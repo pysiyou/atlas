@@ -130,10 +130,11 @@ class CommandCenterService:
             elif log.performedBy in user_map:
                 performed_by_name = user_map[log.performedBy]
 
+            op_type = log.operationType.value if log.operationType else None
             events.append(
                 {
                     "id": log.id,
-                    "type": log.operationType,
+                    "type": op_type,
                     "entityType": log.entityType,
                     "entityId": log.entityId,
                     "timestamp": log.performedAt.isoformat(),

@@ -11,6 +11,7 @@ from app.models.billing import Payment
 from app.models.order import Order
 from app.schemas.payment import PaymentCreate, PaymentResponse
 from app.schemas.enums import PaymentStatus
+from app.services.audit_service import AuditService
 
 
 def enrich_payment(payment: Payment, order: Optional[Order]) -> dict:
@@ -76,9 +77,22 @@ class PaymentService:
             notes=payment_data.notes if payment_data.notes is not None else "",
         )
         self.db.add(payment)
+        self.db.flush()
         new_total_paid = total_paid + payment_data.amount
         if new_total_paid >= order.totalPrice:
             order.paymentStatus = PaymentStatus.PAID
+        else:
+            order.paymentStatus = PaymentStatus.UNPAID
+
+        AuditService(self.db).log_order_payment_recorded(
+            order_id=order.orderId,
+            payment_id=payment.paymentId,
+            user_id=user_id,
+            amount=payment_data.amount,
+            payment_method=payment_data.paymentMethod.value,
+            payment_status=order.paymentStatus.value,
+            metadata={"totalPaid": new_total_paid, "orderTotal": order.totalPrice},
+        )
         self.db.commit()
         self.db.refresh(payment)
         return enrich_payment(payment, order)

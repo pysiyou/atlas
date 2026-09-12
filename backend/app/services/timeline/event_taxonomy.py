@@ -153,6 +153,12 @@ _EVENT_REGISTRY: dict[LabOperationType, EventDefinition] = {
         WorkflowPhase.COMPOSITION,
         TimelineEventTone.NEUTRAL,
     ),
+    LabOperationType.ORDER_PAYMENT_RECORDED: EventDefinition(
+        LabOperationType.ORDER_PAYMENT_RECORDED,
+        TimelineScopeKind.COMMAND_CENTER_ONLY,
+        WorkflowPhase.COMPOSITION,
+        TimelineEventTone.RESOLUTION,
+    ),
 }
 
 for _op in _ESCALATION_TRIGGER_TYPES:

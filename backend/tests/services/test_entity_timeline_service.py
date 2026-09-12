@@ -38,6 +38,9 @@ class TestEventTaxonomy(unittest.TestCase):
     def test_order_status_change_not_entity_visible(self) -> None:
         self.assertFalse(is_entity_visible(LabOperationType.ORDER_STATUS_CHANGE))
 
+    def test_order_payment_not_entity_visible(self) -> None:
+        self.assertFalse(is_entity_visible(LabOperationType.ORDER_PAYMENT_RECORDED))
+
     def test_result_entry_entity_visible_with_phase(self) -> None:
         self.assertTrue(is_entity_visible(LabOperationType.RESULT_ENTRY))
         self.assertEqual(get_event_phase(LabOperationType.RESULT_ENTRY), "results")

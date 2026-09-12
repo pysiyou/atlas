@@ -58,6 +58,14 @@ function orderLink(orderId: unknown): EventDetail | null {
   return { type: 'link', value: displayId.order(id), to: `/orders/${id}` };
 }
 
+/** Resolve order link from event entity (legacy order logs) or metadata.orderId. */
+function orderLinkFromEvent(event: TimelineEvent): EventDetail | null {
+  if (event.entityType === 'order') {
+    return orderLink(event.entityId);
+  }
+  return orderLink(event.metadata.orderId);
+}
+
 function sampleRef(sampleId: unknown): EventDetail | null {
   const id = Number(sampleId);
   if (!Number.isFinite(id) || id <= 0) return null;
@@ -364,27 +372,32 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
   recollection_request_created: event => {
     const meta = event.metadata;
     const details: EventDetail[] = [];
-    const link = orderLink(event.entityId);
+    const link = orderLinkFromEvent(event);
     if (link) details.push(link);
     const rejected = sampleRef(meta.rejectedSampleId);
     if (rejected) details.push({ type: 'text', value: 'for' }, rejected);
+    const test = testRef(meta.orderTestId ?? (event.entityType === 'order_test' ? event.entityId : undefined));
+    if (test) details.push(test);
     const stage = metaString(meta.stage);
     if (stage) details.push({ type: 'text', value: 'at' }, { type: 'text', value: stage });
     return { action: 'Recollection sent for supervisor approval', details };
   },
 
   recollection_request_approved: event => {
+    const meta = event.metadata;
     const details: EventDetail[] = [];
-    const link = orderLink(event.entityId);
+    const link = orderLinkFromEvent(event);
     if (link) details.push(link);
-    const created = sampleRef(event.metadata.createdSampleId);
+    const created = sampleRef(meta.createdSampleId);
     if (created) details.push({ type: 'text', value: '→' }, created);
+    const newTest = testRef(meta.createdTestId);
+    if (newTest) details.push(newTest);
     return { action: 'Recollection request approved by supervisor', details };
   },
 
   recollection_request_denied: event => {
     const details: EventDetail[] = [];
-    const link = orderLink(event.entityId);
+    const link = orderLinkFromEvent(event);
     if (link) details.push(link);
     const note = metaString(event.metadata.reviewNotes);
     if (note) details.push({ type: 'note', value: note });
@@ -396,15 +409,36 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
 
   order_status_change: event => {
     const details: EventDetail[] = [];
-    const link = orderLink(event.entityId);
+    const link = orderLinkFromEvent(event);
     if (link) details.push(link);
     const status = getStatusValue(event);
     if (status) details.push({ type: 'text', value: '→' }, { type: 'status', value: status });
-    const action =
-      event.performedBy === 'system'
-        ? 'Order status automatically updated'
-        : 'Order status manually updated';
+    const isSystem = event.performedBy === 'system';
+    let action = isSystem ? 'Order status automatically updated' : 'Order status manually updated';
+    if (status === 'completed' && isSystem) {
+      action = 'Order completed — all tests finished';
+    } else if (status === 'in-progress' && isSystem) {
+      action = 'Order moved to in progress';
+    }
     return { action, details };
+  },
+
+  order_payment_recorded: event => {
+    const meta = event.metadata;
+    const details: EventDetail[] = [];
+    const link = orderLinkFromEvent(event);
+    if (link) details.push(link);
+    const amount = meta.amount;
+    if (typeof amount === 'number') {
+      details.push({ type: 'text', value: '—' }, { type: 'text', value: `$${amount.toFixed(2)}` });
+    }
+    const method = metaString(meta.paymentMethod);
+    if (method) details.push({ type: 'text', value: 'via' }, { type: 'text', value: method });
+    const payStatus = metaString(meta.paymentStatus) ?? getStatusValue(event);
+    if (payStatus === 'paid') {
+      details.push({ type: 'text', value: '→' }, { type: 'status', value: 'paid' });
+    }
+    return { action: 'Payment recorded for order', details };
   },
 };
 

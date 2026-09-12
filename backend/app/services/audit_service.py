@@ -521,6 +521,35 @@ class AuditService:
             metadata=full_metadata
         )
 
+    def log_order_payment_recorded(
+        self,
+        order_id: int,
+        payment_id: int,
+        user_id: int,
+        amount: float,
+        payment_method: str,
+        payment_status: str,
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> LabOperationLog:
+        """Log a payment recorded against an order."""
+        full_metadata = {
+            "orderId": order_id,
+            "paymentId": payment_id,
+            "amount": amount,
+            "paymentMethod": payment_method,
+            "paymentStatus": payment_status,
+            **(metadata or {}),
+        }
+        return self.log_operation(
+            operation_type=LabOperationType.ORDER_PAYMENT_RECORDED,
+            entity_type="order",
+            entity_id=order_id,
+            user_id=user_id,
+            before_state=None,
+            after_state={"paymentStatus": payment_status},
+            metadata=full_metadata,
+        )
+
     def log_test_added(
         self,
         order_id: int,

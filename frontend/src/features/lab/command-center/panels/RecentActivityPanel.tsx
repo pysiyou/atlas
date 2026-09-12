@@ -11,8 +11,8 @@ export const RecentActivityPanel: React.FC = () => {
   const { events, isLoading, isError, refetchFeed } = useRecentActivityFeed();
 
   return (
-    <Panel title="Recent Activity" meta="Last 24 hours · workflow events">
-      <PanelBody>
+    <Panel title="Recent Activity" meta="Last 24 hours · workflow & order events">
+      <PanelBody className="overflow-y-auto px-4 py-2">
         <ActivityFeed
           events={events}
           isLoading={isLoading}
