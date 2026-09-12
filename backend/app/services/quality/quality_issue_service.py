@@ -48,7 +48,6 @@ _VALIDATION_REMEDIES: List[RemedyType] = [
     RemedyType.RETRY_SAME_SAMPLE,
     RemedyType.REQUEST_RECOLLECTION,
     RemedyType.CANCEL,
-    RemedyType.ESCALATE,
 ]
 
 # Remedies for unfinished work when rejecting a collected sample.
@@ -214,6 +213,9 @@ class QualityIssueService:
             reason=reason,
             test_code=test_code,
             sample_id=sample_id,
+            order_test_id=order_test_id,
+            created_test_id=created_test_id,
+            created_sample_id=created_sample_id,
         )
         return issue
 
@@ -321,6 +323,11 @@ class QualityIssueService:
         if not can_reject:
             raise LabOperationError(reject_reason, status_code=400)
 
+        before_state = {
+            "status": sample.status.value if sample.status else None,
+            "sampleId": sample.sampleId,
+        }
+
         sample.status = SampleStatus.REJECTED
         sample.rejectedAt = datetime.now(timezone.utc)
         sample.rejectedBy = str(user_id)
@@ -328,6 +335,21 @@ class QualityIssueService:
         sample.rejectionNotes = notes
         sample.recollectionRequired = True
         sample.updatedBy = str(user_id)
+
+        self.audit.log_sample_rejection(
+            sample_id=sample.sampleId,
+            user_id=user_id,
+            before_state=before_state,
+            after_state={
+                "status": SampleStatus.REJECTED.value,
+                "sampleId": sample.sampleId,
+                "rejectionReason": reason,
+            },
+            rejection_reason=reason,
+            recollection_required=True,
+            metadata={"notes": notes} if notes else None,
+            comment=notes or reason,
+        )
 
         if not reset_unfinished:
             return
@@ -356,7 +378,6 @@ class QualityIssueService:
         sample = self._get_sample(sample_id)
         recollection_used = self.collection.attempts_used(sample)
         recollection_remaining = self.collection.attempts_remaining_after(sample)
-        at_recollection_limit = recollection_remaining == 0
 
         linked = self._linked_tests(
             sample, exclude=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED]
@@ -388,11 +409,6 @@ class QualityIssueService:
             )
         if not parts:
             parts.append("This specimen will be marked rejected.")
-        if at_recollection_limit and unfinished > 0:
-            parts.append(
-                "Recollection attempt limit reached — supervisor override required if recollection is approved."
-            )
-
         criteria = RejectionCriteriaService(self.db).get_specimen_criteria_for_tests(sample.testCodes)
 
         return QualityIssueOptions(
@@ -426,11 +442,9 @@ class QualityIssueService:
         retest_remaining = max(0, MAX_RETEST_ATTEMPTS - retest_used - 1)
         at_retest_limit = retest_remaining == 0
 
-        sample_remaining = 0
         sample_rejected = False
         if order_test.sampleId:
             sample = self._get_sample(order_test.sampleId)
-            sample_remaining = self.collection.attempts_remaining_after(sample)
             sample_rejected = sample.status == SampleStatus.REJECTED
 
         criteria_service = RejectionCriteriaService(self.db)
@@ -466,11 +480,8 @@ class QualityIssueService:
             )
         if at_retest_limit:
             message_parts.append(
-                f"Re-test limit reached ({MAX_RETEST_ATTEMPTS}). Escalate or cancel is recommended."
-            )
-        if sample_remaining == 0 and order_test.sampleId:
-            message_parts.append(
-                "Recollection attempt limit reached — supervisor override required if recollection is approved."
+                f"Re-test limit reached ({MAX_RETEST_ATTEMPTS}). "
+                "Choosing re-test will escalate to a supervisor for approval."
             )
 
         return QualityIssueOptions(
@@ -485,7 +496,6 @@ class QualityIssueService:
             suggestedRemedy=suggested,
             retestAttemptsUsed=retest_used,
             retestAttemptsRemaining=retest_remaining,
-            recollectionAttemptsRemaining=sample_remaining,
             willEscalate=at_retest_limit,
             previewRemedy=suggested,
             previewMessage=" ".join(message_parts),
@@ -647,7 +657,7 @@ class QualityIssueService:
         if preferred_remedy is None:
             raise LabOperationError(
                 "preferredRemedy is required for validation rejection. "
-                "Choose: retry_same_sample, request_recollection, cancel, or escalate.",
+                "Choose: retry_same_sample, request_recollection, or cancel.",
                 status_code=400,
             )
         if preferred_remedy not in _VALIDATION_REMEDIES:
@@ -673,7 +683,7 @@ class QualityIssueService:
                 sample = self._get_sample(order_test.sampleId)
                 if sample.status == SampleStatus.REJECTED:
                     raise LabOperationError(
-                        "Cannot re-test on a rejected specimen. Request recollection, cancel, or escalate.",
+                        "Cannot re-test on a rejected specimen. Request recollection or cancel.",
                         status_code=400,
                     )
             return self._retry_test_issue(order_test, user_id, reason, notes)
@@ -686,7 +696,10 @@ class QualityIssueService:
             return self._request_recollection_from_validation(order_test, user_id, reason, notes)
         if preferred_remedy == RemedyType.CANCEL:
             return self._cancel_test_issue(order_test, user_id, reason, notes, domain)
-        return self._escalate_test_issue(order_test, user_id, reason, notes, domain)
+        raise LabOperationError(
+            f"Unsupported preferredRemedy '{preferred_remedy.value}'.",
+            status_code=400,
+        )
 
     def _cancel_test_issue(
         self,
@@ -733,14 +746,21 @@ class QualityIssueService:
         reason: str,
         notes: Optional[str],
     ) -> QualityIssueResult:
-        # Check retest limit before creating retest
-        retest_count = self._count_retests_in_chain(order_test)
-        if retest_count >= MAX_RETEST_ATTEMPTS:
-            raise LabOperationError(
-                f"Maximum retest limit ({MAX_RETEST_ATTEMPTS}) reached. Escalation required.",
-                status_code=400
+        retest_used = self._count_retests_in_chain(order_test)
+        retest_remaining = max(0, MAX_RETEST_ATTEMPTS - retest_used - 1)
+        if retest_remaining <= 0:
+            return self._escalate_test_issue(
+                order_test,
+                user_id,
+                reason,
+                notes,
+                QualityDomain.ANALYTICAL,
+                message=(
+                    f"Re-test limit reached ({MAX_RETEST_ATTEMPTS}). "
+                    "Escalated to supervisor for approval."
+                ),
             )
-        
+
         new_test = self._create_retest(order_test, user_id, reason, notes)
         issue = self._record_issue(
             order_id=order_test.orderId,
@@ -888,6 +908,7 @@ class QualityIssueService:
         reason: str,
         notes: Optional[str],
         domain: QualityDomain,
+        message: Optional[str] = None,
     ) -> QualityIssueResult:
         TestStateMachine.validate_transition(order_test.status, TestStatus.ESCALATED)
         self.escalation.escalate_test(
@@ -914,7 +935,7 @@ class QualityIssueService:
         return QualityIssueResult(
             success=True,
             remedy=RemedyType.ESCALATE,
-            message="Escalated to supervisor.",
+            message=message or "Escalated to supervisor for approval.",
             qualityIssueId=issue.id,
             orderId=order_test.orderId,
             testCode=order_test.testCode,

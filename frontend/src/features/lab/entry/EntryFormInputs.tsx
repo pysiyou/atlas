@@ -17,7 +17,8 @@ const SelectParameterInput: React.FC<{
   value: string;
   onChange: (value: string) => void;
   inputId: string;
-}> = ({ param, value, onChange, inputId }) => {
+  disabled?: boolean;
+}> = ({ param, value, onChange, inputId, disabled = false }) => {
   const handleClear = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
@@ -31,7 +32,15 @@ const SelectParameterInput: React.FC<{
       placement="bottom-start"
       showBackdrop={false}
       trigger={({ isOpen }) => (
-        <div id={inputId} className={cn(inputTrigger, 'w-full', isOpen && inputTriggerOpen)}>
+        <div
+          id={inputId}
+          className={cn(
+            inputTrigger,
+            'w-full',
+            isOpen && inputTriggerOpen,
+            disabled && 'opacity-60 pointer-events-none',
+          )}
+        >
           <div className="flex-1 text-xs truncate">
             {value ? (
               <span className="text-text-primary">{titleCaseWords(value)}</span>
@@ -90,7 +99,8 @@ export const ParameterInput: React.FC<{
   inputId: string;
   validationError?: string;
   onValidationChange?: (error: string | undefined) => void;
-}> = ({ param, value, onChange, onKeyDown, inputId, validationError, onValidationChange }) => {
+  disabled?: boolean;
+}> = ({ param, value, onChange, onKeyDown, inputId, validationError, onValidationChange, disabled }) => {
   const valueType =
     param.valueType ||
     (param.type === 'numeric' ? 'NUMERIC' : param.type === 'select' ? 'SELECT' : 'TEXT');
@@ -121,6 +131,7 @@ export const ParameterInput: React.FC<{
     onChange: handleChange,
     onKeyDown,
     onBlur: handleBlur,
+    disabled,
   };
 
   if (valueType === 'SELECT' && param.allowedValues) {
@@ -130,6 +141,7 @@ export const ParameterInput: React.FC<{
         value={normalizedValue}
         onChange={onChange}
         inputId={inputId}
+        disabled={disabled}
       />
     );
   }

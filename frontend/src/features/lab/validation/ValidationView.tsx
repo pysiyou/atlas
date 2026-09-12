@@ -14,7 +14,12 @@ import { EscalationCard } from './EscalationCard';
 import { createLabItemFilter } from '../components/LabWorkflowView';
 import { LabQueueSection } from '../components/LabQueueSection';
 import { LabFilters } from '../components/LabFilters';
-import { useLabWorkflowFilters, useLabTestsFromOrders, useLabUrlSearch } from '@/features/lab/hooks';
+import {
+  applyLabQueueFilters,
+  useLabWorkflowFilters,
+  useLabTestsFromOrders,
+  useLabUrlSearch,
+} from '@/features/lab/hooks';
 import { validationFilterConfig } from '@/features/lab/constants';
 import { ErrorBoundary, EmptyState } from '@/components';
 import { SectionLoadingBoundary } from '@/components/loaders';
@@ -22,6 +27,7 @@ import { useMinDisplay } from '@/hooks/useMinDisplay';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import type { PriorityLevel, TestWithContext } from '@/types';
+import type { RecollectionRequestSummary } from '@/types/lab-operations';
 import { useValidationWorkflow } from './useValidationWorkflow';
 import { orderTestKey } from '@/features/lab/utils/orderTestKey';
 import { usePendingEscalation } from '../api/results.api';
@@ -35,6 +41,7 @@ import { toast } from '@/app/AppToastBar';
 
 export const ValidationView: React.FC = () => {
   const { hasRole } = useAuthStore();
+  const canViewEscalations = hasRole(['administrator', 'lab-technician', 'lab-technician-plus']);
   const canResolveEscalation = hasRole(['administrator', 'lab-technician-plus']);
   const { orders, isLoading: ordersLoading } = useOrdersList();
   const { tests: testCatalog, isLoading: testsLoading } = useTestCatalog();
@@ -92,6 +99,7 @@ export const ValidationView: React.FC = () => {
 
   const {
     filteredItems: filteredTests,
+    filterState,
     searchQuery,
     setSearchQuery,
     dateRange,
@@ -112,8 +120,57 @@ export const ValidationView: React.FC = () => {
     getQueueSince,
   });
 
+  const filterRecollectionRequest = useMemo(
+    () =>
+      createLabItemFilter<RecollectionRequestSummary>(item =>
+        [
+          item.orderNumber,
+          item.patientName,
+          ...(item.testCodes ?? []),
+          item.rejectedSampleId?.toString(),
+        ].filter((value): value is string => Boolean(value))
+      ),
+    []
+  );
+
+  const filteredEscalatedTests = useMemo(
+    () =>
+      applyLabQueueFilters({
+        items: escalatedTests,
+        filters: filterState,
+        getOrderDate: test => test.orderDate,
+        getSampleType: test => test.sampleType,
+        getStatus: test => test.priority as PriorityLevel,
+        searchFilterFn: filterTest,
+        sortByQueuePriority: true,
+        getPriority: test => test.priority,
+        getQueueSince: test => test.resultEnteredAt ?? test.orderDate,
+      }),
+    [escalatedTests, filterState, filterTest]
+  );
+
+  const filteredRecollectionRequests = useMemo(
+    () =>
+      applyLabQueueFilters({
+        items: recollectionRequests,
+        filters: filterState,
+        getOrderDate: request => request.createdAt,
+        getSampleType: request => request.sampleType,
+        getStatus: () => undefined,
+        searchFilterFn: filterRecollectionRequest,
+        sortByQueuePriority: true,
+        getPriority: () => undefined,
+        getQueueSince: request => request.createdAt,
+        applyStatusFilter: false,
+      }),
+    [recollectionRequests, filterState, filterRecollectionRequest]
+  );
+
   const sectionLoading = useMinDisplay(
-    ordersLoading || testsLoading || (canResolveEscalation && (escalationLoading || recollectionLoading)),
+    ordersLoading ||
+      testsLoading ||
+      (canViewEscalations && escalationLoading) ||
+      (canResolveEscalation && recollectionLoading),
     500
   );
 
@@ -155,6 +212,7 @@ export const ValidationView: React.FC = () => {
     (test: TestWithContext) => {
       openModal(ModalType.ESCALATION_RESOLUTION_DETAIL, {
         test,
+        readOnly: !canResolveEscalation,
         onResolved: async () => {
           invalidatePendingEscalation();
           await invalidateOrders();
@@ -162,7 +220,7 @@ export const ValidationView: React.FC = () => {
         },
       });
     },
-    [openModal, invalidatePendingEscalation, invalidateOrders, refetchEscalation]
+    [openModal, canResolveEscalation, invalidatePendingEscalation, invalidateOrders, refetchEscalation]
   );
 
   const getCommentKey = useCallback(
@@ -184,8 +242,8 @@ export const ValidationView: React.FC = () => {
     />
   );
 
-  const hasRecollection = canResolveEscalation && recollectionRequests.length > 0;
-  const hasEscalated = canResolveEscalation && escalatedTests.length > 0;
+  const hasRecollection = canResolveEscalation && filteredRecollectionRequests.length > 0;
+  const hasEscalated = canViewEscalations && filteredEscalatedTests.length > 0;
   const hasValidation = filteredTests.length > 0;
   const isEmpty = !hasRecollection && !hasEscalated && !hasValidation;
 
@@ -211,9 +269,9 @@ export const ValidationView: React.FC = () => {
                 {hasRecollection && (
                   <LabQueueSection
                     title="Recollection requests"
-                    count={recollectionRequests.length}
+                    count={filteredRecollectionRequests.length}
                   >
-                    {recollectionRequests.map(request => (
+                    {filteredRecollectionRequests.map(request => (
                       <RecollectionRequestCard
                         key={`recollection-${request.id}`}
                         request={request}
@@ -228,8 +286,15 @@ export const ValidationView: React.FC = () => {
                 )}
 
                 {hasEscalated && (
-                  <LabQueueSection title="Supervisor exceptions" count={escalatedTests.length}>
-                    {escalatedTests.map((test, idx) => (
+                  <LabQueueSection
+                    title={
+                      canResolveEscalation
+                        ? 'Supervisor exceptions'
+                        : 'Awaiting supervisor approval'
+                    }
+                    count={filteredEscalatedTests.length}
+                  >
+                    {filteredEscalatedTests.map((test, idx) => (
                       <EscalationCard
                         key={`escalated-${test.id}-${idx}`}
                         test={test}

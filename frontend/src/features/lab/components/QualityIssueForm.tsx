@@ -5,10 +5,8 @@
 import React, { useState } from 'react';
 import { Alert, SpinnerLoader } from '@/components';
 import { CatalogRejectionFields } from './CatalogRejectionFields';
-import { AttemptProgressBar } from './AttemptProgressBar';
 import { useQualityIssueOptions } from '@/features/lab/api/quality-issues.api';
 import type { QualityIssueOptions, QualityIssueTargetType, RemedyType } from '@/types/lab-operations';
-import { GENERATED_LAB_CONSTANTS } from '@/types/generated/labConstants';
 import { QUALITY_ISSUE_DIALOG_COPY } from './qualityIssueDialogConstants';
 import {
   RemedyDestinationPicker,
@@ -26,7 +24,6 @@ type CollectionAlertCopy = {
 function getCollectionAlertCopy(options: QualityIssueOptions): CollectionAlertCopy {
   const hasResultedOrValidated =
     (options.resultedTestsCount ?? 0) > 0 || (options.validatedTestsCount ?? 0) > 0;
-  const atLimit = (options.recollectionAttemptsRemaining ?? 0) === 0;
 
   if (hasResultedOrValidated) {
     return {
@@ -36,10 +33,8 @@ function getCollectionAlertCopy(options: QualityIssueOptions): CollectionAlertCo
     };
   }
   return {
-    variant: atLimit ? 'danger' : 'warning',
-    warningTitle: atLimit
-      ? QUALITY_ISSUE_DIALOG_COPY.collection.escalateLimit.warningTitle
-      : QUALITY_ISSUE_DIALOG_COPY.collection.recollect.warningTitle,
+    variant: 'warning',
+    warningTitle: QUALITY_ISSUE_DIALOG_COPY.collection.recollect.warningTitle,
     warningBody:
       options.previewMessage || QUALITY_ISSUE_DIALOG_COPY.collection.recollect.warningBody,
     reasonLabel: QUALITY_ISSUE_DIALOG_COPY.collection.recollect.reasonLabel,
@@ -78,15 +73,6 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
   notes,
 }) => {
   const { data: options, isLoading } = useQualityIssueOptions(targetType, targetId);
-
-  const attemptUsed =
-    targetType === 'sample'
-      ? (options?.recollectionAttemptsUsed ?? 0)
-      : (options?.retestAttemptsUsed ?? 0);
-  const attemptMax =
-    targetType === 'sample'
-      ? GENERATED_LAB_CONSTANTS.MAX_RECOLLECTION_ATTEMPTS
-      : GENERATED_LAB_CONSTANTS.MAX_RETEST_ATTEMPTS;
 
   const alertCopy =
     targetType === 'sample' && options ? getCollectionAlertCopy(options) : null;
@@ -137,14 +123,6 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
                 <p className="text-xxs opacity-90 leading-tight">{alertCopy.warningBody}</p>
               </div>
             </Alert>
-          )}
-
-          {attemptMax > 0 && (
-            <AttemptProgressBar
-              used={attemptUsed}
-              total={attemptMax}
-              label={targetType === 'sample' ? 'Recollection' : 'Re-test'}
-            />
           )}
 
           <CatalogRejectionFields

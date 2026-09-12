@@ -34,11 +34,11 @@ export function useCommandCenterDashboard(params?: {
   });
 }
 
-interface CommandCenterDashboardContextValue extends UseQueryResult<CommandCenterDashboardResponse> {
+type CommandCenterDashboardContextValue = UseQueryResult<CommandCenterDashboardResponse> & {
   timeRange: CommandCenterTimeRange;
   setTimeRange: (range: CommandCenterTimeRange) => void;
   hoursBack: number;
-}
+};
 
 const CommandCenterDashboardContext = createContext<CommandCenterDashboardContextValue | null>(
   null

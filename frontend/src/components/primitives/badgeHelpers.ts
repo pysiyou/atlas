@@ -62,6 +62,11 @@ const CATALOG_COLOR_MAP: Record<string, BadgeColor> = {
 };
 
 const COLOR_MAP: Record<string, BadgeColor> = {
+  danger: 'danger',
+  warning: 'warning',
+  success: 'success',
+  info: 'info',
+  neutral: 'neutral',
   ...MISC_COLOR_MAP,
   ...ORDER_COLOR_MAP,
   ...SAMPLE_COLOR_MAP,

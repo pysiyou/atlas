@@ -31,6 +31,8 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   icon?: IconName | React.ReactNode;
   /** Show dot indicator (default: false) */
   dot?: boolean;
+  /** Force uppercase label text (default: true). Set false for proper nouns such as parameter names. */
+  uppercase?: boolean;
 }
 
 /** Base classes for unified appearance (neutral bg, colored text + dot) */
@@ -47,6 +49,7 @@ export const Badge: React.FC<BadgeProps> = ({
   pulse,
   icon,
   dot = false,
+  uppercase = true,
   children,
   ...props
 }) => {
@@ -85,6 +88,7 @@ export const Badge: React.FC<BadgeProps> = ({
     <span
       className={cn(
         'inline-flex items-center font-normal rounded whitespace-nowrap',
+        uppercase && 'uppercase tracking-wide',
         SIZES[size],
         isContainer
           ? containerStyle

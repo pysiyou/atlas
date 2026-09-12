@@ -14,22 +14,28 @@ import { formatDate, displayId } from '@/utils';
 import { useUserLookup } from '@/lib/api/users.api';
 import { usePatientNameLookup } from '@/features/patients';
 import { LabCard } from '../components/LabCard';
-import { LAB_CONFIG } from '@/features/lab/constants';
 import { QualityIssueDialog } from '@/features/lab/components';
 import { AttemptIndicator } from '../components/AttemptIndicator';
 import { QueueAgeBadge } from '../components/QueueAgeBadge';
 import { useLabCardClickGuard, useTestWorkItemState } from '@/features/lab/hooks';
 import { BlockedReasonBadge } from '../components/StatusBadges';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
-import type { TestWithContext } from '@/types';
+import { formatRejectionReasons } from '../utils/labFormatters';
+import { useSampleLookup } from '@/features/lab/api/samples.api';
+import type { TestWithContext, Sample } from '@/types';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import { ICONS } from '@/config/icons';
-import {
-  type ResultStatus,
-  isCritical,
-  statusMapFromFlags,
-  parseResultEntry,
-} from '../utils/labHelpers';
+import { ResultsParameterGrid } from '../components/ResultsParameterGrid';
+
+function getSampleRejectionReason(
+  test: TestWithContext,
+  getSample: (sampleId: number) => Sample | undefined,
+): string | undefined {
+  if (!test.sampleId) return undefined;
+  const sample = getSample(test.sampleId);
+  if (sample?.status !== 'rejected') return undefined;
+  return formatRejectionReasons(sample.rejectionReasons) ?? undefined;
+}
 
 // ─── ResultGrid ───────────────────────────────────────────────────────────────
 
@@ -71,93 +77,10 @@ function SpecimenRejectedAlert({
             <li>Approve result (add validation notes explaining decision)</li>
             <li>Request recollection with new sample</li>
             <li>Cancel this test</li>
-            <li>Escalate to supervisor</li>
           </ul>
         </div>
       </div>
     </Alert>
-  );
-}
-
-// ─── ResultGrid ───────────────────────────────────────────────────────────────
-
-function ResultGrid({
-  results,
-  flagStatusMap,
-  compact = false,
-}: {
-  results: Record<string, unknown>;
-  flagStatusMap: Record<string, ResultStatus>;
-  compact?: boolean;
-}) {
-  const entries = Object.entries(results);
-
-  if (compact) {
-    const maxVisible = LAB_CONFIG.COMPACT_RESULT_GRID_LIMIT;
-    const visibleEntries = entries.slice(0, maxVisible);
-    const remainingCount = entries.length - maxVisible;
-
-    return (
-      <div className="grid grid-cols-4 grid-rows-2 gap-x-3 gap-y-0.5">
-        {visibleEntries.map(([key, value]) => {
-          const { resultValue, unit, status } = parseResultEntry(key, value, flagStatusMap);
-          const abnormal = status !== 'normal';
-          const valueColor = abnormal
-            ? isCritical(status)
-              ? 'text-danger-fg'
-              : 'text-warning-fg'
-            : 'text-text-primary';
-
-          return (
-            <div key={key} className="grid grid-cols-[1fr_auto] items-baseline whitespace-nowrap">
-              <span className="text-xxs text-text-tertiary" title={key}>
-                {key}:
-              </span>
-              <span className={`text-xxs font-normal text-left ${valueColor}`}>
-                {resultValue}
-                {unit && (
-                  <span className="text-text-tertiary font-normal ml-0.5 text-[9px]">{unit}</span>
-                )}
-              </span>
-            </div>
-          );
-        })}
-        {remainingCount > 0 && (
-          <div className="text-xxs text-text-tertiary col-span-full pt-0.5">
-            +{remainingCount} more
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  return (
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,max-content))] gap-x-8 gap-y-1">
-      {entries.map(([key, value]) => {
-        const { resultValue, unit, status } = parseResultEntry(key, value, flagStatusMap);
-        const abnormal = status !== 'normal';
-        const valueColor = abnormal
-          ? isCritical(status)
-            ? 'text-danger-fg'
-            : 'text-warning-fg'
-          : 'text-text-primary';
-
-        return (
-          <div
-            key={key}
-            className="grid grid-cols-[1fr_auto] items-baseline gap-x-2 whitespace-nowrap"
-          >
-            <span className="text-xxs text-text-tertiary text-right" title={key}>
-              {key}:
-            </span>
-            <span className={`text-xs font-normal text-left ${valueColor}`}>
-              {resultValue}
-              {unit && <span className="text-text-tertiary font-normal ml-1 text-xxs">{unit}</span>}
-            </span>
-          </div>
-        );
-      })}
-    </div>
   );
 }
 
@@ -182,7 +105,6 @@ export interface ValidationCardProps {
 function deriveCardState(test: TestWithContext) {
   const rejection = deriveRetestContext(test);
   const hasFlags = test.flags && test.flags.length > 0;
-  const flagStatusMap = statusMapFromFlags(test.flags);
   return {
     hasRejectionHistory: rejection.showAttemptIndicator,
     isRetest: rejection.isRetest,
@@ -194,7 +116,6 @@ function deriveCardState(test: TestWithContext) {
     attemptMax: rejection.attemptMax,
     attemptType: rejection.attemptType,
     hasFlags,
-    flagStatusMap,
   };
 }
 
@@ -207,6 +128,7 @@ function ValidationCardMobile({
   onReject,
   isApproving,
   handleCardClick,
+  sampleRejectionReason,
 }: {
   test: TestWithContext;
   patientName: string;
@@ -214,8 +136,9 @@ function ValidationCardMobile({
   onReject: (result: QualityIssueResult) => void;
   isApproving: boolean;
   handleCardClick: () => void;
+  sampleRejectionReason?: string;
 }) {
-  const { hasFlags, isRetest, hasRejectionHistory, flagStatusMap } = deriveCardState(test);
+  const { hasFlags, isRetest, hasRejectionHistory } = deriveCardState(test);
   const workItem = useTestWorkItemState(test);
   const handleRejectionResult = (result: QualityIssueResult) => onReject(result);
   const isSpecimenRejected = workItem.blockedReason === 'sample_rejected';
@@ -227,7 +150,7 @@ function ValidationCardMobile({
         <div className="mb-3">
           <SpecimenRejectedAlert
             sampleId={test.sampleId}
-            sampleRejectionReason={test.sample?.rejectionReason}
+            sampleRejectionReason={sampleRejectionReason}
             size="compact"
           />
         </div>
@@ -241,6 +164,14 @@ function ValidationCardMobile({
             <div className="text-xs text-text-secondary font-normal truncate capitalize">
               {patientName}
             </div>
+            {test.id != null && (
+              <>
+                <div className="text-xxs text-text-disabled">•</div>
+                <div className="entity-id entity-id--secondary truncate">
+                  {displayId.orderTest(test.id)}
+                </div>
+              </>
+            )}
             <div className="text-xxs text-text-disabled">•</div>
             <div className="entity-id entity-id--secondary truncate">
               {test.testCode}
@@ -264,7 +195,12 @@ function ValidationCardMobile({
       <div className="space-y-2">
         <div className="space-y-1">
           <div className="mt-2">
-            <ResultGrid results={test.results!} flagStatusMap={flagStatusMap} compact />
+            <ResultsParameterGrid
+              results={test.results!}
+              flags={test.flags}
+              variant="inline"
+              dense
+            />
           </div>
           {test.resultEnteredAt && (
             <div className="text-xs text-text-tertiary">
@@ -330,6 +266,7 @@ function ValidationCardDesktop({
   isApproving,
   handleCardClick,
   getUserName,
+  sampleRejectionReason,
 }: {
   test: TestWithContext;
   onApprove: () => void;
@@ -337,6 +274,7 @@ function ValidationCardDesktop({
   isApproving: boolean;
   handleCardClick: () => void;
   getUserName: (id: string) => string;
+  sampleRejectionReason?: string;
 }) {
   const {
     hasRejectionHistory,
@@ -346,7 +284,6 @@ function ValidationCardDesktop({
     attemptNumber,
     attemptMax,
     attemptType,
-    flagStatusMap,
   } = deriveCardState(test);
   const workItem = useTestWorkItemState(test);
   const handleRejectionResult = (result: QualityIssueResult) => onReject(result);
@@ -442,6 +379,7 @@ function ValidationCardDesktop({
       context={{
         patientName: test.patientName,
         orderId: test.orderId,
+        orderTestId: test.id,
         referringPhysician: test.referringPhysician,
       }}
       sampleInfo={{
@@ -463,11 +401,11 @@ function ValidationCardDesktop({
             <div className="mb-3">
               <SpecimenRejectedAlert
                 sampleId={test.sampleId}
-                sampleRejectionReason={test.sample?.rejectionReason}
+                sampleRejectionReason={sampleRejectionReason}
               />
             </div>
           )}
-          <ResultGrid results={test.results!} flagStatusMap={flagStatusMap} />
+          <ResultsParameterGrid results={test.results!} flags={test.flags} variant="inline" />
         </>
       }
       contentTitle={`Results (${resultCount})`}
@@ -490,11 +428,13 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
 }) => {
   const { getUserName } = useUserLookup();
   const { getPatientName } = usePatientNameLookup();
+  const { getSample } = useSampleLookup();
   const handleCardClick = useLabCardClickGuard(onClick);
 
   if (!test.results) return null;
 
   const patientName = getPatientName(test.patientId);
+  const sampleRejectionReason = getSampleRejectionReason(test, getSample);
 
   if (isMobile) {
     return (
@@ -505,6 +445,7 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
         onReject={onReject}
         isApproving={isApproving}
         handleCardClick={handleCardClick}
+        sampleRejectionReason={sampleRejectionReason}
       />
     );
   }
@@ -517,6 +458,7 @@ export const ValidationCard: React.FC<ValidationCardProps> = ({
       isApproving={isApproving}
       handleCardClick={handleCardClick}
       getUserName={getUserName}
+      sampleRejectionReason={sampleRejectionReason}
     />
   );
 };

@@ -2,7 +2,7 @@
 Audit API Endpoints
 Provides access to lab operation logs for activity timeline display.
 """
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import desc, func
 from typing import Optional
@@ -10,9 +10,12 @@ from datetime import datetime, timedelta, timezone
 from pydantic import BaseModel
 
 from app.database import get_db
+from app.core.dependencies import get_current_user
 from app.models.lab_audit import LabOperationLog
 from app.models.user import User
 from app.schemas.enums import LabOperationType
+from app.services.entity_timeline_service import EntityTimelineService
+from app.utils.exceptions import LabOperationError
 
 router = APIRouter()
 
@@ -139,3 +142,47 @@ async def get_lab_operation_logs_count(
         query = query.filter(LabOperationLog.entityType == entity_type)
     total = query.scalar() or 0
     return AuditLogsCountResponse(count=total)
+
+
+class TimelineEventResponse(BaseModel):
+    id: int
+    type: str
+    entityType: str
+    entityId: int
+    timestamp: str
+    performedBy: str
+    performedByName: Optional[str] = None
+    metadata: dict
+    beforeState: Optional[dict] = None
+    afterState: Optional[dict] = None
+    comment: Optional[str] = None
+
+
+class EntityTimelineResponse(BaseModel):
+    events: list[TimelineEventResponse]
+    total: int
+
+
+@router.get(
+    "/audit/entities/{entityType}/{entityId}/timeline",
+    response_model=EntityTimelineResponse,
+)
+async def get_entity_timeline(
+    entityType: str,
+    entityId: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> EntityTimelineResponse:
+    """
+    Full operation timeline for a sample or order test, including related chain objects.
+    """
+    try:
+        service = EntityTimelineService(db)
+        events, total = service.get_timeline(entityType, entityId)
+    except LabOperationError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.message)
+
+    return EntityTimelineResponse(
+        events=[TimelineEventResponse(**event) for event in events],
+        total=total,
+    )

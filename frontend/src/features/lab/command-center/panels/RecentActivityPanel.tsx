@@ -1,0 +1,25 @@
+/**
+ * Trimmed recent activity for lab techs — fixed 24h workflow events only.
+ */
+
+import React from 'react';
+import { ActivityFeed } from '../ActivityFeed';
+import { Panel, PanelBody } from '../components';
+import { useRecentActivityFeed } from '../hooks/useRecentActivityFeed';
+
+export const RecentActivityPanel: React.FC = () => {
+  const { events, isLoading, isError, refetchFeed } = useRecentActivityFeed();
+
+  return (
+    <Panel title="Recent Activity" meta="Last 24 hours · workflow events">
+      <PanelBody>
+        <ActivityFeed
+          events={events}
+          isLoading={isLoading}
+          isError={isError}
+          onRetry={refetchFeed}
+        />
+      </PanelBody>
+    </Panel>
+  );
+};

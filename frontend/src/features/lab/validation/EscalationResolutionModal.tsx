@@ -17,12 +17,16 @@ import { queryKeys } from '@/lib/query';
 import type { TestWithContext } from '@/types';
 import { useEscalationResolution } from './useEscalationResolution';
 import { EscalationResolutionFooter } from './EscalationResolutionFooter';
+import { LabHistoryPanel } from '../components/LabHistoryPanel';
+import { Button } from '@/components';
+import { ModalFooter } from '../components/LabDetailModal';
 
 interface EscalationResolutionModalProps {
   isOpen: boolean;
   onClose: () => void;
   test: TestWithContext;
   onResolved: () => void | Promise<void>;
+  readOnly?: boolean;
 }
 
 export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps> = ({
@@ -30,6 +34,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   onClose,
   test,
   onResolved,
+  readOnly = false,
 }) => {
   const [validationNotesForceValidate, setValidationNotesForceValidate] = useState('');
   const [reasonAuthorizeRetest, setReasonAuthorizeRetest] = useState('');
@@ -83,7 +88,16 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
       isOpen={isOpen}
       onClose={onClose}
       title={test.testName}
-      subtitle={`${test.testCode} - ${test.patientName} (Escalated)`}
+      subtitle={
+        test.id != null
+          ? readOnly
+            ? `${displayId.orderTest(test.id)} · ${test.testCode} - ${test.patientName} · escalated`
+            : `${displayId.orderTest(test.id)} · ${test.testCode} - ${test.patientName} (Escalated)`
+          : readOnly
+            ? `${test.testCode} - ${test.patientName} · escalated`
+            : `${test.testCode} - ${test.patientName} (Escalated)`
+      }
+      modalKey={readOnly ? `historical-${test.id}` : `escalation-${test.id}`}
       headerBadges={
         <StatusBadgeRow
           sampleType={test.sampleType}
@@ -107,6 +121,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
         patientName: test.patientName,
         patientId: test.patientId,
         orderId: test.orderId,
+        orderTestId: test.id,
         referringPhysician: test.referringPhysician,
       }}
       sampleInfo={
@@ -123,48 +138,55 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
       }
       disableClose={resolving}
       footer={
-        <EscalationResolutionFooter
-          canResolveEscalation={canResolveEscalation}
-          resolving={resolving}
-          reasonCode={test.reasonCode}
-          hasResults={hasResults}
-          requiresReadBack={requiresReadBack}
-          validationNotesForceValidate={validationNotesForceValidate}
-          onValidationNotesForceValidateChange={setValidationNotesForceValidate}
-          readBackProviderName={readBackProviderName}
-          onReadBackProviderNameChange={setReadBackProviderName}
-          readBackProviderContact={readBackProviderContact}
-          onReadBackProviderContactChange={setReadBackProviderContact}
-          readBackConfirmed={readBackConfirmed}
-          onReadBackConfirmedChange={setReadBackConfirmed}
-          reasonAuthorizeRetest={reasonAuthorizeRetest}
-          onReasonAuthorizeRetestChange={setReasonAuthorizeRetest}
-          reasonAuthorizeRecollect={reasonAuthorizeRecollect}
-          onReasonAuthorizeRecollectChange={setReasonAuthorizeRecollect}
-          reasonFinalReject={reasonFinalReject}
-          onReasonFinalRejectChange={setReasonFinalReject}
-          resolveAsync={resolveAsync}
-        />
+        readOnly ? (
+          <ModalFooter statusMessage="">
+            <Button onClick={onClose} variant="cancel" size="md">Close</Button>
+          </ModalFooter>
+        ) : (
+          <EscalationResolutionFooter
+            orderTestId={test.id}
+            canResolveEscalation={canResolveEscalation}
+            resolving={resolving}
+            reasonCode={test.reasonCode}
+            hasResults={hasResults}
+            requiresReadBack={requiresReadBack}
+            validationNotesForceValidate={validationNotesForceValidate}
+            onValidationNotesForceValidateChange={setValidationNotesForceValidate}
+            readBackProviderName={readBackProviderName}
+            onReadBackProviderNameChange={setReadBackProviderName}
+            readBackProviderContact={readBackProviderContact}
+            onReadBackProviderContactChange={setReadBackProviderContact}
+            readBackConfirmed={readBackConfirmed}
+            onReadBackConfirmedChange={setReadBackConfirmed}
+            reasonAuthorizeRetest={reasonAuthorizeRetest}
+            onReasonAuthorizeRetestChange={setReasonAuthorizeRetest}
+            reasonAuthorizeRecollect={reasonAuthorizeRecollect}
+            onReasonAuthorizeRecollectChange={setReasonAuthorizeRecollect}
+            reasonFinalReject={reasonFinalReject}
+            onReasonFinalRejectChange={setReasonFinalReject}
+            resolveAsync={resolveAsync}
+          />
+        )
       }
     >
       {hasResults ? (
-        <SectionPanel title="Result Validation">
+        <SectionPanel title={readOnly ? 'Recorded Results' : 'Result Validation'}>
           <ValidationForm
             results={test.results!}
             flags={test.flags}
             technicianNotes={test.technicianNotes}
-            comments=""
+            comments={test.validationNotes ?? ''}
             onCommentsChange={() => {}}
             onApprove={() => {}}
+            readOnly={readOnly}
             enableApproveShortcut={false}
           />
         </SectionPanel>
       ) : (
         <SectionPanel title="Escalation Summary">
           <p className="text-sm text-text-secondary">
-            {test.reasonCode === 'REJ-SAMP'
-              ? 'This test was escalated after sample rejection and the recollection limit was reached. No results are on file — choose an action below.'
-              : 'This test was escalated before results were entered. Review the context below and choose an action.'}
+            This test was escalated before results were entered. Review the context below and choose
+            an action.
           </p>
           {(rejectionReason || rejectionNotes) && (
             <dl className="mt-3 space-y-2 text-sm">
@@ -216,6 +238,12 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
             fields: [
               { label: 'Entered', timestamp: test.resultEnteredAt, user: test.enteredBy },
               {
+                label: 'Test ID',
+                value: test.id != null ? (
+                  <span className="entity-id">{displayId.orderTest(test.id)}</span>
+                ) : undefined,
+              },
+              {
                 label: 'Test Code',
                 value: test.testCode ? (
                   <span className="entity-id">{test.testCode}</span>
@@ -231,6 +259,9 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
           },
         ]}
       />
+      {test.id != null && (
+        <LabHistoryPanel entityType="order_test" entityId={test.id} />
+      )}
     </LabDetailModal>
   );
 };

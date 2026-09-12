@@ -11,6 +11,7 @@ import type { SampleDisplay } from '@/features/lab/types';
 /** Payload for opening the sample/collection detail modal by sample id. */
 export interface SampleDetailByIdProps {
   sampleId: string;
+  readOnly?: boolean;
 }
 
 /** Payload for opening the sample/collection detail modal with pending sample and collect callback. */
@@ -33,6 +34,7 @@ export interface ResultDetailProps {
   results: Record<string, string>;
   technicianNotes: string;
   isComplete: boolean;
+  readOnly?: boolean;
   onResultsChange: (resultKey: string, paramCode: string, value: string) => void;
   onNotesChange: (resultKey: string, notes: string) => void;
   onSave: (finalResults?: Record<string, string>, finalNotes?: string) => void;
@@ -43,6 +45,7 @@ export interface ValidationDetailProps {
   test: TestWithContext;
   commentKey: string;
   comments: string;
+  readOnly?: boolean;
   onCommentsChange: (commentKey: string, comments: string) => void;
   onApprove: () => void;
   onReject: (result: QualityIssueResult) => void;
@@ -51,6 +54,7 @@ export interface ValidationDetailProps {
 /** Payload for escalation resolution modal. */
 export interface EscalationResolutionDetailProps {
   test: TestWithContext;
+  readOnly?: boolean;
   onResolved: () => void | Promise<void>;
 }
 

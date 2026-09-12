@@ -14,9 +14,11 @@ import { OrderUpsertModal } from '@/features/orders';
 // Register Collection Detail Modal (Sample Detail)
 registerModal(ModalType.SAMPLE_DETAIL, CollectionDetailModal, (props, baseProps, helpers) => {
   if ('sampleId' in props && props.sampleId) {
-    const sample = helpers.getSample(props.sampleId);
-    if (!sample) return null;
-    return { ...baseProps, sampleId: props.sampleId };
+    if (!props.readOnly) {
+      const sample = helpers.getSample(props.sampleId);
+      if (!sample) return null;
+    }
+    return { ...baseProps, sampleId: props.sampleId, readOnly: props.readOnly };
   }
   if ('pendingSampleDisplay' in props && props.pendingSampleDisplay) {
     return {
@@ -37,6 +39,7 @@ registerModal(ModalType.RESULT_DETAIL, EntryDetailModal, (props, baseProps) => (
   results: props.results,
   technicianNotes: props.technicianNotes,
   isComplete: props.isComplete,
+  readOnly: props.readOnly,
   onResultsChange: props.onResultsChange,
   onNotesChange: props.onNotesChange,
   onSave: props.onSave,
@@ -48,6 +51,7 @@ registerModal(ModalType.VALIDATION_DETAIL, ValidationDetailModal, (props, basePr
   test: props.test,
   commentKey: props.commentKey,
   comments: props.comments,
+  readOnly: props.readOnly,
   onCommentsChange: props.onCommentsChange,
   onApprove: props.onApprove,
   onReject: props.onReject,
@@ -60,6 +64,7 @@ registerModal(
   (props, baseProps) => ({
     ...baseProps,
     test: props.test,
+    readOnly: props.readOnly,
     onResolved: props.onResolved,
   })
 );

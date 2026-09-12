@@ -32,6 +32,14 @@ export const EscalationCardMobile: React.FC<EscalationCardMobileProps> = ({
           <div className="text-xs text-text-secondary font-normal truncate capitalize">
             {test.patientName}
           </div>
+          {test.id != null && (
+            <>
+              <div className="text-xxs text-text-disabled">•</div>
+              <div className="entity-id entity-id--secondary truncate">
+                {displayId.orderTest(test.id)}
+              </div>
+            </>
+          )}
           <div className="text-xxs text-text-disabled">•</div>
           <div className="entity-id entity-id--secondary truncate">{test.testCode}</div>
           {test.sampleId && (

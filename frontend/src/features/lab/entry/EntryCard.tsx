@@ -81,6 +81,12 @@ export const EntryCard: React.FC<EntryCardProps> = ({
             <div className="flex items-center gap-1.5 text-xs text-text-secondary">
               <span className="truncate capitalize">{patientName}</span>
               <span className="text-text-tertiary">•</span>
+              {test.id != null && (
+                <>
+                  <span className="entity-id truncate">{displayId.orderTest(test.id)}</span>
+                  <span className="text-text-tertiary">•</span>
+                </>
+              )}
               <span className="entity-id truncate">{test.testCode}</span>
               {test.sampleId && (
                 <>
@@ -181,6 +187,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
         <Badge
           key={param.code}
           size="sm"
+          uppercase={false}
           className={results[param.code] ? 'text-brand-fg' : 'text-text-tertiary'}
           variant={results[param.code] ? 'primary' : 'default'}
         >
@@ -230,6 +237,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
       context={{
         patientName: test.patientName,
         orderId: test.orderId,
+        orderTestId: test.id,
         referringPhysician: test.referringPhysician,
       }}
       sampleInfo={{

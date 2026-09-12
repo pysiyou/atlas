@@ -16,7 +16,7 @@ export interface RemedyOption {
 }
 
 const VALIDATION_REMEDY_META: Record<
-  Extract<RemedyType, 'retry_same_sample' | 'request_recollection' | 'cancel' | 'escalate'>,
+  Extract<RemedyType, 'retry_same_sample' | 'request_recollection' | 'cancel'>,
   { label: string; description: string }
 > = {
   retry_same_sample: {
@@ -30,10 +30,6 @@ const VALIDATION_REMEDY_META: Record<
   cancel: {
     label: QUALITY_ISSUE_DIALOG_COPY.actions.cancelLabel,
     description: QUALITY_ISSUE_DIALOG_COPY.actions.cancelDescription,
-  },
-  escalate: {
-    label: QUALITY_ISSUE_DIALOG_COPY.actions.escalateLabel,
-    description: QUALITY_ISSUE_DIALOG_COPY.actions.escalateDescription,
   },
 };
 
@@ -58,15 +54,9 @@ export function buildValidationRemedyOptions(
   allowed: RemedyType[] | undefined,
   context?: {
     retestRemaining?: number;
-    recollectionRemaining?: number;
   }
 ): RemedyOption[] {
-  const order: RemedyType[] = [
-    'retry_same_sample',
-    'request_recollection',
-    'cancel',
-    'escalate',
-  ];
+  const order: RemedyType[] = ['retry_same_sample', 'request_recollection', 'cancel'];
   const allowedSet = new Set(allowed ?? order);
   
   return order
@@ -74,19 +64,17 @@ export function buildValidationRemedyOptions(
     .map(value => {
       const meta = VALIDATION_REMEDY_META[value as keyof typeof VALIDATION_REMEDY_META];
       let hint: string | undefined;
+      let description = meta.description;
 
-      if (value === 'retry_same_sample' && context?.retestRemaining != null) {
-        hint = QUALITY_ISSUE_DIALOG_COPY.actions.remaining(context.retestRemaining);
-      }
-
-      if (value === 'request_recollection' && context?.recollectionRemaining != null) {
-        hint = QUALITY_ISSUE_DIALOG_COPY.actions.remaining(context.recollectionRemaining);
+      if (value === 'retry_same_sample' && context?.retestRemaining != null && context.retestRemaining <= 0) {
+        hint = QUALITY_ISSUE_DIALOG_COPY.actions.retestSupervisorHint;
+        description = QUALITY_ISSUE_DIALOG_COPY.actions.retestLimitDescription;
       }
 
       return {
         value,
         label: meta.label,
-        description: meta.description,
+        description,
         hint,
       };
     });

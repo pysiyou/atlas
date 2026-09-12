@@ -10,6 +10,12 @@ export type EventDetail =
   | { type: 'text'; value: string }
   | { type: 'link'; value: string; to: string }
   | { type: 'id'; value: string }
+  | {
+      type: 'entityRef';
+      entityType: 'sample' | 'order_test';
+      entityId: number;
+      value: string;
+    }
   | { type: 'note'; value: string }
   | { type: 'testCode'; value: string }
   | { type: 'status'; value: string }
@@ -44,12 +50,6 @@ function getStatusValue(event: TimelineEvent): string | null {
   return typeof status === 'string' ? status : null;
 }
 
-function entityRoute(event: TimelineEvent): string {
-  if (event.entityType === 'order') return `/orders/${event.entityId}`;
-  if (event.entityType === 'sample') return '/laboratory/collection';
-  return `/orders/${event.metadata.orderId ?? ''}`;
-}
-
 // --- detail builders ---
 
 function orderLink(orderId: unknown): EventDetail | null {
@@ -61,47 +61,71 @@ function orderLink(orderId: unknown): EventDetail | null {
 function sampleRef(sampleId: unknown): EventDetail | null {
   const id = Number(sampleId);
   if (!Number.isFinite(id) || id <= 0) return null;
-  return { type: 'id', value: displayId.sample(id) };
+  return {
+    type: 'entityRef',
+    entityType: 'sample',
+    entityId: id,
+    value: displayId.sample(id),
+  };
 }
 
 function testRef(testId: unknown): EventDetail | null {
   const id = Number(testId);
   if (!Number.isFinite(id) || id <= 0) return null;
-  return { type: 'id', value: displayId.orderTest(id) };
+  return {
+    type: 'entityRef',
+    entityType: 'order_test',
+    entityId: id,
+    value: displayId.orderTest(id),
+  };
 }
 
-function testOnOrder(meta: Record<string, unknown>): EventDetail[] {
-  const details: EventDetail[] = [{ type: 'testCode', value: formatTestCodes(meta) }];
+function testIdFromEvent(event: TimelineEvent): number | undefined {
+  if (event.entityType === 'test' || event.entityType === 'order_test') {
+    return event.entityId;
+  }
+  const fromMeta = Number(event.metadata.orderTestId ?? event.metadata.escalatedTestId);
+  return Number.isFinite(fromMeta) && fromMeta > 0 ? fromMeta : undefined;
+}
+
+function testTransitionDetails(
+  meta: Record<string, unknown>,
+  event?: TimelineEvent,
+): EventDetail[] {
+  const details: EventDetail[] = [];
+  const sourceId =
+    meta.escalatedTestId ?? meta.orderTestId ?? (event ? testIdFromEvent(event) : undefined);
+  const source = testRef(sourceId);
+  const target = testRef(meta.newTestId);
+
+  if (source) details.push(source);
+  if (target) {
+    if (source) details.push({ type: 'text', value: '→' });
+    details.push(target);
+  }
+  return details;
+}
+
+function testOnOrder(meta: Record<string, unknown>, testId?: number): EventDetail[] {
+  const details: EventDetail[] = [];
+  const test = testRef(testId ?? meta.orderTestId ?? meta.escalatedTestId);
+  if (test) details.push(test);
+  details.push({ type: 'testCode', value: formatTestCodes(meta) });
   const link = orderLink(meta.orderId);
   if (link) details.push({ type: 'text', value: 'for order' }, link);
   return details;
 }
 
-function testCompletedDetails(meta: Record<string, unknown>): EventDetail[] {
-  const details = testOnOrder(meta);
+function testCompletedDetails(meta: Record<string, unknown>, testId?: number): EventDetail[] {
+  const details = testOnOrder(meta, testId);
   if (meta.orderCompleted === true) {
     details.push({ type: 'text', value: '→' }, { type: 'status', value: 'completed' });
   }
   return details;
 }
 
-function orderAndTestDetails(meta: Record<string, unknown>): EventDetail[] {
-  const details: EventDetail[] = [];
-  if (meta.testCode || meta.testCodes) {
-    details.push({ type: 'testCode', value: formatTestCodes(meta) });
-  }
-  const link = orderLink(meta.orderId);
-  if (link) {
-    if (details.length > 0) details.push({ type: 'text', value: 'for order' });
-    details.push(link);
-  }
-  const sample = sampleRef(meta.sampleId);
-  if (sample) details.push({ type: 'text', value: 'on' }, sample);
-  return details;
-}
-
-function escalationTriggerDetails(meta: Record<string, unknown>): EventDetail[] {
-  const details = testOnOrder(meta);
+function escalationTriggerDetails(meta: Record<string, unknown>, testId?: number): EventDetail[] {
+  const details = testOnOrder(meta, testId);
   const reason = metaString(meta.reasonCode);
   if (reason) details.push({ type: 'text', value: '—' }, { type: 'text', value: reason });
   return details;
@@ -115,10 +139,13 @@ function entityDetails(event: TimelineEvent): EventDetail[] {
       return link ? [link] : [{ type: 'id', value: displayId.order(entityId) }];
     }
     case 'sample':
-      return [{ type: 'link', value: displayId.sample(entityId), to: '/laboratory/collection' }];
+      return [sampleRef(entityId) ?? { type: 'id', value: displayId.sample(entityId) }];
     case 'order_test':
     case 'test': {
-      const details: EventDetail[] = [{ type: 'testCode', value: formatTestCodes(metadata) }];
+      const details: EventDetail[] = [];
+      const test = testRef(entityId);
+      if (test) details.push(test);
+      details.push({ type: 'testCode', value: formatTestCodes(metadata) });
       const link = orderLink(metadata.orderId);
       if (link) details.push({ type: 'text', value: 'for order' }, link);
       return details;
@@ -137,10 +164,14 @@ const ESCALATION_TRIGGER_LABELS: Record<string, string> = {
   escalation_trigger_amend_res: 'Escalation opened for result amendment',
 };
 
-function completedWithLabel(action: string, meta: Record<string, unknown>): FormattedTimelineEvent {
+function completedWithLabel(
+  action: string,
+  meta: Record<string, unknown>,
+  testId?: number,
+): FormattedTimelineEvent {
   return {
     action,
-    details: testCompletedDetails(meta),
+    details: testCompletedDetails(meta, testId),
   };
 }
 
@@ -160,7 +191,7 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
   sample_collect: event => {
     const meta = event.metadata;
     const details: EventDetail[] = [
-      { type: 'link', value: displayId.sample(event.entityId), to: entityRoute(event) },
+      sampleRef(event.entityId) ?? { type: 'id', value: displayId.sample(event.entityId) },
       { type: 'text', value: 'for' },
       { type: 'testCode', value: formatTestCodes(meta) },
     ];
@@ -172,7 +203,7 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
   sample_reject: event => ({
     action: 'Sample rejected during collection',
     details: [
-      { type: 'link', value: displayId.sample(event.entityId), to: entityRoute(event) },
+      sampleRef(event.entityId) ?? { type: 'id', value: displayId.sample(event.entityId) },
       { type: 'text', value: '—' },
       { type: 'text', value: (event.metadata.rejectionReason as string) || 'Quality issue' },
     ],
@@ -181,9 +212,9 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
   sample_recollection_request: event => {
     const meta = event.metadata;
     const details: EventDetail[] = [
-      { type: 'link', value: displayId.sample(event.entityId), to: entityRoute(event) },
+      sampleRef(event.entityId) ?? { type: 'id', value: displayId.sample(event.entityId) },
       { type: 'text', value: 'replacing' },
-      { type: 'id', value: displayId.sample(meta.originalSampleId as number) },
+      ...(sampleRef(meta.originalSampleId) ? [sampleRef(meta.originalSampleId)!] : []),
     ];
     const reason = metaString(meta.recollectionReason);
     if (reason) details.push({ type: 'text', value: '—' }, { type: 'text', value: reason });
@@ -194,18 +225,26 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     return { action: 'New sample recollection requested', details };
   },
 
-  result_entry: event => ({ action: 'Test results recorded', details: testOnOrder(event.metadata) }),
+  result_entry: event => ({
+    action: 'Test results recorded',
+    details: testOnOrder(event.metadata, event.entityId),
+  }),
   result_validation_approve: event => ({
     action: 'Test validated and marked complete',
-    details: testCompletedDetails(event.metadata),
+    details: testCompletedDetails(event.metadata, event.entityId),
   }),
 
   quality_issue_reported: event => {
     const meta = event.metadata;
-    const details = orderAndTestDetails(meta);
+    const details: EventDetail[] = [
+      ...testTransitionDetails(meta, event),
+      { type: 'testCode', value: formatTestCodes(meta) },
+    ];
     const domain = metaString(meta.domain) ?? metaString(event.afterState?.domain);
     const reason = metaString(meta.reason);
     const remedy = metaString(event.afterState?.remedy);
+    const link = orderLink(meta.orderId);
+    if (link) details.push({ type: 'text', value: 'on order' }, link);
     if (domain) {
       if (details.length > 0) details.push({ type: 'text', value: '—' });
       details.push({ type: 'text', value: domain });
@@ -213,6 +252,10 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     if (reason) details.push({ type: 'text', value: '—' }, { type: 'text', value: reason });
     if (remedy) {
       details.push({ type: 'text', value: '→' }, { type: 'text', value: remedy.replace(/_/g, ' ') });
+    }
+    const createdSample = sampleRef(meta.newSampleId);
+    if (createdSample && !meta.newTestId) {
+      details.push({ type: 'text', value: '→' }, createdSample);
     }
     if (details.length === 0) details.push({ type: 'text', value: 'Reported' });
     return { action: 'Quality issue flagged for review', details };
@@ -222,8 +265,7 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     const meta = event.metadata;
     const details: EventDetail[] = [
       { type: 'testCode', value: formatTestCodes(meta) },
-      { type: 'text', value: '→' },
-      testRef(meta.newTestId) ?? { type: 'text', value: 'New test' },
+      ...testTransitionDetails(meta, event),
     ];
     const link = orderLink(meta.orderId);
     if (link) details.push({ type: 'text', value: 'on order' }, link);
@@ -236,7 +278,9 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     const meta = event.metadata;
     const details: EventDetail[] = [
       { type: 'testCode', value: formatTestCodes(meta) },
-      { type: 'text', value: '→' },
+      ...(testRef(meta.escalatedTestId ?? event.entityId)
+        ? [testRef(meta.escalatedTestId ?? event.entityId)!, { type: 'text' as const, value: '→' }]
+        : []),
     ];
     const newSample = sampleRef(meta.newSampleId);
     if (newSample) details.push(newSample);
@@ -248,9 +292,9 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
   },
 
   escalation_resolution_force_validate: event =>
-    completedWithLabel('Test force-validated by supervisor', event.metadata),
+    completedWithLabel('Test force-validated by supervisor', event.metadata, event.entityId),
   escalation_resolution_apply_amendment: event =>
-    completedWithLabel('Amended results applied and validated', event.metadata),
+    completedWithLabel('Amended results applied and validated', event.metadata, event.entityId),
 
   escalation_resolution_cancel_test: event => {
     const meta = event.metadata;
@@ -366,7 +410,7 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
 
 const escalationTriggerHandler: EventHandler = event => ({
   action: ESCALATION_TRIGGER_LABELS[event.type] ?? 'Escalation opened for review',
-  details: escalationTriggerDetails(event.metadata),
+  details: escalationTriggerDetails(event.metadata, event.entityId),
 });
 
 for (const type of Object.keys(ESCALATION_TRIGGER_LABELS)) {
@@ -384,7 +428,14 @@ function appendNote(event: TimelineEvent, formatted: FormattedTimelineEvent): Fo
   return { ...formatted, note };
 }
 
-export function formatActivityEvent(event: TimelineEvent): FormattedTimelineEvent {
+export interface FormatActivityOptions {
+  interactiveEntities?: boolean;
+}
+
+export function formatActivityEvent(
+  event: TimelineEvent,
+  _options: FormatActivityOptions = {},
+): FormattedTimelineEvent {
   const handler = EVENT_HANDLERS[event.type];
   const formatted = handler
     ? handler(event)

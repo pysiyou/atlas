@@ -75,6 +75,7 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
   return (
     <div className={compact ? 'space-y-2' : 'space-y-3'}>
       <div className="flex flex-wrap items-center gap-2 text-xs">
+        <span className="entity-id">{displayId.orderTest(record.id)}</span>
         <Badge variant="danger" size="xs">
           {record.testCode}
         </Badge>

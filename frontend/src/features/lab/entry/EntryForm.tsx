@@ -6,10 +6,9 @@ import React, { useCallback, useState } from 'react';
 import { Button, Textarea } from '@/components';
 import { cn } from '@/utils';
 import type { Test, Patient } from '@/types';
-import {
-  ParameterInput,
-} from './EntryFormInputs';
+import { ParameterInput } from './EntryFormInputs';
 import { getReferenceRangeDisplay, checkCriticalStatus } from './entryForm.utils';
+import { RESULT_PANEL, resultTileStatusClass } from '../components/resultDisplayStyles';
 
 interface EntryFormProps {
   testDef: Test;
@@ -22,6 +21,7 @@ interface EntryFormProps {
   onSave: () => void;
   isComplete: boolean;
   isModal?: boolean;
+  readOnly?: boolean;
 }
 
 export const EntryForm: React.FC<EntryFormProps> = ({
@@ -35,6 +35,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
   onSave,
   isComplete,
   isModal = false,
+  readOnly = false,
 }) => {
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
 
@@ -48,38 +49,46 @@ export const EntryForm: React.FC<EntryFormProps> = ({
   if (!testDef?.parameters) return null;
 
   return (
-    <div className="bg-surface-page rounded-lg p-4 border border-border-subtle">
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-7">
+    <div className={cn(!isModal && 'bg-surface-page rounded-lg p-4 border border-border-subtle')}>
+      <div className={RESULT_PANEL.grid}>
         {testDef.parameters.map(param => {
           const value = results[param.code] ?? '';
+          const hasValue = Boolean(value.trim());
           const refRange = getReferenceRangeDisplay(param, patient);
-          const isCritical = checkCriticalStatus(param, value);
+          const isCritical = hasValue && checkCriticalStatus(param, value);
           const valueType =
             param.valueType ||
             (param.type === 'numeric' ? 'NUMERIC' : param.type === 'select' ? 'SELECT' : 'TEXT');
+          const status = isCritical ? 'critical' : 'normal';
 
           return (
-            <div key={param.code} className="group min-h-[72px] flex flex-col">
-              <div className="flex justify-between items-baseline mb-1 gap-2">
+            <div
+              key={param.code}
+              className={cn(
+                RESULT_PANEL.tile,
+                resultTileStatusClass(status, hasValue),
+                validationErrors[param.code] && 'border-danger-stroke ring-1 ring-danger-stroke/30',
+              )}
+            >
+              <div className="flex items-baseline justify-between gap-2 min-w-0">
                 <label
                   htmlFor={`result-${resultKey}-${param.code}`}
-                  className="text-xxs font-normal text-text-tertiary cursor-pointer truncate min-w-0"
+                  className={RESULT_PANEL.label}
                 >
                   {param.name}
                 </label>
-                <div className="flex items-center gap-1 min-w-0 shrink-0 max-w-[50%]">
-                  <span
-                    className={cn(
-                      'text-xxs truncate',
-                      isCritical ? 'text-danger-fg font-normal animate-pulse' : 'text-text-disabled'
-                    )}
-                  >
-                    Ref: {refRange}
-                  </span>
-                </div>
+                <span
+                  className={cn(
+                    RESULT_PANEL.ref,
+                    isCritical && 'text-danger-fg font-medium',
+                  )}
+                  title={`Reference: ${refRange}`}
+                >
+                  {refRange}
+                </span>
               </div>
 
-              <div className="relative flex-1">
+              <div className="relative">
                 <ParameterInput
                   param={param}
                   value={value}
@@ -93,41 +102,36 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                   inputId={`result-${resultKey}-${param.code}`}
                   validationError={validationErrors[param.code]}
                   onValidationChange={error => handleValidationChange(param.code, error)}
+                  disabled={readOnly}
                 />
-                {valueType !== 'TEXT' && (
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none z-0 max-w-[40%]">
-                    <span className="text-xs text-text-disabled select-none truncate">
-                      {param.unit || ''}
-                    </span>
+                {valueType !== 'TEXT' && param.unit && (
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none z-0">
+                    <span className="text-xs text-text-disabled select-none">{param.unit}</span>
                   </div>
                 )}
               </div>
+
               {validationErrors[param.code] && (
-                <div
-                  className="text-xxs text-danger-fg font-normal truncate max-w-full mt-1"
-                  title={validationErrors[param.code]}
-                >
+                <p className="text-xxs text-danger-fg truncate" title={validationErrors[param.code]}>
                   Invalid value
-                </div>
+                </p>
               )}
             </div>
           );
         })}
       </div>
 
-      <div className="mt-4">
-        <label
-          htmlFor={`notes-${resultKey}`}
-          className="text-xs font-normal text-text-tertiary mb-1 block"
-        >
-          Technician Notes (Optional)
+      <div className={RESULT_PANEL.notesSection}>
+        <label htmlFor={`notes-${resultKey}`} className={RESULT_PANEL.notesLabel}>
+          Technician notes <span className="text-text-disabled">(optional)</span>
         </label>
         <Textarea
           id={`notes-${resultKey}`}
           value={technicianNotes ?? ''}
           onChange={e => onNotesChange(resultKey, e.target.value ?? '')}
-          placeholder="Analysis notes..."
-          rows={isModal ? 3 : 1}
+          placeholder="Instrument flags, repeat run context, or other analysis notes…"
+          rows={isModal ? 2 : 1}
+          disabled={readOnly}
         />
       </div>
 

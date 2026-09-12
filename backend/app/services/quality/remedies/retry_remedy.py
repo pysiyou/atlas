@@ -24,8 +24,9 @@ class RetryRemedy:
         self.audit = audit
     
     def can_retry(self, order_test: OrderTest, retest_count: int) -> tuple[bool, Optional[str]]:
-        """Check if test can be retried."""
-        if retest_count >= MAX_RETEST_ATTEMPTS:
+        """Check if test can be retried without supervisor escalation."""
+        retest_remaining = max(0, MAX_RETEST_ATTEMPTS - retest_count - 1)
+        if retest_remaining <= 0:
             return False, f"Maximum retest limit ({MAX_RETEST_ATTEMPTS}) reached. Escalation required."
         return True, None
     

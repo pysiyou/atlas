@@ -6,6 +6,7 @@
 
 import React, { type ReactNode } from 'react';
 import { EmptyState } from '@/components';
+import { displayId } from '@/utils';
 
 type IconName = 'search' | 'sample-collection' | 'checklist' | 'shield-check';
 
@@ -74,18 +75,24 @@ export function LabWorkflowView<T>({
 // eslint-disable-next-line react-refresh/only-export-components
 export function createLabItemFilter<
   T extends {
+    id?: string | number;
     orderId?: string | number;
     patientName?: string;
     testName?: string;
+    testCode?: string;
     sampleId?: string | number;
   },
 >(extraFields?: (item: T) => string[]): (item: T, query: string) => boolean {
   return (item: T, query: string): boolean => {
     const lowerQuery = query.toLowerCase();
+    const orderTestId =
+      item.id != null && Number.isFinite(Number(item.id)) ? displayId.orderTest(Number(item.id)) : undefined;
     const baseFields = [
+      orderTestId,
       item.orderId?.toString(),
       item.patientName,
       item.testName,
+      item.testCode,
       item.sampleId?.toString(),
     ].filter(Boolean) as string[];
 

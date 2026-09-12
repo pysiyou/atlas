@@ -58,6 +58,7 @@ export const EscalationCardDesktop: React.FC<EscalationCardDesktopProps> = ({
       {test.sampleType && (
         <Badge variant={test.sampleType as 'blood' | 'urine' | 'other'} size="sm" />
       )}
+      {test.id != null && <span className="entity-id">{displayId.orderTest(test.id)}</span>}
       <span className="entity-id">{test.testCode}</span>
     </>
   );
@@ -112,7 +113,10 @@ export const EscalationCardDesktop: React.FC<EscalationCardDesktopProps> = ({
 
   const content = (
     <div className="text-xs text-text-secondary">
-      <span className="entity-id">{test.testCode}</span>
+      {test.id != null && (
+        <span className="entity-id">{displayId.orderTest(test.id)}</span>
+      )}
+      <span className={test.id != null ? 'ml-2 entity-id' : 'entity-id'}>{test.testCode}</span>
       {test.orderId != null && (
         <span className="ml-2">
           Order <span className="entity-id">{displayId.order(test.orderId)}</span>
@@ -133,6 +137,7 @@ export const EscalationCardDesktop: React.FC<EscalationCardDesktopProps> = ({
       context={{
         patientName: test.patientName,
         orderId: test.orderId,
+        orderTestId: test.id,
         referringPhysician: test.referringPhysician,
       }}
       sampleInfo={{

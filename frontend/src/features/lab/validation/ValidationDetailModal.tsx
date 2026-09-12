@@ -36,6 +36,8 @@ import {
 } from '../components/StatusBadges';
 import type { TestWithContext } from '@/types';
 import type { QualityIssueResult } from '@/types/lab-operations';
+import { LabHistoryPanel } from '../components/LabHistoryPanel';
+import { hasTestResults } from '../utils/hasTestResults';
 
 interface ValidationDetailModalProps {
   isOpen: boolean;
@@ -47,6 +49,7 @@ interface ValidationDetailModalProps {
   onApprove: () => void;
   /** Called after QualityIssueDialog completes (API already called). */
   onReject: (result: QualityIssueResult) => void;
+  readOnly?: boolean;
 }
 
 // Large component is necessary for comprehensive validation detail modal with result display, validation actions, and conditional rendering
@@ -60,6 +63,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
   onCommentsChange,
   onApprove,
   onReject,
+  readOnly = false,
   // High complexity is necessary for comprehensive validation logic with multiple conditional branches and state management
    
 }) => {
@@ -83,7 +87,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
     queryClient.invalidateQueries({ queryKey: queryKeys.criticalValues.all });
   }, [queryClient]);
 
-  if (!test.results) return null;
+  if (!readOnly && !test.results) return null;
 
   // Flags and rejection state
   const hasFlags = test.flags && test.flags.length > 0;
@@ -122,12 +126,18 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
     </>
   );
 
+  const testIdLabel = test.id != null ? `${displayId.orderTest(test.id)} · ` : '';
+  const historicalSubtitle = readOnly
+    ? `${testIdLabel}${test.testCode} - ${test.patientName} · ${test.status}`
+    : `${testIdLabel}${test.testCode} - ${test.patientName}`;
+
   return (
     <LabDetailModal
       isOpen={isOpen}
       onClose={onClose}
       title={test.testName}
-      subtitle={`${test.testCode} - ${test.patientName}`}
+      subtitle={historicalSubtitle}
+      modalKey={readOnly ? `historical-${test.id}` : commentKey}
       disableClose={isApproving}
       headerBadges={
         <StatusBadgeRow
@@ -141,6 +151,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
         patientName: test.patientName,
         patientId: test.patientId,
         orderId: test.orderId,
+        orderTestId: test.id,
         referringPhysician: test.referringPhysician,
       }}
       sampleInfo={
@@ -156,41 +167,58 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
         <EntryInfoLine enteredAt={test.resultEnteredAt} enteredBy={test.enteredBy} />
       }
       footer={
-        <ModalFooter statusMessage="" statusClassName="text-text-tertiary">
-          <QualityIssueDialog
-            orderTestId={test.id!}
-            testCode={test.testCode}
-            testName={test.testName}
-            patientName={test.patientName}
-            trigger={
-              <Button variant="reject" size="md">
-                Reject
-              </Button>
-            }
-            onReject={result => {
-              onReject(result);
-              onClose();
-            }}
-          />
-          <Button onClick={handleApprove} variant="approve" size="md" isLoading={isApproving}>
-            Approve
-          </Button>
-        </ModalFooter>
+        readOnly ? (
+          <ModalFooter statusMessage="">
+            <Button onClick={onClose} variant="cancel" size="md">Close</Button>
+          </ModalFooter>
+        ) : (
+          <ModalFooter statusMessage="" statusClassName="text-text-tertiary">
+            <QualityIssueDialog
+              orderTestId={test.id!}
+              testCode={test.testCode}
+              testName={test.testName}
+              patientName={test.patientName}
+              trigger={
+                <Button variant="reject" size="md">
+                  Reject
+                </Button>
+              }
+              onReject={result => {
+                onReject(result);
+                onClose();
+              }}
+            />
+            <Button onClick={handleApprove} variant="approve" size="md" isLoading={isApproving}>
+              Approve
+            </Button>
+          </ModalFooter>
+        )
       }
     >
       {/* Validation Form Section */}
-      <SectionPanel title="Result Validation" headerRight={validationSectionHeaderRight}>
-        <ValidationForm
-          results={test.results}
-          flags={test.flags}
-          technicianNotes={test.technicianNotes}
-          comments={comments}
-          onCommentsChange={value => onCommentsChange(commentKey, value)}
-          onApprove={handleApprove}
-        />
-      </SectionPanel>
+      {hasTestResults(test) ? (
+        <SectionPanel
+          title={readOnly ? 'Recorded Results' : 'Result Validation'}
+          headerRight={validationSectionHeaderRight}
+        >
+          <ValidationForm
+            results={test.results!}
+            flags={test.flags}
+            technicianNotes={test.technicianNotes}
+            comments={comments}
+            onCommentsChange={value => onCommentsChange(commentKey, value)}
+            onApprove={handleApprove}
+            readOnly={readOnly}
+            enableApproveShortcut={!readOnly}
+          />
+        </SectionPanel>
+      ) : readOnly ? (
+        <SectionPanel title="Recorded Results">
+          <p className="text-sm text-text-secondary">No results were recorded on this test version.</p>
+        </SectionPanel>
+      ) : null}
 
-      {criticalRecord && (
+      {criticalRecord && !readOnly && (
         <SectionPanel title="Critical Value Notification">
           <CriticalValueActions
             record={criticalRecord}
@@ -226,6 +254,12 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
             fields: [
               { label: 'Entered', timestamp: test.resultEnteredAt, user: test.enteredBy },
               {
+                label: 'Test ID',
+                value: test.id != null ? (
+                  <span className="entity-id">{displayId.orderTest(test.id)}</span>
+                ) : undefined,
+              },
+              {
                 label: 'Test Code',
                 value: test.testCode ? (
                   <span className="entity-id">{test.testCode}</span>
@@ -241,6 +275,9 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
           },
         ]}
       />
+      {test.id != null && (
+        <LabHistoryPanel entityType="order_test" entityId={test.id} />
+      )}
     </LabDetailModal>
   );
 };

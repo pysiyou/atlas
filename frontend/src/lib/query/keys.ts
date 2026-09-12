@@ -137,6 +137,14 @@ export const queryKeys = {
   results: {
     all: ['results'] as const,
     pendingEscalation: () => [...queryKeys.results.all, 'pending-escalation'] as const,
+    orderTest: (orderTestId?: number) =>
+      [...queryKeys.results.all, 'order-test', orderTestId] as const,
+  },
+
+  audit: {
+    all: ['audit'] as const,
+    entityTimeline: (entityType?: string, entityId?: number) =>
+      [...queryKeys.audit.all, 'entity-timeline', entityType, entityId] as const,
   },
 
   recollectionRequests: {

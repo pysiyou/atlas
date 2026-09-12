@@ -9,12 +9,18 @@ import {
   QUALITY_ISSUE_DIALOG_COPY,
   getValidationAlertCopy,
 } from '../components/qualityIssueDialogConstants';
+import { displayId } from '@/utils';
 import { buildValidationRemedyOptions } from '../components/RemedyDestinationPicker';
 
-function buildSubtitle(testName?: string, testCode?: string, patientName?: string): string {
-  return [testName, testCode ? `(${testCode})` : '', patientName ? `- ${patientName}` : '']
-    .filter(Boolean)
-    .join(' ');
+function buildSubtitle(
+  orderTestId: number,
+  testName?: string,
+  testCode?: string,
+  patientName?: string,
+): string {
+  const testLabel = [testName, testCode ? `(${testCode})` : ''].filter(Boolean).join(' ');
+  const patient = patientName ? ` - ${patientName}` : '';
+  return `${displayId.orderTest(orderTestId)} · ${testLabel}${patient}`;
 }
 
 export interface UseQualityIssueDialogParams {
@@ -50,7 +56,6 @@ export function useQualityIssueDialog({
     () =>
       buildValidationRemedyOptions(options?.allowedRemedies, {
         retestRemaining: options?.retestAttemptsRemaining,
-        recollectionRemaining: options?.recollectionAttemptsRemaining,
       }),
     [options],
   );
@@ -97,7 +102,7 @@ export function useQualityIssueDialog({
     refetch();
   };
 
-  const subtitle = buildSubtitle(testName, testCode, patientName);
+  const subtitle = buildSubtitle(orderTestId, testName, testCode, patientName);
   const copy = {
     title: QUALITY_ISSUE_DIALOG_COPY.reject.title,
     confirmLabel: alertCopy?.confirmLabel ?? QUALITY_ISSUE_DIALOG_COPY.reject.confirmLabel,

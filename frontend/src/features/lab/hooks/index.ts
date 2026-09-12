@@ -10,3 +10,4 @@ export * from './useLabCardClickGuard';
 export * from './useQualityIssueDialog';
 export * from './useQualityIssueHandler';
 export * from './useTestWorkItemState';
+export * from './useOpenHistoricalEntity';
