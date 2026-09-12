@@ -13,26 +13,11 @@ import { Modal } from '@/components';
 import { Badge, SectionPanel, DetailFieldGroup, FooterInfo } from '@/components';
 import { MODULE_ICONS } from '@/config/icons';
 import type { DetailFieldConfig } from '@/components';
-import { formatDate } from '@/utils';
-import { displayId } from '@/utils';
-import { useUserLookup } from '@/lib/api/users.api';
-
-interface ContextInfo {
-  patientName: string;
-  patientId: string | number;
-  orderId: string | number;
-  /** Order test row ID (TST####) when the modal is test-centric */
-  orderTestId?: number;
-  referringPhysician?: string;
-  /** Patient date of birth for additional identification */
-  patientDob?: string;
-}
-
-interface SampleInfo {
-  sampleId: string | number;
-  collectedAt?: string;
-  collectedBy?: string;
-}
+import {
+  LabModalHeader,
+  type LabModalContextInfo,
+  type LabModalSampleInfo,
+} from './LabModalHeader';
 
 interface LabDetailModalProps {
   /** Modal open state */
@@ -48,9 +33,9 @@ interface LabDetailModalProps {
   /** Badge elements for the header section */
   headerBadges: ReactNode;
   /** Patient and order context */
-  contextInfo: ContextInfo;
+  contextInfo: LabModalContextInfo;
   /** Sample collection info (optional) */
-  sampleInfo?: SampleInfo;
+  sampleInfo?: LabModalSampleInfo;
   /** Additional info line below sample info */
   additionalContextInfo?: ReactNode;
   /** Main content sections */
@@ -81,8 +66,6 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
   footerInfo,
   disableClose = false,
 }) => {
-  const { getUserName } = useUserLookup();
-
   return (
     <Modal
       key={modalKey}
@@ -95,88 +78,12 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
     >
       <div className="flex flex-col h-full bg-surface-page">
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
-          {/* Header Section with Badges and Context */}
-          <SectionPanel hideHeader>
-            <div className="flex flex-col gap-4">
-              {/* Row 1: Badges */}
-              <div className="flex items-center justify-between gap-3 flex-wrap">
-                <div className="flex items-center gap-2.5 flex-wrap">{headerBadges}</div>
-              </div>
-
-              {/* Row 2: Patient & Order context */}
-              <div className="flex flex-col gap-1.5">
-                <div className="flex items-center gap-3 text-sm text-text-secondary flex-wrap">
-                  <span className="font-normal text-text-primary">{contextInfo.patientName}</span>
-                  <span className="text-text-disabled select-none">|</span>
-                  <span className="entity-id whitespace-nowrap">
-                    {typeof contextInfo.patientId === 'number'
-                      ? displayId.patient(contextInfo.patientId)
-                      : contextInfo.patientId}
-                  </span>
-                  {contextInfo.patientDob && (
-                    <>
-                      <span className="text-text-disabled select-none">|</span>
-                      <span className="text-xs text-text-tertiary whitespace-nowrap">
-                        DOB: {formatDate(contextInfo.patientDob)}
-                      </span>
-                    </>
-                  )}
-                  <span className="text-text-disabled select-none">|</span>
-                  <span className="entity-id whitespace-nowrap">
-                    {typeof contextInfo.orderId === 'number'
-                      ? displayId.order(contextInfo.orderId)
-                      : contextInfo.orderId}
-                  </span>
-                  {contextInfo.orderTestId != null && (
-                    <>
-                      <span className="text-text-disabled select-none">|</span>
-                      <span className="entity-id whitespace-nowrap">
-                        {displayId.orderTest(contextInfo.orderTestId)}
-                      </span>
-                    </>
-                  )}
-                  {contextInfo.referringPhysician && (
-                    <>
-                      <span className="text-text-disabled select-none">|</span>
-                      <span className="text-text-primary whitespace-nowrap">
-                        {contextInfo.referringPhysician}
-                      </span>
-                    </>
-                  )}
-                </div>
-
-                {/* Collection info */}
-                {sampleInfo && sampleInfo.collectedAt && (
-                  <span className="text-xs text-text-tertiary">
-                    Sample{' '}
-                    <span className="entity-id">
-                      {typeof sampleInfo.sampleId === 'number'
-                        ? displayId.sample(sampleInfo.sampleId)
-                        : sampleInfo.sampleId}
-                    </span>{' '}
-                    collected{' '}
-                    <span className="text-text-secondary">
-                      {formatDate(sampleInfo.collectedAt)}
-                    </span>
-                    {sampleInfo.collectedBy && (
-                      <>
-                        {' '}
-                        by{' '}
-                        <span className="text-text-secondary">
-                          {getUserName(sampleInfo.collectedBy)}
-                        </span>
-                      </>
-                    )}
-                  </span>
-                )}
-
-                {/* Additional context info */}
-                {additionalContextInfo}
-              </div>
-            </div>
-          </SectionPanel>
-
-          {/* Main Content */}
+          <LabModalHeader
+            badges={headerBadges}
+            contextInfo={contextInfo}
+            sampleInfo={sampleInfo}
+            additionalContextInfo={additionalContextInfo}
+          />
           {children}
         </div>
 

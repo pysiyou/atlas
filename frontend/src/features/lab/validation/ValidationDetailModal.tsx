@@ -37,6 +37,7 @@ import {
 import type { TestWithContext } from '@/types';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import { LabHistoryPanel } from '../components/LabHistoryPanel';
+import { labModalSubtitle } from '../components/labModalStages';
 import { hasTestResults } from '../utils/hasTestResults';
 
 interface ValidationDetailModalProps {
@@ -126,17 +127,12 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
     </>
   );
 
-  const testIdLabel = test.id != null ? `${displayId.orderTest(test.id)} · ` : '';
-  const historicalSubtitle = readOnly
-    ? `${testIdLabel}${test.testCode} - ${test.patientName} · ${test.status}`
-    : `${testIdLabel}${test.testCode} - ${test.patientName}`;
-
   return (
     <LabDetailModal
       isOpen={isOpen}
       onClose={onClose}
       title={test.testName}
-      subtitle={historicalSubtitle}
+      subtitle={labModalSubtitle('validation')}
       modalKey={readOnly ? `historical-${test.id}` : commentKey}
       disableClose={isApproving}
       headerBadges={
@@ -152,6 +148,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
         patientId: test.patientId,
         orderId: test.orderId,
         orderTestId: test.id,
+        entityCode: test.testCode,
         referringPhysician: test.referringPhysician,
       }}
       sampleInfo={

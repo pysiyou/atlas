@@ -30,6 +30,7 @@ import { useOrderLookup } from '@/features/orders';
 import { useSampleLookup } from '@/features/lab/api/samples.api';
 import { getTestNames } from '@/features/catalog/utils';
 import { LabDetailModal, ModalFooter } from '../components/LabDetailModal';
+import { labModalSubtitle } from '../components/labModalStages';
 import { LabHistoryPanel } from '../components/LabHistoryPanel';
 import { Button } from '@/components';
 import type { SampleDisplay } from '@/features/lab/types';
@@ -184,17 +185,14 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       disableClose={isPopoverSubmitting}
-      title={
-        <span className="entity-id">
-          {displayId.sample(sample.sampleId)}
-        </span>
-      }
-      subtitle={`${patientName} - ${sample.sampleType.toUpperCase()}`}
+      title={<span className="entity-id">{displayId.sample(sample.sampleId)}</span>}
+      subtitle={labModalSubtitle('collection')}
       headerBadges={headerBadges}
       contextInfo={{
         patientName,
         patientId,
         orderId,
+        entityCode: sample.sampleType.toUpperCase(),
         referringPhysician: order?.referringPhysician,
       }}
       footer={
