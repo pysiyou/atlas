@@ -20,7 +20,7 @@ from app.core.security import (
 from app.core.dependencies import get_current_user
 from app.models.user import User
 from app.schemas.user import LoginRequest, Token, UserResponse
-from app.schemas.responses import MessageResponse
+from app.schemas.error import MessageResponse
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 

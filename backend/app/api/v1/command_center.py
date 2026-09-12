@@ -8,7 +8,7 @@ from app.core.dependencies import require_lab_tech
 from app.database import get_db
 from app.models.user import User
 from app.schemas.command_center import TimelineResponse
-from app.services.command_center_service import CommandCenterService
+from app.services.timeline.service import CommandCenterService
 
 router = APIRouter(tags=["command-center"])
 

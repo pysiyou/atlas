@@ -8,11 +8,11 @@ from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
 from app.schemas.enums import LabOperationType
-from app.services.command_center_service import CommandCenterService
+from app.services.timeline.service import CommandCenterService
 
 
 class TestCommandCenterTimeline(unittest.TestCase):
-    @patch("app.services.command_center_service.datetime")
+    @patch("app.services.timeline.service.datetime")
     def test_timeline_includes_order_status_change(self, mock_datetime) -> None:
         mock_datetime.now.return_value = MagicMock()
         mock_datetime.side_effect = __import__("datetime").datetime

@@ -10,7 +10,7 @@ from app.models.patient import Patient
 from app.schemas.patient import PatientCreate, PatientUpdate
 from app.schemas.pagination import create_paginated_response, skip_to_page
 from app.api.deps import PaginationParams
-from app.services.patient_service import PatientService
+from app.services.patients.patient import PatientService
 from app.utils.db_helpers import get_or_404
 
 router = APIRouter()
