@@ -29,6 +29,7 @@ import {
 } from '../components/StatusBadges';
 import { useTestCatalog } from '@/features/catalog';
 import { LabHistoryPanel } from '../components/LabHistoryPanel';
+import { labModalSubtitle } from '../components/labModalStages';
 import { ValidationForm } from '../validation/ValidationForm';
 import { hasTestResults } from '../utils/hasTestResults';
 import type { Test, TestWithContext } from '@/types';
@@ -187,11 +188,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={test.testName}
-      subtitle={
-        test.id != null
-          ? `${displayId.orderTest(test.id)} · ${test.testCode} - ${test.patientName}`
-          : `${test.testCode} - ${test.patientName}`
-      }
+      subtitle={labModalSubtitle('entry')}
       modalKey={readOnly ? `historical-${test.id}` : resultKey}
       disableClose={isSaving}
       headerBadges={
@@ -207,6 +204,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
         patientId: test.patientId,
         orderId: test.orderId,
         orderTestId: test.id,
+        entityCode: test.testCode,
         referringPhysician: test.referringPhysician,
       }}
       sampleInfo={

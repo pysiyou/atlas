@@ -20,6 +20,7 @@ import { EscalationResolutionFooter } from './EscalationResolutionFooter';
 import { LabHistoryPanel } from '../components/LabHistoryPanel';
 import { Button } from '@/components';
 import { ModalFooter } from '../components/LabDetailModal';
+import { labModalSubtitle } from '../components/labModalStages';
 
 interface EscalationResolutionModalProps {
   isOpen: boolean;
@@ -88,15 +89,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
       isOpen={isOpen}
       onClose={onClose}
       title={test.testName}
-      subtitle={
-        test.id != null
-          ? readOnly
-            ? `${displayId.orderTest(test.id)} · ${test.testCode} - ${test.patientName} · escalated`
-            : `${displayId.orderTest(test.id)} · ${test.testCode} - ${test.patientName} (Escalated)`
-          : readOnly
-            ? `${test.testCode} - ${test.patientName} · escalated`
-            : `${test.testCode} - ${test.patientName} (Escalated)`
-      }
+      subtitle={labModalSubtitle('escalation')}
       modalKey={readOnly ? `historical-${test.id}` : `escalation-${test.id}`}
       headerBadges={
         <StatusBadgeRow
@@ -122,6 +115,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
         patientId: test.patientId,
         orderId: test.orderId,
         orderTestId: test.id,
+        entityCode: test.testCode,
         referringPhysician: test.referringPhysician,
       }}
       sampleInfo={
