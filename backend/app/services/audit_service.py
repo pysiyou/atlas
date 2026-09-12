@@ -162,7 +162,7 @@ class AuditService:
         }
         return self.log_operation(
             operation_type=LabOperationType.RESULT_ENTRY,
-            entity_type="test",
+            entity_type="order_test",
             entity_id=test_id,
             user_id=user_id,
             before_state={"status": "sample-collected"},
@@ -191,7 +191,7 @@ class AuditService:
         }
         return self.log_operation(
             operation_type=LabOperationType.RESULT_VALIDATION_APPROVE,
-            entity_type="test",
+            entity_type="order_test",
             entity_id=test_id,
             user_id=user_id,
             before_state={"status": "completed"},
@@ -263,7 +263,7 @@ class AuditService:
         }
         return self.log_operation(
             operation_type=LabOperationType.ESCALATION_RESOLUTION_AUTHORIZE_RETEST,
-            entity_type="test",
+            entity_type="order_test",
             entity_id=original_test_id,
             user_id=user_id,
             before_state={"status": "escalated"},
@@ -296,7 +296,7 @@ class AuditService:
         }
         return self.log_operation(
             operation_type=operation_type,
-            entity_type="test",
+            entity_type="order_test",
             entity_id=test_id,
             user_id=user_id,
             before_state={"status": before_status},
@@ -324,7 +324,7 @@ class AuditService:
         }
         return self.log_operation(
             operation_type=LabOperationType.ESCALATION_RESOLUTION_FORCE_VALIDATE,
-            entity_type="test",
+            entity_type="order_test",
             entity_id=test_id,
             user_id=user_id,
             before_state={"status": "escalated"},
@@ -358,7 +358,7 @@ class AuditService:
         }
         return self.log_operation(
             operation_type=LabOperationType.ESCALATION_RESOLUTION_AUTHORIZE_RECOLLECT,
-            entity_type="test",
+            entity_type="order_test",
             entity_id=original_test_id,
             user_id=user_id,
             before_state={"status": "escalated"},
@@ -388,7 +388,7 @@ class AuditService:
         }
         return self.log_operation(
             operation_type=LabOperationType.ESCALATION_RESOLUTION_CANCEL_TEST,
-            entity_type="test",
+            entity_type="order_test",
             entity_id=test_id,
             user_id=user_id,
             before_state={"status": "escalated", "sampleId": sample_id},
@@ -416,7 +416,7 @@ class AuditService:
         }
         return self.log_operation(
             operation_type=LabOperationType.ESCALATION_RESOLUTION_APPLY_AMENDMENT,
-            entity_type="test",
+            entity_type="order_test",
             entity_id=test_id,
             user_id=user_id,
             before_state={"status": "escalated"},

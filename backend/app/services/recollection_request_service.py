@@ -168,13 +168,15 @@ class RecollectionRequestService:
         self.db.flush()
         self.audit.log_operation(
             operation_type=LabOperationType.RECOLLECTION_REQUEST_CREATED,
-            entity_type="order",
-            entity_id=sample.orderId,
+            entity_type="sample",
+            entity_id=sample.sampleId,
             user_id=user_id,
             metadata={
                 "requestId": request.id,
                 "rejectedSampleId": sample.sampleId,
                 "stage": QualityStage.COLLECTION.value,
+                "testCodes": list(sample.testCodes or []),
+                "affectedOrderTestIds": request.affectedOrderTestIds or [],
             },
         )
         return request
@@ -224,14 +226,15 @@ class RecollectionRequestService:
         self.db.flush()
         self.audit.log_operation(
             operation_type=LabOperationType.RECOLLECTION_REQUEST_CREATED,
-            entity_type="order",
-            entity_id=sample.orderId,
+            entity_type="order_test",
+            entity_id=order_test.id,
             user_id=user_id,
             metadata={
                 "requestId": request.id,
                 "rejectedSampleId": sample.sampleId,
                 "orderTestId": order_test.id,
                 "stage": QualityStage.VALIDATION.value,
+                "affectedOrderTestIds": request.affectedOrderTestIds or [],
             },
         )
         return request
@@ -331,12 +334,24 @@ class RecollectionRequestService:
             recollection_attempt=new_sample.recollectionAttempt,
             comment=review_notes or request.notes,
         )
+        primary_test_id = request.orderTestId or (
+            (request.affectedOrderTestIds or [None])[0]
+        )
+        approve_metadata = {
+            "requestId": request.id,
+            "createdSampleId": new_sample.sampleId,
+            "affectedOrderTestIds": request.affectedOrderTestIds or [],
+        }
+        if primary_test_id is not None:
+            approve_metadata["orderTestId"] = primary_test_id
+        if created_test_id is not None:
+            approve_metadata["createdTestId"] = created_test_id
         self.audit.log_operation(
             operation_type=LabOperationType.RECOLLECTION_REQUEST_APPROVED,
-            entity_type="order",
-            entity_id=request.orderId,
+            entity_type="order_test" if primary_test_id is not None else "sample",
+            entity_id=primary_test_id if primary_test_id is not None else new_sample.sampleId,
             user_id=user_id,
-            metadata={"requestId": request.id, "createdSampleId": new_sample.sampleId},
+            metadata=approve_metadata,
         )
 
         self.db.commit()
@@ -416,12 +431,23 @@ class RecollectionRequestService:
         request.reviewNotes = review_notes
         request.reviewedAt = datetime.now(timezone.utc)
 
+        primary_test_id = request.orderTestId or (
+            (request.affectedOrderTestIds or [None])[0]
+        )
+        deny_metadata = {
+            "requestId": request.id,
+            "reviewNotes": review_notes,
+            "affectedOrderTestIds": request.affectedOrderTestIds or [],
+            "rejectedSampleId": request.rejectedSampleId,
+        }
+        if primary_test_id is not None:
+            deny_metadata["orderTestId"] = primary_test_id
         self.audit.log_operation(
             operation_type=LabOperationType.RECOLLECTION_REQUEST_DENIED,
-            entity_type="order",
-            entity_id=request.orderId,
+            entity_type="order_test" if primary_test_id is not None else "sample",
+            entity_id=primary_test_id if primary_test_id is not None else request.rejectedSampleId,
             user_id=user_id,
-            metadata={"requestId": request.id, "reviewNotes": review_notes},
+            metadata=deny_metadata,
         )
 
         self.db.commit()
