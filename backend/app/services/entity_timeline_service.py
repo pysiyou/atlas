@@ -4,7 +4,7 @@ Entity Timeline Service — audit history for a sample or order test, including 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Literal, Optional
 
 from sqlalchemy import and_, desc, or_
 from sqlalchemy.orm import Session
@@ -12,16 +12,37 @@ from sqlalchemy.orm import Session
 from app.models.lab_audit import LabOperationLog
 from app.models.order import OrderTest
 from app.models.quality_issue import QualityIssue
+from app.models.recollection_request import RecollectionRequest
 from app.models.sample import Sample
 from app.models.user import User
+from app.schemas.enums import LabOperationType
 from app.utils.exceptions import LabOperationError
+
+RECOLLECTION_ORDER_OPS = frozenset(
+    {
+        LabOperationType.RECOLLECTION_REQUEST_CREATED,
+        LabOperationType.RECOLLECTION_REQUEST_APPROVED,
+        LabOperationType.RECOLLECTION_REQUEST_DENIED,
+    }
+)
+
+EXCLUDED_ENTITY_OPS = frozenset(
+    {
+        LabOperationType.ORDER_STATUS_CHANGE,
+        LabOperationType.TEST_ADDED,
+    }
+)
 
 
 @dataclass
 class TimelineScope:
+    anchor_type: Literal["sample", "order_test"]
+    anchor_id: int
     sample_ids: set[int] = field(default_factory=set)
     order_test_ids: set[int] = field(default_factory=set)
     quality_issue_ids: set[int] = field(default_factory=set)
+    test_codes: set[str] = field(default_factory=set)
+    recollection_request_ids: set[int] = field(default_factory=set)
     order_id: Optional[int] = None
 
 
@@ -44,7 +65,8 @@ class EntityTimelineService:
             )
 
         logs = self._fetch_logs(scope)
-        events = self._format_events(logs)
+        relevant_logs = [log for log in logs if self._is_event_relevant(log, scope)]
+        events = self._format_events(relevant_logs)
         return events, len(events)
 
     def _scope_for_sample(self, sample_id: int) -> TimelineScope:
@@ -53,16 +75,22 @@ class EntityTimelineService:
             raise LabOperationError(f"Sample {sample_id} not found", status_code=404)
 
         sample_ids = self._collect_sample_chain(sample)
-        order_test_ids = {
-            t.id
-            for t in self.db.query(OrderTest).filter(OrderTest.sampleId.in_(sample_ids)).all()
-        }
+        linked_tests = self.db.query(OrderTest).filter(OrderTest.sampleId.in_(sample_ids)).all()
+        order_test_ids = {t.id for t in linked_tests if t.id is not None}
+        test_codes = {t.testCode for t in linked_tests if t.testCode}
         quality_issue_ids = self._quality_issue_ids(sample_ids, order_test_ids)
+        recollection_request_ids = self._recollection_request_ids(
+            sample_ids, order_test_ids, sample.orderId
+        )
 
         return TimelineScope(
+            anchor_type="sample",
+            anchor_id=sample_id,
             sample_ids=sample_ids,
             order_test_ids=order_test_ids,
             quality_issue_ids=quality_issue_ids,
+            test_codes=test_codes,
+            recollection_request_ids=recollection_request_ids,
             order_id=sample.orderId,
         )
 
@@ -72,9 +100,11 @@ class EntityTimelineService:
             raise LabOperationError(f"Order test {order_test_id} not found", status_code=404)
 
         order_test_ids = self._collect_retest_chain(order_test)
+        chain_tests = self.db.query(OrderTest).filter(OrderTest.id.in_(order_test_ids)).all()
+        test_codes = {t.testCode for t in chain_tests if t.testCode}
         sample_ids: set[int] = set()
 
-        for test in self.db.query(OrderTest).filter(OrderTest.id.in_(order_test_ids)).all():
+        for test in chain_tests:
             if not test.sampleId:
                 continue
             linked_sample = (
@@ -84,13 +114,47 @@ class EntityTimelineService:
                 sample_ids.update(self._collect_sample_chain(linked_sample))
 
         quality_issue_ids = self._quality_issue_ids(sample_ids, order_test_ids)
+        recollection_request_ids = self._recollection_request_ids(
+            sample_ids, order_test_ids, order_test.orderId
+        )
 
         return TimelineScope(
+            anchor_type="order_test",
+            anchor_id=order_test_id,
             sample_ids=sample_ids,
             order_test_ids=order_test_ids,
             quality_issue_ids=quality_issue_ids,
+            test_codes=test_codes,
+            recollection_request_ids=recollection_request_ids,
             order_id=order_test.orderId,
         )
+
+    def _recollection_request_ids(
+        self,
+        sample_ids: set[int],
+        order_test_ids: set[int],
+        order_id: Optional[int],
+    ) -> set[int]:
+        if order_id is None:
+            return set()
+
+        requests = (
+            self.db.query(RecollectionRequest)
+            .filter(RecollectionRequest.orderId == order_id)
+            .all()
+        )
+        ids: set[int] = set()
+        for request in requests:
+            if request.rejectedSampleId and request.rejectedSampleId in sample_ids:
+                ids.add(request.id)
+                continue
+            if request.orderTestId and request.orderTestId in order_test_ids:
+                ids.add(request.id)
+                continue
+            affected = set(request.affectedOrderTestIds or [])
+            if affected.intersection(order_test_ids):
+                ids.add(request.id)
+        return ids
 
     def _collect_sample_chain(self, sample: Sample) -> set[int]:
         ids: set[int] = {sample.sampleId}
@@ -179,11 +243,12 @@ class EntityTimelineService:
                     LabOperationLog.entityId.in_(scope.quality_issue_ids),
                 )
             )
-        if scope.order_id is not None:
+        if scope.recollection_request_ids and scope.order_id is not None:
             conditions.append(
                 and_(
                     LabOperationLog.entityType == "order",
                     LabOperationLog.entityId == scope.order_id,
+                    LabOperationLog.operationType.in_(RECOLLECTION_ORDER_OPS),
                 )
             )
 
@@ -196,6 +261,52 @@ class EntityTimelineService:
             .order_by(desc(LabOperationLog.performedAt))
             .all()
         )
+
+    def _is_event_relevant(self, log: LabOperationLog, scope: TimelineScope) -> bool:
+        op_type = log.operationType
+        if op_type in EXCLUDED_ENTITY_OPS:
+            return False
+
+        metadata = log.operationData or {}
+
+        if op_type in RECOLLECTION_ORDER_OPS:
+            request_id = metadata.get("requestId")
+            if request_id is None:
+                return False
+            try:
+                return int(request_id) in scope.recollection_request_ids
+            except (TypeError, ValueError):
+                return False
+
+        if log.entityType == "order":
+            return False
+
+        if op_type == LabOperationType.SAMPLE_COLLECT:
+            if log.entityId not in scope.sample_ids:
+                return False
+            event_codes = metadata.get("testCodes")
+            if not isinstance(event_codes, list) or not event_codes:
+                return True
+            return bool(scope.test_codes.intersection(str(code) for code in event_codes))
+
+        if op_type in (
+            LabOperationType.SAMPLE_REJECT,
+            LabOperationType.SAMPLE_RECOLLECTION_REQUEST,
+        ):
+            return log.entityId in scope.sample_ids
+
+        if log.entityType in ("test", "order_test"):
+            if op_type == LabOperationType.TEST_REMOVED:
+                return log.entityId in scope.order_test_ids
+            return log.entityId in scope.order_test_ids
+
+        if log.entityType == "quality_issue":
+            return log.entityId in scope.quality_issue_ids
+
+        if log.entityType == "sample":
+            return log.entityId in scope.sample_ids
+
+        return False
 
     def _format_events(self, logs: list[LabOperationLog]) -> list[dict]:
         user_ids = {

@@ -121,7 +121,7 @@ function StageTimeComposition({ stages }: { stages: StageRow[] }) {
       </div>
 
       {bottleneck.avgHours > 0 && (
-        <p className={COMMAND_CENTER_TEXT.detail}>
+        <p className={cn('text-xs', COMMAND_CENTER_TEXT.detail)}>
           Slowest step:{' '}
           <span className={COMMAND_CENTER_TEXT.label}>{bottleneck.label}</span>
         </p>
