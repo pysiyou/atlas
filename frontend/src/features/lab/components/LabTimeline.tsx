@@ -11,9 +11,9 @@ import {
   getCategoryConfig,
   getEventCategory,
   getEventTone,
-} from '@/features/lab/command-center/activityCategories';
-import { COMMAND_CENTER_TIMELINE } from '@/features/lab/command-center/components/styles';
-import { formatActivityEvent } from '@/features/lab/command-center/formatActivityEvent';
+} from '@/features/lab/timeline/activityCategories';
+import { formatActivityEvent } from '@/features/lab/timeline/formatActivityEvent';
+import { COMMAND_CENTER_TIMELINE } from '@/features/lab/timeline/timelineStyles';
 import { useOpenHistoricalEntity } from '@/features/lab/hooks/useOpenHistoricalEntity';
 import {
   getEntityCategoryConfig,
@@ -25,7 +25,7 @@ import {
   getRetestAttemptDivider,
 } from '@/features/lab/timeline/formatEntityTimelineEvent';
 import type { EventDetail as EntityEventDetail } from '@/features/lab/timeline/timelineDetailBuilders';
-import type { EventDetail as FeedEventDetail } from '@/features/lab/command-center/formatActivityEvent';
+import type { EventDetail as FeedEventDetail } from '@/features/lab/timeline/formatActivityEvent';
 
 type TimelineDetailItem = EntityEventDetail | FeedEventDetail;
 

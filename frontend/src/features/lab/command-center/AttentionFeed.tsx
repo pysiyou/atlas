@@ -7,18 +7,18 @@ import { Link } from 'react-router-dom';
 import { Badge } from '@/components';
 import { cn, displayId } from '@/utils';
 import { ENTITY_ID } from '@/utils/constants';
-import { getLabQueueUrl } from '../constants/labTabs';
+import { getLabQueueUrl } from '@/features/lab/constants/labTabs';
+import { COMMAND_CENTER_BADGE_TEXT } from './components/styles';
+import type { AttentionItem } from './boardTypes';
 import {
   ATTENTION_TYPE_ORDER,
   getAttentionTone,
   getAttentionType,
   getAttentionTypeConfig,
+  type AttentionType,
 } from './attentionCategories';
 import { formatAttentionItem, type AttentionDetail } from './formatAttentionItem';
-import { COMMAND_CENTER_BADGE_TEXT, COMMAND_CENTER_TIMELINE } from './components/styles';
-import type { CommandCenterTimelineTone } from './components/styles';
-import type { AttentionItem } from './hooks/useLabTechBoard';
-import type { AttentionType } from './attentionCategories';
+import { COMMAND_CENTER_TIMELINE, type CommandCenterTimelineTone } from '@/features/lab/timeline/timelineStyles';
 
 export interface AttentionFeedProps {
   items: AttentionItem[];
@@ -29,12 +29,6 @@ const ACCENT_TONE: Record<CommandCenterTimelineTone, string> = {
   resolution: 'bg-success-fg-emphasis',
   neutral: 'bg-warning-fg-emphasis',
 };
-
-function itemSortScore(item: AttentionItem): number {
-  const priorityWeight =
-    item.priority === 'urgent' ? 4 : item.priority === 'high' ? 3 : item.priority === 'medium' ? 2 : 1;
-  return item.waitingHours * 10 + priorityWeight * 100;
-}
 
 function FeedDetail({ detail }: { detail: AttentionDetail }) {
   switch (detail.type) {
@@ -142,7 +136,7 @@ export const AttentionFeed: React.FC<AttentionFeedProps> = ({ items }) => {
 
     return ATTENTION_TYPE_ORDER.filter(type => map.has(type)).map(type => ({
       type,
-      items: (map.get(type) ?? []).sort((a, b) => itemSortScore(b) - itemSortScore(a)),
+      items: map.get(type) ?? [],
     }));
   }, [items]);
 

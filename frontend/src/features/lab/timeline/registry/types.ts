@@ -4,7 +4,7 @@
 
 import type { IconName } from '@/components';
 import type { BadgeVariant } from '@/components/primitives/badgeHelpers';
-import type { CommandCenterTimelineTone } from '../../command-center/components/styles';
+import type { CommandCenterTimelineTone } from '../timelineStyles';
 import type { TimelineEvent } from '../../api/commandCenter.api';
 import type { FormattedTimelineEvent } from '../timelineDetailBuilders';
 

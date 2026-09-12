@@ -10,8 +10,8 @@ import { ColumnHeader, Panel, PanelBody } from '../components';
 import {
   COMMAND_CENTER_TEXT,
 } from '../components/styles';
-import type { LabTechBoardData, QueueAgeStats } from '../hooks/useLabTechBoard';
-import { PanelNote } from './compact';
+import type { LabTechBoardData, QueueAgeStats } from '../boardTypes';
+import { PanelNote } from './PanelNote';
 
 interface QueueAgePanelProps {
   counts: LabTechBoardData['counts'];

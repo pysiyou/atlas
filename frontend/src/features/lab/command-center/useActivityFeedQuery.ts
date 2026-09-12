@@ -5,7 +5,7 @@
 import { useCallback } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query/keys';
-import { commandCenterAPI } from '../api/commandCenter.api';
+import { commandCenterAPI } from '@/features/lab/api/commandCenter.api';
 
 const MAX_ACCUMULATED = 200;
 

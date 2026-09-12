@@ -7,17 +7,10 @@ import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 import { getLabTabPath } from '../../constants/labTabs';
 import { KpiTile, SectionTitle } from '../components';
-import type { CommandCenterKpiTone } from '../components/styles';
 import { COMMAND_CENTER_TEXT, resolveCommandCenterTextTone } from '../components/styles';
-import type { LabTechBoardData, QueueAgeStats } from '../hooks/useLabTechBoard';
+import type { LabTechBoardData, QueueAgeStats } from '../boardTypes';
+import { queueTileTone } from '../queueTone';
 import { LabHealthStatus } from './HealthBanner';
-
-function queueTileTone(count: number, age: QueueAgeStats): CommandCenterKpiTone {
-  if (count === 0) return 'neutral';
-  if (age.criticalCount > 0) return 'danger';
-  if (age.warningCount > 0) return 'warning';
-  return 'brand';
-}
 
 function formatOldestAge(age: QueueAgeStats): string {
   if (age.oldestHours === null) return 'No backlog';

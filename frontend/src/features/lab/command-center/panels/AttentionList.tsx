@@ -5,7 +5,7 @@
 import React from 'react';
 import { AttentionFeed } from '../AttentionFeed';
 import { Panel, PanelBody } from '../components';
-import type { AttentionItem } from '../hooks/useLabTechBoard';
+import type { AttentionItem } from '../boardTypes';
 
 interface AttentionListProps {
   items: AttentionItem[];

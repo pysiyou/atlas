@@ -5,14 +5,14 @@
 import React, { useCallback, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query/keys';
-import { COMMAND_CENTER_PANEL } from '../components';
-import { useLabTechBoard } from '../hooks/useLabTechBoard';
-import { LivePipelineStrip } from '../panels/LivePipelineStrip';
-import { TodaySnapshotPanel } from '../panels/TodaySnapshotPanel';
-import { AttentionList } from '../panels/AttentionList';
-import { QueueAgePanel } from '../panels/QueueAgePanel';
-import { PriorityMixPanel } from '../panels/PriorityMixPanel';
-import { RecentActivityPanel } from '../panels/RecentActivityPanel';
+import { COMMAND_CENTER_PANEL } from './components';
+import { useLabTechBoard } from './useLabTechBoard';
+import { LivePipelineStrip } from './panels/LivePipelineStrip';
+import { TodaySnapshotPanel } from './panels/TodaySnapshotPanel';
+import { AttentionList } from './panels/AttentionList';
+import { QueueAgePanel } from './panels/QueueAgePanel';
+import { PriorityMixPanel } from './panels/PriorityMixPanel';
+import { RecentActivityPanel } from './panels/RecentActivityPanel';
 
 export const LabTechBoard: React.FC = () => {
   const board = useLabTechBoard();

@@ -3,9 +3,9 @@
  */
 
 import { displayId } from '@/utils';
-import { LAB_CONFIG } from '../constants';
+import { LAB_CONFIG } from '@/features/lab/constants';
+import type { AttentionItem } from './boardTypes';
 import type { AttentionType } from './attentionCategories';
-import type { AttentionItem } from './hooks/useLabTechBoard';
 
 export type AttentionDetail =
   | { type: 'text'; value: string }

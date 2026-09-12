@@ -6,7 +6,7 @@ import type { IconName } from '@/components';
 import type { BadgeVariant } from '@/components/primitives/badgeHelpers';
 import { ICONS } from '@/config/icons';
 import type { TimelineEvent } from '../api/commandCenter.api';
-import type { CommandCenterTimelineTone } from './components/styles';
+import type { CommandCenterTimelineTone } from './timelineStyles';
 
 export type TimelineEventCategory =
   | 'specimen'

@@ -5,7 +5,7 @@
 import React from 'react';
 import { ActivityFeed } from '../ActivityFeed';
 import { Panel, PanelBody } from '../components';
-import { useRecentActivityFeed } from '../hooks/useRecentActivityFeed';
+import { useRecentActivityFeed } from '../useRecentActivityFeed';
 
 export const RecentActivityPanel: React.FC = () => {
   const { events, isLoading, isError, refetchFeed } = useRecentActivityFeed();
