@@ -18,6 +18,10 @@ export interface CategorySummaryResponse {
 export interface TimelineEvent {
   id: number;
   type: string;
+  /** Workflow phase from entity timeline API (specimen | results | validation | escalation | composition). */
+  phase?: string;
+  /** Event tone from entity timeline API (neutral | problem | resolution). */
+  tone?: string;
   entityType: string;
   entityId: number;
   timestamp: string;

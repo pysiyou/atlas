@@ -147,6 +147,8 @@ async def get_lab_operation_logs_count(
 class TimelineEventResponse(BaseModel):
     id: int
     type: str
+    phase: Optional[str] = None
+    tone: Optional[str] = None
     entityType: str
     entityId: int
     timestamp: str

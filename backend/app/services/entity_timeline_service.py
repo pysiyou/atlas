@@ -16,34 +16,31 @@ from app.models.recollection_request import RecollectionRequest
 from app.models.sample import Sample
 from app.models.user import User
 from app.schemas.enums import LabOperationType
+from app.services.timeline.event_taxonomy import get_event_phase, get_event_tone
+from app.services.timeline.relevance_engine import (
+    RelevanceEngine,
+    SampleTimelineScope,
+    TestTimelineScope,
+)
 from app.utils.exceptions import LabOperationError
 
-RECOLLECTION_ORDER_OPS = frozenset(
-    {
-        LabOperationType.RECOLLECTION_REQUEST_CREATED,
-        LabOperationType.RECOLLECTION_REQUEST_APPROVED,
-        LabOperationType.RECOLLECTION_REQUEST_DENIED,
-    }
-)
 
-EXCLUDED_ENTITY_OPS = frozenset(
-    {
-        LabOperationType.ORDER_STATUS_CHANGE,
-        LabOperationType.TEST_ADDED,
-    }
-)
+EntityKind = Literal["sample", "order_test"]
 
 
 @dataclass
 class TimelineScope:
-    anchor_type: Literal["sample", "order_test"]
+    entity_kind: EntityKind
     anchor_id: int
     sample_ids: set[int] = field(default_factory=set)
     order_test_ids: set[int] = field(default_factory=set)
     quality_issue_ids: set[int] = field(default_factory=set)
-    test_codes: set[str] = field(default_factory=set)
-    recollection_request_ids: set[int] = field(default_factory=set)
     order_id: Optional[int] = None
+    test_codes: set[str] = field(default_factory=set)
+    test_sample_map: dict[int, int] = field(default_factory=dict)
+    quality_issue_order_test_map: dict[int, int] = field(default_factory=dict)
+    quality_issue_sample_map: dict[int, int] = field(default_factory=dict)
+    recollection_request_map: dict[int, dict] = field(default_factory=dict)
 
 
 class EntityTimelineService:
@@ -65,8 +62,8 @@ class EntityTimelineService:
             )
 
         logs = self._fetch_logs(scope)
-        relevant_logs = [log for log in logs if self._is_event_relevant(log, scope)]
-        events = self._format_events(relevant_logs)
+        filtered = self._filter_logs(logs, scope)
+        events = self._format_events(filtered)
         return events, len(events)
 
     def _scope_for_sample(self, sample_id: int) -> TimelineScope:
@@ -75,23 +72,23 @@ class EntityTimelineService:
             raise LabOperationError(f"Sample {sample_id} not found", status_code=404)
 
         sample_ids = self._collect_sample_chain(sample)
-        linked_tests = self.db.query(OrderTest).filter(OrderTest.sampleId.in_(sample_ids)).all()
-        order_test_ids = {t.id for t in linked_tests if t.id is not None}
-        test_codes = {t.testCode for t in linked_tests if t.testCode}
-        quality_issue_ids = self._quality_issue_ids(sample_ids, order_test_ids)
-        recollection_request_ids = self._recollection_request_ids(
-            sample_ids, order_test_ids, sample.orderId
+        order_tests = (
+            self.db.query(OrderTest).filter(OrderTest.sampleId.in_(sample_ids)).all()
         )
+        order_test_ids = {t.id for t in order_tests}
+        quality_issues = self._quality_issues_for_sample_scope(sample_ids, order_test_ids)
 
         return TimelineScope(
-            anchor_type="sample",
+            entity_kind="sample",
             anchor_id=sample_id,
             sample_ids=sample_ids,
             order_test_ids=order_test_ids,
-            quality_issue_ids=quality_issue_ids,
-            test_codes=test_codes,
-            recollection_request_ids=recollection_request_ids,
+            quality_issue_ids={q.id for q in quality_issues},
             order_id=sample.orderId,
+            quality_issue_sample_map={
+                q.id: q.sampleId for q in quality_issues if q.sampleId is not None
+            },
+            recollection_request_map=self._recollection_request_map(sample.orderId),
         )
 
     def _scope_for_order_test(self, order_test_id: int) -> TimelineScope:
@@ -100,61 +97,94 @@ class EntityTimelineService:
             raise LabOperationError(f"Order test {order_test_id} not found", status_code=404)
 
         order_test_ids = self._collect_retest_chain(order_test)
-        chain_tests = self.db.query(OrderTest).filter(OrderTest.id.in_(order_test_ids)).all()
-        test_codes = {t.testCode for t in chain_tests if t.testCode}
+        chain_tests = (
+            self.db.query(OrderTest).filter(OrderTest.id.in_(order_test_ids)).all()
+        )
         sample_ids: set[int] = set()
+        test_codes: set[str] = set()
+        test_sample_map: dict[int, int] = {}
 
         for test in chain_tests:
-            if not test.sampleId:
-                continue
-            linked_sample = (
-                self.db.query(Sample).filter(Sample.sampleId == test.sampleId).first()
-            )
-            if linked_sample:
-                sample_ids.update(self._collect_sample_chain(linked_sample))
+            if test.testCode:
+                test_codes.add(test.testCode)
+            if test.sampleId:
+                test_sample_map[test.id] = test.sampleId
+                linked_sample = (
+                    self.db.query(Sample).filter(Sample.sampleId == test.sampleId).first()
+                )
+                if linked_sample:
+                    sample_ids.update(self._collect_sample_chain(linked_sample))
 
-        quality_issue_ids = self._quality_issue_ids(sample_ids, order_test_ids)
-        recollection_request_ids = self._recollection_request_ids(
-            sample_ids, order_test_ids, order_test.orderId
-        )
+        quality_issues = self._quality_issues_for_test_scope(order_test_ids, sample_ids)
 
         return TimelineScope(
-            anchor_type="order_test",
+            entity_kind="order_test",
             anchor_id=order_test_id,
             sample_ids=sample_ids,
             order_test_ids=order_test_ids,
-            quality_issue_ids=quality_issue_ids,
-            test_codes=test_codes,
-            recollection_request_ids=recollection_request_ids,
+            quality_issue_ids={q.id for q in quality_issues},
             order_id=order_test.orderId,
+            test_codes=test_codes,
+            test_sample_map=test_sample_map,
+            quality_issue_order_test_map={
+                q.id: q.orderTestId
+                for q in quality_issues
+                if q.orderTestId is not None
+            },
+            recollection_request_map=self._recollection_request_map(order_test.orderId),
         )
 
-    def _recollection_request_ids(
-        self,
-        sample_ids: set[int],
-        order_test_ids: set[int],
-        order_id: Optional[int],
-    ) -> set[int]:
-        if order_id is None:
-            return set()
+    def _quality_issues_for_sample_scope(
+        self, sample_ids: set[int], order_test_ids: set[int]
+    ) -> list[QualityIssue]:
+        if not sample_ids and not order_test_ids:
+            return []
+        filters = []
+        if sample_ids:
+            filters.append(QualityIssue.sampleId.in_(sample_ids))
+        if order_test_ids:
+            filters.append(QualityIssue.orderTestId.in_(order_test_ids))
+        return self.db.query(QualityIssue).filter(or_(*filters)).all()
 
+    def _quality_issues_for_test_scope(
+        self, order_test_ids: set[int], sample_ids: set[int]
+    ) -> list[QualityIssue]:
+        if not order_test_ids:
+            return []
+        by_test = (
+            self.db.query(QualityIssue)
+            .filter(QualityIssue.orderTestId.in_(order_test_ids))
+            .all()
+        )
+        if not sample_ids:
+            return by_test
+        by_sample = (
+            self.db.query(QualityIssue)
+            .filter(
+                QualityIssue.sampleId.in_(sample_ids),
+                QualityIssue.orderTestId.in_(order_test_ids),
+            )
+            .all()
+        )
+        seen = {q.id for q in by_test}
+        return by_test + [q for q in by_sample if q.id not in seen]
+
+    def _recollection_request_map(self, order_id: int) -> dict[int, dict]:
         requests = (
             self.db.query(RecollectionRequest)
             .filter(RecollectionRequest.orderId == order_id)
             .all()
         )
-        ids: set[int] = set()
-        for request in requests:
-            if request.rejectedSampleId and request.rejectedSampleId in sample_ids:
-                ids.add(request.id)
-                continue
-            if request.orderTestId and request.orderTestId in order_test_ids:
-                ids.add(request.id)
-                continue
-            affected = set(request.affectedOrderTestIds or [])
-            if affected.intersection(order_test_ids):
-                ids.add(request.id)
-        return ids
+        result: dict[int, dict] = {}
+        for req in requests:
+            result[req.id] = {
+                "orderTestId": req.orderTestId,
+                "affectedOrderTestIds": list(req.affectedOrderTestIds or []),
+                "rejectedSampleId": req.rejectedSampleId,
+                "createdSampleId": req.createdSampleId,
+                "createdTestId": req.createdTestId,
+            }
+        return result
 
     def _collect_sample_chain(self, sample: Sample) -> set[int]:
         ids: set[int] = {sample.sampleId}
@@ -206,19 +236,6 @@ class EntityTimelineService:
 
         return ids
 
-    def _quality_issue_ids(
-        self, sample_ids: set[int], order_test_ids: set[int]
-    ) -> set[int]:
-        if not sample_ids and not order_test_ids:
-            return set()
-        query = self.db.query(QualityIssue.id)
-        filters = []
-        if sample_ids:
-            filters.append(QualityIssue.sampleId.in_(sample_ids))
-        if order_test_ids:
-            filters.append(QualityIssue.orderTestId.in_(order_test_ids))
-        return {row[0] for row in query.filter(or_(*filters)).all()}
-
     def _fetch_logs(self, scope: TimelineScope) -> list[LabOperationLog]:
         conditions = []
         if scope.sample_ids:
@@ -243,12 +260,18 @@ class EntityTimelineService:
                     LabOperationLog.entityId.in_(scope.quality_issue_ids),
                 )
             )
-        if scope.recollection_request_ids and scope.order_id is not None:
+        # Legacy recollection workflow rows logged on order entity.
+        if scope.order_id is not None:
+            recollection_types = [
+                LabOperationType.RECOLLECTION_REQUEST_CREATED,
+                LabOperationType.RECOLLECTION_REQUEST_APPROVED,
+                LabOperationType.RECOLLECTION_REQUEST_DENIED,
+            ]
             conditions.append(
                 and_(
                     LabOperationLog.entityType == "order",
                     LabOperationLog.entityId == scope.order_id,
-                    LabOperationLog.operationType.in_(RECOLLECTION_ORDER_OPS),
+                    LabOperationLog.operationType.in_(recollection_types),
                 )
             )
 
@@ -262,51 +285,26 @@ class EntityTimelineService:
             .all()
         )
 
-    def _is_event_relevant(self, log: LabOperationLog, scope: TimelineScope) -> bool:
-        op_type = log.operationType
-        if op_type in EXCLUDED_ENTITY_OPS:
-            return False
+    def _filter_logs(self, logs: list[LabOperationLog], scope: TimelineScope) -> list[LabOperationLog]:
+        if scope.entity_kind == "order_test":
+            test_scope = TestTimelineScope(
+                anchor_test_id=scope.anchor_id,
+                order_test_ids=scope.order_test_ids,
+                sample_ids=scope.sample_ids,
+                test_codes=scope.test_codes,
+                test_sample_map=scope.test_sample_map,
+                quality_issue_order_test_map=scope.quality_issue_order_test_map,
+                recollection_request_map=scope.recollection_request_map,
+            )
+            return [log for log in logs if RelevanceEngine.applies_to_test_timeline(log, test_scope)]
 
-        metadata = log.operationData or {}
-
-        if op_type in RECOLLECTION_ORDER_OPS:
-            request_id = metadata.get("requestId")
-            if request_id is None:
-                return False
-            try:
-                return int(request_id) in scope.recollection_request_ids
-            except (TypeError, ValueError):
-                return False
-
-        if log.entityType == "order":
-            return False
-
-        if op_type == LabOperationType.SAMPLE_COLLECT:
-            if log.entityId not in scope.sample_ids:
-                return False
-            event_codes = metadata.get("testCodes")
-            if not isinstance(event_codes, list) or not event_codes:
-                return True
-            return bool(scope.test_codes.intersection(str(code) for code in event_codes))
-
-        if op_type in (
-            LabOperationType.SAMPLE_REJECT,
-            LabOperationType.SAMPLE_RECOLLECTION_REQUEST,
-        ):
-            return log.entityId in scope.sample_ids
-
-        if log.entityType in ("test", "order_test"):
-            if op_type == LabOperationType.TEST_REMOVED:
-                return log.entityId in scope.order_test_ids
-            return log.entityId in scope.order_test_ids
-
-        if log.entityType == "quality_issue":
-            return log.entityId in scope.quality_issue_ids
-
-        if log.entityType == "sample":
-            return log.entityId in scope.sample_ids
-
-        return False
+        sample_scope = SampleTimelineScope(
+            anchor_sample_id=scope.anchor_id,
+            sample_ids=scope.sample_ids,
+            quality_issue_sample_map=scope.quality_issue_sample_map,
+            recollection_request_map=scope.recollection_request_map,
+        )
+        return [log for log in logs if RelevanceEngine.applies_to_sample_timeline(log, sample_scope)]
 
     def _format_events(self, logs: list[LabOperationLog]) -> list[dict]:
         user_ids = {
@@ -328,16 +326,21 @@ class EntityTimelineService:
                 performed_by_name = user_map[log.performedBy]
 
             op_type = log.operationType.value if log.operationType else None
+            metadata = log.operationData or {}
+            quality_stage = metadata.get("stage") or (log.afterState or {}).get("stage")
+
             events.append(
                 {
                     "id": log.id,
                     "type": op_type,
+                    "phase": get_event_phase(op_type, quality_stage=quality_stage),
+                    "tone": get_event_tone(op_type),
                     "entityType": log.entityType,
                     "entityId": log.entityId,
                     "timestamp": log.performedAt.isoformat(),
                     "performedBy": log.performedBy,
                     "performedByName": performed_by_name,
-                    "metadata": log.operationData or {},
+                    "metadata": metadata,
                     "beforeState": log.beforeState,
                     "afterState": log.afterState,
                     "comment": log.comment,

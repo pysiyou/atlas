@@ -13,15 +13,20 @@ interface LabHistoryPanelProps {
   title?: string;
 }
 
+function defaultTitle(entityType: 'sample' | 'order_test'): string {
+  return entityType === 'order_test' ? 'Test History' : 'Sample History';
+}
+
 export const LabHistoryPanel: React.FC<LabHistoryPanelProps> = ({
   entityType,
   entityId,
-  title = 'History',
+  title,
 }) => {
   const { data, isLoading, isError, refetch } = useEntityTimeline(entityType, entityId);
+  const panelTitle = title ?? defaultTitle(entityType);
 
   return (
-    <SectionPanel title={title}>
+    <SectionPanel title={panelTitle}>
       {isLoading ? (
         <div className="space-y-3 py-1" aria-busy="true">
           {Array.from({ length: 3 }).map((_, i) => (
@@ -42,7 +47,7 @@ export const LabHistoryPanel: React.FC<LabHistoryPanelProps> = ({
           </button>
         </div>
       ) : (
-        <LabTimeline events={data?.events ?? []} interactiveEntities emptyMessage="No recorded actions yet." />
+        <LabTimeline events={data?.events ?? []} interactiveEntities />
       )}
     </SectionPanel>
   );
