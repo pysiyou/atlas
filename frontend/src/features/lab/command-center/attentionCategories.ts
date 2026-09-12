@@ -4,9 +4,10 @@
 
 import type { BadgeVariant } from '@/components/primitives/badgeHelpers';
 import type { BlockedReason } from '@/features/lab/utils/deriveWorkItemState';
-import { LAB_CONFIG } from '../constants';
-import type { AttentionItem } from './hooks/useLabTechBoard';
-import type { CommandCenterBadgeTextTone, CommandCenterTimelineTone } from './components/styles';
+import { LAB_CONFIG } from '@/features/lab/constants';
+import type { CommandCenterBadgeTextTone } from './components/styles';
+import type { CommandCenterTimelineTone } from '@/features/lab/timeline/timelineStyles';
+import type { AttentionItem } from './boardTypes';
 
 /** Why the item surfaced in Needs Attention — one per distinct lab exception or SLA breach. */
 export type AttentionType =

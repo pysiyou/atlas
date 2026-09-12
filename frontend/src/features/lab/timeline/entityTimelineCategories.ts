@@ -3,7 +3,7 @@
  */
 
 import type { TimelineEvent } from '../api/commandCenter.api';
-import type { CommandCenterTimelineTone } from '../command-center/components/styles';
+import type { CommandCenterTimelineTone } from './timelineStyles';
 import {
   ENTITY_PHASE_CONFIG,
   resolveEntityPhase,

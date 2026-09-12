@@ -1,140 +1,16 @@
 """
-Command Center API — dashboard metrics and activity timeline.
+Command Center API — activity timeline.
 """
-from typing import List
-
 from fastapi import APIRouter, Depends, Query, status
-from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from app.core.dependencies import require_lab_tech
 from app.database import get_db
 from app.models.user import User
+from app.schemas.command_center import TimelineResponse
 from app.services.command_center_service import CommandCenterService
 
 router = APIRouter(tags=["command-center"])
-
-
-class TimelineEvent(BaseModel):
-    id: int
-    type: str
-    entityType: str
-    entityId: int
-    timestamp: str
-    performedBy: str
-    performedByName: str | None
-    metadata: dict
-    beforeState: dict | None = None
-    afterState: dict | None = None
-    comment: str | None = None
-
-
-class TimelineResponse(BaseModel):
-    events: List[TimelineEvent]
-    total: int
-
-
-class CategorySummaryItem(BaseModel):
-    category: str
-    count: int
-    percentage: int
-
-
-class CategorySummaryResponse(BaseModel):
-    total: int
-    categories: List[CategorySummaryItem]
-
-
-class OperationsOverviewResponse(BaseModel):
-    testFlow: dict[str, int]
-    escalations: dict[str, int]
-    qualityIssues: int
-    recollectionRequests: dict[str, int]
-
-
-class StageTimingItem(BaseModel):
-    key: str
-    name: str
-    hours: float
-    targetHours: float
-    minHours: float
-    maxHours: float
-    p95Hours: float
-
-
-class StageTimingResponse(BaseModel):
-    stages: List[StageTimingItem]
-
-
-class DelaySourceItem(BaseModel):
-    key: str
-    name: str
-    count: int
-    avgDelayHours: float
-    impactHours: float
-    pctOfTests: float
-
-
-class DelayImpactResponse(BaseModel):
-    sources: List[DelaySourceItem]
-    totalImpactHours: float
-
-
-class TatStageItem(BaseModel):
-    key: str
-    label: str
-    hours: float
-
-
-class TurnaroundTimeResponse(BaseModel):
-    avgHours: float
-    targetHours: float
-    medianHours: float
-    p95Hours: float
-    minHours: float
-    maxHours: float
-    stages: List[TatStageItem]
-
-
-class DelaySeverityItem(BaseModel):
-    key: str
-    label: str
-    count: int
-    pct: int
-
-
-class SlaPerformanceResponse(BaseModel):
-    onTimeRate: int
-    onTimeTarget: int
-    totalTests: int
-    onTimeCount: int
-    delayedCount: int
-    delayedRate: int
-    avgDelayOverTarget: float
-    delaySeverity: List[DelaySeverityItem]
-
-
-class CommandCenterDashboardResponse(BaseModel):
-    operationsOverview: OperationsOverviewResponse
-    categorySummary: CategorySummaryResponse
-    stageTiming: StageTimingResponse
-    delayImpact: DelayImpactResponse
-    turnaroundTime: TurnaroundTimeResponse
-    slaPerformance: SlaPerformanceResponse
-
-
-@router.get(
-    "/command-center/dashboard",
-    response_model=CommandCenterDashboardResponse,
-    status_code=status.HTTP_200_OK,
-)
-def get_dashboard(
-    hours_back: int = Query(24, description="Lookback window in hours"),
-    db: Session = Depends(get_db),
-    _current_user: User = Depends(require_lab_tech),
-):
-    service = CommandCenterService(db)
-    return service.get_dashboard(hours_back=hours_back)
 
 
 @router.get(
@@ -143,9 +19,9 @@ def get_dashboard(
     status_code=status.HTTP_200_OK,
 )
 def get_timeline(
-    hours_back: int = 24,
-    limit: int = 100,
-    offset: int = 0,
+    hours_back: int = Query(24, ge=1, le=168, description="Lookback window in hours"),
+    limit: int = Query(100, ge=1, le=200, description="Maximum events per page"),
+    offset: int = Query(0, ge=0, description="Pagination offset"),
     db: Session = Depends(get_db),
     _current_user: User = Depends(require_lab_tech),
 ):

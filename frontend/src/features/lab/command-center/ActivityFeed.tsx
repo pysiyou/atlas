@@ -4,9 +4,9 @@
 
 import React from 'react';
 import { Skeleton } from '@/components/loaders/Skeleton';
-import type { TimelineEvent } from '../api/commandCenter.api';
-import { LabTimeline } from '../components/LabTimeline';
-import { COMMAND_CENTER_TIMELINE } from './components/styles';
+import type { TimelineEvent } from '@/features/lab/api/commandCenter.api';
+import { LabTimeline } from '@/features/lab/components/LabTimeline';
+import { COMMAND_CENTER_TIMELINE } from '@/features/lab/timeline/timelineStyles';
 
 export interface ActivityFeedProps {
   events: TimelineEvent[];

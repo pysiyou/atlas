@@ -8,7 +8,7 @@ import { Icon } from '@/components';
 import { ICONS } from '@/config/icons';
 import { cn } from '@/utils';
 import { getLabTabPath } from '../../constants/labTabs';
-import type { LabTechBoardData } from '../hooks/useLabTechBoard';
+import type { LabTechBoardData } from '../boardTypes';
 
 const HEALTH_STYLES = {
   healthy: {
@@ -106,8 +106,3 @@ export const LabHealthStatus: React.FC<LabHealthStatusProps> = ({
     </div>
   );
 };
-
-/** @deprecated Use LabHealthStatus with variant="banner" */
-export const HealthBanner = (props: Omit<LabHealthStatusProps, 'variant'>) => (
-  <LabHealthStatus {...props} variant="banner" />
-);

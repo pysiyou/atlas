@@ -5,7 +5,7 @@
 import React from 'react';
 import { Panel, PanelBody } from '../components';
 import type { DonutSegment } from '../components/DonutChart';
-import type { LabTechBoardData } from '../hooks/useLabTechBoard';
+import type { LabTechBoardData } from '../boardTypes';
 import { MetricDonutHalf, type MetricDonutLegendItem } from './MetricDonutHalf';
 
 interface TodaySnapshotPanelProps {

@@ -4,7 +4,8 @@
 
 import React from 'react';
 import { cn } from '@/utils';
-import { COMMAND_CENTER_PANEL, COMMAND_CENTER_TIMELINE } from './styles';
+import { COMMAND_CENTER_TIMELINE } from '@/features/lab/timeline/timelineStyles';
+import { COMMAND_CENTER_PANEL } from './styles';
 
 export function Panel({
   title,
