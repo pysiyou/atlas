@@ -5,7 +5,6 @@ Stores pricing information for different affiliation durations
 from sqlalchemy import Column, Integer, Float, DateTime, Boolean
 from sqlalchemy.sql import func
 from app.database import Base
-from app.schemas.enums import AffiliationDuration
 
 
 class AffiliationPricing(Base):

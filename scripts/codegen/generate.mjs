@@ -36,7 +36,7 @@ export const GENERATED_LAB_CONSTANTS = {
   MAX_RECOLLECTION_ATTEMPTS: ${data.MAX_RECOLLECTION_ATTEMPTS},
 } as const;
 `;
-  writeFile('backend/app/services/lab_constants.py', py);
+  writeFile('backend/app/data/lab_constants.py', py);
   writeFile('frontend/src/types/generated/labConstants.ts', ts);
 }
 
@@ -81,7 +81,7 @@ export const PHYSIOLOGIC_LIMITS: Record<string, PhysiologicLimit> = {
 ${tsEntries}
 };
 `;
-  writeFile('backend/app/services/physiologic_limits.py', py);
+  writeFile('backend/app/data/physiologic_limits.py', py);
   writeFile('frontend/src/types/generated/physiologicLimits.ts', ts);
 }
 

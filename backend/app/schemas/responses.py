@@ -2,15 +2,9 @@
 Additional response schemas for specific endpoint operations.
 """
 from pydantic import BaseModel
-from typing import Optional, List, Any, Union
+from typing import List
 from app.schemas.order import OrderResponse
 from app.schemas.sample import SampleResponse
-from app.schemas.pagination import PaginatedResponse
-
-
-class MessageResponse(BaseModel):
-    """Simple message response for stateless operations."""
-    message: str
 
 
 class OrderReportResponse(BaseModel):

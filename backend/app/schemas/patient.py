@@ -4,8 +4,8 @@ All fields use camelCase - no aliases needed
 """
 import re
 from calendar import monthrange
-from pydantic import BaseModel, Field, field_validator, model_validator, EmailStr
-from datetime import datetime, timedelta
+from pydantic import BaseModel, Field, field_validator, model_validator
+from datetime import datetime
 from app.schemas.enums import Gender, AffiliationDuration, Relationship
 
 

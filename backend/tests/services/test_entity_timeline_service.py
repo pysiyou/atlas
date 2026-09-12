@@ -7,11 +7,11 @@ import unittest
 from types import SimpleNamespace
 
 from app.schemas.enums import LabOperationType
-from app.services.timeline.event_taxonomy import (
+from app.services.timeline.taxonomy import (
     get_event_phase,
     is_entity_visible,
 )
-from app.services.timeline.relevance_engine import (
+from app.services.timeline.relevance import (
     RelevanceEngine,
     SampleTimelineScope,
     TestTimelineScope,

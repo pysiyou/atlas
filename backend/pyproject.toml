@@ -24,6 +24,14 @@ redis = {extras = ["hiredis"], version = "^5.0.0"}
 [tool.poetry.group.dev.dependencies]
 black = "^23.12.1"
 ruff = "^0.1.11"
+pytest = "^9.1.1"
+httpx = ">=0.27,<0.28"
+pytest-asyncio = "^1.4.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short"
 
 [build-system]
 requires = ["poetry-core"]

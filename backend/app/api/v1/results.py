@@ -1,194 +1,31 @@
-"""
-Results API Routes - for result entry and validation
+"""Results API Routes — result entry and validation."""
+from typing import List
 
-Uses the unified LabOperationsService for all operations.
-"""
-import logging
-from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session, joinedload
-from pydantic import BaseModel, Field, AliasChoices, model_validator
-from typing import Optional, List, Any, Literal
-from app.database import get_db
+from sqlalchemy.orm import Session
 
-logger = logging.getLogger(__name__)
 from app.core.dependencies import (
     get_current_user,
-    require_role,
     require_lab_tech,
-    require_lab_tech_plus,
-    require_admin,
+    require_role,
 )
+from app.database import get_db
 from app.models.user import User
-from app.models.order import Order, OrderTest
-from app.models.sample import Sample
-from app.models.escalation import EscalationTicket
-from app.schemas.enums import EscalationTicketStatus
-from app.schemas.enums import TestStatus, UserRole, ValidationDecision, EscalationResolutionAction
-from app.schemas.order import TestResultsDict
-from app.services.lab_operations import (
-    LabOperationsService,
-    LabOperationError,
-    EscalationResolveResult,
+from app.schemas.enums import EscalationResolutionAction, UserRole, ValidationDecision
+from app.schemas.lab import (
+    AmendmentRequest,
+    EscalationResolveRequest,
+    EscalationResolveResponse,
+    PendingEscalationItemResponse,
+    ResultEntryRequest,
+    ResultValidationRequest,
 )
-from app.services.order_status_updater import update_order_status
+from app.services.lab.results import ResultQueryService
+from app.services.lab.workflow import LabOperationsService, LabOperationError
 
 router = APIRouter()
 
-
-class ResultEntryRequest(BaseModel):
-    """Request body for entering test results"""
-    results: TestResultsDict  # Record<string, TestResult>
-    technicianNotes: Optional[str] = None
-
-
-class ResultValidationRequest(BaseModel):
-    """Request body for validating (approving) test results"""
-    decision: ValidationDecision
-    validationNotes: Optional[str] = None
-
-
-class EscalationResolveResponse(BaseModel):
-    """Response for escalation resolution."""
-    success: bool
-    action: str
-    message: str
-    escalatedTestId: int
-    newTestId: Optional[int] = None
-    newSampleId: Optional[int] = None
-
-
-EscalationResolveActionLiteral = Literal[
-    "force_validate",
-    "authorize_retest",
-    "authorize_recollect",
-    "apply_amendment",
-    "cancel_test",
-]
-
-
-class CriticalReadBackPayload(BaseModel):
-    """Required for force_validate on CRIT-VAL escalation tickets."""
-    providerName: str = Field(..., min_length=1, max_length=200)
-    providerContact: str = Field(..., min_length=1, max_length=200)
-    notifiedAt: datetime
-    readBackConfirmed: bool
-
-
-class EscalationResolveRequest(BaseModel):
-    """Request body for resolving an escalated test (admin/labtech_plus only)."""
-    action: EscalationResolveActionLiteral = Field(
-        ...,
-        description="'force_validate' | 'authorize_retest' | 'authorize_recollect' | 'apply_amendment' | 'cancel_test'"
-    )
-    validationNotes: Optional[str] = Field(None, max_length=1000)
-    readBack: Optional[CriticalReadBackPayload] = None
-    rejectionReason: Optional[str] = Field(
-        None,
-        min_length=1,
-        max_length=1000,
-        validation_alias=AliasChoices("rejectionReason", "rejection_reason"),
-    )
-
-    @model_validator(mode="after")
-    def require_rejection_reason_for_cancel(self):
-        if self.action in ("cancel_test", "authorize_recollect") and not (self.rejectionReason or "").strip():
-            raise ValueError("rejectionReason is required for this action")
-        return self
-
-
 require_escalation_resolver = require_role(UserRole.ADMIN, UserRole.LAB_TECH_PLUS)
-
-
-class PendingEscalationItemResponse(BaseModel):
-    """Enriched escalation item for frontend TestWithContext (order + patient + test + sample context)."""
-    id: int
-    orderId: int
-    orderDate: datetime
-    patientId: int
-    patientName: str
-    patientDob: Optional[str] = None
-    testCode: str
-    testName: str
-    sampleType: str
-    status: str
-    sampleId: Optional[int] = None
-    results: Optional[TestResultsDict] = None
-    resultEnteredAt: Optional[datetime] = None
-    enteredBy: Optional[str] = None
-    resultValidatedAt: Optional[datetime] = None
-    validatedBy: Optional[str] = None
-    validationNotes: Optional[str] = None
-    flags: Optional[List[str]] = None
-    technicianNotes: Optional[str] = None
-    hasCriticalValues: bool = False
-    isRetest: bool = False
-    retestOfTestId: Optional[int] = None
-    retestNumber: int = 0
-    priority: str
-    referringPhysician: Optional[str] = None
-    collectedAt: Optional[datetime] = None
-    collectedBy: Optional[str] = None
-    sampleIsRecollection: bool = False
-    sampleOriginalSampleId: Optional[int] = None
-    sampleRecollectionReason: Optional[str] = None
-    sampleRecollectionAttempt: Optional[int] = None
-    ticketId: Optional[int] = None
-    reasonCode: Optional[str] = None
-    severity: Optional[str] = None
-    ticketMetadata: Optional[Any] = None
-
-    class Config:
-        from_attributes = True
-
-
-def _enrich_order_test(
-    t: OrderTest,
-    samples_by_id: dict[int, Sample],
-    tickets_by_test: Optional[dict[int, EscalationTicket]] = None,
-) -> PendingEscalationItemResponse:
-    order = t.order
-    patient = order.patient if order else None
-    sample = samples_by_id.get(t.sampleId) if t.sampleId else None
-    test_def = t.test
-    ticket = tickets_by_test.get(t.id) if tickets_by_test else None
-    return PendingEscalationItemResponse(
-        id=t.id,
-        orderId=t.orderId,
-        orderDate=order.orderDate,
-        patientId=order.patientId,
-        patientName=patient.fullName if patient else "Unknown",
-        patientDob=patient.dateOfBirth if patient else None,
-        testCode=t.testCode,
-        testName=test_def.displayName if test_def else t.testCode,
-        sampleType=test_def.sampleType if test_def else "Unknown",
-        status=t.status.value,
-        sampleId=t.sampleId,
-        results=t.results,
-        resultEnteredAt=t.resultEnteredAt,
-        enteredBy=t.enteredBy,
-        resultValidatedAt=t.resultValidatedAt,
-        validatedBy=t.validatedBy,
-        validationNotes=t.validationNotes,
-        flags=t.flags,
-        technicianNotes=t.technicianNotes,
-        hasCriticalValues=t.hasCriticalValues or False,
-        isRetest=t.isRetest or False,
-        retestOfTestId=t.retestOfTestId,
-        retestNumber=t.retestNumber or 0,
-        priority=order.priority.value if order and order.priority else "low",
-        referringPhysician=order.referringPhysician if order else None,
-        collectedAt=sample.collectedAt if sample else None,
-        collectedBy=sample.collectedBy if sample else None,
-        sampleIsRecollection=sample.isRecollection if sample else False,
-        sampleOriginalSampleId=sample.originalSampleId if sample else None,
-        sampleRecollectionReason=sample.recollectionReason if sample else None,
-        sampleRecollectionAttempt=sample.recollectionAttempt if sample else None,
-        ticketId=ticket.id if ticket else None,
-        reasonCode=ticket.reasonCode.value if ticket and ticket.reasonCode else None,
-        severity=ticket.severity.value if ticket and ticket.severity else None,
-        ticketMetadata=ticket.ticketMetadata if ticket else None,
-    )
 
 
 @router.get("/results/pending-escalation", response_model=List[PendingEscalationItemResponse])
@@ -196,41 +33,7 @@ def get_pending_escalation(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_lab_tech),
 ):
-    """
-    Get tests pending escalation resolution.
-    Readable by all lab tech roles (command center visibility); resolution remains restricted.
-    Returns enriched list (order + patient + test + sample context) for Escalation tab.
-    """
-    tests = (
-        db.query(OrderTest)
-        .filter(OrderTest.status == TestStatus.ESCALATED)
-        .options(
-            joinedload(OrderTest.order).joinedload(Order.patient),
-            joinedload(OrderTest.test),
-        )
-        .all()
-    )
-    sample_ids = [t.sampleId for t in tests if t.sampleId]
-    samples_by_id = {}
-    if sample_ids:
-        for s in db.query(Sample).filter(Sample.sampleId.in_(sample_ids)).all():
-            samples_by_id[s.sampleId] = s
-
-    test_ids = [t.id for t in tests]
-    tickets_by_test: dict[int, EscalationTicket] = {}
-    if test_ids:
-        open_tickets = (
-            db.query(EscalationTicket)
-            .filter(
-                EscalationTicket.orderTestId.in_(test_ids),
-                EscalationTicket.status == EscalationTicketStatus.OPEN,
-            )
-            .all()
-        )
-        for ticket in open_tickets:
-            tickets_by_test[ticket.orderTestId] = ticket
-
-    return [_enrich_order_test(t, samples_by_id, tickets_by_test) for t in tests]
+    return ResultQueryService(db).get_pending_escalation()
 
 
 @router.get("/results/order-tests/{orderTestId}", response_model=PendingEscalationItemResponse)
@@ -239,38 +42,7 @@ def get_order_test_context(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Get enriched order test context for detail/history modals."""
-    order_test = (
-        db.query(OrderTest)
-        .filter(OrderTest.id == orderTestId)
-        .options(
-            joinedload(OrderTest.order).joinedload(Order.patient),
-            joinedload(OrderTest.test),
-        )
-        .first()
-    )
-    if not order_test:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Order test {orderTestId} not found")
-
-    samples_by_id: dict[int, Sample] = {}
-    if order_test.sampleId:
-        sample = db.query(Sample).filter(Sample.sampleId == order_test.sampleId).first()
-        if sample:
-            samples_by_id[sample.sampleId] = sample
-
-    tickets_by_test: dict[int, EscalationTicket] = {}
-    open_ticket = (
-        db.query(EscalationTicket)
-        .filter(
-            EscalationTicket.orderTestId == orderTestId,
-            EscalationTicket.status == EscalationTicketStatus.OPEN,
-        )
-        .first()
-    )
-    if open_ticket:
-        tickets_by_test[orderTestId] = open_ticket
-
-    return _enrich_order_test(order_test, samples_by_id, tickets_by_test)
+    return ResultQueryService(db).get_order_test_context(orderTestId)
 
 
 @router.post("/results/order-tests/{orderTestId}")
@@ -280,10 +52,8 @@ def enter_results(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_lab_tech),
 ):
-    """Enter results for a specific order test."""
     try:
-        service = LabOperationsService(db)
-        return service.enter_results(
+        return LabOperationsService(db).enter_results(
             order_test_id=orderTestId,
             user_id=current_user.id,
             results=result_data.results,
@@ -300,29 +70,19 @@ def validate_results(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_lab_tech),
 ):
-    """Validate (approve) a specific order test."""
     if validation_data.decision != ValidationDecision.APPROVED:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="For quality issues, use POST /lab/quality-issues.",
         )
-
     try:
-        service = LabOperationsService(db)
-        return service.validate_results(
+        return LabOperationsService(db).validate_results(
             order_test_id=orderTestId,
             user_id=current_user.id,
             validation_notes=validation_data.validationNotes,
         )
     except LabOperationError as e:
         raise HTTPException(status_code=e.status_code, detail=e.message)
-
-
-class AmendmentRequest(BaseModel):
-    """Request body for requesting amendment of validated results"""
-    amendmentReason: str = Field(..., min_length=1, max_length=1000)
-    proposedResults: Optional[TestResultsDict] = None
-    notes: Optional[str] = Field(None, max_length=1000)
 
 
 @router.post("/results/order-tests/{orderTestId}/request-amendment")
@@ -332,13 +92,8 @@ def request_amendment(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_lab_tech),
 ):
-    """
-    Request amendment for a validated test result.
-    Creates AMEND-RES escalation ticket for supervisor review.
-    """
     try:
-        service = LabOperationsService(db)
-        return service.request_amendment(
+        return LabOperationsService(db).request_amendment(
             order_test_id=orderTestId,
             user_id=current_user.id,
             amendment_reason=amendment_data.amendmentReason,
@@ -356,11 +111,9 @@ def resolve_escalation(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_escalation_resolver),
 ):
-    """Resolve an escalated order test (admin/labtech_plus only)."""
     try:
-        service = LabOperationsService(db)
         read_back = body.readBack.model_dump(mode="json") if body.readBack else None
-        result = service.resolve_escalation(
+        result = LabOperationsService(db).resolve_escalation(
             order_test_id=orderTestId,
             user_id=current_user.id,
             action=EscalationResolutionAction(body.action),

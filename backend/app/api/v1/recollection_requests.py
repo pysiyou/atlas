@@ -7,12 +7,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
-from app.core.dependencies import get_current_user, require_lab_tech_plus, require_role
+from app.core.dependencies import require_role
 from app.database import get_db
 from app.models.user import User
 from app.schemas.enums import UserRole
-from app.services.lab_operations import LabOperationsService
-from app.services.recollection_request_service import (
+from app.services.lab.workflow import LabOperationsService
+from app.services.lab.recollection import (
     RecollectionRequestResult,
     RecollectionRequestSummary,
 )
