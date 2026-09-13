@@ -230,27 +230,27 @@ export const LoginBackground: React.FC = () => {
         }
       `}</style>
 
-      {/* Subtle matte color accents */}
+      {/* Subtle matte color accents - theme-responsive */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Top-right muted teal accent */}
+        {/* Top-right accent */}
         <div
           className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full opacity-20"
           style={{
-            background: 'radial-gradient(circle, rgba(94, 129, 138, 0.25) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, var(--auth-gradient-accent) 0%, transparent 70%)',
           }}
         />
-        {/* Bottom-left muted slate accent */}
+        {/* Bottom-left accent */}
         <div
           className="absolute -bottom-48 -left-48 w-[600px] h-[600px] rounded-full opacity-25"
           style={{
-            background: 'radial-gradient(circle, rgba(100, 116, 139, 0.2) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, var(--auth-gradient-start) 0%, transparent 70%)',
           }}
         />
-        {/* Center subtle matte glow */}
+        {/* Center subtle glow */}
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full opacity-15"
           style={{
-            background: 'radial-gradient(circle, rgba(120, 130, 150, 0.12) 0%, transparent 60%)',
+            background: 'radial-gradient(circle, var(--auth-gradient-end) 0%, transparent 60%)',
           }}
         />
       </div>

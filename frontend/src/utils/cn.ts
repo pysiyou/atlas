@@ -1,14 +1,12 @@
 /**
  * Classname Utility
- * Conditionally join class names together.
+ * Conditionally join and merge Tailwind class names.
+ * Uses clsx for conditional logic and tailwind-merge for conflict resolution.
  */
 
-type ClassValue = string | number | boolean | undefined | null | ClassValue[];
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
-export function cn(...classes: ClassValue[]): string {
-  return classes
-    .flat()
-    .filter((x): x is string | number => Boolean(x) && typeof x !== 'boolean')
-    .map(String)
-    .join(' ');
+export function cn(...inputs: ClassValue[]): string {
+  return twMerge(clsx(inputs));
 }

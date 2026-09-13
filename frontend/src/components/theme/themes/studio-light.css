@@ -1,0 +1,11 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   STUDIO LIGHT THEME
+   Default light theme - uses base semantic tokens from semantic-light.css
+   This explicit block ensures consistent theme application.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme='studio-light'] {
+  /* Studio-light uses the base :root tokens - this block is mainly for consistency */
+  /* All semantic tokens are inherited from semantic-light.css */
+  /* Add any studio-light specific overrides here if needed in the future */
+}

@@ -23,16 +23,16 @@ const COLLECTION_CONTAINER_OPTIONS: { value: ContainerType; label: string }[] = 
   { value: 'cup', label: 'Cup' },
 ];
 
-/** Static bg classes so Tailwind includes them (dynamic classes get purged). */
+/** Static bg classes so Tailwind includes them (uses semantic container tokens). */
 const COLLECTION_TOP_COLOR_BG: Record<
   'red-top' | 'yellow-top' | 'green-top' | 'black-top' | 'blue-top',
   string
 > = {
-  'red-top': 'bg-red-600',
-  'yellow-top': 'bg-yellow-600',
-  'green-top': 'bg-green-600',
-  'black-top': 'bg-gray-900',
-  'blue-top': 'bg-blue-600',
+  'red-top': 'bg-container-red-bg',
+  'yellow-top': 'bg-container-yellow-bg',
+  'green-top': 'bg-container-green-bg',
+  'black-top': 'bg-container-black-bg',
+  'blue-top': 'bg-container-blue-bg',
 };
 
 interface CollectionPopoverContentProps {
@@ -200,7 +200,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
             const bgClass =
               value in COLLECTION_TOP_COLOR_BG
                 ? COLLECTION_TOP_COLOR_BG[value as keyof typeof COLLECTION_TOP_COLOR_BG]
-                : 'bg-gray-500';
+                : 'bg-container-gray-bg';
             return (
               <button
                 key={value}

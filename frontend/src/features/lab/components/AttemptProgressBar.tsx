@@ -20,19 +20,19 @@ interface AttemptProgressBarProps {
 
 const VARIANT_COLORS = {
   sky: {
-    bar: 'bg-sky-500',
-    bg: 'bg-sky-100 dark:bg-sky-900/30',
-    text: 'text-sky-700 dark:text-sky-300',
+    bar: 'bg-tone-info-text',
+    bg: 'bg-tone-info-bg',
+    text: 'text-tone-info-text',
   },
   red: {
-    bar: 'bg-red-500',
-    bg: 'bg-red-100 dark:bg-red-900/30',
-    text: 'text-red-700 dark:text-red-300',
+    bar: 'bg-tone-danger-text',
+    bg: 'bg-tone-danger-bg',
+    text: 'text-tone-danger-text',
   },
   warning: {
-    bar: 'bg-warning-500',
-    bg: 'bg-warning-100 dark:bg-warning-900/30',
-    text: 'text-warning-700 dark:text-warning-300',
+    bar: 'bg-tone-warning-text',
+    bg: 'bg-tone-warning-bg',
+    text: 'text-tone-warning-text',
   },
 };
 

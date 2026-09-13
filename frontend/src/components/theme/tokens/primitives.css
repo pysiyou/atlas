@@ -1,0 +1,105 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   ATLAS DESIGN SYSTEM - PRIMITIVE TOKENS
+   Raw color values with no semantic meaning. Theme-agnostic foundation.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --font-sans: 'Nunito', sans-serif;
+  
+  /* Font weight scale (Tailwind-aligned); default = light */
+  --font-weight-thin: 200;
+  --font-weight-extralight: 300;
+  --font-weight-light: 400;
+  --font-weight-normal: 500;
+  --font-weight-medium: 600;
+  --font-weight-semibold: 700;
+  --font-weight-bold: 800;
+  --font-weight-extrabold: 900;
+  --font-weight-black: 900;
+  --font-weight-default: var(--font-weight-extralight);
+
+  /* Brand Palette - Primary action color */
+  --primitive-brand-50: #f0f9ff;
+  --primitive-brand-100: #e0f2fe;
+  --primitive-brand-200: #bae6fd;
+  --primitive-brand-300: #7dd3fc;
+  --primitive-brand-400: #38bdf8;
+  --primitive-brand-500: #0ea5e9;
+  --primitive-brand-600: #0284c7;
+  --primitive-brand-700: #0369a1;
+  --primitive-brand-800: #075985;
+  --primitive-brand-900: #0c4a6e;
+  --primitive-brand-950: #082f49;
+
+  /* Neutral Palette - Grays for text, borders, surfaces */
+  --primitive-neutral-0: #ffffff;
+  --primitive-neutral-50: #f9fafb;
+  --primitive-neutral-100: #f3f4f6;
+  --primitive-neutral-200: #e5e7eb;
+  --primitive-neutral-300: #d1d5db;
+  --primitive-neutral-400: #9ca3af;
+  --primitive-neutral-500: #6b7280;
+  --primitive-neutral-600: #4b5563;
+  --primitive-neutral-700: #374151;
+  --primitive-neutral-800: #1f2937;
+  --primitive-neutral-900: #111827;
+  --primitive-neutral-950: #030712;
+
+  /* Success Palette */
+  --primitive-success-50: #f0fdf4;
+  --primitive-success-100: #dcfce7;
+  --primitive-success-200: #bbf7d0;
+  --primitive-success-500: #22c55e;
+  --primitive-success-600: #16a34a;
+  --primitive-success-700: #15803d;
+  --primitive-success-800: #166534;
+
+  /* Warning Palette */
+  --primitive-warning-50: #fffbeb;
+  --primitive-warning-100: #fef3c7;
+  --primitive-warning-200: #fde68a;
+  --primitive-warning-300: #fcd34d;
+  --primitive-warning-500: #eab308;
+  --primitive-warning-600: #ca8a04;
+  --primitive-warning-700: #a16207;
+  --primitive-warning-800: #854d0e;
+
+  /* Danger Palette */
+  --primitive-danger-50: #fef2f2;
+  --primitive-danger-100: #fee2e2;
+  --primitive-danger-200: #fecaca;
+  --primitive-danger-500: #ef4444;
+  --primitive-danger-600: #dc2626;
+  --primitive-danger-700: #b91c1c;
+  --primitive-danger-800: #991b1b;
+
+  /* Info Palette (Purple accent) */
+  --primitive-info-400: #a78bfa;
+  --primitive-info-500: #8b5cf6;
+
+  /* Extended badge palettes (purple, pink, teal, orange, indigo, cyan) */
+  --primitive-purple-100: #f3e8ff;
+  --primitive-purple-500: #a855f7;
+  --primitive-purple-600: #9333ea;
+  --primitive-purple-800: #6b21a8;
+  --primitive-pink-100: #fce7f3;
+  --primitive-pink-500: #ec4899;
+  --primitive-pink-600: #db2777;
+  --primitive-pink-800: #9d174d;
+  --primitive-teal-100: #ccfbf1;
+  --primitive-teal-500: #14b8a6;
+  --primitive-teal-600: #0d9488;
+  --primitive-teal-800: #115e59;
+  --primitive-orange-100: #ffedd5;
+  --primitive-orange-500: #f97316;
+  --primitive-orange-600: #ea580c;
+  --primitive-orange-800: #9a3412;
+  --primitive-indigo-100: #e0e7ff;
+  --primitive-indigo-500: #6366f1;
+  --primitive-indigo-600: #4f46e5;
+  --primitive-indigo-800: #3730a3;
+  --primitive-cyan-100: #cffafe;
+  --primitive-cyan-500: #06b6d4;
+  --primitive-cyan-600: #0891b2;
+  --primitive-cyan-800: #155e75;
+}

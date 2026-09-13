@@ -4,20 +4,6 @@
   /* Custom text size */
   --text-xxs: 10px;
 
-  /* Font family - Nunito as default sans */
-  --font-sans: 'Nunito', sans-serif;
-
-  /* Font weights (aligned with theme.css custom scale) */
-  --font-weight-thin: 200;
-  --font-weight-extralight: 300;
-  --font-weight-light: 400;
-  --font-weight-normal: 500;
-  --font-weight-medium: 600;
-  --font-weight-semibold: 700;
-  --font-weight-bold: 800;
-  --font-weight-extrabold: 900;
-  --font-weight-black: 900;
-
   /* ═══════════════════════════════════════════════════════════════════
      TEXT (Foreground)
      ═══════════════════════════════════════════════════════════════════ */
@@ -273,52 +259,29 @@
   --color-auth-badge: var(--auth-badge-bg);
   --color-auth-badge-border: var(--auth-badge-border);
   --color-auth-badge-icon: var(--auth-badge-icon);
+
+  /* ═══════════════════════════════════════════════════════════════════
+     CONTAINER COLORS (sample tube caps)
+     ═══════════════════════════════════════════════════════════════════ */
+  --color-container-red-bg: var(--container-red-bg);
+  --color-container-red-text: var(--container-red-text);
+  --color-container-yellow-bg: var(--container-yellow-bg);
+  --color-container-yellow-text: var(--container-yellow-text);
+  --color-container-purple-bg: var(--container-purple-bg);
+  --color-container-purple-text: var(--container-purple-text);
+  --color-container-blue-bg: var(--container-blue-bg);
+  --color-container-blue-text: var(--container-blue-text);
+  --color-container-green-bg: var(--container-green-bg);
+  --color-container-green-text: var(--container-green-text);
+  --color-container-gray-bg: var(--container-gray-bg);
+  --color-container-gray-text: var(--container-gray-text);
+  --color-container-black-bg: var(--container-black-bg);
+  --color-container-black-text: var(--container-black-text);
 }
 
 body {
   font-family: var(--font-sans);
   font-weight: var(--font-weight-default);
-}
-
-/* RSuite DateRangePicker Overrides */
-.rs-picker-toggle {
-  @apply !border-border-strong !rounded !py-2 !px-3 !h-[42px] !flex !items-center;
-}
-
-.rs-picker-toggle:hover {
-  @apply !border-brand;
-}
-
-.rs-picker-toggle.rs-btn-active {
-  @apply !border-brand !shadow-none !ring-2 !ring-brand;
-}
-
-.rs-picker-toggle {
-  @apply !py-2 !text-sm !h-[38px] !flex !items-center;
-}
-
-.rs-picker-toggle-caret {
-  @apply !top-3;
-}
-
-.rs-picker-toggle-clean {
-  @apply !top-3;
-}
-
-.rs-calendar-table-cell-selected .rs-calendar-table-cell-content {
-  @apply !bg-brand !border-brand;
-}
-
-.rs-calendar-table-cell-in-range:before {
-  @apply !bg-brand-muted;
-}
-
-.rs-btn-primary {
-  @apply !bg-brand !border-brand;
-}
-
-.rs-picker-menu {
-  z-index: 1000 !important;
 }
 
 /* 3D Transform Utilities */
