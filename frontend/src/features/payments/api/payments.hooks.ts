@@ -14,10 +14,6 @@ export {
   paymentAPI,
   type PaymentCreate,
   type PaymentFilters,
-  getPayments,
-  getPayment,
-  getPaymentsByOrder,
-  createPayment,
 } from './payments.service';
 
 export interface PaymentsFilters {

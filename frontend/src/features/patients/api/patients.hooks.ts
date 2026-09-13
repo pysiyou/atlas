@@ -17,7 +17,7 @@ import {
   patientUpdateSchema,
 } from '../schemas/patient.schema';
 import { formInputToPayload } from '../utils/formTransformers';
-import { useOrdersForPatientIds, useOrdersList } from '@/features/orders';
+import { useOrdersForPatientIds } from '@/features/orders';
 import type { Patient, PatientContext, Order } from '@/types';
 import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
 import { patientAPI } from './patients.service';
@@ -416,31 +416,4 @@ export function useUpdatePatient() {
       toast.error(`Failed to update patient: ${getErrorMessage(error, 'Unknown error')}`);
     },
   });
-}
-
-
-/**
- * usePatientContextList — Superset enrichment hook for patient list views.
- */
-
-export function usePatientContextList(): {
-  patients: PatientContext[];
-  isLoading: boolean;
-  isError: boolean;
-  refetch: () => void;
-} {
-  const { patients: rawPatients, isLoading: pLoading, isError: pError, refetch } = usePatientsList();
-  const { orders, isLoading: oLoading } = useOrdersList();
-
-  const patients = useMemo<PatientContext[]>(() => {
-    if (!rawPatients || !orders) return [];
-    return enrichPatientsWithOrderContext(rawPatients, orders);
-  }, [rawPatients, orders]);
-
-  return {
-    patients,
-    isLoading: pLoading || oLoading,
-    isError: pError,
-    refetch,
-  };
 }

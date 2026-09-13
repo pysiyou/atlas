@@ -10,7 +10,7 @@ import {
   toNetworkError,
 } from './errors';
 
-export type { ApiError, APIError } from './errors';
+export type { ApiError } from './errors';
 
 type TokenGetter = () => string | null;
 type RefreshHandler = () => Promise<string | null>;

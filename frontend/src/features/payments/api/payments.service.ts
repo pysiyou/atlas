@@ -52,15 +52,3 @@ export const paymentAPI = {
       .then(data => parseApiResponse(paymentResponseSchema, data, 'payment') as Payment);
   },
 };
-
-/** @deprecated Use paymentAPI.getAll */
-export const getPayments = (filters?: PaymentFilters) => paymentAPI.getAll(filters);
-
-/** @deprecated Use paymentAPI.getById */
-export const getPayment = (paymentId: string) => paymentAPI.getById(paymentId);
-
-/** @deprecated Use paymentAPI.getByOrder */
-export const getPaymentsByOrder = (orderId: string) => paymentAPI.getByOrder(orderId);
-
-/** @deprecated Use paymentAPI.create */
-export const createPayment = (payment: PaymentCreate) => paymentAPI.create(payment);

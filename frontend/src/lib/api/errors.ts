@@ -6,8 +6,6 @@ import { logger } from '@/utils/logger';
 import type { ApiError, ApiErrorDetail } from '@/types/schemas/error.schema';
 
 export type { ApiError };
-/** @deprecated Use ApiError from @/types/schemas/error.schema */
-export type APIError = ApiError;
 
 function parseDetailMessages(details: ApiErrorDetail[]): string {
   return details
