@@ -1,58 +1,28 @@
-/**
- * Lab Feature — public API
- */
+// Re-exports
+export * from './hooks';
+export * from './types';
+export * from './constants';
+export * from './utils';
 
-export { Laboratory } from './pages/LaboratoryPage';
-export { CriticalValuesPanel } from './critical-values/CriticalValuesPanel';
+// API re-exports
+export { useSampleLookup } from './api/samples.api';
+
+// Pages
+export { Laboratory as LaboratoryPage } from './pages/LaboratoryPage';
+
+// Views
+export { CollectionView } from './collection/CollectionView';
+export { EntryView } from './entry/EntryView';
+export { ValidationView } from './validation/ValidationView';
+export { CommandCenterPage } from './command-center/CommandCenterPage';
+
+// Components (selectively exported)
+export { LabWorkflowView } from './components/LabWorkflowView';
+export { LabCard } from './components/LabCard';
+export { LabDetailModal } from './components/LabDetailModal';
+export { LabFilters } from './components/LabFilters';
 export { PopoverForm } from './components/PopoverForm';
-export { getLabQueueUrlForTest } from './utils/labQueueLinks';
+export { useResponsiveCard } from './components/ResponsiveCard';
 
-export {
-  sampleAPI,
-  useSamplesList,
-  useSample,
-  useSampleLookup,
-  useCollectSample,
-  usePaginatedSamples,
-} from './api/samples.api';
-
-export {
-  resultAPI,
-  useEnterResults,
-  useValidateResults,
-  useResolveEscalation,
-  usePendingEscalation,
-} from './api/results.api';
-
-export {
-  qualityIssuesAPI,
-  useQualityIssueOptions,
-  useReportQualityIssue,
-  useQualityIssuesForOrder,
-} from './api/quality-issues.api';
-
-export { auditAPI, useEntityTimeline } from './api/audit.api';
-
-export {
-  commandCenterAPI,
-  type TimelineEvent,
-  type TimelineResponse,
-} from './api/commandCenter.api';
-
-export {
-  recollectionRequestsAPI,
-  usePendingRecollectionRequests,
-  useApproveRecollectionRequest,
-  useDenyRecollectionRequest,
-} from './api/recollection-requests.api';
-
-export {
-  criticalValuesAPI,
-  type CriticalValueRecord,
-} from './critical-values/criticalValues.api';
-
-export {
-  usePendingCriticalValues,
-  useNotifyCriticalValue,
-  useAcknowledgeCriticalValue,
-} from './critical-values/useCriticalValues';
+// Critical Values
+export { CriticalValuesPanel } from './critical-values/CriticalValuesPanel';

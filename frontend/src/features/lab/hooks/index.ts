@@ -4,7 +4,9 @@
 
 export * from './useLabWorkflowFilters';
 export * from './useLabTestsFromOrders';
-export * from './useLabPipelineCounts';
+export { useLabPipelineCounts } from './useLabPipelineCounts';
+export * from './useLabDataProvider';
+export * from './createWorkflowFilters';
 export * from './useLabUrlSearch';
 export * from './useLabCardClickGuard';
 export * from './useQualityIssueDialog';
