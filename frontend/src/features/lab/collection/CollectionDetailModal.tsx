@@ -13,7 +13,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query';
-import { sampleAPI } from '@/features/lab/api/samples.api';
+import { sampleAPI } from '../api/samples.api';
 import type { ContainerType, RejectedSample } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import Barcode from 'react-barcode';
@@ -27,7 +27,7 @@ import { useTestCatalog } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users.api';
 import { usePatientNameLookup } from '@/features/patients';
 import { useOrderLookup } from '@/features/orders';
-import { useSampleLookup } from '@/features/lab/api/samples.api';
+import { useSampleLookup } from '../api/samples.api';
 import { getTestNames } from '@/features/catalog/utils';
 import { LabDetailModal, ModalFooter } from '../components/LabDetailModal';
 import { labModalSubtitle } from '../components/labModalStages';

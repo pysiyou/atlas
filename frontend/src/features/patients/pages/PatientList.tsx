@@ -1,20 +1,17 @@
 /**
- * PatientList - Uses ListView component with PatientContext superset type.
- *
- * PatientContext = Patient + pre-computed order statistics (orderCount, lastOrderDate, etc.)
- * Built by usePatientContextList — no inline Order[] joins needed here.
+ * PatientList - Uses ListView with server-side pagination.
  */
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { usePatientContextList } from '../api/patients.api';
+import { usePaginatedPatientContextList } from '../api/patients.api';
 import { useFiltering } from '@/hooks/useFiltering';
-import { ListView } from '@/components';
+import { ListView, Pagination } from '@/components';
 import { Button } from '@/components';
-import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components';
 import { useModal } from '@/lib/context/ModalContext';
 import { PatientFilters, type AffiliationStatus } from '../components/PatientFilters';
 import { createPatientTableConfig } from '../config/PatientTable.config';
+import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
 import { calculateAge } from '@/utils';
 import type { PatientContext, Gender } from '@/types';
 import { EditPatientModal } from '../components/EditPatientModal';
@@ -22,28 +19,40 @@ import { isAffiliationActive } from '../utils/patientHelpers';
 
 export const PatientList: React.FC = () => {
   const navigate = useNavigate();
-  useModal(); // openModal reserved for future use
-  const { patients, isLoading, isError, refetch } = usePatientContextList();
+  useModal();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [ageRange, setAgeRange] = useState<[number, number]>([0, 150]);
+  const [affiliationStatusFilters, setAffiliationStatusFilters] = useState<AffiliationStatus[]>(
+    []
+  );
 
-  // Format error for ErrorAlert component
+  const {
+    patients,
+    pagination,
+    page,
+    goToPage,
+    resetPage,
+    isLoading,
+    isFetching,
+    isError,
+    refetch,
+  } = usePaginatedPatientContextList(searchQuery.trim() || undefined);
+
+  const handleSearchChange = useCallback(
+    (query: string) => {
+      setSearchQuery(query);
+      resetPage();
+    },
+    [resetPage]
+  );
+
   const error = isError
-    ? {
-        message: 'Failed to load patients',
-        operation: 'load' as const,
-      }
+    ? { message: 'Failed to load patients', operation: 'load' as const }
     : null;
 
-  const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
-  const [ageRange, setAgeRange] = React.useState<[number, number]>([0, 150]);
-  const [affiliationStatusFilters, setAffiliationStatusFilters] = React.useState<
-    AffiliationStatus[]
-  >([]);
-
-  // Use shared filtering hook — PatientContext extends Patient so all fields are available
   const {
     filteredItems: preFilteredPatients,
-    searchQuery,
-    setSearchQuery,
     statusFilters: sexFilters,
     setStatusFilters: setSexFilters,
   } = useFiltering<PatientContext, Gender>(patients, {
@@ -57,11 +66,9 @@ export const PatientList: React.FC = () => {
     defaultSort: { field: 'registrationDate', direction: 'desc' },
   });
 
-  // Apply age and affiliation status filters
   const filteredPatients = useMemo(() => {
     let filtered = preFilteredPatients;
 
-    // Apply age filter
     const [minAge, maxAge] = ageRange;
     if (minAge !== 0 || maxAge !== 150) {
       filtered = filtered.filter(patient => {
@@ -70,7 +77,6 @@ export const PatientList: React.FC = () => {
       });
     }
 
-    // Apply affiliation status filter
     if (affiliationStatusFilters.length > 0) {
       filtered = filtered.filter(patient => {
         const isActive = isAffiliationActive(patient.affiliation);
@@ -80,14 +86,10 @@ export const PatientList: React.FC = () => {
           affiliationStatusFilters.includes('active') &&
           affiliationStatusFilters.includes('inactive')
         ) {
-          return true; // Show all
+          return true;
         }
-        if (affiliationStatusFilters.includes('active')) {
-          return isActive;
-        }
-        if (affiliationStatusFilters.includes('inactive')) {
-          return hasInactive;
-        }
+        if (affiliationStatusFilters.includes('active')) return isActive;
+        if (affiliationStatusFilters.includes('inactive')) return hasInactive;
         return true;
       });
     }
@@ -95,7 +97,6 @@ export const PatientList: React.FC = () => {
     return filtered;
   }, [preFilteredPatients, ageRange, affiliationStatusFilters]);
 
-  // Memoize table config — PatientContext has pre-computed order stats, no callback needed
   const patientTableConfig = useMemo(
     () => createPatientTableConfig(navigate),
     [navigate]
@@ -103,44 +104,49 @@ export const PatientList: React.FC = () => {
 
   return (
     <>
-      <ListView
-        mode="table"
-        items={filteredPatients}
-        viewConfig={patientTableConfig}
-        loading={isLoading}
-        error={error}
-        onRetry={refetch}
-        onDismissError={() => {}}
-        onRowClick={(patient: PatientContext) => navigate(`/patients/${patient.id}`)}
-        title="Patients"
-        headerActions={
-          <Button variant="add" size="sm" onClick={() => setIsCreateModalOpen(true)}>
-            New Patient
-          </Button>
-        }
-        filters={
-          <PatientFilters
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            ageRange={ageRange}
-            onAgeRangeChange={setAgeRange}
-            sexFilters={sexFilters}
-            onSexFiltersChange={setSexFilters}
-            affiliationStatusFilters={affiliationStatusFilters}
-            onAffiliationStatusFiltersChange={setAffiliationStatusFilters}
-          />
-        }
-        pagination={true}
-        pageSize={20}
-        pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL}
-      />
+      <div className="flex h-full min-h-0 flex-col">
+        <ListView
+          mode="table"
+          items={filteredPatients}
+          viewConfig={patientTableConfig}
+          loading={isLoading || isFetching}
+          error={error}
+          onRetry={refetch}
+          onDismissError={() => undefined}
+          onRowClick={(patient: PatientContext) => navigate(`/patients/${patient.id}`)}
+          title="Patients"
+          headerActions={
+            <Button variant="add" size="sm" onClick={() => setIsCreateModalOpen(true)}>
+              New Patient
+            </Button>
+          }
+          filters={
+            <PatientFilters
+              searchQuery={searchQuery}
+              onSearchChange={handleSearchChange}
+              sexFilters={sexFilters}
+              onSexFiltersChange={setSexFilters}
+              ageRange={ageRange}
+              onAgeRangeChange={setAgeRange}
+              affiliationStatusFilters={affiliationStatusFilters}
+              onAffiliationStatusFiltersChange={setAffiliationStatusFilters}
+            />
+          }
+          pagination={false}
+        />
+        <Pagination
+          currentPage={page}
+          totalItems={pagination.total}
+          pageSize={pagination.pageSize}
+          onPageChange={goToPage}
+          onPageSizeChange={() => undefined}
+          pageSizeOptions={[DEFAULT_LIST_PAGE_SIZE]}
+        />
+      </div>
 
       <EditPatientModal
         isOpen={isCreateModalOpen}
-        onClose={() => {
-          refetch();
-          setIsCreateModalOpen(false);
-        }}
+        onClose={() => setIsCreateModalOpen(false)}
         mode="create"
       />
     </>

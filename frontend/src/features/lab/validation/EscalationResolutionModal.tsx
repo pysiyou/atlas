@@ -13,7 +13,7 @@ import { LabDetailModal, DetailGrid, StatusBadgeRow } from '../components/LabDet
 import { EntryInfoLine } from '../components/StatusBadges';
 import { CriticalValueActions } from '@/features/lab/critical-values/CriticalValueActions';
 import { buildCriticalValueRecord } from '@/features/lab/critical-values/buildCriticalValueRecord.utils';
-import { queryKeys } from '@/lib/query';
+import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
 import type { TestWithContext } from '@/types';
 import { useEscalationResolution } from './useEscalationResolution';
 import { EscalationResolutionFooter } from './EscalationResolutionFooter';
@@ -49,9 +49,10 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   const criticalRecord = useMemo(() => buildCriticalValueRecord(test), [test]);
 
   const handleCriticalValueUpdated = useCallback(() => {
-    queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
-    queryClient.invalidateQueries({ queryKey: queryKeys.criticalValues.all });
-    queryClient.invalidateQueries({ queryKey: queryKeys.results.pendingEscalation() });
+    invalidateLabWorkflowQueries(queryClient, {
+      criticalValues: true,
+      pendingEscalation: true,
+    });
   }, [queryClient]);
 
   const resetForm = useCallback(() => {

@@ -2,6 +2,7 @@
 /**
  * Atlas cross-stack codegen — generates Python and TypeScript from contracts/.
  */
+import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -183,4 +184,35 @@ if (fs.existsSync(path.join(CONTRACTS, 'physiologic-limits.json'))) {
   generatePhysiologicLimits();
 }
 generateEnums();
+generateOpenApiTypes();
 console.log('codegen complete');
+
+function exportOpenApiSpec() {
+  const openapiPath = path.join(CONTRACTS, 'openapi.json');
+  const output = execSync(
+    'poetry run python -c "import json; from app.main import app; print(json.dumps(app.openapi()))"',
+    {
+      cwd: path.join(ROOT, 'backend'),
+      encoding: 'utf8',
+      shell: true,
+    }
+  );
+  fs.mkdirSync(CONTRACTS, { recursive: true });
+  fs.writeFileSync(openapiPath, output);
+  console.log('wrote contracts/openapi.json');
+  return openapiPath;
+}
+
+function generateOpenApiTypes() {
+  try {
+    const openapiPath = exportOpenApiSpec();
+    const outPath = path.join(ROOT, 'frontend/src/lib/api/types/generated/api.d.ts');
+    execSync(`npx openapi-typescript ${JSON.stringify(openapiPath)} -o ${JSON.stringify(outPath)}`, {
+      cwd: path.dirname(fileURLToPath(import.meta.url)),
+      stdio: 'inherit',
+    });
+    console.log('wrote frontend/src/lib/api/types/generated/api.d.ts');
+  } catch (error) {
+    console.warn('skip OpenAPI types (backend unavailable or openapi-typescript failed):', error.message);
+  }
+}

@@ -9,7 +9,7 @@
  * - CollectionInfoLine for sample metadata
  */
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Badge, Button, Icon, SectionPanel, CircularProgress } from '@/components';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { displayId } from '@/utils';
@@ -80,17 +80,18 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
     readOnly ? (test.technicianNotes ?? initialTechnicianNotes) : initialTechnicianNotes
   );
 
-  useEffect(() => {
-    if (!readOnly) return;
-    if (test.results) {
-      setLocalResults(
-        Object.fromEntries(
-          Object.entries(test.results).map(([key, value]) => [key, String(value ?? '')]),
-        ),
+  const displayResults = useMemo(() => {
+    if (readOnly && test.results) {
+      return Object.fromEntries(
+        Object.entries(test.results).map(([key, value]) => [key, String(value ?? '')])
       );
     }
-    setLocalNotes(test.technicianNotes ?? initialTechnicianNotes);
-  }, [readOnly, test.id, test.results, test.technicianNotes, initialTechnicianNotes]);
+    return localResults;
+  }, [readOnly, test.results, localResults]);
+
+  const displayNotes = readOnly
+    ? (test.technicianNotes ?? initialTechnicianNotes)
+    : localNotes;
 
   const saveAction = useAsyncAction(
     useCallback(
@@ -105,8 +106,8 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   const isSaving = saveAction.isPending;
 
   const filledCount = useMemo(
-    () => Object.values(localResults).filter(v => v?.trim()).length,
-    [localResults]
+    () => Object.values(displayResults).filter(v => v?.trim()).length,
+    [displayResults]
   );
 
   const isComplete = useMemo(() => {
@@ -263,8 +264,8 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
           <EntryForm
             testDef={resolvedTestDef}
             resultKey={resultKey}
-            results={localResults}
-            technicianNotes={localNotes}
+            results={displayResults}
+            technicianNotes={displayNotes}
             patient={test.patient}
             onResultsChange={handleLocalResultChange}
             onNotesChange={handleLocalNotesChange}

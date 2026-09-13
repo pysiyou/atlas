@@ -1,7 +1,7 @@
 import { deriveWorkItemState } from '@/features/lab/utils/deriveWorkItemState';
 import { getQueueAgeInfo } from '@/features/lab/utils/queueAge';
 import { LAB_CONFIG } from '@/features/lab/constants';
-import type { PriorityLevel, SampleStatus } from '@/types';
+import type { PaymentStatus, PriorityLevel, SampleStatus } from '@/types';
 import {
   accumulateAge,
   bumpAgeBucket,
@@ -26,7 +26,7 @@ const STAGE_LABELS: Record<AttentionItem['stage'], string> = {
 };
 
 export interface CollectionDisplayInput {
-  sample: { sampleId: number; status: string; isRecollection: boolean };
+  sample?: { sampleId: number; status: string; isRecollection: boolean };
   order: {
     orderId: number;
     orderDate: string;
@@ -39,13 +39,13 @@ export interface CollectionDisplayInput {
 export interface TestQueueInput {
   id?: number;
   orderId: number;
-  orderDate: string;
+  orderDate?: string;
   collectedAt?: string | null;
   resultEnteredAt?: string | null;
   priority?: string;
   patientName?: string;
-  isRetest: boolean;
-  sampleStatus?: SampleStatus;
+  isRetest?: boolean;
+  sampleStatus?: string;
   sampleIsRecollection?: boolean;
   reasonCode?: string | null;
 }
@@ -125,7 +125,7 @@ export function deriveBoardPipeline(input: BoardPipelineInput): BoardPipelineRes
     const workItem = deriveWorkItemState(
       { status: 'pending', isRetest: false },
       {
-        paymentStatus: display.order.paymentStatus,
+        paymentStatus: display.order.paymentStatus as PaymentStatus,
         sampleStatus: display.sample.status as SampleStatus,
         sampleIsRecollection: display.sample.isRecollection,
       },
@@ -166,7 +166,7 @@ export function deriveBoardPipeline(input: BoardPipelineInput): BoardPipelineRes
     const workItem = deriveWorkItemState(
       { status: 'sample-collected', isRetest: test.isRetest },
       {
-        sampleStatus: test.sampleStatus,
+        sampleStatus: test.sampleStatus as SampleStatus | undefined,
         sampleIsRecollection: test.sampleIsRecollection,
         escalationReasonCode: test.reasonCode,
       },
@@ -206,7 +206,7 @@ export function deriveBoardPipeline(input: BoardPipelineInput): BoardPipelineRes
     const workItem = deriveWorkItemState(
       { status: 'resulted', isRetest: test.isRetest },
       {
-        sampleStatus: test.sampleStatus,
+        sampleStatus: test.sampleStatus as SampleStatus | undefined,
         escalationReasonCode: test.reasonCode,
       },
     );
@@ -241,7 +241,7 @@ export function deriveBoardPipeline(input: BoardPipelineInput): BoardPipelineRes
     const workItem = deriveWorkItemState(
       { status: 'escalated', isRetest: test.isRetest },
       {
-        sampleStatus: test.sampleStatus,
+        sampleStatus: test.sampleStatus as SampleStatus | undefined,
         escalationReasonCode: test.reasonCode,
       },
     );
@@ -283,7 +283,7 @@ export function deriveBoardPipeline(input: BoardPipelineInput): BoardPipelineRes
       since,
       workItemCount: request.affectedOrderTestIds?.length ?? 1,
       orderTestIds:
-        request.affectedOrderTestIds?.length > 0
+        request.affectedOrderTestIds && request.affectedOrderTestIds.length > 0
           ? request.affectedOrderTestIds
           : request.orderTestId != null
             ? [request.orderTestId]

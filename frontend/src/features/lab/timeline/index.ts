@@ -1,5 +1,6 @@
 export * from './activityCategories';
-export * from './formatActivityEvent';
 export * from './timelineStyles';
 export * from './entityTimelineCategories';
-export * from './formatEntityTimelineEvent';
+export { formatActivityEvent, type FormatActivityOptions } from './formatActivityEvent';
+export { formatEntityTimelineEvent, getRetestAttemptDivider } from './formatEntityTimelineEvent';
+export type { FormattedTimelineEvent, EventDetail } from './timelineDetailBuilders';

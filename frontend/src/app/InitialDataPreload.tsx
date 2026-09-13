@@ -1,14 +1,10 @@
 /**
- * Prefetches shared lists after login so feature pages hit a warm cache.
- * Inactive while logged out (children render immediately).
+ * Prefetches reference data after login (catalog only — dynamic lists use paginated hooks).
  */
 
 import React from 'react';
 import { useAuthStore } from '@/app/store';
 import { useTestCatalog } from '@/features/catalog';
-import { usePatientsList } from '@/features/patients';
-import { useOrdersList } from '@/features/orders';
-import { useSamplesList } from '@/features/lab/api/samples.api';
 import { ErrorFallback, PageLoadingFallback } from '@/components/loaders';
 
 function toErrorEntry(
@@ -27,54 +23,33 @@ interface AuthenticatedPreloadProps {
   showLoadingSkeleton: boolean;
 }
 
-/**
- * Runs query hooks only when mounted under an authenticated session.
- * Separated so hooks are never called on the public login tree.
- */
 const AuthenticatedPreload: React.FC<AuthenticatedPreloadProps> = ({
   children,
   showLoadingSkeleton,
 }) => {
-  const patientsQuery = usePatientsList();
-  const ordersQuery = useOrdersList();
   const testsQuery = useTestCatalog();
-  const samplesQuery = useSamplesList();
 
-  const isLoading =
-    patientsQuery.isLoading ||
-    ordersQuery.isLoading ||
-    testsQuery.isLoading ||
-    samplesQuery.isLoading;
+  const isLoading = testsQuery.isLoading;
 
   const errors = [
-    toErrorEntry(patientsQuery.isError, patientsQuery.error, 'Failed to load patients'),
-    toErrorEntry(ordersQuery.isError, ordersQuery.error, 'Failed to load orders'),
     toErrorEntry(testsQuery.isError, testsQuery.error, 'Failed to load tests'),
-    toErrorEntry(samplesQuery.isError, samplesQuery.error, 'Failed to load samples'),
   ].filter(Boolean) as { message: string }[];
 
   const handleRetry = async () => {
-    await Promise.all([
-      patientsQuery.refetch(),
-      ordersQuery.refetch(),
-      testsQuery.refetch(),
-      samplesQuery.refetch(),
-    ]);
+    await testsQuery.refetch();
   };
+
+  if (errors.length > 0) {
+    return (
+      <ErrorFallback
+        error={new Error(errors.map(entry => entry.message).join('; '))}
+        onRetry={handleRetry}
+      />
+    );
+  }
 
   if (isLoading && showLoadingSkeleton) {
     return <PageLoadingFallback />;
-  }
-
-  if (errors.length > 0 && !isLoading) {
-    const message = errors.map(e => e.message).join('; ');
-    return (
-      <ErrorFallback
-        error={new Error(message)}
-        onRetry={() => void handleRetry()}
-        homeHref="/dashboard"
-      />
-    );
   }
 
   return <>{children}</>;
@@ -82,7 +57,6 @@ const AuthenticatedPreload: React.FC<AuthenticatedPreloadProps> = ({
 
 interface InitialDataPreloadProps {
   children: React.ReactNode;
-  /** Full-screen loader while shared lists fetch; if false, children render immediately */
   showLoadingSkeleton?: boolean;
 }
 

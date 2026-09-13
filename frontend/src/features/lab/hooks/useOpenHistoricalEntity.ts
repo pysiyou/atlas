@@ -4,8 +4,8 @@
 import { useCallback } from 'react';
 import { toast } from '@/app/AppToastBar';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { sampleAPI } from '@/features/lab/api/samples.api';
-import { resultAPI } from '@/features/lab/api/results.api';
+import { sampleAPI } from '../api/samples.api';
+import { resultAPI } from '../api/results.api';
 import { orderTestKey } from '@/features/lab/utils/orderTestKey';
 import { hasTestResults } from '@/features/lab/utils/hasTestResults';
 import type { TestWithContext } from '@/types';

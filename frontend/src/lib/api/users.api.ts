@@ -3,34 +3,15 @@
  *
  * Provides access to user data with Infinity caching.
  * User list rarely changes, so we cache it for the entire session.
- *
- * @module hooks/queries/useUsers
  */
-
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { useInvalidateQueryKey } from '@/lib/query/invalidate';
-import { apiClient } from '@/lib/apiClient';
+import { usersAPI, type UserDisplayInfo } from '@/lib/api/users.service';
 import { useAuthStore } from '@/app/store';
 
-/**
- * API response type for users lookup endpoint (all authenticated users)
- */
-interface UserLookupResponse {
-  id: number; // Backend returns integer, we convert to string for consistency
-  name: string;
-  username: string;
-}
-
-/**
- * Minimal user info for display purposes
- */
-export interface UserDisplayInfo {
-  id: string;
-  name: string;
-  username: string;
-}
+export type { UserDisplayInfo } from '@/lib/api/users.service';
 
 /**
  * Hook to fetch and cache all users.
@@ -48,12 +29,7 @@ export function useUsersList() {
 
   const query = useQuery({
     queryKey: queryKeys.users.list(),
-    queryFn: async () => {
-      // Use lookup endpoint which is accessible to all authenticated users
-      // Returns minimal user info (id, name, username) for display purposes
-      const response = await apiClient.get<UserLookupResponse[]>('/users/lookup');
-      return response;
-    },
+    queryFn: () => usersAPI.lookup(),
     enabled: isAuthenticated && !isRestoring,
     ...cacheConfig.static, // Infinity cache
     retry: (failureCount, error) => {

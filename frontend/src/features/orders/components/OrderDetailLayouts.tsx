@@ -27,7 +27,7 @@ interface LayoutProps {
   onPaymentSuccess?: () => void;
 }
 
-function getTestsTitle(activeTests: OrderTest[], totalTests: number, supersededCount: number, removedCount: number): string {
+function getTestsTitle(_activeTests: OrderTest[], totalTests: number, supersededCount: number, removedCount: number): string {
   const visibleTests = totalTests - removedCount;
   
   if (supersededCount > 0) {

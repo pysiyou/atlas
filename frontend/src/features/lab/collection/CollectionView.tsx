@@ -10,7 +10,7 @@ import { useTestCatalog } from '@/features/catalog';
 import { usePatientNameLookup } from '@/features/patients';
 import { useOrderLookup } from '@/features/orders';
 import { useOrdersList } from '@/features/orders';
-import { useCollectSample, useSamplesList } from '@/features/lab/api/samples.api';
+import { useCollectSample, usePendingSamples } from '../api/samples.api';
 import { useCollectionSampleDisplays } from '@/features/lab/collection/useCollectionSampleDisplays';
 import { useCollectionCollectHandler } from '@/features/lab/collection/useCollectionCollectHandler';
 import type { SampleStatus } from '@/types';
@@ -28,7 +28,7 @@ export const CollectionView: React.FC = () => {
   const { user: currentUser } = useAuthStore();
   const { refetch: refreshOrders, isLoading: ordersLoading } = useOrdersList();
   const { tests, isLoading: testsLoading } = useTestCatalog();
-  const { samples, isLoading: samplesLoading } = useSamplesList();
+  const { samples, isLoading: samplesLoading } = usePendingSamples();
   const collectSampleMutation = useCollectSample();
   const { getPatient, getPatientName } = usePatientNameLookup();
   const { getOrder } = useOrderLookup();

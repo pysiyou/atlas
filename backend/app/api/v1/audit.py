@@ -29,6 +29,7 @@ async def get_lab_operation_logs(
     entity_type: Optional[str] = Query(default=None),
     hours_back: Optional[int] = Query(default=24, ge=1, le=168),
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ) -> list[LabOperationLogResponse]:
     return AuditQueryService(db).list_logs(limit, offset, operation_type, entity_type, hours_back)
 
@@ -39,6 +40,7 @@ async def get_lab_operation_logs_count(
     entity_type: Optional[str] = Query(default=None),
     hours_back: Optional[int] = Query(default=24, ge=1, le=168),
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ) -> AuditLogsCountResponse:
     count = AuditQueryService(db).count_logs(operation_type, entity_type, hours_back)
     return AuditLogsCountResponse(count=count)

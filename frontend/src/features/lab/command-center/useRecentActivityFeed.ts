@@ -5,7 +5,7 @@
 import { useMemo } from 'react';
 import { useActivityFeedQuery } from './useActivityFeedQuery';
 import { getEventCategory, type TimelineEventCategory } from '@/features/lab/timeline/activityCategories';
-import type { TimelineEvent } from '@/features/lab/api/commandCenter.api';
+import type { TimelineEvent } from '../api/commandCenter.api';
 
 const TECH_FEED_HOURS = 24;
 const TECH_FEED_LIMIT = 50;

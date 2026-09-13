@@ -21,7 +21,7 @@ import { useLabCardClickGuard, useTestWorkItemState } from '@/features/lab/hooks
 import { BlockedReasonBadge } from '../components/StatusBadges';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
 import { formatRejectionReasons } from '../utils/labFormatters';
-import { useSampleLookup } from '@/features/lab/api/samples.api';
+import { useSampleLookup } from '../api/samples.api';
 import type { TestWithContext, Sample } from '@/types';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import { ICONS } from '@/config/icons';

@@ -1,27 +1,20 @@
 /**
- * PaymentList Component - Migrated to use ListView
- *
- * Displays a list of orders with payment information.
- * Uses TanStack Query hooks for efficient data fetching and caching.
- * Now uses shared ListView component for consistent UX.
- *
- * Row clicks open a PaymentDetailModal with full order/payment info.
+ * PaymentList — server-paginated orders joined with cached payments.
  */
 
 import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFiltering } from '@/hooks/useFiltering';
-import { ListView } from '@/components';
-import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components';
+import { ListView, Pagination } from '@/components';
 import { PaymentFilters } from '../components/PaymentFilters';
 import { createPaymentTableConfig } from '../config/PaymentTable.config';
 import { PaymentDetailModal } from '../components/PaymentDetailModal';
-import { useOrdersList } from '@/features/orders';
-import { usePaymentsList } from '../api/payments.api';
+import { usePaginatedOrders } from '@/features/orders';
+import { usePaymentsForOrderIds } from '../api/payments.api';
+import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
 import type { Order, Payment, PaymentStatus, PaymentMethod } from '@/types';
 import type { OrderPaymentView } from '../types';
 
-/** Cross-reference orders with payment data for list/table display. Uses Map for O(n+m) join. */
 function buildOrderPaymentViews(orders: Order[], payments: Payment[]): OrderPaymentView[] {
   const paymentByOrder = new Map(payments.map(p => [p.orderId, p]));
   return orders.map(order => {
@@ -34,39 +27,38 @@ function buildOrderPaymentViews(orders: Order[], payments: Payment[]): OrderPaym
   });
 }
 
-/**
- * PaymentList Component
- *
- * Benefits of ListView migration:
- * - Reduced code by ~60 lines
- * - Consistent UX with other list views
- * - Built-in loading/error/empty states
- *
- * Row click opens PaymentDetailModal for full payment processing.
- */
 export const PaymentList: React.FC = () => {
   const navigate = useNavigate();
   const [methodFilters, setMethodFilters] = useState<PaymentMethod[]>([]);
   const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
-
-  // State for payment detail modal
+  const [statusFilters, setStatusFilters] = useState<PaymentStatus[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<OrderPaymentView | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Use shared query hooks - data is cached and shared across components
+  const serverFilters = useMemo(
+    () => ({
+      paymentStatus: statusFilters.length === 1 ? statusFilters[0] : undefined,
+    }),
+    [statusFilters]
+  );
+
   const {
     orders,
+    pagination,
+    page,
+    goToPage,
+    resetPage,
     isLoading: ordersLoading,
+    isFetching,
     isError: ordersError,
     error: ordersErrorObj,
     refetch,
-  } = useOrdersList();
-  const { payments, isLoading: paymentsLoading } = usePaymentsList();
+  } = usePaginatedOrders(serverFilters, 1, DEFAULT_LIST_PAGE_SIZE);
 
-  // Combined loading state
-  const isLoading = ordersLoading || paymentsLoading;
+  const orderIds = useMemo(() => orders.map(order => order.orderId), [orders]);
+  const { payments, isLoading: paymentsLoading } = usePaymentsForOrderIds(orderIds);
+  const isLoading = ordersLoading || isFetching || paymentsLoading;
 
-  // Format error for ErrorAlert component
   const error = ordersError
     ? {
         message: ordersErrorObj instanceof Error ? ordersErrorObj.message : 'Failed to load data',
@@ -74,13 +66,11 @@ export const PaymentList: React.FC = () => {
       }
     : null;
 
-  // Cross-reference orders with payment data using centralized helper
   const orderPaymentViews = useMemo(
     () => buildOrderPaymentViews(orders, payments),
     [orders, payments]
   );
 
-  // Use shared filtering hook for search (status/sort handled manually below for nested access)
   const {
     filteredItems: searchFilteredOrders,
     searchQuery,
@@ -89,20 +79,23 @@ export const PaymentList: React.FC = () => {
     searchFields: item => [item.order.orderId.toString(), item.order.patientName || ''],
   });
 
-  // Status, method, and date range filters + sorting
-  const [statusFilters, setStatusFilters] = useState<PaymentStatus[]>([]);
+  const handleStatusFiltersChange = useCallback(
+    (filters: PaymentStatus[]) => {
+      setStatusFilters(filters);
+      resetPage();
+    },
+    [resetPage]
+  );
 
   const filteredOrders = useMemo(() => {
     let filtered = searchFilteredOrders;
 
-    // Apply payment status filter
-    if (statusFilters.length > 0) {
+    if (statusFilters.length > 1) {
       filtered = filtered.filter(item =>
-        (statusFilters as string[]).includes(item.order.paymentStatus)
+        statusFilters.includes(item.order.paymentStatus)
       );
     }
 
-    // Apply date range filter
     if (dateRange) {
       const [start, end] = dateRange;
       const endDate = new Date(end);
@@ -116,47 +109,31 @@ export const PaymentList: React.FC = () => {
       });
     }
 
-    // Apply payment method filter
     if (methodFilters.length > 0) {
       filtered = filtered.filter(
-        item => item.paymentMethod && (methodFilters as string[]).includes(item.paymentMethod)
+        item =>
+          item.paymentMethod &&
+          (methodFilters as string[]).includes(item.paymentMethod as string)
       );
     }
 
-    // Sort by order date descending
-    filtered = [...filtered].sort((a, b) => b.order.orderDate.localeCompare(a.order.orderDate));
-
-    return filtered;
+    return [...filtered].sort((a, b) => b.order.orderDate.localeCompare(a.order.orderDate));
   }, [searchFilteredOrders, statusFilters, dateRange, methodFilters]);
 
-  /**
-   * Handles successful payment (modal or table). Cache is invalidated by useCreatePayment; refetch for immediate update.
-   */
   const handlePaymentSuccess = useCallback(() => {
     refetch();
   }, [refetch]);
 
-  // Memoize table config to prevent recreation on every render
   const paymentTableConfig = useMemo(
     () => createPaymentTableConfig(navigate, handlePaymentSuccess),
     [navigate, handlePaymentSuccess]
   );
 
-  const handleDismissError = () => {
-    // Error will be cleared on next successful fetch
-  };
-
-  /**
-   * Opens the payment detail modal for a specific order
-   */
   const handleRowClick = useCallback((item: OrderPaymentView) => {
     setSelectedOrder(item);
     setIsModalOpen(true);
   }, []);
 
-  /**
-   * Closes the payment detail modal
-   */
   const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
     setSelectedOrder(null);
@@ -164,34 +141,41 @@ export const PaymentList: React.FC = () => {
 
   return (
     <>
-      <ListView
-        mode="table"
-        items={filteredOrders}
-        viewConfig={paymentTableConfig}
-        loading={isLoading}
-        error={error}
-        onRetry={refetch}
-        onDismissError={handleDismissError}
-        onRowClick={handleRowClick}
-        title="Payments"
-        filters={
-          <PaymentFilters
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            dateRange={dateRange}
-            onDateRangeChange={setDateRange}
-            statusFilters={statusFilters}
-            onStatusFiltersChange={setStatusFilters}
-            methodFilters={methodFilters}
-            onMethodFiltersChange={setMethodFilters}
-          />
-        }
-        pagination={true}
-        pageSize={20}
-        pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL}
-      />
+      <div className="flex h-full min-h-0 flex-col">
+        <ListView
+          mode="table"
+          items={filteredOrders}
+          viewConfig={paymentTableConfig}
+          loading={isLoading}
+          error={error}
+          onRetry={refetch}
+          onDismissError={() => undefined}
+          onRowClick={handleRowClick}
+          title="Payments"
+          filters={
+            <PaymentFilters
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              dateRange={dateRange}
+              onDateRangeChange={setDateRange}
+              statusFilters={statusFilters}
+              onStatusFiltersChange={handleStatusFiltersChange}
+              methodFilters={methodFilters}
+              onMethodFiltersChange={setMethodFilters}
+            />
+          }
+          pagination={false}
+        />
+        <Pagination
+          currentPage={page}
+          totalItems={pagination.total}
+          pageSize={pagination.pageSize}
+          onPageChange={goToPage}
+          onPageSizeChange={() => undefined}
+          pageSizeOptions={[DEFAULT_LIST_PAGE_SIZE]}
+        />
+      </div>
 
-      {/* Payment Detail Modal */}
       <PaymentDetailModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}

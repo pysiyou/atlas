@@ -76,3 +76,18 @@ jobs:
 
       - name: Ruff check
         run: poetry run ruff check app/
+
+      - name: API health smoke test
+        run: |
+          poetry run uvicorn app.main:app --host 127.0.0.1 --port 8000 &
+          SERVER_PID=$!
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:8000/health; then
+              kill $SERVER_PID 2>/dev/null || true
+              exit 0
+            fi
+            sleep 1
+          done
+          kill $SERVER_PID 2>/dev/null || true
+          echo "Health check failed"
+          exit 1

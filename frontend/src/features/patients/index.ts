@@ -14,6 +14,7 @@ export {
   useCreatePatient,
   useUpdatePatient,
   usePatientContextList,
+  usePaginatedPatientContextList,
 } from './api/patients.api';
 export type { PatientsFilter } from './api/patients.api';
 
