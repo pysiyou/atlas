@@ -1,1 +1,0 @@
-"""Atlas integration test helpers."""
