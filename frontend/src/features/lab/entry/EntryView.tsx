@@ -1,40 +1,30 @@
 /**
  * EntryView - Main view for result entry workflow
  *
- * Displays tests awaiting result entry (status: sample-collected only).
- * Backend enter_results accepts only SAMPLE_COLLECTED; in-progress is not supported.
+ * Refactored to use useLabDataProvider and createWorkflowFilters.
  */
 
-import React, { useMemo, useCallback } from 'react';
-import { useTestCatalog, useTestNameLookup } from '@/features/catalog';
-import { useOrdersList } from '@/features/orders';
-import type { TestWithContext } from '@/types';
-import { EntryCard } from './EntryCard';
-import { LabWorkflowView, createLabItemFilter } from '../components/LabWorkflowView';
+import React from 'react';
+import { useTestNameLookup } from '@/features/catalog';
+import { useLabDataProvider, createWorkflowFilters } from '@/features/lab/hooks';
+import type { TestWithContextResult } from '@/features/lab/hooks/useLabTestsFromOrders';
+import { EntryCard } from './EntryCard/index';
+import { LabWorkflowView } from '../components/LabWorkflowView';
 import { LabFilters } from '../components/LabFilters';
-import { useLabWorkflowFilters, useLabTestsFromOrders, useLabUrlSearch } from '@/features/lab/hooks';
-import { entryFilterConfig } from '@/features/lab/constants';
+import { entryFilterConfig } from '../constants';
 import { ErrorBoundary } from '@/components';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { useEntryWorkflow } from './useEntryWorkflow';
-import { orderTestKey } from '@/features/lab/utils/orderTestKey';
-import type { TestStatus } from '@/types';
+import { orderTestKey } from '../utils/orderTestKey';
 
- 
 export const EntryView: React.FC = () => {
-  const { orders, isLoading: ordersLoading } = useOrdersList();
-  const { tests: testCatalog, isLoading: testsLoading } = useTestCatalog();
   const { getTest } = useTestNameLookup();
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
 
-  const allTests = useLabTestsFromOrders({
-    orders,
-    testCatalog,
-    statusFilter: ['sample-collected'],
-    includePatient: true,
-  });
+  // Use shared data provider
+  const { entryTests: allTests, tests: testCatalog, orders, isLoading } = useLabDataProvider();
 
   const {
     results,
@@ -46,21 +36,7 @@ export const EntryView: React.FC = () => {
     openTestModal,
   } = useEntryWorkflow({ allTests, testCatalog, orders });
 
-  const filterTest = useMemo(() => createLabItemFilter<TestWithContext>(), []);
-  const getOrderDate = useCallback(
-    (t: TestWithContext & { orderDate?: string }) => t.orderDate,
-    []
-  );
-  const getSampleType = useCallback((t: TestWithContext) => t.sampleType, []);
-  const getStatus = useCallback((t: TestWithContext) => t.status as TestStatus, []);
-  const getPriority = useCallback((t: TestWithContext) => t.priority, []);
-  const getQueueSince = useCallback(
-    (t: TestWithContext) => t.collectedAt ?? t.orderDate,
-    []
-  );
-
-  const urlSearch = useLabUrlSearch();
-
+  // Use filter factory
   const {
     filteredItems: filteredTests,
     searchQuery,
@@ -71,19 +47,11 @@ export const EntryView: React.FC = () => {
     setSampleTypeFilters,
     statusFilters,
     setStatusFilters,
-  } = useLabWorkflowFilters<TestWithContext, TestStatus>({
+  } = createWorkflowFilters({
     items: allTests,
-    getOrderDate,
-    getSampleType,
-    getStatus,
-    searchFilterFn: filterTest,
-    initialSearchQuery: urlSearch,
-    sortByQueuePriority: true,
-    getPriority,
-    getQueueSince,
+    workflowType: 'entry',
   });
 
-  const isLoading = ordersLoading || testsLoading;
   const hasNoItems = allTests.length === 0;
   if ((isLoading && hasNoItems) || !orders || !testCatalog) {
     return (
@@ -98,15 +66,16 @@ export const EntryView: React.FC = () => {
       <LabWorkflowView
         items={filteredTests}
         renderCard={(test, idx, _filtered) => {
-          if (test.id == null) return null;
-          const testDef = getTest(test.testCode);
-          const resultKey = orderTestKey(test.id);
+          const testItem = test as TestWithContextResult;
+          if (testItem.id == null) return null;
+          const testDef = getTest(testItem.testCode);
+          const resultKey = orderTestKey(testItem.id);
           const isComplete = testDef?.parameters
             ? areAllParametersFilled(resultKey, testDef.parameters.length)
             : false;
 
           const cardProps = {
-            test,
+            test: testItem,
             testDef,
             resultKey,
             results: results[resultKey] || {},
@@ -114,24 +83,24 @@ export const EntryView: React.FC = () => {
             isComplete,
             onResultsChange: handleResultChange,
             onNotesChange: handleNotesChange,
-            onSave: () => handleSaveResults(test.id!, test.orderId, allTests, testCatalog),
-            onClick: () => openTestModal(test, _filtered),
+            onSave: () => handleSaveResults(testItem.id!, testItem.orderId, allTests, testCatalog),
+            onClick: () => openTestModal(testItem, _filtered as TestWithContextResult[]),
           };
 
           return (
             <EntryCard
-              key={`entry-${test.id}-${idx}`}
+              key={`entry-${testItem.id}-${idx}`}
               {...cardProps}
               isMobile={isMobile}
             />
           );
         }}
-        getItemKey={(test, idx) => (test.id != null ? `entry-${test.id}-${idx}` : `entry-${idx}`)}
+        getItemKey={(test, idx) => ((test as TestWithContextResult).id != null ? `entry-${(test as TestWithContextResult).id}-${idx}` : `entry-${idx}`)}
         emptyIcon="checklist"
         emptyTitle="No Pending Results"
         emptyDescription="There are no samples waiting for result entry."
         filterRow={
-          <LabFilters<TestStatus[]>
+          <LabFilters
             config={entryFilterConfig}
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}

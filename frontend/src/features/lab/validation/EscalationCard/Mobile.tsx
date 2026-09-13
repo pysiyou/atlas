@@ -1,20 +1,15 @@
+/**
+ * EscalationCardMobile - Mobile layout for escalated tests
+ */
+
 import React from 'react';
 import { Badge, Card, Button, Icon } from '@/components';
-import { BlockedReasonBadge } from '../components/StatusBadges';
+import { BlockedReasonBadge } from '../../components/StatusBadges';
 import { formatDateTime, displayId } from '@/utils';
-import type { TestWithContext } from '@/types';
 import { ICONS } from '@/config/icons';
+import type { EscalationCardSharedData } from './hooks';
 
-interface EscalationCardMobileProps {
-  test: TestWithContext;
-  onClick: () => void;
-  handleCardClick: () => void;
-  isRetest: boolean;
-  hasRejectionHistory: boolean;
-  blockedLabel?: string;
-}
-
-export const EscalationCardMobile: React.FC<EscalationCardMobileProps> = ({
+export const EscalationCardMobile: React.FC<EscalationCardSharedData> = ({
   test,
   onClick,
   handleCardClick,

@@ -1,51 +1,35 @@
 /**
  * CollectionView - Main view for sample collection workflow
  *
- * Displays samples awaiting collection with filtering by status.
+ * Refactored to use useLabDataProvider and createWorkflowFilters.
  */
 
 import React from 'react';
-import { useAuthStore } from '@/app/store';
-import { useTestCatalog } from '@/features/catalog';
-import { usePatientNameLookup } from '@/features/patients';
-import { useOrderLookup } from '@/features/orders';
-import { useOrdersList } from '@/features/orders';
-import { useCollectSample, usePendingSamples } from '../api/samples.api';
-import { useCollectionSampleDisplays } from '@/features/lab/collection/useCollectionSampleDisplays';
-import { useCollectionCollectHandler } from '@/features/lab/collection/useCollectionCollectHandler';
-import type { SampleStatus } from '@/types';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import { CollectionCard } from './CollectionCard';
+import { useLabDataProvider, createWorkflowFilters } from '@/features/lab/hooks';
+import type { SampleDisplay } from '@/features/lab/types';
+import { useCollectSample } from '../api/samples.api';
+import { useOrdersList } from '@/features/orders';
+import { useCollectionCollectHandler } from './useCollectionCollectHandler';
+import { CollectionCard } from './CollectionCard/index';
 import { LabWorkflowView } from '../components/LabWorkflowView';
 import { LabFilters } from '../components/LabFilters';
-import { useLabWorkflowFilters, useLabUrlSearch } from '@/features/lab/hooks';
-import { collectionFilterConfig } from '@/features/lab/constants';
+import { collectionFilterConfig } from '../constants';
 import { ErrorBoundary } from '@/components';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
-import type { SampleDisplay } from '@/features/lab/types';
+import { useAuthStore } from '@/app/store';
 
 export const CollectionView: React.FC = () => {
   const { user: currentUser } = useAuthStore();
-  const { refetch: refreshOrders, isLoading: ordersLoading } = useOrdersList();
-  const { tests, isLoading: testsLoading } = useTestCatalog();
-  const { samples, isLoading: samplesLoading } = usePendingSamples();
+  const { refetch: refreshOrders } = useOrdersList();
   const collectSampleMutation = useCollectSample();
-  const { getPatient, getPatientName } = usePatientNameLookup();
-  const { getOrder } = useOrderLookup();
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
 
-  const { displays: allSampleDisplays, filterSample, getOrderDate, getSampleType, getStatus } =
-    useCollectionSampleDisplays({
-      samples,
-      tests,
-      getOrder,
-      getPatient,
-      getPatientName,
-    });
+  // Use shared data provider
+  const { collectionDisplays, isLoading } = useLabDataProvider();
 
-  const urlSearch = useLabUrlSearch();
-
+  // Use filter factory
   const {
     filteredItems: filteredDisplays,
     searchQuery,
@@ -56,17 +40,9 @@ export const CollectionView: React.FC = () => {
     setSampleTypeFilters,
     statusFilters,
     setStatusFilters,
-  } = useLabWorkflowFilters<SampleDisplay, SampleStatus>({
-    items: allSampleDisplays,
-    getOrderDate,
-    getSampleType,
-    getStatus,
-    searchFilterFn: filterSample,
-    initialStatusFilters: ['pending'],
-    initialSearchQuery: urlSearch,
-    sortByQueuePriority: true,
-    getPriority: display => display.priority,
-    getQueueSince: display => display.order?.orderDate,
+  } = createWorkflowFilters({
+    items: collectionDisplays,
+    workflowType: 'collection',
   });
 
   const { handleCollect } = useCollectionCollectHandler({
@@ -75,8 +51,7 @@ export const CollectionView: React.FC = () => {
     refreshOrders,
   });
 
-  const isLoading = ordersLoading || testsLoading || samplesLoading;
-  const hasNoItems = allSampleDisplays.length === 0;
+  const hasNoItems = collectionDisplays.length === 0;
   if (isLoading && hasNoItems) {
     return (
       <ErrorBoundary>
@@ -91,20 +66,20 @@ export const CollectionView: React.FC = () => {
         items={filteredDisplays}
         renderCard={display => (
           <CollectionCard
-            display={display}
+            display={display as SampleDisplay}
             onCollect={handleCollect}
             isCollecting={collectSampleMutation.isPending}
             isMobile={isMobile}
           />
         )}
-        getItemKey={(display, idx) =>
+        getItemKey={(display: any, idx: number) =>
           `${display.order.orderId}-${display.sample?.sampleType || 'unknown'}-${display.sample?.sampleId || idx}-${idx}`
         }
         emptyIcon="sample-collection"
         emptyTitle="No Pending Collections"
         emptyDescription="There are no samples waiting to be collected."
         filterRow={
-          <LabFilters<SampleStatus[]>
+          <LabFilters
             config={collectionFilterConfig}
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}

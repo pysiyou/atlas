@@ -1,23 +1,17 @@
+/**
+ * EscalationCardDesktop - Desktop layout for escalated tests
+ */
+
 import React from 'react';
 import { Badge, Button, Icon } from '@/components';
 import { formatDateTime, displayId } from '@/utils';
-import { LabCard } from '../components/LabCard';
-import { AttemptIndicator } from '../components/AttemptIndicator';
-import { BlockedReasonBadge } from '../components/StatusBadges';
-import type { TestWithContext } from '@/types';
-import type { TestRetestContext } from '../utils/deriveRetestContext';
+import { LabCard } from '../../components/LabCard';
+import { AttemptIndicator } from '../../components/AttemptIndicator';
+import { BlockedReasonBadge } from '../../components/StatusBadges';
 import { ICONS } from '@/config/icons';
+import type { EscalationCardSharedData } from './hooks';
 
-interface EscalationCardDesktopProps {
-  test: TestWithContext;
-  onClick: () => void;
-  handleCardClick: () => void;
-  getUserName: (userId: number | string) => string;
-  rejection: TestRetestContext;
-  blockedLabel?: string;
-}
-
-export const EscalationCardDesktop: React.FC<EscalationCardDesktopProps> = ({
+export const EscalationCardDesktop: React.FC<EscalationCardSharedData> = ({
   test,
   onClick,
   handleCardClick,
@@ -86,7 +80,7 @@ export const EscalationCardDesktop: React.FC<EscalationCardDesktopProps> = ({
       {test.enteredBy && (
         <>
           {' '}
-          by <span className="text-text-secondary">{getUserName(test.enteredBy)}</span>
+          by <span className="text-text-secondary">{getUserName(String(test.enteredBy))}</span>
         </>
       )}
     </span>

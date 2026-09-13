@@ -1,53 +1,26 @@
 /**
  * Aggregates live lab state for the lab tech command center board.
+ * 
+ * Refactored to use useLabDataProvider for shared data.
  */
 
 import { useMemo } from 'react';
-import { useOrdersList } from '@/features/orders';
-import { useSamplesList } from '../api/samples.api';
-import { useTestCatalog } from '@/features/catalog';
-import { usePatientNameLookup } from '@/features/patients';
-import { useOrderLookup } from '@/features/orders';
-import { useCollectionSampleDisplays } from '@/features/lab/collection/useCollectionSampleDisplays';
-import { usePendingEscalation } from '../api/results.api';
-import { usePendingRecollectionRequests } from '../api/recollection-requests.api';
-import { useLabPipelineCounts, useLabTestsFromOrders } from '@/features/lab/hooks';
+import { useLabDataProvider } from '@/features/lab/hooks';
 import { finalizeAttentionItems } from './deriveAttention';
-import { deriveBoardPipeline, type CollectionDisplayInput } from './derivePipeline';
+import { deriveBoardPipeline } from './derivePipeline';
 import { deriveHealth } from './deriveHealth';
 import type { LabTechBoardData } from './boardTypes';
 
 export function useLabTechBoard(): LabTechBoardData {
-  const { orders = [] } = useOrdersList();
-  const { samples = [] } = useSamplesList();
-  const { tests: testCatalog = [] } = useTestCatalog();
-  const { getPatient, getPatientName } = usePatientNameLookup();
-  const { getOrder } = useOrderLookup();
-  const { counts } = useLabPipelineCounts();
-  const { escalatedTests = [] } = usePendingEscalation();
-  const { requests: recollectionRequests = [] } = usePendingRecollectionRequests();
-
-  const { displays: collectionDisplays } = useCollectionSampleDisplays({
-    samples,
-    tests: testCatalog,
-    getOrder,
-    getPatient,
-    getPatientName,
-  });
-
-  const entryTests = useLabTestsFromOrders({
-    orders,
-    testCatalog,
-    statusFilter: ['sample-collected'],
-    includePatient: false,
-  });
-
-  const validationTests = useLabTestsFromOrders({
-    orders,
-    testCatalog,
-    statusFilter: ['resulted'],
-    onlyUnvalidated: true,
-  });
+  // Use shared data provider
+  const {
+    collectionDisplays,
+    entryTests,
+    validationTests,
+    escalations: escalatedTests,
+    recollections: recollectionRequests,
+    pipelineCounts: counts,
+  } = useLabDataProvider();
 
   return useMemo(() => {
     const {
@@ -57,13 +30,13 @@ export function useLabTechBoard(): LabTechBoardData {
       priorityMix,
       attentionCandidates,
     } = deriveBoardPipeline({
-      collectionDisplays: collectionDisplays as CollectionDisplayInput[],
+      collectionDisplays: collectionDisplays as any,
       entryTests,
       validationTests,
       escalatedTests,
       recollectionRequests,
-      getPatientName,
-      getOrder,
+      getPatientName: () => '', // Not needed in board derivation
+      getOrder: () => undefined, // Not needed in board derivation
     });
 
     const { attentionItems, attentionTotal } = finalizeAttentionItems(attentionCandidates);
@@ -92,8 +65,6 @@ export function useLabTechBoard(): LabTechBoardData {
     entryTests,
     validationTests,
     counts,
-    getPatientName,
-    getOrder,
     escalatedTests,
     recollectionRequests,
   ]);
