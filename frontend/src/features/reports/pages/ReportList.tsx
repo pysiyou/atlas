@@ -69,7 +69,7 @@ export const ReportList: React.FC = () => {
       test.patientId.toString(),
       test.patientName,
     ],
-    defaultSort: { field: 'orderDate', direction: 'desc' },
+    defaultSort: undefined,
   });
 
   const filteredTests = useMemo(
@@ -132,7 +132,6 @@ export const ReportList: React.FC = () => {
   return (
     <>
       <ListView
-        mode="table"
         items={filteredTests}
         viewConfig={reportTableConfig}
         loading={loading}
@@ -150,9 +149,8 @@ export const ReportList: React.FC = () => {
             onDateRangeChange={setDateRange}
           />
         }
-        pagination={true}
-        pageSize={20}
-        pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL}
+        pagination={{ mode: 'client', pageSize: 20, pageSizeOptions: DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL }}
+        defaultSort={{ key: 'orderDate', direction: 'desc' }}
       />
 
       {previewTest && (

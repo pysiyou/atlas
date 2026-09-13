@@ -39,7 +39,7 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({ orders, 
       striped
       onRowClick={order => onOrderClick(String(order.orderId))}
       getRowKey={order => order.orderId}
-      pagination={false}
+      pagination={{ mode: 'none' }}
       emptyMessage={EMPTY_MESSAGE}
       embedded
     />

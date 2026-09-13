@@ -65,7 +65,6 @@ export const CatalogList: React.FC = () => {
 
   return (
     <ListView
-      mode="table"
       items={filteredTests}
       viewConfig={catalogTableConfig}
       loading={isLoading}
@@ -86,9 +85,7 @@ export const CatalogList: React.FC = () => {
           onPriceRangeChange={setPriceRange}
         />
       }
-      pagination={true}
-      pageSize={20}
-      pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL}
+      pagination={{ mode: 'client', pageSize: 20, pageSizeOptions: DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL }}
     />
   );
 };

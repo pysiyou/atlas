@@ -8,10 +8,10 @@ import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import { CollectionView } from '../collection/CollectionView';
 import { EntryView } from '../entry/EntryView';
 import { ValidationView } from '../validation/ValidationView';
-import { CommandCenterPage } from '../command-center';
+import { LabTechBoard } from '../command-center';
 import { Icon, PageHeaderBar, Badge } from '@/components';
 import { ICONS } from '@/config/icons';
-import { useLabPipelineCounts } from '../hooks';
+import { useLabPipelineCounts, getValidationTabCount } from '../hooks';
 import {
   DEFAULT_LAB_TAB,
   isLabTabId,
@@ -62,7 +62,7 @@ export const Laboratory: React.FC = () => {
         id: 'validation',
         label: LAB_TAB_LABELS.validation,
         icon: <Icon name={ICONS.ui.shieldCheck} className="w-4 h-4" />,
-        count: counts.validation,
+        count: getValidationTabCount(counts),
       },
       {
         id: 'dashboard',
@@ -140,7 +140,7 @@ export const Laboratory: React.FC = () => {
           {activeTab === 'validation' && <ValidationView />}
           {activeTab === 'dashboard' && (
             <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-              <CommandCenterPage />
+              <LabTechBoard />
             </div>
           )}
         </div>

@@ -26,7 +26,15 @@ import type { RecollectionRequestSummary } from '@/types/lab-operations';
 export interface LabPipelineCounts {
   collection: number;
   entry: number;
+  /** Unvalidated tests in the review queue — matches queue-age charts */
   validation: number;
+  /** Escalations and recollection requests — validation tab badge only */
+  supervisor: number;
+}
+
+/** Tab badge count for the validation workflow (queue + supervisor items). */
+export function getValidationTabCount(counts: LabPipelineCounts): number {
+  return counts.validation + counts.supervisor;
 }
 
 export interface LabDataProviderResult {
@@ -48,6 +56,8 @@ export interface LabDataProviderResult {
   
   // Utilities
   canResolveEscalation: boolean;
+  getPatientName: (patientId: number | string) => string;
+  getOrder: (orderId: number) => Order | undefined;
 }
 
 export function useLabDataProvider(): LabDataProviderResult {
@@ -95,11 +105,12 @@ export function useLabDataProvider(): LabDataProviderResult {
   const pipelineCounts = useMemo<LabPipelineCounts>(() => {
     const escalatedCount = canResolveEscalation ? escalatedTests.length : 0;
     const recollectionCount = canResolveEscalation ? recollectionRequests.length : 0;
-    
+
     return {
       collection: collectionDisplays.filter(d => d.sample?.status === 'pending').length,
       entry: entryTests.length,
-      validation: validationTests.length + escalatedCount + recollectionCount,
+      validation: validationTests.length,
+      supervisor: escalatedCount + recollectionCount,
     };
   }, [collectionDisplays, entryTests, validationTests, escalatedTests, recollectionRequests, canResolveEscalation]);
   
@@ -117,5 +128,7 @@ export function useLabDataProvider(): LabDataProviderResult {
     pipelineCounts,
     isLoading,
     canResolveEscalation,
+    getPatientName,
+    getOrder,
   };
 }

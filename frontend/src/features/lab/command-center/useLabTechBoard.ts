@@ -1,7 +1,5 @@
 /**
  * Aggregates live lab state for the lab tech command center board.
- * 
- * Refactored to use useLabDataProvider for shared data.
  */
 
 import { useMemo } from 'react';
@@ -11,8 +9,7 @@ import { deriveBoardPipeline } from './derivePipeline';
 import { deriveHealth } from './deriveHealth';
 import type { LabTechBoardData } from './boardTypes';
 
-export function useLabTechBoard(): LabTechBoardData {
-  // Use shared data provider
+export function useLabTechBoard(): LabTechBoardData & { isLoading: boolean } {
   const {
     collectionDisplays,
     entryTests,
@@ -20,9 +17,12 @@ export function useLabTechBoard(): LabTechBoardData {
     escalations: escalatedTests,
     recollections: recollectionRequests,
     pipelineCounts: counts,
+    isLoading,
+    getPatientName,
+    getOrder,
   } = useLabDataProvider();
 
-  return useMemo(() => {
+  const board = useMemo(() => {
     const {
       queueAge,
       blockers,
@@ -30,17 +30,18 @@ export function useLabTechBoard(): LabTechBoardData {
       priorityMix,
       attentionCandidates,
     } = deriveBoardPipeline({
-      collectionDisplays: collectionDisplays as any,
+      collectionDisplays,
       entryTests,
       validationTests,
       escalatedTests,
       recollectionRequests,
-      getPatientName: () => '', // Not needed in board derivation
-      getOrder: () => undefined, // Not needed in board derivation
+      getPatientName: patientId => getPatientName(patientId),
+      getOrder: orderId => getOrder(orderId),
     });
 
     const { attentionItems, attentionTotal } = finalizeAttentionItems(attentionCandidates);
-    const totalActive = counts.collection + counts.entry + counts.validation;
+    const totalActive =
+      counts.collection + counts.entry + counts.validation + counts.supervisor;
     const { health, healthMessage, suggestedTab } = deriveHealth(
       queueAge,
       blockers,
@@ -67,5 +68,9 @@ export function useLabTechBoard(): LabTechBoardData {
     counts,
     escalatedTests,
     recollectionRequests,
+    getPatientName,
+    getOrder,
   ]);
+
+  return { ...board, isLoading };
 }

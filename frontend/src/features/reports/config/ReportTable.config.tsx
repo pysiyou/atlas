@@ -1,202 +1,113 @@
 /**
  * Report Table Configuration
- *
- * Multi-view table configuration for report list.
- * Defines separate column sets for full table, compact table, and mobile card view.
- * Each row represents a single validated test ready for reporting.
  */
 
 import type { NavigateFunction } from 'react-router-dom';
-import { formatDateTime } from '@/utils';
-import { displayId } from '@/utils';
 import { Badge } from '@/components';
 import type { TableViewConfig } from '@/components';
+import { buildViews, renderDateTimeCell, renderOrderPatientName } from '@/components/data-table';
+import { displayId } from '@/utils';
 import type { ValidatedTest } from '../types';
 import { ENTITY_ID_BLOCK, ENTITY_ID_CLICKABLE, ENTITY_ID_SECONDARY } from '@/utils/constants';
 import { ReportPreviewButton } from '../components/ReportPreviewButton';
 import { ReportCard } from '../components/ReportCard';
 
-/**
- * Create report table configuration with full, compact, and card views
- *
- * @param navigate - React Router navigate function
- * @param getPatientName - Function to get patient name from patientId (unused, kept for compatibility)
- * @param onPreview - Callback to invoke when preview button is clicked
- * @returns TableViewConfig with fullColumns, compactColumns, and CardComponent
- */
-// Large function is necessary to define multiple table column configurations (full, compact, card views) with render functions
-// eslint-disable-next-line max-lines-per-function
+const REPORT_VIEWS = {
+  full: ['testId', 'orderId', 'patientName', 'testName', 'orderDate', 'status', 'action'],
+  medium: ['testId', 'patientName', 'testName', 'status', 'action'],
+  compact: ['testId', 'patientName', 'status', 'action'],
+} as const;
+
 export const createReportTableConfig = (
   navigate: NavigateFunction,
   _getPatientName: (patientId: number | string) => string,
   onPreview: (test: ValidatedTest) => void
 ): TableViewConfig<ValidatedTest> => {
-  // Shared render functions
-  const renderTestId = (test: ValidatedTest) => (
-    <span className={`${ENTITY_ID_BLOCK} font-normal`}>{displayId.orderTest(test.testId)}</span>
-  );
+  const columnMap = {
+    testId: {
+      key: 'testId',
+      header: 'Test ID',
+      width: 'id' as const,
+      sortable: true,
+      accessor: (test: ValidatedTest) => test.testId,
+      render: (test: ValidatedTest) => (
+        <span className={`${ENTITY_ID_BLOCK} font-normal`}>{displayId.orderTest(test.testId)}</span>
+      ),
+    },
+    orderId: {
+      key: 'orderId',
+      header: 'Order ID',
+      width: 'id' as const,
+      sortable: true,
+      accessor: (test: ValidatedTest) => test.orderId,
+      render: (test: ValidatedTest) => (
+        <button
+          onClick={e => {
+            e.stopPropagation();
+            navigate(`/orders/${test.orderId}`);
+          }}
+          className={`${ENTITY_ID_CLICKABLE} font-normal`}
+        >
+          {displayId.order(test.orderId)}
+        </button>
+      ),
+    },
+    patientName: {
+      key: 'patientName',
+      header: 'Patient',
+      width: 'fill' as const,
+      sortable: true,
+      accessor: (test: ValidatedTest) => test.patientName,
+      render: (test: ValidatedTest) => renderOrderPatientName(test.patientName, test.patientId),
+    },
+    testName: {
+      key: 'testName',
+      header: 'Test',
+      width: 'fill' as const,
+      sortable: true,
+      accessor: (test: ValidatedTest) => test.testName,
+      render: (test: ValidatedTest) => (
+        <div className="min-w-0 font-normal">
+          <div className="text-text-primary truncate font-normal">{test.testName}</div>
+          <div className={`${ENTITY_ID_SECONDARY} truncate font-normal`}>{test.testCode}</div>
+        </div>
+      ),
+    },
+    orderDate: {
+      key: 'orderDate',
+      header: 'Date',
+      width: 'lg' as const,
+      sortable: true,
+      accessor: (test: ValidatedTest) => test.orderDate,
+      render: (test: ValidatedTest) => renderDateTimeCell(test.orderDate),
+    },
+    status: {
+      key: 'status',
+      header: 'Status',
+      width: 'md' as const,
+      render: () => <Badge variant="validated" size="sm" />,
+    },
+    action: {
+      key: 'action',
+      header: 'Action',
+      width: 'md' as const,
+      render: (test: ValidatedTest) => (
+        <div className="font-normal" onClick={e => e.stopPropagation()}>
+          <ReportPreviewButton test={test} onPreview={onPreview} />
+        </div>
+      ),
+    },
+  };
 
-  const renderOrderId = (test: ValidatedTest) => (
-    <button
-      onClick={e => {
-        e.stopPropagation();
-        navigate(`/orders/${test.orderId}`);
-      }}
-      className={`${ENTITY_ID_CLICKABLE} font-normal`}
-    >
-      {displayId.order(test.orderId)}
-    </button>
-  );
-
-  const renderPatientName = (test: ValidatedTest) => (
-    <div className="min-w-0 font-normal">
-      <div className="text-text-primary truncate font-normal capitalize">{test.patientName}</div>
-      <div className={`${`${ENTITY_ID_SECONDARY} truncate`} font-normal`}>{displayId.patient(test.patientId)}</div>
-    </div>
-  );
-
-  const renderTestName = (test: ValidatedTest) => (
-    <div className="min-w-0 font-normal">
-      <div className="text-text-primary truncate font-normal">{test.testName}</div>
-      <div className={`${`${ENTITY_ID_SECONDARY} truncate`} font-normal`}>{test.testCode}</div>
-    </div>
-  );
-
-  const renderOrderDate = (test: ValidatedTest) => (
-    <span className="text-xs text-text-tertiary truncate block font-normal">
-      {formatDateTime(test.orderDate)}
-    </span>
-  );
-
-  const renderStatus = () => <Badge variant="validated" size="sm" />;
-
-  const renderAction = (test: ValidatedTest) => (
-    <div className="font-normal" onClick={e => e.stopPropagation()}>
-      <ReportPreviewButton test={test} onPreview={onPreview} />
-    </div>
-  );
-
-  // Create custom card component with onPreview prop
   const CardComponent = (props: { item: ValidatedTest; index: number; onClick?: () => void }) => (
     <ReportCard {...props} onPreview={onPreview} />
   );
 
   return {
-    fullColumns: [
-      {
-        key: 'testId',
-        header: 'Test ID',
-        width: 'sm',
-        sortable: true,
-        render: renderTestId,
-      },
-      {
-        key: 'orderId',
-        header: 'Order ID',
-        width: 'sm',
-        sortable: true,
-        render: renderOrderId,
-      },
-      {
-        key: 'patientName',
-        header: 'Patient',
-        width: 'fill',
-        sortable: true,
-        render: renderPatientName,
-      },
-      {
-        key: 'testName',
-        header: 'Test',
-        width: 'fill',
-        sortable: true,
-        render: renderTestName,
-      },
-      {
-        key: 'orderDate',
-        header: 'Date',
-        width: 'lg',
-        sortable: true,
-        render: renderOrderDate,
-      },
-      {
-        key: 'status',
-        header: 'Status',
-        width: 'md',
-        sortable: true,
-        render: renderStatus,
-      },
-      {
-        key: 'action',
-        header: 'Action',
-        width: 'md',
-        render: renderAction,
-      },
-    ],
-    mediumColumns: [
-      {
-        key: 'testId',
-        header: 'Test ID',
-        width: 'sm',
-        sortable: true,
-        render: renderTestId,
-      },
-      {
-        key: 'patientName',
-        header: 'Patient',
-        width: 'fill',
-        sortable: true,
-        render: renderPatientName,
-      },
-      {
-        key: 'testName',
-        header: 'Test',
-        width: 'fill',
-        sortable: true,
-        render: renderTestName,
-      },
-      {
-        key: 'status',
-        header: 'Status',
-        width: 'sm',
-        sortable: true,
-        render: renderStatus,
-      },
-      {
-        key: 'action',
-        header: 'Action',
-        width: 'md',
-        render: renderAction,
-      },
-    ],
-    compactColumns: [
-      {
-        key: 'testId',
-        header: 'Test ID',
-        width: 'sm',
-        sortable: true,
-        render: renderTestId,
-      },
-      {
-        key: 'patientName',
-        header: 'Patient',
-        width: 'fill',
-        sortable: true,
-        render: renderPatientName,
-      },
-      {
-        key: 'status',
-        header: 'Status',
-        width: 'sm',
-        sortable: true,
-        render: renderStatus,
-      },
-      {
-        key: 'action',
-        header: 'Action',
-        width: 'md',
-        render: renderAction,
-      },
-    ],
+    ...buildViews(columnMap, REPORT_VIEWS, {
+      medium: { status: 'sm' },
+      compact: { status: 'sm' },
+    }),
     CardComponent,
   };
 };

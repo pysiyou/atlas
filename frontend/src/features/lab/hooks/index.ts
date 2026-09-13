@@ -4,7 +4,7 @@
 
 export * from './useLabWorkflowFilters';
 export * from './useLabTestsFromOrders';
-export { useLabPipelineCounts } from './useLabPipelineCounts';
+export { useLabPipelineCounts, getValidationTabCount } from './useLabPipelineCounts';
 export * from './useLabDataProvider';
 export * from './createWorkflowFilters';
 export * from './useLabUrlSearch';

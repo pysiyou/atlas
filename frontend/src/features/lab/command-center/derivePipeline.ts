@@ -1,6 +1,7 @@
 import { deriveWorkItemState } from '@/features/lab/utils/deriveWorkItemState';
 import { getQueueAgeInfo } from '@/features/lab/utils/queueAge';
 import { LAB_CONFIG } from '@/features/lab/constants';
+import type { SampleDisplay } from '@/features/lab/types';
 import type { PaymentStatus, PriorityLevel, SampleStatus } from '@/types';
 import {
   accumulateAge,
@@ -25,16 +26,7 @@ const STAGE_LABELS: Record<AttentionItem['stage'], string> = {
   validation: 'Review',
 };
 
-export interface CollectionDisplayInput {
-  sample?: { sampleId: number; status: string; isRecollection: boolean };
-  order: {
-    orderId: number;
-    orderDate: string;
-    patientId: number;
-    priority: PriorityLevel;
-    paymentStatus: string;
-  };
-}
+export interface CollectionDisplayInput extends SampleDisplay {}
 
 export interface TestQueueInput {
   id?: number;

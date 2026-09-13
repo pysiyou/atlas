@@ -8,7 +8,7 @@ import { Badge } from '@/components';
 import { cn, displayId } from '@/utils';
 import { ENTITY_ID } from '@/utils/constants';
 import { getLabQueueUrl } from '@/features/lab/constants/labTabs';
-import { COMMAND_CENTER_BADGE_TEXT } from './components/styles';
+import { COMMAND_CENTER_BADGE_TEXT, COMMAND_CENTER_ATTENTION_ACCENT } from './components/styles';
 import type { AttentionItem } from './boardTypes';
 import {
   ATTENTION_TYPE_ORDER,
@@ -18,17 +18,11 @@ import {
   type AttentionType,
 } from './attentionCategories';
 import { formatAttentionItem, type AttentionDetail } from './formatAttentionItem';
-import { COMMAND_CENTER_TIMELINE, type CommandCenterTimelineTone } from '@/features/lab/timeline/timelineStyles';
+import { COMMAND_CENTER_TIMELINE } from '@/features/lab/timeline/timelineStyles';
 
 export interface AttentionFeedProps {
   items: AttentionItem[];
 }
-
-const ACCENT_TONE: Record<CommandCenterTimelineTone, string> = {
-  problem: 'bg-danger-fg-emphasis',
-  resolution: 'bg-success-fg-emphasis',
-  neutral: 'bg-warning-fg-emphasis',
-};
 
 function FeedDetail({ detail }: { detail: AttentionDetail }) {
   switch (detail.type) {
@@ -64,7 +58,7 @@ function AttentionFeedRow({ item }: { item: AttentionItem }) {
         )}
       >
         <span
-          className={cn('w-0.5 shrink-0 self-stretch rounded-full', ACCENT_TONE[tone])}
+          className={cn('w-0.5 shrink-0 self-stretch rounded-full', COMMAND_CENTER_ATTENTION_ACCENT[tone])}
           aria-hidden
         />
 

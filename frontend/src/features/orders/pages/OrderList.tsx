@@ -9,7 +9,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTestNameLookup } from '@/features/catalog';
 import { usePatientNameLookup } from '@/features/patients';
 import { usePaginatedOrders } from '../api/orders.api';
-import { ListView, Pagination } from '@/components';
+import { ListView } from '@/components';
 import { Button } from '@/components';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { OrderFilters } from '../components/OrderFilters';
@@ -125,7 +125,6 @@ export const OrderList: React.FC = () => {
   return (
     <div className="flex h-full min-h-0 flex-col">
       <ListView
-        mode="table"
         items={filteredOrders}
         viewConfig={orderTableConfig}
         loading={loading}
@@ -151,15 +150,14 @@ export const OrderList: React.FC = () => {
             onPaymentFiltersChange={handlePaymentFiltersChange}
           />
         }
-        pagination={false}
-      />
-      <Pagination
-        currentPage={page}
-        totalItems={pagination.total}
-        pageSize={pagination.pageSize}
-        onPageChange={goToPage}
-        onPageSizeChange={() => undefined}
-        pageSizeOptions={[DEFAULT_LIST_PAGE_SIZE]}
+        pagination={{
+          mode: 'server',
+          currentPage: page,
+          pageSize: pagination.pageSize,
+          totalItems: pagination.total,
+          onPageChange: goToPage,
+          pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
+        }}
       />
     </div>
   );

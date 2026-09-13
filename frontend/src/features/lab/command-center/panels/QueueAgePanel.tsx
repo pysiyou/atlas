@@ -6,8 +6,9 @@
 import React from 'react';
 import { cn } from '@/utils';
 import { LAB_CONFIG } from '../../constants';
-import { ColumnHeader, Panel, PanelBody } from '../components';
+import { SectionTitle, Panel, PanelBody } from '../components';
 import {
+  COMMAND_CENTER_STAGE_COLORS,
   COMMAND_CENTER_TEXT,
 } from '../components/styles';
 import type { LabTechBoardData, QueueAgeStats } from '../boardTypes';
@@ -26,17 +27,17 @@ const STAGES = [
   {
     key: 'collection' as const,
     label: 'Collection',
-    barClass: 'bg-info-fg-emphasis',
+    barClass: COMMAND_CENTER_STAGE_COLORS.collection.bar,
   },
   {
     key: 'entry' as const,
     label: 'Entry',
-    barClass: 'bg-warning-fg-emphasis',
+    barClass: COMMAND_CENTER_STAGE_COLORS.entry.bar,
   },
   {
     key: 'validation' as const,
     label: 'Review',
-    barClass: 'bg-success-fg-emphasis',
+    barClass: COMMAND_CENTER_STAGE_COLORS.validation.bar,
   },
 ] as const;
 
@@ -85,7 +86,7 @@ function StageTimeComposition({ stages }: { stages: StageRow[] }) {
 
   return (
     <div className="space-y-1.5">
-      <ColumnHeader
+      <SectionTitle
         title="Time Split"
         aside={`${hoursLabel(totalHours)} total avg`}
       />
@@ -252,7 +253,7 @@ export const QueueAgePanel: React.FC<QueueAgePanelProps> = ({ counts, queueAge, 
               <StageTimeComposition stages={stages} />
 
               <div className="space-y-2.5">
-                <ColumnHeader title="Wait Per Step" />
+                <SectionTitle title="Wait Per Step" />
                 {stages.map(stage => (
                   <StageWaitRow key={stage.key} stage={stage} scaleMax={scaleMax} />
                 ))}

@@ -10,7 +10,7 @@ import { KpiTile, SectionTitle } from '../components';
 import { COMMAND_CENTER_TEXT, resolveCommandCenterTextTone } from '../components/styles';
 import type { LabTechBoardData, QueueAgeStats } from '../boardTypes';
 import { queueTileTone } from '../queueTone';
-import { LabHealthStatus } from './HealthBanner';
+import { LabHealthStatus } from './LabHealthStatus';
 import type { CommandCenterKpiTone } from '../components/styles';
 
 function formatOldestAge(age: QueueAgeStats): string {
@@ -25,6 +25,15 @@ function subtextTone(age: QueueAgeStats): string {
   return COMMAND_CENTER_TEXT.detail;
 }
 
+function formatValidationSubtext(
+  age: QueueAgeStats,
+  supervisorCount: number,
+): string {
+  const oldest = formatOldestAge(age);
+  if (supervisorCount <= 0) return oldest;
+  return `${oldest} · +${supervisorCount} supervisor`;
+}
+
 interface LivePipelineStripProps {
   counts: LabTechBoardData['counts'];
   queueAge: LabTechBoardData['queueAge'];
@@ -35,6 +44,7 @@ interface LivePipelineStripProps {
   suggestedTab: LabTechBoardData['suggestedTab'];
   onRefresh?: () => void;
   isRefreshing?: boolean;
+  lastRefreshedAt?: Date | null;
 }
 
 export const LivePipelineStrip: React.FC<LivePipelineStripProps> = ({
@@ -47,6 +57,7 @@ export const LivePipelineStrip: React.FC<LivePipelineStripProps> = ({
   suggestedTab,
   onRefresh,
   isRefreshing = false,
+  lastRefreshedAt = null,
 }) => {
   const share = (count: number) =>
     totalActive > 0 ? Math.round((count / totalActive) * 100) : 0;
@@ -113,6 +124,7 @@ export const LivePipelineStrip: React.FC<LivePipelineStripProps> = ({
           suggestedTab={suggestedTab}
           onRefresh={onRefresh}
           isRefreshing={isRefreshing}
+          lastRefreshedAt={lastRefreshedAt}
         />
       </div>
       <div className="flex gap-2">
@@ -136,7 +148,9 @@ export const LivePipelineStrip: React.FC<LivePipelineStripProps> = ({
               {'blockedDetail' in tile && tile.blockedDetail
                 ? tile.blockedDetail
                 : tile.age
-                  ? formatOldestAge(tile.age)
+                  ? tile.key === 'validation'
+                    ? formatValidationSubtext(tile.age, counts.supervisor)
+                    : formatOldestAge(tile.age)
                   : ''}
             </p>
           </div>

@@ -3,6 +3,8 @@
  */
 
 export { Table } from './Table';
+export { DataTable } from './DataTable';
+export { CardGridView } from './components/CardGridView';
 export {
   renderDisplayId,
   renderPatientId,
@@ -20,23 +22,53 @@ export {
   renderOrderDateCell,
   renderNavigableOrderId,
 } from './columnRenders';
+export { createOrderSharedColumns } from './columnDefinitions/orders';
+export type {
+  OrderColumnAccessors,
+  OrderColumnRenderers,
+  OrderSharedColumnOptions,
+  OrderSharedColumnKey,
+} from './columnDefinitions/orders';
 export {
   createColumn,
   createIdColumn,
   createBadgeColumn,
   pickColumns,
+  buildViews,
+  resolvePaginationConfig,
+  isPaginationEnabled,
+} from './columnHelpers';
+export {
   DEFAULT_LOADING_ROWS,
   SHOW_ALL_PAGE_SIZE,
+  DEFAULT_PAGE_SIZE,
+  DEFAULT_PAGE_SIZE_OPTIONS,
   DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL,
-} from '@/utils/table';
+  SIZE_PRESETS,
+  ROW_HEIGHTS,
+  CELL_PADDING,
+  HEADER_PADDING,
+  TEXT_SIZE,
+} from './constants';
 export type {
   TableProps,
   TableViewConfig,
   CardComponentProps,
   ColumnConfig,
+  ColumnWidth,
   ColumnSizePreset,
+  ColumnViewPreset,
+  ColumnAlign,
   CreateColumnOptions,
   SortConfig,
+  PaginationConfig,
   TableVariant,
   Breakpoint,
-} from '@/utils/table';
+  ListViewPaginationConfig,
+  DataTableMode,
+  TableHeaderProps,
+  TableBodyProps,
+  TableCellProps,
+  TableSkeletonProps,
+  StickyPosition,
+} from './types';

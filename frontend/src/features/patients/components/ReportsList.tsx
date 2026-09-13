@@ -40,8 +40,8 @@ export const ReportsList: React.FC<ReportsListProps> = ({ orders }) => {
               <Icon name={ICONS.dataFields.pdf} className="w-full h-full text-danger-fg" />
             </div>
             <div className="min-w-0">
-              <p className="text-xs font-normal font-mono text-text-primary truncate">
-                Report_{displayId.order(order.orderId)}.pdf
+              <p className="text-xs font-normal text-text-primary truncate">
+                Report_<span className="entity-id">{displayId.order(order.orderId)}</span>.pdf
               </p>
               <p className="text-xs text-text-tertiary mt-0.5">
                 {formatDateTime(order.orderDate)} • 1.2 MB

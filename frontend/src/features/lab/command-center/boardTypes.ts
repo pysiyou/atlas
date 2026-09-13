@@ -57,7 +57,7 @@ export interface PriorityMix {
 }
 
 export interface LabTechBoardData {
-  counts: { collection: number; entry: number; validation: number };
+  counts: { collection: number; entry: number; validation: number; supervisor: number };
   queueAge: Record<'collection' | 'entry' | 'validation', QueueAgeStats>;
   blockers: BlockerSummary;
   attentionItems: AttentionItem[];

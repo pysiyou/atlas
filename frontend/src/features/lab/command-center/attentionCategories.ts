@@ -6,8 +6,10 @@ import type { BadgeVariant } from '@/components/primitives/badgeHelpers';
 import type { BlockedReason } from '@/features/lab/utils/deriveWorkItemState';
 import { LAB_CONFIG } from '@/features/lab/constants';
 import type { CommandCenterBadgeTextTone } from './components/styles';
-import type { CommandCenterTimelineTone } from '@/features/lab/timeline/timelineStyles';
 import type { AttentionItem } from './boardTypes';
+
+/** Accent severity for attention feed rows */
+export type AttentionTone = 'problem' | 'neutral';
 
 /** Why the item surfaced in Needs Attention — one per distinct lab exception or SLA breach. */
 export type AttentionType =
@@ -195,7 +197,7 @@ export function getAttentionTypeConfig(type: AttentionType): AttentionTypeConfig
   return ATTENTION_TYPE_CONFIG[type];
 }
 
-export function getAttentionTone(item: AttentionItem): CommandCenterTimelineTone {
+export function getAttentionTone(item: AttentionItem): AttentionTone {
   const type = getAttentionType(item);
   if (
     type.startsWith('escalation_') ||

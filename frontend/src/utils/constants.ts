@@ -62,6 +62,11 @@ export const ENTITY_ID_INLINE = 'entity-id truncate';
 /** Clickable ID link style. */
 export const ENTITY_ID_CLICKABLE = 'entity-id entity-id--clickable truncate block max-w-full';
 
+/** True when a class string applies entity-id typography (used by Avatar, etc.). */
+export function isEntityIdClassName(className?: string): boolean {
+  return className?.includes('entity-id') ?? false;
+}
+
 /** Detail row label. */
 export const DETAIL_LABEL = 'text-xs text-text-tertiary';
 

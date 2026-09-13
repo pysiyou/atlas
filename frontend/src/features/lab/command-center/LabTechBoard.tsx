@@ -2,7 +2,7 @@
  * Lab tech command center — live lab state board.
  */
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { invalidateCommandCenterQueries } from '@/lib/query/invalidate';
 import { COMMAND_CENTER_PANEL } from './components';
@@ -13,20 +13,33 @@ import { AttentionList } from './panels/AttentionList';
 import { QueueAgePanel } from './panels/QueueAgePanel';
 import { PriorityMixPanel } from './panels/PriorityMixPanel';
 import { RecentActivityPanel } from './panels/RecentActivityPanel';
+import { LabTechBoardSkeleton } from './LabTechBoardSkeleton';
 
 export const LabTechBoard: React.FC = () => {
   const board = useLabTechBoard();
   const queryClient = useQueryClient();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [lastRefreshedAt, setLastRefreshedAt] = useState<Date | null>(null);
+
+  useEffect(() => {
+    if (!board.isLoading) {
+      setLastRefreshedAt(new Date());
+    }
+  }, [board.isLoading]);
 
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
     try {
       await Promise.all([invalidateCommandCenterQueries(queryClient)]);
+      setLastRefreshedAt(new Date());
     } finally {
       setIsRefreshing(false);
     }
   }, [queryClient]);
+
+  if (board.isLoading) {
+    return <LabTechBoardSkeleton />;
+  }
 
   return (
     <div className={COMMAND_CENTER_PANEL.page}>
@@ -42,6 +55,7 @@ export const LabTechBoard: React.FC = () => {
             suggestedTab={board.suggestedTab}
             onRefresh={() => void handleRefresh()}
             isRefreshing={isRefreshing}
+            lastRefreshedAt={lastRefreshedAt}
           />
         </div>
 

@@ -6,7 +6,7 @@
 import React from 'react';
 import { Badge, Button, Icon, IconButton } from '@/components';
 import { DetailPageHeader } from '@/components';
-import { displayId } from '@/utils';
+import { EntityId } from '@/components';
 import type { Order, Invoice } from '@/types';
 import { ICONS } from '@/config/icons';
 
@@ -90,6 +90,10 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
     </div>
   );
   return (
-    <DetailPageHeader title={displayId.order(order.orderId)} badges={badges} actions={actions} />
+    <DetailPageHeader
+      title={<EntityId type="order" value={order.orderId} />}
+      badges={badges}
+      actions={actions}
+    />
   );
 };
