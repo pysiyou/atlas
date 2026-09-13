@@ -175,8 +175,6 @@ export const queryKeys = {
    */
   commandCenter: {
     all: ['command-center'] as const,
-    dashboard: (params: { hours_back: number }) =>
-      [...queryKeys.commandCenter.all, 'dashboard', params] as const,
     timeline: (params: { hours_back: number; limit: number }) =>
       [...queryKeys.commandCenter.all, 'timeline', params] as const,
   },

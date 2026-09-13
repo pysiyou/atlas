@@ -6,7 +6,7 @@ import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePaginatedPatientContextList } from '../api/patients.api';
 import { useFiltering } from '@/hooks/useFiltering';
-import { ListView, Pagination } from '@/components';
+import { ListView } from '@/components';
 import { Button } from '@/components';
 import { useModal } from '@/lib/context/ModalContext';
 import { PatientFilters, type AffiliationStatus } from '../components/PatientFilters';
@@ -63,7 +63,7 @@ export const PatientList: React.FC = () => {
       patient.email || '',
     ],
     statusField: 'gender',
-    defaultSort: { field: 'registrationDate', direction: 'desc' },
+    defaultSort: undefined,
   });
 
   const filteredPatients = useMemo(() => {
@@ -106,7 +106,6 @@ export const PatientList: React.FC = () => {
     <>
       <div className="flex h-full min-h-0 flex-col">
         <ListView
-          mode="table"
           items={filteredPatients}
           viewConfig={patientTableConfig}
           loading={isLoading || isFetching}
@@ -132,15 +131,15 @@ export const PatientList: React.FC = () => {
               onAffiliationStatusFiltersChange={setAffiliationStatusFilters}
             />
           }
-          pagination={false}
-        />
-        <Pagination
-          currentPage={page}
-          totalItems={pagination.total}
-          pageSize={pagination.pageSize}
-          onPageChange={goToPage}
-          onPageSizeChange={() => undefined}
-          pageSizeOptions={[DEFAULT_LIST_PAGE_SIZE]}
+          pagination={{
+            mode: 'server',
+            currentPage: page,
+            pageSize: pagination.pageSize,
+            totalItems: pagination.total,
+            onPageChange: goToPage,
+            pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
+          }}
+          defaultSort={{ key: 'registrationDate', direction: 'desc' }}
         />
       </div>
 

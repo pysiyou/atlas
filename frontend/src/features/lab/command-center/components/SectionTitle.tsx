@@ -25,15 +25,3 @@ export function SectionTitle({
     </div>
   );
 }
-
-export function ColumnHeader({
-  title,
-  aside,
-  className,
-}: {
-  title: string;
-  aside?: string;
-  className?: string;
-}) {
-  return <SectionTitle title={title} aside={aside} className={className} />;
-}

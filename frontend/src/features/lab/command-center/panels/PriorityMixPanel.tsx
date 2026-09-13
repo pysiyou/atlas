@@ -7,18 +7,12 @@ import { Panel, PanelBody } from '../components';
 import type { DonutSegment } from '../components/DonutChart';
 import type { PriorityMix } from '../boardTypes';
 import { MetricDonutHalf, type MetricDonutLegendItem } from './MetricDonutHalf';
+import { COMMAND_CENTER_PRIORITY_COLORS } from '../components/styles';
 
 interface PriorityMixPanelProps {
   priorityMix: PriorityMix;
   totalActive: number;
 }
-
-const PRIORITY_COLORS = {
-  urgent: 'fill-danger-fg-emphasis',
-  high: 'fill-warning-fg-emphasis',
-  medium: 'fill-brand',
-  low: 'fill-chart-axis',
-} as const;
 
 const PRIORITY_ROWS = [
   { key: 'urgent' as const, label: 'STAT / urgent' },
@@ -33,14 +27,14 @@ export const PriorityMixPanel: React.FC<PriorityMixPanelProps> = ({
 }) => {
   const segments: DonutSegment[] = PRIORITY_ROWS.map(row => ({
     value: priorityMix[row.key],
-    colorClass: PRIORITY_COLORS[row.key],
+    colorClass: COMMAND_CENTER_PRIORITY_COLORS[row.key],
   }));
 
   const elevated = priorityMix.urgent + priorityMix.high;
   const elevatedPct = totalActive > 0 ? Math.round((elevated / totalActive) * 100) : 0;
 
   const legend: MetricDonutLegendItem[] = PRIORITY_ROWS.map(row => ({
-    colorClass: PRIORITY_COLORS[row.key],
+    colorClass: COMMAND_CENTER_PRIORITY_COLORS[row.key],
     label: row.label,
     value: priorityMix[row.key],
     total: totalActive,

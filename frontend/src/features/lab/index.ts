@@ -14,7 +14,7 @@ export { Laboratory as LaboratoryPage } from './pages/LaboratoryPage';
 export { CollectionView } from './collection/CollectionView';
 export { EntryView } from './entry/EntryView';
 export { ValidationView } from './validation/ValidationView';
-export { CommandCenterPage } from './command-center/CommandCenterPage';
+export { LabTechBoard } from './command-center';
 
 // Components (selectively exported)
 export { LabWorkflowView } from './components/LabWorkflowView';

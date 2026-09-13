@@ -12,4 +12,5 @@ export * from './DetailsTable';
 export * from './detailsTableUtils';
 export * from './displayUtils';
 export * from './EmptyState';
+export * from './EntityId';
 export * from './FooterInfo';

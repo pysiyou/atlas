@@ -7,6 +7,10 @@ import { Panel, PanelBody } from '../components';
 import type { DonutSegment } from '../components/DonutChart';
 import type { LabTechBoardData } from '../boardTypes';
 import { MetricDonutHalf, type MetricDonutLegendItem } from './MetricDonutHalf';
+import {
+  COMMAND_CENTER_AGE_COLORS,
+  COMMAND_CENTER_STAGE_COLORS,
+} from '../components/styles';
 
 interface TodaySnapshotPanelProps {
   totalActive: number;
@@ -14,24 +18,11 @@ interface TodaySnapshotPanelProps {
   ageBuckets: LabTechBoardData['ageBuckets'];
 }
 
-const STAGE_COLORS = {
-  collection: 'fill-info-fg-emphasis',
-  entry: 'fill-warning-fg-emphasis',
-  validation: 'fill-success-fg-emphasis',
-} as const;
-
 const STAGE_ROWS = [
   { key: 'collection' as const, label: 'Collection' },
   { key: 'entry' as const, label: 'Entry' },
   { key: 'validation' as const, label: 'Review' },
 ] as const;
-
-const AGE_COLORS = {
-  fresh: 'fill-brand',
-  onTrack: 'fill-info-fg-emphasis',
-  warning: 'fill-warning-fg-emphasis',
-  critical: 'fill-danger-fg-emphasis',
-} as const;
 
 /**
  * Renders the current open pipeline: stage mix on the left, wait-age mix on the right.
@@ -43,7 +34,7 @@ export const TodaySnapshotPanel: React.FC<TodaySnapshotPanelProps> = ({
 }) => {
   const stageSegments: DonutSegment[] = STAGE_ROWS.map(row => ({
     value: counts[row.key],
-    colorClass: STAGE_COLORS[row.key],
+    colorClass: COMMAND_CENTER_STAGE_COLORS[row.key].fill,
   }));
 
   const heaviestStage = STAGE_ROWS.reduce((max, row) =>
@@ -51,42 +42,42 @@ export const TodaySnapshotPanel: React.FC<TodaySnapshotPanelProps> = ({
   );
 
   const stageLegend: MetricDonutLegendItem[] = STAGE_ROWS.map(row => ({
-    colorClass: STAGE_COLORS[row.key],
+    colorClass: COMMAND_CENTER_STAGE_COLORS[row.key].fill,
     label: row.label,
     value: counts[row.key],
     total: totalActive,
   }));
 
   const ageSegments: DonutSegment[] = [
-    { value: ageBuckets.fresh, colorClass: AGE_COLORS.fresh },
-    { value: ageBuckets.onTrack, colorClass: AGE_COLORS.onTrack },
-    { value: ageBuckets.warning, colorClass: AGE_COLORS.warning },
-    { value: ageBuckets.critical, colorClass: AGE_COLORS.critical },
+    { value: ageBuckets.fresh, colorClass: COMMAND_CENTER_AGE_COLORS.fresh },
+    { value: ageBuckets.onTrack, colorClass: COMMAND_CENTER_AGE_COLORS.onTrack },
+    { value: ageBuckets.warning, colorClass: COMMAND_CENTER_AGE_COLORS.warning },
+    { value: ageBuckets.critical, colorClass: COMMAND_CENTER_AGE_COLORS.critical },
   ];
 
   const aging = ageBuckets.warning + ageBuckets.critical;
 
   const ageLegend: MetricDonutLegendItem[] = [
     {
-      colorClass: AGE_COLORS.fresh,
+      colorClass: COMMAND_CENTER_AGE_COLORS.fresh,
       label: 'Fresh',
       value: ageBuckets.fresh,
       total: totalActive,
     },
     {
-      colorClass: AGE_COLORS.onTrack,
+      colorClass: COMMAND_CENTER_AGE_COLORS.onTrack,
       label: 'On track',
       value: ageBuckets.onTrack,
       total: totalActive,
     },
     {
-      colorClass: AGE_COLORS.warning,
+      colorClass: COMMAND_CENTER_AGE_COLORS.warning,
       label: 'Waiting 4h+',
       value: ageBuckets.warning,
       total: totalActive,
     },
     {
-      colorClass: AGE_COLORS.critical,
+      colorClass: COMMAND_CENTER_AGE_COLORS.critical,
       label: 'Waiting 8h+',
       value: ageBuckets.critical,
       total: totalActive,

@@ -6,7 +6,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Badge, Icon, type IconName } from '@/components';
 import { ICONS } from '@/config/icons';
-import { useLabPipelineCounts } from '@/features/lab/hooks';
+import { useLabPipelineCounts, getValidationTabCount } from '@/features/lab/hooks';
 import { getLabTabPath, LAB_TAB_LABELS, type LabTabId } from '@/features/lab/constants/labTabs';
 import { useAuthStore } from '@/app/store';
 
@@ -39,7 +39,10 @@ export const LabPipelineSummary: React.FC = () => {
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         {LAB_QUEUE_ITEMS.map(item => {
-          const count = counts[item.countKey];
+          const count =
+            item.countKey === 'validation'
+              ? getValidationTabCount(counts)
+              : counts[item.countKey];
           return (
             <Link
               key={item.id}

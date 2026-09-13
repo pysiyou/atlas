@@ -198,12 +198,3 @@ export function LegendRow({
     </div>
   );
 }
-
-export function StatLine({ label, value }: { label: string; value: string }) {
-  return (
-    <p className="flex items-center justify-between gap-2 text-[9px] tabular-nums text-text-tertiary">
-      <span>{label}</span>
-      <span className="text-text-secondary">{value}</span>
-    </p>
-  );
-}

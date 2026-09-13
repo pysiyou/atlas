@@ -76,7 +76,7 @@ const PatientSearchTagInput: React.FC<{
             <span className={`text-xs font-normal truncate min-w-0 capitalize ${tagStyles.text}`}>
               {selectedPatient.fullName}
             </span>
-            <span className={`text-xxs font-normal font-mono shrink-0 ${tagStyles.code}`}>
+            <span className="entity-id shrink-0">
               {displayId.patient(selectedPatient.id)}
             </span>
             {!disabled && (

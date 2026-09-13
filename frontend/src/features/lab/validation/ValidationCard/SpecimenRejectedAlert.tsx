@@ -29,7 +29,7 @@ export const SpecimenRejectedAlert: React.FC<SpecimenRejectedAlertProps> = ({
             Specimen Rejected — Validator Decision Required
           </p>
           <p className={`text-text-secondary leading-tight mt-0.5 ${isCompact ? 'text-xxs' : 'text-xs'}`}>
-            Sample {displayId.sample(sampleId)} was rejected
+            Sample <span className="entity-id">{displayId.sample(sampleId)}</span> was rejected
             {sampleRejectionReason && (
               <>: <span className="italic">{sampleRejectionReason}</span></>
             )}

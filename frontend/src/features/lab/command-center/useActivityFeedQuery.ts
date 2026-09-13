@@ -5,6 +5,7 @@
 import { useCallback } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query/keys';
+import { LAB_CONFIG } from '@/features/lab/constants';
 import { commandCenterAPI } from '../api/commandCenter.api';
 
 const MAX_ACCUMULATED = 200;
@@ -21,8 +22,8 @@ export function useActivityFeedQuery(hoursBack = 24, limit = 50) {
       if (loaded >= lastPage.total || loaded >= MAX_ACCUMULATED) return undefined;
       return loaded;
     },
-    staleTime: 30_000,
-    refetchInterval: 60_000,
+    staleTime: LAB_CONFIG.COMMAND_CENTER_STALE_MS,
+    refetchInterval: LAB_CONFIG.COMMAND_CENTER_REFETCH_MS,
   });
 
   const events = query.data?.pages.flatMap(page => page?.events ?? []) ?? [];
@@ -30,13 +31,19 @@ export function useActivityFeedQuery(hoursBack = 24, limit = 50) {
 
   const refetchFeed = useCallback(() => {
     void query.refetch();
-  }, [query]);
+  }, [query.refetch]);
 
-  const loadMore = useCallback(() => {
-    if (query.hasNextPage && !query.isFetchingNextPage) {
-      void query.fetchNextPage();
+  /** Fetch the next page; returns how many raw events were added and whether more pages exist. */
+  const loadMore = useCallback(async (): Promise<{ added: number; hasMore: boolean }> => {
+    if (!query.hasNextPage || query.isFetchingNextPage) {
+      return { added: 0, hasMore: Boolean(query.hasNextPage) };
     }
-  }, [query]);
+
+    const before = query.data?.pages.flatMap(page => page?.events ?? []).length ?? 0;
+    const result = await query.fetchNextPage();
+    const after = result.data?.pages.flatMap(page => page?.events ?? []).length ?? before;
+    return { added: after - before, hasMore: Boolean(result.hasNextPage) };
+  }, [query.data?.pages, query.fetchNextPage, query.hasNextPage, query.isFetchingNextPage]);
 
   return {
     events,

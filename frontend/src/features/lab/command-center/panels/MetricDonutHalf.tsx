@@ -2,7 +2,7 @@
  * Shared half-panel layout — section title, donut + legend, summary footer.
  */
 
-import { ColumnHeader, DonutChart, LegendRow } from '../components';
+import { SectionTitle, DonutChart, LegendRow } from '../components';
 import { COMMAND_CENTER_SECTION } from '../components/styles';
 import type { DonutSegment } from '../components/DonutChart';
 
@@ -32,7 +32,7 @@ export function MetricDonutHalf({
 }) {
   return (
     <div className="flex h-full min-h-0 min-w-0 flex-col justify-between gap-2 px-3 py-2">
-      <ColumnHeader title={title} />
+      <SectionTitle title={title} />
 
       <div className="flex min-h-0 flex-1 items-center gap-2.5">
         <DonutChart

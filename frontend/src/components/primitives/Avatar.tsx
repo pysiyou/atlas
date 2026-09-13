@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { getInitials } from '@/utils';
+import { cn, getInitials } from '@/utils';
+import { isEntityIdClassName } from '@/utils/constants';
 
 export interface AvatarProps {
   primaryText: string;
@@ -53,6 +54,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   const isButton = Boolean(onClick);
   const hasText = primaryText && !avatarOnly;
   const labelSizes = LABEL_SIZE_CLASSES[size];
+  const secondaryUsesEntityId = isEntityIdClassName(secondaryTextClassName);
 
   return (
     <div
@@ -88,7 +90,13 @@ export const Avatar: React.FC<AvatarProps> = ({
           </span>
           {secondaryText && (
             <span
-              className={`text-text-tertiary truncate ${labelSizes.secondary} ${secondaryTextClassName || ''}`}
+              className={cn(
+                'truncate',
+                labelSizes.secondary,
+                secondaryUsesEntityId
+                  ? secondaryTextClassName
+                  : cn('text-text-tertiary', secondaryTextClassName)
+              )}
             >
               {secondaryText}
             </span>

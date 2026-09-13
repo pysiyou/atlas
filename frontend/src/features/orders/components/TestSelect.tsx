@@ -89,9 +89,7 @@ const TestSearchTagInput: React.FC<{
             className={`flex items-center gap-2 px-2 py-1 rounded max-w-full shrink-0 ${tagStyles.container}`}
           >
             <span className={`text-xs font-normal truncate min-w-0 ${tagStyles.text}`}>{name}</span>
-            <span className={`text-xxs font-normal font-mono shrink-0 ${tagStyles.code}`}>
-              {code}
-            </span>
+            <span className="entity-id shrink-0">{code}</span>
             <button
               type="button"
               onClick={() => onRemoveTag(code)}
@@ -177,7 +175,7 @@ const TestSelectPopover: React.FC<TestSelectPopoverProps> = ({
               <div className="min-w-0">
                 <div className="flex items-center gap-2 min-w-0">
                   <span
-                    className={`shrink-0 text-xs font-normal font-mono px-2 py-0.5 rounded ${tagStyles.container} ${tagStyles.code}`}
+                    className={`entity-id shrink-0 px-2 py-0.5 rounded ${tagStyles.container}`}
                   >
                     {code}
                   </span>

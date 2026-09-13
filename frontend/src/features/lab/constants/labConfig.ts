@@ -11,7 +11,10 @@ export const LAB_CONFIG = {
   DEFAULT_TEXTAREA_ROWS: 2,
   REJECTION_TEXTAREA_ROWS: 3,
   PARAMETER_PREVIEW_LIMIT: 5,
-  TAB_COUNT_REFRESH_MS: 30000,
+  /** Command center timeline poll interval */
+  COMMAND_CENTER_REFETCH_MS: 60_000,
+  /** Command center query stale window (half of refetch interval) */
+  COMMAND_CENTER_STALE_MS: 30_000,
   COMPACT_RESULT_GRID_LIMIT: 8,
   POPOVER_OFFSET: 8,
   MODAL_SIZE_DEFAULT: '3xl' as const,

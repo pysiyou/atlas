@@ -5,7 +5,7 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFiltering } from '@/hooks/useFiltering';
-import { ListView, Pagination } from '@/components';
+import { ListView } from '@/components';
 import { PaymentFilters } from '../components/PaymentFilters';
 import { createPaymentTableConfig } from '../config/PaymentTable.config';
 import { PaymentDetailModal } from '../components/PaymentDetailModal';
@@ -117,7 +117,7 @@ export const PaymentList: React.FC = () => {
       );
     }
 
-    return [...filtered].sort((a, b) => b.order.orderDate.localeCompare(a.order.orderDate));
+    return filtered;
   }, [searchFilteredOrders, statusFilters, dateRange, methodFilters]);
 
   const handlePaymentSuccess = useCallback(() => {
@@ -143,7 +143,6 @@ export const PaymentList: React.FC = () => {
     <>
       <div className="flex h-full min-h-0 flex-col">
         <ListView
-          mode="table"
           items={filteredOrders}
           viewConfig={paymentTableConfig}
           loading={isLoading}
@@ -164,15 +163,15 @@ export const PaymentList: React.FC = () => {
               onMethodFiltersChange={setMethodFilters}
             />
           }
-          pagination={false}
-        />
-        <Pagination
-          currentPage={page}
-          totalItems={pagination.total}
-          pageSize={pagination.pageSize}
-          onPageChange={goToPage}
-          onPageSizeChange={() => undefined}
-          pageSizeOptions={[DEFAULT_LIST_PAGE_SIZE]}
+          pagination={{
+            mode: 'server',
+            currentPage: page,
+            pageSize: pagination.pageSize,
+            totalItems: pagination.total,
+            onPageChange: goToPage,
+            pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
+          }}
+          defaultSort={{ key: 'orderDate', direction: 'desc' }}
         />
       </div>
 

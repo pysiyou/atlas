@@ -8,7 +8,8 @@ import { Panel, PanelBody } from '../components';
 import { useRecentActivityFeed } from '../useRecentActivityFeed';
 
 export const RecentActivityPanel: React.FC = () => {
-  const { events, isLoading, isError, refetchFeed } = useRecentActivityFeed();
+  const { events, isLoading, isLoadingMore, isError, refetchFeed, hasMore, loadMore } =
+    useRecentActivityFeed();
 
   return (
     <Panel title="Recent Activity" meta="Last 24 hours · workflow & order events">
@@ -18,6 +19,9 @@ export const RecentActivityPanel: React.FC = () => {
           isLoading={isLoading}
           isError={isError}
           onRetry={refetchFeed}
+          hasMore={hasMore}
+          onLoadMore={loadMore}
+          isLoadingMore={isLoadingMore}
         />
       </PanelBody>
     </Panel>

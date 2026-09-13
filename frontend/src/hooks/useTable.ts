@@ -148,8 +148,8 @@ export const useTableSort = <T = Record<string, unknown>>({
         const result = column.sortFn(a, b);
         return sort.direction === 'asc' ? result : -result;
       }
-      const aValue = (a as Record<string, unknown>)[sort.key];
-      const bValue = (b as Record<string, unknown>)[sort.key];
+      const aValue = column?.accessor ? column.accessor(a) : (a as Record<string, unknown>)[sort.key];
+      const bValue = column?.accessor ? column.accessor(b) : (b as Record<string, unknown>)[sort.key];
       if (aValue === bValue) return 0;
       if (aValue === null || aValue === undefined) return 1;
       if (bValue === null || bValue === undefined) return -1;

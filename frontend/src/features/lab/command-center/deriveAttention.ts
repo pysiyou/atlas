@@ -52,9 +52,9 @@ export function finalizeAttentionItems(candidates: AttentionItem[]): {
   attentionItems: AttentionItem[];
   attentionTotal: number;
 } {
-  const attentionTotal = candidates.length;
   const attentionItems = consolidateAttentionItems(candidates).sort(
     (a, b) => attentionSortScore(b) - attentionSortScore(a),
   );
+  const attentionTotal = attentionItems.reduce((sum, item) => sum + item.workItemCount, 0);
   return { attentionItems, attentionTotal };
 }

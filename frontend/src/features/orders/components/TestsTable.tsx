@@ -8,7 +8,7 @@ import { Table, EmptyState } from '@/components';
 import { useTestCatalog } from '@/features/catalog';
 import type { OrderTest } from '@/types';
 import { ICONS } from '@/config/icons';
-import { createTestsTableConfig } from '../config/TestsTableConfig';
+import { createTestsTableConfig } from '../config/TestsTable.config';
 
 export interface TestsTableProps {
   tests: OrderTest[];
@@ -30,18 +30,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({ tests, orderId, variant 
   const visibleTests = useMemo(() => tests.filter(t => t.status !== 'removed'), [tests]);
 
   const viewConfig = useMemo(
-    () =>
-      variant === 'detailed'
-        ? createTestsTableConfig(testCatalog, orderId)
-        : (() => {
-            const config = createTestsTableConfig(testCatalog, orderId);
-            return {
-              ...config,
-              fullColumns: config.compactColumns,
-              mediumColumns: config.compactColumns,
-              compactColumns: config.compactColumns,
-            };
-          })(),
+    () => createTestsTableConfig(testCatalog, orderId, variant),
     [testCatalog, orderId, variant]
   );
 
@@ -58,7 +47,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({ tests, orderId, variant 
       striped
       getRowKey={(t, i) => t.id ?? i}
       rowClassName={rowClassName}
-      pagination={false}
+      pagination={{ mode: 'none' }}
       emptyMessage={EMPTY_MESSAGE}
       embedded
     />

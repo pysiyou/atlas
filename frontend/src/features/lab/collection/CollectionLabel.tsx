@@ -34,6 +34,17 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
         <style>
+          .entity-id {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+            font-size: 10px;
+            font-weight: 400;
+            color: #2563eb;
+            letter-spacing: 0.02em;
+          }
+          .entity-id--secondary {
+            font-size: 10px;
+            color: #6b7280;
+          }
           @media print {
             @page {
               size: 4in 2in;
@@ -77,8 +88,9 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
             </div>
 
             <!-- Patient ID and Sample Type -->
-            <div class="text-xxs text-text-tertiary text-center leading-tight">
-              ${patientIdDisplay} | ${sampleType.toUpperCase()}
+            <div class="text-xxs text-center leading-tight">
+              <span class="entity-id entity-id--secondary">${patientIdDisplay}</span>
+              <span class="text-text-tertiary"> | ${sampleType.toUpperCase()}</span>
             </div>
 
             <!-- Container Info -->
@@ -92,8 +104,8 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
             </div>
 
             <!-- Sample ID -->
-            <div class="text-xxs text-text-tertiary text-center leading-tight">
-              ${sampleIdDisplay}
+            <div class="text-center leading-tight">
+              <span class="entity-id">${sampleIdDisplay}</span>
             </div>
 
             <!-- Date and Time -->

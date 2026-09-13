@@ -72,14 +72,16 @@ export function renderOrderTestsBlock(
   activeTests: Pick<OrderTest, 'testCode' | 'testName'>[]
 ): ReactNode {
   const activeCount = activeTests.length;
+  const testList = activeTests.map(t => t.testCode ?? t.testName).join('/');
+
   return (
     <div className="min-w-0 font-normal">
-      <div className="truncate entity-id font-normal">
-        {activeTests.map(t => t.testCode ?? t.testName).join('/')}
-      </div>
-      <div className="text-xs text-text-tertiary truncate font-normal">
+      <div className="text-text-primary truncate font-normal">
         {activeCount} test{activeCount !== 1 ? 's' : ''}
       </div>
+      {testList ? (
+        <div className={`${ENTITY_ID_SECONDARY} truncate font-normal`}>{testList}</div>
+      ) : null}
     </div>
   );
 }

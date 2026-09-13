@@ -8,7 +8,7 @@ import { DETAIL_TITLE, DETAIL_SUBTITLE } from '@/utils/constants';
 
 export interface DetailPageHeaderProps {
   /** Page title (rendered in h1) */
-  title: string;
+  title: ReactNode;
   /** Optional subtitle below title */
   subtitle?: string;
   /** Optional left slot (e.g. Avatar + popover) before title */
