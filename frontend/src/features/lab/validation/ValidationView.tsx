@@ -35,7 +35,7 @@ import {
   usePendingRecollectionRequests,
   useApproveRecollectionRequest,
   useDenyRecollectionRequest,
-} from '@/features/lab/api/recollection-requests.api';
+} from '../api/recollection-requests.api';
 import { RecollectionRequestCard } from './RecollectionRequestCard';
 import { toast } from '@/app/AppToastBar';
 

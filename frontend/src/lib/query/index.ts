@@ -11,11 +11,20 @@ export {
   invalidateOrderQueries,
   invalidatePatientQueries,
   invalidateResultQueries,
+  invalidateCriticalValueQueries,
+  invalidateQualityIssueQueries,
+  invalidateRecollectionQueries,
+  invalidateCollectionQueries,
+  invalidateCommandCenterQueries,
+  invalidateLabWorkflowQueries,
+  invalidateSampleDetailQueries,
   useInvalidateQueryKey,
 } from './invalidate';
 export type {
   InvalidateOrderOptions,
   InvalidatePatientOptions,
   InvalidateResultOptions,
+  InvalidateCriticalValueOptions,
+  InvalidateLabWorkflowOptions,
 } from './invalidate';
 export { QueryProvider } from './QueryProvider';

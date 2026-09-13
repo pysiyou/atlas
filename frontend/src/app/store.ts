@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { AuthUser, UserRole } from '@/types';
-import { apiClient } from '@/lib/apiClient';
+import { authAPI, bindAuthClientHandlers } from '@/lib/api/auth.service';
 
 interface AuthState {
   user: AuthUser | null;
@@ -18,9 +18,7 @@ interface AuthState {
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => {
-      // Initialize token getter and refresh handler
-      apiClient.setTokenGetter(() => get().token);
-      apiClient.setRefreshTokenHandler(() => get().refreshAccessToken());
+      bindAuthClientHandlers(() => get().token, () => get().refreshAccessToken());
 
       return {
         user: null,
@@ -31,26 +29,20 @@ export const useAuthStore = create<AuthState>()(
         isLoading: true,
 
         login: async (username, password) => {
-          const response = await apiClient.post<{
-            access_token: string;
-            refresh_token: string;
-            role: UserRole;
-          }>('/auth/login', { username, password });
+          const response = await authAPI.login(username, password);
 
-          // Set token before calling /auth/me so Authorization header is included
           set({
             token: response.access_token,
             refreshToken: response.refresh_token,
           });
 
           try {
-            const userInfo = await apiClient.get<AuthUser>('/auth/me');
+            const userInfo = await authAPI.getMe();
             set({
               user: userInfo,
               isAuthenticated: true,
             });
           } catch {
-            // Keep storage in sync: do not leave token without user
             set({
               user: null,
               token: null,
@@ -63,7 +55,7 @@ export const useAuthStore = create<AuthState>()(
 
         logout: async () => {
           try {
-            await apiClient.post('/auth/logout', {});
+            await authAPI.logout();
           } catch {
             // Ignore logout errors
           }
@@ -81,11 +73,7 @@ export const useAuthStore = create<AuthState>()(
           if (!currentRefreshToken) return null;
 
           try {
-            const { access_token } = await apiClient.post<{ access_token: string }>(
-              '/auth/refresh',
-              { refresh_token: currentRefreshToken }
-            );
-
+            const { access_token } = await authAPI.refresh(currentRefreshToken);
             set({ token: access_token });
             return access_token;
           } catch {
@@ -135,9 +123,6 @@ export const useAuthStore = create<AuthState>()(
         },
       },
       onRehydrateStorage: () => {
-        // Clears isLoading when persist finishes (or after timeout).
-        // Must defer setState: sync rehydrate runs during create(), so calling
-        // useAuthStore.setState inline hits TDZ and leaves isLoading true forever.
         const REHYDRATE_TIMEOUT_MS = 300;
         let done = false;
         const finish = () => {

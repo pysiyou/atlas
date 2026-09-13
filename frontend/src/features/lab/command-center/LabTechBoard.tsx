@@ -4,7 +4,7 @@
 
 import React, { useCallback, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { queryKeys } from '@/lib/query/keys';
+import { invalidateCommandCenterQueries } from '@/lib/query/invalidate';
 import { COMMAND_CENTER_PANEL } from './components';
 import { useLabTechBoard } from './useLabTechBoard';
 import { LivePipelineStrip } from './panels/LivePipelineStrip';
@@ -22,11 +22,7 @@ export const LabTechBoard: React.FC = () => {
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
     try {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.orders.all }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.samples.all }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.commandCenter.all }),
-      ]);
+      await Promise.all([invalidateCommandCenterQueries(queryClient)]);
     } finally {
       setIsRefreshing(false);
     }

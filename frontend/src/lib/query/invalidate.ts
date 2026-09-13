@@ -1,6 +1,16 @@
 /**
  * Shared cache invalidation helpers.
- * Use in mutation onSuccess/onSettled so all dependent queries refresh without page reload.
+ *
+ * Invalidation matrix:
+ * - Orders: create/update/delete/payment → invalidateOrderQueries
+ * - Patients: create/update/delete → invalidatePatientQueries
+ * - Results: entry/validate/escalation → invalidateResultQueries
+ * - Critical values: notify/acknowledge → invalidateCriticalValueQueries
+ * - Quality issues: report → invalidateQualityIssueQueries
+ * - Recollection: approve/deny → invalidateRecollectionQueries
+ * - Collection: collect sample → invalidateCollectionQueries
+ * - Lab board refresh → invalidateCommandCenterQueries
+ * - Full lab workflow (validation modals) → invalidateLabWorkflowQueries
  */
 
 import type { QueryClient, QueryKey } from '@tanstack/react-query';
@@ -9,15 +19,10 @@ import { queryKeys } from './keys';
 
 export interface InvalidateOrderOptions {
   orderId?: string | number;
-  /** Invalidate samples (e.g. after order create/update/delete). Default true when orderId set. */
   samples?: boolean;
-  /** Invalidate payments (e.g. after payment status change). */
   payments?: boolean;
 }
 
-/**
- * Invalidate order-related queries. Use after any order create/update/delete.
- */
 export function invalidateOrderQueries(
   client: QueryClient,
   options: InvalidateOrderOptions = {}
@@ -37,13 +42,14 @@ export function invalidateOrderQueries(
   }
 }
 
+export function invalidateOrderDetailQuery(client: QueryClient, orderId: string): void {
+  client.invalidateQueries({ queryKey: queryKeys.orders.byId(orderId) });
+}
+
 export interface InvalidatePatientOptions {
   patientId?: string | number;
 }
 
-/**
- * Invalidate patient-related queries. Use after any patient create/update/delete.
- */
 export function invalidatePatientQueries(
   client: QueryClient,
   options: InvalidatePatientOptions = {}
@@ -63,9 +69,6 @@ export interface InvalidateResultOptions {
   pendingEscalation?: boolean;
 }
 
-/**
- * Invalidate result-related and dependent queries. Use after result entry/validate/reject/resolve escalation.
- */
 export function invalidateResultQueries(
   client: QueryClient,
   options: InvalidateResultOptions = {}
@@ -86,9 +89,90 @@ export function invalidateResultQueries(
   }
 }
 
-/**
- * Generic hook to invalidate queries by key prefix.
- */
+export interface InvalidateCriticalValueOptions {
+  orderId?: string | number;
+}
+
+export function invalidateCriticalValueQueries(
+  client: QueryClient,
+  options: InvalidateCriticalValueOptions = {}
+): void {
+  client.invalidateQueries({ queryKey: queryKeys.criticalValues.all });
+  invalidateOrderQueries(client, { orderId: options.orderId, samples: false, payments: false });
+}
+
+export function invalidateQualityIssueQueries(client: QueryClient): void {
+  client.invalidateQueries({ queryKey: queryKeys.samples.all });
+  client.invalidateQueries({ queryKey: queryKeys.orders.all });
+  client.invalidateQueries({ queryKey: queryKeys.qualityIssues.all });
+  client.invalidateQueries({ queryKey: queryKeys.recollectionRequests.all });
+}
+
+export function invalidateRecollectionQueries(client: QueryClient): void {
+  client.invalidateQueries({ queryKey: queryKeys.recollectionRequests.all });
+}
+
+export function invalidateCollectionQueries(client: QueryClient): void {
+  client.invalidateQueries({ queryKey: queryKeys.samples.all });
+  client.invalidateQueries({ queryKey: queryKeys.orders.all });
+}
+
+export function invalidateCommandCenterQueries(client: QueryClient): void {
+  client.invalidateQueries({ queryKey: queryKeys.orders.all });
+  client.invalidateQueries({ queryKey: queryKeys.samples.all });
+  client.invalidateQueries({ queryKey: queryKeys.commandCenter.all });
+}
+
+export interface InvalidateLabWorkflowOptions {
+  orderId?: string | number;
+  criticalValues?: boolean;
+  pendingEscalation?: boolean;
+}
+
+export function invalidateLabWorkflowQueries(
+  client: QueryClient,
+  options: InvalidateLabWorkflowOptions = {}
+): void {
+  const { orderId, criticalValues = false, pendingEscalation = false } = options;
+  invalidateOrderQueries(client, { orderId, samples: true, payments: false });
+  invalidateCommandCenterQueries(client);
+  if (criticalValues) {
+    client.invalidateQueries({ queryKey: queryKeys.criticalValues.all });
+  }
+  if (pendingEscalation) {
+    client.invalidateQueries({ queryKey: queryKeys.results.pendingEscalation() });
+  }
+}
+
+export function invalidateSampleDetailQueries(
+  client: QueryClient,
+  sampleId?: string,
+  orderId?: string
+): void {
+  if (sampleId) {
+    client.invalidateQueries({ queryKey: queryKeys.samples.byId(sampleId) });
+  }
+  if (orderId) {
+    client.invalidateQueries({ queryKey: queryKeys.samples.byOrder(orderId) });
+  }
+}
+
+export function invalidatePendingEscalationQueries(client: QueryClient): void {
+  client.invalidateQueries({ queryKey: queryKeys.results.pendingEscalation() });
+}
+
+export function invalidatePaymentDetailQueries(
+  client: QueryClient,
+  options: { paymentId?: string; orderId?: string }
+): void {
+  if (options.paymentId) {
+    client.invalidateQueries({ queryKey: queryKeys.payments.byId(options.paymentId) });
+  }
+  if (options.orderId) {
+    client.invalidateQueries({ queryKey: queryKeys.payments.byOrder(options.orderId) });
+  }
+}
+
 export function useInvalidateQueryKey(queryKey: QueryKey) {
   const queryClient = useQueryClient();
 

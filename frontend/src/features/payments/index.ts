@@ -3,11 +3,13 @@
  */
 
 export {
+  paymentAPI,
   getPayments,
   getPayment,
   getPaymentsByOrder,
   createPayment,
   usePaymentsList,
+  usePaymentsForOrderIds,
   usePayment,
   usePaymentsByOrder,
   usePaymentMethodByOrder,

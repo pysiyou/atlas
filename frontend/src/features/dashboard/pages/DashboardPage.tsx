@@ -5,8 +5,9 @@
 
 import React from 'react';
 import { useAuthStore } from '@/app/store';
-import { usePatientNameLookup, usePatientsList } from '@/features/patients';
-import { useOrdersList } from '@/features/orders';
+import { WORKFLOW_QUERY_LIMIT } from '@/lib/api/constants';
+import { usePatientNameLookup, usePaginatedPatients } from '@/features/patients';
+import { usePaginatedOrders } from '@/features/orders';
 import { usePaymentsList } from '@/features/payments';
 import { formatDate } from '@/utils';
 import { LabPipelineSummary } from '../components/LabPipelineSummary';
@@ -20,9 +21,9 @@ import { DashboardRecentOrders } from '../components/DashboardRecentOrders';
 
 export const Dashboard: React.FC = () => {
   const { user: currentUser, hasRole } = useAuthStore();
-  const { patients } = usePatientsList();
-  const { orders } = useOrdersList();
-  const { payments } = usePaymentsList();
+  const { patients } = usePaginatedPatients(undefined, 1, WORKFLOW_QUERY_LIMIT);
+  const { orders } = usePaginatedOrders(undefined, 1, WORKFLOW_QUERY_LIMIT);
+  const { payments } = usePaymentsList({ limit: WORKFLOW_QUERY_LIMIT });
   const { getPatientName } = usePatientNameLookup();
 
   const isLabRole = hasRole(['administrator', 'lab-technician', 'lab-technician-plus']);

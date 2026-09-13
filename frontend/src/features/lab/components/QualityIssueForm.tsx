@@ -1,17 +1,17 @@
 /**
  * Unified quality issue form — used at collection (sample reject).
- * Validation uses QualityIssueDialog with an explicit destination picker.
  */
-import React, { useState } from 'react';
+import React from 'react';
 import { Alert, SpinnerLoader } from '@/components';
 import { CatalogRejectionFields } from './CatalogRejectionFields';
-import { useQualityIssueOptions } from '@/features/lab/api/quality-issues.api';
+import { useQualityIssueOptions } from '../api/quality-issues.api';
 import type { QualityIssueOptions, QualityIssueTargetType, RemedyType } from '@/types/lab-operations';
 import { QUALITY_ISSUE_DIALOG_COPY } from './qualityIssueDialogConstants';
+import { RemedyDestinationPicker } from './RemedyDestinationPicker';
 import {
-  RemedyDestinationPicker,
   buildSampleRemedyOptions,
-} from './RemedyDestinationPicker';
+  resolveSuggestedRemedy,
+} from './remedyDestinationUtils';
 
 type CollectionAlertCopy = {
   variant: 'warning' | 'danger';
@@ -29,7 +29,8 @@ function getCollectionAlertCopy(options: QualityIssueOptions): CollectionAlertCo
     return {
       variant: 'warning',
       ...QUALITY_ISSUE_DIALOG_COPY.collection.escalateResults,
-      warningBody: options.previewMessage || QUALITY_ISSUE_DIALOG_COPY.collection.escalateResults.warningBody,
+      warningBody:
+        options.previewMessage || QUALITY_ISSUE_DIALOG_COPY.collection.escalateResults.warningBody,
     };
   }
   return {
@@ -51,7 +52,6 @@ export interface QualityIssueFormProps {
   isSubmitting?: boolean;
   onReasonChange?: (reason: string) => void;
   onNotesChange?: (notes: string) => void;
-  /** Sample unfinished-work destination (collection only). */
   preferredRemedy?: RemedyType | '';
   onPreferredRemedyChange?: (remedy: RemedyType) => void;
   reason: string;
@@ -74,31 +74,23 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
 }) => {
   const { data: options, isLoading } = useQualityIssueOptions(targetType, targetId);
 
-  const alertCopy =
-    targetType === 'sample' && options ? getCollectionAlertCopy(options) : null;
+  const alertCopy = targetType === 'sample' && options ? getCollectionAlertCopy(options) : null;
 
   const sampleRemedyOptions = React.useMemo(
-    () =>
-      targetType === 'sample' ? buildSampleRemedyOptions(options?.allowedRemedies) : [],
+    () => (targetType === 'sample' ? buildSampleRemedyOptions(options?.allowedRemedies) : []),
     [targetType, options?.allowedRemedies]
   );
 
-  // Soft-suggest recollection when unfinished work exists.
-  React.useEffect(() => {
-    if (targetType !== 'sample' || !options || preferredRemedy || !onPreferredRemedyChange) {
-      return;
-    }
-    const suggested = options.suggestedRemedy ?? options.previewRemedy;
-    if (suggested && sampleRemedyOptions.some(o => o.value === suggested)) {
-      onPreferredRemedyChange(suggested);
-    }
-  }, [
-    targetType,
-    options,
-    preferredRemedy,
-    onPreferredRemedyChange,
-    sampleRemedyOptions,
-  ]);
+  const suggestedRemedy = React.useMemo(
+    () =>
+      resolveSuggestedRemedy(
+        options?.suggestedRemedy ?? options?.previewRemedy,
+        sampleRemedyOptions
+      ),
+    [options?.previewRemedy, options?.suggestedRemedy, sampleRemedyOptions]
+  );
+
+  const effectivePreferredRemedy = preferredRemedy || suggestedRemedy;
 
   return (
     <div className="space-y-3">
@@ -143,7 +135,7 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
             <RemedyDestinationPicker
               label={QUALITY_ISSUE_DIALOG_COPY.collection.actions.followUpLabel}
               options={sampleRemedyOptions}
-              value={preferredRemedy}
+              value={effectivePreferredRemedy}
               onChange={remedy => onPreferredRemedyChange?.(remedy)}
             />
           )}
@@ -152,15 +144,3 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
     </div>
   );
 };
-
-export function useQualityIssueFormState() {
-  const [reason, setReason] = useState('');
-  const [notes, setNotes] = useState('');
-  const [preferredRemedy, setPreferredRemedy] = useState<RemedyType | ''>('');
-  const reset = () => {
-    setReason('');
-    setNotes('');
-    setPreferredRemedy('');
-  };
-  return { reason, notes, setReason, setNotes, preferredRemedy, setPreferredRemedy, reset };
-}

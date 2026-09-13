@@ -26,7 +26,7 @@ import { QualityIssueDialog } from '../components/QualityIssueDialog';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
 import { CriticalValueActions } from '@/features/lab/critical-values/CriticalValueActions';
 import { buildCriticalValueRecord } from '@/features/lab/critical-values/buildCriticalValueRecord.utils';
-import { queryKeys } from '@/lib/query';
+import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
 import {
   RetestBadge,
   RecollectionAttemptBadge,
@@ -84,8 +84,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
   const criticalRecord = useMemo(() => buildCriticalValueRecord(test), [test]);
 
   const handleCriticalValueUpdated = useCallback(() => {
-    queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
-    queryClient.invalidateQueries({ queryKey: queryKeys.criticalValues.all });
+    invalidateLabWorkflowQueries(queryClient, { criticalValues: true });
   }, [queryClient]);
 
   if (!readOnly && !test.results) return null;

@@ -9,6 +9,7 @@ export {
   useOrdersByPatient,
   useOrdersByStatus,
   usePaginatedOrders,
+  useOrdersForPatientIds,
   useOrderStats,
   useOrderSummary,
   useRecentOrders,

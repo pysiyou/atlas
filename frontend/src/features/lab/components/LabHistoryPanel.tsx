@@ -4,7 +4,7 @@
 import React from 'react';
 import { SectionPanel } from '@/components';
 import { Skeleton } from '@/components/loaders/Skeleton';
-import { useEntityTimeline } from '@/features/lab/api/audit.api';
+import { useEntityTimeline } from '../api/audit.api';
 import { LabTimeline } from './LabTimeline';
 
 interface LabHistoryPanelProps {

@@ -77,16 +77,8 @@ export const updateOrderTestStatus = (
     test.testCode === testCode ? { ...test, status, ...additionalData } : test
   );
   
-  // Build samples map for accurate order status calculation
+  // Sample context is supplied by callers when available for status calculation.
   const samplesById: Record<number, { status?: string; isRecollection?: boolean }> = {};
-  if (order.samples) {
-    order.samples.forEach(sample => {
-      samplesById[sample.sampleId] = {
-        status: sample.status,
-        isRecollection: sample.isRecollection
-      };
-    });
-  }
   
   const overallStatus = calculateOrderStatus(
     updatedTests.map(t => t.status),

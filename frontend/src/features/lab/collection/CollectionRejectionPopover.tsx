@@ -7,9 +7,14 @@ import { Popover, Button, FooterInfo } from '@/components';
 import { PopoverForm } from '../components/PopoverForm';
 import { MODULE_ICONS } from '@/config/icons';
 import { displayId } from '@/utils';
-import { QualityIssueForm, useQualityIssueFormState } from '../components/QualityIssueForm';
+import { QualityIssueForm } from '../components/QualityIssueForm';
+import { useQualityIssueFormState } from '../components/useQualityIssueFormState';
 import { useQualityIssueHandler } from '../hooks/useQualityIssueHandler';
-import { useQualityIssueOptions } from '@/features/lab/api/quality-issues.api';
+import { useQualityIssueOptions } from '../api/quality-issues.api';
+import {
+  buildSampleRemedyOptions,
+  resolveSuggestedRemedy,
+} from '../components/remedyDestinationUtils';
 import { parseNumericSampleId } from './collectionRejectionPopover.helpers';
 
 interface CollectionRejectionPopoverContentProps {
@@ -49,18 +54,22 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
 
   const unfinishedCount = options?.unfinishedTestsCount ?? 0;
   const requiresUnfinishedChoice = unfinishedCount > 0;
-  const canSubmit =
-    !!reason && (!requiresUnfinishedChoice || preferredRemedy !== '');
+  const suggestedRemedy = resolveSuggestedRemedy(
+    options?.suggestedRemedy ?? options?.previewRemedy,
+    buildSampleRemedyOptions(options?.allowedRemedies)
+  );
+  const effectiveRemedy = preferredRemedy || suggestedRemedy;
+  const canSubmit = !!reason && (!requiresUnfinishedChoice || effectiveRemedy !== '');
 
   const handleConfirm = useCallback(async () => {
     if (!numericSampleId || !reason) return;
-    if (requiresUnfinishedChoice && !preferredRemedy) return;
+    if (requiresUnfinishedChoice && !effectiveRemedy) return;
     await reportIssue(
       'sample',
       numericSampleId,
       reason,
       notes,
-      preferredRemedy || undefined,
+      effectiveRemedy || undefined
     );
     reset();
     onSuccess();
@@ -68,7 +77,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
     numericSampleId,
     reason,
     notes,
-    preferredRemedy,
+    effectiveRemedy,
     requiresUnfinishedChoice,
     reportIssue,
     reset,

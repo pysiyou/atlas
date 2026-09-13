@@ -11,6 +11,7 @@ import { COMMAND_CENTER_TEXT, resolveCommandCenterTextTone } from '../components
 import type { LabTechBoardData, QueueAgeStats } from '../boardTypes';
 import { queueTileTone } from '../queueTone';
 import { LabHealthStatus } from './HealthBanner';
+import type { CommandCenterKpiTone } from '../components/styles';
 
 function formatOldestAge(age: QueueAgeStats): string {
   if (age.oldestHours === null) return 'No backlog';

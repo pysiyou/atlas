@@ -4,16 +4,16 @@
 
 import { useMemo } from 'react';
 import { useOrdersList } from '@/features/orders';
-import { useSamplesList } from '@/features/lab/api/samples.api';
+import { useSamplesList } from '../api/samples.api';
 import { useTestCatalog } from '@/features/catalog';
 import { usePatientNameLookup } from '@/features/patients';
 import { useOrderLookup } from '@/features/orders';
 import { useCollectionSampleDisplays } from '@/features/lab/collection/useCollectionSampleDisplays';
-import { usePendingEscalation } from '@/features/lab/api/results.api';
-import { usePendingRecollectionRequests } from '@/features/lab/api/recollection-requests.api';
+import { usePendingEscalation } from '../api/results.api';
+import { usePendingRecollectionRequests } from '../api/recollection-requests.api';
 import { useLabPipelineCounts, useLabTestsFromOrders } from '@/features/lab/hooks';
 import { finalizeAttentionItems } from './deriveAttention';
-import { deriveBoardPipeline } from './derivePipeline';
+import { deriveBoardPipeline, type CollectionDisplayInput } from './derivePipeline';
 import { deriveHealth } from './deriveHealth';
 import { deriveTodayThroughput } from './deriveThroughput';
 import type { LabTechBoardData } from './boardTypes';
@@ -58,7 +58,7 @@ export function useLabTechBoard(): LabTechBoardData {
       priorityMix,
       attentionCandidates,
     } = deriveBoardPipeline({
-      collectionDisplays,
+      collectionDisplays: collectionDisplays as CollectionDisplayInput[],
       entryTests,
       validationTests,
       escalatedTests,

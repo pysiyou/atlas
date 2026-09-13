@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { Badge } from '@/components';
 import { cn, formatRelativeDateLabel, formatRelativeDateTime } from '@/utils';
 import { ENTITY_ID, ENTITY_ID_CLICKABLE } from '@/utils/constants';
-import type { TimelineEvent } from '@/features/lab/api/commandCenter.api';
+import type { TimelineEvent } from '../api/commandCenter.api';
 import {
   getCategoryConfig,
   getEventCategory,
@@ -103,10 +103,9 @@ function TimelineEventRow({
   onOpenOrderTest: (id: number) => void;
 }) {
   const isEntity = variant === 'entity';
-  const category = isEntity ? getEntityEventCategory(event) : getEventCategory(event.type);
   const categoryConfig = isEntity
-    ? getEntityCategoryConfig(category)
-    : getCategoryConfig(category);
+    ? getEntityCategoryConfig(getEntityEventCategory(event))
+    : getCategoryConfig(getEventCategory(event.type));
   const tone = isEntity ? getEntityEventTone(event) : getEventTone(event);
   const formatted = isEntity
     ? formatEntityTimelineEvent(event)

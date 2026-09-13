@@ -10,6 +10,7 @@ import {
   type NotifyCriticalValueRequest,
 } from './criticalValues.api';
 import { queryKeys } from '@/lib/query';
+import { invalidateCriticalValueQueries } from '@/lib/query/invalidate';
 
 export function usePendingCriticalValues() {
   const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
@@ -38,8 +39,7 @@ export function useNotifyCriticalValue() {
     mutationFn: ({ testId, body }: { testId: number; body: NotifyCriticalValueRequest }) =>
       criticalValuesAPI.notify(testId, body),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.criticalValues.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+      invalidateCriticalValueQueries(queryClient);
     },
   });
 }
@@ -51,8 +51,7 @@ export function useAcknowledgeCriticalValue() {
     mutationFn: ({ testId, body }: { testId: number; body: AcknowledgeCriticalValueRequest }) =>
       criticalValuesAPI.acknowledge(testId, body),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.criticalValues.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+      invalidateCriticalValueQueries(queryClient);
     },
   });
 }

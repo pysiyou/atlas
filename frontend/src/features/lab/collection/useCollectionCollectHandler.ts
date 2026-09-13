@@ -6,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { toast } from '@/app/AppToastBar';
 import { logger } from '@/utils/logger';
 import { getErrorMessage, getErrorDetails, isLikelyNetworkOrTimeout } from '@/utils/errors';
-import { queryKeys } from '@/lib/query';
+import { invalidateCollectionQueries } from '@/lib/query/invalidate';
 import type { ContainerType, ContainerTopColor } from '@/types';
 import type { SampleDisplay } from '@/features/lab/types';
 import type { UseMutationResult } from '@tanstack/react-query';
@@ -87,13 +87,11 @@ export function useCollectionCollectHandler({
         if (err?.name !== 'AbortError') {
           logger.error('Error refreshing orders after collection', getErrorDetails(refetchError));
         }
-        queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
-        queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
+        invalidateCollectionQueries(queryClient);
       }
     } catch (error) {
       logger.error('Error collecting sample', getErrorDetails(error));
-      queryClient.invalidateQueries({ queryKey: queryKeys.samples.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+      invalidateCollectionQueries(queryClient);
       if (isLikelyNetworkOrTimeout(error)) {
         toast.error({
           title: 'Action may have completed',

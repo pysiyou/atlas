@@ -4,7 +4,7 @@
 import { useCallback } from 'react';
 import { toast } from '@/app/AppToastBar';
 import { logger } from '@/utils/logger';
-import { useReportQualityIssue } from '@/features/lab/api/quality-issues.api';
+import { useReportQualityIssue } from '../api/quality-issues.api';
 import type {
   QualityIssueResult,
   QualityIssueTargetType,

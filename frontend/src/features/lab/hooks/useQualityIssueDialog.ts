@@ -1,22 +1,24 @@
 /**
  * useQualityIssueDialog — quality issue popover state for result validation.
- * Validator must choose reason + destination (preferredRemedy); no auto-routing.
  */
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import type { QualityIssueResult, RemedyType } from '@/types/lab-operations';
-import { useQualityIssueOptions, useReportQualityIssue } from '@/features/lab/api/quality-issues.api';
+import { useQualityIssueOptions, useReportQualityIssue } from '../api/quality-issues.api';
 import {
   QUALITY_ISSUE_DIALOG_COPY,
   getValidationAlertCopy,
 } from '../components/qualityIssueDialogConstants';
 import { displayId } from '@/utils';
-import { buildValidationRemedyOptions } from '../components/RemedyDestinationPicker';
+import {
+  buildValidationRemedyOptions,
+  resolveSuggestedRemedy,
+} from '../components/remedyDestinationUtils';
 
 function buildSubtitle(
   orderTestId: number,
   testName?: string,
   testCode?: string,
-  patientName?: string,
+  patientName?: string
 ): string {
   const testLabel = [testName, testCode ? `(${testCode})` : ''].filter(Boolean).join(' ');
   const patient = patientName ? ` - ${patientName}` : '';
@@ -48,7 +50,7 @@ export function useQualityIssueDialog({
 
   const { data: options, isLoading, error: fetchError, refetch } = useQualityIssueOptions(
     'test',
-    orderTestId,
+    orderTestId
   );
   const reportMutation = useReportQualityIssue();
 
@@ -57,22 +59,24 @@ export function useQualityIssueDialog({
       buildValidationRemedyOptions(options?.allowedRemedies, {
         retestRemaining: options?.retestAttemptsRemaining,
       }),
-    [options],
+    [options]
   );
 
-  // Pre-select soft suggestion when options load (still editable).
-  useEffect(() => {
-    if (!options || preferredRemedy) return;
-    const suggested = options.suggestedRemedy ?? options.previewRemedy;
-    if (suggested && remedyOptions.some(o => o.value === suggested)) {
-      setPreferredRemedy(suggested);
-    }
-  }, [options, preferredRemedy, remedyOptions]);
+  const suggestedRemedy = useMemo(
+    () =>
+      resolveSuggestedRemedy(
+        options?.suggestedRemedy ?? options?.previewRemedy,
+        remedyOptions
+      ),
+    [options?.previewRemedy, options?.suggestedRemedy, remedyOptions]
+  );
+
+  const effectivePreferredRemedy = preferredRemedy || suggestedRemedy;
 
   const allowedCriteria = options?.allowedCriteria ?? [];
   const hasReason = rejectionReason.length > 0;
   const hasCriteria = allowedCriteria.length > 0;
-  const hasDestination = preferredRemedy !== '';
+  const hasDestination = effectivePreferredRemedy !== '';
   const isConfirmDisabled = useMemo(
     () => !hasCriteria || !hasReason || !hasDestination,
     [hasCriteria, hasReason, hasDestination]
@@ -80,7 +84,7 @@ export function useQualityIssueDialog({
 
   const alertCopy = useMemo(
     () => (options ? getValidationAlertCopy(options) : null),
-    [options],
+    [options]
   );
 
   useEffect(() => {
@@ -88,12 +92,12 @@ export function useQualityIssueDialog({
   }, [reportMutation.isPending, onSubmittingChange]);
 
   const handleConfirm = async () => {
-    if (!rejectionReason || !preferredRemedy) return;
+    if (!rejectionReason || !effectivePreferredRemedy) return;
     const result = await reportMutation.mutateAsync({
       target: { type: 'test', id: orderTestId },
       reason: rejectionReason,
       notes: rejectionNotes.trim() || undefined,
-      preferredRemedy,
+      preferredRemedy: effectivePreferredRemedy,
     });
     onConfirm(result);
   };
@@ -113,7 +117,7 @@ export function useQualityIssueDialog({
     setRejectionReason,
     rejectionNotes,
     setRejectionNotes,
-    preferredRemedy,
+    preferredRemedy: effectivePreferredRemedy,
     setPreferredRemedy,
     remedyOptions,
     isConfirmDisabled,
