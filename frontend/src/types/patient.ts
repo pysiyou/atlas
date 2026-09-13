@@ -86,7 +86,7 @@ export interface Patient {
  * to avoid redundant Order[] lookups in every component that renders
  * patient cards, rows, or detail views.
  *
- * Built by `usePatientContextList` — joins cached Patient[] + Order[].
+ * Built by `usePaginatedPatientContextList` — joins paginated patients with per-patient orders.
  * No additional API calls required.
  *
  * Consumers: PatientList, PatientDetail, PatientTableConfig

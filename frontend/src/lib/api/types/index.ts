@@ -41,9 +41,6 @@ export type RefreshTokenResponse = Pick<
   'access_token'
 >;
 
-/** @deprecated Use ApiMessageResponse for new code */
-export type OperationResponse = MessageResponse;
-
 /**
  * Backend endpoints available but not wired in the frontend UI.
  * @see backend/app/api/v1/
