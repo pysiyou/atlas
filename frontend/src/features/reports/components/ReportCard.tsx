@@ -6,7 +6,7 @@
  */
 import { Badge, Card, Avatar } from '@/components';
 import type { CardComponentProps } from '@/components';
-import { formatDate } from '@/utils';
+import { formatDateTime } from '@/utils';
 import { displayId } from '@/utils';
 import type { ValidatedTest } from '../types';
 import { ReportPreviewButton } from './ReportPreviewButton';
@@ -54,7 +54,7 @@ export function ReportCard({ item: test, onClick, onPreview }: ReportCardProps) 
       {/* Bottom section: Order date (left) + Preview button (right) */}
       <div className="flex justify-between items-center mt-auto pt-3">
         {/* Order date on bottom left */}
-        <div className="text-xs text-text-tertiary">{formatDate(test.orderDate)}</div>
+        <div className="text-xs text-text-tertiary">{formatDateTime(test.orderDate)}</div>
         {/* Preview button on bottom right */}
         <div onClick={e => e.stopPropagation()}>
           <ReportPreviewButton test={test} onPreview={onPreview} size="xs" />

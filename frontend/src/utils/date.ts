@@ -26,18 +26,38 @@ import {
   isAfter,
 } from 'date-fns';
 
+/** Parse API date/datetime values into a valid Date, or null. */
+export function parseAppDate(date: string | Date | undefined | null): Date | null {
+  if (!date) return null;
+  try {
+    const d = typeof date === 'string' ? parseISO(date) : date;
+    return isValid(d) ? d : null;
+  } catch {
+    return null;
+  }
+}
+
 export function formatDate(
   date: string | Date | undefined | null,
   formatStr = 'MMM d, yyyy'
 ): string {
-  if (!date) return '';
-  try {
-    const d = typeof date === 'string' ? parseISO(date) : date;
-    if (!isValid(d)) return '';
-    return format(d, formatStr);
-  } catch {
-    return '';
-  }
+  const d = parseAppDate(date);
+  if (!d) return '';
+  return format(d, formatStr);
+}
+
+/**
+ * Canonical in-app datetime display.
+ * Always includes hours and minutes; omits the year for the current year.
+ */
+export function formatDateTime(date: string | Date | undefined | null): string {
+  const d = parseAppDate(date);
+  if (!d) return '';
+
+  const now = new Date();
+  const datePart =
+    d.getFullYear() === now.getFullYear() ? format(d, 'd MMM') : format(d, 'd MMM yyyy');
+  return `${datePart}, ${format(d, 'h:mm a')}`;
 }
 
 export function formatOrderDate(
@@ -88,34 +108,25 @@ export function formatRelativeTime(
   dateString: string | undefined | null,
   options?: { absoluteFormat?: string }
 ): string {
-  if (!dateString) return '';
-  try {
-    const date = typeof dateString === 'string' ? parseISO(dateString) : dateString;
-    if (!isValid(date)) return '';
-    const now = new Date();
-    const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
+  const date = parseAppDate(dateString);
+  if (!date) return '';
 
-    if (diffInHours < 24) {
-      const diffInMinutes = Math.floor(diffInHours * 60);
-      if (diffInMinutes < 60) {
-        return `${diffInMinutes}m ago`;
-      }
-      return `${Math.floor(diffInHours)}h ago`;
+  const now = new Date();
+  const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
+
+  if (diffInHours < 24) {
+    const diffInMinutes = Math.floor(diffInHours * 60);
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes}m ago`;
     }
-
-    if (options?.absoluteFormat) {
-      return format(date, options.absoluteFormat);
-    }
-
-    return date.toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  } catch {
-    return '';
+    return `${Math.floor(diffInHours)}h ago`;
   }
+
+  if (options?.absoluteFormat) {
+    return format(date, options.absoluteFormat);
+  }
+
+  return formatDateTime(date);
 }
 
 /** PDF/report timestamp format. */
@@ -130,26 +141,24 @@ export function formatReportTime(dateString?: string | null, emptyLabel = 'N/A')
   }
 }
 
+/** Datetime with Today/Yesterday labels for activity feeds and timelines. */
 export function formatRelativeDateTime(date: string | Date | undefined | null): string {
-  if (!date) return '';
-  try {
-    const d = typeof date === 'string' ? parseISO(date) : date;
-    if (!isValid(d)) return '';
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-    const dateOnly = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-    let dateLabel: string;
-    if (dateOnly.getTime() === today.getTime()) dateLabel = 'Today';
-    else if (dateOnly.getTime() === yesterday.getTime()) dateLabel = 'Yesterday';
-    else
-      dateLabel =
-        d.getFullYear() === now.getFullYear() ? format(d, 'd MMM') : format(d, 'd MMM yyyy');
-    return `${dateLabel}, ${format(d, 'h:mm a')}`;
-  } catch {
-    return '';
+  const d = parseAppDate(date);
+  if (!d) return '';
+
+  const now = new Date();
+  const today = startOfDay(now);
+  const yesterday = startOfDay(subDays(now, 1));
+  const dateOnly = startOfDay(d);
+
+  if (isSameDay(dateOnly, today)) {
+    return `Today, ${format(d, 'h:mm a')}`;
   }
+  if (isSameDay(dateOnly, yesterday)) {
+    return `Yesterday, ${format(d, 'h:mm a')}`;
+  }
+
+  return formatDateTime(d);
 }
 
 export const DATE_PRESETS = [

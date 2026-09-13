@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Badge } from '@/components';
 import type { TableViewConfig, CardComponentProps } from '@/components';
 import { ENTITY_ID_INLINE } from '@/utils/constants';
-import { formatCurrency, formatDate, displayId } from '@/utils';
+import { formatCurrency, formatDateTime, displayId } from '@/utils';
 import { getTestName } from '@/features/catalog/utils';
 import { getLabQueueUrlForTest } from '@/features/lab';
 import type { OrderTest, Test } from '@/types';
@@ -107,7 +107,7 @@ function createDetailedExtraColumns(_testCatalog: Test[], labColumn: ReturnType<
       width: 'lg' as const,
       render: (test: OrderTest) =>
         test.resultEnteredAt ? (
-          <span className="text-xs text-text-secondary">{formatDate(test.resultEnteredAt)}</span>
+          <span className="text-xs text-text-secondary">{formatDateTime(test.resultEnteredAt)}</span>
         ) : (
           <span className="text-xs text-text-tertiary">—</span>
         ),

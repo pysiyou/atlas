@@ -16,6 +16,7 @@ export {
   renderOrderTotalPriceInline,
   renderContactBlock,
   renderDateCell,
+  renderDateTimeCell,
   renderOrderDateCell,
   renderNavigableOrderId,
 } from './columnRenders';

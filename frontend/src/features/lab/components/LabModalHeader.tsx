@@ -3,7 +3,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { formatDate } from '@/utils';
+import { formatDate, formatDateTime } from '@/utils';
 import { displayId } from '@/utils';
 import { useUserLookup } from '@/lib/api/users.api';
 
@@ -103,7 +103,7 @@ export const LabModalHeader: React.FC<LabModalHeaderProps> = ({
               : sampleInfo.sampleId}
           </span>{' '}
           collected{' '}
-          <span className="text-text-secondary">{formatDate(sampleInfo.collectedAt)}</span>
+          <span className="text-text-secondary">{formatDateTime(sampleInfo.collectedAt)}</span>
           {sampleInfo.collectedBy && (
             <>
               {' '}

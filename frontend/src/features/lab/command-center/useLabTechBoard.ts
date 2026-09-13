@@ -15,7 +15,6 @@ import { useLabPipelineCounts, useLabTestsFromOrders } from '@/features/lab/hook
 import { finalizeAttentionItems } from './deriveAttention';
 import { deriveBoardPipeline, type CollectionDisplayInput } from './derivePipeline';
 import { deriveHealth } from './deriveHealth';
-import { deriveTodayThroughput } from './deriveThroughput';
 import type { LabTechBoardData } from './boardTypes';
 
 export function useLabTechBoard(): LabTechBoardData {
@@ -68,7 +67,6 @@ export function useLabTechBoard(): LabTechBoardData {
     });
 
     const { attentionItems, attentionTotal } = finalizeAttentionItems(attentionCandidates);
-    const todayThroughput = deriveTodayThroughput(orders, samples);
     const totalActive = counts.collection + counts.entry + counts.validation;
     const { health, healthMessage, suggestedTab } = deriveHealth(
       queueAge,
@@ -82,7 +80,6 @@ export function useLabTechBoard(): LabTechBoardData {
       blockers,
       attentionItems,
       attentionTotal,
-      todayThroughput,
       ageBuckets,
       priorityMix,
       health,
@@ -95,8 +92,6 @@ export function useLabTechBoard(): LabTechBoardData {
     entryTests,
     validationTests,
     counts,
-    orders,
-    samples,
     getPatientName,
     getOrder,
     escalatedTests,

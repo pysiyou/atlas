@@ -8,7 +8,7 @@
 
 import React from 'react';
 import { Badge, Card, Icon, IconButton } from '@/components';
-import { formatDate } from '@/utils';
+import { formatDateTime } from '@/utils';
 import { displayId } from '@/utils';
 import { usePatientNameLookup } from '@/features/patients';
 import { LabCard, ProgressBadge } from '../components/LabCard';
@@ -107,7 +107,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
         <div className="space-y-1 ">
           {test.collectedAt && (
             <div className="text-xs text-text-tertiary mt-1">
-              Collected: {formatDate(test.collectedAt)}
+              Collected: {formatDateTime(test.collectedAt)}
             </div>
           )}
         </div>

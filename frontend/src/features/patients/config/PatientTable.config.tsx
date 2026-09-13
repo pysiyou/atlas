@@ -1,7 +1,7 @@
 import type { NavigateFunction } from 'react-router-dom';
 import { Badge } from '@/components';
 import type { TableViewConfig } from '@/components';
-import { formatDate, calculateAge, formatPhoneNumber } from '@/utils';
+import { formatDate, formatDateTime, calculateAge, formatPhoneNumber } from '@/utils';
 import { displayId } from '@/utils';
 import type { PatientContext } from '@/types';
 import { ENTITY_ID_BLOCK } from '@/utils/constants';
@@ -47,7 +47,7 @@ export const createPatientTableConfig = (
       <div className="min-w-0 font-normal">
         <div className={`${ENTITY_ID_BLOCK} font-normal`}>{patient.orderCount} orders</div>
         <div className="text-xs text-text-tertiary truncate font-normal">
-          Last: {formatDate(patient.lastOrderDate)}
+          Last: {formatDateTime(patient.lastOrderDate)}
         </div>
       </div>
     );
@@ -84,7 +84,7 @@ export const createPatientTableConfig = (
 
   const renderRegistrationDate = (patient: PatientContext) => (
     <div className="text-xs text-text-tertiary truncate font-normal">
-      {formatDate(patient.registrationDate)}
+      {formatDateTime(patient.registrationDate)}
     </div>
   );
 

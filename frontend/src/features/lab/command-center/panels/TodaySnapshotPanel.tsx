@@ -1,5 +1,5 @@
 /**
- * Today's shift output — two equal halves: shift progress and live backlog.
+ * Today snapshot — live pipeline composition by stage and wait age.
  */
 
 import React from 'react';
@@ -10,16 +10,21 @@ import { MetricDonutHalf, type MetricDonutLegendItem } from './MetricDonutHalf';
 
 interface TodaySnapshotPanelProps {
   totalActive: number;
-  today: LabTechBoardData['todayThroughput'];
+  counts: LabTechBoardData['counts'];
   ageBuckets: LabTechBoardData['ageBuckets'];
 }
 
-const FINISHED_COLORS = {
-  collected: 'fill-info-fg-emphasis',
-  entered: 'fill-warning-fg-emphasis',
-  validated: 'fill-success-fg-emphasis',
-  rejected: 'fill-danger-fg-emphasis',
+const STAGE_COLORS = {
+  collection: 'fill-info-fg-emphasis',
+  entry: 'fill-warning-fg-emphasis',
+  validation: 'fill-success-fg-emphasis',
 } as const;
+
+const STAGE_ROWS = [
+  { key: 'collection' as const, label: 'Collection' },
+  { key: 'entry' as const, label: 'Entry' },
+  { key: 'validation' as const, label: 'Review' },
+] as const;
 
 const AGE_COLORS = {
   fresh: 'fill-brand',
@@ -28,21 +33,29 @@ const AGE_COLORS = {
   critical: 'fill-danger-fg-emphasis',
 } as const;
 
+/**
+ * Renders the current open pipeline: stage mix on the left, wait-age mix on the right.
+ */
 export const TodaySnapshotPanel: React.FC<TodaySnapshotPanelProps> = ({
   totalActive,
-  today,
+  counts,
   ageBuckets,
 }) => {
-  const stageCompletions = today.collected + today.resultsEntered + today.validated;
-  const finishedSegments: DonutSegment[] = [
-    { value: today.collected, colorClass: FINISHED_COLORS.collected },
-    { value: today.resultsEntered, colorClass: FINISHED_COLORS.entered },
-    { value: today.validated, colorClass: FINISHED_COLORS.validated },
-    ...(today.rejected > 0
-      ? [{ value: today.rejected, colorClass: FINISHED_COLORS.rejected }]
-      : []),
-  ];
-  const finishedTotal = finishedSegments.reduce((sum, segment) => sum + segment.value, 0);
+  const stageSegments: DonutSegment[] = STAGE_ROWS.map(row => ({
+    value: counts[row.key],
+    colorClass: STAGE_COLORS[row.key],
+  }));
+
+  const heaviestStage = STAGE_ROWS.reduce((max, row) =>
+    counts[row.key] > counts[max.key] ? row : max,
+  );
+
+  const stageLegend: MetricDonutLegendItem[] = STAGE_ROWS.map(row => ({
+    colorClass: STAGE_COLORS[row.key],
+    label: row.label,
+    value: counts[row.key],
+    total: totalActive,
+  }));
 
   const ageSegments: DonutSegment[] = [
     { value: ageBuckets.fresh, colorClass: AGE_COLORS.fresh },
@@ -52,37 +65,6 @@ export const TodaySnapshotPanel: React.FC<TodaySnapshotPanelProps> = ({
   ];
 
   const aging = ageBuckets.warning + ageBuckets.critical;
-
-  const finishedLegend: MetricDonutLegendItem[] = [
-    {
-      colorClass: FINISHED_COLORS.collected,
-      label: 'Collected',
-      value: today.collected,
-      total: finishedTotal,
-    },
-    {
-      colorClass: FINISHED_COLORS.entered,
-      label: 'Entered',
-      value: today.resultsEntered,
-      total: finishedTotal,
-    },
-    {
-      colorClass: FINISHED_COLORS.validated,
-      label: 'Validated',
-      value: today.validated,
-      total: finishedTotal,
-    },
-    ...(today.rejected > 0
-      ? [
-          {
-            colorClass: FINISHED_COLORS.rejected,
-            label: 'Rejected',
-            value: today.rejected,
-            total: finishedTotal,
-          },
-        ]
-      : []),
-  ];
 
   const ageLegend: MetricDonutLegendItem[] = [
     {
@@ -111,14 +93,12 @@ export const TodaySnapshotPanel: React.FC<TodaySnapshotPanelProps> = ({
     },
   ];
 
-  const shiftSummary =
-    stageCompletions > 0
-      ? `${stageCompletions} stage action${stageCompletions === 1 ? '' : 's'} completed${
-          today.ordersCompleted > 0
-            ? ` · ${today.ordersCompleted} order${today.ordersCompleted === 1 ? '' : 's'} closed`
-            : ''
-        }`
-      : 'No stage completions yet today.';
+  const stageSummary =
+    totalActive === 0
+      ? 'No tests waiting in the pipeline.'
+      : `${heaviestStage.label} holds ${counts[heaviestStage.key]} of ${totalActive} open test${
+          totalActive === 1 ? '' : 's'
+        }`;
 
   const backlogSummary =
     totalActive > 0
@@ -127,28 +107,23 @@ export const TodaySnapshotPanel: React.FC<TodaySnapshotPanelProps> = ({
         : `${totalActive} active test${totalActive === 1 ? '' : 's'} — all on track`
       : 'Pipeline is clear right now.';
 
-  const metaParts = ['Since midnight'];
-  if (today.ordersCreated > 0) {
-    metaParts.push(`${today.ordersCreated} in`);
-  }
-  if (today.ordersCompleted > 0) {
-    metaParts.push(`${today.ordersCompleted} closed`);
-  }
+  const meta =
+    totalActive === 0 ? 'Pipeline is clear' : `${totalActive} open in pipeline`;
 
   return (
-    <Panel title="Today" meta={metaParts.join(' · ')}>
+    <Panel title="Today" meta={meta}>
       <PanelBody>
         <div className="grid h-full min-h-0 grid-cols-2 divide-x divide-border-subtle">
           <MetricDonutHalf
-            title="Shift Output"
-            summary={shiftSummary}
-            centerLabel={String(stageCompletions)}
-            centerDetail="done"
-            segments={finishedSegments}
-            legend={finishedLegend}
+            title="By Stage"
+            summary={stageSummary}
+            centerLabel={String(totalActive)}
+            centerDetail="open"
+            segments={stageSegments}
+            legend={stageLegend}
           />
           <MetricDonutHalf
-            title="In the Lab"
+            title="By Wait"
             summary={backlogSummary}
             centerLabel={String(totalActive)}
             centerDetail="active"

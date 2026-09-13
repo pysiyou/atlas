@@ -4,7 +4,7 @@
 
 import type { ReactNode } from 'react';
 import type { NavigateFunction } from 'react-router-dom';
-import { formatDate, formatPhoneNumber, calculateAge, formatCurrency } from '@/utils';
+import { formatDate, formatDateTime, formatPhoneNumber, calculateAge, formatCurrency } from '@/utils';
 import { displayId } from '@/utils';
 import {
   DATA_AMOUNT,
@@ -127,9 +127,19 @@ export function renderOrderDateCell(date: string | Date | null | undefined): Rea
   }
   return (
     <span className="text-xs text-text-tertiary truncate block font-normal">
-      {formatDate(date)}
+      {formatDateTime(date)}
     </span>
   );
+}
+
+export function renderDateTimeCell(
+  date: string | Date | null | undefined,
+  emptyLabel = '—'
+): ReactNode {
+  if (!date) {
+    return <span className="text-xs text-text-tertiary font-normal">{emptyLabel}</span>;
+  }
+  return <span className="text-xs text-text-primary font-normal">{formatDateTime(date)}</span>;
 }
 
 export function renderNavigableOrderId(

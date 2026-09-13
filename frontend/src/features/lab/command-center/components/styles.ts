@@ -57,7 +57,7 @@ export const COMMAND_CENTER_PANEL = {
 } as const;
 
 export const COMMAND_CENTER_SECTION = {
-  /** Inner panel section heading (e.g. Shift Output, Wait Per Step). */
+  /** Inner panel section heading (e.g. By Stage, Wait Per Step). */
   title: `text-xxs font-medium uppercase tracking-wide ${COMMAND_CENTER_TEXT.sectionTitle}`,
   /** Footer note under a section or panel body. */
   summary: `text-xxs leading-snug ${COMMAND_CENTER_TEXT.summary}`,

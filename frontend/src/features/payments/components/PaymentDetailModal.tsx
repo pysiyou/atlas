@@ -24,7 +24,7 @@ import {
   PaymentMethodSelector,
 } from '@/components';
 import { ErrorBoundary } from '@/components';
-import { cn, formatDate, formatCurrency, displayId } from '@/utils';
+import { cn, formatDateTime, formatCurrency, displayId } from '@/utils';
 import { getActiveTests, getActiveTotal } from '@/features/orders/utils';
 import { inputBase } from '@/components/inputs/inputStyles';
 import { useCreatePayment } from '../api/payments.api';
@@ -99,13 +99,13 @@ const PaymentReceipt: React.FC<{
           <div className="flex items-center text-xs">
             <span className="text-text-tertiary w-28">Order Date:</span>
             <span className="text-text-secondary font-normal">
-              {formatDate(sourceOrder.orderDate)}
+              {formatDateTime(sourceOrder.orderDate)}
             </span>
           </div>
           {paymentDate && (
             <div className="flex items-center text-xs">
               <span className="text-text-tertiary w-28">Payment Date:</span>
-              <span className="text-text-secondary font-normal">{formatDate(paymentDate)}</span>
+              <span className="text-text-secondary font-normal">{formatDateTime(paymentDate)}</span>
             </div>
           )}
         </div>
