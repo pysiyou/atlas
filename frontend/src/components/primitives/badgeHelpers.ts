@@ -119,13 +119,13 @@ export function getColorStyles(color: BadgeColor, appearance: 'unified' | 'tinte
 }
 
 export const CONTAINER_STYLES: Record<string, string> = {
-  'container-red': 'bg-red-500 text-white',
-  'container-yellow': 'bg-yellow-400 text-neutral-900',
-  'container-purple': 'bg-purple-500 text-white',
-  'container-blue': 'bg-blue-500 text-white',
-  'container-green': 'bg-green-500 text-white',
-  'container-gray': 'bg-gray-500 text-white',
-  'container-black': 'bg-neutral-900 text-white',
+  'container-red': 'bg-container-red-bg text-container-red-text',
+  'container-yellow': 'bg-container-yellow-bg text-container-yellow-text',
+  'container-purple': 'bg-container-purple-bg text-container-purple-text',
+  'container-blue': 'bg-container-blue-bg text-container-blue-text',
+  'container-green': 'bg-container-green-bg text-container-green-text',
+  'container-gray': 'bg-container-gray-bg text-container-gray-text',
+  'container-black': 'bg-container-black-bg text-container-black-text',
 };
 
 export const DISPLAY_LABELS: Record<string, string> = {

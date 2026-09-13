@@ -14,13 +14,13 @@ interface AlertProps {
 }
 
 /**
- * Alert variant styles
+ * Alert variant styles - uses unified tone system
  */
 const VARIANT_STYLES = {
-  info: 'bg-brand-muted border-border-focus text-brand-fg',
-  success: 'bg-success-bg border-success-stroke text-success-fg-emphasis',
-  warning: 'bg-warning-bg border-warning-stroke text-warning-fg-emphasis',
-  danger: 'bg-danger-bg border-danger-stroke text-danger-fg-emphasis',
+  info: 'bg-tone-info-bg border-tone-info-border text-tone-info-text',
+  success: 'bg-tone-success-bg border-tone-success-border text-tone-success-text',
+  warning: 'bg-tone-warning-bg border-tone-warning-border text-tone-warning-text',
+  danger: 'bg-tone-danger-bg border-tone-danger-border text-tone-danger-text',
 } as const;
 
 /**
