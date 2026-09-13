@@ -4,7 +4,7 @@
  */
 import React, { useState } from 'react';
 import { Badge, Button, Card } from '@/components';
-import { formatDate, displayId } from '@/utils';
+import { formatDateTime, displayId } from '@/utils';
 import { LabCard } from '../components/LabCard';
 import { AttemptIndicator } from '../components/AttemptIndicator';
 import { BlockedReasonBadge } from '../components/StatusBadges';
@@ -96,7 +96,7 @@ function RecollectionRequestCardDesktop({
 
   const additionalInfo = (
     <span className="text-xs text-text-tertiary">
-      Requested <span className="text-text-secondary">{formatDate(request.createdAt)}</span>
+      Requested <span className="text-text-secondary">{formatDateTime(request.createdAt)}</span>
       {request.stage === 'validation' ? ' · from result review' : ' · from collection'}
     </span>
   );
@@ -183,7 +183,7 @@ function RecollectionRequestCardMobile({
 
       <div className="space-y-1 mb-2">
         <div className="text-xs text-text-tertiary">
-          Requested: {formatDate(request.createdAt)}
+          Requested: {formatDateTime(request.createdAt)}
         </div>
         <div className="text-xs text-text-secondary">
           <span className="text-text-tertiary">Reason:</span> {request.reason}

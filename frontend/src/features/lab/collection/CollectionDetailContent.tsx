@@ -8,7 +8,7 @@ import { Icon, SectionPanel } from '@/components';
 import type { Sample, RejectedSample, Test } from '@/types';
 import { CollectionRequirementsSection } from './CollectionRequirementsSection';
 import { DetailGrid, type DetailGridSectionConfig } from '../components/LabDetailModal';
-import { formatDate } from '@/utils';
+import { formatDateTime } from '@/utils';
 import { formatRejectionReasons } from '../utils/labFormatters';
 import { ICONS } from '@/config/icons';
 
@@ -83,7 +83,7 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
               <span className="text-text-tertiary">Rejected by </span>
               {getUserName(rejectedSample.rejectedBy)}
               <span className="text-text-tertiary"> on </span>
-              {formatDate(rejectedSample.rejectedAt)}
+              {formatDateTime(rejectedSample.rejectedAt)}
             </p>
             {rejectedSample.recollectionRequired && (
               <p className="text-warning-fg">Recollection required</p>

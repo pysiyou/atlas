@@ -16,7 +16,7 @@ import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { formatRejectionCriteriaList } from '@/features/lab/utils/catalogRejectionCriteria';
 import { CATALOG_DETAIL_SKELETON_SECTIONS } from '../config/catalogDetailSkeleton';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
-import { formatDetailDate } from '@/utils';
+import { formatDateTime } from '@/utils';
 import { formatArrayWithFallback, formatBoolean, capitalize } from '@/utils';
 
 /**
@@ -133,8 +133,8 @@ export const CatalogDetail: React.FC = () => {
         { label: 'Price', value: formatCurrency(test.price) },
         { label: 'Status', value: test.isActive ? 'Active' : 'Inactive' },
         { label: 'Confidence Level', value: test.confidence || '-' },
-        { label: 'Created', value: formatDetailDate(test.createdAt) || '-' },
-        { label: 'Last Updated', value: formatDetailDate(test.updatedAt) || '-' },
+        { label: 'Created', value: formatDateTime(test.createdAt) || '-' },
+        { label: 'Last Updated', value: formatDateTime(test.updatedAt) || '-' },
       ],
     },
   ];

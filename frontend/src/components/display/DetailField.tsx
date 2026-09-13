@@ -2,7 +2,7 @@ import React from 'react';
 import { Badge, type BadgeVariant } from '@/components/primitives/Badge';
 import { Icon, type IconName } from '@/components/primitives/Icon';
 import { DETAIL_LABEL, DETAIL_VALUE } from '@/utils/constants';
-import { formatDate } from '@/utils';
+import { formatDateTime } from '@/utils';
 import { useUserLookup } from '@/lib/api/users.api';
 
 /**
@@ -58,7 +58,7 @@ export const DetailField: React.FC<DetailFieldProps> = ({
     }
 
     if (timestamp) {
-      const formattedDate = formatDate(timestamp);
+      const formattedDate = formatDateTime(timestamp);
       const userName = user ? getUserName(user) : null;
 
       if (userName) {

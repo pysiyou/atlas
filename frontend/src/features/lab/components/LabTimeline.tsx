@@ -158,7 +158,7 @@ function TimelineEventRow({
         <p className={COMMAND_CENTER_TIMELINE.eventMeta}>
           {performerLabel} ·{' '}
           <time dateTime={event.timestamp} title={formatRelativeDateTime(event.timestamp)}>
-            {formatRelativeDateLabel(event.timestamp)}
+            {formatRelativeDateTime(event.timestamp)}
           </time>
         </p>
       </div>

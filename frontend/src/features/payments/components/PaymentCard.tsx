@@ -1,6 +1,6 @@
 import { Badge, Avatar, MobileEntityCard } from '@/components';
 import type { CardComponentProps } from '@/components';
-import { formatCurrency, formatDate } from '@/utils';
+import { formatCurrency, formatDateTime } from '@/utils';
 import { displayId } from '@/utils';
 import type { OrderPaymentView } from '../types';
 import { PaymentButton } from './PaymentButton';
@@ -70,7 +70,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
       <div className="flex justify-between items-center pt-3">
         {/* Date on bottom left - show payment date if paid, otherwise order date */}
         <div className="text-xs text-text-tertiary">
-          {item.paymentDate ? formatDate(item.paymentDate) : formatDate(order.orderDate)}
+          {item.paymentDate ? formatDateTime(item.paymentDate) : formatDateTime(order.orderDate)}
         </div>
         {/* Payment method or Payment button on bottom right */}
         {item.paymentMethod && order.paymentStatus !== 'unpaid' ? (

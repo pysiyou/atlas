@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { format } from 'date-fns';
+import { formatDateTime } from '@/utils';
 import { companyConfig } from '@/config';
 import type { ReportData } from '../types';
 
@@ -127,16 +127,14 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
               <div className="flex gap-2">
                 <span className="text-xs text-text-secondary min-w-[60px] truncate">Sample:</span>
                 <span className="text-xs font-normal text-text-primary">
-                  {format(new Date(collectedAt), 'yyyy-MM-dd hh:mm a')}
+                  {formatDateTime(collectedAt)}
                 </span>
               </div>
             )}
             <div className="flex gap-2">
               <span className="text-xs text-text-secondary min-w-[60px] truncate">Results:</span>
               <span className="text-xs font-normal text-text-primary">
-                {reportedAt
-                  ? format(new Date(reportedAt), 'yyyy-MM-dd hh:mm a')
-                  : format(new Date(), 'yyyy-MM-dd hh:mm a')}
+                {reportedAt ? formatDateTime(reportedAt) : formatDateTime(new Date())}
               </span>
             </div>
             {reportData.testResults[0] && (

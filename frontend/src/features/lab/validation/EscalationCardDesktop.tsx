@@ -1,6 +1,6 @@
 import React from 'react';
 import { Badge, Button, Icon } from '@/components';
-import { formatDate, displayId } from '@/utils';
+import { formatDateTime, displayId } from '@/utils';
 import { LabCard } from '../components/LabCard';
 import { AttemptIndicator } from '../components/AttemptIndicator';
 import { BlockedReasonBadge } from '../components/StatusBadges';
@@ -82,7 +82,7 @@ export const EscalationCardDesktop: React.FC<EscalationCardDesktopProps> = ({
   const additionalInfo = test.resultEnteredAt && (
     <span className="text-xs text-text-tertiary">
       Results entered{' '}
-      <span className="text-text-secondary">{formatDate(test.resultEnteredAt)}</span>
+      <span className="text-text-secondary">{formatDateTime(test.resultEnteredAt)}</span>
       {test.enteredBy && (
         <>
           {' '}

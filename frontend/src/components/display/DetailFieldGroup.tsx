@@ -24,7 +24,7 @@ export interface DetailFieldConfig {
   label: string;
   /** Direct value to display */
   value?: React.ReactNode;
-  /** Timestamp to auto-format with formatDate */
+  /** Timestamp to auto-format with formatDateTime */
   timestamp?: string;
   /** User ID to display with getUserName */
   user?: string;

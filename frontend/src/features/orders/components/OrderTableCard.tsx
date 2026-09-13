@@ -1,6 +1,6 @@
 import { Badge, Avatar, MobileEntityCard } from '@/components';
 import type { CardComponentProps } from '@/components';
-import { formatCurrency, formatDate } from '@/utils';
+import { formatCurrency, formatDateTime } from '@/utils';
 import { displayId } from '@/utils';
 import { getActiveTests } from '@/features/orders/utils';
 import type { Order } from '@/types';
@@ -57,7 +57,7 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
       {/* Bottom section: Order date (left) + Payment status + Order status badges (right) */}
       <div className="flex justify-between items-center mt-auto pt-3">
         {/* Order date on bottom left */}
-        <div className="text-xs text-text-tertiary">{formatDate(order.orderDate)}</div>
+        <div className="text-xs text-text-tertiary">{formatDateTime(order.orderDate)}</div>
         {/* Payment status and Order status badges on bottom right */}
         <div className="flex items-center gap-2">
           {order.paymentStatus && <Badge variant={order.paymentStatus} size="xs" />}

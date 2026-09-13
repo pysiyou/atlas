@@ -12,7 +12,7 @@
 
 import React from 'react';
 import { Badge, Icon, SpinnerLoader } from '@/components';
-import { formatDate } from '@/utils';
+import { formatDateTime } from '@/utils';
 import { getContainerIconColor } from '@/features/lab/utils';
 import { displayId } from '@/utils';
 import { useUserLookup } from '@/lib/api/users.api';
@@ -85,7 +85,7 @@ export const CollectionInfoLine: React.FC<CollectionInfoLineProps> = ({
           Sample <span className="entity-id">{formattedSampleId}</span>{' '}
         </>
       )}
-      collected <span className="text-text-secondary">{formatDate(collectedAt)}</span>
+      collected <span className="text-text-secondary">{formatDateTime(collectedAt)}</span>
       {collectedBy && (
         <>
           {' '}
@@ -116,7 +116,7 @@ export const EntryInfoLine: React.FC<EntryInfoLineProps> = ({
 
   return (
     <span className={className}>
-      Results entered <span className="text-text-secondary">{formatDate(enteredAt)}</span>
+      Results entered <span className="text-text-secondary">{formatDateTime(enteredAt)}</span>
       {enteredBy && (
         <>
           {' '}

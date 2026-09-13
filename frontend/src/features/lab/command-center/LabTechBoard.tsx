@@ -51,7 +51,7 @@ export const LabTechBoard: React.FC = () => {
             <div className="min-h-48 lg:min-h-0 lg:flex-[2]">
               <TodaySnapshotPanel
                 totalActive={board.totalActive}
-                today={board.todayThroughput}
+                counts={board.counts}
                 ageBuckets={board.ageBuckets}
               />
             </div>

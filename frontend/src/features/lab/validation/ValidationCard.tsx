@@ -10,7 +10,7 @@
 
 import React from 'react';
 import { Badge, Button, Card, Icon, Alert } from '@/components';
-import { formatDate, displayId } from '@/utils';
+import { formatDateTime, displayId } from '@/utils';
 import { useUserLookup } from '@/lib/api/users.api';
 import { usePatientNameLookup } from '@/features/patients';
 import { LabCard } from '../components/LabCard';
@@ -204,7 +204,7 @@ function ValidationCardMobile({
           </div>
           {test.resultEnteredAt && (
             <div className="text-xs text-text-tertiary">
-              Entered: {formatDate(test.resultEnteredAt)}
+              Entered: {formatDateTime(test.resultEnteredAt)}
             </div>
           )}
         </div>
@@ -344,7 +344,7 @@ function ValidationCardDesktop({
   const additionalInfo = test.resultEnteredAt && (
     <span className="text-xs text-text-tertiary">
       Results entered{' '}
-      <span className="text-text-secondary">{formatDate(test.resultEnteredAt)}</span>
+      <span className="text-text-secondary">{formatDateTime(test.resultEnteredAt)}</span>
       {test.enteredBy && (
         <>
           {' '}

@@ -8,7 +8,7 @@ import { Badge } from '@/components';
 import { displayId } from '@/utils';
 import type { Order } from '@/types';
 import { DetailField } from '@/components/display/DetailField';
-import { formatOrderDate } from '@/utils/date';
+import { formatDateTime } from '@/utils/date';
 import { getDataFieldIcon, getPriorityIcon, getOrderStatusIcon } from '@/config/icons';
 
 export interface OrderInfoSectionProps {
@@ -33,7 +33,7 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order, layou
         label="Order Date"
         value={
           <span className="whitespace-nowrap truncate">
-            {formatOrderDate(order.orderDate, 'long')}
+            {formatDateTime(order.orderDate)}
           </span>
         }
         orientation="vertical"

@@ -5,7 +5,7 @@
 
 import React, { type ReactNode } from 'react';
 import { Card, Badge } from '@/components';
-import { formatDate } from '@/utils';
+import { formatDateTime } from '@/utils';
 import { displayId } from '@/utils';
 import { useUserLookup } from '@/lib/api/users.api';
 import { InfoBanner } from './InfoBanner';
@@ -124,7 +124,7 @@ export const LabCard: React.FC<LabCardProps> = ({
                 </span>{' '}
                 collected{' '}
                 <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>
-                  {formatDate(sampleInfo.collectedAt)}
+                  {formatDateTime(sampleInfo.collectedAt)}
                 </span>
                 {sampleInfo.collectedBy && (
                   <>

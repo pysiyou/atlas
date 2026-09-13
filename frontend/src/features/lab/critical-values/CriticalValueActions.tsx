@@ -4,7 +4,7 @@
 
 import React, { useState } from 'react';
 import { Alert, Button, Badge } from '@/components';
-import { formatDate } from '@/utils';
+import { formatDateTime } from '@/utils';
 import { displayId } from '@/utils';
 import { useAuthStore } from '@/app/store';
 import { toast } from '@/app/AppToastBar';
@@ -96,7 +96,7 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
       {record.criticalNotificationSent ? (
         <Alert variant="warning" className="text-xs">
           Notified {record.criticalNotifiedTo ? `to ${record.criticalNotifiedTo}` : ''}
-          {record.criticalNotifiedAt ? ` on ${formatDate(record.criticalNotifiedAt)}` : ''}
+          {record.criticalNotifiedAt ? ` on ${formatDateTime(record.criticalNotifiedAt)}` : ''}
         </Alert>
       ) : (
         <div className="space-y-2">
@@ -122,7 +122,7 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
 
       {record.criticalAcknowledgedAt && (
         <p className="text-xs text-success-fg">
-          Acknowledged {formatDate(record.criticalAcknowledgedAt)}
+          Acknowledged {formatDateTime(record.criticalAcknowledgedAt)}
         </p>
       )}
 

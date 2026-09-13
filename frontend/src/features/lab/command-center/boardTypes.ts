@@ -42,15 +42,6 @@ export interface BlockerSummary {
   total: number;
 }
 
-export interface TodayThroughput {
-  validated: number;
-  collected: number;
-  resultsEntered: number;
-  ordersCompleted: number;
-  rejected: number;
-  ordersCreated: number;
-}
-
 export interface AgeBuckets {
   fresh: number;
   onTrack: number;
@@ -71,7 +62,6 @@ export interface LabTechBoardData {
   blockers: BlockerSummary;
   attentionItems: AttentionItem[];
   attentionTotal: number;
-  todayThroughput: TodayThroughput;
   ageBuckets: AgeBuckets;
   priorityMix: PriorityMix;
   health: LabBoardHealth;

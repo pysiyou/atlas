@@ -7,7 +7,7 @@
  */
 
 import type { NavigateFunction } from 'react-router-dom';
-import { formatDate } from '@/utils';
+import { formatDateTime } from '@/utils';
 import { displayId } from '@/utils';
 import { Badge } from '@/components';
 import type { TableViewConfig } from '@/components';
@@ -64,7 +64,7 @@ export const createReportTableConfig = (
 
   const renderOrderDate = (test: ValidatedTest) => (
     <span className="text-xs text-text-tertiary truncate block font-normal">
-      {formatDate(test.orderDate)}
+      {formatDateTime(test.orderDate)}
     </span>
   );
 

@@ -7,7 +7,8 @@ import React from 'react';
 import { Icon, IconButton, EmptyState } from '@/components';
 import { displayId } from '@/utils';
 import type { Order } from '@/types';
-import { formatPatientDetailDate, getReportableOrders } from '../utils/patientFormatters';
+import { formatDateTime } from '@/utils';
+import { getReportableOrders } from '../utils/patientFormatters';
 import { ICONS } from '@/config/icons';
 
 export interface ReportsListProps {
@@ -43,7 +44,7 @@ export const ReportsList: React.FC<ReportsListProps> = ({ orders }) => {
                 Report_{displayId.order(order.orderId)}.pdf
               </p>
               <p className="text-xs text-text-tertiary mt-0.5">
-                {formatPatientDetailDate(order.orderDate)} • 1.2 MB
+                {formatDateTime(order.orderDate)} • 1.2 MB
               </p>
             </div>
           </div>

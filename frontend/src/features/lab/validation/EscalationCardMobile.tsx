@@ -1,7 +1,7 @@
 import React from 'react';
 import { Badge, Card, Button, Icon } from '@/components';
 import { BlockedReasonBadge } from '../components/StatusBadges';
-import { formatDate, displayId } from '@/utils';
+import { formatDateTime, displayId } from '@/utils';
 import type { TestWithContext } from '@/types';
 import { ICONS } from '@/config/icons';
 
@@ -59,10 +59,10 @@ export const EscalationCardMobile: React.FC<EscalationCardMobileProps> = ({
 
     <div className="space-y-1">
       {test.collectedAt && (
-        <div className="text-xs text-text-tertiary">Collected: {formatDate(test.collectedAt)}</div>
+        <div className="text-xs text-text-tertiary">Collected: {formatDateTime(test.collectedAt)}</div>
       )}
       {test.resultEnteredAt && (
-        <div className="text-xs text-text-tertiary">Entered: {formatDate(test.resultEnteredAt)}</div>
+        <div className="text-xs text-text-tertiary">Entered: {formatDateTime(test.resultEnteredAt)}</div>
       )}
     </div>
 
