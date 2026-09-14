@@ -1,6 +1,17 @@
 /**
  * Centralized user-facing feedback copy and channel mapping.
+ *
+ * Naming: `domain.action.outcome` (e.g. `order.create.success`, `lab.entry.save.error`).
+ * Channels: `toast` (transient), `alert` / `errorAlert` / `inline` (in-layout).
+ *
+ * Feature code: `import { notify, getFeedback, errorAlertMessage } from '@/utils/feedback'`.
+ * Do not import `@/app/AppToastBar` from features — that adapter is only for the toaster host and notify.
+ *
+ * @example notify.toast('order.create.success')
+ * @example notify.apiError('order.create.error', err)
  */
+
+/* eslint-disable max-lines -- single catalog of all user-facing feedback copy */
 
 export type FeedbackChannel = 'toast' | 'alert' | 'errorAlert' | 'inline';
 export type FeedbackVariant = 'success' | 'error' | 'warning' | 'info' | 'danger';
@@ -115,7 +126,45 @@ export type FeedbackId =
   | 'catalog.detail.notFoundTitle'
   | 'catalog.detail.notFoundDescription'
   | 'patient.detail.notFoundTitle'
-  | 'patient.detail.notFoundDescription';
+  | 'patient.detail.notFoundDescription'
+  | 'api.validationError'
+  | 'api.businessRule'
+  | 'api.labOperation'
+  | 'api.databaseError'
+  | 'api.badRequest'
+  | 'lab.qualityIssue.dialog.loading'
+  | 'lab.qualityIssue.dialog.error.cancel'
+  | 'lab.qualityIssue.dialog.error.retry'
+  | 'lab.qualityIssue.dialog.reject.title'
+  | 'lab.qualityIssue.dialog.reject.confirm'
+  | 'lab.qualityIssue.dialog.reject.warningTitle'
+  | 'lab.qualityIssue.dialog.reject.warningBody'
+  | 'lab.qualityIssue.dialog.reject.reasonLabel'
+  | 'lab.qualityIssue.dialog.escalation.warningTitle'
+  | 'lab.qualityIssue.dialog.escalation.warningBody'
+  | 'lab.qualityIssue.dialog.escalation.reasonLabel'
+  | 'lab.qualityIssue.dialog.notesLabel'
+  | 'lab.qualityIssue.dialog.actions.followUp'
+  | 'lab.qualityIssue.dialog.actions.retest'
+  | 'lab.qualityIssue.dialog.actions.retestDescription'
+  | 'lab.qualityIssue.dialog.actions.recollect'
+  | 'lab.qualityIssue.dialog.actions.recollectDescription'
+  | 'lab.qualityIssue.dialog.actions.cancel'
+  | 'lab.qualityIssue.dialog.actions.cancelDescription'
+  | 'lab.qualityIssue.dialog.actions.retestLimit'
+  | 'lab.qualityIssue.dialog.actions.retestHint'
+  | 'lab.qualityIssue.dialog.recollectBlocked'
+  | 'lab.qualityIssue.dialog.trigger'
+  | 'lab.qualityIssue.collection.recollect.warningTitle'
+  | 'lab.qualityIssue.collection.recollect.warningBody'
+  | 'lab.qualityIssue.collection.reasonLabel'
+  | 'lab.qualityIssue.collection.escalate.warningTitle'
+  | 'lab.qualityIssue.collection.escalate.warningBody'
+  | 'lab.qualityIssue.collection.actions.followUp'
+  | 'lab.qualityIssue.collection.actions.recollect'
+  | 'lab.qualityIssue.collection.actions.recollectDescription'
+  | 'lab.qualityIssue.collection.actions.cancelUnfinished'
+  | 'lab.qualityIssue.collection.actions.cancelUnfinishedDescription';
 
 export interface FeedbackEntry {
   channel: FeedbackChannel;
@@ -750,5 +799,198 @@ export const FEEDBACK_CATALOG: Record<FeedbackId, FeedbackEntry> = {
     channel: 'inline',
     variant: 'danger',
     title: 'The patient could not be found.',
+  },
+  'api.validationError': {
+    channel: 'inline',
+    variant: 'danger',
+    title: 'Request validation failed. Check the highlighted fields and try again.',
+  },
+  'api.businessRule': {
+    channel: 'inline',
+    variant: 'danger',
+    title: 'This action is not allowed by a lab business rule.',
+  },
+  'api.labOperation': {
+    channel: 'inline',
+    variant: 'danger',
+    title: 'The lab operation could not be completed.',
+  },
+  'api.databaseError': {
+    channel: 'inline',
+    variant: 'danger',
+    title: 'A database error occurred. Please try again later.',
+  },
+  'api.badRequest': {
+    channel: 'inline',
+    variant: 'danger',
+    title: 'The request could not be processed. Check the details and try again.',
+  },
+  'lab.qualityIssue.dialog.loading': {
+    channel: 'inline',
+    variant: 'info',
+    title: 'Loading options...',
+  },
+  'lab.qualityIssue.dialog.error.cancel': {
+    channel: 'inline',
+    variant: 'info',
+    title: 'Cancel',
+  },
+  'lab.qualityIssue.dialog.error.retry': {
+    channel: 'inline',
+    variant: 'info',
+    title: 'Retry',
+  },
+  'lab.qualityIssue.dialog.reject.title': {
+    channel: 'inline',
+    variant: 'danger',
+    title: 'Reject Results',
+  },
+  'lab.qualityIssue.dialog.reject.confirm': {
+    channel: 'inline',
+    variant: 'danger',
+    title: 'Submit Rejection',
+  },
+  'lab.qualityIssue.dialog.reject.warningTitle': {
+    channel: 'inline',
+    variant: 'warning',
+    title: 'Choose Next Step',
+  },
+  'lab.qualityIssue.dialog.reject.warningBody': {
+    channel: 'inline',
+    variant: 'warning',
+    title: 'Select a rejection reason and where to send this test. The system will not decide automatically.',
+  },
+  'lab.qualityIssue.dialog.reject.reasonLabel': {
+    channel: 'inline',
+    variant: 'warning',
+    title: 'Result rejection reason',
+  },
+  'lab.qualityIssue.dialog.escalation.warningTitle': {
+    channel: 'inline',
+    variant: 'danger',
+    title: 'Re-test Limit Reached',
+  },
+  'lab.qualityIssue.dialog.escalation.warningBody': {
+    channel: 'inline',
+    variant: 'danger',
+    title:
+      'Re-test attempts are exhausted. You can still choose re-test — it will escalate to a supervisor for approval before another run.',
+  },
+  'lab.qualityIssue.dialog.escalation.reasonLabel': {
+    channel: 'inline',
+    variant: 'danger',
+    title: 'Rejection Reason',
+  },
+  'lab.qualityIssue.dialog.notesLabel': {
+    channel: 'inline',
+    variant: 'info',
+    title: 'Additional Context / Notes',
+  },
+  'lab.qualityIssue.dialog.actions.followUp': {
+    channel: 'inline',
+    variant: 'info',
+    title: 'Send to',
+  },
+  'lab.qualityIssue.dialog.actions.retest': {
+    channel: 'inline',
+    variant: 'info',
+    title: 'Re-test same sample',
+  },
+  'lab.qualityIssue.dialog.actions.retestDescription': {
+    channel: 'inline',
+    variant: 'info',
+    title: 'Supersede this result and create a new entry on the same tube.',
+  },
+  'lab.qualityIssue.dialog.actions.recollect': {
+    channel: 'inline',
+    variant: 'info',
+    title: 'Request recollection',
+  },
+  'lab.qualityIssue.dialog.actions.recollectDescription': {
+    channel: 'inline',
+    variant: 'info',
+    title:
+      'Reject the specimen and submit a recollection request — supervisor must approve before the patient is redrawn.',
+  },
+  'lab.qualityIssue.dialog.actions.cancel': {
+    channel: 'inline',
+    variant: 'info',
+    title: 'Cancel this test',
+  },
+  'lab.qualityIssue.dialog.actions.cancelDescription': {
+    channel: 'inline',
+    variant: 'info',
+    title: 'Close this test line. Other tests on the order are not affected.',
+  },
+  'lab.qualityIssue.dialog.actions.retestLimit': {
+    channel: 'inline',
+    variant: 'warning',
+    title: 'Re-test limit reached. Submitting will escalate to a supervisor for approval.',
+  },
+  'lab.qualityIssue.dialog.actions.retestHint': {
+    channel: 'inline',
+    variant: 'warning',
+    title: '(supervisor approval required)',
+  },
+  'lab.qualityIssue.dialog.recollectBlocked': {
+    channel: 'inline',
+    variant: 'warning',
+    title: 'Cannot collect new sample - order has validated tests',
+  },
+  'lab.qualityIssue.dialog.trigger': {
+    channel: 'inline',
+    variant: 'danger',
+    title: 'Reject',
+  },
+  'lab.qualityIssue.collection.recollect.warningTitle': {
+    channel: 'inline',
+    variant: 'warning',
+    title: 'Reject Specimen',
+  },
+  'lab.qualityIssue.collection.recollect.warningBody': {
+    channel: 'inline',
+    variant: 'warning',
+    title:
+      'Decide what happens to unfinished tests. Resulted tests stay in Review with a Specimen rejected signal. Validated results stay released.',
+  },
+  'lab.qualityIssue.collection.reasonLabel': {
+    channel: 'inline',
+    variant: 'warning',
+    title: 'Specimen Issue',
+  },
+  'lab.qualityIssue.collection.escalate.warningTitle': {
+    channel: 'inline',
+    variant: 'warning',
+    title: 'Linked Tests Have Results',
+  },
+  'lab.qualityIssue.collection.escalate.warningBody': {
+    channel: 'inline',
+    variant: 'warning',
+    title: 'Resulted tests will stay in Review for the validator. Validated results will remain released.',
+  },
+  'lab.qualityIssue.collection.actions.followUp': {
+    channel: 'inline',
+    variant: 'info',
+    title: 'Unfinished linked tests',
+  },
+  'lab.qualityIssue.collection.actions.recollect': {
+    channel: 'inline',
+    variant: 'info',
+    title: 'Request recollection',
+  },
+  'lab.qualityIssue.collection.actions.recollectDescription': {
+    channel: 'inline',
+    variant: 'info',
+    title: 'Supervisor must approve before the patient is contacted for a new sample.',
+  },
+  'lab.qualityIssue.collection.actions.cancelUnfinished': {
+    channel: 'inline',
+    variant: 'info',
+    title: 'Cancel unfinished tests',
+  },
+  'lab.qualityIssue.collection.actions.cancelUnfinishedDescription': {
+    channel: 'inline',
+    variant: 'info',
+    title: 'Cancel pending / sample-collected tests on this tube. Resulted and validated stay.',
   },
 };

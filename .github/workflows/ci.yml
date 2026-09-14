@@ -31,6 +31,9 @@ jobs:
       - name: Typecheck
         run: npx tsc -b --noEmit
 
+      - name: Validate feedback catalog
+        run: npm run validate:feedback
+
       - name: Knip
         run: npm run knip
 

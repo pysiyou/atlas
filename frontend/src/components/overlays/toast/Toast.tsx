@@ -3,6 +3,8 @@
  *
  * Title + subtitle, optional actions, close control, and an optional
  * countdown footer ("click to stop") with a variant-colored progress bar.
+ *
+ * Success/info: countdown auto-dismiss. Error/warning/loading: persist until dismiss.
  */
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -97,13 +99,10 @@ export const Toast: React.FC<BaseToastProps> = ({
   const [remainingMs, setRemainingMs] = useState(durationMs);
   const remainingRef = useRef(durationMs);
   const onDismissRef = useRef(onDismiss);
-  onDismissRef.current = onDismiss;
 
   useEffect(() => {
-    remainingRef.current = durationMs;
-    setRemainingMs(durationMs);
-    setPaused(false);
-  }, [durationMs, title, subtitle]);
+    onDismissRef.current = onDismiss;
+  }, [onDismiss]);
 
   useEffect(() => {
     if (persist || paused || !countdownEnabled) return undefined;

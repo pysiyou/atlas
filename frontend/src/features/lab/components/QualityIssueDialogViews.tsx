@@ -20,6 +20,8 @@ export const QualityIssueDialogLoadingView: React.FC = () => (
       QUALITY_ISSUE_DIALOG_LAYOUT.widthClass,
       'bg-surface rounded-lg shadow-xl border border-border-default overflow-hidden flex flex-col max-h-[600px]'
     )}
+    aria-busy="true"
+    aria-label={QUALITY_ISSUE_DIALOG_COPY.loading.message}
   >
     {/* Header */}
     <div className="px-4 py-3 bg-surface-page border-b border-border-subtle flex items-start justify-between">

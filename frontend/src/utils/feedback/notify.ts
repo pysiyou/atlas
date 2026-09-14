@@ -9,8 +9,10 @@ import type { ToastAction } from '@/components/overlays/toast';
 import type { FeedbackId, FeedbackEntry } from '@/config/feedbackCatalog';
 import { getErrorMessage } from '@/utils/errors';
 import { getFeedback } from './copy';
+import { resolveFeedbackForApiError, shouldSuppressApiErrorToast } from './resolveApiError';
 
 export { getFeedback, feedbackTitle, feedbackSubtitle } from './copy';
+export { resolveFeedbackForApiError } from './resolveApiError';
 
 export type ToastOverrides = {
   title?: string;
@@ -49,27 +51,18 @@ function dispatchToast(
   }
 }
 
-function toErrorToastPayload(
-  error: unknown,
-  title: string,
-  fallbackSubtitle = 'Please try again.'
-): { title: string; subtitle: string } {
-  return {
-    title,
-    subtitle: getErrorMessage(error, fallbackSubtitle),
-  };
-}
-
 export const notify = {
   toast(id: FeedbackId, overrides?: ToastOverrides) {
     dispatchToast(getFeedback(id).variant, buildToastPayload(getFeedback(id), overrides));
   },
 
   apiError(id: FeedbackId, error: unknown, fallbackSubtitle?: string) {
-    const entry = getFeedback(id);
-    toast.error(
-      toErrorToastPayload(error, entry.title, fallbackSubtitle ?? entry.subtitle ?? 'Please try again.')
-    );
+    if (shouldSuppressApiErrorToast(error)) return;
+    const payload = resolveFeedbackForApiError(error, id);
+    toast.error({
+      title: payload.title,
+      subtitle: fallbackSubtitle ?? payload.subtitle,
+    });
   },
 };
 

@@ -1,6 +1,9 @@
 /**
  * Toast adapter — typed `toast` API + react-hot-toast renderer.
  * One toast at a time (new replaces existing). UI lives in overlays/toast.
+ *
+ * Duration: Toaster uses Infinity. Success/info auto-dismiss via Toast countdown;
+ * error/warning/loading persist until dismiss or replacement.
  */
 
 import React from 'react';
@@ -141,6 +144,7 @@ export const AppToastBar: React.FC<AppToastBarProps> = ({ toast: hostToast }) =>
 
   return (
     <VariantToast
+      key={hostToast.id}
       title={content.title}
       subtitle={content.subtitle}
       actions={content.actions}
