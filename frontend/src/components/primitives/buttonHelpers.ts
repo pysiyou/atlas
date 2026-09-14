@@ -3,7 +3,7 @@
  * Components may override base style per variant (e.g. IconButton ICON_BUTTON_VARIANTS).
  */
 
-import { ICONS } from '@/config/icons';
+import { ICONS, MODULE_ICONS } from '@/config/icons';
 import type { IconName } from './Icon';
 
 
@@ -21,6 +21,7 @@ export type SemanticVariant =
   | 'delete'
   | 'reject'
   | 'approve'
+  | 'collect'
   | 'edit'
   | 'add'
   | 'create'
@@ -64,6 +65,7 @@ export const VARIANT_CONFIG: Record<SemanticVariant, VariantConfig> = {
   save: { style: 'primary', icon: ICONS.actions.save },
   submit: { style: 'primary', icon: ICONS.actions.check },
   approve: { style: 'success', icon: ICONS.actions.like },
+  collect: { style: 'primary', icon: MODULE_ICONS.laboratory },
   confirm: { style: 'success', icon: ICONS.actions.check },
   add: { style: 'primary', icon: ICONS.actions.add },
   create: { style: 'primary', icon: ICONS.actions.add },

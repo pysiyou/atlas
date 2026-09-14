@@ -116,13 +116,11 @@ export function LabMobileCardHeader({
 
   return (
     <div className={cn(LAB_MOBILE_CARD.stack, className)}>
-      <div className={LAB_MOBILE_CARD.titleRow}>
-        <div className={LAB_MOBILE_CARD.titleBlock}>
-          <p className={LAB_MOBILE_CARD.title} title={typeof primary === 'string' ? primary : undefined}>
-            {primary}
-          </p>
-          <MobileIdentitySubline context={context} />
-        </div>
+      <div className={LAB_MOBILE_CARD.titleHead}>
+        <p className={LAB_MOBILE_CARD.title} title={typeof primary === 'string' ? primary : undefined}>
+          {primary}
+        </p>
+        <MobileIdentitySubline context={context} />
         {titleAside ? <div className={LAB_MOBILE_CARD.titleAside}>{titleAside}</div> : null}
       </div>
 

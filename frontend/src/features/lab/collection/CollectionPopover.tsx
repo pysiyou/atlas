@@ -277,8 +277,8 @@ export const CollectionPopover: React.FC<CollectionPopoverProps> = ({
       preventClose={effectiveSubmitting}
       trigger={
         trigger || (
-          <Button variant="approve" size="xs">
-            {isRecollection ? 'RECOLLECT' : 'COLLECT'}
+          <Button variant="collect" size="sm">
+            {isRecollection ? 'Recollect' : 'Collect'}
           </Button>
         )
       }

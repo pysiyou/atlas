@@ -65,15 +65,6 @@ export const LabIdentityRow: React.FC<LabIdentityRowProps> = ({
     );
     needsSep = true;
   }
-  if (context.patientId != null) {
-    if (needsSep) parts.push(<InlineDot key="dot-pat" className={hideMd} />);
-    parts.push(
-      <HiddenAt key="pat" hide={hideMd}>
-        <span className={idClass}>{displayId.patient(context.patientId)}</span>
-      </HiddenAt>
-    );
-    needsSep = true;
-  }
 
   if (needsSep) parts.push(<InlineDot key="dot-ord" />);
   parts.push(
