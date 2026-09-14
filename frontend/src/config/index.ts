@@ -5,3 +5,4 @@
 export * from './api';
 export * from './routes';
 export * from './company';
+export * from './feedbackCatalog';

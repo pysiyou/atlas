@@ -9,6 +9,6 @@ export type { LabPipelineCounts };
 export { getValidationTabCount };
 
 export function useLabPipelineCounts() {
-  const { pipelineCounts: counts } = useLabDataProvider();
-  return { counts };
+  const { pipelineCounts: counts, isError, error, refetch } = useLabDataProvider();
+  return { counts, isError, error, refetch };
 }

@@ -214,6 +214,10 @@
   --toast-info: #2196f3;
   --toast-warning: #ffc107;
   --toast-danger: #f44336;
+  --toast-track: rgba(255, 255, 255, 0.12);
+  --toast-footer-bg: rgba(0, 0, 0, 0.22);
+  --toast-action-border: rgba(255, 255, 255, 0.35);
+  --toast-action-hover: rgba(255, 255, 255, 0.08);
 
   /* ═══════════════════════════════════════════════════════════════════
      AUTH (Isolated module)

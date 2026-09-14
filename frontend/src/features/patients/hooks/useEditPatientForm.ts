@@ -65,11 +65,6 @@ export function useEditPatientForm({ patient, mode, onClose }: UseEditPatientFor
     async data => { await onSubmit(data); },
     validationErrors => {
       const firstErrorPath = Object.keys(validationErrors)[0];
-      const firstError = validationErrors[firstErrorPath as keyof typeof validationErrors];
-      const errorMessage = firstError?.message || 'Please fix form errors';
-      import('react-hot-toast').then(({ default: toast }) => {
-        toast.error(`Validation error: ${errorMessage}`);
-      });
       if (firstErrorPath) {
         const fieldName = firstErrorPath.split('.')[0];
         const element =

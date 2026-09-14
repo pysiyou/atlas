@@ -8,8 +8,7 @@ import { useQuery, keepPreviousData, useMutation, useQueryClient, useQueries } f
 import { useMemo, useState, useCallback } from 'react';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { invalidateOrderQueries } from '@/lib/query/invalidate';
-import { getErrorMessage } from '@/utils/errors';
-import { toast } from '@/app/AppToastBar';
+import { notify } from '@/utils/feedback';
 import { useAuthStore } from '@/app/store';
 import type { Order, OrderStatus, PaymentStatus } from '@/types';
 import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
@@ -443,10 +442,10 @@ export function useCreateOrder() {
     },
     onSuccess: () => {
       invalidateOrderQueries(queryClient, { samples: true });
-      toast.success('Order created successfully');
+      notify.toast('order.create.success');
     },
     onError: error => {
-      toast.error(`Failed to create order: ${getErrorMessage(error, 'Unknown error')}`);
+      notify.apiError('order.create.error', error);
     },
   });
 }
@@ -486,14 +485,11 @@ export function useUpdateOrder() {
       if (context?.previousOrder) {
         queryClient.setQueryData(queryKeys.orders.byId(orderIdStr), context.previousOrder);
       }
-      toast.error({
-        title: 'Failed to update order',
-        subtitle: getErrorMessage(error, 'The order could not be updated. Please try again.'),
-      });
+      notify.apiError('order.update.error', error);
     },
     onSuccess: (_, variables) => {
       invalidateOrderQueries(queryClient, { orderId: variables.orderId.toString(), samples: true });
-      toast.success('Order updated successfully');
+      notify.toast('order.update.success');
     },
     onSettled: (_, __, variables) => {
       const orderIdStr = variables.orderId.toString();
@@ -515,12 +511,10 @@ export function useDeleteOrder() {
     },
     onSuccess: () => {
       invalidateOrderQueries(queryClient, { samples: true });
+      notify.toast('order.delete.success');
     },
     onError: error => {
-      toast.error({
-        title: 'Failed to delete order',
-        subtitle: getErrorMessage(error, 'The order could not be deleted. Please try again.'),
-      });
+      notify.apiError('order.delete.error', error);
     },
   });
 }
@@ -548,6 +542,7 @@ export function useUpdatePaymentStatus() {
       const orderIdStr =
         typeof variables.orderId === 'string' ? variables.orderId : variables.orderId.toString();
       invalidateOrderQueries(queryClient, { orderId: orderIdStr, payments: true });
+      notify.toast('order.paymentStatus.success');
     },
   });
 }

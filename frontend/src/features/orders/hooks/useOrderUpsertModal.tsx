@@ -8,6 +8,7 @@ import { PRIORITY_LEVEL_VALUES, PRIORITY_LEVEL_CONFIG } from '@/types';
 import { displayId, formatCurrency } from '@/utils';
 import { createFilterOptions } from '@/utils/filtering';
 import { getErrorMessage } from '@/utils/errors';
+import { getFeedback } from '@/utils/feedback';
 import { useOrderForm } from './useOrderForm';
 import { useTestCatalog, useTestSearch } from '@/features/catalog';
 import { usePatientSearch, usePatientsList } from '@/features/patients';
@@ -77,7 +78,7 @@ export function useOrderUpsertModal({
               {
                 onSuccess: () => resolve(),
                 onError: (err: unknown) => {
-                  setPaymentError(getErrorMessage(err, 'Failed to process payment'));
+                  setPaymentError(getErrorMessage(err, getFeedback('payment.process.error').title));
                   reject(err);
                 },
               }

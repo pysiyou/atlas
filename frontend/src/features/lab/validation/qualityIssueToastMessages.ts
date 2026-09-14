@@ -1,56 +1,53 @@
 /**
- * Toast copy for quality issue outcomes.
+ * Toast copy for quality issue outcomes — backed by feedback catalog.
  */
+import type { FeedbackId } from '@/config/feedbackCatalog';
+import { notify } from '@/utils/feedback';
 import type { QualityIssueResult } from '@/types/lab-operations';
 
-export function getRejectionToast(result?: QualityIssueResult | null): {
-  title: string;
-  subtitle: string;
-} {
+function resolveQualityIssueSuccess(
+  result?: QualityIssueResult | null
+): { id: FeedbackId; overrides?: { subtitle?: string } } {
   if (!result) {
-    return {
-      title: 'Quality issue reported',
-      subtitle: 'The issue has been recorded and the workflow updated.',
-    };
+    return { id: 'lab.qualityIssue.reported' };
   }
 
   switch (result.remedy) {
     case 'escalate':
       return {
-        title: 'Escalated to supervisor',
-        subtitle: result.escalationRequired
-          ? 'Re-test limit reached. A supervisor must approve before another run — find it under Awaiting supervisor approval on Review.'
-          : 'This test has been sent to the escalation queue for supervisor review.',
+        id: result.escalationRequired
+          ? 'lab.qualityIssue.escalate.limitHit'
+          : 'lab.qualityIssue.escalate',
       };
     case 'retry_same_sample':
       return {
-        title: result.escalationRequired ? 'Escalated for re-test approval' : 'Re-test requested',
-        subtitle: result.escalationRequired
-          ? 'Re-test limit reached. The test is on Review awaiting supervisor approval.'
-          : 'A new result entry has been created using the same sample.',
+        id: result.escalationRequired
+          ? 'lab.qualityIssue.retest.limitHit'
+          : 'lab.qualityIssue.retest',
       };
     case 'request_recollection':
       if (result.recollectionRequestId) {
-        return {
-          title: 'Recollection request submitted',
-          subtitle: 'A supervisor will review before the patient is contacted.',
-        };
+        return { id: 'lab.qualityIssue.recollection.requested' };
       }
       return {
-        title: 'Specimen rejected',
-        subtitle:
-          result.message ||
-          'Linked resulted tests remain in Review for validator decision.',
+        id: 'lab.qualityIssue.specimenRejected',
+        overrides: result.message ? { subtitle: result.message } : undefined,
       };
     case 'cancel':
       return {
-        title: 'Cancelled',
-        subtitle: result.message || 'The selected work item(s) were cancelled.',
+        id: 'lab.qualityIssue.cancelled',
+        overrides: result.message ? { subtitle: result.message } : undefined,
       };
     default:
       return {
-        title: 'Quality issue reported',
-        subtitle: result.message || 'The issue has been recorded.',
+        id: 'lab.qualityIssue.reported',
+        overrides: result.message ? { subtitle: result.message } : undefined,
       };
   }
+}
+
+/** Show success toast for a quality-issue / rejection outcome. */
+export function notifyQualityIssueSuccess(result?: QualityIssueResult | null): void {
+  const { id, overrides } = resolveQualityIssueSuccess(result);
+  notify.toast(id, overrides);
 }

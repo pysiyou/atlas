@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/app/store';
 import { ROUTES } from '@/config';
 
+import { getFeedback } from '@/utils/feedback';
 import { getLoginErrorMessage } from '@/utils/errors';
 export const useLoginForm = () => {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ export const useLoginForm = () => {
     setError('');
 
     if (!username || !password) {
-      setError('Please enter both username and password');
+      setError(getFeedback('auth.login.fieldsRequired').title);
       return;
     }
 

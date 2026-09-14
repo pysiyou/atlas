@@ -2,22 +2,18 @@
  * Shared quality issue handler for collection and validation.
  */
 import { useCallback } from 'react';
-import { toast } from '@/app/AppToastBar';
 import { logger } from '@/utils/logger';
+import { notify } from '@/utils/feedback';
 import { useReportQualityIssue } from '../api/quality-issues.api';
 import type {
   QualityIssueResult,
   QualityIssueTargetType,
   RemedyType,
 } from '@/types/lab-operations';
-import { getRejectionToast } from '@/features/lab/validation/qualityIssueToastMessages';
+import { notifyQualityIssueSuccess } from '@/features/lab/validation/qualityIssueToastMessages';
 
 interface UseQualityIssueHandlerOptions {
   onSuccess?: (result: QualityIssueResult) => void;
-}
-
-function collectionSuccessToast(result: QualityIssueResult) {
-  return getRejectionToast(result);
 }
 
 export function useQualityIssueHandler(options?: UseQualityIssueHandlerOptions) {
@@ -39,15 +35,12 @@ export function useQualityIssueHandler(options?: UseQualityIssueHandlerOptions) 
           notes: notes?.trim() || undefined,
           preferredRemedy,
         });
-        toast.success(collectionSuccessToast(result));
+        notifyQualityIssueSuccess(result);
         onSuccess?.(result);
         return result;
       } catch (error) {
         logger.error('Failed to report quality issue', error instanceof Error ? error : undefined);
-        toast.error({
-          title: 'Failed to report quality issue',
-          subtitle: 'Check the details and try again.',
-        });
+        notify.apiError('lab.qualityIssue.report.error', error);
         throw error;
       }
     },

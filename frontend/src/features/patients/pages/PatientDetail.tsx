@@ -15,6 +15,7 @@ import { PatientHeader } from '../components/PatientHeader';
 import { SmallScreenLayout, MediumScreenLayout, LargeScreenLayout } from '../components/PatientDetailLayouts';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { PATIENT_DETAIL_SKELETON_SECTIONS } from '../config/patientDetailSkeleton';
+import { feedbackTitle } from '@/utils/feedback/copy';
 
 export const PatientDetail: React.FC = () => {
   const navigate = useNavigate();
@@ -66,8 +67,8 @@ export const PatientDetail: React.FC = () => {
           <DetailPageSkeleton sections={PATIENT_DETAIL_SKELETON_SECTIONS} aria-label="Loading patient" />
         }
         notFound={!patient}
-        notFoundTitle="Patient Not Found"
-        notFoundDescription="The patient could not be found."
+        notFoundTitle={feedbackTitle('patient.detail.notFoundTitle')}
+        notFoundDescription={feedbackTitle('patient.detail.notFoundDescription')}
       >
         {renderContent()}
       </DetailPageShell>

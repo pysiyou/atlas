@@ -2,7 +2,7 @@
  * Open read-only detail modals for historical samples and order tests from timeline links.
  */
 import { useCallback } from 'react';
-import { toast } from '@/app/AppToastBar';
+import { notify } from '@/utils/feedback';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { sampleAPI } from '../api/samples.api';
 import { resultAPI } from '../api/results.api';
@@ -60,8 +60,7 @@ export function useOpenHistoricalEntity() {
     async (sampleId: number) => {
       const sample = await sampleAPI.getById(String(sampleId));
       if (!sample) {
-        toast.error({
-          title: 'Sample not found',
+        notify.toast('lab.history.sampleNotFound', {
           subtitle: `Could not load sample ${sampleId}. It may have been removed.`,
         });
         return;
@@ -77,8 +76,7 @@ export function useOpenHistoricalEntity() {
       try {
         test = await resultAPI.getOrderTestContext(orderTestId);
       } catch {
-        toast.error({
-          title: 'Test record not found',
+        notify.toast('lab.history.testLoadFailed', {
           subtitle: `Could not load order test ${orderTestId}.`,
         });
         return;

@@ -34,6 +34,8 @@ import {
   type PaymentMethod,
 } from '@/types/payments';
 import { getPaymentErrorMessage } from '@/utils/errors';
+import { getFeedback } from '@/utils/feedback';
+import { feedbackTitle } from '@/utils/feedback/copy';
 import type { OrderPaymentView } from '../types';
 import type { Order } from '@/types';
 import { ICONS, MODULE_ICONS } from '@/config/icons';
@@ -202,7 +204,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
 
     // Validate amount
     if (sourceOrder.totalPrice <= 0) {
-      setError('Invalid order amount');
+      setError(feedbackTitle('payment.orderAmount.invalid'));
       return;
     }
 
@@ -221,7 +223,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
         onClose();
       },
       onError: (err: unknown) => {
-        setError(getPaymentErrorMessage(err, 'Failed to process payment'));
+        setError(getPaymentErrorMessage(err, getFeedback('payment.process.error').title));
       },
     });
   }, [sourceOrder, isPaid, paymentMethod, notes, createPaymentMutation, onPaymentSuccess, onClose]);

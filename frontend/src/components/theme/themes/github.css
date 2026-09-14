@@ -168,6 +168,10 @@
   --toast-info: var(--primitive-info-500);
   --toast-warning: var(--primitive-warning-500);
   --toast-danger: var(--primitive-danger-500);
+  --toast-track: rgba(0, 0, 0, 0.1);
+  --toast-footer-bg: rgba(0, 0, 0, 0.06);
+  --toast-action-border: rgba(0, 0, 0, 0.2);
+  --toast-action-hover: rgba(0, 0, 0, 0.06);
 
   /* Auth overrides */
   --auth-canvas: var(--primitive-neutral-0);

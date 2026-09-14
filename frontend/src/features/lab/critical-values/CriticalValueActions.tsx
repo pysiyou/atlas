@@ -7,7 +7,7 @@ import { Alert, Button, Badge } from '@/components';
 import { formatDateTime } from '@/utils';
 import { displayId } from '@/utils';
 import { useAuthStore } from '@/app/store';
-import { toast } from '@/app/AppToastBar';
+import { notify } from '@/utils/feedback';
 import {
   useAcknowledgeCriticalValue,
   useNotifyCriticalValue,
@@ -36,7 +36,7 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
 
   const handleNotify = async () => {
     if (!notifiedTo.trim()) {
-      toast.error({ title: 'Recipient required', subtitle: 'Enter who was notified.' });
+      notify.toast('lab.critical.recipientRequired');
       return;
     }
     try {
@@ -48,15 +48,18 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
           notes: notes.trim() || undefined,
         },
       });
-      toast.success({ title: 'Notification recorded', subtitle: record.testCode });
+      notify.toast('lab.critical.notify.success', { subtitle: record.testCode });
       onUpdated?.();
-    } catch {
-      toast.error({ title: 'Failed to record notification' });
+    } catch (error) {
+      notify.apiError('lab.critical.notify.error', error);
     }
   };
 
   const handleAcknowledge = async () => {
-    if (!user?.name) return;
+    if (!user?.name) {
+      notify.toast('lab.critical.profileMissing');
+      return;
+    }
     try {
       await acknowledgeMutation.mutateAsync({
         testId: record.id,
@@ -65,10 +68,10 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
           notes: notes.trim() || undefined,
         },
       });
-      toast.success({ title: 'Critical value acknowledged', subtitle: record.testCode });
+      notify.toast('lab.critical.ack.success', { subtitle: record.testCode });
       onUpdated?.();
-    } catch {
-      toast.error({ title: 'Failed to acknowledge critical value' });
+    } catch (error) {
+      notify.apiError('lab.critical.ack.error', error);
     }
   };
 

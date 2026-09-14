@@ -1,6 +1,7 @@
 import type { SampleDisplay } from '@/features/lab/types';
 import { CONTAINER_COLOR_OPTIONS, isCollectedSample } from '@/types';
 import { displayId } from '@/utils';
+import { feedbackTitle } from '@/utils/feedback/copy';
 
 /**
  * Generates HTML content for printing a sample label
@@ -9,7 +10,7 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
   const { sample, order } = display;
 
   if (!sample || !isCollectedSample(sample)) {
-    throw new Error('Cannot print label for uncollected sample');
+    throw new Error(feedbackTitle('lab.collection.printLabel.uncollected'));
   }
 
   const sampleId = sample.sampleId;
@@ -154,7 +155,7 @@ export const printCollectionLabel = (display: SampleDisplay, patientName: string
     const printWindow = window.open('', '', 'width=400,height=250');
 
     if (!printWindow) {
-      throw new Error('Please allow popups to print labels');
+      throw new Error(feedbackTitle('lab.collection.printLabel.popupBlocked'));
     }
 
     printWindow.document.write(htmlContent);
@@ -163,6 +164,6 @@ export const printCollectionLabel = (display: SampleDisplay, patientName: string
     if (error instanceof Error) {
       throw error;
     }
-    throw new Error('Failed to print label');
+    throw new Error(feedbackTitle('lab.collection.printLabel.genericError'));
   }
 };

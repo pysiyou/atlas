@@ -4,12 +4,23 @@
  * Shared utility functions for lab workflow components.
  */
 
-import { toast } from '@/app/AppToastBar';
+import type { FeedbackId } from '@/config/feedbackCatalog';
+import { notify } from '@/utils/feedback';
+import { feedbackTitle } from '@/utils/feedback/copy';
 import { getCollectionRequirements } from './sampleHelpers';
 import { getTestNames } from '@/features/catalog/utils';
 import { printCollectionLabel } from '@/features/lab/collection/CollectionLabel';
 import type { SampleDisplay } from '../types';
 import type { Test } from '@/types';
+import type { ResultStatus } from '@/types/enums';
+
+export type { ResultStatus };
+
+const PRINT_LABEL_ERRORS: Record<string, FeedbackId> = {
+  [feedbackTitle('lab.collection.printLabel.uncollected')]: 'lab.collection.printLabel.uncollected',
+  [feedbackTitle('lab.collection.printLabel.popupBlocked')]: 'lab.collection.printLabel.popupBlocked',
+  [feedbackTitle('lab.collection.printLabel.genericError')]: 'lab.collection.printLabel.genericError',
+};
 
 /**
  * Handle printing collection label with error handling
@@ -19,15 +30,14 @@ export const handlePrintCollectionLabel = (display: SampleDisplay, patientName: 
     printCollectionLabel(display, patientName);
   } catch (error) {
     if (error instanceof Error) {
-      toast.error({
-        title: error.message,
-        subtitle: 'The label could not be printed. Check your printer and try again.',
-      });
+      const catalogId = PRINT_LABEL_ERRORS[error.message];
+      if (catalogId) {
+        notify.toast(catalogId);
+        return;
+      }
+      notify.toast('lab.collection.printLabel.error', { title: error.message });
     } else {
-      toast.error({
-        title: 'Failed to print label',
-        subtitle: 'Ensure the printer is connected and the sample data is valid.',
-      });
+      notify.toast('lab.collection.printLabel.genericError');
     }
   }
 };
@@ -44,10 +54,6 @@ export const getEffectiveContainerType = (
   }
   return sampleType === 'urine' || sampleType === 'stool' ? 'cup' : 'tube';
 };
-
-// Import ResultStatus from enums (single source of truth)
-import type { ResultStatus } from '@/types/enums';
-export type { ResultStatus };
 
 const ABNORMAL_STATUSES: ResultStatus[] = [
   'high',

@@ -6,6 +6,7 @@ import React from 'react';
 import { useAuthStore } from '@/app/store';
 import { useTestCatalog } from '@/features/catalog';
 import { ErrorFallback, PageLoadingFallback } from '@/components/loaders';
+import { errorAlertMessage } from '@/utils/feedback';
 
 function toErrorEntry(
   isError: boolean,
@@ -32,7 +33,7 @@ const AuthenticatedPreload: React.FC<AuthenticatedPreloadProps> = ({
   const isLoading = testsQuery.isLoading;
 
   const errors = [
-    toErrorEntry(testsQuery.isError, testsQuery.error, 'Failed to load tests'),
+    toErrorEntry(testsQuery.isError, testsQuery.error, errorAlertMessage('catalog.bootstrap.loadFailed', testsQuery.error)),
   ].filter(Boolean) as { message: string }[];
 
   const handleRetry = async () => {

@@ -9,6 +9,7 @@ import { RadioCard } from './PopoverForm';
 import { AttemptProgressBar } from './AttemptProgressBar';
 import type { ResultRejectionType } from '@/types';
 import { cn } from '@/utils';
+import { getFeedback } from '@/utils/feedback';
 import { QUALITY_ISSUE_DIALOG_LAYOUT, QUALITY_ISSUE_DIALOG_COPY } from './qualityIssueDialogConstants';
 import { LAB_CONFIG } from '@/features/lab/constants';
 
@@ -72,7 +73,7 @@ export const QualityIssueDialogErrorView: React.FC<QualityIssueDialogErrorViewPr
     )}
   >
     <Alert variant="danger" className="py-2">
-      <p className="font-normal text-xs">{QUALITY_ISSUE_DIALOG_COPY.error.title}</p>
+      <p className="font-normal text-xs">{getFeedback('lab.qualityIssue.options.loadFailed').title}</p>
       <p className="text-xxs mt-1">{error}</p>
     </Alert>
     <div className="flex justify-end gap-2">

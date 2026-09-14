@@ -26,6 +26,8 @@ import {
   type PaymentMethod,
 } from '@/types/payments';
 import { useCreatePayment } from '../api/payments.api';
+import { getFeedback, notify } from '@/utils/feedback';
+import { feedbackTitle } from '@/utils/feedback/copy';
 import { ICONS, MODULE_ICONS } from '@/config/icons';
 import { getPaymentErrorMessage } from '@/utils/errors';
 
@@ -278,17 +280,18 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
       notes?: string;
     }) => {
       if (paymentData.amount <= 0) {
-        setError('Amount must be greater than 0');
+        setError(feedbackTitle('payment.amount.mustBePositive'));
         return;
       }
       setError(null);
       createPaymentMutation(paymentData, {
         onSuccess: () => {
+          notify.toast('payment.record.success');
           onSuccess?.();
           closeRef.current?.();
         },
         onError: (err: unknown) => {
-          setError(getPaymentErrorMessage(err, 'Failed to process payment'));
+          setError(getPaymentErrorMessage(err, getFeedback('payment.process.error').title));
         },
       });
     },

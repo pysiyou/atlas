@@ -18,6 +18,7 @@ import { CATALOG_DETAIL_SKELETON_SECTIONS } from '../config/catalogDetailSkeleto
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import { formatDateTime } from '@/utils';
 import { formatArrayWithFallback, formatBoolean, capitalize } from '@/utils';
+import { feedbackTitle } from '@/utils/feedback/copy';
 
 /**
  * CatalogDetail Component
@@ -71,11 +72,11 @@ export const CatalogDetail: React.FC = () => {
       <DetailPageShell
         header={<DetailPageHeader title="Test" />}
         notFound
-        notFoundTitle="Test Not Found"
+        notFoundTitle={feedbackTitle('catalog.detail.notFoundTitle')}
         notFoundDescription={
           testCode != null
             ? `The test with code "${testCode}" could not be found in the catalog.`
-            : undefined
+            : feedbackTitle('catalog.detail.notFoundDescription')
         }
       >
         {null}

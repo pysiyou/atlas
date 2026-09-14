@@ -5,6 +5,7 @@
 import React, { useCallback, useState } from 'react';
 import { Button, Textarea } from '@/components';
 import { cn } from '@/utils';
+import { feedbackTitle } from '@/utils/feedback/copy';
 import type { Test, Patient } from '@/types';
 import { ParameterInput } from './EntryFormInputs';
 import { getReferenceRangeDisplay, checkCriticalStatus } from './entryForm.utils';
@@ -113,7 +114,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
 
               {validationErrors[param.code] && (
                 <p className="text-xxs text-danger-fg truncate" title={validationErrors[param.code]}>
-                  Invalid value
+                  {feedbackTitle('lab.entry.fieldInvalid')}
                 </p>
               )}
             </div>
@@ -139,7 +140,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
         <div className="mt-6 -mx-4 -mb-4 px-4 py-3 bg-surface-page border-t border-border-subtle rounded-b flex items-center justify-between">
           {hasValidationErrors && (
             <span className="text-xxs text-danger-fg">
-              Please correct invalid values before submitting
+              {feedbackTitle('lab.entry.fixValidationBeforeSubmit')}
             </span>
           )}
           <Button

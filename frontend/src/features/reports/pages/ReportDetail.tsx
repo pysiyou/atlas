@@ -18,7 +18,7 @@ import {
   downloadValidatedTestReport,
 } from '../utils/prepareReportData';
 import { formatDate } from '@/utils';
-import { toast } from '@/app/AppToastBar';
+import { notify } from '@/utils/feedback';
 import { DetailPageShell, DetailPageHeader } from '@/components';
 import { ReportDetailSkeletonContent } from '../config/reportDetailSkeleton';
 
@@ -72,19 +72,11 @@ export const ReportDetail: React.FC = () => {
         downloadPDF,
         formatDate
       );
-      toast.success({
-        title: 'Report downloaded successfully',
-        subtitle:
-          'The report has been generated and the download should start shortly. Check your downloads folder.',
-      });
+      notify.toast('report.download.success');
       navigate('/reports');
     } catch (error) {
       console.error('Error generating report:', error);
-      toast.error({
-        title: 'Failed to generate report',
-        subtitle:
-          'The report could not be generated. Please try again or contact support if the issue persists.',
-      });
+      notify.apiError('report.download.error', error);
     } finally {
       setIsGenerating(false);
     }

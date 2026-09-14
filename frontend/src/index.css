@@ -226,6 +226,10 @@
   --color-toast-info: var(--toast-info);
   --color-toast-warning: var(--toast-warning);
   --color-toast-danger: var(--toast-danger);
+  --color-toast-track: var(--toast-track);
+  --color-toast-footer-bg: var(--toast-footer-bg);
+  --color-toast-action-border: var(--toast-action-border);
+  --color-toast-action-hover: var(--toast-action-hover);
 
   /* ═══════════════════════════════════════════════════════════════════
      AUTH (Isolated module - different visual language)

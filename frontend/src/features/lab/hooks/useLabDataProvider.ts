@@ -54,6 +54,9 @@ export interface LabDataProviderResult {
   // Metadata
   pipelineCounts: LabPipelineCounts;
   isLoading: boolean;
+  isError: boolean;
+  error: unknown;
+  refetch: () => void;
   
   // Utilities
   canResolveEscalation: boolean;
@@ -68,9 +71,27 @@ export function useLabDataProvider(): LabDataProviderResult {
   // Primary data sources
   const tabRefresh = { refetchInterval: LAB_CONFIG.TAB_COUNT_REFRESH_MS };
 
-  const { orders = [], isLoading: ordersLoading } = useOrdersList(undefined, tabRefresh);
-  const { samples = [], isLoading: samplesLoading } = useSamplesList(undefined, tabRefresh);
-  const { tests = [], isLoading: catalogLoading } = useTestCatalog();
+  const {
+    orders = [],
+    isLoading: ordersLoading,
+    isError: ordersError,
+    error: ordersErr,
+    refetch: refetchOrders,
+  } = useOrdersList(undefined, tabRefresh);
+  const {
+    samples = [],
+    isLoading: samplesLoading,
+    isError: samplesError,
+    error: samplesErr,
+    refetch: refetchSamples,
+  } = useSamplesList(undefined, tabRefresh);
+  const {
+    tests = [],
+    isLoading: catalogLoading,
+    isError: catalogError,
+    error: catalogErr,
+    refetch: refetchCatalog,
+  } = useTestCatalog();
   const { escalatedTests = [] } = usePendingEscalation(tabRefresh);
   const { requests: recollectionRequests = [] } = usePendingRecollectionRequests(tabRefresh);
   
@@ -119,6 +140,13 @@ export function useLabDataProvider(): LabDataProviderResult {
   }, [collectionDisplays, entryTests, validationTests, escalatedTests, recollectionRequests, canResolveEscalation]);
   
   const isLoading = ordersLoading || samplesLoading || catalogLoading;
+  const isError = ordersError || samplesError || catalogError;
+  const error = ordersErr ?? samplesErr ?? catalogErr ?? null;
+  const refetch = () => {
+    void refetchOrders();
+    void refetchSamples();
+    void refetchCatalog();
+  };
   
   return {
     orders,
@@ -131,6 +159,9 @@ export function useLabDataProvider(): LabDataProviderResult {
     recollections: recollectionRequests,
     pipelineCounts,
     isLoading,
+    isError,
+    error,
+    refetch,
     canResolveEscalation,
     getPatientName,
     getOrder,

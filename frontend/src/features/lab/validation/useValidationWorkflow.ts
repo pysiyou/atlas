@@ -9,11 +9,11 @@ import { useState, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { invalidateResultQueries } from '@/lib/query/invalidate';
 import { useValidateResults } from '../api/results.api';
-import { getRejectionToast } from '@/features/lab/validation/qualityIssueToastMessages';
-import { toast } from '@/app/AppToastBar';
+import { notifyQualityIssueSuccess } from '@/features/lab/validation/qualityIssueToastMessages';
+import { notify } from '@/utils/feedback';
 import { logger } from '@/utils/logger';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { getErrorMessage, isLikelyNetworkOrTimeout } from '@/utils/errors';
+import { isLikelyNetworkOrTimeout } from '@/utils/errors';
 import { orderTestKey } from '@/features/lab/utils/orderTestKey';
 import type { TestWithContext } from '@/types';
 import type { QualityIssueResult } from '@/types/lab-operations';
@@ -73,26 +73,14 @@ export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflo
             orderTestId,
             validationNotes: comments[commentKey] || undefined,
           });
-          toast.success({
-            title: 'Results approved',
-            subtitle:
-              'These results have been approved and are now final. The order status has been updated.',
-          });
+          notify.toast('lab.validation.approve.success');
           clearComment(commentKey);
         } catch (error) {
           logger.error('Error validating results', error instanceof Error ? error : undefined);
           if (isLikelyNetworkOrTimeout(error)) {
-            toast.error({
-              title: 'Action may have completed',
-              subtitle:
-                'The request did not complete. Please refresh the page to see the latest status.',
-            });
+            notify.toast('lab.validation.approve.networkAmbiguous');
           } else {
-            toast.error({
-              title: `Failed to validate results: ${getErrorMessage(error, 'Unknown error')}`,
-              subtitle:
-                'The validation request failed. Please try again or contact support if the issue persists.',
-            });
+            notify.apiError('lab.validation.approve.error', error);
           }
           throw error;
         } finally {
@@ -108,8 +96,7 @@ export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflo
           pendingEscalation: true,
         });
       }
-      const toastMessage = getRejectionToast(rejectionResult);
-      toast.success(toastMessage);
+      notifyQualityIssueSuccess(rejectionResult);
       clearComment(commentKey);
     },
     [comments, ordersLoading, validateMutation, clearComment, queryClient]
@@ -118,10 +105,7 @@ export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflo
   const openValidationModal = useCallback(
     (test: TestWithContext) => {
       if (test.id == null) {
-        toast.error({
-          title: 'Test record unavailable',
-          subtitle: 'Refresh the page and try again.',
-        });
+        notify.toast('lab.validation.testUnavailable');
         return;
       }
 

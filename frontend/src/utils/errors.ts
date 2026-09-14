@@ -3,19 +3,24 @@
  * Consistent error message extraction and classification.
  */
 
-export function getLoginErrorMessage(error: unknown, fallback = 'Login failed. Please try again.'): string {
+import { feedbackTitle } from '@/utils/feedback/copy';
+
+export function getLoginErrorMessage(
+  error: unknown,
+  fallback = feedbackTitle('auth.login.failed')
+): string {
   if (!(error instanceof Error)) return fallback;
 
   const msg = error.message.toLowerCase();
 
   if (msg.includes('fetch') || msg.includes('network') || msg === 'load failed') {
-    return 'Unable to connect to server. Please check your connection.';
+    return feedbackTitle('auth.login.network');
   }
   if (msg.includes('abort') || msg.includes('timeout')) {
-    return 'Request timed out. Please try again.';
+    return feedbackTitle('auth.login.timeout');
   }
   if (msg.includes('invalid') || msg.includes('unauthorized') || msg.includes('401')) {
-    return 'Invalid username or password';
+    return feedbackTitle('auth.login.invalidCredentials');
   }
 
   return error.message || fallback;
@@ -25,18 +30,18 @@ export function getErrorMessage(error: unknown, fallback: string): string {
   if (error instanceof Error) {
     const message = error.message.toLowerCase();
     if (message.includes('network') || message.includes('fetch'))
-      return 'Network error. Please check your connection and try again.';
+      return feedbackTitle('api.networkError');
     if (message.includes('401') || message.includes('unauthorized'))
-      return 'Session expired. Please log in again.';
+      return feedbackTitle('api.sessionExpired');
     if (message.includes('403') || message.includes('forbidden'))
-      return 'You do not have permission to perform this action.';
+      return feedbackTitle('api.permissionDenied');
     if (message.includes('404') || message.includes('not found'))
-      return 'The requested resource was not found.';
+      return feedbackTitle('api.notFound');
     if (message.includes('409') || message.includes('conflict'))
-      return 'A conflict occurred. The resource may have been modified.';
+      return feedbackTitle('api.conflict');
     if (message.includes('500') || message.includes('server error'))
-      return 'A server error occurred. Please try again later.';
-    if (message.includes('timeout')) return 'The request timed out. Please try again.';
+      return feedbackTitle('api.serverError');
+    if (message.includes('timeout')) return feedbackTitle('api.timeout');
     if (error.message.length < 100 && !message.includes('error:')) return error.message;
   }
   if (typeof error === 'object' && error !== null && 'message' in error) {
@@ -49,8 +54,7 @@ export function getErrorMessage(error: unknown, fallback: string): string {
 export function getPaymentErrorMessage(error: unknown, fallback: string): string {
   if (typeof error === 'object' && error !== null && 'status' in error) {
     const status = (error as { status?: number }).status;
-    if (status === 409)
-      return 'This order is already paid. Refresh the page to see the latest status.';
+    if (status === 409) return feedbackTitle('payment.alreadyPaid');
   }
   return getErrorMessage(error, fallback);
 }
