@@ -13,33 +13,33 @@ import {
   resolveSuggestedRemedy,
 } from './remedyDestinationUtils';
 
-type CollectionAlertCopy = {
-  variant: 'warning' | 'danger';
-  warningTitle: string;
-  warningBody: string;
+type CollectionFormCopy = {
+  alert: { title: string; description: string } | null;
   reasonLabel: string;
   notesLabel: string;
 };
 
-function getCollectionAlertCopy(options: QualityIssueOptions): CollectionAlertCopy {
+function getCollectionFormCopy(options: QualityIssueOptions): CollectionFormCopy {
   const hasResultedOrValidated =
     (options.resultedTestsCount ?? 0) > 0 || (options.validatedTestsCount ?? 0) > 0;
+  const recollect = QUALITY_ISSUE_DIALOG_COPY.collection.recollect;
+  const escalate = QUALITY_ISSUE_DIALOG_COPY.collection.escalateResults;
 
   if (hasResultedOrValidated) {
     return {
-      variant: 'warning',
-      ...QUALITY_ISSUE_DIALOG_COPY.collection.escalateResults,
-      warningBody:
-        options.previewMessage || QUALITY_ISSUE_DIALOG_COPY.collection.escalateResults.warningBody,
+      alert: {
+        title: escalate.warningTitle,
+        description: options.previewMessage || escalate.warningBody,
+      },
+      reasonLabel: escalate.reasonLabel,
+      notesLabel: escalate.notesLabel,
     };
   }
+
   return {
-    variant: 'warning',
-    warningTitle: QUALITY_ISSUE_DIALOG_COPY.collection.recollect.warningTitle,
-    warningBody:
-      options.previewMessage || QUALITY_ISSUE_DIALOG_COPY.collection.recollect.warningBody,
-    reasonLabel: QUALITY_ISSUE_DIALOG_COPY.collection.recollect.reasonLabel,
-    notesLabel: QUALITY_ISSUE_DIALOG_COPY.collection.recollect.notesLabel,
+    alert: null,
+    reasonLabel: recollect.reasonLabel,
+    notesLabel: recollect.notesLabel,
   };
 }
 
@@ -74,7 +74,8 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
 }) => {
   const { data: options, isLoading } = useQualityIssueOptions(targetType, targetId);
 
-  const alertCopy = targetType === 'sample' && options ? getCollectionAlertCopy(options) : null;
+  const collectionCopy =
+    targetType === 'sample' && options ? getCollectionFormCopy(options) : null;
 
   const sampleRemedyOptions = React.useMemo(
     () => (targetType === 'sample' ? buildSampleRemedyOptions(options?.allowedRemedies) : []),
@@ -108,13 +109,13 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
             </Alert>
           )}
 
-          {alertCopy && (
-            <Alert variant={alertCopy.variant} className="py-2">
-              <div className="space-y-0.5">
-                <p className="font-normal text-xs">{alertCopy.warningTitle}</p>
-                <p className="text-xxs opacity-90 leading-tight">{alertCopy.warningBody}</p>
-              </div>
-            </Alert>
+          {collectionCopy?.alert && (
+            <Alert
+              variant="warning"
+              title={collectionCopy.alert.title}
+              description={collectionCopy.alert.description}
+              className="py-3"
+            />
           )}
 
           <CatalogRejectionFields
@@ -125,10 +126,10 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
             onReasonChange={onReasonChange ?? (() => {})}
             onNotesChange={onNotesChange ?? (() => {})}
             reasonLabel={
-              alertCopy?.reasonLabel ??
+              collectionCopy?.reasonLabel ??
               (targetType === 'test' ? 'Result rejection reason' : 'Specimen issue')
             }
-            notesLabel={alertCopy?.notesLabel}
+            notesLabel={collectionCopy?.notesLabel}
           />
 
           {targetType === 'sample' && sampleRemedyOptions.length > 0 && (

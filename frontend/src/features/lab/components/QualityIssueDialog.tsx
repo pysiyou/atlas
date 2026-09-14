@@ -9,7 +9,11 @@ import { PopoverForm } from './PopoverForm';
 import { MODULE_ICONS } from '@/config/icons';
 import { useQualityIssueDialog } from '../hooks/useQualityIssueDialog';
 import type { QualityIssueResult, RemedyType } from '@/types/lab-operations';
-import { QUALITY_ISSUE_DIALOG_LAYOUT, QUALITY_ISSUE_DIALOG_COPY, type ValidationAlertCopy } from './qualityIssueDialogConstants';
+import {
+  QUALITY_ISSUE_DIALOG_LAYOUT,
+  QUALITY_ISSUE_DIALOG_COPY,
+  type ValidationFormCopy,
+} from './qualityIssueDialogConstants';
 import { CatalogRejectionFields } from './CatalogRejectionFields';
 import { QualityIssueDialogLoadingView, QualityIssueDialogErrorView } from './QualityIssueDialogViews';
 import {
@@ -24,7 +28,7 @@ export { QualityIssueDialogLoadingView, QualityIssueDialogErrorView } from './Qu
 export interface QualityIssueFormState {
   error: string | null;
   escalationRequired: boolean;
-  alertCopy: ValidationAlertCopy | null;
+  formCopy: ValidationFormCopy | null;
   rejectionReason: string;
   rejectionNotes: string;
   allowedCriteria: string[];
@@ -51,7 +55,7 @@ export const QualityIssueDialogFormBody: React.FC<QualityIssueDialogFormBodyProp
 }) => {
   const {
     error,
-    alertCopy,
+    formCopy,
     rejectionReason,
     rejectionNotes,
     allowedCriteria,
@@ -60,14 +64,14 @@ export const QualityIssueDialogFormBody: React.FC<QualityIssueDialogFormBodyProp
     remedyOptions,
   } = state;
   const { onReasonChange, onNotesChange, onRemedyChange } = actions;
-  const copy = alertCopy ?? {
-    variant: 'warning' as const,
-    warningTitle: QUALITY_ISSUE_DIALOG_COPY.reject.warningTitle,
-    warningBody: QUALITY_ISSUE_DIALOG_COPY.reject.warningBody,
-    confirmLabel: QUALITY_ISSUE_DIALOG_COPY.reject.confirmLabel,
-    reasonLabel: QUALITY_ISSUE_DIALOG_COPY.reject.reasonLabel,
-    notesLabel: QUALITY_ISSUE_DIALOG_COPY.reject.notesLabel,
-  };
+  const copy =
+    formCopy ?? {
+      alert: null,
+      confirmLabel: QUALITY_ISSUE_DIALOG_COPY.reject.confirmLabel,
+      reasonLabel: QUALITY_ISSUE_DIALOG_COPY.reject.reasonLabel,
+      notesLabel: QUALITY_ISSUE_DIALOG_COPY.reject.notesLabel,
+      escalationRequired: false,
+    };
 
   return (
     <>
@@ -77,12 +81,14 @@ export const QualityIssueDialogFormBody: React.FC<QualityIssueDialogFormBodyProp
         </Alert>
       )}
 
-      <Alert variant={copy.variant} className="py-2">
-        <div className="space-y-0.5">
-          <p className="font-normal text-xs">{copy.warningTitle}</p>
-          <p className="text-xxs opacity-90 leading-tight">{copy.warningBody}</p>
-        </div>
-      </Alert>
+      {copy.alert && (
+        <Alert
+          variant={copy.alert.variant}
+          title={copy.alert.title}
+          description={copy.alert.description}
+          className="py-3"
+        />
+      )}
 
       <CatalogRejectionFields
         criteria={allowedCriteria}
@@ -147,7 +153,7 @@ const QualityIssueDialogContent: React.FC<QualityIssueDialogContentProps> = ({
     isRejecting,
     error,
     options,
-    alertCopy,
+    formCopy,
     handleConfirm,
     handleRetry,
     subtitle,
@@ -182,8 +188,8 @@ const QualityIssueDialogContent: React.FC<QualityIssueDialogContentProps> = ({
       <QualityIssueDialogFormBody
         state={{
           error,
-          escalationRequired: alertCopy?.variant === 'danger',
-          alertCopy,
+          escalationRequired: formCopy?.escalationRequired ?? false,
+          formCopy,
           rejectionReason,
           rejectionNotes,
           allowedCriteria: options?.allowedCriteria ?? [],

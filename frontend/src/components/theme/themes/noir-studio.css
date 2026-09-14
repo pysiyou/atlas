@@ -160,7 +160,7 @@
   --shadow-md: 0 4px 12px var(--primitive-neutral-0);
   --shadow-lg: 0 12px 32px var(--primitive-neutral-0);
 
-  --toast-bg: var(--primitive-neutral-200);
+  --toast-bg: var(--primitive-neutral-100);
   --toast-fg: var(--primitive-neutral-900);
   --toast-fg-muted: var(--primitive-neutral-600);
   --toast-close: var(--primitive-neutral-700);
@@ -168,10 +168,13 @@
   --toast-info: var(--primitive-info-500);
   --toast-warning: var(--primitive-warning-500);
   --toast-danger: var(--primitive-danger-500);
-  --toast-track: rgba(0, 0, 0, 0.1);
-  --toast-footer-bg: rgba(0, 0, 0, 0.06);
-  --toast-action-border: rgba(0, 0, 0, 0.2);
-  --toast-action-hover: rgba(0, 0, 0, 0.06);
+  --toast-border: rgba(255, 255, 255, 0.08);
+  --toast-accent-mix: 14%;
+  --toast-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  --toast-track: rgba(255, 255, 255, 0.12);
+  --toast-footer-bg: rgba(0, 0, 0, 0.22);
+  --toast-action-border: rgba(255, 255, 255, 0.18);
+  --toast-action-hover: rgba(255, 255, 255, 0.06);
 
   /* Auth overrides */
   --auth-canvas: var(--primitive-neutral-0);
