@@ -3,7 +3,8 @@
  */
 import { useState, useMemo, useEffect } from 'react';
 import type { QualityIssueResult, RemedyType } from '@/types/lab-operations';
-import { useQualityIssueOptions, useReportQualityIssue } from '../api/quality-issues.api';
+import { useQualityIssueOptions } from '../api/quality-issues.api';
+import { resultAPI } from '../api/results.api';
 import {
   QUALITY_ISSUE_DIALOG_COPY,
   getValidationAlertCopy,
@@ -52,7 +53,8 @@ export function useQualityIssueDialog({
     'test',
     orderTestId
   );
-  const reportMutation = useReportQualityIssue();
+  const [isRejecting, setIsRejecting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const remedyOptions = useMemo(
     () =>
@@ -88,18 +90,29 @@ export function useQualityIssueDialog({
   );
 
   useEffect(() => {
-    onSubmittingChange?.(reportMutation.isPending);
-  }, [reportMutation.isPending, onSubmittingChange]);
+    onSubmittingChange?.(isRejecting);
+  }, [isRejecting, onSubmittingChange]);
 
   const handleConfirm = async () => {
     if (!rejectionReason || !effectivePreferredRemedy) return;
-    const result = await reportMutation.mutateAsync({
-      target: { type: 'test', id: orderTestId },
-      reason: rejectionReason,
-      notes: rejectionNotes.trim() || undefined,
-      preferredRemedy: effectivePreferredRemedy,
-    });
-    onConfirm(result);
+    setIsRejecting(true);
+    setSubmitError(null);
+    try {
+      const result = await resultAPI.rejectResults({
+        orderTestId,
+        data: {
+          rejectionReason,
+          validationNotes: rejectionNotes.trim() || undefined,
+          preferredRemedy: effectivePreferredRemedy,
+        },
+      });
+      onConfirm(result);
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : 'Failed to reject results');
+      throw err;
+    } finally {
+      setIsRejecting(false);
+    }
   };
 
   const handleRetry = () => {
@@ -122,8 +135,8 @@ export function useQualityIssueDialog({
     remedyOptions,
     isConfirmDisabled,
     isLoading,
-    isRejecting: reportMutation.isPending,
-    error: reportMutation.error?.message ?? (fetchError ? String(fetchError) : null),
+    isRejecting,
+    error: submitError ?? (fetchError ? String(fetchError) : null),
     options,
     alertCopy,
     handleConfirm,

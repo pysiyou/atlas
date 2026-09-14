@@ -6,6 +6,8 @@
  */
 
 import { useState, useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { invalidateResultQueries } from '@/lib/query/invalidate';
 import { useValidateResults } from '../api/results.api';
 import { getRejectionToast } from '@/features/lab/validation/qualityIssueToastMessages';
 import { toast } from '@/app/AppToastBar';
@@ -31,6 +33,7 @@ export interface ValidationWorkflow {
 }
 
 export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflow {
+  const queryClient = useQueryClient();
   const { openModal } = useModal();
   const [comments, setComments] = useState<Record<string, string>>({});
   const [pendingValidateKey, setPendingValidateKey] = useState<string | null>(null);
@@ -98,11 +101,18 @@ export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflo
         return;
       }
 
+      if (rejectionResult) {
+        invalidateResultQueries(queryClient, {
+          orderId: orderIdStr,
+          samples: true,
+          pendingEscalation: true,
+        });
+      }
       const toastMessage = getRejectionToast(rejectionResult);
       toast.success(toastMessage);
       clearComment(commentKey);
     },
-    [comments, ordersLoading, validateMutation, clearComment]
+    [comments, ordersLoading, validateMutation, clearComment, queryClient]
   );
 
   const openValidationModal = useCallback(

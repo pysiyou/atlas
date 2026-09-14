@@ -7,6 +7,8 @@ import type { ValidationDecision, TestWithContext } from '@/types';
 import type {
   EscalationResolveRequest,
   EscalationResolveResult,
+  QualityIssueResult,
+  RemedyType,
 } from '@/types/lab-operations';
 
 interface ResultEntryRequest {
@@ -17,6 +19,8 @@ interface ResultEntryRequest {
 interface ResultValidationRequest {
   decision: ValidationDecision;
   validationNotes?: string;
+  rejectionReason?: string;
+  preferredRemedy?: RemedyType;
 }
 
 export const resultAPI = {
@@ -50,6 +54,19 @@ export const resultAPI = {
     return apiClient.post(
       `/results/order-tests/${params.orderTestId}/validate`,
       params.data
+    );
+  },
+
+  async rejectResults(params: {
+    orderTestId: number;
+    data: Omit<ResultValidationRequest, 'decision'> & {
+      rejectionReason: string;
+      preferredRemedy: RemedyType;
+    };
+  }): Promise<QualityIssueResult> {
+    return apiClient.post<QualityIssueResult>(
+      `/results/order-tests/${params.orderTestId}/validate`,
+      { decision: 'rejected', ...params.data }
     );
   },
 };

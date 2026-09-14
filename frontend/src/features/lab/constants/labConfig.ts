@@ -11,6 +11,8 @@ export const LAB_CONFIG = {
   DEFAULT_TEXTAREA_ROWS: 2,
   REJECTION_TEXTAREA_ROWS: 3,
   PARAMETER_PREVIEW_LIMIT: 5,
+  /** Tab badge / worklist poll interval */
+  TAB_COUNT_REFRESH_MS: 30_000,
   /** Command center timeline poll interval */
   COMMAND_CENTER_REFETCH_MS: 60_000,
   /** Command center query stale window (half of refetch interval) */

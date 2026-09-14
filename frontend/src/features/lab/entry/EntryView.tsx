@@ -1,13 +1,13 @@
 /**
  * EntryView - Main view for result entry workflow
- *
- * Refactored to use useLabDataProvider and createWorkflowFilters.
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTestNameLookup } from '@/features/catalog';
 import { useLabDataProvider, createWorkflowFilters } from '@/features/lab/hooks';
 import type { TestWithContextResult } from '@/features/lab/hooks/useLabTestsFromOrders';
+import { useEntryWorklist } from '../api/worklists.api';
+import { entryWorklistToTestContext } from '../utils/worklistMappers';
 import { EntryCard } from './EntryCard/index';
 import { LabWorkflowView } from '../components/LabWorkflowView';
 import { LabFilters } from '../components/LabFilters';
@@ -17,14 +17,18 @@ import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { useEntryWorkflow } from './useEntryWorkflow';
 import { orderTestKey } from '../utils/orderTestKey';
-
 export const EntryView: React.FC = () => {
   const { getTest } = useTestNameLookup();
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
 
-  // Use shared data provider
-  const { entryTests: allTests, tests: testCatalog, orders, isLoading } = useLabDataProvider();
+  const { items: worklistItems, isLoading: worklistLoading } = useEntryWorklist();
+  const { tests: testCatalog, orders } = useLabDataProvider();
+
+  const allTests = useMemo(
+    () => worklistItems.map(entryWorklistToTestContext) as TestWithContextResult[],
+    [worklistItems]
+  );
 
   const {
     results,
@@ -36,7 +40,6 @@ export const EntryView: React.FC = () => {
     openTestModal,
   } = useEntryWorkflow({ allTests, testCatalog, orders });
 
-  // Use filter factory
   const {
     filteredItems: filteredTests,
     searchQuery,
@@ -53,7 +56,7 @@ export const EntryView: React.FC = () => {
   });
 
   const hasNoItems = allTests.length === 0;
-  if ((isLoading && hasNoItems) || !orders || !testCatalog) {
+  if ((worklistLoading && hasNoItems) || !testCatalog) {
     return (
       <ErrorBoundary>
         <DetailPageSkeleton variant="workflow-grid" />
@@ -95,7 +98,11 @@ export const EntryView: React.FC = () => {
             />
           );
         }}
-        getItemKey={(test, idx) => ((test as TestWithContextResult).id != null ? `entry-${(test as TestWithContextResult).id}-${idx}` : `entry-${idx}`)}
+        getItemKey={(test, idx) =>
+          (test as TestWithContextResult).id != null
+            ? `entry-${(test as TestWithContextResult).id}-${idx}`
+            : `entry-${idx}`
+        }
         emptyIcon="checklist"
         emptyTitle="No Pending Results"
         emptyDescription="There are no samples waiting for result entry."

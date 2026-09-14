@@ -4,9 +4,9 @@
 
 import { useMemo } from 'react';
 import { useLabDataProvider } from '@/features/lab/hooks';
+import { useLabBoard } from '@/features/lab/api/worklists.api';
 import { finalizeAttentionItems } from './deriveAttention';
 import { deriveBoardPipeline } from './derivePipeline';
-import { deriveHealth } from './deriveHealth';
 import type { LabTechBoardData } from './boardTypes';
 
 export function useLabTechBoard(): LabTechBoardData & { isLoading: boolean } {
@@ -16,16 +16,18 @@ export function useLabTechBoard(): LabTechBoardData & { isLoading: boolean } {
     validationTests,
     escalations: escalatedTests,
     recollections: recollectionRequests,
-    pipelineCounts: counts,
-    isLoading,
+    pipelineCounts: derivedCounts,
+    isLoading: dataLoading,
     getPatientName,
     getOrder,
   } = useLabDataProvider();
 
+  const { board: serverBoard, isLoading: boardLoading } = useLabBoard();
+
   const board = useMemo(() => {
     const {
-      queueAge,
-      blockers,
+      queueAge: derivedQueueAge,
+      blockers: derivedBlockers,
       ageBuckets,
       priorityMix,
       attentionCandidates,
@@ -40,13 +42,16 @@ export function useLabTechBoard(): LabTechBoardData & { isLoading: boolean } {
     });
 
     const { attentionItems, attentionTotal } = finalizeAttentionItems(attentionCandidates);
+
+    const counts = serverBoard?.counts ?? derivedCounts;
+    const queueAge = (serverBoard?.queueAge as LabTechBoardData['queueAge']) ?? derivedQueueAge;
+    const blockers = serverBoard?.blockers ?? derivedBlockers;
+    const health = serverBoard?.health ?? 'healthy';
+    const healthMessage = serverBoard?.healthMessage ?? 'Queues within TAT';
+    const suggestedTab = (serverBoard?.suggestedTab as LabTechBoardData['suggestedTab']) ?? null;
+
     const totalActive =
       counts.collection + counts.entry + counts.validation + counts.supervisor;
-    const { health, healthMessage, suggestedTab } = deriveHealth(
-      queueAge,
-      blockers,
-      attentionItems,
-    );
 
     return {
       counts,
@@ -65,12 +70,13 @@ export function useLabTechBoard(): LabTechBoardData & { isLoading: boolean } {
     collectionDisplays,
     entryTests,
     validationTests,
-    counts,
+    derivedCounts,
     escalatedTests,
     recollectionRequests,
     getPatientName,
     getOrder,
+    serverBoard,
   ]);
 
-  return { ...board, isLoading };
+  return { ...board, isLoading: dataLoading || boardLoading };
 }

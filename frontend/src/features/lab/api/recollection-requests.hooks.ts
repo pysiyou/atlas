@@ -9,7 +9,11 @@ import { recollectionRequestsAPI } from './recollection-requests.service';
 
 export { recollectionRequestsAPI } from './recollection-requests.service';
 
-export function usePendingRecollectionRequests() {
+export interface LabQueryRefetchOptions {
+  refetchInterval?: number;
+}
+
+export function usePendingRecollectionRequests(refetchOptions?: LabQueryRefetchOptions) {
   const { isAuthenticated, isLoading: isRestoring, hasRole } = useAuthStore();
   const canReview = hasRole(['administrator', 'lab-technician-plus']);
 
@@ -18,7 +22,7 @@ export function usePendingRecollectionRequests() {
     queryFn: () => recollectionRequestsAPI.listPending(),
     enabled: isAuthenticated && !isRestoring && canReview,
     ...cacheConfig.dynamic,
-    refetchInterval: 15_000,
+    refetchInterval: refetchOptions?.refetchInterval ?? 15_000,
   });
 
   return {

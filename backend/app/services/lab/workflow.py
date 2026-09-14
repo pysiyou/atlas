@@ -135,6 +135,9 @@ class LabOperationsService:
     def validate_results(self, **kwargs) -> OrderTest:
         return self._results.validate_results(**kwargs)
 
+    def reject_results(self, **kwargs):
+        return self._results.reject_results(**kwargs)
+
     def request_amendment(self, **kwargs) -> OrderTest:
         return self._results.request_amendment(**kwargs)
 

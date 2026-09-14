@@ -4,7 +4,7 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from app.core.dependencies import get_current_user
+from app.core.dependencies import get_current_user, require_lab_tech
 from app.database import get_db
 from app.models.user import User
 from app.schemas.critical_values import (
@@ -39,7 +39,7 @@ def notify_critical_value(
     test_id: int,
     request: NotifyRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_lab_tech),
 ):
     return CriticalNotificationService(db).notify(test_id, request, current_user.id)
 
@@ -49,7 +49,7 @@ def acknowledge_critical_value(
     test_id: int,
     request: AcknowledgeRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_lab_tech),
 ):
     return CriticalNotificationService(db).acknowledge(test_id, request, current_user.id)
 

@@ -268,6 +268,9 @@ class OrderService:
                 ))
             self.db.flush()
             generate_samples_for_order(order.orderId, self.db, user_id)
+            from app.services.billing.invoice import BillingService
+
+            BillingService(self.db).create_invoice_for_order(order.orderId)
             self.db.commit()
             self.db.refresh(order)
         except SQLAlchemyError:

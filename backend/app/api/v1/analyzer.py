@@ -8,6 +8,7 @@ from app.schemas.analyzer import (
     AnalyzerResultResponse,
     HL7MessageRequest,
 )
+from app.config import settings
 from app.services.lab.analyzer_ingest import AnalyzerIngestService
 
 router = APIRouter()
@@ -18,6 +19,17 @@ def verify_analyzer_auth(x_analyzer_key: str = Header(None)) -> bool:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Missing analyzer authentication key",
+        )
+    expected = settings.ANALYZER_API_KEY
+    if not expected:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Analyzer API key is not configured on the server",
+        )
+    if x_analyzer_key != expected:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid analyzer authentication key",
         )
     return True
 

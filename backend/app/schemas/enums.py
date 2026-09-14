@@ -150,6 +150,7 @@ class ResultStatus(str, enum.Enum):
 
 class ValidationDecision(str, enum.Enum):
     APPROVED = "approved"
+    REJECTED = "rejected"
 
 class LabOperationType(str, enum.Enum):
     SAMPLE_COLLECT = "sample_collect"

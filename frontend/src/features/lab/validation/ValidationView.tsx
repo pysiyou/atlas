@@ -7,8 +7,7 @@
 
 import React, { useMemo, useCallback } from 'react';
 import { useAuthStore } from '@/app/store';
-import { useTestCatalog } from '@/features/catalog';
-import { useInvalidateOrders, useOrdersList } from '@/features/orders';
+import { useInvalidateOrders } from '@/features/orders';
 import { ValidationCard } from './ValidationCard/index';
 import { EscalationCard } from './EscalationCard/index';
 import { createLabItemFilter } from '../components/LabWorkflowView';
@@ -17,7 +16,7 @@ import { LabFilters } from '../components/LabFilters';
 import {
   applyLabQueueFilters,
   useLabWorkflowFilters,
-  useLabTestsFromOrders,
+  useLabDataProvider,
   useLabUrlSearch,
 } from '@/features/lab/hooks';
 import { validationFilterConfig } from '@/features/lab/constants';
@@ -32,7 +31,6 @@ import { useValidationWorkflow } from './useValidationWorkflow';
 import { orderTestKey } from '@/features/lab/utils/orderTestKey';
 import { usePendingEscalation } from '../api/results.api';
 import {
-  usePendingRecollectionRequests,
   useApproveRecollectionRequest,
   useDenyRecollectionRequest,
 } from '../api/recollection-requests.api';
@@ -43,19 +41,20 @@ export const ValidationView: React.FC = () => {
   const { hasRole } = useAuthStore();
   const canViewEscalations = hasRole(['administrator', 'lab-technician', 'lab-technician-plus']);
   const canResolveEscalation = hasRole(['administrator', 'lab-technician-plus']);
-  const { orders, isLoading: ordersLoading } = useOrdersList();
-  const { tests: testCatalog, isLoading: testsLoading } = useTestCatalog();
+
   const {
-    escalatedTests,
+    validationTests: allTests,
+    escalations: escalatedTests,
+    recollections: recollectionRequests,
+    isLoading: dataLoading,
+    canResolveEscalation: canResolveFromProvider,
+  } = useLabDataProvider();
+
+  const {
     isLoading: escalationLoading,
     refetch: refetchEscalation,
     invalidatePendingEscalation,
   } = usePendingEscalation();
-  const {
-    requests: recollectionRequests,
-    isLoading: recollectionLoading,
-    refetch: refetchRecollection,
-  } = usePendingRecollectionRequests();
   const approveRecollection = useApproveRecollectionRequest();
   const denyRecollection = useDenyRecollectionRequest();
   const { invalidateAll: invalidateOrders } = useInvalidateOrders();
@@ -71,16 +70,7 @@ export const ValidationView: React.FC = () => {
     handleValidate,
     openValidationModal,
     validateMutation,
-  } = useValidationWorkflow(ordersLoading);
-
-  const allTests = useLabTestsFromOrders({
-    orders,
-    testCatalog,
-    statusFilter: ['resulted'],
-    onlyUnvalidated: true,
-    includeHasCriticalValues: true,
-    includePatient: true,
-  });
+  } = useValidationWorkflow(dataLoading);
 
   const filterTest = useMemo(() => createLabItemFilter<TestWithContext>(), []);
   const getOrderDate = useCallback(
@@ -152,7 +142,7 @@ export const ValidationView: React.FC = () => {
   const filteredRecollectionRequests = useMemo(
     () =>
       applyLabQueueFilters({
-        items: recollectionRequests,
+        items: canResolveFromProvider ? recollectionRequests : [],
         filters: filterState,
         getOrderDate: request => request.createdAt,
         getSampleType: request => request.sampleType,
@@ -163,14 +153,11 @@ export const ValidationView: React.FC = () => {
         getQueueSince: request => request.createdAt,
         applyStatusFilter: false,
       }),
-    [recollectionRequests, filterState, filterRecollectionRequest]
+    [recollectionRequests, filterState, filterRecollectionRequest, canResolveFromProvider]
   );
 
   const sectionLoading = useMinDisplay(
-    ordersLoading ||
-      testsLoading ||
-      (canViewEscalations && escalationLoading) ||
-      (canResolveEscalation && recollectionLoading),
+    dataLoading || (canViewEscalations && escalationLoading),
     500
   );
 
@@ -183,12 +170,11 @@ export const ValidationView: React.FC = () => {
           subtitle: 'A pending collection tube is now available in Sample Collection.',
         });
         await invalidateOrders();
-        await refetchRecollection();
       } catch {
         toast.error({ title: 'Failed to approve recollection', subtitle: 'Please try again.' });
       }
     },
-    [approveRecollection, invalidateOrders, refetchRecollection]
+    [approveRecollection, invalidateOrders]
   );
 
   const handleDenyRecollection = useCallback(
@@ -200,12 +186,11 @@ export const ValidationView: React.FC = () => {
           subtitle: 'Affected tests have been cancelled.',
         });
         await invalidateOrders();
-        await refetchRecollection();
       } catch {
         toast.error({ title: 'Failed to deny recollection', subtitle: 'Please try again.' });
       }
     },
-    [denyRecollection, invalidateOrders, refetchRecollection]
+    [denyRecollection, invalidateOrders]
   );
 
   const openEscalationModal = useCallback(

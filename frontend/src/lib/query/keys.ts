@@ -177,6 +177,17 @@ export const queryKeys = {
     all: ['command-center'] as const,
     timeline: (params: { hours_back: number; limit: number }) =>
       [...queryKeys.commandCenter.all, 'timeline', params] as const,
+    board: () => [...queryKeys.commandCenter.all, 'board'] as const,
+  },
+
+  worklists: {
+    all: ['lab-worklists'] as const,
+    collection: (params?: { page?: number; pageSize?: number; search?: string }) =>
+      [...queryKeys.worklists.all, 'collection', params] as const,
+    entry: (params?: { page?: number; pageSize?: number; search?: string }) =>
+      [...queryKeys.worklists.all, 'entry', params] as const,
+    validation: (params?: { page?: number; pageSize?: number; search?: string }) =>
+      [...queryKeys.worklists.all, 'validation', params] as const,
   },
 } as const;
 

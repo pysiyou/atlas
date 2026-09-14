@@ -1,7 +1,7 @@
 /**
  * LabWorkflowView - Shared layout for lab workflow pages
  *
- * Structure: filterRow (e.g. LabFilters) then optional afterFilterRow then grid of cards.
+ * Structure: filterRow (e.g. LabFilters) then grid of cards.
  */
 
 import React, { type ReactNode } from 'react';
@@ -25,8 +25,6 @@ interface LabWorkflowViewProps<T> {
   emptyDescription: string;
   /** Filter row (e.g. LabFilters). Parent filters items before passing here. */
   filterRow: ReactNode;
-  /** Content to render after filter row but before the grid (e.g. bulk action toolbar) */
-  afterFilterRow?: ReactNode;
 }
 
 export function LabWorkflowView<T>({
@@ -37,7 +35,6 @@ export function LabWorkflowView<T>({
   emptyTitle,
   emptyDescription,
   filterRow,
-  afterFilterRow,
 }: LabWorkflowViewProps<T>): React.ReactElement {
   const hasItems = items.length > 0;
   const showEmptyState = items.length === 0;
@@ -45,7 +42,6 @@ export function LabWorkflowView<T>({
   return (
     <div className="h-full flex flex-col min-h-0">
       <div className="shrink-0">{filterRow}</div>
-      {afterFilterRow && <div className="shrink-0 px-6 pt-4">{afterFilterRow}</div>}
 
       <div
         className={`flex-1 min-h-0 overflow-y-auto p-6 ${showEmptyState ? 'flex flex-col' : 'grid gap-4 content-start'}`}

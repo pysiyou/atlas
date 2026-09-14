@@ -1,7 +1,7 @@
 """Results API Routes — result entry and validation."""
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.core.dependencies import (
@@ -70,13 +70,17 @@ def validate_results(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_lab_tech),
 ):
-    if validation_data.decision != ValidationDecision.APPROVED:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="For quality issues, use POST /lab/quality-issues.",
-        )
+    service = LabOperationsService(db)
     try:
-        return LabOperationsService(db).validate_results(
+        if validation_data.decision == ValidationDecision.REJECTED:
+            return service.reject_results(
+                order_test_id=orderTestId,
+                user_id=current_user.id,
+                rejection_reason=validation_data.rejectionReason or "",
+                validation_notes=validation_data.validationNotes,
+                preferred_remedy=validation_data.preferredRemedy,
+            )
+        return service.validate_results(
             order_test_id=orderTestId,
             user_id=current_user.id,
             validation_notes=validation_data.validationNotes,
