@@ -10,6 +10,7 @@ import {
   getValidationAlertCopy,
 } from '../components/qualityIssueDialogConstants';
 import { displayId } from '@/utils';
+import { errorAlertMessage, inlineFeedbackMessage } from '@/utils/feedback';
 import {
   buildValidationRemedyOptions,
   resolveSuggestedRemedy,
@@ -108,7 +109,7 @@ export function useQualityIssueDialog({
       });
       onConfirm(result);
     } catch (err) {
-      setSubmitError(err instanceof Error ? err.message : 'Failed to reject results');
+      setSubmitError(inlineFeedbackMessage('lab.qualityIssue.reject.error', err));
       throw err;
     } finally {
       setIsRejecting(false);
@@ -136,7 +137,7 @@ export function useQualityIssueDialog({
     isConfirmDisabled,
     isLoading,
     isRejecting,
-    error: submitError ?? (fetchError ? String(fetchError) : null),
+    error: submitError ?? (fetchError ? errorAlertMessage('lab.qualityIssue.options.loadFailed', fetchError) : null),
     options,
     alertCopy,
     handleConfirm,

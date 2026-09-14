@@ -12,6 +12,7 @@ import { useModal } from '@/lib/context/ModalContext';
 import { PatientFilters, type AffiliationStatus } from '../components/PatientFilters';
 import { createPatientTableConfig } from '../config/PatientTable.config';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
+import { errorAlertMessage } from '@/utils/feedback';
 import { calculateAge } from '@/utils';
 import type { PatientContext, Gender } from '@/types';
 import { EditPatientModal } from '../components/EditPatientModal';
@@ -36,6 +37,7 @@ export const PatientList: React.FC = () => {
     isLoading,
     isFetching,
     isError,
+    error: patientsError,
     refetch,
   } = usePaginatedPatientContextList(searchQuery.trim() || undefined);
 
@@ -48,7 +50,7 @@ export const PatientList: React.FC = () => {
   );
 
   const error = isError
-    ? { message: 'Failed to load patients', operation: 'load' as const }
+    ? { message: errorAlertMessage('patients.list.loadFailed', patientsError), operation: 'load' as const }
     : null;
 
   const {

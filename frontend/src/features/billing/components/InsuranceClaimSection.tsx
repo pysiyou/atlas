@@ -2,9 +2,10 @@
  * InsuranceClaimSection — list and submit insurance claims for an order invoice.
  */
 import React, { useState } from 'react';
-import { Badge, Button } from '@/components';
+import { Alert, Badge, Button, ErrorAlert } from '@/components';
 import { Input } from '@/components/inputs/FormField';
 import { formatCurrency, displayId } from '@/utils';
+import { notify, getFeedback, errorAlertMessage } from '@/utils/feedback';
 import type { Invoice } from '@/types';
 import {
   useOrderInsuranceClaims,
@@ -21,7 +22,7 @@ export const InsuranceClaimSection: React.FC<InsuranceClaimSectionProps> = ({
   orderId,
   invoice,
 }) => {
-  const { claims, isLoading } = useOrderInsuranceClaims(orderId);
+  const { claims, isLoading, isError, error, refetch } = useOrderInsuranceClaims(orderId);
   const submitMutation = useSubmitInsuranceClaim();
   const [provider, setProvider] = useState('');
   const [policyNumber, setPolicyNumber] = useState('');
@@ -35,17 +36,22 @@ export const InsuranceClaimSection: React.FC<InsuranceClaimSectionProps> = ({
 
   const handleSubmit = async () => {
     if (!canSubmit) return;
-    await submitMutation.mutateAsync({
-      orderId,
-      invoiceId: invoice.invoiceId,
-      insuranceProvider: provider.trim(),
-      insuranceNumber: policyNumber.trim(),
-      claimAmount: invoice.amountDue,
-      notes: notes.trim() || undefined,
-    });
-    setProvider('');
-    setPolicyNumber('');
-    setNotes('');
+    try {
+      await submitMutation.mutateAsync({
+        orderId,
+        invoiceId: invoice.invoiceId,
+        insuranceProvider: provider.trim(),
+        insuranceNumber: policyNumber.trim(),
+        claimAmount: invoice.amountDue,
+        notes: notes.trim() || undefined,
+      });
+      setProvider('');
+      setPolicyNumber('');
+      setNotes('');
+      notify.toast('billing.claim.submit.success');
+    } catch {
+      // Submit failure is shown inline on the form.
+    }
   };
 
   return (
@@ -59,7 +65,16 @@ export const InsuranceClaimSection: React.FC<InsuranceClaimSectionProps> = ({
         </span>
       </div>
 
-      {isLoading ? (
+      {isError ? (
+        <ErrorAlert
+          error={{
+            message: errorAlertMessage('billing.claims.loadFailed', error),
+          }}
+          onRetry={() => {
+            void refetch();
+          }}
+        />
+      ) : isLoading ? (
         <p className="text-xs text-text-tertiary">Loading claims…</p>
       ) : claims.length > 0 ? (
         <ul className="space-y-2">
@@ -106,11 +121,11 @@ export const InsuranceClaimSection: React.FC<InsuranceClaimSectionProps> = ({
             placeholder="Optional"
           />
           {submitMutation.isError && (
-            <p className="text-xs text-danger">
+            <Alert variant="danger" className="text-xs">
               {submitMutation.error instanceof Error
                 ? submitMutation.error.message
-                : 'Failed to submit claim'}
-            </p>
+                : getFeedback('billing.claim.submit.error').title}
+            </Alert>
           )}
           <Button
             variant="secondary"

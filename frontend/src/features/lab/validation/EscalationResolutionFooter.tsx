@@ -1,6 +1,6 @@
 import React from 'react';
 import { ModalFooter } from '../components/LabDetailModal';
-import { toast } from '@/app/AppToastBar';
+import { notify } from '@/utils/feedback';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
 import {
   EscalationResolutionActions,
@@ -48,7 +48,7 @@ export const EscalationResolutionFooter: React.FC<EscalationResolutionFooterProp
           orderTestId={props.orderTestId}
           hasResults={props.hasResults ?? false}
           resolving={resolving}
-          onValidationError={(title, subtitle) => toast.error({ title, subtitle })}
+          onValidationError={id => notify.toast(id)}
         />
       )}
     </ModalFooter>

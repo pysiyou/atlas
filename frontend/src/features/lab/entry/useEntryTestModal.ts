@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useTestNameLookup } from '@/features/catalog';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { orderTestKey } from '@/features/lab/utils/orderTestKey';
-import { toast } from '@/app/AppToastBar';
+import { notify } from '@/utils/feedback';
 import type { TestWithContext, Test, Order } from '@/types';
 
 interface UseEntryTestModalOptions {
@@ -40,10 +40,7 @@ export function useEntryTestModal({
   const openTestModal = useCallback(
     (test: TestWithContext) => {
       if (!testCatalog || test.id == null) {
-        toast.error({
-          title: 'Test record unavailable',
-          subtitle: 'Refresh the page and try again.',
-        });
+        notify.toast('lab.entry.modalUnavailable');
         return;
       }
 

@@ -17,7 +17,13 @@ export function useOrderInvoices(orderId: number | undefined) {
     enabled: isAuthenticated && !isRestoring && orderId != null,
     ...cacheConfig.dynamic,
   });
-  return { invoices: query.data ?? [], isLoading: query.isLoading };
+  return {
+    invoices: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+    refetch: query.refetch,
+  };
 }
 
 export function useOrderInsuranceClaims(orderId: number | undefined) {
@@ -28,7 +34,13 @@ export function useOrderInsuranceClaims(orderId: number | undefined) {
     enabled: isAuthenticated && !isRestoring && orderId != null,
     ...cacheConfig.dynamic,
   });
-  return { claims: query.data ?? [], isLoading: query.isLoading };
+  return {
+    claims: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+    refetch: query.refetch,
+  };
 }
 
 export function useSubmitInsuranceClaim() {

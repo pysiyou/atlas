@@ -9,7 +9,8 @@ import { CollectionView } from '../collection/CollectionView';
 import { EntryView } from '../entry/EntryView';
 import { ValidationView } from '../validation/ValidationView';
 import { LabTechBoard } from '../command-center';
-import { Icon, PageHeaderBar, Badge } from '@/components';
+import { Icon, PageHeaderBar, Badge, ErrorAlert } from '@/components';
+import { errorAlertMessage } from '@/utils/feedback';
 import { ICONS } from '@/config/icons';
 import { useLabPipelineCounts, getValidationTabCount } from '../hooks';
 import {
@@ -23,7 +24,7 @@ import {
 export const Laboratory: React.FC = () => {
   const navigate = useNavigate();
   const { tab: tabParam } = useParams<{ tab?: string }>();
-  const { counts } = useLabPipelineCounts();
+  const { counts, isError, error, refetch } = useLabPipelineCounts();
 
   const activeTab: LabTabId = isLabTabId(tabParam) ? tabParam : DEFAULT_LAB_TAB;
 
@@ -135,13 +136,26 @@ export const Laboratory: React.FC = () => {
             activeTab === 'dashboard' ? '' : 'bg-surface-page'
           }`}
         >
-          {activeTab === 'collection' && <CollectionView />}
-          {activeTab === 'entry' && <EntryView />}
-          {activeTab === 'validation' && <ValidationView />}
-          {activeTab === 'dashboard' && (
-            <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-              <LabTechBoard />
+          {isError ? (
+            <div className="p-4">
+              <ErrorAlert
+                error={{
+                  message: errorAlertMessage('lab.page.loadFailed', error),
+                }}
+                onRetry={() => refetch()}
+              />
             </div>
+          ) : (
+            <>
+              {activeTab === 'collection' && <CollectionView />}
+              {activeTab === 'entry' && <EntryView />}
+              {activeTab === 'validation' && <ValidationView />}
+              {activeTab === 'dashboard' && (
+                <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+                  <LabTechBoard />
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

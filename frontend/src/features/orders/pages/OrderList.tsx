@@ -15,6 +15,7 @@ import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { OrderFilters } from '../components/OrderFilters';
 import { createOrderTableConfig } from '../config/OrderTable.config';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
+import { errorAlertMessage } from '@/utils/feedback';
 import type { Order, OrderStatus, PaymentStatus } from '@/types';
 
 export const OrderList: React.FC = () => {
@@ -73,7 +74,7 @@ export const OrderList: React.FC = () => {
 
   const error = isError
     ? {
-        message: queryError instanceof Error ? queryError.message : 'Failed to load orders',
+        message: errorAlertMessage('orders.list.loadFailed', queryError),
         operation: 'load' as const,
       }
     : null;

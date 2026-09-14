@@ -14,6 +14,7 @@ import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components';
 import { CatalogFilters } from '../components/CatalogFilters';
 import { createCatalogTableConfig } from '../config/CatalogTable.config';
 import { useCatalogFilters } from '../hooks/useCatalogFilters';
+import { errorAlertMessage } from '@/utils/feedback';
 import type { Test } from '@/types';
 
 /**
@@ -35,7 +36,7 @@ export const CatalogList: React.FC = () => {
   // Format error for ErrorAlert component
   const error = isError
     ? {
-        message: queryError instanceof Error ? queryError.message : 'Failed to load test catalog',
+        message: errorAlertMessage('catalog.list.loadFailed', queryError),
         operation: 'load' as const,
       }
     : null;

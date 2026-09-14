@@ -1,5 +1,5 @@
 import { checkReferenceRangeWithDemographics } from '@/features/lab/utils';
-import { toast } from '@/app/AppToastBar';
+import { notify } from '@/utils/feedback';
 import type { TestResult, TestWithContext, Test } from '@/types';
 
 export function formatParameterResults(
@@ -27,10 +27,8 @@ export function formatParameterResults(
       }
     } else if ((param.valueType === 'SELECT' || param.type === 'select') && param.allowedValues) {
       if (!param.allowedValues.includes(value)) {
-        toast.error({
+        notify.toast('lab.entry.selectInvalid', {
           title: `${param.name}: Invalid value. Must be one of: ${param.allowedValues.join(', ')}`,
-          subtitle:
-            'The value entered is not in the allowed list for this parameter. Choose one of the options shown.',
         });
         return null;
       }

@@ -5,7 +5,7 @@
  */
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { toast } from '@/app/AppToastBar';
+import { notify } from '@/utils/feedback';
 import { Popover, Button, Icon, FooterInfo } from '@/components';
 import { PopoverForm, RadioCard } from '../components/PopoverForm';
 import { MODULE_ICONS } from '@/config/icons';
@@ -76,17 +76,11 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
   const handleSubmit = useCallback(async () => {
     if (!selectedColor) {
-      toast.error({
-        title: 'Please select the top color',
-        subtitle: 'Select the container cap color used for this sample.',
-      });
+      notify.toast('lab.collection.popover.colorRequired');
       return;
     }
     if (!selectedContainerType) {
-      toast.error({
-        title: 'Please select the container type',
-        subtitle: 'Select tube or cup used for this sample.',
-      });
+      notify.toast('lab.collection.popover.containerRequired');
       return;
     }
     if (volume < minimumVolume) {

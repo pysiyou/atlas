@@ -35,7 +35,7 @@ import {
   useDenyRecollectionRequest,
 } from '../api/recollection-requests.api';
 import { RecollectionRequestCard } from './RecollectionRequestCard';
-import { toast } from '@/app/AppToastBar';
+import { notify } from '@/utils/feedback';
 
 export const ValidationView: React.FC = () => {
   const { hasRole } = useAuthStore();
@@ -165,13 +165,10 @@ export const ValidationView: React.FC = () => {
     async (requestId: number, reviewNotes?: string) => {
       try {
         await approveRecollection.mutateAsync({ requestId, reviewNotes });
-        toast.success({
-          title: 'Recollection approved',
-          subtitle: 'A pending collection tube is now available in Sample Collection.',
-        });
+        notify.toast('lab.recollection.approve.success');
         await invalidateOrders();
-      } catch {
-        toast.error({ title: 'Failed to approve recollection', subtitle: 'Please try again.' });
+      } catch (error) {
+        notify.apiError('lab.recollection.approve.error', error);
       }
     },
     [approveRecollection, invalidateOrders]
@@ -181,13 +178,10 @@ export const ValidationView: React.FC = () => {
     async (requestId: number, reviewNotes?: string) => {
       try {
         await denyRecollection.mutateAsync({ requestId, reviewNotes });
-        toast.success({
-          title: 'Recollection denied',
-          subtitle: 'Affected tests have been cancelled.',
-        });
+        notify.toast('lab.recollection.deny.success');
         await invalidateOrders();
-      } catch {
-        toast.error({ title: 'Failed to deny recollection', subtitle: 'Please try again.' });
+      } catch (error) {
+        notify.apiError('lab.recollection.deny.error', error);
       }
     },
     [denyRecollection, invalidateOrders]

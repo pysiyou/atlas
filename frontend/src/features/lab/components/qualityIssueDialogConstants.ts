@@ -20,7 +20,6 @@ export const QUALITY_ISSUE_DIALOG_COPY = {
     message: 'Loading options...',
   },
   error: {
-    title: 'Failed to load options',
     cancel: 'Cancel',
     retry: 'Retry',
   },

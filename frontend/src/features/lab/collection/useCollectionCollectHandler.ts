@@ -3,10 +3,10 @@
  */
 
 import { useQueryClient } from '@tanstack/react-query';
-import { toast } from '@/app/AppToastBar';
 import { logger } from '@/utils/logger';
 import { getErrorMessage, getErrorDetails, isLikelyNetworkOrTimeout } from '@/utils/errors';
 import { invalidateCollectionQueries } from '@/lib/query/invalidate';
+import { getFeedback, notify } from '@/utils/feedback';
 import type { ContainerType, ContainerTopColor } from '@/types';
 import type { SampleDisplay } from '@/features/lab/types';
 import type { UseMutationResult } from '@tanstack/react-query';
@@ -38,32 +38,19 @@ export function useCollectionCollectHandler({
     selectedContainerType?: ContainerType
   ) => {
     if (!isAuthenticated) {
-      toast.error({
-        title: 'You must be logged in to collect samples',
-        subtitle: 'Please sign in to record sample collections, then try again.',
-      });
+      notify.toast('lab.collection.authRequired');
       return;
     }
     if (!display.sample || !display.requirement) {
-      toast.error({
-        title: 'Invalid sample data',
-        subtitle:
-          'The sample or requirement data is missing or invalid. Refresh the page and try again.',
-      });
+      notify.toast('lab.collection.invalidSample');
       return;
     }
     if (!selectedColor) {
-      toast.error({
-        title: 'Container color is required',
-        subtitle: 'Select the container cap color before confirming the collection.',
-      });
+      notify.toast('lab.collection.colorRequired');
       return;
     }
     if (!selectedContainerType) {
-      toast.error({
-        title: 'Container type is required',
-        subtitle: 'Select the container type (e.g. cup or tube) before confirming the collection.',
-      });
+      notify.toast('lab.collection.containerRequired');
       return;
     }
 
@@ -75,10 +62,9 @@ export function useCollectionCollectHandler({
         actualContainerColor: selectedColor as ContainerTopColor,
         collectionNotes: notes,
       });
-      toast.success({
-        title: `${(display.sample.sampleType ?? 'sample').toString().toUpperCase()} sample collected`,
-        subtitle:
-          'The sample has been recorded and the order has been updated. You can continue with the next sample.',
+      const sampleLabel = (display.sample.sampleType ?? 'sample').toString().toUpperCase();
+      notify.toast('lab.collection.success', {
+        title: `${sampleLabel} sample collected`,
       });
       try {
         await refreshOrders();
@@ -86,6 +72,7 @@ export function useCollectionCollectHandler({
         const err = refetchError as Error & { name?: string };
         if (err?.name !== 'AbortError') {
           logger.error('Error refreshing orders after collection', getErrorDetails(refetchError));
+          notify.toast('lab.collection.refreshWarning');
         }
         invalidateCollectionQueries(queryClient);
       }
@@ -93,20 +80,14 @@ export function useCollectionCollectHandler({
       logger.error('Error collecting sample', getErrorDetails(error));
       invalidateCollectionQueries(queryClient);
       if (isLikelyNetworkOrTimeout(error)) {
-        toast.error({
-          title: 'Action may have completed',
-          subtitle:
-            'The request did not complete. Please refresh the page to see the latest status.',
-        });
+        notify.toast('lab.collection.networkAmbiguous');
       } else {
         const message = getErrorMessage(
           error,
-          'The collection could not be saved. Check your connection and try again.'
+          getFeedback('lab.collection.error').subtitle ??
+            'The collection could not be saved. Check your connection and try again.'
         );
-        toast.error({
-          title: 'Failed to collect sample',
-          subtitle: message,
-        });
+        notify.toast('lab.collection.error', { subtitle: message });
       }
     }
   };

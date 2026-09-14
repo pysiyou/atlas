@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FeedbackId } from '@/config/feedbackCatalog';
 import { Button, Popover, Icon } from '@/components';
 import { cn, displayId } from '@/utils';
 import { inputBase } from '@/components/inputs/inputStyles';
@@ -128,7 +128,7 @@ interface EscalationResolutionActionsProps {
     reasonOrNotes?: string,
     options?: EscalationResolveOptions,
   ) => Promise<void>;
-  onValidationError: (message: string, subtitle: string) => void;
+  onValidationError: (id: FeedbackId) => void;
 }
 
 export const EscalationResolutionActions: React.FC<EscalationResolutionActionsProps> = ({
@@ -182,17 +182,11 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
           onConfirm={async () => {
             if (requiresReadBack) {
               if (!readBackProviderName.trim() || !readBackProviderContact.trim()) {
-                onValidationError(
-                  'Provider read-back required',
-                  'Enter provider name and contact for critical value release.',
-                );
+                onValidationError('lab.escalation.readBack.providerRequired');
                 return false;
               }
               if (!readBackConfirmed) {
-                onValidationError(
-                  'Read-back confirmation required',
-                  'Confirm provider read-back before force-validating critical results.',
-                );
+                onValidationError('lab.escalation.readBack.confirmRequired');
                 return false;
               }
             }
@@ -292,10 +286,7 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
           disabled={!reasonAuthorizeRecollect.trim()}
           onConfirm={async () => {
             if (!reasonAuthorizeRecollect.trim()) {
-              onValidationError(
-                'Reason required',
-                'Provide a clinical reason to authorize re-collection.',
-              );
+              onValidationError('lab.escalation.recollect.reasonRequired');
               return false;
             }
             await resolveAsync('authorize_recollect', reasonAuthorizeRecollect.trim());
@@ -318,7 +309,7 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
         disabled={!reasonFinalReject.trim()}
         onConfirm={async () => {
           if (!reasonFinalReject.trim()) {
-            onValidationError('Reason required', 'Provide a clinical reason to cancel this test.');
+            onValidationError('lab.escalation.cancel.reasonRequired');
             return false;
           }
           await resolveAsync('cancel_test', reasonFinalReject.trim());

@@ -8,6 +8,7 @@ import {
 } from '@/lib/query/invalidate';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { useAuthStore } from '@/app/store';
+import { feedbackTitle } from '@/utils/feedback/copy';
 import type { ValidationDecision, TestWithContext } from '@/types';
 import type { EscalationResolveRequest } from '@/types/lab-operations';
 import { resultAPI } from './results.service';
@@ -103,7 +104,7 @@ export function useResolveEscalation() {
     }) => {
       const { hasRole } = useAuthStore.getState();
       if (!hasRole(['administrator', 'lab-technician-plus'])) {
-        throw new Error('You do not have permission to resolve escalations.');
+        throw new Error(feedbackTitle('lab.escalation.permissionDenied'));
       }
       if (orderTestId == null) {
         throw new Error('orderTestId is required to resolve an escalation.');

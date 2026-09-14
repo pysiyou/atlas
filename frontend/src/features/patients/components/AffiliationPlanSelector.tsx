@@ -9,6 +9,7 @@ import { Button, CalloutCard, Icon } from '@/components';
 import { SpinnerLoader } from '@/components';
 import { useAffiliationPricing } from '../api/affiliations.api';
 import { formatCurrency } from '@/utils';
+import { getFeedback } from '@/utils/feedback';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import type { AffiliationPlan } from '@/types/affiliation';
 import type { AffiliationDuration } from '@/types';
@@ -48,7 +49,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
 }) => {
   // Use TanStack Query for pricing data with static caching
   const { pricing, isLoading: isLoadingPricing, isError } = useAffiliationPricing();
-  const error = isError ? 'Failed to load pricing. Please try again.' : null;
+  const error = isError ? getFeedback('patients.affiliation.pricingLoadFailed').title : null;
 
   // Build plans with pricing information
   const plans: AffiliationPlan[] = useMemo(() => {

@@ -10,7 +10,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useTestNameLookup } from '@/features/catalog';
 import { useEnterResults } from '../api/results.api';
 import { queryKeys } from '@/lib/query';
-import { toast } from '@/app/AppToastBar';
+import { notify } from '@/utils/feedback';
 import { logger } from '@/utils/logger';
 import { formatParameterResults, findTestById } from './entryWorkflow.helpers';
 import { orderTestKey } from '@/features/lab/utils/orderTestKey';
@@ -90,31 +90,19 @@ export function useEntryWorkflow({
 
       const testResults = finalResults || results[resultKey];
       if (!testResults || Object.keys(testResults).length === 0) {
-        toast.error({
-          title: 'No results to save',
-          subtitle:
-            'There are no results entered for this test. Enter values in the required fields before saving.',
-        });
+        notify.toast('lab.entry.noResults');
         return;
       }
 
       const testItem = findTestById(saveAllTests, orderTestId);
       if (!testItem) {
-        toast.error({
-          title: 'Test not found in current list',
-          subtitle:
-            'This test could not be found in the current order. The list may have been updated—refresh and try again.',
-        });
+        notify.toast('lab.entry.testNotFound');
         return;
       }
 
       const testDef = getTest(testItem.testCode);
       if (!testDef?.parameters) {
-        toast.error({
-          title: 'Test parameters not found',
-          subtitle:
-            'The test configuration could not be loaded. Refresh the page or contact support.',
-        });
+        notify.toast('lab.entry.parametersMissing');
         return;
       }
 
@@ -128,11 +116,7 @@ export function useEntryWorkflow({
           results: formattedResults,
           technicianNotes: finalNotes || technicianNotes[resultKey] || undefined,
         });
-        toast.success({
-          title: 'Results saved successfully',
-          subtitle:
-            'The results have been saved and the order has been updated. You can continue with other tests.',
-        });
+        notify.toast('lab.entry.save.success');
         setResults(prev => {
           const n = { ...prev };
           delete n[resultKey];
@@ -146,10 +130,7 @@ export function useEntryWorkflow({
         await queryClient.refetchQueries({ queryKey: queryKeys.orders.all });
       } catch (error) {
         logger.error('Error saving results', error instanceof Error ? error : undefined);
-        toast.error({
-          title: 'Failed to save results. Please try again.',
-          subtitle: 'The results could not be saved. Check your connection and try again.',
-        });
+        notify.apiError('lab.entry.save.error', error);
         throw error;
       }
     },

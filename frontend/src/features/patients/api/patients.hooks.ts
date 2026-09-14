@@ -9,8 +9,7 @@ import { useEntityLookup, parseNumericKey } from '@/hooks/useEntityLookup';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { invalidatePatientQueries } from '@/lib/query/invalidate';
 import { useAuthStore } from '@/app/store';
-import { toast } from '@/app/AppToastBar';
-import { getErrorMessage } from '@/utils/errors';
+import { notify } from '@/utils/feedback';
 import {
   patientSchema,
   patientCreateSchema,
@@ -387,10 +386,10 @@ export function useCreatePatient() {
     onSuccess: () => {
       invalidatePatientQueries(queryClient);
       queryClient.refetchQueries({ queryKey: queryKeys.patients.list() });
-      toast.success('Patient created successfully');
+      notify.toast('patient.create.success');
     },
     onError: error => {
-      toast.error(`Failed to create patient: ${getErrorMessage(error, 'Unknown error')}`);
+      notify.apiError('patient.create.error', error);
     },
   });
 }
@@ -410,10 +409,10 @@ export function useUpdatePatient() {
     },
     onSuccess: (_, { id }) => {
       invalidatePatientQueries(queryClient, { patientId: id });
-      toast.success('Patient updated successfully');
+      notify.toast('patient.update.success');
     },
     onError: error => {
-      toast.error(`Failed to update patient: ${getErrorMessage(error, 'Unknown error')}`);
+      notify.apiError('patient.update.error', error);
     },
   });
 }

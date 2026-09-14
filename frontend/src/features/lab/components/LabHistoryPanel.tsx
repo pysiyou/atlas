@@ -5,6 +5,7 @@ import React from 'react';
 import { SectionPanel } from '@/components';
 import { Skeleton } from '@/components/loaders/Skeleton';
 import { useEntityTimeline } from '../api/audit.api';
+import { getFeedback } from '@/utils/feedback';
 import { LabTimeline } from './LabTimeline';
 
 interface LabHistoryPanelProps {
@@ -41,7 +42,7 @@ export const LabHistoryPanel: React.FC<LabHistoryPanelProps> = ({
         </div>
       ) : isError ? (
         <div className="text-sm text-text-secondary">
-          Failed to load history.{' '}
+          {getFeedback('lab.history.panel.loadFailed').title}{' '}
           <button type="button" className="text-brand hover:underline" onClick={() => refetch()}>
             Retry
           </button>

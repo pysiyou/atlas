@@ -9,7 +9,7 @@ import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import { usePatient } from '@/features/patients';
 import { useOrder } from '../api/orders.api';
 import { getActiveTests } from '@/features/orders/utils';
-import toast from 'react-hot-toast';
+import { notify } from '@/utils/feedback';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { formatCurrency, displayId } from '@/utils';
 import type { Invoice } from '@/types';
@@ -67,9 +67,9 @@ export const OrderDetail: React.FC = () => {
   const handleViewPatient = () => navigate(`/patients/${order?.patientId}`);
   const handleViewInvoice = () => {
     if (!invoice) return;
-    toast.success(
-      `${displayId.invoice(invoice.invoiceId)} — ${formatCurrency(invoice.total)} (${invoice.status})`
-    );
+    notify.toast('order.invoice.preview', {
+      subtitle: `${displayId.invoice(invoice.invoiceId)} — ${formatCurrency(invoice.total)} (${invoice.status})`,
+    });
   };
   const handleEdit = () => {
     if (order?.overallStatus === 'ordered') {

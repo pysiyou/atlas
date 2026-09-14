@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { toast } from '@/app/AppToastBar';
+import { notify } from '@/utils/feedback';
 import { useAuthStore } from '@/app/store';
 import { useResolveEscalation } from '../api/results.api';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
@@ -40,7 +40,11 @@ export function useEscalationResolution({
       rejectionReasonOrNotes?: string,
       options?: EscalationResolveOptions,
     ): Promise<void> => {
-      if (!canResolveEscalation || resolving) return Promise.resolve();
+      if (!canResolveEscalation) {
+        notify.toast('lab.escalation.permissionDenied');
+        return Promise.resolve();
+      }
+      if (resolving) return Promise.resolve();
 
       const variables = {
         orderTestId,
@@ -63,19 +67,13 @@ export function useEscalationResolution({
           onSuccess: async () => {
             await onResolved();
             onClose();
-            toast.success({
+            notify.toast('lab.escalation.resolve.success', {
               title: messages[action] ?? 'Operation completed.',
-              subtitle: 'The escalation has been resolved and the test status updated.',
             });
             onResetForm();
           },
           onError: err => {
-            const apiError = err as { message?: string };
-            const msg =
-              apiError && typeof apiError === 'object' && typeof apiError.message === 'string'
-                ? apiError.message
-                : 'Failed to resolve escalation.';
-            toast.error({ title: msg, subtitle: 'Check the details and try again.' });
+            notify.apiError('lab.escalation.resolve.error', err);
           },
         })
         .then(() => undefined)

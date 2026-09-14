@@ -12,6 +12,7 @@ import { PaymentDetailModal } from '../components/PaymentDetailModal';
 import { usePaginatedOrders } from '@/features/orders';
 import { usePaymentsForOrderIds } from '../api/payments.api';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
+import { errorAlertMessage } from '@/utils/feedback';
 import type { Order, Payment, PaymentStatus, PaymentMethod } from '@/types';
 import type { OrderPaymentView } from '../types';
 
@@ -61,7 +62,7 @@ export const PaymentList: React.FC = () => {
 
   const error = ordersError
     ? {
-        message: ordersErrorObj instanceof Error ? ordersErrorObj.message : 'Failed to load data',
+        message: errorAlertMessage('payments.list.loadFailed', ordersErrorObj),
         operation: 'load' as const,
       }
     : null;

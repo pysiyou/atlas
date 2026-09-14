@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { AuthUser, UserRole } from '@/types';
 import { authAPI, bindAuthClientHandlers } from '@/lib/api/auth.service';
+import { notify } from '@/utils/feedback';
+import { feedbackTitle } from '@/utils/feedback/copy';
 
 interface AuthState {
   user: AuthUser | null;
@@ -49,7 +51,7 @@ export const useAuthStore = create<AuthState>()(
               refreshToken: null,
               isAuthenticated: false,
             });
-            throw new Error('Failed to load user after login. Please try again.');
+            throw new Error(feedbackTitle('auth.login.profileLoadFailed'));
           }
         },
 
@@ -77,6 +79,7 @@ export const useAuthStore = create<AuthState>()(
             set({ token: access_token });
             return access_token;
           } catch {
+            notify.toast('session.expired');
             get().logout();
             return null;
           }
