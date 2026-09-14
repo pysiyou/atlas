@@ -141,30 +141,34 @@ export const LAB_CARD_LIST_ITEMS = {
 
 // Context Row Constants (Patient/Order info)
 export const LAB_CARD_CONTEXT = {
-  container: 'flex items-center gap-2 text-xs text-text-tertiary flex-wrap min-w-0 w-full',
+  container:
+    'flex items-center gap-x-2 gap-y-0 text-xs text-text-tertiary flex-wrap min-w-0 w-full leading-snug',
   patientName: 'font-normal text-text-primary capitalize',
   separator: 'text-text-disabled select-none',
   inlineDot: '•',
 } as const;
 
 export const LAB_CARD_HEADER = {
-  /** Identity + actions on row 1; badges on row 2 */
-  shell: 'flex items-start justify-between gap-2 w-full min-w-0',
-  actionColumn: 'flex shrink-0 flex-wrap items-start justify-end gap-2 self-start',
+  /** Identity row; actions float top-right so they don't stretch row height */
+  identityShell: 'relative min-w-0 w-full',
+  identityPadActions: 'pe-[5.5rem] sm:pe-28',
+  actionColumn:
+    'absolute top-0 right-0 z-10 flex max-w-[46%] shrink-0 flex-wrap items-start justify-end gap-2',
 } as const;
 
 /** Narrow / list-padding workflow cards (breakpoint mobile layouts) */
 export const LAB_MOBILE_CARD = {
   stack: 'flex flex-col min-h-0 min-w-0 w-full flex-1 gap-1.5',
-  titleRow: 'flex items-start justify-between gap-2 min-w-0',
-  titleBlock: 'min-w-0 flex-1 space-y-0.5',
-  title: 'text-sm font-normal text-text-primary truncate leading-snug normal-case',
-  subline: 'flex items-center gap-1.5 min-w-0 text-xs text-text-secondary leading-snug',
+  titleHead:
+    'grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto] grid-rows-[auto_auto] gap-x-2 gap-y-0.5 items-start',
+  title: 'm-0 col-start-1 row-start-1 text-sm font-normal text-text-primary truncate leading-snug normal-case',
+  subline:
+    'col-start-1 row-start-2 flex items-center gap-1.5 min-w-0 text-xs text-text-secondary leading-snug',
   sublineName: 'truncate capitalize font-normal text-text-secondary',
   metaLine: 'text-xs text-text-tertiary leading-snug',
   body: 'text-xs text-text-secondary leading-snug',
   footer: 'flex items-center justify-between gap-2 pt-2 mt-auto border-t border-border-subtle',
   badgeRail: 'flex min-w-0 flex-1 flex-wrap items-center gap-1.5',
   actionRail: 'flex shrink-0 items-center justify-end gap-1.5',
-  titleAside: 'shrink-0 pt-0.5',
+  titleAside: 'col-start-2 row-start-1 shrink-0',
 } as const;

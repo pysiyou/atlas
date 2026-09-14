@@ -231,15 +231,17 @@ export function LabHeaderContent({
 
   return (
     <LabHeaderStack as={stackAs} className={cn('min-w-0 w-full', className)}>
-      <div className={LAB_CARD_HEADER.shell}>
-        <div className="min-w-0 flex-1">
-          <LabIdentityRow context={context} compact={compact} />
-        </div>
+      <div className={LAB_CARD_HEADER.identityShell}>
         {actions ? (
           <div className={LAB_CARD_HEADER.actionColumn} onClick={e => e.stopPropagation()}>
             {actions}
           </div>
         ) : null}
+        <LabIdentityRow
+          context={context}
+          compact={compact}
+          className={actions ? LAB_CARD_HEADER.identityPadActions : undefined}
+        />
       </div>
       {badges ? (
         <LabHeaderCompactContext.Provider value={compact}>

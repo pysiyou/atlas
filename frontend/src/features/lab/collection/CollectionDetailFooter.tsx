@@ -58,7 +58,7 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
           }}
           onSubmittingChange={onPopoverSubmittingChange}
           trigger={
-            <Button variant="approve" size="md">
+            <Button variant="collect" size="md">
               {isRecollection ? 'Recollect Sample' : 'Collect Sample'}
             </Button>
           }
