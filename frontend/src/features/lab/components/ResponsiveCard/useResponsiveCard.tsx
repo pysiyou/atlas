@@ -19,8 +19,11 @@ export function useResponsiveCard<TItem, TDerived>({
   const breakpoint = useBreakpoint();
   const shouldUseMobile = isMobile ?? isBreakpointAtMost(breakpoint, 'sm');
 
-  // Derive shared data once, used by both variants
   const sharedData = useMemo(() => deriveSharedData(item), [item, deriveSharedData]);
 
-  return shouldUseMobile ? <MobileComponent {...(sharedData as any)} /> : <DesktopComponent {...(sharedData as any)} />;
+  return shouldUseMobile ? (
+    <MobileComponent {...(sharedData as TDerived & object)} />
+  ) : (
+    <DesktopComponent {...(sharedData as TDerived & object)} />
+  );
 }

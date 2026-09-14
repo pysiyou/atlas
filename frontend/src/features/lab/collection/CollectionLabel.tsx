@@ -36,7 +36,7 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
         <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
         <style>
           .entity-id {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+            font-family: 'Nunito', sans-serif;
             font-size: 10px;
             font-weight: 400;
             color: #2563eb;

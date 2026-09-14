@@ -69,18 +69,37 @@ export async function parseErrorResponse(response: Response): Promise<ApiError> 
   return { message, code, status: response.status, details };
 }
 
-export function parseSuccessResponse<T>(response: Response): Promise<T> {
-  return response.text().then(text => {
-    try {
-      return text ? JSON.parse(text) : ({} as T);
-    } catch (parseError) {
-      const err: ApiError = {
-        message: (parseError as Error).message || 'Invalid response',
-        status: response.status,
-      };
-      throw err;
-    }
-  });
+export async function parseSuccessResponse<T>(response: Response): Promise<T> {
+  if (response.status === 204 || response.status === 304) {
+    return undefined as T;
+  }
+
+  const text = await response.text();
+  if (!text) {
+    return undefined as T;
+  }
+
+  try {
+    return JSON.parse(text) as T;
+  } catch (parseError) {
+    const err: ApiError = {
+      message: (parseError as Error).message || 'Invalid response',
+      status: response.status,
+    };
+    throw err;
+  }
+}
+
+/** Guard list endpoints so a 304/empty body cannot crash `.map()`. */
+export function expectArray<T>(data: unknown, label: string): T[] {
+  if (!Array.isArray(data)) {
+    const err: ApiError = {
+      message: `Invalid ${label} response from server`,
+      code: 'INVALID_RESPONSE',
+    };
+    throw err;
+  }
+  return data;
 }
 
 export function isApiError(error: unknown): error is ApiError {

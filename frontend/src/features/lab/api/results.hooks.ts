@@ -37,14 +37,14 @@ export function useEnterResults() {
         data: { results, technicianNotes },
       });
     },
-    onSuccess: (_, variables) => {
+    onSuccess: async (_, variables) => {
       const orderIdStr =
         variables.orderId != null
           ? typeof variables.orderId === 'number'
             ? variables.orderId.toString()
             : variables.orderId
           : undefined;
-      invalidateResultQueries(queryClient, { orderId: orderIdStr, samples: false });
+      await invalidateResultQueries(queryClient, { orderId: orderIdStr, samples: false });
     },
   });
 }
@@ -72,14 +72,14 @@ export function useValidateResults() {
         },
       });
     },
-    onSuccess: (_, variables) => {
+    onSuccess: async (_, variables) => {
       const orderIdStr =
         variables.orderId != null
           ? typeof variables.orderId === 'number'
             ? variables.orderId.toString()
             : variables.orderId
           : undefined;
-      invalidateResultQueries(queryClient, { orderId: orderIdStr, samples: false });
+      await invalidateResultQueries(queryClient, { orderId: orderIdStr, samples: false });
     },
   });
 }
@@ -117,14 +117,14 @@ export function useResolveEscalation() {
         readBack,
       });
     },
-    onSuccess: (_, variables) => {
+    onSuccess: async (_, variables) => {
       const orderIdStr =
         variables.orderId != null
           ? typeof variables.orderId === 'number'
             ? variables.orderId.toString()
             : variables.orderId
           : undefined;
-      invalidateResultQueries(queryClient, {
+      await invalidateResultQueries(queryClient, {
         orderId: orderIdStr,
         samples: true,
         pendingEscalation: true,

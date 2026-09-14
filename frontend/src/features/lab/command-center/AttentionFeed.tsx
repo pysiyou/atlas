@@ -6,7 +6,7 @@ import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components';
 import { cn, displayId } from '@/utils';
-import { ENTITY_ID } from '@/utils/constants';
+import { LAB_ENTITY_ID_INLINE } from '@/features/lab/utils/labStyles';
 import { getLabQueueUrl } from '@/features/lab/constants/labTabs';
 import { COMMAND_CENTER_BADGE_TEXT, COMMAND_CENTER_ATTENTION_ACCENT } from './components/styles';
 import type { AttentionItem } from './boardTypes';
@@ -28,7 +28,7 @@ function FeedDetail({ detail }: { detail: AttentionDetail }) {
   switch (detail.type) {
     case 'link':
     case 'testId':
-      return <span className={ENTITY_ID}>{detail.value}</span>;
+      return <span className={LAB_ENTITY_ID_INLINE}>{detail.value}</span>;
     case 'priority':
       return <Badge variant={detail.value as 'urgent' | 'high'} size="xs" />;
     case 'wait':

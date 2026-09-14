@@ -3,11 +3,10 @@
  */
 
 import React from 'react';
-import { Badge, Button, Icon } from '@/components';
-import { formatDateTime, displayId } from '@/utils';
+import { Button, Icon } from '@/components';
 import { LabCard } from '../../components/LabCard';
-import { AttemptIndicator } from '../../components/AttemptIndicator';
-import { BlockedReasonBadge } from '../../components/StatusBadges';
+import { TestHeaderBadges } from '../../components/labWorkflowBadges';
+import { testHeaderAudit } from '../../components/labHeader';
 import { ICONS } from '@/config/icons';
 import type { EscalationCardSharedData } from './hooks';
 
@@ -15,114 +14,10 @@ export const EscalationCardDesktop: React.FC<EscalationCardSharedData> = ({
   test,
   onClick,
   handleCardClick,
-  getUserName,
   rejection,
   blockedLabel,
 }) => {
-  const {
-    showRetestBadge,
-    showRecollectionBadge,
-    showAttemptIndicator,
-    attemptNumber,
-    attemptMax,
-    attemptType,
-    sampleRecollectionAttempt,
-  } = rejection;
-
-  const badges = (
-    <>
-      {showAttemptIndicator && (
-        <AttemptIndicator
-          attemptNumber={attemptNumber}
-          maxAttempts={attemptMax}
-          type={attemptType}
-        />
-      )}
-      <h3 className="text-sm font-medium text-text-primary">{test.testName ?? test.testCode}</h3>
-      <Badge variant="escalated" size="sm" />
-      {test.reasonCode && (
-        <Badge variant="warning" size="sm">
-          {test.reasonCode}
-        </Badge>
-      )}
-      {blockedLabel && <BlockedReasonBadge label={blockedLabel} size="sm" />}
-      {test.priority && (
-        <Badge variant={test.priority as 'low' | 'medium' | 'high' | 'urgent'} size="sm" />
-      )}
-      {test.sampleType && (
-        <Badge variant={test.sampleType as 'blood' | 'urine' | 'other'} size="sm" />
-      )}
-      {test.id != null && <span className="entity-id">{displayId.orderTest(test.id)}</span>}
-      <span className="entity-id">{test.testCode}</span>
-    </>
-  );
-
-  const actions = (
-    <div className="flex items-center gap-2 z-10" onClick={e => e.stopPropagation()}>
-      <Button
-        variant="primary"
-        size="sm"
-        icon={<Icon name={ICONS.actions.eye} className="text-on-brand" />}
-        onClick={e => {
-          e.stopPropagation();
-          onClick();
-        }}
-      >
-        View
-      </Button>
-    </div>
-  );
-
-  const additionalInfo = test.resultEnteredAt && (
-    <span className="text-xs text-text-tertiary">
-      Results entered{' '}
-      <span className="text-text-secondary">{formatDateTime(test.resultEnteredAt)}</span>
-      {test.enteredBy && (
-        <>
-          {' '}
-          by <span className="text-text-secondary">{getUserName(String(test.enteredBy))}</span>
-        </>
-      )}
-    </span>
-  );
-
-  const rejectionTrackingInfo =
-    showAttemptIndicator && (showRetestBadge || showRecollectionBadge) ? (
-      <div className="flex items-center gap-2 flex-wrap">
-        {showRetestBadge && (
-          <Badge size="sm" variant="warning" className="flex items-center gap-1">
-            <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Re-test of{' '}
-            <span className="entity-id">{displayId.orderTest(test.retestOfTestId)}</span>
-          </Badge>
-        )}
-        {showRecollectionBadge && (
-          <Badge size="sm" variant="warning" className="flex items-center gap-1">
-            <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Recollection attempt #{sampleRecollectionAttempt}
-          </Badge>
-        )}
-      </div>
-    ) : undefined;
-
-  const content = (
-    <div className="text-xs text-text-secondary">
-      {test.id != null && (
-        <span className="entity-id">{displayId.orderTest(test.id)}</span>
-      )}
-      <span className={test.id != null ? 'ml-2 entity-id' : 'entity-id'}>{test.testCode}</span>
-      {test.orderId != null && (
-        <span className="ml-2">
-          Order <span className="entity-id">{displayId.order(test.orderId)}</span>
-        </span>
-      )}
-      {test.sampleId && (
-        <span className="ml-2">
-          Sample <span className="entity-id">{displayId.sample(test.sampleId)}</span>
-        </span>
-      )}
-    </div>
-  );
+  const { showAttemptIndicator } = rejection;
 
   return (
     <LabCard
@@ -130,24 +25,47 @@ export const EscalationCardDesktop: React.FC<EscalationCardSharedData> = ({
       className={showAttemptIndicator ? 'border-warning-stroke-emphasis' : ''}
       context={{
         patientName: test.patientName,
+        patientId: test.patientId,
         orderId: test.orderId,
         orderTestId: test.id,
+        sampleId: test.sampleId,
+        entityCode: test.testCode,
+        entityName: test.testName,
         referringPhysician: test.referringPhysician,
       }}
-      sampleInfo={{
-        sampleId: test.sampleId,
-        collectedAt: test.collectedAt,
-        collectedBy: test.collectedBy,
-      }}
-      additionalInfo={
-        <>
-          {additionalInfo}
-          {rejectionTrackingInfo}
-        </>
+      auditLines={testHeaderAudit(test, { includeResultEntered: true })}
+      badges={
+        <TestHeaderBadges
+          test={test}
+          variant="escalation"
+          reasonCode={test.reasonCode}
+          blockedLabel={blockedLabel}
+        />
       }
-      badges={badges}
-      actions={actions}
-      content={content}
+      actions={
+        <div className="flex items-center gap-2 z-10" onClick={e => e.stopPropagation()}>
+          <Button
+            variant="primary"
+            size="sm"
+            icon={<Icon name={ICONS.actions.eye} className="text-on-brand" />}
+            onClick={e => {
+              e.stopPropagation();
+              onClick();
+            }}
+          >
+            View
+          </Button>
+        </div>
+      }
+      content={
+        <div className="text-xs text-text-secondary">
+          {test.reasonCode && (
+            <span>
+              <span className="text-text-tertiary">Reason:</span> {test.reasonCode}
+            </span>
+          )}
+        </div>
+      }
       contentTitle="Details"
     />
   );

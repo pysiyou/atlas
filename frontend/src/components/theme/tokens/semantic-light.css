@@ -189,8 +189,7 @@
   /* ═══════════════════════════════════════════════════════════════════
      ENTITY ID (patient, order, sample, test codes)
      ═══════════════════════════════════════════════════════════════════ */
-  --id-font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
-    'Courier New', monospace;
+  --id-font-family: var(--font-sans);
   --id-font-size: 0.75rem;
   --id-font-size-secondary: var(--text-xxs);
   --id-color: var(--brand);

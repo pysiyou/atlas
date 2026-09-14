@@ -43,6 +43,7 @@ class SampleResponse(SampleBase):
     recollectionSampleId: int | None = None
     isRecollection: bool = False
     originalSampleId: int | None = None
+    originalSampleCollectedAt: datetime | None = None
     recollectionReason: str | None = None
     recollectionAttempt: int = 1
     createdAt: datetime

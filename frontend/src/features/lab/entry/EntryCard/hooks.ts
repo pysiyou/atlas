@@ -40,16 +40,14 @@ export function useEntryCardData(props: EntryCardProps): EntryCardSharedData | n
   const { getPatientName } = usePatientNameLookup();
   const handleCardClick = useLabCardClickGuard(onClick);
   const workItem = useTestWorkItemState(test);
-  
-  // Early return if missing test definition
+  const rejection = useMemo(() => deriveRetestContext(test), [test]);
+
   if (!testDef?.parameters) return null;
-  
+
   const patientName = getPatientName(test.patientId);
   const parameterCount = testDef.parameters.length;
   const filledCount = Object.values(results).filter(v => v?.trim()).length;
-  
-  const rejection = useMemo(() => deriveRetestContext(test), [test]);
-  
+
   return {
     test,
     testDef,

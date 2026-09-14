@@ -4,8 +4,14 @@
  */
 import React, { useState } from 'react';
 import { Badge, Button, Card } from '@/components';
-import { formatDateTime, displayId } from '@/utils';
+import { cn, formatDateTime } from '@/utils';
 import { LabCard } from '../components/LabCard';
+import { compactAuditLines } from '../components/labHeader';
+import {
+  LabMobileCardHeader,
+  labMobileCardSurfaceClassName,
+} from '../components/labMobileCardHeader';
+import { LAB_MOBILE_CARD } from '../utils/labStyles';
 import { AttemptIndicator } from '../components/AttemptIndicator';
 import { BlockedReasonBadge } from '../components/StatusBadges';
 import { LAB_CONFIG } from '@/features/lab/constants';
@@ -48,12 +54,6 @@ function RecollectionRequestCardDesktop({
 
   const badges = (
     <>
-      <AttemptIndicator
-        attemptNumber={attemptUsed}
-        maxAttempts={LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS}
-        type="recollection"
-      />
-      <h3 className="text-sm font-medium text-text-primary">{title}</h3>
       <BlockedReasonBadge label="Recollection approval" size="sm" />
       {request.sampleType && (
         <Badge variant={request.sampleType as 'blood' | 'urine' | 'other'} size="sm" />
@@ -61,7 +61,11 @@ function RecollectionRequestCardDesktop({
       {request.requiresSupervisorOverride && (
         <Badge variant="danger" size="sm">Limit override</Badge>
       )}
-      <span className="entity-id">{displayId.sample(request.rejectedSampleId)}</span>
+      <AttemptIndicator
+        attemptNumber={attemptUsed}
+        maxAttempts={LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS}
+        type="recollection"
+      />
     </>
   );
 
@@ -95,10 +99,10 @@ function RecollectionRequestCardDesktop({
   );
 
   const additionalInfo = (
-    <span className="text-xs text-text-tertiary">
+    <>
       Requested <span className="text-text-secondary">{formatDateTime(request.createdAt)}</span>
       {request.stage === 'validation' ? ' · from result review' : ' · from collection'}
-    </span>
+    </>
   );
 
   const content = (
@@ -124,13 +128,16 @@ function RecollectionRequestCardDesktop({
       className={request.requiresSupervisorOverride ? 'border-warning-stroke-emphasis' : ''}
       context={{
         patientName: request.patientName,
+        patientId: request.patientId,
         orderId: request.orderId,
-      }}
-      sampleInfo={{
         sampleId: request.rejectedSampleId,
+        entityCode: title,
       }}
-      additionalInfo={additionalInfo}
       badges={badges}
+      auditLines={compactAuditLines({
+        type: 'custom',
+        content: additionalInfo,
+      })}
       actions={actions}
       content={content}
       contentTitle="Recollection request"
@@ -156,86 +163,98 @@ function RecollectionRequestCardMobile({
   onReviewNotesChange: (value: string) => void;
 }) {
   const title = getDisplayTitle(request);
+  const attemptUsed = request.recollectionAttemptsUsed + 1;
+
+  const badges = (
+    <>
+      <BlockedReasonBadge label="Recollection approval" size="xs" />
+      {request.sampleType && (
+        <Badge variant={request.sampleType as 'blood' | 'urine' | 'other'} size="xs" />
+      )}
+      {request.requiresSupervisorOverride && (
+        <Badge variant="danger" size="xs">
+          Limit override
+        </Badge>
+      )}
+      <AttemptIndicator
+        attemptNumber={attemptUsed}
+        maxAttempts={LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS}
+        type="recollection"
+      />
+    </>
+  );
+
+  const meta = (
+    <>
+      Requested <span className="text-text-secondary">{formatDateTime(request.createdAt)}</span>
+      {request.stage === 'validation' ? ' · from result review' : ' · from collection'}
+    </>
+  );
+
+  const actions = (
+    <>
+      <Button
+        variant="danger"
+        size="sm"
+        isLoading={isDenying}
+        disabled={isApproving}
+        onClick={e => {
+          e.stopPropagation();
+          void onDeny(request.id, reviewNotes.trim() || undefined);
+        }}
+      >
+        Deny
+      </Button>
+      <Button
+        variant="approve"
+        size="sm"
+        isLoading={isApproving}
+        disabled={isDenying}
+        onClick={e => {
+          e.stopPropagation();
+          void onApprove(request.id, reviewNotes.trim() || undefined);
+        }}
+      >
+        Approve
+      </Button>
+    </>
+  );
 
   return (
-    <Card padding="list" hover className="flex flex-col h-full">
-      <div className="flex items-center justify-between gap-2 mb-2">
-        <div className="min-w-0 overflow-hidden">
-          <div className="text-sm font-normal text-text-primary truncate">{title}</div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <div className="text-xs text-text-secondary font-normal truncate capitalize">
-              {request.patientName}
-            </div>
-            <div className="text-xxs text-text-disabled">•</div>
-            <div className="entity-id entity-id--secondary truncate">
-              {displayId.order(request.orderId)}
-            </div>
-            <div className="text-xxs text-text-disabled">•</div>
-            <div
-              className="entity-id entity-id--secondary truncate"
-              title={displayId.sample(request.rejectedSampleId)}
-            >
-              {displayId.sample(request.rejectedSampleId)}
-            </div>
+    <Card
+      padding="list"
+      hover
+      className={labMobileCardSurfaceClassName(
+        request.requiresSupervisorOverride ? 'border-warning-stroke-emphasis' : undefined
+      )}
+    >
+      <LabMobileCardHeader
+        context={{
+          patientName: request.patientName,
+          patientId: request.patientId,
+          orderId: request.orderId,
+          sampleId: request.rejectedSampleId,
+          entityCode: title,
+        }}
+        meta={<p className={LAB_MOBILE_CARD.metaLine}>{meta}</p>}
+        badges={badges}
+        actions={actions}
+      >
+        <div className={cn(LAB_MOBILE_CARD.body, 'space-y-1')}>
+          <div>
+            <span className="text-text-tertiary">Reason:</span> {request.reason}
           </div>
+          {request.notes && <div className="text-text-tertiary">{request.notes}</div>}
         </div>
-      </div>
-
-      <div className="space-y-1 mb-2">
-        <div className="text-xs text-text-tertiary">
-          Requested: {formatDateTime(request.createdAt)}
-        </div>
-        <div className="text-xs text-text-secondary">
-          <span className="text-text-tertiary">Reason:</span> {request.reason}
-        </div>
-        {request.notes && <div className="text-xs text-text-tertiary">{request.notes}</div>}
-      </div>
-
-      <textarea
-        value={reviewNotes}
-        onChange={e => onReviewNotesChange(e.target.value)}
-        placeholder="Review notes (optional)"
-        rows={2}
-        className="text-xs mb-2 w-full rounded border border-border-default bg-surface px-2 py-1.5 resize-none"
-      />
-
-      <div className="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-border-subtle">
-        <div className="flex items-center gap-2 flex-wrap">
-          <BlockedReasonBadge label="Recollection approval" size="xs" />
-          {request.sampleType && (
-            <Badge variant={request.sampleType as 'blood' | 'urine' | 'other'} size="xs" />
-          )}
-          {request.requiresSupervisorOverride && (
-            <Badge variant="danger" size="xs">Limit override</Badge>
-          )}
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="danger"
-            size="sm"
-            isLoading={isDenying}
-            disabled={isApproving}
-            onClick={e => {
-              e.stopPropagation();
-              void onDeny(request.id, reviewNotes.trim() || undefined);
-            }}
-          >
-            Deny
-          </Button>
-          <Button
-            variant="approve"
-            size="sm"
-            isLoading={isApproving}
-            disabled={isDenying}
-            onClick={e => {
-              e.stopPropagation();
-              void onApprove(request.id, reviewNotes.trim() || undefined);
-            }}
-          >
-            Approve
-          </Button>
-        </div>
-      </div>
+        <textarea
+          value={reviewNotes}
+          onChange={e => onReviewNotesChange(e.target.value)}
+          onClick={e => e.stopPropagation()}
+          placeholder="Review notes (optional)"
+          rows={2}
+          className="text-xs w-full rounded border border-border-default bg-surface px-2 py-1.5 resize-none"
+        />
+      </LabMobileCardHeader>
     </Card>
   );
 }

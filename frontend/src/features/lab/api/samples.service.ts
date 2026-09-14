@@ -82,7 +82,7 @@ export const sampleAPI = {
   async getAll(params?: GetSamplesParams): Promise<Sample[]> {
     const queryParams: Record<string, string> = { limit: String(WORKFLOW_QUERY_LIMIT) };
     if (params?.orderId) queryParams.orderId = params.orderId;
-    if (params?.status) queryParams.status = params.status;
+    if (params?.status) queryParams.sampleStatus = params.status;
     if (params?.skip) queryParams.skip = String(params.skip);
     if (params?.limit) queryParams.limit = String(params.limit);
     return apiClient.get<Sample[]>('/samples', queryParams);

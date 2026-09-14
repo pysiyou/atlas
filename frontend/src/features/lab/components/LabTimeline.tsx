@@ -4,8 +4,9 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components';
-import { cn, formatRelativeDateLabel, formatRelativeDateTime } from '@/utils';
-import { ENTITY_ID, ENTITY_ID_CLICKABLE } from '@/utils/constants';
+import { cn, formatRelativeDateLabel, formatRelativeDateTime, displayId } from '@/utils';
+import { ENTITY_ID_CLICKABLE } from '@/utils/constants';
+import { LAB_ENTITY_ID_INLINE } from '@/features/lab/utils/labStyles';
 import type { TimelineEvent } from '../api/commandCenter.api';
 import {
   getCategoryConfig,
@@ -52,27 +53,29 @@ function TimelineDetail({
 }) {
   switch (detail.type) {
     case 'note':
-      return <span className="text-xs text-text-secondary">Notes: {detail.value}</span>;
+      return (
+        <span className={COMMAND_CENTER_TIMELINE.eventDetailText}>Notes: {detail.value}</span>
+      );
     case 'status':
     case 'sampleType':
       return <Badge variant={detail.value} size="xs" />;
     case 'testCode':
     case 'id':
-      return <span className={ENTITY_ID}>{detail.value}</span>;
+      return <span className={LAB_ENTITY_ID_INLINE}>{detail.value}</span>;
     case 'link':
       return (
-        <Link to={detail.to} className={ENTITY_ID_CLICKABLE}>
+        <Link to={detail.to} className={cn(ENTITY_ID_CLICKABLE, 'font-normal')}>
           {detail.value}
         </Link>
       );
     case 'entityRef':
       if (!interactiveEntities) {
-        return <span className={ENTITY_ID}>{detail.value}</span>;
+        return <span className={LAB_ENTITY_ID_INLINE}>{detail.value}</span>;
       }
       return (
         <button
           type="button"
-          className={ENTITY_ID_CLICKABLE}
+          className={cn(ENTITY_ID_CLICKABLE, 'font-normal text-left')}
           onClick={e => {
             e.stopPropagation();
             if (detail.entityType === 'sample') onOpenSample(detail.entityId);
@@ -83,7 +86,7 @@ function TimelineDetail({
         </button>
       );
     default:
-      return <span className="text-xs text-text-secondary">{detail.value}</span>;
+      return <span className={COMMAND_CENTER_TIMELINE.eventDetailText}>{detail.value}</span>;
   }
 }
 
@@ -167,7 +170,7 @@ function TimelineEventRow({
 }
 
 type TimelineGroupItem =
-  | { kind: 'divider'; label: string }
+  | { kind: 'divider'; testId: number }
   | { kind: 'event'; event: TimelineEvent };
 
 export const LabTimeline: React.FC<LabTimelineProps> = ({
@@ -197,7 +200,7 @@ export const LabTimeline: React.FC<LabTimelineProps> = ({
       if (showRetestDividers) {
         const divider = getRetestAttemptDivider(event, previousEvent);
         if (divider) {
-          group.items.push({ kind: 'divider', label: divider });
+          group.items.push({ kind: 'divider', testId: divider.testId });
         }
       }
 
@@ -224,7 +227,8 @@ export const LabTimeline: React.FC<LabTimelineProps> = ({
               if (item.kind === 'divider') {
                 return (
                   <li key={`divider-${group.label}-${idx}`} className="py-1.5 pl-5">
-                    <span className={COMMAND_CENTER_TIMELINE.groupLabel}>{item.label}</span>
+                    <span className={COMMAND_CENTER_TIMELINE.eventDetailText}>Retest attempt · </span>
+                    <span className={LAB_ENTITY_ID_INLINE}>{displayId.orderTest(item.testId)}</span>
                   </li>
                 );
               }

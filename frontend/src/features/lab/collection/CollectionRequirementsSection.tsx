@@ -3,7 +3,8 @@
  */
 
 import React from 'react';
-import { CalloutCard, SectionPanel } from '@/components';
+import { CalloutCard } from '@/components';
+import { LabSectionPanel } from '../components/LabSectionPanel';
 import { formatArray } from '@/utils';
 import { formatRejectionCriteriaList } from '@/features/lab/utils/catalogRejectionCriteria';
 
@@ -34,7 +35,7 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
   if (!activeTest) return null;
 
   return (
-    <SectionPanel
+    <LabSectionPanel
       title="Collection Requirements & Instructions"
       headerRight={
         <div className="flex gap-1">
@@ -42,7 +43,7 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
             <button
               key={`${test.code}-${index}`}
               onClick={() => setActiveTestCode(test.code)}
-              className={`px-2 py-1 text-xs rounded transition-colors font-mono ${
+              className={`px-2 py-1 text-xs rounded transition-colors entity-id ${
                 activeTestCode === test.code
                   ? 'bg-brand-muted text-brand font-normal'
                   : 'bg-neutral-100 text-brand hover:bg-neutral-200'
@@ -104,6 +105,6 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
           </div>
         )}
       </div>
-    </SectionPanel>
+    </LabSectionPanel>
   );
 };

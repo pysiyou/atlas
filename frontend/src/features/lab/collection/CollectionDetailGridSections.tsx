@@ -7,6 +7,7 @@ import { Badge } from '@/components';
 import type { ContainerType, Sample } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_CONFIG } from '@/types';
 import { formatVolume } from '@/features/lab/utils';
+import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 import type { DetailGridSectionConfig } from '../components/LabDetailModal';
 
 interface CollectionDetailGridSectionsProps {
@@ -60,11 +61,11 @@ export const buildCollectionDetailGridSections = ({
           label: 'Container',
           value: (
             <div className="flex items-center gap-2">
-              <Badge size="sm" variant="primary" className="capitalize">
+              <Badge size={LAB_CARD_BADGE_SIZE} variant="primary" className="capitalize">
                 {effectiveContainerType}
               </Badge>
               {containerColor && (
-                <Badge size="sm" variant={`container-${containerColor}` as never}>
+                <Badge size={LAB_CARD_BADGE_SIZE} variant={`container-${containerColor}` as never}>
                   {colorName} Top
                 </Badge>
               )}
@@ -111,7 +112,7 @@ export const buildCollectionDetailGridSections = ({
             requirement.containerTypes.length > 0 ? (
               <div className="flex flex-wrap gap-1 justify-end">
                 {requirement.containerTypes.map((type, idx) => (
-                  <Badge key={idx} size="sm" variant="primary" className="capitalize">
+                  <Badge key={idx} size={LAB_CARD_BADGE_SIZE} variant="primary" className="capitalize">
                     {CONTAINER_CONFIG[type]?.label || type}
                   </Badge>
                 ))}
@@ -124,7 +125,7 @@ export const buildCollectionDetailGridSections = ({
             requirement.containerTopColors.length > 0 ? (
               <div className="flex flex-wrap gap-1 justify-end">
                 {requirement.containerTopColors.map((color, idx) => (
-                  <Badge key={idx} size="sm" variant={`container-${color}` as never}>
+                  <Badge key={idx} size={LAB_CARD_BADGE_SIZE} variant={`container-${color}` as never}>
                     {CONTAINER_COLOR_OPTIONS.find(opt => opt.value === color)?.label || color} Top
                   </Badge>
                 ))}

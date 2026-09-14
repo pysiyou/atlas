@@ -1,10 +1,8 @@
 """Test catalog business logic."""
-import hashlib
-import json
 import logging
 from typing import List, Optional
 
-from fastapi import HTTPException, Request, Response, status
+from fastapi import HTTPException, Response, status
 from sqlalchemy.orm import Session
 
 from app.config import settings
@@ -32,13 +30,13 @@ class TestService:
 
     def list_tests(
         self,
-        request: Request,
         response: Response,
         category: Optional[str] = None,
         active_only: bool = True,
         skip: int = 0,
         limit: int = 10000,
     ) -> List[dict]:
+        response.headers["Cache-Control"] = "private, no-store"
         cache_key = generate_cache_key(
             CacheKeys.TESTS_CATALOG,
             category=category,
@@ -48,13 +46,6 @@ class TestService:
         )
         cached_data = cache_get(cache_key)
         if cached_data is not None:
-            etag = hashlib.md5(json.dumps(cached_data, sort_keys=True).encode()).hexdigest()
-            response.headers["ETag"] = f'"{etag}"'
-            response.headers["Cache-Control"] = "public, max-age=3600"
-            if_none_match = request.headers.get("if-none-match")
-            if if_none_match and if_none_match.strip('"') == etag:
-                response.status_code = 304
-                return []
             return cached_data
 
         query = self.db.query(Test)
@@ -65,9 +56,6 @@ class TestService:
         tests = query.order_by(Test.updatedAt.desc()).offset(skip).limit(limit).all()
         result = [serialize_test(t) for t in tests]
         cache_set(cache_key, result, settings.CACHE_TTL_STATIC)
-        etag = hashlib.md5(json.dumps(result, sort_keys=True).encode()).hexdigest()
-        response.headers["ETag"] = f'"{etag}"'
-        response.headers["Cache-Control"] = "public, max-age=3600"
         return result
 
     def get_by_code(self, test_code: str) -> Test:

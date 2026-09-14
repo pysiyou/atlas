@@ -25,6 +25,10 @@ export interface CollectionWorklistItem {
   orderDate: string;
   testCodes: string[];
   isRecollection: boolean;
+  originalSampleId?: number | null;
+  originalSampleCollectedAt?: string | null;
+  recollectionReason?: string | null;
+  recollectionAttempt?: number;
   blockedReason?: string | null;
   waitingHours: number;
   turnaroundHours: number;

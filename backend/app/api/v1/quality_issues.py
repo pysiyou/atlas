@@ -4,7 +4,7 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
-from app.core.dependencies import get_current_user, require_lab_tech
+from app.core.dependencies import get_current_user, require_sample_collector
 from app.database import get_db
 from app.models.user import User
 from app.schemas.enums import QualityIssueTargetType
@@ -21,7 +21,7 @@ def get_quality_issue_options(
     targetType: QualityIssueTargetType = Query(...),
     targetId: int = Query(...),
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_lab_tech),
+    current_user: User = Depends(require_sample_collector),
 ):
     try:
         return LabOperationsService(db).quality.get_options(targetType, targetId)
@@ -33,7 +33,7 @@ def get_quality_issue_options(
 def report_quality_issue(
     body: ReportQualityIssueRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_lab_tech),
+    current_user: User = Depends(require_sample_collector),
 ):
     try:
         return LabOperationsService(db).quality.report_issue(

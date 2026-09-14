@@ -5,12 +5,13 @@
  *
  * Uses centralized components:
  * - DetailGrid with sections config for consistent layout
- * - SectionPanel for form section
+ * - LabSectionPanel for form section
  * - CollectionInfoLine for sample metadata
  */
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { Badge, Button, Icon, SectionPanel, CircularProgress } from '@/components';
+import { Badge, Button, Icon, CircularProgress } from '@/components';
+import { LabSectionPanel } from '../components/LabSectionPanel';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { displayId } from '@/utils';
 import { EntryForm } from './EntryForm';
@@ -18,18 +19,15 @@ import {
   LabDetailModal,
   DetailGrid,
   ModalFooter,
-  StatusBadgeRow,
 } from '../components/LabDetailModal';
-import { deriveRetestContext } from '../utils/deriveRetestContext';
+import { TestHeaderBadges } from '../components/labWorkflowBadges';
+import { useTestWorkItemState } from '../hooks';
+import { testHeaderAudit } from '../components/labHeader';
 import { ICONS } from '@/config/icons';
-import {
-  CollectionInfoLine,
-  RetestBadge,
-  RecollectionAttemptBadge,
-} from '../components/StatusBadges';
 import { useTestCatalog } from '@/features/catalog';
 import { LabHistoryPanel } from '../components/LabHistoryPanel';
 import { labModalSubtitle } from '../components/labModalStages';
+import { LAB_CARD_BADGE_SIZE, LAB_DETAIL_ID_VALUE } from '../utils/labStyles';
 import { ValidationForm } from '../validation/ValidationForm';
 import { hasTestResults } from '../utils/hasTestResults';
 import type { Test, TestWithContext } from '@/types';
@@ -105,6 +103,8 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   );
   const isSaving = saveAction.isPending;
 
+  const workItem = useTestWorkItemState(test);
+
   const filledCount = useMemo(
     () => Object.values(displayResults).filter(v => v?.trim()).length,
     [displayResults]
@@ -122,13 +122,6 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   const turnaroundTime = resolvedTestDef.turnaroundTime;
   const remainingParams = totalParams - filledCount;
 
-  const {
-    isRetest,
-    retestNumber,
-    showRecollectionBadge,
-    sampleRecollectionAttempt,
-  } = deriveRetestContext(test);
-
   const handleLocalResultChange = (key: string, paramCode: string, value: string) => {
     setLocalResults(prev => ({ ...prev, [paramCode]: value }));
     onResultsChange(key, paramCode, value);
@@ -144,10 +137,6 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
     saveAction.execute();
   };
 
-  /**
-   * Circular progress indicator for header
-   * Shows completion percentage with color coding matching order progress style
-   */
   const progressIndicator = (
     <CircularProgress
       size={18}
@@ -159,29 +148,31 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
     />
   );
 
-  /**
-   * Extra header badges for parameter count, TAT, and retest/recollection status
-   */
-  const headerExtraBadges = (
-    <>
-      {isRetest && <RetestBadge retestNumber={retestNumber} />}
-      {showRecollectionBadge && !isRetest && (
-        <RecollectionAttemptBadge attemptNumber={sampleRecollectionAttempt} />
-      )}
-      <Badge size="sm" variant="default" className="text-text-secondary">
-        {filledCount} / {totalParams} parameters
-      </Badge>
-      {turnaroundTime && (
-        <Badge
-          size="sm"
-          variant="default"
-          className="text-text-secondary flex items-center gap-1.5"
-        >
-          <Icon name={ICONS.dataFields.time} className="w-3 h-3 text-text-tertiary" />
-          {turnaroundTime}h TAT
-        </Badge>
-      )}
-    </>
+  const headerBadges = (
+    <TestHeaderBadges
+      test={test}
+      variant="entry"
+      showStatus
+      queueSince={test.collectedAt}
+      blockedLabel={workItem.blockedReason ? workItem.label : undefined}
+      trailing={
+        <>
+          <Badge size={LAB_CARD_BADGE_SIZE} variant="default" className="text-text-secondary">
+            {filledCount} / {totalParams} parameters
+          </Badge>
+          {turnaroundTime && (
+            <Badge
+              size={LAB_CARD_BADGE_SIZE}
+              variant="default"
+              className="text-text-secondary flex items-center gap-1.5"
+            >
+              <Icon name={ICONS.dataFields.time} className="w-3 h-3 text-text-tertiary" />
+              {turnaroundTime}h TAT
+            </Badge>
+          )}
+        </>
+      }
+    />
   );
 
   return (
@@ -192,37 +183,18 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
       subtitle={labModalSubtitle('entry')}
       modalKey={readOnly ? `historical-${test.id}` : resultKey}
       disableClose={isSaving}
-      headerBadges={
-        <StatusBadgeRow
-          sampleType={test.sampleType}
-          priority={test.priority}
-          status={test.status}
-          extraBadges={headerExtraBadges}
-        />
-      }
+      headerBadges={headerBadges}
       contextInfo={{
         patientName: test.patientName,
         patientId: test.patientId,
         orderId: test.orderId,
         orderTestId: test.id,
         entityCode: test.testCode,
+        entityName: test.testName,
         referringPhysician: test.referringPhysician,
+        sampleId: test.sampleId,
       }}
-      sampleInfo={
-        test.sampleId && test.collectedAt
-          ? {
-              sampleId: test.sampleId,
-              collectedAt: test.collectedAt,
-              collectedBy: test.collectedBy,
-            }
-          : undefined
-      }
-      additionalContextInfo={
-        // Show collection info only if no sampleId (means collection info not in sampleInfo above)
-        test.collectedAt && !test.sampleId ? (
-          <CollectionInfoLine collectedAt={test.collectedAt} collectedBy={test.collectedBy} />
-        ) : undefined
-      }
+      headerAudit={testHeaderAudit(test)}
       footer={
         readOnly ? (
           <ModalFooter statusMessage="">
@@ -247,7 +219,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
       }
     >
       {readOnly && hasTestResults(test) ? (
-        <SectionPanel title="Recorded Results">
+        <LabSectionPanel title="Recorded Results">
           <ValidationForm
             results={test.results!}
             flags={test.flags}
@@ -258,9 +230,9 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
             readOnly
             enableApproveShortcut={false}
           />
-        </SectionPanel>
+        </LabSectionPanel>
       ) : (
-        <SectionPanel title="Result Entry" headerRight={progressIndicator}>
+        <LabSectionPanel title="Result Entry" headerRight={progressIndicator}>
           <EntryForm
             testDef={resolvedTestDef}
             resultKey={resultKey}
@@ -274,7 +246,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
             isModal={true}
             readOnly={readOnly}
           />
-        </SectionPanel>
+        </LabSectionPanel>
       )}
 
       {/* Test Details - using declarative sections config */}
@@ -312,13 +284,14 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
             fields: [
               {
                 label: 'Test ID',
-                value: test.id != null ? (
-                  <span className="entity-id">{displayId.orderTest(test.id)}</span>
-                ) : undefined,
+                value:
+                  test.id != null ? displayId.orderTest(test.id) : undefined,
+                valueClassName: LAB_DETAIL_ID_VALUE,
               },
               {
                 label: 'Test Code',
-                value: <span className="entity-id">{test.testCode}</span>,
+                value: test.testCode,
+                valueClassName: LAB_DETAIL_ID_VALUE,
               },
               {
                 label: 'Sample Type',
@@ -328,9 +301,8 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
               },
               {
                 label: 'Sample ID',
-                value: test.sampleId ? (
-                  <span className="entity-id">{displayId.sample(test.sampleId)}</span>
-                ) : undefined,
+                value: test.sampleId ? displayId.sample(test.sampleId) : undefined,
+                valueClassName: LAB_DETAIL_ID_VALUE,
               },
               {
                 label: 'Turnaround Time',

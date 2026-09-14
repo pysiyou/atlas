@@ -440,8 +440,8 @@ export function useCreateOrder() {
       const response = await orderAPI.create(transformed);
       return orderSchema.parse(response) as Order;
     },
-    onSuccess: () => {
-      invalidateOrderQueries(queryClient, { samples: true });
+    onSuccess: async () => {
+      await invalidateOrderQueries(queryClient, { samples: true });
       notify.toast('order.create.success');
     },
     onError: error => {
@@ -459,7 +459,7 @@ export function useUpdateOrder() {
   return useMutation({
     mutationFn: async ({ orderId, data }: { orderId: number; data: unknown }) => {
       const validated = orderUpdateSchema.parse(data);
-      const transformed = formInputToPayload(validated);
+      const transformed = formInputToPayload(validated, { includePatientId: false });
       const response = await orderAPI.update(orderId.toString(), transformed);
       return orderSchema.parse(response) as Order;
     },
@@ -487,13 +487,13 @@ export function useUpdateOrder() {
       }
       notify.apiError('order.update.error', error);
     },
-    onSuccess: (_, variables) => {
-      invalidateOrderQueries(queryClient, { orderId: variables.orderId.toString(), samples: true });
+    onSuccess: async (_, variables) => {
+      await invalidateOrderQueries(queryClient, { orderId: variables.orderId.toString(), samples: true });
       notify.toast('order.update.success');
     },
     onSettled: (_, __, variables) => {
       const orderIdStr = variables.orderId.toString();
-      invalidateOrderQueries(queryClient, { orderId: orderIdStr, samples: true });
+      return invalidateOrderQueries(queryClient, { orderId: orderIdStr, samples: true });
     },
   });
 }
@@ -509,8 +509,8 @@ export function useDeleteOrder() {
       const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
       return orderAPI.delete(orderIdStr);
     },
-    onSuccess: () => {
-      invalidateOrderQueries(queryClient, { samples: true });
+    onSuccess: async () => {
+      await invalidateOrderQueries(queryClient, { samples: true });
       notify.toast('order.delete.success');
     },
     onError: error => {
@@ -538,10 +538,10 @@ export function useUpdatePaymentStatus() {
       const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
       return orderAPI.updatePaymentStatus(orderIdStr, paymentStatus, amountPaid);
     },
-    onSuccess: (_, variables) => {
+    onSuccess: async (_, variables) => {
       const orderIdStr =
         typeof variables.orderId === 'string' ? variables.orderId : variables.orderId.toString();
-      invalidateOrderQueries(queryClient, { orderId: orderIdStr, payments: true });
+      await invalidateOrderQueries(queryClient, { orderId: orderIdStr, payments: true });
       notify.toast('order.paymentStatus.success');
     },
   });

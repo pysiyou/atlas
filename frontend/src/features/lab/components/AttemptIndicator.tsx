@@ -52,14 +52,14 @@ export const AttemptIndicator: React.FC<AttemptIndicatorProps> = ({
         className="flex items-center gap-1 cursor-help"
       >
         <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-        <span className="font-mono text-xxs">
+        <span className="text-xxs">
           {attemptNumber}/{maxAttempts}
         </span>
       </Badge>
 
       {/* Hover tooltip */}
       {showTooltip && (
-        <div className="absolute top-full right-0 mt-1 z-50 w-64 bg-surface-elevated border border-border-default rounded-lg shadow-xl p-3 animate-in fade-in slide-in-from-top-1 duration-200">
+        <div className="absolute top-full right-0 mt-1 z-50 w-64 bg-surface-elevated border border-border-default rounded-lg shadow-xl p-3">
           <div className="space-y-1">
             <p className="text-xs font-normal text-text-primary">
               {typeLabel} Attempt #{attemptNumber}

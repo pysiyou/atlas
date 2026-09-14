@@ -1,9 +1,7 @@
 """Affiliation pricing business logic."""
-import hashlib
-import json
 from typing import List
 
-from fastapi import HTTPException, Request, Response, status
+from fastapi import HTTPException, Response, status
 from sqlalchemy.orm import Session
 
 from app.config import settings
@@ -17,17 +15,11 @@ class AffiliationService:
     def __init__(self, db: Session):
         self.db = db
 
-    def list_pricing(self, request: Request, response: Response) -> List[dict]:
+    def list_pricing(self, response: Response) -> List[dict]:
+        response.headers["Cache-Control"] = "private, no-store"
         cache_key = CacheKeys.AFFILIATIONS_PRICING
         cached_data = cache_get(cache_key)
         if cached_data is not None:
-            etag = hashlib.md5(json.dumps(cached_data, sort_keys=True).encode()).hexdigest()
-            response.headers["ETag"] = f'"{etag}"'
-            response.headers["Cache-Control"] = "public, max-age=3600"
-            if_none_match = request.headers.get("if-none-match")
-            if if_none_match and if_none_match.strip('"') == etag:
-                response.status_code = 304
-                return []
             return cached_data
 
         pricing_list = (
@@ -38,9 +30,6 @@ class AffiliationService:
         )
         result = [AffiliationPricingResponse.model_validate(p).model_dump() for p in pricing_list]
         cache_set(cache_key, result, settings.CACHE_TTL_STATIC)
-        etag = hashlib.md5(json.dumps(result, sort_keys=True).encode()).hexdigest()
-        response.headers["ETag"] = f'"{etag}"'
-        response.headers["Cache-Control"] = "public, max-age=3600"
         return result
 
     def get_price(self, duration: int) -> dict:

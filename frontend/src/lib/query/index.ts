@@ -17,6 +17,7 @@ export {
   invalidateCollectionQueries,
   invalidateCommandCenterQueries,
   invalidateLabWorkflowQueries,
+  invalidateWorklistQueries,
   invalidateSampleDetailQueries,
   useInvalidateQueryKey,
 } from './invalidate';

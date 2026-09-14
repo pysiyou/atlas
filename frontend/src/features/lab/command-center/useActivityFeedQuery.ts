@@ -31,7 +31,7 @@ export function useActivityFeedQuery(hoursBack = 24, limit = 50) {
 
   const refetchFeed = useCallback(() => {
     void query.refetch();
-  }, [query.refetch]);
+  }, [query]);
 
   /** Fetch the next page; returns how many raw events were added and whether more pages exist. */
   const loadMore = useCallback(async (): Promise<{ added: number; hasMore: boolean }> => {
@@ -43,7 +43,7 @@ export function useActivityFeedQuery(hoursBack = 24, limit = 50) {
     const result = await query.fetchNextPage();
     const after = result.data?.pages.flatMap(page => page?.events ?? []).length ?? before;
     return { added: after - before, hasMore: Boolean(result.hasNextPage) };
-  }, [query.data?.pages, query.fetchNextPage, query.hasNextPage, query.isFetchingNextPage]);
+  }, [query]);
 
   return {
     events,

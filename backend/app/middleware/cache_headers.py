@@ -13,21 +13,16 @@ class CacheHeadersMiddleware(BaseHTTPMiddleware):
     Middleware to add HTTP caching headers to responses.
 
     Cache strategies:
-    - Static endpoints (/tests, /affiliations): public, max-age=3600 (1 hour)
+    - Catalog/auth endpoints: no-store (SPA JWT clients cannot use 304 bodies)
     - Dynamic endpoints (/orders, /samples, /payments): private, no-cache
-    - Auth endpoints: no-store (never cache)
     """
-
-    # Endpoints with static data (can be cached publicly)
-    STATIC_ENDPOINTS = {
-        "/api/v1/tests": 3600,           # 1 hour
-        "/api/v1/affiliations": 3600,    # 1 hour
-    }
 
     # Endpoints that should never be cached
     NO_CACHE_ENDPOINTS = {
         "/api/v1/auth",
         "/api/v1/users/me",
+        "/api/v1/tests",
+        "/api/v1/affiliations",
     }
 
     # Endpoints with semi-static data (short cache, private)
@@ -54,13 +49,6 @@ class CacheHeadersMiddleware(BaseHTTPMiddleware):
         for endpoint in self.NO_CACHE_ENDPOINTS:
             if path.startswith(endpoint):
                 response.headers["Cache-Control"] = "no-store"
-                return response
-
-        # Check for static endpoints
-        for endpoint, max_age in self.STATIC_ENDPOINTS.items():
-            if path.startswith(endpoint):
-                response.headers["Cache-Control"] = f"public, max-age={max_age}"
-                response.headers["Vary"] = "Authorization"
                 return response
 
         # Check for semi-static endpoints

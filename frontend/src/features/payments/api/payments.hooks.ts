@@ -8,10 +8,11 @@ import { queryKeys, cacheConfig } from '@/lib/query';
 import { invalidateOrderQueries, useInvalidateQueryKey, invalidatePaymentDetailQueries } from '@/lib/query/invalidate';
 import { useAuthStore } from '@/app/store';
 import type { PaymentMethod } from '@/types';
-import { paymentAPI } from './payments.service';
+import { paymentAPI, remainingPaymentAmount } from './payments.service';
 
 export {
   paymentAPI,
+  remainingPaymentAmount,
   type PaymentCreate,
   type PaymentFilters,
 } from './payments.service';
@@ -106,6 +107,14 @@ export function usePaymentsByOrder(orderId: string | undefined) {
   };
 }
 
+export function useOrderRemainingBalance(orderId: string | undefined, totalPrice: number) {
+  const { payments, isLoading } = usePaymentsByOrder(orderId);
+  return {
+    remainingAmount: remainingPaymentAmount(totalPrice, payments),
+    paymentsLoading: isLoading,
+  };
+}
+
 export function usePaymentMethodByOrder() {
   const { payments, isLoading } = usePaymentsList({ limit: WORKFLOW_QUERY_LIMIT });
 
@@ -154,7 +163,7 @@ export function useCreatePayment() {
     onSuccess: (_, variables) => {
       const orderIdStr =
         typeof variables.orderId === 'string' ? variables.orderId : String(variables.orderId);
-      invalidateOrderQueries(queryClient, { orderId: orderIdStr, payments: true });
+      return invalidateOrderQueries(queryClient, { orderId: orderIdStr, payments: true });
     },
   });
 }

@@ -48,7 +48,7 @@ export const AffiliationSection: React.FC<
               <span className="text-xs font-normal text-text-tertiary uppercase tracking-wide">
                 Assurance Number
               </span>
-              <p className="font-mono font-normal text-text-primary text-sm">
+              <p className="font-normal text-text-primary text-sm">
                 {existingAffiliation.assuranceNumber}
               </p>
             </div>

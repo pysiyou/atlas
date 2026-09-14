@@ -37,9 +37,11 @@ export function useApproveRecollectionRequest() {
   return useMutation({
     mutationFn: ({ requestId, reviewNotes }: { requestId: number; reviewNotes?: string }) =>
       recollectionRequestsAPI.approve(requestId, reviewNotes),
-    onSuccess: () => {
-      invalidateRecollectionQueries(queryClient);
-      invalidateOrderQueries(queryClient, { samples: true });
+    onSuccess: async () => {
+      await Promise.all([
+        invalidateRecollectionQueries(queryClient),
+        invalidateOrderQueries(queryClient, { samples: true }),
+      ]);
     },
   });
 }
@@ -49,9 +51,11 @@ export function useDenyRecollectionRequest() {
   return useMutation({
     mutationFn: ({ requestId, reviewNotes }: { requestId: number; reviewNotes?: string }) =>
       recollectionRequestsAPI.deny(requestId, reviewNotes),
-    onSuccess: () => {
-      invalidateRecollectionQueries(queryClient);
-      invalidateOrderQueries(queryClient, { samples: true });
+    onSuccess: async () => {
+      await Promise.all([
+        invalidateRecollectionQueries(queryClient),
+        invalidateOrderQueries(queryClient, { samples: true }),
+      ]);
     },
   });
 }

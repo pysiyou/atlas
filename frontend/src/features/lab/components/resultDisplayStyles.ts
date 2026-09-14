@@ -13,7 +13,7 @@ export const RESULT_PANEL = {
   label: 'text-xxs font-medium text-text-tertiary truncate',
   value: 'text-lg font-medium tabular-nums leading-tight',
   unit: 'text-xs font-normal text-text-tertiary ml-1',
-  ref: 'text-xxs text-text-disabled truncate',
+  reference: 'text-[9px] leading-none font-normal text-text-tertiary truncate shrink-0 max-w-[50%]',
   notesSection: 'mt-4 pt-4 border-t border-border-subtle space-y-3',
   notesLabel: 'text-xs font-normal text-text-tertiary',
 } as const;

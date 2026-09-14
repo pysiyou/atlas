@@ -8,21 +8,22 @@ import React from 'react';
 import { useResponsiveCard } from '../../components/ResponsiveCard';
 import { EntryCardMobile } from './Mobile';
 import { EntryCardDesktop } from './Desktop';
-import { useEntryCardData, type EntryCardProps } from './hooks';
+import { useEntryCardData, type EntryCardProps, type EntryCardSharedData } from './hooks';
 
 export const EntryCard: React.FC<EntryCardProps> = (props) => {
   const sharedData = useEntryCardData(props);
-  
-  // Early return if missing required data
-  if (!sharedData) return null;
-  
-  return useResponsiveCard({
+
+  const card = useResponsiveCard({
     item: props,
-    deriveSharedData: () => sharedData,
+    deriveSharedData: () => sharedData as EntryCardSharedData,
     renderMobile: EntryCardMobile,
     renderDesktop: EntryCardDesktop,
     isMobile: props.isMobile,
   });
+
+  if (!sharedData) return null;
+
+  return card;
 };
 
 export type { EntryCardProps };

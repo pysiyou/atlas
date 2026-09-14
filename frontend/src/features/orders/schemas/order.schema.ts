@@ -4,6 +4,7 @@ import {
   nullableApiDatetimeSchema,
   positiveIntSchema,
 } from '@/types/schemas/common.schema';
+import { PAYMENT_STATUS_VALUES } from '@/types/enums';
 import type { TestStatus } from '@/types';
 
 const apiTestStatusSchema = z.enum([
@@ -56,7 +57,7 @@ export const orderSchema = z.object({
   orderDate: dateStringSchema,
   tests: z.array(orderTestSchema).min(1, 'At least one test is required'),
   totalPrice: z.number().min(0),
-  paymentStatus: z.enum(['unpaid', 'paid', 'refunded']),
+  paymentStatus: z.enum(PAYMENT_STATUS_VALUES),
   overallStatus: z.enum(['ordered', 'in-progress', 'completed', 'cancelled']), // Backend returns overallStatus, not orderStatus
   priority: z.enum(['low', 'medium', 'high', 'urgent']),
   referringPhysician: z.string().nullable().optional(), // Backend allows null

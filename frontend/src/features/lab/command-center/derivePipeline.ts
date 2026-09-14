@@ -26,7 +26,7 @@ const STAGE_LABELS: Record<AttentionItem['stage'], string> = {
   validation: 'Review',
 };
 
-export interface CollectionDisplayInput extends SampleDisplay {}
+export type CollectionDisplayInput = SampleDisplay;
 
 export interface TestQueueInput {
   id?: number;

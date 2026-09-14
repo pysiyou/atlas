@@ -22,12 +22,12 @@ import {
   CalloutCard,
   FooterInfo,
   PaymentMethodSelector,
+  ErrorBoundary,
 } from '@/components';
-import { ErrorBoundary } from '@/components';
 import { cn, formatDateTime, formatCurrency, displayId } from '@/utils';
 import { getActiveTests, getActiveTotal } from '@/features/orders/utils';
 import { inputBase } from '@/components/inputs/inputStyles';
-import { useCreatePayment } from '../api/payments.api';
+import { useCreatePayment, useOrderRemainingBalance } from '../api/payments.api';
 import {
   getEnabledPaymentMethods,
   getDefaultPaymentMethod,
@@ -158,13 +158,37 @@ const PaymentReceipt: React.FC<{
   );
 };
 
-/**
- * PaymentDetailModal - Full payment details with inline payment processing
- *
- * Shows complete order information with test list in receipt format and allows payment
- * method selection directly in the modal. Larger version of the payment popover.
- */
-// Large component is necessary for comprehensive payment detail modal with order info, test list, payment method selection, and processing
+const PaymentDetailFooter: React.FC<{
+  isPaid: boolean; submitting: boolean; paymentsLoading: boolean; remainingAmount: number;
+  onClose: () => void; onPay: () => void;
+}> = ({ isPaid, submitting, paymentsLoading, remainingAmount, onClose, onPay }) => (
+  <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border-default bg-surface shrink-0">
+    <FooterInfo icon={MODULE_ICONS.payments} label="Payments" size="md" />
+    <div className="flex items-center gap-3">
+      <Button
+        variant={isPaid ? 'close' : 'cancel'}
+        size="md"
+        showIcon={true}
+        onClick={onClose}
+        disabled={submitting}
+      >
+        {isPaid ? 'Close' : 'Cancel'}
+      </Button>
+      {!isPaid && (
+        <Button
+          variant="primary"
+          size="md"
+          onClick={onPay}
+          disabled={submitting || paymentsLoading || remainingAmount <= 0}
+          isLoading={submitting}
+          icon={<Icon name={ICONS.dataFields.wallet} />}
+        >
+          {`Pay ${formatCurrency(remainingAmount)}`}
+        </Button>
+      )}
+    </div>
+  </div>
+);
 
 export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
   isOpen,
@@ -174,13 +198,15 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
 }) => {
   // Use mutation hook for payment creation
   const { mutate: createPaymentMutation, isPending: submitting } = useCreatePayment();
-
-  // Form state - use default payment method from centralized config
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(getDefaultPaymentMethod());
   const [notes, setNotes] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
   const sourceOrder = view?.order;
+  const { remainingAmount, paymentsLoading } = useOrderRemainingBalance(
+    sourceOrder ? String(sourceOrder.orderId) : undefined,
+    sourceOrder?.totalPrice ?? 0
+  );
 
   // Reset form state when modal opens or order changes
   React.useEffect(() => {
@@ -192,26 +218,22 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
   }, [isOpen, sourceOrder?.orderId]);
 
   // Check if order is already paid
-  const isPaid = sourceOrder?.paymentStatus === 'paid';
+  const isPaid =
+    sourceOrder?.paymentStatus === 'paid' || (!paymentsLoading && remainingAmount <= 0);
 
-  /**
-   * Handles payment submission
-   */
   const handlePayment = useCallback(() => {
-    if (!sourceOrder || isPaid) return;
+    if (!sourceOrder || isPaid || paymentsLoading) return;
 
     setError(null);
 
-    // Validate amount
-    if (sourceOrder.totalPrice <= 0) {
+    if (remainingAmount <= 0) {
       setError(feedbackTitle('payment.orderAmount.invalid'));
       return;
     }
 
-    // Build payment request - schema validates and transforms orderId
     const paymentData = {
       orderId: sourceOrder.orderId,
-      amount: sourceOrder.totalPrice,
+      amount: remainingAmount,
       paymentMethod,
       notes: notes.trim() || undefined,
     };
@@ -226,7 +248,17 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
         setError(getPaymentErrorMessage(err, getFeedback('payment.process.error').title));
       },
     });
-  }, [sourceOrder, isPaid, paymentMethod, notes, createPaymentMutation, onPaymentSuccess, onClose]);
+  }, [
+    sourceOrder,
+    isPaid,
+    paymentsLoading,
+    remainingAmount,
+    paymentMethod,
+    notes,
+    createPaymentMutation,
+    onPaymentSuccess,
+    onClose,
+  ]);
 
   // Don't render if no order
   if (!view || !sourceOrder) return null;
@@ -305,34 +337,14 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
             )}
           </div>
 
-          {/* Footer */}
-          <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border-default bg-surface shrink-0">
-            <FooterInfo icon={MODULE_ICONS.payments} label="Payments" size="md" />
-            <div className="flex items-center gap-3">
-              <Button
-                variant={isPaid ? 'close' : 'cancel'}
-                size="md"
-                showIcon={true}
-                onClick={onClose}
-                disabled={submitting}
-              >
-                {isPaid ? 'Close' : 'Cancel'}
-              </Button>
-
-              {!isPaid && (
-                <Button
-                  variant="primary"
-                  size="md"
-                  onClick={handlePayment}
-                  disabled={submitting}
-                  isLoading={submitting}
-                  icon={<Icon name={ICONS.dataFields.wallet} />}
-                >
-                  {`Pay ${formatCurrency(sourceOrder.totalPrice)}`}
-                </Button>
-              )}
-            </div>
-          </div>
+          <PaymentDetailFooter
+            isPaid={isPaid}
+            submitting={submitting}
+            paymentsLoading={paymentsLoading}
+            remainingAmount={remainingAmount}
+            onClose={onClose}
+            onPay={handlePayment}
+          />
         </div>
       </Modal>
     </ErrorBoundary>

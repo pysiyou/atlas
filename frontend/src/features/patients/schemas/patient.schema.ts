@@ -10,6 +10,17 @@ import { affiliationSchema, affiliationFormSchema } from './affiliation.schema';
 import { emergencyContactSchema } from './emergency-contact.schema';
 import { vitalSignsSchema, vitalSignsFormSchema } from './vital-signs.schema';
 
+/** Backend PatientResponse allows legacy phones shorter than the write minimum. */
+const patientReadPhoneSchema = z
+  .string()
+  .min(1, 'Phone number is required')
+  .max(20, 'Phone number must be at most 20 characters')
+  .regex(/^[\d\s\-+()]+$/, 'Invalid phone number format');
+
+const emergencyContactReadSchema = emergencyContactSchema.extend({
+  phone: patientReadPhoneSchema,
+});
+
 export const medicalHistorySchema = z.object({
   chronicConditions: z.array(z.string()).optional(),
   currentMedications: z.array(z.string()).optional(),
@@ -29,13 +40,13 @@ export const patientSchema = z.object({
   fullName: nameSchema,
   dateOfBirth: dateStringSchema,
   gender: z.enum(['male', 'female']),
-  phone: phoneSchema,
+  phone: patientReadPhoneSchema,
   email: emailSchema.nullable(), // Backend can return null
   height: z.number().min(30).max(250).nullable().optional(), // Backend can return null
   weight: z.number().min(1).max(500).nullable().optional(), // Backend can return null
   address: addressSchema,
   affiliation: affiliationSchema.nullable().optional(), // Backend can return null
-  emergencyContact: emergencyContactSchema,
+  emergencyContact: emergencyContactReadSchema,
   medicalHistory: medicalHistorySchema.nullable().optional(), // Backend can return null
   vitalSigns: vitalSignsSchema.nullable().optional(), // Backend can return null
   registrationDate: dateStringSchema,
@@ -59,6 +70,8 @@ export const patientCreateSchema = patientSchema
     updatedBy: true,
   })
   .extend({
+    phone: phoneSchema,
+    emergencyContact: emergencyContactSchema,
     affiliation: affiliationFormSchema.nullish(),
     vitalSigns: vitalSignsFormSchema.nullish(),
   });

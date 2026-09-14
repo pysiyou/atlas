@@ -322,9 +322,7 @@ export function useCollectSample() {
         actualContainerColor,
         collectionNotes,
       }),
-    onSuccess: () => {
-      invalidateCollectionQueries(queryClient);
-    },
+    onSuccess: () => invalidateCollectionQueries(queryClient),
   });
 }
 

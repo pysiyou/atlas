@@ -307,21 +307,21 @@ class OrderService:
         if tests_to_update is not None:
             existing_test_codes = {ot.testCode for ot in order.tests}
             new_test_codes = {t["testCode"] for t in tests_to_update}
-            tests_to_remove = existing_test_codes - new_test_codes
+            omitted_codes = existing_test_codes - new_test_codes
             tests_to_add = new_test_codes - existing_test_codes
+            # Only pending rows can be removed; in-progress / terminal omissions are ignored.
+            tests_to_remove = {
+                ot.testCode
+                for ot in order.tests
+                if ot.testCode in omitted_codes and ot.status == TestStatus.PENDING
+            }
 
             for ot in order.tests:
-                if ot.testCode in tests_to_remove:
-                    if ot.results is not None:
-                        raise HTTPException(
-                            status_code=status.HTTP_400_BAD_REQUEST,
-                            detail=f"Cannot remove test {ot.testCode} - it has results entered",
-                        )
-                    if ot.status != TestStatus.PENDING:
-                        raise HTTPException(
-                            status_code=status.HTTP_400_BAD_REQUEST,
-                            detail=f"Cannot remove test {ot.testCode} - it is in progress (status: {ot.status})",
-                        )
+                if ot.testCode in tests_to_remove and ot.results is not None:
+                    raise HTTPException(
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                        detail=f"Cannot remove test {ot.testCode} - it has results entered",
+                    )
 
             existing_tests_price = sum(
                 ot.priceAtOrder for ot in order.tests

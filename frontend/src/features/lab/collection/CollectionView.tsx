@@ -4,11 +4,10 @@
 
 import React, { useMemo } from 'react';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import { createWorkflowFilters } from '@/features/lab/hooks';
+import { useCreateWorkflowFilters } from '@/features/lab/hooks';
 import type { SampleDisplay } from '@/features/lab/types';
 import { useCollectSample } from '../api/samples.api';
 import { useCollectionWorklist } from '../api/worklists.api';
-import { useOrdersList } from '@/features/orders';
 import { useCollectionCollectHandler } from './useCollectionCollectHandler';
 import { CollectionCard } from './CollectionCard/index';
 import { LabWorkflowView } from '../components/LabWorkflowView';
@@ -21,7 +20,6 @@ import { useAuthStore } from '@/app/store';
 
 export const CollectionView: React.FC = () => {
   const { user: currentUser } = useAuthStore();
-  const { refetch: refreshOrders } = useOrdersList();
   const collectSampleMutation = useCollectSample();
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
@@ -41,7 +39,7 @@ export const CollectionView: React.FC = () => {
     setSampleTypeFilters,
     statusFilters,
     setStatusFilters,
-  } = createWorkflowFilters({
+  } = useCreateWorkflowFilters({
     items: collectionDisplays,
     workflowType: 'collection',
   });
@@ -50,7 +48,6 @@ export const CollectionView: React.FC = () => {
   const { handleCollect } = useCollectionCollectHandler({
     isAuthenticated: !!currentUser,
     collectSampleMutation,
-    refreshOrders,
   });
 
   const hasNoItems = collectionDisplays.length === 0;

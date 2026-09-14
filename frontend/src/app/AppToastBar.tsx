@@ -1,9 +1,6 @@
 /**
  * Toast adapter — typed `toast` API + react-hot-toast renderer.
  * One toast at a time (new replaces existing). UI lives in overlays/toast.
- *
- * Duration: Toaster uses Infinity. Success/info auto-dismiss via Toast countdown;
- * error/warning/loading persist until dismiss or replacement.
  */
 
 import React from 'react';
@@ -15,9 +12,11 @@ import {
   ToastSuccess,
   ToastWarning,
   DEFAULT_TOAST_TITLES,
+  TOAST_DEFAULT_DURATION_MS,
   type ToastAction,
   type ToastVariant,
 } from '@/components/overlays/toast';
+
 export interface ToastMessageObject {
   title?: string;
   subtitle?: string;
@@ -27,7 +26,8 @@ export interface ToastMessageObject {
 
 type ToastMessage = Parameters<typeof toastLib>[0] | ToastMessageObject;
 
-const PERSIST_OPTS = { duration: Infinity } as const;
+const AUTO_DISMISS = { duration: TOAST_DEFAULT_DURATION_MS } as const;
+const PERSIST = { duration: Infinity } as const;
 
 /** Dismiss all toasts so only one is active; new toast replaces existing. */
 function dismissThen<A extends unknown[], R extends string>(fn: (...args: A) => R): (...args: A) => R {
@@ -61,32 +61,32 @@ function asVariantMessage(msg: ToastMessage, variant: 'info' | 'warning'): Toast
 // eslint-disable-next-line react-refresh/only-export-components -- single file for toast API + adapter
 export const toast = Object.assign(
   dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib>[1]) =>
-    toastLib(msg as Parameters<typeof toastLib>[0], { ...PERSIST_OPTS, ...opts })
+    toastLib(msg as Parameters<typeof toastLib>[0], { ...AUTO_DISMISS, ...opts })
   ),
   {
     success: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib.success>[1]) =>
-      toastLib.success(msg as Parameters<typeof toastLib.success>[0], { ...PERSIST_OPTS, ...opts })
+      toastLib.success(msg as Parameters<typeof toastLib.success>[0], { ...AUTO_DISMISS, ...opts })
     ),
     error: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib.error>[1]) =>
-      toastLib.error(msg as Parameters<typeof toastLib.error>[0], { ...PERSIST_OPTS, ...opts })
+      toastLib.error(msg as Parameters<typeof toastLib.error>[0], { ...PERSIST, ...opts })
     ),
     warning: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib>[1]) =>
       toastLib(asVariantMessage(msg, 'warning') as Parameters<typeof toastLib>[0], {
-        ...PERSIST_OPTS,
+        ...PERSIST,
         ...opts,
       })
     ),
     info: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib>[1]) =>
       toastLib(asVariantMessage(msg, 'info') as Parameters<typeof toastLib>[0], {
-        ...PERSIST_OPTS,
+        ...AUTO_DISMISS,
         ...opts,
       })
     ),
     loading: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib.loading>[1]) =>
-      toastLib.loading(msg as Parameters<typeof toastLib.loading>[0], { ...PERSIST_OPTS, ...opts })
+      toastLib.loading(msg as Parameters<typeof toastLib.loading>[0], { ...PERSIST, ...opts })
     ),
     custom: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib.custom>[1]) =>
-      toastLib.custom(msg as Parameters<typeof toastLib.custom>[0], { ...PERSIST_OPTS, ...opts })
+      toastLib.custom(msg as Parameters<typeof toastLib.custom>[0], { ...AUTO_DISMISS, ...opts })
     ),
     dismiss: toastLib.dismiss,
     promise: toastLib.promise,
@@ -136,23 +136,26 @@ const VARIANT_COMPONENT = {
 /**
  * Maps a react-hot-toast record onto the matching Toast derivative.
  */
-export const AppToastBar: React.FC<AppToastBarProps> = ({ toast: hostToast }) => {
+export const AppToastBar: React.FC<AppToastBarProps> = React.memo(({ toast: hostToast }) => {
   const raw = resolveValue(hostToast.message, hostToast);
   const variant = getEffectiveVariant(hostToast, raw);
   const content = resolveContent(raw, variant);
   const VariantToast = VARIANT_COMPONENT[variant];
 
+  const onDismiss = React.useCallback(() => {
+    toastLib.dismiss(hostToast.id, hostToast.toasterId);
+  }, [hostToast.id, hostToast.toasterId]);
+
   return (
     <VariantToast
-      key={hostToast.id}
       title={content.title}
       subtitle={content.subtitle}
       actions={content.actions}
       customIcon={hostToast.icon}
       ariaProps={hostToast.ariaProps}
-      onDismiss={() => {
-        toastLib.dismiss(hostToast.id, hostToast.toasterId);
-      }}
+      onDismiss={onDismiss}
     />
   );
-};
+});
+
+AppToastBar.displayName = 'AppToastBar';

@@ -10,14 +10,12 @@
 
 import React, { type ReactNode } from 'react';
 import { Modal } from '@/components';
-import { Badge, SectionPanel, DetailFieldGroup, FooterInfo } from '@/components';
+import { DetailFieldGroup, FooterInfo } from '@/components';
+import { LabSectionPanel } from './LabSectionPanel';
 import { MODULE_ICONS } from '@/config/icons';
 import type { DetailFieldConfig } from '@/components';
-import {
-  LabModalHeader,
-  type LabModalContextInfo,
-  type LabModalSampleInfo,
-} from './LabModalHeader';
+import { LAB_MODAL_DETAIL } from '../utils/labStyles';
+import { LabModalHeader, type LabModalContextInfo, type LabAuditLine } from './labHeader';
 
 interface LabDetailModalProps {
   /** Modal open state */
@@ -34,10 +32,8 @@ interface LabDetailModalProps {
   headerBadges: ReactNode;
   /** Patient and order context */
   contextInfo: LabModalContextInfo;
-  /** Sample collection info (optional) */
-  sampleInfo?: LabModalSampleInfo;
-  /** Additional info line below sample info */
-  additionalContextInfo?: ReactNode;
+  /** Structured audit lines (collection, entry, recollection, etc.) */
+  headerAudit?: LabAuditLine[];
   /** Main content sections */
   children: ReactNode;
   /** Footer actions */
@@ -59,8 +55,7 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
   modalKey,
   headerBadges,
   contextInfo,
-  sampleInfo,
-  additionalContextInfo,
+  headerAudit,
   children,
   footer,
   footerInfo,
@@ -77,12 +72,11 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
       disableClose={disableClose}
     >
       <div className="flex flex-col h-full bg-surface-page">
-        <div className="flex-1 overflow-y-auto p-6 space-y-4">
+        <div className={`flex-1 overflow-y-auto p-6 ${LAB_MODAL_DETAIL.sectionStack}`}>
           <LabModalHeader
             badges={headerBadges}
             contextInfo={contextInfo}
-            sampleInfo={sampleInfo}
-            additionalContextInfo={additionalContextInfo}
+            auditLines={headerAudit}
           />
           {children}
         </div>
@@ -173,14 +167,14 @@ export const DetailGrid: React.FC<DetailGridProps> = ({ children, sections }) =>
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {visibleSections.map(section => (
-          <SectionPanel
+          <LabSectionPanel
             key={section.title}
             title={section.title}
             headerRight={section.headerRight}
             spacing="normal"
           >
-            <DetailFieldGroup fields={section.fields} />
-          </SectionPanel>
+            <DetailFieldGroup fields={section.fields} spacing="tight" />
+          </LabSectionPanel>
         ))}
       </div>
     );
@@ -234,27 +228,3 @@ export const ModalFooter: React.FC<ModalFooterProps> = ({
     </div>
   );
 };
-
-/**
- * StatusBadgeRow - Row of status badges commonly used in headers
- */
-interface StatusBadgeRowProps {
-  sampleType?: string;
-  priority?: string;
-  status?: string;
-  extraBadges?: ReactNode;
-}
-
-export const StatusBadgeRow: React.FC<StatusBadgeRowProps> = ({
-  sampleType,
-  priority,
-  status,
-  extraBadges,
-}) => (
-  <>
-    {sampleType && <Badge variant={sampleType} size="sm" />}
-    {priority && <Badge variant={priority} size="sm" />}
-    {status && <Badge variant={status} size="sm" />}
-    {extraBadges}
-  </>
-);

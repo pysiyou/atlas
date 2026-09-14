@@ -9,7 +9,8 @@ export { LabWorkflowView, createLabItemFilter } from './LabWorkflowView';
 export { LabQueueSection } from './LabQueueSection';
 export { LabFilters } from './LabFilters';
 export type { LabFiltersProps } from './LabFilters';
-export { LabDetailModal, DetailGrid, ModalFooter, StatusBadgeRow } from './LabDetailModal';
+export { LabSectionPanel } from './LabSectionPanel';
+export { LabDetailModal, DetailGrid, ModalFooter } from './LabDetailModal';
 export type { DetailGridSectionConfig } from './LabDetailModal';
 export {
   CollectionInfoLine,
@@ -19,5 +20,12 @@ export {
   FlagCountBadge,
   ReviewRequiredBadge,
 } from './StatusBadges';
+export { RecollectionOfBadge } from './RecollectionOfBadge';
+export { RetestOfBadge } from './RetestOfBadge';
+export {
+  LabRejectionTailBadges,
+  LabRejectionTailBadgesFromTest,
+  LabRejectionTailBadgesFromSample,
+} from './LabRejectionTailBadges';
 export { handlePrintCollectionLabel, getEffectiveContainerType } from '../utils/labHelpers';
 export { formatRejectionReasons } from '../utils/labFormatters';

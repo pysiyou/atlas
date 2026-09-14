@@ -7,7 +7,7 @@ from typing import Optional
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session, joinedload, selectinload
 
-from app.models.billing import Payment
+from app.models.billing import Invoice, Payment
 from app.models.order import Order
 from app.schemas.enums import PaymentMethod, PaymentStatus
 from app.schemas.payment import PaymentCreate
@@ -122,6 +122,16 @@ class PaymentService:
             order.paymentStatus = PaymentStatus.PAID
         else:
             order.paymentStatus = PaymentStatus.UNPAID
+
+        invoices = self.db.query(Invoice).filter(Invoice.orderId == order.orderId).all()
+        for invoice in invoices:
+            invoice.amountPaid = new_total_paid
+            invoice.amountDue = max(0.0, (invoice.total or 0.0) - new_total_paid)
+            invoice.paymentStatus = (
+                PaymentStatus.PAID if invoice.amountDue <= 0 else PaymentStatus.UNPAID
+            )
+            if payment.invoiceId is None:
+                payment.invoiceId = invoice.invoiceId
 
         AuditService(self.db).log_order_payment_recorded(
             order_id=order.orderId,

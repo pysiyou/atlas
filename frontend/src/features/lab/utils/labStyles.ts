@@ -3,7 +3,39 @@
  * Uses shared typography tokens where they match; lab-specific tokens for section titles etc.
  */
 
-import { TEXT_METADATA, BODY_SECONDARY } from '@/utils/constants';
+import { TEXT_METADATA, BODY_SECONDARY, ENTITY_ID } from '@/utils/constants';
+import type { BadgeSize } from '@/components/primitives/badgeHelpers';
+
+/** Compact lab workflow badges (cards, modals, queue age) */
+export const LAB_CARD_BADGE_SIZE: BadgeSize = 'xs';
+
+/** Entity ID typography — matches card context row and modal header */
+export const LAB_ENTITY_ID = ENTITY_ID;
+
+/** Detail grid value cell for PAT/ORD/SAM/TST codes (no nested span) */
+export const LAB_DETAIL_ID_VALUE = `${LAB_ENTITY_ID} font-normal text-right block`;
+
+/** Inline IDs in timeline detail chips and dividers */
+export const LAB_ENTITY_ID_INLINE = `${LAB_ENTITY_ID} font-normal`;
+
+/** Shared lab header rows (modals; cards can reuse audit/badge row tokens) */
+export const LAB_HEADER = {
+  /** Space between identity / badges / audit blocks */
+  stack: 'flex flex-col gap-2 min-w-0',
+  cardStack: 'flex flex-col gap-0.5 min-w-0',
+  row: 'min-h-0 min-w-0 w-full leading-snug',
+  badgeRow: 'flex min-w-0 flex-1 flex-wrap items-center gap-2 overflow-hidden',
+  /** Space between multiple audit lines within the audit block */
+  auditStack: 'flex flex-col gap-0.5 min-w-0',
+  auditLine: TEXT_METADATA,
+} as const;
+
+/** Lab detail modal layout — header metadata + grid field stacks */
+export const LAB_MODAL_DETAIL = {
+  headerStack: LAB_HEADER.stack,
+  headerRow: LAB_HEADER.row,
+  sectionStack: 'space-y-3',
+} as const;
 
 // Typography Constants (shared tokens for body/metadata; lab-specific for title/section)
 export const LAB_CARD_TYPOGRAPHY = {
@@ -31,6 +63,14 @@ export const LAB_CARD_TYPOGRAPHY = {
   // Flags Text (in red context)
   flagText: 'text-xs text-danger-fg',
   flagTitle: 'text-xxs font-medium text-danger-fg uppercase tracking-wide',
+} as const;
+
+/** Section container titles — matches InfoBanner / “Required for” on lab cards */
+export const LAB_SECTION_PANEL = {
+  wrapper: 'bg-surface-page',
+  header: 'px-2 py-2',
+  title: LAB_CARD_TYPOGRAPHY.sectionTitle,
+  content: 'p-2',
 } as const;
 
 // Spacing Constants
@@ -101,24 +141,30 @@ export const LAB_CARD_LIST_ITEMS = {
 
 // Context Row Constants (Patient/Order info)
 export const LAB_CARD_CONTEXT = {
-  // Container for context row
-  container: 'flex items-center gap-2 text-xs text-text-tertiary flex-wrap',
-
-  // Patient name styling
+  container: 'flex items-center gap-2 text-xs text-text-tertiary flex-wrap min-w-0 w-full',
   patientName: 'font-normal text-text-primary capitalize',
-
-  // Separator between items
-  separator: 'text-text-disabled',
+  separator: 'text-text-disabled select-none',
+  inlineDot: '•',
 } as const;
 
-// Header Row Constants (Badges & Actions)
 export const LAB_CARD_HEADER = {
-  // Container for badges and actions
-  container: 'flex items-center justify-between gap-3 flex-wrap py-0',
+  /** Identity + actions on row 1; badges on row 2 */
+  shell: 'flex items-start justify-between gap-2 w-full min-w-0',
+  actionColumn: 'flex shrink-0 flex-wrap items-start justify-end gap-2 self-start',
+} as const;
 
-  // Left side (badges)
-  badgeGroup: 'flex items-center gap-3 flex-wrap',
-
-  // Right side (actions)
-  actionGroup: 'flex items-center gap-2 flex-wrap',
+/** Narrow / list-padding workflow cards (breakpoint mobile layouts) */
+export const LAB_MOBILE_CARD = {
+  stack: 'flex flex-col min-h-0 min-w-0 w-full flex-1 gap-1.5',
+  titleRow: 'flex items-start justify-between gap-2 min-w-0',
+  titleBlock: 'min-w-0 flex-1 space-y-0.5',
+  title: 'text-sm font-normal text-text-primary truncate leading-snug normal-case',
+  subline: 'flex items-center gap-1.5 min-w-0 text-xs text-text-secondary leading-snug',
+  sublineName: 'truncate capitalize font-normal text-text-secondary',
+  metaLine: 'text-xs text-text-tertiary leading-snug',
+  body: 'text-xs text-text-secondary leading-snug',
+  footer: 'flex items-center justify-between gap-2 pt-2 mt-auto border-t border-border-subtle',
+  badgeRail: 'flex min-w-0 flex-1 flex-wrap items-center gap-1.5',
+  actionRail: 'flex shrink-0 items-center justify-end gap-1.5',
+  titleAside: 'shrink-0 pt-0.5',
 } as const;

@@ -30,7 +30,7 @@ export const LabTechBoard: React.FC = () => {
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
     try {
-      await Promise.all([invalidateCommandCenterQueries(queryClient)]);
+      await invalidateCommandCenterQueries(queryClient);
       setLastRefreshedAt(new Date());
     } finally {
       setIsRefreshing(false);

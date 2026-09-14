@@ -1,12 +1,12 @@
 /**
- * createWorkflowFilters - Factory for workflow-specific filter configurations
+ * useCreateWorkflowFilters - Factory hook for workflow-specific filter configurations
  *
  * Eliminates boilerplate of wiring getOrderDate, getSampleType, getStatus,
  * searchFilterFn callbacks across CollectionView, EntryView, ValidationView.
  */
 
 import { useMemo } from 'react';
-import { useLabWorkflowFilters } from './useLabWorkflowFilters';
+import { useLabWorkflowFilters, type UseLabWorkflowFiltersOptions } from './useLabWorkflowFilters';
 import { useLabUrlSearch } from './useLabUrlSearch';
 import { createLabItemFilter } from '../components/LabWorkflowView';
 import { displayId } from '@/utils';
@@ -99,25 +99,32 @@ export interface CreateWorkflowFiltersOptions<T extends WorkflowType> {
   workflowType: T;
 }
 
-export function createWorkflowFilters<T extends WorkflowType>({
+export function useCreateWorkflowFilters<T extends WorkflowType>({
   items,
   workflowType,
 }: CreateWorkflowFiltersOptions<T>) {
   const urlSearch = useLabUrlSearch();
-  
+
   const filterConfig = useMemo(
     () => WORKFLOW_FILTER_CONFIGS[workflowType],
     [workflowType]
   );
-  
-  // Cast to any to avoid complex type inference issues
-  const options = useMemo(() => ({
-    items,
-    ...filterConfig.callbacks,
-    initialStatusFilters: filterConfig.defaultStatuses,
-    initialSearchQuery: urlSearch,
-    sortByQueuePriority: filterConfig.sortByPriority,
-  }), [items, filterConfig, urlSearch]) as any;
-  
-  return useLabWorkflowFilters(options);
+
+  const options = useMemo(
+    () => ({
+      items,
+      ...filterConfig.callbacks,
+      initialStatusFilters: filterConfig.defaultStatuses,
+      initialSearchQuery: urlSearch,
+      sortByQueuePriority: filterConfig.sortByPriority,
+    }),
+    [items, filterConfig, urlSearch]
+  );
+
+  return useLabWorkflowFilters(
+    options as UseLabWorkflowFiltersOptions<WorkflowItem<T>, SampleStatus | TestStatus>
+  );
 }
+
+/** @deprecated Use useCreateWorkflowFilters */
+export const createWorkflowFilters = useCreateWorkflowFilters;

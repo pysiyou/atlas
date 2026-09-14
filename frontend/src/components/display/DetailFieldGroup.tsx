@@ -30,6 +30,8 @@ export interface DetailFieldConfig {
   user?: string;
   /** Badge configuration for rendering value as a Badge */
   badge?: FieldBadgeConfig;
+  /** Override value cell typography (e.g. LAB_DETAIL_ID_VALUE for entity IDs) */
+  valueClassName?: string;
   /** Whether to hide this field (useful for conditional rendering) */
   hidden?: boolean;
 }
@@ -110,6 +112,7 @@ export const DetailFieldGroup: React.FC<DetailFieldGroupProps> = ({
           timestamp={field.timestamp}
           user={field.user}
           badge={field.badge}
+          valueClassName={field.valueClassName}
         />
       ))}
     </div>

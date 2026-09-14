@@ -18,14 +18,8 @@ export interface ToastProps {
   subtitle?: string;
   /** Optional action chips (e.g. Undo). */
   actions?: ToastAction[];
-  /** Called when the toast should close (timer, close button). */
+  /** Called when the user dismisses the toast. */
   onDismiss?: () => void;
-  /** When true, the toast stays until dismissed. */
-  persist?: boolean;
-  /** Auto-dismiss duration in ms when not persisted. */
-  durationMs?: number;
-  /** Show the countdown footer with pause-on-click. */
-  showCountdown?: boolean;
   /** Override the variant icon. */
   customIcon?: ReactNode;
   className?: string;

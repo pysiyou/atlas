@@ -3,9 +3,11 @@
  */
 
 import React from 'react';
-import { Badge, Card, Button, Icon } from '@/components';
-import { BlockedReasonBadge } from '../../components/StatusBadges';
-import { formatDateTime, displayId } from '@/utils';
+import { Button, Card, Icon } from '@/components';
+import { TestHeaderBadges } from '../../components/labWorkflowBadges';
+import { testHeaderAudit } from '../../components/labHeader';
+import { LabMobileCardHeader, labMobileCardSurfaceClassName } from '../../components/labMobileCardHeader';
+import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 import type { EscalationCardSharedData } from './hooks';
 
@@ -13,81 +15,55 @@ export const EscalationCardMobile: React.FC<EscalationCardSharedData> = ({
   test,
   onClick,
   handleCardClick,
-  isRetest,
-  hasRejectionHistory,
   blockedLabel,
-}) => (
-  <Card padding="list" hover className="flex flex-col h-full" onClick={handleCardClick}>
-    <div className="flex items-center justify-between gap-2 mb-2">
-      <div className="min-w-0 overflow-hidden">
-        <div className="text-sm font-normal text-text-primary truncate">
-          {test.testName ?? test.testCode}
-        </div>
-        <div className="flex items-center gap-2 flex-wrap">
-          <div className="text-xs text-text-secondary font-normal truncate capitalize">
-            {test.patientName}
-          </div>
-          {test.id != null && (
-            <>
-              <div className="text-xxs text-text-disabled">•</div>
-              <div className="entity-id entity-id--secondary truncate">
-                {displayId.orderTest(test.id)}
-              </div>
-            </>
-          )}
-          <div className="text-xxs text-text-disabled">•</div>
-          <div className="entity-id entity-id--secondary truncate">{test.testCode}</div>
-          {test.sampleId && (
-            <>
-              <div className="text-xs text-text-disabled">•</div>
-              <div
-                className="entity-id entity-id--secondary truncate"
-                title={displayId.sample(test.sampleId)}
-              >
-                {displayId.sample(test.sampleId)}
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
+  rejection,
+}) => {
+  const { showAttemptIndicator } = rejection;
 
-    <div className="space-y-1">
-      {test.collectedAt && (
-        <div className="text-xs text-text-tertiary">Collected: {formatDateTime(test.collectedAt)}</div>
+  return (
+    <Card
+      padding="list"
+      hover
+      className={cn(
+        labMobileCardSurfaceClassName(),
+        showAttemptIndicator && 'border-warning-stroke-emphasis'
       )}
-      {test.resultEnteredAt && (
-        <div className="text-xs text-text-tertiary">Entered: {formatDateTime(test.resultEnteredAt)}</div>
-      )}
-    </div>
-
-    <div className="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-border-subtle">
-      <div className="flex items-center gap-2">
-        <Badge variant="escalated" size="xs" />
-        {test.priority && (
-          <Badge variant={test.priority as 'low' | 'medium' | 'high' | 'urgent'} size="xs" />
-        )}
-        {test.sampleType && (
-          <Badge variant={test.sampleType as 'blood' | 'urine' | 'other'} size="xs" />
-        )}
-        {(isRetest || hasRejectionHistory) && (
-          <Badge variant="warning" size="xs">
-            RE-TEST
-          </Badge>
-        )}
-        {blockedLabel && <BlockedReasonBadge label={blockedLabel} size="xs" />}
-      </div>
-      <Button
-        variant="primary"
-        size="sm"
-        icon={<Icon name={ICONS.actions.eye} className="text-on-brand" />}
-        onClick={e => {
-          e.stopPropagation();
-          onClick();
+      onClick={handleCardClick}
+    >
+      <LabMobileCardHeader
+        context={{
+          patientName: test.patientName,
+          patientId: test.patientId,
+          orderId: test.orderId,
+          orderTestId: test.id,
+          sampleId: test.sampleId,
+          entityCode: test.testCode,
+          entityName: test.testName,
         }}
-      >
-        View
-      </Button>
-    </div>
-  </Card>
-);
+        auditLines={testHeaderAudit(test, { includeResultEntered: true })}
+        badges={
+          <TestHeaderBadges
+            test={test}
+            variant="escalation"
+            size="xs"
+            reasonCode={test.reasonCode}
+            blockedLabel={blockedLabel}
+          />
+        }
+        actions={
+          <Button
+            variant="primary"
+            size="sm"
+            icon={<Icon name={ICONS.actions.eye} className="text-on-brand" />}
+            onClick={e => {
+              e.stopPropagation();
+              onClick();
+            }}
+          >
+            View
+          </Button>
+        }
+      />
+    </Card>
+  );
+};

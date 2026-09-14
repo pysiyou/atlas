@@ -29,8 +29,10 @@ export function useReportQualityIssue() {
   return useMutation({
     mutationFn: (body: ReportQualityIssueRequest) => qualityIssuesAPI.reportIssue(body),
     onSuccess: async () => {
-      invalidateQualityIssueQueries(queryClient);
-      invalidateResultQueries(queryClient);
+      await Promise.all([
+        invalidateQualityIssueQueries(queryClient),
+        invalidateResultQueries(queryClient),
+      ]);
     },
   });
 }

@@ -3,20 +3,14 @@
  */
 
 import React from 'react';
-import { Badge, Icon, IconButton } from '@/components';
-import Barcode from 'react-barcode';
-import { CONTAINER_COLOR_OPTIONS, CONTAINER_CONFIG } from '@/types';
-import { displayId } from '@/utils';
+import { IconButton } from '@/components';
 import { LabCard, TestList } from '../../components/LabCard';
-import { AttemptIndicator } from '../../components/AttemptIndicator';
-import { BlockedReasonBadge } from '../../components/StatusBadges';
-import { QueueAgeBadge } from '../../components/QueueAgeBadge';
-import { LAB_CONFIG } from '../../constants';
+import { CollectionHeaderBadges } from '../../components/labWorkflowBadges';
+import { collectionHeaderAudit } from '../../components/labHeader';
 import { CollectionPopover } from '../CollectionPopover';
 import { CollectionRejectionPopover } from '../CollectionRejectionPopover';
 import { handlePrintCollectionLabel, getEffectiveContainerType } from '../../utils/labHelpers';
-import { getCollectionRequirements, formatVolume, getContainerIconColor } from '../../utils';
-import { ICONS, getContainerIcon } from '@/config/icons';
+import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import type { CollectionCardSharedData } from './hooks';
 import type { RejectedSample } from '@/types';
 
@@ -53,57 +47,21 @@ export const CollectionCardDesktop: React.FC<CollectionCardSharedData> = ({
     (isCollected || isRejected) && 'collectedBy' in sample ? sample.collectedBy : undefined;
 
   const badges = (
-    <>
-      {/* Attempt indicator for recollections */}
-      {isRecollection && (sample.recollectionAttempt ?? 1) > 1 && (
-        <AttemptIndicator
-          attemptNumber={sample.recollectionAttempt ?? 1}
-          maxAttempts={LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS}
-          type="recollection"
-          previousReason={sample.recollectionReason}
-        />
-      )}
-      <h3 className="text-sm font-medium text-text-primary capitalize">{patientName}</h3>
-      {(sample.priority === 'urgent' || sample.priority === 'high') && (
-        <Badge variant={sample.priority} size="sm" />
-      )}
-      <Badge variant={sample.sampleType} size="sm" />
-      {isPending && <QueueAgeBadge since={order.orderDate} />}
-      {paymentBlocked && <BlockedReasonBadge label="Payment required" size="sm" />}
-      <Badge size="sm" variant="default" className="text-text-tertiary">
-        {isPending
-          ? `${formatVolume(requirement.totalVolume)} required`
-          : `${formatVolume(collectedVolume!)} ${isRejected ? 'was collected' : 'collected'}`}
-      </Badge>
-      {(isCollected || isRejected) && containerColor && (
-        <span
-          className="flex items-center"
-          title={`Container: ${CONTAINER_CONFIG[effectiveContainerType]?.label || effectiveContainerType}, Color: ${colorName}`}
-        >
-          <Icon
-            name={getContainerIcon(effectiveContainerType)}
-            className={`w-6 h-6 ${getContainerIconColor(containerColor)}`}
-          />
-        </span>
-      )}
-      {getCollectionRequirements(sample.sampleType).isDerived && (
-        <Badge size="sm" variant="default" className="text-text-tertiary">
-          {getCollectionRequirements(sample.sampleType).label}
-        </Badge>
-      )}
-      {isCollected && sample.sampleId && (
-        <div className="flex items-center">
-          <Barcode
-            value={displayId.sample(sample.sampleId)}
-            height={15}
-            displayValue={false}
-            background="transparent"
-            lineColor="var(--text)"
-            margin={0}
-          />
-        </div>
-      )}
-    </>
+    <CollectionHeaderBadges
+      sample={sample}
+      isPending={isPending}
+      isCollected={isCollected}
+      isRejected={isRejected}
+      rejectedSample={rejectedSample}
+      orderDate={order.orderDate}
+      paymentBlocked={paymentBlocked}
+      requiredVolume={requirement.totalVolume}
+      collectedVolume={collectedVolume}
+      containerColor={containerColor}
+      effectiveContainerType={effectiveContainerType}
+      colorName={colorName}
+      showBarcode={isCollected && !!sample.sampleId}
+    />
   );
 
   const actions = (
@@ -118,71 +76,46 @@ export const CollectionCardDesktop: React.FC<CollectionCardSharedData> = ({
             onCollect(display, volume, notes, color, containerType)
           }
         />
-      ) : isRejected ? (
-        <Badge size="sm" variant="rejected" />
-      ) : (
+      ) : isCollected && sample.sampleId ? (
         <>
-          <Badge size="sm" variant="collected" />
-          {sample.sampleId && (
-            <>
-              <CollectionRejectionPopover
-                sampleId={sample.sampleId.toString()}
-                testCodes={sample.testCodes ?? []}
-                sampleType={sample.sampleType}
-                patientName={patientName}
-                isRecollection={isRecollection}
-              />
-              <IconButton
-                onClick={() => handlePrintCollectionLabel(display, patientName)}
-                variant="print"
-                size="sm"
-                title="Print Sample Label"
-              />
-            </>
-          )}
+          <CollectionRejectionPopover
+            sampleId={sample.sampleId.toString()}
+            testCodes={sample.testCodes ?? []}
+            sampleType={sample.sampleType}
+            patientName={patientName}
+            isRecollection={isRecollection}
+          />
+          <IconButton
+            onClick={() => handlePrintCollectionLabel(display, patientName)}
+            variant="print"
+            size="sm"
+            title="Print Sample Label"
+          />
         </>
-      )}
+      ) : null}
     </div>
   );
-
-  const additionalInfo =
-    (isRecollection && sample.originalSampleId) || rejectedSample?.recollectionSampleId ? (
-      <div className="flex items-center gap-2 flex-wrap">
-        {isRecollection && sample.originalSampleId && (
-          <Badge size="sm" variant="warning" className="flex items-center gap-1">
-            <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Recollection of{' '}
-            <span className="entity-id">
-              {displayId.sample(sample.originalSampleId)}
-            </span>
-          </Badge>
-        )}
-        {rejectedSample?.recollectionSampleId && (
-          <Badge size="sm" variant="info" className="flex items-center gap-1">
-            <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-            Recollection requested:{' '}
-            <span className="entity-id">
-              {displayId.sample(rejectedSample.recollectionSampleId)}
-            </span>
-          </Badge>
-        )}
-      </div>
-    ) : undefined;
 
   return (
     <LabCard
       onClick={handleCardClick}
       className={isRejected ? 'border-warning-stroke-emphasis' : ''}
       context={{
+        patientName,
+        patientId: display.order.patientId,
         orderId: order.orderId,
+        sampleId: sample.sampleId,
+        entityCode: sample.sampleType.toUpperCase(),
         referringPhysician: order.referringPhysician,
       }}
-      sampleInfo={
-        (isCollected || isRejected) && sample.sampleId
-          ? { sampleId: sample.sampleId, collectedAt, collectedBy }
-          : undefined
-      }
-      additionalInfo={additionalInfo}
+      auditLines={collectionHeaderAudit({
+        sampleId: sample.sampleId,
+        collectedAt,
+        collectedBy,
+        isRecollection,
+        originalSampleId: sample.originalSampleId,
+        originalSampleCollectedAt: sample.originalSampleCollectedAt,
+      })}
       badges={badges}
       actions={actions}
       content={

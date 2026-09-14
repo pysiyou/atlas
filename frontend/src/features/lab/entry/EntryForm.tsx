@@ -80,8 +80,9 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                 </label>
                 <span
                   className={cn(
-                    RESULT_PANEL.ref,
-                    isCritical && 'text-danger-fg font-medium',
+                    RESULT_PANEL.reference,
+                    refRange === 'N/A' && 'text-text-disabled/70',
+                    isCritical && refRange !== 'N/A' && 'text-danger-fg font-medium',
                   )}
                   title={`Reference: ${refRange}`}
                 >
