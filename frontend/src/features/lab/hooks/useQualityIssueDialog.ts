@@ -7,7 +7,7 @@ import { useQualityIssueOptions } from '../api/quality-issues.api';
 import { resultAPI } from '../api/results.api';
 import {
   QUALITY_ISSUE_DIALOG_COPY,
-  getValidationAlertCopy,
+  getValidationFormCopy,
 } from '../components/qualityIssueDialogConstants';
 import { displayId } from '@/utils';
 import { errorAlertMessage, inlineFeedbackMessage } from '@/utils/feedback';
@@ -85,8 +85,8 @@ export function useQualityIssueDialog({
     [hasCriteria, hasReason, hasDestination]
   );
 
-  const alertCopy = useMemo(
-    () => (options ? getValidationAlertCopy(options) : null),
+  const formCopy = useMemo(
+    () => (options ? getValidationFormCopy(options) : null),
     [options]
   );
 
@@ -123,7 +123,7 @@ export function useQualityIssueDialog({
   const subtitle = buildSubtitle(orderTestId, testName, testCode, patientName);
   const copy = {
     title: QUALITY_ISSUE_DIALOG_COPY.reject.title,
-    confirmLabel: alertCopy?.confirmLabel ?? QUALITY_ISSUE_DIALOG_COPY.reject.confirmLabel,
+    confirmLabel: formCopy?.confirmLabel ?? QUALITY_ISSUE_DIALOG_COPY.reject.confirmLabel,
   };
 
   return {
@@ -139,7 +139,7 @@ export function useQualityIssueDialog({
     isRejecting,
     error: submitError ?? (fetchError ? errorAlertMessage('lab.qualityIssue.options.loadFailed', fetchError) : null),
     options,
-    alertCopy,
+    formCopy,
     handleConfirm,
     handleRetry,
     subtitle,

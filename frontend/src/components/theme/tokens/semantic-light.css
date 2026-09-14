@@ -203,20 +203,23 @@
   --focus: var(--primitive-brand-600);
 
   /* ═══════════════════════════════════════════════════════════════════
-     TOAST (theme-responsive)
+     TOAST (studio-light)
      ═══════════════════════════════════════════════════════════════════ */
-  --toast-bg: #333333;
-  --toast-fg: #ffffff;
-  --toast-fg-muted: #cccccc;
-  --toast-close: #e0e0e0;
-  --toast-success: #6cd96d;
-  --toast-info: #2196f3;
-  --toast-warning: #ffc107;
-  --toast-danger: #f44336;
-  --toast-track: rgba(255, 255, 255, 0.12);
-  --toast-footer-bg: rgba(0, 0, 0, 0.22);
-  --toast-action-border: rgba(255, 255, 255, 0.35);
-  --toast-action-hover: rgba(255, 255, 255, 0.08);
+  --toast-bg: var(--primitive-neutral-0);
+  --toast-fg: var(--primitive-neutral-900);
+  --toast-fg-muted: var(--primitive-neutral-600);
+  --toast-close: var(--primitive-neutral-500);
+  --toast-success: var(--primitive-success-600);
+  --toast-info: var(--primitive-info-600);
+  --toast-warning: var(--primitive-warning-600);
+  --toast-danger: var(--primitive-danger-600);
+  --toast-border: rgba(0, 0, 0, 0.08);
+  --toast-accent-mix: 11%;
+  --toast-shadow: 0 10px 28px rgba(15, 23, 42, 0.12);
+  --toast-track: rgba(0, 0, 0, 0.08);
+  --toast-footer-bg: rgba(0, 0, 0, 0.04);
+  --toast-action-border: rgba(0, 0, 0, 0.14);
+  --toast-action-hover: rgba(0, 0, 0, 0.05);
 
   /* ═══════════════════════════════════════════════════════════════════
      AUTH (Isolated module)

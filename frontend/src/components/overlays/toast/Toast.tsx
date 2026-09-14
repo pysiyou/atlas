@@ -53,7 +53,7 @@ function ActionChip({ action }: { action: ToastAction }) {
   return (
     <button
       type="button"
-      className="mt-2 inline-flex items-center rounded-md border border-border-default px-2.5 py-0.5 text-sm text-text-primary hover:bg-surface-hover cursor-pointer"
+      className="mt-2 inline-flex items-center rounded-md border border-toast-action-border px-2.5 py-0.5 text-sm text-toast-fg hover:bg-toast-action-hover cursor-pointer"
       onClick={event => {
         event.stopPropagation();
         action.onClick();
@@ -71,7 +71,7 @@ export const Toast: React.FC<BaseToastProps> = React.memo(
     return (
       <div
         className={cn(
-          'flex w-[380px] max-w-[calc(100vw-2rem)] items-start gap-3 rounded-lg p-4',
+          'flex w-[380px] max-w-[calc(100vw-2rem)] items-start gap-3 rounded-[10px] p-4',
           'pointer-events-auto font-sans',
           getToastSurfaceClasses(variant),
           className
@@ -81,9 +81,9 @@ export const Toast: React.FC<BaseToastProps> = React.memo(
       >
         <ToastIcon variant={variant} customIcon={customIcon} />
         <div className="min-w-0 flex-1">
-          <p className="m-0 text-sm font-semibold leading-snug text-text-primary">{title}</p>
+          <p className="m-0 text-sm font-semibold leading-snug text-toast-fg">{title}</p>
           {subtitle ? (
-            <p className="mt-1 mb-0 text-sm leading-snug text-text-secondary">{subtitle}</p>
+            <p className="mt-1 mb-0 text-sm leading-snug text-toast-fg-muted">{subtitle}</p>
           ) : null}
           {actions?.map(action => (
             <ActionChip key={action.label} action={action} />
@@ -93,7 +93,7 @@ export const Toast: React.FC<BaseToastProps> = React.memo(
           <button
             type="button"
             aria-label="Dismiss"
-            className="shrink-0 -mr-1 -mt-0.5 flex h-7 w-7 items-center justify-center rounded-md border-0 bg-transparent p-0 text-text-tertiary hover:text-text-secondary cursor-pointer"
+            className="shrink-0 self-start -mr-1 -mt-0.5 flex h-7 w-7 items-center justify-center rounded-md border-0 bg-transparent p-0 text-toast-close hover:text-toast-fg-muted cursor-pointer"
             onClick={event => {
               event.stopPropagation();
               onDismiss();

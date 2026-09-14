@@ -78,29 +78,38 @@ export const QUALITY_ISSUE_DIALOG_COPY = {
   },
 };
 
-export interface ValidationAlertCopy {
-  variant: 'warning' | 'danger';
-  warningTitle: string;
-  warningBody: string;
+export interface ValidationFormCopy {
+  /** Shown only for true warnings (e.g. re-test limit); not for routine “choose next step” guidance */
+  alert: { variant: 'warning'; title: string; description: string } | null;
   confirmLabel: string;
   reasonLabel: string;
   notesLabel: string;
+  escalationRequired: boolean;
 }
 
 /** Dialog copy for validation rejection — destination is always operator-chosen. */
-export function getValidationAlertCopy(options: QualityIssueOptions): ValidationAlertCopy {
+export function getValidationFormCopy(options: QualityIssueOptions): ValidationFormCopy {
   if (options.willEscalate) {
+    const escalation = QUALITY_ISSUE_DIALOG_COPY.escalation;
     return {
-      variant: 'danger',
-      ...QUALITY_ISSUE_DIALOG_COPY.escalation,
+      alert: {
+        variant: 'warning',
+        title: escalation.warningTitle,
+        description: escalation.warningBody,
+      },
+      confirmLabel: escalation.confirmLabel,
+      reasonLabel: escalation.reasonLabel,
+      notesLabel: escalation.notesLabel,
+      escalationRequired: true,
     };
   }
+
+  const reject = QUALITY_ISSUE_DIALOG_COPY.reject;
   return {
-    variant: 'warning',
-    warningTitle: QUALITY_ISSUE_DIALOG_COPY.reject.warningTitle,
-    warningBody: options.previewMessage || QUALITY_ISSUE_DIALOG_COPY.reject.warningBody,
-    confirmLabel: QUALITY_ISSUE_DIALOG_COPY.reject.confirmLabel,
-    reasonLabel: QUALITY_ISSUE_DIALOG_COPY.reject.reasonLabel,
-    notesLabel: QUALITY_ISSUE_DIALOG_COPY.reject.notesLabel,
+    alert: null,
+    confirmLabel: reject.confirmLabel,
+    reasonLabel: reject.reasonLabel,
+    notesLabel: reject.notesLabel,
+    escalationRequired: false,
   };
 }
