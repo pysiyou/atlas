@@ -90,7 +90,7 @@ export function useValidationWorkflow(ordersLoading: boolean): ValidationWorkflo
       }
 
       if (rejectionResult) {
-        invalidateResultQueries(queryClient, {
+        await invalidateResultQueries(queryClient, {
           orderId: orderIdStr,
           samples: true,
           pendingEscalation: true,

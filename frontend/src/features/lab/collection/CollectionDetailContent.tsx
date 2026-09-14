@@ -4,8 +4,11 @@
  */
 
 import React from 'react';
-import { Icon, SectionPanel } from '@/components';
+import Barcode from 'react-barcode';
+import { Icon } from '@/components';
+import { LabSectionPanel } from '../components/LabSectionPanel';
 import type { Sample, RejectedSample, Test } from '@/types';
+import { displayId } from '@/utils';
 import { CollectionRequirementsSection } from './CollectionRequirementsSection';
 import { DetailGrid, type DetailGridSectionConfig } from '../components/LabDetailModal';
 import { formatDateTime } from '@/utils';
@@ -25,9 +28,11 @@ interface CollectionDetailContentProps {
   getUserName: (userId: string) => string;
   collectionNotes?: string;
   gridSections: DetailGridSectionConfig[];
+  showBarcode?: boolean;
 }
 
 export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = ({
+  sample,
   isPending,
   isRejected,
   isCollected,
@@ -39,10 +44,23 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
   getUserName,
   collectionNotes,
   gridSections,
+  showBarcode = false,
 }) => {
   return (
     <>
-      <SectionPanel title={isCollected ? 'Linked Tests' : 'Required for'}>
+      {showBarcode && sample.sampleId != null && (
+        <div className="flex items-center justify-center bg-surface-page rounded p-4 border border-border-default">
+          <Barcode
+            value={displayId.sample(sample.sampleId)}
+            height={40}
+            displayValue={false}
+            background="transparent"
+            lineColor="var(--text)"
+            margin={0}
+          />
+        </div>
+      )}
+      <LabSectionPanel title={isCollected ? 'Linked Tests' : 'Required for'}>
         <ul className="space-y-1">
           {testNames.map((testName, i) => {
             const testCode = testCodes[i];
@@ -62,10 +80,10 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
             );
           })}
         </ul>
-      </SectionPanel>
+      </LabSectionPanel>
 
       {isRejected && rejectedSample && (
-        <SectionPanel title="Rejection Details">
+        <LabSectionPanel title="Rejection Details">
           <div className="space-y-2 text-sm text-text-secondary">
             {rejectedSample.rejectionReasons && rejectedSample.rejectionReasons.length > 0 && (
               <p>
@@ -89,7 +107,7 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
               <p className="text-warning-fg">Recollection required</p>
             )}
           </div>
-        </SectionPanel>
+        </LabSectionPanel>
       )}
 
       {isPending && testDetails.length > 0 && (
@@ -97,9 +115,9 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
       )}
 
       {collectionNotes && (
-        <SectionPanel title="Collection Notes">
+        <LabSectionPanel title="Collection Notes">
           <div className="text-sm text-text-primary">{collectionNotes}</div>
-        </SectionPanel>
+        </LabSectionPanel>
       )}
 
       <DetailGrid sections={gridSections} />

@@ -6,11 +6,14 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { SectionPanel, Badge } from '@/components';
+import { Badge } from '@/components';
+import { LabSectionPanel } from '../components/LabSectionPanel';
 import { displayId } from '@/utils';
 import { ValidationForm } from './ValidationForm';
-import { LabDetailModal, DetailGrid, StatusBadgeRow } from '../components/LabDetailModal';
-import { EntryInfoLine } from '../components/StatusBadges';
+import { LabDetailModal, DetailGrid } from '../components/LabDetailModal';
+import { testHeaderAudit } from '../components/labHeader';
+import { TestHeaderBadges } from '../components/labWorkflowBadges';
+import { useTestWorkItemState } from '../hooks';
 import { CriticalValueActions } from '@/features/lab/critical-values/CriticalValueActions';
 import { buildCriticalValueRecord } from '@/features/lab/critical-values/buildCriticalValueRecord.utils';
 import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
@@ -21,6 +24,7 @@ import { LabHistoryPanel } from '../components/LabHistoryPanel';
 import { Button } from '@/components';
 import { ModalFooter } from '../components/LabDetailModal';
 import { labModalSubtitle } from '../components/labModalStages';
+import { LAB_CARD_BADGE_SIZE, LAB_DETAIL_ID_VALUE } from '../utils/labStyles';
 
 interface EscalationResolutionModalProps {
   isOpen: boolean;
@@ -85,6 +89,22 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
 
   if (test.id == null) return null;
 
+  const workItem = useTestWorkItemState(test);
+
+  const headerBadges = (
+    <TestHeaderBadges
+      test={test}
+      variant="escalation"
+      reasonCode={test.reasonCode}
+      blockedLabel={workItem.blockedReason ? workItem.label : undefined}
+      trailing={
+        <Badge size={LAB_CARD_BADGE_SIZE} variant="danger">
+          Requires Supervisor Action
+        </Badge>
+      }
+    />
+  );
+
   return (
     <LabDetailModal
       isOpen={isOpen}
@@ -92,45 +112,18 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
       title={test.testName}
       subtitle={labModalSubtitle('escalation')}
       modalKey={readOnly ? `historical-${test.id}` : `escalation-${test.id}`}
-      headerBadges={
-        <StatusBadgeRow
-          sampleType={test.sampleType}
-          priority={test.priority}
-          status="escalated"
-          extraBadges={
-            <>
-              {test.reasonCode && (
-                <Badge size="sm" variant="warning">
-                  {test.reasonCode}
-                </Badge>
-              )}
-              <Badge size="sm" variant="danger">
-                Requires Supervisor Action
-              </Badge>
-            </>
-          }
-        />
-      }
+      headerBadges={headerBadges}
       contextInfo={{
         patientName: test.patientName,
         patientId: test.patientId,
         orderId: test.orderId,
         orderTestId: test.id,
         entityCode: test.testCode,
+        entityName: test.testName,
         referringPhysician: test.referringPhysician,
+        sampleId: test.sampleId,
       }}
-      sampleInfo={
-        test.sampleId && test.collectedAt
-          ? {
-              sampleId: test.sampleId,
-              collectedAt: test.collectedAt,
-              collectedBy: test.collectedBy,
-            }
-          : undefined
-      }
-      additionalContextInfo={
-        <EntryInfoLine enteredAt={test.resultEnteredAt} enteredBy={test.enteredBy} />
-      }
+      headerAudit={testHeaderAudit(test, { includeResultEntered: true })}
       disableClose={resolving}
       footer={
         readOnly ? (
@@ -165,7 +158,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
       }
     >
       {hasResults ? (
-        <SectionPanel title={readOnly ? 'Recorded Results' : 'Result Validation'}>
+        <LabSectionPanel title={readOnly ? 'Recorded Results' : 'Result Validation'}>
           <ValidationForm
             results={test.results!}
             flags={test.flags}
@@ -176,9 +169,9 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
             readOnly={readOnly}
             enableApproveShortcut={false}
           />
-        </SectionPanel>
+        </LabSectionPanel>
       ) : (
-        <SectionPanel title="Escalation Summary">
+        <LabSectionPanel title="Escalation Summary">
           <p className="text-sm text-text-secondary">
             This test was escalated before results were entered. Review the context below and choose
             an action.
@@ -199,13 +192,13 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
               )}
             </dl>
           )}
-        </SectionPanel>
+        </LabSectionPanel>
       )}
 
       {criticalRecord && (
-        <SectionPanel title="Critical Value Notification">
+        <LabSectionPanel title="Critical Value Notification">
           <CriticalValueActions record={criticalRecord} onUpdated={handleCriticalValueUpdated} />
-        </SectionPanel>
+        </LabSectionPanel>
       )}
 
       <DetailGrid
@@ -215,9 +208,8 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
             fields: [
               {
                 label: 'Sample ID',
-                value: test.sampleId ? (
-                  <span className="entity-id">{displayId.sample(test.sampleId)}</span>
-                ) : undefined,
+                value: test.sampleId ? displayId.sample(test.sampleId) : undefined,
+                valueClassName: LAB_DETAIL_ID_VALUE,
               },
               { label: 'Collected', timestamp: test.collectedAt, user: test.collectedBy },
               {
@@ -234,21 +226,18 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
               { label: 'Entered', timestamp: test.resultEnteredAt, user: test.enteredBy },
               {
                 label: 'Test ID',
-                value: test.id != null ? (
-                  <span className="entity-id">{displayId.orderTest(test.id)}</span>
-                ) : undefined,
+                value: test.id != null ? displayId.orderTest(test.id) : undefined,
+                valueClassName: LAB_DETAIL_ID_VALUE,
               },
               {
                 label: 'Test Code',
-                value: test.testCode ? (
-                  <span className="entity-id">{test.testCode}</span>
-                ) : undefined,
+                value: test.testCode || undefined,
+                valueClassName: LAB_DETAIL_ID_VALUE,
               },
               {
                 label: 'Order ID',
-                value: test.orderId ? (
-                  <span className="entity-id">{displayId.order(test.orderId)}</span>
-                ) : undefined,
+                value: test.orderId ? displayId.order(test.orderId) : undefined,
+                valueClassName: LAB_DETAIL_ID_VALUE,
               },
             ],
           },

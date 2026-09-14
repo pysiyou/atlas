@@ -33,6 +33,14 @@ function buildPaymentQueryParams(filters?: PaymentFilters): Record<string, strin
   return params;
 }
 
+export function remainingPaymentAmount(
+  totalPrice: number,
+  payments: Array<{ amount: number }>
+): number {
+  const paid = payments.reduce((sum, payment) => sum + payment.amount, 0);
+  return Math.max(0, Math.round((totalPrice - paid) * 100) / 100);
+}
+
 export const paymentAPI = {
   getAll(filters?: PaymentFilters): Promise<Payment[]> {
     return apiClient.get<Payment[]>('/payments', buildPaymentQueryParams(filters));

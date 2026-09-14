@@ -9,21 +9,22 @@ import React from 'react';
 import { useResponsiveCard } from '../../components/ResponsiveCard';
 import { CollectionCardMobile } from './Mobile';
 import { CollectionCardDesktop } from './Desktop';
-import { useCollectionCardData, type CollectionCardProps } from './hooks';
+import { useCollectionCardData, type CollectionCardProps, type CollectionCardSharedData } from './hooks';
 
 export const CollectionCard: React.FC<CollectionCardProps> = (props) => {
   const sharedData = useCollectionCardData(props);
-  
-  // Early return if missing required data
-  if (!sharedData) return null;
-  
-  return useResponsiveCard({
+
+  const card = useResponsiveCard({
     item: props,
-    deriveSharedData: () => sharedData,
+    deriveSharedData: () => sharedData as CollectionCardSharedData,
     renderMobile: CollectionCardMobile,
     renderDesktop: CollectionCardDesktop,
     isMobile: props.isMobile,
   });
+
+  if (!sharedData) return null;
+
+  return card;
 };
 
 export type { CollectionCardProps };

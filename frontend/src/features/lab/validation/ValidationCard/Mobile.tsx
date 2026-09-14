@@ -3,12 +3,14 @@
  */
 
 import React from 'react';
-import { Badge, Button, Card } from '@/components';
-import { formatDate, displayId } from '@/utils';
+import { Button, Card } from '@/components';
 import { QualityIssueDialog } from '../../components';
-import { BlockedReasonBadge } from '../../components/StatusBadges';
+import { TestHeaderBadges } from '../../components/labWorkflowBadges';
+import { testHeaderAudit } from '../../components/labHeader';
+import { LabMobileCardHeader, labMobileCardSurfaceClassName } from '../../components/labMobileCardHeader';
 import { ResultsParameterGrid } from '../../components/ResultsParameterGrid';
 import { SpecimenRejectedAlert } from './SpecimenRejectedAlert';
+import { cn } from '@/utils';
 import type { ValidationCardSharedData } from './hooks';
 
 export const ValidationCardMobile: React.FC<ValidationCardSharedData> = ({
@@ -22,14 +24,45 @@ export const ValidationCardMobile: React.FC<ValidationCardSharedData> = ({
   workItem,
   rejection,
 }) => {
-  const { showAttemptIndicator, isRetest } = rejection;
+  const { showAttemptIndicator } = rejection;
   const isSpecimenRejected = workItem.blockedReason === 'sample_rejected';
 
+  const actions = (
+    <>
+      <QualityIssueDialog
+        orderTestId={test.id!}
+        testCode={test.testCode}
+        testName={test.testName}
+        patientName={patientName}
+        onReject={onReject}
+      />
+      <Button
+        variant="approve"
+        size="sm"
+        title="Approve Results"
+        isLoading={isApproving}
+        onClick={e => {
+          e.stopPropagation();
+          onApprove();
+        }}
+      >
+        Approve
+      </Button>
+    </>
+  );
+
   return (
-    <Card padding="list" hover className="flex flex-col h-full" onClick={handleCardClick}>
-      {/* Specimen Rejection Alert */}
+    <Card
+      padding="list"
+      hover
+      className={cn(
+        labMobileCardSurfaceClassName(),
+        showAttemptIndicator && 'border-warning-stroke-emphasis'
+      )}
+      onClick={handleCardClick}
+    >
       {isSpecimenRejected && (
-        <div className="mb-3">
+        <div className="mb-2">
           <SpecimenRejectedAlert
             sampleId={test.sampleId}
             sampleRejectionReason={sampleRejectionReason}
@@ -37,104 +70,38 @@ export const ValidationCardMobile: React.FC<ValidationCardSharedData> = ({
           />
         </div>
       )}
-      
-      {/* Header: Test name + Patient name, Test code, Sample ID */}
-      <div className="flex items-center justify-between gap-2 mb-2">
-        <div className="min-w-0 overflow-hidden">
-          <div className="text-sm font-normal text-text-primary truncate">{test.testName}</div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <div className="text-xs text-text-secondary font-normal truncate capitalize">
-              {patientName}
-            </div>
-            {test.id != null && (
-              <>
-                <div className="text-xxs text-text-disabled">•</div>
-                <div className="entity-id entity-id--secondary truncate">
-                  {displayId.orderTest(test.id)}
-                </div>
-              </>
-            )}
-            <div className="text-xxs text-text-disabled">•</div>
-            <div className="entity-id entity-id--secondary truncate">
-              {test.testCode}
-            </div>
-            {test.sampleId && (
-              <>
-                <div className="text-xs text-text-disabled">•</div>
-                <div
-                  className="entity-id entity-id--secondary truncate"
-                  title={displayId.sample(test.sampleId)}
-                >
-                  {displayId.sample(test.sampleId)}
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
 
-      {/* Content: Results, entry date */}
-      <div className="space-y-2">
-        <div className="space-y-1">
-          <div className="mt-2">
-            <ResultsParameterGrid
-              results={test.results!}
-              flags={test.flags}
-              variant="inline"
-              dense
-            />
-          </div>
-          {test.resultEnteredAt && (
-            <div className="text-xs text-text-tertiary">
-              Entered: {formatDate(test.resultEnteredAt)}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Bottom section: Badges (left) + Approve/Reject buttons (right) */}
-      <div className="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-border-subtle">
-        <div className="flex items-center gap-2">
-          {test.flags && test.flags.length > 0 && (
-            <Badge variant="danger" size="xs">
-              {test.flags.length} FLAG{test.flags.length > 1 ? 'S' : ''}
-            </Badge>
-          )}
-          {test.priority && <Badge variant={test.priority} size="xs" />}
-          <Badge variant={test.sampleType} size="xs" />
-          {(isRetest || showAttemptIndicator) && (
-            <Badge variant="warning" size="xs">
-              RE-TEST
-            </Badge>
-          )}
-          {workItem.blockedReason && (
-            <BlockedReasonBadge label={workItem.label} size="xs" />
-          )}
-        </div>
-        <div className="flex items-center gap-2">
-          <div onClick={e => e.stopPropagation()}>
-            <QualityIssueDialog
-              orderTestId={test.id!}
-              testCode={test.testCode}
-              testName={test.testName}
-              patientName={patientName}
-              onReject={onReject}
-            />
-          </div>
-          <Button
-            variant="approve"
-            size="sm"
-            title="Approve Results"
-            isLoading={isApproving}
-            onClick={e => {
-              e.stopPropagation();
-              onApprove();
-            }}
-          >
-            Approve
-          </Button>
-        </div>
-      </div>
+      <LabMobileCardHeader
+        context={{
+          patientName,
+          patientId: test.patientId,
+          orderId: test.orderId,
+          orderTestId: test.id,
+          sampleId: test.sampleId,
+          entityCode: test.testCode,
+          entityName: test.testName,
+        }}
+        auditLines={testHeaderAudit(test, { includeResultEntered: true })}
+        badges={
+          <TestHeaderBadges
+            test={test}
+            variant="validation"
+            size="xs"
+            emphasizeCritical
+            queueSince={test.resultEnteredAt}
+            blockedLabel={workItem.blockedReason ? workItem.label : undefined}
+            flagCount={test.flags?.length}
+          />
+        }
+        actions={actions}
+      >
+        <ResultsParameterGrid
+          results={test.results!}
+          flags={test.flags}
+          variant="inline"
+          dense
+        />
+      </LabMobileCardHeader>
     </Card>
   );
 };

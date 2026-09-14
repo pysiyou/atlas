@@ -22,11 +22,9 @@ interface CollectSampleParams {
 export function useCollectionCollectHandler({
   isAuthenticated,
   collectSampleMutation,
-  refreshOrders,
 }: {
   isAuthenticated: boolean;
   collectSampleMutation: UseMutationResult<unknown, Error, CollectSampleParams>;
-  refreshOrders: () => Promise<unknown>;
 }) {
   const queryClient = useQueryClient();
 
@@ -66,19 +64,9 @@ export function useCollectionCollectHandler({
       notify.toast('lab.collection.success', {
         title: `${sampleLabel} sample collected`,
       });
-      try {
-        await refreshOrders();
-      } catch (refetchError) {
-        const err = refetchError as Error & { name?: string };
-        if (err?.name !== 'AbortError') {
-          logger.error('Error refreshing orders after collection', getErrorDetails(refetchError));
-          notify.toast('lab.collection.refreshWarning');
-        }
-        invalidateCollectionQueries(queryClient);
-      }
     } catch (error) {
       logger.error('Error collecting sample', getErrorDetails(error));
-      invalidateCollectionQueries(queryClient);
+      await invalidateCollectionQueries(queryClient);
       if (isLikelyNetworkOrTimeout(error)) {
         notify.toast('lab.collection.networkAmbiguous');
       } else {

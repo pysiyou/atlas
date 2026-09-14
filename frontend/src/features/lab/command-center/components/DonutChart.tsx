@@ -86,7 +86,7 @@ export function DonutChart({
   const cx = size / 2;
   const cy = size / 2;
   const outerR = size / 2 - 2;
-  const innerR = outerR * 0.62;
+  const innerR = outerR * 0.80;
   const activeSegments = segments.filter(segment => segment.value > 0);
   const total = activeSegments.reduce((sum, segment) => sum + segment.value, 0);
   let cursor = 0;

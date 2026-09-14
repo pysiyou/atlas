@@ -4,21 +4,23 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { SectionPanel, Badge, Icon } from '@/components';
+import { Badge, Icon } from '@/components';
+import { LabSectionPanel } from '../components/LabSectionPanel';
 import { ICONS } from '@/config/icons';
 import { displayId } from '@/utils';
 import { getLabQueueUrl } from '@/features/lab/constants/labTabs';
 import { usePendingCriticalValues } from './useCriticalValues';
 import { CriticalValueActions } from './CriticalValueActions';
+import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 
 export const CriticalValuesPanel: React.FC = () => {
   const { criticalValues, isLoading, refetch } = usePendingCriticalValues();
 
   if (isLoading) {
     return (
-      <SectionPanel title="Critical Values">
+      <LabSectionPanel title="Critical Values">
         <p className="text-sm text-text-tertiary py-4">Loading critical values...</p>
-      </SectionPanel>
+      </LabSectionPanel>
     );
   }
 
@@ -27,10 +29,10 @@ export const CriticalValuesPanel: React.FC = () => {
   }
 
   return (
-    <SectionPanel
+    <LabSectionPanel
       title="Critical Values Pending"
       headerRight={
-        <Badge variant="danger" size="sm">
+        <Badge variant="danger" size={LAB_CARD_BADGE_SIZE}>
           {criticalValues.length}
         </Badge>
       }
@@ -60,6 +62,6 @@ export const CriticalValuesPanel: React.FC = () => {
           </div>
         ))}
       </div>
-    </SectionPanel>
+    </LabSectionPanel>
   );
 };

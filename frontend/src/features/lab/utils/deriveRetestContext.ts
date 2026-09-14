@@ -15,6 +15,7 @@ export interface TestRetestContext {
   attemptType: 'retest' | 'recollection';
   showRetestBadge: boolean;
   showRecollectionBadge: boolean;
+  showRecollectionLink: boolean;
 }
 
 export function deriveRetestContext(test: TestWithContext): TestRetestContext {
@@ -41,5 +42,7 @@ export function deriveRetestContext(test: TestWithContext): TestRetestContext {
     attemptType,
     showRetestBadge: isRetest && !!test.retestOfTestId,
     showRecollectionBadge: isSampleRecollection && !isRetest,
+    showRecollectionLink:
+      isSampleRecollection && !isRetest && test.sampleOriginalSampleId != null,
   };
 }

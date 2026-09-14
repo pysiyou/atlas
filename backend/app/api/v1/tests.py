@@ -1,7 +1,7 @@
 """Test Catalog API Routes"""
 from typing import List
 
-from fastapi import APIRouter, Depends, Query, Request, Response, status
+from fastapi import APIRouter, Depends, Query, Response, status
 from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_current_user
@@ -15,7 +15,6 @@ router = APIRouter()
 
 @router.get("/tests", response_model=List[TestResponse])
 def get_tests(
-    request: Request,
     response: Response,
     category: str | None = None,
     activeOnly: bool = True,
@@ -24,7 +23,7 @@ def get_tests(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    return TestService(db).list_tests(request, response, category, activeOnly, skip, limit)
+    return TestService(db).list_tests(response, category, activeOnly, skip, limit)
 
 
 @router.get("/tests/search", response_model=List[TestResponse])

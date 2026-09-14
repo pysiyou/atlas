@@ -1,11 +1,9 @@
 /**
- * ToastError.tsx — Error toast that persists until dismissed.
+ * ToastError.tsx — Error toast (stays until dismissed).
  */
 
 import React from 'react';
 import { Toast } from './Toast';
 import type { ToastProps } from './toastTypes';
 
-export const ToastError: React.FC<ToastProps> = props => (
-  <Toast variant="error" persist showCountdown={false} {...props} />
-);
+export const ToastError: React.FC<ToastProps> = props => <Toast variant="error" {...props} />;

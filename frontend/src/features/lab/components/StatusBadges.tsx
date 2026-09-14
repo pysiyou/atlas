@@ -12,14 +12,13 @@
 
 import React from 'react';
 import { Badge, Icon, SpinnerLoader } from '@/components';
-import { formatDateTime } from '@/utils';
 import { getContainerIconColor } from '@/features/lab/utils';
-import { displayId } from '@/utils';
-import { useUserLookup } from '@/lib/api/users.api';
 import type { ContainerType, ContainerTopColor } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import { getContainerIcon } from '@/config/icons';
 import { ICONS } from '@/config/icons';
+import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
+import { LabAuditLineView } from './labHeader';
 
 /**
  * ContainerInfo - Displays container type and color with icon
@@ -65,35 +64,25 @@ export const CollectionInfoLine: React.FC<CollectionInfoLineProps> = ({
   sampleId,
   collectedAt,
   collectedBy,
-  className = 'text-xs text-text-tertiary',
+  className,
 }) => {
-  const { getUserName } = useUserLookup();
-
   if (!collectedAt) return null;
 
-  const formattedSampleId =
+  const line =
     sampleId !== undefined
-      ? typeof sampleId === 'number'
-        ? displayId.sample(sampleId)
-        : sampleId
-      : undefined;
+      ? {
+          type: 'sample-collected' as const,
+          sampleId,
+          collectedAt,
+          collectedBy,
+        }
+      : {
+          type: 'collection-only' as const,
+          collectedAt,
+          collectedBy,
+        };
 
-  return (
-    <span className={className}>
-      {formattedSampleId && (
-        <>
-          Sample <span className="entity-id">{formattedSampleId}</span>{' '}
-        </>
-      )}
-      collected <span className="text-text-secondary">{formatDateTime(collectedAt)}</span>
-      {collectedBy && (
-        <>
-          {' '}
-          by <span className="text-text-secondary">{getUserName(collectedBy)}</span>
-        </>
-      )}
-    </span>
-  );
+  return <LabAuditLineView line={line} className={className} />;
 };
 
 /**
@@ -108,22 +97,15 @@ interface EntryInfoLineProps {
 export const EntryInfoLine: React.FC<EntryInfoLineProps> = ({
   enteredAt,
   enteredBy,
-  className = 'text-xs text-text-tertiary',
+  className,
 }) => {
-  const { getUserName } = useUserLookup();
-
   if (!enteredAt) return null;
 
   return (
-    <span className={className}>
-      Results entered <span className="text-text-secondary">{formatDateTime(enteredAt)}</span>
-      {enteredBy && (
-        <>
-          {' '}
-          by <span className="text-text-secondary">{getUserName(enteredBy)}</span>
-        </>
-      )}
-    </span>
+    <LabAuditLineView
+      line={{ type: 'result-entered', enteredAt, enteredBy }}
+      className={className}
+    />
   );
 };
 
@@ -142,7 +124,7 @@ interface RetestBadgeProps {
 
 export const RetestBadge: React.FC<RetestBadgeProps> = ({
   retestNumber,
-  size = 'sm',
+  size = LAB_CARD_BADGE_SIZE,
   className = '',
 }) => (
   <Badge size={size} variant="warning" className={className}>
@@ -167,7 +149,7 @@ interface RecollectionAttemptBadgeProps {
 
 export const RecollectionAttemptBadge: React.FC<RecollectionAttemptBadgeProps> = ({
   attemptNumber,
-  size = 'sm',
+  size = LAB_CARD_BADGE_SIZE,
   className = '',
   showIcon = false,
 }) => (
@@ -194,7 +176,7 @@ interface FlagCountBadgeProps {
 
 export const FlagCountBadge: React.FC<FlagCountBadgeProps> = ({
   count,
-  size = 'sm',
+  size = LAB_CARD_BADGE_SIZE,
   className = '',
   showIcon = true,
 }) => {
@@ -221,7 +203,7 @@ interface ReviewRequiredBadgeProps {
 }
 
 export const ReviewRequiredBadge: React.FC<ReviewRequiredBadgeProps> = ({
-  size = 'sm',
+  size = LAB_CARD_BADGE_SIZE,
   className = '',
   showIcon = true,
 }) => (

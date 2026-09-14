@@ -78,6 +78,7 @@ class APIClient {
         headers,
         body: data ? JSON.stringify(data) : undefined,
         signal: controller.signal,
+        cache: 'no-store',
       });
 
       clearTimeout(timeoutId);

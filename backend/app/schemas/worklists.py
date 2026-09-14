@@ -28,6 +28,10 @@ class CollectionWorklistItem(BaseModel):
     orderDate: datetime
     testCodes: List[str]
     isRecollection: bool
+    originalSampleId: Optional[int] = None
+    originalSampleCollectedAt: Optional[datetime] = None
+    recollectionReason: Optional[str] = None
+    recollectionAttempt: int = 1
     blockedReason: Optional[str] = None
     waitingHours: float
     turnaroundHours: int

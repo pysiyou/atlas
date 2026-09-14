@@ -23,7 +23,7 @@ export const AffiliationInfo: React.FC<AffiliationInfoProps> = ({ affiliation })
     <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
       <div className="col-span-2">
         <div className="text-xs text-text-tertiary mb-0.5">Assurance Number</div>
-        <div className="font-mono font-normal text-text-primary">{affiliation.assuranceNumber}</div>
+        <div className="font-normal text-text-primary">{affiliation.assuranceNumber}</div>
       </div>
 
       <div>

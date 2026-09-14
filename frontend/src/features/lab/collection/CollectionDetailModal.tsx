@@ -7,7 +7,7 @@
  * Uses centralized components:
  * - DetailGrid with sections config for consistent layout
  * - SectionPanel for custom sections
- * - CollectionInfoLine for sample metadata
+ * - LabModalHeader sampleInfo for collection metadata (same as entry/validation modals)
  */
 
 import React, { useCallback, useMemo, useState } from 'react';
@@ -16,21 +16,21 @@ import { queryKeys } from '@/lib/query';
 import { sampleAPI } from '../api/samples.api';
 import type { ContainerType, RejectedSample } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
-import Barcode from 'react-barcode';
 import { displayId } from '@/utils';
-import { CollectionInfoLine } from '../components/StatusBadges';
-import { CollectionDetailHeaderBadges } from './CollectionDetailHeaderBadges';
 import { CollectionDetailFooter } from './CollectionDetailFooter';
 import { buildCollectionDetailGridSections } from './CollectionDetailGridSections';
 import { CollectionDetailContent } from './CollectionDetailContent';
+import { LabDetailModal, ModalFooter } from '../components/LabDetailModal';
+import { collectionHeaderAudit } from '../components/labHeader';
+import { CollectionHeaderBadges } from '../components/labWorkflowBadges';
 import { useTestCatalog } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users.api';
 import { usePatientNameLookup } from '@/features/patients';
 import { useOrderLookup } from '@/features/orders';
 import { useSampleLookup } from '../api/samples.api';
 import { getTestNames } from '@/features/catalog/utils';
-import { LabDetailModal, ModalFooter } from '../components/LabDetailModal';
 import { labModalSubtitle } from '../components/labModalStages';
+import { LAB_ENTITY_ID } from '../utils/labStyles';
 import { LabHistoryPanel } from '../components/LabHistoryPanel';
 import { Button } from '@/components';
 import type { SampleDisplay } from '@/features/lab/types';
@@ -133,16 +133,23 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
     (isCollected || isRejected) && 'collectionNotes' in sample ? sample.collectionNotes : undefined;
 
   // Build header badges
+  const paymentBlocked = isPending && order?.paymentStatus === 'unpaid';
+
   const headerBadges = (
-    <CollectionDetailHeaderBadges
+    <CollectionHeaderBadges
       sample={sample}
       isPending={isPending}
-      isRejected={isRejected}
       isCollected={isCollected}
+      isRejected={isRejected}
       rejectedSample={rejectedSample}
+      orderDate={order?.orderDate}
+      paymentBlocked={paymentBlocked}
+      requiredVolume={sample.requiredVolume}
+      collectedVolume={collectedVolume}
       containerColor={containerColor}
       effectiveContainerType={effectiveContainerType}
       colorName={colorName}
+      containerIconClassName="w-7 h-7"
     />
   );
 
@@ -185,7 +192,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       disableClose={isPopoverSubmitting}
-      title={<span className="entity-id">{displayId.sample(sample.sampleId)}</span>}
+      title={<span className={LAB_ENTITY_ID}>{displayId.sample(sample.sampleId)}</span>}
       subtitle={labModalSubtitle('collection')}
       headerBadges={headerBadges}
       contextInfo={{
@@ -194,7 +201,16 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
         orderId,
         entityCode: sample.sampleType.toUpperCase(),
         referringPhysician: order?.referringPhysician,
+        sampleId: sample.sampleId,
       }}
+      headerAudit={collectionHeaderAudit({
+        sampleId: sample.sampleId,
+        collectedAt,
+        collectedBy,
+        isRecollection: sample.isRecollection,
+        originalSampleId: sample.originalSampleId,
+        originalSampleCollectedAt: sample.originalSampleCollectedAt,
+      })}
       footer={
         readOnly ? (
           <ModalFooter statusMessage="">
@@ -203,31 +219,6 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
         ) : (
           footerContent
         )
-      }
-      additionalContextInfo={
-        <>
-          {/* Barcode */}
-          {(isCollected || isRejected) && sample.sampleId && (
-            <div className="flex items-center justify-center bg-surface-page rounded p-4 border border-border-default mt-2">
-              <Barcode
-                value={displayId.sample(sample.sampleId)}
-                height={40}
-                displayValue={false}
-                background="transparent"
-                lineColor="var(--text)"
-                margin={0}
-              />
-            </div>
-          )}
-          {/* Collection info */}
-          {collectedAt && (
-            <CollectionInfoLine
-              collectedAt={collectedAt}
-              collectedBy={collectedBy}
-              className="text-xs text-text-tertiary mt-1"
-            />
-          )}
-        </>
       }
     >
       <CollectionDetailContent
@@ -243,6 +234,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
         getUserName={getUserName}
         collectionNotes={collectionNotes}
         gridSections={gridSections}
+        showBarcode={(isCollected || isRejected) && sample.sampleId != null}
       />
       {sample.sampleId && (
         <LabHistoryPanel entityType="sample" entityId={Number(sample.sampleId)} />

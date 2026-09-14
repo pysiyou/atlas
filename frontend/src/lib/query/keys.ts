@@ -197,9 +197,10 @@ export const queryKeys = {
  * - After any ORDER mutation: invalidate queryKeys.orders.all; if order or samples change, also invalidate samples.all
  *   (and payments.all when payment status changes).
  * - After any PATIENT mutation: invalidate queryKeys.patients.all.
- * - After RESULT mutations (entry/validate/reject): invalidate orders.all, samples.all (when relevant), results.all;
- *   when resolving escalation also invalidate results.pendingEscalation().
+ * - After RESULT mutations (entry/validate/reject): invalidate orders.all, samples.all (when relevant), results.all,
+ *   and worklists.all; when resolving escalation also invalidate results.pendingEscalation().
  * - After PAYMENT mutations: invalidate payments.all and orders.all.
+ * - After any mutation that changes lab queue membership: invalidate worklists.all.
  */
 
 /**

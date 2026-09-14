@@ -6,10 +6,8 @@
  */
 
 import { useState, useCallback } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { useTestNameLookup } from '@/features/catalog';
 import { useEnterResults } from '../api/results.api';
-import { queryKeys } from '@/lib/query';
 import { notify } from '@/utils/feedback';
 import { logger } from '@/utils/logger';
 import { formatParameterResults, findTestById } from './entryWorkflow.helpers';
@@ -46,7 +44,6 @@ export function useEntryWorkflow({
   testCatalog,
   orders,
 }: UseEntryWorkflowOptions): EntryWorkflow {
-  const queryClient = useQueryClient();
   const { getTest } = useTestNameLookup();
   const [results, setResults] = useState<Record<string, Record<string, string>>>({});
   const [technicianNotes, setTechnicianNotes] = useState<Record<string, string>>({});
@@ -127,14 +124,13 @@ export function useEntryWorkflow({
           delete n[resultKey];
           return n;
         });
-        await queryClient.refetchQueries({ queryKey: queryKeys.orders.all });
       } catch (error) {
         logger.error('Error saving results', error instanceof Error ? error : undefined);
         notify.apiError('lab.entry.save.error', error);
         throw error;
       }
     },
-    [results, technicianNotes, getTest, enterMutation, queryClient]
+    [results, technicianNotes, getTest, enterMutation]
   );
 
   const openTestModal = useEntryTestModal({

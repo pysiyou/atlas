@@ -54,14 +54,13 @@ export function useValidationCardData(props: ValidationCardProps): ValidationCar
   const { getSample } = useSampleLookup();
   const handleCardClick = useLabCardClickGuard(onClick);
   const workItem = useTestWorkItemState(test);
-  
-  // Early return if no results
+  const rejection = useMemo(() => deriveRetestContext(test), [test]);
+
   if (!test.results) return null;
-  
+
   const patientName = getPatientName(test.patientId);
   const sampleRejectionReason = getSampleRejectionReason(test, getSample);
-  const rejection = useMemo(() => deriveRetestContext(test), [test]);
-  
+
   return {
     test,
     patientName,

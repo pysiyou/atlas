@@ -23,6 +23,7 @@ export const COMMAND_CENTER_TIMELINE = {
   eventTitleRow: 'flex flex-wrap items-center gap-x-2 gap-y-1',
   eventAction: 'text-sm font-light text-text-primary',
   eventDetails: 'flex flex-wrap items-center gap-x-1 gap-y-0.5 mt-0.5',
+  eventDetailText: 'text-xs font-normal text-text-secondary',
   eventMeta: 'text-xs text-text-tertiary mt-1',
   loadMore: 'px-4 py-2 flex justify-center border-t border-border-subtle',
   retryLink: 'text-sm text-brand hover:underline',

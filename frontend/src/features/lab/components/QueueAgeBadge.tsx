@@ -5,6 +5,7 @@
 import React from 'react';
 import { Badge } from '@/components';
 import { getQueueAgeInfo } from '../utils/queueAge';
+import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 
 interface QueueAgeBadgeProps {
   since: string | undefined | null;
@@ -19,7 +20,7 @@ export const QueueAgeBadge: React.FC<QueueAgeBadgeProps> = ({ since, className }
     info.variant === 'danger' ? 'danger' : info.variant === 'warning' ? 'warning' : 'default';
 
   return (
-    <Badge variant={badgeVariant} size="xs" className={className}>
+    <Badge variant={badgeVariant} size={LAB_CARD_BADGE_SIZE} className={className}>
       {info.label}
     </Badge>
   );

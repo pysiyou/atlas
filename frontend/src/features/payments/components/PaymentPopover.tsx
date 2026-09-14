@@ -25,7 +25,7 @@ import {
   getDefaultPaymentMethod,
   type PaymentMethod,
 } from '@/types/payments';
-import { useCreatePayment } from '../api/payments.api';
+import { useCreatePayment, useOrderRemainingBalance } from '../api/payments.api';
 import { getFeedback, notify } from '@/utils/feedback';
 import { feedbackTitle } from '@/utils/feedback/copy';
 import { ICONS, MODULE_ICONS } from '@/config/icons';
@@ -111,6 +111,8 @@ const PaymentReceipt: React.FC<{ order: Order }> = ({ order }) => {
 
 interface PaymentPopoverContentProps {
   order: Order;
+  remainingAmount: number;
+  paymentsLoading: boolean;
   onCancel: () => void;
   /** Submitting state from parent (for preventClose). */
   submitting: boolean;
@@ -132,6 +134,8 @@ interface PaymentPopoverContentProps {
  */
 const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
   order,
+  remainingAmount,
+  paymentsLoading,
   onCancel,
   submitting,
   error,
@@ -140,9 +144,8 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(getDefaultPaymentMethod());
   const [notes, setNotes] = useState<string>('');
 
-  // Amount is fixed to the order's total price
-  const amount = order.totalPrice;
-  const isValid = amount > 0;
+  const amount = remainingAmount;
+  const isValid = !paymentsLoading && amount > 0;
 
   const handleSubmit = useCallback(() => {
     if (amount <= 0) return;
@@ -180,7 +183,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
       }
       onCancel={onCancel}
       onConfirm={handleSubmit}
-      confirmLabel="Process Payment"
+      confirmLabel={amount > 0 ? `Pay ${formatCurrency(amount)}` : 'Fully Paid'}
       confirmVariant="primary"
       isSubmitting={submitting}
       disabled={!isValid}
@@ -227,6 +230,8 @@ const PaymentPopoverContentInner: React.FC<{
   close: () => void;
   closeRef: React.MutableRefObject<(() => void) | null>;
   order: Order;
+  remainingAmount: number;
+  paymentsLoading: boolean;
   submitting: boolean;
   error: string | null;
   onSubmit: (data: {
@@ -235,7 +240,7 @@ const PaymentPopoverContentInner: React.FC<{
     paymentMethod: PaymentMethod;
     notes?: string;
   }) => void;
-}> = ({ close, closeRef, order, submitting, error, onSubmit }) => {
+}> = ({ close, closeRef, order, remainingAmount, paymentsLoading, submitting, error, onSubmit }) => {
   useEffect(() => {
     closeRef.current = close;
     return () => {
@@ -246,6 +251,8 @@ const PaymentPopoverContentInner: React.FC<{
     <div data-popover-content onClick={e => e.stopPropagation()}>
       <PaymentPopoverContent
         order={order}
+        remainingAmount={remainingAmount}
+        paymentsLoading={paymentsLoading}
         onCancel={close}
         submitting={submitting}
         error={error}
@@ -269,6 +276,10 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
 }) => {
   const [error, setError] = useState<string | null>(null);
   const { mutate: createPaymentMutation, isPending: submitting } = useCreatePayment();
+  const { remainingAmount, paymentsLoading } = useOrderRemainingBalance(
+    String(order.orderId),
+    order.totalPrice
+  );
 
   const closeRef = useRef<(() => void) | null>(null);
 
@@ -304,15 +315,17 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
         close={close}
         closeRef={closeRef}
         order={order}
+        remainingAmount={remainingAmount}
+        paymentsLoading={paymentsLoading}
         submitting={submitting}
         error={error}
         onSubmit={handleSubmit}
       />
     ),
-    [order, submitting, error, handleSubmit]
+    [order, remainingAmount, paymentsLoading, submitting, error, handleSubmit]
   );
 
-  const isPaid = order.paymentStatus === 'paid';
+  const isPaid = order.paymentStatus === 'paid' || (!paymentsLoading && remainingAmount <= 0);
   if (isPaid && trigger == null) {
     return <Badge variant="paid" size="sm" />;
   }

@@ -8,21 +8,22 @@ import React from 'react';
 import { useResponsiveCard } from '../../components/ResponsiveCard';
 import { ValidationCardMobile } from './Mobile';
 import { ValidationCardDesktop } from './Desktop';
-import { useValidationCardData, type ValidationCardProps } from './hooks';
+import { useValidationCardData, type ValidationCardProps, type ValidationCardSharedData } from './hooks';
 
 export const ValidationCard: React.FC<ValidationCardProps> = (props) => {
   const sharedData = useValidationCardData(props);
-  
-  // Early return if missing required data
-  if (!sharedData) return null;
-  
-  return useResponsiveCard({
+
+  const card = useResponsiveCard({
     item: props,
-    deriveSharedData: () => sharedData,
+    deriveSharedData: () => sharedData as ValidationCardSharedData,
     renderMobile: ValidationCardMobile,
     renderDesktop: ValidationCardDesktop,
     isMobile: props.isMobile,
   });
+
+  if (!sharedData) return null;
+
+  return card;
 };
 
 export type { ValidationCardProps };

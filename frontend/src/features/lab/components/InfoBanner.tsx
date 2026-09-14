@@ -5,9 +5,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { LAB_CARD_SPACING } from '../utils/labStyles';
-
-const TITLE_CLASS = 'text-xxs font-medium text-text-tertiary uppercase tracking-wide';
+import { LAB_CARD_SPACING, LAB_CARD_TYPOGRAPHY } from '../utils/labStyles';
 
 interface InfoBannerProps {
   title: string;
@@ -21,7 +19,7 @@ export const InfoBanner: React.FC<InfoBannerProps> = ({ title, children, classNa
   return (
     <div className={className}>
       <div className={hasChildren ? LAB_CARD_SPACING.sectionTitleMargin : ''}>
-        <span className={TITLE_CLASS}>{title}</span>
+        <span className={LAB_CARD_TYPOGRAPHY.sectionTitle}>{title}</span>
       </div>
       {hasChildren ? children : null}
     </div>

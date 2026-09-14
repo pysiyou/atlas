@@ -111,6 +111,15 @@ class LabWorklistService:
                 if order.paymentStatus != PaymentStatus.PAID
                 else None
             )
+            original_sample_collected_at = None
+            if sample.originalSampleId:
+                parent = (
+                    self.db.query(Sample)
+                    .filter(Sample.sampleId == sample.originalSampleId)
+                    .first()
+                )
+                if parent:
+                    original_sample_collected_at = parent.collectedAt
             items.append({
                 "sampleId": sample.sampleId,
                 "orderId": order.orderId,
@@ -123,6 +132,10 @@ class LabWorklistService:
                 "orderDate": order.orderDate,
                 "testCodes": sample.testCodes or [],
                 "isRecollection": bool(sample.isRecollection),
+                "originalSampleId": sample.originalSampleId,
+                "originalSampleCollectedAt": original_sample_collected_at,
+                "recollectionReason": sample.recollectionReason,
+                "recollectionAttempt": sample.recollectionAttempt or 1,
                 "blockedReason": blocked,
                 "waitingHours": round(hours, 2),
                 "turnaroundHours": tat,

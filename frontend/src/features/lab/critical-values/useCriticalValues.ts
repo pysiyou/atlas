@@ -38,9 +38,7 @@ export function useNotifyCriticalValue() {
   return useMutation({
     mutationFn: ({ testId, body }: { testId: number; body: NotifyCriticalValueRequest }) =>
       criticalValuesAPI.notify(testId, body),
-    onSuccess: () => {
-      invalidateCriticalValueQueries(queryClient);
-    },
+    onSuccess: () => invalidateCriticalValueQueries(queryClient),
   });
 }
 
@@ -50,8 +48,6 @@ export function useAcknowledgeCriticalValue() {
   return useMutation({
     mutationFn: ({ testId, body }: { testId: number; body: AcknowledgeCriticalValueRequest }) =>
       criticalValuesAPI.acknowledge(testId, body),
-    onSuccess: () => {
-      invalidateCriticalValueQueries(queryClient);
-    },
+    onSuccess: () => invalidateCriticalValueQueries(queryClient),
   });
 }

@@ -60,6 +60,15 @@
   text-decoration: underline;
 }
 
+:is(h1, h2, h3, h4) .entity-id,
+:is(button, a).entity-id {
+  font-family: var(--id-font-family);
+  font-size: var(--id-font-size);
+  font-weight: var(--id-font-weight);
+  color: var(--id-color);
+  letter-spacing: var(--id-letter-spacing);
+}
+
 /* ─────────────────────────────────────────────────────────────────────────
    Dark theme: inputs default to theme text color
    ───────────────────────────────────────────────────────────────────────── */
@@ -71,6 +80,26 @@
 [data-theme='noir-studio'] textarea,
 [data-theme='noir-studio'] select {
   color: var(--text);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Toaster host — never intercept clicks outside the toast card
+   ───────────────────────────────────────────────────────────────────────── */
+
+.app-toaster,
+[data-rht-toaster] {
+  pointer-events: none !important;
+}
+
+/* Wrappers span the viewport; keep them pass-through so only the card is clickable. */
+.app-toaster > *,
+[data-rht-toaster] > * {
+  pointer-events: none !important;
+}
+
+.app-toaster > * > *,
+[data-rht-toaster] > * > * {
+  pointer-events: auto;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────

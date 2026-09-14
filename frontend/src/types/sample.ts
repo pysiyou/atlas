@@ -46,6 +46,7 @@ interface BaseSample {
   // Recollection tracking (present if this sample is a recollection)
   isRecollection?: boolean;
   originalSampleId?: number; // The rejected sample this replaces
+  originalSampleCollectedAt?: string;
   recollectionReason?: string;
   recollectionAttempt?: number; // 1 = original, 2 = 1st recollection, etc.
 

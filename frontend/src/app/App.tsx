@@ -11,6 +11,7 @@ import { Toaster } from 'react-hot-toast';
 import { AppProviders } from '@/app/AppProviders';
 import { ErrorBoundary } from '@/components';
 import { AppToastBar } from '@/app/AppToastBar';
+import { TOAST_DEFAULT_DURATION_MS } from '@/components/overlays/toast';
 import { InitialDataPreload } from '@/app/InitialDataPreload';
 import { ProtectedLayout } from '@/app/ProtectedLayout';
 import { PublicRoute } from '@/app/PublicRoute';
@@ -107,8 +108,8 @@ const App: React.FC = () => {
               position="bottom-right"
               containerClassName="app-toaster"
               toastOptions={{
-                // Host never auto-dismisses; variants own persist vs countdown (see overlays/toast).
-                duration: Infinity,
+                duration: TOAST_DEFAULT_DURATION_MS,
+                removeDelay: 0,
               }}
             >
               {t => <AppToastBar toast={t} />}

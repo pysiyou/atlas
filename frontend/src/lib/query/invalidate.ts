@@ -3,6 +3,7 @@
  *
  * Invalidation matrix:
  * - Orders: create/update/delete/payment → invalidateOrderQueries
+ *   (also invalidates worklists when samples !== false)
  * - Patients: create/update/delete → invalidatePatientQueries
  * - Results: entry/validate/escalation → invalidateResultQueries
  * - Critical values: notify/acknowledge → invalidateCriticalValueQueries
@@ -11,6 +12,7 @@
  * - Collection: collect sample → invalidateCollectionQueries
  * - Lab board refresh → invalidateCommandCenterQueries
  * - Full lab workflow (validation modals) → invalidateLabWorkflowQueries
+ * - Worklists: collection/entry/validation queues → invalidateWorklistQueries
  */
 
 import type { QueryClient, QueryKey } from '@tanstack/react-query';
@@ -23,27 +25,39 @@ export interface InvalidateOrderOptions {
   payments?: boolean;
 }
 
+function settleInvalidations(tasks: Array<Promise<unknown>>): Promise<void> {
+  return Promise.all(tasks).then(() => undefined);
+}
+
+export function invalidateWorklistQueries(client: QueryClient): Promise<void> {
+  return client.invalidateQueries({ queryKey: queryKeys.worklists.all });
+}
+
 export function invalidateOrderQueries(
   client: QueryClient,
   options: InvalidateOrderOptions = {}
-): void {
+): Promise<void> {
   const { orderId, samples = true, payments = false } = options;
   const orderIdStr = orderId !== undefined ? String(orderId) : undefined;
 
-  client.invalidateQueries({ queryKey: queryKeys.orders.all });
+  const tasks: Array<Promise<unknown>> = [
+    client.invalidateQueries({ queryKey: queryKeys.orders.all }),
+  ];
   if (orderIdStr) {
-    client.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
+    tasks.push(client.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) }));
   }
   if (samples) {
-    client.invalidateQueries({ queryKey: queryKeys.samples.all });
+    tasks.push(client.invalidateQueries({ queryKey: queryKeys.samples.all }));
+    tasks.push(invalidateWorklistQueries(client));
   }
   if (payments) {
-    client.invalidateQueries({ queryKey: queryKeys.payments.all });
+    tasks.push(client.invalidateQueries({ queryKey: queryKeys.payments.all }));
   }
+  return settleInvalidations(tasks);
 }
 
-export function invalidateOrderDetailQuery(client: QueryClient, orderId: string): void {
-  client.invalidateQueries({ queryKey: queryKeys.orders.byId(orderId) });
+export function invalidateOrderDetailQuery(client: QueryClient, orderId: string): Promise<void> {
+  return client.invalidateQueries({ queryKey: queryKeys.orders.byId(orderId) });
 }
 
 export interface InvalidatePatientOptions {
@@ -53,14 +67,17 @@ export interface InvalidatePatientOptions {
 export function invalidatePatientQueries(
   client: QueryClient,
   options: InvalidatePatientOptions = {}
-): void {
+): Promise<void> {
   const { patientId } = options;
   const patientIdStr = patientId !== undefined ? String(patientId) : undefined;
 
-  client.invalidateQueries({ queryKey: queryKeys.patients.all });
+  const tasks: Array<Promise<unknown>> = [
+    client.invalidateQueries({ queryKey: queryKeys.patients.all }),
+  ];
   if (patientIdStr) {
-    client.invalidateQueries({ queryKey: queryKeys.patients.byId(patientIdStr) });
+    tasks.push(client.invalidateQueries({ queryKey: queryKeys.patients.byId(patientIdStr) }));
   }
+  return settleInvalidations(tasks);
 }
 
 export interface InvalidateResultOptions {
@@ -72,21 +89,25 @@ export interface InvalidateResultOptions {
 export function invalidateResultQueries(
   client: QueryClient,
   options: InvalidateResultOptions = {}
-): void {
+): Promise<void> {
   const { orderId, samples = true, pendingEscalation = true } = options;
   const orderIdStr = orderId !== undefined ? String(orderId) : undefined;
 
-  client.invalidateQueries({ queryKey: queryKeys.orders.all });
+  const tasks: Array<Promise<unknown>> = [
+    client.invalidateQueries({ queryKey: queryKeys.orders.all }),
+    client.invalidateQueries({ queryKey: queryKeys.results.all }),
+    invalidateWorklistQueries(client),
+  ];
   if (orderIdStr) {
-    client.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) });
+    tasks.push(client.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) }));
   }
   if (samples) {
-    client.invalidateQueries({ queryKey: queryKeys.samples.all });
+    tasks.push(client.invalidateQueries({ queryKey: queryKeys.samples.all }));
   }
-  client.invalidateQueries({ queryKey: queryKeys.results.all });
   if (pendingEscalation) {
-    client.invalidateQueries({ queryKey: queryKeys.results.pendingEscalation() });
+    tasks.push(client.invalidateQueries({ queryKey: queryKeys.results.pendingEscalation() }));
   }
+  return settleInvalidations(tasks);
 }
 
 export interface InvalidateCriticalValueOptions {
@@ -96,32 +117,45 @@ export interface InvalidateCriticalValueOptions {
 export function invalidateCriticalValueQueries(
   client: QueryClient,
   options: InvalidateCriticalValueOptions = {}
-): void {
-  client.invalidateQueries({ queryKey: queryKeys.criticalValues.all });
-  invalidateOrderQueries(client, { orderId: options.orderId, samples: false, payments: false });
+): Promise<void> {
+  return settleInvalidations([
+    client.invalidateQueries({ queryKey: queryKeys.criticalValues.all }),
+    invalidateOrderQueries(client, { orderId: options.orderId, samples: false, payments: false }),
+  ]);
 }
 
-export function invalidateQualityIssueQueries(client: QueryClient): void {
-  client.invalidateQueries({ queryKey: queryKeys.samples.all });
-  client.invalidateQueries({ queryKey: queryKeys.orders.all });
-  client.invalidateQueries({ queryKey: queryKeys.qualityIssues.all });
-  client.invalidateQueries({ queryKey: queryKeys.recollectionRequests.all });
+export function invalidateQualityIssueQueries(client: QueryClient): Promise<void> {
+  return settleInvalidations([
+    client.invalidateQueries({ queryKey: queryKeys.samples.all }),
+    client.invalidateQueries({ queryKey: queryKeys.orders.all }),
+    client.invalidateQueries({ queryKey: queryKeys.qualityIssues.all }),
+    client.invalidateQueries({ queryKey: queryKeys.recollectionRequests.all }),
+    invalidateWorklistQueries(client),
+  ]);
 }
 
-export function invalidateRecollectionQueries(client: QueryClient): void {
-  client.invalidateQueries({ queryKey: queryKeys.recollectionRequests.all });
+export function invalidateRecollectionQueries(client: QueryClient): Promise<void> {
+  return settleInvalidations([
+    client.invalidateQueries({ queryKey: queryKeys.recollectionRequests.all }),
+    invalidateWorklistQueries(client),
+  ]);
 }
 
-export function invalidateCollectionQueries(client: QueryClient): void {
-  client.invalidateQueries({ queryKey: queryKeys.samples.all });
-  client.invalidateQueries({ queryKey: queryKeys.orders.all });
+export function invalidateCollectionQueries(client: QueryClient): Promise<void> {
+  return settleInvalidations([
+    client.invalidateQueries({ queryKey: queryKeys.samples.all }),
+    client.invalidateQueries({ queryKey: queryKeys.orders.all }),
+    invalidateWorklistQueries(client),
+  ]);
 }
 
-export function invalidateCommandCenterQueries(client: QueryClient): void {
-  client.invalidateQueries({ queryKey: queryKeys.orders.all });
-  client.invalidateQueries({ queryKey: queryKeys.samples.all });
-  client.invalidateQueries({ queryKey: queryKeys.commandCenter.all });
-  client.invalidateQueries({ queryKey: queryKeys.worklists.all });
+export function invalidateCommandCenterQueries(client: QueryClient): Promise<void> {
+  return settleInvalidations([
+    client.invalidateQueries({ queryKey: queryKeys.orders.all }),
+    client.invalidateQueries({ queryKey: queryKeys.samples.all }),
+    client.invalidateQueries({ queryKey: queryKeys.commandCenter.all }),
+    invalidateWorklistQueries(client),
+  ]);
 }
 
 export interface InvalidateLabWorkflowOptions {
@@ -133,45 +167,52 @@ export interface InvalidateLabWorkflowOptions {
 export function invalidateLabWorkflowQueries(
   client: QueryClient,
   options: InvalidateLabWorkflowOptions = {}
-): void {
+): Promise<void> {
   const { orderId, criticalValues = false, pendingEscalation = false } = options;
-  invalidateOrderQueries(client, { orderId, samples: true, payments: false });
-  invalidateCommandCenterQueries(client);
+  const tasks: Array<Promise<unknown>> = [
+    invalidateOrderQueries(client, { orderId, samples: true, payments: false }),
+    invalidateCommandCenterQueries(client),
+  ];
   if (criticalValues) {
-    client.invalidateQueries({ queryKey: queryKeys.criticalValues.all });
+    tasks.push(client.invalidateQueries({ queryKey: queryKeys.criticalValues.all }));
   }
   if (pendingEscalation) {
-    client.invalidateQueries({ queryKey: queryKeys.results.pendingEscalation() });
+    tasks.push(client.invalidateQueries({ queryKey: queryKeys.results.pendingEscalation() }));
   }
+  return settleInvalidations(tasks);
 }
 
 export function invalidateSampleDetailQueries(
   client: QueryClient,
   sampleId?: string,
   orderId?: string
-): void {
+): Promise<void> {
+  const tasks: Array<Promise<unknown>> = [];
   if (sampleId) {
-    client.invalidateQueries({ queryKey: queryKeys.samples.byId(sampleId) });
+    tasks.push(client.invalidateQueries({ queryKey: queryKeys.samples.byId(sampleId) }));
   }
   if (orderId) {
-    client.invalidateQueries({ queryKey: queryKeys.samples.byOrder(orderId) });
+    tasks.push(client.invalidateQueries({ queryKey: queryKeys.samples.byOrder(orderId) }));
   }
+  return settleInvalidations(tasks);
 }
 
-export function invalidatePendingEscalationQueries(client: QueryClient): void {
-  client.invalidateQueries({ queryKey: queryKeys.results.pendingEscalation() });
+export function invalidatePendingEscalationQueries(client: QueryClient): Promise<void> {
+  return client.invalidateQueries({ queryKey: queryKeys.results.pendingEscalation() });
 }
 
 export function invalidatePaymentDetailQueries(
   client: QueryClient,
   options: { paymentId?: string; orderId?: string }
-): void {
+): Promise<void> {
+  const tasks: Array<Promise<unknown>> = [];
   if (options.paymentId) {
-    client.invalidateQueries({ queryKey: queryKeys.payments.byId(options.paymentId) });
+    tasks.push(client.invalidateQueries({ queryKey: queryKeys.payments.byId(options.paymentId) }));
   }
   if (options.orderId) {
-    client.invalidateQueries({ queryKey: queryKeys.payments.byOrder(options.orderId) });
+    tasks.push(client.invalidateQueries({ queryKey: queryKeys.payments.byOrder(options.orderId) }));
   }
+  return settleInvalidations(tasks);
 }
 
 export function useInvalidateQueryKey(queryKey: QueryKey) {

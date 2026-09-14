@@ -2,6 +2,7 @@
  * Tests API service — pure HTTP, no React.
  */
 import { apiClient } from '@/lib/api/client';
+import { expectArray } from '@/lib/api/errors';
 import type { ApiTestResponse } from '@/lib/api/types';
 import { REFERENCE_DATA_LIMIT } from '@/lib/api/constants';
 import type { Test, TestCategory, TestParameter, ResultItem } from '@/types';
@@ -80,7 +81,10 @@ export const testAPI = {
     if (params?.skip) queryParams.skip = String(params.skip);
     if (params?.limit) queryParams.limit = String(params.limit);
 
-    const apiTests = await apiClient.get<APITestResponse[]>('/tests', queryParams);
+    const apiTests = expectArray<APITestResponse>(
+      await apiClient.get<APITestResponse[]>('/tests', queryParams),
+      'catalog'
+    );
     return apiTests.map(transformAPITest);
   },
 
@@ -94,7 +98,10 @@ export const testAPI = {
   },
 
   async search(query: string): Promise<Test[]> {
-    const apiTests = await apiClient.get<APITestResponse[]>('/tests/search', { q: query });
+    const apiTests = expectArray<APITestResponse>(
+      await apiClient.get<APITestResponse[]>('/tests/search', { q: query }),
+      'catalog search'
+    );
     return apiTests.map(transformAPITest);
   },
 

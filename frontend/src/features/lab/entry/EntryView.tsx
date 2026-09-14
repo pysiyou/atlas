@@ -4,7 +4,7 @@
 
 import React, { useMemo } from 'react';
 import { useTestNameLookup } from '@/features/catalog';
-import { useLabDataProvider, createWorkflowFilters } from '@/features/lab/hooks';
+import { useLabDataProvider, useCreateWorkflowFilters } from '@/features/lab/hooks';
 import type { TestWithContextResult } from '@/features/lab/hooks/useLabTestsFromOrders';
 import { useEntryWorklist } from '../api/worklists.api';
 import { entryWorklistToTestContext } from '../utils/worklistMappers';
@@ -50,7 +50,7 @@ export const EntryView: React.FC = () => {
     setSampleTypeFilters,
     statusFilters,
     setStatusFilters,
-  } = createWorkflowFilters({
+  } = useCreateWorkflowFilters({
     items: allTests,
     workflowType: 'entry',
   });

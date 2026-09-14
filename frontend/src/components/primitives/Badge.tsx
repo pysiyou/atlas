@@ -10,7 +10,6 @@ import {
   getColorStyles,
   CONTAINER_STYLES,
   DISPLAY_LABELS,
-  CRITICAL_VARIANTS,
   SIZES,
   ICON_SIZES,
 } from './badgeHelpers';
@@ -71,8 +70,8 @@ export const Badge: React.FC<BadgeProps> = ({
       ? (DISPLAY_LABELS[normalizedVariant] ?? String(variant).replace(/-/g, ' ').toUpperCase())
       : null);
 
-  // Auto-pulse for critical variants
-  const shouldPulse = pulse ?? CRITICAL_VARIANTS.has(normalizedVariant);
+  // Pulse only when explicitly requested (badges stay static by default).
+  const shouldPulse = pulse === true;
 
   // Render icon
   const renderIcon = () => {

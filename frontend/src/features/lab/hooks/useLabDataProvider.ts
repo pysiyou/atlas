@@ -17,6 +17,11 @@ import { useOrderLookup } from '@/features/orders';
 import { useSamplesList } from '../api/samples.api';
 import { usePendingEscalation } from '../api/results.api';
 import { usePendingRecollectionRequests } from '../api/recollection-requests.api';
+import {
+  useCollectionWorklist,
+  useEntryWorklist,
+  useValidationWorklist,
+} from '../api/worklists.api';
 import { useCollectionSampleDisplays } from '../collection/useCollectionSampleDisplays';
 import { useLabTestsFromOrders } from './useLabTestsFromOrders';
 import type { Order, Sample, Test, TestWithContext } from '@/types';
@@ -94,6 +99,9 @@ export function useLabDataProvider(): LabDataProviderResult {
   } = useTestCatalog();
   const { escalatedTests = [] } = usePendingEscalation(tabRefresh);
   const { requests: recollectionRequests = [] } = usePendingRecollectionRequests(tabRefresh);
+  const collectionWorklist = useCollectionWorklist();
+  const entryWorklist = useEntryWorklist();
+  const validationWorklist = useValidationWorklist();
   
   // Lookup utilities
   const { getPatient, getPatientName } = usePatientNameLookup();
@@ -132,12 +140,22 @@ export function useLabDataProvider(): LabDataProviderResult {
     const recollectionCount = canResolveEscalation ? recollectionRequests.length : 0;
 
     return {
-      collection: collectionDisplays.filter(d => d.sample?.status === 'pending').length,
-      entry: entryTests.length,
-      validation: validationTests.length,
+      collection: collectionWorklist.pagination?.total ?? collectionWorklist.items.length,
+      entry: entryWorklist.pagination?.total ?? entryWorklist.items.length,
+      validation: validationWorklist.pagination?.total ?? validationWorklist.items.length,
       supervisor: escalatedCount + recollectionCount,
     };
-  }, [collectionDisplays, entryTests, validationTests, escalatedTests, recollectionRequests, canResolveEscalation]);
+  }, [
+    collectionWorklist.pagination?.total,
+    collectionWorklist.items.length,
+    entryWorklist.pagination?.total,
+    entryWorklist.items.length,
+    validationWorklist.pagination?.total,
+    validationWorklist.items.length,
+    escalatedTests,
+    recollectionRequests,
+    canResolveEscalation,
+  ]);
   
   const isLoading = ordersLoading || samplesLoading || catalogLoading;
   const isError = ordersError || samplesError || catalogError;
@@ -146,6 +164,9 @@ export function useLabDataProvider(): LabDataProviderResult {
     void refetchOrders();
     void refetchSamples();
     void refetchCatalog();
+    void collectionWorklist.refetch();
+    void entryWorklist.refetch();
+    void validationWorklist.refetch();
   };
   
   return {
