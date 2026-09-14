@@ -132,7 +132,11 @@ export function useResolveEscalation() {
   });
 }
 
-export function usePendingEscalation() {
+export interface LabQueryRefetchOptions {
+  refetchInterval?: number;
+}
+
+export function usePendingEscalation(refetchOptions?: LabQueryRefetchOptions) {
   const { isAuthenticated, isLoading: isRestoring, hasRole } = useAuthStore();
   const queryClient = useQueryClient();
   const canViewEscalations = hasRole(['administrator', 'lab-technician', 'lab-technician-plus']);
@@ -143,7 +147,7 @@ export function usePendingEscalation() {
     queryFn: () => resultAPI.getPendingEscalation(),
     enabled: isAuthenticated && !isRestoring && canViewEscalations,
     ...cacheConfig.dynamic,
-    refetchInterval: 15_000,
+    refetchInterval: refetchOptions?.refetchInterval ?? 15_000,
   });
 
   const invalidatePendingEscalation = () => {

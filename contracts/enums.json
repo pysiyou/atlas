@@ -206,7 +206,8 @@
   "ValidationDecision": {
     "type": "string",
     "values": {
-      "APPROVED": "approved"
+      "APPROVED": "approved",
+      "REJECTED": "rejected"
     }
   },
   "LabOperationType": {

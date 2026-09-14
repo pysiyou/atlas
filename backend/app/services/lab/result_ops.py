@@ -9,11 +9,15 @@ from app.models.test import Test
 from app.schemas.enums import (
     EscalationReasonCode,
     LabOperationType,
+    RemedyType,
     SampleStatus,
     TestStatus,
 )
+from app.schemas.enums import OrderStatus
+from app.services.lab.delta_check import DeltaCheckService
+from app.services.lab.reflex import ReflexEngine
 from app.services.lab.state import TestStateMachine
-from app.services.orders.order import build_order_completion_metadata, update_order_status
+from app.services.orders.order import OrderService, build_order_completion_metadata, update_order_status
 from app.utils.exceptions import LabOperationError
 
 class ResultOperations:
@@ -70,6 +74,39 @@ class ResultOperations:
 
         has_critical = self._svc.flag_calculator.has_critical_values(flags)
         order_test.hasCriticalValues = has_critical
+
+        if order and patient:
+            delta_warnings = DeltaCheckService(self._svc.db).check_results(
+                patient_id=order.patientId,
+                test_code=test_code,
+                results=results_serializable,
+                exclude_order_test_id=order_test.id,
+            )
+            if delta_warnings:
+                delta_flag_strings = [
+                    f"DELTA:{w.item_code}:{w.percent_change}"
+                    for w in delta_warnings
+                ]
+                existing_flags = list(order_test.flags or [])
+                order_test.flags = existing_flags + delta_flag_strings
+                flag_modified(order_test, "flags")
+                self._svc.audit.log_operation(
+                    operation_type=LabOperationType.RESULT_ENTRY,
+                    entity_type="order_test",
+                    entity_id=order_test.id,
+                    user_id=user_id,
+                    metadata={
+                        "deltaChecks": [
+                            {
+                                "itemCode": w.item_code,
+                                "percentChange": w.percent_change,
+                                "priorValue": w.prior_value,
+                                "currentValue": w.current_value,
+                            }
+                            for w in delta_warnings
+                        ]
+                    },
+                )
 
         if has_critical:
             critical_flags = self._svc.flag_calculator.get_critical_flags(flags)
@@ -156,10 +193,44 @@ class ResultOperations:
             metadata=completion_meta,
         )
 
+        reflex_added = ReflexEngine(self._svc.db).evaluate_after_validation(order_test, user_id)
+        if reflex_added:
+            reflex_note = "; ".join(
+                f"Reflex {r.added_test_code}: {r.rule_description}" for r in reflex_added
+            )
+            order_test.validationNotes = (
+                f"{order_test.validationNotes or ''} [{reflex_note}]".strip()
+            )
+
         self._svc.db.commit()
         self._svc.db.refresh(order_test)
         update_order_status(self._svc.db, order_id)
+
+        order = self._svc.db.query(Order).filter(Order.orderId == order_id).first()
+        if order and order.overallStatus == OrderStatus.COMPLETED:
+            try:
+                OrderService(self._svc.db).mark_as_reported(order_id)
+            except Exception:
+                pass
+
         return order_test
+
+    def reject_results(
+        self,
+        order_test_id: int,
+        user_id: int,
+        rejection_reason: str,
+        validation_notes: Optional[str] = None,
+        preferred_remedy: Optional[RemedyType] = None,
+    ):
+        """Reject resulted test via validate endpoint (delegates to quality workflow)."""
+        return self._svc.quality._report_test_issue(
+            order_test_id=order_test_id,
+            user_id=user_id,
+            reason=rejection_reason,
+            notes=validation_notes,
+            preferred_remedy=preferred_remedy,
+        )
 
     def request_amendment(
         self,

@@ -58,12 +58,12 @@ export const COMMAND_CENTER_PANEL = {
 
 export const COMMAND_CENTER_SECTION = {
   /** Inner panel section heading (e.g. By Stage, Wait Per Step). */
-  title: `text-xxs font-medium uppercase tracking-wide ${COMMAND_CENTER_TEXT.sectionTitle}`,
+  title: `text-[9.5px] font-normal uppercase tracking-normal leading-tight ${COMMAND_CENTER_TEXT.sectionTitle}`,
   /** Footer note under a section or panel body. */
   summary: `text-xxs leading-snug ${COMMAND_CENTER_TEXT.summary}`,
   /** Right-aligned section context (counts, totals). */
-  aside: `shrink-0 text-xxs tabular-nums ${COMMAND_CENTER_TEXT.sectionAside}`,
-  statLabel: `text-xxs font-medium uppercase tracking-wide ${COMMAND_CENTER_TEXT.sectionTitle}`,
+  aside: `shrink-0 text-[9.5px] tabular-nums ${COMMAND_CENTER_TEXT.sectionAside}`,
+  statLabel: `text-[9.5px] font-normal uppercase tracking-normal leading-tight ${COMMAND_CENTER_TEXT.sectionTitle}`,
 } as const;
 
 export const COMMAND_CENTER_KPI = {

@@ -9,6 +9,7 @@
 
 import { useMemo } from 'react';
 import { useAuthStore } from '@/app/store';
+import { LAB_CONFIG } from '@/features/lab/constants';
 import { useOrdersList } from '@/features/orders';
 import { useTestCatalog } from '@/features/catalog';
 import { usePatientNameLookup } from '@/features/patients';
@@ -65,11 +66,13 @@ export function useLabDataProvider(): LabDataProviderResult {
   const canResolveEscalation = hasRole(['administrator', 'lab-technician-plus']);
   
   // Primary data sources
-  const { orders = [], isLoading: ordersLoading } = useOrdersList();
-  const { samples = [], isLoading: samplesLoading } = useSamplesList();
+  const tabRefresh = { refetchInterval: LAB_CONFIG.TAB_COUNT_REFRESH_MS };
+
+  const { orders = [], isLoading: ordersLoading } = useOrdersList(undefined, tabRefresh);
+  const { samples = [], isLoading: samplesLoading } = useSamplesList(undefined, tabRefresh);
   const { tests = [], isLoading: catalogLoading } = useTestCatalog();
-  const { escalatedTests = [] } = usePendingEscalation();
-  const { requests: recollectionRequests = [] } = usePendingRecollectionRequests();
+  const { escalatedTests = [] } = usePendingEscalation(tabRefresh);
+  const { requests: recollectionRequests = [] } = usePendingRecollectionRequests(tabRefresh);
   
   // Lookup utilities
   const { getPatient, getPatientName } = usePatientNameLookup();
@@ -99,6 +102,7 @@ export function useLabDataProvider(): LabDataProviderResult {
     statusFilter: ['resulted'],
     onlyUnvalidated: true,
     includeHasCriticalValues: true,
+    includePatient: true,
   });
   
   // Pipeline counts

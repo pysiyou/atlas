@@ -898,6 +898,143 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/lab/worklists/collection": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Collection Worklist */
+        get: operations["get_collection_worklist_api_v1_lab_worklists_collection_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/worklists/entry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Entry Worklist */
+        get: operations["get_entry_worklist_api_v1_lab_worklists_entry_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/worklists/validation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Validation Worklist */
+        get: operations["get_validation_worklist_api_v1_lab_worklists_validation_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/board": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Lab Board */
+        get: operations["get_lab_board_api_v1_lab_board_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/invoices/order/{orderId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Invoices For Order */
+        get: operations["list_invoices_for_order_api_v1_invoices_order__orderId__get"];
+        put?: never;
+        /** Create Invoice For Order */
+        post: operations["create_invoice_for_order_api_v1_invoices_order__orderId__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/invoices/{invoiceId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Invoice */
+        get: operations["get_invoice_api_v1_invoices__invoiceId__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/insurance-claims/order/{orderId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Claims For Order */
+        get: operations["list_claims_for_order_api_v1_insurance_claims_order__orderId__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/insurance-claims": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Submit Insurance Claim */
+        post: operations["submit_insurance_claim_api_v1_insurance_claims_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1003,6 +1140,22 @@ export interface components {
             /** Count */
             count: number;
         };
+        /** BlockerSummary */
+        BlockerSummary: {
+            /** Paymentunpaid */
+            paymentUnpaid: number;
+            /** Retestpending */
+            retestPending: number;
+            /** Recollectionwaiting */
+            recollectionWaiting: number;
+            /** Total */
+            total: number;
+        };
+        /**
+         * ClaimStatus
+         * @enum {string}
+         */
+        ClaimStatus: "submitted" | "processing" | "approved" | "denied" | "paid";
         /**
          * ContainerTopColor
          * @enum {string}
@@ -1121,6 +1274,135 @@ export interface components {
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** InsuranceClaimCreate */
+        InsuranceClaimCreate: {
+            /** Orderid */
+            orderId: number;
+            /** Invoiceid */
+            invoiceId: number;
+            /** Insuranceprovider */
+            insuranceProvider: string;
+            /** Insurancenumber */
+            insuranceNumber: string;
+            /** Claimamount */
+            claimAmount: number;
+            /** Notes */
+            notes?: string | null;
+        };
+        /** InsuranceClaimResponse */
+        InsuranceClaimResponse: {
+            /** Claimid */
+            claimId: number;
+            /** Orderid */
+            orderId: number;
+            /** Invoiceid */
+            invoiceId: number;
+            /** Patientid */
+            patientId: number;
+            /** Insuranceprovider */
+            insuranceProvider: string;
+            /** Insurancenumber */
+            insuranceNumber: string;
+            /** Claimamount */
+            claimAmount: number;
+            /** Approvedamount */
+            approvedAmount?: number | null;
+            claimStatus: components["schemas"]["ClaimStatus"];
+            /**
+             * Submitteddate
+             * Format: date-time
+             */
+            submittedDate: string;
+            /** Processeddate */
+            processedDate?: string | null;
+            /** Denialreason */
+            denialReason?: string | null;
+            /** Notes */
+            notes?: string | null;
+        };
+        /** InvoiceItem */
+        InvoiceItem: {
+            /** Testcode */
+            testCode: string;
+            /** Testname */
+            testName: string;
+            /**
+             * Quantity
+             * @default 1
+             */
+            quantity: number;
+            /** Unitprice */
+            unitPrice: number;
+            /** Totalprice */
+            totalPrice: number;
+        };
+        /** InvoiceResponse */
+        InvoiceResponse: {
+            /** Invoiceid */
+            invoiceId: number;
+            /** Orderid */
+            orderId: number;
+            /** Patientid */
+            patientId: number;
+            /** Patientname */
+            patientName: string;
+            /** Items */
+            items: components["schemas"]["InvoiceItem"][];
+            /** Subtotal */
+            subtotal: number;
+            /** Discount */
+            discount: number;
+            /** Tax */
+            tax: number;
+            /** Total */
+            total: number;
+            paymentStatus: components["schemas"]["PaymentStatus"];
+            /** Amountpaid */
+            amountPaid: number;
+            /** Amountdue */
+            amountDue: number;
+            /**
+             * Createdat
+             * Format: date-time
+             */
+            createdAt: string;
+            /**
+             * Updatedat
+             * Format: date-time
+             */
+            updatedAt: string;
+            /** Duedate */
+            dueDate?: string | null;
+        };
+        /** LabBoardCounts */
+        LabBoardCounts: {
+            /** Collection */
+            collection: number;
+            /** Entry */
+            entry: number;
+            /** Validation */
+            validation: number;
+            /** Supervisor */
+            supervisor: number;
+        };
+        /** LabBoardResponse */
+        LabBoardResponse: {
+            counts: components["schemas"]["LabBoardCounts"];
+            /** Queueage */
+            queueAge: {
+                [key: string]: components["schemas"]["QueueAgeStats"];
+            };
+            blockers: components["schemas"]["BlockerSummary"];
+            /**
+             * Health
+             * @enum {string}
+             */
+            health: "healthy" | "attention" | "critical";
+            /** Healthmessage */
+            healthMessage: string;
+            /** Suggestedtab */
+            suggestedTab: string | null;
         };
         /** LabOperationLogResponse */
         LabOperationLogResponse: {
@@ -1774,6 +2056,17 @@ export interface components {
          * @enum {string}
          */
         QualityStage: "collection" | "validation";
+        /** QueueAgeStats */
+        QueueAgeStats: {
+            /** Oldesthours */
+            oldestHours: number | null;
+            /** Averagehours */
+            averageHours: number | null;
+            /** Warningcount */
+            warningCount: number;
+            /** Criticalcount */
+            criticalCount: number;
+        };
         /** RecollectionRequestResult */
         RecollectionRequestResult: {
             /** Success */
@@ -1921,6 +2214,9 @@ export interface components {
             decision: components["schemas"]["ValidationDecision"];
             /** Validationnotes */
             validationNotes?: string | null;
+            /** Rejectionreason */
+            rejectionReason?: string | null;
+            preferredRemedy?: components["schemas"]["RemedyType"] | null;
         };
         /** SampleCollectRequest */
         SampleCollectRequest: {
@@ -2335,7 +2631,7 @@ export interface components {
          * ValidationDecision
          * @enum {string}
          */
-        ValidationDecision: "approved";
+        ValidationDecision: "approved" | "rejected";
         /** ValidationError */
         ValidationError: {
             /** Location */
@@ -4342,6 +4638,285 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TimelineResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_collection_worklist_api_v1_lab_worklists_collection_get: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                search?: string | null;
+                priority?: components["schemas"]["PriorityLevel"] | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_entry_worklist_api_v1_lab_worklists_entry_get: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                search?: string | null;
+                priority?: components["schemas"]["PriorityLevel"] | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_validation_worklist_api_v1_lab_worklists_validation_get: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                search?: string | null;
+                priority?: components["schemas"]["PriorityLevel"] | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_lab_board_api_v1_lab_board_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LabBoardResponse"];
+                };
+            };
+        };
+    };
+    list_invoices_for_order_api_v1_invoices_order__orderId__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvoiceResponse"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_invoice_for_order_api_v1_invoices_order__orderId__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvoiceResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_invoice_api_v1_invoices__invoiceId__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                invoiceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvoiceResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_claims_for_order_api_v1_insurance_claims_order__orderId__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InsuranceClaimResponse"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    submit_insurance_claim_api_v1_insurance_claims_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InsuranceClaimCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InsuranceClaimResponse"];
                 };
             };
             /** @description Validation Error */

@@ -1,20 +1,20 @@
 /**
  * CollectionView - Main view for sample collection workflow
- *
- * Refactored to use useLabDataProvider and createWorkflowFilters.
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import { useLabDataProvider, createWorkflowFilters } from '@/features/lab/hooks';
+import { createWorkflowFilters } from '@/features/lab/hooks';
 import type { SampleDisplay } from '@/features/lab/types';
 import { useCollectSample } from '../api/samples.api';
+import { useCollectionWorklist } from '../api/worklists.api';
 import { useOrdersList } from '@/features/orders';
 import { useCollectionCollectHandler } from './useCollectionCollectHandler';
 import { CollectionCard } from './CollectionCard/index';
 import { LabWorkflowView } from '../components/LabWorkflowView';
 import { LabFilters } from '../components/LabFilters';
 import { collectionFilterConfig } from '../constants';
+import { collectionWorklistToDisplay } from '../utils/worklistMappers';
 import { ErrorBoundary } from '@/components';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { useAuthStore } from '@/app/store';
@@ -25,13 +25,14 @@ export const CollectionView: React.FC = () => {
   const collectSampleMutation = useCollectSample();
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
+  const { items: worklistItems, isLoading } = useCollectionWorklist();
+  const collectionDisplays = useMemo(
+    () => worklistItems.map(collectionWorklistToDisplay),
+    [worklistItems]
+  );
 
-  // Use shared data provider
-  const { collectionDisplays, isLoading } = useLabDataProvider();
-
-  // Use filter factory
   const {
-    filteredItems: filteredDisplays,
+    filteredItems: filteredDisplaysRaw,
     searchQuery,
     setSearchQuery,
     dateRange,
@@ -44,6 +45,7 @@ export const CollectionView: React.FC = () => {
     items: collectionDisplays,
     workflowType: 'collection',
   });
+  const filteredDisplays = filteredDisplaysRaw as SampleDisplay[];
 
   const { handleCollect } = useCollectionCollectHandler({
     isAuthenticated: !!currentUser,
@@ -72,7 +74,7 @@ export const CollectionView: React.FC = () => {
             isMobile={isMobile}
           />
         )}
-        getItemKey={(display: any, idx: number) =>
+        getItemKey={(display: SampleDisplay, idx: number) =>
           `${display.order.orderId}-${display.sample?.sampleType || 'unknown'}-${display.sample?.sampleId || idx}-${idx}`
         }
         emptyIcon="sample-collection"

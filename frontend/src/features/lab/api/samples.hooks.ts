@@ -52,7 +52,11 @@ export interface SamplesFilters {
  * const { samples, isLoading, error } = useSamplesList();
  * ```
  */
-export function useSamplesList(filters?: SamplesFilters) {
+export interface LabQueryRefetchOptions {
+  refetchInterval?: number;
+}
+
+export function useSamplesList(filters?: SamplesFilters, refetchOptions?: LabQueryRefetchOptions) {
   const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
 
   const query = useQuery({
@@ -60,6 +64,9 @@ export function useSamplesList(filters?: SamplesFilters) {
     queryFn: () => sampleAPI.getAll(filters),
     enabled: isAuthenticated && !isRestoring, // Only fetch when authenticated and not restoring
     ...cacheConfig.dynamic, // 30s stale, 5 min gc
+    ...(refetchOptions?.refetchInterval != null
+      ? { refetchInterval: refetchOptions.refetchInterval }
+      : {}),
   });
 
   return {

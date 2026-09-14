@@ -9,8 +9,11 @@ import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import { usePatient } from '@/features/patients';
 import { useOrder } from '../api/orders.api';
 import { getActiveTests } from '@/features/orders/utils';
+import toast from 'react-hot-toast';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
+import { formatCurrency, displayId } from '@/utils';
 import type { Invoice } from '@/types';
+import { useOrderInvoices } from '@/features/billing/api/billing.hooks';
 import { DetailPageShell, DetailPageHeader } from '@/components';
 import { OrderHeader } from '../components/OrderHeader';
 import {
@@ -31,11 +34,30 @@ export const OrderDetail: React.FC = () => {
   const { openModal } = useModal();
 
   const { order, isLoading: orderLoading } = useOrder(id);
+  const orderIdNum = order?.orderId;
+  const { invoices } = useOrderInvoices(orderIdNum);
   const { patient: patientData, isLoading: patientLoading } = usePatient(
     order?.patientId.toString()
   );
   const patient = patientData ?? null;
-  const invoice: Invoice | null = null;
+  const invoice: Invoice | null = invoices[0]
+    ? {
+        invoiceId: invoices[0].invoiceId,
+        orderId: invoices[0].orderId,
+        patientId: invoices[0].patientId,
+        patientName: invoices[0].patientName,
+        status: invoices[0].paymentStatus === 'paid' ? 'paid' : 'unpaid',
+        items: invoices[0].items,
+        subtotal: invoices[0].subtotal,
+        discount: invoices[0].discount,
+        tax: invoices[0].tax,
+        total: invoices[0].total,
+        amountPaid: invoices[0].amountPaid,
+        amountDue: invoices[0].amountDue,
+        createdAt: invoices[0].createdAt,
+        dueDate: invoices[0].dueDate ?? undefined,
+      }
+    : null;
 
   const activeTests = order != null ? getActiveTests(order.tests) : [];
   // Count tests that are not shown: removed, and optionally superseded (shown with reduced opacity)
@@ -44,7 +66,10 @@ export const OrderDetail: React.FC = () => {
 
   const handleViewPatient = () => navigate(`/patients/${order?.patientId}`);
   const handleViewInvoice = () => {
-    /* Stubbed until API */
+    if (!invoice) return;
+    toast.success(
+      `${displayId.invoice(invoice.invoiceId)} — ${formatCurrency(invoice.total)} (${invoice.status})`
+    );
   };
   const handleEdit = () => {
     if (order?.overallStatus === 'ordered') {

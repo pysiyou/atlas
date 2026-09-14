@@ -29,6 +29,12 @@ class Settings(BaseSettings):
     REPORTS_DIR: str = "./storage/reports"
     UPLOADS_DIR: str = "./storage/uploads"
 
+    # Analyzer integration — required for /analyzer/* endpoints
+    ANALYZER_API_KEY: str = Field(
+        default="",
+        description="Shared secret for analyzer ingest (X-Analyzer-Key header)",
+    )
+
     # Optional artificial delay for testing loading UI (ms). Set to 0 to disable.
     ARTIFICIAL_DELAY_MS: int = Field(default=0, description="Optional delay in ms for all API v1 requests (for testing loading UI)")
 

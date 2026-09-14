@@ -121,6 +121,7 @@ export function invalidateCommandCenterQueries(client: QueryClient): void {
   client.invalidateQueries({ queryKey: queryKeys.orders.all });
   client.invalidateQueries({ queryKey: queryKeys.samples.all });
   client.invalidateQueries({ queryKey: queryKeys.commandCenter.all });
+  client.invalidateQueries({ queryKey: queryKeys.worklists.all });
 }
 
 export interface InvalidateLabWorkflowOptions {

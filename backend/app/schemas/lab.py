@@ -16,6 +16,17 @@ class ResultEntryRequest(BaseModel):
 class ResultValidationRequest(BaseModel):
     decision: ValidationDecision
     validationNotes: Optional[str] = None
+    rejectionReason: Optional[str] = Field(None, min_length=1, max_length=1000)
+    preferredRemedy: Optional[RemedyType] = None
+
+    @model_validator(mode="after")
+    def reject_requires_reason_and_remedy(self):
+        if self.decision == ValidationDecision.REJECTED:
+            if not (self.rejectionReason or "").strip():
+                raise ValueError("rejectionReason is required when decision is rejected")
+            if self.preferredRemedy is None:
+                raise ValueError("preferredRemedy is required when decision is rejected")
+        return self
 
 
 class EscalationResolveResponse(BaseModel):

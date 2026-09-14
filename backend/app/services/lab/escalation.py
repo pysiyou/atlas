@@ -122,6 +122,16 @@ class EscalationEngine:
             ticket.reasonCode == EscalationReasonCode.CRIT_VAL
             and action == EscalationResolutionAction.FORCE_VALIDATE
         ):
+            order_test = (
+                self.db.query(OrderTest)
+                .filter(OrderTest.id == order_test_id)
+                .first()
+            )
+            if order_test and not order_test.criticalNotificationSent:
+                raise LabOperationError(
+                    "Critical value must be notified before force-validate",
+                    status_code=422,
+                )
             if not read_back_payload or not read_back_payload.get("readBackConfirmed"):
                 raise LabOperationError(
                     "Critical value force-validate requires provider read-back confirmation",

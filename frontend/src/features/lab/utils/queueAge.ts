@@ -1,5 +1,5 @@
 import { differenceInHours, parseISO, isValid } from 'date-fns';
-import { LAB_CONFIG } from '@/features/lab/constants';
+import { LAB_CONFIG } from '@/features/lab/constants/labConfig';
 
 type QueueAgeVariant = 'default' | 'warning' | 'danger';
 
@@ -10,7 +10,10 @@ export interface QueueAgeInfo {
 }
 
 /** Computes queue age label and urgency variant from an ISO timestamp. */
-export function getQueueAgeInfo(since: string | undefined | null): QueueAgeInfo | null {
+export function getQueueAgeInfo(
+  since: string | undefined | null,
+  turnaroundHours?: number
+): QueueAgeInfo | null {
   if (!since) return null;
 
   const date = parseISO(since);
@@ -19,10 +22,19 @@ export function getQueueAgeInfo(since: string | undefined | null): QueueAgeInfo 
   const hours = Math.max(0, differenceInHours(new Date(), date));
   const label = hours < 1 ? '<1h waiting' : `${hours}h waiting`;
 
+  const warningThreshold =
+    turnaroundHours != null && turnaroundHours > 0
+      ? Math.min(turnaroundHours * 0.5, LAB_CONFIG.QUEUE_AGE_WARNING_HOURS)
+      : LAB_CONFIG.QUEUE_AGE_WARNING_HOURS;
+  const criticalThreshold =
+    turnaroundHours != null && turnaroundHours > 0
+      ? Math.min(turnaroundHours, LAB_CONFIG.QUEUE_AGE_CRITICAL_HOURS)
+      : LAB_CONFIG.QUEUE_AGE_CRITICAL_HOURS;
+
   let variant: QueueAgeVariant = 'default';
-  if (hours >= LAB_CONFIG.QUEUE_AGE_CRITICAL_HOURS) {
+  if (hours >= criticalThreshold) {
     variant = 'danger';
-  } else if (hours >= LAB_CONFIG.QUEUE_AGE_WARNING_HOURS) {
+  } else if (hours >= warningThreshold) {
     variant = 'warning';
   }
 

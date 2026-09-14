@@ -10,6 +10,7 @@ import { displayId } from '@/utils';
 import { getActiveTests, getActiveTotal } from '@/features/orders/utils';
 import type { Order, Invoice } from '@/types';
 import { ICONS } from '@/config/icons';
+import { InsuranceClaimSection } from '@/features/billing/components/InsuranceClaimSection';
 
 export interface BillingSummarySectionProps {
   order: Order;
@@ -93,15 +94,18 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
 
       {/* View Invoice Button */}
       {invoice && (
-        <Button
-          variant="secondary"
-          size="sm"
-          className="w-full mt-4"
-          icon={<Icon name={ICONS.dataFields.bill} className="w-4 h-4" />}
-          onClick={onViewInvoice}
-        >
-          View Invoice
-        </Button>
+        <>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="w-full mt-4"
+            icon={<Icon name={ICONS.dataFields.bill} className="w-4 h-4" />}
+            onClick={onViewInvoice}
+          >
+            View Invoice ({displayId.invoice(invoice.invoiceId)})
+          </Button>
+          <InsuranceClaimSection orderId={order.orderId} invoice={invoice} />
+        </>
       )}
     </div>
   );

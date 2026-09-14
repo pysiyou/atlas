@@ -76,7 +76,11 @@ export function useOrdersForPatientIds(patientIds: number[]) {
  * Hook to fetch and cache workflow-scoped orders (client-side filtering applied from filters).
  * For large datasets (hundreds/thousands of orders), prefer usePaginatedOrders to avoid over-fetching.
  */
-export function useOrdersList(filters?: OrdersFilters) {
+export interface LabQueryRefetchOptions {
+  refetchInterval?: number;
+}
+
+export function useOrdersList(filters?: OrdersFilters, refetchOptions?: LabQueryRefetchOptions) {
   const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
 
   const query = useQuery({
@@ -84,6 +88,9 @@ export function useOrdersList(filters?: OrdersFilters) {
     queryFn: ({ signal }) => orderAPI.getAll({ signal }),
     enabled: isAuthenticated && !isRestoring,
     ...cacheConfig.dynamic,
+    ...(refetchOptions?.refetchInterval != null
+      ? { refetchInterval: refetchOptions.refetchInterval }
+      : {}),
   });
 
   // Apply client-side filters for instant filtering on cached data
