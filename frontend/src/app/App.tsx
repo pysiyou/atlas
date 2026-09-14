@@ -107,6 +107,7 @@ const App: React.FC = () => {
               position="bottom-right"
               containerClassName="app-toaster"
               toastOptions={{
+                // Host never auto-dismisses; variants own persist vs countdown (see overlays/toast).
                 duration: Infinity,
               }}
             >

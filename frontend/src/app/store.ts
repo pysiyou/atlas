@@ -4,6 +4,7 @@ import type { AuthUser, UserRole } from '@/types';
 import { authAPI, bindAuthClientHandlers } from '@/lib/api/auth.service';
 import { notify } from '@/utils/feedback';
 import { feedbackTitle } from '@/utils/feedback/copy';
+import { clearSessionExpired, markSessionExpired } from '@/utils/feedback/sessionExpiry';
 
 interface AuthState {
   user: AuthUser | null;
@@ -40,6 +41,7 @@ export const useAuthStore = create<AuthState>()(
 
           try {
             const userInfo = await authAPI.getMe();
+            clearSessionExpired();
             set({
               user: userInfo,
               isAuthenticated: true,
@@ -79,8 +81,19 @@ export const useAuthStore = create<AuthState>()(
             set({ token: access_token });
             return access_token;
           } catch {
+            markSessionExpired();
             notify.toast('session.expired');
-            get().logout();
+            set({
+              user: null,
+              token: null,
+              refreshToken: null,
+              isAuthenticated: false,
+            });
+            try {
+              await authAPI.logout();
+            } catch {
+              // Ignore logout errors after expiry
+            }
             return null;
           }
         },

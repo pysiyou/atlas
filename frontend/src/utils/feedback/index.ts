@@ -5,5 +5,6 @@ export {
   notify,
   errorAlertMessage,
   inlineFeedbackMessage,
+  resolveFeedbackForApiError,
   type ToastOverrides,
 } from './notify';
