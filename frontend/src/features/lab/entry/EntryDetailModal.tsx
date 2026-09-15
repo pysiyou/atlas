@@ -5,15 +5,13 @@
  *
  * Uses centralized components:
  * - DetailGrid with sections config for consistent layout
- * - LabSectionPanel for form section
+ * - Panel (lab variant) for form section
  * - CollectionInfoLine for sample metadata
  */
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { Badge, Button, Icon, CircularProgress } from '@/components';
-import { LabSectionPanel } from '../components/LabSectionPanel';
+import { Badge, Button, Icon, CircularProgress, Panel, EntityId } from '@/components';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
-import { displayId } from '@/utils';
 import { EntryForm } from './EntryForm';
 import {
   LabDetailModal,
@@ -27,7 +25,7 @@ import { ICONS } from '@/config/icons';
 import { useTestCatalog } from '@/features/catalog';
 import { LabHistoryPanel } from '../components/LabHistoryPanel';
 import { labModalSubtitle } from '../components/labModalStages';
-import { LAB_CARD_BADGE_SIZE, LAB_DETAIL_ID_VALUE } from '../utils/labStyles';
+import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 import { ValidationForm } from '../validation/ValidationForm';
 import { hasTestResults } from '../utils/hasTestResults';
 import type { Test, TestWithContext } from '@/types';
@@ -220,7 +218,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
       }
     >
       {readOnly && hasTestResults(test) ? (
-        <LabSectionPanel title="Recorded Results">
+        <Panel variant="lab" title="Recorded Results">
           <ValidationForm
             results={test.results!}
             flags={test.flags}
@@ -231,9 +229,9 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
             readOnly
             enableApproveShortcut={false}
           />
-        </LabSectionPanel>
+        </Panel>
       ) : (
-        <LabSectionPanel title="Result Entry" headerRight={progressIndicator}>
+        <Panel variant="lab" title="Result Entry" headerEnd={progressIndicator}>
           <EntryForm
             testDef={resolvedTestDef}
             resultKey={resultKey}
@@ -247,7 +245,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
             isModal={true}
             readOnly={readOnly}
           />
-        </LabSectionPanel>
+        </Panel>
       )}
 
       {/* Test Details - using declarative sections config */}
@@ -285,14 +283,11 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
             fields: [
               {
                 label: 'Test ID',
-                value:
-                  test.id != null ? displayId.orderTest(test.id) : undefined,
-                valueClassName: LAB_DETAIL_ID_VALUE,
+                value: test.id != null ? <EntityId type="orderTest" value={test.id} variant="block" className="text-right" /> : undefined,
               },
               {
                 label: 'Test Code',
-                value: test.testCode,
-                valueClassName: LAB_DETAIL_ID_VALUE,
+                value: test.testCode ? <EntityId variant="block" className="text-right">{test.testCode}</EntityId> : undefined,
               },
               {
                 label: 'Sample Type',
@@ -302,8 +297,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
               },
               {
                 label: 'Sample ID',
-                value: test.sampleId ? displayId.sample(test.sampleId) : undefined,
-                valueClassName: LAB_DETAIL_ID_VALUE,
+                value: test.sampleId ? <EntityId type="sample" value={test.sampleId} variant="block" className="text-right" /> : undefined,
               },
               {
                 label: 'Turnaround Time',

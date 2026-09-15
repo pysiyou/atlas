@@ -14,7 +14,7 @@ import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { formatCurrency, displayId } from '@/utils';
 import type { Invoice } from '@/types';
 import { useOrderInvoices } from '@/features/billing/api/billing.hooks';
-import { DetailPageShell, DetailPageHeader } from '@/components';
+import { DetailPageShell, PageHeader } from '@/components';
 import { OrderHeader } from '../components/OrderHeader';
 import {
   SmallScreenLayout,
@@ -104,7 +104,7 @@ export const OrderDetail: React.FC = () => {
         onEdit={order.overallStatus === 'ordered' ? handleEdit : undefined}
       />
     ) : (
-      <DetailPageHeader title="Order" />
+      <PageHeader title="Order" />
     );
 
   return (
@@ -116,7 +116,6 @@ export const OrderDetail: React.FC = () => {
         <DetailPageSkeleton
           sections={ORDER_DETAIL_SKELETON_SECTIONS}
           renderLargeLayout={renderOrderDetailLargeSkeleton}
-          usePagePanel
           aria-label="Loading order"
         />
       }

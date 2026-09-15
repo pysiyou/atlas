@@ -9,9 +9,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { Modal } from '@/components';
-import { DetailFieldGroup, FooterInfo } from '@/components';
-import { LabSectionPanel } from './LabSectionPanel';
+import { Modal, Panel, DetailFieldGroup, FooterInfo, DialogFooter } from '@/components';
 import { MODULE_ICONS } from '@/config/icons';
 import type { DetailFieldConfig } from '@/components';
 import { LAB_MODAL_DETAIL } from '../utils/labStyles';
@@ -83,10 +81,10 @@ export const LabDetailModal: React.FC<LabDetailModalProps> = ({
 
         {/* Footer */}
         {(footer || footerInfo) && (
-          <div className="shrink-0 bg-surface border-t border-border-default px-6 py-4 flex items-center justify-between gap-4">
-            {footerInfo || <FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" size="md" />}
-            {footer && <div className="flex-1 min-w-0 flex justify-end">{footer}</div>}
-          </div>
+          <DialogFooter
+            start={footerInfo || <FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" size="md" />}
+            end={footer}
+          />
         )}
       </div>
     </Modal>
@@ -102,14 +100,14 @@ export interface DetailGridSectionConfig {
   /** Array of field configurations for this section */
   fields: DetailFieldConfig[];
   /** Content to display in the header right side */
-  headerRight?: ReactNode;
+  headerEnd?: ReactNode;
 }
 
 /**
  * DetailGrid - Two-column grid for detail sections
  *
  * Can be used in two ways:
- * 1. With children (legacy): Pass SectionPanel components as children
+ * 1. With children (legacy): Pass Panel components as children
  * 2. With sections config (new): Pass array of section configurations
  *
  * @example
@@ -135,8 +133,8 @@ export interface DetailGridSectionConfig {
  * @example
  * // Using children (legacy)
  * <DetailGrid>
- *   <SectionPanel title="Section 1">...</SectionPanel>
- *   <SectionPanel title="Section 2">...</SectionPanel>
+ *   <Panel variant="lab" title="Section 1">...</Panel>
+ *   <Panel variant="lab" title="Section 2">...</Panel>
  * </DetailGrid>
  */
 interface DetailGridProps {
@@ -167,14 +165,14 @@ export const DetailGrid: React.FC<DetailGridProps> = ({ children, sections }) =>
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {visibleSections.map(section => (
-          <LabSectionPanel
+          <Panel
             key={section.title}
+            variant="lab"
             title={section.title}
-            headerRight={section.headerRight}
-            spacing="normal"
+            headerEnd={section.headerEnd}
           >
             <DetailFieldGroup fields={section.fields} spacing="tight" />
-          </LabSectionPanel>
+          </Panel>
         ))}
       </div>
     );

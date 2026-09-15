@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@/components';
+import { Button, DialogFooter } from '@/components';
 
 export interface OrderModalFooterProps {
   onClose: () => void;
@@ -20,31 +20,33 @@ export const OrderModalFooter: React.FC<OrderModalFooterProps> = ({
   buttonVariant = 'save',
   buttonIcon,
 }) => (
-  <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border-default bg-surface shrink-0 shadow-[var(--shadow-footer)]">
-    {footerInfo}
-    <div className="flex items-center gap-3">
-      <Button
-        type="button"
-        variant="cancel"
-        size="md"
-        layout="icon-text"
-        onClick={onClose}
-        disabled={isSubmitting}
-      >
-        Cancel
-      </Button>
-      <Button
-        type="submit"
-        variant={buttonVariant}
-        size="md"
-        layout="icon-text"
-        form={formId}
-        isLoading={isSubmitting}
-        disabled={isSubmitting}
-        icon={buttonIcon}
-      >
-        {submitLabel}
-      </Button>
-    </div>
-  </div>
+  <DialogFooter
+    start={footerInfo}
+    end={
+      <>
+        <Button
+          type="button"
+          variant="cancel"
+          size="md"
+          layout="icon-text"
+          onClick={onClose}
+          disabled={isSubmitting}
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          variant={buttonVariant}
+          size="md"
+          layout="icon-text"
+          form={formId}
+          isLoading={isSubmitting}
+          disabled={isSubmitting}
+          icon={buttonIcon}
+        >
+          {submitLabel}
+        </Button>
+      </>
+    }
+  />
 );

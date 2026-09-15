@@ -4,8 +4,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Badge, Icon } from '@/components';
-import { LabSectionPanel } from '../components/LabSectionPanel';
+import { Badge, Icon, Panel, EntityId } from '@/components';
 import { ICONS } from '@/config/icons';
 import { displayId } from '@/utils';
 import { getLabQueueUrl } from '@/features/lab/constants/labTabs';
@@ -18,9 +17,9 @@ export const CriticalValuesPanel: React.FC = () => {
 
   if (isLoading) {
     return (
-      <LabSectionPanel title="Critical Values">
+      <Panel variant="lab" title="Critical Values">
         <p className="text-sm text-text-tertiary py-4">Loading critical values...</p>
-      </LabSectionPanel>
+      </Panel>
     );
   }
 
@@ -29,9 +28,10 @@ export const CriticalValuesPanel: React.FC = () => {
   }
 
   return (
-    <LabSectionPanel
+    <Panel
+      variant="lab"
       title="Critical Values Pending"
-      headerRight={
+      headerEnd={
         <Badge variant="danger" size={LAB_CARD_BADGE_SIZE}>
           {criticalValues.length}
         </Badge>
@@ -46,7 +46,7 @@ export const CriticalValuesPanel: React.FC = () => {
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 text-sm font-normal text-text-primary">
                 <Icon name={ICONS.actions.alertCircle} className="w-4 h-4 text-danger-fg" />
-                <span className="entity-id">{displayId.orderTest(record.id)}</span>
+                <EntityId type="orderTest" value={record.id} />
                 {record.testName ?? record.testCode}
               </div>
               <Link
@@ -62,6 +62,6 @@ export const CriticalValuesPanel: React.FC = () => {
           </div>
         ))}
       </div>
-    </LabSectionPanel>
+    </Panel>
   );
 };

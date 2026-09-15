@@ -5,8 +5,7 @@
 import React, { type ReactNode } from 'react';
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import { useBreakpoint } from '@/hooks/useBreakpoint';
-import { SectionPanel, PagePanel, PagePanelBody } from '@/components';
-import { cn } from '@/utils';
+import { Panel, type PanelPadding, type PanelScroll } from '@/components';
 import { Skeleton, SkeletonCard, SkeletonInfoSection, SkeletonTableRow } from './Skeleton';
 
 export interface DetailSkeletonSection {
@@ -16,8 +15,8 @@ export interface DetailSkeletonSection {
   tableColumns?: number;
   tableRows?: number;
   colSpan?: number;
-  headerClassName?: string;
-  contentClassName?: string;
+  padding?: PanelPadding;
+  scroll?: PanelScroll;
   panelClassName?: string;
   customContent?: ReactNode;
 }
@@ -29,8 +28,6 @@ export interface DetailPageSkeletonProps {
   sections?: DetailSkeletonSection[];
   workflowCardCount?: number;
   renderLargeLayout?: () => ReactNode;
-  /** Use command-center PagePanel shell (order detail, etc.) */
-  usePagePanel?: boolean;
   'aria-label'?: string;
 }
 
@@ -52,47 +49,33 @@ function renderSectionContent(section: DetailSkeletonSection) {
   return <SkeletonInfoSection rows={section.rows ?? 4} layout={section.layout ?? 'column'} />;
 }
 
-function DetailSkeletonSectionPanel({
+function SkeletonPanel({
   section,
-  children,
-  usePagePanel,
   className,
-  bodyClassName,
+  scroll,
 }: {
   section: DetailSkeletonSection;
-  children: ReactNode;
-  usePagePanel: boolean;
   className?: string;
-  bodyClassName?: string;
+  scroll?: PanelScroll;
 }) {
-  if (usePagePanel) {
-    return (
-      <PagePanel title={section.title} className={className}>
-        <PagePanelBody className={bodyClassName}>{children}</PagePanelBody>
-      </PagePanel>
-    );
-  }
-
   return (
-    <SectionPanel
+    <Panel
       title={section.title}
       className={className}
-      contentClassName={bodyClassName}
-      headerClassName={section.headerClassName}
+      padding={section.padding}
+      scroll={section.scroll ?? scroll}
     >
-      {children}
-    </SectionPanel>
+      {renderSectionContent(section)}
+    </Panel>
   );
 }
 
 function ResponsiveDetailSkeleton({
   sections,
   renderLargeLayout,
-  usePagePanel = false,
 }: {
   sections: DetailSkeletonSection[];
   renderLargeLayout?: () => ReactNode;
-  usePagePanel?: boolean;
 }) {
   const { isSmall, isMedium } = useResponsiveLayout();
 
@@ -100,22 +83,12 @@ function ResponsiveDetailSkeleton({
     return (
       <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6 bg-surface-page">
         {sections.map(section => (
-          <DetailSkeletonSectionPanel
+          <SkeletonPanel
             key={section.title}
             section={section}
-            usePagePanel={usePagePanel}
-            className={
-              usePagePanel
-                ? (section.panelClassName ?? 'shrink-0')
-                : (section.panelClassName ?? 'shrink-0 bg-surface')
-            }
-            bodyClassName={cn(
-              usePagePanel && 'p-4',
-              section.contentClassName ?? 'overflow-visible',
-            )}
-          >
-            {renderSectionContent(section)}
-          </DetailSkeletonSectionPanel>
+            className={section.panelClassName ?? 'shrink-0'}
+            scroll={section.scroll ?? 'visible'}
+          />
         ))}
       </div>
     );
@@ -125,22 +98,12 @@ function ResponsiveDetailSkeleton({
     return (
       <div className="grid grid-cols-2 gap-4 w-full pb-6">
         {sections.map(section => (
-          <DetailSkeletonSectionPanel
+          <SkeletonPanel
             key={section.title}
-            section={section}
-            usePagePanel={usePagePanel}
-            className={
-              usePagePanel
-                ? `${section.colSpan === 2 ? 'col-span-2' : ''} ${section.panelClassName ?? ''}`
-                : `bg-surface ${section.colSpan === 2 ? 'col-span-2' : ''} ${section.panelClassName ?? ''}`
-            }
-            bodyClassName={cn(
-              usePagePanel && 'p-4',
-              section.contentClassName ?? 'overflow-visible',
-            )}
-          >
-            {renderSectionContent({ ...section, layout: section.layout ?? 'column' })}
-          </DetailSkeletonSectionPanel>
+            section={{ ...section, layout: section.layout ?? 'column' }}
+            className={`${section.colSpan === 2 ? 'col-span-2' : ''} ${section.panelClassName ?? ''}`}
+            scroll={section.scroll ?? 'visible'}
+          />
         ))}
       </div>
     );
@@ -156,18 +119,12 @@ function ResponsiveDetailSkeleton({
       style={{ height: '100%', maxHeight: '100%', overflow: 'hidden' }}
     >
       {sections.map(section => (
-        <DetailSkeletonSectionPanel
+        <SkeletonPanel
           key={section.title}
-          section={section}
-          usePagePanel={usePagePanel}
-          className={`h-full min-h-0 ${section.colSpan === 3 ? 'col-span-3' : ''} ${section.panelClassName ?? ''}`}
-          bodyClassName={cn(
-            usePagePanel && 'p-4',
-            section.contentClassName ?? 'flex-1 min-h-0 overflow-y-auto',
-          )}
-        >
-          {renderSectionContent({ ...section, layout: section.layout ?? 'column' })}
-        </DetailSkeletonSectionPanel>
+          section={{ ...section, layout: section.layout ?? 'column' }}
+          className={`min-h-0 ${section.colSpan === 3 ? 'col-span-3' : ''} ${section.panelClassName ?? ''}`}
+          scroll={section.scroll ?? 'auto'}
+        />
       ))}
     </div>
   );
@@ -185,17 +142,9 @@ function BalancedGridSkeleton({ sections }: { sections: DetailSkeletonSection[] 
       aria-busy="true"
     >
       {sections.map(section => (
-        <div
-          key={section.title}
-          className="bg-surface border border-border-default rounded-md overflow-hidden"
-        >
-          <div className="px-4 py-3 border-b border-border-default bg-surface-page">
-            <div className="h-3 w-24 animate-pulse bg-neutral-200 rounded-md" />
-          </div>
-          <div className="p-4">
-            {renderSectionContent({ ...section, layout: 'column' })}
-          </div>
-        </div>
+        <Panel key={section.title} title={section.title} padding={section.padding}>
+          {renderSectionContent({ ...section, layout: 'column' })}
+        </Panel>
       ))}
     </div>
   );
@@ -225,7 +174,6 @@ export const DetailPageSkeleton: React.FC<DetailPageSkeletonProps> = ({
   sections = [],
   workflowCardCount = 8,
   renderLargeLayout,
-  usePagePanel = false,
   'aria-label': ariaLabel = 'Loading',
 }) => {
   if (variant === 'workflow-grid') {
@@ -236,11 +184,7 @@ export const DetailPageSkeleton: React.FC<DetailPageSkeletonProps> = ({
   }
   return (
     <div aria-busy="true" aria-label={ariaLabel}>
-      <ResponsiveDetailSkeleton
-        sections={sections}
-        renderLargeLayout={renderLargeLayout}
-        usePagePanel={usePagePanel}
-      />
+      <ResponsiveDetailSkeleton sections={sections} renderLargeLayout={renderLargeLayout} />
     </div>
   );
 };

@@ -2,7 +2,7 @@
  * LabHistoryPanel — entity operation timeline for lab detail modals.
  */
 import React from 'react';
-import { LabSectionPanel } from './LabSectionPanel';
+import { Panel } from '@/components';
 import { Skeleton } from '@/components/loaders/Skeleton';
 import { useEntityTimeline } from '../api/audit.api';
 import { getFeedback } from '@/utils/feedback';
@@ -27,7 +27,7 @@ export const LabHistoryPanel: React.FC<LabHistoryPanelProps> = ({
   const panelTitle = title ?? defaultTitle(entityType);
 
   return (
-    <LabSectionPanel title={panelTitle}>
+    <Panel variant="lab" title={panelTitle}>
       {isLoading ? (
         <div className="space-y-3 py-1" aria-busy="true">
           {Array.from({ length: 3 }).map((_, i) => (
@@ -50,6 +50,6 @@ export const LabHistoryPanel: React.FC<LabHistoryPanelProps> = ({
       ) : (
         <LabTimeline events={data?.events ?? []} interactiveEntities />
       )}
-    </LabSectionPanel>
+    </Panel>
   );
 };

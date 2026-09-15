@@ -9,7 +9,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { Badge, Icon } from '@/components';
+import { Badge, Icon, EntityId } from '@/components';
 import type { BadgeSize } from '@/components';
 import Barcode from 'react-barcode';
 import type { ContainerType, ContainerTopColor, Sample, RejectedSample, TestWithContext } from '@/types';
@@ -21,7 +21,7 @@ import {
   getContainerIconColor,
 } from '@/features/lab/utils';
 import { getContainerIcon, ICONS } from '@/config/icons';
-import { LAB_CARD_BADGE_SIZE, LAB_ENTITY_ID } from '../utils/labStyles';
+import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 import { QueueAgeBadge } from './QueueAgeBadge';
 import { BlockedReasonBadge, FlagCountBadge } from './StatusBadges';
 import {
@@ -159,9 +159,7 @@ export const CollectionHeaderBadges = React.memo(function CollectionHeaderBadges
           <Badge size={size} variant="info" className="flex items-center gap-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
             Recollection requested:{' '}
-            <span className={LAB_ENTITY_ID}>
-              {displayId.sample(rejectedSample.recollectionSampleId)}
-            </span>
+            <EntityId type="sample" value={rejectedSample.recollectionSampleId} />
           </Badge>
         </CompactOnly>
       )}

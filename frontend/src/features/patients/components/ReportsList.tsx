@@ -4,10 +4,9 @@
  */
 
 import React from 'react';
-import { Icon, IconButton, EmptyState } from '@/components';
-import { displayId } from '@/utils';
-import type { Order } from '@/types';
+import { Icon, IconButton, EmptyState, EntityId } from '@/components';
 import { formatDateTime } from '@/utils';
+import type { Order } from '@/types';
 import { getReportableOrders } from '../utils/patientFormatters';
 import { ICONS } from '@/config/icons';
 
@@ -41,7 +40,7 @@ export const ReportsList: React.FC<ReportsListProps> = ({ orders }) => {
             </div>
             <div className="min-w-0">
               <p className="text-xs font-normal text-text-primary truncate">
-                Report_<span className="entity-id">{displayId.order(order.orderId)}</span>.pdf
+                Report_<EntityId type="order" value={order.orderId} />.pdf
               </p>
               <p className="text-xs text-text-tertiary mt-0.5">
                 {formatDateTime(order.orderDate)} • 1.2 MB

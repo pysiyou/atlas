@@ -3,33 +3,21 @@
  */
 
 import React from 'react';
-import { Skeleton } from '@/components';
+import { Panel, Skeleton, SkeletonText } from '@/components';
 import { COMMAND_CENTER_PANEL } from './components';
 
 function PanelSkeleton({ className }: { className?: string }) {
   return (
-    <div
-      className={`flex h-full min-h-48 flex-col overflow-hidden rounded border border-border-default bg-surface shadow-sm ${className ?? ''}`}
+    <Panel
+      title={<Skeleton height={14} width={96} />}
+      headerEnd={<Skeleton height={12} width={72} />}
+      className={className}
     >
-      <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border-default px-4 py-2.5">
-        <Skeleton height={14} width={96} />
-        <Skeleton height={12} width={72} />
-      </div>
-      <div className="flex flex-1 flex-col gap-3 p-4">
+      <div className="flex flex-col gap-3 min-h-48">
         <Skeleton height={120} className="w-full rounded-full" />
-        <SkeletonTextPlaceholder lines={3} />
+        <SkeletonText lines={3} />
       </div>
-    </div>
-  );
-}
-
-function SkeletonTextPlaceholder({ lines }: { lines: number }) {
-  return (
-    <div className="space-y-2">
-      {Array.from({ length: lines }).map((_, index) => (
-        <Skeleton key={index} height={12} width={index === lines - 1 ? '70%' : '100%'} />
-      ))}
-    </div>
+    </Panel>
   );
 }
 

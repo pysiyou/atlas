@@ -9,7 +9,6 @@ export { LabWorkflowView, createLabItemFilter } from './LabWorkflowView';
 export { LabQueueSection } from './LabQueueSection';
 export { LabFilters } from './LabFilters';
 export type { LabFiltersProps } from './LabFilters';
-export { LabSectionPanel } from './LabSectionPanel';
 export { LabDetailModal, DetailGrid, ModalFooter } from './LabDetailModal';
 export type { DetailGridSectionConfig } from './LabDetailModal';
 export {

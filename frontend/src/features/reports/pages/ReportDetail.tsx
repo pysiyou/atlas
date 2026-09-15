@@ -19,7 +19,7 @@ import {
 } from '../utils/prepareReportData';
 import { formatDate } from '@/utils';
 import { notify } from '@/utils/feedback';
-import { DetailPageShell, DetailPageHeader } from '@/components';
+import { DetailPageShell, PageHeader } from '@/components';
 import { ReportDetailSkeletonContent } from '../config/reportDetailSkeleton';
 
 export const ReportDetail: React.FC = () => {
@@ -89,7 +89,7 @@ export const ReportDetail: React.FC = () => {
   if (ordersLoading || patientsLoading || testsLoading) {
     return (
       <DetailPageShell
-        header={<DetailPageHeader title="Report" />}
+        header={<PageHeader title="Report" />}
         loading
         loadingSkeleton={<ReportDetailSkeletonContent />}
       >

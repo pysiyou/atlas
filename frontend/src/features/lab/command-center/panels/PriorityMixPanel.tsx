@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Panel, PanelBody } from '../components';
+import { Panel } from '../components';
 import type { DonutSegment } from '../components/DonutChart';
 import type { PriorityMix } from '../boardTypes';
 import { MetricDonutHalf, type MetricDonutLegendItem } from './MetricDonutHalf';
@@ -57,17 +57,16 @@ export const PriorityMixPanel: React.FC<PriorityMixPanelProps> = ({
           ? `${elevated} elevated · ${elevatedPct}% of pipeline`
           : 'Active pipeline · all routine'
       }
+      padding="none"
     >
-      <PanelBody>
-        <MetricDonutHalf
-          title="By Priority"
-          summary={summary}
-          centerLabel={String(elevated)}
-          centerDetail="elevated"
-          segments={segments}
-          legend={legend}
-        />
-      </PanelBody>
+      <MetricDonutHalf
+        title="By Priority"
+        summary={summary}
+        centerLabel={String(elevated)}
+        centerDetail="elevated"
+        segments={segments}
+        legend={legend}
+      />
     </Panel>
   );
 };

@@ -1,5 +1,4 @@
-import { PagePanel, PagePanelBody } from '@/components';
-import { cn } from '@/utils';
+import { Panel } from '@/components';
 import { SkeletonInfoSection, SkeletonTableRow } from '@/components/loaders/Skeleton';
 import type { DetailSkeletonSection } from '@/components/loaders/DetailPageSkeleton';
 import { OrderProgressSkeleton } from './OrderProgressSkeleton';
@@ -14,60 +13,55 @@ export const ORDER_DETAIL_SKELETON_SECTIONS: DetailSkeletonSection[] = [
         <OrderProgressSkeleton />
       </div>
     ),
-    contentClassName: 'overflow-visible p-0',
+    padding: 'none',
+    scroll: 'visible',
   },
   {
     title: 'Tests',
     tableColumns: 4,
     tableRows: 4,
-    contentClassName: 'p-0 overflow-visible',
+    padding: 'none',
+    scroll: 'visible',
   },
   { title: 'Billing Summary', rows: 3, layout: 'column' },
 ];
 
 export function renderOrderDetailLargeSkeleton() {
-  const scrollBody = 'flex-1 min-h-0 overflow-y-auto p-4';
-
   return (
     <div
       className="flex-1 grid grid-rows-[1fr_1fr] gap-4 min-h-0 h-full overflow-hidden"
       style={{ height: '100%', maxHeight: '100%' }}
     >
       <div className="grid grid-cols-3 gap-4 min-h-0">
-        <PagePanel title="Order Information" className="h-full min-h-0">
-          <PagePanelBody className={scrollBody}>
-            <SkeletonInfoSection rows={5} layout="column" />
-          </PagePanelBody>
-        </PagePanel>
-        <PagePanel title="Patient Information" className="h-full min-h-0">
-          <PagePanelBody className={scrollBody}>
-            <SkeletonInfoSection rows={4} layout="column" />
-          </PagePanelBody>
-        </PagePanel>
-        <PagePanel title="Order Progress" className="h-full min-h-0">
-          <PagePanelBody className="flex-1 min-h-0 overflow-y-auto p-0">
-            <div className="p-4">
-              <OrderProgressSkeleton />
-            </div>
-          </PagePanelBody>
-        </PagePanel>
+        <Panel title="Order Information" className="min-h-0" scroll="auto">
+          <SkeletonInfoSection rows={5} layout="column" />
+        </Panel>
+        <Panel title="Patient Information" className="min-h-0" scroll="auto">
+          <SkeletonInfoSection rows={4} layout="column" />
+        </Panel>
+        <Panel title="Order Progress" className="min-h-0" padding="none" scroll="auto">
+          <div className="p-4">
+            <OrderProgressSkeleton />
+          </div>
+        </Panel>
       </div>
 
       <div className="grid grid-cols-3 gap-4 min-h-0">
-        <PagePanel title="Tests" className="h-full min-h-0 col-span-2">
-          <PagePanelBody className="flex-1 min-h-0 p-0 overflow-y-auto">
-            <div className="border-t border-border-default">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <SkeletonTableRow key={i} columns={5} />
-              ))}
-            </div>
-          </PagePanelBody>
-        </PagePanel>
-        <PagePanel title="Billing Summary" className="h-full min-h-0">
-          <PagePanelBody className={cn(scrollBody, 'flex flex-col')}>
-            <SkeletonInfoSection rows={3} layout="column" />
-          </PagePanelBody>
-        </PagePanel>
+        <Panel title="Tests" className="min-h-0 col-span-2" padding="none" scroll="auto">
+          <div className="border-t border-border-default">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <SkeletonTableRow key={i} columns={5} />
+            ))}
+          </div>
+        </Panel>
+        <Panel
+          title="Billing Summary"
+          className="min-h-0"
+          scroll="auto"
+          bodyClassName="flex flex-col"
+        >
+          <SkeletonInfoSection rows={3} layout="column" />
+        </Panel>
       </div>
     </div>
   );

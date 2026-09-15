@@ -4,7 +4,8 @@
 
 import React, { type ReactNode } from 'react';
 import { cn, displayId } from '@/utils';
-import { LAB_ENTITY_ID, LAB_HEADER, LAB_MOBILE_CARD } from '../utils/labStyles';
+import { EntityId } from '@/components';
+import { LAB_HEADER, LAB_MOBILE_CARD } from '../utils/labStyles';
 import type { LabIdentityContext } from './LabIdentityRow';
 import type { LabAuditLine } from './labHeaderAudit';
 import { LabAuditLineView, LabHeaderCompactContext } from './labHeader';
@@ -23,35 +24,37 @@ function MobileIdentitySubline({ context }: { context: LabIdentityContext }) {
 
   if (context.orderTestId != null) {
     segments.push(
-      <span key="tst" className={cn(LAB_ENTITY_ID, 'truncate')} title={displayId.orderTest(context.orderTestId)}>
-        {displayId.orderTest(context.orderTestId)}
-      </span>
+      <EntityId
+        key="tst"
+        type="orderTest"
+        value={context.orderTestId}
+        variant="inline"
+        title={displayId.orderTest(context.orderTestId)}
+      />
     );
   } else if (!context.entityName) {
     segments.push(
-      <span key="ord" className={cn(LAB_ENTITY_ID, 'truncate')}>
-        {displayId.order(context.orderId)}
-      </span>
+      <EntityId key="ord" type="order" value={context.orderId} variant="inline" />
     );
   }
 
   if (context.entityCode) {
     segments.push(
-      <span key="code" className={cn(LAB_ENTITY_ID, 'truncate uppercase')}>
+      <EntityId key="code" variant="inline" className="uppercase">
         {context.entityCode}
-      </span>
+      </EntityId>
     );
   }
 
   if (context.sampleId != null && context.entityName) {
     segments.push(
-      <span
+      <EntityId
         key="sam"
-        className={cn(LAB_ENTITY_ID, 'truncate')}
+        type="sample"
+        value={context.sampleId}
+        variant="inline"
         title={displayId.sample(context.sampleId)}
-      >
-        {displayId.sample(context.sampleId)}
-      </span>
+      />
     );
   }
 

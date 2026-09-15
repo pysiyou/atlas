@@ -4,6 +4,7 @@ import { useAsyncAction } from '@/hooks/useAsyncAction';
 import type { AffiliationDuration } from '@/types';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import { formatDate } from '@/utils';
+import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { AffiliationPlanSelector } from './AffiliationPlanSelector';
 import type { PatientFormSectionProps } from './patientFormSectionTypes';
@@ -45,7 +46,7 @@ export const AffiliationSection: React.FC<
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
-              <span className="text-xs font-normal text-text-tertiary uppercase tracking-wide">
+              <span className={FORM_FIELD_LABEL}>
                 Assurance Number
               </span>
               <p className="font-normal text-text-primary text-sm">
@@ -53,7 +54,7 @@ export const AffiliationSection: React.FC<
               </p>
             </div>
             <div className="space-y-1">
-              <span className="text-xs font-normal text-text-tertiary uppercase tracking-wide">
+              <span className={FORM_FIELD_LABEL}>
                 Duration
               </span>
               <p className="font-normal text-text-primary text-sm">
@@ -63,7 +64,7 @@ export const AffiliationSection: React.FC<
               </p>
             </div>
             <div className="space-y-1">
-              <span className="text-xs font-normal text-text-tertiary uppercase tracking-wide">
+              <span className={FORM_FIELD_LABEL}>
                 Start Date
               </span>
               <p className="font-normal text-text-primary text-sm">
@@ -71,7 +72,7 @@ export const AffiliationSection: React.FC<
               </p>
             </div>
             <div className="space-y-1">
-              <span className="text-xs font-normal text-text-tertiary uppercase tracking-wide">
+              <span className={FORM_FIELD_LABEL}>
                 Expiry Date
               </span>
               <p

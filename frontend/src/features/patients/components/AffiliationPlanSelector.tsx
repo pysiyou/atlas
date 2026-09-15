@@ -5,7 +5,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { Button, CalloutCard, Icon } from '@/components';
+import { Button, Callout, Icon } from '@/components';
 import { SpinnerLoader } from '@/components';
 import { useAffiliationPricing } from '../api/affiliations.api';
 import { formatCurrency } from '@/utils';
@@ -101,9 +101,9 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
       {/* Left Column - Text/Information */}
       <div className="space-y-6">
         {showPricingError && (
-          <CalloutCard variant="warning" title={error} className="mb-4">
+          <Callout variant="warning" title={error} className="mb-4">
             You can still select a plan. Pricing will be calculated during checkout.
-          </CalloutCard>
+          </Callout>
         )}
         <div className="space-y-4">
           <div>

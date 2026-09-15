@@ -67,7 +67,7 @@ export const createPatientTableConfig = (
         }
         return (
           <div className="min-w-0 font-normal">
-            <div className="entity-id font-normal">{patient.orderCount} orders</div>
+            <div className="text-sm text-text-primary font-normal">{patient.orderCount} orders</div>
             <div className="text-xs text-text-tertiary truncate font-normal">
               Last: {formatDateTime(patient.lastOrderDate)}
             </div>

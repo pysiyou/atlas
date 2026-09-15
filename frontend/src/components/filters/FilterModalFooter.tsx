@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Button, FooterInfo } from '@/components';
+import { Button, DialogFooter, FooterInfo } from '@/components';
 import type { IconName } from '@/components';
 
 export interface FilterModalFooterProps {
@@ -21,17 +21,17 @@ export const FilterModalFooter: React.FC<FilterModalFooterProps> = ({
   icon,
   label,
 }) => (
-  <div className="px-5 py-4 border-t border-border-default bg-surface shrink-0">
-    <div className="flex items-center justify-between gap-3">
-      <FooterInfo icon={icon} label={label} size="md" />
-      <div className="flex items-center gap-2">
+  <DialogFooter
+    start={<FooterInfo icon={icon} label={label} size="md" />}
+    end={
+      <>
         <Button variant="outline" size="md" layout="text" onClick={onReset}>
           Reset
         </Button>
         <Button variant="primary" size="md" layout="text" onClick={onApply}>
           Filter
         </Button>
-      </div>
-    </div>
-  </div>
+      </>
+    }
+  />
 );

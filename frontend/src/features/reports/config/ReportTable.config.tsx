@@ -2,13 +2,12 @@
  * Report Table Configuration
  */
 
+import type { MouseEvent } from 'react';
 import type { NavigateFunction } from 'react-router-dom';
-import { Badge } from '@/components';
+import { Badge, EntityId } from '@/components';
 import type { TableViewConfig } from '@/components';
 import { buildViews, renderDateTimeCell, renderOrderPatientName } from '@/components/data-table';
-import { displayId } from '@/utils';
 import type { ValidatedTest } from '../types';
-import { ENTITY_ID_BLOCK, ENTITY_ID_CLICKABLE, ENTITY_ID_SECONDARY } from '@/utils/constants';
 import { ReportPreviewButton } from '../components/ReportPreviewButton';
 import { ReportCard } from '../components/ReportCard';
 
@@ -31,7 +30,7 @@ export const createReportTableConfig = (
       sortable: true,
       accessor: (test: ValidatedTest) => test.testId,
       render: (test: ValidatedTest) => (
-        <span className={`${ENTITY_ID_BLOCK} font-normal`}>{displayId.orderTest(test.testId)}</span>
+        <EntityId type="orderTest" value={test.testId} variant="block" />
       ),
     },
     orderId: {
@@ -41,15 +40,16 @@ export const createReportTableConfig = (
       sortable: true,
       accessor: (test: ValidatedTest) => test.orderId,
       render: (test: ValidatedTest) => (
-        <button
-          onClick={e => {
+        <EntityId
+          type="order"
+          value={test.orderId}
+          variant="clickable"
+          as="button"
+          onClick={(e: MouseEvent<HTMLElement>) => {
             e.stopPropagation();
             navigate(`/orders/${test.orderId}`);
           }}
-          className={`${ENTITY_ID_CLICKABLE} font-normal`}
-        >
-          {displayId.order(test.orderId)}
-        </button>
+        />
       ),
     },
     patientName: {
@@ -69,7 +69,7 @@ export const createReportTableConfig = (
       render: (test: ValidatedTest) => (
         <div className="min-w-0 font-normal">
           <div className="text-text-primary truncate font-normal">{test.testName}</div>
-          <div className={`${ENTITY_ID_SECONDARY} truncate font-normal`}>{test.testCode}</div>
+          <EntityId variant="secondary" className="truncate">{test.testCode}</EntityId>
         </div>
       ),
     },

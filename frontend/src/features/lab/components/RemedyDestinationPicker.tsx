@@ -5,6 +5,7 @@ import React from 'react';
 import type { RemedyType } from '@/types/lab-operations';
 import { RadioCard } from './PopoverForm';
 import { QUALITY_ISSUE_DIALOG_COPY } from './qualityIssueDialogConstants';
+import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 
 export interface RemedyOption {
   value: RemedyType;
@@ -33,7 +34,7 @@ export const RemedyDestinationPicker: React.FC<RemedyDestinationPickerProps> = (
 
   return (
     <div>
-      <label className="block text-xs font-normal text-text-tertiary mb-1">{label}</label>
+      <label className={`${FORM_FIELD_LABEL} mb-1`}>{label}</label>
       <div className="grid grid-cols-1 gap-2">
         {options.map(option => {
           const labelText = option.hint ? `${option.label} ${option.hint}` : option.label;

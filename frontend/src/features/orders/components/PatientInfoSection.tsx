@@ -4,9 +4,8 @@
  */
 
 import React from 'react';
-import { Icon, Avatar, DetailField } from '@/components';
+import { Icon, Avatar, DetailField, EntityId } from '@/components';
 import { calculateAge } from '@/utils';
-import { displayId } from '@/utils';
 import type { Patient } from '@/types';
 import { formatOrderDate } from '@/utils/date';
 import { ICONS } from '@/config/icons';
@@ -44,8 +43,7 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
       <div className="flex gap-3 items-center col-span-full">
         <Avatar
           primaryText={patient.fullName}
-          secondaryText={displayId.patient(patient.id)}
-          secondaryTextClassName="entity-id"
+          secondaryText={<EntityId type="patient" value={patient.id} />}
           size="sm"
         />
       </div>

@@ -1,11 +1,11 @@
 /**
  * PatientHeader Component
- * Displays patient header with avatar and action buttons. Uses shared DetailPageHeader for a11y and layout.
+ * Displays patient header with avatar and action buttons. Uses shared PageHeader for a11y and layout.
  */
 
 import React from 'react';
 import { Button, Avatar, Icon, IconButton } from '@/components';
-import { DetailPageHeader } from '@/components';
+import { PageHeader } from '@/components';
 import type { Patient } from '@/types/patient';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { AffiliationPopover } from './AffiliationPopover';
@@ -67,5 +67,5 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
       )}
     </div>
   );
-  return <DetailPageHeader title={patient.fullName} avatar={avatar} actions={actions} />;
+  return <PageHeader title={patient.fullName} avatar={avatar} actions={actions} />;
 };

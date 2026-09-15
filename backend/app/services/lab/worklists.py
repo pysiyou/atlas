@@ -10,6 +10,8 @@ from datetime import datetime, timezone
 from typing import Any, Optional
 
 from sqlalchemy import String, or_
+
+from app.utils.display_id_search import parse_display_id_from_search
 from sqlalchemy.orm import Session
 
 from app.models.order import Order, OrderTest
@@ -29,23 +31,10 @@ PRIORITY_ORDER = {
 COLLECTION_SAMPLE_LOOKUP_MIN_LEN = 3
 
 
-def _parse_sample_id_from_search(search_term: str) -> Optional[int]:
-    """Resolve numeric sample id from raw id, SAM#### display id, or padded digits."""
-    compact = re.sub(r"[\s-]", "", search_term.strip())
-    upper = compact.upper()
-    if upper.startswith("SAM") and len(upper) > 3:
-        suffix = upper[3:]
-        if suffix.isdigit():
-            return int(suffix)
-    if compact.isdigit():
-        return int(compact)
-    return None
-
-
 def _collection_search_filter(search_term: str):
     term = search_term.strip()
     predicates = [Patient.fullName.ilike(f"%{term}%")]
-    sample_id = _parse_sample_id_from_search(term)
+    sample_id = parse_display_id_from_search(term, "SAM")
     if sample_id is not None:
         predicates.append(Sample.sampleId == sample_id)
     compact = re.sub(r"[\s-]", "", term)

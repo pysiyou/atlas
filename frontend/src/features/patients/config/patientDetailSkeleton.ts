@@ -7,8 +7,8 @@ export const PATIENT_DETAIL_SKELETON_SECTIONS: DetailSkeletonSection[] = [
     title: 'Related Orders',
     tableColumns: 5,
     tableRows: 4,
-    contentClassName: 'p-0 overflow-visible',
-    headerClassName: '!py-1.5',
+    padding: 'none',
+    scroll: 'visible',
   },
   { title: 'Reports', rows: 3, layout: 'column' },
 ];

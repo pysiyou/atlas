@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Badge } from '@/components';
+import { Badge, DetailField } from '@/components';
 import { formatDate } from '@/utils';
 import type { Affiliation } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';
@@ -21,34 +21,40 @@ export const AffiliationInfo: React.FC<AffiliationInfoProps> = ({ affiliation })
 
   return (
     <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
-      <div className="col-span-2">
-        <div className="text-xs text-text-tertiary mb-0.5">Assurance Number</div>
-        <div className="font-normal text-text-primary">{affiliation.assuranceNumber}</div>
-      </div>
-
-      <div>
-        <div className="text-xs text-text-tertiary mb-0.5">Status</div>
-        <Badge variant={isActive ? 'success' : 'danger'} size="sm" className="inline-flex">
-          {isActive ? 'Active' : 'Expired'}
-        </Badge>
-      </div>
-
-      <div>
-        <div className="text-xs text-text-tertiary mb-0.5">Duration</div>
-        <div className="text-text-primary">{affiliation.duration} Months</div>
-      </div>
-
-      <div>
-        <div className="text-xs text-text-tertiary mb-0.5">Start Date</div>
-        <div className="text-text-primary">{formatDate(affiliation.startDate)}</div>
-      </div>
-
-      <div>
-        <div className="text-xs text-text-tertiary mb-0.5">End Date</div>
-        <div className={`font-normal ${isActive ? 'text-text-primary' : 'text-danger-fg'}`}>
-          {formatDate(affiliation.endDate)}
-        </div>
-      </div>
+      <DetailField
+        orientation="vertical"
+        label="Assurance Number"
+        value={affiliation.assuranceNumber}
+        className="col-span-2"
+      />
+      <DetailField
+        orientation="vertical"
+        label="Status"
+        value={
+          <Badge variant={isActive ? 'success' : 'danger'} size="sm" className="inline-flex">
+            {isActive ? 'Active' : 'Expired'}
+          </Badge>
+        }
+      />
+      <DetailField
+        orientation="vertical"
+        label="Duration"
+        value={`${affiliation.duration} Months`}
+      />
+      <DetailField
+        orientation="vertical"
+        label="Start Date"
+        value={formatDate(affiliation.startDate)}
+      />
+      <DetailField
+        orientation="vertical"
+        label="End Date"
+        value={
+          <span className={isActive ? undefined : 'text-danger-fg'}>
+            {formatDate(affiliation.endDate)}
+          </span>
+        }
+      />
     </div>
   );
 };

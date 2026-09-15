@@ -2,9 +2,9 @@
  * InsuranceClaimSection — list and submit insurance claims for an order invoice.
  */
 import React, { useState } from 'react';
-import { Alert, Badge, Button, ErrorAlert } from '@/components';
+import { Alert, Badge, Button, ErrorAlert, EntityId } from '@/components';
 import { Input } from '@/components/inputs/FormField';
-import { formatCurrency, displayId } from '@/utils';
+import { formatCurrency } from '@/utils';
 import { notify, getFeedback, errorAlertMessage } from '@/utils/feedback';
 import type { Invoice } from '@/types';
 import {
@@ -60,9 +60,7 @@ export const InsuranceClaimSection: React.FC<InsuranceClaimSectionProps> = ({
         <span className="text-xs font-medium text-text-secondary uppercase tracking-wider">
           Insurance Claims
         </span>
-        <span className="text-[10px] text-text-tertiary entity-id">
-          {displayId.invoice(invoice.invoiceId)}
-        </span>
+        <EntityId type="invoice" value={invoice.invoiceId} className="text-[10px] text-text-tertiary" />
       </div>
 
       {isError ? (

@@ -5,11 +5,12 @@
 
 import React from 'react';
 import type { Patient } from '@/types';
-import { Button, Modal, CircularProgress, FooterInfo } from '@/components';
+import { Modal, CircularProgress, FooterInfo } from '@/components';
 import { MODULE_ICONS } from '@/config/icons';
 import { ErrorBoundary } from '@/components';
 import { useEditPatientForm } from '../hooks/useEditPatientForm';
 import { PatientFormTabs } from './PatientFormTabs';
+import { OrderModalFooter } from '@/features/orders/components/OrderModalFooter';
 
 interface EditPatientModalProps {
   isOpen: boolean;
@@ -59,34 +60,6 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
       label={`${formProgress.filled}/${formProgress.total}`}
       className="h-7"
     />
-  </div>
-);
-
-interface ModalFooterProps {
-  onClose: () => void;
-  submitLabel: string;
-  isSubmitting: boolean;
-  formId: string;
-  footerInfo?: React.ReactNode;
-}
-
-const ModalFooter: React.FC<ModalFooterProps> = ({
-  onClose,
-  submitLabel,
-  isSubmitting,
-  formId,
-  footerInfo,
-}) => (
-  <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border-default bg-surface shrink-0 shadow-[var(--shadow-footer)]">
-    {footerInfo}
-    <div className="flex items-center gap-3">
-      <Button type="button" variant="cancel" size="md" layout="icon-text" onClick={onClose} disabled={isSubmitting}>
-        Cancel
-      </Button>
-      <Button type="submit" variant="save" size="md" layout="icon-text" form={formId} isLoading={isSubmitting} disabled={isSubmitting}>
-        {submitLabel}
-      </Button>
-    </div>
   </div>
 );
 
@@ -144,7 +117,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
               </div>
             </form>
           </div>
-          <ModalFooter
+          <OrderModalFooter
             onClose={onClose}
             submitLabel={submitLabel}
             isSubmitting={isSubmitting}

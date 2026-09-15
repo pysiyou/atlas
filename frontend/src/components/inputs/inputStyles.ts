@@ -39,6 +39,12 @@ export const inputClearButton =
 export const inputError =
   'border-border-error focus:border-border-error focus:ring-danger focus:ring-opacity-20';
 
+/** Compact form-field label (popover / modal / patient form sections). */
+export const FORM_FIELD_LABEL = 'block text-xs font-normal text-text-tertiary';
+
+/** Form control label sitting above an input (clickable, truncated). */
+export const FORM_CONTROL_LABEL = `${FORM_FIELD_LABEL} cursor-pointer truncate min-w-0`;
+
 /** Container for input wrappers (TagInput, TestSelect, PatientSelect, modal search) — same border/hover/focus-within */
 export const inputContainerBase =
   'w-full rounded border border-border-default bg-surface transition-colors duration-200 hover:border-border-hover focus-within:outline-none focus-within:border-brand focus-within:ring-1 focus-within:ring-brand focus-within:ring-opacity-20';

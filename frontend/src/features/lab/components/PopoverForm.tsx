@@ -8,7 +8,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { Button, IconButton, FooterInfo, Icon } from '@/components';
+import { Button, FooterInfo, Icon, DialogHeader, DialogFooter } from '@/components';
 import { MODULE_ICONS } from '@/config/icons';
 import { ICONS } from '@/config/icons';
 
@@ -60,50 +60,42 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
 }) => {
   return (
     <div className="w-90 md:w-96 bg-surface rounded-lg shadow-xl border border-border-default overflow-hidden flex flex-col max-h-[600px]">
-      {/* Header */}
-      <div className="px-4 py-3 bg-surface-page border-b border-border-subtle flex items-start justify-between">
-        <div className="space-y-0.5">
-          <h4 className="font-medium text-text-primary">{title}</h4>
-          {subtitle && <p className="text-xs text-text-tertiary">{subtitle}</p>}
-          {headerBadges && <div className="flex items-center gap-2 pt-1">{headerBadges}</div>}
-        </div>
-        <IconButton
-          onClick={onCancel}
-          variant="close"
-          size="sm"
-          title="Close"
-          disabled={isSubmitting}
-        />
-      </div>
-
-      {/* Body - scrollable content area */}
+      <DialogHeader
+        size="popover"
+        title={title}
+        subtitle={subtitle}
+        badges={headerBadges}
+        onClose={onCancel}
+        disabled={isSubmitting}
+      />
       <div className="p-4 space-y-4 overflow-y-auto flex-1">{children}</div>
-
-      {/* Footer */}
-      <div className="p-3 bg-surface-page border-t border-border-subtle flex items-center justify-between gap-2 shrink-0">
-        {footerInfo || <FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" />}
-        <div className="flex items-center gap-2">
-          <Button
-            variant="cancel"
-            size="sm"
-            layout="text"
-            onClick={onCancel}
-            disabled={isSubmitting}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant={confirmVariant}
-            size="sm"
-            layout="text"
-            onClick={onConfirm}
-            isLoading={isSubmitting}
-            disabled={disabled}
-          >
-            {confirmLabel}
-          </Button>
-        </div>
-      </div>
+      <DialogFooter
+        density="popover"
+        start={footerInfo || <FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" />}
+        end={
+          <>
+            <Button
+              variant="cancel"
+              size="sm"
+              layout="text"
+              onClick={onCancel}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant={confirmVariant}
+              size="sm"
+              layout="text"
+              onClick={onConfirm}
+              isLoading={isSubmitting}
+              disabled={disabled}
+            >
+              {confirmLabel}
+            </Button>
+          </>
+        }
+      />
     </div>
   );
 };

@@ -9,7 +9,7 @@ import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import { usePatient } from '../api/patients.api';
 import { useOrdersByPatient } from '@/features/orders';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { DetailPageShell, DetailPageHeader } from '@/components';
+import { DetailPageShell, PageHeader } from '@/components';
 import { EditPatientModal } from '../components/EditPatientModal';
 import { PatientHeader } from '../components/PatientHeader';
 import { SmallScreenLayout, MediumScreenLayout, LargeScreenLayout } from '../components/PatientDetailLayouts';
@@ -54,7 +54,7 @@ export const PatientDetail: React.FC = () => {
       onNewOrder={handleNewOrder}
     />
   ) : (
-    <DetailPageHeader title="Patient" />
+    <PageHeader title="Patient" />
   );
 
   return (

@@ -4,8 +4,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { SectionPanel, Badge } from '@/components';
-import { displayId } from '@/utils';
+import { Panel, Badge, EntityId } from '@/components';
 import { ROUTES } from '@/config';
 import type { Order } from '@/types';
 
@@ -18,9 +17,9 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
   orders,
   getPatientName,
 }) => (
-  <SectionPanel
+  <Panel
     title="Recent Orders"
-    headerRight={
+    headerEnd={
       <Link to={ROUTES.ORDERS} className="text-xs text-brand hover:underline">
         View all
       </Link>
@@ -39,7 +38,7 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
                 {getPatientName(String(order.patientId))}
               </p>
               <p className="text-xs text-text-tertiary">
-                <span className="entity-id">{displayId.order(order.orderId)}</span> •{' '}
+                <EntityId type="order" value={order.orderId} /> •{' '}
                 {order.tests.length} test(s)
               </p>
             </div>
@@ -62,5 +61,5 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
         <p className="text-center text-sm text-text-tertiary py-8">No recent orders</p>
       )}
     </div>
-  </SectionPanel>
+  </Panel>
 );

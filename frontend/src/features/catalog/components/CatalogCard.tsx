@@ -1,4 +1,4 @@
-import { Badge, MobileEntityCard } from '@/components';
+import { Badge, MobileEntityCard, EntityId } from '@/components';
 import type { CardComponentProps } from '@/components';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import type { Test } from '@/types';
@@ -16,14 +16,17 @@ import type { Test } from '@/types';
 export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
   return (
     <MobileEntityCard onClick={onClick}>
-      {/* Header: Test name + code (left) + Price (right) */}
-      <div className="flex justify-between items-center mb-3 pb-3 border-b border-border-default">
-        <div className="flex flex-col min-w-0">
-          <div className="text-sm text-text-primary break-words">{test.name}</div>
-          <span className="entity-id leading-none">{test.code}</span>
-        </div>
-        <div className="text-text-primary text-lg leading-none">{formatCurrency(test.price)}</div>
-      </div>
+      <MobileEntityCard.Header
+        leading={
+          <div className="flex flex-col min-w-0">
+            <div className="text-sm text-text-primary break-words">{test.name}</div>
+            <EntityId className="leading-none">{test.code}</EntityId>
+          </div>
+        }
+        trailing={
+          <div className="text-text-primary text-lg leading-none">{formatCurrency(test.price)}</div>
+        }
+      />
 
       {/* Synonyms and volume */}
       <div className="grow">
@@ -34,7 +37,6 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
               {test.synonyms.length > 2 && ` +${test.synonyms.length - 2} more`}
             </div>
           )}
-          {/* Sample volume - shown if available */}
           {test.sampleVolume && (
             <div className="text-xs text-text-secondary">Volume: {test.sampleVolume}</div>
           )}
@@ -43,14 +45,11 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
 
       {/* Bottom section: Turnaround time (left) + Category + Sample Type badges (right) */}
       <div className="flex justify-between items-center mt-auto pt-3">
-        {/* Turnaround time on bottom left */}
         <div className="text-xs text-text-tertiary">
           TAT: {formatTurnaroundTime(test.turnaroundTime)}
         </div>
-        {/* Category and Sample Type badges on bottom right */}
         <div className="flex items-center gap-2">
           <Badge variant={test.category} size="xs" className="border-none" />
-          {/* Sample Type badge */}
           <Badge variant={test.sampleType} size="xs" />
         </div>
       </div>

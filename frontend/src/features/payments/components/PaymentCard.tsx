@@ -1,7 +1,6 @@
-import { Badge, Avatar, MobileEntityCard } from '@/components';
+import { Badge, Avatar, MobileEntityCard, EntityId } from '@/components';
 import type { CardComponentProps } from '@/components';
 import { formatCurrency, formatDateTime } from '@/utils';
-import { displayId } from '@/utils';
 import type { OrderPaymentView } from '../types';
 import { PaymentButton } from './PaymentButton';
 import { useInvalidatePayments } from '../api/payments.api';
@@ -22,25 +21,22 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
 
   return (
     <MobileEntityCard onClick={onClick}>
-      {/* Header: Avatar (top left) + Total Price (top right) */}
-      <div className="pb-3 border-b border-border-default flex justify-between items-center">
-        {/* Avatar: Patient name + Order ID - positioned at top left */}
-        <Avatar
-          primaryText={order.patientName || 'N/A'}
-          primaryTextClassName=""
-          secondaryText={displayId.order(order.orderId)}
-          secondaryTextClassName="entity-id"
-          size="xs"
-        />
-        {/* Total price on top right */}
-        <div className="text-text-primary text-lg">{formatCurrency(order.totalPrice)}</div>
-      </div>
+      <MobileEntityCard.Header
+        leading={
+          <Avatar
+            primaryText={order.patientName || 'N/A'}
+            primaryTextClassName=""
+            secondaryText={<EntityId type="order" value={order.orderId} />}
+            size="xs"
+          />
+        }
+        trailing={<div className="text-text-primary text-lg">{formatCurrency(order.totalPrice)}</div>}
+      />
 
       {/* Tests list: Show at most 2 tests, third line shows remaining count */}
-      <div className="space-y-2 pt-3">
+      <div className="space-y-2">
         {order.tests && order.tests.length > 0 && (
           <div className="space-y-1">
-            {/* Display first 2 tests */}
             {order.tests.slice(0, 2).map((test, index) => (
               <div
                 key={test.testCode || index}
@@ -49,14 +45,15 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
                 <div className="flex items-center flex-1 min-w-0">
                   <span className="w-1 h-1 rounded-full bg-neutral-400 mr-2 flex-shrink-0" />
                   <span className="mr-1 truncate">{test.testName}</span>
-                  <span className="entity-id truncate">{test.testCode}</span>
+                  <EntityId variant="inline" className="truncate">
+                    {test.testCode}
+                  </EntityId>
                 </div>
                 <span className="text-text-primary ml-2 flex-shrink-0">
                   {formatCurrency(test.priceAtOrder)}
                 </span>
               </div>
             ))}
-            {/* Third line: Show remaining tests count if more than 2 */}
             {order.tests.length > 2 && (
               <div className="text-xs text-text-tertiary">
                 +{order.tests.length - 2} more test{order.tests.length - 2 !== 1 ? 's' : ''}
@@ -68,11 +65,9 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
 
       {/* Bottom section: Date (left) + Payment method/button (right) */}
       <div className="flex justify-between items-center pt-3">
-        {/* Date on bottom left - show payment date if paid, otherwise order date */}
         <div className="text-xs text-text-tertiary">
           {item.paymentDate ? formatDateTime(item.paymentDate) : formatDateTime(order.orderDate)}
         </div>
-        {/* Payment method or Payment button on bottom right */}
         {item.paymentMethod && order.paymentStatus !== 'unpaid' ? (
           <Badge variant={item.paymentMethod} size="xs" />
         ) : order.paymentStatus === 'unpaid' ? (

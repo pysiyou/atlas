@@ -30,13 +30,14 @@ export interface EntityIdProps {
   title?: string;
   as?: ElementType;
   onClick?: React.MouseEventHandler<HTMLElement>;
+  [key: string]: unknown;
 }
 
 /**
  * Consistent typography for entity IDs (PAT/ORD/SAM/TST) and catalog/test codes.
  * Uses theme tokens via the `.entity-id` class.
  */
-export const EntityId: React.FC<EntityIdProps> = ({
+export function EntityId({
   type,
   value,
   children,
@@ -45,7 +46,8 @@ export const EntityId: React.FC<EntityIdProps> = ({
   title,
   as: Component = 'span',
   onClick,
-}) => {
+  ...rest
+}: EntityIdProps) {
   const content =
     children ??
     (type != null
@@ -61,8 +63,10 @@ export const EntityId: React.FC<EntityIdProps> = ({
       className={cn(VARIANT_CLASSES[variant], 'font-normal', className)}
       title={title}
       onClick={onClick}
+      {...rest}
+      {...(Component === 'button' ? { type: 'button' } : {})}
     >
       {content}
     </Component>
   );
-};
+}

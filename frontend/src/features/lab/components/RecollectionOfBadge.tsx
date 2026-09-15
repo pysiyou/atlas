@@ -3,10 +3,9 @@
  */
 
 import React from 'react';
-import { Badge, Icon } from '@/components';
+import { Badge, Icon, EntityId } from '@/components';
 import type { BadgeSize } from '@/components';
 import { ICONS } from '@/config/icons';
-import { displayId } from '@/utils';
 import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 
 interface RecollectionOfBadgeProps {
@@ -26,7 +25,6 @@ export const RecollectionOfBadge: React.FC<RecollectionOfBadgeProps> = ({
     className={`flex items-center gap-1 ${className}`}
   >
     <Icon name={ICONS.actions.alertCircle} className="w-3 h-3 shrink-0" />
-    Recollection of{' '}
-    <span className="entity-id">{displayId.sample(originalSampleId)}</span>
+    Recollection of <EntityId type="sample" value={originalSampleId} />
   </Badge>
 );

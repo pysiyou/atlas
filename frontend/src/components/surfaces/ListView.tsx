@@ -5,7 +5,7 @@
 import { type ReactNode } from 'react';
 import { Table, type TableViewConfig } from '@/components/data-table';
 import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components/data-table';
-import { EmptyState, PageHeaderBar } from '@/components';
+import { EmptyState, PageHeader } from '@/components';
 import { ErrorAlert } from '@/components/loaders/ErrorAlert';
 import { EMPTY_ICON_SEARCH, DEFAULT_EMPTY_DESCRIPTION_SEARCH } from '@/utils/constants';
 import type { ListViewPaginationConfig, PaginationConfig, SortConfig } from '@/utils/table';
@@ -84,9 +84,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
   return (
     <div className={`min-h-0 flex-1 flex flex-col p-2 gap-2 overflow-hidden ${className}`}>
       {(title != null || headerActions != null) && (
-        <PageHeaderBar title={title ?? ''} subtitle={subtitle}>
-          {headerActions}
-        </PageHeaderBar>
+        <PageHeader variant="bar" title={title ?? ''} subtitle={subtitle} actions={headerActions} />
       )}
       {error && (
         <ErrorAlert

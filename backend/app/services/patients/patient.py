@@ -1,6 +1,7 @@
 """
 Patient business logic. Router delegates list/get/search/create/update to this service.
 """
+import re
 from datetime import datetime, timezone
 
 from fastapi import HTTPException, status
@@ -9,6 +10,7 @@ from sqlalchemy import or_, cast, String
 from sqlalchemy.inspection import inspect
 
 from app.models.patient import Patient
+from app.utils.display_id_search import parse_display_id_from_search
 from app.schemas.patient import PatientCreate, PatientUpdate, PatientResponse, MedicalHistory
 
 
@@ -32,6 +34,24 @@ def serialize_patient_full(patient: Patient) -> dict:
     return PatientResponse.model_validate(patient_to_response_dict(patient)).model_dump()
 
 
+def _patient_search_filter(search_term: str):
+    """Collection-style name/id lookup plus phone substring match."""
+    term = search_term.strip()
+    predicates = [
+        Patient.fullName.ilike(f"%{term}%"),
+        Patient.phone.contains(term),
+    ]
+    patient_id = parse_display_id_from_search(term, "PAT")
+    if patient_id is not None:
+        predicates.append(Patient.id == patient_id)
+    compact = re.sub(r"[\s-]", "", term)
+    if compact.isdigit():
+        predicates.append(cast(Patient.id, String).ilike(f"%{compact}%"))
+        if compact != term:
+            predicates.append(Patient.phone.contains(compact))
+    return or_(*predicates)
+
+
 class PatientService:
     def __init__(self, db: Session):
         self.db = db
@@ -45,14 +65,7 @@ class PatientService:
     ) -> tuple[list[dict], int]:
         query = self.db.query(Patient)
         if search:
-            search_term = f"%{search.lower()}%"
-            query = query.filter(
-                or_(
-                    Patient.fullName.ilike(search_term),
-                    Patient.id.ilike(search_term),
-                    Patient.phone.contains(search),
-                )
-            )
+            query = query.filter(_patient_search_filter(search))
         query = query.order_by(Patient.updatedAt.desc())
         total = query.count() if paginated else 0
         patients = query.offset(skip).limit(limit).all()
@@ -60,16 +73,9 @@ class PatientService:
         return data, total
 
     def search(self, q: str, limit: int = 10000) -> list[dict]:
-        search_term = f"%{q.lower()}%"
         patients = (
             self.db.query(Patient)
-            .filter(
-                or_(
-                    Patient.fullName.ilike(search_term),
-                    cast(Patient.id, String).ilike(search_term),
-                    Patient.phone.contains(q),
-                )
-            )
+            .filter(_patient_search_filter(q))
             .order_by(Patient.updatedAt.desc())
             .limit(limit)
             .all()

@@ -2,7 +2,7 @@
  * Command center shared layout, surface, and tone styles.
  */
 
-import { PAGE_PANEL } from '@/components/surfaces/pagePanelStyles';
+import { PANEL_VARIANTS } from '@/components/surfaces/panelTokens';
 
 export type CommandCenterKpiTone = 'brand' | 'success' | 'warning' | 'danger' | 'neutral';
 
@@ -38,9 +38,7 @@ export function resolveCommandCenterTextTone(
 }
 
 export const COMMAND_CENTER_PANEL = {
-  ...PAGE_PANEL,
-  title: `m-0 truncate text-sm font-light leading-none ${COMMAND_CENTER_TEXT.panelTitle}`,
-  meta: `flex h-6 shrink-0 items-center text-xxs ${COMMAND_CENTER_TEXT.panelMeta}`,
+  ...PANEL_VARIANTS.page,
   page: 'flex-1 min-h-0 min-w-0 overflow-hidden bg-surface-page p-2',
 } as const;
 

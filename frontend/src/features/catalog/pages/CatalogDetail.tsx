@@ -11,7 +11,7 @@ import { useTest } from '../api/tests.api';
 import { useBreakpoint } from '@/hooks/useBreakpoint';
 import { BalancedColumnsLayout } from '@/components';
 import type { TableInput } from '@/components';
-import { DetailPageShell, DetailPageHeader } from '@/components';
+import { DetailPageShell, PageHeader, EntityId } from '@/components';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { formatRejectionCriteriaList } from '@/features/lab/utils/catalogRejectionCriteria';
 import { CATALOG_DETAIL_SKELETON_SECTIONS } from '../config/catalogDetailSkeleton';
@@ -51,7 +51,7 @@ export const CatalogDetail: React.FC = () => {
   if (isLoading) {
     return (
       <DetailPageShell
-        header={<DetailPageHeader title="Test" />}
+        header={<PageHeader title="Test" />}
         loading
         loadingSkeleton={
           <DetailPageSkeleton
@@ -70,7 +70,7 @@ export const CatalogDetail: React.FC = () => {
   if (isError || !test) {
     return (
       <DetailPageShell
-        header={<DetailPageHeader title="Test" />}
+        header={<PageHeader title="Test" />}
         notFound
         notFoundTitle={feedbackTitle('catalog.detail.notFoundTitle')}
         notFoundDescription={
@@ -90,7 +90,7 @@ export const CatalogDetail: React.FC = () => {
       key: 'overview',
       title: 'Test Overview',
       rows: [
-        { label: 'Test Code', value: <span className="entity-id">{test.code}</span> },
+        { label: 'Test Code', value: <EntityId>{test.code}</EntityId> },
         { label: 'Test Name', value: test.name },
         { label: 'Category', value: capitalize(test.category) },
         { label: 'Turnaround Time', value: formatTurnaroundTime(test.turnaroundTime) },
@@ -187,7 +187,7 @@ export const CatalogDetail: React.FC = () => {
   }
 
   return (
-    <DetailPageShell header={<DetailPageHeader title={test.name} subtitle={test.code} />}>
+    <DetailPageShell header={<PageHeader title={test.name} subtitle={test.code} />}>
       <BalancedColumnsLayout tables={tables} columns={getColumnCount()} className="pb-6" />
     </DetailPageShell>
   );

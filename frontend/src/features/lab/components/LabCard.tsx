@@ -4,7 +4,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { Card, Badge } from '@/components';
+import { Card, Badge, EntityId } from '@/components';
 import { InfoBanner } from './InfoBanner';
 import { LabHeaderContent, type LabAuditLine } from './labHeader';
 import type { LabIdentityContext } from './LabIdentityRow';
@@ -93,7 +93,7 @@ export const TestList: React.FC<TestListProps> = ({ tests }) => (
       <li key={test.code || i} className={LAB_CARD_LIST_ITEMS.testItem}>
         <span className={LAB_CARD_LIST_ITEMS.bullet} />
         <span className={LAB_CARD_LIST_ITEMS.testName}>{test.name}</span>
-        <span className={LAB_CARD_LIST_ITEMS.testCode}>{test.code}</span>
+        <EntityId variant="inline">{test.code}</EntityId>
       </li>
     ))}
   </ul>

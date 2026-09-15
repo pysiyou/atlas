@@ -3,10 +3,9 @@
  */
 
 import React from 'react';
-import { Badge, Icon } from '@/components';
+import { Badge, Icon, EntityId } from '@/components';
 import type { BadgeSize } from '@/components';
 import { ICONS } from '@/config/icons';
-import { displayId } from '@/utils';
 import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 
 interface RetestOfBadgeProps {
@@ -22,6 +21,6 @@ export const RetestOfBadge: React.FC<RetestOfBadgeProps> = ({
 }) => (
   <Badge size={size} variant="warning" className={`flex items-center gap-1 ${className}`}>
     <Icon name={ICONS.actions.alertCircle} className="w-3 h-3 shrink-0" />
-    Re-test of <span className="entity-id">{displayId.orderTest(retestOfTestId)}</span>
+    Re-test of <EntityId type="orderTest" value={retestOfTestId} />
   </Badge>
 );

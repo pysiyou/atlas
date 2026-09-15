@@ -5,8 +5,7 @@
 
 import React from 'react';
 import Barcode from 'react-barcode';
-import { Icon } from '@/components';
-import { LabSectionPanel } from '../components/LabSectionPanel';
+import { Icon, Panel, EntityId } from '@/components';
 import type { Sample, RejectedSample, Test } from '@/types';
 import { displayId } from '@/utils';
 import { CollectionRequirementsSection } from './CollectionRequirementsSection';
@@ -60,7 +59,7 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
           />
         </div>
       )}
-      <LabSectionPanel title={isCollected ? 'Linked Tests' : 'Required for'}>
+      <Panel variant="lab" title={isCollected ? 'Linked Tests' : 'Required for'}>
         <ul className="space-y-1">
           {testNames.map((testName, i) => {
             const testCode = testCodes[i];
@@ -69,7 +68,7 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
               <li key={testCode || i} className="flex items-center text-xs text-text-secondary">
                 <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mr-2" />
                 <span className="font-normal mr-1">{testName}</span>
-                <span className="entity-id mr-2">{testCode}</span>
+                <EntityId variant="inline" className="mr-2">{testCode}</EntityId>
                 {test?.turnaroundTime && (
                   <span className="text-text-disabled flex items-center gap-1">
                     <Icon name={ICONS.dataFields.time} className="w-2.5 h-2.5" />
@@ -80,10 +79,10 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
             );
           })}
         </ul>
-      </LabSectionPanel>
+      </Panel>
 
       {isRejected && rejectedSample && (
-        <LabSectionPanel title="Rejection Details">
+        <Panel variant="lab" title="Rejection Details">
           <div className="space-y-2 text-sm text-text-secondary">
             {rejectedSample.rejectionReasons && rejectedSample.rejectionReasons.length > 0 && (
               <p>
@@ -107,7 +106,7 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
               <p className="text-warning-fg">Recollection required</p>
             )}
           </div>
-        </LabSectionPanel>
+        </Panel>
       )}
 
       {isPending && testDetails.length > 0 && (
@@ -115,9 +114,9 @@ export const CollectionDetailContent: React.FC<CollectionDetailContentProps> = (
       )}
 
       {collectionNotes && (
-        <LabSectionPanel title="Collection Notes">
+        <Panel variant="lab" title="Collection Notes">
           <div className="text-sm text-text-primary">{collectionNotes}</div>
-        </LabSectionPanel>
+        </Panel>
       )}
 
       <DetailGrid sections={gridSections} />

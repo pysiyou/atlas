@@ -3,9 +3,8 @@
  */
 
 import React, { useState } from 'react';
-import { Alert, Button, Badge } from '@/components';
+import { Alert, Button, Badge, EntityId } from '@/components';
 import { formatDateTime } from '@/utils';
-import { displayId } from '@/utils';
 import { useAuthStore } from '@/app/store';
 import { notify } from '@/utils/feedback';
 import {
@@ -78,12 +77,12 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
   return (
     <div className={compact ? 'space-y-2' : 'space-y-3'}>
       <div className="flex flex-wrap items-center gap-2 text-xs">
-        <span className="entity-id">{displayId.orderTest(record.id)}</span>
+        <EntityId type="orderTest" value={record.id} />
         <Badge variant="danger" size="xs">
           {record.testCode}
         </Badge>
         <span className="text-text-secondary">{record.patientName}</span>
-        <span className="entity-id entity-id--secondary">{displayId.order(record.orderId)}</span>
+        <EntityId type="order" value={record.orderId} variant="secondary" />
       </div>
 
       {record.flags && record.flags.length > 0 && (

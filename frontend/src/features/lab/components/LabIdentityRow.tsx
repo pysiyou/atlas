@@ -3,8 +3,9 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { cn, formatDate, displayId } from '@/utils';
-import { LAB_CARD_CONTEXT, LAB_ENTITY_ID } from '../utils/labStyles';
+import { cn, formatDate } from '@/utils';
+import { EntityId } from '@/components';
+import { LAB_CARD_CONTEXT } from '../utils/labStyles';
 
 export interface LabIdentityContext {
   patientName?: string;
@@ -40,7 +41,7 @@ export const LabIdentityRow: React.FC<LabIdentityRowProps> = ({
   className,
   compact = false,
 }) => {
-  const idClass = cn(LAB_ENTITY_ID, 'whitespace-nowrap');
+  const idClass = 'whitespace-nowrap';
   const nameClass = cn(LAB_CARD_CONTEXT.patientName, compact && 'min-w-0 truncate');
   const hideMd = compact ? 'hidden md:inline' : undefined;
   const hideLg = compact ? 'hidden lg:inline' : undefined;
@@ -68,16 +69,14 @@ export const LabIdentityRow: React.FC<LabIdentityRowProps> = ({
 
   if (needsSep) parts.push(<InlineDot key="dot-ord" />);
   parts.push(
-    <span key="ord" className={idClass}>
-      {displayId.order(context.orderId)}
-    </span>
+    <EntityId key="ord" type="order" value={context.orderId} className={idClass} />
   );
 
   if (context.orderTestId != null) {
     parts.push(<InlineDot key="dot-tst" className={hideMd} />);
     parts.push(
       <HiddenAt key="tst" hide={hideMd}>
-        <span className={idClass}>{displayId.orderTest(context.orderTestId)}</span>
+        <EntityId type="orderTest" value={context.orderTestId} className={idClass} />
       </HiddenAt>
     );
   }
@@ -85,7 +84,7 @@ export const LabIdentityRow: React.FC<LabIdentityRowProps> = ({
     parts.push(<InlineDot key="dot-sam" className={hideMd} />);
     parts.push(
       <HiddenAt key="sam" hide={hideMd}>
-        <span className={idClass}>{displayId.sample(context.sampleId)}</span>
+        <EntityId type="sample" value={context.sampleId} className={idClass} />
       </HiddenAt>
     );
   }
@@ -93,7 +92,7 @@ export const LabIdentityRow: React.FC<LabIdentityRowProps> = ({
     parts.push(<InlineDot key="dot-code" className={context.entityName ? hideLg : hideMd} />);
     parts.push(
       <HiddenAt key="code" hide={context.entityName ? hideLg : hideMd}>
-        <span className={idClass}>{context.entityCode}</span>
+        <EntityId className={idClass}>{context.entityCode}</EntityId>
       </HiddenAt>
     );
   }

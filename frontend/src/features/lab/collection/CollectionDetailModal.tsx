@@ -6,7 +6,7 @@
  *
  * Uses centralized components:
  * - DetailGrid with sections config for consistent layout
- * - SectionPanel for custom sections
+ * - Panel for custom sections
  * - LabModalHeader sampleInfo for collection metadata (same as entry/validation modals)
  */
 
@@ -16,7 +16,7 @@ import { queryKeys } from '@/lib/query';
 import { sampleAPI } from '../api/samples.api';
 import type { ContainerType, RejectedSample } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
-import { displayId } from '@/utils';
+import { labModalSubtitle } from '../components/labModalStages';
 import { CollectionDetailFooter } from './CollectionDetailFooter';
 import { buildCollectionDetailGridSections } from './CollectionDetailGridSections';
 import { CollectionDetailContent } from './CollectionDetailContent';
@@ -29,10 +29,8 @@ import { usePatientNameLookup } from '@/features/patients';
 import { useOrderLookup } from '@/features/orders';
 import { useSampleLookup } from '../api/samples.api';
 import { getTestNames } from '@/features/catalog/utils';
-import { labModalSubtitle } from '../components/labModalStages';
-import { LAB_ENTITY_ID } from '../utils/labStyles';
 import { LabHistoryPanel } from '../components/LabHistoryPanel';
-import { Button } from '@/components';
+import { Button, EntityId } from '@/components';
 import type { SampleDisplay } from '@/features/lab/types';
 
 interface CollectionDetailModalProps {
@@ -192,7 +190,7 @@ export const CollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       disableClose={isPopoverSubmitting}
-      title={<span className={LAB_ENTITY_ID}>{displayId.sample(sample.sampleId)}</span>}
+      title={<EntityId type="sample" value={sample.sampleId} />}
       subtitle={labModalSubtitle('collection')}
       headerBadges={headerBadges}
       contextInfo={{

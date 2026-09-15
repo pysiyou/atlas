@@ -6,7 +6,7 @@
 
 import React, { type InputHTMLAttributes } from 'react';
 import { Icon, type IconName } from '@/components/primitives/Icon';
-import { inputBase, inputError } from '@/components/inputs/inputStyles';
+import { inputBase, inputError, FORM_CONTROL_LABEL } from '@/components/inputs/inputStyles';
 import { getDefaultIconForField } from './formFieldHelpers';
 
 interface FormFieldWrapperProps {
@@ -31,7 +31,7 @@ const FormFieldWrapper: React.FC<FormFieldWrapperProps> = ({
   <div className={className}>
     {label && (
       <div className="flex justify-between items-baseline mb-1 gap-2">
-        <label htmlFor={id} className="text-xs font-normal text-text-tertiary cursor-pointer truncate min-w-0">
+        <label htmlFor={id} className={FORM_CONTROL_LABEL}>
           {label}
           {required && <span className="text-danger-fg ml-1">*</span>}
         </label>
