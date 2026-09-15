@@ -14,11 +14,12 @@ import { LabCard } from '../components/LabCard';
 import { TestHeaderBadges } from '../components/labWorkflowBadges';
 import { QualityIssueDialog } from '../components';
 import { ResultsParameterGrid } from '../components/ResultsParameterGrid';
-import { testHeaderAudit } from '../components/labHeader';
-import { LabMobileCardHeader, labMobileCardSurfaceClassName } from '../components/labMobileCardHeader';
+import { testHeaderAudit } from '../components/labHeaderAudit';
+import { LabMobileCardHeader } from '../components/labMobileCardHeader';
 import { LAB_COPY } from '../constants/labCopy';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
 import { formatRejectionReasons } from '../utils/labFormatters';
+import { LAB_MOBILE_CARD } from '../utils/labStyles';
 import type { TestWithContext, Sample } from '@/types';
 import type { QualityIssueResult } from '@/types/lab-operations';
 
@@ -229,7 +230,7 @@ function ValidationCardMobile({
       padding="list"
       hover
       className={cn(
-        labMobileCardSurfaceClassName(),
+        LAB_MOBILE_CARD.surface,
         showAttemptIndicator && 'border-warning-stroke-emphasis'
       )}
       onClick={handleCardClick}

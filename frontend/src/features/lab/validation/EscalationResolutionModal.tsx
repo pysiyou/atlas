@@ -9,7 +9,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Badge, Panel, Button, EntityId } from '@/components';
 import { ValidationForm } from './ValidationForm';
 import { LabDetailModal, DetailGrid, ModalFooter } from '../components/LabDetailModal';
-import { testHeaderAudit } from '../components/labHeader';
+import { testHeaderAudit } from '../components/labHeaderAudit';
 import { TestHeaderBadges } from '../components/labWorkflowBadges';
 import { useTestWorkItemState } from '../hooks';
 import { CriticalValueActions } from '@/features/lab/critical-values/CriticalValueActions';

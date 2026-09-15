@@ -2,6 +2,7 @@
  * Toast.tsx — Lightweight toast card (title, subtitle, optional actions, dismiss).
  * The react-hot-toast adapter and `toast` API live in `@/app/AppToastBar`.
  */
+/* eslint-disable react-refresh/only-export-components -- single module: Toast + variant tokens */
 
 import React, { type HTMLAttributes, type ReactNode } from 'react';
 import { Icon, type IconName } from '@/components/primitives/Icon';

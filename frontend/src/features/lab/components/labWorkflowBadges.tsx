@@ -76,7 +76,7 @@ export interface CollectionHeaderBadgesProps {
   containerIconClassName?: string;
 }
 
-export const CollectionHeaderBadges = React.memo(function CollectionHeaderBadges({
+export const CollectionHeaderBadges = React.memo(({
   sample,
   isPending,
   isCollected,
@@ -92,7 +92,7 @@ export const CollectionHeaderBadges = React.memo(function CollectionHeaderBadges
   size = LAB_CARD_BADGE_SIZE,
   showBarcode = false,
   containerIconClassName = 'w-6 h-6',
-}: CollectionHeaderBadgesProps) {
+}: CollectionHeaderBadgesProps) => {
   const priority = sample.priority;
   const showPriority = priority === 'urgent' || priority === 'high';
   const hasContainer = (isCollected || isRejected) && containerColor && effectiveContainerType;
@@ -195,7 +195,7 @@ export interface TestHeaderBadgesProps {
   trailing?: ReactNode;
 }
 
-export const TestHeaderBadges = React.memo(function TestHeaderBadges({
+export const TestHeaderBadges = React.memo(({
   test,
   variant = 'entry',
   size = LAB_CARD_BADGE_SIZE,
@@ -206,7 +206,7 @@ export const TestHeaderBadges = React.memo(function TestHeaderBadges({
   flagCount,
   reasonCode,
   trailing,
-}: TestHeaderBadgesProps) {
+}: TestHeaderBadgesProps) => {
   const showPriority = test.priority === 'urgent' || test.priority === 'high';
   const tail = <LabRejectionTailBadgesFromTest test={test} size={size} />;
   const compactSize = compactBadgeSize(size);

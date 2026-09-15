@@ -1,6 +1,7 @@
 /**
  * CollectionCard — responsive card for sample collection (mobile + desktop).
  */
+/* eslint-disable max-lines -- single module: shared view-model + mobile/desktop */
 
 import React, { useMemo } from 'react';
 import { Badge, Card, IconButton } from '@/components';
@@ -12,8 +13,8 @@ import { useLabCardClickGuard } from '@/features/lab/hooks';
 import { useResponsiveCard } from '../components/useResponsiveCard';
 import { LabCard, TestList } from '../components/LabCard';
 import { CollectionHeaderBadges } from '../components/labWorkflowBadges';
-import { collectionHeaderAudit } from '../components/labHeader';
-import { LabMobileCardHeader, labMobileCardSurfaceClassName } from '../components/labMobileCardHeader';
+import { collectionHeaderAudit } from '../components/labHeaderAudit';
+import { LabMobileCardHeader } from '../components/labMobileCardHeader';
 import { LAB_MOBILE_CARD } from '../utils/labStyles';
 import { CollectionPopover } from './CollectionPopover';
 import { CollectionRejectionPopover } from './CollectionRejectionPopover';
@@ -87,6 +88,37 @@ function useCollectionCardData(props: CollectionCardProps): CollectionCardShared
   };
 }
 
+function getCollectionViewModel(display: SampleDisplay, sample: Sample) {
+  const { order } = display;
+  const isPending = sample.status === 'pending';
+  const isCollected = sample.status === 'collected';
+  const isRejected = sample.status === 'rejected';
+  const isDone = isCollected || isRejected;
+  const hasContainerInfo = isDone && 'actualContainerColor' in sample;
+  const containerColor = hasContainerInfo ? sample.actualContainerColor : undefined;
+
+  return {
+    order,
+    isPending,
+    isCollected,
+    isRejected,
+    isRecollection: sample.isRecollection === true,
+    paymentBlocked: isPending && order.paymentStatus === 'unpaid',
+    rejectedSample: isRejected ? (sample as RejectedSample) : null,
+    containerColor,
+    colorName: containerColor
+      ? CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerColor)?.label || 'N/A'
+      : 'N/A',
+    effectiveContainerType: getEffectiveContainerType(
+      hasContainerInfo && 'actualContainerType' in sample ? sample.actualContainerType : undefined,
+      sample.sampleType
+    ),
+    collectedVolume: isDone && 'collectedVolume' in sample ? sample.collectedVolume : undefined,
+    collectedAt: isDone && 'collectedAt' in sample ? sample.collectedAt : undefined,
+    collectedBy: isDone && 'collectedBy' in sample ? sample.collectedBy : undefined,
+  };
+}
+
 function CollectionCardDesktop({
   display,
   sample,
@@ -96,28 +128,21 @@ function CollectionCardDesktop({
   testNames,
   handleCardClick,
 }: CollectionCardSharedData) {
-  const { order } = display;
-  const isPending = sample.status === 'pending';
-  const isCollected = sample.status === 'collected';
-  const isRejected = sample.status === 'rejected';
-  const isRecollection = sample.isRecollection === true;
-  const paymentBlocked = isPending && order.paymentStatus === 'unpaid';
-  const rejectedSample = isRejected ? (sample as RejectedSample) : null;
-
-  const hasContainerInfo = (isCollected || isRejected) && 'actualContainerColor' in sample;
-  const containerColor = hasContainerInfo ? sample.actualContainerColor : undefined;
-  const colorName = containerColor
-    ? CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerColor)?.label || 'N/A'
-    : 'N/A';
-  const containerType =
-    hasContainerInfo && 'actualContainerType' in sample ? sample.actualContainerType : undefined;
-  const effectiveContainerType = getEffectiveContainerType(containerType, sample.sampleType);
-  const collectedVolume =
-    (isCollected || isRejected) && 'collectedVolume' in sample ? sample.collectedVolume : undefined;
-  const collectedAt =
-    (isCollected || isRejected) && 'collectedAt' in sample ? sample.collectedAt : undefined;
-  const collectedBy =
-    (isCollected || isRejected) && 'collectedBy' in sample ? sample.collectedBy : undefined;
+  const {
+    order,
+    isPending,
+    isCollected,
+    isRejected,
+    isRecollection,
+    paymentBlocked,
+    rejectedSample,
+    containerColor,
+    colorName,
+    effectiveContainerType,
+    collectedVolume,
+    collectedAt,
+    collectedBy,
+  } = getCollectionViewModel(display, sample);
 
   return (
     <LabCard
@@ -207,28 +232,21 @@ function CollectionCardMobile({
   handleCardClick,
   isCollecting,
 }: CollectionCardSharedData) {
-  const { order } = display;
-  const isPending = sample.status === 'pending';
-  const isCollected = sample.status === 'collected';
-  const isRejected = sample.status === 'rejected';
-  const isRecollection = sample.isRecollection === true;
-  const paymentBlocked = isPending && order.paymentStatus === 'unpaid';
-  const rejectedSample = isRejected ? (sample as RejectedSample) : null;
-
-  const hasContainerInfo = (isCollected || isRejected) && 'actualContainerColor' in sample;
-  const containerColor = hasContainerInfo ? sample.actualContainerColor : undefined;
-  const colorName = containerColor
-    ? CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerColor)?.label || 'N/A'
-    : 'N/A';
-  const containerType =
-    hasContainerInfo && 'actualContainerType' in sample ? sample.actualContainerType : undefined;
-  const effectiveContainerType = getEffectiveContainerType(containerType, sample.sampleType);
-  const collectedVolume =
-    (isCollected || isRejected) && 'collectedVolume' in sample ? sample.collectedVolume : undefined;
-  const collectedAt =
-    (isCollected || isRejected) && 'collectedAt' in sample ? sample.collectedAt : undefined;
-  const collectedBy =
-    (isCollected || isRejected) && 'collectedBy' in sample ? sample.collectedBy : undefined;
+  const {
+    order,
+    isPending,
+    isCollected,
+    isRejected,
+    isRecollection,
+    paymentBlocked,
+    rejectedSample,
+    containerColor,
+    colorName,
+    effectiveContainerType,
+    collectedVolume,
+    collectedAt,
+    collectedBy,
+  } = getCollectionViewModel(display, sample);
   const testCount = testNames.length;
 
   const statusAside = isPending ? (
@@ -266,7 +284,7 @@ function CollectionCardMobile({
     <Card
       padding="list"
       hover
-      className={labMobileCardSurfaceClassName()}
+      className={LAB_MOBILE_CARD.surface}
       onClick={() => handleCardClick()}
     >
       <LabMobileCardHeader

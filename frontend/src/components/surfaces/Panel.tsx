@@ -1,6 +1,7 @@
 /**
  * Panel — titled section shell for detail pages, dashboard, command center, and lab modals.
  */
+/* eslint-disable react-refresh/only-export-components -- single module: Panel + variant tokens */
 
 import React from 'react';
 import { cn } from '@/utils';

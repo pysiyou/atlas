@@ -21,7 +21,7 @@ import {
   ModalFooter,
 } from '../components/LabDetailModal';
 import { ReviewRequiredBadge } from '../components/StatusBadges';
-import { testHeaderAudit } from '../components/labHeader';
+import { testHeaderAudit } from '../components/labHeaderAudit';
 import { QualityIssueDialog } from '../components/QualityIssueDialog';
 import { CriticalValueActions } from '@/features/lab/critical-values/CriticalValueActions';
 import { buildCriticalValueRecord } from '@/features/lab/critical-values/buildCriticalValueRecord.utils';

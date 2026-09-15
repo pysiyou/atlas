@@ -21,7 +21,7 @@ import { CollectionDetailFooter } from './CollectionDetailFooter';
 import { buildCollectionDetailGridSections } from './CollectionDetailGridSections';
 import { CollectionDetailContent } from './CollectionDetailContent';
 import { LabDetailModal, ModalFooter } from '../components/LabDetailModal';
-import { collectionHeaderAudit } from '../components/labHeader';
+import { collectionHeaderAudit } from '../components/labHeaderAudit';
 import { CollectionHeaderBadges } from '../components/labWorkflowBadges';
 import { useTestCatalog } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users.api';

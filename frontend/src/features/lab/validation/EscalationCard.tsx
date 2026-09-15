@@ -11,9 +11,9 @@ import { useLabCardClickGuard, useTestWorkItemState } from '@/features/lab/hooks
 import { useResponsiveCard } from '../components/useResponsiveCard';
 import { LabCard } from '../components/LabCard';
 import { TestHeaderBadges } from '../components/labWorkflowBadges';
-import { testHeaderAudit } from '../components/labHeader';
-import { LabMobileCardHeader, labMobileCardSurfaceClassName } from '../components/labMobileCardHeader';
-import { LAB_CARD_TYPOGRAPHY } from '../utils/labStyles';
+import { testHeaderAudit } from '../components/labHeaderAudit';
+import { LabMobileCardHeader } from '../components/labMobileCardHeader';
+import { LAB_CARD_TYPOGRAPHY, LAB_MOBILE_CARD } from '../utils/labStyles';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
 import type { TestWithContext } from '@/types';
 
@@ -129,7 +129,7 @@ function EscalationCardMobile({
       padding="list"
       hover
       className={cn(
-        labMobileCardSurfaceClassName(),
+        LAB_MOBILE_CARD.surface,
         showAttemptIndicator && 'border-warning-stroke-emphasis'
       )}
       onClick={handleCardClick}

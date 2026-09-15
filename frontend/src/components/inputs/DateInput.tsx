@@ -1,6 +1,7 @@
 /**
  * DateInput — single date picker with calendar popover.
  */
+/* eslint-disable max-lines -- single module: trigger + calendar views */
 
 import React, { useState } from 'react';
 import { format, isSameMonth, isSameDay, endOfMonth, setYear, isBefore, isAfter } from 'date-fns';

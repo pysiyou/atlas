@@ -6,11 +6,8 @@ import React, { useState } from 'react';
 import { Badge, Button, Card } from '@/components';
 import { cn, formatDateTime } from '@/utils';
 import { LabCard } from '../components/LabCard';
-import { compactAuditLines } from '../components/labHeader';
-import {
-  LabMobileCardHeader,
-  labMobileCardSurfaceClassName,
-} from '../components/labMobileCardHeader';
+import { compactAuditLines } from '../components/labHeaderAudit';
+import { LabMobileCardHeader } from '../components/labMobileCardHeader';
 import { LAB_CARD_BADGE_SIZE, LAB_CARD_TYPOGRAPHY, LAB_MOBILE_CARD } from '../utils/labStyles';
 import { AttemptIndicator } from '../components/AttemptIndicator';
 import { BlockedReasonBadge } from '../components/StatusBadges';
@@ -235,8 +232,9 @@ function RecollectionRequestCardMobile({
     <Card
       padding="list"
       hover
-      className={labMobileCardSurfaceClassName(
-        request.requiresSupervisorOverride ? 'border-warning-stroke-emphasis' : undefined
+      className={cn(
+        LAB_MOBILE_CARD.surface,
+        request.requiresSupervisorOverride && 'border-warning-stroke-emphasis'
       )}
     >
       <LabMobileCardHeader

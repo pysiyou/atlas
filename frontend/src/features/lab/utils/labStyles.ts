@@ -148,6 +148,7 @@ export const LAB_CARD_HEADER = {
 
 /** Narrow / list-padding workflow cards (breakpoint mobile layouts) */
 export const LAB_MOBILE_CARD = {
+  surface: 'flex flex-col h-full min-h-0',
   stack: 'flex flex-col min-h-0 min-w-0 w-full flex-1 gap-1.5',
   titleHead:
     'grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto] grid-rows-[auto_auto] gap-x-2 gap-y-0.5 items-start',
