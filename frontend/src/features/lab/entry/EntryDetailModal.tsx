@@ -20,7 +20,7 @@ import {
 } from '../components/LabDetailModal';
 import { TestHeaderBadges } from '../components/labWorkflowBadges';
 import { useTestWorkItemState } from '../hooks';
-import { testHeaderAudit } from '../components/labHeader';
+import { testHeaderAudit } from '../components/labHeaderAudit';
 import { ICONS } from '@/config/icons';
 import { useTestCatalog } from '@/features/catalog';
 import { LabHistoryPanel } from '../components/LabHistoryPanel';

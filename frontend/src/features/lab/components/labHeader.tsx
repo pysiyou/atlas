@@ -14,15 +14,11 @@ export type {
   LabAuditLine,
   LabSampleAuditInfo,
 } from './labHeaderAudit';
-export {
-  compactAuditLines,
-  auditLinesFromSampleInfo,
-  collectionHeaderAudit,
-  testHeaderAudit,
-} from './labHeaderAudit';
 
 /** When true, badge rows hide tertiary chips (cards only; modals stay full). */
+// eslint-disable-next-line react-refresh/only-export-components -- compact flag for shared lab header consumers
 export const LabHeaderCompactContext = createContext(false);
+// eslint-disable-next-line react-refresh/only-export-components -- compact flag for shared lab header consumers
 export function useLabHeaderCompact(): boolean {
   return useContext(LabHeaderCompactContext);
 }

@@ -1,6 +1,7 @@
 /**
  * DatePicker — date range picker with calendar popover and presets.
  */
+/* eslint-disable max-lines -- single module: range picker + calendar + presets */
 
 import React, { useState, useRef, useCallback } from 'react';
 import {

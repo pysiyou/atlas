@@ -1,6 +1,7 @@
 /**
  * LoadingScope — global/section loading registration (provider + hooks).
  */
+/* eslint-disable react-refresh/only-export-components -- single module: provider + hooks + types */
 
 import {
   createContext,

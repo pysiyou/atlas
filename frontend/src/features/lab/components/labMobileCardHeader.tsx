@@ -144,7 +144,3 @@ export function LabMobileCardHeader({
     </div>
   );
 }
-
-export function labMobileCardSurfaceClassName(className?: string): string {
-  return cn('flex flex-col h-full min-h-0', className);
-}

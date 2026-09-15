@@ -19,6 +19,7 @@ import { LabTechBoardSkeleton } from './LabTechBoardSkeleton';
 
 export const LabTechBoard: React.FC = () => {
   const board = useLabTechBoard();
+  const { refetch } = board;
   const queryClient = useQueryClient();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -28,11 +29,11 @@ export const LabTechBoard: React.FC = () => {
     setIsRefreshing(true);
     try {
       await invalidateCommandCenterQueries(queryClient);
-      await board.refetch();
+      await refetch();
     } finally {
       setIsRefreshing(false);
     }
-  }, [queryClient, board.refetch]);
+  }, [queryClient, refetch]);
 
   if (board.isLoading) {
     return <LabTechBoardSkeleton />;
