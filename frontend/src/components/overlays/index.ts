@@ -14,4 +14,4 @@ export * from './OverlayRangeSlider';
 export * from './ModalRenderer';
 export * from './modalRegistry';
 export * from './registerModals';
-export * from './toast';
+export * from './Toast';

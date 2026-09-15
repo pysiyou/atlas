@@ -1,16 +1,82 @@
 /**
  * Toast.tsx — Lightweight toast card (title, subtitle, optional actions, dismiss).
+ * The react-hot-toast adapter and `toast` API live in `@/app/AppToastBar`.
  */
 
-import React from 'react';
-import { Icon } from '@/components/primitives/Icon';
+import React, { type HTMLAttributes, type ReactNode } from 'react';
+import { Icon, type IconName } from '@/components/primitives/Icon';
 import { cn } from '@/utils';
-import { getToastIconClasses, getToastSurfaceClasses, TOAST_ICON_NAME } from './toastHelpers';
-import type { ToastAction, ToastProps, ToastVariant } from './toastTypes';
+
+export type ToastVariant = 'success' | 'error' | 'info' | 'warning' | 'loading';
+
+export interface ToastAction {
+  label: string;
+  onClick: () => void;
+}
+
+export interface ToastProps {
+  /** Primary heading shown in the toast. */
+  title: string;
+  /** Optional supporting copy under the title. */
+  subtitle?: string;
+  /** Optional action chips (e.g. Undo). */
+  actions?: ToastAction[];
+  /** Called when the user dismisses the toast. */
+  onDismiss?: () => void;
+  /** Override the variant icon. */
+  customIcon?: ReactNode;
+  className?: string;
+  /** Accessibility props forwarded from the toaster host. */
+  ariaProps?: HTMLAttributes<HTMLDivElement>;
+}
 
 export interface BaseToastProps extends ToastProps {
   variant: ToastVariant;
 }
+
+export const TOAST_DEFAULT_DURATION_MS = 4000;
+
+export const DEFAULT_TOAST_TITLES: Record<ToastVariant, string> = {
+  success: 'Success',
+  error: 'Error',
+  info: 'Informational',
+  warning: 'Warning',
+  loading: 'Loading',
+};
+
+const TOAST_SURFACE: Record<ToastVariant, string> = {
+  success: 'toast-card toast-card--success',
+  error: 'toast-card toast-card--error',
+  info: 'toast-card toast-card--info',
+  warning: 'toast-card toast-card--warning',
+  loading: 'toast-card toast-card--loading',
+};
+
+const TOAST_ICON_CLASS: Record<ToastVariant, string> = {
+  success: 'text-toast-success',
+  error: 'text-toast-danger',
+  info: 'text-toast-info',
+  warning: 'text-toast-warning',
+  loading: 'text-toast-fg-muted',
+};
+
+/** Toast container — theme tokens + per-variant accent gradient. */
+export function getToastSurfaceClasses(variant: ToastVariant): string {
+  return TOAST_SURFACE[variant];
+}
+
+/** Semantic accent for the toast icon only. */
+export function getToastIconClasses(variant: ToastVariant): string {
+  return TOAST_ICON_CLASS[variant];
+}
+
+export const TOAST_ICON_NAME: Record<ToastVariant, IconName | null> = {
+  success: 'check-circle',
+  error: 'alert-circle',
+  info: 'info-circle',
+  warning: 'warning',
+  loading: null,
+};
 
 function ToastIcon({
   variant,
