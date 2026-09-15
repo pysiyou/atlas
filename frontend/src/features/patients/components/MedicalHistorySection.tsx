@@ -1,6 +1,6 @@
 import React from 'react';
 import { Textarea, TagInput, Checkbox } from '@/components';
-import type { PatientFormSectionProps } from './patientFormSectionTypes';
+import type { PatientFormSectionProps } from '../patientFormTypes';
 
 export const MedicalHistorySection: React.FC<
   Pick<PatientFormSectionProps, 'formData' | 'onFieldChange'>

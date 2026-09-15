@@ -8,8 +8,8 @@
 import React, { useMemo, useCallback } from 'react';
 import { useAuthStore } from '@/app/store';
 import { useInvalidateOrders } from '@/features/orders';
-import { ValidationCard } from './ValidationCard/index';
-import { EscalationCard } from './EscalationCard/index';
+import { ValidationCard } from './ValidationCard';
+import { EscalationCard } from './EscalationCard';
 import { createLabItemFilter } from '../components/LabWorkflowView';
 import { LabQueueSection } from '../components/LabQueueSection';
 import { LabFilters } from '../components/LabFilters';

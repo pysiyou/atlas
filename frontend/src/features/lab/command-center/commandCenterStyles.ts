@@ -43,11 +43,8 @@ export const COMMAND_CENTER_PANEL = {
 } as const;
 
 export const COMMAND_CENTER_SECTION = {
-  /** Inner panel section heading (e.g. By Stage, Wait Per Step). */
   title: `text-[9.5px] font-normal uppercase tracking-normal leading-tight ${COMMAND_CENTER_TEXT.sectionTitle}`,
-  /** Footer note under a section or panel body. */
   summary: `text-xxs leading-snug ${COMMAND_CENTER_TEXT.summary}`,
-  /** Right-aligned section context (counts, totals). */
   aside: `shrink-0 text-[9.5px] tabular-nums ${COMMAND_CENTER_TEXT.sectionAside}`,
   statLabel: `text-[9.5px] font-normal uppercase tracking-normal leading-tight ${COMMAND_CENTER_TEXT.sectionTitle}`,
 } as const;
@@ -89,7 +86,6 @@ export const COMMAND_CENTER_KPI_RING_TONE: Record<CommandCenterKpiTone, string> 
   neutral: 'text-text-secondary',
 };
 
-/** Donut fill classes — queue age buckets */
 export const COMMAND_CENTER_AGE_COLORS = {
   fresh: 'fill-brand',
   onTrack: 'fill-info-fg-emphasis',
@@ -97,7 +93,6 @@ export const COMMAND_CENTER_AGE_COLORS = {
   critical: 'fill-danger-fg-emphasis',
 } as const;
 
-/** Donut fill classes — priority mix */
 export const COMMAND_CENTER_PRIORITY_COLORS = {
   urgent: 'fill-danger-fg-emphasis',
   high: 'fill-warning-fg-emphasis',
@@ -105,7 +100,6 @@ export const COMMAND_CENTER_PRIORITY_COLORS = {
   low: 'fill-chart-axis',
 } as const;
 
-/** Health indicator dot and text tones */
 export const COMMAND_CENTER_HEALTH_STYLES = {
   healthy: {
     dot: 'bg-success-fg-emphasis',
@@ -121,7 +115,6 @@ export const COMMAND_CENTER_HEALTH_STYLES = {
   },
 } as const;
 
-/** Attention feed row accent bars — matches getAttentionTone() output */
 export const COMMAND_CENTER_ATTENTION_ACCENT = {
   problem: 'bg-danger-fg-emphasis',
   neutral: 'bg-warning-fg-emphasis',

@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { ActivityFeed } from '../ActivityFeed';
-import { Panel } from '../components';
+import { Panel } from '@/components/surfaces/Panel';
 import { useRecentActivityFeed } from '../useRecentActivityFeed';
 
 export const RecentActivityPanel: React.FC = () => {

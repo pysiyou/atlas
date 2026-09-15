@@ -3,11 +3,11 @@
  */
 
 import React from 'react';
-import { Panel } from '../components';
-import type { DonutSegment } from '../components/DonutChart';
+import { Panel } from '@/components/surfaces/Panel';
+import type { DonutSegment } from '../commandCenterUi';
 import type { PriorityMix } from '../boardTypes';
 import { MetricDonutHalf, type MetricDonutLegendItem } from './MetricDonutHalf';
-import { COMMAND_CENTER_PRIORITY_COLORS } from '../components/styles';
+import { COMMAND_CENTER_PRIORITY_COLORS } from '../commandCenterStyles';
 
 interface PriorityMixPanelProps {
   priorityMix: PriorityMix;

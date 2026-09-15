@@ -28,7 +28,7 @@ import { useUserLookup } from '@/lib/api/users.api';
 import { usePatientNameLookup } from '@/features/patients';
 import { useOrderLookup } from '@/features/orders';
 import { useSampleLookup } from '../api/samples.api';
-import { getTestNames } from '@/features/catalog/utils';
+import { getTestNames } from '@/features/catalog/testLookup';
 import { LabHistoryPanel } from '../components/LabHistoryPanel';
 import { Button, EntityId } from '@/components';
 import type { SampleDisplay } from '@/features/lab/types';

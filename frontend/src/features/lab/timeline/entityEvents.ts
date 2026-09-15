@@ -4,9 +4,10 @@
 /* eslint-disable max-lines -- consolidated event handler registry */
 
 import { displayId } from '@/utils';
-import { LAB_COPY } from '../../constants/labCopy';
-import { apiCategoryToTimelineLane, getLaneDisplay } from '../../constants/labWorkflowVisual';
-import type { TimelineEvent } from '../../api/commandCenter.api';
+import { LAB_COPY } from '../constants/labCopy';
+import { apiCategoryToTimelineLane, getLaneDisplay, type LabLaneDisplay } from '../constants/labWorkflowVisual';
+import type { TimelineEvent } from '../api/commandCenter.api';
+import type { CommandCenterTimelineTone } from './timelineStyles';
 import {
   appendNote,
   formatTestCodes,
@@ -16,8 +17,26 @@ import {
   testTransitionDetails,
   type EventDetail,
   type FormattedTimelineEvent,
-} from '../timelineDetailBuilders';
-import type { EntityEventDefinition, EntityPhaseConfig, EntityTimelinePhase } from './types';
+} from './timelineDetailBuilders';
+
+export type EntityTimelinePhase =
+  | 'sample'
+  | 'results'
+  | 'validation'
+  | 'escalation'
+  | 'composition';
+
+export type EntityEventHandler = (event: TimelineEvent) => FormattedTimelineEvent;
+
+export type EntityPhaseConfig = LabLaneDisplay;
+
+export interface EntityEventDefinition {
+  phase: EntityTimelinePhase;
+  tone: CommandCenterTimelineTone;
+  format: EntityEventHandler;
+  /** Override phase for quality_issue_reported when stage=collection */
+  qualityIssueCollectionPhase?: EntityTimelinePhase;
+}
 
 function testEntityDetails(meta: Record<string, unknown>, testId?: number): EventDetail[] {
   const details: EventDetail[] = [];

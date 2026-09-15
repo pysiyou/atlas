@@ -7,8 +7,9 @@ import React from 'react';
 import { cn } from '@/utils';
 import { LAB_CONFIG, LAB_STAGE_SHORT_ROWS } from '../../constants';
 import { getStageVisual } from '../../constants/labWorkflowVisual';
-import { SectionTitle, Panel } from '../components';
-import { COMMAND_CENTER_TEXT } from '../components/styles';
+import { Panel } from '@/components/surfaces/Panel';
+import { SectionTitle } from '../commandCenterUi';
+import { COMMAND_CENTER_TEXT } from '../commandCenterStyles';
 import type { LabTechBoardData, QueueAgeStats } from '../boardTypes';
 import { PanelNote } from './PanelNote';
 

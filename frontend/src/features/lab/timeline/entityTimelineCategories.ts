@@ -10,7 +10,7 @@ import {
   resolveEntityTone,
   type EntityPhaseConfig,
   type EntityTimelinePhase,
-} from './registry';
+} from './entityEvents';
 
 export type EntityTimelineCategory = EntityTimelinePhase;
 

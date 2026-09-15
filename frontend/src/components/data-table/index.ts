@@ -2,9 +2,7 @@
  * data-table/index.ts — Generic table component and column utilities.
  */
 
-export { Table } from './Table';
-export { DataTable } from './DataTable';
-export { CardGridView } from './CardGridView';
+export { DataTable, DataTable as Table, CardGridView } from './DataTable';
 export {
   renderPatientId,
   renderOrderId,
@@ -21,13 +19,13 @@ export {
   renderOrderDateCell,
   renderNavigableOrderId,
 } from './columnRenders';
-export { createOrderSharedColumns } from './columnDefinitions/orders';
+export { createOrderSharedColumns } from './orderColumns';
 export type {
   OrderColumnAccessors,
   OrderColumnRenderers,
   OrderSharedColumnOptions,
   OrderSharedColumnKey,
-} from './columnDefinitions/orders';
+} from './orderColumns';
 export {
   createColumn,
   createIdColumn,

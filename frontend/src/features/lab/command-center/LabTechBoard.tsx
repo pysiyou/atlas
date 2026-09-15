@@ -7,7 +7,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { ErrorAlert } from '@/components';
 import { errorAlertMessage } from '@/utils/feedback';
 import { invalidateCommandCenterQueries } from '@/lib/query/invalidate';
-import { COMMAND_CENTER_PANEL } from './components';
+import { COMMAND_CENTER_PANEL } from './commandCenterStyles';
 import { useLabTechBoard } from './useLabTechBoard';
 import { LivePipelineStrip } from './panels/LivePipelineStrip';
 import { TodaySnapshotPanel } from './panels/TodaySnapshotPanel';

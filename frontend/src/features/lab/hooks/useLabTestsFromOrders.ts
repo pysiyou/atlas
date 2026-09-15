@@ -7,7 +7,7 @@ import { useMemo } from 'react';
 import { useTestNameLookup } from '@/features/catalog';
 import { usePatientNameLookup } from '@/features/patients';
 import { useSampleLookup } from '../api/samples.api';
-import { getTestSampleType } from '@/features/catalog/utils';
+import { getTestSampleType } from '@/features/catalog/testLookup';
 import type { Order, OrderTest, TestStatus, TestWithContext } from '@/types';
 import type { Test } from '@/types';
 import { isCollectedSample } from '@/types';

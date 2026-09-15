@@ -8,7 +8,7 @@ import { useLabDataProvider, useCreateWorkflowFilters } from '@/features/lab/hoo
 import type { TestWithContextResult } from '@/features/lab/hooks/useLabTestsFromOrders';
 import { useEntryWorklist } from '../api/worklists.api';
 import { entryWorklistToTestContext } from '../utils/worklistMappers';
-import { EntryCard } from './EntryCard/index';
+import { EntryCard } from './EntryCard';
 import { LabWorkflowView } from '../components/LabWorkflowView';
 import { LabFilters } from '../components/LabFilters';
 import { entryFilterConfig } from '../constants';

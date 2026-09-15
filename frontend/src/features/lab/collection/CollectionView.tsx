@@ -11,7 +11,7 @@ import { LAB_CONFIG } from '@/features/lab/constants';
 import { useCollectSample } from '../api/samples.api';
 import { useCollectionWorklist } from '../api/worklists.api';
 import { useCollectionCollectHandler } from './useCollectionCollectHandler';
-import { CollectionCard } from './CollectionCard/index';
+import { CollectionCard } from './CollectionCard';
 import { LabWorkflowView } from '../components/LabWorkflowView';
 import { LabFilters } from '../components/LabFilters';
 import { collectionFilterConfig } from '../constants';

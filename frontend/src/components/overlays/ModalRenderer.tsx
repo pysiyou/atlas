@@ -2,15 +2,14 @@
  * Modal Renderer
  *
  * Renders the active modal from context. To add a new modal: (1) add its type to ModalType
- * in ModalContext and ModalPropsMap in modalTypes; (2) register it in registerModals.ts
+ * in ModalContext and ModalPropsMap in modalTypes; (2) register it in modalRegistry.ts
  * (single place for all modal registration).
  */
 
 import React, { useMemo, createElement } from 'react';
 import { useModal } from '@/lib/context/ModalContext';
 import { useSampleLookup } from '@/features/lab';
-import { getRegisteredModal } from './modalRegistry';
-import { initializeModalRegistry } from './registerModals';
+import { getRegisteredModal, initializeModalRegistry } from './modalRegistry';
 import { logger } from '@/utils/logger';
 
 // Initialize modal registry on module load

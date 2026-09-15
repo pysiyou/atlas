@@ -3,13 +3,13 @@
  */
 
 import React from 'react';
-import { Panel } from '../components';
-import type { DonutSegment } from '../components/DonutChart';
+import { Panel } from '@/components/surfaces/Panel';
+import type { DonutSegment } from '../commandCenterUi';
 import type { LabTechBoardData } from '../boardTypes';
 import { MetricDonutHalf, type MetricDonutLegendItem } from './MetricDonutHalf';
 import { LAB_CONFIG, LAB_STAGE_SHORT_ROWS } from '../../constants';
 import { getStageVisual } from '../../constants/labWorkflowVisual';
-import { COMMAND_CENTER_AGE_COLORS } from '../components/styles';
+import { COMMAND_CENTER_AGE_COLORS } from '../commandCenterStyles';
 
 interface TodaySnapshotPanelProps {
   totalActive: number;

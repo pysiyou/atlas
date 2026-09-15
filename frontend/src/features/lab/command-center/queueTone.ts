@@ -1,4 +1,4 @@
-import type { CommandCenterKpiTone } from './components/styles';
+import type { CommandCenterKpiTone } from './commandCenterStyles';
 import type { QueueAgeStats } from './boardTypes';
 
 export function queueTileTone(count: number, age: QueueAgeStats): CommandCenterKpiTone {

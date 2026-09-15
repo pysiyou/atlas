@@ -5,7 +5,7 @@ import { GENDER_VALUES, GENDER_CONFIG, type Gender } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
 import { ICONS } from '@/config/icons';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
-import type { PatientFormSectionProps } from './patientFormSectionTypes';
+import type { PatientFormSectionProps } from '../patientFormTypes';
 
 export const DemographicsSection: React.FC<
   Pick<PatientFormSectionProps, 'formData' | 'errors' | 'onFieldChange'>

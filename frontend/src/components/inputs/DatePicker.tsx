@@ -3,26 +3,331 @@
  */
 
 import React, { useState, useRef, useCallback } from 'react';
-import { format, isBefore, isSameDay, startOfDay, endOfDay } from 'date-fns';
-import { Popover, Icon, FilterTriggerShell } from '@/components';
+import {
+  format,
+  isBefore,
+  isSameDay,
+  isSameMonth,
+  isAfter,
+  endOfMonth,
+  setYear,
+  startOfDay,
+  endOfDay,
+} from 'date-fns';
+import { Popover, Icon, FilterTriggerShell, FilterChip } from '@/components';
 import { ICONS } from '@/config/icons';
+import { cn } from '@/utils';
 import {
   isDateDisabledForPicker,
   isSelectedDateForPicker,
   isDateInRangeForPicker,
   getDateRangeFromPreset,
   getActivePresetId,
+  generateCalendarDays,
+  generateCalendarMonths,
+  generateCalendarYears,
+  WEEKDAY_LABELS,
+  DATE_PRESETS,
+  type DatePreset,
 } from '@/utils/date';
-import { MIN_DATE, MAX_DATE, type CalendarView } from './DatePickerCalendar';
-import { DatePickerPopoverBody } from './DatePickerPopoverBody';
 
-export type { CalendarView };
+export type CalendarView = 'days' | 'months' | 'years';
+
+const MIN_DATE = new Date(1900, 0, 1);
+const MAX_DATE = new Date(2100, 11, 31);
 
 export interface DatePickerProps {
   value: [Date, Date] | null;
   onChange: (value: [Date, Date] | null) => void;
   placeholder?: string;
   className?: string;
+}
+
+function DatePickerHeader({
+  currentMonth,
+  view,
+  onPrevClick,
+  onNextClick,
+  onTitleClick,
+  isPrevDisabled,
+  isNextDisabled,
+}: {
+  currentMonth: Date;
+  view: CalendarView;
+  onPrevClick: () => void;
+  onNextClick: () => void;
+  onTitleClick: () => void;
+  isPrevDisabled: boolean;
+  isNextDisabled: boolean;
+}) {
+  const getTitle = (): string => {
+    if (view === 'days') return format(currentMonth, 'MMMM yyyy');
+    if (view === 'months') return format(currentMonth, 'yyyy');
+    const years = generateCalendarYears(currentMonth);
+    return `${format(years[0], 'yyyy')} - ${format(years[years.length - 1], 'yyyy')}`;
+  };
+  return (
+    <div className="flex items-center justify-between mb-3">
+      <button
+        onClick={onPrevClick}
+        disabled={isPrevDisabled}
+        className="p-1 hover:bg-neutral-100 rounded text-text-tertiary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
+      >
+        <Icon name={ICONS.actions.chevronLeft} className="w-4 h-4" />
+      </button>
+      <button
+        onClick={onTitleClick}
+        className={cn(
+          'text-sm font-normal text-text-secondary hover:bg-surface-page px-2 py-1 rounded transition-colors cursor-pointer',
+          view === 'years' && 'pointer-events-none hover:bg-transparent cursor-default'
+        )}
+      >
+        {getTitle()}
+      </button>
+      <button
+        onClick={onNextClick}
+        disabled={isNextDisabled}
+        className="p-1 hover:bg-neutral-100 rounded text-text-tertiary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
+      >
+        <Icon name={ICONS.actions.chevronRight} className="w-4 h-4" />
+      </button>
+    </div>
+  );
+}
+
+function DatePickerCalendarGrid({
+  currentMonth,
+  setCurrentMonth,
+  view,
+  setView,
+  value,
+  minDate,
+  maxDate,
+  isDateDisabled,
+  handleDateClick,
+  isSelected,
+  isInRange,
+}: {
+  currentMonth: Date;
+  setCurrentMonth: (d: Date) => void;
+  view: CalendarView;
+  setView: (v: CalendarView) => void;
+  value: [Date, Date] | null;
+  minDate: Date;
+  maxDate: Date;
+  isDateDisabled: (d: Date) => boolean;
+  handleDateClick: (d: Date) => void;
+  isSelected: (d: Date) => boolean;
+  isInRange: (d: Date) => boolean;
+}) {
+  if (view === 'days') {
+    return (
+      <>
+        <div className="grid grid-cols-7 gap-1 mb-1">
+          {WEEKDAY_LABELS.map(day => (
+            <div key={day} className="text-center text-xs text-text-disabled py-1">
+              {day}
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-7 gap-1">
+          {generateCalendarDays(currentMonth).map(day => {
+            const currentMonthMatch = isSameMonth(day, currentMonth);
+            const selected = isSelected(day);
+            const inRange = isInRange(day);
+            const isToday = isSameDay(day, new Date());
+            const disabled = isDateDisabled(day);
+            return (
+              <button
+                key={day.toISOString()}
+                onClick={() => handleDateClick(day)}
+                disabled={disabled}
+                className={cn(
+                  'h-8 w-8 text-xs rounded-full flex items-center justify-center transition-colors relative cursor-pointer',
+                  disabled && 'opacity-30 cursor-not-allowed',
+                  !currentMonthMatch && 'text-text-disabled',
+                  currentMonthMatch &&
+                    !selected &&
+                    !inRange &&
+                    !disabled &&
+                    'text-text-secondary hover:bg-neutral-100',
+                  isToday && !selected && !inRange && !disabled && 'font-normal text-brand bg-brand-muted',
+                  inRange && !selected && 'bg-brand-muted text-brand rounded-none',
+                  value &&
+                    isSameDay(day, value[0]) &&
+                    !isSameDay(value[0], value[1]) &&
+                    'rounded-l-full rounded-r-none',
+                  value &&
+                    isSameDay(day, value[1]) &&
+                    !isSameDay(value[0], value[1]) &&
+                    'rounded-r-full rounded-l-none',
+                  selected && 'bg-brand text-on-brand hover:bg-brand-hover z-10'
+                )}
+              >
+                {format(day, 'd')}
+              </button>
+            );
+          })}
+        </div>
+      </>
+    );
+  }
+  if (view === 'months') {
+    return (
+      <div className="grid grid-cols-3 gap-2">
+        {generateCalendarMonths(currentMonth).map(month => {
+          const endOfM = endOfMonth(month);
+          const disabled = isBefore(endOfM, minDate) || isAfter(month, maxDate);
+          return (
+            <button
+              key={month.toISOString()}
+              onClick={() => {
+                if (!disabled) {
+                  setCurrentMonth(month);
+                  setView('days');
+                }
+              }}
+              disabled={disabled}
+              className={cn(
+                'h-10 text-sm rounded flex items-center justify-center transition-colors cursor-pointer',
+                disabled && 'opacity-30 cursor-not-allowed',
+                !disabled && isSameMonth(month, new Date()) && 'text-brand font-normal bg-brand-muted',
+                !disabled && isSameMonth(month, currentMonth)
+                  ? 'bg-brand-muted text-brand'
+                  : 'hover:bg-neutral-100 text-text-secondary',
+                !disabled && 'hover:bg-neutral-100'
+              )}
+            >
+              {format(month, 'MMM')}
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
+  return (
+    <div className="grid grid-cols-3 gap-2">
+      {generateCalendarYears(currentMonth).map(year => {
+        const y = year.getFullYear();
+        const disabled = y < minDate.getFullYear() || y > maxDate.getFullYear();
+        return (
+          <button
+            key={year.toISOString()}
+            onClick={() => {
+              if (!disabled) {
+                setCurrentMonth(setYear(currentMonth, y));
+                setView('months');
+              }
+            }}
+            disabled={disabled}
+            className={cn(
+              'h-10 text-sm rounded flex items-center justify-center transition-colors cursor-pointer',
+              disabled && 'opacity-30 cursor-not-allowed',
+              !disabled && y === new Date().getFullYear() && 'text-brand font-normal bg-brand-muted',
+              !disabled && y === currentMonth.getFullYear()
+                ? 'bg-brand-muted text-brand'
+                : 'hover:bg-neutral-100 text-text-secondary',
+              !disabled && 'hover:bg-neutral-100'
+            )}
+          >
+            {format(year, 'yyyy')}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function DatePickerPopoverBody({
+  currentMonth,
+  setCurrentMonth,
+  view,
+  setView,
+  calendarValue,
+  minDate,
+  maxDate,
+  isDateDisabled,
+  handleDateClick,
+  isSelected,
+  isInRange,
+  navigatePrevious,
+  navigateNext,
+  activePresetId,
+  onPresetClick,
+  tempStart,
+  onApply,
+}: {
+  currentMonth: Date;
+  setCurrentMonth: (d: Date) => void;
+  view: CalendarView;
+  setView: (v: CalendarView) => void;
+  calendarValue: [Date, Date] | null;
+  minDate: Date;
+  maxDate: Date;
+  isDateDisabled: (d: Date) => boolean;
+  handleDateClick: (d: Date) => void;
+  isSelected: (d: Date) => boolean;
+  isInRange: (d: Date) => boolean;
+  navigatePrevious: () => void;
+  navigateNext: () => void;
+  activePresetId: DatePreset | null;
+  onPresetClick: (presetId: DatePreset) => void;
+  tempStart: Date | null;
+  onApply: () => void;
+}) {
+  return (
+    <div className="p-3">
+      <DatePickerHeader
+        currentMonth={currentMonth}
+        view={view}
+        onPrevClick={navigatePrevious}
+        onNextClick={navigateNext}
+        onTitleClick={() =>
+          setView(view === 'days' ? 'months' : view === 'months' ? 'years' : 'days')
+        }
+        isPrevDisabled={false}
+        isNextDisabled={false}
+      />
+      <DatePickerCalendarGrid
+        currentMonth={currentMonth}
+        setCurrentMonth={setCurrentMonth}
+        view={view}
+        setView={setView}
+        value={calendarValue}
+        minDate={minDate}
+        maxDate={maxDate}
+        isDateDisabled={isDateDisabled}
+        handleDateClick={handleDateClick}
+        isSelected={isSelected}
+        isInRange={isInRange}
+      />
+      <div className="my-3 border-t border-border-default" />
+      <div className="mt-3">
+        <div className="flex flex-wrap gap-2">
+          {DATE_PRESETS.map(preset => (
+            <FilterChip
+              key={preset.id}
+              size="sm"
+              active={activePresetId === preset.id}
+              onClick={() => onPresetClick(preset.id)}
+            >
+              {preset.label}
+            </FilterChip>
+          ))}
+        </div>
+      </div>
+      {tempStart && (
+        <div className="mt-3 pt-3 border-t border-border-default">
+          <button
+            onClick={onApply}
+            className="w-full px-3 py-2 bg-brand hover:opacity-90 text-text-inverse text-xs font-normal rounded transition-colors"
+          >
+            Apply
+          </button>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export const DatePicker: React.FC<DatePickerProps> = ({

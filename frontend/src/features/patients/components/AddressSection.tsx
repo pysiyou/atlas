@@ -1,6 +1,6 @@
 import React from 'react';
 import { Input } from '@/components';
-import type { PatientFormSectionProps } from './patientFormSectionTypes';
+import type { PatientFormSectionProps } from '../patientFormTypes';
 
 export const AddressSection: React.FC<
   Pick<PatientFormSectionProps, 'formData' | 'errors' | 'onFieldChange'>
