@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { useResponsiveCard } from '../../components/ResponsiveCard';
+import { useResponsiveCard } from '../../components/useResponsiveCard';
 import { EscalationCardMobile } from './Mobile';
 import { EscalationCardDesktop } from './Desktop';
 import { useEscalationCardData, type EscalationCardProps } from './hooks';

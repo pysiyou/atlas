@@ -8,8 +8,8 @@ import { useDataTable } from '@/hooks/useDataTable';
 import { Pagination } from '@/components';
 import { DEFAULT_LOADING_ROWS } from './constants';
 import type { TableProps } from './types';
-import { CardGridView } from './components/CardGridView';
-import { TableView } from './components/TableView';
+import { CardGridView } from './CardGridView';
+import { TableView } from './TableView';
 
 export function DataTable<T = Record<string, unknown>>({
   data,

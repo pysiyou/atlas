@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { useResponsiveCard } from '../../components/ResponsiveCard';
+import { useResponsiveCard } from '../../components/useResponsiveCard';
 import { ValidationCardMobile } from './Mobile';
 import { ValidationCardDesktop } from './Desktop';
 import { useValidationCardData, type ValidationCardProps, type ValidationCardSharedData } from './hooks';

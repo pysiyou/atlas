@@ -22,7 +22,7 @@ export { LabCard } from './components/LabCard';
 export { LabDetailModal } from './components/LabDetailModal';
 export { LabFilters } from './components/LabFilters';
 export { PopoverForm } from './components/PopoverForm';
-export { useResponsiveCard } from './components/ResponsiveCard';
+export { useResponsiveCard } from './components/useResponsiveCard';
 
 // Critical Values
 export { CriticalValuesPanel } from './critical-values/CriticalValuesPanel';

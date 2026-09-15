@@ -1,5 +1,5 @@
-import type { ColumnConfig, TableBodyProps } from '../types';
-import { ROW_HEIGHTS } from '../constants';
+import type { ColumnConfig, TableBodyProps } from './types';
+import { ROW_HEIGHTS } from './constants';
 import { TableCell } from './TableCell';
 
 const tableRow = {

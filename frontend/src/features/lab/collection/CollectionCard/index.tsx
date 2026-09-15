@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { useResponsiveCard } from '../../components/ResponsiveCard';
+import { useResponsiveCard } from '../../components/useResponsiveCard';
 import { CollectionCardMobile } from './Mobile';
 import { CollectionCardDesktop } from './Desktop';
 import { useCollectionCardData, type CollectionCardProps, type CollectionCardSharedData } from './hooks';

@@ -1,13 +1,21 @@
 /**
- * useResponsiveCard - Generic hook for mobile/desktop card rendering
- *
- * Eliminates duplication of breakpoint detection and conditional rendering
- * across collection, entry, validation, escalation, and recollection cards.
+ * useResponsiveCard — mobile/desktop card rendering from shared derived props.
  */
 
-import { useMemo } from 'react';
+import { useMemo, type FC, type ReactElement } from 'react';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import type { ResponsiveCardConfig } from './types';
+
+export interface ResponsiveCardConfig<TItem, TDerived> {
+  item: TItem;
+  deriveSharedData: (item: TItem) => TDerived;
+  renderMobile: FC<TDerived>;
+  renderDesktop: FC<TDerived>;
+  isMobile?: boolean;
+}
+
+export type ResponsiveCardHook = <TItem, TDerived>(
+  config: ResponsiveCardConfig<TItem, TDerived>
+) => ReactElement;
 
 export function useResponsiveCard<TItem, TDerived>({
   item,

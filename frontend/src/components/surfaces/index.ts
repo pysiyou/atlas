@@ -8,4 +8,3 @@ export * from './MobileEntityCard';
 export * from './ListView';
 export * from './Pagination';
 export * from './Panel';
-export * from './panelTokens';
