@@ -236,6 +236,13 @@
   --color-id-secondary: var(--id-color-secondary);
 
   /* ═══════════════════════════════════════════════════════════════════
+     BUTTON (radius utilities: rounded-button, rounded-button-square, rounded-button-circle)
+     ═══════════════════════════════════════════════════════════════════ */
+  --radius-button: var(--button-radius);
+  --radius-button-square: var(--button-radius-square);
+  --radius-button-circle: var(--button-radius-circle);
+
+  /* ═══════════════════════════════════════════════════════════════════
      FOCUS
      ═══════════════════════════════════════════════════════════════════ */
   --color-focus: var(--focus);

@@ -2,10 +2,9 @@
  * Attention types — groups queue items by why they need action (not workflow stage).
  */
 
-import type { BadgeVariant } from '@/components/primitives/badgeHelpers';
+import type { BadgeVariant } from '@/components';
 import { LAB_CONFIG } from '../constants/labConfig';
 import { LAB_COPY } from '../constants/labCopy';
-import type { CommandCenterBadgeTextTone } from './components/styles';
 
 /** Accent severity for attention feed rows */
 export type AttentionTone = 'problem' | 'neutral';
@@ -34,7 +33,6 @@ export interface AttentionTypeConfig {
   /** Short label on each row badge */
   pillLabel: string;
   badgeVariant: BadgeVariant;
-  badgeTextTone: CommandCenterBadgeTextTone;
   sortOrder: number;
 }
 
@@ -44,7 +42,6 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
     groupLabel: LAB_COPY.attention.criticalValue,
     pillLabel: 'Critical',
     badgeVariant: 'escalated',
-    badgeTextTone: 'danger',
     sortOrder: 10,
   },
   escalation_amendment: {
@@ -52,7 +49,6 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
     groupLabel: 'Amended result',
     pillLabel: 'Amended',
     badgeVariant: 'escalated',
-    badgeTextTone: 'danger',
     sortOrder: 20,
   },
   escalation_retry_limit: {
@@ -60,7 +56,6 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
     groupLabel: 'Repeat limit',
     pillLabel: 'Repeat limit',
     badgeVariant: 'escalated',
-    badgeTextTone: 'danger',
     sortOrder: 30,
   },
   escalation_recollection_limit: {
@@ -68,7 +63,6 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
     groupLabel: 'Recollection limit',
     pillLabel: 'Recollection limit',
     badgeVariant: 'escalated',
-    badgeTextTone: 'danger',
     sortOrder: 40,
   },
   supervisor_approval: {
@@ -76,7 +70,6 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
     groupLabel: 'Path review',
     pillLabel: 'Path review',
     badgeVariant: 'escalated',
-    badgeTextTone: 'danger',
     sortOrder: 45,
   },
   supervisor_recollection_request: {
@@ -84,7 +77,6 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
     groupLabel: 'Recollection approval',
     pillLabel: 'Recollection approval',
     badgeVariant: 'escalated',
-    badgeTextTone: 'danger',
     sortOrder: 48,
   },
   payment_blocked: {
@@ -92,7 +84,6 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
     groupLabel: 'Unpaid accession',
     pillLabel: 'Unpaid',
     badgeVariant: 'warning',
-    badgeTextTone: 'warning',
     sortOrder: 50,
   },
   sample_rejected: {
@@ -100,7 +91,6 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
     groupLabel: LAB_COPY.quality.sampleRejected,
     pillLabel: 'Rejected',
     badgeVariant: 'cancelled',
-    badgeTextTone: 'danger',
     sortOrder: 60,
   },
   recollection_waiting: {
@@ -108,7 +98,6 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
     groupLabel: 'Pending recollection',
     pillLabel: LAB_COPY.attention.recollection,
     badgeVariant: 'warning',
-    badgeTextTone: 'warning',
     sortOrder: 70,
   },
   retest_in_progress: {
@@ -116,7 +105,6 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
     groupLabel: 'Repeat analysis',
     pillLabel: 'Repeat',
     badgeVariant: 'info',
-    badgeTextTone: 'info',
     sortOrder: 80,
   },
   priority_urgent: {
@@ -124,7 +112,6 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
     groupLabel: 'STAT',
     pillLabel: 'STAT',
     badgeVariant: 'urgent',
-    badgeTextTone: 'danger',
     sortOrder: 82,
   },
   priority_high: {
@@ -132,7 +119,6 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
     groupLabel: 'Elevated priority',
     pillLabel: 'High',
     badgeVariant: 'high',
-    badgeTextTone: 'warning',
     sortOrder: 84,
   },
   queue_overdue_critical: {
@@ -140,7 +126,6 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
     groupLabel: `TAT >${LAB_CONFIG.QUEUE_AGE_CRITICAL_HOURS}h`,
     pillLabel: `${LAB_CONFIG.QUEUE_AGE_CRITICAL_HOURS}h+`,
     badgeVariant: 'danger',
-    badgeTextTone: 'danger',
     sortOrder: 90,
   },
   queue_overdue_warning: {
@@ -148,7 +133,6 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
     groupLabel: `TAT >${LAB_CONFIG.QUEUE_AGE_WARNING_HOURS}h`,
     pillLabel: `${LAB_CONFIG.QUEUE_AGE_WARNING_HOURS}h+`,
     badgeVariant: 'warning',
-    badgeTextTone: 'warning',
     sortOrder: 100,
   },
 };

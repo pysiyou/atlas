@@ -156,12 +156,13 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
                 <div className="flex items-center gap-2">
                   <Button
                     variant="outline"
+                    size="md"
+                    layout="text"
                     onClick={() => onDateRangeChange(null)}
-                    showIcon={false}
                   >
                     Reset
                   </Button>
-                  <Button variant="primary" onClick={() => setIsModalOpen(false)} showIcon={false}>
+                  <Button variant="primary" size="md" layout="text" onClick={() => setIsModalOpen(false)}>
                     Filter
                   </Button>
                 </div>

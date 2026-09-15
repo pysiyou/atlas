@@ -12,6 +12,7 @@
 
 import React from 'react';
 import { Badge, Icon, SpinnerLoader } from '@/components';
+import type { BadgeSize } from '@/components';
 import { getContainerIconColor } from '@/features/lab/utils';
 import type { ContainerType, ContainerTopColor } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
@@ -218,7 +219,7 @@ export const ReviewRequiredBadge: React.FC<ReviewRequiredBadgeProps> = ({
  */
 interface BlockedReasonBadgeProps {
   label: string;
-  size?: 'sm' | 'xs';
+  size?: BadgeSize;
   className?: string;
 }
 

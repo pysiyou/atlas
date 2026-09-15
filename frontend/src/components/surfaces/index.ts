@@ -8,3 +8,5 @@ export * from './MobileEntityCard';
 export * from './ListView';
 export * from './Pagination';
 export * from './SectionPanel';
+export * from './PagePanel';
+export * from './pagePanelStyles';

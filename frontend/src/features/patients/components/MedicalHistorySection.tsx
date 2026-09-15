@@ -44,7 +44,6 @@ export const MedicalHistorySection: React.FC<
         onChange={tags => handleTagsChange('chronicConditions', tags)}
         placeholder="Type condition and press Enter"
         helperText="Enter chronic medical conditions"
-        tagVariant="outline"
       />
       <TagInput
         label="Current Medications"
@@ -52,7 +51,6 @@ export const MedicalHistorySection: React.FC<
         onChange={tags => handleTagsChange('currentMedications', tags)}
         placeholder="Type medication and press Enter"
         helperText="Include dosage if known"
-        tagVariant="outline"
       />
       <TagInput
         label="Known Allergies"
@@ -60,14 +58,12 @@ export const MedicalHistorySection: React.FC<
         onChange={tags => handleTagsChange('allergies', tags)}
         placeholder="Type allergy and press Enter"
         helperText="Include drug and non-drug allergies"
-        tagVariant="outline"
       />
       <TagInput
         label="Previous Surgeries"
         tags={previousSurgeriesArray}
         onChange={tags => handleTagsChange('previousSurgeries', tags)}
         placeholder="Type surgery and press Enter"
-        tagVariant="outline"
       />
       <Textarea
         label="Family Medical History"

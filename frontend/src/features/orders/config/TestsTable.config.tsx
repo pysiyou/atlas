@@ -8,8 +8,6 @@ import { formatCurrency, formatDateTime, displayId } from '@/utils';
 import { getTestName } from '@/features/catalog/utils';
 import { getLabQueueUrlForTest } from '@/features/lab';
 import type { OrderTest, Test } from '@/types';
-import { getBadgeAppearance } from '@/components/theme/theme';
-import { TAG_STYLES } from '@/components/primitives/badgeHelpers';
 
 const SIMPLE_VIEWS = {
   full: ['testCode', 'testName', 'status', 'lab'],
@@ -61,9 +59,6 @@ export function createTestsTableConfig(
   orderId: number,
   variant: 'simple' | 'detailed' = 'detailed'
 ): TableViewConfig<OrderTest> {
-  const appearance = getBadgeAppearance();
-  const tagStyles = TAG_STYLES[appearance];
-
   const columnMap = {
     testCode: {
       key: 'testCode',
@@ -84,7 +79,7 @@ export function createTestsTableConfig(
               {test.testCode}
             </span>
             {isRetest && retestNumber > 0 && (
-              <Badge variant="info" size="xs" className={tagStyles.container}>
+              <Badge variant="info" size="xs" uppercase={false}>
                 #{retestNumber}
               </Badge>
             )}

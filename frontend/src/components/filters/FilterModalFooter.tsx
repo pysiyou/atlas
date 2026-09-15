@@ -25,10 +25,10 @@ export const FilterModalFooter: React.FC<FilterModalFooterProps> = ({
     <div className="flex items-center justify-between gap-3">
       <FooterInfo icon={icon} label={label} size="md" />
       <div className="flex items-center gap-2">
-        <Button variant="outline" onClick={onReset} showIcon={false}>
+        <Button variant="outline" size="md" layout="text" onClick={onReset}>
           Reset
         </Button>
-        <Button variant="primary" onClick={onApply} showIcon={false}>
+        <Button variant="primary" size="md" layout="text" onClick={onApply}>
           Filter
         </Button>
       </div>

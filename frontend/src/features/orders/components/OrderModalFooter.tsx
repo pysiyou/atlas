@@ -26,7 +26,8 @@ export const OrderModalFooter: React.FC<OrderModalFooterProps> = ({
       <Button
         type="button"
         variant="cancel"
-        showIcon={true}
+        size="md"
+        layout="icon-text"
         onClick={onClose}
         disabled={isSubmitting}
       >
@@ -35,6 +36,8 @@ export const OrderModalFooter: React.FC<OrderModalFooterProps> = ({
       <Button
         type="submit"
         variant={buttonVariant}
+        size="md"
+        layout="icon-text"
         form={formId}
         isLoading={isSubmitting}
         disabled={isSubmitting}

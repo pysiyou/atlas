@@ -14,13 +14,11 @@ interface ReportPreviewButtonProps {
   /** Callback invoked when preview is clicked */
   onPreview: (test: ValidatedTest) => void;
   /** Button size */
-  size?: 'xs' | 'sm' | 'md';
+  size?: 'sm' | 'md' | 'lg';
 }
 
 /**
  * ReportPreviewButton - Displays preview action for validated tests
- *
- * Shows an icon button to preview the report before generating PDF
  */
 export const ReportPreviewButton: React.FC<ReportPreviewButtonProps> = ({
   test,
@@ -32,7 +30,7 @@ export const ReportPreviewButton: React.FC<ReportPreviewButtonProps> = ({
       variant="view"
       size={size}
       onClick={() => onPreview(test)}
-      className="bg-brand text-text-inverse hover:opacity-90"
+      title="Preview report"
     />
   );
 };

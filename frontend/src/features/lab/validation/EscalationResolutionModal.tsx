@@ -128,7 +128,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
       footer={
         readOnly ? (
           <ModalFooter statusMessage="">
-            <Button onClick={onClose} variant="cancel" size="md">Close</Button>
+            <Button onClick={onClose} variant="cancel" size="md" layout="icon-text">Close</Button>
           </ModalFooter>
         ) : (
           <EscalationResolutionFooter

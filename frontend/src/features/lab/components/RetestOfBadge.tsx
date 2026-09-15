@@ -4,9 +4,9 @@
 
 import React from 'react';
 import { Badge, Icon } from '@/components';
+import type { BadgeSize } from '@/components';
 import { ICONS } from '@/config/icons';
 import { displayId } from '@/utils';
-import type { BadgeSize } from '@/components/primitives/badgeHelpers';
 import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 
 interface RetestOfBadgeProps {

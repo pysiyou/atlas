@@ -79,7 +79,7 @@ export const QualityIssueDialogErrorView: React.FC<QualityIssueDialogErrorViewPr
       <p className="text-xxs mt-1">{error}</p>
     </Alert>
     <div className="flex justify-end gap-2">
-      <Button variant="cancel" size="sm" showIcon={false} onClick={onCancel}>
+      <Button variant="cancel" size="sm" layout="text" onClick={onCancel}>
         {QUALITY_ISSUE_DIALOG_COPY.error.cancel}
       </Button>
       <Button variant="retry" size="sm" onClick={onRetry}>

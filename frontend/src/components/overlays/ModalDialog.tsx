@@ -4,7 +4,7 @@
 
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
-import { IconButton } from '@/components/primitives/IconButton';
+import { IconButton } from '@/components';
 
 const BASE_MODAL_CLASSES =
   'relative bg-surface border border-border-default rounded-lg shadow-xl w-full';

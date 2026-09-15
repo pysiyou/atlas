@@ -4,7 +4,8 @@
  */
 
 import React from 'react';
-import { SectionPanel, IconButton } from '@/components';
+import { PagePanel, PagePanelBody, IconButton } from '@/components';
+import { cn } from '@/utils';
 import { PaymentPopover } from '@/features/payments';
 import type { Order, OrderTest, Patient, Invoice } from '@/types';
 import { OrderInfoSection } from './OrderInfoSection';
@@ -29,11 +30,11 @@ interface LayoutProps {
 
 function getTestsTitle(_activeTests: OrderTest[], totalTests: number, supersededCount: number, removedCount: number): string {
   const visibleTests = totalTests - removedCount;
-  
+
   if (supersededCount > 0) {
     return `Tests (${visibleTests} total, ${supersededCount} superseded)`;
   }
-  
+
   return `Tests (${visibleTests})`;
 }
 
@@ -60,68 +61,70 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
   testsVariant,
   fillHeight,
 }) => {
-  const panelClass = fillHeight ? 'h-full flex flex-col min-h-0' : 'bg-surface';
-  const scrollContentClass = fillHeight ? 'flex-1 min-h-0 overflow-y-auto' : 'overflow-visible';
+  const panelClass = fillHeight ? 'h-full min-h-0' : '';
+  const scrollBodyClass = fillHeight ? 'overflow-y-auto' : 'overflow-visible';
+  const paddedBody = cn('p-4', scrollBodyClass);
   const testsTitle = getTestsTitle(activeTests, order.tests.length, supersededCount, removedCount);
 
   return (
     <>
       <div className={`grid grid-cols-3 gap-4 ${fillHeight ? 'min-h-0' : ''}`}>
-        <SectionPanel
-          title="Order Information"
-          className={panelClass}
-          contentClassName={scrollContentClass}
-        >
-          <OrderInfoSection order={order} layout={infoLayout} />
-        </SectionPanel>
+        <PagePanel title="Order Information" className={panelClass}>
+          <PagePanelBody className={paddedBody}>
+            <OrderInfoSection order={order} layout={infoLayout} />
+          </PagePanelBody>
+        </PagePanel>
 
-        <SectionPanel
+        <PagePanel
           title="Patient Information"
           className={panelClass}
-          contentClassName={scrollContentClass}
-          headerClassName="!py-1.5"
-          headerRight={
-            patient && (
+          headerActions={
+            patient ? (
               <IconButton onClick={onViewPatient} variant="view" size="sm" title="View Patient" />
-            )
+            ) : undefined
           }
         >
-          <PatientInfoSection patient={patient} onViewPatient={onViewPatient} layout={infoLayout} />
-        </SectionPanel>
+          <PagePanelBody className={paddedBody}>
+            <PatientInfoSection patient={patient} onViewPatient={onViewPatient} layout={infoLayout} />
+          </PagePanelBody>
+        </PagePanel>
 
-        <SectionPanel
+        <PagePanel
           title="Order Progress"
           className={panelClass}
-          contentClassName={`${scrollContentClass} p-0`}
-          headerClassName="!py-1.5"
-          headerRight={<OrderCircularProgress order={order} />}
+          headerActions={<OrderCircularProgress order={order} />}
         >
-          <OrderTimeline order={order} />
-        </SectionPanel>
+          <PagePanelBody className={cn('p-0', scrollBodyClass)}>
+            <OrderTimeline order={order} />
+          </PagePanelBody>
+        </PagePanel>
       </div>
 
       <div className={`grid grid-cols-3 gap-4 ${fillHeight ? 'min-h-0' : ''}`}>
-        <SectionPanel
-          title={testsTitle}
-          className={`${panelClass} col-span-2`}
-          contentClassName={`${fillHeight ? 'flex-1 min-h-0' : ''} p-0 overflow-visible`}
-        >
-          <TestsTable
-            tests={order.tests}
-            orderId={order.orderId}
-            supersededCount={supersededCount}
-            variant={testsVariant}
-          />
-        </SectionPanel>
+        <PagePanel title={testsTitle} className={cn(panelClass, 'col-span-2')}>
+          <PagePanelBody
+            className={cn(
+              'p-0 overflow-visible',
+              fillHeight && 'flex flex-col min-h-0',
+            )}
+          >
+            <TestsTable
+              tests={order.tests}
+              orderId={order.orderId}
+              variant={testsVariant}
+            />
+          </PagePanelBody>
+        </PagePanel>
 
-        <SectionPanel
+        <PagePanel
           title="Billing Summary"
           className={panelClass}
-          contentClassName={`${scrollContentClass} flex flex-col`}
-          headerRight={<PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
+          headerActions={<PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
         >
-          <BillingSummarySection order={order} invoice={invoice} onViewInvoice={onViewInvoice} />
-        </SectionPanel>
+          <PagePanelBody className={cn(paddedBody, 'flex flex-col')}>
+            <BillingSummarySection order={order} invoice={invoice} onViewInvoice={onViewInvoice} />
+          </PagePanelBody>
+        </PagePanel>
       </div>
     </>
   );
@@ -137,50 +140,55 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
 
   return (
     <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6 bg-surface-page">
-      <SectionPanel title="Order Information" className="shrink-0 bg-surface" contentClassName="overflow-visible">
-        <OrderInfoSection order={order} layout="grid" />
-      </SectionPanel>
+      <PagePanel title="Order Information" className="shrink-0">
+        <PagePanelBody className="overflow-visible p-4">
+          <OrderInfoSection order={order} layout="grid" />
+        </PagePanelBody>
+      </PagePanel>
 
-      <SectionPanel
+      <PagePanel
         title="Patient Information"
-        className="shrink-0 bg-surface"
-        contentClassName="overflow-visible"
-        headerRight={
-          patient && (
+        className="shrink-0"
+        headerActions={
+          patient ? (
             <IconButton onClick={onViewPatient} variant="view" size="sm" title="View Patient" />
-          )
+          ) : undefined
         }
       >
-        <PatientInfoSection patient={patient} onViewPatient={onViewPatient} layout="grid" />
-      </SectionPanel>
+        <PagePanelBody className="overflow-visible p-4">
+          <PatientInfoSection patient={patient} onViewPatient={onViewPatient} layout="grid" />
+        </PagePanelBody>
+      </PagePanel>
 
-      <SectionPanel
+      <PagePanel
         title="Order Progress"
-        className="shrink-0 bg-surface"
-        contentClassName="overflow-visible p-0"
-        headerClassName="!py-1.5"
-        headerRight={<OrderCircularProgress order={order} />}
+        className="shrink-0"
+        headerActions={<OrderCircularProgress order={order} />}
       >
-        <OrderTimeline order={order} />
-      </SectionPanel>
+        <PagePanelBody className="overflow-visible p-0">
+          <OrderTimeline order={order} />
+        </PagePanelBody>
+      </PagePanel>
 
-      <SectionPanel title={testsTitle} className="shrink-0 bg-surface" contentClassName="p-0 overflow-visible">
-        <TestsTable
-          tests={order.tests}
-          orderId={order.orderId}
-          supersededCount={supersededCount}
-          variant="simple"
-        />
-      </SectionPanel>
+      <PagePanel title={testsTitle} className="shrink-0">
+        <PagePanelBody className="p-0 overflow-visible">
+          <TestsTable
+            tests={order.tests}
+            orderId={order.orderId}
+            variant="simple"
+          />
+        </PagePanelBody>
+      </PagePanel>
 
-      <SectionPanel
+      <PagePanel
         title="Billing Summary"
-        className="shrink-0 bg-surface"
-        contentClassName="overflow-visible"
-        headerRight={<PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
+        className="shrink-0"
+        headerActions={<PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
       >
-        <BillingSummarySection order={order} invoice={invoice} onViewInvoice={onViewInvoice} />
-      </SectionPanel>
+        <PagePanelBody className="overflow-visible p-4">
+          <BillingSummarySection order={order} invoice={invoice} onViewInvoice={onViewInvoice} />
+        </PagePanelBody>
+      </PagePanel>
     </div>
   );
 };

@@ -223,6 +223,13 @@
   --id-font-weight: var(--font-weight-normal);
 
   /* ═══════════════════════════════════════════════════════════════════
+     BUTTON (geometry — colors use brand/danger/success tokens)
+     ═══════════════════════════════════════════════════════════════════ */
+  --button-radius: 0.375rem;
+  --button-radius-square: 0.5rem;
+  --button-radius-circle: 9999px;
+
+  /* ═══════════════════════════════════════════════════════════════════
      FOCUS
      ═══════════════════════════════════════════════════════════════════ */
   --focus: var(--primitive-brand-600);

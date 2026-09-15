@@ -86,7 +86,7 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
           <Button
             variant="cancel"
             size="sm"
-            showIcon={false}
+            layout="text"
             onClick={onCancel}
             disabled={isSubmitting}
           >
@@ -95,7 +95,7 @@ export const PopoverForm: React.FC<PopoverFormProps> = ({
           <Button
             variant={confirmVariant}
             size="sm"
-            showIcon={false}
+            layout="text"
             onClick={onConfirm}
             isLoading={isSubmitting}
             disabled={disabled}

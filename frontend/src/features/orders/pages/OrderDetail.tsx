@@ -116,6 +116,7 @@ export const OrderDetail: React.FC = () => {
         <DetailPageSkeleton
           sections={ORDER_DETAIL_SKELETON_SECTIONS}
           renderLargeLayout={renderOrderDetailLargeSkeleton}
+          usePagePanel
           aria-label="Loading order"
         />
       }

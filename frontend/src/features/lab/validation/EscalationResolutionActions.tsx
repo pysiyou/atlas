@@ -50,6 +50,7 @@ function ResolutionPopover({
         <Button
           variant={triggerVariant}
           size="md"
+          layout="icon-text"
           icon={triggerIcon}
           disabled={resolving}
           isLoading={resolving}

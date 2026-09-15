@@ -72,8 +72,9 @@ function RecollectionRequestCardDesktop({
   const actions = (
     <div className="flex items-center gap-2 z-10" onClick={e => e.stopPropagation()}>
       <Button
-        variant="danger"
+        variant="reject"
         size="sm"
+        layout="icon-text"
         isLoading={isDenying}
         disabled={isApproving}
         onClick={e => {
@@ -86,6 +87,7 @@ function RecollectionRequestCardDesktop({
       <Button
         variant="approve"
         size="sm"
+        layout="icon-text"
         isLoading={isApproving}
         disabled={isDenying}
         onClick={e => {
@@ -107,7 +109,7 @@ function RecollectionRequestCardDesktop({
   );
 
   const content = (
-    <div className="space-y-2 text-xs">
+    <div className="space-y-1 text-xs">
       <div>
         <span className={LAB_CARD_TYPOGRAPHY.fieldLabel}>Reason:</span>{' '}
         <span className={LAB_CARD_TYPOGRAPHY.fieldValue}>{request.reason}</span>
@@ -124,7 +126,7 @@ function RecollectionRequestCardDesktop({
         onClick={e => e.stopPropagation()}
         placeholder="Review notes (optional)"
         rows={2}
-        className="w-full rounded border border-border-default bg-surface px-2 py-1.5 resize-none text-xs"
+        className="w-full rounded border border-border-default bg-surface px-2 py-1 resize-none text-xs"
       />
     </div>
   );
@@ -201,8 +203,9 @@ function RecollectionRequestCardMobile({
   const actions = (
     <>
       <Button
-        variant="danger"
+        variant="reject"
         size="sm"
+        layout="icon-text"
         isLoading={isDenying}
         disabled={isApproving}
         onClick={e => {
@@ -215,6 +218,7 @@ function RecollectionRequestCardMobile({
       <Button
         variant="approve"
         size="sm"
+        layout="icon-text"
         isLoading={isApproving}
         disabled={isDenying}
         onClick={e => {
@@ -247,26 +251,26 @@ function RecollectionRequestCardMobile({
         badges={badges}
         actions={actions}
       >
-        <div className={cn(LAB_MOBILE_CARD.body, 'space-y-1')}>
+        <div className={cn(LAB_MOBILE_CARD.body, 'space-y-0.5')}>
           <div>
             <span className={LAB_CARD_TYPOGRAPHY.fieldLabel}>Reason:</span>{' '}
             <span className={LAB_CARD_TYPOGRAPHY.fieldValue}>{request.reason}</span>
           </div>
           {request.notes && (
-        <div>
-          <span className={LAB_CARD_TYPOGRAPHY.fieldLabel}>Notes:</span>{' '}
-          <span className={LAB_CARD_TYPOGRAPHY.fieldValue}>{request.notes}</span>
+            <div>
+              <span className={LAB_CARD_TYPOGRAPHY.fieldLabel}>Notes:</span>{' '}
+              <span className={LAB_CARD_TYPOGRAPHY.fieldValue}>{request.notes}</span>
+            </div>
+          )}
+          <textarea
+            value={reviewNotes}
+            onChange={e => onReviewNotesChange(e.target.value)}
+            onClick={e => e.stopPropagation()}
+            placeholder="Review notes (optional)"
+            rows={2}
+            className="text-xs w-full rounded border border-border-default bg-surface px-2 py-1 resize-none"
+          />
         </div>
-      )}
-        </div>
-        <textarea
-          value={reviewNotes}
-          onChange={e => onReviewNotesChange(e.target.value)}
-          onClick={e => e.stopPropagation()}
-          placeholder="Review notes (optional)"
-          rows={2}
-          className="text-xs w-full rounded border border-border-default bg-surface px-2 py-1.5 resize-none"
-        />
       </LabMobileCardHeader>
     </Card>
   );

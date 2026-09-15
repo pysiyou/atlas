@@ -129,7 +129,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
       footer={
         readOnly ? (
           <ModalFooter statusMessage="">
-            <Button onClick={onClose} variant="cancel" size="md">Close</Button>
+            <Button onClick={onClose} variant="cancel" size="md" layout="icon-text">Close</Button>
           </ModalFooter>
         ) : (
           <ModalFooter statusMessage="" statusClassName="text-text-tertiary">
@@ -139,7 +139,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
               testName={test.testName}
               patientName={test.patientName}
               trigger={
-                <Button variant="reject" size="md">
+                <Button variant="reject" size="md" layout="icon-text">
                   Reject
                 </Button>
               }
@@ -148,7 +148,7 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
                 onClose();
               }}
             />
-            <Button onClick={handleApprove} variant="approve" size="md" isLoading={isApproving}>
+            <Button onClick={handleApprove} variant="approve" size="md" layout="icon-text" isLoading={isApproving}>
               Approve
             </Button>
           </ModalFooter>

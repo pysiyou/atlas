@@ -6,11 +6,8 @@
  */
 
 import React, { useState, type KeyboardEvent, type ChangeEvent } from 'react';
-import { Icon } from '@/components/primitives/Icon';
+import { RemovableTag } from '@/components';
 import { cn } from '@/utils';
-import { ICONS } from '@/config/icons';
-import { getBadgeAppearance } from '@/components/theme/theme';
-import { TAG_STYLES } from '@/components/primitives/badgeHelpers';
 import { inputContainerBase, inputContainerError } from './inputStyles';
 
 export interface TagInputProps {
@@ -32,19 +29,8 @@ export interface TagInputProps {
   className?: string;
   /** Maximum number of tags allowed */
   maxTags?: number;
-  /** Variant for tag badges */
-  tagVariant?: 'default' | 'primary' | 'secondary' | 'outline';
 }
 
-/**
- * TagInput - Component for managing a list of tags
- *
- * Features:
- * - Add tags by typing and pressing Enter
- * - Remove tags by clicking the X button
- * - Visual feedback with badges
- * - Validation support
- */
 export const TagInput: React.FC<TagInputProps> = ({
   tags,
   onChange,
@@ -55,55 +41,30 @@ export const TagInput: React.FC<TagInputProps> = ({
   required = false,
   className = '',
   maxTags,
-  tagVariant: _tagVariant = 'outline',
 }) => {
   const [inputValue, setInputValue] = useState('');
-  const appearance = getBadgeAppearance();
-  const tagStyles = TAG_STYLES[appearance];
 
-  /**
-   * Handles adding a new tag
-   */
   const handleAddTag = (value: string) => {
     const trimmedValue = value.trim();
-
-    // Don't add empty tags or duplicates
-    if (!trimmedValue || tags.includes(trimmedValue)) {
-      return;
-    }
-
-    // Check max tags limit
-    if (maxTags && tags.length >= maxTags) {
-      return;
-    }
-
+    if (!trimmedValue || tags.includes(trimmedValue)) return;
+    if (maxTags && tags.length >= maxTags) return;
     onChange([...tags, trimmedValue]);
     setInputValue('');
   };
 
-  /**
-   * Handles removing a tag
-   */
   const handleRemoveTag = (tagToRemove: string) => {
     onChange(tags.filter(tag => tag !== tagToRemove));
   };
 
-  /**
-   * Handles keyboard events in the input
-   */
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       handleAddTag(inputValue);
     } else if (e.key === 'Backspace' && inputValue === '' && tags.length > 0) {
-      // Remove last tag when backspace is pressed on empty input
       handleRemoveTag(tags[tags.length - 1]);
     }
   };
 
-  /**
-   * Handles input change
-   */
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
@@ -124,7 +85,6 @@ export const TagInput: React.FC<TagInputProps> = ({
         </div>
       )}
 
-      {/* Tags Container */}
       <div
         className={cn(
           inputContainerBase,
@@ -132,25 +92,17 @@ export const TagInput: React.FC<TagInputProps> = ({
           error && inputContainerError
         )}
       >
-        {/* Existing Tags */}
-        {tags.map((tag) => (
-          <div
+        {tags.map(tag => (
+          <RemovableTag
             key={tag}
-            className={`flex items-center gap-2 px-2 py-1 rounded max-w-full shrink-0 ${tagStyles.container}`}
+            size="sm"
+            onRemove={() => handleRemoveTag(tag)}
+            removeAriaLabel={`Remove ${tag}`}
           >
-            <span className={`text-xs font-normal truncate min-w-0 ${tagStyles.text}`}>{tag}</span>
-            <button
-              type="button"
-              onClick={() => handleRemoveTag(tag)}
-              className="flex items-center justify-center ml-0.5 -mr-0.5 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-brand shrink-0"
-              aria-label={`Remove ${tag}`}
-            >
-              <Icon name={ICONS.actions.closeCircle} className={`w-3 h-3 ${tagStyles.remove}`} />
-            </button>
-          </div>
+            <span className="min-w-0 truncate text-xs font-normal">{tag}</span>
+          </RemovableTag>
         ))}
 
-        {/* Input Field */}
         <input
           id={inputId}
           type="text"
@@ -163,10 +115,7 @@ export const TagInput: React.FC<TagInputProps> = ({
         />
       </div>
 
-      {/* Error Message */}
       {error && <p className="text-xs text-danger-fg mt-1.5">{error}</p>}
-
-      {/* Helper Text */}
       {helperText && !error && <p className="text-xs text-text-tertiary mt-1.5">{helperText}</p>}
     </div>
   );

@@ -47,12 +47,13 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
         <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border-default bg-surface shrink-0 shadow-[var(--shadow-footer)]">
           <FooterInfo icon={MODULE_ICONS.reports} label="Reports" size="md" />
           <div className="flex items-center gap-3">
-            <Button variant="cancel" size="md" onClick={onClose} disabled={isGenerating}>
+            <Button variant="cancel" size="md" layout="icon-text" onClick={onClose} disabled={isGenerating}>
               Close
             </Button>
             <Button
               variant="download"
               size="md"
+              layout="icon-text"
               onClick={onGenerate}
               disabled={isGenerating}
               isLoading={isGenerating}
