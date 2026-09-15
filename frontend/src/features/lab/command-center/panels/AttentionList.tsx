@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { AttentionFeed } from '../AttentionFeed';
-import { Panel } from '../components';
+import { Panel } from '@/components/surfaces/Panel';
 import type { AttentionItem } from '../boardTypes';
 
 interface AttentionListProps {

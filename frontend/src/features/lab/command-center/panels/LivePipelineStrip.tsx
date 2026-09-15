@@ -7,12 +7,11 @@ import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 import { getLabTabPath } from '../../constants/labTabs';
 import { LAB_STAGE_SHORT_ROWS } from '../../constants/labCopy';
-import { KpiTile, SectionTitle } from '../components';
-import { COMMAND_CENTER_TEXT, resolveCommandCenterTextTone } from '../components/styles';
+import { KpiTile, SectionTitle } from '../commandCenterUi';
+import { COMMAND_CENTER_TEXT, resolveCommandCenterTextTone, type CommandCenterKpiTone } from '../commandCenterStyles';
 import type { LabTechBoardData, QueueAgeStats } from '../boardTypes';
 import { queueTileTone } from '../queueTone';
 import { LabHealthStatus } from './LabHealthStatus';
-import type { CommandCenterKpiTone } from '../components/styles';
 
 function formatOldestAge(age: QueueAgeStats): string {
   if (age.oldestHours === null) return 'No backlog';

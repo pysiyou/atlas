@@ -2,9 +2,8 @@
  * Shared half-panel layout — section title, donut + legend, summary footer.
  */
 
-import { SectionTitle, DonutChart, LegendRow } from '../components';
-import { COMMAND_CENTER_SECTION } from '../components/styles';
-import type { DonutSegment } from '../components/DonutChart';
+import { SectionTitle, DonutChart, LegendRow, type DonutSegment } from '../commandCenterUi';
+import { COMMAND_CENTER_SECTION } from '../commandCenterStyles';
 
 export const METRIC_DONUT_CHART_SIZE = 80;
 

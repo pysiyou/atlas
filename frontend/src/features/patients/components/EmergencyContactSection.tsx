@@ -4,7 +4,7 @@ import type { FilterOption } from '@/components';
 import { RELATIONSHIP_VALUES, RELATIONSHIP_CONFIG, type Relationship } from '@/types';
 import { ICONS } from '@/config/icons';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
-import type { PatientFormSectionProps } from './patientFormSectionTypes';
+import type { PatientFormSectionProps } from '../patientFormTypes';
 
 export const EmergencyContactSection: React.FC<
   Pick<PatientFormSectionProps, 'formData' | 'errors' | 'onFieldChange'>

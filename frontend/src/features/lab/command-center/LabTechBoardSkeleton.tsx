@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Panel, Skeleton, SkeletonText } from '@/components';
-import { COMMAND_CENTER_PANEL } from './components';
+import { COMMAND_CENTER_PANEL } from './commandCenterStyles';
 
 function PanelSkeleton({ className }: { className?: string }) {
   return (

@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { Badge, EntityId } from '@/components';
 import { cn, displayId } from '@/utils';
 import { getLabQueueUrl } from '@/features/lab/constants/labTabs';
-import { COMMAND_CENTER_ATTENTION_ACCENT } from './components/styles';
+import { COMMAND_CENTER_ATTENTION_ACCENT } from './commandCenterStyles';
 import type { AttentionItem } from './boardTypes';
 import {
   ATTENTION_TYPE_ORDER,

@@ -7,7 +7,7 @@ import { formatDate } from '@/utils';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { AffiliationPlanSelector } from './AffiliationPlanSelector';
-import type { PatientFormSectionProps } from './patientFormSectionTypes';
+import type { PatientFormSectionProps } from '../patientFormTypes';
 
 export const AffiliationSection: React.FC<
   Pick<

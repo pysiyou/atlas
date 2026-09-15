@@ -5,14 +5,14 @@
 import type { ReactNode } from 'react';
 import { Badge } from '@/components';
 import type { OrderTest, PaymentStatus, PriorityLevel, OrderStatus } from '@/types';
-import { createIdColumn, createBadgeColumn } from '../columnHelpers';
-import type { ColumnConfig } from '../types';
+import { createIdColumn, createBadgeColumn } from './columnHelpers';
+import type { ColumnConfig } from './types';
 import {
   renderOrderDateCell,
   renderOrderPatientName,
   renderOrderTestsBlock,
   renderOrderTotalPrice,
-} from '../columnRenders';
+} from './columnRenders';
 
 export interface OrderColumnAccessors<T> {
   getOrderId: (item: T) => number | string;

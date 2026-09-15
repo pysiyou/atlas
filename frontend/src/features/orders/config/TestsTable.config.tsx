@@ -4,7 +4,7 @@ import { Badge, EntityId } from '@/components';
 import type { TableViewConfig, CardComponentProps } from '@/components';
 import { buildViews } from '@/components/data-table';
 import { formatCurrency, formatDateTime } from '@/utils';
-import { getTestName } from '@/features/catalog/utils';
+import { getTestName } from '@/features/catalog/testLookup';
 import { getLabQueueUrlForTest } from '@/features/lab';
 import type { OrderTest, Test } from '@/types';
 

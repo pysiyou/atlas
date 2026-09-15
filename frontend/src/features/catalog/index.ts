@@ -13,4 +13,4 @@ export {
   useInvalidateTestCatalog,
 } from './api/tests.api';
 
-export * from './utils';
+export * from './testLookup';

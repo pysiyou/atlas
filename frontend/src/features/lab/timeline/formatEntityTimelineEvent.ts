@@ -3,7 +3,7 @@
  */
 
 import type { TimelineEvent } from '../api/commandCenter.api';
-import { formatEntityEvent } from './registry';
+import { formatEntityEvent } from './entityEvents';
 import { testIdFromEvent } from './timelineDetailBuilders';
 
 export type { FormattedTimelineEvent, EventDetail } from './timelineDetailBuilders';

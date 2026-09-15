@@ -1,23 +1,22 @@
 /**
- * MultiSelectFilter Component
- *
- * A filter component with a popover for multi-select options with checkboxes.
- * Inspired by the cargoplan ListSelector component.
+ * MultiSelectFilter — popover filter with multi-select (or single-select) options.
  */
 
 import React, { useCallback, useMemo } from 'react';
-import { Popover } from './Popover';
+import { cn, uppercaseLabel } from '@/utils';
+import { ICONS } from '@/config/icons';
+import { Badge } from '@/components';
 import { Icon, type IconName } from '@/components/primitives/Icon';
+import { Popover } from './Popover';
 import { FilterTriggerShell } from './FilterTriggerShell';
-import { MultiSelectTriggerContent } from './MultiSelectTriggerContent';
-import { MultiSelectOptionsPanel } from './MultiSelectOptionsPanel';
-import type { FilterOption } from './MultiSelectListItem';
 
-export type { FilterOption };
+export interface FilterOption {
+  id: string;
+  label: string;
+  /** Badge color variant */
+  color?: string;
+}
 
-/**
- * Props for the MultiSelectFilter component
- */
 export interface MultiSelectFilterProps {
   label: string;
   options: FilterOption[];
@@ -29,6 +28,159 @@ export interface MultiSelectFilterProps {
   className?: string;
   icon?: IconName;
   singleSelect?: boolean;
+}
+
+function MultiSelectListItem({
+  option,
+  isSelected,
+  onToggle,
+  singleSelect = false,
+}: {
+  option: FilterOption;
+  isSelected: boolean;
+  onToggle: () => void;
+  singleSelect?: boolean;
+}) {
+  return (
+    <label
+      className={cn(
+        'flex items-center gap-3 px-3 py-2 text-sm cursor-pointer',
+        'hover:bg-surface-hover transition-colors',
+        isSelected && 'bg-surface'
+      )}
+    >
+      <div className="flex items-center justify-center">
+        <input
+          type={singleSelect ? 'radio' : 'checkbox'}
+          checked={isSelected}
+          onChange={onToggle}
+          className="sr-only"
+        />
+        {singleSelect ? (
+          <div
+            className={cn(
+              'w-5 h-5 rounded-full flex items-center justify-center transition-colors duration-200',
+              isSelected ? 'bg-brand' : 'bg-transparent border-2 border-border-default'
+            )}
+          >
+            {isSelected && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
+          </div>
+        ) : isSelected ? (
+          <div className="w-4 h-4 rounded border-2 border-brand bg-brand flex items-center justify-center transition-all duration-150">
+            <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
+          </div>
+        ) : (
+          <div className="w-4 h-4 rounded border-2 border-border-default bg-surface transition-all duration-150" />
+        )}
+      </div>
+
+      <Badge variant={option.color || 'default'} size="sm">
+        {uppercaseLabel(option.label)}
+      </Badge>
+    </label>
+  );
+}
+
+function MultiSelectTriggerContent({
+  label,
+  placeholder,
+  selectedIds,
+  singleSelectedOption,
+}: {
+  label: string;
+  placeholder?: string;
+  selectedIds: string[];
+  singleSelectedOption: FilterOption | null;
+}) {
+  if (selectedIds.length === 0) {
+    return (
+      <span className="text-text-muted whitespace-nowrap overflow-hidden truncate">
+        {placeholder || `Select ${label}...`}
+      </span>
+    );
+  }
+
+  if (singleSelectedOption) {
+    return (
+      <Badge variant={singleSelectedOption.color || 'default'} size="xs">
+        {uppercaseLabel(singleSelectedOption.label)}
+      </Badge>
+    );
+  }
+
+  return (
+    <span className="text-text-primary truncate block whitespace-nowrap">
+      <span className="inline-flex items-center justify-center min-w-[18px] h-4 px-1 rounded-full text-on-brand text-xxs font-normal align-middle mr-1 bg-brand">
+        {selectedIds.length}
+      </span>
+      selected
+    </span>
+  );
+}
+
+function MultiSelectOptionsPanel({
+  options,
+  selectedIds,
+  onToggle,
+  singleSelect = false,
+  showSelectAll = true,
+  selectAllLabel = 'Select all',
+  allSelected,
+  onSelectAll,
+}: {
+  options: FilterOption[];
+  selectedIds: string[];
+  onToggle: (id: string) => void;
+  singleSelect?: boolean;
+  showSelectAll?: boolean;
+  selectAllLabel?: string;
+  allSelected: boolean;
+  onSelectAll: () => void;
+}) {
+  return (
+    <div className="bg-surface border border-border-default rounded-md shadow-lg py-2">
+      <div className="max-h-[300px] overflow-y-auto">
+        {options.map(option => (
+          <MultiSelectListItem
+            key={option.id}
+            option={option}
+            isSelected={selectedIds.includes(option.id)}
+            onToggle={() => onToggle(option.id)}
+            singleSelect={singleSelect}
+          />
+        ))}
+      </div>
+
+      {showSelectAll && !singleSelect && options.length > 0 && (
+        <div className="border-t border-border-default mt-2 pt-2">
+          <div className="px-3 py-2">
+            <label className="flex items-center gap-3 cursor-pointer">
+              <div className="flex items-center justify-center">
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  onChange={onSelectAll}
+                  className="sr-only"
+                />
+                {allSelected ? (
+                  <div className="w-4 h-4 rounded border-2 border-brand bg-brand flex items-center justify-center transition-all duration-150">
+                    <Icon name={ICONS.actions.cross} className="w-3 h-3 text-on-brand" />
+                  </div>
+                ) : (
+                  <div className="w-4 h-4 rounded border-2 border-brand bg-brand flex items-center justify-center transition-all duration-150">
+                    <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
+                  </div>
+                )}
+              </div>
+              <span className="text-xs font-normal text-text-primary">
+                {allSelected ? 'Deselect all' : selectAllLabel}
+              </span>
+            </label>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({

@@ -9,7 +9,7 @@ import { ICONS } from '@/config/icons';
 import { cn } from '@/utils';
 import { getLabTabPath } from '../../constants/labTabs';
 import type { LabTechBoardData } from '../boardTypes';
-import { COMMAND_CENTER_HEALTH_STYLES, COMMAND_CENTER_TEXT } from '../components/styles';
+import { COMMAND_CENTER_HEALTH_STYLES, COMMAND_CENTER_TEXT } from '../commandCenterStyles';
 
 function formatLastRefreshed(at: Date): string {
   const diffSec = Math.floor((Date.now() - at.getTime()) / 1000);
