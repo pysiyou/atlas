@@ -240,7 +240,7 @@ export const ValidationView: React.FC = () => {
             {isEmpty ? (
               <EmptyState
                 icon="shield-check"
-                title="No Pending Reviews"
+                title="No Pending Validation"
                 description="There are no results waiting for validation or supervisor review."
               />
             ) : (

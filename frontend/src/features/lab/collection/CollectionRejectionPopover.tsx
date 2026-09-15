@@ -1,5 +1,5 @@
 /**
- * Collection quality issue popover — reports specimen problems via unified API.
+ * Collection quality issue popover — reports sample problems via unified API.
  * Operator chooses unfinished-test fate when linked unfinished work exists.
  */
 import React, { useCallback } from 'react';
@@ -16,6 +16,7 @@ import {
   resolveSuggestedRemedy,
 } from '../components/remedyDestinationUtils';
 import { parseNumericSampleId } from './collectionRejectionPopover.helpers';
+import { LAB_COPY } from '../constants/labCopy';
 
 interface CollectionRejectionPopoverContentProps {
   onSuccess: () => void;
@@ -96,7 +97,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
 
   return (
     <PopoverForm
-      title="Report Specimen Issue"
+      title={LAB_COPY.quality.reportSampleIssue}
       subtitle={subtitle}
       onCancel={onCancel}
       onConfirm={handleConfirm}
@@ -110,7 +111,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
         <QualityIssueForm
           targetType="sample"
           targetId={numericSampleId}
-          title="Specimen Issue"
+          title={LAB_COPY.quality.sampleIssue}
           reason={reason}
           notes={notes}
           preferredRemedy={preferredRemedy}
@@ -150,8 +151,8 @@ export const CollectionRejectionPopover: React.FC<CollectionRejectionPopoverProp
       preventClose={false}
       trigger={
         trigger ?? (
-          <Button variant="reject" size="sm" title="Report specimen issue">
-            Report Specimen Issue
+          <Button variant="reject" size="sm" title={LAB_COPY.quality.reportSampleIssue}>
+            {LAB_COPY.quality.reportSampleIssue}
           </Button>
         )
       }

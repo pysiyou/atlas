@@ -13,7 +13,6 @@ import type { AttentionItem } from './boardTypes';
 import {
   ATTENTION_TYPE_ORDER,
   getAttentionTone,
-  getAttentionType,
   getAttentionTypeConfig,
   type AttentionType,
 } from './attentionCategories';
@@ -39,9 +38,9 @@ function FeedDetail({ detail }: { detail: AttentionDetail }) {
 }
 
 function AttentionFeedRow({ item }: { item: AttentionItem }) {
-  const type = getAttentionType(item);
+  const type = item.attentionType;
   const typeConfig = getAttentionTypeConfig(type);
-  const tone = getAttentionTone(item);
+  const tone = getAttentionTone(type);
   const formatted = formatAttentionItem(item, type);
   const href = getLabQueueUrl(item.queueTab, {
     search: displayId.order(item.orderId),
@@ -122,7 +121,7 @@ export const AttentionFeed: React.FC<AttentionFeedProps> = ({ items }) => {
     const map = new Map<AttentionType, AttentionItem[]>();
 
     for (const item of items) {
-      const type = getAttentionType(item);
+      const type = item.attentionType;
       const bucket = map.get(type) ?? [];
       bucket.push(item);
       map.set(type, bucket);

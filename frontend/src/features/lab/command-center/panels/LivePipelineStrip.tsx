@@ -6,6 +6,7 @@ import React from 'react';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 import { getLabTabPath } from '../../constants/labTabs';
+import { LAB_STAGE_SHORT_ROWS } from '../../constants/labCopy';
 import { KpiTile, SectionTitle } from '../components';
 import { COMMAND_CENTER_TEXT, resolveCommandCenterTextTone } from '../components/styles';
 import type { LabTechBoardData, QueueAgeStats } from '../boardTypes';
@@ -64,41 +65,34 @@ export const LivePipelineStrip: React.FC<LivePipelineStripProps> = ({
 
   const blockedTone: CommandCenterKpiTone = blockers.total > 0 ? 'warning' : 'neutral';
 
+  const stageIcons = {
+    collection: ICONS.dataFields.flask,
+    entry: ICONS.dataFields.notebook,
+    validation: ICONS.ui.shieldCheck,
+  } as const;
+
   const tiles = [
+    ...LAB_STAGE_SHORT_ROWS.map(row => ({
+      key: row.key,
+      icon: stageIcons[row.key],
+      label: row.label,
+      value: counts[row.key],
+      tone: queueTileTone(counts[row.key], queueAge[row.key]),
+      to: getLabTabPath(row.key),
+      age: queueAge[row.key],
+    })),
     {
-      key: 'collection',
-      icon: ICONS.dataFields.flask,
-      label: 'Collection',
-      value: counts.collection,
-      tone: queueTileTone(counts.collection, queueAge.collection),
-      to: getLabTabPath('collection'),
-      age: queueAge.collection,
-    },
-    {
-      key: 'entry',
-      icon: ICONS.dataFields.notebook,
-      label: 'Entry',
-      value: counts.entry,
-      tone: queueTileTone(counts.entry, queueAge.entry),
-      to: getLabTabPath('entry'),
-      age: queueAge.entry,
-    },
-    {
-      key: 'validation',
-      icon: ICONS.ui.shieldCheck,
-      label: 'Review',
-      value: counts.validation,
-      tone: queueTileTone(counts.validation, queueAge.validation),
-      to: getLabTabPath('validation'),
-      age: queueAge.validation,
-    },
-    {
-      key: 'blocked',
+      key: 'blocked' as const,
       icon: ICONS.actions.alertCircle,
       label: 'Blocked',
       value: blockers.total,
       tone: blockedTone,
-      to: blockers.paymentUnpaid > 0 ? getLabTabPath('collection') : undefined,
+      to:
+        blockers.paymentUnpaid > 0 || blockers.recollectionWaiting > 0
+          ? getLabTabPath('collection')
+          : blockers.retestPending > 0
+            ? getLabTabPath('entry')
+            : undefined,
       age: null as QueueAgeStats | null,
       blockedDetail:
         blockers.total > 0
@@ -118,7 +112,6 @@ export const LivePipelineStrip: React.FC<LivePipelineStripProps> = ({
       <div className="flex items-center justify-between gap-3">
         <SectionTitle title="Live Pipeline" className="shrink-0" />
         <LabHealthStatus
-          variant="inline"
           health={health}
           message={healthMessage}
           suggestedTab={suggestedTab}

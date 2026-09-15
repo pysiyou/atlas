@@ -8,6 +8,7 @@ import { LabCard, ProgressBadge } from '../../components/LabCard';
 import { TestHeaderBadges } from '../../components/labWorkflowBadges';
 import { testHeaderAudit } from '../../components/labHeader';
 import { LAB_CONFIG } from '../../constants';
+import { LAB_CARD_TYPOGRAPHY } from '../../utils/labStyles';
 import type { EntryCardSharedData } from './hooks';
 
 export const EntryCardDesktop: React.FC<EntryCardSharedData> = ({
@@ -49,14 +50,16 @@ export const EntryCardDesktop: React.FC<EntryCardSharedData> = ({
             key={param.code}
             size="sm"
             uppercase={false}
-            className={results[param.code] ? 'text-brand-fg' : 'text-text-tertiary'}
+            className={
+              results[param.code] ? LAB_CARD_TYPOGRAPHY.fieldValue : LAB_CARD_TYPOGRAPHY.fieldLabel
+            }
             variant={results[param.code] ? 'primary' : 'default'}
           >
             {param.name}
           </Badge>
         ))}
       {parameterCount > LAB_CONFIG.PARAMETER_PREVIEW_LIMIT && (
-        <Badge size="sm" variant="default" className="text-text-tertiary">
+        <Badge size="sm" variant="default" className={LAB_CARD_TYPOGRAPHY.fieldLabel}>
           +{parameterCount - LAB_CONFIG.PARAMETER_PREVIEW_LIMIT} more
         </Badge>
       )}

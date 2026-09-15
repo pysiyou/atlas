@@ -148,6 +148,31 @@
   --category-default: var(--chart-brand);
 
   /* ═══════════════════════════════════════════════════════════════════
+     LAB WORKFLOW LANES (override per theme to recolor a stage everywhere)
+     ═══════════════════════════════════════════════════════════════════ */
+  --workflow-collection-fg: var(--info-fg-emphasis);
+  --workflow-collection-bg: var(--info-bg);
+  --workflow-collection-border: var(--info-stroke);
+  --workflow-entry-fg: var(--warning-fg-emphasis);
+  --workflow-entry-bg: var(--warning-bg);
+  --workflow-entry-border: var(--warning-stroke);
+  --workflow-validation-fg: var(--success-fg-emphasis);
+  --workflow-validation-bg: var(--success-bg);
+  --workflow-validation-border: var(--success-stroke);
+  --workflow-escalation-fg: var(--danger-fg-emphasis);
+  --workflow-escalation-bg: var(--danger-bg);
+  --workflow-escalation-border: var(--danger-stroke);
+  --workflow-quality-fg: var(--warning-fg-emphasis);
+  --workflow-quality-bg: var(--warning-bg);
+  --workflow-quality-border: var(--warning-stroke);
+  --workflow-order-fg: var(--text-secondary);
+  --workflow-order-bg: var(--tone-neutral-bg);
+  --workflow-order-border: var(--border);
+  --workflow-composition-fg: var(--text-secondary);
+  --workflow-composition-bg: var(--surface-hover);
+  --workflow-composition-border: var(--border);
+
+  /* ═══════════════════════════════════════════════════════════════════
      OVERLAY
      ═══════════════════════════════════════════════════════════════════ */
   --overlay: rgba(0, 0, 0, 0.5);

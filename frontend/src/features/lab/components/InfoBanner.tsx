@@ -21,7 +21,9 @@ export const InfoBanner: React.FC<InfoBannerProps> = ({ title, children, classNa
       <div className={hasChildren ? LAB_CARD_SPACING.sectionTitleMargin : ''}>
         <span className={LAB_CARD_TYPOGRAPHY.sectionTitle}>{title}</span>
       </div>
-      {hasChildren ? children : null}
+      {hasChildren ? (
+        <div className={LAB_CARD_TYPOGRAPHY.sectionContent}>{children}</div>
+      ) : null}
     </div>
   );
 };

@@ -55,7 +55,7 @@ export function buildLabFilterConfig(options: BuildLabFilterConfigOptions): Filt
           selectAllLabel: 'All sample types',
           icon: ICONS.dataFields.sampleCollection,
           placeholder: SHARED_FILTER_PLACEHOLDERS.sampleType,
-          helpText: 'Filter by specimen type (e.g. blood, urine, swab).',
+          helpText: 'Filter by sample type (e.g. blood, urine, swab).',
         },
         ...options.extraControls,
       ],

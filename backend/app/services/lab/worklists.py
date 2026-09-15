@@ -5,9 +5,11 @@ Replaces client-side filtering of full order/sample lists for lab queues.
 """
 from __future__ import annotations
 
+import re
 from datetime import datetime, timezone
-from typing import Any, Literal, Optional
+from typing import Any, Optional
 
+from sqlalchemy import String, or_
 from sqlalchemy.orm import Session
 
 from app.models.order import Order, OrderTest
@@ -15,9 +17,7 @@ from app.models.patient import Patient
 from app.models.sample import Sample
 from app.models.test import Test
 from app.schemas.enums import PaymentStatus, PriorityLevel, SampleStatus, TestStatus
-
-QUEUE_AGE_WARNING_HOURS = 4
-QUEUE_AGE_CRITICAL_HOURS = 8
+from app.services.lab.board import LabBoardService
 
 PRIORITY_ORDER = {
     PriorityLevel.URGENT: 0,
@@ -25,6 +25,33 @@ PRIORITY_ORDER = {
     PriorityLevel.MEDIUM: 2,
     PriorityLevel.LOW: 3,
 }
+
+COLLECTION_SAMPLE_LOOKUP_MIN_LEN = 3
+
+
+def _parse_sample_id_from_search(search_term: str) -> Optional[int]:
+    """Resolve numeric sample id from raw id, SAM#### display id, or padded digits."""
+    compact = re.sub(r"[\s-]", "", search_term.strip())
+    upper = compact.upper()
+    if upper.startswith("SAM") and len(upper) > 3:
+        suffix = upper[3:]
+        if suffix.isdigit():
+            return int(suffix)
+    if compact.isdigit():
+        return int(compact)
+    return None
+
+
+def _collection_search_filter(search_term: str):
+    term = search_term.strip()
+    predicates = [Patient.fullName.ilike(f"%{term}%")]
+    sample_id = _parse_sample_id_from_search(term)
+    if sample_id is not None:
+        predicates.append(Sample.sampleId == sample_id)
+    compact = re.sub(r"[\s-]", "", term)
+    if compact.isdigit():
+        predicates.append(Sample.sampleId.cast(String).ilike(f"%{compact}%"))
+    return or_(*predicates)
 
 
 def _hours_since(ts: Optional[datetime]) -> float:
@@ -34,16 +61,6 @@ def _hours_since(ts: Optional[datetime]) -> float:
     if ts.tzinfo is None:
         ts = ts.replace(tzinfo=timezone.utc)
     return max(0.0, (now - ts).total_seconds() / 3600.0)
-
-
-def _tat_status(hours: float, turnaround_hours: int) -> Literal["fresh", "warning", "critical"]:
-    warning = min(turnaround_hours * 0.5, QUEUE_AGE_WARNING_HOURS) if turnaround_hours else QUEUE_AGE_WARNING_HOURS
-    critical = min(turnaround_hours, QUEUE_AGE_CRITICAL_HOURS) if turnaround_hours else QUEUE_AGE_CRITICAL_HOURS
-    if hours >= critical:
-        return "critical"
-    if hours >= warning:
-        return "warning"
-    return "fresh"
 
 
 def _paginate(total: int, page: int, page_size: int) -> dict[str, Any]:
@@ -85,21 +102,20 @@ class LabWorklistService:
         search: Optional[str] = None,
         priority: Optional[PriorityLevel] = None,
     ) -> dict[str, Any]:
+        search_term = search.strip() if search else ""
+        if len(search_term) < COLLECTION_SAMPLE_LOOKUP_MIN_LEN:
+            search_term = ""
         query = (
             self.db.query(Sample, Order, Patient)
             .join(Order, Sample.orderId == Order.orderId)
             .join(Patient, Order.patientId == Patient.id)
-            .filter(Sample.status == SampleStatus.PENDING)
         )
+        if search_term:
+            query = query.filter(_collection_search_filter(search_term))
+        else:
+            query = query.filter(Sample.status == SampleStatus.PENDING)
         if priority:
             query = query.filter(Sample.priority == priority)
-        if search:
-            term = f"%{search.strip()}%"
-            query = query.filter(
-                (Patient.fullName.ilike(term))
-                | (Order.orderId.cast(str).ilike(term))
-                | (Sample.sampleId.cast(str).ilike(term))
-            )
         rows = query.all()
         items = []
         for sample, order, patient in rows:
@@ -139,16 +155,29 @@ class LabWorklistService:
                 "blockedReason": blocked,
                 "waitingHours": round(hours, 2),
                 "turnaroundHours": tat,
+                "actualContainerType": sample.actualContainerType,
+                "actualContainerColor": sample.actualContainerColor,
+                "collectedAt": sample.collectedAt,
+                "collectedBy": sample.collectedBy,
+                "collectedVolume": sample.collectedVolume,
                 "_sort_priority": PRIORITY_ORDER.get(sample.priority, 99),
                 "_sort_since": since,
+                "_sort_recency": sample.updatedAt or sample.collectedAt or since,
             })
-        items.sort(key=lambda x: (x["_sort_priority"], x["_sort_since"]))
+        if search_term:
+            items.sort(
+                key=lambda x: x["_sort_recency"],
+                reverse=True,
+            )
+        else:
+            items.sort(key=lambda x: (x["_sort_priority"], x["_sort_since"]))
         total = len(items)
         start = (page - 1) * page_size
         page_items = items[start : start + page_size]
         for item in page_items:
             item.pop("_sort_priority", None)
             item.pop("_sort_since", None)
+            item.pop("_sort_recency", None)
         return {"items": page_items, "pagination": _paginate(total, page, page_size)}
 
     def list_entry(
@@ -160,30 +189,30 @@ class LabWorklistService:
         priority: Optional[PriorityLevel] = None,
     ) -> dict[str, Any]:
         query = (
-            self.db.query(OrderTest, Order, Patient, Test)
+            self.db.query(OrderTest, Order, Patient, Test, Sample)
             .join(Order, OrderTest.orderId == Order.orderId)
             .join(Patient, Order.patientId == Patient.id)
             .join(Test, OrderTest.testCode == Test.code)
+            .outerjoin(Sample, Sample.sampleId == OrderTest.sampleId)
             .filter(OrderTest.status == TestStatus.SAMPLE_COLLECTED)
         )
         if priority:
             query = query.filter(Order.priority == priority)
-        if search:
-            term = f"%{search.strip()}%"
+        search_term = search.strip() if search else ""
+        if search_term:
+            term = f"%{search_term}%"
             query = query.filter(
-                (Patient.fullName.ilike(term))
-                | (Order.orderId.cast(str).ilike(term))
-                | (Test.name.ilike(term))
-                | (OrderTest.testCode.ilike(term))
+                or_(
+                    Patient.fullName.ilike(term),
+                    Order.orderId.cast(String).ilike(term),
+                    Test.name.ilike(term),
+                    OrderTest.testCode.ilike(term),
+                    Sample.sampleId.cast(String).ilike(term),
+                )
             )
         rows = query.all()
         items = []
-        for ot, order, patient, test in rows:
-            sample = (
-                self.db.query(Sample).filter(Sample.sampleId == ot.sampleId).first()
-                if ot.sampleId
-                else None
-            )
+        for ot, order, patient, test, sample in rows:
             since = sample.collectedAt if sample and sample.collectedAt else order.orderDate
             hours = _hours_since(since)
             items.append({
@@ -273,85 +302,7 @@ class LabWorklistService:
             item.pop("_sort_since", None)
         return {"items": page_items, "pagination": _paginate(total, page, page_size)}
 
-    def get_board(self) -> dict[str, Any]:
-        collection = self.list_collection(page=1, page_size=10_000)["items"]
-        entry = self.list_entry(page=1, page_size=10_000)["items"]
-        validation = self.list_validation(page=1, page_size=10_000)["items"]
-
-        escalated = (
-            self.db.query(OrderTest)
-            .filter(OrderTest.status == TestStatus.ESCALATED)
-            .count()
+    def get_board(self, include_supervisor: bool = True) -> dict[str, Any]:
+        return LabBoardService(self.db).compute_board_snapshot(
+            include_supervisor=include_supervisor
         )
-        from app.models.recollection_request import RecollectionRequest
-        from app.schemas.enums import RecollectionRequestStatus
-
-        recollection = (
-            self.db.query(RecollectionRequest)
-            .filter(RecollectionRequest.status == RecollectionRequestStatus.PENDING_APPROVAL)
-            .count()
-        )
-
-        def age_stats(rows: list[dict], since_key: str, tat_key: str = "turnaroundHours") -> dict:
-            if not rows:
-                return {"oldestHours": None, "averageHours": None, "warningCount": 0, "criticalCount": 0}
-            hours_list = [r["waitingHours"] for r in rows]
-            warning = critical = 0
-            for r in rows:
-                status = _tat_status(r["waitingHours"], r.get(tat_key, 24))
-                if status == "warning":
-                    warning += 1
-                elif status == "critical":
-                    critical += 1
-            return {
-                "oldestHours": round(max(hours_list), 2),
-                "averageHours": round(sum(hours_list) / len(hours_list), 2),
-                "warningCount": warning,
-                "criticalCount": critical,
-            }
-
-        queue_age = {
-            "collection": age_stats(collection, "orderDate"),
-            "entry": age_stats(entry, "collectedAt"),
-            "validation": age_stats(validation, "resultEnteredAt"),
-        }
-
-        payment_unpaid = sum(1 for r in collection if r.get("blockedReason") == "payment_unpaid")
-        retest_pending = sum(1 for r in entry if r.get("isRetest"))
-        blockers = {
-            "paymentUnpaid": payment_unpaid,
-            "retestPending": retest_pending,
-            "recollectionWaiting": recollection,
-            "total": payment_unpaid + retest_pending + recollection,
-        }
-
-        critical_total = sum(v["criticalCount"] for v in queue_age.values())
-        warning_total = sum(v["warningCount"] for v in queue_age.values())
-
-        if critical_total > 0:
-            health, health_message, suggested = "critical", f"{critical_total} items past TAT", "validation"
-        elif warning_total > 0 or blockers["total"] > 0 or escalated > 0:
-            parts = []
-            if warning_total:
-                parts.append(f"{warning_total} approaching TAT")
-            if escalated:
-                parts.append(f"{escalated} supervisor review")
-            if payment_unpaid:
-                parts.append(f"{payment_unpaid} unpaid hold")
-            health, health_message, suggested = "attention", " · ".join(parts), "collection"
-        else:
-            health, health_message, suggested = "healthy", "Queues within TAT", None
-
-        return {
-            "counts": {
-                "collection": len(collection),
-                "entry": len(entry),
-                "validation": len(validation),
-                "supervisor": escalated + recollection,
-            },
-            "queueAge": queue_age,
-            "blockers": blockers,
-            "health": health,
-            "healthMessage": health_message,
-            "suggestedTab": suggested,
-        }

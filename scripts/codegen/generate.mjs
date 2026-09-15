@@ -23,18 +23,22 @@ function writeFile(relPath, content) {
 
 function generateLabConstants() {
   const data = readJson('lab-constants.json');
+  const pyBody = Object.entries(data)
+    .map(([key, value]) => `${key} = ${JSON.stringify(value)}`)
+    .join('\n');
+  const tsBody = Object.entries(data)
+    .map(([key, value]) => `  ${key}: ${JSON.stringify(value)},`)
+    .join('\n');
   const py = `"""
 Laboratory Constants — GENERATED from contracts/lab-constants.json. DO NOT EDIT.
 """
-MAX_RETEST_ATTEMPTS = ${data.MAX_RETEST_ATTEMPTS}
-MAX_RECOLLECTION_ATTEMPTS = ${data.MAX_RECOLLECTION_ATTEMPTS}
+${pyBody}
 `;
   const ts = `/**
  * Lab constants — GENERATED from contracts/lab-constants.json. DO NOT EDIT.
  */
 export const GENERATED_LAB_CONSTANTS = {
-  MAX_RETEST_ATTEMPTS: ${data.MAX_RETEST_ATTEMPTS},
-  MAX_RECOLLECTION_ATTEMPTS: ${data.MAX_RECOLLECTION_ATTEMPTS},
+${tsBody}
 } as const;
 `;
   writeFile('backend/app/data/lab_constants.py', py);

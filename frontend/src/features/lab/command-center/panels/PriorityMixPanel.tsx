@@ -46,7 +46,7 @@ export const PriorityMixPanel: React.FC<PriorityMixPanelProps> = ({
       : elevated > 0
         ? `${priorityMix.urgent > 0 ? `${priorityMix.urgent} STAT` : ''}${
             priorityMix.urgent > 0 && priorityMix.high > 0 ? ' · ' : ''
-          }${priorityMix.high > 0 ? `${priorityMix.high} high` : ''} — see Needs Attention for order details`
+          }${priorityMix.high > 0 ? `${priorityMix.high} high` : ''} in the active pipeline`
         : 'No STAT or high-priority tests in the pipeline right now.';
 
   return (

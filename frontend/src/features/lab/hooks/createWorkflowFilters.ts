@@ -50,6 +50,8 @@ const COLLECTION_FILTER_CONFIG: WorkflowFilterConfig<SampleDisplay, SampleStatus
       const lowerQuery = query.toLowerCase();
       const fields = [
         item.patient?.fullName || '',
+        item.sample?.sampleId != null ? displayId.sample(item.sample.sampleId) : '',
+        item.sample?.sampleId != null ? String(item.sample.sampleId) : '',
         item.order ? displayId.order(item.order.orderId) : undefined,
         ...(item.requirement?.testCodes || []),
       ].filter(Boolean) as string[];
@@ -97,11 +99,21 @@ const WORKFLOW_FILTER_CONFIGS = {
 export interface CreateWorkflowFiltersOptions<T extends WorkflowType> {
   items: WorkflowItem<T>[];
   workflowType: T;
+  searchQuery?: string;
+  onSearchChange?: (value: string) => void;
+  skipSearchFilter?: boolean;
+  appliedStatusFilters?: SampleStatus[] | TestStatus[];
+  collectionSampleLookup?: boolean;
 }
 
 export function useCreateWorkflowFilters<T extends WorkflowType>({
   items,
   workflowType,
+  searchQuery,
+  onSearchChange,
+  skipSearchFilter,
+  appliedStatusFilters,
+  collectionSampleLookup,
 }: CreateWorkflowFiltersOptions<T>) {
   const urlSearch = useLabUrlSearch();
 
@@ -117,8 +129,22 @@ export function useCreateWorkflowFilters<T extends WorkflowType>({
       initialStatusFilters: filterConfig.defaultStatuses,
       initialSearchQuery: urlSearch,
       sortByQueuePriority: filterConfig.sortByPriority,
+      searchQuery,
+      onSearchChange,
+      skipSearchFilter,
+      appliedStatusFilters,
+      collectionSampleLookup,
     }),
-    [items, filterConfig, urlSearch]
+    [
+      items,
+      filterConfig,
+      urlSearch,
+      searchQuery,
+      onSearchChange,
+      skipSearchFilter,
+      appliedStatusFilters,
+      collectionSampleLookup,
+    ]
   );
 
   return useLabWorkflowFilters(

@@ -103,22 +103,6 @@ export const COMMAND_CENTER_KPI_RING_TONE: Record<CommandCenterKpiTone, string> 
   neutral: 'text-text-secondary',
 };
 
-/** Donut fill classes — pipeline stages */
-export const COMMAND_CENTER_STAGE_COLORS = {
-  collection: {
-    fill: 'fill-info-fg-emphasis',
-    bar: 'bg-info-fg-emphasis',
-  },
-  entry: {
-    fill: 'fill-warning-fg-emphasis',
-    bar: 'bg-warning-fg-emphasis',
-  },
-  validation: {
-    fill: 'fill-success-fg-emphasis',
-    bar: 'bg-success-fg-emphasis',
-  },
-} as const;
-
 /** Donut fill classes — queue age buckets */
 export const COMMAND_CENTER_AGE_COLORS = {
   fresh: 'fill-brand',
@@ -135,22 +119,19 @@ export const COMMAND_CENTER_PRIORITY_COLORS = {
   low: 'fill-chart-axis',
 } as const;
 
-/** Health banner dot, text, and banner surface tones */
+/** Health indicator dot and text tones */
 export const COMMAND_CENTER_HEALTH_STYLES = {
   healthy: {
     dot: 'bg-success-fg-emphasis',
     text: 'text-success-fg-emphasis',
-    bg: 'bg-success-bg/40 border-success-fg/20',
   },
   attention: {
     dot: 'bg-warning-fg-emphasis',
     text: 'text-warning-fg-emphasis',
-    bg: 'bg-warning-bg/40 border-warning-fg/20',
   },
   critical: {
     dot: 'bg-danger-fg-emphasis',
     text: 'text-danger-fg-emphasis',
-    bg: 'bg-danger-bg/40 border-danger-fg/20',
   },
 } as const;
 

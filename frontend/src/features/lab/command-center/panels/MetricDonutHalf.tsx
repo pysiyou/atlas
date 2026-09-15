@@ -41,6 +41,9 @@ export function MetricDonutHalf({
           segments={segments}
           centerLabel={centerLabel}
           centerDetail={centerDetail}
+          ariaLabel={`${title}: ${centerLabel} ${centerDetail}. ${legend
+            .map(item => `${item.label} ${item.value}`)
+            .join(', ')}`}
         />
         <div className="min-w-0 flex-1 space-y-1">
           {legend.map(item => (

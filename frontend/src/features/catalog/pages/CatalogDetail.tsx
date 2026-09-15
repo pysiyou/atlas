@@ -115,7 +115,7 @@ export const CatalogDetail: React.FC = () => {
         { label: 'Collection Notes', value: test.collectionNotes || '-' },
         { label: 'Special Requirements', value: test.specialRequirements || '-' },
         {
-          label: 'Specimen Rejection (Collection)',
+          label: 'Sample Rejection (Collection)',
           value: formatArrayWithFallback(formatRejectionCriteriaList(test.rejectionCriteria), 'Not defined'),
         },
         {

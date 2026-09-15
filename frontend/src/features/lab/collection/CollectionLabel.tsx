@@ -18,7 +18,17 @@ export const generatePrintLabelHTML = (display: SampleDisplay, patientName: stri
   const patientIdDisplay = displayId.patient(order.patientId);
   const sampleType = sample.sampleType || 'unknown';
   const containerTopColor = sample.actualContainerColor;
-  const containerType = sample.actualContainerType;
+  /**
+   * Worklist payloads and older collected rows can omit actualContainerType.
+   * Fall back by sample type so label HTML never calls toUpperCase on undefined.
+   */
+  const actualContainerType = sample.actualContainerType;
+  const containerType =
+    actualContainerType === 'cup' || actualContainerType === 'tube'
+      ? actualContainerType
+      : sampleType === 'urine' || sampleType === 'stool'
+        ? 'cup'
+        : 'tube';
 
   const colorName =
     CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerTopColor)?.label || 'N/A';

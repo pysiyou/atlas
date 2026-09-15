@@ -1403,6 +1403,74 @@ export interface components {
             healthMessage: string;
             /** Suggestedtab */
             suggestedTab: string | null;
+            ageBuckets: components["schemas"]["AgeBuckets"];
+            priorityMix: components["schemas"]["PriorityMix"];
+            /** Attentionitems */
+            attentionItems: components["schemas"]["BoardAttentionItem"][];
+            /** Attentiontotal */
+            attentionTotal: number;
+            /** Totalactive */
+            totalActive: number;
+            /** Computedat */
+            computedAt?: string | null;
+        };
+        /** AgeBuckets */
+        AgeBuckets: {
+            /** Fresh */
+            fresh: number;
+            /** Ontrack */
+            onTrack: number;
+            /** Warning */
+            warning: number;
+            /** Critical */
+            critical: number;
+        };
+        /** PriorityMix */
+        PriorityMix: {
+            /** Urgent */
+            urgent: number;
+            /** High */
+            high: number;
+            /** Medium */
+            medium: number;
+            /** Low */
+            low: number;
+        };
+        /** BoardAttentionItem */
+        BoardAttentionItem: {
+            /** Id */
+            id: string;
+            /**
+             * Stage
+             * @enum {string}
+             */
+            stage: "collection" | "entry" | "validation";
+            /** Stagelabel */
+            stageLabel: string;
+            /** Orderid */
+            orderId: number;
+            /** Patientname */
+            patientName: string;
+            priority: components["schemas"]["PriorityLevel"];
+            /** Waitinghours */
+            waitingHours: number;
+            /** Blockedreason */
+            blockedReason?: string | null;
+            /** Blockedlabel */
+            blockedLabel?: string | null;
+            /**
+             * Queuetab
+             * @enum {string}
+             */
+            queueTab: "collection" | "entry" | "validation";
+            /** Since */
+            since: string;
+            /** Workitemcount */
+            workItemCount: number;
+            /** Ordertestids */
+            orderTestIds: number[];
+            /** Attentiontype */
+            attentionType: string;
         };
         /** LabOperationLogResponse */
         LabOperationLogResponse: {
@@ -4624,6 +4692,8 @@ export interface operations {
                 limit?: number;
                 /** @description Pagination offset */
                 offset?: number;
+                /** @description Optional workflow categories: specimen, results, validation, order, escalation, quality */
+                categories?: string[];
             };
             header?: never;
             path?: never;

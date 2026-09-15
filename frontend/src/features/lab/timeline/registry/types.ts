@@ -2,14 +2,13 @@
  * Entity timeline registry types — workflow phases and event definitions.
  */
 
-import type { IconName } from '@/components';
-import type { BadgeVariant } from '@/components/primitives/badgeHelpers';
 import type { CommandCenterTimelineTone } from '../timelineStyles';
 import type { TimelineEvent } from '../../api/commandCenter.api';
 import type { FormattedTimelineEvent } from '../timelineDetailBuilders';
+import type { LabLaneDisplay } from '../../constants/labWorkflowVisual';
 
 export type EntityTimelinePhase =
-  | 'specimen'
+  | 'sample'
   | 'results'
   | 'validation'
   | 'escalation'
@@ -17,14 +16,7 @@ export type EntityTimelinePhase =
 
 export type EntityEventHandler = (event: TimelineEvent) => FormattedTimelineEvent;
 
-export interface EntityPhaseConfig {
-  id: EntityTimelinePhase;
-  label: string;
-  icon: IconName;
-  badgeVariant: BadgeVariant;
-  iconWrapClass: string;
-  iconClass: string;
-}
+export type EntityPhaseConfig = LabLaneDisplay;
 
 export interface EntityEventDefinition {
   phase: EntityTimelinePhase;

@@ -1,8 +1,10 @@
 import type { BlockedReason } from '@/features/lab/utils/deriveWorkItemState';
-import type { LabTabId } from '@/features/lab/constants/labTabs';
 import type { PriorityLevel } from '@/types';
+import type { AttentionType } from './attentionCategories';
 
 export type LabBoardHealth = 'healthy' | 'attention' | 'critical';
+
+export type QueueStage = 'collection' | 'entry' | 'validation';
 
 export interface QueueAgeStats {
   oldestHours: number | null;
@@ -11,17 +13,9 @@ export interface QueueAgeStats {
   criticalCount: number;
 }
 
-export interface QueueAgeAccumulator {
-  oldestHours: number | null;
-  sumHours: number;
-  itemCount: number;
-  warningCount: number;
-  criticalCount: number;
-}
-
 export interface AttentionItem {
   id: string;
-  stage: 'collection' | 'entry' | 'validation';
+  stage: QueueStage;
   stageLabel: string;
   orderId: number;
   patientName: string;
@@ -29,10 +23,11 @@ export interface AttentionItem {
   waitingHours: number;
   blockedReason: BlockedReason | null;
   blockedLabel: string | null;
-  queueTab: LabTabId;
+  queueTab: QueueStage;
   since: string;
   workItemCount: number;
   orderTestIds: number[];
+  attentionType: AttentionType;
 }
 
 export interface BlockerSummary {
@@ -58,7 +53,7 @@ export interface PriorityMix {
 
 export interface LabTechBoardData {
   counts: { collection: number; entry: number; validation: number; supervisor: number };
-  queueAge: Record<'collection' | 'entry' | 'validation', QueueAgeStats>;
+  queueAge: Record<QueueStage, QueueAgeStats>;
   blockers: BlockerSummary;
   attentionItems: AttentionItem[];
   attentionTotal: number;
@@ -66,8 +61,7 @@ export interface LabTechBoardData {
   priorityMix: PriorityMix;
   health: LabBoardHealth;
   healthMessage: string;
-  suggestedTab: LabTabId | null;
+  suggestedTab: QueueStage | null;
   totalActive: number;
+  computedAt?: string | null;
 }
-
-export type QueueStage = keyof LabTechBoardData['queueAge'];

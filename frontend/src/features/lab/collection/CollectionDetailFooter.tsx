@@ -9,6 +9,7 @@ import { CollectionRejectionPopover } from './CollectionRejectionPopover';
 import { ModalFooter } from '../components/LabDetailModal';
 import type { SampleDisplay } from '@/features/lab/types';
 import { getSampleStatusIcon } from '@/config/icons';
+import { LAB_COPY } from '../constants/labCopy';
 
 interface CollectionDetailFooterProps {
   sample: Sample;
@@ -85,7 +86,7 @@ export const CollectionDetailFooter: React.FC<CollectionDetailFooterProps> = ({
           onSuccess={onClose}
           trigger={
             <Button variant="reject" size="md">
-              Report Specimen Issue
+              {LAB_COPY.quality.reportSampleIssue}
             </Button>
           }
         />

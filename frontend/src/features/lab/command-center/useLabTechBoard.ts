@@ -1,82 +1,100 @@
 /**
- * Aggregates live lab state for the lab tech command center board.
+ * Thin React Query wrapper for the lab tech command center board.
+ * Board payload is server-authoritative.
  */
 
 import { useMemo } from 'react';
-import { useLabDataProvider } from '@/features/lab/hooks';
 import { useLabBoard } from '@/features/lab/api/worklists.api';
-import { finalizeAttentionItems } from './deriveAttention';
-import { deriveBoardPipeline } from './derivePipeline';
-import type { LabTechBoardData } from './boardTypes';
+import type { LabBoardResponse } from '@/features/lab/api/worklists.service';
+import type { BlockedReason } from '@/features/lab/utils/deriveWorkItemState';
+import { ATTENTION_TYPE_CONFIG, type AttentionType } from './attentionCategories';
+import type { AttentionItem, LabTechBoardData, QueueStage } from './boardTypes';
+import { labStageLabel } from '../constants/labCopy';
 
-export function useLabTechBoard(): LabTechBoardData & { isLoading: boolean } {
-  const {
-    collectionDisplays,
-    entryTests,
-    validationTests,
-    escalations: escalatedTests,
-    recollections: recollectionRequests,
-    pipelineCounts: derivedCounts,
-    isLoading: dataLoading,
-    getPatientName,
-    getOrder,
-  } = useLabDataProvider();
+const EMPTY_QUEUE_AGE: LabTechBoardData['queueAge'] = {
+  collection: { oldestHours: null, averageHours: null, warningCount: 0, criticalCount: 0 },
+  entry: { oldestHours: null, averageHours: null, warningCount: 0, criticalCount: 0 },
+  validation: { oldestHours: null, averageHours: null, warningCount: 0, criticalCount: 0 },
+};
 
-  const { board: serverBoard, isLoading: boardLoading } = useLabBoard();
+const EMPTY_BOARD: LabTechBoardData = {
+  counts: { collection: 0, entry: 0, validation: 0, supervisor: 0 },
+  queueAge: EMPTY_QUEUE_AGE,
+  blockers: { paymentUnpaid: 0, retestPending: 0, recollectionWaiting: 0, total: 0 },
+  attentionItems: [],
+  attentionTotal: 0,
+  ageBuckets: { fresh: 0, onTrack: 0, warning: 0, critical: 0 },
+  priorityMix: { urgent: 0, high: 0, medium: 0, low: 0 },
+  health: 'healthy',
+  healthMessage: 'Queues within TAT',
+  suggestedTab: null,
+  totalActive: 0,
+};
 
-  const board = useMemo(() => {
-    const {
-      queueAge: derivedQueueAge,
-      blockers: derivedBlockers,
-      ageBuckets,
-      priorityMix,
-      attentionCandidates,
-    } = deriveBoardPipeline({
-      collectionDisplays,
-      entryTests,
-      validationTests,
-      escalatedTests,
-      recollectionRequests,
-      getPatientName: patientId => getPatientName(patientId),
-      getOrder: orderId => getOrder(orderId),
-    });
+function isQueueStage(value: string | null | undefined): value is QueueStage {
+  return value === 'collection' || value === 'entry' || value === 'validation';
+}
 
-    const { attentionItems, attentionTotal } = finalizeAttentionItems(attentionCandidates);
+function isAttentionType(value: string): value is AttentionType {
+  return value in ATTENTION_TYPE_CONFIG;
+}
 
-    const counts = serverBoard?.counts ?? derivedCounts;
-    const queueAge = (serverBoard?.queueAge as LabTechBoardData['queueAge']) ?? derivedQueueAge;
-    const blockers = serverBoard?.blockers ?? derivedBlockers;
-    const health = serverBoard?.health ?? 'healthy';
-    const healthMessage = serverBoard?.healthMessage ?? 'Queues within TAT';
-    const suggestedTab = (serverBoard?.suggestedTab as LabTechBoardData['suggestedTab']) ?? null;
+function mapAttentionItem(item: LabBoardResponse['attentionItems'][number]): AttentionItem {
+  return {
+    id: item.id,
+    stage: item.stage,
+    stageLabel: labStageLabel(item.stage, 'short'),
+    orderId: item.orderId,
+    patientName: item.patientName,
+    priority: item.priority,
+    waitingHours: item.waitingHours,
+    blockedReason: (item.blockedReason as BlockedReason | null) ?? null,
+    blockedLabel: item.blockedLabel ?? null,
+    queueTab: isQueueStage(item.queueTab) ? item.queueTab : 'validation',
+    since: item.since,
+    workItemCount: item.workItemCount,
+    orderTestIds: item.orderTestIds ?? [],
+    attentionType: isAttentionType(item.attentionType) ? item.attentionType : 'queue_overdue_warning',
+  };
+}
 
-    const totalActive =
-      counts.collection + counts.entry + counts.validation + counts.supervisor;
+function toBoardData(board: LabBoardResponse): LabTechBoardData {
+  return {
+    counts: board.counts,
+    queueAge: {
+      collection: board.queueAge.collection,
+      entry: board.queueAge.entry,
+      validation: board.queueAge.validation,
+    },
+    blockers: board.blockers,
+    attentionItems: board.attentionItems.map(mapAttentionItem),
+    attentionTotal: board.attentionTotal,
+    ageBuckets: board.ageBuckets,
+    priorityMix: board.priorityMix,
+    health: board.health,
+    healthMessage: board.healthMessage,
+    suggestedTab: isQueueStage(board.suggestedTab) ? board.suggestedTab : null,
+    totalActive: board.totalActive,
+    computedAt: board.computedAt,
+  };
+}
 
-    return {
-      counts,
-      queueAge,
-      blockers,
-      attentionItems,
-      attentionTotal,
-      ageBuckets,
-      priorityMix,
-      health,
-      healthMessage,
-      suggestedTab,
-      totalActive,
-    };
-  }, [
-    collectionDisplays,
-    entryTests,
-    validationTests,
-    derivedCounts,
-    escalatedTests,
-    recollectionRequests,
-    getPatientName,
-    getOrder,
-    serverBoard,
-  ]);
+export function useLabTechBoard(): LabTechBoardData & {
+  isLoading: boolean;
+  isError: boolean;
+  error: unknown;
+  refetch: () => Promise<unknown>;
+  dataUpdatedAt: number;
+} {
+  const { board, isLoading, isError, error, refetch, dataUpdatedAt } = useLabBoard();
+  const data = useMemo(() => (board ? toBoardData(board) : EMPTY_BOARD), [board]);
 
-  return { ...board, isLoading: dataLoading || boardLoading };
+  return {
+    ...data,
+    isLoading,
+    isError,
+    error,
+    refetch,
+    dataUpdatedAt,
+  };
 }

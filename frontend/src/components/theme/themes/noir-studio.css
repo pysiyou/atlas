@@ -233,4 +233,7 @@
   --container-gray-text: #ffffff;
   --container-black-bg: #18181b;
   --container-black-text: #ffffff;
+
+  /* Override --workflow-* here to recolor a lab stage for this theme only.
+     Defaults: tokens/semantic-light.css */
 }

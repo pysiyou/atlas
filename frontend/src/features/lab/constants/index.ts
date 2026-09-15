@@ -5,3 +5,5 @@
 export { LAB_CONFIG } from './labConfig';
 export * from './workflow';
 export * from './labTabs';
+export * from './labCopy';
+export * from './labWorkflowVisual';

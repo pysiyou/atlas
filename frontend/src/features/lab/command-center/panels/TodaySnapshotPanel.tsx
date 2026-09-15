@@ -7,10 +7,9 @@ import { Panel, PanelBody } from '../components';
 import type { DonutSegment } from '../components/DonutChart';
 import type { LabTechBoardData } from '../boardTypes';
 import { MetricDonutHalf, type MetricDonutLegendItem } from './MetricDonutHalf';
-import {
-  COMMAND_CENTER_AGE_COLORS,
-  COMMAND_CENTER_STAGE_COLORS,
-} from '../components/styles';
+import { LAB_CONFIG, LAB_STAGE_SHORT_ROWS } from '../../constants';
+import { getStageVisual } from '../../constants/labWorkflowVisual';
+import { COMMAND_CENTER_AGE_COLORS } from '../components/styles';
 
 interface TodaySnapshotPanelProps {
   totalActive: number;
@@ -18,31 +17,23 @@ interface TodaySnapshotPanelProps {
   ageBuckets: LabTechBoardData['ageBuckets'];
 }
 
-const STAGE_ROWS = [
-  { key: 'collection' as const, label: 'Collection' },
-  { key: 'entry' as const, label: 'Entry' },
-  { key: 'validation' as const, label: 'Review' },
-] as const;
-
-/**
- * Renders the current open pipeline: stage mix on the left, wait-age mix on the right.
- */
+/** Renders the current open pipeline: stage mix on the left, wait-age mix on the right. */
 export const TodaySnapshotPanel: React.FC<TodaySnapshotPanelProps> = ({
   totalActive,
   counts,
   ageBuckets,
 }) => {
-  const stageSegments: DonutSegment[] = STAGE_ROWS.map(row => ({
+  const stageSegments: DonutSegment[] = LAB_STAGE_SHORT_ROWS.map(row => ({
     value: counts[row.key],
-    colorClass: COMMAND_CENTER_STAGE_COLORS[row.key].fill,
+    colorClass: getStageVisual(row.key).fill,
   }));
 
-  const heaviestStage = STAGE_ROWS.reduce((max, row) =>
+  const heaviestStage = LAB_STAGE_SHORT_ROWS.reduce((max, row) =>
     counts[row.key] > counts[max.key] ? row : max,
   );
 
-  const stageLegend: MetricDonutLegendItem[] = STAGE_ROWS.map(row => ({
-    colorClass: COMMAND_CENTER_STAGE_COLORS[row.key].fill,
+  const stageLegend: MetricDonutLegendItem[] = LAB_STAGE_SHORT_ROWS.map(row => ({
+    colorClass: getStageVisual(row.key).fill,
     label: row.label,
     value: counts[row.key],
     total: totalActive,
@@ -72,13 +63,13 @@ export const TodaySnapshotPanel: React.FC<TodaySnapshotPanelProps> = ({
     },
     {
       colorClass: COMMAND_CENTER_AGE_COLORS.warning,
-      label: 'Waiting 4h+',
+      label: 'TAT warning',
       value: ageBuckets.warning,
       total: totalActive,
     },
     {
       colorClass: COMMAND_CENTER_AGE_COLORS.critical,
-      label: 'Waiting 8h+',
+      label: 'TAT critical',
       value: ageBuckets.critical,
       total: totalActive,
     },
@@ -94,7 +85,7 @@ export const TodaySnapshotPanel: React.FC<TodaySnapshotPanelProps> = ({
   const backlogSummary =
     totalActive > 0
       ? aging > 0
-        ? `${aging} test${aging === 1 ? '' : 's'} past TAT thresholds`
+        ? `${aging} test${aging === 1 ? '' : 's'} past TAT (${LAB_CONFIG.QUEUE_AGE_WARNING_HOURS}h / ${LAB_CONFIG.QUEUE_AGE_CRITICAL_HOURS}h caps)`
         : `${totalActive} active test${totalActive === 1 ? '' : 's'} — all on track`
       : 'Pipeline is clear right now.';
 

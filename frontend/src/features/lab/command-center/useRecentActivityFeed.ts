@@ -2,46 +2,36 @@
  * Fixed-window activity feed for the lab tech command center.
  */
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
+import { timelineLaneToApiCategory } from '../constants/labWorkflowVisual';
+import type { LabTimelineLane } from '../constants/labCopy';
 import { useActivityFeedQuery } from './useActivityFeedQuery';
-import { getEventCategory, type TimelineEventCategory } from '@/features/lab/timeline/activityCategories';
-import type { TimelineEvent } from '../api/commandCenter.api';
 
 const TECH_FEED_HOURS = 24;
 const TECH_FEED_PAGE_SIZE = 50;
 const TECH_FEED_VISIBLE_STEP = 30;
 const TECH_FEED_MAX_VISIBLE = 200;
-const MAX_EMPTY_PAGE_FETCHES = 3;
 
 /** Lab workflow + order-coordination events (status, payments, test changes, recollection). */
-const TECH_CATEGORIES = new Set<TimelineEventCategory>([
-  'specimen',
-  'results',
-  'validation',
-  'order',
-]);
-
-function filterTechEvents(events: TimelineEvent[]): TimelineEvent[] {
-  return events.filter(event => TECH_CATEGORIES.has(getEventCategory(event.type)));
-}
+const TECH_LANES: LabTimelineLane[] = ['sample', 'results', 'validation', 'order'];
+const TECH_CATEGORIES = TECH_LANES.map(timelineLaneToApiCategory);
 
 export function useRecentActivityFeed() {
-  const query = useActivityFeedQuery(TECH_FEED_HOURS, TECH_FEED_PAGE_SIZE);
+  const query = useActivityFeedQuery(TECH_FEED_HOURS, TECH_FEED_PAGE_SIZE, [...TECH_CATEGORIES]);
   const [visibleLimit, setVisibleLimit] = useState(TECH_FEED_VISIBLE_STEP);
 
-  const filtered = useMemo(() => filterTechEvents(query.events), [query.events]);
-  const events = filtered.slice(0, visibleLimit);
+  const events = query.events.slice(0, visibleLimit);
 
   const canRevealBuffered =
-    filtered.length > visibleLimit && visibleLimit < TECH_FEED_MAX_VISIBLE;
+    query.events.length > visibleLimit && visibleLimit < TECH_FEED_MAX_VISIBLE;
   const needsRemotePage =
-    query.hasMore && visibleLimit >= filtered.length && visibleLimit < TECH_FEED_MAX_VISIBLE;
+    query.hasMore && visibleLimit >= query.events.length && visibleLimit < TECH_FEED_MAX_VISIBLE;
   const hasMore = canRevealBuffered || needsRemotePage;
 
   const loadMore = useCallback(async () => {
-    if (filtered.length > visibleLimit) {
+    if (query.events.length > visibleLimit) {
       setVisibleLimit(limit =>
-        Math.min(limit + TECH_FEED_VISIBLE_STEP, TECH_FEED_MAX_VISIBLE, filtered.length),
+        Math.min(limit + TECH_FEED_VISIBLE_STEP, TECH_FEED_MAX_VISIBLE, query.events.length),
       );
       return;
     }
@@ -49,16 +39,8 @@ export function useRecentActivityFeed() {
     if (!query.hasMore || visibleLimit >= TECH_FEED_MAX_VISIBLE) return;
 
     setVisibleLimit(limit => Math.min(limit + TECH_FEED_VISIBLE_STEP, TECH_FEED_MAX_VISIBLE));
-
-    let hasNext: boolean = query.hasMore;
-    let emptyFetches = 0;
-    while (hasNext && emptyFetches < MAX_EMPTY_PAGE_FETCHES) {
-      const { added, hasMore: nextPage } = await query.loadMore();
-      if (added > 0) break;
-      hasNext = nextPage;
-      emptyFetches += 1;
-    }
-  }, [filtered.length, query, visibleLimit]);
+    await query.loadMore();
+  }, [query, visibleLimit]);
 
   return {
     events,

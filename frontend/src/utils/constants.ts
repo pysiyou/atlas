@@ -68,7 +68,7 @@ export function isEntityIdClassName(className?: string): boolean {
 }
 
 /** Detail row label. */
-export const DETAIL_LABEL = 'text-xs text-text-tertiary';
+export const DETAIL_LABEL = 'text-xs text-text-secondary';
 
 /** Detail row value. */
 export const DETAIL_VALUE = 'text-xs text-text-primary';

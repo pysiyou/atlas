@@ -83,7 +83,7 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
           const { resultValue, unit, status } = parseResultEntry(key, rawValue, flagStatusMap);
           return (
             <div key={key} className="grid grid-cols-[1fr_auto] items-baseline gap-x-1.5 min-w-0">
-              <span className="text-xxs text-text-tertiary truncate" title={key}>{key}:</span>
+              <span className="text-xxs text-text-secondary truncate" title={key}>{key}:</span>
               <span className={`text-xxs font-normal tabular-nums ${inlineValueClass(status)}`}>
                 {resultValue}
                 {unit && <span className="text-text-tertiary font-normal ml-0.5 text-[9px]">{unit}</span>}
@@ -109,7 +109,7 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
             key={key}
             className="grid grid-cols-[1fr_auto] items-baseline gap-x-2 whitespace-nowrap min-w-0"
           >
-            <span className="text-xxs text-text-tertiary truncate text-right" title={key}>
+            <span className="text-xxs text-text-secondary truncate text-right" title={key}>
               {key}:
             </span>
             <span className={`text-xs font-normal tabular-nums ${inlineValueClass(status)}`}>

@@ -1,6 +1,5 @@
 /**
- * Critical Value Banner Component
- * Simple inline banner for critical values - auto-notified on approval
+ * Critical Value Banner — inline banner for critical values (auto-notified on approval).
  */
 
 import React from 'react';
@@ -19,8 +18,7 @@ export interface CriticalValueBannerProps {
 }
 
 /**
- * Simplified critical value banner
- * Shows which values are critical without requiring explicit acknowledgment
+ * Shows which values are critical without requiring explicit acknowledgment.
  */
 export const CriticalValueBanner: React.FC<CriticalValueBannerProps> = ({
   criticalParameters,

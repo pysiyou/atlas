@@ -5,7 +5,6 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 [data-theme='studio-light'] {
-  /* Studio-light uses the base :root tokens - this block is mainly for consistency */
-  /* All semantic tokens are inherited from semantic-light.css */
-  /* Add any studio-light specific overrides here if needed in the future */
+  /* Studio-light uses the base :root tokens from semantic-light.css.
+     Override --workflow-* here to recolor a lab stage for this theme only. */
 }

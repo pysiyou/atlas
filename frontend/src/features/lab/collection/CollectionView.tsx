@@ -2,10 +2,12 @@
  * CollectionView - Main view for sample collection workflow
  */
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import { useCreateWorkflowFilters } from '@/features/lab/hooks';
+import { useDebouncedValue } from '@/hooks/useDebouncedValue';
+import { useCreateWorkflowFilters, useLabUrlSearch } from '@/features/lab/hooks';
 import type { SampleDisplay } from '@/features/lab/types';
+import { LAB_CONFIG } from '@/features/lab/constants';
 import { useCollectSample } from '../api/samples.api';
 import { useCollectionWorklist } from '../api/worklists.api';
 import { useCollectionCollectHandler } from './useCollectionCollectHandler';
@@ -17,13 +19,27 @@ import { collectionWorklistToDisplay } from '../utils/worklistMappers';
 import { ErrorBoundary } from '@/components';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { useAuthStore } from '@/app/store';
-
 export const CollectionView: React.FC = () => {
   const { user: currentUser } = useAuthStore();
   const collectSampleMutation = useCollectSample();
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
-  const { items: worklistItems, isLoading } = useCollectionWorklist();
+
+  const urlSearch = useLabUrlSearch();
+  const [searchQuery, setSearchQuery] = useState(urlSearch);
+  React.useEffect(() => {
+    if (urlSearch) setSearchQuery(urlSearch);
+  }, [urlSearch]);
+
+  const debouncedSearch = useDebouncedValue(searchQuery, LAB_CONFIG.SEARCH_DEBOUNCE_MS);
+  const trimmedSearch = debouncedSearch.trim();
+  const isSampleLookup = trimmedSearch.length >= LAB_CONFIG.SAMPLE_LOOKUP_MIN_CHARS;
+  const isLookupBelowMin =
+    trimmedSearch.length > 0 && trimmedSearch.length < LAB_CONFIG.SAMPLE_LOOKUP_MIN_CHARS;
+
+  const { items: worklistItems, isLoading } = useCollectionWorklist(
+    isSampleLookup ? { search: trimmedSearch } : undefined
+  );
   const collectionDisplays = useMemo(
     () => worklistItems.map(collectionWorklistToDisplay),
     [worklistItems]
@@ -31,8 +47,6 @@ export const CollectionView: React.FC = () => {
 
   const {
     filteredItems: filteredDisplaysRaw,
-    searchQuery,
-    setSearchQuery,
     dateRange,
     setDateRange,
     sampleTypeFilters,
@@ -42,6 +56,10 @@ export const CollectionView: React.FC = () => {
   } = useCreateWorkflowFilters({
     items: collectionDisplays,
     workflowType: 'collection',
+    searchQuery,
+    onSearchChange: setSearchQuery,
+    skipSearchFilter: isSampleLookup,
+    collectionSampleLookup: isSampleLookup,
   });
   const filteredDisplays = filteredDisplaysRaw as SampleDisplay[];
 
@@ -75,8 +93,14 @@ export const CollectionView: React.FC = () => {
           `${display.order.orderId}-${display.sample?.sampleType || 'unknown'}-${display.sample?.sampleId || idx}-${idx}`
         }
         emptyIcon="sample-collection"
-        emptyTitle="No Pending Collections"
-        emptyDescription="There are no samples waiting to be collected."
+        emptyTitle={isSampleLookup ? 'No matching samples' : 'No Pending Collections'}
+        emptyDescription={
+          isSampleLookup
+            ? 'Try a display sample ID (e.g. SAM0042), numeric ID, or patient name.'
+            : isLookupBelowMin
+              ? `Enter at least ${LAB_CONFIG.SAMPLE_LOOKUP_MIN_CHARS} characters to search past samples by sample ID or patient name.`
+              : 'There are no samples waiting to be collected.'
+        }
         filterRow={
           <LabFilters
             config={collectionFilterConfig}

@@ -8,6 +8,7 @@ import { LabCard } from '../../components/LabCard';
 import { TestHeaderBadges } from '../../components/labWorkflowBadges';
 import { testHeaderAudit } from '../../components/labHeader';
 import { ICONS } from '@/config/icons';
+import { LAB_CARD_TYPOGRAPHY } from '../../utils/labStyles';
 import type { EscalationCardSharedData } from './hooks';
 
 export const EscalationCardDesktop: React.FC<EscalationCardSharedData> = ({
@@ -58,10 +59,11 @@ export const EscalationCardDesktop: React.FC<EscalationCardSharedData> = ({
         </div>
       }
       content={
-        <div className="text-xs text-text-secondary">
+        <div className={LAB_CARD_TYPOGRAPHY.sectionContent}>
           {test.reasonCode && (
             <span>
-              <span className="text-text-tertiary">Reason:</span> {test.reasonCode}
+              <span className={LAB_CARD_TYPOGRAPHY.fieldLabel}>Reason:</span>{' '}
+              <span className={LAB_CARD_TYPOGRAPHY.fieldValue}>{test.reasonCode}</span>
             </span>
           )}
         </div>

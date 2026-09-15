@@ -75,6 +75,7 @@ export function DonutChart({
   centerDetail,
   centerTone = 'default',
   centerSize = 'sm',
+  ariaLabel,
 }: {
   segments: DonutSegment[];
   size?: number;
@@ -82,6 +83,7 @@ export function DonutChart({
   centerDetail?: string;
   centerTone?: CommandCenterTextTone;
   centerSize?: 'sm' | 'md';
+  ariaLabel?: string;
 }) {
   const cx = size / 2;
   const cy = size / 2;
@@ -114,9 +116,17 @@ export function DonutChart({
           },
         ];
 
+  const fallbackLabel = [centerLabel, centerDetail].filter(Boolean).join(' ');
+
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} aria-hidden>
+      <svg
+        width={size}
+        height={size}
+        viewBox={`0 0 ${size} ${size}`}
+        role="img"
+        aria-label={ariaLabel ?? fallbackLabel}
+      >
         {arcs.map((arc, index) => (
           <path key={index} d={arc.d} className={arc.colorClass} />
         ))}

@@ -11,7 +11,7 @@ import {
   LabMobileCardHeader,
   labMobileCardSurfaceClassName,
 } from '../components/labMobileCardHeader';
-import { LAB_MOBILE_CARD } from '../utils/labStyles';
+import { LAB_CARD_BADGE_SIZE, LAB_CARD_TYPOGRAPHY, LAB_MOBILE_CARD } from '../utils/labStyles';
 import { AttemptIndicator } from '../components/AttemptIndicator';
 import { BlockedReasonBadge } from '../components/StatusBadges';
 import { LAB_CONFIG } from '@/features/lab/constants';
@@ -54,12 +54,12 @@ function RecollectionRequestCardDesktop({
 
   const badges = (
     <>
-      <BlockedReasonBadge label="Recollection approval" size="sm" />
+      <BlockedReasonBadge label="Recollection approval" size={LAB_CARD_BADGE_SIZE} />
       {request.sampleType && (
-        <Badge variant={request.sampleType as 'blood' | 'urine' | 'other'} size="sm" />
+        <Badge variant={request.sampleType as 'blood' | 'urine' | 'other'} size={LAB_CARD_BADGE_SIZE} />
       )}
       {request.requiresSupervisorOverride && (
-        <Badge variant="danger" size="sm">Limit override</Badge>
+        <Badge variant="danger" size={LAB_CARD_BADGE_SIZE}>Limit override</Badge>
       )}
       <AttemptIndicator
         attemptNumber={attemptUsed}
@@ -100,18 +100,24 @@ function RecollectionRequestCardDesktop({
 
   const additionalInfo = (
     <>
-      Requested <span className="text-text-secondary">{formatDateTime(request.createdAt)}</span>
-      {request.stage === 'validation' ? ' · from result review' : ' · from collection'}
+      Requested{' '}
+      <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>{formatDateTime(request.createdAt)}</span>
+      {request.stage === 'validation' ? ' · from validation' : ' · from collection'}
     </>
   );
 
   const content = (
-    <div className="space-y-2 text-xs text-text-secondary">
+    <div className="space-y-2 text-xs">
       <div>
-        <span className="text-text-tertiary">Reason:</span>{' '}
-        <span className="text-text-primary">{request.reason}</span>
+        <span className={LAB_CARD_TYPOGRAPHY.fieldLabel}>Reason:</span>{' '}
+        <span className={LAB_CARD_TYPOGRAPHY.fieldValue}>{request.reason}</span>
       </div>
-      {request.notes && <div className="text-text-tertiary">{request.notes}</div>}
+      {request.notes && (
+        <div>
+          <span className={LAB_CARD_TYPOGRAPHY.fieldLabel}>Notes:</span>{' '}
+          <span className={LAB_CARD_TYPOGRAPHY.fieldValue}>{request.notes}</span>
+        </div>
+      )}
       <textarea
         value={reviewNotes}
         onChange={e => onReviewNotesChange(e.target.value)}
@@ -167,12 +173,12 @@ function RecollectionRequestCardMobile({
 
   const badges = (
     <>
-      <BlockedReasonBadge label="Recollection approval" size="xs" />
+      <BlockedReasonBadge label="Recollection approval" size={LAB_CARD_BADGE_SIZE} />
       {request.sampleType && (
-        <Badge variant={request.sampleType as 'blood' | 'urine' | 'other'} size="xs" />
+        <Badge variant={request.sampleType as 'blood' | 'urine' | 'other'} size={LAB_CARD_BADGE_SIZE} />
       )}
       {request.requiresSupervisorOverride && (
-        <Badge variant="danger" size="xs">
+        <Badge variant="danger" size={LAB_CARD_BADGE_SIZE}>
           Limit override
         </Badge>
       )}
@@ -186,8 +192,9 @@ function RecollectionRequestCardMobile({
 
   const meta = (
     <>
-      Requested <span className="text-text-secondary">{formatDateTime(request.createdAt)}</span>
-      {request.stage === 'validation' ? ' · from result review' : ' · from collection'}
+      Requested{' '}
+      <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>{formatDateTime(request.createdAt)}</span>
+      {request.stage === 'validation' ? ' · from validation' : ' · from collection'}
     </>
   );
 
@@ -242,9 +249,15 @@ function RecollectionRequestCardMobile({
       >
         <div className={cn(LAB_MOBILE_CARD.body, 'space-y-1')}>
           <div>
-            <span className="text-text-tertiary">Reason:</span> {request.reason}
+            <span className={LAB_CARD_TYPOGRAPHY.fieldLabel}>Reason:</span>{' '}
+            <span className={LAB_CARD_TYPOGRAPHY.fieldValue}>{request.reason}</span>
           </div>
-          {request.notes && <div className="text-text-tertiary">{request.notes}</div>}
+          {request.notes && (
+        <div>
+          <span className={LAB_CARD_TYPOGRAPHY.fieldLabel}>Notes:</span>{' '}
+          <span className={LAB_CARD_TYPOGRAPHY.fieldValue}>{request.notes}</span>
+        </div>
+      )}
         </div>
         <textarea
           value={reviewNotes}

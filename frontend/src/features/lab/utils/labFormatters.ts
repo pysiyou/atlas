@@ -17,7 +17,7 @@ export const formatRejectionReasons = (reasons: string[] | undefined): string | 
 type SampleWithOptionalRejectionReason = Sample & { rejectionReason?: string | null };
 
 /**
- * Human-readable rejection reason for a sample (rejected specimens only).
+ * Human-readable rejection reason for a sample (rejected samples only).
  */
 export const getSampleRejectionReasonLabel = (sample: Sample): string | null => {
   if (sample.status !== 'rejected') return null;

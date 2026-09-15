@@ -3,24 +3,18 @@
  */
 
 import React from 'react';
+import { LAB_COPY, labStageLabel, type LabWorkflowStage } from '../constants/labCopy';
 
-export type LabModalStage = 'collection' | 'entry' | 'validation' | 'escalation';
-
-const STAGE_LABELS: Record<LabModalStage, string> = {
-  collection: 'Collection',
-  entry: 'Result Entry',
-  validation: 'Validation',
-  escalation: 'Escalation',
-};
+export type LabModalStage = LabWorkflowStage | 'escalation';
 
 export function labModalStageLabel(stage: LabModalStage): string {
-  return STAGE_LABELS[stage];
+  return stage === 'escalation' ? LAB_COPY.workflow.escalation : labStageLabel(stage, 'full');
 }
 
 export function labModalSubtitle(stage: LabModalStage): React.ReactNode {
   return (
     <span className="text-xxs uppercase tracking-widest text-text-tertiary font-light">
-      {STAGE_LABELS[stage]}
+      {labModalStageLabel(stage)}
     </span>
   );
 }
