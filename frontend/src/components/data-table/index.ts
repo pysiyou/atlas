@@ -4,7 +4,7 @@
 
 export { Table } from './Table';
 export { DataTable } from './DataTable';
-export { CardGridView } from './components/CardGridView';
+export { CardGridView } from './CardGridView';
 export {
   renderPatientId,
   renderOrderId,

@@ -1,7 +1,7 @@
 import { Skeleton } from '@/components';
 import { useColumnStyles } from '@/hooks/useTable';
-import type { TableSkeletonProps } from '../types';
-import { CELL_PADDING, ROW_HEIGHTS, TEXT_SIZE } from '../constants';
+import type { TableSkeletonProps } from './types';
+import { CELL_PADDING, ROW_HEIGHTS, TEXT_SIZE } from './constants';
 
 export function TableSkeleton<T = unknown>({ columns, rows, variant }: TableSkeletonProps<T>) {
   const columnStyles = useColumnStyles(columns);

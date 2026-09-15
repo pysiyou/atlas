@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { useResponsiveCard } from '../../components/ResponsiveCard';
+import { useResponsiveCard } from '../../components/useResponsiveCard';
 import { EntryCardMobile } from './Mobile';
 import { EntryCardDesktop } from './Desktop';
 import { useEntryCardData, type EntryCardProps, type EntryCardSharedData } from './hooks';

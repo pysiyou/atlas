@@ -1,6 +1,6 @@
 import { getColumnStyle } from '@/hooks/useTable';
-import type { TableCellProps } from '../types';
-import { CELL_PADDING, TEXT_SIZE } from '../constants';
+import type { TableCellProps } from './types';
+import { CELL_PADDING, TEXT_SIZE } from './constants';
 
 export function TableCell({ column, children, variant }: TableCellProps) {
   const style = getColumnStyle(column);

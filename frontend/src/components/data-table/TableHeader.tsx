@@ -1,8 +1,8 @@
 import { Icon } from '@/components';
 import { ICONS } from '@/config/icons';
 import { useColumnStyles } from '@/hooks/useTable';
-import type { TableHeaderProps } from '../types';
-import { HEADER_PADDING, TEXT_SIZE } from '../constants';
+import type { TableHeaderProps } from './types';
+import { HEADER_PADDING, TEXT_SIZE } from './constants';
 
 export function TableHeader<T>({
   visibleColumns,

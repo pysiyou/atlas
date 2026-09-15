@@ -2,7 +2,7 @@
  * Command center shared layout, surface, and tone styles.
  */
 
-import { PANEL_VARIANTS } from '@/components/surfaces/panelTokens';
+import { PANEL_VARIANTS } from '@/components/surfaces/Panel';
 
 export type CommandCenterKpiTone = 'brand' | 'success' | 'warning' | 'danger' | 'neutral';
 

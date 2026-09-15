@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react';
-import type { CardComponentProps } from '../types';
+import type { CardComponentProps } from './types';
 
 interface CardGridViewProps<T> {
   data: T[];
