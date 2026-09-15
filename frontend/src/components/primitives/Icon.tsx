@@ -72,6 +72,7 @@ export type IconName =
   | 'shield-check'
   | 'sample-collection'
   | 'loading'
+  | 'refresh'
   | 'stethoscope'
   | 'clock'
   | 'hashtag'

@@ -5,12 +5,10 @@
 
 import React from 'react';
 import { cn } from '@/utils';
-import { LAB_CONFIG } from '../../constants';
+import { LAB_CONFIG, LAB_STAGE_SHORT_ROWS } from '../../constants';
+import { getStageVisual } from '../../constants/labWorkflowVisual';
 import { SectionTitle, Panel, PanelBody } from '../components';
-import {
-  COMMAND_CENTER_STAGE_COLORS,
-  COMMAND_CENTER_TEXT,
-} from '../components/styles';
+import { COMMAND_CENTER_TEXT } from '../components/styles';
 import type { LabTechBoardData, QueueAgeStats } from '../boardTypes';
 import { PanelNote } from './PanelNote';
 
@@ -23,25 +21,13 @@ interface QueueAgePanelProps {
 const { QUEUE_AGE_WARNING_HOURS: warningHours, QUEUE_AGE_CRITICAL_HOURS: criticalHours } =
   LAB_CONFIG;
 
-const STAGES = [
-  {
-    key: 'collection' as const,
-    label: 'Collection',
-    barClass: COMMAND_CENTER_STAGE_COLORS.collection.bar,
-  },
-  {
-    key: 'entry' as const,
-    label: 'Entry',
-    barClass: COMMAND_CENTER_STAGE_COLORS.entry.bar,
-  },
-  {
-    key: 'validation' as const,
-    label: 'Review',
-    barClass: COMMAND_CENTER_STAGE_COLORS.validation.bar,
-  },
-] as const;
+const STAGES = LAB_STAGE_SHORT_ROWS.map(row => ({
+  key: row.key,
+  label: row.label,
+  barClass: getStageVisual(row.key).bar,
+}));
 
-type StageKey = (typeof STAGES)[number]['key'];
+type StageKey = (typeof LAB_STAGE_SHORT_ROWS)[number]['key'];
 
 interface StageRow {
   key: StageKey;

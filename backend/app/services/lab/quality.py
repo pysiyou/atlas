@@ -399,14 +399,14 @@ class QualityIssueService:
             )
         if resulted > 0:
             parts.append(
-                f"{resulted} resulted test(s) stay in Review with a Specimen rejected signal."
+                f"{resulted} resulted test(s) stay in Validation with a Sample rejected signal."
             )
         if validated > 0:
             parts.append(
                 f"{validated} validated/released result(s) stay unchanged — amend separately if needed."
             )
         if not parts:
-            parts.append("This specimen will be marked rejected.")
+            parts.append("This sample will be marked rejected.")
         criteria = RejectionCriteriaService(self.db).get_specimen_criteria_for_tests(sample.testCodes)
 
         return QualityIssueOptions(
@@ -474,7 +474,7 @@ class QualityIssueService:
         ]
         if sample_rejected:
             message_parts.append(
-                "Linked specimen is already rejected — re-test on the same sample is unavailable."
+                "Linked sample is already rejected — re-test on the same sample is unavailable."
             )
         if at_retest_limit:
             message_parts.append(
@@ -570,7 +570,7 @@ class QualityIssueService:
 
         parts = ["Sample rejected."]
         if (options.resultedTestsCount or 0) > 0:
-            parts.append("Resulted tests remain in Review for validator decision.")
+            parts.append("Resulted tests remain in Validation for validator decision.")
         if (options.validatedTestsCount or 0) > 0:
             parts.append("Validated results were left unchanged.")
 
@@ -681,7 +681,7 @@ class QualityIssueService:
                 sample = self._get_sample(order_test.sampleId)
                 if sample.status == SampleStatus.REJECTED:
                     raise LabOperationError(
-                        "Cannot re-test on a rejected specimen. Request recollection or cancel.",
+                        "Cannot re-test on a rejected sample. Request recollection or cancel.",
                         status_code=400,
                     )
             return self._retry_test_issue(order_test, user_id, reason, notes)

@@ -3,7 +3,8 @@
  */
 
 import { displayId } from '@/utils';
-import { LAB_CONFIG } from '@/features/lab/constants';
+import { LAB_CONFIG } from '../constants/labConfig';
+import { LAB_COPY } from '../constants/labCopy';
 import type { AttentionItem } from './boardTypes';
 import type { AttentionType } from './attentionCategories';
 
@@ -41,7 +42,7 @@ function testIdChip(item: AttentionItem): AttentionDetail | null {
 }
 
 function queueChip(item: AttentionItem): AttentionDetail {
-  const unit = item.stage === 'collection' ? 'specimens' : 'analytes';
+  const unit = item.stage === 'collection' ? LAB_COPY.entity.samples : 'analytes';
   const countLabel = item.workItemCount > 1 ? ` · ${item.workItemCount} ${unit}` : '';
   return { type: 'text', value: `${item.stageLabel}${countLabel}` };
 }
@@ -80,7 +81,7 @@ function baseDetails(
 
 const ATTENTION_HANDLERS: Record<AttentionType, AttentionHandler> = {
   escalation_critical: item => ({
-    action: 'Panic value — path review required',
+    action: `${LAB_COPY.attention.criticalValue} — path review required`,
     details: baseDetails(item, 'escalation_critical', [{ type: 'text', value: 'Escalation' }]),
   }),
 
@@ -95,7 +96,7 @@ const ATTENTION_HANDLERS: Record<AttentionType, AttentionHandler> = {
   }),
 
   escalation_recollection_limit: item => ({
-    action: 'Redraw limit hit — path approval needed',
+    action: `${LAB_COPY.attention.recollection} limit hit — path approval needed`,
     details: baseDetails(item, 'escalation_recollection_limit', [{ type: 'text', value: 'Escalation' }]),
   }),
 
@@ -105,7 +106,7 @@ const ATTENTION_HANDLERS: Record<AttentionType, AttentionHandler> = {
   }),
 
   supervisor_recollection_request: item => ({
-    action: 'Redraw request — pending approval',
+    action: `${LAB_COPY.attention.recollection} request — pending approval`,
     details: baseDetails(item, 'supervisor_recollection_request', [{ type: 'text', value: 'Escalation' }]),
   }),
 
@@ -115,12 +116,12 @@ const ATTENTION_HANDLERS: Record<AttentionType, AttentionHandler> = {
   }),
 
   sample_rejected: item => ({
-    action: 'Specimen rejected — pre-analytical hold',
+    action: `${LAB_COPY.quality.sampleRejected} — pre-analytical hold`,
     details: baseDetails(item, 'sample_rejected'),
   }),
 
   recollection_waiting: item => ({
-    action: 'Redraw required before analysis',
+    action: `${LAB_COPY.attention.recollection} required before analysis`,
     details: baseDetails(item, 'recollection_waiting'),
   }),
 

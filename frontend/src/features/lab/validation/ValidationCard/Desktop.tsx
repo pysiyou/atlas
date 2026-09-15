@@ -8,7 +8,7 @@ import { LabCard } from '../../components/LabCard';
 import { TestHeaderBadges } from '../../components/labWorkflowBadges';
 import { QualityIssueDialog } from '../../components';
 import { ResultsParameterGrid } from '../../components/ResultsParameterGrid';
-import { SpecimenRejectedAlert } from './SpecimenRejectedAlert';
+import { SampleRejectedAlert } from './SampleRejectedAlert';
 import { testHeaderAudit } from '../../components/labHeader';
 import type { ValidationCardSharedData } from './hooks';
 
@@ -24,7 +24,7 @@ export const ValidationCardDesktop: React.FC<ValidationCardSharedData> = ({
 }) => {
   const { showAttemptIndicator } = rejection;
   const resultCount = Object.keys(test.results!).length;
-  const isSpecimenRejected = workItem.blockedReason === 'sample_rejected';
+  const isSampleRejected = workItem.blockedReason === 'sample_rejected';
 
   const badges = (
     <TestHeaderBadges
@@ -80,9 +80,9 @@ export const ValidationCardDesktop: React.FC<ValidationCardSharedData> = ({
       actions={actions}
       content={
         <>
-          {isSpecimenRejected && (
+          {isSampleRejected && (
             <div className="mb-3">
-              <SpecimenRejectedAlert
+              <SampleRejectedAlert
                 sampleId={test.sampleId}
                 sampleRejectionReason={sampleRejectionReason}
               />

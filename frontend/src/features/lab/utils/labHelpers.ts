@@ -7,11 +7,8 @@
 import type { FeedbackId } from '@/config/feedbackCatalog';
 import { notify } from '@/utils/feedback';
 import { feedbackTitle } from '@/utils/feedback/copy';
-import { getCollectionRequirements } from './sampleHelpers';
-import { getTestNames } from '@/features/catalog/utils';
 import { printCollectionLabel } from '@/features/lab/collection/CollectionLabel';
 import type { SampleDisplay } from '../types';
-import type { Test } from '@/types';
 import type { ResultStatus } from '@/types/enums';
 
 export type { ResultStatus };
@@ -110,74 +107,3 @@ export function parseResultEntry(
   return { resultValue, unit, status };
 }
 
-function getRejectionReasonsText(sample: SampleDisplay['sample']): string {
-  if (sample?.status !== 'rejected' || !('rejectionReasons' in sample)) return '';
-  return (sample.rejectionReasons || []).join(' ').toLowerCase();
-}
-
-function getRejectionNotesText(sample: SampleDisplay['sample']): string {
-  if (sample?.status !== 'rejected' || !('rejectionNotes' in sample)) return '';
-  return (sample.rejectionNotes || '').toLowerCase();
-}
-
-function getCollectionNotesText(sample: SampleDisplay['sample']): string {
-  const hasNotes =
-    sample?.status === 'collected' || sample?.status === 'rejected';
-  if (!hasNotes || !('collectionNotes' in sample)) return '';
-  return (sample.collectionNotes || '').toLowerCase();
-}
-
-function matchesSampleSearchQuery(
-  display: SampleDisplay,
-  lowerQuery: string,
-  patientName: string,
-  collectionType: string,
-  testNames: string[],
-  rejectionReasons: string,
-  rejectionNotes: string,
-  collectionNotes: string
-): boolean {
-  const sample = display.sample;
-  const sampleType = sample?.sampleType;
-
-  return (
-    display.order.orderId.toString().toLowerCase().includes(lowerQuery) ||
-    sample?.sampleId?.toString().toLowerCase().includes(lowerQuery) ||
-    patientName.toLowerCase().includes(lowerQuery) ||
-    Boolean(sampleType?.toLowerCase()?.includes(lowerQuery)) ||
-    (collectionType.toLowerCase().includes(lowerQuery) && collectionType !== sampleType) ||
-    testNames.some(name => name.toLowerCase().includes(lowerQuery)) ||
-    rejectionReasons.includes(lowerQuery) ||
-    rejectionNotes.includes(lowerQuery) ||
-    collectionNotes.includes(lowerQuery)
-  );
-}
-
-/**
- * Creates a search filter for SampleDisplay (collection workflow).
- * Searches order ID, sample ID, patient name, sample type, test names, rejection/collection notes.
- */
-export function createSampleSearchFilter(
-  getPatientName: (patientId: number) => string,
-  tests: Test[]
-): (display: SampleDisplay, query: string) => boolean {
-  return (display: SampleDisplay, query: string): boolean => {
-    const lowerQuery = query.toLowerCase();
-    const sample = display.sample;
-    const sampleType = sample?.sampleType;
-    const collectionType = sampleType ? getCollectionRequirements(sampleType).collectionType : '';
-    const patientName = getPatientName(display.order.patientId);
-    const testNames = sample?.testCodes ? getTestNames(sample.testCodes, tests) : [];
-
-    return matchesSampleSearchQuery(
-      display,
-      lowerQuery,
-      patientName,
-      collectionType,
-      testNames,
-      getRejectionReasonsText(sample),
-      getRejectionNotesText(sample),
-      getCollectionNotesText(sample)
-    );
-  };
-}

@@ -2,28 +2,14 @@
  * Timeline event categories — maps LabOperationType values to workflow groups.
  */
 
-import type { IconName } from '@/components';
-import type { BadgeVariant } from '@/components/primitives/badgeHelpers';
-import { ICONS } from '@/config/icons';
+import type { LabTimelineLane } from '../constants/labCopy';
+import { getLaneDisplay, type LabLaneDisplay } from '../constants/labWorkflowVisual';
 import type { TimelineEvent } from '../api/commandCenter.api';
 import type { CommandCenterTimelineTone } from './timelineStyles';
 
-export type TimelineEventCategory =
-  | 'specimen'
-  | 'results'
-  | 'validation'
-  | 'escalation'
-  | 'quality'
-  | 'order';
+export type TimelineEventCategory = LabTimelineLane;
 
-export interface TimelineCategoryConfig {
-  id: TimelineEventCategory;
-  label: string;
-  icon: IconName;
-  badgeVariant: BadgeVariant;
-  iconWrapClass: string;
-  iconClass: string;
-}
+export type TimelineCategoryConfig = LabLaneDisplay;
 
 const PROBLEM_TYPES = new Set([
   'sample_reject',
@@ -53,9 +39,9 @@ const RESOLUTION_TYPES = new Set([
 ]);
 
 const TYPE_CATEGORY: Record<string, TimelineEventCategory> = {
-  sample_collect: 'specimen',
-  sample_reject: 'specimen',
-  sample_recollection_request: 'specimen',
+  sample_collect: 'sample',
+  sample_reject: 'sample',
+  sample_recollection_request: 'sample',
   recollection_request_created: 'order',
   recollection_request_approved: 'order',
   recollection_request_denied: 'order',
@@ -81,54 +67,13 @@ const TYPE_CATEGORY: Record<string, TimelineEventCategory> = {
 };
 
 export const TIMELINE_CATEGORY_CONFIG: Record<TimelineEventCategory, TimelineCategoryConfig> = {
-  specimen: {
-    id: 'specimen',
-    label: 'Specimen',
-    icon: ICONS.lab.sampleTube,
-    badgeVariant: 'collected',
-    iconWrapClass: 'bg-info-bg border-info-fg/15',
-    iconClass: 'text-info-fg-emphasis',
-  },
-  results: {
-    id: 'results',
-    label: 'Results',
-    icon: ICONS.lab.flask,
-    badgeVariant: 'warning',
-    iconWrapClass: 'bg-warning-bg border-warning-fg/15',
-    iconClass: 'text-warning-fg-emphasis',
-  },
-  validation: {
-    id: 'validation',
-    label: 'Validation',
-    icon: ICONS.actions.checkCircle,
-    badgeVariant: 'validated',
-    iconWrapClass: 'bg-success-bg border-success-fg/15',
-    iconClass: 'text-success-fg-emphasis',
-  },
-  escalation: {
-    id: 'escalation',
-    label: 'Escalation',
-    icon: ICONS.actions.alertCircle,
-    badgeVariant: 'escalated',
-    iconWrapClass: 'bg-danger-bg border-danger-fg/15',
-    iconClass: 'text-danger-fg-emphasis',
-  },
-  quality: {
-    id: 'quality',
-    label: 'Quality',
-    icon: ICONS.actions.warning,
-    badgeVariant: 'warning',
-    iconWrapClass: 'bg-warning-bg border-warning-fg/15',
-    iconClass: 'text-warning-fg-emphasis',
-  },
-  order: {
-    id: 'order',
-    label: 'Order',
-    icon: ICONS.dataFields.document,
-    badgeVariant: 'neutral',
-    iconWrapClass: 'bg-tone-neutral-bg border-border-default',
-    iconClass: 'text-text-secondary',
-  },
+  sample: getLaneDisplay('sample'),
+  results: getLaneDisplay('results'),
+  validation: getLaneDisplay('validation'),
+  escalation: getLaneDisplay('escalation'),
+  quality: getLaneDisplay('quality'),
+  order: getLaneDisplay('order'),
+  composition: getLaneDisplay('composition'),
 };
 
 export function getEventCategory(type: string): TimelineEventCategory {

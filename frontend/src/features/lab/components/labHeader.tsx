@@ -185,7 +185,7 @@ export function LabAuditLineView({
         </span>
       );
     case 'custom':
-      return <div className={base}>{line.content}</div>;
+      return <span className={base}>{line.content}</span>;
     default: {
       const _exhaustive: never = line;
       return _exhaustive;

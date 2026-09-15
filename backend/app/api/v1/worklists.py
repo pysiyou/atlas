@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from app.core.dependencies import require_lab_tech, require_sample_collector
 from app.database import get_db
 from app.models.user import User
-from app.schemas.enums import PriorityLevel
+from app.schemas.enums import PriorityLevel, UserRole
 from app.schemas.worklists import (
     CollectionWorklistItem,
     EntryWorklistItem,
@@ -79,6 +79,7 @@ def get_validation_worklist(
 @router.get("/lab/board", response_model=LabBoardResponse)
 def get_lab_board(
     db: Session = Depends(get_db),
-    _user: User = Depends(require_lab_tech),
+    current_user: User = Depends(require_lab_tech),
 ):
-    return LabWorklistService(db).get_board()
+    include_supervisor = current_user.role in (UserRole.ADMIN, UserRole.LAB_TECH_PLUS)
+    return LabWorklistService(db).get_board(include_supervisor=include_supervisor)

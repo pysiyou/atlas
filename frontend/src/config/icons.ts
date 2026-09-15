@@ -103,6 +103,7 @@ export const ICONS = {
     dangerSquare: 'danger-square' as IconName,
     loading: 'loading' as IconName,
     spinner: 'loading' as IconName,
+    refresh: 'refresh' as IconName,
     search: 'search' as IconName,
     filter: 'filter' as IconName,
     flag: 'flag' as IconName,

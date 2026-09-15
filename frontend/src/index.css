@@ -171,6 +171,31 @@
   --color-category-default: var(--category-default);
 
   /* ═══════════════════════════════════════════════════════════════════
+     LAB WORKFLOW LANES
+     ═══════════════════════════════════════════════════════════════════ */
+  --color-workflow-collection-fg: var(--workflow-collection-fg);
+  --color-workflow-collection-bg: var(--workflow-collection-bg);
+  --color-workflow-collection-border: var(--workflow-collection-border);
+  --color-workflow-entry-fg: var(--workflow-entry-fg);
+  --color-workflow-entry-bg: var(--workflow-entry-bg);
+  --color-workflow-entry-border: var(--workflow-entry-border);
+  --color-workflow-validation-fg: var(--workflow-validation-fg);
+  --color-workflow-validation-bg: var(--workflow-validation-bg);
+  --color-workflow-validation-border: var(--workflow-validation-border);
+  --color-workflow-escalation-fg: var(--workflow-escalation-fg);
+  --color-workflow-escalation-bg: var(--workflow-escalation-bg);
+  --color-workflow-escalation-border: var(--workflow-escalation-border);
+  --color-workflow-quality-fg: var(--workflow-quality-fg);
+  --color-workflow-quality-bg: var(--workflow-quality-bg);
+  --color-workflow-quality-border: var(--workflow-quality-border);
+  --color-workflow-order-fg: var(--workflow-order-fg);
+  --color-workflow-order-bg: var(--workflow-order-bg);
+  --color-workflow-order-border: var(--workflow-order-border);
+  --color-workflow-composition-fg: var(--workflow-composition-fg);
+  --color-workflow-composition-bg: var(--workflow-composition-bg);
+  --color-workflow-composition-border: var(--workflow-composition-border);
+
+  /* ═══════════════════════════════════════════════════════════════════
      NEUTRALS (for direct use when semantic doesn't fit)
      ═══════════════════════════════════════════════════════════════════ */
   --color-neutral-0: var(--primitive-neutral-0);

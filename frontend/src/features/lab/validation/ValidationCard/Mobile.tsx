@@ -9,7 +9,7 @@ import { TestHeaderBadges } from '../../components/labWorkflowBadges';
 import { testHeaderAudit } from '../../components/labHeader';
 import { LabMobileCardHeader, labMobileCardSurfaceClassName } from '../../components/labMobileCardHeader';
 import { ResultsParameterGrid } from '../../components/ResultsParameterGrid';
-import { SpecimenRejectedAlert } from './SpecimenRejectedAlert';
+import { SampleRejectedAlert } from './SampleRejectedAlert';
 import { cn } from '@/utils';
 import type { ValidationCardSharedData } from './hooks';
 
@@ -25,7 +25,7 @@ export const ValidationCardMobile: React.FC<ValidationCardSharedData> = ({
   rejection,
 }) => {
   const { showAttemptIndicator } = rejection;
-  const isSpecimenRejected = workItem.blockedReason === 'sample_rejected';
+  const isSampleRejected = workItem.blockedReason === 'sample_rejected';
 
   const actions = (
     <>
@@ -61,9 +61,9 @@ export const ValidationCardMobile: React.FC<ValidationCardSharedData> = ({
       )}
       onClick={handleCardClick}
     >
-      {isSpecimenRejected && (
+      {isSampleRejected && (
         <div className="mb-2">
-          <SpecimenRejectedAlert
+          <SampleRejectedAlert
             sampleId={test.sampleId}
             sampleRejectionReason={sampleRejectionReason}
             size="compact"

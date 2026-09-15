@@ -7,6 +7,7 @@ import type { SampleDisplay } from '../types';
 import type { CollectionWorklistItem, EntryWorklistItem } from '../api/worklists.service';
 
 export function collectionWorklistToDisplay(item: CollectionWorklistItem): SampleDisplay {
+  const isCollectedLike = item.status === 'collected' || item.status === 'rejected';
   const sample = {
     sampleId: item.sampleId,
     orderId: item.orderId,
@@ -26,6 +27,15 @@ export function collectionWorklistToDisplay(item: CollectionWorklistItem): Sampl
     updatedBy: '',
     createdAt: item.orderDate,
     updatedAt: item.orderDate,
+    ...(isCollectedLike
+      ? {
+          collectedAt: item.collectedAt ?? item.orderDate,
+          collectedBy: item.collectedBy ?? '',
+          collectedVolume: item.collectedVolume ?? 0,
+          actualContainerType: item.actualContainerType ?? undefined,
+          actualContainerColor: item.actualContainerColor ?? undefined,
+        }
+      : {}),
   } as Sample;
 
   const order = {

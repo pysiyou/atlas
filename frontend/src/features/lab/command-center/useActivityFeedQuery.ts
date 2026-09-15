@@ -10,11 +10,25 @@ import { commandCenterAPI } from '../api/commandCenter.api';
 
 const MAX_ACCUMULATED = 200;
 
-export function useActivityFeedQuery(hoursBack = 24, limit = 50) {
+export function useActivityFeedQuery(
+  hoursBack = 24,
+  limit = 50,
+  categories?: string[],
+) {
+  const categoryKey = categories?.slice().sort().join(',') || undefined;
   const query = useInfiniteQuery({
-    queryKey: queryKeys.commandCenter.timeline({ hours_back: hoursBack, limit }),
+    queryKey: queryKeys.commandCenter.timeline({
+      hours_back: hoursBack,
+      limit,
+      categories: categoryKey,
+    }),
     queryFn: ({ pageParam }) =>
-      commandCenterAPI.getTimeline({ hours_back: hoursBack, limit, offset: pageParam }),
+      commandCenterAPI.getTimeline({
+        hours_back: hoursBack,
+        limit,
+        offset: pageParam,
+        categories,
+      }),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       if (!lastPage?.events) return undefined;

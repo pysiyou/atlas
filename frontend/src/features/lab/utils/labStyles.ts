@@ -27,7 +27,8 @@ export const LAB_HEADER = {
   badgeRow: 'flex min-w-0 flex-1 flex-wrap items-center gap-2 overflow-hidden',
   /** Space between multiple audit lines within the audit block */
   auditStack: 'flex flex-col gap-0.5 min-w-0',
-  auditLine: TEXT_METADATA,
+  /** Labels (e.g. "Requested", "collected") — values use emphasizedInline (primary) */
+  auditLine: 'text-xs text-text-secondary',
 } as const;
 
 /** Lab detail modal layout — header metadata + grid field stacks */
@@ -43,7 +44,13 @@ export const LAB_CARD_TYPOGRAPHY = {
   title: 'text-sm font-medium text-text-primary',
 
   // Section Headers (lab-specific: uppercase/tracking)
-  sectionTitle: 'text-xxs font-medium text-text-tertiary uppercase tracking-wide',
+  /** Card / modal section headers (e.g. Required for, Parameters) */
+  sectionTitle: 'text-xxs font-medium text-text-secondary uppercase tracking-wide',
+  /** Values under section headers (test list, parameter chips, etc.) */
+  sectionContent: 'text-xs text-text-primary',
+  /** Inline label in card body (e.g. Reason:, Container Specifications) */
+  fieldLabel: 'text-text-secondary',
+  fieldValue: 'text-text-primary',
 
   // Patient Names (within text-xs context)
   patientName: 'font-normal text-text-primary capitalize',
@@ -57,8 +64,8 @@ export const LAB_CARD_TYPOGRAPHY = {
   // Separator/Divider Text
   separator: 'text-text-disabled',
 
-  // Emphasized Inline Text
-  emphasizedInline: 'text-text-secondary',
+  // Audit / header inline values (dates, user names)
+  emphasizedInline: 'text-text-primary',
 
   // Flags Text (in red context)
   flagText: 'text-xs text-danger-fg',
@@ -124,7 +131,7 @@ export const LAB_CARD_CONTAINERS = {
 // List Item Constants
 export const LAB_CARD_LIST_ITEMS = {
   // Test list item
-  testItem: 'flex items-center text-xs text-text-secondary',
+  testItem: `flex items-center ${LAB_CARD_TYPOGRAPHY.sectionContent}`,
 
   // List bullet (gray)
   bullet: 'w-1 h-1 rounded-full bg-neutral-400 mr-2',
@@ -133,7 +140,7 @@ export const LAB_CARD_LIST_ITEMS = {
   bulletRed: 'w-1 h-1 rounded-full bg-danger-text mr-2',
 
   // Test name in list
-  testName: 'font-normal mr-1',
+  testName: `font-normal mr-1 ${LAB_CARD_TYPOGRAPHY.fieldValue}`,
 
   // Test code in list
   testCode: 'entity-id',
@@ -165,7 +172,7 @@ export const LAB_MOBILE_CARD = {
   subline:
     'col-start-1 row-start-2 flex items-center gap-1.5 min-w-0 text-xs text-text-secondary leading-snug',
   sublineName: 'truncate capitalize font-normal text-text-secondary',
-  metaLine: 'text-xs text-text-tertiary leading-snug',
+  metaLine: 'text-xs text-text-secondary leading-snug',
   body: 'text-xs text-text-secondary leading-snug',
   footer: 'flex items-center justify-between gap-2 pt-2 mt-auto border-t border-border-subtle',
   badgeRail: 'flex min-w-0 flex-1 flex-wrap items-center gap-1.5',

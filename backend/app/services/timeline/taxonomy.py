@@ -221,3 +221,45 @@ def get_event_tone(operation_type: str | LabOperationType | None) -> str:
 
 
 RECOLLECTION_REQUEST_TYPES = {op.value for op in _RECOLLECTION_TYPES}
+
+TIMELINE_CATEGORY_TYPES: dict[str, set[LabOperationType]] = {
+    "specimen": {
+        LabOperationType.SAMPLE_COLLECT,
+        LabOperationType.SAMPLE_REJECT,
+        LabOperationType.SAMPLE_RECOLLECTION_REQUEST,
+    },
+    "results": {
+        LabOperationType.RESULT_ENTRY,
+        LabOperationType.CRITICAL_VALUE_DETECTED,
+        LabOperationType.CRITICAL_VALUE_NOTIFIED,
+        LabOperationType.CRITICAL_VALUE_ACKNOWLEDGED,
+    },
+    "validation": {
+        LabOperationType.RESULT_VALIDATION_APPROVE,
+    },
+    "escalation": set(_ESCALATION_TRIGGER_TYPES | _ESCALATION_RESOLUTION_TYPES),
+    "quality": {
+        LabOperationType.QUALITY_ISSUE_REPORTED,
+    },
+    "order": {
+        LabOperationType.RECOLLECTION_REQUEST_CREATED,
+        LabOperationType.RECOLLECTION_REQUEST_APPROVED,
+        LabOperationType.RECOLLECTION_REQUEST_DENIED,
+        LabOperationType.TEST_ADDED,
+        LabOperationType.TEST_REMOVED,
+        LabOperationType.ORDER_STATUS_CHANGE,
+        LabOperationType.ORDER_PAYMENT_RECORDED,
+    },
+}
+
+
+def operation_types_for_categories(categories: Optional[list[str]]) -> Optional[list[LabOperationType]]:
+    """Resolve command-center timeline category names to LabOperationType values."""
+    if not categories:
+        return None
+    types: set[LabOperationType] = set()
+    for category in categories:
+        mapped = TIMELINE_CATEGORY_TYPES.get(category.strip().lower())
+        if mapped:
+            types.update(mapped)
+    return sorted(types, key=lambda op: op.value) if types else None

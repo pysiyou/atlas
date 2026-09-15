@@ -138,7 +138,7 @@ export const catalogFilterConfig: FilterConfig = {
         selectAllLabel: 'All sample types',
         icon: ICONS.dataFields.sampleCollection,
         placeholder: SHARED_FILTER_PLACEHOLDERS.sampleType,
-        helpText: 'Filter by required specimen type for the test.',
+        helpText: 'Filter by required sample type for the test.',
       },
       {
         type: 'priceRange',

@@ -3,10 +3,9 @@
  */
 
 import type { BadgeVariant } from '@/components/primitives/badgeHelpers';
-import type { BlockedReason } from '@/features/lab/utils/deriveWorkItemState';
-import { LAB_CONFIG } from '@/features/lab/constants';
+import { LAB_CONFIG } from '../constants/labConfig';
+import { LAB_COPY } from '../constants/labCopy';
 import type { CommandCenterBadgeTextTone } from './components/styles';
-import type { AttentionItem } from './boardTypes';
 
 /** Accent severity for attention feed rows */
 export type AttentionTone = 'problem' | 'neutral';
@@ -39,24 +38,11 @@ export interface AttentionTypeConfig {
   sortOrder: number;
 }
 
-const BLOCKED_TYPE: Record<BlockedReason, AttentionType> = {
-  critical_value: 'escalation_critical',
-  amendment_pending: 'escalation_amendment',
-  retry_limit: 'escalation_retry_limit',
-  recollection_limit: 'escalation_recollection_limit',
-  supervisor_review: 'supervisor_approval',
-  recollection_approval: 'supervisor_recollection_request',
-  payment_unpaid: 'payment_blocked',
-  sample_rejected: 'sample_rejected',
-  specimen_recollection: 'recollection_waiting',
-  retest_pending: 'retest_in_progress',
-};
-
 export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> = {
   escalation_critical: {
     id: 'escalation_critical',
-    groupLabel: 'Panic value',
-    pillLabel: 'Panic',
+    groupLabel: LAB_COPY.attention.criticalValue,
+    pillLabel: 'Critical',
     badgeVariant: 'escalated',
     badgeTextTone: 'danger',
     sortOrder: 10,
@@ -79,8 +65,8 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
   },
   escalation_recollection_limit: {
     id: 'escalation_recollection_limit',
-    groupLabel: 'Redraw limit',
-    pillLabel: 'Redraw limit',
+    groupLabel: 'Recollection limit',
+    pillLabel: 'Recollection limit',
     badgeVariant: 'escalated',
     badgeTextTone: 'danger',
     sortOrder: 40,
@@ -95,8 +81,8 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
   },
   supervisor_recollection_request: {
     id: 'supervisor_recollection_request',
-    groupLabel: 'Redraw approval',
-    pillLabel: 'Redraw approval',
+    groupLabel: 'Recollection approval',
+    pillLabel: 'Recollection approval',
     badgeVariant: 'escalated',
     badgeTextTone: 'danger',
     sortOrder: 48,
@@ -111,7 +97,7 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
   },
   sample_rejected: {
     id: 'sample_rejected',
-    groupLabel: 'Rejected specimen',
+    groupLabel: LAB_COPY.quality.sampleRejected,
     pillLabel: 'Rejected',
     badgeVariant: 'cancelled',
     badgeTextTone: 'danger',
@@ -119,8 +105,8 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
   },
   recollection_waiting: {
     id: 'recollection_waiting',
-    groupLabel: 'Pending redraw',
-    pillLabel: 'Redraw',
+    groupLabel: 'Pending recollection',
+    pillLabel: LAB_COPY.attention.recollection,
     badgeVariant: 'warning',
     badgeTextTone: 'warning',
     sortOrder: 70,
@@ -174,63 +160,19 @@ export const ATTENTION_TYPE_ORDER: AttentionType[] = (
   .sort((a, b) => a.sortOrder - b.sortOrder)
   .map(config => config.id);
 
-export function getAttentionType(item: AttentionItem): AttentionType {
-  if (item.blockedReason) {
-    return BLOCKED_TYPE[item.blockedReason];
-  }
-  if (item.waitingHours >= LAB_CONFIG.QUEUE_AGE_CRITICAL_HOURS) {
-    return 'queue_overdue_critical';
-  }
-  if (item.waitingHours >= LAB_CONFIG.QUEUE_AGE_WARNING_HOURS) {
-    return 'queue_overdue_warning';
-  }
-  if (item.priority === 'urgent') {
-    return 'priority_urgent';
-  }
-  if (item.priority === 'high') {
-    return 'priority_high';
-  }
-  return 'queue_overdue_warning';
-}
-
 export function getAttentionTypeConfig(type: AttentionType): AttentionTypeConfig {
   return ATTENTION_TYPE_CONFIG[type];
 }
 
-export function getAttentionTone(item: AttentionItem): AttentionTone {
-  const type = getAttentionType(item);
+export function getAttentionTone(type: AttentionType): AttentionTone {
   if (
     type.startsWith('escalation_') ||
     type.startsWith('supervisor_') ||
     type === 'sample_rejected' ||
-    type === 'priority_urgent'
+    type === 'priority_urgent' ||
+    type === 'queue_overdue_critical'
   ) {
     return 'problem';
   }
-  if (type === 'queue_overdue_critical') return 'problem';
-  if (
-    type === 'payment_blocked' ||
-    type === 'recollection_waiting' ||
-    type === 'priority_high' ||
-    type === 'queue_overdue_warning'
-  ) {
-    return 'neutral';
-  }
   return 'neutral';
-}
-
-export function attentionTypeSortKey(type: AttentionType): number {
-  return ATTENTION_TYPE_CONFIG[type].sortOrder;
-}
-
-export function isSupervisorAttentionType(type: AttentionType): boolean {
-  return (
-    type.startsWith('escalation_') ||
-    type === 'supervisor_approval' ||
-    type === 'supervisor_recollection_request'
-  );
-}
-
-export function isPriorityAttentionType(type: AttentionType): boolean {
-  return type === 'priority_urgent' || type === 'priority_high';
 }

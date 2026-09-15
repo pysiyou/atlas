@@ -7,6 +7,7 @@ import { CatalogRejectionFields } from './CatalogRejectionFields';
 import { useQualityIssueOptions } from '../api/quality-issues.api';
 import type { QualityIssueOptions, QualityIssueTargetType, RemedyType } from '@/types/lab-operations';
 import { QUALITY_ISSUE_DIALOG_COPY } from './qualityIssueDialogConstants';
+import { LAB_COPY } from '../constants/labCopy';
 import { RemedyDestinationPicker } from './RemedyDestinationPicker';
 import {
   buildSampleRemedyOptions,
@@ -127,7 +128,7 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
             onNotesChange={onNotesChange ?? (() => {})}
             reasonLabel={
               collectionCopy?.reasonLabel ??
-              (targetType === 'test' ? 'Result rejection reason' : 'Specimen issue')
+              (targetType === 'test' ? 'Result rejection reason' : LAB_COPY.quality.sampleIssue)
             }
             notesLabel={collectionCopy?.notesLabel}
           />

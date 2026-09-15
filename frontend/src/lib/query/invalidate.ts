@@ -151,9 +151,9 @@ export function invalidateCollectionQueries(client: QueryClient): Promise<void> 
 
 export function invalidateCommandCenterQueries(client: QueryClient): Promise<void> {
   return settleInvalidations([
-    client.invalidateQueries({ queryKey: queryKeys.orders.all }),
-    client.invalidateQueries({ queryKey: queryKeys.samples.all }),
     client.invalidateQueries({ queryKey: queryKeys.commandCenter.all }),
+    client.invalidateQueries({ queryKey: queryKeys.results.pendingEscalation() }),
+    client.invalidateQueries({ queryKey: queryKeys.recollectionRequests.all }),
     invalidateWorklistQueries(client),
   ]);
 }

@@ -2,8 +2,10 @@
  * Lab tech command center — live lab state board.
  */
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { ErrorAlert } from '@/components';
+import { errorAlertMessage } from '@/utils/feedback';
 import { invalidateCommandCenterQueries } from '@/lib/query/invalidate';
 import { COMMAND_CENTER_PANEL } from './components';
 import { useLabTechBoard } from './useLabTechBoard';
@@ -19,26 +21,34 @@ export const LabTechBoard: React.FC = () => {
   const board = useLabTechBoard();
   const queryClient = useQueryClient();
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [lastRefreshedAt, setLastRefreshedAt] = useState<Date | null>(null);
 
-  useEffect(() => {
-    if (!board.isLoading) {
-      setLastRefreshedAt(new Date());
-    }
-  }, [board.isLoading]);
+  const lastRefreshedAt = board.dataUpdatedAt ? new Date(board.dataUpdatedAt) : null;
 
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
     try {
       await invalidateCommandCenterQueries(queryClient);
-      setLastRefreshedAt(new Date());
+      await board.refetch();
     } finally {
       setIsRefreshing(false);
     }
-  }, [queryClient]);
+  }, [queryClient, board.refetch]);
 
   if (board.isLoading) {
     return <LabTechBoardSkeleton />;
+  }
+
+  if (board.isError) {
+    return (
+      <div className={COMMAND_CENTER_PANEL.page}>
+        <ErrorAlert
+          error={{
+            message: errorAlertMessage('lab.page.loadFailed', board.error),
+          }}
+          onRetry={() => void handleRefresh()}
+        />
+      </div>
+    );
   }
 
   return (
@@ -60,7 +70,6 @@ export const LabTechBoard: React.FC = () => {
         </div>
 
         <div className="grid min-h-0 flex-1 grid-cols-1 gap-2 lg:grid-cols-12">
-          {/* Left: Today ~1/3 height; Recent Activity + Needs Attention share the remaining ~2/3 */}
           <div className="flex min-h-0 flex-col gap-2 lg:col-span-8 lg:h-full">
             <div className="min-h-48 lg:min-h-0 lg:flex-[2]">
               <TodaySnapshotPanel
@@ -79,7 +88,6 @@ export const LabTechBoard: React.FC = () => {
             </div>
           </div>
 
-          {/* Right: Priority mix ~1/3; Stage Wait matches bottom-row panel height */}
           <div className="flex min-h-0 flex-col gap-2 lg:col-span-4 lg:h-full">
             <div className="min-h-48 lg:min-h-0 lg:flex-[2]">
               <PriorityMixPanel

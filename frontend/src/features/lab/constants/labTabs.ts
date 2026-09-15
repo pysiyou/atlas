@@ -4,6 +4,7 @@
 
 import { ROUTES } from '@/config';
 import type { TestStatus } from '@/types/enums';
+import { labStageLabel, LAB_COPY } from './labCopy';
 
 export const LAB_TAB_IDS = [
   'collection',
@@ -15,10 +16,10 @@ export const LAB_TAB_IDS = [
 export type LabTabId = (typeof LAB_TAB_IDS)[number];
 
 export const LAB_TAB_LABELS: Record<LabTabId, string> = {
-  collection: 'Sample Collection',
-  entry: 'Result Entry',
-  validation: 'Result Review',
-  dashboard: 'Command Center',
+  collection: labStageLabel('collection', 'nav'),
+  entry: labStageLabel('entry', 'nav'),
+  validation: labStageLabel('validation', 'nav'),
+  dashboard: LAB_COPY.workflow.dashboardNav,
 };
 
 export const DEFAULT_LAB_TAB: LabTabId = 'dashboard';

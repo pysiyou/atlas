@@ -78,7 +78,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
       variant="commandCenter"
       interactiveEntities
       emptyMessage="No recent activity"
-      className="h-full"
+      className="h-full px-4 py-2"
       footer={loadMoreFooter}
     />
   );

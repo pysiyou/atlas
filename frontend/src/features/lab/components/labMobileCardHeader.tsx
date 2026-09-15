@@ -3,11 +3,11 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { cn, formatDate, displayId } from '@/utils';
-import { LAB_ENTITY_ID, LAB_MOBILE_CARD } from '../utils/labStyles';
+import { cn, displayId } from '@/utils';
+import { LAB_ENTITY_ID, LAB_HEADER, LAB_MOBILE_CARD } from '../utils/labStyles';
 import type { LabIdentityContext } from './LabIdentityRow';
 import type { LabAuditLine } from './labHeaderAudit';
-import { LabHeaderCompactContext } from './labHeader';
+import { LabAuditLineView, LabHeaderCompactContext } from './labHeader';
 
 function MobileIdentitySubline({ context }: { context: LabIdentityContext }) {
   const dot = <span className="text-text-disabled shrink-0 select-none">•</span>;
@@ -70,16 +70,14 @@ function MobileIdentitySubline({ context }: { context: LabIdentityContext }) {
 }
 
 function MobileAuditMeta({ lines }: { lines: LabAuditLine[] }) {
-  const parts: string[] = [];
-  for (const line of lines) {
-    if (line.type === 'sample-collected' || line.type === 'collection-only') {
-      parts.push(`Collected ${formatDate(line.collectedAt)}`);
-    } else if (line.type === 'result-entered') {
-      parts.push(`Entered ${formatDate(line.enteredAt)}`);
-    }
-  }
-  if (parts.length === 0) return null;
-  return <p className={LAB_MOBILE_CARD.metaLine}>{parts.join(' · ')}</p>;
+  if (lines.length === 0) return null;
+  return (
+    <div className={cn(LAB_MOBILE_CARD.metaLine, LAB_HEADER.auditStack)}>
+      {lines.map((line, index) => (
+        <LabAuditLineView key={`${line.type}-${index}`} line={line} compact />
+      ))}
+    </div>
+  );
 }
 
 export interface LabMobileCardHeaderProps {

@@ -13,7 +13,7 @@ export const RecentActivityPanel: React.FC = () => {
 
   return (
     <Panel title="Recent Activity" meta="Last 24 hours · workflow & order events">
-      <PanelBody className="overflow-y-auto px-4 py-2">
+      <PanelBody>
         <ActivityFeed
           events={events}
           isLoading={isLoading}

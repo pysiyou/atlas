@@ -567,7 +567,7 @@ export const FEEDBACK_CATALOG: Record<FeedbackId, FeedbackEntry> = {
     variant: 'success',
     title: 'Escalated to supervisor',
     subtitle:
-      'Re-test limit reached. A supervisor must approve before another run — find it under Awaiting supervisor approval on Review.',
+      'Re-test limit reached. A supervisor must approve before another run — find it under Awaiting supervisor approval on Validation.',
   },
   'lab.qualityIssue.retest': {
     channel: 'toast',
@@ -579,7 +579,7 @@ export const FEEDBACK_CATALOG: Record<FeedbackId, FeedbackEntry> = {
     channel: 'toast',
     variant: 'success',
     title: 'Escalated for re-test approval',
-    subtitle: 'Re-test limit reached. The test is on Review awaiting supervisor approval.',
+    subtitle: 'Re-test limit reached. The test is on Validation awaiting supervisor approval.',
   },
   'lab.qualityIssue.recollection.requested': {
     channel: 'toast',
@@ -590,8 +590,8 @@ export const FEEDBACK_CATALOG: Record<FeedbackId, FeedbackEntry> = {
   'lab.qualityIssue.specimenRejected': {
     channel: 'toast',
     variant: 'success',
-    title: 'Specimen rejected',
-    subtitle: 'Linked resulted tests remain in Review for validator decision.',
+    title: 'Sample rejected',
+    subtitle: 'Linked resulted tests remain in Validation for validator decision.',
   },
   'lab.qualityIssue.cancelled': {
     channel: 'toast',
@@ -910,7 +910,7 @@ export const FEEDBACK_CATALOG: Record<FeedbackId, FeedbackEntry> = {
     channel: 'inline',
     variant: 'info',
     title:
-      'Reject the specimen and submit a recollection request — supervisor must approve before the patient is redrawn.',
+      'Reject the sample and submit a recollection request — supervisor must approve before the patient is redrawn.',
   },
   'lab.qualityIssue.dialog.actions.cancel': {
     channel: 'inline',
@@ -945,18 +945,18 @@ export const FEEDBACK_CATALOG: Record<FeedbackId, FeedbackEntry> = {
   'lab.qualityIssue.collection.recollect.warningTitle': {
     channel: 'inline',
     variant: 'warning',
-    title: 'Reject Specimen',
+    title: 'Reject Sample',
   },
   'lab.qualityIssue.collection.recollect.warningBody': {
     channel: 'inline',
     variant: 'warning',
     title:
-      'Decide what happens to unfinished tests. Resulted tests stay in Review with a Specimen rejected signal. Validated results stay released.',
+      'Decide what happens to unfinished tests. Resulted tests stay in Validation with a Sample rejected signal. Validated results stay released.',
   },
   'lab.qualityIssue.collection.reasonLabel': {
     channel: 'inline',
     variant: 'warning',
-    title: 'Specimen Issue',
+    title: 'Sample Issue',
   },
   'lab.qualityIssue.collection.escalate.warningTitle': {
     channel: 'inline',
@@ -966,7 +966,7 @@ export const FEEDBACK_CATALOG: Record<FeedbackId, FeedbackEntry> = {
   'lab.qualityIssue.collection.escalate.warningBody': {
     channel: 'inline',
     variant: 'warning',
-    title: 'Resulted tests will stay in Review for the validator. Validated results will remain released.',
+    title: 'Resulted tests will stay in Validation for the validator. Validated results will remain released.',
   },
   'lab.qualityIssue.collection.actions.followUp': {
     channel: 'inline',

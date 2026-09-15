@@ -1,79 +1,36 @@
 /**
- * useLabDataProvider - Centralized lab data fetching and derivation
- *
- * Single source of truth for all lab workflow views, eliminating triplicated
- * data fetching across CollectionView, EntryView, ValidationView, and CommandCenter.
- *
- * React Query handles deduplication - multiple consumers share the same cache.
+ * useLabDataProvider — shared catalog, orders, and validation queue data
+ * for EntryView and ValidationView. Collection/Entry queues use their own
+ * worklist hooks; Command Center counts come from GET /lab/board.
  */
 
-import { useMemo } from 'react';
 import { useAuthStore } from '@/app/store';
 import { LAB_CONFIG } from '@/features/lab/constants';
 import { useOrdersList } from '@/features/orders';
 import { useTestCatalog } from '@/features/catalog';
-import { usePatientNameLookup } from '@/features/patients';
-import { useOrderLookup } from '@/features/orders';
-import { useSamplesList } from '../api/samples.api';
 import { usePendingEscalation } from '../api/results.api';
 import { usePendingRecollectionRequests } from '../api/recollection-requests.api';
-import {
-  useCollectionWorklist,
-  useEntryWorklist,
-  useValidationWorklist,
-} from '../api/worklists.api';
-import { useCollectionSampleDisplays } from '../collection/useCollectionSampleDisplays';
 import { useLabTestsFromOrders } from './useLabTestsFromOrders';
-import type { Order, Sample, Test, TestWithContext } from '@/types';
-import type { SampleDisplay } from '../types';
+import type { Order, Test, TestWithContext } from '@/types';
 import type { TestWithContextResult } from './useLabTestsFromOrders';
 import type { RecollectionRequestSummary } from '@/types/lab-operations';
 
-export interface LabPipelineCounts {
-  collection: number;
-  entry: number;
-  /** Unvalidated tests in the review queue — matches queue-age charts */
-  validation: number;
-  /** Escalations and recollection requests — validation tab badge only */
-  supervisor: number;
-}
-
-/** Tab badge count for the validation workflow (queue + supervisor items). */
-export function getValidationTabCount(counts: LabPipelineCounts): number {
-  return counts.validation + counts.supervisor;
-}
-
 export interface LabDataProviderResult {
-  // Raw data
   orders: Order[];
-  samples: Sample[];
   tests: Test[];
-  
-  // Derived displays
-  collectionDisplays: SampleDisplay[];
-  entryTests: TestWithContextResult[];
   validationTests: TestWithContextResult[];
   escalations: TestWithContext[];
   recollections: RecollectionRequestSummary[];
-  
-  // Metadata
-  pipelineCounts: LabPipelineCounts;
   isLoading: boolean;
   isError: boolean;
   error: unknown;
   refetch: () => void;
-  
-  // Utilities
   canResolveEscalation: boolean;
-  getPatientName: (patientId: number | string) => string;
-  getOrder: (orderId: number) => Order | undefined;
 }
 
 export function useLabDataProvider(): LabDataProviderResult {
   const { hasRole } = useAuthStore();
   const canResolveEscalation = hasRole(['administrator', 'lab-technician-plus']);
-  
-  // Primary data sources
   const tabRefresh = { refetchInterval: LAB_CONFIG.TAB_COUNT_REFRESH_MS };
 
   const {
@@ -84,13 +41,6 @@ export function useLabDataProvider(): LabDataProviderResult {
     refetch: refetchOrders,
   } = useOrdersList(undefined, tabRefresh);
   const {
-    samples = [],
-    isLoading: samplesLoading,
-    isError: samplesError,
-    error: samplesErr,
-    refetch: refetchSamples,
-  } = useSamplesList(undefined, tabRefresh);
-  const {
     tests = [],
     isLoading: catalogLoading,
     isError: catalogError,
@@ -99,32 +49,7 @@ export function useLabDataProvider(): LabDataProviderResult {
   } = useTestCatalog();
   const { escalatedTests = [] } = usePendingEscalation(tabRefresh);
   const { requests: recollectionRequests = [] } = usePendingRecollectionRequests(tabRefresh);
-  const collectionWorklist = useCollectionWorklist();
-  const entryWorklist = useEntryWorklist();
-  const validationWorklist = useValidationWorklist();
-  
-  // Lookup utilities
-  const { getPatient, getPatientName } = usePatientNameLookup();
-  const { getOrder } = useOrderLookup();
-  
-  // Derived collection displays
-  const { displays: collectionDisplays } = useCollectionSampleDisplays({
-    samples,
-    tests,
-    getOrder,
-    getPatient,
-    getPatientName,
-  });
-  
-  // Derived entry tests
-  const entryTests = useLabTestsFromOrders({
-    orders,
-    testCatalog: tests,
-    statusFilter: ['sample-collected'],
-    includePatient: true,
-  });
-  
-  // Derived validation tests
+
   const validationTests = useLabTestsFromOrders({
     orders,
     testCatalog: tests,
@@ -133,58 +58,25 @@ export function useLabDataProvider(): LabDataProviderResult {
     includeHasCriticalValues: true,
     includePatient: true,
   });
-  
-  // Pipeline counts
-  const pipelineCounts = useMemo<LabPipelineCounts>(() => {
-    const escalatedCount = canResolveEscalation ? escalatedTests.length : 0;
-    const recollectionCount = canResolveEscalation ? recollectionRequests.length : 0;
 
-    return {
-      collection: collectionWorklist.pagination?.total ?? collectionWorklist.items.length,
-      entry: entryWorklist.pagination?.total ?? entryWorklist.items.length,
-      validation: validationWorklist.pagination?.total ?? validationWorklist.items.length,
-      supervisor: escalatedCount + recollectionCount,
-    };
-  }, [
-    collectionWorklist.pagination?.total,
-    collectionWorklist.items.length,
-    entryWorklist.pagination?.total,
-    entryWorklist.items.length,
-    validationWorklist.pagination?.total,
-    validationWorklist.items.length,
-    escalatedTests,
-    recollectionRequests,
-    canResolveEscalation,
-  ]);
-  
-  const isLoading = ordersLoading || samplesLoading || catalogLoading;
-  const isError = ordersError || samplesError || catalogError;
-  const error = ordersErr ?? samplesErr ?? catalogErr ?? null;
+  const isLoading = ordersLoading || catalogLoading;
+  const isError = ordersError || catalogError;
+  const error = ordersErr ?? catalogErr ?? null;
   const refetch = () => {
     void refetchOrders();
-    void refetchSamples();
     void refetchCatalog();
-    void collectionWorklist.refetch();
-    void entryWorklist.refetch();
-    void validationWorklist.refetch();
   };
-  
+
   return {
     orders,
-    samples,
     tests,
-    collectionDisplays,
-    entryTests,
     validationTests,
     escalations: escalatedTests,
     recollections: recollectionRequests,
-    pipelineCounts,
     isLoading,
     isError,
     error,
     refetch,
     canResolveEscalation,
-    getPatientName,
-    getOrder,
   };
 }

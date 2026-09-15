@@ -1,14 +1,35 @@
 /**
- * useLabPipelineCounts - Shared tab badge counts for the laboratory page.
- * Delegates to useLabDataProvider for a single derivation path.
+ * useLabPipelineCounts — tab badge counts from GET /lab/board.
  */
 
-import { useLabDataProvider, type LabPipelineCounts, getValidationTabCount } from './useLabDataProvider';
+import { useLabBoard } from '@/features/lab/api/worklists.api';
 
-export type { LabPipelineCounts };
-export { getValidationTabCount };
+export interface LabPipelineCounts {
+  collection: number;
+  entry: number;
+  /** Unvalidated tests in the review queue */
+  validation: number;
+  /** Escalations and recollection requests — validation tab badge only */
+  supervisor: number;
+}
+
+export function getValidationTabCount(counts: LabPipelineCounts): number {
+  return counts.validation + counts.supervisor;
+}
+
+const EMPTY_COUNTS: LabPipelineCounts = {
+  collection: 0,
+  entry: 0,
+  validation: 0,
+  supervisor: 0,
+};
 
 export function useLabPipelineCounts() {
-  const { pipelineCounts: counts, isError, error, refetch } = useLabDataProvider();
-  return { counts, isError, error, refetch };
+  const { board, isError, error, refetch } = useLabBoard();
+  return {
+    counts: board?.counts ?? EMPTY_COUNTS,
+    isError,
+    error,
+    refetch,
+  };
 }

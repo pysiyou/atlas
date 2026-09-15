@@ -84,6 +84,9 @@ export function useLabBoard() {
   return {
     board: query.data,
     isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
     refetch: query.refetch,
+    dataUpdatedAt: query.dataUpdatedAt,
   };
 }

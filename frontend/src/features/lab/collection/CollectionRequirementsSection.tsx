@@ -7,6 +7,7 @@ import { CalloutCard } from '@/components';
 import { LabSectionPanel } from '../components/LabSectionPanel';
 import { formatArray } from '@/utils';
 import { formatRejectionCriteriaList } from '@/features/lab/utils/catalogRejectionCriteria';
+import { LAB_CARD_TYPOGRAPHY } from '../utils/labStyles';
 
 /** Test detail for requirements display */
 export interface TestDetail {
@@ -66,10 +67,10 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
           <div className="flex items-start gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mt-1.5 shrink-0" />
             <div className="flex-1">
-              <div className="text-xs font-normal text-text-secondary mb-1">
+              <div className={`text-xs font-normal mb-1 ${LAB_CARD_TYPOGRAPHY.fieldLabel}`}>
                 Container Specifications
               </div>
-              <div className="text-xs text-text-tertiary">{activeTest.containerDescription}</div>
+              <div className={LAB_CARD_TYPOGRAPHY.sectionContent}>{activeTest.containerDescription}</div>
             </div>
           </div>
         )}
@@ -78,10 +79,10 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
           <div className="flex items-start gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mt-1.5 shrink-0" />
             <div className="flex-1">
-              <div className="text-xs font-normal text-text-secondary mb-1">
+              <div className={`text-xs font-normal mb-1 ${LAB_CARD_TYPOGRAPHY.fieldLabel}`}>
                 Collection Instructions
               </div>
-              <div className="text-xs text-text-tertiary">{activeTest.collectionNotes}</div>
+              <div className={LAB_CARD_TYPOGRAPHY.sectionContent}>{activeTest.collectionNotes}</div>
             </div>
           </div>
         )}
@@ -90,8 +91,10 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
           <div className="flex items-start gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mt-1.5 shrink-0" />
             <div className="flex-1">
-              <div className="text-xs font-normal text-text-secondary mb-1">Rejection Criteria</div>
-              <div className="text-xs text-text-tertiary">
+              <div className={`text-xs font-normal mb-1 ${LAB_CARD_TYPOGRAPHY.fieldLabel}`}>
+                Rejection Criteria
+              </div>
+              <div className={LAB_CARD_TYPOGRAPHY.sectionContent}>
                 {formatArray(formatRejectionCriteriaList(activeTest.rejectionCriteria))}
               </div>
             </div>
@@ -100,8 +103,8 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
 
         {activeTest.minimumVolume && (
           <div className="flex items-center gap-2 text-xs">
-            <span className="font-normal text-text-secondary">Minimum Volume:</span>
-            <span className="text-text-tertiary">{activeTest.minimumVolume} mL</span>
+            <span className={`font-normal ${LAB_CARD_TYPOGRAPHY.fieldLabel}`}>Minimum Volume:</span>
+            <span className={LAB_CARD_TYPOGRAPHY.fieldValue}>{activeTest.minimumVolume} mL</span>
           </div>
         )}
       </div>

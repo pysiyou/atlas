@@ -2,7 +2,14 @@
  * Lab worklist API service — server-paginated queues.
  */
 import { apiClient } from '@/lib/api/client';
-import type { PaymentStatus, PriorityLevel, SampleStatus, TestStatus } from '@/types';
+import type {
+  ContainerTopColor,
+  ContainerType,
+  PaymentStatus,
+  PriorityLevel,
+  SampleStatus,
+  TestStatus,
+} from '@/types';
 
 export interface WorklistPagination {
   page: number;
@@ -32,6 +39,11 @@ export interface CollectionWorklistItem {
   blockedReason?: string | null;
   waitingHours: number;
   turnaroundHours: number;
+  actualContainerType?: ContainerType | null;
+  actualContainerColor?: ContainerTopColor | null;
+  collectedAt?: string | null;
+  collectedBy?: string | null;
+  collectedVolume?: number | null;
 }
 
 export interface EntryWorklistItem {
@@ -72,7 +84,7 @@ export interface ValidationWorklistItem {
 export interface LabBoardResponse {
   counts: { collection: number; entry: number; validation: number; supervisor: number };
   queueAge: Record<
-    string,
+    'collection' | 'entry' | 'validation',
     {
       oldestHours: number | null;
       averageHours: number | null;
@@ -89,6 +101,37 @@ export interface LabBoardResponse {
   health: 'healthy' | 'attention' | 'critical';
   healthMessage: string;
   suggestedTab?: string | null;
+  ageBuckets: {
+    fresh: number;
+    onTrack: number;
+    warning: number;
+    critical: number;
+  };
+  priorityMix: {
+    urgent: number;
+    high: number;
+    medium: number;
+    low: number;
+  };
+  attentionItems: Array<{
+    id: string;
+    stage: 'collection' | 'entry' | 'validation';
+    stageLabel: string;
+    orderId: number;
+    patientName: string;
+    priority: PriorityLevel;
+    waitingHours: number;
+    blockedReason?: string | null;
+    blockedLabel?: string | null;
+    queueTab: 'collection' | 'entry' | 'validation';
+    since: string;
+    workItemCount: number;
+    orderTestIds: number[];
+    attentionType: string;
+  }>;
+  attentionTotal: number;
+  totalActive: number;
+  computedAt?: string | null;
 }
 
 interface WorklistParams {

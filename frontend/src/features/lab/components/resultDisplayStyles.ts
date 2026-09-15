@@ -10,12 +10,12 @@ export const RESULT_PANEL = {
     'rounded-md border px-3 py-2.5 flex flex-col gap-1.5 min-h-[4.5rem] transition-colors duration-150',
   tileEmpty: 'border-border-subtle bg-surface-page/40',
   tileFilled: 'border-border-default bg-surface shadow-sm',
-  label: 'text-xxs font-medium text-text-tertiary truncate',
+  label: 'text-xxs font-medium text-text-secondary truncate',
   value: 'text-lg font-medium tabular-nums leading-tight',
   unit: 'text-xs font-normal text-text-tertiary ml-1',
   reference: 'text-[9px] leading-none font-normal text-text-tertiary truncate shrink-0 max-w-[50%]',
   notesSection: 'mt-4 pt-4 border-t border-border-subtle space-y-3',
-  notesLabel: 'text-xs font-normal text-text-tertiary',
+  notesLabel: 'text-xs font-normal text-text-secondary',
 } as const;
 
 export function resultTileStatusClass(status: ResultStatus, hasValue: boolean): string {

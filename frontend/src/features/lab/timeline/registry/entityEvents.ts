@@ -4,7 +4,8 @@
 /* eslint-disable max-lines -- consolidated event handler registry */
 
 import { displayId } from '@/utils';
-import { ICONS } from '@/config/icons';
+import { LAB_COPY } from '../../constants/labCopy';
+import { apiCategoryToTimelineLane, getLaneDisplay } from '../../constants/labWorkflowVisual';
 import type { TimelineEvent } from '../../api/commandCenter.api';
 import {
   appendNote,
@@ -83,51 +84,16 @@ function escalationResolutionHandler(event: TimelineEvent): FormattedTimelineEve
 }
 
 export const ENTITY_PHASE_CONFIG: Record<EntityTimelinePhase, EntityPhaseConfig> = {
-  specimen: {
-    id: 'specimen',
-    label: 'Specimen',
-    icon: ICONS.lab.sampleTube,
-    badgeVariant: 'collected',
-    iconWrapClass: 'bg-info-bg border-info-fg/15',
-    iconClass: 'text-info-fg-emphasis',
-  },
-  results: {
-    id: 'results',
-    label: 'Results',
-    icon: ICONS.lab.flask,
-    badgeVariant: 'warning',
-    iconWrapClass: 'bg-warning-bg border-warning-fg/15',
-    iconClass: 'text-warning-fg-emphasis',
-  },
-  validation: {
-    id: 'validation',
-    label: 'Validation',
-    icon: ICONS.actions.checkCircle,
-    badgeVariant: 'validated',
-    iconWrapClass: 'bg-success-bg border-success-fg/15',
-    iconClass: 'text-success-fg-emphasis',
-  },
-  escalation: {
-    id: 'escalation',
-    label: 'Escalation',
-    icon: ICONS.actions.alertCircle,
-    badgeVariant: 'escalated',
-    iconWrapClass: 'bg-danger-bg border-danger-fg/15',
-    iconClass: 'text-danger-fg-emphasis',
-  },
-  composition: {
-    id: 'composition',
-    label: 'Composition',
-    icon: ICONS.actions.edit,
-    badgeVariant: 'pending',
-    iconWrapClass: 'bg-surface-secondary border-border',
-    iconClass: 'text-text-secondary',
-  },
+  sample: getLaneDisplay('sample'),
+  results: getLaneDisplay('results'),
+  validation: getLaneDisplay('validation'),
+  escalation: getLaneDisplay('escalation'),
+  composition: getLaneDisplay('composition'),
 };
 
 export const ENTITY_EVENT_REGISTRY: Record<string, EntityEventDefinition> = {
   sample_collect: {
-    phase: 'specimen',
+    phase: 'sample',
     tone: 'neutral',
     format: event => {
       const meta = event.metadata;
@@ -144,7 +110,7 @@ export const ENTITY_EVENT_REGISTRY: Record<string, EntityEventDefinition> = {
     },
   },
   sample_reject: {
-    phase: 'specimen',
+    phase: 'sample',
     tone: 'problem',
     format: event => {
       const details: EventDetail[] = [
@@ -159,7 +125,7 @@ export const ENTITY_EVENT_REGISTRY: Record<string, EntityEventDefinition> = {
     },
   },
   sample_recollection_request: {
-    phase: 'specimen',
+    phase: 'sample',
     tone: 'problem',
     format: event => {
       const meta = event.metadata;
@@ -178,7 +144,7 @@ export const ENTITY_EVENT_REGISTRY: Record<string, EntityEventDefinition> = {
     },
   },
   recollection_request_created: {
-    phase: 'specimen',
+    phase: 'sample',
     tone: 'problem',
     format: event => {
       const meta = event.metadata;
@@ -193,7 +159,7 @@ export const ENTITY_EVENT_REGISTRY: Record<string, EntityEventDefinition> = {
     },
   },
   recollection_request_approved: {
-    phase: 'specimen',
+    phase: 'sample',
     tone: 'resolution',
     format: event => {
       const details: EventDetail[] = [];
@@ -205,7 +171,7 @@ export const ENTITY_EVENT_REGISTRY: Record<string, EntityEventDefinition> = {
     },
   },
   recollection_request_denied: {
-    phase: 'specimen',
+    phase: 'sample',
     tone: 'problem',
     format: event => {
       const details: EventDetail[] = [];
@@ -235,7 +201,7 @@ export const ENTITY_EVENT_REGISTRY: Record<string, EntityEventDefinition> = {
   quality_issue_reported: {
     phase: 'validation',
     tone: 'problem',
-    qualityIssueCollectionPhase: 'specimen',
+    qualityIssueCollectionPhase: 'sample',
     format: event => {
       const meta = event.metadata;
       const stage = metaString(meta.stage) ?? metaString(event.afterState?.stage);
@@ -254,7 +220,7 @@ export const ENTITY_EVENT_REGISTRY: Record<string, EntityEventDefinition> = {
       }
       let action = 'Quality issue reported';
       if (stage === 'collection' || domain === 'specimen') {
-        action = 'Specimen rejected';
+        action = LAB_COPY.quality.sampleRejected;
       } else if (stage === 'validation' || domain === 'results') {
         action = 'Results rejected at validation';
       }
@@ -355,15 +321,15 @@ for (const type of Object.keys(ESCALATION_RESOLUTION_LABELS)) {
 }
 
 export function resolveEntityPhase(event: TimelineEvent): EntityTimelinePhase {
-  const apiPhase = event.phase;
+  const mapped = apiCategoryToTimelineLane(event.phase);
   if (
-    apiPhase === 'specimen' ||
-    apiPhase === 'results' ||
-    apiPhase === 'validation' ||
-    apiPhase === 'escalation' ||
-    apiPhase === 'composition'
+    mapped === 'sample' ||
+    mapped === 'results' ||
+    mapped === 'validation' ||
+    mapped === 'escalation' ||
+    mapped === 'composition'
   ) {
-    return apiPhase;
+    return mapped;
   }
 
   const definition = ENTITY_EVENT_REGISTRY[event.type];

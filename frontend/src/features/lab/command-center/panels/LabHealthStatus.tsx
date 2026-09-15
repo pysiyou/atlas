@@ -1,5 +1,5 @@
 /**
- * Lab health status — inline (header) or banner layout.
+ * Lab health status — inline indicator in the live pipeline header.
  */
 
 import React, { useEffect, useState } from 'react';
@@ -25,8 +25,6 @@ interface LabHealthStatusProps {
   onRefresh?: () => void;
   isRefreshing?: boolean;
   lastRefreshedAt?: Date | null;
-  /** Inline sits in the pipeline header; banner is a full-width row (legacy). */
-  variant?: 'inline' | 'banner';
 }
 
 export const LabHealthStatus: React.FC<LabHealthStatusProps> = ({
@@ -36,10 +34,8 @@ export const LabHealthStatus: React.FC<LabHealthStatusProps> = ({
   onRefresh,
   isRefreshing = false,
   lastRefreshedAt = null,
-  variant = 'inline',
 }) => {
   const styles = COMMAND_CENTER_HEALTH_STYLES[health];
-  const isInline = variant === 'inline';
   const [, setTick] = useState(0);
 
   useEffect(() => {
@@ -49,13 +45,7 @@ export const LabHealthStatus: React.FC<LabHealthStatusProps> = ({
   }, [lastRefreshedAt]);
 
   return (
-    <div
-      className={cn(
-        'flex min-w-0 items-center gap-2',
-        isInline ? 'shrink-0 justify-end' : 'shrink-0 justify-between gap-3 rounded border px-3 py-2',
-        !isInline && styles.bg,
-      )}
-    >
+    <div className="flex min-w-0 shrink-0 items-center justify-end gap-2">
       <div className="flex min-w-0 items-center gap-2">
         <span
           className={cn('h-1.5 w-1.5 shrink-0 rounded-full', styles.dot)}
@@ -63,11 +53,8 @@ export const LabHealthStatus: React.FC<LabHealthStatusProps> = ({
           title={message}
         />
         <p
-          className={cn(
-            'truncate',
-            isInline ? 'max-w-[min(28rem,40vw)] text-xs' : 'text-sm',
-            styles.text,
-          )}
+          className={cn('max-w-[min(28rem,40vw)] truncate text-xs', styles.text)}
+          aria-live="polite"
         >
           {message}
         </p>
@@ -98,18 +85,12 @@ export const LabHealthStatus: React.FC<LabHealthStatusProps> = ({
             disabled={isRefreshing}
             aria-label="Refresh lab status"
             title="Refresh"
-            className={cn(
-              'inline-flex shrink-0 items-center transition-colors disabled:opacity-50',
-              isInline
-                ? 'rounded p-1 text-text-tertiary hover:bg-surface-hover hover:text-text-primary'
-                : 'gap-1 rounded px-2 py-1 text-xxs text-text-secondary hover:bg-surface-hover hover:text-text-primary',
-            )}
+            className="inline-flex shrink-0 items-center rounded p-1 text-text-tertiary transition-colors hover:bg-surface-hover hover:text-text-primary disabled:opacity-50"
           >
             <Icon
-              name={ICONS.actions.loading}
+              name={ICONS.actions.refresh}
               className={cn('h-3.5 w-3.5', isRefreshing && 'animate-spin')}
             />
-            {!isInline && 'Refresh'}
           </button>
         )}
       </div>

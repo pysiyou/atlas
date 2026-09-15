@@ -5,6 +5,7 @@
 
 import { useState, useMemo } from 'react';
 import { compareQueuePriority } from '../utils/compareQueuePriority';
+import { resolveCollectionStatusFilters } from '../utils/collectionSearchQuery';
 
 export interface UseLabWorkflowFiltersOptions<T, S> {
   items: T[];
@@ -19,6 +20,15 @@ export interface UseLabWorkflowFiltersOptions<T, S> {
   sortByQueuePriority?: boolean;
   getPriority?: (item: T) => string | undefined;
   getQueueSince?: (item: T) => string | undefined;
+  /** When set, search text is controlled by the parent (e.g. server-side sample lookup). */
+  searchQuery?: string;
+  onSearchChange?: (value: string) => void;
+  /** Skip client-side search filtering when the server already applied the query. */
+  skipSearchFilter?: boolean;
+  /** When set, overrides `statusFilters` during apply (e.g. collection lookup vs queue). */
+  appliedStatusFilters?: S[];
+  /** Collection tab: historical sample search — show all statuses unless user filters. */
+  collectionSampleLookup?: boolean;
 }
 
 export interface LabQueueFilterState<S> {
@@ -59,6 +69,7 @@ export function applyLabQueueFilters<T, S>({
   getPriority,
   getQueueSince,
   applyStatusFilter = true,
+  skipSearchFilter = false,
 }: {
   items: T[];
   filters: LabQueueFilterState<S>;
@@ -71,6 +82,7 @@ export function applyLabQueueFilters<T, S>({
   getQueueSince?: (item: T) => string | undefined;
   /** When false, priority/status filters are skipped (e.g. recollection requests without priority). */
   applyStatusFilter?: boolean;
+  skipSearchFilter?: boolean;
 }): T[] {
   let out = items;
   out = applyDateRange(out, filters.dateRange, getOrderDate);
@@ -86,7 +98,7 @@ export function applyLabQueueFilters<T, S>({
       return s != null && filters.statusFilters.includes(s);
     });
   }
-  if (filters.searchQuery.trim()) {
+  if (!skipSearchFilter && filters.searchQuery.trim()) {
     out = out.filter(item => searchFilterFn(item, filters.searchQuery));
   }
   if (sortByQueuePriority && getPriority && getQueueSince) {
@@ -108,8 +120,15 @@ export function useLabWorkflowFilters<T, S>({
   sortByQueuePriority = false,
   getPriority,
   getQueueSince,
+  searchQuery: controlledSearchQuery,
+  onSearchChange: controlledOnSearchChange,
+  skipSearchFilter = false,
+  appliedStatusFilters,
+  collectionSampleLookup = false,
 }: UseLabWorkflowFiltersOptions<T, S>) {
-  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
+  const [internalSearchQuery, setInternalSearchQuery] = useState(initialSearchQuery);
+  const searchQuery = controlledSearchQuery ?? internalSearchQuery;
+  const setSearchQuery = controlledOnSearchChange ?? setInternalSearchQuery;
   const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
   const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
   const [statusFilters, setStatusFilters] = useState<S[]>(initialStatusFilters);
@@ -124,11 +143,24 @@ export function useLabWorkflowFilters<T, S>({
     [searchQuery, dateRange, sampleTypeFilters, statusFilters]
   );
 
+  const filtersForApply = useMemo((): LabQueueFilterState<S> => {
+    const resolvedStatus: S[] = collectionSampleLookup
+      ? (resolveCollectionStatusFilters(
+          true,
+          filterState.statusFilters as string[]
+        ) as S[])
+      : (appliedStatusFilters ?? filterState.statusFilters);
+    return {
+      ...filterState,
+      statusFilters: resolvedStatus,
+    };
+  }, [filterState, appliedStatusFilters, collectionSampleLookup]);
+
   const filteredItems = useMemo(
     () =>
       applyLabQueueFilters({
         items,
-        filters: filterState,
+        filters: filtersForApply,
         getOrderDate,
         getSampleType,
         getStatus,
@@ -136,10 +168,12 @@ export function useLabWorkflowFilters<T, S>({
         sortByQueuePriority,
         getPriority,
         getQueueSince,
+        applyStatusFilter: true,
+        skipSearchFilter,
       }),
     [
       items,
-      filterState,
+      filtersForApply,
       getOrderDate,
       getSampleType,
       getStatus,
@@ -147,6 +181,7 @@ export function useLabWorkflowFilters<T, S>({
       sortByQueuePriority,
       getPriority,
       getQueueSince,
+      skipSearchFilter,
     ]
   );
 

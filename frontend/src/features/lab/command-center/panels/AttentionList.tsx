@@ -13,12 +13,17 @@ interface AttentionListProps {
 }
 
 export const AttentionList: React.FC<AttentionListProps> = ({ items, attentionTotal }) => {
+  const shownTests = items.reduce((sum, item) => sum + item.workItemCount, 0);
+  const capped = attentionTotal > shownTests;
+
   return (
     <Panel
       title="Needs Attention"
       meta={
         items.length > 0
-          ? `${items.length} orders · ${attentionTotal} tests`
+          ? capped
+            ? `Top ${items.length} of ${attentionTotal} tests`
+            : `${items.length} orders · ${attentionTotal} tests`
           : 'Action queue · holds · STAT · TAT'
       }
     >

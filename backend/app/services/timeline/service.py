@@ -16,6 +16,7 @@ from app.models.quality_issue import QualityIssue
 from app.models.recollection_request import RecollectionRequest
 from app.models.sample import Sample
 from app.schemas.enums import LabOperationType
+from app.services.timeline.taxonomy import operation_types_for_categories
 from app.services.timeline.relevance import (
     RelevanceEngine,
     SampleTimelineScope,
@@ -37,12 +38,15 @@ class CommandCenterService:
         hours_back: int = 24,
         limit: int = 100,
         offset: int = 0,
+        categories: Optional[list[str]] = None,
     ) -> List[dict]:
         cutoff = datetime.now(timezone.utc) - timedelta(hours=hours_back)
+        query = self.db.query(LabOperationLog).filter(LabOperationLog.performedAt >= cutoff)
+        operation_types = operation_types_for_categories(categories)
+        if operation_types:
+            query = query.filter(LabOperationLog.operationType.in_(operation_types))
         logs = (
-            self.db.query(LabOperationLog)
-            .filter(LabOperationLog.performedAt >= cutoff)
-            .order_by(LabOperationLog.performedAt.desc())
+            query.order_by(LabOperationLog.performedAt.desc())
             .offset(offset)
             .limit(limit)
             .all()
@@ -50,14 +54,15 @@ class CommandCenterService:
         user_map = self._formatter.build_user_map(logs)
         return [self._formatter.format_command_center_event(log, user_map) for log in logs]
 
-    def get_timeline_count(self, hours_back: int = 24) -> int:
+    def get_timeline_count(self, hours_back: int = 24, categories: Optional[list[str]] = None) -> int:
         cutoff = datetime.now(timezone.utc) - timedelta(hours=hours_back)
-        return (
-            self.db.query(func.count(LabOperationLog.id))
-            .filter(LabOperationLog.performedAt >= cutoff)
-            .scalar()
-            or 0
+        query = self.db.query(func.count(LabOperationLog.id)).filter(
+            LabOperationLog.performedAt >= cutoff
         )
+        operation_types = operation_types_for_categories(categories)
+        if operation_types:
+            query = query.filter(LabOperationLog.operationType.in_(operation_types))
+        return query.scalar() or 0
 
 
 EntityKind = Literal["sample", "order_test"]

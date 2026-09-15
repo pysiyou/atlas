@@ -4,7 +4,7 @@
 
 import React, { useMemo } from 'react';
 import { Textarea } from '@/components';
-import { CriticalValueBanner } from './PanicValueAlert';
+import { CriticalValueBanner } from './CriticalValueBanner';
 import { statusMapFromFlags, parseResultEntry, isCritical } from '../utils/labHelpers';
 import { ResultsParameterGrid } from '../components/ResultsParameterGrid';
 import { ResultContextNotes } from '../components/ResultContextNotes';

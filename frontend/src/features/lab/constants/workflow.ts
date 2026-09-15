@@ -21,8 +21,9 @@ const COLLECTION_STATUS_OPTIONS: FilterOption[] = [
 ];
 
 export const collectionFilterConfig = buildLabFilterConfig({
-  searchPlaceholder: 'Search samples by order ID, sample ID, patient, or test...',
-  searchHelpText: 'Search by order ID, sample ID, patient name, or test name.',
+  searchPlaceholder: 'Sample ID (SAM0042) or patient name, min 3 characters...',
+  searchHelpText:
+    'Use the label/barcode ID (SAM####), numeric sample ID, or patient name. Historical search starts after 3 characters.',
   dateRangeHelpText: 'Filter samples by collection or order date range.',
   extraControls: [
     {
