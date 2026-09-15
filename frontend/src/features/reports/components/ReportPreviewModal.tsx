@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { Modal, Button, FooterInfo } from '@/components';
+import { Modal, Button, FooterInfo, DialogFooter } from '@/components';
 import type { ReportData } from '../types';
 import { MODULE_ICONS } from '@/config/icons';
 import { useUserLookup } from '@/lib/api/users.api';
@@ -44,24 +44,26 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
           <ReportPreviewResults reportData={reportData} />
         </div>
 
-        <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border-default bg-surface shrink-0 shadow-[var(--shadow-footer)]">
-          <FooterInfo icon={MODULE_ICONS.reports} label="Reports" size="md" />
-          <div className="flex items-center gap-3">
-            <Button variant="cancel" size="md" layout="icon-text" onClick={onClose} disabled={isGenerating}>
-              Close
-            </Button>
-            <Button
-              variant="download"
-              size="md"
-              layout="icon-text"
-              onClick={onGenerate}
-              disabled={isGenerating}
-              isLoading={isGenerating}
-            >
-              {isGenerating ? 'Generating...' : 'Download PDF'}
-            </Button>
-          </div>
-        </div>
+        <DialogFooter
+          start={<FooterInfo icon={MODULE_ICONS.reports} label="Reports" size="md" />}
+          end={
+            <>
+              <Button variant="cancel" size="md" layout="icon-text" onClick={onClose} disabled={isGenerating}>
+                Close
+              </Button>
+              <Button
+                variant="download"
+                size="md"
+                layout="icon-text"
+                onClick={onGenerate}
+                disabled={isGenerating}
+                isLoading={isGenerating}
+              >
+                {isGenerating ? 'Generating...' : 'Download PDF'}
+              </Button>
+            </>
+          }
+        />
       </div>
     </Modal>
   );

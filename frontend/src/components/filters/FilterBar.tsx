@@ -13,13 +13,14 @@ import { QuickFilters } from './QuickFilters';
 import { FilterSection } from './FilterSection';
 import { FilterModal } from './FilterModal';
 import { Button, Badge } from '@/components';
+import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 import type { FilterConfig, FilterValues, ActiveFilterBadge } from './types';
 
 // Style constants for consistent styling
 const filterStyles = {
   controlHeight: 'h-[34px]',
   container: 'w-full bg-surface border-b border-border-default',
-  dropdownLabel: 'text-xs font-normal text-text-tertiary mb-2',
+  dropdownLabel: `${FORM_FIELD_LABEL} mb-2`,
   dropdownDivider: 'pt-2 border-t border-border-default',
 } as const;
 

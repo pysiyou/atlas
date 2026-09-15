@@ -6,7 +6,6 @@ export { Table } from './Table';
 export { DataTable } from './DataTable';
 export { CardGridView } from './components/CardGridView';
 export {
-  renderDisplayId,
   renderPatientId,
   renderOrderId,
   renderPatientNameBlock,

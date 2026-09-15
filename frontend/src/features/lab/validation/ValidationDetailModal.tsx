@@ -12,10 +12,8 @@
 
 import React, { useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { Button } from '@/components';
-import { LabSectionPanel } from '../components/LabSectionPanel';
+import { Button, Panel, EntityId } from '@/components';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
-import { displayId } from '@/utils';
 import { ValidationForm } from './ValidationForm';
 import {
   LabDetailModal,
@@ -34,7 +32,6 @@ import type { TestWithContext } from '@/types';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import { LabHistoryPanel } from '../components/LabHistoryPanel';
 import { labModalSubtitle } from '../components/labModalStages';
-import { LAB_DETAIL_ID_VALUE } from '../utils/labStyles';
 import { hasTestResults } from '../utils/hasTestResults';
 
 interface ValidationDetailModalProps {
@@ -84,9 +81,9 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
     invalidateLabWorkflowQueries(queryClient, { criticalValues: true });
   }, [queryClient]);
 
-  if (!readOnly && !test.results) return null;
-
   const workItem = useTestWorkItemState(test);
+
+  if (!readOnly && !test.results) return null;
 
   // Flags and rejection state
   const hasFlags = test.flags && test.flags.length > 0;
@@ -157,9 +154,10 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
     >
       {/* Validation Form Section */}
       {hasTestResults(test) ? (
-        <LabSectionPanel
+        <Panel
+          variant="lab"
           title={readOnly ? 'Recorded Results' : 'Result Validation'}
-          headerRight={validationSectionHeaderRight}
+          headerEnd={validationSectionHeaderRight}
         >
           <ValidationForm
             results={test.results!}
@@ -171,20 +169,20 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
             readOnly={readOnly}
             enableApproveShortcut={!readOnly}
           />
-        </LabSectionPanel>
+        </Panel>
       ) : readOnly ? (
-        <LabSectionPanel title="Recorded Results">
+        <Panel variant="lab" title="Recorded Results">
           <p className="text-sm text-text-secondary">No results were recorded on this test version.</p>
-        </LabSectionPanel>
+        </Panel>
       ) : null}
 
       {criticalRecord && !readOnly && (
-        <LabSectionPanel title="Critical Value Notification">
+        <Panel variant="lab" title="Critical Value Notification">
           <CriticalValueActions
             record={criticalRecord}
             onUpdated={handleCriticalValueUpdated}
           />
-        </LabSectionPanel>
+        </Panel>
       )}
 
       {/* Previous Rejection History - show for both retests and recollections */}
@@ -196,8 +194,9 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
             fields: [
               {
                 label: 'Sample ID',
-                value: test.sampleId ? displayId.sample(test.sampleId) : undefined,
-                valueClassName: LAB_DETAIL_ID_VALUE,
+                value: test.sampleId ? (
+                  <EntityId type="sample" value={test.sampleId} variant="block" className="text-right" />
+                ) : undefined,
               },
               { label: 'Collected', timestamp: test.collectedAt, user: test.collectedBy },
               {
@@ -214,18 +213,21 @@ export const ValidationDetailModal: React.FC<ValidationDetailModalProps> = ({
               { label: 'Entered', timestamp: test.resultEnteredAt, user: test.enteredBy },
               {
                 label: 'Test ID',
-                value: test.id != null ? displayId.orderTest(test.id) : undefined,
-                valueClassName: LAB_DETAIL_ID_VALUE,
+                value: test.id != null ? (
+                  <EntityId type="orderTest" value={test.id} variant="block" className="text-right" />
+                ) : undefined,
               },
               {
                 label: 'Test Code',
-                value: test.testCode || undefined,
-                valueClassName: LAB_DETAIL_ID_VALUE,
+                value: test.testCode ? (
+                  <EntityId variant="block" className="text-right">{test.testCode}</EntityId>
+                ) : undefined,
               },
               {
                 label: 'Order ID',
-                value: test.orderId ? displayId.order(test.orderId) : undefined,
-                valueClassName: LAB_DETAIL_ID_VALUE,
+                value: test.orderId ? (
+                  <EntityId type="order" value={test.orderId} variant="block" className="text-right" />
+                ) : undefined,
               },
             ],
           },

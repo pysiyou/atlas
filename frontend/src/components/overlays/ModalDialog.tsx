@@ -4,7 +4,8 @@
 
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
-import { IconButton } from '@/components';
+import { IconButton } from '@/components/primitives';
+import { DialogHeader } from './DialogChrome';
 
 const BASE_MODAL_CLASSES =
   'relative bg-surface border border-border-default rounded-lg shadow-xl w-full';
@@ -69,32 +70,14 @@ export const ModalDialog = memo(({
         className={`${BASE_MODAL_CLASSES} ${maxWidthClass} ${className} flex flex-col h-[calc(100vh-16px)] md:h-[calc(100vh-48px)] origin-top lg:origin-top-right pointer-events-auto`}
         onClick={onModalClick}
       >
-        <div className="px-6 py-3.5 border-b border-border-default bg-surface flex items-center justify-between shrink-0">
-          <div className="flex items-start gap-3 min-w-0">
-            <div className="flex flex-col min-w-0 gap-0.5">
-              <h2
-                id="modal-title"
-                className="text-base font-medium text-text-primary truncate leading-snug"
-                title={typeof title === 'string' ? title : undefined}
-              >
-                {title}
-              </h2>
-              {subtitle && (
-                <div className="text-sm text-text-tertiary leading-snug">{subtitle}</div>
-              )}
-            </div>
-          </div>
-
-          <div className="flex gap-2 shrink-0">
-            <IconButton
-              onClick={onClose}
-              variant="close"
-              size="md"
-              title="Close"
-              disabled={disableClose}
-            />
-
-            {onConfirm && (
+        <DialogHeader
+          title={title}
+          subtitle={subtitle}
+          titleId="modal-title"
+          onClose={onClose}
+          disabled={disableClose}
+          actions={
+            onConfirm ? (
               <IconButton
                 onClick={onConfirm}
                 variant="confirm"
@@ -102,9 +85,9 @@ export const ModalDialog = memo(({
                 disabled={confirmDisabled}
                 title={confirmText}
               />
-            )}
-          </div>
-        </div>
+            ) : undefined
+          }
+        />
 
         <div className="grow overflow-hidden relative flex flex-col min-h-0">
           {children}

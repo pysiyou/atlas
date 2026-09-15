@@ -9,7 +9,7 @@ import { CollectionView } from '../collection/CollectionView';
 import { EntryView } from '../entry/EntryView';
 import { ValidationView } from '../validation/ValidationView';
 import { LabTechBoard } from '../command-center';
-import { Icon, PageHeaderBar, Badge, ErrorAlert } from '@/components';
+import { Icon, PageHeader, Badge, ErrorAlert } from '@/components';
 import { errorAlertMessage } from '@/utils/feedback';
 import { ICONS } from '@/config/icons';
 import { useLabPipelineCounts, getValidationTabCount } from '../hooks';
@@ -85,16 +85,19 @@ export const Laboratory: React.FC = () => {
 
   return (
     <div className="min-h-full flex flex-col p-2 gap-2 min-w-0">
-      <PageHeaderBar title={pageTitle}>
-        <div className="bg-neutral-200/60 p-1 rounded flex items-center gap-1">
-          {tabs.map(tab => {
-            const isActive = activeTab === tab.id;
-            const hasCount = typeof tab.count === 'number' && tab.count > 0;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => handleTabChange(tab.id)}
-                className={`
+      <PageHeader
+        variant="bar"
+        title={pageTitle}
+        actions={
+          <div className="bg-neutral-200/60 p-1 rounded flex items-center gap-1">
+            {tabs.map(tab => {
+              const isActive = activeTab === tab.id;
+              const hasCount = typeof tab.count === 'number' && tab.count > 0;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => handleTabChange(tab.id)}
+                  className={`
                   relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-normal transition-all duration-200 cursor-pointer
                   ${
                     isActive
@@ -102,27 +105,28 @@ export const Laboratory: React.FC = () => {
                       : 'text-text-tertiary hover:text-text-primary hover:bg-neutral-200/50'
                   }
                 `}
-              >
-                <div
-                  className={`${isActive ? 'text-brand' : 'text-text-disabled'} flex items-center`}
                 >
-                  {tab.icon}
-                </div>
-                {tab.label}
-                {hasCount && (
-                  <Badge
-                    variant={isActive ? 'primary' : 'default'}
-                    size="xs"
-                    className="ml-1"
+                  <div
+                    className={`${isActive ? 'text-brand' : 'text-text-disabled'} flex items-center`}
                   >
-                    {tab.count}
-                  </Badge>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </PageHeaderBar>
+                    {tab.icon}
+                  </div>
+                  {tab.label}
+                  {hasCount && (
+                    <Badge
+                      variant={isActive ? 'primary' : 'default'}
+                      size="xs"
+                      className="ml-1"
+                    >
+                      {tab.count}
+                    </Badge>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        }
+      />
 
       <div
         className={`flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden ${

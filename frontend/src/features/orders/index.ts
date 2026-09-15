@@ -24,6 +24,8 @@ export { useOrderSearch, useOrderLookup, useInvalidateOrders } from './hooks/use
 
 export { OrderUpsertModal } from './components/OrderUpsertModal';
 export type { OrderUpsertModalProps } from './components/OrderUpsertModal';
+export { OrderReceipt } from './components/OrderReceipt';
+export type { OrderReceiptProps, OrderReceiptVariant } from './components/OrderReceipt';
 
 export * from './utils';
 export { formInputToPayload, orderToFormInput } from './utils/formTransformers';

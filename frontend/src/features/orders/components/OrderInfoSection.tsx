@@ -4,8 +4,7 @@
  */
 
 import React from 'react';
-import { Badge } from '@/components';
-import { displayId } from '@/utils';
+import { Badge, EntityId } from '@/components';
 import type { Order } from '@/types';
 import { DetailField } from '@/components/display/DetailField';
 import { formatDateTime } from '@/utils/date';
@@ -25,7 +24,7 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order, layou
       <DetailField
         icon={getDataFieldIcon('orderId')}
         label="Order ID"
-        value={<span className="entity-id">{displayId.order(order.orderId)}</span>}
+        value={<EntityId type="order" value={order.orderId} />}
         orientation="vertical"
       />
       <DetailField

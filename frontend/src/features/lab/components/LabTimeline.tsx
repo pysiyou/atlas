@@ -3,10 +3,8 @@
  */
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Badge } from '@/components';
-import { cn, formatRelativeDateLabel, formatRelativeDateTime, displayId } from '@/utils';
-import { ENTITY_ID_CLICKABLE } from '@/utils/constants';
-import { LAB_ENTITY_ID_INLINE } from '@/features/lab/utils/labStyles';
+import { Badge, EntityId } from '@/components';
+import { cn, formatRelativeDateLabel, formatRelativeDateTime } from '@/utils';
 import type { TimelineEvent } from '../api/commandCenter.api';
 import {
   getCategoryConfig,
@@ -61,21 +59,22 @@ function TimelineDetail({
       return <Badge variant={detail.value} size="xs" />;
     case 'testCode':
     case 'id':
-      return <span className={LAB_ENTITY_ID_INLINE}>{detail.value}</span>;
+      return <EntityId variant="inline">{detail.value}</EntityId>;
     case 'link':
       return (
-        <Link to={detail.to} className={cn(ENTITY_ID_CLICKABLE, 'font-normal')}>
+        <EntityId variant="clickable" as={Link} to={detail.to}>
           {detail.value}
-        </Link>
+        </EntityId>
       );
     case 'entityRef':
       if (!interactiveEntities) {
-        return <span className={LAB_ENTITY_ID_INLINE}>{detail.value}</span>;
+        return <EntityId variant="inline">{detail.value}</EntityId>;
       }
       return (
-        <button
-          type="button"
-          className={cn(ENTITY_ID_CLICKABLE, 'font-normal text-left')}
+        <EntityId
+          variant="clickable"
+          as="button"
+          className="text-left"
           onClick={e => {
             e.stopPropagation();
             if (detail.entityType === 'sample') onOpenSample(detail.entityId);
@@ -83,7 +82,7 @@ function TimelineDetail({
           }}
         >
           {detail.value}
-        </button>
+        </EntityId>
       );
     default:
       return <span className={COMMAND_CENTER_TIMELINE.eventDetailText}>{detail.value}</span>;
@@ -228,7 +227,7 @@ export const LabTimeline: React.FC<LabTimelineProps> = ({
                 return (
                   <li key={`divider-${group.label}-${idx}`} className="py-1.5 pl-5">
                     <span className={COMMAND_CENTER_TIMELINE.eventDetailText}>Retest attempt · </span>
-                    <span className={LAB_ENTITY_ID_INLINE}>{displayId.orderTest(item.testId)}</span>
+                    <EntityId type="orderTest" value={item.testId} variant="inline" />
                   </li>
                 );
               }

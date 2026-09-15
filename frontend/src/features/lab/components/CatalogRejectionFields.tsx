@@ -5,7 +5,7 @@
 import React from 'react';
 import { Alert } from '@/components';
 import { cn } from '@/utils';
-import { inputBase } from '@/components/inputs/inputStyles';
+import { inputBase, FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 
 export interface CatalogRejectionFieldsProps {
   criteria: string[];
@@ -50,7 +50,7 @@ export const CatalogRejectionFields: React.FC<CatalogRejectionFieldsProps> = ({
     <>
       {showReason && (
         <div>
-          <label className="block text-xs font-normal text-text-tertiary mb-1">
+          <label className={`${FORM_FIELD_LABEL} mb-1`}>
             {reasonLabel} <span className="text-danger-fg">*</span>
           </label>
           <select
@@ -70,7 +70,7 @@ export const CatalogRejectionFields: React.FC<CatalogRejectionFieldsProps> = ({
 
       {showNotes && (
         <div>
-          <label className="block text-xs font-normal text-text-tertiary mb-1">{notesLabel}</label>
+          <label className={`${FORM_FIELD_LABEL} mb-1`}>{notesLabel}</label>
           <textarea
             rows={notesRows}
             placeholder="Optional additional details..."

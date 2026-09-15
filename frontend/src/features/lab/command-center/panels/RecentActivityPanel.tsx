@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { ActivityFeed } from '../ActivityFeed';
-import { Panel, PanelBody } from '../components';
+import { Panel } from '../components';
 import { useRecentActivityFeed } from '../useRecentActivityFeed';
 
 export const RecentActivityPanel: React.FC = () => {
@@ -12,18 +12,16 @@ export const RecentActivityPanel: React.FC = () => {
     useRecentActivityFeed();
 
   return (
-    <Panel title="Recent Activity" meta="Last 24 hours · workflow & order events">
-      <PanelBody>
-        <ActivityFeed
-          events={events}
-          isLoading={isLoading}
-          isError={isError}
-          onRetry={refetchFeed}
-          hasMore={hasMore}
-          onLoadMore={loadMore}
-          isLoadingMore={isLoadingMore}
-        />
-      </PanelBody>
+    <Panel title="Recent Activity" meta="Last 24 hours · workflow & order events" padding="none">
+      <ActivityFeed
+        events={events}
+        isLoading={isLoading}
+        isError={isError}
+        onRetry={refetchFeed}
+        hasMore={hasMore}
+        onLoadMore={loadMore}
+        isLoadingMore={isLoadingMore}
+      />
     </Panel>
   );
 };

@@ -4,10 +4,9 @@
  * Custom mobile card component for report data in table view.
  * Displays validated test information in a mobile-friendly card layout.
  */
-import { Badge, Card, Avatar } from '@/components';
+import { Badge, Avatar, MobileEntityCard, EntityId } from '@/components';
 import type { CardComponentProps } from '@/components';
 import { formatDateTime } from '@/utils';
-import { displayId } from '@/utils';
 import type { ValidatedTest } from '../types';
 import { ReportPreviewButton } from './ReportPreviewButton';
 
@@ -25,41 +24,37 @@ interface ReportCardProps extends CardComponentProps<ValidatedTest> {
  */
 export function ReportCard({ item: test, onClick, onPreview }: ReportCardProps) {
   return (
-    <Card padding="list" hover className="flex flex-col h-full" onClick={onClick}>
-      {/* Header: Avatar (top left) + Status (top right) */}
-      <div className="flex justify-between items-start mb-3 pb-3 border-b border-border-default">
-        {/* Avatar: Patient name + Test ID - positioned at top left */}
-        <Avatar
-          primaryText={test.patientName}
-          primaryTextClassName="capitalize"
-          secondaryText={displayId.orderTest(test.testId)}
-          secondaryTextClassName="entity-id"
-          size="xs"
-        />
-        {/* Status badge on top right */}
-        <Badge variant="validated" size="xs" />
-      </div>
+    <MobileEntityCard onClick={onClick}>
+      <MobileEntityCard.Header
+        leading={
+          <Avatar
+            primaryText={test.patientName}
+            primaryTextClassName="capitalize"
+            secondaryText={<EntityId type="orderTest" value={test.testId} />}
+            size="xs"
+          />
+        }
+        trailing={<Badge variant="validated" size="xs" />}
+      />
 
       {/* Test information */}
       <div className="grow space-y-2">
         <div>
           <div className="text-text-primary text-sm">{test.testName}</div>
-          <div className="entity-id">{test.testCode}</div>
+          <EntityId variant="block">{test.testCode}</EntityId>
         </div>
         <div className="text-xs text-text-tertiary">
-          Order: <span className="entity-id">{displayId.order(test.orderId)}</span>
+          Order: <EntityId type="order" value={test.orderId} />
         </div>
       </div>
 
       {/* Bottom section: Order date (left) + Preview button (right) */}
       <div className="flex justify-between items-center mt-auto pt-3">
-        {/* Order date on bottom left */}
         <div className="text-xs text-text-tertiary">{formatDateTime(test.orderDate)}</div>
-        {/* Preview button on bottom right */}
         <div onClick={e => e.stopPropagation()}>
           <ReportPreviewButton test={test} onPreview={onPreview} size="sm" />
         </div>
       </div>
-    </Card>
+    </MobileEntityCard>
   );
 }

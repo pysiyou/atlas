@@ -16,16 +16,17 @@ import React, { useState, useCallback } from 'react';
 import {
   Modal,
   Icon,
-  Badge,
   Button,
   Alert,
-  CalloutCard,
+  Callout,
   FooterInfo,
   PaymentMethodSelector,
   ErrorBoundary,
+  DialogFooter,
+  EntityId,
 } from '@/components';
-import { cn, formatDateTime, formatCurrency, displayId } from '@/utils';
-import { getActiveTests, getActiveTotal } from '@/features/orders/utils';
+import { cn, formatCurrency } from '@/utils';
+import { OrderReceipt } from '@/features/orders';
 import { inputBase } from '@/components/inputs/inputStyles';
 import { useCreatePayment, useOrderRemainingBalance } from '../api/payments.api';
 import {
@@ -37,7 +38,6 @@ import { getPaymentErrorMessage } from '@/utils/errors';
 import { getFeedback } from '@/utils/feedback';
 import { feedbackTitle } from '@/utils/feedback/copy';
 import type { OrderPaymentView } from '../types';
-import type { Order } from '@/types';
 import { ICONS, MODULE_ICONS } from '@/config/icons';
 
 interface PaymentDetailModalProps {
@@ -54,141 +54,39 @@ interface PaymentDetailModalProps {
 /** Get enabled payment methods from the single source of truth */
 const PAYMENT_METHODS = getEnabledPaymentMethods();
 
-/**
- * PaymentReceipt - Large receipt-style order summary with item list
- *
- * Renders order ID, patient, date, line items (tests with prices), and total
- * in a thermal-receipt inspired layout. Larger version for modal display.
- * Excludes superseded and removed tests; only active tests are shown and
- * included in the total.
- */
-const PaymentReceipt: React.FC<{
-  sourceOrder: Order;
-  paymentDate?: string;
-  paymentMethod?: string;
-}> = ({ sourceOrder, paymentDate, paymentMethod }) => {
-  const activeTests = getActiveTests(sourceOrder.tests ?? []);
-  const activeTotal = getActiveTotal(sourceOrder.tests ?? []);
-
-  return (
-    <div className="rounded-lg border border-border-default overflow-hidden bg-surface">
-      {/* Receipt Header */}
-      <div className="px-6 py-4 border-b border-dashed border-border-strong bg-surface-page">
-        <div className="flex justify-between items-center mb-2">
-          {sourceOrder.patientName ? (
-            <p className="text-sm font-normal text-text-secondary">{sourceOrder.patientName}</p>
-          ) : (
-            <p className="text-sm text-text-tertiary italic">No patient name</p>
-          )}
-          <div className="flex items-center gap-2">
-            <Badge variant={sourceOrder.paymentStatus} size="sm" />
-            {paymentMethod && <Badge variant={paymentMethod} size="sm" />}
-          </div>
-        </div>
-        <div className="space-y-1.5">
-          <div className="flex items-center text-xs">
-            <span className="text-text-tertiary w-28">Order Number:</span>
-            <span className="entity-id">
-              {displayId.order(sourceOrder.orderId)}
-            </span>
-          </div>
-          <div className="flex items-center text-xs">
-            <span className="text-text-tertiary w-28">Patient Number:</span>
-            <span className="entity-id">
-              {displayId.patient(sourceOrder.patientId)}
-            </span>
-          </div>
-          <div className="flex items-center text-xs">
-            <span className="text-text-tertiary w-28">Order Date:</span>
-            <span className="text-text-secondary font-normal">
-              {formatDateTime(sourceOrder.orderDate)}
-            </span>
-          </div>
-          {paymentDate && (
-            <div className="flex items-center text-xs">
-              <span className="text-text-tertiary w-28">Payment Date:</span>
-              <span className="text-text-secondary font-normal">{formatDateTime(paymentDate)}</span>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Items List (active tests only) */}
-      <div className="px-6 py-4 max-h-96 overflow-y-auto">
-        {activeTests.length > 0 ? (
-          <ul className="space-y-2.5">
-            {activeTests.map((test, idx) => (
-              <li
-                key={test.testCode ? `${test.testCode}-${idx}` : `item-${idx}`}
-                className="flex justify-between gap-3 text-sm items-start"
-              >
-                <span className="flex items-start gap-2.5 min-w-0 flex-1">
-                  <span className="w-1 h-1 rounded-full bg-neutral-400 shrink-0 mt-1.5" />
-                  <span className="flex flex-col min-w-0 flex-1">
-                    <span className="text-text-secondary truncate">
-                      {test.testName || test.testCode || 'Test'}
-                    </span>
-                    {test.testCode && test.testName !== test.testCode && (
-                      <span className="entity-id mt-0.5">{test.testCode}</span>
-                    )}
-                  </span>
-                </span>
-                <span className="font-normal text-text-primary tabular-nums shrink-0">
-                  {formatCurrency(test.priceAtOrder)}
-                </span>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-sm text-text-tertiary italic">No items</p>
-        )}
-      </div>
-
-      {/* Receipt Footer with Total (sum of active tests only) */}
-      <div className="border-t border-dashed border-border-strong" />
-      <div className="px-6 py-4 flex justify-between items-center bg-surface-page">
-        <span className="text-sm font-normal text-text-secondary uppercase tracking-wider">
-          Total
-        </span>
-        <span className="text-lg font-normal text-text-primary tabular-nums">
-          {formatCurrency(activeTotal)}
-        </span>
-      </div>
-    </div>
-  );
-};
-
 const PaymentDetailFooter: React.FC<{
   isPaid: boolean; submitting: boolean; paymentsLoading: boolean; remainingAmount: number;
   onClose: () => void; onPay: () => void;
 }> = ({ isPaid, submitting, paymentsLoading, remainingAmount, onClose, onPay }) => (
-  <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border-default bg-surface shrink-0">
-    <FooterInfo icon={MODULE_ICONS.payments} label="Payments" size="md" />
-    <div className="flex items-center gap-3">
-      <Button
-        variant="cancel"
-        size="md"
-        layout="icon-text"
-        onClick={onClose}
-        disabled={submitting}
-      >
-        {isPaid ? 'Close' : 'Cancel'}
-      </Button>
-      {!isPaid && (
+  <DialogFooter
+    start={<FooterInfo icon={MODULE_ICONS.payments} label="Payments" size="md" />}
+    end={
+      <>
         <Button
-          variant="primary"
+          variant="cancel"
           size="md"
           layout="icon-text"
-          onClick={onPay}
-          disabled={submitting || paymentsLoading || remainingAmount <= 0}
-          isLoading={submitting}
-          icon={<Icon name={ICONS.dataFields.wallet} />}
+          onClick={onClose}
+          disabled={submitting}
         >
-          {`Pay ${formatCurrency(remainingAmount)}`}
+          {isPaid ? 'Close' : 'Cancel'}
         </Button>
-      )}
-    </div>
-  </div>
+        {!isPaid && (
+          <Button
+            variant="primary"
+            size="md"
+            layout="icon-text"
+            onClick={onPay}
+            disabled={submitting || paymentsLoading || remainingAmount <= 0}
+            isLoading={submitting}
+            icon={<Icon name={ICONS.dataFields.wallet} />}
+          >
+            {`Pay ${formatCurrency(remainingAmount)}`}
+          </Button>
+        )}
+      </>
+    }
+  />
 );
 
 export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
@@ -272,8 +170,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
         title="Process Payment"
         subtitle={
           <span>
-            Order{' '}
-            <span className="entity-id">{displayId.order(sourceOrder.orderId)}</span>
+            Order <EntityId type="order" value={sourceOrder.orderId} />
           </span>
         }
         size="xl"
@@ -284,8 +181,9 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
           {/* Scrollable content area */}
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             {/* Receipt-style Order Summary */}
-            <PaymentReceipt
-              sourceOrder={sourceOrder}
+            <OrderReceipt
+              order={sourceOrder}
+              variant="detailed"
               paymentDate={view.paymentDate}
               paymentMethod={view.paymentMethod}
             />
@@ -332,9 +230,9 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
 
             {/* Paid Success Message */}
             {isPaid && (
-              <CalloutCard variant="success" title="Payment Complete" className="p-4">
+              <Callout variant="success" title="Payment Complete" className="p-4">
                 This order has been fully paid.
-              </CalloutCard>
+              </Callout>
             )}
           </div>
 

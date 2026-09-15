@@ -3,8 +3,7 @@
  */
 
 import React from 'react';
-import { CalloutCard } from '@/components';
-import { LabSectionPanel } from '../components/LabSectionPanel';
+import { Callout, Panel, EntityId } from '@/components';
 import { formatArray } from '@/utils';
 import { formatRejectionCriteriaList } from '@/features/lab/utils/catalogRejectionCriteria';
 import { LAB_CARD_TYPOGRAPHY } from '../utils/labStyles';
@@ -36,21 +35,22 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
   if (!activeTest) return null;
 
   return (
-    <LabSectionPanel
+    <Panel
+      variant="lab"
       title="Collection Requirements & Instructions"
-      headerRight={
+      headerEnd={
         <div className="flex gap-1">
           {testDetails.map((test, index) => (
             <button
               key={`${test.code}-${index}`}
               onClick={() => setActiveTestCode(test.code)}
-              className={`px-2 py-1 text-xs rounded transition-colors entity-id ${
+              className={`px-2 py-1 text-xs rounded transition-colors ${
                 activeTestCode === test.code
                   ? 'bg-brand-muted text-brand font-normal'
                   : 'bg-neutral-100 text-brand hover:bg-neutral-200'
               }`}
             >
-              {test.code}
+              <EntityId>{test.code}</EntityId>
             </button>
           ))}
         </div>
@@ -58,9 +58,9 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
     >
       <div className="space-y-3 pt-2 animate-in fade-in duration-200">
         {activeTest.fastingRequired && (
-          <CalloutCard variant="warning" title="Fasting Required">
+          <Callout variant="warning" title="Fasting Required">
             Patient must fast before sample collection. Verify fasting status before proceeding.
-          </CalloutCard>
+          </Callout>
         )}
 
         {activeTest.containerDescription && (
@@ -108,6 +108,6 @@ export const CollectionRequirementsSection: React.FC<CollectionRequirementsSecti
           </div>
         )}
       </div>
-    </LabSectionPanel>
+    </Panel>
   );
 };

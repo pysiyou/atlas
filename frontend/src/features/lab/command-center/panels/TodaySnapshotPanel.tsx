@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Panel, PanelBody } from '../components';
+import { Panel } from '../components';
 import type { DonutSegment } from '../components/DonutChart';
 import type { LabTechBoardData } from '../boardTypes';
 import { MetricDonutHalf, type MetricDonutLegendItem } from './MetricDonutHalf';
@@ -93,27 +93,25 @@ export const TodaySnapshotPanel: React.FC<TodaySnapshotPanelProps> = ({
     totalActive === 0 ? 'Pipeline is clear' : `${totalActive} open in pipeline`;
 
   return (
-    <Panel title="Today" meta={meta}>
-      <PanelBody>
-        <div className="grid h-full min-h-0 grid-cols-2 divide-x divide-border-subtle">
-          <MetricDonutHalf
-            title="By Stage"
-            summary={stageSummary}
-            centerLabel={String(totalActive)}
-            centerDetail="open"
-            segments={stageSegments}
-            legend={stageLegend}
-          />
-          <MetricDonutHalf
-            title="By Wait"
-            summary={backlogSummary}
-            centerLabel={String(totalActive)}
-            centerDetail="active"
-            segments={ageSegments}
-            legend={ageLegend}
-          />
-        </div>
-      </PanelBody>
+    <Panel title="Today" meta={meta} padding="none">
+      <div className="grid h-full min-h-0 grid-cols-2 divide-x divide-border-subtle">
+        <MetricDonutHalf
+          title="By Stage"
+          summary={stageSummary}
+          centerLabel={String(totalActive)}
+          centerDetail="open"
+          segments={stageSegments}
+          legend={stageLegend}
+        />
+        <MetricDonutHalf
+          title="By Wait"
+          summary={backlogSummary}
+          centerLabel={String(totalActive)}
+          centerDetail="active"
+          segments={ageSegments}
+          legend={ageLegend}
+        />
+      </div>
     </Panel>
   );
 };

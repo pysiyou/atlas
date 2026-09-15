@@ -7,7 +7,7 @@ import React from 'react';
 import { cn } from '@/utils';
 import { LAB_CONFIG, LAB_STAGE_SHORT_ROWS } from '../../constants';
 import { getStageVisual } from '../../constants/labWorkflowVisual';
-import { SectionTitle, Panel, PanelBody } from '../components';
+import { SectionTitle, Panel } from '../components';
 import { COMMAND_CENTER_TEXT } from '../components/styles';
 import type { LabTechBoardData, QueueAgeStats } from '../boardTypes';
 import { PanelNote } from './PanelNote';
@@ -229,33 +229,32 @@ export const QueueAgePanel: React.FC<QueueAgePanelProps> = ({ counts, queueAge, 
     <Panel
       title="Stage Wait"
       meta={`Per-step wait · ${warningHours}h / ${criticalHours}h thresholds`}
+      padding="none"
     >
-      <PanelBody>
-        <div className="flex h-full min-h-0 flex-col justify-between gap-3 overflow-hidden px-3 py-2">
-          {totalActive === 0 ? (
-            <PanelNote>No active tests in pipeline.</PanelNote>
-          ) : (
-            <>
-              <StageTimeComposition stages={stages} />
+      <div className="flex h-full min-h-0 flex-col justify-between gap-3 overflow-hidden px-3 py-2">
+        {totalActive === 0 ? (
+          <PanelNote>No active tests in pipeline.</PanelNote>
+        ) : (
+          <>
+            <StageTimeComposition stages={stages} />
 
-              <div className="space-y-2.5">
-                <SectionTitle title="Wait Per Step" />
-                {stages.map(stage => (
-                  <StageWaitRow key={stage.key} stage={stage} scaleMax={scaleMax} />
-                ))}
-                <SharedTimeAxis scaleMax={scaleMax} />
-              </div>
+            <div className="space-y-2.5">
+              <SectionTitle title="Wait Per Step" />
+              {stages.map(stage => (
+                <StageWaitRow key={stage.key} stage={stage} scaleMax={scaleMax} />
+              ))}
+              <SharedTimeAxis scaleMax={scaleMax} />
+            </div>
 
-              <PanelNote>
-                Bar = avg wait · dot = oldest item · dashed lines at {warningHours}h /{' '}
-                {criticalHours}h
-                {totalAvgHours > 0 ? ` · ${hoursLabel(totalAvgHours)} combined avg` : ''}
-                {criticalTotal > 0 ? ` · ${criticalTotal} past ${criticalHours}h` : ''}
-              </PanelNote>
-            </>
-          )}
-        </div>
-      </PanelBody>
+            <PanelNote>
+              Bar = avg wait · dot = oldest item · dashed lines at {warningHours}h /{' '}
+              {criticalHours}h
+              {totalAvgHours > 0 ? ` · ${hoursLabel(totalAvgHours)} combined avg` : ''}
+              {criticalTotal > 0 ? ` · ${criticalTotal} past ${criticalHours}h` : ''}
+            </PanelNote>
+          </>
+        )}
+      </div>
     </Panel>
   );
 };

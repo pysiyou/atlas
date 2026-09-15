@@ -3,20 +3,11 @@
  * Uses shared typography tokens where they match; lab-specific tokens for section titles etc.
  */
 
-import { TEXT_METADATA, BODY_SECONDARY, ENTITY_ID } from '@/utils/constants';
+import { TEXT_METADATA, BODY_SECONDARY } from '@/utils/constants';
 import type { BadgeSize } from '@/components';
 
 /** Compact lab workflow badges (cards, modals, queue age) */
 export const LAB_CARD_BADGE_SIZE: BadgeSize = 'xs';
-
-/** Entity ID typography — matches card context row and modal header */
-export const LAB_ENTITY_ID = ENTITY_ID;
-
-/** Detail grid value cell for PAT/ORD/SAM/TST codes (no nested span) */
-export const LAB_DETAIL_ID_VALUE = `${LAB_ENTITY_ID} font-normal text-right block`;
-
-/** Inline IDs in timeline detail chips and dividers */
-export const LAB_ENTITY_ID_INLINE = `${LAB_ENTITY_ID} font-normal`;
 
 /** Shared lab header rows (modals; cards can reuse audit/badge row tokens) */
 export const LAB_HEADER = {
@@ -72,16 +63,8 @@ export const LAB_CARD_TYPOGRAPHY = {
   flagTitle: 'text-xxs font-medium text-danger-fg uppercase tracking-wide',
 } as const;
 
-/** Section container titles — matches InfoBanner / “Required for” on lab cards */
 /** Shared inset for titled panels on lab cards (tighter top than sides/bottom). */
 const LAB_CARD_PANEL_INSET = 'px-2 pb-2 pt-1';
-
-export const LAB_SECTION_PANEL = {
-  wrapper: 'bg-surface-page',
-  header: 'px-2 py-2',
-  title: LAB_CARD_TYPOGRAPHY.sectionTitle,
-  content: 'p-2',
-} as const;
 
 // Spacing Constants
 export const LAB_CARD_SPACING = {
@@ -144,9 +127,6 @@ export const LAB_CARD_LIST_ITEMS = {
 
   // Test name in list
   testName: `font-normal mr-1 ${LAB_CARD_TYPOGRAPHY.fieldValue}`,
-
-  // Test code in list
-  testCode: 'entity-id',
 } as const;
 
 // Context Row Constants (Patient/Order info)

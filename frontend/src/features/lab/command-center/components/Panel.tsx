@@ -1,5 +1,5 @@
 /**
- * Command center panel shell — re-exports shared PagePanel.
+ * Command center panel shell — shared Panel (`page` variant).
  */
 
-export { PagePanel as Panel, PagePanelBody as PanelBody } from '@/components/surfaces/PagePanel';
+export { Panel } from '@/components/surfaces/Panel';

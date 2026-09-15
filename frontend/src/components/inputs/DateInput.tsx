@@ -7,7 +7,7 @@ import { format } from 'date-fns';
 import { Popover, Icon } from '@/components';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { inputTrigger, inputTriggerOpen, inputError, inputClearButton } from '@/components/inputs/inputStyles';
+import { inputTrigger, inputTriggerOpen, inputError, inputClearButton, FORM_CONTROL_LABEL } from '@/components/inputs/inputStyles';
 import { DateInputHeader } from './DateInputHeader';
 import { DateInputCalendarGrid, type DateInputCalendarView } from './DateInputCalendarGrid';
 
@@ -77,7 +77,7 @@ export const DateInput: React.FC<DateInputProps> = ({
     <div className="w-full group">
       {label && (
         <div className="flex justify-between items-baseline mb-1 gap-2">
-          <label htmlFor={inputId} className="text-xs font-normal text-text-tertiary cursor-pointer truncate min-w-0">
+          <label htmlFor={inputId} className={FORM_CONTROL_LABEL}>
             {label}
             {required && <span className="text-danger-fg ml-1">*</span>}
           </label>

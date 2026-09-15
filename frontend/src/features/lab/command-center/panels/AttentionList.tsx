@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { AttentionFeed } from '../AttentionFeed';
-import { Panel, PanelBody } from '../components';
+import { Panel } from '../components';
 import type { AttentionItem } from '../boardTypes';
 
 interface AttentionListProps {
@@ -26,10 +26,9 @@ export const AttentionList: React.FC<AttentionListProps> = ({ items, attentionTo
             : `${items.length} orders · ${attentionTotal} tests`
           : 'Action queue · holds · STAT · TAT'
       }
+      padding="none"
     >
-      <PanelBody>
-        <AttentionFeed items={items} />
-      </PanelBody>
+      <AttentionFeed items={items} />
     </Panel>
   );
 };

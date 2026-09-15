@@ -3,9 +3,10 @@
  */
 
 import React, { createContext, type ReactNode, useContext } from 'react';
-import { cn, formatDateTime, displayId } from '@/utils';
+import { cn, formatDateTime } from '@/utils';
+import { EntityId } from '@/components';
 import { useUserLookup } from '@/lib/api/users.api';
-import { LAB_CARD_HEADER, LAB_CARD_TYPOGRAPHY, LAB_ENTITY_ID, LAB_HEADER } from '../utils/labStyles';
+import { LAB_CARD_HEADER, LAB_CARD_TYPOGRAPHY, LAB_HEADER } from '../utils/labStyles';
 import { LabIdentityRow, type LabIdentityContext } from './LabIdentityRow';
 import type { LabAuditLine } from './labHeaderAudit';
 
@@ -117,11 +118,11 @@ export function LabAuditLineView({
       return (
         <span className={base}>
           Sample{' '}
-          <span className={LAB_ENTITY_ID}>
-            {typeof line.sampleId === 'number'
-              ? displayId.sample(line.sampleId)
-              : line.sampleId}
-          </span>{' '}
+          {typeof line.sampleId === 'number' ? (
+            <EntityId type="sample" value={line.sampleId} />
+          ) : (
+            <EntityId>{line.sampleId}</EntityId>
+          )}{' '}
           collected{' '}
           <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>
             {formatDateTime(line.collectedAt)}
@@ -160,7 +161,7 @@ export function LabAuditLineView({
         <span className={cn(base, compact && 'hidden md:inline')}>
           Previous sample <span className="text-warning-fg font-normal">rejected</span>
           {' — '}
-          <span className={LAB_ENTITY_ID}>{displayId.sample(line.sampleId)}</span> collected{' '}
+          <EntityId type="sample" value={line.sampleId} /> collected{' '}
           <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>
             {formatDateTime(line.collectedAt)}
           </span>

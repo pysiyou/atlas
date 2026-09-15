@@ -3,12 +3,12 @@
  */
 
 import type { NavigateFunction } from 'react-router-dom';
-import { Badge } from '@/components';
+import { Badge, EntityId } from '@/components';
 import type { TableViewConfig } from '@/components';
 import { buildViews } from '@/components/data-table';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
-import { DATA_AMOUNT, ENTITY_ID_BLOCK } from '@/utils/constants';
+import { DATA_AMOUNT } from '@/utils/constants';
 import { CatalogCard } from '../components/CatalogCard';
 
 const CATALOG_VIEWS = {
@@ -26,7 +26,7 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
       sortable: true,
       accessor: (test: Test) => test.code,
       render: (test: Test) => (
-        <span className={`${ENTITY_ID_BLOCK} font-normal`}>{test.code}</span>
+        <EntityId variant="block">{test.code}</EntityId>
       ),
     },
     name: {

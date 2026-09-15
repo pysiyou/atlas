@@ -1,10 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Badge } from '@/components';
+import { Badge, EntityId } from '@/components';
 import type { TableViewConfig, CardComponentProps } from '@/components';
 import { buildViews } from '@/components/data-table';
-import { ENTITY_ID_INLINE } from '@/utils/constants';
-import { formatCurrency, formatDateTime, displayId } from '@/utils';
+import { formatCurrency, formatDateTime } from '@/utils';
 import { getTestName } from '@/features/catalog/utils';
 import { getLabQueueUrlForTest } from '@/features/lab';
 import type { OrderTest, Test } from '@/types';
@@ -35,11 +34,9 @@ function createTestTableCard(testCatalog: Test[]): React.FC<CardComponentProps<O
       >
         <div className="flex items-center justify-between gap-2">
           <span
-            className={
-              isSuperseded ? 'text-text-disabled line-through font-id' : ENTITY_ID_INLINE
-            }
+            className={isSuperseded ? 'text-text-disabled line-through font-id' : undefined}
           >
-            {item.testCode}
+            {isSuperseded ? item.testCode : <EntityId variant="inline">{item.testCode}</EntityId>}
           </span>
           <Badge variant={item.status} size="sm" strikethrough={isSuperseded} />
         </div>
@@ -71,13 +68,11 @@ export function createTestsTableConfig(
         const retestNumber = test.retestNumber ?? 0;
         return (
           <div className="flex items-center gap-1">
-            <span
-              className={
-                isSuperseded ? 'text-text-disabled line-through font-id' : ENTITY_ID_INLINE
-              }
-            >
-              {test.testCode}
-            </span>
+            {isSuperseded ? (
+              <span className="text-text-disabled line-through font-id">{test.testCode}</span>
+            ) : (
+              <EntityId variant="inline">{test.testCode}</EntityId>
+            )}
             {isRetest && retestNumber > 0 && (
               <Badge variant="info" size="xs" uppercase={false}>
                 #{retestNumber}
@@ -118,7 +113,7 @@ export function createTestsTableConfig(
       accessor: (test: OrderTest) => test.sampleId ?? '',
       render: (test: OrderTest) =>
         test.sampleId ? (
-          <span className="entity-id">{displayId.sample(test.sampleId)}</span>
+          <EntityId type="sample" value={test.sampleId} />
         ) : (
           <span className="text-xs text-text-tertiary">—</span>
         ),

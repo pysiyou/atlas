@@ -3,8 +3,7 @@
  */
 
 export * from './AppShell';
-export * from './DetailPageHeader';
+export * from './PageHeader';
 export * from './DetailPageShell';
-export * from './PageHeaderBar';
 export * from './sidebarMenu';
 export * from './Sidebar';

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Avatar, Icon, RemovableTag, TagChip } from '@/components';
-import { cn, displayId } from '@/utils';
-import { inputContainerBase, inputContainerError } from '@/components/inputs/inputStyles';
+import { Avatar, Icon, RemovableTag, TagChip, EntityId } from '@/components';
+import { cn } from '@/utils';
+import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/components/inputs/inputStyles';
 import type { Patient } from '@/types';
 import { ICONS } from '@/config/icons';
 
@@ -36,7 +36,7 @@ const PatientSearchTagInput: React.FC<{
       <div className="flex justify-between items-baseline mb-1 gap-2">
         <label
           htmlFor="order-patient-search"
-          className="text-xs font-normal text-text-tertiary cursor-pointer truncate min-w-0"
+          className={FORM_CONTROL_LABEL}
         >
           Patient
         </label>
@@ -69,7 +69,7 @@ const PatientSearchTagInput: React.FC<{
               <span className="min-w-0 truncate text-xs font-normal capitalize">
                 {selectedPatient.fullName}
               </span>
-              <span className="entity-id shrink-0">{displayId.patient(selectedPatient.id)}</span>
+              <EntityId type="patient" value={selectedPatient.id} className="shrink-0" />
             </TagChip>
           ) : (
             <RemovableTag
@@ -87,7 +87,7 @@ const PatientSearchTagInput: React.FC<{
               <span className="min-w-0 truncate text-xs font-normal capitalize">
                 {selectedPatient.fullName}
               </span>
-              <span className="entity-id shrink-0">{displayId.patient(selectedPatient.id)}</span>
+              <EntityId type="patient" value={selectedPatient.id} className="shrink-0" />
             </RemovableTag>
           ))}
 
@@ -224,9 +224,7 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
 
                       <div className="shrink-0 flex items-center gap-2">
                         {/* Patient ID on the right */}
-                        <span className="entity-id">
-                          {displayId.patient(patient.id)}
-                        </span>
+                        <EntityId type="patient" value={patient.id} />
                         {/* Check icon if selected */}
                         {isSelected && (
                           <Icon

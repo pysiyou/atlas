@@ -4,6 +4,7 @@ import type { FilterOption } from '@/components';
 import { GENDER_VALUES, GENDER_CONFIG, type Gender } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
 import { ICONS } from '@/config/icons';
+import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 import type { PatientFormSectionProps } from './patientFormSectionTypes';
 
 export const DemographicsSection: React.FC<
@@ -64,7 +65,7 @@ export const DemographicsSection: React.FC<
           maxDate={new Date()}
         />
         <div>
-          <label className="block text-xs font-normal text-text-tertiary mb-1.5">
+          <label className={`${FORM_FIELD_LABEL} mb-1.5`}>
             Gender <span className="text-danger-fg ml-1">*</span>
           </label>
           <MultiSelectFilter

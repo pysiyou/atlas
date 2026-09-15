@@ -22,7 +22,7 @@ def search_patients(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """Search patients by name, id, or phone. Returns list (no pagination)."""
+    """Search patients by name, id (numeric or PAT display id), or phone. Returns list (no pagination)."""
     return PatientService(db).search(q, limit=10000)
 
 

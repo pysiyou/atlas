@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Alert, Button, Skeleton } from '@/components';
+import { Alert, Button, Skeleton, DialogHeader, DialogFooter } from '@/components';
 import { RadioCard } from './PopoverForm';
 import { AttemptProgressBar } from './AttemptProgressBar';
 import type { ResultRejectionType } from '@/types';
@@ -12,6 +12,7 @@ import { cn } from '@/utils';
 import { getFeedback } from '@/utils/feedback';
 import { QUALITY_ISSUE_DIALOG_LAYOUT, QUALITY_ISSUE_DIALOG_COPY } from './qualityIssueDialogConstants';
 import { LAB_CONFIG } from '@/features/lab/constants';
+import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 
 /** Skeleton that mirrors PopoverForm layout (header, body, footer) to avoid layout shift when options load. */
 export const QualityIssueDialogLoadingView: React.FC = () => (
@@ -23,15 +24,12 @@ export const QualityIssueDialogLoadingView: React.FC = () => (
     aria-busy="true"
     aria-label={QUALITY_ISSUE_DIALOG_COPY.loading.message}
   >
-    {/* Header */}
-    <div className="px-4 py-3 bg-surface-page border-b border-border-subtle flex items-start justify-between">
-      <div className="space-y-0.5">
-        <Skeleton height={20} width="60%" className="rounded-md" />
-        <Skeleton height={12} width="40%" className="rounded-md" />
-      </div>
-      <Skeleton width={32} height={32} className="rounded-md shrink-0" />
-    </div>
-    {/* Body */}
+    <DialogHeader
+      size="popover"
+      title={<Skeleton height={20} width="60%" className="rounded-md" />}
+      subtitle={<Skeleton height={12} width="40%" className="rounded-md" />}
+      actions={<Skeleton width={32} height={32} className="rounded-md shrink-0" />}
+    />
     <div className="p-4 space-y-4 overflow-y-auto flex-1">
       <div className="space-y-1.5">
         <Skeleton height={14} width="100%" className="rounded-md" />
@@ -46,14 +44,16 @@ export const QualityIssueDialogLoadingView: React.FC = () => (
         <Skeleton height={60} width="100%" className="rounded-md" />
       </div>
     </div>
-    {/* Footer */}
-    <div className="p-3 bg-surface-page border-t border-border-subtle flex items-center justify-between gap-2 shrink-0">
-      <Skeleton height={12} width="50%" className="rounded-md" />
-      <div className="flex items-center gap-2">
-        <Skeleton height={32} width={70} className="rounded-md" />
-        <Skeleton height={32} width={70} className="rounded-md" />
-      </div>
-    </div>
+    <DialogFooter
+      density="popover"
+      start={<Skeleton height={12} width="50%" className="rounded-md" />}
+      end={
+        <>
+          <Skeleton height={32} width={70} className="rounded-md" />
+          <Skeleton height={32} width={70} className="rounded-md" />
+        </>
+      }
+    />
   </div>
 );
 
@@ -109,7 +109,7 @@ export const RejectionActionCards: React.FC<RejectionActionCardsProps> = ({
 
   return (
     <div>
-      <label className="block text-xs font-normal text-text-tertiary mb-1">
+      <label className={`${FORM_FIELD_LABEL} mb-1`}>
         {QUALITY_ISSUE_DIALOG_COPY.actions.followUpLabel}
       </label>
       <div className="grid grid-cols-1 gap-2">

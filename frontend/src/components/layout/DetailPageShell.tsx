@@ -16,7 +16,7 @@ export interface DetailPageShellError {
 }
 
 export interface DetailPageShellProps {
-  /** Header node (e.g. DetailPageHeader or feature header wrapping it) */
+  /** Header node (e.g. PageHeader or feature header wrapping it) */
   header: ReactNode;
   /** Main content (rendered in scrollable area when not loading/error/notFound) */
   children: ReactNode;

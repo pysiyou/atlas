@@ -10,11 +10,11 @@
  * - The popover stays open while selecting; outside click closes only when every visible test is checked.
  */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Icon, RemovableTag, TagChip } from '@/components';
+import { Icon, RemovableTag, TagChip, EntityId } from '@/components';
 import type { Test } from '@/types';
 import { cn, formatCurrency } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { inputContainerBase, inputContainerError } from '@/components/inputs/inputStyles';
+import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL, FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 
 interface TestSelectorProps {
   selectedTests: string[];
@@ -57,7 +57,7 @@ const TestSearchTagInput: React.FC<{
       <div className="flex justify-between items-baseline mb-1 gap-2">
         <label
           htmlFor="order-test-search"
-          className="text-xs font-normal text-text-tertiary cursor-pointer truncate min-w-0"
+          className={FORM_CONTROL_LABEL}
         >
           Tests
         </label>
@@ -85,7 +85,7 @@ const TestSearchTagInput: React.FC<{
             removeAriaLabel={`Remove ${code}`}
           >
             <span className="min-w-0 truncate text-xs font-normal">{name}</span>
-            <span className="entity-id shrink-0">{code}</span>
+            <EntityId className="shrink-0">{code}</EntityId>
           </RemovableTag>
         ))}
 
@@ -129,7 +129,7 @@ const TestSelectPopover: React.FC<TestSelectPopoverProps> = ({
     ].join(' ')}
   >
     <div className="px-4 py-2.5 bg-surface-page/70 border-b border-border-default/70 flex items-center justify-between">
-      <div className="text-xs font-normal text-text-tertiary">Matching tests</div>
+      <div className={FORM_FIELD_LABEL}>Matching tests</div>
       <div className="text-xs text-text-tertiary">{visibleTests.length} result(s)</div>
     </div>
 
@@ -159,8 +159,8 @@ const TestSelectPopover: React.FC<TestSelectPopoverProps> = ({
             >
               <div className="min-w-0">
                 <div className="flex min-w-0 items-center gap-2">
-                  <TagChip size="xs" emphasis="code" className="entity-id shrink-0">
-                    {code}
+                  <TagChip size="xs" emphasis="code" className="shrink-0">
+                    <EntityId>{code}</EntityId>
                   </TagChip>
                   <span className="min-w-0 truncate text-xs font-normal text-text-primary">
                     {safeName}

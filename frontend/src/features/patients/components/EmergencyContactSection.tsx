@@ -3,6 +3,7 @@ import { Input, MultiSelectFilter } from '@/components';
 import type { FilterOption } from '@/components';
 import { RELATIONSHIP_VALUES, RELATIONSHIP_CONFIG, type Relationship } from '@/types';
 import { ICONS } from '@/config/icons';
+import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 import type { PatientFormSectionProps } from './patientFormSectionTypes';
 
 export const EmergencyContactSection: React.FC<
@@ -56,7 +57,7 @@ export const EmergencyContactSection: React.FC<
           placeholder="Jane Doe"
         />
         <div>
-          <label className="block text-xs font-normal text-text-tertiary mb-1.5">
+          <label className={`${FORM_FIELD_LABEL} mb-1.5`}>
             Relationship <span className="text-danger-fg ml-1">*</span>
           </label>
           <MultiSelectFilter

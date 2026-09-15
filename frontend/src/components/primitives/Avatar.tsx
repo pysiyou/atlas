@@ -8,7 +8,7 @@ export interface AvatarProps {
   size?: 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
   onClick?: () => void;
-  secondaryText?: string;
+  secondaryText?: React.ReactNode;
   /** Optional className for secondary text */
   secondaryTextClassName?: string;
   /** Optional className for primary text */

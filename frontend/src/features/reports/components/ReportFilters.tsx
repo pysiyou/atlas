@@ -4,19 +4,16 @@
  */
 
 import React, { useState } from 'react';
-import { Icon, Button, Badge, Modal, FooterInfo } from '@/components';
-import { DebouncedSearchInput } from '@/components';
 import { DateFilter } from '@/components';
-import {
-  inputContainerBase,
-  inputInner,
-  inputText,
-  inputClearButton,
-} from '@/components/inputs/inputStyles';
-import { cn } from '@/utils';
-import { ICONS, MODULE_ICONS } from '@/config/icons';
+import { DebouncedSearchInput } from '@/components';
+import { MODULE_ICONS } from '@/config/icons';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import { DatePresetBadges, REPORT_FILTER_PLACEHOLDERS } from '@/components/filters';
+import {
+  DatePresetBadges,
+  EntityFilterModal,
+  REPORT_FILTER_PLACEHOLDERS,
+  ResponsiveFilterMobileBar,
+} from '@/components/filters';
 
 /**
  * Props interface for ReportFilters component
@@ -30,9 +27,8 @@ export interface ReportFiltersProps {
 
 /**
  * ReportFilters - Responsive filter layout
- * - lg+: 2-column grid (search + date)
- * - md: 2-column grid
- * - sm/xs: Search bar + Filters button (opens modal with date filter)
+ * - lg+/md: 2-column grid (search + date)
+ * - sm/xs: Search bar + Filters button (opens EntityFilterModal)
  */
 export const ReportFilters: React.FC<ReportFiltersProps> = ({
   searchQuery,
@@ -43,18 +39,11 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
   const breakpoint = useBreakpoint();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Count active filters for badge
   const activeFilterCount = dateRange ? 1 : 0;
-
-  // Check if we should show modal view (sm and below)
   const showModalView = isBreakpointAtMost(breakpoint, 'sm');
 
-  /**
-   * Render all filter controls (used in both inline and modal views)
-   */
   const renderFilters = () => (
     <>
-      {/* Search */}
       <div className="flex h-9 w-full items-center">
         <DebouncedSearchInput
           value={searchQuery}
@@ -62,8 +51,6 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
           placeholder={REPORT_FILTER_PLACEHOLDERS.searchLong}
         />
       </div>
-
-      {/* Date Range */}
       <div className="flex h-9 w-full items-center">
         <DateFilter
           value={dateRange}
@@ -75,106 +62,36 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
     </>
   );
 
-  // Mobile view: Search bar + Filters button
   if (showModalView) {
     return (
       <>
-        <div className="w-full bg-surface border-b border-border-default">
-          <div className="px-3 py-2 w-full">
-            <div className="grid grid-cols-[1fr_auto] gap-2 items-center w-full">
-              {/* Search control */}
-              <div className="flex h-9 w-full items-center">
-                <DebouncedSearchInput
-                  value={searchQuery}
-                  onChange={onSearchChange}
-                  placeholder={REPORT_FILTER_PLACEHOLDERS.search}
-                />
-              </div>
-
-              {/* Filters button */}
-              <div className="relative flex shrink-0">
-                <Button variant="filter" size="sm" onClick={() => setIsModalOpen(true)}>
-                  Filters
-                </Button>
-                {activeFilterCount > 0 && (
-                  <Badge
-                    variant="primary"
-                    size="xs"
-                    className="absolute -top-1 -right-1 min-w-[18px] h-4 px-1 flex items-center justify-center"
-                  >
-                    {activeFilterCount}
-                  </Badge>
-                )}
-              </div>
-            </div>
+        <ResponsiveFilterMobileBar
+          searchQuery={searchQuery}
+          onSearchChange={onSearchChange}
+          searchPlaceholder={REPORT_FILTER_PLACEHOLDERS.search}
+          activeFilterCount={activeFilterCount}
+          onOpenModal={() => setIsModalOpen(true)}
+          searchRowHeight="h-9"
+        />
+        <EntityFilterModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          searchQuery={searchQuery}
+          onSearchChange={onSearchChange}
+          searchPlaceholder={REPORT_FILTER_PLACEHOLDERS.search}
+          onReset={() => onDateRangeChange(null)}
+          footerIcon={MODULE_ICONS.reports}
+          footerLabel="Reports"
+        >
+          <div className="w-full">
+            <h4 className="text-sm font-semibold text-text-primary mb-3">Date Range</h4>
+            <DatePresetBadges value={dateRange} onChange={onDateRangeChange} />
           </div>
-        </div>
-
-        {/* Filter Modal */}
-        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Filter" size="md">
-          <div className="flex flex-col h-full bg-surface">
-            {/* Filter Controls - Scrollable */}
-            <div className="flex-1 overflow-y-auto px-5 py-4">
-              {/* Search Section */}
-              <div className="mb-6">
-                <div className={cn(inputContainerBase, 'flex items-center h-10 px-4')}>
-                  <input
-                    type="text"
-                    placeholder={REPORT_FILTER_PLACEHOLDERS.search}
-                    value={searchQuery}
-                    onChange={e => onSearchChange(e.target.value)}
-                    className={cn(inputInner, inputText)}
-                  />
-                  {searchQuery && (
-                    <button
-                      onClick={() => onSearchChange('')}
-                      className={cn(inputClearButton, 'hover:bg-surface-hover')}
-                    >
-                      <Icon
-                        name={ICONS.actions.closeCircle}
-                        className="w-4 h-4 text-text-tertiary"
-                      />
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Filter Sections */}
-              <div className="space-y-5">
-                {/* Date Range Section */}
-                <div className="w-full">
-                  <h4 className="text-sm font-semibold text-text-primary mb-3">Date Range</h4>
-                  <DatePresetBadges value={dateRange} onChange={onDateRangeChange} />
-                </div>
-              </div>
-            </div>
-
-            {/* Footer with Filter Button */}
-            <div className="px-5 py-4 border-t border-border-default bg-surface shrink-0">
-              <div className="flex items-center justify-between gap-3">
-                <FooterInfo icon={MODULE_ICONS.reports} label="Reports" size="md" />
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="md"
-                    layout="text"
-                    onClick={() => onDateRangeChange(null)}
-                  >
-                    Reset
-                  </Button>
-                  <Button variant="primary" size="md" layout="text" onClick={() => setIsModalOpen(false)}>
-                    Filter
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Modal>
+        </EntityFilterModal>
       </>
     );
   }
 
-  // Desktop/Tablet view: 2-column grid
   return (
     <div className="w-full bg-surface border-b border-border-default">
       <div className="px-4 py-2.5 lg:px-5 lg:py-3 w-full">

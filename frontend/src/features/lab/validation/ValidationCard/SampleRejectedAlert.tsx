@@ -3,8 +3,7 @@
  */
 
 import React from 'react';
-import { Alert } from '@/components';
-import { displayId } from '@/utils';
+import { Alert, EntityId } from '@/components';
 import { LAB_COPY } from '../../constants/labCopy';
 
 interface SampleRejectedAlertProps {
@@ -30,7 +29,7 @@ export const SampleRejectedAlert: React.FC<SampleRejectedAlertProps> = ({
             {LAB_COPY.quality.sampleRejected} — Validator Decision Required
           </p>
           <p className={`text-text-secondary leading-tight mt-0.5 ${isCompact ? 'text-xxs' : 'text-xs'}`}>
-            {LAB_COPY.entity.sample} <span className="entity-id">{displayId.sample(sampleId)}</span> was rejected
+            {LAB_COPY.entity.sample} <EntityId type="sample" value={sampleId} /> was rejected
             {sampleRejectionReason && (
               <>: <span className="italic">{sampleRejectionReason}</span></>
             )}

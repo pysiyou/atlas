@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import type { PaymentMethod } from '@/types';
 import { getEnabledPaymentMethods } from '@/types/payments';
 import { PaymentMethodSelector, Alert } from '@/components';
+import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 
 export interface OrderPaymentSectionProps {
   mode: 'create' | 'edit';
@@ -28,7 +29,7 @@ export const OrderPaymentSection: React.FC<OrderPaymentSectionProps> = ({
 
   return (
     <div>
-      <label className="block text-xs font-normal text-text-tertiary mb-2">Payment method</label>
+      <label className={`${FORM_FIELD_LABEL} mb-2`}>Payment method</label>
       <PaymentMethodSelector
         methods={methods}
         value={paymentMethod}

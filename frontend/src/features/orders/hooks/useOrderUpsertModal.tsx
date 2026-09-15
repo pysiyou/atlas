@@ -5,7 +5,8 @@
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import type { Order, PaymentMethod } from '@/types';
 import { PRIORITY_LEVEL_VALUES, PRIORITY_LEVEL_CONFIG } from '@/types';
-import { displayId, formatCurrency } from '@/utils';
+import { formatCurrency } from '@/utils';
+import { EntityId } from '@/components';
 import { createFilterOptions } from '@/utils/filtering';
 import { getErrorMessage } from '@/utils/errors';
 import { getFeedback } from '@/utils/feedback';
@@ -132,7 +133,7 @@ export function useOrderUpsertModal({
     if (mode === 'edit' && order) {
       return (
         <span>
-          Editing order <span className="entity-id">{displayId.order(order.orderId)}</span>
+          Editing order <EntityId type="order" value={order.orderId} />
         </span>
       );
     }

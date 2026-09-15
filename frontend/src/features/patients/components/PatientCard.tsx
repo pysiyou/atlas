@@ -1,8 +1,7 @@
 import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { Badge, Avatar, IconButton, MobileEntityCard } from '@/components';
+import { Badge, Avatar, IconButton, MobileEntityCard, EntityId } from '@/components';
 import type { CardComponentProps } from '@/components';
 import { calculateAge, formatPhoneNumber } from '@/utils';
-import { displayId } from '@/utils';
 import type { Patient } from '@/types';
 
 /**
@@ -25,19 +24,17 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
 
   return (
     <MobileEntityCard onClick={onClick}>
-      {/* Header: Avatar (top left) + Gender badge (top right) */}
-      <div className="flex justify-between items-start mb-3 pb-3 border-b border-border-default">
-        {/* Avatar: Patient name + Patient ID - positioned at top left */}
-        <Avatar
-          primaryText={patient.fullName}
-          primaryTextClassName=""
-          secondaryText={displayId.patient(patient.id)}
-          secondaryTextClassName="entity-id"
-          size="xs"
-        />
-        {/* Gender badge on top right */}
-        <Badge variant={patient.gender} size="xs" />
-      </div>
+      <MobileEntityCard.Header
+        leading={
+          <Avatar
+            primaryText={patient.fullName}
+            primaryTextClassName=""
+            secondaryText={<EntityId type="patient" value={patient.id} />}
+            size="xs"
+          />
+        }
+        trailing={<Badge variant={patient.gender} size="xs" />}
+      />
 
       {/* Contact info: Age, Phone, email */}
       <div className="grow pt-1">

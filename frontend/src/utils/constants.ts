@@ -70,6 +70,10 @@ export function isEntityIdClassName(className?: string): boolean {
 /** Detail row label. */
 export const DETAIL_LABEL = 'text-xs text-text-secondary';
 
+/** Key-value table label (e.g. catalog test detail). */
+export const DETAIL_TABLE_LABEL =
+  'text-xxs text-text-secondary uppercase tracking-wide';
+
 /** Detail row value. */
 export const DETAIL_VALUE = 'text-xs text-text-primary';
 

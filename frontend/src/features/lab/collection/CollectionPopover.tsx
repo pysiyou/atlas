@@ -15,7 +15,7 @@ import type { SampleRequirement } from '@/features/lab/utils';
 import { cn } from '@/utils';
 import { getContainerIcon } from '@/config/icons';
 import { ICONS } from '@/config/icons';
-import { inputBase, inputError } from '@/components/inputs/inputStyles';
+import { inputBase, inputError, FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 
 /** Container type choices for collection: tube or cup only */
 const COLLECTION_CONTAINER_OPTIONS: { value: ContainerType; label: string }[] = [
@@ -121,7 +121,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       {/* Required quantity (volume) */}
       <div>
         <div className="flex items-center justify-between mb-1">
-          <label className="block text-xs font-normal text-text-tertiary">
+          <label className={FORM_FIELD_LABEL}>
             Required Quantity <span className="text-danger-fg">*</span>
           </label>
           {minimumVolume > 0 && (
@@ -159,7 +159,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
       {/* Container Type: tube or cup only */}
       <div>
-        <label className="block text-xs font-normal text-text-tertiary mb-2">
+        <label className={`${FORM_FIELD_LABEL} mb-2`}>
           Container Type <span className="text-danger-fg">*</span>
         </label>
         <div className="grid grid-cols-2 gap-2">
@@ -184,7 +184,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
       {/* Top color: list of coloured circles */}
       <div>
-        <label className="block text-xs font-normal text-text-tertiary mb-1">
+        <label className={`${FORM_FIELD_LABEL} mb-1`}>
           Top Color <span className="text-danger-fg">*</span>
         </label>
         <div className="flex flex-wrap gap-3">
@@ -216,7 +216,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
       {/* Notes */}
       <div>
-        <label className="block text-xs font-normal text-text-tertiary mb-1">Notes</label>
+        <label className={`${FORM_FIELD_LABEL} mb-1`}>Notes</label>
         <textarea
           rows={2}
           placeholder="Add optional notes..."

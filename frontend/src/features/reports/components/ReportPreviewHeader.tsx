@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { formatDateTime } from '@/utils';
+import { EntityId } from '@/components';
 import { companyConfig } from '@/config';
 import type { ReportData } from '../types';
 
@@ -76,9 +77,7 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
           {reportData.testResults.length > 0 ? (
             <>
               {reportData.testResults.map(t => t.testName).join(', ')} Results ({' '}
-              <span className="entity-id">
-                {reportData.testResults.map(t => t.testCode).join(', ')}
-              </span>{' '}
+              <EntityId>{reportData.testResults.map(t => t.testCode).join(', ')}</EntityId>{' '}
               )
             </>
           ) : (

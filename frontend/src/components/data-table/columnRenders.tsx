@@ -2,37 +2,19 @@
  * Reusable table column render helpers for *TableConfig files.
  */
 
-import type { ReactNode } from 'react';
+import type { MouseEvent, ReactNode } from 'react';
 import type { NavigateFunction } from 'react-router-dom';
+import { EntityId } from '@/components/display/EntityId';
 import { formatDate, formatDateTime, formatPhoneNumber, calculateAge, formatCurrency } from '@/utils';
-import { displayId } from '@/utils';
-import {
-  DATA_AMOUNT,
-  ENTITY_ID_BLOCK,
-  ENTITY_ID_CLICKABLE,
-  ENTITY_ID_SECONDARY,
-} from '@/utils/constants';
+import { DATA_AMOUNT } from '@/utils/constants';
 import type { OrderTest } from '@/types';
 
-export function renderDisplayId(
-  id: string | number,
-  formatter: (id: number | null | undefined) => string,
-  className = ENTITY_ID_BLOCK
-): ReactNode {
-  const numericId = typeof id === 'string' ? Number(id) : id;
-  return <span className={`${className} font-normal`}>{formatter(numericId)}</span>;
-}
-
 export function renderPatientId(patientId: string | number): ReactNode {
-  return renderDisplayId(patientId, displayId.patient);
+  return <EntityId type="patient" value={patientId} variant="block" />;
 }
 
 export function renderOrderId(orderId: string | number, clickable = false): ReactNode {
-  return renderDisplayId(
-    orderId,
-    displayId.order,
-    clickable ? ENTITY_ID_CLICKABLE : ENTITY_ID_BLOCK
-  );
+  return <EntityId type="order" value={orderId} variant={clickable ? 'clickable' : 'block'} />;
 }
 
 export function renderPatientNameBlock(fullName: string, secondary?: ReactNode): ReactNode {
@@ -54,10 +36,9 @@ export function renderPatientNameWithAge(fullName: string, dateOfBirth: string):
 }
 
 export function renderPatientNameWithId(fullName: string, patientId: string | number): ReactNode {
-  const numericId = typeof patientId === 'string' ? Number(patientId) : patientId;
   return renderPatientNameBlock(
     fullName,
-    <div className={`${ENTITY_ID_SECONDARY} truncate font-normal`}>{displayId.patient(numericId)}</div>
+    <EntityId type="patient" value={patientId} variant="secondary" className="truncate" />
   );
 }
 
@@ -79,9 +60,7 @@ export function renderOrderTestsBlock(
       <div className="text-text-primary truncate font-normal">
         {activeCount} test{activeCount !== 1 ? 's' : ''}
       </div>
-      {testList ? (
-        <div className={`${ENTITY_ID_SECONDARY} truncate font-normal`}>{testList}</div>
-      ) : null}
+      {testList ? <EntityId variant="secondary" className="truncate">{testList}</EntityId> : null}
     </div>
   );
 }
@@ -149,15 +128,15 @@ export function renderNavigableOrderId(
   navigate: NavigateFunction
 ): ReactNode {
   return (
-    <button
-      type="button"
-      onClick={e => {
+    <EntityId
+      type="order"
+      value={orderId}
+      variant="clickable"
+      as="button"
+      onClick={(e: MouseEvent<HTMLElement>) => {
         e.stopPropagation();
         navigate(`/orders/${orderId}`);
       }}
-      className={`${ENTITY_ID_CLICKABLE} font-normal`}
-    >
-      {displayId.order(typeof orderId === 'string' ? Number(orderId) : orderId)}
-    </button>
+    />
   );
 }

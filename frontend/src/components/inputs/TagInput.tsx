@@ -8,7 +8,7 @@
 import React, { useState, type KeyboardEvent, type ChangeEvent } from 'react';
 import { RemovableTag } from '@/components';
 import { cn } from '@/utils';
-import { inputContainerBase, inputContainerError } from './inputStyles';
+import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from './inputStyles';
 
 export interface TagInputProps {
   /** Current tags as an array of strings */
@@ -77,7 +77,7 @@ export const TagInput: React.FC<TagInputProps> = ({
         <div className="flex justify-between items-baseline mb-1.5 gap-2">
           <label
             htmlFor={inputId}
-            className="text-xs font-normal text-text-tertiary cursor-pointer truncate min-w-0"
+            className={FORM_CONTROL_LABEL}
           >
             {label}
             {required && <span className="text-danger-fg ml-1">*</span>}

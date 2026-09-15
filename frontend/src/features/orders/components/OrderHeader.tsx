@@ -1,12 +1,10 @@
 /**
  * OrderHeader Component
- * Displays order header with badges and action buttons. Uses shared DetailPageHeader for consistent layout.
+ * Displays order header with badges and action buttons. Uses shared PageHeader for consistent layout.
  */
 
 import React from 'react';
-import { Badge, Button, Icon, IconButton } from '@/components';
-import { DetailPageHeader } from '@/components';
-import { EntityId } from '@/components';
+import { Badge, Button, Icon, IconButton, PageHeader, EntityId } from '@/components';
 import type { Order, Invoice } from '@/types';
 import { ICONS } from '@/config/icons';
 
@@ -90,7 +88,7 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
     </div>
   );
   return (
-    <DetailPageHeader
+    <PageHeader
       title={<EntityId type="order" value={order.orderId} />}
       badges={badges}
       actions={actions}

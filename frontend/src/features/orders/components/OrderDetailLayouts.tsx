@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { PagePanel, PagePanelBody, IconButton } from '@/components';
+import { Panel, IconButton } from '@/components';
 import { cn } from '@/utils';
 import { PaymentPopover } from '@/features/payments';
 import type { Order, OrderTest, Patient, Invoice } from '@/types';
@@ -62,69 +62,65 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
   fillHeight,
 }) => {
   const panelClass = fillHeight ? 'h-full min-h-0' : '';
-  const scrollBodyClass = fillHeight ? 'overflow-y-auto' : 'overflow-visible';
-  const paddedBody = cn('p-4', scrollBodyClass);
+  const fillScroll = fillHeight ? 'auto' : 'visible';
   const testsTitle = getTestsTitle(activeTests, order.tests.length, supersededCount, removedCount);
 
   return (
     <>
       <div className={`grid grid-cols-3 gap-4 ${fillHeight ? 'min-h-0' : ''}`}>
-        <PagePanel title="Order Information" className={panelClass}>
-          <PagePanelBody className={paddedBody}>
-            <OrderInfoSection order={order} layout={infoLayout} />
-          </PagePanelBody>
-        </PagePanel>
+        <Panel title="Order Information" className={panelClass} scroll={fillScroll}>
+          <OrderInfoSection order={order} layout={infoLayout} />
+        </Panel>
 
-        <PagePanel
+        <Panel
           title="Patient Information"
           className={panelClass}
-          headerActions={
+          scroll={fillScroll}
+          headerEnd={
             patient ? (
               <IconButton onClick={onViewPatient} variant="view" size="sm" title="View Patient" />
             ) : undefined
           }
         >
-          <PagePanelBody className={paddedBody}>
-            <PatientInfoSection patient={patient} onViewPatient={onViewPatient} layout={infoLayout} />
-          </PagePanelBody>
-        </PagePanel>
+          <PatientInfoSection patient={patient} onViewPatient={onViewPatient} layout={infoLayout} />
+        </Panel>
 
-        <PagePanel
+        <Panel
           title="Order Progress"
           className={panelClass}
-          headerActions={<OrderCircularProgress order={order} />}
+          padding="none"
+          scroll={fillScroll}
+          headerEnd={<OrderCircularProgress order={order} />}
         >
-          <PagePanelBody className={cn('p-0', scrollBodyClass)}>
-            <OrderTimeline order={order} />
-          </PagePanelBody>
-        </PagePanel>
+          <OrderTimeline order={order} />
+        </Panel>
       </div>
 
       <div className={`grid grid-cols-3 gap-4 ${fillHeight ? 'min-h-0' : ''}`}>
-        <PagePanel title={testsTitle} className={cn(panelClass, 'col-span-2')}>
-          <PagePanelBody
-            className={cn(
-              'p-0 overflow-visible',
-              fillHeight && 'flex flex-col min-h-0',
-            )}
-          >
-            <TestsTable
-              tests={order.tests}
-              orderId={order.orderId}
-              variant={testsVariant}
-            />
-          </PagePanelBody>
-        </PagePanel>
+        <Panel
+          title={testsTitle}
+          className={cn(panelClass, 'col-span-2')}
+          padding="none"
+          scroll={fillHeight ? 'auto' : 'visible'}
+          bodyClassName={fillHeight ? 'flex flex-col' : undefined}
+        >
+          <TestsTable
+            tests={order.tests}
+            orderId={order.orderId}
+            variant={testsVariant}
+          />
+        </Panel>
 
-        <PagePanel
+        <Panel
           title="Billing Summary"
           className={panelClass}
-          headerActions={<PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
+          padding="none"
+          scroll={fillScroll}
+          bodyClassName="flex flex-col"
+          headerEnd={<PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
         >
-          <PagePanelBody className={cn(paddedBody, 'flex flex-col')}>
-            <BillingSummarySection order={order} invoice={invoice} onViewInvoice={onViewInvoice} />
-          </PagePanelBody>
-        </PagePanel>
+          <BillingSummarySection order={order} invoice={invoice} onViewInvoice={onViewInvoice} />
+        </Panel>
       </div>
     </>
   );
@@ -140,55 +136,50 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
 
   return (
     <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6 bg-surface-page">
-      <PagePanel title="Order Information" className="shrink-0">
-        <PagePanelBody className="overflow-visible p-4">
-          <OrderInfoSection order={order} layout="grid" />
-        </PagePanelBody>
-      </PagePanel>
+      <Panel title="Order Information" className="shrink-0" scroll="visible">
+        <OrderInfoSection order={order} layout="grid" />
+      </Panel>
 
-      <PagePanel
+      <Panel
         title="Patient Information"
         className="shrink-0"
-        headerActions={
+        scroll="visible"
+        headerEnd={
           patient ? (
             <IconButton onClick={onViewPatient} variant="view" size="sm" title="View Patient" />
           ) : undefined
         }
       >
-        <PagePanelBody className="overflow-visible p-4">
-          <PatientInfoSection patient={patient} onViewPatient={onViewPatient} layout="grid" />
-        </PagePanelBody>
-      </PagePanel>
+        <PatientInfoSection patient={patient} onViewPatient={onViewPatient} layout="grid" />
+      </Panel>
 
-      <PagePanel
+      <Panel
         title="Order Progress"
         className="shrink-0"
-        headerActions={<OrderCircularProgress order={order} />}
+        padding="none"
+        scroll="visible"
+        headerEnd={<OrderCircularProgress order={order} />}
       >
-        <PagePanelBody className="overflow-visible p-0">
-          <OrderTimeline order={order} />
-        </PagePanelBody>
-      </PagePanel>
+        <OrderTimeline order={order} />
+      </Panel>
 
-      <PagePanel title={testsTitle} className="shrink-0">
-        <PagePanelBody className="p-0 overflow-visible">
-          <TestsTable
-            tests={order.tests}
-            orderId={order.orderId}
-            variant="simple"
-          />
-        </PagePanelBody>
-      </PagePanel>
+      <Panel title={testsTitle} className="shrink-0" padding="none" scroll="visible">
+        <TestsTable
+          tests={order.tests}
+          orderId={order.orderId}
+          variant="simple"
+        />
+      </Panel>
 
-      <PagePanel
+      <Panel
         title="Billing Summary"
         className="shrink-0"
-        headerActions={<PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
+        padding="none"
+        scroll="visible"
+        headerEnd={<PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
       >
-        <PagePanelBody className="overflow-visible p-4">
-          <BillingSummarySection order={order} invoice={invoice} onViewInvoice={onViewInvoice} />
-        </PagePanelBody>
-      </PagePanel>
+        <BillingSummarySection order={order} invoice={invoice} onViewInvoice={onViewInvoice} />
+      </Panel>
     </div>
   );
 };
