@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { uppercaseLabel } from '@/utils';
-import { Badge } from '@/components/primitives/Badge';
+import { Badge } from '@/components';
 import type { FilterOption } from './MultiSelectListItem';
 
 export interface MultiSelectTriggerContentProps {

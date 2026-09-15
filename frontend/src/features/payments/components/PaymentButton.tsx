@@ -16,7 +16,7 @@ interface PaymentButtonProps {
   /** Callback invoked on successful payment */
   onPaymentSuccess?: () => void;
   /** Button size for the payment popover trigger */
-  size?: 'xs' | 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg';
 }
 
 /**

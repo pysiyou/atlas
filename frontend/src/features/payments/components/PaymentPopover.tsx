@@ -37,7 +37,7 @@ interface PaymentPopoverProps {
   /** Callback invoked on successful payment */
   onSuccess?: () => void;
   /** Button size for the trigger (used only when trigger is not provided) */
-  size?: 'xs' | 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg';
   /** Optional custom trigger element; when provided, used instead of the default PAY button */
   trigger?: React.ReactNode;
 }
@@ -333,6 +333,7 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
   const defaultTrigger = (
     <Button
       size={size}
+      layout="icon-text"
       variant="primary"
       icon={<Icon name={ICONS.dataFields.wallet} className="text-on-brand" />}
     >

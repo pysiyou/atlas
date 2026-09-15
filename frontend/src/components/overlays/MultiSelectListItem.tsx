@@ -5,7 +5,7 @@
 import React from 'react';
 import { cn, uppercaseLabel } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { Badge } from '@/components/primitives/Badge';
+import { Badge } from '@/components';
 import { Icon } from '@/components/primitives/Icon';
 
 export interface FilterOption {

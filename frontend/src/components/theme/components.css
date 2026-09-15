@@ -4,38 +4,6 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ─────────────────────────────────────────────────────────────────────────
-   Filter chip (modal date badges, quick filters, active badges)
-   ───────────────────────────────────────────────────────────────────────── */
-
-.filter-chip {
-  background-color: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-  transition:
-    background-color 0.15s,
-    border-color 0.15s,
-    color 0.15s;
-}
-
-.filter-chip:hover {
-  background-color: var(--surface-hover);
-  border-color: var(--border-hover);
-  color: var(--text);
-}
-
-.filter-chip--active {
-  background-color: var(--brand-muted);
-  border-color: var(--brand);
-  color: var(--brand-fg);
-}
-
-.filter-chip--active:hover {
-  background-color: var(--brand-muted);
-  border-color: var(--brand-hover);
-  color: var(--brand-fg);
-}
-
-/* ─────────────────────────────────────────────────────────────────────────
    Entity IDs — shared typography for PAT/ORD/SAM/TST codes and catalog codes
    ───────────────────────────────────────────────────────────────────────── */
 

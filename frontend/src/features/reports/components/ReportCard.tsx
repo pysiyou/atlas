@@ -57,7 +57,7 @@ export function ReportCard({ item: test, onClick, onPreview }: ReportCardProps) 
         <div className="text-xs text-text-tertiary">{formatDateTime(test.orderDate)}</div>
         {/* Preview button on bottom right */}
         <div onClick={e => e.stopPropagation()}>
-          <ReportPreviewButton test={test} onPreview={onPreview} size="xs" />
+          <ReportPreviewButton test={test} onPreview={onPreview} size="sm" />
         </div>
       </div>
     </Card>

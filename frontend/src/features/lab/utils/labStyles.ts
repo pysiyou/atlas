@@ -4,7 +4,7 @@
  */
 
 import { TEXT_METADATA, BODY_SECONDARY, ENTITY_ID } from '@/utils/constants';
-import type { BadgeSize } from '@/components/primitives/badgeHelpers';
+import type { BadgeSize } from '@/components';
 
 /** Compact lab workflow badges (cards, modals, queue age) */
 export const LAB_CARD_BADGE_SIZE: BadgeSize = 'xs';
@@ -73,6 +73,9 @@ export const LAB_CARD_TYPOGRAPHY = {
 } as const;
 
 /** Section container titles — matches InfoBanner / “Required for” on lab cards */
+/** Shared inset for titled panels on lab cards (tighter top than sides/bottom). */
+const LAB_CARD_PANEL_INSET = 'px-2 pb-2 pt-1';
+
 export const LAB_SECTION_PANEL = {
   wrapper: 'bg-surface-page',
   header: 'px-2 py-2',
@@ -86,7 +89,7 @@ export const LAB_CARD_SPACING = {
   cardGap: 'gap-1',
 
   // Section content margins
-  sectionTitleMargin: 'mb-1.5',
+  sectionTitleMargin: 'mb-1',
 
   // Flags section title margin
   flagsTitleMargin: 'mb-1',
@@ -122,10 +125,10 @@ export const LAB_CARD_CONTAINERS = {
   cardBase: 'shadow-sm hover:bg-surface-hover transition-colors duration-200',
 
   // Content section (gray background)
-  contentSection: 'bg-surface-page rounded p-2 border border-border-default',
+  contentSection: `bg-surface-page rounded border border-border-default ${LAB_CARD_PANEL_INSET}`,
 
   // Flags section (red background)
-  flagsSection: 'bg-danger-bg rounded p-2 border border-danger-stroke',
+  flagsSection: `bg-danger-bg rounded border border-danger-stroke ${LAB_CARD_PANEL_INSET}`,
 } as const;
 
 // List Item Constants

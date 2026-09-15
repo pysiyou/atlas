@@ -1,6 +1,6 @@
 import React from 'react';
 import { DetailField } from './DetailField';
-import type { BadgeVariant } from '@/components/primitives/Badge';
+import type { BadgeVariant } from '@/components';
 
 /**
  * Badge configuration for a field in the group

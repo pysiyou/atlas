@@ -8,7 +8,7 @@ import { Badge } from '@/components';
 import { cn, displayId } from '@/utils';
 import { LAB_ENTITY_ID_INLINE } from '@/features/lab/utils/labStyles';
 import { getLabQueueUrl } from '@/features/lab/constants/labTabs';
-import { COMMAND_CENTER_BADGE_TEXT, COMMAND_CENTER_ATTENTION_ACCENT } from './components/styles';
+import { COMMAND_CENTER_ATTENTION_ACCENT } from './components/styles';
 import type { AttentionItem } from './boardTypes';
 import {
   ATTENTION_TYPE_ORDER,
@@ -63,11 +63,7 @@ function AttentionFeedRow({ item }: { item: AttentionItem }) {
 
         <div className="min-w-0 flex-1 space-y-1">
           <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
-            <Badge
-              variant={typeConfig.badgeVariant}
-              size="xs"
-              className={COMMAND_CENTER_BADGE_TEXT[typeConfig.badgeTextTone]}
-            >
+            <Badge variant={typeConfig.badgeVariant} size="xs">
               {typeConfig.pillLabel}
             </Badge>
             <span className="min-w-0 text-sm font-light text-text-primary group-hover:text-brand-fg">

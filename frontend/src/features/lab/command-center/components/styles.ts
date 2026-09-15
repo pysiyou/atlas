@@ -2,6 +2,8 @@
  * Command center shared layout, surface, and tone styles.
  */
 
+import { PAGE_PANEL } from '@/components/surfaces/pagePanelStyles';
+
 export type CommandCenterKpiTone = 'brand' | 'success' | 'warning' | 'danger' | 'neutral';
 
 export type CommandCenterTextTone = 'default' | 'success' | 'warning' | 'danger';
@@ -27,17 +29,6 @@ export const COMMAND_CENTER_TEXT_TONE: Record<CommandCenterTextTone, string> = {
   danger: 'text-danger-fg-emphasis',
 };
 
-export type CommandCenterBadgeTextTone = 'danger' | 'warning' | 'info' | 'success' | 'neutral';
-
-/** Category badge text — matches pre-Badge pill emphasis colors */
-export const COMMAND_CENTER_BADGE_TEXT: Record<CommandCenterBadgeTextTone, string> = {
-  danger: 'text-danger-fg-emphasis',
-  warning: 'text-warning-fg-emphasis',
-  info: 'text-info-fg-emphasis',
-  success: 'text-success-fg-emphasis',
-  neutral: 'text-text-secondary',
-};
-
 export function resolveCommandCenterTextTone(
   tone: CommandCenterTextTone = 'default',
   active = true,
@@ -47,12 +38,9 @@ export function resolveCommandCenterTextTone(
 }
 
 export const COMMAND_CENTER_PANEL = {
-  shell: 'h-full bg-surface rounded border border-border-default shadow-sm overflow-hidden flex flex-col',
-  header: 'shrink-0 px-4 py-2.5 border-b border-border-default flex items-center gap-3',
-  headerBetween: 'shrink-0 px-4 py-2.5 border-b border-border-default flex items-center justify-between gap-3',
-  title: `text-sm font-light ${COMMAND_CENTER_TEXT.panelTitle}`,
+  ...PAGE_PANEL,
+  title: `m-0 truncate text-sm font-light leading-none ${COMMAND_CENTER_TEXT.panelTitle}`,
   meta: `flex h-6 shrink-0 items-center text-xxs ${COMMAND_CENTER_TEXT.panelMeta}`,
-  body: 'flex-1 min-h-0 overflow-hidden',
   page: 'flex-1 min-h-0 min-w-0 overflow-hidden bg-surface-page p-2',
 } as const;
 

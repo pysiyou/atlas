@@ -286,7 +286,6 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
               onClick={onAction}
               disabled={loading}
               isLoading={loading}
-              className="font-normal bg-brand hover:bg-brand-hover text-on-brand rounded-lg py-3 text-base shadow-sm"
             >
               {getActionText()}
             </Button>

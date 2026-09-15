@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Avatar, Icon } from '@/components';
+import { Avatar, Icon, RemovableTag, TagChip } from '@/components';
 import { cn, displayId } from '@/utils';
 import { inputContainerBase, inputContainerError } from '@/components/inputs/inputStyles';
 import type { Patient } from '@/types';
 import { ICONS } from '@/config/icons';
-import { getBadgeAppearance } from '@/components/theme/theme';
-import { TAG_STYLES } from '@/components/primitives/badgeHelpers';
 
 interface PatientSelectorProps {
   selectedPatient: Patient | null;
@@ -33,12 +31,8 @@ const PatientSearchTagInput: React.FC<{
   onClearSelection: () => void;
   error?: string;
   disabled?: boolean;
-}> = ({ selectedPatient, value, onValueChange, onClearSelection, error, disabled = false }) => {
-  const appearance = getBadgeAppearance();
-  const tagStyles = TAG_STYLES[appearance];
-
-  return (
-    <div className="w-full">
+}> = ({ selectedPatient, value, onValueChange, onClearSelection, error, disabled = false }) => (
+  <div className="w-full">
       <div className="flex justify-between items-baseline mb-1 gap-2">
         <label
           htmlFor="order-patient-search"
@@ -63,34 +57,39 @@ const PatientSearchTagInput: React.FC<{
           />
         </div>
 
-        {selectedPatient && (
-          <div
-            className={`flex items-center gap-2 px-2 py-1 rounded max-w-full shrink-0 ${tagStyles.container}`}
-          >
-            <Avatar
-              primaryText={selectedPatient.fullName}
-              size="xxs"
-              avatarOnly={true}
-              className="shrink-0"
-            />
-            <span className={`text-xs font-normal truncate min-w-0 capitalize ${tagStyles.text}`}>
-              {selectedPatient.fullName}
-            </span>
-            <span className="entity-id shrink-0">
-              {displayId.patient(selectedPatient.id)}
-            </span>
-            {!disabled && (
-              <button
-                type="button"
-                onClick={onClearSelection}
-                className="flex items-center justify-center ml-0.5 -mr-0.5 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-brand/30 shrink-0"
-                aria-label="Clear selected patient"
-              >
-                <Icon name={ICONS.actions.closeCircle} className={`w-3 h-3 ${tagStyles.remove}`} />
-              </button>
-            )}
-          </div>
-        )}
+        {selectedPatient &&
+          (disabled ? (
+            <TagChip size="sm" className="gap-2">
+              <Avatar
+                primaryText={selectedPatient.fullName}
+                size="xxs"
+                avatarOnly
+                className="shrink-0"
+              />
+              <span className="min-w-0 truncate text-xs font-normal capitalize">
+                {selectedPatient.fullName}
+              </span>
+              <span className="entity-id shrink-0">{displayId.patient(selectedPatient.id)}</span>
+            </TagChip>
+          ) : (
+            <RemovableTag
+              size="sm"
+              onRemove={onClearSelection}
+              removeAriaLabel="Clear selected patient"
+              className="gap-2"
+            >
+              <Avatar
+                primaryText={selectedPatient.fullName}
+                size="xxs"
+                avatarOnly
+                className="shrink-0"
+              />
+              <span className="min-w-0 truncate text-xs font-normal capitalize">
+                {selectedPatient.fullName}
+              </span>
+              <span className="entity-id shrink-0">{displayId.patient(selectedPatient.id)}</span>
+            </RemovableTag>
+          ))}
 
         <input
           id="order-patient-search"
@@ -109,7 +108,6 @@ const PatientSearchTagInput: React.FC<{
       {error && <p className="mt-1.5 text-xs text-danger-fg">{error}</p>}
     </div>
   );
-};
 
 export const PatientSelect: React.FC<PatientSelectorProps> = ({
   selectedPatient,

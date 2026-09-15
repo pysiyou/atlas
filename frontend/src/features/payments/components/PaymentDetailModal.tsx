@@ -166,9 +166,9 @@ const PaymentDetailFooter: React.FC<{
     <FooterInfo icon={MODULE_ICONS.payments} label="Payments" size="md" />
     <div className="flex items-center gap-3">
       <Button
-        variant={isPaid ? 'close' : 'cancel'}
+        variant="cancel"
         size="md"
-        showIcon={true}
+        layout="icon-text"
         onClick={onClose}
         disabled={submitting}
       >
@@ -178,6 +178,7 @@ const PaymentDetailFooter: React.FC<{
         <Button
           variant="primary"
           size="md"
+          layout="icon-text"
           onClick={onPay}
           disabled={submitting || paymentsLoading || remainingAmount <= 0}
           isLoading={submitting}

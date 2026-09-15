@@ -10,12 +10,10 @@
  * - The popover stays open while selecting; outside click closes only when every visible test is checked.
  */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Icon } from '@/components';
+import { Icon, RemovableTag, TagChip } from '@/components';
 import type { Test } from '@/types';
 import { cn, formatCurrency } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { getBadgeAppearance } from '@/components/theme/theme';
-import { TAG_STYLES } from '@/components/primitives/badgeHelpers';
 import { inputContainerBase, inputContainerError } from '@/components/inputs/inputStyles';
 
 interface TestSelectorProps {
@@ -54,12 +52,8 @@ const TestSearchTagInput: React.FC<{
   onValueChange: (value: string) => void;
   onRemoveTag: (code: string) => void;
   error?: string;
-}> = ({ selectedTags, value, onValueChange, onRemoveTag, error }) => {
-  const appearance = getBadgeAppearance();
-  const tagStyles = TAG_STYLES[appearance];
-
-  return (
-    <div className="w-full">
+}> = ({ selectedTags, value, onValueChange, onRemoveTag, error }) => (
+  <div className="w-full">
       <div className="flex justify-between items-baseline mb-1 gap-2">
         <label
           htmlFor="order-test-search"
@@ -84,21 +78,15 @@ const TestSearchTagInput: React.FC<{
         </div>
 
         {selectedTags.map(({ code, name }, idx) => (
-          <div
+          <RemovableTag
             key={`${code}-${idx}`}
-            className={`flex items-center gap-2 px-2 py-1 rounded max-w-full shrink-0 ${tagStyles.container}`}
+            size="sm"
+            onRemove={() => onRemoveTag(code)}
+            removeAriaLabel={`Remove ${code}`}
           >
-            <span className={`text-xs font-normal truncate min-w-0 ${tagStyles.text}`}>{name}</span>
+            <span className="min-w-0 truncate text-xs font-normal">{name}</span>
             <span className="entity-id shrink-0">{code}</span>
-            <button
-              type="button"
-              onClick={() => onRemoveTag(code)}
-              className="flex items-center justify-center ml-0.5 -mr-0.5 rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-brand/30 shrink-0"
-              aria-label={`Remove ${code}`}
-            >
-              <Icon name={ICONS.actions.closeCircle} className={`w-3 h-3 ${tagStyles.remove}`} />
-            </button>
-          </div>
+          </RemovableTag>
         ))}
 
         <input
@@ -117,19 +105,16 @@ const TestSearchTagInput: React.FC<{
       {error && <p className="mt-1.5 text-xs text-danger-fg">{error}</p>}
     </div>
   );
-};
 
 interface TestSelectPopoverProps {
   visibleTests: Test[];
   selectedSet: Set<string>;
-  tagStyles: (typeof TAG_STYLES)[ReturnType<typeof getBadgeAppearance>];
   onToggleTest: (testCode: string) => void;
 }
 
 const TestSelectPopover: React.FC<TestSelectPopoverProps> = ({
   visibleTests,
   selectedSet,
-  tagStyles,
   onToggleTest,
 }) => (
   <div
@@ -173,24 +158,20 @@ const TestSelectPopover: React.FC<TestSelectPopoverProps> = ({
               ].join(' ')}
             >
               <div className="min-w-0">
-                <div className="flex items-center gap-2 min-w-0">
-                  <span
-                    className={`entity-id shrink-0 px-2 py-0.5 rounded ${tagStyles.container}`}
-                  >
+                <div className="flex min-w-0 items-center gap-2">
+                  <TagChip size="xs" emphasis="code" className="entity-id shrink-0">
                     {code}
-                  </span>
-                  <span className="shrink-0 text-xs font-normal px-2 py-0.5 rounded truncate">
+                  </TagChip>
+                  <span className="min-w-0 truncate text-xs font-normal text-text-primary">
                     {safeName}
                   </span>
                 </div>
               </div>
 
-              <div className="shrink-0 flex items-center gap-3">
-                <div
-                  className={`text-xs font-normal px-2 py-1 rounded ${tagStyles.container} ${tagStyles.code}`}
-                >
+              <div className="flex shrink-0 items-center gap-3">
+                <TagChip size="sm" emphasis="code">
                   {formatCurrency(price)}
-                </div>
+                </TagChip>
                 <SelectionCheck isSelected={isSelected} />
               </div>
             </button>
@@ -212,8 +193,6 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const appearance = getBadgeAppearance();
-  const tagStyles = TAG_STYLES[appearance];
 
   /**
    * Defensive: normalize selected tests to a set for fast membership checks.
@@ -315,7 +294,6 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
         <TestSelectPopover
           visibleTests={visibleTests}
           selectedSet={selectedSet}
-          tagStyles={tagStyles}
           onToggleTest={onToggleTest}
         />
       )}

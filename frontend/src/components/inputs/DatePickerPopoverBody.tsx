@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { cn } from '@/utils';
+import { FilterChip } from '@/components';
 import { DATE_PRESETS, type DatePreset } from '@/utils/date';
 import {
   DatePickerHeader,
@@ -79,17 +79,14 @@ export const DatePickerPopoverBody: React.FC<DatePickerPopoverBodyProps> = ({
     <div className="mt-3">
       <div className="flex flex-wrap gap-2">
         {DATE_PRESETS.map(preset => (
-          <button
+          <FilterChip
             key={preset.id}
+            size="sm"
+            active={activePresetId === preset.id}
             onClick={() => onPresetClick(preset.id)}
-            className={cn(
-              'px-2 py-1 text-xxs font-normal rounded cursor-pointer transition-colors',
-              'filter-chip',
-              activePresetId === preset.id && 'filter-chip--active'
-            )}
           >
             {preset.label}
-          </button>
+          </FilterChip>
         ))}
       </div>
     </div>

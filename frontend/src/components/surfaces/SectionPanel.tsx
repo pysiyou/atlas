@@ -61,7 +61,7 @@ export const SectionPanel: React.FC<SectionPanelProps> = ({
   const wrapperStyles = `w-full bg-surface border border-border-default rounded-md overflow-hidden ${className}`;
   const headerStyles = cn(HEADER_LAYOUT, headerClassName);
   const spacingClass = SPACING_CLASSES[spacing];
-  const contentStyles = `p-4 ${spacingClass} ${contentClassName}`.trim();
+  const contentStyles = cn('p-4', spacingClass, contentClassName);
 
   return (
     <section className={wrapperStyles} data-testid={testId}>

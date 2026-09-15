@@ -198,17 +198,18 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
       footer={
         readOnly ? (
           <ModalFooter statusMessage="">
-            <Button onClick={onClose} variant="cancel" size="md">Close</Button>
+            <Button onClick={onClose} variant="cancel" size="md" layout="icon-text">Close</Button>
           </ModalFooter>
         ) : (
           <ModalFooter statusMessage="">
-            <Button onClick={onClose} variant="cancel" size="md" disabled={isSaving}>
+            <Button onClick={onClose} variant="cancel" size="md" layout="icon-text" disabled={isSaving}>
               Cancel
             </Button>
             <Button
               onClick={handleSave}
               variant="save"
               size="md"
+              layout="icon-text"
               disabled={!isComplete}
               isLoading={isSaving}
             >

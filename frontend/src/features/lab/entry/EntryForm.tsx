@@ -148,7 +148,9 @@ export const EntryForm: React.FC<EntryFormProps> = ({
             onClick={onSave}
             disabled={!canSubmit}
             variant="submit"
-            className="shadow-sm text-xs ml-auto"
+            size="sm"
+            layout="icon-text"
+            className="shadow-sm ml-auto"
           >
             Submit Results
           </Button>

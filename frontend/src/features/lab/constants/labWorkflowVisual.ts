@@ -3,7 +3,7 @@
  * Colors come from theme `--workflow-*` tokens (see semantic-light.css + theme files).
  */
 
-import type { BadgeVariant } from '@/components/primitives/badgeHelpers';
+import type { BadgeVariant } from '@/components';
 import { timelineLaneLabel, type LabTimelineLane, type LabWorkflowStage } from './labCopy';
 
 export interface LabLaneVisual {

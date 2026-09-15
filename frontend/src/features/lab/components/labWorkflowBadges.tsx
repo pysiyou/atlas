@@ -10,6 +10,7 @@
 
 import React, { type ReactNode } from 'react';
 import { Badge, Icon } from '@/components';
+import type { BadgeSize } from '@/components';
 import Barcode from 'react-barcode';
 import type { ContainerType, ContainerTopColor, Sample, RejectedSample, TestWithContext } from '@/types';
 import { CONTAINER_CONFIG } from '@/types';
@@ -21,7 +22,6 @@ import {
 } from '@/features/lab/utils';
 import { getContainerIcon, ICONS } from '@/config/icons';
 import { LAB_CARD_BADGE_SIZE, LAB_ENTITY_ID } from '../utils/labStyles';
-import type { BadgeSize } from '@/components/primitives/badgeHelpers';
 import { QueueAgeBadge } from './QueueAgeBadge';
 import { BlockedReasonBadge, FlagCountBadge } from './StatusBadges';
 import {

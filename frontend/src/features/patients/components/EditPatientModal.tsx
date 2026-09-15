@@ -80,10 +80,10 @@ const ModalFooter: React.FC<ModalFooterProps> = ({
   <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-border-default bg-surface shrink-0 shadow-[var(--shadow-footer)]">
     {footerInfo}
     <div className="flex items-center gap-3">
-      <Button type="button" variant="cancel" showIcon onClick={onClose} disabled={isSubmitting}>
+      <Button type="button" variant="cancel" size="md" layout="icon-text" onClick={onClose} disabled={isSubmitting}>
         Cancel
       </Button>
-      <Button type="submit" variant="save" form={formId} isLoading={isSubmitting} disabled={isSubmitting}>
+      <Button type="submit" variant="save" size="md" layout="icon-text" form={formId} isLoading={isSubmitting} disabled={isSubmitting}>
         {submitLabel}
       </Button>
     </div>
