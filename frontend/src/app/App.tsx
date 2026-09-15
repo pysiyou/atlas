@@ -11,7 +11,7 @@ import { Toaster } from 'react-hot-toast';
 import { AppProviders } from '@/app/AppProviders';
 import { ErrorBoundary } from '@/components';
 import { AppToastBar } from '@/app/AppToastBar';
-import { TOAST_DEFAULT_DURATION_MS } from '@/components/overlays/toast';
+import { TOAST_DEFAULT_DURATION_MS } from '@/components/overlays/Toast';
 import { InitialDataPreload } from '@/app/InitialDataPreload';
 import { ProtectedLayout } from '@/app/ProtectedLayout';
 import { PublicRoute } from '@/app/PublicRoute';

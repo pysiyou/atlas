@@ -1,21 +1,17 @@
 /**
  * Toast adapter — typed `toast` API + react-hot-toast renderer.
- * One toast at a time (new replaces existing). UI lives in overlays/toast.
+ * One toast at a time (new replaces existing). UI lives in overlays/Toast.
  */
 
 import React from 'react';
-import toastLib, { resolveValue, type Toast } from 'react-hot-toast';
+import toastLib, { resolveValue, type Toast as HotToast } from 'react-hot-toast';
 import {
-  ToastError,
-  ToastInfo,
-  ToastLoading,
-  ToastSuccess,
-  ToastWarning,
+  Toast,
   DEFAULT_TOAST_TITLES,
   TOAST_DEFAULT_DURATION_MS,
   type ToastAction,
   type ToastVariant,
-} from '@/components/overlays/toast';
+} from '@/components/overlays/Toast';
 
 export interface ToastMessageObject {
   title?: string;
@@ -98,7 +94,7 @@ if (import.meta.env.DEV) {
   (globalThis as { __atlasToast?: typeof toast }).__atlasToast = toast;
 }
 
-function getEffectiveVariant(hostToast: Toast, raw: unknown): ToastVariant {
+function getEffectiveVariant(hostToast: HotToast, raw: unknown): ToastVariant {
   if (isToastMessageObject(raw) && raw.variant === 'info') return 'info';
   if (isToastMessageObject(raw) && raw.variant === 'warning') return 'warning';
   if (hostToast.type === 'success') return 'success';
@@ -122,32 +118,22 @@ function resolveContent(
 }
 
 export interface AppToastBarProps {
-  toast: Toast;
+  toast: HotToast;
 }
 
-const VARIANT_COMPONENT = {
-  success: ToastSuccess,
-  error: ToastError,
-  warning: ToastWarning,
-  info: ToastInfo,
-  loading: ToastLoading,
-} as const;
-
-/**
- * Maps a react-hot-toast record onto the matching Toast derivative.
- */
+/** Maps a react-hot-toast record onto {@link Toast}. */
 export const AppToastBar: React.FC<AppToastBarProps> = React.memo(({ toast: hostToast }) => {
   const raw = resolveValue(hostToast.message, hostToast);
   const variant = getEffectiveVariant(hostToast, raw);
   const content = resolveContent(raw, variant);
-  const VariantToast = VARIANT_COMPONENT[variant];
 
   const onDismiss = React.useCallback(() => {
     toastLib.dismiss(hostToast.id, hostToast.toasterId);
   }, [hostToast.id, hostToast.toasterId]);
 
   return (
-    <VariantToast
+    <Toast
+      variant={variant}
       title={content.title}
       subtitle={content.subtitle}
       actions={content.actions}
