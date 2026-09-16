@@ -7,7 +7,7 @@ export const paymentMethodSchema = z.enum([
   'debit-card',
   'insurance',
   'bank-transfer',
-  'mobile-money',
+  'mobile',
 ]);
 
 export const paymentSchema = z.object({

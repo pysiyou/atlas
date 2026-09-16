@@ -10,7 +10,7 @@ export type PaymentMethod =
   | 'debit-card'
   | 'insurance'
   | 'bank-transfer'
-  | 'mobile-money';
+  | 'mobile';
 
 /**
  * Payment method option configuration for UI components
@@ -35,7 +35,7 @@ export interface PaymentMethodOption {
  */
 export const PAYMENT_METHOD_OPTIONS: PaymentMethodOption[] = [
   { value: 'cash', label: 'Cash', icon: ICONS.dataFields.cash, enabled: true },
-  { value: 'mobile-money', label: 'Mobile Money', icon: ICONS.ui.smartphone, enabled: true },
+  { value: 'mobile', label: 'Mobile', icon: ICONS.ui.smartphone, enabled: true },
   { value: 'credit-card', label: 'Credit Card', icon: ICONS.dataFields.creditCard, enabled: false },
   { value: 'debit-card', label: 'Debit Card', icon: ICONS.dataFields.creditCard, enabled: false },
   { value: 'insurance', label: 'Insurance', icon: ICONS.ui.shield, enabled: false },

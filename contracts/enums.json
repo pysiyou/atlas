@@ -179,7 +179,7 @@
       "DEBIT_CARD": "debit-card",
       "INSURANCE": "insurance",
       "BANK_TRANSFER": "bank-transfer",
-      "MOBILE_MONEY": "mobile-money"
+      "MOBILE": "mobile"
     }
   },
   "ClaimStatus": {

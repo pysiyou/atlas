@@ -1,32 +1,25 @@
 /**
  * PaymentDetailModal Component
  *
- * Modal that displays complete order payment information in a receipt-style layout.
- * Similar to PaymentPopover but larger - displays as a receipt with:
- * - Order details (ID, date, patient) in receipt header
- * - List of ordered tests with prices
- * - Total amount
- * - Payment method selection (if not paid)
- * - Notes field (if not paid)
- * - Cancel and Pay buttons in footer
- *
- * Payment methods are sourced from the centralized PAYMENT_METHOD_OPTIONS in types/payments.
+ * Modal that uses the same BillingSummarySection as order details, plus payment actions when unpaid.
  */
 import React, { useState, useCallback } from 'react';
 import {
   Modal,
+  Panel,
   Icon,
   Button,
   Alert,
-  Callout,
   FooterInfo,
   PaymentMethodSelector,
   ErrorBoundary,
   DialogFooter,
   EntityId,
+  SkeletonText,
 } from '@/components';
 import { cn, formatCurrency } from '@/utils';
-import { OrderReceipt } from '@/features/orders';
+import { BillingSummarySection } from '@/features/orders/components/BillingSummarySection';
+import { useOrder } from '@/features/orders';
 import { inputBase } from '@/components/inputs/inputStyles';
 import { useCreatePayment, useOrderRemainingBalance } from '../api/payments';
 import {
@@ -102,6 +95,12 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   const sourceOrder = view?.order;
+  const orderIdForFetch =
+    isOpen && sourceOrder != null ? String(sourceOrder.orderId) : undefined;
+  const { order: orderDetail, isLoading: orderDetailLoading, isError: orderDetailError } =
+    useOrder(orderIdForFetch);
+  const billingOrder = orderDetail ?? sourceOrder;
+
   const { remainingAmount, paymentsLoading } = useOrderRemainingBalance(
     sourceOrder ? String(sourceOrder.orderId) : undefined,
     sourceOrder?.totalPrice ?? 0
@@ -180,13 +179,33 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
         <div className="flex flex-col h-full bg-surface-page">
           {/* Scrollable content area */}
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
-            {/* Receipt-style Order Summary */}
-            <OrderReceipt
-              order={sourceOrder}
-              variant="detailed"
-              paymentDate={view.paymentDate}
-              paymentMethod={view.paymentMethod}
-            />
+            <Panel
+              title="Billing Summary"
+              padding="none"
+              scroll="visible"
+              bodyClassName="flex flex-col"
+              className="h-auto shrink-0"
+            >
+              {orderDetailLoading ? (
+                <div className="p-4">
+                  <SkeletonText lines={6} />
+                </div>
+              ) : orderDetailError ? (
+                <div className="p-4">
+                  <Alert variant="danger" className="py-3">
+                    <p className="text-sm">
+                      Could not load order line items. Try closing and opening again.
+                    </p>
+                  </Alert>
+                </div>
+              ) : billingOrder ? (
+                <BillingSummarySection
+                  order={billingOrder}
+                  fillHeight={false}
+                  paymentMethod={view.paymentMethod}
+                />
+              ) : null}
+            </Panel>
 
             {/* Payment Method Selection - Only show if not paid */}
             {!isPaid && (
@@ -226,13 +245,6 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
               <Alert variant="danger" className="py-3">
                 <p className="text-sm">{error}</p>
               </Alert>
-            )}
-
-            {/* Paid Success Message */}
-            {isPaid && (
-              <Callout variant="success" title="Payment Complete" className="p-4">
-                This order has been fully paid.
-              </Callout>
             )}
           </div>
 

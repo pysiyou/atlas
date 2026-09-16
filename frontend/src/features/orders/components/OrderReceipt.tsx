@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Badge, EntityId } from '@/components';
-import { cn, formatCurrency, formatDateTime } from '@/utils';
+import { cn, displayId, formatCurrency, formatDateTime } from '@/utils';
 import { getActiveTests, getActiveTotal } from '../utils/orderCalculator';
 import type { Order, OrderTest } from '@/types';
 
@@ -19,6 +19,8 @@ export interface OrderReceiptProps {
   showTotal?: boolean;
   /** When false, payment status badge is hidden in the compact/panel header. Default true. */
   showPaymentStatusBadge?: boolean;
+  /** Panel: grow item list with content instead of internal scroll (e.g. payment modal). */
+  expandItems?: boolean;
 }
 
 function receiptShellClass(variant: OrderReceiptVariant): string {
@@ -43,6 +45,9 @@ function ReceiptHeader({
   showPaymentStatusBadge: boolean;
 }) {
   const isDetailed = variant === 'detailed';
+  const metaRowClass =
+    'flex flex-wrap items-center gap-x-2 gap-y-0.5 min-w-0 leading-snug text-xs text-text-tertiary';
+  const metaPartClass = 'font-normal tabular-nums text-xs';
 
   return (
     <div
@@ -99,18 +104,29 @@ function ReceiptHeader({
                 {order.patientName}
               </p>
             ) : null}
-            <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-text-tertiary">
-              <EntityId type="order" value={order.orderId} variant="secondary" className="min-w-0" />
+            <div className={metaRowClass}>
+              <span className={cn(metaPartClass, 'min-w-0 truncate')}>
+                {displayId.order(order.orderId)}
+              </span>
               {order.orderDate && (
                 <>
-                  <span className="text-border-strong" aria-hidden>·</span>
-                  <span className="tabular-nums shrink-0">{formatDateTime(order.orderDate)}</span>
+                  <span className="text-text-disabled select-none" aria-hidden>
+                    •
+                  </span>
+                  <span className={cn(metaPartClass, 'shrink-0 whitespace-nowrap')}>
+                    {formatDateTime(order.orderDate)}
+                  </span>
                 </>
               )}
             </div>
           </div>
           {showPaymentStatusBadge && (
-            <Badge variant={order.paymentStatus} size="xs" className="shrink-0" />
+            <div className="flex items-center gap-1.5 shrink-0">
+              <Badge variant={order.paymentStatus} size="xs" />
+              {paymentMethod && order.paymentStatus !== 'unpaid' && (
+                <Badge variant={paymentMethod} size="xs" />
+              )}
+            </div>
           )}
         </div>
       ) : (
@@ -173,18 +189,22 @@ function ReceiptItems({
   tests,
   variant,
   pad,
+  expandItems,
 }: {
   tests: OrderTest[];
   variant: OrderReceiptVariant;
   pad: string;
+  expandItems?: boolean;
 }) {
   const isDetailed = variant === 'detailed';
   const isCompact = variant === 'compact';
-  const listMax = isCompact
-    ? 'max-h-32 overflow-y-auto'
-    : isDetailed
-      ? 'max-h-96 overflow-y-auto'
-      : 'flex-1 min-h-0 overflow-y-auto';
+  const listMax = expandItems
+    ? undefined
+    : isCompact
+      ? 'max-h-32 overflow-y-auto'
+      : isDetailed
+        ? 'max-h-96 overflow-y-auto'
+        : 'flex-1 min-h-0 overflow-y-auto';
 
   return (
     <div className={cn(pad, isDetailed ? 'py-4' : 'py-2', listMax)}>
@@ -256,6 +276,7 @@ export const OrderReceipt: React.FC<OrderReceiptProps> = ({
   paymentMethod,
   showTotal = true,
   showPaymentStatusBadge = true,
+  expandItems = false,
 }) => {
   const activeTests = getActiveTests(order.tests ?? []);
   const activeTotal = getActiveTotal(order.tests ?? []);
@@ -271,7 +292,7 @@ export const OrderReceipt: React.FC<OrderReceiptProps> = ({
         pad={pad}
         showPaymentStatusBadge={showPaymentStatusBadge}
       />
-      <ReceiptItems tests={activeTests} variant={variant} pad={pad} />
+      <ReceiptItems tests={activeTests} variant={variant} pad={pad} expandItems={expandItems} />
       {showTotal && <ReceiptTotal total={activeTotal} variant={variant} pad={pad} />}
     </div>
   );
