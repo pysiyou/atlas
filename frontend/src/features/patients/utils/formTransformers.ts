@@ -3,7 +3,7 @@
  * Transforms between flat form structure (for UI) and nested schema structure (for API)
  */
 
-import type { PatientFormInput } from '../schemas/patient.schema';
+import type { PatientFormInput } from '../schemas/patientFormSchemas';
 import type { FieldErrors } from 'react-hook-form';
 import type { Patient as PatientType, AffiliationDuration } from '@/types';
 
@@ -168,7 +168,7 @@ export function formInputToPayload(
  */
 // eslint-disable-next-line complexity
 export function createFormDataAdapter(
-  watch: import('react-hook-form').UseFormWatch<import('../schemas/patient.schema').PatientFormInput>,
+  watch: import('react-hook-form').UseFormWatch<import('../schemas/patientFormSchemas').PatientFormInput>,
   hasAffiliationChecked: boolean
 ) {
   const formValues = watch();

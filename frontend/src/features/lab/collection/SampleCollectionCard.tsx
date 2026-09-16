@@ -13,7 +13,7 @@ import { useLabWorkflowCardClickGuard } from '@/features/lab/hooks';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
 import { LabWorkflowCardShell, TestList } from '../components/LabWorkflowCardShell';
 import { CollectionHeaderBadges } from '../components/LabWorkflowBadges';
-import { collectionHeaderAudit } from '../components/labWorkflowAuditLines';
+import { collectionHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { LabMobileCardHeader } from '../components/LabWorkflowMobileHeader';
 import { LAB_MOBILE_CARD } from '../utils/labStyles';
 import { SampleCollectionPopover } from './SampleCollectionPopover';

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useTestNameLookup } from '@/features/catalog';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { orderTestKey } from '../utils/orderTestKey';
+import { orderTestKey } from '../utils/labSearchAndLinks';
 import { notify } from '@/utils/feedback';
 import type { TestWithContext, Test, Order } from '@/types';
 

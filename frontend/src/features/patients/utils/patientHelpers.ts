@@ -4,7 +4,7 @@
  */
 
 import type { Affiliation } from '@/types';
-import type { PatientFormInput } from '../schemas/patient.schema';
+import type { PatientFormInput } from '../schemas/patientFormSchemas';
 
 // ============================================================================
 // AFFILIATION UTILITIES

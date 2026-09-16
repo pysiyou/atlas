@@ -17,8 +17,8 @@ export {
   useUpdateOrder,
   useDeleteOrder,
   useUpdatePaymentStatus,
-} from './api/orders.api';
-export type { OrdersFilter, OrdersFilters, PaginationOptions } from './api/orders.api';
+} from './api/orders';
+export type { OrdersFilter, OrdersFilters, PaginationOptions } from './api/orders';
 
 export { useOrderSearch, useOrderLookup, useInvalidateOrders } from './hooks/useOrderDisplayHelpers';
 
@@ -27,5 +27,6 @@ export type { OrderUpsertModalProps } from './components/OrderUpsertModal';
 export { OrderReceipt } from './components/OrderReceipt';
 export type { OrderReceiptProps, OrderReceiptVariant } from './components/OrderReceipt';
 
-export * from './utils';
+export * from './utils/orderTimelineUtils';
+export * from './utils/orderCalculator';
 export { formInputToPayload, orderToFormInput } from './utils/formTransformers';

@@ -5,10 +5,10 @@
 import React, { useMemo } from 'react';
 import { Textarea } from '@/components';
 import { ResultCriticalValueBanner } from './ResultCriticalValueBanner';
-import { statusMapFromFlags, parseResultEntry, isCritical } from '../utils/labResultHelpers';
+import { statusMapFromFlags, parseResultEntry, isCritical } from '../utils/labResult';
 import { ResultsParameterGrid } from '../components/ResultsParameterGrid';
 import { ResultContextNotes } from '../components/ResultContextNotes';
-import { RESULT_PANEL } from '../components/resultDisplayStyles';
+import { RESULT_PANEL } from '../utils/labResult';
 
 interface ValidationFormProps {
   results: Record<string, unknown>;

@@ -7,7 +7,7 @@ import { cn, displayId } from '@/utils';
 import { EntityId } from '@/components';
 import { LAB_HEADER, LAB_MOBILE_CARD } from '../utils/labStyles';
 import type { LabIdentityContext } from './LabIdentityRow';
-import type { LabAuditLine } from './labWorkflowAuditLines';
+import type { LabAuditLine } from '../constants/labWorkflowAuditLines';
 import { LabAuditLineView, LabHeaderCompactContext } from './LabWorkflowHeader';
 
 function MobileIdentitySubline({ context }: { context: LabIdentityContext }) {

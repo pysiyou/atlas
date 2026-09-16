@@ -21,18 +21,18 @@ import {
   ModalFooter,
 } from '../components/LabWorkflowDetailModal';
 import { ReviewRequiredBadge } from '../components/LabResultStatusBadges';
-import { testHeaderAudit } from '../components/labWorkflowAuditLines';
+import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { QualityIssuePopover } from '../components/QualityIssuePopover';
-import { CriticalValueActions } from '@/features/lab/critical-values/CriticalValueActions';
-import { buildCriticalValueRecord } from '@/features/lab/critical-values/buildCriticalValueRecord.utils';
+import { CriticalValueActions } from '@/features/lab/criticalValues/CriticalValueActions';
+import { buildCriticalValueRecord } from '@/features/lab/criticalValues/criticalValues';
 import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { useOrderTestQueueState } from '../hooks';
 import type { TestWithContext } from '@/types';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import { LabEntityTimelinePanel } from '../components/LabEntityTimelinePanel';
-import { labModalSubtitle } from '../components/labWorkflowModalSubtitles';
-import { hasTestResults } from '../utils/hasTestResults';
+import { labModalSubtitle } from '../components/LabWorkflowModalSubtitles';
+import { hasTestResults } from '../utils/labSearchAndLinks';
 
 interface ValidationDetailModalProps {
   isOpen: boolean;

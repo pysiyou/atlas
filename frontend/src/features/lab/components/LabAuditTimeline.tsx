@@ -5,26 +5,26 @@ import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Badge, EntityId } from '@/components';
 import { cn, formatRelativeDateLabel, formatRelativeDateTime } from '@/utils';
-import type { TimelineEvent } from '../api/labCommandCenter.api';
+import type { TimelineEvent } from '../api/labCommandCenter';
 import {
   getCategoryConfig,
   getEventCategory,
   getEventTone,
-} from '../timeline/activityCategories';
-import { formatActivityEvent } from '../timeline/formatActivityEvent';
-import { COMMAND_CENTER_TIMELINE } from '../timeline/timelineStyles';
+} from '../timeline/labTimelineShared';
+import { formatActivityEvent } from '../timeline/labActivityEventFormat';
+import { COMMAND_CENTER_TIMELINE } from '../timeline/labTimelineShared';
 import { useOpenHistoricalLabRecord } from '../hooks/useOpenHistoricalLabRecord';
 import {
   getEntityCategoryConfig,
   getEntityEventCategory,
   getEntityEventTone,
-} from '../timeline/entityTimelineCategories';
+} from '../timeline/labEntityTimelineEvents';
 import {
   formatEntityTimelineEvent,
   getRetestAttemptDivider,
-} from '../timeline/formatEntityTimelineEvent';
-import type { EventDetail as EntityEventDetail } from '../timeline/timelineDetailBuilders';
-import type { EventDetail as FeedEventDetail } from '../timeline/formatActivityEvent';
+} from '../timeline/labEntityTimelineFormat';
+import type { EventDetail as EntityEventDetail } from '../timeline/labTimelineShared';
+import type { EventDetail as FeedEventDetail } from '../timeline/labActivityEventFormat';
 
 type TimelineDetailItem = EntityEventDetail | FeedEventDetail;
 

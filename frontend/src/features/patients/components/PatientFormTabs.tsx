@@ -16,7 +16,7 @@ import type {
   UseFormWatch,
   UseFormSetValue,
 } from 'react-hook-form';
-import type { PatientFormInput } from '../schemas/patient.schema';
+import type { PatientFormInput } from '../schemas/patientFormSchemas';
 import type { Patient } from '@/types';
 import { DemographicsSection } from './DemographicsSection';
 import { AddressSection } from './AddressSection';

@@ -4,10 +4,10 @@
 import { useCallback } from 'react';
 import { notify } from '@/utils/feedback';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { sampleAPI } from '../api/samples.api';
-import { resultAPI } from '../api/results.api';
-import { orderTestKey } from '../utils/orderTestKey';
-import { hasTestResults } from '../utils/hasTestResults';
+import { sampleAPI } from '../api/samples';
+import { resultAPI } from '../api/results';
+import { orderTestKey } from '../utils/labSearchAndLinks';
+import { hasTestResults } from '../utils/labSearchAndLinks';
 import type { TestWithContext } from '@/types';
 
 const noop = () => undefined;

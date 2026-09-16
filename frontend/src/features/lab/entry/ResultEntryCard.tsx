@@ -10,7 +10,7 @@ import { useLabWorkflowCardClickGuard, useOrderTestQueueState } from '@/features
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
 import { LabWorkflowCardShell, ProgressBadge } from '../components/LabWorkflowCardShell';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
-import { testHeaderAudit } from '../components/labWorkflowAuditLines';
+import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { LabMobileCardHeader } from '../components/LabWorkflowMobileHeader';
 import { LAB_CONFIG } from '../constants';
 import { LAB_CARD_TYPOGRAPHY, LAB_MOBILE_CARD } from '../utils/labStyles';

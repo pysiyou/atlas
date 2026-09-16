@@ -6,9 +6,9 @@
 import React from 'react';
 import type { BadgeSize } from '@/components';
 import type { Sample, TestWithContext } from '@/types';
-import { AttemptIndicator } from './AttemptIndicator';
-import { RecollectionOfBadge } from './RecollectionOfBadge';
-import { RetestOfBadge } from './RetestOfBadge';
+import { AttemptIndicator } from './LabAttemptIndicators';
+import { RecollectionOfBadge } from './LabLineageBadges';
+import { RetestOfBadge } from './LabLineageBadges';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
 import { LAB_CONFIG } from '../constants';
 

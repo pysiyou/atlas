@@ -14,14 +14,14 @@ export {
   useCreatePatient,
   useUpdatePatient,
   usePaginatedPatientContextList,
-} from './api/patients.api';
-export type { PatientsFilter } from './api/patients.api';
+} from './api/patients';
+export type { PatientsFilter } from './api/patients';
 
 export {
   affiliationAPI,
   useAffiliationPricing,
   useAffiliationPrice,
   useSelectedAffiliationPrice,
-} from './api/affiliations.api';
+} from './api/affiliations';
 
 export { AgeFilter } from './components/AgeFilter';

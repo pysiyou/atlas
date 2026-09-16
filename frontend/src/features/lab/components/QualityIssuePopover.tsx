@@ -13,7 +13,7 @@ import {
   QUALITY_ISSUE_POPOVER_LAYOUT,
   QUALITY_ISSUE_POPOVER_COPY,
   type ValidationFormCopy,
-} from './qualityIssuePopoverCopy';
+} from '../constants/qualityIssuePopoverCopy';
 import { CatalogRejectionCriteriaFields } from './CatalogRejectionCriteriaFields';
 import { QualityIssuePopoverLoadingView, QualityIssuePopoverErrorView } from './QualityIssuePopoverStates';
 import {

@@ -28,12 +28,12 @@ import { useModal, ModalType } from '@/lib/context/ModalContext';
 import type { PriorityLevel, TestWithContext } from '@/types';
 import type { RecollectionRequestSummary } from '@/types/lab-operations';
 import { useResultValidationWorkflow } from './useResultValidationWorkflow';
-import { orderTestKey } from '../utils/orderTestKey';
-import { usePendingEscalation } from '../api/results.api';
+import { orderTestKey } from '../utils/labSearchAndLinks';
+import { usePendingEscalation } from '../api/results';
 import {
   useApproveRecollectionRequest,
   useDenyRecollectionRequest,
-} from '../api/recollectionRequests.api';
+} from '../api/recollectionRequests';
 import { SampleRecollectionRequestCard } from './SampleRecollectionRequestCard';
 import { notify } from '@/utils/feedback';
 

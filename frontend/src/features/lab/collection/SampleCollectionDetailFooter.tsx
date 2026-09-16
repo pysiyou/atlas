@@ -9,7 +9,7 @@ import { SampleRejectionPopover } from './SampleRejectionPopover';
 import { ModalFooter } from '../components/LabWorkflowDetailModal';
 import type { SampleCollectionQueueItem } from '@/features/lab/types';
 import { getSampleStatusIcon } from '@/config/icons';
-import { LAB_COPY } from '../constants/labCopy';
+import { LAB_COPY } from '../constants/labConstants';
 
 interface CollectionDetailFooterProps {
   sample: Sample;

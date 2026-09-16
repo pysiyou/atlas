@@ -7,7 +7,7 @@
 
 import { useMemo } from 'react';
 import { useLabQueueFilterState, type UseLabQueueFilterStateOptions } from './useLabQueueFilterState';
-import { useLabQueueUrlSearch } from './useLabQueueUrlSearch';
+import { useLabQueueUrlSearch } from './useLabQueueFilterState';
 import { createLabQueueSearchFilter } from '../components/LabWorkflowQueueLayout';
 import { displayId } from '@/utils';
 import type { SampleCollectionQueueItem } from '../types';

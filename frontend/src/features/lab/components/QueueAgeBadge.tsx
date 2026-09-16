@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Badge } from '@/components';
-import { getQueueAgeInfo } from '../utils/queueAge';
+import { getQueueAgeInfo } from '../utils/labQueue';
 import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 
 interface QueueAgeBadgeProps {

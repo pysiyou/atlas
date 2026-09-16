@@ -11,9 +11,9 @@ export { LabQueueFilters } from './LabQueueFilters';
 export type { LabQueueFiltersProps } from './LabQueueFilters';
 export { LabWorkflowDetailModal, DetailGrid, ModalFooter } from './LabWorkflowDetailModal';
 export type { DetailGridSectionConfig } from './LabWorkflowDetailModal';
-export { SampleContainerInfo } from './SampleContainerInfo';
-export { SampleCollectionMetaLine } from './SampleCollectionMetaLine';
-export { ResultEntryMetaLine } from './ResultEntryMetaLine';
+export { SampleContainerInfo } from './LabWorkflowMeta';
+export { SampleCollectionMetaLine } from './LabWorkflowMeta';
+export { ResultEntryMetaLine } from './LabWorkflowMeta';
 export {
   RetestBadge,
   RecollectionAttemptBadge,
@@ -21,13 +21,13 @@ export {
   ReviewRequiredBadge,
   BlockedReasonBadge,
 } from './LabResultStatusBadges';
-export { RecollectionOfBadge } from './RecollectionOfBadge';
-export { RetestOfBadge } from './RetestOfBadge';
+export { RecollectionOfBadge } from './LabLineageBadges';
+export { RetestOfBadge } from './LabLineageBadges';
 export {
   LabRejectionTailBadges,
   LabRejectionTailBadgesFromTest,
   LabRejectionTailBadgesFromSample,
 } from './LabRejectionTailBadges';
-export { printSampleCollectionLabel } from '../utils/printSampleCollectionLabel';
-export { getEffectiveContainerType } from '../utils/sampleContainerHelpers';
+export { printSampleCollectionLabel } from '../utils/labSample';
+export { getEffectiveContainerType } from '../utils/labSample';
 export { formatRejectionReasons } from '../utils/labFormatters';

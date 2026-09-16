@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { Card, Badge, Icon, type IconName } from '@/components';
 import { ICONS } from '@/config/icons';
 import { useLabStageQueueCounts, getValidationTabCount } from '@/features/lab/hooks';
-import { getLabTabPath, LAB_TAB_LABELS, type LabTabId } from '@/features/lab/constants/labTabs';
+import { getLabTabPath, LAB_TAB_LABELS, type LabTabId } from '@/features/lab/constants/labConstants';
 import { useAuthStore } from '@/app/authStore';
 
 const LAB_QUEUE_ITEMS: Array<{

@@ -12,7 +12,7 @@
 
 import { useCallback } from 'react';
 import type { UseFormWatch, UseFormSetValue } from 'react-hook-form';
-import type { PatientFormInput } from '../schemas/patient.schema';
+import type { PatientFormInput } from '../schemas/patientFormSchemas';
 
 type FieldChangeHandler = (field: string, value: unknown) => void;
 

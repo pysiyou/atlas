@@ -8,13 +8,13 @@
 import { useState, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { invalidateResultQueries } from '@/lib/query/invalidate';
-import { useValidateResults } from '../api/results.api';
+import { useValidateResults } from '../api/results';
 import { notifyQualityIssueSuccess } from '@/features/lab/validation/qualityIssueToastMessages';
 import { notify } from '@/utils/feedback';
 import { logger } from '@/utils/logger';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { isLikelyNetworkOrTimeout } from '@/utils/errors';
-import { orderTestKey } from '../utils/orderTestKey';
+import { orderTestKey } from '../utils/labSearchAndLinks';
 import type { TestWithContext } from '@/types';
 import type { QualityIssueResult } from '@/types/lab-operations';
 

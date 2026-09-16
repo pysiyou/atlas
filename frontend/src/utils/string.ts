@@ -3,7 +3,7 @@
  */
 
 import { parseISO, isValid } from 'date-fns';
-import { formatDurationHours } from './formatDuration.utils';
+import { formatDurationHours } from './formatDuration';
 
 export function formatPhoneNumber(phone: string | undefined | null): string {
   if (!phone) return '';

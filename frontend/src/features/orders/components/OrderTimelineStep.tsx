@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Avatar } from '@/components';
-import { getLabTabPath, type LabTabId } from '@/features/lab/constants/labTabs';
+import { getLabTabPath, type LabTabId } from '@/features/lab/constants/labConstants';
 import {
   getStepCompletionInfo,
   type StepProgress,

@@ -4,8 +4,15 @@
  */
 
 import { useState, useMemo } from 'react';
-import { compareQueuePriority } from '../utils/compareQueuePriority';
-import { resolveCollectionStatusFilters } from '../utils/collectionSearchQuery';
+import { useSearchParams } from 'react-router-dom';
+import { compareQueuePriority } from '../utils/labQueue';
+import { resolveCollectionStatusFilters } from '../utils/labSearchAndLinks';
+
+/** Reads the `search` query param used for lab queue deep-links. */
+export function useLabQueueUrlSearch(): string {
+  const [searchParams] = useSearchParams();
+  return searchParams.get('search') ?? '';
+}
 
 export interface UseLabQueueFilterStateOptions<T, S> {
   items: T[];

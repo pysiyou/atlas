@@ -6,8 +6,8 @@ import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { Patient } from '@/types';
-import { patientFormSchema, type PatientFormInput } from '../schemas/patient.schema';
-import { useCreatePatient, useUpdatePatient } from '../api/patients.api';
+import { patientFormSchema, type PatientFormInput } from '../schemas/patientFormSchemas';
+import { useCreatePatient, useUpdatePatient } from '../api/patients';
 import { patientToFormInput } from '../utils/formTransformers';
 import { calculateFormProgressV2 } from '../utils/patientHelpers';
 

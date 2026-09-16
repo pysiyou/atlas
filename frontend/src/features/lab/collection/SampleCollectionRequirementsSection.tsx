@@ -5,7 +5,7 @@
 import React from 'react';
 import { Callout, Panel, EntityId } from '@/components';
 import { formatArray } from '@/utils';
-import { formatRejectionCriteriaList } from '@/features/lab/utils/catalogRejectionCriteria';
+import { formatRejectionCriteriaList } from '../utils/catalogRejectionCriteria';
 import { LAB_CARD_TYPOGRAPHY } from '../utils/labStyles';
 
 /** Test detail for requirements display */

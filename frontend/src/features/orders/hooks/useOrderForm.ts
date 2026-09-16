@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo, useRef } from 'react';
 import { orderFormSchema, type OrderFormInput } from '../schemas/order.schema';
 import { orderToFormInput } from '../utils/formTransformers';
-import { useCreateOrder, useUpdateOrder } from '../api/orders.api';
+import { useCreateOrder, useUpdateOrder } from '../api/orders';
 import type { Order } from '@/types';
 
 interface UseOrderFormOptions {

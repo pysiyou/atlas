@@ -1,7 +1,7 @@
 import { Badge, Avatar, MobileEntityCard, EntityId } from '@/components';
 import type { CardComponentProps } from '@/components';
 import { formatCurrency, formatDateTime } from '@/utils';
-import { getActiveTests } from '@/features/orders/utils';
+import { getActiveTests } from '../utils/orderCalculator';
 import type { Order } from '@/types';
 
 export function OrderTableCard({ item: order, onClick }: CardComponentProps<Order>) {

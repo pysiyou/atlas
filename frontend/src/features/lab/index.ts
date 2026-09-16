@@ -5,7 +5,7 @@ export * from './constants';
 export * from './utils';
 
 // API re-exports
-export { useSampleLookup } from './api/samples.api';
+export { useSampleLookup } from './api/samples';
 
 // Pages
 export { LaboratoryPage } from './pages/LaboratoryPage';
@@ -14,7 +14,7 @@ export { LaboratoryPage } from './pages/LaboratoryPage';
 export { SampleCollectionQueue } from './collection/SampleCollectionQueue';
 export { ResultEntryQueue } from './entry/ResultEntryQueue';
 export { ResultValidationQueue } from './validation/ResultValidationQueue';
-export { LabCommandCenterBoard } from './command-center';
+export { LabCommandCenterBoard } from './commandCenter/LabCommandCenterBoard';
 
 // Components (selectively exported)
 export { LabWorkflowQueueLayout } from './components/LabWorkflowQueueLayout';
@@ -25,4 +25,4 @@ export { LabWorkflowPopoverChrome } from './components/LabWorkflowPopoverChrome'
 export { useLabWorkflowResponsiveCard } from './hooks/useLabWorkflowResponsiveCard';
 
 // Critical Values
-export { PendingCriticalValuesPanel } from './critical-values/PendingCriticalValuesPanel';
+export { PendingCriticalValuesPanel } from './criticalValues/PendingCriticalValuesPanel';

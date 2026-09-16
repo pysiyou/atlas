@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { AuthUser, UserRole } from '@/types';
-import { authAPI, bindAuthClientHandlers } from '@/lib/api/auth.service';
+import { authAPI, bindAuthClientHandlers } from '@/lib/api/auth';
 import { notify } from '@/utils/feedback';
 import { feedbackTitle } from '@/utils/feedback/copy';
 import { clearSessionExpired, markSessionExpired } from '@/utils/feedback/sessionExpiry';

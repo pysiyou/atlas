@@ -4,7 +4,7 @@
 import React from 'react';
 import { Panel } from '@/components';
 import { Skeleton } from '@/components/loaders/Skeleton';
-import { useEntityTimeline } from '../api/audit.api';
+import { useEntityTimeline } from '../api/audit';
 import { getFeedback } from '@/utils/feedback';
 import { LabAuditTimeline } from './LabAuditTimeline';
 

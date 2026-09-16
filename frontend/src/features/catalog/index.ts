@@ -11,6 +11,6 @@ export {
   useActiveTests,
   useTestNameLookup,
   useInvalidateTestCatalog,
-} from './api/tests.api';
+} from './api/tests';
 
 export * from './testLookup';

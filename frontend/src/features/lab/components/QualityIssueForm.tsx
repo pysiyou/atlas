@@ -4,15 +4,15 @@
 import React from 'react';
 import { Alert, SpinnerLoader } from '@/components';
 import { CatalogRejectionCriteriaFields } from './CatalogRejectionCriteriaFields';
-import { useQualityIssueOptions } from '../api/qualityIssues.api';
+import { useQualityIssueOptions } from '../api/qualityIssues';
 import type { QualityIssueOptions, QualityIssueTargetType, RemedyType } from '@/types/lab-operations';
-import { QUALITY_ISSUE_POPOVER_COPY } from './qualityIssuePopoverCopy';
-import { LAB_COPY } from '../constants/labCopy';
+import { QUALITY_ISSUE_POPOVER_COPY } from '../constants/qualityIssuePopoverCopy';
+import { LAB_COPY } from '../constants/labConstants';
 import { QualityIssueRemedyPicker } from './QualityIssueRemedyPicker';
 import {
   buildSampleRemedyOptions,
   resolveSuggestedRemedy,
-} from './remedyDestinationUtils';
+} from '../constants/qualityIssuePopoverCopy';
 
 type CollectionFormCopy = {
   alert: { title: string; description: string } | null;
