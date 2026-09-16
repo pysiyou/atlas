@@ -1,13 +1,14 @@
 """
 Unified error response schemas for consistent API error handling.
 """
+
 from pydantic import BaseModel
-from typing import Optional, List
 
 
 class ErrorDetail(BaseModel):
     """Individual error detail, e.g., for field-level validation errors."""
-    field: Optional[str] = None
+
+    field: str | None = None
     message: str
 
 
@@ -20,18 +21,21 @@ class ErrorResponse(BaseModel):
         - message: Human-readable description
         - details: Optional list of field-level errors for validation failures
     """
+
     error_code: str
     message: str
-    details: Optional[List[ErrorDetail]] = None
+    details: list[ErrorDetail] | None = None
 
 
 class MessageResponse(BaseModel):
     """Simple message response for operations that return a status message."""
+
     message: str
 
 
 class OperationResponse(BaseModel):
     """Response for operations that return a status with additional context."""
+
     success: bool
     message: str
 

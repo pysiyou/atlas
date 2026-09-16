@@ -4,34 +4,37 @@ Authentication API Routes.
 Provides login, logout, token refresh, and user info endpoints.
 Uses JWT tokens with distinct access/refresh types for security.
 """
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from app.database import get_db
+from app.api.dependencies import get_current_user
 from app.core.security import (
-    verify_password,
-    create_tokens,
-    create_access_token,
-    decode_token,
     TokenType,
+    create_access_token,
+    create_tokens,
+    decode_token,
+    verify_password,
 )
-from app.core.dependencies import get_current_user
+from app.db.database import get_db
 from app.models.user import User
-from app.schemas.user import LoginRequest, Token, UserResponse
 from app.schemas.error import MessageResponse
+from app.schemas.user import LoginRequest, Token, UserResponse
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
 class RefreshRequest(BaseModel):
     """Request body for token refresh."""
+
     refresh_token: str
 
 
 class RefreshResponse(BaseModel):
     """Response for token refresh."""
+
     access_token: str
     token_type: str = "bearer"
 
@@ -105,7 +108,7 @@ def refresh_token(request: RefreshRequest, db: Session = Depends(get_db)):
 def get_me(current_user: User = Depends(get_current_user)):
     """Get the current authenticated user's information. Sets loggedInAt to current time for frontend AuthUser."""
     data = UserResponse.model_validate(current_user).model_dump()
-    data["loggedInAt"] = datetime.now(timezone.utc)
+    data["loggedInAt"] = datetime.now(UTC)
     return UserResponse(**data)
 
 

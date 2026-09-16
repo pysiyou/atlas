@@ -4,20 +4,20 @@ Result Validator Service
 Validates test results against physiologic limits and reference ranges.
 Prevents entry of impossible values that could lead to patient harm.
 """
-from datetime import date, datetime
-from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
-
-from sqlalchemy.orm import Session
+from datetime import date, datetime
+from typing import Any
 
 from app.data.physiologic_limits import PHYSIOLOGIC_LIMITS
 from app.schemas.enums import ResultStatus
-from app.utils.result_values import PHYSIOLOGIC_LIMIT_ALIASES, parse_numeric_result_value
+from app.utils.common import PHYSIOLOGIC_LIMIT_ALIASES, parse_numeric_result_value
+from sqlalchemy.orm import Session
 
 
 @dataclass
 class ValidationError:
     """Represents a validation error for a result value"""
+
     item_code: str
     value: Any
     error_type: str  # 'physiologic_limit', 'type_error', 'range_warning'
@@ -39,10 +39,8 @@ class ResultValidatorService:
         self.physiologic_limits = PHYSIOLOGIC_LIMITS
 
     def validate_results(
-        self,
-        results: Dict[str, Any],
-        result_items: Optional[List[Dict[str, Any]]] = None
-    ) -> List[ValidationError]:
+        self, results: dict[str, Any], result_items: list[dict[str, Any]] | None = None
+    ) -> list[ValidationError]:
         """
         Validate all result values.
 
@@ -62,11 +60,8 @@ class ResultValidatorService:
         return errors
 
     def _validate_single_result(
-        self,
-        item_code: str,
-        value: Any,
-        result_items: Optional[List[Dict[str, Any]]] = None
-    ) -> List[ValidationError]:
+        self, item_code: str, value: Any, result_items: list[dict[str, Any]] | None = None
+    ) -> list[ValidationError]:
         """Validate a single result value"""
         errors = []
 
@@ -74,17 +69,16 @@ class ResultValidatorService:
         item_def = None
         if result_items:
             item_def = next(
-                (item for item in result_items if item.get('item_code') == item_code),
-                None
+                (item for item in result_items if item.get("item_code") == item_code), None
             )
 
         # Determine if this should be numeric
-        value_type = 'NUMERIC'  # Default assumption
+        value_type = "NUMERIC"  # Default assumption
         if item_def:
-            value_type = item_def.get('value_type', 'NUMERIC')
+            value_type = item_def.get("value_type", "NUMERIC")
 
         # Skip validation for non-numeric values
-        if value_type not in ('NUMERIC', 'numeric'):
+        if value_type not in ("NUMERIC", "numeric"):
             return errors
 
         # Try to parse as number (scalar or structured {"value": ...})
@@ -95,50 +89,58 @@ class ResultValidatorService:
         # Check physiologic limits
         limit = self._get_physiologic_limit(item_code)
         if limit:
-            if numeric_value < limit['min']:
-                errors.append(ValidationError(
-                    item_code=item_code,
-                    value=value,
-                    error_type='physiologic_limit',
-                    message=f"{item_code} value {value} is below physiologic minimum ({limit['min']}). This value is not compatible with life.",
-                    is_blocking=True
-                ))
-            elif numeric_value > limit['max']:
-                errors.append(ValidationError(
-                    item_code=item_code,
-                    value=value,
-                    error_type='physiologic_limit',
-                    message=f"{item_code} value {value} exceeds physiologic maximum ({limit['max']}). This value is not compatible with life.",
-                    is_blocking=True
-                ))
+            if numeric_value < limit["min"]:
+                errors.append(
+                    ValidationError(
+                        item_code=item_code,
+                        value=value,
+                        error_type="physiologic_limit",
+                        message=f"{item_code} value {value} is below physiologic minimum ({limit['min']}). This value is not compatible with life.",
+                        is_blocking=True,
+                    )
+                )
+            elif numeric_value > limit["max"]:
+                errors.append(
+                    ValidationError(
+                        item_code=item_code,
+                        value=value,
+                        error_type="physiologic_limit",
+                        message=f"{item_code} value {value} exceeds physiologic maximum ({limit['max']}). This value is not compatible with life.",
+                        is_blocking=True,
+                    )
+                )
 
         # Check against critical range from item definition
         if item_def:
-            critical_range = item_def.get('critical_range', {})
-            critical_low = critical_range.get('low')
-            critical_high = critical_range.get('high')
+            critical_range = item_def.get("critical_range", {})
+            critical_low = critical_range.get("low")
+            critical_high = critical_range.get("high")
 
             # These are warnings, not blocking errors
             if critical_low is not None and numeric_value < critical_low:
-                errors.append(ValidationError(
-                    item_code=item_code,
-                    value=value,
-                    error_type='critical_low',
-                    message=f"{item_code} value {value} is critically low (< {critical_low})",
-                    is_blocking=False
-                ))
+                errors.append(
+                    ValidationError(
+                        item_code=item_code,
+                        value=value,
+                        error_type="critical_low",
+                        message=f"{item_code} value {value} is critically low (< {critical_low})",
+                        is_blocking=False,
+                    )
+                )
             elif critical_high is not None and numeric_value > critical_high:
-                errors.append(ValidationError(
-                    item_code=item_code,
-                    value=value,
-                    error_type='critical_high',
-                    message=f"{item_code} value {value} is critically high (> {critical_high})",
-                    is_blocking=False
-                ))
+                errors.append(
+                    ValidationError(
+                        item_code=item_code,
+                        value=value,
+                        error_type="critical_high",
+                        message=f"{item_code} value {value} is critically high (> {critical_high})",
+                        is_blocking=False,
+                    )
+                )
 
         return errors
 
-    def _get_physiologic_limit(self, item_code: str) -> Optional[Dict[str, float]]:
+    def _get_physiologic_limit(self, item_code: str) -> dict[str, float] | None:
         """Get physiologic limit for an item code, checking various naming conventions."""
         resolved_code = PHYSIOLOGIC_LIMIT_ALIASES.get(item_code, item_code)
 
@@ -163,15 +165,15 @@ class ResultValidatorService:
 
         return None
 
-    def has_blocking_errors(self, errors: List[ValidationError]) -> bool:
+    def has_blocking_errors(self, errors: list[ValidationError]) -> bool:
         """Check if any errors are blocking"""
         return any(e.is_blocking for e in errors)
 
-    def get_blocking_errors(self, errors: List[ValidationError]) -> List[ValidationError]:
+    def get_blocking_errors(self, errors: list[ValidationError]) -> list[ValidationError]:
         """Get only blocking errors"""
         return [e for e in errors if e.is_blocking]
 
-    def format_error_message(self, errors: List[ValidationError]) -> str:
+    def format_error_message(self, errors: list[ValidationError]) -> str:
         """Format errors into a human-readable message"""
         blocking = self.get_blocking_errors(errors)
         if not blocking:
@@ -184,15 +186,16 @@ class ResultValidatorService:
 @dataclass
 class ResultFlag:
     """Represents a calculated flag for a result item"""
+
     item_code: str
     item_name: str
     value: float
     status: ResultStatus
-    reference_low: Optional[float]
-    reference_high: Optional[float]
-    critical_low: Optional[float]
-    critical_high: Optional[float]
-    unit: Optional[str]
+    reference_low: float | None
+    reference_high: float | None
+    critical_low: float | None
+    critical_high: float | None
+    unit: str | None
 
 
 class FlagCalculatorService:
@@ -205,11 +208,11 @@ class FlagCalculatorService:
 
     def calculate_flags(
         self,
-        results: Dict[str, Any],
-        result_items: List[Dict[str, Any]],
-        patient_gender: Optional[str] = None,
-        patient_dob: Optional[str] = None
-    ) -> List[ResultFlag]:
+        results: dict[str, Any],
+        result_items: list[dict[str, Any]],
+        patient_gender: str | None = None,
+        patient_dob: str | None = None,
+    ) -> list[ResultFlag]:
         """
         Calculate flags for all result values.
 
@@ -226,15 +229,15 @@ class FlagCalculatorService:
         patient_age = self._calculate_age(patient_dob) if patient_dob else None
 
         for item in result_items:
-            item_code = item.get('item_code')
+            item_code = item.get("item_code")
             if item_code not in results:
                 continue
 
             value = results[item_code]
-            value_type = item.get('value_type', 'NUMERIC')
+            value_type = item.get("value_type", "NUMERIC")
 
             # Skip non-numeric values
-            if value_type not in ('NUMERIC', 'numeric'):
+            if value_type not in ("NUMERIC", "numeric"):
                 continue
 
             # Parse numeric value (scalar or structured {"value": ...})
@@ -244,44 +247,44 @@ class FlagCalculatorService:
 
             # Get applicable reference range
             ref_range = self._get_applicable_range(
-                item.get('reference_range', {}),
-                patient_gender,
-                patient_age
+                item.get("reference_range", {}), patient_gender, patient_age
             )
 
             # Get critical range
-            critical_range = item.get('critical_range', {})
+            critical_range = item.get("critical_range", {})
 
             # Calculate status
             status = self._evaluate_value(
                 numeric_value,
-                ref_range.get('low'),
-                ref_range.get('high'),
-                critical_range.get('low'),
-                critical_range.get('high')
+                ref_range.get("low"),
+                ref_range.get("high"),
+                critical_range.get("low"),
+                critical_range.get("high"),
             )
 
-            flags.append(ResultFlag(
-                item_code=item_code,
-                item_name=item.get('item_name', item_code),
-                value=numeric_value,
-                status=status,
-                reference_low=ref_range.get('low'),
-                reference_high=ref_range.get('high'),
-                critical_low=critical_range.get('low'),
-                critical_high=critical_range.get('high'),
-                unit=item.get('unit')
-            ))
+            flags.append(
+                ResultFlag(
+                    item_code=item_code,
+                    item_name=item.get("item_name", item_code),
+                    value=numeric_value,
+                    status=status,
+                    reference_low=ref_range.get("low"),
+                    reference_high=ref_range.get("high"),
+                    critical_low=critical_range.get("low"),
+                    critical_high=critical_range.get("high"),
+                    unit=item.get("unit"),
+                )
+            )
 
         return flags
 
     def _calculate_age(self, dob_str: str) -> int:
         """Calculate age from date of birth string"""
         try:
-            if 'T' in dob_str:
-                dob = datetime.fromisoformat(dob_str.replace('Z', '+00:00')).date()
+            if "T" in dob_str:
+                dob = datetime.fromisoformat(dob_str.replace("Z", "+00:00")).date()
             else:
-                dob = datetime.strptime(dob_str, '%Y-%m-%d').date()
+                dob = datetime.strptime(dob_str, "%Y-%m-%d").date()
 
             today = date.today()
             age = today.year - dob.year
@@ -292,11 +295,8 @@ class FlagCalculatorService:
             return 0
 
     def _get_applicable_range(
-        self,
-        reference_range: Dict[str, Any],
-        gender: Optional[str],
-        age: Optional[int]
-    ) -> Dict[str, Optional[float]]:
+        self, reference_range: dict[str, Any], gender: str | None, age: int | None
+    ) -> dict[str, float | None]:
         """
         Select the appropriate reference range based on patient demographics.
 
@@ -305,41 +305,38 @@ class FlagCalculatorService:
         2. Pediatric range (if age < 18)
         3. General adult range
         """
-        result = {'low': None, 'high': None}
+        result = {"low": None, "high": None}
 
         if not reference_range:
             return result
 
         # Check gender-specific ranges first
-        if gender == 'male' and 'adult_male' in reference_range:
-            return reference_range['adult_male']
-        if gender == 'female' and 'adult_female' in reference_range:
-            return reference_range['adult_female']
+        if gender == "male" and "adult_male" in reference_range:
+            return reference_range["adult_male"]
+        if gender == "female" and "adult_female" in reference_range:
+            return reference_range["adult_female"]
 
         # Check pediatric range
-        if age is not None and age < 18 and 'pediatric' in reference_range:
-            return reference_range['pediatric']
+        if age is not None and age < 18 and "pediatric" in reference_range:
+            return reference_range["pediatric"]
 
         # Fall back to general adult range
-        if 'adult_general' in reference_range:
-            return reference_range['adult_general']
+        if "adult_general" in reference_range:
+            return reference_range["adult_general"]
 
         # Handle legacy format (direct low/high)
-        if 'low' in reference_range or 'high' in reference_range:
-            return {
-                'low': reference_range.get('low'),
-                'high': reference_range.get('high')
-            }
+        if "low" in reference_range or "high" in reference_range:
+            return {"low": reference_range.get("low"), "high": reference_range.get("high")}
 
         return result
 
     def _evaluate_value(
         self,
         value: float,
-        ref_low: Optional[float],
-        ref_high: Optional[float],
-        crit_low: Optional[float],
-        crit_high: Optional[float]
+        ref_low: float | None,
+        ref_high: float | None,
+        crit_low: float | None,
+        crit_high: float | None,
     ) -> ResultStatus:
         """
         Evaluate a value against reference and critical ranges.
@@ -360,42 +357,53 @@ class FlagCalculatorService:
 
         return ResultStatus.NORMAL
 
-    def has_critical_values(self, flags: List[ResultFlag]) -> bool:
+    def has_critical_values(self, flags: list[ResultFlag]) -> bool:
         """Check if any flags indicate critical values"""
-        critical_statuses = {ResultStatus.CRITICAL, ResultStatus.CRITICAL_HIGH, ResultStatus.CRITICAL_LOW}
+        critical_statuses = {
+            ResultStatus.CRITICAL,
+            ResultStatus.CRITICAL_HIGH,
+            ResultStatus.CRITICAL_LOW,
+        }
         return any(f.status in critical_statuses for f in flags)
 
-    def has_abnormal_values(self, flags: List[ResultFlag]) -> bool:
+    def has_abnormal_values(self, flags: list[ResultFlag]) -> bool:
         """Check if any flags indicate abnormal values"""
         abnormal_statuses = {
-            ResultStatus.HIGH, ResultStatus.LOW,
-            ResultStatus.CRITICAL, ResultStatus.CRITICAL_HIGH, ResultStatus.CRITICAL_LOW
+            ResultStatus.HIGH,
+            ResultStatus.LOW,
+            ResultStatus.CRITICAL,
+            ResultStatus.CRITICAL_HIGH,
+            ResultStatus.CRITICAL_LOW,
         }
         return any(f.status in abnormal_statuses for f in flags)
 
-    def get_critical_flags(self, flags: List[ResultFlag]) -> List[ResultFlag]:
+    def get_critical_flags(self, flags: list[ResultFlag]) -> list[ResultFlag]:
         """Get only critical flags"""
-        critical_statuses = {ResultStatus.CRITICAL, ResultStatus.CRITICAL_HIGH, ResultStatus.CRITICAL_LOW}
+        critical_statuses = {
+            ResultStatus.CRITICAL,
+            ResultStatus.CRITICAL_HIGH,
+            ResultStatus.CRITICAL_LOW,
+        }
         return [f for f in flags if f.status in critical_statuses]
 
-    def flags_to_json(self, flags: List[ResultFlag]) -> List[Dict[str, Any]]:
+    def flags_to_json(self, flags: list[ResultFlag]) -> list[dict[str, Any]]:
         """Convert flags to JSON-serializable format"""
         return [
             {
-                'item_code': f.item_code,
-                'item_name': f.item_name,
-                'value': f.value,
-                'status': f.status.value,
-                'reference_low': f.reference_low,
-                'reference_high': f.reference_high,
-                'critical_low': f.critical_low,
-                'critical_high': f.critical_high,
-                'unit': f.unit
+                "item_code": f.item_code,
+                "item_name": f.item_name,
+                "value": f.value,
+                "status": f.status.value,
+                "reference_low": f.reference_low,
+                "reference_high": f.reference_high,
+                "critical_low": f.critical_low,
+                "critical_high": f.critical_high,
+                "unit": f.unit,
             }
             for f in flags
         ]
 
-    def flags_to_string_list(self, flags: List[ResultFlag]) -> List[str]:
+    def flags_to_string_list(self, flags: list[ResultFlag]) -> list[str]:
         """Convert flags to simple string list for OrderTest.flags field"""
         result = []
         for f in flags:
@@ -411,11 +419,11 @@ class ResultQueryService:
         self.db = db
 
     def get_pending_escalation(self) -> list:
-        from sqlalchemy.orm import joinedload
+        from app.models.escalation import EscalationTicket
         from app.models.order import Order, OrderTest
         from app.models.sample import Sample
-        from app.models.escalation import EscalationTicket
         from app.schemas.enums import EscalationTicketStatus, TestStatus
+        from sqlalchemy.orm import joinedload
 
         tests = (
             self.db.query(OrderTest)
@@ -445,18 +453,16 @@ class ResultQueryService:
             ):
                 tickets_by_test[ticket.orderTestId] = ticket
 
-        return [
-            self._enrich_order_test(t, samples_by_id, tickets_by_test)
-            for t in tests
-        ]
+        return [self._enrich_order_test(t, samples_by_id, tickets_by_test) for t in tests]
 
     def get_order_test_context(self, order_test_id: int):
-        from fastapi import HTTPException, status as http_status
-        from sqlalchemy.orm import joinedload
+        from app.models.escalation import EscalationTicket
         from app.models.order import Order, OrderTest
         from app.models.sample import Sample
-        from app.models.escalation import EscalationTicket
         from app.schemas.enums import EscalationTicketStatus
+        from fastapi import HTTPException
+        from fastapi import status as http_status
+        from sqlalchemy.orm import joinedload
 
         order_test = (
             self.db.query(OrderTest)

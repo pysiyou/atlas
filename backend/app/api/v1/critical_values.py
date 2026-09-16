@@ -1,11 +1,10 @@
 """Critical Values API Routes."""
-from typing import List, Optional
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from app.core.dependencies import get_current_user, require_lab_tech
-from app.database import get_db
+from app.api.dependencies import get_current_user, require_lab_tech
+from app.db.database import get_db
 from app.models.user import User
 from app.schemas.critical_values import (
     AcknowledgeRequest,
@@ -21,16 +20,16 @@ router = APIRouter()
 def get_pending_critical_values(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> List[CriticalValueResponse]:
+) -> list[CriticalValueResponse]:
     return CriticalNotificationService(db).list_pending()
 
 
 @router.get("/critical-values/all")
 def get_all_critical_values(
-    acknowledged: Optional[bool] = None,
+    acknowledged: bool | None = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> List[CriticalValueResponse]:
+) -> list[CriticalValueResponse]:
     return CriticalNotificationService(db).list_all(acknowledged)
 
 
@@ -59,5 +58,5 @@ def get_order_critical_values(
     order_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> List[CriticalValueResponse]:
+) -> list[CriticalValueResponse]:
     return CriticalNotificationService(db).list_for_order(order_id)

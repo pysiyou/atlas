@@ -2,9 +2,10 @@
 Affiliation Pricing Model
 Stores pricing information for different affiliation durations
 """
-from sqlalchemy import Column, Integer, Float, DateTime, Boolean
+from sqlalchemy import Boolean, Column, DateTime, Float, Integer
 from sqlalchemy.sql import func
-from app.database import Base
+
+from app.db.database import Base
 
 
 class AffiliationPricing(Base):
@@ -15,7 +16,9 @@ class AffiliationPricing(Base):
     price = Column(Float, nullable=False)  # Price in local currency
     isActive = Column("is_active", Boolean, default=True, nullable=False)
     createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
-    updatedAt = Column("updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    updatedAt = Column(
+        "updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
 
     def __repr__(self):
         return f"<AffiliationPricing(duration={self.duration}, price={self.price}, isActive={self.isActive})>"

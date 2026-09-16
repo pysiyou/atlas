@@ -1,9 +1,10 @@
 """
 Test Catalog Model - All fields use camelCase
 """
-from sqlalchemy import Column, String, Float, Integer, Boolean, JSON, DateTime
+from sqlalchemy import JSON, Boolean, Column, DateTime, Float, Integer, String
 from sqlalchemy.sql import func
-from app.database import Base
+
+from app.db.database import Base
 
 
 class Test(Base):
@@ -27,7 +28,9 @@ class Test(Base):
 
     # Container requirements
     containerTypes = Column("container_types", JSON, nullable=False)  # Array of ContainerType
-    containerTopColors = Column("container_top_colors", JSON, nullable=False)  # Array of ContainerTopColor
+    containerTopColors = Column(
+        "container_top_colors", JSON, nullable=False
+    )  # Array of ContainerTopColor
     numberOfContainers = Column("number_of_containers", Integer, nullable=True)
     containerDescription = Column("container_description", String, nullable=True)
 
@@ -35,12 +38,20 @@ class Test(Base):
     specialRequirements = Column("special_requirements", String, nullable=True)
     fastingRequired = Column("fasting_required", Boolean, default=False)
     collectionNotes = Column("collection_notes", String, nullable=True)
-    rejectionCriteria = Column("rejection_criteria", JSON, nullable=True)  # specimen criteria for collection
-    validationRejectionCriteria = Column("validation_rejection_criteria", JSON, nullable=True)  # result review
+    rejectionCriteria = Column(
+        "rejection_criteria", JSON, nullable=True
+    )  # specimen criteria for collection
+    validationRejectionCriteria = Column(
+        "validation_rejection_criteria", JSON, nullable=True
+    )  # result review
 
     # Reference ranges and parameters (JSON)
-    referenceRanges = Column("reference_ranges", JSON, nullable=True)  # Array of ReferenceRange objects
-    resultItems = Column("result_items", JSON, nullable=True)  # Array of ResultItem objects from catalog
+    referenceRanges = Column(
+        "reference_ranges", JSON, nullable=True
+    )  # Array of ReferenceRange objects
+    resultItems = Column(
+        "result_items", JSON, nullable=True
+    )  # Array of ResultItem objects from catalog
 
     # Additional catalog fields
     panels = Column(JSON, nullable=True)  # Related test panels
@@ -54,4 +65,6 @@ class Test(Base):
 
     # Metadata
     createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
-    updatedAt = Column("updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    updatedAt = Column(
+        "updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )

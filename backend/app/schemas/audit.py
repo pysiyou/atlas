@@ -1,6 +1,5 @@
 """Audit API schemas."""
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel
 
@@ -12,17 +11,17 @@ class AuditLogsCountResponse(BaseModel):
 class TimelineEventResponse(BaseModel):
     id: int
     type: str
-    phase: Optional[str] = None
-    tone: Optional[str] = None
+    phase: str | None = None
+    tone: str | None = None
     entityType: str
     entityId: int
     timestamp: str
     performedBy: str
-    performedByName: Optional[str] = None
+    performedByName: str | None = None
     metadata: dict
-    beforeState: Optional[dict] = None
-    afterState: Optional[dict] = None
-    comment: Optional[str] = None
+    beforeState: dict | None = None
+    afterState: dict | None = None
+    comment: str | None = None
 
 
 class EntityTimelineResponse(BaseModel):
@@ -36,12 +35,12 @@ class LabOperationLogResponse(BaseModel):
     entityType: str
     entityId: int
     performedBy: str
-    performedByName: Optional[str] = None
+    performedByName: str | None = None
     performedAt: datetime
-    beforeState: Optional[dict] = None
-    afterState: Optional[dict] = None
-    operationData: Optional[dict] = None
-    comment: Optional[str] = None
+    beforeState: dict | None = None
+    afterState: dict | None = None
+    operationData: dict | None = None
+    comment: str | None = None
 
     class Config:
         from_attributes = True

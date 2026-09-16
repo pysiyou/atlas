@@ -1,14 +1,14 @@
 """Lab worklist API schemas."""
 from datetime import datetime
-from typing import List, Literal, Optional
+from typing import Literal
 
 from pydantic import BaseModel
 
 from app.schemas.enums import (
     ContainerTopColor,
     ContainerType,
-    PriorityLevel,
     PaymentStatus,
+    PriorityLevel,
     SampleStatus,
     TestStatus,
 )
@@ -33,20 +33,20 @@ class CollectionWorklistItem(BaseModel):
     priority: PriorityLevel
     paymentStatus: PaymentStatus
     orderDate: datetime
-    testCodes: List[str]
+    testCodes: list[str]
     isRecollection: bool
-    originalSampleId: Optional[int] = None
-    originalSampleCollectedAt: Optional[datetime] = None
-    recollectionReason: Optional[str] = None
+    originalSampleId: int | None = None
+    originalSampleCollectedAt: datetime | None = None
+    recollectionReason: str | None = None
     recollectionAttempt: int = 1
-    blockedReason: Optional[str] = None
+    blockedReason: str | None = None
     waitingHours: float
     turnaroundHours: int
-    actualContainerType: Optional[ContainerType] = None
-    actualContainerColor: Optional[ContainerTopColor] = None
-    collectedAt: Optional[datetime] = None
-    collectedBy: Optional[str] = None
-    collectedVolume: Optional[float] = None
+    actualContainerType: ContainerType | None = None
+    actualContainerColor: ContainerTopColor | None = None
+    collectedAt: datetime | None = None
+    collectedBy: str | None = None
+    collectedVolume: float | None = None
 
 
 class EntryWorklistItem(BaseModel):
@@ -56,11 +56,11 @@ class EntryWorklistItem(BaseModel):
     patientName: str
     testCode: str
     testName: str
-    sampleId: Optional[int]
+    sampleId: int | None
     sampleType: str
     priority: PriorityLevel
     status: TestStatus
-    collectedAt: Optional[datetime]
+    collectedAt: datetime | None
     orderDate: datetime
     waitingHours: float
     turnaroundHours: int
@@ -77,7 +77,7 @@ class ValidationWorklistItem(BaseModel):
     sampleType: str
     priority: PriorityLevel
     status: TestStatus
-    resultEnteredAt: Optional[datetime]
+    resultEnteredAt: datetime | None
     orderDate: datetime
     waitingHours: float
     turnaroundHours: int
@@ -85,13 +85,13 @@ class ValidationWorklistItem(BaseModel):
 
 
 class WorklistResponse(BaseModel):
-    items: List
+    items: list
     pagination: WorklistPagination
 
 
 class QueueAgeStats(BaseModel):
-    oldestHours: Optional[float]
-    averageHours: Optional[float]
+    oldestHours: float | None
+    averageHours: float | None
     warningCount: int
     criticalCount: int
 
@@ -132,12 +132,12 @@ class BoardAttentionItem(BaseModel):
     patientName: str
     priority: PriorityLevel
     waitingHours: float
-    blockedReason: Optional[str] = None
-    blockedLabel: Optional[str] = None
+    blockedReason: str | None = None
+    blockedLabel: str | None = None
     queueTab: Literal["collection", "entry", "validation"]
     since: str
     workItemCount: int
-    orderTestIds: List[int]
+    orderTestIds: list[int]
     attentionType: str
 
 
@@ -147,10 +147,10 @@ class LabBoardResponse(BaseModel):
     blockers: BlockerSummary
     health: Literal["healthy", "attention", "critical"]
     healthMessage: str
-    suggestedTab: Optional[str]
+    suggestedTab: str | None
     ageBuckets: AgeBuckets
     priorityMix: PriorityMix
-    attentionItems: List[BoardAttentionItem]
+    attentionItems: list[BoardAttentionItem]
     attentionTotal: int
     totalActive: int
-    computedAt: Optional[str] = None
+    computedAt: str | None = None

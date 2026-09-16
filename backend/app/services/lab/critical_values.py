@@ -4,13 +4,9 @@ Critical Value Notification Service
 Handles critical value detection and notification workflow.
 Ensures critical results are promptly communicated to ordering physicians.
 """
-from datetime import datetime, timezone
-from typing import Optional, List, Dict, Any
-
 from dataclasses import dataclass
-from sqlalchemy.orm import Session
-
-from fastapi import HTTPException
+from datetime import UTC, datetime
+from typing import Any
 
 from app.models.order import Order, OrderTest
 from app.schemas.critical_values import (
@@ -21,21 +17,24 @@ from app.schemas.critical_values import (
 from app.schemas.enums import ResultStatus
 from app.services.audit.logger import AuditService
 from app.services.lab.results import ResultFlag
+from fastapi import HTTPException
+from sqlalchemy.orm import Session
 
 
 @dataclass
 class CriticalNotification:
     """Represents a critical value notification"""
+
     order_test_id: int
     order_id: int
     test_code: str
     patient_id: int
     patient_name: str
-    critical_values: List[Dict[str, Any]]
-    notified_to: Optional[str]
-    notified_at: Optional[datetime]
-    acknowledged_at: Optional[datetime]
-    notification_method: str = 'pending'
+    critical_values: list[dict[str, Any]]
+    notified_to: str | None
+    notified_at: datetime | None
+    acknowledged_at: datetime | None
+    notification_method: str = "pending"
 
 
 class CriticalNotificationService:
@@ -52,11 +51,7 @@ class CriticalNotificationService:
     def __init__(self, db: Session):
         self.db = db
 
-    def check_and_flag_critical(
-        self,
-        order_test: OrderTest,
-        flags: List[ResultFlag]
-    ) -> bool:
+    def check_and_flag_critical(self, order_test: OrderTest, flags: list[ResultFlag]) -> bool:
         """
         Check for critical values and update OrderTest fields.
 
@@ -67,7 +62,11 @@ class CriticalNotificationService:
         Returns:
             True if critical values were found
         """
-        critical_statuses = {ResultStatus.CRITICAL, ResultStatus.CRITICAL_HIGH, ResultStatus.CRITICAL_LOW}
+        critical_statuses = {
+            ResultStatus.CRITICAL,
+            ResultStatus.CRITICAL_HIGH,
+            ResultStatus.CRITICAL_LOW,
+        }
         critical_flags = [f for f in flags if f.status in critical_statuses]
 
         has_critical = len(critical_flags) > 0
@@ -85,9 +84,9 @@ class CriticalNotificationService:
         self,
         order_test: OrderTest,
         order: Order,
-        critical_flags: List[ResultFlag],
+        critical_flags: list[ResultFlag],
         notified_to: str,
-        notification_method: str = 'system'
+        notification_method: str = "system",
     ) -> CriticalNotification:
         """
         Create and record a critical value notification.
@@ -102,7 +101,7 @@ class CriticalNotificationService:
         Returns:
             CriticalNotification object
         """
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
 
         # Update OrderTest with notification info
         order_test.criticalNotificationSent = True
@@ -112,12 +111,14 @@ class CriticalNotificationService:
         # Format critical values for notification
         critical_values = [
             {
-                'item_code': f.item_code,
-                'item_name': f.item_name,
-                'value': f.value,
-                'unit': f.unit,
-                'status': f.status.value,
-                'reference_range': f"{f.reference_low}-{f.reference_high}" if f.reference_low and f.reference_high else None
+                "item_code": f.item_code,
+                "item_name": f.item_name,
+                "value": f.value,
+                "unit": f.unit,
+                "status": f.status.value,
+                "reference_range": f"{f.reference_low}-{f.reference_high}"
+                if f.reference_low and f.reference_high
+                else None,
             }
             for f in critical_flags
         ]
@@ -132,16 +133,12 @@ class CriticalNotificationService:
             notified_to=notified_to,
             notified_at=now,
             acknowledged_at=None,
-            notification_method=notification_method
+            notification_method=notification_method,
         )
 
         return notification
 
-    def acknowledge_notification(
-        self,
-        order_test: OrderTest,
-        acknowledged_by: str
-    ) -> bool:
+    def acknowledge_notification(self, order_test: OrderTest, acknowledged_by: str) -> bool:
         """
         Record acknowledgment of a critical value notification.
 
@@ -155,26 +152,30 @@ class CriticalNotificationService:
         if not order_test.criticalNotificationSent:
             return False
 
-        order_test.criticalAcknowledgedAt = datetime.now(timezone.utc)
+        order_test.criticalAcknowledgedAt = datetime.now(UTC)
         # Store acknowledgment info in the notification record
         # (criticalNotifiedTo already has the notification target)
 
         return True
 
-    def get_unacknowledged_critical_values(self) -> List[OrderTest]:
+    def get_unacknowledged_critical_values(self) -> list[OrderTest]:
         """
         Get all OrderTests with unacknowledged critical values.
 
         Returns:
             List of OrderTest objects with pending acknowledgments
         """
-        return self.db.query(OrderTest).filter(
-            OrderTest.hasCriticalValues.is_(True),
-            OrderTest.criticalNotificationSent.is_(True),
-            OrderTest.criticalAcknowledgedAt.is_(None),
-        ).all()
+        return (
+            self.db.query(OrderTest)
+            .filter(
+                OrderTest.hasCriticalValues.is_(True),
+                OrderTest.criticalNotificationSent.is_(True),
+                OrderTest.criticalAcknowledgedAt.is_(None),
+            )
+            .all()
+        )
 
-    def get_critical_values_for_order(self, order_id: int) -> List[OrderTest]:
+    def get_critical_values_for_order(self, order_id: int) -> list[OrderTest]:
         """
         Get all OrderTests with critical values for an order.
 
@@ -184,22 +185,21 @@ class CriticalNotificationService:
         Returns:
             List of OrderTest objects with critical values
         """
-        return self.db.query(OrderTest).filter(
-            OrderTest.orderId == order_id,
-            OrderTest.hasCriticalValues.is_(True),
-        ).all()
+        return (
+            self.db.query(OrderTest)
+            .filter(
+                OrderTest.orderId == order_id,
+                OrderTest.hasCriticalValues.is_(True),
+            )
+            .all()
+        )
 
-    def _format_critical_flags(self, flags: List[ResultFlag]) -> List[str]:
+    def _format_critical_flags(self, flags: list[ResultFlag]) -> list[str]:
         """Format critical flags as string list for storage"""
-        return [
-            f"{f.item_code}:{f.status.value}:{f.value}"
-            for f in flags
-        ]
+        return [f"{f.item_code}:{f.status.value}:{f.value}" for f in flags]
 
     def format_notification_message(
-        self,
-        notification: CriticalNotification,
-        include_values: bool = True
+        self, notification: CriticalNotification, include_values: bool = True
     ) -> str:
         """
         Format a notification message for display or communication.
@@ -222,13 +222,17 @@ class CriticalNotificationService:
             lines.append("Critical Values:")
             for cv in notification.critical_values:
                 value_str = f"{cv['value']}"
-                if cv.get('unit'):
+                if cv.get("unit"):
                     value_str += f" {cv['unit']}"
-                ref_str = f" (Ref: {cv['reference_range']})" if cv.get('reference_range') else ""
-                lines.append(f"  - {cv['item_name']}: {value_str} [{cv['status'].upper()}]{ref_str}")
+                ref_str = f" (Ref: {cv['reference_range']})" if cv.get("reference_range") else ""
+                lines.append(
+                    f"  - {cv['item_name']}: {value_str} [{cv['status'].upper()}]{ref_str}"
+                )
 
         lines.append(f"Notification sent to: {notification.notified_to}")
-        lines.append(f"Notification time: {notification.notified_at.isoformat() if notification.notified_at else 'Pending'}")
+        lines.append(
+            f"Notification time: {notification.notified_at.isoformat() if notification.notified_at else 'Pending'}"
+        )
 
         return "\n".join(lines)
 
@@ -286,21 +290,23 @@ class CriticalNotificationService:
         for flag_str in test.flags:
             parts = flag_str.split(":")
             if len(parts) >= 2:
-                critical_flags.append(ResultFlag(
-                    item_code=parts[0],
-                    item_name=parts[0],
-                    value=float(parts[2]) if len(parts) > 2 else 0,
-                    status=(
-                        ResultStatus(parts[1])
-                        if parts[1] in [s.value for s in ResultStatus]
-                        else ResultStatus.CRITICAL
-                    ),
-                    reference_low=None,
-                    reference_high=None,
-                    critical_low=None,
-                    critical_high=None,
-                    unit=None,
-                ))
+                critical_flags.append(
+                    ResultFlag(
+                        item_code=parts[0],
+                        item_name=parts[0],
+                        value=float(parts[2]) if len(parts) > 2 else 0,
+                        status=(
+                            ResultStatus(parts[1])
+                            if parts[1] in [s.value for s in ResultStatus]
+                            else ResultStatus.CRITICAL
+                        ),
+                        reference_low=None,
+                        reference_high=None,
+                        critical_low=None,
+                        critical_high=None,
+                        unit=None,
+                    )
+                )
         return critical_flags
 
     def notify(self, test_id: int, request: NotifyRequest, user_id: int) -> dict:
@@ -329,7 +335,9 @@ class CriticalNotificationService:
         return {
             "success": True,
             "message": f"Notification recorded for {request.notifiedTo}",
-            "notifiedAt": notification.notified_at.isoformat() if notification.notified_at else None,
+            "notifiedAt": notification.notified_at.isoformat()
+            if notification.notified_at
+            else None,
         }
 
     def acknowledge(self, test_id: int, request: AcknowledgeRequest, user_id: int) -> dict:

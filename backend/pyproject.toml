@@ -22,9 +22,26 @@ python-dateutil = "^2.8.2"
 redis = {extras = ["hiredis"], version = "^5.0.0"}
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.12.1"
 ruff = "^0.1.11"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["app"]
+extend-exclude = [
+    "app/data/lab_constants.py",
+    "app/data/physiologic_limits.py",
+    "app/schemas/enums.py",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+ignore = ["E501"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

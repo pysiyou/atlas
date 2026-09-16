@@ -1,10 +1,9 @@
 """
 Pydantic schemas for Test Catalog
 """
-from typing import Union
+from datetime import datetime
 
 from pydantic import BaseModel, field_validator
-from datetime import datetime
 
 
 class RejectionCriterionItem(BaseModel):
@@ -14,7 +13,7 @@ class RejectionCriterionItem(BaseModel):
     domain: str = "specimen"
 
 
-RejectionCriterionValue = Union[str, RejectionCriterionItem]
+RejectionCriterionValue = str | RejectionCriterionItem
 
 
 def _normalize_rejection_criteria(
@@ -121,6 +120,6 @@ class TestResponse(TestBase):
         cls, value: list[RejectionCriterionValue] | None
     ) -> list[RejectionCriterionItem] | None:
         return _normalize_rejection_criteria(value)
-    
+
     class Config:
         from_attributes = True

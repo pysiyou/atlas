@@ -7,17 +7,19 @@ These handlers ensure that:
 3. Errors are properly logged for debugging
 """
 import logging
-from fastapi import Request, HTTPException
-from fastapi.responses import JSONResponse
+
+from fastapi import HTTPException, Request
 from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 from sqlalchemy.exc import SQLAlchemyError
-from app.schemas.error import ErrorResponse, ErrorDetail
+
+from app.schemas.error import ErrorDetail, ErrorResponse
 from app.utils.exceptions import (
+    AuthorizationException,
+    BusinessRuleException,
     LabOperationError,
     NotFoundException,
     ValidationException,
-    AuthorizationException,
-    BusinessRuleException,
 )
 
 logger = logging.getLogger(__name__)
@@ -27,10 +29,7 @@ async def lab_operation_error_handler(request: Request, exc: LabOperationError) 
     """Handle LabOperationError exceptions from service layer."""
     return JSONResponse(
         status_code=exc.status_code,
-        content=ErrorResponse(
-            error_code=exc.error_code,
-            message=exc.message
-        ).model_dump()
+        content=ErrorResponse(error_code=exc.error_code, message=exc.message).model_dump(),
     )
 
 
@@ -38,10 +37,7 @@ async def not_found_error_handler(request: Request, exc: NotFoundException) -> J
     """Handle NotFoundException exceptions."""
     return JSONResponse(
         status_code=404,
-        content=ErrorResponse(
-            error_code="NOT_FOUND",
-            message=str(exc)
-        ).model_dump()
+        content=ErrorResponse(error_code="NOT_FOUND", message=str(exc)).model_dump(),
     )
 
 
@@ -49,52 +45,44 @@ async def validation_exception_handler(request: Request, exc: ValidationExceptio
     """Handle ValidationException exceptions."""
     return JSONResponse(
         status_code=400,
-        content=ErrorResponse(
-            error_code="VALIDATION_ERROR",
-            message=str(exc)
-        ).model_dump()
+        content=ErrorResponse(error_code="VALIDATION_ERROR", message=str(exc)).model_dump(),
     )
 
 
-async def authorization_exception_handler(request: Request, exc: AuthorizationException) -> JSONResponse:
+async def authorization_exception_handler(
+    request: Request, exc: AuthorizationException
+) -> JSONResponse:
     """Handle AuthorizationException exceptions."""
     return JSONResponse(
         status_code=403,
-        content=ErrorResponse(
-            error_code="FORBIDDEN",
-            message=str(exc)
-        ).model_dump()
+        content=ErrorResponse(error_code="FORBIDDEN", message=str(exc)).model_dump(),
     )
 
 
-async def business_rule_exception_handler(request: Request, exc: BusinessRuleException) -> JSONResponse:
+async def business_rule_exception_handler(
+    request: Request, exc: BusinessRuleException
+) -> JSONResponse:
     """Handle BusinessRuleException exceptions."""
     return JSONResponse(
         status_code=400,
-        content=ErrorResponse(
-            error_code="BUSINESS_RULE_VIOLATION",
-            message=str(exc)
-        ).model_dump()
+        content=ErrorResponse(error_code="BUSINESS_RULE_VIOLATION", message=str(exc)).model_dump(),
     )
 
 
-async def request_validation_error_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
+async def request_validation_error_handler(
+    request: Request, exc: RequestValidationError
+) -> JSONResponse:
     """Handle Pydantic validation errors from request body/params."""
     details = []
     for error in exc.errors():
         field = ".".join(str(loc) for loc in error["loc"]) if error["loc"] else None
-        details.append(ErrorDetail(
-            field=field,
-            message=error["msg"]
-        ))
+        details.append(ErrorDetail(field=field, message=error["msg"]))
 
     return JSONResponse(
         status_code=422,
         content=ErrorResponse(
-            error_code="VALIDATION_ERROR",
-            message="Request validation failed",
-            details=details
-        ).model_dump()
+            error_code="VALIDATION_ERROR", message="Request validation failed", details=details
+        ).model_dump(),
     )
 
 
@@ -105,8 +93,8 @@ async def sqlalchemy_error_handler(request: Request, exc: SQLAlchemyError) -> JS
         status_code=500,
         content=ErrorResponse(
             error_code="DATABASE_ERROR",
-            message="A database error occurred. Please try again later."
-        ).model_dump()
+            message="A database error occurred. Please try again later.",
+        ).model_dump(),
     )
 
 
@@ -128,8 +116,8 @@ async def http_exception_handler(request: Request, exc: HTTPException) -> JSONRe
         status_code=exc.status_code,
         content=ErrorResponse(
             error_code=error_code,
-            message=exc.detail if isinstance(exc.detail, str) else str(exc.detail)
-        ).model_dump()
+            message=exc.detail if isinstance(exc.detail, str) else str(exc.detail),
+        ).model_dump(),
     )
 
 
@@ -145,8 +133,8 @@ async def generic_exception_handler(request: Request, exc: Exception) -> JSONRes
         status_code=500,
         content=ErrorResponse(
             error_code="INTERNAL_ERROR",
-            message="An unexpected error occurred. Please try again later."
-        ).model_dump()
+            message="An unexpected error occurred. Please try again later.",
+        ).model_dump(),
     )
 
 

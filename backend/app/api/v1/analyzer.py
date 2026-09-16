@@ -2,13 +2,13 @@
 from fastapi import APIRouter, Depends, Header, HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.database import get_db
+from app.core.config import settings
+from app.db.database import get_db
 from app.schemas.analyzer import (
     AnalyzerResultRequest,
     AnalyzerResultResponse,
     HL7MessageRequest,
 )
-from app.config import settings
 from app.services.lab.analyzer_ingest import AnalyzerIngestService
 
 router = APIRouter()

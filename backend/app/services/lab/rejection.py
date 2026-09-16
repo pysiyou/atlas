@@ -6,13 +6,12 @@ Collection (sample) and validation (result review) use separate criterion lists.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Literal, Optional
-
-from sqlalchemy.orm import Session
+from typing import Any, Literal
 
 from app.models.test import Test
+from app.utils.common import infer_criterion_domain
 from app.utils.exceptions import LabOperationError
-from app.utils.specimen_reasons import infer_criterion_domain
+from sqlalchemy.orm import Session
 
 QualityContext = Literal["sample", "validation"]
 
@@ -42,7 +41,7 @@ class RejectionCriteriaService:
         reason = str(raw).strip()
         return RejectionCriterion(reason=reason, domain=infer_criterion_domain(reason))
 
-    def _get_test(self, test_code: str) -> Optional[Test]:
+    def _get_test(self, test_code: str) -> Test | None:
         return self.db.query(Test).filter(Test.code == test_code).first()
 
     def get_specimen_criteria_items_for_test(self, test_code: str) -> list[RejectionCriterion]:
@@ -61,7 +60,9 @@ class RejectionCriteriaService:
             raw = test.rejectionCriteria or []
         return [self._normalize_criterion(item) for item in raw]
 
-    def _items_for_context(self, test_code: str, context: QualityContext) -> list[RejectionCriterion]:
+    def _items_for_context(
+        self, test_code: str, context: QualityContext
+    ) -> list[RejectionCriterion]:
         if context == "sample":
             return self.get_specimen_criteria_items_for_test(test_code)
         return self.get_validation_criteria_items_for_test(test_code)
@@ -96,14 +97,16 @@ class RejectionCriteriaService:
         rejection_reason: str,
         *,
         context: QualityContext = "validation",
-    ) -> Optional[RejectionCriterion]:
+    ) -> RejectionCriterion | None:
         for code in test_codes:
             for item in self._items_for_context(code, context):
                 if item.reason == rejection_reason:
                     return item
         return None
 
-    def has_specimen_criteria(self, test_codes: list[str], *, context: QualityContext = "validation") -> bool:
+    def has_specimen_criteria(
+        self, test_codes: list[str], *, context: QualityContext = "validation"
+    ) -> bool:
         for code in test_codes:
             if any(item.domain == "specimen" for item in self._items_for_context(code, context)):
                 return True

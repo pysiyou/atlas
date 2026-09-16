@@ -1,16 +1,19 @@
 """
 Report Model - All fields use camelCase
 """
-from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, Boolean
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.sql import func
-from app.database import Base
+
+from app.db.database import Base
 
 
 class Report(Base):
     __tablename__ = "reports"
 
     reportId = Column("report_id", Integer, primary_key=True, autoincrement=True, index=True)
-    orderId = Column("order_id", Integer, ForeignKey("orders.order_id"), nullable=False, unique=True, index=True)
+    orderId = Column(
+        "order_id", Integer, ForeignKey("orders.order_id"), nullable=False, unique=True, index=True
+    )
     patientId = Column("patient_id", Integer, ForeignKey("patients.id"), nullable=False, index=True)
 
     # Report generation
@@ -27,4 +30,6 @@ class Report(Base):
 
     # Metadata
     createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
-    updatedAt = Column("updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    updatedAt = Column(
+        "updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )

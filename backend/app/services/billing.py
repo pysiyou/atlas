@@ -1,14 +1,12 @@
 """Invoice and insurance claim services."""
-from datetime import datetime, timezone
-from typing import List
+from datetime import UTC, datetime
 
-from fastapi import HTTPException
-from sqlalchemy.orm import Session, joinedload
-
-from app.models.billing import Invoice, InsuranceClaim
+from app.models.billing import InsuranceClaim, Invoice
 from app.models.order import Order, OrderTest
 from app.schemas.billing import InsuranceClaimCreate
 from app.schemas.enums import ClaimStatus, TestStatus
+from fastapi import HTTPException
+from sqlalchemy.orm import Session, joinedload
 
 
 class BillingService:
@@ -29,20 +27,22 @@ class BillingService:
         if not order:
             raise HTTPException(status_code=404, detail=f"Order {order_id} not found")
 
-        items: List[dict] = []
+        items: list[dict] = []
         subtotal = 0.0
         for ot in order.tests:
             if ot.status in (TestStatus.REMOVED, TestStatus.CANCELLED):
                 continue
             test_name = ot.test.name if ot.test else ot.testCode
             price = float(ot.priceAtOrder or 0)
-            items.append({
-                "testCode": ot.testCode,
-                "testName": test_name,
-                "quantity": 1,
-                "unitPrice": price,
-                "totalPrice": price,
-            })
+            items.append(
+                {
+                    "testCode": ot.testCode,
+                    "testName": test_name,
+                    "quantity": 1,
+                    "unitPrice": price,
+                    "totalPrice": price,
+                }
+            )
             subtotal += price
 
         patient_name = order.patient.fullName if order.patient else "Unknown"
@@ -69,7 +69,7 @@ class BillingService:
             raise HTTPException(status_code=404, detail="Invoice not found")
         return invoice
 
-    def list_invoices_for_order(self, order_id: int) -> List[Invoice]:
+    def list_invoices_for_order(self, order_id: int) -> list[Invoice]:
         return self.db.query(Invoice).filter(Invoice.orderId == order_id).all()
 
     def submit_insurance_claim(self, data: InsuranceClaimCreate, user_id: int) -> InsuranceClaim:
@@ -85,7 +85,7 @@ class BillingService:
             insuranceNumber=data.insuranceNumber,
             claimAmount=data.claimAmount,
             claimStatus=ClaimStatus.SUBMITTED,
-            submittedDate=datetime.now(timezone.utc),
+            submittedDate=datetime.now(UTC),
             notes=data.notes,
         )
         self.db.add(claim)
@@ -93,5 +93,5 @@ class BillingService:
         self.db.refresh(claim)
         return claim
 
-    def list_claims_for_order(self, order_id: int) -> List[InsuranceClaim]:
+    def list_claims_for_order(self, order_id: int) -> list[InsuranceClaim]:
         return self.db.query(InsuranceClaim).filter(InsuranceClaim.orderId == order_id).all()

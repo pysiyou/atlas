@@ -2,22 +2,24 @@
 Redis caching utilities for Atlas backend.
 Provides connection management, caching decorators, and invalidation helpers.
 """
-import json
 import hashlib
-from functools import wraps
-from typing import Any, Callable, TypeVar, Optional
+import json
+from collections.abc import Callable
 from datetime import datetime
+from functools import wraps
+from typing import Any, TypeVar
 
 import redis
-from app.config import settings
+
+from app.core.config import settings
 
 T = TypeVar("T")
 
 # Redis client singleton
-_redis_client: Optional[redis.Redis] = None
+_redis_client: redis.Redis | None = None
 
 
-def get_redis() -> Optional[redis.Redis]:
+def get_redis() -> redis.Redis | None:
     """Get Redis client instance. Returns None if caching is disabled or connection fails."""
     global _redis_client
 
@@ -80,7 +82,7 @@ def generate_cache_key(base_key: str, **params) -> str:
     return f"{base_key}:{param_hash}"
 
 
-def cache_get(key: str) -> Optional[Any]:
+def cache_get(key: str) -> Any | None:
     """Get value from cache."""
     client = get_redis()
     if client is None:

@@ -1,10 +1,17 @@
 """
 Sample Model - All fields use camelCase
 """
-from sqlalchemy import Column, String, Float, DateTime, JSON, ForeignKey, Boolean, Integer
+from sqlalchemy import JSON, Boolean, Column, DateTime, Float, ForeignKey, Integer, String
 from sqlalchemy.sql import func
-from app.database import Base, contract_enum
-from app.schemas.enums import SampleStatus, SampleType, ContainerType, ContainerTopColor, PriorityLevel
+
+from app.db.database import Base, contract_enum
+from app.schemas.enums import (
+    ContainerTopColor,
+    ContainerType,
+    PriorityLevel,
+    SampleStatus,
+    SampleType,
+)
 
 
 class Sample(Base):
@@ -13,7 +20,9 @@ class Sample(Base):
     sampleId = Column("sample_id", Integer, primary_key=True, autoincrement=True, index=True)
     orderId = Column("order_id", Integer, ForeignKey("orders.order_id"), nullable=False, index=True)
     sampleType = Column("sample_type", contract_enum(SampleType), nullable=False)
-    status = Column(contract_enum(SampleStatus), nullable=False, default=SampleStatus.PENDING, index=True)
+    status = Column(
+        contract_enum(SampleStatus), nullable=False, default=SampleStatus.PENDING, index=True
+    )
 
     # What this sample is for
     testCodes = Column("test_codes", JSON, nullable=False)  # Array of test codes
@@ -21,8 +30,12 @@ class Sample(Base):
     priority = Column(contract_enum(PriorityLevel), nullable=False)
 
     # Required specs
-    requiredContainerTypes = Column("required_container_types", JSON, nullable=False)  # Array of ContainerType
-    requiredContainerColors = Column("required_container_colors", JSON, nullable=False)  # Array of ContainerTopColor
+    requiredContainerTypes = Column(
+        "required_container_types", JSON, nullable=False
+    )  # Array of ContainerType
+    requiredContainerColors = Column(
+        "required_container_colors", JSON, nullable=False
+    )  # Array of ContainerTopColor
 
     # Collection info (only when status = collected or rejected)
     collectedAt = Column("collected_at", DateTime(timezone=True), nullable=True)
@@ -30,8 +43,12 @@ class Sample(Base):
     collectedVolume = Column("collected_volume", Float, nullable=True)
 
     # Actual container used (only when collected)
-    actualContainerType = Column("actual_container_type", contract_enum(ContainerType), nullable=True)
-    actualContainerColor = Column("actual_container_color", contract_enum(ContainerTopColor), nullable=True)
+    actualContainerType = Column(
+        "actual_container_type", contract_enum(ContainerType), nullable=True
+    )
+    actualContainerColor = Column(
+        "actual_container_color", contract_enum(ContainerTopColor), nullable=True
+    )
 
     # Optional collection fields
     collectionNotes = Column("collection_notes", String, nullable=True)
@@ -44,7 +61,9 @@ class Sample(Base):
     # Rejection info (only when status = rejected)
     rejectedAt = Column("rejected_at", DateTime(timezone=True), nullable=True)
     rejectedBy = Column("rejected_by", String, nullable=True)
-    rejectionReason = Column("rejection_reason", String, nullable=True)  # Catalog rejection criterion
+    rejectionReason = Column(
+        "rejection_reason", String, nullable=True
+    )  # Catalog rejection criterion
     rejectionNotes = Column("rejection_notes", String, nullable=True)
     # Recollection
     recollectionRequired = Column("recollection_required", Boolean, default=False)
@@ -52,12 +71,18 @@ class Sample(Base):
 
     # New fields for recollection tracking
     isRecollection = Column("is_recollection", Boolean, default=False)
-    originalSampleId = Column("original_sample_id", Integer, nullable=True)  # Pointer to the sample this replaced
+    originalSampleId = Column(
+        "original_sample_id", Integer, nullable=True
+    )  # Pointer to the sample this replaced
     recollectionReason = Column("recollection_reason", String, nullable=True)
-    recollectionAttempt = Column("recollection_attempt", Integer, default=1)  # 1 = original/first collection, 2 = 1st recollection, etc.
+    recollectionAttempt = Column(
+        "recollection_attempt", Integer, default=1
+    )  # 1 = original/first collection, 2 = 1st recollection, etc.
 
     # Metadata
     createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
     createdBy = Column("created_by", String, nullable=False)
-    updatedAt = Column("updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    updatedAt = Column(
+        "updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
     updatedBy = Column("updated_by", String, nullable=False)

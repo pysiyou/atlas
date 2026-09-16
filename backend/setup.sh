@@ -27,7 +27,7 @@ poetry install
 
 # Initialize database
 echo "🗄️  Initializing database..."
-poetry run python init_db.py
+poetry run python -m app.db.bootstrap
 
 echo ""
 echo "✅ Setup complete!"

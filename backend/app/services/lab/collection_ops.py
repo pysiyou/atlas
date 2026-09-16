@@ -1,11 +1,10 @@
 """Sample collection operations for lab workflow."""
-from datetime import datetime, timezone
-from typing import Optional
+from datetime import UTC, datetime
 
 from app.models.sample import Sample
 from app.schemas.enums import SampleStatus, TestStatus
-from app.services.lab.state import SampleStateMachine, TestStateMachine, StateTransitionError
-from app.services.orders.order import update_order_status
+from app.services.lab.state import SampleStateMachine, StateTransitionError, TestStateMachine
+from app.services.orders import update_order_status
 from app.utils.exceptions import LabOperationError
 
 
@@ -24,7 +23,7 @@ class CollectionOperations:
         collected_volume: float,
         container_type: str,
         container_color: str,
-        collection_notes: Optional[str] = None,
+        collection_notes: str | None = None,
     ) -> Sample:
         sample = self._svc._get_sample(sample_id, for_update=True)
         self._svc._assert_order_paid_for_collection(sample.orderId)
@@ -36,7 +35,7 @@ class CollectionOperations:
             raise LabOperationError(e.message, status_code=400)
 
         sample.status = SampleStatus.COLLECTED
-        sample.collectedAt = datetime.now(timezone.utc)
+        sample.collectedAt = datetime.now(UTC)
         sample.collectedBy = str(user_id)
         sample.collectedVolume = collected_volume
         sample.actualContainerType = container_type
@@ -47,7 +46,12 @@ class CollectionOperations:
 
         order_tests = self._svc._linked_order_tests(
             sample,
-            exclude_statuses=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.VALIDATED, TestStatus.CANCELLED],
+            exclude_statuses=[
+                TestStatus.SUPERSEDED,
+                TestStatus.REMOVED,
+                TestStatus.VALIDATED,
+                TestStatus.CANCELLED,
+            ],
         )
         for order_test in order_tests:
             # Validate state machine transition before forcing status change
@@ -72,4 +76,3 @@ class CollectionOperations:
         self.db.refresh(sample)
         update_order_status(self.db, sample.orderId)
         return sample
-

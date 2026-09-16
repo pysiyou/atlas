@@ -1,12 +1,7 @@
-"""
-Unified Lab Operations Service — thin facade delegating to domain operation modules.
-"""
-from typing import Any, Dict, Optional
+"""Unified Lab Operations Service — thin facade delegating to domain operation modules."""
+from typing import Any
 
-from pydantic import BaseModel
-from sqlalchemy.orm import Session
-
-from app.models.order import OrderTest
+from app.models.order import Order, OrderTest
 from app.models.sample import Sample
 from app.schemas.enums import (
     PaymentStatus,
@@ -14,14 +9,18 @@ from app.schemas.enums import (
 )
 from app.services.audit.logger import AuditService
 from app.services.lab.collection_ops import CollectionOperations
-from app.services.lab.escalation import EscalationEngine
-from app.services.lab.escalation_ops import EscalationOperations
+from app.services.lab.escalation import (
+    EscalationEngine,
+    EscalationOperations,
+    EscalationResolveResult,
+)
 from app.services.lab.quality import QualityIssueService
 from app.services.lab.recollection import RecollectionRequestService
 from app.services.lab.result_ops import ResultOperations
 from app.services.lab.results import FlagCalculatorService, ResultValidatorService
-from app.services.lab.types import EscalationResolveResult
 from app.utils.exceptions import LabOperationError
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
 
 __all__ = ["LabOperationsService", "LabOperationError", "EscalationResolveResult"]
 
@@ -54,7 +53,7 @@ class LabOperationsService:
     def _get_order_test(
         self,
         order_test_id: int,
-        status: Optional[TestStatus] = None,
+        status: TestStatus | None = None,
         for_update: bool = False,
     ) -> OrderTest:
         query = self.db.query(OrderTest).filter(OrderTest.id == order_test_id)
@@ -72,8 +71,6 @@ class LabOperationsService:
         return order_test
 
     def _assert_order_paid_for_collection(self, order_id: int) -> None:
-        from app.models.order import Order
-
         order = self.db.query(Order).filter(Order.orderId == order_id).first()
         if not order:
             raise LabOperationError(f"Order {order_id} not found", status_code=404)
@@ -83,7 +80,7 @@ class LabOperationsService:
                 status_code=402,
             )
 
-    def _serialize_sample_state(self, sample: Sample) -> Dict[str, Any]:
+    def _serialize_sample_state(self, sample: Sample) -> dict[str, Any]:
         return {
             "sampleId": sample.sampleId,
             "status": sample.status.value if sample.status else None,
@@ -93,20 +90,17 @@ class LabOperationsService:
         }
 
     @staticmethod
-    def _results_to_json_serializable(results: Dict[str, Any]) -> Dict[str, Any]:
-        out: Dict[str, Any] = {}
+    def _results_to_json_serializable(results: dict[str, Any]) -> dict[str, Any]:
+        out: dict[str, Any] = {}
         for k, v in results.items():
-            if v is None or isinstance(v, (str, int, float, bool)):
+            if v is None or isinstance(v, str | int | float | bool):
                 out[k] = v
             elif isinstance(v, BaseModel):
                 out[k] = v.model_dump()
             elif isinstance(v, dict):
                 out[k] = LabOperationsService._results_to_json_serializable(v)
             elif isinstance(v, list):
-                out[k] = [
-                    item.model_dump() if isinstance(item, BaseModel) else item
-                    for item in v
-                ]
+                out[k] = [item.model_dump() if isinstance(item, BaseModel) else item for item in v]
             else:
                 out[k] = v
         return out
@@ -115,7 +109,7 @@ class LabOperationsService:
         self,
         sample: Sample,
         *,
-        exclude_statuses: Optional[list[TestStatus]] = None,
+        exclude_statuses: list[TestStatus] | None = None,
     ) -> list[OrderTest]:
         query = self.db.query(OrderTest).filter(
             OrderTest.orderId == sample.orderId,

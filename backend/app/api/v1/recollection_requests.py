@@ -1,21 +1,20 @@
 """
 Recollection Requests API — supervisor approval for patient redraw.
 """
-from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
-from app.core.dependencies import require_role
-from app.database import get_db
+from app.api.dependencies import require_role
+from app.db.database import get_db
 from app.models.user import User
 from app.schemas.enums import UserRole
-from app.services.lab.workflow import LabOperationsService
 from app.services.lab.recollection import (
     RecollectionRequestResult,
     RecollectionRequestSummary,
 )
+from app.services.lab.workflow import LabOperationsService
 from app.utils.exceptions import LabOperationError
 
 router = APIRouter()
@@ -24,12 +23,12 @@ require_recollection_reviewer = require_role(UserRole.ADMIN, UserRole.LAB_TECH_P
 
 
 class RecollectionReviewRequest(BaseModel):
-    reviewNotes: Optional[str] = Field(None, max_length=1000)
+    reviewNotes: str | None = Field(None, max_length=1000)
 
 
 @router.get(
     "/lab/recollection-requests/pending",
-    response_model=List[RecollectionRequestSummary],
+    response_model=list[RecollectionRequestSummary],
 )
 def list_pending_recollection_requests(
     db: Session = Depends(get_db),

@@ -2,16 +2,15 @@
 Patient business logic. Router delegates list/get/search/create/update to this service.
 """
 import re
-from datetime import datetime, timezone
-
-from fastapi import HTTPException, status
-from sqlalchemy.orm import Session
-from sqlalchemy import or_, cast, String
-from sqlalchemy.inspection import inspect
+from datetime import UTC, datetime
 
 from app.models.patient import Patient
-from app.utils.display_id_search import parse_display_id_from_search
-from app.schemas.patient import PatientCreate, PatientUpdate, PatientResponse, MedicalHistory
+from app.schemas.patient import MedicalHistory, PatientCreate, PatientResponse, PatientUpdate
+from app.utils.common import parse_display_id_from_search
+from fastapi import HTTPException, status
+from sqlalchemy import String, cast, or_
+from sqlalchemy.inspection import inspect
+from sqlalchemy.orm import Session
 
 
 def patient_to_response_dict(patient: Patient) -> dict:
@@ -110,7 +109,7 @@ class PatientService:
             medicalHistory=medical_history_data,
             affiliation=patient_data.affiliation.model_dump() if patient_data.affiliation else None,
             vitalSigns=patient_data.vitalSigns.model_dump() if patient_data.vitalSigns else None,
-            registrationDate=datetime.now(timezone.utc),
+            registrationDate=datetime.now(UTC),
             createdBy=user_id,
             updatedBy=user_id,
         )
@@ -127,8 +126,17 @@ class PatientService:
                 detail=f"Patient {patient_id} not found",
             )
         ALLOWED = {
-            "fullName", "dateOfBirth", "gender", "phone", "email",
-            "height", "weight", "address", "emergencyContact", "medicalHistory", "affiliation",
+            "fullName",
+            "dateOfBirth",
+            "gender",
+            "phone",
+            "email",
+            "height",
+            "weight",
+            "address",
+            "emergencyContact",
+            "medicalHistory",
+            "affiliation",
             "vitalSigns",
         }
         update_data = patient_data.model_dump(exclude_unset=True)

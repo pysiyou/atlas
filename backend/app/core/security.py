@@ -4,15 +4,18 @@ Security utilities for authentication and authorization.
 Provides JWT token creation/verification and password hashing using bcrypt.
 Token types are distinguished by a 'type' claim for security.
 """
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from enum import Enum
+
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from app.config import settings
+
+from app.core.config import settings
 
 
 class TokenType(str, Enum):
     """Token type identifiers to prevent token misuse."""
+
     ACCESS = "access"
     REFRESH = "refresh"
 
@@ -39,14 +42,14 @@ def create_access_token(subject: str | int, expires_delta: timedelta | None = No
         subject: User identifier (typically user ID)
         expires_delta: Custom expiration time (defaults to settings)
     """
-    expire = datetime.now(timezone.utc) + (
+    expire = datetime.now(UTC) + (
         expires_delta or timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     )
     payload = {
         "sub": str(subject),
         "type": TokenType.ACCESS,
         "exp": expire,
-        "iat": datetime.now(timezone.utc),
+        "iat": datetime.now(UTC),
     }
     return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
@@ -58,12 +61,12 @@ def create_refresh_token(subject: str | int) -> str:
     Args:
         subject: User identifier (typically user ID)
     """
-    expire = datetime.now(timezone.utc) + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
+    expire = datetime.now(UTC) + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
     payload = {
         "sub": str(subject),
         "type": TokenType.REFRESH,
         "exp": expire,
-        "iat": datetime.now(timezone.utc),
+        "iat": datetime.now(UTC),
     }
     return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 

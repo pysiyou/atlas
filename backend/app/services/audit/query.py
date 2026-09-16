@@ -1,14 +1,12 @@
 """Audit log query operations."""
-from datetime import datetime, timedelta, timezone
-from typing import Optional
-
-from sqlalchemy import desc, func
-from sqlalchemy.orm import Session
+from datetime import UTC, datetime, timedelta
 
 from app.models.lab_audit import LabOperationLog
 from app.schemas.audit import LabOperationLogResponse
 from app.schemas.enums import LabOperationType
-from app.services.timeline.formatter import TimelineFormatter
+from app.services.timeline import TimelineFormatter
+from sqlalchemy import desc, func
+from sqlalchemy.orm import Session
 
 
 class AuditQueryService:
@@ -20,12 +18,12 @@ class AuditQueryService:
         self,
         limit: int = 10000,
         offset: int = 0,
-        operation_type: Optional[LabOperationType] = None,
-        entity_type: Optional[str] = None,
+        operation_type: LabOperationType | None = None,
+        entity_type: str | None = None,
         hours_back: int = 24,
     ) -> list[LabOperationLogResponse]:
         query = self.db.query(LabOperationLog)
-        cutoff = datetime.now(timezone.utc) - timedelta(hours=hours_back)
+        cutoff = datetime.now(UTC) - timedelta(hours=hours_back)
         query = query.filter(LabOperationLog.performedAt >= cutoff)
         if operation_type:
             query = query.filter(LabOperationLog.operationType == operation_type)
@@ -52,12 +50,12 @@ class AuditQueryService:
 
     def count_logs(
         self,
-        operation_type: Optional[LabOperationType] = None,
-        entity_type: Optional[str] = None,
+        operation_type: LabOperationType | None = None,
+        entity_type: str | None = None,
         hours_back: int = 24,
     ) -> int:
         query = self.db.query(func.count(LabOperationLog.id)).filter(
-            LabOperationLog.performedAt >= (datetime.now(timezone.utc) - timedelta(hours=hours_back))
+            LabOperationLog.performedAt >= (datetime.now(UTC) - timedelta(hours=hours_back))
         )
         if operation_type:
             query = query.filter(LabOperationLog.operationType == operation_type)

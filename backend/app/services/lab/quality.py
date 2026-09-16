@@ -5,34 +5,33 @@ One entry point for specimen and analytical quality problems at collection or va
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from typing import Any, List, Optional
+from datetime import UTC, datetime
+from typing import Any
 
-from pydantic import BaseModel
-from sqlalchemy.orm import Session
-
+from app.data.lab_constants import MAX_RETEST_ATTEMPTS
 from app.models.order import OrderTest
 from app.models.quality_issue import QualityIssue
 from app.models.sample import Sample
 from app.schemas.enums import (
     EscalationReasonCode,
+    PriorityLevel,
     QualityDomain,
     QualityIssueTargetType,
     QualityStage,
     RemedyType,
-    PriorityLevel,
     SampleStatus,
     TestStatus,
 )
 from app.services.audit.logger import AuditService
 from app.services.lab.escalation import EscalationEngine
-from app.data.lab_constants import MAX_RETEST_ATTEMPTS
-from app.services.lab.samples import SampleCollectionService
-from app.services.orders.order import update_order_status
 from app.services.lab.rejection import RejectionCriteriaService
+from app.services.lab.samples import SampleCollectionService
 from app.services.lab.state import SampleStateMachine, TestStateMachine
+from app.services.orders import update_order_status
+from app.utils.common import is_specimen_rejection_reason
 from app.utils.exceptions import LabOperationError
-from app.utils.specimen_reasons import is_specimen_rejection_reason
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
 
 # Resulted / validated tests are left for the validator (or remain released).
 _SAMPLE_RESET_STATUSES = {
@@ -42,14 +41,14 @@ _SAMPLE_RESET_STATUSES = {
 
 
 # Remedies a validator may choose explicitly (no auto-routing).
-_VALIDATION_REMEDIES: List[RemedyType] = [
+_VALIDATION_REMEDIES: list[RemedyType] = [
     RemedyType.RETRY_SAME_SAMPLE,
     RemedyType.REQUEST_RECOLLECTION,
     RemedyType.CANCEL,
 ]
 
 # Remedies for unfinished work when rejecting a collected sample.
-_SAMPLE_UNFINISHED_REMEDIES: List[RemedyType] = [
+_SAMPLE_UNFINISHED_REMEDIES: list[RemedyType] = [
     RemedyType.REQUEST_RECOLLECTION,
     RemedyType.CANCEL,
 ]
@@ -59,18 +58,18 @@ class QualityIssueOptions(BaseModel):
     targetType: QualityIssueTargetType
     targetId: int
     orderId: int
-    testCode: Optional[str] = None
-    sampleId: Optional[int] = None
+    testCode: str | None = None
+    sampleId: int | None = None
     stage: QualityStage
-    allowedCriteria: List[str] = []
-    allowedRemedies: List[RemedyType] = []
-    suggestedRemedy: Optional[RemedyType] = None
+    allowedCriteria: list[str] = []
+    allowedRemedies: list[RemedyType] = []
+    suggestedRemedy: RemedyType | None = None
     retestAttemptsUsed: int = 0
     retestAttemptsRemaining: int = 0
     recollectionAttemptsUsed: int = 0
     recollectionAttemptsRemaining: int = 0
     willEscalate: bool = False
-    previewRemedy: Optional[RemedyType] = None
+    previewRemedy: RemedyType | None = None
     previewMessage: str = ""
     hasSpecimenCriteria: bool = False
     hasAnalyticalCriteria: bool = False
@@ -87,12 +86,12 @@ class QualityIssueResult(BaseModel):
     message: str
     qualityIssueId: int
     orderId: int
-    testCode: Optional[str] = None
-    sampleId: Optional[int] = None
-    orderTestId: Optional[int] = None
-    createdTestId: Optional[int] = None
-    createdSampleId: Optional[int] = None
-    recollectionRequestId: Optional[int] = None
+    testCode: str | None = None
+    sampleId: int | None = None
+    orderTestId: int | None = None
+    createdTestId: int | None = None
+    createdSampleId: int | None = None
+    recollectionRequestId: int | None = None
     escalationRequired: bool = False
 
 
@@ -102,7 +101,7 @@ class QualityIssueService:
         self.audit = audit
         self.escalation = escalation
         self.collection = SampleCollectionService(db)
-        self.recollection_requests: Optional[Any] = None
+        self.recollection_requests: Any | None = None
 
     # ── helpers ──────────────────────────────────────────────────────────
 
@@ -112,7 +111,9 @@ class QualityIssueService:
             raise LabOperationError(f"Sample {sample_id} not found", status_code=404)
         return sample
 
-    def _linked_tests(self, sample: Sample, *, exclude: Optional[List[TestStatus]] = None) -> List[OrderTest]:
+    def _linked_tests(
+        self, sample: Sample, *, exclude: list[TestStatus] | None = None
+    ) -> list[OrderTest]:
         query = self.db.query(OrderTest).filter(
             OrderTest.orderId == sample.orderId,
             OrderTest.testCode.in_(sample.testCodes),
@@ -134,7 +135,9 @@ class QualityIssueService:
     def _chain_root_sample(self, sample: Sample) -> Sample:
         current = sample
         while current.originalSampleId:
-            parent = self.db.query(Sample).filter(Sample.sampleId == current.originalSampleId).first()
+            parent = (
+                self.db.query(Sample).filter(Sample.sampleId == current.originalSampleId).first()
+            )
             if not parent:
                 break
             current = parent
@@ -147,9 +150,7 @@ class QualityIssueService:
         current = root
         while current.retestOrderTestId:
             child = (
-                self.db.query(OrderTest)
-                .filter(OrderTest.id == current.retestOrderTestId)
-                .first()
+                self.db.query(OrderTest).filter(OrderTest.id == current.retestOrderTestId).first()
             )
             if not child:
                 break
@@ -175,14 +176,14 @@ class QualityIssueService:
         stage: QualityStage,
         domain: QualityDomain,
         reason: str,
-        notes: Optional[str],
+        notes: str | None,
         remedy: RemedyType,
         user_id: int,
-        order_test_id: Optional[int] = None,
-        sample_id: Optional[int] = None,
-        test_code: Optional[str] = None,
-        created_test_id: Optional[int] = None,
-        created_sample_id: Optional[int] = None,
+        order_test_id: int | None = None,
+        sample_id: int | None = None,
+        test_code: str | None = None,
+        created_test_id: int | None = None,
+        created_sample_id: int | None = None,
     ) -> QualityIssue:
         issue = QualityIssue(
             orderId=order_id,
@@ -197,7 +198,7 @@ class QualityIssueService:
             createdTestId=created_test_id,
             createdSampleId=created_sample_id,
             createdBy=str(user_id),
-            createdAt=datetime.now(timezone.utc),
+            createdAt=datetime.now(UTC),
         )
         self.db.add(issue)
         self.db.flush()
@@ -222,9 +223,9 @@ class QualityIssueService:
         order_test: OrderTest,
         user_id: int,
         reason: str,
-        notes: Optional[str],
+        notes: str | None,
         *,
-        retest_number: Optional[int] = None,
+        retest_number: int | None = None,
         technician_note_prefix: str = "Re-test",
     ) -> OrderTest:
         current_retest = order_test.retestNumber or 0
@@ -260,8 +261,8 @@ class QualityIssueService:
         user_id: int,
         reason: str,
         *,
-        test_codes: Optional[list[str]] = None,
-        priority: Optional[PriorityLevel] = None,
+        test_codes: list[str] | None = None,
+        priority: PriorityLevel | None = None,
         supervisor_authorized: bool = False,
     ) -> Sample:
         return self.collection.request_recollection(
@@ -308,9 +309,9 @@ class QualityIssueService:
         sample: Sample,
         user_id: int,
         reason: str,
-        notes: Optional[str],
+        notes: str | None,
         *,
-        skip_test_ids: Optional[set[int]] = None,
+        skip_test_ids: set[int] | None = None,
         reset_unfinished: bool = True,
     ) -> None:
         """
@@ -327,7 +328,7 @@ class QualityIssueService:
         }
 
         sample.status = SampleStatus.REJECTED
-        sample.rejectedAt = datetime.now(timezone.utc)
+        sample.rejectedAt = datetime.now(UTC)
         sample.rejectedBy = str(user_id)
         sample.rejectionReason = reason
         sample.rejectionNotes = notes
@@ -353,7 +354,9 @@ class QualityIssueService:
             return
 
         skip = skip_test_ids or set()
-        linked = self._linked_tests(sample, exclude=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED])
+        linked = self._linked_tests(
+            sample, exclude=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED]
+        )
         for order_test in linked:
             if order_test.id in skip:
                 continue
@@ -384,15 +387,13 @@ class QualityIssueService:
         validated = sum(1 for t in linked if t.status == TestStatus.VALIDATED)
         unfinished = sum(1 for t in linked if t.status in _SAMPLE_RESET_STATUSES)
         awaiting_recollection = sum(
-            1
-            for t in linked
-            if t.status == TestStatus.PENDING and t.sampleId == sample_id
+            1 for t in linked if t.status == TestStatus.PENDING and t.sampleId == sample_id
         )
 
         allowed = list(_SAMPLE_UNFINISHED_REMEDIES) if unfinished > 0 else []
         suggested = RemedyType.REQUEST_RECOLLECTION if unfinished > 0 else None
 
-        parts: List[str] = []
+        parts: list[str] = []
         if unfinished > 0:
             parts.append(
                 f"{unfinished} unfinished test(s) — choose recollection request or cancel."
@@ -407,7 +408,9 @@ class QualityIssueService:
             )
         if not parts:
             parts.append("This sample will be marked rejected.")
-        criteria = RejectionCriteriaService(self.db).get_specimen_criteria_for_tests(sample.testCodes)
+        criteria = RejectionCriteriaService(self.db).get_specimen_criteria_for_tests(
+            sample.testCodes
+        )
 
         return QualityIssueOptions(
             targetType=QualityIssueTargetType.SAMPLE,
@@ -434,7 +437,9 @@ class QualityIssueService:
         if not order_test:
             raise LabOperationError(f"Test {order_test_id} not found", status_code=404)
         if order_test.status != TestStatus.RESULTED:
-            raise LabOperationError("Only resulted tests can be reported at validation", status_code=400)
+            raise LabOperationError(
+                "Only resulted tests can be reported at validation", status_code=400
+            )
 
         retest_used = self._count_retests_in_chain(order_test)
         retest_remaining = max(0, MAX_RETEST_ATTEMPTS - retest_used - 1)
@@ -447,18 +452,16 @@ class QualityIssueService:
 
         criteria_service = RejectionCriteriaService(self.db)
         criteria = criteria_service.get_validation_criteria_for_test(order_test.testCode)
-        criteria_items = criteria_service.get_validation_criteria_items_for_test(order_test.testCode)
+        criteria_items = criteria_service.get_validation_criteria_items_for_test(
+            order_test.testCode
+        )
         has_specimen = any(item.domain == "specimen" for item in criteria_items)
         has_analytical = any(item.domain == "analytical" for item in criteria_items)
 
         # Soft suggestion only — validator always picks the destination.
         if sample_rejected:
             suggested = RemedyType.REQUEST_RECOLLECTION
-            allowed = [
-                r
-                for r in _VALIDATION_REMEDIES
-                if r != RemedyType.RETRY_SAME_SAMPLE
-            ]
+            allowed = [r for r in _VALIDATION_REMEDIES if r != RemedyType.RETRY_SAME_SAMPLE]
         elif has_specimen and not has_analytical and order_test.sampleId:
             suggested = RemedyType.REQUEST_RECOLLECTION
             allowed = list(_VALIDATION_REMEDIES)
@@ -508,13 +511,11 @@ class QualityIssueService:
         target_id: int,
         user_id: int,
         reason: str,
-        notes: Optional[str] = None,
-        preferred_remedy: Optional[RemedyType] = None,
+        notes: str | None = None,
+        preferred_remedy: RemedyType | None = None,
     ) -> QualityIssueResult:
         if target_type == QualityIssueTargetType.SAMPLE:
-            return self._report_sample_issue(
-                target_id, user_id, reason, notes, preferred_remedy
-            )
+            return self._report_sample_issue(target_id, user_id, reason, notes, preferred_remedy)
         return self._report_test_issue(target_id, user_id, reason, notes, preferred_remedy)
 
     def _report_sample_issue(
@@ -522,11 +523,13 @@ class QualityIssueService:
         sample_id: int,
         user_id: int,
         reason: str,
-        notes: Optional[str],
-        preferred_remedy: Optional[RemedyType],
+        notes: str | None,
+        preferred_remedy: RemedyType | None,
     ) -> QualityIssueResult:
         sample = self._get_sample(sample_id)
-        RejectionCriteriaService(self.db).validate_for_tests(sample.testCodes, reason, context="sample")
+        RejectionCriteriaService(self.db).validate_for_tests(
+            sample.testCodes, reason, context="sample"
+        )
         options = self._sample_options(sample_id)
         unfinished = options.unfinishedTestsCount or 0
 
@@ -589,14 +592,12 @@ class QualityIssueService:
         sample: Sample,
         user_id: int,
         reason: str,
-        notes: Optional[str],
+        notes: str | None,
     ) -> QualityIssueResult:
         """Reject sample and cancel unfinished linked tests; leave resulted/validated alone."""
-        self._reject_sample_record(
-            sample, user_id, reason, notes, reset_unfinished=False
-        )
+        self._reject_sample_record(sample, user_id, reason, notes, reset_unfinished=False)
 
-        cancelled_ids: List[int] = []
+        cancelled_ids: list[int] = []
         linked = self._linked_tests(
             sample, exclude=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED]
         )
@@ -639,14 +640,16 @@ class QualityIssueService:
         order_test_id: int,
         user_id: int,
         reason: str,
-        notes: Optional[str],
-        preferred_remedy: Optional[RemedyType],
+        notes: str | None,
+        preferred_remedy: RemedyType | None,
     ) -> QualityIssueResult:
         order_test = self.db.query(OrderTest).filter(OrderTest.id == order_test_id).first()
         if not order_test:
             raise LabOperationError(f"Test {order_test_id} not found", status_code=404)
         if order_test.status != TestStatus.RESULTED:
-            raise LabOperationError("Only resulted tests can be reported at validation", status_code=400)
+            raise LabOperationError(
+                "Only resulted tests can be reported at validation", status_code=400
+            )
 
         RejectionCriteriaService(self.db).validate_for_test(
             order_test.testCode, reason, context="validation"
@@ -670,9 +673,7 @@ class QualityIssueService:
             [order_test.testCode], reason, context="validation"
         )
         is_specimen = (
-            matched.domain == "specimen"
-            if matched
-            else is_specimen_rejection_reason(reason)
+            matched.domain == "specimen" if matched else is_specimen_rejection_reason(reason)
         )
         domain = QualityDomain.SPECIMEN if is_specimen else QualityDomain.ANALYTICAL
 
@@ -704,7 +705,7 @@ class QualityIssueService:
         order_test: OrderTest,
         user_id: int,
         reason: str,
-        notes: Optional[str],
+        notes: str | None,
         domain: QualityDomain,
     ) -> QualityIssueResult:
         """Cancel a resulted test at validation — explicit validator destination."""
@@ -742,7 +743,7 @@ class QualityIssueService:
         order_test: OrderTest,
         user_id: int,
         reason: str,
-        notes: Optional[str],
+        notes: str | None,
     ) -> QualityIssueResult:
         retest_used = self._count_retests_in_chain(order_test)
         retest_remaining = max(0, MAX_RETEST_ATTEMPTS - retest_used - 1)
@@ -791,7 +792,7 @@ class QualityIssueService:
         sample: Sample,
         user_id: int,
         reason: str,
-        notes: Optional[str],
+        notes: str | None,
     ) -> QualityIssueResult:
         if not self.recollection_requests:
             raise LabOperationError("Recollection request service not configured", status_code=500)
@@ -837,7 +838,7 @@ class QualityIssueService:
         order_test: OrderTest,
         user_id: int,
         reason: str,
-        notes: Optional[str],
+        notes: str | None,
     ) -> QualityIssueResult:
         if not order_test.sampleId:
             raise LabOperationError("No sample linked to this test", status_code=400)
@@ -854,7 +855,8 @@ class QualityIssueService:
         elif sample.status != SampleStatus.REJECTED:
             can_reject, reject_reason = SampleStateMachine.can_reject(sample.status)
             raise LabOperationError(
-                reject_reason or f"Cannot request recollection for sample status '{sample.status.value}'",
+                reject_reason
+                or f"Cannot request recollection for sample status '{sample.status.value}'",
                 status_code=400,
             )
 
@@ -904,9 +906,9 @@ class QualityIssueService:
         order_test: OrderTest,
         user_id: int,
         reason: str,
-        notes: Optional[str],
+        notes: str | None,
         domain: QualityDomain,
-        message: Optional[str] = None,
+        message: str | None = None,
     ) -> QualityIssueResult:
         TestStateMachine.validate_transition(order_test.status, TestStatus.ESCALATED)
         self.escalation.escalate_test(
@@ -941,7 +943,7 @@ class QualityIssueService:
             escalationRequired=True,
         )
 
-    def get_issues_for_order(self, order_id: int) -> List[QualityIssue]:
+    def get_issues_for_order(self, order_id: int) -> list[QualityIssue]:
         return (
             self.db.query(QualityIssue)
             .filter(QualityIssue.orderId == order_id)
@@ -949,7 +951,7 @@ class QualityIssueService:
             .all()
         )
 
-    def get_issues_for_test(self, order_test_id: int) -> List[QualityIssue]:
+    def get_issues_for_test(self, order_test_id: int) -> list[QualityIssue]:
         return (
             self.db.query(QualityIssue)
             .filter(QualityIssue.orderTestId == order_test_id)
@@ -957,7 +959,7 @@ class QualityIssueService:
             .all()
         )
 
-    def get_issues_for_sample(self, sample_id: int) -> List[QualityIssue]:
+    def get_issues_for_sample(self, sample_id: int) -> list[QualityIssue]:
         return (
             self.db.query(QualityIssue)
             .filter(QualityIssue.sampleId == sample_id)

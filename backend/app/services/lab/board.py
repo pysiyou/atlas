@@ -9,10 +9,8 @@ Blocker mapping (aligned with frontend deriveWorkItemState):
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from typing import Any, Literal, Optional
-
-from sqlalchemy.orm import Session
+from datetime import UTC, datetime
+from typing import Any, Literal
 
 from app.data.lab_constants import QUEUE_AGE_CRITICAL_HOURS, QUEUE_AGE_WARNING_HOURS
 from app.models.escalation import EscalationTicket
@@ -30,6 +28,7 @@ from app.schemas.enums import (
     SampleStatus,
     TestStatus,
 )
+from sqlalchemy.orm import Session
 
 ATTENTION_LIMIT = 50
 
@@ -109,19 +108,19 @@ SUPERVISOR_ATTENTION_TYPES = {
 PRIORITY_ATTENTION_TYPES = {"priority_urgent", "priority_high"}
 
 
-def hours_since(ts: Optional[datetime], now: Optional[datetime] = None) -> float:
+def hours_since(ts: datetime | None, now: datetime | None = None) -> float:
     """Elapsed hours from *ts* to *now* (UTC). Missing timestamps yield 0."""
     if not ts:
         return 0.0
-    current = now or datetime.now(timezone.utc)
+    current = now or datetime.now(UTC)
     if ts.tzinfo is None:
-        ts = ts.replace(tzinfo=timezone.utc)
+        ts = ts.replace(tzinfo=UTC)
     if current.tzinfo is None:
-        current = current.replace(tzinfo=timezone.utc)
+        current = current.replace(tzinfo=UTC)
     return max(0.0, (current - ts).total_seconds() / 3600.0)
 
 
-def tat_status(hours: float, turnaround_hours: Optional[int]) -> TatStatus:
+def tat_status(hours: float, turnaround_hours: int | None) -> TatStatus:
     """Classify wait against per-test TAT, capped at the global 4h / 8h ceilings."""
     warning = QUEUE_AGE_WARNING_HOURS
     critical = QUEUE_AGE_CRITICAL_HOURS
@@ -135,7 +134,7 @@ def tat_status(hours: float, turnaround_hours: Optional[int]) -> TatStatus:
     return "fresh"
 
 
-def age_bucket(hours: float, turnaround_hours: Optional[int]) -> TatBucket:
+def age_bucket(hours: float, turnaround_hours: int | None) -> TatBucket:
     """Four-bucket wait mix used by the Today panel (TAT-aware)."""
     status = tat_status(hours, turnaround_hours)
     if status == "critical":
@@ -151,11 +150,11 @@ def blocked_reason_for_work_item(
     *,
     status: str,
     is_retest: bool = False,
-    payment_status: Optional[str] = None,
-    sample_status: Optional[str] = None,
+    payment_status: str | None = None,
+    sample_status: str | None = None,
     sample_is_recollection: bool = False,
-    escalation_reason_code: Optional[str] = None,
-) -> Optional[str]:
+    escalation_reason_code: str | None = None,
+) -> str | None:
     """Mirror of frontend deriveWorkItemState blockedReason."""
     if payment_status == PaymentStatus.UNPAID.value and status in (
         TestStatus.PENDING.value,
@@ -182,7 +181,7 @@ def blocked_reason_for_work_item(
 
 
 def should_surface_attention(
-    blocked_reason: Optional[str],
+    blocked_reason: str | None,
     status: TatStatus,
     *,
     always: bool = False,
@@ -194,7 +193,7 @@ def should_surface_attention(
 
 
 def attention_type_for(
-    blocked_reason: Optional[str],
+    blocked_reason: str | None,
     status: TatStatus,
     priority: str,
 ) -> str:
@@ -211,11 +210,11 @@ def attention_type_for(
     return "queue_overdue_warning"
 
 
-def _iso(ts: Optional[datetime]) -> str:
+def _iso(ts: datetime | None) -> str:
     if ts is None:
-        return datetime.now(timezone.utc).isoformat()
+        return datetime.now(UTC).isoformat()
     if ts.tzinfo is None:
-        ts = ts.replace(tzinfo=timezone.utc)
+        ts = ts.replace(tzinfo=UTC)
     return ts.isoformat()
 
 
@@ -263,8 +262,8 @@ def _attention_candidate(
     patient_name: str,
     priority: str,
     waiting_hours: float,
-    blocked_reason: Optional[str],
-    since: Optional[datetime],
+    blocked_reason: str | None,
+    since: datetime | None,
     order_test_ids: list[int],
     attention_type: str,
     work_item_count: int = 1,
@@ -287,7 +286,9 @@ def _attention_candidate(
     }
 
 
-def finalize_attention_items(candidates: list[dict[str, Any]], limit: int = ATTENTION_LIMIT) -> tuple[list[dict[str, Any]], int]:
+def finalize_attention_items(
+    candidates: list[dict[str, Any]], limit: int = ATTENTION_LIMIT
+) -> tuple[list[dict[str, Any]], int]:
     """Consolidate per (type, order, tab), sort, and cap the feed."""
     merged: dict[str, dict[str, Any]] = {}
     for item in candidates:
@@ -307,7 +308,9 @@ def finalize_attention_items(candidates: list[dict[str, Any]], limit: int = ATTE
         if item_hours > existing_hours:
             existing["since"] = item["since"]
         existing["workItemCount"] += item.get("workItemCount") or 1
-        existing["orderTestIds"] = list(dict.fromkeys([*existing["orderTestIds"], *item["orderTestIds"]]))
+        existing["orderTestIds"] = list(
+            dict.fromkeys([*existing["orderTestIds"], *item["orderTestIds"]])
+        )
 
     def sort_score(item: dict[str, Any]) -> float:
         type_score = 1000 - ATTENTION_TYPE_SORT.get(item["attentionType"], 100)
@@ -339,7 +342,11 @@ def derive_health(
 
     if critical_count > 0:
         stage = next(
-            (key for key in ("collection", "entry", "validation") if queue_age[key]["criticalCount"] > 0),
+            (
+                key
+                for key in ("collection", "entry", "validation")
+                if queue_age[key]["criticalCount"] > 0
+            ),
             "validation",
         )
         suffix = "" if critical_count == 1 else "s"
@@ -390,10 +397,10 @@ def assemble_board(
     validation_rows: list[dict[str, Any]],
     escalation_rows: list[dict[str, Any]],
     recollection_rows: list[dict[str, Any]],
-    now: Optional[datetime] = None,
+    now: datetime | None = None,
 ) -> dict[str, Any]:
     """Build the full board payload from lightweight stage rows (no 10k worklist materialization)."""
-    current = now or datetime.now(timezone.utc)
+    current = now or datetime.now(UTC)
     queue_age = {
         "collection": _empty_queue_age(),
         "entry": _empty_queue_age(),
@@ -419,7 +426,9 @@ def assemble_board(
         else:
             priority_mix["medium"] += 1
 
-    def track_wait(stage: QueueStage, since: Optional[datetime], tat: Optional[int], priority: str) -> tuple[float, TatStatus, TatBucket]:
+    def track_wait(
+        stage: QueueStage, since: datetime | None, tat: int | None, priority: str
+    ) -> tuple[float, TatStatus, TatBucket]:
         hours = hours_since(since, current)
         status = tat_status(hours, tat)
         bucket = age_bucket(hours, tat)
@@ -520,12 +529,15 @@ def assemble_board(
         hours = hours_since(since, current)
         status = tat_status(hours, row.get("turnaround_hours") or 24)
         priority = _priority_value(row.get("priority"))
-        blocked = blocked_reason_for_work_item(
-            status=TestStatus.ESCALATED.value,
-            is_retest=bool(row.get("is_retest")),
-            sample_status=_enum_value(row.get("sample_status")),
-            escalation_reason_code=row.get("reason_code"),
-        ) or "supervisor_review"
+        blocked = (
+            blocked_reason_for_work_item(
+                status=TestStatus.ESCALATED.value,
+                is_retest=bool(row.get("is_retest")),
+                sample_status=_enum_value(row.get("sample_status")),
+                escalation_reason_code=row.get("reason_code"),
+            )
+            or "supervisor_review"
+        )
         order_test_id = row.get("order_test_id")
         candidates.append(
             _attention_candidate(
@@ -547,7 +559,11 @@ def assemble_board(
         priority = _priority_value(row.get("priority"))
         affected = row.get("affected_order_test_ids") or []
         order_test_id = row.get("order_test_id")
-        order_test_ids = [int(v) for v in affected] if affected else ([order_test_id] if order_test_id is not None else [])
+        order_test_ids = (
+            [int(v) for v in affected]
+            if affected
+            else ([order_test_id] if order_test_id is not None else [])
+        )
         candidates.append(
             _attention_candidate(
                 stage="validation",
@@ -595,7 +611,7 @@ def assemble_board(
     }
 
 
-def _enum_value(value: Any) -> Optional[str]:
+def _enum_value(value: Any) -> str | None:
     if value is None:
         return None
     return value.value if hasattr(value, "value") else str(value)
@@ -616,7 +632,7 @@ class LabBoardService:
         self._tat_cache[test_code] = hours
         return hours
 
-    def _max_tat_for_codes(self, codes: Optional[list[str]]) -> int:
+    def _max_tat_for_codes(self, codes: list[str] | None) -> int:
         if not codes:
             return 24
         return max(self._get_turnaround(code) for code in codes)
@@ -746,7 +762,9 @@ class LabBoardService:
                     "is_retest": bool(ot.isRetest),
                     "result_entered_at": ot.resultEnteredAt,
                     "order_date": order.orderDate,
-                    "reason_code": ticket.reasonCode.value if ticket and ticket.reasonCode else None,
+                    "reason_code": ticket.reasonCode.value
+                    if ticket and ticket.reasonCode
+                    else None,
                     "turnaround_hours": test.turnaroundTimeHours or 24,
                 }
             )

@@ -1,9 +1,18 @@
 """
 Pydantic schemas for Sample
 """
-from pydantic import BaseModel
 from datetime import datetime
-from app.schemas.enums import SampleStatus, SampleType, ContainerType, ContainerTopColor, PriorityLevel, RejectionReason
+
+from pydantic import BaseModel
+
+from app.schemas.enums import (
+    ContainerTopColor,
+    ContainerType,
+    PriorityLevel,
+    RejectionReason,
+    SampleStatus,
+    SampleType,
+)
 
 
 class SampleBase(BaseModel):

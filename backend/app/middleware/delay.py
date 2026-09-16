@@ -4,13 +4,13 @@ When ARTIFICIAL_DELAY_MS > 0, delays all API v1 requests by that many millisecon
 Skips /health and docs/openapi routes.
 """
 import asyncio
-from typing import Callable
+from collections.abc import Callable
 
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
 
-from app.config import settings
+from app.core.config import settings
 
 
 class DelayMiddleware(BaseHTTPMiddleware):
