@@ -4,7 +4,8 @@
  */
 
 import React from 'react';
-import { Panel, IconButton } from '@/components';
+import { Panel, IconButton, Icon } from '@/components';
+import { ICONS } from '@/config/icons';
 import { cn } from '@/utils';
 import { PaymentPopover } from '@/features/payments';
 import type { Order, OrderTest, Patient, Invoice } from '@/types';
@@ -28,14 +29,43 @@ interface LayoutProps {
   onPaymentSuccess?: () => void;
 }
 
-function getTestsTitle(_activeTests: OrderTest[], totalTests: number, supersededCount: number, removedCount: number): string {
+function BillingSummaryPanelActions({
+  order,
+  invoice,
+  onViewInvoice,
+  onPaymentSuccess,
+}: {
+  order: Order;
+  invoice: Invoice | null;
+  onViewInvoice: () => void;
+  onPaymentSuccess?: () => void;
+}) {
+  const isPaid = order.paymentStatus === 'paid';
+
+  return (
+    <div className="flex items-center gap-2">
+      {invoice != null && (
+        <IconButton
+          variant="print"
+          size="sm"
+          title="View Invoice"
+          icon={<Icon name={ICONS.dataFields.bill} className="w-4 h-4" />}
+          onClick={onViewInvoice}
+        />
+      )}
+      {!isPaid && <PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
+    </div>
+  );
+}
+
+function getTestsHeaderMeta(totalTests: number, supersededCount: number, removedCount: number): string {
   const visibleTests = totalTests - removedCount;
 
   if (supersededCount > 0) {
-    return `Tests (${visibleTests} total, ${supersededCount} superseded)`;
+    return `${visibleTests} total, ${supersededCount} superseded`;
   }
 
-  return `Tests (${visibleTests})`;
+  return String(visibleTests);
 }
 
 interface OrderDetailPanelsProps extends LayoutProps {
@@ -63,8 +93,7 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
 }) => {
   const panelClass = fillHeight ? 'h-full min-h-0' : '';
   const fillScroll = fillHeight ? 'auto' : 'visible';
-  const testsTitle = getTestsTitle(
-    activeTests,
+  const testsHeaderMeta = getTestsHeaderMeta(
     order.tests?.length ?? activeTests.length,
     supersededCount,
     removedCount
@@ -103,7 +132,8 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
 
       <div className={`grid grid-cols-3 gap-4 ${fillHeight ? 'min-h-0' : ''}`}>
         <Panel
-          title={testsTitle}
+          title="Tests"
+          meta={testsHeaderMeta}
           className={cn(panelClass, 'col-span-2')}
           padding="none"
           scroll={fillHeight ? 'auto' : 'visible'}
@@ -122,9 +152,16 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
           padding="none"
           scroll={fillScroll}
           bodyClassName="flex flex-col"
-          headerEnd={<PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
+          headerEnd={
+            <BillingSummaryPanelActions
+              order={order}
+              invoice={invoice}
+              onViewInvoice={onViewInvoice}
+              onPaymentSuccess={onPaymentSuccess}
+            />
+          }
         >
-          <BillingSummarySection order={order} invoice={invoice} onViewInvoice={onViewInvoice} />
+          <BillingSummarySection order={order} />
         </Panel>
       </div>
     </>
@@ -137,8 +174,7 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
 export const SmallScreenLayout: React.FC<LayoutProps> = props => {
   const { order, patient, invoice, activeTests, supersededCount, removedCount, onViewPatient, onViewInvoice, onPaymentSuccess } =
     props;
-  const testsTitle = getTestsTitle(
-    activeTests,
+  const testsHeaderMeta = getTestsHeaderMeta(
     order.tests?.length ?? activeTests.length,
     supersededCount,
     removedCount
@@ -173,7 +209,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
         <OrderTimeline order={order} />
       </Panel>
 
-      <Panel title={testsTitle} className="shrink-0" padding="none" scroll="visible">
+      <Panel title="Tests" meta={testsHeaderMeta} className="shrink-0" padding="none" scroll="visible">
         <TestsTable
           tests={order.tests ?? []}
           orderId={order.orderId}
@@ -186,9 +222,16 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
         className="shrink-0"
         padding="none"
         scroll="visible"
-        headerEnd={<PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
+        headerEnd={
+          <BillingSummaryPanelActions
+            order={order}
+            invoice={invoice}
+            onViewInvoice={onViewInvoice}
+            onPaymentSuccess={onPaymentSuccess}
+          />
+        }
       >
-        <BillingSummarySection order={order} invoice={invoice} onViewInvoice={onViewInvoice} />
+        <BillingSummarySection order={order} />
       </Panel>
     </div>
   );

@@ -4,38 +4,23 @@
  */
 
 import React from 'react';
-import { Button, Icon, EntityId } from '@/components';
-import type { Order, Invoice } from '@/types';
-import { ICONS } from '@/config/icons';
-import { InsuranceClaimSection } from '@/features/billing';
-import { OrderReceipt } from './OrderReceipt';
+import type { Order } from '@/types';
+import { getActiveTotal } from '../utils/orderCalculator';
+import { OrderReceipt, ReceiptTotal } from './OrderReceipt';
 
 export interface BillingSummarySectionProps {
   order: Order;
-  invoice: Invoice | null;
-  onViewInvoice: () => void;
 }
 
-export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
-  order,
-  invoice,
-  onViewInvoice,
-}) => (
-  <div className="flex flex-col justify-between h-full">
-    <OrderReceipt order={order} variant="panel" />
-    {invoice && (
-      <div className="px-4 pb-4">
-        <Button
-          variant="secondary"
-          size="sm"
-          className="w-full mt-4"
-          icon={<Icon name={ICONS.dataFields.bill} className="w-4 h-4" />}
-          onClick={onViewInvoice}
-        >
-          View Invoice (<EntityId type="invoice" value={invoice.invoiceId} />)
-        </Button>
-        <InsuranceClaimSection orderId={order.orderId} invoice={invoice} />
+export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({ order }) => {
+  const activeTotal = getActiveTotal(order.tests ?? []);
+
+  return (
+    <div className="flex flex-col min-h-0 h-full">
+      <OrderReceipt order={order} variant="panel" showTotal={false} />
+      <div className="mt-auto shrink-0">
+        <ReceiptTotal total={activeTotal} variant="panel" pad="px-4" />
       </div>
-    )}
-  </div>
-);
+    </div>
+  );
+};
