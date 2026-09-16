@@ -6,15 +6,80 @@
  * UX requirement:
  * - Tests are NOT selected in a modal.
  * - Selecting happens via a simple "popover" list shown directly under the search input.
- * - Each list row shows: `code - name - price` and a payment-style check circle on the right.
- * - The popover stays open while selecting; outside click closes only when every visible test is checked.
+ * - Each list row shows test details and a square checkbox on the right (multi-select).
+ * - The popover stays open while selecting; outside click or Escape closes it.
  */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Icon, RemovableTag, TagChip, EntityId } from '@/components';
+import { Icon, RemovableTag, CheckboxIndicator } from '@/components';
 import type { Test } from '@/types';
-import { cn, formatCurrency } from '@/utils';
+import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
+import { cn, formatCurrency, formatTurnaroundTime, titleCaseWords } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL, FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
+import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/components/inputs/inputStyles';
+import { OrderSelectPopoverShell } from './OrderSelectPopoverShell';
+
+const SELECTED_CHIP_CLASS =
+  'max-w-[min(100%,20rem)] items-start gap-2 py-1.5 px-2 bg-surface-page border-border-default/80 shadow-none';
+
+function TestSelectMetaLine({ code, test }: { code: string; test: Test }) {
+  const segments: Array<{ id: string; label: string }> = [];
+
+  if (test.category) {
+    const slug = String(test.category).toLowerCase();
+    segments.push({ id: 'category', label: getCategoryLabel(slug) });
+  }
+  if (test.sampleType) {
+    const slug = String(test.sampleType).toLowerCase();
+    segments.push({
+      id: 'sampleType',
+      label: titleCaseWords(slug.replace(/_/g, ' ')),
+    });
+  }
+  const hours = test.turnaroundTime;
+  if (typeof hours === 'number' && Number.isFinite(hours) && hours > 0) {
+    segments.push({ id: 'tat', label: formatTurnaroundTime(hours) });
+  }
+  if (test.fastingRequired) {
+    segments.push({ id: 'fasting', label: 'Fasting' });
+  }
+
+  const hasCode = code.trim().length > 0;
+  if (!hasCode && segments.length === 0) return null;
+
+  return (
+    <p className="text-xxs font-normal truncate uppercase min-w-0 text-text-tertiary">
+      {hasCode && <span className="truncate">{code}</span>}
+      {hasCode && segments.length > 0 && <span> · </span>}
+      {segments.map((segment, index) => (
+        <React.Fragment key={segment.id}>
+          {index > 0 && <span> · </span>}
+          <span>{segment.label}</span>
+        </React.Fragment>
+      ))}
+    </p>
+  );
+}
+
+function TestSelectedChip({
+  code,
+  name,
+  test,
+}: {
+  code: string;
+  name: string;
+  test?: Test;
+}) {
+  return (
+    <div className="min-w-0 flex flex-col">
+      <span className="text-xs font-normal text-text-primary truncate">{name}</span>
+      {test ? (
+        <TestSelectMetaLine code={code} test={test} />
+      ) : (
+        <p className="text-xxs font-normal text-text-tertiary truncate uppercase">{code}</p>
+      )}
+    </div>
+  );
+}
 
 interface TestSelectorProps {
   selectedTests: string[];
@@ -27,18 +92,6 @@ interface TestSelectorProps {
   tests?: Test[];
 }
 
-/** Circular check indicator matching PaymentMethodSelector. */
-const SelectionCheck: React.FC<{ isSelected: boolean }> = ({ isSelected }) => (
-  <div
-    className={cn(
-      'w-5 h-5 rounded-full flex items-center justify-center transition-colors duration-200 shrink-0',
-      isSelected ? 'bg-brand' : 'bg-transparent border-2 border-border-strong'
-    )}
-  >
-    {isSelected && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
-  </div>
-);
-
 /**
  * TestSearchTagInput
  *
@@ -47,12 +100,13 @@ const SelectionCheck: React.FC<{ isSelected: boolean }> = ({ isSelected }) => (
  * Tags match the patient tag styling (bg-brand-muted, border-border-default) but without avatars.
  */
 const TestSearchTagInput: React.FC<{
-  selectedTags: Array<{ code: string; name: string }>;
+  selectedTags: Array<{ code: string; name: string; test?: Test }>;
+  selectedCount: number;
   value: string;
   onValueChange: (value: string) => void;
   onRemoveTag: (code: string) => void;
   error?: string;
-}> = ({ selectedTags, value, onValueChange, onRemoveTag, error }) => (
+}> = ({ selectedTags, selectedCount, value, onValueChange, onRemoveTag, error }) => (
   <div className="w-full">
       <div className="flex justify-between items-baseline mb-1 gap-2">
         <label
@@ -61,6 +115,9 @@ const TestSearchTagInput: React.FC<{
         >
           Tests
         </label>
+        <span className="text-sm font-normal text-text-tertiary tabular-nums shrink-0">
+          {selectedCount} {selectedCount === 1 ? 'test' : 'tests'}
+        </span>
       </div>
 
       <div
@@ -77,15 +134,15 @@ const TestSearchTagInput: React.FC<{
           />
         </div>
 
-        {selectedTags.map(({ code, name }, idx) => (
+        {selectedTags.map(({ code, name, test }, idx) => (
           <RemovableTag
             key={`${code}-${idx}`}
             size="sm"
             onRemove={() => onRemoveTag(code)}
             removeAriaLabel={`Remove ${code}`}
+            className={SELECTED_CHIP_CLASS}
           >
-            <span className="min-w-0 truncate text-xs font-normal">{name}</span>
-            <EntityId className="shrink-0">{code}</EntityId>
+            <TestSelectedChip code={code} name={name} test={test} />
           </RemovableTag>
         ))}
 
@@ -117,69 +174,52 @@ const TestSelectPopover: React.FC<TestSelectPopoverProps> = ({
   selectedSet,
   onToggleTest,
 }) => (
-  <div
-    className={[
-      'mt-1 text-text-primary',
-      'border border-border-default/80',
-      'rounded',
-      'overflow-hidden',
-      'bg-surface',
-      'shadow-md',
-      'ring-1 ring-black/5',
-    ].join(' ')}
+  <OrderSelectPopoverShell
+    title="Matching tests"
+    resultCount={visibleTests.length}
+    emptyMessage="No tests found"
+    isEmpty={visibleTests.length === 0}
   >
-    <div className="px-4 py-2.5 bg-surface-page/70 border-b border-border-default/70 flex items-center justify-between">
-      <div className={FORM_FIELD_LABEL}>Matching tests</div>
-      <div className="text-xs text-text-tertiary">{visibleTests.length} result(s)</div>
-    </div>
-
-    {visibleTests.length === 0 ? (
-      <div className="px-4 py-3 text-xs text-text-tertiary">No tests found</div>
-    ) : (
-      <div className="max-h-[320px] overflow-y-auto divide-y divide-border-subtle">
-        {visibleTests.map(test => {
-          const code = typeof test.code === 'string' ? test.code : String(test.code);
-          const isSelected = selectedSet.has(code);
-          const safeName = typeof test.name === 'string' ? test.name : String(test.name);
-          const price = typeof test.price === 'number' ? test.price : Number(test.price) || 0;
-
-          return (
-            <button
-              key={code}
-              type="button"
-              onClick={() => onToggleTest(code)}
-              className={[
-                'w-full text-left px-4 py-3 text-text-primary',
-                'transition-colors',
-                'flex items-center justify-between gap-4',
-                'hover:bg-surface-hover',
-                'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-opacity-30 focus-visible:bg-surface-hover',
-                'bg-surface',
-              ].join(' ')}
-            >
-              <div className="min-w-0">
-                <div className="flex min-w-0 items-center gap-2">
-                  <TagChip size="xs" emphasis="code" className="shrink-0">
-                    <EntityId>{code}</EntityId>
-                  </TagChip>
-                  <span className="min-w-0 truncate text-xs font-normal text-text-primary">
-                    {safeName}
-                  </span>
+    {visibleTests.map(test => {
+            const code = typeof test.code === 'string' ? test.code : String(test.code);
+            const isSelected = selectedSet.has(code);
+            const safeName = typeof test.name === 'string' ? test.name : String(test.name);
+            const price = typeof test.price === 'number' ? test.price : Number(test.price) || 0;
+            return (
+              <button
+                key={code}
+                type="button"
+                role="checkbox"
+                aria-checked={isSelected}
+                aria-label={`${isSelected ? 'Deselect' : 'Select'} ${safeName}`}
+                onClick={() => onToggleTest(code)}
+                className={cn(
+                  'w-full text-left px-3 py-2',
+                  'transition-colors',
+                  'flex items-center gap-2',
+                  'hover:bg-surface-page',
+                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-opacity-30',
+                  isSelected ? 'bg-surface-page' : 'bg-surface',
+                  'group'
+                )}
+              >
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-normal text-text-primary truncate">{safeName}</p>
+                  <TestSelectMetaLine code={code} test={test} />
                 </div>
-              </div>
-
-              <div className="flex shrink-0 items-center gap-3">
-                <TagChip size="sm" emphasis="code">
-                  {formatCurrency(price)}
-                </TagChip>
-                <SelectionCheck isSelected={isSelected} />
-              </div>
-            </button>
-          );
-        })}
-      </div>
-    )}
-  </div>
+                <div className="flex shrink-0 items-center gap-4">
+                  <span className="text-sm font-medium text-text-tertiary tabular-nums">
+                    {formatCurrency(price)}
+                  </span>
+                  <CheckboxIndicator
+                    checked={isSelected}
+                    className={!isSelected ? 'group-hover:border-brand' : undefined}
+                  />
+                </div>
+              </button>
+            );
+    })}
+  </OrderSelectPopoverShell>
 );
 
 export const TestSelect: React.FC<TestSelectorProps> = ({
@@ -212,29 +252,13 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
     [hasSearch, filteredTests]
   );
 
-  const visibleTestsRef = useRef(visibleTests);
-  const selectedSetRef = useRef(selectedSet);
-  useEffect(() => {
-    visibleTestsRef.current = visibleTests;
-    selectedSetRef.current = selectedSet;
-  }, [visibleTests, selectedSet]);
-
-  const canClosePopover = () => {
-    const tests = visibleTestsRef.current;
-    if (tests.length === 0) return true;
-    return tests.every(test => {
-      const code = typeof test.code === 'string' ? test.code : String(test.code);
-      return selectedSetRef.current.has(code);
-    });
-  };
-
-  // Close popover on outside click only when every visible test is selected; Escape always closes.
+  // Close popover on outside click and Escape.
   useEffect(() => {
     const handlePointerDown = (e: MouseEvent | TouchEvent) => {
       const target = e.target as Node | null;
       const container = containerRef.current;
       if (!container || !target) return;
-      if (!container.contains(target) && canClosePopover()) setIsPopoverOpen(false);
+      if (!container.contains(target)) setIsPopoverOpen(false);
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -261,35 +285,25 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
         return {
           code,
           name: test?.name || code,
+          test,
         };
       });
   }, [selectedTests, tests]);
 
   return (
     <div ref={containerRef} className="relative">
-      <div className="flex items-end gap-3">
-        <div className="grow min-w-0">
-          {/* Tag-style input (similar to patient medical background TagInput) */}
-          <TestSearchTagInput
-            selectedTags={selectedTags}
-            value={testSearch}
-            onValueChange={value => {
-              onTestSearchChange(value);
-              setIsPopoverOpen(value.trim().length > 0);
-            }}
-            onRemoveTag={onToggleTest}
-            error={error}
-          />
-        </div>
+      <TestSearchTagInput
+        selectedTags={selectedTags}
+        selectedCount={selectedTests.length}
+        value={testSearch}
+        onValueChange={value => {
+          onTestSearchChange(value);
+          setIsPopoverOpen(value.trim().length > 0);
+        }}
+        onRemoveTag={onToggleTest}
+        error={error}
+      />
 
-        <div className="shrink-0 pb-[2px]">
-          <div className="text-base font-normal text-brand">
-            {selectedTests.length} {selectedTests.length === 1 ? 'test' : 'tests'}
-          </div>
-        </div>
-      </div>
-
-      {/* "Popover" results shown directly under the input */}
       {isPopoverOpen && hasSearch && (
         <TestSelectPopover
           visibleTests={visibleTests}

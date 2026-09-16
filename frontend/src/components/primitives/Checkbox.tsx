@@ -8,6 +8,25 @@ import { Icon } from './Icon';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 
+export interface CheckboxIndicatorProps {
+  checked: boolean;
+  className?: string;
+}
+
+/** Square checkbox control (visual only). */
+export const CheckboxIndicator: React.FC<CheckboxIndicatorProps> = ({ checked, className }) => (
+  <div
+    className={cn(
+      'w-4 h-4 rounded border-2 flex items-center justify-center transition-all duration-150 shrink-0',
+      checked ? 'bg-brand border-brand' : 'border-border-default bg-surface',
+      className
+    )}
+    aria-hidden
+  >
+    {checked && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
+  </div>
+);
+
 export interface CheckboxProps {
   id: string;
   name?: string;
@@ -45,17 +64,13 @@ export const Checkbox: React.FC<CheckboxProps> = ({
         disabled={disabled}
         className="sr-only"
       />
-      <div
+      <CheckboxIndicator
+        checked={checked}
         className={cn(
-          'w-4 h-4 rounded border-2 flex items-center justify-center transition-all duration-150',
-          checked
-            ? 'bg-brand border-brand'
-            : 'border-border-default bg-surface group-hover:border-brand',
+          !checked && 'group-hover:border-brand',
           disabled && 'group-hover:border-border-default'
         )}
-      >
-        {checked && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
-      </div>
+      />
     </div>
     <span
       className={cn(

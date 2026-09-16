@@ -12,3 +12,4 @@ export { DatePicker as DateFilter } from './DatePicker';
 export * from './DebouncedSearchInput';
 export * from './TagInput';
 export * from './PaymentMethodSelector';
+export * from './SelectionCheck';
