@@ -4,9 +4,10 @@
 
 import React from 'react';
 import { cn } from '@/utils';
-import { getBadgeAppearance } from '@/components/theme/theme';
+import { useBadgeAppearance } from '@/components/theme/theme';
 import { ICONS } from '@/config/icons';
 import { Icon, type IconName } from './Icon';
+import { BADGE, RADIUS } from '@/components/theme/recipes';
 import {
   CONTAINER_STYLES,
   DISPLAY_LABELS,
@@ -17,23 +18,15 @@ import {
 
 export type { BadgeColor, BadgeVariant } from './badgeStyles';
 
-const SIZES = {
-  xs: 'px-1.5 py-0.5 text-[10px] gap-1',
-  sm: 'px-2 py-0.5 text-xs gap-1.5',
-  md: 'px-2.5 py-1 text-sm gap-1.5',
-} as const;
+export type BadgeSize = keyof typeof BADGE.size;
 
-const ICON_SIZES = {
-  xs: 'w-3 h-3',
-  sm: 'w-3.5 h-3.5',
-  md: 'w-4 h-4',
-} as const;
-
-export type BadgeSize = keyof typeof SIZES;
+const SIZES = BADGE.size;
+const ICON_SIZES = BADGE.icon;
+const FILTER_CHIP_SIZE = BADGE.filterChip;
 
 const SELECTION_CHIP = {
   unified: {
-    surface: 'bg-badge border border-border-default shadow-sm',
+    surface: 'bg-badge border border-border-default',
     text: 'text-text-primary',
     code: 'text-brand',
     remove: 'text-text-tertiary hover:text-text-secondary',
@@ -46,15 +39,6 @@ const SELECTION_CHIP = {
   },
 } as const;
 
-function selectionChipClasses() {
-  return SELECTION_CHIP[getBadgeAppearance()];
-}
-
-const FILTER_CHIP_SIZE = {
-  xs: 'px-2 py-1 text-xxs gap-1',
-  sm: 'px-2 py-1.5 text-xs gap-1',
-} as const;
-
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: BadgeVariant;
   size?: BadgeSize;
@@ -65,12 +49,12 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   uppercase?: boolean;
 }
 
-const UNIFIED_BASE = 'bg-badge border border-border-default shadow-sm';
+const UNIFIED_BASE = 'bg-badge border border-border-default';
 
 export const Badge: React.FC<BadgeProps> = ({
   className,
   variant = 'neutral',
-  size = 'sm',
+  size = 'xs',
   strikethrough = false,
   pulse,
   icon,
@@ -80,7 +64,7 @@ export const Badge: React.FC<BadgeProps> = ({
   ...props
 }) => {
   const normalizedVariant = String(variant).toLowerCase();
-  const appearance = getBadgeAppearance();
+  const appearance = useBadgeAppearance();
   const isContainer = normalizedVariant.startsWith('container-');
   const containerStyle = isContainer ? CONTAINER_STYLES[normalizedVariant] : null;
   const color = resolveColor(normalizedVariant);
@@ -101,20 +85,20 @@ export const Badge: React.FC<BadgeProps> = ({
   return (
     <span
       className={cn(
-        'inline-flex items-center font-normal rounded whitespace-nowrap',
-        uppercase && 'uppercase tracking-wide',
-        SIZES[size],
-        isContainer
-          ? containerStyle
-          : [appearance === 'unified' ? UNIFIED_BASE : '', colorClass],
+        `inline-flex items-center font-normal ${RADIUS.control} whitespace-nowrap`,
+        uppercase && 'uppercase tracking-normal',
+        isContainer ? containerStyle : null,
         strikethrough && 'line-through',
         pulse && 'animate-pulse',
-        className
+        className,
+        SIZES[size],
+        !isContainer && appearance === 'unified' ? UNIFIED_BASE : null,
+        !isContainer ? colorClass : null
       )}
       {...props}
     >
       {showDot && (
-        <span className={cn('w-1.5 h-1.5 rounded-full shrink-0', dotClassName)} aria-hidden />
+        <span className={cn('w-1 h-1 rounded-full shrink-0', dotClassName)} aria-hidden />
       )}
       {iconElement}
       {content}
@@ -129,20 +113,20 @@ export interface TagChipProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const TagChip: React.FC<TagChipProps> = ({
   className,
-  size = 'sm',
+  size = 'xs',
   emphasis = 'default',
   children,
   ...props
 }) => {
-  const chip = selectionChipClasses();
+  const chip = SELECTION_CHIP[useBadgeAppearance()];
   return (
     <div
       className={cn(
-        'inline-flex max-w-full shrink-0 items-center rounded font-normal normal-case tracking-normal',
-        SIZES[size],
+        `inline-flex max-w-full shrink-0 items-center ${RADIUS.control} font-normal normal-case tracking-normal`,
         chip.surface,
         emphasis === 'code' ? chip.code : chip.text,
-        className
+        className,
+        SIZES[size]
       )}
       {...props}
     >
@@ -159,20 +143,20 @@ export interface RemovableTagProps extends React.HTMLAttributes<HTMLDivElement> 
 
 export const RemovableTag: React.FC<RemovableTagProps> = ({
   className,
-  size = 'sm',
+  size = 'xs',
   onRemove,
   removeAriaLabel,
   children,
   ...props
 }) => {
-  const chip = selectionChipClasses();
+  const chip = SELECTION_CHIP[useBadgeAppearance()];
   return (
     <div
       className={cn(
-        'inline-flex max-w-full shrink-0 items-center gap-2 rounded font-normal normal-case tracking-normal',
-        SIZES[size],
+        `inline-flex max-w-full shrink-0 items-center gap-2 ${RADIUS.control} font-normal normal-case tracking-normal`,
         chip.surface,
-        className
+        className,
+        SIZES[size]
       )}
       {...props}
     >
@@ -207,12 +191,12 @@ export const FilterChip: React.FC<FilterChipProps> = ({
   <button
     type={type}
     className={cn(
-      'inline-flex cursor-pointer items-center rounded border font-normal transition-colors',
-      FILTER_CHIP_SIZE[size],
+      `inline-flex cursor-pointer items-center ${RADIUS.control} border font-normal transition-colors`,
       active
         ? 'border-brand bg-brand-muted text-brand hover:border-brand-hover'
         : 'border-border-default bg-surface text-text-secondary hover:border-border-hover hover:bg-surface-hover hover:text-text-primary',
-      className
+      className,
+      FILTER_CHIP_SIZE[size]
     )}
     {...props}
   >

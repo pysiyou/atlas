@@ -9,6 +9,7 @@ import { EmptyState, PageHeader } from '@/components';
 import { ErrorAlert } from '@/components/loaders/ErrorAlert';
 import { EMPTY_ICON_SEARCH, DEFAULT_EMPTY_DESCRIPTION_SEARCH } from '@/utils/constants';
 import type { ListViewPaginationConfig, PaginationConfig, SortConfig } from '@/utils/table';
+import { RADIUS, SURFACE } from '@/components/theme/recipes';
 
 type TableDataItem = Record<string, unknown> | object;
 
@@ -94,7 +95,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
           className="shrink-0"
         />
       )}
-      <div className="bg-surface rounded-lg border border-border-default shadow-sm flex flex-col flex-1 min-h-0 overflow-hidden">
+      <div className={`${SURFACE.raised} ${RADIUS.overlay} shadow-sm flex flex-col flex-1 min-h-0 overflow-hidden`}>
         {filters}
         <div className="flex-1 min-h-0 flex flex-col">
           <Table

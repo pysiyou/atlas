@@ -7,6 +7,7 @@ import React from 'react';
 import { Icon } from '@/components';
 import { ICONS } from '@/config/icons';
 import { companyConfig } from '@/config';
+import { RADIUS } from '@/components/theme/recipes';
 
 interface LoginBrandingPanelProps {
   isVisible: boolean;
@@ -32,10 +33,10 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
           {/* Logo container with matte finish */}
           <div className="relative">
             <div
-              className="absolute inset-0 rounded-lg bg-auth-accent-medium blur-xl opacity-30"
+              className={`absolute inset-0 ${RADIUS.overlay} bg-auth-accent-medium blur-xl opacity-30`}
               style={{ animation: 'pulse-ring 3s ease-in-out infinite' }}
             />
-            <div className="relative w-16 h-16 bg-auth-accent rounded-lg flex items-center justify-center shadow-lg shadow-black/20 transform hover:scale-105 transition-transform duration-300">
+            <div className={`relative w-16 h-16 bg-auth-accent ${RADIUS.overlay} flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform duration-300`}>
               <Icon name={ICONS.ui.appLogo} className="w-9 h-9" />
             </div>
           </div>
@@ -60,17 +61,17 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
         {features.map((feature, index) => (
           <div
             key={feature.title}
-            className={`group flex items-start gap-4 p-4 rounded-xl bg-auth-card border border-auth-card-stroke hover:bg-auth-card-hover hover:border-auth-card-stroke transition-all duration-300 ${
+            className={`group flex items-start gap-4 p-4 ${RADIUS.overlay} bg-auth-card border border-auth-card-stroke hover:bg-auth-card-hover hover:border-auth-card-stroke transition-all duration-300 ${
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
             }`}
             style={{ transitionDelay: `${400 + index * 100}ms` }}
           >
             {/* Feature icon */}
-            <div className="w-10 h-10 rounded-lg bg-auth-card-icon border border-auth-card-icon-border flex items-center justify-center flex-shrink-0 group-hover:bg-auth-card-icon-hover transition-colors duration-300">
+            <div className={`w-10 h-10 ${RADIUS.overlay} bg-auth-card-icon border border-auth-card-icon-border flex items-center justify-center flex-shrink-0 group-hover:bg-auth-card-icon-hover transition-colors duration-300`}>
               <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-auth-fg-light" />
             </div>
             <div>
-              <h3 className="font-body font-semibold text-auth-fg text-[15px] leading-tight">
+              <h3 className="font-body font-semibold text-auth-fg text-sm leading-tight">
                 {feature.title}
               </h3>
               <p className="font-body text-sm text-auth-fg-muted mt-1 leading-relaxed">

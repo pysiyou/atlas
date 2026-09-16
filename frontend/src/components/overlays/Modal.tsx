@@ -8,6 +8,7 @@ import React, { memo, useCallback, useEffect, useRef, type RefObject } from 'rea
 import { AnimatePresence, motion } from 'framer-motion';
 import { IconButton } from '@/components/primitives';
 import { Portal } from './Portal';
+import { RADIUS, SURFACE } from '@/components/theme/recipes';
 import { DialogHeader } from './DialogChrome';
 
 const SIZE_CLASSES: Record<string, string> = {
@@ -25,7 +26,7 @@ const FOCUSABLE_SELECTOR =
   'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 const BASE_MODAL_CLASSES =
-  'relative bg-surface border border-border-default rounded-lg shadow-xl w-full';
+  `relative ${SURFACE.raised} ${RADIUS.overlay} shadow-xl w-full`;
 
 interface ModalProps {
   isOpen: boolean;

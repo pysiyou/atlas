@@ -320,6 +320,14 @@ export function mapValidationWorklistToOrderTestContext(
     orderDate: item.orderDate,
     resultEnteredAt: item.resultEnteredAt ?? undefined,
     hasCriticalValues: item.hasCriticalValues,
+    sampleId: item.sampleId ?? undefined,
+    results: item.results ?? undefined,
+    flags: item.flags ?? undefined,
+    enteredBy: item.enteredBy ?? undefined,
+    referringPhysician: item.referringPhysician ?? undefined,
+    isRetest: item.isRetest,
+    retestOfTestId: item.retestOfTestId ?? undefined,
+    retestNumber: item.retestNumber,
   } as TestWithContext;
 }
 

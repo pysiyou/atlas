@@ -10,6 +10,8 @@ import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
 import { DATA_AMOUNT } from '@/utils/constants';
 import { CatalogCard } from '../components/CatalogCard';
+import { TYPE } from '@/components/theme/recipes';
+
 
 const CATALOG_VIEWS = {
   full: ['code', 'name', 'category', 'sampleType', 'loincCodes', 'price'],
@@ -40,7 +42,7 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
         <div className="min-w-0 font-normal">
           <div className="text-text-primary truncate font-normal">{test.name}</div>
           {test.synonyms && test.synonyms.length > 0 && (
-            <div className="text-xs text-text-tertiary truncate font-normal">
+            <div className={`${TYPE.meta} truncate font-normal`}>
               {test.synonyms.slice(0, 2).join(', ')}
               {test.synonyms.length > 2 && ` +${test.synonyms.length - 2} more`}
             </div>
@@ -58,7 +60,7 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
           return <div className="text-xs text-text-disabled truncate font-normal">-</div>;
         }
         return (
-          <div className="text-xs text-text-primary truncate font-normal">
+          <div className={`${TYPE.value} truncate font-normal`}>
             {test.loincCodes.join(', ')}
           </div>
         );
@@ -70,7 +72,7 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
       width: 'lg' as const,
       sortable: true,
       accessor: (test: Test) => test.category,
-      render: (test: Test) => <Badge variant={test.category} size="sm" className="border-none" />,
+      render: (test: Test) => <Badge variant={test.category} size="xs" className="border-none" />,
     },
     sampleType: {
       key: 'sampleType',
@@ -78,7 +80,7 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
       width: 'sm' as const,
       sortable: true,
       accessor: (test: Test) => test.sampleType,
-      render: (test: Test) => <Badge variant={test.sampleType} size="sm" />,
+      render: (test: Test) => <Badge variant={test.sampleType} size="xs" />,
     },
     price: {
       key: 'price',

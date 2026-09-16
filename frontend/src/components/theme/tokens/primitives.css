@@ -5,79 +5,110 @@
 
 :root {
   --font-sans: 'Nunito', sans-serif;
-  
-  /* Font weight scale (Tailwind-aligned); default = light */
-  --font-weight-thin: 200;
-  --font-weight-extralight: 300;
-  --font-weight-light: 400;
-  --font-weight-normal: 500;
-  --font-weight-medium: 600;
-  --font-weight-semibold: 700;
-  --font-weight-bold: 800;
-  --font-weight-extrabold: 900;
+
+  /* Font weight scale (CSS-aligned); default = light (300) */
+  --font-weight-thin: 100;
+  --font-weight-extralight: 200;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
   --font-weight-black: 900;
-  --font-weight-default: var(--font-weight-extralight);
+  --font-weight-default: var(--font-weight-light);
 
-  /* Brand Palette - Primary action color */
-  --primitive-brand-50: #f0f9ff;
-  --primitive-brand-100: #e0f2fe;
-  --primitive-brand-200: #bae6fd;
-  --primitive-brand-300: #7dd3fc;
-  --primitive-brand-400: #38bdf8;
-  --primitive-brand-500: #0ea5e9;
-  --primitive-brand-600: #0284c7;
-  --primitive-brand-700: #0369a1;
-  --primitive-brand-800: #075985;
-  --primitive-brand-900: #0c4a6e;
-  --primitive-brand-950: #082f49;
+  /* Type scale (px locked; recipes use these via Tailwind text-*) */
+  --font-size-3xs: 8px;
+  --font-size-2xs: 10px;
+  --font-size-xxs: 10px;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
 
-  /* Neutral Palette - Grays for text, borders, surfaces */
+  /* Brand — clinical teal */
+  --primitive-brand-50: #f0fdfa;
+  --primitive-brand-100: #ccfbf1;
+  --primitive-brand-200: #99f6e4;
+  --primitive-brand-300: #5eead4;
+  --primitive-brand-400: #2dd4bf;
+  --primitive-brand-500: #14b8a6;
+  --primitive-brand-600: #0d9488;
+  --primitive-brand-700: #0f766e;
+  --primitive-brand-800: #115e59;
+  --primitive-brand-900: #134e4a;
+  --primitive-brand-950: #042f2e;
+
+  /* Neutral — cool slate */
   --primitive-neutral-0: #ffffff;
-  --primitive-neutral-50: #f9fafb;
-  --primitive-neutral-100: #f3f4f6;
-  --primitive-neutral-200: #e5e7eb;
-  --primitive-neutral-300: #d1d5db;
-  --primitive-neutral-400: #9ca3af;
-  --primitive-neutral-500: #6b7280;
-  --primitive-neutral-600: #4b5563;
-  --primitive-neutral-700: #374151;
-  --primitive-neutral-800: #1f2937;
-  --primitive-neutral-900: #111827;
-  --primitive-neutral-950: #030712;
+  --primitive-neutral-50: #f8fafc;
+  --primitive-neutral-100: #f1f5f9;
+  --primitive-neutral-200: #e2e8f0;
+  --primitive-neutral-300: #cbd5e1;
+  --primitive-neutral-400: #94a3b8;
+  --primitive-neutral-500: #64748b;
+  --primitive-neutral-600: #475569;
+  --primitive-neutral-700: #334155;
+  --primitive-neutral-800: #1e293b;
+  --primitive-neutral-900: #0f172a;
+  --primitive-neutral-950: #020617;
 
-  /* Success Palette */
+  /* Success — forest green */
   --primitive-success-50: #f0fdf4;
   --primitive-success-100: #dcfce7;
   --primitive-success-200: #bbf7d0;
+  --primitive-success-300: #86efac;
+  --primitive-success-400: #4ade80;
   --primitive-success-500: #22c55e;
   --primitive-success-600: #16a34a;
   --primitive-success-700: #15803d;
   --primitive-success-800: #166534;
+  --primitive-success-900: #14532d;
+  --primitive-success-950: #052e16;
 
-  /* Warning Palette */
+  /* Warning — amber */
   --primitive-warning-50: #fffbeb;
   --primitive-warning-100: #fef3c7;
   --primitive-warning-200: #fde68a;
   --primitive-warning-300: #fcd34d;
-  --primitive-warning-500: #eab308;
-  --primitive-warning-600: #ca8a04;
-  --primitive-warning-700: #a16207;
-  --primitive-warning-800: #854d0e;
+  --primitive-warning-400: #fbbf24;
+  --primitive-warning-500: #f59e0b;
+  --primitive-warning-600: #d97706;
+  --primitive-warning-700: #b45309;
+  --primitive-warning-800: #92400e;
+  --primitive-warning-900: #78350f;
+  --primitive-warning-950: #451a03;
 
-  /* Danger Palette */
-  --primitive-danger-50: #fef2f2;
-  --primitive-danger-100: #fee2e2;
-  --primitive-danger-200: #fecaca;
-  --primitive-danger-500: #ef4444;
-  --primitive-danger-600: #dc2626;
-  --primitive-danger-700: #b91c1c;
-  --primitive-danger-800: #991b1b;
+  /* Danger — rose red */
+  --primitive-danger-50: #fff1f2;
+  --primitive-danger-100: #ffe4e6;
+  --primitive-danger-200: #fecdd3;
+  --primitive-danger-300: #fda4af;
+  --primitive-danger-400: #fb7185;
+  --primitive-danger-500: #f43f5e;
+  --primitive-danger-600: #e11d48;
+  --primitive-danger-700: #be123c;
+  --primitive-danger-800: #9f1239;
+  --primitive-danger-900: #881337;
+  --primitive-danger-950: #4c0519;
 
-  /* Info Palette (Purple accent) */
-  --primitive-info-400: #a78bfa;
-  --primitive-info-500: #8b5cf6;
+  /* Info — sky (workflow / informational, distinct from brand teal) */
+  --primitive-info-50: #f0f9ff;
+  --primitive-info-100: #e0f2fe;
+  --primitive-info-200: #bae6fd;
+  --primitive-info-300: #7dd3fc;
+  --primitive-info-400: #38bdf8;
+  --primitive-info-500: #0ea5e9;
+  --primitive-info-600: #0284c7;
+  --primitive-info-700: #0369a1;
+  --primitive-info-800: #075985;
+  --primitive-info-900: #0c4a6e;
+  --primitive-info-950: #082f49;
 
-  /* Extended badge palettes (purple, pink, teal, orange, indigo, cyan) */
+  --primitive-surface-report: #ecfdf5;
+
+  /* Extended badge palettes */
   --primitive-purple-100: #f3e8ff;
   --primitive-purple-500: #a855f7;
   --primitive-purple-600: #9333ea;
@@ -102,4 +133,34 @@
   --primitive-cyan-500: #06b6d4;
   --primitive-cyan-600: #0891b2;
   --primitive-cyan-800: #155e75;
+
+  /* Auth canvas (login panel on studio-light) */
+  --primitive-auth-canvas: #0f172a;
+  --primitive-auth-panel: #1e293b;
+  --primitive-auth-panel-hover: #273449;
+  --primitive-auth-border: #334155;
+  --primitive-auth-border-light: #475569;
+  --primitive-auth-border-hover: #64748b;
+  --primitive-auth-accent: #0d9488;
+  --primitive-auth-accent-medium: #14b8a6;
+  --primitive-auth-input-focus: #2dd4bf;
+  --primitive-auth-text: #f1f5f9;
+  --primitive-auth-text-secondary: #cbd5e1;
+  --primitive-auth-text-muted: #94a3b8;
+  --primitive-auth-text-light: #5eead4;
+  --primitive-auth-error-bg: #4c0519;
+  --primitive-auth-error-bg-light: #881337;
+  --primitive-auth-error-border: #be123c;
+  --primitive-auth-error-text: #fda4af;
+
+  /* Sample tube caps — theme-invariant */
+  --primitive-container-red: #e11d48;
+  --primitive-container-yellow: #f59e0b;
+  --primitive-container-purple: #9333ea;
+  --primitive-container-blue: #0284c7;
+  --primitive-container-green: #16a34a;
+  --primitive-container-gray: #64748b;
+  --primitive-container-black: #0f172a;
+  --primitive-container-on-light: #ffffff;
+  --primitive-container-on-yellow: #0f172a;
 }

@@ -3,6 +3,7 @@ import type { ResultStatus } from '@/types/enums';
 import type { CatalogReferenceRange, CriticalRange, TestParameter, Patient, Gender } from '@/types';
 import { calculateAge } from '@/utils/string';
 import { PHYSIOLOGIC_LIMITS, type PhysiologicLimit } from '@/types/generated/physiologicLimits';
+import { RADIUS, TONE, TYPE } from '@/components/theme/recipes';
 
 export type { ResultStatus };
 export { PHYSIOLOGIC_LIMITS, type PhysiologicLimit };
@@ -215,31 +216,33 @@ export function validatePhysiologicValue(
 export const RESULT_PANEL = {
   grid: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3',
   tile:
-    'rounded-md border px-3 py-2.5 flex flex-col gap-1.5 min-h-[4.5rem] transition-colors duration-150',
+    `${RADIUS.card} border px-3 py-2.5 flex flex-col gap-1.5 min-h-[4.5rem] transition-colors duration-150`,
   tileEmpty: 'border-border-subtle bg-surface-page/40',
   tileFilled: 'border-border-default bg-surface shadow-sm',
   label: 'text-xxs font-medium text-text-secondary truncate',
   value: 'text-lg font-medium tabular-nums leading-tight',
-  unit: 'text-xs font-normal text-text-tertiary ml-1',
-  reference: 'text-[9px] leading-none font-normal text-text-tertiary truncate shrink-0 max-w-[50%]',
+  unit: `${TYPE.meta} font-normal ml-1`,
+  reference: `${TYPE.caption} leading-none font-normal truncate shrink-0 max-w-[50%]`,
+  referenceUnavailable:
+    '!text-xxs leading-none font-normal text-text-secondary truncate shrink-0 max-w-[50%]',
   notesSection: 'mt-4 pt-4 border-t border-border-subtle space-y-3',
-  notesLabel: 'text-xs font-normal text-text-secondary',
+  notesLabel: `${TYPE.label} font-normal`,
 } as const;
 
 export function resultTileStatusClass(status: ResultStatus, hasValue: boolean): string {
   if (!hasValue) return RESULT_PANEL.tileEmpty;
   if (isCritical(status)) {
-    return 'border-danger-stroke bg-danger-bg/15 shadow-sm ring-1 ring-danger-stroke/20';
+    return `${TONE.danger.well} shadow-sm`;
   }
   if (status !== 'normal') {
-    return 'border-warning-stroke bg-warning-bg/20 shadow-sm';
+    return `${TONE.warning.well} shadow-sm`;
   }
   return RESULT_PANEL.tileFilled;
 }
 
 export function resultValueClass(status: ResultStatus): string {
-  if (isCritical(status)) return 'text-danger-fg';
-  if (status !== 'normal') return 'text-warning-fg';
+  if (isCritical(status)) return TONE.danger.fg;
+  if (status !== 'normal') return TONE.warning.fg;
   return 'text-text-primary';
 }
 

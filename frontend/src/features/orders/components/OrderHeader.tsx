@@ -25,8 +25,8 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
 }) => {
   const badges = (
     <>
-      <Badge variant={order.priority} size="sm" />
-      <Badge variant={order.overallStatus} size="sm" />
+      <Badge variant={order.priority} size="xs" />
+      <Badge variant={order.overallStatus} size="xs" />
     </>
   );
   const actions = (

@@ -2,6 +2,52 @@ import type { SampleCollectionQueueItem } from '@/features/lab/types';
 import { CONTAINER_COLOR_OPTIONS, isCollectedSample } from '@/types';
 import { displayId } from '@/utils';
 import { feedbackTitle } from '@/utils/feedback/copy';
+import { TYPE } from '@/components/theme/recipes';
+
+
+const PRINT_TOKEN_KEYS = [
+  '--brand',
+  '--text',
+  '--text-tertiary',
+  '--surface',
+  '--surface-hover',
+  '--border-strong',
+  '--font-sans',
+  '--id-font-weight',
+] as const;
+
+/**
+ * Snapshot live theme tokens so the print window (Tailwind CDN, no app CSS) still matches.
+ */
+function snapshotPrintThemeCss(): string {
+  if (typeof document === 'undefined') return '';
+  const styles = getComputedStyle(document.documentElement);
+  const decls = PRINT_TOKEN_KEYS.map(key => `${key}: ${styles.getPropertyValue(key).trim() || 'inherit'};`).join(
+    '\n            ',
+  );
+  return `
+            :root {
+            ${decls}
+            }
+            .entity-id {
+              font-family: var(--font-sans), sans-serif;
+              font-size: 10px;
+              font-weight: var(--id-font-weight);
+              color: var(--brand);
+              letter-spacing: 0.02em;
+            }
+            .entity-id--secondary {
+              font-size: 10px;
+              color: var(--text-tertiary);
+            }
+            .bg-surface { background-color: var(--surface); }
+            .bg-surface-hover { background-color: var(--surface-hover); }
+            .text-text-primary { color: var(--text); }
+            .text-text-tertiary { color: var(--text-tertiary); }
+            .border-border-strong { border-color: var(--border-strong); }
+            .text-xxs { font-size: 10px; }
+`;
+}
 
 /**
  * Generates HTML content for printing a sample label
@@ -36,6 +82,7 @@ export const generatePrintLabelHTML = (display: SampleCollectionQueueItem, patie
   const currentDate = new Date();
   const formattedDate = currentDate.toLocaleDateString();
   const formattedTime = currentDate.toLocaleTimeString();
+  const themeCss = snapshotPrintThemeCss();
 
   return `
     <!DOCTYPE html>
@@ -45,17 +92,7 @@ export const generatePrintLabelHTML = (display: SampleCollectionQueueItem, patie
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
         <style>
-          .entity-id {
-            font-family: 'Nunito', sans-serif;
-            font-size: 10px;
-            font-weight: 400;
-            color: #2563eb;
-            letter-spacing: 0.02em;
-          }
-          .entity-id--secondary {
-            font-size: 10px;
-            color: #6b7280;
-          }
+          ${themeCss}
           @media print {
             @page {
               size: 4in 2in;
@@ -105,7 +142,7 @@ export const generatePrintLabelHTML = (display: SampleCollectionQueueItem, patie
             </div>
 
             <!-- Container Info -->
-            <div class="w-full text-xxs font-normal text-center text-text-primary bg-neutral-100 rounded px-2 py-1 print:py-0.5">
+            <div class="w-full text-xxs font-normal text-center text-text-primary bg-surface-hover rounded px-2 py-1 print:py-0.5">
               ${containerType.toUpperCase()}: ${colorName.toUpperCase()}
             </div>
 
@@ -120,7 +157,7 @@ export const generatePrintLabelHTML = (display: SampleCollectionQueueItem, patie
             </div>
 
             <!-- Date and Time -->
-            <div class="text-[9px] text-text-tertiary text-center leading-tight">
+            <div class="${TYPE.caption} text-center leading-tight">
               ${formattedDate} ${formattedTime}
             </div>
           </div>

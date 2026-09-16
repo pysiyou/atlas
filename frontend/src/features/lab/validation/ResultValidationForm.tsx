@@ -9,6 +9,8 @@ import { statusMapFromFlags, parseResultEntry, isCritical } from '../utils/labRe
 import { ResultsParameterGrid } from '../components/ResultsParameterGrid';
 import { ResultContextNotes } from '../components/ResultContextNotes';
 import { RESULT_PANEL } from '../utils/labResult';
+import { TYPE } from '@/components/theme/recipes';
+
 
 interface ValidationFormProps {
   results: Record<string, unknown>;
@@ -88,7 +90,7 @@ export const ResultValidationForm: React.FC<ValidationFormProps> = ({
       {readOnly && comments && (
         <div className="pt-3 border-t border-border-subtle space-y-1">
           <p className={RESULT_PANEL.notesLabel}>Validation notes</p>
-          <p className="text-sm text-text-primary whitespace-pre-wrap leading-snug">{comments}</p>
+          <p className={`${TYPE.amount} whitespace-pre-wrap leading-snug`}>{comments}</p>
         </div>
       )}
     </div>

@@ -16,6 +16,7 @@ import { cn } from '@/utils';
 import { getContainerIcon } from '@/config/icons';
 import { ICONS } from '@/config/icons';
 import { inputBase, inputError, FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
+import { TONE } from '@/components/theme/recipes';
 
 /** Container type choices for collection: tube or cup only */
 const COLLECTION_CONTAINER_OPTIONS: { value: ContainerType; label: string }[] = [
@@ -122,10 +123,10 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       <div>
         <div className="flex items-center justify-between mb-1">
           <label className={FORM_FIELD_LABEL}>
-            Required Quantity <span className="text-danger-fg">*</span>
+            Required Quantity <span className={TONE.danger.fg}>*</span>
           </label>
           {minimumVolume > 0 && (
-            <div className="text-xxs text-warning-fg bg-warning-bg px-2 py-0.5 rounded border border-warning-stroke flex items-center gap-1">
+            <div className={cn('text-xxs px-2 py-0.5 rounded flex items-center gap-1', TONE.warning.well, TONE.warning.fg)}>
               <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
               Min: {minimumVolume} mL
             </div>
@@ -151,7 +152,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
           </span>
         </div>
         {showVolumeError && volume < minimumVolume && (
-          <p className="text-xxs text-danger-fg mt-1">
+          <p className={`text-xxs ${TONE.danger.fg} mt-1`}>
             Volume must be at least {minimumVolume} mL
           </p>
         )}
@@ -160,7 +161,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       {/* Container Type: tube or cup only */}
       <div>
         <label className={`${FORM_FIELD_LABEL} mb-2`}>
-          Container Type <span className="text-danger-fg">*</span>
+          Container Type <span className={TONE.danger.fg}>*</span>
         </label>
         <div className="grid grid-cols-2 gap-2">
           {COLLECTION_CONTAINER_OPTIONS.map(option => (
@@ -185,7 +186,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       {/* Top color: list of coloured circles */}
       <div>
         <label className={`${FORM_FIELD_LABEL} mb-1`}>
-          Top Color <span className="text-danger-fg">*</span>
+          Top Color <span className={TONE.danger.fg}>*</span>
         </label>
         <div className="flex flex-wrap gap-3">
           {COLLECTION_TOP_COLOR_VALUES.map(value => {

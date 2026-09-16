@@ -5,6 +5,8 @@ import { inputBase } from '@/components/inputs/inputStyles';
 import { LabWorkflowPopoverChrome } from '../components/LabWorkflowPopoverChrome';
 import type { FeedbackId } from '@/config/feedbackCatalog';
 import type { CriticalReadBackPayload, EscalationResolutionAction } from '@/types/lab-operations';
+import { TYPE } from '@/components/theme/recipes';
+
 
 interface ResolutionPopoverProps {
   resolving: boolean;
@@ -189,7 +191,7 @@ export function ForceValidateAction({
             value={readBackProviderContact}
             onChange={e => onReadBackProviderContactChange(e.target.value)}
           />
-          <label className="flex items-center gap-2 text-xs text-text-secondary">
+          <label className={`flex items-center gap-2 ${TYPE.label}`}>
             <input
               type="checkbox"
               checked={readBackConfirmed}

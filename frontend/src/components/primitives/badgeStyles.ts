@@ -2,6 +2,8 @@
  * Badge color maps, labels, and appearance helpers.
  */
 
+import { TONE } from '@/components/theme/recipes';
+
 export type BadgeColor =
   | 'neutral'
   | 'primary'
@@ -113,12 +115,12 @@ const COLOR_MAP: Record<string, BadgeColor> = {
 export type BadgeVariant = BadgeColor | keyof typeof COLOR_MAP | (string & {});
 
 const UNIFIED_STYLES: Record<BadgeColor, { text: string; dot: string }> = {
-  neutral: { text: 'text-text-secondary', dot: 'bg-text-tertiary' },
-  primary: { text: 'text-brand', dot: 'bg-brand' },
-  success: { text: 'text-success-fg-emphasis', dot: 'bg-success-fg-emphasis' },
-  warning: { text: 'text-warning-fg-emphasis', dot: 'bg-warning-fg-emphasis' },
-  danger: { text: 'text-danger-fg-emphasis', dot: 'bg-danger-fg-emphasis' },
-  info: { text: 'text-info-fg-emphasis', dot: 'bg-info-fg-emphasis' },
+  neutral: { text: TONE.neutral.fgEmphasis, dot: TONE.neutral.fill },
+  primary: { text: TONE.brand.fgEmphasis, dot: TONE.brand.fill },
+  success: { text: TONE.success.fgEmphasis, dot: TONE.success.fill },
+  warning: { text: TONE.warning.fgEmphasis, dot: TONE.warning.fill },
+  danger: { text: TONE.danger.fgEmphasis, dot: TONE.danger.fill },
+  info: { text: TONE.info.fgEmphasis, dot: TONE.info.fill },
   purple: { text: 'text-purple-fg-emphasis', dot: 'bg-purple-fg-emphasis' },
   pink: { text: 'text-pink-fg-emphasis', dot: 'bg-pink-fg-emphasis' },
   teal: { text: 'text-teal-fg-emphasis', dot: 'bg-teal-fg-emphasis' },
@@ -129,7 +131,7 @@ const UNIFIED_STYLES: Record<BadgeColor, { text: string; dot: string }> = {
 };
 
 const TINTED_STYLES: Record<BadgeColor, string> = {
-  neutral: 'bg-neutral-200 text-text-primary',
+  neutral: 'bg-border-default text-text-primary',
   primary: 'bg-brand text-on-brand',
   success: 'bg-success-bg-emphasis text-success-fg-emphasis',
   warning: 'bg-warning-bg-emphasis text-warning-fg-emphasis',
@@ -141,7 +143,7 @@ const TINTED_STYLES: Record<BadgeColor, string> = {
   orange: 'bg-orange-bg-emphasis text-orange-fg-emphasis',
   indigo: 'bg-indigo-bg-emphasis text-indigo-fg-emphasis',
   cyan: 'bg-cyan-bg-emphasis text-cyan-fg-emphasis',
-  muted: 'bg-neutral-200 text-text-tertiary',
+  muted: 'bg-border-default text-text-tertiary',
 };
 
 export const CONTAINER_STYLES: Record<string, string> = {

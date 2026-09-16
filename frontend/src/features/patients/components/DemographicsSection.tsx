@@ -5,6 +5,7 @@ import { GENDER_VALUES, GENDER_CONFIG, type Gender } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
 import { ICONS } from '@/config/icons';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
+import { TONE } from '@/components/theme/recipes';
 import type { PatientFormSectionProps } from '../patientFormTypes';
 
 export const DemographicsSection: React.FC<
@@ -66,7 +67,7 @@ export const DemographicsSection: React.FC<
         />
         <div>
           <label className={`${FORM_FIELD_LABEL} mb-1.5`}>
-            Gender <span className="text-danger-fg ml-1">*</span>
+            Gender <span className={`${TONE.danger.fg} ml-1`}>*</span>
           </label>
           <MultiSelectFilter
             label="Gender"
@@ -79,7 +80,7 @@ export const DemographicsSection: React.FC<
             icon={ICONS.dataFields.userHands}
             className="w-full"
           />
-          {errors.gender && <p className="mt-1 text-sm text-danger-fg">{errors.gender}</p>}
+          {errors.gender && <p className={`mt-1 text-sm ${TONE.danger.fg}`}>{errors.gender}</p>}
         </div>
         <Input
           label="Phone Number"

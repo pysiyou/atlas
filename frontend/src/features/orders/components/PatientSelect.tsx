@@ -5,6 +5,8 @@ import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/c
 import type { Patient } from '@/types';
 import { ICONS } from '@/config/icons';
 import { OrderSelectPopoverShell } from './OrderSelectPopoverShell';
+import { TONE, TYPE } from '@/components/theme/recipes';
+
 
 const SELECTED_CHIP_CLASS =
   'max-w-[min(100%,20rem)] items-start gap-2 py-1.5 px-2 bg-surface-page border-border-default/80 shadow-none';
@@ -29,7 +31,7 @@ function PatientSelectedChip({ patient }: { patient: Patient }) {
         className="shrink-0 self-center"
       />
       <div className="min-w-0 flex flex-col">
-        <span className="text-xs font-normal text-text-primary truncate capitalize">
+        <span className={`${TYPE.value} font-normal truncate capitalize`}>
           {patient.fullName}
         </span>
         <span className="text-xxs font-normal text-text-tertiary truncate">
@@ -94,12 +96,12 @@ const PatientSearchTagInput: React.FC<{
 
         {selectedPatient &&
           (disabled ? (
-            <TagChip size="sm" className={SELECTED_CHIP_CLASS}>
+            <TagChip size="xs" className={SELECTED_CHIP_CLASS}>
               <PatientSelectedChip patient={selectedPatient} />
             </TagChip>
           ) : (
             <RemovableTag
-              size="sm"
+              size="xs"
               onRemove={onClearSelection}
               removeAriaLabel="Clear selected patient"
               className={SELECTED_CHIP_CLASS}
@@ -116,13 +118,13 @@ const PatientSearchTagInput: React.FC<{
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => onValueChange(e.target.value)}
           onFocus={() => onValueChange(value)}
           placeholder={selectedPatient ? '' : 'Search by name, ID, or phone…'}
-          className="flex-1 min-w-[140px] outline-none text-xs text-text-primary placeholder:text-text-muted bg-transparent leading-normal"
+          className={`flex-1 min-w-[140px] outline-none ${TYPE.value} placeholder:text-text-muted bg-transparent leading-normal`}
           autoComplete="off"
           disabled={disabled}
         />
       </div>
 
-      {error && <p className="mt-1.5 text-xs text-danger-fg">{error}</p>}
+      {error && <p className={`mt-1.5 text-xs ${TONE.danger.fg}`}>{error}</p>}
     </div>
   );
 
@@ -222,11 +224,11 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                         className="shrink-0"
                       />
                       <div className="min-w-0 flex-1">
-                        <p className="text-xs font-normal text-text-primary truncate capitalize">
+                        <p className={`${TYPE.value} font-normal truncate capitalize`}>
                           {patient.fullName}
                         </p>
                         {contactLine ? (
-                          <p className="text-xxs text-text-tertiary truncate">{contactLine}</p>
+                          <p className={`${TYPE.caption} truncate`}>{contactLine}</p>
                         ) : (
                           <p className="text-xxs text-text-muted truncate">No contact on file</p>
                         )}

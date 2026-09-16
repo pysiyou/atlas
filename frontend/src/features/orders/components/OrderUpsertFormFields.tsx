@@ -6,6 +6,7 @@ import type { OrderFormInput } from '../schemas/order.schema';
 import { PatientSelect } from './PatientSelect';
 import { TestSelect } from './TestSelect';
 import { OrderPaymentSection } from './OrderPaymentSection';
+import { TONE } from '@/components/theme/recipes';
 import type { useOrderUpsertModal } from '../hooks/useOrderUpsertModal';
 
 interface OrderUpsertFormFieldsProps {
@@ -148,7 +149,7 @@ export const OrderUpsertFormFields: React.FC<OrderUpsertFormFieldsProps> = ({
                 icon={ICONS.actions.warning}
               />
               {fieldState.error && (
-                <p className="mt-1.5 text-xs text-danger-fg">{fieldState.error.message}</p>
+                <p className={`mt-1.5 text-xs ${TONE.danger.fg}`}>{fieldState.error.message}</p>
               )}
             </div>
           );

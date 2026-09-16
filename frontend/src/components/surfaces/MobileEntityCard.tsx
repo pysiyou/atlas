@@ -3,6 +3,7 @@
  */
 
 import React, { type ReactNode } from 'react';
+import { RADIUS, SURFACE } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
 export interface MobileEntityCardProps {
@@ -12,7 +13,7 @@ export interface MobileEntityCardProps {
 }
 
 export const MOBILE_ENTITY_CARD_CLASS =
-  'bg-surface border border-border-default rounded-md p-3 duration-200 cursor-pointer flex flex-col h-full';
+  `${SURFACE.raised} ${RADIUS.card} p-3 duration-200 cursor-pointer flex flex-col h-full`;
 
 function MobileEntityCardRoot({ children, onClick, className }: MobileEntityCardProps) {
   return (

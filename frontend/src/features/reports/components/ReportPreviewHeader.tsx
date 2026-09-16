@@ -7,6 +7,8 @@ import { formatDateTime } from '@/utils';
 import { EntityId } from '@/components';
 import { companyConfig } from '@/config';
 import type { ValidatedTestReportPayload } from '../types';
+import { TYPE } from '@/components/theme/recipes';
+
 
 interface ReportPreviewHeaderProps {
   reportData: ValidatedTestReportPayload;
@@ -53,11 +55,11 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
       <div className="bg-surface-report p-6 shrink-0 space-y-2" style={{ width: '40%' }}>
         <h2 className="text-2xl font-bold text-text-primary mb-3">{companyConfig.getName()}</h2>
         {companyConfig.getConfig().company.subtitle && (
-          <p className="text-xs text-text-primary font-normal">
+          <p className={`${TYPE.value} font-normal`}>
             {companyConfig.getConfig().company.subtitle}
           </p>
         )}
-        <div className="text-xs text-text-secondary space-y-0.5">
+        <div className={`${TYPE.label} space-y-0.5`}>
           {companyConfig.getContact().address.street && (
             <p>{companyConfig.getContact().address.street}</p>
           )}
@@ -90,30 +92,30 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
             <p className="text-base font-normal text-text-primary">{reportData.patientName}</p>
             {reportData.patientAge && (
               <div className="flex gap-2">
-                <span className="text-xs text-text-secondary min-w-[50px] truncate">Age:</span>
-                <span className="text-xs font-normal text-text-primary">{reportData.patientAge}</span>
+                <span className={`${TYPE.label} min-w-[50px] truncate`}>Age:</span>
+                <span className={`${TYPE.value} font-normal`}>{reportData.patientAge}</span>
               </div>
             )}
             {reportData.patientGender && (
               <div className="flex gap-2">
-                <span className="text-xs text-text-secondary min-w-[50px] truncate">Gender:</span>
-                <span className="text-xs font-normal text-text-primary">
+                <span className={`${TYPE.label} min-w-[50px] truncate`}>Gender:</span>
+                <span className={`${TYPE.value} font-normal`}>
                   {reportData.patientGender.toUpperCase()}
                 </span>
               </div>
             )}
             {orderExtended.patientPhone && (
               <div className="flex gap-2">
-                <span className="text-xs text-text-secondary min-w-[50px] truncate">Phone:</span>
-                <span className="text-xs font-normal text-text-primary">
+                <span className={`${TYPE.label} min-w-[50px] truncate`}>Phone:</span>
+                <span className={`${TYPE.value} font-normal`}>
                   {orderExtended.patientPhone}
                 </span>
               </div>
             )}
             {!orderExtended.patientPhone && orderExtended.patientEmail && (
               <div className="flex gap-2">
-                <span className="text-xs text-text-secondary min-w-[50px] truncate">Email:</span>
-                <span className="text-xs font-normal text-text-primary">
+                <span className={`${TYPE.label} min-w-[50px] truncate`}>Email:</span>
+                <span className={`${TYPE.value} font-normal`}>
                   {orderExtended.patientEmail}
                 </span>
               </div>
@@ -124,22 +126,22 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
             <p className="text-base font-normal text-text-primary">Processing Details</p>
             {collectedAt && (
               <div className="flex gap-2">
-                <span className="text-xs text-text-secondary min-w-[60px] truncate">Sample:</span>
-                <span className="text-xs font-normal text-text-primary">
+                <span className={`${TYPE.label} min-w-[60px] truncate`}>Sample:</span>
+                <span className={`${TYPE.value} font-normal`}>
                   {formatDateTime(collectedAt)}
                 </span>
               </div>
             )}
             <div className="flex gap-2">
-              <span className="text-xs text-text-secondary min-w-[60px] truncate">Results:</span>
-              <span className="text-xs font-normal text-text-primary">
+              <span className={`${TYPE.label} min-w-[60px] truncate`}>Results:</span>
+              <span className={`${TYPE.value} font-normal`}>
                 {reportedAt ? formatDateTime(reportedAt) : formatDateTime(new Date())}
               </span>
             </div>
             {reportData.testResults[0] && (
               <div className="flex gap-2">
-                <span className="text-xs text-text-secondary min-w-[60px] truncate">Verified by:</span>
-                <span className="text-xs font-normal text-text-primary">{resolveVerifiedBy()}</span>
+                <span className={`${TYPE.label} min-w-[60px] truncate`}>Verified by:</span>
+                <span className={`${TYPE.value} font-normal`}>{resolveVerifiedBy()}</span>
               </div>
             )}
           </div>

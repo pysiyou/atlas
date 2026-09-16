@@ -78,6 +78,14 @@ export interface ValidationWorklistItem {
   sampleType: string;
   priority: PriorityLevel;
   status: TestStatus;
+  sampleId?: number | null;
+  results?: Record<string, unknown> | null;
+  flags?: string[] | null;
+  enteredBy?: string | null;
+  referringPhysician?: string | null;
+  isRetest?: boolean;
+  retestOfTestId?: number | null;
+  retestNumber?: number;
   resultEnteredAt?: string | null;
   orderDate: string;
   waitingHours: number;

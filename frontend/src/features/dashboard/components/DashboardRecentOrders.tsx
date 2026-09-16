@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import { Panel, Badge, EntityId } from '@/components';
 import { ROUTES } from '@/config';
 import type { Order } from '@/types';
+import { TYPE, RADIUS } from '@/components/theme/recipes';
+
 
 export interface DashboardRecentOrdersProps {
   orders: Order[];
@@ -31,13 +33,13 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
           <Link
             key={order.orderId}
             to={`${ROUTES.ORDERS}/${order.orderId}`}
-            className="flex items-center justify-between p-4 border border-border-default rounded-md hover:bg-surface-page"
+            className={`flex items-center justify-between p-4 border border-border-default ${RADIUS.card} hover:bg-surface-page`}
           >
             <div>
               <p className="text-sm font-normal text-text-primary">
                 {getPatientName(String(order.patientId))}
               </p>
-              <p className="text-xs text-text-tertiary">
+              <p className={TYPE.meta}>
                 <EntityId type="order" value={order.orderId} /> •{' '}
                 {order.testCount ?? order.tests?.length ?? 0} test(s)
               </p>
@@ -50,7 +52,6 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
                     ? 'warning'
                     : 'info'
               }
-              size="sm"
               className="border-none font-normal"
             >
               {order.overallStatus}

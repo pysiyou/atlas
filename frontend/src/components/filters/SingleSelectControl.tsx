@@ -9,6 +9,7 @@ import type { IconName } from '@/components';
 import { cn, uppercaseLabel } from '@/utils';
 import { ICONS } from '@/config/icons';
 import type { SingleSelectFilterControl } from './types';
+import { SURFACE, RADIUS } from '@/components/theme/recipes';
 
 /**
  * Props for SingleSelectControl component
@@ -103,7 +104,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
       className=""
     >
       {() => (
-        <div className="bg-surface border border-border-default rounded-md shadow-lg py-1 max-h-60 overflow-auto">
+        <div className={`${SURFACE.raised} ${RADIUS.card} shadow-lg py-1 max-h-60 overflow-auto`}>
           {/* Options list */}
           <div>
             {config.options.map(option => {
@@ -130,7 +131,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
                   </div>
 
                   {/* Badge */}
-                  <Badge variant={option.color || 'default'} size="sm">
+                  <Badge variant={option.color || 'default'} size="xs">
                     {uppercaseLabel(option.label)}
                   </Badge>
                 </button>

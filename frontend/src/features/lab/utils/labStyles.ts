@@ -1,12 +1,12 @@
 /**
  * Lab Card Style Constants
- * Uses shared typography tokens where they match; lab-specific tokens for section titles etc.
+ * Typography and wells come from theme recipes; layout objects stay here.
  */
 
-import { TEXT_METADATA, BODY_SECONDARY } from '@/utils/constants';
+import { SURFACE, TONE, TYPE } from '@/components/theme/recipes';
 import type { BadgeSize } from '@/components';
 
-/** Compact lab workflow badges (cards, modals, queue age) */
+/** Canonical Badge size for lab cards — uses theme BADGE.size.xs. */
 export const LAB_CARD_BADGE_SIZE: BadgeSize = 'xs';
 
 /** Shared lab header rows (modals; cards can reuse audit/badge row tokens) */
@@ -19,7 +19,7 @@ export const LAB_HEADER = {
   /** Space between multiple audit lines within the audit block */
   auditStack: 'flex flex-col gap-0.5 min-w-0',
   /** Labels (e.g. "Requested", "collected") — values use emphasizedInline (primary) */
-  auditLine: 'text-xs text-text-secondary',
+  auditLine: TYPE.label,
 } as const;
 
 /** Lab detail modal layout — header metadata + grid field stacks */
@@ -31,36 +31,18 @@ export const LAB_MODAL_DETAIL = {
 
 // Typography Constants (shared tokens for body/metadata; lab-specific for title/section)
 export const LAB_CARD_TYPOGRAPHY = {
-  // Test/Item Names (primary emphasis)
-  title: 'text-sm font-medium text-text-primary',
-
-  // Section Headers (lab-specific: uppercase/tracking)
-  /** Card / modal section headers (e.g. Required for, Parameters) */
-  sectionTitle: 'text-xxs font-medium text-text-secondary uppercase tracking-wide',
-  /** Values under section headers (test list, parameter chips, etc.) */
-  sectionContent: 'text-xs text-text-primary',
-  /** Inline label in card body (e.g. Reason:, Container Specifications) */
-  fieldLabel: 'text-text-secondary',
-  fieldValue: 'text-text-primary',
-
-  // Patient Names (within text-xs context)
+  title: TYPE.detailTitle,
+  sectionTitle: TYPE.sectionTitle,
+  sectionContent: TYPE.value,
+  fieldLabel: TYPE.label,
+  fieldValue: TYPE.value,
   patientName: 'font-normal text-text-primary capitalize',
-
-  // Standard Body Text – shared token
-  bodyText: BODY_SECONDARY,
-
-  // Metadata/Secondary Text – shared token
-  metadata: TEXT_METADATA,
-
-  // Separator/Divider Text
+  bodyText: TYPE.label,
+  metadata: TYPE.meta,
   separator: 'text-text-disabled',
-
-  // Audit / header inline values (dates, user names)
   emphasizedInline: 'text-text-primary',
-
-  // Flags Text (in red context)
-  flagText: 'text-xs text-danger-fg',
-  flagTitle: 'text-xxs font-medium text-danger-fg uppercase tracking-wide',
+  flagText: `text-xs ${TONE.danger.fg}`,
+  flagTitle: `${TYPE.sectionTitle} ${TONE.danger.fg}`,
 } as const;
 
 /** Shared inset for titled panels on lab cards (tighter top than sides/bottom). */
@@ -107,11 +89,8 @@ export const LAB_CARD_CONTAINERS = {
   // Card base styling (applied via Card component)
   cardBase: 'shadow-sm hover:bg-surface-hover transition-colors duration-200',
 
-  // Content section (gray background)
-  contentSection: `bg-surface-page rounded border border-border-default ${LAB_CARD_PANEL_INSET}`,
-
-  // Flags section (red background)
-  flagsSection: `bg-danger-bg rounded border border-danger-stroke ${LAB_CARD_PANEL_INSET}`,
+  contentSection: `${SURFACE.recessed} rounded ${LAB_CARD_PANEL_INSET}`,
+  flagsSection: `${SURFACE.dangerWell} rounded ${LAB_CARD_PANEL_INSET}`,
 } as const;
 
 // List Item Constants
@@ -120,10 +99,10 @@ export const LAB_CARD_LIST_ITEMS = {
   testItem: `flex items-center ${LAB_CARD_TYPOGRAPHY.sectionContent}`,
 
   // List bullet (gray)
-  bullet: 'w-1 h-1 rounded-full bg-neutral-400 mr-2',
+  bullet: 'w-1 h-1 rounded-full bg-text-muted mr-2',
 
   // List bullet (red for flags)
-  bulletRed: 'w-1 h-1 rounded-full bg-danger-text mr-2',
+  bulletRed: `w-1 h-1 rounded-full ${TONE.danger.fill} mr-2`,
 
   // Test name in list
   testName: `font-normal mr-1 ${LAB_CARD_TYPOGRAPHY.fieldValue}`,
@@ -132,7 +111,7 @@ export const LAB_CARD_LIST_ITEMS = {
 // Context Row Constants (Patient/Order info)
 export const LAB_CARD_CONTEXT = {
   container:
-    'flex items-center gap-x-2 gap-y-0 text-xs text-text-tertiary flex-wrap min-w-0 w-full leading-snug',
+    `flex items-center gap-x-2 gap-y-0 ${TYPE.meta} flex-wrap min-w-0 w-full leading-snug`,
   patientName: 'font-normal text-text-primary capitalize',
   separator: 'text-text-disabled select-none',
   inlineDot: '•',
@@ -152,12 +131,12 @@ export const LAB_MOBILE_CARD = {
   stack: 'flex flex-col min-h-0 min-w-0 w-full flex-1 gap-1.5',
   titleHead:
     'grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto] grid-rows-[auto_auto] gap-x-2 gap-y-0.5 items-start',
-  title: 'm-0 col-start-1 row-start-1 text-sm font-normal text-text-primary truncate leading-snug normal-case',
+  title: `m-0 col-start-1 row-start-1 ${TYPE.detailTitle} truncate leading-snug normal-case`,
   subline:
-    'col-start-1 row-start-2 flex items-center gap-1.5 min-w-0 text-xs text-text-secondary leading-snug',
+    `col-start-1 row-start-2 flex items-center gap-1.5 min-w-0 ${TYPE.label} leading-snug`,
   sublineName: 'truncate capitalize font-normal text-text-secondary',
-  metaLine: 'text-xs text-text-secondary leading-snug',
-  body: 'text-xs text-text-secondary leading-snug',
+  metaLine: `${TYPE.label} leading-snug`,
+  body: `${TYPE.label} leading-snug`,
   footer: 'flex items-center justify-between gap-2 pt-2 mt-auto border-t border-border-subtle',
   badgeRail: 'flex min-w-0 flex-1 flex-wrap items-center gap-1.5',
   actionRail: 'flex shrink-0 items-center justify-end gap-1.5',

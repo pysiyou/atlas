@@ -13,44 +13,46 @@ import { getFeedback } from '@/utils/feedback';
 import { QUALITY_ISSUE_POPOVER_LAYOUT, QUALITY_ISSUE_POPOVER_COPY } from '../constants/qualityIssuePopoverCopy';
 import { LAB_CONFIG } from '@/features/lab/constants';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
+import { SURFACE, TYPE, RADIUS } from '@/components/theme/recipes';
+
 
 /** Skeleton that mirrors LabWorkflowPopoverChrome layout (header, body, footer) to avoid layout shift when options load. */
 export const QualityIssuePopoverLoadingView: React.FC = () => (
   <div
     className={cn(
       QUALITY_ISSUE_POPOVER_LAYOUT.widthClass,
-      'bg-surface rounded-lg shadow-xl border border-border-default overflow-hidden flex flex-col max-h-[600px]'
+      `${SURFACE.raised} ${RADIUS.overlay} shadow-xl overflow-hidden flex flex-col max-h-[600px]`
     )}
     aria-busy="true"
     aria-label={QUALITY_ISSUE_POPOVER_COPY.loading.message}
   >
     <DialogHeader
       size="popover"
-      title={<Skeleton height={20} width="60%" className="rounded-md" />}
-      subtitle={<Skeleton height={12} width="40%" className="rounded-md" />}
-      actions={<Skeleton width={32} height={32} className="rounded-md shrink-0" />}
+      title={<Skeleton height={20} width="60%" className={`${RADIUS.card}`} />}
+      subtitle={<Skeleton height={12} width="40%" className={`${RADIUS.card}`} />}
+      actions={<Skeleton width={32} height={32} className={`${RADIUS.card} shrink-0`} />}
     />
     <div className="p-4 space-y-4 overflow-y-auto flex-1">
       <div className="space-y-1.5">
-        <Skeleton height={14} width="100%" className="rounded-md" />
-        <Skeleton height={12} width="85%" className="rounded-md" />
+        <Skeleton height={14} width="100%" className={`${RADIUS.card}`} />
+        <Skeleton height={12} width="85%" className={`${RADIUS.card}`} />
       </div>
       <div className="space-y-2">
-        <Skeleton height={12} width="30%" className="rounded-md" />
-        <Skeleton height={52} width="100%" className="rounded-md" />
+        <Skeleton height={12} width="30%" className={`${RADIUS.card}`} />
+        <Skeleton height={52} width="100%" className={`${RADIUS.card}`} />
       </div>
       <div>
-        <Skeleton height={12} width="35%" className="rounded-md mb-1" />
-        <Skeleton height={60} width="100%" className="rounded-md" />
+        <Skeleton height={12} width="35%" className={`${RADIUS.card} mb-1`} />
+        <Skeleton height={60} width="100%" className={`${RADIUS.card}`} />
       </div>
     </div>
     <DialogFooter
       density="popover"
-      start={<Skeleton height={12} width="50%" className="rounded-md" />}
+      start={<Skeleton height={12} width="50%" className={`${RADIUS.card}`} />}
       end={
         <>
-          <Skeleton height={32} width={70} className="rounded-md" />
-          <Skeleton height={32} width={70} className="rounded-md" />
+          <Skeleton height={32} width={70} className={`${RADIUS.card}`} />
+          <Skeleton height={32} width={70} className={`${RADIUS.card}`} />
         </>
       }
     />
@@ -71,7 +73,7 @@ export const QualityIssuePopoverErrorView: React.FC<QualityIssuePopoverErrorView
   <div
     className={cn(
       QUALITY_ISSUE_POPOVER_LAYOUT.widthClass,
-      'bg-surface rounded-lg shadow-xl border border-border-default p-4 space-y-4'
+      `${SURFACE.raised} ${RADIUS.overlay} shadow-xl p-4 space-y-4`
     )}
   >
     <Alert variant="danger" className="py-2">
@@ -120,7 +122,7 @@ export const RejectionActionCards: React.FC<RejectionActionCardsProps> = ({
           label={QUALITY_ISSUE_POPOVER_COPY.actions.retestLabel}
           description={
             <div className="space-y-2">
-              <p className="text-xxs text-text-tertiary">
+              <p className={TYPE.caption}>
                 {QUALITY_ISSUE_POPOVER_COPY.actions.retestDescription}
               </p>
               {retestAttemptsRemaining > 0 && (

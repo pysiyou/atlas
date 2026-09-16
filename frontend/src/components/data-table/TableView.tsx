@@ -17,6 +17,7 @@ import type {
   TableSkeletonProps,
   TableVariant,
 } from './types';
+import { RADIUS, SURFACE } from '@/components/theme/recipes';
 import {
   CELL_PADDING,
   DEFAULT_LOADING_ROWS,
@@ -231,7 +232,7 @@ export function TableView<T>({
 }: TableViewProps<T>) {
   const containerClasses = embedded
     ? 'flex flex-col flex-1 min-h-0'
-    : 'bg-surface rounded-lg border border-border-default shadow-sm flex flex-col h-full';
+    : `${SURFACE.raised} ${RADIUS.overlay} shadow-sm flex flex-col h-full`;
 
   if (loading) {
     return (

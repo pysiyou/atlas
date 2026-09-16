@@ -5,6 +5,8 @@
 import React from 'react';
 import { cn } from '@/utils';
 import type { ValidatedTestReportPayload } from '../types';
+import { TONE, TYPE } from '@/components/theme/recipes';
+
 
 interface ReportPreviewResultsProps {
   reportData: ValidatedTestReportPayload;
@@ -80,7 +82,7 @@ export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ repo
                     <td
                       className={cn(
                         'px-6 py-3 text-left',
-                        isAbnormal ? 'text-danger-fg font-normal' : 'text-text-primary'
+                        isAbnormal ? cn(TONE.danger.fg, 'font-normal') : 'text-text-primary'
                       )}
                     >
                       {param.value}
@@ -96,7 +98,7 @@ export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ repo
           </table>
         </div>
 
-        <div className="space-y-2 text-xs text-text-primary mt-4">
+        <div className={`space-y-2 ${TYPE.value} mt-4`}>
           {test.technicianNotes && <p>Instruments: {test.technicianNotes}</p>}
           {test.validationNotes && <p>Interpretation: {test.validationNotes}</p>}
           <p>Thanks for Reference</p>

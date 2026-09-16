@@ -11,6 +11,7 @@ import { ErrorBoundary } from '@/components';
 import { useEditPatientForm } from '../hooks/useEditPatientForm';
 import { PatientFormTabs } from './PatientFormTabs';
 import { OrderModalFooter } from '@/features/orders';
+import { RADIUS } from '@/components/theme/recipes';
 
 interface EditPatientModalProps {
   isOpen: boolean;
@@ -33,7 +34,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
   formProgress,
 }) => (
   <div className="flex items-center justify-between gap-4 mb-6">
-    <div className="bg-neutral-200/60 p-1 rounded flex items-center gap-1">
+    <div className="bg-surface-hover p-1 rounded flex items-center gap-1">
       {tabs.map(tab => {
         const isActive = activeTab === tab.id;
         return (
@@ -44,7 +45,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
             className={
               isActive
                 ? 'relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-normal cursor-pointer bg-surface text-brand shadow-sm ring-1 ring-black/5'
-                : 'relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-normal cursor-pointer text-text-tertiary hover:text-text-primary hover:bg-neutral-200/50'
+                : 'relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-normal cursor-pointer text-text-tertiary hover:text-text-primary hover:bg-surface-hover'
             }
           >
             {tab.label}
@@ -103,7 +104,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
                 onTabChange={setActiveTab}
                 formProgress={formProgress}
               />
-              <div className="rounded-lg border border-border-default bg-surface p-6">
+              <div className={`${RADIUS.overlay} border border-border-default bg-surface p-6`}>
                 <PatientFormTabs
                   activeTab={activeTab}
                   register={register}

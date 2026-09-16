@@ -3,6 +3,8 @@ import type { PopoverPlacement } from '@/components';
 import { formatStatus } from '@/utils/string';
 import type { AuthUser } from '@/types';
 import defaultAvatar from '@/assets/default-avatar.jpg';
+import { TYPE } from '@/components/theme/recipes';
+
 
 export interface SidebarProfileProps {
   currentUser: AuthUser;
@@ -38,7 +40,7 @@ export function SidebarProfile({ currentUser, isCollapsed, onLogout }: SidebarPr
             </div>
             <div className="flex-1 min-w-0 overflow-hidden">
               <p className="text-sm font-normal text-text-primary truncate">{currentUser.name}</p>
-              <p className="text-xs text-text-tertiary truncate">{formatStatus(currentUser.role)}</p>
+              <p className={`${TYPE.meta} truncate`}>{formatStatus(currentUser.role)}</p>
             </div>
           </div>
         }
@@ -47,7 +49,7 @@ export function SidebarProfile({ currentUser, isCollapsed, onLogout }: SidebarPr
           <>
             <div className="px-4 py-3 border-b border-border-default">
               <p className="text-sm font-normal text-text-primary truncate">{currentUser.name}</p>
-              <p className="text-xs text-text-tertiary truncate">{formatStatus(currentUser.role)}</p>
+              <p className={`${TYPE.meta} truncate`}>{formatStatus(currentUser.role)}</p>
             </div>
             <Button
               variant="logout"

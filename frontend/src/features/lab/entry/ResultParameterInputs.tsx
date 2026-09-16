@@ -4,6 +4,7 @@
 
 import React, { useCallback } from 'react';
 import { Popover, Icon } from '@/components';
+import { CONTROL } from '@/components/theme/recipes';
 import { inputTrigger, inputTriggerOpen, inputBase, inputError } from '@/components/inputs/inputStyles';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
@@ -58,7 +59,7 @@ const SelectParameterInput: React.FC<{
           {value && (
             <button
               onClick={handleClear}
-              className="p-0.5 -mr-1 hover:bg-neutral-100 rounded transition-colors flex items-center justify-center cursor-pointer flex-shrink-0"
+              className="p-0.5 -mr-1 hover:bg-surface-hover rounded transition-colors flex items-center justify-center cursor-pointer flex-shrink-0"
             >
               <Icon
                 name={ICONS.actions.closeCircle}
@@ -151,7 +152,7 @@ export const ParameterInput: React.FC<{
       <input
         {...commonProps}
         type="text"
-        className={cn(inputBase, 'block h-[34px]')}
+        className={cn(inputBase, `block ${CONTROL.height}`)}
         placeholder="Enter text result..."
       />
     );
@@ -168,7 +169,7 @@ export const ParameterInput: React.FC<{
       min={limit?.min}
       max={limit?.max}
       inputMode="decimal"
-      className={cn(inputBase, 'block h-[34px] pr-12 relative z-10', noSpinner, hasError && inputError)}
+      className={cn(inputBase, `block ${CONTROL.height} pr-12 relative z-10`, noSpinner, hasError && inputError)}
       placeholder="--"
     />
   );

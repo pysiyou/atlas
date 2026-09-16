@@ -4,6 +4,7 @@ import type { FilterOption } from '@/components';
 import { RELATIONSHIP_VALUES, RELATIONSHIP_CONFIG, type Relationship } from '@/types';
 import { ICONS } from '@/config/icons';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
+import { TONE } from '@/components/theme/recipes';
 import type { PatientFormSectionProps } from '../patientFormTypes';
 
 export const EmergencyContactSection: React.FC<
@@ -58,7 +59,7 @@ export const EmergencyContactSection: React.FC<
         />
         <div>
           <label className={`${FORM_FIELD_LABEL} mb-1.5`}>
-            Relationship <span className="text-danger-fg ml-1">*</span>
+            Relationship <span className={`${TONE.danger.fg} ml-1`}>*</span>
           </label>
           <MultiSelectFilter
             label="Relationship"
@@ -72,7 +73,7 @@ export const EmergencyContactSection: React.FC<
             className="w-full"
           />
           {errors.emergencyContactRelationship && (
-            <p className="mt-1 text-sm text-danger-fg">{errors.emergencyContactRelationship}</p>
+            <p className={`mt-1 text-sm ${TONE.danger.fg}`}>{errors.emergencyContactRelationship}</p>
           )}
         </div>
         <Input

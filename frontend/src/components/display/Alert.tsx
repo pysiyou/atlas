@@ -5,7 +5,8 @@
 import React, { type ReactNode } from 'react';
 import { Icon, type IconName } from '@/components/primitives/Icon';
 import { getColorStyles, type BadgeColor } from '@/components';
-import { getBadgeAppearance } from '@/components/theme/theme';
+import { useBadgeAppearance, type BadgeAppearance } from '@/components/theme/theme';
+import { RADIUS } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
 interface AlertProps {
@@ -32,18 +33,22 @@ const ALERT_ICON_NAME: Record<NonNullable<AlertProps['variant']>, IconName> = {
   danger: 'alert-circle',
 };
 
-function getAlertShellClasses(variant: NonNullable<AlertProps['variant']>): string {
+function getAlertShellClasses(
+  variant: NonNullable<AlertProps['variant']>,
+  appearance: BadgeAppearance
+): string {
   const color = VARIANT_COLOR[variant];
-  const appearance = getBadgeAppearance();
   if (appearance === 'tinted') {
     return cn(getColorStyles(color, 'tinted').className, 'shadow-sm');
   }
   return 'bg-badge border border-border-default shadow-sm';
 }
 
-function getAlertIconClasses(variant: NonNullable<AlertProps['variant']>): string {
+function getAlertIconClasses(
+  variant: NonNullable<AlertProps['variant']>,
+  appearance: BadgeAppearance
+): string {
   const color = VARIANT_COLOR[variant];
-  const appearance = getBadgeAppearance();
   if (appearance === 'tinted') {
     return 'text-current';
   }
@@ -58,8 +63,8 @@ export const Alert: React.FC<AlertProps> = ({
   onClose,
   className = '',
 }) => {
-  const appearance = getBadgeAppearance();
-  const iconClass = getAlertIconClasses(variant);
+  const appearance = useBadgeAppearance();
+  const iconClass = getAlertIconClasses(variant, appearance);
 
   const body =
     title != null ? (
@@ -90,8 +95,8 @@ export const Alert: React.FC<AlertProps> = ({
   return (
     <div
       className={cn(
-        'flex items-start gap-3 rounded-[10px] p-4',
-        getAlertShellClasses(variant),
+        `flex items-start gap-3 ${RADIUS.notice} p-4`,
+        getAlertShellClasses(variant, appearance),
         className
       )}
       role="alert"
@@ -102,7 +107,7 @@ export const Alert: React.FC<AlertProps> = ({
         <button
           type="button"
           onClick={onClose}
-          className="shrink-0 self-start -mr-1 -mt-0.5 flex h-7 w-7 items-center justify-center rounded-md border-0 bg-transparent p-0 text-text-tertiary hover:text-text-secondary cursor-pointer"
+          className={`shrink-0 self-start -mr-1 -mt-0.5 flex h-7 w-7 items-center justify-center ${RADIUS.card} border-0 bg-transparent p-0 text-text-tertiary hover:text-text-secondary cursor-pointer`}
           aria-label="Close alert"
         >
           <Icon name="cross" className="w-4 h-4 pointer-events-none" />

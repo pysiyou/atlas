@@ -7,6 +7,7 @@ import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import { useBreakpoint } from '@/hooks/useBreakpoint';
 import { Panel, type PanelPadding, type PanelScroll } from '@/components';
 import { Skeleton, SkeletonCard, SkeletonInfoSection, SkeletonTableRow } from './Skeleton';
+import { RADIUS } from '@/components/theme/recipes';
 
 export interface DetailSkeletonSection {
   title: string;
@@ -154,8 +155,8 @@ function WorkflowGridSkeleton({ cardCount }: { cardCount: number }) {
   return (
     <div className="h-full flex flex-col min-h-0" aria-busy="true">
       <div className="shrink-0 px-4 py-3 border-b border-border-default bg-surface-page flex flex-wrap items-center gap-3">
-        <Skeleton height={40} width={280} className="rounded-md" />
-        <Skeleton height={36} width={120} className="rounded-md" />
+        <Skeleton height={40} width={280} className={`${RADIUS.card}`} />
+        <Skeleton height={36} width={120} className={`${RADIUS.card}`} />
         <Skeleton height={32} width={100} className="rounded-full" />
         <Skeleton height={32} width={100} className="rounded-full" />
         <Skeleton height={32} width={90} className="rounded-full" />

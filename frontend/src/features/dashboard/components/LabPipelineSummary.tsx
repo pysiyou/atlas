@@ -9,6 +9,8 @@ import { ICONS } from '@/config/icons';
 import { useLabStageQueueCounts, getValidationTabCount } from '@/features/lab/hooks';
 import { getLabTabPath, LAB_TAB_LABELS, type LabTabId } from '@/features/lab/constants/labConstants';
 import { useAuthStore } from '@/app/authStore';
+import { TYPE } from '@/components/theme/recipes';
+
 
 const LAB_QUEUE_ITEMS: Array<{
   id: LabTabId;
@@ -51,7 +53,7 @@ export const LabPipelineSummary: React.FC = () => {
             >
               <div className="flex items-center gap-2 min-w-0">
                 <Icon name={item.icon as IconName} className="w-4 h-4 text-brand shrink-0" />
-                <span className="text-xs text-text-secondary truncate">{LAB_TAB_LABELS[item.id]}</span>
+                <span className={`${TYPE.label} truncate`}>{LAB_TAB_LABELS[item.id]}</span>
               </div>
               {count > 0 && (
                 <Badge variant="primary" size="xs">

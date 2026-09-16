@@ -12,6 +12,7 @@ import { LabCommandCenterBoard } from '../commandCenter/LabCommandCenterBoard';
 import { Icon, PageHeader, Badge, ErrorAlert } from '@/components';
 import { errorAlertMessage } from '@/utils/feedback';
 import { ICONS } from '@/config/icons';
+import { SURFACE } from '@/components/theme/recipes';
 import { useLabStageQueueCounts, getValidationTabCount } from '../hooks';
 import {
   DEFAULT_LAB_TAB,
@@ -89,7 +90,7 @@ export const LaboratoryPage: React.FC = () => {
         variant="bar"
         title={pageTitle}
         actions={
-          <div className="bg-neutral-200/60 p-1 rounded flex items-center gap-1">
+          <div className="bg-surface-hover p-1 rounded flex items-center gap-1">
             {tabs.map(tab => {
               const isActive = activeTab === tab.id;
               const hasCount = typeof tab.count === 'number' && tab.count > 0;
@@ -102,7 +103,7 @@ export const LaboratoryPage: React.FC = () => {
                   ${
                     isActive
                       ? 'bg-surface text-brand shadow-sm ring-1 ring-black/5'
-                      : 'text-text-tertiary hover:text-text-primary hover:bg-neutral-200/50'
+                      : 'text-text-tertiary hover:text-text-primary hover:bg-surface-hover'
                   }
                 `}
                 >
@@ -132,7 +133,7 @@ export const LaboratoryPage: React.FC = () => {
         className={`flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden ${
           activeTab === 'command-center'
             ? ''
-            : 'bg-surface rounded border border-border-default shadow-sm'
+            : `${SURFACE.raised} rounded shadow-sm`
         }`}
       >
         <div

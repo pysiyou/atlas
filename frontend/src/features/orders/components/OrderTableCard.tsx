@@ -5,6 +5,8 @@ import { useTestNameLookup } from '@/features/catalog';
 import { formatCurrency, formatDateTime } from '@/utils';
 import { getActiveTests } from '../utils/orderCalculator';
 import type { Order } from '@/types';
+import { TYPE } from '@/components/theme/recipes';
+
 
 export function OrderTableCard({ item: order, onClick }: CardComponentProps<Order>) {
   const { getTestName } = useTestNameLookup();
@@ -40,7 +42,7 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
       )}
 
       <div className="flex justify-between items-center mt-auto pt-3 gap-2">
-        <div className="text-xs text-text-tertiary tabular-nums">{formatDateTime(order.orderDate)}</div>
+        <div className={`${TYPE.meta} tabular-nums`}>{formatDateTime(order.orderDate)}</div>
         <div className="flex items-center gap-2 shrink-0">
           {order.overallStatus && <Badge variant={order.overallStatus} size="xs" />}
           {order.paymentStatus && <Badge variant={order.paymentStatus} size="xs" />}

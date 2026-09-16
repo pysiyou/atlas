@@ -10,6 +10,7 @@ import React, { type ReactNode, useState, useEffect } from 'react';
 import { useBreakpoint, isBreakpointAtLeast } from '@/hooks/useBreakpoint';
 import { Sidebar } from './Sidebar';
 import { Icon } from '@/components/primitives/Icon';
+import { SURFACE, RADIUS } from '@/components/theme/recipes';
 
 export interface AppShellProps {
   children: ReactNode;
@@ -46,7 +47,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
         <button
           onClick={handleToggleMobileSidebar}
           title="Open Menu"
-          className="fixed top-4 left-4 z-40 w-10 h-10 flex items-center justify-center bg-surface border border-border-default rounded-lg shadow-md hover:bg-surface-hover transition-colors lg:hidden"
+          className={`fixed top-4 left-4 z-40 w-10 h-10 flex items-center justify-center ${SURFACE.raised} ${RADIUS.overlay} shadow-md hover:bg-surface-hover transition-colors lg:hidden`}
           aria-label="Open navigation menu"
         >
           <Icon name="menu" className="w-6 h-6 text-text-primary" />        </button>
