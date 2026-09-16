@@ -13,7 +13,7 @@ import { notify } from '@/utils/feedback';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { formatCurrency, displayId } from '@/utils';
 import type { Invoice } from '@/types';
-import { useOrderInvoices } from '@/features/billing/api/billing';
+import { useOrderInvoices } from '@/features/billing';
 import { DetailPageShell, PageHeader } from '@/components';
 import { OrderHeader } from '../components/OrderHeader';
 import {

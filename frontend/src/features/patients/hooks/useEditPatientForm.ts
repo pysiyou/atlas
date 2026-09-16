@@ -3,7 +3,7 @@
  */
 
 import { useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { Patient } from '@/types';
 import { patientFormSchema, type PatientFormInput } from '../schemas/patientFormSchemas';
@@ -43,7 +43,7 @@ export function useEditPatientForm({ patient, mode, onClose }: UseEditPatientFor
   });
 
   const { register, handleSubmit, control, formState: { errors }, reset, watch, setValue } = form;
-  const formValues = watch();
+  const formValues = useWatch({ control });
   const isPendingMutation = create.isPending || update.isPending;
 
   const onSubmit = async (data: PatientFormInput) => {
@@ -76,7 +76,10 @@ export function useEditPatientForm({ patient, mode, onClose }: UseEditPatientFor
     }
   );
 
-  const formProgress = useMemo(() => calculateFormProgressV2(formValues), [formValues]);
+  const formProgress = useMemo(
+    () => calculateFormProgressV2((formValues ?? {}) as Partial<PatientFormInput>),
+    [formValues],
+  );
   const modalTitle = mode === 'edit' ? 'Edit Patient' : 'New Patient';
   const submitLabel = isPendingMutation
     ? (mode === 'edit' ? 'Saving...' : 'Creating...')

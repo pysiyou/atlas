@@ -1,107 +1,16 @@
-import type { FeedbackId } from '@/config/feedbackCatalog';
-import { Button, Popover, Icon } from '@/components';
-import { cn, displayId } from '@/utils';
-import { inputBase } from '@/components/inputs/inputStyles';
-import { LabWorkflowPopoverChrome } from '../components/LabWorkflowPopoverChrome';
+import React from 'react';
+import { Icon } from '@/components';
 import { ICONS } from '@/config/icons';
-import type { CriticalReadBackPayload, EscalationResolutionAction } from '@/types/lab-operations';
-
-interface ResolutionPopoverProps {
-  resolving: boolean;
-  triggerLabel: string;
-  triggerVariant: 'approve' | 'secondary' | 'reject';
-  triggerIcon?: React.ReactNode;
-  title: string;
-  subtitle: string;
-  textareaId: string;
-  placeholder: string;
-  value: string;
-  onChange: (value: string) => void;
-  confirmLabel: string;
-  confirmVariant: 'success' | 'danger';
-  disabled?: boolean;
-  onConfirm: () => Promise<void | boolean>;
-  children?: React.ReactNode;
-}
-
-function ResolutionPopover({
-  resolving,
-  triggerLabel,
-  triggerVariant,
-  triggerIcon,
-  title,
-  subtitle,
-  textareaId,
-  placeholder,
-  value,
-  onChange,
-  confirmLabel,
-  confirmVariant,
-  disabled,
-  onConfirm,
-  children,
-}: ResolutionPopoverProps) {
-  return (
-    <Popover
-      placement="top-end"
-      offsetValue={8}
-      preventClose={resolving}
-      trigger={
-        <Button
-          variant={triggerVariant}
-          size="md"
-          layout="icon-text"
-          icon={triggerIcon}
-          disabled={resolving}
-          isLoading={resolving}
-        >
-          {triggerLabel}
-        </Button>
-      }
-    >
-      {({ close }) => (
-        <div data-popover-content onClick={e => e.stopPropagation()}>
-          <LabWorkflowPopoverChrome
-            title={title}
-            subtitle={subtitle}
-            onCancel={close}
-            onConfirm={async () => {
-              const shouldClose = await onConfirm();
-              if (shouldClose !== false) close();
-            }}
-            confirmLabel={confirmLabel}
-            confirmVariant={confirmVariant}
-            isSubmitting={resolving}
-            disabled={disabled}
-          >
-            {children}
-            <div>
-              <label className="sr-only" htmlFor={textareaId}>
-                {subtitle}
-              </label>
-              <textarea
-                id={textareaId}
-                className={cn(inputBase, 'min-h-[80px] resize-none')}
-                placeholder={placeholder}
-                value={value}
-                onChange={e => onChange(e.target.value)}
-                maxLength={1000}
-              />
-            </div>
-          </LabWorkflowPopoverChrome>
-        </div>
-      )}
-    </Popover>
-  );
-}
+import type { FeedbackId } from '@/config/feedbackCatalog';
+import { displayId } from '@/utils';
+import type { EscalationResolutionAction } from '@/types/lab-operations';
+import {
+  ForceValidateAction,
+  ResolutionPopover,
+} from './EscalationResolutionPopover';
 
 export interface EscalationResolveOptions {
-  readBack?: CriticalReadBackPayload;
-}
-
-function popoverSubtitle(orderTestId?: number, hint?: string): string {
-  const label = orderTestId != null ? displayId.orderTest(orderTestId) : undefined;
-  return [label, hint].filter(Boolean).join(' · ');
+  readBack?: import('@/types/lab-operations').CriticalReadBackPayload;
 }
 
 interface EscalationResolutionActionsProps {
@@ -132,6 +41,21 @@ interface EscalationResolutionActionsProps {
   onValidationError: (id: FeedbackId) => void;
 }
 
+function popoverSubtitle(orderTestId?: number, hint?: string): string {
+  const label = orderTestId != null ? displayId.orderTest(orderTestId) : undefined;
+  return [label, hint].filter(Boolean).join(' · ');
+}
+
+function visibleActions(reasonCode: string | undefined, hasResults: boolean) {
+  return {
+    showRetest: hasResults && (!reasonCode || reasonCode === 'LIMIT-HIT'),
+    showRecollect: !reasonCode || reasonCode === 'LIMIT-HIT',
+    showApplyAmendment: reasonCode === 'AMEND-RES' && hasResults,
+    showForceValidate:
+      hasResults && (reasonCode === 'CRIT-VAL' || reasonCode === 'LIMIT-HIT' || !reasonCode),
+  };
+}
+
 export const EscalationResolutionActions: React.FC<EscalationResolutionActionsProps> = ({
   orderTestId,
   resolving,
@@ -155,79 +79,29 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
   onValidationError,
   hasResults = false,
 }) => {
-  const showRetest = hasResults && (!reasonCode || reasonCode === 'LIMIT-HIT');
-  const showRecollect = !reasonCode || reasonCode === 'LIMIT-HIT';
-  const showApplyAmendment = reasonCode === 'AMEND-RES' && hasResults;
-  const showForceValidate =
-    hasResults && (reasonCode === 'CRIT-VAL' || reasonCode === 'LIMIT-HIT' || !reasonCode);
+  const { showRetest, showRecollect, showApplyAmendment, showForceValidate } = visibleActions(
+    reasonCode,
+    hasResults,
+  );
 
   return (
     <div className="flex items-center gap-2 flex-nowrap">
       {showForceValidate && (
-        <ResolutionPopover
+        <ForceValidateAction
+          orderTestId={orderTestId}
           resolving={resolving}
-          triggerLabel="Force Validate"
-          triggerVariant="approve"
-          title="Force Validate"
-          subtitle={popoverSubtitle(orderTestId, 'Validation notes (optional)')}
-          textareaId="escalation-force-validate-notes"
-          placeholder="e.g. Supervisor override after review"
-          value={validationNotesForceValidate}
-          onChange={onValidationNotesForceValidateChange}
-          confirmLabel="Confirm"
-          confirmVariant="success"
-          disabled={
-            requiresReadBack &&
-            (!readBackConfirmed || !readBackProviderName.trim() || !readBackProviderContact.trim())
-          }
-          onConfirm={async () => {
-            if (requiresReadBack) {
-              if (!readBackProviderName.trim() || !readBackProviderContact.trim()) {
-                onValidationError('lab.escalation.readBack.providerRequired');
-                return false;
-              }
-              if (!readBackConfirmed) {
-                onValidationError('lab.escalation.readBack.confirmRequired');
-                return false;
-              }
-            }
-            await resolveAsync('force_validate', validationNotesForceValidate, {
-              readBack: requiresReadBack
-                ? {
-                    providerName: readBackProviderName.trim(),
-                    providerContact: readBackProviderContact.trim(),
-                    notifiedAt: new Date().toISOString(),
-                    readBackConfirmed: true,
-                  }
-                : undefined,
-            });
-          }}
-        >
-          {requiresReadBack && (
-            <div className="mb-3 space-y-2">
-              <input
-                className={cn(inputBase, 'w-full')}
-                placeholder="Provider name"
-                value={readBackProviderName}
-                onChange={e => onReadBackProviderNameChange(e.target.value)}
-              />
-              <input
-                className={cn(inputBase, 'w-full')}
-                placeholder="Provider contact"
-                value={readBackProviderContact}
-                onChange={e => onReadBackProviderContactChange(e.target.value)}
-              />
-              <label className="flex items-center gap-2 text-xs text-text-secondary">
-                <input
-                  type="checkbox"
-                  checked={readBackConfirmed}
-                  onChange={e => onReadBackConfirmedChange(e.target.checked)}
-                />
-                Read-back confirmed with ordering provider
-              </label>
-            </div>
-          )}
-        </ResolutionPopover>
+          requiresReadBack={requiresReadBack}
+          validationNotesForceValidate={validationNotesForceValidate}
+          onValidationNotesForceValidateChange={onValidationNotesForceValidateChange}
+          readBackProviderName={readBackProviderName}
+          onReadBackProviderNameChange={onReadBackProviderNameChange}
+          readBackProviderContact={readBackProviderContact}
+          onReadBackProviderContactChange={onReadBackProviderContactChange}
+          readBackConfirmed={readBackConfirmed}
+          onReadBackConfirmedChange={onReadBackConfirmedChange}
+          resolveAsync={resolveAsync}
+          onValidationError={onValidationError}
+        />
       )}
 
       {showApplyAmendment && (

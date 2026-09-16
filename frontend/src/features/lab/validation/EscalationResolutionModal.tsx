@@ -1,24 +1,20 @@
 /**
  * EscalationResolutionModal - Resolve escalated tests (admin/labtech_plus only)
- *
- * Four paths: Force Validate, Authorize Re-test, Authorize Re-collect, Cancel Test.
  */
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { Badge, Panel, Button, EntityId } from '@/components';
-import { ResultValidationForm } from './ResultValidationForm';
-import { LabWorkflowDetailModal, DetailGrid, ModalFooter } from '../components/LabWorkflowDetailModal';
+import { Badge, Button } from '@/components';
+import { LabWorkflowDetailModal, ModalFooter } from '../components/LabWorkflowDetailModal';
 import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { useOrderTestQueueState } from '../hooks';
-import { CriticalValueActions } from '@/features/lab/criticalValues/CriticalValueActions';
-import { buildCriticalValueRecord } from '@/features/lab/criticalValues/criticalValues';
+import { buildCriticalValueRecord } from '../criticalValues/criticalValues';
 import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
 import type { TestWithContext } from '@/types';
 import { useEscalationResolution } from './useEscalationResolution';
 import { EscalationResolutionFooter } from './EscalationResolutionFooter';
-import { LabEntityTimelinePanel } from '../components/LabEntityTimelinePanel';
+import { EscalationResolutionBody } from './EscalationResolutionBody';
 import { labModalSubtitle } from '../components/LabWorkflowModalSubtitles';
 import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 
@@ -28,6 +24,10 @@ interface EscalationResolutionModalProps {
   test: TestWithContext;
   onResolved: () => void | Promise<void>;
   readOnly?: boolean;
+}
+
+function ticketString(value: unknown): string | undefined {
+  return typeof value === 'string' ? value : undefined;
 }
 
 export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps> = ({
@@ -47,7 +47,6 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   const queryClient = useQueryClient();
 
   const criticalRecord = useMemo(() => buildCriticalValueRecord(test), [test]);
-
   const handleCriticalValueUpdated = useCallback(() => {
     invalidateLabWorkflowQueries(queryClient, {
       criticalValues: true,
@@ -72,21 +71,10 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
     onResetForm: resetForm,
   });
 
-  const requiresReadBack = test.reasonCode === 'CRIT-VAL';
-  const hasResults = Boolean(test.results && Object.keys(test.results).length > 0);
-  const rejectionReason =
-    typeof test.ticketMetadata?.rejectionReason === 'string'
-      ? test.ticketMetadata.rejectionReason
-      : undefined;
-  const rejectionNotes =
-    typeof test.ticketMetadata?.rejectionNotes === 'string'
-      ? test.ticketMetadata.rejectionNotes
-      : undefined;
-
   const workItem = useOrderTestQueueState(test);
-
   if (test.id == null) return null;
 
+  const hasResults = Boolean(test.results && Object.keys(test.results).length > 0);
   const headerBadges = (
     <TestHeaderBadges
       test={test}
@@ -133,7 +121,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
             resolving={resolving}
             reasonCode={test.reasonCode}
             hasResults={hasResults}
-            requiresReadBack={requiresReadBack}
+            requiresReadBack={test.reasonCode === 'CRIT-VAL'}
             validationNotesForceValidate={validationNotesForceValidate}
             onValidationNotesForceValidateChange={setValidationNotesForceValidate}
             readBackProviderName={readBackProviderName}
@@ -153,99 +141,15 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
         )
       }
     >
-      {hasResults ? (
-        <Panel variant="lab" title={readOnly ? 'Recorded Results' : 'Result Validation'}>
-          <ResultValidationForm
-            results={test.results!}
-            flags={test.flags}
-            technicianNotes={test.technicianNotes}
-            comments={test.validationNotes ?? ''}
-            onCommentsChange={() => {}}
-            onApprove={() => {}}
-            readOnly={readOnly}
-            enableApproveShortcut={false}
-          />
-        </Panel>
-      ) : (
-        <Panel variant="lab" title="Escalation Summary">
-          <p className="text-sm text-text-secondary">
-            This test was escalated before results were entered. Review the context below and choose
-            an action.
-          </p>
-          {(rejectionReason || rejectionNotes) && (
-            <dl className="mt-3 space-y-2 text-sm">
-              {rejectionReason && (
-                <div>
-                  <dt className="text-text-tertiary">Rejection reason</dt>
-                  <dd className="text-text-primary">{rejectionReason}</dd>
-                </div>
-              )}
-              {rejectionNotes && (
-                <div>
-                  <dt className="text-text-tertiary">Notes</dt>
-                  <dd className="text-text-primary whitespace-pre-wrap">{rejectionNotes}</dd>
-                </div>
-              )}
-            </dl>
-          )}
-        </Panel>
-      )}
-
-      {criticalRecord && (
-        <Panel variant="lab" title="Critical Value Notification">
-          <CriticalValueActions record={criticalRecord} onUpdated={handleCriticalValueUpdated} />
-        </Panel>
-      )}
-
-      <DetailGrid
-        sections={[
-          {
-            title: 'Collection Information',
-            fields: [
-              {
-                label: 'Sample ID',
-                value: test.sampleId ? (
-                  <EntityId type="sample" value={test.sampleId} variant="block" className="text-right" />
-                ) : undefined,
-              },
-              { label: 'Collected', timestamp: test.collectedAt, user: test.collectedBy },
-              {
-                label: 'Sample Type',
-                badge: test.sampleType
-                  ? { value: test.sampleType, variant: test.sampleType }
-                  : undefined,
-              },
-            ],
-          },
-          {
-            title: 'Result Entry Information',
-            fields: [
-              { label: 'Entered', timestamp: test.resultEnteredAt, user: test.enteredBy },
-              {
-                label: 'Test ID',
-                value: test.id != null ? (
-                  <EntityId type="orderTest" value={test.id} variant="block" className="text-right" />
-                ) : undefined,
-              },
-              {
-                label: 'Test Code',
-                value: test.testCode ? (
-                  <EntityId variant="block" className="text-right">{test.testCode}</EntityId>
-                ) : undefined,
-              },
-              {
-                label: 'Order ID',
-                value: test.orderId ? (
-                  <EntityId type="order" value={test.orderId} variant="block" className="text-right" />
-                ) : undefined,
-              },
-            ],
-          },
-        ]}
+      <EscalationResolutionBody
+        test={test}
+        readOnly={readOnly}
+        hasResults={hasResults}
+        rejectionReason={ticketString(test.ticketMetadata?.rejectionReason)}
+        rejectionNotes={ticketString(test.ticketMetadata?.rejectionNotes)}
+        criticalRecord={criticalRecord}
+        onCriticalValueUpdated={handleCriticalValueUpdated}
       />
-      {test.id != null && (
-        <LabEntityTimelinePanel entityType="order_test" entityId={test.id} />
-      )}
     </LabWorkflowDetailModal>
   );
 };
