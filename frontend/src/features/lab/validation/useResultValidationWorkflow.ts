@@ -8,7 +8,7 @@
 import { useState, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { invalidateResultQueries } from '@/lib/query/invalidate';
-import { useValidateResults } from '../api/results';
+import { resultAPI, useValidateResults } from '../api/results';
 import { notifyQualityIssueSuccess } from '@/features/lab/validation/qualityIssueToastMessages';
 import { notify } from '@/utils/feedback';
 import { logger } from '@/utils/logger';
@@ -32,7 +32,7 @@ export interface ResultValidationWorkflowController {
   validateMutation: ReturnType<typeof useValidateResults>;
 }
 
-export function useResultValidationWorkflow(ordersLoading: boolean): ResultValidationWorkflowController {
+export function useResultValidationWorkflow(queueLoading: boolean): ResultValidationWorkflowController {
   const queryClient = useQueryClient();
   const { openModal } = useModal();
   const [comments, setComments] = useState<Record<string, string>>({});
@@ -59,7 +59,7 @@ export function useResultValidationWorkflow(ordersLoading: boolean): ResultValid
       approve: boolean,
       rejectionResult?: QualityIssueResult
     ): Promise<void> => {
-      if (ordersLoading) return;
+      if (queueLoading) return;
 
       const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
       const commentKey = orderTestKey(orderTestId);
@@ -99,7 +99,7 @@ export function useResultValidationWorkflow(ordersLoading: boolean): ResultValid
       notifyQualityIssueSuccess(rejectionResult);
       clearComment(commentKey);
     },
-    [comments, ordersLoading, validateMutation, clearComment, queryClient]
+    [comments, queueLoading, validateMutation, clearComment, queryClient]
   );
 
   const openValidationModal = useCallback(
@@ -111,14 +111,22 @@ export function useResultValidationWorkflow(ordersLoading: boolean): ResultValid
 
       const commentKey = orderTestKey(test.id);
 
-      openModal(ModalType.VALIDATION_DETAIL, {
-        test,
-        commentKey,
-        comments: comments[commentKey] || '',
-        onCommentsChange: handleCommentsChange,
-        onApprove: () => handleValidate(test.id!, test.orderId, true),
-        onReject: result => handleValidate(test.id!, test.orderId, false, result),
-      });
+      void (async () => {
+        try {
+          const enriched = await resultAPI.getOrderTestContext(test.id!);
+          openModal(ModalType.VALIDATION_DETAIL, {
+            test: enriched,
+            commentKey,
+            comments: comments[commentKey] || '',
+            onCommentsChange: handleCommentsChange,
+            onApprove: () => handleValidate(test.id!, test.orderId, true),
+            onReject: result => handleValidate(test.id!, test.orderId, false, result),
+          });
+        } catch (error) {
+          logger.error('Error loading validation context', error instanceof Error ? error : undefined);
+          notify.apiError('lab.validation.testUnavailable', error);
+        }
+      })();
     },
     [comments, handleCommentsChange, handleValidate, openModal]
   );

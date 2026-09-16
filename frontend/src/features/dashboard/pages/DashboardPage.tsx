@@ -5,11 +5,9 @@
 
 import React from 'react';
 import { useAuthStore } from '@/app/authStore';
-import { WORKFLOW_QUERY_LIMIT } from '@/lib/api/constants';
-import { usePatientNameLookup, usePaginatedPatients } from '@/features/patients';
-import { usePaginatedOrders } from '@/features/orders';
-import { usePaymentsList } from '@/features/payments';
+import { usePatientNameLookup } from '@/features/patients';
 import { formatDate } from '@/utils';
+import { useDashboardSummary } from '../api/dashboard';
 import { LabPipelineSummary } from '../components/LabPipelineSummary';
 import { PendingCriticalValuesPanel } from '@/features/lab';
 import {
@@ -21,39 +19,25 @@ import { DashboardRecentOrders } from '../components/DashboardRecentOrders';
 
 export const Dashboard: React.FC = () => {
   const { user: currentUser, hasRole } = useAuthStore();
-  const { patients } = usePaginatedPatients(undefined, 1, WORKFLOW_QUERY_LIMIT);
-  const { orders } = usePaginatedOrders(undefined, 1, WORKFLOW_QUERY_LIMIT);
-  const { payments } = usePaymentsList({ limit: WORKFLOW_QUERY_LIMIT });
+  const { summary } = useDashboardSummary();
   const { getPatientName } = usePatientNameLookup();
 
   const isLabRole = hasRole(['administrator', 'lab-technician', 'lab-technician-plus']);
   const isReceptionRole = hasRole(['administrator', 'receptionist']);
 
-  const today = new Date().toISOString().split('T')[0];
-  const todayPatients = patients.filter(p => p.registrationDate.startsWith(today)).length;
-  const todayOrders = orders.filter(o => o.orderDate.startsWith(today)).length;
-  const todayRevenue = payments
-    .filter(p => p.paidAt && p.paidAt.startsWith(today))
-    .reduce((sum, p) => sum + p.amount, 0);
-
-  const pendingOrders = orders.filter(
-    o => o.overallStatus === 'ordered' || o.overallStatus === 'in-progress'
-  ).length;
-
   const stats = buildDashboardStats({
     isReceptionRole,
     isLabRole,
-    patientsCount: patients.length,
-    todayPatients,
-    ordersCount: orders.length,
-    todayOrders,
-    todayRevenue,
-    pendingOrders,
+    patientsCount: summary?.totalPatients ?? 0,
+    todayPatients: summary?.todayPatients ?? 0,
+    ordersCount: summary?.totalOrders ?? 0,
+    todayOrders: summary?.todayOrders ?? 0,
+    todayRevenue: summary?.todayRevenue ?? 0,
+    pendingOrders: summary?.pendingOrders ?? 0,
   });
 
-  const recentOrders = [...orders]
-    .sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime())
-    .slice(0, 5);
+  const recentOrders = summary?.recentOrders ?? [];
+  const pendingOrders = summary?.pendingOrders ?? 0;
 
   return (
     <div className="min-h-full flex flex-col p-2 gap-2">

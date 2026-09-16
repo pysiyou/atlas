@@ -50,5 +50,5 @@ export const formatAddress = (address: Patient['address']): string => {
  * Gets reportable orders (orders with validated tests)
  */
 export const getReportableOrders = (orders: Order[]): Order[] => {
-  return orders.filter(order => order.tests.some(test => test.status === 'validated'));
+  return orders.filter(order => (order.tests ?? []).some(test => test.status === 'validated'));
 };

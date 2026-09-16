@@ -21,6 +21,7 @@ export type {
   TestResult,
   ResultRejectionType,
 } from './order';
+export { getOrderTests, getOrderTestCount } from './order';
 export type {
   Sample,
   PendingSample,

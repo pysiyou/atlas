@@ -15,11 +15,13 @@ from app.api.v1 import (
     billing,
     command_center,
     critical_values,
+    dashboard,
     orders,
     patients,
     payments,
     quality_issues,
     recollection_requests,
+    reports,
     results,
     samples,
     tests,
@@ -105,3 +107,5 @@ app.include_router(
 app.include_router(command_center.router, prefix=settings.API_V1_PREFIX, tags=["command-center"])
 app.include_router(worklists.router, prefix=settings.API_V1_PREFIX)
 app.include_router(billing.router, prefix=settings.API_V1_PREFIX)
+app.include_router(dashboard.router, prefix=settings.API_V1_PREFIX)
+app.include_router(reports.router, prefix=settings.API_V1_PREFIX)

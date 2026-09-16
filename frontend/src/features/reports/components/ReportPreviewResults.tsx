@@ -42,7 +42,7 @@ export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ repo
               <tr className="border-b border-border-subtle hover:bg-surface-page transition-colors">
                 <td className="px-6 py-3 text-text-primary">Primary Sample Type :</td>
                 <td className="px-6 py-3 text-left text-text-primary">
-                  {reportData.order.tests[0]?.sampleType?.toUpperCase() || 'N/A'}
+                  {(reportData.order.tests ?? [])[0]?.sampleType?.toUpperCase() || 'N/A'}
                 </td>
                 <td className="px-6 py-3 text-left text-text-secondary"></td>
                 <td className="px-6 py-3 text-right text-text-secondary"></td>

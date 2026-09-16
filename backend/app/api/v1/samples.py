@@ -1,5 +1,4 @@
 """Sample API Routes"""
-
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
@@ -8,6 +7,7 @@ from app.db.database import get_db
 from app.models.sample import Sample
 from app.models.user import User
 from app.schemas.enums import SampleStatus
+from app.schemas.pagination import PaginatedResponse
 from app.schemas.sample import SampleCollectRequest, SampleResponse
 from app.services.lab.samples import SampleService
 from app.services.lab.workflow import LabOperationError, LabOperationsService
@@ -24,7 +24,10 @@ def _sample_response(db: Session, sample: Sample) -> SampleResponse:
     return SampleResponse(**data)
 
 
-@router.get("/samples")
+@router.get(
+    "/samples",
+    response_model=list[SampleResponse] | PaginatedResponse[SampleResponse],
+)
 def get_samples(
     pagination: PaginationParams,
     orderId: int | None = None,

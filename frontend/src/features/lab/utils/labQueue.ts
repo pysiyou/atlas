@@ -14,7 +14,11 @@ import type {
   TestWithContext,
 } from '@/types';
 import type { SampleCollectionQueueItem } from '../types';
-import type { CollectionWorklistItem, EntryWorklistItem } from '../api/worklists';
+import type {
+  CollectionWorklistItem,
+  EntryWorklistItem,
+  ValidationWorklistItem,
+} from '../api/worklists';
 
 /** Lab queue priority, age, derived work-item state, and worklist mapping. */
 
@@ -297,6 +301,25 @@ export function mapEntryWorklistToOrderTestContext(item: EntryWorklistItem): Tes
     orderDate: item.orderDate,
     collectedAt: item.collectedAt ?? undefined,
     isRetest: item.isRetest,
+  } as TestWithContext;
+}
+
+export function mapValidationWorklistToOrderTestContext(
+  item: ValidationWorklistItem
+): TestWithContext {
+  return {
+    id: item.orderTestId,
+    orderId: item.orderId,
+    patientId: item.patientId,
+    testCode: item.testCode,
+    testName: item.testName,
+    status: item.status,
+    sampleType: item.sampleType,
+    priority: item.priority,
+    patientName: item.patientName,
+    orderDate: item.orderDate,
+    resultEnteredAt: item.resultEnteredAt ?? undefined,
+    hasCriticalValues: item.hasCriticalValues,
   } as TestWithContext;
 }
 

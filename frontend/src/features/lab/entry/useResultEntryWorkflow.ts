@@ -13,12 +13,11 @@ import { logger } from '@/utils/logger';
 import { formatParameterResults, findTestById } from './resultEntry';
 import { orderTestKey } from '../utils/labSearchAndLinks';
 import { useResultEntryDetailModal } from './useResultEntryDetailModal';
-import type { TestWithContext, Test, Order } from '@/types';
+import type { TestWithContext, Test } from '@/types';
 
 export interface UseEntryWorkflowOptions {
   allTests: TestWithContext[];
   testCatalog: Test[] | undefined;
-  orders: Order[] | undefined;
 }
 
 export interface EntryWorkflow {
@@ -42,7 +41,6 @@ export interface EntryWorkflow {
 export function useResultEntryWorkflow({
   allTests,
   testCatalog,
-  orders,
 }: UseEntryWorkflowOptions): EntryWorkflow {
   const { getTest } = useTestNameLookup();
   const [results, setResults] = useState<Record<string, Record<string, string>>>({});
@@ -135,7 +133,6 @@ export function useResultEntryWorkflow({
 
   const openTestModal = useResultEntryDetailModal({
     testCatalog,
-    orders,
     allTests,
     results,
     technicianNotes,

@@ -3,11 +3,10 @@ import { useTestNameLookup } from '@/features/catalog';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { orderTestKey } from '../utils/labSearchAndLinks';
 import { notify } from '@/utils/feedback';
-import type { TestWithContext, Test, Order } from '@/types';
+import type { TestWithContext, Test } from '@/types';
 
 interface UseEntryTestModalOptions {
   testCatalog: Test[] | undefined;
-  orders: Order[] | undefined;
   allTests: TestWithContext[];
   results: Record<string, Record<string, string>>;
   technicianNotes: Record<string, string>;

@@ -50,9 +50,10 @@ export function renderOrderPatientName(
 }
 
 export function renderOrderTestsBlock(
-  activeTests: Pick<OrderTest, 'testCode' | 'testName'>[]
+  activeTests: Pick<OrderTest, 'testCode' | 'testName'>[],
+  fallbackCount?: number
 ): ReactNode {
-  const activeCount = activeTests.length;
+  const activeCount = fallbackCount ?? activeTests.length;
   const testList = activeTests.map(t => t.testCode ?? t.testName).join('/');
 
   return (

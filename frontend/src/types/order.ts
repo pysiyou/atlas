@@ -96,6 +96,14 @@ export interface OrderTest {
   updatedAt: string;
 }
 
+export function getOrderTests(order: Pick<Order, 'tests' | 'testCount'>): OrderTest[] {
+  return order.tests ?? [];
+}
+
+export function getOrderTestCount(order: Pick<Order, 'tests' | 'testCount'>): number {
+  return order.testCount ?? order.tests?.length ?? 0;
+}
+
 export interface Order {
   // Identity
   orderId: number; // Integer ID, displayed as ORD{id}
@@ -103,8 +111,9 @@ export interface Order {
   patientName: string; // From API relationship
   orderDate: string;
 
-  // Tests
-  tests: OrderTest[];
+  // Tests (omitted on summary list responses — use testCount)
+  tests?: OrderTest[];
+  testCount?: number;
 
   // Pricing (snapshot at order time)
   totalPrice: number;

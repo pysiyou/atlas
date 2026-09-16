@@ -11,6 +11,7 @@ from app.models.order import Order, OrderTest
 from app.models.patient import Patient
 from app.models.sample import Sample
 from app.models.test import Test
+from app.schemas.billing import InvoiceResponse
 from app.schemas.enums import (
     LabOperationType,
     OrderStatus,
@@ -24,15 +25,18 @@ from app.schemas.order import (
     OrderDetailResponse,
     OrderReportResponse,
     OrderResponse,
+    OrderSummaryResponse,
     OrderUpdate,
 )
 from app.schemas.pagination import create_paginated_response, skip_to_page
+from app.schemas.patient import PatientResponse
 from app.schemas.payment import PaymentCreate, PaymentResponse
 from app.services.audit.logger import AuditService
 from app.services.billing import BillingService
 from app.services.lab.samples import generate_samples_for_order
 from app.utils.common import get_or_404
 from fastapi import HTTPException, status
+from sqlalchemy import func
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session, joinedload, selectinload
 
@@ -280,6 +284,34 @@ def update_order_status(db: Session, order_id: int) -> None:
         logger.info("Order %s status changed from %s to %s", order_id, old_status, new_status)
 
 
+def _parse_include(include: str | None) -> set[str]:
+    if not include:
+        return set()
+    return {part.strip().lower() for part in include.split(",") if part.strip()}
+
+
+def _order_to_summary(order: Order, test_count: int) -> dict:
+    patient_name = order.patient.fullName if order.patient else "Unknown"
+    return OrderSummaryResponse(
+        orderId=order.orderId,
+        patientId=order.patientId,
+        patientName=patient_name,
+        orderDate=order.orderDate,
+        testCount=test_count,
+        totalPrice=float(order.totalPrice or 0),
+        paymentStatus=order.paymentStatus,
+        overallStatus=order.overallStatus,
+        priority=order.priority,
+        referringPhysician=order.referringPhysician,
+        clinicalNotes=order.clinicalNotes,
+        specialInstructions=order.specialInstructions,
+        patientPrepInstructions=order.patientPrepInstructions,
+        createdBy=str(order.createdBy),
+        createdAt=order.createdAt,
+        updatedAt=order.updatedAt,
+    ).model_dump(mode="json")
+
+
 class OrderService:
     def __init__(self, db: Session):
         self.db = db
@@ -293,6 +325,7 @@ class OrderService:
         payment_status: PaymentStatus | None = None,
         sort: Literal["createdAt", "updatedAt"] = "updatedAt",
         paginated: bool = False,
+        summary: bool = False,
     ):
         query = self.db.query(Order)
         if patient_id:
@@ -301,15 +334,35 @@ class OrderService:
             query = query.filter(Order.overallStatus == order_status)
         if payment_status:
             query = query.filter(Order.paymentStatus == payment_status)
-        query = query.options(
-            joinedload(Order.patient),
-            selectinload(Order.tests).joinedload(OrderTest.test),
-        )
+        if summary:
+            query = query.options(joinedload(Order.patient))
+        else:
+            query = query.options(
+                joinedload(Order.patient),
+                selectinload(Order.tests).joinedload(OrderTest.test),
+            )
         total = query.count() if paginated else 0
         order_by = Order.updatedAt.desc() if sort == "updatedAt" else Order.createdAt.desc()
         orders = query.order_by(order_by).offset(skip).limit(limit).all()
         try:
-            serialized = [OrderResponse.model_validate(o).model_dump(mode="json") for o in orders]
+            if summary:
+                order_ids = [order.orderId for order in orders]
+                test_counts: dict[int, int] = {}
+                if order_ids:
+                    rows = (
+                        self.db.query(OrderTest.orderId, func.count(OrderTest.id))
+                        .filter(OrderTest.orderId.in_(order_ids))
+                        .group_by(OrderTest.orderId)
+                        .all()
+                    )
+                    test_counts = {order_id: count for order_id, count in rows}
+                serialized = [
+                    _order_to_summary(order, test_counts.get(order.orderId, 0)) for order in orders
+                ]
+            else:
+                serialized = [
+                    OrderResponse.model_validate(o).model_dump(mode="json") for o in orders
+                ]
         except Exception:
             logger.exception("Error serializing orders")
             raise HTTPException(
@@ -321,11 +374,12 @@ class OrderService:
         return serialized
 
     def get_order(self, order_id: int, include: str | None = None):
+        includes = _parse_include(include)
         options = [
             joinedload(Order.patient),
             selectinload(Order.tests).joinedload(OrderTest.test),
         ]
-        if include == "payments":
+        if "payments" in includes:
             options.append(selectinload(Order.payments))
         order = self.db.query(Order).filter(Order.orderId == order_id).options(*options).first()
         if not order:
@@ -333,12 +387,26 @@ class OrderService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Order {order_id} not found",
             )
-        if include == "payments":
+        if includes:
             order_dump = OrderResponse.model_validate(order).model_dump(mode="json")
-            order_dump["payments"] = [
-                PaymentResponse(**enrich_payment(p, order)) for p in order.payments
-            ]
-            return OrderDetailResponse(**order_dump)
+            detail: dict = {**order_dump}
+            if "payments" in includes:
+                detail["payments"] = [
+                    PaymentResponse(**enrich_payment(p, order)).model_dump(mode="json")
+                    for p in order.payments
+                ]
+            if "invoices" in includes:
+                invoices = BillingService(self.db).list_invoices_for_order(order_id)
+                detail["invoices"] = [
+                    InvoiceResponse.model_validate(inv).model_dump(mode="json") for inv in invoices
+                ]
+            if "patient" in includes and order.patient:
+                from app.services.patients import patient_to_response_dict
+
+                detail["patient"] = PatientResponse.model_validate(
+                    patient_to_response_dict(order.patient)
+                ).model_dump(mode="json")
+            return OrderDetailResponse(**detail)
         return OrderResponse.model_validate(order)
 
     def delete_order(self, order_id: int) -> None:

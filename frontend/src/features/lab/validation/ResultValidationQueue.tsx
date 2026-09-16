@@ -54,12 +54,13 @@ export const ResultValidationQueue: React.FC = () => {
   const canResolveEscalation = hasRole(['administrator', 'lab-technician-plus']);
 
   const {
-    validationTests: allTests,
+    validationTests,
     escalations: escalatedTests,
     recollections: recollectionRequests,
     isLoading: dataLoading,
     canResolveEscalation: canResolveFromProvider,
   } = useResultValidationQueueData();
+  const allTests = validationTests;
 
   const {
     isLoading: escalationLoading,

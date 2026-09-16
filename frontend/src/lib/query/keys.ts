@@ -59,7 +59,7 @@ export const queryKeys = {
     lists: () => [...queryKeys.patients.all, 'list'] as const,
     list: (filters?: { search?: string } & PaginationParams) =>
       [...queryKeys.patients.lists(), filters] as const,
-    paginated: (params: { search?: string } & PaginationParams) =>
+    paginated: (params: { search?: string; includeOrderSummary?: boolean } & PaginationParams) =>
       [...queryKeys.patients.all, 'paginated', params] as const,
     details: () => [...queryKeys.patients.all, 'detail'] as const,
     byId: (id: string) => [...queryKeys.patients.details(), id] as const,
@@ -178,6 +178,11 @@ export const queryKeys = {
     timeline: (params: { hours_back: number; limit: number; categories?: string }) =>
       [...queryKeys.commandCenter.all, 'timeline', params] as const,
     board: () => [...queryKeys.commandCenter.all, 'board'] as const,
+  },
+
+  reports: {
+    all: ['reports'] as const,
+    validatedTests: () => [...queryKeys.reports.all, 'validated-tests'] as const,
   },
 
   worklists: {

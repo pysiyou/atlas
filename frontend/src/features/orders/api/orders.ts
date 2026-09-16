@@ -4,7 +4,15 @@
  */
 import { apiClient } from '@/lib/api/client';
 import { WORKFLOW_QUERY_LIMIT, DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
-import type { Order, OrderStatus, PaymentStatus } from '@/types';
+import type { Order, OrderStatus, PaymentStatus, Patient } from '@/types';
+import { getOrderTestCount, getOrderTests } from '@/types';
+import type { Invoice } from '@/features/billing/api/billing';
+
+export interface OrderDetailApiResponse extends Order {
+  patient?: Patient;
+  invoices?: Invoice[];
+  payments?: unknown[];
+}
 import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
 import { useQuery, keepPreviousData, useMutation, useQueryClient, useQueries } from '@tanstack/react-query';
 import { useMemo, useState, useCallback } from 'react';
@@ -27,16 +35,19 @@ export interface OrdersFilter {
 
 export const orderAPI = {
   /** Workflow-scoped order fetch (not a full-table scan). */
-  async getAll(options?: { signal?: AbortSignal }): Promise<Order[]> {
-    return apiClient.get<Order[]>(
-      '/orders',
-      { limit: String(WORKFLOW_QUERY_LIMIT), sort: 'updatedAt' },
-      options
-    );
+  async getAll(options?: { signal?: AbortSignal; summary?: boolean }): Promise<Order[]> {
+    const params: Record<string, string> = {
+      limit: String(WORKFLOW_QUERY_LIMIT),
+      sort: 'updatedAt',
+    };
+    if (options?.summary !== false) {
+      params.summary = 'true';
+    }
+    return apiClient.get<Order[]>('/orders', params, { signal: options?.signal });
   },
 
-  async getPaginated(filters?: OrdersFilter): Promise<PaginatedResponse<Order>> {
-    const params: Record<string, string> = { paginated: 'true', sort: 'updatedAt' };
+  async getPaginated(filters?: OrdersFilter & { summary?: boolean }): Promise<PaginatedResponse<Order>> {
+    const params: Record<string, string> = { paginated: 'true', sort: 'updatedAt', summary: 'true' };
 
     if (filters?.patientId) params.patientId = filters.patientId;
     if (filters?.status) params.status = filters.status;
@@ -47,8 +58,14 @@ export const orderAPI = {
     return apiClient.get<PaginatedResponse<Order>>('/orders', params);
   },
 
-  async getById(orderId: string, options?: { signal?: AbortSignal }): Promise<Order | null> {
-    return apiClient.get<Order>(`/orders/${orderId}`, undefined, options);
+  async getById(
+    orderId: string,
+    options?: { signal?: AbortSignal; include?: string }
+  ): Promise<OrderDetailApiResponse | null> {
+    const params = options?.include ? { include: options.include } : undefined;
+    return apiClient.get<OrderDetailApiResponse>(`/orders/${orderId}`, params, {
+      signal: options?.signal,
+    });
   },
 
   async getByPatientId(patientId: string): Promise<Order[]> {
@@ -184,13 +201,17 @@ export function useOrdersList(filters?: OrdersFilters, refetchOptions?: LabQuery
 /**
  * Hook to fetch a single order by ID
  */
-export function useOrder(orderId: string | undefined) {
+export function useOrder(
+  orderId: string | undefined,
+  options?: { include?: string }
+) {
   const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const include = options?.include ?? 'patient,invoices';
 
   const query = useQuery({
-    queryKey: queryKeys.orders.byId(orderId ?? ''),
+    queryKey: [...queryKeys.orders.byId(orderId ?? ''), include],
     queryFn: async ({ signal }) => {
-      const data = await orderAPI.getById(orderId!, { signal });
+      const data = await orderAPI.getById(orderId!, { signal, include });
       if (!data) throw new Error('Order not found');
       return data;
     },
@@ -200,6 +221,8 @@ export function useOrder(orderId: string | undefined) {
 
   return {
     order: query.data,
+    patient: query.data?.patient ?? null,
+    invoices: query.data?.invoices ?? [],
     isLoading: query.isLoading,
     isFetching: query.isFetching,
     isError: query.isError,
@@ -418,11 +441,11 @@ export function useOrderSummary(orderId: string | undefined) {
     select: (order: Order) => ({
       orderId: order.orderId,
       patientName: order.patientName,
-      totalTests: order.tests.length,
-      pendingTests: order.tests.filter(t =>
+      totalTests: getOrderTestCount(order),
+      pendingTests: getOrderTests(order).filter(t =>
         ['pending', 'sample-collected', 'resulted', 'escalated'].includes(t.status)
       ).length,
-      completedTests: order.tests.filter(t => t.status === 'validated').length,
+      completedTests: getOrderTests(order).filter(t => t.status === 'validated').length,
       totalAmount: order.totalPrice,
       isPaid: order.paymentStatus === 'paid',
       status: order.overallStatus,
@@ -468,7 +491,7 @@ export function useRecentOrders(limit = 10) {
           patientName: order.patientName,
           orderDate: order.orderDate,
           status: order.overallStatus,
-          testCount: order.tests.length,
+          testCount: getOrderTestCount(order),
         })),
   });
 

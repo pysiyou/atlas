@@ -4,7 +4,7 @@
 
 import React, { useMemo } from 'react';
 import { useTestNameLookup } from '@/features/catalog';
-import { useResultValidationQueueData, useLabQueueFilters } from '@/features/lab/hooks';
+import { useResultEntryQueueData, useLabQueueFilters } from '@/features/lab/hooks';
 import type { TestWithContextResult } from '../hooks/useOrderTestsWithLabContext';
 import { useEntryWorklist } from '../api/worklists';
 import { mapEntryWorklistToOrderTestContext } from '../utils/labQueue';
@@ -23,7 +23,7 @@ export const ResultEntryQueue: React.FC = () => {
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
 
   const { items: worklistItems, isLoading: worklistLoading } = useEntryWorklist();
-  const { tests: testCatalog, orders } = useResultValidationQueueData();
+  const { tests: testCatalog } = useResultEntryQueueData();
 
   const allTests = useMemo(
     () => worklistItems.map(mapEntryWorklistToOrderTestContext) as TestWithContextResult[],
@@ -38,7 +38,7 @@ export const ResultEntryQueue: React.FC = () => {
     areAllParametersFilled,
     handleSaveResults,
     openTestModal,
-  } = useResultEntryWorkflow({ allTests, testCatalog, orders });
+  } = useResultEntryWorkflow({ allTests, testCatalog });
 
   const {
     filteredItems: filteredTests,

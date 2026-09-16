@@ -39,7 +39,7 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
               </p>
               <p className="text-xs text-text-tertiary">
                 <EntityId type="order" value={order.orderId} /> •{' '}
-                {order.tests.length} test(s)
+                {order.testCount ?? order.tests?.length ?? 0} test(s)
               </p>
             </div>
             <Badge

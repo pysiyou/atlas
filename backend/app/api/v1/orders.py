@@ -10,17 +10,27 @@ from app.models.user import User
 from app.schemas.enums import OrderStatus, PaymentStatus
 from app.schemas.order import (
     OrderCreate,
+    OrderDetailResponse,
     OrderPaymentUpdate,
     OrderReportResponse,
     OrderResponse,
+    OrderSummaryResponse,
     OrderUpdate,
 )
+from app.schemas.pagination import PaginatedResponse
 from app.services.orders import OrderService
 
 router = APIRouter()
 
+OrderListUnion = (
+    list[OrderResponse]
+    | list[OrderSummaryResponse]
+    | PaginatedResponse[OrderResponse]
+    | PaginatedResponse[OrderSummaryResponse]
+)
 
-@router.get("/orders")
+
+@router.get("/orders", response_model=OrderListUnion)
 def get_orders(
     pagination: PaginationParams,
     patientId: int | None = None,
@@ -28,6 +38,7 @@ def get_orders(
     paymentStatus: PaymentStatus | None = Query(None, alias="paymentStatus"),
     sort: Literal["createdAt", "updatedAt"] = Query("updatedAt"),
     paginated: bool = Query(False),
+    summary: bool = Query(False, description="Return lightweight order rows without nested tests"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -39,13 +50,16 @@ def get_orders(
         paymentStatus,
         sort,
         paginated,
+        summary,
     )
 
 
-@router.get("/orders/{orderId}")
+@router.get("/orders/{orderId}", response_model=OrderResponse | OrderDetailResponse)
 def get_order(
     orderId: int,
-    include: str | None = Query(None, description="Include related data, e.g. 'payments'"),
+    include: str | None = Query(
+        None, description="Comma-separated related data: payments, invoices, patient"
+    ),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):

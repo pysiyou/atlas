@@ -4,7 +4,9 @@ Patient business logic. Router delegates list/get/search/create/update to this s
 import re
 from datetime import UTC, datetime
 
+from app.models.order import Order
 from app.models.patient import Patient
+from app.schemas.enums import PaymentStatus
 from app.schemas.patient import MedicalHistory, PatientCreate, PatientResponse, PatientUpdate
 from app.utils.common import parse_display_id_from_search
 from fastapi import HTTPException, status
@@ -51,6 +53,39 @@ def _patient_search_filter(search_term: str):
     return or_(*predicates)
 
 
+def _attach_order_summaries(db: Session, patients_data: list[dict]) -> list[dict]:
+    if not patients_data:
+        return patients_data
+    patient_ids = [p["id"] for p in patients_data]
+    orders = db.query(Order).filter(Order.patientId.in_(patient_ids)).all()
+    orders_by_patient: dict[int, list[Order]] = {}
+    for order in orders:
+        orders_by_patient.setdefault(order.patientId, []).append(order)
+
+    for patient in patients_data:
+        patient_orders = orders_by_patient.get(patient["id"], [])
+        if not patient_orders:
+            patient["orderSummary"] = {
+                "orderCount": 0,
+                "lastOrderDate": None,
+                "lastOrderStatus": None,
+                "hasUnpaidOrders": False,
+            }
+            continue
+        sorted_orders = sorted(patient_orders, key=lambda o: o.orderDate, reverse=True)
+        last_order = sorted_orders[0]
+        last_status = last_order.overallStatus
+        patient["orderSummary"] = {
+            "orderCount": len(patient_orders),
+            "lastOrderDate": last_order.orderDate,
+            "lastOrderStatus": last_status.value if hasattr(last_status, "value") else last_status,
+            "hasUnpaidOrders": any(
+                o.paymentStatus == PaymentStatus.UNPAID for o in patient_orders
+            ),
+        }
+    return patients_data
+
+
 class PatientService:
     def __init__(self, db: Session):
         self.db = db
@@ -61,6 +96,7 @@ class PatientService:
         limit: int = 10000,
         search: str | None = None,
         paginated: bool = False,
+        include_order_summary: bool = False,
     ) -> tuple[list[dict], int]:
         query = self.db.query(Patient)
         if search:
@@ -69,6 +105,8 @@ class PatientService:
         total = query.count() if paginated else 0
         patients = query.offset(skip).limit(limit).all()
         data = [serialize_patient(p) for p in patients]
+        if include_order_summary:
+            data = _attach_order_summaries(self.db, data)
         return data, total
 
     def search(self, q: str, limit: int = 10000) -> list[dict]:

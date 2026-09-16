@@ -19,6 +19,7 @@ export interface OrderColumnAccessors<T> {
   getPatientId: (item: T) => number | string;
   getPatientName: (item: T) => string;
   getTests: (item: T) => OrderTest[];
+  getTestCount?: (item: T) => number | undefined;
   getTotalPrice: (item: T) => number;
   getPaymentStatus: (item: T) => PaymentStatus;
   getOrderDate: (item: T) => string;
@@ -75,7 +76,11 @@ export function createOrderSharedColumns<T>(
       accessor: accessors.getTestsSortValue
         ? item => accessors.getTestsSortValue!(item)
         : undefined,
-      render: item => renderOrderTestsBlock(accessors.getTests(item)),
+      render: item => {
+        const tests = accessors.getTests(item);
+        const count = accessors.getTestCount?.(item);
+        return renderOrderTestsBlock(tests, count != null && tests.length === 0 ? count : undefined);
+      },
     },
     totalPrice: {
       key: 'totalPrice',

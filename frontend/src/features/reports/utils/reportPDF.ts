@@ -53,7 +53,7 @@ export function drawTestResultsSection(
     doc.line(margin, yPosition, pageWidth - margin, yPosition);
     yPosition += 2;
 
-    const sampleType = (reportData.order.tests[0]?.sampleType || 'N/A').toUpperCase();
+    const sampleType = ((reportData.order.tests ?? [])[0]?.sampleType || 'N/A').toUpperCase();
     const tableData: TableRow[] = [
       { investigation: 'Primary Sample Type :', result: sampleType, referenceValue: '', unit: '' },
     ];

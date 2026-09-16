@@ -118,7 +118,7 @@ export interface paths {
         };
         /**
          * Search Patients
-         * @description Search patients by name, id, or phone. Returns list (no pagination).
+         * @description Search patients by name, id (numeric or PAT display id), or phone. Returns list (no pagination).
          */
         get: operations["search_patients_api_v1_patients_search_get"];
         put?: never;
@@ -1035,6 +1035,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/dashboard/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Dashboard Summary */
+        get: operations["get_dashboard_summary_api_v1_dashboard_summary_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reports/validated-tests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Validated Tests */
+        get: operations["list_validated_tests_api_v1_reports_validated_tests_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1088,6 +1122,17 @@ export interface components {
             /** Enddate */
             endDate?: string | null;
             duration?: components["schemas"]["AffiliationDuration"] | null;
+        };
+        /** AgeBuckets */
+        AgeBuckets: {
+            /** Fresh */
+            fresh: number;
+            /** Ontrack */
+            onTrack: number;
+            /** Warning */
+            warning: number;
+            /** Critical */
+            critical: number;
         };
         /** AmendmentRequest */
         AmendmentRequest: {
@@ -1151,6 +1196,42 @@ export interface components {
             /** Total */
             total: number;
         };
+        /** BoardAttentionItem */
+        BoardAttentionItem: {
+            /** Id */
+            id: string;
+            /**
+             * Stage
+             * @enum {string}
+             */
+            stage: "collection" | "entry" | "validation";
+            /** Stagelabel */
+            stageLabel: string;
+            /** Orderid */
+            orderId: number;
+            /** Patientname */
+            patientName: string;
+            priority: components["schemas"]["PriorityLevel"];
+            /** Waitinghours */
+            waitingHours: number;
+            /** Blockedreason */
+            blockedReason?: string | null;
+            /** Blockedlabel */
+            blockedLabel?: string | null;
+            /**
+             * Queuetab
+             * @enum {string}
+             */
+            queueTab: "collection" | "entry" | "validation";
+            /** Since */
+            since: string;
+            /** Workitemcount */
+            workItemCount: number;
+            /** Ordertestids */
+            orderTestIds: number[];
+            /** Attentiontype */
+            attentionType: string;
+        };
         /**
          * ClaimStatus
          * @enum {string}
@@ -1209,11 +1290,41 @@ export interface components {
             /** Status */
             status: string;
         };
+        /** DashboardSummaryResponse */
+        DashboardSummaryResponse: {
+            /** Totalpatients */
+            totalPatients: number;
+            /** Todaypatients */
+            todayPatients: number;
+            /** Totalorders */
+            totalOrders: number;
+            /** Todayorders */
+            todayOrders: number;
+            /** Todayrevenue */
+            todayRevenue: number;
+            /** Pendingorders */
+            pendingOrders: number;
+            /** Recentorders */
+            recentOrders: components["schemas"]["OrderSummaryResponse"][];
+        };
         /**
          * EmergencyContact
          * @description Emergency contact information.
          */
         EmergencyContact: {
+            /** Fullname */
+            fullName: string;
+            relationship: components["schemas"]["Relationship"];
+            /** Phone */
+            phone: string;
+            /** Email */
+            email?: string | null;
+        };
+        /**
+         * EmergencyContactResponse
+         * @description Emergency contact as stored in DB (may include legacy short phone numbers).
+         */
+        EmergencyContactResponse: {
             /** Fullname */
             fullName: string;
             relationship: components["schemas"]["Relationship"];
@@ -1414,64 +1525,6 @@ export interface components {
             /** Computedat */
             computedAt?: string | null;
         };
-        /** AgeBuckets */
-        AgeBuckets: {
-            /** Fresh */
-            fresh: number;
-            /** Ontrack */
-            onTrack: number;
-            /** Warning */
-            warning: number;
-            /** Critical */
-            critical: number;
-        };
-        /** PriorityMix */
-        PriorityMix: {
-            /** Urgent */
-            urgent: number;
-            /** High */
-            high: number;
-            /** Medium */
-            medium: number;
-            /** Low */
-            low: number;
-        };
-        /** BoardAttentionItem */
-        BoardAttentionItem: {
-            /** Id */
-            id: string;
-            /**
-             * Stage
-             * @enum {string}
-             */
-            stage: "collection" | "entry" | "validation";
-            /** Stagelabel */
-            stageLabel: string;
-            /** Orderid */
-            orderId: number;
-            /** Patientname */
-            patientName: string;
-            priority: components["schemas"]["PriorityLevel"];
-            /** Waitinghours */
-            waitingHours: number;
-            /** Blockedreason */
-            blockedReason?: string | null;
-            /** Blockedlabel */
-            blockedLabel?: string | null;
-            /**
-             * Queuetab
-             * @enum {string}
-             */
-            queueTab: "collection" | "entry" | "validation";
-            /** Since */
-            since: string;
-            /** Workitemcount */
-            workItemCount: number;
-            /** Ordertestids */
-            orderTestIds: number[];
-            /** Attentiontype */
-            attentionType: string;
-        };
         /** LabOperationLogResponse */
         LabOperationLogResponse: {
             /** Id */
@@ -1592,6 +1645,55 @@ export interface components {
             patientPrepInstructions?: string | null;
         };
         /**
+         * OrderDetailResponse
+         * @description Order plus optional related data from GET /orders/{id}?include=.
+         */
+        OrderDetailResponse: {
+            /** Orderid */
+            orderId: number;
+            /** Patientid */
+            patientId: number;
+            /** Patientname */
+            patientName: string;
+            /**
+             * Orderdate
+             * Format: date-time
+             */
+            orderDate: string;
+            /** Tests */
+            tests: components["schemas"]["OrderTestResponse"][];
+            /** Totalprice */
+            totalPrice: number;
+            paymentStatus: components["schemas"]["PaymentStatus"];
+            overallStatus: components["schemas"]["OrderStatus"];
+            priority: components["schemas"]["PriorityLevel"];
+            /** Referringphysician */
+            referringPhysician?: string | null;
+            /** Clinicalnotes */
+            clinicalNotes?: string | null;
+            /** Specialinstructions */
+            specialInstructions?: string[] | null;
+            /** Patientprepinstructions */
+            patientPrepInstructions?: string | null;
+            /** Createdby */
+            createdBy: string;
+            /**
+             * Createdat
+             * Format: date-time
+             */
+            createdAt: string;
+            /**
+             * Updatedat
+             * Format: date-time
+             */
+            updatedAt: string;
+            /** Payments */
+            payments?: components["schemas"]["PaymentResponse"][] | null;
+            /** Invoices */
+            invoices?: components["schemas"]["InvoiceResponse"][] | null;
+            patient?: components["schemas"]["PatientResponse"] | null;
+        };
+        /**
          * OrderPaymentUpdate
          * @description Body for PATCH /orders/{orderId}/payment
          */
@@ -1659,6 +1761,53 @@ export interface components {
          * @enum {string}
          */
         OrderStatus: "ordered" | "in-progress" | "completed" | "cancelled";
+        /**
+         * OrderSummaryResponse
+         * @description Lightweight order projection for lists, dashboards, and aggregates.
+         */
+        OrderSummaryResponse: {
+            /** Orderid */
+            orderId: number;
+            /** Patientid */
+            patientId: number;
+            /** Patientname */
+            patientName: string;
+            /**
+             * Orderdate
+             * Format: date-time
+             */
+            orderDate: string;
+            /**
+             * Testcount
+             * @default 0
+             */
+            testCount: number;
+            /** Totalprice */
+            totalPrice: number;
+            paymentStatus: components["schemas"]["PaymentStatus"];
+            overallStatus: components["schemas"]["OrderStatus"];
+            priority: components["schemas"]["PriorityLevel"];
+            /** Referringphysician */
+            referringPhysician?: string | null;
+            /** Clinicalnotes */
+            clinicalNotes?: string | null;
+            /** Specialinstructions */
+            specialInstructions?: string[] | null;
+            /** Patientprepinstructions */
+            patientPrepInstructions?: string | null;
+            /** Createdby */
+            createdBy: string;
+            /**
+             * Createdat
+             * Format: date-time
+             */
+            createdAt: string;
+            /**
+             * Updatedat
+             * Format: date-time
+             */
+            updatedAt: string;
+        };
         /**
          * OrderTestCreate
          * @description Schema for creating a test within an order.
@@ -1750,6 +1899,82 @@ export interface components {
             /** Tests */
             tests?: components["schemas"]["OrderTestCreate"][] | null;
         };
+        /** PaginatedResponse[OrderResponse] */
+        PaginatedResponse_OrderResponse_: {
+            /**
+             * Data
+             * @description List of items for the current page
+             */
+            data: components["schemas"]["OrderResponse"][];
+            /** @description Pagination metadata */
+            pagination: components["schemas"]["PaginationMeta"];
+        };
+        /** PaginatedResponse[OrderSummaryResponse] */
+        PaginatedResponse_OrderSummaryResponse_: {
+            /**
+             * Data
+             * @description List of items for the current page
+             */
+            data: components["schemas"]["OrderSummaryResponse"][];
+            /** @description Pagination metadata */
+            pagination: components["schemas"]["PaginationMeta"];
+        };
+        /** PaginatedResponse[PatientResponse] */
+        PaginatedResponse_PatientResponse_: {
+            /**
+             * Data
+             * @description List of items for the current page
+             */
+            data: components["schemas"]["PatientResponse"][];
+            /** @description Pagination metadata */
+            pagination: components["schemas"]["PaginationMeta"];
+        };
+        /** PaginatedResponse[SampleResponse] */
+        PaginatedResponse_SampleResponse_: {
+            /**
+             * Data
+             * @description List of items for the current page
+             */
+            data: components["schemas"]["SampleResponse"][];
+            /** @description Pagination metadata */
+            pagination: components["schemas"]["PaginationMeta"];
+        };
+        /**
+         * PaginationMeta
+         * @description Pagination metadata.
+         */
+        PaginationMeta: {
+            /**
+             * Page
+             * @description Current page number (1-indexed)
+             */
+            page: number;
+            /**
+             * Pagesize
+             * @description Number of items per page
+             */
+            pageSize: number;
+            /**
+             * Total
+             * @description Total number of items
+             */
+            total: number;
+            /**
+             * Totalpages
+             * @description Total number of pages
+             */
+            totalPages: number;
+            /**
+             * Hasnext
+             * @description Whether there are more pages
+             */
+            hasNext: boolean;
+            /**
+             * Hasprev
+             * @description Whether there are previous pages
+             */
+            hasPrev: boolean;
+        };
         /**
          * PatientCreate
          * @description Schema for creating a new patient.
@@ -1783,6 +2008,78 @@ export interface components {
             /** Affiliation */
             affiliation?: components["schemas"]["Affiliation"] | components["schemas"]["AffiliationInput"] | null;
             vitalSigns?: components["schemas"]["VitalSigns"] | null;
+        };
+        /**
+         * PatientOrderSummary
+         * @description Aggregated order stats for patient list rows.
+         */
+        PatientOrderSummary: {
+            /**
+             * Ordercount
+             * @default 0
+             */
+            orderCount: number;
+            /** Lastorderdate */
+            lastOrderDate?: string | null;
+            /** Lastorderstatus */
+            lastOrderStatus?: string | null;
+            /**
+             * Hasunpaidorders
+             * @default false
+             */
+            hasUnpaidOrders: boolean;
+        };
+        /** PatientResponse */
+        PatientResponse: {
+            /**
+             * Fullname
+             * @description Patient full name
+             */
+            fullName: string;
+            /** Dateofbirth */
+            dateOfBirth: string;
+            gender: components["schemas"]["Gender"];
+            /** Phone */
+            phone: string;
+            /** Email */
+            email?: string | null;
+            /**
+             * Height
+             * @description Height in centimeters
+             */
+            height?: number | null;
+            /**
+             * Weight
+             * @description Weight in kilograms
+             */
+            weight?: number | null;
+            address: components["schemas"]["Address"];
+            emergencyContact: components["schemas"]["EmergencyContactResponse"];
+            medicalHistory?: components["schemas"]["MedicalHistory"] | null;
+            affiliation?: components["schemas"]["Affiliation"] | null;
+            vitalSigns?: components["schemas"]["VitalSigns"] | null;
+            /** Id */
+            id: number;
+            /**
+             * Registrationdate
+             * Format: date-time
+             */
+            registrationDate: string;
+            /** Createdby */
+            createdBy: string;
+            /**
+             * Createdat
+             * Format: date-time
+             */
+            createdAt: string;
+            /**
+             * Updatedat
+             * Format: date-time
+             */
+            updatedAt: string;
+            /** Updatedby */
+            updatedBy: string;
+            orderSummary?: components["schemas"]["PatientOrderSummary"] | null;
         };
         /**
          * PatientUpdate
@@ -1958,6 +2255,17 @@ export interface components {
          * @enum {string}
          */
         PriorityLevel: "low" | "medium" | "high" | "urgent";
+        /** PriorityMix */
+        PriorityMix: {
+            /** Urgent */
+            urgent: number;
+            /** High */
+            high: number;
+            /** Medium */
+            medium: number;
+            /** Low */
+            low: number;
+        };
         /** QualityIssueOptions */
         QualityIssueOptions: {
             targetType: components["schemas"]["QualityIssueTargetType"];
@@ -2350,6 +2658,8 @@ export interface components {
             isRecollection: boolean;
             /** Originalsampleid */
             originalSampleId?: number | null;
+            /** Originalsamplecollectedat */
+            originalSampleCollectedAt?: string | null;
             /** Recollectionreason */
             recollectionReason?: string | null;
             /**
@@ -2695,6 +3005,34 @@ export interface components {
             /** Password */
             password?: string | null;
         };
+        /** ValidatedTestReportItem */
+        ValidatedTestReportItem: {
+            /** Testid */
+            testId: number;
+            /** Testcode */
+            testCode: string;
+            /** Testname */
+            testName: string;
+            /** Orderid */
+            orderId: number;
+            /**
+             * Orderdate
+             * Format: date-time
+             */
+            orderDate: string;
+            /** Patientid */
+            patientId: number;
+            /** Patientname */
+            patientName: string;
+            /** Patientdob */
+            patientDob?: string | null;
+            patientGender?: components["schemas"]["Gender"] | null;
+            test: components["schemas"]["OrderTestResponse"];
+            /** Order */
+            order: {
+                [key: string]: unknown;
+            };
+        };
         /**
          * ValidationDecision
          * @enum {string}
@@ -2897,7 +3235,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["PatientResponse"][];
                 };
             };
             /** @description Validation Error */
@@ -2917,6 +3255,8 @@ export interface operations {
                 search?: string | null;
                 /** @description Return paginated response with total count */
                 paginated?: boolean;
+                /** @description Comma-separated embeds, e.g. orderSummary */
+                include?: string | null;
                 /** @description Number of records to skip */
                 skip?: number;
                 /** @description Max records to return */
@@ -2934,7 +3274,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["PatientResponse"][] | components["schemas"]["PaginatedResponse_PatientResponse_"];
                 };
             };
             /** @description Validation Error */
@@ -2998,7 +3338,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["PatientResponse"];
                 };
             };
             /** @description Validation Error */
@@ -3248,6 +3588,8 @@ export interface operations {
                 paymentStatus?: components["schemas"]["PaymentStatus"] | null;
                 sort?: "createdAt" | "updatedAt";
                 paginated?: boolean;
+                /** @description Return lightweight order rows without nested tests */
+                summary?: boolean;
                 /** @description Number of records to skip */
                 skip?: number;
                 /** @description Max records to return */
@@ -3265,7 +3607,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["OrderResponse"][] | components["schemas"]["OrderSummaryResponse"][] | components["schemas"]["PaginatedResponse_OrderResponse_"] | components["schemas"]["PaginatedResponse_OrderSummaryResponse_"];
                 };
             };
             /** @description Validation Error */
@@ -3315,7 +3657,7 @@ export interface operations {
     get_order_api_v1_orders__orderId__get: {
         parameters: {
             query?: {
-                /** @description Include related data, e.g. 'payments' */
+                /** @description Comma-separated related data: payments, invoices, patient */
                 include?: string | null;
             };
             header?: never;
@@ -3332,7 +3674,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["OrderResponse"] | components["schemas"]["OrderDetailResponse"];
                 };
             };
             /** @description Validation Error */
@@ -3499,7 +3841,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["SampleResponse"][] | components["schemas"]["PaginatedResponse_SampleResponse_"];
                 };
             };
             /** @description Validation Error */
@@ -4693,7 +5035,7 @@ export interface operations {
                 /** @description Pagination offset */
                 offset?: number;
                 /** @description Optional workflow categories: specimen, results, validation, order, escalation, quality */
-                categories?: string[];
+                categories?: string[] | null;
             };
             header?: never;
             path?: never;
@@ -4987,6 +5329,57 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["InsuranceClaimResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_dashboard_summary_api_v1_dashboard_summary_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DashboardSummaryResponse"];
+                };
+            };
+        };
+    };
+    list_validated_tests_api_v1_reports_validated_tests_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidatedTestReportItem"][];
                 };
             };
             /** @description Validation Error */

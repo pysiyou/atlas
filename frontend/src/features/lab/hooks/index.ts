@@ -5,6 +5,7 @@
 export * from './useLabQueueFilterState';
 export * from './useOrderTestsWithLabContext';
 export { useLabStageQueueCounts, getValidationTabCount } from '../api/labCommandCenter';
+export * from './useResultEntryQueueData';
 export * from './useResultValidationQueueData';
 export * from './useLabQueueFilters';
 export * from './useLabWorkflowCardClickGuard';

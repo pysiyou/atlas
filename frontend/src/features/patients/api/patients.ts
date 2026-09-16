@@ -3,7 +3,7 @@
  */
 import { apiClient } from '@/lib/api/client';
 import { WORKFLOW_QUERY_LIMIT, DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
-import type { Patient, PatientContext, Order } from '@/types';
+import type { Patient, PatientContext } from '@/types';
 import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { useCallback, useMemo, useState } from 'react';
@@ -14,7 +14,6 @@ import { useAuthStore } from '@/app/authStore';
 import { notify } from '@/utils/feedback';
 import { patientSchema, patientCreateSchema, patientUpdateSchema } from '../schemas/patientFormSchemas';
 import { formInputToPayload } from '../utils/formTransformers';
-import { useOrdersForPatientIds } from '@/features/orders';
 
 export type { PaginatedResponse, PaginationMeta };
 
@@ -22,7 +21,17 @@ export interface PatientsFilter {
   search?: string;
   page?: number;
   pageSize?: number;
+  includeOrderSummary?: boolean;
 }
+
+export interface PatientOrderSummary {
+  orderCount: number;
+  lastOrderDate?: string;
+  lastOrderStatus?: string;
+  hasUnpaidOrders: boolean;
+}
+
+export type PatientWithOrderSummary = Patient & { orderSummary?: PatientOrderSummary };
 
 export const patientAPI = {
   async getAll(): Promise<Patient[]> {
@@ -35,8 +44,9 @@ export const patientAPI = {
     if (filters?.search) params.search = filters.search;
     if (filters?.page) params.skip = String((filters.page - 1) * (filters.pageSize || DEFAULT_LIST_PAGE_SIZE));
     if (filters?.pageSize) params.limit = String(filters.pageSize);
+    if (filters?.includeOrderSummary) params.include = 'orderSummary';
 
-    return apiClient.get<PaginatedResponse<Patient>>('/patients', params);
+    return apiClient.get<PaginatedResponse<PatientWithOrderSummary>>('/patients', params);
   },
 
   async getById(id: string): Promise<Patient | null> {
@@ -118,7 +128,8 @@ export function usePatientsList() {
 export function usePaginatedPatients(
   search?: string,
   initialPage = 1,
-  pageSize = DEFAULT_LIST_PAGE_SIZE
+  pageSize = DEFAULT_LIST_PAGE_SIZE,
+  options?: { includeOrderSummary?: boolean }
 ) {
   const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
   const [page, setPage] = useState(initialPage);
@@ -130,8 +141,19 @@ export function usePaginatedPatients(
   }
 
   const query = useQuery({
-    queryKey: queryKeys.patients.paginated({ search, page, pageSize }),
-    queryFn: () => patientAPI.getPaginated({ search, page, pageSize }),
+    queryKey: queryKeys.patients.paginated({
+      search,
+      page,
+      pageSize,
+      includeOrderSummary: options?.includeOrderSummary,
+    }),
+    queryFn: () =>
+      patientAPI.getPaginated({
+        search,
+        page,
+        pageSize,
+        includeOrderSummary: options?.includeOrderSummary,
+      }),
     enabled: isAuthenticated && !isRestoring,
     placeholderData: keepPreviousData,
     ...cacheConfig.semiStatic,
@@ -182,52 +204,30 @@ export function usePaginatedPatients(
   };
 }
 
-function enrichPatientsWithOrderContext(
-  patients: Patient[],
-  orders: Order[]
-): PatientContext[] {
-  const ordersByPatient = new Map<number, Order[]>();
-  for (const order of orders) {
-    const pid = order.patientId;
-    if (!ordersByPatient.has(pid)) ordersByPatient.set(pid, []);
-    ordersByPatient.get(pid)!.push(order);
-  }
-
-  return patients.map(patient => {
-    const patientOrders = ordersByPatient.get(patient.id) ?? [];
-    const sorted = [...patientOrders].sort(
-      (a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime()
-    );
-    const lastOrder = sorted[0];
-    const hasUnpaidOrders = patientOrders.some(o => o.paymentStatus === 'unpaid');
-
-    return {
-      ...patient,
-      orderCount: patientOrders.length,
-      lastOrderDate: lastOrder?.orderDate,
-      lastOrderStatus: lastOrder?.overallStatus,
-      hasUnpaidOrders,
-    } satisfies PatientContext;
-  });
+function mapPatientOrderSummary(patient: PatientWithOrderSummary): PatientContext {
+  const summary = patient.orderSummary;
+  return {
+    ...patient,
+    orderCount: summary?.orderCount ?? 0,
+    lastOrderDate: summary?.lastOrderDate,
+    lastOrderStatus: summary?.lastOrderStatus,
+    hasUnpaidOrders: summary?.hasUnpaidOrders ?? false,
+  } satisfies PatientContext;
 }
 
 export function usePaginatedPatientContextList(search?: string) {
-  const paginated = usePaginatedPatients(search);
-  const patientIds = useMemo(
-    () => paginated.patients.map(patient => patient.id),
-    [paginated.patients]
-  );
-  const { orders, isLoading: ordersLoading } = useOrdersForPatientIds(patientIds);
+  const paginated = usePaginatedPatients(search, 1, DEFAULT_LIST_PAGE_SIZE, {
+    includeOrderSummary: true,
+  });
 
   const patients = useMemo(
-    () => enrichPatientsWithOrderContext(paginated.patients, orders),
-    [paginated.patients, orders]
+    () => paginated.patients.map(mapPatientOrderSummary),
+    [paginated.patients]
   );
 
   return {
     ...paginated,
     patients,
-    isLoading: paginated.isLoading || ordersLoading,
   };
 }
 
