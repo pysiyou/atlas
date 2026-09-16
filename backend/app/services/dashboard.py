@@ -45,7 +45,7 @@ class DashboardService:
         pending_orders = (
             self.db.query(func.count(Order.orderId))
             .filter(
-                Order.overallStatus.in_([OrderStatus.ORDERED, OrderStatus.IN_PROGRESS]),
+                Order.overallStatus.in_([OrderStatus.ORDERED, OrderStatus.RUNNING]),
             )
             .scalar()
             or 0

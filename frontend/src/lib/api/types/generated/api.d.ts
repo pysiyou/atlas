@@ -1760,7 +1760,7 @@ export interface components {
          * OrderStatus
          * @enum {string}
          */
-        OrderStatus: "ordered" | "in-progress" | "completed" | "cancelled";
+        OrderStatus: "ordered" | "running" | "completed" | "cancelled";
         /**
          * OrderSummaryResponse
          * @description Lightweight order projection for lists, dashboards, and aggregates.

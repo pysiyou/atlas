@@ -111,7 +111,7 @@ class RecollectionRequestStatus(str, enum.Enum):
 
 class OrderStatus(str, enum.Enum):
     ORDERED = "ordered"
-    IN_PROGRESS = "in-progress"
+    RUNNING = "running"
     COMPLETED = "completed"
     CANCELLED = "cancelled"
 

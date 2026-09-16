@@ -1,11 +1,11 @@
 /** GENERATED — source: contracts/enums. UI config preserved during migration. DO NOT EDIT BY HAND. */
-export const ORDER_STATUS_VALUES = ['ordered', 'in-progress', 'completed', 'cancelled'] as const;
+export const ORDER_STATUS_VALUES = ['ordered', 'running', 'completed', 'cancelled'] as const;
 
 export type OrderStatus = (typeof ORDER_STATUS_VALUES)[number];
 
 export const ORDER_STATUS_CONFIG: Record<OrderStatus, { label: string }> = {
   ordered: { label: 'Ordered' },
-  'in-progress': { label: 'In Progress' },
+  running: { label: 'Running' },
   completed: { label: 'Completed' },
   cancelled: { label: 'Cancelled' },
 };
