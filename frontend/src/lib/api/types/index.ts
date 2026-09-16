@@ -26,7 +26,7 @@ export type {
   ApiEscalationResolveResponse,
 } from './schemas';
 
-/** Entity/audit timeline events include phase/tone from OpenAPI TimelineEventResponse */
+/** Entity/audit timeline events include category/tone from OpenAPI TimelineEventResponse */
 export type TimelineEvent = import('./schemas').ApiTimelineEventResponse;
 export type TimelineResponse = import('./schemas').ApiTimelineResponse;
 export type EntityTimelineResponse = import('./schemas').ApiEntityTimelineResponse;

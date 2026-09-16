@@ -38,7 +38,7 @@ export const operationResponseSchema = z.object({
 export const timelineEventSchema = z.object({
   id: z.number(),
   type: z.string(),
-  phase: z.string().optional(),
+  category: z.string().optional(),
   tone: z.string().optional(),
   entityType: z.string(),
   entityId: z.number(),
