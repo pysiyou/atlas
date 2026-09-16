@@ -1,18 +1,21 @@
 """Order API Routes"""
-from typing import Literal, Optional
+from typing import Literal
 
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
-from app.api.deps import PaginationParams
-from app.core.dependencies import get_current_user
-from app.database import get_db
+from app.api.dependencies import PaginationParams, get_current_user
+from app.db.database import get_db
 from app.models.user import User
 from app.schemas.enums import OrderStatus, PaymentStatus
-from app.schemas.order import OrderCreate, OrderResponse, OrderUpdate
-from app.schemas.orders import OrderPaymentUpdate
-from app.schemas.responses import OrderReportResponse
-from app.services.orders.order import OrderService
+from app.schemas.order import (
+    OrderCreate,
+    OrderPaymentUpdate,
+    OrderReportResponse,
+    OrderResponse,
+    OrderUpdate,
+)
+from app.services.orders import OrderService
 
 router = APIRouter()
 
@@ -42,7 +45,7 @@ def get_orders(
 @router.get("/orders/{orderId}")
 def get_order(
     orderId: int,
-    include: Optional[str] = Query(None, description="Include related data, e.g. 'payments'"),
+    include: str | None = Query(None, description="Include related data, e.g. 'payments'"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -90,7 +93,9 @@ def update_order_payment_status(
     )
 
 
-@router.post("/orders/{orderId}/report", response_model=OrderReportResponse, status_code=status.HTTP_200_OK)
+@router.post(
+    "/orders/{orderId}/report", response_model=OrderReportResponse, status_code=status.HTTP_200_OK
+)
 def mark_as_reported(
     orderId: int,
     db: Session = Depends(get_db),

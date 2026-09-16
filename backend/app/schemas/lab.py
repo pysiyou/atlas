@@ -1,6 +1,6 @@
 """Lab workflow API schemas (results, quality issues, escalation)."""
 from datetime import datetime
-from typing import Any, List, Literal, Optional
+from typing import Any, Literal
 
 from pydantic import AliasChoices, BaseModel, Field, model_validator
 
@@ -10,14 +10,14 @@ from app.schemas.order import TestResultsDict
 
 class ResultEntryRequest(BaseModel):
     results: TestResultsDict
-    technicianNotes: Optional[str] = None
+    technicianNotes: str | None = None
 
 
 class ResultValidationRequest(BaseModel):
     decision: ValidationDecision
-    validationNotes: Optional[str] = None
-    rejectionReason: Optional[str] = Field(None, min_length=1, max_length=1000)
-    preferredRemedy: Optional[RemedyType] = None
+    validationNotes: str | None = None
+    rejectionReason: str | None = Field(None, min_length=1, max_length=1000)
+    preferredRemedy: RemedyType | None = None
 
     @model_validator(mode="after")
     def reject_requires_reason_and_remedy(self):
@@ -34,8 +34,8 @@ class EscalationResolveResponse(BaseModel):
     action: str
     message: str
     escalatedTestId: int
-    newTestId: Optional[int] = None
-    newSampleId: Optional[int] = None
+    newTestId: int | None = None
+    newSampleId: int | None = None
 
 
 EscalationResolveActionLiteral = Literal[
@@ -59,9 +59,9 @@ class EscalationResolveRequest(BaseModel):
         ...,
         description="'force_validate' | 'authorize_retest' | 'authorize_recollect' | 'apply_amendment' | 'cancel_test'",
     )
-    validationNotes: Optional[str] = Field(None, max_length=1000)
-    readBack: Optional[CriticalReadBackPayload] = None
-    rejectionReason: Optional[str] = Field(
+    validationNotes: str | None = Field(None, max_length=1000)
+    readBack: CriticalReadBackPayload | None = None
+    rejectionReason: str | None = Field(
         None,
         min_length=1,
         max_length=1000,
@@ -70,7 +70,10 @@ class EscalationResolveRequest(BaseModel):
 
     @model_validator(mode="after")
     def require_rejection_reason_for_cancel(self):
-        if self.action in ("cancel_test", "authorize_recollect") and not (self.rejectionReason or "").strip():
+        if (
+            self.action in ("cancel_test", "authorize_recollect")
+            and not (self.rejectionReason or "").strip()
+        ):
             raise ValueError("rejectionReason is required for this action")
         return self
 
@@ -81,36 +84,36 @@ class PendingEscalationItemResponse(BaseModel):
     orderDate: datetime
     patientId: int
     patientName: str
-    patientDob: Optional[str] = None
+    patientDob: str | None = None
     testCode: str
     testName: str
     sampleType: str
     status: str
-    sampleId: Optional[int] = None
-    results: Optional[TestResultsDict] = None
-    resultEnteredAt: Optional[datetime] = None
-    enteredBy: Optional[str] = None
-    resultValidatedAt: Optional[datetime] = None
-    validatedBy: Optional[str] = None
-    validationNotes: Optional[str] = None
-    flags: Optional[List[str]] = None
-    technicianNotes: Optional[str] = None
+    sampleId: int | None = None
+    results: TestResultsDict | None = None
+    resultEnteredAt: datetime | None = None
+    enteredBy: str | None = None
+    resultValidatedAt: datetime | None = None
+    validatedBy: str | None = None
+    validationNotes: str | None = None
+    flags: list[str] | None = None
+    technicianNotes: str | None = None
     hasCriticalValues: bool = False
     isRetest: bool = False
-    retestOfTestId: Optional[int] = None
+    retestOfTestId: int | None = None
     retestNumber: int = 0
     priority: str
-    referringPhysician: Optional[str] = None
-    collectedAt: Optional[datetime] = None
-    collectedBy: Optional[str] = None
+    referringPhysician: str | None = None
+    collectedAt: datetime | None = None
+    collectedBy: str | None = None
     sampleIsRecollection: bool = False
-    sampleOriginalSampleId: Optional[int] = None
-    sampleRecollectionReason: Optional[str] = None
-    sampleRecollectionAttempt: Optional[int] = None
-    ticketId: Optional[int] = None
-    reasonCode: Optional[str] = None
-    severity: Optional[str] = None
-    ticketMetadata: Optional[Any] = None
+    sampleOriginalSampleId: int | None = None
+    sampleRecollectionReason: str | None = None
+    sampleRecollectionAttempt: int | None = None
+    ticketId: int | None = None
+    reasonCode: str | None = None
+    severity: str | None = None
+    ticketMetadata: Any | None = None
 
     class Config:
         from_attributes = True
@@ -118,8 +121,8 @@ class PendingEscalationItemResponse(BaseModel):
 
 class AmendmentRequest(BaseModel):
     amendmentReason: str = Field(..., min_length=1, max_length=1000)
-    proposedResults: Optional[TestResultsDict] = None
-    notes: Optional[str] = Field(None, max_length=1000)
+    proposedResults: TestResultsDict | None = None
+    notes: str | None = Field(None, max_length=1000)
 
 
 class QualityIssueTarget(BaseModel):
@@ -130,23 +133,23 @@ class QualityIssueTarget(BaseModel):
 class ReportQualityIssueRequest(BaseModel):
     target: QualityIssueTarget
     reason: str = Field(..., min_length=1, max_length=500)
-    notes: Optional[str] = Field(None, max_length=1000)
-    preferredRemedy: Optional[RemedyType] = None
+    notes: str | None = Field(None, max_length=1000)
+    preferredRemedy: RemedyType | None = None
 
 
 class QualityIssueResponse(BaseModel):
     id: int
     orderId: int
-    orderTestId: Optional[int] = None
-    sampleId: Optional[int] = None
-    testCode: Optional[str] = None
+    orderTestId: int | None = None
+    sampleId: int | None = None
+    testCode: str | None = None
     stage: str
     domain: str
     reason: str
-    notes: Optional[str] = None
+    notes: str | None = None
     remedy: str
-    createdTestId: Optional[int] = None
-    createdSampleId: Optional[int] = None
+    createdTestId: int | None = None
+    createdSampleId: int | None = None
     createdBy: str
     createdAt: str
 

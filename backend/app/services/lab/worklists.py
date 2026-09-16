@@ -6,13 +6,8 @@ Replaces client-side filtering of full order/sample lists for lab queues.
 from __future__ import annotations
 
 import re
-from datetime import datetime, timezone
-from typing import Any, Optional
-
-from sqlalchemy import String, or_
-
-from app.utils.display_id_search import parse_display_id_from_search
-from sqlalchemy.orm import Session
+from datetime import UTC, datetime
+from typing import Any
 
 from app.models.order import Order, OrderTest
 from app.models.patient import Patient
@@ -20,6 +15,9 @@ from app.models.sample import Sample
 from app.models.test import Test
 from app.schemas.enums import PaymentStatus, PriorityLevel, SampleStatus, TestStatus
 from app.services.lab.board import LabBoardService
+from app.utils.common import parse_display_id_from_search
+from sqlalchemy import String, or_
+from sqlalchemy.orm import Session
 
 PRIORITY_ORDER = {
     PriorityLevel.URGENT: 0,
@@ -43,12 +41,12 @@ def _collection_search_filter(search_term: str):
     return or_(*predicates)
 
 
-def _hours_since(ts: Optional[datetime]) -> float:
+def _hours_since(ts: datetime | None) -> float:
     if not ts:
         return 0.0
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     if ts.tzinfo is None:
-        ts = ts.replace(tzinfo=timezone.utc)
+        ts = ts.replace(tzinfo=UTC)
     return max(0.0, (now - ts).total_seconds() / 3600.0)
 
 
@@ -88,8 +86,8 @@ class LabWorklistService:
         *,
         page: int = 1,
         page_size: int = 50,
-        search: Optional[str] = None,
-        priority: Optional[PriorityLevel] = None,
+        search: str | None = None,
+        priority: PriorityLevel | None = None,
     ) -> dict[str, Any]:
         search_term = search.strip() if search else ""
         if len(search_term) < COLLECTION_SAMPLE_LOOKUP_MIN_LEN:
@@ -111,48 +109,44 @@ class LabWorklistService:
             since = order.orderDate
             hours = _hours_since(since)
             tat = self._max_tat_for_codes(sample.testCodes or [])
-            blocked = (
-                "payment_unpaid"
-                if order.paymentStatus != PaymentStatus.PAID
-                else None
-            )
+            blocked = "payment_unpaid" if order.paymentStatus != PaymentStatus.PAID else None
             original_sample_collected_at = None
             if sample.originalSampleId:
                 parent = (
-                    self.db.query(Sample)
-                    .filter(Sample.sampleId == sample.originalSampleId)
-                    .first()
+                    self.db.query(Sample).filter(Sample.sampleId == sample.originalSampleId).first()
                 )
                 if parent:
                     original_sample_collected_at = parent.collectedAt
-            items.append({
-                "sampleId": sample.sampleId,
-                "orderId": order.orderId,
-                "patientId": patient.id,
-                "patientName": patient.fullName,
-                "sampleType": sample.sampleType.value if sample.sampleType else "",
-                "status": sample.status,
-                "priority": sample.priority,
-                "paymentStatus": order.paymentStatus,
-                "orderDate": order.orderDate,
-                "testCodes": sample.testCodes or [],
-                "isRecollection": bool(sample.isRecollection),
-                "originalSampleId": sample.originalSampleId,
-                "originalSampleCollectedAt": original_sample_collected_at,
-                "recollectionReason": sample.recollectionReason,
-                "recollectionAttempt": sample.recollectionAttempt or 1,
-                "blockedReason": blocked,
-                "waitingHours": round(hours, 2),
-                "turnaroundHours": tat,
-                "actualContainerType": sample.actualContainerType,
-                "actualContainerColor": sample.actualContainerColor,
-                "collectedAt": sample.collectedAt,
-                "collectedBy": sample.collectedBy,
-                "collectedVolume": sample.collectedVolume,
-                "_sort_priority": PRIORITY_ORDER.get(sample.priority, 99),
-                "_sort_since": since,
-                "_sort_recency": sample.updatedAt or sample.collectedAt or since,
-            })
+            items.append(
+                {
+                    "sampleId": sample.sampleId,
+                    "orderId": order.orderId,
+                    "patientId": patient.id,
+                    "patientName": patient.fullName,
+                    "sampleType": sample.sampleType.value if sample.sampleType else "",
+                    "status": sample.status,
+                    "priority": sample.priority,
+                    "paymentStatus": order.paymentStatus,
+                    "orderDate": order.orderDate,
+                    "testCodes": sample.testCodes or [],
+                    "isRecollection": bool(sample.isRecollection),
+                    "originalSampleId": sample.originalSampleId,
+                    "originalSampleCollectedAt": original_sample_collected_at,
+                    "recollectionReason": sample.recollectionReason,
+                    "recollectionAttempt": sample.recollectionAttempt or 1,
+                    "blockedReason": blocked,
+                    "waitingHours": round(hours, 2),
+                    "turnaroundHours": tat,
+                    "actualContainerType": sample.actualContainerType,
+                    "actualContainerColor": sample.actualContainerColor,
+                    "collectedAt": sample.collectedAt,
+                    "collectedBy": sample.collectedBy,
+                    "collectedVolume": sample.collectedVolume,
+                    "_sort_priority": PRIORITY_ORDER.get(sample.priority, 99),
+                    "_sort_since": since,
+                    "_sort_recency": sample.updatedAt or sample.collectedAt or since,
+                }
+            )
         if search_term:
             items.sort(
                 key=lambda x: x["_sort_recency"],
@@ -174,8 +168,8 @@ class LabWorklistService:
         *,
         page: int = 1,
         page_size: int = 50,
-        search: Optional[str] = None,
-        priority: Optional[PriorityLevel] = None,
+        search: str | None = None,
+        priority: PriorityLevel | None = None,
     ) -> dict[str, Any]:
         query = (
             self.db.query(OrderTest, Order, Patient, Test, Sample)
@@ -204,26 +198,33 @@ class LabWorklistService:
         for ot, order, patient, test, sample in rows:
             since = sample.collectedAt if sample and sample.collectedAt else order.orderDate
             hours = _hours_since(since)
-            items.append({
-                "orderTestId": ot.id,
-                "orderId": order.orderId,
-                "patientId": patient.id,
-                "patientName": patient.fullName,
-                "testCode": ot.testCode,
-                "testName": test.name,
-                "sampleId": ot.sampleId,
-                "sampleType": test.sampleType or "",
-                "priority": order.priority,
-                "status": ot.status,
-                "collectedAt": sample.collectedAt if sample else None,
-                "orderDate": order.orderDate,
-                "waitingHours": round(hours, 2),
-                "turnaroundHours": test.turnaroundTimeHours,
-                "isRetest": bool(ot.isRetest),
-                "_sort_priority": PRIORITY_ORDER.get(order.priority, 99),
-                "_sort_since": since,
-            })
-        items.sort(key=lambda x: (x["_sort_priority"], x["_sort_since"] or datetime.min.replace(tzinfo=timezone.utc)))
+            items.append(
+                {
+                    "orderTestId": ot.id,
+                    "orderId": order.orderId,
+                    "patientId": patient.id,
+                    "patientName": patient.fullName,
+                    "testCode": ot.testCode,
+                    "testName": test.name,
+                    "sampleId": ot.sampleId,
+                    "sampleType": test.sampleType or "",
+                    "priority": order.priority,
+                    "status": ot.status,
+                    "collectedAt": sample.collectedAt if sample else None,
+                    "orderDate": order.orderDate,
+                    "waitingHours": round(hours, 2),
+                    "turnaroundHours": test.turnaroundTimeHours,
+                    "isRetest": bool(ot.isRetest),
+                    "_sort_priority": PRIORITY_ORDER.get(order.priority, 99),
+                    "_sort_since": since,
+                }
+            )
+        items.sort(
+            key=lambda x: (
+                x["_sort_priority"],
+                x["_sort_since"] or datetime.min.replace(tzinfo=UTC),
+            )
+        )
         total = len(items)
         start = (page - 1) * page_size
         page_items = items[start : start + page_size]
@@ -237,8 +238,8 @@ class LabWorklistService:
         *,
         page: int = 1,
         page_size: int = 50,
-        search: Optional[str] = None,
-        priority: Optional[PriorityLevel] = None,
+        search: str | None = None,
+        priority: PriorityLevel | None = None,
     ) -> dict[str, Any]:
         query = (
             self.db.query(OrderTest, Order, Patient, Test)
@@ -264,25 +265,32 @@ class LabWorklistService:
         for ot, order, patient, test in rows:
             since = ot.resultEnteredAt or order.orderDate
             hours = _hours_since(since)
-            items.append({
-                "orderTestId": ot.id,
-                "orderId": order.orderId,
-                "patientId": patient.id,
-                "patientName": patient.fullName,
-                "testCode": ot.testCode,
-                "testName": test.name,
-                "sampleType": test.sampleType or "",
-                "priority": order.priority,
-                "status": ot.status,
-                "resultEnteredAt": ot.resultEnteredAt,
-                "orderDate": order.orderDate,
-                "waitingHours": round(hours, 2),
-                "turnaroundHours": test.turnaroundTimeHours,
-                "hasCriticalValues": bool(ot.hasCriticalValues),
-                "_sort_priority": PRIORITY_ORDER.get(order.priority, 99),
-                "_sort_since": since,
-            })
-        items.sort(key=lambda x: (x["_sort_priority"], x["_sort_since"] or datetime.min.replace(tzinfo=timezone.utc)))
+            items.append(
+                {
+                    "orderTestId": ot.id,
+                    "orderId": order.orderId,
+                    "patientId": patient.id,
+                    "patientName": patient.fullName,
+                    "testCode": ot.testCode,
+                    "testName": test.name,
+                    "sampleType": test.sampleType or "",
+                    "priority": order.priority,
+                    "status": ot.status,
+                    "resultEnteredAt": ot.resultEnteredAt,
+                    "orderDate": order.orderDate,
+                    "waitingHours": round(hours, 2),
+                    "turnaroundHours": test.turnaroundTimeHours,
+                    "hasCriticalValues": bool(ot.hasCriticalValues),
+                    "_sort_priority": PRIORITY_ORDER.get(order.priority, 99),
+                    "_sort_since": since,
+                }
+            )
+        items.sort(
+            key=lambda x: (
+                x["_sort_priority"],
+                x["_sort_since"] or datetime.min.replace(tzinfo=UTC),
+            )
+        )
         total = len(items)
         start = (page - 1) * page_size
         page_items = items[start : start + page_size]

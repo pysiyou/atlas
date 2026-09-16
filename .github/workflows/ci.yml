@@ -80,6 +80,9 @@ jobs:
       - name: Ruff check
         run: poetry run ruff check app/
 
+      - name: Ruff format
+        run: poetry run ruff format --check app/
+
       - name: API health smoke test
         run: |
           poetry run uvicorn app.main:app --host 127.0.0.1 --port 8000 &

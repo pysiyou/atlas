@@ -1,14 +1,15 @@
 """
 EscalationTicket Model - Tracks LIS escalation events and supervisor resolutions.
 """
-from sqlalchemy import Column, String, DateTime, JSON, ForeignKey, Integer, Text
+from sqlalchemy import JSON, Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.sql import func
-from app.database import Base, contract_enum
+
+from app.db.database import Base, contract_enum
 from app.schemas.enums import (
     EscalationReasonCode,
-    EscalationTicketStatus,
-    EscalationSeverity,
     EscalationResolutionAction,
+    EscalationSeverity,
+    EscalationTicketStatus,
 )
 
 

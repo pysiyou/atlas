@@ -1,8 +1,10 @@
 """
 Pydantic schemas for User
 """
-from pydantic import BaseModel
 from datetime import datetime
+
+from pydantic import BaseModel
+
 from app.schemas.enums import UserRole
 
 
@@ -28,7 +30,9 @@ class UserUpdate(BaseModel):
 class UserResponse(UserBase):
     id: int
     createdAt: datetime
-    loggedInAt: datetime | None = None  # Set by /auth/me to current time; frontend AuthUser expects it
+    loggedInAt: datetime | None = (
+        None  # Set by /auth/me to current time; frontend AuthUser expects it
+    )
 
     class Config:
         from_attributes = True
@@ -36,6 +40,7 @@ class UserResponse(UserBase):
 
 class UserLookupResponse(BaseModel):
     """Minimal user info for display/lookup purposes (accessible to all authenticated users)"""
+
     id: int
     name: str
     username: str

@@ -1,19 +1,18 @@
 """Billing API — invoices and insurance claims."""
-from typing import List
 
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from app.core.dependencies import get_current_user
-from app.database import get_db
+from app.api.dependencies import get_current_user
+from app.db.database import get_db
 from app.models.user import User
 from app.schemas.billing import InsuranceClaimCreate, InsuranceClaimResponse, InvoiceResponse
-from app.services.billing.invoice import BillingService
+from app.services.billing import BillingService
 
 router = APIRouter(tags=["billing"])
 
 
-@router.get("/invoices/order/{orderId}", response_model=List[InvoiceResponse])
+@router.get("/invoices/order/{orderId}", response_model=list[InvoiceResponse])
 def list_invoices_for_order(
     orderId: int,
     db: Session = Depends(get_db),
@@ -47,7 +46,7 @@ def create_invoice_for_order(
     return invoice
 
 
-@router.get("/insurance-claims/order/{orderId}", response_model=List[InsuranceClaimResponse])
+@router.get("/insurance-claims/order/{orderId}", response_model=list[InsuranceClaimResponse])
 def list_claims_for_order(
     orderId: int,
     db: Session = Depends(get_db),
@@ -56,7 +55,9 @@ def list_claims_for_order(
     return BillingService(db).list_claims_for_order(orderId)
 
 
-@router.post("/insurance-claims", response_model=InsuranceClaimResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/insurance-claims", response_model=InsuranceClaimResponse, status_code=status.HTTP_201_CREATED
+)
 def submit_insurance_claim(
     body: InsuranceClaimCreate,
     db: Session = Depends(get_db),

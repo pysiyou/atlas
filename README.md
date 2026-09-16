@@ -42,4 +42,4 @@ npm run codegen
 
 ## CI
 
-GitHub Actions runs frontend lint/typecheck/knip, backend ruff, and a codegen drift check on every push and PR.
+GitHub Actions runs frontend lint/typecheck/knip, backend ruff (check + format), and a codegen drift check on every push and PR.

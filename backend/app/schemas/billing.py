@@ -1,6 +1,5 @@
 """Billing API schemas — invoices and insurance claims."""
 from datetime import datetime
-from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -20,7 +19,7 @@ class InvoiceResponse(BaseModel):
     orderId: int
     patientId: int
     patientName: str
-    items: List[InvoiceItem]
+    items: list[InvoiceItem]
     subtotal: float
     discount: float
     tax: float
@@ -30,7 +29,7 @@ class InvoiceResponse(BaseModel):
     amountDue: float
     createdAt: datetime
     updatedAt: datetime
-    dueDate: Optional[datetime] = None
+    dueDate: datetime | None = None
 
     class Config:
         from_attributes = True
@@ -42,7 +41,7 @@ class InsuranceClaimCreate(BaseModel):
     insuranceProvider: str = Field(..., min_length=1, max_length=200)
     insuranceNumber: str = Field(..., min_length=1, max_length=100)
     claimAmount: float = Field(..., gt=0)
-    notes: Optional[str] = None
+    notes: str | None = None
 
 
 class InsuranceClaimResponse(BaseModel):
@@ -53,12 +52,12 @@ class InsuranceClaimResponse(BaseModel):
     insuranceProvider: str
     insuranceNumber: str
     claimAmount: float
-    approvedAmount: Optional[float] = None
+    approvedAmount: float | None = None
     claimStatus: ClaimStatus
     submittedDate: datetime
-    processedDate: Optional[datetime] = None
-    denialReason: Optional[str] = None
-    notes: Optional[str] = None
+    processedDate: datetime | None = None
+    denialReason: str | None = None
+    notes: str | None = None
 
     class Config:
         from_attributes = True

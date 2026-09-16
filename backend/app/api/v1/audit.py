@@ -1,11 +1,10 @@
 """Audit API Endpoints."""
-from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
-from app.core.dependencies import get_current_user
-from app.database import get_db
+from app.api.dependencies import get_current_user
+from app.db.database import get_db
 from app.models.user import User
 from app.schemas.audit import (
     AuditLogsCountResponse,
@@ -15,7 +14,7 @@ from app.schemas.audit import (
 )
 from app.schemas.enums import LabOperationType
 from app.services.audit.query import AuditQueryService
-from app.services.timeline.service import EntityTimelineService
+from app.services.timeline import EntityTimelineService
 from app.utils.exceptions import LabOperationError
 
 router = APIRouter()
@@ -25,9 +24,9 @@ router = APIRouter()
 async def get_lab_operation_logs(
     limit: int = Query(default=10000, le=10000, ge=1),
     offset: int = Query(default=0, ge=0),
-    operation_type: Optional[LabOperationType] = Query(default=None),
-    entity_type: Optional[str] = Query(default=None),
-    hours_back: Optional[int] = Query(default=24, ge=1, le=168),
+    operation_type: LabOperationType | None = Query(default=None),
+    entity_type: str | None = Query(default=None),
+    hours_back: int | None = Query(default=24, ge=1, le=168),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> list[LabOperationLogResponse]:
@@ -36,9 +35,9 @@ async def get_lab_operation_logs(
 
 @router.get("/audit/logs/count", response_model=AuditLogsCountResponse)
 async def get_lab_operation_logs_count(
-    operation_type: Optional[LabOperationType] = Query(default=None),
-    entity_type: Optional[str] = Query(default=None),
-    hours_back: Optional[int] = Query(default=24, ge=1, le=168),
+    operation_type: LabOperationType | None = Query(default=None),
+    entity_type: str | None = Query(default=None),
+    hours_back: int | None = Query(default=24, ge=1, le=168),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> AuditLogsCountResponse:

@@ -4,11 +4,11 @@ Command Center API — activity timeline.
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
-from app.core.dependencies import require_lab_tech
-from app.database import get_db
+from app.api.dependencies import require_lab_tech
+from app.db.database import get_db
 from app.models.user import User
 from app.schemas.command_center import TimelineResponse
-from app.services.timeline.service import CommandCenterService
+from app.services.timeline import CommandCenterService
 
 router = APIRouter(tags=["command-center"])
 

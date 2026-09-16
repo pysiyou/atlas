@@ -1,19 +1,18 @@
 """Test Catalog API Routes"""
-from typing import List
 
 from fastapi import APIRouter, Depends, Query, Response, status
 from sqlalchemy.orm import Session
 
-from app.core.dependencies import get_current_user
-from app.database import get_db
+from app.api.dependencies import get_current_user
+from app.db.database import get_db
 from app.models.user import User
 from app.schemas.test import TestCreate, TestResponse, TestUpdate
-from app.services.catalog.test import TestService
+from app.services.catalog import TestService
 
 router = APIRouter()
 
 
-@router.get("/tests", response_model=List[TestResponse])
+@router.get("/tests", response_model=list[TestResponse])
 def get_tests(
     response: Response,
     category: str | None = None,
@@ -26,7 +25,7 @@ def get_tests(
     return TestService(db).list_tests(response, category, activeOnly, skip, limit)
 
 
-@router.get("/tests/search", response_model=List[TestResponse])
+@router.get("/tests/search", response_model=list[TestResponse])
 def search_tests(
     q: str,
     db: Session = Depends(get_db),

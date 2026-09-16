@@ -1,15 +1,14 @@
 """Results API Routes — result entry and validation."""
-from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.core.dependencies import (
+from app.api.dependencies import (
     get_current_user,
     require_lab_tech,
     require_role,
 )
-from app.database import get_db
+from app.db.database import get_db
 from app.models.user import User
 from app.schemas.enums import EscalationResolutionAction, UserRole, ValidationDecision
 from app.schemas.lab import (
@@ -21,14 +20,14 @@ from app.schemas.lab import (
     ResultValidationRequest,
 )
 from app.services.lab.results import ResultQueryService
-from app.services.lab.workflow import LabOperationsService, LabOperationError
+from app.services.lab.workflow import LabOperationError, LabOperationsService
 
 router = APIRouter()
 
 require_escalation_resolver = require_role(UserRole.ADMIN, UserRole.LAB_TECH_PLUS)
 
 
-@router.get("/results/pending-escalation", response_model=List[PendingEscalationItemResponse])
+@router.get("/results/pending-escalation", response_model=list[PendingEscalationItemResponse])
 def get_pending_escalation(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_lab_tech),
@@ -108,7 +107,10 @@ def request_amendment(
         raise HTTPException(status_code=e.status_code, detail=e.message)
 
 
-@router.post("/results/order-tests/{orderTestId}/escalation/resolve", response_model=EscalationResolveResponse)
+@router.post(
+    "/results/order-tests/{orderTestId}/escalation/resolve",
+    response_model=EscalationResolveResponse,
+)
 def resolve_escalation(
     orderTestId: int,
     body: EscalationResolveRequest,

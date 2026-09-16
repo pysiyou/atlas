@@ -1,27 +1,26 @@
 """Analyzer integration API schemas."""
 from datetime import datetime
-from typing import List, Optional
 
 from pydantic import BaseModel
 
 
 class HL7MessageRequest(BaseModel):
     message: str
-    analyzer_id: Optional[str] = None
+    analyzer_id: str | None = None
 
 
 class AnalyzerResultRequest(BaseModel):
     specimen_id: str
     test_code: str
     results: dict
-    analyzer_id: Optional[str] = None
-    observation_datetime: Optional[datetime] = None
+    analyzer_id: str | None = None
+    observation_datetime: datetime | None = None
 
 
 class AnalyzerResultResponse(BaseModel):
     success: bool
     message: str
-    order_id: Optional[int] = None
-    test_id: Optional[int] = None
-    status: Optional[str] = None
-    warnings: List[str] = []
+    order_id: int | None = None
+    test_id: int | None = None
+    status: str | None = None
+    warnings: list[str] = []

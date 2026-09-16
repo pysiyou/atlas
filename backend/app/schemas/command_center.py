@@ -1,5 +1,4 @@
 """Command center API schemas."""
-from typing import List
 
 from pydantic import BaseModel
 
@@ -19,5 +18,5 @@ class TimelineEvent(BaseModel):
 
 
 class TimelineResponse(BaseModel):
-    events: List[TimelineEvent]
+    events: list[TimelineEvent]
     total: int

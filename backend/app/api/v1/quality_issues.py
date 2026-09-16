@@ -1,11 +1,10 @@
 """Quality Issues API — unified endpoint for reporting lab quality problems."""
-from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
-from app.core.dependencies import get_current_user, require_sample_collector
-from app.database import get_db
+from app.api.dependencies import get_current_user, require_sample_collector
+from app.db.database import get_db
 from app.models.user import User
 from app.schemas.enums import QualityIssueTargetType
 from app.schemas.lab import QualityIssueResponse, ReportQualityIssueRequest
@@ -48,11 +47,11 @@ def report_quality_issue(
         raise HTTPException(status_code=e.status_code, detail=e.message)
 
 
-@router.get("/lab/quality-issues", response_model=List[QualityIssueResponse])
+@router.get("/lab/quality-issues", response_model=list[QualityIssueResponse])
 def list_quality_issues(
-    orderId: Optional[int] = None,
-    sampleId: Optional[int] = None,
-    orderTestId: Optional[int] = None,
+    orderId: int | None = None,
+    sampleId: int | None = None,
+    orderTestId: int | None = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):

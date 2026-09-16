@@ -1,9 +1,11 @@
 """
 Pydantic schemas for Order
 """
-from pydantic import BaseModel, Field, field_validator
 from datetime import datetime
-from typing import Literal, Optional, List, Dict, Any, Union
+from typing import Any, Literal
+
+from pydantic import BaseModel, Field, field_validator
+
 from app.schemas.enums import OrderStatus, PaymentStatus, PriorityLevel, TestStatus
 from app.schemas.payment import PaymentResponse
 
@@ -13,26 +15,31 @@ class TestResultValue(BaseModel):
     Individual test result parameter value.
     Flexible to handle both numeric and text results.
     """
-    value: Union[str, float, int, None] = None
-    unit: Optional[str] = None
-    referenceRange: Optional[str] = None
-    flag: Optional[Literal["normal", "high", "low", "critical", "critical-high", "critical-low"]] = None
+
+    value: str | float | int | None = None
+    unit: str | None = None
+    referenceRange: str | None = None
+    flag: Literal[
+        "normal", "high", "low", "critical", "critical-high", "critical-low"
+    ] | None = None
 
     class Config:
         from_attributes = True
 
 
 # Type alias for results dict - keys are parameter codes, values are result data
-TestResultsDict = Dict[str, Union[TestResultValue, Dict[str, Any], str, float, int, None]]
+TestResultsDict = dict[str, TestResultValue | dict[str, Any] | str | float | int | None]
 
 
 class OrderTestCreate(BaseModel):
     """Schema for creating a test within an order."""
+
     testCode: str = Field(..., min_length=1, max_length=50, description="Test code from catalog")
 
 
 class OrderTestResponse(BaseModel):
     """Schema for test response data."""
+
     id: int
     testCode: str
     testName: str  # From relationship
@@ -40,7 +47,7 @@ class OrderTestResponse(BaseModel):
     status: TestStatus
     priceAtOrder: float
     sampleId: int | None = None
-    results: Optional[TestResultsDict] = None
+    results: TestResultsDict | None = None
     resultEnteredAt: datetime | None = None
     enteredBy: str | None = None
     resultValidatedAt: datetime | None = None
@@ -58,37 +65,40 @@ class OrderTestResponse(BaseModel):
 
     createdAt: datetime
     updatedAt: datetime
-    
+
     class Config:
         from_attributes = True
 
 
 class OrderCreate(BaseModel):
     """Schema for creating a new order."""
+
     patientId: int = Field(..., gt=0, description="Patient ID")
-    tests: list[OrderTestCreate] = Field(..., min_length=1, description="At least one test required")
+    tests: list[OrderTestCreate] = Field(
+        ..., min_length=1, description="At least one test required"
+    )
     priority: PriorityLevel = PriorityLevel.LOW
     referringPhysician: str | None = Field(None, max_length=200)
     clinicalNotes: str | None = Field(None, max_length=2000)
     specialInstructions: list[str] | None = None
     patientPrepInstructions: str | None = Field(None, max_length=1000)
 
-    @field_validator('tests')
+    @field_validator("tests")
     @classmethod
     def no_duplicate_tests(cls, v: list[OrderTestCreate]) -> list[OrderTestCreate]:
         """Ensure no duplicate test codes in the order."""
         codes = [t.testCode for t in v]
         if len(codes) != len(set(codes)):
-            raise ValueError('Duplicate test codes not allowed')
+            raise ValueError("Duplicate test codes not allowed")
         return v
 
 
 class OrderUpdate(BaseModel):
-  priority: PriorityLevel | None = None
-  referringPhysician: str | None = None
-  clinicalNotes: str | None = None
-  specialInstructions: list[str] | None = None
-  tests: list[OrderTestCreate] | None = None  # Optional list of tests to update (add/remove)
+    priority: PriorityLevel | None = None
+    referringPhysician: str | None = None
+    clinicalNotes: str | None = None
+    specialInstructions: list[str] | None = None
+    tests: list[OrderTestCreate] | None = None  # Optional list of tests to update (add/remove)
 
 
 class OrderResponse(BaseModel):
@@ -115,4 +125,23 @@ class OrderResponse(BaseModel):
 
 class OrderDetailResponse(OrderResponse):
     """Order plus optional payments for GET /orders/{id}?include=payments."""
-    payments: Optional[List[PaymentResponse]] = None
+
+    payments: list[PaymentResponse] | None = None
+
+
+"""Order endpoint request schemas."""
+
+
+class OrderPaymentUpdate(BaseModel):
+    """Body for PATCH /orders/{orderId}/payment"""
+
+    paymentStatus: PaymentStatus = Field(..., description="paid | unpaid")
+    amountPaid: float | None = Field(None, ge=0)
+
+
+class OrderReportResponse(BaseModel):
+    """Response for order report/completion confirmation."""
+
+    orderId: int
+    status: str
+    message: str

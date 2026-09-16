@@ -1,18 +1,16 @@
 """Sample API Routes"""
-from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
-from app.api.deps import PaginationParams
-from app.core.dependencies import get_current_user, require_sample_collector
-from app.database import get_db
+from app.api.dependencies import PaginationParams, get_current_user, require_sample_collector
+from app.db.database import get_db
+from app.models.sample import Sample
 from app.models.user import User
 from app.schemas.enums import SampleStatus
 from app.schemas.sample import SampleCollectRequest, SampleResponse
-from app.models.sample import Sample
 from app.services.lab.samples import SampleService
-from app.services.lab.workflow import LabOperationsService, LabOperationError
+from app.services.lab.workflow import LabOperationError, LabOperationsService
 
 router = APIRouter()
 
@@ -29,8 +27,8 @@ def _sample_response(db: Session, sample: Sample) -> SampleResponse:
 @router.get("/samples")
 def get_samples(
     pagination: PaginationParams,
-    orderId: Optional[int] = None,
-    sampleStatus: Optional[SampleStatus] = None,
+    orderId: int | None = None,
+    sampleStatus: SampleStatus | None = None,
     paginated: bool = Query(False),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
@@ -40,7 +38,7 @@ def get_samples(
     )
 
 
-@router.get("/samples/pending", response_model=List[SampleResponse])
+@router.get("/samples/pending", response_model=list[SampleResponse])
 def get_pending_samples(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),

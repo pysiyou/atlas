@@ -3,17 +3,20 @@ State Machine Service for Laboratory Operations
 
 Provides strict validation of status transitions for samples and tests.
 """
-from typing import Set, Dict, Tuple
+
 from app.schemas.enums import SampleStatus, TestStatus
 
 
 class StateTransitionError(Exception):
     """Raised when an invalid state transition is attempted"""
+
     def __init__(self, entity_type: str, from_status: str, to_status: str, message: str = None):
         self.entity_type = entity_type
         self.from_status = from_status
         self.to_status = to_status
-        self.message = message or f"Invalid {entity_type} transition from '{from_status}' to '{to_status}'"
+        self.message = (
+            message or f"Invalid {entity_type} transition from '{from_status}' to '{to_status}'"
+        )
         super().__init__(self.message)
 
 
@@ -23,13 +26,13 @@ class SampleStateMachine:
     PENDING -> COLLECTED -> REJECTED (terminal — recollection creates new sample)
     """
 
-    TRANSITIONS: Dict[SampleStatus, Set[SampleStatus]] = {
+    TRANSITIONS: dict[SampleStatus, set[SampleStatus]] = {
         SampleStatus.PENDING: {SampleStatus.COLLECTED},
         SampleStatus.COLLECTED: {SampleStatus.REJECTED},
         SampleStatus.REJECTED: set(),
     }
 
-    REJECTABLE_STATES: Set[SampleStatus] = {SampleStatus.COLLECTED}
+    REJECTABLE_STATES: set[SampleStatus] = {SampleStatus.COLLECTED}
 
     @classmethod
     def can_transition(cls, from_status: SampleStatus, to_status: SampleStatus) -> bool:
@@ -40,16 +43,18 @@ class SampleStateMachine:
     def validate_transition(cls, from_status: SampleStatus, to_status: SampleStatus) -> None:
         if not cls.can_transition(from_status, to_status):
             allowed = cls.TRANSITIONS.get(from_status, set())
-            allowed_str = ", ".join(s.value for s in allowed) if allowed else "none (terminal state)"
+            allowed_str = (
+                ", ".join(s.value for s in allowed) if allowed else "none (terminal state)"
+            )
             raise StateTransitionError(
                 entity_type="sample",
                 from_status=from_status.value,
                 to_status=to_status.value,
-                message=f"Cannot transition sample from '{from_status.value}' to '{to_status.value}'. Allowed transitions: {allowed_str}"
+                message=f"Cannot transition sample from '{from_status.value}' to '{to_status.value}'. Allowed transitions: {allowed_str}",
             )
 
     @classmethod
-    def can_reject(cls, status: SampleStatus) -> Tuple[bool, str]:
+    def can_reject(cls, status: SampleStatus) -> tuple[bool, str]:
         if status in cls.REJECTABLE_STATES:
             return True, ""
         if status == SampleStatus.PENDING:
@@ -71,15 +76,15 @@ class TestStateMachine:
     RESULTED -> ESCALATED (limit-hit, validator escalate)
     VALIDATED -> ESCALATED (amendment request - AMEND-RES)
     ESCALATED -> VALIDATED | SUPERSEDED | CANCELLED (supervisor resolution)
-    
+
     Quality issue paths:
     - SAMPLE_COLLECTED -> PENDING (specimen rejection reset)
     - RESULTED -> SUPERSEDED (retest/recollection)
-    
+
     Terminal: VALIDATED, SUPERSEDED, REMOVED, CANCELLED
     """
 
-    TRANSITIONS: Dict[TestStatus, Set[TestStatus]] = {
+    TRANSITIONS: dict[TestStatus, set[TestStatus]] = {
         TestStatus.PENDING: {
             TestStatus.SAMPLE_COLLECTED,
             TestStatus.REMOVED,
@@ -110,9 +115,9 @@ class TestStateMachine:
         TestStatus.CANCELLED: set(),
     }
 
-    RESULT_ENTRY_STATES: Set[TestStatus] = {TestStatus.SAMPLE_COLLECTED}
+    RESULT_ENTRY_STATES: set[TestStatus] = {TestStatus.SAMPLE_COLLECTED}
 
-    VALIDATION_STATES: Set[TestStatus] = {TestStatus.RESULTED}
+    VALIDATION_STATES: set[TestStatus] = {TestStatus.RESULTED}
 
     @classmethod
     def can_transition(cls, from_status: TestStatus, to_status: TestStatus) -> bool:
@@ -127,16 +132,18 @@ class TestStateMachine:
             return
         if not cls.can_transition(from_status, to_status):
             allowed = cls.TRANSITIONS.get(from_status, set())
-            allowed_str = ", ".join(s.value for s in allowed) if allowed else "none (terminal state)"
+            allowed_str = (
+                ", ".join(s.value for s in allowed) if allowed else "none (terminal state)"
+            )
             raise StateTransitionError(
                 entity_type="test",
                 from_status=from_status.value,
                 to_status=to_status.value,
-                message=f"Cannot transition test from '{from_status.value}' to '{to_status.value}'. Allowed transitions: {allowed_str}"
+                message=f"Cannot transition test from '{from_status.value}' to '{to_status.value}'. Allowed transitions: {allowed_str}",
             )
 
     @classmethod
-    def can_enter_results(cls, status: TestStatus) -> Tuple[bool, str]:
+    def can_enter_results(cls, status: TestStatus) -> tuple[bool, str]:
         if status in cls.RESULT_ENTRY_STATES:
             return True, ""
         if status == TestStatus.PENDING:
@@ -156,7 +163,7 @@ class TestStateMachine:
         return False, f"Cannot enter results for test with status '{status.value}'"
 
     @classmethod
-    def can_validate(cls, status: TestStatus) -> Tuple[bool, str]:
+    def can_validate(cls, status: TestStatus) -> tuple[bool, str]:
         if status in cls.VALIDATION_STATES:
             return True, ""
         if status == TestStatus.PENDING:
@@ -179,4 +186,9 @@ class TestStateMachine:
 
     @classmethod
     def is_active(cls, status: TestStatus) -> bool:
-        return status not in {TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.VALIDATED, TestStatus.CANCELLED}
+        return status not in {
+            TestStatus.SUPERSEDED,
+            TestStatus.REMOVED,
+            TestStatus.VALIDATED,
+            TestStatus.CANCELLED,
+        }

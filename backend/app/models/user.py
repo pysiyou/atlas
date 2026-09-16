@@ -1,9 +1,10 @@
 """
 User Model - All fields use camelCase
 """
-from sqlalchemy import Column, String, Integer, DateTime
+from sqlalchemy import Column, DateTime, Integer, String
 from sqlalchemy.sql import func
-from app.database import Base, contract_enum
+
+from app.db.database import Base, contract_enum
 from app.schemas.enums import UserRole
 
 
@@ -18,4 +19,6 @@ class User(Base):
     email = Column(String, nullable=True)
     phone = Column(String, nullable=True)
     createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
-    updatedAt = Column("updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    updatedAt = Column(
+        "updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )

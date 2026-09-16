@@ -3,11 +3,8 @@ Recollection request workflow — supervisor approval before patient redraw.
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from typing import Any, List, Optional
-
-from pydantic import BaseModel
-from sqlalchemy.orm import Session
+from datetime import UTC, datetime
+from typing import Any
 
 from app.models.order import Order, OrderTest
 from app.models.patient import Patient
@@ -22,38 +19,40 @@ from app.schemas.enums import (
     TestStatus,
 )
 from app.services.audit.logger import AuditService
-from app.services.orders.order import update_order_status
 from app.services.lab.samples import SampleCollectionService
 from app.services.lab.state import TestStateMachine
+from app.services.orders import update_order_status
 from app.utils.exceptions import LabOperationError
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
 
 
 class RecollectionRequestSummary(BaseModel):
     id: int
     orderId: int
-    qualityIssueId: Optional[int] = None
+    qualityIssueId: int | None = None
     rejectedSampleId: int
-    orderTestId: Optional[int] = None
+    orderTestId: int | None = None
     stage: str
     status: str
     reason: str
-    notes: Optional[str] = None
-    testCodes: List[str]
-    affectedOrderTestIds: List[int]
+    notes: str | None = None
+    testCodes: list[str]
+    affectedOrderTestIds: list[int]
     recollectionAttemptsUsed: int
     recollectionAttemptsRemaining: int
     requiresSupervisorOverride: bool
     requestedByUserId: str
-    reviewedByUserId: Optional[str] = None
-    reviewNotes: Optional[str] = None
-    reviewedAt: Optional[str] = None
-    createdSampleId: Optional[int] = None
-    createdTestId: Optional[int] = None
+    reviewedByUserId: str | None = None
+    reviewNotes: str | None = None
+    reviewedAt: str | None = None
+    createdSampleId: int | None = None
+    createdTestId: int | None = None
     createdAt: str
-    patientId: Optional[int] = None
-    patientName: Optional[str] = None
-    orderNumber: Optional[str] = None
-    sampleType: Optional[str] = None
+    patientId: int | None = None
+    patientName: str | None = None
+    orderNumber: str | None = None
+    sampleType: str | None = None
 
 
 class RecollectionRequestResult(BaseModel):
@@ -61,8 +60,8 @@ class RecollectionRequestResult(BaseModel):
     message: str
     requestId: int
     status: str
-    createdSampleId: Optional[int] = None
-    createdTestId: Optional[int] = None
+    createdSampleId: int | None = None
+    createdTestId: int | None = None
 
 
 class RecollectionRequestService:
@@ -77,9 +76,7 @@ class RecollectionRequestService:
         patient = None
         if order:
             patient = self.db.query(Patient).filter(Patient.id == order.patientId).first()
-        sample = (
-            self.db.query(Sample).filter(Sample.sampleId == request.rejectedSampleId).first()
-        )
+        sample = self.db.query(Sample).filter(Sample.sampleId == request.rejectedSampleId).first()
         return RecollectionRequestSummary(
             id=request.id,
             orderId=request.orderId,
@@ -108,7 +105,7 @@ class RecollectionRequestService:
             sampleType=sample.sampleType.value if sample else None,
         )
 
-    def list_pending(self) -> List[RecollectionRequestSummary]:
+    def list_pending(self) -> list[RecollectionRequestSummary]:
         rows = (
             self.db.query(RecollectionRequest)
             .filter(RecollectionRequest.status == RecollectionRequestStatus.PENDING_APPROVAL)
@@ -118,7 +115,9 @@ class RecollectionRequestService:
         return [self._to_summary(row) for row in rows]
 
     def get_request(self, request_id: int) -> RecollectionRequest:
-        row = self.db.query(RecollectionRequest).filter(RecollectionRequest.id == request_id).first()
+        row = (
+            self.db.query(RecollectionRequest).filter(RecollectionRequest.id == request_id).first()
+        )
         if not row:
             raise LabOperationError(f"Recollection request {request_id} not found", status_code=404)
         return row
@@ -129,22 +128,22 @@ class RecollectionRequestService:
         sample: Sample,
         user_id: int,
         reason: str,
-        notes: Optional[str],
+        notes: str | None,
         quality_issue_id: int,
-        affected_tests: List[OrderTest],
+        affected_tests: list[OrderTest],
     ) -> RecollectionRequest:
         # Check for existing pending request for this sample
         existing = (
             self.db.query(RecollectionRequest)
             .filter(
                 RecollectionRequest.rejectedSampleId == sample.sampleId,
-                RecollectionRequest.status == RecollectionRequestStatus.PENDING_APPROVAL
+                RecollectionRequest.status == RecollectionRequestStatus.PENDING_APPROVAL,
             )
             .first()
         )
         if existing:
             return existing  # Return existing instead of creating duplicate
-        
+
         attempts_used = self.collection.attempts_used(sample)
         attempts_remaining = self.collection.attempts_remaining_after(sample)
         request = RecollectionRequest(
@@ -187,22 +186,22 @@ class RecollectionRequestService:
         order_test: OrderTest,
         user_id: int,
         reason: str,
-        notes: Optional[str],
+        notes: str | None,
         quality_issue_id: int,
-        affected_tests: List[OrderTest],
+        affected_tests: list[OrderTest],
     ) -> RecollectionRequest:
         # Check for existing pending request for this sample
         existing = (
             self.db.query(RecollectionRequest)
             .filter(
                 RecollectionRequest.rejectedSampleId == sample.sampleId,
-                RecollectionRequest.status == RecollectionRequestStatus.PENDING_APPROVAL
+                RecollectionRequest.status == RecollectionRequestStatus.PENDING_APPROVAL,
             )
             .first()
         )
         if existing:
             return existing  # Return existing instead of creating duplicate
-        
+
         attempts_used = self.collection.attempts_used(sample)
         attempts_remaining = self.collection.attempts_remaining_after(sample)
         request = RecollectionRequest(
@@ -238,7 +237,9 @@ class RecollectionRequestService:
         )
         return request
 
-    def approve(self, request_id: int, user_id: int, review_notes: Optional[str] = None) -> RecollectionRequestResult:
+    def approve(
+        self, request_id: int, user_id: int, review_notes: str | None = None
+    ) -> RecollectionRequestResult:
         # Lock the request row to prevent concurrent approvals
         request = (
             self.db.query(RecollectionRequest)
@@ -248,9 +249,11 @@ class RecollectionRequestService:
         )
         if not request:
             raise LabOperationError(f"Recollection request {request_id} not found", status_code=404)
-        
+
         if request.status != RecollectionRequestStatus.PENDING_APPROVAL:
-            raise LabOperationError("Only pending recollection requests can be approved", status_code=400)
+            raise LabOperationError(
+                "Only pending recollection requests can be approved", status_code=400
+            )
 
         sample = self.db.query(Sample).filter(Sample.sampleId == request.rejectedSampleId).first()
         if not sample:
@@ -259,13 +262,14 @@ class RecollectionRequestService:
         # Validate that there are pending tests to reattach (collection-stage recollection)
         # or that the original test is still superseded (validation-stage recollection)
         pending_tests_to_reattach = [
-            test for test in self.quality._linked_tests(
+            test
+            for test in self.quality._linked_tests(
                 sample,
                 exclude=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED],
             )
             if test.status == TestStatus.PENDING and test.sampleId == sample.sampleId
         ]
-        
+
         # For validation-stage requests, check if the original test is still superseded
         original_test_valid = False
         if request.orderTestId and request.stage == QualityStage.VALIDATION:
@@ -273,13 +277,13 @@ class RecollectionRequestService:
                 self.db.query(OrderTest).filter(OrderTest.id == request.orderTestId).first()
             )
             original_test_valid = original_test and original_test.status == TestStatus.SUPERSEDED
-        
+
         # If no pending tests to reattach and no valid original test for validation-stage, reject approval
         if not pending_tests_to_reattach and not original_test_valid:
             raise LabOperationError(
                 "Cannot approve recollection request: no pending tests remain to recollect. "
                 "All affected tests have been cancelled, validated, or are no longer associated with this request.",
-                status_code=400
+                status_code=400,
             )
 
         supervisor_override = request.requiresSupervisorOverride
@@ -291,7 +295,7 @@ class RecollectionRequestService:
         )
         self.quality._reattach_tests_to_recollection(sample, new_sample)
 
-        created_test_id: Optional[int] = None
+        created_test_id: int | None = None
         if request.orderTestId and request.stage == QualityStage.VALIDATION:
             original_test = (
                 self.db.query(OrderTest).filter(OrderTest.id == request.orderTestId).first()
@@ -321,7 +325,7 @@ class RecollectionRequestService:
         request.status = RecollectionRequestStatus.APPROVED
         request.reviewedByUserId = str(user_id)
         request.reviewNotes = review_notes
-        request.reviewedAt = datetime.now(timezone.utc)
+        request.reviewedAt = datetime.now(UTC)
         request.createdSampleId = new_sample.sampleId
         request.createdTestId = created_test_id
 
@@ -333,9 +337,7 @@ class RecollectionRequestService:
             recollection_attempt=new_sample.recollectionAttempt,
             comment=review_notes or request.notes,
         )
-        primary_test_id = request.orderTestId or (
-            (request.affectedOrderTestIds or [None])[0]
-        )
+        primary_test_id = request.orderTestId or ((request.affectedOrderTestIds or [None])[0])
         approve_metadata = {
             "requestId": request.id,
             "createdSampleId": new_sample.sampleId,
@@ -368,7 +370,7 @@ class RecollectionRequestService:
         self,
         request_id: int,
         user_id: int,
-        review_notes: Optional[str] = None,
+        review_notes: str | None = None,
     ) -> RecollectionRequestResult:
         # Lock the request row to prevent concurrent denials
         request = (
@@ -379,9 +381,11 @@ class RecollectionRequestService:
         )
         if not request:
             raise LabOperationError(f"Recollection request {request_id} not found", status_code=404)
-        
+
         if request.status != RecollectionRequestStatus.PENDING_APPROVAL:
-            raise LabOperationError("Only pending recollection requests can be denied", status_code=400)
+            raise LabOperationError(
+                "Only pending recollection requests can be denied", status_code=400
+            )
 
         cancel_reason = review_notes or f"Recollection denied: {request.reason}"
         test_ids: set[int] = set(request.affectedOrderTestIds or [])
@@ -428,11 +432,9 @@ class RecollectionRequestService:
         request.status = RecollectionRequestStatus.DENIED
         request.reviewedByUserId = str(user_id)
         request.reviewNotes = review_notes
-        request.reviewedAt = datetime.now(timezone.utc)
+        request.reviewedAt = datetime.now(UTC)
 
-        primary_test_id = request.orderTestId or (
-            (request.affectedOrderTestIds or [None])[0]
-        )
+        primary_test_id = request.orderTestId or ((request.affectedOrderTestIds or [None])[0])
         deny_metadata = {
             "requestId": request.id,
             "reviewNotes": review_notes,

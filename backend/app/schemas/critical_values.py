@@ -1,6 +1,5 @@
 """Critical values API schemas."""
 from datetime import datetime
-from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -9,15 +8,15 @@ class CriticalValueResponse(BaseModel):
     id: int
     orderId: int
     testCode: str
-    testName: Optional[str]
+    testName: str | None
     patientId: int
     patientName: str
-    flags: Optional[List[str]]
+    flags: list[str] | None
     criticalNotificationSent: bool
-    criticalNotifiedAt: Optional[datetime]
-    criticalNotifiedTo: Optional[str]
-    criticalAcknowledgedAt: Optional[datetime]
-    resultEnteredAt: Optional[datetime]
+    criticalNotifiedAt: datetime | None
+    criticalNotifiedTo: str | None
+    criticalAcknowledgedAt: datetime | None
+    resultEnteredAt: datetime | None
     status: str
 
     class Config:
@@ -27,15 +26,15 @@ class CriticalValueResponse(BaseModel):
 class NotifyRequest(BaseModel):
     notifiedTo: str
     notificationMethod: str = "phone"
-    notes: Optional[str] = None
+    notes: str | None = None
 
 
 class AcknowledgeRequest(BaseModel):
     acknowledgedBy: str
-    notes: Optional[str] = None
+    notes: str | None = None
 
 
 class BulkNotifyRequest(BaseModel):
-    testIds: List[int]
+    testIds: list[int]
     notifiedTo: str
     notificationMethod: str = "phone"

@@ -1,8 +1,10 @@
 """
 Pydantic schemas for Payment
 """
-from pydantic import BaseModel, Field
 from datetime import datetime
+
+from pydantic import BaseModel, Field
+
 from app.schemas.enums import PaymentMethod
 
 
@@ -23,11 +25,11 @@ class PaymentResponse(BaseModel):
     receivedBy: str
     receiptGenerated: bool
     notes: str | None = None
-    
+
     # Computed fields from relationships
     orderTotalPrice: float | None = None
     numberOfTests: int | None = None
     patientName: str | None = None
-    
+
     class Config:
         from_attributes = True

@@ -2,10 +2,11 @@
 HTTP Caching Headers Middleware.
 Automatically adds appropriate Cache-Control headers based on endpoint patterns.
 """
+from collections.abc import Callable
+
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
-from typing import Callable
 
 
 class CacheHeadersMiddleware(BaseHTTPMiddleware):

@@ -1,11 +1,10 @@
 """Lab worklist API routes."""
-from typing import Optional
 
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
-from app.core.dependencies import require_lab_tech, require_sample_collector
-from app.database import get_db
+from app.api.dependencies import require_lab_tech, require_sample_collector
+from app.db.database import get_db
 from app.models.user import User
 from app.schemas.enums import PriorityLevel, UserRole
 from app.schemas.worklists import (
@@ -32,8 +31,8 @@ def _worklist_response(items: list, pagination: dict) -> WorklistResponse:
 def get_collection_worklist(
     page: int = Query(1, ge=1),
     pageSize: int = Query(50, ge=1, le=200),
-    search: Optional[str] = None,
-    priority: Optional[PriorityLevel] = None,
+    search: str | None = None,
+    priority: PriorityLevel | None = None,
     db: Session = Depends(get_db),
     _user: User = Depends(require_sample_collector),
 ):
@@ -48,8 +47,8 @@ def get_collection_worklist(
 def get_entry_worklist(
     page: int = Query(1, ge=1),
     pageSize: int = Query(50, ge=1, le=200),
-    search: Optional[str] = None,
-    priority: Optional[PriorityLevel] = None,
+    search: str | None = None,
+    priority: PriorityLevel | None = None,
     db: Session = Depends(get_db),
     _user: User = Depends(require_lab_tech),
 ):
@@ -64,8 +63,8 @@ def get_entry_worklist(
 def get_validation_worklist(
     page: int = Query(1, ge=1),
     pageSize: int = Query(50, ge=1, le=200),
-    search: Optional[str] = None,
-    priority: Optional[PriorityLevel] = None,
+    search: str | None = None,
+    priority: PriorityLevel | None = None,
     db: Session = Depends(get_db),
     _user: User = Depends(require_lab_tech),
 ):

@@ -1,21 +1,19 @@
 """Payment API Routes."""
-from typing import List
 
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from app.api.deps import PaginationParams
-from app.core.dependencies import get_current_user
-from app.database import get_db
+from app.api.dependencies import PaginationParams, get_current_user
+from app.db.database import get_db
 from app.models.user import User
 from app.schemas.enums import PaymentMethod
 from app.schemas.payment import PaymentCreate, PaymentResponse
-from app.services.orders.payment import PaymentService
+from app.services.orders import PaymentService
 
 router = APIRouter()
 
 
-@router.get("/payments", response_model=List[PaymentResponse])
+@router.get("/payments", response_model=list[PaymentResponse])
 def get_payments(
     pagination: PaginationParams,
     orderId: int | None = None,
@@ -40,7 +38,7 @@ def get_payment(
     return PaymentResponse(**PaymentService(db).get_payment(paymentId))
 
 
-@router.get("/payments/order/{orderId}", response_model=List[PaymentResponse])
+@router.get("/payments/order/{orderId}", response_model=list[PaymentResponse])
 def get_payments_by_order(
     orderId: int,
     db: Session = Depends(get_db),

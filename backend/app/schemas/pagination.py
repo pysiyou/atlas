@@ -1,9 +1,10 @@
 """
 Pagination schemas for standardized paginated API responses.
 """
-from typing import Generic, TypeVar, List
-from pydantic import BaseModel, Field
 from math import ceil
+from typing import Generic, TypeVar
+
+from pydantic import BaseModel, Field
 
 T = TypeVar("T")
 
@@ -30,12 +31,12 @@ class PaginatedResponse(BaseModel, Generic[T]):
         )
     """
 
-    data: List[T] = Field(..., description="List of items for the current page")
+    data: list[T] = Field(..., description="List of items for the current page")
     pagination: PaginationMeta = Field(..., description="Pagination metadata")
 
 
 def create_paginated_response(
-    data: List[T],
+    data: list[T],
     total: int,
     page: int,
     page_size: int,

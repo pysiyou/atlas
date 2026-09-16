@@ -1,13 +1,11 @@
 """User management business logic."""
 import logging
-from typing import List
-
-from fastapi import HTTPException, status
-from sqlalchemy.orm import Session
 
 from app.core.security import get_password_hash
 from app.models.user import User
 from app.schemas.user import UserCreate, UserUpdate
+from fastapi import HTTPException, status
+from sqlalchemy.orm import Session
 
 logger = logging.getLogger(__name__)
 
@@ -16,10 +14,10 @@ class UserService:
     def __init__(self, db: Session):
         self.db = db
 
-    def list_all(self) -> List[User]:
+    def list_all(self) -> list[User]:
         return self.db.query(User).all()
 
-    def list_lookup(self) -> List[User]:
+    def list_lookup(self) -> list[User]:
         return self.db.query(User).all()
 
     def get_by_id(self, user_id: int) -> User:

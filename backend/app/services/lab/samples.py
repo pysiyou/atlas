@@ -7,15 +7,14 @@ recollectionAttempt scale (matches UI 1..MAX_RECOLLECTION_ATTEMPTS):
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Tuple
+from datetime import UTC, datetime
+from typing import Any
 
-from sqlalchemy.orm import Session
-
+from app.data.lab_constants import MAX_RECOLLECTION_ATTEMPTS
 from app.models import Order, OrderTest, Sample, Test
 from app.schemas.enums import PriorityLevel, SampleStatus, SampleType, TestStatus
-from app.data.lab_constants import MAX_RECOLLECTION_ATTEMPTS
 from app.utils.exceptions import LabOperationError
+from sqlalchemy.orm import Session
 
 
 class SampleCollectionService:
@@ -85,8 +84,8 @@ class SampleCollectionService:
         user_id: int,
         reason: str,
         *,
-        test_codes: Optional[list[str]] = None,
-        priority: Optional[PriorityLevel] = None,
+        test_codes: list[str] | None = None,
+        priority: PriorityLevel | None = None,
         supervisor_authorized: bool = False,
     ) -> Sample:
         """
@@ -97,10 +96,16 @@ class SampleCollectionService:
         resolution (authorize_recollect) may pass supervisor_authorized=True to allow one more tube.
         """
         if source_sample.recollectionSampleId:
-            existing = self.db.query(Sample).filter(
-                Sample.sampleId == source_sample.recollectionSampleId
-            ).first()
-            if existing and existing.status == SampleStatus.PENDING and existing.collectedAt is None:
+            existing = (
+                self.db.query(Sample)
+                .filter(Sample.sampleId == source_sample.recollectionSampleId)
+                .first()
+            )
+            if (
+                existing
+                and existing.status == SampleStatus.PENDING
+                and existing.collectedAt is None
+            ):
                 return existing
             if existing:
                 raise LabOperationError(
@@ -125,7 +130,7 @@ class SampleCollectionService:
             originalSampleId=source_sample.sampleId,
             recollectionReason=reason,
             recollectionAttempt=next_attempt,
-            createdAt=datetime.now(timezone.utc),
+            createdAt=datetime.now(UTC),
             createdBy=str(user_id),
             updatedBy=str(user_id),
         )
@@ -154,7 +159,7 @@ def _sample_type_matches(sample: Sample, sample_type_key: str | SampleType) -> b
     return sample.sampleType == st
 
 
-def generate_samples_for_order(orderId: int, db: Session, createdBy: int) -> List[Sample]:
+def generate_samples_for_order(orderId: int, db: Session, createdBy: int) -> list[Sample]:
     """
     Sync samples for an order: one active pending sample per sample type.
     Groups active tests by sample type; updates the pending/recollection sample or creates one.
@@ -178,7 +183,7 @@ def generate_samples_for_order(orderId: int, db: Session, createdBy: int) -> Lis
         return []
 
     # Group active tests by sample type (key: string from Test.sampleType for consistency)
-    sample_groups: Dict[str, List[Tuple[OrderTest, Test]]] = {}
+    sample_groups: dict[str, list[tuple[OrderTest, Test]]] = {}
     for order_test in order_tests:
         test = db.query(Test).filter(Test.code == order_test.testCode).first()
         if not test:
@@ -190,10 +195,10 @@ def generate_samples_for_order(orderId: int, db: Session, createdBy: int) -> Lis
 
     existing_samples = db.query(Sample).filter(Sample.orderId == orderId).all()
     collection = SampleCollectionService(db)
-    samples: List[Sample] = []
+    samples: list[Sample] = []
     for sample_type_key, test_list in sample_groups.items():
         total_volume = 0.0
-        test_codes: List[str] = []
+        test_codes: list[str] = []
         container_types_set: set = set()
         container_colors_set: set = set()
         for _order_test, test in test_list:
@@ -262,10 +267,10 @@ def generate_samples_for_order(orderId: int, db: Session, createdBy: int) -> Lis
 def _update_sample(
     sample: Sample,
     *,
-    test_codes: List[str],
+    test_codes: list[str],
     required_volume: float,
-    container_types: List[Any],
-    container_colors: List[Any],
+    container_types: list[Any],
+    container_colors: list[Any],
     priority: PriorityLevel,
     updated_by: int,
 ) -> None:
@@ -275,19 +280,16 @@ def _update_sample(
     sample.requiredContainerColors = container_colors
     sample.priority = priority
     sample.updatedBy = str(updated_by)
-    sample.updatedAt = datetime.now(timezone.utc)
+    sample.updatedAt = datetime.now(UTC)
 
 
-def _choose_active_sample(existing: List[Sample]) -> Sample | None:
+def _choose_active_sample(existing: list[Sample]) -> Sample | None:
     """
     Return the pending, uncollected sample that should receive active tests.
 
     Rejected/collected tubes are historical — never reuse them when syncing tests.
     """
-    pending = [
-        s for s in existing
-        if s.status == SampleStatus.PENDING and s.collectedAt is None
-    ]
+    pending = [s for s in existing if s.status == SampleStatus.PENDING and s.collectedAt is None]
     if not pending:
         return None
     recollection = [s for s in pending if s.isRecollection]
@@ -299,7 +301,7 @@ def _dedupe_pending_samples(
     db: Session,
     order_id: int,
     keep: Sample,
-    existing: List[Sample],
+    existing: list[Sample],
 ) -> None:
     """Remove duplicate pending samples for the same type, reassigning tests to keep."""
     for s in existing:
@@ -315,7 +317,7 @@ def _dedupe_pending_samples(
             db.delete(s)
 
 
-def _latest_rejected_sample(existing: List[Sample]) -> Sample | None:
+def _latest_rejected_sample(existing: list[Sample]) -> Sample | None:
     rejected = [s for s in existing if s.status == SampleStatus.REJECTED]
     if not rejected:
         return None
@@ -323,7 +325,7 @@ def _latest_rejected_sample(existing: List[Sample]) -> Sample | None:
 
 
 def _pending_recollection_sample(
-    existing: List[Sample],
+    existing: list[Sample],
     latest_rejected: Sample | None,
 ) -> Sample | None:
     """Return the pending recollection tube created by the quality workflow, if any."""
@@ -351,9 +353,7 @@ def _reassign_order_tests_to_sample(
     ).update({OrderTest.sampleId: to_sample_id}, synchronize_session="fetch")
 
 
-def _delete_pending_samples_for_order(
-    order_id: int, db: Session, keep_sample_types: set
-) -> None:
+def _delete_pending_samples_for_order(order_id: int, db: Session, keep_sample_types: set) -> None:
     """Delete samples for this order that are PENDING, not collected, and not in keep_sample_types."""
     to_delete = (
         db.query(Sample)
@@ -369,7 +369,7 @@ def _delete_pending_samples_for_order(
             db.delete(s)
 
 
-def _link_order_tests_to_samples(db: Session, order_id: int, samples: List[Sample]) -> None:
+def _link_order_tests_to_samples(db: Session, order_id: int, samples: list[Sample]) -> None:
     """Link collectable order tests to the active pending sample for their type."""
     linkable_statuses = [
         TestStatus.PENDING,
@@ -395,13 +395,14 @@ class SampleService:
         self,
         skip: int,
         limit: int,
-        order_id: Optional[int] = None,
-        sample_status: Optional[SampleStatus] = None,
+        order_id: int | None = None,
+        sample_status: SampleStatus | None = None,
         paginated: bool = False,
     ):
-        from fastapi import HTTPException, status as http_status
-        from app.schemas.sample import SampleResponse
         from app.schemas.pagination import create_paginated_response, skip_to_page
+        from app.schemas.sample import SampleResponse
+        from fastapi import HTTPException
+        from fastapi import status as http_status
 
         query = self.db.query(Sample)
         if order_id:
@@ -415,6 +416,7 @@ class SampleService:
             serialized = [SampleResponse.model_validate(s).model_dump(mode="json") for s in samples]
         except Exception:
             import logging
+
             logging.getLogger(__name__).exception("Error serializing samples")
             raise HTTPException(
                 status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -433,7 +435,8 @@ class SampleService:
         )
 
     def get_by_id(self, sample_id: int) -> Sample:
-        from fastapi import HTTPException, status as http_status
+        from fastapi import HTTPException
+        from fastapi import status as http_status
 
         sample = self.db.query(Sample).filter(Sample.sampleId == sample_id).first()
         if not sample:
