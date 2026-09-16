@@ -11,7 +11,7 @@ class AuditLogsCountResponse(BaseModel):
 class TimelineEventResponse(BaseModel):
     id: int
     type: str
-    phase: str | None = None
+    category: str | None = None
     tone: str | None = None
     entityType: str
     entityId: int

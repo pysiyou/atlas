@@ -6,6 +6,8 @@ from pydantic import BaseModel
 class TimelineEvent(BaseModel):
     id: int
     type: str
+    category: str | None = None
+    tone: str | None = None
     entityType: str
     entityId: int
     timestamp: str

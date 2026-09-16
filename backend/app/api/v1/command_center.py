@@ -33,7 +33,7 @@ def get_timeline(
     offset: int = Query(0, ge=0, description="Pagination offset"),
     categories: list[str] | None = Query(
         None,
-        description="Optional workflow categories: specimen, results, validation, order, escalation, quality",
+        description="Optional categories: order, payment, sample, result, other (legacy: specimen→sample)",
     ),
     db: Session = Depends(get_db),
     _current_user: User = Depends(require_lab_tech),

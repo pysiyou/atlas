@@ -1,7 +1,7 @@
 """
 Event taxonomy for lab entity timelines.
 
-Single registry mapping every LabOperationType to timeline scope, workflow phase, and tone.
+Single registry mapping every LabOperationType to timeline scope, category, and tone.
 """
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ from enum import Enum
 from typing import Any, Literal
 
 from app.models.lab_audit import LabOperationLog
-from app.models.order import OrderTest
+from app.models.order import Order, OrderTest
 from app.models.quality_issue import QualityIssue
 from app.models.recollection_request import RecollectionRequest
 from app.models.sample import Sample
@@ -27,12 +27,12 @@ class TimelineScopeKind(str, Enum):
     COMMAND_CENTER_ONLY = "command_center_only"
 
 
-class WorkflowPhase(str, Enum):
-    SPECIMEN = "specimen"
-    RESULTS = "results"
-    VALIDATION = "validation"
-    ESCALATION = "escalation"
-    COMPOSITION = "composition"
+class TimelineCategory(str, Enum):
+    ORDER = "order"
+    PAYMENT = "payment"
+    SAMPLE = "sample"
+    RESULT = "result"
+    OTHER = "other"
 
 
 class TimelineEventTone(str, Enum):
@@ -45,7 +45,7 @@ class TimelineEventTone(str, Enum):
 class EventDefinition:
     operation_type: LabOperationType
     timeline_scope: TimelineScopeKind
-    phase: WorkflowPhase
+    category: TimelineCategory
     tone: TimelineEventTone
     quality_issue_stage_override: str | None = None  # "collection" | "validation"
 
@@ -75,110 +75,110 @@ _EVENT_REGISTRY: dict[LabOperationType, EventDefinition] = {
     LabOperationType.SAMPLE_COLLECT: EventDefinition(
         LabOperationType.SAMPLE_COLLECT,
         TimelineScopeKind.ENTITY,
-        WorkflowPhase.SPECIMEN,
+        TimelineCategory.SAMPLE,
         TimelineEventTone.NEUTRAL,
     ),
     LabOperationType.SAMPLE_REJECT: EventDefinition(
         LabOperationType.SAMPLE_REJECT,
         TimelineScopeKind.ENTITY,
-        WorkflowPhase.SPECIMEN,
+        TimelineCategory.SAMPLE,
         TimelineEventTone.PROBLEM,
     ),
     LabOperationType.SAMPLE_RECOLLECTION_REQUEST: EventDefinition(
         LabOperationType.SAMPLE_RECOLLECTION_REQUEST,
         TimelineScopeKind.ENTITY,
-        WorkflowPhase.SPECIMEN,
+        TimelineCategory.SAMPLE,
         TimelineEventTone.PROBLEM,
     ),
     LabOperationType.RECOLLECTION_REQUEST_CREATED: EventDefinition(
         LabOperationType.RECOLLECTION_REQUEST_CREATED,
         TimelineScopeKind.ENTITY,
-        WorkflowPhase.SPECIMEN,
+        TimelineCategory.OTHER,
         TimelineEventTone.PROBLEM,
     ),
     LabOperationType.RECOLLECTION_REQUEST_APPROVED: EventDefinition(
         LabOperationType.RECOLLECTION_REQUEST_APPROVED,
         TimelineScopeKind.ENTITY,
-        WorkflowPhase.SPECIMEN,
+        TimelineCategory.OTHER,
         TimelineEventTone.RESOLUTION,
     ),
     LabOperationType.RECOLLECTION_REQUEST_DENIED: EventDefinition(
         LabOperationType.RECOLLECTION_REQUEST_DENIED,
         TimelineScopeKind.ENTITY,
-        WorkflowPhase.SPECIMEN,
+        TimelineCategory.OTHER,
         TimelineEventTone.PROBLEM,
     ),
     LabOperationType.RESULT_ENTRY: EventDefinition(
         LabOperationType.RESULT_ENTRY,
         TimelineScopeKind.ENTITY,
-        WorkflowPhase.RESULTS,
+        TimelineCategory.RESULT,
         TimelineEventTone.NEUTRAL,
     ),
     LabOperationType.CRITICAL_VALUE_DETECTED: EventDefinition(
         LabOperationType.CRITICAL_VALUE_DETECTED,
         TimelineScopeKind.ENTITY,
-        WorkflowPhase.RESULTS,
+        TimelineCategory.RESULT,
         TimelineEventTone.PROBLEM,
     ),
     LabOperationType.CRITICAL_VALUE_NOTIFIED: EventDefinition(
         LabOperationType.CRITICAL_VALUE_NOTIFIED,
         TimelineScopeKind.ENTITY,
-        WorkflowPhase.RESULTS,
+        TimelineCategory.RESULT,
         TimelineEventTone.PROBLEM,
     ),
     LabOperationType.CRITICAL_VALUE_ACKNOWLEDGED: EventDefinition(
         LabOperationType.CRITICAL_VALUE_ACKNOWLEDGED,
         TimelineScopeKind.ENTITY,
-        WorkflowPhase.RESULTS,
+        TimelineCategory.RESULT,
         TimelineEventTone.RESOLUTION,
     ),
     LabOperationType.RESULT_VALIDATION_APPROVE: EventDefinition(
         LabOperationType.RESULT_VALIDATION_APPROVE,
         TimelineScopeKind.ENTITY,
-        WorkflowPhase.VALIDATION,
+        TimelineCategory.RESULT,
         TimelineEventTone.RESOLUTION,
     ),
     LabOperationType.QUALITY_ISSUE_REPORTED: EventDefinition(
         LabOperationType.QUALITY_ISSUE_REPORTED,
         TimelineScopeKind.ENTITY,
-        WorkflowPhase.VALIDATION,
+        TimelineCategory.RESULT,
         TimelineEventTone.PROBLEM,
         quality_issue_stage_override="validation",
     ),
     LabOperationType.TEST_ADDED: EventDefinition(
         LabOperationType.TEST_ADDED,
         TimelineScopeKind.ENTITY,
-        WorkflowPhase.COMPOSITION,
+        TimelineCategory.ORDER,
         TimelineEventTone.NEUTRAL,
     ),
     LabOperationType.TEST_REMOVED: EventDefinition(
         LabOperationType.TEST_REMOVED,
         TimelineScopeKind.ENTITY,
-        WorkflowPhase.COMPOSITION,
+        TimelineCategory.ORDER,
         TimelineEventTone.PROBLEM,
     ),
     LabOperationType.ORDER_STATUS_CHANGE: EventDefinition(
         LabOperationType.ORDER_STATUS_CHANGE,
         TimelineScopeKind.COMMAND_CENTER_ONLY,
-        WorkflowPhase.COMPOSITION,
+        TimelineCategory.ORDER,
         TimelineEventTone.NEUTRAL,
     ),
     LabOperationType.ORDER_PAYMENT_RECORDED: EventDefinition(
         LabOperationType.ORDER_PAYMENT_RECORDED,
         TimelineScopeKind.COMMAND_CENTER_ONLY,
-        WorkflowPhase.COMPOSITION,
+        TimelineCategory.PAYMENT,
         TimelineEventTone.RESOLUTION,
     ),
 }
 
 for _op in _ESCALATION_TRIGGER_TYPES:
     _EVENT_REGISTRY[_op] = EventDefinition(
-        _op, TimelineScopeKind.ENTITY, WorkflowPhase.ESCALATION, TimelineEventTone.PROBLEM
+        _op, TimelineScopeKind.ENTITY, TimelineCategory.OTHER, TimelineEventTone.PROBLEM
     )
 
 for _op in _ESCALATION_RESOLUTION_TYPES:
     _EVENT_REGISTRY[_op] = EventDefinition(
-        _op, TimelineScopeKind.ENTITY, WorkflowPhase.ESCALATION, TimelineEventTone.RESOLUTION
+        _op, TimelineScopeKind.ENTITY, TimelineCategory.OTHER, TimelineEventTone.RESOLUTION
     )
 
 
@@ -207,7 +207,7 @@ def is_entity_visible(operation_type: str | LabOperationType | None) -> bool:
     return definition.timeline_scope == TimelineScopeKind.ENTITY
 
 
-def get_event_phase(
+def get_event_category(
     operation_type: str | LabOperationType | None,
     *,
     quality_stage: str | None = None,
@@ -219,8 +219,8 @@ def get_event_phase(
         definition.operation_type == LabOperationType.QUALITY_ISSUE_REPORTED
         and quality_stage == "collection"
     ):
-        return WorkflowPhase.SPECIMEN.value
-    return definition.phase.value
+        return TimelineCategory.SAMPLE.value
+    return definition.category.value
 
 
 def get_event_tone(operation_type: str | LabOperationType | None) -> str:
@@ -232,35 +232,51 @@ def get_event_tone(operation_type: str | LabOperationType | None) -> str:
 
 RECOLLECTION_REQUEST_TYPES = {op.value for op in _RECOLLECTION_TYPES}
 
+_TIMELINE_CATEGORY_ALIASES: dict[str, str] = {
+    "specimen": "sample",
+    "results": "result",
+    "validation": "result",
+    "escalation": "other",
+    "quality": "result",
+    "composition": "order",
+}
+
 TIMELINE_CATEGORY_TYPES: dict[str, set[LabOperationType]] = {
-    "specimen": {
+    "sample": {
         LabOperationType.SAMPLE_COLLECT,
         LabOperationType.SAMPLE_REJECT,
         LabOperationType.SAMPLE_RECOLLECTION_REQUEST,
+        LabOperationType.QUALITY_ISSUE_REPORTED,
     },
-    "results": {
+    "result": {
         LabOperationType.RESULT_ENTRY,
+        LabOperationType.RESULT_VALIDATION_APPROVE,
         LabOperationType.CRITICAL_VALUE_DETECTED,
         LabOperationType.CRITICAL_VALUE_NOTIFIED,
         LabOperationType.CRITICAL_VALUE_ACKNOWLEDGED,
-    },
-    "validation": {
-        LabOperationType.RESULT_VALIDATION_APPROVE,
-    },
-    "escalation": set(_ESCALATION_TRIGGER_TYPES | _ESCALATION_RESOLUTION_TYPES),
-    "quality": {
         LabOperationType.QUALITY_ISSUE_REPORTED,
     },
     "order": {
-        LabOperationType.RECOLLECTION_REQUEST_CREATED,
-        LabOperationType.RECOLLECTION_REQUEST_APPROVED,
-        LabOperationType.RECOLLECTION_REQUEST_DENIED,
         LabOperationType.TEST_ADDED,
         LabOperationType.TEST_REMOVED,
         LabOperationType.ORDER_STATUS_CHANGE,
+    },
+    "payment": {
         LabOperationType.ORDER_PAYMENT_RECORDED,
     },
+    "other": {
+        LabOperationType.RECOLLECTION_REQUEST_CREATED,
+        LabOperationType.RECOLLECTION_REQUEST_APPROVED,
+        LabOperationType.RECOLLECTION_REQUEST_DENIED,
+        *_ESCALATION_TRIGGER_TYPES,
+        *_ESCALATION_RESOLUTION_TYPES,
+    },
 }
+
+
+def _normalize_category_name(name: str) -> str:
+    key = name.strip().lower()
+    return _TIMELINE_CATEGORY_ALIASES.get(key, key)
 
 
 def operation_types_for_categories(categories: list[str] | None) -> list[LabOperationType] | None:
@@ -269,7 +285,7 @@ def operation_types_for_categories(categories: list[str] | None) -> list[LabOper
         return None
     types: set[LabOperationType] = set()
     for category in categories:
-        mapped = TIMELINE_CATEGORY_TYPES.get(category.strip().lower())
+        mapped = TIMELINE_CATEGORY_TYPES.get(_normalize_category_name(category))
         if mapped:
             types.update(mapped)
     return sorted(types, key=lambda op: op.value) if types else None
@@ -299,15 +315,19 @@ class TimelineFormatter:
 
     def format_command_center_event(self, log: LabOperationLog, user_map: dict[str, str]) -> dict:
         op_type = log.operationType.value if log.operationType else None
+        metadata = log.operationData or {}
+        quality_stage = metadata.get("stage") or (log.afterState or {}).get("stage")
         return {
             "id": log.id,
             "type": op_type,
+            "category": get_event_category(op_type, quality_stage=quality_stage),
+            "tone": get_event_tone(op_type),
             "entityType": log.entityType,
             "entityId": log.entityId,
             "timestamp": log.performedAt.isoformat(),
             "performedBy": log.performedBy,
             "performedByName": self.performer_name(log, user_map),
-            "metadata": log.operationData or {},
+            "metadata": metadata,
             "beforeState": log.beforeState,
             "afterState": log.afterState,
             "comment": log.comment,
@@ -320,7 +340,7 @@ class TimelineFormatter:
         return {
             "id": log.id,
             "type": op_type,
-            "phase": get_event_phase(op_type, quality_stage=quality_stage),
+            "category": get_event_category(op_type, quality_stage=quality_stage),
             "tone": get_event_tone(op_type),
             "entityType": log.entityType,
             "entityId": log.entityId,
@@ -568,7 +588,7 @@ class CommandCenterService:
         return query.scalar() or 0
 
 
-EntityKind = Literal["sample", "order_test"]
+EntityKind = Literal["sample", "order_test", "order"]
 
 
 @dataclass
@@ -598,9 +618,11 @@ class EntityTimelineService:
             scope = self._scope_for_sample(entity_id)
         elif normalized in ("order_test", "test"):
             scope = self._scope_for_order_test(entity_id)
+        elif normalized == "order":
+            scope = self._scope_for_order(entity_id)
         else:
             raise LabOperationError(
-                f"Unsupported entity type '{entity_type}'. Use 'sample' or 'order_test'.",
+                f"Unsupported entity type '{entity_type}'. Use 'sample', 'order_test', or 'order'.",
                 status_code=400,
             )
 
@@ -608,6 +630,43 @@ class EntityTimelineService:
         filtered = self._filter_logs(logs, scope)
         events = self._format_events(filtered)
         return events, len(events)
+
+    def _scope_for_order(self, order_id: int) -> TimelineScope:
+        order = self.db.query(Order).filter(Order.orderId == order_id).first()
+        if not order:
+            raise LabOperationError(f"Order {order_id} not found", status_code=404)
+
+        samples = self.db.query(Sample).filter(Sample.orderId == order_id).all()
+        sample_ids: set[int] = set()
+        for sample in samples:
+            sample_ids.update(self._collect_sample_chain(sample))
+
+        order_tests = self.db.query(OrderTest).filter(OrderTest.orderId == order_id).all()
+        order_test_ids = {t.id for t in order_tests}
+        test_codes = {t.testCode for t in order_tests if t.testCode}
+        test_sample_map = {
+            t.id: t.sampleId for t in order_tests if t.sampleId is not None
+        }
+
+        quality_issues = self._quality_issues_for_test_scope(order_test_ids, sample_ids)
+
+        return TimelineScope(
+            entity_kind="order",
+            anchor_id=order_id,
+            sample_ids=sample_ids,
+            order_test_ids=order_test_ids,
+            quality_issue_ids={q.id for q in quality_issues},
+            order_id=order_id,
+            test_codes=test_codes,
+            test_sample_map=test_sample_map,
+            quality_issue_order_test_map={
+                q.id: q.orderTestId for q in quality_issues if q.orderTestId is not None
+            },
+            quality_issue_sample_map={
+                q.id: q.sampleId for q in quality_issues if q.sampleId is not None
+            },
+            recollection_request_map=self._recollection_request_map(order_id),
+        )
 
     def _scope_for_sample(self, sample_id: int) -> TimelineScope:
         sample = self.db.query(Sample).filter(Sample.sampleId == sample_id).first()
@@ -789,20 +848,27 @@ class EntityTimelineService:
                     LabOperationLog.entityId.in_(scope.quality_issue_ids),
                 )
             )
-        # Legacy recollection workflow rows logged on order entity.
         if scope.order_id is not None:
-            recollection_types = [
-                LabOperationType.RECOLLECTION_REQUEST_CREATED,
-                LabOperationType.RECOLLECTION_REQUEST_APPROVED,
-                LabOperationType.RECOLLECTION_REQUEST_DENIED,
-            ]
-            conditions.append(
-                and_(
-                    LabOperationLog.entityType == "order",
-                    LabOperationLog.entityId == scope.order_id,
-                    LabOperationLog.operationType.in_(recollection_types),
+            if scope.entity_kind == "order":
+                conditions.append(
+                    and_(
+                        LabOperationLog.entityType == "order",
+                        LabOperationLog.entityId == scope.order_id,
+                    )
                 )
-            )
+            else:
+                recollection_types = [
+                    LabOperationType.RECOLLECTION_REQUEST_CREATED,
+                    LabOperationType.RECOLLECTION_REQUEST_APPROVED,
+                    LabOperationType.RECOLLECTION_REQUEST_DENIED,
+                ]
+                conditions.append(
+                    and_(
+                        LabOperationLog.entityType == "order",
+                        LabOperationLog.entityId == scope.order_id,
+                        LabOperationLog.operationType.in_(recollection_types),
+                    )
+                )
 
         if not conditions:
             return []
@@ -817,6 +883,16 @@ class EntityTimelineService:
     def _filter_logs(
         self, logs: list[LabOperationLog], scope: TimelineScope
     ) -> list[LabOperationLog]:
+        if scope.entity_kind == "order":
+            seen: set[int] = set()
+            unique: list[LabOperationLog] = []
+            for log in logs:
+                if log.id in seen:
+                    continue
+                seen.add(log.id)
+                unique.append(log)
+            return unique
+
         if scope.entity_kind == "order_test":
             test_scope = TestTimelineScope(
                 anchor_test_id=scope.anchor_id,

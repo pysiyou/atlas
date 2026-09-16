@@ -5,8 +5,7 @@
 import React from 'react';
 import { Skeleton } from '@/components/loaders/Skeleton';
 import type { TimelineEvent } from '../api/labCommandCenter';
-import { LabAuditTimeline } from '../components/LabAuditTimeline';
-import { COMMAND_CENTER_TIMELINE } from '../timeline/labTimelineShared';
+import { Timeline, TIMELINE_STYLES } from '@/features/timeline';
 
 export interface LabActivityFeedProps {
   events: TimelineEvent[];
@@ -48,7 +47,7 @@ export const LabActivityFeed: React.FC<LabActivityFeedProps> = ({
       <div className="text-sm text-text-secondary">
         Couldn&apos;t load activity feed.{' '}
         {onRetry && (
-          <button type="button" onClick={onRetry} className={COMMAND_CENTER_TIMELINE.retryLink}>
+          <button type="button" onClick={onRetry} className={TIMELINE_STYLES.retryLink}>
             Retry
           </button>
         )}
@@ -60,12 +59,12 @@ export const LabActivityFeed: React.FC<LabActivityFeedProps> = ({
 
   const loadMoreFooter =
     hasMore && onLoadMore ? (
-      <div className={COMMAND_CENTER_TIMELINE.loadMore}>
+      <div className={TIMELINE_STYLES.loadMore}>
         <button
           type="button"
           onClick={onLoadMore}
           disabled={isLoadingMore}
-          className={COMMAND_CENTER_TIMELINE.retryLinkDisabled}
+          className={TIMELINE_STYLES.retryLinkDisabled}
         >
           {isLoadingMore ? 'Loading…' : 'Load more'}
         </button>
@@ -73,9 +72,9 @@ export const LabActivityFeed: React.FC<LabActivityFeedProps> = ({
     ) : null;
 
   return (
-    <LabAuditTimeline
+    <Timeline
+      preset="commandCenter"
       events={events}
-      variant="commandCenter"
       interactiveEntities
       emptyMessage="No recent activity"
       className="h-full px-4 py-2"

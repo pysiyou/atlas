@@ -6,7 +6,7 @@ import { Panel } from '@/components';
 import { Skeleton } from '@/components/loaders/Skeleton';
 import { useEntityTimeline } from '../api/audit';
 import { getFeedback } from '@/utils/feedback';
-import { LabAuditTimeline } from './LabAuditTimeline';
+import { Timeline } from '@/features/timeline';
 
 interface LabEntityTimelinePanelProps {
   entityType: 'sample' | 'order_test';
@@ -48,7 +48,7 @@ export const LabEntityTimelinePanel: React.FC<LabEntityTimelinePanelProps> = ({
           </button>
         </div>
       ) : (
-        <LabAuditTimeline events={data?.events ?? []} interactiveEntities />
+        <Timeline preset="lab" events={data?.events ?? []} interactiveEntities />
       )}
     </Panel>
   );

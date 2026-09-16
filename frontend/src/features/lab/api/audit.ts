@@ -11,7 +11,7 @@ export type { EntityTimelineResponse };
 
 export const auditAPI = {
   getEntityTimeline(
-    entityType: 'sample' | 'order_test',
+    entityType: 'sample' | 'order_test' | 'order',
     entityId: number
   ): Promise<EntityTimelineResponse> {
     return apiClient
@@ -25,7 +25,7 @@ export const auditAPI = {
  */
 
 export function useEntityTimeline(
-  entityType: 'sample' | 'order_test' | undefined,
+  entityType: 'sample' | 'order_test' | 'order' | undefined,
   entityId: number | undefined,
   enabled = true
 ) {

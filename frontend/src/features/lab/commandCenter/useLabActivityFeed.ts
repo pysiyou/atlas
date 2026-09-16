@@ -6,8 +6,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query/keys';
 import { LAB_CONFIG } from '@/features/lab/constants';
 import { labCommandCenterAPI } from '../api/labCommandCenter';
-import { timelineLaneToApiCategory } from '../constants/labConstants';
-import type { LabTimelineLane } from '../constants/labConstants';
+import type { TimelineCategory } from '@/features/timeline';
 
 const MAX_ACCUMULATED = 200;
 
@@ -76,9 +75,14 @@ const TECH_FEED_PAGE_SIZE = 50;
 const TECH_FEED_VISIBLE_STEP = 30;
 const TECH_FEED_MAX_VISIBLE = 200;
 
-/** Lab workflow + order-coordination events (status, payments, test changes, recollection). */
-const TECH_LANES: LabTimelineLane[] = ['sample', 'results', 'validation', 'order'];
-const TECH_CATEGORIES = TECH_LANES.map(timelineLaneToApiCategory);
+/** Lab workflow + order-coordination events for the command center feed. */
+const TECH_CATEGORIES: TimelineCategory[] = [
+  'sample',
+  'result',
+  'other',
+  'order',
+  'payment',
+];
 
 export function useRecentLabActivityFeed() {
   const query = useLabActivityFeedQuery(TECH_FEED_HOURS, TECH_FEED_PAGE_SIZE, [...TECH_CATEGORIES]);

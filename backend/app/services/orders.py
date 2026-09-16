@@ -522,6 +522,13 @@ class OrderService:
             generate_samples_for_order(order.orderId, self.db, user_id)
 
             BillingService(self.db).create_invoice_for_order(order.orderId)
+            AuditService(self.db).log_order_status_change(
+                order.orderId,
+                "",
+                OrderStatus.ORDERED.value,
+                user_id=user_id,
+                metadata={"trigger": "create"},
+            )
             self.db.commit()
             self.db.refresh(order)
         except SQLAlchemyError:

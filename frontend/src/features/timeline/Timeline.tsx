@@ -1,38 +1,33 @@
 /**
- * LabAuditTimeline — shared vertical timeline for entity history panels and command center.
+ * Unified audit timeline — lab history, command center feed, and order detail.
  */
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Badge, EntityId } from '@/components';
+import { EntityId } from '@/components';
 import { cn, formatRelativeDateLabel, formatRelativeDateTime } from '@/utils';
-import type { TimelineEvent } from '../api/labCommandCenter';
+import type { TimelineEvent } from '@/features/lab/api/labCommandCenter';
+import { useOpenHistoricalLabRecord } from '@/features/lab/hooks/useOpenHistoricalLabRecord';
 import {
-  getCategoryConfig,
-  getEventCategory,
-  getEventTone,
-} from '../timeline/labTimelineShared';
-import { formatActivityEvent } from '../timeline/labActivityEventFormat';
-import { COMMAND_CENTER_TIMELINE } from '../timeline/labTimelineShared';
-import { useOpenHistoricalLabRecord } from '../hooks/useOpenHistoricalLabRecord';
-import {
-  getEntityCategoryConfig,
-  getEntityEventCategory,
-  getEntityEventTone,
-} from '../timeline/labEntityTimelineEvents';
-import {
-  formatEntityTimelineEvent,
-  getRetestAttemptDivider,
-} from '../timeline/labEntityTimelineFormat';
-import type { EventDetail as EntityEventDetail } from '../timeline/labTimelineShared';
-import type { EventDetail as FeedEventDetail } from '../timeline/labActivityEventFormat';
+  categoriesForPreset,
+  filterEventsByCategories,
+  resolveCategory,
+  type TimelineCategory,
+} from './timelineCategories';
+import { formatTimelineEvent } from './timelineEventRegistry';
+import type { EventDetail } from './timelineEventRegistry';
+import { formatStatusLabel } from './timelineDetails';
+import { getRetestAttemptDivider } from './timelineRetestDivider';
+import { TIMELINE_STYLES } from './timelineStyles';
+import { getCategoryVisual } from './timelineVisuals';
 
-type TimelineDetailItem = EntityEventDetail | FeedEventDetail;
+export type TimelinePreset = 'lab' | 'order' | 'commandCenter' | 'all';
 
-export interface LabAuditTimelineProps {
+export interface TimelineProps {
   events: TimelineEvent[];
-  /** Entity history panels use workflow-phase categories; command center includes order events. */
-  variant?: 'entity' | 'commandCenter';
+  preset?: TimelinePreset;
+  categoryFilter?: TimelineCategory[];
   interactiveEntities?: boolean;
+  showRetestDividers?: boolean;
   emptyMessage?: string;
   className?: string;
   footer?: React.ReactNode;
@@ -44,7 +39,7 @@ function TimelineDetail({
   onOpenSample,
   onOpenOrderTest,
 }: {
-  detail: TimelineDetailItem;
+  detail: EventDetail;
   interactiveEntities: boolean;
   onOpenSample: (id: number) => void;
   onOpenOrderTest: (id: number) => void;
@@ -52,11 +47,14 @@ function TimelineDetail({
   switch (detail.type) {
     case 'note':
       return (
-        <span className={COMMAND_CENTER_TIMELINE.eventDetailText}>Notes: {detail.value}</span>
+        <span className={TIMELINE_STYLES.eventDetailText}>Notes: {detail.value}</span>
       );
     case 'status':
+      return (
+        <span className={TIMELINE_STYLES.eventDetailText}>{formatStatusLabel(detail.value)}</span>
+      );
     case 'sampleType':
-      return <Badge variant={detail.value} size="xs" />;
+      return <span className={TIMELINE_STYLES.eventDetailText}>{detail.value}</span>;
     case 'testCode':
     case 'id':
       return <EntityId variant="inline">{detail.value}</EntityId>;
@@ -85,64 +83,57 @@ function TimelineDetail({
         </EntityId>
       );
     default:
-      return <span className={COMMAND_CENTER_TIMELINE.eventDetailText}>{detail.value}</span>;
+      return <span className={TIMELINE_STYLES.eventDetailText}>{detail.value}</span>;
   }
 }
 
 function TimelineEventRow({
   event,
   isLast,
-  variant,
   interactiveEntities,
   onOpenSample,
   onOpenOrderTest,
 }: {
   event: TimelineEvent;
   isLast: boolean;
-  variant: 'entity' | 'commandCenter';
   interactiveEntities: boolean;
   onOpenSample: (id: number) => void;
   onOpenOrderTest: (id: number) => void;
 }) {
-  const isEntity = variant === 'entity';
-  const categoryConfig = isEntity
-    ? getEntityCategoryConfig(getEntityEventCategory(event))
-    : getCategoryConfig(getEventCategory(event.type));
-  const tone = isEntity ? getEntityEventTone(event) : getEventTone(event);
-  const formatted = isEntity
-    ? formatEntityTimelineEvent(event)
-    : formatActivityEvent(event, { interactiveEntities });
+  const category = resolveCategory(event);
+  const visual = getCategoryVisual(category);
+  const formatted = formatTimelineEvent(event);
 
   const performerLabel =
     event.performedByName ??
     (event.performedBy === 'system' ? 'System' : `User ${event.performedBy}`);
 
   return (
-    <li className={COMMAND_CENTER_TIMELINE.eventRow}>
-      <div className={COMMAND_CENTER_TIMELINE.eventDotTrack}>
+    <li className={TIMELINE_STYLES.eventRow}>
+      <div className={TIMELINE_STYLES.eventDotTrack}>
         <div
-          className={cn(COMMAND_CENTER_TIMELINE.eventDot, COMMAND_CENTER_TIMELINE.toneDot[tone])}
+          className={cn(TIMELINE_STYLES.eventDot, TIMELINE_STYLES.eventIndicator)}
           aria-hidden="true"
         />
         {!isLast && (
           <div
             className={cn(
-              COMMAND_CENTER_TIMELINE.eventConnectorStem,
-              COMMAND_CENTER_TIMELINE.connectorStem,
+              TIMELINE_STYLES.eventConnectorStem,
+              TIMELINE_STYLES.connectorStem,
             )}
             aria-hidden="true"
           />
         )}
       </div>
-      <div className={COMMAND_CENTER_TIMELINE.eventBody}>
-        <div className={COMMAND_CENTER_TIMELINE.eventTitleRow}>
-          <Badge variant={categoryConfig.badgeVariant} size="xs" className={categoryConfig.iconClass}>
-            {categoryConfig.label}
-          </Badge>
-          <span className={COMMAND_CENTER_TIMELINE.eventAction}>{formatted.action}</span>
+      <div className={TIMELINE_STYLES.eventBody}>
+        <div className={TIMELINE_STYLES.eventTitleRow}>
+          <span className={cn(TIMELINE_STYLES.categoryLabel, visual.textClass)}>
+            {visual.label}
+          </span>
+          <span className={TIMELINE_STYLES.eventAction}>{formatted.action}</span>
         </div>
         {formatted.details.length > 0 && (
-          <div className={COMMAND_CENTER_TIMELINE.eventDetails}>
+          <div className={TIMELINE_STYLES.eventDetails}>
             {formatted.details.map((detail, idx) => (
               <TimelineDetail
                 key={`${event.id}-${idx}`}
@@ -155,9 +146,11 @@ function TimelineEventRow({
           </div>
         )}
         {formatted.note && (
-          <p className="text-xs text-text-secondary mt-1 whitespace-pre-wrap">{formatted.note}</p>
+          <p className={cn(TIMELINE_STYLES.eventDetailText, 'whitespace-pre-wrap')}>
+            Notes: {formatted.note}
+          </p>
         )}
-        <p className={COMMAND_CENTER_TIMELINE.eventMeta}>
+        <p className={TIMELINE_STYLES.eventMeta}>
           {performerLabel} ·{' '}
           <time dateTime={event.timestamp} title={formatRelativeDateTime(event.timestamp)}>
             {formatRelativeDateTime(event.timestamp)}
@@ -172,23 +165,37 @@ type TimelineGroupItem =
   | { kind: 'divider'; testId: number }
   | { kind: 'event'; event: TimelineEvent };
 
-export const LabAuditTimeline: React.FC<LabAuditTimelineProps> = ({
+function isLastEventInGroup(items: TimelineGroupItem[], index: number): boolean {
+  for (let i = index + 1; i < items.length; i++) {
+    if (items[i].kind === 'event') return false;
+  }
+  return true;
+}
+
+export const Timeline: React.FC<TimelineProps> = ({
   events,
-  variant = 'entity',
+  preset = 'all',
+  categoryFilter,
   interactiveEntities = false,
+  showRetestDividers,
   emptyMessage = 'No recorded actions yet.',
   className,
   footer,
 }) => {
   const { openSample, openOrderTest } = useOpenHistoricalLabRecord();
-  const showRetestDividers = variant === 'entity';
+  const retestDividers = showRetestDividers ?? preset === 'lab';
+
+  const visibleEvents = useMemo(() => {
+    const allowed = categoryFilter ?? categoriesForPreset(preset);
+    return filterEventsByCategories(events, allowed);
+  }, [events, categoryFilter, preset]);
 
   const grouped = useMemo(() => {
     const groups: { label: string; items: TimelineGroupItem[] }[] = [];
     let currentLabel: string | null = null;
     let previousEvent: TimelineEvent | undefined;
 
-    for (const event of events) {
+    for (const event of visibleEvents) {
       const label = formatRelativeDateLabel(event.timestamp);
       if (label !== currentLabel) {
         currentLabel = label;
@@ -196,7 +203,7 @@ export const LabAuditTimeline: React.FC<LabAuditTimelineProps> = ({
       }
       const group = groups[groups.length - 1];
 
-      if (showRetestDividers) {
+      if (retestDividers) {
         const divider = getRetestAttemptDivider(event, previousEvent);
         if (divider) {
           group.items.push({ kind: 'divider', testId: divider.testId });
@@ -207,9 +214,9 @@ export const LabAuditTimeline: React.FC<LabAuditTimelineProps> = ({
       previousEvent = event;
     }
     return groups;
-  }, [events, showRetestDividers]);
+  }, [visibleEvents, retestDividers]);
 
-  if (events.length === 0) {
+  if (visibleEvents.length === 0) {
     return <p className="text-sm text-text-tertiary">{emptyMessage}</p>;
   }
 
@@ -217,27 +224,26 @@ export const LabAuditTimeline: React.FC<LabAuditTimelineProps> = ({
     <div className={cn('overflow-y-auto pr-1', className ?? 'max-h-80')}>
       {grouped.map(group => (
         <div key={group.label} className="mb-2">
-          <div className={COMMAND_CENTER_TIMELINE.groupHeader}>
-            <span className={COMMAND_CENTER_TIMELINE.groupLabel}>{group.label}</span>
-            <div className={COMMAND_CENTER_TIMELINE.groupDivider} />
+          <div className={TIMELINE_STYLES.groupHeader}>
+            <span className={TIMELINE_STYLES.groupLabel}>{group.label}</span>
+            <div className={TIMELINE_STYLES.groupDivider} />
           </div>
           <ul className="space-y-0">
             {group.items.map((item, idx) => {
               if (item.kind === 'divider') {
                 return (
-                  <li key={`divider-${group.label}-${idx}`} className="py-1.5 pl-5">
-                    <span className={COMMAND_CENTER_TIMELINE.eventDetailText}>Retest attempt · </span>
+                  <li key={`divider-${group.label}-${idx}`} className="pb-2 pl-5">
+                    <span className={TIMELINE_STYLES.eventDetailText}>Retest attempt · </span>
                     <EntityId type="orderTest" value={item.testId} variant="inline" />
                   </li>
                 );
               }
-              const isLast = idx === group.items.length - 1;
+              const isLast = isLastEventInGroup(group.items, idx);
               return (
                 <TimelineEventRow
                   key={item.event.id}
                   event={item.event}
                   isLast={isLast}
-                  variant={variant}
                   interactiveEntities={interactiveEntities}
                   onOpenSample={openSample}
                   onOpenOrderTest={openOrderTest}

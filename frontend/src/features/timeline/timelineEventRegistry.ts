@@ -1,10 +1,11 @@
 /**
- * Activity event formatting — maps audit log events to display labels and detail chips.
+ * Unified timeline event registry — labels and detail lines for all audit event types.
  */
 /* eslint-disable max-lines -- single registry for all audit event type handlers */
 
 import { displayId } from '@/utils';
-import type { TimelineEvent } from '../api/labCommandCenter';
+import { LAB_COPY } from '@/features/lab/constants/labConstants';
+import type { TimelineEvent } from '@/features/lab/api/labCommandCenter';
 
 export type EventDetail =
   | { type: 'text'; value: string }
@@ -244,19 +245,16 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
 
   quality_issue_reported: event => {
     const meta = event.metadata;
+    const stage = metaString(meta.stage) ?? metaString(event.afterState?.stage);
+    const domain = metaString(meta.domain) ?? metaString(event.afterState?.domain);
     const details: EventDetail[] = [
       ...testTransitionDetails(meta, event),
       { type: 'testCode', value: formatTestCodes(meta) },
     ];
-    const domain = metaString(meta.domain) ?? metaString(event.afterState?.domain);
     const reason = metaString(meta.reason);
     const remedy = metaString(event.afterState?.remedy);
     const link = orderLink(meta.orderId);
     if (link) details.push({ type: 'text', value: 'on order' }, link);
-    if (domain) {
-      if (details.length > 0) details.push({ type: 'text', value: '—' });
-      details.push({ type: 'text', value: domain });
-    }
     if (reason) details.push({ type: 'text', value: '—' }, { type: 'text', value: reason });
     if (remedy) {
       details.push({ type: 'text', value: '→' }, { type: 'text', value: remedy.replace(/_/g, ' ') });
@@ -266,7 +264,13 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
       details.push({ type: 'text', value: '→' }, createdSample);
     }
     if (details.length === 0) details.push({ type: 'text', value: 'Reported' });
-    return { action: 'Quality issue flagged for review', details };
+    let action = 'Quality issue reported';
+    if (stage === 'collection' || domain === 'specimen') {
+      action = LAB_COPY.quality.sampleRejected;
+    } else if (stage === 'validation' || domain === 'results') {
+      action = 'Results rejected at validation';
+    }
+    return { action, details };
   },
 
   escalation_resolution_authorize_retest: event => {
@@ -412,10 +416,13 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     const link = orderLinkFromEvent(event);
     if (link) details.push(link);
     const status = getStatusValue(event);
+    const beforeStatus = metaString(event.beforeState?.status);
     if (status) details.push({ type: 'text', value: '→' }, { type: 'status', value: status });
     const isSystem = event.performedBy === 'system';
     let action = isSystem ? 'Order status automatically updated' : 'Order status manually updated';
-    if (status === 'completed' && isSystem) {
+    if (status === 'ordered' && (!beforeStatus || beforeStatus === '')) {
+      action = 'Order placed';
+    } else if (status === 'completed' && isSystem) {
       action = 'Order completed — all tests finished';
     } else if (status === 'in-progress' && isSystem) {
       action = 'Order moved to in progress';
@@ -462,17 +469,13 @@ function appendNote(event: TimelineEvent, formatted: FormattedTimelineEvent): Fo
   return { ...formatted, note };
 }
 
-export interface FormatActivityOptions {
-  interactiveEntities?: boolean;
-}
-
-export function formatActivityEvent(
-  event: TimelineEvent,
-  _options: FormatActivityOptions = {},
-): FormattedTimelineEvent {
+export function formatTimelineEvent(event: TimelineEvent): FormattedTimelineEvent {
   const handler = EVENT_HANDLERS[event.type];
   const formatted = handler
     ? handler(event)
     : { action: event.type.replace(/_/g, ' '), details: entityDetails(event) };
   return appendNote(event, formatted);
 }
+
+/** @deprecated Use formatTimelineEvent */
+export const formatActivityEvent = formatTimelineEvent;

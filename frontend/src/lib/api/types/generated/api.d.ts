@@ -2864,6 +2864,10 @@ export interface components {
             id: number;
             /** Type */
             type: string;
+            /** Category */
+            category?: string | null;
+            /** Tone */
+            tone?: string | null;
             /** Entitytype */
             entityType: string;
             /** Entityid */
@@ -2895,8 +2899,8 @@ export interface components {
             id: number;
             /** Type */
             type: string;
-            /** Phase */
-            phase?: string | null;
+            /** Category */
+            category?: string | null;
             /** Tone */
             tone?: string | null;
             /** Entitytype */
@@ -5036,7 +5040,7 @@ export interface operations {
                 limit?: number;
                 /** @description Pagination offset */
                 offset?: number;
-                /** @description Optional workflow categories: specimen, results, validation, order, escalation, quality */
+                /** @description Optional categories: order, payment, sample, result, other (legacy: specimen→sample) */
                 categories?: string[] | null;
             };
             header?: never;
