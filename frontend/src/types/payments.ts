@@ -38,7 +38,7 @@ export const PAYMENT_METHOD_OPTIONS: PaymentMethodOption[] = [
   { value: 'mobile-money', label: 'Mobile Money', icon: ICONS.ui.smartphone, enabled: true },
   { value: 'credit-card', label: 'Credit Card', icon: ICONS.dataFields.creditCard, enabled: false },
   { value: 'debit-card', label: 'Debit Card', icon: ICONS.dataFields.creditCard, enabled: false },
-  { value: 'insurance', label: 'Insurance', icon: ICONS.ui.shield, enabled: true },
+  { value: 'insurance', label: 'Insurance', icon: ICONS.ui.shield, enabled: false },
   { value: 'bank-transfer', label: 'Bank Transfer', icon: ICONS.dataFields.wallet, enabled: false },
 ];
 

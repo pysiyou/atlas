@@ -1,9 +1,44 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Avatar, Icon, RemovableTag, TagChip, EntityId } from '@/components';
-import { cn } from '@/utils';
+import { Avatar, Icon, RemovableTag, TagChip } from '@/components';
+import { cn, formatPhoneNumber } from '@/utils';
 import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/components/inputs/inputStyles';
 import type { Patient } from '@/types';
 import { ICONS } from '@/config/icons';
+import { OrderSelectPopoverShell } from './OrderSelectPopoverShell';
+
+const SELECTED_CHIP_CLASS =
+  'max-w-[min(100%,20rem)] items-start gap-2 py-1.5 px-2 bg-surface-page border-border-default/80 shadow-none';
+
+function formatPatientContactLine(patient: Patient): string {
+  return [
+    patient.email?.trim() || undefined,
+    patient.phone?.trim() ? formatPhoneNumber(patient.phone) : undefined,
+  ]
+    .filter((part): part is string => Boolean(part))
+    .join(' · ');
+}
+
+function PatientSelectedChip({ patient }: { patient: Patient }) {
+  const contactLine = formatPatientContactLine(patient);
+  return (
+    <>
+      <Avatar
+        primaryText={patient.fullName}
+        size="xs"
+        avatarOnly
+        className="shrink-0 self-center"
+      />
+      <div className="min-w-0 flex flex-col">
+        <span className="text-xs font-normal text-text-primary truncate capitalize">
+          {patient.fullName}
+        </span>
+        <span className="text-xxs font-normal text-text-tertiary truncate">
+          {contactLine || 'No contact on file'}
+        </span>
+      </div>
+    </>
+  );
+}
 
 interface PatientSelectorProps {
   selectedPatient: Patient | null;
@@ -59,35 +94,17 @@ const PatientSearchTagInput: React.FC<{
 
         {selectedPatient &&
           (disabled ? (
-            <TagChip size="sm" className="gap-2">
-              <Avatar
-                primaryText={selectedPatient.fullName}
-                size="xxs"
-                avatarOnly
-                className="shrink-0"
-              />
-              <span className="min-w-0 truncate text-xs font-normal capitalize">
-                {selectedPatient.fullName}
-              </span>
-              <EntityId type="patient" value={selectedPatient.id} className="shrink-0" />
+            <TagChip size="sm" className={SELECTED_CHIP_CLASS}>
+              <PatientSelectedChip patient={selectedPatient} />
             </TagChip>
           ) : (
             <RemovableTag
               size="sm"
               onRemove={onClearSelection}
               removeAriaLabel="Clear selected patient"
-              className="gap-2"
+              className={SELECTED_CHIP_CLASS}
             >
-              <Avatar
-                primaryText={selectedPatient.fullName}
-                size="xxs"
-                avatarOnly
-                className="shrink-0"
-              />
-              <span className="min-w-0 truncate text-xs font-normal capitalize">
-                {selectedPatient.fullName}
-              </span>
-              <EntityId type="patient" value={selectedPatient.id} className="shrink-0" />
+              <PatientSelectedChip patient={selectedPatient} />
             </RemovableTag>
           ))}
 
@@ -98,7 +115,7 @@ const PatientSearchTagInput: React.FC<{
           value={value}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => onValueChange(e.target.value)}
           onFocus={() => onValueChange(value)}
-          placeholder={selectedPatient ? 'Search to change…' : 'Search by name, ID, or phone…'}
+          placeholder={selectedPatient ? '' : 'Search by name, ID, or phone…'}
           className="flex-1 min-w-[140px] outline-none text-xs text-text-primary placeholder:text-text-muted bg-transparent leading-normal"
           autoComplete="off"
           disabled={disabled}
@@ -172,23 +189,16 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
 
       {/* "Popover" results shown directly under the input */}
       {!disabled && isPopoverOpen && hasSearch && (
-        <div
-          className={[
-            'mt-1',
-            'border border-border-default/80',
-            'rounded',
-            'bg-surface',
-            'shadow-lg shadow-md',
-            'ring-1 ring-black/5',
-          ].join(' ')}
+        <OrderSelectPopoverShell
+          title="Matching patients"
+          resultCount={visiblePatients.length}
+          emptyMessage="No patients found"
+          isEmpty={visiblePatients.length === 0}
         >
-          {visiblePatients.length === 0 ? (
-            <div className="px-4 py-3 text-xs text-text-tertiary">No patients found</div>
-          ) : (
-            <div className="max-h-[320px] overflow-y-auto p-2">
-              <div className="space-y-1">
-                {visiblePatients.map(patient => {
+          {visiblePatients.map(patient => {
                   const isSelected = selectedPatient?.id === patient.id;
+                  const contactLine = formatPatientContactLine(patient);
+
                   return (
                     <button
                       key={patient.id}
@@ -197,49 +207,34 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                         onSelectPatient(patient);
                         setIsPopoverOpen(false);
                       }}
-                      className={[
-                        'w-full text-left',
-                        'px-3 py-2',
-                        'rounded',
-                        'transition-colors',
-                        'flex items-center justify-between gap-3',
+                      className={cn(
+                        'w-full text-left px-3 py-2',
+                        'transition-colors flex items-center gap-2',
                         'hover:bg-surface-page',
                         'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-opacity-30',
-                        isSelected ? 'bg-success-bg' : 'bg-surface',
-                      ].join(' ')}
+                        isSelected ? 'bg-surface-page' : 'bg-surface'
+                      )}
                     >
-                      <div className="min-w-0 flex items-center gap-2.5 flex-1">
-                        {/* Small avatar with initial */}
-                        <Avatar
-                          primaryText={patient.fullName}
-                          size="xxs"
-                          avatarOnly={true}
-                          className="shrink-0"
-                        />
-                        {/* Patient name */}
-                        <span className="text-xs font-normal text-text-primary truncate capitalize">
+                      <Avatar
+                        primaryText={patient.fullName}
+                        size="xs"
+                        avatarOnly
+                        className="shrink-0"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs font-normal text-text-primary truncate capitalize">
                           {patient.fullName}
-                        </span>
-                      </div>
-
-                      <div className="shrink-0 flex items-center gap-2">
-                        {/* Patient ID on the right */}
-                        <EntityId type="patient" value={patient.id} />
-                        {/* Check icon if selected */}
-                        {isSelected && (
-                          <Icon
-                            name={ICONS.actions.checkCircle}
-                            className="w-5 h-5 text-success-fg"
-                          />
+                        </p>
+                        {contactLine ? (
+                          <p className="text-xxs text-text-tertiary truncate">{contactLine}</p>
+                        ) : (
+                          <p className="text-xxs text-text-muted truncate">No contact on file</p>
                         )}
                       </div>
                     </button>
                   );
-                })}
-              </div>
-            </div>
-          )}
-        </div>
+          })}
+        </OrderSelectPopoverShell>
       )}
     </div>
   );
