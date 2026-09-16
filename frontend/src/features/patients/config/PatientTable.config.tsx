@@ -14,9 +14,9 @@ import { isAffiliationActive } from '../utils/patientHelpers';
 import { PatientCard } from '../components/PatientCard';
 
 const PATIENT_VIEWS = {
-  full: ['id', 'fullName', 'contact', 'gender', 'lastOrder', 'affiliation', 'registrationDate'],
-  medium: ['id', 'fullName', 'contact', 'gender'],
-  compact: ['id', 'fullName', 'contact'],
+  full: ['id', 'fullName', 'gender', 'contact', 'lastOrder', 'registrationDate', 'affiliation'],
+  medium: ['id', 'fullName', 'gender', 'contact', 'lastOrder', 'registrationDate'],
+  compact: ['id', 'fullName', 'gender', 'contact'],
 } as const;
 
 export const createPatientTableConfig = (

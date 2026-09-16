@@ -20,6 +20,7 @@ export interface OrderColumnAccessors<T> {
   getPatientName: (item: T) => string;
   getTests: (item: T) => OrderTest[];
   getTestCount?: (item: T) => number | undefined;
+  getTestCodes?: (item: T) => string[] | undefined;
   getTotalPrice: (item: T) => number;
   getPaymentStatus: (item: T) => PaymentStatus;
   getOrderDate: (item: T) => string;
@@ -35,6 +36,7 @@ export interface OrderColumnRenderers<T> {
 
 export interface OrderSharedColumnOptions {
   testsSortable?: boolean;
+  getTestName?: (testCode: string) => string;
 }
 
 export type OrderSharedColumnKey =
@@ -52,7 +54,7 @@ export function createOrderSharedColumns<T>(
   renderers: OrderColumnRenderers<T>,
   options: OrderSharedColumnOptions = {}
 ): Record<OrderSharedColumnKey, ColumnConfig<T>> {
-  const { testsSortable = false } = options;
+  const { testsSortable = false, getTestName } = options;
 
   const columns: Partial<Record<OrderSharedColumnKey, ColumnConfig<T>>> = {
     orderId: createIdColumn<T>('orderId', 'Order ID', item => renderers.renderOrderId(item), {
@@ -79,7 +81,12 @@ export function createOrderSharedColumns<T>(
       render: item => {
         const tests = accessors.getTests(item);
         const count = accessors.getTestCount?.(item);
-        return renderOrderTestsBlock(tests, count != null && tests.length === 0 ? count : undefined);
+        const testCodes = accessors.getTestCodes?.(item);
+        return renderOrderTestsBlock(tests, {
+          fallbackCount: count != null && tests.length === 0 ? count : undefined,
+          testCodes: tests.length === 0 ? testCodes : undefined,
+          getTestName,
+        });
       },
     },
     totalPrice: {

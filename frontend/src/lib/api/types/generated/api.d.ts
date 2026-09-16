@@ -1782,6 +1782,8 @@ export interface components {
              * @default 0
              */
             testCount: number;
+            /** Testcodes */
+            testCodes?: string[];
             /** Totalprice */
             totalPrice: number;
             paymentStatus: components["schemas"]["PaymentStatus"];

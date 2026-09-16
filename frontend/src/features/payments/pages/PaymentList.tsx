@@ -9,6 +9,7 @@ import { ListView } from '@/components';
 import { PaymentFilters } from '../components/PaymentFilters';
 import { createPaymentTableConfig } from '../config/PaymentTable.config';
 import { PaymentDetailModal } from '../components/PaymentDetailModal';
+import { useTestNameLookup } from '@/features/catalog';
 import { usePaginatedOrders } from '@/features/orders';
 import { usePaymentsForOrderIds } from '../api/payments';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
@@ -58,7 +59,8 @@ export const PaymentList: React.FC = () => {
 
   const orderIds = useMemo(() => orders.map(order => order.orderId), [orders]);
   const { payments, isLoading: paymentsLoading } = usePaymentsForOrderIds(orderIds);
-  const isLoading = ordersLoading || isFetching || paymentsLoading;
+  const { getTestName, isLoading: testsCatalogLoading } = useTestNameLookup();
+  const isLoading = ordersLoading || isFetching || paymentsLoading || testsCatalogLoading;
 
   const error = ordersError
     ? {
@@ -105,8 +107,9 @@ export const PaymentList: React.FC = () => {
       startDate.setHours(0, 0, 0, 0);
 
       filtered = filtered.filter(item => {
-        const orderDate = new Date(item.order.orderDate);
-        return orderDate >= startDate && orderDate <= endDate;
+        const dateValue = item.paymentDate ?? item.order.orderDate;
+        const rowDate = new Date(dateValue);
+        return rowDate >= startDate && rowDate <= endDate;
       });
     }
 
@@ -126,8 +129,8 @@ export const PaymentList: React.FC = () => {
   }, [refetch]);
 
   const paymentTableConfig = useMemo(
-    () => createPaymentTableConfig(navigate, handlePaymentSuccess),
-    [navigate, handlePaymentSuccess]
+    () => createPaymentTableConfig(navigate, handlePaymentSuccess, getTestName),
+    [navigate, handlePaymentSuccess, getTestName]
   );
 
   const handleRowClick = useCallback((item: OrderPaymentView) => {
@@ -172,7 +175,7 @@ export const PaymentList: React.FC = () => {
             onPageChange: goToPage,
             pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
           }}
-          defaultSort={{ key: 'orderDate', direction: 'desc' }}
+          defaultSort={{ key: 'paidDate', direction: 'desc' }}
         />
       </div>
 

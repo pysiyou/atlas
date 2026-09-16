@@ -111,9 +111,10 @@ export interface Order {
   patientName: string; // From API relationship
   orderDate: string;
 
-  // Tests (omitted on summary list responses — use testCount)
+  // Tests (omitted on summary list responses — use testCount / testCodes)
   tests?: OrderTest[];
   testCount?: number;
+  testCodes?: string[];
 
   // Pricing (snapshot at order time)
   totalPrice: number;

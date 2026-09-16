@@ -290,7 +290,30 @@ def _parse_include(include: str | None) -> set[str]:
     return {part.strip().lower() for part in include.split(",") if part.strip()}
 
 
-def _order_to_summary(order: Order, test_count: int) -> dict:
+_INACTIVE_TEST_STATUSES = (
+    TestStatus.REMOVED,
+    TestStatus.SUPERSEDED,
+    TestStatus.CANCELLED,
+)
+
+
+def _active_test_codes_by_order_id(db, order_ids: list[int]) -> dict[int, list[str]]:
+    if not order_ids:
+        return {}
+    rows = (
+        db.query(OrderTest.orderId, OrderTest.testCode)
+        .filter(OrderTest.orderId.in_(order_ids))
+        .filter(OrderTest.status.notin_(_INACTIVE_TEST_STATUSES))
+        .order_by(OrderTest.orderId, OrderTest.id)
+        .all()
+    )
+    codes_by_order: dict[int, list[str]] = {}
+    for order_id, test_code in rows:
+        codes_by_order.setdefault(order_id, []).append(test_code)
+    return codes_by_order
+
+
+def _order_to_summary(order: Order, test_count: int, test_codes: list[str] | None = None) -> dict:
     patient_name = order.patient.fullName if order.patient else "Unknown"
     return OrderSummaryResponse(
         orderId=order.orderId,
@@ -298,6 +321,7 @@ def _order_to_summary(order: Order, test_count: int) -> dict:
         patientName=patient_name,
         orderDate=order.orderDate,
         testCount=test_count,
+        testCodes=test_codes or [],
         totalPrice=float(order.totalPrice or 0),
         paymentStatus=order.paymentStatus,
         overallStatus=order.overallStatus,
@@ -348,16 +372,24 @@ class OrderService:
             if summary:
                 order_ids = [order.orderId for order in orders]
                 test_counts: dict[int, int] = {}
+                test_codes_by_order: dict[int, list[str]] = {}
                 if order_ids:
                     rows = (
                         self.db.query(OrderTest.orderId, func.count(OrderTest.id))
                         .filter(OrderTest.orderId.in_(order_ids))
+                        .filter(OrderTest.status.notin_(_INACTIVE_TEST_STATUSES))
                         .group_by(OrderTest.orderId)
                         .all()
                     )
                     test_counts = {order_id: count for order_id, count in rows}
+                    test_codes_by_order = _active_test_codes_by_order_id(self.db, order_ids)
                 serialized = [
-                    _order_to_summary(order, test_counts.get(order.orderId, 0)) for order in orders
+                    _order_to_summary(
+                        order,
+                        test_counts.get(order.orderId, 0),
+                        test_codes_by_order.get(order.orderId, []),
+                    )
+                    for order in orders
                 ]
             else:
                 serialized = [

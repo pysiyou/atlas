@@ -49,19 +49,43 @@ export function renderOrderPatientName(
   return renderPatientNameWithId(patientName, patientId);
 }
 
+export interface RenderOrderTestsBlockOptions {
+  fallbackCount?: number;
+  testCodes?: string[];
+  getTestName?: (testCode: string) => string;
+}
+
 export function renderOrderTestsBlock(
   activeTests: Pick<OrderTest, 'testCode' | 'testName'>[],
-  fallbackCount?: number
+  options?: RenderOrderTestsBlockOptions | number
 ): ReactNode {
-  const activeCount = fallbackCount ?? activeTests.length;
-  const testList = activeTests.map(t => t.testCode ?? t.testName).join('/');
+  const resolved: RenderOrderTestsBlockOptions =
+    typeof options === 'number' ? { fallbackCount: options } : (options ?? {});
+  const { fallbackCount, testCodes, getTestName } = resolved;
+
+  const activeCount =
+    fallbackCount ??
+    (activeTests.length > 0 ? activeTests.length : (testCodes?.length ?? 0));
+
+  const labels =
+    activeTests.length > 0
+      ? activeTests.map(t => t.testName || t.testCode)
+      : (testCodes ?? []).map(code => getTestName?.(code) || code);
+
+  const firstName = labels[0];
+  const secondary =
+    firstName && labels.length > 1
+      ? `${firstName}, +${labels.length - 1}`
+      : firstName ?? '';
 
   return (
     <div className="min-w-0 font-normal">
       <div className="text-text-primary truncate font-normal">
         {activeCount} test{activeCount !== 1 ? 's' : ''}
       </div>
-      {testList ? <EntityId variant="secondary" className="truncate">{testList}</EntityId> : null}
+      {secondary ? (
+        <div className="text-xs text-text-tertiary truncate font-normal">{secondary}</div>
+      ) : null}
     </div>
   );
 }

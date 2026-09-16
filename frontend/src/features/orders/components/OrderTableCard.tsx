@@ -1,11 +1,18 @@
 import { Badge, Avatar, MobileEntityCard, EntityId } from '@/components';
 import type { CardComponentProps } from '@/components';
+import { renderOrderTestsBlock } from '@/components/data-table';
+import { useTestNameLookup } from '@/features/catalog';
 import { formatCurrency, formatDateTime } from '@/utils';
 import { getActiveTests } from '../utils/orderCalculator';
 import type { Order } from '@/types';
 
 export function OrderTableCard({ item: order, onClick }: CardComponentProps<Order>) {
+  const { getTestName } = useTestNameLookup();
   const activeTests = getActiveTests(order.tests ?? []);
+  const hasTests =
+    activeTests.length > 0 ||
+    (order.testCodes?.length ?? 0) > 0 ||
+    (order.testCount ?? 0) > 0;
 
   return (
     <MobileEntityCard onClick={onClick}>
@@ -21,42 +28,22 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
         trailing={<div className="text-text-primary text-lg">{formatCurrency(order.totalPrice)}</div>}
       />
 
-      {/* Tests list: Show at most 2 tests, third line shows remaining count */}
-      <div className="grow">
-        {activeTests.length > 0 && (
-          <div className="space-y-1">
-            {activeTests.slice(0, 2).map((test, index) => (
-              <div
-                key={test.id ?? `${test.testCode}-${index}`}
-                className="flex items-center justify-between text-xs text-text-secondary"
-              >
-                <div className="flex items-center flex-1 min-w-0">
-                  <span className="w-1 h-1 rounded-full bg-neutral-400 mr-2 shrink-0" />
-                  <span className="mr-1 truncate">{test.testName}</span>
-                  <EntityId variant="inline" className="truncate">
-                    {test.testCode}
-                  </EntityId>
-                </div>
-                <span className="text-text-primary ml-2 shrink-0">
-                  {formatCurrency(test.priceAtOrder)}
-                </span>
-              </div>
-            ))}
-            {activeTests.length > 2 && (
-              <div className="text-xs text-text-tertiary">
-                +{activeTests.length - 2} more test{activeTests.length - 2 !== 1 ? 's' : ''}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+      {hasTests && (
+        <div className="min-w-0 grow">
+          {renderOrderTestsBlock(activeTests, {
+            fallbackCount:
+              order.testCount != null && activeTests.length === 0 ? order.testCount : undefined,
+            testCodes: activeTests.length === 0 ? order.testCodes : undefined,
+            getTestName,
+          })}
+        </div>
+      )}
 
-      {/* Bottom section: Order date (left) + Payment status + Order status badges (right) */}
-      <div className="flex justify-between items-center mt-auto pt-3">
-        <div className="text-xs text-text-tertiary">{formatDateTime(order.orderDate)}</div>
-        <div className="flex items-center gap-2">
-          {order.paymentStatus && <Badge variant={order.paymentStatus} size="xs" />}
+      <div className="flex justify-between items-center mt-auto pt-3 gap-2">
+        <div className="text-xs text-text-tertiary tabular-nums">{formatDateTime(order.orderDate)}</div>
+        <div className="flex items-center gap-2 shrink-0">
           {order.overallStatus && <Badge variant={order.overallStatus} size="xs" />}
+          {order.paymentStatus && <Badge variant={order.paymentStatus} size="xs" />}
         </div>
       </div>
     </MobileEntityCard>
