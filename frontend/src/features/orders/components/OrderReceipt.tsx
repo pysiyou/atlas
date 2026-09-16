@@ -15,6 +15,10 @@ export interface OrderReceiptProps {
   variant?: OrderReceiptVariant;
   paymentDate?: string;
   paymentMethod?: string;
+  /** When false, total row is omitted (e.g. rendered in panel footer). Default true. */
+  showTotal?: boolean;
+  /** When false, payment status badge is hidden in the compact/panel header. Default true. */
+  showPaymentStatusBadge?: boolean;
 }
 
 function receiptShellClass(variant: OrderReceiptVariant): string {
@@ -29,12 +33,14 @@ function ReceiptHeader({
   paymentDate,
   paymentMethod,
   pad,
+  showPaymentStatusBadge,
 }: {
   order: Order;
   variant: OrderReceiptVariant;
   paymentDate?: string;
   paymentMethod?: string;
   pad: string;
+  showPaymentStatusBadge: boolean;
 }) {
   const isDetailed = variant === 'detailed';
 
@@ -85,13 +91,38 @@ function ReceiptHeader({
             )}
           </div>
         </>
+      ) : variant === 'panel' ? (
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0 flex-1 space-y-0.5">
+            {order.patientName ? (
+              <p className="text-sm leading-snug font-normal text-text-primary truncate">
+                {order.patientName}
+              </p>
+            ) : null}
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-text-tertiary">
+              <EntityId type="order" value={order.orderId} variant="secondary" className="min-w-0" />
+              {order.orderDate && (
+                <>
+                  <span className="text-border-strong" aria-hidden>·</span>
+                  <span className="tabular-nums shrink-0">{formatDateTime(order.orderDate)}</span>
+                </>
+              )}
+            </div>
+          </div>
+          {showPaymentStatusBadge && (
+            <Badge variant={order.paymentStatus} size="xs" className="shrink-0" />
+          )}
+        </div>
       ) : (
         <>
-          <div className="flex justify-between items-center">
-            <span className="text-xs font-normal text-text-secondary uppercase tracking-wider">
-              Order <EntityId type="order" value={order.orderId} />
-            </span>
-            <Badge variant={order.paymentStatus} size="xs" />
+          <div className="flex justify-between items-center gap-2">
+            <EntityId
+              type="order"
+              value={order.orderId}
+              variant="secondary"
+              className="text-xs min-w-0 truncate"
+            />
+            {showPaymentStatusBadge && <Badge variant={order.paymentStatus} size="xs" className="shrink-0" />}
           </div>
           {order.patientName && (
             <p className="text-[11px] text-text-tertiary mt-0.5 truncate">{order.patientName}</p>
@@ -174,7 +205,7 @@ function ReceiptItems({
   );
 }
 
-function ReceiptTotal({
+export function ReceiptTotal({
   total,
   variant,
   pad,
@@ -223,6 +254,8 @@ export const OrderReceipt: React.FC<OrderReceiptProps> = ({
   variant = 'panel',
   paymentDate,
   paymentMethod,
+  showTotal = true,
+  showPaymentStatusBadge = true,
 }) => {
   const activeTests = getActiveTests(order.tests ?? []);
   const activeTotal = getActiveTotal(order.tests ?? []);
@@ -236,9 +269,10 @@ export const OrderReceipt: React.FC<OrderReceiptProps> = ({
         paymentDate={paymentDate}
         paymentMethod={paymentMethod}
         pad={pad}
+        showPaymentStatusBadge={showPaymentStatusBadge}
       />
       <ReceiptItems tests={activeTests} variant={variant} pad={pad} />
-      <ReceiptTotal total={activeTotal} variant={variant} pad={pad} />
+      {showTotal && <ReceiptTotal total={activeTotal} variant={variant} pad={pad} />}
     </div>
   );
 };
