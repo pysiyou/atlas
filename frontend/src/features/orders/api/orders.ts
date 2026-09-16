@@ -361,7 +361,7 @@ export function usePaginatedOrders(filters?: OrdersFilters, initialPage = 1, pag
  * ```tsx
  * const { stats, isLoading } = useOrderStats();
  * // stats.total = 150
- * // stats.byStatus['in-progress'] = 45
+ * // stats.byStatus['running'] = 45
  * ```
  */
 export function useOrderStats() {
@@ -393,7 +393,7 @@ export function useOrderStats() {
         byStatus,
         byPaymentStatus,
         unpaidCount: byPaymentStatus['unpaid'] || 0,
-        inProgressCount: byStatus['in-progress'] || 0,
+        inProgressCount: byStatus['running'] || 0,
       };
     },
   });

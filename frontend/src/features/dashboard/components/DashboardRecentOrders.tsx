@@ -46,7 +46,7 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
               variant={
                 order.overallStatus === 'completed'
                   ? 'success'
-                  : order.overallStatus === 'in-progress'
+                  : order.overallStatus === 'running'
                     ? 'warning'
                     : 'info'
               }

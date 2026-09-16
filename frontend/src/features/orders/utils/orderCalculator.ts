@@ -10,7 +10,7 @@ import type { Order, OrderStatus, TestStatus, OrderTest } from '@/types';
  *
  * Logic matches backend order_status_updater.py:
  * 1. All active tests are validated or cancelled -> completed
- * 2. Any active test started (including pending on rejected/recollection tubes) -> in-progress
+ * 2. Any active test started (including pending on rejected/recollection tubes) -> running
  * 3. All pending -> ordered
  *
  * Note: cancelled is set manually on the order and is not derived here.
@@ -49,7 +49,7 @@ export const calculateOrderStatus = (
     'escalated',
   ];
   if (activeStatuses.some(s => startedStatuses.includes(s))) {
-    return 'in-progress';
+    return 'running';
   }
 
   // Mirror backend: pending on rejected or recollection samples counts as started.
@@ -61,7 +61,7 @@ export const calculateOrderStatus = (
       if (!sample) return false;
       return sample.status === 'rejected' || sample.isRecollection === true;
     });
-    if (pendingRework) return 'in-progress';
+    if (pendingRework) return 'running';
   }
 
   return 'ordered';

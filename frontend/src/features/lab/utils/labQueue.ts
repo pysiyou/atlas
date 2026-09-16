@@ -249,7 +249,7 @@ export function mapCollectionWorklistToSampleDisplay(item: CollectionWorklistIte
     orderDate: item.orderDate,
     totalPrice: 0,
     paymentStatus: item.paymentStatus,
-    overallStatus: 'in-progress',
+    overallStatus: 'running',
     priority: item.priority,
     tests: [],
     createdBy: '',

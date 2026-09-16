@@ -246,7 +246,7 @@ def _calculate_order_status(order: Order, samples: list[Sample]) -> OrderStatus:
         return OrderStatus.COMPLETED
 
     if any(_test_has_started(t, samples_by_id) for t in active_tests):
-        return OrderStatus.IN_PROGRESS
+        return OrderStatus.RUNNING
 
     return OrderStatus.ORDERED
 

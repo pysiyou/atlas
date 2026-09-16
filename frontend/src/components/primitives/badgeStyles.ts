@@ -19,7 +19,7 @@ export type BadgeColor =
 
 const ORDER_COLOR_MAP: Record<string, BadgeColor> = {
   ordered: 'info',
-  'in-progress': 'warning',
+  running: 'warning',
   completed: 'success',
   cancelled: 'danger',
 };
@@ -157,7 +157,7 @@ export const CONTAINER_STYLES: Record<string, string> = {
 export const DISPLAY_LABELS: Record<string, string> = {
   pending: 'PENDING',
   'sample-collected': 'COLLECTED',
-  'in-progress': 'IN PROGRESS',
+  running: 'RUNNING',
   resulted: 'RESULTED',
   validated: 'VALIDATED',
   cancelled: 'CANCELLED',

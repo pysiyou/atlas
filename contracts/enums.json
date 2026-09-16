@@ -150,7 +150,7 @@
     "type": "string",
     "values": {
       "ORDERED": "ordered",
-      "IN_PROGRESS": "in-progress",
+      "RUNNING": "running",
       "COMPLETED": "completed",
       "CANCELLED": "cancelled"
     }

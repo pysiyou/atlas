@@ -424,7 +424,7 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
       action = 'Order placed';
     } else if (status === 'completed' && isSystem) {
       action = 'Order completed — all tests finished';
-    } else if (status === 'in-progress' && isSystem) {
+    } else if (status === 'running' && isSystem) {
       action = 'Order moved to in progress';
     }
     return { action, details };
