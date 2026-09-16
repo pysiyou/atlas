@@ -9,7 +9,7 @@ import type { TableViewConfig } from '@/components';
 import { buildViews, renderDateTimeCell, renderOrderPatientName } from '@/components/data-table';
 import type { ValidatedTest } from '../types';
 import { ReportPreviewButton } from '../components/ReportPreviewButton';
-import { ReportCard } from '../components/ReportCard';
+import { ValidatedTestReportCard } from '../components/ValidatedTestReportCard';
 
 const REPORT_VIEWS = {
   full: ['testId', 'orderId', 'patientName', 'testName', 'orderDate', 'status', 'action'],
@@ -100,7 +100,7 @@ export const createReportTableConfig = (
   };
 
   const CardComponent = (props: { item: ValidatedTest; index: number; onClick?: () => void }) => (
-    <ReportCard {...props} onPreview={onPreview} />
+    <ValidatedTestReportCard {...props} onPreview={onPreview} />
   );
 
   return {

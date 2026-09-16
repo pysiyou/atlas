@@ -5,14 +5,14 @@
 
 import React, { useMemo, useCallback, useEffect } from 'react';
 import { useNavigate, useParams, Navigate } from 'react-router-dom';
-import { CollectionView } from '../collection/CollectionView';
-import { EntryView } from '../entry/EntryView';
-import { ValidationView } from '../validation/ValidationView';
-import { LabTechBoard } from '../command-center';
+import { SampleCollectionQueue } from '../collection/SampleCollectionQueue';
+import { ResultEntryQueue } from '../entry/ResultEntryQueue';
+import { ResultValidationQueue } from '../validation/ResultValidationQueue';
+import { LabCommandCenterBoard } from '../command-center';
 import { Icon, PageHeader, Badge, ErrorAlert } from '@/components';
 import { errorAlertMessage } from '@/utils/feedback';
 import { ICONS } from '@/config/icons';
-import { useLabPipelineCounts, getValidationTabCount } from '../hooks';
+import { useLabStageQueueCounts, getValidationTabCount } from '../hooks';
 import {
   DEFAULT_LAB_TAB,
   isLabTabId,
@@ -21,10 +21,10 @@ import {
   getLabTabPath,
 } from '../constants/labTabs';
 
-export const Laboratory: React.FC = () => {
+export const LaboratoryPage: React.FC = () => {
   const navigate = useNavigate();
   const { tab: tabParam } = useParams<{ tab?: string }>();
-  const { counts, isError, error, refetch } = useLabPipelineCounts();
+  const { counts, isError, error, refetch } = useLabStageQueueCounts();
 
   const activeTab: LabTabId = isLabTabId(tabParam) ? tabParam : DEFAULT_LAB_TAB;
 
@@ -66,8 +66,8 @@ export const Laboratory: React.FC = () => {
         count: getValidationTabCount(counts),
       },
       {
-        id: 'dashboard',
-        label: LAB_TAB_LABELS.dashboard,
+        id: 'command-center',
+        label: LAB_TAB_LABELS['command-center'],
         icon: <Icon name={ICONS.ui.dashboard} className="w-4 h-4" />,
       },
     ];
@@ -130,14 +130,14 @@ export const Laboratory: React.FC = () => {
 
       <div
         className={`flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden ${
-          activeTab === 'dashboard'
+          activeTab === 'command-center'
             ? ''
             : 'bg-surface rounded border border-border-default shadow-sm'
         }`}
       >
         <div
           className={`flex-1 flex flex-col min-h-0 overflow-hidden ${
-            activeTab === 'dashboard' ? '' : 'bg-surface-page'
+            activeTab === 'command-center' ? '' : 'bg-surface-page'
           }`}
         >
           {isError ? (
@@ -151,12 +151,12 @@ export const Laboratory: React.FC = () => {
             </div>
           ) : (
             <>
-              {activeTab === 'collection' && <CollectionView />}
-              {activeTab === 'entry' && <EntryView />}
-              {activeTab === 'validation' && <ValidationView />}
-              {activeTab === 'dashboard' && (
+              {activeTab === 'collection' && <SampleCollectionQueue />}
+              {activeTab === 'entry' && <ResultEntryQueue />}
+              {activeTab === 'validation' && <ResultValidationQueue />}
+              {activeTab === 'command-center' && (
                 <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-                  <LabTechBoard />
+                  <LabCommandCenterBoard />
                 </div>
               )}
             </>

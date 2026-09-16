@@ -2,7 +2,7 @@
  * PaymentPopover Component
  * Popover interface for processing payments on orders
  *
- * Uses the shared PopoverForm component for consistent styling with other lab popovers.
+ * Uses the shared LabWorkflowPopoverChrome component for consistent styling with other lab popovers.
  * Payment methods are sourced from the centralized PAYMENT_METHOD_OPTIONS in types/payments.
  */
 import React, { useState, useCallback, useEffect, useRef } from 'react';
@@ -16,7 +16,7 @@ import {
   PaymentMethodSelector,
   EntityId,
 } from '@/components';
-import { PopoverForm } from '@/features/lab';
+import { LabWorkflowPopoverChrome } from '@/features/lab';
 import { cn, formatCurrency } from '@/utils';
 import { OrderReceipt } from '@/features/orders';
 import { inputBase, FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
@@ -111,7 +111,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
   }, [handleSubmit, onCancel, isValid, submitting]);
 
   return (
-    <PopoverForm
+    <LabWorkflowPopoverChrome
       title="Process Payment"
       subtitle={
         <span>
@@ -158,7 +158,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
           <p className="text-xs">{error}</p>
         </Alert>
       )}
-    </PopoverForm>
+    </LabWorkflowPopoverChrome>
   );
 };
 

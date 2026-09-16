@@ -2,14 +2,16 @@
  * Lab Feature Hooks
  */
 
-export * from './useLabWorkflowFilters';
-export * from './useLabTestsFromOrders';
-export { useLabPipelineCounts, getValidationTabCount } from './useLabPipelineCounts';
-export * from './useLabDataProvider';
-export * from './createWorkflowFilters';
-export * from './useLabUrlSearch';
-export * from './useLabCardClickGuard';
-export * from './useQualityIssueDialog';
-export * from './useQualityIssueHandler';
-export * from './useTestWorkItemState';
-export * from './useOpenHistoricalEntity';
+export * from './useLabQueueFilterState';
+export * from './useOrderTestsWithLabContext';
+export { useLabStageQueueCounts, getValidationTabCount } from './useLabStageQueueCounts';
+export * from './useResultValidationQueueData';
+export * from './useLabQueueFilters';
+export * from './useLabQueueUrlSearch';
+export * from './useLabWorkflowCardClickGuard';
+export * from './useQualityIssuePopover';
+export * from './useSubmitQualityIssue';
+export * from './useOrderTestQueueState';
+export * from './useOpenHistoricalLabRecord';
+export * from './useLabWorkflowResponsiveCard';
+export * from './useQualityIssueFormState';

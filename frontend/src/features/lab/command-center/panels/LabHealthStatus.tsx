@@ -8,7 +8,7 @@ import { Icon } from '@/components';
 import { ICONS } from '@/config/icons';
 import { cn } from '@/utils';
 import { getLabTabPath } from '../../constants/labTabs';
-import type { LabTechBoardData } from '../boardTypes';
+import type { LabCommandCenterSnapshot } from '../boardTypes';
 import { COMMAND_CENTER_HEALTH_STYLES, COMMAND_CENTER_TEXT } from '../commandCenterStyles';
 
 function formatLastRefreshed(at: Date): string {
@@ -19,9 +19,9 @@ function formatLastRefreshed(at: Date): string {
 }
 
 interface LabHealthStatusProps {
-  health: LabTechBoardData['health'];
+  health: LabCommandCenterSnapshot['health'];
   message: string;
-  suggestedTab: LabTechBoardData['suggestedTab'];
+  suggestedTab: LabCommandCenterSnapshot['suggestedTab'];
   onRefresh?: () => void;
   isRefreshing?: boolean;
   lastRefreshedAt?: Date | null;

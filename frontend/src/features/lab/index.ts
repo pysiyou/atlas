@@ -8,21 +8,21 @@ export * from './utils';
 export { useSampleLookup } from './api/samples.api';
 
 // Pages
-export { Laboratory as LaboratoryPage } from './pages/LaboratoryPage';
+export { LaboratoryPage } from './pages/LaboratoryPage';
 
 // Views
-export { CollectionView } from './collection/CollectionView';
-export { EntryView } from './entry/EntryView';
-export { ValidationView } from './validation/ValidationView';
-export { LabTechBoard } from './command-center';
+export { SampleCollectionQueue } from './collection/SampleCollectionQueue';
+export { ResultEntryQueue } from './entry/ResultEntryQueue';
+export { ResultValidationQueue } from './validation/ResultValidationQueue';
+export { LabCommandCenterBoard } from './command-center';
 
 // Components (selectively exported)
-export { LabWorkflowView } from './components/LabWorkflowView';
-export { LabCard } from './components/LabCard';
-export { LabDetailModal } from './components/LabDetailModal';
-export { LabFilters } from './components/LabFilters';
-export { PopoverForm } from './components/PopoverForm';
-export { useResponsiveCard } from './components/useResponsiveCard';
+export { LabWorkflowQueueLayout } from './components/LabWorkflowQueueLayout';
+export { LabWorkflowCardShell } from './components/LabWorkflowCardShell';
+export { LabWorkflowDetailModal } from './components/LabWorkflowDetailModal';
+export { LabQueueFilters } from './components/LabQueueFilters';
+export { LabWorkflowPopoverChrome } from './components/LabWorkflowPopoverChrome';
+export { useLabWorkflowResponsiveCard } from './hooks/useLabWorkflowResponsiveCard';
 
 // Critical Values
-export { CriticalValuesPanel } from './critical-values/CriticalValuesPanel';
+export { PendingCriticalValuesPanel } from './critical-values/PendingCriticalValuesPanel';

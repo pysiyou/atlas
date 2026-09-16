@@ -3,7 +3,7 @@
  */
 import { useQuery } from '@tanstack/react-query';
 import { queryKeys, cacheConfig } from '@/lib/query';
-import { useAuthStore } from '@/app/store';
+import { useAuthStore } from '@/app/authStore';
 import type { AffiliationPricing } from '@/types/affiliation';
 import type { AffiliationDuration } from '@/types';
 import { affiliationAPI } from './affiliations.service';

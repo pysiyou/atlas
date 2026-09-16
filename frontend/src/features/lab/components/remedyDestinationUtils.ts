@@ -2,24 +2,24 @@
  * Remedy destination option builders for validation and collection flows.
  */
 import type { RemedyType } from '@/types/lab-operations';
-import { QUALITY_ISSUE_DIALOG_COPY } from './qualityIssueDialogConstants';
-import type { RemedyOption } from './RemedyDestinationPicker';
+import { QUALITY_ISSUE_POPOVER_COPY } from './qualityIssuePopoverCopy';
+import type { RemedyOption } from './QualityIssueRemedyPicker';
 
 const VALIDATION_REMEDY_META: Record<
   Extract<RemedyType, 'retry_same_sample' | 'request_recollection' | 'cancel'>,
   { label: string; description: string }
 > = {
   retry_same_sample: {
-    label: QUALITY_ISSUE_DIALOG_COPY.actions.retestLabel,
-    description: QUALITY_ISSUE_DIALOG_COPY.actions.retestDescription,
+    label: QUALITY_ISSUE_POPOVER_COPY.actions.retestLabel,
+    description: QUALITY_ISSUE_POPOVER_COPY.actions.retestDescription,
   },
   request_recollection: {
-    label: QUALITY_ISSUE_DIALOG_COPY.actions.newSampleLabel,
-    description: QUALITY_ISSUE_DIALOG_COPY.actions.newSampleDescription,
+    label: QUALITY_ISSUE_POPOVER_COPY.actions.newSampleLabel,
+    description: QUALITY_ISSUE_POPOVER_COPY.actions.newSampleDescription,
   },
   cancel: {
-    label: QUALITY_ISSUE_DIALOG_COPY.actions.cancelLabel,
-    description: QUALITY_ISSUE_DIALOG_COPY.actions.cancelDescription,
+    label: QUALITY_ISSUE_POPOVER_COPY.actions.cancelLabel,
+    description: QUALITY_ISSUE_POPOVER_COPY.actions.cancelDescription,
   },
 };
 
@@ -28,12 +28,12 @@ const SAMPLE_REMEDY_META: Record<
   { label: string; description: string }
 > = {
   request_recollection: {
-    label: QUALITY_ISSUE_DIALOG_COPY.collection.actions.recollectLabel,
-    description: QUALITY_ISSUE_DIALOG_COPY.collection.actions.recollectDescription,
+    label: QUALITY_ISSUE_POPOVER_COPY.collection.actions.recollectLabel,
+    description: QUALITY_ISSUE_POPOVER_COPY.collection.actions.recollectDescription,
   },
   cancel: {
-    label: QUALITY_ISSUE_DIALOG_COPY.collection.actions.cancelUnfinishedLabel,
-    description: QUALITY_ISSUE_DIALOG_COPY.collection.actions.cancelUnfinishedDescription,
+    label: QUALITY_ISSUE_POPOVER_COPY.collection.actions.cancelUnfinishedLabel,
+    description: QUALITY_ISSUE_POPOVER_COPY.collection.actions.cancelUnfinishedDescription,
   },
 };
 
@@ -56,8 +56,8 @@ export function buildValidationRemedyOptions(
         context?.retestRemaining != null &&
         context.retestRemaining <= 0
       ) {
-        hint = QUALITY_ISSUE_DIALOG_COPY.actions.retestSupervisorHint;
-        description = QUALITY_ISSUE_DIALOG_COPY.actions.retestLimitDescription;
+        hint = QUALITY_ISSUE_POPOVER_COPY.actions.retestSupervisorHint;
+        description = QUALITY_ISSUE_POPOVER_COPY.actions.retestLimitDescription;
       }
 
       return { value, label: meta.label, description, hint };

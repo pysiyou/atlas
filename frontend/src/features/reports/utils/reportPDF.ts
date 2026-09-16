@@ -4,7 +4,7 @@
  */
 
 import jsPDF from 'jspdf';
-import type { ReportData, ReportTemplate } from '../types';
+import type { ValidatedTestReportPayload, ReportTemplate } from '../types';
 import { getDefaultTemplate } from './reportPDFHelpers';
 import { drawReportHeader } from './reportPDFHeader';
 import { drawTestResultsSection } from './reportPDFResults';
@@ -14,7 +14,7 @@ import { drawSignatureAndPageFooters } from './reportPDFFooter';
  * Generate PDF report for lab results with company header, patient details, test results, and footer.
  */
 export function generateLabReport(
-  reportData: ReportData,
+  reportData: ValidatedTestReportPayload,
   template: ReportTemplate = getDefaultTemplate()
 ): jsPDF {
   const doc = new jsPDF();

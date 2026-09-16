@@ -7,9 +7,9 @@ import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 import { getLabTabPath } from '../../constants/labTabs';
 import { LAB_STAGE_SHORT_ROWS } from '../../constants/labCopy';
-import { KpiTile, SectionTitle } from '../commandCenterUi';
+import { KpiTile, SectionTitle } from '../LabCommandCenterUi';
 import { COMMAND_CENTER_TEXT, resolveCommandCenterTextTone, type CommandCenterKpiTone } from '../commandCenterStyles';
-import type { LabTechBoardData, QueueAgeStats } from '../boardTypes';
+import type { LabCommandCenterSnapshot, QueueAgeStats } from '../boardTypes';
 import { queueTileTone } from '../queueTone';
 import { LabHealthStatus } from './LabHealthStatus';
 
@@ -35,13 +35,13 @@ function formatValidationSubtext(
 }
 
 interface LivePipelineStripProps {
-  counts: LabTechBoardData['counts'];
-  queueAge: LabTechBoardData['queueAge'];
-  blockers: LabTechBoardData['blockers'];
+  counts: LabCommandCenterSnapshot['counts'];
+  queueAge: LabCommandCenterSnapshot['queueAge'];
+  blockers: LabCommandCenterSnapshot['blockers'];
   totalActive: number;
-  health: LabTechBoardData['health'];
+  health: LabCommandCenterSnapshot['health'];
   healthMessage: string;
-  suggestedTab: LabTechBoardData['suggestedTab'];
+  suggestedTab: LabCommandCenterSnapshot['suggestedTab'];
   onRefresh?: () => void;
   isRefreshing?: boolean;
   lastRefreshedAt?: Date | null;

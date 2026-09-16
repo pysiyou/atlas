@@ -6,7 +6,7 @@
 import { displayId } from '@/utils';
 import { LAB_COPY } from '../constants/labCopy';
 import { apiCategoryToTimelineLane, getLaneDisplay, type LabLaneDisplay } from '../constants/labWorkflowVisual';
-import type { TimelineEvent } from '../api/commandCenter.api';
+import type { TimelineEvent } from '../api/labCommandCenter.api';
 import type { CommandCenterTimelineTone } from './timelineStyles';
 import {
   appendNote,

@@ -6,7 +6,7 @@
 import type { ModalType } from './ModalContext';
 import type { Order, Test, TestWithContext, ContainerType } from '@/types';
 import type { QualityIssueResult } from '@/types/lab-operations';
-import type { SampleDisplay } from '@/features/lab/types';
+import type { SampleCollectionQueueItem } from '@/features/lab/types';
 
 /** Payload for opening the sample/collection detail modal by sample id. */
 export interface SampleDetailByIdProps {
@@ -16,9 +16,9 @@ export interface SampleDetailByIdProps {
 
 /** Payload for opening the sample/collection detail modal with pending sample and collect callback. */
 export interface SampleDetailPendingProps {
-  pendingSampleDisplay: SampleDisplay;
+  pendingSampleDisplay: SampleCollectionQueueItem;
   onCollect?: (
-    display: SampleDisplay,
+    display: SampleCollectionQueueItem,
     volume: number,
     notes?: string,
     selectedColor?: string,
@@ -59,7 +59,7 @@ export interface EscalationResolutionDetailProps {
 }
 
 /** Payload for new/edit order modal. */
-export interface NewOrderProps {
+export interface OrderUpsertModalProps {
   patientId?: string;
   order?: Order;
   mode?: 'create' | 'edit';
@@ -74,7 +74,7 @@ export interface ModalPropsMap {
   RESULT_DETAIL: ResultDetailProps;
   VALIDATION_DETAIL: ValidationDetailProps;
   ESCALATION_RESOLUTION_DETAIL: EscalationResolutionDetailProps;
-  NEW_ORDER: NewOrderProps;
+  NEW_ORDER: OrderUpsertModalProps;
 }
 
 export type ModalPropsFor<T extends ModalType> = ModalPropsMap[T];

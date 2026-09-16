@@ -29,6 +29,6 @@ export * from './errors';
 // UI/style constants
 export * from './constants';
 
-// Filtering (pure functions + types; hooks are in @/hooks/useFiltering)
+// Filtering (pure functions + types; hooks are in @/hooks/useClientListFilter)
 export * from './filtering';
 export * from './formatDuration.utils';

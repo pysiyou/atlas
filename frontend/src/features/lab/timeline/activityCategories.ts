@@ -4,7 +4,7 @@
 
 import type { LabTimelineLane } from '../constants/labCopy';
 import { getLaneDisplay, type LabLaneDisplay } from '../constants/labWorkflowVisual';
-import type { TimelineEvent } from '../api/commandCenter.api';
+import type { TimelineEvent } from '../api/labCommandCenter.api';
 import type { CommandCenterTimelineTone } from './timelineStyles';
 
 export type TimelineEventCategory = LabTimelineLane;

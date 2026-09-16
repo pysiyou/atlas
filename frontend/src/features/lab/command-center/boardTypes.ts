@@ -1,10 +1,10 @@
-import type { BlockedReason } from '@/features/lab/utils/deriveWorkItemState';
+import type { OrderTestBlockReason } from '../utils/deriveOrderTestQueueState';
 import type { PriorityLevel } from '@/types';
 import type { AttentionType } from './attentionCategories';
 
 export type LabBoardHealth = 'healthy' | 'attention' | 'critical';
 
-export type QueueStage = 'collection' | 'entry' | 'validation';
+export type LabPipelineStage = 'collection' | 'entry' | 'validation';
 
 export interface QueueAgeStats {
   oldestHours: number | null;
@@ -13,17 +13,17 @@ export interface QueueAgeStats {
   criticalCount: number;
 }
 
-export interface AttentionItem {
+export interface LabAttentionQueueItem {
   id: string;
-  stage: QueueStage;
+  stage: LabPipelineStage;
   stageLabel: string;
   orderId: number;
   patientName: string;
   priority: PriorityLevel;
   waitingHours: number;
-  blockedReason: BlockedReason | null;
+  blockedReason: OrderTestBlockReason | null;
   blockedLabel: string | null;
-  queueTab: QueueStage;
+  queueTab: LabPipelineStage;
   since: string;
   workItemCount: number;
   orderTestIds: number[];
@@ -51,17 +51,17 @@ export interface PriorityMix {
   low: number;
 }
 
-export interface LabTechBoardData {
+export interface LabCommandCenterSnapshot {
   counts: { collection: number; entry: number; validation: number; supervisor: number };
-  queueAge: Record<QueueStage, QueueAgeStats>;
+  queueAge: Record<LabPipelineStage, QueueAgeStats>;
   blockers: BlockerSummary;
-  attentionItems: AttentionItem[];
+  attentionItems: LabAttentionQueueItem[];
   attentionTotal: number;
   ageBuckets: AgeBuckets;
   priorityMix: PriorityMix;
   health: LabBoardHealth;
   healthMessage: string;
-  suggestedTab: QueueStage | null;
+  suggestedTab: LabPipelineStage | null;
   totalActive: number;
   computedAt?: string | null;
 }

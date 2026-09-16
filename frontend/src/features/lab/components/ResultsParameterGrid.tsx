@@ -3,7 +3,7 @@
  */
 import React, { useMemo } from 'react';
 import { cn } from '@/utils';
-import { parseResultEntry, statusMapFromFlags, isCritical } from '../utils/labHelpers';
+import { parseResultEntry, statusMapFromFlags, isCritical } from '../utils/labResultHelpers';
 import { LAB_CONFIG } from '@/features/lab/constants';
 import {
   RESULT_PANEL,

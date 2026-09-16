@@ -7,12 +7,12 @@ import { Button, Card, Icon } from '@/components';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 import { useUserLookup } from '@/lib/api/users.api';
-import { useLabCardClickGuard, useTestWorkItemState } from '@/features/lab/hooks';
-import { useResponsiveCard } from '../components/useResponsiveCard';
-import { LabCard } from '../components/LabCard';
-import { TestHeaderBadges } from '../components/labWorkflowBadges';
-import { testHeaderAudit } from '../components/labHeaderAudit';
-import { LabMobileCardHeader } from '../components/labMobileCardHeader';
+import { useLabWorkflowCardClickGuard, useOrderTestQueueState } from '@/features/lab/hooks';
+import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
+import { LabWorkflowCardShell } from '../components/LabWorkflowCardShell';
+import { TestHeaderBadges } from '../components/LabWorkflowBadges';
+import { testHeaderAudit } from '../components/labWorkflowAuditLines';
+import { LabMobileCardHeader } from '../components/LabWorkflowMobileHeader';
 import { LAB_CARD_TYPOGRAPHY, LAB_MOBILE_CARD } from '../utils/labStyles';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
 import type { TestWithContext } from '@/types';
@@ -37,8 +37,8 @@ interface EscalationCardSharedData {
 function useEscalationCardData(props: EscalationCardProps): EscalationCardSharedData {
   const { test, onClick } = props;
   const { getUserName } = useUserLookup();
-  const handleCardClick = useLabCardClickGuard(onClick);
-  const workItem = useTestWorkItemState(test);
+  const handleCardClick = useLabWorkflowCardClickGuard(onClick);
+  const workItem = useOrderTestQueueState(test);
   const rejection = useMemo(() => deriveRetestContext(test), [test]);
 
   return {
@@ -63,7 +63,7 @@ function EscalationCardDesktop({
   const { showAttemptIndicator } = rejection;
 
   return (
-    <LabCard
+    <LabWorkflowCardShell
       onClick={handleCardClick}
       className={showAttemptIndicator ? 'border-warning-stroke-emphasis' : ''}
       context={{
@@ -175,7 +175,7 @@ function EscalationCardMobile({
 export const EscalationCard: React.FC<EscalationCardProps> = props => {
   const sharedData = useEscalationCardData(props);
 
-  return useResponsiveCard({
+  return useLabWorkflowResponsiveCard({
     item: props,
     deriveSharedData: () => sharedData,
     renderMobile: EscalationCardMobile,

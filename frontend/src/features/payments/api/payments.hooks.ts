@@ -6,7 +6,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { invalidateOrderQueries, useInvalidateQueryKey, invalidatePaymentDetailQueries } from '@/lib/query/invalidate';
-import { useAuthStore } from '@/app/store';
+import { useAuthStore } from '@/app/authStore';
 import type { PaymentMethod } from '@/types';
 import { paymentAPI, remainingPaymentAmount } from './payments.service';
 

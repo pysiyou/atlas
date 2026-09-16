@@ -65,7 +65,7 @@ export function useFilterState(options: UseFilterStateOptions = {}): UseFilterSt
 
   /**
    * Update a single filter value.
-   * onChange is deferred to avoid updating parent (e.g. CollectionView) during FilterBar's setState.
+   * onChange is deferred to avoid updating parent (e.g. SampleCollectionQueue) during FilterBar's setState.
    */
   const setFilter = useCallback(
     (key: string, value: unknown) => {

@@ -8,7 +8,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useEntityLookup, parseNumericKey } from '@/hooks/useEntityLookup';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { invalidatePatientQueries } from '@/lib/query/invalidate';
-import { useAuthStore } from '@/app/store';
+import { useAuthStore } from '@/app/authStore';
 import { notify } from '@/utils/feedback';
 import {
   patientSchema,

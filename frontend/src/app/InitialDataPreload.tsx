@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { useAuthStore } from '@/app/store';
+import { useAuthStore } from '@/app/authStore';
 import { useTestCatalog } from '@/features/catalog';
 import { ErrorFallback, PageLoadingFallback } from '@/components/loaders';
 import { errorAlertMessage } from '@/utils/feedback';

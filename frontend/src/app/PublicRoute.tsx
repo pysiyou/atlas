@@ -7,7 +7,7 @@
 
 import { type ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuthStore } from '@/app/store';
+import { useAuthStore } from '@/app/authStore';
 import { ROUTES } from '@/config';
 import { PageLoadingFallback } from '@/components/loaders';
 

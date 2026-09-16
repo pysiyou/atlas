@@ -14,7 +14,7 @@ import { EditPatientModal } from '../components/EditPatientModal';
 import { PatientHeader } from '../components/PatientHeader';
 import { SmallScreenLayout, MediumScreenLayout, LargeScreenLayout } from '../components/PatientDetailLayouts';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
-import { PATIENT_DETAIL_SKELETON_SECTIONS } from '../config/patientDetailSkeleton';
+import { PATIENT_DETAIL_SKELETON_SECTIONS } from '../config/PatientDetailSkeleton';
 import { feedbackTitle } from '@/utils/feedback/copy';
 
 export const PatientDetail: React.FC = () => {

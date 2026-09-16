@@ -20,7 +20,7 @@ export {
 } from './api/orders.api';
 export type { OrdersFilter, OrdersFilters, PaginationOptions } from './api/orders.api';
 
-export { useOrderSearch, useOrderLookup, useInvalidateOrders } from './hooks/useOrderUtils';
+export { useOrderSearch, useOrderLookup, useInvalidateOrders } from './hooks/useOrderDisplayHelpers';
 
 export { OrderUpsertModal } from './components/OrderUpsertModal';
 export type { OrderUpsertModalProps } from './components/OrderUpsertModal';

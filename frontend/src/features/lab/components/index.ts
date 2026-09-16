@@ -2,23 +2,25 @@
  * Lab Shared Components Index
  */
 
-export { LabCard, ProgressBadge, TestList } from './LabCard';
-export { PopoverForm, RadioCard } from './PopoverForm';
-export { QualityIssueDialog } from './QualityIssueDialog';
-export { LabWorkflowView, createLabItemFilter } from './LabWorkflowView';
-export { LabQueueSection } from './LabQueueSection';
-export { LabFilters } from './LabFilters';
-export type { LabFiltersProps } from './LabFilters';
-export { LabDetailModal, DetailGrid, ModalFooter } from './LabDetailModal';
-export type { DetailGridSectionConfig } from './LabDetailModal';
+export { LabWorkflowCardShell, ProgressBadge, TestList } from './LabWorkflowCardShell';
+export { LabWorkflowPopoverChrome, RadioCard } from './LabWorkflowPopoverChrome';
+export { QualityIssuePopover } from './QualityIssuePopover';
+export { LabWorkflowQueueLayout, createLabQueueSearchFilter } from './LabWorkflowQueueLayout';
+export { LabValidationQueueSection } from './LabValidationQueueSection';
+export { LabQueueFilters } from './LabQueueFilters';
+export type { LabQueueFiltersProps } from './LabQueueFilters';
+export { LabWorkflowDetailModal, DetailGrid, ModalFooter } from './LabWorkflowDetailModal';
+export type { DetailGridSectionConfig } from './LabWorkflowDetailModal';
+export { SampleContainerInfo } from './SampleContainerInfo';
+export { SampleCollectionMetaLine } from './SampleCollectionMetaLine';
+export { ResultEntryMetaLine } from './ResultEntryMetaLine';
 export {
-  CollectionInfoLine,
-  EntryInfoLine,
   RetestBadge,
   RecollectionAttemptBadge,
   FlagCountBadge,
   ReviewRequiredBadge,
-} from './StatusBadges';
+  BlockedReasonBadge,
+} from './LabResultStatusBadges';
 export { RecollectionOfBadge } from './RecollectionOfBadge';
 export { RetestOfBadge } from './RetestOfBadge';
 export {
@@ -26,5 +28,6 @@ export {
   LabRejectionTailBadgesFromTest,
   LabRejectionTailBadgesFromSample,
 } from './LabRejectionTailBadges';
-export { handlePrintCollectionLabel, getEffectiveContainerType } from '../utils/labHelpers';
+export { printSampleCollectionLabel } from '../utils/printSampleCollectionLabel';
+export { getEffectiveContainerType } from '../utils/sampleContainerHelpers';
 export { formatRejectionReasons } from '../utils/labFormatters';

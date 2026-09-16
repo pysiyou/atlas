@@ -15,7 +15,7 @@ export type { SampleRequirement };
  * Display object for sample collection workflow.
  * Combines sample data with its associated order, patient, and requirements.
  */
-export interface SampleDisplay {
+export interface SampleCollectionQueueItem {
   /** The sample data (may be undefined for pending samples) */
   sample?: Sample;
   /** The associated order */

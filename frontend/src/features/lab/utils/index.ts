@@ -2,7 +2,9 @@
  * Lab Feature Utils
  */
 
-export * from './labHelpers';
+export * from './printSampleCollectionLabel';
+export * from './sampleContainerHelpers';
+export * from './labResultHelpers';
 export * from './labStyles';
 export * from './labFormatters';
 export * from './physiologicLimits';

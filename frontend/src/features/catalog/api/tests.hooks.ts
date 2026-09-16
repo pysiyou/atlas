@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEntityLookup } from '@/hooks/useEntityLookup';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { useInvalidateQueryKey } from '@/lib/query/invalidate';
-import { useAuthStore } from '@/app/store';
+import { useAuthStore } from '@/app/authStore';
 import type { Test, TestCategory } from '@/types';
 import { testAPI } from './tests.service';
 

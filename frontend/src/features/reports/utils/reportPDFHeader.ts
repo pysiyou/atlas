@@ -3,7 +3,7 @@
  */
 
 import type jsPDF from 'jspdf';
-import type { ReportData, ReportTemplate } from '../types';
+import type { ValidatedTestReportPayload, ReportTemplate } from '../types';
 import { companyConfig } from '@/config';
 import { formatReportTime } from '@/utils/date';
 
@@ -79,7 +79,7 @@ function drawCompanyPanel(doc: jsPDF, layout: HeaderLayout): void {
   }
 }
 
-function drawReportTitle(doc: jsPDF, layout: HeaderLayout, reportData: ReportData): number {
+function drawReportTitle(doc: jsPDF, layout: HeaderLayout, reportData: ValidatedTestReportPayload): number {
   const { headerStartY, rightPanelX } = layout;
   const currentY = headerStartY + 5;
 
@@ -111,7 +111,7 @@ function drawLabelValue(
   doc.text(value, valueX, y);
 }
 
-function drawPatientDetails(doc: jsPDF, layout: HeaderLayout, reportData: ReportData, startY: number): void {
+function drawPatientDetails(doc: jsPDF, layout: HeaderLayout, reportData: ValidatedTestReportPayload, startY: number): void {
   const { rightPanelX } = layout;
   const subCol1X = rightPanelX;
   let subColY = startY;
@@ -151,7 +151,7 @@ function drawPatientDetails(doc: jsPDF, layout: HeaderLayout, reportData: Report
 function drawProcessingDetails(
   doc: jsPDF,
   layout: HeaderLayout,
-  reportData: ReportData,
+  reportData: ValidatedTestReportPayload,
   startY: number
 ): void {
   const { rightPanelWidth, rightPanelX } = layout;
@@ -210,7 +210,7 @@ function drawProcessingDetails(
 
 export function drawReportHeader(
   doc: jsPDF,
-  reportData: ReportData,
+  reportData: ValidatedTestReportPayload,
   _template: ReportTemplate,
   margin: number
 ): number {

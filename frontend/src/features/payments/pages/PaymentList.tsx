@@ -4,7 +4,7 @@
 
 import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useFiltering } from '@/hooks/useFiltering';
+import { useClientListFilter } from '@/hooks/useClientListFilter';
 import { ListView } from '@/components';
 import { PaymentFilters } from '../components/PaymentFilters';
 import { createPaymentTableConfig } from '../config/PaymentTable.config';
@@ -76,7 +76,7 @@ export const PaymentList: React.FC = () => {
     filteredItems: searchFilteredOrders,
     searchQuery,
     setSearchQuery,
-  } = useFiltering<OrderPaymentView>(orderPaymentViews, {
+  } = useClientListFilter<OrderPaymentView>(orderPaymentViews, {
     searchFields: item => [item.order.orderId.toString(), item.order.patientName || ''],
   });
 

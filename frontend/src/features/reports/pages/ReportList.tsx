@@ -11,7 +11,7 @@ import { useUserLookup } from '@/lib/api/users.api';
 import { usePatientNameLookup, usePatientsList } from '@/features/patients';
 import { useOrdersList } from '@/features/orders';
 import { useSampleLookup } from '@/features/lab';
-import { useFiltering } from '@/hooks/useFiltering';
+import { useClientListFilter } from '@/hooks/useClientListFilter';
 import { ListView } from '@/components';
 import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components';
 import { createReportTableConfig } from '../config/ReportTable.config';
@@ -60,7 +60,7 @@ export const ReportList: React.FC = () => {
     filteredItems: preFilteredTests,
     searchQuery,
     setSearchQuery,
-  } = useFiltering<ValidatedTest, never>(validatedTests, {
+  } = useClientListFilter<ValidatedTest, never>(validatedTests, {
     searchFields: test => [
       test.testId.toString(),
       test.orderId.toString(),

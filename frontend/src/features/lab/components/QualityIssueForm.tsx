@@ -3,12 +3,12 @@
  */
 import React from 'react';
 import { Alert, SpinnerLoader } from '@/components';
-import { CatalogRejectionFields } from './CatalogRejectionFields';
-import { useQualityIssueOptions } from '../api/quality-issues.api';
+import { CatalogRejectionCriteriaFields } from './CatalogRejectionCriteriaFields';
+import { useQualityIssueOptions } from '../api/qualityIssues.api';
 import type { QualityIssueOptions, QualityIssueTargetType, RemedyType } from '@/types/lab-operations';
-import { QUALITY_ISSUE_DIALOG_COPY } from './qualityIssueDialogConstants';
+import { QUALITY_ISSUE_POPOVER_COPY } from './qualityIssuePopoverCopy';
 import { LAB_COPY } from '../constants/labCopy';
-import { RemedyDestinationPicker } from './RemedyDestinationPicker';
+import { QualityIssueRemedyPicker } from './QualityIssueRemedyPicker';
 import {
   buildSampleRemedyOptions,
   resolveSuggestedRemedy,
@@ -23,8 +23,8 @@ type CollectionFormCopy = {
 function getCollectionFormCopy(options: QualityIssueOptions): CollectionFormCopy {
   const hasResultedOrValidated =
     (options.resultedTestsCount ?? 0) > 0 || (options.validatedTestsCount ?? 0) > 0;
-  const recollect = QUALITY_ISSUE_DIALOG_COPY.collection.recollect;
-  const escalate = QUALITY_ISSUE_DIALOG_COPY.collection.escalateResults;
+  const recollect = QUALITY_ISSUE_POPOVER_COPY.collection.recollect;
+  const escalate = QUALITY_ISSUE_POPOVER_COPY.collection.escalateResults;
 
   if (hasResultedOrValidated) {
     return {
@@ -119,7 +119,7 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
             />
           )}
 
-          <CatalogRejectionFields
+          <CatalogRejectionCriteriaFields
             criteria={options?.allowedCriteria ?? []}
             criteriaLoading={isLoading}
             rejectionReason={reason}
@@ -134,8 +134,8 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
           />
 
           {targetType === 'sample' && sampleRemedyOptions.length > 0 && (
-            <RemedyDestinationPicker
-              label={QUALITY_ISSUE_DIALOG_COPY.collection.actions.followUpLabel}
+            <QualityIssueRemedyPicker
+              label={QUALITY_ISSUE_POPOVER_COPY.collection.actions.followUpLabel}
               options={sampleRemedyOptions}
               value={effectivePreferredRemedy}
               onChange={remedy => onPreferredRemedyChange?.(remedy)}

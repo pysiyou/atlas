@@ -1,5 +1,5 @@
 import React from 'react';
-import { ModalFooter } from '../components/LabDetailModal';
+import { ModalFooter } from '../components/LabWorkflowDetailModal';
 import { notify } from '@/utils/feedback';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
 import {

@@ -6,10 +6,10 @@ import React from 'react';
 import { formatDateTime } from '@/utils';
 import { EntityId } from '@/components';
 import { companyConfig } from '@/config';
-import type { ReportData } from '../types';
+import type { ValidatedTestReportPayload } from '../types';
 
 interface ReportPreviewHeaderProps {
-  reportData: ReportData;
+  reportData: ValidatedTestReportPayload;
   getUserName: (id: string) => string;
 }
 

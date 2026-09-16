@@ -20,7 +20,7 @@ import {
 import { formatDate } from '@/utils';
 import { notify } from '@/utils/feedback';
 import { DetailPageShell, PageHeader } from '@/components';
-import { ReportDetailSkeletonContent } from '../config/reportDetailSkeleton';
+import { ReportDetailSkeletonContent } from '../config/ReportDetailSkeleton';
 
 export const ReportDetail: React.FC = () => {
   const navigate = useNavigate();

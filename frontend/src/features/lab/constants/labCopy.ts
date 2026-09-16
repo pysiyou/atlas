@@ -28,7 +28,7 @@ export const LAB_COPY = {
     entry: 'Result Entry',
     entryShort: 'Entry',
     validation: 'Validation',
-    dashboardNav: 'Command Center',
+    commandCenterNav: 'Command Center',
     escalation: 'Escalation',
   },
   quality: {

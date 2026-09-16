@@ -9,7 +9,7 @@ import type { Patient, Order } from '@/types';
 import { GeneralInfoSection } from '../components/GeneralInfoSection';
 import { MedicalHistorySectionDisplay } from '../components/MedicalHistorySectionDisplay';
 import { PatientOrdersTable } from '../components/PatientOrdersTable';
-import { ReportsList } from '../components/ReportsList';
+import { PatientReportsList } from '../components/PatientReportsList';
 
 interface LayoutProps {
   patient: Patient;
@@ -49,7 +49,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
       </Panel>
 
       <Panel title="Reports" className="shrink-0" scroll="visible">
-        <ReportsList orders={orders} />
+        <PatientReportsList orders={orders} />
       </Panel>
     </div>
   );
@@ -75,7 +75,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
       </Panel>
 
       <Panel title="Reports" className="col-span-2" scroll="visible" bodyClassName="flex flex-col">
-        <ReportsList orders={orders} />
+        <PatientReportsList orders={orders} />
       </Panel>
 
       <Panel
@@ -115,7 +115,7 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
       </Panel>
 
       <Panel title="Reports" className="min-h-0" scroll="auto" bodyClassName="flex flex-col">
-        <ReportsList orders={orders} />
+        <PatientReportsList orders={orders} />
       </Panel>
 
       <Panel

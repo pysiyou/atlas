@@ -7,7 +7,7 @@ import {
   invalidateResultQueries,
 } from '@/lib/query/invalidate';
 import { queryKeys, cacheConfig } from '@/lib/query';
-import { useAuthStore } from '@/app/store';
+import { useAuthStore } from '@/app/authStore';
 import { feedbackTitle } from '@/utils/feedback/copy';
 import type { ValidationDecision, TestWithContext } from '@/types';
 import type { EscalationResolveRequest } from '@/types/lab-operations';

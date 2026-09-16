@@ -49,7 +49,7 @@ const Orders = lazyNamed(() => import('@/features/orders/pages/OrdersPage'), 'Or
 const Catalog = lazyNamed(() => import('@/features/catalog/pages/CatalogPage'), 'Catalog');
 const Laboratory = lazyNamed(
   () => import('@/features/lab/pages/LaboratoryPage'),
-  'Laboratory'
+  'LaboratoryPage'
 );
 const Payments = lazyNamed(
   () => import('@/features/payments/pages/PaymentList'),

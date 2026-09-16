@@ -9,7 +9,7 @@ import { useCallback, useMemo } from 'react';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { useInvalidateQueryKey } from '@/lib/query/invalidate';
 import { usersAPI, type UserDisplayInfo } from '@/lib/api/users.service';
-import { useAuthStore } from '@/app/store';
+import { useAuthStore } from '@/app/authStore';
 
 export type { UserDisplayInfo } from '@/lib/api/users.service';
 
