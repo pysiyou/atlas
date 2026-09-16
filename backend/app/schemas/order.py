@@ -111,6 +111,7 @@ class OrderSummaryResponse(BaseModel):
     patientName: str
     orderDate: datetime
     testCount: int = 0
+    testCodes: list[str] = Field(default_factory=list)
     totalPrice: float
     paymentStatus: PaymentStatus
     overallStatus: OrderStatus

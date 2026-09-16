@@ -12,8 +12,8 @@ import { DATA_AMOUNT } from '@/utils/constants';
 import { CatalogCard } from '../components/CatalogCard';
 
 const CATALOG_VIEWS = {
-  full: ['code', 'name', 'loincCodes', 'category', 'sampleType', 'price'],
-  medium: ['code', 'name', 'loincCodes', 'sampleType', 'price'],
+  full: ['code', 'name', 'category', 'sampleType', 'loincCodes', 'price'],
+  medium: ['code', 'name', 'category', 'sampleType', 'price'],
   compact: ['code', 'name', 'price'],
 } as const;
 
@@ -94,7 +94,7 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
 
   return {
     ...buildViews(columnMap, CATALOG_VIEWS, {
-      medium: { loincCodes: 'md', sampleType: 'sm' },
+      medium: { sampleType: 'sm' },
     }),
     CardComponent: CatalogCard,
   };
