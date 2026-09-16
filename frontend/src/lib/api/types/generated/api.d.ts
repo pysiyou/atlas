@@ -2125,7 +2125,7 @@ export interface components {
          * PaymentMethod
          * @enum {string}
          */
-        PaymentMethod: "cash" | "credit-card" | "debit-card" | "insurance" | "bank-transfer" | "mobile-money";
+        PaymentMethod: "cash" | "credit-card" | "debit-card" | "insurance" | "bank-transfer" | "mobile";
         /** PaymentResponse */
         PaymentResponse: {
             /** Paymentid */

@@ -80,7 +80,7 @@ export const orderCreateSchema = z.object({
   clinicalNotes: z.string().optional(),
   testCodes: z.array(z.string()).min(1, 'At least one test is required'),
   paymentMethod: z
-    .enum(['cash', 'credit-card', 'debit-card', 'insurance', 'bank-transfer', 'mobile-money'])
+    .enum(['cash', 'credit-card', 'debit-card', 'insurance', 'bank-transfer', 'mobile'])
     .optional(),
 });
 

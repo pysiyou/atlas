@@ -168,7 +168,7 @@ export const DISPLAY_LABELS: Record<string, string> = {
   'credit-card': 'CREDIT CARD',
   'debit-card': 'DEBIT CARD',
   'bank-transfer': 'BANK TRANSFER',
-  'mobile-money': 'MOBILE MONEY',
+  mobile: 'MOBILE',
   're-test': 'RE-TEST',
   're-collect': 'RE-COLLECT',
   escalate: 'ESCALATE',

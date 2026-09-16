@@ -12,25 +12,16 @@ import {
 } from '@/components/filters';
 import { PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
-import { getEnabledPaymentMethods } from '@/types/payments';
+import { getEnabledPaymentMethods, PAYMENT_METHOD_FILTER_CONFIG } from '@/types/payments';
 import { MODULE_ICONS } from '@/config/icons';
 import { PaymentFiltersInlineControls } from './PaymentFiltersInlineControls';
 import type { PaymentStatus, PaymentMethod } from '@/types';
 
 const statusOptions = createFilterOptions(PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG);
 
-const PAYMENT_METHOD_CONFIG: Record<PaymentMethod, { label: string }> = {
-  cash: { label: 'Cash' },
-  'credit-card': { label: 'Credit Card' },
-  'debit-card': { label: 'Debit Card' },
-  insurance: { label: 'Insurance' },
-  'bank-transfer': { label: 'Bank Transfer' },
-  'mobile-money': { label: 'Mobile Money' },
-};
-
 const methodOptions = createFilterOptions(
   getEnabledPaymentMethods().map(m => m.value) as PaymentMethod[],
-  PAYMENT_METHOD_CONFIG
+  PAYMENT_METHOD_FILTER_CONFIG
 );
 
 export interface PaymentFiltersProps {

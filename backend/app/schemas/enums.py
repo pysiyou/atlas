@@ -131,7 +131,7 @@ class PaymentMethod(str, enum.Enum):
     DEBIT_CARD = "debit-card"
     INSURANCE = "insurance"
     BANK_TRANSFER = "bank-transfer"
-    MOBILE_MONEY = "mobile-money"
+    MOBILE = "mobile"
 
 class ClaimStatus(str, enum.Enum):
     SUBMITTED = "submitted"
