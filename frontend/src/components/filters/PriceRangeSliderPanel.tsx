@@ -34,7 +34,7 @@ export const PriceRangeSliderPanel: React.FC<PriceRangeSliderPanelProps> = ({
     </div>
 
     <div className="relative h-6 flex items-center select-none touch-none" ref={sliderRef}>
-      <div className="absolute w-full h-1.5 bg-neutral-200 rounded-full overflow-hidden">
+      <div className="absolute w-full h-1.5 bg-border-default rounded-full overflow-hidden">
         <div
           className="absolute h-full bg-brand"
           style={{

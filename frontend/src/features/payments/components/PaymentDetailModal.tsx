@@ -30,6 +30,7 @@ import {
 import { getPaymentErrorMessage } from '@/utils/errors';
 import { getFeedback } from '@/utils/feedback';
 import { feedbackTitle } from '@/utils/feedback/copy';
+import { TONE } from '@/components/theme/recipes';
 import type { OrderPaymentView } from '../types';
 import { ICONS, MODULE_ICONS } from '@/config/icons';
 
@@ -211,7 +212,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
             {!isPaid && (
               <div>
                 <label className="block text-sm font-normal text-text-secondary mb-3">
-                  Payment Method <span className="text-danger-fg">*</span>
+                  Payment Method <span className={TONE.danger.fg}>*</span>
                 </label>
                 <PaymentMethodSelector
                   methods={PAYMENT_METHODS}

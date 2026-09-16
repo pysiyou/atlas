@@ -2,6 +2,7 @@
  * Command center shared layout, surface, and tone styles.
  */
 import { PANEL_VARIANTS } from '@/components/surfaces/Panel';
+import { TONE, TYPE } from '@/components/theme/recipes';
 import type { QueueAgeStats } from './commandCenterModel';
 
 export type CommandCenterKpiTone = 'brand' | 'success' | 'warning' | 'danger' | 'neutral';
@@ -24,9 +25,9 @@ export const COMMAND_CENTER_TEXT = {
 
 export const COMMAND_CENTER_TEXT_TONE: Record<CommandCenterTextTone, string> = {
   default: COMMAND_CENTER_TEXT.value,
-  success: 'text-success-fg-emphasis',
-  warning: 'text-warning-fg-emphasis',
-  danger: 'text-danger-fg-emphasis',
+  success: TONE.success.fgEmphasis,
+  warning: TONE.warning.fgEmphasis,
+  danger: TONE.danger.fgEmphasis,
 };
 
 export function resolveCommandCenterTextTone(
@@ -42,11 +43,15 @@ export const COMMAND_CENTER_PANEL = {
   page: 'flex-1 min-h-0 min-w-0 overflow-hidden bg-surface-page p-2',
 } as const;
 
+const COMMAND_CENTER_MICRO_LABEL =
+  'font-light uppercase leading-tight tracking-wide text-2xs' as const;
+
 export const COMMAND_CENTER_SECTION = {
-  title: `text-[9.5px] font-normal uppercase tracking-normal leading-tight ${COMMAND_CENTER_TEXT.sectionTitle}`,
-  summary: `text-xxs leading-snug ${COMMAND_CENTER_TEXT.summary}`,
-  aside: `shrink-0 text-[9.5px] tabular-nums ${COMMAND_CENTER_TEXT.sectionAside}`,
-  statLabel: `text-[9.5px] font-normal uppercase tracking-normal leading-tight ${COMMAND_CENTER_TEXT.sectionTitle}`,
+  microLabel: COMMAND_CENTER_MICRO_LABEL,
+  title: `${COMMAND_CENTER_MICRO_LABEL} text-text-tertiary`,
+  summary: `leading-snug ${TYPE.caption}`,
+  aside: `shrink-0 tabular-nums ${TYPE.caption}`,
+  statLabel: `${COMMAND_CENTER_MICRO_LABEL} text-text-tertiary`,
 } as const;
 
 export const COMMAND_CENTER_KPI = {
@@ -56,34 +61,34 @@ export const COMMAND_CENTER_KPI = {
   tileLink: 'min-w-0 flex-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/30',
   tileWrap: 'min-w-0 flex-1',
   iconWrap: 'flex h-8 w-8 shrink-0 items-center justify-center rounded bg-surface-hover',
-  label: 'truncate text-xxs uppercase tracking-wide text-text-tertiary',
-  value: 'text-lg font-semibold leading-none tabular-nums',
-  context: 'truncate text-xxs font-light leading-none text-text-tertiary tabular-nums',
+  label: `truncate uppercase tracking-wide ${TYPE.caption}`,
+  value: `${TYPE.pageTitle} font-semibold leading-none tabular-nums`,
+  context: `truncate font-light leading-none tabular-nums ${TYPE.caption}`,
   ringTrack: 'text-border-subtle',
 } as const;
 
 export const COMMAND_CENTER_KPI_TONE_ICON: Record<CommandCenterKpiTone, string> = {
-  brand: 'text-brand',
-  success: 'text-success-fg-emphasis',
-  warning: 'text-warning-fg-emphasis',
-  danger: 'text-danger-fg-emphasis',
-  neutral: 'text-text-secondary',
+  brand: TONE.brand.fg,
+  success: TONE.success.fgEmphasis,
+  warning: TONE.warning.fgEmphasis,
+  danger: TONE.danger.fgEmphasis,
+  neutral: TONE.neutral.fg,
 };
 
 export const COMMAND_CENTER_KPI_TONE_VALUE: Record<CommandCenterKpiTone, string> = {
   brand: 'text-text-primary',
-  success: 'text-success-fg-emphasis',
-  warning: 'text-warning-fg-emphasis',
-  danger: 'text-danger-fg-emphasis',
+  success: TONE.success.fgEmphasis,
+  warning: TONE.warning.fgEmphasis,
+  danger: TONE.danger.fgEmphasis,
   neutral: 'text-text-primary',
 };
 
 export const COMMAND_CENTER_KPI_RING_TONE: Record<CommandCenterKpiTone, string> = {
-  brand: 'text-brand',
-  success: 'text-success-fg',
-  warning: 'text-warning-fg',
-  danger: 'text-danger-fg',
-  neutral: 'text-text-secondary',
+  brand: TONE.brand.fg,
+  success: TONE.success.fg,
+  warning: TONE.warning.fg,
+  danger: TONE.danger.fg,
+  neutral: TONE.neutral.fg,
 };
 
 export const COMMAND_CENTER_AGE_COLORS = {
@@ -102,22 +107,22 @@ export const COMMAND_CENTER_PRIORITY_COLORS = {
 
 export const COMMAND_CENTER_HEALTH_STYLES = {
   healthy: {
-    dot: 'bg-success-fg-emphasis',
-    text: 'text-success-fg-emphasis',
+    dot: TONE.success.fill,
+    text: TONE.success.fgEmphasis,
   },
   attention: {
-    dot: 'bg-warning-fg-emphasis',
-    text: 'text-warning-fg-emphasis',
+    dot: TONE.warning.fill,
+    text: TONE.warning.fgEmphasis,
   },
   critical: {
-    dot: 'bg-danger-fg-emphasis',
-    text: 'text-danger-fg-emphasis',
+    dot: TONE.danger.fill,
+    text: TONE.danger.fgEmphasis,
   },
 } as const;
 
 export const COMMAND_CENTER_ATTENTION_ACCENT = {
-  problem: 'bg-danger-fg-emphasis',
-  neutral: 'bg-warning-fg-emphasis',
+  problem: TONE.danger.fill,
+  neutral: TONE.warning.fill,
 } as const;
 
 export function queueTileTone(count: number, age: QueueAgeStats): CommandCenterKpiTone {

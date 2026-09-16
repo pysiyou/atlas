@@ -1,7 +1,9 @@
 /**
  * UI Constants
- * Shared pagination sizes, display limits, empty-state copy, and typography class strings.
+ * Shared pagination sizes, display limits, empty-state copy, and typography aliases.
  */
+
+import { TYPE } from '@/components/theme/recipes';
 
 // ---------------------------------------------------------------------------
 // Pagination & Display Limits
@@ -68,29 +70,28 @@ export function isEntityIdClassName(className?: string): boolean {
 }
 
 /** Detail row label. */
-export const DETAIL_LABEL = 'text-xs text-text-secondary';
+export const DETAIL_LABEL = TYPE.label;
 
 /** Key-value table label (e.g. catalog test detail). */
-export const DETAIL_TABLE_LABEL =
-  'text-xxs text-text-secondary uppercase tracking-wide';
+export const DETAIL_TABLE_LABEL = TYPE.sectionTitle;
 
 /** Detail row value. */
-export const DETAIL_VALUE = 'text-xs text-text-primary';
+export const DETAIL_VALUE = TYPE.value;
 
 /** Amount/currency cell. */
-export const DATA_AMOUNT = 'text-sm text-text-primary';
+export const DATA_AMOUNT = TYPE.amount;
 
 /** Metadata/secondary label text (timestamps, captions). */
-export const TEXT_METADATA = 'text-xs text-text-tertiary';
+export const TEXT_METADATA = TYPE.meta;
 
 /** Body text secondary (descriptions, list content). */
-export const BODY_SECONDARY = 'text-xs text-text-secondary';
+export const BODY_SECONDARY = TYPE.label;
 
 /** Detail page title (h1). */
-export const DETAIL_TITLE = 'text-sm font-medium text-text-primary';
+export const DETAIL_TITLE = TYPE.detailTitle;
 
 /** Detail page subtitle (under title). */
-export const DETAIL_SUBTITLE = 'text-xs text-text-tertiary';
+export const DETAIL_SUBTITLE = TYPE.meta;
 
 /** List/page title. */
-export const PAGE_TITLE = 'text-lg font-light text-text-primary';
+export const PAGE_TITLE = TYPE.pageTitle;

@@ -9,6 +9,8 @@ import React, { useState, type KeyboardEvent, type ChangeEvent } from 'react';
 import { RemovableTag } from '@/components';
 import { cn } from '@/utils';
 import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from './inputStyles';
+import { TONE, TYPE } from '@/components/theme/recipes';
+
 
 export interface TagInputProps {
   /** Current tags as an array of strings */
@@ -80,7 +82,7 @@ export const TagInput: React.FC<TagInputProps> = ({
             className={FORM_CONTROL_LABEL}
           >
             {label}
-            {required && <span className="text-danger-fg ml-1">*</span>}
+            {required && <span className={`${TONE.danger.fg} ml-1`}>*</span>}
           </label>
         </div>
       )}
@@ -95,11 +97,11 @@ export const TagInput: React.FC<TagInputProps> = ({
         {tags.map(tag => (
           <RemovableTag
             key={tag}
-            size="sm"
+            size="xs"
             onRemove={() => handleRemoveTag(tag)}
             removeAriaLabel={`Remove ${tag}`}
           >
-            <span className="min-w-0 truncate text-xs font-normal">{tag}</span>
+            <span className="min-w-0 truncate font-normal">{tag}</span>
           </RemovableTag>
         ))}
 
@@ -110,13 +112,13 @@ export const TagInput: React.FC<TagInputProps> = ({
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           placeholder={tags.length === 0 ? placeholder : ''}
-          className="flex-1 min-w-[120px] outline-none text-xs text-text-primary placeholder:text-text-muted bg-transparent leading-normal"
+          className={`flex-1 min-w-[120px] outline-none ${TYPE.value} placeholder:text-text-muted bg-transparent leading-normal`}
           disabled={maxTags !== undefined && tags.length >= maxTags}
         />
       </div>
 
-      {error && <p className="text-xs text-danger-fg mt-1.5">{error}</p>}
-      {helperText && !error && <p className="text-xs text-text-tertiary mt-1.5">{helperText}</p>}
+      {error && <p className={`text-xs ${TONE.danger.fg} mt-1.5`}>{error}</p>}
+      {helperText && !error && <p className={`${TYPE.meta} mt-1.5`}>{helperText}</p>}
     </div>
   );
 };

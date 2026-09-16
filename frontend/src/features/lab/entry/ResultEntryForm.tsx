@@ -10,6 +10,7 @@ import type { Test, Patient } from '@/types';
 import { ParameterInput } from './ResultParameterInputs';
 import { getReferenceRangeDisplay, checkCriticalStatus } from './resultEntry';
 import { RESULT_PANEL, resultTileStatusClass } from '../utils/labResult';
+import { RADIUS, TONE } from '@/components/theme/recipes';
 
 interface EntryFormProps {
   testDef: Test;
@@ -50,7 +51,7 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
   if (!testDef?.parameters) return null;
 
   return (
-    <div className={cn(!isModal && 'bg-surface-page rounded-lg p-4 border border-border-subtle')}>
+    <div className={cn(!isModal && cn('bg-surface-page p-4 border border-border-subtle', RADIUS.overlay))}>
       <div className={RESULT_PANEL.grid}>
         {testDef.parameters.map(param => {
           const value = results[param.code] ?? '';
@@ -80,9 +81,8 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
                 </label>
                 <span
                   className={cn(
-                    RESULT_PANEL.reference,
-                    refRange === 'N/A' && 'text-text-disabled/70',
-                    isCritical && refRange !== 'N/A' && 'text-danger-fg font-medium',
+                    refRange === 'N/A' ? RESULT_PANEL.referenceUnavailable : RESULT_PANEL.reference,
+                    isCritical && refRange !== 'N/A' && cn(TONE.danger.fg, 'font-medium'),
                   )}
                   title={`Reference: ${refRange}`}
                 >
@@ -114,7 +114,7 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
               </div>
 
               {validationErrors[param.code] && (
-                <p className="text-xxs text-danger-fg truncate" title={validationErrors[param.code]}>
+                <p className={`text-xxs ${TONE.danger.fg} truncate`} title={validationErrors[param.code]}>
                   {feedbackTitle('lab.entry.fieldInvalid')}
                 </p>
               )}
@@ -140,7 +140,7 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
       {!isModal && (
         <div className="mt-6 -mx-4 -mb-4 px-4 py-3 bg-surface-page border-t border-border-subtle rounded-b flex items-center justify-between">
           {hasValidationErrors && (
-            <span className="text-xxs text-danger-fg">
+            <span className={`text-xxs ${TONE.danger.fg}`}>
               {feedbackTitle('lab.entry.fixValidationBeforeSubmit')}
             </span>
           )}

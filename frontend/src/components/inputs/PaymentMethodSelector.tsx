@@ -10,6 +10,7 @@ import { Icon } from '@/components/primitives/Icon';
 import type { IconName } from '@/components/primitives/Icon';
 import { ICONS } from '@/config/icons';
 import type { PaymentMethodOption, PaymentMethod } from '@/types/payments';
+import { TYPE } from '@/components/theme/recipes';
 
 export interface PaymentMethodSelectorProps {
   /** Available options (e.g. from getEnabledPaymentMethods()) */
@@ -42,7 +43,7 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
           `}
         >
           <Icon name={method.icon as IconName} className="w-7 h-7 shrink-0 text-text-disabled" />
-          <span className="flex-1 text-xs font-normal text-left text-text-secondary">
+          <span className={`flex-1 font-normal text-left ${TYPE.label}`}>
             {method.label.toUpperCase()}
           </span>
           <div

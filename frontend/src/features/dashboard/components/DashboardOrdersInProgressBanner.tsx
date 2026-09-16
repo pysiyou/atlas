@@ -5,6 +5,8 @@
 import React from 'react';
 import { Card, Icon } from '@/components';
 import { ICONS } from '@/config/icons';
+import { TYPE } from '@/components/theme/recipes';
+
 
 export interface DashboardOrdersInProgressBannerProps {
   pendingOrders: number;
@@ -18,7 +20,7 @@ export const DashboardOrdersInProgressBanner: React.FC<DashboardOrdersInProgress
       <Icon name={ICONS.dataFields.trendingUp} className="w-6 h-6 text-warning-fg" />
       <div>
         <p className="text-sm font-normal text-text-primary">Orders In Progress</p>
-        <p className="text-xs text-text-secondary">
+        <p className={TYPE.label}>
           {pendingOrders} order{pendingOrders !== 1 ? 's' : ''} awaiting completion
         </p>
       </div>

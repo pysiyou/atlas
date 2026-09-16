@@ -8,7 +8,7 @@
  *
  * Usage:
  *   <Icon name="check" className="w-4 h-4" />
- *   <Icon name="alert-circle" className="w-5 h-5 text-red-500" />
+ *   <Icon name="check" className="w-4 h-4" />
  *
  * NOTE: Use Tailwind className for sizing (e.g. "w-4 h-4"). Do NOT pass a number
  *       `size` prop — dynamic class names like `w-${n}` are purged by Tailwind.

@@ -40,13 +40,13 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order, layou
       <DetailField
         icon={getPriorityIcon(order.priority)}
         label="Priority"
-        value={<Badge variant={order.priority} size="sm" />}
+        value={<Badge variant={order.priority} size="xs" />}
         orientation="vertical"
       />
       <DetailField
         icon={getOrderStatusIcon(order.overallStatus)}
         label="Status"
-        value={<Badge variant={order.overallStatus} size="sm" />}
+        value={<Badge variant={order.overallStatus} size="xs" />}
         orientation="vertical"
       />
       {order.referringPhysician && (

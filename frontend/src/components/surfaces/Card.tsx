@@ -3,6 +3,7 @@
  */
 
 import React, { type ReactNode } from 'react';
+import { RADIUS, SURFACE } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
 export type CardVariant = 'default' | 'lab' | 'metric';
@@ -16,9 +17,9 @@ const BOX_VARIANT_CLASSES: Record<CardVariant, string> = {
 const PADDING_CLASSES = {
   none: '',
   list: 'p-3',
-  sm: 'p-4',
+  sm: 'p-3',
   md: 'p-4',
-  lg: 'p-4',
+  lg: 'p-5',
 } as const;
 
 export interface CardProps {
@@ -40,7 +41,8 @@ export const Card: React.FC<CardProps> = ({
 }) => (
   <div
     className={cn(
-      'bg-surface rounded-md border border-border-default duration-200',
+      SURFACE.raised,
+      `${RADIUS.card} duration-200`,
       PADDING_CLASSES[padding],
       BOX_VARIANT_CLASSES[variant],
       hover && 'cursor-pointer',

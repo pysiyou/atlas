@@ -2,9 +2,11 @@
  * Attempt count indicator and remaining-attempt progress bar.
  */
 import React, { useState } from 'react';
-import { Badge, Icon } from '@/components';
+import { Badge } from '@/components';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
+import { TONE, TYPE, RADIUS } from '@/components/theme/recipes';
+
 
 interface AttemptIndicatorProps {
   /** Current attempt number (1-based) */
@@ -47,23 +49,22 @@ export const AttemptIndicator: React.FC<AttemptIndicatorProps> = ({
       <Badge
         variant={isNearLimit ? 'warning' : 'default'}
         size="xs"
-        className="flex items-center gap-1 cursor-help"
+        uppercase={false}
+        icon={ICONS.actions.alertCircle}
+        className="cursor-help"
       >
-        <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
-        <span className="text-xxs">
-          {attemptNumber}/{maxAttempts}
-        </span>
+        {attemptNumber}/{maxAttempts}
       </Badge>
 
       {/* Hover tooltip */}
       {showTooltip && (
-        <div className="absolute top-full right-0 mt-1 z-50 w-64 bg-surface-elevated border border-border-default rounded-lg shadow-xl p-3">
+        <div className={`absolute top-full right-0 mt-1 z-50 w-64 bg-surface-elev border border-border-default ${RADIUS.overlay} shadow-xl p-3`}>
           <div className="space-y-1">
-            <p className="text-xs font-normal text-text-primary">
+            <p className={`${TYPE.value} font-normal`}>
               {typeLabel} Attempt #{attemptNumber}
             </p>
             {previousReason && (
-              <p className="text-xxs text-text-tertiary leading-tight">
+              <p className={`${TYPE.caption} leading-tight`}>
                 <span className="text-text-secondary">Previous: </span>
                 {previousReason}
               </p>
@@ -95,23 +96,11 @@ interface AttemptProgressBarProps {
   className?: string;
 }
 
-const VARIANT_COLORS = {
-  sky: {
-    bar: 'bg-tone-info-text',
-    bg: 'bg-tone-info-bg',
-    text: 'text-tone-info-text',
-  },
-  red: {
-    bar: 'bg-tone-danger-text',
-    bg: 'bg-tone-danger-bg',
-    text: 'text-tone-danger-text',
-  },
-  warning: {
-    bar: 'bg-tone-warning-text',
-    bg: 'bg-tone-warning-bg',
-    text: 'text-tone-warning-text',
-  },
-};
+const VARIANT_TONES = {
+  sky: TONE.info,
+  red: TONE.danger,
+  warning: TONE.warning,
+} as const;
 
 /**
  * AttemptProgressBar component
@@ -126,19 +115,19 @@ export const AttemptProgressBar: React.FC<AttemptProgressBarProps> = ({
 }) => {
   const remaining = Math.max(0, total - used);
   const percentage = total > 0 ? ((total - used) / total) * 100 : 0;
-  const colors = VARIANT_COLORS[variant];
+  const colors = VARIANT_TONES[variant];
 
   return (
     <div className={cn('space-y-1', className)}>
       <div className="flex items-center justify-between text-xxs">
         <span className="font-normal text-text-secondary">{label}</span>
-        <span className={cn('font-normal', colors.text)}>
+        <span className={cn('font-normal', colors.fg)}>
           {remaining} {remaining === 1 ? 'left' : 'left'}
         </span>
       </div>
-      <div className={cn('h-1.5 rounded-full overflow-hidden', colors.bg)}>
+      <div className={cn('h-1.5 rounded-full overflow-hidden', colors.well)}>
         <div
-          className={cn('h-full rounded-full transition-all duration-300', colors.bar)}
+          className={cn('h-full rounded-full transition-all duration-300', colors.fill)}
           style={{ width: `${percentage}%` }}
         />
       </div>

@@ -9,6 +9,7 @@ import { Badge } from '@/components';
 import { Icon, type IconName } from '@/components/primitives/Icon';
 import { Popover } from './Popover';
 import { FilterTriggerShell } from './FilterTriggerShell';
+import { SURFACE, TYPE, RADIUS } from '@/components/theme/recipes';
 
 export interface FilterOption {
   id: string;
@@ -74,7 +75,7 @@ function MultiSelectListItem({
         )}
       </div>
 
-      <Badge variant={option.color || 'default'} size="sm">
+      <Badge variant={option.color || 'default'} size="xs">
         {uppercaseLabel(option.label)}
       </Badge>
     </label>
@@ -138,7 +139,7 @@ function MultiSelectOptionsPanel({
   onSelectAll: () => void;
 }) {
   return (
-    <div className="bg-surface border border-border-default rounded-md shadow-lg py-2">
+    <div className={`${SURFACE.raised} ${RADIUS.card} shadow-lg py-2`}>
       <div className="max-h-[300px] overflow-y-auto">
         {options.map(option => (
           <MultiSelectListItem
@@ -172,7 +173,7 @@ function MultiSelectOptionsPanel({
                   </div>
                 )}
               </div>
-              <span className="text-xs font-normal text-text-primary">
+              <span className={`${TYPE.value} font-normal`}>
                 {allSelected ? 'Deselect all' : selectAllLabel}
               </span>
             </label>

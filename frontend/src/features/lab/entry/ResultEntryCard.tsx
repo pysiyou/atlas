@@ -13,7 +13,7 @@ import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { LabMobileCardHeader } from '../components/LabWorkflowMobileHeader';
 import { LAB_CONFIG } from '../constants';
-import { LAB_CARD_TYPOGRAPHY, LAB_MOBILE_CARD } from '../utils/labStyles';
+import { LAB_MOBILE_CARD } from '../utils/labStyles';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
 import type { Test, TestWithContext } from '@/types';
 
@@ -121,18 +121,16 @@ function ResultEntryCardDesktop({
             testDef.parameters.slice(0, LAB_CONFIG.PARAMETER_PREVIEW_LIMIT).map(param => (
               <Badge
                 key={param.code}
-                size="sm"
+                size="xs"
                 uppercase={false}
-                className={
-                  results[param.code] ? LAB_CARD_TYPOGRAPHY.fieldValue : LAB_CARD_TYPOGRAPHY.fieldLabel
-                }
+                className={results[param.code] ? 'text-text-primary' : 'text-text-secondary'}
                 variant={results[param.code] ? 'primary' : 'default'}
               >
                 {param.name}
               </Badge>
             ))}
           {parameterCount > LAB_CONFIG.PARAMETER_PREVIEW_LIMIT && (
-            <Badge size="sm" variant="default" className={LAB_CARD_TYPOGRAPHY.fieldLabel}>
+            <Badge size="xs" variant="default" uppercase={false} className="text-text-secondary">
               +{parameterCount - LAB_CONFIG.PARAMETER_PREVIEW_LIMIT} more
             </Badge>
           )}

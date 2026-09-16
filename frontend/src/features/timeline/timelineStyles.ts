@@ -1,3 +1,5 @@
+import { TYPE } from '@/components/theme/recipes';
+
 export const TIMELINE_STYLES = {
   eventIndicator: 'bg-border-strong',
   connectorStem: 'bg-border-strong',
@@ -7,17 +9,17 @@ export const TIMELINE_STYLES = {
     'pointer-events-none absolute top-[1.375rem] bottom-0 w-px -translate-x-1/2 left-1/2',
   groupHeader: 'flex items-center gap-2 py-2 sticky top-0 z-1 bg-surface/95 backdrop-blur-sm',
   groupDivider: 'flex-1 h-px bg-border-subtle',
-  groupLabel: 'text-xxs font-light text-text-tertiary uppercase tracking-widest',
+  groupLabel: `${TYPE.sectionTitle} tracking-widest`,
   /** Matches LabAttentionFeed row: accent + `min-w-0 flex-1 space-y-1` content */
   eventRow: 'flex min-w-0 items-stretch gap-2 relative',
   eventBody: 'min-w-0 flex-1 space-y-1 pb-3',
   eventTitleRow: 'flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1',
   categoryLabel:
     'shrink-0 text-xs font-light uppercase tracking-wide underline underline-offset-2',
-  eventAction: 'min-w-0 text-sm font-light text-text-primary',
+  eventAction: `min-w-0 ${TYPE.detailTitle}`,
   eventDetails: 'flex flex-wrap items-center gap-x-1 gap-y-0.5',
-  eventDetailText: 'text-xs text-text-secondary',
-  eventMeta: 'text-xs text-text-tertiary',
+  eventDetailText: TYPE.label,
+  eventMeta: TYPE.meta,
   loadMore: 'px-4 py-2 flex justify-center border-t border-border-subtle',
   retryLink: 'text-sm text-brand hover:underline',
   retryLinkDisabled: 'text-sm text-brand hover:underline disabled:opacity-60',

@@ -11,6 +11,8 @@ import type { VitalSigns } from '@/types/patient';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 import { inputBase, inputError } from '@/components/inputs/inputStyles';
+import { TONE, TYPE } from '@/components/theme/recipes';
+
 
 export interface VitalsSectionProps {
   /** Current vital signs data */
@@ -155,30 +157,26 @@ const getVitalStatus = (
 const getStatusColors = (status: 'normal' | 'borderline' | 'abnormal' | null) => {
   if (!status) {
     return {
-      border: 'border-border-strong',
+      chrome: 'border-border-strong bg-transparent',
       text: 'text-text-tertiary',
-      bg: 'bg-transparent',
     };
   }
 
   switch (status) {
     case 'normal':
       return {
-        border: 'border-success-stroke',
-        text: 'text-success-fg',
-        bg: 'bg-success-bg-emphasis',
+        chrome: cn(TONE.success.well, 'bg-success-bg-emphasis'),
+        text: TONE.success.fg,
       };
     case 'borderline':
       return {
-        border: 'border-warning-stroke',
-        text: 'text-warning-fg',
-        bg: 'bg-warning-bg-emphasis',
+        chrome: cn(TONE.warning.well, 'bg-warning-bg-emphasis'),
+        text: TONE.warning.fg,
       };
     case 'abnormal':
       return {
-        border: 'border-danger-stroke',
-        text: 'text-danger-fg',
-        bg: 'bg-danger-bg-emphasis',
+        chrome: cn(TONE.danger.well, 'bg-danger-bg-emphasis'),
+        text: TONE.danger.fg,
       };
   }
 };
@@ -219,10 +217,10 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                 {isAbnormal && !isNa && (
                   <Icon
                     name={ICONS.actions.dangerSquare}
-                    className="w-3 h-3 text-danger-fg shrink-0"
+                    className={`w-3 h-3 ${TONE.danger.fg} shrink-0`}
                   />
                 )}
-                <span className="text-xxs text-text-tertiary truncate">Ref: {refRange}</span>
+                <span className={`${TYPE.caption} truncate`}>Ref: {refRange}</span>
               </div>
             </div>
 
@@ -239,7 +237,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
 
               {isNa ? (
                 <div
-                  className="w-full rounded border border-border-default bg-neutral-100/30 px-3 py-1.5 text-sm pl-10 pr-12 text-text-tertiary"
+                  className="w-full rounded border border-border-default bg-surface-hover/30 px-3 py-1.5 text-sm pl-10 pr-12 text-text-tertiary"
                   aria-label={`${config.label} not provided`}
                 >
                   N/A
@@ -262,17 +260,16 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                       inputBase,
                       'pl-10 pr-12 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0',
                       error && inputError,
-                      status && statusColors.border,
-                      status && statusColors.bg
+                      status && statusColors.chrome
                     )}
                   />
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none max-w-[40%]">
-                    <span className="text-xs text-text-tertiary select-none truncate">
+                    <span className={`${TYPE.meta} select-none truncate`}>
                       {config.unit}
                     </span>
                   </div>
                   {isAbnormal && (
-                    <div className="absolute -bottom-5 left-0 text-xxs text-danger-fg font-normal">
+                    <div className={`absolute -bottom-5 left-0 text-xxs ${TONE.danger.fg} font-normal`}>
                       Abnormal value
                     </div>
                   )}
@@ -280,7 +277,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
               )}
             </div>
 
-            {error && <p className="mt-1 text-sm text-danger-fg">{error}</p>}
+            {error && <p className={`mt-1 text-sm ${TONE.danger.fg}`}>{error}</p>}
           </div>
         );
       })}

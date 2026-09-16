@@ -6,6 +6,8 @@ import React from 'react';
 import { Alert } from '@/components';
 import { cn } from '@/utils';
 import { inputBase, FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
+import { TONE, TYPE } from '@/components/theme/recipes';
+
 
 export interface CatalogRejectionFieldsProps {
   criteria: string[];
@@ -35,7 +37,7 @@ export const CatalogRejectionCriteriaFields: React.FC<CatalogRejectionFieldsProp
   showNotes = true,
 }) => {
   if (showReason && criteriaLoading) {
-    return <p className="text-xs text-text-tertiary">Loading rejection criteria...</p>;
+    return <p className={TYPE.meta}>Loading rejection criteria...</p>;
   }
 
   if (showReason && criteria.length === 0) {
@@ -51,7 +53,7 @@ export const CatalogRejectionCriteriaFields: React.FC<CatalogRejectionFieldsProp
       {showReason && (
         <div>
           <label className={`${FORM_FIELD_LABEL} mb-1`}>
-            {reasonLabel} <span className="text-danger-fg">*</span>
+            {reasonLabel} <span className={TONE.danger.fg}>*</span>
           </label>
           <select
             value={rejectionReason}

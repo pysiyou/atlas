@@ -8,7 +8,7 @@ import { ICONS } from '@/config/icons';
 import { getLabTabPath } from '../../constants/labConstants';
 import { LAB_STAGE_SHORT_ROWS } from '../../constants/labConstants';
 import { KpiTile, SectionTitle } from '../LabCommandCenterUi';
-import { COMMAND_CENTER_TEXT, resolveCommandCenterTextTone, type CommandCenterKpiTone } from '../commandCenterStyles';
+import { COMMAND_CENTER_SECTION, COMMAND_CENTER_TEXT, resolveCommandCenterTextTone, type CommandCenterKpiTone } from '../commandCenterStyles';
 import type { LabCommandCenterSnapshot, QueueAgeStats } from '../commandCenterModel';
 import { queueTileTone } from '../commandCenterStyles';
 import { LabHealthStatus } from './LabHealthStatus';
@@ -133,7 +133,8 @@ export const LivePipelineStrip: React.FC<LivePipelineStripProps> = ({
             />
             <p
               className={cn(
-                'mt-0.5 truncate px-1 text-[9px] tabular-nums',
+                'mt-0.5 truncate px-1 tabular-nums',
+                COMMAND_CENTER_SECTION.microLabel,
                 tile.age ? subtextTone(tile.age) : COMMAND_CENTER_TEXT.detail,
               )}
             >

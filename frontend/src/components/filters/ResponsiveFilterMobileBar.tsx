@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { Button, Badge, DebouncedSearchInput } from '@/components';
+import { CONTROL } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
 export interface ResponsiveFilterMobileBarProps {
@@ -12,7 +13,7 @@ export interface ResponsiveFilterMobileBarProps {
   searchPlaceholder: string;
   activeFilterCount: number;
   onOpenModal: () => void;
-  /** Height class for the search row, e.g. 'h-[34px]' or 'h-9' */
+  /** Height class for the search row (defaults to CONTROL.height). */
   searchRowHeight?: string;
 }
 
@@ -22,7 +23,7 @@ export const ResponsiveFilterMobileBar: React.FC<ResponsiveFilterMobileBarProps>
   searchPlaceholder,
   activeFilterCount,
   onOpenModal,
-  searchRowHeight = 'h-[34px]',
+  searchRowHeight = CONTROL.height,
 }) => (
   <div className="w-full bg-surface border-b border-border-default">
     <div className="px-3 py-2 w-full">

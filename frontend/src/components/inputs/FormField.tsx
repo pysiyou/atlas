@@ -8,6 +8,7 @@ import React, { type InputHTMLAttributes } from 'react';
 import { Icon, type IconName } from '@/components/primitives/Icon';
 import { ICONS } from '@/config/icons';
 import { inputBase, inputError, FORM_CONTROL_LABEL } from '@/components/inputs/inputStyles';
+import { TONE, TYPE } from '@/components/theme/recipes';
 
 type FormFieldKind = 'input' | 'textarea' | 'select';
 
@@ -83,13 +84,13 @@ const FormFieldWrapper: React.FC<FormFieldWrapperProps> = ({
       <div className="flex justify-between items-baseline mb-1 gap-2">
         <label htmlFor={id} className={FORM_CONTROL_LABEL}>
           {label}
-          {required && <span className="text-danger-fg ml-1">*</span>}
+          {required && <span className={`${TONE.danger.fg} ml-1`}>*</span>}
         </label>
       </div>
     )}
     {children}
-    {error && <p className="text-danger-fg text-xs mt-1">{error}</p>}
-    {helperText && !error && <p className="text-text-tertiary text-xs mt-1">{helperText}</p>}
+    {error && <p className={`${TONE.danger.fg} text-xs mt-1`}>{error}</p>}
+    {helperText && !error && <p className={`${TYPE.meta} mt-1`}>{helperText}</p>}
   </div>
 );
 

@@ -90,7 +90,7 @@ export const createPaymentTableConfig = (
       accessor: (item: OrderPaymentView) => item.paymentMethod ?? '',
       render: (item: OrderPaymentView) => {
         if (!item.paymentMethod || item.order.paymentStatus === 'unpaid') return null;
-        return <Badge variant={item.paymentMethod} size="sm" />;
+        return <Badge variant={item.paymentMethod} size="xs" />;
       },
     },
     paidDate: {

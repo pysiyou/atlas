@@ -1,6 +1,5 @@
 /** Sample definitions, collection helpers, container inference, and label printing. */
 import type { SampleType, ContainerType, ContainerTopColor, OrderTest, Test } from '@/types';
-import { CONTAINER_COLOR_CONFIG } from '@/types';
 import type { FeedbackId } from '@/config/feedbackCatalog';
 import { notify } from '@/utils/feedback';
 import { feedbackTitle } from '@/utils/feedback/copy';
@@ -195,8 +194,34 @@ export function formatVolume(volumeInMl: number): string {
   return `${volumeInMl.toFixed(1)}mL`;
 }
 
+/** Theme-token icon color per tube/cup (see getContainerIconColor; generated CONTAINER_CONFIG.textClass is unused). */
+const CONTAINER_ICON_COLOR: Record<ContainerTopColor, string> = {
+  'red-top': 'text-container-red-bg',
+  'lavender-top': 'text-container-purple-bg',
+  'green-top': 'text-container-green-bg',
+  'blue-top': 'text-container-blue-bg',
+  'yellow-top': 'text-container-yellow-bg',
+  'gray-top': 'text-container-gray-bg',
+  'light-blue-top': 'text-cyan-fg-emphasis',
+  'pink-top': 'text-pink-fg-emphasis',
+  'black-top': 'text-container-black-bg',
+  'orange-top': 'text-orange-fg-emphasis',
+  'royal-blue-top': 'text-indigo-fg-emphasis',
+  'white-top': 'text-text-muted',
+  'tan-top': 'text-orange-fg-emphasis',
+  'urine-cup': 'text-container-yellow-bg',
+  'stool-container': 'text-orange-fg-emphasis',
+  'swab-tube': 'text-teal-fg-emphasis',
+  'gold-top': 'text-container-yellow-bg',
+  'tiger-top': 'text-orange-fg-emphasis',
+  'clear-top': 'text-text-disabled',
+  cup: 'text-orange-fg-emphasis',
+  tube: 'text-text-muted',
+  other: 'text-text-muted',
+};
+
 export function getContainerIconColor(containerTopColor: ContainerTopColor): string {
-  return CONTAINER_COLOR_CONFIG[containerTopColor]?.textClass || 'text-text-disabled';
+  return CONTAINER_ICON_COLOR[containerTopColor] ?? 'text-text-disabled';
 }
 
 export const getEffectiveContainerType = (

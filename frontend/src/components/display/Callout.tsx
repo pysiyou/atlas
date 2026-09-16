@@ -7,43 +7,30 @@
 
 import React from 'react';
 import { Icon, type IconName } from '@/components/primitives/Icon';
+import { RADIUS, TONE } from '@/components/theme/recipes';
 
 export type CalloutVariant = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
+
+/** Compose TONE well + fg (+ fill dot) for a Callout variant. */
+function calloutChrome(role: CalloutVariant) {
+  const tone = TONE[role];
+  return {
+    container: tone.well,
+    title: `${tone.fg} font-medium`,
+    body: tone.fg,
+    dot: tone.fill,
+  };
+}
 
 const CALLOUT_STYLES: Record<
   CalloutVariant,
   { container: string; title: string; body: string; dot: string }
 > = {
-  neutral: {
-    container: 'bg-tone-neutral-bg border border-tone-neutral-border',
-    title: 'text-tone-neutral-text font-medium',
-    body: 'text-tone-neutral-text',
-    dot: 'bg-tone-neutral-text',
-  },
-  info: {
-    container: 'bg-tone-info-bg border border-tone-info-border',
-    title: 'text-tone-info-text font-medium',
-    body: 'text-tone-info-text',
-    dot: 'bg-tone-info-text',
-  },
-  success: {
-    container: 'bg-tone-success-bg border border-tone-success-border',
-    title: 'text-tone-success-text font-medium',
-    body: 'text-tone-success-text',
-    dot: 'bg-tone-success-text',
-  },
-  warning: {
-    container: 'bg-tone-warning-bg border border-tone-warning-border',
-    title: 'text-tone-warning-text font-medium',
-    body: 'text-tone-warning-text',
-    dot: 'bg-tone-warning-text',
-  },
-  danger: {
-    container: 'bg-tone-danger-bg border border-tone-danger-border',
-    title: 'text-tone-danger-text font-medium',
-    body: 'text-tone-danger-text',
-    dot: 'bg-tone-danger-text',
-  },
+  neutral: calloutChrome('neutral'),
+  info: calloutChrome('info'),
+  success: calloutChrome('success'),
+  warning: calloutChrome('warning'),
+  danger: calloutChrome('danger'),
 };
 
 const DEFAULT_CALLOUT_ICONS: Partial<Record<CalloutVariant, IconName>> = {
@@ -75,7 +62,7 @@ export const Callout: React.FC<CalloutProps> = ({
 
   return (
     <div
-      className={`flex items-start gap-2 p-2 rounded ${styles.container} ${className}`}
+      className={`flex items-start gap-2 p-2 ${RADIUS.control} ${styles.container} ${className}`}
       role={variant === 'danger' || variant === 'warning' ? 'alert' : undefined}
     >
       {iconName ? (

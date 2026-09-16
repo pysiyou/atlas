@@ -11,6 +11,7 @@ import React, { type ReactNode } from 'react';
 import { Button, FooterInfo, Icon, DialogHeader, DialogFooter } from '@/components';
 import { MODULE_ICONS } from '@/config/icons';
 import { ICONS } from '@/config/icons';
+import { SURFACE, TONE, RADIUS } from '@/components/theme/recipes';
 
 interface LabWorkflowPopoverChromeProps {
   /** Main title displayed in the header */
@@ -59,7 +60,7 @@ export const LabWorkflowPopoverChrome: React.FC<LabWorkflowPopoverChromeProps> =
   children,
 }) => {
   return (
-    <div className="w-90 md:w-96 bg-surface rounded-lg shadow-xl border border-border-default overflow-hidden flex flex-col max-h-[600px]">
+    <div className={`w-90 md:w-96 ${SURFACE.raised} ${RADIUS.overlay} shadow-xl overflow-hidden flex flex-col max-h-[600px]`}>
       <DialogHeader
         size="popover"
         title={title}
@@ -192,7 +193,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
             </span>
           ) : null}
           {disabled && disabledReason ? (
-            <span className="block text-xxs mt-1 text-danger-fg font-normal">{disabledReason}</span>
+            <span className={`block text-xxs mt-1 ${TONE.danger.fg} font-normal`}>{disabledReason}</span>
           ) : null}
         </div>
       </div>

@@ -1,8 +1,13 @@
 @import 'tailwindcss';
 
 @theme {
-  /* Custom text size */
-  --text-xxs: 10px;
+  --text-3xs: var(--font-size-3xs);
+  --text-2xs: var(--font-size-2xs);
+  --text-xxs: var(--font-size-xxs);
+  --text-xs: var(--font-size-xs);
+  --text-sm: var(--font-size-sm);
+  --text-base: var(--font-size-base);
+  --text-lg: var(--font-size-lg);
 
   /* ═══════════════════════════════════════════════════════════════════
      TEXT (Foreground)
@@ -95,28 +100,6 @@
   --color-warning-hover: var(--warning-hover);
 
   /* ═══════════════════════════════════════════════════════════════════
-     TONE SYSTEM (badges/alerts)
-     ═══════════════════════════════════════════════════════════════════ */
-  --color-tone-neutral-bg: var(--tone-neutral-bg);
-  --color-tone-neutral-text: var(--tone-neutral-text);
-  --color-tone-neutral-border: var(--tone-neutral-border);
-  --color-tone-info-bg: var(--tone-info-bg);
-  --color-tone-info-text: var(--tone-info-text);
-  --color-tone-info-border: var(--tone-info-border);
-  --color-tone-success-bg: var(--tone-success-bg);
-  --color-tone-success-text: var(--tone-success-text);
-  --color-tone-success-border: var(--tone-success-border);
-  --color-tone-warning-bg: var(--tone-warning-bg);
-  --color-tone-warning-text: var(--tone-warning-text);
-  --color-tone-warning-border: var(--tone-warning-border);
-  --color-tone-danger-bg: var(--tone-danger-bg);
-  --color-tone-danger-text: var(--tone-danger-text);
-  --color-tone-danger-border: var(--tone-danger-border);
-  --color-tone-accent-bg: var(--tone-accent-bg);
-  --color-tone-accent-text: var(--tone-accent-text);
-  --color-tone-accent-border: var(--tone-accent-border);
-
-  /* ═══════════════════════════════════════════════════════════════════
      EXTENDED BADGE COLORS (theme-responsive)
      ═══════════════════════════════════════════════════════════════════ */
   --color-purple-fg-emphasis: var(--purple-fg-emphasis);
@@ -195,21 +178,8 @@
   --color-workflow-composition-bg: var(--workflow-composition-bg);
   --color-workflow-composition-border: var(--workflow-composition-border);
 
-  /* ═══════════════════════════════════════════════════════════════════
-     NEUTRALS (for direct use when semantic doesn't fit)
-     ═══════════════════════════════════════════════════════════════════ */
-  --color-neutral-0: var(--primitive-neutral-0);
-  --color-neutral-50: var(--primitive-neutral-50);
-  --color-neutral-100: var(--primitive-neutral-100);
-  --color-neutral-200: var(--primitive-neutral-200);
-  --color-neutral-300: var(--primitive-neutral-300);
-  --color-neutral-400: var(--primitive-neutral-400);
-  --color-neutral-500: var(--primitive-neutral-500);
-  --color-neutral-600: var(--primitive-neutral-600);
-  --color-neutral-700: var(--primitive-neutral-700);
-  --color-neutral-800: var(--primitive-neutral-800);
-  --color-neutral-900: var(--primitive-neutral-900);
-  --color-neutral-950: var(--primitive-neutral-950);
+  /* Disable Tailwind's default neutral scale so app code cannot bypass tokens */
+  --color-neutral-*: initial;
 
   /* ═══════════════════════════════════════════════════════════════════
      OVERLAY
@@ -222,10 +192,8 @@
   --shadow-sm: var(--shadow-sm);
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
   --shadow-footer: var(--shadow-footer);
-  --shadow-1: var(--shadow-1);
-  --shadow-2: var(--shadow-2);
-  --shadow-3: var(--shadow-3);
   --opacity-disabled: var(--state-disabled-opacity);
 
   /* ═══════════════════════════════════════════════════════════════════
@@ -236,11 +204,17 @@
   --color-id-secondary: var(--id-color-secondary);
 
   /* ═══════════════════════════════════════════════════════════════════
-     BUTTON (radius utilities: rounded-button, rounded-button-square, rounded-button-circle)
+     RADIUS (rounded-control/card/overlay/notice/pill + button aliases)
      ═══════════════════════════════════════════════════════════════════ */
+  --radius-control: var(--radius-control);
+  --radius-card: var(--radius-card);
+  --radius-overlay: var(--radius-overlay);
+  --radius-notice: var(--radius-notice);
+  --radius-pill: var(--radius-pill);
   --radius-button: var(--button-radius);
   --radius-button-square: var(--button-radius-square);
   --radius-button-circle: var(--button-radius-circle);
+  --height-control: var(--control-height);
 
   /* ═══════════════════════════════════════════════════════════════════
      FOCUS

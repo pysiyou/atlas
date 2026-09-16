@@ -108,13 +108,13 @@ const chrome =
 
 const tone: Record<BaseVariant, string> = {
   primary: 'bg-brand text-on-brand hover:bg-brand-hover focus-visible:ring-brand',
-  secondary: 'bg-surface-hover text-text-primary hover:bg-border-subtle focus-visible:ring-neutral-500',
+  secondary: 'bg-surface-hover text-text-primary hover:bg-border-subtle focus-visible:ring-text-muted',
   danger: 'bg-danger text-on-danger hover:bg-danger-hover focus-visible:ring-danger',
   success: 'bg-success text-on-success hover:bg-success-hover focus-visible:ring-success',
   warning: 'bg-warning text-on-warning hover:bg-warning-hover focus-visible:ring-warning',
   outline:
-    'border-2 border-border-strong bg-transparent text-text-secondary hover:bg-surface-hover focus-visible:ring-neutral-500',
-  ghost: 'bg-transparent text-text-secondary hover:bg-surface-hover focus-visible:ring-neutral-500',
+    'border-2 border-border-strong bg-transparent text-text-secondary hover:bg-surface-hover focus-visible:ring-text-muted',
+  ghost: 'bg-transparent text-text-secondary hover:bg-surface-hover focus-visible:ring-text-muted',
 };
 
 const labelButtonSize: Record<ButtonSize, string> = {
@@ -164,7 +164,7 @@ function iconButtonClasses(
   let colors = tone[baseTone(variant)];
   if (variant === 'close') colors = tone.danger;
   if (variant === 'sidebarClose') {
-    colors = 'bg-surface-hover text-text-secondary hover:bg-border-subtle focus-visible:ring-neutral-500';
+    colors = 'bg-surface-hover text-text-secondary hover:bg-border-subtle focus-visible:ring-text-muted';
   }
   return cn(chrome, colors, iconButtonBox[size], iconButtonShape[shape], className);
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { TYPE } from '@/components/theme/recipes';
 
 export interface CircularProgressProps {
   /** Size of the circular progress in pixels */
@@ -71,7 +72,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
       </div>
 
       {/* Label */}
-      {label && <span className="text-text-tertiary text-xs normal-case font-normal">{label}</span>}
+      {label && <span className={`${TYPE.meta} normal-case font-normal`}>{label}</span>}
     </div>
   );
 };

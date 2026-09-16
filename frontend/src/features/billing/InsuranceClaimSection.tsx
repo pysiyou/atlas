@@ -7,6 +7,7 @@ import { Input } from '@/components/inputs/FormField';
 import { formatCurrency } from '@/utils';
 import { notify, getFeedback, errorAlertMessage } from '@/utils/feedback';
 import type { Invoice } from '@/types';
+import { TYPE } from '@/components/theme/recipes';
 import {
   useOrderInsuranceClaims,
   useSubmitInsuranceClaim,
@@ -60,7 +61,7 @@ export const InsuranceClaimSection: React.FC<InsuranceClaimSectionProps> = ({
         <span className="text-xs font-medium text-text-secondary uppercase tracking-wider">
           Insurance Claims
         </span>
-        <EntityId type="invoice" value={invoice.invoiceId} className="text-[10px] text-text-tertiary" />
+        <EntityId type="invoice" value={invoice.invoiceId} className={TYPE.caption} />
       </div>
 
       {isError ? (
@@ -73,7 +74,7 @@ export const InsuranceClaimSection: React.FC<InsuranceClaimSectionProps> = ({
           }}
         />
       ) : isLoading ? (
-        <p className="text-xs text-text-tertiary">Loading claims…</p>
+        <p className={TYPE.meta}>Loading claims…</p>
       ) : claims.length > 0 ? (
         <ul className="space-y-2">
           {claims.map((claim: InsuranceClaim) => (
@@ -93,7 +94,7 @@ export const InsuranceClaimSection: React.FC<InsuranceClaimSectionProps> = ({
           ))}
         </ul>
       ) : (
-        <p className="text-xs text-text-tertiary">No claims submitted yet.</p>
+        <p className={TYPE.meta}>No claims submitted yet.</p>
       )}
 
       {invoice.amountDue > 0 && (

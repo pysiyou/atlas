@@ -20,6 +20,7 @@ import { LabWorkflowPopoverChrome } from '@/features/lab';
 import { cn, formatCurrency } from '@/utils';
 import { OrderReceipt } from '@/features/orders';
 import { inputBase, FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
+import { TONE } from '@/components/theme/recipes';
 import type { Order } from '@/types';
 import {
   getEnabledPaymentMethods,
@@ -131,7 +132,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
       {/* Payment Method Selection */}
       <div>
         <label className={`${FORM_FIELD_LABEL} mb-2`}>
-          Payment Method <span className="text-danger-fg">*</span>
+          Payment Method <span className={TONE.danger.fg}>*</span>
         </label>
         <PaymentMethodSelector
           methods={PAYMENT_METHODS}
@@ -264,7 +265,7 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
 
   const isPaid = order.paymentStatus === 'paid' || (!paymentsLoading && remainingAmount <= 0);
   if (isPaid && trigger == null) {
-    return <Badge variant="paid" size="sm" />;
+    return <Badge variant="paid" size="xs" />;
   }
 
   const defaultTrigger = (

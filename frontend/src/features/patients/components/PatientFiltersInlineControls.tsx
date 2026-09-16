@@ -12,6 +12,7 @@ import { PATIENT_FILTER_PLACEHOLDERS } from '@/components/filters';
 import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
 import { AgeFilter } from './AgeFilter';
 import type { Gender } from '@/types';
+import { CONTROL } from '@/components/theme/recipes';
 import type { AffiliationStatus } from './PatientFilterTypes';
 
 const genderOptions = createFilterOptions(GENDER_VALUES, GENDER_CONFIG);
@@ -42,7 +43,7 @@ export const PatientFiltersInlineControls: React.FC<PatientFiltersInlineControls
   onAffiliationStatusFiltersChange,
 }) => (
   <>
-    <div className={cn('flex', 'h-[34px]', 'w-full items-center')}>
+    <div className={cn('flex', CONTROL.height, 'w-full items-center')}>
       <DebouncedSearchInput
         value={searchQuery}
         onChange={onSearchChange}
@@ -50,7 +51,7 @@ export const PatientFiltersInlineControls: React.FC<PatientFiltersInlineControls
       />
     </div>
 
-    <div className={cn('flex', 'h-[34px]', 'w-full items-center')}>
+    <div className={cn('flex', CONTROL.height, 'w-full items-center')}>
       <AgeFilter
         value={ageRange}
         onChange={onAgeRangeChange}
@@ -61,7 +62,7 @@ export const PatientFiltersInlineControls: React.FC<PatientFiltersInlineControls
       />
     </div>
 
-    <div className={cn('flex', 'h-[34px]', 'w-full items-center')}>
+    <div className={cn('flex', CONTROL.height, 'w-full items-center')}>
       <MultiSelectFilter
         label="Sex"
         options={genderOptions}
@@ -74,7 +75,7 @@ export const PatientFiltersInlineControls: React.FC<PatientFiltersInlineControls
       />
     </div>
 
-    <div className={cn('flex', 'h-[34px]', 'w-full items-center')}>
+    <div className={cn('flex', CONTROL.height, 'w-full items-center')}>
       <MultiSelectFilter
         label="Affiliation Status"
         options={affiliationStatusOptions}

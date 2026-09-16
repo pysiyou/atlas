@@ -13,12 +13,12 @@ import { QuickFilters } from './QuickFilters';
 import { FilterSection } from './FilterSection';
 import { FilterModal } from './FilterModal';
 import { Button, Badge } from '@/components';
+import { CONTROL } from '@/components/theme/recipes';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 import type { FilterConfig, FilterValues, ActiveFilterBadge } from './types';
 
-// Style constants for consistent styling
 const filterStyles = {
-  controlHeight: 'h-[34px]',
+  controlHeight: CONTROL.height,
   container: 'w-full bg-surface border-b border-border-default',
   dropdownLabel: `${FORM_FIELD_LABEL} mb-2`,
   dropdownDivider: 'pt-2 border-t border-border-default',

@@ -15,6 +15,7 @@ import {
   inputClearButton,
   FORM_CONTROL_LABEL,
 } from '@/components/inputs/inputStyles';
+import { TONE, TYPE } from '@/components/theme/recipes';
 import {
   generateCalendarDays,
   generateCalendarMonths,
@@ -62,7 +63,7 @@ function DateInputHeader({
       <button
         type="button"
         onClick={onPrevClick}
-        className="p-1 hover:bg-neutral-100 rounded text-text-tertiary cursor-pointer flex items-center justify-center"
+        className="p-1 hover:bg-surface-hover rounded text-text-tertiary cursor-pointer flex items-center justify-center"
       >
         <Icon name={ICONS.actions.chevronLeft} className="w-4 h-4" />
       </button>
@@ -76,7 +77,7 @@ function DateInputHeader({
       <button
         type="button"
         onClick={onNextClick}
-        className="p-1 hover:bg-neutral-100 rounded text-text-tertiary cursor-pointer flex items-center justify-center"
+        className="p-1 hover:bg-surface-hover rounded text-text-tertiary cursor-pointer flex items-center justify-center"
       >
         <Icon name={ICONS.actions.chevronRight} className="w-4 h-4" />
       </button>
@@ -131,7 +132,7 @@ function DateInputCalendarGrid({
                   'h-8 w-8 text-xs rounded-full flex items-center justify-center transition-colors cursor-pointer',
                   disabled && 'opacity-30 cursor-not-allowed',
                   !currentMonthMatch && 'text-text-disabled',
-                  currentMonthMatch && !selected && !disabled && 'text-text-secondary hover:bg-neutral-100',
+                  currentMonthMatch && !selected && !disabled && 'text-text-secondary hover:bg-surface-hover',
                   isToday && !selected && !disabled && 'font-normal text-brand bg-brand-muted',
                   selected && 'bg-brand text-on-brand hover:bg-brand-hover z-10'
                 )}
@@ -165,7 +166,7 @@ function DateInputCalendarGrid({
               className={cn(
                 'h-10 text-sm rounded flex items-center justify-center transition-colors cursor-pointer',
                 disabled && 'opacity-30 cursor-not-allowed',
-                !disabled && 'hover:bg-neutral-100 text-text-secondary'
+                !disabled && 'hover:bg-surface-hover text-text-secondary'
               )}
             >
               {format(month, 'MMM')}
@@ -195,7 +196,7 @@ function DateInputCalendarGrid({
             className={cn(
               'h-10 text-sm rounded flex items-center justify-center transition-colors cursor-pointer',
               disabled && 'opacity-30 cursor-not-allowed',
-              !disabled && 'hover:bg-neutral-100 text-text-secondary'
+              !disabled && 'hover:bg-surface-hover text-text-secondary'
             )}
           >
             {format(year, 'yyyy')}
@@ -260,7 +261,7 @@ export const DateInput: React.FC<DateInputProps> = ({
         <div className="flex justify-between items-baseline mb-1 gap-2">
           <label htmlFor={inputId} className={FORM_CONTROL_LABEL}>
             {label}
-            {required && <span className="text-danger-fg ml-1">*</span>}
+            {required && <span className={`${TONE.danger.fg} ml-1`}>*</span>}
           </label>
         </div>
       )}
@@ -274,14 +275,14 @@ export const DateInput: React.FC<DateInputProps> = ({
               'w-full',
               isOpen && inputTriggerOpen,
               error && inputError,
-              disabled && 'bg-neutral-100 cursor-not-allowed'
+              disabled && 'bg-surface-hover cursor-not-allowed'
             )}
           >
             <Icon
               name={ICONS.dataFields.date}
               className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors shrink-0"
             />
-            <div className="flex-1 min-w-0 text-xs text-text-primary truncate">
+            <div className={`flex-1 min-w-0 ${TYPE.value} truncate`}>
               {dateValue ? (
                 <span className="text-text-primary">{format(dateValue, 'dd MMM yyyy')}</span>
               ) : (
@@ -295,7 +296,7 @@ export const DateInput: React.FC<DateInputProps> = ({
             {dateValue && !disabled && (
               <button
                 onClick={handleClear}
-                className={cn(inputClearButton, '-mr-1 hover:bg-neutral-100')}
+                className={cn(inputClearButton, '-mr-1 hover:bg-surface-hover')}
                 type="button"
               >
                 <Icon name={ICONS.actions.closeCircle} className="w-3.5 h-3.5 text-text-disabled hover:text-text-tertiary" />
@@ -329,7 +330,7 @@ export const DateInput: React.FC<DateInputProps> = ({
         )}
       </Popover>
       <input type="hidden" id={inputId} name={name} value={value} />
-      {error && <p className="text-xs text-danger-fg mt-1">{error}</p>}
+      {error && <p className={`text-xs ${TONE.danger.fg} mt-1`}>{error}</p>}
     </div>
   );
 };

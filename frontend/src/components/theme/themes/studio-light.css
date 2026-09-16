@@ -1,10 +1,103 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    STUDIO LIGHT THEME
-   Default light theme - uses base semantic tokens from semantic-light.css
-   This explicit block ensures consistent theme application.
+   Halal-inspired: white chrome, cool gray canvas, saturated blue primary,
+   soft borders/shadows, slightly rounder controls.
+   Overrides primitives + key semantics only for [data-theme='studio-light'].
    ═══════════════════════════════════════════════════════════════════════════ */
 
 [data-theme='studio-light'] {
-  /* Studio-light uses the base :root tokens from semantic-light.css.
-     Override --workflow-* here to recolor a lab stage for this theme only. */
+  --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-weight-default: var(--font-weight-normal);
+
+  /* Brand — product blue (primary actions, links, today marker) */
+  --primitive-brand-50: #eff6ff;
+  --primitive-brand-100: #dbeafe;
+  --primitive-brand-200: #bfdbfe;
+  --primitive-brand-300: #93c5fd;
+  --primitive-brand-400: #60a5fa;
+  --primitive-brand-500: #3b82f6;
+  --primitive-brand-600: #2563eb;
+  --primitive-brand-700: #1d4ed8;
+  --primitive-brand-800: #1e40af;
+  --primitive-brand-900: #1e3a8a;
+  --primitive-brand-950: #172554;
+
+  /* Neutral — blue-gray (Halal sidebar / page / borders) */
+  --primitive-neutral-0: #ffffff;
+  --primitive-neutral-50: #f4f6f9;
+  --primitive-neutral-100: #eef1f6;
+  --primitive-neutral-200: #e2e8f0;
+  --primitive-neutral-300: #cbd5e1;
+  --primitive-neutral-400: #94a3b8;
+  --primitive-neutral-500: #64748b;
+  --primitive-neutral-600: #475569;
+  --primitive-neutral-700: #334155;
+  --primitive-neutral-800: #1e293b;
+  --primitive-neutral-900: #111827;
+  --primitive-neutral-950: #030712;
+
+  --primitive-surface-report: #f0f9ff;
+
+  /* Semantic surfaces & chrome */
+  --text: var(--primitive-neutral-900);
+  --text-secondary: var(--primitive-neutral-600);
+  --text-tertiary: var(--primitive-neutral-500);
+  --text-muted: var(--primitive-neutral-400);
+
+  --surface-page: var(--primitive-neutral-50);
+  --surface: var(--primitive-neutral-0);
+  --surface-hover: var(--primitive-neutral-100);
+  --surface-selected: var(--primitive-brand-50);
+  --surface-elev: var(--primitive-neutral-0);
+
+  --border: #e5eaf0;
+  --border-subtle: var(--primitive-neutral-100);
+  --border-strong: var(--primitive-neutral-300);
+  --border-hover: #d1dae6;
+  --border-focus: var(--primitive-brand-500);
+
+  --brand: var(--primitive-brand-600);
+  --brand-hover: var(--primitive-brand-700);
+  --brand-muted: var(--primitive-brand-50);
+  --brand-fg: var(--primitive-brand-700);
+  --on-brand: var(--primitive-neutral-0);
+
+  --focus: var(--primitive-brand-500);
+
+  --info: var(--primitive-brand-500);
+  --info-bg: color-mix(in srgb, var(--primitive-brand-500) 10%, transparent);
+  --info-bg-emphasis: color-mix(in srgb, var(--primitive-brand-500) 16%, transparent);
+  --info-fg: var(--primitive-brand-700);
+  --info-fg-emphasis: var(--primitive-brand-800);
+  --info-stroke: color-mix(in srgb, var(--primitive-brand-500) 22%, transparent);
+
+  --badge: var(--primitive-neutral-0);
+
+  --shadow-sm: 0 1px 2px 0 rgb(15 23 42 / 0.04);
+  --shadow-md: 0 4px 12px -2px rgb(15 23 42 / 0.08), 0 2px 4px -2px rgb(15 23 42 / 0.04);
+  --shadow-lg: 0 12px 24px -4px rgb(15 23 42 / 0.1), 0 4px 8px -4px rgb(15 23 42 / 0.06);
+  --shadow-xl: 0 20px 32px -6px rgb(15 23 42 / 0.12), 0 8px 16px -6px rgb(15 23 42 / 0.06);
+  --shadow-footer: 0 -1px 2px rgb(15 23 42 / 0.04);
+
+  --radius-control: 0.375rem;
+  --radius-card: 0.5rem;
+  --radius-overlay: 0.625rem;
+  --radius-notice: 0.75rem;
+  --button-radius: var(--radius-control);
+
+  --id-color: var(--brand);
+
+  --toast-bg: var(--primitive-neutral-0);
+  --toast-fg: var(--primitive-neutral-900);
+  --toast-border: rgb(15 23 42 / 0.08);
+  --toast-shadow: 0 16px 40px rgb(15 23 42 / 0.12);
+  --toast-track: rgb(15 23 42 / 0.06);
+
+  /* Auth panel stays dark; align accent with studio blue */
+  --primitive-auth-accent: var(--primitive-brand-600);
+  --primitive-auth-accent-medium: var(--primitive-brand-500);
+  --primitive-auth-input-focus: var(--primitive-brand-400);
+  --primitive-auth-text-light: var(--primitive-brand-300);
+
+  /* Override --workflow-* here to recolor a lab stage for this theme only. */
 }

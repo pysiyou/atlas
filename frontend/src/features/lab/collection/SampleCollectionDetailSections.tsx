@@ -16,6 +16,8 @@ import { displayId, formatDateTime } from '@/utils';
 import { SampleCollectionRequirementsSection } from './SampleCollectionRequirementsSection';
 import { formatRejectionReasons } from '../utils/labFormatters';
 import { ICONS } from '@/config/icons';
+import { SURFACE, TONE, TYPE } from '@/components/theme/recipes';
+
 
 interface CollectionDetailGridSectionsProps {
   sample: Sample;
@@ -96,7 +98,7 @@ export const buildCollectionDetailGridSections = ({
         label: 'Remaining',
         value:
           remainingVolume !== undefined ? (
-            <span className={remainingVolume < sample.requiredVolume * 0.2 ? 'text-danger-fg' : ''}>
+            <span className={remainingVolume < sample.requiredVolume * 0.2 ? TONE.danger.fg : ''}>
               {formatVolume(remainingVolume)}
             </span>
           ) : undefined,
@@ -201,7 +203,7 @@ export const SampleCollectionDetailContent: React.FC<CollectionDetailContentProp
   return (
     <>
       {showBarcode && sample.sampleId != null && (
-        <div className="flex items-center justify-center bg-surface-page rounded p-4 border border-border-default">
+        <div className={`flex items-center justify-center ${SURFACE.recessed} rounded p-4`}>
           <Barcode
             value={displayId.sample(sample.sampleId)}
             height={40}
@@ -218,8 +220,8 @@ export const SampleCollectionDetailContent: React.FC<CollectionDetailContentProp
             const testCode = testCodes[i];
             const test = testCode ? getTest(testCode) : undefined;
             return (
-              <li key={testCode || i} className="flex items-center text-xs text-text-secondary">
-                <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mr-2" />
+              <li key={testCode || i} className={`flex items-center ${TYPE.label}`}>
+                <span className="w-1.5 h-1.5 rounded-full bg-text-muted mr-2" />
                 <span className="font-normal mr-1">{testName}</span>
                 <EntityId variant="inline" className="mr-2">{testCode}</EntityId>
                 {test?.turnaroundTime && (
@@ -268,7 +270,7 @@ export const SampleCollectionDetailContent: React.FC<CollectionDetailContentProp
 
       {collectionNotes && (
         <Panel variant="lab" title="Collection Notes">
-          <div className="text-sm text-text-primary">{collectionNotes}</div>
+          <div className={TYPE.amount}>{collectionNotes}</div>
         </Panel>
       )}
 

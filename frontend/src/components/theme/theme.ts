@@ -1,3 +1,5 @@
+import { useSyncExternalStore } from 'react';
+
 export type ThemeName = 'studio-light' | 'github' | 'noir-studio';
 
 /** Badge background behaviour: unified = same bg for all; tinted = per-variant bg/text from semantic tokens */
@@ -6,6 +8,7 @@ export type BadgeAppearance = 'unified' | 'tinted';
 const THEME_ATTRIBUTE = 'data-theme';
 const DEFAULT_THEME: ThemeName = 'noir-studio';
 const STORAGE_KEY = 'atlas-theme';
+export const THEME_CHANGE_EVENT = 'atlas-theme-change';
 const VALID_THEMES = new Set<ThemeName>(['studio-light', 'github', 'noir-studio']);
 
 const THEME_BADGE_APPEARANCE: Record<ThemeName, BadgeAppearance> = {
@@ -39,6 +42,7 @@ export function setTheme(theme: ThemeName): void {
   requestAnimationFrame(() => {
     root.setAttribute(THEME_ATTRIBUTE, theme);
     localStorage.setItem(STORAGE_KEY, theme);
+    window.dispatchEvent(new Event(THEME_CHANGE_EVENT));
     setTimeout(() => root.classList.remove(THEME_TRANSITION_CLASS), THEME_TRANSITION_MS);
   });
 }
@@ -54,5 +58,32 @@ export function initializeTheme(): void {
 
 export function getBadgeAppearance(): BadgeAppearance {
   const theme = getActiveTheme();
+  return THEME_BADGE_APPEARANCE[theme] ?? 'unified';
+}
+
+function subscribeTheme(onStoreChange: () => void): () => void {
+  if (typeof window === 'undefined') {
+    return () => undefined;
+  }
+  const handler = () => onStoreChange();
+  window.addEventListener(THEME_CHANGE_EVENT, handler);
+  window.addEventListener('storage', handler);
+  return () => {
+    window.removeEventListener(THEME_CHANGE_EVENT, handler);
+    window.removeEventListener('storage', handler);
+  };
+}
+
+function getThemeServerSnapshot(): ThemeName {
+  return DEFAULT_THEME;
+}
+
+/** Re-renders when setTheme() updates data-theme (badge appearance, etc.). */
+export function useActiveTheme(): ThemeName {
+  return useSyncExternalStore(subscribeTheme, getActiveTheme, getThemeServerSnapshot);
+}
+
+export function useBadgeAppearance(): BadgeAppearance {
+  const theme = useActiveTheme();
   return THEME_BADGE_APPEARANCE[theme] ?? 'unified';
 }

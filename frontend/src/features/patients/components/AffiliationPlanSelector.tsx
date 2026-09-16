@@ -14,6 +14,8 @@ import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import type { AffiliationPlan } from '@/types/affiliation';
 import type { AffiliationDuration } from '@/types';
 import { ICONS } from '@/config/icons';
+import { TYPE, RADIUS } from '@/components/theme/recipes';
+
 
 export interface AffiliationPlanSelectorProps {
   /** Currently selected duration */
@@ -128,7 +130,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                   <span className="text-sm font-normal text-text-primary">
                     Priority Lab Services
                   </span>
-                  <p className="text-xs text-text-tertiary mt-0.5">Faster processing and results</p>
+                  <p className={`${TYPE.meta} mt-0.5`}>Faster processing and results</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -139,7 +141,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                   <span className="text-sm font-normal text-text-primary">
                     Discounted Test Pricing
                   </span>
-                  <p className="text-xs text-text-tertiary mt-0.5">Save on all lab tests</p>
+                  <p className={`${TYPE.meta} mt-0.5`}>Save on all lab tests</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -148,7 +150,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 </div>
                 <div>
                   <span className="text-sm font-normal text-text-primary">Assurance Number</span>
-                  <p className="text-xs text-text-tertiary mt-0.5">
+                  <p className={`${TYPE.meta} mt-0.5`}>
                     Auto-generated unique identifier
                   </p>
                 </div>
@@ -161,7 +163,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                   <span className="text-sm font-normal text-text-primary">
                     Extended Validity Period
                   </span>
-                  <p className="text-xs text-text-tertiary mt-0.5">Long-term access to services</p>
+                  <p className={`${TYPE.meta} mt-0.5`}>Long-term access to services</p>
                 </div>
               </div>
             </div>
@@ -169,7 +171,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
 
           {/* Additional Info */}
           <div className="pt-4 border-t border-border-default">
-            <p className="text-xs text-text-tertiary leading-relaxed">
+            <p className={`${TYPE.meta} leading-relaxed`}>
               {hasExistingAffiliation
                 ? 'Your affiliation will be extended from the current end date when you renew or extend.'
                 : 'An assurance number will be automatically generated upon registration. All plans include full lab services access.'}
@@ -190,7 +192,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 key={plan.duration}
                 onClick={() => handlePlanSelect(plan.duration)}
                 className={`
-                  group relative border-2 rounded-xl p-5 cursor-pointer transition-all duration-200
+                  group relative border-2 ${RADIUS.overlay} p-5 cursor-pointer transition-all duration-200
                   ${
                     isSelected
                       ? 'border-brand bg-brand-muted shadow-sm'
@@ -201,7 +203,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 {/* Best Value Badge */}
                 {plan.isBestValue && (
                   <div className="absolute -top-2 -right-2">
-                    <div className="bg-danger text-on-danger text-[10px] font-normal px-2 py-0.5 rounded-md transform rotate-3 shadow-sm">
+                    <div className={`bg-danger text-on-danger text-xxs font-normal px-2 py-0.5 ${RADIUS.card} transform rotate-3 shadow-sm`}>
                       Best Value
                     </div>
                   </div>
@@ -243,7 +245,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                               </span>
                               <span className="text-sm text-text-tertiary font-normal">/month</span>
                             </div>
-                            <div className="text-xs text-text-tertiary">
+                            <div className={TYPE.meta}>
                               {formatCurrency(plan.price)} per year
                             </div>
                           </>
@@ -289,7 +291,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
             >
               {getActionText()}
             </Button>
-            <p className="text-xs text-text-tertiary text-center mt-2">
+            <p className={`${TYPE.meta} text-center mt-2`}>
               All subscription auto renews until canceled
             </p>
           </div>

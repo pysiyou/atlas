@@ -9,6 +9,7 @@ import { PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
 import { PAYMENT_FILTER_PLACEHOLDERS } from '@/components/filters';
 import { getEnabledPaymentMethods, PAYMENT_METHOD_FILTER_CONFIG } from '@/types/payments';
+import { CONTROL } from '@/components/theme/recipes';
 import type { PaymentStatus, PaymentMethod } from '@/types';
 
 const statusOptions = createFilterOptions(PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG);
@@ -40,7 +41,7 @@ export const PaymentFiltersInlineControls: React.FC<PaymentFiltersInlineControls
   onMethodFiltersChange,
 }) => (
   <>
-    <div className="flex h-[34px] w-full items-center">
+    <div className={`flex ${CONTROL.height} w-full items-center`}>
       <DebouncedSearchInput
         value={searchQuery}
         onChange={onSearchChange}
@@ -48,7 +49,7 @@ export const PaymentFiltersInlineControls: React.FC<PaymentFiltersInlineControls
       />
     </div>
 
-    <div className="flex h-[34px] w-full items-center">
+    <div className={`flex ${CONTROL.height} w-full items-center`}>
       <DateFilter
         value={dateRange}
         onChange={onDateRangeChange}
@@ -57,7 +58,7 @@ export const PaymentFiltersInlineControls: React.FC<PaymentFiltersInlineControls
       />
     </div>
 
-    <div className="flex h-[34px] w-full items-center">
+    <div className={`flex ${CONTROL.height} w-full items-center`}>
       <MultiSelectFilter
         label="Payment Status"
         options={statusOptions}
@@ -70,7 +71,7 @@ export const PaymentFiltersInlineControls: React.FC<PaymentFiltersInlineControls
       />
     </div>
 
-    <div className="flex h-[34px] w-full items-center">
+    <div className={`flex ${CONTROL.height} w-full items-center`}>
       <MultiSelectFilter
         label="Payment Method"
         options={methodOptions}

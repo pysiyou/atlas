@@ -10,6 +10,7 @@ import { DEFAULT_LOADING_ROWS } from './constants';
 import type { TableProps } from './types';
 import { CardGridView } from './CardGridView';
 import { TableView } from './TableView';
+import { RADIUS, SURFACE } from '@/components/theme/recipes';
 
 export function DataTable<T = Record<string, unknown>>({
   data,
@@ -75,7 +76,7 @@ export function DataTable<T = Record<string, unknown>>({
 
   const wrapperClass = embedded
     ? 'flex flex-col h-full min-h-0'
-    : 'bg-surface rounded-lg border border-border-default shadow-sm flex flex-col h-full min-h-0';
+    : `${SURFACE.raised} ${RADIUS.overlay} shadow-sm flex flex-col h-full min-h-0`;
 
   const paginationFooter =
     paginationEnabled && !loading ? (

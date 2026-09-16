@@ -7,6 +7,8 @@ import { formatCurrency, formatDateTime } from '@/utils';
 import type { OrderPaymentView } from '../types';
 import { PaymentButton } from './PaymentButton';
 import { useInvalidatePayments } from '../api/payments';
+import { TYPE } from '@/components/theme/recipes';
+
 
 /**
  * Mobile card for payments list — aligned with PaymentTable columns (amount, status, date, tests summary).
@@ -54,7 +56,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
       )}
 
       <div className="flex justify-between items-center mt-auto pt-3 gap-2">
-        <div className="text-xs text-text-tertiary tabular-nums">{formatDateTime(displayDate)}</div>
+        <div className={`${TYPE.meta} tabular-nums`}>{formatDateTime(displayDate)}</div>
         <div className="flex items-center gap-2 shrink-0">
           {order.overallStatus && <Badge variant={order.overallStatus} size="xs" />}
           <Badge variant={order.paymentStatus} size="xs" />

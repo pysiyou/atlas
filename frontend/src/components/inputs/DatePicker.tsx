@@ -72,7 +72,7 @@ function DatePickerHeader({
       <button
         onClick={onPrevClick}
         disabled={isPrevDisabled}
-        className="p-1 hover:bg-neutral-100 rounded text-text-tertiary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
+        className="p-1 hover:bg-surface-hover rounded text-text-tertiary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
       >
         <Icon name={ICONS.actions.chevronLeft} className="w-4 h-4" />
       </button>
@@ -88,7 +88,7 @@ function DatePickerHeader({
       <button
         onClick={onNextClick}
         disabled={isNextDisabled}
-        className="p-1 hover:bg-neutral-100 rounded text-text-tertiary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
+        className="p-1 hover:bg-surface-hover rounded text-text-tertiary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
       >
         <Icon name={ICONS.actions.chevronRight} className="w-4 h-4" />
       </button>
@@ -151,7 +151,7 @@ function DatePickerCalendarGrid({
                     !selected &&
                     !inRange &&
                     !disabled &&
-                    'text-text-secondary hover:bg-neutral-100',
+                    'text-text-secondary hover:bg-surface-hover',
                   isToday && !selected && !inRange && !disabled && 'font-normal text-brand bg-brand-muted',
                   inRange && !selected && 'bg-brand-muted text-brand rounded-none',
                   value &&
@@ -195,8 +195,8 @@ function DatePickerCalendarGrid({
                 !disabled && isSameMonth(month, new Date()) && 'text-brand font-normal bg-brand-muted',
                 !disabled && isSameMonth(month, currentMonth)
                   ? 'bg-brand-muted text-brand'
-                  : 'hover:bg-neutral-100 text-text-secondary',
-                !disabled && 'hover:bg-neutral-100'
+                  : 'hover:bg-surface-hover text-text-secondary',
+                !disabled && 'hover:bg-surface-hover'
               )}
             >
               {format(month, 'MMM')}
@@ -227,8 +227,8 @@ function DatePickerCalendarGrid({
               !disabled && y === new Date().getFullYear() && 'text-brand font-normal bg-brand-muted',
               !disabled && y === currentMonth.getFullYear()
                 ? 'bg-brand-muted text-brand'
-                : 'hover:bg-neutral-100 text-text-secondary',
-              !disabled && 'hover:bg-neutral-100'
+                : 'hover:bg-surface-hover text-text-secondary',
+              !disabled && 'hover:bg-surface-hover'
             )}
           >
             {format(year, 'yyyy')}

@@ -9,6 +9,8 @@ import type { CardComponentProps } from '@/components';
 import { formatDateTime } from '@/utils';
 import type { ValidatedTest } from '../types';
 import { ReportPreviewButton } from './ReportPreviewButton';
+import { TYPE } from '@/components/theme/recipes';
+
 
 interface ValidatedTestReportCardProps extends CardComponentProps<ValidatedTest> {
   /** Callback when preview button is clicked */
@@ -43,14 +45,14 @@ export function ValidatedTestReportCard({ item: test, onClick, onPreview }: Vali
           <div className="text-text-primary text-sm">{test.testName}</div>
           <EntityId variant="block">{test.testCode}</EntityId>
         </div>
-        <div className="text-xs text-text-tertiary">
+        <div className={TYPE.meta}>
           Order: <EntityId type="order" value={test.orderId} />
         </div>
       </div>
 
       {/* Bottom section: Order date (left) + Preview button (right) */}
       <div className="flex justify-between items-center mt-auto pt-3">
-        <div className="text-xs text-text-tertiary">{formatDateTime(test.orderDate)}</div>
+        <div className={TYPE.meta}>{formatDateTime(test.orderDate)}</div>
         <div onClick={e => e.stopPropagation()}>
           <ReportPreviewButton test={test} onPreview={onPreview} size="sm" />
         </div>

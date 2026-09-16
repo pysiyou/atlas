@@ -47,7 +47,7 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
               className={`px-2 py-1 text-xs rounded transition-colors ${
                 activeTestCode === test.code
                   ? 'bg-brand-muted text-brand font-normal'
-                  : 'bg-neutral-100 text-brand hover:bg-neutral-200'
+                  : 'bg-surface-hover text-brand hover:bg-border-default'
               }`}
             >
               <EntityId>{test.code}</EntityId>
@@ -65,7 +65,7 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
 
         {activeTest.containerDescription && (
           <div className="flex items-start gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mt-1.5 shrink-0" />
+            <span className="w-1.5 h-1.5 rounded-full bg-text-muted mt-1.5 shrink-0" />
             <div className="flex-1">
               <div className={`text-xs font-normal mb-1 ${LAB_CARD_TYPOGRAPHY.fieldLabel}`}>
                 Container Specifications
@@ -77,7 +77,7 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
 
         {activeTest.collectionNotes && (
           <div className="flex items-start gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mt-1.5 shrink-0" />
+            <span className="w-1.5 h-1.5 rounded-full bg-text-muted mt-1.5 shrink-0" />
             <div className="flex-1">
               <div className={`text-xs font-normal mb-1 ${LAB_CARD_TYPOGRAPHY.fieldLabel}`}>
                 Collection Instructions
@@ -89,7 +89,7 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
 
         {activeTest.rejectionCriteria && activeTest.rejectionCriteria.length > 0 && (
           <div className="flex items-start gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 mt-1.5 shrink-0" />
+            <span className="w-1.5 h-1.5 rounded-full bg-text-muted mt-1.5 shrink-0" />
             <div className="flex-1">
               <div className={`text-xs font-normal mb-1 ${LAB_CARD_TYPOGRAPHY.fieldLabel}`}>
                 Rejection Criteria

@@ -7,6 +7,7 @@ import React, { useRef, useEffect } from 'react';
 import { Icon, SpinnerLoader } from '@/components';
 import { ICONS } from '@/config/icons';
 import { companyConfig } from '@/config';
+import { RADIUS } from '@/components/theme/recipes';
 
 interface LoginFormCardProps {
   username: string;
@@ -59,13 +60,13 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
     >
       <div className="relative">
         {/* Main card */}
-        <div className="relative bg-auth-panel rounded-lg shadow-xl shadow-black/30 border border-auth-stroke p-8 sm:p-10">
+        <div className={`relative bg-auth-panel ${RADIUS.overlay} shadow-xl border border-auth-stroke p-8 sm:p-10`}>
           {/* Subtle top accent line */}
           <div className="absolute top-0 left-8 right-8 h-px bg-auth-accent-medium/50" />
 
           {/* Mobile logo */}
           <div className="flex lg:hidden items-center gap-3 mb-8">
-            <div className="w-11 h-11 bg-auth-accent rounded flex items-center justify-center shadow-md shadow-black/20">
+            <div className={`w-11 h-11 bg-auth-accent ${RADIUS.control} flex items-center justify-center shadow-md`}>
               <Icon name={ICONS.ui.appLogo} className="w-6 h-6 text-auth-fg" />
             </div>
             <div>
@@ -79,16 +80,16 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
           {/* Form header */}
           <div className="mb-8">
             <h2 className="font-display text-3xl sm:text-4xl text-auth-fg mb-2">Welcome back</h2>
-            <p className="font-body text-auth-fg-muted text-[15px]">
+            <p className="font-body text-auth-fg-muted text-sm">
               Sign in to continue to your dashboard
             </p>
           </div>
 
           {/* Error message display */}
           {error && (
-            <div className="mb-6 p-4 bg-auth-error border border-auth-error-stroke rounded-lg animate-[shake_0.5s_ease-in-out]">
+            <div className={`mb-6 p-4 bg-auth-error border border-auth-error-stroke ${RADIUS.overlay} animate-[shake_0.5s_ease-in-out]`}>
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-auth-error-muted flex items-center justify-center flex-shrink-0">
+                <div className={`w-8 h-8 ${RADIUS.overlay} bg-auth-error-muted flex items-center justify-center flex-shrink-0`}>
                   <Icon name={ICONS.actions.alertCircle} className="h-4 w-4 text-auth-error-fg" />
                 </div>
                 <p className="font-body text-sm text-auth-error-fg">{error}</p>
@@ -123,7 +124,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
                     onErrorDismiss();
                   }}
                   placeholder="Enter your username"
-                  className="font-body block w-full pl-12 pr-4 py-3.5 bg-auth-input border border-auth-input-stroke rounded-lg text-auth-fg placeholder-auth-fg-subtle focus:outline-none focus:ring-2 focus:ring-auth-input-focus focus:ring-opacity-50 focus:border-auth-input-focus hover:bg-auth-panel-hover transition-all duration-200"
+                  className={`font-body block w-full pl-12 pr-4 py-3.5 bg-auth-input border border-auth-input-stroke ${RADIUS.overlay} text-auth-fg placeholder-auth-fg-subtle focus:outline-none focus:ring-2 focus:ring-auth-input-focus focus:ring-opacity-50 focus:border-auth-input-focus hover:bg-auth-panel-hover transition-all duration-200`}
                   required
                 />
               </div>
@@ -153,7 +154,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
                     onErrorDismiss();
                   }}
                   placeholder="Enter your password"
-                  className="font-body block w-full pl-12 pr-12 py-3.5 bg-auth-input border border-auth-input-stroke rounded-lg text-auth-fg placeholder-auth-fg-subtle focus:outline-none focus:ring-2 focus:ring-auth-input-focus focus:ring-opacity-50 focus:border-auth-input-focus hover:bg-auth-panel-hover transition-all duration-200"
+                  className={`font-body block w-full pl-12 pr-12 py-3.5 bg-auth-input border border-auth-input-stroke ${RADIUS.overlay} text-auth-fg placeholder-auth-fg-subtle focus:outline-none focus:ring-2 focus:ring-auth-input-focus focus:ring-opacity-50 focus:border-auth-input-focus hover:bg-auth-panel-hover transition-all duration-200`}
                   required
                 />
                 <button
@@ -171,7 +172,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="relative w-full mt-2 font-body font-normal py-4 px-6 rounded-lg text-auth-fg overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-auth-input-focus focus:ring-opacity-50 focus:ring-offset-2 focus:ring-offset-auth-panel"
+              className={`relative w-full mt-2 font-body font-normal py-4 px-6 ${RADIUS.overlay} text-auth-fg overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-auth-input-focus focus:ring-opacity-50 focus:ring-offset-2 focus:ring-offset-auth-panel`}
             >
               <div className="absolute inset-0 bg-auth-accent transition-all duration-300 hover:bg-auth-accent-hover" />
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-shimmer" />

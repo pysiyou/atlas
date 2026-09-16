@@ -16,6 +16,8 @@ import {
 } from './commandCenterModel';
 import { formatLabAttentionQueueItem, type AttentionDetail } from './commandCenterAttentionFormat';
 import { TIMELINE_STYLES } from '@/features/timeline';
+import { TYPE } from '@/components/theme/recipes';
+
 
 export interface LabAttentionFeedProps {
   items: LabAttentionQueueItem[];
@@ -29,9 +31,9 @@ function FeedDetail({ detail }: { detail: AttentionDetail }) {
     case 'priority':
       return <Badge variant={detail.value as 'urgent' | 'high'} size="xs" />;
     case 'wait':
-      return <span className="text-xs tabular-nums text-text-tertiary">{detail.value}</span>;
+      return <span className={`${TYPE.meta} tabular-nums`}>{detail.value}</span>;
     default:
-      return <span className="text-xs text-text-secondary">{detail.value}</span>;
+      return <span className={TYPE.label}>{detail.value}</span>;
   }
 }
 

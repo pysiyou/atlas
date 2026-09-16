@@ -8,6 +8,8 @@ import { EntityId } from '@/components/display/EntityId';
 import { formatDate, formatDateTime, formatPhoneNumber, calculateAge, formatCurrency } from '@/utils';
 import { DATA_AMOUNT } from '@/utils/constants';
 import type { OrderTest } from '@/types';
+import { TYPE } from '@/components/theme/recipes';
+
 
 export function renderPatientId(patientId: string | number): ReactNode {
   return <EntityId type="patient" value={patientId} variant="block" />;
@@ -29,7 +31,7 @@ export function renderPatientNameBlock(fullName: string, secondary?: ReactNode):
 export function renderPatientNameWithAge(fullName: string, dateOfBirth: string): ReactNode {
   return renderPatientNameBlock(
     fullName,
-    <div className="text-xs text-text-tertiary truncate font-normal">
+    <div className={`${TYPE.meta} truncate font-normal`}>
       {calculateAge(dateOfBirth)} years old
     </div>
   );
@@ -84,7 +86,7 @@ export function renderOrderTestsBlock(
         {activeCount} test{activeCount !== 1 ? 's' : ''}
       </div>
       {secondary ? (
-        <div className="text-xs text-text-tertiary truncate font-normal">{secondary}</div>
+        <div className={`${TYPE.meta} truncate font-normal`}>{secondary}</div>
       ) : null}
     </div>
   );
@@ -107,11 +109,11 @@ export function renderOrderTotalPriceInline(totalPrice: number): ReactNode {
 export function renderContactBlock(phone: string, email?: string): ReactNode {
   return (
     <div className="text-xs min-w-0 font-normal">
-      <div className="text-xs text-text-primary truncate font-normal">
+      <div className={`${TYPE.value} truncate font-normal`}>
         {formatPhoneNumber(phone)}
       </div>
       {email ? (
-        <div className="text-xs text-text-tertiary truncate font-normal">{email}</div>
+        <div className={`${TYPE.meta} truncate font-normal`}>{email}</div>
       ) : null}
     </div>
   );
@@ -122,9 +124,9 @@ export function renderDateCell(
   emptyLabel = '—'
 ): ReactNode {
   if (!date) {
-    return <span className="text-xs text-text-tertiary font-normal">{emptyLabel}</span>;
+    return <span className={`${TYPE.meta} font-normal`}>{emptyLabel}</span>;
   }
-  return <span className="text-xs text-text-primary font-normal">{formatDate(date)}</span>;
+  return <span className={`${TYPE.value} font-normal`}>{formatDate(date)}</span>;
 }
 
 export function renderOrderDateCell(date: string | Date | null | undefined): ReactNode {
@@ -132,7 +134,7 @@ export function renderOrderDateCell(date: string | Date | null | undefined): Rea
     return null;
   }
   return (
-    <span className="text-xs text-text-tertiary truncate block font-normal">
+    <span className={`${TYPE.meta} truncate block font-normal`}>
       {formatDateTime(date)}
     </span>
   );
@@ -143,9 +145,9 @@ export function renderDateTimeCell(
   emptyLabel = '—'
 ): ReactNode {
   if (!date) {
-    return <span className="text-xs text-text-tertiary font-normal">{emptyLabel}</span>;
+    return <span className={`${TYPE.meta} font-normal`}>{emptyLabel}</span>;
   }
-  return <span className="text-xs text-text-primary font-normal">{formatDateTime(date)}</span>;
+  return <span className={`${TYPE.value} font-normal`}>{formatDateTime(date)}</span>;
 }
 
 export function renderNavigableOrderId(

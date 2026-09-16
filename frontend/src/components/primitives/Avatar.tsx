@@ -21,8 +21,8 @@ type AvatarSize = NonNullable<AvatarProps['size']>;
 
 // Module-level constants: do not re-create these objects on every render.
 const CIRCLE_SIZE_CLASSES: Record<AvatarSize, string> = {
-  xxs: 'w-6 h-6 text-[8px]',
-  xs: 'w-7 h-7 text-[8px]',
+  xxs: 'w-6 h-6 text-3xs',
+  xs: 'w-7 h-7 text-3xs',
   sm: 'w-8 h-8 text-xs',
   md: 'w-10 h-10 text-sm',
   lg: 'w-12 h-12 text-base',

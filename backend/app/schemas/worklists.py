@@ -12,6 +12,7 @@ from app.schemas.enums import (
     SampleStatus,
     TestStatus,
 )
+from app.schemas.order import TestResultsDict
 
 
 class WorklistPagination(BaseModel):
@@ -77,6 +78,14 @@ class ValidationWorklistItem(BaseModel):
     sampleType: str
     priority: PriorityLevel
     status: TestStatus
+    sampleId: int | None = None
+    results: TestResultsDict | None = None
+    flags: list[str] | None = None
+    enteredBy: str | None = None
+    referringPhysician: str | None = None
+    isRetest: bool = False
+    retestOfTestId: int | None = None
+    retestNumber: int = 0
     resultEnteredAt: datetime | None
     orderDate: datetime
     waitingHours: float

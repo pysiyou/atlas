@@ -8,6 +8,7 @@ import { Badge, DetailField } from '@/components';
 import { formatDate } from '@/utils';
 import type { Affiliation } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';
+import { TONE } from '@/components/theme/recipes';
 
 interface AffiliationInfoProps {
   affiliation: Affiliation;
@@ -31,7 +32,7 @@ export const AffiliationInfo: React.FC<AffiliationInfoProps> = ({ affiliation })
         orientation="vertical"
         label="Status"
         value={
-          <Badge variant={isActive ? 'success' : 'danger'} size="sm" className="inline-flex">
+          <Badge variant={isActive ? 'success' : 'danger'} size="xs" className="inline-flex">
             {isActive ? 'Active' : 'Expired'}
           </Badge>
         }
@@ -50,7 +51,7 @@ export const AffiliationInfo: React.FC<AffiliationInfoProps> = ({ affiliation })
         orientation="vertical"
         label="End Date"
         value={
-          <span className={isActive ? undefined : 'text-danger-fg'}>
+          <span className={isActive ? undefined : TONE.danger.fg}>
             {formatDate(affiliation.endDate)}
           </span>
         }

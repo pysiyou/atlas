@@ -6,10 +6,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Badge, Icon, Panel, EntityId } from '@/components';
 import { ICONS } from '@/config/icons';
-import { displayId } from '@/utils';
+import { cn, displayId } from '@/utils';
 import { getLabQueueUrl } from '@/features/lab/constants/labConstants';
 import { usePendingCriticalValues } from './criticalValues';
 import { CriticalValueActions } from './CriticalValueActions';
+import { RADIUS, TONE } from '@/components/theme/recipes';
 import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 
 export const PendingCriticalValuesPanel: React.FC = () => {
@@ -41,11 +42,11 @@ export const PendingCriticalValuesPanel: React.FC = () => {
         {criticalValues.map(record => (
           <div
             key={record.id}
-            className="p-4 border border-danger-stroke rounded-md bg-danger-bg/30 space-y-3"
+            className={cn(RADIUS.card, 'p-4 space-y-3', TONE.danger.well)}
           >
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 text-sm font-normal text-text-primary">
-                <Icon name={ICONS.actions.alertCircle} className="w-4 h-4 text-danger-fg" />
+                <Icon name={ICONS.actions.alertCircle} className={`w-4 h-4 ${TONE.danger.fg}`} />
                 <EntityId type="orderTest" value={record.id} />
                 {record.testName ?? record.testCode}
               </div>

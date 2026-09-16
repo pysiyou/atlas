@@ -7,6 +7,8 @@ import { formatCurrency, formatDateTime } from '@/utils';
 import { getTestName } from '@/features/catalog/testLookup';
 import { getLabQueueUrlForTest } from '@/features/lab';
 import type { OrderTest, Test } from '@/types';
+import { TYPE, RADIUS } from '@/components/theme/recipes';
+
 
 const SIMPLE_VIEWS = {
   full: ['testCode', 'testName', 'status', 'lab'],
@@ -26,7 +28,7 @@ function createTestTableCard(testCatalog: Test[]): React.FC<CardComponentProps<O
     const isSuperseded = item.status === 'superseded';
     return (
       <div
-        className="p-3 border border-border-default rounded-lg hover:bg-surface-hover cursor-pointer"
+        className={`p-3 border border-border-default ${RADIUS.overlay} hover:bg-surface-hover cursor-pointer`}
         onClick={onClick}
         role="button"
         tabIndex={0}
@@ -38,14 +40,14 @@ function createTestTableCard(testCatalog: Test[]): React.FC<CardComponentProps<O
           >
             {isSuperseded ? item.testCode : <EntityId variant="inline">{item.testCode}</EntityId>}
           </span>
-          <Badge variant={item.status} size="sm" strikethrough={isSuperseded} />
+          <Badge variant={item.status} size="xs" strikethrough={isSuperseded} />
         </div>
         <div
           className={`text-sm mt-1 ${isSuperseded ? 'text-text-disabled line-through' : 'text-text-primary'}`}
         >
           {name}
         </div>
-        <div className="text-xs text-text-tertiary mt-1">{formatCurrency(item.priceAtOrder)}</div>
+        <div className={`${TYPE.meta} mt-1`}>{formatCurrency(item.priceAtOrder)}</div>
       </div>
     );
   };
@@ -103,7 +105,7 @@ export function createTestsTableConfig(
       width: 'sm' as const,
       accessor: (test: OrderTest) => test.status,
       render: (test: OrderTest) => (
-        <Badge variant={test.status} size="sm" strikethrough={test.status === 'superseded'} />
+        <Badge variant={test.status} size="xs" strikethrough={test.status === 'superseded'} />
       ),
     },
     sampleId: {
@@ -115,7 +117,7 @@ export function createTestsTableConfig(
         test.sampleId ? (
           <EntityId type="sample" value={test.sampleId} />
         ) : (
-          <span className="text-xs text-text-tertiary">—</span>
+          <span className={TYPE.meta}>—</span>
         ),
     },
     resultEnteredAt: {
@@ -125,9 +127,9 @@ export function createTestsTableConfig(
       accessor: (test: OrderTest) => test.resultEnteredAt ?? '',
       render: (test: OrderTest) =>
         test.resultEnteredAt ? (
-          <span className="text-xs text-text-secondary">{formatDateTime(test.resultEnteredAt)}</span>
+          <span className={TYPE.label}>{formatDateTime(test.resultEnteredAt)}</span>
         ) : (
-          <span className="text-xs text-text-tertiary">—</span>
+          <span className={TYPE.meta}>—</span>
         ),
     },
     lab: {

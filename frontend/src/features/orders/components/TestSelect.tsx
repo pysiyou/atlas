@@ -17,6 +17,8 @@ import { cn, formatCurrency, formatTurnaroundTime, titleCaseWords } from '@/util
 import { ICONS } from '@/config/icons';
 import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/components/inputs/inputStyles';
 import { OrderSelectPopoverShell } from './OrderSelectPopoverShell';
+import { TONE, TYPE } from '@/components/theme/recipes';
+
 
 const SELECTED_CHIP_CLASS =
   'max-w-[min(100%,20rem)] items-start gap-2 py-1.5 px-2 bg-surface-page border-border-default/80 shadow-none';
@@ -71,7 +73,7 @@ function TestSelectedChip({
 }) {
   return (
     <div className="min-w-0 flex flex-col">
-      <span className="text-xs font-normal text-text-primary truncate">{name}</span>
+      <span className={`${TYPE.value} font-normal truncate`}>{name}</span>
       {test ? (
         <TestSelectMetaLine code={code} test={test} />
       ) : (
@@ -137,7 +139,7 @@ const TestSearchTagInput: React.FC<{
         {selectedTags.map(({ code, name, test }, idx) => (
           <RemovableTag
             key={`${code}-${idx}`}
-            size="sm"
+            size="xs"
             onRemove={() => onRemoveTag(code)}
             removeAriaLabel={`Remove ${code}`}
             className={SELECTED_CHIP_CLASS}
@@ -154,12 +156,12 @@ const TestSearchTagInput: React.FC<{
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => onValueChange(e.target.value)}
           onFocus={() => onValueChange(value)}
           placeholder={selectedTags.length === 0 ? 'Search by code or name…' : ''}
-          className="flex-1 min-w-[120px] outline-none text-xs text-text-primary placeholder:text-text-muted bg-transparent leading-normal"
+          className={`flex-1 min-w-[120px] outline-none ${TYPE.value} placeholder:text-text-muted bg-transparent leading-normal`}
           autoComplete="off"
         />
       </div>
 
-      {error && <p className="mt-1.5 text-xs text-danger-fg">{error}</p>}
+      {error && <p className={`mt-1.5 text-xs ${TONE.danger.fg}`}>{error}</p>}
     </div>
   );
 
@@ -204,7 +206,7 @@ const TestSelectPopover: React.FC<TestSelectPopoverProps> = ({
                 )}
               >
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-normal text-text-primary truncate">{safeName}</p>
+                  <p className={`${TYPE.value} font-normal truncate`}>{safeName}</p>
                   <TestSelectMetaLine code={code} test={test} />
                 </div>
                 <div className="flex shrink-0 items-center gap-4">

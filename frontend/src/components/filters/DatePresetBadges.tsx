@@ -32,7 +32,7 @@ export const DatePresetBadges: React.FC<DatePresetBadgesProps> = ({ value, onCha
       {DATE_PRESETS.map(preset => (
         <FilterChip
           key={preset.id}
-          size="sm"
+          size="xs"
           active={activePresetId === preset.id}
           onClick={() => handlePresetClick(preset.id)}
         >

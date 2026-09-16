@@ -5,6 +5,8 @@
 import React from 'react';
 import { Alert, Icon, Badge } from '@/components';
 import { ICONS } from '@/config/icons';
+import { TONE, TYPE } from '@/components/theme/recipes';
+
 
 export interface CriticalValueBannerProps {
   /** List of critical parameters */
@@ -33,7 +35,7 @@ export const ResultCriticalValueBanner: React.FC<CriticalValueBannerProps> = ({
       <div className="space-y-2">
         <div className="flex items-center gap-2">
           <Icon name={ICONS.actions.alertCircle} className="w-4 h-4" />
-          <h4 className="text-sm font-normal text-danger-fg">
+          <h4 className={`text-sm font-normal ${TONE.danger.fg}`}>
             Contains Critical Values
           </h4>
         </div>
@@ -43,14 +45,14 @@ export const ResultCriticalValueBanner: React.FC<CriticalValueBannerProps> = ({
               <Badge variant="danger" size="xs" className="shrink-0">
                 {param.name}
               </Badge>
-              <span className="font-normal text-danger-fg">
+              <span className={`font-normal ${TONE.danger.fg}`}>
                 {param.value}
                 {param.unit && <span className="ml-1 text-xxs">{param.unit}</span>}
               </span>
             </div>
           ))}
         </div>
-        <p className="text-xxs text-text-tertiary pl-6">
+        <p className={`${TYPE.caption} pl-6`}>
           Physician will be automatically notified upon approval
         </p>
       </div>

@@ -7,6 +7,8 @@ import { Badge, EntityId } from '@/components';
 import { cn, displayId, formatCurrency, formatDateTime } from '@/utils';
 import { getActiveTests, getActiveTotal } from '../utils/orderCalculator';
 import type { Order, OrderTest } from '@/types';
+import { RADIUS, TYPE } from '@/components/theme/recipes';
+
 
 export type OrderReceiptVariant = 'panel' | 'compact' | 'detailed';
 
@@ -24,9 +26,9 @@ export interface OrderReceiptProps {
 }
 
 function receiptShellClass(variant: OrderReceiptVariant): string {
-  if (variant === 'compact') return 'rounded border border-border-default';
-  if (variant === 'detailed') return 'rounded-lg border border-border-default bg-surface';
-  return 'rounded flex-1';
+  if (variant === 'compact') return `${RADIUS.control} border border-border-default`;
+  if (variant === 'detailed') return `${RADIUS.overlay} border border-border-default bg-surface`;
+  return `${RADIUS.control} flex-1`;
 }
 
 function ReceiptHeader({
@@ -46,7 +48,7 @@ function ReceiptHeader({
 }) {
   const isDetailed = variant === 'detailed';
   const metaRowClass =
-    'flex flex-wrap items-center gap-x-2 gap-y-0.5 min-w-0 leading-snug text-xs text-text-tertiary';
+    `flex flex-wrap items-center gap-x-2 gap-y-0.5 min-w-0 leading-snug ${TYPE.meta}`;
   const metaPartClass = 'font-normal tabular-nums text-xs';
 
   return (
@@ -67,8 +69,8 @@ function ReceiptHeader({
               <p className="text-sm text-text-tertiary italic">No patient name</p>
             )}
             <div className="flex items-center gap-2">
-              <Badge variant={order.paymentStatus} size="sm" />
-              {paymentMethod && <Badge variant={paymentMethod} size="sm" />}
+              <Badge variant={order.paymentStatus} size="xs" />
+              {paymentMethod && <Badge variant={paymentMethod} size="xs" />}
             </div>
           </div>
           <div className="space-y-1.5">
@@ -141,7 +143,7 @@ function ReceiptHeader({
             {showPaymentStatusBadge && <Badge variant={order.paymentStatus} size="xs" className="shrink-0" />}
           </div>
           {order.patientName && (
-            <p className="text-[11px] text-text-tertiary mt-0.5 truncate">{order.patientName}</p>
+            <p className={`${TYPE.caption} mt-0.5 truncate`}>{order.patientName}</p>
           )}
         </>
       )}
@@ -165,7 +167,7 @@ function ReceiptItemRow({ test, detailed }: { test: OrderTest; detailed: boolean
       )}
     >
       <span className={cn('flex min-w-0 flex-1 gap-2', detailed ? 'items-start gap-2.5' : 'items-center')}>
-        <span className={cn('w-1 h-1 rounded-full bg-neutral-400 shrink-0', detailed && 'mt-1.5')} />
+        <span className={cn('w-1 h-1 rounded-full bg-text-muted shrink-0', detailed && 'mt-1.5')} />
         {detailed ? (
           <span className="flex flex-col min-w-0 flex-1">
             <span className="text-text-secondary truncate">{test.testName || test.testCode || 'Test'}</span>

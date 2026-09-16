@@ -22,7 +22,7 @@
   --surface-hover: var(--primitive-neutral-50);
   --surface-selected: var(--primitive-brand-100);
   --surface-elev: var(--primitive-neutral-0);
-  --surface-report: #e0f2f7;
+  --surface-report: var(--primitive-surface-report);
 
   /* ═══════════════════════════════════════════════════════════════════
      BORDER (Borders & Dividers)
@@ -86,11 +86,11 @@
      INFO (Informational)
      ═══════════════════════════════════════════════════════════════════ */
   --info: var(--primitive-info-500);
-  --info-bg: rgba(139, 92, 246, 0.08);
-  --info-bg-emphasis: rgba(139, 92, 246, 0.15);
+  --info-bg: color-mix(in srgb, var(--primitive-info-500) 8%, transparent);
+  --info-bg-emphasis: color-mix(in srgb, var(--primitive-info-500) 15%, transparent);
   --info-fg: var(--primitive-info-500);
   --info-fg-emphasis: var(--primitive-info-400);
-  --info-stroke: rgba(139, 92, 246, 0.25);
+  --info-stroke: color-mix(in srgb, var(--primitive-info-500) 25%, transparent);
   --on-info: var(--primitive-neutral-0);
 
   /* ═══════════════════════════════════════════════════════════════════
@@ -166,7 +166,7 @@
   --workflow-quality-bg: var(--warning-bg);
   --workflow-quality-border: var(--warning-stroke);
   --workflow-order-fg: var(--text-secondary);
-  --workflow-order-bg: var(--tone-neutral-bg);
+  --workflow-order-bg: var(--surface-hover);
   --workflow-order-border: var(--border);
   --workflow-composition-fg: var(--text-secondary);
   --workflow-composition-bg: var(--surface-hover);
@@ -183,33 +183,9 @@
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --shadow-footer: 0 -1px 3px rgba(0, 0, 0, 0.04);
-  --shadow-1: var(--shadow-sm);
-  --shadow-2: var(--shadow-md);
-  --shadow-3: var(--shadow-lg);
   --state-disabled-opacity: 0.5;
-
-  /* ═══════════════════════════════════════════════════════════════════
-     TONE SYSTEM (Unified feedback pattern)
-     ═══════════════════════════════════════════════════════════════════ */
-  --tone-neutral-bg: var(--surface-hover);
-  --tone-neutral-text: var(--text-secondary);
-  --tone-neutral-border: var(--border);
-  --tone-info-bg: var(--info-bg);
-  --tone-info-text: var(--info-fg);
-  --tone-info-border: var(--info-stroke);
-  --tone-success-bg: var(--success-bg);
-  --tone-success-text: var(--success-fg);
-  --tone-success-border: var(--success-stroke);
-  --tone-warning-bg: var(--warning-bg);
-  --tone-warning-text: var(--warning-fg);
-  --tone-warning-border: var(--warning-stroke);
-  --tone-danger-bg: var(--danger-bg);
-  --tone-danger-text: var(--danger-fg);
-  --tone-danger-border: var(--danger-stroke);
-  --tone-accent-bg: var(--brand-muted);
-  --tone-accent-text: var(--brand-fg);
-  --tone-accent-border: var(--brand);
 
   /* ═══════════════════════════════════════════════════════════════════
      ENTITY ID (patient, order, sample, test codes)
@@ -220,14 +196,20 @@
   --id-color: var(--brand);
   --id-color-secondary: var(--text-tertiary);
   --id-letter-spacing: 0.02em;
-  --id-font-weight: var(--font-weight-normal);
+  --id-font-weight: var(--font-weight-medium);
 
   /* ═══════════════════════════════════════════════════════════════════
-     BUTTON (geometry — colors use brand/danger/success tokens)
+     RADIUS (control / card / overlay / notice / pill)
      ═══════════════════════════════════════════════════════════════════ */
-  --button-radius: 0.375rem;
-  --button-radius-square: 0.5rem;
-  --button-radius-circle: 9999px;
+  --radius-control: 0.25rem;
+  --radius-card: 0.375rem;
+  --radius-overlay: 0.5rem;
+  --radius-notice: 0.625rem;
+  --radius-pill: 9999px;
+  --button-radius: var(--radius-card);
+  --button-radius-square: var(--radius-overlay);
+  --button-radius-circle: var(--radius-pill);
+  --control-height: 2.125rem;
 
   /* ═══════════════════════════════════════════════════════════════════
      FOCUS
@@ -241,10 +223,10 @@
   --toast-fg: var(--primitive-neutral-900);
   --toast-fg-muted: var(--primitive-neutral-600);
   --toast-close: var(--primitive-neutral-500);
-  --toast-success: var(--primitive-success-600);
-  --toast-info: var(--primitive-info-600);
-  --toast-warning: var(--primitive-warning-600);
-  --toast-danger: var(--primitive-danger-600);
+  --toast-success: var(--success-fg);
+  --toast-info: var(--info-fg);
+  --toast-warning: var(--warning-fg);
+  --toast-danger: var(--danger-fg);
   --toast-border: rgba(0, 0, 0, 0.08);
   --toast-accent-mix: 11%;
   --toast-shadow: 0 10px 28px rgba(15, 23, 42, 0.12);
@@ -256,56 +238,54 @@
   /* ═══════════════════════════════════════════════════════════════════
      AUTH (Isolated module)
      ═══════════════════════════════════════════════════════════════════ */
-  --auth-canvas: #1a1f2e;
-  --auth-panel: #232938;
-  --auth-panel-hover: #283040;
-  --auth-input-bg: #232938;
-  --auth-input-border: #2d3548;
-  --auth-input-border-focus: #4a6670;
-  --auth-text-primary: #e8eaed;
-  --auth-text-secondary: #b0b8c8;
-  --auth-text-muted: #6b7280;
-  --auth-text-light: #7a9ba8;
-  --auth-accent: #3d5a66;
-  --auth-accent-medium: #4a6b78;
-  --auth-accent-hover: #4a6b78;
-  --auth-border: #2d3548;
-  --auth-border-light: #3a4455;
-  --auth-border-hover: #3d4760;
-  --auth-error-bg: #3d2a2e;
-  --auth-error-bg-light: #4a3035;
-  --auth-error-border: #5a3a40;
-  --auth-error-text: #d4989d;
-  --auth-feature-card-bg: #232938;
-  --auth-feature-card-hover: #283040;
-  --auth-feature-card-border: #2d3548;
-  --auth-card-icon-bg: #2d3548;
-  --auth-card-icon-hover: #3a4455;
-  --auth-card-icon-border: #2d3548;
-  --auth-badge-bg: #2d3548;
-  --auth-badge-border: #232938;
-  --auth-badge-icon: #7a9ba8;
-
-  /* Auth gradient tokens */
-  --auth-gradient-start: rgba(58, 90, 102, 0.4);
-  --auth-gradient-end: rgba(26, 31, 46, 0.8);
-  --auth-gradient-accent: rgba(122, 155, 168, 0.15);
+  --auth-canvas: var(--primitive-auth-canvas);
+  --auth-panel: var(--primitive-auth-panel);
+  --auth-panel-hover: var(--primitive-auth-panel-hover);
+  --auth-input-bg: var(--primitive-auth-panel);
+  --auth-input-border: var(--primitive-auth-border);
+  --auth-input-border-focus: var(--primitive-auth-input-focus);
+  --auth-text-primary: var(--primitive-auth-text);
+  --auth-text-secondary: var(--primitive-auth-text-secondary);
+  --auth-text-muted: var(--primitive-auth-text-muted);
+  --auth-text-light: var(--primitive-auth-text-light);
+  --auth-accent: var(--primitive-auth-accent);
+  --auth-accent-medium: var(--primitive-auth-accent-medium);
+  --auth-accent-hover: var(--primitive-auth-accent-medium);
+  --auth-border: var(--primitive-auth-border);
+  --auth-border-light: var(--primitive-auth-border-light);
+  --auth-border-hover: var(--primitive-auth-border-hover);
+  --auth-error-bg: var(--primitive-auth-error-bg);
+  --auth-error-bg-light: var(--primitive-auth-error-bg-light);
+  --auth-error-border: var(--primitive-auth-error-border);
+  --auth-error-text: var(--primitive-auth-error-text);
+  --auth-feature-card-bg: var(--primitive-auth-panel);
+  --auth-feature-card-hover: var(--primitive-auth-panel-hover);
+  --auth-feature-card-border: var(--primitive-auth-border);
+  --auth-card-icon-bg: var(--primitive-auth-border);
+  --auth-card-icon-hover: var(--primitive-auth-border-light);
+  --auth-card-icon-border: var(--primitive-auth-border);
+  --auth-badge-bg: var(--primitive-auth-border);
+  --auth-badge-border: var(--primitive-auth-panel);
+  --auth-badge-icon: var(--primitive-auth-text-light);
+  --auth-gradient-start: color-mix(in srgb, var(--primitive-auth-accent) 40%, transparent);
+  --auth-gradient-end: color-mix(in srgb, var(--primitive-auth-canvas) 80%, transparent);
+  --auth-gradient-accent: color-mix(in srgb, var(--primitive-auth-text-light) 15%, transparent);
 
   /* ═══════════════════════════════════════════════════════════════════
      CONTAINER COLORS (sample tube caps)
      ═══════════════════════════════════════════════════════════════════ */
-  --container-red-bg: #ef4444;
-  --container-red-text: #ffffff;
-  --container-yellow-bg: #facc15;
-  --container-yellow-text: #18181b;
-  --container-purple-bg: #a855f7;
-  --container-purple-text: #ffffff;
-  --container-blue-bg: #3b82f6;
-  --container-blue-text: #ffffff;
-  --container-green-bg: #22c55e;
-  --container-green-text: #ffffff;
-  --container-gray-bg: #6b7280;
-  --container-gray-text: #ffffff;
-  --container-black-bg: #18181b;
-  --container-black-text: #ffffff;
+  --container-red-bg: var(--primitive-container-red);
+  --container-red-text: var(--primitive-container-on-light);
+  --container-yellow-bg: var(--primitive-container-yellow);
+  --container-yellow-text: var(--primitive-container-on-yellow);
+  --container-purple-bg: var(--primitive-container-purple);
+  --container-purple-text: var(--primitive-container-on-light);
+  --container-blue-bg: var(--primitive-container-blue);
+  --container-blue-text: var(--primitive-container-on-light);
+  --container-green-bg: var(--primitive-container-green);
+  --container-green-text: var(--primitive-container-on-light);
+  --container-gray-bg: var(--primitive-container-gray);
+  --container-gray-text: var(--primitive-container-on-light);
+  --container-black-bg: var(--primitive-container-black);
+  --container-black-text: var(--primitive-container-on-light);
 }

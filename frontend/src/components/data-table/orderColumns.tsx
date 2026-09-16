@@ -103,7 +103,7 @@ export function createOrderSharedColumns<T>(
     paymentStatus: createBadgeColumn<T>(
       'paymentStatus',
       'Payment',
-      item => <Badge variant={accessors.getPaymentStatus(item)} size="sm" />,
+      item => <Badge variant={accessors.getPaymentStatus(item)} size="xs" />,
       {
         sortable: true,
         width: 'sm',
@@ -124,7 +124,7 @@ export function createOrderSharedColumns<T>(
     columns.priority = createBadgeColumn<T>(
       'priority',
       'Priority',
-      item => <Badge variant={accessors.getPriority!(item)} size="sm" className="border-none" />,
+      item => <Badge variant={accessors.getPriority!(item)} size="xs" className="border-none" />,
       {
         sortable: true,
         width: 'sm',
@@ -137,7 +137,7 @@ export function createOrderSharedColumns<T>(
     columns.overallStatus = createBadgeColumn<T>(
       'overallStatus',
       'Status',
-      item => <Badge variant={accessors.getOverallStatus!(item)} size="sm" />,
+      item => <Badge variant={accessors.getOverallStatus!(item)} size="xs" />,
       {
         sortable: true,
         width: 'md',

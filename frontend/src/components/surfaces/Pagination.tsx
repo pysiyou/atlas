@@ -4,6 +4,8 @@ import { Icon } from '@/components/primitives/Icon';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 import { inputBase } from '@/components/inputs/inputStyles';
+import { TYPE } from '@/components/theme/recipes';
+
 
 interface PaginationProps {
   currentPage: number;
@@ -59,7 +61,7 @@ export const Pagination: React.FC<PaginationProps> = ({
 
   const getPageButtonClasses = (isActive: boolean) => {
     const base =
-      'min-w-[26px] h-6 px-1.5 text-[11px] font-normal rounded transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-1 focus-visible:ring-offset-surface';
+      'min-w-[26px] h-6 px-1.5 text-xxs font-normal rounded transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-1 focus-visible:ring-offset-surface';
     return isActive
       ? `${base} bg-brand text-on-brand`
       : `${base} text-text-primary border border-border-default bg-surface hover:border-border-hover hover:bg-surface-hover`;
@@ -72,7 +74,7 @@ export const Pagination: React.FC<PaginationProps> = ({
     <div className="flex items-center justify-between gap-3 px-3 py-2 border-t border-border-default bg-surface">
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-1.5 whitespace-nowrap">
-          <span className="text-[11px] text-text-secondary">Rows per page</span>
+          <span className={`${TYPE.caption} text-text-secondary`}>Rows per page</span>
           <select
             value={pageSize}
             onChange={e => onPageSizeChange(Number(e.target.value))}
@@ -89,7 +91,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             ))}
           </select>
         </div>
-        <span className="text-[11px] text-text-secondary tabular-nums">
+        <span className={`${TYPE.caption} text-text-secondary tabular-nums`}>
           {startItem}–{endItem} of {totalItems}
         </span>
       </div>
@@ -110,7 +112,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             <React.Fragment key={index}>
               {page === '...' ? (
                 <span
-                  className="min-w-[20px] text-center text-[11px] text-text-disabled"
+                  className="min-w-[20px] text-center text-xxs text-text-disabled"
                   aria-hidden
                 >
                   …
