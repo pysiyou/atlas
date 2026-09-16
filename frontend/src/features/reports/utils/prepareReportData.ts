@@ -1,7 +1,7 @@
 import type jsPDF from 'jspdf';
 import type { Order, OrderTest, Patient, Test } from '@/types';
 import { calculateAge } from '@/utils';
-import type { ReportData, ValidatedTest } from '../types';
+import type { ValidatedTestReportPayload, ValidatedTest } from '../types';
 import { companyConfig } from '@/config';
 
 interface SampleLookup {
@@ -140,7 +140,7 @@ export function prepareReportData({
   catalogTests,
   getSample,
   getUserName,
-}: PrepareReportDataOptions): ReportData {
+}: PrepareReportDataOptions): ValidatedTestReportPayload {
   const { test, order } = validatedTest;
   const patient = patients?.find(p => p.id === validatedTest.patientId);
 
@@ -181,8 +181,8 @@ export function prepareReportData({
 
 export async function downloadValidatedTestReport(
   validatedTest: ValidatedTest,
-  reportData: ReportData,
-  generateLabReport: (data: ReportData) => jsPDF,
+  reportData: ValidatedTestReportPayload,
+  generateLabReport: (data: ValidatedTestReportPayload) => jsPDF,
   downloadPDF: (doc: jsPDF, filename: string) => void,
   formatDate: (date: Date) => string
 ): Promise<void> {

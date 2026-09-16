@@ -5,7 +5,7 @@
 
 import React, { Suspense } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuthStore } from '@/app/store';
+import { useAuthStore } from '@/app/authStore';
 import { AppShell } from '@/components/layout';
 import { ErrorBoundary, PageLoadingFallback } from '@/components/loaders';
 import { ROUTES } from '@/config';

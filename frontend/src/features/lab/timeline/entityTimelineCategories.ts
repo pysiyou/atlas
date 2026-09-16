@@ -2,7 +2,7 @@
  * Entity timeline categories — derived from the entity event registry.
  */
 
-import type { TimelineEvent } from '../api/commandCenter.api';
+import type { TimelineEvent } from '../api/labCommandCenter.api';
 import type { CommandCenterTimelineTone } from './timelineStyles';
 import {
   ENTITY_PHASE_CONFIG,

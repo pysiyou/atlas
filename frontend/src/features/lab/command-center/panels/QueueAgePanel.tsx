@@ -8,14 +8,14 @@ import { cn } from '@/utils';
 import { LAB_CONFIG, LAB_STAGE_SHORT_ROWS } from '../../constants';
 import { getStageVisual } from '../../constants/labWorkflowVisual';
 import { Panel } from '@/components/surfaces/Panel';
-import { SectionTitle } from '../commandCenterUi';
+import { SectionTitle } from '../LabCommandCenterUi';
 import { COMMAND_CENTER_TEXT } from '../commandCenterStyles';
-import type { LabTechBoardData, QueueAgeStats } from '../boardTypes';
-import { PanelNote } from './PanelNote';
+import type { LabCommandCenterSnapshot, QueueAgeStats } from '../boardTypes';
+import { LabCommandCenterPanelNote } from './LabCommandCenterPanelNote';
 
 interface QueueAgePanelProps {
-  counts: LabTechBoardData['counts'];
-  queueAge: LabTechBoardData['queueAge'];
+  counts: LabCommandCenterSnapshot['counts'];
+  queueAge: LabCommandCenterSnapshot['queueAge'];
   totalActive: number;
 }
 
@@ -51,8 +51,8 @@ function pct(hours: number, scaleMax: number): number {
 }
 
 function buildStages(
-  counts: LabTechBoardData['counts'],
-  queueAge: LabTechBoardData['queueAge'],
+  counts: LabCommandCenterSnapshot['counts'],
+  queueAge: LabCommandCenterSnapshot['queueAge'],
 ): StageRow[] {
   return STAGES.map(stage => ({
     ...stage,
@@ -234,7 +234,7 @@ export const QueueAgePanel: React.FC<QueueAgePanelProps> = ({ counts, queueAge, 
     >
       <div className="flex h-full min-h-0 flex-col justify-between gap-3 overflow-hidden px-3 py-2">
         {totalActive === 0 ? (
-          <PanelNote>No active tests in pipeline.</PanelNote>
+          <LabCommandCenterPanelNote>No active tests in pipeline.</LabCommandCenterPanelNote>
         ) : (
           <>
             <StageTimeComposition stages={stages} />
@@ -247,12 +247,12 @@ export const QueueAgePanel: React.FC<QueueAgePanelProps> = ({ counts, queueAge, 
               <SharedTimeAxis scaleMax={scaleMax} />
             </div>
 
-            <PanelNote>
+            <LabCommandCenterPanelNote>
               Bar = avg wait · dot = oldest item · dashed lines at {warningHours}h /{' '}
               {criticalHours}h
               {totalAvgHours > 0 ? ` · ${hoursLabel(totalAvgHours)} combined avg` : ''}
               {criticalTotal > 0 ? ` · ${criticalTotal} past ${criticalHours}h` : ''}
-            </PanelNote>
+            </LabCommandCenterPanelNote>
           </>
         )}
       </div>

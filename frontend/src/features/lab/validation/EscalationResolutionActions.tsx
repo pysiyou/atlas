@@ -2,7 +2,7 @@ import type { FeedbackId } from '@/config/feedbackCatalog';
 import { Button, Popover, Icon } from '@/components';
 import { cn, displayId } from '@/utils';
 import { inputBase } from '@/components/inputs/inputStyles';
-import { PopoverForm } from '../components/PopoverForm';
+import { LabWorkflowPopoverChrome } from '../components/LabWorkflowPopoverChrome';
 import { ICONS } from '@/config/icons';
 import type { CriticalReadBackPayload, EscalationResolutionAction } from '@/types/lab-operations';
 
@@ -61,7 +61,7 @@ function ResolutionPopover({
     >
       {({ close }) => (
         <div data-popover-content onClick={e => e.stopPropagation()}>
-          <PopoverForm
+          <LabWorkflowPopoverChrome
             title={title}
             subtitle={subtitle}
             onCancel={close}
@@ -88,7 +88,7 @@ function ResolutionPopover({
                 maxLength={1000}
               />
             </div>
-          </PopoverForm>
+          </LabWorkflowPopoverChrome>
         </div>
       )}
     </Popover>

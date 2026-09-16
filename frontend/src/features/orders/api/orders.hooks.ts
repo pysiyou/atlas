@@ -9,7 +9,7 @@ import { useMemo, useState, useCallback } from 'react';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { invalidateOrderQueries } from '@/lib/query/invalidate';
 import { notify } from '@/utils/feedback';
-import { useAuthStore } from '@/app/store';
+import { useAuthStore } from '@/app/authStore';
 import type { Order, OrderStatus, PaymentStatus } from '@/types';
 import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
 import {

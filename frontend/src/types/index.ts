@@ -40,4 +40,4 @@ export type {
   TestWithContext,
 } from './test';
 export type { Payment, PaymentMethod, Invoice } from './payments';
-// SampleDisplay is a lab feature type; import from @/features/lab/types
+// SampleCollectionQueueItem is a lab feature type; import from @/features/lab/types

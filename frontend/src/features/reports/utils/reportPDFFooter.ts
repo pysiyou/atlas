@@ -4,11 +4,11 @@
 
 import type jsPDF from 'jspdf';
 import { format } from 'date-fns';
-import type { ReportData, ReportTemplate } from '../types';
+import type { ValidatedTestReportPayload, ReportTemplate } from '../types';
 
 export function drawSignatureAndPageFooters(
   doc: jsPDF,
-  reportData: ReportData,
+  reportData: ValidatedTestReportPayload,
   template: ReportTemplate,
   startY: number,
   margin: number,

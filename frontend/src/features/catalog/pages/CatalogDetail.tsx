@@ -14,7 +14,7 @@ import type { TableInput } from '@/components';
 import { DetailPageShell, PageHeader, EntityId } from '@/components';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { formatRejectionCriteriaList } from '@/features/lab/utils/catalogRejectionCriteria';
-import { CATALOG_DETAIL_SKELETON_SECTIONS } from '../config/catalogDetailSkeleton';
+import { CATALOG_DETAIL_SKELETON_SECTIONS } from '../config/CatalogDetailSkeleton';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import { formatDateTime } from '@/utils';
 import { formatArrayWithFallback, formatBoolean, capitalize } from '@/utils';

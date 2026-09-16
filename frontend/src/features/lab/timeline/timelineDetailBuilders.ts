@@ -2,7 +2,7 @@
  * Shared detail-chip builders for lab timeline formatters.
  */
 import { displayId } from '@/utils';
-import type { TimelineEvent } from '../api/commandCenter.api';
+import type { TimelineEvent } from '../api/labCommandCenter.api';
 
 export type EventDetail =
   | { type: 'text'; value: string }

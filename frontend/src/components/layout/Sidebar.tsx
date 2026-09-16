@@ -4,7 +4,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useAuthStore } from '@/app/store';
+import { useAuthStore } from '@/app/authStore';
 import { getFilteredMenuItems, settingsItems } from './sidebarMenu';
 import { SidebarContent } from './SidebarContent';
 

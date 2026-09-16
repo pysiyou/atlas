@@ -4,8 +4,8 @@
 
 import React from 'react';
 import { Panel } from '@/components/surfaces/Panel';
-import type { DonutSegment } from '../commandCenterUi';
-import type { LabTechBoardData } from '../boardTypes';
+import type { DonutSegment } from '../LabCommandCenterUi';
+import type { LabCommandCenterSnapshot } from '../boardTypes';
 import { MetricDonutHalf, type MetricDonutLegendItem } from './MetricDonutHalf';
 import { LAB_CONFIG, LAB_STAGE_SHORT_ROWS } from '../../constants';
 import { getStageVisual } from '../../constants/labWorkflowVisual';
@@ -13,8 +13,8 @@ import { COMMAND_CENTER_AGE_COLORS } from '../commandCenterStyles';
 
 interface TodaySnapshotPanelProps {
   totalActive: number;
-  counts: LabTechBoardData['counts'];
-  ageBuckets: LabTechBoardData['ageBuckets'];
+  counts: LabCommandCenterSnapshot['counts'];
+  ageBuckets: LabCommandCenterSnapshot['ageBuckets'];
 }
 
 /** Renders the current open pipeline: stage mix on the left, wait-age mix on the right. */

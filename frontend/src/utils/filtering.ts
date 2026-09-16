@@ -1,6 +1,6 @@
 /**
  * Filtering Utilities — pure functions and types only.
- * React hooks (useFiltering, useSearch, useMultiSelect) live in @/hooks/useFiltering.
+ * React hooks (useClientListFilter, useSearch, useMultiSelect) live in @/hooks/useClientListFilter.
  */
 
 // ---------------------------------------------------------------------------
@@ -20,14 +20,14 @@ export interface FilterOption {
   color?: string;
 }
 
-export interface UseFilteringOptions<T, S extends string = string> {
+export interface UseClientListFilterOptions<T, S extends string = string> {
   searchFields?: (item: T) => string[];
   defaultSort?: SortConfig<T>;
   statusField?: keyof T;
   initialStatusFilters?: S[];
 }
 
-export interface UseFilteringReturn<T, S extends string = string> {
+export interface UseClientListFilterReturn<T, S extends string = string> {
   filteredItems: T[];
   searchQuery: string;
   setSearchQuery: (query: string) => void;

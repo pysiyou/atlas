@@ -5,7 +5,7 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePaginatedPatientContextList } from '../api/patients.api';
-import { useFiltering } from '@/hooks/useFiltering';
+import { useClientListFilter } from '@/hooks/useClientListFilter';
 import { ListView } from '@/components';
 import { Button } from '@/components';
 import { useModal } from '@/lib/context/ModalContext';
@@ -57,7 +57,7 @@ export const PatientList: React.FC = () => {
     filteredItems: preFilteredPatients,
     statusFilters: sexFilters,
     setStatusFilters: setSexFilters,
-  } = useFiltering<PatientContext, Gender>(patients, {
+  } = useClientListFilter<PatientContext, Gender>(patients, {
     searchFields: patient => [
       patient.fullName,
       patient.id.toString(),

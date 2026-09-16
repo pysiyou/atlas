@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { Modal, Button, FooterInfo, DialogFooter } from '@/components';
-import type { ReportData } from '../types';
+import type { ValidatedTestReportPayload } from '../types';
 import { MODULE_ICONS } from '@/config/icons';
 import { useUserLookup } from '@/lib/api/users.api';
 import { ReportPreviewHeader } from './ReportPreviewHeader';
@@ -15,7 +15,7 @@ import { ReportPreviewResults } from './ReportPreviewResults';
 interface ReportPreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
-  reportData: ReportData;
+  reportData: ValidatedTestReportPayload;
   onGenerate: () => void;
   isGenerating?: boolean;
 }

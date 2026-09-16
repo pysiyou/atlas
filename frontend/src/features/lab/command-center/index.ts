@@ -1,1 +1,1 @@
-export { LabTechBoard } from './LabTechBoard';
+export { LabCommandCenterBoard } from './LabCommandCenterBoard';

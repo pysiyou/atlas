@@ -2,7 +2,7 @@
  * Shared layout + status styling for result entry / validation panels in modals.
  */
 import type { ResultStatus } from '@/types/enums';
-import { isCritical } from '../utils/labHelpers';
+import { isCritical } from '../utils/labResultHelpers';
 
 export const RESULT_PANEL = {
   grid: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3',

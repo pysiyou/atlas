@@ -3,7 +3,7 @@
  */
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useAuthStore } from '@/app/store';
+import { useAuthStore } from '@/app/authStore';
 import {
   criticalValuesAPI,
   type AcknowledgeCriticalValueRequest,

@@ -4,14 +4,14 @@
  */
 
 import React from 'react';
-import { useAuthStore } from '@/app/store';
+import { useAuthStore } from '@/app/authStore';
 import { WORKFLOW_QUERY_LIMIT } from '@/lib/api/constants';
 import { usePatientNameLookup, usePaginatedPatients } from '@/features/patients';
 import { usePaginatedOrders } from '@/features/orders';
 import { usePaymentsList } from '@/features/payments';
 import { formatDate } from '@/utils';
 import { LabPipelineSummary } from '../components/LabPipelineSummary';
-import { CriticalValuesPanel } from '@/features/lab';
+import { PendingCriticalValuesPanel } from '@/features/lab';
 import {
   DashboardStatsGrid,
 } from '../components/DashboardStatsGrid';
@@ -71,7 +71,7 @@ export const Dashboard: React.FC = () => {
           <DashboardStatsGrid stats={stats} />
 
           {isLabRole && <LabPipelineSummary />}
-          {isLabRole && <CriticalValuesPanel />}
+          {isLabRole && <PendingCriticalValuesPanel />}
 
           {pendingOrders > 0 && isReceptionRole && (
             <DashboardOrdersInProgressBanner pendingOrders={pendingOrders} />

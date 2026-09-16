@@ -4,7 +4,7 @@
 
 import type jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import type { ReportData } from '../types';
+import type { ValidatedTestReportPayload } from '../types';
 
 interface TableRow {
   investigation: string;
@@ -18,7 +18,7 @@ interface TableRow {
 
 export function drawTestResultsSection(
   doc: jsPDF,
-  reportData: ReportData,
+  reportData: ValidatedTestReportPayload,
   startY: number,
   margin: number,
   pageWidth: number,

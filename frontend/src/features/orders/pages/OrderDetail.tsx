@@ -25,7 +25,7 @@ import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import {
   ORDER_DETAIL_SKELETON_SECTIONS,
   renderOrderDetailLargeSkeleton,
-} from '../config/orderDetailSkeleton';
+} from '../config/OrderDetailSkeleton';
 
 export const OrderDetail: React.FC = () => {
   const navigate = useNavigate();

@@ -4,10 +4,10 @@
 
 import React from 'react';
 import { cn } from '@/utils';
-import type { ReportData } from '../types';
+import type { ValidatedTestReportPayload } from '../types';
 
 interface ReportPreviewResultsProps {
-  reportData: ReportData;
+  reportData: ValidatedTestReportPayload;
 }
 
 export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ reportData }) => (

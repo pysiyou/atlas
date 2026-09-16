@@ -2,7 +2,7 @@
  * Entity timeline formatting — delegates to the entity event registry.
  */
 
-import type { TimelineEvent } from '../api/commandCenter.api';
+import type { TimelineEvent } from '../api/labCommandCenter.api';
 import { formatEntityEvent } from './entityEvents';
 import { testIdFromEvent } from './timelineDetailBuilders';
 

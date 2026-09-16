@@ -3,10 +3,10 @@
  */
 import type { Order, Patient, Sample, SampleType, TestWithContext } from '@/types';
 import type { SampleRequirement } from './sampleHelpers';
-import type { SampleDisplay } from '../types';
+import type { SampleCollectionQueueItem } from '../types';
 import type { CollectionWorklistItem, EntryWorklistItem } from '../api/worklists.service';
 
-export function collectionWorklistToDisplay(item: CollectionWorklistItem): SampleDisplay {
+export function mapCollectionWorklistToSampleDisplay(item: CollectionWorklistItem): SampleCollectionQueueItem {
   const isCollectedLike = item.status === 'collected' || item.status === 'rejected';
   const sample = {
     sampleId: item.sampleId,
@@ -82,7 +82,7 @@ export function collectionWorklistToDisplay(item: CollectionWorklistItem): Sampl
   return { sample, order, patient, priority: item.priority, requirement };
 }
 
-export function entryWorklistToTestContext(item: EntryWorklistItem): TestWithContext {
+export function mapEntryWorklistToOrderTestContext(item: EntryWorklistItem): TestWithContext {
   return {
     id: item.orderTestId,
     orderId: item.orderId,

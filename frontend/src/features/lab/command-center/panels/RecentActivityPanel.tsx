@@ -3,17 +3,17 @@
  */
 
 import React from 'react';
-import { ActivityFeed } from '../ActivityFeed';
+import { LabActivityFeed } from '../LabActivityFeed';
 import { Panel } from '@/components/surfaces/Panel';
-import { useRecentActivityFeed } from '../useRecentActivityFeed';
+import { useRecentLabActivityFeed } from '../useRecentLabActivityFeed';
 
 export const RecentActivityPanel: React.FC = () => {
   const { events, isLoading, isLoadingMore, isError, refetchFeed, hasMore, loadMore } =
-    useRecentActivityFeed();
+    useRecentLabActivityFeed();
 
   return (
     <Panel title="Recent Activity" meta="Last 24 hours · workflow & order events" padding="none">
-      <ActivityFeed
+      <LabActivityFeed
         events={events}
         isLoading={isLoading}
         isError={isError}

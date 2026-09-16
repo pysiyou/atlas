@@ -187,7 +187,7 @@ export interface TestParameter {
  * Result Entry, Result Validation, and Escalation workflow views.
  * Use this type instead of creating feature-specific variants.
  *
- * Built by `useLabTestsFromOrders` — the single enrichment hook that joins
+ * Built by `useOrderTestsWithLabContext` — the single enrichment hook that joins
  * Order[] + Sample[] + Patient[] + Test[] into this unified shape.
  */
 export interface TestWithContext {
@@ -213,16 +213,16 @@ export interface TestWithContext {
   technicianNotes?: string;
   validationNotes?: string;
 
-  // Order-level fields (set by useLabTestsFromOrders)
+  // Order-level fields (set by useOrderTestsWithLabContext)
   /** ISO date string of the order — used for sorting and display in lab workflow views. */
   orderDate?: string;
 
-  // Patient-level fields (set by useLabTestsFromOrders when includePatient=true)
-  /** Patient date of birth — used for demographic reference range checks in EntryView. */
+  // Patient-level fields (set by useOrderTestsWithLabContext when includePatient=true)
+  /** Patient date of birth — used for demographic reference range checks in ResultEntryQueue. */
   patientDob?: string;
 
-  // Derived flags (set by useLabTestsFromOrders when includeHasCriticalValues=true)
-  /** Whether this test has critical values flagged — used by ValidationView. */
+  // Derived flags (set by useOrderTestsWithLabContext when includeHasCriticalValues=true)
+  /** Whether this test has critical values flagged — used by ResultValidationQueue. */
   hasCriticalValues?: boolean;
 
   /** Order test row id — required for critical value API calls. */

@@ -7,19 +7,19 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Badge, Panel, Button, EntityId } from '@/components';
-import { ValidationForm } from './ValidationForm';
-import { LabDetailModal, DetailGrid, ModalFooter } from '../components/LabDetailModal';
-import { testHeaderAudit } from '../components/labHeaderAudit';
-import { TestHeaderBadges } from '../components/labWorkflowBadges';
-import { useTestWorkItemState } from '../hooks';
+import { ResultValidationForm } from './ResultValidationForm';
+import { LabWorkflowDetailModal, DetailGrid, ModalFooter } from '../components/LabWorkflowDetailModal';
+import { testHeaderAudit } from '../components/labWorkflowAuditLines';
+import { TestHeaderBadges } from '../components/LabWorkflowBadges';
+import { useOrderTestQueueState } from '../hooks';
 import { CriticalValueActions } from '@/features/lab/critical-values/CriticalValueActions';
 import { buildCriticalValueRecord } from '@/features/lab/critical-values/buildCriticalValueRecord.utils';
 import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
 import type { TestWithContext } from '@/types';
 import { useEscalationResolution } from './useEscalationResolution';
 import { EscalationResolutionFooter } from './EscalationResolutionFooter';
-import { LabHistoryPanel } from '../components/LabHistoryPanel';
-import { labModalSubtitle } from '../components/labModalStages';
+import { LabEntityTimelinePanel } from '../components/LabEntityTimelinePanel';
+import { labModalSubtitle } from '../components/labWorkflowModalSubtitles';
 import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 
 interface EscalationResolutionModalProps {
@@ -83,7 +83,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
       ? test.ticketMetadata.rejectionNotes
       : undefined;
 
-  const workItem = useTestWorkItemState(test);
+  const workItem = useOrderTestQueueState(test);
 
   if (test.id == null) return null;
 
@@ -102,7 +102,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   );
 
   return (
-    <LabDetailModal
+    <LabWorkflowDetailModal
       isOpen={isOpen}
       onClose={onClose}
       title={test.testName}
@@ -155,7 +155,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
     >
       {hasResults ? (
         <Panel variant="lab" title={readOnly ? 'Recorded Results' : 'Result Validation'}>
-          <ValidationForm
+          <ResultValidationForm
             results={test.results!}
             flags={test.flags}
             technicianNotes={test.technicianNotes}
@@ -244,8 +244,8 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
         ]}
       />
       {test.id != null && (
-        <LabHistoryPanel entityType="order_test" entityId={test.id} />
+        <LabEntityTimelinePanel entityType="order_test" entityId={test.id} />
       )}
-    </LabDetailModal>
+    </LabWorkflowDetailModal>
   );
 };

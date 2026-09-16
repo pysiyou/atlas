@@ -2,7 +2,7 @@
  * Billing React Query hooks.
  */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useAuthStore } from '@/app/store';
+import { useAuthStore } from '@/app/authStore';
 import { cacheConfig } from '@/lib/query';
 import { billingAPI } from './billing.service';
 

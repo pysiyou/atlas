@@ -6,14 +6,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Badge, Icon, type IconName } from '@/components';
 import { ICONS } from '@/config/icons';
-import { useLabPipelineCounts, getValidationTabCount } from '@/features/lab/hooks';
+import { useLabStageQueueCounts, getValidationTabCount } from '@/features/lab/hooks';
 import { getLabTabPath, LAB_TAB_LABELS, type LabTabId } from '@/features/lab/constants/labTabs';
-import { useAuthStore } from '@/app/store';
+import { useAuthStore } from '@/app/authStore';
 
 const LAB_QUEUE_ITEMS: Array<{
   id: LabTabId;
   icon: string;
-  countKey: keyof ReturnType<typeof useLabPipelineCounts>['counts'];
+  countKey: keyof ReturnType<typeof useLabStageQueueCounts>['counts'];
 }> = [
   { id: 'collection', icon: ICONS.dataFields.flask, countKey: 'collection' },
   { id: 'entry', icon: ICONS.dataFields.notebook, countKey: 'entry' },
@@ -23,7 +23,7 @@ const LAB_QUEUE_ITEMS: Array<{
 export const LabPipelineSummary: React.FC = () => {
   const { hasRole } = useAuthStore();
   const canViewLab = hasRole(['administrator', 'lab-technician', 'lab-technician-plus']);
-  const { counts } = useLabPipelineCounts();
+  const { counts } = useLabStageQueueCounts();
 
   if (!canViewLab) {
     return null;
@@ -33,7 +33,7 @@ export const LabPipelineSummary: React.FC = () => {
     <Card padding="md">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-sm font-normal text-text-primary">Lab Pipeline</h2>
-        <Link to={getLabTabPath('dashboard')} className="text-xs text-brand hover:underline">
+        <Link to={getLabTabPath('command-center')} className="text-xs text-brand hover:underline">
           Command Center
         </Link>
       </div>

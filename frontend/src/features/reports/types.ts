@@ -30,9 +30,9 @@ export interface ValidatedTest {
 }
 
 /**
- * ReportData - Data structure for generating a single test report
+ * ValidatedTestReportPayload - Data structure for generating a single test report
  */
-export interface ReportData {
+export interface ValidatedTestReportPayload {
   order: Order;
   patientId: number;
   patientName: string;

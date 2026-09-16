@@ -10,7 +10,7 @@ export const LAB_TAB_IDS = [
   'collection',
   'entry',
   'validation',
-  'dashboard',
+  'command-center',
 ] as const;
 
 export type LabTabId = (typeof LAB_TAB_IDS)[number];
@@ -19,10 +19,10 @@ export const LAB_TAB_LABELS: Record<LabTabId, string> = {
   collection: labStageLabel('collection', 'nav'),
   entry: labStageLabel('entry', 'nav'),
   validation: labStageLabel('validation', 'nav'),
-  dashboard: LAB_COPY.workflow.dashboardNav,
+  'command-center': LAB_COPY.workflow.commandCenterNav,
 };
 
-export const DEFAULT_LAB_TAB: LabTabId = 'dashboard';
+export const DEFAULT_LAB_TAB: LabTabId = 'command-center';
 
 export function isLabTabId(value: string | undefined): value is LabTabId {
   return LAB_TAB_IDS.includes(value as LabTabId);

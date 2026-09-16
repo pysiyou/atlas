@@ -7,9 +7,9 @@
 import type { ComponentType } from 'react';
 import { ModalType } from '@/lib/context/ModalContext';
 import type { ModalPropsMap } from '@/lib/context/modalTypes';
-import { CollectionDetailModal } from '@/features/lab/collection/CollectionDetailModal';
-import { EntryDetailModal } from '@/features/lab/entry/EntryDetailModal';
-import { ValidationDetailModal } from '@/features/lab/validation/ValidationDetailModal';
+import { SampleCollectionDetailModal } from '@/features/lab/collection/SampleCollectionDetailModal';
+import { ResultEntryDetailModal } from '@/features/lab/entry/ResultEntryDetailModal';
+import { ResultValidationDetailModal } from '@/features/lab/validation/ResultValidationDetailModal';
 import { EscalationResolutionModal } from '@/features/lab/validation/EscalationResolutionModal';
 import { OrderUpsertModal } from '@/features/orders';
 
@@ -82,7 +82,7 @@ export function getRegisteredModalTypes(): ModalType[] {
   return Object.keys(registry) as ModalType[];
 }
 
-registerModal(ModalType.SAMPLE_DETAIL, CollectionDetailModal, (props, baseProps, helpers) => {
+registerModal(ModalType.SAMPLE_DETAIL, SampleCollectionDetailModal, (props, baseProps, helpers) => {
   if ('sampleId' in props && props.sampleId) {
     if (!props.readOnly) {
       const sample = helpers.getSample(props.sampleId);
@@ -100,7 +100,7 @@ registerModal(ModalType.SAMPLE_DETAIL, CollectionDetailModal, (props, baseProps,
   return null;
 });
 
-registerModal(ModalType.RESULT_DETAIL, EntryDetailModal, (props, baseProps) => ({
+registerModal(ModalType.RESULT_DETAIL, ResultEntryDetailModal, (props, baseProps) => ({
   ...baseProps,
   test: props.test,
   testDef: props.testDef,
@@ -114,7 +114,7 @@ registerModal(ModalType.RESULT_DETAIL, EntryDetailModal, (props, baseProps) => (
   onSave: props.onSave,
 }));
 
-registerModal(ModalType.VALIDATION_DETAIL, ValidationDetailModal, (props, baseProps) => ({
+registerModal(ModalType.VALIDATION_DETAIL, ResultValidationDetailModal, (props, baseProps) => ({
   ...baseProps,
   test: props.test,
   commentKey: props.commentKey,
