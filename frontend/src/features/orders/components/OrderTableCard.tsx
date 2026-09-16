@@ -5,7 +5,7 @@ import { getActiveTests } from '../utils/orderCalculator';
 import type { Order } from '@/types';
 
 export function OrderTableCard({ item: order, onClick }: CardComponentProps<Order>) {
-  const activeTests = getActiveTests(order.tests);
+  const activeTests = getActiveTests(order.tests ?? []);
 
   return (
     <MobileEntityCard onClick={onClick}>

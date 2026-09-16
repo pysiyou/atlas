@@ -7,13 +7,11 @@ import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTestCatalog } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users';
-import { usePatientNameLookup, usePatientsList } from '@/features/patients';
-import { useOrdersList } from '@/features/orders';
+import { useValidatedTestsReport } from '../api/reports';
 import { useSampleLookup } from '@/features/lab';
 import { ReportPreviewModal } from '../components/ReportPreviewModal';
 import { generateLabReport, downloadPDF } from '../utils/reportPDF';
 import {
-  findValidatedTestById,
   prepareReportData,
   downloadValidatedTestReport,
 } from '../utils/prepareReportData';
@@ -27,10 +25,8 @@ export const ReportDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const testId = id ? parseInt(id, 10) : null;
 
-  const { orders, isLoading: ordersLoading } = useOrdersList();
-  const { patients, isLoading: patientsLoading } = usePatientsList();
+  const { validatedTests, isLoading: reportsLoading } = useValidatedTestsReport();
   const { tests, isLoading: testsLoading } = useTestCatalog();
-  const { getPatientName } = usePatientNameLookup();
   const { getSample } = useSampleLookup();
   const { getUserName } = useUserLookup();
 
@@ -38,25 +34,25 @@ export const ReportDetail: React.FC = () => {
 
   const validatedTest = useMemo(() => {
     if (!testId) return null;
-    return findValidatedTestById(testId, orders, patients, getPatientName);
-  }, [testId, orders, patients, getPatientName]);
+    return validatedTests.find(test => test.testId === testId) ?? null;
+  }, [testId, validatedTests]);
 
   useEffect(() => {
-    if (!ordersLoading && !patientsLoading && !testsLoading && !validatedTest) {
+    if (!reportsLoading && !testsLoading && !validatedTest) {
       navigate('/reports', { replace: true });
     }
-  }, [ordersLoading, patientsLoading, testsLoading, validatedTest, navigate]);
+  }, [reportsLoading, testsLoading, validatedTest, navigate]);
 
   const buildReportData = useCallback(() => {
     if (!validatedTest) return null;
     return prepareReportData({
       validatedTest,
-      patients,
+      patients: undefined,
       catalogTests: tests,
       getSample,
       getUserName: id => getUserName(id),
     });
-  }, [validatedTest, patients, tests, getSample, getUserName]);
+  }, [validatedTest, tests, getSample, getUserName]);
 
   const handleGenerateReport = async () => {
     if (!validatedTest) return;
@@ -86,7 +82,7 @@ export const ReportDetail: React.FC = () => {
     navigate('/reports');
   };
 
-  if (ordersLoading || patientsLoading || testsLoading) {
+  if (reportsLoading || testsLoading) {
     return (
       <DetailPageShell
         header={<PageHeader title="Report" />}

@@ -165,3 +165,22 @@ export function useEntryWorklist(params?: WorklistHookParams) {
     refetch: query.refetch,
   };
 }
+
+export function useValidationWorklist(params?: WorklistHookParams) {
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const query = useQuery({
+    queryKey: queryKeys.worklists.validation(params),
+    queryFn: () => worklistsAPI.getValidation({ pageSize: 200, ...params }),
+    enabled: isAuthenticated && !isRestoring,
+    ...cacheConfig.dynamic,
+    refetchInterval: LAB_CONFIG.TAB_COUNT_REFRESH_MS,
+  });
+  return {
+    items: query.data?.items ?? [],
+    pagination: query.data?.pagination,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+    refetch: query.refetch,
+  };
+}

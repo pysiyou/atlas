@@ -63,7 +63,12 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
 }) => {
   const panelClass = fillHeight ? 'h-full min-h-0' : '';
   const fillScroll = fillHeight ? 'auto' : 'visible';
-  const testsTitle = getTestsTitle(activeTests, order.tests.length, supersededCount, removedCount);
+  const testsTitle = getTestsTitle(
+    activeTests,
+    order.tests?.length ?? activeTests.length,
+    supersededCount,
+    removedCount
+  );
 
   return (
     <>
@@ -105,7 +110,7 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
           bodyClassName={fillHeight ? 'flex flex-col' : undefined}
         >
           <TestsTable
-            tests={order.tests}
+            tests={order.tests ?? []}
             orderId={order.orderId}
             variant={testsVariant}
           />
@@ -132,7 +137,12 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
 export const SmallScreenLayout: React.FC<LayoutProps> = props => {
   const { order, patient, invoice, activeTests, supersededCount, removedCount, onViewPatient, onViewInvoice, onPaymentSuccess } =
     props;
-  const testsTitle = getTestsTitle(activeTests, order.tests.length, supersededCount, removedCount);
+  const testsTitle = getTestsTitle(
+    activeTests,
+    order.tests?.length ?? activeTests.length,
+    supersededCount,
+    removedCount
+  );
 
   return (
     <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6 bg-surface-page">
@@ -165,7 +175,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
 
       <Panel title={testsTitle} className="shrink-0" padding="none" scroll="visible">
         <TestsTable
-          tests={order.tests}
+          tests={order.tests ?? []}
           orderId={order.orderId}
           variant="simple"
         />

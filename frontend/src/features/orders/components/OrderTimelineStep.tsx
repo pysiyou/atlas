@@ -43,7 +43,8 @@ export const OrderTimelineStep: React.FC<OrderTimelineStepProps> = ({
     ? getStepCompletionInfo(order, step.status)
     : {};
   const statusMessage = getTimelineStatusMessage(step.status, progress, blocked);
-  const showTestDots = TEST_BASED_STEPS.includes(step.status) && order.tests.length >= 1;
+  const showTestDots =
+    TEST_BASED_STEPS.includes(step.status) && (order.tests?.length ?? order.testCount ?? 0) >= 1;
   const showLabLink = labTab && progress.isStarted && !progress.isFullyComplete && !blocked;
 
   return (

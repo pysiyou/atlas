@@ -6,14 +6,12 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
-import { usePatient } from '@/features/patients';
 import { useOrder } from '../api/orders';
 import { getActiveTests } from '../utils/orderCalculator';
 import { notify } from '@/utils/feedback';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { formatCurrency, displayId } from '@/utils';
 import type { Invoice } from '@/types';
-import { useOrderInvoices } from '@/features/billing';
 import { DetailPageShell, PageHeader } from '@/components';
 import { OrderHeader } from '../components/OrderHeader';
 import {
@@ -33,12 +31,7 @@ export const OrderDetail: React.FC = () => {
   const { isSmall, isMedium, isLarge } = useResponsiveLayout();
   const { openModal } = useModal();
 
-  const { order, isLoading: orderLoading } = useOrder(id);
-  const orderIdNum = order?.orderId;
-  const { invoices } = useOrderInvoices(orderIdNum);
-  const { patient: patientData, isLoading: patientLoading } = usePatient(
-    order?.patientId.toString()
-  );
+  const { order, patient: patientData, invoices, isLoading: orderLoading } = useOrder(id);
   const patient = patientData ?? null;
   const invoice: Invoice | null = invoices[0]
     ? {
@@ -59,10 +52,11 @@ export const OrderDetail: React.FC = () => {
       }
     : null;
 
-  const activeTests = order != null ? getActiveTests(order.tests) : [];
+  const orderTests = order?.tests ?? [];
+  const activeTests = order != null ? getActiveTests(orderTests) : [];
   // Count tests that are not shown: removed, and optionally superseded (shown with reduced opacity)
-  const removedCount = order != null ? order.tests.filter(t => t.status === 'removed').length : 0;
-  const supersededCount = order != null ? order.tests.filter(t => t.status === 'superseded').length : 0;
+  const removedCount = order != null ? orderTests.filter(t => t.status === 'removed').length : 0;
+  const supersededCount = order != null ? orderTests.filter(t => t.status === 'superseded').length : 0;
 
   const handleViewPatient = () => navigate(`/patients/${order?.patientId}`);
   const handleViewInvoice = () => {
@@ -110,7 +104,7 @@ export const OrderDetail: React.FC = () => {
   return (
     <DetailPageShell
       header={header}
-      loading={orderLoading || patientLoading}
+      loading={orderLoading}
       loadingMessage="Loading order..."
       loadingSkeleton={
         <DetailPageSkeleton

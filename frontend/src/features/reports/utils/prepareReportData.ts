@@ -1,5 +1,6 @@
 import type jsPDF from 'jspdf';
 import type { Order, OrderTest, Patient, Test } from '@/types';
+import { getOrderTests } from '@/types';
 import { calculateAge } from '@/utils';
 import type { ValidatedTestReportPayload, ValidatedTest } from '../types';
 import { companyConfig } from '@/config';
@@ -24,7 +25,7 @@ export function buildValidatedTestsFromOrders(
   const tests: ValidatedTest[] = [];
 
   orders.forEach(order => {
-    order.tests
+    getOrderTests(order)
       .filter(test => test.status === 'validated' && test.id)
       .forEach(test => {
         const patient = patients?.find(p => p.id === order.patientId);
@@ -56,7 +57,7 @@ export function findValidatedTestById(
   getPatientName: (patientId: number) => string
 ): ValidatedTest | null {
   for (const order of orders) {
-    const test = order.tests.find(t => t.id === testId && t.status === 'validated');
+    const test = getOrderTests(order).find(t => t.id === testId && t.status === 'validated');
     if (test) {
       const patient = patients?.find(p => p.id === order.patientId);
       const age = patient?.dateOfBirth ? calculateAge(patient.dateOfBirth) : undefined;

@@ -6,7 +6,9 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field, field_validator
 
+from app.schemas.billing import InvoiceResponse
 from app.schemas.enums import OrderStatus, PaymentStatus, PriorityLevel, TestStatus
+from app.schemas.patient import PatientResponse
 from app.schemas.payment import PaymentResponse
 
 
@@ -101,6 +103,30 @@ class OrderUpdate(BaseModel):
     tests: list[OrderTestCreate] | None = None  # Optional list of tests to update (add/remove)
 
 
+class OrderSummaryResponse(BaseModel):
+    """Lightweight order projection for lists, dashboards, and aggregates."""
+
+    orderId: int
+    patientId: int
+    patientName: str
+    orderDate: datetime
+    testCount: int = 0
+    totalPrice: float
+    paymentStatus: PaymentStatus
+    overallStatus: OrderStatus
+    priority: PriorityLevel
+    referringPhysician: str | None = None
+    clinicalNotes: str | None = None
+    specialInstructions: list[str] | None = None
+    patientPrepInstructions: str | None = None
+    createdBy: str
+    createdAt: datetime
+    updatedAt: datetime
+
+    class Config:
+        from_attributes = True
+
+
 class OrderResponse(BaseModel):
     orderId: int
     patientId: int
@@ -124,9 +150,11 @@ class OrderResponse(BaseModel):
 
 
 class OrderDetailResponse(OrderResponse):
-    """Order plus optional payments for GET /orders/{id}?include=payments."""
+    """Order plus optional related data from GET /orders/{id}?include=."""
 
     payments: list[PaymentResponse] | None = None
+    invoices: list[InvoiceResponse] | None = None
+    patient: PatientResponse | None = None
 
 
 """Order endpoint request schemas."""

@@ -8,9 +8,9 @@ import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTestCatalog } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users';
-import { usePatientNameLookup, usePatientsList } from '@/features/patients';
-import { useOrdersList } from '@/features/orders';
+import { usePatientNameLookup } from '@/features/patients';
 import { useSampleLookup } from '@/features/lab';
+import { useValidatedTestsReport } from '../api/reports';
 import { useClientListFilter } from '@/hooks/useClientListFilter';
 import { ListView } from '@/components';
 import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components';
@@ -20,7 +20,6 @@ import { ReportFilters } from '../components/ReportFilters';
 import { generateLabReport, downloadPDF } from '../utils/reportPDF';
 import type { ValidatedTest } from '../types';
 import {
-  buildValidatedTestsFromOrders,
   filterValidatedTestsByDateRange,
   prepareReportData,
   downloadValidatedTestReport,
@@ -31,14 +30,19 @@ import { notify, errorAlertMessage } from '@/utils/feedback';
 export const ReportList: React.FC = () => {
   const navigate = useNavigate();
 
-  const { orders, isLoading: ordersLoading, isError, error: queryError, refetch } = useOrdersList();
-  const { patients, isLoading: patientsLoading } = usePatientsList();
+  const {
+    validatedTests,
+    isLoading: reportsLoading,
+    isError,
+    error: queryError,
+    refetch,
+  } = useValidatedTestsReport();
   const { tests, isLoading: testsLoading } = useTestCatalog();
   const { getPatientName } = usePatientNameLookup();
   const { getSample } = useSampleLookup();
   const { getUserName, isLoading: usersLoading } = useUserLookup();
 
-  const loading = ordersLoading || patientsLoading || testsLoading || usersLoading;
+  const loading = reportsLoading || testsLoading || usersLoading;
 
   const error = isError
     ? {
@@ -50,11 +54,6 @@ export const ReportList: React.FC = () => {
   const [previewTest, setPreviewTest] = useState<ValidatedTest | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
-
-  const validatedTests = useMemo(
-    () => buildValidatedTestsFromOrders(orders, patients, getPatientName),
-    [orders, patients, getPatientName]
-  );
 
   const {
     filteredItems: preFilteredTests,
@@ -81,12 +80,12 @@ export const ReportList: React.FC = () => {
     (validatedTest: ValidatedTest) =>
       prepareReportData({
         validatedTest,
-        patients,
+        patients: undefined,
         catalogTests: tests,
         getSample,
         getUserName: id => getUserName(id),
       }),
-    [patients, tests, getSample, getUserName]
+    [tests, getSample, getUserName]
   );
 
   const handlePreview = (validatedTest: ValidatedTest) => {

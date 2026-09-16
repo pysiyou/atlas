@@ -1,4 +1,5 @@
 import type { Order } from '@/types';
+import { getOrderTests } from '@/types';
 import { getActiveTests } from './orderCalculator';
 
 /**
@@ -62,7 +63,7 @@ export const getOrderStepProgress = (order: Order, stepStatus: string): StepProg
     isStarted: false,
   };
 
-  const activeTests = getActiveTests(order.tests);
+  const activeTests = getActiveTests(getOrderTests(order));
   const total = activeTests.length;
 
   if (total === 0) {
@@ -128,7 +129,7 @@ export const getOrderStepProgress = (order: Order, stepStatus: string): StepProg
  * @returns Overall progress percentage (0-100)
  */
 export const getOverallOrderProgress = (order: Order): number => {
-  if (order.tests.length === 0) return 0;
+  if (getOrderTests(order).length === 0) return 0;
 
   // Weight for each test status (0-100 scale)
   const statusWeights: Record<string, number> = {
@@ -141,7 +142,7 @@ export const getOverallOrderProgress = (order: Order): number => {
     superseded: 0, // Superseded tests don't count toward progress
   };
 
-  const activeTests = getActiveTests(order.tests);
+  const activeTests = getActiveTests(getOrderTests(order));
   if (activeTests.length === 0) return 0;
 
   const totalWeight = activeTests.reduce((sum, test) => {
@@ -182,7 +183,7 @@ export const getStepCompletionInfo = (
 
     case 'sample-collected': {
       // Find the first test that has been collected
-      const collectedTest = order.tests.find(t =>
+      const collectedTest = getOrderTests(order).find(t =>
         ['sample-collected', 'resulted', 'validated', 'cancelled'].includes(t.status)
       );
       return {
@@ -193,7 +194,9 @@ export const getStepCompletionInfo = (
 
     case 'results-entered': {
       // Find the first test with results entered
-      const enteredTest = order.tests.find(t => ['resulted', 'validated'].includes(t.status));
+      const enteredTest = getOrderTests(order).find(t =>
+        ['resulted', 'validated'].includes(t.status)
+      );
       return {
         completedBy: enteredTest?.enteredBy,
         completedAt: enteredTest?.resultEnteredAt,
@@ -202,7 +205,7 @@ export const getStepCompletionInfo = (
 
     case 'completed': {
       // Find the first validated test (order is completed when all tests validated)
-      const validatedTest = order.tests.find(t => t.status === 'validated');
+      const validatedTest = getOrderTests(order).find(t => t.status === 'validated');
       return {
         completedBy: validatedTest?.validatedBy,
         completedAt: validatedTest?.resultValidatedAt,

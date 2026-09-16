@@ -282,6 +282,15 @@ class PatientUpdate(BaseModel):
         return data
 
 
+class PatientOrderSummary(BaseModel):
+    """Aggregated order stats for patient list rows."""
+
+    orderCount: int = 0
+    lastOrderDate: datetime | None = None
+    lastOrderStatus: str | None = None
+    hasUnpaidOrders: bool = False
+
+
 class PatientResponse(PatientBase):
     # Allow legacy DB values shorter than the 10-char create/update minimum.
     phone: str = Field(..., min_length=1, max_length=20)
@@ -292,6 +301,8 @@ class PatientResponse(PatientBase):
     createdAt: datetime
     updatedAt: datetime
     updatedBy: str
+
+    orderSummary: PatientOrderSummary | None = None
 
     class Config:
         from_attributes = True
