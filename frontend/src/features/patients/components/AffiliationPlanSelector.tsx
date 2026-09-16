@@ -7,7 +7,7 @@
 import React, { useMemo } from 'react';
 import { Button, Callout, Icon } from '@/components';
 import { SpinnerLoader } from '@/components';
-import { useAffiliationPricing } from '../api/affiliations.api';
+import { useAffiliationPricing } from '../api/affiliations';
 import { formatCurrency } from '@/utils';
 import { getFeedback } from '@/utils/feedback';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';

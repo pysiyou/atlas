@@ -6,11 +6,11 @@
 import React from 'react';
 import { Alert, Button, Skeleton, DialogHeader, DialogFooter } from '@/components';
 import { RadioCard } from './LabWorkflowPopoverChrome';
-import { AttemptProgressBar } from './AttemptProgressBar';
+import { AttemptProgressBar } from './LabAttemptIndicators';
 import type { ResultRejectionType } from '@/types';
 import { cn } from '@/utils';
 import { getFeedback } from '@/utils/feedback';
-import { QUALITY_ISSUE_POPOVER_LAYOUT, QUALITY_ISSUE_POPOVER_COPY } from './qualityIssuePopoverCopy';
+import { QUALITY_ISSUE_POPOVER_LAYOUT, QUALITY_ISSUE_POPOVER_COPY } from '../constants/qualityIssuePopoverCopy';
 import { LAB_CONFIG } from '@/features/lab/constants';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 

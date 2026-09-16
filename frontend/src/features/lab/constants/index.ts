@@ -1,9 +1,8 @@
 /**
- * Lab feature constants — config, workflow filters, and tab routing.
+ * Lab feature constants — copy, config, tabs, visuals, and queue filter configs.
  */
 
-export { LAB_CONFIG } from './labConfig';
-export * from './workflow';
-export * from './labTabs';
-export * from './labCopy';
-export * from './labWorkflowVisual';
+export * from './labConstants';
+export * from './labFilterConfigs';
+export * from './labWorkflowAuditLines';
+export * from './qualityIssuePopoverCopy';

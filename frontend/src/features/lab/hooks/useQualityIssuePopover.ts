@@ -3,18 +3,18 @@
  */
 import { useState, useMemo, useEffect } from 'react';
 import type { QualityIssueResult, RemedyType } from '@/types/lab-operations';
-import { useQualityIssueOptions } from '../api/qualityIssues.api';
-import { resultAPI } from '../api/results.api';
+import { useQualityIssueOptions } from '../api/qualityIssues';
+import { resultAPI } from '../api/results';
 import {
   QUALITY_ISSUE_POPOVER_COPY,
   getValidationFormCopy,
-} from '../components/qualityIssuePopoverCopy';
+} from '../constants/qualityIssuePopoverCopy';
 import { displayId } from '@/utils';
 import { errorAlertMessage, inlineFeedbackMessage } from '@/utils/feedback';
 import {
   buildValidationRemedyOptions,
   resolveSuggestedRemedy,
-} from '../components/remedyDestinationUtils';
+} from '../constants/qualityIssuePopoverCopy';
 
 function buildSubtitle(
   orderTestId: number,

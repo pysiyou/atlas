@@ -6,7 +6,7 @@ import React, { useMemo } from 'react';
 import { Table, EmptyState } from '@/components';
 import type { Order } from '@/types/order';
 import { useTestNameLookup } from '@/features/catalog';
-import { usePatientNameLookup } from '../api/patients.api';
+import { usePatientNameLookup } from '../api/patients';
 import { createOrderTableConfig } from '@/features/orders/config/OrderTable.config';
 import { ICONS } from '@/config/icons';
 

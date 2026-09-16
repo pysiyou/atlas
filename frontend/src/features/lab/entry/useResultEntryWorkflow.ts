@@ -7,11 +7,11 @@
 
 import { useState, useCallback } from 'react';
 import { useTestNameLookup } from '@/features/catalog';
-import { useEnterResults } from '../api/results.api';
+import { useEnterResults } from '../api/results';
 import { notify } from '@/utils/feedback';
 import { logger } from '@/utils/logger';
-import { formatParameterResults, findTestById } from './resultEntryValidation.helpers';
-import { orderTestKey } from '../utils/orderTestKey';
+import { formatParameterResults, findTestById } from './resultEntry';
+import { orderTestKey } from '../utils/labSearchAndLinks';
 import { useResultEntryDetailModal } from './useResultEntryDetailModal';
 import type { TestWithContext, Test, Order } from '@/types';
 

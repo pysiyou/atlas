@@ -10,7 +10,7 @@ import { PaymentFilters } from '../components/PaymentFilters';
 import { createPaymentTableConfig } from '../config/PaymentTable.config';
 import { PaymentDetailModal } from '../components/PaymentDetailModal';
 import { usePaginatedOrders } from '@/features/orders';
-import { usePaymentsForOrderIds } from '../api/payments.api';
+import { usePaymentsForOrderIds } from '../api/payments';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
 import { errorAlertMessage } from '@/utils/feedback';
 import type { Order, Payment, PaymentStatus, PaymentMethod } from '@/types';

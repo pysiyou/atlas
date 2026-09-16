@@ -4,7 +4,7 @@
 
 import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { usePaginatedPatientContextList } from '../api/patients.api';
+import { usePaginatedPatientContextList } from '../api/patients';
 import { useClientListFilter } from '@/hooks/useClientListFilter';
 import { ListView } from '@/components';
 import { Button } from '@/components';

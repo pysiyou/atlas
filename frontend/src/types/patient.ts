@@ -35,7 +35,7 @@ export interface EmergencyContact {
   email?: string;
 }
 
-import type { VitalSigns } from '@/features/patients/schemas/vital-signs.schema';
+import type { VitalSigns } from '@/features/patients/schemas/patientFormSchemas';
 
 export type { VitalSigns };
 

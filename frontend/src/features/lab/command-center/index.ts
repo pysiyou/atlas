@@ -1,1 +1,0 @@
-export { LabCommandCenterBoard } from './LabCommandCenterBoard';

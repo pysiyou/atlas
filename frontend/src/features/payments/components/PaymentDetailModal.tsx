@@ -28,7 +28,7 @@ import {
 import { cn, formatCurrency } from '@/utils';
 import { OrderReceipt } from '@/features/orders';
 import { inputBase } from '@/components/inputs/inputStyles';
-import { useCreatePayment, useOrderRemainingBalance } from '../api/payments.api';
+import { useCreatePayment, useOrderRemainingBalance } from '../api/payments';
 import {
   getEnabledPaymentMethods,
   getDefaultPaymentMethod,

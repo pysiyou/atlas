@@ -1,7 +1,7 @@
 import type { NavigateFunction } from 'react-router-dom';
 import type { TableViewConfig } from '@/components';
 import { buildViews, createOrderSharedColumns, renderOrderId } from '@/components/data-table';
-import { getActiveTests } from '@/features/orders/utils';
+import { getActiveTests } from '../utils/orderCalculator';
 import type { Order } from '@/types';
 import { OrderTableCard } from '../components/OrderTableCard';
 

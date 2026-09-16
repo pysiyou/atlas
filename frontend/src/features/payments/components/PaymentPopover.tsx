@@ -26,7 +26,7 @@ import {
   getDefaultPaymentMethod,
   type PaymentMethod,
 } from '@/types/payments';
-import { useCreatePayment, useOrderRemainingBalance } from '../api/payments.api';
+import { useCreatePayment, useOrderRemainingBalance } from '../api/payments';
 import { getFeedback, notify } from '@/utils/feedback';
 import { feedbackTitle } from '@/utils/feedback/copy';
 import { ICONS, MODULE_ICONS } from '@/config/icons';

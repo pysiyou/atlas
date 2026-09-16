@@ -31,4 +31,4 @@ export * from './constants';
 
 // Filtering (pure functions + types; hooks are in @/hooks/useClientListFilter)
 export * from './filtering';
-export * from './formatDuration.utils';
+export * from './formatDuration';

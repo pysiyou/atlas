@@ -8,7 +8,7 @@ import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import { SampleCollectionQueue } from '../collection/SampleCollectionQueue';
 import { ResultEntryQueue } from '../entry/ResultEntryQueue';
 import { ResultValidationQueue } from '../validation/ResultValidationQueue';
-import { LabCommandCenterBoard } from '../command-center';
+import { LabCommandCenterBoard } from '../commandCenter/LabCommandCenterBoard';
 import { Icon, PageHeader, Badge, ErrorAlert } from '@/components';
 import { errorAlertMessage } from '@/utils/feedback';
 import { ICONS } from '@/config/icons';
@@ -19,7 +19,7 @@ import {
   LAB_TAB_LABELS,
   type LabTabId,
   getLabTabPath,
-} from '../constants/labTabs';
+} from '../constants/labConstants';
 
 export const LaboratoryPage: React.FC = () => {
   const navigate = useNavigate();

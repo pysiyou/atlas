@@ -3,7 +3,7 @@
  */
 
 import type { NavigateFunction } from 'react-router-dom';
-import { getActiveTests } from '@/features/orders/utils';
+import { getActiveTests } from '@/features/orders';
 import { Badge } from '@/components';
 import type { TableViewConfig } from '@/components';
 import {

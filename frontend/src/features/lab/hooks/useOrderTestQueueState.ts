@@ -7,7 +7,7 @@ import { useOrderLookup } from '@/features/orders';
 import {
   deriveOrderTestQueueState,
   type OrderTestQueueState,
-} from '../utils/deriveOrderTestQueueState';
+} from '../utils/labQueue';
 import type { SampleStatus, TestStatus, TestWithContext } from '@/types';
 
 export function useOrderTestQueueState(test: TestWithContext): OrderTestQueueState {

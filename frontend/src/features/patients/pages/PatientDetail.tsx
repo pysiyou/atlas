@@ -6,7 +6,7 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
-import { usePatient } from '../api/patients.api';
+import { usePatient } from '../api/patients';
 import { useOrdersByPatient } from '@/features/orders';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { DetailPageShell, PageHeader } from '@/components';

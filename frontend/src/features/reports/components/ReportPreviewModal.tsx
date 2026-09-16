@@ -8,7 +8,7 @@ import React from 'react';
 import { Modal, Button, FooterInfo, DialogFooter } from '@/components';
 import type { ValidatedTestReportPayload } from '../types';
 import { MODULE_ICONS } from '@/config/icons';
-import { useUserLookup } from '@/lib/api/users.api';
+import { useUserLookup } from '@/lib/api/users';
 import { ReportPreviewHeader } from './ReportPreviewHeader';
 import { ReportPreviewResults } from './ReportPreviewResults';
 

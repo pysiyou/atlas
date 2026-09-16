@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useTest } from '../api/tests.api';
+import { useTest } from '../api/tests';
 import { useBreakpoint } from '@/hooks/useBreakpoint';
 import { BalancedColumnsLayout } from '@/components';
 import type { TableInput } from '@/components';

@@ -9,17 +9,17 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Badge, Panel, Button, EntityId } from '@/components';
 import { ResultValidationForm } from './ResultValidationForm';
 import { LabWorkflowDetailModal, DetailGrid, ModalFooter } from '../components/LabWorkflowDetailModal';
-import { testHeaderAudit } from '../components/labWorkflowAuditLines';
+import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { useOrderTestQueueState } from '../hooks';
-import { CriticalValueActions } from '@/features/lab/critical-values/CriticalValueActions';
-import { buildCriticalValueRecord } from '@/features/lab/critical-values/buildCriticalValueRecord.utils';
+import { CriticalValueActions } from '@/features/lab/criticalValues/CriticalValueActions';
+import { buildCriticalValueRecord } from '@/features/lab/criticalValues/criticalValues';
 import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
 import type { TestWithContext } from '@/types';
 import { useEscalationResolution } from './useEscalationResolution';
 import { EscalationResolutionFooter } from './EscalationResolutionFooter';
 import { LabEntityTimelinePanel } from '../components/LabEntityTimelinePanel';
-import { labModalSubtitle } from '../components/labWorkflowModalSubtitles';
+import { labModalSubtitle } from '../components/LabWorkflowModalSubtitles';
 import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 
 interface EscalationResolutionModalProps {

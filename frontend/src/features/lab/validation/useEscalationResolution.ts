@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { notify } from '@/utils/feedback';
 import { useAuthStore } from '@/app/authStore';
-import { useResolveEscalation } from '../api/results.api';
+import { useResolveEscalation } from '../api/results';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
 import type { EscalationResolveOptions } from './EscalationResolutionActions';
 

@@ -4,16 +4,10 @@
 import React from 'react';
 import type { RemedyType } from '@/types/lab-operations';
 import { RadioCard } from './LabWorkflowPopoverChrome';
-import { QUALITY_ISSUE_POPOVER_COPY } from './qualityIssuePopoverCopy';
+import { QUALITY_ISSUE_POPOVER_COPY, type RemedyOption } from '../constants/qualityIssuePopoverCopy';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 
-export interface RemedyOption {
-  value: RemedyType;
-  label: string;
-  description: string;
-  disabled?: boolean;
-  hint?: string;
-}
+export type { RemedyOption };
 
 export interface RemedyDestinationPickerProps {
   label?: string;

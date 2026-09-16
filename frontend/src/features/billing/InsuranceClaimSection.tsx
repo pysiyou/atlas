@@ -11,7 +11,7 @@ import {
   useOrderInsuranceClaims,
   useSubmitInsuranceClaim,
   type InsuranceClaim,
-} from './api/billing.hooks';
+} from './api/billing';
 
 export interface InsuranceClaimSectionProps {
   orderId: number;

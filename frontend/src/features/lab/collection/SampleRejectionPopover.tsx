@@ -2,21 +2,40 @@
  * Collection quality issue popover — reports sample problems via unified API.
  * Operator chooses unfinished-test fate when linked unfinished work exists.
  */
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Popover, Button, FooterInfo } from '@/components';
 import { LabWorkflowPopoverChrome } from '../components/LabWorkflowPopoverChrome';
 import { MODULE_ICONS } from '@/config/icons';
 import { displayId } from '@/utils';
 import { QualityIssueForm } from '../components/QualityIssueForm';
-import { useQualityIssueFormState } from '../hooks/useQualityIssueFormState';
 import { useSubmitQualityIssue } from '../hooks/useSubmitQualityIssue';
-import { useQualityIssueOptions } from '../api/qualityIssues.api';
+import { useQualityIssueOptions } from '../api/qualityIssues';
 import {
   buildSampleRemedyOptions,
   resolveSuggestedRemedy,
-} from '../components/remedyDestinationUtils';
-import { parseNumericSampleId } from './sampleRejectionPopover.helpers';
-import { LAB_COPY } from '../constants/labCopy';
+} from '../constants/qualityIssuePopoverCopy';
+import { LAB_COPY } from '../constants/labConstants';
+import type { RemedyType } from '@/types/lab-operations';
+
+function parseNumericSampleId(sampleId: string): number | undefined {
+  return typeof sampleId === 'string' && /^\d+$/.test(sampleId)
+    ? parseInt(sampleId, 10)
+    : undefined;
+}
+
+function useQualityIssueFormState() {
+  const [reason, setReason] = useState('');
+  const [notes, setNotes] = useState('');
+  const [preferredRemedy, setPreferredRemedy] = useState<RemedyType | ''>('');
+
+  const reset = () => {
+    setReason('');
+    setNotes('');
+    setPreferredRemedy('');
+  };
+
+  return { reason, notes, setReason, setNotes, preferredRemedy, setPreferredRemedy, reset };
+}
 
 interface CollectionRejectionPopoverContentProps {
   onSuccess: () => void;

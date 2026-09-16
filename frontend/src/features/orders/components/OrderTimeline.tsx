@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import { useUserLookup } from '@/lib/api/users.api';
-import type { LabTabId } from '@/features/lab/constants/labTabs';
+import { useUserLookup } from '@/lib/api/users';
+import type { LabTabId } from '@/features/lab/constants/labConstants';
 import {
   STATUS_TIMELINE_STEPS,
   getOrderStepProgress,

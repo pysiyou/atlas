@@ -4,7 +4,7 @@
 import { useCallback } from 'react';
 import { logger } from '@/utils/logger';
 import { notify } from '@/utils/feedback';
-import { useReportQualityIssue } from '../api/qualityIssues.api';
+import { useReportQualityIssue } from '../api/qualityIssues';
 import type {
   QualityIssueResult,
   QualityIssueTargetType,

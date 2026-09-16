@@ -8,8 +8,8 @@ import { cn } from '@/utils';
 import { feedbackTitle } from '@/utils/feedback/copy';
 import type { Test, Patient } from '@/types';
 import { ParameterInput } from './ResultParameterInputs';
-import { getReferenceRangeDisplay, checkCriticalStatus } from './resultEntryForm.utils';
-import { RESULT_PANEL, resultTileStatusClass } from '../components/resultDisplayStyles';
+import { getReferenceRangeDisplay, checkCriticalStatus } from './resultEntry';
+import { RESULT_PANEL, resultTileStatusClass } from '../utils/labResult';
 
 interface EntryFormProps {
   testDef: Test;

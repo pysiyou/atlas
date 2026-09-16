@@ -8,7 +8,7 @@ import { useMemo } from 'react';
 import { useEntityLookup, parseNumericKey } from '@/hooks/useEntityLookup';
 import { queryKeys } from '@/lib/query';
 import { useInvalidateQueryKey, invalidateOrderDetailQuery } from '@/lib/query/invalidate';
-import { useOrdersList } from '../api/orders.api';
+import { useOrdersList } from '../api/orders';
 
 /**
  * Hook to search orders by order ID

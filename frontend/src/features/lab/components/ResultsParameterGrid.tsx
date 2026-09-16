@@ -3,14 +3,14 @@
  */
 import React, { useMemo } from 'react';
 import { cn } from '@/utils';
-import { parseResultEntry, statusMapFromFlags, isCritical } from '../utils/labResultHelpers';
+import { parseResultEntry, statusMapFromFlags, isCritical } from '../utils/labResult';
 import { LAB_CONFIG } from '@/features/lab/constants';
 import {
   RESULT_PANEL,
   resultTileStatusClass,
   resultValueClass,
   resultStatusLabel,
-} from './resultDisplayStyles';
+} from '../utils/labResult';
 
 export type ResultsGridVariant = 'inline' | 'tiles';
 

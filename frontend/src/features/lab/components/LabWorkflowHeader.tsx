@@ -5,15 +5,15 @@
 import React, { createContext, type ReactNode, useContext } from 'react';
 import { cn, formatDateTime } from '@/utils';
 import { EntityId } from '@/components';
-import { useUserLookup } from '@/lib/api/users.api';
+import { useUserLookup } from '@/lib/api/users';
 import { LAB_CARD_HEADER, LAB_CARD_TYPOGRAPHY, LAB_HEADER } from '../utils/labStyles';
 import { LabIdentityRow, type LabIdentityContext } from './LabIdentityRow';
-import type { LabAuditLine } from './labWorkflowAuditLines';
+import type { LabAuditLine } from '../constants/labWorkflowAuditLines';
 
 export type {
   LabAuditLine,
   LabSampleAuditInfo,
-} from './labWorkflowAuditLines';
+} from '../constants/labWorkflowAuditLines';
 
 /** When true, badge rows hide tertiary chips (cards only; modals stay full). */
 // eslint-disable-next-line react-refresh/only-export-components -- compact flag for shared lab header consumers

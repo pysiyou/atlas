@@ -8,7 +8,7 @@ import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTestNameLookup } from '@/features/catalog';
 import { usePatientNameLookup } from '@/features/patients';
-import { usePaginatedOrders } from '../api/orders.api';
+import { usePaginatedOrders } from '../api/orders';
 import { ListView } from '@/components';
 import { Button } from '@/components';
 import { useModal, ModalType } from '@/lib/context/ModalContext';

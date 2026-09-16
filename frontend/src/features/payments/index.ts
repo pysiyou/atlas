@@ -11,12 +11,12 @@ export {
   usePaymentMethodByOrder,
   useCreatePayment,
   useInvalidatePayments,
-} from './api/payments.api';
+} from './api/payments';
 export type {
   PaymentCreate,
   PaymentFilters,
   PaymentsFilters,
   CreatePaymentData,
-} from './api/payments.api';
+} from './api/payments';
 
 export { PaymentPopover } from './components/PaymentPopover';

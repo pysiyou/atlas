@@ -20,14 +20,14 @@ import {
 } from '../components/LabWorkflowDetailModal';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { useOrderTestQueueState } from '../hooks';
-import { testHeaderAudit } from '../components/labWorkflowAuditLines';
+import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { ICONS } from '@/config/icons';
 import { useTestCatalog } from '@/features/catalog';
 import { LabEntityTimelinePanel } from '../components/LabEntityTimelinePanel';
-import { labModalSubtitle } from '../components/labWorkflowModalSubtitles';
+import { labModalSubtitle } from '../components/LabWorkflowModalSubtitles';
 import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 import { ResultValidationForm } from '../validation/ResultValidationForm';
-import { hasTestResults } from '../utils/hasTestResults';
+import { hasTestResults } from '../utils/labSearchAndLinks';
 import type { Test, TestWithContext } from '@/types';
 
 interface EntryDetailModalProps {

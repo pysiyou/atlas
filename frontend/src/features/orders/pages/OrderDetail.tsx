@@ -7,13 +7,13 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import { usePatient } from '@/features/patients';
-import { useOrder } from '../api/orders.api';
-import { getActiveTests } from '@/features/orders/utils';
+import { useOrder } from '../api/orders';
+import { getActiveTests } from '../utils/orderCalculator';
 import { notify } from '@/utils/feedback';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { formatCurrency, displayId } from '@/utils';
 import type { Invoice } from '@/types';
-import { useOrderInvoices } from '@/features/billing/api/billing.hooks';
+import { useOrderInvoices } from '@/features/billing/api/billing';
 import { DetailPageShell, PageHeader } from '@/components';
 import { OrderHeader } from '../components/OrderHeader';
 import {

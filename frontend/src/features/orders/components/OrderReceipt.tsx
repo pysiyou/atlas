@@ -5,7 +5,7 @@
 import React from 'react';
 import { Badge, EntityId } from '@/components';
 import { cn, formatCurrency, formatDateTime } from '@/utils';
-import { getActiveTests, getActiveTotal } from '@/features/orders/utils';
+import { getActiveTests, getActiveTotal } from '../utils/orderCalculator';
 import type { Order, OrderTest } from '@/types';
 
 export type OrderReceiptVariant = 'panel' | 'compact' | 'detailed';

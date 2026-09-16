@@ -3,7 +3,7 @@ import type { CardComponentProps } from '@/components';
 import { formatCurrency, formatDateTime } from '@/utils';
 import type { OrderPaymentView } from '../types';
 import { PaymentButton } from './PaymentButton';
-import { useInvalidatePayments } from '../api/payments.api';
+import { useInvalidatePayments } from '../api/payments';
 
 /**
  * PaymentCard Component
