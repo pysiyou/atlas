@@ -26,6 +26,8 @@ export { OrderUpsertModal } from './components/OrderUpsertModal';
 export type { OrderUpsertModalProps } from './components/OrderUpsertModal';
 export { OrderReceipt } from './components/OrderReceipt';
 export type { OrderReceiptProps, OrderReceiptVariant } from './components/OrderReceipt';
+export { OrderModalFooter } from './components/OrderModalFooter';
+export type { OrderModalFooterProps } from './components/OrderModalFooter';
 
 export * from './utils/orderTimelineUtils';
 export * from './utils/orderCalculator';

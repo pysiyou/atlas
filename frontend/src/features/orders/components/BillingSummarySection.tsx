@@ -7,7 +7,7 @@ import React from 'react';
 import { Button, Icon, EntityId } from '@/components';
 import type { Order, Invoice } from '@/types';
 import { ICONS } from '@/config/icons';
-import { InsuranceClaimSection } from '@/features/billing/InsuranceClaimSection';
+import { InsuranceClaimSection } from '@/features/billing';
 import { OrderReceipt } from './OrderReceipt';
 
 export interface BillingSummarySectionProps {

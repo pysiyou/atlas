@@ -10,7 +10,7 @@ import { MODULE_ICONS } from '@/config/icons';
 import { ErrorBoundary } from '@/components';
 import { useEditPatientForm } from '../hooks/useEditPatientForm';
 import { PatientFormTabs } from './PatientFormTabs';
-import { OrderModalFooter } from '@/features/orders/components/OrderModalFooter';
+import { OrderModalFooter } from '@/features/orders';
 
 interface EditPatientModalProps {
   isOpen: boolean;
