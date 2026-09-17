@@ -85,7 +85,7 @@ export const CONTROL = {
 } as const;
 
 /** Chip geometry. Font-size via CSS var (not text-*) so twMerge keeps status text-* colors. */
-const BADGE_TYPE = '[font-size:var(--font-size-xs)]';
+const BADGE_TYPE = '[font-size:var(--font-size-badge)]';
 
 /** Chip geometry (type scale only). Color: badgeStyles + useBadgeAppearance() + semantic --badge / --*-fg. */
 export const BADGE = {

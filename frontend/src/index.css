@@ -28,6 +28,8 @@
   --color-surface-selected: var(--surface-selected);
   --color-surface-elev: var(--surface-elev);
   --color-surface-report: var(--surface-report);
+  --color-surface-sidebar: var(--surface-sidebar);
+  --color-surface-table-header: var(--surface-table-header);
 
   /* ═══════════════════════════════════════════════════════════════════
      BORDER

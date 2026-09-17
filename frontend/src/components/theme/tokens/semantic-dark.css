@@ -19,6 +19,8 @@
   --surface-selected: var(--primitive-neutral-200);
   --surface-elev: var(--primitive-neutral-100);
   --surface-report: var(--primitive-neutral-50);
+  --surface-sidebar: var(--surface);
+  --surface-table-header: var(--surface-page);
 
   --border: var(--primitive-neutral-200);
   --border-subtle: var(--primitive-neutral-100);

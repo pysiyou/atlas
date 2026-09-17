@@ -16,13 +16,13 @@ export const TIMELINE_STYLES = {
   eventTitleRow: 'flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1',
   categoryLabel:
     'shrink-0 text-xs font-light uppercase tracking-wide underline underline-offset-2',
-  eventAction: `min-w-0 ${TYPE.detailTitle}`,
+  eventAction: 'min-w-0 text-sm text-text-primary',
   eventDetails: 'flex flex-wrap items-center gap-x-1 gap-y-0.5',
   eventDetailText: TYPE.label,
   eventMeta: TYPE.meta,
   loadMore: 'px-4 py-2 flex justify-center border-t border-border-subtle',
-  retryLink: 'text-sm text-brand hover:underline',
-  retryLinkDisabled: 'text-sm text-brand hover:underline disabled:opacity-60',
+  retryLink: 'text-xs text-brand hover:underline',
+  retryLinkDisabled: 'text-xs text-brand hover:underline disabled:opacity-60',
 } as const;
 
 /** @deprecated Use TIMELINE_STYLES */

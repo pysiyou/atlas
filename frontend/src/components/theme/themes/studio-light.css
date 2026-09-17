@@ -44,13 +44,15 @@
   --text-tertiary: var(--primitive-neutral-500);
   --text-muted: var(--primitive-neutral-400);
 
-  --surface-page: var(--primitive-neutral-50);
+  --surface-page: #f9fafb;
   --surface: var(--primitive-neutral-0);
-  --surface-hover: var(--primitive-neutral-100);
+  --surface-hover: #f3f4f6;
   --surface-selected: var(--primitive-brand-50);
   --surface-elev: var(--primitive-neutral-0);
+  --surface-sidebar: #f7f8f9;
+  --surface-table-header: #f3f4f6;
 
-  --border: #e5eaf0;
+  --border: #e5e7eb;
   --border-subtle: var(--primitive-neutral-100);
   --border-strong: var(--primitive-neutral-300);
   --border-hover: #d1dae6;
@@ -70,6 +72,23 @@
   --info-fg: var(--primitive-brand-700);
   --info-fg-emphasis: var(--primitive-brand-800);
   --info-stroke: color-mix(in srgb, var(--primitive-brand-500) 22%, transparent);
+
+  --warning-bg: #fffbeb;
+  --warning-bg-emphasis: #fef3c7;
+  --warning-fg: #b45309;
+  --warning-fg-emphasis: #92400e;
+  --warning-stroke: var(--primitive-warning-200);
+
+  --purple-fg-emphasis: #6b21a8;
+  --purple-bg-emphasis: #f3e8ff;
+  --teal-fg-emphasis: #134e4a;
+  --teal-bg-emphasis: #f0fdfa;
+  --orange-fg-emphasis: #991b1b;
+  --orange-bg-emphasis: #fee2e2;
+  --indigo-fg-emphasis: #5b21b6;
+  --indigo-bg-emphasis: #ede9fe;
+  --cyan-fg-emphasis: #006064;
+  --cyan-bg-emphasis: #e0f7fa;
 
   --badge: var(--primitive-neutral-0);
 
@@ -99,5 +118,23 @@
   --primitive-auth-input-focus: var(--primitive-brand-400);
   --primitive-auth-text-light: var(--primitive-brand-300);
 
-  /* Override --workflow-* here to recolor a lab stage for this theme only. */
+  /* Lab workflow lanes — Halal-like pastels (blue / salmon / green / purple / teal) */
+  --workflow-collection-fg: #1e40af;
+  --workflow-collection-bg: #dbeafe;
+  --workflow-collection-border: color-mix(in srgb, #3b82f6 28%, transparent);
+  --workflow-entry-fg: #991b1b;
+  --workflow-entry-bg: #fee2e2;
+  --workflow-entry-border: color-mix(in srgb, #f87171 28%, transparent);
+  --workflow-validation-fg: #166534;
+  --workflow-validation-bg: #dcfce7;
+  --workflow-validation-border: color-mix(in srgb, #10b981 28%, transparent);
+  --workflow-escalation-fg: var(--danger-fg-emphasis);
+  --workflow-escalation-bg: var(--danger-bg);
+  --workflow-escalation-border: var(--danger-stroke);
+  --workflow-quality-fg: #6b21a8;
+  --workflow-quality-bg: #f3e8ff;
+  --workflow-quality-border: color-mix(in srgb, #8b5cf6 28%, transparent);
+  --workflow-composition-fg: #006064;
+  --workflow-composition-bg: #e0f7fa;
+  --workflow-composition-border: color-mix(in srgb, #06b6d4 28%, transparent);
 }

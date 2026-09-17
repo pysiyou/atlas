@@ -23,6 +23,8 @@
   --surface-selected: var(--primitive-brand-100);
   --surface-elev: var(--primitive-neutral-0);
   --surface-report: var(--primitive-surface-report);
+  --surface-sidebar: var(--surface);
+  --surface-table-header: var(--surface-page);
 
   /* ═══════════════════════════════════════════════════════════════════
      BORDER (Borders & Dividers)
