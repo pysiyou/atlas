@@ -13,7 +13,7 @@ export function SidebarNav({ menuItems, settingsItems, onNavigate }: SidebarNavP
     const base =
       'flex items-center py-3 text-sm font-normal rounded-none border-l-2 border-transparent';
     return isActive
-      ? `${base} border-l-brand text-brand`
+      ? `${base} border-l-brand bg-surface-selected text-brand`
       : `${base} text-text-secondary hover:bg-surface-hover hover:text-text-primary`;
   };
   return (

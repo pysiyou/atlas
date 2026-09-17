@@ -59,7 +59,7 @@ function TableHeader<T>({
   const columnStyles = useColumnStyles(visibleColumns);
   return (
     <div
-      className={`flex items-stretch border-b border-border-default bg-surface-page ${TEXT_SIZE[variant]} text-text-tertiary uppercase tracking-wider ${sticky ? 'sticky top-0 z-10' : ''}`}
+      className={`flex items-stretch border-b border-border-default bg-surface-table-header ${TEXT_SIZE[variant]} text-text-tertiary uppercase tracking-wider ${sticky ? 'sticky top-0 z-10' : ''}`}
     >
       {visibleColumns.map(column => {
         const style = columnStyles.get(column.key) || {};
