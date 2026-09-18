@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Panel, Skeleton, SkeletonText } from '@/components';
-import { COMMAND_CENTER_PANEL } from './commandCenterStyles';
+import { COMMAND_CENTER_PANEL, COMMAND_CENTER_PIPELINE_STRIP } from './commandCenterStyles';
 
 function PanelSkeleton({ className }: { className?: string }) {
   return (
@@ -25,7 +25,7 @@ export const LabCommandCenterBoardSkeleton: React.FC = () => {
   return (
     <div className={COMMAND_CENTER_PANEL.page} aria-busy="true" aria-label="Loading command center">
       <div className="flex h-full min-h-0 flex-col gap-2">
-        <div className="shrink-0 rounded border border-border-default bg-surface px-3 py-2 shadow-sm">
+        <div className={COMMAND_CENTER_PIPELINE_STRIP}>
           <div className="mb-2 flex items-center justify-between gap-3">
             <Skeleton height={14} width={88} />
             <Skeleton height={12} width={160} />

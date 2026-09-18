@@ -12,7 +12,8 @@ import { LabCommandCenterBoard } from '../commandCenter/LabCommandCenterBoard';
 import { Icon, PageHeader, Badge, ErrorAlert } from '@/components';
 import { errorAlertMessage } from '@/utils/feedback';
 import { ICONS } from '@/config/icons';
-import { SURFACE } from '@/components/theme/recipes';
+import { RADIUS } from '@/components/theme/recipes';
+import { LAB_WORKFLOW_QUEUE_SHELL } from '../utils/labStyles';
 import { useLabStageQueueCounts, getValidationTabCount } from '../hooks';
 import {
   DEFAULT_LAB_TAB,
@@ -85,12 +86,12 @@ export const LaboratoryPage: React.FC = () => {
   const pageTitle = LAB_TAB_LABELS[activeTab];
 
   return (
-    <div className="min-h-full flex flex-col p-2 gap-2 min-w-0">
+    <div className="h-full min-h-0 flex flex-col overflow-hidden p-2 gap-2 min-w-0">
       <PageHeader
         variant="bar"
         title={pageTitle}
         actions={
-          <div className="bg-surface-hover p-1 rounded flex items-center gap-1">
+          <div className={`bg-surface-hover p-1 ${RADIUS.control} flex items-center gap-1`}>
             {tabs.map(tab => {
               const isActive = activeTab === tab.id;
               const hasCount = typeof tab.count === 'number' && tab.count > 0;
@@ -99,7 +100,7 @@ export const LaboratoryPage: React.FC = () => {
                   key={tab.id}
                   onClick={() => handleTabChange(tab.id)}
                   className={`
-                  relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-normal transition-all duration-200 cursor-pointer
+                  relative flex items-center gap-2 px-3 py-1.5 ${RADIUS.control} text-xs font-normal transition-all duration-200 cursor-pointer
                   ${
                     isActive
                       ? 'bg-surface text-brand shadow-sm ring-1 ring-black/5'
@@ -130,11 +131,9 @@ export const LaboratoryPage: React.FC = () => {
       />
 
       <div
-        className={`flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden ${
-          activeTab === 'command-center'
-            ? ''
-            : `${SURFACE.raised} rounded shadow-sm`
-        }`}
+        className={
+          activeTab === 'command-center' ? 'flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden' : LAB_WORKFLOW_QUEUE_SHELL
+        }
       >
         <div
           className={`flex-1 flex flex-col min-h-0 overflow-hidden ${

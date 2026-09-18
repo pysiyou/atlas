@@ -42,7 +42,7 @@ export const Card: React.FC<CardProps> = ({
   <div
     className={cn(
       SURFACE.raised,
-      `${RADIUS.card} duration-200`,
+      `${RADIUS.surface} duration-200`,
       PADDING_CLASSES[padding],
       BOX_VARIANT_CLASSES[variant],
       hover && 'cursor-pointer',

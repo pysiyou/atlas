@@ -206,13 +206,19 @@
   --color-id-secondary: var(--id-color-secondary);
 
   /* ═══════════════════════════════════════════════════════════════════
-     RADIUS (rounded-control/card/overlay/notice/pill + button aliases)
+     RADIUS — primitives + semantic roles (override --radius-* in theme CSS)
      ═══════════════════════════════════════════════════════════════════ */
   --radius-control: var(--radius-control);
   --radius-card: var(--radius-card);
   --radius-overlay: var(--radius-overlay);
+  --radius-shell: var(--radius-shell);
   --radius-notice: var(--radius-notice);
   --radius-pill: var(--radius-pill);
+  --radius-field: var(--radius-field);
+  --radius-menu: var(--radius-menu);
+  --radius-menu-item: var(--radius-menu-item);
+  --radius-surface: var(--radius-surface);
+  --radius-workspace: var(--radius-workspace);
   --radius-button: var(--button-radius);
   --radius-button-square: var(--button-radius-square);
   --radius-button-circle: var(--button-radius-circle);

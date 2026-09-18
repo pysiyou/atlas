@@ -2,7 +2,7 @@
  * Command center shared layout, surface, and tone styles.
  */
 import { PANEL_VARIANTS } from '@/components/surfaces/Panel';
-import { TONE, TYPE } from '@/components/theme/recipes';
+import { PANEL, TONE, TYPE } from '@/components/theme/recipes';
 import type { QueueAgeStats } from './commandCenterModel';
 
 export type CommandCenterKpiTone = 'brand' | 'success' | 'warning' | 'danger' | 'neutral';
@@ -40,8 +40,12 @@ export function resolveCommandCenterTextTone(
 
 export const COMMAND_CENTER_PANEL = {
   ...PANEL_VARIANTS.page,
-  page: 'flex-1 min-h-0 min-w-0 overflow-hidden bg-surface-page p-2',
+  page: 'flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-surface-page p-2',
 } as const;
+
+/** Top pipeline / KPI strip — aligned with lab workflow queue shell radius. */
+export const COMMAND_CENTER_PIPELINE_STRIP =
+  `${PANEL.raisedShadowSm} shrink-0 px-3 py-2` as const;
 
 const COMMAND_CENTER_MICRO_LABEL =
   'font-light uppercase leading-tight tracking-wide text-2xs' as const;

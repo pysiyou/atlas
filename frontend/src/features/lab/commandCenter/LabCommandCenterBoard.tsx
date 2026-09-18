@@ -7,7 +7,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { ErrorAlert } from '@/components';
 import { errorAlertMessage } from '@/utils/feedback';
 import { invalidateCommandCenterQueries } from '@/lib/query/invalidate';
-import { COMMAND_CENTER_PANEL } from './commandCenterStyles';
+import { COMMAND_CENTER_PANEL, COMMAND_CENTER_PIPELINE_STRIP } from './commandCenterStyles';
 import { useLabCommandCenterViewModel } from './useLabCommandCenterViewModel';
 import { LivePipelineStrip } from './panels/LivePipelineStrip';
 import { TodaySnapshotPanel } from './panels/TodaySnapshotPanel';
@@ -55,7 +55,7 @@ export const LabCommandCenterBoard: React.FC = () => {
   return (
     <div className={COMMAND_CENTER_PANEL.page}>
       <div className="flex h-full min-h-0 flex-col gap-2">
-        <div className="shrink-0 rounded border border-border-default bg-surface px-3 py-2 shadow-sm">
+        <div className={COMMAND_CENTER_PIPELINE_STRIP}>
           <LivePipelineStrip
             counts={board.counts}
             queueAge={board.queueAge}

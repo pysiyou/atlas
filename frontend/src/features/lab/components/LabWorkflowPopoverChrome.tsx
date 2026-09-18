@@ -11,7 +11,8 @@ import React, { type ReactNode } from 'react';
 import { Button, FooterInfo, Icon, DialogHeader, DialogFooter } from '@/components';
 import { MODULE_ICONS } from '@/config/icons';
 import { ICONS } from '@/config/icons';
-import { SURFACE, TONE, RADIUS } from '@/components/theme/recipes';
+import { cn } from '@/utils';
+import { MENU_ITEM, TONE } from '@/components/theme/recipes';
 
 interface LabWorkflowPopoverChromeProps {
   /** Main title displayed in the header */
@@ -60,7 +61,7 @@ export const LabWorkflowPopoverChrome: React.FC<LabWorkflowPopoverChromeProps> =
   children,
 }) => {
   return (
-    <div className={`w-90 md:w-96 ${SURFACE.raised} ${RADIUS.overlay} shadow-xl overflow-hidden flex flex-col max-h-[600px]`}>
+    <div className="flex w-90 md:w-96 max-h-[600px] min-w-0 flex-col overflow-hidden">
       <DialogHeader
         size="popover"
         title={title}
@@ -158,11 +159,13 @@ export const RadioCard: React.FC<RadioCardProps> = ({
           onClick();
         }
       }}
-      className={`
-        relative flex p-3 rounded border border-border-default bg-surface hover:border-border-strong transition-colors duration-200
-        ${align === 'center' ? 'items-center' : 'items-start'}
-        ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-      `}
+      className={cn(
+        'relative flex p-3 bg-surface',
+        MENU_ITEM.base,
+        MENU_ITEM.interactive,
+        align === 'center' ? 'items-center' : 'items-start',
+        disabled && 'opacity-50 cursor-not-allowed',
+      )}
       onClick={handleClick}
       title={disabled ? disabledReason : undefined}
     >

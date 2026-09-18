@@ -66,13 +66,46 @@ export const SURFACE = {
   infoWell: TONE.info.well,
 } as const;
 
-/** Geometry roles from live usage — do not unify Panel vs Card. */
+/**
+ * Semantic geometry — Tailwind classes map to CSS vars in semantic-light.css.
+ * Themes override --radius-field | menu | menu-item | surface | workspace (not primitives directly).
+ */
 export const RADIUS = {
-  control: 'rounded-control',
-  card: 'rounded-card',
-  overlay: 'rounded-overlay',
+  field: 'rounded-field',
+  menu: 'rounded-menu',
+  menuItem: 'rounded-menu-item',
+  surface: 'rounded-surface',
+  workspace: 'rounded-workspace',
   notice: 'rounded-notice',
   pill: 'rounded-pill',
+  /** @deprecated use field */
+  control: 'rounded-field',
+  /** @deprecated use surface */
+  card: 'rounded-surface',
+  /** @deprecated use menu */
+  overlay: 'rounded-menu',
+  /** @deprecated use workspace */
+  shell: 'rounded-workspace',
+} as const;
+
+/** Floating menus (popover/modal) — single shell recipe. */
+export const OVERLAY = {
+  shell: `${SURFACE.raised} ${RADIUS.menu} overflow-hidden`,
+  shellShadowLg: `${SURFACE.raised} ${RADIUS.menu} overflow-hidden shadow-lg`,
+  shellShadowXl: `${SURFACE.raised} ${RADIUS.menu} overflow-hidden shadow-xl`,
+} as const;
+
+/** In-page raised panels (tables, lab queue, command center strip). */
+export const PANEL = {
+  raised: `${SURFACE.raised} ${RADIUS.surface} overflow-hidden`,
+  raisedShadowSm: `${SURFACE.raised} ${RADIUS.surface} overflow-hidden shadow-sm`,
+} as const;
+
+/** Selectable rows/cards inside popovers and filter menus. */
+export const MENU_ITEM = {
+  base: `${SURFACE.raised} ${RADIUS.menuItem} border border-border-default`,
+  interactive:
+    'hover:border-border-strong transition-colors duration-200 cursor-pointer',
 } as const;
 
 export const CONTROL = {

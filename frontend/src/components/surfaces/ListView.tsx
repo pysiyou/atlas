@@ -9,7 +9,7 @@ import { EmptyState, PageHeader } from '@/components';
 import { ErrorAlert } from '@/components/loaders/ErrorAlert';
 import { EMPTY_ICON_SEARCH, DEFAULT_EMPTY_DESCRIPTION_SEARCH } from '@/utils/constants';
 import type { ListViewPaginationConfig, PaginationConfig, SortConfig } from '@/utils/table';
-import { RADIUS, SURFACE } from '@/components/theme/recipes';
+import { PANEL } from '@/components/theme/recipes';
 
 type TableDataItem = Record<string, unknown> | object;
 
@@ -83,7 +83,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
   const resolvedPagination = normalizePagination(pagination, pageSize, pageSizeOptions);
 
   return (
-    <div className={`min-h-0 flex-1 flex flex-col p-2 gap-2 overflow-hidden ${className}`}>
+    <div className={`h-full min-h-0 flex flex-col overflow-hidden p-2 gap-2 ${className}`.trim()}>
       {(title != null || headerActions != null) && (
         <PageHeader variant="bar" title={title ?? ''} subtitle={subtitle} actions={headerActions} />
       )}
@@ -95,7 +95,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
           className="shrink-0"
         />
       )}
-      <div className={`${SURFACE.raised} ${RADIUS.overlay} shadow-sm flex flex-col flex-1 min-h-0 overflow-hidden`}>
+      <div className={`${PANEL.raisedShadowSm} flex flex-col flex-1 min-h-0 overflow-hidden`}>
         {filters}
         <div className="flex-1 min-h-0 flex flex-col">
           <Table

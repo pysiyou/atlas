@@ -122,6 +122,7 @@ export const ReportList: React.FC = () => {
 
   return (
     <>
+      <div className="flex h-full min-h-0 flex-col">
       <ListView
         items={filteredTests}
         viewConfig={reportTableConfig}
@@ -143,6 +144,7 @@ export const ReportList: React.FC = () => {
         pagination={{ mode: 'client', pageSize: 20, pageSizeOptions: DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL }}
         defaultSort={{ key: 'orderDate', direction: 'desc' }}
       />
+      </div>
 
       {previewTest && (
         <ReportPreviewModal

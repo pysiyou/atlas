@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { Badge } from '@/components';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { TONE, TYPE, RADIUS } from '@/components/theme/recipes';
+import { TONE, TYPE, OVERLAY } from '@/components/theme/recipes';
 
 
 interface AttemptIndicatorProps {
@@ -58,7 +58,7 @@ export const AttemptIndicator: React.FC<AttemptIndicatorProps> = ({
 
       {/* Hover tooltip */}
       {showTooltip && (
-        <div className={`absolute top-full right-0 mt-1 z-50 w-64 bg-surface-elev border border-border-default ${RADIUS.overlay} shadow-xl p-3`}>
+        <div className={`absolute top-full right-0 mt-1 z-50 w-64 p-3 ${OVERLAY.shellShadowXl}`}>
           <div className="space-y-1">
             <p className={`${TYPE.value} font-normal`}>
               {typeLabel} Attempt #{attemptNumber}

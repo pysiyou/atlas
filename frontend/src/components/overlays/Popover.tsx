@@ -33,6 +33,7 @@ import {
 } from '@floating-ui/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils';
+import { OVERLAY } from '@/components/theme/recipes';
 
 /**
  * Placement options for the popover
@@ -116,9 +117,10 @@ const FloatingContent: React.FC<FloatingContentProps> = ({
         exit={{ opacity: 0, y: -10, scale: 0.95 }}
         transition={{ duration }}
         className={cn(
-          'bg-surface text-text-primary border border-border-default shadow-lg rounded overflow-hidden flex flex-col h-full',
+          OVERLAY.shellShadowLg,
+          'text-text-primary flex flex-col h-full min-w-0',
           noBorder && 'border-0',
-          className
+          className,
         )}
       >
         <div className="hide-scrollbar h-full flex flex-col">

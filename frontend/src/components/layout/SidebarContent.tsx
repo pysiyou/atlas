@@ -38,7 +38,7 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
       variants={sidebarVariants}
       animate={collapsed ? 'collapsed' : 'expanded'}
       initial={false}
-      className="bg-surface-sidebar border-r border-border-default flex flex-col overflow-hidden"
+      className="bg-surface-sidebar flex flex-col overflow-hidden"
       style={{ padding: '0' }}
       onClick={e => e.stopPropagation()}
     >

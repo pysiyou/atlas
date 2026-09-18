@@ -13,7 +13,7 @@ import { getFeedback } from '@/utils/feedback';
 import { QUALITY_ISSUE_POPOVER_LAYOUT, QUALITY_ISSUE_POPOVER_COPY } from '../constants/qualityIssuePopoverCopy';
 import { LAB_CONFIG } from '@/features/lab/constants';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
-import { SURFACE, TYPE, RADIUS } from '@/components/theme/recipes';
+import { TYPE, RADIUS } from '@/components/theme/recipes';
 
 
 /** Skeleton that mirrors LabWorkflowPopoverChrome layout (header, body, footer) to avoid layout shift when options load. */
@@ -21,7 +21,7 @@ export const QualityIssuePopoverLoadingView: React.FC = () => (
   <div
     className={cn(
       QUALITY_ISSUE_POPOVER_LAYOUT.widthClass,
-      `${SURFACE.raised} ${RADIUS.overlay} shadow-xl overflow-hidden flex flex-col max-h-[600px]`
+      'flex max-h-[600px] min-w-0 flex-col overflow-hidden',
     )}
     aria-busy="true"
     aria-label={QUALITY_ISSUE_POPOVER_COPY.loading.message}
@@ -71,10 +71,7 @@ export const QualityIssuePopoverErrorView: React.FC<QualityIssuePopoverErrorView
   onCancel,
 }) => (
   <div
-    className={cn(
-      QUALITY_ISSUE_POPOVER_LAYOUT.widthClass,
-      `${SURFACE.raised} ${RADIUS.overlay} shadow-xl p-4 space-y-4`
-    )}
+    className={cn(QUALITY_ISSUE_POPOVER_LAYOUT.widthClass, 'flex flex-col gap-4 p-4 min-w-0')}
   >
     <Alert variant="danger" className="py-2">
       <p className="font-normal text-xs">{getFeedback('lab.qualityIssue.options.loadFailed').title}</p>
