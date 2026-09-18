@@ -38,14 +38,14 @@ export const AffiliationSection: React.FC<
     <div className="space-y-6">
       {/* Existing Affiliation Info */}
       {hasExistingAffiliation && (
-        <div className={`${SURFACE.raised} ${RADIUS.overlay} p-5 space-y-4 shadow-sm`}>
+        <div className={`${SURFACE.raised} ${RADIUS.overlay} p-space-5 space-y-4 shadow-sm`}>
           <div className="flex items-center justify-between pb-3 border-b border-border-subtle">
             <span className="text-sm font-normal text-text-primary">Current Affiliation</span>
             <Badge variant={isActive ? 'success' : 'danger'} size="xs" className="font-normal">
               {isActive ? 'Active' : 'Expired'}
             </Badge>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-layout-section">
             <div className="space-y-1">
               <span className={FORM_FIELD_LABEL}>
                 Assurance Number
@@ -88,7 +88,7 @@ export const AffiliationSection: React.FC<
 
       {/* New/Renewal Affiliation Toggle */}
       {!hasExistingAffiliation && (
-        <div className={`p-4 ${SURFACE.recessed} ${RADIUS.overlay}`}>
+        <div className={`p-panel ${SURFACE.recessed} ${RADIUS.overlay}`}>
           <Checkbox
             id="hasAffiliation"
             name="hasAffiliation"

@@ -55,7 +55,7 @@ function ReceiptHeader({
     <div
       className={cn(
         pad,
-        isDetailed ? 'py-4' : 'py-2.5',
+        isDetailed ? 'py-space-4' : 'py-2.5',
         'border-b border-dashed border-border-strong',
         isDetailed && 'bg-surface-page',
       )}
@@ -209,7 +209,7 @@ function ReceiptItems({
         : 'flex-1 min-h-0 overflow-y-auto';
 
   return (
-    <div className={cn(pad, isDetailed ? 'py-4' : 'py-2', listMax)}>
+    <div className={cn(pad, isDetailed ? 'py-space-4' : 'py-2', listMax)}>
       {tests.length > 0 ? (
         <ul className={isDetailed ? 'space-y-2.5' : 'space-y-1.5'}>
           {tests.map((test, idx) => (
@@ -245,7 +245,7 @@ export function ReceiptTotal({
       <div
         className={cn(
           pad,
-          isDetailed || !isCompact ? 'py-4' : 'py-2.5',
+          isDetailed || !isCompact ? 'py-space-4' : 'py-2.5',
           'flex justify-between items-center shrink-0',
           isDetailed && 'bg-surface-page',
         )}
@@ -282,7 +282,7 @@ export const OrderReceipt: React.FC<OrderReceiptProps> = ({
 }) => {
   const activeTests = getActiveTests(order.tests ?? []);
   const activeTotal = getActiveTotal(order.tests ?? []);
-  const pad = variant === 'detailed' ? 'px-6' : variant === 'compact' ? 'px-3' : 'px-4';
+  const pad = variant === 'detailed' ? 'px-table-cell-x-default' : variant === 'compact' ? 'px-3' : 'px-space-4';
 
   return (
     <div className={cn('overflow-hidden flex flex-col min-h-0', receiptShellClass(variant))}>

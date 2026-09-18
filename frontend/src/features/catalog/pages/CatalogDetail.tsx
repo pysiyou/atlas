@@ -18,6 +18,7 @@ import { CATALOG_DETAIL_SKELETON_SECTIONS } from '../config/CatalogDetailSkeleto
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import { formatDateTime } from '@/utils';
 import { formatArrayWithFallback, formatBoolean, capitalize } from '@/utils';
+import { SPACING } from '@/components/theme/recipes';
 import { feedbackTitle } from '@/utils/feedback/copy';
 
 /**
@@ -188,7 +189,7 @@ export const CatalogDetail: React.FC = () => {
 
   return (
     <DetailPageShell header={<PageHeader title={test.name} subtitle={test.code} />}>
-      <BalancedColumnsLayout tables={tables} columns={getColumnCount()} className="pb-6" />
+      <BalancedColumnsLayout tables={tables} columns={getColumnCount()} className={SPACING.pbScrollEnd} />
     </DetailPageShell>
   );
 };

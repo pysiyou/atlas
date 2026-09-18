@@ -18,8 +18,8 @@ export const ErrorFallback: React.FC<ErrorFallbackProps> = ({
   onRetry,
   homeHref = '/',
 }) => (
-  <div className="min-h-screen flex items-center justify-center bg-surface-page px-4">
-    <div className={`max-w-md w-full bg-surface ${RADIUS.overlay} shadow-lg p-6`}>
+  <div className="min-h-screen flex items-center justify-center bg-surface-page px-space-4">
+    <div className={`max-w-md w-full bg-surface ${RADIUS.overlay} shadow-lg p-space-6`}>
       <div className="flex items-center justify-start gap-3">
         <div className={`flex shrink-0 items-center justify-center w-12 h-12 ${RADIUS.pill}`}>
           <Icon name={ICONS.actions.alertCircle} className={`w-6 h-6 ${TONE.danger.fg}`} />

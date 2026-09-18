@@ -70,7 +70,101 @@ export const SURFACE = {
 export const WORKSPACE = {
   page:
     'h-full min-h-0 flex flex-col overflow-hidden min-w-0 p-workspace-page-inset gap-workspace-page-gap',
+  wellGutter: 'pr-workspace-well-gutter pb-workspace-well-gutter pl-0 pt-0',
   contentInset: 'p-workspace-page-inset',
+} as const;
+
+/** Spacing utilities — class strings only defined here (ESLint). */
+export const SPACING = {
+  gapHairline: 'gap-space-0-5',
+  gapTight: 'gap-space-1',
+  gapCompact: 'gap-space-1-5',
+  gapInline: 'gap-space-2',
+  gapRelaxed: 'gap-space-3',
+  gapSection: 'gap-layout-section',
+  gapStack: 'gap-layout-stack',
+  pPanel: 'p-panel',
+  pxPanelHeader: 'px-panel-header-x',
+  pyOverlayBody: 'py-overlay-body-y',
+  pxOverlayBody: 'px-overlay-body-x',
+  pyFilterBar: 'py-overlay-filter-y lg:py-overlay-filter-y-lg',
+  pxFilterBar: 'px-overlay-filter-x lg:px-overlay-filter-x-lg',
+  pbScrollEnd: 'pb-layout-scroll-end',
+  pxTableCellCompact: 'px-table-cell-x-compact',
+  pxTableCellDefault: 'px-table-cell-x-default',
+  pxTableCellComfortable: 'px-table-cell-x-comfortable',
+  pyTableCellCompact: 'py-table-cell-y-compact',
+  pyTableCellDefault: 'py-table-cell-y-default',
+  pyTableCellComfortable: 'py-table-cell-y-comfortable',
+  stackCompact: 'space-y-space-1',
+  stackNormal: 'space-y-space-2',
+  stackRelaxed: 'space-y-space-3',
+  pxSpace2: 'px-space-2',
+  pxSpace3: 'px-space-3',
+  pxSpace4: 'px-space-4',
+  pySpace2: 'py-space-2',
+  pSpace2: 'p-space-2',
+  ptSpace1: 'pt-space-1',
+} as const;
+
+/** List filter bar + responsive entity filters. */
+export const FILTER = {
+  barInset: `w-full ${SPACING.pxFilterBar} ${SPACING.pyFilterBar}`,
+  barGridDesktop: `grid grid-cols-4 ${SPACING.gapRelaxed} lg:gap-layout-section items-center w-full`,
+  barGridCompact: `grid grid-cols-4 ${SPACING.gapInline} items-center w-full`,
+  mobileGrid: `grid grid-cols-[1fr_auto] ${SPACING.gapInline} items-center w-full`,
+  mobileTwoCol: `grid grid-cols-2 ${SPACING.gapInline} items-center w-full`,
+  modalBody: 'px-space-5 py-space-4',
+  barInsetCompact: 'px-space-3 py-space-2 w-full',
+  chipRow: `flex flex-wrap ${SPACING.gapInline}`,
+} as const;
+
+/** Page header row spacing (inline + chrome). */
+export const PAGE_HEADER = {
+  barRow: `w-full flex items-center justify-between ${SPACING.gapSection} flex-nowrap min-w-0`,
+  barInline: `shrink-0 h-chrome-header-band min-h-chrome-header-band max-h-chrome-header-band py-space-2 px-space-4`,
+  barActions: `flex items-center ${SPACING.gapInline} shrink-0`,
+  detailRow: `flex items-center justify-between shrink-0 ${SPACING.gapRelaxed} flex-nowrap w-full min-w-0`,
+  detailMain: `flex items-center ${SPACING.gapRelaxed} min-w-0 flex-1 flex-wrap`,
+  detailTitleRow: `flex items-center ${SPACING.gapRelaxed} flex-wrap`,
+  detailBadges: `flex items-center ${SPACING.gapInline} flex-wrap`,
+  detailActions: `shrink-0 flex items-center ${SPACING.gapInline}`,
+} as const;
+
+/** Shared page layout compositions (detail grids, scroll stacks). */
+export const LAYOUT = {
+  detailScroll:
+    'flex-1 flex flex-col gap-layout-stack overflow-y-auto pb-layout-scroll-end bg-surface-page',
+  detailGrid: 'grid gap-layout-section',
+  detailGrid2: 'grid grid-cols-2 gap-layout-section',
+  detailGrid3: 'grid grid-cols-3 gap-layout-section',
+  detailGridRows2: 'grid grid-rows-[auto_auto] gap-layout-section w-full pb-layout-scroll-end',
+  detailGridRowsSplit:
+    'flex-1 grid grid-rows-[1fr_1fr] gap-layout-section min-h-0 h-full overflow-hidden',
+  detailGrid3Rows2:
+    'flex-1 grid grid-cols-3 grid-rows-[1fr_1fr] gap-layout-section min-h-0 h-full',
+  balancedColumns: 'grid gap-layout-section',
+  balancedColumnStack: 'flex flex-col gap-layout-section',
+} as const;
+
+/** Data table cell padding by density. */
+export const TABLE_CELL = {
+  compact: `${SPACING.pxTableCellCompact} ${SPACING.pyTableCellCompact}`,
+  default: `${SPACING.pxTableCellDefault} ${SPACING.pyTableCellDefault}`,
+  comfortable: `${SPACING.pxTableCellComfortable} ${SPACING.pyTableCellComfortable}`,
+} as const;
+
+/** In-page panel geometry (page + lab variants). */
+export const PANEL_LAYOUT = {
+  pageHeader:
+    'shrink-0 h-panel-header min-h-panel-header max-h-panel-header px-panel-header-x border-b border-border-default flex items-center gap-space-3 overflow-hidden',
+  pageHeaderBetween:
+    'shrink-0 h-panel-header min-h-panel-header max-h-panel-header px-panel-header-x border-b border-border-default flex items-center justify-between gap-space-3 overflow-hidden',
+  pageBodyPadding: SPACING.pPanel,
+  labHeader:
+    'shrink-0 px-space-2 py-space-2 border-b border-border-default flex items-center gap-space-2',
+  labHeaderBetween:
+    'shrink-0 px-space-2 py-space-2 border-b border-border-default flex items-center justify-between gap-space-2',
 } as const;
 
 /**
@@ -103,6 +197,29 @@ export const RADIUS = {
   shell: 'rounded-workspace',
 } as const;
 
+/** Empty state layout. */
+export const EMPTY = {
+  containerCompact: `flex flex-col items-center justify-center py-space-6 px-space-4 text-center`,
+  containerDefault: 'flex flex-col items-center justify-center py-12 px-space-6 text-center',
+  iconWrapCompact: `w-10 h-10 ${RADIUS.pill} bg-surface-hover flex items-center justify-center mb-space-3`,
+  iconWrapDefault: `w-16 h-16 ${RADIUS.pill} bg-surface-hover flex items-center justify-center mb-space-4`,
+} as const;
+
+/** Modal / dialog chrome. */
+export const DIALOG = {
+  modalHeader:
+    'px-overlay-dialog-footer-x py-space-3-5 border-b border-border-default bg-surface flex items-center justify-between shrink-0',
+  popoverHeader:
+    `${SPACING.pxSpace4} py-space-3 bg-surface-page border-b border-border-subtle flex items-start justify-between shrink-0`,
+  modalFooter:
+    `flex items-center justify-between ${SPACING.gapRelaxed} px-overlay-dialog-footer-x py-overlay-dialog-footer-y border-t border-border-default bg-surface shrink-0 shadow-[var(--shadow-footer)]`,
+  popoverFooter:
+    `${SPACING.pSpace2} bg-surface-page border-t border-border-subtle flex items-center justify-between ${SPACING.gapInline} shrink-0`,
+  modalTitleRow: `flex items-start ${SPACING.gapRelaxed} min-w-0`,
+  modalBadges: `flex items-center ${SPACING.gapInline} ${SPACING.ptSpace1}`,
+  headerActions: `flex ${SPACING.gapInline} shrink-0`,
+} as const;
+
 /** Primitive token references — lengths live only in primitives.css. */
 export const CHROME_RAIL_VAR = 'var(--chrome-rail)' as const;
 export const CHROME_SIDEBAR_EXPANDED_VAR = 'var(--chrome-sidebar-expanded)' as const;
@@ -120,14 +237,14 @@ export const CHROME = {
   headerBand:
     'flex h-chrome-header-band min-h-chrome-header-band w-full shrink-0 items-center',
   topHeaderShell:
-    'shrink-0 bg-surface-sidebar pl-chrome-header-gutter pr-3 lg:pr-5',
+    'shrink-0 bg-surface-sidebar pl-chrome-header-gutter pr-chrome-header-trailing lg:pr-chrome-header-trailing-lg',
   topHeaderRow:
     'flex h-chrome-header-band min-h-chrome-header-band w-full items-center',
   pageHeaderChrome:
-    'flex h-full w-full min-w-0 items-center pr-2',
+    'flex h-full w-full min-w-0 items-center pr-chrome-page-header-trailing',
   navScroll:
     'flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto py-chrome-nav-menu-gutter hide-scrollbar',
-  navList: 'flex flex-col gap-1.5',
+  navList: `flex flex-col ${SPACING.gapCompact}`,
   navItem:
     'group/nav relative flex min-h-chrome-nav-indicator w-full items-stretch text-left',
   navHit:
@@ -148,14 +265,14 @@ export const CHROME = {
   clipPane:
     'chrome-clip min-w-0 flex-1 overflow-hidden whitespace-nowrap transition-opacity duration-200 ease-out',
   sectionTitle:
-    'chrome-section-title shrink-0 overflow-hidden pl-chrome-rail pr-3 pt-0 pb-2 min-h-6 text-xxs font-medium uppercase tracking-wide text-text-secondary leading-none transition-opacity duration-200 ease-out',
+    `chrome-section-title shrink-0 overflow-hidden pl-chrome-rail pr-space-3 pt-0 pb-space-2 min-h-6 text-xxs font-medium uppercase tracking-wide text-text-secondary leading-none transition-opacity duration-200 ease-out`,
   navLabel:
-    'chrome-clip min-w-0 flex-1 truncate pr-3 text-sm font-medium whitespace-nowrap transition-opacity duration-200 ease-out',
+    'chrome-clip min-w-0 flex-1 truncate pr-space-3 text-sm font-medium whitespace-nowrap transition-opacity duration-200 ease-out',
   navTooltip:
     `pointer-events-none absolute left-full z-50 ml-2 hidden whitespace-nowrap ${RADIUS.pill} bg-brand px-2.5 py-1 text-xs font-medium text-on-brand shadow-sm group-data-[collapsed=true]/chrome:group-hover/nav:block`,
   footerDivider: 'chrome-nav-split',
   footerDividerRule: 'chrome-nav-split-line',
-  footerBlock: 'flex shrink-0 flex-col gap-3 pb-chrome-nav-menu-gutter',
+  footerBlock: `flex shrink-0 flex-col ${SPACING.gapRelaxed} pb-chrome-nav-menu-gutter`,
 } as const;
 
 /** Floating menus (popover/modal) — single shell recipe. */
@@ -193,9 +310,9 @@ const BADGE_TYPE = '[font-size:var(--font-size-badge)]';
 /** Chip geometry (type scale only). Color: badgeStyles + useBadgeAppearance() + semantic --badge / --*-fg. */
 export const BADGE = {
   size: {
-    xs: `px-2 py-1 ${BADGE_TYPE} gap-1.5 leading-none`,
-    sm: `px-2 py-1 ${BADGE_TYPE} gap-1.5 leading-none`,
-    md: `px-3 py-1.5 ${BADGE_TYPE} gap-2 leading-none`,
+    xs: `px-space-2 py-space-1 ${BADGE_TYPE} ${SPACING.gapCompact} leading-none`,
+    sm: `px-space-2 py-space-1 ${BADGE_TYPE} ${SPACING.gapCompact} leading-none`,
+    md: `px-space-3 py-space-1-5 ${BADGE_TYPE} ${SPACING.gapInline} leading-none`,
   },
   icon: {
     xs: 'w-3.5 h-3.5',
@@ -203,7 +320,7 @@ export const BADGE = {
     md: 'w-4 h-4',
   },
   filterChip: {
-    xs: `px-3 py-1 ${BADGE_TYPE} gap-1.5 leading-none`,
-    sm: `px-3 py-1.5 ${BADGE_TYPE} gap-1.5 leading-none`,
+    xs: `px-space-3 py-space-1 ${BADGE_TYPE} ${SPACING.gapCompact} leading-none`,
+    sm: `px-space-3 py-space-1-5 ${BADGE_TYPE} ${SPACING.gapCompact} leading-none`,
   },
 } as const;

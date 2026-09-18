@@ -94,7 +94,7 @@ export const SkeletonTableRow: React.FC<{
   columns?: number;
   className?: string;
 }> = ({ columns = 5, className = '' }) => (
-  <div className={`flex items-center gap-4 py-4 px-6 border-b border-border-default ${className}`}>
+  <div className={`flex items-center gap-layout-section py-space-4 px-table-cell-x-default border-b border-border-default ${className}`}>
     {Array.from({ length: columns }).map((_, index) => (
       <div key={index} className="flex-1">
         <Skeleton height={16} width={index === 0 ? '60%' : '80%'} />
@@ -112,8 +112,8 @@ export const SkeletonCard: React.FC<{
   showAvatar?: boolean;
   lines?: number;
 }> = ({ className = '', showAvatar = true, lines = 3 }) => (
-  <div className={`${SURFACE.raised} ${RADIUS.card} shadow-sm p-4 ${className}`}>
-    <div className="flex items-start gap-4">
+  <div className={`${SURFACE.raised} ${RADIUS.card} shadow-sm p-panel ${className}`}>
+    <div className="flex items-start gap-layout-section">
       {showAvatar && <SkeletonAvatar size="md" />}
       <div className="flex-1">
         <Skeleton height={20} width="40%" className="mb-2" />
@@ -132,7 +132,7 @@ export const SkeletonInfoSection: React.FC<{
   className?: string;
 }> = ({ rows = 5, layout = 'column', className = '' }) => {
   const containerClass =
-    layout === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 gap-5' : 'flex flex-col gap-3';
+    layout === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 gap-layout-stack' : 'flex flex-col gap-3';
   return (
     <div className={`${containerClass} ${className}`}>
       {Array.from({ length: rows }).map((_, i) => (
@@ -155,7 +155,7 @@ export const SkeletonList: React.FC<{
 }> = ({ rows = 5, className = '' }) => (
   <div className={`space-y-4 ${className}`}>
     {Array.from({ length: rows }).map((_, index) => (
-      <div key={index} className="flex items-center gap-4">
+      <div key={index} className="flex items-center gap-layout-section">
         <SkeletonAvatar size="sm" />
         <div className="flex-1">
           <Skeleton height={16} width="30%" className="mb-2" />
@@ -173,7 +173,7 @@ export const SkeletonList: React.FC<{
 export const SkeletonPage: React.FC<{
   className?: string;
 }> = ({ className = '' }) => (
-  <div className={`p-6 space-y-6 ${className}`}>
+  <div className={`p-space-6 space-y-6 ${className}`}>
     {/* Header */}
     <div className="flex items-center justify-between">
       <Skeleton height={32} width={200} />
@@ -181,7 +181,7 @@ export const SkeletonPage: React.FC<{
     </div>
 
     {/* Filters */}
-    <div className="flex gap-4">
+    <div className="flex gap-layout-section">
       <Skeleton height={40} width={300} />
       <Skeleton height={40} width={150} />
       <Skeleton height={40} width={150} />
@@ -190,7 +190,7 @@ export const SkeletonPage: React.FC<{
     {/* Table */}
     <div className={`${SURFACE.raised} ${RADIUS.card} shadow-sm`}>
       {/* Table header */}
-      <div className="flex items-center gap-4 py-3 px-6 border border-border-default border-b bg-surface-page">
+      <div className="flex items-center gap-layout-section py-space-3 px-table-cell-x-default border border-border-default border-b bg-surface-page">
         {Array.from({ length: 6 }).map((_, index) => (
           <div key={index} className="flex-1">
             <Skeleton height={12} width="60%" />

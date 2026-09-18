@@ -5,6 +5,8 @@
 
 import React from 'react';
 import { Panel, IconButton } from '@/components';
+import { LAYOUT } from '@/components/theme/recipes';
+import { cn } from '@/utils';
 import type { Patient, Order } from '@/types';
 import { GeneralInfoSection } from '../components/GeneralInfoSection';
 import { MedicalHistorySectionDisplay } from '../components/MedicalHistorySectionDisplay';
@@ -29,7 +31,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
   onNewOrder,
 }) => {
   return (
-    <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6 bg-surface-page">
+    <div className={LAYOUT.detailScroll}>
       <Panel title="General Info" className="shrink-0" scroll="visible">
         <GeneralInfoSection patient={patient} layout="grid" />
       </Panel>
@@ -65,7 +67,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
   onNewOrder,
 }) => {
   return (
-    <div className="grid grid-cols-2 gap-4 w-full pb-6">
+    <div className={cn(LAYOUT.detailGrid2, 'w-full pb-layout-scroll-end')}>
       <Panel title="General Info" scroll="visible">
         <GeneralInfoSection patient={patient} layout="column" />
       </Panel>
@@ -103,7 +105,7 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
 }) => {
   return (
     <div
-      className="flex-1 grid grid-cols-3 grid-rows-[1fr_1fr] gap-4 min-h-0 h-full"
+      className={LAYOUT.detailGrid3Rows2}
       style={{ height: '100%', maxHeight: '100%', overflow: 'hidden' }}
     >
       <Panel title="General Info" className="min-h-0" scroll="auto">

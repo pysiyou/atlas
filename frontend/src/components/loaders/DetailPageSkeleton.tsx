@@ -7,7 +7,8 @@ import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import { useBreakpoint } from '@/hooks/useBreakpoint';
 import { Panel, type PanelPadding, type PanelScroll } from '@/components';
 import { Skeleton, SkeletonCard, SkeletonInfoSection, SkeletonTableRow } from './Skeleton';
-import { RADIUS } from '@/components/theme/recipes';
+import { LAYOUT, RADIUS, SPACING } from '@/components/theme/recipes';
+import { cn } from '@/utils';
 
 export interface DetailSkeletonSection {
   title: string;
@@ -82,7 +83,7 @@ function ResponsiveDetailSkeleton({
 
   if (isSmall) {
     return (
-      <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6 bg-surface-page">
+      <div className={LAYOUT.detailScroll}>
         {sections.map(section => (
           <SkeletonPanel
             key={section.title}
@@ -97,7 +98,7 @@ function ResponsiveDetailSkeleton({
 
   if (isMedium) {
     return (
-      <div className="grid grid-cols-2 gap-4 w-full pb-6">
+      <div className={cn(LAYOUT.detailGrid2, 'w-full pb-layout-scroll-end')}>
         {sections.map(section => (
           <SkeletonPanel
             key={section.title}
@@ -116,7 +117,7 @@ function ResponsiveDetailSkeleton({
 
   return (
     <div
-      className="flex-1 grid grid-cols-3 grid-rows-[1fr_1fr] gap-4 min-h-0 h-full"
+      className={LAYOUT.detailGrid3Rows2}
       style={{ height: '100%', maxHeight: '100%', overflow: 'hidden' }}
     >
       {sections.map(section => (
@@ -138,7 +139,7 @@ function BalancedGridSkeleton({ sections }: { sections: DetailSkeletonSection[] 
 
   return (
     <div
-      className="grid gap-4 pb-6"
+      className={cn(LAYOUT.balancedColumns, SPACING.pbScrollEnd)}
       style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
       aria-busy="true"
     >
@@ -154,14 +155,18 @@ function BalancedGridSkeleton({ sections }: { sections: DetailSkeletonSection[] 
 function WorkflowGridSkeleton({ cardCount }: { cardCount: number }) {
   return (
     <div className="h-full flex flex-col min-h-0" aria-busy="true">
-      <div className="shrink-0 px-4 py-3 border-b border-border-default bg-surface-page flex flex-wrap items-center gap-3">
+      <div
+        className={`shrink-0 ${SPACING.pxSpace4} py-space-3 border-b border-border-default bg-surface-page flex flex-wrap items-center ${SPACING.gapRelaxed}`}
+      >
         <Skeleton height={40} width={280} className={`${RADIUS.card}`} />
         <Skeleton height={36} width={120} className={`${RADIUS.card}`} />
         <Skeleton height={32} width={100} className={`${RADIUS.pill}`} />
         <Skeleton height={32} width={100} className={`${RADIUS.pill}`} />
         <Skeleton height={32} width={90} className={`${RADIUS.pill}`} />
       </div>
-      <div className="flex-1 min-h-0 overflow-y-auto p-6 grid gap-4 content-start">
+      <div
+        className={`flex-1 min-h-0 overflow-y-auto p-space-6 grid ${SPACING.gapSection} content-start`}
+      >
         {Array.from({ length: cardCount }).map((_, i) => (
           <SkeletonCard key={i} />
         ))}

@@ -18,8 +18,8 @@ const PADDING_CLASSES = {
   none: '',
   list: 'p-3',
   sm: 'p-3',
-  md: 'p-4',
-  lg: 'p-5',
+  md: 'p-panel',
+  lg: 'p-space-5',
 } as const;
 
 export interface CardProps {

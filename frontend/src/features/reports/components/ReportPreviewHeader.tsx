@@ -52,7 +52,7 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
 
   return (
     <div className="flex border-b border-border-default">
-      <div className="bg-surface-report p-6 shrink-0 space-y-2" style={{ width: '40%' }}>
+      <div className="bg-surface-report p-space-6 shrink-0 space-y-2" style={{ width: '40%' }}>
         <h2 className="text-2xl font-bold text-text-primary mb-3">{companyConfig.getName()}</h2>
         {companyConfig.getConfig().company.subtitle && (
           <p className={`${TYPE.value} font-normal`}>
@@ -74,7 +74,7 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
         </div>
       </div>
 
-      <div className="bg-surface p-4 flex-1">
+      <div className="bg-surface p-panel flex-1">
         <h1 className="text-base font-bold text-text-primary mb-2">
           {reportData.testResults.length > 0 ? (
             <>

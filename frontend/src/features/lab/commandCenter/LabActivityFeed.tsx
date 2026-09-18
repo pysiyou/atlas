@@ -77,7 +77,7 @@ export const LabActivityFeed: React.FC<LabActivityFeedProps> = ({
       events={events}
       interactiveEntities
       emptyMessage="No recent activity"
-      className="h-full px-4 py-2"
+      className="h-full px-space-4 py-2"
       footer={loadMoreFooter}
     />
   );

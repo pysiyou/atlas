@@ -32,7 +32,7 @@ export const QualityIssuePopoverLoadingView: React.FC = () => (
       subtitle={<Skeleton height={12} width="40%" className={`${RADIUS.card}`} />}
       actions={<Skeleton width={32} height={32} className={`${RADIUS.card} shrink-0`} />}
     />
-    <div className="p-4 space-y-4 overflow-y-auto flex-1">
+    <div className="p-panel space-y-4 overflow-y-auto flex-1">
       <div className="space-y-1.5">
         <Skeleton height={14} width="100%" className={`${RADIUS.card}`} />
         <Skeleton height={12} width="85%" className={`${RADIUS.card}`} />
@@ -71,7 +71,7 @@ export const QualityIssuePopoverErrorView: React.FC<QualityIssuePopoverErrorView
   onCancel,
 }) => (
   <div
-    className={cn(QUALITY_ISSUE_POPOVER_LAYOUT.widthClass, 'flex flex-col gap-4 p-4 min-w-0')}
+    className={cn(QUALITY_ISSUE_POPOVER_LAYOUT.widthClass, 'flex flex-col gap-layout-section p-panel min-w-0')}
   >
     <Alert variant="danger" className="py-2">
       <p className="font-normal text-xs">{getFeedback('lab.qualityIssue.options.loadFailed').title}</p>

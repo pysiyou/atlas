@@ -50,7 +50,7 @@ export function SidebarProfile({ currentUser, isCollapsed, onLogout }: SidebarPr
     >
       {({ close }) => (
         <div className="flex flex-col">
-          <div className="flex items-center gap-3 border-b border-border-default bg-surface-page px-3 py-3">
+          <div className="flex items-center gap-3 border-b border-border-default bg-surface-page px-3 py-space-3">
             <Avatar primaryText={currentUser.name} src={defaultAvatar} size="sm" avatarOnly />
             <div className="min-w-0 flex-1">
               <p className={`${TYPE.detailTitle} truncate`}>{currentUser.name}</p>

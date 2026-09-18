@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import { SPACING } from '@/components/theme/recipes';
 import type { Patient } from '@/types';
 import { DetailField } from '@/components/display/DetailField';
 import { formatPatientDetailDate, formatAddress } from '../utils/patientFormatters';
@@ -19,7 +20,9 @@ export const GeneralInfoSection: React.FC<GeneralInfoSectionProps> = ({
   layout = 'column',
 }) => {
   const containerClass =
-    layout === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 gap-5' : 'flex flex-col gap-3';
+    layout === 'grid'
+      ? 'grid grid-cols-1 sm:grid-cols-2 gap-layout-stack'
+      : `flex flex-col ${SPACING.gapRelaxed}`;
 
   return (
     <div className={containerClass}>

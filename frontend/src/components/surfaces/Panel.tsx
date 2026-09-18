@@ -4,7 +4,7 @@
 /* eslint-disable react-refresh/only-export-components -- single module: Panel + variant tokens */
 
 import React from 'react';
-import { RADIUS, SURFACE, TYPE } from '@/components/theme/recipes';
+import { PANEL_LAYOUT, RADIUS, SPACING, SURFACE, TYPE } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
 export type PanelVariant = 'page' | 'lab';
@@ -14,9 +14,9 @@ export type PanelSpacing = 'none' | 'compact' | 'normal' | 'relaxed';
 
 export const PANEL_SPACING: Record<PanelSpacing, string> = {
   none: '',
-  compact: 'space-y-1',
-  normal: 'space-y-2',
-  relaxed: 'space-y-3',
+  compact: SPACING.stackCompact,
+  normal: SPACING.stackNormal,
+  relaxed: SPACING.stackRelaxed,
 };
 
 export const PANEL_SCROLL: Record<Exclude<PanelScroll, 'default'>, string> = {
@@ -27,28 +27,24 @@ export const PANEL_SCROLL: Record<Exclude<PanelScroll, 'default'>, string> = {
 export const PANEL_VARIANTS = {
   page: {
     shell: `h-full ${SURFACE.raised} ${RADIUS.field} shadow-sm overflow-hidden flex flex-col`,
-    header:
-      'shrink-0 h-10 min-h-10 max-h-10 px-4 border-b border-border-default flex items-center gap-3 overflow-hidden',
-    headerBetween:
-      'shrink-0 h-10 min-h-10 max-h-10 px-4 border-b border-border-default flex items-center justify-between gap-3 overflow-hidden',
+    header: PANEL_LAYOUT.pageHeader,
+    headerBetween: PANEL_LAYOUT.pageHeaderBetween,
     title: `m-0 truncate leading-none ${TYPE.panelTitle}`,
     meta: `flex h-6 shrink-0 items-center ${TYPE.caption}`,
     headerActions: 'flex shrink-0 items-center min-h-0',
     body: 'flex-1 min-h-0',
-    padding: 'p-4',
+    padding: PANEL_LAYOUT.pageBodyPadding,
     scrollDefault: 'overflow-hidden',
   },
   lab: {
     shell: `w-full ${SURFACE.recessed} ${RADIUS.card} overflow-hidden`,
-    header:
-      'shrink-0 px-2 py-2 border-b border-border-default flex items-center gap-2',
-    headerBetween:
-      'shrink-0 px-2 py-2 border-b border-border-default flex items-center justify-between gap-2',
+    header: PANEL_LAYOUT.labHeader,
+    headerBetween: PANEL_LAYOUT.labHeaderBetween,
     title: `m-0 truncate ${TYPE.sectionTitle}`,
     meta: `flex shrink-0 items-center ${TYPE.caption}`,
     headerActions: 'flex shrink-0 items-center min-h-0',
     body: '',
-    padding: 'p-2',
+    padding: SPACING.pSpace2,
     scrollDefault: '',
   },
 } as const;

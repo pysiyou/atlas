@@ -14,7 +14,7 @@ export const OrderProgressSkeleton: React.FC = () => (
       {Array.from({ length: TIMELINE_STEPS }).map((_, i) => (
         <li key={i} className="flex items-start gap-3 relative">
           <div className={`w-5 h-5 shrink-0 ${RADIUS.pill} border-2 border-border-default bg-surface z-10 mt-0.5`} />
-          <div className="flex-1 min-w-0 pt-0.5 pb-4">
+          <div className="flex-1 min-w-0 pt-0.5 pb-space-4">
             <Skeleton height={14} width="70%" className="mb-1" />
             <Skeleton height={12} width="50%" />
           </div>

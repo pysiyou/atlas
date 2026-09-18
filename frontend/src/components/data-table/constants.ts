@@ -2,6 +2,7 @@
  * Data table layout constants and defaults.
  */
 
+import { TABLE_CELL } from '@/components/theme/recipes';
 import type { ColumnWidth, TableVariant } from './types';
 
 export const SIZE_PRESETS: Record<string, ColumnWidth> = {
@@ -22,15 +23,15 @@ export const ROW_HEIGHTS: Record<TableVariant, number> = {
 };
 
 export const CELL_PADDING: Record<TableVariant, string> = {
-  compact: 'px-4 py-2',
-  default: 'px-6 py-3',
-  comfortable: 'px-6 py-4',
+  compact: TABLE_CELL.compact,
+  default: TABLE_CELL.default,
+  comfortable: TABLE_CELL.comfortable,
 };
 
 export const HEADER_PADDING: Record<TableVariant, string> = {
-  compact: 'px-4 py-2',
-  default: 'px-6 py-3',
-  comfortable: 'px-6 py-4',
+  compact: TABLE_CELL.compact,
+  default: TABLE_CELL.default,
+  comfortable: TABLE_CELL.comfortable,
 };
 
 export const TEXT_SIZE: Record<TableVariant, string> = {

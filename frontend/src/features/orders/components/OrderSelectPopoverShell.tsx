@@ -30,13 +30,13 @@ export const OrderSelectPopoverShell: React.FC<OrderSelectPopoverShellProps> = (
   children,
 }) => (
   <div className={POPOVER_SHELL_CLASS}>
-    <div className="px-4 py-2.5 bg-surface-page/70 border-b border-border-default/70 flex items-center justify-between">
+    <div className="px-space-4 py-2.5 bg-surface-page/70 border-b border-border-default/70 flex items-center justify-between">
       <div className={FORM_FIELD_LABEL}>{title}</div>
       <div className={TYPE.meta}>{resultCount} result(s)</div>
     </div>
 
     {isEmpty ? (
-      <div className={`px-4 py-3 ${TYPE.meta}`}>{emptyMessage}</div>
+      <div className={`px-space-4 py-space-3 ${TYPE.meta}`}>{emptyMessage}</div>
     ) : (
       <div className="max-h-[280px] overflow-y-auto divide-y divide-border-default/70">
         {children}

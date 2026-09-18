@@ -40,7 +40,7 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
         paymentMethod={paymentMethod}
       />
       <div className="mt-auto shrink-0">
-        <ReceiptTotal total={activeTotal} variant="panel" pad="px-4" />
+        <ReceiptTotal total={activeTotal} variant="panel" pad="px-space-4" />
       </div>
     </div>
   );

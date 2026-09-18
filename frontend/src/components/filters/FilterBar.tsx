@@ -13,7 +13,7 @@ import { QuickFilters } from './QuickFilters';
 import { FilterSection } from './FilterSection';
 import { FilterModal } from './FilterModal';
 import { Button, Badge } from '@/components';
-import { CONTROL } from '@/components/theme/recipes';
+import { CONTROL, FILTER } from '@/components/theme/recipes';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 import type { FilterConfig, FilterValues, ActiveFilterBadge } from './types';
 
@@ -156,9 +156,9 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
     return (
       <div className={`${filterStyles.container} ${className || ''}`}>
         {/* Filter row - 4 column grid layout */}
-        <div className="px-4 py-2.5 lg:px-5 lg:py-3 w-full">
+        <div className={FILTER.barInset}>
           {/* 4-column grid: search bar + 3 filters */}
-          <div className="grid grid-cols-4 gap-3 lg:gap-4 items-center w-full">
+          <div className={FILTER.barGridDesktop}>
             {/* Column 1: Search control */}
             {searchControl && (
               <div className={`flex ${filterStyles.controlHeight} w-full items-center`}>
@@ -215,9 +215,9 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
     return (
       <div className={`${filterStyles.container} ${className || ''}`}>
         {/* Filter row - 4 column grid layout */}
-        <div className="px-3 py-2 w-full">
+        <div className={FILTER.barInsetCompact}>
           {/* 4-column grid: search bar + 3 filters */}
-          <div className="grid grid-cols-4 gap-2 items-center w-full">
+          <div className={FILTER.barGridCompact}>
             {/* Column 1: Search control */}
             {searchControl && (
               <div className={`flex ${filterStyles.controlHeight} w-full items-center`}>
@@ -270,8 +270,8 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
   const renderSmallView = () => (
     <div className={`${filterStyles.container} ${className || ''}`}>
       {/* Search and filter button row */}
-      <div className="px-3 py-2 w-full">
-        <div className="grid grid-cols-[1fr_auto] gap-2 items-center w-full">
+      <div className={FILTER.barInsetCompact}>
+        <div className={FILTER.mobileGrid}>
           {/* Search control - takes remaining space */}
           {searchControl && (
             <div className={`flex ${filterStyles.controlHeight} w-full items-center`}>

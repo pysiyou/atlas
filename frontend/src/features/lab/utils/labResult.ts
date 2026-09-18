@@ -231,7 +231,7 @@ export const RESULT_PANEL = {
   reference: `${TYPE.caption} leading-none font-normal truncate shrink-0 max-w-[50%]`,
   referenceUnavailable:
     '!text-xxs leading-none font-normal text-text-secondary truncate shrink-0 max-w-[50%]',
-  notesSection: 'mt-4 pt-4 border-t border-border-subtle space-y-3',
+  notesSection: 'mt-space-4 pt-space-4 border-t border-border-subtle space-y-space-3',
   notesLabel: `${TYPE.label} font-normal`,
 } as const;
 

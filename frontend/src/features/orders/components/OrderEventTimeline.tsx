@@ -12,7 +12,7 @@ export const OrderEventTimeline: React.FC<OrderEventTimelineProps> = ({ orderId 
 
   if (isLoading) {
     return (
-      <div className="p-4 space-y-3" aria-busy="true">
+      <div className="p-panel space-y-3" aria-busy="true">
         {Array.from({ length: 3 }).map((_, i) => (
           <div key={i} className="flex gap-3">
             <Skeleton circle width={10} height={10} className="mt-1 shrink-0" />
@@ -28,7 +28,7 @@ export const OrderEventTimeline: React.FC<OrderEventTimelineProps> = ({ orderId 
 
   if (isError) {
     return (
-      <div className="p-4 text-sm text-text-secondary">
+      <div className="p-panel text-sm text-text-secondary">
         Couldn&apos;t load timeline.{' '}
         <button type="button" className="text-brand hover:underline" onClick={() => refetch()}>
           Retry
@@ -42,7 +42,7 @@ export const OrderEventTimeline: React.FC<OrderEventTimelineProps> = ({ orderId 
       preset="order"
       events={data?.events ?? []}
       interactiveEntities
-      className="max-h-80 p-4"
+      className="max-h-80 p-panel"
       emptyMessage="No activity recorded for this order yet."
     />
   );

@@ -72,7 +72,7 @@ export const LabWorkflowDetailModal: React.FC<LabDetailModalProps> = ({
       disableClose={disableClose}
     >
       <div className="flex flex-col h-full bg-surface-page">
-        <div className={`flex-1 overflow-y-auto p-6 ${LAB_MODAL_DETAIL.sectionStack}`}>
+        <div className={`flex-1 overflow-y-auto p-space-6 ${LAB_MODAL_DETAIL.sectionStack}`}>
           <LabModalHeader
             badges={headerBadges}
             contextInfo={contextInfo}
@@ -165,7 +165,7 @@ export const DetailGrid: React.FC<DetailGridProps> = ({ children, sections }) =>
     }
 
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-layout-section">
         {visibleSections.map(section => (
           <Panel
             key={section.title}
@@ -181,7 +181,7 @@ export const DetailGrid: React.FC<DetailGridProps> = ({ children, sections }) =>
   }
 
   // Legacy: render children directly
-  return <div className="grid grid-cols-1 md:grid-cols-2 gap-4">{children}</div>;
+  return <div className="grid grid-cols-1 md:grid-cols-2 gap-layout-section">{children}</div>;
 };
 
 /**

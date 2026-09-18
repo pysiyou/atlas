@@ -2,7 +2,7 @@
  * Command center shared layout, surface, and tone styles.
  */
 import { PANEL_VARIANTS } from '@/components/surfaces/Panel';
-import { PANEL, RADIUS, TONE, TYPE } from '@/components/theme/recipes';
+import { PANEL, RADIUS, SPACING, TONE, TYPE } from '@/components/theme/recipes';
 import type { QueueAgeStats } from './commandCenterModel';
 
 export type CommandCenterKpiTone = 'brand' | 'success' | 'warning' | 'danger' | 'neutral';
@@ -45,7 +45,15 @@ export const COMMAND_CENTER_PANEL = {
 
 /** Top pipeline / KPI strip — aligned with lab workflow queue shell radius. */
 export const COMMAND_CENTER_PIPELINE_STRIP =
-  `${PANEL.raisedShadowSm} shrink-0 px-3 py-2` as const;
+  `${PANEL.raisedShadowSm} shrink-0 ${SPACING.pxSpace3} ${SPACING.pySpace2}` as const;
+
+export const COMMAND_CENTER_BOARD = {
+  stack: `flex h-full min-h-0 flex-col ${SPACING.gapInline}`,
+  mainGrid: `grid min-h-0 flex-1 grid-cols-1 ${SPACING.gapInline} lg:grid-cols-12`,
+  primaryColumn: `flex min-h-0 flex-col ${SPACING.gapInline} lg:col-span-8 lg:h-full`,
+  secondaryColumn: `flex min-h-0 flex-col ${SPACING.gapInline} lg:col-span-4 lg:h-full`,
+  innerGrid: `grid min-h-0 grid-cols-1 ${SPACING.gapInline} sm:grid-cols-2 lg:min-h-0 lg:flex-[4]`,
+} as const;
 
 const COMMAND_CENTER_MICRO_LABEL =
   'font-light uppercase leading-tight tracking-wide text-2xs' as const;

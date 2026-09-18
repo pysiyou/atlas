@@ -6,6 +6,7 @@
 import React from 'react';
 import { Panel, IconButton, Icon } from '@/components';
 import { ICONS } from '@/config/icons';
+import { LAYOUT, SPACING } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 import { PaymentPopover } from '@/features/payments';
 import type { Order, OrderTest, Patient, Invoice } from '@/types';
@@ -43,7 +44,7 @@ function BillingSummaryPanelActions({
   const isPaid = order.paymentStatus === 'paid';
 
   return (
-    <div className="flex items-center gap-2">
+    <div className={`flex items-center ${SPACING.gapInline}`}>
       {invoice != null && (
         <IconButton
           variant="print"
@@ -101,7 +102,7 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
 
   return (
     <>
-      <div className={`grid grid-cols-3 gap-4 ${fillHeight ? 'min-h-0' : ''}`}>
+      <div className={cn(LAYOUT.detailGrid3, fillHeight && 'min-h-0')}>
         <Panel title="Order Information" className={panelClass} scroll={fillScroll}>
           <OrderInfoSection order={order} layout={infoLayout} />
         </Panel>
@@ -130,7 +131,7 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
         </Panel>
       </div>
 
-      <div className={`grid grid-cols-3 gap-4 ${fillHeight ? 'min-h-0' : ''}`}>
+      <div className={cn(LAYOUT.detailGrid3, fillHeight && 'min-h-0')}>
         <Panel
           title="Tests"
           meta={testsHeaderMeta}
@@ -181,7 +182,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
   );
 
   return (
-    <div className="flex-1 flex flex-col gap-5 overflow-y-auto pb-6 bg-surface-page">
+    <div className={LAYOUT.detailScroll}>
       <Panel title="Order Information" className="shrink-0" scroll="visible">
         <OrderInfoSection order={order} layout="grid" />
       </Panel>
@@ -241,7 +242,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
  * MediumScreenLayout - 3 panels on top, 2 on bottom. Page scrolls when content overflows.
  */
 export const MediumScreenLayout: React.FC<LayoutProps> = props => (
-  <div className="grid grid-rows-[auto_auto] gap-4 w-full pb-6">
+  <div className={LAYOUT.detailGridRows2}>
     <OrderDetailPanels {...props} infoLayout="column" testsVariant="detailed" fillHeight={false} />
   </div>
 );
@@ -250,10 +251,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = props => (
  * LargeScreenLayout - 3 panels on top, 2 on bottom. Fills viewport height with internal scrolling.
  */
 export const LargeScreenLayout: React.FC<LayoutProps> = props => (
-  <div
-    className="flex-1 grid grid-rows-[1fr_1fr] gap-4 min-h-0 h-full overflow-hidden"
-    style={{ height: '100%', maxHeight: '100%' }}
-  >
+  <div className={LAYOUT.detailGridRowsSplit} style={{ height: '100%', maxHeight: '100%' }}>
     <OrderDetailPanels {...props} infoLayout="column" testsVariant="detailed" fillHeight />
   </div>
 );

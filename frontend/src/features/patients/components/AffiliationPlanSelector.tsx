@@ -170,7 +170,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
           </div>
 
           {/* Additional Info */}
-          <div className="pt-4 border-t border-border-default">
+          <div className="pt-space-4 border-t border-border-default">
             <p className={`${TYPE.meta} leading-relaxed`}>
               {hasExistingAffiliation
                 ? 'Your affiliation will be extended from the current end date when you renew or extend.'
@@ -192,7 +192,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 key={plan.duration}
                 onClick={() => handlePlanSelect(plan.duration)}
                 className={`
-                  group relative border-2 ${RADIUS.overlay} p-5 cursor-pointer transition-all duration-200
+                  group relative border-2 ${RADIUS.overlay} p-space-5 cursor-pointer transition-all duration-200
                   ${
                     isSelected
                       ? 'border-brand bg-brand-muted shadow-sm'
@@ -210,7 +210,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 )}
 
                 {/* Circular single-select indicator - theme matches Checkbox (brand, border-border-default) */}
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-layout-section">
                   <div className="mt-0.5 flex-shrink-0">
                     <div
                       className={`
@@ -279,7 +279,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
 
         {/* Action Button - Only show when onAction is provided */}
         {selectedDuration && onAction && (
-          <div className="pt-4">
+          <div className="pt-space-4">
             <Button
               type="button"
               variant="primary"

@@ -5,7 +5,7 @@
 
 import React, { type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { CHROME, RADIUS, SURFACE, TYPE } from '@/components/theme/recipes';
+import { CHROME, PAGE_HEADER, RADIUS, SURFACE, TYPE } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 import { useAppChromeMount } from './appChromeMount';
 
@@ -36,10 +36,8 @@ function PageHeaderContent({
     return (
       <header
         className={cn(
-          'w-full flex items-center justify-between gap-4 flex-nowrap min-w-0',
-          placement === 'chrome'
-            ? CHROME.pageHeaderChrome
-            : `shrink-0 h-12 min-h-12 max-h-12 py-2 px-4 ${RADIUS.surface}`,
+          PAGE_HEADER.barRow,
+          placement === 'chrome' ? CHROME.pageHeaderChrome : `${PAGE_HEADER.barInline} ${RADIUS.surface}`,
           placement === 'inline' && SURFACE.raised,
           className,
         )}
@@ -51,7 +49,7 @@ function PageHeaderContent({
             <p className={`${TYPE.meta} truncate leading-tight`}>{subtitle}</p>
           )}
         </div>
-        {actions != null && <div className="flex items-center gap-2 shrink-0">{actions}</div>}
+        {actions != null && <div className={PAGE_HEADER.barActions}>{actions}</div>}
       </header>
     );
   }
@@ -59,25 +57,25 @@ function PageHeaderContent({
   return (
     <header
       className={cn(
-        'flex items-center justify-between shrink-0 gap-3 flex-nowrap w-full min-w-0',
+        PAGE_HEADER.detailRow,
         placement === 'chrome' && CHROME.pageHeaderChrome,
         className,
       )}
       role="banner"
     >
-      <div className="flex items-center gap-3 min-w-0 flex-1 flex-wrap">
+      <div className={PAGE_HEADER.detailMain}>
         {avatar != null && <div className="shrink-0">{avatar}</div>}
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className={PAGE_HEADER.detailTitleRow}>
             <h1 className={TYPE.detailTitle}>{title}</h1>
-            {badges != null && <div className="flex items-center gap-2 flex-wrap">{badges}</div>}
+            {badges != null && <div className={PAGE_HEADER.detailBadges}>{badges}</div>}
           </div>
           {subtitle != null && subtitle !== '' && (
             <p className={`${TYPE.meta} mt-0.5`}>{subtitle}</p>
           )}
         </div>
       </div>
-      {actions != null && <div className="shrink-0 flex items-center gap-2">{actions}</div>}
+      {actions != null && <div className={PAGE_HEADER.detailActions}>{actions}</div>}
     </header>
   );
 }

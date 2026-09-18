@@ -227,7 +227,7 @@ export const Timeline: React.FC<TimelineProps> = ({
             {group.items.map((item, idx) => {
               if (item.kind === 'divider') {
                 return (
-                  <li key={`divider-${group.label}-${idx}`} className="pb-2 pl-5">
+                  <li key={`divider-${group.label}-${idx}`} className="pb-space-2 pl-space-5">
                     <span className={TIMELINE_STYLES.eventDetailText}>Retest attempt · </span>
                     <EntityId type="orderTest" value={item.testId} variant="inline" />
                   </li>

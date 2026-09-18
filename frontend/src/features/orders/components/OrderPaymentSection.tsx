@@ -40,7 +40,7 @@ export const OrderPaymentSection: React.FC<OrderPaymentSectionProps> = ({
         disabled={isSubmitting || isProcessingPayment}
       />
       {paymentError && (
-        <Alert variant="danger" className="mt-3 py-3">
+        <Alert variant="danger" className="mt-3 py-space-3">
           <p className="text-sm">{paymentError}</p>
         </Alert>
       )}

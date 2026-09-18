@@ -22,7 +22,7 @@ export const DashboardStatsGrid: React.FC<DashboardStatsGridProps> = ({ stats })
   if (stats.length === 0) return null;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-6">
       {stats.map((stat, index) => (
         <Card key={index} padding="lg" hover>
           <div className="flex items-start justify-between">

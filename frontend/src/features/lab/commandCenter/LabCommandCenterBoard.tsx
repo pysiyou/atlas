@@ -7,7 +7,11 @@ import { useQueryClient } from '@tanstack/react-query';
 import { ErrorAlert } from '@/components';
 import { errorAlertMessage } from '@/utils/feedback';
 import { invalidateCommandCenterQueries } from '@/lib/query/invalidate';
-import { COMMAND_CENTER_PANEL, COMMAND_CENTER_PIPELINE_STRIP } from './commandCenterStyles';
+import {
+  COMMAND_CENTER_BOARD,
+  COMMAND_CENTER_PANEL,
+  COMMAND_CENTER_PIPELINE_STRIP,
+} from './commandCenterStyles';
 import { useLabCommandCenterViewModel } from './useLabCommandCenterViewModel';
 import { LivePipelineStrip } from './panels/LivePipelineStrip';
 import { TodaySnapshotPanel } from './panels/TodaySnapshotPanel';
@@ -54,7 +58,7 @@ export const LabCommandCenterBoard: React.FC = () => {
 
   return (
     <div className={COMMAND_CENTER_PANEL.page}>
-      <div className="flex h-full min-h-0 flex-col gap-2">
+      <div className={COMMAND_CENTER_BOARD.stack}>
         <div className={COMMAND_CENTER_PIPELINE_STRIP}>
           <LivePipelineStrip
             counts={board.counts}
@@ -70,8 +74,8 @@ export const LabCommandCenterBoard: React.FC = () => {
           />
         </div>
 
-        <div className="grid min-h-0 flex-1 grid-cols-1 gap-2 lg:grid-cols-12">
-          <div className="flex min-h-0 flex-col gap-2 lg:col-span-8 lg:h-full">
+        <div className={COMMAND_CENTER_BOARD.mainGrid}>
+          <div className={COMMAND_CENTER_BOARD.primaryColumn}>
             <div className="min-h-48 lg:min-h-0 lg:flex-[2]">
               <TodaySnapshotPanel
                 totalActive={board.totalActive}
@@ -79,7 +83,7 @@ export const LabCommandCenterBoard: React.FC = () => {
                 ageBuckets={board.ageBuckets}
               />
             </div>
-            <div className="grid min-h-0 grid-cols-1 gap-2 sm:grid-cols-2 lg:min-h-0 lg:flex-[4]">
+            <div className={COMMAND_CENTER_BOARD.innerGrid}>
               <div className="min-h-48 lg:min-h-0 lg:h-full">
                 <RecentActivityPanel />
               </div>
@@ -89,7 +93,7 @@ export const LabCommandCenterBoard: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex min-h-0 flex-col gap-2 lg:col-span-4 lg:h-full">
+          <div className={COMMAND_CENTER_BOARD.secondaryColumn}>
             <div className="min-h-48 lg:min-h-0 lg:flex-[2]">
               <PriorityMixPanel
                 priorityMix={board.priorityMix}

@@ -6,7 +6,9 @@
  */
 
 import React from 'react';
+import { LAYOUT } from '@/components/theme/recipes';
 import { DetailsTable, type DetailTableRow } from '@/components/display/DetailsTable';
+import { cn } from '@/utils';
 import { filterDetailRows } from '@/components/display/detailsTableUtils';
 
 export interface TableInput {
@@ -90,11 +92,11 @@ export const BalancedColumnsLayout: React.FC<BalancedColumnsLayoutProps> = ({
   const balancedColumns = balanceTablesAcrossColumns(tables, safeColumns, tieBreakBias);
   return (
     <div
-      className={`grid gap-4 ${className}`}
+      className={cn(LAYOUT.balancedColumns, className)}
       style={{ gridTemplateColumns: `repeat(${safeColumns}, minmax(0, 1fr))` }}
     >
       {balancedColumns.map((col, i) => (
-        <div key={`col-${i}`} className="flex flex-col gap-4">
+        <div key={`col-${i}`} className={LAYOUT.balancedColumnStack}>
           {col.items.map(spec => (
             <DetailsTable
               key={spec.key}

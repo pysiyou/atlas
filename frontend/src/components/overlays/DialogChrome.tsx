@@ -4,16 +4,14 @@
 
 import { type ReactNode } from 'react';
 import { IconButton } from '@/components/primitives';
-import { TYPE } from '@/components/theme/recipes';
+import { DIALOG, TYPE } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
 export type DialogChromeSize = 'modal' | 'popover';
 
 const HEADER_CLASS: Record<DialogChromeSize, string> = {
-  modal:
-    'px-6 py-3.5 border-b border-border-default bg-surface flex items-center justify-between shrink-0',
-  popover:
-    'px-4 py-3 bg-surface-page border-b border-border-subtle flex items-start justify-between shrink-0',
+  modal: DIALOG.modalHeader,
+  popover: DIALOG.popoverHeader,
 };
 
 const TITLE_CLASS: Record<DialogChromeSize, string> = {
@@ -27,10 +25,8 @@ const SUBTITLE_CLASS: Record<DialogChromeSize, string> = {
 };
 
 const FOOTER_CLASS: Record<DialogChromeSize, string> = {
-  modal:
-    'flex items-center justify-between gap-3 px-6 py-4 border-t border-border-default bg-surface shrink-0 shadow-[var(--shadow-footer)]',
-  popover:
-    'p-3 bg-surface-page border-t border-border-subtle flex items-center justify-between gap-2 shrink-0',
+  modal: DIALOG.modalFooter,
+  popover: DIALOG.popoverFooter,
 };
 
 export interface DialogHeaderProps {
@@ -61,7 +57,7 @@ export function DialogHeader({
 
   return (
     <div className={HEADER_CLASS[size]}>
-      <div className={size === 'popover' ? 'space-y-0.5 min-w-0' : 'flex items-start gap-3 min-w-0'}>
+      <div className={size === 'popover' ? 'space-y-space-0-5 min-w-0' : DIALOG.modalTitleRow}>
         <div className="flex flex-col min-w-0 gap-0.5">
           <TitleTag
             id={titleId}
@@ -73,10 +69,10 @@ export function DialogHeader({
           {subtitle != null && subtitle !== false && (
             <div className={SUBTITLE_CLASS[size]}>{subtitle}</div>
           )}
-          {badges != null && <div className="flex items-center gap-2 pt-1">{badges}</div>}
+          {badges != null && <div className={DIALOG.modalBadges}>{badges}</div>}
         </div>
       </div>
-      <div className="flex gap-2 shrink-0">
+      <div className={DIALOG.headerActions}>
         {onClose != null && (
           <IconButton
             onClick={onClose}

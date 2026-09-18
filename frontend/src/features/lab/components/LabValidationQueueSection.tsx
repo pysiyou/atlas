@@ -22,6 +22,6 @@ export const LabValidationQueueSection: React.FC<LabValidationQueueSectionProps>
       {title}
       {typeof count === 'number' ? ` (${count})` : ''}
     </h3>
-    <div className="grid gap-4 content-start">{children}</div>
+    <div className="grid gap-layout-section content-start">{children}</div>
   </section>
 );

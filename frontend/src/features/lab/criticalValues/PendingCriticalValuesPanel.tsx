@@ -19,7 +19,7 @@ export const PendingCriticalValuesPanel: React.FC = () => {
   if (isLoading) {
     return (
       <Panel variant="lab" title="Critical Values">
-        <p className="text-sm text-text-tertiary py-4">Loading critical values...</p>
+        <p className="text-sm text-text-tertiary py-space-4">Loading critical values...</p>
       </Panel>
     );
   }
@@ -42,7 +42,7 @@ export const PendingCriticalValuesPanel: React.FC = () => {
         {criticalValues.map(record => (
           <div
             key={record.id}
-            className={cn(RADIUS.card, 'p-4 space-y-3', TONE.danger.well)}
+            className={cn(RADIUS.card, 'p-panel space-y-3', TONE.danger.well)}
           >
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 text-sm font-normal text-text-primary">

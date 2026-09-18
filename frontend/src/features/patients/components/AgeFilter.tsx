@@ -90,7 +90,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
           {renderTriggerContent()}
         </FilterTriggerShell>
       )}
-      className="p-6 w-[320px]"
+      className="p-space-6 w-[320px]"
     >
       {() => (
         <div className="w-full">

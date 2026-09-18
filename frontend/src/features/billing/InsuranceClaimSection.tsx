@@ -56,7 +56,7 @@ export const InsuranceClaimSection: React.FC<InsuranceClaimSectionProps> = ({
   };
 
   return (
-    <div className="mt-4 pt-4 border-t border-dashed border-border-strong space-y-3">
+    <div className="mt-space-4 pt-space-4 border-t border-dashed border-border-strong space-y-space-3">
       <div className="flex items-center justify-between gap-2">
         <span className="text-xs font-medium text-text-secondary uppercase tracking-wider">
           Insurance Claims

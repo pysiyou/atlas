@@ -39,7 +39,7 @@ export const ResultCriticalValueBanner: React.FC<CriticalValueBannerProps> = ({
             Contains Critical Values
           </h4>
         </div>
-        <div className="pl-6 space-y-1">
+        <div className="pl-space-6 space-y-space-1">
           {criticalParameters.map((param, index) => (
             <div key={index} className="flex items-baseline gap-2 text-xs">
               <Badge variant="danger" size="xs" className="shrink-0">
@@ -52,7 +52,7 @@ export const ResultCriticalValueBanner: React.FC<CriticalValueBannerProps> = ({
             </div>
           ))}
         </div>
-        <p className={`${TYPE.caption} pl-6`}>
+        <p className={`${TYPE.caption} pl-space-6`}>
           Physician will be automatically notified upon approval
         </p>
       </div>
