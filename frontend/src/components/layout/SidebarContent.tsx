@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { CHROME } from '@/components/theme/recipes';
 import type { AuthUser } from '@/types';
 import type { MenuItem, SettingsItem } from './sidebarMenu';
 import { SidebarHeader } from './SidebarHeader';
@@ -31,7 +32,7 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
   const collapsed = isCollapsed && !isMobile;
   const sidebarVariants = {
     expanded: { width: '16rem', transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] as const } },
-    collapsed: { width: '4rem', transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] as const } },
+    collapsed: { width: CHROME.railVar, transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] as const } },
   };
   return (
     <motion.aside

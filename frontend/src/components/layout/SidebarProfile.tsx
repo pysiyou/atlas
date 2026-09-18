@@ -3,7 +3,7 @@ import type { PopoverPlacement } from '@/components';
 import { formatStatus } from '@/utils/string';
 import type { AuthUser } from '@/types';
 import defaultAvatar from '@/assets/default-avatar.jpg';
-import { TYPE } from '@/components/theme/recipes';
+import { CHROME, TYPE } from '@/components/theme/recipes';
 
 
 export interface SidebarProfileProps {
@@ -29,7 +29,7 @@ export function SidebarProfile({ currentUser, isCollapsed, onLogout }: SidebarPr
             role="button"
             tabIndex={0}
           >
-            <div className="w-16 shrink-0 flex items-center justify-center">
+            <div className={`${CHROME.railWidth} shrink-0 flex items-center justify-center`}>
               <Avatar
                 primaryText={currentUser.name}
                 secondaryText={formatStatus(currentUser.role)}

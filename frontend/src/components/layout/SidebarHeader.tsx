@@ -1,6 +1,7 @@
 import { companyConfig } from '@/config';
 import { Icon, IconButton } from '@/components';
 import { ICONS } from '@/config/icons';
+import { CHROME } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
 export interface SidebarHeaderProps {
@@ -25,7 +26,8 @@ export function SidebarHeader({ isCollapsed, onToggleCollapse, onMobileClose }: 
   return (
     <div
       className={cn(
-        'h-16 flex items-center shrink-0',
+        CHROME.railHeight,
+        'flex items-center shrink-0',
         isCollapsed ? 'justify-center px-0' : 'justify-between px-4'
       )}
     >

@@ -88,6 +88,17 @@ export const RADIUS = {
   shell: 'rounded-workspace',
 } as const;
 
+/** Primitive token reference — value defined only as `--chrome-rail` in primitives.css */
+export const CHROME_RAIL_VAR = 'var(--chrome-rail)' as const;
+
+/** App shell — collapsed rail width matches header band height (--chrome-rail). */
+export const CHROME = {
+  railWidth: 'w-chrome-rail',
+  railHeight: 'h-chrome-rail',
+  railMinHeight: 'min-h-chrome-rail',
+  railVar: CHROME_RAIL_VAR,
+} as const;
+
 /** Floating menus (popover/modal) — single shell recipe. */
 export const OVERLAY = {
   shell: `${SURFACE.raised} ${RADIUS.menu} overflow-hidden`,

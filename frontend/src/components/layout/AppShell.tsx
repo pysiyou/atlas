@@ -12,7 +12,7 @@ import { useBreakpoint, isBreakpointAtLeast } from '@/hooks/useBreakpoint';
 import { AppChromeMountContext } from './appChromeMount';
 import { Sidebar } from './Sidebar';
 import { Icon } from '@/components/primitives/Icon';
-import { RADIUS, SURFACE } from '@/components/theme/recipes';
+import { CHROME, RADIUS, SURFACE } from '@/components/theme/recipes';
 
 export interface AppShellProps {
   children: ReactNode;
@@ -56,7 +56,9 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
         />
 
         <div className="flex flex-1 flex-col min-w-0 min-h-0">
-          <div className="shrink-0 flex items-stretch min-h-16 bg-surface-sidebar px-2 lg:px-4 gap-2">
+          <div
+            className={`shrink-0 flex items-stretch ${CHROME.railMinHeight} bg-surface-sidebar px-2 lg:px-4 gap-2`}
+          >
             {isMobile && (
               <div className="flex items-center shrink-0">
                 <button
@@ -70,7 +72,10 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
                 </button>
               </div>
             )}
-            <div ref={chromeMountRef} className="flex-1 min-w-0 flex items-center min-h-16" />
+            <div
+              ref={chromeMountRef}
+              className={`flex-1 min-w-0 flex items-center ${CHROME.railMinHeight}`}
+            />
           </div>
 
           <div className="flex flex-1 min-h-0 p-2 pt-0">
