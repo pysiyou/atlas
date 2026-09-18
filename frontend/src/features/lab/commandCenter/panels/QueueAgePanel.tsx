@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { RADIUS } from '@/components/theme/recipes';
+import { RADIUS, SHADOW } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 import { LAB_CONFIG, LAB_STAGE_SHORT_ROWS } from '../../constants';
 import { getStageVisual } from '../../constants/labConstants';
@@ -170,7 +170,7 @@ function StageWaitRow({ stage, scaleMax }: { stage: StageRow; scaleMax: number }
 
         {oldestPct !== null && oldestPct > 0 && (
           <div
-            className={`absolute top-1/2 z-10 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 ${RADIUS.field} border-2 border-surface bg-text-primary shadow-sm`}
+            className={`absolute top-1/2 z-10 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 ${RADIUS.field} border-2 border-surface bg-text-primary ${SHADOW.subtle}`}
             style={{ left: `${oldestPct}%` }}
             title={`Oldest: ${hoursLabel(stage.age.oldestHours)}`}
           />

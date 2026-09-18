@@ -221,6 +221,24 @@ export const EMPTY = {
   actionWrap: 'mt-space-2',
 } as const;
 
+/**
+ * Elevation — values from semantic --shadow-* (see primitives + semantic-light/dark).
+ * Prefer OVERLAY/PANEL composed shells; use SHADOW.* for one-off elevation.
+ */
+export const SHADOW = {
+  subtle: 'shadow-sm',
+  raised: 'shadow-md',
+  overlay: 'shadow-lg',
+  modal: 'shadow-xl',
+  footer: 'shadow-footer',
+} as const;
+
+/** Range slider thumbs (webkit + moz pseudo-elements). */
+export const RANGE_SLIDER = {
+  thumbChrome: (radiusField: string) =>
+    `[&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-brand [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:${radiusField} [&::-webkit-slider-thumb]:${SHADOW.raised} [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-brand [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:${radiusField} [&::-moz-range-thumb]:${SHADOW.raised} [&::-moz-range-thumb]:cursor-pointer`,
+} as const;
+
 /** Modal / dialog chrome. */
 export const DIALOG = {
   modalHeader:
@@ -228,7 +246,7 @@ export const DIALOG = {
   popoverHeader:
     `${SPACING.pxSpace4} py-space-3 bg-surface-page border-b border-border-subtle flex items-start justify-between shrink-0`,
   modalFooter:
-    `flex items-center justify-between ${SPACING.gapRelaxed} px-overlay-dialog-footer-x py-overlay-dialog-footer-y border-t border-border-default bg-surface shrink-0 shadow-[var(--shadow-footer)]`,
+    `flex items-center justify-between ${SPACING.gapRelaxed} px-overlay-dialog-footer-x py-overlay-dialog-footer-y border-t border-border-default bg-surface shrink-0 ${SHADOW.footer}`,
   popoverFooter:
     `${SPACING.pSpace2} bg-surface-page border-t border-border-subtle flex items-center justify-between ${SPACING.gapInline} shrink-0`,
   modalTitleRow: `flex items-start ${SPACING.gapRelaxed} min-w-0`,
@@ -276,7 +294,7 @@ export const CHROME = {
     'flex size-chrome-nav-indicator shrink-0 items-center justify-center',
   navIndicator:
     `flex size-chrome-nav-indicator shrink-0 items-center justify-center ${RADIUS.field} transition-colors duration-200 ease-out`,
-  navIndicatorActive: 'bg-brand text-on-brand shadow-sm',
+  navIndicatorActive: `bg-brand text-on-brand ${SHADOW.subtle}`,
   navIndicatorIdle: 'text-text-secondary',
   clipPane:
     'chrome-clip min-w-0 flex-1 overflow-hidden whitespace-nowrap transition-opacity duration-200 ease-out',
@@ -285,7 +303,7 @@ export const CHROME = {
   navLabel:
     'chrome-clip min-w-0 flex-1 truncate pr-space-3 text-sm font-medium whitespace-nowrap transition-opacity duration-200 ease-out',
   navTooltip:
-    `pointer-events-none absolute left-full z-50 ml-space-2 hidden whitespace-nowrap ${RADIUS.pill} bg-brand px-space-2-5 py-space-1 text-xs font-medium text-on-brand shadow-sm group-data-[collapsed=true]/chrome:group-hover/nav:block`,
+    `pointer-events-none absolute left-full z-50 ml-space-2 hidden whitespace-nowrap ${RADIUS.pill} bg-brand px-space-2-5 py-space-1 text-xs font-medium text-on-brand ${SHADOW.subtle} group-data-[collapsed=true]/chrome:group-hover/nav:block`,
   footerDivider: 'chrome-nav-split',
   footerDividerRule: 'chrome-nav-split-line',
   footerBlock: `flex shrink-0 flex-col ${SPACING.gapRelaxed} pb-chrome-nav-menu-gutter`,
@@ -294,14 +312,15 @@ export const CHROME = {
 /** Floating menus (popover/modal) — single shell recipe. */
 export const OVERLAY = {
   shell: `${SURFACE.raised} ${RADIUS.menu} overflow-hidden`,
-  shellShadowLg: `${SURFACE.raised} ${RADIUS.menu} overflow-hidden shadow-lg`,
-  shellShadowXl: `${SURFACE.raised} ${RADIUS.menu} overflow-hidden shadow-xl`,
+  shellShadowLg: `${SURFACE.raised} ${RADIUS.menu} overflow-hidden ${SHADOW.overlay}`,
+  shellShadowXl: `${SURFACE.raised} ${RADIUS.menu} overflow-hidden ${SHADOW.modal}`,
+  anchoredRaised: `${SHADOW.raised} ring-1 ring-ring-subtle`,
 } as const;
 
 /** In-page raised panels (tables, lab queue, command center strip). */
 export const PANEL = {
   raised: `${SURFACE.raised} ${RADIUS.surface} overflow-hidden`,
-  raisedShadowSm: `${SURFACE.raised} ${RADIUS.surface} overflow-hidden shadow-sm`,
+  raisedShadowSm: `${SURFACE.raised} ${RADIUS.surface} overflow-hidden ${SHADOW.subtle}`,
 } as const;
 
 /** Selectable rows/cards inside popovers and filter menus. */
@@ -311,13 +330,47 @@ export const MENU_ITEM = {
     'hover:border-border-strong transition-colors duration-200 cursor-pointer',
 } as const;
 
+/**
+ * Control chrome — field focus (ring-1), interactive focus-visible (ring-2), heights.
+ * Buttons use padding-based sizes; filter rows use CONTROL.height / heightMultiline.
+ */
 export const CONTROL = {
   hoverBorder: 'hover:border-border-hover',
   focus: 'focus:outline-none focus:ring-1 focus:ring-brand focus:ring-opacity-20 focus:border-brand',
   focusWithin: 'focus-within:outline-none focus-within:border-brand focus-within:ring-1 focus-within:ring-brand focus-within:ring-opacity-20',
   error: 'border-border-error focus:border-border-error focus:ring-danger focus:ring-opacity-20',
   errorWithin: 'border-border-error focus-within:border-border-error focus-within:ring-danger focus-within:ring-opacity-20',
+  open: 'border-brand ring-1 ring-brand ring-opacity-20',
+  focusVisible:
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-surface',
+  focusVisibleBrand: 'focus-visible:ring-brand/30',
+  focusVisibleTight:
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-1 focus-visible:ring-offset-surface',
+  focusVisibleDanger:
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger focus-visible:ring-offset-1',
+  focusSubtle: 'focus:outline-none focus:ring-1 focus:ring-brand/30',
+  focusBrand: 'focus:outline-none focus:ring-2 focus:ring-brand/30',
+  focusBrandSoft: 'focus:outline-none focus:ring-2 focus:ring-brand/20',
+  focusVisibleFlat: 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/30',
+  segmentActive: `${SHADOW.subtle} ring-1 ring-ring-subtle`,
+  choiceSelected: `scale-110 ring-2 ring-offset-2 ring-brand ${SHADOW.raised}`,
   height: 'h-control',
+  heightMultiline: 'min-h-control-multiline',
+  minHeight: 'min-h-control',
+} as const;
+
+/** Auth login — shared geometry; colors stay on auth semantic tokens. */
+export const AUTH_CONTROL = {
+  focusField:
+    'focus:outline-none focus:ring-2 focus:ring-auth-input-focus focus:ring-opacity-50 focus:border-auth-input-focus',
+  focusSubmit:
+    'focus:outline-none focus:ring-2 focus:ring-auth-input-focus focus:ring-opacity-50 focus:ring-offset-2 focus:ring-offset-auth-panel',
+} as const;
+
+export const AUTH_SHADOW = {
+  card: SHADOW.modal,
+  accent: SHADOW.overlay,
+  logo: SHADOW.raised,
 } as const;
 
 /** Chip geometry. Font-size via CSS var (not text-*) so twMerge keeps status text-* colors. */

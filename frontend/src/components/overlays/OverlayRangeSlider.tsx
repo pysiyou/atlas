@@ -4,12 +4,10 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { RADIUS } from '@/components/theme/recipes';
+import { RANGE_SLIDER, RADIUS } from '@/components/theme/recipes';
 
 const SLIDER_THUMB_CLASS =
-  `absolute w-full h-1 appearance-none bg-transparent pointer-events-none ` +
-  `[&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-brand [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:${RADIUS.field} [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer ` +
-  `[&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-brand [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:${RADIUS.field} [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer`;
+  `absolute w-full h-1 appearance-none bg-transparent pointer-events-none ${RANGE_SLIDER.thumbChrome(RADIUS.field)}`;
 
 export interface OverlayRangeSliderProps {
   value: [number, number];
@@ -84,4 +82,3 @@ export const OverlayRangeSlider: React.FC<OverlayRangeSliderProps> = ({
     </div>
   );
 };
-

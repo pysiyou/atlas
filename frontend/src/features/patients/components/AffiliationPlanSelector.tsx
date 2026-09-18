@@ -14,7 +14,7 @@ import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import type { AffiliationPlan } from '@/types/affiliation';
 import type { AffiliationDuration } from '@/types';
 import { ICONS } from '@/config/icons';
-import { TYPE, RADIUS } from '@/components/theme/recipes';
+import { RADIUS, SHADOW, TYPE } from '@/components/theme/recipes';
 
 
 export interface AffiliationPlanSelectorProps {
@@ -195,15 +195,15 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                   group relative border-2 ${RADIUS.overlay} p-space-5 cursor-pointer transition-all duration-200
                   ${
                     isSelected
-                      ? 'border-brand bg-brand-muted shadow-sm'
-                      : 'border-border-default hover:border-border-strong bg-surface hover:shadow-sm'
+                      ? `border-brand bg-brand-muted ${SHADOW.subtle}`
+                      : `border-border-default hover:border-border-strong bg-surface hover:${SHADOW.subtle}`
                   }
                 `}
               >
                 {/* Best Value Badge */}
                 {plan.isBestValue && (
                   <div className="absolute -top-space-2 -right-space-2">
-                    <div className={`bg-danger text-on-danger text-xxs font-normal px-space-2 py-space-0-5 ${RADIUS.card} transform rotate-3 shadow-sm`}>
+                    <div className={`bg-danger text-on-danger text-xxs font-normal px-space-2 py-space-0-5 ${RADIUS.card} transform rotate-3 ${SHADOW.subtle}`}>
                       Best Value
                     </div>
                   </div>

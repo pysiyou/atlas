@@ -9,7 +9,7 @@ import React, { useState, type KeyboardEvent, type ChangeEvent } from 'react';
 import { RemovableTag } from '@/components';
 import { cn } from '@/utils';
 import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from './inputStyles';
-import { TONE, TYPE } from '@/components/theme/recipes';
+import { CONTROL, TONE, TYPE } from '@/components/theme/recipes';
 
 
 export interface TagInputProps {
@@ -90,7 +90,7 @@ export const TagInput: React.FC<TagInputProps> = ({
       <div
         className={cn(
           inputContainerBase,
-          'px-space-3 py-space-2-5 flex flex-wrap gap-space-2 items-center min-h-[42px]',
+          `px-space-3 py-space-2-5 flex flex-wrap gap-space-2 items-center ${CONTROL.heightMultiline}`,
           error && inputContainerError
         )}
       >

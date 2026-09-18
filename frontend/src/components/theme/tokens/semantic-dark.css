@@ -93,6 +93,9 @@
   --shadow-lg: 0 12px 32px var(--primitive-neutral-0);
   --shadow-xl: 0 20px 40px var(--primitive-neutral-0);
 
+  --focus: var(--primitive-brand-500);
+  --ring-subtle: rgb(255 255 255 / 0.08);
+
   --toast-bg: var(--primitive-neutral-100);
   --toast-fg: var(--primitive-neutral-900);
   --toast-fg-muted: var(--primitive-neutral-600);

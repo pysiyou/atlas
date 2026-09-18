@@ -197,6 +197,7 @@
   --shadow-xl: var(--shadow-xl);
   --shadow-footer: var(--shadow-footer);
   --opacity-disabled: var(--state-disabled-opacity);
+  --color-ring-subtle: var(--ring-subtle);
 
   /* ═══════════════════════════════════════════════════════════════════
      ENTITY ID
@@ -223,6 +224,7 @@
   --radius-button-square: var(--button-radius-square);
   --radius-button-circle: var(--button-radius-circle);
   --height-control: var(--control-height);
+  --height-control-multiline: var(--control-height-multiline);
   /* Layout — numeric chrome tokens live in primitives.css */
   --spacing-chrome-rail: var(--chrome-rail);
   --spacing-chrome-header-band: var(--chrome-header-band);

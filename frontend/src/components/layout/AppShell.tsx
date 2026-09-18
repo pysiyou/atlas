@@ -12,7 +12,7 @@ import { useBreakpoint, isBreakpointAtLeast } from '@/hooks/useBreakpoint';
 import { AppChromeMountContext } from './appChromeMount';
 import { Sidebar } from './Sidebar';
 import { Icon } from '@/components/primitives/Icon';
-import { CHROME, RADIUS, SURFACE, WORKSPACE } from '@/components/theme/recipes';
+import { CHROME, RADIUS, SHADOW, SURFACE, WORKSPACE } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
 export interface AppShellProps {
@@ -68,7 +68,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
                     className={cn(
                       CHROME.navIndicator,
                       SURFACE.raised,
-                      'text-text-primary shadow-sm hover:bg-surface-hover lg:hidden',
+                      `text-text-primary ${SHADOW.subtle} hover:bg-surface-hover lg:hidden`,
                     )}
                     aria-label="Open navigation menu"
                   >

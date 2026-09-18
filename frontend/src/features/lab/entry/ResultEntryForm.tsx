@@ -10,7 +10,7 @@ import type { Test, Patient } from '@/types';
 import { ParameterInput } from './ResultParameterInputs';
 import { getReferenceRangeDisplay, checkCriticalStatus } from './resultEntry';
 import { RESULT_PANEL, resultTileStatusClass } from '../utils/labResult';
-import { RADIUS, TONE } from '@/components/theme/recipes';
+import { RADIUS, SHADOW, TONE } from '@/components/theme/recipes';
 
 interface EntryFormProps {
   testDef: Test;
@@ -150,7 +150,7 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
             variant="submit"
             size="sm"
             layout="icon-text"
-            className="shadow-sm ml-auto"
+            className={`${SHADOW.subtle} ml-auto`}
           >
             Submit Results
           </Button>

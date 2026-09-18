@@ -11,7 +11,7 @@ import { ErrorBoundary } from '@/components';
 import { useEditPatientForm } from '../hooks/useEditPatientForm';
 import { PatientFormTabs } from './PatientFormTabs';
 import { OrderModalFooter } from '@/features/orders';
-import { RADIUS } from '@/components/theme/recipes';
+import { CONTROL, RADIUS } from '@/components/theme/recipes';
 
 interface EditPatientModalProps {
   isOpen: boolean;
@@ -44,7 +44,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
             onClick={() => onTabChange(tab.id)}
             className={
               isActive
-                ? `relative flex items-center gap-space-2 px-space-3 py-space-1-5 ${RADIUS.field} text-xs font-normal cursor-pointer bg-surface text-brand shadow-sm ring-1 ring-black/5`
+                ? `relative flex items-center gap-space-2 px-space-3 py-space-1-5 ${RADIUS.field} text-xs font-normal cursor-pointer bg-surface text-brand ${CONTROL.segmentActive}`
                 : `relative flex items-center gap-space-2 px-space-3 py-space-1-5 ${RADIUS.field} text-xs font-normal cursor-pointer text-text-tertiary hover:text-text-primary hover:bg-surface-hover`
             }
           >

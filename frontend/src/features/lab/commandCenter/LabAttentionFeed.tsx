@@ -16,7 +16,7 @@ import {
 } from './commandCenterModel';
 import { formatLabAttentionQueueItem, type AttentionDetail } from './commandCenterAttentionFormat';
 import { TIMELINE_STYLES } from '@/features/timeline';
-import { RADIUS, TYPE } from '@/components/theme/recipes';
+import { CONTROL, RADIUS, TYPE } from '@/components/theme/recipes';
 
 
 export interface LabAttentionFeedProps {
@@ -53,7 +53,7 @@ function LabAttentionFeedRow({ item }: { item: LabAttentionQueueItem }) {
         className={cn(
           `group flex min-w-0 gap-space-2 ${RADIUS.field} border border-border-subtle px-space-2 py-space-1-5`,
           'transition-colors hover:border-border-hover hover:bg-surface-hover/50',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/30',
+          CONTROL.focusVisibleFlat,
         )}
       >
         <span

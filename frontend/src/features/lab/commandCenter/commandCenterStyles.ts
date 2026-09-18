@@ -2,7 +2,7 @@
  * Command center shared layout, surface, and tone styles.
  */
 import { PANEL_VARIANTS } from '@/components/surfaces/Panel';
-import { PANEL, RADIUS, SPACING, TONE, TYPE } from '@/components/theme/recipes';
+import { CONTROL, PANEL, RADIUS, SHADOW, SPACING, TONE, TYPE } from '@/components/theme/recipes';
 import type { QueueAgeStats } from './commandCenterModel';
 
 export type CommandCenterKpiTone = 'brand' | 'success' | 'warning' | 'danger' | 'neutral';
@@ -68,9 +68,9 @@ export const COMMAND_CENTER_SECTION = {
 
 export const COMMAND_CENTER_KPI = {
   tile:
-    `group relative flex min-w-0 flex-1 items-center gap-space-2-5 ${RADIUS.surface} border border-border-default bg-gradient-to-br from-surface via-surface to-surface-page/80 px-space-2-5 py-space-2 transition-all duration-200 hover:border-border-hover hover:shadow-sm`,
+    `group relative flex min-w-0 flex-1 items-center gap-space-2-5 ${RADIUS.surface} border border-border-default bg-gradient-to-br from-surface via-surface to-surface-page/80 px-space-2-5 py-space-2 transition-all duration-200 hover:border-border-hover hover:${SHADOW.subtle}`,
   tileInteractive: 'cursor-pointer',
-  tileLink: `min-w-0 flex-1 ${RADIUS.field} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/30`,
+  tileLink: `min-w-0 flex-1 ${RADIUS.field} ${CONTROL.focusVisibleFlat}`,
   tileWrap: 'min-w-0 flex-1',
   iconWrap: `flex h-8 w-8 shrink-0 items-center justify-center ${RADIUS.field} bg-surface-hover`,
   label: `truncate uppercase tracking-wide ${TYPE.caption}`,

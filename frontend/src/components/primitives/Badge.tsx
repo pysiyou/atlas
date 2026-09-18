@@ -7,7 +7,7 @@ import { cn } from '@/utils';
 import { useBadgeAppearance } from '@/components/theme/theme';
 import { ICONS } from '@/config/icons';
 import { Icon, type IconName } from './Icon';
-import { BADGE, RADIUS } from '@/components/theme/recipes';
+import { BADGE, CONTROL, RADIUS } from '@/components/theme/recipes';
 import {
   CONTAINER_STYLES,
   DISPLAY_LABELS,
@@ -164,7 +164,7 @@ export const RemovableTag: React.FC<RemovableTagProps> = ({
       <button
         type="button"
         onClick={onRemove}
-        className={`-mr-space-0-5 ml-space-0-5 flex shrink-0 items-center justify-center ${RADIUS.pill} p-space-0-5 transition-colors focus:outline-none focus:ring-1 focus:ring-brand/30`}
+        className={`-mr-space-0-5 ml-space-0-5 flex shrink-0 items-center justify-center ${RADIUS.pill} p-space-0-5 transition-colors ${CONTROL.focusSubtle}`}
         aria-label={removeAriaLabel}
       >
         <Icon name={ICONS.actions.closeCircle} className={cn('h-3 w-3', chip.remove)} />
