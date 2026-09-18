@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import { RADIUS } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 import { LAB_CONFIG, LAB_STAGE_SHORT_ROWS } from '../../constants';
 import { getStageVisual } from '../../constants/labConstants';
@@ -77,7 +78,7 @@ function StageTimeComposition({ stages }: { stages: StageRow[] }) {
         aside={`${hoursLabel(totalHours)} total avg`}
       />
 
-      <div className="flex h-1.5 overflow-hidden rounded-xs bg-surface-hover">
+      <div className={`flex h-1.5 overflow-hidden ${RADIUS.pill} bg-surface-hover`}>
         {stages.map(stage => {
           if (stage.avgHours <= 0) return null;
           return (
@@ -96,7 +97,7 @@ function StageTimeComposition({ stages }: { stages: StageRow[] }) {
           const share = totalHours > 0 ? Math.round((stage.avgHours / totalHours) * 100) : 0;
           return (
             <span key={stage.key} className={cn('flex items-center gap-1.5 text-xs', COMMAND_CENTER_TEXT.label)}>
-              <span className={cn('h-2 w-2 shrink-0 rounded-sm', stage.barClass)} />
+              <span className={cn(`h-2 w-2 shrink-0 ${RADIUS.field}`, stage.barClass)} />
               {stage.label}{' '}
               <span className={cn('text-sm font-light tabular-nums', COMMAND_CENTER_TEXT.value)}>
                 {hoursLabel(stage.avgHours)}
@@ -154,13 +155,13 @@ function StageWaitRow({ stage, scaleMax }: { stage: StageRow; scaleMax: number }
         </p>
       </div>
 
-      <div className="relative h-1.5 rounded-xs bg-surface-hover">
+      <div className={`relative h-1.5 ${RADIUS.pill} bg-surface-hover`}>
         <ThresholdMarkers scaleMax={scaleMax} />
 
         {avgPct > 0 && (
           <div
             className={cn(
-              'absolute inset-y-0 left-0 rounded-xs opacity-90',
+              `absolute inset-y-0 left-0 ${RADIUS.pill} opacity-90`,
               stage.barClass,
             )}
             style={{ width: `${avgPct}%` }}
@@ -169,7 +170,7 @@ function StageWaitRow({ stage, scaleMax }: { stage: StageRow; scaleMax: number }
 
         {oldestPct !== null && oldestPct > 0 && (
           <div
-            className="absolute top-1/2 z-10 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-sm border-2 border-surface bg-text-primary shadow-sm"
+            className={`absolute top-1/2 z-10 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 ${RADIUS.field} border-2 border-surface bg-text-primary shadow-sm`}
             style={{ left: `${oldestPct}%` }}
             title={`Oldest: ${hoursLabel(stage.age.oldestHours)}`}
           />

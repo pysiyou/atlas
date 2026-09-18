@@ -4,11 +4,12 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { RADIUS } from '@/components/theme/recipes';
 
 const SLIDER_THUMB_CLASS =
-  'absolute w-full h-1 appearance-none bg-transparent pointer-events-none ' +
-  '[&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-brand [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer ' +
-  '[&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-brand [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:rounded-sm [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer';
+  `absolute w-full h-1 appearance-none bg-transparent pointer-events-none ` +
+  `[&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-brand [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:${RADIUS.field} [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer ` +
+  `[&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-brand [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:${RADIUS.field} [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer`;
 
 export interface OverlayRangeSliderProps {
   value: [number, number];
@@ -52,9 +53,9 @@ export const OverlayRangeSlider: React.FC<OverlayRangeSliderProps> = ({
     <div className="w-full">
       {hint && <p className="text-sm text-text-tertiary mb-4">{hint}</p>}
       <div className="relative h-1 mb-6">
-        <div className="absolute inset-0 bg-border rounded-full" />
+        <div className={`absolute inset-0 bg-border ${RADIUS.pill}`} />
         <div
-          className="absolute h-full bg-brand rounded-full"
+          className={`absolute h-full bg-brand ${RADIUS.pill}`}
           style={{ left: `${minPercent}%`, width: `${maxPercent - minPercent}%` }}
         />
         <input

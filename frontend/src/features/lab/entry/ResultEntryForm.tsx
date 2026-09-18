@@ -138,7 +138,7 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
       </div>
 
       {!isModal && (
-        <div className="mt-6 -mx-4 -mb-4 px-4 py-3 bg-surface-page border-t border-border-subtle rounded-b flex items-center justify-between">
+        <div className={`mt-6 -mx-4 -mb-4 px-4 py-3 bg-surface-page border-t border-border-subtle ${RADIUS.bottomSurface} flex items-center justify-between`}>
           {hasValidationErrors && (
             <span className={`text-xxs ${TONE.danger.fg}`}>
               {feedbackTitle('lab.entry.fixValidationBeforeSubmit')}

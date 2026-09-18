@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { Badge } from '@/components';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { TONE, TYPE, OVERLAY } from '@/components/theme/recipes';
+import { OVERLAY, RADIUS, TONE, TYPE } from '@/components/theme/recipes';
 
 
 interface AttemptIndicatorProps {
@@ -125,9 +125,9 @@ export const AttemptProgressBar: React.FC<AttemptProgressBarProps> = ({
           {remaining} {remaining === 1 ? 'left' : 'left'}
         </span>
       </div>
-      <div className={cn('h-1.5 rounded-full overflow-hidden', colors.well)}>
+      <div className={cn(`h-1.5 ${RADIUS.pill} overflow-hidden`, colors.well)}>
         <div
-          className={cn('h-full rounded-full transition-all duration-300', colors.fill)}
+          className={cn(`h-full ${RADIUS.pill} transition-all duration-300`, colors.fill)}
           style={{ width: `${percentage}%` }}
         />
       </div>

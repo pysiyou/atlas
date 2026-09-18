@@ -78,6 +78,14 @@ export const RADIUS = {
   workspace: 'rounded-workspace',
   notice: 'rounded-notice',
   pill: 'rounded-pill',
+  none: 'rounded-none',
+  button: 'rounded-button',
+  buttonSquare: 'rounded-button-square',
+  buttonCircle: 'rounded-button-circle',
+  /** Date range / segmented row endpoints */
+  rangeStart: 'rounded-l-pill rounded-r-none',
+  rangeEnd: 'rounded-r-pill rounded-l-none',
+  bottomSurface: 'rounded-b-surface',
   /** @deprecated use field */
   control: 'rounded-field',
   /** @deprecated use surface */
@@ -113,7 +121,7 @@ export const CHROME = {
   navItem:
     'group/nav relative flex min-h-chrome-nav-indicator w-full items-stretch text-left',
   navHit:
-    'flex min-h-chrome-nav-indicator w-full min-w-0 flex-1 items-center overflow-hidden rounded-field text-text-secondary transition-colors duration-200 ease-out',
+    `flex min-h-chrome-nav-indicator w-full min-w-0 flex-1 items-center overflow-hidden ${RADIUS.field} text-text-secondary transition-colors duration-200 ease-out`,
   navHitHover: 'group-hover/nav:bg-surface-hover',
   navIconActive: 'text-brand group-hover/nav:text-brand',
   navIconHover: 'group-hover/nav:text-text-primary',
@@ -124,7 +132,7 @@ export const CHROME = {
   navIcon:
     'flex size-chrome-nav-indicator shrink-0 items-center justify-center',
   navIndicator:
-    'flex size-chrome-nav-indicator shrink-0 items-center justify-center rounded-field transition-colors duration-200 ease-out',
+    `flex size-chrome-nav-indicator shrink-0 items-center justify-center ${RADIUS.field} transition-colors duration-200 ease-out`,
   navIndicatorActive: 'bg-brand text-on-brand shadow-sm',
   navIndicatorIdle: 'text-text-secondary',
   clipPane:
@@ -134,7 +142,7 @@ export const CHROME = {
   navLabel:
     'chrome-clip min-w-0 flex-1 truncate pr-3 text-sm font-medium whitespace-nowrap transition-opacity duration-200 ease-out',
   navTooltip:
-    'pointer-events-none absolute left-full z-50 ml-2 hidden whitespace-nowrap rounded-pill bg-brand px-2.5 py-1 text-xs font-medium text-on-brand shadow-sm group-data-[collapsed=true]/chrome:group-hover/nav:block',
+    `pointer-events-none absolute left-full z-50 ml-2 hidden whitespace-nowrap ${RADIUS.pill} bg-brand px-2.5 py-1 text-xs font-medium text-on-brand shadow-sm group-data-[collapsed=true]/chrome:group-hover/nav:block`,
   footerDivider: 'chrome-nav-split',
   footerDividerRule: 'chrome-nav-split-line',
   footerBlock: 'shrink-0 pb-3',

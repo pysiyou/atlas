@@ -6,6 +6,7 @@
 import React, { forwardRef, memo, type ButtonHTMLAttributes } from 'react';
 import { ICONS, MODULE_ICONS } from '@/config/icons';
 import { SpinnerLoader } from '@/components/loaders/SpinnerLoader';
+import { RADIUS } from '@/components/theme/recipes';
 import { cn } from '@/utils/cn';
 import { Icon, type IconName } from './Icon';
 
@@ -118,9 +119,9 @@ const tone: Record<BaseVariant, string> = {
 };
 
 const labelButtonSize: Record<ButtonSize, string> = {
-  sm: 'gap-1.5 px-3 py-1.5 text-xs rounded-button',
-  md: 'gap-1.5 px-4 py-2 text-sm rounded-button',
-  lg: 'gap-1.5 px-6 py-3 text-base rounded-button',
+  sm: `gap-1.5 px-3 py-1.5 text-xs ${RADIUS.button}`,
+  md: `gap-1.5 px-4 py-2 text-sm ${RADIUS.button}`,
+  lg: `gap-1.5 px-6 py-3 text-base ${RADIUS.button}`,
 };
 
 const labelIconSize: Record<ButtonSize, string> = {
@@ -142,8 +143,8 @@ const iconButtonIconSize: Record<ButtonSize, string> = {
 };
 
 const iconButtonShape: Record<IconButtonShape, string> = {
-  circle: 'rounded-button-circle',
-  square: 'rounded-button-square',
+  circle: RADIUS.buttonCircle,
+  square: RADIUS.buttonSquare,
 };
 
 function labelButtonClasses(

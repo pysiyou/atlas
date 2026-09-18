@@ -68,7 +68,7 @@ export const Callout: React.FC<CalloutProps> = ({
       {iconName ? (
         <Icon name={iconName} className={`w-4 h-4 mt-0.5 shrink-0 ${styles.body}`} />
       ) : (
-        <span className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${styles.dot}`} />
+        <span className={`w-1.5 h-1.5 ${RADIUS.pill} mt-1.5 shrink-0 ${styles.dot}`} />
       )}
       <div className="flex-1 min-w-0">
         <div className={`text-xs mb-1 ${styles.title}`}>{title}</div>

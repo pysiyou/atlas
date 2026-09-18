@@ -26,7 +26,7 @@ export const PANEL_SCROLL: Record<Exclude<PanelScroll, 'default'>, string> = {
 
 export const PANEL_VARIANTS = {
   page: {
-    shell: `h-full ${SURFACE.raised} ${RADIUS.control} shadow-sm overflow-hidden flex flex-col`,
+    shell: `h-full ${SURFACE.raised} ${RADIUS.field} shadow-sm overflow-hidden flex flex-col`,
     header:
       'shrink-0 h-10 min-h-10 max-h-10 px-4 border-b border-border-default flex items-center gap-3 overflow-hidden',
     headerBetween:

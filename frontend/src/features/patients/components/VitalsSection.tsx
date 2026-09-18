@@ -11,7 +11,7 @@ import type { VitalSigns } from '@/types/patient';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 import { inputBase, inputError } from '@/components/inputs/inputStyles';
-import { TONE, TYPE } from '@/components/theme/recipes';
+import { RADIUS, TONE, TYPE } from '@/components/theme/recipes';
 
 
 export interface VitalsSectionProps {
@@ -237,7 +237,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
 
               {isNa ? (
                 <div
-                  className="w-full rounded border border-border-default bg-surface-hover/30 px-3 py-1.5 text-sm pl-10 pr-12 text-text-tertiary"
+                  className={`w-full ${RADIUS.field} border border-border-default bg-surface-hover/30 px-3 py-1.5 text-sm pl-10 pr-12 text-text-tertiary`}
                   aria-label={`${config.label} not provided`}
                 >
                   N/A

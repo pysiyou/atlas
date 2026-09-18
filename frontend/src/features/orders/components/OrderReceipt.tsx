@@ -167,7 +167,7 @@ function ReceiptItemRow({ test, detailed }: { test: OrderTest; detailed: boolean
       )}
     >
       <span className={cn('flex min-w-0 flex-1 gap-2', detailed ? 'items-start gap-2.5' : 'items-center')}>
-        <span className={cn('w-1 h-1 rounded-full bg-text-muted shrink-0', detailed && 'mt-1.5')} />
+        <span className={cn(`w-1 h-1 ${RADIUS.pill} bg-text-muted shrink-0`, detailed && 'mt-1.5')} />
         {detailed ? (
           <span className="flex flex-col min-w-0 flex-1">
             <span className="text-text-secondary truncate">{test.testName || test.testCode || 'Test'}</span>

@@ -7,7 +7,7 @@ import { Input } from '@/components/inputs/FormField';
 import { formatCurrency } from '@/utils';
 import { notify, getFeedback, errorAlertMessage } from '@/utils/feedback';
 import type { Invoice } from '@/types';
-import { TYPE } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/components/theme/recipes';
 import {
   useOrderInsuranceClaims,
   useSubmitInsuranceClaim,
@@ -80,7 +80,7 @@ export const InsuranceClaimSection: React.FC<InsuranceClaimSectionProps> = ({
           {claims.map((claim: InsuranceClaim) => (
             <li
               key={claim.claimId}
-              className="flex items-start justify-between gap-2 text-xs border border-border-default rounded px-2 py-1.5"
+              className={`flex items-start justify-between gap-2 text-xs border border-border-default ${RADIUS.field} px-2 py-1.5`}
             >
               <div className="min-w-0">
                 <p className="font-medium text-text-primary truncate">{claim.insuranceProvider}</p>

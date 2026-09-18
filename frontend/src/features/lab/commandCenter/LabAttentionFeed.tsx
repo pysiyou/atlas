@@ -16,7 +16,7 @@ import {
 } from './commandCenterModel';
 import { formatLabAttentionQueueItem, type AttentionDetail } from './commandCenterAttentionFormat';
 import { TIMELINE_STYLES } from '@/features/timeline';
-import { TYPE } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/components/theme/recipes';
 
 
 export interface LabAttentionFeedProps {
@@ -51,13 +51,13 @@ function LabAttentionFeedRow({ item }: { item: LabAttentionQueueItem }) {
       <Link
         to={href}
         className={cn(
-          'group flex min-w-0 gap-2 rounded-sm border border-border-subtle px-2 py-1.5',
+          `group flex min-w-0 gap-2 ${RADIUS.field} border border-border-subtle px-2 py-1.5`,
           'transition-colors hover:border-border-hover hover:bg-surface-hover/50',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/30',
         )}
       >
         <span
-          className={cn('w-0.5 shrink-0 self-stretch rounded-full', COMMAND_CENTER_ATTENTION_ACCENT[tone])}
+          className={cn(`w-0.5 shrink-0 self-stretch ${RADIUS.pill}`, COMMAND_CENTER_ATTENTION_ACCENT[tone])}
           aria-hidden
         />
 

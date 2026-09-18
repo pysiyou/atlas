@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { Icon } from './Icon';
+import { RADIUS } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 
@@ -17,7 +18,7 @@ export interface CheckboxIndicatorProps {
 export const CheckboxIndicator: React.FC<CheckboxIndicatorProps> = ({ checked, className }) => (
   <div
     className={cn(
-      'w-4 h-4 rounded border-2 flex items-center justify-center transition-all duration-150 shrink-0',
+      `w-4 h-4 ${RADIUS.field} border-2 flex items-center justify-center transition-all duration-150 shrink-0`,
       checked ? 'bg-brand border-brand' : 'border-border-default bg-surface',
       className
     )}

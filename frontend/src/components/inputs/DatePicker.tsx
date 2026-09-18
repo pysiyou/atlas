@@ -17,6 +17,7 @@ import {
 } from 'date-fns';
 import { Popover, Icon, FilterTriggerShell, FilterChip } from '@/components';
 import { ICONS } from '@/config/icons';
+import { RADIUS } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 import {
   isDateDisabledForPicker,
@@ -72,14 +73,14 @@ function DatePickerHeader({
       <button
         onClick={onPrevClick}
         disabled={isPrevDisabled}
-        className="p-1 hover:bg-surface-hover rounded text-text-tertiary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
+        className={`p-1 hover:bg-surface-hover ${RADIUS.field} text-text-tertiary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center`}
       >
         <Icon name={ICONS.actions.chevronLeft} className="w-4 h-4" />
       </button>
       <button
         onClick={onTitleClick}
         className={cn(
-          'text-sm font-normal text-text-secondary hover:bg-surface-page px-2 py-1 rounded transition-colors cursor-pointer',
+          `text-sm font-normal text-text-secondary hover:bg-surface-page px-2 py-1 ${RADIUS.field} transition-colors cursor-pointer`,
           view === 'years' && 'pointer-events-none hover:bg-transparent cursor-default'
         )}
       >
@@ -88,7 +89,7 @@ function DatePickerHeader({
       <button
         onClick={onNextClick}
         disabled={isNextDisabled}
-        className="p-1 hover:bg-surface-hover rounded text-text-tertiary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
+        className={`p-1 hover:bg-surface-hover ${RADIUS.field} text-text-tertiary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center`}
       >
         <Icon name={ICONS.actions.chevronRight} className="w-4 h-4" />
       </button>
@@ -144,7 +145,7 @@ function DatePickerCalendarGrid({
                 onClick={() => handleDateClick(day)}
                 disabled={disabled}
                 className={cn(
-                  'h-8 w-8 text-xs rounded-full flex items-center justify-center transition-colors relative cursor-pointer',
+                  `h-8 w-8 text-xs ${RADIUS.pill} flex items-center justify-center transition-colors relative cursor-pointer`,
                   disabled && 'opacity-30 cursor-not-allowed',
                   !currentMonthMatch && 'text-text-disabled',
                   currentMonthMatch &&
@@ -153,15 +154,15 @@ function DatePickerCalendarGrid({
                     !disabled &&
                     'text-text-secondary hover:bg-surface-hover',
                   isToday && !selected && !inRange && !disabled && 'font-normal text-brand bg-brand-muted',
-                  inRange && !selected && 'bg-brand-muted text-brand rounded-none',
+                  inRange && !selected && `bg-brand-muted text-brand ${RADIUS.none}`,
                   value &&
                     isSameDay(day, value[0]) &&
                     !isSameDay(value[0], value[1]) &&
-                    'rounded-l-full rounded-r-none',
+                    RADIUS.rangeStart,
                   value &&
                     isSameDay(day, value[1]) &&
                     !isSameDay(value[0], value[1]) &&
-                    'rounded-r-full rounded-l-none',
+                    RADIUS.rangeEnd,
                   selected && 'bg-brand text-on-brand hover:bg-brand-hover z-10'
                 )}
               >
@@ -190,7 +191,7 @@ function DatePickerCalendarGrid({
               }}
               disabled={disabled}
               className={cn(
-                'h-10 text-sm rounded flex items-center justify-center transition-colors cursor-pointer',
+                `h-10 text-sm ${RADIUS.field} flex items-center justify-center transition-colors cursor-pointer`,
                 disabled && 'opacity-30 cursor-not-allowed',
                 !disabled && isSameMonth(month, new Date()) && 'text-brand font-normal bg-brand-muted',
                 !disabled && isSameMonth(month, currentMonth)
@@ -222,7 +223,7 @@ function DatePickerCalendarGrid({
             }}
             disabled={disabled}
             className={cn(
-              'h-10 text-sm rounded flex items-center justify-center transition-colors cursor-pointer',
+              `h-10 text-sm ${RADIUS.field} flex items-center justify-center transition-colors cursor-pointer`,
               disabled && 'opacity-30 cursor-not-allowed',
               !disabled && y === new Date().getFullYear() && 'text-brand font-normal bg-brand-muted',
               !disabled && y === currentMonth.getFullYear()
@@ -321,7 +322,7 @@ function DatePickerPopoverBody({
         <div className="mt-3 pt-3 border-t border-border-default">
           <button
             onClick={onApply}
-            className="w-full px-3 py-2 bg-brand hover:opacity-90 text-text-inverse text-xs font-normal rounded transition-colors"
+            className={`w-full px-3 py-2 bg-brand hover:opacity-90 text-text-inverse text-xs font-normal ${RADIUS.field} transition-colors`}
           >
             Apply
           </button>

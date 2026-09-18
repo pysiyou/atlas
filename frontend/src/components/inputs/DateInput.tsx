@@ -15,7 +15,7 @@ import {
   inputClearButton,
   FORM_CONTROL_LABEL,
 } from '@/components/inputs/inputStyles';
-import { TONE, TYPE } from '@/components/theme/recipes';
+import { RADIUS, TONE, TYPE } from '@/components/theme/recipes';
 import {
   generateCalendarDays,
   generateCalendarMonths,
@@ -63,21 +63,21 @@ function DateInputHeader({
       <button
         type="button"
         onClick={onPrevClick}
-        className="p-1 hover:bg-surface-hover rounded text-text-tertiary cursor-pointer flex items-center justify-center"
+        className={`p-1 hover:bg-surface-hover ${RADIUS.field} text-text-tertiary cursor-pointer flex items-center justify-center`}
       >
         <Icon name={ICONS.actions.chevronLeft} className="w-4 h-4" />
       </button>
       <button
         type="button"
         onClick={onTitleClick}
-        className="text-sm font-normal text-text-secondary hover:bg-surface-page px-2 py-1 rounded transition-colors cursor-pointer"
+        className={`text-sm font-normal text-text-secondary hover:bg-surface-page px-2 py-1 ${RADIUS.field} transition-colors cursor-pointer`}
       >
         {getTitle()}
       </button>
       <button
         type="button"
         onClick={onNextClick}
-        className="p-1 hover:bg-surface-hover rounded text-text-tertiary cursor-pointer flex items-center justify-center"
+        className={`p-1 hover:bg-surface-hover ${RADIUS.field} text-text-tertiary cursor-pointer flex items-center justify-center`}
       >
         <Icon name={ICONS.actions.chevronRight} className="w-4 h-4" />
       </button>
@@ -129,7 +129,7 @@ function DateInputCalendarGrid({
                 onClick={() => handleDateClick(day)}
                 disabled={disabled}
                 className={cn(
-                  'h-8 w-8 text-xs rounded-full flex items-center justify-center transition-colors cursor-pointer',
+                  `h-8 w-8 text-xs ${RADIUS.pill} flex items-center justify-center transition-colors cursor-pointer`,
                   disabled && 'opacity-30 cursor-not-allowed',
                   !currentMonthMatch && 'text-text-disabled',
                   currentMonthMatch && !selected && !disabled && 'text-text-secondary hover:bg-surface-hover',
@@ -164,7 +164,7 @@ function DateInputCalendarGrid({
               }}
               disabled={disabled}
               className={cn(
-                'h-10 text-sm rounded flex items-center justify-center transition-colors cursor-pointer',
+                `h-10 text-sm ${RADIUS.field} flex items-center justify-center transition-colors cursor-pointer`,
                 disabled && 'opacity-30 cursor-not-allowed',
                 !disabled && 'hover:bg-surface-hover text-text-secondary'
               )}
@@ -194,7 +194,7 @@ function DateInputCalendarGrid({
             }}
             disabled={disabled}
             className={cn(
-              'h-10 text-sm rounded flex items-center justify-center transition-colors cursor-pointer',
+              `h-10 text-sm ${RADIUS.field} flex items-center justify-center transition-colors cursor-pointer`,
               disabled && 'opacity-30 cursor-not-allowed',
               !disabled && 'hover:bg-surface-hover text-text-secondary'
             )}

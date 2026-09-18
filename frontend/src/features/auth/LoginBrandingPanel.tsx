@@ -89,7 +89,7 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
             {[1, 2, 3].map(i => (
               <div
                 key={i}
-                className="w-8 h-8 rounded-full bg-auth-badge border-2 border-auth-badge-border flex items-center justify-center"
+                className={`w-8 h-8 ${RADIUS.pill} bg-auth-badge border-2 border-auth-badge-border flex items-center justify-center`}
               >
                 <Icon name={ICONS.dataFields.user} className="w-4 h-4 text-auth-badge-icon" />
               </div>

@@ -101,7 +101,7 @@ function ToastIcon({
     return (
       <span
         className={cn(
-          'mt-0.5 shrink-0 w-5 h-5 rounded-full border-2 animate-spin',
+          `mt-0.5 shrink-0 w-5 h-5 ${RADIUS.pill} border-2 animate-spin`,
           'border-current/30 border-t-current',
           accentClass
         )}

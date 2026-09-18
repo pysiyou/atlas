@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from 'react';
+import { RADIUS } from '@/components/theme/recipes';
 import { Icon } from '@/components';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
@@ -70,7 +71,7 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
             {title}
           </h3>
           {activeCount > 0 && (
-            <span className="inline-flex items-center justify-center min-w-[18px] h-4 px-1 rounded-full bg-brand text-on-brand text-xxs font-normal">
+            <span className={`inline-flex items-center justify-center min-w-[18px] h-4 px-1 ${RADIUS.pill} bg-brand text-on-brand text-xxs font-normal`}>
               {activeCount}
             </span>
           )}

@@ -16,7 +16,7 @@ import { cn } from '@/utils';
 import { getContainerIcon } from '@/config/icons';
 import { ICONS } from '@/config/icons';
 import { inputBase, inputError, FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
-import { TONE } from '@/components/theme/recipes';
+import { RADIUS, TONE } from '@/components/theme/recipes';
 
 /** Container type choices for collection: tube or cup only */
 const COLLECTION_CONTAINER_OPTIONS: { value: ContainerType; label: string }[] = [
@@ -126,7 +126,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
             Required Quantity <span className={TONE.danger.fg}>*</span>
           </label>
           {minimumVolume > 0 && (
-            <div className={cn('text-xxs px-2 py-0.5 rounded flex items-center gap-1', TONE.warning.well, TONE.warning.fg)}>
+            <div className={cn(`text-xxs px-2 py-0.5 ${RADIUS.field} flex items-center gap-1`, TONE.warning.well, TONE.warning.fg)}>
               <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
               Min: {minimumVolume} mL
             </div>
@@ -202,7 +202,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                 type="button"
                 onClick={() => setSelectedColor(value)}
                 className={cn(
-                  'w-8 h-8 rounded-full transition-all duration-200',
+                  `w-8 h-8 ${RADIUS.pill} transition-all duration-200`,
                   bgClass,
                   isSelected
                     ? 'scale-110 ring-2 ring-offset-2 ring-brand shadow-md'

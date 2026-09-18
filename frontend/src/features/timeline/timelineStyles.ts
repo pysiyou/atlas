@@ -1,8 +1,8 @@
-import { TYPE } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/components/theme/recipes';
 
 export const TIMELINE_STYLES = {
   connectorStem: 'bg-border-strong',
-  eventDot: 'relative z-10 mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full border-2',
+  eventDot: `relative z-10 mt-1.5 h-2.5 w-2.5 shrink-0 ${RADIUS.pill} border-2`,
   eventDotTrack: 'relative flex w-2.5 shrink-0 flex-col items-center self-stretch',
   eventConnectorStem:
     'pointer-events-none absolute top-[1.375rem] bottom-0 w-px -translate-x-1/2 left-1/2',

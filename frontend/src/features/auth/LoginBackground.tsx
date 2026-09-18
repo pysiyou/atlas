@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import { RADIUS } from '@/components/theme/recipes';
 
 interface FloatingIconConfig {
   icon: string;
@@ -234,21 +235,21 @@ export const LoginBackground: React.FC = () => {
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Top-right accent */}
         <div
-          className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full opacity-20"
+          className={`absolute -top-32 -right-32 w-[500px] h-[500px] ${RADIUS.pill} opacity-20`}
           style={{
             background: 'radial-gradient(circle, var(--auth-gradient-accent) 0%, transparent 70%)',
           }}
         />
         {/* Bottom-left accent */}
         <div
-          className="absolute -bottom-48 -left-48 w-[600px] h-[600px] rounded-full opacity-25"
+          className={`absolute -bottom-48 -left-48 w-[600px] h-[600px] ${RADIUS.pill} opacity-25`}
           style={{
             background: 'radial-gradient(circle, var(--auth-gradient-start) 0%, transparent 70%)',
           }}
         />
         {/* Center subtle glow */}
         <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full opacity-15"
+          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] ${RADIUS.pill} opacity-15`}
           style={{
             background: 'radial-gradient(circle, var(--auth-gradient-end) 0%, transparent 60%)',
           }}

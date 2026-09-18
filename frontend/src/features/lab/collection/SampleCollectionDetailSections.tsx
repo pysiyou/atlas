@@ -16,7 +16,7 @@ import { displayId, formatDateTime } from '@/utils';
 import { SampleCollectionRequirementsSection } from './SampleCollectionRequirementsSection';
 import { formatRejectionReasons } from '../utils/labFormatters';
 import { ICONS } from '@/config/icons';
-import { SURFACE, TONE, TYPE } from '@/components/theme/recipes';
+import { RADIUS, SURFACE, TONE, TYPE } from '@/components/theme/recipes';
 
 
 interface CollectionDetailGridSectionsProps {
@@ -203,7 +203,7 @@ export const SampleCollectionDetailContent: React.FC<CollectionDetailContentProp
   return (
     <>
       {showBarcode && sample.sampleId != null && (
-        <div className={`flex items-center justify-center ${SURFACE.recessed} rounded p-4`}>
+        <div className={`flex items-center justify-center ${SURFACE.recessed} ${RADIUS.field} p-4`}>
           <Barcode
             value={displayId.sample(sample.sampleId)}
             height={40}
@@ -221,7 +221,7 @@ export const SampleCollectionDetailContent: React.FC<CollectionDetailContentProp
             const test = testCode ? getTest(testCode) : undefined;
             return (
               <li key={testCode || i} className={`flex items-center ${TYPE.label}`}>
-                <span className="w-1.5 h-1.5 rounded-full bg-text-muted mr-2" />
+                <span className={`w-1.5 h-1.5 ${RADIUS.pill} bg-text-muted mr-2`} />
                 <span className="font-normal mr-1">{testName}</span>
                 <EntityId variant="inline" className="mr-2">{testCode}</EntityId>
                 {test?.turnaroundTime && (

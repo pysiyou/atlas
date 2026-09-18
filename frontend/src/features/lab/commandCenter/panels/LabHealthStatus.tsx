@@ -3,6 +3,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import { RADIUS } from '@/components/theme/recipes';
 import { Link } from 'react-router-dom';
 import { Icon } from '@/components';
 import { ICONS } from '@/config/icons';
@@ -48,7 +49,7 @@ export const LabHealthStatus: React.FC<LabHealthStatusProps> = ({
     <div className="flex min-w-0 shrink-0 items-center justify-end gap-2">
       <div className="flex min-w-0 items-center gap-2">
         <span
-          className={cn('h-1.5 w-1.5 shrink-0 rounded-full', styles.dot)}
+          className={cn(`h-1.5 w-1.5 shrink-0 ${RADIUS.pill}`, styles.dot)}
           aria-hidden
           title={message}
         />
@@ -85,7 +86,7 @@ export const LabHealthStatus: React.FC<LabHealthStatusProps> = ({
             disabled={isRefreshing}
             aria-label="Refresh lab status"
             title="Refresh"
-            className="inline-flex shrink-0 items-center rounded p-1 text-text-tertiary transition-colors hover:bg-surface-hover hover:text-text-primary disabled:opacity-50"
+            className={`inline-flex shrink-0 items-center ${RADIUS.field} p-1 text-text-tertiary transition-colors hover:bg-surface-hover hover:text-text-primary disabled:opacity-50`}
           >
             <Icon
               name={ICONS.actions.refresh}

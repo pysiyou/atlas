@@ -4,7 +4,7 @@ import { Icon } from '@/components/primitives/Icon';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 import { inputBase } from '@/components/inputs/inputStyles';
-import { TYPE } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/components/theme/recipes';
 
 
 interface PaginationProps {
@@ -61,14 +61,14 @@ export const Pagination: React.FC<PaginationProps> = ({
 
   const getPageButtonClasses = (isActive: boolean) => {
     const base =
-      'min-w-[26px] h-6 px-1.5 text-xxs font-normal rounded transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-1 focus-visible:ring-offset-surface';
+      `min-w-[26px] h-6 px-1.5 text-xxs font-normal ${RADIUS.field} transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-1 focus-visible:ring-offset-surface`;
     return isActive
       ? `${base} bg-brand text-on-brand`
       : `${base} text-text-primary border border-border-default bg-surface hover:border-border-hover hover:bg-surface-hover`;
   };
 
   const navButtonClass =
-    'w-6 h-6 flex items-center justify-center rounded border border-transparent text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-1 focus-visible:ring-offset-surface disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-text-secondary';
+    `w-6 h-6 flex items-center justify-center ${RADIUS.field} border border-transparent text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-1 focus-visible:ring-offset-surface disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-text-secondary`;
 
   return (
     <div className="flex items-center justify-between gap-3 px-3 py-2 border-t border-border-default bg-surface">

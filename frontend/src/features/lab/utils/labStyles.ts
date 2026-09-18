@@ -103,10 +103,10 @@ export const LAB_CARD_LIST_ITEMS = {
   testItem: `flex items-center ${LAB_CARD_TYPOGRAPHY.sectionContent}`,
 
   // List bullet (gray)
-  bullet: 'w-1 h-1 rounded-full bg-text-muted mr-2',
+  bullet: `w-1 h-1 ${RADIUS.pill} bg-text-muted mr-2`,
 
   // List bullet (red for flags)
-  bulletRed: `w-1 h-1 rounded-full ${TONE.danger.fill} mr-2`,
+  bulletRed: `w-1 h-1 ${RADIUS.pill} ${TONE.danger.fill} mr-2`,
 
   // Test name in list
   testName: `font-normal mr-1 ${LAB_CARD_TYPOGRAPHY.fieldValue}`,

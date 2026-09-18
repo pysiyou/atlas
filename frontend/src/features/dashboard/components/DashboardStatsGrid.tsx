@@ -3,6 +3,7 @@
  */
 
 import React from 'react';
+import { RADIUS } from '@/components/theme/recipes';
 import { Card } from '@/components';
 
 export interface DashboardStat {
@@ -32,7 +33,7 @@ export const DashboardStatsGrid: React.FC<DashboardStatsGridProps> = ({ stats })
                 <p className="text-xs text-success-fg mt-1">+{stat.today} today</p>
               )}
             </div>
-            <div className={`p-3 rounded ${stat.color}`}>{stat.icon}</div>
+            <div className={`p-3 ${RADIUS.field} ${stat.color}`}>{stat.icon}</div>
           </div>
         </Card>
       ))}
