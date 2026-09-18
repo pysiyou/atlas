@@ -25,7 +25,7 @@ export function SidebarProfile({ currentUser, isCollapsed, onLogout }: SidebarPr
       className="w-56 min-w-0"
       trigger={
         <div
-          className={cn(CHROME.navItem, 'cursor-pointer py-1.5')}
+          className={cn(CHROME.navItem, 'cursor-pointer')}
           title={currentUser.name}
           role="button"
           tabIndex={0}

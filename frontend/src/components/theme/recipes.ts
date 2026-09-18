@@ -112,11 +112,14 @@ export const CHROME = {
     'group/chrome relative flex h-full flex-col overflow-x-hidden overflow-y-hidden bg-surface-sidebar',
   headerBand:
     'flex h-chrome-header-band min-h-chrome-header-band w-full shrink-0 items-center',
+  topHeaderShell:
+    'shrink-0 bg-surface-sidebar pl-chrome-header-gutter pr-3 lg:pr-5',
   topHeaderRow:
-    'flex min-h-chrome-header-band shrink-0 items-stretch bg-surface-sidebar pl-chrome-header-gutter pr-3 lg:pr-5',
+    'flex h-chrome-header-band min-h-chrome-header-band w-full items-center',
   pageHeaderChrome:
-    'h-full min-h-chrome-header-band h-chrome-header-band flex items-center pr-2',
-  navScroll: 'flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto py-3 hide-scrollbar',
+    'flex h-full w-full min-w-0 items-center pr-2',
+  navScroll:
+    'flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto py-chrome-nav-menu-gutter hide-scrollbar',
   navList: 'flex flex-col gap-1.5',
   navItem:
     'group/nav relative flex min-h-chrome-nav-indicator w-full items-stretch text-left',
@@ -145,7 +148,7 @@ export const CHROME = {
     `pointer-events-none absolute left-full z-50 ml-2 hidden whitespace-nowrap ${RADIUS.pill} bg-brand px-2.5 py-1 text-xs font-medium text-on-brand shadow-sm group-data-[collapsed=true]/chrome:group-hover/nav:block`,
   footerDivider: 'chrome-nav-split',
   footerDividerRule: 'chrome-nav-split-line',
-  footerBlock: 'shrink-0 pb-3',
+  footerBlock: 'flex shrink-0 flex-col gap-3 pb-chrome-nav-menu-gutter',
 } as const;
 
 /** Floating menus (popover/modal) — single shell recipe. */

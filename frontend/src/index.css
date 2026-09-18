@@ -230,6 +230,7 @@
   --spacing-chrome-nav-indicator: var(--chrome-nav-indicator);
   --spacing-chrome-nav-inset: var(--chrome-nav-inset);
   --spacing-chrome-header-gutter: var(--chrome-header-gutter);
+  --spacing-chrome-nav-menu-gutter: var(--chrome-nav-menu-gutter);
 
   /* ═══════════════════════════════════════════════════════════════════
      FOCUS

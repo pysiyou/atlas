@@ -57,28 +57,30 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
         />
 
         <div className="flex flex-1 flex-col min-w-0 min-h-0">
-          <div className={CHROME.topHeaderRow}>
-            {isMobile && (
-              <div className={`${CHROME.navIconColumn} shrink-0`}>
-                <button
-                  type="button"
-                  onClick={handleToggleMobileSidebar}
-                  title="Open Menu"
-                  className={cn(
-                    CHROME.navIndicator,
-                    SURFACE.raised,
-                    'text-text-primary shadow-sm hover:bg-surface-hover lg:hidden',
-                  )}
-                  aria-label="Open navigation menu"
-                >
-                  <Icon name="menu" className="size-5" />
-                </button>
-              </div>
-            )}
-            <div
-              ref={chromeMountRef}
-              className="flex min-h-chrome-header-band flex-1 min-w-0 items-center"
-            />
+          <div className={CHROME.topHeaderShell}>
+            <div className={CHROME.topHeaderRow}>
+              {isMobile && (
+                <div className={`${CHROME.navIconColumn} shrink-0 self-center`}>
+                  <button
+                    type="button"
+                    onClick={handleToggleMobileSidebar}
+                    title="Open Menu"
+                    className={cn(
+                      CHROME.navIndicator,
+                      SURFACE.raised,
+                      'text-text-primary shadow-sm hover:bg-surface-hover lg:hidden',
+                    )}
+                    aria-label="Open navigation menu"
+                  >
+                    <Icon name="menu" className="size-5" />
+                  </button>
+                </div>
+              )}
+              <div
+                ref={chromeMountRef}
+                className="flex h-chrome-header-band min-h-chrome-header-band flex-1 min-w-0 items-center"
+              />
+            </div>
           </div>
 
           <div className="flex flex-1 min-h-0 pr-2 pb-2 pl-0 pt-0">
