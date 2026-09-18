@@ -37,6 +37,7 @@
   --chrome-rail: 3rem;
   --chrome-sidebar-expanded: 15rem;
   --chrome-nav-indicator: calc(var(--chrome-rail) - 0.5rem);
+  --chrome-nav-inset: calc((var(--chrome-rail) - var(--chrome-nav-indicator)) / 2);
   --chrome-header-gutter: 1.25rem;
 
   /* Type scale (px locked; recipes use these via Tailwind text-*) */

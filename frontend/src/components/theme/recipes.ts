@@ -108,14 +108,21 @@ export const CHROME = {
   navScroll: 'flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto py-3 hide-scrollbar',
   navList: 'flex flex-col gap-1.5',
   navItem:
-    'group/nav relative flex min-h-chrome-nav-indicator w-full items-center text-left transition-colors duration-200 ease-out',
+    'group/nav relative flex min-h-chrome-nav-indicator w-full items-center text-left',
+  navRow: 'px-chrome-nav-inset',
+  navHit:
+    'flex min-h-chrome-nav-indicator w-full min-w-0 items-center overflow-hidden rounded-field text-text-secondary transition-colors duration-200 ease-out',
+  navHitFill: 'bg-brand text-on-brand shadow-sm',
+  navHitHover:
+    'group-hover/nav:bg-brand group-hover/nav:text-on-brand group-hover/nav:shadow-sm',
   navIconColumn:
     'chrome-rail-slot flex w-chrome-rail shrink-0 items-center justify-center',
+  navIcon:
+    'flex size-chrome-nav-indicator shrink-0 items-center justify-center',
   navIndicator:
     'flex size-chrome-nav-indicator shrink-0 items-center justify-center rounded-field transition-colors duration-200 ease-out',
   navIndicatorActive: 'bg-brand text-on-brand shadow-sm',
-  navIndicatorIdle:
-    'text-text-secondary group-hover/nav:bg-surface-hover group-hover/nav:text-text-primary',
+  navIndicatorIdle: 'text-text-secondary',
   clipPane:
     'chrome-clip min-w-0 flex-1 overflow-hidden whitespace-nowrap transition-opacity duration-200 ease-out',
   sectionTitle:
