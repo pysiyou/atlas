@@ -289,7 +289,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
                 <Badge
                   variant="primary"
                   size="xs"
-                  className="absolute -top-1 -right-1 min-w-[18px] h-4 px-space-1 flex items-center justify-center"
+                  className="absolute -top-space-1 -right-space-1 min-w-[18px] h-4 px-space-1 flex items-center justify-center"
                 >
                   {activeBadges.length}
                 </Badge>

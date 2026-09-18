@@ -7,7 +7,7 @@ const TIMELINE_STEPS = 4;
 export const OrderProgressSkeleton: React.FC = () => (
   <div className="relative">
     <div
-      className="absolute top-4 bottom-4 w-px bg-linear-to-b from-stroke via-stroke/60 to-stroke pointer-events-none left-[9px]"
+      className="absolute top-space-4 bottom-space-4 w-px bg-linear-to-b from-stroke via-stroke/60 to-stroke pointer-events-none left-[9px]"
       aria-hidden
     />
     <ul className="space-y-0 list-none">

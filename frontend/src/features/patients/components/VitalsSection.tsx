@@ -269,7 +269,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                     </span>
                   </div>
                   {isAbnormal && (
-                    <div className={`absolute -bottom-5 left-0 text-xxs ${TONE.danger.fg} font-normal`}>
+                    <div className={`absolute -bottom-space-5 left-0 text-xxs ${TONE.danger.fg} font-normal`}>
                       Abnormal value
                     </div>
                   )}

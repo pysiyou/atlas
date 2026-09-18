@@ -45,6 +45,7 @@
   --space-8: 2rem;
   --space-10: 2.5rem;
   --space-12: 3rem;
+  --space-16: 4rem;
 
   /**
    * App chrome — collapsed rail width (--chrome-rail); header band matches rail (square top cell).

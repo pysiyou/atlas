@@ -43,7 +43,7 @@ export const ResponsiveFilterMobileBar: React.FC<ResponsiveFilterMobileBarProps>
             <Badge
               variant="primary"
               size="xs"
-              className="absolute -top-1 -right-1 min-w-[18px] h-4 px-space-1 flex items-center justify-center"
+              className="absolute -top-space-1 -right-space-1 min-w-[18px] h-4 px-space-1 flex items-center justify-center"
             >
               {activeFilterCount}
             </Badge>

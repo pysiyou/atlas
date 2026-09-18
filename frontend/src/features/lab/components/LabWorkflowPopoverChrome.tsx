@@ -202,7 +202,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
       </div>
       <div
         className={`
-          absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 ${RADIUS.pill} flex items-center justify-center transition-colors duration-200
+          absolute top-1/2 -translate-y-1/2 right-space-2 w-5 h-5 ${RADIUS.pill} flex items-center justify-center transition-colors duration-200
           ${selected ? 'bg-brand' : 'bg-transparent border-2 border-border-strong'}
         `}
       >

@@ -74,7 +74,13 @@ export const WORKSPACE = {
   contentInset: 'p-workspace-page-inset',
 } as const;
 
-/** Spacing utilities — class strings only defined here (ESLint). */
+/**
+ * Spacing author rules:
+ * - Change scale in primitives.css (`--space-*`, semantic aliases like `--panel-padding`).
+ * - Composed shells: prefer WORKSPACE, LAYOUT, FILTER, EMPTY, DIALOG, PAGE_HEADER.
+ * - One-offs in features: semantic utilities (`gap-layout-section`, `p-panel`, `gap-space-2`) or SPACING.* — not raw `gap-4`.
+ * - `p-0` / `m-0` only for explicit layout resets.
+ */
 export const SPACING = {
   gapHairline: 'gap-space-0-5',
   gapTight: 'gap-space-1',
@@ -109,6 +115,8 @@ export const SPACING = {
   plSpace12: 'pl-space-12',
   prSpace8: 'pr-space-8',
   prSpace12: 'pr-space-12',
+  /** Input / option checkmark inset (shared with payment + lab popover chrome). */
+  insetIconEnd: 'right-space-2',
 } as const;
 
 /** List filter bar + responsive entity filters. */
