@@ -52,25 +52,25 @@ export const LaboratoryPage: React.FC = () => {
       {
         id: 'collection',
         label: LAB_TAB_LABELS.collection,
-        icon: <Icon name={ICONS.dataFields.flask} className="w-4 h-4" />,
+        icon: <Icon name={ICONS.dataFields.flask} className="w-3.5 h-3.5" />,
         count: counts.collection,
       },
       {
         id: 'entry',
         label: LAB_TAB_LABELS.entry,
-        icon: <Icon name={ICONS.dataFields.notebook} className="w-4 h-4" />,
+        icon: <Icon name={ICONS.dataFields.notebook} className="w-3.5 h-3.5" />,
         count: counts.entry,
       },
       {
         id: 'validation',
         label: LAB_TAB_LABELS.validation,
-        icon: <Icon name={ICONS.ui.shieldCheck} className="w-4 h-4" />,
+        icon: <Icon name={ICONS.ui.shieldCheck} className="w-3.5 h-3.5" />,
         count: getValidationTabCount(counts),
       },
       {
         id: 'command-center',
         label: LAB_TAB_LABELS['command-center'],
-        icon: <Icon name={ICONS.ui.dashboard} className="w-4 h-4" />,
+        icon: <Icon name={ICONS.ui.dashboard} className="w-3.5 h-3.5" />,
       },
     ];
   }, [counts]);
@@ -91,7 +91,7 @@ export const LaboratoryPage: React.FC = () => {
         variant="bar"
         title={pageTitle}
         actions={
-          <div className={`bg-surface-hover p-1 ${RADIUS.control} flex items-center gap-1`}>
+          <div className={`bg-surface-hover p-0.5 ${RADIUS.field} flex items-center gap-0.5`}>
             {tabs.map(tab => {
               const isActive = activeTab === tab.id;
               const hasCount = typeof tab.count === 'number' && tab.count > 0;
@@ -100,7 +100,7 @@ export const LaboratoryPage: React.FC = () => {
                   key={tab.id}
                   onClick={() => handleTabChange(tab.id)}
                   className={`
-                  relative flex items-center gap-2 px-3 py-1.5 ${RADIUS.control} text-xs font-normal transition-all duration-200 cursor-pointer
+                  relative flex items-center gap-1.5 px-2.5 py-1 ${RADIUS.field} text-xs font-normal transition-all duration-200 cursor-pointer
                   ${
                     isActive
                       ? 'bg-surface text-brand shadow-sm ring-1 ring-black/5'

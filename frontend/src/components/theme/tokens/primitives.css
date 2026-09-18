@@ -31,15 +31,16 @@
   --control-height: 2.125rem;
 
   /**
-   * App chrome — collapsed sidebar width (--chrome-rail) is independent of row/header
-   * band height (--chrome-header-band) and nav tile size (--chrome-nav-indicator).
+   * App chrome — collapsed rail width (--chrome-rail); header band matches rail (square top cell).
    */
   --chrome-rail: 3.5rem;
-  --chrome-header-band: 3rem;
-  --chrome-sidebar-expanded: 15rem;
   --chrome-nav-indicator: 2.5rem;
+  --chrome-header-band: var(--chrome-rail);
+  --chrome-sidebar-expanded: 15rem;
   --chrome-nav-inset: calc((var(--chrome-rail) - var(--chrome-nav-indicator)) / 2);
   --chrome-header-gutter: 1.25rem;
+  /** Sidebar nav scroll + footer vertical inset (not applied to header band — keeps header ≤ rail width). */
+  --chrome-nav-menu-gutter: 1rem;
 
   /* Type scale (px locked; recipes use these via Tailwind text-*) */
   --font-size-3xs: 8px;
