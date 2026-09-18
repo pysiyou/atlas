@@ -17,7 +17,7 @@ export type EventDetail =
   | { type: 'sampleType'; value: string };
 
 export interface FormattedTimelineEvent {
-  action: string;
+  headline: EventDetail[];
   details: EventDetail[];
   note?: string;
 }

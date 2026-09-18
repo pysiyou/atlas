@@ -4,8 +4,8 @@
 /* eslint-disable max-lines -- single registry for all audit event type handlers */
 
 import { displayId } from '@/utils';
-import { LAB_COPY } from '@/features/lab/constants/labConstants';
 import type { TimelineEvent } from '@/features/lab/api/labCommandCenter';
+import { formatStatusLabel } from './timelineDetails';
 
 export type EventDetail =
   | { type: 'text'; value: string }
@@ -97,6 +97,113 @@ function testIdFromEvent(event: TimelineEvent): number | undefined {
   return Number.isFinite(fromMeta) && fromMeta > 0 ? fromMeta : undefined;
 }
 
+function resolveOrderId(event: TimelineEvent, meta?: Record<string, unknown>): number | undefined {
+  if (event.entityType === 'order') return event.entityId;
+  const m = meta ?? event.metadata;
+  const id = Number(m.orderId);
+  return Number.isFinite(id) && id > 0 ? id : undefined;
+}
+
+function resolveTestId(event: TimelineEvent, meta?: Record<string, unknown>): number | undefined {
+  const fromEvent = testIdFromEvent(event);
+  if (fromEvent) return fromEvent;
+  const m = meta ?? event.metadata;
+  const id = Number(m.orderTestId ?? m.escalatedTestId ?? m.createdTestId);
+  return Number.isFinite(id) && id > 0 ? id : undefined;
+}
+
+function resolveSampleId(event: TimelineEvent, meta?: Record<string, unknown>): number | undefined {
+  if (event.entityType === 'sample') return event.entityId;
+  const m = meta ?? event.metadata;
+  for (const key of ['newSampleId', 'createdSampleId', 'rejectedSampleId', 'originalSampleId']) {
+    const id = Number(m[key]);
+    if (Number.isFinite(id) && id > 0) return id;
+  }
+  return undefined;
+}
+
+function ordLabel(orderId: number | undefined): string | null {
+  if (!orderId) return null;
+  return displayId.order(orderId);
+}
+
+function tstLabel(testId: number | undefined): string | null {
+  if (!testId) return null;
+  return displayId.orderTest(testId);
+}
+
+function smpLabel(sampleId: number | undefined): string | null {
+  if (!sampleId) return null;
+  return displayId.sample(sampleId);
+}
+
+function headlineOrder(prefix: string, orderId: number | undefined): string {
+  const ord = ordLabel(orderId);
+  return ord ? `${prefix} ${ord}` : `${prefix}.`;
+}
+
+function headlineTestInOrder(
+  lead: string,
+  testId: number | undefined,
+  orderId: number | undefined,
+): string {
+  const tst = tstLabel(testId);
+  const ord = ordLabel(orderId);
+  if (tst && ord) return `${lead} for test ${tst} in order ${ord}`;
+  if (tst) return `${lead} for test ${tst}`;
+  if (ord) return `${lead} for order ${ord}`;
+  return `${lead}.`;
+}
+
+function headlineTestOrderFromEvent(lead: string, event: TimelineEvent): string {
+  const meta = event.metadata;
+  return headlineTestInOrder(lead, resolveTestId(event, meta), resolveOrderId(event, meta));
+}
+
+function headlineActivityFallback(event: TimelineEvent): string {
+  const ord = resolveOrderId(event);
+  const tst = resolveTestId(event);
+  if (ord) return `Activity recorded for order ${ordLabel(ord)}`;
+  if (tst) return `Activity recorded for test ${tstLabel(tst)}`;
+  return 'Activity recorded.';
+}
+
+function humanizePaymentMethod(method: string): string {
+  return method.replace(/_/g, ' ').toLowerCase();
+}
+
+function paymentDetails(meta: Record<string, unknown>, event: TimelineEvent): EventDetail[] {
+  const parts: string[] = [];
+  const amount = meta.amount;
+  if (typeof amount === 'number') parts.push(`$${amount.toFixed(2)}`);
+  const payStatus = metaString(meta.paymentStatus) ?? getStatusValue(event);
+  if (payStatus === 'paid') parts.push('paid');
+  const method = metaString(meta.paymentMethod);
+  if (method) parts.push(`via ${humanizePaymentMethod(method)}`);
+  if (parts.length === 0) return [];
+  return [{ type: 'text', value: parts.join(' ') }];
+}
+
+function orderStatusChangeDetails(event: TimelineEvent): EventDetail[] {
+  const orderId = resolveOrderId(event);
+  if (!orderId) return [];
+  const ord = ordLabel(orderId);
+  if (!ord) return [];
+  const before = metaString(event.beforeState?.status);
+  const after = getStatusValue(event);
+  const beforeLabel = before ? formatStatusLabel(before) : '—';
+  const afterLabel = after ? formatStatusLabel(after) : '—';
+  return [{ type: 'text', value: `${ord} changed from ${beforeLabel} to ${afterLabel}` }];
+}
+
+function testContextWithoutOrder(meta: Record<string, unknown>, testId?: number): EventDetail[] {
+  const details: EventDetail[] = [];
+  const test = testRef(testId ?? meta.orderTestId ?? meta.escalatedTestId);
+  if (test) details.push(test);
+  details.push({ type: 'testCode', value: formatTestCodes(meta) });
+  return details;
+}
+
 function testTransitionDetails(
   meta: Record<string, unknown>,
   event?: TimelineEvent,
@@ -166,10 +273,10 @@ function entityDetails(event: TimelineEvent): EventDetail[] {
 
 // --- per-type handlers ---
 
-const ESCALATION_TRIGGER_LABELS: Record<string, string> = {
+const ESCALATION_TRIGGER_LEAD: Record<string, string> = {
   escalation_trigger_crit_val: 'Escalation opened for critical value',
-  escalation_trigger_limit_hit: 'Escalation opened after retest limit',
-  escalation_trigger_rej_samp: 'Escalation opened for rejected sample',
+  escalation_trigger_limit_hit: 'Escalation opened for retest limit',
+  escalation_trigger_rej_samp: 'Escalation opened for rejected specimen',
   escalation_trigger_amend_res: 'Escalation opened for result amendment',
 };
 
@@ -184,15 +291,19 @@ function completedWithLabel(
   };
 }
 
-function testOrderChange(action: string, preposition: string, meta: Record<string, unknown>): FormattedTimelineEvent {
-  const link = orderLink(meta.orderId);
+function testOrderChange(verb: 'added' | 'removed', meta: Record<string, unknown>): FormattedTimelineEvent {
+  const code = formatTestCodes(meta);
+  const orderId = Number(meta.orderId);
+  const ord = Number.isFinite(orderId) && orderId > 0 ? ordLabel(orderId) : null;
+  const action =
+    ord && verb === 'added'
+      ? `${code} added to order ${ord}`
+      : ord && verb === 'removed'
+        ? `${code} removed from order ${ord}`
+        : `${code} ${verb}`;
   return {
     action,
-    details: [
-      { type: 'testCode', value: formatTestCodes(meta) },
-      { type: 'text', value: preposition },
-      ...(link ? [link] : []),
-    ],
+    details: testContextWithoutOrder(meta),
   };
 }
 
@@ -206,17 +317,25 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     ];
     const sampleType = meta.sampleType;
     if (typeof sampleType === 'string') details.push({ type: 'sampleType', value: sampleType });
-    return { action: 'Sample collected and ready for testing', details };
+    const smp = smpLabel(event.entityId);
+    const codes = formatTestCodes(meta);
+    const action = smp
+      ? `Specimen ${smp} collected for ${codes}`
+      : `Specimen collected for ${codes}`;
+    return { action, details };
   },
 
-  sample_reject: event => ({
-    action: 'Sample rejected during collection',
-    details: [
-      sampleRef(event.entityId) ?? { type: 'id', value: displayId.sample(event.entityId) },
-      { type: 'text', value: '—' },
-      { type: 'text', value: (event.metadata.rejectionReason as string) || 'Quality issue' },
-    ],
-  }),
+  sample_reject: event => {
+    const smp = smpLabel(event.entityId);
+    return {
+      action: smp ? `Specimen ${smp} rejected at collection` : 'Specimen rejected at collection',
+      details: [
+        sampleRef(event.entityId) ?? { type: 'id', value: displayId.sample(event.entityId) },
+        { type: 'text', value: '—' },
+        { type: 'text', value: (event.metadata.rejectionReason as string) || 'Quality issue' },
+      ],
+    };
+  },
 
   sample_recollection_request: event => {
     const meta = event.metadata;
@@ -231,15 +350,19 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     if (typeof attempt === 'number' && attempt > 0) {
       details.push({ type: 'text', value: `(attempt ${attempt})` });
     }
-    return { action: 'New sample recollection requested', details };
+    const smp = smpLabel(event.entityId);
+    const action = smp
+      ? `Repeat draw requested for specimen ${smp}`
+      : 'Repeat draw requested for specimen';
+    return { action, details };
   },
 
   result_entry: event => ({
-    action: 'Test results recorded',
+    action: headlineTestOrderFromEvent('Results recorded', event),
     details: testOnOrder(event.metadata, event.entityId),
   }),
   result_validation_approve: event => ({
-    action: 'Test validated and marked complete',
+    action: headlineTestOrderFromEvent('Results approved', event),
     details: testCompletedDetails(event.metadata, event.entityId),
   }),
 
@@ -264,11 +387,14 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
       details.push({ type: 'text', value: '→' }, createdSample);
     }
     if (details.length === 0) details.push({ type: 'text', value: 'Reported' });
-    let action = 'Quality issue reported';
+    let action: string;
     if (stage === 'collection' || domain === 'specimen') {
-      action = LAB_COPY.quality.sampleRejected;
+      const smp = smpLabel(resolveSampleId(event, meta) ?? event.entityId);
+      action = smp ? `Specimen issue reported for sample ${smp}` : 'Specimen issue reported';
     } else if (stage === 'validation' || domain === 'results') {
-      action = 'Results rejected at validation';
+      action = headlineTestOrderFromEvent('Validation issue reported', event);
+    } else {
+      action = headlineTestOrderFromEvent('Quality issue reported', event);
     }
     return { action, details };
   },
@@ -283,7 +409,10 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     if (link) details.push({ type: 'text', value: 'on order' }, link);
     const reason = metaString(meta.reason);
     if (reason) details.push({ type: 'text', value: '—' }, { type: 'text', value: reason });
-    return { action: 'Supervisor authorized a retest', details };
+    return {
+      action: headlineTestOrderFromEvent('Supervisor approved retest', event),
+      details,
+    };
   },
 
   escalation_resolution_authorize_recollect: event => {
@@ -300,13 +429,24 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     if (link) details.push({ type: 'text', value: 'on order' }, link);
     const reason = metaString(meta.reason);
     if (reason) details.push({ type: 'text', value: '—' }, { type: 'text', value: reason });
-    return { action: 'Supervisor authorized sample recollection', details };
+    return {
+      action: headlineTestOrderFromEvent('Supervisor approved new specimen', event),
+      details,
+    };
   },
 
   escalation_resolution_force_validate: event =>
-    completedWithLabel('Test force-validated by supervisor', event.metadata, event.entityId),
+    completedWithLabel(
+      headlineTestOrderFromEvent('Supervisor released results', event),
+      event.metadata,
+      event.entityId,
+    ),
   escalation_resolution_apply_amendment: event =>
-    completedWithLabel('Amended results applied and validated', event.metadata, event.entityId),
+    completedWithLabel(
+      headlineTestOrderFromEvent('Supervisor signed off on amended results', event),
+      event.metadata,
+      event.entityId,
+    ),
 
   escalation_resolution_cancel_test: event => {
     const meta = event.metadata;
@@ -317,7 +457,10 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
       { type: 'text', value: '—' },
       { type: 'text', value: metaString(meta.reason) ?? 'Cancelled' }
     );
-    return { action: 'Test cancelled by supervisor', details };
+    return {
+      action: headlineTestOrderFromEvent('Supervisor cancelled test', event),
+      details,
+    };
   },
 
   critical_value_detected: event => {
@@ -344,7 +487,10 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
         .join(', ');
       if (summary) details.push({ type: 'text', value: '—' }, { type: 'text', value: summary });
     }
-    return { action: 'Critical result detected in testing', details };
+    return {
+      action: headlineTestOrderFromEvent('Critical value flagged', event),
+      details,
+    };
   },
 
   critical_value_notified: event => {
@@ -358,7 +504,10 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     if (method) details.push({ type: 'text', value: `via ${method}` });
     const link = orderLink(meta.orderId);
     if (link) details.push({ type: 'text', value: 'on order' }, link);
-    return { action: 'Provider notified of critical value', details };
+    return {
+      action: headlineTestOrderFromEvent('Critical value notification sent', event),
+      details,
+    };
   },
 
   critical_value_acknowledged: event => {
@@ -370,7 +519,10 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     ];
     const link = orderLink(meta.orderId);
     if (link) details.push({ type: 'text', value: 'on order' }, link);
-    return { action: 'Critical value acknowledged by provider', details };
+    return {
+      action: headlineTestOrderFromEvent('Critical value acknowledged', event),
+      details,
+    };
   },
 
   recollection_request_created: event => {
@@ -384,7 +536,10 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     if (test) details.push(test);
     const stage = metaString(meta.stage);
     if (stage) details.push({ type: 'text', value: 'at' }, { type: 'text', value: stage });
-    return { action: 'Recollection sent for supervisor approval', details };
+    return {
+      action: headlineOrder('Recollection submitted for order', resolveOrderId(event, meta)),
+      details,
+    };
   },
 
   recollection_request_approved: event => {
@@ -396,7 +551,10 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     if (created) details.push({ type: 'text', value: '→' }, created);
     const newTest = testRef(meta.createdTestId);
     if (newTest) details.push(newTest);
-    return { action: 'Recollection request approved by supervisor', details };
+    return {
+      action: headlineOrder('Recollection approved for order', resolveOrderId(event, meta)),
+      details,
+    };
   },
 
   recollection_request_denied: event => {
@@ -405,56 +563,40 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     if (link) details.push(link);
     const note = metaString(event.metadata.reviewNotes);
     if (note) details.push({ type: 'note', value: note });
-    return { action: 'Recollection request denied by supervisor', details };
+    return {
+      action: headlineOrder('Recollection declined for order', resolveOrderId(event)),
+      details,
+    };
   },
 
-  test_added: event => testOrderChange('Test added to order', 'to order', event.metadata),
-  test_removed: event => testOrderChange('Test removed from order', 'from order', event.metadata),
+  test_added: event => testOrderChange('added', event.metadata),
+  test_removed: event => testOrderChange('removed', event.metadata),
 
   order_status_change: event => {
-    const details: EventDetail[] = [];
-    const link = orderLinkFromEvent(event);
-    if (link) details.push(link);
-    const status = getStatusValue(event);
-    const beforeStatus = metaString(event.beforeState?.status);
-    if (status) details.push({ type: 'text', value: '→' }, { type: 'status', value: status });
-    const isSystem = event.performedBy === 'system';
-    let action = isSystem ? 'Order status automatically updated' : 'Order status manually updated';
-    if (status === 'ordered' && (!beforeStatus || beforeStatus === '')) {
-      action = 'Order placed';
-    } else if (status === 'completed' && isSystem) {
-      action = 'Order completed — all tests finished';
-    } else if (status === 'running' && isSystem) {
-      action = 'Order moved to in progress';
-    }
-    return { action, details };
+    const orderId = resolveOrderId(event);
+    const ord = ordLabel(orderId);
+    const action = ord ? `The order status of ${ord} changed` : 'The order status changed';
+    return { action, details: orderStatusChangeDetails(event) };
   },
 
   order_payment_recorded: event => {
     const meta = event.metadata;
-    const details: EventDetail[] = [];
-    const link = orderLinkFromEvent(event);
-    if (link) details.push(link);
-    const amount = meta.amount;
-    if (typeof amount === 'number') {
-      details.push({ type: 'text', value: '—' }, { type: 'text', value: `$${amount.toFixed(2)}` });
-    }
-    const method = metaString(meta.paymentMethod);
-    if (method) details.push({ type: 'text', value: 'via' }, { type: 'text', value: method });
-    const payStatus = metaString(meta.paymentStatus) ?? getStatusValue(event);
-    if (payStatus === 'paid') {
-      details.push({ type: 'text', value: '→' }, { type: 'status', value: 'paid' });
-    }
-    return { action: 'Payment recorded for order', details };
+    return {
+      action: headlineOrder('Payment recorded for order', resolveOrderId(event, meta)),
+      details: paymentDetails(meta, event),
+    };
   },
 };
 
-const escalationTriggerHandler: EventHandler = event => ({
-  action: ESCALATION_TRIGGER_LABELS[event.type] ?? 'Escalation opened for review',
-  details: escalationTriggerDetails(event.metadata, event.entityId),
-});
+const escalationTriggerHandler: EventHandler = event => {
+  const lead = ESCALATION_TRIGGER_LEAD[event.type] ?? 'Escalation opened';
+  return {
+    action: headlineTestOrderFromEvent(lead, event),
+    details: escalationTriggerDetails(event.metadata, event.entityId),
+  };
+};
 
-for (const type of Object.keys(ESCALATION_TRIGGER_LABELS)) {
+for (const type of Object.keys(ESCALATION_TRIGGER_LEAD)) {
   EVENT_HANDLERS[type] = escalationTriggerHandler;
 }
 
@@ -473,7 +615,7 @@ export function formatTimelineEvent(event: TimelineEvent): FormattedTimelineEven
   const handler = EVENT_HANDLERS[event.type];
   const formatted = handler
     ? handler(event)
-    : { action: event.type.replace(/_/g, ' '), details: entityDetails(event) };
+    : { action: headlineActivityFallback(event), details: entityDetails(event) };
   return appendNote(event, formatted);
 }
 

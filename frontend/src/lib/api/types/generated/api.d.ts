@@ -5040,7 +5040,7 @@ export interface operations {
                 limit?: number;
                 /** @description Pagination offset */
                 offset?: number;
-                /** @description Optional verb categories: placed, paid, collected, recorded, rejected, requested, approved, validated */
+                /** @description Optional categories: order, payment, sample, result, other (legacy: specimen→sample) */
                 categories?: string[] | null;
             };
             header?: never;

@@ -161,18 +161,24 @@ export function formatReferenceRange(
   return 'N/A';
 }
 
+/** Catalog item codes that differ from physiologic-limits contract keys (matches backend). */
+const PHYSIOLOGIC_LIMIT_ALIASES: Record<string, string> = {
+  PLAT: 'PLT',
+};
+
 export function getPhysiologicLimit(itemCode: string): PhysiologicLimit | undefined {
-  if (PHYSIOLOGIC_LIMITS[itemCode]) return PHYSIOLOGIC_LIMITS[itemCode];
-  const upperCode = itemCode.toUpperCase();
+  const resolvedCode = PHYSIOLOGIC_LIMIT_ALIASES[itemCode] ?? itemCode;
+
+  if (PHYSIOLOGIC_LIMITS[resolvedCode]) return PHYSIOLOGIC_LIMITS[resolvedCode];
+  const upperCode = resolvedCode.toUpperCase();
   for (const [key, limit] of Object.entries(PHYSIOLOGIC_LIMITS)) {
     if (key.toUpperCase() === upperCode) return limit;
   }
+  const resolvedLower = resolvedCode.toLowerCase();
   for (const [key, limit] of Object.entries(PHYSIOLOGIC_LIMITS)) {
-    if (
-      key.toLowerCase().includes(itemCode.toLowerCase()) ||
-      itemCode.toLowerCase().includes(key.toLowerCase())
-    )
-      return limit;
+    if (key.length < 3) continue;
+    const keyLower = key.toLowerCase();
+    if (keyLower.includes(resolvedLower) || resolvedLower.includes(keyLower)) return limit;
   }
   return undefined;
 }
