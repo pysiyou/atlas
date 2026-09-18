@@ -13,15 +13,32 @@ const THEME_CONFIG: Record<ThemeName, { icon: IconName; label: string }> = {
   github: { icon: 'settings', label: 'GitHub' },
 };
 
-export function ThemeSwitch() {
+function nextTheme(current: ThemeName): ThemeName {
+  const index = THEMES.indexOf(current);
+  return THEMES[(index + 1) % THEMES.length] ?? THEMES[0];
+}
+
+export interface ThemeSwitchProps {
+  isCollapsed?: boolean;
+}
+
+export function ThemeSwitch({ isCollapsed = false }: ThemeSwitchProps) {
   const effective = useActiveTheme();
+
+  const handleThemeClick = (theme: ThemeName) => {
+    if (isCollapsed) {
+      setTheme(nextTheme(effective));
+      return;
+    }
+    setTheme(theme);
+  };
 
   return (
     <div className="flex flex-col">
       <p className={CHROME.sectionTitle}>Theme</p>
       <div
         className={cn(
-          'chrome-theme-well mx-2 flex items-center gap-1 bg-surface-hover p-1',
+          'chrome-theme-well mx-2 flex min-h-[2.125rem] items-center gap-1 overflow-hidden bg-surface-hover p-1',
           RADIUS.control,
         )}
         role="group"
@@ -34,8 +51,8 @@ export function ThemeSwitch() {
             <button
               key={theme}
               type="button"
-              onClick={() => setTheme(theme)}
-              title={config.label}
+              onClick={() => handleThemeClick(theme)}
+              title={isCollapsed ? `Theme: ${config.label}. Click to switch.` : config.label}
               aria-pressed={isActive}
               aria-label={`${config.label} theme`}
               className={cn(

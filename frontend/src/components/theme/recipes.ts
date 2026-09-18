@@ -91,30 +91,34 @@ export const RADIUS = {
 /** Primitive token references — lengths live only in primitives.css. */
 export const CHROME_RAIL_VAR = 'var(--chrome-rail)' as const;
 export const CHROME_SIDEBAR_EXPANDED_VAR = 'var(--chrome-sidebar-expanded)' as const;
+export const CHROME_HEADER_BAND_VAR = 'var(--chrome-header-band)' as const;
 
-/** App shell — collapsed rail width matches header band height (--chrome-rail). */
+/** App shell — collapsed width (--chrome-rail); header band height (--chrome-header-band). */
 export const CHROME = {
   railWidth: 'w-chrome-rail',
-  railHeight: 'h-chrome-rail',
-  railMinHeight: 'min-h-chrome-rail',
+  railHeight: 'h-chrome-header-band',
+  railMinHeight: 'min-h-chrome-header-band',
   railVar: CHROME_RAIL_VAR,
   sidebarExpandedVar: CHROME_SIDEBAR_EXPANDED_VAR,
   aside:
     'group/chrome relative flex h-full flex-col overflow-x-hidden overflow-y-hidden bg-surface-sidebar',
-  headerBand: 'flex h-chrome-rail min-h-chrome-rail w-full shrink-0 items-center',
+  headerBand:
+    'flex h-chrome-header-band min-h-chrome-header-band w-full shrink-0 items-center',
   topHeaderRow:
-    'flex min-h-chrome-rail shrink-0 items-stretch bg-surface-sidebar pl-chrome-header-gutter pr-3 lg:pr-5',
-  pageHeaderChrome: 'h-full min-h-chrome-rail h-chrome-rail flex items-center pr-2',
+    'flex min-h-chrome-header-band shrink-0 items-stretch bg-surface-sidebar pl-chrome-header-gutter pr-3 lg:pr-5',
+  pageHeaderChrome:
+    'h-full min-h-chrome-header-band h-chrome-header-band flex items-center pr-2',
   navScroll: 'flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto py-3 hide-scrollbar',
   navList: 'flex flex-col gap-1.5',
   navItem:
-    'group/nav relative flex min-h-chrome-nav-indicator w-full items-center text-left',
-  navRow: 'px-chrome-nav-inset',
+    'group/nav relative flex min-h-chrome-nav-indicator w-full items-stretch text-left',
   navHit:
-    'flex min-h-chrome-nav-indicator w-full min-w-0 items-center overflow-hidden rounded-field text-text-secondary transition-colors duration-200 ease-out',
-  navHitFill: 'bg-brand text-on-brand shadow-sm',
-  navHitHover:
-    'group-hover/nav:bg-brand group-hover/nav:text-on-brand group-hover/nav:shadow-sm',
+    'flex min-h-chrome-nav-indicator w-full min-w-0 flex-1 items-center overflow-hidden rounded-field text-text-secondary transition-colors duration-200 ease-out',
+  navHitHover: 'group-hover/nav:bg-surface-hover',
+  navIconActive: 'text-brand group-hover/nav:text-brand',
+  navIconHover: 'group-hover/nav:text-text-primary',
+  navLabelActive: 'text-brand group-hover/nav:text-brand',
+  navLabelHover: 'group-hover/nav:text-text-primary',
   navIconColumn:
     'chrome-rail-slot flex w-chrome-rail shrink-0 items-center justify-center',
   navIcon:
@@ -126,7 +130,7 @@ export const CHROME = {
   clipPane:
     'chrome-clip min-w-0 flex-1 overflow-hidden whitespace-nowrap transition-opacity duration-200 ease-out',
   sectionTitle:
-    'chrome-section-title shrink-0 overflow-hidden pl-chrome-rail pr-3 pt-0 pb-2 text-xxs font-medium uppercase tracking-wide text-text-secondary leading-none',
+    'chrome-section-title shrink-0 overflow-hidden pl-chrome-rail pr-3 pt-0 pb-2 min-h-6 text-xxs font-medium uppercase tracking-wide text-text-secondary leading-none transition-opacity duration-200 ease-out',
   navLabel:
     'chrome-clip min-w-0 flex-1 truncate pr-3 text-sm font-medium whitespace-nowrap transition-opacity duration-200 ease-out',
   navTooltip:

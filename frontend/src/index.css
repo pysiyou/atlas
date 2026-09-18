@@ -223,8 +223,9 @@
   --radius-button-square: var(--button-radius-square);
   --radius-button-circle: var(--button-radius-circle);
   --height-control: var(--control-height);
-  /* Layout — sole numeric value lives on :root --chrome-rail in primitives.css */
+  /* Layout — numeric chrome tokens live in primitives.css */
   --spacing-chrome-rail: var(--chrome-rail);
+  --spacing-chrome-header-band: var(--chrome-header-band);
   --spacing-chrome-sidebar-expanded: var(--chrome-sidebar-expanded);
   --spacing-chrome-nav-indicator: var(--chrome-nav-indicator);
   --spacing-chrome-nav-inset: var(--chrome-nav-inset);
@@ -335,7 +336,14 @@ body {
   scrollbar-width: none;
 }
 
-/* Collapsed app rail — labels stay mounted but must occupy zero flex width so tiles center. */
+/* Collapsed app rail — clip text without reflowing icon column or section bands. */
+.chrome-clip {
+  transition:
+    opacity 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+    flex-basis 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+    width 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .chrome-collapsed .chrome-clip {
   width: 0 !important;
   min-width: 0 !important;
@@ -348,13 +356,9 @@ body {
   pointer-events: none;
 }
 
-.chrome-collapsed .chrome-rail-slot {
-  width: 100%;
-  justify-content: center;
-}
-
 .chrome-collapsed .chrome-section-title {
-  display: none !important;
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Line sits in the vertical center of a band equal to one nav tile. */
@@ -373,24 +377,33 @@ body {
 }
 
 .chrome-collapsed .chrome-theme-well {
-  flex-direction: column;
-  width: fit-content;
-  margin-inline: auto !important;
-  gap: 0.125rem;
+  justify-content: center;
+  margin-inline: var(--chrome-nav-inset);
+  min-height: var(--chrome-nav-indicator);
+  padding: 0;
+  background: transparent;
 }
 
-.chrome-collapsed .chrome-theme-well > button {
-  display: flex;
+.chrome-collapsed .chrome-theme-well > button:not([aria-pressed='true']) {
+  display: none !important;
+}
+
+.chrome-collapsed .chrome-theme-well > button[aria-pressed='true'] {
   flex: none;
-  align-items: center;
-  justify-content: center;
   gap: 0;
-  width: 1.75rem;
-  height: 1.75rem;
+  width: var(--chrome-nav-indicator);
+  height: var(--chrome-nav-indicator);
   padding: 0;
-  line-height: 0;
 }
 
 .chrome-collapsed .chrome-theme-well .chrome-clip {
-  display: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  flex: 0 0 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  opacity: 0;
+  pointer-events: none;
 }
