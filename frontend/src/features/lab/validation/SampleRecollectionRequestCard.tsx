@@ -3,6 +3,7 @@
  * Desktop uses LabWorkflowCardShell; mobile matches EscalationCard / ResultValidationCard layout.
  */
 import React, { useState } from 'react';
+import { RADIUS } from '@/components/theme/recipes';
 import { Badge, Button, Card } from '@/components';
 import { cn, formatDateTime } from '@/utils';
 import { LabWorkflowCardShell } from '../components/LabWorkflowCardShell';
@@ -123,7 +124,7 @@ function RecollectionRequestCardDesktop({
         onClick={e => e.stopPropagation()}
         placeholder="Review notes (optional)"
         rows={2}
-        className="w-full rounded border border-border-default bg-surface px-2 py-1 resize-none text-xs"
+        className={`w-full ${RADIUS.field} border border-border-default bg-surface px-2 py-1 resize-none text-xs`}
       />
     </div>
   );
@@ -266,7 +267,7 @@ function RecollectionRequestCardMobile({
             onClick={e => e.stopPropagation()}
             placeholder="Review notes (optional)"
             rows={2}
-            className="text-xs w-full rounded border border-border-default bg-surface px-2 py-1 resize-none"
+            className={`text-xs w-full ${RADIUS.field} border border-border-default bg-surface px-2 py-1 resize-none`}
           />
         </div>
       </LabMobileCardHeader>

@@ -9,7 +9,7 @@ import { ICONS } from '@/config/icons';
 import { useLabStageQueueCounts, getValidationTabCount } from '@/features/lab/hooks';
 import { getLabTabPath, LAB_TAB_LABELS, type LabTabId } from '@/features/lab/constants/labConstants';
 import { useAuthStore } from '@/app/authStore';
-import { TYPE } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/components/theme/recipes';
 
 
 const LAB_QUEUE_ITEMS: Array<{
@@ -49,7 +49,7 @@ export const LabPipelineSummary: React.FC = () => {
             <Link
               key={item.id}
               to={getLabTabPath(item.id)}
-              className="flex items-center justify-between p-3 rounded border border-border-default hover:bg-surface-page transition-colors"
+              className={`flex items-center justify-between p-3 ${RADIUS.field} border border-border-default hover:bg-surface-page transition-colors`}
             >
               <div className="flex items-center gap-2 min-w-0">
                 <Icon name={item.icon as IconName} className="w-4 h-4 text-brand shrink-0" />

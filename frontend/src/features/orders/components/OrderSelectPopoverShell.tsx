@@ -1,12 +1,12 @@
 import React from 'react';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
-import { TYPE } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/components/theme/recipes';
 
 
 const POPOVER_SHELL_CLASS = [
   'absolute left-0 right-0 top-full z-50 mt-1 text-text-primary',
   'border border-border-default/80',
-  'rounded',
+  RADIUS.menu,
   'overflow-hidden',
   'bg-surface',
   'shadow-md',

@@ -3,6 +3,7 @@
  */
 
 import { Link } from 'react-router-dom';
+import { RADIUS } from '@/components/theme/recipes';
 import { Icon, type IconName } from '@/components';
 import { cn } from '@/utils';
 import {
@@ -296,7 +297,7 @@ export function LegendRow({
     <div className={cn('flex items-center justify-between gap-2', isMd ? 'text-xs' : 'text-xxs')}>
       <span className={cn('flex min-w-0 items-center gap-1.5 truncate', COMMAND_CENTER_TEXT.label)}>
         <span
-          className={cn('shrink-0 rounded-sm', swatchClass, isMd ? 'h-2 w-2' : 'h-1.5 w-1.5')}
+          className={cn(`shrink-0 ${RADIUS.field}`, swatchClass, isMd ? 'h-2 w-2' : 'h-1.5 w-1.5')}
         />
         {label}
       </span>

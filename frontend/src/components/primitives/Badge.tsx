@@ -98,7 +98,7 @@ export const Badge: React.FC<BadgeProps> = ({
       {...props}
     >
       {showDot && (
-        <span className={cn('w-1 h-1 rounded-full shrink-0', dotClassName)} aria-hidden />
+        <span className={cn(`w-1 h-1 ${RADIUS.pill} shrink-0`, dotClassName)} aria-hidden />
       )}
       {iconElement}
       {content}
@@ -164,7 +164,7 @@ export const RemovableTag: React.FC<RemovableTagProps> = ({
       <button
         type="button"
         onClick={onRemove}
-        className="-mr-0.5 ml-0.5 flex shrink-0 items-center justify-center rounded-full p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-brand/30"
+        className={`-mr-0.5 ml-0.5 flex shrink-0 items-center justify-center ${RADIUS.pill} p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-brand/30`}
         aria-label={removeAriaLabel}
       >
         <Icon name={ICONS.actions.closeCircle} className={cn('h-3 w-3', chip.remove)} />

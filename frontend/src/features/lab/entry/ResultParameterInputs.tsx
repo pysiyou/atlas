@@ -4,7 +4,7 @@
 
 import React, { useCallback } from 'react';
 import { Popover, Icon } from '@/components';
-import { CONTROL } from '@/components/theme/recipes';
+import { CONTROL, RADIUS } from '@/components/theme/recipes';
 import { inputTrigger, inputTriggerOpen, inputBase, inputError } from '@/components/inputs/inputStyles';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
@@ -59,7 +59,7 @@ const SelectParameterInput: React.FC<{
           {value && (
             <button
               onClick={handleClear}
-              className="p-0.5 -mr-1 hover:bg-surface-hover rounded transition-colors flex items-center justify-center cursor-pointer flex-shrink-0"
+              className={`p-0.5 -mr-1 hover:bg-surface-hover ${RADIUS.field} transition-colors flex items-center justify-center cursor-pointer flex-shrink-0`}
             >
               <Icon
                 name={ICONS.actions.closeCircle}

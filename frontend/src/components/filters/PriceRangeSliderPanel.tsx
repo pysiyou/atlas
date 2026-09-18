@@ -3,6 +3,7 @@
  */
 
 import React from 'react';
+import { RADIUS } from '@/components/theme/recipes';
 
 export interface PriceRangeSliderPanelProps {
   localValue: [number, number];
@@ -34,7 +35,7 @@ export const PriceRangeSliderPanel: React.FC<PriceRangeSliderPanelProps> = ({
     </div>
 
     <div className="relative h-6 flex items-center select-none touch-none" ref={sliderRef}>
-      <div className="absolute w-full h-1.5 bg-border-default rounded-full overflow-hidden">
+      <div className={`absolute w-full h-1.5 bg-border-default ${RADIUS.pill} overflow-hidden`}>
         <div
           className="absolute h-full bg-brand"
           style={{
@@ -45,13 +46,13 @@ export const PriceRangeSliderPanel: React.FC<PriceRangeSliderPanelProps> = ({
       </div>
 
       <div
-        className="absolute w-5 h-5 bg-surface border-2 border-brand rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-brand/30"
+        className={`absolute w-5 h-5 bg-surface border-2 border-brand ${RADIUS.pill} shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-brand/30`}
         style={{ left: `calc(${getPercentage(localValue[0])}% - 10px)` }}
         onMouseDown={onMouseDown('min')}
       />
 
       <div
-        className="absolute w-5 h-5 bg-surface border-2 border-brand rounded-full shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-brand/30"
+        className={`absolute w-5 h-5 bg-surface border-2 border-brand ${RADIUS.pill} shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-brand/30`}
         style={{ left: `calc(${getPercentage(localValue[1])}% - 10px)` }}
         onMouseDown={onMouseDown('max')}
       />

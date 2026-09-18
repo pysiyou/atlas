@@ -1,7 +1,7 @@
 import { companyConfig } from '@/config';
 import { Icon, IconButton } from '@/components';
 import { ICONS } from '@/config/icons';
-import { CHROME, TYPE } from '@/components/theme/recipes';
+import { CHROME, RADIUS, TYPE } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
 export interface SidebarHeaderProps {
@@ -43,7 +43,7 @@ export function SidebarHeader({
         <button
           type="button"
           onClick={isCollapsed && !onMobileClose ? onToggleCollapse : undefined}
-          className="rounded-field transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]"
+          className={`${RADIUS.field} transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]`}
           title={isCollapsed && !onMobileClose ? 'Expand sidebar' : displayName}
           aria-label={isCollapsed && !onMobileClose ? 'Expand sidebar' : displayName}
         >

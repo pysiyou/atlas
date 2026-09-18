@@ -123,7 +123,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
             <h4 className="text-sm font-semibold text-text-primary">What's Included</h4>
             <div className="space-y-2.5">
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-4 h-4 rounded-full bg-brand flex items-center justify-center mt-0.5">
+                <div className={`flex-shrink-0 w-4 h-4 ${RADIUS.pill} bg-brand flex items-center justify-center mt-0.5`}>
                   <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                 </div>
                 <div>
@@ -134,7 +134,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-4 h-4 rounded-full bg-brand flex items-center justify-center mt-0.5">
+                <div className={`flex-shrink-0 w-4 h-4 ${RADIUS.pill} bg-brand flex items-center justify-center mt-0.5`}>
                   <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                 </div>
                 <div>
@@ -145,7 +145,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-4 h-4 rounded-full bg-brand flex items-center justify-center mt-0.5">
+                <div className={`flex-shrink-0 w-4 h-4 ${RADIUS.pill} bg-brand flex items-center justify-center mt-0.5`}>
                   <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                 </div>
                 <div>
@@ -156,7 +156,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-4 h-4 rounded-full bg-brand flex items-center justify-center mt-0.5">
+                <div className={`flex-shrink-0 w-4 h-4 ${RADIUS.pill} bg-brand flex items-center justify-center mt-0.5`}>
                   <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                 </div>
                 <div>
@@ -214,7 +214,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                   <div className="mt-0.5 flex-shrink-0">
                     <div
                       className={`
-                        w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all duration-150
+                        w-4 h-4 ${RADIUS.pill} border-2 flex items-center justify-center transition-all duration-150
                         ${
                           isSelected
                             ? 'border-brand bg-brand'

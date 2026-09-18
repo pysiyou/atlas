@@ -34,7 +34,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
   formProgress,
 }) => (
   <div className="flex items-center justify-between gap-4 mb-6">
-    <div className="bg-surface-hover p-1 rounded flex items-center gap-1">
+    <div className={`bg-surface-hover p-1 ${RADIUS.field} flex items-center gap-1`}>
       {tabs.map(tab => {
         const isActive = activeTab === tab.id;
         return (
@@ -44,8 +44,8 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
             onClick={() => onTabChange(tab.id)}
             className={
               isActive
-                ? 'relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-normal cursor-pointer bg-surface text-brand shadow-sm ring-1 ring-black/5'
-                : 'relative flex items-center gap-2 px-3 py-1.5 rounded text-xs font-normal cursor-pointer text-text-tertiary hover:text-text-primary hover:bg-surface-hover'
+                ? `relative flex items-center gap-2 px-3 py-1.5 ${RADIUS.field} text-xs font-normal cursor-pointer bg-surface text-brand shadow-sm ring-1 ring-black/5`
+                : `relative flex items-center gap-2 px-3 py-1.5 ${RADIUS.field} text-xs font-normal cursor-pointer text-text-tertiary hover:text-text-primary hover:bg-surface-hover`
             }
           >
             {tab.label}

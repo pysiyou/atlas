@@ -160,23 +160,53 @@ export default defineConfig([
         selector: 'TemplateElement[value.raw=/border-border-error focus-within:border-border-error focus-within:ring-danger focus-within:ring-opacity-20/]',
         message: 'Use CONTROL.errorWithin from @/components/theme/recipes.',
       }, {
+        selector: 'Literal[value=/\\brounded-full\\b/]',
+        message: 'Use RADIUS.pill from @/components/theme/recipes.',
+      }, {
+        selector: 'TemplateElement[value.raw=/\\brounded-full\\b/]',
+        message: 'Use RADIUS.pill from @/components/theme/recipes.',
+      }, {
+        selector: 'Literal[value=/\\brounded-sm\\b/]',
+        message: 'Use RADIUS.field from @/components/theme/recipes.',
+      }, {
+        selector: 'TemplateElement[value.raw=/\\brounded-sm\\b/]',
+        message: 'Use RADIUS.field from @/components/theme/recipes.',
+      }, {
+        selector: 'Literal[value=/\\brounded-xs\\b/]',
+        message: 'Use RADIUS.pill or RADIUS.field from @/components/theme/recipes.',
+      }, {
+        selector: 'TemplateElement[value.raw=/\\brounded-xs\\b/]',
+        message: 'Use RADIUS.pill or RADIUS.field from @/components/theme/recipes.',
+      }, {
+        selector: 'Literal[value=/(\s|^)rounded(\s|$)/]',
+        message: 'Use RADIUS.* token utilities (e.g. RADIUS.field), not bare Tailwind rounded.',
+      }, {
+        selector: 'TemplateElement[value.raw=/(\s|^)rounded(\s|$)/]',
+        message: 'Use RADIUS.* token utilities (e.g. RADIUS.field), not bare Tailwind rounded.',
+      }, {
+        selector: 'Literal[value=/\\brounded-(field|pill|surface|menu|menu-item|workspace|notice|button|b-surface)\\b/]',
+        message: 'Use RADIUS from @/components/theme/recipes, not inline token class names.',
+      }, {
+        selector: 'TemplateElement[value.raw=/\\brounded-(field|pill|surface|menu|menu-item|workspace|notice|button|b-surface)\\b/]',
+        message: 'Use RADIUS from @/components/theme/recipes, not inline token class names.',
+      }, {
         selector: 'Literal[value=/\\brounded-md\\b/]',
-        message: 'Use RADIUS.card from @/components/theme/recipes.',
+        message: 'Use RADIUS.surface from @/components/theme/recipes.',
       }, {
         selector: 'TemplateElement[value.raw=/\\brounded-md\\b/]',
-        message: 'Use RADIUS.card from @/components/theme/recipes.',
+        message: 'Use RADIUS.surface from @/components/theme/recipes.',
       }, {
         selector: 'Literal[value=/\\brounded-lg\\b/]',
-        message: 'Use RADIUS.overlay from @/components/theme/recipes.',
+        message: 'Use RADIUS.menu from @/components/theme/recipes.',
       }, {
         selector: 'TemplateElement[value.raw=/\\brounded-lg\\b/]',
-        message: 'Use RADIUS.overlay from @/components/theme/recipes.',
+        message: 'Use RADIUS.menu from @/components/theme/recipes.',
       }, {
         selector: 'Literal[value=/\\brounded-xl\\b/]',
-        message: 'Use RADIUS.overlay from @/components/theme/recipes.',
+        message: 'Use RADIUS.menu from @/components/theme/recipes.',
       }, {
         selector: 'TemplateElement[value.raw=/\\brounded-xl\\b/]',
-        message: 'Use RADIUS.overlay from @/components/theme/recipes.',
+        message: 'Use RADIUS.menu from @/components/theme/recipes.',
       }, {
         selector: 'Literal[value=/text-(gray|slate|red|blue|green|yellow|orange|amber|sky|purple|pink|teal|indigo|cyan)-(50|100|200|300|400|500|600|700|800|900|950)/]',
         message: 'Use semantic tokens or TONE/Badge colors, not default Tailwind palette classes.',

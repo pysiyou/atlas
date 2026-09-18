@@ -3,7 +3,7 @@ import { Badge, Avatar, IconButton, MobileEntityCard, EntityId } from '@/compone
 import type { CardComponentProps } from '@/components';
 import { calculateAge, formatPhoneNumber } from '@/utils';
 import type { Patient } from '@/types';
-import { TYPE } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/components/theme/recipes';
 
 
 /**
@@ -43,7 +43,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
         <div className="grid grid-cols-2 gap-x-3 gap-y-2">
           {/* Age */}
           <div className="flex items-center gap-2">
-            <span className="w-1 h-1 rounded-full bg-text-muted shrink-0" />
+            <span className={`w-1 h-1 ${RADIUS.pill} bg-text-muted shrink-0`} />
             <span className={`${TYPE.label} truncate`}>
               {calculateAge(patient.dateOfBirth)} years old
             </span>
@@ -51,7 +51,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
 
           {/* Phone */}
           <div className="flex items-center gap-2">
-            <span className="w-1 h-1 rounded-full bg-text-muted shrink-0" />
+            <span className={`w-1 h-1 ${RADIUS.pill} bg-text-muted shrink-0`} />
             <span className={`${TYPE.label} truncate`}>
               {formatPhoneNumber(patient.phone)}
             </span>
@@ -60,7 +60,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
           {/* Email */}
           {patient.email && (
             <div className="flex items-center gap-2">
-              <span className="w-1 h-1 rounded-full bg-text-muted shrink-0" />
+              <span className={`w-1 h-1 ${RADIUS.pill} bg-text-muted shrink-0`} />
               <span className={`${TYPE.label} truncate`}>{patient.email}</span>
             </div>
           )}

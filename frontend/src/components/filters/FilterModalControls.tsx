@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import { RADIUS } from '@/components/theme/recipes';
 import { Icon } from '@/components';
 import { uppercaseLabel, cn } from '@/utils';
 import { ICONS } from '@/config/icons';
@@ -51,7 +52,7 @@ export const ModalRadioList: React.FC<{
             />
             <div
               className={cn(
-                'w-5 h-5 rounded-full flex items-center justify-center transition-colors',
+                `w-5 h-5 ${RADIUS.pill} flex items-center justify-center transition-colors`,
                 isSelected
                   ? 'bg-brand'
                   : 'bg-transparent border-2 border-border-strong group-hover:border-brand'

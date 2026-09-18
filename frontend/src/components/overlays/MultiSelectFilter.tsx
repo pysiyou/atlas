@@ -60,7 +60,7 @@ function MultiSelectListItem({
         {singleSelect ? (
           <div
             className={cn(
-              'w-5 h-5 rounded-full flex items-center justify-center transition-colors duration-200',
+              `w-5 h-5 ${RADIUS.pill} flex items-center justify-center transition-colors duration-200`,
               isSelected ? 'bg-brand' : 'bg-transparent border-2 border-border-default'
             )}
           >
@@ -111,7 +111,7 @@ function MultiSelectTriggerContent({
 
   return (
     <span className="text-text-primary truncate block whitespace-nowrap">
-      <span className="inline-flex items-center justify-center min-w-[18px] h-4 px-1 rounded-full text-on-brand text-xxs font-normal align-middle mr-1 bg-brand">
+      <span className={`inline-flex items-center justify-center min-w-[18px] h-4 px-1 ${RADIUS.pill} text-on-brand text-xxs font-normal align-middle mr-1 bg-brand`}>
         {selectedIds.length}
       </span>
       selected

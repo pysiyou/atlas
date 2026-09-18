@@ -3,6 +3,7 @@
  */
 
 import React from 'react';
+import { RADIUS } from '@/components/theme/recipes';
 import { Panel, Skeleton, SkeletonText } from '@/components';
 import { COMMAND_CENTER_PANEL, COMMAND_CENTER_PIPELINE_STRIP } from './commandCenterStyles';
 
@@ -14,7 +15,7 @@ function PanelSkeleton({ className }: { className?: string }) {
       className={className}
     >
       <div className="flex flex-col gap-3 min-h-48">
-        <Skeleton height={120} className="w-full rounded-full" />
+        <Skeleton height={120} className={`w-full ${RADIUS.pill}`} />
         <SkeletonText lines={3} />
       </div>
     </Panel>
@@ -32,7 +33,7 @@ export const LabCommandCenterBoardSkeleton: React.FC = () => {
           </div>
           <div className="flex gap-2">
             {Array.from({ length: 4 }).map((_, index) => (
-              <div key={index} className="min-w-0 flex-1 rounded border border-border-default px-2.5 py-2">
+              <div key={index} className={`min-w-0 flex-1 ${RADIUS.field} border border-border-default px-2.5 py-2`}>
                 <div className="flex items-center gap-2">
                   <Skeleton circle height={32} width={32} />
                   <div className="min-w-0 flex-1 space-y-2">

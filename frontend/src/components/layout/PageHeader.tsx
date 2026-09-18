@@ -5,7 +5,7 @@
 
 import React, { type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { CHROME, SURFACE, TYPE } from '@/components/theme/recipes';
+import { CHROME, RADIUS, SURFACE, TYPE } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 import { useAppChromeMount } from './appChromeMount';
 
@@ -39,7 +39,7 @@ function PageHeaderContent({
           'w-full flex items-center justify-between gap-4 flex-nowrap min-w-0',
           placement === 'chrome'
             ? CHROME.pageHeaderChrome
-            : 'shrink-0 h-12 min-h-12 max-h-12 py-2 px-4 rounded',
+            : `shrink-0 h-12 min-h-12 max-h-12 py-2 px-4 ${RADIUS.surface}`,
           placement === 'inline' && SURFACE.raised,
           className,
         )}

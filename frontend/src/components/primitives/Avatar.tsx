@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { RADIUS } from '@/components/theme/recipes';
 import { cn, getInitials } from '@/utils';
 import { isEntityIdClassName } from '@/utils/constants';
 
@@ -69,12 +70,12 @@ export const Avatar: React.FC<AvatarProps> = ({
         <img
           src={src}
           alt={primaryText}
-          className={`rounded object-cover block shrink-0 ${CIRCLE_SIZE_CLASSES[size]}`}
+          className={`${RADIUS.pill} object-cover block shrink-0 ${CIRCLE_SIZE_CLASSES[size]}`}
           onError={() => setImageError(true)}
         />
       ) : (
         <div
-          className={`rounded bg-brand flex items-center justify-center text-on-brand font-normal shrink-0 ${CIRCLE_SIZE_CLASSES[size]}`}
+          className={`${RADIUS.pill} bg-brand flex items-center justify-center text-on-brand font-normal shrink-0 ${CIRCLE_SIZE_CLASSES[size]}`}
         >
           {getInitials(primaryText)}
         </div>

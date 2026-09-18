@@ -20,9 +20,9 @@
 
   /* Shared geometry (all themes) */
   --radius-control: 0.5rem;
-  --radius-card: 0.75rem;
-  --radius-overlay: 1rem;
-  --radius-shell: 1.5rem;
+  --radius-card: 0.5rem;
+  --radius-overlay: 0.5rem;
+  --radius-shell: 0.5rem;
   --radius-notice: 0.875rem;
   --radius-pill: 9999px;
   --button-radius: var(--radius-control);

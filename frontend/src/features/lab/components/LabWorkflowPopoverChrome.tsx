@@ -12,7 +12,7 @@ import { Button, FooterInfo, Icon, DialogHeader, DialogFooter } from '@/componen
 import { MODULE_ICONS } from '@/config/icons';
 import { ICONS } from '@/config/icons';
 import { cn } from '@/utils';
-import { MENU_ITEM, TONE } from '@/components/theme/recipes';
+import { MENU_ITEM, RADIUS, TONE } from '@/components/theme/recipes';
 
 interface LabWorkflowPopoverChromeProps {
   /** Main title displayed in the header */
@@ -202,7 +202,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
       </div>
       <div
         className={`
-          absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors duration-200
+          absolute top-1/2 -translate-y-1/2 right-2 w-5 h-5 ${RADIUS.pill} flex items-center justify-center transition-colors duration-200
           ${selected ? 'bg-brand' : 'bg-transparent border-2 border-border-strong'}
         `}
       >

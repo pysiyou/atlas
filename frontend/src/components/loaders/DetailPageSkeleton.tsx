@@ -157,9 +157,9 @@ function WorkflowGridSkeleton({ cardCount }: { cardCount: number }) {
       <div className="shrink-0 px-4 py-3 border-b border-border-default bg-surface-page flex flex-wrap items-center gap-3">
         <Skeleton height={40} width={280} className={`${RADIUS.card}`} />
         <Skeleton height={36} width={120} className={`${RADIUS.card}`} />
-        <Skeleton height={32} width={100} className="rounded-full" />
-        <Skeleton height={32} width={100} className="rounded-full" />
-        <Skeleton height={32} width={90} className="rounded-full" />
+        <Skeleton height={32} width={100} className={`${RADIUS.pill}`} />
+        <Skeleton height={32} width={100} className={`${RADIUS.pill}`} />
+        <Skeleton height={32} width={90} className={`${RADIUS.pill}`} />
       </div>
       <div className="flex-1 min-h-0 overflow-y-auto p-6 grid gap-4 content-start">
         {Array.from({ length: cardCount }).map((_, i) => (

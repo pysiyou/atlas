@@ -2,7 +2,7 @@ import type { SampleCollectionQueueItem } from '@/features/lab/types';
 import { CONTAINER_COLOR_OPTIONS, isCollectedSample } from '@/types';
 import { displayId } from '@/utils';
 import { feedbackTitle } from '@/utils/feedback/copy';
-import { TYPE } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/components/theme/recipes';
 
 
 const PRINT_TOKEN_KEYS = [
@@ -142,7 +142,7 @@ export const generatePrintLabelHTML = (display: SampleCollectionQueueItem, patie
             </div>
 
             <!-- Container Info -->
-            <div class="w-full text-xxs font-normal text-center text-text-primary bg-surface-hover rounded px-2 py-1 print:py-0.5">
+            <div class="w-full text-xxs font-normal text-center text-text-primary bg-surface-hover ${RADIUS.field} px-2 py-1 print:py-0.5">
               ${containerType.toUpperCase()}: ${colorName.toUpperCase()}
             </div>
 
