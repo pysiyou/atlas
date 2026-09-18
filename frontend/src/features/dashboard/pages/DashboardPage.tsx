@@ -16,6 +16,7 @@ import {
 import { buildDashboardStats } from '../components/buildDashboardStats';
 import { DashboardOrdersInProgressBanner } from '../components/DashboardOrdersInProgressBanner';
 import { DashboardRecentOrders } from '../components/DashboardRecentOrders';
+import { WORKSPACE } from '@/components/theme/recipes';
 
 export const Dashboard: React.FC = () => {
   const { user: currentUser, hasRole } = useAuthStore();
@@ -40,7 +41,7 @@ export const Dashboard: React.FC = () => {
   const pendingOrders = summary?.pendingOrders ?? 0;
 
   return (
-    <div className="h-full min-h-0 flex flex-col overflow-hidden p-2 gap-2">
+    <div className={WORKSPACE.page}>
       <div className="shrink-0 h-14 min-h-14 max-h-14 flex flex-col justify-center">
         <h1 className="text-xl font-bold text-text-primary truncate">
           Welcome back, {currentUser?.name}!

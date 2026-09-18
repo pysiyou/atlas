@@ -14,6 +14,7 @@ import {
 } from '@/features/lab/hooks';
 import { validationFilterConfig } from '@/features/lab/constants';
 import { ErrorBoundary } from '@/components';
+import { WORKSPACE } from '@/components/theme/recipes';
 import { SectionLoadingBoundary } from '@/components/loaders';
 import { useMinDisplay } from '@/hooks/useMinDisplay';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
@@ -169,7 +170,7 @@ export const ResultValidationQueue: React.FC = () => {
               onStatusFiltersChange={setPriorityFilters}
             />
           </div>
-          <div className="flex-1 min-h-0 overflow-y-auto p-6">
+          <div className={`flex-1 min-h-0 overflow-y-auto ${WORKSPACE.contentInset}`}>
             <ResultValidationQueueView
               isEmpty={!hasRecollection && !hasEscalated && !hasValidation}
               hasRecollection={hasRecollection}

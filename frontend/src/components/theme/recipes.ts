@@ -66,6 +66,13 @@ export const SURFACE = {
   infoWell: TONE.info.well,
 } as const;
 
+/** Page shell inside the app workspace well — spacing from `--workspace-page-spacing`. */
+export const WORKSPACE = {
+  page:
+    'h-full min-h-0 flex flex-col overflow-hidden min-w-0 p-workspace-page-inset gap-workspace-page-gap',
+  contentInset: 'p-workspace-page-inset',
+} as const;
+
 /**
  * Semantic geometry — Tailwind classes map to CSS vars in semantic-light.css.
  * Themes override --radius-field | menu | menu-item | surface | workspace (not primitives directly).

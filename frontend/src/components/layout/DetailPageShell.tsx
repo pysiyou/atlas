@@ -1,6 +1,7 @@
 /**
- * DetailPageShell - Standard wrapper for detail pages. Enforces p-2 gap-4, header slot, scrollable content.
- * Handles loading, error, and not-found via optional props so callers avoid inline duplication.
+ * DetailPageShell - Standard wrapper for detail pages.
+ * When AppShell chrome is active, headers portal to the top row; the in-flow header slot uses
+ * `contents` so flex gap does not reserve space under the chrome (same as list pages).
  */
 
 import React, { type ReactNode } from 'react';
@@ -8,6 +9,9 @@ import { LoadingState } from '@/components/loaders/LoadingState';
 import { ErrorAlert } from '@/components/loaders/ErrorAlert';
 import { EmptyState } from '@/components';
 import { ICONS } from '@/config/icons';
+import { WORKSPACE } from '@/components/theme/recipes';
+import { useAppChromeMount } from './appChromeMount';
+import { cn } from '@/utils';
 
 export interface DetailPageShellError {
   message: string;
@@ -55,11 +59,14 @@ export const DetailPageShell: React.FC<DetailPageShellProps> = ({
   notFoundDescription,
   className = '',
 }) => {
+  const headerInChrome = useAppChromeMount() != null;
+  const headerSlotClass = headerInChrome ? 'contents' : 'shrink-0';
+
   if (loading) {
     if (loadingSkeleton != null) {
       return (
-        <div className={`h-full min-h-0 flex flex-col overflow-hidden p-2 gap-4 ${className}`.trim()}>
-          <div className="shrink-0">{header}</div>
+        <div className={cn(WORKSPACE.page, className)}>
+          <div className={headerSlotClass}>{header}</div>
           <div className="flex-1 min-h-0 overflow-auto" aria-busy="true">
             {loadingSkeleton}
           </div>
@@ -70,8 +77,8 @@ export const DetailPageShell: React.FC<DetailPageShellProps> = ({
   }
 
   return (
-    <div className={`h-full min-h-0 flex flex-col overflow-hidden p-2 gap-4 ${className}`.trim()}>
-      <div className="shrink-0">{header}</div>
+    <div className={cn(WORKSPACE.page, className)}>
+      <div className={headerSlotClass}>{header}</div>
       {error != null ? (
         <div className="flex-1 min-h-0">
           <ErrorAlert error={error} onRetry={onRetry} onDismiss={onDismissError} />

@@ -9,7 +9,7 @@ import { EmptyState, PageHeader } from '@/components';
 import { ErrorAlert } from '@/components/loaders/ErrorAlert';
 import { EMPTY_ICON_SEARCH, DEFAULT_EMPTY_DESCRIPTION_SEARCH } from '@/utils/constants';
 import type { ListViewPaginationConfig, PaginationConfig, SortConfig } from '@/utils/table';
-import { PANEL } from '@/components/theme/recipes';
+import { PANEL, WORKSPACE } from '@/components/theme/recipes';
 
 type TableDataItem = Record<string, unknown> | object;
 
@@ -83,7 +83,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
   const resolvedPagination = normalizePagination(pagination, pageSize, pageSizeOptions);
 
   return (
-    <div className={`h-full min-h-0 flex flex-col overflow-hidden p-2 gap-2 ${className}`.trim()}>
+    <div className={`${WORKSPACE.page} ${className}`.trim()}>
       {(title != null || headerActions != null) && (
         <PageHeader variant="bar" title={title ?? ''} subtitle={subtitle} actions={headerActions} />
       )}

@@ -42,6 +42,11 @@
   /** Sidebar nav scroll + footer vertical inset (not applied to header band — keeps header ≤ rail width). */
   --chrome-nav-menu-gutter: 1rem;
 
+  /** Page padding inside the workspace well (edge inset + flex gap between chrome/header and body). */
+  --workspace-page-spacing: 0.5rem;
+  --workspace-page-inset: var(--workspace-page-spacing);
+  --workspace-page-gap: var(--workspace-page-spacing);
+
   /* Type scale (px locked; recipes use these via Tailwind text-*) */
   --font-size-3xs: 8px;
   --font-size-2xs: 10px;

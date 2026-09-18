@@ -12,7 +12,7 @@ import { LabCommandCenterBoard } from '../commandCenter/LabCommandCenterBoard';
 import { Icon, PageHeader, Badge, ErrorAlert } from '@/components';
 import { errorAlertMessage } from '@/utils/feedback';
 import { ICONS } from '@/config/icons';
-import { RADIUS } from '@/components/theme/recipes';
+import { RADIUS, WORKSPACE } from '@/components/theme/recipes';
 import { LAB_WORKFLOW_QUEUE_SHELL } from '../utils/labStyles';
 import { useLabStageQueueCounts, getValidationTabCount } from '../hooks';
 import {
@@ -86,7 +86,7 @@ export const LaboratoryPage: React.FC = () => {
   const pageTitle = LAB_TAB_LABELS[activeTab];
 
   return (
-    <div className="h-full min-h-0 flex flex-col overflow-hidden p-2 gap-2 min-w-0">
+    <div className={WORKSPACE.page}>
       <PageHeader
         variant="bar"
         title={pageTitle}
@@ -141,7 +141,7 @@ export const LaboratoryPage: React.FC = () => {
           }`}
         >
           {isError ? (
-            <div className="p-4">
+            <div className={WORKSPACE.contentInset}>
               <ErrorAlert
                 error={{
                   message: errorAlertMessage('lab.page.loadFailed', error),
