@@ -4,9 +4,9 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  --font-sans: 'Nunito', sans-serif;
+  --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
 
-  /* Font weight scale (CSS-aligned); default = light (300) */
+  /* Font weight scale (CSS-aligned); default = normal (400) */
   --font-weight-thin: 100;
   --font-weight-extralight: 200;
   --font-weight-light: 300;
@@ -16,7 +16,18 @@
   --font-weight-bold: 700;
   --font-weight-extrabold: 800;
   --font-weight-black: 900;
-  --font-weight-default: var(--font-weight-light);
+  --font-weight-default: var(--font-weight-normal);
+
+  /* Shared geometry (all themes) */
+  --radius-control: 0.5rem;
+  --radius-card: 0.75rem;
+  --radius-overlay: 1rem;
+  --radius-notice: 0.875rem;
+  --radius-pill: 9999px;
+  --button-radius: var(--radius-control);
+  --button-radius-square: var(--radius-overlay);
+  --button-radius-circle: var(--radius-pill);
+  --control-height: 2.125rem;
 
   /* Type scale (px locked; recipes use these via Tailwind text-*) */
   --font-size-3xs: 8px;

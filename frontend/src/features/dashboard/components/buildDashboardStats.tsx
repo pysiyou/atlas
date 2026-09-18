@@ -40,8 +40,10 @@ export function buildDashboardStats({
             label: 'Total Orders',
             value: ordersCount,
             today: todayOrders,
-            icon: <Icon name={ICONS.dataFields.document} className="w-8 h-8 text-success-fg" />,
-            color: 'bg-success-bg',
+            icon: (
+              <Icon name={ICONS.dataFields.document} className="w-8 h-8 text-pink-fg-emphasis" />
+            ),
+            color: 'bg-pink-bg-emphasis',
           },
           {
             label: 'Revenue Today',

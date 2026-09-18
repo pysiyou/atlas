@@ -238,6 +238,12 @@
     "unit": "×10⁹/L",
     "description": "Platelet count"
   },
+  "PLAT": {
+    "min": 1,
+    "max": 2000,
+    "unit": "×10⁹/L",
+    "description": "Platelet count (catalog item code)"
+  },
   "MCV": {
     "min": 30,
     "max": 200,

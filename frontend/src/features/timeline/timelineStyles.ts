@@ -1,9 +1,8 @@
 import { TYPE } from '@/components/theme/recipes';
 
 export const TIMELINE_STYLES = {
-  eventIndicator: 'bg-border-strong',
   connectorStem: 'bg-border-strong',
-  eventDot: 'relative z-10 mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full border-2 border-surface',
+  eventDot: 'relative z-10 mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full border-2',
   eventDotTrack: 'relative flex w-2.5 shrink-0 flex-col items-center self-stretch',
   eventConnectorStem:
     'pointer-events-none absolute top-[1.375rem] bottom-0 w-px -translate-x-1/2 left-1/2',
@@ -13,10 +12,8 @@ export const TIMELINE_STYLES = {
   /** Matches LabAttentionFeed row: accent + `min-w-0 flex-1 space-y-1` content */
   eventRow: 'flex min-w-0 items-stretch gap-2 relative',
   eventBody: 'min-w-0 flex-1 space-y-1 pb-3',
-  eventTitleRow: 'flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1',
-  categoryLabel:
-    'shrink-0 text-xs font-light uppercase tracking-wide underline underline-offset-2',
-  eventAction: 'min-w-0 text-sm text-text-primary',
+  /** Same weight as detail line; sm size only — avoid primary + panelTitle (reads bold). */
+  eventHeadline: 'min-w-0 text-sm font-normal text-text-primary',
   eventDetails: 'flex flex-wrap items-center gap-x-1 gap-y-0.5',
   eventDetailText: TYPE.label,
   eventMeta: TYPE.meta,

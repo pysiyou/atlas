@@ -44,6 +44,7 @@ PHYSIOLOGIC_LIMITS: Dict[str, Dict[str, Any]] = {
     'HCT': {'min': 5, 'max': 80, 'unit': '%', 'description': 'Hematocrit'},
     'Platelets': {'min': 1, 'max': 2000, 'unit': '×10⁹/L', 'description': 'Platelet count'},
     'PLT': {'min': 1, 'max': 2000, 'unit': '×10⁹/L', 'description': 'Platelet count'},
+    'PLAT': {'min': 1, 'max': 2000, 'unit': '×10⁹/L', 'description': 'Platelet count (catalog item code)'},
     'MCV': {'min': 30, 'max': 200, 'unit': 'fL', 'description': 'Mean corpuscular volume'},
     'MCH': {'min': 10, 'max': 60, 'unit': 'pg', 'description': 'Mean corpuscular hemoglobin'},
     'MCHC': {'min': 20, 'max': 50, 'unit': 'g/dL', 'description': 'Mean corpuscular hemoglobin concentration'},

@@ -112,7 +112,7 @@ function TimelineEventRow({
     <li className={TIMELINE_STYLES.eventRow}>
       <div className={TIMELINE_STYLES.eventDotTrack}>
         <div
-          className={cn(TIMELINE_STYLES.eventDot, TIMELINE_STYLES.eventIndicator)}
+          className={cn(TIMELINE_STYLES.eventDot, visual.dotClass)}
           aria-hidden="true"
         />
         {!isLast && (
@@ -126,12 +126,7 @@ function TimelineEventRow({
         )}
       </div>
       <div className={TIMELINE_STYLES.eventBody}>
-        <div className={TIMELINE_STYLES.eventTitleRow}>
-          <span className={cn(TIMELINE_STYLES.categoryLabel, visual.textClass)}>
-            {visual.label}
-          </span>
-          <span className={TIMELINE_STYLES.eventAction}>{formatted.action}</span>
-        </div>
+        <div className={TIMELINE_STYLES.eventHeadline}>{formatted.action}</div>
         {formatted.details.length > 0 && (
           <div className={TIMELINE_STYLES.eventDetails}>
             {formatted.details.map((detail, idx) => (
