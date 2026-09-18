@@ -30,6 +30,12 @@
   --button-radius-circle: var(--radius-pill);
   --control-height: 2.125rem;
 
+  /**
+   * App chrome rail — collapsed sidebar width and top header band height (square corner).
+   * Single source of truth; Tailwind `chrome-rail` spacing maps here via index.css @theme.
+   */
+  --chrome-rail: 3.75rem;
+
   /* Type scale (px locked; recipes use these via Tailwind text-*) */
   --font-size-3xs: 8px;
   --font-size-2xs: 10px;

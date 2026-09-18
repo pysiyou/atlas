@@ -223,6 +223,8 @@
   --radius-button-square: var(--button-radius-square);
   --radius-button-circle: var(--button-radius-circle);
   --height-control: var(--control-height);
+  /* Layout — sole numeric value lives on :root --chrome-rail in primitives.css */
+  --spacing-chrome-rail: var(--chrome-rail);
 
   /* ═══════════════════════════════════════════════════════════════════
      FOCUS

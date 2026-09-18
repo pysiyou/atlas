@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { CHROME } from '@/components/theme/recipes';
 import type { MenuItem, SettingsItem } from './sidebarMenu';
 
 export interface SidebarNavProps {
@@ -26,7 +27,7 @@ export function SidebarNav({ menuItems, settingsItems, onNavigate }: SidebarNavP
             onClick={handleNavClick}
             className={({ isActive }) => getNavLinkClasses(isActive)}
           >
-            <div className="w-16 shrink-0 flex items-center justify-center">
+            <div className={`${CHROME.railWidth} shrink-0 flex items-center justify-center`}>
               <div className="w-5 h-5 flex items-center justify-center">{item.icon}</div>
             </div>
             <span className="flex-1 min-w-0 overflow-hidden truncate" title={item.label}>
@@ -44,7 +45,7 @@ export function SidebarNav({ menuItems, settingsItems, onNavigate }: SidebarNavP
               className="w-full flex items-center py-3 text-sm font-normal text-text-disabled rounded cursor-not-allowed"
               title={item.label}
             >
-              <div className="w-16 shrink-0 flex items-center justify-center">
+              <div className={`${CHROME.railWidth} shrink-0 flex items-center justify-center`}>
                 <div className="w-5 h-5 flex items-center justify-center">{item.icon}</div>
               </div>
               <span className="flex-1 min-w-0 overflow-hidden truncate text-left">{item.label}</span>
