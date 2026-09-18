@@ -65,7 +65,8 @@ export const CatalogList: React.FC = () => {
   };
 
   return (
-    <ListView
+    <div className="flex h-full min-h-0 flex-col">
+      <ListView
       items={filteredTests}
       viewConfig={catalogTableConfig}
       loading={isLoading}
@@ -88,5 +89,6 @@ export const CatalogList: React.FC = () => {
       }
       pagination={{ mode: 'client', pageSize: 20, pageSizeOptions: DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL }}
     />
+    </div>
   );
 };

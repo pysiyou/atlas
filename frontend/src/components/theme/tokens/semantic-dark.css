@@ -22,6 +22,12 @@
   --surface-sidebar: var(--surface);
   --surface-table-header: var(--surface-page);
 
+  --radius-field: var(--radius-control);
+  --radius-menu: var(--radius-overlay);
+  --radius-menu-item: var(--radius-field);
+  --radius-surface: var(--radius-card);
+  --radius-workspace: var(--radius-shell);
+
   --border: var(--primitive-neutral-200);
   --border-subtle: var(--primitive-neutral-100);
   --border-strong: var(--primitive-neutral-300);

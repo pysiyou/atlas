@@ -58,7 +58,7 @@ export const DetailPageShell: React.FC<DetailPageShellProps> = ({
   if (loading) {
     if (loadingSkeleton != null) {
       return (
-        <div className={`min-h-full flex flex-col p-2 gap-4 ${className}`.trim()}>
+        <div className={`h-full min-h-0 flex flex-col overflow-hidden p-2 gap-4 ${className}`.trim()}>
           <div className="shrink-0">{header}</div>
           <div className="flex-1 min-h-0 overflow-auto" aria-busy="true">
             {loadingSkeleton}
@@ -70,7 +70,7 @@ export const DetailPageShell: React.FC<DetailPageShellProps> = ({
   }
 
   return (
-    <div className={`min-h-full flex flex-col p-2 gap-4 ${className}`.trim()}>
+    <div className={`h-full min-h-0 flex flex-col overflow-hidden p-2 gap-4 ${className}`.trim()}>
       <div className="shrink-0">{header}</div>
       {error != null ? (
         <div className="flex-1 min-h-0">

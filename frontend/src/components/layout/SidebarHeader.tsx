@@ -25,7 +25,7 @@ export function SidebarHeader({ isCollapsed, onToggleCollapse, onMobileClose }: 
   return (
     <div
       className={cn(
-        'h-16 border-b border-border-default flex items-center shrink-0',
+        'h-16 flex items-center shrink-0',
         isCollapsed ? 'justify-center px-0' : 'justify-between px-4'
       )}
     >

@@ -27,6 +27,17 @@
   --surface-table-header: var(--surface-page);
 
   /* ═══════════════════════════════════════════════════════════════════
+     GEOMETRY (semantic radius — themes override these, not primitives)
+     field: inputs & triggers; menu: modal/popover shell; menu-item: picks inside menus;
+     surface: in-page panels/cards/tables; workspace: app content well
+     ═══════════════════════════════════════════════════════════════════ */
+  --radius-field: var(--radius-control);
+  --radius-menu: var(--radius-overlay);
+  --radius-menu-item: var(--radius-field);
+  --radius-surface: var(--radius-card);
+  --radius-workspace: var(--radius-shell);
+
+  /* ═══════════════════════════════════════════════════════════════════
      BORDER (Borders & Dividers)
      ═══════════════════════════════════════════════════════════════════ */
   --border: var(--primitive-neutral-200);

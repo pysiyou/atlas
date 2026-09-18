@@ -9,7 +9,7 @@ import { Badge } from '@/components';
 import { Icon, type IconName } from '@/components/primitives/Icon';
 import { Popover } from './Popover';
 import { FilterTriggerShell } from './FilterTriggerShell';
-import { SURFACE, TYPE, RADIUS } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/components/theme/recipes';
 
 export interface FilterOption {
   id: string;
@@ -67,11 +67,11 @@ function MultiSelectListItem({
             {isSelected && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
           </div>
         ) : isSelected ? (
-          <div className="w-4 h-4 rounded border-2 border-brand bg-brand flex items-center justify-center transition-all duration-150">
+          <div className={`w-4 h-4 ${RADIUS.menuItem} border-2 border-brand bg-brand flex items-center justify-center transition-all duration-150`}>
             <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
           </div>
         ) : (
-          <div className="w-4 h-4 rounded border-2 border-border-default bg-surface transition-all duration-150" />
+          <div className={`w-4 h-4 ${RADIUS.menuItem} border-2 border-border-default bg-surface transition-all duration-150`} />
         )}
       </div>
 
@@ -139,7 +139,7 @@ function MultiSelectOptionsPanel({
   onSelectAll: () => void;
 }) {
   return (
-    <div className={`${SURFACE.raised} ${RADIUS.card} shadow-lg py-2`}>
+    <div className="flex flex-col py-2 min-w-0">
       <div className="max-h-[300px] overflow-y-auto">
         {options.map(option => (
           <MultiSelectListItem
@@ -164,11 +164,11 @@ function MultiSelectOptionsPanel({
                   className="sr-only"
                 />
                 {allSelected ? (
-                  <div className="w-4 h-4 rounded border-2 border-brand bg-brand flex items-center justify-center transition-all duration-150">
+                  <div className={`w-4 h-4 ${RADIUS.menuItem} border-2 border-brand bg-brand flex items-center justify-center transition-all duration-150`}>
                     <Icon name={ICONS.actions.cross} className="w-3 h-3 text-on-brand" />
                   </div>
                 ) : (
-                  <div className="w-4 h-4 rounded border-2 border-brand bg-brand flex items-center justify-center transition-all duration-150">
+                  <div className={`w-4 h-4 ${RADIUS.menuItem} border-2 border-brand bg-brand flex items-center justify-center transition-all duration-150`}>
                     <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                   </div>
                 )}

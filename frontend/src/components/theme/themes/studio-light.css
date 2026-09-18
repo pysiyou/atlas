@@ -5,6 +5,9 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 [data-theme='studio-light'] {
+  /* Semantic geometry — override roles from semantic-light.css (primitives set raw scale) */
+  /* Example: unify popover shell + inner picks — --radius-menu-item: var(--radius-menu); */
+
   /* Brand — teal */
   --primitive-brand-50: #eef6f6;
   --primitive-brand-100: #d9eceb;

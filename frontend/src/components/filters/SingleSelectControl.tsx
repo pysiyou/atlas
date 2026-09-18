@@ -9,7 +9,7 @@ import type { IconName } from '@/components';
 import { cn, uppercaseLabel } from '@/utils';
 import { ICONS } from '@/config/icons';
 import type { SingleSelectFilterControl } from './types';
-import { SURFACE, RADIUS } from '@/components/theme/recipes';
+import { RADIUS } from '@/components/theme/recipes';
 
 /**
  * Props for SingleSelectControl component
@@ -104,7 +104,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
       className=""
     >
       {() => (
-        <div className={`${SURFACE.raised} ${RADIUS.card} shadow-lg py-1 max-h-60 overflow-auto`}>
+        <div className="py-1 max-h-60 overflow-auto min-w-0">
           {/* Options list */}
           <div>
             {config.options.map(option => {
@@ -122,11 +122,11 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
                   {/* Check indicator */}
                   <div className="flex items-center justify-center w-4 h-4 shrink-0">
                     {isSelected ? (
-                      <div className="w-4 h-4 rounded bg-brand flex items-center justify-center transition-all duration-150">
+                      <div className={`w-4 h-4 ${RADIUS.menuItem} bg-brand flex items-center justify-center transition-all duration-150`}>
                         <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                       </div>
                     ) : (
-                      <div className="w-4 h-4 rounded border border-border-default" />
+                      <div className={`w-4 h-4 ${RADIUS.menuItem} border border-border-default`} />
                     )}
                   </div>
 

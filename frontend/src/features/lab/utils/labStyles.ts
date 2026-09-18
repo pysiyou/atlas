@@ -3,11 +3,15 @@
  * Typography and wells come from theme recipes; layout objects stay here.
  */
 
-import { SURFACE, TONE, TYPE } from '@/components/theme/recipes';
+import { PANEL, RADIUS, SURFACE, TONE, TYPE } from '@/components/theme/recipes';
 import type { BadgeSize } from '@/components';
 
 /** Canonical Badge size for lab cards — uses theme BADGE.size.xs. */
 export const LAB_CARD_BADGE_SIZE: BadgeSize = 'xs';
+
+/** Collection / entry / validation queue panel — matches ListView table shell inside app well. */
+export const LAB_WORKFLOW_QUEUE_SHELL =
+  `${PANEL.raisedShadowSm} flex flex-1 flex-col min-w-0 min-h-0` as const;
 
 /** Shared lab header rows (modals; cards can reuse audit/badge row tokens) */
 export const LAB_HEADER = {
@@ -89,8 +93,8 @@ export const LAB_CARD_CONTAINERS = {
   // Card base styling (applied via Card component)
   cardBase: 'shadow-sm hover:bg-surface-hover transition-colors duration-200',
 
-  contentSection: `${SURFACE.recessed} rounded ${LAB_CARD_PANEL_INSET}`,
-  flagsSection: `${SURFACE.dangerWell} rounded ${LAB_CARD_PANEL_INSET}`,
+  contentSection: `${SURFACE.recessed} ${RADIUS.field} ${LAB_CARD_PANEL_INSET}`,
+  flagsSection: `${SURFACE.dangerWell} ${RADIUS.field} ${LAB_CARD_PANEL_INSET}`,
 } as const;
 
 // List Item Constants
