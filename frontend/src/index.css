@@ -231,6 +231,8 @@
   --spacing-chrome-nav-inset: var(--chrome-nav-inset);
   --spacing-chrome-header-gutter: var(--chrome-header-gutter);
   --spacing-chrome-nav-menu-gutter: var(--chrome-nav-menu-gutter);
+  --spacing-workspace-page-inset: var(--workspace-page-inset);
+  --spacing-workspace-page-gap: var(--workspace-page-gap);
 
   /* ═══════════════════════════════════════════════════════════════════
      FOCUS

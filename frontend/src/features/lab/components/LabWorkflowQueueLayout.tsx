@@ -7,6 +7,7 @@
 import React, { type ReactNode } from 'react';
 import { EmptyState } from '@/components';
 import { displayId } from '@/utils';
+import { WORKSPACE } from '@/components/theme/recipes';
 
 type IconName = 'search' | 'sample-collection' | 'checklist' | 'shield-check';
 
@@ -44,7 +45,7 @@ export function LabWorkflowQueueLayout<T>({
       <div className="shrink-0">{filterRow}</div>
 
       <div
-        className={`flex-1 min-h-0 overflow-y-auto p-6 ${showEmptyState ? 'flex flex-col' : 'grid gap-4 content-start'}`}
+        className={`flex-1 min-h-0 overflow-y-auto ${WORKSPACE.contentInset} ${showEmptyState ? 'flex flex-col' : 'grid gap-4 content-start'}`}
       >
         {!showEmptyState &&
           items.map((item, idx) => (

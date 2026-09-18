@@ -40,7 +40,7 @@ export function resolveCommandCenterTextTone(
 
 export const COMMAND_CENTER_PANEL = {
   ...PANEL_VARIANTS.page,
-  page: 'flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-surface-page p-2',
+  page: 'flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-surface-page',
 } as const;
 
 /** Top pipeline / KPI strip — aligned with lab workflow queue shell radius. */
