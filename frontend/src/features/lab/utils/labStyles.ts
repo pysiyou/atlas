@@ -50,39 +50,39 @@ export const LAB_CARD_TYPOGRAPHY = {
 } as const;
 
 /** Shared inset for titled panels on lab cards (tighter top than sides/bottom). */
-const LAB_CARD_PANEL_INSET = 'px-2 pb-2 pt-1';
+const LAB_CARD_PANEL_INSET = 'px-space-2 pb-space-2 pt-space-1';
 
 // Spacing Constants
 export const LAB_CARD_SPACING = {
   // Card internal gaps
-  cardGap: 'gap-1',
+  cardGap: 'gap-space-1',
 
   // Section content margins
-  sectionTitleMargin: 'mb-1',
+  sectionTitleMargin: 'mb-space-1',
 
   // Flags section title margin
-  flagsTitleMargin: 'mb-1',
+  flagsTitleMargin: 'mb-space-1',
 
   // List item spacing
-  listGap: 'space-y-1',
+  listGap: 'space-y-space-1',
 
   // Flags list spacing
-  flagsListGap: 'space-y-0.5',
+  flagsListGap: 'space-y-space-0-5',
 
   // Row padding
   rowPadding: 'py-0',
 
   // Content section padding
-  contentPadding: 'p-4',
+  contentPadding: 'p-panel',
 
   // Flags section padding
-  flagsPadding: 'p-2',
+  flagsPadding: 'p-space-2',
 
   // Badge group gap
-  badgeGap: 'gap-3',
+  badgeGap: 'gap-space-3',
 
   // Action group gap
-  actionGap: 'gap-2',
+  actionGap: 'gap-space-2',
 } as const;
 
 // Container Constants
@@ -103,19 +103,19 @@ export const LAB_CARD_LIST_ITEMS = {
   testItem: `flex items-center ${LAB_CARD_TYPOGRAPHY.sectionContent}`,
 
   // List bullet (gray)
-  bullet: `w-1 h-1 ${RADIUS.pill} bg-text-muted mr-2`,
+  bullet: `w-1 h-1 ${RADIUS.pill} bg-text-muted mr-space-2`,
 
   // List bullet (red for flags)
-  bulletRed: `w-1 h-1 ${RADIUS.pill} ${TONE.danger.fill} mr-2`,
+  bulletRed: `w-1 h-1 ${RADIUS.pill} ${TONE.danger.fill} mr-space-2`,
 
   // Test name in list
-  testName: `font-normal mr-1 ${LAB_CARD_TYPOGRAPHY.fieldValue}`,
+  testName: `font-normal mr-space-1 ${LAB_CARD_TYPOGRAPHY.fieldValue}`,
 } as const;
 
 // Context Row Constants (Patient/Order info)
 export const LAB_CARD_CONTEXT = {
   container:
-    `flex items-center gap-x-2 gap-y-0 ${TYPE.meta} flex-wrap min-w-0 w-full leading-snug`,
+    `flex items-center gap-x-space-2 gap-y-0 ${TYPE.meta} flex-wrap min-w-0 w-full leading-snug`,
   patientName: 'font-normal text-text-primary capitalize',
   separator: 'text-text-disabled select-none',
   inlineDot: '•',
@@ -126,23 +126,23 @@ export const LAB_CARD_HEADER = {
   identityShell: 'relative min-w-0 w-full',
   identityPadActions: 'pe-[5.5rem] sm:pe-28',
   actionColumn:
-    'absolute top-0 right-0 z-10 flex max-w-[46%] shrink-0 flex-wrap items-start justify-end gap-2',
+    'absolute top-0 right-0 z-10 flex max-w-[46%] shrink-0 flex-wrap items-start justify-end gap-space-2',
 } as const;
 
 /** Narrow / list-padding workflow cards (breakpoint mobile layouts) */
 export const LAB_MOBILE_CARD = {
   surface: 'flex flex-col h-full min-h-0',
-  stack: 'flex flex-col min-h-0 min-w-0 w-full flex-1 gap-1.5',
+  stack: 'flex flex-col min-h-0 min-w-0 w-full flex-1 gap-space-1-5',
   titleHead:
-    'grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto] grid-rows-[auto_auto] gap-x-2 gap-y-0.5 items-start',
+    'grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto] grid-rows-[auto_auto] gap-x-space-2 gap-y-space-0-5 items-start',
   title: `m-0 col-start-1 row-start-1 ${TYPE.detailTitle} truncate leading-snug normal-case`,
   subline:
-    `col-start-1 row-start-2 flex items-center gap-1.5 min-w-0 ${TYPE.label} leading-snug`,
+    `col-start-1 row-start-2 flex items-center gap-space-1-5 min-w-0 ${TYPE.label} leading-snug`,
   sublineName: 'truncate capitalize font-normal text-text-secondary',
   metaLine: `${TYPE.label} leading-snug`,
   body: `${TYPE.label} leading-snug`,
-  footer: 'flex items-center justify-between gap-2 pt-2 mt-auto border-t border-border-subtle',
-  badgeRail: 'flex min-w-0 flex-1 flex-wrap items-center gap-1.5',
-  actionRail: 'flex shrink-0 items-center justify-end gap-1.5',
+  footer: 'flex items-center justify-between gap-space-2 pt-space-2 mt-auto border-t border-border-subtle',
+  badgeRail: 'flex min-w-0 flex-1 flex-wrap items-center gap-space-1-5',
+  actionRail: 'flex shrink-0 items-center justify-end gap-space-1-5',
   titleAside: 'col-start-2 row-start-1 shrink-0',
 } as const;

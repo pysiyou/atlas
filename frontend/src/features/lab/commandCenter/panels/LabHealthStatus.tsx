@@ -46,8 +46,8 @@ export const LabHealthStatus: React.FC<LabHealthStatusProps> = ({
   }, [lastRefreshedAt]);
 
   return (
-    <div className="flex min-w-0 shrink-0 items-center justify-end gap-2">
-      <div className="flex min-w-0 items-center gap-2">
+    <div className="flex min-w-0 shrink-0 items-center justify-end gap-space-2">
+      <div className="flex min-w-0 items-center gap-space-2">
         <span
           className={cn(`h-1.5 w-1.5 shrink-0 ${RADIUS.pill}`, styles.dot)}
           aria-hidden
@@ -69,7 +69,7 @@ export const LabHealthStatus: React.FC<LabHealthStatusProps> = ({
         )}
       </div>
 
-      <div className="flex shrink-0 items-center gap-2">
+      <div className="flex shrink-0 items-center gap-space-2">
         {lastRefreshedAt && (
           <span
             className={cn('hidden tabular-nums sm:inline', COMMAND_CENTER_TEXT.panelMeta, 'text-xxs')}
@@ -86,7 +86,7 @@ export const LabHealthStatus: React.FC<LabHealthStatusProps> = ({
             disabled={isRefreshing}
             aria-label="Refresh lab status"
             title="Refresh"
-            className={`inline-flex shrink-0 items-center ${RADIUS.field} p-1 text-text-tertiary transition-colors hover:bg-surface-hover hover:text-text-primary disabled:opacity-50`}
+            className={`inline-flex shrink-0 items-center ${RADIUS.field} p-space-1 text-text-tertiary transition-colors hover:bg-surface-hover hover:text-text-primary disabled:opacity-50`}
           >
             <Icon
               name={ICONS.actions.refresh}

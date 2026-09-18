@@ -45,7 +45,7 @@ export const OrderCircularProgress: React.FC<OrderCircularProgressProps> = ({ or
       trackColorClass="stroke-border-default"
       progressColorClass={percentage === 100 ? 'stroke-success' : 'stroke-brand'}
       label={label}
-      className="gap-1 [&_span]:text-xxs [&_span]:leading-none"
+      className="gap-space-1 [&_span]:text-xxs [&_span]:leading-none"
     />
   );
 };

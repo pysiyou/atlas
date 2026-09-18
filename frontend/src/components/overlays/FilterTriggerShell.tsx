@@ -41,7 +41,7 @@ export const FilterTriggerShell: React.FC<FilterTriggerShellProps> = ({
   >
     {leftIcon ?? <div className="w-4 h-4 shrink-0" aria-hidden />}
     <div className={cn('flex-1 min-w-0 truncate', filterTriggerText)}>{children}</div>
-    <div className="flex items-center gap-1 shrink-0">
+    <div className="flex items-center gap-space-1 shrink-0">
       {showClear ? (
         <button
           type="button"

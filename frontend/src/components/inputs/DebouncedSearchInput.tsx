@@ -66,7 +66,7 @@ export const DebouncedSearchInput: React.FC<DebouncedSearchInputProps> = ({
         onChange={e => setLocalValue(e.target.value)}
         className={cn(inputInner, inputText)}
       />
-      <div className="flex items-center gap-1 shrink-0">
+      <div className="flex items-center gap-space-1 shrink-0">
         {isDebouncing && <SpinnerLoader size="xs" />}
         {localValue && !isDebouncing && (
           <button

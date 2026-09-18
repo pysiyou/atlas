@@ -45,7 +45,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = props => {
   const modalContent = (
     <>
       <div className="w-full">
-        <h4 className="text-sm font-semibold text-text-primary mb-3">Age Range</h4>
+        <h4 className="text-sm font-semibold text-text-primary mb-space-3">Age Range</h4>
         <OverlayRangeSlider
           value={props.ageRange}
           onChange={props.onAgeRangeChange}
@@ -54,20 +54,20 @@ export const PatientFilters: React.FC<PatientFiltersProps> = props => {
           hint="Move the slider to filter by age"
           formatLabel={v => `${v} years`}
         />
-        <div className="border-b border-border-default mt-4" />
+        <div className="border-b border-border-default mt-space-4" />
       </div>
       <div className="w-full">
-        <h4 className="text-sm font-semibold text-text-primary mb-3">Sex</h4>
+        <h4 className="text-sm font-semibold text-text-primary mb-space-3">Sex</h4>
         <CheckboxList
           options={genderOptions}
           selectedIds={props.sexFilters}
           onChange={values => props.onSexFiltersChange(values as Gender[])}
           columns={genderOptions.length > 4 ? 2 : 1}
         />
-        <div className="border-b border-border-default mt-4" />
+        <div className="border-b border-border-default mt-space-4" />
       </div>
       <div className="w-full">
-        <h4 className="text-sm font-semibold text-text-primary mb-3">Affiliation Status</h4>
+        <h4 className="text-sm font-semibold text-text-primary mb-space-3">Affiliation Status</h4>
         <CheckboxList
           options={affiliationStatusOptions}
           selectedIds={props.affiliationStatusFilters}

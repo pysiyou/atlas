@@ -121,12 +121,12 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
     >
       {/* Required quantity (volume) */}
       <div>
-        <div className="flex items-center justify-between mb-1">
+        <div className="flex items-center justify-between mb-space-1">
           <label className={FORM_FIELD_LABEL}>
             Required Quantity <span className={TONE.danger.fg}>*</span>
           </label>
           {minimumVolume > 0 && (
-            <div className={cn(`text-xxs px-2 py-0.5 ${RADIUS.field} flex items-center gap-1`, TONE.warning.well, TONE.warning.fg)}>
+            <div className={cn(`text-xxs px-space-2 py-space-0-5 ${RADIUS.field} flex items-center gap-space-1`, TONE.warning.well, TONE.warning.fg)}>
               <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
               Min: {minimumVolume} mL
             </div>
@@ -144,7 +144,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                 setShowVolumeError(false);
               }
             }}
-            className={cn(inputBase, 'pr-8', volume < minimumVolume && inputError)}
+            className={cn(inputBase, 'pr-space-8', volume < minimumVolume && inputError)}
             placeholder="0.0"
           />
           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-normal text-text-disabled pointer-events-none">
@@ -152,7 +152,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
           </span>
         </div>
         {showVolumeError && volume < minimumVolume && (
-          <p className={`text-xxs ${TONE.danger.fg} mt-1`}>
+          <p className={`text-xxs ${TONE.danger.fg} mt-space-1`}>
             Volume must be at least {minimumVolume} mL
           </p>
         )}
@@ -160,10 +160,10 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
       {/* Container Type: tube or cup only */}
       <div>
-        <label className={`${FORM_FIELD_LABEL} mb-2`}>
+        <label className={`${FORM_FIELD_LABEL} mb-space-2`}>
           Container Type <span className={TONE.danger.fg}>*</span>
         </label>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-space-2">
           {COLLECTION_CONTAINER_OPTIONS.map(option => (
             <RadioCard
               key={option.value}
@@ -185,10 +185,10 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
       {/* Top color: list of coloured circles */}
       <div>
-        <label className={`${FORM_FIELD_LABEL} mb-1`}>
+        <label className={`${FORM_FIELD_LABEL} mb-space-1`}>
           Top Color <span className={TONE.danger.fg}>*</span>
         </label>
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-space-3">
           {COLLECTION_TOP_COLOR_VALUES.map(value => {
             const isSelected = selectedColor === value;
             const config = CONTAINER_CONFIG[value];
@@ -217,7 +217,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
       {/* Notes */}
       <div>
-        <label className={`${FORM_FIELD_LABEL} mb-1`}>Notes</label>
+        <label className={`${FORM_FIELD_LABEL} mb-space-1`}>Notes</label>
         <textarea
           rows={2}
           placeholder="Add optional notes..."

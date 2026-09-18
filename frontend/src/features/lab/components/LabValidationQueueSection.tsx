@@ -18,7 +18,7 @@ export const LabValidationQueueSection: React.FC<LabValidationQueueSectionProps>
   className = '',
 }) => (
   <section className={className}>
-    <h3 className={`${LAB_CARD_TYPOGRAPHY.sectionTitle} mb-4`}>
+    <h3 className={`${LAB_CARD_TYPOGRAPHY.sectionTitle} mb-space-4`}>
       {title}
       {typeof count === 'number' ? ` (${count})` : ''}
     </h3>

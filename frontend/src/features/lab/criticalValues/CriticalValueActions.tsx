@@ -75,8 +75,8 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
   };
 
   return (
-    <div className={compact ? 'space-y-2' : 'space-y-3'}>
-      <div className="flex flex-wrap items-center gap-2 text-xs">
+    <div className={compact ? 'space-y-space-2' : 'space-y-space-3'}>
+      <div className="flex flex-wrap items-center gap-space-2 text-xs">
         <EntityId type="orderTest" value={record.id} />
         <Badge variant="danger" size="xs">
           {record.testCode}
@@ -86,7 +86,7 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
       </div>
 
       {record.flags && record.flags.length > 0 && (
-        <div className="flex flex-wrap gap-1">
+        <div className="flex flex-wrap gap-space-1">
           {record.flags.map(flag => (
             <Badge key={flag} variant="danger" size="xs">
               {flag}
@@ -101,7 +101,7 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
           {record.criticalNotifiedAt ? ` on ${formatDateTime(record.criticalNotifiedAt)}` : ''}
         </Alert>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-space-2">
           <input
             type="text"
             value={notifiedTo}

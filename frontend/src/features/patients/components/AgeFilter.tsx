@@ -94,10 +94,10 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
     >
       {() => (
         <div className="w-full">
-          <p className="text-sm text-text-tertiary mb-4">Move the slider to filter by age</p>
+          <p className="text-sm text-text-tertiary mb-space-4">Move the slider to filter by age</p>
 
           {/* Slider Track */}
-          <div className="relative h-1 mb-6">
+          <div className="relative h-1 mb-space-6">
             {/* Background track */}
             <div className={`absolute inset-0 bg-border ${RADIUS.pill}`} />
 

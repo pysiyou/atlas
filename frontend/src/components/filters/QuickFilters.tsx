@@ -26,7 +26,7 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
   }
 
   return (
-    <div className={cn('flex items-center gap-1.5 flex-wrap', className)}>
+    <div className={cn('flex items-center gap-space-1-5 flex-wrap', className)}>
       {presets.map(preset => (
         <FilterChip
           key={preset.id}

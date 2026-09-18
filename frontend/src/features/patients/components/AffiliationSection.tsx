@@ -35,18 +35,18 @@ export const AffiliationSection: React.FC<
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-space-6">
       {/* Existing Affiliation Info */}
       {hasExistingAffiliation && (
-        <div className={`${SURFACE.raised} ${RADIUS.overlay} p-space-5 space-y-4 shadow-sm`}>
-          <div className="flex items-center justify-between pb-3 border-b border-border-subtle">
+        <div className={`${SURFACE.raised} ${RADIUS.overlay} p-space-5 space-y-space-4 shadow-sm`}>
+          <div className="flex items-center justify-between pb-space-3 border-b border-border-subtle">
             <span className="text-sm font-normal text-text-primary">Current Affiliation</span>
             <Badge variant={isActive ? 'success' : 'danger'} size="xs" className="font-normal">
               {isActive ? 'Active' : 'Expired'}
             </Badge>
           </div>
           <div className="grid grid-cols-2 gap-layout-section">
-            <div className="space-y-1">
+            <div className="space-y-space-1">
               <span className={FORM_FIELD_LABEL}>
                 Assurance Number
               </span>
@@ -54,7 +54,7 @@ export const AffiliationSection: React.FC<
                 {existingAffiliation.assuranceNumber}
               </p>
             </div>
-            <div className="space-y-1">
+            <div className="space-y-space-1">
               <span className={FORM_FIELD_LABEL}>
                 Duration
               </span>
@@ -64,7 +64,7 @@ export const AffiliationSection: React.FC<
                 )?.label || `${existingAffiliation.duration} Months`}
               </p>
             </div>
-            <div className="space-y-1">
+            <div className="space-y-space-1">
               <span className={FORM_FIELD_LABEL}>
                 Start Date
               </span>
@@ -72,7 +72,7 @@ export const AffiliationSection: React.FC<
                 {formatDate(existingAffiliation.startDate)}
               </p>
             </div>
-            <div className="space-y-1">
+            <div className="space-y-space-1">
               <span className={FORM_FIELD_LABEL}>
                 Expiry Date
               </span>
@@ -106,7 +106,7 @@ export const AffiliationSection: React.FC<
       {(formData.hasAffiliation || (hasExistingAffiliation && !isActive)) && (
         <div>
           {errors?.affiliationDuration && (
-            <p className={`mb-2 text-sm ${TONE.danger.fg}`}>{errors.affiliationDuration}</p>
+            <p className={`mb-space-2 text-sm ${TONE.danger.fg}`}>{errors.affiliationDuration}</p>
           )}
           <AffiliationPlanSelector
             selectedDuration={formData.affiliationDuration}

@@ -40,7 +40,7 @@ export function SidebarProfile({ currentUser, isCollapsed, onLogout }: SidebarPr
                 avatarOnly
               />
             </div>
-            <div className={cn(CHROME.navLabel, 'flex flex-col justify-center gap-0.5')}>
+            <div className={cn(CHROME.navLabel, 'flex flex-col justify-center gap-space-0-5')}>
               <p className={`${TYPE.detailTitle} truncate leading-tight`}>{currentUser.name}</p>
               <p className={`${TYPE.meta} truncate leading-tight`}>{formatStatus(currentUser.role)}</p>
             </div>
@@ -50,20 +50,20 @@ export function SidebarProfile({ currentUser, isCollapsed, onLogout }: SidebarPr
     >
       {({ close }) => (
         <div className="flex flex-col">
-          <div className="flex items-center gap-3 border-b border-border-default bg-surface-page px-3 py-space-3">
+          <div className="flex items-center gap-space-3 border-b border-border-default bg-surface-page px-space-3 py-space-3">
             <Avatar primaryText={currentUser.name} src={defaultAvatar} size="sm" avatarOnly />
             <div className="min-w-0 flex-1">
               <p className={`${TYPE.detailTitle} truncate`}>{currentUser.name}</p>
-              <p className={`${TYPE.sectionTitle} mt-0.5 truncate`}>
+              <p className={`${TYPE.sectionTitle} mt-space-0-5 truncate`}>
                 {formatStatus(currentUser.role)}
               </p>
             </div>
           </div>
-          <div className="p-1.5">
+          <div className="p-space-1-5">
             <button
               type="button"
               className={cn(
-                'flex w-full items-center gap-2.5 px-2.5 py-2 text-left text-sm',
+                'flex w-full items-center gap-space-2-5 px-space-2-5 py-space-2 text-left text-sm',
                 RADIUS.menuItem,
                 TONE.danger.fg,
                 'hover:bg-danger-bg transition-colors duration-150',

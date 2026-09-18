@@ -104,7 +104,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
       className=""
     >
       {() => (
-        <div className="py-1 max-h-60 overflow-auto min-w-0">
+        <div className="py-space-1 max-h-60 overflow-auto min-w-0">
           {/* Options list */}
           <div>
             {config.options.map(option => {
@@ -114,7 +114,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
                   key={option.id}
                   onClick={() => handleSelect(option.id)}
                   className={cn(
-                    'px-3 py-2 text-sm hover:bg-surface-hover cursor-pointer transition-colors duration-150 w-full flex items-center gap-2',
+                    'px-space-3 py-space-2 text-sm hover:bg-surface-hover cursor-pointer transition-colors duration-150 w-full flex items-center gap-space-2',
                     isSelected && 'bg-surface-page',
                     'text-left'
                   )}

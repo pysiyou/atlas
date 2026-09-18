@@ -91,7 +91,7 @@ function ToastIcon({
 
   if (customIcon !== undefined) {
     return (
-      <span className={cn('mt-0.5 shrink-0 w-5 h-5 flex items-center justify-center', accentClass)}>
+      <span className={cn('mt-space-0-5 shrink-0 w-5 h-5 flex items-center justify-center', accentClass)}>
         {customIcon}
       </span>
     );
@@ -101,7 +101,7 @@ function ToastIcon({
     return (
       <span
         className={cn(
-          `mt-0.5 shrink-0 w-5 h-5 ${RADIUS.pill} border-2 animate-spin`,
+          `mt-space-0-5 shrink-0 w-5 h-5 ${RADIUS.pill} border-2 animate-spin`,
           'border-current/30 border-t-current',
           accentClass
         )}
@@ -114,14 +114,14 @@ function ToastIcon({
   const iconName = TOAST_ICON_NAME[variant];
   if (!iconName) return null;
 
-  return <Icon name={iconName} className={cn('mt-0.5 shrink-0 w-5 h-5', accentClass)} />;
+  return <Icon name={iconName} className={cn('mt-space-0-5 shrink-0 w-5 h-5', accentClass)} />;
 }
 
 function ActionChip({ action }: { action: ToastAction }) {
   return (
     <button
       type="button"
-      className={`mt-2 inline-flex items-center ${RADIUS.card} border border-toast-action-border px-2.5 py-0.5 text-sm text-toast-fg hover:bg-toast-action-hover cursor-pointer`}
+      className={`mt-space-2 inline-flex items-center ${RADIUS.card} border border-toast-action-border px-space-2-5 py-space-0-5 text-sm text-toast-fg hover:bg-toast-action-hover cursor-pointer`}
       onClick={event => {
         event.stopPropagation();
         action.onClick();
@@ -139,7 +139,7 @@ export const Toast: React.FC<BaseToastProps> = React.memo(
     return (
       <div
         className={cn(
-          `flex w-[380px] max-w-[calc(100vw-2rem)] items-start gap-3 ${RADIUS.notice} p-panel`,
+          `flex w-[380px] max-w-[calc(100vw-2rem)] items-start gap-space-3 ${RADIUS.notice} p-panel`,
           'pointer-events-auto font-sans',
           getToastSurfaceClasses(variant),
           className
@@ -151,7 +151,7 @@ export const Toast: React.FC<BaseToastProps> = React.memo(
         <div className="min-w-0 flex-1">
           <p className="m-0 text-sm font-semibold leading-snug text-toast-fg">{title}</p>
           {subtitle ? (
-            <p className="mt-1 mb-0 text-sm leading-snug text-toast-fg-muted">{subtitle}</p>
+            <p className="mt-space-1 mb-0 text-sm leading-snug text-toast-fg-muted">{subtitle}</p>
           ) : null}
           {actions?.map(action => (
             <ActionChip key={action.label} action={action} />
@@ -161,7 +161,7 @@ export const Toast: React.FC<BaseToastProps> = React.memo(
           <button
             type="button"
             aria-label="Dismiss"
-            className={`shrink-0 self-start -mr-1 -mt-0.5 flex h-7 w-7 items-center justify-center ${RADIUS.card} border-0 bg-transparent p-0 text-toast-close hover:text-toast-fg-muted cursor-pointer`}
+            className={`shrink-0 self-start -mr-space-1 -mt-space-0-5 flex h-7 w-7 items-center justify-center ${RADIUS.card} border-0 bg-transparent p-0 text-toast-close hover:text-toast-fg-muted cursor-pointer`}
             onClick={event => {
               event.stopPropagation();
               onDismiss();

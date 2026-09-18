@@ -33,9 +33,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   const containerClasses = isCompact ? EMPTY.containerCompact : EMPTY.containerDefault;
   const iconWrapperClasses = isCompact ? EMPTY.iconWrapCompact : EMPTY.iconWrapDefault;
   const iconClasses = isCompact ? 'w-5 h-5 text-text-disabled' : 'w-8 h-8 text-text-disabled';
-  const titleClasses = isCompact
-    ? 'text-sm font-normal text-text-primary mb-1'
-    : 'text-base font-normal text-text-primary mb-2';
+  const titleClasses = isCompact ? EMPTY.titleCompact : EMPTY.titleDefault;
 
   return (
     <div className={`${containerClasses} ${className}`}>
@@ -44,9 +42,9 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       </div>
       <p className={titleClasses}>{title}</p>
       {description != null && description !== '' && (
-        <p className="text-sm text-text-tertiary mb-4 max-w-md">{description}</p>
+        <p className={EMPTY.description}>{description}</p>
       )}
-      {action && <div className="mt-2">{action}</div>}
+      {action && <div className={EMPTY.actionWrap}>{action}</div>}
     </div>
   );
 };

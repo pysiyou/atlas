@@ -34,9 +34,9 @@ export const PatientReportsList: React.FC<PatientReportsListProps> = ({ orders }
       {reportableOrders.map((order: Order) => (
         <div
           key={order.orderId}
-          className="flex items-center justify-between p-3 hover:bg-surface-page group"
+          className="flex items-center justify-between p-space-3 hover:bg-surface-page group"
         >
-          <div className="flex items-center gap-3 overflow-hidden">
+          <div className="flex items-center gap-space-3 overflow-hidden">
             <div className="w-8 h-8 flex items-center justify-center">
               <Icon name={ICONS.dataFields.pdf} className={`w-full h-full ${TONE.danger.fg}`} />
             </div>
@@ -44,7 +44,7 @@ export const PatientReportsList: React.FC<PatientReportsListProps> = ({ orders }
               <p className={`${TYPE.value} font-normal truncate`}>
                 Report_<EntityId type="order" value={order.orderId} />.pdf
               </p>
-              <p className={`${TYPE.meta} mt-0.5`}>
+              <p className={`${TYPE.meta} mt-space-0-5`}>
                 {formatDateTime(order.orderDate)} • 1.2 MB
               </p>
             </div>

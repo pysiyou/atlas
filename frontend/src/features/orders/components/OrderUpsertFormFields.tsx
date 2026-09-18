@@ -58,7 +58,7 @@ export const OrderUpsertFormFields: React.FC<OrderUpsertFormFieldsProps> = ({
   } = modalState;
 
   return (
-    <div className="flex-1 overflow-y-auto px-table-cell-x-default py-space-5 space-y-6">
+    <div className="flex-1 overflow-y-auto px-table-cell-x-default py-space-5 space-y-space-6">
       <Controller
         name="patientId"
         control={control}
@@ -149,7 +149,7 @@ export const OrderUpsertFormFields: React.FC<OrderUpsertFormFieldsProps> = ({
                 icon={ICONS.actions.warning}
               />
               {fieldState.error && (
-                <p className={`mt-1.5 text-xs ${TONE.danger.fg}`}>{fieldState.error.message}</p>
+                <p className={`mt-space-1-5 text-xs ${TONE.danger.fg}`}>{fieldState.error.message}</p>
               )}
             </div>
           );

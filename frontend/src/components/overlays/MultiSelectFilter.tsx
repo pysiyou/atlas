@@ -45,7 +45,7 @@ function MultiSelectListItem({
   return (
     <label
       className={cn(
-        'flex items-center gap-3 px-3 py-2 text-sm cursor-pointer',
+        'flex items-center gap-space-3 px-space-3 py-space-2 text-sm cursor-pointer',
         'hover:bg-surface-hover transition-colors',
         isSelected && 'bg-surface'
       )}
@@ -111,7 +111,7 @@ function MultiSelectTriggerContent({
 
   return (
     <span className="text-text-primary truncate block whitespace-nowrap">
-      <span className={`inline-flex items-center justify-center min-w-[18px] h-4 px-1 ${RADIUS.pill} text-on-brand text-xxs font-normal align-middle mr-1 bg-brand`}>
+      <span className={`inline-flex items-center justify-center min-w-[18px] h-4 px-space-1 ${RADIUS.pill} text-on-brand text-xxs font-normal align-middle mr-space-1 bg-brand`}>
         {selectedIds.length}
       </span>
       selected
@@ -139,7 +139,7 @@ function MultiSelectOptionsPanel({
   onSelectAll: () => void;
 }) {
   return (
-    <div className="flex flex-col py-2 min-w-0">
+    <div className="flex flex-col py-space-2 min-w-0">
       <div className="max-h-[300px] overflow-y-auto">
         {options.map(option => (
           <MultiSelectListItem
@@ -153,9 +153,9 @@ function MultiSelectOptionsPanel({
       </div>
 
       {showSelectAll && !singleSelect && options.length > 0 && (
-        <div className="border-t border-border-default mt-2 pt-2">
-          <div className="px-3 py-2">
-            <label className="flex items-center gap-3 cursor-pointer">
+        <div className="border-t border-border-default mt-space-2 pt-space-2">
+          <div className="px-space-3 py-space-2">
+            <label className="flex items-center gap-space-3 cursor-pointer">
               <div className="flex items-center justify-center">
                 <input
                   type="checkbox"

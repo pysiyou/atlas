@@ -26,8 +26,8 @@ export const ResponsiveFilterMobileBar: React.FC<ResponsiveFilterMobileBarProps>
   searchRowHeight = CONTROL.height,
 }) => (
   <div className="w-full bg-surface border-b border-border-default">
-    <div className="px-3 py-2 w-full">
-      <div className="grid grid-cols-[1fr_auto] gap-2 items-center w-full">
+    <div className="px-space-3 py-space-2 w-full">
+      <div className="grid grid-cols-[1fr_auto] gap-space-2 items-center w-full">
         <div className={cn('flex', searchRowHeight, 'w-full items-center')}>
           <DebouncedSearchInput
             value={searchQuery}
@@ -43,7 +43,7 @@ export const ResponsiveFilterMobileBar: React.FC<ResponsiveFilterMobileBarProps>
             <Badge
               variant="primary"
               size="xs"
-              className="absolute -top-1 -right-1 min-w-[18px] h-4 px-1 flex items-center justify-center"
+              className="absolute -top-1 -right-1 min-w-[18px] h-4 px-space-1 flex items-center justify-center"
             >
               {activeFilterCount}
             </Badge>

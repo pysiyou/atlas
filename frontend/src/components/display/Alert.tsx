@@ -80,7 +80,7 @@ export const Alert: React.FC<AlertProps> = ({
         {description ? (
           <p
             className={cn(
-              'mt-1 mb-0 text-sm leading-snug',
+              'mt-space-1 mb-0 text-sm leading-snug',
               appearance === 'unified' ? 'text-text-secondary' : 'opacity-90'
             )}
           >
@@ -95,19 +95,19 @@ export const Alert: React.FC<AlertProps> = ({
   return (
     <div
       className={cn(
-        `flex items-start gap-3 ${RADIUS.notice} p-panel`,
+        `flex items-start gap-space-3 ${RADIUS.notice} p-panel`,
         getAlertShellClasses(variant, appearance),
         className
       )}
       role="alert"
     >
-      <Icon name={ALERT_ICON_NAME[variant]} className={cn('mt-0.5 shrink-0 w-5 h-5', iconClass)} />
+      <Icon name={ALERT_ICON_NAME[variant]} className={cn('mt-space-0-5 shrink-0 w-5 h-5', iconClass)} />
       <div className="min-w-0 flex-1">{body}</div>
       {onClose ? (
         <button
           type="button"
           onClick={onClose}
-          className={`shrink-0 self-start -mr-1 -mt-0.5 flex h-7 w-7 items-center justify-center ${RADIUS.card} border-0 bg-transparent p-0 text-text-tertiary hover:text-text-secondary cursor-pointer`}
+          className={`shrink-0 self-start -mr-space-1 -mt-space-0-5 flex h-7 w-7 items-center justify-center ${RADIUS.card} border-0 bg-transparent p-0 text-text-tertiary hover:text-text-secondary cursor-pointer`}
           aria-label="Close alert"
         >
           <Icon name="cross" className="w-4 h-4 pointer-events-none" />

@@ -35,13 +35,13 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
 }) => {
   const containerClasses = fullScreen
     ? 'flex items-center justify-center min-h-screen'
-    : 'flex items-center justify-center p-8';
+    : 'flex items-center justify-center p-space-8';
 
   return (
     <div className={`${containerClasses} ${className}`}>
       <div className="text-center">
         <SpinnerLoader size={size} />
-        {message && <p className="mt-3 text-sm text-text-tertiary">{message}</p>}
+        {message && <p className="mt-space-3 text-sm text-text-tertiary">{message}</p>}
       </div>
     </div>
   );

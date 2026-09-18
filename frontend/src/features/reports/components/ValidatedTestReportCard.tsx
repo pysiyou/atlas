@@ -40,7 +40,7 @@ export function ValidatedTestReportCard({ item: test, onClick, onPreview }: Vali
       />
 
       {/* Test information */}
-      <div className="grow space-y-2">
+      <div className="grow space-y-space-2">
         <div>
           <div className="text-text-primary text-sm">{test.testName}</div>
           <EntityId variant="block">{test.testCode}</EntityId>
@@ -51,7 +51,7 @@ export function ValidatedTestReportCard({ item: test, onClick, onPreview }: Vali
       </div>
 
       {/* Bottom section: Order date (left) + Preview button (right) */}
-      <div className="flex justify-between items-center mt-auto pt-3">
+      <div className="flex justify-between items-center mt-auto pt-space-3">
         <div className={TYPE.meta}>{formatDateTime(test.orderDate)}</div>
         <div onClick={e => e.stopPropagation()}>
           <ReportPreviewButton test={test} onPreview={onPreview} size="sm" />

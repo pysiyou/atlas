@@ -179,7 +179,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
       >
         <div className="flex flex-col h-full bg-surface-page">
           {/* Scrollable content area */}
-          <div className="flex-1 overflow-y-auto p-space-6 space-y-6">
+          <div className="flex-1 overflow-y-auto p-space-6 space-y-space-6">
             <Panel
               title="Billing Summary"
               padding="none"
@@ -211,7 +211,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
             {/* Payment Method Selection - Only show if not paid */}
             {!isPaid && (
               <div>
-                <label className="block text-sm font-normal text-text-secondary mb-3">
+                <label className="block text-sm font-normal text-text-secondary mb-space-3">
                   Payment Method <span className={TONE.danger.fg}>*</span>
                 </label>
                 <PaymentMethodSelector
@@ -226,7 +226,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
             {/* Notes - Only show if not paid */}
             {!isPaid && (
               <div>
-                <label className="block text-sm font-normal text-text-secondary mb-2">Notes</label>
+                <label className="block text-sm font-normal text-text-secondary mb-space-2">Notes</label>
                 <textarea
                   rows={3}
                   placeholder="Add optional notes..."

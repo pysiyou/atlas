@@ -41,9 +41,9 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
         </div>
       )}
 
-      <div className="flex justify-between items-center mt-auto pt-3 gap-2">
+      <div className="flex justify-between items-center mt-auto pt-space-3 gap-space-2">
         <div className={`${TYPE.meta} tabular-nums`}>{formatDateTime(order.orderDate)}</div>
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-space-2 shrink-0">
           {order.overallStatus && <Badge variant={order.overallStatus} size="xs" />}
           {order.paymentStatus && <Badge variant={order.paymentStatus} size="xs" />}
         </div>

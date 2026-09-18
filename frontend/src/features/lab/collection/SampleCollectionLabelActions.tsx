@@ -129,7 +129,7 @@ export const generatePrintLabelHTML = (display: SampleCollectionQueueItem, patie
       </head>
       <body class="bg-surface m-0 p-0">
         <div class="label-wrapper">
-          <div class="w-full max-w-[3.75in] flex flex-col items-center justify-center gap-1.5 p-2 border border-dashed border-border-strong print:border-none print:max-w-full print:p-0">
+          <div class="w-full max-w-[3.75in] flex flex-col items-center justify-center gap-space-1-5 p-space-2 border border-dashed border-border-strong print:border-none print:max-w-full print:p-0">
             <!-- Patient Name -->
             <div class="text-sm font-normal text-center text-text-primary leading-snug w-full">
               ${patientName}
@@ -142,12 +142,12 @@ export const generatePrintLabelHTML = (display: SampleCollectionQueueItem, patie
             </div>
 
             <!-- Container Info -->
-            <div class="w-full text-xxs font-normal text-center text-text-primary bg-surface-hover ${RADIUS.field} px-2 py-1 print:py-0.5">
+            <div class="w-full text-xxs font-normal text-center text-text-primary bg-surface-hover ${RADIUS.field} px-space-2 py-space-1 print:py-space-0-5">
               ${containerType.toUpperCase()}: ${colorName.toUpperCase()}
             </div>
 
             <!-- Barcode -->
-            <div class="flex justify-center items-center w-full py-0.5">
+            <div class="flex justify-center items-center w-full py-space-0-5">
               <svg id="barcode" class="max-w-full h-auto"></svg>
             </div>
 

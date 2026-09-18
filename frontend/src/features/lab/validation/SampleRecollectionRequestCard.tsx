@@ -68,7 +68,7 @@ function RecollectionRequestCardDesktop({
   );
 
   const actions = (
-    <div className="flex items-center gap-2 z-10" onClick={e => e.stopPropagation()}>
+    <div className="flex items-center gap-space-2 z-10" onClick={e => e.stopPropagation()}>
       <Button
         variant="reject"
         size="sm"
@@ -107,7 +107,7 @@ function RecollectionRequestCardDesktop({
   );
 
   const content = (
-    <div className="space-y-1 text-xs">
+    <div className="space-y-space-1 text-xs">
       <div>
         <span className={LAB_CARD_TYPOGRAPHY.fieldLabel}>Reason:</span>{' '}
         <span className={LAB_CARD_TYPOGRAPHY.fieldValue}>{request.reason}</span>
@@ -124,7 +124,7 @@ function RecollectionRequestCardDesktop({
         onClick={e => e.stopPropagation()}
         placeholder="Review notes (optional)"
         rows={2}
-        className={`w-full ${RADIUS.field} border border-border-default bg-surface px-2 py-1 resize-none text-xs`}
+        className={`w-full ${RADIUS.field} border border-border-default bg-surface px-space-2 py-space-1 resize-none text-xs`}
       />
     </div>
   );
@@ -250,7 +250,7 @@ function RecollectionRequestCardMobile({
         badges={badges}
         actions={actions}
       >
-        <div className={cn(LAB_MOBILE_CARD.body, 'space-y-0.5')}>
+        <div className={cn(LAB_MOBILE_CARD.body, 'space-y-space-0-5')}>
           <div>
             <span className={LAB_CARD_TYPOGRAPHY.fieldLabel}>Reason:</span>{' '}
             <span className={LAB_CARD_TYPOGRAPHY.fieldValue}>{request.reason}</span>
@@ -267,7 +267,7 @@ function RecollectionRequestCardMobile({
             onClick={e => e.stopPropagation()}
             placeholder="Review notes (optional)"
             rows={2}
-            className={`text-xs w-full ${RADIUS.field} border border-border-default bg-surface px-2 py-1 resize-none`}
+            className={`text-xs w-full ${RADIUS.field} border border-border-default bg-surface px-space-2 py-space-1 resize-none`}
           />
         </div>
       </LabMobileCardHeader>

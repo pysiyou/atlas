@@ -26,7 +26,7 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
   onNewOrder,
 }) => {
   const avatar = (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-space-2">
       <Avatar primaryText={patient.fullName} size="sm" avatarOnly />
       {isAffiliationActive(patient.affiliation) && (
         <AffiliationPopover
@@ -49,7 +49,7 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
   );
   const actions = (
     <div
-      className={`flex items-center gap-2 ${!isLarge ? 'w-full sm:w-auto sm:justify-end justify-end' : ''}`}
+      className={`flex items-center gap-space-2 ${!isLarge ? 'w-full sm:w-auto sm:justify-end justify-end' : ''}`}
     >
       {isLarge ? (
         <>

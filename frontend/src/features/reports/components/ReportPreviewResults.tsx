@@ -13,9 +13,9 @@ interface ReportPreviewResultsProps {
 }
 
 export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ reportData }) => (
-  <div className="p-space-6 space-y-4">
+  <div className="p-space-6 space-y-space-4">
     {reportData.testResults.map((test, index) => (
-      <div key={index} className="space-y-4">
+      <div key={index} className="space-y-space-4">
         <div className="text-center">
           <h3 className="text-lg font-bold text-text-primary">
             {test.testName} ({test.testCode})
@@ -98,11 +98,11 @@ export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ repo
           </table>
         </div>
 
-        <div className={`space-y-2 ${TYPE.value} mt-4`}>
+        <div className={`space-y-space-2 ${TYPE.value} mt-space-4`}>
           {test.technicianNotes && <p>Instruments: {test.technicianNotes}</p>}
           {test.validationNotes && <p>Interpretation: {test.validationNotes}</p>}
           <p>Thanks for Reference</p>
-          <p className="text-center font-normal mt-4">****End of Report****</p>
+          <p className="text-center font-normal mt-space-4">****End of Report****</p>
         </div>
       </div>
     ))}

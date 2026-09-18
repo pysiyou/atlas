@@ -72,7 +72,7 @@ function StageTimeComposition({ stages }: { stages: StageRow[] }) {
   );
 
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-space-1-5">
       <SectionTitle
         title="Time Split"
         aside={`${hoursLabel(totalHours)} total avg`}
@@ -92,11 +92,11 @@ function StageTimeComposition({ stages }: { stages: StageRow[] }) {
         })}
       </div>
 
-      <div className="flex flex-wrap gap-x-3 gap-y-1">
+      <div className="flex flex-wrap gap-x-space-3 gap-y-space-1">
         {stages.map(stage => {
           const share = totalHours > 0 ? Math.round((stage.avgHours / totalHours) * 100) : 0;
           return (
-            <span key={stage.key} className={cn('flex items-center gap-1.5 text-xs', COMMAND_CENTER_TEXT.label)}>
+            <span key={stage.key} className={cn('flex items-center gap-space-1-5 text-xs', COMMAND_CENTER_TEXT.label)}>
               <span className={cn(`h-2 w-2 shrink-0 ${RADIUS.field}`, stage.barClass)} />
               {stage.label}{' '}
               <span className={cn('text-sm font-light tabular-nums', COMMAND_CENTER_TEXT.value)}>
@@ -147,7 +147,7 @@ function StageWaitRow({ stage, scaleMax }: { stage: StageRow; scaleMax: number }
   const agingCount = stage.age.warningCount + stage.age.criticalCount;
 
   return (
-    <div className="grid grid-cols-[5rem_minmax(0,1fr)_4rem] items-center gap-2.5">
+    <div className="grid grid-cols-[5rem_minmax(0,1fr)_4rem] items-center gap-space-2-5">
       <div className="min-w-0">
         <p className={cn('truncate text-xs', COMMAND_CENTER_TEXT.label)}>{stage.label}</p>
         <p className={cn('text-xs tabular-nums', COMMAND_CENTER_TEXT.detail)}>
@@ -196,7 +196,7 @@ function SharedTimeAxis({ scaleMax }: { scaleMax: number }) {
   ).sort((a, b) => a - b);
 
   return (
-    <div className="relative mt-1 h-4 border-t border-border-subtle pt-1">
+    <div className="relative mt-space-1 h-4 border-t border-border-subtle pt-space-1">
       {ticks.map(tick => (
         <span
           key={tick}
@@ -232,14 +232,14 @@ export const QueueAgePanel: React.FC<QueueAgePanelProps> = ({ counts, queueAge, 
       meta={`Per-step wait · ${warningHours}h / ${criticalHours}h thresholds`}
       padding="none"
     >
-      <div className="flex h-full min-h-0 flex-col justify-between gap-3 overflow-hidden px-3 py-2">
+      <div className="flex h-full min-h-0 flex-col justify-between gap-space-3 overflow-hidden px-space-3 py-space-2">
         {totalActive === 0 ? (
           <p className={COMMAND_CENTER_SECTION.summary}>No active tests in pipeline.</p>
         ) : (
           <>
             <StageTimeComposition stages={stages} />
 
-            <div className="space-y-2.5">
+            <div className="space-y-space-2-5">
               <SectionTitle title="Wait Per Step" />
               {stages.map(stage => (
                 <StageWaitRow key={stage.key} stage={stage} scaleMax={scaleMax} />

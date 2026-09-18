@@ -38,7 +38,7 @@ export function ThemeSwitch({ isCollapsed = false }: ThemeSwitchProps) {
       <p className={CHROME.sectionTitle}>Theme</p>
       <div
         className={cn(
-          'chrome-theme-well mx-2 flex min-h-[2.125rem] items-center gap-1 overflow-hidden bg-surface-hover p-1',
+          'chrome-theme-well mx-space-2 flex min-h-[2.125rem] items-center gap-space-1 overflow-hidden bg-surface-hover p-space-1',
           RADIUS.control,
         )}
         role="group"
@@ -56,7 +56,7 @@ export function ThemeSwitch({ isCollapsed = false }: ThemeSwitchProps) {
               aria-pressed={isActive}
               aria-label={`${config.label} theme`}
               className={cn(
-                'relative flex min-w-0 flex-1 items-center justify-center gap-1.5 px-1.5 py-1.5 leading-none text-xs font-normal transition-all duration-200 cursor-pointer',
+                'relative flex min-w-0 flex-1 items-center justify-center gap-space-1-5 px-space-1-5 py-space-1-5 leading-none text-xs font-normal transition-all duration-200 cursor-pointer',
                 RADIUS.control,
                 isActive
                   ? 'bg-surface text-brand shadow-sm ring-1 ring-black/5'

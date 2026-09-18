@@ -95,7 +95,7 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
   const effectivePreferredRemedy = preferredRemedy || suggestedRemedy;
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-space-3">
       {subtitle && <p className="text-xs text-muted-foreground">{subtitle}</p>}
 
       {isLoading || isSubmitting ? (
@@ -105,7 +105,7 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
       ) : (
         <>
           {error && (
-            <Alert variant="danger" className="py-2">
+            <Alert variant="danger" className="py-space-2">
               <p className="text-xs">{error}</p>
             </Alert>
           )}

@@ -86,7 +86,7 @@ function EscalationCardDesktop({
         />
       }
       actions={
-        <div className="flex items-center gap-2 z-10" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center gap-space-2 z-10" onClick={e => e.stopPropagation()}>
           <Button
             variant="primary"
             size="sm"

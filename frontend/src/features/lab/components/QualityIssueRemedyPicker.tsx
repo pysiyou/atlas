@@ -28,8 +28,8 @@ export const QualityIssueRemedyPicker: React.FC<RemedyDestinationPickerProps> = 
 
   return (
     <div>
-      <label className={`${FORM_FIELD_LABEL} mb-1`}>{label}</label>
-      <div className="grid grid-cols-1 gap-2">
+      <label className={`${FORM_FIELD_LABEL} mb-space-1`}>{label}</label>
+      <div className="grid grid-cols-1 gap-space-2">
         {options.map(option => {
           const labelText = option.hint ? `${option.label} ${option.hint}` : option.label;
           return (

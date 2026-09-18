@@ -4,7 +4,7 @@ import { RADIUS, TYPE } from '@/components/theme/recipes';
 
 
 const POPOVER_SHELL_CLASS = [
-  'absolute left-0 right-0 top-full z-50 mt-1 text-text-primary',
+  'absolute left-0 right-0 top-full z-50 mt-space-1 text-text-primary',
   'border border-border-default/80',
   RADIUS.menu,
   'overflow-hidden',
@@ -30,7 +30,7 @@ export const OrderSelectPopoverShell: React.FC<OrderSelectPopoverShellProps> = (
   children,
 }) => (
   <div className={POPOVER_SHELL_CLASS}>
-    <div className="px-space-4 py-2.5 bg-surface-page/70 border-b border-border-default/70 flex items-center justify-between">
+    <div className="px-space-4 py-space-2-5 bg-surface-page/70 border-b border-border-default/70 flex items-center justify-between">
       <div className={FORM_FIELD_LABEL}>{title}</div>
       <div className={TYPE.meta}>{resultCount} result(s)</div>
     </div>

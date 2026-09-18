@@ -1,4 +1,5 @@
 import React from 'react';
+import { SPACING } from '@/components/theme/recipes';
 import { DetailField } from './DetailField';
 import type { BadgeVariant } from '@/components';
 
@@ -41,7 +42,7 @@ interface DetailFieldGroupProps {
   fields: DetailFieldConfig[];
   /** Additional CSS classes for the container */
   className?: string;
-  /** Gap between fields (default: 'space-y-2') */
+  /** Gap between fields (default: 'space-y-space-2') */
   spacing?: 'tight' | 'normal' | 'loose';
 }
 
@@ -49,9 +50,9 @@ interface DetailFieldGroupProps {
  * Spacing class map for different gap sizes
  */
 const SPACING_CLASSES = {
-  tight: 'space-y-1',
-  normal: 'space-y-2',
-  loose: 'space-y-3',
+  tight: SPACING.stackCompact,
+  normal: SPACING.stackNormal,
+  loose: SPACING.stackRelaxed,
 };
 
 /**

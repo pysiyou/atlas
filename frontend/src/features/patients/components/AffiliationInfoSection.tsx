@@ -21,7 +21,7 @@ export const AffiliationInfo: React.FC<AffiliationInfoProps> = ({ affiliation })
   const isActive = isAffiliationActive(affiliation);
 
   return (
-    <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+    <div className="grid grid-cols-2 gap-x-space-4 gap-y-space-3 text-sm">
       <DetailField
         orientation="vertical"
         label="Assurance Number"

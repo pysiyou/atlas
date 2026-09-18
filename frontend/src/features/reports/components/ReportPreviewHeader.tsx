@@ -52,14 +52,14 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
 
   return (
     <div className="flex border-b border-border-default">
-      <div className="bg-surface-report p-space-6 shrink-0 space-y-2" style={{ width: '40%' }}>
-        <h2 className="text-2xl font-bold text-text-primary mb-3">{companyConfig.getName()}</h2>
+      <div className="bg-surface-report p-space-6 shrink-0 space-y-space-2" style={{ width: '40%' }}>
+        <h2 className="text-2xl font-bold text-text-primary mb-space-3">{companyConfig.getName()}</h2>
         {companyConfig.getConfig().company.subtitle && (
           <p className={`${TYPE.value} font-normal`}>
             {companyConfig.getConfig().company.subtitle}
           </p>
         )}
-        <div className={`${TYPE.label} space-y-0.5`}>
+        <div className={`${TYPE.label} space-y-space-0-5`}>
           {companyConfig.getContact().address.street && (
             <p>{companyConfig.getContact().address.street}</p>
           )}
@@ -75,7 +75,7 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
       </div>
 
       <div className="bg-surface p-panel flex-1">
-        <h1 className="text-base font-bold text-text-primary mb-2">
+        <h1 className="text-base font-bold text-text-primary mb-space-2">
           {reportData.testResults.length > 0 ? (
             <>
               {reportData.testResults.map(t => t.testName).join(', ')} Results ({' '}
@@ -87,17 +87,17 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
           )}
         </h1>
 
-        <div className="grid grid-cols-2 gap-2">
-          <div className="space-y-0.5">
+        <div className="grid grid-cols-2 gap-space-2">
+          <div className="space-y-space-0-5">
             <p className="text-base font-normal text-text-primary">{reportData.patientName}</p>
             {reportData.patientAge && (
-              <div className="flex gap-2">
+              <div className="flex gap-space-2">
                 <span className={`${TYPE.label} min-w-[50px] truncate`}>Age:</span>
                 <span className={`${TYPE.value} font-normal`}>{reportData.patientAge}</span>
               </div>
             )}
             {reportData.patientGender && (
-              <div className="flex gap-2">
+              <div className="flex gap-space-2">
                 <span className={`${TYPE.label} min-w-[50px] truncate`}>Gender:</span>
                 <span className={`${TYPE.value} font-normal`}>
                   {reportData.patientGender.toUpperCase()}
@@ -105,7 +105,7 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
               </div>
             )}
             {orderExtended.patientPhone && (
-              <div className="flex gap-2">
+              <div className="flex gap-space-2">
                 <span className={`${TYPE.label} min-w-[50px] truncate`}>Phone:</span>
                 <span className={`${TYPE.value} font-normal`}>
                   {orderExtended.patientPhone}
@@ -113,7 +113,7 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
               </div>
             )}
             {!orderExtended.patientPhone && orderExtended.patientEmail && (
-              <div className="flex gap-2">
+              <div className="flex gap-space-2">
                 <span className={`${TYPE.label} min-w-[50px] truncate`}>Email:</span>
                 <span className={`${TYPE.value} font-normal`}>
                   {orderExtended.patientEmail}
@@ -122,24 +122,24 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
             )}
           </div>
 
-          <div className="space-y-0.5">
+          <div className="space-y-space-0-5">
             <p className="text-base font-normal text-text-primary">Processing Details</p>
             {collectedAt && (
-              <div className="flex gap-2">
+              <div className="flex gap-space-2">
                 <span className={`${TYPE.label} min-w-[60px] truncate`}>Sample:</span>
                 <span className={`${TYPE.value} font-normal`}>
                   {formatDateTime(collectedAt)}
                 </span>
               </div>
             )}
-            <div className="flex gap-2">
+            <div className="flex gap-space-2">
               <span className={`${TYPE.label} min-w-[60px] truncate`}>Results:</span>
               <span className={`${TYPE.value} font-normal`}>
                 {reportedAt ? formatDateTime(reportedAt) : formatDateTime(new Date())}
               </span>
             </div>
             {reportData.testResults[0] && (
-              <div className="flex gap-2">
+              <div className="flex gap-space-2">
                 <span className={`${TYPE.label} min-w-[60px] truncate`}>Verified by:</span>
                 <span className={`${TYPE.value} font-normal`}>{resolveVerifiedBy()}</span>
               </div>

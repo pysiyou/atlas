@@ -51,7 +51,7 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
 
   return (
     <div
-      className={cn(columns === 2 ? 'grid grid-cols-2 gap-x-6 gap-y-2' : 'space-y-2', className)}
+      className={cn(columns === 2 ? 'grid grid-cols-2 gap-x-space-6 gap-y-space-2' : 'space-y-space-2', className)}
     >
       {options.map(option => (
         <Checkbox

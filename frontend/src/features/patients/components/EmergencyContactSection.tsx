@@ -44,7 +44,7 @@ export const EmergencyContactSection: React.FC<
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-space-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-layout-section">
         <Input
           label="Contact Full Name"
@@ -58,8 +58,8 @@ export const EmergencyContactSection: React.FC<
           placeholder="Jane Doe"
         />
         <div>
-          <label className={`${FORM_FIELD_LABEL} mb-1.5`}>
-            Relationship <span className={`${TONE.danger.fg} ml-1`}>*</span>
+          <label className={`${FORM_FIELD_LABEL} mb-space-1.5`}>
+            Relationship <span className={`${TONE.danger.fg} ml-space-1`}>*</span>
           </label>
           <MultiSelectFilter
             label="Relationship"
@@ -73,7 +73,7 @@ export const EmergencyContactSection: React.FC<
             className="w-full"
           />
           {errors.emergencyContactRelationship && (
-            <p className={`mt-1 text-sm ${TONE.danger.fg}`}>{errors.emergencyContactRelationship}</p>
+            <p className={`mt-space-1 text-sm ${TONE.danger.fg}`}>{errors.emergencyContactRelationship}</p>
           )}
         </div>
         <Input

@@ -74,7 +74,7 @@ export const ProgressBadge: React.FC<InfoBadgeProps> = ({
   label,
   isComplete = false,
 }) => (
-  <div className="flex flex-col items-end gap-0.5">
+  <div className="flex flex-col items-end gap-space-0-5">
     <Badge size={LAB_CARD_BADGE_SIZE} variant={isComplete ? 'success' : 'warning'}>
       {count}/{total} {label}
     </Badge>

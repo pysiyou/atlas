@@ -83,10 +83,10 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
   switch (activeTab) {
     case 'general':
       return (
-        <div className="space-y-8">
-          <div className="space-y-6">
-            <div className="pb-1">
-              <div className={`${TYPE.meta} font-normal uppercase tracking-wide mb-1`}>
+        <div className="space-y-space-8">
+          <div className="space-y-space-6">
+            <div className="pb-space-1">
+              <div className={`${TYPE.meta} font-normal uppercase tracking-wide mb-space-1`}>
                 General
               </div>
               <div className="text-base font-normal text-text-primary">Identity &amp; Contact</div>
@@ -99,9 +99,9 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
             <AddressSection formData={formData} errors={flatErrors} onFieldChange={onFieldChange} />
           </div>
 
-          <div className="border-t border-border-default pt-space-6 space-y-6">
-            <div className="pb-1">
-              <div className={`${TYPE.meta} font-normal uppercase tracking-wide mb-1`}>
+          <div className="border-t border-border-default pt-space-6 space-y-space-6">
+            <div className="pb-space-1">
+              <div className={`${TYPE.meta} font-normal uppercase tracking-wide mb-space-1`}>
                 Primary Contact
               </div>
               <div className="text-base font-normal text-text-primary">Emergency Contact</div>
@@ -117,9 +117,9 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
 
     case 'medical':
       return (
-        <div className="space-y-6">
-          <div className="pb-1">
-            <div className={`${TYPE.meta} font-normal uppercase tracking-wide mb-1`}>
+        <div className="space-y-space-6">
+          <div className="pb-space-1">
+            <div className={`${TYPE.meta} font-normal uppercase tracking-wide mb-space-1`}>
               Medical Background
             </div>
             <div className="text-base font-normal text-text-primary">
@@ -132,13 +132,13 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
 
     case 'vitals':
       return (
-        <div className="space-y-6">
-          <div className="pb-1">
-            <div className={`${TYPE.meta} font-normal uppercase tracking-wide mb-1`}>
+        <div className="space-y-space-6">
+          <div className="pb-space-1">
+            <div className={`${TYPE.meta} font-normal uppercase tracking-wide mb-space-1`}>
               Vitals
             </div>
             <div className="text-base font-normal text-text-primary">Measurements</div>
-            <div className={`${TYPE.meta} mt-1.5 leading-relaxed`}>
+            <div className={`${TYPE.meta} mt-space-1-5 leading-relaxed`}>
               Fill any vitals you have. Hints show typical ranges.
             </div>
           </div>
@@ -160,13 +160,13 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
 
     case 'affiliation':
       return (
-        <div className="space-y-6">
-          <div className="pb-1">
-            <div className={`${TYPE.meta} font-normal uppercase tracking-wide mb-1`}>
+        <div className="space-y-space-6">
+          <div className="pb-space-1">
+            <div className={`${TYPE.meta} font-normal uppercase tracking-wide mb-space-1`}>
               Affiliation
             </div>
             <div className="text-base font-normal text-text-primary">Select Your Plan</div>
-            <div className={`${TYPE.meta} mt-1.5 leading-relaxed`}>
+            <div className={`${TYPE.meta} mt-space-1-5 leading-relaxed`}>
               Choose a duration and pricing that works for you
             </div>
           </div>

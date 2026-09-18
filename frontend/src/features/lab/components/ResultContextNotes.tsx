@@ -28,7 +28,7 @@ export const ResultContextNotes: React.FC<ResultContextNotesProps> = ({
 
   if (compact) {
     return (
-      <div className={cn('space-y-1 text-xs', className)}>
+      <div className={cn('space-y-space-1 text-xs', className)}>
         {hasFlags && (
           <p className={`${TONE.danger.fg} leading-snug`}>{flags!.join(', ')}</p>
         )}
@@ -40,10 +40,10 @@ export const ResultContextNotes: React.FC<ResultContextNotesProps> = ({
   }
 
   return (
-    <div className={cn('grid grid-cols-1 md:grid-cols-2 gap-3', className)}>
+    <div className={cn('grid grid-cols-1 md:grid-cols-2 gap-space-3', className)}>
       {hasFlags && (
-        <div className={cn(TONE.danger.well, RADIUS.card, 'px-3 py-2.5')}>
-          <p className={`${TYPE.sectionTitle} ${TONE.danger.fg} mb-1.5 flex items-center gap-1`}>
+        <div className={cn(TONE.danger.well, RADIUS.card, 'px-space-3 py-space-2-5')}>
+          <p className={`${TYPE.sectionTitle} ${TONE.danger.fg} mb-space-1.5 flex items-center gap-space-1`}>
             <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
             Flags
           </p>
@@ -51,8 +51,8 @@ export const ResultContextNotes: React.FC<ResultContextNotesProps> = ({
         </div>
       )}
       {hasNotes && (
-        <div className={`${RADIUS.card} border border-border-subtle bg-surface-page/60 px-3 py-2.5`}>
-          <p className={`${TYPE.sectionTitle} text-text-tertiary mb-1.5`}>
+        <div className={`${RADIUS.card} border border-border-subtle bg-surface-page/60 px-space-3 py-space-2-5`}>
+          <p className={`${TYPE.sectionTitle} text-text-tertiary mb-space-1.5`}>
             Technician notes
           </p>
           <p className="text-sm text-text-secondary leading-snug whitespace-pre-wrap">

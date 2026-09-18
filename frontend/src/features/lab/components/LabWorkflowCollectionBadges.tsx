@@ -140,7 +140,7 @@ function CollectionStatusExtras({
     <>
       {isRejected && rejectedSample?.recollectionSampleId && (
         <CompactOnly>
-          <Badge size={size} variant="info" className="flex items-center gap-1">
+          <Badge size={size} variant="info" className="flex items-center gap-space-1">
             <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
             Recollection requested:{' '}
             <EntityId type="sample" value={rejectedSample.recollectionSampleId} />

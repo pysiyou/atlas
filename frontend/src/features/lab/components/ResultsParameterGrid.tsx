@@ -54,13 +54,13 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
               key={key}
               className={cn(RESULT_PANEL.tile, resultTileStatusClass(status, true))}
             >
-              <div className="flex items-start justify-between gap-2 min-w-0">
+              <div className="flex items-start justify-between gap-space-2 min-w-0">
                 <span className={RESULT_PANEL.label} title={key}>{key}</span>
                 {statusLabel && (
                   <span className={`text-xxs font-medium ${TONE.danger.fg} shrink-0`}>{statusLabel}</span>
                 )}
               </div>
-              <div className="flex items-baseline gap-0.5 min-w-0">
+              <div className="flex items-baseline gap-space-0-5 min-w-0">
                 <span className={cn(RESULT_PANEL.value, resultValueClass(status))}>
                   {resultValue}
                 </span>
@@ -79,21 +79,21 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
     const remainingCount = entries.length - maxVisible;
 
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-0.5">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-space-4 gap-y-space-0-5">
         {visibleEntries.map(([key, rawValue]) => {
           const { resultValue, unit, status } = parseResultEntry(key, rawValue, flagStatusMap);
           return (
-            <div key={key} className="grid grid-cols-[1fr_auto] items-baseline gap-x-1.5 min-w-0">
+            <div key={key} className="grid grid-cols-[1fr_auto] items-baseline gap-x-space-1-5 min-w-0">
               <span className={`${TYPE.caption} text-text-secondary truncate`} title={key}>{key}:</span>
               <span className={`text-xxs font-normal tabular-nums ${inlineValueClass(status)}`}>
                 {resultValue}
-                {unit && <span className="text-text-tertiary font-normal ml-0.5 text-xxs">{unit}</span>}
+                {unit && <span className="text-text-tertiary font-normal ml-space-0-5 text-xxs">{unit}</span>}
               </span>
             </div>
           );
         })}
         {remainingCount > 0 && (
-          <div className={`${TYPE.caption} col-span-full pt-0.5`}>
+          <div className={`${TYPE.caption} col-span-full pt-space-0-5`}>
             +{remainingCount} more
           </div>
         )}
@@ -102,20 +102,20 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
   }
 
   return (
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,max-content))] gap-x-6 gap-y-1">
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,max-content))] gap-x-space-6 gap-y-space-1">
       {entries.map(([key, rawValue]) => {
         const { resultValue, unit, status } = parseResultEntry(key, rawValue, flagStatusMap);
         return (
           <div
             key={key}
-            className="grid grid-cols-[1fr_auto] items-baseline gap-x-2 whitespace-nowrap min-w-0"
+            className="grid grid-cols-[1fr_auto] items-baseline gap-x-space-2 whitespace-nowrap min-w-0"
           >
             <span className={`${TYPE.caption} text-text-secondary truncate text-right`} title={key}>
               {key}:
             </span>
             <span className={`text-xs font-normal tabular-nums ${inlineValueClass(status)}`}>
               {resultValue}
-              {unit && <span className="text-text-tertiary font-normal ml-1 text-xxs">{unit}</span>}
+              {unit && <span className="text-text-tertiary font-normal ml-space-1 text-xxs">{unit}</span>}
             </span>
           </div>
         );

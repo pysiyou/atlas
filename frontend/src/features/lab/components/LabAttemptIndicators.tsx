@@ -58,8 +58,8 @@ export const AttemptIndicator: React.FC<AttemptIndicatorProps> = ({
 
       {/* Hover tooltip */}
       {showTooltip && (
-        <div className={`absolute top-full right-0 mt-1 z-50 w-64 p-3 ${OVERLAY.shellShadowXl}`}>
-          <div className="space-y-1">
+        <div className={`absolute top-full right-0 mt-space-1 z-50 w-64 p-space-3 ${OVERLAY.shellShadowXl}`}>
+          <div className="space-y-space-1">
             <p className={`${TYPE.value} font-normal`}>
               {typeLabel} Attempt #{attemptNumber}
             </p>
@@ -118,7 +118,7 @@ export const AttemptProgressBar: React.FC<AttemptProgressBarProps> = ({
   const colors = VARIANT_TONES[variant];
 
   return (
-    <div className={cn('space-y-1', className)}>
+    <div className={cn('space-y-space-1', className)}>
       <div className="flex items-center justify-between text-xxs">
         <span className="font-normal text-text-secondary">{label}</span>
         <span className={cn('font-normal', colors.fg)}>

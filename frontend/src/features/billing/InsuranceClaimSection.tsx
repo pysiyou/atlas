@@ -57,7 +57,7 @@ export const InsuranceClaimSection: React.FC<InsuranceClaimSectionProps> = ({
 
   return (
     <div className="mt-space-4 pt-space-4 border-t border-dashed border-border-strong space-y-space-3">
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center justify-between gap-space-2">
         <span className="text-xs font-medium text-text-secondary uppercase tracking-wider">
           Insurance Claims
         </span>
@@ -76,11 +76,11 @@ export const InsuranceClaimSection: React.FC<InsuranceClaimSectionProps> = ({
       ) : isLoading ? (
         <p className={TYPE.meta}>Loading claims…</p>
       ) : claims.length > 0 ? (
-        <ul className="space-y-2">
+        <ul className="space-y-space-2">
           {claims.map((claim: InsuranceClaim) => (
             <li
               key={claim.claimId}
-              className={`flex items-start justify-between gap-2 text-xs border border-border-default ${RADIUS.field} px-2 py-1.5`}
+              className={`flex items-start justify-between gap-space-2 text-xs border border-border-default ${RADIUS.field} px-space-2 py-space-1-5`}
             >
               <div className="min-w-0">
                 <p className="font-medium text-text-primary truncate">{claim.insuranceProvider}</p>
@@ -88,7 +88,7 @@ export const InsuranceClaimSection: React.FC<InsuranceClaimSectionProps> = ({
               </div>
               <div className="text-right shrink-0">
                 <Badge variant="default" size="xs">{claim.claimStatus}</Badge>
-                <p className="tabular-nums mt-0.5">{formatCurrency(claim.claimAmount)}</p>
+                <p className="tabular-nums mt-space-0-5">{formatCurrency(claim.claimAmount)}</p>
               </div>
             </li>
           ))}
@@ -98,7 +98,7 @@ export const InsuranceClaimSection: React.FC<InsuranceClaimSectionProps> = ({
       )}
 
       {invoice.amountDue > 0 && (
-        <div className="space-y-2">
+        <div className="space-y-space-2">
           <Input
             label="Provider"
             required

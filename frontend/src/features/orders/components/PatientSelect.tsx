@@ -5,11 +5,11 @@ import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/c
 import type { Patient } from '@/types';
 import { ICONS } from '@/config/icons';
 import { OrderSelectPopoverShell } from './OrderSelectPopoverShell';
-import { TONE, TYPE } from '@/components/theme/recipes';
+import { SPACING, TONE, TYPE } from '@/components/theme/recipes';
 
 
 const SELECTED_CHIP_CLASS =
-  'max-w-[min(100%,20rem)] items-start gap-2 py-1.5 px-2 bg-surface-page border-border-default/80 shadow-none';
+  'max-w-[min(100%,20rem)] items-start gap-space-2 py-space-1-5 px-space-2 bg-surface-page border-border-default/80 shadow-none';
 
 function formatPatientContactLine(patient: Patient): string {
   return [
@@ -70,7 +70,7 @@ const PatientSearchTagInput: React.FC<{
   disabled?: boolean;
 }> = ({ selectedPatient, value, onValueChange, onClearSelection, error, disabled = false }) => (
   <div className="w-full">
-      <div className="flex justify-between items-baseline mb-1 gap-2">
+      <div className="flex justify-between items-baseline mb-space-1 gap-space-2">
         <label
           htmlFor="order-patient-search"
           className={FORM_CONTROL_LABEL}
@@ -82,12 +82,12 @@ const PatientSearchTagInput: React.FC<{
       <div
         className={cn(
           inputContainerBase,
-          'group relative pl-10 pr-3 py-2.5 flex flex-wrap gap-2 items-center min-h-[42px]',
+          `group relative ${SPACING.plSpace10} pr-space-3 py-space-2-5 flex flex-wrap gap-space-2 items-center min-h-[42px]`,
           disabled && 'bg-surface-page opacity-60 cursor-not-allowed',
           error && inputContainerError
         )}
       >
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <div className="absolute inset-y-0 left-0 pl-space-3 flex items-center pointer-events-none">
           <Icon
             name={ICONS.dataFields.user}
             className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors"
@@ -124,7 +124,7 @@ const PatientSearchTagInput: React.FC<{
         />
       </div>
 
-      {error && <p className={`mt-1.5 text-xs ${TONE.danger.fg}`}>{error}</p>}
+      {error && <p className={`mt-space-1-5 text-xs ${TONE.danger.fg}`}>{error}</p>}
     </div>
   );
 
@@ -210,8 +210,8 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                         setIsPopoverOpen(false);
                       }}
                       className={cn(
-                        'w-full text-left px-3 py-2',
-                        'transition-colors flex items-center gap-2',
+                        'w-full text-left px-space-3 py-space-2',
+                        'transition-colors flex items-center gap-space-2',
                         'hover:bg-surface-page',
                         'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-opacity-30',
                         isSelected ? 'bg-surface-page' : 'bg-surface'

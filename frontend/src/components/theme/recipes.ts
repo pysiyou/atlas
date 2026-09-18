@@ -105,6 +105,10 @@ export const SPACING = {
   pySpace2: 'py-space-2',
   pSpace2: 'p-space-2',
   ptSpace1: 'pt-space-1',
+  plSpace10: 'pl-space-10',
+  plSpace12: 'pl-space-12',
+  prSpace8: 'pr-space-8',
+  prSpace12: 'pr-space-12',
 } as const;
 
 /** List filter bar + responsive entity filters. */
@@ -200,9 +204,13 @@ export const RADIUS = {
 /** Empty state layout. */
 export const EMPTY = {
   containerCompact: `flex flex-col items-center justify-center py-space-6 px-space-4 text-center`,
-  containerDefault: 'flex flex-col items-center justify-center py-12 px-space-6 text-center',
+  containerDefault: 'flex flex-col items-center justify-center py-space-12 px-space-6 text-center',
   iconWrapCompact: `w-10 h-10 ${RADIUS.pill} bg-surface-hover flex items-center justify-center mb-space-3`,
   iconWrapDefault: `w-16 h-16 ${RADIUS.pill} bg-surface-hover flex items-center justify-center mb-space-4`,
+  titleCompact: 'text-sm font-normal text-text-primary mb-space-1',
+  titleDefault: 'text-base font-normal text-text-primary mb-space-2',
+  description: 'text-sm text-text-tertiary mb-space-4 max-w-md',
+  actionWrap: 'mt-space-2',
 } as const;
 
 /** Modal / dialog chrome. */
@@ -269,7 +277,7 @@ export const CHROME = {
   navLabel:
     'chrome-clip min-w-0 flex-1 truncate pr-space-3 text-sm font-medium whitespace-nowrap transition-opacity duration-200 ease-out',
   navTooltip:
-    `pointer-events-none absolute left-full z-50 ml-2 hidden whitespace-nowrap ${RADIUS.pill} bg-brand px-2.5 py-1 text-xs font-medium text-on-brand shadow-sm group-data-[collapsed=true]/chrome:group-hover/nav:block`,
+    `pointer-events-none absolute left-full z-50 ml-space-2 hidden whitespace-nowrap ${RADIUS.pill} bg-brand px-space-2-5 py-space-1 text-xs font-medium text-on-brand shadow-sm group-data-[collapsed=true]/chrome:group-hover/nav:block`,
   footerDivider: 'chrome-nav-split',
   footerDividerRule: 'chrome-nav-split-line',
   footerBlock: `flex shrink-0 flex-col ${SPACING.gapRelaxed} pb-chrome-nav-menu-gutter`,

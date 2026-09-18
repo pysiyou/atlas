@@ -32,8 +32,8 @@ export const ResultCriticalValueBanner: React.FC<CriticalValueBannerProps> = ({
 
   return (
     <Alert variant="danger" className={className}>
-      <div className="space-y-2">
-        <div className="flex items-center gap-2">
+      <div className="space-y-space-2">
+        <div className="flex items-center gap-space-2">
           <Icon name={ICONS.actions.alertCircle} className="w-4 h-4" />
           <h4 className={`text-sm font-normal ${TONE.danger.fg}`}>
             Contains Critical Values
@@ -41,13 +41,13 @@ export const ResultCriticalValueBanner: React.FC<CriticalValueBannerProps> = ({
         </div>
         <div className="pl-space-6 space-y-space-1">
           {criticalParameters.map((param, index) => (
-            <div key={index} className="flex items-baseline gap-2 text-xs">
+            <div key={index} className="flex items-baseline gap-space-2 text-xs">
               <Badge variant="danger" size="xs" className="shrink-0">
                 {param.name}
               </Badge>
               <span className={`font-normal ${TONE.danger.fg}`}>
                 {param.value}
-                {param.unit && <span className="ml-1 text-xxs">{param.unit}</span>}
+                {param.unit && <span className="ml-space-1 text-xxs">{param.unit}</span>}
               </span>
             </div>
           ))}

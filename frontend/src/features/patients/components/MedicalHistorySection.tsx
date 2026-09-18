@@ -37,7 +37,7 @@ export const MedicalHistorySection: React.FC<
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-space-6">
       <TagInput
         label="Chronic Conditions"
         tags={chronicConditionsArray}
@@ -75,7 +75,7 @@ export const MedicalHistorySection: React.FC<
         placeholder="Notable family medical history"
         rows={3}
       />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-layout-section pt-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-layout-section pt-space-2">
         <Checkbox
           id="smoking"
           name="smoking"

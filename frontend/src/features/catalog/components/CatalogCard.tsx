@@ -32,7 +32,7 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
 
       {/* Synonyms and volume */}
       <div className="grow">
-        <div className="space-y-1">
+        <div className="space-y-space-1">
           {test.synonyms && test.synonyms.length > 0 && (
             <div className={`${TYPE.label} truncate`}>
               {test.synonyms.slice(0, 2).join(', ')}
@@ -46,11 +46,11 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
       </div>
 
       {/* Bottom section: Turnaround time (left) + Category + Sample Type badges (right) */}
-      <div className="flex justify-between items-center mt-auto pt-3">
+      <div className="flex justify-between items-center mt-auto pt-space-3">
         <div className={TYPE.meta}>
           TAT: {formatTurnaroundTime(test.turnaroundTime)}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-space-2">
           <Badge variant={test.category} size="xs" className="border-none" />
           <Badge variant={test.sampleType} size="xs" />
         </div>

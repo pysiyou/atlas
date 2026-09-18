@@ -42,7 +42,7 @@ export const CatalogRejectionCriteriaFields: React.FC<CatalogRejectionFieldsProp
 
   if (showReason && criteria.length === 0) {
     return (
-      <Alert variant="danger" className="py-2">
+      <Alert variant="danger" className="py-space-2">
         <p className="text-xs">No rejection criteria are defined for this test in the catalog.</p>
       </Alert>
     );
@@ -52,7 +52,7 @@ export const CatalogRejectionCriteriaFields: React.FC<CatalogRejectionFieldsProp
     <>
       {showReason && (
         <div>
-          <label className={`${FORM_FIELD_LABEL} mb-1`}>
+          <label className={`${FORM_FIELD_LABEL} mb-space-1`}>
             {reasonLabel} <span className={TONE.danger.fg}>*</span>
           </label>
           <select
@@ -72,7 +72,7 @@ export const CatalogRejectionCriteriaFields: React.FC<CatalogRejectionFieldsProp
 
       {showNotes && (
         <div>
-          <label className={`${FORM_FIELD_LABEL} mb-1`}>{notesLabel}</label>
+          <label className={`${FORM_FIELD_LABEL} mb-space-1`}>{notesLabel}</label>
           <textarea
             rows={notesRows}
             placeholder="Optional additional details..."

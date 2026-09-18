@@ -68,7 +68,7 @@ export const COMMAND_CENTER_SECTION = {
 
 export const COMMAND_CENTER_KPI = {
   tile:
-    `group relative flex min-w-0 flex-1 items-center gap-2.5 ${RADIUS.surface} border border-border-default bg-gradient-to-br from-surface via-surface to-surface-page/80 px-2.5 py-2 transition-all duration-200 hover:border-border-hover hover:shadow-sm`,
+    `group relative flex min-w-0 flex-1 items-center gap-space-2-5 ${RADIUS.surface} border border-border-default bg-gradient-to-br from-surface via-surface to-surface-page/80 px-space-2-5 py-space-2 transition-all duration-200 hover:border-border-hover hover:shadow-sm`,
   tileInteractive: 'cursor-pointer',
   tileLink: `min-w-0 flex-1 ${RADIUS.field} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/30`,
   tileWrap: 'min-w-0 flex-1',

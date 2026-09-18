@@ -252,6 +252,9 @@
   --spacing-space-4: var(--space-4);
   --spacing-space-5: var(--space-5);
   --spacing-space-6: var(--space-6);
+  --spacing-space-8: var(--space-8);
+  --spacing-space-10: var(--space-10);
+  --spacing-space-12: var(--space-12);
   --spacing-table-cell-x-compact: var(--table-cell-x-compact);
   --spacing-table-cell-x-default: var(--table-cell-x-default);
   --spacing-table-cell-x-comfortable: var(--table-cell-x-comfortable);

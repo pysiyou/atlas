@@ -23,7 +23,7 @@ export const RecollectionOfBadge: React.FC<RecollectionOfBadgeProps> = ({
   <Badge
     size={size}
     variant="warning"
-    className={`flex items-center gap-1 ${className}`}
+    className={`flex items-center gap-space-1 ${className}`}
   >
     <Icon name={ICONS.actions.alertCircle} className="w-3 h-3 shrink-0" />
     Recollection of <EntityId type="sample" value={originalSampleId} />
@@ -46,7 +46,7 @@ export const RetestOfBadge: React.FC<RetestOfBadgeProps> = ({
   size = LAB_CARD_BADGE_SIZE,
   className = '',
 }) => (
-  <Badge size={size} variant="warning" className={`flex items-center gap-1 ${className}`}>
+  <Badge size={size} variant="warning" className={`flex items-center gap-space-1 ${className}`}>
     <Icon name={ICONS.actions.alertCircle} className="w-3 h-3 shrink-0" />
     Re-test of <EntityId type="orderTest" value={retestOfTestId} />
   </Badge>

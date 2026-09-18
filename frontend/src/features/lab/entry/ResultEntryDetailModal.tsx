@@ -162,7 +162,7 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
             <Badge
               size={LAB_CARD_BADGE_SIZE}
               variant="default"
-              className="text-text-secondary flex items-center gap-1.5"
+              className="text-text-secondary flex items-center gap-space-1-5"
             >
               <Icon name={ICONS.dataFields.time} className="w-3 h-3 text-text-tertiary" />
               {turnaroundTime}h TAT
@@ -302,7 +302,7 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
               {
                 label: 'Turnaround Time',
                 value: turnaroundTime ? (
-                  <span className="flex items-center gap-1">
+                  <span className="flex items-center gap-space-1">
                     <Icon name={ICONS.dataFields.time} className="w-3.5 h-3.5" />
                     {turnaroundTime} hours
                   </span>

@@ -66,7 +66,7 @@ export function ResultValidationQueueView({
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-space-8">
       {hasRecollection && (
         <LabValidationQueueSection title="Recollection requests" count={recollectionRequests.length}>
           {recollectionRequests.map(request => (

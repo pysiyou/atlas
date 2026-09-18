@@ -212,19 +212,19 @@ export const ModalFooter: React.FC<ModalFooterProps> = ({
     >
       {hasStatus &&
         (statusIcon && statusMessage ? (
-          <div className={`${TYPE.meta} flex items-center gap-1.5`}>
+          <div className={`${TYPE.meta} flex items-center gap-space-1-5`}>
             <div className="w-3.5 h-3.5 flex items-center justify-center">{statusIcon}</div>
             <span>{statusMessage}</span>
           </div>
         ) : (
-          <div className={`flex items-center gap-1.5 text-xs ${statusClassName}`}>
+          <div className={`flex items-center gap-space-1-5 text-xs ${statusClassName}`}>
             {statusIcon && (
               <div className="w-3.5 h-3.5 flex items-center justify-center shrink-0">{statusIcon}</div>
             )}
             {statusMessage && <span>{statusMessage}</span>}
           </div>
         ))}
-      <div className="flex items-center gap-3 flex-nowrap">{children}</div>
+      <div className="flex items-center gap-space-3 flex-nowrap">{children}</div>
     </div>
   );
 };

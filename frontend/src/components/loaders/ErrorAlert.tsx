@@ -55,16 +55,16 @@ export const ErrorAlert: React.FC<ErrorAlertProps> = ({
 
   return (
     <Alert variant="danger" onClose={onDismiss} className={className}>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-space-2">
         <div>
           <p className="font-normal">{error.message}</p>
           {error.operation && (
-            <p className="text-sm opacity-80 mt-1">Failed operation: {error.operation}</p>
+            <p className="text-sm opacity-80 mt-space-1">Failed operation: {error.operation}</p>
           )}
-          {error.code && <p className="text-xs opacity-60 mt-1">Error code: {error.code}</p>}
+          {error.code && <p className="text-xs opacity-60 mt-space-1">Error code: {error.code}</p>}
         </div>
         {showRetry && onRetry && (
-          <div className="flex gap-2 mt-2">
+          <div className="flex gap-space-2 mt-space-2">
             <Button variant="retry" size="sm" onClick={onRetry}>
               Retry
             </Button>

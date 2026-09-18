@@ -28,7 +28,7 @@ export const PriceRangeSliderPanel: React.FC<PriceRangeSliderPanelProps> = ({
   getPercentage,
   onMouseDown,
 }) => (
-  <div className="space-y-4">
+  <div className="space-y-space-4">
     <div className="flex items-center justify-between text-sm font-normal text-text-tertiary">
       <span>{formatPrice(localValue[0], currency)}</span>
       <span>{formatPrice(localValue[1], currency)}</span>

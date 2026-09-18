@@ -39,10 +39,10 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
       />
 
       {/* Contact info: Age, Phone, email */}
-      <div className="grow pt-1">
-        <div className="grid grid-cols-2 gap-x-3 gap-y-2">
+      <div className="grow pt-space-1">
+        <div className="grid grid-cols-2 gap-x-space-3 gap-y-space-2">
           {/* Age */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-space-2">
             <span className={`w-1 h-1 ${RADIUS.pill} bg-text-muted shrink-0`} />
             <span className={`${TYPE.label} truncate`}>
               {calculateAge(patient.dateOfBirth)} years old
@@ -50,7 +50,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
           </div>
 
           {/* Phone */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-space-2">
             <span className={`w-1 h-1 ${RADIUS.pill} bg-text-muted shrink-0`} />
             <span className={`${TYPE.label} truncate`}>
               {formatPhoneNumber(patient.phone)}
@@ -59,7 +59,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
 
           {/* Email */}
           {patient.email && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-space-2">
               <span className={`w-1 h-1 ${RADIUS.pill} bg-text-muted shrink-0`} />
               <span className={`${TYPE.label} truncate`}>{patient.email}</span>
             </div>
@@ -68,7 +68,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
       </div>
 
       {/* Bottom section: Add Order button - positioned at bottom right */}
-      <div className="flex justify-between items-center mt-auto pt-3">
+      <div className="flex justify-between items-center mt-auto pt-space-3">
         <div></div>
         <IconButton variant="add" size="sm" title="Add Order" onClick={handleAddOrder} />
       </div>
