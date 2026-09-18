@@ -88,8 +88,9 @@ export const RADIUS = {
   shell: 'rounded-workspace',
 } as const;
 
-/** Primitive token reference — value defined only as `--chrome-rail` in primitives.css */
+/** Primitive token references — lengths live only in primitives.css. */
 export const CHROME_RAIL_VAR = 'var(--chrome-rail)' as const;
+export const CHROME_SIDEBAR_EXPANDED_VAR = 'var(--chrome-sidebar-expanded)' as const;
 
 /** App shell — collapsed rail width matches header band height (--chrome-rail). */
 export const CHROME = {
@@ -97,6 +98,35 @@ export const CHROME = {
   railHeight: 'h-chrome-rail',
   railMinHeight: 'min-h-chrome-rail',
   railVar: CHROME_RAIL_VAR,
+  sidebarExpandedVar: CHROME_SIDEBAR_EXPANDED_VAR,
+  aside:
+    'group/chrome relative flex h-full flex-col overflow-x-hidden overflow-y-hidden bg-surface-sidebar',
+  headerBand: 'flex h-chrome-rail min-h-chrome-rail w-full shrink-0 items-center',
+  topHeaderRow:
+    'flex min-h-chrome-rail shrink-0 items-stretch bg-surface-sidebar pl-chrome-header-gutter pr-3 lg:pr-5',
+  pageHeaderChrome: 'h-full min-h-chrome-rail h-chrome-rail flex items-center pr-2',
+  navScroll: 'flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto py-3 hide-scrollbar',
+  navList: 'flex flex-col gap-1.5',
+  navItem:
+    'group/nav relative flex min-h-chrome-nav-indicator w-full items-center text-left transition-colors duration-200 ease-out',
+  navIconColumn:
+    'chrome-rail-slot flex w-chrome-rail shrink-0 items-center justify-center',
+  navIndicator:
+    'flex size-chrome-nav-indicator shrink-0 items-center justify-center rounded-field transition-colors duration-200 ease-out',
+  navIndicatorActive: 'bg-brand text-on-brand shadow-sm',
+  navIndicatorIdle:
+    'text-text-secondary group-hover/nav:bg-surface-hover group-hover/nav:text-text-primary',
+  clipPane:
+    'chrome-clip min-w-0 flex-1 overflow-hidden whitespace-nowrap transition-opacity duration-200 ease-out',
+  sectionTitle:
+    'chrome-section-title shrink-0 overflow-hidden pl-chrome-rail pr-3 pt-0 pb-2 text-xxs font-medium uppercase tracking-wide text-text-secondary leading-none',
+  navLabel:
+    'chrome-clip min-w-0 flex-1 truncate pr-3 text-sm font-medium whitespace-nowrap transition-opacity duration-200 ease-out',
+  navTooltip:
+    'pointer-events-none absolute left-full z-50 ml-2 hidden whitespace-nowrap rounded-pill bg-brand px-2.5 py-1 text-xs font-medium text-on-brand shadow-sm group-data-[collapsed=true]/chrome:group-hover/nav:block',
+  footerDivider: 'chrome-nav-split',
+  footerDividerRule: 'chrome-nav-split-line',
+  footerBlock: 'shrink-0 pb-3',
 } as const;
 
 /** Floating menus (popover/modal) — single shell recipe. */

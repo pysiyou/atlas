@@ -225,6 +225,9 @@
   --height-control: var(--control-height);
   /* Layout — sole numeric value lives on :root --chrome-rail in primitives.css */
   --spacing-chrome-rail: var(--chrome-rail);
+  --spacing-chrome-sidebar-expanded: var(--chrome-sidebar-expanded);
+  --spacing-chrome-nav-indicator: var(--chrome-nav-indicator);
+  --spacing-chrome-header-gutter: var(--chrome-header-gutter);
 
   /* ═══════════════════════════════════════════════════════════════════
      FOCUS
@@ -329,4 +332,64 @@ body {
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Collapsed app rail — labels stay mounted but must occupy zero flex width so tiles center. */
+.chrome-collapsed .chrome-clip {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  flex: 0 0 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chrome-collapsed .chrome-rail-slot {
+  width: 100%;
+  justify-content: center;
+}
+
+.chrome-collapsed .chrome-section-title {
+  display: none !important;
+}
+
+/* Line sits in the vertical center of a band equal to one nav tile. */
+.chrome-nav-split {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  height: var(--chrome-nav-indicator);
+  padding-inline: 0.75rem;
+}
+
+.chrome-nav-split-line {
+  width: 100%;
+  height: 1px;
+  background-color: var(--border);
+}
+
+.chrome-collapsed .chrome-theme-well {
+  flex-direction: column;
+  width: fit-content;
+  margin-inline: auto !important;
+  gap: 0.125rem;
+}
+
+.chrome-collapsed .chrome-theme-well > button {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  line-height: 0;
+}
+
+.chrome-collapsed .chrome-theme-well .chrome-clip {
+  display: none !important;
 }

@@ -13,6 +13,7 @@ import { AppChromeMountContext } from './appChromeMount';
 import { Sidebar } from './Sidebar';
 import { Icon } from '@/components/primitives/Icon';
 import { CHROME, RADIUS, SURFACE } from '@/components/theme/recipes';
+import { cn } from '@/utils';
 
 export interface AppShellProps {
   children: ReactNode;
@@ -56,29 +57,31 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
         />
 
         <div className="flex flex-1 flex-col min-w-0 min-h-0">
-          <div
-            className={`shrink-0 flex items-stretch ${CHROME.railMinHeight} bg-surface-sidebar px-2 lg:px-4 gap-2`}
-          >
+          <div className={CHROME.topHeaderRow}>
             {isMobile && (
-              <div className="flex items-center shrink-0">
+              <div className={`${CHROME.navIconColumn} shrink-0`}>
                 <button
                   type="button"
                   onClick={handleToggleMobileSidebar}
                   title="Open Menu"
-                  className={`w-10 h-10 flex items-center justify-center ${SURFACE.raised} ${RADIUS.overlay} shadow-sm hover:bg-surface-hover transition-colors lg:hidden`}
+                  className={cn(
+                    CHROME.navIndicator,
+                    SURFACE.raised,
+                    'text-text-primary shadow-sm hover:bg-surface-hover lg:hidden',
+                  )}
                   aria-label="Open navigation menu"
                 >
-                  <Icon name="menu" className="w-6 h-6 text-text-primary" />
+                  <Icon name="menu" className="size-5" />
                 </button>
               </div>
             )}
             <div
               ref={chromeMountRef}
-              className={`flex-1 min-w-0 flex items-center ${CHROME.railMinHeight}`}
+              className="flex min-h-chrome-rail flex-1 min-w-0 items-center"
             />
           </div>
 
-          <div className="flex flex-1 min-h-0 p-2 pt-0">
+          <div className="flex flex-1 min-h-0 pr-2 pb-2 pl-0 pt-0">
             <main
               className={`flex flex-1 min-h-0 min-w-0 flex flex-col overflow-hidden bg-surface-page ${RADIUS.workspace}`}
             >

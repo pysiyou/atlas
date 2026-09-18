@@ -38,7 +38,7 @@ function PageHeaderContent({
         className={cn(
           'w-full flex items-center justify-between gap-4 flex-nowrap min-w-0',
           placement === 'chrome'
-            ? `h-full ${CHROME.railMinHeight} px-0 lg:px-2`
+            ? CHROME.pageHeaderChrome
             : 'shrink-0 h-12 min-h-12 max-h-12 py-2 px-4 rounded',
           placement === 'inline' && SURFACE.raised,
           className,
@@ -60,7 +60,7 @@ function PageHeaderContent({
     <header
       className={cn(
         'flex items-center justify-between shrink-0 gap-3 flex-nowrap w-full min-w-0',
-        placement === 'chrome' && `${CHROME.railMinHeight} h-full py-2 px-0 lg:px-2`,
+        placement === 'chrome' && CHROME.pageHeaderChrome,
         className,
       )}
       role="banner"

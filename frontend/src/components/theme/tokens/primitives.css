@@ -34,7 +34,10 @@
    * App chrome rail — collapsed sidebar width and top header band height (square corner).
    * Single source of truth; Tailwind `chrome-rail` spacing maps here via index.css @theme.
    */
-  --chrome-rail: 3.75rem;
+  --chrome-rail: 3rem;
+  --chrome-sidebar-expanded: 15rem;
+  --chrome-nav-indicator: calc(var(--chrome-rail) - 0.5rem);
+  --chrome-header-gutter: 1.25rem;
 
   /* Type scale (px locked; recipes use these via Tailwind text-*) */
   --font-size-3xs: 8px;
