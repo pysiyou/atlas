@@ -10,10 +10,6 @@ export interface SidebarNavProps {
   onNavigate?: () => void;
 }
 
-function navIconIndicatorClasses(isActive: boolean): string {
-  return cn(CHROME.navIndicator, isActive ? CHROME.navIndicatorActive : CHROME.navIndicatorIdle);
-}
-
 function SectionTitle({ children }: { children: string }) {
   return <p className={CHROME.sectionTitle}>{children}</p>;
 }
@@ -22,25 +18,25 @@ function NavRowBody({
   icon,
   label,
   isActive = false,
+  interactive = true,
 }: {
   icon: ReactNode;
   label: string;
   isActive?: boolean;
+  interactive?: boolean;
 }) {
   return (
     <>
-      <div className={CHROME.navIconColumn}>
-        <div className={navIconIndicatorClasses(isActive)}>{icon}</div>
-      </div>
-      <span
+      <div
         className={cn(
-          CHROME.navLabel,
-          'text-left',
-          isActive ? 'text-text-primary' : 'text-text-secondary group-hover/nav:text-text-primary',
+          CHROME.navHit,
+          isActive && CHROME.navHitFill,
+          interactive && CHROME.navHitHover,
         )}
       >
-        {label}
-      </span>
+        <div className={CHROME.navIcon}>{icon}</div>
+        <span className={cn(CHROME.navLabel, 'text-left')}>{label}</span>
+      </div>
       <span className={CHROME.navTooltip} role="tooltip">
         {label}
       </span>
@@ -63,7 +59,7 @@ export function SidebarNav({ menuItems, settingsItems, onNavigate }: SidebarNavP
             key={item.path}
             to={item.path}
             onClick={handleNavClick}
-            className={cn(CHROME.navItem, navRowReset)}
+            className={cn(CHROME.navItem, CHROME.navRow, navRowReset)}
           >
             {({ isActive }) => (
               <NavRowBody icon={item.icon} label={item.label} isActive={isActive} />
@@ -84,9 +80,9 @@ export function SidebarNav({ menuItems, settingsItems, onNavigate }: SidebarNavP
                 key={index}
                 type="button"
                 disabled
-                className={cn(CHROME.navItem, navRowReset, 'cursor-not-allowed')}
+                className={cn(CHROME.navItem, CHROME.navRow, navRowReset, 'cursor-not-allowed')}
               >
-                <NavRowBody icon={item.icon} label={item.label} />
+                <NavRowBody icon={item.icon} label={item.label} interactive={false} />
               </button>
             ))}
           </div>

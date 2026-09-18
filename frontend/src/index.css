@@ -227,6 +227,7 @@
   --spacing-chrome-rail: var(--chrome-rail);
   --spacing-chrome-sidebar-expanded: var(--chrome-sidebar-expanded);
   --spacing-chrome-nav-indicator: var(--chrome-nav-indicator);
+  --spacing-chrome-nav-inset: var(--chrome-nav-inset);
   --spacing-chrome-header-gutter: var(--chrome-header-gutter);
 
   /* ═══════════════════════════════════════════════════════════════════
