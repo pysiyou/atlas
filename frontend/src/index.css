@@ -230,9 +230,43 @@
   --spacing-chrome-nav-indicator: var(--chrome-nav-indicator);
   --spacing-chrome-nav-inset: var(--chrome-nav-inset);
   --spacing-chrome-header-gutter: var(--chrome-header-gutter);
+  --spacing-chrome-header-trailing: var(--chrome-header-trailing);
+  --spacing-chrome-header-trailing-lg: var(--chrome-header-trailing-lg);
+  --spacing-chrome-page-header-trailing: var(--chrome-page-header-trailing);
   --spacing-chrome-nav-menu-gutter: var(--chrome-nav-menu-gutter);
+  --spacing-workspace-well-gutter: var(--workspace-well-gutter);
   --spacing-workspace-page-inset: var(--workspace-page-inset);
   --spacing-workspace-page-gap: var(--workspace-page-gap);
+  --spacing-layout-section: var(--layout-section-gap);
+  --spacing-layout-stack: var(--layout-stack-gap);
+  --spacing-layout-scroll-end: var(--layout-scroll-end);
+  --spacing-panel: var(--panel-padding);
+  --spacing-panel-header-x: var(--panel-header-padding-x);
+  --spacing-space-0-5: var(--space-0-5);
+  --spacing-space-1: var(--space-1);
+  --spacing-space-1-5: var(--space-1-5);
+  --spacing-space-2: var(--space-2);
+  --spacing-space-2-5: var(--space-2-5);
+  --spacing-space-3: var(--space-3);
+  --spacing-space-3-5: var(--space-3-5);
+  --spacing-space-4: var(--space-4);
+  --spacing-space-5: var(--space-5);
+  --spacing-space-6: var(--space-6);
+  --spacing-table-cell-x-compact: var(--table-cell-x-compact);
+  --spacing-table-cell-x-default: var(--table-cell-x-default);
+  --spacing-table-cell-x-comfortable: var(--table-cell-x-comfortable);
+  --spacing-table-cell-y-compact: var(--table-cell-y-compact);
+  --spacing-table-cell-y-default: var(--table-cell-y-default);
+  --spacing-table-cell-y-comfortable: var(--table-cell-y-comfortable);
+  --spacing-overlay-filter-x: var(--overlay-filter-padding-x);
+  --spacing-overlay-filter-y: var(--overlay-filter-padding-y);
+  --spacing-overlay-filter-x-lg: var(--overlay-filter-padding-x-lg);
+  --spacing-overlay-filter-y-lg: var(--overlay-filter-padding-y-lg);
+  --spacing-overlay-body-x: var(--overlay-body-padding-x);
+  --spacing-overlay-body-y: var(--overlay-body-padding-y);
+  --spacing-overlay-dialog-footer-x: var(--overlay-dialog-footer-x);
+  --spacing-overlay-dialog-footer-y: var(--overlay-dialog-footer-y);
+  --height-panel-header: var(--panel-header-height);
 
   /* ═══════════════════════════════════════════════════════════════════
      FOCUS

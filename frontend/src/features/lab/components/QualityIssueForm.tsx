@@ -99,7 +99,7 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
       {subtitle && <p className="text-xs text-muted-foreground">{subtitle}</p>}
 
       {isLoading || isSubmitting ? (
-        <div className="flex justify-center py-4">
+        <div className="flex justify-center py-space-4">
           <SpinnerLoader size="sm" />
         </div>
       ) : (
@@ -115,7 +115,7 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
               variant="warning"
               title={collectionCopy.alert.title}
               description={collectionCopy.alert.description}
-              className="py-3"
+              className="py-space-3"
             />
           )}
 

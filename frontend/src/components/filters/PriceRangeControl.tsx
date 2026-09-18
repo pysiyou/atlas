@@ -108,7 +108,7 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
           />
         </FilterTriggerShell>
       )}
-      className="p-4"
+      className="p-panel"
     >
       {() => (
         <PriceRangeSliderPanel

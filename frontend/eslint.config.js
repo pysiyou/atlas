@@ -213,6 +213,18 @@ export default defineConfig([
       }, {
         selector: 'TemplateElement[value.raw=/text-(gray|slate|red|blue|green|yellow|orange|amber|sky|purple|pink|teal|indigo|cyan)-(50|100|200|300|400|500|600|700|800|900|950)/]',
         message: 'Use semantic tokens or TONE/Badge colors, not default Tailwind palette classes.',
+      }, {
+        selector: 'Literal[value=/\\b(gap|p|px|py|pb|pt|pl|pr)-(4|5|6)\\b/]',
+        message: 'Use SPACING, LAYOUT, WORKSPACE, FILTER, EMPTY, or DIALOG from @/components/theme/recipes (or approved *Styles.ts modules).',
+      }, {
+        selector: 'TemplateElement[value.raw=/\\b(gap|p|px|py|pb|pt|pl|pr)-(4|5|6)\\b/]',
+        message: 'Use SPACING, LAYOUT, WORKSPACE, FILTER, EMPTY, or DIALOG from @/components/theme/recipes (or approved *Styles.ts modules).',
+      }, {
+        selector: 'Literal[value=/\\bpx-6\\b/]',
+        message: 'Use TABLE_CELL / SPACING table tokens from @/components/theme/recipes.',
+      }, {
+        selector: 'TemplateElement[value.raw=/\\bpx-6\\b/]',
+        message: 'Use TABLE_CELL / SPACING table tokens from @/components/theme/recipes.',
       }],
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'prefer-const': 'error',
@@ -267,6 +279,20 @@ export default defineConfig([
         selector: 'TemplateElement[value.raw=/h-\\[34px\\]/]',
         message: 'Use CONTROL.height from @/components/theme/recipes.',
       }],
+    },
+  },
+  {
+    files: [
+      'src/components/inputs/inputStyles.ts',
+      'src/components/surfaces/Panel.tsx',
+      'src/components/data-table/constants.ts',
+      'src/features/lab/utils/labStyles.ts',
+      'src/features/lab/commandCenter/commandCenterStyles.ts',
+      'src/features/timeline/timelineStyles.ts',
+      'src/features/auth/**/*.{ts,tsx}',
+    ],
+    rules: {
+      'no-restricted-syntax': 'off',
     },
   },
 ])

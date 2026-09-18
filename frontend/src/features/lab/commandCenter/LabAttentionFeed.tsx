@@ -131,7 +131,7 @@ export const LabAttentionFeed: React.FC<LabAttentionFeedProps> = ({ items }) => 
 
   if (groups.length === 0) {
     return (
-      <div className="flex h-full flex-col items-center justify-center bg-surface px-4">
+      <div className="flex h-full flex-col items-center justify-center bg-surface px-space-4">
         <p className="text-sm text-text-secondary">No holds, escalations, or STAT work pending.</p>
       </div>
     );

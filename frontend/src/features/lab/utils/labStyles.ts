@@ -3,7 +3,7 @@
  * Typography and wells come from theme recipes; layout objects stay here.
  */
 
-import { PANEL, RADIUS, SURFACE, TONE, TYPE } from '@/components/theme/recipes';
+import { PANEL, RADIUS, SPACING, SURFACE, TONE, TYPE } from '@/components/theme/recipes';
 import type { BadgeSize } from '@/components';
 
 /** Canonical Badge size for lab cards — uses theme BADGE.size.xs. */
@@ -16,12 +16,12 @@ export const LAB_WORKFLOW_QUEUE_SHELL =
 /** Shared lab header rows (modals; cards can reuse audit/badge row tokens) */
 export const LAB_HEADER = {
   /** Space between identity / badges / audit blocks */
-  stack: 'flex flex-col gap-2 min-w-0',
-  cardStack: 'flex flex-col gap-0.5 min-w-0',
+  stack: `flex flex-col ${SPACING.gapInline} min-w-0`,
+  cardStack: `flex flex-col ${SPACING.gapHairline} min-w-0`,
   row: 'min-h-0 min-w-0 w-full leading-snug',
-  badgeRow: 'flex min-w-0 flex-1 flex-wrap items-center gap-2 overflow-hidden',
+  badgeRow: `flex min-w-0 flex-1 flex-wrap items-center ${SPACING.gapInline} overflow-hidden`,
   /** Space between multiple audit lines within the audit block */
-  auditStack: 'flex flex-col gap-0.5 min-w-0',
+  auditStack: `flex flex-col ${SPACING.gapHairline} min-w-0`,
   /** Labels (e.g. "Requested", "collected") — values use emphasizedInline (primary) */
   auditLine: TYPE.label,
 } as const;
@@ -30,7 +30,7 @@ export const LAB_HEADER = {
 export const LAB_MODAL_DETAIL = {
   headerStack: LAB_HEADER.stack,
   headerRow: LAB_HEADER.row,
-  sectionStack: 'space-y-3',
+  sectionStack: SPACING.stackRelaxed,
 } as const;
 
 // Typography Constants (shared tokens for body/metadata; lab-specific for title/section)

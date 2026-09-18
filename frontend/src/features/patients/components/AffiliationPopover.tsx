@@ -22,13 +22,13 @@ export const AffiliationPopover: React.FC<AffiliationPopoverProps> = ({ affiliat
     <Popover trigger={trigger} placement="bottom-start" offsetValue={8}>
       {() => (
         <div className="flex flex-col w-full max-w-xs">
-          <div className="p-4">
+          <div className="p-panel">
             <h3 className="text-sm font-normal text-text-primary mb-3 border-b border-border-subtle pb-2">
               Affiliation Details
             </h3>
             <AffiliationInfo affiliation={affiliation} />
           </div>
-          <div className="px-4 py-3 bg-surface-page border-t border-border-subtle">
+          <div className="px-space-4 py-space-3 bg-surface-page border-t border-border-subtle">
             <FooterInfo icon={MODULE_ICONS.patients} label="Patients" />
           </div>
         </div>

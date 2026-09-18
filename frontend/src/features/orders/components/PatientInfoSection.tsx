@@ -22,7 +22,7 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
   layout = 'column',
 }) => {
   const containerClass =
-    layout === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 gap-5' : 'flex flex-col gap-3';
+    layout === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 gap-layout-stack' : 'flex flex-col gap-3';
 
   if (!patient) {
     return (

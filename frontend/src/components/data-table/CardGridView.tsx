@@ -15,7 +15,7 @@ export function CardGridView<T>({
   getRowKey,
 }: CardGridViewProps<T>) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-layout-section">
       {data.map((item, index) => {
         const rowKey = getRowKey ? getRowKey(item, index) : index;
         return (

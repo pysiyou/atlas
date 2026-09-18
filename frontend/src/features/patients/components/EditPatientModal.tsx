@@ -33,7 +33,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
   onTabChange,
   formProgress,
 }) => (
-  <div className="flex items-center justify-between gap-4 mb-6">
+  <div className="flex items-center justify-between gap-layout-section mb-6">
     <div className={`bg-surface-hover p-1 ${RADIUS.field} flex items-center gap-1`}>
       {tabs.map(tab => {
         const isActive = activeTab === tab.id;
@@ -96,7 +96,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
         disableClose={isSubmitting}
       >
         <div className="flex flex-col h-full bg-surface-page">
-          <div className="flex-1 overflow-y-auto px-6 py-5">
+          <div className="flex-1 overflow-y-auto px-table-cell-x-default py-space-5">
             <form id="patient-form" onSubmit={handleSubmit} className="max-w-full">
               <TabNavigation
                 tabs={[...tabs]}
@@ -104,7 +104,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
                 onTabChange={setActiveTab}
                 formProgress={formProgress}
               />
-              <div className={`${RADIUS.overlay} border border-border-default bg-surface p-6`}>
+              <div className={`${RADIUS.overlay} border border-border-default bg-surface p-space-6`}>
                 <PatientFormTabs
                   activeTab={activeTab}
                   register={register}

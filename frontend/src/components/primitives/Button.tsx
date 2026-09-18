@@ -120,8 +120,8 @@ const tone: Record<BaseVariant, string> = {
 
 const labelButtonSize: Record<ButtonSize, string> = {
   sm: `gap-1.5 px-3 py-1.5 text-xs ${RADIUS.button}`,
-  md: `gap-1.5 px-4 py-2 text-sm ${RADIUS.button}`,
-  lg: `gap-1.5 px-6 py-3 text-base ${RADIUS.button}`,
+  md: `gap-1.5 px-space-4 py-2 text-sm ${RADIUS.button}`,
+  lg: `gap-1.5 px-table-cell-x-default py-space-3 text-base ${RADIUS.button}`,
 };
 
 const labelIconSize: Record<ButtonSize, string> = {

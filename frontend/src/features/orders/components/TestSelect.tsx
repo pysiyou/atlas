@@ -209,7 +209,7 @@ const TestSelectPopover: React.FC<TestSelectPopoverProps> = ({
                   <p className={`${TYPE.value} font-normal truncate`}>{safeName}</p>
                   <TestSelectMetaLine code={code} test={test} />
                 </div>
-                <div className="flex shrink-0 items-center gap-4">
+                <div className="flex shrink-0 items-center gap-layout-section">
                   <span className="text-sm font-medium text-text-tertiary tabular-nums">
                     {formatCurrency(price)}
                   </span>

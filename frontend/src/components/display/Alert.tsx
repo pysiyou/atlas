@@ -95,7 +95,7 @@ export const Alert: React.FC<AlertProps> = ({
   return (
     <div
       className={cn(
-        `flex items-start gap-3 ${RADIUS.notice} p-4`,
+        `flex items-start gap-3 ${RADIUS.notice} p-panel`,
         getAlertShellClasses(variant, appearance),
         className
       )}

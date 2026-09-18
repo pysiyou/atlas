@@ -13,7 +13,7 @@ interface ReportPreviewResultsProps {
 }
 
 export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ reportData }) => (
-  <div className="p-6 space-y-4">
+  <div className="p-space-6 space-y-4">
     {reportData.testResults.map((test, index) => (
       <div key={index} className="space-y-4">
         <div className="text-center">
@@ -26,28 +26,28 @@ export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ repo
           <table className="w-full text-xs">
             <thead>
               <tr className="bg-surface-page border-b border-border-strong">
-                <th className="px-6 py-3 text-left font-normal text-text-tertiary uppercase tracking-wider">
+                <th className="px-table-cell-x-default py-space-3 text-left font-normal text-text-tertiary uppercase tracking-wider">
                   Investigation
                 </th>
-                <th className="px-6 py-3 text-left font-normal text-text-tertiary uppercase tracking-wider">
+                <th className="px-table-cell-x-default py-space-3 text-left font-normal text-text-tertiary uppercase tracking-wider">
                   Result
                 </th>
-                <th className="px-6 py-3 text-left font-normal text-text-tertiary uppercase tracking-wider">
+                <th className="px-table-cell-x-default py-space-3 text-left font-normal text-text-tertiary uppercase tracking-wider">
                   Reference Value
                 </th>
-                <th className="px-6 py-3 text-right font-normal text-text-tertiary uppercase tracking-wider">
+                <th className="px-table-cell-x-default py-space-3 text-right font-normal text-text-tertiary uppercase tracking-wider">
                   Unit
                 </th>
               </tr>
             </thead>
             <tbody>
               <tr className="border-b border-border-subtle hover:bg-surface-page transition-colors">
-                <td className="px-6 py-3 text-text-primary">Primary Sample Type :</td>
-                <td className="px-6 py-3 text-left text-text-primary">
+                <td className="px-table-cell-x-default py-space-3 text-text-primary">Primary Sample Type :</td>
+                <td className="px-table-cell-x-default py-space-3 text-left text-text-primary">
                   {(reportData.order.tests ?? [])[0]?.sampleType?.toUpperCase() || 'N/A'}
                 </td>
-                <td className="px-6 py-3 text-left text-text-secondary"></td>
-                <td className="px-6 py-3 text-right text-text-secondary"></td>
+                <td className="px-table-cell-x-default py-space-3 text-left text-text-secondary"></td>
+                <td className="px-table-cell-x-default py-space-3 text-right text-text-secondary"></td>
               </tr>
 
               {test.parameters.map((param, paramIndex) => {
@@ -66,7 +66,7 @@ export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ repo
                     )}
                   >
                     <td
-                      className={cn('px-6 py-3 text-text-primary', isSectionHeader && 'font-normal')}
+                      className={cn('px-table-cell-x-default py-space-3 text-text-primary', isSectionHeader && 'font-normal')}
                     >
                       {isSectionHeader ? (
                         param.name
@@ -81,16 +81,16 @@ export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ repo
                     </td>
                     <td
                       className={cn(
-                        'px-6 py-3 text-left',
+                        'px-table-cell-x-default py-space-3 text-left',
                         isAbnormal ? cn(TONE.danger.fg, 'font-normal') : 'text-text-primary'
                       )}
                     >
                       {param.value}
                     </td>
-                    <td className="px-6 py-3 text-left text-text-secondary">
+                    <td className="px-table-cell-x-default py-space-3 text-left text-text-secondary">
                       {param.referenceRange || ''}
                     </td>
-                    <td className="px-6 py-3 text-right text-text-secondary">{param.unit || '-'}</td>
+                    <td className="px-table-cell-x-default py-space-3 text-right text-text-secondary">{param.unit || '-'}</td>
                   </tr>
                 );
               })}

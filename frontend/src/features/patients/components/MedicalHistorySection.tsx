@@ -75,7 +75,7 @@ export const MedicalHistorySection: React.FC<
         placeholder="Notable family medical history"
         rows={3}
       />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-layout-section pt-2">
         <Checkbox
           id="smoking"
           name="smoking"

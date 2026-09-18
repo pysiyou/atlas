@@ -203,7 +203,7 @@ export const SampleCollectionDetailContent: React.FC<CollectionDetailContentProp
   return (
     <>
       {showBarcode && sample.sampleId != null && (
-        <div className={`flex items-center justify-center ${SURFACE.recessed} ${RADIUS.field} p-4`}>
+        <div className={`flex items-center justify-center ${SURFACE.recessed} ${RADIUS.field} p-panel`}>
           <Barcode
             value={displayId.sample(sample.sampleId)}
             height={40}

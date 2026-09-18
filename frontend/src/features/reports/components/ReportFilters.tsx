@@ -94,8 +94,8 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
 
   return (
     <div className="w-full bg-surface border-b border-border-default">
-      <div className="px-4 py-2.5 lg:px-5 lg:py-3 w-full">
-        <div className="grid grid-cols-2 gap-3 lg:gap-4 items-center w-full">{renderFilters()}</div>
+      <div className="px-space-4 py-2.5 lg:px-space-5 lg:py-space-3 w-full">
+        <div className="grid grid-cols-2 gap-3 lg:gap-layout-section items-center w-full">{renderFilters()}</div>
       </div>
     </div>
   );

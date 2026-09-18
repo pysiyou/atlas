@@ -4,6 +4,7 @@
  */
 
 import React, { useState, type ReactNode } from 'react';
+import { FILTER } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import type { IconName } from '@/components';
@@ -71,8 +72,8 @@ export const ResponsiveEntityFilters: React.FC<ResponsiveEntityFiltersProps> = (
   if (showTwoColumn) {
     return (
       <div className={cn('w-full bg-surface border-b', 'border-border-default')}>
-        <div className="px-3 py-2 w-full">
-          <div className="grid grid-cols-2 gap-2 items-center w-full">{inlineControls}</div>
+        <div className={FILTER.barInsetCompact}>
+          <div className={FILTER.mobileTwoCol}>{inlineControls}</div>
         </div>
       </div>
     );
@@ -80,8 +81,8 @@ export const ResponsiveEntityFilters: React.FC<ResponsiveEntityFiltersProps> = (
 
   return (
     <div className="w-full bg-surface border-b border-border-default">
-      <div className="px-4 py-2.5 lg:px-5 lg:py-3 w-full">
-        <div className="grid grid-cols-4 gap-3 lg:gap-4 items-center w-full">{inlineControls}</div>
+      <div className={FILTER.barInset}>
+        <div className={FILTER.barGridDesktop}>{inlineControls}</div>
       </div>
     </div>
   );

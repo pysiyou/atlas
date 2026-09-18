@@ -6,7 +6,7 @@ export const AddressSection: React.FC<
   Pick<PatientFormSectionProps, 'formData' | 'errors' | 'onFieldChange'>
 > = ({ formData, errors, onFieldChange }) => (
   <div className="space-y-4">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-layout-section">
       <div className="md:col-span-2">
         <Input
           label="Street Address"

@@ -32,7 +32,7 @@ export const EntityFilterModal: React.FC<EntityFilterModalProps> = ({
 }) => (
   <Modal isOpen={isOpen} onClose={onClose} title="Filter" size="md">
     <div className="flex flex-col h-full bg-surface">
-      <div className="flex-1 overflow-y-auto px-5 py-4">
+      <div className="flex-1 overflow-y-auto px-space-5 py-space-4">
         <div className="mb-6">
           <OverlaySearchInput
             value={searchQuery}

@@ -70,7 +70,7 @@ export const LabWorkflowPopoverChrome: React.FC<LabWorkflowPopoverChromeProps> =
         onClose={onCancel}
         disabled={isSubmitting}
       />
-      <div className="p-4 space-y-4 overflow-y-auto flex-1">{children}</div>
+      <div className="p-panel space-y-4 overflow-y-auto flex-1">{children}</div>
       <DialogFooter
         density="popover"
         start={footerInfo || <FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" />}

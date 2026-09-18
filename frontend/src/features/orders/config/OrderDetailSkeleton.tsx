@@ -1,4 +1,6 @@
 import { Panel } from '@/components';
+import { LAYOUT, SPACING } from '@/components/theme/recipes';
+import { cn } from '@/utils';
 import { SkeletonInfoSection, SkeletonTableRow } from '@/components/loaders/Skeleton';
 import type { DetailSkeletonSection } from '@/components/loaders/DetailPageSkeleton';
 import { OrderProgressSkeleton } from './OrderProgressSkeleton';
@@ -9,7 +11,7 @@ export const ORDER_DETAIL_SKELETON_SECTIONS: DetailSkeletonSection[] = [
   {
     title: 'Order Progress',
     customContent: (
-      <div className="p-4">
+      <div className={SPACING.pPanel}>
         <OrderProgressSkeleton />
       </div>
     ),
@@ -28,11 +30,8 @@ export const ORDER_DETAIL_SKELETON_SECTIONS: DetailSkeletonSection[] = [
 
 export function renderOrderDetailLargeSkeleton() {
   return (
-    <div
-      className="flex-1 grid grid-rows-[1fr_1fr] gap-4 min-h-0 h-full overflow-hidden"
-      style={{ height: '100%', maxHeight: '100%' }}
-    >
-      <div className="grid grid-cols-3 gap-4 min-h-0">
+    <div className={LAYOUT.detailGridRowsSplit} style={{ height: '100%', maxHeight: '100%' }}>
+      <div className={cn(LAYOUT.detailGrid3, 'min-h-0')}>
         <Panel title="Order Information" className="min-h-0" scroll="auto">
           <SkeletonInfoSection rows={5} layout="column" />
         </Panel>
@@ -40,13 +39,13 @@ export function renderOrderDetailLargeSkeleton() {
           <SkeletonInfoSection rows={4} layout="column" />
         </Panel>
         <Panel title="Order Progress" className="min-h-0" padding="none" scroll="auto">
-          <div className="p-4">
+          <div className={SPACING.pPanel}>
             <OrderProgressSkeleton />
           </div>
         </Panel>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 min-h-0">
+      <div className={cn(LAYOUT.detailGrid3, 'min-h-0')}>
         <Panel title="Tests" className="min-h-0 col-span-2" padding="none" scroll="auto">
           <div className="border-t border-border-default">
             {Array.from({ length: 4 }).map((_, i) => (

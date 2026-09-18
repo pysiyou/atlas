@@ -19,16 +19,29 @@
   --font-weight-default: var(--font-weight-normal);
 
   /* Shared geometry (all themes) */
-  --radius-control: 0.5rem;
-  --radius-card: 0.5rem;
-  --radius-overlay: 0.5rem;
-  --radius-shell: 0.5rem;
+  --radius-base: 0.5rem;
+  --radius-control: var(--radius-base);
+  --radius-card: var(--radius-base);
+  --radius-overlay: var(--radius-base);
+  --radius-shell: var(--radius-base);
   --radius-notice: 0.875rem;
   --radius-pill: 9999px;
   --button-radius: var(--radius-control);
   --button-radius-square: var(--radius-overlay);
   --button-radius-circle: var(--radius-pill);
   --control-height: 2.125rem;
+
+  /** Spacing scale — single source for padding/gap utilities (semantic aliases below). */
+  --space-0-5: 0.125rem;
+  --space-1: 0.25rem;
+  --space-1-5: 0.375rem;
+  --space-2: 0.5rem;
+  --space-2-5: 0.625rem;
+  --space-3: 0.75rem;
+  --space-3-5: 0.875rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
 
   /**
    * App chrome — collapsed rail width (--chrome-rail); header band matches rail (square top cell).
@@ -38,14 +51,50 @@
   --chrome-header-band: var(--chrome-rail);
   --chrome-sidebar-expanded: 15rem;
   --chrome-nav-inset: calc((var(--chrome-rail) - var(--chrome-nav-indicator)) / 2);
-  --chrome-header-gutter: 1.25rem;
+  --chrome-header-gutter: var(--space-5);
+  /** Top chrome row trailing padding (base / lg). */
+  --chrome-header-trailing: var(--space-3);
+  --chrome-header-trailing-lg: var(--space-5);
+  /** Portaled page header trailing inset inside chrome band. */
+  --chrome-page-header-trailing: var(--space-2);
   /** Sidebar nav scroll + footer vertical inset (not applied to header band — keeps header ≤ rail width). */
-  --chrome-nav-menu-gutter: 1rem;
+  --chrome-nav-menu-gutter: var(--space-4);
 
+  /** Margin around workspace well inside AppShell (main card inset from chrome). */
+  --workspace-well-gutter: var(--space-2);
   /** Page padding inside the workspace well (edge inset + flex gap between chrome/header and body). */
-  --workspace-page-spacing: 0.5rem;
+  --workspace-page-spacing: var(--space-2);
   --workspace-page-inset: var(--workspace-page-spacing);
   --workspace-page-gap: var(--workspace-page-spacing);
+
+  /** Detail / multi-column page rhythm. */
+  --layout-section-gap: var(--space-4);
+  --layout-stack-gap: var(--space-5);
+  --layout-scroll-end: var(--space-6);
+
+  /** In-page panel (page variant). */
+  --panel-padding: var(--space-4);
+  --panel-header-height: var(--chrome-nav-indicator);
+  --panel-header-padding-x: var(--space-4);
+
+  /** Data table cell padding. */
+  --table-cell-x-compact: var(--space-4);
+  --table-cell-x-default: var(--space-6);
+  --table-cell-x-comfortable: var(--space-6);
+  --table-cell-y-compact: var(--space-2);
+  --table-cell-y-default: var(--space-3);
+  --table-cell-y-comfortable: var(--space-4);
+
+  /** Filter bar / modal body padding (inline list filters). */
+  --overlay-filter-padding-x: var(--space-4);
+  --overlay-filter-padding-y: var(--space-2-5);
+  --overlay-filter-padding-x-lg: var(--space-5);
+  --overlay-filter-padding-y-lg: var(--space-3);
+  /** Modal shell body + footer. */
+  --overlay-body-padding-x: var(--space-6);
+  --overlay-body-padding-y: var(--space-4);
+  --overlay-dialog-footer-x: var(--space-6);
+  --overlay-dialog-footer-y: var(--space-4);
 
   /* Type scale (px locked; recipes use these via Tailwind text-*) */
   --font-size-3xs: 8px;

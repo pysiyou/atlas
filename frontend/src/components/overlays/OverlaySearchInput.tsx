@@ -39,7 +39,7 @@ export const OverlaySearchInput: React.FC<OverlaySearchInputProps> = ({
   }, [onChange]);
 
   return (
-    <div className={cn(inputContainerBase, 'flex items-center h-10 px-4')}>
+    <div className={cn(inputContainerBase, 'flex items-center h-10 px-space-4')}>
       <input
         type="text"
         placeholder={placeholder}

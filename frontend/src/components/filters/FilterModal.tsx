@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { Modal } from '@/components';
+import { FILTER } from '@/components/theme/recipes';
 import { QuickFilters } from './QuickFilters';
 import { FilterModalFooter } from './FilterModalFooter';
 import type { FilterConfig, ActiveFilterBadge, FilterValues } from './types';
@@ -54,7 +55,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
     <Modal isOpen={isOpen} onClose={onClose} title="Filter" size="md">
       <div className="flex flex-col h-full bg-surface">
         {/* Filter Controls - Scrollable */}
-        <div className="flex-1 overflow-y-auto px-5 py-4">
+        <div className={`flex-1 overflow-y-auto ${FILTER.modalBody}`}>
           {/* Search Control */}
           {searchControl && (
             <div className="mb-6">

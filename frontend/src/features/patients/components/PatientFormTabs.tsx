@@ -99,7 +99,7 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
             <AddressSection formData={formData} errors={flatErrors} onFieldChange={onFieldChange} />
           </div>
 
-          <div className="border-t border-border-default pt-6 space-y-6">
+          <div className="border-t border-border-default pt-space-6 space-y-6">
             <div className="pb-1">
               <div className={`${TYPE.meta} font-normal uppercase tracking-wide mb-1`}>
                 Primary Contact

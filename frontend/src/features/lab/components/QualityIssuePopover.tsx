@@ -86,7 +86,7 @@ export const QualityIssuePopoverFormBody: React.FC<QualityIssuePopoverFormBodyPr
           variant={copy.alert.variant}
           title={copy.alert.title}
           description={copy.alert.description}
-          className="py-3"
+          className="py-space-3"
         />
       )}
 

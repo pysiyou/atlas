@@ -139,7 +139,7 @@ export const Toast: React.FC<BaseToastProps> = React.memo(
     return (
       <div
         className={cn(
-          `flex w-[380px] max-w-[calc(100vw-2rem)] items-start gap-3 ${RADIUS.notice} p-4`,
+          `flex w-[380px] max-w-[calc(100vw-2rem)] items-start gap-3 ${RADIUS.notice} p-panel`,
           'pointer-events-auto font-sans',
           getToastSurfaceClasses(variant),
           className

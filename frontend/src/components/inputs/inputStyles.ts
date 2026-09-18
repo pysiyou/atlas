@@ -3,7 +3,7 @@
  * Single source of truth: border, text, hover, focus.
  */
 
-import { CONTROL, RADIUS, SURFACE, TYPE } from '@/components/theme/recipes';
+import { CONTROL, RADIUS, SPACING, SURFACE, TYPE } from '@/components/theme/recipes';
 
 /** Focus-within variant for wrappers (SearchControl, DebouncedSearchInput) */
 const inputBorderFocusWithin =
@@ -18,24 +18,24 @@ export const filterTriggerText = `${TYPE.value} font-normal`;
 
 /** Full classes for a standalone <input> (e.g. Input.tsx) */
 export const inputBase =
-  `w-full ${SURFACE.raised} ${RADIUS.control} px-3 py-2 ${TYPE.value} placeholder:text-text-muted transition-colors duration-200 ${CONTROL.hoverBorder} ${CONTROL.focus} disabled:bg-surface-hover disabled:text-text-disabled disabled:cursor-not-allowed`;
+  `w-full ${SURFACE.raised} ${RADIUS.control} ${SPACING.pxSpace3} ${SPACING.pySpace2} ${TYPE.value} placeholder:text-text-muted transition-colors duration-200 ${CONTROL.hoverBorder} ${CONTROL.focus} disabled:bg-surface-hover disabled:text-text-disabled disabled:cursor-not-allowed`;
 
 /** Inner input when inside a wrapper (no border, transparent bg) */
 export const inputInner = 'flex-1 min-w-0 bg-transparent border-0 outline-none py-0';
 
 /** Wrapper for search/filter input (icon + input in one box) */
-export const inputWrapper = `group relative w-full flex items-center gap-2 ${CONTROL.height} px-3 bg-surface ${inputBorderFocusWithin}`;
+export const inputWrapper = `group relative w-full flex items-center ${SPACING.gapInline} ${CONTROL.height} ${SPACING.pxSpace3} bg-surface ${inputBorderFocusWithin}`;
 
 /** Trigger for filter dropdowns (MultiSelect, SingleSelect, Date, PriceRange) — same border/text/hover; open state applied via inputTriggerOpen */
 export const inputTrigger =
-  `group ${CONTROL.height} px-3 ${SURFACE.raised} ${RADIUS.control} transition-colors duration-200 ${CONTROL.hoverBorder} cursor-pointer flex items-center gap-2`;
+  `group ${CONTROL.height} ${SPACING.pxSpace3} ${SURFACE.raised} ${RADIUS.control} transition-colors duration-200 ${CONTROL.hoverBorder} cursor-pointer flex items-center ${SPACING.gapInline}`;
 
 /** Trigger open state (border + ring) */
 export const inputTriggerOpen = 'border-brand ring-1 ring-brand ring-opacity-20';
 
 /** Clear (close-circle) button inside input/trigger — keeps icon vertically centered with other icons */
 export const inputClearButton =
-  `flex items-center justify-center leading-none p-0.5 ${RADIUS.control} transition-colors cursor-pointer`;
+  `flex items-center justify-center leading-none p-space-0-5 ${RADIUS.control} transition-colors cursor-pointer`;
 
 /** Error state for inputs */
 export const inputError = CONTROL.error;

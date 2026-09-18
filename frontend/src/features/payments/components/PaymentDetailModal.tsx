@@ -179,7 +179,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
       >
         <div className="flex flex-col h-full bg-surface-page">
           {/* Scrollable content area */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          <div className="flex-1 overflow-y-auto p-space-6 space-y-6">
             <Panel
               title="Billing Summary"
               padding="none"
@@ -188,12 +188,12 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
               className="h-auto shrink-0"
             >
               {orderDetailLoading ? (
-                <div className="p-4">
+                <div className="p-panel">
                   <SkeletonText lines={6} />
                 </div>
               ) : orderDetailError ? (
-                <div className="p-4">
-                  <Alert variant="danger" className="py-3">
+                <div className="p-panel">
+                  <Alert variant="danger" className="py-space-3">
                     <p className="text-sm">
                       Could not load order line items. Try closing and opening again.
                     </p>
@@ -243,7 +243,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
 
             {/* Error Display */}
             {error && (
-              <Alert variant="danger" className="py-3">
+              <Alert variant="danger" className="py-space-3">
                 <p className="text-sm">{error}</p>
               </Alert>
             )}

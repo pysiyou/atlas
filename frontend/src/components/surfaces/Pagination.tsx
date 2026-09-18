@@ -80,7 +80,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             onChange={e => onPageSizeChange(Number(e.target.value))}
             className={cn(
               inputBase,
-              'cursor-pointer h-6 w-12 min-h-0 pt-0.5 pb-0 leading-5 pl-5 pr-5 text-center text-xxs appearance-none'
+              'cursor-pointer h-6 w-12 min-h-0 pt-0.5 pb-0 leading-5 pl-space-5 pr-space-5 text-center text-xxs appearance-none'
             )}
             aria-label="Rows per page"
           >

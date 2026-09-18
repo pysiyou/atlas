@@ -12,7 +12,7 @@ import { useBreakpoint, isBreakpointAtLeast } from '@/hooks/useBreakpoint';
 import { AppChromeMountContext } from './appChromeMount';
 import { Sidebar } from './Sidebar';
 import { Icon } from '@/components/primitives/Icon';
-import { CHROME, RADIUS, SURFACE } from '@/components/theme/recipes';
+import { CHROME, RADIUS, SURFACE, WORKSPACE } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
 export interface AppShellProps {
@@ -83,7 +83,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
             </div>
           </div>
 
-          <div className="flex flex-1 min-h-0 pr-2 pb-2 pl-0 pt-0">
+          <div className={`flex flex-1 min-h-0 ${WORKSPACE.wellGutter}`}>
             <main
               className={`flex flex-1 min-h-0 min-w-0 flex flex-col overflow-hidden bg-surface-page ${RADIUS.workspace}`}
             >
