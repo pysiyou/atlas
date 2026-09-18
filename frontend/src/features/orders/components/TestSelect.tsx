@@ -17,11 +17,11 @@ import { cn, formatCurrency, formatTurnaroundTime, titleCaseWords } from '@/util
 import { ICONS } from '@/config/icons';
 import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/components/inputs/inputStyles';
 import { OrderSelectPopoverShell } from './OrderSelectPopoverShell';
-import { TONE, TYPE } from '@/components/theme/recipes';
+import { SPACING, TONE, TYPE } from '@/components/theme/recipes';
 
 
 const SELECTED_CHIP_CLASS =
-  'max-w-[min(100%,20rem)] items-start gap-2 py-1.5 px-2 bg-surface-page border-border-default/80 shadow-none';
+  'max-w-[min(100%,20rem)] items-start gap-space-2 py-space-1-5 px-space-2 bg-surface-page border-border-default/80 shadow-none';
 
 function TestSelectMetaLine({ code, test }: { code: string; test: Test }) {
   const segments: Array<{ id: string; label: string }> = [];
@@ -110,7 +110,7 @@ const TestSearchTagInput: React.FC<{
   error?: string;
 }> = ({ selectedTags, selectedCount, value, onValueChange, onRemoveTag, error }) => (
   <div className="w-full">
-      <div className="flex justify-between items-baseline mb-1 gap-2">
+      <div className="flex justify-between items-baseline mb-space-1 gap-space-2">
         <label
           htmlFor="order-test-search"
           className={FORM_CONTROL_LABEL}
@@ -125,11 +125,11 @@ const TestSearchTagInput: React.FC<{
       <div
         className={cn(
           inputContainerBase,
-          'group relative pl-10 pr-3 py-2.5 flex flex-wrap gap-2 items-center min-h-[42px]',
+          `group relative ${SPACING.plSpace10} pr-space-3 py-space-2-5 flex flex-wrap gap-space-2 items-center min-h-[42px]`,
           error && inputContainerError
         )}
       >
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-start pt-2.5 pointer-events-none">
+        <div className="absolute inset-y-0 left-0 pl-space-3 flex items-start pt-space-2.5 pointer-events-none">
           <Icon
             name={ICONS.dataFields.document}
             className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors"
@@ -161,7 +161,7 @@ const TestSearchTagInput: React.FC<{
         />
       </div>
 
-      {error && <p className={`mt-1.5 text-xs ${TONE.danger.fg}`}>{error}</p>}
+      {error && <p className={`mt-space-1-5 text-xs ${TONE.danger.fg}`}>{error}</p>}
     </div>
   );
 
@@ -196,9 +196,9 @@ const TestSelectPopover: React.FC<TestSelectPopoverProps> = ({
                 aria-label={`${isSelected ? 'Deselect' : 'Select'} ${safeName}`}
                 onClick={() => onToggleTest(code)}
                 className={cn(
-                  'w-full text-left px-3 py-2',
+                  'w-full text-left px-space-3 py-space-2',
                   'transition-colors',
-                  'flex items-center gap-2',
+                  'flex items-center gap-space-2',
                   'hover:bg-surface-page',
                   'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-opacity-30',
                   isSelected ? 'bg-surface-page' : 'bg-surface',

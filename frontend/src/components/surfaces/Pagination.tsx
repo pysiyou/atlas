@@ -61,7 +61,7 @@ export const Pagination: React.FC<PaginationProps> = ({
 
   const getPageButtonClasses = (isActive: boolean) => {
     const base =
-      `min-w-[26px] h-6 px-1.5 text-xxs font-normal ${RADIUS.field} transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-1 focus-visible:ring-offset-surface`;
+      `min-w-[26px] h-6 px-space-1-5 text-xxs font-normal ${RADIUS.field} transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-1 focus-visible:ring-offset-surface`;
     return isActive
       ? `${base} bg-brand text-on-brand`
       : `${base} text-text-primary border border-border-default bg-surface hover:border-border-hover hover:bg-surface-hover`;
@@ -71,16 +71,16 @@ export const Pagination: React.FC<PaginationProps> = ({
     `w-6 h-6 flex items-center justify-center ${RADIUS.field} border border-transparent text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-1 focus-visible:ring-offset-surface disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-text-secondary`;
 
   return (
-    <div className="flex items-center justify-between gap-3 px-3 py-2 border-t border-border-default bg-surface">
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-1.5 whitespace-nowrap">
+    <div className="flex items-center justify-between gap-space-3 px-space-3 py-space-2 border-t border-border-default bg-surface">
+      <div className="flex items-center gap-space-3">
+        <div className="flex items-center gap-space-1-5 whitespace-nowrap">
           <span className={`${TYPE.caption} text-text-secondary`}>Rows per page</span>
           <select
             value={pageSize}
             onChange={e => onPageSizeChange(Number(e.target.value))}
             className={cn(
               inputBase,
-              'cursor-pointer h-6 w-12 min-h-0 pt-0.5 pb-0 leading-5 pl-space-5 pr-space-5 text-center text-xxs appearance-none'
+              'cursor-pointer h-6 w-12 min-h-0 pt-space-0-5 pb-0 leading-5 pl-space-5 pr-space-5 text-center text-xxs appearance-none'
             )}
             aria-label="Rows per page"
           >
@@ -96,7 +96,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         </span>
       </div>
 
-      <div className="flex items-center gap-0.5">
+      <div className="flex items-center gap-space-0-5">
         <button
           type="button"
           onClick={() => onPageChange(currentPage - 1)}
@@ -107,7 +107,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           <Icon name={ICONS.actions.chevronLeft} className="w-3.5 h-3.5" />
         </button>
 
-        <div className="flex items-center gap-0.5 mx-0.5">
+        <div className="flex items-center gap-space-0-5 mx-space-0-5">
           {pageNumbers.map((page, index) => (
             <React.Fragment key={index}>
               {page === '...' ? (

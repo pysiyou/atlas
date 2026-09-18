@@ -33,13 +33,13 @@ export const LabPipelineSummary: React.FC = () => {
 
   return (
     <Card padding="md">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-space-4">
         <h2 className="text-sm font-normal text-text-primary">Lab Pipeline</h2>
         <Link to={getLabTabPath('command-center')} className="text-xs text-brand hover:underline">
           Command Center
         </Link>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-space-3">
         {LAB_QUEUE_ITEMS.map(item => {
           const count =
             item.countKey === 'validation'
@@ -49,9 +49,9 @@ export const LabPipelineSummary: React.FC = () => {
             <Link
               key={item.id}
               to={getLabTabPath(item.id)}
-              className={`flex items-center justify-between p-3 ${RADIUS.field} border border-border-default hover:bg-surface-page transition-colors`}
+              className={`flex items-center justify-between p-space-3 ${RADIUS.field} border border-border-default hover:bg-surface-page transition-colors`}
             >
-              <div className="flex items-center gap-2 min-w-0">
+              <div className="flex items-center gap-space-2 min-w-0">
                 <Icon name={item.icon as IconName} className="w-4 h-4 text-brand shrink-0" />
                 <span className={`${TYPE.label} truncate`}>{LAB_TAB_LABELS[item.id]}</span>
               </div>

@@ -28,13 +28,13 @@ function createTestTableCard(testCatalog: Test[]): React.FC<CardComponentProps<O
     const isSuperseded = item.status === 'superseded';
     return (
       <div
-        className={`p-3 border border-border-default ${RADIUS.overlay} hover:bg-surface-hover cursor-pointer`}
+        className={`p-space-3 border border-border-default ${RADIUS.overlay} hover:bg-surface-hover cursor-pointer`}
         onClick={onClick}
         role="button"
         tabIndex={0}
         onKeyDown={e => e.key === 'Enter' && onClick?.()}
       >
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center justify-between gap-space-2">
           <span
             className={isSuperseded ? 'text-text-disabled line-through font-id' : undefined}
           >
@@ -43,11 +43,11 @@ function createTestTableCard(testCatalog: Test[]): React.FC<CardComponentProps<O
           <Badge variant={item.status} size="xs" strikethrough={isSuperseded} />
         </div>
         <div
-          className={`text-sm mt-1 ${isSuperseded ? 'text-text-disabled line-through' : 'text-text-primary'}`}
+          className={`text-sm mt-space-1 ${isSuperseded ? 'text-text-disabled line-through' : 'text-text-primary'}`}
         >
           {name}
         </div>
-        <div className={`${TYPE.meta} mt-1`}>{formatCurrency(item.priceAtOrder)}</div>
+        <div className={`${TYPE.meta} mt-space-1`}>{formatCurrency(item.priceAtOrder)}</div>
       </div>
     );
   };
@@ -69,7 +69,7 @@ export function createTestsTableConfig(
         const isRetest = test.isRetest || false;
         const retestNumber = test.retestNumber ?? 0;
         return (
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-space-1">
             {isSuperseded ? (
               <span className="text-text-disabled line-through font-id">{test.testCode}</span>
             ) : (

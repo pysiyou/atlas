@@ -58,7 +58,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
         <div className={`flex-1 overflow-y-auto ${FILTER.modalBody}`}>
           {/* Search Control */}
           {searchControl && (
-            <div className="mb-6">
+            <div className="mb-space-6">
               {renderFilterControl(
                 searchControl,
                 filters[searchControl.key],
@@ -70,7 +70,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
 
           {/* Quick Filters */}
           {config.quickFilters && config.quickFilters.length > 0 && (
-            <div className="mb-6">
+            <div className="mb-space-6">
               <QuickFilters
                 presets={config.quickFilters}
                 activePresetId={activePresetId}
@@ -81,16 +81,16 @@ export const FilterModal: React.FC<FilterModalProps> = ({
 
           {/* All Filter Controls - Each with its own label */}
           {allFilterControls.length > 0 && (
-            <div className="space-y-5">
+            <div className="space-y-space-5">
               {allFilterControls.map((control, index) => (
                 <div key={control.key} className="w-full">
                   {/* Filter Label */}
-                  <h4 className="text-sm font-semibold text-text-primary mb-3">{control.label}</h4>
+                  <h4 className="text-sm font-semibold text-text-primary mb-space-3">{control.label}</h4>
                   {/* Filter Options */}
                   {renderModalControl(control)}
                   {/* Separator line (except for last item) */}
                   {index < allFilterControls.length - 1 && (
-                    <div className="border-b border-border-default mt-4" />
+                    <div className="border-b border-border-default mt-space-4" />
                   )}
                 </div>
               ))}

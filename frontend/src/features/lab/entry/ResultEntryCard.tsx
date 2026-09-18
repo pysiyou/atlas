@@ -116,7 +116,7 @@ function ResultEntryCardDesktop({
         />
       }
       content={
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-space-1-5">
           {testDef.parameters &&
             testDef.parameters.slice(0, LAB_CONFIG.PARAMETER_PREVIEW_LIMIT).map(param => (
               <Badge

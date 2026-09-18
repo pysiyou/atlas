@@ -69,18 +69,18 @@ function DatePickerHeader({
     return `${format(years[0], 'yyyy')} - ${format(years[years.length - 1], 'yyyy')}`;
   };
   return (
-    <div className="flex items-center justify-between mb-3">
+    <div className="flex items-center justify-between mb-space-3">
       <button
         onClick={onPrevClick}
         disabled={isPrevDisabled}
-        className={`p-1 hover:bg-surface-hover ${RADIUS.field} text-text-tertiary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center`}
+        className={`p-space-1 hover:bg-surface-hover ${RADIUS.field} text-text-tertiary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center`}
       >
         <Icon name={ICONS.actions.chevronLeft} className="w-4 h-4" />
       </button>
       <button
         onClick={onTitleClick}
         className={cn(
-          `text-sm font-normal text-text-secondary hover:bg-surface-page px-2 py-1 ${RADIUS.field} transition-colors cursor-pointer`,
+          `text-sm font-normal text-text-secondary hover:bg-surface-page px-space-2 py-space-1 ${RADIUS.field} transition-colors cursor-pointer`,
           view === 'years' && 'pointer-events-none hover:bg-transparent cursor-default'
         )}
       >
@@ -89,7 +89,7 @@ function DatePickerHeader({
       <button
         onClick={onNextClick}
         disabled={isNextDisabled}
-        className={`p-1 hover:bg-surface-hover ${RADIUS.field} text-text-tertiary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center`}
+        className={`p-space-1 hover:bg-surface-hover ${RADIUS.field} text-text-tertiary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center`}
       >
         <Icon name={ICONS.actions.chevronRight} className="w-4 h-4" />
       </button>
@@ -125,14 +125,14 @@ function DatePickerCalendarGrid({
   if (view === 'days') {
     return (
       <>
-        <div className="grid grid-cols-7 gap-1 mb-1">
+        <div className="grid grid-cols-7 gap-space-1 mb-space-1">
           {WEEKDAY_LABELS.map(day => (
-            <div key={day} className="text-center text-xs text-text-disabled py-1">
+            <div key={day} className="text-center text-xs text-text-disabled py-space-1">
               {day}
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-7 gap-1">
+        <div className="grid grid-cols-7 gap-space-1">
           {generateCalendarDays(currentMonth).map(day => {
             const currentMonthMatch = isSameMonth(day, currentMonth);
             const selected = isSelected(day);
@@ -176,7 +176,7 @@ function DatePickerCalendarGrid({
   }
   if (view === 'months') {
     return (
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-3 gap-space-2">
         {generateCalendarMonths(currentMonth).map(month => {
           const endOfM = endOfMonth(month);
           const disabled = isBefore(endOfM, minDate) || isAfter(month, maxDate);
@@ -208,7 +208,7 @@ function DatePickerCalendarGrid({
     );
   }
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid grid-cols-3 gap-space-2">
       {generateCalendarYears(currentMonth).map(year => {
         const y = year.getFullYear();
         const disabled = y < minDate.getFullYear() || y > maxDate.getFullYear();
@@ -278,7 +278,7 @@ function DatePickerPopoverBody({
   onApply: () => void;
 }) {
   return (
-    <div className="p-3">
+    <div className="p-space-3">
       <DatePickerHeader
         currentMonth={currentMonth}
         view={view}
@@ -303,9 +303,9 @@ function DatePickerPopoverBody({
         isSelected={isSelected}
         isInRange={isInRange}
       />
-      <div className="my-3 border-t border-border-default" />
-      <div className="mt-3">
-        <div className="flex flex-wrap gap-2">
+      <div className="my-space-3 border-t border-border-default" />
+      <div className="mt-space-3">
+        <div className="flex flex-wrap gap-space-2">
           {DATE_PRESETS.map(preset => (
             <FilterChip
               key={preset.id}
@@ -319,10 +319,10 @@ function DatePickerPopoverBody({
         </div>
       </div>
       {tempStart && (
-        <div className="mt-3 pt-3 border-t border-border-default">
+        <div className="mt-space-3 pt-space-3 border-t border-border-default">
           <button
             onClick={onApply}
-            className={`w-full px-3 py-2 bg-brand hover:opacity-90 text-text-inverse text-xs font-normal ${RADIUS.field} transition-colors`}
+            className={`w-full px-space-3 py-space-2 bg-brand hover:opacity-90 text-text-inverse text-xs font-normal ${RADIUS.field} transition-colors`}
           >
             Apply
           </button>

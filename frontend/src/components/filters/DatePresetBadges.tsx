@@ -28,7 +28,7 @@ export const DatePresetBadges: React.FC<DatePresetBadgesProps> = ({ value, onCha
   };
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-space-2">
       {DATE_PRESETS.map(preset => (
         <FilterChip
           key={preset.id}

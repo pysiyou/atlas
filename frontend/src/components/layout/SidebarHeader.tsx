@@ -60,7 +60,7 @@ export function SidebarHeader({
           <span className="text-brand">{displayName}</span>
         )}
       </p>
-      <div className={cn(CHROME.clipPane, 'flex items-center justify-end pr-2')}>
+      <div className={cn(CHROME.clipPane, 'flex items-center justify-end pr-chrome-page-header-trailing')}>
         <IconButton
           variant="sidebarClose"
           size="sm"

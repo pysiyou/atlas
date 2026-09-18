@@ -70,7 +70,7 @@ export const LabWorkflowPopoverChrome: React.FC<LabWorkflowPopoverChromeProps> =
         onClose={onCancel}
         disabled={isSubmitting}
       />
-      <div className="p-panel space-y-4 overflow-y-auto flex-1">{children}</div>
+      <div className="p-panel space-y-space-4 overflow-y-auto flex-1">{children}</div>
       <DialogFooter
         density="popover"
         start={footerInfo || <FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" />}
@@ -160,7 +160,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
         }
       }}
       className={cn(
-        'relative flex p-3 bg-surface',
+        'relative flex p-space-3 bg-surface',
         MENU_ITEM.base,
         MENU_ITEM.interactive,
         align === 'center' ? 'items-center' : 'items-start',
@@ -179,7 +179,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
         aria-hidden
       />
       <div
-        className={`flex-1 min-w-0 pr-8 flex gap-2.5 ${align === 'center' ? 'items-center' : 'items-start'}`}
+        className={`flex-1 min-w-0 pr-space-8 flex gap-space-2-5 ${align === 'center' ? 'items-center' : 'items-start'}`}
       >
         {leading ? <div className="shrink-0">{leading}</div> : null}
         <div className="min-w-0 flex-1">
@@ -190,13 +190,13 @@ export const RadioCard: React.FC<RadioCardProps> = ({
           </span>
           {hasDescription ? (
             <span
-              className={`block text-xxs mt-0.5 ${disabled ? 'text-text-disabled' : 'text-text-tertiary'}`}
+              className={`block text-xxs mt-space-0-5 ${disabled ? 'text-text-disabled' : 'text-text-tertiary'}`}
             >
               {description}
             </span>
           ) : null}
           {disabled && disabledReason ? (
-            <span className={`block text-xxs mt-1 ${TONE.danger.fg} font-normal`}>{disabledReason}</span>
+            <span className={`block text-xxs mt-space-1 ${TONE.danger.fg} font-normal`}>{disabledReason}</span>
           ) : null}
         </div>
       </div>

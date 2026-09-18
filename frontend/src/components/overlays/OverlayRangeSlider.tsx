@@ -51,8 +51,8 @@ export const OverlayRangeSlider: React.FC<OverlayRangeSliderProps> = ({
 
   return (
     <div className="w-full">
-      {hint && <p className="text-sm text-text-tertiary mb-4">{hint}</p>}
-      <div className="relative h-1 mb-6">
+      {hint && <p className="text-sm text-text-tertiary mb-space-4">{hint}</p>}
+      <div className="relative h-1 mb-space-6">
         <div className={`absolute inset-0 bg-border ${RADIUS.pill}`} />
         <div
           className={`absolute h-full bg-brand ${RADIUS.pill}`}

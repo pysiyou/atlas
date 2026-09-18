@@ -165,7 +165,7 @@ const ModalDialog = memo(
     disableClose?: boolean;
     onModalClick: (e: React.MouseEvent) => void;
   }) => (
-    <div className="fixed inset-0 z-50 flex items-start justify-center lg:justify-end p-2 md:p-space-6 pointer-events-none">
+    <div className="fixed inset-0 z-50 flex items-start justify-center lg:justify-end p-space-2 md:p-space-6 pointer-events-none">
       <motion.div
         ref={modalRef}
         role="dialog"

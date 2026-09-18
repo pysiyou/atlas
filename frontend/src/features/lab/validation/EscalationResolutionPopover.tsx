@@ -178,7 +178,7 @@ export function ForceValidateAction({
       }}
     >
       {requiresReadBack && (
-        <div className="mb-3 space-y-2">
+        <div className="mb-space-3 space-y-space-2">
           <input
             className={cn(inputBase, 'w-full')}
             placeholder="Provider name"
@@ -191,7 +191,7 @@ export function ForceValidateAction({
             value={readBackProviderContact}
             onChange={e => onReadBackProviderContactChange(e.target.value)}
           />
-          <label className={`flex items-center gap-2 ${TYPE.label}`}>
+          <label className={`flex items-center gap-space-2 ${TYPE.label}`}>
             <input
               type="checkbox"
               checked={readBackConfirmed}

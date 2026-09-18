@@ -30,10 +30,10 @@ export function MetricDonutHalf({
   legend: MetricDonutLegendItem[];
 }) {
   return (
-    <div className="flex h-full min-h-0 min-w-0 flex-col justify-between gap-2 px-3 py-2">
+    <div className="flex h-full min-h-0 min-w-0 flex-col justify-between gap-space-2 px-space-3 py-space-2">
       <SectionTitle title={title} />
 
-      <div className="flex min-h-0 flex-1 items-center gap-2.5">
+      <div className="flex min-h-0 flex-1 items-center gap-space-2-5">
         <DonutChart
           size={METRIC_DONUT_CHART_SIZE}
           centerSize="md"
@@ -44,7 +44,7 @@ export function MetricDonutHalf({
             .map(item => `${item.label} ${item.value}`)
             .join(', ')}`}
         />
-        <div className="min-w-0 flex-1 space-y-1">
+        <div className="min-w-0 flex-1 space-y-space-1">
           {legend.map(item => (
             <LegendRow
               key={item.label}

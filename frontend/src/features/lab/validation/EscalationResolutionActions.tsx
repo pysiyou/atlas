@@ -85,7 +85,7 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
   );
 
   return (
-    <div className="flex items-center gap-2 flex-nowrap">
+    <div className="flex items-center gap-space-2 flex-nowrap">
       {showForceValidate && (
         <ForceValidateAction
           orderTestId={orderTestId}

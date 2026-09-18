@@ -115,7 +115,7 @@ export const SearchControl: React.FC<SearchControlProps> = ({
       />
 
       {/* Column 3: Right Icons (loading/clear) */}
-      <div className="flex items-center gap-1 shrink-0">
+      <div className="flex items-center gap-space-1 shrink-0">
         {isDebouncing && <SpinnerLoader size="xs" />}
         {localValue && !isDebouncing && (
           <button

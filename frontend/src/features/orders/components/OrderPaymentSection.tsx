@@ -29,7 +29,7 @@ export const OrderPaymentSection: React.FC<OrderPaymentSectionProps> = ({
 
   return (
     <div>
-      <label className={`${FORM_FIELD_LABEL} mb-2`}>Payment method</label>
+      <label className={`${FORM_FIELD_LABEL} mb-space-2`}>Payment method</label>
       <PaymentMethodSelector
         methods={methods}
         value={paymentMethod}
@@ -40,7 +40,7 @@ export const OrderPaymentSection: React.FC<OrderPaymentSectionProps> = ({
         disabled={isSubmitting || isProcessingPayment}
       />
       {paymentError && (
-        <Alert variant="danger" className="mt-3 py-space-3">
+        <Alert variant="danger" className="mt-space-3 py-space-3">
           <p className="text-sm">{paymentError}</p>
         </Alert>
       )}

@@ -27,7 +27,7 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
       </Link>
     }
   >
-    <div className="space-y-3">
+    <div className="space-y-space-3">
       {orders.length > 0 ? (
         orders.map(order => (
           <Link
@@ -59,7 +59,7 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
           </Link>
         ))
       ) : (
-        <p className="text-center text-sm text-text-tertiary py-8">No recent orders</p>
+        <p className="text-center text-sm text-text-tertiary py-space-8">No recent orders</p>
       )}
     </div>
   </Panel>

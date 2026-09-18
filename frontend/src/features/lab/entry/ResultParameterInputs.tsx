@@ -59,7 +59,7 @@ const SelectParameterInput: React.FC<{
           {value && (
             <button
               onClick={handleClear}
-              className={`p-0.5 -mr-1 hover:bg-surface-hover ${RADIUS.field} transition-colors flex items-center justify-center cursor-pointer flex-shrink-0`}
+              className={`p-space-0-5 -mr-space-1 hover:bg-surface-hover ${RADIUS.field} transition-colors flex items-center justify-center cursor-pointer flex-shrink-0`}
             >
               <Icon
                 name={ICONS.actions.closeCircle}
@@ -72,7 +72,7 @@ const SelectParameterInput: React.FC<{
       className="min-w-[200px]"
     >
       {({ close }) => (
-        <div className="flex flex-col gap-2 p-2 max-h-[250px] overflow-y-auto">
+        <div className="flex flex-col gap-space-2 p-space-2 max-h-[250px] overflow-y-auto">
           {param.allowedValues?.map(option => (
             <RadioCard
               key={option}
@@ -169,7 +169,7 @@ export const ParameterInput: React.FC<{
       min={limit?.min}
       max={limit?.max}
       inputMode="decimal"
-      className={cn(inputBase, `block ${CONTROL.height} pr-12 relative z-10`, noSpinner, hasError && inputError)}
+      className={cn(inputBase, `block ${CONTROL.height} pr-space-12 relative z-10`, noSpinner, hasError && inputError)}
       placeholder="--"
     />
   );

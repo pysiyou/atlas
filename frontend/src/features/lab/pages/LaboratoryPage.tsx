@@ -91,7 +91,7 @@ export const LaboratoryPage: React.FC = () => {
         variant="bar"
         title={pageTitle}
         actions={
-          <div className={`bg-surface-hover p-0.5 ${RADIUS.field} flex items-center gap-0.5`}>
+          <div className={`bg-surface-hover p-space-0-5 ${RADIUS.field} flex items-center gap-space-0-5`}>
             {tabs.map(tab => {
               const isActive = activeTab === tab.id;
               const hasCount = typeof tab.count === 'number' && tab.count > 0;
@@ -100,7 +100,7 @@ export const LaboratoryPage: React.FC = () => {
                   key={tab.id}
                   onClick={() => handleTabChange(tab.id)}
                   className={`
-                  relative flex items-center gap-1.5 px-2.5 py-1 ${RADIUS.field} text-xs font-normal transition-all duration-200 cursor-pointer
+                  relative flex items-center gap-space-1-5 px-space-2-5 py-space-1 ${RADIUS.field} text-xs font-normal transition-all duration-200 cursor-pointer
                   ${
                     isActive
                       ? 'bg-surface text-brand shadow-sm ring-1 ring-black/5'
@@ -118,7 +118,7 @@ export const LaboratoryPage: React.FC = () => {
                     <Badge
                       variant={isActive ? 'primary' : 'default'}
                       size="xs"
-                      className="ml-1"
+                      className="ml-space-1"
                     >
                       {tab.count}
                     </Badge>

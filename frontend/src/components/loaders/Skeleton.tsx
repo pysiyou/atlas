@@ -62,7 +62,7 @@ export const SkeletonText: React.FC<{
   lines?: number;
   className?: string;
 }> = ({ lines = 1, className = '' }) => (
-  <div className={`space-y-2 ${className}`}>
+  <div className={`space-y-space-2 ${className}`}>
     {Array.from({ length: lines }).map((_, index) => (
       <Skeleton key={index} height={16} width={index === lines - 1 && lines > 1 ? '75%' : '100%'} />
     ))}
@@ -116,7 +116,7 @@ export const SkeletonCard: React.FC<{
     <div className="flex items-start gap-layout-section">
       {showAvatar && <SkeletonAvatar size="md" />}
       <div className="flex-1">
-        <Skeleton height={20} width="40%" className="mb-2" />
+        <Skeleton height={20} width="40%" className="mb-space-2" />
         <SkeletonText lines={lines} />
       </div>
     </div>
@@ -132,11 +132,11 @@ export const SkeletonInfoSection: React.FC<{
   className?: string;
 }> = ({ rows = 5, layout = 'column', className = '' }) => {
   const containerClass =
-    layout === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 gap-layout-stack' : 'flex flex-col gap-3';
+    layout === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 gap-layout-stack' : 'flex flex-col gap-space-3';
   return (
     <div className={`${containerClass} ${className}`}>
       {Array.from({ length: rows }).map((_, i) => (
-        <div key={i} className="flex flex-col gap-1">
+        <div key={i} className="flex flex-col gap-space-1">
           <Skeleton height={10} width={64} />
           <Skeleton height={14} width={i % 2 === 0 ? '85%' : '70%'} />
         </div>
@@ -153,12 +153,12 @@ export const SkeletonList: React.FC<{
   rows?: number;
   className?: string;
 }> = ({ rows = 5, className = '' }) => (
-  <div className={`space-y-4 ${className}`}>
+  <div className={`space-y-space-4 ${className}`}>
     {Array.from({ length: rows }).map((_, index) => (
       <div key={index} className="flex items-center gap-layout-section">
         <SkeletonAvatar size="sm" />
         <div className="flex-1">
-          <Skeleton height={16} width="30%" className="mb-2" />
+          <Skeleton height={16} width="30%" className="mb-space-2" />
           <Skeleton height={12} width="60%" />
         </div>
       </div>
@@ -173,7 +173,7 @@ export const SkeletonList: React.FC<{
 export const SkeletonPage: React.FC<{
   className?: string;
 }> = ({ className = '' }) => (
-  <div className={`p-space-6 space-y-6 ${className}`}>
+  <div className={`p-space-6 space-y-space-6 ${className}`}>
     {/* Header */}
     <div className="flex items-center justify-between">
       <Skeleton height={32} width={200} />

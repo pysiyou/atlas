@@ -131,7 +131,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
 
       {/* Payment Method Selection */}
       <div>
-        <label className={`${FORM_FIELD_LABEL} mb-2`}>
+        <label className={`${FORM_FIELD_LABEL} mb-space-2`}>
           Payment Method <span className={TONE.danger.fg}>*</span>
         </label>
         <PaymentMethodSelector
@@ -143,7 +143,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
 
       {/* Notes */}
       <div>
-        <label className={`${FORM_FIELD_LABEL} mb-1`}>Notes</label>
+        <label className={`${FORM_FIELD_LABEL} mb-space-1`}>Notes</label>
         <textarea
           rows={2}
           placeholder="Add optional notes..."
@@ -155,7 +155,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
 
       {/* Error Display */}
       {error && (
-        <Alert variant="danger" className="py-2">
+        <Alert variant="danger" className="py-space-2">
           <p className="text-xs">{error}</p>
         </Alert>
       )}

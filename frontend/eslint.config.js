@@ -214,17 +214,17 @@ export default defineConfig([
         selector: 'TemplateElement[value.raw=/text-(gray|slate|red|blue|green|yellow|orange|amber|sky|purple|pink|teal|indigo|cyan)-(50|100|200|300|400|500|600|700|800|900|950)/]',
         message: 'Use semantic tokens or TONE/Badge colors, not default Tailwind palette classes.',
       }, {
-        selector: 'Literal[value=/\\b(gap|p|px|py|pb|pt|pl|pr)-(4|5|6)\\b/]',
-        message: 'Use SPACING, LAYOUT, WORKSPACE, FILTER, EMPTY, or DIALOG from @/components/theme/recipes (or approved *Styles.ts modules).',
+        selector: 'Literal[value=/\\b(gap|gap-x|gap-y|space-[xy])-(0\\.5|1|1\\.5|2|2\\.5|3|3\\.5|4|5|6|8)\\b/]',
+        message: 'Use spacing token utilities (gap-space-*, space-y-space-*, gap-layout-*) or SPACING/LAYOUT from recipes.',
       }, {
-        selector: 'TemplateElement[value.raw=/\\b(gap|p|px|py|pb|pt|pl|pr)-(4|5|6)\\b/]',
-        message: 'Use SPACING, LAYOUT, WORKSPACE, FILTER, EMPTY, or DIALOG from @/components/theme/recipes (or approved *Styles.ts modules).',
+        selector: 'TemplateElement[value.raw=/\\b(gap|gap-x|gap-y|space-[xy])-(0\\.5|1|1\\.5|2|2\\.5|3|3\\.5|4|5|6|8)\\b/]',
+        message: 'Use spacing token utilities (gap-space-*, space-y-space-*, gap-layout-*) or SPACING/LAYOUT from recipes.',
       }, {
-        selector: 'Literal[value=/\\bpx-6\\b/]',
-        message: 'Use TABLE_CELL / SPACING table tokens from @/components/theme/recipes.',
+        selector: 'Literal[value=/\\b(p|px|py|pb|pt|pl|pr|mb|mt|ml|mr|my|mx)-(0\\.5|1|1\\.5|2|2\\.5|3|3\\.5|4|5|6|8|10|12)\\b/]',
+        message: 'Use spacing token utilities (p-space-*, px-space-*, etc.) or SPACING from recipes.',
       }, {
-        selector: 'TemplateElement[value.raw=/\\bpx-6\\b/]',
-        message: 'Use TABLE_CELL / SPACING table tokens from @/components/theme/recipes.',
+        selector: 'TemplateElement[value.raw=/\\b(p|px|py|pb|pt|pl|pr|mb|mt|ml|mr|my|mx)-(0\\.5|1|1\\.5|2|2\\.5|3|3\\.5|4|5|6|8|10|12)\\b/]',
+        message: 'Use spacing token utilities (p-space-*, px-space-*, etc.) or SPACING from recipes.',
       }],
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'prefer-const': 'error',
@@ -287,6 +287,7 @@ export default defineConfig([
       'src/components/surfaces/Panel.tsx',
       'src/components/data-table/constants.ts',
       'src/features/lab/utils/labStyles.ts',
+      'src/features/lab/utils/labResult.ts',
       'src/features/lab/commandCenter/commandCenterStyles.ts',
       'src/features/timeline/timelineStyles.ts',
       'src/features/auth/**/*.{ts,tsx}',

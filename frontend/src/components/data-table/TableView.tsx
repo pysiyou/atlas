@@ -68,7 +68,7 @@ function TableHeader<T>({
         return (
           <div
             key={column.key}
-            className={`${HEADER_PADDING[variant]} text-xxs flex items-center justify-start gap-2 whitespace-nowrap ${isSortable ? 'cursor-pointer hover:bg-surface-hover select-none' : ''} ${isActiveSort ? 'text-text-primary bg-surface-selected' : ''} ${column.headerClassName || ''}`.trim()}
+            className={`${HEADER_PADDING[variant]} text-xxs flex items-center justify-start gap-space-2 whitespace-nowrap ${isSortable ? 'cursor-pointer hover:bg-surface-hover select-none' : ''} ${isActiveSort ? 'text-text-primary bg-surface-selected' : ''} ${column.headerClassName || ''}`.trim()}
             style={style}
             onClick={() => isSortable && onSort(column.key)}
             aria-sort={

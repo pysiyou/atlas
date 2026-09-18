@@ -72,7 +72,7 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
                 validationErrors[param.code] && 'border-danger-stroke ring-1 ring-danger-stroke/30',
               )}
             >
-              <div className="flex items-baseline justify-between gap-2 min-w-0">
+              <div className="flex items-baseline justify-between gap-space-2 min-w-0">
                 <label
                   htmlFor={`result-${resultKey}-${param.code}`}
                   className={RESULT_PANEL.label}
@@ -107,7 +107,7 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
                   disabled={readOnly}
                 />
                 {valueType !== 'TEXT' && param.unit && (
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none z-0">
+                  <div className="absolute inset-y-0 right-0 pr-space-3 flex items-center pointer-events-none z-0">
                     <span className="text-xs text-text-disabled select-none">{param.unit}</span>
                   </div>
                 )}
@@ -138,7 +138,7 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
       </div>
 
       {!isModal && (
-        <div className={`mt-6 -mx-4 -mb-4 px-space-4 py-space-3 bg-surface-page border-t border-border-subtle ${RADIUS.bottomSurface} flex items-center justify-between`}>
+        <div className={`mt-space-6 -mx-space-4 -mb-space-4 px-space-4 py-space-3 bg-surface-page border-t border-border-subtle ${RADIUS.bottomSurface} flex items-center justify-between`}>
           {hasValidationErrors && (
             <span className={`text-xxs ${TONE.danger.fg}`}>
               {feedbackTitle('lab.entry.fixValidationBeforeSubmit')}

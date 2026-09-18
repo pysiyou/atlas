@@ -84,7 +84,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
           footerLabel="Reports"
         >
           <div className="w-full">
-            <h4 className="text-sm font-semibold text-text-primary mb-3">Date Range</h4>
+            <h4 className="text-sm font-semibold text-text-primary mb-space-3">Date Range</h4>
             <DatePresetBadges value={dateRange} onChange={onDateRangeChange} />
           </div>
         </EntityFilterModal>
@@ -94,8 +94,8 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
 
   return (
     <div className="w-full bg-surface border-b border-border-default">
-      <div className="px-space-4 py-2.5 lg:px-space-5 lg:py-space-3 w-full">
-        <div className="grid grid-cols-2 gap-3 lg:gap-layout-section items-center w-full">{renderFilters()}</div>
+      <div className="px-space-4 py-space-2-5 lg:px-space-5 lg:py-space-3 w-full">
+        <div className="grid grid-cols-2 gap-space-3 lg:gap-layout-section items-center w-full">{renderFilters()}</div>
       </div>
     </div>
   );

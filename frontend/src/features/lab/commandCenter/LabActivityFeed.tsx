@@ -19,11 +19,11 @@ export interface LabActivityFeedProps {
 
 function FeedSkeleton() {
   return (
-    <div className="space-y-3 py-1" aria-busy="true">
+    <div className="space-y-space-3 py-space-1" aria-busy="true">
       {Array.from({ length: 3 }).map((_, i) => (
-        <div key={i} className="flex gap-3">
-          <Skeleton circle width={10} height={10} className="mt-1 shrink-0" />
-          <div className="flex-1 space-y-1">
+        <div key={i} className="flex gap-space-3">
+          <Skeleton circle width={10} height={10} className="mt-space-1 shrink-0" />
+          <div className="flex-1 space-y-space-1">
             <Skeleton height={14} width="70%" />
             <Skeleton height={12} width="85%" />
           </div>
@@ -77,7 +77,7 @@ export const LabActivityFeed: React.FC<LabActivityFeedProps> = ({
       events={events}
       interactiveEntities
       emptyMessage="No recent activity"
-      className="h-full px-space-4 py-2"
+      className="h-full px-space-4 py-space-2"
       footer={loadMoreFooter}
     />
   );

@@ -37,7 +37,7 @@ export const RecollectionAttemptBadge: React.FC<RecollectionAttemptBadgeProps> =
   className = '',
   showIcon = false,
 }) => (
-  <Badge size={size} variant="warning" className={`flex items-center gap-1 ${className}`}>
+  <Badge size={size} variant="warning" className={`flex items-center gap-space-1 ${className}`}>
     {showIcon && <SpinnerLoader size="xs" />}
     RE-COLLECT #{attemptNumber}
   </Badge>
@@ -59,7 +59,7 @@ export const FlagCountBadge: React.FC<FlagCountBadgeProps> = ({
   if (count === 0) return null;
 
   return (
-    <Badge size={size} variant="danger" className={`flex items-center gap-1.5 ${className}`}>
+    <Badge size={size} variant="danger" className={`flex items-center gap-space-1-5 ${className}`}>
       {showIcon && <Icon name={ICONS.actions.warning} className="w-3 h-3 shrink-0 text-current" />}
       {count} flag{count !== 1 ? 's' : ''}
     </Badge>
@@ -77,7 +77,7 @@ export const ReviewRequiredBadge: React.FC<ReviewRequiredBadgeProps> = ({
   className = '',
   showIcon = true,
 }) => (
-  <Badge size={size} variant="danger" className={`flex items-center gap-1 ${className}`}>
+  <Badge size={size} variant="danger" className={`flex items-center gap-space-1 ${className}`}>
     {showIcon && <Icon name={ICONS.actions.warning} className="w-3 h-3" />}
     Review Required
   </Badge>
@@ -94,7 +94,7 @@ export const BlockedReasonBadge: React.FC<OrderTestBlockReasonBadgeProps> = ({
   size = 'xs',
   className = '',
 }) => (
-  <Badge size={size} variant="warning" className={`flex items-center gap-1 ${className}`}>
+  <Badge size={size} variant="warning" className={`flex items-center gap-space-1 ${className}`}>
     <Icon name={ICONS.actions.alertCircle} className="w-3 h-3 shrink-0" />
     {label}
   </Badge>

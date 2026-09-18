@@ -69,7 +69,7 @@ export const buildCollectionDetailGridSections = ({
         {
           label: 'Container',
           value: (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-space-2">
               <Badge size={LAB_CARD_BADGE_SIZE} variant="primary" className="capitalize">
                 {effectiveContainerType}
               </Badge>
@@ -119,7 +119,7 @@ export const buildCollectionDetailGridSections = ({
           label: 'Required Container Types',
           value:
             requirement.containerTypes.length > 0 ? (
-              <div className="flex flex-wrap gap-1 justify-end">
+              <div className="flex flex-wrap gap-space-1 justify-end">
                 {requirement.containerTypes.map((type, idx) => (
                   <Badge key={idx} size={LAB_CARD_BADGE_SIZE} variant="primary" className="capitalize">
                     {CONTAINER_CONFIG[type]?.label || type}
@@ -132,7 +132,7 @@ export const buildCollectionDetailGridSections = ({
           label: 'Required Container Colors',
           value:
             requirement.containerTopColors.length > 0 ? (
-              <div className="flex flex-wrap gap-1 justify-end">
+              <div className="flex flex-wrap gap-space-1 justify-end">
                 {requirement.containerTopColors.map((color, idx) => (
                   <Badge key={idx} size={LAB_CARD_BADGE_SIZE} variant={`container-${color}` as never}>
                     {CONTAINER_COLOR_OPTIONS.find(opt => opt.value === color)?.label || color} Top
@@ -215,17 +215,17 @@ export const SampleCollectionDetailContent: React.FC<CollectionDetailContentProp
         </div>
       )}
       <Panel variant="lab" title={isCollected ? 'Linked Tests' : 'Required for'}>
-        <ul className="space-y-1">
+        <ul className="space-y-space-1">
           {testNames.map((testName, i) => {
             const testCode = testCodes[i];
             const test = testCode ? getTest(testCode) : undefined;
             return (
               <li key={testCode || i} className={`flex items-center ${TYPE.label}`}>
-                <span className={`w-1.5 h-1.5 ${RADIUS.pill} bg-text-muted mr-2`} />
-                <span className="font-normal mr-1">{testName}</span>
-                <EntityId variant="inline" className="mr-2">{testCode}</EntityId>
+                <span className={`w-1.5 h-1.5 ${RADIUS.pill} bg-text-muted mr-space-2`} />
+                <span className="font-normal mr-space-1">{testName}</span>
+                <EntityId variant="inline" className="mr-space-2">{testCode}</EntityId>
                 {test?.turnaroundTime && (
-                  <span className="text-text-disabled flex items-center gap-1">
+                  <span className="text-text-disabled flex items-center gap-space-1">
                     <Icon name={ICONS.dataFields.time} className="w-2.5 h-2.5" />
                     {test.turnaroundTime}h
                   </span>
@@ -238,7 +238,7 @@ export const SampleCollectionDetailContent: React.FC<CollectionDetailContentProp
 
       {isRejected && rejectedSample && (
         <Panel variant="lab" title="Rejection Details">
-          <div className="space-y-2 text-sm text-text-secondary">
+          <div className="space-y-space-2 text-sm text-text-secondary">
             {rejectedSample.rejectionReasons && rejectedSample.rejectionReasons.length > 0 && (
               <p>
                 <span className="text-text-tertiary">Reason: </span>

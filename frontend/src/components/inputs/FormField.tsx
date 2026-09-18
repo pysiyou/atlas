@@ -8,7 +8,7 @@ import React, { type InputHTMLAttributes } from 'react';
 import { Icon, type IconName } from '@/components/primitives/Icon';
 import { ICONS } from '@/config/icons';
 import { inputBase, inputError, FORM_CONTROL_LABEL } from '@/components/inputs/inputStyles';
-import { TONE, TYPE } from '@/components/theme/recipes';
+import { SPACING, TONE, TYPE } from '@/components/theme/recipes';
 
 type FormFieldKind = 'input' | 'textarea' | 'select';
 
@@ -81,21 +81,21 @@ const FormFieldWrapper: React.FC<FormFieldWrapperProps> = ({
 }) => (
   <div className={className}>
     {label && (
-      <div className="flex justify-between items-baseline mb-1 gap-2">
+      <div className="flex justify-between items-baseline mb-space-1 gap-space-2">
         <label htmlFor={id} className={FORM_CONTROL_LABEL}>
           {label}
-          {required && <span className={`${TONE.danger.fg} ml-1`}>*</span>}
+          {required && <span className={`${TONE.danger.fg} ml-space-1`}>*</span>}
         </label>
       </div>
     )}
     {children}
-    {error && <p className={`${TONE.danger.fg} text-xs mt-1`}>{error}</p>}
-    {helperText && !error && <p className={`${TYPE.meta} mt-1`}>{helperText}</p>}
+    {error && <p className={`${TONE.danger.fg} text-xs mt-space-1`}>{error}</p>}
+    {helperText && !error && <p className={`${TYPE.meta} mt-space-1`}>{helperText}</p>}
   </div>
 );
 
 const getInputClasses = (hasError: boolean, hasIcon: boolean) => {
-  const iconPadding = hasIcon ? 'pl-10' : '';
+  const iconPadding = hasIcon ? SPACING.plSpace10 : '';
   const stateClasses = hasError ? inputError : '';
   return `${inputBase} ${iconPadding} ${stateClasses}`.trim();
 };
@@ -130,7 +130,7 @@ export const Input: React.FC<InputProps> = ({
     >
       <div className="relative">
         {displayIcon && (
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <div className="absolute inset-y-0 left-0 pl-space-3 flex items-center pointer-events-none">
             <Icon
               name={displayIcon}
               className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors"
@@ -225,7 +225,7 @@ export const Select: React.FC<SelectProps> = ({
     >
       <div className="relative">
         {displayIcon && (
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <div className="absolute inset-y-0 left-0 pl-space-3 flex items-center pointer-events-none">
             <Icon
               name={displayIcon}
               className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors"

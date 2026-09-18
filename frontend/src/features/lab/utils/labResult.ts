@@ -220,14 +220,14 @@ export function validatePhysiologicValue(
 }
 
 export const RESULT_PANEL = {
-  grid: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3',
+  grid: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-space-3',
   tile:
-    `${RADIUS.card} border px-3 py-2.5 flex flex-col gap-1.5 min-h-[4.5rem] transition-colors duration-150`,
+    `${RADIUS.card} border px-space-3 py-space-2-5 flex flex-col gap-space-1-5 min-h-[4.5rem] transition-colors duration-150`,
   tileEmpty: 'border-border-subtle bg-surface-page/40',
   tileFilled: 'border-border-default bg-surface shadow-sm',
   label: 'text-xxs font-medium text-text-secondary truncate',
   value: 'text-lg font-medium tabular-nums leading-tight',
-  unit: `${TYPE.meta} font-normal ml-1`,
+  unit: `${TYPE.meta} font-normal ml-space-1`,
   reference: `${TYPE.caption} leading-none font-normal truncate shrink-0 max-w-[50%]`,
   referenceUnavailable:
     '!text-xxs leading-none font-normal text-text-secondary truncate shrink-0 max-w-[50%]',

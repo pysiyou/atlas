@@ -59,25 +59,25 @@ function DateInputHeader({
     return `${format(years[0], 'yyyy')} - ${format(years[years.length - 1], 'yyyy')}`;
   };
   return (
-    <div className="flex items-center justify-between mb-3">
+    <div className="flex items-center justify-between mb-space-3">
       <button
         type="button"
         onClick={onPrevClick}
-        className={`p-1 hover:bg-surface-hover ${RADIUS.field} text-text-tertiary cursor-pointer flex items-center justify-center`}
+        className={`p-space-1 hover:bg-surface-hover ${RADIUS.field} text-text-tertiary cursor-pointer flex items-center justify-center`}
       >
         <Icon name={ICONS.actions.chevronLeft} className="w-4 h-4" />
       </button>
       <button
         type="button"
         onClick={onTitleClick}
-        className={`text-sm font-normal text-text-secondary hover:bg-surface-page px-2 py-1 ${RADIUS.field} transition-colors cursor-pointer`}
+        className={`text-sm font-normal text-text-secondary hover:bg-surface-page px-space-2 py-space-1 ${RADIUS.field} transition-colors cursor-pointer`}
       >
         {getTitle()}
       </button>
       <button
         type="button"
         onClick={onNextClick}
-        className={`p-1 hover:bg-surface-hover ${RADIUS.field} text-text-tertiary cursor-pointer flex items-center justify-center`}
+        className={`p-space-1 hover:bg-surface-hover ${RADIUS.field} text-text-tertiary cursor-pointer flex items-center justify-center`}
       >
         <Icon name={ICONS.actions.chevronRight} className="w-4 h-4" />
       </button>
@@ -109,14 +109,14 @@ function DateInputCalendarGrid({
   if (view === 'days') {
     return (
       <>
-        <div className="grid grid-cols-7 gap-1 mb-1">
+        <div className="grid grid-cols-7 gap-space-1 mb-space-1">
           {WEEKDAY_LABELS.map(day => (
-            <div key={day} className="text-center text-xs text-text-disabled py-1">
+            <div key={day} className="text-center text-xs text-text-disabled py-space-1">
               {day}
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-7 gap-1">
+        <div className="grid grid-cols-7 gap-space-1">
           {generateCalendarDays(currentMonth).map(day => {
             const currentMonthMatch = isSameMonth(day, currentMonth);
             const selected = isSelected(day);
@@ -148,7 +148,7 @@ function DateInputCalendarGrid({
 
   if (view === 'months') {
     return (
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-3 gap-space-2">
         {generateCalendarMonths(currentMonth).map(month => {
           const endOfM = endOfMonth(month);
           const disabled = isBefore(endOfM, minDate) || isAfter(month, maxDate);
@@ -178,7 +178,7 @@ function DateInputCalendarGrid({
   }
 
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid grid-cols-3 gap-space-2">
       {generateCalendarYears(currentMonth).map(year => {
         const y = year.getFullYear();
         const disabled = y < minDate.getFullYear() || y > maxDate.getFullYear();
@@ -258,10 +258,10 @@ export const DateInput: React.FC<DateInputProps> = ({
   return (
     <div className="w-full group">
       {label && (
-        <div className="flex justify-between items-baseline mb-1 gap-2">
+        <div className="flex justify-between items-baseline mb-space-1 gap-space-2">
           <label htmlFor={inputId} className={FORM_CONTROL_LABEL}>
             {label}
-            {required && <span className={`${TONE.danger.fg} ml-1`}>*</span>}
+            {required && <span className={`${TONE.danger.fg} ml-space-1`}>*</span>}
           </label>
         </div>
       )}
@@ -296,7 +296,7 @@ export const DateInput: React.FC<DateInputProps> = ({
             {dateValue && !disabled && (
               <button
                 onClick={handleClear}
-                className={cn(inputClearButton, '-mr-1 hover:bg-surface-hover')}
+                className={cn(inputClearButton, '-mr-space-1 hover:bg-surface-hover')}
                 type="button"
               >
                 <Icon name={ICONS.actions.closeCircle} className="w-3.5 h-3.5 text-text-disabled hover:text-text-tertiary" />
@@ -307,7 +307,7 @@ export const DateInput: React.FC<DateInputProps> = ({
         className="p-0 w-[280px]"
       >
         {() => (
-          <div className="p-3">
+          <div className="p-space-3">
             <DateInputHeader
               currentMonth={currentMonth}
               view={view}
@@ -330,7 +330,7 @@ export const DateInput: React.FC<DateInputProps> = ({
         )}
       </Popover>
       <input type="hidden" id={inputId} name={name} value={value} />
-      {error && <p className={`text-xs ${TONE.danger.fg} mt-1`}>{error}</p>}
+      {error && <p className={`text-xs ${TONE.danger.fg} mt-space-1`}>{error}</p>}
     </div>
   );
 };

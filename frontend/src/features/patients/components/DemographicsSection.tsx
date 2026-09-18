@@ -40,7 +40,7 @@ export const DemographicsSection: React.FC<
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-space-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-layout-section">
         <div className="md:col-span-2">
           <Input
@@ -66,8 +66,8 @@ export const DemographicsSection: React.FC<
           maxDate={new Date()}
         />
         <div>
-          <label className={`${FORM_FIELD_LABEL} mb-1.5`}>
-            Gender <span className={`${TONE.danger.fg} ml-1`}>*</span>
+          <label className={`${FORM_FIELD_LABEL} mb-space-1.5`}>
+            Gender <span className={`${TONE.danger.fg} ml-space-1`}>*</span>
           </label>
           <MultiSelectFilter
             label="Gender"
@@ -80,7 +80,7 @@ export const DemographicsSection: React.FC<
             icon={ICONS.dataFields.userHands}
             className="w-full"
           />
-          {errors.gender && <p className={`mt-1 text-sm ${TONE.danger.fg}`}>{errors.gender}</p>}
+          {errors.gender && <p className={`mt-space-1 text-sm ${TONE.danger.fg}`}>{errors.gender}</p>}
         </div>
         <Input
           label="Phone Number"

@@ -32,7 +32,7 @@ export function SectionTitle({
   }
 
   return (
-    <div className={cn('flex items-baseline justify-between gap-2', className)}>
+    <div className={cn('flex items-baseline justify-between gap-space-2', className)}>
       <p className={COMMAND_CENTER_SECTION.title}>{title}</p>
       <span className={COMMAND_CENTER_SECTION.aside}>{aside}</span>
     </div>
@@ -110,7 +110,7 @@ export function KpiTile({
       </div>
       <div className="min-w-0 flex-1">
         <p className={COMMAND_CENTER_KPI.label}>{label}</p>
-        <div className="flex min-w-0 items-baseline gap-1">
+        <div className="flex min-w-0 items-baseline gap-space-1">
           <p className={cn(COMMAND_CENTER_KPI.value, COMMAND_CENTER_KPI_TONE_VALUE[tone])}>{value}</p>
           <span className={COMMAND_CENTER_KPI.context}>on {denominator}</span>
         </div>
@@ -247,7 +247,7 @@ export function DonutChart({
           <path key={index} d={arc.d} className={arc.colorClass} />
         ))}
       </svg>
-      <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-1 text-center">
+      <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-space-1 text-center">
         <span
           className={cn(
             'leading-none tabular-nums',
@@ -260,7 +260,7 @@ export function DonutChart({
         {centerDetail && (
           <span
             className={cn(
-              'mt-0.5 leading-none',
+              'mt-space-0-5 leading-none',
               COMMAND_CENTER_TEXT.centerDetail,
               centerSize === 'md' ? 'text-xs' : 'text-xxs'
             )}
@@ -294,8 +294,8 @@ export function LegendRow({
   const isMd = size === 'md';
 
   return (
-    <div className={cn('flex items-center justify-between gap-2', isMd ? 'text-xs' : 'text-xxs')}>
-      <span className={cn('flex min-w-0 items-center gap-1.5 truncate', COMMAND_CENTER_TEXT.label)}>
+    <div className={cn('flex items-center justify-between gap-space-2', isMd ? 'text-xs' : 'text-xxs')}>
+      <span className={cn('flex min-w-0 items-center gap-space-1-5 truncate', COMMAND_CENTER_TEXT.label)}>
         <span
           className={cn(`shrink-0 ${RADIUS.field}`, swatchClass, isMd ? 'h-2 w-2' : 'h-1.5 w-1.5')}
         />
@@ -312,7 +312,7 @@ export function LegendRow({
           {value}
         </span>
         {detail && (
-          <span className={cn('ml-1 tabular-nums', COMMAND_CENTER_TEXT.detail)}>{detail}</span>
+          <span className={cn('ml-space-1 tabular-nums', COMMAND_CENTER_TEXT.detail)}>{detail}</span>
         )}
       </span>
     </div>

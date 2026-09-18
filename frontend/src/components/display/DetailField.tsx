@@ -78,11 +78,11 @@ export const DetailField: React.FC<DetailFieldProps> = ({
 
   if (orientation === 'vertical') {
     return (
-      <div className={`flex gap-3 ${className}`}>
+      <div className={`flex gap-space-3 ${className}`}>
         {icon && <Icon name={icon} className="w-4 h-4 text-text-disabled shrink-0" />}
         <div className="min-w-0 flex-1">
           <div className={DETAIL_LABEL}>{label}</div>
-          <div className={`font-normal mt-0.5 leading-relaxed ${DETAIL_VALUE}`}>{renderValue()}</div>
+          <div className={`font-normal mt-space-0-5 leading-relaxed ${DETAIL_VALUE}`}>{renderValue()}</div>
         </div>
       </div>
     );
@@ -90,7 +90,7 @@ export const DetailField: React.FC<DetailFieldProps> = ({
 
   if (variant === 'inline') {
     return (
-      <span className={`inline-flex items-center gap-1.5 ${className}`}>
+      <span className={`inline-flex items-center gap-space-1-5 ${className}`}>
         <span className={labelClassName}>{label}:</span>
         <span className={valueClassName}>{renderValue()}</span>
       </span>
@@ -99,7 +99,7 @@ export const DetailField: React.FC<DetailFieldProps> = ({
 
   return (
     <div className={`flex items-center justify-between gap-layout-section ${className}`}>
-      <div className="flex items-center gap-2 min-w-0">
+      <div className="flex items-center gap-space-2 min-w-0">
         {icon && <Icon name={icon} className="w-4 h-4 text-text-tertiary flex-shrink-0" />}
         <span className={`font-normal whitespace-nowrap ${labelClassName}`}>{label}</span>
       </div>

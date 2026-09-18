@@ -71,7 +71,7 @@ function PageHeaderContent({
             {badges != null && <div className={PAGE_HEADER.detailBadges}>{badges}</div>}
           </div>
           {subtitle != null && subtitle !== '' && (
-            <p className={`${TYPE.meta} mt-0.5`}>{subtitle}</p>
+            <p className={`${TYPE.meta} mt-space-0-5`}>{subtitle}</p>
           )}
         </div>
       </div>

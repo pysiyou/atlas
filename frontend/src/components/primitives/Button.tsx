@@ -119,9 +119,9 @@ const tone: Record<BaseVariant, string> = {
 };
 
 const labelButtonSize: Record<ButtonSize, string> = {
-  sm: `gap-1.5 px-3 py-1.5 text-xs ${RADIUS.button}`,
-  md: `gap-1.5 px-space-4 py-2 text-sm ${RADIUS.button}`,
-  lg: `gap-1.5 px-table-cell-x-default py-space-3 text-base ${RADIUS.button}`,
+  sm: `gap-space-1-5 px-space-3 py-space-1-5 text-xs ${RADIUS.button}`,
+  md: `gap-space-1-5 px-space-4 py-space-2 text-sm ${RADIUS.button}`,
+  lg: `gap-space-1-5 px-table-cell-x-default py-space-3 text-base ${RADIUS.button}`,
 };
 
 const labelIconSize: Record<ButtonSize, string> = {
@@ -239,14 +239,14 @@ export const Button: React.FC<ButtonProps> = ({
   if (isLoading) {
     const spinner = <SpinnerLoader size="xs" />;
     body = showTextWhenLoading ? (
-      <span className="inline-flex items-center gap-1.5">
+      <span className="inline-flex items-center gap-space-1-5">
         {spinner}
         {children}
       </span>
     ) : (
       <span className={cn('grid *:col-start-1 *:row-start-1', fullWidth && 'w-full')}>
         <span
-          className={cn('inline-flex items-center gap-1.5 invisible', fullWidth && 'w-full')}
+          className={cn('inline-flex items-center gap-space-1-5 invisible', fullWidth && 'w-full')}
           aria-hidden
         >
           {label}

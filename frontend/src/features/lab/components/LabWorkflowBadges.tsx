@@ -72,7 +72,7 @@ function TestHeaderBadgesView({
   return (
     <>
       {variant === 'validation' && emphasizeCritical && test.hasCriticalValues ? (
-        <Badge variant="danger" size={size} className="flex items-center gap-1">
+        <Badge variant="danger" size={size} className="flex items-center gap-space-1">
           <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
           CRITICAL
         </Badge>

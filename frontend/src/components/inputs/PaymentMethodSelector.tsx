@@ -28,7 +28,7 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
   onChange,
   disabled = false,
 }) => (
-  <div className="grid grid-cols-2 gap-2">
+  <div className="grid grid-cols-2 gap-space-2">
     {methods.map(method => {
       const isSelected = value === method.value;
       return (
@@ -38,7 +38,7 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
           disabled={disabled}
           onClick={() => onChange(method.value)}
           className={`
-            relative flex items-center gap-2.5 p-3 ${RADIUS.field} border border-border-default bg-surface hover:border-border-strong transition-colors duration-200
+            relative flex items-center gap-space-2-5 p-space-3 ${RADIUS.field} border border-border-default bg-surface hover:border-border-strong transition-colors duration-200
             ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
           `}
         >

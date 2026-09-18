@@ -16,7 +16,7 @@ export const DashboardOrdersInProgressBanner: React.FC<DashboardOrdersInProgress
   pendingOrders,
 }) => (
   <Card padding="md">
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-space-3">
       <Icon name={ICONS.dataFields.trendingUp} className="w-6 h-6 text-warning-fg" />
       <div>
         <p className="text-sm font-normal text-text-primary">Orders In Progress</p>

@@ -182,7 +182,7 @@ function CollectionCardDesktop({
         />
       }
       actions={
-        <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center gap-space-2" onClick={e => e.stopPropagation()}>
           {isPending ? (
             <SampleCollectionPopover
               requirement={requirement}

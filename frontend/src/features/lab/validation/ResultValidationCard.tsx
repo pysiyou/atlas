@@ -72,13 +72,13 @@ function SampleRejectedAlert({
   const isCompact = size === 'compact';
 
   return (
-    <Alert variant="warning" className={isCompact ? 'py-1.5' : 'py-2'}>
-      <div className="space-y-1">
+    <Alert variant="warning" className={isCompact ? 'py-space-1-5' : 'py-space-2'}>
+      <div className="space-y-space-1">
         <div>
           <p className={`font-semibold ${isCompact ? 'text-xxs' : 'text-xs'}`}>
             {LAB_COPY.quality.sampleRejected} — Validator Decision Required
           </p>
-          <p className={`text-text-secondary leading-tight mt-0.5 ${isCompact ? 'text-xxs' : 'text-xs'}`}>
+          <p className={`text-text-secondary leading-tight mt-space-0-5 ${isCompact ? 'text-xxs' : 'text-xs'}`}>
             {LAB_COPY.entity.sample} <EntityId type="sample" value={sampleId} /> was rejected
             {sampleRejectionReason && (
               <>
@@ -87,12 +87,12 @@ function SampleRejectedAlert({
             )}
           </p>
         </div>
-        <div className={`space-y-0.5 ${isCompact ? 'text-xxs' : 'text-xs'} text-text-tertiary leading-tight`}>
+        <div className={`space-y-space-0-5 ${isCompact ? 'text-xxs' : 'text-xs'} text-text-tertiary leading-tight`}>
           <p>This result was entered before sample rejection.</p>
           <p className="font-medium">
             You may still approve this result (clinical judgment) or choose another action:
           </p>
-          <ul className="list-disc list-inside pl-2 space-y-0.5 mt-1">
+          <ul className="list-disc list-inside pl-space-2 space-y-space-0-5 mt-space-1">
             <li>Approve result (add validation notes explaining decision)</li>
             <li>Request recollection with new sample</li>
             <li>Cancel this test</li>
@@ -171,7 +171,7 @@ function ResultValidationCardDesktop({
         />
       }
       actions={
-        <div className="flex items-center gap-2 z-10" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center gap-space-2 z-10" onClick={e => e.stopPropagation()}>
           <QualityIssuePopover
             orderTestId={test.id!}
             testCode={test.testCode}
@@ -196,7 +196,7 @@ function ResultValidationCardDesktop({
       content={
         <>
           {isSampleRejected && (
-            <div className="mb-3">
+            <div className="mb-space-3">
               <SampleRejectedAlert
                 sampleId={test.sampleId}
                 sampleRejectionReason={sampleRejectionReason}
@@ -236,7 +236,7 @@ function ResultValidationCardMobile({
       onClick={handleCardClick}
     >
       {isSampleRejected && (
-        <div className="mb-2">
+        <div className="mb-space-2">
           <SampleRejectedAlert
             sampleId={test.sampleId}
             sampleRejectionReason={sampleRejectionReason}

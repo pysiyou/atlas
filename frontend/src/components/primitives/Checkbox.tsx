@@ -50,7 +50,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   <label
     htmlFor={id}
     className={cn(
-      'flex items-center gap-3 cursor-pointer group py-1 transition-colors duration-200',
+      'flex items-center gap-space-3 cursor-pointer group py-space-1 transition-colors duration-200',
       disabled && 'opacity-50 cursor-not-allowed',
       className
     )}

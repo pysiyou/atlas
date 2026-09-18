@@ -76,7 +76,7 @@ export const QualityIssuePopoverFormBody: React.FC<QualityIssuePopoverFormBodyPr
   return (
     <>
       {error && (
-        <Alert variant="danger" className="py-2">
+        <Alert variant="danger" className="py-space-2">
           <p className="text-xs">{error}</p>
         </Alert>
       )}

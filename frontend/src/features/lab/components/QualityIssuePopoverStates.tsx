@@ -32,17 +32,17 @@ export const QualityIssuePopoverLoadingView: React.FC = () => (
       subtitle={<Skeleton height={12} width="40%" className={`${RADIUS.card}`} />}
       actions={<Skeleton width={32} height={32} className={`${RADIUS.card} shrink-0`} />}
     />
-    <div className="p-panel space-y-4 overflow-y-auto flex-1">
-      <div className="space-y-1.5">
+    <div className="p-panel space-y-space-4 overflow-y-auto flex-1">
+      <div className="space-y-space-1-5">
         <Skeleton height={14} width="100%" className={`${RADIUS.card}`} />
         <Skeleton height={12} width="85%" className={`${RADIUS.card}`} />
       </div>
-      <div className="space-y-2">
+      <div className="space-y-space-2">
         <Skeleton height={12} width="30%" className={`${RADIUS.card}`} />
         <Skeleton height={52} width="100%" className={`${RADIUS.card}`} />
       </div>
       <div>
-        <Skeleton height={12} width="35%" className={`${RADIUS.card} mb-1`} />
+        <Skeleton height={12} width="35%" className={`${RADIUS.card} mb-space-1`} />
         <Skeleton height={60} width="100%" className={`${RADIUS.card}`} />
       </div>
     </div>
@@ -73,11 +73,11 @@ export const QualityIssuePopoverErrorView: React.FC<QualityIssuePopoverErrorView
   <div
     className={cn(QUALITY_ISSUE_POPOVER_LAYOUT.widthClass, 'flex flex-col gap-layout-section p-panel min-w-0')}
   >
-    <Alert variant="danger" className="py-2">
+    <Alert variant="danger" className="py-space-2">
       <p className="font-normal text-xs">{getFeedback('lab.qualityIssue.options.loadFailed').title}</p>
-      <p className="text-xxs mt-1">{error}</p>
+      <p className="text-xxs mt-space-1">{error}</p>
     </Alert>
-    <div className="flex justify-end gap-2">
+    <div className="flex justify-end gap-space-2">
       <Button variant="cancel" size="sm" layout="text" onClick={onCancel}>
         {QUALITY_ISSUE_POPOVER_COPY.error.cancel}
       </Button>
@@ -108,17 +108,17 @@ export const RejectionActionCards: React.FC<RejectionActionCardsProps> = ({
 
   return (
     <div>
-      <label className={`${FORM_FIELD_LABEL} mb-1`}>
+      <label className={`${FORM_FIELD_LABEL} mb-space-1`}>
         {QUALITY_ISSUE_POPOVER_COPY.actions.followUpLabel}
       </label>
-      <div className="grid grid-cols-1 gap-2">
+      <div className="grid grid-cols-1 gap-space-2">
         <RadioCard
           name="rejection-type"
           selected={selectedType === 're-test'}
           onClick={() => isRetestEnabled && onSelect('re-test')}
           label={QUALITY_ISSUE_POPOVER_COPY.actions.retestLabel}
           description={
-            <div className="space-y-2">
+            <div className="space-y-space-2">
               <p className={TYPE.caption}>
                 {QUALITY_ISSUE_POPOVER_COPY.actions.retestDescription}
               </p>

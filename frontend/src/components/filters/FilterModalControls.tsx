@@ -35,13 +35,13 @@ export const ModalRadioList: React.FC<{
   onChange: (id: string | null) => void;
   columns?: 1 | 2;
 }> = ({ options, selectedId, onChange, columns = 1 }) => (
-  <div className={cn(columns === 2 ? 'grid grid-cols-2 gap-x-6 gap-y-2' : 'space-y-2')}>
+  <div className={cn(columns === 2 ? 'grid grid-cols-2 gap-x-space-6 gap-y-space-2' : 'space-y-space-2')}>
     {options.map(option => {
       const isSelected = selectedId === option.id;
       return (
         <label
           key={option.id}
-          className="flex items-center gap-3 cursor-pointer group py-1 transition-colors"
+          className="flex items-center gap-space-3 cursor-pointer group py-space-1 transition-colors"
         >
           <div className="relative flex items-center justify-center shrink-0">
             <input

@@ -20,8 +20,8 @@ import type { FilterConfig, FilterValues, ActiveFilterBadge } from './types';
 const filterStyles = {
   controlHeight: CONTROL.height,
   container: 'w-full bg-surface border-b border-border-default',
-  dropdownLabel: `${FORM_FIELD_LABEL} mb-2`,
-  dropdownDivider: 'pt-2 border-t border-border-default',
+  dropdownLabel: `${FORM_FIELD_LABEL} mb-space-2`,
+  dropdownDivider: 'pt-space-2 border-t border-border-default',
 } as const;
 
 /**
@@ -179,7 +179,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
 
           {/* Quick filters row - below the main grid if present */}
           {config.quickFilters && config.quickFilters.length > 0 && (
-            <div className="mt-2 flex items-center">
+            <div className="mt-space-2 flex items-center">
               <QuickFilters
                 presets={config.quickFilters}
                 activePresetId={activePresetId}
@@ -238,7 +238,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
 
           {/* Quick filters row - below the main grid if present */}
           {config.quickFilters && config.quickFilters.length > 0 && (
-            <div className="mt-2 flex items-center">
+            <div className="mt-space-2 flex items-center">
               <QuickFilters
                 presets={config.quickFilters}
                 activePresetId={activePresetId}
@@ -289,7 +289,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
                 <Badge
                   variant="primary"
                   size="xs"
-                  className="absolute -top-1 -right-1 min-w-[18px] h-4 px-1 flex items-center justify-center"
+                  className="absolute -top-1 -right-1 min-w-[18px] h-4 px-space-1 flex items-center justify-center"
                 >
                   {activeBadges.length}
                 </Badge>

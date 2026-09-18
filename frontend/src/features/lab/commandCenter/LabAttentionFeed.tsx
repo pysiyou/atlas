@@ -51,7 +51,7 @@ function LabAttentionFeedRow({ item }: { item: LabAttentionQueueItem }) {
       <Link
         to={href}
         className={cn(
-          `group flex min-w-0 gap-2 ${RADIUS.field} border border-border-subtle px-2 py-1.5`,
+          `group flex min-w-0 gap-space-2 ${RADIUS.field} border border-border-subtle px-space-2 py-space-1-5`,
           'transition-colors hover:border-border-hover hover:bg-surface-hover/50',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/30',
         )}
@@ -61,8 +61,8 @@ function LabAttentionFeedRow({ item }: { item: LabAttentionQueueItem }) {
           aria-hidden
         />
 
-        <div className="min-w-0 flex-1 space-y-1">
-          <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+        <div className="min-w-0 flex-1 space-y-space-1">
+          <div className="flex min-w-0 flex-wrap items-center gap-x-space-2 gap-y-space-1">
             <Badge variant={typeConfig.badgeVariant} size="xs">
               {typeConfig.pillLabel}
             </Badge>
@@ -94,16 +94,16 @@ function LabAttentionFeedGroup({
   const config = getAttentionTypeConfig(type);
 
   return (
-    <section className="pb-3 last:pb-0">
+    <section className="pb-space-3 last:pb-0">
       <div className={TIMELINE_STYLES.groupHeader}>
         <div className={TIMELINE_STYLES.groupDivider} />
         <span className={TIMELINE_STYLES.groupLabel}>
           {config.groupLabel}
-          <span className="ml-1.5 tabular-nums text-text-tertiary">({items.length})</span>
+          <span className="ml-space-1.5 tabular-nums text-text-tertiary">({items.length})</span>
         </span>
         <div className={TIMELINE_STYLES.groupDivider} />
       </div>
-      <ul className="space-y-1">
+      <ul className="space-y-space-1">
         {items.map(item => (
           <LabAttentionFeedRow key={item.id} item={item} />
         ))}
@@ -139,7 +139,7 @@ export const LabAttentionFeed: React.FC<LabAttentionFeedProps> = ({ items }) => 
 
   return (
     <div className="flex h-full flex-col bg-surface">
-      <div className="min-h-0 flex-1 overflow-y-auto px-3 py-2">
+      <div className="min-h-0 flex-1 overflow-y-auto px-space-3 py-space-2">
         {groups.map(group => (
           <LabAttentionFeedGroup key={group.type} type={group.type} items={group.items} />
         ))}

@@ -58,7 +58,7 @@ export function DialogHeader({
   return (
     <div className={HEADER_CLASS[size]}>
       <div className={size === 'popover' ? 'space-y-space-0-5 min-w-0' : DIALOG.modalTitleRow}>
-        <div className="flex flex-col min-w-0 gap-0.5">
+        <div className="flex flex-col min-w-0 gap-space-0-5">
           <TitleTag
             id={titleId}
             className={TITLE_CLASS[size]}
@@ -108,7 +108,7 @@ export function DialogFooter({
         <div
           className={cn(
             'flex items-center shrink-0',
-            density === 'popover' ? 'gap-2' : 'gap-3',
+            density === 'popover' ? 'gap-space-2' : 'gap-space-3',
           )}
         >
           {end}

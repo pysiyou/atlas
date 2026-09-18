@@ -48,32 +48,32 @@ function ReceiptHeader({
 }) {
   const isDetailed = variant === 'detailed';
   const metaRowClass =
-    `flex flex-wrap items-center gap-x-2 gap-y-0.5 min-w-0 leading-snug ${TYPE.meta}`;
+    `flex flex-wrap items-center gap-x-space-2 gap-y-space-0-5 min-w-0 leading-snug ${TYPE.meta}`;
   const metaPartClass = 'font-normal tabular-nums text-xs';
 
   return (
     <div
       className={cn(
         pad,
-        isDetailed ? 'py-space-4' : 'py-2.5',
+        isDetailed ? 'py-space-4' : 'py-space-2-5',
         'border-b border-dashed border-border-strong',
         isDetailed && 'bg-surface-page',
       )}
     >
       {isDetailed ? (
         <>
-          <div className="flex justify-between items-center mb-2">
+          <div className="flex justify-between items-center mb-space-2">
             {order.patientName ? (
               <p className="text-sm font-normal text-text-secondary">{order.patientName}</p>
             ) : (
               <p className="text-sm text-text-tertiary italic">No patient name</p>
             )}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-space-2">
               <Badge variant={order.paymentStatus} size="xs" />
               {paymentMethod && <Badge variant={paymentMethod} size="xs" />}
             </div>
           </div>
-          <div className="space-y-1.5">
+          <div className="space-y-space-1-5">
             <div className="flex items-center text-xs">
               <span className="text-text-tertiary w-28">Order Number:</span>
               <EntityId type="order" value={order.orderId} />
@@ -99,8 +99,8 @@ function ReceiptHeader({
           </div>
         </>
       ) : variant === 'panel' ? (
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0 flex-1 space-y-0.5">
+        <div className="flex items-center justify-between gap-space-3">
+          <div className="min-w-0 flex-1 space-y-space-0-5">
             {order.patientName ? (
               <p className="text-sm leading-snug font-normal text-text-primary truncate">
                 {order.patientName}
@@ -123,7 +123,7 @@ function ReceiptHeader({
             </div>
           </div>
           {showPaymentStatusBadge && (
-            <div className="flex items-center gap-1.5 shrink-0">
+            <div className="flex items-center gap-space-1-5 shrink-0">
               <Badge variant={order.paymentStatus} size="xs" />
               {paymentMethod && order.paymentStatus !== 'unpaid' && (
                 <Badge variant={paymentMethod} size="xs" />
@@ -133,7 +133,7 @@ function ReceiptHeader({
         </div>
       ) : (
         <>
-          <div className="flex justify-between items-center gap-2">
+          <div className="flex justify-between items-center gap-space-2">
             <EntityId
               type="order"
               value={order.orderId}
@@ -143,7 +143,7 @@ function ReceiptHeader({
             {showPaymentStatusBadge && <Badge variant={order.paymentStatus} size="xs" className="shrink-0" />}
           </div>
           {order.patientName && (
-            <p className={`${TYPE.caption} mt-0.5 truncate`}>{order.patientName}</p>
+            <p className={`${TYPE.caption} mt-space-0-5 truncate`}>{order.patientName}</p>
           )}
         </>
       )}
@@ -154,7 +154,7 @@ function ReceiptHeader({
 function ReceiptItemRow({ test, detailed }: { test: OrderTest; detailed: boolean }) {
   const code =
     test.testCode && test.testName !== test.testCode ? (
-      <EntityId variant="inline" className={detailed ? 'mt-0.5' : 'ml-1'}>
+      <EntityId variant="inline" className={detailed ? 'mt-space-0-5' : 'ml-space-1'}>
         {detailed ? test.testCode : `(${test.testCode})`}
       </EntityId>
     ) : null;
@@ -162,12 +162,12 @@ function ReceiptItemRow({ test, detailed }: { test: OrderTest; detailed: boolean
   return (
     <li
       className={cn(
-        'flex justify-between items-center gap-2',
-        detailed ? 'text-sm items-start gap-3' : 'text-xs',
+        'flex justify-between items-center gap-space-2',
+        detailed ? 'text-sm items-start gap-space-3' : 'text-xs',
       )}
     >
-      <span className={cn('flex min-w-0 flex-1 gap-2', detailed ? 'items-start gap-2.5' : 'items-center')}>
-        <span className={cn(`w-1 h-1 ${RADIUS.pill} bg-text-muted shrink-0`, detailed && 'mt-1.5')} />
+      <span className={cn('flex min-w-0 flex-1 gap-space-2', detailed ? 'items-start gap-space-2-5' : 'items-center')}>
+        <span className={cn(`w-1 h-1 ${RADIUS.pill} bg-text-muted shrink-0`, detailed && 'mt-space-1-5')} />
         {detailed ? (
           <span className="flex flex-col min-w-0 flex-1">
             <span className="text-text-secondary truncate">{test.testName || test.testCode || 'Test'}</span>
@@ -209,9 +209,9 @@ function ReceiptItems({
         : 'flex-1 min-h-0 overflow-y-auto';
 
   return (
-    <div className={cn(pad, isDetailed ? 'py-space-4' : 'py-2', listMax)}>
+    <div className={cn(pad, isDetailed ? 'py-space-4' : 'py-space-2', listMax)}>
       {tests.length > 0 ? (
-        <ul className={isDetailed ? 'space-y-2.5' : 'space-y-1.5'}>
+        <ul className={isDetailed ? 'space-y-space-2-5' : 'space-y-space-1-5'}>
           {tests.map((test, idx) => (
             <ReceiptItemRow
               key={test.testCode ? `${test.testCode}-${idx}` : `item-${idx}`}
@@ -245,7 +245,7 @@ export function ReceiptTotal({
       <div
         className={cn(
           pad,
-          isDetailed || !isCompact ? 'py-space-4' : 'py-2.5',
+          isDetailed || !isCompact ? 'py-space-4' : 'py-space-2-5',
           'flex justify-between items-center shrink-0',
           isDetailed && 'bg-surface-page',
         )}
@@ -282,7 +282,7 @@ export const OrderReceipt: React.FC<OrderReceiptProps> = ({
 }) => {
   const activeTests = getActiveTests(order.tests ?? []);
   const activeTotal = getActiveTotal(order.tests ?? []);
-  const pad = variant === 'detailed' ? 'px-table-cell-x-default' : variant === 'compact' ? 'px-3' : 'px-space-4';
+  const pad = variant === 'detailed' ? 'px-table-cell-x-default' : variant === 'compact' ? 'px-space-3' : 'px-space-4';
 
   return (
     <div className={cn('overflow-hidden flex flex-col min-h-0', receiptShellClass(variant))}>

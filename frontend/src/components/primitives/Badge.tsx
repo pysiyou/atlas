@@ -153,7 +153,7 @@ export const RemovableTag: React.FC<RemovableTagProps> = ({
   return (
     <div
       className={cn(
-        `inline-flex max-w-full shrink-0 items-center gap-2 ${RADIUS.control} font-normal normal-case tracking-normal`,
+        `inline-flex max-w-full shrink-0 items-center gap-space-2 ${RADIUS.control} font-normal normal-case tracking-normal`,
         chip.surface,
         className,
         SIZES[size]
@@ -164,7 +164,7 @@ export const RemovableTag: React.FC<RemovableTagProps> = ({
       <button
         type="button"
         onClick={onRemove}
-        className={`-mr-0.5 ml-0.5 flex shrink-0 items-center justify-center ${RADIUS.pill} p-0.5 transition-colors focus:outline-none focus:ring-1 focus:ring-brand/30`}
+        className={`-mr-space-0-5 ml-space-0-5 flex shrink-0 items-center justify-center ${RADIUS.pill} p-space-0-5 transition-colors focus:outline-none focus:ring-1 focus:ring-brand/30`}
         aria-label={removeAriaLabel}
       >
         <Icon name={ICONS.actions.closeCircle} className={cn('h-3 w-3', chip.remove)} />

@@ -61,17 +61,17 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
         onClick={toggleCollapse}
         disabled={!collapsible}
         className={cn(
-          'w-full flex items-center justify-between px-3 py-1.5 text-left transition-colors',
+          'w-full flex items-center justify-between px-space-3 py-space-1-5 text-left transition-colors',
           collapsible && 'hover:bg-surface-page cursor-pointer',
           !collapsible && 'cursor-default'
         )}
       >
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-space-1-5">
           <h3 className="text-xs font-semibold text-text-tertiary uppercase tracking-wide">
             {title}
           </h3>
           {activeCount > 0 && (
-            <span className={`inline-flex items-center justify-center min-w-[18px] h-4 px-1 ${RADIUS.pill} bg-brand text-on-brand text-xxs font-normal`}>
+            <span className={`inline-flex items-center justify-center min-w-[18px] h-4 px-space-1 ${RADIUS.pill} bg-brand text-on-brand text-xxs font-normal`}>
               {activeCount}
             </span>
           )}
@@ -90,8 +90,8 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
 
       {/* Section content - compact */}
       {(!collapsible || !isCollapsed) && (
-        <div className="px-3 pb-2">
-          <div className="flex flex-wrap gap-2">{children}</div>
+        <div className="px-space-3 pb-space-2">
+          <div className="flex flex-wrap gap-space-2">{children}</div>
         </div>
       )}
     </div>

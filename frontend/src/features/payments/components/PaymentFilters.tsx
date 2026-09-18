@@ -42,22 +42,22 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = props => {
   const modalContent = (
     <>
       <div className="w-full">
-        <h4 className="text-sm font-semibold text-text-primary mb-3">Date Range</h4>
+        <h4 className="text-sm font-semibold text-text-primary mb-space-3">Date Range</h4>
         <DatePresetBadges value={props.dateRange} onChange={props.onDateRangeChange} />
-        <div className="border-b border-border-default mt-4" />
+        <div className="border-b border-border-default mt-space-4" />
       </div>
       <div className="w-full">
-        <h4 className="text-sm font-semibold text-text-primary mb-3">Payment Status</h4>
+        <h4 className="text-sm font-semibold text-text-primary mb-space-3">Payment Status</h4>
         <CheckboxList
           options={statusOptions}
           selectedIds={props.statusFilters}
           onChange={values => props.onStatusFiltersChange(values as PaymentStatus[])}
           columns={statusOptions.length > 4 ? 2 : 1}
         />
-        <div className="border-b border-border-default mt-4" />
+        <div className="border-b border-border-default mt-space-4" />
       </div>
       <div className="w-full">
-        <h4 className="text-sm font-semibold text-text-primary mb-3">Payment Method</h4>
+        <h4 className="text-sm font-semibold text-text-primary mb-space-3">Payment Method</h4>
         <CheckboxList
           options={methodOptions}
           selectedIds={props.methodFilters}

@@ -206,14 +206,14 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
 
         return (
           <div key={config.key} className="group">
-            <div className="flex justify-between items-baseline mb-1 gap-2">
+            <div className="flex justify-between items-baseline mb-space-1 gap-space-2">
               <label
                 htmlFor={isNa ? undefined : `vital-${fieldName}`}
                 className={`text-xs font-normal truncate min-w-0 ${isNa ? 'text-text-tertiary cursor-default' : 'text-text-tertiary cursor-pointer'}`}
               >
                 {config.label}
               </label>
-              <div className="flex items-center gap-1 min-w-0 shrink-0 max-w-[50%]">
+              <div className="flex items-center gap-space-1 min-w-0 shrink-0 max-w-[50%]">
                 {isAbnormal && !isNa && (
                   <Icon
                     name={ICONS.actions.dangerSquare}
@@ -225,7 +225,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
             </div>
 
             <div className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
+              <div className="absolute inset-y-0 left-0 pl-space-3 flex items-center pointer-events-none z-10">
                 <Icon
                   name={config.icon}
                   className={cn(
@@ -237,7 +237,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
 
               {isNa ? (
                 <div
-                  className={`w-full ${RADIUS.field} border border-border-default bg-surface-hover/30 px-3 py-1.5 text-sm pl-10 pr-12 text-text-tertiary`}
+                  className={`w-full ${RADIUS.field} border border-border-default bg-surface-hover/30 px-space-3 py-space-1-5 text-sm pl-space-10 pr-space-12 text-text-tertiary`}
                   aria-label={`${config.label} not provided`}
                 >
                   N/A
@@ -258,12 +258,12 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                     placeholder="--"
                     className={cn(
                       inputBase,
-                      'pl-10 pr-12 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0',
+                      'pl-space-10 pr-space-12 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0',
                       error && inputError,
                       status && statusColors.chrome
                     )}
                   />
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none max-w-[40%]">
+                  <div className="absolute inset-y-0 right-0 pr-space-3 flex items-center pointer-events-none max-w-[40%]">
                     <span className={`${TYPE.meta} select-none truncate`}>
                       {config.unit}
                     </span>
@@ -277,7 +277,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
               )}
             </div>
 
-            {error && <p className={`mt-1 text-sm ${TONE.danger.fg}`}>{error}</p>}
+            {error && <p className={`mt-space-1 text-sm ${TONE.danger.fg}`}>{error}</p>}
           </div>
         );
       })}

@@ -216,9 +216,9 @@ export const Timeline: React.FC<TimelineProps> = ({
   }
 
   return (
-    <div className={cn('overflow-y-auto pr-1', className ?? 'max-h-80')}>
+    <div className={cn('overflow-y-auto pr-space-1', className ?? 'max-h-80')}>
       {grouped.map(group => (
-        <div key={group.label} className="mb-2">
+        <div key={group.label} className="mb-space-2">
           <div className={TIMELINE_STYLES.groupHeader}>
             <span className={TIMELINE_STYLES.groupLabel}>{group.label}</span>
             <div className={TIMELINE_STYLES.groupDivider} />

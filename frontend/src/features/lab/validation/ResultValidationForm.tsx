@@ -55,9 +55,9 @@ export const ResultValidationForm: React.FC<ValidationFormProps> = ({
   }, [results, flagStatusMap, hasResults]);
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-space-3">
       {criticalValues.length > 0 && (
-        <ResultCriticalValueBanner criticalParameters={criticalValues} className="py-2" />
+        <ResultCriticalValueBanner criticalParameters={criticalValues} className="py-space-2" />
       )}
 
       {hasResults && (
@@ -67,7 +67,7 @@ export const ResultValidationForm: React.FC<ValidationFormProps> = ({
       <ResultContextNotes flags={flags} technicianNotes={technicianNotes} compact />
 
       {!readOnly && (
-        <div className="pt-3 border-t border-border-subtle space-y-2">
+        <div className="pt-space-3 border-t border-border-subtle space-y-space-2">
           <Textarea
             label="Validation notes"
             value={comments}
@@ -88,7 +88,7 @@ export const ResultValidationForm: React.FC<ValidationFormProps> = ({
       )}
 
       {readOnly && comments && (
-        <div className="pt-3 border-t border-border-subtle space-y-1">
+        <div className="pt-space-3 border-t border-border-subtle space-y-space-1">
           <p className={RESULT_PANEL.notesLabel}>Validation notes</p>
           <p className={`${TYPE.amount} whitespace-pre-wrap leading-snug`}>{comments}</p>
         </div>

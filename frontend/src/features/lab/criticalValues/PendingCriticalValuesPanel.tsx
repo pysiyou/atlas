@@ -38,14 +38,14 @@ export const PendingCriticalValuesPanel: React.FC = () => {
         </Badge>
       }
     >
-      <div className="space-y-4">
+      <div className="space-y-space-4">
         {criticalValues.map(record => (
           <div
             key={record.id}
-            className={cn(RADIUS.card, 'p-panel space-y-3', TONE.danger.well)}
+            className={cn(RADIUS.card, 'p-panel space-y-space-3', TONE.danger.well)}
           >
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2 text-sm font-normal text-text-primary">
+            <div className="flex items-center justify-between gap-space-2">
+              <div className="flex items-center gap-space-2 text-sm font-normal text-text-primary">
                 <Icon name={ICONS.actions.alertCircle} className={`w-4 h-4 ${TONE.danger.fg}`} />
                 <EntityId type="orderTest" value={record.id} />
                 {record.testName ?? record.testCode}

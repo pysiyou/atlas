@@ -61,7 +61,7 @@ export const Avatar: React.FC<AvatarProps> = ({
     <div
       role={isButton ? 'button' : undefined}
       tabIndex={isButton ? 0 : undefined}
-      className={`relative flex items-center ${hasText ? 'gap-3 max-w-full' : 'justify-center'} ${isButton ? 'cursor-pointer' : ''} ${className}`}
+      className={`relative flex items-center ${hasText ? 'gap-space-3 max-w-full' : 'justify-center'} ${isButton ? 'cursor-pointer' : ''} ${className}`}
       onClick={onClick}
       onKeyDown={isButton ? (e) => { if (e.key === 'Enter' || e.key === ' ') onClick?.(); } : undefined}
     >

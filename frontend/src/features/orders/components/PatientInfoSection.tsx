@@ -22,7 +22,7 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
   layout = 'column',
 }) => {
   const containerClass =
-    layout === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 gap-layout-stack' : 'flex flex-col gap-3';
+    layout === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 gap-layout-stack' : 'flex flex-col gap-space-3';
 
   if (!patient) {
     return (
@@ -30,7 +30,7 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
         <div className="text-center">
           <Icon
             name={ICONS.dataFields.user}
-            className="w-12 h-12 text-text-disabled mx-auto mb-2"
+            className="w-12 h-12 text-text-disabled mx-auto mb-space-2"
           />
           <p className="text-sm text-text-tertiary">Patient Not Found</p>
         </div>
@@ -40,7 +40,7 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
 
   return (
     <div className={containerClass}>
-      <div className="flex gap-3 items-center col-span-full">
+      <div className="flex gap-space-3 items-center col-span-full">
         <Avatar
           primaryText={patient.fullName}
           secondaryText={<EntityId type="patient" value={patient.id} />}

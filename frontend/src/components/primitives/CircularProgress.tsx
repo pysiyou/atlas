@@ -34,7 +34,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
     circumference - (Math.min(100, Math.max(0, percentage)) / 100) * circumference;
 
   return (
-    <div className={`flex items-center gap-1 ${className}`}>
+    <div className={`flex items-center gap-space-1 ${className}`}>
       {/* Circular Progress Bar */}
       <div className="relative" style={{ width: size, height: size }}>
         <svg

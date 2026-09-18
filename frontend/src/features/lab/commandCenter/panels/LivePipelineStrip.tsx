@@ -107,8 +107,8 @@ export const LivePipelineStrip: React.FC<LivePipelineStripProps> = ({
   ] as const;
 
   return (
-    <div className="flex shrink-0 flex-col gap-1">
-      <div className="flex items-center justify-between gap-3">
+    <div className="flex shrink-0 flex-col gap-space-1">
+      <div className="flex items-center justify-between gap-space-3">
         <SectionTitle title="Live Pipeline" className="shrink-0" />
         <LabHealthStatus
           health={health}
@@ -119,7 +119,7 @@ export const LivePipelineStrip: React.FC<LivePipelineStripProps> = ({
           lastRefreshedAt={lastRefreshedAt}
         />
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-space-2">
         {tiles.map(tile => (
           <div key={tile.key} className="min-w-0 flex-1">
             <KpiTile
@@ -133,7 +133,7 @@ export const LivePipelineStrip: React.FC<LivePipelineStripProps> = ({
             />
             <p
               className={cn(
-                'mt-0.5 truncate px-1 tabular-nums',
+                'mt-space-0-5 truncate px-space-1 tabular-nums',
                 COMMAND_CENTER_SECTION.microLabel,
                 tile.age ? subtextTone(tile.age) : COMMAND_CENTER_TEXT.detail,
               )}

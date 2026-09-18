@@ -76,13 +76,13 @@ export const TagInput: React.FC<TagInputProps> = ({
   return (
     <div className={cn('w-full', className)}>
       {label && (
-        <div className="flex justify-between items-baseline mb-1.5 gap-2">
+        <div className="flex justify-between items-baseline mb-space-1.5 gap-space-2">
           <label
             htmlFor={inputId}
             className={FORM_CONTROL_LABEL}
           >
             {label}
-            {required && <span className={`${TONE.danger.fg} ml-1`}>*</span>}
+            {required && <span className={`${TONE.danger.fg} ml-space-1`}>*</span>}
           </label>
         </div>
       )}
@@ -90,7 +90,7 @@ export const TagInput: React.FC<TagInputProps> = ({
       <div
         className={cn(
           inputContainerBase,
-          'px-3 py-2.5 flex flex-wrap gap-2 items-center min-h-[42px]',
+          'px-space-3 py-space-2-5 flex flex-wrap gap-space-2 items-center min-h-[42px]',
           error && inputContainerError
         )}
       >
@@ -117,8 +117,8 @@ export const TagInput: React.FC<TagInputProps> = ({
         />
       </div>
 
-      {error && <p className={`text-xs ${TONE.danger.fg} mt-1.5`}>{error}</p>}
-      {helperText && !error && <p className={`${TYPE.meta} mt-1.5`}>{helperText}</p>}
+      {error && <p className={`text-xs ${TONE.danger.fg} mt-space-1-5`}>{error}</p>}
+      {helperText && !error && <p className={`${TYPE.meta} mt-space-1-5`}>{helperText}</p>}
     </div>
   );
 };
