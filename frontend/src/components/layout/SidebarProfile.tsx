@@ -30,18 +30,20 @@ export function SidebarProfile({ currentUser, isCollapsed, onLogout }: SidebarPr
           role="button"
           tabIndex={0}
         >
-          <div className={CHROME.navIconColumn}>
-            <Avatar
-              primaryText={currentUser.name}
-              secondaryText={formatStatus(currentUser.role)}
-              src={defaultAvatar}
-              size="sm"
-              avatarOnly
-            />
-          </div>
-          <div className={cn(CHROME.navLabel, 'flex flex-col justify-center gap-0.5')}>
-            <p className={`${TYPE.detailTitle} truncate leading-tight`}>{currentUser.name}</p>
-            <p className={`${TYPE.meta} truncate leading-tight`}>{formatStatus(currentUser.role)}</p>
+          <div className={CHROME.navHit}>
+            <div className={CHROME.navIconColumn}>
+              <Avatar
+                primaryText={currentUser.name}
+                secondaryText={formatStatus(currentUser.role)}
+                src={defaultAvatar}
+                size="sm"
+                avatarOnly
+              />
+            </div>
+            <div className={cn(CHROME.navLabel, 'flex flex-col justify-center gap-0.5')}>
+              <p className={`${TYPE.detailTitle} truncate leading-tight`}>{currentUser.name}</p>
+              <p className={`${TYPE.meta} truncate leading-tight`}>{formatStatus(currentUser.role)}</p>
+            </div>
           </div>
         </div>
       }

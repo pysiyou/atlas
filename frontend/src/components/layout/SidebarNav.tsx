@@ -27,15 +27,26 @@ function NavRowBody({
 }) {
   return (
     <>
-      <div
-        className={cn(
-          CHROME.navHit,
-          isActive && CHROME.navHitFill,
-          interactive && CHROME.navHitHover,
-        )}
-      >
-        <div className={CHROME.navIcon}>{icon}</div>
-        <span className={cn(CHROME.navLabel, 'text-left')}>{label}</span>
+      <div className={cn(CHROME.navHit, interactive && CHROME.navHitHover)}>
+        <div className={CHROME.navIconColumn}>
+          <div
+            className={cn(
+              CHROME.navIcon,
+              isActive ? CHROME.navIconActive : CHROME.navIconHover,
+            )}
+          >
+            {icon}
+          </div>
+        </div>
+        <span
+          className={cn(
+            CHROME.navLabel,
+            'text-left',
+            isActive ? CHROME.navLabelActive : CHROME.navLabelHover,
+          )}
+        >
+          {label}
+        </span>
       </div>
       <span className={CHROME.navTooltip} role="tooltip">
         {label}
@@ -59,7 +70,7 @@ export function SidebarNav({ menuItems, settingsItems, onNavigate }: SidebarNavP
             key={item.path}
             to={item.path}
             onClick={handleNavClick}
-            className={cn(CHROME.navItem, CHROME.navRow, navRowReset)}
+            className={cn(CHROME.navItem, navRowReset)}
           >
             {({ isActive }) => (
               <NavRowBody icon={item.icon} label={item.label} isActive={isActive} />
@@ -80,7 +91,7 @@ export function SidebarNav({ menuItems, settingsItems, onNavigate }: SidebarNavP
                 key={index}
                 type="button"
                 disabled
-                className={cn(CHROME.navItem, CHROME.navRow, navRowReset, 'cursor-not-allowed')}
+                className={cn(CHROME.navItem, navRowReset, 'cursor-not-allowed')}
               >
                 <NavRowBody icon={item.icon} label={item.label} interactive={false} />
               </button>

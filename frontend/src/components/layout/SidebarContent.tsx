@@ -66,7 +66,7 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
         <div className={CHROME.footerDividerRule} />
       </div>
       <div className={CHROME.footerBlock}>
-        <ThemeSwitch />
+        <ThemeSwitch isCollapsed={collapsed} />
         {currentUser && (
           <SidebarProfile currentUser={currentUser} isCollapsed={collapsed} onLogout={onLogout} />
         )}

@@ -77,7 +77,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
             )}
             <div
               ref={chromeMountRef}
-              className="flex min-h-chrome-rail flex-1 min-w-0 items-center"
+              className="flex min-h-chrome-header-band flex-1 min-w-0 items-center"
             />
           </div>
 
