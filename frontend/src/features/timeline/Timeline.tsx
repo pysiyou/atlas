@@ -220,6 +220,7 @@ export const Timeline: React.FC<TimelineProps> = ({
       {grouped.map(group => (
         <div key={group.label} className="mb-space-2">
           <div className={TIMELINE_STYLES.groupHeader}>
+            <div className={TIMELINE_STYLES.groupDivider} />
             <span className={TIMELINE_STYLES.groupLabel}>{group.label}</span>
             <div className={TIMELINE_STYLES.groupDivider} />
           </div>
