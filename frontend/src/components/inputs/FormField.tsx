@@ -176,7 +176,7 @@ export const Textarea: React.FC<TextareaProps> = ({
     >
       <div className="relative">
         {displayIcon && (
-          <div className="absolute top-2.5 left-3 pointer-events-none">
+          <div className="absolute top-space-2-5 left-space-3 pointer-events-none">
             <Icon
               name={displayIcon}
               className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors"

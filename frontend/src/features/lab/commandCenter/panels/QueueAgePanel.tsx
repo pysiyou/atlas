@@ -201,7 +201,7 @@ function SharedTimeAxis({ scaleMax }: { scaleMax: number }) {
         <span
           key={tick}
           className={cn(
-            'absolute top-1 -translate-x-1/2 text-xs tabular-nums',
+            'absolute top-space-1 -translate-x-1/2 text-xs tabular-nums',
             COMMAND_CENTER_TEXT.detail,
           )}
           style={{ left: `${pct(tick, scaleMax)}%` }}

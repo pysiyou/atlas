@@ -202,7 +202,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
               >
                 {/* Best Value Badge */}
                 {plan.isBestValue && (
-                  <div className="absolute -top-2 -right-2">
+                  <div className="absolute -top-space-2 -right-space-2">
                     <div className={`bg-danger text-on-danger text-xxs font-normal px-space-2 py-space-0-5 ${RADIUS.card} transform rotate-3 shadow-sm`}>
                       Best Value
                     </div>

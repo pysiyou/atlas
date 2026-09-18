@@ -23,13 +23,13 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
 
   return (
     <div
-      className={`hidden lg:flex flex-col items-start text-auth-fg space-y-10 flex-1 max-w-lg transition-all duration-1000 delay-200 ${
+      className={`hidden lg:flex flex-col items-start text-auth-fg space-y-space-10 flex-1 max-w-lg transition-all duration-1000 delay-200 ${
         isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
       }`}
     >
       {/* Logo and brand name */}
-      <div className="space-y-6">
-        <div className="flex items-center gap-5">
+      <div className="space-y-space-6">
+        <div className="flex items-center gap-space-5">
           {/* Logo container with matte finish */}
           <div className="relative">
             <div
@@ -44,7 +44,7 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
             <h1 className="font-display text-5xl text-auth-fg tracking-tight">
               {company.company.name}
             </h1>
-            <p className="font-body text-auth-fg-light text-sm tracking-widest uppercase mt-1">
+            <p className="font-body text-auth-fg-light text-sm tracking-widest uppercase mt-space-1">
               {company.company.subtitle}
             </p>
           </div>
@@ -57,11 +57,11 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
       </div>
 
       {/* Feature highlights */}
-      <div className="space-y-5 w-full">
+      <div className="space-y-space-5 w-full">
         {features.map((feature, index) => (
           <div
             key={feature.title}
-            className={`group flex items-start gap-4 p-4 ${RADIUS.overlay} bg-auth-card border border-auth-card-stroke hover:bg-auth-card-hover hover:border-auth-card-stroke transition-all duration-300 ${
+            className={`group flex items-start gap-space-4 p-panel ${RADIUS.overlay} bg-auth-card border border-auth-card-stroke hover:bg-auth-card-hover hover:border-auth-card-stroke transition-all duration-300 ${
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
             }`}
             style={{ transitionDelay: `${400 + index * 100}ms` }}
@@ -74,7 +74,7 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
               <h3 className="font-body font-semibold text-auth-fg text-sm leading-tight">
                 {feature.title}
               </h3>
-              <p className="font-body text-sm text-auth-fg-muted mt-1 leading-relaxed">
+              <p className="font-body text-sm text-auth-fg-muted mt-space-1 leading-relaxed">
                 {feature.description}
               </p>
             </div>
@@ -83,9 +83,9 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
       </div>
 
       {/* Trust indicators */}
-      <div className="pt-6 border-t border-auth-stroke w-full">
-        <div className="flex items-center gap-3">
-          <div className="flex -space-x-2">
+      <div className="pt-space-6 border-t border-auth-stroke w-full">
+        <div className="flex items-center gap-space-3">
+          <div className="flex -space-x-space-2">
             {[1, 2, 3].map(i => (
               <div
                 key={i}

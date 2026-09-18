@@ -36,13 +36,13 @@ export const LoginPage: React.FC = () => {
   const formContainerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="min-h-screen bg-auth-canvas flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+    <div className="min-h-screen bg-auth-canvas flex items-center justify-center p-space-4 sm:p-space-6 lg:p-space-8 relative overflow-hidden">
       <LoginBackground />
 
       {/* Main content container */}
       <div
         ref={formContainerRef}
-        className={`w-full max-w-6xl flex items-center justify-center lg:justify-between gap-8 lg:gap-16 relative z-10 transition-all duration-1000 ${
+        className={`w-full max-w-6xl flex items-center justify-center lg:justify-between gap-space-8 lg:gap-space-16 relative z-10 transition-all duration-1000 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
       >

@@ -147,7 +147,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
             className={cn(inputBase, 'pr-space-8', volume < minimumVolume && inputError)}
             placeholder="0.0"
           />
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-normal text-text-disabled pointer-events-none">
+          <span className="absolute right-space-3 top-1/2 -translate-y-1/2 text-xs font-normal text-text-disabled pointer-events-none">
             mL
           </span>
         </div>
