@@ -3,14 +3,14 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { RADIUS, SURFACE } from '@/components/theme/recipes';
+import { RADIUS, SHADOW, SURFACE } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
 export type CardVariant = 'default' | 'lab' | 'metric';
 
 const BOX_VARIANT_CLASSES: Record<CardVariant, string> = {
   default: '',
-  lab: 'shadow-sm hover:bg-surface-hover transition-colors duration-200',
+  lab: `${SHADOW.subtle} hover:bg-surface-hover transition-colors duration-200`,
   metric: 'hover:border-brand hover:border-opacity-50 transition-colors duration-200',
 };
 

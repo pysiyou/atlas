@@ -3,7 +3,7 @@ import type { ResultStatus } from '@/types/enums';
 import type { CatalogReferenceRange, CriticalRange, TestParameter, Patient, Gender } from '@/types';
 import { calculateAge } from '@/utils/string';
 import { PHYSIOLOGIC_LIMITS, type PhysiologicLimit } from '@/types/generated/physiologicLimits';
-import { RADIUS, TONE, TYPE } from '@/components/theme/recipes';
+import { RADIUS, SHADOW, TONE, TYPE } from '@/components/theme/recipes';
 
 export type { ResultStatus };
 export { PHYSIOLOGIC_LIMITS, type PhysiologicLimit };
@@ -224,7 +224,7 @@ export const RESULT_PANEL = {
   tile:
     `${RADIUS.card} border px-space-3 py-space-2-5 flex flex-col gap-space-1-5 min-h-[4.5rem] transition-colors duration-150`,
   tileEmpty: 'border-border-subtle bg-surface-page/40',
-  tileFilled: 'border-border-default bg-surface shadow-sm',
+  tileFilled: `border-border-default bg-surface ${SHADOW.subtle}`,
   label: 'text-xxs font-medium text-text-secondary truncate',
   value: 'text-lg font-medium tabular-nums leading-tight',
   unit: `${TYPE.meta} font-normal ml-space-1`,
@@ -238,10 +238,10 @@ export const RESULT_PANEL = {
 export function resultTileStatusClass(status: ResultStatus, hasValue: boolean): string {
   if (!hasValue) return RESULT_PANEL.tileEmpty;
   if (isCritical(status)) {
-    return `${TONE.danger.well} shadow-sm`;
+    return `${TONE.danger.well} ${SHADOW.subtle}`;
   }
   if (status !== 'normal') {
-    return `${TONE.warning.well} shadow-sm`;
+    return `${TONE.warning.well} ${SHADOW.subtle}`;
   }
   return RESULT_PANEL.tileFilled;
 }

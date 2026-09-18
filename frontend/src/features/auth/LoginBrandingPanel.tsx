@@ -7,7 +7,7 @@ import React from 'react';
 import { Icon } from '@/components';
 import { ICONS } from '@/config/icons';
 import { companyConfig } from '@/config';
-import { RADIUS } from '@/components/theme/recipes';
+import { AUTH_SHADOW, RADIUS } from '@/components/theme/recipes';
 
 interface LoginBrandingPanelProps {
   isVisible: boolean;
@@ -36,7 +36,7 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
               className={`absolute inset-0 ${RADIUS.overlay} bg-auth-accent-medium blur-xl opacity-30`}
               style={{ animation: 'pulse-ring 3s ease-in-out infinite' }}
             />
-            <div className={`relative w-16 h-16 bg-auth-accent ${RADIUS.overlay} flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform duration-300`}>
+            <div className={`relative w-16 h-16 bg-auth-accent ${RADIUS.overlay} flex items-center justify-center ${AUTH_SHADOW.accent} transform hover:scale-105 transition-transform duration-300`}>
               <Icon name={ICONS.ui.appLogo} className="w-9 h-9" />
             </div>
           </div>

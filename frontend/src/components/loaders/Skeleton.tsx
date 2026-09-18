@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { RADIUS, SURFACE } from '@/components/theme/recipes';
+import { RADIUS, SHADOW, SURFACE } from '@/components/theme/recipes';
 
 interface SkeletonProps {
   /** Width of the skeleton (CSS value) */
@@ -112,7 +112,7 @@ export const SkeletonCard: React.FC<{
   showAvatar?: boolean;
   lines?: number;
 }> = ({ className = '', showAvatar = true, lines = 3 }) => (
-  <div className={`${SURFACE.raised} ${RADIUS.card} shadow-sm p-panel ${className}`}>
+  <div className={`${SURFACE.raised} ${RADIUS.card} ${SHADOW.subtle} p-panel ${className}`}>
     <div className="flex items-start gap-layout-section">
       {showAvatar && <SkeletonAvatar size="md" />}
       <div className="flex-1">
@@ -188,7 +188,7 @@ export const SkeletonPage: React.FC<{
     </div>
 
     {/* Table */}
-    <div className={`${SURFACE.raised} ${RADIUS.card} shadow-sm`}>
+    <div className={`${SURFACE.raised} ${RADIUS.card} ${SHADOW.subtle}`}>
       {/* Table header */}
       <div className="flex items-center gap-layout-section py-space-3 px-table-cell-x-default border border-border-default border-b bg-surface-page">
         {Array.from({ length: 6 }).map((_, index) => (

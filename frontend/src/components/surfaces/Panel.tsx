@@ -4,7 +4,7 @@
 /* eslint-disable react-refresh/only-export-components -- single module: Panel + variant tokens */
 
 import React from 'react';
-import { PANEL_LAYOUT, RADIUS, SPACING, SURFACE, TYPE } from '@/components/theme/recipes';
+import { PANEL_LAYOUT, RADIUS, SHADOW, SPACING, SURFACE, TYPE } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
 export type PanelVariant = 'page' | 'lab';
@@ -26,7 +26,7 @@ export const PANEL_SCROLL: Record<Exclude<PanelScroll, 'default'>, string> = {
 
 export const PANEL_VARIANTS = {
   page: {
-    shell: `h-full ${SURFACE.raised} ${RADIUS.field} shadow-sm overflow-hidden flex flex-col`,
+    shell: `h-full ${SURFACE.raised} ${RADIUS.field} ${SHADOW.subtle} overflow-hidden flex flex-col`,
     header: PANEL_LAYOUT.pageHeader,
     headerBetween: PANEL_LAYOUT.pageHeaderBetween,
     title: `m-0 truncate leading-none ${TYPE.panelTitle}`,

@@ -30,6 +30,11 @@
   --button-radius-square: var(--radius-overlay);
   --button-radius-circle: var(--radius-pill);
   --control-height: 2.125rem;
+  --control-height-multiline: 2.625rem;
+  --focus-ring-width-field: 1px;
+  --focus-ring-width-interactive: 2px;
+  --focus-ring-opacity-field: 0.2;
+  --focus-ring-opacity-interactive: 0.3;
 
   /** Spacing scale — single source for padding/gap utilities (semantic aliases below). */
   --space-0-5: 0.125rem;

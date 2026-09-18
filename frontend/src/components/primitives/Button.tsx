@@ -6,7 +6,7 @@
 import React, { forwardRef, memo, type ButtonHTMLAttributes } from 'react';
 import { ICONS, MODULE_ICONS } from '@/config/icons';
 import { SpinnerLoader } from '@/components/loaders/SpinnerLoader';
-import { RADIUS } from '@/components/theme/recipes';
+import { CONTROL, RADIUS } from '@/components/theme/recipes';
 import { cn } from '@/utils/cn';
 import { Icon, type IconName } from './Icon';
 
@@ -105,7 +105,7 @@ function defaultIcon(variant: ButtonLikeVariant): IconName | undefined {
 }
 
 const chrome =
-  'inline-flex shrink-0 items-center justify-center font-normal whitespace-nowrap overflow-hidden cursor-pointer transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+  `inline-flex shrink-0 items-center justify-center font-normal whitespace-nowrap overflow-hidden cursor-pointer transition-colors duration-200 ${CONTROL.focusVisible} disabled:opacity-50 disabled:cursor-not-allowed`;
 
 const tone: Record<BaseVariant, string> = {
   primary: 'bg-brand text-on-brand hover:bg-brand-hover focus-visible:ring-brand',

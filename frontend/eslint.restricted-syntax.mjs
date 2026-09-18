@@ -245,4 +245,59 @@ export const spacingRestrictedSyntax = [
   },
 ]
 
-export const allRestrictedSyntax = [...designTokenRestrictedSyntax, ...spacingRestrictedSyntax]
+export const chromeRestrictedSyntax = [
+  {
+    selector: 'Literal[value=/\\bshadow-(sm|md|lg|xl)\\b/]',
+    message: 'Use SHADOW.*, OVERLAY.*, or PANEL.* from @/components/theme/recipes.',
+  },
+  {
+    selector: 'TemplateElement[value.raw=/\\bshadow-(sm|md|lg|xl)\\b/]',
+    message: 'Use SHADOW.*, OVERLAY.*, or PANEL.* from @/components/theme/recipes.',
+  },
+  {
+    selector: 'Literal[value=/ring-black\\//]',
+    message: 'Use CONTROL.segmentActive (ring-ring-subtle) from @/components/theme/recipes.',
+  },
+  {
+    selector: 'TemplateElement[value.raw=/ring-black\\//]',
+    message: 'Use CONTROL.segmentActive (ring-ring-subtle) from @/components/theme/recipes.',
+  },
+  {
+    selector: 'Literal[value=/\\bmin-h-\\[42px\\]/]',
+    message: 'Use CONTROL.heightMultiline from @/components/theme/recipes.',
+  },
+  {
+    selector: 'TemplateElement[value.raw=/\\bmin-h-\\[42px\\]/]',
+    message: 'Use CONTROL.heightMultiline from @/components/theme/recipes.',
+  },
+  {
+    selector: 'Literal[value=/\\bmin-h-\\[2\\.125rem\\]/]',
+    message: 'Use min-h-control or CONTROL.minHeight from @/components/theme/recipes.',
+  },
+  {
+    selector: 'TemplateElement[value.raw=/\\bmin-h-\\[2\\.125rem\\]/]',
+    message: 'Use min-h-control or CONTROL.minHeight from @/components/theme/recipes.',
+  },
+  {
+    selector: 'Literal[value=/focus-visible:outline-none focus-visible:ring-2/]',
+    message: 'Use CONTROL.focusVisible, CONTROL.focusVisibleTight, or AUTH_CONTROL from recipes.',
+  },
+  {
+    selector: 'TemplateElement[value.raw=/focus-visible:outline-none focus-visible:ring-2/]',
+    message: 'Use CONTROL.focusVisible, CONTROL.focusVisibleTight, or AUTH_CONTROL from recipes.',
+  },
+  {
+    selector: 'Literal[value=/focus:outline-none focus:ring-2 focus:ring-brand\\//]',
+    message: 'Use CONTROL.focusBrand, CONTROL.focusBrandSoft, or AUTH_CONTROL from @/components/theme/recipes.',
+  },
+  {
+    selector: 'TemplateElement[value.raw=/focus:outline-none focus:ring-2 focus:ring-brand\\//]',
+    message: 'Use CONTROL.focusBrand, CONTROL.focusBrandSoft, or AUTH_CONTROL from @/components/theme/recipes.',
+  },
+]
+
+export const allRestrictedSyntax = [
+  ...designTokenRestrictedSyntax,
+  ...spacingRestrictedSyntax,
+  ...chromeRestrictedSyntax,
+]

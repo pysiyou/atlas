@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { RADIUS } from '@/components/theme/recipes';
+import { CONTROL, RADIUS } from '@/components/theme/recipes';
 
 export interface PriceRangeSliderPanelProps {
   localValue: [number, number];
@@ -46,13 +46,13 @@ export const PriceRangeSliderPanel: React.FC<PriceRangeSliderPanelProps> = ({
       </div>
 
       <div
-        className={`absolute w-5 h-5 bg-surface border-2 border-brand ${RADIUS.pill} shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-brand/30`}
+        className={`absolute w-5 h-5 bg-surface border-2 border-brand ${RADIUS.pill} shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 ${CONTROL.focusBrand}`}
         style={{ left: `calc(${getPercentage(localValue[0])}% - 10px)` }}
         onMouseDown={onMouseDown('min')}
       />
 
       <div
-        className={`absolute w-5 h-5 bg-surface border-2 border-brand ${RADIUS.pill} shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 focus:outline-none focus:ring-2 focus:ring-brand/30`}
+        className={`absolute w-5 h-5 bg-surface border-2 border-brand ${RADIUS.pill} shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10 ${CONTROL.focusBrand}`}
         style={{ left: `calc(${getPercentage(localValue[1])}% - 10px)` }}
         onMouseDown={onMouseDown('max')}
       />

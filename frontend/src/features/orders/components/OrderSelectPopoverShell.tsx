@@ -1,6 +1,6 @@
 import React from 'react';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
-import { RADIUS, TYPE } from '@/components/theme/recipes';
+import { OVERLAY, RADIUS, TYPE } from '@/components/theme/recipes';
 
 
 const POPOVER_SHELL_CLASS = [
@@ -9,8 +9,7 @@ const POPOVER_SHELL_CLASS = [
   RADIUS.menu,
   'overflow-hidden',
   'bg-surface',
-  'shadow-md',
-  'ring-1 ring-black/5',
+  OVERLAY.anchoredRaised,
 ].join(' ');
 
 export interface OrderSelectPopoverShellProps {

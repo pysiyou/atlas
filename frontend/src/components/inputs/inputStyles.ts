@@ -31,7 +31,7 @@ export const inputTrigger =
   `group ${CONTROL.height} ${SPACING.pxSpace3} ${SURFACE.raised} ${RADIUS.control} transition-colors duration-200 ${CONTROL.hoverBorder} cursor-pointer flex items-center ${SPACING.gapInline}`;
 
 /** Trigger open state (border + ring) */
-export const inputTriggerOpen = 'border-brand ring-1 ring-brand ring-opacity-20';
+export const inputTriggerOpen = CONTROL.open;
 
 /** Clear (close-circle) button inside input/trigger — keeps icon vertically centered with other icons */
 export const inputClearButton =

@@ -5,7 +5,7 @@ import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/c
 import type { Patient } from '@/types';
 import { ICONS } from '@/config/icons';
 import { OrderSelectPopoverShell } from './OrderSelectPopoverShell';
-import { SPACING, TONE, TYPE } from '@/components/theme/recipes';
+import { CONTROL, SPACING, TONE, TYPE } from '@/components/theme/recipes';
 
 
 const SELECTED_CHIP_CLASS =
@@ -82,7 +82,7 @@ const PatientSearchTagInput: React.FC<{
       <div
         className={cn(
           inputContainerBase,
-          `group relative ${SPACING.plSpace10} pr-space-3 py-space-2-5 flex flex-wrap gap-space-2 items-center min-h-[42px]`,
+          `group relative ${SPACING.plSpace10} pr-space-3 py-space-2-5 flex flex-wrap gap-space-2 items-center ${CONTROL.heightMultiline}`,
           disabled && 'bg-surface-page opacity-60 cursor-not-allowed',
           error && inputContainerError
         )}
@@ -213,7 +213,7 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                         'w-full text-left px-space-3 py-space-2',
                         'transition-colors flex items-center gap-space-2',
                         'hover:bg-surface-page',
-                        'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-opacity-30',
+                        `${CONTROL.focusVisibleTight}`,
                         isSelected ? 'bg-surface-page' : 'bg-surface'
                       )}
                     >

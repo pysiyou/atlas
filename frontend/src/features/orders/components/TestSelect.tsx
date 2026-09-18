@@ -17,7 +17,7 @@ import { cn, formatCurrency, formatTurnaroundTime, titleCaseWords } from '@/util
 import { ICONS } from '@/config/icons';
 import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/components/inputs/inputStyles';
 import { OrderSelectPopoverShell } from './OrderSelectPopoverShell';
-import { SPACING, TONE, TYPE } from '@/components/theme/recipes';
+import { CONTROL, SPACING, TONE, TYPE } from '@/components/theme/recipes';
 
 
 const SELECTED_CHIP_CLASS =
@@ -125,7 +125,7 @@ const TestSearchTagInput: React.FC<{
       <div
         className={cn(
           inputContainerBase,
-          `group relative ${SPACING.plSpace10} pr-space-3 py-space-2-5 flex flex-wrap gap-space-2 items-center min-h-[42px]`,
+          `group relative ${SPACING.plSpace10} pr-space-3 py-space-2-5 flex flex-wrap gap-space-2 items-center ${CONTROL.heightMultiline}`,
           error && inputContainerError
         )}
       >
@@ -200,7 +200,7 @@ const TestSelectPopover: React.FC<TestSelectPopoverProps> = ({
                   'transition-colors',
                   'flex items-center gap-space-2',
                   'hover:bg-surface-page',
-                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-opacity-30',
+                  CONTROL.focusVisibleTight,
                   isSelected ? 'bg-surface-page' : 'bg-surface',
                   'group'
                 )}

@@ -5,7 +5,7 @@ import { cn } from '@/utils';
 import { formatStatus } from '@/utils/string';
 import type { AuthUser } from '@/types';
 import defaultAvatar from '@/assets/default-avatar.jpg';
-import { CHROME, RADIUS, TONE, TYPE } from '@/components/theme/recipes';
+import { CHROME, CONTROL, RADIUS, TONE, TYPE } from '@/components/theme/recipes';
 
 export interface SidebarProfileProps {
   currentUser: AuthUser;
@@ -67,7 +67,7 @@ export function SidebarProfile({ currentUser, isCollapsed, onLogout }: SidebarPr
                 RADIUS.menuItem,
                 TONE.danger.fg,
                 'hover:bg-danger-bg transition-colors duration-150',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger focus-visible:ring-offset-1',
+                CONTROL.focusVisibleDanger,
               )}
               onClick={() => {
                 close();

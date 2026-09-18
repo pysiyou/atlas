@@ -3,7 +3,7 @@
  * Typography and wells come from theme recipes; layout objects stay here.
  */
 
-import { PANEL, RADIUS, SPACING, SURFACE, TONE, TYPE } from '@/components/theme/recipes';
+import { PANEL, RADIUS, SHADOW, SPACING, SURFACE, TONE, TYPE } from '@/components/theme/recipes';
 import type { BadgeSize } from '@/components';
 
 /** Canonical Badge size for lab cards — uses theme BADGE.size.xs. */
@@ -91,7 +91,7 @@ export const LAB_CARD_CONTAINERS = {
   cardWrapper: 'cursor-pointer',
 
   // Card base styling (applied via Card component)
-  cardBase: 'shadow-sm hover:bg-surface-hover transition-colors duration-200',
+  cardBase: `${SHADOW.subtle} hover:bg-surface-hover transition-colors duration-200`,
 
   contentSection: `${SURFACE.recessed} ${RADIUS.field} ${LAB_CARD_PANEL_INSET}`,
   flagsSection: `${SURFACE.dangerWell} ${RADIUS.field} ${LAB_CARD_PANEL_INSET}`,

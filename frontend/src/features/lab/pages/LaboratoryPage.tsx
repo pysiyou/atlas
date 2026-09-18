@@ -12,7 +12,7 @@ import { LabCommandCenterBoard } from '../commandCenter/LabCommandCenterBoard';
 import { Icon, PageHeader, Badge, ErrorAlert } from '@/components';
 import { errorAlertMessage } from '@/utils/feedback';
 import { ICONS } from '@/config/icons';
-import { RADIUS, WORKSPACE } from '@/components/theme/recipes';
+import { CONTROL, RADIUS, WORKSPACE } from '@/components/theme/recipes';
 import { LAB_WORKFLOW_QUEUE_SHELL } from '../utils/labStyles';
 import { useLabStageQueueCounts, getValidationTabCount } from '../hooks';
 import {
@@ -103,7 +103,7 @@ export const LaboratoryPage: React.FC = () => {
                   relative flex items-center gap-space-1-5 px-space-2-5 py-space-1 ${RADIUS.field} text-xs font-normal transition-all duration-200 cursor-pointer
                   ${
                     isActive
-                      ? 'bg-surface text-brand shadow-sm ring-1 ring-black/5'
+                      ? `bg-surface text-brand ${CONTROL.segmentActive}`
                       : 'text-text-tertiary hover:text-text-primary hover:bg-surface-hover'
                   }
                 `}

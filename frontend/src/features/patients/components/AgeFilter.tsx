@@ -6,7 +6,10 @@
  */
 
 import React from 'react';
-import { RADIUS } from '@/components/theme/recipes';
+import { RANGE_SLIDER, RADIUS } from '@/components/theme/recipes';
+
+const AGE_SLIDER_THUMB_CLASS =
+  `absolute w-full h-1 appearance-none bg-transparent pointer-events-none ${RANGE_SLIDER.thumbChrome(RADIUS.field)}`;
 import { Popover, Icon, FilterTriggerShell } from '@/components';
 import { useRangeValue } from '@/hooks/useRangeValue';
 import { cn } from '@/utils';
@@ -117,7 +120,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
               max={max}
               value={localValue[0]}
               onChange={handleMinChange}
-              className={`absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-brand [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:${RADIUS.field} [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-brand [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:${RADIUS.field} [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer`}
+              className={AGE_SLIDER_THUMB_CLASS}
               style={{ zIndex: localValue[0] > max - 10 ? 5 : 3 }}
             />
 
@@ -128,7 +131,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
               max={max}
               value={localValue[1]}
               onChange={handleMaxChange}
-              className={`absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-brand [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:${RADIUS.field} [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-brand [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:${RADIUS.field} [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer`}
+              className={AGE_SLIDER_THUMB_CLASS}
               style={{ zIndex: 4 }}
             />
           </div>

@@ -6,7 +6,7 @@ import React, { type ReactNode } from 'react';
 import { Icon, type IconName } from '@/components/primitives/Icon';
 import { getColorStyles, type BadgeColor } from '@/components';
 import { useBadgeAppearance, type BadgeAppearance } from '@/components/theme/theme';
-import { RADIUS } from '@/components/theme/recipes';
+import { RADIUS, SHADOW } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
 interface AlertProps {
@@ -39,9 +39,9 @@ function getAlertShellClasses(
 ): string {
   const color = VARIANT_COLOR[variant];
   if (appearance === 'tinted') {
-    return cn(getColorStyles(color, 'tinted').className, 'shadow-sm');
+    return cn(getColorStyles(color, 'tinted').className, SHADOW.subtle);
   }
-  return 'bg-badge border border-border-default shadow-sm';
+  return `bg-badge border border-border-default ${SHADOW.subtle}`;
 }
 
 function getAlertIconClasses(

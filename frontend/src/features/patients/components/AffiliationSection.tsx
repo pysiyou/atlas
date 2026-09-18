@@ -7,7 +7,7 @@ import { formatDate } from '@/utils';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { AffiliationPlanSelector } from './AffiliationPlanSelector';
-import { SURFACE, TONE, RADIUS } from '@/components/theme/recipes';
+import { RADIUS, SHADOW, SURFACE, TONE } from '@/components/theme/recipes';
 import type { PatientFormSectionProps } from '../patientFormTypes';
 
 export const AffiliationSection: React.FC<
@@ -38,7 +38,7 @@ export const AffiliationSection: React.FC<
     <div className="space-y-space-6">
       {/* Existing Affiliation Info */}
       {hasExistingAffiliation && (
-        <div className={`${SURFACE.raised} ${RADIUS.overlay} p-space-5 space-y-space-4 shadow-sm`}>
+        <div className={`${SURFACE.raised} ${RADIUS.overlay} p-space-5 space-y-space-4 ${SHADOW.subtle}`}>
           <div className="flex items-center justify-between pb-space-3 border-b border-border-subtle">
             <span className="text-sm font-normal text-text-primary">Current Affiliation</span>
             <Badge variant={isActive ? 'success' : 'danger'} size="xs" className="font-normal">
