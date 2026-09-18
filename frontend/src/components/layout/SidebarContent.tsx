@@ -1,12 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CHROME } from '@/components/theme/recipes';
+import { cn } from '@/utils';
 import type { AuthUser } from '@/types';
 import type { MenuItem, SettingsItem } from './sidebarMenu';
 import { SidebarHeader } from './SidebarHeader';
 import { SidebarNav } from './SidebarNav';
 import { ThemeSwitch } from './ThemeSwitch';
 import { SidebarProfile } from './SidebarProfile';
+import { SIDEBAR_MOTION } from './sidebarMotion';
 
 export interface SidebarContentProps {
   isCollapsed: boolean;
@@ -31,16 +33,23 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
 }) => {
   const collapsed = isCollapsed && !isMobile;
   const sidebarVariants = {
-    expanded: { width: '16rem', transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] as const } },
-    collapsed: { width: CHROME.railVar, transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] as const } },
+    expanded: {
+      width: CHROME.sidebarExpandedVar,
+      transition: SIDEBAR_MOTION.width,
+    },
+    collapsed: {
+      width: CHROME.railVar,
+      transition: SIDEBAR_MOTION.width,
+    },
   };
+
   return (
     <motion.aside
       variants={sidebarVariants}
       animate={collapsed ? 'collapsed' : 'expanded'}
       initial={false}
-      className="bg-surface-sidebar flex flex-col overflow-hidden"
-      style={{ padding: '0' }}
+      className={cn(CHROME.aside, collapsed && 'chrome-collapsed')}
+      data-collapsed={collapsed ? 'true' : 'false'}
       onClick={e => e.stopPropagation()}
     >
       <SidebarHeader
@@ -53,10 +62,15 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
         settingsItems={settingsItemsProp}
         onNavigate={isMobile ? onMobileClose : undefined}
       />
-      <ThemeSwitch isCollapsed={collapsed} />
-      {currentUser && (
-        <SidebarProfile currentUser={currentUser} isCollapsed={collapsed} onLogout={onLogout} />
-      )}
+      <div className={CHROME.footerDivider} aria-hidden="true">
+        <div className={CHROME.footerDividerRule} />
+      </div>
+      <div className={CHROME.footerBlock}>
+        <ThemeSwitch />
+        {currentUser && (
+          <SidebarProfile currentUser={currentUser} isCollapsed={collapsed} onLogout={onLogout} />
+        )}
+      </div>
     </motion.aside>
   );
 };
