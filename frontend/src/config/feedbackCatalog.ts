@@ -986,11 +986,12 @@ export const FEEDBACK_CATALOG: Record<FeedbackId, FeedbackEntry> = {
   'lab.qualityIssue.collection.actions.cancelUnfinished': {
     channel: 'inline',
     variant: 'info',
-    title: 'Cancel unfinished tests',
+    title: 'Reject tube only',
   },
   'lab.qualityIssue.collection.actions.cancelUnfinishedDescription': {
     channel: 'inline',
     variant: 'info',
-    title: 'Cancel pending / sample-collected tests on this tube. Resulted and validated stay.',
+    title:
+      'Mark specimen rejected without opening a recollection request. Unfinished tests reset to await collection.',
   },
 };

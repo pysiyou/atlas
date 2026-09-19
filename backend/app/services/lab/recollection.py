@@ -340,13 +340,20 @@ class RecollectionRequestService:
         primary_test_id = request.orderTestId or ((request.affectedOrderTestIds or [None])[0])
         approve_metadata = {
             "requestId": request.id,
+            "orderId": request.orderId,
+            "rejectedSampleId": request.rejectedSampleId,
             "createdSampleId": new_sample.sampleId,
+            "reason": request.reason,
+            "stage": request.stage.value if request.stage else None,
+            "testCodes": list(request.testCodes or []),
             "affectedOrderTestIds": request.affectedOrderTestIds or [],
         }
         if primary_test_id is not None:
             approve_metadata["orderTestId"] = primary_test_id
         if created_test_id is not None:
             approve_metadata["createdTestId"] = created_test_id
+        if review_notes:
+            approve_metadata["reviewNotes"] = review_notes
         self.audit.log_operation(
             operation_type=LabOperationType.RECOLLECTION_REQUEST_APPROVED,
             entity_type="order_test" if primary_test_id is not None else "sample",

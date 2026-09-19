@@ -29,8 +29,11 @@ export function metaString(value: unknown): string | null {
 
 export function formatTestCodes(meta: Record<string, unknown>): string {
   const codes = meta.testCodes;
-  if (Array.isArray(codes) && codes.length > 0) {
-    return codes.map(code => String(code)).join('/');
+  if (Array.isArray(codes) && codes.length > 1) {
+    return `${String(codes[0])}, +${codes.length - 1} more`;
+  }
+  if (Array.isArray(codes) && codes.length === 1) {
+    return String(codes[0]);
   }
   if (meta.testCode) return String(meta.testCode);
   return 'Test';

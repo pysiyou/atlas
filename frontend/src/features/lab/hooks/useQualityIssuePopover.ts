@@ -4,7 +4,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import type { QualityIssueResult, RemedyType } from '@/types/lab-operations';
 import { useQualityIssueOptions } from '../api/qualityIssues';
-import { resultAPI } from '../api/results';
+import { useSubmitQualityIssue } from './useSubmitQualityIssue';
 import {
   QUALITY_ISSUE_POPOVER_COPY,
   getValidationFormCopy,
@@ -54,8 +54,10 @@ export function useQualityIssuePopover({
     'test',
     orderTestId
   );
-  const [isRejecting, setIsRejecting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const { reportIssue, isSubmitting: isRejecting } = useSubmitQualityIssue({
+    onSuccess: onConfirm,
+  });
 
   const remedyOptions = useMemo(
     () =>
@@ -96,23 +98,18 @@ export function useQualityIssuePopover({
 
   const handleConfirm = async () => {
     if (!rejectionReason || !effectivePreferredRemedy) return;
-    setIsRejecting(true);
     setSubmitError(null);
     try {
-      const result = await resultAPI.rejectResults({
+      await reportIssue(
+        'test',
         orderTestId,
-        data: {
-          rejectionReason,
-          validationNotes: rejectionNotes.trim() || undefined,
-          preferredRemedy: effectivePreferredRemedy,
-        },
-      });
-      onConfirm(result);
+        rejectionReason,
+        rejectionNotes.trim() || undefined,
+        effectivePreferredRemedy
+      );
     } catch (err) {
       setSubmitError(inlineFeedbackMessage('lab.qualityIssue.reject.error', err));
       throw err;
-    } finally {
-      setIsRejecting(false);
     }
   };
 

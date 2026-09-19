@@ -79,6 +79,7 @@ export interface ValidationWorklistItem {
   priority: PriorityLevel;
   status: TestStatus;
   sampleId?: number | null;
+  sampleStatus?: SampleStatus | null;
   results?: Record<string, unknown> | null;
   flags?: string[] | null;
   enteredBy?: string | null;

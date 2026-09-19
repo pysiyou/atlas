@@ -37,12 +37,74 @@ function metaString(value: unknown): string | null {
   return value.trim();
 }
 
-function formatTestCodes(meta: Record<string, unknown>): string {
+function metaId(meta: Record<string, unknown>, ...keys: string[]): number | undefined {
+  for (const key of keys) {
+    const value = Number(meta[key]);
+    if (Number.isFinite(value) && value > 0) return value;
+  }
+  return undefined;
+}
+
+function testCodesList(meta: Record<string, unknown>): string[] {
   const codes = meta.testCodes;
   if (Array.isArray(codes) && codes.length > 0) {
-    return codes.map(code => String(code)).join('/');
+    return codes.map(code => String(code)).filter(Boolean);
   }
-  if (meta.testCode) return String(meta.testCode);
+  if (meta.testCode) return [String(meta.testCode)];
+  return [];
+}
+
+function appendTestsFromMeta(
+  details: EventDetail[],
+  meta: Record<string, unknown>,
+  event: TimelineEvent,
+): void {
+  const ids = new Set<number>();
+  const primary =
+    metaId(meta, 'createdTestId', 'orderTestId') ??
+    (event.entityType === 'order_test' || event.entityType === 'test' ? event.entityId : undefined);
+  if (primary) ids.add(primary);
+  const affected = meta.affectedOrderTestIds;
+  if (Array.isArray(affected)) {
+    for (const raw of affected) {
+      const id = Number(raw);
+      if (Number.isFinite(id) && id > 0) ids.add(id);
+    }
+  }
+
+  const codes = testCodesList(meta);
+  const count = Math.max(ids.size, codes.length);
+
+  if (count > 1) {
+    if (codes.length > 0) {
+      details.push({ type: 'testCode', value: codes[0] });
+      details.push({ type: 'text', value: `, +${count - 1} more` });
+      return;
+    }
+    const firstId = [...ids][0];
+    const ref = testRef(firstId);
+    if (ref) details.push(ref);
+    details.push({ type: 'text', value: `, +${count - 1} more` });
+    return;
+  }
+
+  if (ids.size === 1) {
+    const ref = testRef([...ids][0]);
+    if (ref) details.push(ref);
+    return;
+  }
+
+  if (codes.length === 1 || meta.testCode) {
+    details.push({ type: 'testCode', value: formatTestCodes(meta) });
+  }
+}
+
+function formatTestCodes(meta: Record<string, unknown>): string {
+  const codes = testCodesList(meta);
+  if (codes.length > 1) {
+    return `${codes[0]}, +${codes.length - 1} more`;
+  }
+  if (codes.length === 1) return codes[0];
   return 'Test';
 }
 
@@ -224,8 +286,12 @@ function testTransitionDetails(
 
 function testOnOrder(meta: Record<string, unknown>, testId?: number): EventDetail[] {
   const details: EventDetail[] = [];
-  const test = testRef(testId ?? meta.orderTestId ?? meta.escalatedTestId);
-  if (test) details.push(test);
+  const codes = testCodesList(meta);
+  const multi = codes.length > 1;
+  if (!multi) {
+    const test = testRef(testId ?? meta.orderTestId ?? meta.escalatedTestId);
+    if (test) details.push(test);
+  }
   details.push({ type: 'testCode', value: formatTestCodes(meta) });
   const link = orderLink(meta.orderId);
   if (link) details.push({ type: 'text', value: 'for order' }, link);
@@ -259,8 +325,11 @@ function entityDetails(event: TimelineEvent): EventDetail[] {
     case 'order_test':
     case 'test': {
       const details: EventDetail[] = [];
-      const test = testRef(entityId);
-      if (test) details.push(test);
+      const multi = testCodesList(metadata).length > 1;
+      if (!multi) {
+        const test = testRef(entityId);
+        if (test) details.push(test);
+      }
       details.push({ type: 'testCode', value: formatTestCodes(metadata) });
       const link = orderLink(metadata.orderId);
       if (link) details.push({ type: 'text', value: 'for order' }, link);
@@ -327,8 +396,17 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
 
   sample_reject: event => {
     const smp = smpLabel(event.entityId);
+    const stage = event.metadata.rejectionStage as string | undefined;
+    const atValidation = stage === 'validation';
+    const action = smp
+      ? atValidation
+        ? `Specimen ${smp} rejected during validation`
+        : `Specimen ${smp} rejected at collection`
+      : atValidation
+        ? 'Specimen rejected during validation'
+        : 'Specimen rejected at collection';
     return {
-      action: smp ? `Specimen ${smp} rejected at collection` : 'Specimen rejected at collection',
+      action,
       details: [
         sampleRef(event.entityId) ?? { type: 'id', value: displayId.sample(event.entityId) },
         { type: 'text', value: '—' },
@@ -352,8 +430,8 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     }
     const smp = smpLabel(event.entityId);
     const action = smp
-      ? `Repeat draw requested for specimen ${smp}`
-      : 'Repeat draw requested for specimen';
+      ? `Repeat recollection requested for specimen ${smp}`
+      : 'Repeat recollection requested for specimen';
     return { action, details };
   },
 
@@ -532,8 +610,7 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
     if (link) details.push(link);
     const rejected = sampleRef(meta.rejectedSampleId);
     if (rejected) details.push({ type: 'text', value: 'for' }, rejected);
-    const test = testRef(meta.orderTestId ?? (event.entityType === 'order_test' ? event.entityId : undefined));
-    if (test) details.push(test);
+    appendTestsFromMeta(details, meta, event);
     const stage = metaString(meta.stage);
     if (stage) details.push({ type: 'text', value: 'at' }, { type: 'text', value: stage });
     return {
@@ -543,18 +620,28 @@ const EVENT_HANDLERS: Record<string, EventHandler> = {
   },
 
   recollection_request_approved: event => {
-    const meta = event.metadata;
+    const meta = event.metadata ?? {};
+    const headlineSampleId =
+      metaId(meta, 'createdSampleId') ?? resolveSampleId(event, meta);
+    const smp = smpLabel(headlineSampleId);
+    const action = smp
+      ? `Recollection approved for specimen ${smp}`
+      : 'Recollection approved for specimen';
+
     const details: EventDetail[] = [];
-    const link = orderLinkFromEvent(event);
-    if (link) details.push(link);
-    const created = sampleRef(meta.createdSampleId);
-    if (created) details.push({ type: 'text', value: '→' }, created);
-    const newTest = testRef(meta.createdTestId);
-    if (newTest) details.push(newTest);
-    return {
-      action: headlineOrder('Recollection approved for order', resolveOrderId(event, meta)),
-      details,
-    };
+    const rejected = sampleRef(meta.rejectedSampleId);
+    if (rejected) details.push({ type: 'text', value: 'replacing' }, rejected);
+    const link = orderLink(resolveOrderId(event, meta)) ?? orderLinkFromEvent(event);
+    if (link) details.push({ type: 'text', value: 'on order' }, link);
+    appendTestsFromMeta(details, meta, event);
+    const reason = metaString(meta.reason) ?? metaString(event.comment);
+    if (reason) details.push({ type: 'text', value: '—' }, { type: 'text', value: reason });
+    const stage = metaString(meta.stage);
+    if (stage) details.push({ type: 'text', value: 'at' }, { type: 'text', value: stage });
+    const note = metaString(meta.reviewNotes);
+    if (note) details.push({ type: 'note', value: note });
+
+    return { action, details };
   },
 
   recollection_request_denied: event => {

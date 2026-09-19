@@ -242,10 +242,11 @@ class LabWorklistService:
         priority: PriorityLevel | None = None,
     ) -> dict[str, Any]:
         query = (
-            self.db.query(OrderTest, Order, Patient, Test)
+            self.db.query(OrderTest, Order, Patient, Test, Sample)
             .join(Order, OrderTest.orderId == Order.orderId)
             .join(Patient, Order.patientId == Patient.id)
             .join(Test, OrderTest.testCode == Test.code)
+            .outerjoin(Sample, OrderTest.sampleId == Sample.sampleId)
             .filter(
                 OrderTest.status == TestStatus.RESULTED,
                 OrderTest.resultValidatedAt.is_(None),
@@ -262,7 +263,7 @@ class LabWorklistService:
             )
         rows = query.all()
         items = []
-        for ot, order, patient, test in rows:
+        for ot, order, patient, test, sample in rows:
             since = ot.resultEnteredAt or order.orderDate
             hours = _hours_since(since)
             items.append(
@@ -282,6 +283,7 @@ class LabWorklistService:
                     "turnaroundHours": test.turnaroundTimeHours,
                     "hasCriticalValues": bool(ot.hasCriticalValues),
                     "sampleId": ot.sampleId,
+                    "sampleStatus": sample.status if sample else None,
                     "results": ot.results,
                     "flags": ot.flags,
                     "enteredBy": ot.enteredBy,

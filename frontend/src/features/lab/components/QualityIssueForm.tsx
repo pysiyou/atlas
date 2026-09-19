@@ -57,6 +57,7 @@ export interface QualityIssueFormProps {
   onPreferredRemedyChange?: (remedy: RemedyType) => void;
   reason: string;
   notes: string;
+  onOptionsLoaded?: (options: QualityIssueOptions | undefined) => void;
 }
 
 export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
@@ -72,8 +73,13 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
   onPreferredRemedyChange,
   reason,
   notes,
+  onOptionsLoaded,
 }) => {
   const { data: options, isLoading } = useQualityIssueOptions(targetType, targetId);
+
+  React.useEffect(() => {
+    onOptionsLoaded?.(options);
+  }, [options, onOptionsLoaded]);
 
   const collectionCopy =
     targetType === 'sample' && options ? getCollectionFormCopy(options) : null;

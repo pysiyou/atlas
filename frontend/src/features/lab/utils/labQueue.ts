@@ -321,6 +321,7 @@ export function mapValidationWorklistToOrderTestContext(
     resultEnteredAt: item.resultEnteredAt ?? undefined,
     hasCriticalValues: item.hasCriticalValues,
     sampleId: item.sampleId ?? undefined,
+    sampleStatus: item.sampleStatus ?? undefined,
     results: item.results ?? undefined,
     flags: item.flags ?? undefined,
     enteredBy: item.enteredBy ?? undefined,

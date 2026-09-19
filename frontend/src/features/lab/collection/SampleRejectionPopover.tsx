@@ -9,11 +9,11 @@ import { MODULE_ICONS } from '@/config/icons';
 import { displayId } from '@/utils';
 import { QualityIssueForm } from '../components/QualityIssueForm';
 import { useSubmitQualityIssue } from '../hooks/useSubmitQualityIssue';
-import { useQualityIssueOptions } from '../api/qualityIssues';
 import {
   buildSampleRemedyOptions,
   resolveSuggestedRemedy,
 } from '../constants/qualityIssuePopoverCopy';
+import type { QualityIssueOptions } from '@/types/lab-operations';
 import { LAB_COPY } from '../constants/labConstants';
 import type { RemedyType } from '@/types/lab-operations';
 
@@ -67,10 +67,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
   } = useQualityIssueFormState();
   const numericSampleId = parseNumericSampleId(sampleId);
   const { reportIssue, isSubmitting } = useSubmitQualityIssue({ onSuccess });
-  const { data: options } = useQualityIssueOptions(
-    numericSampleId ? 'sample' : undefined,
-    numericSampleId ?? undefined,
-  );
+  const [options, setOptions] = React.useState<QualityIssueOptions | undefined>();
 
   const unfinishedCount = options?.unfinishedTestsCount ?? 0;
   const requiresUnfinishedChoice = unfinishedCount > 0;
@@ -138,6 +135,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
           onNotesChange={setNotes}
           onPreferredRemedyChange={setPreferredRemedy}
           isSubmitting={isSubmitting}
+          onOptionsLoaded={setOptions}
         />
       ) : null}
     </LabWorkflowPopoverChrome>

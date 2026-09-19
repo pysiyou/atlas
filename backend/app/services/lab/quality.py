@@ -25,6 +25,7 @@ from app.schemas.enums import (
 from app.services.audit.logger import AuditService
 from app.services.lab.escalation import EscalationEngine
 from app.services.lab.rejection import RejectionCriteriaService
+from app.services.lab.sample_rejection_context import SampleRejectionContext
 from app.services.lab.samples import SampleCollectionService
 from app.services.lab.state import SampleStateMachine, TestStateMachine
 from app.services.orders import update_order_status
@@ -310,6 +311,7 @@ class QualityIssueService:
         user_id: int,
         reason: str,
         notes: str | None,
+        context: SampleRejectionContext,
         *,
         skip_test_ids: set[int] | None = None,
         reset_unfinished: bool = True,
@@ -335,6 +337,16 @@ class QualityIssueService:
         sample.recollectionRequired = True
         sample.updatedBy = str(user_id)
 
+        audit_metadata: dict[str, Any] = {
+            "rejectionStage": context.stage.value,
+        }
+        if notes:
+            audit_metadata["notes"] = notes
+        if context.order_test_id is not None:
+            audit_metadata["orderTestId"] = context.order_test_id
+        if context.quality_issue_id is not None:
+            audit_metadata["qualityIssueId"] = context.quality_issue_id
+
         self.audit.log_sample_rejection(
             sample_id=sample.sampleId,
             user_id=user_id,
@@ -346,7 +358,7 @@ class QualityIssueService:
             },
             rejection_reason=reason,
             recollection_required=True,
-            metadata={"notes": notes} if notes else None,
+            metadata=audit_metadata,
             comment=notes or reason,
         )
 
@@ -396,7 +408,7 @@ class QualityIssueService:
         parts: list[str] = []
         if unfinished > 0:
             parts.append(
-                f"{unfinished} unfinished test(s) — choose recollection request or cancel."
+                f"{unfinished} unfinished test(s) — request recollection or reject tube only."
             )
         if resulted > 0:
             parts.append(
@@ -533,7 +545,7 @@ class QualityIssueService:
         options = self._sample_options(sample_id)
         unfinished = options.unfinishedTestsCount or 0
 
-        # When unfinished work exists, operator must choose recollection vs cancel.
+        # When unfinished work exists, operator chooses recollection request vs reject-only.
         remedy = preferred_remedy
         if unfinished > 0:
             if remedy is None:
@@ -548,23 +560,24 @@ class QualityIssueService:
             # No unfinished work — reject tube only; resulted/validated stay for review.
             remedy = RemedyType.REQUEST_RECOLLECTION
 
-        if remedy == RemedyType.CANCEL and unfinished > 0:
-            return self._cancel_unfinished_on_sample_reject(sample, user_id, reason, notes)
+        rejection_ctx = SampleRejectionContext(stage=QualityStage.COLLECTION)
+        self._reject_sample_record(
+            sample, user_id, reason, notes, rejection_ctx, reset_unfinished=True
+        )
 
-        # Default / request_recollection: reject, reset unfinished, create recollection request
-        # when there is unfinished work; otherwise reject and leave resulted tests for validator.
-        self._reject_sample_record(sample, user_id, reason, notes, reset_unfinished=True)
-
-        if unfinished > 0:
+        if unfinished > 0 and remedy == RemedyType.REQUEST_RECOLLECTION:
             return self._request_recollection_from_collection(sample, user_id, reason, notes)
 
+        recorded_remedy = (
+            RemedyType.CANCEL if unfinished > 0 and remedy == RemedyType.CANCEL else remedy
+        )
         issue = self._record_issue(
             order_id=sample.orderId,
             stage=QualityStage.COLLECTION,
             domain=QualityDomain.SPECIMEN,
             reason=reason,
             notes=notes,
-            remedy=RemedyType.REQUEST_RECOLLECTION,
+            remedy=recorded_remedy,
             user_id=user_id,
             sample_id=sample_id,
         )
@@ -572,6 +585,8 @@ class QualityIssueService:
         update_order_status(self.db, sample.orderId)
 
         parts = ["Sample rejected."]
+        if unfinished > 0 and remedy == RemedyType.CANCEL:
+            parts.append("Unfinished tests were reset to await collection.")
         if (options.resultedTestsCount or 0) > 0:
             parts.append("Resulted tests remain in Validation for validator decision.")
         if (options.validatedTestsCount or 0) > 0:
@@ -579,59 +594,11 @@ class QualityIssueService:
 
         return QualityIssueResult(
             success=True,
-            remedy=RemedyType.REQUEST_RECOLLECTION,
+            remedy=recorded_remedy,
             message=" ".join(parts),
             qualityIssueId=issue.id,
             orderId=sample.orderId,
             sampleId=sample_id,
-            escalationRequired=False,
-        )
-
-    def _cancel_unfinished_on_sample_reject(
-        self,
-        sample: Sample,
-        user_id: int,
-        reason: str,
-        notes: str | None,
-    ) -> QualityIssueResult:
-        """Reject sample and cancel unfinished linked tests; leave resulted/validated alone."""
-        self._reject_sample_record(sample, user_id, reason, notes, reset_unfinished=False)
-
-        cancelled_ids: list[int] = []
-        linked = self._linked_tests(
-            sample, exclude=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED]
-        )
-        for order_test in linked:
-            if order_test.status not in _SAMPLE_RESET_STATUSES:
-                continue
-            TestStateMachine.validate_transition(order_test.status, TestStatus.CANCELLED)
-            order_test.status = TestStatus.CANCELLED
-            order_test.validationNotes = notes or f"Cancelled on specimen rejection: {reason}"
-            cancelled_ids.append(order_test.id)
-
-        issue = self._record_issue(
-            order_id=sample.orderId,
-            stage=QualityStage.COLLECTION,
-            domain=QualityDomain.SPECIMEN,
-            reason=reason,
-            notes=notes,
-            remedy=RemedyType.CANCEL,
-            user_id=user_id,
-            sample_id=sample.sampleId,
-        )
-        self.db.commit()
-        update_order_status(self.db, sample.orderId)
-
-        return QualityIssueResult(
-            success=True,
-            remedy=RemedyType.CANCEL,
-            message=(
-                f"Sample rejected. Cancelled {len(cancelled_ids)} unfinished test(s). "
-                "Resulted/validated tests were left unchanged."
-            ),
-            qualityIssueId=issue.id,
-            orderId=sample.orderId,
-            sampleId=sample.sampleId,
             escalationRequired=False,
         )
 
@@ -850,7 +817,15 @@ class QualityIssueService:
         # Reject tube if still collected; if already rejected, continue (validator chose recollect).
         if sample.status == SampleStatus.COLLECTED:
             self._reject_sample_record(
-                sample, user_id, reason, notes, skip_test_ids={order_test.id}
+                sample,
+                user_id,
+                reason,
+                notes,
+                SampleRejectionContext(
+                    stage=QualityStage.VALIDATION,
+                    order_test_id=order_test.id,
+                ),
+                skip_test_ids={order_test.id},
             )
         elif sample.status != SampleStatus.REJECTED:
             can_reject, reject_reason = SampleStateMachine.can_reject(sample.status)
