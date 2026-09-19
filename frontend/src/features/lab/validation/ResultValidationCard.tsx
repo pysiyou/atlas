@@ -3,11 +3,10 @@
  */
 
 import React, { useMemo } from 'react';
-import { Alert, Button, Card, EntityId } from '@/components';
+import { Button, Card } from '@/components';
 import { cn } from '@/utils';
 import { useUserLookup } from '@/lib/api/users';
 import { usePatientNameLookup } from '@/features/patients';
-import { useSampleLookup } from '../api/samples';
 import { useLabWorkflowCardClickGuard, useOrderTestQueueState } from '@/features/lab/hooks';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
 import { LabWorkflowCardShell } from '../components/LabWorkflowCardShell';
@@ -16,11 +15,11 @@ import { QualityIssuePopover } from '../components';
 import { ResultsParameterGrid } from '../components/ResultsParameterGrid';
 import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { LabMobileCardHeader } from '../components/LabWorkflowMobileHeader';
-import { LAB_COPY } from '../constants/labConstants';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
-import { formatRejectionReasons } from '../utils/labFormatters';
+import { SampleRejectedBanner } from '../components/SampleRejectedBanner';
+import { useSampleRejectionDisplay } from '../hooks/useSampleRejectionDisplay';
 import { LAB_MOBILE_CARD } from '../utils/labStyles';
-import type { TestWithContext, Sample } from '@/types';
+import type { TestWithContext } from '@/types';
 import type { QualityIssueResult } from '@/types/lab-operations';
 
 export interface ResultValidationCardProps {
@@ -43,79 +42,23 @@ interface ResultValidationCardSharedData {
   isApproving: boolean;
   handleCardClick: () => void;
   getUserName: (id: string) => string;
-  sampleRejectionReason?: string;
+  sampleRejection: ReturnType<typeof useSampleRejectionDisplay>;
   workItem: ReturnType<typeof useOrderTestQueueState>;
   rejection: ReturnType<typeof deriveRetestContext>;
-}
-
-function getSampleRejectionReason(
-  test: TestWithContext,
-  getSample: (sampleId: number) => Sample | undefined
-): string | undefined {
-  if (!test.sampleId) return undefined;
-  const sample = getSample(test.sampleId);
-  if (sample?.status !== 'rejected') return undefined;
-  return formatRejectionReasons(sample.rejectionReasons) ?? undefined;
-}
-
-function SampleRejectedAlert({
-  sampleId,
-  sampleRejectionReason,
-  size = 'default',
-}: {
-  sampleId?: number;
-  sampleRejectionReason?: string;
-  size?: 'default' | 'compact';
-}) {
-  if (!sampleId) return null;
-
-  const isCompact = size === 'compact';
-
-  return (
-    <Alert variant="warning" className={isCompact ? 'py-space-1-5' : 'py-space-2'}>
-      <div className="space-y-space-1">
-        <div>
-          <p className={`font-semibold ${isCompact ? 'text-xxs' : 'text-xs'}`}>
-            {LAB_COPY.quality.sampleRejected} — Validator Decision Required
-          </p>
-          <p className={`text-text-secondary leading-tight mt-space-0-5 ${isCompact ? 'text-xxs' : 'text-xs'}`}>
-            {LAB_COPY.entity.sample} <EntityId type="sample" value={sampleId} /> was rejected
-            {sampleRejectionReason && (
-              <>
-                : <span className="italic">{sampleRejectionReason}</span>
-              </>
-            )}
-          </p>
-        </div>
-        <div className={`space-y-space-0-5 ${isCompact ? 'text-xxs' : 'text-xs'} text-text-tertiary leading-tight`}>
-          <p>This result was entered before sample rejection.</p>
-          <p className="font-medium">
-            You may still approve this result (clinical judgment) or choose another action:
-          </p>
-          <ul className="list-disc list-inside pl-space-2 space-y-space-0-5 mt-space-1">
-            <li>Approve result (add validation notes explaining decision)</li>
-            <li>Request recollection with new sample</li>
-            <li>Cancel this test</li>
-          </ul>
-        </div>
-      </div>
-    </Alert>
-  );
 }
 
 function useResultValidationCardData(props: ResultValidationCardProps): ResultValidationCardSharedData | null {
   const { test, onApprove, onReject, onClick, isApproving = false } = props;
   const { getUserName } = useUserLookup();
   const { getPatientName } = usePatientNameLookup();
-  const { getSample } = useSampleLookup();
   const handleCardClick = useLabWorkflowCardClickGuard(onClick);
   const workItem = useOrderTestQueueState(test);
   const rejection = useMemo(() => deriveRetestContext(test), [test]);
+  const sampleRejection = useSampleRejectionDisplay(test);
 
   if (!test.results) return null;
 
   const patientName = getPatientName(test.patientId);
-  const sampleRejectionReason = getSampleRejectionReason(test, getSample);
 
   return {
     test,
@@ -125,7 +68,7 @@ function useResultValidationCardData(props: ResultValidationCardProps): ResultVa
     isApproving,
     handleCardClick,
     getUserName,
-    sampleRejectionReason,
+    sampleRejection,
     workItem,
     rejection,
   };
@@ -137,13 +80,13 @@ function ResultValidationCardDesktop({
   onReject,
   isApproving,
   handleCardClick,
-  sampleRejectionReason,
+  sampleRejection,
   workItem,
   rejection,
 }: ResultValidationCardSharedData) {
   const { showAttemptIndicator } = rejection;
   const resultCount = Object.keys(test.results!).length;
-  const isSampleRejected = workItem.blockedReason === 'sample_rejected';
+  const { showBanner: isSampleRejected, sampleId, sampleRejectionReason } = sampleRejection;
 
   return (
     <LabWorkflowCardShell
@@ -197,10 +140,7 @@ function ResultValidationCardDesktop({
         <>
           {isSampleRejected && (
             <div className="mb-space-3">
-              <SampleRejectedAlert
-                sampleId={test.sampleId}
-                sampleRejectionReason={sampleRejectionReason}
-              />
+              <SampleRejectedBanner sampleId={sampleId} sampleRejectionReason={sampleRejectionReason} />
             </div>
           )}
           <ResultsParameterGrid results={test.results!} flags={test.flags} variant="inline" />
@@ -218,12 +158,12 @@ function ResultValidationCardMobile({
   onReject,
   isApproving,
   handleCardClick,
-  sampleRejectionReason,
+  sampleRejection,
   workItem,
   rejection,
 }: ResultValidationCardSharedData) {
   const { showAttemptIndicator } = rejection;
-  const isSampleRejected = workItem.blockedReason === 'sample_rejected';
+  const { showBanner: isSampleRejected, sampleId, sampleRejectionReason } = sampleRejection;
 
   return (
     <Card
@@ -237,8 +177,8 @@ function ResultValidationCardMobile({
     >
       {isSampleRejected && (
         <div className="mb-space-2">
-          <SampleRejectedAlert
-            sampleId={test.sampleId}
+          <SampleRejectedBanner
+            sampleId={sampleId}
             sampleRejectionReason={sampleRejectionReason}
             size="compact"
           />

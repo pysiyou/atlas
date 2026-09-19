@@ -28,6 +28,8 @@ import { buildCriticalValueRecord } from '@/features/lab/criticalValues/critical
 import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { useOrderTestQueueState } from '../hooks';
+import { useSampleRejectionDisplay } from '../hooks/useSampleRejectionDisplay';
+import { SampleRejectedBanner } from '../components/SampleRejectedBanner';
 import type { TestWithContext } from '@/types';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import { LabEntityTimelinePanel } from '../components/LabEntityTimelinePanel';
@@ -82,6 +84,7 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
   }, [queryClient]);
 
   const workItem = useOrderTestQueueState(test);
+  const sampleRejection = useSampleRejectionDisplay(test);
 
   if (!readOnly && !test.results) return null;
 
@@ -152,6 +155,15 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
         )
       }
     >
+      {sampleRejection.showBanner && (
+        <div className="mb-space-4">
+          <SampleRejectedBanner
+            sampleId={sampleRejection.sampleId}
+            sampleRejectionReason={sampleRejection.sampleRejectionReason}
+          />
+        </div>
+      )}
+
       {/* Validation Form Section */}
       {hasTestResults(test) ? (
         <Panel

@@ -79,6 +79,7 @@ class ValidationWorklistItem(BaseModel):
     priority: PriorityLevel
     status: TestStatus
     sampleId: int | None = None
+    sampleStatus: SampleStatus | None = None
     results: TestResultsDict | None = None
     flags: list[str] | None = None
     enteredBy: str | None = None

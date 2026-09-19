@@ -3,7 +3,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
-from app.api.dependencies import get_current_user, require_sample_collector
+from app.api.dependencies import assert_quality_issue_target_access, get_current_user
 from app.db.database import get_db
 from app.models.user import User
 from app.schemas.enums import QualityIssueTargetType
@@ -20,8 +20,9 @@ def get_quality_issue_options(
     targetType: QualityIssueTargetType = Query(...),
     targetId: int = Query(...),
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_sample_collector),
+    current_user: User = Depends(get_current_user),
 ):
+    assert_quality_issue_target_access(current_user, targetType)
     try:
         return LabOperationsService(db).quality.get_options(targetType, targetId)
     except LabOperationError as e:
@@ -32,8 +33,9 @@ def get_quality_issue_options(
 def report_quality_issue(
     body: ReportQualityIssueRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_sample_collector),
+    current_user: User = Depends(get_current_user),
 ):
+    assert_quality_issue_target_access(current_user, body.target.type)
     try:
         return LabOperationsService(db).quality.report_issue(
             target_type=body.target.type,

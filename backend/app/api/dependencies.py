@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from app.core.security import TokenType, decode_token
 from app.db.database import get_db
 from app.models.user import User
-from app.schemas.enums import UserRole
+from app.schemas.enums import QualityIssueTargetType, UserRole
 
 DEFAULT_PAGE_SIZE = 10000
 MAX_PAGE_SIZE = 10000
@@ -95,3 +95,31 @@ require_sample_collector = require_role(
     UserRole.LAB_TECH,
     UserRole.LAB_TECH_PLUS,
 )
+
+_LAB_TECH_ROLES = frozenset(
+    {UserRole.ADMIN, UserRole.LAB_TECH, UserRole.LAB_TECH_PLUS}
+)
+_SAMPLE_COLLECTOR_ROLES = frozenset(
+    {
+        UserRole.ADMIN,
+        UserRole.RECEPTIONIST,
+        UserRole.LAB_TECH,
+        UserRole.LAB_TECH_PLUS,
+    }
+)
+
+
+def assert_quality_issue_target_access(
+    user: User, target_type: QualityIssueTargetType
+) -> None:
+    """Validation targets require lab tech; specimen targets allow collectors."""
+    allowed = (
+        _LAB_TECH_ROLES
+        if target_type == QualityIssueTargetType.TEST
+        else _SAMPLE_COLLECTOR_ROLES
+    )
+    if user.role not in allowed:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Requires role: {', '.join(r.value for r in allowed)}",
+        )

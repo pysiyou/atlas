@@ -20,6 +20,7 @@ from app.schemas.enums import (
     TestStatus,
 )
 from app.services.audit.logger import AuditService
+from app.services.lab.sample_rejection_context import SampleRejectionContext
 from app.services.lab.state import StateTransitionError, TestStateMachine
 from app.services.orders import build_order_completion_metadata, update_order_status
 from app.utils.exceptions import LabOperationError
@@ -324,7 +325,13 @@ class EscalationOperations:
         original_test.status = TestStatus.SUPERSEDED
 
         if sample.status == SampleStatus.COLLECTED:
-            self._svc.quality._reject_sample_record(sample, user_id, reason, None)
+            self._svc.quality._reject_sample_record(
+                sample,
+                user_id,
+                reason,
+                None,
+                SampleRejectionContext(stage=QualityStage.VALIDATION, order_test_id=original_test.id),
+            )
 
         new_sample = self._svc.quality._create_recollection_sample(
             sample, user_id, reason, supervisor_authorized=True

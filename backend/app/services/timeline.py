@@ -313,9 +313,72 @@ class TimelineFormatter:
             return "System"
         return user_map.get(log.performedBy)
 
+    def _enrich_metadata(self, log: LabOperationLog, metadata: dict[str, Any]) -> dict[str, Any]:
+        """Fill recollection timeline fields from RecollectionRequest / Sample when logs are sparse."""
+        enriched = dict(metadata)
+        if log.operationType not in (
+            LabOperationType.RECOLLECTION_REQUEST_CREATED,
+            LabOperationType.RECOLLECTION_REQUEST_APPROVED,
+            LabOperationType.RECOLLECTION_REQUEST_DENIED,
+        ):
+            return enriched
+
+        request_id = enriched.get("requestId")
+        if isinstance(request_id, int):
+            req = (
+                self.db.query(RecollectionRequest)
+                .filter(RecollectionRequest.id == request_id)
+                .first()
+            )
+            if req:
+                enriched.setdefault("orderId", req.orderId)
+                enriched.setdefault("rejectedSampleId", req.rejectedSampleId)
+                enriched.setdefault("createdSampleId", req.createdSampleId)
+                enriched.setdefault("reason", req.reason)
+                if req.stage is not None:
+                    enriched.setdefault("stage", req.stage.value)
+                if req.testCodes:
+                    enriched.setdefault("testCodes", list(req.testCodes))
+                if req.orderTestId is not None:
+                    enriched.setdefault("orderTestId", req.orderTestId)
+                if req.createdTestId is not None:
+                    enriched.setdefault("createdTestId", req.createdTestId)
+                if req.affectedOrderTestIds:
+                    enriched.setdefault(
+                        "affectedOrderTestIds", list(req.affectedOrderTestIds)
+                    )
+                if req.reviewNotes:
+                    enriched.setdefault("reviewNotes", req.reviewNotes)
+
+        if log.operationType == LabOperationType.RECOLLECTION_REQUEST_APPROVED:
+            created_id = enriched.get("createdSampleId")
+            if not isinstance(created_id, int) and log.entityType == "sample":
+                created_id = log.entityId
+            if isinstance(created_id, int):
+                enriched.setdefault("createdSampleId", created_id)
+                sample = (
+                    self.db.query(Sample).filter(Sample.sampleId == created_id).first()
+                )
+                if sample:
+                    enriched.setdefault("orderId", sample.orderId)
+                    if sample.originalSampleId:
+                        enriched.setdefault("rejectedSampleId", sample.originalSampleId)
+                    if sample.testCodes:
+                        enriched.setdefault("testCodes", list(sample.testCodes))
+
+            if log.entityType in ("order_test", "test"):
+                enriched.setdefault("orderTestId", log.entityId)
+                test = self.db.query(OrderTest).filter(OrderTest.id == log.entityId).first()
+                if test:
+                    enriched.setdefault("orderId", test.orderId)
+                    if test.testCode:
+                        enriched.setdefault("testCodes", [test.testCode])
+
+        return enriched
+
     def format_command_center_event(self, log: LabOperationLog, user_map: dict[str, str]) -> dict:
         op_type = log.operationType.value if log.operationType else None
-        metadata = log.operationData or {}
+        metadata = self._enrich_metadata(log, log.operationData or {})
         quality_stage = metadata.get("stage") or (log.afterState or {}).get("stage")
         return {
             "id": log.id,
@@ -335,7 +398,7 @@ class TimelineFormatter:
 
     def format_entity_event(self, log: LabOperationLog, user_map: dict[str, str]) -> dict:
         op_type = log.operationType.value if log.operationType else None
-        metadata = log.operationData or {}
+        metadata = self._enrich_metadata(log, log.operationData or {})
         quality_stage = metadata.get("stage") or (log.afterState or {}).get("stage")
         return {
             "id": log.id,

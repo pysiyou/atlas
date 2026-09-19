@@ -4,6 +4,7 @@
 
 import { useMemo } from 'react';
 import { useOrderLookup } from '@/features/orders';
+import { useSampleLookup } from '../api/samples';
 import {
   deriveOrderTestQueueState,
   type OrderTestQueueState,
@@ -12,7 +13,10 @@ import type { SampleStatus, TestStatus, TestWithContext } from '@/types';
 
 export function useOrderTestQueueState(test: TestWithContext): OrderTestQueueState {
   const { getOrder } = useOrderLookup();
+  const { getSample } = useSampleLookup();
   const order = getOrder(test.orderId);
+  const linkedSample = test.sampleId ? getSample(test.sampleId) : undefined;
+  const sampleStatus = (linkedSample?.status ?? test.sampleStatus) as SampleStatus | undefined;
 
   return useMemo(
     () =>
@@ -20,7 +24,7 @@ export function useOrderTestQueueState(test: TestWithContext): OrderTestQueueSta
         { status: test.status as TestStatus, isRetest: test.isRetest },
         {
           paymentStatus: order?.paymentStatus,
-          sampleStatus: test.sampleStatus as SampleStatus | undefined,
+          sampleStatus,
           sampleIsRecollection: test.sampleIsRecollection,
           escalationReasonCode: test.reasonCode,
         }
@@ -28,7 +32,7 @@ export function useOrderTestQueueState(test: TestWithContext): OrderTestQueueSta
     [
       test.status,
       test.isRetest,
-      test.sampleStatus,
+      sampleStatus,
       test.sampleIsRecollection,
       test.reasonCode,
       order?.paymentStatus,
