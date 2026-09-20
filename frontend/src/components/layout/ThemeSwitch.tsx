@@ -5,10 +5,11 @@ import type { IconName } from '@/components/primitives/Icon';
 import { CHROME, CONTROL, RADIUS } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
-const THEMES: ThemeName[] = ['studio-light', 'noir-studio', 'github'];
+const THEMES: ThemeName[] = ['studio-light', 'playful-light', 'noir-studio', 'github'];
 
 const THEME_CONFIG: Record<ThemeName, { icon: IconName; label: string }> = {
-  'studio-light': { icon: 'sun', label: 'Light' },
+  'studio-light': { icon: 'sun', label: 'Studio' },
+  'playful-light': { icon: 'category', label: 'Playful' },
   'noir-studio': { icon: 'moon', label: 'Dark' },
   github: { icon: 'settings', label: 'GitHub' },
 };

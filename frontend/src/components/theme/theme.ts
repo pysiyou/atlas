@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react';
 
-export type ThemeName = 'studio-light' | 'github' | 'noir-studio';
+export type ThemeName = 'studio-light' | 'playful-light' | 'github' | 'noir-studio';
 
 /** Badge background behaviour: unified = same bg for all; tinted = per-variant bg/text from semantic tokens */
 export type BadgeAppearance = 'unified' | 'tinted';
@@ -9,10 +9,11 @@ const THEME_ATTRIBUTE = 'data-theme';
 const DEFAULT_THEME: ThemeName = 'noir-studio';
 const STORAGE_KEY = 'atlas-theme';
 export const THEME_CHANGE_EVENT = 'atlas-theme-change';
-const VALID_THEMES = new Set<ThemeName>(['studio-light', 'github', 'noir-studio']);
+const VALID_THEMES = new Set<ThemeName>(['studio-light', 'playful-light', 'github', 'noir-studio']);
 
 const THEME_BADGE_APPEARANCE: Record<ThemeName, BadgeAppearance> = {
   'studio-light': 'tinted',
+  'playful-light': 'tinted',
   github: 'unified',
   'noir-studio': 'unified',
 };
