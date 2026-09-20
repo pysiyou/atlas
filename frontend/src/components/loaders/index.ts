@@ -12,4 +12,5 @@ export * from './LoadingScope';
 export * from './SectionLoadingBoundary';
 export * from './Skeleton';
 export * from './DetailPageSkeleton';
+export * from './ClaudeLoader';
 export * from './SpinnerLoader';
