@@ -7,6 +7,13 @@
 
 import React from 'react';
 import { SpinnerLoader } from '@/components';
+import { cn } from '@/utils/cn';
+
+const LOADER_GLOW: Record<'sm' | 'md' | 'lg', string> = {
+  sm: 'size-14',
+  md: 'size-[4.5rem]',
+  lg: 'size-24',
+};
 
 export interface LoadingStateProps {
   /** Loading message to display */
@@ -39,9 +46,23 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
 
   return (
     <div className={`${containerClasses} ${className}`}>
-      <div className="text-center">
-        <SpinnerLoader size={size} />
-        {message && <p className="mt-space-3 text-sm text-text-tertiary">{message}</p>}
+      <div className="flex flex-col items-center gap-space-4 text-center">
+        <div className="relative flex items-center justify-center">
+          <div
+            aria-hidden
+            className={cn(
+              'pointer-events-none absolute rounded-full bg-brand/15 blur-2xl',
+              'motion-reduce:opacity-70',
+              LOADER_GLOW[size],
+            )}
+          />
+          <SpinnerLoader size={size} className="relative z-[1] text-brand" />
+        </div>
+        {message && (
+          <p className="max-w-[18rem] text-sm font-medium tracking-tight text-text-secondary">
+            {message}
+          </p>
+        )}
       </div>
     </div>
   );
