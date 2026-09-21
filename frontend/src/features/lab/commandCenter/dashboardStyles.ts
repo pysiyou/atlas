@@ -33,6 +33,7 @@ export const DASHBOARD_TABLE_WRAP = 'flex min-h-80 flex-1 flex-col lg:min-h-0' a
 export const DASHBOARD_TWO_LINE = {
   primary: 'truncate text-xs font-normal text-text-primary',
   secondary: `${TYPE.meta} truncate`,
+  mrn: `${TYPE.caption} truncate uppercase tracking-wide`,
 } as const;
 
 export const DASHBOARD_CHART = {

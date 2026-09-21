@@ -28,7 +28,7 @@ function twoLineDate(value: string) {
   return (
     <div className="min-w-0">
       <div className={DASHBOARD_TWO_LINE.primary}>{formatDate(parsed, 'MMM d, yyyy')}</div>
-      <div className={DASHBOARD_TWO_LINE.secondary}>{format(parsed, 'hh:mm a')}</div>
+      <div className={DASHBOARD_TWO_LINE.mrn}>{format(parsed, 'hh:mm a')}</div>
     </div>
   );
 }
@@ -48,7 +48,7 @@ export function createLabDashboardOrdersTableConfig(): TableViewConfig<LabDashbo
       render: row => (
         <div className="min-w-0">
           <div className={DASHBOARD_TWO_LINE.primary}>{row.patientName}</div>
-          <div className={DASHBOARD_TWO_LINE.secondary}>MRN: {displayId.patient(row.patientId)}</div>
+          <div className={DASHBOARD_TWO_LINE.mrn}>MRN: {displayId.patient(row.patientId)}</div>
         </div>
       ),
     }),
@@ -58,7 +58,7 @@ export function createLabDashboardOrdersTableConfig(): TableViewConfig<LabDashbo
       render: row => (
         <div className="min-w-0">
           <div className={DASHBOARD_TWO_LINE.primary}>{row.doctorName || '—'}</div>
-          <div className={DASHBOARD_TWO_LINE.secondary}>
+          <div className={DASHBOARD_TWO_LINE.mrn}>
             {row.department ? getCategoryLabel(row.department) : ' '}
           </div>
         </div>
