@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Avatar, Icon, RemovableTag, TagChip } from '@/components';
+import { Avatar, EMPTY_COPY, Icon, RemovableTag, TagChip } from '@/components';
 import { cn, formatPhoneNumber } from '@/utils';
 import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/components/inputs/inputStyles';
 import type { Patient } from '@/types';
@@ -194,7 +194,8 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
         <OrderSelectPopoverShell
           title="Matching patients"
           resultCount={visiblePatients.length}
-          emptyMessage="No patients found"
+          emptyMessage={EMPTY_COPY.matchingPatients.title}
+          emptyDescription={EMPTY_COPY.matchingPatients.description}
           isEmpty={visiblePatients.length === 0}
         >
           {visiblePatients.map(patient => {

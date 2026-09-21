@@ -33,6 +33,7 @@ export function DataTable<T = Record<string, unknown>>({
   loading = false,
   loadingRows = DEFAULT_LOADING_ROWS,
   emptyMessage,
+  emptyDescription,
   emptyIcon,
   caption,
   ariaLabel,
@@ -106,6 +107,7 @@ export function DataTable<T = Record<string, unknown>>({
             loading={loading}
             loadingRows={loadingRows}
             emptyMessage={emptyMessage}
+            emptyDescription={emptyDescription}
             emptyIcon={emptyIcon}
             totalItems={totalItems}
           />
@@ -147,6 +149,7 @@ export function DataTable<T = Record<string, unknown>>({
         loading={loading}
         loadingRows={loadingRows}
         emptyMessage={emptyMessage}
+        emptyDescription={emptyDescription}
         emptyIcon={emptyIcon}
         caption={caption}
         ariaLabel={ariaLabel}

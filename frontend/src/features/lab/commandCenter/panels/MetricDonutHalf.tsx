@@ -2,6 +2,7 @@
  * Shared half-panel layout — section title, donut + legend, summary footer.
  */
 
+import { EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components';
 import { SectionTitle, DonutChart, LegendRow, type DonutSegment } from '../LabCommandCenterUi';
 import { COMMAND_CENTER_SECTION } from '../commandCenterStyles';
 
@@ -29,36 +30,52 @@ export function MetricDonutHalf({
   segments: DonutSegment[];
   legend: MetricDonutLegendItem[];
 }) {
+  const total = legend[0]?.total ?? 0;
+  const isEmpty = total <= 0;
+
   return (
     <div className="flex h-full min-h-0 min-w-0 flex-col justify-between gap-space-2 px-space-3 py-space-2">
       <SectionTitle title={title} />
 
-      <div className="flex min-h-0 flex-1 items-center gap-space-2-5">
-        <DonutChart
-          size={METRIC_DONUT_CHART_SIZE}
-          centerSize="md"
-          segments={segments}
-          centerLabel={centerLabel}
-          centerDetail={centerDetail}
-          ariaLabel={`${title}: ${centerLabel} ${centerDetail}. ${legend
-            .map(item => `${item.label} ${item.value}`)
-            .join(', ')}`}
+      {isEmpty ? (
+        <EmptyState
+          iconOnly
+          icon={PANEL_EMPTY_STATE.icon}
+          variant={PANEL_EMPTY_STATE.variant}
+          fill={PANEL_EMPTY_STATE.fill}
+          title={EMPTY_COPY.activeTests.title}
+          description={EMPTY_COPY.activeTests.description}
         />
-        <div className="min-w-0 flex-1 space-y-space-1">
-          {legend.map(item => (
-            <LegendRow
-              key={item.label}
-              size="md"
-              colorClass={item.colorClass}
-              label={item.label}
-              value={String(item.value)}
-              detail={share(item.value, item.total)}
+      ) : (
+        <>
+          <div className="flex min-h-0 flex-1 items-center gap-space-2-5">
+            <DonutChart
+              size={METRIC_DONUT_CHART_SIZE}
+              centerSize="md"
+              segments={segments}
+              centerLabel={centerLabel}
+              centerDetail={centerDetail}
+              ariaLabel={`${title}: ${centerLabel} ${centerDetail}. ${legend
+                .map(item => `${item.label} ${item.value}`)
+                .join(', ')}`}
             />
-          ))}
-        </div>
-      </div>
+            <div className="min-w-0 flex-1 space-y-space-1">
+              {legend.map(item => (
+                <LegendRow
+                  key={item.label}
+                  size="md"
+                  colorClass={item.colorClass}
+                  label={item.label}
+                  value={String(item.value)}
+                  detail={share(item.value, item.total)}
+                />
+              ))}
+            </div>
+          </div>
 
-      <p className={COMMAND_CENTER_SECTION.summary}>{summary}</p>
+          <p className={COMMAND_CENTER_SECTION.summary}>{summary}</p>
+        </>
+      )}
     </div>
   );
 }

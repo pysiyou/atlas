@@ -9,8 +9,6 @@ import { EmptyState } from '@/components';
 import { displayId } from '@/utils';
 import { SPACING, WORKSPACE } from '@/components/theme/recipes';
 
-type IconName = 'search' | 'sample-collection' | 'checklist' | 'shield-check';
-
 interface LabWorkflowQueueLayoutProps<T> {
   /** All items (parent applies filterRow filters) */
   items: T[];
@@ -18,8 +16,6 @@ interface LabWorkflowQueueLayoutProps<T> {
   renderCard: (item: T, index: number, filteredItems: T[]) => ReactNode;
   /** Generate a unique key for each item */
   getItemKey: (item: T, index: number) => string;
-  /** Icon to show when no items exist */
-  emptyIcon: IconName;
   /** Title to show when no items exist */
   emptyTitle: string;
   /** Description to show when no items exist */
@@ -32,7 +28,6 @@ export function LabWorkflowQueueLayout<T>({
   items,
   renderCard,
   getItemKey,
-  emptyIcon,
   emptyTitle,
   emptyDescription,
   filterRow,
@@ -56,7 +51,7 @@ export function LabWorkflowQueueLayout<T>({
 
         {!hasItems && (
           <div className="flex-1">
-            <EmptyState icon={emptyIcon} title={emptyTitle} description={emptyDescription} />
+            <EmptyState fill title={emptyTitle} description={emptyDescription} />
           </div>
         )}
       </div>

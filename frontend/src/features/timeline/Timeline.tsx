@@ -3,7 +3,7 @@
  */
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { EntityId } from '@/components';
+import { EmptyState, EMPTY_COPY, EntityId, PANEL_EMPTY_STATE } from '@/components';
 import { cn, formatRelativeDateLabel, formatRelativeDateTime } from '@/utils';
 import type { TimelineEvent } from '@/features/lab/api/labCommandCenter';
 import { useOpenHistoricalLabRecord } from '@/features/lab/hooks/useOpenHistoricalLabRecord';
@@ -29,6 +29,7 @@ export interface TimelineProps {
   interactiveEntities?: boolean;
   showRetestDividers?: boolean;
   emptyMessage?: string;
+  emptyDescription?: string;
   className?: string;
   footer?: React.ReactNode;
 }
@@ -173,7 +174,8 @@ export const Timeline: React.FC<TimelineProps> = ({
   categoryFilter,
   interactiveEntities = false,
   showRetestDividers,
-  emptyMessage = 'No recorded actions yet.',
+  emptyMessage = EMPTY_COPY.recordedActions.title,
+  emptyDescription = EMPTY_COPY.recordedActions.description,
   className,
   footer,
 }) => {
@@ -212,7 +214,16 @@ export const Timeline: React.FC<TimelineProps> = ({
   }, [visibleEvents, retestDividers]);
 
   if (visibleEvents.length === 0) {
-    return <p className="text-sm text-text-tertiary">{emptyMessage}</p>;
+    return (
+      <div className={cn('flex min-h-0 flex-col', className ?? 'max-h-80')}>
+        <EmptyState
+          {...PANEL_EMPTY_STATE}
+          title={emptyMessage}
+          description={emptyDescription}
+        />
+        {footer}
+      </div>
+    );
   }
 
   return (

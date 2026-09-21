@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Panel, Badge, EntityId } from '@/components';
+import { EmptyState, EMPTY_COPY, Panel, Badge, EntityId } from '@/components';
 import { ROUTES } from '@/config';
 import type { Order } from '@/types';
 import { TYPE, RADIUS } from '@/components/theme/recipes';
@@ -59,7 +59,11 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
           </Link>
         ))
       ) : (
-        <p className="text-center text-sm text-text-tertiary py-space-8">No recent orders</p>
+        <EmptyState
+          variant="compact"
+          title={EMPTY_COPY.recentOrders.title}
+          description={EMPTY_COPY.recentOrders.description}
+        />
       )}
     </div>
   </Panel>

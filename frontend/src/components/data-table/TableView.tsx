@@ -3,8 +3,7 @@
  */
 
 import { type ReactNode } from 'react';
-import { EmptyState, Icon, Skeleton } from '@/components';
-import type { IconName } from '@/components';
+import { EmptyState, Icon, Skeleton, type IconName } from '@/components';
 import { ICONS } from '@/config/icons';
 import { DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';
 import { getColumnStyle, useColumnStyles } from '@/hooks/useTable';
@@ -43,6 +42,7 @@ export interface TableViewProps<T> {
   loading?: boolean;
   loadingRows?: number;
   emptyMessage?: ReactNode;
+  emptyDescription?: string;
   emptyIcon?: string;
   caption?: string;
   ariaLabel?: string;
@@ -225,6 +225,7 @@ export function TableView<T>({
   loading = false,
   loadingRows = DEFAULT_LOADING_ROWS,
   emptyMessage,
+  emptyDescription,
   emptyIcon,
   caption,
   ariaLabel,
@@ -259,20 +260,28 @@ export function TableView<T>({
     const emptyContent =
       typeof emptyMessage === 'string' ? (
         <EmptyState
-          icon={(emptyIcon || ICONS.dataFields.document) as IconName}
+          variant="compact"
+          fill
+          icon={emptyIcon as IconName | undefined}
           title={emptyMessage}
-          description={DEFAULT_EMPTY_DESCRIPTION}
+          description={emptyDescription ?? DEFAULT_EMPTY_DESCRIPTION}
         />
       ) : (
         (emptyMessage ?? (
           <EmptyState
-            icon={(emptyIcon || ICONS.dataFields.document) as IconName}
+            variant="compact"
+            fill
+            icon={emptyIcon as IconName | undefined}
             title={DEFAULT_EMPTY_TITLE}
-            description={DEFAULT_EMPTY_DESCRIPTION}
+            description={emptyDescription ?? DEFAULT_EMPTY_DESCRIPTION}
           />
         ))
       );
-    return <div className={containerClasses}>{emptyContent}</div>;
+    return (
+      <div className={`${containerClasses} flex flex-1 items-center justify-center min-h-[12rem]`}>
+        {emptyContent}
+      </div>
+    );
   }
 
   return (

@@ -16,7 +16,7 @@ import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import { collectionFilterConfig } from '../constants';
 import { mapCollectionWorklistToSampleDisplay } from '../utils/labQueue';
-import { ErrorBoundary } from '@/components';
+import { EMPTY_COPY, ErrorBoundary, emptySubtitle } from '@/components';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { useAuthStore } from '@/app/authStore';
 export const SampleCollectionQueue: React.FC = () => {
@@ -92,14 +92,18 @@ export const SampleCollectionQueue: React.FC = () => {
         getItemKey={(display: SampleCollectionQueueItem, idx: number) =>
           `${display.order.orderId}-${display.sample?.sampleType || 'unknown'}-${display.sample?.sampleId || idx}-${idx}`
         }
-        emptyIcon="sample-collection"
-        emptyTitle={isSampleLookup ? 'No matching samples' : 'No Pending Collections'}
+        emptyTitle={
+          isSampleLookup ? EMPTY_COPY.matchingSamples.title : EMPTY_COPY.pendingCollections.title
+        }
         emptyDescription={
           isSampleLookup
-            ? 'Try a display sample ID (e.g. SAM0042), numeric ID, or patient name.'
+            ? EMPTY_COPY.matchingSamples.description
             : isLookupBelowMin
-              ? `Enter at least ${LAB_CONFIG.SAMPLE_LOOKUP_MIN_CHARS} characters to search past samples by sample ID or patient name.`
-              : 'There are no samples waiting to be collected.'
+              ? emptySubtitle(
+                  'samples',
+                  `you enter at least ${LAB_CONFIG.SAMPLE_LOOKUP_MIN_CHARS} characters to search`,
+                )
+              : EMPTY_COPY.pendingCollections.description
         }
         filterRow={
           <LabQueueFilters

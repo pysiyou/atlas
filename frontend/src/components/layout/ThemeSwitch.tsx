@@ -1,22 +1,19 @@
 import { Icon } from '@/components';
-import { useActiveTheme, setTheme } from '@/components/theme';
-import type { ThemeName } from '@/components/theme';
+import { useActiveThemeMode, setThemeMode } from '@/components/theme';
+import type { ThemeMode } from '@/components/theme';
 import type { IconName } from '@/components/primitives/Icon';
 import { CHROME, CONTROL, RADIUS } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
-const THEMES: ThemeName[] = ['studio-light', 'playful-light', 'noir-studio', 'github'];
+const MODES: ThemeMode[] = ['light', 'dark'];
 
-const THEME_CONFIG: Record<ThemeName, { icon: IconName; label: string }> = {
-  'studio-light': { icon: 'sun', label: 'Studio' },
-  'playful-light': { icon: 'category', label: 'Playful' },
-  'noir-studio': { icon: 'moon', label: 'Dark' },
-  github: { icon: 'settings', label: 'GitHub' },
+const MODE_CONFIG: Record<ThemeMode, { icon: IconName; label: string }> = {
+  light: { icon: 'sun', label: 'Light' },
+  dark: { icon: 'moon', label: 'Dark' },
 };
 
-function nextTheme(current: ThemeName): ThemeName {
-  const index = THEMES.indexOf(current);
-  return THEMES[(index + 1) % THEMES.length] ?? THEMES[0];
+function nextMode(current: ThemeMode): ThemeMode {
+  return current === 'light' ? 'dark' : 'light';
 }
 
 export interface ThemeSwitchProps {
@@ -24,14 +21,14 @@ export interface ThemeSwitchProps {
 }
 
 export function ThemeSwitch({ isCollapsed = false }: ThemeSwitchProps) {
-  const effective = useActiveTheme();
+  const effective = useActiveThemeMode();
 
-  const handleThemeClick = (theme: ThemeName) => {
+  const handleModeClick = (mode: ThemeMode) => {
     if (isCollapsed) {
-      setTheme(nextTheme(effective));
+      setThemeMode(nextMode(effective));
       return;
     }
-    setTheme(theme);
+    setThemeMode(mode);
   };
 
   return (
@@ -45,14 +42,14 @@ export function ThemeSwitch({ isCollapsed = false }: ThemeSwitchProps) {
         role="group"
         aria-label="Theme"
       >
-        {THEMES.map(theme => {
-          const config = THEME_CONFIG[theme];
-          const isActive = effective === theme;
+        {MODES.map(mode => {
+          const config = MODE_CONFIG[mode];
+          const isActive = effective === mode;
           return (
             <button
-              key={theme}
+              key={mode}
               type="button"
-              onClick={() => handleThemeClick(theme)}
+              onClick={() => handleModeClick(mode)}
               title={isCollapsed ? `Theme: ${config.label}. Click to switch.` : config.label}
               aria-pressed={isActive}
               aria-label={`${config.label} theme`}

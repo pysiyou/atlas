@@ -3,13 +3,11 @@
  */
 
 import React, { useMemo } from 'react';
-import { Table, EmptyState } from '@/components';
+import { Table, EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components';
 import type { Order } from '@/types/order';
 import { useTestNameLookup } from '@/features/catalog';
 import { usePatientNameLookup } from '../api/patients';
 import { createOrderTableConfig } from '@/features/orders/config/OrderTable.config';
-import { ICONS } from '@/config/icons';
-
 export interface PatientOrdersTableProps {
   orders: Order[];
   onOrderClick: (orderId: string) => void;
@@ -17,9 +15,9 @@ export interface PatientOrdersTableProps {
 
 const EMPTY_MESSAGE = (
   <EmptyState
-    icon={ICONS.dataFields.document}
-    title="No Orders Found"
-    description="This patient has no orders yet."
+    {...PANEL_EMPTY_STATE}
+    title={EMPTY_COPY.relatedOrders.title}
+    description={EMPTY_COPY.relatedOrders.description}
   />
 );
 

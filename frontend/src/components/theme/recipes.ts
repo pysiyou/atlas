@@ -211,8 +211,9 @@ export const RADIUS = {
 
 /** Empty state layout. */
 export const EMPTY = {
-  containerCompact: `flex flex-col items-center justify-center py-space-6 px-space-4 text-center`,
-  containerDefault: 'flex flex-col items-center justify-center py-space-12 px-space-6 text-center',
+  containerCompact: `flex flex-col items-center justify-center py-space-6 px-space-4 text-center opacity-55`,
+  containerDefault:
+    'flex flex-col items-center justify-center py-space-12 px-space-6 text-center opacity-55',
   iconWrapCompact: `w-10 h-10 ${RADIUS.pill} bg-surface-hover flex items-center justify-center mb-space-3`,
   iconWrapDefault: `w-16 h-16 ${RADIUS.pill} bg-surface-hover flex items-center justify-center mb-space-4`,
   titleCompact: 'text-sm font-normal text-text-primary mb-space-1',

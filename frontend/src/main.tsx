@@ -12,6 +12,7 @@ import '@/components/theme/tokens/semantic-light.css';
 import '@/components/theme/tokens/semantic-dark.css';
 import '@/components/theme/themes/studio-light.css';
 import '@/components/theme/themes/playful-light.css';
+import '@/components/theme/themes/aurora-light.css';
 import '@/components/theme/themes/noir-studio.css';
 import '@/components/theme/themes/github.css';
 import '@/components/theme/components.css';
