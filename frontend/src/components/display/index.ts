@@ -11,5 +11,7 @@ export * from './DetailFieldGroup';
 export * from './DetailsTable';
 export * from './detailsTableUtils';
 export * from './EmptyState';
+export * from './emptyStatePresets';
+export * from './emptyStateCopy';
 export * from './EntityId';
 export * from './FooterInfo';

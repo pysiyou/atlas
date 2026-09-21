@@ -10,7 +10,7 @@
  * - The popover stays open while selecting; outside click or Escape closes it.
  */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Icon, RemovableTag, CheckboxIndicator } from '@/components';
+import { EMPTY_COPY, Icon, RemovableTag, CheckboxIndicator } from '@/components';
 import type { Test } from '@/types';
 import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
 import { cn, formatCurrency, formatTurnaroundTime, titleCaseWords } from '@/utils';
@@ -179,7 +179,8 @@ const TestSelectPopover: React.FC<TestSelectPopoverProps> = ({
   <OrderSelectPopoverShell
     title="Matching tests"
     resultCount={visibleTests.length}
-    emptyMessage="No tests found"
+    emptyMessage={EMPTY_COPY.matchingTests.title}
+    emptyDescription={EMPTY_COPY.matchingTests.description}
     isEmpty={visibleTests.length === 0}
   >
     {visibleTests.map(test => {

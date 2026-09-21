@@ -8,6 +8,7 @@ import { RADIUS, SHADOW } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 import { LAB_CONFIG, LAB_STAGE_SHORT_ROWS } from '../../constants';
 import { getStageVisual } from '../../constants/labConstants';
+import { EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components';
 import { Panel } from '@/components/surfaces/Panel';
 import { SectionTitle } from '../LabCommandCenterUi';
 import { COMMAND_CENTER_TEXT, COMMAND_CENTER_SECTION } from '../commandCenterStyles';
@@ -234,7 +235,11 @@ export const QueueAgePanel: React.FC<QueueAgePanelProps> = ({ counts, queueAge, 
     >
       <div className="flex h-full min-h-0 flex-col justify-between gap-space-3 overflow-hidden px-space-3 py-space-2">
         {totalActive === 0 ? (
-          <p className={COMMAND_CENTER_SECTION.summary}>No active tests in pipeline.</p>
+          <EmptyState
+            {...PANEL_EMPTY_STATE}
+            title={EMPTY_COPY.activeTests.title}
+            description={EMPTY_COPY.activeTests.description}
+          />
         ) : (
           <>
             <StageTimeComposition stages={stages} />

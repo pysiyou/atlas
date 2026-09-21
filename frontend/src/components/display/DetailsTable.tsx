@@ -6,7 +6,6 @@
 import React from 'react';
 import { EmptyState, Panel } from '@/components';
 import { DETAIL_TABLE_LABEL, DETAIL_VALUE, DEFAULT_EMPTY_TITLE } from '@/utils/constants';
-import { ICONS } from '@/config/icons';
 import { filterDetailRows, type DetailTableRow } from './detailsTableUtils';
 
 /** Re-export for consumers */
@@ -47,11 +46,7 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
           {filteredRows.length === 0 && (
             <tr>
               <td colSpan={2} className="px-space-4 py-space-4">
-                <EmptyState
-                  variant="compact"
-                  icon={ICONS.dataFields.document}
-                  title={DEFAULT_EMPTY_TITLE}
-                />
+                <EmptyState variant="compact" title={DEFAULT_EMPTY_TITLE} />
               </td>
             </tr>
           )}

@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Icon, IconButton, EmptyState, EntityId } from '@/components';
+import { Icon, IconButton, EmptyState, EntityId, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components';
 import { formatDateTime } from '@/utils';
 import type { Order } from '@/types';
 import { getReportableOrders } from '../utils/patientFormatters';
@@ -22,9 +22,9 @@ export const PatientReportsList: React.FC<PatientReportsListProps> = ({ orders }
   if (reportableOrders.length === 0) {
     return (
       <EmptyState
-        icon={ICONS.dataFields.documentMedicine}
-        title="No Reports Available"
-        description="There are no validated reports for this patient yet."
+        {...PANEL_EMPTY_STATE}
+        title={EMPTY_COPY.reports.title}
+        description={EMPTY_COPY.reports.description}
       />
     );
   }

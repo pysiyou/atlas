@@ -12,7 +12,7 @@ import { ResultEntryCard } from './ResultEntryCard';
 import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import { entryFilterConfig } from '../constants';
-import { ErrorBoundary } from '@/components';
+import { EMPTY_COPY, ErrorBoundary } from '@/components';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { useResultEntryWorkflow } from './useResultEntryWorkflow';
@@ -103,9 +103,8 @@ export const ResultEntryQueue: React.FC = () => {
             ? `entry-${(test as TestWithContextResult).id}-${idx}`
             : `entry-${idx}`
         }
-        emptyIcon="checklist"
-        emptyTitle="No Pending Results"
-        emptyDescription="There are no samples waiting for result entry."
+        emptyTitle={EMPTY_COPY.pendingResults.title}
+        emptyDescription={EMPTY_COPY.pendingResults.description}
         filterRow={
           <LabQueueFilters
             config={entryFilterConfig}

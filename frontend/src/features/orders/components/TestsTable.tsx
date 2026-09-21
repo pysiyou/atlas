@@ -4,10 +4,9 @@
  */
 
 import React, { useMemo } from 'react';
-import { Table, EmptyState } from '@/components';
+import { Table, EmptyState, EMPTY_COPY } from '@/components';
 import { useTestCatalog } from '@/features/catalog';
 import type { OrderTest } from '@/types';
-import { ICONS } from '@/config/icons';
 import { createTestsTableConfig } from '../config/TestsTable.config';
 
 export interface TestsTableProps {
@@ -19,9 +18,10 @@ export interface TestsTableProps {
 
 const EMPTY_MESSAGE = (
   <EmptyState
-    icon={ICONS.dataFields.health}
-    title="No Tests"
-    description="This order has no tests."
+    variant="compact"
+    fill
+    title={EMPTY_COPY.orderTests.title}
+    description={EMPTY_COPY.orderTests.description}
   />
 );
 

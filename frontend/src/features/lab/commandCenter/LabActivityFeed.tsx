@@ -5,6 +5,7 @@
 import React from 'react';
 import { Skeleton } from '@/components/loaders/Skeleton';
 import type { TimelineEvent } from '../api/labCommandCenter';
+import { EMPTY_COPY } from '@/components';
 import { Timeline, TIMELINE_STYLES } from '@/features/timeline';
 
 export interface LabActivityFeedProps {
@@ -76,7 +77,8 @@ export const LabActivityFeed: React.FC<LabActivityFeedProps> = ({
       preset="commandCenter"
       events={events}
       interactiveEntities
-      emptyMessage="No recent activity"
+      emptyMessage={EMPTY_COPY.recentActivity.title}
+      emptyDescription={EMPTY_COPY.recentActivity.description}
       className="h-full px-space-4 py-space-2"
       footer={loadMoreFooter}
     />

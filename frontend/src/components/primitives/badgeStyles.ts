@@ -116,7 +116,7 @@ export type BadgeVariant = BadgeColor | keyof typeof COLOR_MAP | (string & {});
 
 const UNIFIED_STYLES: Record<BadgeColor, { text: string; dot: string }> = {
   neutral: { text: TONE.neutral.fgEmphasis, dot: TONE.neutral.fill },
-  primary: { text: TONE.brand.fgEmphasis, dot: TONE.brand.fill },
+  primary: { text: 'text-brand-fg', dot: TONE.brand.fill },
   success: { text: TONE.success.fgEmphasis, dot: TONE.success.fill },
   warning: { text: TONE.warning.fgEmphasis, dot: TONE.warning.fill },
   danger: { text: TONE.danger.fgEmphasis, dot: TONE.danger.fill },

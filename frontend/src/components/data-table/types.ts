@@ -79,6 +79,9 @@ export interface TableProps<T> {
   loading?: boolean;
   loadingRows?: number;
   emptyMessage?: ReactNode;
+  /** Subtitle when emptyMessage is a string */
+  emptyDescription?: string;
+  /** Passed to EmptyState when set */
   emptyIcon?: string;
   caption?: string;
   ariaLabel?: string;

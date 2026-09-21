@@ -3,6 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
+import { EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components';
 import { Link } from 'react-router-dom';
 import { Badge, EntityId } from '@/components';
 import { cn, displayId } from '@/utils';
@@ -131,8 +132,12 @@ export const LabAttentionFeed: React.FC<LabAttentionFeedProps> = ({ items }) => 
 
   if (groups.length === 0) {
     return (
-      <div className="flex h-full flex-col items-center justify-center bg-surface px-space-4">
-        <p className="text-sm text-text-secondary">No holds, escalations, or STAT work pending.</p>
+      <div className="flex h-full min-h-0 flex-col bg-surface">
+        <EmptyState
+          {...PANEL_EMPTY_STATE}
+          title={EMPTY_COPY.pendingAttention.title}
+          description={EMPTY_COPY.pendingAttention.description}
+        />
       </div>
     );
   }

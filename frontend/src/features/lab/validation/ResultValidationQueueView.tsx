@@ -1,7 +1,7 @@
 import { ResultValidationCard } from './ResultValidationCard';
 import { EscalationCard } from './EscalationCard';
 import { LabValidationQueueSection } from '../components/LabValidationQueueSection';
-import { EmptyState } from '@/components';
+import { EmptyState, EMPTY_COPY } from '@/components';
 import type { TestWithContext } from '@/types';
 import type { RecollectionRequestSummary, QualityIssueResult } from '@/types/lab-operations';
 import { SampleRecollectionRequestCard } from './SampleRecollectionRequestCard';
@@ -58,9 +58,9 @@ export function ResultValidationQueueView({
   if (isEmpty) {
     return (
       <EmptyState
-        icon="shield-check"
-        title="No Pending Validation"
-        description="There are no results waiting for validation or supervisor review."
+        fill
+        title={EMPTY_COPY.pendingValidation.title}
+        description={EMPTY_COPY.pendingValidation.description}
       />
     );
   }

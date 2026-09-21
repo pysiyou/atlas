@@ -1,4 +1,5 @@
 import React from 'react';
+import { EMPTY_COPY } from '@/components';
 import { Skeleton } from '@/components/loaders/Skeleton';
 import { Timeline } from '@/features/timeline';
 import { useOrderTimeline } from '@/features/timeline/useOrderTimeline';
@@ -43,7 +44,8 @@ export const OrderEventTimeline: React.FC<OrderEventTimelineProps> = ({ orderId 
       events={data?.events ?? []}
       interactiveEntities
       className="max-h-80 p-panel"
-      emptyMessage="No activity recorded for this order yet."
+      emptyMessage={EMPTY_COPY.orderActivity.title}
+      emptyDescription={EMPTY_COPY.orderActivity.description}
     />
   );
 };

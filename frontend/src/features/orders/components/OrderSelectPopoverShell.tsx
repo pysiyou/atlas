@@ -1,6 +1,8 @@
 import React from 'react';
+import { EmptyState } from '@/components';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 import { OVERLAY, RADIUS, TYPE } from '@/components/theme/recipes';
+import { DEFAULT_EMPTY_DESCRIPTION_SEARCH } from '@/utils/constants';
 
 
 const POPOVER_SHELL_CLASS = [
@@ -16,6 +18,7 @@ export interface OrderSelectPopoverShellProps {
   title: string;
   resultCount: number;
   emptyMessage: string;
+  emptyDescription?: string;
   isEmpty: boolean;
   children: React.ReactNode;
 }
@@ -25,6 +28,7 @@ export const OrderSelectPopoverShell: React.FC<OrderSelectPopoverShellProps> = (
   title,
   resultCount,
   emptyMessage,
+  emptyDescription = DEFAULT_EMPTY_DESCRIPTION_SEARCH,
   isEmpty,
   children,
 }) => (
@@ -35,7 +39,7 @@ export const OrderSelectPopoverShell: React.FC<OrderSelectPopoverShellProps> = (
     </div>
 
     {isEmpty ? (
-      <div className={`px-space-4 py-space-3 ${TYPE.meta}`}>{emptyMessage}</div>
+      <EmptyState variant="compact" title={emptyMessage} description={emptyDescription} />
     ) : (
       <div className="max-h-[280px] overflow-y-auto divide-y divide-border-default/70">
         {children}

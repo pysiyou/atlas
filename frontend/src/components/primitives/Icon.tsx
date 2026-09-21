@@ -125,7 +125,8 @@ export type IconName =
   | 'user-cog'
   | 'like'
   | 'dislike'
-  | 'menu';
+  | 'menu'
+  | 'database';
 
 export interface IconProps {
   /** Name of the icon to display (must match SVG filename without .svg extension) */
