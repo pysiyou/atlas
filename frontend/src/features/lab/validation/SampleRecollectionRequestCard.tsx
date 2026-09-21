@@ -52,7 +52,7 @@ function RecollectionRequestCardDesktop({
 
   const badges = (
     <>
-      <BlockedReasonBadge label="Recollection approval" size={LAB_CARD_BADGE_SIZE} />
+      <BlockedReasonBadge label="Recollection approval" size={LAB_CARD_BADGE_SIZE} showIcon={false} />
       {request.sampleType && (
         <Badge variant={request.sampleType as 'blood' | 'urine' | 'other'} size={LAB_CARD_BADGE_SIZE} />
       )}
@@ -173,7 +173,7 @@ function RecollectionRequestCardMobile({
 
   const badges = (
     <>
-      <BlockedReasonBadge label="Recollection approval" size={LAB_CARD_BADGE_SIZE} />
+      <BlockedReasonBadge label="Recollection approval" size={LAB_CARD_BADGE_SIZE} showIcon={false} />
       {request.sampleType && (
         <Badge variant={request.sampleType as 'blood' | 'urine' | 'other'} size={LAB_CARD_BADGE_SIZE} />
       )}

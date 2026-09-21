@@ -63,6 +63,15 @@ export interface LabBoardResponse {
   attentionTotal: number;
   totalActive: number;
   computedAt?: string | null;
+  dashboardKpis?: {
+    ordersToday: number;
+    awaitingResults: number;
+    criticalValues: number;
+    tatCompliancePercent: number;
+    volumeTotal: number;
+    volumeWowPercent: number | null;
+  };
+  volumeByDay?: Array<{ date: string; count: number }>;
 }
 
 export const labCommandCenterAPI = {

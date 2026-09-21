@@ -1,11 +1,18 @@
 /**
- * Loading skeleton for the lab tech command center board.
+ * Loading skeleton for the lab dashboard board.
  */
 
 import React from 'react';
-import { RADIUS } from '@/components/theme/recipes';
 import { Panel, Skeleton, SkeletonText } from '@/components';
-import { COMMAND_CENTER_PANEL, COMMAND_CENTER_PIPELINE_STRIP } from './commandCenterStyles';
+import { COMMAND_CENTER_PANEL } from './commandCenterStyles';
+import {
+  DASHBOARD_BOTTOM_PANEL,
+  DASHBOARD_BOTTOM_ROW,
+  DASHBOARD_KPI_CARD,
+  DASHBOARD_KPI_ROW,
+  DASHBOARD_PAGE,
+  DASHBOARD_TABLE_WRAP,
+} from './dashboardStyles';
 
 function PanelSkeleton({ className }: { className?: string }) {
   return (
@@ -14,8 +21,8 @@ function PanelSkeleton({ className }: { className?: string }) {
       headerEnd={<Skeleton height={12} width={72} />}
       className={className}
     >
-      <div className="flex flex-col gap-space-3 min-h-48">
-        <Skeleton height={120} className={`w-full ${RADIUS.pill}`} />
+      <div className="flex min-h-48 flex-col gap-space-3">
+        <Skeleton height={120} className="w-full" />
         <SkeletonText lines={3} />
       </div>
     </Panel>
@@ -24,45 +31,37 @@ function PanelSkeleton({ className }: { className?: string }) {
 
 export const LabCommandCenterBoardSkeleton: React.FC = () => {
   return (
-    <div className={COMMAND_CENTER_PANEL.page} aria-busy="true" aria-label="Loading command center">
-      <div className="flex h-full min-h-0 flex-col gap-space-2">
-        <div className={COMMAND_CENTER_PIPELINE_STRIP}>
-          <div className="mb-space-2 flex items-center justify-between gap-space-3">
-            <Skeleton height={14} width={88} />
-            <Skeleton height={12} width={160} />
-          </div>
-          <div className="flex gap-space-2">
-            {Array.from({ length: 4 }).map((_, index) => (
-              <div key={index} className={`min-w-0 flex-1 ${RADIUS.field} border border-border-default px-space-2-5 py-space-2`}>
-                <div className="flex items-center gap-space-2">
-                  <Skeleton circle height={32} width={32} />
-                  <div className="min-w-0 flex-1 space-y-space-2">
-                    <Skeleton height={10} width="55%" />
-                    <Skeleton height={18} width="35%" />
-                  </div>
-                </div>
+    <div className={COMMAND_CENTER_PANEL.page} aria-busy="true" aria-label="Loading dashboard">
+      <div className={DASHBOARD_PAGE}>
+        <div className={DASHBOARD_KPI_ROW}>
+          {Array.from({ length: 4 }).map((_, index) => (
+            <div key={index} className={DASHBOARD_KPI_CARD.shell}>
+              <Skeleton circle height={40} width={40} />
+              <div className="min-w-0 flex-1 space-y-space-2">
+                <Skeleton height={28} width="40%" />
+                <Skeleton height={12} width="55%" />
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
-
-        <div className="grid min-h-0 flex-1 grid-cols-1 gap-space-2 lg:grid-cols-12">
-          <div className="flex min-h-0 flex-col gap-space-2 lg:col-span-8 lg:h-full">
-            <div className="min-h-48 lg:min-h-0 lg:flex-[2]">
-              <PanelSkeleton />
+        <div className={DASHBOARD_TABLE_WRAP}>
+          <Panel hideHeader padding="none" className="h-full min-h-0">
+            <div className="flex h-full flex-col space-y-space-2 p-space-3">
+              {Array.from({ length: 8 }).map((_, index) => (
+                <Skeleton key={index} height={44} className="w-full" />
+              ))}
             </div>
-            <div className="grid min-h-0 grid-cols-1 gap-space-2 sm:grid-cols-2 lg:min-h-0 lg:flex-[4]">
-              <PanelSkeleton />
-              <PanelSkeleton />
-            </div>
+          </Panel>
+        </div>
+        <div className={DASHBOARD_BOTTOM_ROW}>
+          <div className={DASHBOARD_BOTTOM_PANEL}>
+            <PanelSkeleton />
           </div>
-          <div className="flex min-h-0 flex-col gap-space-2 lg:col-span-4 lg:h-full">
-            <div className="min-h-48 lg:min-h-0 lg:flex-[2]">
-              <PanelSkeleton />
-            </div>
-            <div className="min-h-48 lg:min-h-0 lg:flex-[4]">
-              <PanelSkeleton />
-            </div>
+          <div className={DASHBOARD_BOTTOM_PANEL}>
+            <PanelSkeleton />
+          </div>
+          <div className={DASHBOARD_BOTTOM_PANEL}>
+            <PanelSkeleton />
           </div>
         </div>
       </div>

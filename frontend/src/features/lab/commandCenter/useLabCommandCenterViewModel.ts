@@ -17,6 +17,15 @@ const EMPTY_QUEUE_AGE: LabCommandCenterSnapshot['queueAge'] = {
   validation: { oldestHours: null, averageHours: null, warningCount: 0, criticalCount: 0 },
 };
 
+const EMPTY_DASHBOARD_KPIS: LabCommandCenterSnapshot['dashboardKpis'] = {
+  ordersToday: 0,
+  awaitingResults: 0,
+  criticalValues: 0,
+  tatCompliancePercent: 100,
+  volumeTotal: 0,
+  volumeWowPercent: null,
+};
+
 const EMPTY_BOARD: LabCommandCenterSnapshot = {
   counts: { collection: 0, entry: 0, validation: 0, supervisor: 0 },
   queueAge: EMPTY_QUEUE_AGE,
@@ -29,6 +38,8 @@ const EMPTY_BOARD: LabCommandCenterSnapshot = {
   healthMessage: 'Queues within TAT',
   suggestedTab: null,
   totalActive: 0,
+  dashboardKpis: EMPTY_DASHBOARD_KPIS,
+  volumeByDay: [],
 };
 
 function isLabPipelineStage(value: string | null | undefined): value is LabPipelineStage {
@@ -76,6 +87,8 @@ function toBoardData(board: LabBoardResponse): LabCommandCenterSnapshot {
     suggestedTab: isLabPipelineStage(board.suggestedTab) ? board.suggestedTab : null,
     totalActive: board.totalActive,
     computedAt: board.computedAt,
+    dashboardKpis: board.dashboardKpis ?? EMPTY_DASHBOARD_KPIS,
+    volumeByDay: board.volumeByDay ?? [],
   };
 }
 

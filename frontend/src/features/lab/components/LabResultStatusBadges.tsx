@@ -87,15 +87,23 @@ interface OrderTestBlockReasonBadgeProps {
   label: string;
   size?: BadgeSize;
   className?: string;
+  showIcon?: boolean;
 }
 
 export const BlockedReasonBadge: React.FC<OrderTestBlockReasonBadgeProps> = ({
   label,
   size = 'xs',
   className = '',
+  showIcon = true,
 }) => (
-  <Badge size={size} variant="warning" className={`flex items-center gap-space-1 ${className}`}>
-    <Icon name={ICONS.actions.alertCircle} className="w-3 h-3 shrink-0" />
+  <Badge
+    size={size}
+    variant="warning"
+    className={`${showIcon ? 'flex items-center gap-space-1' : ''} ${className}`}
+  >
+    {showIcon ? (
+      <Icon name={ICONS.actions.alertCircle} className="w-3 h-3 shrink-0" />
+    ) : null}
     {label}
   </Badge>
 );

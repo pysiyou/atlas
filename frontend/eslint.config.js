@@ -125,6 +125,7 @@ export default defineConfig([
       'src/features/lab/utils/labStyles.ts',
       'src/features/lab/utils/labResult.ts',
       'src/features/lab/commandCenter/commandCenterStyles.ts',
+      'src/features/lab/commandCenter/dashboardStyles.ts',
       'src/features/timeline/timelineStyles.ts',
     ],
     rules: {
