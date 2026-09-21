@@ -12,7 +12,7 @@
  * - Collection: collect sample → invalidateCollectionQueries
  * - Lab board refresh → invalidateCommandCenterQueries
  * - Full lab workflow (validation modals) → invalidateLabWorkflowQueries
- * - Worklists: collection/entry/validation queues → invalidateWorklistQueries
+ * - Worklists + lab tab counts: queue changes → invalidateWorklistQueries (also refreshes board)
  */
 
 import type { QueryClient, QueryKey } from '@tanstack/react-query';
@@ -29,8 +29,16 @@ function settleInvalidations(tasks: Array<Promise<unknown>>): Promise<void> {
   return Promise.all(tasks).then(() => undefined);
 }
 
+/** Lab tab badges read pipeline counts from the command-center board snapshot. */
+export function invalidateLabBoardQuery(client: QueryClient): Promise<void> {
+  return client.invalidateQueries({ queryKey: queryKeys.commandCenter.board() });
+}
+
 export function invalidateWorklistQueries(client: QueryClient): Promise<void> {
-  return client.invalidateQueries({ queryKey: queryKeys.worklists.all });
+  return settleInvalidations([
+    client.invalidateQueries({ queryKey: queryKeys.worklists.all }),
+    invalidateLabBoardQuery(client),
+  ]);
 }
 
 export function invalidateOrderQueries(

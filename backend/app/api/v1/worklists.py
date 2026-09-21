@@ -9,6 +9,7 @@ from app.models.user import User
 from app.schemas.enums import PriorityLevel, UserRole
 from app.schemas.worklists import (
     CollectionWorklistItem,
+    DashboardBlockedWorklistItem,
     EntryWorklistItem,
     LabBoardResponse,
     ValidationWorklistItem,
@@ -56,6 +57,18 @@ def get_entry_worklist(
         page=page, page_size=pageSize, search=search, priority=priority
     )
     items = [EntryWorklistItem(**item) for item in result["items"]]
+    return _worklist_response(items, result["pagination"])
+
+
+@router.get("/lab/worklists/dashboard-blocked")
+def get_dashboard_blocked_worklist(
+    page: int = Query(1, ge=1),
+    pageSize: int = Query(50, ge=1, le=200),
+    db: Session = Depends(get_db),
+    _user: User = Depends(require_lab_tech),
+):
+    result = LabWorklistService(db).list_dashboard_blocked(page=page, page_size=pageSize)
+    items = [DashboardBlockedWorklistItem(**item) for item in result["items"]]
     return _worklist_response(items, result["pagination"])
 
 

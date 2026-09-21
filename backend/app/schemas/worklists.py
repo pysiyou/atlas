@@ -48,6 +48,9 @@ class CollectionWorklistItem(BaseModel):
     collectedAt: datetime | None = None
     collectedBy: str | None = None
     collectedVolume: float | None = None
+    referringPhysician: str | None = None
+    testName: str | None = None
+    testCategory: str | None = None
 
 
 class EntryWorklistItem(BaseModel):
@@ -66,6 +69,29 @@ class EntryWorklistItem(BaseModel):
     waitingHours: float
     turnaroundHours: int
     isRetest: bool
+    referringPhysician: str | None = None
+    testCategory: str | None = None
+
+
+class DashboardBlockedWorklistItem(BaseModel):
+    """Order tests hidden from stage queues while recollection awaits supervisor approval."""
+
+    orderTestId: int
+    orderId: int
+    patientId: int
+    patientName: str
+    testCode: str
+    testName: str
+    priority: PriorityLevel
+    status: TestStatus
+    stage: Literal["collection", "entry", "validation"]
+    orderDate: datetime
+    blockedReason: Literal["recollection_approval"]
+    blockedLabel: str
+    waitingHours: float
+    referringPhysician: str | None = None
+    testCategory: str | None = None
+    recollectionRequestId: int
 
 
 class ValidationWorklistItem(BaseModel):
@@ -92,6 +118,7 @@ class ValidationWorklistItem(BaseModel):
     waitingHours: float
     turnaroundHours: int
     hasCriticalValues: bool
+    testCategory: str | None = None
 
 
 class WorklistResponse(BaseModel):
@@ -151,6 +178,20 @@ class BoardAttentionItem(BaseModel):
     attentionType: str
 
 
+class DashboardKpis(BaseModel):
+    ordersToday: int
+    awaitingResults: int
+    criticalValues: int
+    tatCompliancePercent: int
+    volumeTotal: int
+    volumeWowPercent: float | None = None
+
+
+class VolumeDayPoint(BaseModel):
+    date: str
+    count: int
+
+
 class LabBoardResponse(BaseModel):
     counts: LabBoardCounts
     queueAge: dict[str, QueueAgeStats]
@@ -164,3 +205,5 @@ class LabBoardResponse(BaseModel):
     attentionTotal: int
     totalActive: int
     computedAt: str | None = None
+    dashboardKpis: DashboardKpis
+    volumeByDay: list[VolumeDayPoint]

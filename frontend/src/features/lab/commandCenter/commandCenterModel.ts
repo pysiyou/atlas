@@ -208,6 +208,20 @@ export interface PriorityMix {
   low: number;
 }
 
+export interface DashboardKpis {
+  ordersToday: number;
+  awaitingResults: number;
+  criticalValues: number;
+  tatCompliancePercent: number;
+  volumeTotal: number;
+  volumeWowPercent: number | null;
+}
+
+export interface VolumeDayPoint {
+  date: string;
+  count: number;
+}
+
 export interface LabCommandCenterSnapshot {
   counts: { collection: number; entry: number; validation: number; supervisor: number };
   queueAge: Record<LabPipelineStage, QueueAgeStats>;
@@ -221,5 +235,7 @@ export interface LabCommandCenterSnapshot {
   suggestedTab: LabPipelineStage | null;
   totalActive: number;
   computedAt?: string | null;
+  dashboardKpis: DashboardKpis;
+  volumeByDay: VolumeDayPoint[];
 }
 

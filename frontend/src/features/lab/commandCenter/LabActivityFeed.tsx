@@ -45,7 +45,7 @@ export const LabActivityFeed: React.FC<LabActivityFeedProps> = ({
 }) => {
   if (isError) {
     return (
-      <div className="text-sm text-text-secondary">
+      <div className="text-xs text-text-secondary">
         Couldn&apos;t load activity feed.{' '}
         {onRetry && (
           <button type="button" onClick={onRetry} className={TIMELINE_STYLES.retryLink}>

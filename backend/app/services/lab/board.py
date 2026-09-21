@@ -9,7 +9,7 @@ Blocker mapping (aligned with frontend deriveWorkItemState):
 """
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from typing import Any, Literal
 
 from app.data.lab_constants import QUEUE_AGE_CRITICAL_HOURS, QUEUE_AGE_WARNING_HOURS
@@ -28,6 +28,7 @@ from app.schemas.enums import (
     SampleStatus,
     TestStatus,
 )
+from sqlalchemy import Date, cast, func
 from sqlalchemy.orm import Session
 
 ATTENTION_LIMIT = 50
@@ -643,13 +644,95 @@ class LabBoardService:
         validation_rows = self._validation_rows()
         escalation_rows = self._escalation_rows() if include_supervisor else []
         recollection_rows = self._recollection_rows() if include_supervisor else []
-        return assemble_board(
+        snapshot = assemble_board(
             collection_rows,
             entry_rows,
             validation_rows,
             escalation_rows,
             recollection_rows,
         )
+        snapshot.update(
+            self._dashboard_extensions(snapshot, validation_rows, escalation_rows)
+        )
+        return snapshot
+
+    def _utc_today_start(self) -> datetime:
+        today = datetime.now(UTC).date()
+        return datetime.combine(today, datetime.min.time()).replace(tzinfo=UTC)
+
+    def _active_order_test_filter(self):
+        return ~OrderTest.status.in_(
+            (TestStatus.CANCELLED, TestStatus.REMOVED, TestStatus.SUPERSEDED)
+        )
+
+    def _orders_today_count(self) -> int:
+        return (
+            self.db.query(func.count(OrderTest.id))
+            .join(Order, OrderTest.orderId == Order.orderId)
+            .filter(Order.orderDate >= self._utc_today_start())
+            .filter(self._active_order_test_filter())
+            .scalar()
+            or 0
+        )
+
+    def _volume_by_day(self) -> tuple[list[dict[str, Any]], int, float | None]:
+        """Last 7 UTC days of order-test volume; WoW uses the prior 7-day window."""
+        today = datetime.now(UTC).date()
+        days = [today - timedelta(days=offset) for offset in range(13, -1, -1)]
+        start = datetime.combine(days[0], datetime.min.time()).replace(tzinfo=UTC)
+        day_expr = cast(func.timezone("UTC", Order.orderDate), Date)
+        rows = (
+            self.db.query(day_expr, func.count(OrderTest.id))
+            .join(Order, OrderTest.orderId == Order.orderId)
+            .filter(Order.orderDate >= start)
+            .filter(self._active_order_test_filter())
+            .group_by(day_expr)
+            .all()
+        )
+        counts = {str(day): int(count) for day, count in rows}
+        series = [{"date": day.isoformat(), "count": counts.get(day.isoformat(), 0)} for day in days]
+        last_week = series[-7:]
+        prior_week = series[:7]
+        volume_total = sum(point["count"] for point in last_week)
+        prior_total = sum(point["count"] for point in prior_week)
+        wow = (
+            None
+            if prior_total == 0
+            else round((volume_total - prior_total) / prior_total * 100, 1)
+        )
+        return last_week, volume_total, wow
+
+    def _dashboard_extensions(
+        self,
+        snapshot: dict[str, Any],
+        validation_rows: list[dict[str, Any]],
+        escalation_rows: list[dict[str, Any]],
+    ) -> dict[str, Any]:
+        awaiting = snapshot["counts"]["entry"] + snapshot["counts"]["validation"]
+        critical = sum(1 for row in validation_rows if row.get("has_critical_values")) + sum(
+            1
+            for row in escalation_rows
+            if row.get("reason_code") == EscalationReasonCode.CRIT_VAL.value
+        )
+        buckets = snapshot["ageBuckets"]
+        total_active = snapshot["totalActive"]
+        tat = (
+            100
+            if total_active <= 0
+            else round((buckets["fresh"] + buckets["onTrack"]) / total_active * 100)
+        )
+        volume_by_day, volume_total, wow = self._volume_by_day()
+        return {
+            "dashboardKpis": {
+                "ordersToday": self._orders_today_count(),
+                "awaitingResults": awaiting,
+                "criticalValues": critical,
+                "tatCompliancePercent": tat,
+                "volumeTotal": volume_total,
+                "volumeWowPercent": wow,
+            },
+            "volumeByDay": volume_by_day,
+        }
 
     def _collection_rows(self) -> list[dict[str, Any]]:
         rows = (
@@ -725,6 +808,7 @@ class LabBoardService:
                 "order_date": order.orderDate,
                 "sample_status": sample.status if sample else None,
                 "turnaround_hours": test.turnaroundTimeHours or 24,
+                "has_critical_values": bool(ot.hasCriticalValues),
             }
             for ot, order, patient, test, sample in rows
         ]

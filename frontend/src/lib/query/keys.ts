@@ -193,6 +193,8 @@ export const queryKeys = {
       [...queryKeys.worklists.all, 'entry', params] as const,
     validation: (params?: { page?: number; pageSize?: number; search?: string }) =>
       [...queryKeys.worklists.all, 'validation', params] as const,
+    dashboardBlocked: (params?: { page?: number; pageSize?: number; search?: string }) =>
+      [...queryKeys.worklists.all, 'dashboard-blocked', params] as const,
   },
 } as const;
 

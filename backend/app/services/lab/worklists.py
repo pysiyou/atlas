@@ -11,9 +11,17 @@ from typing import Any
 
 from app.models.order import Order, OrderTest
 from app.models.patient import Patient
+from app.models.recollection_request import RecollectionRequest
 from app.models.sample import Sample
 from app.models.test import Test
-from app.schemas.enums import PaymentStatus, PriorityLevel, SampleStatus, TestStatus
+from app.schemas.enums import (
+    PaymentStatus,
+    PriorityLevel,
+    RecollectionRequestStatus,
+    SampleStatus,
+    TestStatus,
+)
+from app.services.lab.board import BLOCKED_LABELS
 from app.services.lab.board import LabBoardService
 from app.utils.common import parse_display_id_from_search
 from sqlalchemy import String, or_
@@ -67,6 +75,7 @@ class LabWorklistService:
     def __init__(self, db: Session):
         self.db = db
         self._tat_cache: dict[str, int] = {}
+        self._catalog_cache: dict[str, tuple[str | None, str | None]] = {}
 
     def _get_turnaround(self, test_code: str) -> int:
         if test_code in self._tat_cache:
@@ -80,6 +89,31 @@ class LabWorklistService:
         if not codes:
             return 24
         return max(self._get_turnaround(c) for c in codes)
+
+    def _catalog_meta(self, code: str | None) -> tuple[str | None, str | None]:
+        if not code:
+            return None, None
+        if code in self._catalog_cache:
+            return self._catalog_cache[code]
+        row = self.db.query(Test.name, Test.category).filter(Test.code == code).first()
+        meta = (row[0], row[1]) if row else (None, None)
+        self._catalog_cache[code] = meta
+        return meta
+
+    def _collection_test_display(self, codes: list[str]) -> tuple[str, str | None]:
+        names: list[str] = []
+        category: str | None = None
+        for code in codes:
+            name, cat = self._catalog_meta(code)
+            if name:
+                names.append(name)
+            elif code:
+                names.append(code)
+            if category is None:
+                category = cat
+        if names:
+            return ", ".join(names), category
+        return "Sample collection", category
 
     def list_collection(
         self,
@@ -108,7 +142,9 @@ class LabWorklistService:
         for sample, order, patient in rows:
             since = order.orderDate
             hours = _hours_since(since)
-            tat = self._max_tat_for_codes(sample.testCodes or [])
+            codes = sample.testCodes or []
+            tat = self._max_tat_for_codes(codes)
+            test_name, test_category = self._collection_test_display(codes)
             blocked = "payment_unpaid" if order.paymentStatus != PaymentStatus.PAID else None
             original_sample_collected_at = None
             if sample.originalSampleId:
@@ -128,7 +164,10 @@ class LabWorklistService:
                     "priority": sample.priority,
                     "paymentStatus": order.paymentStatus,
                     "orderDate": order.orderDate,
-                    "testCodes": sample.testCodes or [],
+                    "testCodes": codes,
+                    "referringPhysician": order.referringPhysician,
+                    "testName": test_name,
+                    "testCategory": test_category,
                     "isRecollection": bool(sample.isRecollection),
                     "originalSampleId": sample.originalSampleId,
                     "originalSampleCollectedAt": original_sample_collected_at,
@@ -161,6 +200,110 @@ class LabWorklistService:
             item.pop("_sort_priority", None)
             item.pop("_sort_since", None)
             item.pop("_sort_recency", None)
+        return {"items": page_items, "pagination": _paginate(total, page, page_size)}
+
+    def _order_test_in_active_worklist(self, order_test: OrderTest, sample: Sample | None) -> bool:
+        """True when the test already appears on collection, entry, or validation worklists."""
+        if order_test.status == TestStatus.SAMPLE_COLLECTED:
+            return True
+        if order_test.status == TestStatus.RESULTED and order_test.resultValidatedAt is None:
+            return True
+        return (
+            order_test.status == TestStatus.PENDING
+            and sample is not None
+            and sample.status == SampleStatus.PENDING
+        )
+
+    def _pipeline_stage_for_test(self, order_test: OrderTest) -> str:
+        if order_test.status == TestStatus.PENDING:
+            return "collection"
+        if order_test.status == TestStatus.SAMPLE_COLLECTED:
+            return "entry"
+        return "validation"
+
+    def list_dashboard_blocked(
+        self,
+        *,
+        page: int = 1,
+        page_size: int = 50,
+    ) -> dict[str, Any]:
+        """Tests blocked on pending recollection approval (not surfaced by stage worklists)."""
+        requests = (
+            self.db.query(RecollectionRequest)
+            .filter(RecollectionRequest.status == RecollectionRequestStatus.PENDING_APPROVAL)
+            .order_by(RecollectionRequest.createdAt.asc())
+            .all()
+        )
+        if not requests:
+            return {"items": [], "pagination": _paginate(0, page, page_size)}
+
+        request_by_test_id: dict[int, RecollectionRequest] = {}
+        for request in requests:
+            for test_id in request.affectedOrderTestIds or []:
+                if isinstance(test_id, int):
+                    request_by_test_id.setdefault(test_id, request)
+            if request.orderTestId is not None:
+                request_by_test_id.setdefault(request.orderTestId, request)
+
+        test_ids = list(request_by_test_id.keys())
+        if not test_ids:
+            return {"items": [], "pagination": _paginate(0, page, page_size)}
+
+        rows = (
+            self.db.query(OrderTest, Order, Patient, Test, Sample)
+            .join(Order, OrderTest.orderId == Order.orderId)
+            .join(Patient, Order.patientId == Patient.id)
+            .join(Test, OrderTest.testCode == Test.code)
+            .outerjoin(Sample, Sample.sampleId == OrderTest.sampleId)
+            .filter(OrderTest.id.in_(test_ids))
+            .all()
+        )
+
+        blocked_label = BLOCKED_LABELS["recollection_approval"]
+        items: list[dict[str, Any]] = []
+        for order_test, order, patient, test, sample in rows:
+            if self._order_test_in_active_worklist(order_test, sample):
+                continue
+            request = request_by_test_id.get(order_test.id)
+            if not request:
+                continue
+            since = request.createdAt or order.orderDate
+            hours = _hours_since(since)
+            items.append(
+                {
+                    "orderTestId": order_test.id,
+                    "orderId": order.orderId,
+                    "patientId": patient.id,
+                    "patientName": patient.fullName,
+                    "testCode": order_test.testCode,
+                    "testName": test.name,
+                    "priority": order.priority,
+                    "status": order_test.status,
+                    "stage": self._pipeline_stage_for_test(order_test),
+                    "orderDate": order.orderDate,
+                    "blockedReason": "recollection_approval",
+                    "blockedLabel": blocked_label,
+                    "waitingHours": round(hours, 2),
+                    "referringPhysician": order.referringPhysician,
+                    "testCategory": test.category,
+                    "recollectionRequestId": request.id,
+                    "_sort_priority": PRIORITY_ORDER.get(order.priority, 99),
+                    "_sort_since": since,
+                }
+            )
+
+        items.sort(
+            key=lambda x: (
+                x["_sort_priority"],
+                x["_sort_since"] or datetime.min.replace(tzinfo=UTC),
+            )
+        )
+        total = len(items)
+        start = (page - 1) * page_size
+        page_items = items[start : start + page_size]
+        for item in page_items:
+            item.pop("_sort_priority", None)
+            item.pop("_sort_since", None)
         return {"items": page_items, "pagination": _paginate(total, page, page_size)}
 
     def list_entry(
@@ -215,6 +358,8 @@ class LabWorklistService:
                     "waitingHours": round(hours, 2),
                     "turnaroundHours": test.turnaroundTimeHours,
                     "isRetest": bool(ot.isRetest),
+                    "referringPhysician": order.referringPhysician,
+                    "testCategory": test.category,
                     "_sort_priority": PRIORITY_ORDER.get(order.priority, 99),
                     "_sort_since": since,
                 }
@@ -282,6 +427,7 @@ class LabWorklistService:
                     "waitingHours": round(hours, 2),
                     "turnaroundHours": test.turnaroundTimeHours,
                     "hasCriticalValues": bool(ot.hasCriticalValues),
+                    "testCategory": test.category,
                     "sampleId": ot.sampleId,
                     "sampleStatus": sample.status if sample else None,
                     "results": ot.results,

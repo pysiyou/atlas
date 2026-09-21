@@ -1290,6 +1290,21 @@ export interface components {
             /** Status */
             status: string;
         };
+        /** DashboardKpis */
+        DashboardKpis: {
+            /** Orderstoday */
+            ordersToday: number;
+            /** Awaitingresults */
+            awaitingResults: number;
+            /** Criticalvalues */
+            criticalValues: number;
+            /** Tatcompliancepercent */
+            tatCompliancePercent: number;
+            /** Volumetotal */
+            volumeTotal: number;
+            /** Volumewowpercent */
+            volumeWowPercent?: number | null;
+        };
         /** DashboardSummaryResponse */
         DashboardSummaryResponse: {
             /** Totalpatients */
@@ -1524,6 +1539,9 @@ export interface components {
             totalActive: number;
             /** Computedat */
             computedAt?: string | null;
+            dashboardKpis: components["schemas"]["DashboardKpis"];
+            /** Volumebyday */
+            volumeByDay: components["schemas"]["VolumeDayPoint"][];
         };
         /** LabOperationLogResponse */
         LabOperationLogResponse: {
@@ -3088,6 +3106,13 @@ export interface components {
              * @description SpO2 %. Normal: 95-100
              */
             oxygenSaturation?: number | null;
+        };
+        /** VolumeDayPoint */
+        VolumeDayPoint: {
+            /** Date */
+            date: string;
+            /** Count */
+            count: number;
         };
     };
     responses: never;

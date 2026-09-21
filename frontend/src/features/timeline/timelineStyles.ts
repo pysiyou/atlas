@@ -12,8 +12,8 @@ export const TIMELINE_STYLES = {
   /** Matches LabAttentionFeed row: accent + `min-w-0 flex-1 space-y-1` content */
   eventRow: 'flex min-w-0 items-stretch gap-space-2 relative',
   eventBody: 'min-w-0 flex-1 space-y-space-1 pb-space-3',
-  /** Same weight as detail line; sm size only — avoid primary + panelTitle (reads bold). */
-  eventHeadline: 'min-w-0 text-sm font-normal text-text-primary',
+  /** Same weight as detail line; xs size only — avoid primary + panelTitle (reads bold). */
+  eventHeadline: 'min-w-0 text-xs font-normal text-text-primary',
   eventDetails: 'flex flex-wrap items-center gap-x-space-1 gap-y-space-0-5',
   eventDetailText: TYPE.label,
   eventMeta: TYPE.meta,
