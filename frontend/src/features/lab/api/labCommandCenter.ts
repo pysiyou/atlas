@@ -63,13 +63,13 @@ export interface LabBoardResponse {
   attentionTotal: number;
   totalActive: number;
   computedAt?: string | null;
-  todayPanelMix?: {
-    newOrders: number;
-    pending: number;
-    collected: number;
-    resulted: number;
-    blocked: number;
-    validatedToday: number;
+  todayPanel: {
+    dayStartUtc: string;
+    steps: Array<{
+      step: 'collection' | 'entry' | 'validation';
+      averageHours: number | null;
+      sampleCount: number;
+    }>;
   };
 }
 

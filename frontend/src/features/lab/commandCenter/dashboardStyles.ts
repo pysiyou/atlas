@@ -22,32 +22,38 @@ export const DASHBOARD_TWO_LINE = {
 export const DASHBOARD_ROW_INTERACTIVE = `cursor-pointer ${CONTROL.focusVisibleFlat}` as const;
 
 export const TODAY_PANEL = {
-  body: 'flex min-h-0 flex-1 flex-col gap-space-4 overflow-y-auto px-space-2 py-space-3',
-  composition: 'space-y-space-1.5',
-  compositionLabel: `${TYPE.caption} font-medium uppercase tracking-wide text-text-tertiary`,
-  compositionTrack: `flex h-1.5 w-full overflow-hidden ${RADIUS.pill} bg-border-subtle/40`,
-  compositionSegment: 'h-full min-w-[2px] transition-[flex-grow] duration-300',
-  section: 'space-y-space-2.5',
-  sectionLabel: `${TYPE.caption} font-medium uppercase tracking-wide text-text-tertiary`,
-  rows: 'space-y-space-3',
-  row: 'space-y-space-1',
-  rowHead: 'flex min-w-0 items-baseline justify-between gap-space-3',
-  rowTitle: 'text-xs font-medium text-text-primary',
-  rowCount: 'shrink-0 text-sm font-semibold tabular-nums leading-none text-text-primary',
-  rowHint: 'text-[11px] leading-snug text-text-tertiary',
-  rowMeta: 'text-[11px] tabular-nums text-text-secondary',
-  meterTrack: `h-1 w-full overflow-hidden ${RADIUS.pill} bg-border-subtle/45`,
-  meterFill: `h-full ${RADIUS.pill} transition-[width] duration-300 ease-out`,
-  emptyHint: `${TYPE.caption} text-center text-text-tertiary py-space-2`,
+  body: 'flex min-h-0 flex-1 flex-col justify-center overflow-hidden px-space-3 py-space-2',
+  emptyHint: `${TYPE.caption} text-center text-text-tertiary py-space-1`,
 } as const;
 
-export const TODAY_PANEL_COLORS = {
-  newOrders: '#5BA4E8',
-  pending: '#F0A855',
-  collected: '#3A9488',
-  resulted: '#7B6FD4',
-  blocked: '#E0667A',
-  validatedToday: '#58A870',
+export const TODAY_STEP_CHART = {
+  bubbleMin: 58,
+  bubbleMax: 96,
+  bubbleText: 'text-text-inverse',
+  zIndex: {
+    collection: 3,
+    entry: 2,
+    validation: 1,
+  },
+  layout: 'flex h-full min-h-0 min-w-0 items-center gap-space-3',
+  bubbleStage: 'relative h-[8.25rem] w-[8.5rem] shrink-0',
+  bubble:
+    'absolute flex flex-col items-center justify-center gap-0.5 rounded-full text-center ring-4 ring-[color:var(--surface)]',
+  bubbleDuration: 'max-w-[90%] truncate px-1 text-[13px] font-semibold leading-none tabular-nums',
+  bubbleLabel: 'max-w-[88%] truncate px-1 text-[9px] font-medium leading-none opacity-80',
+  bubblePositions: {
+    collection: 'left-1/2 top-0 -translate-x-1/2',
+    entry: 'bottom-0 left-0',
+    validation: 'bottom-0 right-0',
+  },
+  metricStack: 'flex min-h-0 min-w-0 flex-1 flex-col justify-center gap-space-2',
+  metricRow: 'flex min-w-0 flex-col gap-space-1',
+  metricHead: 'flex min-w-0 items-baseline justify-between gap-space-2',
+  metricLabel: `${TYPE.caption} truncate text-text-tertiary`,
+  metricValue: 'shrink-0 text-sm font-semibold tabular-nums leading-none text-text-primary',
+  metricBarLine: 'flex min-w-0 items-center gap-space-2',
+  metricSide: 'w-[3.6rem] shrink-0 truncate text-[10px] tabular-nums leading-none text-text-tertiary',
+  metricSideEnd: 'w-[4.75rem] shrink-0 truncate text-right text-[10px] tabular-nums leading-none text-text-tertiary',
+  metricTrack: `h-px min-w-0 flex-1 overflow-hidden ${RADIUS.pill} bg-border-subtle/60`,
+  metricFill: `h-full ${RADIUS.pill} transition-[width] duration-300`,
 } as const;
-
-export const TODAY_IN_LAB_KEYS = ['pending', 'collected', 'resulted', 'blocked'] as const;

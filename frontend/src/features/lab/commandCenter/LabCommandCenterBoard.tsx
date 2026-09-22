@@ -39,7 +39,12 @@ export const LabCommandCenterBoard: React.FC = () => {
       <div className={DASHBOARD_PAGE}>
         <div className={DASHBOARD_BOTTOM_ROW}>
           <div className={DASHBOARD_BOTTOM_PANEL}>
-            <LabDashboardTodayPanel mix={board.todayPanelMix} />
+            <LabDashboardTodayPanel
+              todayPanel={board.todayPanel}
+              healthMessage={board.healthMessage}
+              totalActive={board.totalActive}
+              suggestedTab={board.suggestedTab}
+            />
           </div>
           <div className={DASHBOARD_BOTTOM_PANEL}>
             <LabAttentionQueue items={board.attentionItems} attentionTotal={board.attentionTotal} />
