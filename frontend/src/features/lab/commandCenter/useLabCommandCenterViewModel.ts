@@ -17,12 +17,13 @@ const EMPTY_QUEUE_AGE: LabCommandCenterSnapshot['queueAge'] = {
   validation: { oldestHours: null, averageHours: null, warningCount: 0, criticalCount: 0 },
 };
 
-const EMPTY_SCHEDULE_STATE_MIX: LabCommandCenterSnapshot['scheduleStateMix'] = {
+const EMPTY_TODAY_PANEL_MIX: LabCommandCenterSnapshot['todayPanelMix'] = {
+  newOrders: 0,
   pending: 0,
-  running: 0,
+  collected: 0,
   resulted: 0,
-  validated: 0,
   blocked: 0,
+  validatedToday: 0,
 };
 
 const EMPTY_BOARD: LabCommandCenterSnapshot = {
@@ -37,7 +38,7 @@ const EMPTY_BOARD: LabCommandCenterSnapshot = {
   healthMessage: 'Queues within TAT',
   suggestedTab: null,
   totalActive: 0,
-  scheduleStateMix: EMPTY_SCHEDULE_STATE_MIX,
+  todayPanelMix: EMPTY_TODAY_PANEL_MIX,
 };
 
 function isLabPipelineStage(value: string | null | undefined): value is LabPipelineStage {
@@ -85,7 +86,7 @@ function toBoardData(board: LabBoardResponse): LabCommandCenterSnapshot {
     suggestedTab: isLabPipelineStage(board.suggestedTab) ? board.suggestedTab : null,
     totalActive: board.totalActive,
     computedAt: board.computedAt,
-    scheduleStateMix: board.scheduleStateMix ?? EMPTY_SCHEDULE_STATE_MIX,
+    todayPanelMix: board.todayPanelMix ?? EMPTY_TODAY_PANEL_MIX,
   };
 }
 

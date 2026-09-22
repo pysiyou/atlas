@@ -199,14 +199,15 @@ class BoardAttentionItem(BaseModel):
     attentionType: str
 
 
-class LabScheduleStateMix(BaseModel):
-    """Exclusive test-state counts for order tests currently in the lab pipeline."""
+class LabTodayPanelMix(BaseModel):
+    """Counts for the Today dashboard panel (incomplete tests + validated today)."""
 
+    newOrders: int
     pending: int
-    running: int
+    collected: int
     resulted: int
-    validated: int
     blocked: int
+    validatedToday: int
 
 
 class LabBoardResponse(BaseModel):
@@ -222,4 +223,4 @@ class LabBoardResponse(BaseModel):
     attentionTotal: int
     totalActive: int
     computedAt: str | None = None
-    scheduleStateMix: LabScheduleStateMix
+    todayPanelMix: LabTodayPanelMix

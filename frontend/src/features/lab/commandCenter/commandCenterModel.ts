@@ -208,13 +208,14 @@ export interface PriorityMix {
   low: number;
 }
 
-/** Exclusive test-state counts for order tests currently in the lab pipeline. */
-export interface LabScheduleStateMix {
+/** Today panel — incomplete pipeline buckets plus validated-today. */
+export interface LabTodayPanelMix {
+  newOrders: number;
   pending: number;
-  running: number;
+  collected: number;
   resulted: number;
-  validated: number;
   blocked: number;
+  validatedToday: number;
 }
 
 export interface LabCommandCenterSnapshot {
@@ -230,6 +231,6 @@ export interface LabCommandCenterSnapshot {
   suggestedTab: LabPipelineStage | null;
   totalActive: number;
   computedAt?: string | null;
-  scheduleStateMix: LabScheduleStateMix;
+  todayPanelMix: LabTodayPanelMix;
 }
 

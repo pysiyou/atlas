@@ -63,12 +63,13 @@ export interface LabBoardResponse {
   attentionTotal: number;
   totalActive: number;
   computedAt?: string | null;
-  scheduleStateMix?: {
+  todayPanelMix?: {
+    newOrders: number;
     pending: number;
-    running: number;
+    collected: number;
     resulted: number;
-    validated: number;
     blocked: number;
+    validatedToday: number;
   };
 }
 

@@ -1,5 +1,5 @@
 /**
- * Lab dashboard — volume chart, attention queue, activity timeline, orders table.
+ * Lab dashboard — attention queue, activity timeline, orders table.
  */
 
 import React from 'react';
@@ -10,7 +10,7 @@ import { DASHBOARD_BOTTOM_PANEL, DASHBOARD_BOTTOM_ROW, DASHBOARD_PAGE, DASHBOARD
 import { useLabCommandCenterViewModel } from './useLabCommandCenterViewModel';
 import { LabCommandCenterBoardSkeleton } from './LabCommandCenterBoardSkeleton';
 import { LabDashboardOrdersTable } from './dashboard/LabDashboardOrdersTable';
-import { LabDashboardScheduleChart } from './dashboard/LabDashboardScheduleChart';
+import { LabDashboardTodayPanel } from './dashboard/LabDashboardTodayPanel';
 import { LabAttentionQueue } from './panels/LabAttentionQueue';
 import { RecentActivityPanel } from './panels/RecentActivityPanel';
 
@@ -39,7 +39,7 @@ export const LabCommandCenterBoard: React.FC = () => {
       <div className={DASHBOARD_PAGE}>
         <div className={DASHBOARD_BOTTOM_ROW}>
           <div className={DASHBOARD_BOTTOM_PANEL}>
-            <LabDashboardScheduleChart stateMix={board.scheduleStateMix} />
+            <LabDashboardTodayPanel mix={board.todayPanelMix} />
           </div>
           <div className={DASHBOARD_BOTTOM_PANEL}>
             <LabAttentionQueue items={board.attentionItems} attentionTotal={board.attentionTotal} />
