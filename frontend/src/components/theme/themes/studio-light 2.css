@@ -1,0 +1,148 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   STUDIO LIGHT THEME — color overrides only
+   Halal-inspired teal / mustard / coral on studio-light.
+   Typography, radius, and shadows live in primitives.css + semantic-light.css.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme='studio-light'] {
+  /* Semantic geometry — override roles from semantic-light.css (primitives set raw scale) */
+  /* Example: unify popover shell + inner picks — --radius-menu-item: var(--radius-menu); */
+
+  /* Brand — teal */
+  --primitive-brand-50: #eef6f6;
+  --primitive-brand-100: #d9eceb;
+  --primitive-brand-200: #b5dbd9;
+  --primitive-brand-300: #85c4c1;
+  --primitive-brand-400: #55a9a5;
+  --primitive-brand-500: #2b7a78;
+  --primitive-brand-600: #2b7a78;
+  --primitive-brand-700: #1f6361;
+  --primitive-brand-800: #0d4f55;
+  --primitive-brand-900: #0a3d42;
+  --primitive-brand-950: #062a2e;
+
+  /* Neutral — Halal gray */
+  --primitive-neutral-0: #ffffff;
+  --primitive-neutral-50: #f3f6f6;
+  --primitive-neutral-100: #edf1f2;
+  --primitive-neutral-200: #e5e9eb;
+  --primitive-neutral-300: #d1d8db;
+  --primitive-neutral-400: #9a9fa5;
+  --primitive-neutral-500: #9a9fa5;
+  --primitive-neutral-600: #6f767e;
+  --primitive-neutral-700: #4a5158;
+  --primitive-neutral-800: #2d3136;
+  --primitive-neutral-900: #1a1d1f;
+  --primitive-neutral-950: #0f1112;
+
+  --primitive-surface-report: #eef6f6;
+
+  --text: #1a1d1f;
+  --text-secondary: #6f767e;
+  --text-tertiary: #9a9fa5;
+  --text-muted: #b0b5ba;
+
+  --surface-page: #f3f6f6;
+  --surface: var(--primitive-neutral-0);
+  --surface-hover: #eef2f2;
+  --surface-selected: color-mix(in srgb, var(--primitive-brand-500) 10%, var(--primitive-neutral-0));
+  --surface-elev: var(--primitive-neutral-0);
+  --surface-sidebar: #ffffff;
+  --surface-table-header: #f3f6f6;
+
+  --border: #e5e9eb;
+  --border-subtle: #edf1f2;
+  --border-strong: #d1d8db;
+  --border-hover: #d8dee2;
+  --border-focus: var(--primitive-brand-500);
+
+  --brand: var(--primitive-brand-600);
+  --brand-hover: var(--primitive-brand-800);
+  --brand-muted: var(--primitive-brand-50);
+  --brand-fg: var(--primitive-brand-800);
+  --on-brand: var(--primitive-neutral-0);
+
+  --focus: var(--primitive-brand-500);
+  --id-color: var(--brand);
+
+  --info: var(--primitive-brand-500);
+  --info-bg: color-mix(in srgb, var(--primitive-brand-500) 10%, transparent);
+  --info-bg-emphasis: color-mix(in srgb, var(--primitive-brand-500) 16%, transparent);
+  --info-fg: var(--primitive-brand-800);
+  --info-fg-emphasis: var(--primitive-brand-800);
+  --info-stroke: color-mix(in srgb, var(--primitive-brand-500) 22%, transparent);
+
+  --warning: #f6bf59;
+  --warning-bg: #fef6e8;
+  --warning-bg-emphasis: #fcecc8;
+  --warning-fg: #9a7328;
+  --warning-fg-emphasis: #7a5c1f;
+  --warning-stroke: #f6e0a8;
+
+  --purple-fg-emphasis: #6b21a8;
+  --purple-bg-emphasis: #f3e8ff;
+  --teal-fg-emphasis: var(--primitive-brand-800);
+  --teal-bg-emphasis: var(--primitive-brand-50);
+  --pink-fg-emphasis: #c45655;
+  --pink-bg-emphasis: #fde8e8;
+  --orange-fg-emphasis: #c45655;
+  --orange-bg-emphasis: #fde8e8;
+  --indigo-fg-emphasis: #5b21b6;
+  --indigo-bg-emphasis: #ede9fe;
+  --cyan-fg-emphasis: var(--primitive-brand-700);
+  --cyan-bg-emphasis: var(--primitive-brand-50);
+
+  --badge: var(--primitive-neutral-0);
+
+  --chart-grid: #e5e9eb;
+  --chart-axis: var(--text-tertiary);
+  --chart-brand: var(--primitive-brand-500);
+  --chart-primary: var(--primitive-brand-500);
+  --chart-warning: #f6bf59;
+  --chart-danger: #f79897;
+  --chart-accent: #f79897;
+  --chart-accent-muted: #f6bf59;
+  --chart-accent-light: #f6bf59;
+
+  --category-hematology: var(--chart-danger);
+  --category-biochemistry: var(--chart-warning);
+  --category-chemistry: var(--chart-warning);
+  --category-microbiology: var(--chart-brand);
+  --category-serology: var(--chart-accent);
+  --category-urinalysis: var(--chart-brand);
+  --category-imaging: var(--chart-accent);
+  --category-immunology: var(--chart-danger);
+  --category-molecular: var(--chart-brand);
+  --category-toxicology: var(--primitive-success-600);
+  --category-coagulation: var(--chart-danger);
+  --category-default: var(--chart-brand);
+
+  --toast-bg: var(--primitive-neutral-0);
+  --toast-fg: var(--text);
+  --toast-border: rgb(26 29 31 / 0.08);
+  --toast-track: rgb(26 29 31 / 0.06);
+
+  --primitive-auth-accent: var(--primitive-brand-600);
+  --primitive-auth-accent-medium: var(--primitive-brand-500);
+  --primitive-auth-input-focus: var(--primitive-brand-400);
+  --primitive-auth-text-light: var(--primitive-brand-300);
+
+  --workflow-collection-fg: var(--primitive-brand-800);
+  --workflow-collection-bg: var(--primitive-brand-100);
+  --workflow-collection-border: color-mix(in srgb, var(--primitive-brand-500) 28%, transparent);
+  --workflow-entry-fg: #a84847;
+  --workflow-entry-bg: #fde8e8;
+  --workflow-entry-border: color-mix(in srgb, #f79897 32%, transparent);
+  --workflow-validation-fg: #166534;
+  --workflow-validation-bg: #dcfce7;
+  --workflow-validation-border: color-mix(in srgb, #10b981 28%, transparent);
+  --workflow-escalation-fg: var(--danger-fg-emphasis);
+  --workflow-escalation-bg: var(--danger-bg);
+  --workflow-escalation-border: var(--danger-stroke);
+  --workflow-quality-fg: var(--warning-fg-emphasis);
+  --workflow-quality-bg: var(--warning-bg);
+  --workflow-quality-border: var(--warning-stroke);
+  --workflow-composition-fg: var(--pink-fg-emphasis);
+  --workflow-composition-bg: var(--pink-bg-emphasis);
+  --workflow-composition-border: color-mix(in srgb, #f79897 28%, transparent);
+}

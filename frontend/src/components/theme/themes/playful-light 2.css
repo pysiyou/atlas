@@ -1,0 +1,215 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   PLAYFUL LIGHT — cream / forest / orange / sage (soft nature palette)
+   Standalone light theme; studio-light keeps the clinical teal look.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme='playful-light'] {
+  /* ── Brand (orange — CTAs, active nav, focus, avatar) ── */
+  --primitive-brand-50: #fff8ec;
+  --primitive-brand-100: #fde8c8;
+  --primitive-brand-200: #faca87;
+  --primitive-brand-300: #f0b86a;
+  --primitive-brand-400: #e8a45c;
+  --primitive-brand-500: #d4893c;
+  --primitive-brand-600: #d4893c;
+  --primitive-brand-700: #b8732a;
+  --primitive-brand-800: #8a5a22;
+  --primitive-brand-900: #6b4520;
+  --primitive-brand-950: #4a3018;
+
+  /* ── Neutral (warm cream / taupe / ink) ── */
+  --primitive-neutral-0: #ffffff;
+  --primitive-neutral-50: #f3e6d0;
+  --primitive-neutral-100: #ede3d2;
+  --primitive-neutral-200: #e6d9c8;
+  --primitive-neutral-300: #d4c4b0;
+  --primitive-neutral-400: #b5a898;
+  --primitive-neutral-500: #b5a898;
+  --primitive-neutral-600: #8a7b6a;
+  --primitive-neutral-700: #5c5248;
+  --primitive-neutral-800: #4a4038;
+  --primitive-neutral-900: #3a2c27;
+  --primitive-neutral-950: #2a201c;
+
+  --primitive-surface-report: #f7f1e8;
+
+  /* ── Success (sage) ── */
+  --primitive-success-50: #e8f0d8;
+  --primitive-success-100: #dce8cc;
+  --primitive-success-200: #c8dab0;
+  --primitive-success-500: #7a9458;
+  --primitive-success-600: #7a9458;
+  --primitive-success-700: #5f7345;
+
+  /* ── Danger (terracotta) ── */
+  --primitive-danger-50: #f8e8e0;
+  --primitive-danger-100: #f0d4c8;
+  --primitive-danger-200: #e4b8a8;
+  --primitive-danger-500: #a85b3c;
+  --primitive-danger-600: #a85b3c;
+  --primitive-danger-700: #8f4d32;
+
+  /* ── Text ── */
+  --text: #3a2c27;
+  --text-secondary: #8a7b6a;
+  --text-tertiary: #b5a898;
+  --text-muted: #c4b5a5;
+
+  /* ── Surface ── */
+  --surface-page: #f3e6d0;
+  --surface: var(--primitive-neutral-0);
+  --surface-hover: #f7f1e8;
+  --surface-selected: color-mix(in srgb, #d4893c 12%, var(--primitive-neutral-0));
+  --surface-elev: var(--primitive-neutral-0);
+  --surface-sidebar: #ffffff;
+  --surface-table-header: #f3e6d0;
+
+  /* ── Border ── */
+  --border: #e6d9c8;
+  --border-subtle: #ede3d2;
+  --border-strong: #d4c4b0;
+  --border-hover: #d4c4b0;
+  --border-focus: var(--primitive-brand-600);
+
+  /* ── Brand semantic ── */
+  --brand: var(--primitive-brand-600);
+  --brand-hover: var(--primitive-brand-700);
+  --brand-muted: var(--primitive-brand-100);
+  --brand-fg: var(--primitive-brand-800);
+  --on-brand: #fff8ec;
+
+  --focus: var(--primitive-brand-600);
+  --id-color: var(--brand);
+
+  /* ── Success semantic ── */
+  --success: var(--primitive-success-600);
+  --success-hover: var(--primitive-success-700);
+  --success-bg: var(--primitive-success-50);
+  --success-bg-emphasis: #bad08f;
+  --success-fg: var(--primitive-success-600);
+  --success-fg-emphasis: var(--primitive-success-700);
+  --success-stroke: #c8dab0;
+  --success-stroke-emphasis: var(--primitive-success-600);
+
+  /* ── Danger semantic ── */
+  --danger: var(--primitive-danger-600);
+  --danger-hover: var(--primitive-danger-700);
+  --danger-bg: var(--primitive-danger-50);
+  --danger-bg-emphasis: var(--primitive-danger-100);
+  --danger-fg: var(--primitive-danger-600);
+  --danger-fg-emphasis: var(--primitive-danger-700);
+  --danger-stroke: var(--primitive-danger-200);
+  --danger-stroke-emphasis: var(--primitive-danger-600);
+
+  /* ── Warning (gold — distinct from brand orange) ── */
+  --warning: #e0b84a;
+  --on-warning: #3a2c27;
+  --warning-bg: #fdf4dc;
+  --warning-bg-emphasis: #f5e6b8;
+  --warning-fg: #8a6f28;
+  --warning-fg-emphasis: #6d5720;
+  --warning-stroke: #ead89a;
+  --warning-stroke-emphasis: #e0b84a;
+  --warning-hover: #c9a33a;
+
+  /* ── Info (forest olive — headers / banners / collection) ── */
+  --info: #616d55;
+  --info-bg: color-mix(in srgb, #616d55 12%, var(--primitive-neutral-0));
+  --info-bg-emphasis: color-mix(in srgb, #616d55 18%, var(--primitive-neutral-0));
+  --info-fg: #4e5844;
+  --info-fg-emphasis: #3d4536;
+  --info-stroke: color-mix(in srgb, #616d55 24%, transparent);
+  --on-info: #fff8ec;
+
+  /* ── Extended badge tones ── */
+  --purple-fg-emphasis: #6b21a8;
+  --purple-bg-emphasis: #f3e8ff;
+  --teal-fg-emphasis: #4e5844;
+  --teal-bg-emphasis: color-mix(in srgb, #616d55 14%, var(--primitive-neutral-0));
+  --pink-fg-emphasis: #a85b3c;
+  --pink-bg-emphasis: #f8e8e0;
+  --orange-fg-emphasis: #8a5a22;
+  --orange-bg-emphasis: #fde8c8;
+  --indigo-fg-emphasis: #5b21b6;
+  --indigo-bg-emphasis: #ede9fe;
+  --cyan-fg-emphasis: #5f7345;
+  --cyan-bg-emphasis: #e8f0d8;
+
+  --badge: var(--primitive-neutral-0);
+
+  /* ── Charts ── */
+  --chart-grid: #e6d9c8;
+  --chart-axis: var(--text-tertiary);
+  --chart-brand: var(--primitive-brand-500);
+  --chart-primary: var(--primitive-brand-500);
+  --chart-success: var(--primitive-success-600);
+  --chart-danger: var(--primitive-danger-600);
+  --chart-warning: #e0b84a;
+  --chart-accent: #616d55;
+  --chart-accent-muted: #bad08f;
+  --chart-accent-light: #faca87;
+
+  --category-hematology: var(--chart-danger);
+  --category-biochemistry: var(--chart-warning);
+  --category-chemistry: var(--chart-warning);
+  --category-microbiology: var(--info);
+  --category-serology: var(--chart-accent);
+  --category-urinalysis: var(--info);
+  --category-imaging: var(--chart-accent);
+  --category-immunology: var(--chart-danger);
+  --category-molecular: var(--chart-brand);
+  --category-toxicology: var(--chart-success);
+  --category-coagulation: var(--chart-danger);
+  --category-default: var(--chart-brand);
+
+  /* ── Toast ── */
+  --toast-bg: var(--primitive-neutral-0);
+  --toast-fg: var(--text);
+  --toast-border: rgb(58 44 39 / 0.08);
+  --toast-track: rgb(58 44 39 / 0.06);
+
+  /* ── Auth accent (login panel) ── */
+  --primitive-auth-accent: var(--primitive-brand-600);
+  --primitive-auth-accent-medium: var(--primitive-brand-500);
+  --primitive-auth-input-focus: var(--primitive-brand-400);
+  --primitive-auth-text-light: var(--primitive-brand-200);
+
+  /* ── Workflow lanes ── */
+  --workflow-collection-fg: #4e5844;
+  --workflow-collection-bg: color-mix(in srgb, #616d55 16%, var(--primitive-neutral-0));
+  --workflow-collection-border: color-mix(in srgb, #616d55 28%, transparent);
+  --workflow-entry-fg: var(--primitive-danger-700);
+  --workflow-entry-bg: var(--primitive-danger-50);
+  --workflow-entry-border: color-mix(in srgb, #a85b3c 28%, transparent);
+  --workflow-validation-fg: var(--primitive-success-700);
+  --workflow-validation-bg: var(--primitive-success-50);
+  --workflow-validation-border: color-mix(in srgb, #7a9458 28%, transparent);
+  --workflow-escalation-fg: var(--danger-fg-emphasis);
+  --workflow-escalation-bg: var(--danger-bg);
+  --workflow-escalation-border: var(--danger-stroke);
+  --workflow-quality-fg: var(--warning-fg-emphasis);
+  --workflow-quality-bg: var(--warning-bg);
+  --workflow-quality-border: var(--warning-stroke);
+  --workflow-order-fg: var(--text-secondary);
+  --workflow-order-bg: var(--surface-hover);
+  --workflow-order-border: var(--border);
+  --workflow-composition-fg: var(--orange-fg-emphasis);
+  --workflow-composition-bg: var(--orange-bg-emphasis);
+  --workflow-composition-border: color-mix(in srgb, #faca87 35%, transparent);
+
+  /* ── Semantic geometry (rounder shells) ── */
+  --radius-field: 1rem;
+  --radius-menu-item: 1rem;
+  --radius-surface: 1.25rem;
+  --radius-menu: 1.25rem;
+  --radius-workspace: 1.5rem;
+  --button-radius: 1.25rem;
+  --radius-notice: 1rem;
+
+  /* ── Warm shadows ── */
+  --shadow-sm: 0 1px 3px 0 rgb(58 44 39 / 0.04);
+  --shadow-md: 0 4px 14px -2px rgb(58 44 39 / 0.06), 0 2px 4px -2px rgb(58 44 39 / 0.04);
+  --shadow-lg: 0 12px 28px -4px rgb(58 44 39 / 0.08), 0 4px 8px -4px rgb(58 44 39 / 0.04);
+  --shadow-xl: 0 20px 36px -6px rgb(58 44 39 / 0.1), 0 8px 16px -6px rgb(58 44 39 / 0.05);
+  --shadow-footer: 0 -1px 2px rgb(58 44 39 / 0.04);
+}

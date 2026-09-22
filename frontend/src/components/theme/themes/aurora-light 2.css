@@ -1,0 +1,232 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   AURORA LIGHT — lilac / violet / mint / peach (pastel job-search palette)
+   Standalone light theme; studio-light and playful-light stay unchanged.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme='aurora-light'] {
+  --font-sans: 'Nunito', 'Inter', system-ui, sans-serif;
+
+  /* ── Brand (violet — avatars, active nav, selected, focus) ── */
+  --primitive-brand-50: #f3f0ff;
+  --primitive-brand-100: #e4deff;
+  --primitive-brand-200: #c7beff;
+  --primitive-brand-300: #a99aff;
+  --primitive-brand-400: #9a8cff;
+  --primitive-brand-500: #8b7cff;
+  --primitive-brand-600: #8b7cff;
+  --primitive-brand-700: #6f62e0;
+  --primitive-brand-800: #4a3fa8;
+  --primitive-brand-900: #3a3280;
+  --primitive-brand-950: #241e52;
+
+  /* ── Neutral (lilac mist / ink) ── */
+  --primitive-neutral-0: #ffffff;
+  --primitive-neutral-50: #f6f0fa;
+  --primitive-neutral-100: #ede8f2;
+  --primitive-neutral-200: #e8e4f0;
+  --primitive-neutral-300: #d4cfe0;
+  --primitive-neutral-400: #b4aec2;
+  --primitive-neutral-500: #b4aec2;
+  --primitive-neutral-600: #8b8499;
+  --primitive-neutral-700: #5c5668;
+  --primitive-neutral-800: #3a3848;
+  --primitive-neutral-900: #1c1b2e;
+  --primitive-neutral-950: #12111c;
+
+  --primitive-surface-report: #f3f0ff;
+
+  /* ── Success (mint) ── */
+  --primitive-success-50: #e7f6ee;
+  --primitive-success-100: #d4efe0;
+  --primitive-success-200: #b5e2cb;
+  --primitive-success-500: #7ec8a3;
+  --primitive-success-600: #7ec8a3;
+  --primitive-success-700: #5fa882;
+
+  /* ── Danger (soft rose) ── */
+  --primitive-danger-50: #fce8ee;
+  --primitive-danger-100: #f8d0dc;
+  --primitive-danger-200: #f0b0c0;
+  --primitive-danger-500: #e56b8a;
+  --primitive-danger-600: #e56b8a;
+  --primitive-danger-700: #c44d6c;
+
+  /* ── Text ── */
+  --text: #1c1b2e;
+  --text-secondary: #8b8499;
+  --text-tertiary: #b4aec2;
+  --text-muted: #c8c2d4;
+
+  /* ── Surface ── */
+  --surface-page: #f6f0fa;
+  --surface: var(--primitive-neutral-0);
+  --surface-hover: #f4f0f8;
+  --surface-selected: color-mix(in srgb, #8b7cff 12%, var(--primitive-neutral-0));
+  --surface-elev: var(--primitive-neutral-0);
+  --surface-sidebar: #ffffff;
+  --surface-table-header: #f6f0fa;
+
+  /* ── Border ── */
+  --border: #e8e4f0;
+  --border-subtle: #ede8f2;
+  --border-strong: #d4cfe0;
+  --border-hover: #d4cfe0;
+  --border-focus: var(--primitive-brand-600);
+
+  /* ── Brand semantic ── */
+  --brand: var(--primitive-brand-600);
+  --brand-hover: var(--primitive-brand-700);
+  --brand-muted: var(--primitive-brand-100);
+  --brand-fg: var(--primitive-brand-800);
+  --on-brand: #ffffff;
+
+  --focus: var(--primitive-brand-600);
+  --id-color: var(--brand);
+
+  /* ── Success semantic ── */
+  --success: var(--primitive-success-600);
+  --success-hover: var(--primitive-success-700);
+  --success-bg: var(--primitive-success-50);
+  --success-bg-emphasis: #c8ead8;
+  --success-fg: var(--primitive-success-600);
+  --success-fg-emphasis: var(--primitive-success-700);
+  --success-stroke: #b5e2cb;
+  --success-stroke-emphasis: var(--primitive-success-600);
+
+  /* ── Danger semantic ── */
+  --danger: var(--primitive-danger-600);
+  --danger-hover: var(--primitive-danger-700);
+  --danger-bg: var(--primitive-danger-50);
+  --danger-bg-emphasis: var(--primitive-danger-100);
+  --danger-fg: var(--primitive-danger-600);
+  --danger-fg-emphasis: var(--primitive-danger-700);
+  --danger-stroke: var(--primitive-danger-200);
+  --danger-stroke-emphasis: var(--primitive-danger-600);
+
+  /* ── Warning (peach) ── */
+  --warning: #f0b27a;
+  --on-warning: #1c1b2e;
+  --warning-bg: #fdecdc;
+  --warning-bg-emphasis: #f8d9b8;
+  --warning-fg: #b07840;
+  --warning-fg-emphasis: #8a5c30;
+  --warning-stroke: #f5d0a8;
+  --warning-stroke-emphasis: #f0b27a;
+  --warning-hover: #d99a62;
+
+  /* ── Info (lavender / violet family) ── */
+  --info: #8b7cff;
+  --info-bg: color-mix(in srgb, #8b7cff 12%, var(--primitive-neutral-0));
+  --info-bg-emphasis: color-mix(in srgb, #8b7cff 18%, var(--primitive-neutral-0));
+  --info-fg: #4a3fa8;
+  --info-fg-emphasis: #3a3280;
+  --info-stroke: color-mix(in srgb, #8b7cff 24%, transparent);
+  --on-info: #ffffff;
+
+  /* ── Extended badge tones ── */
+  --purple-fg-emphasis: #4a3fa8;
+  --purple-bg-emphasis: #e4deff;
+  --teal-fg-emphasis: #5fa882;
+  --teal-bg-emphasis: #e7f6ee;
+  --pink-fg-emphasis: #c44d6c;
+  --pink-bg-emphasis: #fce8ee;
+  --orange-fg-emphasis: #b07840;
+  --orange-bg-emphasis: #fdecdc;
+  --indigo-fg-emphasis: #4a3fa8;
+  --indigo-bg-emphasis: #e4deff;
+  --cyan-fg-emphasis: #5fa882;
+  --cyan-bg-emphasis: #e7f6ee;
+
+  --badge: var(--primitive-neutral-0);
+
+  /* ── Charts (bubble cluster pastels) ── */
+  --chart-grid: #e8e4f0;
+  --chart-axis: var(--text-tertiary);
+  --chart-brand: var(--primitive-brand-500);
+  --chart-primary: var(--primitive-brand-500);
+  --chart-success: var(--primitive-success-600);
+  --chart-danger: var(--primitive-danger-600);
+  --chart-warning: #f0b27a;
+  --chart-accent: #c7beff;
+  --chart-accent-muted: #7ec8a3;
+  --chart-accent-light: #fdecdc;
+
+  --category-hematology: var(--chart-danger);
+  --category-biochemistry: var(--chart-warning);
+  --category-chemistry: var(--chart-warning);
+  --category-microbiology: var(--info);
+  --category-serology: var(--chart-accent);
+  --category-urinalysis: var(--info);
+  --category-imaging: var(--chart-accent);
+  --category-immunology: var(--chart-danger);
+  --category-molecular: var(--chart-brand);
+  --category-toxicology: var(--chart-success);
+  --category-coagulation: var(--chart-danger);
+  --category-default: var(--chart-brand);
+
+  /* ── Toast ── */
+  --toast-bg: var(--primitive-neutral-0);
+  --toast-fg: var(--text);
+  --toast-border: rgb(28 27 46 / 0.08);
+  --toast-track: rgb(28 27 46 / 0.06);
+
+  /* ── Auth accent (login panel) ── */
+  --primitive-auth-accent: var(--primitive-brand-600);
+  --primitive-auth-accent-medium: var(--primitive-brand-500);
+  --primitive-auth-input-focus: var(--primitive-brand-400);
+  --primitive-auth-text-light: var(--primitive-brand-200);
+
+  /* ── Workflow lanes ── */
+  --workflow-collection-fg: #4a3fa8;
+  --workflow-collection-bg: color-mix(in srgb, #8b7cff 16%, var(--primitive-neutral-0));
+  --workflow-collection-border: color-mix(in srgb, #8b7cff 28%, transparent);
+  --workflow-entry-fg: #b07840;
+  --workflow-entry-bg: #fdecdc;
+  --workflow-entry-border: color-mix(in srgb, #f0b27a 32%, transparent);
+  --workflow-validation-fg: var(--primitive-success-700);
+  --workflow-validation-bg: var(--primitive-success-50);
+  --workflow-validation-border: color-mix(in srgb, #7ec8a3 28%, transparent);
+  --workflow-escalation-fg: var(--danger-fg-emphasis);
+  --workflow-escalation-bg: var(--danger-bg);
+  --workflow-escalation-border: var(--danger-stroke);
+  --workflow-quality-fg: var(--warning-fg-emphasis);
+  --workflow-quality-bg: var(--warning-bg);
+  --workflow-quality-border: var(--warning-stroke);
+  --workflow-order-fg: var(--text-secondary);
+  --workflow-order-bg: var(--surface-hover);
+  --workflow-order-border: var(--border);
+  --workflow-composition-fg: #4a3fa8;
+  --workflow-composition-bg: #e4deff;
+  --workflow-composition-border: color-mix(in srgb, #c7beff 35%, transparent);
+
+  /* ── Semantic geometry (pill shells) ── */
+  --radius-field: 1.25rem;
+  --radius-menu-item: 1.25rem;
+  --radius-surface: 1.5rem;
+  --radius-menu: 1.5rem;
+  --radius-workspace: 1.75rem;
+  --button-radius: 9999px;
+  --radius-notice: 1.25rem;
+
+  /* ── Soft lilac shadows ── */
+  --shadow-sm: 0 1px 3px 0 rgb(28 27 46 / 0.04);
+  --shadow-md: 0 4px 14px -2px rgb(28 27 46 / 0.06), 0 2px 4px -2px rgb(28 27 46 / 0.04);
+  --shadow-lg: 0 12px 28px -4px rgb(28 27 46 / 0.08), 0 4px 8px -4px rgb(28 27 46 / 0.04);
+  --shadow-xl: 0 20px 36px -6px rgb(28 27 46 / 0.1), 0 8px 16px -6px rgb(28 27 46 / 0.05);
+  --shadow-footer: 0 -1px 2px rgb(28 27 46 / 0.04);
+}
+
+/* Workspace well — peach bloom (right) + lilac bloom (left) */
+[data-theme='aurora-light'] .bg-surface-page {
+  background-image:
+    radial-gradient(
+      ellipse 80% 50% at 80% 0%,
+      color-mix(in srgb, #f8efe6 70%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 70% 45% at 10% 0%,
+      color-mix(in srgb, #e4deff 55%, transparent),
+      transparent 55%
+    );
+}
