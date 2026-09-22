@@ -1558,7 +1558,7 @@ export interface components {
             totalActive: number;
             /** Computedat */
             computedAt?: string | null;
-            todayPanelMix: components["schemas"]["LabTodayPanelMix"];
+            todayPanel: components["schemas"]["LabTodayPanelSnapshot"];
         };
         /** LabOperationLogResponse */
         LabOperationLogResponse: {
@@ -1600,22 +1600,29 @@ export interface components {
          */
         LabOperationType: "sample_collect" | "sample_reject" | "sample_recollection_request" | "recollection_request_created" | "recollection_request_approved" | "recollection_request_denied" | "result_entry" | "result_validation_approve" | "quality_issue_reported" | "escalation_resolution_authorize_retest" | "escalation_resolution_authorize_recollect" | "escalation_resolution_force_validate" | "escalation_trigger_crit_val" | "escalation_trigger_rej_samp" | "escalation_trigger_limit_hit" | "escalation_trigger_amend_res" | "escalation_resolution_cancel_test" | "escalation_resolution_apply_amendment" | "order_status_change" | "order_payment_recorded" | "test_removed" | "test_added" | "critical_value_detected" | "critical_value_notified" | "critical_value_acknowledged";
         /**
-         * LabTodayPanelMix
-         * @description Counts for the Today dashboard panel (incomplete tests + validated today).
+         * LabTodayPanelSnapshot
+         * @description Average time per workflow step for tests on today's accessions.
          */
-        LabTodayPanelMix: {
-            /** Neworders */
-            newOrders: number;
-            /** Pending */
-            pending: number;
-            /** Collected */
-            collected: number;
-            /** Resulted */
-            resulted: number;
-            /** Blocked */
-            blocked: number;
-            /** Validatedtoday */
-            validatedToday: number;
+        LabTodayPanelSnapshot: {
+            /** Daystartutc */
+            dayStartUtc: string;
+            /** Steps */
+            steps: components["schemas"]["LabTodayStepAverage"][];
+        };
+        /**
+         * LabTodayStepAverage
+         * @description Mean hours tests spend in a workflow step (today's accessions).
+         */
+        LabTodayStepAverage: {
+            /**
+             * Step
+             * @enum {string}
+             */
+            step: "collection" | "entry" | "validation";
+            /** Averagehours */
+            averageHours: number | null;
+            /** Samplecount */
+            sampleCount: number;
         };
         /**
          * Lifestyle

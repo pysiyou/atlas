@@ -199,15 +199,19 @@ class BoardAttentionItem(BaseModel):
     attentionType: str
 
 
-class LabTodayPanelMix(BaseModel):
-    """Counts for the Today dashboard panel (incomplete tests + validated today)."""
+class LabTodayStepAverage(BaseModel):
+    """Mean hours tests spend in a workflow step (today's accessions)."""
 
-    newOrders: int
-    pending: int
-    collected: int
-    resulted: int
-    blocked: int
-    validatedToday: int
+    step: Literal["collection", "entry", "validation"]
+    averageHours: float | None
+    sampleCount: int
+
+
+class LabTodayPanelSnapshot(BaseModel):
+    """Average time per workflow step for tests on today's accessions."""
+
+    dayStartUtc: str
+    steps: list[LabTodayStepAverage]
 
 
 class LabBoardResponse(BaseModel):
@@ -223,4 +227,4 @@ class LabBoardResponse(BaseModel):
     attentionTotal: int
     totalActive: int
     computedAt: str | None = None
-    todayPanelMix: LabTodayPanelMix
+    todayPanel: LabTodayPanelSnapshot

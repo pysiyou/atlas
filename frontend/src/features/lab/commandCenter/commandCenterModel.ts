@@ -208,14 +208,16 @@ export interface PriorityMix {
   low: number;
 }
 
-/** Today panel — incomplete pipeline buckets plus validated-today. */
-export interface LabTodayPanelMix {
-  newOrders: number;
-  pending: number;
-  collected: number;
-  resulted: number;
-  blocked: number;
-  validatedToday: number;
+/** Today panel — mean hours per workflow step for today's accessions. */
+export interface LabTodayStepAverage {
+  step: LabPipelineStage;
+  averageHours: number | null;
+  sampleCount: number;
+}
+
+export interface LabTodayPanelSnapshot {
+  dayStartUtc: string;
+  steps: LabTodayStepAverage[];
 }
 
 export interface LabCommandCenterSnapshot {
@@ -231,6 +233,6 @@ export interface LabCommandCenterSnapshot {
   suggestedTab: LabPipelineStage | null;
   totalActive: number;
   computedAt?: string | null;
-  todayPanelMix: LabTodayPanelMix;
+  todayPanel: LabTodayPanelSnapshot;
 }
 

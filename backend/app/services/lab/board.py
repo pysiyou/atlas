@@ -650,8 +650,113 @@ class LabBoardService:
             escalation_rows,
             recollection_rows,
         )
-        snapshot.update({"todayPanelMix": self._today_panel_mix()})
+        snapshot.update({"todayPanel": self._today_panel_snapshot()})
         return snapshot
+
+    def _normalize_utc(self, ts: datetime | None) -> datetime | None:
+        if ts is None:
+            return None
+        if ts.tzinfo is None:
+            return ts.replace(tzinfo=UTC)
+        return ts
+
+    def _hours_between(self, start: datetime, end: datetime) -> float:
+        return max(0.0, (end - start).total_seconds() / 3600.0)
+
+    def _accumulate_today_step_durations(
+        self,
+        *,
+        order_test: OrderTest,
+        order: Order,
+        sample: Sample | None,
+        now: datetime,
+        sums: dict[str, float],
+        counts: dict[str, int],
+    ) -> None:
+        """Add this test's time-in-step to running totals (today's accession cohort)."""
+        order_date = self._normalize_utc(order.orderDate)
+        if order_date is None:
+            return
+
+        status = _enum_value(order_test.status) or TestStatus.PENDING.value
+        collected_at = self._normalize_utc(sample.collectedAt) if sample else None
+        entered_at = self._normalize_utc(order_test.resultEnteredAt)
+        validated_at = self._normalize_utc(order_test.resultValidatedAt)
+
+        collection_end = collected_at
+        if collection_end is None and status == TestStatus.PENDING.value:
+            collection_end = now
+        if collection_end is not None:
+            sums["collection"] += self._hours_between(order_date, collection_end)
+            counts["collection"] += 1
+
+        if collected_at is None:
+            return
+
+        entry_end = entered_at
+        if entry_end is None and status == TestStatus.SAMPLE_COLLECTED.value:
+            entry_end = now
+        if entry_end is not None:
+            sums["entry"] += self._hours_between(collected_at, entry_end)
+            counts["entry"] += 1
+
+        if entered_at is None:
+            return
+
+        validation_end = validated_at
+        if validation_end is None and status in (
+            TestStatus.RESULTED.value,
+            TestStatus.ESCALATED.value,
+        ):
+            validation_end = now
+        if validation_end is not None:
+            sums["validation"] += self._hours_between(entered_at, validation_end)
+            counts["validation"] += 1
+
+    def _today_panel_snapshot(self) -> dict[str, Any]:
+        """Average hours per workflow step for tests on today's accessions."""
+        today_start = self._utc_today_start()
+        now = datetime.now(UTC)
+        sums = {"collection": 0.0, "entry": 0.0, "validation": 0.0}
+        counts = {"collection": 0, "entry": 0, "validation": 0}
+
+        rows = (
+            self.db.query(OrderTest, Order, Sample)
+            .join(Order, OrderTest.orderId == Order.orderId)
+            .outerjoin(Sample, Sample.sampleId == OrderTest.sampleId)
+            .filter(self._active_order_test_filter())
+            .filter(Order.orderDate >= today_start)
+            .all()
+        )
+
+        for order_test, order, sample in rows:
+            self._accumulate_today_step_durations(
+                order_test=order_test,
+                order=order,
+                sample=sample,
+                now=now,
+                sums=sums,
+                counts=counts,
+            )
+
+        steps: list[dict[str, Any]] = []
+        for step in ("collection", "entry", "validation"):
+            sample_count = counts[step]
+            average = (
+                round(sums[step] / sample_count, 2) if sample_count > 0 else None
+            )
+            steps.append(
+                {
+                    "step": step,
+                    "averageHours": average,
+                    "sampleCount": sample_count,
+                }
+            )
+
+        return {
+            "dayStartUtc": today_start.isoformat(),
+            "steps": steps,
+        }
 
     def _utc_today_start(self) -> datetime:
         today = datetime.now(UTC).date()
@@ -679,79 +784,6 @@ class LabBoardService:
         if order_test.id in recollection_blocked:
             blocked = blocked or "recollection_approval"
         return blocked
-
-    def _today_panel_mix(self) -> dict[str, int]:
-        """Incomplete pipeline tests bucketed for Today panel, plus validated-today count."""
-        today_start = self._utc_today_start()
-        mix = {
-            "newOrders": 0,
-            "pending": 0,
-            "collected": 0,
-            "resulted": 0,
-            "blocked": 0,
-            "validatedToday": 0,
-        }
-
-        mix["validatedToday"] = (
-            self.db.query(OrderTest.id)
-            .filter(self._active_order_test_filter())
-            .filter(OrderTest.status == TestStatus.VALIDATED)
-            .filter(OrderTest.resultValidatedAt >= today_start)
-            .count()
-        )
-
-        recollection_blocked = self._recollection_blocked_order_test_ids()
-        rows = (
-            self.db.query(OrderTest, Order, Sample)
-            .join(Order, OrderTest.orderId == Order.orderId)
-            .outerjoin(Sample, Sample.sampleId == OrderTest.sampleId)
-            .filter(self._active_order_test_filter())
-            .filter(self._in_pipeline_order_test_filter())
-            .all()
-        )
-        escalated_ids = [
-            ot.id for ot, _order, _sample in rows if ot.status == TestStatus.ESCALATED
-        ]
-        tickets_by_test: dict[int, EscalationTicket] = {}
-        if escalated_ids:
-            for ticket in (
-                self.db.query(EscalationTicket)
-                .filter(
-                    EscalationTicket.orderTestId.in_(escalated_ids),
-                    EscalationTicket.status == EscalationTicketStatus.OPEN,
-                )
-                .all()
-            ):
-                tickets_by_test[ticket.orderTestId] = ticket
-
-        for order_test, order, sample in rows:
-            order_date = order.orderDate
-            if order_date is not None:
-                if order_date.tzinfo is None:
-                    order_date = order_date.replace(tzinfo=UTC)
-                if order_date >= today_start:
-                    mix["newOrders"] += 1
-
-            blocked = self._blocked_reason_for_order_test(
-                order_test, order, sample, recollection_blocked, tickets_by_test
-            )
-            if blocked:
-                mix["blocked"] += 1
-                continue
-
-            status = _enum_value(order_test.status) or TestStatus.PENDING.value
-            if status == TestStatus.PENDING.value:
-                mix["pending"] += 1
-            elif status == TestStatus.SAMPLE_COLLECTED.value:
-                mix["collected"] += 1
-            elif status == TestStatus.RESULTED.value:
-                mix["resulted"] += 1
-            elif status == TestStatus.ESCALATED.value:
-                mix["blocked"] += 1
-            else:
-                mix["pending"] += 1
-
-        return mix
 
     def _active_order_test_filter(self):
         return ~OrderTest.status.in_(
