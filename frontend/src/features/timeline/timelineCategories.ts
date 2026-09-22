@@ -1,7 +1,20 @@
 /** Timeline event categories — aligned with backend TimelineCategory. */
 import type { TimelineEvent } from '@/features/lab/api/labCommandCenter';
 
+/** Backend-aligned filter buckets (presets). */
 export type TimelineCategory = 'order' | 'payment' | 'sample' | 'result' | 'other';
+
+/**
+ * Display lanes for the activity feed — maps lab workflow to readable feed categories.
+ * Accession → billing → specimen → analytical results → quality & safety → oversight.
+ */
+export type TimelineFeedKind =
+  | 'accession'
+  | 'billing'
+  | 'specimen'
+  | 'analytical'
+  | 'quality'
+  | 'oversight';
 
 export type TimelineTone = 'neutral' | 'problem' | 'resolution';
 
@@ -13,6 +26,15 @@ export const TIMELINE_CATEGORY_ORDER: TimelineCategory[] = [
   'other',
 ];
 
+export const TIMELINE_FEED_KIND_ORDER: TimelineFeedKind[] = [
+  'accession',
+  'billing',
+  'specimen',
+  'analytical',
+  'quality',
+  'oversight',
+];
+
 export const TIMELINE_PRESET_CATEGORIES: Record<
   'lab' | 'order' | 'commandCenter' | 'all',
   TimelineCategory[] | null
@@ -22,6 +44,14 @@ export const TIMELINE_PRESET_CATEGORIES: Record<
   commandCenter: ['sample', 'result', 'other', 'order', 'payment'],
   all: null,
 };
+
+/** Command-center feed minus order lifecycle events (test add/remove, order status). */
+export const ENTITY_MODAL_TIMELINE_CATEGORIES: TimelineCategory[] = [
+  'sample',
+  'result',
+  'other',
+  'payment',
+];
 
 const OPERATION_CATEGORY: Record<string, TimelineCategory> = {
   sample_collect: 'sample',
@@ -50,6 +80,13 @@ const OPERATION_CATEGORY: Record<string, TimelineCategory> = {
   escalation_resolution_apply_amendment: 'other',
   escalation_resolution_cancel_test: 'other',
 };
+
+const QUALITY_EVENT_TYPES = new Set([
+  'critical_value_detected',
+  'critical_value_notified',
+  'critical_value_acknowledged',
+  'quality_issue_reported',
+]);
 
 const PROBLEM_TYPES = new Set([
   'sample_reject',
@@ -104,6 +141,25 @@ export function resolveCategory(event: TimelineEvent): TimelineCategory {
   }
 
   return OPERATION_CATEGORY[event.type] ?? 'other';
+}
+
+/** Feed category for presentation — splits analytical work from quality & safety. */
+export function resolveFeedKind(event: TimelineEvent): TimelineFeedKind {
+  const category = resolveCategory(event);
+  switch (category) {
+    case 'order':
+      return 'accession';
+    case 'payment':
+      return 'billing';
+    case 'sample':
+      return 'specimen';
+    case 'other':
+      return 'oversight';
+    case 'result':
+      return QUALITY_EVENT_TYPES.has(event.type) ? 'quality' : 'analytical';
+    default:
+      return 'oversight';
+  }
 }
 
 export function resolveTone(event: TimelineEvent): TimelineTone {

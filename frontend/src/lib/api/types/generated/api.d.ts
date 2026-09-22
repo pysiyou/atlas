@@ -932,6 +932,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/lab/worklists/dashboard-blocked": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Dashboard Blocked Worklist */
+        get: operations["get_dashboard_blocked_worklist_api_v1_lab_worklists_dashboard_blocked_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/lab/worklists/validation": {
         parameters: {
             query?: never;
@@ -1542,6 +1559,7 @@ export interface components {
             dashboardKpis: components["schemas"]["DashboardKpis"];
             /** Volumebyday */
             volumeByDay: components["schemas"]["VolumeDayPoint"][];
+            scheduleStateMix: components["schemas"]["LabScheduleStateMix"];
         };
         /** LabOperationLogResponse */
         LabOperationLogResponse: {
@@ -1582,6 +1600,22 @@ export interface components {
          * @enum {string}
          */
         LabOperationType: "sample_collect" | "sample_reject" | "sample_recollection_request" | "recollection_request_created" | "recollection_request_approved" | "recollection_request_denied" | "result_entry" | "result_validation_approve" | "quality_issue_reported" | "escalation_resolution_authorize_retest" | "escalation_resolution_authorize_recollect" | "escalation_resolution_force_validate" | "escalation_trigger_crit_val" | "escalation_trigger_rej_samp" | "escalation_trigger_limit_hit" | "escalation_trigger_amend_res" | "escalation_resolution_cancel_test" | "escalation_resolution_apply_amendment" | "order_status_change" | "order_payment_recorded" | "test_removed" | "test_added" | "critical_value_detected" | "critical_value_notified" | "critical_value_acknowledged";
+        /**
+         * LabScheduleStateMix
+         * @description Exclusive test-state counts for order tests currently in the lab pipeline.
+         */
+        LabScheduleStateMix: {
+            /** Pending */
+            pending: number;
+            /** Running */
+            running: number;
+            /** Resulted */
+            resulted: number;
+            /** Validated */
+            validated: number;
+            /** Blocked */
+            blocked: number;
+        };
         /**
          * Lifestyle
          * @description Patient lifestyle information.
@@ -5135,6 +5169,38 @@ export interface operations {
                 pageSize?: number;
                 search?: string | null;
                 priority?: components["schemas"]["PriorityLevel"] | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_dashboard_blocked_worklist_api_v1_lab_worklists_dashboard_blocked_get: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
             };
             header?: never;
             path?: never;

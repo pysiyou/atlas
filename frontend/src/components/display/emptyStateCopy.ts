@@ -21,16 +21,18 @@ export function emptyTitle(nounPhrase: string): string {
 
 export const EMPTY_COPY = {
   recentActivity: {
-    title: 'No recent activity',
-    description: emptySubtitle('activity', 'work moves through the pipeline'),
+    title: 'No activity recorded',
+    description:
+      'Posts will appear here as accession, specimen, result, and oversight events are recorded.',
   },
   activeTests: {
     title: 'No active tests',
     description: emptySubtitle('tests', 'they enter the pipeline'),
   },
   pendingAttention: {
-    title: 'No pending attention',
-    description: emptySubtitle('items', 'something needs your attention'),
+    title: 'No items in queue',
+    description:
+      'Accessions will appear here when they require pathologist review, operational hold, or expedited handling.',
   },
   recentOrders: {
     title: 'No recent orders',

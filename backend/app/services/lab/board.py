@@ -732,7 +732,92 @@ class LabBoardService:
                 "volumeWowPercent": wow,
             },
             "volumeByDay": volume_by_day,
+            "scheduleStateMix": self._schedule_state_mix(),
         }
+
+    def _recollection_blocked_order_test_ids(self) -> set[int]:
+        blocked: set[int] = set()
+        for row in self._recollection_rows():
+            for order_test_id in row.get("affected_order_test_ids") or []:
+                blocked.add(int(order_test_id))
+            order_test_id = row.get("order_test_id")
+            if order_test_id is not None:
+                blocked.add(int(order_test_id))
+        return blocked
+
+    def _in_pipeline_order_test_filter(self):
+        """Tests still moving through the lab (excludes completed validated work)."""
+        return OrderTest.status.in_(
+            (
+                TestStatus.PENDING,
+                TestStatus.SAMPLE_COLLECTED,
+                TestStatus.RESULTED,
+                TestStatus.ESCALATED,
+            )
+        )
+
+    def _schedule_state_mix(self) -> dict[str, int]:
+        """Bucket in-pipeline order tests into exclusive states (any order date)."""
+        mix = {"pending": 0, "running": 0, "resulted": 0, "validated": 0, "blocked": 0}
+        recollection_blocked = self._recollection_blocked_order_test_ids()
+        rows = (
+            self.db.query(OrderTest, Order, Sample)
+            .join(Order, OrderTest.orderId == Order.orderId)
+            .outerjoin(Sample, Sample.sampleId == OrderTest.sampleId)
+            .filter(self._active_order_test_filter())
+            .filter(self._in_pipeline_order_test_filter())
+            .all()
+        )
+        escalated_ids = [
+            ot.id for ot, _order, _sample in rows if ot.status == TestStatus.ESCALATED
+        ]
+        tickets_by_test: dict[int, EscalationTicket] = {}
+        if escalated_ids:
+            for ticket in (
+                self.db.query(EscalationTicket)
+                .filter(
+                    EscalationTicket.orderTestId.in_(escalated_ids),
+                    EscalationTicket.status == EscalationTicketStatus.OPEN,
+                )
+                .all()
+            ):
+                tickets_by_test[ticket.orderTestId] = ticket
+
+        for order_test, order, sample in rows:
+            status = _enum_value(order_test.status) or TestStatus.PENDING.value
+            ticket = tickets_by_test.get(order_test.id)
+            escalation_code = (
+                ticket.reasonCode.value if ticket and ticket.reasonCode else None
+            )
+            blocked = blocked_reason_for_work_item(
+                status=status,
+                is_retest=bool(order_test.isRetest),
+                payment_status=_enum_value(order.paymentStatus),
+                sample_status=_enum_value(sample.status) if sample else None,
+                sample_is_recollection=bool(sample.isRecollection) if sample else False,
+                escalation_reason_code=escalation_code,
+            )
+            if order_test.id in recollection_blocked:
+                blocked = blocked or "recollection_approval"
+
+            if blocked:
+                mix["blocked"] += 1
+                continue
+
+            if status == TestStatus.PENDING.value:
+                mix["pending"] += 1
+            elif status == TestStatus.SAMPLE_COLLECTED.value:
+                mix["running"] += 1
+            elif status == TestStatus.RESULTED.value:
+                mix["resulted"] += 1
+            elif status == TestStatus.VALIDATED.value:
+                mix["validated"] += 1
+            elif status == TestStatus.ESCALATED.value:
+                mix["blocked"] += 1
+            else:
+                mix["pending"] += 1
+
+        return mix
 
     def _collection_rows(self) -> list[dict[str, Any]]:
         rows = (

@@ -21,6 +21,7 @@ export interface LabDashboardOrderRow {
   patientId: number;
   doctorName: string | null;
   department: string | null;
+  sampleType: string;
   priority: PriorityLevel;
   status: SampleStatus | TestStatus;
   date: string;
@@ -50,6 +51,7 @@ export function fromCollectionItem(
       patientId: item.patientId,
       doctorName: item.referringPhysician ?? null,
       department: test?.category ?? item.testCategory ?? null,
+      sampleType: item.sampleType,
       priority: item.priority,
       status: item.status,
       date: item.orderDate,
@@ -68,6 +70,7 @@ export function fromEntryItem(item: EntryWorklistItem): LabDashboardOrderRow {
     patientId: item.patientId,
     doctorName: item.referringPhysician ?? null,
     department: item.testCategory ?? null,
+    sampleType: item.sampleType,
     priority: item.priority,
     status: item.status,
     date: item.collectedAt || item.orderDate,
@@ -85,6 +88,7 @@ export function fromValidationItem(item: ValidationWorklistItem): LabDashboardOr
     patientId: item.patientId,
     doctorName: item.referringPhysician ?? null,
     department: item.testCategory ?? null,
+    sampleType: item.sampleType,
     priority: item.priority,
     status: item.status,
     date: item.resultEnteredAt || item.orderDate,
@@ -102,6 +106,7 @@ export function fromDashboardBlockedItem(item: DashboardBlockedWorklistItem): La
     patientId: item.patientId,
     doctorName: item.referringPhysician ?? null,
     department: item.testCategory ?? null,
+    sampleType: item.sampleType ?? '',
     priority: item.priority,
     status: item.status,
     date: item.orderDate,

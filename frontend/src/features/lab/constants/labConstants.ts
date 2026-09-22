@@ -38,8 +38,10 @@ export const LAB_COPY = {
     reportSampleIssue: 'Report Sample Issue',
   },
   attention: {
-    criticalValue: 'Critical value',
+    criticalValue: 'Critical values',
     recollection: 'Recollection',
+    panelTitle: 'Attention queue',
+    panelMetaEmpty: 'Escalations, holds, priority, and turnaround exceptions',
   },
   timeline: {
     sample: 'Sample',
@@ -49,6 +51,8 @@ export const LAB_COPY = {
     quality: 'Quality',
     order: 'Order',
     composition: 'Composition',
+    activityTitle: 'Activity log',
+    activityMeta: 'Last 24 hours · chronological record of accession and laboratory events',
   },
 } as const;
 

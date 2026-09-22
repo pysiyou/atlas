@@ -72,6 +72,13 @@ export interface LabBoardResponse {
     volumeWowPercent: number | null;
   };
   volumeByDay?: Array<{ date: string; count: number }>;
+  scheduleStateMix?: {
+    pending: number;
+    running: number;
+    resulted: number;
+    validated: number;
+    blocked: number;
+  };
 }
 
 export const labCommandCenterAPI = {

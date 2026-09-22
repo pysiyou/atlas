@@ -44,14 +44,14 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
   },
   escalation_amendment: {
     id: 'escalation_amendment',
-    groupLabel: 'Amended result',
+    groupLabel: 'Amended results',
     pillLabel: 'Amended',
     badgeVariant: 'escalated',
     sortOrder: 20,
   },
   escalation_retry_limit: {
     id: 'escalation_retry_limit',
-    groupLabel: 'Repeat limit',
+    groupLabel: 'Repeat analysis limit',
     pillLabel: 'Repeat limit',
     badgeVariant: 'escalated',
     sortOrder: 30,
@@ -59,41 +59,41 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
   escalation_recollection_limit: {
     id: 'escalation_recollection_limit',
     groupLabel: 'Recollection limit',
-    pillLabel: 'Recollection limit',
+    pillLabel: 'Recollect limit',
     badgeVariant: 'escalated',
     sortOrder: 40,
   },
   supervisor_approval: {
     id: 'supervisor_approval',
-    groupLabel: 'Path review',
-    pillLabel: 'Path review',
+    groupLabel: 'Pathologist review',
+    pillLabel: 'Review',
     badgeVariant: 'escalated',
     sortOrder: 45,
   },
   supervisor_recollection_request: {
     id: 'supervisor_recollection_request',
-    groupLabel: 'Recollection approval',
-    pillLabel: 'Recollection approval',
+    groupLabel: 'Recollection authorization',
+    pillLabel: 'Authorization',
     badgeVariant: 'escalated',
     sortOrder: 48,
   },
   payment_blocked: {
     id: 'payment_blocked',
-    groupLabel: 'Unpaid accession',
+    groupLabel: 'Financial hold',
     pillLabel: 'Unpaid',
     badgeVariant: 'warning',
     sortOrder: 50,
   },
   sample_rejected: {
     id: 'sample_rejected',
-    groupLabel: LAB_COPY.quality.sampleRejected,
+    groupLabel: 'Pre-analytical rejection',
     pillLabel: 'Rejected',
     badgeVariant: 'cancelled',
     sortOrder: 60,
   },
   recollection_waiting: {
     id: 'recollection_waiting',
-    groupLabel: 'Pending recollection',
+    groupLabel: 'Awaiting recollection',
     pillLabel: LAB_COPY.attention.recollection,
     badgeVariant: 'warning',
     sortOrder: 70,
@@ -107,29 +107,29 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
   },
   priority_urgent: {
     id: 'priority_urgent',
-    groupLabel: 'STAT',
+    groupLabel: 'STAT priority',
     pillLabel: 'STAT',
     badgeVariant: 'urgent',
     sortOrder: 82,
   },
   priority_high: {
     id: 'priority_high',
-    groupLabel: 'Elevated priority',
+    groupLabel: 'High priority',
     pillLabel: 'High',
     badgeVariant: 'high',
     sortOrder: 84,
   },
   queue_overdue_critical: {
     id: 'queue_overdue_critical',
-    groupLabel: `TAT >${LAB_CONFIG.QUEUE_AGE_CRITICAL_HOURS}h`,
-    pillLabel: `${LAB_CONFIG.QUEUE_AGE_CRITICAL_HOURS}h+`,
+    groupLabel: `Turnaround exceeded (${LAB_CONFIG.QUEUE_AGE_CRITICAL_HOURS}h+)`,
+    pillLabel: 'Critical TAT',
     badgeVariant: 'danger',
     sortOrder: 90,
   },
   queue_overdue_warning: {
     id: 'queue_overdue_warning',
-    groupLabel: `TAT >${LAB_CONFIG.QUEUE_AGE_WARNING_HOURS}h`,
-    pillLabel: `${LAB_CONFIG.QUEUE_AGE_WARNING_HOURS}h+`,
+    groupLabel: `Turnaround at risk (${LAB_CONFIG.QUEUE_AGE_WARNING_HOURS}h+)`,
+    pillLabel: 'TAT warning',
     badgeVariant: 'warning',
     sortOrder: 100,
   },
@@ -222,6 +222,15 @@ export interface VolumeDayPoint {
   count: number;
 }
 
+/** Exclusive test-state counts for order tests currently in the lab pipeline. */
+export interface LabScheduleStateMix {
+  pending: number;
+  running: number;
+  resulted: number;
+  validated: number;
+  blocked: number;
+}
+
 export interface LabCommandCenterSnapshot {
   counts: { collection: number; entry: number; validation: number; supervisor: number };
   queueAge: Record<LabPipelineStage, QueueAgeStats>;
@@ -237,5 +246,6 @@ export interface LabCommandCenterSnapshot {
   computedAt?: string | null;
   dashboardKpis: DashboardKpis;
   volumeByDay: VolumeDayPoint[];
+  scheduleStateMix: LabScheduleStateMix;
 }
 

@@ -26,6 +26,14 @@ const EMPTY_DASHBOARD_KPIS: LabCommandCenterSnapshot['dashboardKpis'] = {
   volumeWowPercent: null,
 };
 
+const EMPTY_SCHEDULE_STATE_MIX: LabCommandCenterSnapshot['scheduleStateMix'] = {
+  pending: 0,
+  running: 0,
+  resulted: 0,
+  validated: 0,
+  blocked: 0,
+};
+
 const EMPTY_BOARD: LabCommandCenterSnapshot = {
   counts: { collection: 0, entry: 0, validation: 0, supervisor: 0 },
   queueAge: EMPTY_QUEUE_AGE,
@@ -40,6 +48,7 @@ const EMPTY_BOARD: LabCommandCenterSnapshot = {
   totalActive: 0,
   dashboardKpis: EMPTY_DASHBOARD_KPIS,
   volumeByDay: [],
+  scheduleStateMix: EMPTY_SCHEDULE_STATE_MIX,
 };
 
 function isLabPipelineStage(value: string | null | undefined): value is LabPipelineStage {
@@ -89,6 +98,7 @@ function toBoardData(board: LabBoardResponse): LabCommandCenterSnapshot {
     computedAt: board.computedAt,
     dashboardKpis: board.dashboardKpis ?? EMPTY_DASHBOARD_KPIS,
     volumeByDay: board.volumeByDay ?? [],
+    scheduleStateMix: board.scheduleStateMix ?? EMPTY_SCHEDULE_STATE_MIX,
   };
 }
 

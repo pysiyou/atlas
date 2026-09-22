@@ -5,6 +5,7 @@
 import React from 'react';
 import { LabAttentionFeed } from '../LabAttentionFeed';
 import { Panel } from '@/components/surfaces/Panel';
+import { LAB_COPY } from '../../constants/labConstants';
 import type { LabAttentionQueueItem } from '../commandCenterModel';
 
 interface LabAttentionQueueProps {
@@ -18,13 +19,13 @@ export const LabAttentionQueue: React.FC<LabAttentionQueueProps> = ({ items, att
 
   return (
     <Panel
-      title="Needs Attention"
+      title={LAB_COPY.attention.panelTitle}
       meta={
         items.length > 0
           ? capped
-            ? `Top ${items.length} of ${attentionTotal} tests`
-            : `${items.length} orders · ${attentionTotal} tests`
-          : 'Action queue · holds · STAT · TAT'
+            ? `Prioritized view · ${shownTests} of ${attentionTotal} tests`
+            : `${items.length} accessions · ${attentionTotal} tests`
+          : LAB_COPY.attention.panelMetaEmpty
       }
       padding="none"
     >
