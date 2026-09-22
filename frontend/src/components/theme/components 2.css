@@ -1,0 +1,126 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   ATLAS DESIGN SYSTEM - COMPONENT STYLES
+   Global component classes that depend on theme tokens
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Entity IDs — shared typography for PAT/ORD/SAM/TST codes and catalog codes
+   ───────────────────────────────────────────────────────────────────────── */
+
+.entity-id {
+  font-family: var(--id-font-family);
+  font-size: var(--id-font-size);
+  font-weight: var(--id-font-weight);
+  color: var(--id-color);
+  letter-spacing: var(--id-letter-spacing);
+}
+
+.entity-id--secondary {
+  font-size: var(--id-font-size-secondary);
+  color: var(--id-color-secondary);
+}
+
+.entity-id--clickable {
+  cursor: pointer;
+}
+
+.entity-id--clickable:hover {
+  text-decoration: underline;
+}
+
+:is(h1, h2, h3, h4) .entity-id,
+:is(button, a).entity-id {
+  font-family: var(--id-font-family);
+  font-size: var(--id-font-size);
+  font-weight: var(--id-font-weight);
+  color: var(--id-color);
+  letter-spacing: var(--id-letter-spacing);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Dark theme: inputs default to theme text color
+   ───────────────────────────────────────────────────────────────────────── */
+
+[data-theme='github'] input,
+[data-theme='github'] textarea,
+[data-theme='github'] select,
+[data-theme='noir-studio'] input,
+[data-theme='noir-studio'] textarea,
+[data-theme='noir-studio'] select {
+  color: var(--text);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Toaster host — never intercept clicks outside the toast card
+   ───────────────────────────────────────────────────────────────────────── */
+
+.app-toaster,
+[data-rht-toaster] {
+  pointer-events: none !important;
+}
+
+/* Wrappers span the viewport; keep them pass-through so only the card is clickable. */
+.app-toaster > *,
+[data-rht-toaster] > * {
+  pointer-events: none !important;
+}
+
+.app-toaster > * > *,
+[data-rht-toaster] > * > * {
+  pointer-events: auto;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Toast card — dark charcoal shell + subtle variant gradient (theme tokens)
+   ───────────────────────────────────────────────────────────────────────── */
+
+.toast-card {
+  --toast-variant-accent: var(--toast-info);
+  color: var(--toast-fg);
+  border: 1px solid var(--toast-border);
+  box-shadow: var(--toast-shadow);
+  background:
+    linear-gradient(
+      152deg,
+      color-mix(in srgb, var(--toast-variant-accent) var(--toast-accent-mix), transparent) 0%,
+      transparent 52%
+    ),
+    var(--toast-bg);
+}
+
+.toast-card--success {
+  --toast-variant-accent: var(--toast-success);
+}
+
+.toast-card--error {
+  --toast-variant-accent: var(--toast-danger);
+}
+
+.toast-card--warning {
+  --toast-variant-accent: var(--toast-warning);
+}
+
+.toast-card--info {
+  --toast-variant-accent: var(--toast-info);
+}
+
+.toast-card--loading {
+  --toast-variant-accent: var(--toast-fg-muted);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Theme switch: smooth transition only while changing theme
+   ───────────────────────────────────────────────────────────────────────── */
+
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition:
+    background-color 0.4s ease-out,
+    color 0.4s ease-out,
+    border-color 0.4s ease-out,
+    fill 0.4s ease-out,
+    stroke 0.4s ease-out,
+    box-shadow 0.4s ease-out !important;
+}
