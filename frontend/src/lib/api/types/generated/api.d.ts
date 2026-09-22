@@ -949,6 +949,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/lab/worklists/dashboard-today": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Dashboard Worklist Today */
+        get: operations["get_dashboard_worklist_today_api_v1_lab_worklists_dashboard_today_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/lab/worklists/validation": {
         parameters: {
             query?: never;
@@ -1307,21 +1324,6 @@ export interface components {
             /** Status */
             status: string;
         };
-        /** DashboardKpis */
-        DashboardKpis: {
-            /** Orderstoday */
-            ordersToday: number;
-            /** Awaitingresults */
-            awaitingResults: number;
-            /** Criticalvalues */
-            criticalValues: number;
-            /** Tatcompliancepercent */
-            tatCompliancePercent: number;
-            /** Volumetotal */
-            volumeTotal: number;
-            /** Volumewowpercent */
-            volumeWowPercent?: number | null;
-        };
         /** DashboardSummaryResponse */
         DashboardSummaryResponse: {
             /** Totalpatients */
@@ -1556,9 +1558,6 @@ export interface components {
             totalActive: number;
             /** Computedat */
             computedAt?: string | null;
-            dashboardKpis: components["schemas"]["DashboardKpis"];
-            /** Volumebyday */
-            volumeByDay: components["schemas"]["VolumeDayPoint"][];
             scheduleStateMix: components["schemas"]["LabScheduleStateMix"];
         };
         /** LabOperationLogResponse */
@@ -3140,13 +3139,6 @@ export interface components {
              * @description SpO2 %. Normal: 95-100
              */
             oxygenSaturation?: number | null;
-        };
-        /** VolumeDayPoint */
-        VolumeDayPoint: {
-            /** Date */
-            date: string;
-            /** Count */
-            count: number;
         };
     };
     responses: never;
@@ -5197,6 +5189,38 @@ export interface operations {
         };
     };
     get_dashboard_blocked_worklist_api_v1_lab_worklists_dashboard_blocked_get: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_dashboard_worklist_today_api_v1_lab_worklists_dashboard_today_get: {
         parameters: {
             query?: {
                 page?: number;

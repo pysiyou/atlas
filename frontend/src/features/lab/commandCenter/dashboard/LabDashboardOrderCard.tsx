@@ -18,6 +18,7 @@ export function LabDashboardOrderCard({
         leading={
           <div className="min-w-0">
             <div className={DASHBOARD_TWO_LINE.primary}>{item.testName}</div>
+            <div className={DASHBOARD_TWO_LINE.mrn}>{item.testCode}</div>
             <div className={DASHBOARD_TWO_LINE.secondary}>
               {item.patientName}
               <span className={DASHBOARD_TWO_LINE.mrn}>

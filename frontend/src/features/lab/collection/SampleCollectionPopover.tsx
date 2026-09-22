@@ -6,7 +6,7 @@
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { notify } from '@/utils/feedback';
-import { Popover, Button, Icon, FooterInfo } from '@/components';
+import { Popover, Button, Icon, FooterInfo, SelectionCheck } from '@/components';
 import { LabWorkflowPopoverChrome, RadioCard } from '../components/LabWorkflowPopoverChrome';
 import { MODULE_ICONS } from '@/config/icons';
 import type { ContainerType } from '@/types';
@@ -16,7 +16,11 @@ import { cn } from '@/utils';
 import { getContainerIcon } from '@/config/icons';
 import { ICONS } from '@/config/icons';
 import { inputBase, inputError, FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
-import { CONTROL, RADIUS, SHADOW, TONE } from '@/components/theme/recipes';
+import { RADIUS, SHADOW, TONE } from '@/components/theme/recipes';
+import {
+  getDefaultCollectionTopColor,
+  getEffectiveContainerType,
+} from '@/features/lab/utils/labSample';
 
 /** Container type choices for collection: tube or cup only */
 const COLLECTION_CONTAINER_OPTIONS: { value: ContainerType; label: string }[] = [
@@ -62,13 +66,18 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
   const minimumVolume = requirement.totalVolume;
   const [volume, setVolume] = useState<number>(minimumVolume);
   const [notes, setNotes] = useState('');
-  const [selectedColor, setSelectedColor] = useState<string>('');
-  const [showVolumeError, setShowVolumeError] = useState(false);
+  const defaultContainerType = useMemo(
+    () => getEffectiveContainerType(undefined, requirement.sampleType),
+    [requirement.sampleType]
+  );
 
-  const defaultContainerType: ContainerType = useMemo(() => {
-    const sampleType = requirement.sampleType?.toLowerCase() || '';
-    return sampleType === 'urine' || sampleType === 'stool' ? 'cup' : 'tube';
-  }, [requirement.sampleType]);
+  const defaultTopColor = useMemo(
+    () => getDefaultCollectionTopColor(requirement.sampleType),
+    [requirement.sampleType]
+  );
+
+  const [selectedColor, setSelectedColor] = useState<string>(defaultTopColor);
+  const [showVolumeError, setShowVolumeError] = useState(false);
 
   const [selectedContainerType, setSelectedContainerType] =
     useState<ContainerType>(defaultContainerType);
@@ -202,14 +211,29 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
                 type="button"
                 onClick={() => setSelectedColor(value)}
                 className={cn(
-                  `w-8 h-8 ${RADIUS.pill} transition-all duration-200`,
-                  bgClass,
-                  isSelected
-                    ? CONTROL.choiceSelected
-                    : `opacity-80 hover:opacity-100 hover:scale-105 hover:${SHADOW.subtle}`
+                  `relative w-8 h-8 ${RADIUS.pill} transition-all duration-200`,
+                  !isSelected && `opacity-80 hover:opacity-100 hover:scale-105 hover:${SHADOW.subtle}`
                 )}
                 title={config?.label ?? value}
-              />
+                aria-pressed={isSelected}
+              >
+                <span
+                  className={cn(
+                    `absolute inset-0 ${RADIUS.pill}`,
+                    bgClass,
+                    isSelected ? 'blur-[2px]' : 'scale-100'
+                  )}
+                  aria-hidden
+                />
+                {isSelected && (
+                  <span
+                    className={`absolute inset-0 z-10 flex items-center justify-center ${RADIUS.pill}`}
+                    aria-hidden
+                  >
+                    <SelectionCheck isSelected />
+                  </span>
+                )}
+              </button>
             );
           })}
         </div>

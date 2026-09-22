@@ -73,6 +73,24 @@ export interface EntryWorklistItem {
   testCategory?: string | null;
 }
 
+export interface DashboardWorklistItem {
+  orderTestId: number;
+  orderId: number;
+  patientId: number;
+  patientName: string;
+  testCode: string;
+  testName: string;
+  sampleType: string;
+  priority: PriorityLevel;
+  status: TestStatus;
+  stage: 'collection' | 'entry' | 'validation';
+  activityAt: string;
+  orderDate: string;
+  referringPhysician?: string | null;
+  testCategory?: string | null;
+  blockedLabel?: string | null;
+}
+
 export interface DashboardBlockedWorklistItem {
   orderTestId: number;
   orderId: number;
@@ -162,6 +180,13 @@ export const worklistsAPI = {
       buildParams(params)
     );
   },
+
+  getDashboardToday(params?: WorklistParams) {
+    return apiClient.get<{ items: DashboardWorklistItem[]; pagination: WorklistPagination }>(
+      '/lab/worklists/dashboard-today',
+      buildParams(params)
+    );
+  },
 };
 
 /**
@@ -232,6 +257,23 @@ export function useDashboardBlockedWorklist(params?: WorklistHookParams) {
   const query = useQuery({
     queryKey: queryKeys.worklists.dashboardBlocked(params),
     queryFn: () => worklistsAPI.getDashboardBlocked({ pageSize: 200, ...params }),
+    enabled: isAuthenticated && !isRestoring,
+    ...cacheConfig.dynamic,
+    refetchInterval: LAB_CONFIG.TAB_COUNT_REFRESH_MS,
+  });
+  return {
+    items: query.data?.items ?? [],
+    pagination: query.data?.pagination,
+    isLoading: query.isLoading,
+    refetch: query.refetch,
+  };
+}
+
+export function useDashboardWorklistToday(params?: WorklistHookParams) {
+  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const query = useQuery({
+    queryKey: queryKeys.worklists.dashboardToday(params),
+    queryFn: () => worklistsAPI.getDashboardToday({ pageSize: 200, ...params }),
     enabled: isAuthenticated && !isRestoring,
     ...cacheConfig.dynamic,
     refetchInterval: LAB_CONFIG.TAB_COUNT_REFRESH_MS,

@@ -38,8 +38,13 @@ export function createLabDashboardOrdersTableConfig(): TableViewConfig<LabDashbo
     test: createColumn<LabDashboardOrderRow>('test', 'Test', {
       width: 'xl',
       sortable: true,
-      accessor: row => row.testName,
-      render: row => <span className={DASHBOARD_TWO_LINE.primary}>{row.testName}</span>,
+      accessor: row => `${row.testName} ${row.testCode}`,
+      render: row => (
+        <div className="min-w-0">
+          <div className={DASHBOARD_TWO_LINE.primary}>{row.testName}</div>
+          <div className={DASHBOARD_TWO_LINE.mrn}>{row.testCode}</div>
+        </div>
+      ),
     }),
     patient: createColumn<LabDashboardOrderRow>('patient', 'Patient', {
       width: 'lg',

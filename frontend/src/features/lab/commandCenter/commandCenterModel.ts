@@ -208,20 +208,6 @@ export interface PriorityMix {
   low: number;
 }
 
-export interface DashboardKpis {
-  ordersToday: number;
-  awaitingResults: number;
-  criticalValues: number;
-  tatCompliancePercent: number;
-  volumeTotal: number;
-  volumeWowPercent: number | null;
-}
-
-export interface VolumeDayPoint {
-  date: string;
-  count: number;
-}
-
 /** Exclusive test-state counts for order tests currently in the lab pipeline. */
 export interface LabScheduleStateMix {
   pending: number;
@@ -244,8 +230,6 @@ export interface LabCommandCenterSnapshot {
   suggestedTab: LabPipelineStage | null;
   totalActive: number;
   computedAt?: string | null;
-  dashboardKpis: DashboardKpis;
-  volumeByDay: VolumeDayPoint[];
   scheduleStateMix: LabScheduleStateMix;
 }
 

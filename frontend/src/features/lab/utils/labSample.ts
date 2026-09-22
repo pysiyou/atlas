@@ -1,5 +1,6 @@
 /** Sample definitions, collection helpers, container inference, and label printing. */
 import type { SampleType, ContainerType, ContainerTopColor, OrderTest, Test } from '@/types';
+import { COLLECTION_TOP_COLOR_VALUES } from '@/types';
 import type { FeedbackId } from '@/config/feedbackCatalog';
 import { notify } from '@/utils/feedback';
 import { feedbackTitle } from '@/utils/feedback/copy';
@@ -224,6 +225,12 @@ export function getContainerIconColor(containerTopColor: ContainerTopColor): str
   return CONTAINER_ICON_COLOR[containerTopColor] ?? 'text-text-disabled';
 }
 
+/** Blood-derived samples use a tube; all other sample types default to a cup in collection UI. */
+export function isBloodDerivedSampleType(sampleType: string): boolean {
+  const normalized = sampleType.toLowerCase();
+  return normalized === 'blood' || normalized === 'serum' || normalized === 'plasma';
+}
+
 export const getEffectiveContainerType = (
   actualContainerType: string | undefined,
   sampleType: string
@@ -231,8 +238,33 @@ export const getEffectiveContainerType = (
   if (actualContainerType === 'cup' || actualContainerType === 'tube') {
     return actualContainerType;
   }
-  return sampleType === 'urine' || sampleType === 'stool' ? 'cup' : 'tube';
+  return isBloodDerivedSampleType(sampleType) ? 'tube' : 'cup';
 };
+
+export type CollectionPopoverTopColor = (typeof COLLECTION_TOP_COLOR_VALUES)[number];
+
+/** Default top-cap color in the collection popover swatch row, by sample type. */
+export function getDefaultCollectionTopColor(sampleType: SampleType): CollectionPopoverTopColor {
+  switch (sampleType) {
+    case 'blood':
+    case 'serum':
+      return 'red-top';
+    case 'plasma':
+      return 'green-top';
+    case 'urine':
+      return 'yellow-top';
+    case 'stool':
+      return 'black-top';
+    case 'saliva':
+    case 'swab':
+      return 'green-top';
+    case 'csf':
+    case 'pleural_fluid':
+      return 'blue-top';
+    default:
+      return 'blue-top';
+  }
+}
 
 const PRINT_LABEL_ERRORS: Record<string, FeedbackId> = {
   [feedbackTitle('lab.collection.printLabel.uncollected')]: 'lab.collection.printLabel.uncollected',

@@ -195,6 +195,8 @@ export const queryKeys = {
       [...queryKeys.worklists.all, 'validation', params] as const,
     dashboardBlocked: (params?: { page?: number; pageSize?: number; search?: string }) =>
       [...queryKeys.worklists.all, 'dashboard-blocked', params] as const,
+    dashboardToday: (params?: { page?: number; pageSize?: number; search?: string }) =>
+      [...queryKeys.worklists.all, 'dashboard-today', params] as const,
   },
 } as const;
 

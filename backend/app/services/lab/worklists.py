@@ -15,14 +15,17 @@ from app.models.recollection_request import RecollectionRequest
 from app.models.sample import Sample
 from app.models.test import Test
 from app.schemas.enums import (
+    EscalationTicketStatus,
     PaymentStatus,
     PriorityLevel,
     RecollectionRequestStatus,
     SampleStatus,
     TestStatus,
 )
+from app.models.escalation import EscalationTicket
 from app.services.lab.board import BLOCKED_LABELS
 from app.services.lab.board import LabBoardService
+from app.services.lab.board import blocked_reason_for_work_item
 from app.utils.common import parse_display_id_from_search
 from sqlalchemy import String, or_
 from sqlalchemy.orm import Session
@@ -33,6 +36,13 @@ PRIORITY_ORDER = {
     PriorityLevel.MEDIUM: 2,
     PriorityLevel.LOW: 3,
 }
+
+IN_PIPELINE_TEST_STATUSES = (
+    TestStatus.PENDING,
+    TestStatus.SAMPLE_COLLECTED,
+    TestStatus.RESULTED,
+    TestStatus.ESCALATED,
+)
 
 COLLECTION_SAMPLE_LOOKUP_MIN_LEN = 3
 
@@ -454,6 +464,166 @@ class LabWorklistService:
         for item in page_items:
             item.pop("_sort_priority", None)
             item.pop("_sort_since", None)
+        return {"items": page_items, "pagination": _paginate(total, page, page_size)}
+
+    def _utc_today_start(self) -> datetime:
+        today = datetime.now(UTC).date()
+        return datetime.combine(today, datetime.min.time()).replace(tzinfo=UTC)
+
+    def _dashboard_stage(self, order_test: OrderTest) -> str:
+        if order_test.status in (TestStatus.VALIDATED, TestStatus.ESCALATED):
+            return "validation"
+        return self._pipeline_stage_for_test(order_test)
+
+    def _normalize_ts(self, ts: datetime | None) -> datetime | None:
+        if ts is None:
+            return None
+        if ts.tzinfo is None:
+            return ts.replace(tzinfo=UTC)
+        return ts
+
+    def _activity_at_for_dashboard(
+        self,
+        *,
+        order_test: OrderTest,
+        sample: Sample | None,
+    ) -> datetime:
+        """Display/sort timestamp — prefer row update, then latest workflow milestone."""
+        candidates = [order_test.updatedAt]
+        if sample:
+            candidates.append(sample.updatedAt)
+            candidates.append(sample.collectedAt)
+        candidates.extend(
+            [order_test.resultEnteredAt, order_test.resultValidatedAt, order_test.createdAt]
+        )
+        normalized = [self._normalize_ts(ts) for ts in candidates if ts is not None]
+        return max(normalized) if normalized else datetime.now(UTC)
+
+    def _blocked_label_for_dashboard(
+        self,
+        *,
+        order_test: OrderTest,
+        order: Order,
+        sample: Sample | None,
+        recollection_blocked: set[int],
+        escalation_code: str | None,
+    ) -> str | None:
+        status = (
+            order_test.status.value
+            if hasattr(order_test.status, "value")
+            else str(order_test.status)
+        )
+        blocked = blocked_reason_for_work_item(
+            status=status,
+            is_retest=bool(order_test.isRetest),
+            payment_status=(
+                order.paymentStatus.value
+                if hasattr(order.paymentStatus, "value")
+                else str(order.paymentStatus)
+            ),
+            sample_status=(
+                sample.status.value if sample and hasattr(sample.status, "value") else None
+            ),
+            sample_is_recollection=bool(sample.isRecollection) if sample else False,
+            escalation_reason_code=escalation_code,
+        )
+        if order_test.id in recollection_blocked:
+            blocked = blocked or "recollection_approval"
+        if not blocked:
+            return None
+        return BLOCKED_LABELS.get(blocked, blocked.replace("_", " ").title())
+
+    def list_dashboard_work_today(
+        self,
+        *,
+        user_id: int,
+        page: int = 1,
+        page_size: int = 50,
+    ) -> dict[str, Any]:
+        """Today's dashboard rows: in-pipeline work plus anything updated today (incl. completed)."""
+        _ = user_id  # reserved for future per-user scoping
+        today_start = self._utc_today_start()
+        board = LabBoardService(self.db)
+        recollection_blocked = board._recollection_blocked_order_test_ids()
+
+        active_filter = ~OrderTest.status.in_(
+            (TestStatus.CANCELLED, TestStatus.REMOVED, TestStatus.SUPERSEDED)
+        )
+        visible_today = or_(
+            OrderTest.updatedAt >= today_start,
+            OrderTest.status.in_(IN_PIPELINE_TEST_STATUSES),
+        )
+
+        rows = (
+            self.db.query(OrderTest, Order, Patient, Test, Sample)
+            .join(Order, OrderTest.orderId == Order.orderId)
+            .join(Patient, Order.patientId == Patient.id)
+            .join(Test, OrderTest.testCode == Test.code)
+            .outerjoin(Sample, Sample.sampleId == OrderTest.sampleId)
+            .filter(active_filter)
+            .filter(visible_today)
+            .all()
+        )
+
+        escalated_ids = [
+            ot.id for ot, _order, _patient, _test, _sample in rows if ot.status == TestStatus.ESCALATED
+        ]
+        tickets_by_test: dict[int, EscalationTicket] = {}
+        if escalated_ids:
+            for ticket in (
+                self.db.query(EscalationTicket)
+                .filter(
+                    EscalationTicket.orderTestId.in_(escalated_ids),
+                    EscalationTicket.status == EscalationTicketStatus.OPEN,
+                )
+                .all()
+            ):
+                tickets_by_test[ticket.orderTestId] = ticket
+
+        items: list[dict[str, Any]] = []
+        for order_test, order, patient, test, sample in rows:
+            activity_at = self._activity_at_for_dashboard(
+                order_test=order_test,
+                sample=sample,
+            )
+            ticket = tickets_by_test.get(order_test.id)
+            escalation_code = (
+                ticket.reasonCode.value if ticket and ticket.reasonCode else None
+            )
+            blocked_label = self._blocked_label_for_dashboard(
+                order_test=order_test,
+                order=order,
+                sample=sample,
+                recollection_blocked=recollection_blocked,
+                escalation_code=escalation_code,
+            )
+            items.append(
+                {
+                    "orderTestId": order_test.id,
+                    "orderId": order.orderId,
+                    "patientId": patient.id,
+                    "patientName": patient.fullName,
+                    "testCode": order_test.testCode,
+                    "testName": test.name,
+                    "sampleType": test.sampleType or "",
+                    "priority": order.priority,
+                    "status": order_test.status,
+                    "stage": self._dashboard_stage(order_test),
+                    "activityAt": activity_at,
+                    "orderDate": order.orderDate,
+                    "referringPhysician": order.referringPhysician,
+                    "testCategory": test.category,
+                    "blockedLabel": blocked_label,
+                    "_sort_activity": activity_at,
+                }
+            )
+
+        items.sort(key=lambda row: row["_sort_activity"], reverse=True)
+        total = len(items)
+        start = (page - 1) * page_size
+        page_items = items[start : start + page_size]
+        for item in page_items:
+            item.pop("_sort_activity", None)
         return {"items": page_items, "pagination": _paginate(total, page, page_size)}
 
     def get_board(self, include_supervisor: bool = True) -> dict[str, Any]:

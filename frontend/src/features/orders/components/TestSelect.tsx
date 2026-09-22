@@ -129,7 +129,7 @@ const TestSearchTagInput: React.FC<{
           error && inputContainerError
         )}
       >
-        <div className="absolute inset-y-0 left-0 pl-space-3 flex items-start pt-space-2.5 pointer-events-none">
+        <div className="absolute inset-y-0 left-0 pl-space-3 flex items-center pointer-events-none">
           <Icon
             name={ICONS.dataFields.document}
             className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors"

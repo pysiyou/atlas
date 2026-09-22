@@ -29,6 +29,13 @@ export const EMPTY_COPY = {
     title: 'No active tests',
     description: emptySubtitle('tests', 'they enter the pipeline'),
   },
+  dashboardWorklist: {
+    title: emptyTitle("tests in today's view"),
+    description: emptySubtitle(
+      'tests',
+      'pipeline work is open or a row is updated today',
+    ),
+  },
   pendingAttention: {
     title: 'No items in queue',
     description:
