@@ -4,15 +4,8 @@
  */
 import { apiClient } from '@/lib/api/client';
 import { WORKFLOW_QUERY_LIMIT, DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
-import type { Order, OrderStatus, PaymentStatus, Patient } from '@/types';
+import type { Order, OrderStatus, PaymentStatus, Patient, Invoice } from '@/types';
 import { getOrderTestCount, getOrderTests } from '@/types';
-import type { Invoice } from '@/features/billing/api/billing';
-
-export interface OrderDetailApiResponse extends Order {
-  patient?: Patient;
-  invoices?: Invoice[];
-  payments?: unknown[];
-}
 import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
 import { useQuery, keepPreviousData, useMutation, useQueryClient, useQueries } from '@tanstack/react-query';
 import { useMemo, useState, useCallback } from 'react';
@@ -24,6 +17,31 @@ import { orderCreateSchema, orderUpdateSchema, orderSchema } from '@/features/or
 import { formInputToPayload } from '../utils/formTransformers';
 
 export type { PaginatedResponse, PaginationMeta };
+
+/** Invoice payload on order detail (`include=invoices`) — API uses `paymentStatus`. */
+export interface OrderDetailInvoice {
+  invoiceId: number;
+  orderId: number;
+  patientId: number;
+  patientName: string;
+  items: Invoice['items'];
+  subtotal: number;
+  discount: number;
+  tax: number;
+  total: number;
+  paymentStatus: PaymentStatus;
+  amountPaid: number;
+  amountDue: number;
+  createdAt: string;
+  updatedAt?: string;
+  dueDate?: string | null;
+}
+
+export interface OrderDetailApiResponse extends Order {
+  patient?: Patient;
+  invoices?: OrderDetailInvoice[];
+  payments?: unknown[];
+}
 
 export interface OrdersFilter {
   patientId?: string;

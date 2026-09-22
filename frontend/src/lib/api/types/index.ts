@@ -40,20 +40,3 @@ export type RefreshTokenResponse = Pick<
   import('./schemas').ApiRefreshTokenResponse,
   'access_token'
 >;
-
-/**
- * Backend endpoints available but not wired in the frontend UI.
- * @see backend/app/api/v1/
- */
-export const UNWIRED_BACKEND_ENDPOINTS = [
-  'POST /orders/{orderId}/report',
-  'POST /results/order-tests/{orderTestId}/request-amendment',
-  'GET /critical-values/all',
-  'GET /orders/{order_id}/critical-values',
-  'GET /audit/logs',
-  'GET /audit/logs/count',
-  'GET/POST/PUT/DELETE /users (admin CRUD — only /users/lookup is used)',
-  'POST /analyzer/hl7',
-  'POST /analyzer/json',
-  'GET /analyzer/pending/{analyzer_id}',
-] as const;

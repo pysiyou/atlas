@@ -17,6 +17,6 @@ export {
   formatPerformerName,
   performerInitials,
 } from './timelineFeedCopy';
-export { TIMELINE_STYLES, COMMAND_CENTER_TIMELINE } from './timelineStyles';
+export { TIMELINE_STYLES } from './timelineStyles';
 export { formatTimelineEvent } from './timelineEventRegistry';
 export { getCategoryVisual } from './timelineVisuals';

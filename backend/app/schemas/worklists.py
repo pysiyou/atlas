@@ -73,6 +73,26 @@ class EntryWorklistItem(BaseModel):
     testCategory: str | None = None
 
 
+class DashboardWorklistItem(BaseModel):
+    """In-pipeline order tests plus rows updated today (any status)."""
+
+    orderTestId: int
+    orderId: int
+    patientId: int
+    patientName: str
+    testCode: str
+    testName: str
+    sampleType: str
+    priority: PriorityLevel
+    status: TestStatus
+    stage: Literal["collection", "entry", "validation"]
+    activityAt: datetime
+    orderDate: datetime
+    referringPhysician: str | None = None
+    testCategory: str | None = None
+    blockedLabel: str | None = None
+
+
 class DashboardBlockedWorklistItem(BaseModel):
     """Order tests hidden from stage queues while recollection awaits supervisor approval."""
 
@@ -179,20 +199,6 @@ class BoardAttentionItem(BaseModel):
     attentionType: str
 
 
-class DashboardKpis(BaseModel):
-    ordersToday: int
-    awaitingResults: int
-    criticalValues: int
-    tatCompliancePercent: int
-    volumeTotal: int
-    volumeWowPercent: float | None = None
-
-
-class VolumeDayPoint(BaseModel):
-    date: str
-    count: int
-
-
 class LabScheduleStateMix(BaseModel):
     """Exclusive test-state counts for order tests currently in the lab pipeline."""
 
@@ -216,6 +222,4 @@ class LabBoardResponse(BaseModel):
     attentionTotal: int
     totalActive: int
     computedAt: str | None = None
-    dashboardKpis: DashboardKpis
-    volumeByDay: list[VolumeDayPoint]
     scheduleStateMix: LabScheduleStateMix

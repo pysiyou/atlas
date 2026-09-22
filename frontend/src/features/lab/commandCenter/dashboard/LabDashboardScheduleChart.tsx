@@ -2,6 +2,9 @@
  * Lab pipeline mix — donut chart with side legend (schedule for today panel).
  */
 import React, { useMemo } from 'react';
+import { EMPTY_COPY } from '@/components/display/emptyStateCopy';
+import { EmptyState } from '@/components/display/EmptyState';
+import { PANEL_EMPTY_STATE } from '@/components/display/emptyStatePresets';
 import { Panel } from '@/components/surfaces/Panel';
 import type { LabScheduleStateMix } from '../commandCenterModel';
 import { DASHBOARD_CHART, SCHEDULE_STATE_CHART_COLORS } from '../dashboardStyles';
@@ -103,7 +106,11 @@ export const LabDashboardScheduleChart: React.FC<LabDashboardScheduleChartProps>
   return (
     <Panel title="Schedule for Today" bodyClassName="flex flex-col justify-center">
       {total === 0 ? (
-        <p className={DASHBOARD_CHART.empty}>Nothing in the pipeline right now.</p>
+        <EmptyState
+          {...PANEL_EMPTY_STATE}
+          title={EMPTY_COPY.activeTests.title}
+          description={EMPTY_COPY.activeTests.description}
+        />
       ) : (
         <div className={DASHBOARD_CHART.donutRow}>
           <div

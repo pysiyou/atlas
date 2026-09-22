@@ -705,6 +705,3 @@ export function formatTimelineEvent(event: TimelineEvent): FormattedTimelineEven
     : { action: headlineActivityFallback(event), details: entityDetails(event) };
   return appendNote(event, formatted);
 }
-
-/** @deprecated Use formatTimelineEvent */
-export const formatActivityEvent = formatTimelineEvent;

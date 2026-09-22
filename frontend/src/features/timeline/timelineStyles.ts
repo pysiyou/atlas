@@ -24,6 +24,3 @@ export const TIMELINE_STYLES = {
   retryLink: 'text-xs text-brand hover:underline',
   retryLinkDisabled: 'text-xs text-brand hover:underline disabled:opacity-60',
 } as const;
-
-/** @deprecated Use TIMELINE_STYLES */
-export const COMMAND_CENTER_TIMELINE = TIMELINE_STYLES;

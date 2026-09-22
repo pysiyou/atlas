@@ -1,42 +1,23 @@
 /**
- * Merges collection / entry / validation worklists into one dashboard table feed.
+ * Dashboard table feed — in-pipeline tests plus rows updated today.
  */
 import { useMemo } from 'react';
-import { useTestNameLookup } from '@/features/catalog';
-import {
-  useCollectionWorklist,
-  useDashboardBlockedWorklist,
-  useEntryWorklist,
-  useValidationWorklist,
-} from '../../api/worklists';
-import { mergeDashboardOrders } from './dashboardOrders';
+import { useDashboardWorklistToday } from '../../api/worklists';
+import { mapDashboardWorkToday, type LabDashboardOrderRow } from './dashboardOrders';
 
-export function useLabDashboardOrders() {
-  const collection = useCollectionWorklist({ pageSize: 200 });
-  const entry = useEntryWorklist({ pageSize: 200 });
-  const validation = useValidationWorklist({ pageSize: 200 });
-  const blocked = useDashboardBlockedWorklist({ pageSize: 200 });
-  const { getTest, isLoading: catalogLoading } = useTestNameLookup();
+export function useLabDashboardOrders(): {
+  rows: LabDashboardOrderRow[];
+  isLoading: boolean;
+} {
+  const workToday = useDashboardWorklistToday({ pageSize: 200 });
 
   const rows = useMemo(
-    () =>
-      mergeDashboardOrders(
-        collection.items,
-        entry.items,
-        validation.items,
-        blocked.items,
-        getTest,
-      ),
-    [collection.items, entry.items, validation.items, blocked.items, getTest],
+    () => workToday.items.map(mapDashboardWorkToday),
+    [workToday.items],
   );
 
   return {
     rows,
-    isLoading:
-      collection.isLoading ||
-      entry.isLoading ||
-      validation.isLoading ||
-      blocked.isLoading ||
-      catalogLoading,
+    isLoading: workToday.isLoading,
   };
 }
