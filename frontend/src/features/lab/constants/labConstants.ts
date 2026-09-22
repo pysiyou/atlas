@@ -54,6 +54,40 @@ export const LAB_COPY = {
     activityTitle: 'Activity log',
     activityMeta: 'Last 24 hours · chronological record of accession and laboratory events',
   },
+  dashboard: {
+    todaySections: {
+      intake: 'Intake',
+      inLab: 'In lab',
+      released: 'Released',
+    },
+    todayPanelMetaEmpty: 'No open work or releases recorded for today yet',
+    todayRows: {
+      newOrders: {
+        label: 'New orders',
+        description: 'On accessions received today',
+      },
+      pending: {
+        label: 'Pending',
+        description: 'Collection or setup',
+      },
+      collected: {
+        label: 'Collected',
+        description: 'Awaiting result entry',
+      },
+      resulted: {
+        label: 'Resulted',
+        description: 'Awaiting validation',
+      },
+      blocked: {
+        label: 'Blocked',
+        description: 'Hold — any reason',
+      },
+      validatedToday: {
+        label: 'Validated',
+        description: 'Completed today',
+      },
+    },
+  },
 } as const;
 
 export function labStageLabel(

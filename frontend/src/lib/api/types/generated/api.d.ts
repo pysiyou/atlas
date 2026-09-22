@@ -1558,7 +1558,7 @@ export interface components {
             totalActive: number;
             /** Computedat */
             computedAt?: string | null;
-            scheduleStateMix: components["schemas"]["LabScheduleStateMix"];
+            todayPanelMix: components["schemas"]["LabTodayPanelMix"];
         };
         /** LabOperationLogResponse */
         LabOperationLogResponse: {
@@ -1600,20 +1600,22 @@ export interface components {
          */
         LabOperationType: "sample_collect" | "sample_reject" | "sample_recollection_request" | "recollection_request_created" | "recollection_request_approved" | "recollection_request_denied" | "result_entry" | "result_validation_approve" | "quality_issue_reported" | "escalation_resolution_authorize_retest" | "escalation_resolution_authorize_recollect" | "escalation_resolution_force_validate" | "escalation_trigger_crit_val" | "escalation_trigger_rej_samp" | "escalation_trigger_limit_hit" | "escalation_trigger_amend_res" | "escalation_resolution_cancel_test" | "escalation_resolution_apply_amendment" | "order_status_change" | "order_payment_recorded" | "test_removed" | "test_added" | "critical_value_detected" | "critical_value_notified" | "critical_value_acknowledged";
         /**
-         * LabScheduleStateMix
-         * @description Exclusive test-state counts for order tests currently in the lab pipeline.
+         * LabTodayPanelMix
+         * @description Counts for the Today dashboard panel (incomplete tests + validated today).
          */
-        LabScheduleStateMix: {
+        LabTodayPanelMix: {
+            /** Neworders */
+            newOrders: number;
             /** Pending */
             pending: number;
-            /** Running */
-            running: number;
+            /** Collected */
+            collected: number;
             /** Resulted */
             resulted: number;
-            /** Validated */
-            validated: number;
             /** Blocked */
             blocked: number;
+            /** Validatedtoday */
+            validatedToday: number;
         };
         /**
          * Lifestyle
