@@ -8,8 +8,6 @@ import { COMMAND_CENTER_PANEL } from './commandCenterStyles';
 import {
   DASHBOARD_BOTTOM_PANEL,
   DASHBOARD_BOTTOM_ROW,
-  DASHBOARD_KPI_CARD,
-  DASHBOARD_KPI_ROW,
   DASHBOARD_PAGE,
   DASHBOARD_TABLE_WRAP,
 } from './dashboardStyles';
@@ -33,26 +31,6 @@ export const LabCommandCenterBoardSkeleton: React.FC = () => {
   return (
     <div className={COMMAND_CENTER_PANEL.page} aria-busy="true" aria-label="Loading dashboard">
       <div className={DASHBOARD_PAGE}>
-        <div className={DASHBOARD_KPI_ROW}>
-          {Array.from({ length: 4 }).map((_, index) => (
-            <div key={index} className={DASHBOARD_KPI_CARD.shell}>
-              <Skeleton circle height={40} width={40} />
-              <div className="min-w-0 flex-1 space-y-space-2">
-                <Skeleton height={28} width="40%" />
-                <Skeleton height={12} width="55%" />
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className={DASHBOARD_TABLE_WRAP}>
-          <Panel hideHeader padding="none" className="h-full min-h-0">
-            <div className="flex h-full flex-col space-y-space-2 p-space-3">
-              {Array.from({ length: 8 }).map((_, index) => (
-                <Skeleton key={index} height={44} className="w-full" />
-              ))}
-            </div>
-          </Panel>
-        </div>
         <div className={DASHBOARD_BOTTOM_ROW}>
           <div className={DASHBOARD_BOTTOM_PANEL}>
             <PanelSkeleton />
@@ -63,6 +41,15 @@ export const LabCommandCenterBoardSkeleton: React.FC = () => {
           <div className={DASHBOARD_BOTTOM_PANEL}>
             <PanelSkeleton />
           </div>
+        </div>
+        <div className={DASHBOARD_TABLE_WRAP}>
+          <Panel hideHeader padding="none" className="h-full min-h-0">
+            <div className="flex h-full flex-col space-y-space-2 p-space-3">
+              {Array.from({ length: 8 }).map((_, index) => (
+                <Skeleton key={index} height={44} className="w-full" />
+              ))}
+            </div>
+          </Panel>
         </div>
       </div>
     </div>

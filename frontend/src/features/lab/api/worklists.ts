@@ -89,6 +89,7 @@ export interface DashboardBlockedWorklistItem {
   waitingHours: number;
   referringPhysician?: string | null;
   testCategory?: string | null;
+  sampleType?: string | null;
   recollectionRequestId: number;
 }
 

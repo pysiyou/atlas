@@ -286,6 +286,7 @@ class LabWorklistService:
                     "waitingHours": round(hours, 2),
                     "referringPhysician": order.referringPhysician,
                     "testCategory": test.category,
+                    "sampleType": order_test.sampleType or "",
                     "recollectionRequestId": request.id,
                     "_sort_priority": PRIORITY_ORDER.get(order.priority, 99),
                     "_sort_since": since,

@@ -35,6 +35,9 @@ export function LabDashboardOrderCard({
         ) : (
           <Badge variant={item.status} size="xs" />
         )}
+        {item.sampleType ? (
+          <Badge variant={item.sampleType} size="xs" className="border-none" />
+        ) : null}
         {item.department ? (
           <Badge variant={item.department} size="xs" className="border-none" />
         ) : null}

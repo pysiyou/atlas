@@ -1,5 +1,5 @@
 /**
- * Unified audit timeline — lab history, command center feed, and order detail.
+ * Unified activity feed — social-style audit history for lab dashboard, orders, and entity panels.
  */
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
@@ -11,6 +11,7 @@ import {
   categoriesForPreset,
   filterEventsByCategories,
   resolveCategory,
+  resolveFeedKind,
   type TimelineCategory,
 } from './timelineCategories';
 import { formatTimelineEvent } from './timelineEventRegistry';
@@ -18,6 +19,7 @@ import type { EventDetail } from './timelineEventRegistry';
 import { formatStatusLabel } from './timelineDetails';
 import { getRetestAttemptDivider } from './timelineRetestDivider';
 import { TIMELINE_STYLES } from './timelineStyles';
+import { formatPerformerName, getFeedKindMeta } from './timelineFeedCopy';
 import { getCategoryVisual } from './timelineVisuals';
 
 export type TimelinePreset = 'lab' | 'order' | 'commandCenter' | 'all';
@@ -88,7 +90,7 @@ function TimelineDetail({
   }
 }
 
-function TimelineEventRow({
+function TimelinePost({
   event,
   isLast,
   interactiveEntities,
@@ -101,27 +103,20 @@ function TimelineEventRow({
   onOpenSample: (id: number) => void;
   onOpenOrderTest: (id: number) => void;
 }) {
-  const category = resolveCategory(event);
-  const visual = getCategoryVisual(category);
+  const feedKind = resolveFeedKind(event);
+  const category = getFeedKindMeta(feedKind);
+  const visual = getCategoryVisual(resolveCategory(event));
   const formatted = formatTimelineEvent(event);
-
-  const performerLabel =
-    event.performedByName ??
-    (event.performedBy === 'system' ? 'System' : `User ${event.performedBy}`);
+  const actor = formatPerformerName(event.performedByName, event.performedBy);
+  const relativeTime = formatRelativeDateTime(event.timestamp);
 
   return (
     <li className={TIMELINE_STYLES.eventRow}>
       <div className={TIMELINE_STYLES.eventDotTrack}>
-        <div
-          className={cn(TIMELINE_STYLES.eventDot, visual.dotClass)}
-          aria-hidden="true"
-        />
+        <div className={cn(TIMELINE_STYLES.eventDot, visual.dotClass)} aria-hidden="true" />
         {!isLast && (
           <div
-            className={cn(
-              TIMELINE_STYLES.eventConnectorStem,
-              TIMELINE_STYLES.connectorStem,
-            )}
+            className={cn(TIMELINE_STYLES.eventConnectorStem, TIMELINE_STYLES.connectorStem)}
             aria-hidden="true"
           />
         )}
@@ -132,7 +127,7 @@ function TimelineEventRow({
           <div className={TIMELINE_STYLES.eventDetails}>
             {formatted.details.map((detail, idx) => (
               <TimelineDetail
-                key={`${event.id}-${idx}`}
+                key={`${event.id}-d-${idx}`}
                 detail={detail}
                 interactiveEntities={interactiveEntities}
                 onOpenSample={onOpenSample}
@@ -147,10 +142,12 @@ function TimelineEventRow({
           </p>
         )}
         <p className={TIMELINE_STYLES.eventMeta}>
-          {performerLabel} ·{' '}
-          <time dateTime={event.timestamp} title={formatRelativeDateTime(event.timestamp)}>
-            {formatRelativeDateTime(event.timestamp)}
+          {actor} ·{' '}
+          <time dateTime={event.timestamp} title={relativeTime}>
+            {relativeTime}
           </time>
+          {' · '}
+          {category.tag}
         </p>
       </div>
     </li>
@@ -163,7 +160,7 @@ type TimelineGroupItem =
 
 function isLastEventInGroup(items: TimelineGroupItem[], index: number): boolean {
   for (let i = index + 1; i < items.length; i++) {
-    if (items[i].kind === 'event') return false;
+    if (items[i]!.kind === 'event') return false;
   }
   return true;
 }
@@ -198,7 +195,7 @@ export const Timeline: React.FC<TimelineProps> = ({
         currentLabel = label;
         groups.push({ label, items: [] });
       }
-      const group = groups[groups.length - 1];
+      const group = groups[groups.length - 1]!;
 
       if (retestDividers) {
         const divider = getRetestAttemptDivider(event, previousEvent);
@@ -215,7 +212,7 @@ export const Timeline: React.FC<TimelineProps> = ({
 
   if (visibleEvents.length === 0) {
     return (
-      <div className={cn('flex min-h-0 flex-col', className ?? 'max-h-80')}>
+      <div className={cn('flex min-h-0 flex-col bg-transparent', className ?? 'max-h-80')}>
         <EmptyState
           {...PANEL_EMPTY_STATE}
           title={emptyMessage}
@@ -227,27 +224,30 @@ export const Timeline: React.FC<TimelineProps> = ({
   }
 
   return (
-    <div className={cn('overflow-y-auto pr-space-1', className ?? 'max-h-80')}>
+    <div className={cn(TIMELINE_STYLES.scroll, className ?? 'max-h-80')}>
       {grouped.map(group => (
-        <div key={group.label} className="mb-space-2">
+        <section key={group.label} className="mb-space-2">
           <div className={TIMELINE_STYLES.groupHeader}>
             <div className={TIMELINE_STYLES.groupDivider} />
             <span className={TIMELINE_STYLES.groupLabel}>{group.label}</span>
             <div className={TIMELINE_STYLES.groupDivider} />
           </div>
-          <ul className="space-y-0">
+          <ul className={TIMELINE_STYLES.postList}>
             {group.items.map((item, idx) => {
               if (item.kind === 'divider') {
                 return (
-                  <li key={`divider-${group.label}-${idx}`} className="pb-space-2 pl-space-5">
-                    <span className={TIMELINE_STYLES.eventDetailText}>Retest attempt · </span>
+                  <li
+                    key={`divider-${group.label}-${idx}`}
+                    className={TIMELINE_STYLES.threadMarker}
+                  >
+                    Retest attempt ·{' '}
                     <EntityId type="orderTest" value={item.testId} variant="inline" />
                   </li>
                 );
               }
               const isLast = isLastEventInGroup(group.items, idx);
               return (
-                <TimelineEventRow
+                <TimelinePost
                   key={item.event.id}
                   event={item.event}
                   isLast={isLast}
@@ -258,7 +258,7 @@ export const Timeline: React.FC<TimelineProps> = ({
               );
             })}
           </ul>
-        </div>
+        </section>
       ))}
       {footer}
     </div>

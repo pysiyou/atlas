@@ -17,8 +17,8 @@ import type { LabDashboardOrderRow } from './dashboardOrders';
 import { LabDashboardOrderCard } from './LabDashboardOrderCard';
 
 const VIEWS = {
-  full: ['test', 'patient', 'doctor', 'priority', 'department', 'status', 'date'],
-  medium: ['test', 'patient', 'priority', 'status', 'date'],
+  full: ['test', 'patient', 'sampleType', 'doctor', 'priority', 'department', 'status', 'date'],
+  medium: ['test', 'patient', 'sampleType', 'priority', 'status', 'date'],
   compact: ['test', 'patient', 'status'],
 } as const;
 
@@ -52,6 +52,17 @@ export function createLabDashboardOrdersTableConfig(): TableViewConfig<LabDashbo
         </div>
       ),
     }),
+    sampleType: createBadgeColumn<LabDashboardOrderRow>(
+      'sampleType',
+      'Sample Type',
+      row =>
+        row.sampleType ? (
+          <Badge variant={row.sampleType} size="xs" className="border-none" />
+        ) : (
+          <span className={DASHBOARD_TWO_LINE.secondary}>—</span>
+        ),
+      { accessor: row => row.sampleType, width: 'md', sortable: true },
+    ),
     doctor: createColumn<LabDashboardOrderRow>('doctor', 'Doctor', {
       width: 'lg',
       accessor: row => row.doctorName ?? '',

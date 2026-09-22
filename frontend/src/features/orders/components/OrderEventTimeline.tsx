@@ -16,7 +16,7 @@ export const OrderEventTimeline: React.FC<OrderEventTimelineProps> = ({ orderId 
       <div className="p-panel space-y-space-3" aria-busy="true">
         {Array.from({ length: 3 }).map((_, i) => (
           <div key={i} className="flex gap-space-3">
-            <Skeleton circle width={10} height={10} className="mt-space-1 shrink-0" />
+            <Skeleton circle width={8} height={8} className="mt-space-1 shrink-0" />
             <div className="flex-1 space-y-space-1">
               <Skeleton height={14} width="70%" />
               <Skeleton height={12} width="85%" />

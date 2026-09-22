@@ -5,6 +5,7 @@
 import React from 'react';
 import { LabActivityFeed } from '../LabActivityFeed';
 import { Panel } from '@/components/surfaces/Panel';
+import { LAB_COPY } from '../../constants/labConstants';
 import { useRecentLabActivityFeed } from '../useLabActivityFeed';
 
 export const RecentActivityPanel: React.FC = () => {
@@ -12,7 +13,11 @@ export const RecentActivityPanel: React.FC = () => {
     useRecentLabActivityFeed();
 
   return (
-    <Panel title="Recent Activity" meta="Last 24 hours · workflow & order events" padding="none">
+    <Panel
+      title={LAB_COPY.timeline.activityTitle}
+      meta={LAB_COPY.timeline.activityMeta}
+      padding="none"
+    >
       <LabActivityFeed
         events={events}
         isLoading={isLoading}

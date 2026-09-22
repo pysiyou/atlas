@@ -37,15 +37,34 @@ export const DASHBOARD_TWO_LINE = {
 } as const;
 
 export const DASHBOARD_CHART = {
-  plot: 'flex h-44 items-end gap-space-2 px-space-1',
-  barStack: `flex w-full flex-col overflow-hidden ${RADIUS.field}`,
-  barTop: 'w-full bg-brand/45',
-  barBottom: 'w-full bg-brand',
-  axis: `mt-space-2 flex ${SPACING.gapTight} ${TYPE.caption}`,
-  axisLabel: 'min-w-0 flex-1 truncate text-center',
+  empty: `${TYPE.meta} text-text-secondary`,
+  donutRow:
+    'flex min-h-0 flex-1 items-center justify-center gap-space-6 py-space-2 sm:justify-start sm:gap-space-8',
+  donutChartWrap: 'relative shrink-0',
+  donutCenter:
+    'pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-space-0.5 text-center',
+  donutCenterLabel: 'text-xs font-normal text-text-tertiary',
+  donutCenterValue: 'text-3xl font-semibold leading-none tracking-tight tabular-nums text-text-primary',
+  donutLegend: 'grid min-w-0 flex-1 grid-cols-2 gap-x-space-6 gap-y-space-5 sm:max-w-[220px]',
+  donutLegendItem: 'min-w-0',
+  donutLegendHeading: 'flex items-center gap-space-2',
+  donutLegendSwatch: 'h-2.5 w-2.5 shrink-0 rounded-full',
+  donutLegendLabel: 'truncate text-sm font-normal text-text-secondary',
+  donutLegendValue:
+    'mt-space-1 flex items-baseline gap-space-2 pl-[18px] text-xl font-semibold leading-none tabular-nums text-text-primary',
+  donutLegendPercent: 'text-sm font-normal tabular-nums text-text-secondary',
   footer: `mt-space-3 flex items-center justify-between gap-space-3 border-t border-border-subtle pt-space-3 ${TYPE.meta}`,
   wowUp: TONE.success.fgEmphasis,
   wowDown: TONE.danger.fgEmphasis,
 } as const;
 
 export const DASHBOARD_ROW_INTERACTIVE = `cursor-pointer ${CONTROL.focusVisibleFlat}` as const;
+
+/** Pipeline donut palette — matches schedule chart reference (light dashboard). */
+export const SCHEDULE_STATE_CHART_COLORS = {
+  pending: '#F0A855',
+  running: '#3A9488',
+  resulted: '#5BA4E8',
+  validated: '#58A870',
+  blocked: '#E0667A',
+} as const;

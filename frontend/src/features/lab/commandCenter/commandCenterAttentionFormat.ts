@@ -42,13 +42,16 @@ function testIdChip(item: LabAttentionQueueItem): AttentionDetail | null {
 }
 
 function queueChip(item: LabAttentionQueueItem): AttentionDetail {
-  const unit = item.stage === 'collection' ? LAB_COPY.entity.samples : 'analytes';
+  const unit = item.stage === 'collection' ? LAB_COPY.entity.samples : 'tests';
   const countLabel = item.workItemCount > 1 ? ` · ${item.workItemCount} ${unit}` : '';
   return { type: 'text', value: `${item.stageLabel}${countLabel}` };
 }
 
 function waitChip(item: LabAttentionQueueItem): AttentionDetail {
-  const label = item.waitingHours < 1 ? 'TAT <1h' : `TAT ${item.waitingHours}h`;
+  const label =
+    item.waitingHours < 1
+      ? 'Turnaround under 1 hour'
+      : `Turnaround ${item.waitingHours} hours`;
   return { type: 'wait', value: label };
 }
 
@@ -79,44 +82,46 @@ function baseDetails(
   return details;
 }
 
+const ESCALATION_DETAIL: AttentionDetail = { type: 'text', value: 'Clinical escalation' };
+
 const ATTENTION_HANDLERS: Record<AttentionType, AttentionHandler> = {
   escalation_critical: item => ({
-    action: `${LAB_COPY.attention.criticalValue} — path review required`,
-    details: baseDetails(item, 'escalation_critical', [{ type: 'text', value: 'Escalation' }]),
+    action: `${LAB_COPY.attention.criticalValue} — pathologist review required`,
+    details: baseDetails(item, 'escalation_critical', [ESCALATION_DETAIL]),
   }),
 
   escalation_amendment: item => ({
-    action: 'Amended result — pending path release',
-    details: baseDetails(item, 'escalation_amendment', [{ type: 'text', value: 'Escalation' }]),
+    action: 'Amended result — pending pathologist release',
+    details: baseDetails(item, 'escalation_amendment', [ESCALATION_DETAIL]),
   }),
 
   escalation_retry_limit: item => ({
-    action: 'Repeat limit hit — path approval needed',
-    details: baseDetails(item, 'escalation_retry_limit', [{ type: 'text', value: 'Escalation' }]),
+    action: 'Repeat analysis limit — pathologist authorization required',
+    details: baseDetails(item, 'escalation_retry_limit', [ESCALATION_DETAIL]),
   }),
 
   escalation_recollection_limit: item => ({
-    action: `${LAB_COPY.attention.recollection} limit hit — path approval needed`,
-    details: baseDetails(item, 'escalation_recollection_limit', [{ type: 'text', value: 'Escalation' }]),
+    action: `${LAB_COPY.attention.recollection} limit — pathologist authorization required`,
+    details: baseDetails(item, 'escalation_recollection_limit', [ESCALATION_DETAIL]),
   }),
 
   supervisor_approval: item => ({
-    action: 'Pending supervisor release',
-    details: baseDetails(item, 'supervisor_approval', [{ type: 'text', value: 'Escalation' }]),
+    action: 'Awaiting pathologist release',
+    details: baseDetails(item, 'supervisor_approval', [ESCALATION_DETAIL]),
   }),
 
   supervisor_recollection_request: item => ({
-    action: `${LAB_COPY.attention.recollection} request — pending approval`,
-    details: baseDetails(item, 'supervisor_recollection_request', [{ type: 'text', value: 'Escalation' }]),
+    action: `${LAB_COPY.attention.recollection} request — pending authorization`,
+    details: baseDetails(item, 'supervisor_recollection_request', [ESCALATION_DETAIL]),
   }),
 
   payment_blocked: item => ({
-    action: 'Phlebotomy hold — unpaid accession',
+    action: 'Accession on hold — payment required before collection',
     details: baseDetails(item, 'payment_blocked'),
   }),
 
   sample_rejected: item => ({
-    action: `${LAB_COPY.quality.sampleRejected} — pre-analytical hold`,
+    action: 'Pre-analytical rejection — sample cannot proceed',
     details: baseDetails(item, 'sample_rejected'),
   }),
 
@@ -131,22 +136,22 @@ const ATTENTION_HANDLERS: Record<AttentionType, AttentionHandler> = {
   }),
 
   priority_urgent: item => ({
-    action: 'STAT accession — expedite',
+    action: 'STAT accession — prioritize handling',
     details: baseDetails(item, 'priority_urgent'),
   }),
 
   priority_high: item => ({
-    action: 'Elevated priority — shorten TAT',
+    action: 'High priority — monitor turnaround closely',
     details: baseDetails(item, 'priority_high'),
   }),
 
   queue_overdue_critical: item => ({
-    action: `TAT exceeded — >${LAB_CONFIG.QUEUE_AGE_CRITICAL_HOURS}h in queue`,
+    action: `Turnaround exceeded — more than ${LAB_CONFIG.QUEUE_AGE_CRITICAL_HOURS} hours in queue`,
     details: baseDetails(item, 'queue_overdue_critical'),
   }),
 
   queue_overdue_warning: item => ({
-    action: `TAT at risk — >${LAB_CONFIG.QUEUE_AGE_WARNING_HOURS}h in queue`,
+    action: `Turnaround at risk — more than ${LAB_CONFIG.QUEUE_AGE_WARNING_HOURS} hours in queue`,
     details: baseDetails(item, 'queue_overdue_warning'),
   }),
 };

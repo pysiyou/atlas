@@ -91,6 +91,7 @@ class DashboardBlockedWorklistItem(BaseModel):
     waitingHours: float
     referringPhysician: str | None = None
     testCategory: str | None = None
+    sampleType: str | None = None
     recollectionRequestId: int
 
 
@@ -192,6 +193,16 @@ class VolumeDayPoint(BaseModel):
     count: int
 
 
+class LabScheduleStateMix(BaseModel):
+    """Exclusive test-state counts for order tests currently in the lab pipeline."""
+
+    pending: int
+    running: int
+    resulted: int
+    validated: int
+    blocked: int
+
+
 class LabBoardResponse(BaseModel):
     counts: LabBoardCounts
     queueAge: dict[str, QueueAgeStats]
@@ -207,3 +218,4 @@ class LabBoardResponse(BaseModel):
     computedAt: str | None = None
     dashboardKpis: DashboardKpis
     volumeByDay: list[VolumeDayPoint]
+    scheduleStateMix: LabScheduleStateMix

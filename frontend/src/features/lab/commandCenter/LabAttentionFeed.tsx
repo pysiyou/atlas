@@ -67,7 +67,7 @@ function LabAttentionFeedRow({ item }: { item: LabAttentionQueueItem }) {
             <Badge variant={typeConfig.badgeVariant} size="xs">
               {typeConfig.pillLabel}
             </Badge>
-            <span className="min-w-0 text-sm font-light text-text-primary group-hover:text-brand-fg">
+            <span className="min-w-0 text-xs font-light text-text-primary group-hover:text-brand-fg">
               {formatted.action}
             </span>
           </div>
