@@ -30,6 +30,7 @@ export {
   renderPatientId,
   renderPatientNameWithAge,
 } from './utils/patientTableColumnRenders';
+export { formatAddress } from './utils/patientFormatters';
 
 export { Patients as PatientsPage } from './pages/PatientsPage';
 export { PatientList } from './pages/PatientList';

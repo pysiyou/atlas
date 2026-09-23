@@ -2,11 +2,11 @@ import type { TableViewConfig } from '@/components';
 import { buildViews, type CardComponentProps } from '@/components/data-table';
 import {
   createOrderSharedColumns,
+  getActiveTests,
+  OrderTableCard,
   renderOrderId,
   renderOrderTestsBlock,
 } from '@/features/orders';
-import { OrderTableCard } from '@/features/orders/components/OrderTableCard';
-import { getActiveTests } from '@/features/orders/utils/orderCalculator';
 import type { Order } from '@/types';
 
 /** Column sets tuned for the patient detail “Related Orders” panel (patient name omitted). */

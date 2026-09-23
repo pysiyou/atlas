@@ -31,6 +31,7 @@ export {
 } from './components/OrderDomainBadges';
 export { OrderReceipt } from './components/OrderReceipt';
 export type { OrderReceiptProps, OrderReceiptVariant } from './components/OrderReceipt';
+export { OrderTableCard } from './components/OrderTableCard';
 export { BillingSummarySection } from './components/BillingSummarySection';
 export type { BillingSummarySectionProps } from './components/BillingSummarySection';
 export { FormDialogFooter } from '@/components/overlays/FormDialogFooter';
