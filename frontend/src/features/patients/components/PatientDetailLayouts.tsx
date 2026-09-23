@@ -1,6 +1,9 @@
 /**
  * Patient Detail Layout Components
- * Responsive layouts for patient detail page
+ * Responsive layouts for the patient detail page.
+ *
+ * Top row is the patient record, grouped by topic.
+ * Bottom row places related orders beside the reports list.
  */
 
 import React from 'react';
@@ -8,10 +11,12 @@ import { Panel, IconButton } from '@/components';
 import { LAYOUT } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 import type { Patient, Order } from '@/types';
-import { GeneralInfoSection } from '../components/GeneralInfoSection';
-import { MedicalHistorySectionDisplay } from '../components/MedicalHistorySectionDisplay';
-import { PatientOrdersTable } from '../components/PatientOrdersTable';
-import { PatientReportsList } from '../components/PatientReportsList';
+import { GeneralInfoSection } from './GeneralInfoSection';
+import { MedicalHistorySectionDisplay } from './MedicalHistorySectionDisplay';
+import { CareSnapshotSection } from './CareSnapshotSection';
+import { PatientOrdersTable } from './PatientOrdersTable';
+import { PatientReportsList } from './PatientReportsList';
+import { getReportableOrders } from '../utils/patientFormatters';
 
 interface LayoutProps {
   patient: Patient;
@@ -20,9 +25,14 @@ interface LayoutProps {
   onNewOrder: () => void;
 }
 
+/** Count label for a panel header. Always a string so the meta slot stays stable. */
+function countMeta(count: number): string {
+  return String(count);
+}
+
 /**
- * SmallScreenLayout - Single column stack layout for small screens.
- * Uses theme tokens (bg-surface-page, bg-surface, border-border-default) so theme applies correctly.
+ * SmallScreenLayout — single column.
+ * Record panels first, then orders, then reports directly underneath.
  */
 export const SmallScreenLayout: React.FC<LayoutProps> = ({
   patient,
@@ -40,8 +50,13 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         <MedicalHistorySectionDisplay patient={patient} layout="grid" />
       </Panel>
 
+      <Panel title="Care Snapshot" className="shrink-0" scroll="visible">
+        <CareSnapshotSection patient={patient} layout="grid" />
+      </Panel>
+
       <Panel
         title="Related Orders"
+        meta={countMeta(orders.length)}
         className="shrink-0"
         padding="none"
         scroll="visible"
@@ -50,7 +65,13 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
       </Panel>
 
-      <Panel title="Reports" className="shrink-0" scroll="visible">
+      <Panel
+        title="Reports"
+        meta={countMeta(getReportableOrders(orders).length)}
+        className="shrink-0"
+        scroll="visible"
+        bodyClassName="flex flex-col"
+      >
         <PatientReportsList orders={orders} />
       </Panel>
     </div>
@@ -58,7 +79,9 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 };
 
 /**
- * MediumScreenLayout - Row 1: General Info | Medical History; Row 2: Reports (full width); Row 3: Related Orders (full width).
+ * MediumScreenLayout — two columns.
+ * Profile and history share the first row, the care snapshot spans the width,
+ * and reports sit beside related orders.
  */
 export const MediumScreenLayout: React.FC<LayoutProps> = ({
   patient,
@@ -76,26 +99,35 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
         <MedicalHistorySectionDisplay patient={patient} layout="column" />
       </Panel>
 
-      <Panel title="Reports" className="col-span-2" scroll="visible" bodyClassName="flex flex-col">
-        <PatientReportsList orders={orders} />
+      <Panel title="Care Snapshot" className="col-span-2" scroll="visible">
+        <CareSnapshotSection patient={patient} layout="grid" />
       </Panel>
 
       <Panel
         title="Related Orders"
-        className="col-span-2"
+        meta={countMeta(orders.length)}
         padding="none"
         scroll="visible"
         headerEnd={<IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />}
       >
         <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
       </Panel>
+
+      <Panel
+        title="Reports"
+        meta={countMeta(getReportableOrders(orders).length)}
+        scroll="visible"
+        bodyClassName="flex flex-col"
+      >
+        <PatientReportsList orders={orders} />
+      </Panel>
     </div>
   );
 };
 
 /**
- * LargeScreenLayout - Row 1: General Info | Medical History | Reports; Row 2: Related Orders (full width).
- * Vital Signs section hidden for future release.
+ * LargeScreenLayout — three record panels on top, orders and reports on the bottom.
+ * Orders take two columns so the table keeps its columns; reports use the remaining column.
  */
 export const LargeScreenLayout: React.FC<LayoutProps> = ({
   patient,
@@ -105,30 +137,60 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
 }) => {
   return (
     <div
-      className={LAYOUT.detailGrid3Rows2}
-      style={{ height: '100%', maxHeight: '100%', overflow: 'hidden' }}
+      className="flex-1 grid grid-rows-[minmax(0,1fr)_minmax(0,1fr)] gap-layout-section min-h-0 h-full overflow-hidden"
+      style={{ height: '100%', maxHeight: '100%' }}
     >
-      <Panel title="General Info" className="min-h-0" scroll="auto">
-        <GeneralInfoSection patient={patient} layout="column" />
-      </Panel>
+      <div className={cn(LAYOUT.detailGrid3, 'min-h-0 h-full items-stretch')}>
+        <Panel
+          title="General Info"
+          className="min-h-0 h-full"
+          scroll="auto"
+          bodyClassName="flex min-h-0 flex-1 flex-col overflow-hidden"
+        >
+          <GeneralInfoSection patient={patient} />
+        </Panel>
 
-      <Panel title="Medical History" className="min-h-0" scroll="auto">
-        <MedicalHistorySectionDisplay patient={patient} layout="column" />
-      </Panel>
+        <Panel
+          title="Medical History"
+          className="min-h-0 h-full"
+          scroll="auto"
+          bodyClassName="flex min-h-0 flex-1 flex-col overflow-hidden"
+        >
+          <MedicalHistorySectionDisplay patient={patient} layout="column" />
+        </Panel>
 
-      <Panel title="Reports" className="min-h-0" scroll="auto" bodyClassName="flex flex-col">
-        <PatientReportsList orders={orders} />
-      </Panel>
+        <Panel
+          title="Care Snapshot"
+          className="min-h-0 h-full"
+          scroll="auto"
+          bodyClassName="flex min-h-0 flex-1 flex-col overflow-hidden"
+        >
+          <CareSnapshotSection patient={patient} />
+        </Panel>
+      </div>
 
-      <Panel
-        title="Related Orders"
-        className="col-span-3 min-h-0"
-        padding="none"
-        scroll="auto"
-        headerEnd={<IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />}
-      >
-        <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
-      </Panel>
+      <div className={cn(LAYOUT.detailGrid3, 'min-h-0 h-full items-stretch')}>
+        <Panel
+          title="Related Orders"
+          meta={countMeta(orders.length)}
+          className="col-span-2 min-h-0"
+          padding="none"
+          scroll="auto"
+          headerEnd={<IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />}
+        >
+          <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
+        </Panel>
+
+        <Panel
+          title="Reports"
+          meta={countMeta(getReportableOrders(orders).length)}
+          className="min-h-0"
+          scroll="auto"
+          bodyClassName="flex flex-col"
+        >
+          <PatientReportsList orders={orders} />
+        </Panel>
+      </div>
     </div>
   );
 };

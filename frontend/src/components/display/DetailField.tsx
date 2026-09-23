@@ -28,6 +28,8 @@ interface DetailFieldProps {
   orientation?: 'horizontal' | 'vertical';
   /** Optional icon before label */
   icon?: IconName;
+  /** Span all columns when rendered inside {@link DetailGroup}. */
+  span?: 'full';
   timestamp?: string;
   user?: string;
   badge?: BadgeConfig;
@@ -78,11 +80,17 @@ export const DetailField: React.FC<DetailFieldProps> = ({
 
   if (orientation === 'vertical') {
     return (
-      <div className={`flex gap-space-3 ${className}`}>
-        {icon && <Icon name={icon} className="w-4 h-4 text-text-disabled shrink-0" />}
+      <div className={`flex items-start gap-space-3 min-w-0 w-full ${className}`}>
+        {icon && (
+          <Icon name={icon} className="mt-space-0-5 w-4 h-4 shrink-0 text-text-disabled" />
+        )}
         <div className="min-w-0 flex-1">
           <div className={DETAIL_LABEL}>{label}</div>
-          <div className={`font-normal mt-space-0-5 leading-relaxed ${DETAIL_VALUE}`}>{renderValue()}</div>
+          <div
+            className={`mt-space-0-5 font-normal leading-relaxed text-left break-words whitespace-normal ${DETAIL_VALUE}`}
+          >
+            {renderValue()}
+          </div>
         </div>
       </div>
     );
