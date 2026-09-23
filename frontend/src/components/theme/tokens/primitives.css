@@ -105,15 +105,7 @@
   --overlay-dialog-footer-x: var(--space-6);
   --overlay-dialog-footer-y: var(--space-4);
 
-  /* Type scale (px locked; recipes use these via Tailwind text-*) */
-  --font-size-3xs: 8px;
-  --font-size-2xs: 10px;
-  --font-size-xxs: 10px;
-  --font-size-badge: 11px;
-  --font-size-xs: 12px;
-  --font-size-sm: 14px;
-  --font-size-base: var(--font-size-xs);
-  --font-size-lg: 18px;
+  /* Type scale — see tokens/typography.css */
 
   /* Brand — clinical teal */
   --primitive-brand-50: #f0fdfa;

@@ -5,7 +5,7 @@ import { cn } from '@/utils';
 import { formatStatus } from '@/utils/string';
 import type { AuthUser } from '@/types';
 import defaultAvatar from '@/assets/default-avatar.jpg';
-import { CHROME, CONTROL, RADIUS, TONE, TYPE } from '@/components/theme/recipes';
+import { CHROME, CONTROL, MENU_ITEM_TYPE, RADIUS, TONE, TYPE } from '@/components/theme/recipes';
 
 export interface SidebarProfileProps {
   currentUser: AuthUser;
@@ -63,7 +63,7 @@ export function SidebarProfile({ currentUser, isCollapsed, onLogout }: SidebarPr
             <button
               type="button"
               className={cn(
-                'flex w-full items-center gap-space-2-5 px-space-2-5 py-space-2 text-left text-sm',
+                `flex w-full items-center gap-space-2-5 px-space-2-5 py-space-2 text-left ${MENU_ITEM_TYPE}`,
                 RADIUS.menuItem,
                 TONE.danger.fg,
                 'hover:bg-danger-bg transition-colors duration-150',

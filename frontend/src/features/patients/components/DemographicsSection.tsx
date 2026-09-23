@@ -5,7 +5,7 @@ import { GENDER_VALUES, GENDER_CONFIG, type Gender } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
 import { ICONS } from '@/config/icons';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
-import { TONE } from '@/components/theme/recipes';
+import { FIELD_ERROR, TONE } from '@/components/theme/recipes';
 import type { PatientFormSectionProps } from '../patientFormTypes';
 
 export const DemographicsSection: React.FC<
@@ -81,7 +81,7 @@ export const DemographicsSection: React.FC<
             icon={ICONS.dataFields.userHands}
             className="w-full"
           />
-          {errors.gender && <p className={`mt-space-1 text-sm ${TONE.danger.fg}`}>{errors.gender}</p>}
+          {errors.gender && <p className={`mt-space-1 ${FIELD_ERROR}`}>{errors.gender}</p>}
         </div>
         <Input
           inferIcon

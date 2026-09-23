@@ -10,7 +10,7 @@ import type { IconName } from '@/components';
 import { cn, uppercaseLabel } from '@/utils';
 import { ICONS } from '@/config/icons';
 import type { SingleSelectFilterControl } from './types';
-import { RADIUS } from '@/components/theme/recipes';
+import { MENU_ITEM_TYPE, RADIUS } from '@/components/theme/recipes';
 
 /**
  * Props for SingleSelectControl component
@@ -115,7 +115,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
                   key={option.id}
                   onClick={() => handleSelect(option.id)}
                   className={cn(
-                    'px-space-3 py-space-2 text-sm hover:bg-surface-hover cursor-pointer transition-colors duration-150 w-full flex items-center gap-space-2',
+                    `px-space-3 py-space-2 ${MENU_ITEM_TYPE} hover:bg-surface-hover cursor-pointer transition-colors duration-150 w-full flex items-center gap-space-2`,
                     isSelected && 'bg-surface-page',
                     'text-left'
                   )}

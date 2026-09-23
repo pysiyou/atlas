@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { TYPE } from '@/components/theme/recipes';
 import type { Order } from '@/types';
 import { CircularProgress } from '@/components';
 import { STATUS_TIMELINE_STEPS, getOrderStepProgress } from '../utils/orderTimelineUtils';
@@ -45,7 +46,8 @@ export const OrderCircularProgress: React.FC<OrderCircularProgressProps> = ({ or
       trackColorClass="stroke-border-default"
       progressColorClass={percentage === 100 ? 'stroke-success' : 'stroke-brand'}
       label={label}
-      className="gap-space-1 [&_span]:text-xxs [&_span]:leading-none"
+      className="gap-space-1"
+      labelClassName={`${TYPE.caption} leading-none normal-case font-normal`}
     />
   );
 };

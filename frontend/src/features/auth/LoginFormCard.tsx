@@ -7,7 +7,7 @@ import React, { useRef, useEffect } from 'react';
 import { Icon, SpinnerLoader } from '@/components';
 import { ICONS } from '@/config/icons';
 import { companyConfig } from '@/config';
-import { AUTH_CONTROL, AUTH_SHADOW, RADIUS } from '@/components/theme/recipes';
+import { AUTH_CONTROL, AUTH_SHADOW, AUTH_TYPE, RADIUS } from '@/components/theme/recipes';
 
 interface LoginFormCardProps {
   username: string;
@@ -71,7 +71,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
             </div>
             <div>
               <h1 className="font-display text-2xl text-auth-fg">{company.company.name}</h1>
-              <p className="font-body text-auth-fg-light text-xs tracking-wider uppercase">
+              <p className={AUTH_TYPE.companySubtitle}>
                 {company.company.subtitle}
               </p>
             </div>
@@ -80,7 +80,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
           {/* Form header */}
           <div className="mb-space-8">
             <h2 className="font-display text-3xl sm:text-4xl text-auth-fg mb-space-2">Welcome back</h2>
-            <p className="font-body text-auth-fg-muted text-sm">
+            <p className={AUTH_TYPE.formSubtitle}>
               Sign in to continue to your dashboard
             </p>
           </div>
@@ -92,7 +92,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
                 <div className={`w-8 h-8 ${RADIUS.menu} bg-auth-error-muted flex items-center justify-center flex-shrink-0`}>
                   <Icon name={ICONS.actions.alertCircle} className="h-4 w-4 text-auth-error-fg" />
                 </div>
-                <p className="font-body text-sm text-auth-error-fg">{error}</p>
+                <p className={AUTH_TYPE.formError}>{error}</p>
               </div>
             </div>
           )}
@@ -103,7 +103,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
             <div className="space-y-space-2">
               <label
                 htmlFor="username"
-                className="block font-body text-sm font-normal text-auth-fg-muted"
+                className={AUTH_TYPE.fieldLabel}
               >
                 Username
               </label>
@@ -134,7 +134,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
             <div className="space-y-space-2">
               <label
                 htmlFor="password"
-                className="block font-body text-sm font-normal text-auth-fg-muted"
+                className={AUTH_TYPE.fieldLabel}
               >
                 Password
               </label>
@@ -190,7 +190,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
 
           {/* Footer */}
           <div className="mt-space-8 pt-space-6 border-t border-auth-stroke">
-            <p className="font-body text-center text-sm text-auth-fg-subtle">
+            <p className={AUTH_TYPE.formFooter}>
               {company.company.copyright}
             </p>
           </div>

@@ -3,7 +3,7 @@
  * Typography and wells come from theme recipes; layout objects stay here.
  */
 
-import { PANEL, RADIUS, SHADOW, SPACING, SURFACE, TONE, TYPE, CONTROL } from '@/components/theme/recipes';
+import { CONTROL, FIELD_ERROR, PANEL, RADIUS, SHADOW, SPACING, SURFACE, TONE, TYPE } from '@/components/theme/recipes';
 import type { BadgeSize } from '@/components';
 
 /** Canonical Badge size for lab cards — uses theme BADGE.size.xs. */
@@ -56,7 +56,7 @@ export const LAB_CARD_TYPOGRAPHY = {
   metadata: TYPE.meta,
   separator: 'text-text-disabled',
   emphasizedInline: 'text-text-primary',
-  flagText: `text-xs ${TONE.danger.fg}`,
+  flagText: `${FIELD_ERROR}`,
   flagTitle: `${TYPE.sectionTitle} ${TONE.danger.fg}`,
 } as const;
 

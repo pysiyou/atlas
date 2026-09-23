@@ -4,31 +4,28 @@
  */
 
 export const TYPE = {
-  pageTitle: 'text-lg font-light text-text-primary',
-  detailTitle: 'text-sm font-medium text-text-primary',
+  pageTitle: 'type-page-title text-text-primary',
+  detailTitle: 'type-detail-title text-text-primary',
   /** In-page panel header — xs scale, lighter than pageTitle. */
-  panelTitle: 'text-xs font-light text-text-primary',
-  modalTitle: 'text-base font-medium text-text-primary',
-  sectionTitle: 'text-xxs font-medium uppercase tracking-wide text-text-secondary',
-  label: 'text-xs text-text-secondary',
-  value: 'text-xs text-text-primary',
-  meta: 'text-xs text-text-tertiary',
-  amount: 'text-sm text-text-primary',
-  caption: 'text-xxs text-text-tertiary',
+  panelTitle: 'type-panel-title text-text-primary',
+  modalTitle: 'type-modal-title text-text-primary',
+  sectionTitle: 'type-section-title text-text-secondary',
+  label: 'type-label text-text-secondary',
+  value: 'type-body text-text-primary',
+  meta: 'type-body text-text-tertiary',
+  amount: 'type-amount text-text-primary',
+  caption: 'type-caption text-text-tertiary',
 } as const;
 
 /** Body cell scale for DataTable rows — change once to resize table body text. */
-const TABLE_TEXT_SCALE = 'text-base';
-
-/** Column header font — CSS var so size applies even when utilities are composed in recipes. */
-const TABLE_HEADER_FONT = '[font-size:var(--font-size-xxs)]';
+const TABLE_TEXT_SCALE = 'type-table-cell';
 
 /** Data table cells, headers, and list pagination. */
 export const TABLE_TYPE = {
-  /** Type scale step for body cells — matches `--font-size-base`. */
+  /** Type scale step for body cells — matches `--type-table-cell-size`. */
   size: TABLE_TEXT_SCALE,
   /** Column header label (DataTable `TableHeader` — apply on each column cell / label). */
-  columnTitle: `${TABLE_HEADER_FONT} font-normal text-text-tertiary uppercase tracking-wider`,
+  columnTitle: 'type-table-header text-text-tertiary',
   columnTitleActive: 'text-text-primary bg-surface-selected',
   columnTitleSortable: 'cursor-pointer hover:bg-surface-hover select-none',
   cell: `${TABLE_TEXT_SCALE} text-text-primary`,
@@ -58,17 +55,52 @@ export const TABLE_SHELL = {
  * Prefer over TYPE for DetailField, DetailGroup, and detail sections.
  */
 export const DETAIL_TYPE = {
-  value: 'text-base text-text-primary',
-  label: 'text-base text-text-secondary',
-  meta: 'text-base text-text-tertiary',
-  amount: 'text-base text-text-primary',
-  title: 'text-sm font-medium text-text-primary',
-  subtitle: 'text-base text-text-tertiary',
+  value: 'type-detail-value text-text-primary',
+  label: 'type-detail-label text-text-secondary',
+  meta: 'type-detail-meta text-text-tertiary',
+  amount: 'type-detail-value text-text-primary',
+  title: 'type-detail-title text-text-primary',
+  subtitle: 'type-detail-subtitle text-text-tertiary',
   /** Larger section headings — use when promoting group labels to base scale. */
-  sectionTitle: 'text-base font-medium uppercase tracking-wide text-text-secondary',
+  sectionTitle: 'type-detail-section-title text-text-secondary',
   /** Default for DetailGroup + DetailsTable row labels until hierarchy pass picks one token. */
-  sectionTitleCompact: 'text-xxs font-medium uppercase tracking-wide text-text-secondary',
-  link: 'text-base text-brand underline',
+  sectionTitleCompact: 'type-section-title text-text-secondary',
+  link: 'type-detail-value text-brand underline',
+} as const;
+
+/** Button label typography — pairs with padding in Button.tsx. */
+export const BUTTON_TYPE = {
+  sm: 'type-button-sm',
+  md: 'type-button-md',
+  lg: 'type-button-lg',
+} as const;
+
+/** Avatar circle initials + optional label stacks. */
+export const AVATAR_TYPE = {
+  circle: {
+    xxs: 'type-micro',
+    xs: 'type-micro',
+    sm: 'type-body',
+    md: 'type-amount',
+    lg: 'type-body',
+    xl: 'type-page-title',
+  },
+  primary: {
+    xxs: 'type-caption',
+    xs: 'type-body',
+    sm: 'type-amount',
+    md: 'type-body',
+    lg: 'type-page-title',
+    xl: 'type-page-title',
+  },
+  secondary: {
+    xxs: 'type-caption',
+    xs: 'type-caption',
+    sm: 'type-caption',
+    md: 'type-body',
+    lg: 'type-amount',
+    xl: 'type-body',
+  },
 } as const;
 
 /** Status roles: fg/fill/well from semantic --{role}-* tokens. Workflow stage tokens stay separate. */
@@ -109,6 +141,120 @@ export const TONE = {
     fill: 'bg-danger-fg-emphasis',
     well: 'bg-danger-bg border border-danger-stroke',
   },
+} as const;
+
+/** Inline validation / field error copy (forms, selects, tag input). */
+export const FIELD_ERROR = `${TYPE.value} ${TONE.danger.fg}` as const;
+
+/** Compact validation line (captions, units). */
+export const FIELD_ERROR_CAPTION = `${TYPE.caption} ${TONE.danger.fg}` as const;
+
+/** Full-page / modal error surfaces. */
+export const ERROR_SURFACE_TYPE = {
+  title: `${TYPE.pageTitle} font-semibold`,
+  message: `${TYPE.amount} text-center text-text-tertiary`,
+  code: `${TYPE.value} font-mono`,
+  codeMeta: `${TYPE.value} opacity-60 mt-space-1`,
+  operation: `${TYPE.amount} opacity-80 mt-space-1`,
+} as const;
+
+/** Inline alert card typography. */
+export const ALERT_SURFACE_TYPE = {
+  title: `m-0 ${TYPE.amount} font-semibold leading-snug`,
+  body: `mt-space-1 mb-0 ${TYPE.amount} leading-snug`,
+} as const;
+
+/** Filter section chrome (sidebar sections, not modal FILTER_TYPE). */
+export const FILTER_SECTION_TYPE = {
+  heading: `${TYPE.value} font-semibold text-text-tertiary uppercase tracking-wide`,
+  countBadge: `${TYPE.caption} font-normal`,
+} as const;
+
+/** Theme switcher segment control. */
+export const THEME_SWITCH_TYPE = {
+  segment: `${TYPE.value} font-normal leading-none`,
+  label: `${TYPE.caption} font-medium leading-none`,
+} as const;
+
+/** Price range slider labels. */
+export const PRICE_RANGE_TYPE = {
+  value: `${TYPE.amount} font-normal text-text-tertiary`,
+  bound: `${TYPE.meta} text-text-disabled`,
+} as const;
+
+/** Filter modal / inline filter section headings. */
+export const FILTER_TYPE = {
+  sectionTitle: 'type-detail-title font-semibold text-text-primary mb-space-3',
+} as const;
+
+/** Order / payment receipt (panel, compact, detailed). */
+export const RECEIPT_TYPE = {
+  metaPart: 'font-normal tabular-nums type-body',
+  metaRow: `flex flex-wrap items-center gap-x-space-2 gap-y-space-0-5 min-w-0 ${TYPE.meta}`,
+  detailedPatientName: `${TYPE.amount} text-text-secondary`,
+  detailedPatientMissing: `${TYPE.amount} text-text-tertiary italic`,
+  fieldRow: TYPE.value,
+  panelPatientName: `${TYPE.amount} text-text-primary`,
+  compactEntityId: `${TYPE.value} min-w-0 truncate`,
+  rowListCompact: 'flex justify-between items-start gap-space-2 type-body',
+  rowListDetailed: 'flex justify-between items-start gap-space-2 type-amount gap-space-3',
+  emptyCompact: `${TYPE.value} text-text-tertiary italic`,
+  emptyDetailed: `${TYPE.amount} text-text-tertiary italic`,
+  totalLabelCompact: `${TYPE.value} font-normal text-text-secondary uppercase tracking-wider`,
+  totalLabelDetailed: `${TYPE.amount} font-normal text-text-secondary uppercase tracking-wider`,
+  totalValueCompact: `${TYPE.amount} text-brand`,
+  totalValueDetailed: `${TYPE.pageTitle} text-text-primary`,
+} as const;
+
+/** Trailing price on entity cards (catalog, orders, payments). */
+export const CARD_PRICE = `${TYPE.pageTitle} leading-none` as const;
+
+/** Patient form tab section labels. */
+export const FORM_TAB_TITLE = `${TYPE.value} font-normal` as const;
+
+/** Select / menu row text scale. */
+export const MENU_ITEM_TYPE = 'type-amount' as const;
+
+/** In-app text links (dashboard, pipeline). */
+export const INLINE_LINK = `${TABLE_TYPE.link} hover:underline` as const;
+
+/** Data table pagination controls. */
+export const PAGINATION_TYPE = {
+  pageButtonBase: `${TABLE_TYPE.size} font-normal`,
+  ellipsis: `${TABLE_TYPE.meta}`,
+  selectCompact: `${TABLE_TYPE.size} leading-5`,
+} as const;
+
+/** Date picker / date input calendar grids. */
+export const CALENDAR_TYPE = {
+  weekday: `${TYPE.meta} text-center py-space-1`,
+  day: TYPE.value,
+  month: TYPE.amount,
+  applyButton: `${TYPE.value} font-normal`,
+} as const;
+
+/** Toast content (semantic toast colors). */
+export const TOAST_TYPE = {
+  action: 'type-amount text-toast-fg',
+  title: 'type-amount font-semibold leading-snug text-toast-fg',
+  subtitle: 'type-amount leading-snug text-toast-fg-muted',
+} as const;
+
+/** Auth login module — isolated palette; scale via type-* roles only here. */
+export const AUTH_TYPE = {
+  kicker: 'font-body text-auth-fg-light type-amount tracking-wider uppercase',
+  lead: 'font-body type-page-title text-auth-fg-muted',
+  featureTitle: 'font-body font-semibold text-auth-fg type-amount leading-tight',
+  featureBody: 'font-body type-amount text-auth-fg-muted',
+  footer: 'font-body type-amount text-auth-fg-muted',
+  formSubtitle: 'font-body text-auth-fg-muted type-amount',
+  formError: 'font-body type-amount text-auth-error-fg',
+  fieldLabel: 'block font-body type-amount font-normal text-auth-fg-muted',
+  formFooter: 'font-body text-center type-amount text-auth-fg-subtle',
+  companySubtitle: 'font-body text-auth-fg-light type-body tracking-wider uppercase',
+  brandingKicker:
+    'font-body text-auth-fg-light type-amount tracking-widest uppercase mt-space-1',
+  brandingLead: 'font-body type-page-title text-auth-fg-muted leading-relaxed max-w-md',
 } as const;
 
 export const SURFACE = {
@@ -265,11 +411,11 @@ export const EMPTY = {
   iconWrapCompact: `w-10 h-10 ${RADIUS.pill} bg-surface-hover flex items-center justify-center mb-space-3`,
   iconWrapDefault: `w-16 h-16 ${RADIUS.pill} bg-surface-hover flex items-center justify-center mb-space-4`,
   iconWrapDense: `w-8 h-8 ${RADIUS.pill} bg-surface-hover flex items-center justify-center mb-space-2`,
-  titleCompact: 'text-sm font-normal text-text-primary mb-space-1',
-  titleDefault: 'text-base font-normal text-text-primary mb-space-2',
-  titleDense: 'text-xs font-normal text-text-primary mb-space-0-5',
-  description: 'text-sm text-text-tertiary mb-space-4 max-w-md',
-  descriptionDense: 'text-xs text-text-tertiary mb-space-2 max-w-xs leading-snug',
+  titleCompact: 'type-empty-title text-text-primary mb-space-1',
+  titleDefault: 'type-body text-text-primary mb-space-2',
+  titleDense: 'type-empty-title-dense text-text-primary mb-space-0-5',
+  description: 'type-empty-description text-text-tertiary mb-space-4 max-w-md',
+  descriptionDense: 'type-empty-description-dense text-text-tertiary mb-space-2 max-w-xs',
   actionWrap: 'mt-space-2',
 } as const;
 
@@ -378,11 +524,11 @@ export const CHROME = {
   clipPane:
     'chrome-clip min-w-0 flex-1 overflow-hidden whitespace-nowrap transition-opacity duration-200 ease-out',
   sectionTitle:
-    `chrome-section-title shrink-0 overflow-hidden pl-chrome-rail pr-space-3 pt-0 pb-space-2 min-h-6 text-xxs font-medium uppercase tracking-wide text-text-secondary leading-none transition-opacity duration-200 ease-out`,
+    `chrome-section-title shrink-0 overflow-hidden pl-chrome-rail pr-space-3 pt-0 pb-space-2 min-h-6 type-chrome-section-title text-text-secondary transition-opacity duration-200 ease-out`,
   navLabel:
-    'chrome-clip min-w-0 flex-1 truncate pr-space-3 text-sm font-medium whitespace-nowrap transition-opacity duration-200 ease-out',
+    'chrome-clip min-w-0 flex-1 truncate pr-space-3 type-chrome-nav-label whitespace-nowrap transition-opacity duration-200 ease-out',
   navTooltip:
-    `pointer-events-none absolute left-full z-50 ml-space-2 hidden whitespace-nowrap ${RADIUS.pill} bg-brand px-space-2-5 py-space-1 text-xs font-medium text-on-brand ${SHADOW.subtle} group-data-[collapsed=true]/chrome:group-hover/nav:block`,
+    `pointer-events-none absolute left-full z-50 ml-space-2 hidden whitespace-nowrap ${RADIUS.pill} bg-brand px-space-2-5 py-space-1 type-chrome-nav-tooltip text-on-brand ${SHADOW.subtle} group-data-[collapsed=true]/chrome:group-hover/nav:block`,
   footerDivider: 'chrome-nav-split',
   footerDividerRule: 'chrome-nav-split-line',
   footerBlock: `flex shrink-0 flex-col ${SPACING.gapRelaxed} pb-chrome-nav-menu-gutter`,
@@ -452,15 +598,15 @@ export const AUTH_SHADOW = {
   logo: SHADOW.raised,
 } as const;
 
-/** Chip geometry. Font-size via CSS var (not text-*) so twMerge keeps status text-* colors. */
-const BADGE_TYPE = '[font-size:var(--font-size-badge)]';
+/** Chip geometry (type-badge so twMerge keeps status text-* colors). */
+const BADGE_TYPE = 'type-badge';
 
 /** Chip geometry (type scale only). Color: badgeStyles + useBadgeAppearance() + semantic --badge / --*-fg. */
 export const BADGE = {
   size: {
-    xs: `px-space-2 py-space-1 ${BADGE_TYPE} ${SPACING.gapCompact} leading-none`,
-    sm: `px-space-2 py-space-1 ${BADGE_TYPE} ${SPACING.gapCompact} leading-none`,
-    md: `px-space-3 py-space-1-5 ${BADGE_TYPE} ${SPACING.gapInline} leading-none`,
+    xs: `px-space-2 py-space-1 ${BADGE_TYPE} ${SPACING.gapCompact}`,
+    sm: `px-space-2 py-space-1 ${BADGE_TYPE} ${SPACING.gapCompact}`,
+    md: `px-space-3 py-space-1-5 ${BADGE_TYPE} ${SPACING.gapInline}`,
   },
   icon: {
     xs: 'w-3.5 h-3.5',
@@ -468,7 +614,7 @@ export const BADGE = {
     md: 'w-4 h-4',
   },
   filterChip: {
-    xs: `px-space-3 py-space-1 ${BADGE_TYPE} ${SPACING.gapCompact} leading-none`,
-    sm: `px-space-3 py-space-1-5 ${BADGE_TYPE} ${SPACING.gapCompact} leading-none`,
+    xs: `px-space-3 py-space-1 ${BADGE_TYPE} ${SPACING.gapCompact}`,
+    sm: `px-space-3 py-space-1-5 ${BADGE_TYPE} ${SPACING.gapCompact}`,
   },
 } as const;

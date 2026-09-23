@@ -69,7 +69,7 @@ export const AttemptIndicator: React.FC<AttemptIndicatorProps> = ({
                 {previousReason}
               </p>
             )}
-            <p className="text-xxs text-text-disabled">
+            <p className={`${TYPE.caption} text-text-disabled`}>
               {maxAttempts - attemptNumber} {maxAttempts - attemptNumber === 1 ? 'attempt' : 'attempts'} remaining
             </p>
           </div>
@@ -119,7 +119,7 @@ export const AttemptProgressBar: React.FC<AttemptProgressBarProps> = ({
 
   return (
     <div className={cn('space-y-space-1', className)}>
-      <div className="flex items-center justify-between text-xxs">
+      <div className={`flex items-center justify-between ${TYPE.caption}`}>
         <span className="font-normal text-text-secondary">{label}</span>
         <span className={cn('font-normal', colors.fg)}>
           {remaining} {remaining === 1 ? 'left' : 'left'}

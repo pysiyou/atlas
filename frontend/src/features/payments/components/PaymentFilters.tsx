@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import { FILTER_TYPE } from '@/components/theme/recipes';
 import { CheckboxList } from '@/components';
 import {
   ResponsiveEntityFilters,
@@ -42,12 +43,12 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = props => {
   const modalContent = (
     <>
       <div className="w-full">
-        <h4 className="text-sm font-semibold text-text-primary mb-space-3">Date Range</h4>
+        <h4 className={FILTER_TYPE.sectionTitle}>Date Range</h4>
         <DatePresetBadges value={props.dateRange} onChange={props.onDateRangeChange} />
         <div className="border-b border-border-default mt-space-4" />
       </div>
       <div className="w-full">
-        <h4 className="text-sm font-semibold text-text-primary mb-space-3">Payment Status</h4>
+        <h4 className={FILTER_TYPE.sectionTitle}>Payment Status</h4>
         <CheckboxList
           options={statusOptions}
           selectedIds={props.statusFilters}
@@ -57,7 +58,7 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = props => {
         <div className="border-b border-border-default mt-space-4" />
       </div>
       <div className="w-full">
-        <h4 className="text-sm font-semibold text-text-primary mb-space-3">Payment Method</h4>
+        <h4 className={FILTER_TYPE.sectionTitle}>Payment Method</h4>
         <CheckboxList
           options={methodOptions}
           selectedIds={props.methodFilters}

@@ -15,7 +15,7 @@ import { cn } from '@/utils';
 import { getContainerIcon } from '@/config/icons';
 import { ICONS } from '@/config/icons';
 import { inputBase, inputError, FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
-import { RADIUS, SHADOW, TONE, TYPE } from '@/components/theme/recipes';
+import { FIELD_ERROR_CAPTION, RADIUS, SHADOW, TONE, TYPE } from '@/components/theme/recipes';
 import {
   getDefaultCollectionTopColor,
   getEffectiveContainerType,
@@ -134,7 +134,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
             Required Quantity <span className={TONE.danger.fg}>*</span>
           </label>
           {minimumVolume > 0 && (
-            <div className={cn(`text-xxs px-space-2 py-space-0-5 ${RADIUS.field} flex items-center gap-space-1`, TONE.warning.well, TONE.warning.fg)}>
+            <div className={cn(`${TYPE.caption} px-space-2 py-space-0-5 ${RADIUS.field} flex items-center gap-space-1`, TONE.warning.well, TONE.warning.fg)}>
               <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
               Min: {minimumVolume} mL
             </div>
@@ -160,7 +160,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
           </span>
         </div>
         {showVolumeError && volume < minimumVolume && (
-          <p className={`text-xxs ${TONE.danger.fg} mt-space-1`}>
+          <p className={`${FIELD_ERROR_CAPTION} mt-space-1`}>
             Volume must be at least {minimumVolume} mL
           </p>
         )}

@@ -22,13 +22,12 @@ export const COMMAND_CENTER_BOARD = {
   innerGrid: `grid min-h-0 grid-cols-1 ${SPACING.gapInline} sm:grid-cols-2 lg:min-h-0 lg:flex-[4]`,
 } as const;
 
-const COMMAND_CENTER_MICRO_LABEL =
-  'font-light uppercase leading-tight tracking-wide text-2xs' as const;
+const COMMAND_CENTER_MICRO_LABEL = `${TYPE.sectionTitle} font-light` as const;
 
 export const COMMAND_CENTER_SECTION = {
   microLabel: COMMAND_CENTER_MICRO_LABEL,
   title: `${COMMAND_CENTER_MICRO_LABEL} text-text-tertiary`,
-  summary: `leading-snug ${TYPE.caption}`,
+  summary: TYPE.caption,
   aside: `shrink-0 tabular-nums ${TYPE.caption}`,
   statLabel: `${COMMAND_CENTER_MICRO_LABEL} text-text-tertiary`,
 } as const;
@@ -40,9 +39,9 @@ export const COMMAND_CENTER_KPI = {
   tileLink: `min-w-0 flex-1 ${RADIUS.field} ${CONTROL.focusVisibleFlat}`,
   tileWrap: 'min-w-0 flex-1',
   iconWrap: `flex h-8 w-8 shrink-0 items-center justify-center ${RADIUS.field} bg-surface-hover`,
-  label: `truncate uppercase tracking-wide ${TYPE.caption}`,
-  value: `${TYPE.pageTitle} font-semibold leading-none tabular-nums`,
-  context: `truncate font-light leading-none tabular-nums ${TYPE.caption}`,
+  label: `truncate ${TYPE.sectionTitle} text-text-tertiary`,
+  value: `${TYPE.pageTitle} font-semibold tabular-nums leading-none`,
+  context: `truncate font-light tabular-nums leading-none ${TYPE.caption}`,
   ringTrack: 'text-border-subtle',
 } as const;
 

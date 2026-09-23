@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { EmptyState, EMPTY_COPY, Panel, Badge, EntityId, PANEL_EMPTY_STATE } from '@/components';
 import { ROUTES } from '@/config';
 import type { Order } from '@/types';
-import { TYPE, RADIUS } from '@/components/theme/recipes';
+import { INLINE_LINK, RADIUS, TYPE } from '@/components/theme/recipes';
 
 
 export interface DashboardRecentOrdersProps {
@@ -22,7 +22,7 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
   <Panel
     title="Recent Orders"
     headerEnd={
-      <Link to={ROUTES.ORDERS} className="text-xs text-brand hover:underline">
+      <Link to={ROUTES.ORDERS} className={INLINE_LINK}>
         View all
       </Link>
     }
@@ -36,7 +36,7 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
             className={`flex items-center justify-between p-panel border border-border-default ${RADIUS.surface} hover:bg-surface-page`}
           >
             <div>
-              <p className="text-sm font-normal text-text-primary">
+              <p className={TYPE.amount}>
                 {getPatientName(String(order.patientId))}
               </p>
               <p className={TYPE.meta}>

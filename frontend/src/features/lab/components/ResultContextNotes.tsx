@@ -4,7 +4,7 @@
 import React from 'react';
 import { Icon } from '@/components';
 import { ICONS } from '@/config/icons';
-import { TONE, TYPE, RADIUS } from '@/components/theme/recipes';
+import { FIELD_ERROR, RADIUS, TONE, TYPE } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
 interface ResultContextNotesProps {
@@ -28,7 +28,7 @@ export const ResultContextNotes: React.FC<ResultContextNotesProps> = ({
 
   if (compact) {
     return (
-      <div className={cn('space-y-space-1 text-xs', className)}>
+      <div className={cn(`space-y-space-1 ${TYPE.value}`, className)}>
         {hasFlags && (
           <p className={`${TONE.danger.fg} leading-snug`}>{flags!.join(', ')}</p>
         )}
@@ -47,7 +47,7 @@ export const ResultContextNotes: React.FC<ResultContextNotesProps> = ({
             <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
             Flags
           </p>
-          <p className={`text-sm ${TONE.danger.fg} leading-snug`}>{flags!.join(' · ')}</p>
+          <p className={`${FIELD_ERROR} leading-snug`}>{flags!.join(' · ')}</p>
         </div>
       )}
       {hasNotes && (

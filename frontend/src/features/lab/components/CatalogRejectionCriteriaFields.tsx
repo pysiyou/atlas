@@ -43,7 +43,7 @@ export const CatalogRejectionCriteriaFields: React.FC<CatalogRejectionFieldsProp
   if (showReason && criteria.length === 0) {
     return (
       <Alert variant="danger" className="py-space-2">
-        <p className="text-xs">No rejection criteria are defined for this test in the catalog.</p>
+        <p className={TYPE.value}>No rejection criteria are defined for this test in the catalog.</p>
       </Alert>
     );
   }

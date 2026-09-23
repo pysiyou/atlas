@@ -11,7 +11,7 @@ import type { VitalSigns } from '@/types/patient';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 import { inputBase, inputError } from '@/components/inputs/inputStyles';
-import { RADIUS, TONE, TYPE } from '@/components/theme/recipes';
+import { FIELD_ERROR, FIELD_ERROR_CAPTION, RADIUS, TONE, TYPE } from '@/components/theme/recipes';
 
 
 export interface VitalsSectionProps {
@@ -209,7 +209,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
             <div className="flex justify-between items-baseline mb-space-1 gap-space-2">
               <label
                 htmlFor={isNa ? undefined : `vital-${fieldName}`}
-                className={`text-xs font-normal truncate min-w-0 ${isNa ? 'text-text-tertiary cursor-default' : 'text-text-tertiary cursor-pointer'}`}
+                className={`${TYPE.value} truncate min-w-0 ${isNa ? 'text-text-tertiary cursor-default' : 'text-text-tertiary cursor-pointer'}`}
               >
                 {config.label}
               </label>
@@ -237,7 +237,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
 
               {isNa ? (
                 <div
-                  className={`w-full ${RADIUS.field} border border-border-default bg-surface-hover/30 px-space-3 py-space-1-5 text-sm pl-space-10 pr-space-12 text-text-tertiary`}
+                  className={`w-full ${RADIUS.field} border border-border-default bg-surface-hover/30 px-space-3 py-space-1-5 ${TYPE.amount} text-text-tertiary pl-space-10 pr-space-12`}
                   aria-label={`${config.label} not provided`}
                 >
                   N/A
@@ -269,7 +269,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                     </span>
                   </div>
                   {isAbnormal && (
-                    <div className={`absolute -bottom-space-5 left-0 text-xxs ${TONE.danger.fg} font-normal`}>
+                    <div className={`absolute -bottom-space-5 left-0 ${FIELD_ERROR_CAPTION} font-normal`}>
                       Abnormal value
                     </div>
                   )}
@@ -277,7 +277,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
               )}
             </div>
 
-            {error && <p className={`mt-space-1 text-sm ${TONE.danger.fg}`}>{error}</p>}
+            {error && <p className={`mt-space-1 ${FIELD_ERROR}`}>{error}</p>}
           </div>
         );
       })}

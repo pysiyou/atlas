@@ -7,7 +7,7 @@ import { formatDateTime } from '@/utils';
 import { EntityId } from '@/components';
 import { companyConfig } from '@/config';
 import type { ValidatedTestReportPayload } from '../types';
-import { TYPE } from '@/components/theme/recipes';
+import { FORM_TAB_TITLE, TYPE } from '@/components/theme/recipes';
 
 
 interface ReportPreviewHeaderProps {
@@ -75,7 +75,7 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
       </div>
 
       <div className="bg-surface p-panel flex-1">
-        <h1 className="text-base font-bold text-text-primary mb-space-2">
+        <h1 className={`${TYPE.value} font-bold mb-space-2`}>
           {reportData.testResults.length > 0 ? (
             <>
               {reportData.testResults.map(t => t.testName).join(', ')} Results ({' '}
@@ -89,7 +89,7 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
 
         <div className="grid grid-cols-2 gap-space-2">
           <div className="space-y-space-0-5">
-            <p className="text-base font-normal text-text-primary">{reportData.patientName}</p>
+            <p className={`${FORM_TAB_TITLE} text-text-primary`}>{reportData.patientName}</p>
             {reportData.patientAge && (
               <div className="flex gap-space-2">
                 <span className={`${TYPE.label} min-w-[50px] truncate`}>Age:</span>
@@ -123,7 +123,7 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
           </div>
 
           <div className="space-y-space-0-5">
-            <p className="text-base font-normal text-text-primary">Processing Details</p>
+            <p className={`${FORM_TAB_TITLE} text-text-primary`}>Processing Details</p>
             {collectedAt && (
               <div className="flex gap-space-2">
                 <span className={`${TYPE.label} min-w-[60px] truncate`}>Sample:</span>

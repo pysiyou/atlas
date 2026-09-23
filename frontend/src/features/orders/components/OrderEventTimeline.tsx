@@ -1,4 +1,5 @@
 import React from 'react';
+import { TYPE } from '@/components/theme/recipes';
 import { EMPTY_COPY } from '@/components';
 import { Skeleton } from '@/components/loaders/Skeleton';
 import { Timeline } from '@/features/timeline';
@@ -29,7 +30,7 @@ export const OrderEventTimeline: React.FC<OrderEventTimelineProps> = ({ orderId 
 
   if (isError) {
     return (
-      <div className="p-panel text-sm text-text-secondary">
+      <div className={`p-panel ${TYPE.amount} text-text-secondary`}>
         Couldn&apos;t load timeline.{' '}
         <button type="button" className="text-brand hover:underline" onClick={() => refetch()}>
           Retry

@@ -82,7 +82,7 @@ export const ResultValidationForm: React.FC<ValidationFormProps> = ({
             rows={2}
           />
           {enableApproveShortcut && (
-            <p className="text-xxs text-text-disabled">Ctrl+Enter to approve</p>
+            <p className={`${TYPE.caption} text-text-disabled`}>Ctrl+Enter to approve</p>
           )}
         </div>
       )}

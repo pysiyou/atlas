@@ -17,7 +17,7 @@ export const DASHBOARD_TWO_LINE = {
   primary: `truncate ${TYPE.value} font-normal`,
   secondary: `${TYPE.meta} truncate`,
   /** Subline codes, MRN, time — matches orders test identity subline. */
-  mrn: 'text-xxs text-text-secondary truncate uppercase tracking-wide',
+  mrn: `${TYPE.sectionTitle} text-text-secondary truncate`,
 } as const;
 
 export const DASHBOARD_ROW_INTERACTIVE = `cursor-pointer ${CONTROL.focusVisibleFlat}` as const;
@@ -37,9 +37,9 @@ export const TODAY_STEP_CHART = {
   },
   layout: 'flex h-full min-h-0 min-w-0 items-center gap-space-3',
   bubbleStage: 'relative h-[8.25rem] w-[8.5rem] shrink-0',
-  bubble: `absolute flex flex-col items-center justify-center gap-0.5 ${RADIUS.pill} text-center ring-4 ring-[color:var(--surface)]`,
-  bubbleDuration: 'max-w-[90%] truncate px-1 text-sm font-semibold leading-none tabular-nums',
-  bubbleLabel: 'max-w-[88%] truncate px-1 text-3xs font-medium leading-none opacity-80',
+  bubble: `absolute flex flex-col items-center justify-center gap-space-0-5 ${RADIUS.pill} text-center ring-4 ring-[color:var(--surface)]`,
+  bubbleDuration: `max-w-[90%] truncate px-space-1 ${TYPE.amount} font-semibold tabular-nums leading-none`,
+  bubbleLabel: `max-w-[88%] truncate px-space-1 opacity-80 ${TYPE.caption}`,
   bubblePositions: {
     collection: 'left-1/2 top-0 -translate-x-1/2',
     entry: 'bottom-0 left-0',
@@ -49,10 +49,10 @@ export const TODAY_STEP_CHART = {
   metricRow: 'flex min-w-0 flex-col gap-space-1',
   metricHead: 'flex min-w-0 items-baseline justify-between gap-space-2',
   metricLabel: `${TYPE.caption} truncate text-text-tertiary`,
-  metricValue: 'shrink-0 text-sm font-semibold tabular-nums leading-none text-text-primary',
+  metricValue: `shrink-0 ${TYPE.amount} font-semibold tabular-nums leading-none`,
   metricBarLine: 'flex min-w-0 items-center gap-space-2',
-  metricSide: 'w-[3.6rem] shrink-0 truncate text-xxs tabular-nums leading-none text-text-tertiary',
-  metricSideEnd: 'w-[4.75rem] shrink-0 truncate text-right text-xxs tabular-nums leading-none text-text-tertiary',
+  metricSide: `w-[3.6rem] shrink-0 truncate ${TYPE.caption} tabular-nums leading-none`,
+  metricSideEnd: `w-[4.75rem] shrink-0 truncate text-right ${TYPE.caption} tabular-nums leading-none`,
   metricTrack: `h-px min-w-0 flex-1 overflow-hidden ${RADIUS.pill} bg-border-subtle/60`,
   metricFill: `h-full ${RADIUS.pill} transition-[width] duration-300`,
 } as const;

@@ -10,7 +10,7 @@ import type { Test, Patient } from '@/types';
 import { ParameterInput } from './ResultParameterInputs';
 import { getReferenceRangeDisplay, checkCriticalStatus } from './resultEntry';
 import { RESULT_PANEL, resultTileStatusClass } from '../utils/labResult';
-import { RADIUS, SHADOW, TONE, TYPE } from '@/components/theme/recipes';
+import { FIELD_ERROR_CAPTION, RADIUS, SHADOW, TONE, TYPE } from '@/components/theme/recipes';
 
 interface EntryFormProps {
   testDef: Test;
@@ -114,7 +114,7 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
               </div>
 
               {validationErrors[param.code] && (
-                <p className={`text-xxs ${TONE.danger.fg} truncate`} title={validationErrors[param.code]}>
+                <p className={`${FIELD_ERROR_CAPTION} truncate`} title={validationErrors[param.code]}>
                   {feedbackTitle('lab.entry.fieldInvalid')}
                 </p>
               )}
@@ -140,7 +140,7 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
       {!isModal && (
         <div className={`mt-space-6 -mx-space-4 -mb-space-4 px-space-4 py-space-3 bg-surface-page border-t border-border-subtle ${RADIUS.bottomSurface} flex items-center justify-between`}>
           {hasValidationErrors && (
-            <span className={`text-xxs ${TONE.danger.fg}`}>
+            <span className={FIELD_ERROR_CAPTION}>
               {feedbackTitle('lab.entry.fixValidationBeforeSubmit')}
             </span>
           )}

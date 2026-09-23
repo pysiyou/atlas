@@ -9,7 +9,7 @@ import React, { useState, type KeyboardEvent, type ChangeEvent } from 'react';
 import { RemovableTag } from '@/components';
 import { cn } from '@/utils';
 import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from './inputStyles';
-import { CONTROL, TONE, TYPE } from '@/components/theme/recipes';
+import { CONTROL, FIELD_ERROR, TONE, TYPE } from '@/components/theme/recipes';
 
 
 export interface TagInputProps {
@@ -117,7 +117,7 @@ export const TagInput: React.FC<TagInputProps> = ({
         />
       </div>
 
-      {error && <p className={`text-xs ${TONE.danger.fg} mt-space-1-5`}>{error}</p>}
+      {error && <p className={`${FIELD_ERROR} mt-space-1-5`}>{error}</p>}
       {helperText && !error && <p className={`${TYPE.meta} mt-space-1-5`}>{helperText}</p>}
     </div>
   );

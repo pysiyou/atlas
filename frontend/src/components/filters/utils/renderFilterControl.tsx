@@ -3,6 +3,7 @@
  */
 
 import { type ReactNode } from 'react';
+import { TYPE } from '@/components/theme/recipes';
 import { CheckboxList } from '@/components';
 import type { FilterControl } from '../types';
 import {
@@ -78,7 +79,7 @@ function renderAgeRangeControl(
 ): ReactNode {
   if (variant === 'modal') {
     return (
-      <div className="text-sm text-text-tertiary italic">
+      <div className={`${TYPE.amount} text-text-tertiary italic`}>
         Use the main filter bar for this filter type
       </div>
     );

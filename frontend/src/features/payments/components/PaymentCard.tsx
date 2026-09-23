@@ -8,7 +8,7 @@ import { formatCurrency, formatDateTime } from '@/utils';
 import type { OrderPaymentView } from '../types';
 import { PaymentButton } from './PaymentButton';
 import { useInvalidatePayments } from '../api/payments';
-import { TYPE } from '@/components/theme/recipes';
+import { CARD_PRICE, TYPE } from '@/components/theme/recipes';
 
 
 /**
@@ -42,7 +42,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
             size="xs"
           />
         }
-        trailing={<div className="text-text-primary text-lg">{formatCurrency(order.totalPrice)}</div>}
+        trailing={<div className={CARD_PRICE}>{formatCurrency(order.totalPrice)}</div>}
       />
 
       {hasTests && (

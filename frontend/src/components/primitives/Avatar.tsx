@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RADIUS } from '@/components/theme/recipes';
+import { AVATAR_TYPE, RADIUS } from '@/components/theme/recipes';
 import { cn, getInitials } from '@/utils';
 import { isEntityIdClassName } from '@/utils/constants';
 
@@ -22,21 +22,21 @@ type AvatarSize = NonNullable<AvatarProps['size']>;
 
 // Module-level constants: do not re-create these objects on every render.
 const CIRCLE_SIZE_CLASSES: Record<AvatarSize, string> = {
-  xxs: 'w-6 h-6 text-3xs',
-  xs: 'w-7 h-7 text-3xs',
-  sm: 'w-8 h-8 text-xs',
-  md: 'w-10 h-10 text-sm',
-  lg: 'w-12 h-12 text-base',
-  xl: 'w-14 h-14 text-lg',
+  xxs: `w-6 h-6 ${AVATAR_TYPE.circle.xxs}`,
+  xs: `w-7 h-7 ${AVATAR_TYPE.circle.xs}`,
+  sm: `w-8 h-8 ${AVATAR_TYPE.circle.sm}`,
+  md: `w-10 h-10 ${AVATAR_TYPE.circle.md}`,
+  lg: `w-12 h-12 ${AVATAR_TYPE.circle.lg}`,
+  xl: `w-14 h-14 ${AVATAR_TYPE.circle.xl}`,
 };
 
 const LABEL_SIZE_CLASSES: Record<AvatarSize, { primary: string; secondary: string }> = {
-  xxs: { primary: 'text-xxs', secondary: 'text-xxs' },
-  xs: { primary: 'text-xs', secondary: 'text-xxs' },
-  sm: { primary: 'text-sm', secondary: 'text-xxs' },
-  md: { primary: 'text-base', secondary: 'text-xs' },
-  lg: { primary: 'text-lg', secondary: 'text-sm' },
-  xl: { primary: 'text-xl', secondary: 'text-base' },
+  xxs: { primary: AVATAR_TYPE.primary.xxs, secondary: AVATAR_TYPE.secondary.xxs },
+  xs: { primary: AVATAR_TYPE.primary.xs, secondary: AVATAR_TYPE.secondary.xs },
+  sm: { primary: AVATAR_TYPE.primary.sm, secondary: AVATAR_TYPE.secondary.sm },
+  md: { primary: AVATAR_TYPE.primary.md, secondary: AVATAR_TYPE.secondary.md },
+  lg: { primary: AVATAR_TYPE.primary.lg, secondary: AVATAR_TYPE.secondary.lg },
+  xl: { primary: AVATAR_TYPE.primary.xl, secondary: AVATAR_TYPE.secondary.xl },
 };
 
 export const Avatar: React.FC<AvatarProps> = ({

@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { Icon, type IconName } from '@/components/primitives/Icon';
-import { RADIUS, TONE } from '@/components/theme/recipes';
+import { RADIUS, TONE, TYPE } from '@/components/theme/recipes';
 
 export type CalloutVariant = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 
@@ -71,15 +71,15 @@ export const Callout: React.FC<CalloutProps> = ({
         <span className={`w-1.5 h-1.5 ${RADIUS.pill} mt-space-1-5 shrink-0 ${styles.dot}`} />
       )}
       <div className="flex-1 min-w-0">
-        <div className={`text-xs mb-space-1 ${styles.title}`}>{title}</div>
+        <div className={`${TYPE.value} mb-space-1 ${styles.title}`}>{title}</div>
         {items && items.length > 0 ? (
           <ul className="list-disc list-inside space-y-space-0-5">
             {items.map((item, idx) => (
-              <li key={idx} className={`text-xs ${styles.body}`}>{item}</li>
+              <li key={idx} className={`${TYPE.value} ${styles.body}`}>{item}</li>
             ))}
           </ul>
         ) : (
-          <div className={`text-xs ${styles.body}`}>{children}</div>
+          <div className={`${TYPE.value} ${styles.body}`}>{children}</div>
         )}
       </div>
     </div>

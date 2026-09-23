@@ -4,7 +4,7 @@ import type { FilterOption } from '@/components';
 import { RELATIONSHIP_VALUES, RELATIONSHIP_CONFIG, type Relationship } from '@/types';
 import { ICONS } from '@/config/icons';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
-import { TONE } from '@/components/theme/recipes';
+import { FIELD_ERROR, TONE } from '@/components/theme/recipes';
 import type { PatientFormSectionProps } from '../patientFormTypes';
 
 export const EmergencyContactSection: React.FC<
@@ -74,7 +74,7 @@ export const EmergencyContactSection: React.FC<
             className="w-full"
           />
           {errors.emergencyContactRelationship && (
-            <p className={`mt-space-1 text-sm ${TONE.danger.fg}`}>{errors.emergencyContactRelationship}</p>
+            <p className={`mt-space-1 ${FIELD_ERROR}`}>{errors.emergencyContactRelationship}</p>
           )}
         </div>
         <Input

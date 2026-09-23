@@ -6,7 +6,7 @@ import React, { type ReactNode } from 'react';
 import { Icon, type IconName } from '@/components/primitives/Icon';
 import { getColorStyles, type BadgeColor } from '@/components';
 import { useBadgeAppearance, type BadgeAppearance } from '@/components/theme/theme';
-import { RADIUS, SHADOW } from '@/components/theme/recipes';
+import { ALERT_SURFACE_TYPE, RADIUS, SHADOW } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
 interface AlertProps {
@@ -71,7 +71,7 @@ export const Alert: React.FC<AlertProps> = ({
       <div>
         <p
           className={cn(
-            'm-0 text-sm font-semibold leading-snug',
+            ALERT_SURFACE_TYPE.title,
             appearance === 'unified' && 'text-text-primary'
           )}
         >
@@ -80,7 +80,7 @@ export const Alert: React.FC<AlertProps> = ({
         {description ? (
           <p
             className={cn(
-              'mt-space-1 mb-0 text-sm leading-snug',
+              ALERT_SURFACE_TYPE.body,
               appearance === 'unified' ? 'text-text-secondary' : 'opacity-90'
             )}
           >

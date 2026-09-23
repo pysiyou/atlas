@@ -11,6 +11,20 @@
   --text-base: var(--font-size-base);
   --text-lg: var(--font-size-lg);
 
+  --text-body: var(--type-body-size);
+  --text-label: var(--type-label-size);
+  --text-caption: var(--type-caption-size);
+  --text-page-title: var(--type-page-title-size);
+  --text-detail-title: var(--type-detail-title-size);
+  --text-table-cell: var(--type-table-cell-size);
+  --text-table-header: var(--type-table-header-size);
+  --text-micro: var(--type-micro-size);
+
+  --leading-body: var(--type-body-leading);
+  --leading-caption: var(--type-caption-leading);
+  --leading-table-cell: var(--type-table-cell-leading);
+  --leading-table-header: var(--type-table-header-leading);
+
   /* ═══════════════════════════════════════════════════════════════════
      TEXT (Foreground)
      ═══════════════════════════════════════════════════════════════════ */
@@ -348,6 +362,8 @@
   --color-container-black-bg: var(--container-black-bg);
   --color-container-black-text: var(--container-black-text);
 }
+
+@import './components/theme/tokens/typography-utilities.css';
 
 body {
   font-family: var(--font-sans);

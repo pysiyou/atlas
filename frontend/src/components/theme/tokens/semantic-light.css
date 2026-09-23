@@ -204,8 +204,7 @@
      ENTITY ID (patient, order, sample, test codes)
      ═══════════════════════════════════════════════════════════════════ */
   --id-font-family: var(--font-sans);
-  --id-font-size: 0.75rem;
-  --id-font-size-secondary: var(--text-xxs);
+  /* --id-font-size* defined in typography.css */
   --id-color: var(--brand);
   --id-color-secondary: var(--text-tertiary);
   --id-letter-spacing: 0.02em;

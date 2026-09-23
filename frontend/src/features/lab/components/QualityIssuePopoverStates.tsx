@@ -13,7 +13,7 @@ import { getFeedback } from '@/utils/feedback';
 import { QUALITY_ISSUE_POPOVER_LAYOUT, QUALITY_ISSUE_POPOVER_COPY } from '../constants/qualityIssuePopoverCopy';
 import { LAB_CONFIG } from '../constants';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
-import { TYPE, RADIUS } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/components/theme/recipes';
 
 
 /** Skeleton that mirrors PopoverFormChrome layout (header, body, footer) to avoid layout shift when options load. */
@@ -74,8 +74,8 @@ export const QualityIssuePopoverErrorView: React.FC<QualityIssuePopoverErrorView
     className={cn(QUALITY_ISSUE_POPOVER_LAYOUT.widthClass, 'flex flex-col gap-layout-section p-panel min-w-0')}
   >
     <Alert variant="danger" className="py-space-2">
-      <p className="font-normal text-xs">{getFeedback('lab.qualityIssue.options.loadFailed').title}</p>
-      <p className="text-xxs mt-space-1">{error}</p>
+      <p className={TYPE.value}>{getFeedback('lab.qualityIssue.options.loadFailed').title}</p>
+      <p className={`${TYPE.caption} mt-space-1`}>{error}</p>
     </Alert>
     <div className="flex justify-end gap-space-2">
       <Button {...actionButtonPreset('cancel')} size="sm" layout="text" onClick={onCancel}>

@@ -17,13 +17,13 @@ export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ repo
     {reportData.testResults.map((test, index) => (
       <div key={index} className="space-y-space-4">
         <div className="text-center">
-          <h3 className="text-lg font-bold text-text-primary">
+          <h3 className={`${TYPE.pageTitle} font-bold`}>
             {test.testName} ({test.testCode})
           </h3>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-xs">
+          <table className={`${TYPE.value} w-full`}>
             <thead>
               <tr className="bg-surface-page border-b border-border-strong">
                 <th className="px-table-cell-x-default py-space-3 text-left font-normal text-text-tertiary uppercase tracking-wider">
@@ -74,7 +74,7 @@ export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ repo
                         <div className="min-w-0">
                           <div className="font-normal text-text-primary truncate">{param.name}</div>
                           {param.code && (
-                            <div className="text-xs font-normal truncate">{param.code}</div>
+                            <div className={`${TYPE.value} truncate`}>{param.code}</div>
                           )}
                         </div>
                       )}

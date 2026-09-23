@@ -1,4 +1,4 @@
-import { RADIUS, TYPE } from '@/components/theme/recipes';
+import { FORM_TAB_TITLE, INLINE_LINK, RADIUS, TYPE } from '@/components/theme/recipes';
 
 /** Activity feed — step indicator + headline / details / meta (matches attention feed typography). */
 export const TIMELINE_STYLES = {
@@ -15,12 +15,12 @@ export const TIMELINE_STYLES = {
   /** Matches LabAttentionFeed row: accent + `min-w-0 flex-1 space-y-1` content */
   eventRow: 'flex min-w-0 items-stretch gap-space-2 relative',
   eventBody: 'min-w-0 flex-1 space-y-space-1 pb-space-3',
-  eventHeadline: 'min-w-0 text-xs font-normal text-text-primary',
+  eventHeadline: `min-w-0 ${FORM_TAB_TITLE} text-text-primary`,
   eventDetails: 'flex flex-wrap items-center gap-x-space-1 gap-y-space-0-5',
   eventDetailText: TYPE.label,
   eventMeta: TYPE.meta,
   threadMarker: `pb-space-2 pl-space-4 ${TYPE.meta}`,
   loadMore: 'flex justify-center border-t border-border-subtle bg-transparent px-space-4 py-space-2',
-  retryLink: 'text-xs text-brand hover:underline',
-  retryLinkDisabled: 'text-xs text-brand hover:underline disabled:opacity-60',
+  retryLink: INLINE_LINK,
+  retryLinkDisabled: `${INLINE_LINK} disabled:opacity-60`,
 } as const;

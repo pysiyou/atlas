@@ -70,7 +70,7 @@ function LabAttentionFeedRow({ item }: { item: LabAttentionQueueItem }) {
               label={typeConfig.pillLabel}
               size="xs"
             />
-            <span className="min-w-0 text-xs font-light text-text-primary group-hover:text-brand-fg">
+            <span className={`min-w-0 ${TYPE.value} font-light group-hover:text-brand-fg`}>
               {formatted.action}
             </span>
           </div>

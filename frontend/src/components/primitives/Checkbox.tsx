@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { Icon } from './Icon';
-import { RADIUS } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 
@@ -75,7 +75,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
     </div>
     <span
       className={cn(
-        'text-sm transition-colors duration-200',
+        `${TYPE.amount} transition-colors duration-200`,
         checked ? 'text-text-primary' : 'text-text-secondary',
         !disabled && 'group-hover:text-text-primary'
       )}

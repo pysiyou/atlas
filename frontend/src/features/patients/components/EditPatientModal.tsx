@@ -9,7 +9,7 @@ import { Modal, CircularProgress, FooterInfo, FormDialogFooter, ErrorBoundary } 
 import { MODULE_ICONS } from '@/config/icons';
 import { useEditPatientForm } from '../hooks/useEditPatientForm';
 import { PatientFormTabs } from './PatientFormTabs';
-import { CONTROL, RADIUS } from '@/components/theme/recipes';
+import { CONTROL, RADIUS, TYPE } from '@/components/theme/recipes';
 
 interface EditPatientModalProps {
   isOpen: boolean;
@@ -42,8 +42,8 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
             onClick={() => onTabChange(tab.id)}
             className={
               isActive
-                ? `relative flex items-center gap-space-2 px-space-3 py-space-1-5 ${RADIUS.field} text-xs font-normal cursor-pointer bg-surface text-brand ${CONTROL.segmentActive}`
-                : `relative flex items-center gap-space-2 px-space-3 py-space-1-5 ${RADIUS.field} text-xs font-normal cursor-pointer text-text-tertiary hover:text-text-primary hover:bg-surface-hover`
+                ? `relative flex items-center gap-space-2 px-space-3 py-space-1-5 ${RADIUS.field} ${TYPE.value} font-normal cursor-pointer bg-surface text-brand ${CONTROL.segmentActive}`
+                : `relative flex items-center gap-space-2 px-space-3 py-space-1-5 ${RADIUS.field} ${TYPE.value} font-normal cursor-pointer text-text-tertiary hover:text-text-primary hover:bg-surface-hover`
             }
           >
             {tab.label}

@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { TYPE } from '@/components/theme/recipes';
 import type { PaymentMethod } from '@/types';
 import { getEnabledPaymentMethods } from '@/types/payments';
 import { Alert } from '@/components';
@@ -42,7 +43,7 @@ export const OrderPaymentSection: React.FC<OrderPaymentSectionProps> = ({
       />
       {paymentError && (
         <Alert variant="danger" className="mt-space-3 py-space-3">
-          <p className="text-sm">{paymentError}</p>
+          <p className={TYPE.amount}>{paymentError}</p>
         </Alert>
       )}
     </div>

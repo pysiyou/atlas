@@ -1,14 +1,45 @@
 /** Design-token ESLint selectors (type, surface, radius, palette). Spacing is separate. */
 
+/** Raw Tailwind scale classes — use TYPE / TABLE_TYPE / DETAIL_TYPE or type-* utilities. */
+/** Raw type-* utilities in app code — define stacks in recipes.ts instead. */
+export const typeUtilityRestrictedSyntax = [
+  {
+    selector:
+      'Literal[value=/\\btype-(body|label|caption|amount|micro|page-title|table-cell|detail-value|detail-label|button-sm|button-md|button-lg|chrome-|empty-|section-title|panel-title|modal-title|badge)\\b/]',
+    message:
+      'Use recipe tokens from @/components/theme/recipes (TYPE, TABLE_TYPE, RECEIPT_TYPE, etc.), not raw type-* utilities.',
+  },
+  {
+    selector:
+      'TemplateElement[value.raw=/\\btype-(body|label|caption|amount|micro|page-title|table-cell|detail-value|detail-label|button-sm|button-md|button-lg|chrome-|empty-|section-title|panel-title|modal-title|badge)\\b/]',
+    message:
+      'Use recipe tokens from @/components/theme/recipes (TYPE, TABLE_TYPE, RECEIPT_TYPE, etc.), not raw type-* utilities.',
+  },
+]
+
+export const typeScaleRestrictedSyntax = [
+  {
+    selector: 'Literal[value=/\\btext-(3xs|2xs|xxs|xs|sm|base|lg|xl)\\b/]',
+    message:
+      'Use semantic typography from @/components/theme/recipes (TYPE, TABLE_TYPE, DETAIL_TYPE, FIELD_ERROR), not raw text-* scale classes.',
+  },
+  {
+    selector: 'TemplateElement[value.raw=/\\btext-(3xs|2xs|xxs|xs|sm|base|lg|xl)\\b/]',
+    message:
+      'Use semantic typography from @/components/theme/recipes (TYPE, TABLE_TYPE, DETAIL_TYPE, FIELD_ERROR), not raw text-* scale classes.',
+  },
+]
+
 export const designTokenRestrictedSyntax = [
   {
     selector: 'Literal[value=/text-\\[\\d+px\\]/]',
-    message: 'Use the type scale (text-3xs through text-lg), not arbitrary px font sizes.',
+    message: 'Use type-* utilities or recipes TYPE/TABLE_TYPE, not arbitrary px font sizes.',
   },
   {
     selector: 'TemplateElement[value.raw=/text-\\[\\d+px\\]/]',
-    message: 'Use the type scale (text-3xs through text-lg), not arbitrary px font sizes.',
+    message: 'Use type-* utilities or recipes TYPE/TABLE_TYPE, not arbitrary px font sizes.',
   },
+  ...typeScaleRestrictedSyntax,
   {
     selector: 'Literal[value=/text-xs text-text-secondary/]',
     message: 'Use TYPE.label from @/components/theme/recipes.',

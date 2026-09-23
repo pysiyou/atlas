@@ -20,7 +20,7 @@ const TITLE_CLASS: Record<DialogChromeSize, string> = {
 };
 
 const SUBTITLE_CLASS: Record<DialogChromeSize, string> = {
-  modal: 'text-sm text-text-tertiary leading-snug',
+  modal: `${TYPE.amount} text-text-tertiary leading-snug`,
   popover: TYPE.meta,
 };
 
