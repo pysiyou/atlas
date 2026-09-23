@@ -256,6 +256,9 @@ export const PANEL_SHELL = {
 export const RANGE_SLIDER = {
   thumbChrome: (radiusField: string) =>
     `[&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-brand [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface [&::-webkit-slider-thumb]:${radiusField} [&::-webkit-slider-thumb]:${SHADOW.raised} [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-brand [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-surface [&::-moz-range-thumb]:${radiusField} [&::-moz-range-thumb]:${SHADOW.raised} [&::-moz-range-thumb]:cursor-pointer`,
+  /** Neutral thumbs (surface fill) for recessed range panels. */
+  thumbSurface: (radiusField: string) =>
+    `[&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-surface [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-border-strong [&::-webkit-slider-thumb]:${radiusField} [&::-webkit-slider-thumb]:${SHADOW.raised} [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:bg-surface [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-border-strong [&::-moz-range-thumb]:${radiusField} [&::-moz-range-thumb]:${SHADOW.raised} [&::-moz-range-thumb]:cursor-pointer`,
 } as const;
 
 /** Modal / dialog chrome. */

@@ -1,18 +1,11 @@
 /**
- * AgeFilter Component
- *
- * A modern, polished age range selector with dual-handle slider.
- * Features smooth animations, refined visual design, and enhanced micro-interactions.
+ * AgeFilter — popover trigger with dual-handle age range slider.
  */
 
 import React from 'react';
-import { Popover, Icon, FilterTriggerShell } from '@/components';
-import { RANGE_SLIDER, RADIUS } from '@/components/theme/recipes';
-import { useRangeValue } from '@/hooks/useRangeValue';
-import { cn } from '@/utils';
+import { Popover, Icon, FilterTriggerShell, OverlayRangeSlider } from '@/components';
 import { ICONS } from '@/config/icons';
-
-const AGE_SLIDER_THUMB_CLASS = `absolute w-full h-1 appearance-none bg-transparent pointer-events-none ${RANGE_SLIDER.thumbChrome(RADIUS.field)}`;
+import { cn } from '@/utils';
 
 interface AgeFilterProps {
   value: [number, number];
@@ -21,6 +14,8 @@ interface AgeFilterProps {
   max?: number;
   placeholder?: string;
   className?: string;
+  /** Optional right-side footer copy (e.g. "Showing 12 of 48"). */
+  resultSummary?: string;
 }
 
 export const AgeFilter: React.FC<AgeFilterProps> = ({
@@ -30,41 +25,19 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
   max = 100,
   placeholder = 'Filter by Age',
   className,
+  resultSummary,
 }) => {
-  const { localValue, setLocalValue, handleClear } = useRangeValue(value, onChange, {
-    defaultRange: [min, max],
-  });
+  const isDefault = value[0] === min && value[1] === max;
+  const showClear = !isDefault;
 
-  const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newMin = Math.min(Number(e.target.value), localValue[1] - 1);
-    const newValue: [number, number] = [newMin, localValue[1]];
-    setLocalValue(newValue);
-    onChange(newValue);
+  const handleClear = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onChange([min, max]);
   };
 
-  const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newMax = Math.max(Number(e.target.value), localValue[0] + 1);
-    const newValue: [number, number] = [localValue[0], newMax];
-    setLocalValue(newValue);
-    onChange(newValue);
+  const handleReset = () => {
+    onChange([min, max]);
   };
-
-  const minPercent = ((localValue[0] - min) / (max - min)) * 100;
-  const maxPercent = ((localValue[1] - min) / (max - min)) * 100;
-
-  const renderTriggerContent = () => {
-    const [start, end] = value;
-    if (start === min && end === max) {
-      return <span className="text-text-muted">{placeholder}</span>;
-    }
-    return (
-      <span className="text-text-primary font-normal">
-        {start} - {end}
-      </span>
-    );
-  };
-
-  const showClear = value[0] !== min || value[1] !== max;
 
   return (
     <Popover
@@ -86,52 +59,27 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
           onClear={handleClear}
           className={className}
         >
-          {renderTriggerContent()}
+          {isDefault ? (
+            <span className="text-text-muted">{placeholder}</span>
+          ) : (
+            <span className="text-text-primary font-normal tabular-nums">
+              {value[0]}–{value[1]} yrs
+            </span>
+          )}
         </FilterTriggerShell>
       )}
-      className="p-space-6 w-[320px]"
+      className="p-panel w-[20rem]"
     >
       {() => (
-        <div className="w-full">
-          <p className="text-sm text-text-tertiary mb-space-4">Move the slider to filter by age</p>
-
-          <div className="relative h-1 mb-space-6">
-            <div className={`absolute inset-0 bg-border ${RADIUS.pill}`} />
-
-            <div
-              className={`absolute h-full bg-brand ${RADIUS.pill}`}
-              style={{
-                left: `${minPercent}%`,
-                width: `${maxPercent - minPercent}%`,
-              }}
-            />
-
-            <input
-              type="range"
-              min={min}
-              max={max}
-              value={localValue[0]}
-              onChange={handleMinChange}
-              className={AGE_SLIDER_THUMB_CLASS}
-              style={{ zIndex: localValue[0] > max - 10 ? 5 : 3 }}
-            />
-
-            <input
-              type="range"
-              min={min}
-              max={max}
-              value={localValue[1]}
-              onChange={handleMaxChange}
-              className={AGE_SLIDER_THUMB_CLASS}
-              style={{ zIndex: 4 }}
-            />
-          </div>
-
-          <div className="flex justify-between text-lg font-normal text-text-primary">
-            <span>{localValue[0]} years</span>
-            <span>{localValue[1]} years</span>
-          </div>
-        </div>
+        <OverlayRangeSlider
+          value={value}
+          onChange={onChange}
+          min={min}
+          max={max}
+          boundLabels={{ min: 'Min age', max: 'Max age' }}
+          onReset={handleReset}
+          footerSummary={resultSummary}
+        />
       )}
     </Popover>
   );

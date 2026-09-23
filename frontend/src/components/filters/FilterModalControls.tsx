@@ -24,8 +24,10 @@ export const ModalPriceSlider: React.FC<{
     onChange={onChange}
     min={min}
     max={max}
-    hint="Move the slider to change prices"
-    formatLabel={v => `${currency}${v}`}
+    boundLabels={{ min: 'Min price', max: 'Max price' }}
+    valuePrefix={currency}
+    formatValue={v => v.toLocaleString()}
+    onReset={() => onChange([min, max])}
   />
 );
 
