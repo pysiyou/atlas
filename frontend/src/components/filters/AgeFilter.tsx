@@ -6,14 +6,13 @@
  */
 
 import React from 'react';
-import { RANGE_SLIDER, RADIUS } from '@/components/theme/recipes';
-
-const AGE_SLIDER_THUMB_CLASS =
-  `absolute w-full h-1 appearance-none bg-transparent pointer-events-none ${RANGE_SLIDER.thumbChrome(RADIUS.field)}`;
 import { Popover, Icon, FilterTriggerShell } from '@/components';
+import { RANGE_SLIDER, RADIUS } from '@/components/theme/recipes';
 import { useRangeValue } from '@/hooks/useRangeValue';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
+
+const AGE_SLIDER_THUMB_CLASS = `absolute w-full h-1 appearance-none bg-transparent pointer-events-none ${RANGE_SLIDER.thumbChrome(RADIUS.field)}`;
 
 interface AgeFilterProps {
   value: [number, number];
@@ -53,9 +52,6 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
   const minPercent = ((localValue[0] - min) / (max - min)) * 100;
   const maxPercent = ((localValue[1] - min) / (max - min)) * 100;
 
-  /**
-   * Render the trigger button content
-   */
   const renderTriggerContent = () => {
     const [start, end] = value;
     if (start === min && end === max) {
@@ -99,12 +95,9 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
         <div className="w-full">
           <p className="text-sm text-text-tertiary mb-space-4">Move the slider to filter by age</p>
 
-          {/* Slider Track */}
           <div className="relative h-1 mb-space-6">
-            {/* Background track */}
             <div className={`absolute inset-0 bg-border ${RADIUS.pill}`} />
 
-            {/* Active track */}
             <div
               className={`absolute h-full bg-brand ${RADIUS.pill}`}
               style={{
@@ -113,7 +106,6 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
               }}
             />
 
-            {/* Min thumb */}
             <input
               type="range"
               min={min}
@@ -124,7 +116,6 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
               style={{ zIndex: localValue[0] > max - 10 ? 5 : 3 }}
             />
 
-            {/* Max thumb */}
             <input
               type="range"
               min={min}
@@ -136,7 +127,6 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
             />
           </div>
 
-          {/* Age labels */}
           <div className="flex justify-between text-lg font-normal text-text-primary">
             <span>{localValue[0]} years</span>
             <span>{localValue[1]} years</span>

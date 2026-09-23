@@ -6,6 +6,7 @@ import React, { useCallback, useMemo } from 'react';
 import { cn, uppercaseLabel } from '@/utils';
 import { ICONS } from '@/config/icons';
 import { Badge } from '@/components';
+import { parseBadgeVariant } from '@/components/primitives/badgeStyles';
 import { Icon, type IconName } from '@/components/primitives/Icon';
 import { Popover } from './Popover';
 import { FilterTriggerShell } from './FilterTriggerShell';
@@ -75,7 +76,7 @@ function MultiSelectListItem({
         )}
       </div>
 
-      <Badge variant={option.color || 'default'} size="xs">
+      <Badge variant={parseBadgeVariant(option.color)} size="xs">
         {uppercaseLabel(option.label)}
       </Badge>
     </label>
@@ -103,7 +104,7 @@ function MultiSelectTriggerContent({
 
   if (singleSelectedOption) {
     return (
-      <Badge variant={singleSelectedOption.color || 'default'} size="xs">
+      <Badge variant={parseBadgeVariant(singleSelectedOption.color)} size="xs">
         {uppercaseLabel(singleSelectedOption.label)}
       </Badge>
     );

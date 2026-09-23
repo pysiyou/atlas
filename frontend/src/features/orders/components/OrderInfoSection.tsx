@@ -4,8 +4,9 @@
  */
 
 import React from 'react';
-import { Badge, EntityId } from '@/components';
+import { EntityId } from '@/components';
 import type { Order } from '@/types';
+import { OrderPriorityBadge, OrderStatusBadge } from './OrderDomainBadges';
 import { DetailField } from '@/components/display/DetailField';
 import { formatDateTime } from '@/utils/date';
 import { getDataFieldIcon, getPriorityIcon, getOrderStatusIcon } from '@/config/icons';
@@ -42,13 +43,13 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order }) => 
       <DetailField
         icon={getPriorityIcon(order.priority)}
         label="Priority"
-        value={<Badge variant={order.priority} size="xs" />}
+        value={<OrderPriorityBadge priority={order.priority} size="xs" />}
         orientation="vertical"
       />
       <DetailField
         icon={getOrderStatusIcon(order.overallStatus)}
         label="Status"
-        value={<Badge variant={order.overallStatus} size="xs" />}
+        value={<OrderStatusBadge status={order.overallStatus} size="xs" />}
         orientation="vertical"
       />
       {order.referringPhysician && (

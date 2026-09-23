@@ -3,11 +3,12 @@
  */
 
 import React, { useMemo } from 'react';
-import { EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components';
 import { Link } from 'react-router-dom';
-import { Badge, EntityId } from '@/components';
+import { EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE, Badge, EntityId } from '@/components';
+import { LabPriorityBadge } from '../components/LabDomainBadges';
+import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import { cn, displayId } from '@/utils';
-import { getLabQueueUrl } from '@/features/lab/constants/labConstants';
+import { getLabQueueUrl } from '@/features/lab';
 import { COMMAND_CENTER_ATTENTION_ACCENT } from './commandCenterStyles';
 import type { LabAttentionQueueItem, AttentionType } from './commandCenterModel';
 import {
@@ -30,7 +31,7 @@ function FeedDetail({ detail }: { detail: AttentionDetail }) {
     case 'testId':
       return <EntityId variant="inline">{detail.value}</EntityId>;
     case 'priority':
-      return <Badge variant={detail.value as 'urgent' | 'high'} size="xs" />;
+      return <LabPriorityBadge priority={detail.value} size="xs" />;
     case 'wait':
       return <span className={`${TYPE.meta} tabular-nums`}>{detail.value}</span>;
     default:
@@ -64,9 +65,11 @@ function LabAttentionFeedRow({ item }: { item: LabAttentionQueueItem }) {
 
         <div className="min-w-0 flex-1 space-y-space-1">
           <div className="flex min-w-0 flex-wrap items-center gap-x-space-2 gap-y-space-1">
-            <Badge variant={typeConfig.badgeVariant} size="xs">
-              {typeConfig.pillLabel}
-            </Badge>
+            <Badge
+              variant={resolveStatusBadgeColor(typeConfig.badgeVariant)}
+              label={typeConfig.pillLabel}
+              size="xs"
+            />
             <span className="min-w-0 text-xs font-light text-text-primary group-hover:text-brand-fg">
               {formatted.action}
             </span>

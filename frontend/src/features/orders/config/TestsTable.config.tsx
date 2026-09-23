@@ -1,11 +1,13 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import { Badge, EntityId } from '@/components';
+import React from 'react';
+import { EntityId } from '@/components';
 import type { TableViewConfig, CardComponentProps } from '@/components';
 import { buildViews } from '@/components/data-table';
 import { cn, formatCurrency, formatDateTime } from '@/utils';
 import { getTestName, getTestProperty } from '@/features/catalog/testLookup';
+import { CatalogCategoryBadge } from '@/features/catalog';
 import { getLabQueueUrlForTest } from '@/features/lab';
+import { OrderTestStatusBadge } from '../components/OrderDomainBadges';
 import { getOrderTestLineageRowClass } from '../utils/orderTestLineage';
 import type { OrderTest, Test } from '@/types';
 import { TYPE, RADIUS } from '@/components/theme/recipes';
@@ -44,7 +46,7 @@ function renderOrderTestIdentity(test: OrderTest, testCatalog: Test[]) {
 function renderTestCategoryBadge(test: OrderTest, testCatalog: Test[]) {
   const category = getTestProperty(test.testCode, 'category', testCatalog);
   if (!category) return null;
-  return <Badge variant={category} size="xs" className="border-none" />;
+  return <CatalogCategoryBadge category={category} size="xs" className="border-none" />;
 }
 
 function createTestTableCard(testCatalog: Test[]): React.FC<CardComponentProps<OrderTest>> {
@@ -66,7 +68,7 @@ function createTestTableCard(testCatalog: Test[]): React.FC<CardComponentProps<O
       >
         <div className="flex items-start justify-between gap-space-2">
           <div className="min-w-0 flex-1">{renderOrderTestIdentity(item, testCatalog)}</div>
-          <Badge variant={item.status} size="xs" className="shrink-0" />
+          <OrderTestStatusBadge status={item.status} size="xs" className="shrink-0" />
         </div>
         {categoryBadge ? <div className="mt-space-2">{categoryBadge}</div> : null}
         <div className={`${TYPE.meta} mt-space-1`}>{formatCurrency(item.priceAtOrder)}</div>
@@ -103,7 +105,7 @@ export function createTestsTableConfig(
       width: 'md' as const,
       accessor: (test: OrderTest) => test.status,
       render: (test: OrderTest) => (
-        <Badge variant={test.status} size="xs" />
+        <OrderTestStatusBadge status={test.status} size="xs" />
       ),
     },
     sampleId: {

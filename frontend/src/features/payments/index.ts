@@ -22,3 +22,7 @@ export type {
 export { PaymentPopover } from './components/PaymentPopover';
 export { PaymentMethodSelector } from './components/PaymentMethodSelector';
 export type { PaymentMethodSelectorProps } from './components/PaymentMethodSelector';
+export {
+  PaymentMethodBadge,
+  PaymentStatusBadge,
+} from './components/PaymentStatusBadge';

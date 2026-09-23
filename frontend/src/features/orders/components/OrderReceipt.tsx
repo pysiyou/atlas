@@ -3,7 +3,8 @@
  */
 
 import React from 'react';
-import { Badge, EntityId } from '@/components';
+import { EntityId } from '@/components';
+import { PaymentMethodBadge, PaymentStatusBadge } from '@/features/payments';
 import { cn, displayId, formatCurrency, formatDateTime } from '@/utils';
 import { getActiveTests, getActiveTotal } from '../utils/orderCalculator';
 import type { Order, OrderTest } from '@/types';
@@ -69,8 +70,8 @@ function ReceiptHeader({
               <p className="text-sm text-text-tertiary italic">No patient name</p>
             )}
             <div className="flex items-center gap-space-2">
-              <Badge variant={order.paymentStatus} size="xs" />
-              {paymentMethod && <Badge variant={paymentMethod} size="xs" />}
+              <PaymentStatusBadge status={order.paymentStatus} size="xs" />
+              {paymentMethod && <PaymentMethodBadge method={paymentMethod} size="xs" />}
             </div>
           </div>
           <div className="space-y-space-1-5">
@@ -124,9 +125,9 @@ function ReceiptHeader({
           </div>
           {showPaymentStatusBadge && (
             <div className="flex items-center gap-space-1-5 shrink-0">
-              <Badge variant={order.paymentStatus} size="xs" />
+              <PaymentStatusBadge status={order.paymentStatus} size="xs" />
               {paymentMethod && order.paymentStatus !== 'unpaid' && (
-                <Badge variant={paymentMethod} size="xs" />
+                <PaymentMethodBadge method={paymentMethod} size="xs" />
               )}
             </div>
           )}
@@ -140,7 +141,9 @@ function ReceiptHeader({
               variant="secondary"
               className="text-xs min-w-0 truncate"
             />
-            {showPaymentStatusBadge && <Badge variant={order.paymentStatus} size="xs" className="shrink-0" />}
+            {showPaymentStatusBadge && (
+              <PaymentStatusBadge status={order.paymentStatus} size="xs" className="shrink-0" />
+            )}
           </div>
           {order.patientName && (
             <p className={`${TYPE.caption} mt-space-0-5 truncate`}>{order.patientName}</p>

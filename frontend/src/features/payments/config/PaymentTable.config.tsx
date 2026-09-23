@@ -1,6 +1,6 @@
 import type { NavigateFunction } from 'react-router-dom';
 import { getActiveTests } from '@/features/orders';
-import { Badge } from '@/components';
+import { PaymentMethodBadge } from '../components/PaymentStatusBadge';
 import type { TableViewConfig } from '@/components';
 import {
   buildViews,
@@ -90,7 +90,7 @@ export const createPaymentTableConfig = (
       accessor: (item: OrderPaymentView) => item.paymentMethod ?? '',
       render: (item: OrderPaymentView) => {
         if (!item.paymentMethod || item.order.paymentStatus === 'unpaid') return null;
-        return <Badge variant={item.paymentMethod} size="xs" />;
+        return <PaymentMethodBadge method={item.paymentMethod} size="xs" />;
       },
     },
     paidDate: {

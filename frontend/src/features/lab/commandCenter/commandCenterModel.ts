@@ -1,5 +1,4 @@
 /** Command center board types and attention-queue categories. */
-import type { BadgeVariant } from '@/components';
 import { LAB_CONFIG, LAB_COPY } from '../constants/labConstants';
 import type { OrderTestBlockReason } from '../utils/labQueue';
 import type { PriorityLevel } from '@/types';
@@ -30,7 +29,7 @@ export interface AttentionTypeConfig {
   groupLabel: string;
   /** Short label on each row badge */
   pillLabel: string;
-  badgeVariant: BadgeVariant;
+  badgeVariant: string;
   sortOrder: number;
 }
 

@@ -1,4 +1,5 @@
-import { Badge, MobileEntityCard, EntityId } from '@/components';
+import { MobileEntityCard, EntityId } from '@/components';
+import { CatalogCategoryBadge, CatalogSampleTypeBadge } from './CatalogStatusBadge';
 import type { CardComponentProps } from '@/components';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import type { Test } from '@/types';
@@ -51,8 +52,8 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
           TAT: {formatTurnaroundTime(test.turnaroundTime)}
         </div>
         <div className="flex items-center gap-space-2">
-          <Badge variant={test.category} size="xs" className="border-none" />
-          <Badge variant={test.sampleType} size="xs" />
+          <CatalogCategoryBadge category={test.category} size="xs" className="border-none" />
+          <CatalogSampleTypeBadge sampleType={test.sampleType} size="xs" />
         </div>
       </div>
     </MobileEntityCard>

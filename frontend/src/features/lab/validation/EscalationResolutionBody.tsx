@@ -5,6 +5,7 @@ import { CriticalValueActions } from '../criticalValues/CriticalValueActions';
 import { LabEntityTimelinePanel } from '../components/LabEntityTimelinePanel';
 import type { TestWithContext } from '@/types';
 import type { CriticalValueRecord } from '../criticalValues/criticalValues';
+import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 
 interface EscalationResolutionBodyProps {
   test: TestWithContext;
@@ -113,7 +114,7 @@ export function EscalationResolutionBody({
               {
                 label: 'Sample Type',
                 badge: test.sampleType
-                  ? { value: test.sampleType, variant: test.sampleType }
+                  ? { value: test.sampleType, variant: resolveStatusBadgeColor(test.sampleType) }
                   : undefined,
               },
             ],

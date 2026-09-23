@@ -24,6 +24,11 @@ export { useOrderSearch, useOrderLookup, useInvalidateOrders } from './hooks/use
 
 export { OrderUpsertModal } from './components/OrderUpsertModal';
 export type { OrderUpsertModalProps } from './components/OrderUpsertModal';
+export {
+  OrderPriorityBadge,
+  OrderStatusBadge,
+  OrderTestStatusBadge,
+} from './components/OrderDomainBadges';
 export { OrderReceipt } from './components/OrderReceipt';
 export type { OrderReceiptProps, OrderReceiptVariant } from './components/OrderReceipt';
 export { BillingSummarySection } from './components/BillingSummarySection';

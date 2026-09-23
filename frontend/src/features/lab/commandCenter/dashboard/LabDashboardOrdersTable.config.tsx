@@ -1,7 +1,12 @@
 /**
  * Column registry for the lab dashboard orders table.
  */
-import { Badge } from '@/components';
+import {
+  LabDepartmentBadge,
+  LabPriorityBadge,
+  SampleStatusBadge,
+  SampleTypeBadge,
+} from '../../components/LabDomainBadges';
 import {
   buildViews,
   createBadgeColumn,
@@ -9,7 +14,7 @@ import {
   type TableViewConfig,
 } from '@/components/data-table';
 import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
-import { BlockedReasonBadge } from '@/features/lab/components/LabResultStatusBadges';
+import { BlockedReasonBadge } from '@/features/lab';
 import { formatDate, parseAppDate, displayId } from '@/utils';
 import { format } from 'date-fns';
 import { DASHBOARD_TWO_LINE } from '../dashboardStyles';
@@ -62,7 +67,7 @@ export function createLabDashboardOrdersTableConfig(): TableViewConfig<LabDashbo
       'Sample Type',
       row =>
         row.sampleType ? (
-          <Badge variant={row.sampleType} size="xs" className="border-none" />
+          <SampleTypeBadge sampleType={row.sampleType} size="xs" className="border-none" />
         ) : (
           <span className={DASHBOARD_TWO_LINE.secondary}>—</span>
         ),
@@ -83,7 +88,7 @@ export function createLabDashboardOrdersTableConfig(): TableViewConfig<LabDashbo
     priority: createBadgeColumn<LabDashboardOrderRow>(
       'priority',
       'Priority',
-      row => <Badge variant={row.priority} size="xs" />,
+      row => <LabPriorityBadge priority={row.priority} size="xs" />,
       { accessor: row => row.priority },
     ),
     department: createBadgeColumn<LabDashboardOrderRow>(
@@ -91,7 +96,7 @@ export function createLabDashboardOrdersTableConfig(): TableViewConfig<LabDashbo
       'Department',
       row =>
         row.department ? (
-          <Badge variant={row.department} size="xs" className="border-none" />
+          <LabDepartmentBadge department={row.department} size="xs" className="border-none" />
         ) : (
           <span className={DASHBOARD_TWO_LINE.secondary}>—</span>
         ),
@@ -104,7 +109,7 @@ export function createLabDashboardOrdersTableConfig(): TableViewConfig<LabDashbo
         row.blockedLabel ? (
           <BlockedReasonBadge label={row.blockedLabel} size="xs" showIcon={false} />
         ) : (
-          <Badge variant={row.status} size="xs" />
+          <SampleStatusBadge status={row.status} size="xs" />
         ),
       { accessor: row => row.blockedLabel ?? row.status, width: 'md' },
     ),

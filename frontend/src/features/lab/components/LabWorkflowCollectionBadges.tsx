@@ -12,6 +12,11 @@ import {
 } from '@/features/lab/utils';
 import { getContainerIcon, ICONS } from '@/config/icons';
 import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
+import {
+  LabPriorityBadge,
+  SampleStatusBadge,
+  SampleTypeBadge,
+} from './LabDomainBadges';
 import { QueueAgeBadge } from './QueueAgeBadge';
 import { BlockedReasonBadge } from './LabResultStatusBadges';
 import { LabRejectionTailBadgesFromSample } from './LabRejectionTailBadges';
@@ -54,21 +59,21 @@ function CollectionVolumeBadges({
     <>
       {isPending && required != null && (
         <CompactOnly>
-          <Badge size={size} variant="default" className="text-text-tertiary">
+          <Badge size={size} variant="neutral" className="text-text-tertiary">
             {formatVolume(required)} required
           </Badge>
         </CompactOnly>
       )}
       {(isCollected || isRejected) && collectedVolume != null && (
         <CompactOnly>
-          <Badge size={size} variant="default" className="text-text-tertiary">
+          <Badge size={size} variant="neutral" className="text-text-tertiary">
             {formatVolume(collectedVolume)} {isRejected ? 'was collected' : 'collected'}
           </Badge>
         </CompactOnly>
       )}
       {(isCollected || isRejected) && required != null && (
         <CompactOnly>
-          <Badge size={size} variant="default" className="text-text-tertiary">
+          <Badge size={size} variant="neutral" className="text-text-tertiary">
             {formatVolume(required)} required
           </Badge>
         </CompactOnly>
@@ -112,7 +117,7 @@ function CollectionContainerBadges({
       )}
       {derived.isDerived && (
         <CompactOnly>
-          <Badge size={size} variant="default" className="text-text-tertiary">
+          <Badge size={size} variant="neutral" className="text-text-tertiary">
             {derived.label}
           </Badge>
         </CompactOnly>
@@ -195,8 +200,8 @@ export const CollectionHeaderBadges = React.memo(({
 
   return (
     <>
-      {showPriority && priority && <Badge variant={priority} size={size} />}
-      <Badge variant={sample.sampleType} size={size} />
+      {showPriority && priority && <LabPriorityBadge priority={priority} size={size} />}
+      <SampleTypeBadge sampleType={sample.sampleType} size={size} />
       {isPending && orderDate && (
         <CompactMd>
           <QueueAgeBadge since={orderDate} />
@@ -220,8 +225,8 @@ export const CollectionHeaderBadges = React.memo(({
         sampleType={sample.sampleType}
         size={size}
       />
-      <Badge
-        variant={isPending ? 'pending' : isRejected ? 'rejected' : 'collected'}
+      <SampleStatusBadge
+        status={isPending ? 'pending' : isRejected ? 'rejected' : 'collected'}
         size={size}
       />
       <CollectionStatusExtras

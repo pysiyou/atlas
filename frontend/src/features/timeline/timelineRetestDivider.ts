@@ -1,4 +1,4 @@
-import type { TimelineEvent } from '@/features/lab/api/labCommandCenter';
+import type { TimelineEvent } from '@/features/lab';
 import { testIdFromEvent } from './timelineDetails';
 
 export function getRetestAttemptDivider(

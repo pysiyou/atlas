@@ -35,7 +35,7 @@ export function createIdColumn<T>(
   });
 }
 
-/** Badge column; pass a render that returns the badge node (e.g. <Badge variant={item.status} />). */
+/** Badge column; pass a render that returns a domain badge from the owning feature (e.g. OrderStatusBadge). */
 export function createBadgeColumn<T>(
   key: string,
   header: string,

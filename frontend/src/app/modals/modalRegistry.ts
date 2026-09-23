@@ -6,7 +6,7 @@
 
 import type { ComponentType } from 'react';
 import { ModalType } from '@/lib/context/ModalContext';
-import type { ModalPropsMap } from '@/lib/context/modalTypes';
+import type { ModalPropsMap, BaseModalProps } from '@/lib/context/modalTypes';
 import { SampleCollectionDetailModal } from '@/features/lab/collection/SampleCollectionDetailModal';
 import { ResultEntryDetailModal } from '@/features/lab/entry/ResultEntryDetailModal';
 import { ResultValidationDetailModal } from '@/features/lab/validation/ResultValidationDetailModal';
@@ -16,10 +16,7 @@ import { OrderUpsertModal } from '@/features/orders';
 /**
  * Base props that all modals receive
  */
-export interface BaseModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+export type { BaseModalProps } from '@/lib/context/modalTypes';
 
 /**
  * Registry entry: component + getProps. At runtime getProps receives Record<string, unknown>;
@@ -133,4 +130,3 @@ registerModal(ModalType.NEW_ORDER, OrderUpsertModal, (props, baseProps) => ({
 export function initializeModalRegistry(): void {
   // Registration happens on module load
 }
-

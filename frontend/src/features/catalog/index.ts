@@ -14,3 +14,9 @@ export {
 } from './api/tests';
 
 export * from './testLookup';
+
+export {
+  CatalogCategoryBadge,
+  CatalogSampleTypeBadge,
+  CatalogTestStatusBadge,
+} from './components/CatalogStatusBadge';

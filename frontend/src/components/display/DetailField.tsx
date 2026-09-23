@@ -45,9 +45,7 @@ export const DetailField: React.FC<DetailFieldProps> = ({
   const renderValue = () => {
     if (badge?.value) {
       return (
-        <Badge variant={badge.variant || 'primary'} size={badge.size || 'xs'} className={badge.className}>
-          {badge.value.toUpperCase()}
-        </Badge>
+        <Badge variant={badge.variant || 'primary'} size={badge.size || 'xs'} className={badge.className} label={badge.value.toUpperCase()} />
       );
     }
 

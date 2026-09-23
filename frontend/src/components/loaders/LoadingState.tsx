@@ -7,6 +7,7 @@
 
 import React from 'react';
 import { SpinnerLoader } from '@/components';
+import { RADIUS } from '@/components/theme/recipes';
 import { cn } from '@/utils/cn';
 
 const LOADER_GLOW: Record<'sm' | 'md' | 'lg', string> = {
@@ -51,7 +52,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
           <div
             aria-hidden
             className={cn(
-              'pointer-events-none absolute rounded-full bg-brand/15 blur-2xl',
+              `pointer-events-none absolute ${RADIUS.pill} bg-brand/15 blur-2xl`,
               'motion-reduce:opacity-70',
               LOADER_GLOW[size],
             )}

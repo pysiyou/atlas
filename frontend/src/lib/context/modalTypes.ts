@@ -8,6 +8,12 @@ import type { Order, Test, TestWithContext, ContainerType } from '@/types';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import type { SampleCollectionQueueItem } from '@/features/lab/types';
 
+/** Props every registered modal receives from ModalRenderer. */
+export interface BaseModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
 /** Payload for opening the sample/collection detail modal by sample id. */
 export interface SampleDetailByIdProps {
   sampleId: string;

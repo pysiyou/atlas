@@ -85,7 +85,7 @@ export const createReportTableConfig = (
       key: 'status',
       header: 'Status',
       width: 'md' as const,
-      render: () => <Badge variant="validated" size="xs" />,
+      render: () => <Badge variant="success" label="VALIDATED" size="xs" />,
     },
     action: {
       key: 'action',

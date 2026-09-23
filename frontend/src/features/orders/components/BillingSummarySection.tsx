@@ -6,7 +6,7 @@
 import React from 'react';
 import type { Order } from '@/types';
 import { cn } from '@/utils';
-import { usePaymentsByOrder } from '@/features/payments/api/payments';
+import { usePaymentsByOrder } from '@/features/payments';
 import { getActiveTotal } from '../utils/orderCalculator';
 import { OrderReceipt, ReceiptTotal } from './OrderReceipt';
 

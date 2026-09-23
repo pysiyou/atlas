@@ -1,5 +1,5 @@
 import type { NavigateFunction } from 'react-router-dom';
-import { Badge } from '@/components';
+import { PatientGenderBadge } from '../components/PatientGenderBadge';
 import type { TableViewConfig } from '@/components';
 import {
   buildViews,
@@ -54,7 +54,7 @@ export const createPatientTableConfig = (
       width: 'sm' as const,
       sortable: true,
       accessor: (patient: PatientContext) => patient.gender,
-      render: (patient: PatientContext) => <Badge variant={patient.gender} size="xs" />,
+      render: (patient: PatientContext) => <PatientGenderBadge gender={patient.gender} size="xs" />,
     },
     lastOrder: {
       key: 'lastOrder',

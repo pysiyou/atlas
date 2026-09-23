@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { Panel, Skeleton } from '@/components';
+import { RADIUS } from '@/components/theme/recipes';
 import { COMMAND_CENTER_PANEL } from './commandCenterStyles';
 import {
   DASHBOARD_BOTTOM_PANEL,
@@ -18,7 +19,7 @@ function TodayPanelSkeleton() {
     <Panel title={<Skeleton height={14} width={48} />} padding="none">
       <div className={TODAY_PANEL.body}>
         <div className="flex min-h-0 flex-1 items-center gap-space-3">
-          <Skeleton height={132} width={136} className="shrink-0 rounded-full" />
+          <Skeleton height={132} width={136} className={`shrink-0 ${RADIUS.pill}`} />
           <div className="flex min-w-0 flex-1 flex-col gap-space-2">
             <Skeleton height={36} className="w-full" />
             <Skeleton height={36} className="w-full" />

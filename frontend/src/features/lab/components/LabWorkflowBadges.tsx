@@ -8,6 +8,11 @@ import { Badge, Icon, type BadgeSize } from '@/components';
 import type { TestWithContext } from '@/types';
 import { ICONS } from '@/config/icons';
 import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
+import {
+  LabPriorityBadge,
+  SampleStatusBadge,
+  SampleTypeBadge,
+} from './LabDomainBadges';
 import { QueueAgeBadge } from './QueueAgeBadge';
 import { BlockedReasonBadge, FlagCountBadge } from './LabResultStatusBadges';
 import { LabRejectionTailBadgesFromTest } from './LabRejectionTailBadges';
@@ -54,15 +59,15 @@ function TestHeaderBadgesView({
   if (variant === 'escalation') {
     return (
       <>
-        <Badge variant="escalated" size={size} />
+        <SampleStatusBadge status="escalated" size={size} />
         {reasonCode ? (
           <Badge variant="warning" size={size}>
             {reasonCode}
           </Badge>
         ) : null}
         {blockedLabel ? <BlockedReasonBadge label={blockedLabel} size={compactSize} /> : null}
-        {showPriority && test.priority ? <Badge variant={test.priority} size={size} /> : null}
-        {test.sampleType ? <Badge variant={test.sampleType} size={size} /> : null}
+        {showPriority && test.priority ? <LabPriorityBadge priority={test.priority} size={size} /> : null}
+        {test.sampleType ? <SampleTypeBadge sampleType={test.sampleType} size={size} /> : null}
         {trailing}
         {rejectionTail}
       </>
@@ -77,12 +82,12 @@ function TestHeaderBadgesView({
           CRITICAL
         </Badge>
       ) : showPriority && test.priority ? (
-        <Badge variant={test.priority} size={size} />
+        <LabPriorityBadge priority={test.priority} size={size} />
       ) : null}
-      {test.sampleType ? <Badge variant={test.sampleType} size={size} /> : null}
+      {test.sampleType ? <SampleTypeBadge sampleType={test.sampleType} size={size} /> : null}
       {showStatus && test.status ? (
         <CompactMd>
-          <Badge variant={test.status} size={size} />
+          <SampleStatusBadge status={test.status} size={size} />
         </CompactMd>
       ) : null}
       {queueSince ? (

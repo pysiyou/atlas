@@ -10,7 +10,7 @@ import { GENDER_VALUES, GENDER_CONFIG } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
 import { PATIENT_FILTER_PLACEHOLDERS } from '@/components/filters';
 import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
-import { AgeFilter } from './AgeFilter';
+import { AgeFilter } from '@/components/filters/AgeFilter';
 import type { Gender } from '@/types';
 import { CONTROL } from '@/components/theme/recipes';
 import type { AffiliationStatus } from './PatientFilterTypes';

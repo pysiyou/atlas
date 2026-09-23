@@ -5,8 +5,8 @@ import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { EmptyState, EMPTY_COPY, EntityId, PANEL_EMPTY_STATE } from '@/components';
 import { cn, formatRelativeDateLabel, formatRelativeDateTime } from '@/utils';
-import type { TimelineEvent } from '@/features/lab/api/labCommandCenter';
-import { useOpenHistoricalLabRecord } from '@/features/lab/hooks/useOpenHistoricalLabRecord';
+import type { TimelineEvent } from '@/features/lab';
+import { useOpenHistoricalLabRecord } from '@/features/lab';
 import {
   categoriesForPreset,
   filterEventsByCategories,

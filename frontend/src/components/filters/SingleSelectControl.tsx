@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { Popover, Icon, Badge, FilterTriggerShell } from '@/components';
+import { parseBadgeVariant } from '@/components/primitives/badgeStyles';
 import type { IconName } from '@/components';
 import { cn, uppercaseLabel } from '@/utils';
 import { ICONS } from '@/config/icons';
@@ -73,7 +74,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
     }
 
     return (
-      <Badge variant={selectedOption.color || 'default'} size="xs">
+      <Badge variant={parseBadgeVariant(selectedOption.color)} size="xs">
         {uppercaseLabel(selectedOption.label)}
       </Badge>
     );
@@ -131,7 +132,7 @@ export const SingleSelectControl: React.FC<SingleSelectControlProps> = ({
                   </div>
 
                   {/* Badge */}
-                  <Badge variant={option.color || 'default'} size="xs">
+                  <Badge variant={parseBadgeVariant(option.color)} size="xs">
                     {uppercaseLabel(option.label)}
                   </Badge>
                 </button>

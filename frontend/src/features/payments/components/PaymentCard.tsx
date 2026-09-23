@@ -1,4 +1,6 @@
-import { Badge, Avatar, MobileEntityCard, EntityId } from '@/components';
+import { Avatar, MobileEntityCard, EntityId } from '@/components';
+import { OrderStatusBadge } from '@/features/orders';
+import { PaymentMethodBadge, PaymentStatusBadge } from './PaymentStatusBadge';
 import type { CardComponentProps } from '@/components';
 import { renderOrderTestsBlock } from '@/components/data-table';
 import { useTestNameLookup } from '@/features/catalog';
@@ -58,10 +60,10 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
       <div className="flex justify-between items-center mt-auto pt-space-3 gap-space-2">
         <div className={`${TYPE.meta} tabular-nums`}>{formatDateTime(displayDate)}</div>
         <div className="flex items-center gap-space-2 shrink-0">
-          {order.overallStatus && <Badge variant={order.overallStatus} size="xs" />}
-          <Badge variant={order.paymentStatus} size="xs" />
+          {order.overallStatus && <OrderStatusBadge status={order.overallStatus} size="xs" />}
+          <PaymentStatusBadge status={order.paymentStatus} size="xs" />
           {item.paymentMethod && order.paymentStatus !== 'unpaid' ? (
-            <Badge variant={item.paymentMethod} size="xs" />
+            <PaymentMethodBadge method={item.paymentMethod} size="xs" />
           ) : order.paymentStatus === 'unpaid' ? (
             <div onClick={e => e.stopPropagation()}>
               <PaymentButton order={order} size="sm" onPaymentSuccess={handlePaymentSuccess} />

@@ -1,4 +1,3 @@
-/* eslint-disable max-lines -- colocated HTTP service + React Query hooks */
 /**
  * Samples API service — pure HTTP, no React.
  */
