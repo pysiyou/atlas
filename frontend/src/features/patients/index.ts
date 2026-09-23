@@ -26,3 +26,7 @@ export {
 
 export { AgeFilter } from '@/components/filters/AgeFilter';
 export { PatientGenderBadge } from './components/PatientGenderBadge';
+export {
+  renderPatientId,
+  renderPatientNameWithAge,
+} from './utils/patientTableColumnRenders';

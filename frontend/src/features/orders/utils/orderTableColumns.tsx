@@ -16,7 +16,7 @@ import {
   renderOrderPatientName,
   renderOrderTestsBlock,
   renderOrderTotalPrice,
-} from '@/utils/tableColumnRenders';
+} from './orderTableColumnRenders';
 
 export interface OrderColumnAccessors<T> {
   getOrderId: (item: T) => number | string;

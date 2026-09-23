@@ -39,5 +39,10 @@ export {
 export { useOpenHistoricalLabRecord } from './hooks/useOpenHistoricalLabRecord';
 export { useLabWorkflowResponsiveCard } from './hooks/useLabWorkflowResponsiveCard';
 
+export { SampleCollectionDetailModal } from './collection/SampleCollectionDetailModal';
+export { ResultEntryDetailModal } from './entry/ResultEntryDetailModal';
+export { ResultValidationDetailModal } from './validation/ResultValidationDetailModal';
+export { EscalationResolutionModal } from './validation/EscalationResolutionModal';
+
 // Critical Values
 export { PendingCriticalValuesPanel } from './criticalValues/PendingCriticalValuesPanel';

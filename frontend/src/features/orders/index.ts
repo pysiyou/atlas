@@ -46,3 +46,13 @@ export {
   type OrderSharedColumnOptions,
   type OrderSharedColumnKey,
 } from './utils/orderTableColumns';
+export {
+  renderOrderId,
+  renderNavigableOrderId,
+  renderOrderPatientName,
+  renderOrderTestsBlock,
+  renderOrderTotalPrice,
+  renderOrderTotalPriceInline,
+  renderOrderDateCell,
+  type RenderOrderTestsBlockOptions,
+} from './utils/orderTableColumnRenders';
