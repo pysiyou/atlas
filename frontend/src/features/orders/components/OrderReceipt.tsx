@@ -173,11 +173,13 @@ function ReceiptItemRow({ test, detailed }: { test: OrderTest; detailed: boolean
         <span className={cn(`w-1 h-1 ${RADIUS.pill} bg-text-muted shrink-0 mt-space-1-5`)} />
         {detailed ? (
           <span className="flex flex-col min-w-0 flex-1">
-            <span className="text-text-secondary wrap-break-word">{test.testName || test.testCode || 'Test'}</span>
+            <span className={cn(TYPE.value, 'wrap-break-word font-normal')}>
+              {test.testName || test.testCode || 'Test'}
+            </span>
             {code}
           </span>
         ) : (
-          <span className="min-w-0 flex-1 text-text-secondary wrap-break-word">
+          <span className={cn(TYPE.value, 'min-w-0 flex-1 wrap-break-word font-normal')}>
             {test.testName || test.testCode || 'Test'}
             {code}
           </span>

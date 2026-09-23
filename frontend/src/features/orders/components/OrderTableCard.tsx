@@ -28,7 +28,12 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
       <MobileEntityCard.Header
         leading={
           hidePatientName ? (
-            <EntityId type="order" value={order.orderId} variant="block" />
+            <div className="min-w-0">
+              <EntityId type="order" value={order.orderId} variant="block" />
+              {order.orderDate ? (
+                <p className={`${TYPE.meta} mt-space-0-5 tabular-nums`}>{formatDateTime(order.orderDate)}</p>
+              ) : null}
+            </div>
           ) : (
             <Avatar
               primaryText={order.patientName || 'N/A'}
@@ -48,16 +53,26 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
               order.testCount != null && activeTests.length === 0 ? order.testCount : undefined,
             testCodes: activeTests.length === 0 ? order.testCodes : undefined,
             getTestName,
+            layout: hidePatientName ? 'namesFirst' : 'countFirst',
           })}
         </div>
       )}
 
       <div className="flex justify-between items-center mt-auto pt-space-3 gap-space-2">
-        <div className={`${TYPE.meta} tabular-nums`}>{formatDateTime(order.orderDate)}</div>
-        <div className="flex items-center gap-space-2 shrink-0">
-          {order.overallStatus && <OrderStatusBadge status={order.overallStatus} size="xs" />}
-          {order.paymentStatus && <PaymentStatusBadge status={order.paymentStatus} size="xs" />}
-        </div>
+        {hidePatientName ? (
+          <div className="flex items-center gap-space-2 shrink-0 flex-wrap">
+            {order.overallStatus && <OrderStatusBadge status={order.overallStatus} size="xs" />}
+            {order.paymentStatus && <PaymentStatusBadge status={order.paymentStatus} size="xs" />}
+          </div>
+        ) : (
+          <>
+            <div className={`${TYPE.meta} tabular-nums`}>{formatDateTime(order.orderDate)}</div>
+            <div className="flex items-center gap-space-2 shrink-0">
+              {order.overallStatus && <OrderStatusBadge status={order.overallStatus} size="xs" />}
+              {order.paymentStatus && <PaymentStatusBadge status={order.paymentStatus} size="xs" />}
+            </div>
+          </>
+        )}
       </div>
     </MobileEntityCard>
   );

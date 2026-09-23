@@ -1,12 +1,12 @@
 /**
- * PatientOrdersTable – reuses order list table config for identical columns/card.
+ * PatientOrdersTable – related orders on patient detail (columns tuned for that panel).
  */
 
 import React, { useMemo } from 'react';
 import { DataTable, EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components';
 import type { Order } from '@/types/order';
 import { useTestNameLookup } from '@/features/catalog';
-import { createOrderTableConfig } from '@/features/orders/config/OrderTable.config';
+import { createPatientRelatedOrdersTableConfig } from '../config/PatientOrdersTable.config';
 export interface PatientOrdersTableProps {
   orders: Order[];
   onOrderClick: (orderId: string) => void;
@@ -24,7 +24,7 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({ orders, 
   const { getTestName } = useTestNameLookup();
 
   const viewConfig = useMemo(
-    () => createOrderTableConfig(() => {}, () => '', getTestName, { hidePatientName: true }),
+    () => createPatientRelatedOrdersTableConfig(getTestName),
     [getTestName]
   );
 
