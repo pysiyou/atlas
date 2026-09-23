@@ -50,7 +50,7 @@ def enrich_payment(payment: Payment, order: Order | None) -> dict:
         "amount": payment.amount,
         "paymentMethod": payment.paymentMethod,
         "paidAt": payment.paidAt,
-        "receivedBy": payment.receivedBy,
+        "createdBy": payment.createdBy,
         "receiptGenerated": payment.receiptGenerated,
         "notes": payment.notes,
         "orderTotalPrice": order.totalPrice if order else None,
@@ -140,7 +140,7 @@ class PaymentService:
             amount=payment_data.amount,
             paymentMethod=payment_data.paymentMethod,
             paidAt=datetime.now(UTC),
-            receivedBy=str(user_id),
+            createdBy=str(user_id),
             receiptGenerated=False,
             notes=payment_data.notes if payment_data.notes is not None else "",
         )
@@ -669,7 +669,7 @@ class OrderService:
                 amount=amount_paid,
                 paymentMethod=PaymentMethod.CASH,
                 paidAt=datetime.now(UTC),
-                receivedBy=str(user_id),
+                createdBy=str(user_id),
                 receiptGenerated=False,
                 notes="",
             )

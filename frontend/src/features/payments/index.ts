@@ -20,6 +20,8 @@ export type {
 } from './api/payments';
 
 export { PaymentPopover } from './components/PaymentPopover';
+export { PaymentDetailModal } from './components/PaymentDetailModal';
+export type { OrderPaymentView } from './types';
 export { PaymentMethodSelector } from './components/PaymentMethodSelector';
 export type { PaymentMethodSelectorProps } from './components/PaymentMethodSelector';
 export {

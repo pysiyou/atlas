@@ -4,7 +4,7 @@ import { Icon } from '@/components/primitives/Icon';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 import { inputBase } from '@/components/inputs/inputStyles';
-import { CONTROL, RADIUS, TYPE } from '@/components/theme/recipes';
+import { CONTROL, RADIUS, TABLE_TYPE } from '@/components/theme/recipes';
 
 interface PaginationProps {
   currentPage: number;
@@ -59,7 +59,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   }, [currentPage, totalPages]);
 
   const getPageButtonClasses = (isActive: boolean) => {
-    const base = `min-w-[26px] h-6 px-space-1-5 text-xxs font-normal ${RADIUS.field} transition-colors ${CONTROL.focusVisibleTight}`;
+    const base = `min-w-[26px] h-6 px-space-1-5 text-base font-normal ${RADIUS.field} transition-colors ${CONTROL.focusVisibleTight}`;
     return isActive
       ? `${base} bg-brand text-on-brand`
       : `${base} text-text-primary border border-border-default bg-surface hover:border-border-hover hover:bg-surface-hover`;
@@ -71,13 +71,13 @@ export const Pagination: React.FC<PaginationProps> = ({
     <div className="flex min-h-[2.75rem] shrink-0 flex-wrap items-center justify-between gap-x-space-3 gap-y-space-2 border-t border-border-default bg-surface px-space-3 py-space-2">
       <div className="flex min-w-0 flex-wrap items-center gap-x-space-3 gap-y-space-1">
         <div className="flex items-center gap-space-1-5 whitespace-nowrap">
-          <span className={`${TYPE.caption} text-text-secondary`}>Rows per page</span>
+          <span className={`${TABLE_TYPE.caption} text-text-secondary`}>Rows per page</span>
           <select
             value={pageSize}
             onChange={e => onPageSizeChange(Number(e.target.value))}
             className={cn(
               inputBase,
-              'h-6 w-12 min-h-0 cursor-pointer appearance-none pt-space-0-5 pb-0 pl-space-5 pr-space-5 text-center text-xxs leading-5'
+              'h-6 w-12 min-h-0 cursor-pointer appearance-none pt-space-0-5 pb-0 pl-space-5 pr-space-5 text-center text-base leading-5'
             )}
             aria-label="Rows per page"
           >
@@ -88,7 +88,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             ))}
           </select>
         </div>
-        <span className={`${TYPE.caption} tabular-nums text-text-secondary`}>
+        <span className={`${TABLE_TYPE.caption} tabular-nums text-text-secondary`}>
           {startItem}–{endItem} of {totalItems}
         </span>
       </div>
@@ -108,7 +108,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           {pageNumbers.map((page, index) => (
             <React.Fragment key={index}>
               {page === '...' ? (
-                <span className="min-w-[20px] text-center text-xxs text-text-disabled" aria-hidden>
+                <span className="min-w-[20px] text-center text-base text-text-disabled" aria-hidden>
                   …
                 </span>
               ) : (

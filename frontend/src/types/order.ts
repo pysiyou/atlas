@@ -141,7 +141,7 @@ export interface Order {
   paymentMethod?: string; // How payment was made
 
   // Metadata
-  createdBy: string; // Backend returns string user ID
+  createdBy: string; // Logged-in user id at registration
   createdAt: string;
   updatedAt: string;
 }

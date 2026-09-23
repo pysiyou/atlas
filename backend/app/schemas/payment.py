@@ -22,7 +22,7 @@ class PaymentResponse(BaseModel):
     amount: float
     paymentMethod: PaymentMethod
     paidAt: datetime
-    receivedBy: str
+    createdBy: str
     receiptGenerated: bool
     notes: str | None = None
 

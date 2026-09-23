@@ -35,7 +35,7 @@ export function TableHeader<T>({
           <div
             key={column.key}
             role="columnheader"
-            className={`${HEADER_PADDING[variant]} text-xxs flex items-center justify-start gap-space-2 whitespace-nowrap ${isSortable ? 'cursor-pointer hover:bg-surface-hover select-none' : ''} ${isActiveSort ? 'text-text-primary bg-surface-selected' : ''} ${column.headerClassName || ''}`.trim()}
+            className={`${HEADER_PADDING[variant]} ${TEXT_SIZE[variant]} flex items-center justify-start gap-space-2 whitespace-nowrap ${isSortable ? 'cursor-pointer hover:bg-surface-hover select-none' : ''} ${isActiveSort ? 'text-text-primary bg-surface-selected' : ''} ${column.headerClassName || ''}`.trim()}
             style={style}
             onClick={() => isSortable && onSort(column.key)}
             aria-sort={

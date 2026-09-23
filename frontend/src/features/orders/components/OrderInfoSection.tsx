@@ -10,6 +10,7 @@ import { OrderPriorityBadge, OrderStatusBadge } from './OrderDomainBadges';
 import { DetailField } from '@/components/display/DetailField';
 import { formatDateTime } from '@/utils/date';
 import { getDataFieldIcon, getPriorityIcon, getOrderStatusIcon } from '@/config/icons';
+import { useUserLookup } from '@/lib/api/users';
 
 /** Responsive field layout: two columns on narrow full-width panels, single column in multi-column grids. */
 export const ORDER_DETAIL_INFO_FIELDS_LAYOUT =
@@ -20,7 +21,10 @@ export interface OrderInfoSectionProps {
 }
 
 export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order }) => {
+  const { getUserName } = useUserLookup();
   const containerClass = ORDER_DETAIL_INFO_FIELDS_LAYOUT;
+  const createdById = order.createdBy?.trim() || null;
+  const createdByName = createdById ? getUserName(createdById) : null;
 
   return (
     <div className={containerClass}>
@@ -52,6 +56,14 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order }) => 
         value={<OrderStatusBadge status={order.overallStatus} size="xs" />}
         orientation="vertical"
       />
+      {createdByName && (
+        <DetailField
+          icon={getDataFieldIcon('user')}
+          label="Created By"
+          value={createdByName}
+          orientation="vertical"
+        />
+      )}
       {order.referringPhysician && (
         <DetailField
           icon={getDataFieldIcon('referringPhysician')}

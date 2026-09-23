@@ -17,7 +17,7 @@ export const paymentSchema = z.object({
   amount: z.number().min(0),
   paymentMethod: paymentMethodSchema,
   paidAt: dateStringSchema, // Uses dateStringSchema which accepts ISO datetime strings
-  receivedBy: z.string(), // Backend returns string user ID, not number
+  createdBy: z.string(), // Backend returns string user ID
   receiptGenerated: z.boolean(),
   notes: z.string().nullable().optional(), // Backend allows null
   // Computed fields from relationships

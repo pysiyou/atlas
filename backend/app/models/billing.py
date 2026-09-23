@@ -56,7 +56,7 @@ class Payment(Base):
     paymentMethod = Column("payment_method", contract_enum(PaymentMethod), nullable=False)
 
     paidAt = Column("paid_at", DateTime(timezone=True), nullable=False)
-    receivedBy = Column("received_by", String, nullable=False)
+    createdBy = Column("created_by", String, nullable=False)
     receiptGenerated = Column(
         "receipt_generated", Boolean, default=False, server_default=text("false")
     )
