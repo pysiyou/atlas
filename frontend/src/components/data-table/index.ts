@@ -4,22 +4,6 @@
 
 export { DataTable, CardGridView } from './DataTable';
 export {
-  renderPatientId,
-  renderOrderId,
-  renderPatientNameBlock,
-  renderPatientNameWithAge,
-  renderPatientNameWithId,
-  renderOrderPatientName,
-  renderOrderTestsBlock,
-  renderOrderTotalPrice,
-  renderOrderTotalPriceInline,
-  renderContactBlock,
-  renderDateCell,
-  renderDateTimeCell,
-  renderOrderDateCell,
-  renderNavigableOrderId,
-} from '@/utils/tableColumnRenders';
-export {
   createColumn,
   createIdColumn,
   createBadgeColumn,

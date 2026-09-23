@@ -2,7 +2,7 @@ import { Avatar, MobileEntityCard, EntityId } from '@/components';
 import type { CardComponentProps } from '@/components';
 import { OrderStatusBadge } from './OrderDomainBadges';
 import { PaymentStatusBadge } from '@/features/payments';
-import { renderOrderTestsBlock } from '@/components/data-table';
+import { renderOrderTestsBlock } from '@/features/orders';
 import { useTestNameLookup } from '@/features/catalog';
 import { formatCurrency, formatDateTime } from '@/utils';
 import { getActiveTests } from '../utils/orderCalculator';

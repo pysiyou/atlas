@@ -2,13 +2,13 @@ import type { NavigateFunction } from 'react-router-dom';
 import { getActiveTests } from '@/features/orders';
 import { PaymentMethodBadge } from '../components/PaymentStatusBadge';
 import type { TableViewConfig } from '@/components';
+import { buildViews } from '@/components/data-table';
 import {
-  buildViews,
+  createOrderSharedColumns,
   renderNavigableOrderId,
   renderOrderDateCell,
   renderOrderTotalPriceInline,
-} from '@/components/data-table';
-import { createOrderSharedColumns } from '@/features/orders';
+} from '@/features/orders';
 import { PaymentButton } from '../components/PaymentButton';
 import { PaymentCard } from '../components/PaymentCard';
 import type { OrderPaymentView } from '../types';

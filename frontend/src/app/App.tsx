@@ -38,8 +38,8 @@ function lazyNamed(
 }
 
 const Dashboard = lazyNamed(
-  () => import('@/features/dashboard/pages/DashboardPage'),
-  'Dashboard'
+  () => import('@/features/dashboard'),
+  'DashboardPage'
 );
 const Patients = lazyNamed(
   () => import('@/features/patients/pages/PatientsPage'),
@@ -55,7 +55,7 @@ const Payments = lazyNamed(
   () => import('@/features/payments/pages/PaymentList'),
   'PaymentList'
 );
-const Reports = lazyNamed(() => import('@/features/reports/pages/ReportsPage'), 'Reports');
+const Reports = lazyNamed(() => import('@/features/reports'), 'ReportsPage');
 interface ProtectedRouteConfig {
   path: string;
   element: LazyPage;

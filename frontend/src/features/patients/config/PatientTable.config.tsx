@@ -1,13 +1,15 @@
 import type { NavigateFunction } from 'react-router-dom';
 import { PatientGenderBadge } from '../components/PatientGenderBadge';
 import type { TableViewConfig } from '@/components';
+import { buildViews } from '@/components/data-table';
 import {
-  buildViews,
   renderContactBlock,
   renderDateTimeCell,
+} from '@/utils/tableColumnRenders';
+import {
   renderPatientId,
   renderPatientNameWithAge,
-} from '@/components/data-table';
+} from '@/features/patients';
 import { formatDate, formatDateTime } from '@/utils';
 import type { PatientContext } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';

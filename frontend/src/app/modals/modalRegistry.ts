@@ -7,10 +7,12 @@
 import type { ComponentType } from 'react';
 import { ModalType } from '@/lib/context/ModalContext';
 import type { ModalPropsMap, BaseModalProps } from '@/lib/context/modalTypes';
-import { SampleCollectionDetailModal } from '@/features/lab/collection/SampleCollectionDetailModal';
-import { ResultEntryDetailModal } from '@/features/lab/entry/ResultEntryDetailModal';
-import { ResultValidationDetailModal } from '@/features/lab/validation/ResultValidationDetailModal';
-import { EscalationResolutionModal } from '@/features/lab/validation/EscalationResolutionModal';
+import {
+  SampleCollectionDetailModal,
+  ResultEntryDetailModal,
+  ResultValidationDetailModal,
+  EscalationResolutionModal,
+} from '@/features/lab';
 import { OrderUpsertModal } from '@/features/orders';
 
 /**
