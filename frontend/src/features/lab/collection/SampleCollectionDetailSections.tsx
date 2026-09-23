@@ -13,6 +13,7 @@ import { formatVolume } from '@/features/lab/utils';
 import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 import { DetailGrid, type DetailGridSectionConfig } from '../components/LabWorkflowDetailModal';
 import { displayId, formatDateTime } from '@/utils';
+import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import { SampleCollectionRequirementsSection } from './SampleCollectionRequirementsSection';
 import { formatRejectionReasons } from '../utils/labFormatters';
 import { ICONS } from '@/config/icons';
@@ -113,7 +114,9 @@ export const buildCollectionDetailGridSections = ({
       fields: [
         {
           label: 'Priority',
-          badge: sample.priority ? { value: sample.priority, variant: sample.priority } : undefined,
+          badge: sample.priority
+            ? { value: sample.priority, variant: resolveStatusBadgeColor(sample.priority) }
+            : undefined,
         },
         {
           label: 'Required Container Types',

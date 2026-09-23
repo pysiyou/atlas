@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
 
-import { actionButtonPreset, Button, IconButton } from '@/components/primitives';
+import { Icon } from '@/components/primitives/Icon';
 import { cn } from '@/utils';
+import { ICONS } from '@/config/icons';
 import { inputBase } from '@/components/inputs/inputStyles';
 import { CONTROL, RADIUS, TYPE } from '@/components/theme/recipes';
 
@@ -57,9 +58,18 @@ export const Pagination: React.FC<PaginationProps> = ({
     return rangeWithDots;
   }, [currentPage, totalPages]);
 
+  const getPageButtonClasses = (isActive: boolean) => {
+    const base = `min-w-[26px] h-6 px-space-1-5 text-xxs font-normal ${RADIUS.field} transition-colors ${CONTROL.focusVisibleTight}`;
+    return isActive
+      ? `${base} bg-brand text-on-brand`
+      : `${base} text-text-primary border border-border-default bg-surface hover:border-border-hover hover:bg-surface-hover`;
+  };
+
+  const navButtonClass = `w-6 h-6 flex shrink-0 items-center justify-center ${RADIUS.field} border border-transparent text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary ${CONTROL.focusVisibleTight} disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-text-secondary`;
+
   return (
-    <div className="flex items-center justify-between gap-space-3 px-space-3 py-space-2 border-t border-border-default bg-surface">
-      <div className="flex items-center gap-space-3">
+    <div className="flex min-h-[2.75rem] shrink-0 flex-wrap items-center justify-between gap-x-space-3 gap-y-space-2 border-t border-border-default bg-surface px-space-3 py-space-2">
+      <div className="flex min-w-0 flex-wrap items-center gap-x-space-3 gap-y-space-1">
         <div className="flex items-center gap-space-1-5 whitespace-nowrap">
           <span className={`${TYPE.caption} text-text-secondary`}>Rows per page</span>
           <select
@@ -67,7 +77,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             onChange={e => onPageSizeChange(Number(e.target.value))}
             className={cn(
               inputBase,
-              'cursor-pointer h-6 w-12 min-h-0 pt-space-0-5 pb-0 leading-5 pl-space-5 pr-space-5 text-center text-xxs appearance-none'
+              'h-6 w-12 min-h-0 cursor-pointer appearance-none pt-space-0-5 pb-0 pl-space-5 pr-space-5 text-center text-xxs leading-5'
             )}
             aria-label="Rows per page"
           >
@@ -78,61 +88,53 @@ export const Pagination: React.FC<PaginationProps> = ({
             ))}
           </select>
         </div>
-        <span className={`${TYPE.caption} text-text-secondary tabular-nums`}>
+        <span className={`${TYPE.caption} tabular-nums text-text-secondary`}>
           {startItem}–{endItem} of {totalItems}
         </span>
       </div>
 
-      <div className="flex items-center gap-space-0-5">
-        <IconButton
-          {...actionButtonPreset('previous')}
-          size="sm"
-          shape="square"
+      <div className="flex min-w-0 shrink-0 items-center gap-space-0-5">
+        <button
+          type="button"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
+          className={navButtonClass}
           aria-label="Previous page"
-        />
+        >
+          <Icon name={ICONS.actions.chevronLeft} className="h-3.5 w-3.5" />
+        </button>
 
-        <div className="flex items-center gap-space-0-5 mx-space-0-5">
+        <div className="mx-space-0-5 flex max-w-full items-center gap-space-0-5 overflow-x-auto">
           {pageNumbers.map((page, index) => (
             <React.Fragment key={index}>
               {page === '...' ? (
-                <span
-                  className="min-w-[20px] text-center text-xxs text-text-disabled"
-                  aria-hidden
-                >
+                <span className="min-w-[20px] text-center text-xxs text-text-disabled" aria-hidden>
                   …
                 </span>
               ) : (
-                <Button
+                <button
                   type="button"
-                  variant={page === currentPage ? 'primary' : 'outline'}
-                  size="sm"
-                  layout="text"
                   onClick={() => onPageChange(page as number)}
-                  className={cn(
-                    `min-w-[26px] h-6 px-space-1-5 text-xxs font-normal ${RADIUS.field}`,
-                    page !== currentPage && 'border-border-default bg-surface',
-                    CONTROL.focusVisibleTight,
-                  )}
+                  className={getPageButtonClasses(page === currentPage)}
                   aria-label={page === currentPage ? `Page ${page}, current` : `Go to page ${page}`}
                   aria-current={page === currentPage ? 'page' : undefined}
                 >
                   {page}
-                </Button>
+                </button>
               )}
             </React.Fragment>
           ))}
         </div>
 
-        <IconButton
-          {...actionButtonPreset('next')}
-          size="sm"
-          shape="square"
+        <button
+          type="button"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
+          className={navButtonClass}
           aria-label="Next page"
-        />
+        >
+          <Icon name={ICONS.actions.chevronRight} className="h-3.5 w-3.5" />
+        </button>
       </div>
     </div>
   );

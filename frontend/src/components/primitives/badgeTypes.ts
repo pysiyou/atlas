@@ -17,4 +17,4 @@ export type BadgeColor =
   | 'cyan'
   | 'muted';
 
-export type BadgeVariant = BadgeColor | (string & {});
+export type BadgeVariant = BadgeColor | 'default' | `container-${string}`;

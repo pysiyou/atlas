@@ -12,7 +12,6 @@ import { useSampleLookup } from '@/features/lab';
 import { getRegisteredModal, initializeModalRegistry } from './modalRegistry';
 import { logger } from '@/utils/logger';
 
-// Initialize modal registry on module load
 initializeModalRegistry();
 
 /**

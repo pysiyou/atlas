@@ -14,7 +14,6 @@ import {
   resolveColor,
   type BadgeVariant,
 } from './badgeStyles';
-import { STATUS_BADGE_DISPLAY_LABELS, resolveStatusBadgeLabel } from '@/utils/statusBadge';
 
 export type { BadgeColor, BadgeVariant } from './badgeStyles';
 
@@ -46,7 +45,7 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   icon?: IconName | React.ReactNode;
   dot?: boolean;
   uppercase?: boolean;
-  /** Explicit label; when omitted, children or status display labels may apply. */
+  /** Explicit label; when omitted, uses `children` only. */
   label?: React.ReactNode;
 }
 
@@ -70,14 +69,7 @@ export const Badge: React.FC<BadgeProps> = ({
   const containerStyle = isContainer ? CONTAINER_STYLES[normalizedVariant] : null;
   const color = resolveColor(normalizedVariant);
   const { className: colorClass, dotClassName } = getColorStyles(color, appearance);
-  const content =
-    label ??
-    children ??
-    (variant !== 'neutral' && variant !== 'default'
-      ? (STATUS_BADGE_DISPLAY_LABELS[normalizedVariant] ??
-        resolveStatusBadgeLabel(normalizedVariant) ??
-        String(variant).replace(/-/g, ' ').toUpperCase())
-      : null);
+  const content = label ?? children ?? null;
 
   const iconElement = !icon
     ? null

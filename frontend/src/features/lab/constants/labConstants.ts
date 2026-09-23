@@ -2,7 +2,7 @@
 import { GENERATED_LAB_CONSTANTS } from '@/types/generated/labConstants';
 import { ROUTES } from '@/config';
 import type { TestStatus } from '@/types/enums';
-import type { BadgeVariant } from '@/components';
+import type { BadgeColor } from '@/components/primitives/badgeTypes';
 
 export type LabWorkflowStage = 'collection' | 'entry' | 'validation';
 
@@ -166,7 +166,7 @@ export interface LabLaneVisual {
   fill: string;
   bar: string;
   text: string;
-  badgeVariant: BadgeVariant;
+  badgeVariant: BadgeColor;
 }
 
 const LANE_VISUAL: Record<LabTimelineLane, LabLaneVisual> = {
@@ -174,7 +174,7 @@ const LANE_VISUAL: Record<LabTimelineLane, LabLaneVisual> = {
     fill: 'fill-workflow-collection-fg',
     bar: 'bg-workflow-collection-fg',
     text: 'text-workflow-collection-fg',
-    badgeVariant: 'collected',
+    badgeVariant: 'info',
   },
   results: {
     fill: 'fill-workflow-entry-fg',
@@ -186,13 +186,13 @@ const LANE_VISUAL: Record<LabTimelineLane, LabLaneVisual> = {
     fill: 'fill-workflow-validation-fg',
     bar: 'bg-workflow-validation-fg',
     text: 'text-workflow-validation-fg',
-    badgeVariant: 'validated',
+    badgeVariant: 'success',
   },
   escalation: {
     fill: 'fill-workflow-escalation-fg',
     bar: 'bg-workflow-escalation-fg',
     text: 'text-workflow-escalation-fg',
-    badgeVariant: 'escalated',
+    badgeVariant: 'danger',
   },
   quality: {
     fill: 'fill-workflow-quality-fg',
@@ -210,7 +210,7 @@ const LANE_VISUAL: Record<LabTimelineLane, LabLaneVisual> = {
     fill: 'fill-workflow-composition-fg',
     bar: 'bg-workflow-composition-fg',
     text: 'text-workflow-composition-fg',
-    badgeVariant: 'pending',
+    badgeVariant: 'neutral',
   },
 };
 

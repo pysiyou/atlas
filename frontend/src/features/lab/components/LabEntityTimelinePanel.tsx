@@ -6,7 +6,8 @@ import { EMPTY_COPY, Panel } from '@/components';
 import { Skeleton } from '@/components/loaders/Skeleton';
 import { useEntityTimeline } from '../api/audit';
 import { getFeedback } from '@/utils/feedback';
-import { ENTITY_MODAL_TIMELINE_CATEGORIES, Timeline } from '@/features/timeline';
+import { ENTITY_MODAL_TIMELINE_CATEGORIES, Timeline, TIMELINE_STYLES } from '@/features/timeline';
+import { TYPE } from '@/components/theme/recipes';
 
 interface LabEntityTimelinePanelProps {
   entityType: 'sample' | 'order_test';
@@ -42,9 +43,9 @@ export const LabEntityTimelinePanel: React.FC<LabEntityTimelinePanelProps> = ({
           ))}
         </div>
       ) : isError ? (
-        <div className="text-xs text-text-secondary">
+        <div className={TYPE.label}>
           {getFeedback('lab.history.panel.loadFailed').title}{' '}
-          <button type="button" className="text-brand hover:underline" onClick={() => refetch()}>
+          <button type="button" className={TIMELINE_STYLES.retryLink} onClick={() => refetch()}>
             Retry
           </button>
         </div>

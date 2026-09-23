@@ -19,4 +19,5 @@ export {
 } from './timelineFeedCopy';
 export { TIMELINE_STYLES } from './timelineStyles';
 export { formatTimelineEvent } from './timelineEventRegistry';
+export { formatStatusLabel } from './timelineDetails';
 export { getCategoryVisual } from './timelineVisuals';

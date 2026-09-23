@@ -22,6 +22,7 @@ import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { useOrderTestQueueState } from '../hooks';
 import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { ICONS } from '@/config/icons';
+import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import { useTestCatalog } from '@/features/catalog';
 import { LabEntityTimelinePanel } from '../components/LabEntityTimelinePanel';
 import { labModalSubtitle } from '../components/LabWorkflowModalSubtitles';
@@ -155,13 +156,13 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
       blockedLabel={workItem.blockedReason ? workItem.label : undefined}
       trailing={
         <>
-          <Badge size={LAB_CARD_BADGE_SIZE} variant="default" className="text-text-secondary">
+          <Badge size={LAB_CARD_BADGE_SIZE} variant="neutral" className="text-text-secondary">
             {filledCount} / {totalParams} parameters
           </Badge>
           {turnaroundTime && (
             <Badge
               size={LAB_CARD_BADGE_SIZE}
-              variant="default"
+              variant="neutral"
               className="text-text-secondary flex items-center gap-space-1-5"
             >
               <Icon name={ICONS.dataFields.time} className="w-3 h-3 text-text-tertiary" />
@@ -292,7 +293,7 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
               {
                 label: 'Sample Type',
                 badge: test.sampleType
-                  ? { value: test.sampleType, variant: test.sampleType }
+                  ? { value: test.sampleType, variant: resolveStatusBadgeColor(test.sampleType) }
                   : undefined,
               },
               {

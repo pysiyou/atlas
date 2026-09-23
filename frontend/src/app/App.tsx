@@ -15,8 +15,8 @@ import { TOAST_DEFAULT_DURATION_MS } from '@/components/overlays/Toast';
 import { InitialDataPreload } from '@/app/InitialDataPreload';
 import { ProtectedLayout } from '@/app/ProtectedLayout';
 import { PublicRoute } from '@/app/PublicRoute';
-import { LoginPage } from '@/features/auth/LoginPage';
-import { ModalRenderer } from '@/components';
+import { LoginPage } from '@/features/auth';
+import { ModalRenderer } from '@/app/modals/ModalRenderer';
 import { ROUTES } from '@/config';
 
 type LazyPage = LazyExoticComponent<ComponentType>;

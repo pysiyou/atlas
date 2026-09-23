@@ -130,3 +130,10 @@ export function resolveStatusBadgeLabel(status: string): string | undefined {
   const key = status.toLowerCase();
   return STATUS_BADGE_DISPLAY_LABELS[key];
 }
+
+/** Display text for domain status badges (explicit map, else normalized uppercase). */
+export function formatStatusBadgeLabel(status: string): string {
+  const explicit = resolveStatusBadgeLabel(status);
+  if (explicit) return explicit;
+  return String(status).replace(/-/g, ' ').toUpperCase();
+}

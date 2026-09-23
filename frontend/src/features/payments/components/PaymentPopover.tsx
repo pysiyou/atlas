@@ -11,10 +11,10 @@ import {
   Button,
   Icon,
   Alert,
-  Badge,
   FooterInfo,
   EntityId,
 } from '@/components';
+import { PaymentStatusBadge } from './PaymentStatusBadge';
 import { PaymentMethodSelector } from './PaymentMethodSelector';
 import { PopoverFormChrome } from '@/components';
 import { cn, formatCurrency } from '@/utils';
@@ -265,7 +265,7 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
 
   const isPaid = order.paymentStatus === 'paid' || (!paymentsLoading && remainingAmount <= 0);
   if (isPaid && trigger == null) {
-    return <Badge variant="paid" size="xs" />;
+    return <PaymentStatusBadge status="paid" size="xs" />;
   }
 
   const defaultTrigger = (

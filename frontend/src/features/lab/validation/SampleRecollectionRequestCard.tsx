@@ -11,6 +11,7 @@ import { compactAuditLines } from '../constants/labWorkflowAuditLines';
 import { LabMobileCardHeader } from '../components/LabWorkflowMobileHeader';
 import { LAB_CARD_BADGE_SIZE, LAB_CARD_TYPOGRAPHY, LAB_MOBILE_CARD } from '../utils/labStyles';
 import { AttemptIndicator } from '../components/LabAttemptIndicators';
+import { SampleTypeBadge } from '../components/LabDomainBadges';
 import { BlockedReasonBadge } from '../components/LabResultStatusBadges';
 import { LAB_CONFIG } from '@/features/lab/constants';
 import type { RecollectionRequestSummary } from '@/types/lab-operations';
@@ -54,7 +55,7 @@ function RecollectionRequestCardDesktop({
     <>
       <BlockedReasonBadge label="Recollection approval" size={LAB_CARD_BADGE_SIZE} showIcon={false} />
       {request.sampleType && (
-        <Badge variant={request.sampleType as 'blood' | 'urine' | 'other'} size={LAB_CARD_BADGE_SIZE} />
+        <SampleTypeBadge sampleType={request.sampleType} size={LAB_CARD_BADGE_SIZE} />
       )}
       {request.requiresSupervisorOverride && (
         <Badge variant="danger" size={LAB_CARD_BADGE_SIZE}>Limit override</Badge>
@@ -175,7 +176,7 @@ function RecollectionRequestCardMobile({
     <>
       <BlockedReasonBadge label="Recollection approval" size={LAB_CARD_BADGE_SIZE} showIcon={false} />
       {request.sampleType && (
-        <Badge variant={request.sampleType as 'blood' | 'urine' | 'other'} size={LAB_CARD_BADGE_SIZE} />
+        <SampleTypeBadge sampleType={request.sampleType} size={LAB_CARD_BADGE_SIZE} />
       )}
       {request.requiresSupervisorOverride && (
         <Badge variant="danger" size={LAB_CARD_BADGE_SIZE}>

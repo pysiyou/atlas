@@ -4,7 +4,8 @@
 /* eslint-disable max-lines -- single module: shared view-model + mobile/desktop */
 
 import React, { useMemo } from 'react';
-import { actionButtonPreset, Badge, Card, IconButton } from '@/components';
+import { actionButtonPreset, Card, IconButton } from '@/components';
+import { SampleStatusBadge } from '../components/LabDomainBadges';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { useTestCatalog } from '@/features/catalog';
 import { usePatientNameLookup } from '@/features/patients';
@@ -250,11 +251,11 @@ function CollectionCardMobile({
   const testCount = testNames.length;
 
   const statusAside = isPending ? (
-    <Badge variant="pending" size="xs" />
+    <SampleStatusBadge status="pending" size="xs" />
   ) : isCollected ? (
-    <Badge variant="collected" size="xs" />
+    <SampleStatusBadge status="collected" size="xs" />
   ) : isRejected ? (
-    <Badge variant="rejected" size="xs" />
+    <SampleStatusBadge status="rejected" size="xs" />
   ) : null;
 
   const actions = isPending ? (

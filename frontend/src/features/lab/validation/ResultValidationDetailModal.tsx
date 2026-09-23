@@ -31,6 +31,7 @@ import { useOrderTestQueueState } from '../hooks';
 import { useSampleRejectionDisplay } from '../hooks/useSampleRejectionDisplay';
 import { SampleRejectedBanner } from '../components/SampleRejectedBanner';
 import type { TestWithContext } from '@/types';
+import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import { LabEntityTimelinePanel } from '../components/LabEntityTimelinePanel';
 import { labModalSubtitle } from '../components/LabWorkflowModalSubtitles';
@@ -214,7 +215,7 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
               {
                 label: 'Sample Type',
                 badge: test.sampleType
-                  ? { value: test.sampleType, variant: test.sampleType }
+                  ? { value: test.sampleType, variant: resolveStatusBadgeColor(test.sampleType) }
                   : undefined,
               },
             ],

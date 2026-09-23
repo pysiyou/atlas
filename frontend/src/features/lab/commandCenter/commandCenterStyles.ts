@@ -5,20 +5,6 @@ import { PANEL_SHELL } from '@/components/theme/recipes';
 import { CONTROL, PANEL, RADIUS, SHADOW, SPACING, TONE, TYPE } from '@/components/theme/recipes';
 export type CommandCenterKpiTone = 'brand' | 'success' | 'warning' | 'danger' | 'neutral';
 
-export const COMMAND_CENTER_TEXT = {
-  panelTitle: 'text-text-primary',
-  panelMeta: 'text-text-tertiary',
-  sectionTitle: 'text-text-tertiary',
-  sectionAside: 'text-text-tertiary',
-  summary: 'text-text-tertiary',
-  label: 'text-text-primary',
-  value: 'text-text-primary',
-  detail: 'text-text-tertiary',
-  centerLabel: 'text-text-primary',
-  centerDetail: 'text-text-tertiary',
-  empty: 'text-text-tertiary',
-} as const;
-
 export const COMMAND_CENTER_PANEL = {
   ...PANEL_SHELL.page,
   page: 'flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-surface-page',

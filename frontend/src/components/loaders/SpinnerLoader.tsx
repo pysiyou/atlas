@@ -5,6 +5,7 @@
  */
 
 import React, { useMemo } from 'react';
+import { RADIUS } from '@/components/theme/recipes';
 import { cn } from '@/utils/cn';
 
 interface SizeConfig {
@@ -69,11 +70,12 @@ export const SpinnerLoader: React.FC<SpinnerLoaderProps> = ({ size = 'md', class
       className={cn('relative inline-flex shrink-0 items-center justify-center text-current', className)}
       style={{ width: diameter, height: diameter }}
     >
-      <div aria-hidden className="absolute inset-0 rounded-full" style={trackStyle} />
+      <div aria-hidden className={cn('absolute inset-0', RADIUS.pill)} style={trackStyle} />
       <div
         aria-hidden
         className={cn(
-          'absolute inset-0 rounded-full',
+          'absolute inset-0',
+          RADIUS.pill,
           'animate-spin motion-reduce:animate-none motion-reduce:opacity-90',
           '[animation-duration:1.05s] [animation-timing-function:cubic-bezier(0.4,0,0.2,1)]',
         )}

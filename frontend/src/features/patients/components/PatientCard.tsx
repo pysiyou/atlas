@@ -1,5 +1,6 @@
 import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { actionButtonPreset, Badge, Avatar, IconButton, MobileEntityCard, EntityId } from '@/components';
+import { actionButtonPreset, Avatar, IconButton, MobileEntityCard, EntityId } from '@/components';
+import { PatientGenderBadge } from './PatientGenderBadge';
 import type { CardComponentProps } from '@/components';
 import { calculateAge, formatPhoneNumber } from '@/utils';
 import type { Patient } from '@/types';
@@ -35,7 +36,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
             size="xs"
           />
         }
-        trailing={<Badge variant={patient.gender} size="xs" />}
+        trailing={<PatientGenderBadge gender={patient.gender} size="xs" />}
       />
 
       {/* Contact info: Age, Phone, email */}

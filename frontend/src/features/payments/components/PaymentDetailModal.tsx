@@ -4,21 +4,19 @@
  * Modal that uses the same BillingSummarySection as order details, plus payment actions when unpaid.
  */
 import React, { useState, useCallback } from 'react';
-import { actionButtonPreset, Modal,
-  Panel,
+import {
+  actionButtonPreset,
+  Modal,
   Icon,
   Button,
-  Alert,
   FooterInfo,
   ErrorBoundary,
   DialogFooter,
   EntityId,
-  SkeletonText, } from '@/components';
-import { PaymentMethodSelector } from './PaymentMethodSelector';
-import { cn, formatCurrency } from '@/utils';
-import { BillingSummarySection } from '@/features/orders';
+} from '@/components';
+import { PaymentDetailModalBody } from './PaymentDetailModalBody';
+import { formatCurrency } from '@/utils';
 import { useOrder } from '@/features/orders';
-import { inputBase } from '@/components/inputs/inputStyles';
 import { useCreatePayment, useOrderRemainingBalance } from '../api/payments';
 import {
   getEnabledPaymentMethods,
@@ -28,7 +26,6 @@ import {
 import { getPaymentErrorMessage } from '@/utils/errors';
 import { getFeedback } from '@/utils/feedback';
 import { feedbackTitle } from '@/utils/feedback/copy';
-import { TONE } from '@/components/theme/recipes';
 import type { OrderPaymentView } from '../types';
 import { ICONS, MODULE_ICONS } from '@/config/icons';
 
@@ -176,76 +173,20 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
         closeOnBackdropClick={!submitting}
       >
         <div className="flex flex-col h-full bg-surface-page">
-          {/* Scrollable content area */}
-          <div className="flex-1 overflow-y-auto p-space-6 space-y-space-6">
-            <Panel
-              title="Billing Summary"
-              padding="none"
-              scroll="visible"
-              bodyClassName="flex flex-col"
-              className="h-auto shrink-0"
-            >
-              {orderDetailLoading ? (
-                <div className="p-panel">
-                  <SkeletonText lines={6} />
-                </div>
-              ) : orderDetailError ? (
-                <div className="p-panel">
-                  <Alert variant="danger" className="py-space-3">
-                    <p className="text-sm">
-                      Could not load order line items. Try closing and opening again.
-                    </p>
-                  </Alert>
-                </div>
-              ) : billingOrder ? (
-                <BillingSummarySection
-                  order={billingOrder}
-                  fillHeight={false}
-                  paymentMethod={view.paymentMethod}
-                />
-              ) : null}
-            </Panel>
-
-            {/* Payment Method Selection - Only show if not paid */}
-            {!isPaid && (
-              <div>
-                <label className="block text-sm font-normal text-text-secondary mb-space-3">
-                  Payment Method <span className={TONE.danger.fg}>*</span>
-                </label>
-                <PaymentMethodSelector
-                  methods={PAYMENT_METHODS}
-                  value={paymentMethod}
-                  onChange={setPaymentMethod}
-                  disabled={submitting}
-                />
-              </div>
-            )}
-
-            {/* Notes - Only show if not paid */}
-            {!isPaid && (
-              <div>
-                <label className="block text-sm font-normal text-text-secondary mb-space-2">Notes</label>
-                <textarea
-                  rows={3}
-                  placeholder="Add optional notes..."
-                  value={notes}
-                  onChange={e => setNotes(e.target.value)}
-                  disabled={submitting}
-                  className={cn(
-                    inputBase,
-                    'resize-none disabled:opacity-50 disabled:bg-surface-page'
-                  )}
-                />
-              </div>
-            )}
-
-            {/* Error Display */}
-            {error && (
-              <Alert variant="danger" className="py-space-3">
-                <p className="text-sm">{error}</p>
-              </Alert>
-            )}
-          </div>
+          <PaymentDetailModalBody
+            view={view}
+            isPaid={isPaid}
+            submitting={submitting}
+            orderDetailLoading={orderDetailLoading}
+            orderDetailError={orderDetailError}
+            billingOrder={billingOrder ?? undefined}
+            paymentMethod={paymentMethod}
+            onPaymentMethodChange={setPaymentMethod}
+            notes={notes}
+            onNotesChange={setNotes}
+            error={error}
+            paymentMethods={PAYMENT_METHODS}
+          />
 
           <PaymentDetailFooter
             isPaid={isPaid}

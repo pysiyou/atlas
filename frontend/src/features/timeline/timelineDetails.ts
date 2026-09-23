@@ -1,5 +1,5 @@
 import { displayId } from '@/utils';
-import type { TimelineEvent } from '@/features/lab/api/labCommandCenter';
+import type { TimelineEvent } from '@/features/lab';
 
 export type EventDetail =
   | { type: 'text'; value: string }

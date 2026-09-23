@@ -3,10 +3,14 @@
  */
 
 import type { ReactNode } from 'react';
-import { Badge } from '@/components';
 import type { OrderTest, PaymentStatus, PriorityLevel, OrderStatus } from '@/types';
 import { createIdColumn, createBadgeColumn } from '@/components/data-table/columnHelpers';
 import type { ColumnConfig } from '@/components/data-table/types';
+import {
+  OrderPriorityBadge,
+  OrderStatusBadge,
+} from '../components/OrderDomainBadges';
+import { PaymentStatusBadge } from '@/features/payments';
 import {
   renderOrderDateCell,
   renderOrderPatientName,
@@ -103,7 +107,7 @@ export function createOrderSharedColumns<T>(
     paymentStatus: createBadgeColumn<T>(
       'paymentStatus',
       'Payment',
-      item => <Badge variant={accessors.getPaymentStatus(item)} size="xs" />,
+      item => <PaymentStatusBadge status={accessors.getPaymentStatus(item)} size="xs" />,
       {
         sortable: true,
         width: 'sm',
@@ -124,7 +128,7 @@ export function createOrderSharedColumns<T>(
     columns.priority = createBadgeColumn<T>(
       'priority',
       'Priority',
-      item => <Badge variant={accessors.getPriority!(item)} size="xs" className="border-none" />,
+      item => <OrderPriorityBadge priority={accessors.getPriority!(item)} size="xs" className="border-none" />,
       {
         sortable: true,
         width: 'sm',
@@ -137,7 +141,7 @@ export function createOrderSharedColumns<T>(
     columns.overallStatus = createBadgeColumn<T>(
       'overallStatus',
       'Status',
-      item => <Badge variant={accessors.getOverallStatus!(item)} size="xs" />,
+      item => <OrderStatusBadge status={accessors.getOverallStatus!(item)} size="xs" />,
       {
         sortable: true,
         width: 'md',

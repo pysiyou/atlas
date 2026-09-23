@@ -4,7 +4,7 @@
 /* eslint-disable max-lines -- single registry for all audit event type handlers */
 
 import { displayId } from '@/utils';
-import type { TimelineEvent } from '@/features/lab/api/labCommandCenter';
+import type { TimelineEvent } from '@/features/lab';
 import { formatStatusLabel } from './timelineDetails';
 
 export type EventDetail =

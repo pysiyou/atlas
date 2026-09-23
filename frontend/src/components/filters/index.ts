@@ -48,6 +48,7 @@ export {
 
 export { SearchControl, type SearchControlProps } from './SearchControl';
 export { DateRangeControl, type DateRangeControlProps } from './DateRangeControl';
+export { AgeFilter } from './AgeFilter';
 export { AgeRangeControl, type AgeRangeControlProps } from './AgeRangeControl';
 export { PriceRangeControl, type PriceRangeControlProps } from './PriceRangeControl';
 export { MultiSelectControl, type MultiSelectControlProps } from './MultiSelectControl';

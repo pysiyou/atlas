@@ -47,7 +47,7 @@ export const AttemptIndicator: React.FC<AttemptIndicatorProps> = ({
       onMouseLeave={() => setShowTooltip(false)}
     >
       <Badge
-        variant={isNearLimit ? 'warning' : 'default'}
+        variant={isNearLimit ? 'warning' : 'neutral'}
         size="xs"
         uppercase={false}
         icon={ICONS.actions.alertCircle}

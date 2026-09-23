@@ -36,7 +36,7 @@ export function ValidatedTestReportCard({ item: test, onClick, onPreview }: Vali
             size="xs"
           />
         }
-        trailing={<Badge variant="validated" size="xs" />}
+        trailing={<Badge variant="success" label="VALIDATED" size="xs" />}
       />
 
       {/* Test information */}

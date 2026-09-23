@@ -6,6 +6,7 @@ import React from 'react';
 import { Skeleton } from '@/components/loaders/Skeleton';
 import type { TimelineEvent } from '../api/labCommandCenter';
 import { EMPTY_COPY } from '@/components';
+import { TYPE } from '@/components/theme/recipes';
 import { Timeline, TIMELINE_STYLES } from '@/features/timeline';
 
 export interface LabActivityFeedProps {
@@ -46,7 +47,7 @@ export const LabActivityFeed: React.FC<LabActivityFeedProps> = ({
 }) => {
   if (isError) {
     return (
-      <div className="text-xs text-text-secondary">
+      <div className={`${TYPE.label} text-text-secondary px-space-3 py-space-2`}>
         Couldn&apos;t load activity feed.{' '}
         {onRetry && (
           <button type="button" onClick={onRetry} className={TIMELINE_STYLES.retryLink}>

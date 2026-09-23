@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query';
-import { auditAPI } from '@/features/lab/api/audit';
+import { auditAPI } from '@/features/lab';
 
 export function useOrderTimeline(orderId: number | undefined, enabled = true) {
   return useQuery({

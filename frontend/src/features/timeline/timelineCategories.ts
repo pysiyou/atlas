@@ -1,5 +1,5 @@
 /** Timeline event categories — aligned with backend TimelineCategory. */
-import type { TimelineEvent } from '@/features/lab/api/labCommandCenter';
+import type { TimelineEvent } from '@/features/lab';
 
 /** Backend-aligned filter buckets (presets). */
 export type TimelineCategory = 'order' | 'payment' | 'sample' | 'result' | 'other';

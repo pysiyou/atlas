@@ -10,7 +10,7 @@ import { actionButtonPreset, Popover, Button, Icon, FooterInfo, SelectionCheck, 
 import { MODULE_ICONS } from '@/config/icons';
 import type { ContainerType } from '@/types';
 import { COLLECTION_TOP_COLOR_VALUES, CONTAINER_CONFIG } from '@/types';
-import type { SampleRequirement } from '@/features/lab/utils';
+import type { SampleRequirement } from '@/features/lab';
 import { cn } from '@/utils';
 import { getContainerIcon } from '@/config/icons';
 import { ICONS } from '@/config/icons';
@@ -19,7 +19,7 @@ import { RADIUS, SHADOW, TONE } from '@/components/theme/recipes';
 import {
   getDefaultCollectionTopColor,
   getEffectiveContainerType,
-} from '@/features/lab/utils/labSample';
+} from '@/features/lab';
 
 /** Container type choices for collection: tube or cup only */
 const COLLECTION_CONTAINER_OPTIONS: { value: ContainerType; label: string }[] = [

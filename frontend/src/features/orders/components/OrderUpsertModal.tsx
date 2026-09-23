@@ -13,7 +13,7 @@ import { formatCurrency } from '@/utils';
 import { ICONS } from '@/config/icons';
 import { useOrderUpsertModal } from '../hooks/useOrderUpsertModal';
 import { OrderUpsertFormFields } from './OrderUpsertFormFields';
-import type { BaseModalProps } from '@/components';
+import type { BaseModalProps } from '@/lib/context/modalTypes';
 
 export interface OrderUpsertModalProps extends BaseModalProps {
   order?: Order;

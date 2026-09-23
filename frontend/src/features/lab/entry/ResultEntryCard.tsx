@@ -124,13 +124,13 @@ function ResultEntryCardDesktop({
                 size="xs"
                 uppercase={false}
                 className={results[param.code] ? 'text-text-primary' : 'text-text-secondary'}
-                variant={results[param.code] ? 'primary' : 'default'}
+                variant={results[param.code] ? 'primary' : 'neutral'}
               >
                 {param.name}
               </Badge>
             ))}
           {parameterCount > LAB_CONFIG.PARAMETER_PREVIEW_LIMIT && (
-            <Badge size="xs" variant="default" uppercase={false} className="text-text-secondary">
+            <Badge size="xs" variant="neutral" uppercase={false} className="text-text-secondary">
               +{parameterCount - LAB_CONFIG.PARAMETER_PREVIEW_LIMIT} more
             </Badge>
           )}

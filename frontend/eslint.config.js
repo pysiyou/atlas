@@ -72,7 +72,7 @@ export default defineConfig([
       'no-duplicate-imports': 'off',
 
       // Import boundaries — prefer feature barrels for cross-feature access
-      'no-restricted-imports': ['warn', {
+      'no-restricted-imports': ['error', {
         patterns: [
           {
             group: ['@/features/*/components/*', '@/features/*/hooks/*', '@/features/*/api/*', '@/features/*/utils/*'],
@@ -109,6 +109,7 @@ export default defineConfig([
   {
     files: ['src/components/theme/recipes.ts'],
     rules: {
+      'max-lines': 'off',
       'no-restricted-syntax': ['error', {
         selector: 'Literal[value=/text-\\[\\d+px\\]/]',
         message: 'Use the type scale (text-3xs through text-lg), not arbitrary px font sizes.',

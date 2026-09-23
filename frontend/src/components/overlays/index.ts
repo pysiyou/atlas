@@ -13,6 +13,4 @@ export * from './FilterTriggerShell';
 export * from './MultiSelectFilter';
 export * from './OverlaySearchInput';
 export * from './OverlayRangeSlider';
-export * from './ModalRenderer';
-export * from './modalRegistry';
 export * from './Toast';

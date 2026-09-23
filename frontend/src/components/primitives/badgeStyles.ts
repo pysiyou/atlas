@@ -3,10 +3,29 @@
  */
 
 import { TONE } from '@/components/theme/recipes';
-import { resolveStatusBadgeColor } from '@/utils/statusBadge';
-import type { BadgeColor } from './badgeTypes';
+import type { BadgeColor, BadgeVariant } from './badgeTypes';
 
 export type { BadgeColor, BadgeVariant } from './badgeTypes';
+
+const PALETTE_COLORS: Record<string, BadgeColor> = {
+  neutral: 'neutral',
+  default: 'neutral',
+  primary: 'primary',
+  success: 'success',
+  warning: 'warning',
+  danger: 'danger',
+  info: 'info',
+  purple: 'purple',
+  pink: 'pink',
+  teal: 'teal',
+  orange: 'orange',
+  indigo: 'indigo',
+  cyan: 'cyan',
+  muted: 'muted',
+  secondary: 'neutral',
+  outline: 'neutral',
+  ghost: 'neutral',
+};
 
 const UNIFIED_STYLES: Record<BadgeColor, { text: string; dot: string }> = {
   neutral: { text: TONE.neutral.fgEmphasis, dot: TONE.neutral.fill },
@@ -60,5 +79,23 @@ export function getColorStyles(color: BadgeColor, appearance: 'unified' | 'tinte
 }
 
 export function resolveColor(variant: string): BadgeColor {
-  return resolveStatusBadgeColor(variant);
+  const key = variant.toLowerCase();
+  if (key.startsWith('container-')) {
+    return 'neutral';
+  }
+  return PALETTE_COLORS[key] ?? 'neutral';
+}
+
+/** Map filter/UI color strings to palette badge variants only. */
+export function parseBadgeVariant(value: string | undefined): BadgeVariant {
+  if (!value) return 'neutral';
+  const key = value.toLowerCase();
+  if (key.startsWith('container-')) {
+    return value as BadgeVariant;
+  }
+  if (key === 'default') return 'default';
+  if (key in PALETTE_COLORS) {
+    return PALETTE_COLORS[key];
+  }
+  return 'neutral';
 }
