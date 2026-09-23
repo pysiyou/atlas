@@ -7,6 +7,7 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 import {
   allRestrictedSyntax,
   designTokenRestrictedSyntax,
+  typeUtilityRestrictedSyntax,
 } from './eslint.restricted-syntax.mjs'
 
 export default defineConfig([
@@ -143,10 +144,10 @@ export default defineConfig([
       'max-lines': 'off',
       'no-restricted-syntax': ['error', {
         selector: 'Literal[value=/text-\\[\\d+px\\]/]',
-        message: 'Use the type scale (text-3xs through text-lg), not arbitrary px font sizes.',
+        message: 'Use type-* utilities or recipes TYPE/TABLE_TYPE, not arbitrary px font sizes.',
       }, {
         selector: 'TemplateElement[value.raw=/text-\\[\\d+px\\]/]',
-        message: 'Use the type scale (text-3xs through text-lg), not arbitrary px font sizes.',
+        message: 'Use type-* utilities or recipes TYPE/TABLE_TYPE, not arbitrary px font sizes.',
       }, {
         selector: 'Literal[value=/rounded-\\[/]',
         message: 'Use RADIUS from @/components/theme/recipes, not arbitrary rounded-[Npx].',
@@ -184,6 +185,17 @@ export default defineConfig([
     ],
     rules: {
       'no-restricted-syntax': ['error', ...designTokenRestrictedSyntax],
+    },
+  },
+  {
+    files: ['src/components/**/*.{ts,tsx}', 'src/features/**/*.{ts,tsx}'],
+    ignores: [
+      'src/components/theme/recipes.ts',
+      'src/features/auth/**/*.{ts,tsx}',
+      'src/features/lab/collection/SampleCollectionLabelActions.tsx',
+    ],
+    rules: {
+      'no-restricted-syntax': ['error', ...allRestrictedSyntax, ...typeUtilityRestrictedSyntax],
     },
   },
 ])

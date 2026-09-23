@@ -77,7 +77,7 @@ export const DetailField: React.FC<DetailFieldProps> = ({
         <div className="min-w-0 flex-1">
           <div className={DETAIL_LABEL}>{label}</div>
           <div
-            className={`mt-space-0-5 font-normal leading-relaxed text-left break-words whitespace-normal ${DETAIL_VALUE}`}
+            className={`mt-space-0-5 text-left break-words whitespace-normal ${DETAIL_VALUE}`}
           >
             {renderValue()}
           </div>

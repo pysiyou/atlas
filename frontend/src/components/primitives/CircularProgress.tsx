@@ -14,6 +14,8 @@ export interface CircularProgressProps {
   percentage: number;
   /** Optional label text or node to display next to the progress */
   label?: React.ReactNode;
+  /** Typography stack for the label (defaults to TYPE.meta). */
+  labelClassName?: string;
   /** Additional CSS class names */
   className?: string;
 }
@@ -25,6 +27,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
   progressColorClass = 'stroke-brand',
   percentage,
   label,
+  labelClassName = `${TYPE.meta} normal-case font-normal`,
   className = '',
 }) => {
   const center = size / 2;
@@ -72,7 +75,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
       </div>
 
       {/* Label */}
-      {label && <span className={`${TYPE.meta} normal-case font-normal`}>{label}</span>}
+      {label && <span className={labelClassName}>{label}</span>}
     </div>
   );
 };

@@ -90,7 +90,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
     return (
       <div className="flex items-center justify-center py-space-8">
         <SpinnerLoader size="md" />
-        <span className="ml-space-3 text-sm text-text-tertiary">Loading plans...</span>
+        <span className={`ml-space-3 ${TYPE.amount} text-text-tertiary`}>Loading plans...</span>
       </div>
     );
   }
@@ -109,10 +109,10 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
         )}
         <div className="space-y-space-4">
           <div>
-            <h3 className="text-lg font-semibold text-text-primary mb-space-2">
+            <h3 className={`${TYPE.pageTitle} font-semibold mb-space-2`}>
               Lab Affiliation Benefits
             </h3>
-            <p className="text-sm text-text-tertiary leading-relaxed">
+            <p className={`${TYPE.amount} text-text-tertiary leading-relaxed`}>
               Choose a plan that fits your needs. All plans include priority services and discounted
               pricing for lab tests.
             </p>
@@ -120,14 +120,14 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
 
           {/* Included Features - icons follow theme (brand) */}
           <div className="space-y-space-3">
-            <h4 className="text-sm font-semibold text-text-primary">What's Included</h4>
+            <h4 className={`${TYPE.amount} font-semibold`}>What's Included</h4>
             <div className="space-y-space-2-5">
               <div className="flex items-start gap-space-3">
                 <div className={`flex-shrink-0 w-4 h-4 ${RADIUS.pill} bg-brand flex items-center justify-center mt-space-0-5`}>
                   <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                 </div>
                 <div>
-                  <span className="text-sm font-normal text-text-primary">
+                  <span className={TYPE.amount}>
                     Priority Lab Services
                   </span>
                   <p className={`${TYPE.meta} mt-space-0-5`}>Faster processing and results</p>
@@ -138,7 +138,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                   <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                 </div>
                 <div>
-                  <span className="text-sm font-normal text-text-primary">
+                  <span className={TYPE.amount}>
                     Discounted Test Pricing
                   </span>
                   <p className={`${TYPE.meta} mt-space-0-5`}>Save on all lab tests</p>
@@ -149,7 +149,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                   <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                 </div>
                 <div>
-                  <span className="text-sm font-normal text-text-primary">Assurance Number</span>
+                  <span className={TYPE.amount}>Assurance Number</span>
                   <p className={`${TYPE.meta} mt-space-0-5`}>
                     Auto-generated unique identifier
                   </p>
@@ -160,7 +160,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                   <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                 </div>
                 <div>
-                  <span className="text-sm font-normal text-text-primary">
+                  <span className={TYPE.amount}>
                     Extended Validity Period
                   </span>
                   <p className={`${TYPE.meta} mt-space-0-5`}>Long-term access to services</p>
@@ -203,7 +203,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 {/* Best Value Badge */}
                 {plan.isBestValue && (
                   <div className="absolute -top-space-2 -right-space-2">
-                    <div className={`bg-danger text-on-danger text-xxs font-normal px-space-2 py-space-0-5 ${RADIUS.surface} transform rotate-3 ${SHADOW.subtle}`}>
+                    <div className={`bg-danger text-on-danger ${TYPE.caption} font-normal px-space-2 py-space-0-5 ${RADIUS.surface} transform rotate-3 ${SHADOW.subtle}`}>
                       Best Value
                     </div>
                   </div>
@@ -231,7 +231,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                   {/* Plan Details */}
                   <div className="flex-1 min-w-0">
                     <div className="mb-space-2">
-                      <h5 className="font-semibold text-text-primary text-base">{plan.label}</h5>
+                      <h5 className={`${TYPE.value} font-semibold`}>{plan.label}</h5>
                     </div>
 
                     {/* Pricing */}
@@ -243,7 +243,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                               <span className="text-2xl font-normal text-text-primary">
                                 {formatCurrency(plan.monthlyPrice)}
                               </span>
-                              <span className="text-sm text-text-tertiary font-normal">/month</span>
+                              <span className={`${TYPE.amount} text-text-tertiary font-normal`}>/month</span>
                             </div>
                             <div className={TYPE.meta}>
                               {formatCurrency(plan.price)} per year
@@ -251,10 +251,10 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                           </>
                         ) : (
                           <div className="flex items-baseline gap-space-2">
-                            <span className="text-xl font-normal text-text-primary">
+                            <span className={`${TYPE.pageTitle} font-normal`}>
                               {formatCurrency(plan.price)}
                             </span>
-                            <span className="text-sm text-text-tertiary">
+                            <span className={`${TYPE.amount} text-text-tertiary`}>
                               /{plan.duration === 6 ? '6 months' : '2 years'}
                             </span>
                           </div>
@@ -262,9 +262,9 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                       </div>
                     ) : (
                       <div className="space-y-space-1">
-                        <div className="text-sm text-text-tertiary">Price not available</div>
+                        <div className={`${TYPE.amount} text-text-tertiary`}>Price not available</div>
                         {isSelected && (
-                          <div className="text-xs text-warning-fg">
+                          <div className={`${TYPE.value} text-warning-fg`}>
                             Pricing will be calculated during checkout
                           </div>
                         )}

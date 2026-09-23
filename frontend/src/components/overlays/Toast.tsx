@@ -6,7 +6,7 @@
 
 import React, { type HTMLAttributes, type ReactNode } from 'react';
 import { Icon, type IconName } from '@/components/primitives/Icon';
-import { RADIUS } from '@/components/theme/recipes';
+import { RADIUS, TOAST_TYPE } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
 export type ToastVariant = 'success' | 'error' | 'info' | 'warning' | 'loading';
@@ -121,7 +121,7 @@ function ActionChip({ action }: { action: ToastAction }) {
   return (
     <button
       type="button"
-      className={`mt-space-2 inline-flex items-center ${RADIUS.surface} border border-toast-action-border px-space-2-5 py-space-0-5 text-sm text-toast-fg hover:bg-toast-action-hover cursor-pointer`}
+      className={`mt-space-2 inline-flex items-center ${RADIUS.surface} border border-toast-action-border px-space-2-5 py-space-0-5 ${TOAST_TYPE.action} hover:bg-toast-action-hover cursor-pointer`}
       onClick={event => {
         event.stopPropagation();
         action.onClick();
@@ -149,9 +149,9 @@ export const Toast: React.FC<BaseToastProps> = React.memo(
       >
         <ToastIcon variant={variant} customIcon={customIcon} />
         <div className="min-w-0 flex-1">
-          <p className="m-0 text-sm font-semibold leading-snug text-toast-fg">{title}</p>
+          <p className={`m-0 ${TOAST_TYPE.title}`}>{title}</p>
           {subtitle ? (
-            <p className="mt-space-1 mb-0 text-sm leading-snug text-toast-fg-muted">{subtitle}</p>
+            <p className={`mt-space-1 mb-0 ${TOAST_TYPE.subtitle}`}>{subtitle}</p>
           ) : null}
           {actions?.map(action => (
             <ActionChip key={action.label} action={action} />

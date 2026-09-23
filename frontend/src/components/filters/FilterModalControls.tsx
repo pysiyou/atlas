@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { RADIUS } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/components/theme/recipes';
 import { Icon } from '@/components';
 import { uppercaseLabel, cn } from '@/utils';
 import { ICONS } from '@/config/icons';
@@ -62,7 +62,7 @@ export const ModalRadioList: React.FC<{
           </div>
           <span
             className={cn(
-              'text-sm transition-colors',
+              `${TYPE.amount} transition-colors`,
               isSelected ? 'text-text-primary' : 'text-text-secondary group-hover:text-text-primary'
             )}
           >

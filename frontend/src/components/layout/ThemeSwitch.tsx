@@ -2,7 +2,7 @@ import { Icon } from '@/components';
 import { useActiveThemeMode, setThemeMode } from '@/components/theme';
 import type { ThemeMode } from '@/components/theme';
 import type { IconName } from '@/components/primitives/Icon';
-import { CHROME, CONTROL, RADIUS } from '@/components/theme/recipes';
+import { CHROME, CONTROL, RADIUS, THEME_SWITCH_TYPE } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
 const MODES: ThemeMode[] = ['light', 'dark'];
@@ -54,7 +54,7 @@ export function ThemeSwitch({ isCollapsed = false }: ThemeSwitchProps) {
               aria-pressed={isActive}
               aria-label={`${config.label} theme`}
               className={cn(
-                'relative flex min-w-0 flex-1 items-center justify-center gap-space-1-5 px-space-1-5 py-space-1-5 leading-none text-xs font-normal transition-all duration-200 cursor-pointer',
+                `relative flex min-w-0 flex-1 items-center justify-center gap-space-1-5 px-space-1-5 py-space-1-5 ${THEME_SWITCH_TYPE.segment} transition-all duration-200 cursor-pointer`,
                 RADIUS.field,
                 isActive
                   ? `bg-surface text-brand ${CONTROL.segmentActive}`
@@ -68,7 +68,7 @@ export function ThemeSwitch({ isCollapsed = false }: ThemeSwitchProps) {
                   isActive ? 'text-brand' : 'text-text-disabled',
                 )}
               />
-              <span className="chrome-clip text-xxs font-medium leading-none">{config.label}</span>
+              <span className={`chrome-clip ${THEME_SWITCH_TYPE.label}`}>{config.label}</span>
             </button>
           );
         })}

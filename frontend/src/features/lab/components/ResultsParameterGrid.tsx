@@ -57,7 +57,7 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
               <div className="flex items-start justify-between gap-space-2 min-w-0">
                 <span className={RESULT_PANEL.label} title={key}>{key}</span>
                 {statusLabel && (
-                  <span className={`text-xxs font-medium ${TONE.danger.fg} shrink-0`}>{statusLabel}</span>
+                  <span className={`${TYPE.caption} font-medium ${TONE.danger.fg} shrink-0`}>{statusLabel}</span>
                 )}
               </div>
               <div className="flex items-baseline gap-space-0-5 min-w-0">
@@ -85,9 +85,9 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
           return (
             <div key={key} className="grid grid-cols-[1fr_auto] items-baseline gap-x-space-1-5 min-w-0">
               <span className={`${TYPE.caption} text-text-secondary truncate`} title={key}>{key}:</span>
-              <span className={`text-xxs font-normal tabular-nums ${inlineValueClass(status)}`}>
+              <span className={`${TYPE.caption} font-normal tabular-nums ${inlineValueClass(status)}`}>
                 {resultValue}
-                {unit && <span className="text-text-tertiary font-normal ml-space-0-5 text-xxs">{unit}</span>}
+                {unit && <span className={`text-text-tertiary font-normal ml-space-0-5 ${TYPE.caption}`}>{unit}</span>}
               </span>
             </div>
           );
@@ -113,9 +113,9 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
             <span className={`${TYPE.caption} text-text-secondary truncate text-right`} title={key}>
               {key}:
             </span>
-            <span className={`text-xs font-normal tabular-nums ${inlineValueClass(status)}`}>
+            <span className={`${TYPE.value} font-normal tabular-nums ${inlineValueClass(status)}`}>
               {resultValue}
-              {unit && <span className="text-text-tertiary font-normal ml-space-1 text-xxs">{unit}</span>}
+              {unit && <span className={`text-text-tertiary font-normal ml-space-1 ${TYPE.caption}`}>{unit}</span>}
             </span>
           </div>
         );

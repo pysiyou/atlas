@@ -8,6 +8,7 @@ import { App } from './app/App';
 import { initializeTheme } from '@/components/theme/theme';
 import { companyConfig } from '@/config';
 import '@/components/theme/tokens/primitives.css';
+import '@/components/theme/tokens/typography.css';
 import '@/components/theme/tokens/semantic-light.css';
 import '@/components/theme/tokens/semantic-dark.css';
 import '@/components/theme/themes/studio-light.css';

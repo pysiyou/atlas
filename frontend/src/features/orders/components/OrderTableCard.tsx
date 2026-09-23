@@ -7,7 +7,7 @@ import { useTestNameLookup } from '@/features/catalog';
 import { formatCurrency, formatDateTime } from '@/utils';
 import { getActiveTests } from '../utils/orderCalculator';
 import type { Order } from '@/types';
-import { TYPE } from '@/components/theme/recipes';
+import { CARD_PRICE, TYPE } from '@/components/theme/recipes';
 
 
 type OrderTableCardProps = CardComponentProps<Order> & {
@@ -43,7 +43,7 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
             />
           )
         }
-        trailing={<div className="text-text-primary text-lg">{formatCurrency(order.totalPrice)}</div>}
+        trailing={<div className={CARD_PRICE}>{formatCurrency(order.totalPrice)}</div>}
       />
 
       {hasTests && (

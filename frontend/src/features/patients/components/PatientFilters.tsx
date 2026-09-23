@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import { FILTER_TYPE } from '@/components/theme/recipes';
 import { CheckboxList } from '@/components';
 import { AgeRangeSliderPanel } from '@/components/filters';
 import {
@@ -48,7 +49,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = props => {
   const modalContent = (
     <>
       <div className="w-full">
-        <h4 className="text-sm font-semibold text-text-primary mb-space-3">Age Range</h4>
+        <h4 className={FILTER_TYPE.sectionTitle}>Age Range</h4>
         <AgeRangeSliderPanel
           value={props.ageRange}
           onChange={props.onAgeRangeChange}
@@ -60,7 +61,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = props => {
         <div className="border-b border-border-default mt-space-4" />
       </div>
       <div className="w-full">
-        <h4 className="text-sm font-semibold text-text-primary mb-space-3">Sex</h4>
+        <h4 className={FILTER_TYPE.sectionTitle}>Sex</h4>
         <CheckboxList
           options={genderOptions}
           selectedIds={props.sexFilters}
@@ -70,7 +71,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = props => {
         <div className="border-b border-border-default mt-space-4" />
       </div>
       <div className="w-full">
-        <h4 className="text-sm font-semibold text-text-primary mb-space-3">Affiliation Status</h4>
+        <h4 className={FILTER_TYPE.sectionTitle}>Affiliation Status</h4>
         <CheckboxList
           options={affiliationStatusOptions}
           selectedIds={props.affiliationStatusFilters}

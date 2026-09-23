@@ -226,7 +226,7 @@ export const RESULT_PANEL = {
   tileEmpty: 'border-border-subtle bg-surface-page/40',
   tileFilled: `border-border-default bg-surface ${SHADOW.subtle}`,
   label: `${TYPE.caption} font-medium truncate`,
-  value: 'text-lg font-medium tabular-nums leading-tight',
+  value: `${TYPE.pageTitle} font-medium tabular-nums`,
   unit: `${TYPE.meta} font-normal ml-space-1`,
   reference: `${TYPE.caption} leading-none font-normal truncate shrink-0 max-w-[50%]`,
   referenceUnavailable: `${TYPE.caption} leading-none font-normal truncate shrink-0 max-w-[50%]`,

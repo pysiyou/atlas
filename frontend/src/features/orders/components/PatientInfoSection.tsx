@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import { TYPE } from '@/components/theme/recipes';
 import { Icon, DetailField, EntityId } from '@/components';
 import { calculateAge } from '@/utils';
 import type { Patient } from '@/types';
@@ -33,7 +34,7 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
             name={ICONS.dataFields.user}
             className="w-12 h-12 text-text-disabled mx-auto mb-space-2"
           />
-          <p className="text-sm text-text-tertiary">Patient Not Found</p>
+          <p className={`${TYPE.amount} text-text-tertiary`}>Patient Not Found</p>
         </div>
       </div>
     );

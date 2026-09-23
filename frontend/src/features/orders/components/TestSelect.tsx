@@ -17,7 +17,7 @@ import { cn, formatCurrency, formatTurnaroundTime, titleCaseWords } from '@/util
 import { ICONS } from '@/config/icons';
 import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/components/inputs/inputStyles';
 import { OrderSelectPopoverShell } from './OrderSelectPopoverShell';
-import { CONTROL, SPACING, TONE, TYPE } from '@/components/theme/recipes';
+import { CONTROL, FIELD_ERROR, SPACING, TYPE } from '@/components/theme/recipes';
 
 
 const SELECTED_CHIP_CLASS =
@@ -49,7 +49,7 @@ function TestSelectMetaLine({ code, test }: { code: string; test: Test }) {
   if (!hasCode && segments.length === 0) return null;
 
   return (
-    <p className="text-xxs font-normal truncate uppercase min-w-0 text-text-tertiary">
+    <p className={`${TYPE.caption} font-normal truncate uppercase min-w-0`}>
       {hasCode && <span className="truncate">{code}</span>}
       {hasCode && segments.length > 0 && <span> · </span>}
       {segments.map((segment, index) => (
@@ -77,7 +77,7 @@ function TestSelectedChip({
       {test ? (
         <TestSelectMetaLine code={code} test={test} />
       ) : (
-        <p className="text-xxs font-normal text-text-tertiary truncate uppercase">{code}</p>
+        <p className={`${TYPE.caption} font-normal truncate uppercase`}>{code}</p>
       )}
     </div>
   );
@@ -117,7 +117,7 @@ const TestSearchTagInput: React.FC<{
         >
           Tests
         </label>
-        <span className="text-sm font-normal text-text-tertiary tabular-nums shrink-0">
+        <span className={`${TYPE.amount} text-text-tertiary tabular-nums shrink-0`}>
           {selectedCount} {selectedCount === 1 ? 'test' : 'tests'}
         </span>
       </div>
@@ -161,7 +161,7 @@ const TestSearchTagInput: React.FC<{
         />
       </div>
 
-      {error && <p className={`mt-space-1-5 text-xs ${TONE.danger.fg}`}>{error}</p>}
+      {error && <p className={`mt-space-1-5 ${FIELD_ERROR}`}>{error}</p>}
     </div>
   );
 
@@ -211,7 +211,7 @@ const TestSelectPopover: React.FC<TestSelectPopoverProps> = ({
                   <TestSelectMetaLine code={code} test={test} />
                 </div>
                 <div className="flex shrink-0 items-center gap-layout-section">
-                  <span className="text-sm font-medium text-text-tertiary tabular-nums">
+                  <span className={`${TYPE.amount} font-medium text-text-tertiary tabular-nums`}>
                     {formatCurrency(price)}
                   </span>
                   <CheckboxIndicator

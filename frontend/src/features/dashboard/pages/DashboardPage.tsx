@@ -16,7 +16,7 @@ import {
 import { buildDashboardStats } from '../components/buildDashboardStats';
 import { DashboardOrdersInProgressBanner } from '../components/DashboardOrdersInProgressBanner';
 import { DashboardRecentOrders } from '../components/DashboardRecentOrders';
-import { WORKSPACE } from '@/components/theme/recipes';
+import { TYPE, WORKSPACE } from '@/components/theme/recipes';
 
 export const Dashboard: React.FC = () => {
   const { user: currentUser, hasRole } = useAuthStore();
@@ -43,10 +43,10 @@ export const Dashboard: React.FC = () => {
   return (
     <div className={WORKSPACE.page}>
       <div className="shrink-0 h-14 min-h-14 max-h-14 flex flex-col justify-center">
-        <h1 className="text-xl font-bold text-text-primary truncate">
+        <h1 className={`${TYPE.pageTitle} font-bold truncate`}>
           Welcome back, {currentUser?.name}!
         </h1>
-        <p className="text-sm text-text-secondary truncate">
+        <p className={`${TYPE.amount} text-text-secondary truncate`}>
           Here&apos;s what&apos;s happening today — {formatDate(new Date())}
         </p>
       </div>

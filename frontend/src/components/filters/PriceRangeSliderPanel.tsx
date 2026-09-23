@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { CONTROL, RADIUS } from '@/components/theme/recipes';
+import { CONTROL, PRICE_RANGE_TYPE, RADIUS } from '@/components/theme/recipes';
 
 export interface PriceRangeSliderPanelProps {
   localValue: [number, number];
@@ -29,7 +29,7 @@ export const PriceRangeSliderPanel: React.FC<PriceRangeSliderPanelProps> = ({
   onMouseDown,
 }) => (
   <div className="space-y-space-4">
-    <div className="flex items-center justify-between text-sm font-normal text-text-tertiary">
+    <div className={`flex items-center justify-between ${PRICE_RANGE_TYPE.value}`}>
       <span>{formatPrice(localValue[0], currency)}</span>
       <span>{formatPrice(localValue[1], currency)}</span>
     </div>
@@ -58,7 +58,7 @@ export const PriceRangeSliderPanel: React.FC<PriceRangeSliderPanelProps> = ({
       />
     </div>
 
-    <div className="flex justify-between items-center text-xs text-text-disabled">
+    <div className={`flex justify-between items-center ${PRICE_RANGE_TYPE.bound}`}>
       <span>{formatPrice(min, currency)}</span>
       <span>{formatPrice(max, currency)}</span>
     </div>

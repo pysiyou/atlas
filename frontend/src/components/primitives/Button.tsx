@@ -5,7 +5,7 @@
 
 import React, { forwardRef, memo, type ButtonHTMLAttributes } from 'react';
 import { SpinnerLoader } from '@/components/loaders/SpinnerLoader';
-import { CONTROL, RADIUS } from '@/components/theme/recipes';
+import { BUTTON_TYPE, CONTROL, RADIUS } from '@/components/theme/recipes';
 import { cn } from '@/utils/cn';
 import { Icon, type IconName } from './Icon';
 
@@ -40,9 +40,9 @@ const tone: Record<BaseVariant, string> = {
 };
 
 const labelButtonSize: Record<ButtonSize, string> = {
-  sm: `gap-space-1-5 px-space-3 py-space-1-5 text-xs ${RADIUS.button}`,
-  md: `gap-space-1-5 px-space-4 py-space-2 text-sm ${RADIUS.button}`,
-  lg: `gap-space-1-5 px-table-cell-x-default py-space-3 text-base ${RADIUS.button}`,
+  sm: `gap-space-1-5 px-space-3 py-space-1-5 ${BUTTON_TYPE.sm} ${RADIUS.button}`,
+  md: `gap-space-1-5 px-space-4 py-space-2 ${BUTTON_TYPE.md} ${RADIUS.button}`,
+  lg: `gap-space-1-5 px-table-cell-x-default py-space-3 ${BUTTON_TYPE.lg} ${RADIUS.button}`,
 };
 
 const labelIconSize: Record<ButtonSize, string> = {

@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from 'react';
+import { FILTER_TYPE } from '@/components/theme/recipes';
 import { DateFilter } from '@/components';
 import { DebouncedSearchInput } from '@/components';
 import { MODULE_ICONS } from '@/config/icons';
@@ -84,7 +85,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
           footerLabel="Reports"
         >
           <div className="w-full">
-            <h4 className="text-sm font-semibold text-text-primary mb-space-3">Date Range</h4>
+            <h4 className={FILTER_TYPE.sectionTitle}>Date Range</h4>
             <DatePresetBadges value={dateRange} onChange={onDateRangeChange} />
           </div>
         </EntityFilterModal>

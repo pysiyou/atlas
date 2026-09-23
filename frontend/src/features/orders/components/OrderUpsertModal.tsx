@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import { TYPE } from '@/components/theme/recipes';
 import type { Order } from '@/types';
 import { Modal, FooterInfo, Icon, FormDialogFooter } from '@/components';
 import { MODULE_ICONS } from '@/config/icons';
@@ -75,7 +76,7 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
               mode === 'edit' && order ? (
                 <FooterInfo icon={MODULE_ICONS.orders} label="Orders" size="md" />
               ) : (
-                <div className="text-base font-normal text-brand">
+                <div className={`${TYPE.value} text-brand`}>
                   Total: {formatCurrency(totalPrice)}
                 </div>
               )

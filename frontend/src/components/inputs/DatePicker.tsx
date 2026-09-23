@@ -17,7 +17,7 @@ import {
 } from 'date-fns';
 import { Popover, Icon, FilterTriggerShell, FilterChip } from '@/components';
 import { ICONS } from '@/config/icons';
-import { RADIUS } from '@/components/theme/recipes';
+import { CALENDAR_TYPE, RADIUS, TYPE } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 import {
   isDateDisabledForPicker,
@@ -80,7 +80,7 @@ function DatePickerHeader({
       <button
         onClick={onTitleClick}
         className={cn(
-          `text-sm font-normal text-text-secondary hover:bg-surface-page px-space-2 py-space-1 ${RADIUS.field} transition-colors cursor-pointer`,
+          `${TYPE.amount} text-text-secondary hover:bg-surface-page px-space-2 py-space-1 ${RADIUS.field} transition-colors cursor-pointer`,
           view === 'years' && 'pointer-events-none hover:bg-transparent cursor-default'
         )}
       >
@@ -127,7 +127,7 @@ function DatePickerCalendarGrid({
       <>
         <div className="grid grid-cols-7 gap-space-1 mb-space-1">
           {WEEKDAY_LABELS.map(day => (
-            <div key={day} className="text-center text-xs text-text-disabled py-space-1">
+            <div key={day} className={CALENDAR_TYPE.weekday}>
               {day}
             </div>
           ))}
@@ -145,7 +145,7 @@ function DatePickerCalendarGrid({
                 onClick={() => handleDateClick(day)}
                 disabled={disabled}
                 className={cn(
-                  `h-8 w-8 text-xs ${RADIUS.pill} flex items-center justify-center transition-colors relative cursor-pointer`,
+                  `h-8 w-8 ${CALENDAR_TYPE.day} ${RADIUS.pill} flex items-center justify-center transition-colors relative cursor-pointer`,
                   disabled && 'opacity-30 cursor-not-allowed',
                   !currentMonthMatch && 'text-text-disabled',
                   currentMonthMatch &&
@@ -191,7 +191,7 @@ function DatePickerCalendarGrid({
               }}
               disabled={disabled}
               className={cn(
-                `h-10 text-sm ${RADIUS.field} flex items-center justify-center transition-colors cursor-pointer`,
+                `h-10 ${CALENDAR_TYPE.month} ${RADIUS.field} flex items-center justify-center transition-colors cursor-pointer`,
                 disabled && 'opacity-30 cursor-not-allowed',
                 !disabled && isSameMonth(month, new Date()) && 'text-brand font-normal bg-brand-muted',
                 !disabled && isSameMonth(month, currentMonth)
@@ -223,7 +223,7 @@ function DatePickerCalendarGrid({
             }}
             disabled={disabled}
             className={cn(
-              `h-10 text-sm ${RADIUS.field} flex items-center justify-center transition-colors cursor-pointer`,
+              `h-10 ${CALENDAR_TYPE.month} ${RADIUS.field} flex items-center justify-center transition-colors cursor-pointer`,
               disabled && 'opacity-30 cursor-not-allowed',
               !disabled && y === new Date().getFullYear() && 'text-brand font-normal bg-brand-muted',
               !disabled && y === currentMonth.getFullYear()
@@ -322,7 +322,7 @@ function DatePickerPopoverBody({
         <div className="mt-space-3 pt-space-3 border-t border-border-default">
           <button
             onClick={onApply}
-            className={`w-full px-space-3 py-space-2 bg-brand hover:opacity-90 text-text-inverse text-xs font-normal ${RADIUS.field} transition-colors`}
+            className={`w-full px-space-3 py-space-2 bg-brand hover:opacity-90 text-text-inverse ${CALENDAR_TYPE.applyButton} ${RADIUS.field} transition-colors`}
           >
             Apply
           </button>

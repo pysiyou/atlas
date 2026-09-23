@@ -42,7 +42,7 @@ export function ValidatedTestReportCard({ item: test, onClick, onPreview }: Vali
       {/* Test information */}
       <div className="grow space-y-space-2">
         <div>
-          <div className="text-text-primary text-sm">{test.testName}</div>
+          <div className={TYPE.amount}>{test.testName}</div>
           <EntityId variant="block">{test.testCode}</EntityId>
         </div>
         <div className={TYPE.meta}>

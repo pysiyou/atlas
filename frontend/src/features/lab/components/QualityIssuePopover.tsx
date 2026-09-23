@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from 'react';
+import { TYPE } from '@/components/theme/recipes';
 import { actionButtonPreset, Popover, Button, Alert, FooterInfo, PopoverFormChrome } from '@/components';
 import { MODULE_ICONS } from '@/config/icons';
 import { useQualityIssuePopover } from '../hooks/useQualityIssuePopover';
@@ -76,7 +77,7 @@ export const QualityIssuePopoverFormBody: React.FC<QualityIssuePopoverFormBodyPr
     <>
       {error && (
         <Alert variant="danger" className="py-space-2">
-          <p className="text-xs">{error}</p>
+          <p className={TYPE.value}>{error}</p>
         </Alert>
       )}
 

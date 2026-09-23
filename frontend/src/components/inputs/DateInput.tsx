@@ -15,7 +15,7 @@ import {
   inputClearButton,
   FORM_CONTROL_LABEL,
 } from '@/components/inputs/inputStyles';
-import { RADIUS, TONE, TYPE } from '@/components/theme/recipes';
+import { CALENDAR_TYPE, FIELD_ERROR, RADIUS, TONE, TYPE } from '@/components/theme/recipes';
 import {
   generateCalendarDays,
   generateCalendarMonths,
@@ -70,7 +70,7 @@ function DateInputHeader({
       <button
         type="button"
         onClick={onTitleClick}
-        className={`text-sm font-normal text-text-secondary hover:bg-surface-page px-space-2 py-space-1 ${RADIUS.field} transition-colors cursor-pointer`}
+        className={`${TYPE.amount} text-text-secondary hover:bg-surface-page px-space-2 py-space-1 ${RADIUS.field} transition-colors cursor-pointer`}
       >
         {getTitle()}
       </button>
@@ -111,7 +111,7 @@ function DateInputCalendarGrid({
       <>
         <div className="grid grid-cols-7 gap-space-1 mb-space-1">
           {WEEKDAY_LABELS.map(day => (
-            <div key={day} className="text-center text-xs text-text-disabled py-space-1">
+            <div key={day} className={CALENDAR_TYPE.weekday}>
               {day}
             </div>
           ))}
@@ -129,7 +129,7 @@ function DateInputCalendarGrid({
                 onClick={() => handleDateClick(day)}
                 disabled={disabled}
                 className={cn(
-                  `h-8 w-8 text-xs ${RADIUS.pill} flex items-center justify-center transition-colors cursor-pointer`,
+                  `h-8 w-8 ${CALENDAR_TYPE.day} ${RADIUS.pill} flex items-center justify-center transition-colors cursor-pointer`,
                   disabled && 'opacity-30 cursor-not-allowed',
                   !currentMonthMatch && 'text-text-disabled',
                   currentMonthMatch && !selected && !disabled && 'text-text-secondary hover:bg-surface-hover',
@@ -164,7 +164,7 @@ function DateInputCalendarGrid({
               }}
               disabled={disabled}
               className={cn(
-                `h-10 text-sm ${RADIUS.field} flex items-center justify-center transition-colors cursor-pointer`,
+                `h-10 ${CALENDAR_TYPE.month} ${RADIUS.field} flex items-center justify-center transition-colors cursor-pointer`,
                 disabled && 'opacity-30 cursor-not-allowed',
                 !disabled && 'hover:bg-surface-hover text-text-secondary'
               )}
@@ -194,7 +194,7 @@ function DateInputCalendarGrid({
             }}
             disabled={disabled}
             className={cn(
-              `h-10 text-sm ${RADIUS.field} flex items-center justify-center transition-colors cursor-pointer`,
+              `h-10 ${CALENDAR_TYPE.month} ${RADIUS.field} flex items-center justify-center transition-colors cursor-pointer`,
               disabled && 'opacity-30 cursor-not-allowed',
               !disabled && 'hover:bg-surface-hover text-text-secondary'
             )}
@@ -330,7 +330,7 @@ export const DateInput: React.FC<DateInputProps> = ({
         )}
       </Popover>
       <input type="hidden" id={inputId} name={name} value={value} />
-      {error && <p className={`text-xs ${TONE.danger.fg} mt-space-1`}>{error}</p>}
+      {error && <p className={`${FIELD_ERROR} mt-space-1`}>{error}</p>}
     </div>
   );
 };

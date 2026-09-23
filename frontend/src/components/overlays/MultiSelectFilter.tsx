@@ -10,7 +10,7 @@ import { parseBadgeVariant } from '@/components/primitives/badgeStyles';
 import { Icon, type IconName } from '@/components/primitives/Icon';
 import { Popover } from './Popover';
 import { FilterTriggerShell } from './FilterTriggerShell';
-import { RADIUS, TYPE } from '@/components/theme/recipes';
+import { MENU_ITEM_TYPE, RADIUS, TYPE } from '@/components/theme/recipes';
 
 export interface FilterOption {
   id: string;
@@ -46,7 +46,7 @@ function MultiSelectListItem({
   return (
     <label
       className={cn(
-        'flex items-center gap-space-3 px-space-3 py-space-2 text-sm cursor-pointer',
+        `flex items-center gap-space-3 px-space-3 py-space-2 ${MENU_ITEM_TYPE} cursor-pointer`,
         'hover:bg-surface-hover transition-colors',
         isSelected && 'bg-surface'
       )}
@@ -112,7 +112,7 @@ function MultiSelectTriggerContent({
 
   return (
     <span className="text-text-primary truncate block whitespace-nowrap">
-      <span className={`inline-flex items-center justify-center min-w-[18px] h-4 px-space-1 ${RADIUS.pill} text-on-brand text-xxs font-normal align-middle mr-space-1 bg-brand`}>
+      <span className={`inline-flex items-center justify-center min-w-[18px] h-4 px-space-1 ${RADIUS.pill} text-on-brand ${TYPE.caption} font-normal align-middle mr-space-1 bg-brand`}>
         {selectedIds.length}
       </span>
       selected

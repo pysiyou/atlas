@@ -4,7 +4,7 @@
 
 import React, { useCallback } from 'react';
 import { Popover, Icon } from '@/components';
-import { CONTROL, RADIUS } from '@/components/theme/recipes';
+import { CONTROL, RADIUS, TYPE } from '@/components/theme/recipes';
 import { inputTrigger, inputTriggerOpen, inputBase, inputError } from '@/components/inputs/inputStyles';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
@@ -42,7 +42,7 @@ const SelectParameterInput: React.FC<{
             disabled && 'opacity-60 pointer-events-none',
           )}
         >
-          <div className="flex-1 text-xs truncate">
+          <div className={`flex-1 ${TYPE.value} truncate`}>
             {value ? (
               <span className="text-text-primary">{titleCaseWords(value)}</span>
             ) : (

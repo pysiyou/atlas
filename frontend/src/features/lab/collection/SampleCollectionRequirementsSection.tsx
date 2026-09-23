@@ -103,7 +103,7 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
         )}
 
         {activeTest.minimumVolume && (
-          <div className="flex items-center gap-space-2 text-xs">
+          <div className={`flex items-center gap-space-2 ${TYPE.value}`}>
             <span className={`font-normal ${LAB_CARD_TYPOGRAPHY.fieldLabel}`}>Minimum Volume:</span>
             <span className={LAB_CARD_TYPOGRAPHY.fieldValue}>{activeTest.minimumVolume} mL</span>
           </div>

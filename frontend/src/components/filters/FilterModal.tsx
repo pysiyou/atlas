@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { Modal } from '@/components';
-import { FILTER } from '@/components/theme/recipes';
+import { FILTER, FILTER_TYPE } from '@/components/theme/recipes';
 import { QuickFilters } from './QuickFilters';
 import { FilterModalFooter } from './FilterModalFooter';
 import type { FilterConfig, ActiveFilterBadge, FilterValues } from './types';
@@ -85,7 +85,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
               {allFilterControls.map((control, index) => (
                 <div key={control.key} className="w-full">
                   {/* Filter Label */}
-                  <h4 className="text-sm font-semibold text-text-primary mb-space-3">{control.label}</h4>
+                  <h4 className={FILTER_TYPE.sectionTitle}>{control.label}</h4>
                   {/* Filter Options */}
                   {renderModalControl(control)}
                   {/* Separator line (except for last item) */}

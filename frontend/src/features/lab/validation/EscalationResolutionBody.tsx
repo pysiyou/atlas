@@ -55,7 +55,7 @@ function EscalationSummaryPanel({
         an action.
       </p>
       {(rejectionReason || rejectionNotes) && (
-        <dl className="mt-space-3 space-y-space-2 text-sm">
+        <dl className={`mt-space-3 space-y-space-2 ${TYPE.amount}`}>
           {rejectionReason && (
             <div>
               <dt className="text-text-tertiary">Rejection reason</dt>

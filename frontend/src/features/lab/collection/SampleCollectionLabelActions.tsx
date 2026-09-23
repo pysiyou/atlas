@@ -14,6 +14,15 @@ const PRINT_TOKEN_KEYS = [
   '--border-strong',
   '--font-sans',
   '--id-font-weight',
+  '--id-font-size',
+  '--id-font-size-secondary',
+  '--id-letter-spacing',
+  '--type-caption-size',
+  '--type-caption-leading',
+  '--type-caption-weight',
+  '--type-amount-size',
+  '--type-amount-leading',
+  '--type-amount-weight',
 ] as const;
 
 /**
@@ -31,13 +40,13 @@ function snapshotPrintThemeCss(): string {
             }
             .entity-id {
               font-family: var(--font-sans), sans-serif;
-              font-size: 10px;
+              font-size: var(--id-font-size);
               font-weight: var(--id-font-weight);
               color: var(--brand);
-              letter-spacing: 0.02em;
+              letter-spacing: var(--id-letter-spacing);
             }
             .entity-id--secondary {
-              font-size: 10px;
+              font-size: var(--id-font-size-secondary);
               color: var(--text-tertiary);
             }
             .bg-surface { background-color: var(--surface); }
@@ -45,7 +54,16 @@ function snapshotPrintThemeCss(): string {
             .text-text-primary { color: var(--text); }
             .text-text-tertiary { color: var(--text-tertiary); }
             .border-border-strong { border-color: var(--border-strong); }
-            .text-xxs { font-size: 10px; }
+            .type-caption {
+              font-size: var(--type-caption-size);
+              line-height: var(--type-caption-leading);
+              font-weight: var(--type-caption-weight);
+            }
+            .type-amount {
+              font-size: var(--type-amount-size);
+              line-height: var(--type-amount-leading);
+              font-weight: var(--type-amount-weight);
+            }
 `;
 }
 
@@ -131,18 +149,18 @@ export const generatePrintLabelHTML = (display: SampleCollectionQueueItem, patie
         <div class="label-wrapper">
           <div class="w-full max-w-[3.75in] flex flex-col items-center justify-center gap-space-1-5 p-space-2 border border-dashed border-border-strong print:border-none print:max-w-full print:p-0">
             <!-- Patient Name -->
-            <div class="text-sm font-normal text-center text-text-primary leading-snug w-full">
+            <div class="type-amount font-normal text-center text-text-primary leading-snug w-full">
               ${patientName}
             </div>
 
             <!-- Patient ID and Sample Type -->
-            <div class="text-xxs text-center leading-tight">
+            <div class="type-caption text-center leading-tight">
               <span class="entity-id entity-id--secondary">${patientIdDisplay}</span>
               <span class="text-text-tertiary"> | ${sampleType.toUpperCase()}</span>
             </div>
 
             <!-- Container Info -->
-            <div class="w-full text-xxs font-normal text-center text-text-primary bg-surface-hover ${RADIUS.field} px-space-2 py-space-1 print:py-space-0-5">
+            <div class="w-full type-caption font-normal text-center text-text-primary bg-surface-hover ${RADIUS.field} px-space-2 py-space-1 print:py-space-0-5">
               ${containerType.toUpperCase()}: ${colorName.toUpperCase()}
             </div>
 

@@ -5,7 +5,7 @@ import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/c
 import type { Patient } from '@/types';
 import { ICONS } from '@/config/icons';
 import { OrderSelectPopoverShell } from './OrderSelectPopoverShell';
-import { CONTROL, SPACING, TONE, TYPE } from '@/components/theme/recipes';
+import { CONTROL, FIELD_ERROR, SPACING, TYPE } from '@/components/theme/recipes';
 
 
 const SELECTED_CHIP_CLASS =
@@ -34,7 +34,7 @@ function PatientSelectedChip({ patient }: { patient: Patient }) {
         <span className={`${TYPE.value} font-normal truncate capitalize`}>
           {patient.fullName}
         </span>
-        <span className="text-xxs font-normal text-text-tertiary truncate">
+        <span className={`${TYPE.caption} font-normal truncate`}>
           {contactLine || 'No contact on file'}
         </span>
       </div>
@@ -124,7 +124,7 @@ const PatientSearchTagInput: React.FC<{
         />
       </div>
 
-      {error && <p className={`mt-space-1-5 text-xs ${TONE.danger.fg}`}>{error}</p>}
+      {error && <p className={`mt-space-1-5 ${FIELD_ERROR}`}>{error}</p>}
     </div>
   );
 
@@ -231,7 +231,7 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                         {contactLine ? (
                           <p className={`${TYPE.caption} truncate`}>{contactLine}</p>
                         ) : (
-                          <p className="text-xxs text-text-muted truncate">No contact on file</p>
+                          <p className={`${TYPE.caption} text-text-muted truncate`}>No contact on file</p>
                         )}
                       </div>
                     </button>

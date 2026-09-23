@@ -7,7 +7,7 @@ import React from 'react';
 import { Icon } from '@/components';
 import { ICONS } from '@/config/icons';
 import { companyConfig } from '@/config';
-import { AUTH_SHADOW, RADIUS } from '@/components/theme/recipes';
+import { AUTH_SHADOW, AUTH_TYPE, RADIUS } from '@/components/theme/recipes';
 
 interface LoginBrandingPanelProps {
   isVisible: boolean;
@@ -44,14 +44,14 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
             <h1 className="font-display text-5xl text-auth-fg tracking-tight">
               {company.company.name}
             </h1>
-            <p className="font-body text-auth-fg-light text-sm tracking-widest uppercase mt-space-1">
+            <p className={AUTH_TYPE.brandingKicker}>
               {company.company.subtitle}
             </p>
           </div>
         </div>
 
         {/* Tagline */}
-        <p className="font-body text-xl text-auth-fg-muted leading-relaxed max-w-md">
+        <p className={AUTH_TYPE.brandingLead}>
           {company.company.tagline}
         </p>
       </div>
@@ -71,10 +71,10 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
               <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-auth-fg-light" />
             </div>
             <div>
-              <h3 className="font-body font-semibold text-auth-fg text-sm leading-tight">
+              <h3 className={AUTH_TYPE.featureTitle}>
                 {feature.title}
               </h3>
-              <p className="font-body text-sm text-auth-fg-muted mt-space-1 leading-relaxed">
+              <p className={`${AUTH_TYPE.featureBody} mt-space-1 leading-relaxed`}>
                 {feature.description}
               </p>
             </div>
@@ -95,7 +95,7 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
               </div>
             ))}
           </div>
-          <p className="font-body text-sm text-auth-fg-muted">
+          <p className={AUTH_TYPE.footer}>
             {company.marketing.trustIndicator.text}{' '}
             <span className="text-auth-fg-light font-normal">
               {company.marketing.trustIndicator.count}

@@ -5,6 +5,9 @@
 
 [data-theme='aurora-light'] {
   --font-sans: 'Nunito', 'Inter', system-ui, sans-serif;
+  /* Optical correction for round sans x-height (tune via --type-base only). */
+  --type-base: 0.71875rem;
+  --type-page-title-weight: var(--font-weight-normal);
 
   /* ── Brand (violet — avatars, active nav, selected, focus) ── */
   --primitive-brand-50: #f3f0ff;

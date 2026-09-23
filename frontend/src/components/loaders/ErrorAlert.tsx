@@ -6,6 +6,7 @@
 import React from 'react';
 import { actionButtonPreset, Alert } from '@/components';
 import { Button } from '@/components';
+import { ERROR_SURFACE_TYPE } from '@/components/theme/recipes';
 
 /**
  * Generic error type that matches all context error types
@@ -59,9 +60,9 @@ export const ErrorAlert: React.FC<ErrorAlertProps> = ({
         <div>
           <p className="font-normal">{error.message}</p>
           {error.operation && (
-            <p className="text-sm opacity-80 mt-space-1">Failed operation: {error.operation}</p>
+            <p className={ERROR_SURFACE_TYPE.operation}>Failed operation: {error.operation}</p>
           )}
-          {error.code && <p className="text-xs opacity-60 mt-space-1">Error code: {error.code}</p>}
+          {error.code && <p className={ERROR_SURFACE_TYPE.codeMeta}>Error code: {error.code}</p>}
         </div>
         {showRetry && onRetry && (
           <div className="flex gap-space-2 mt-space-2">

@@ -14,7 +14,7 @@ import {
   type LabTabId,
 } from '@/features/lab';
 import { useAuthStore } from '@/app/authStore';
-import { RADIUS, TYPE } from '@/components/theme/recipes';
+import { INLINE_LINK, RADIUS, TYPE } from '@/components/theme/recipes';
 
 
 const LAB_QUEUE_ITEMS: Array<{
@@ -39,8 +39,8 @@ export const LabPipelineSummary: React.FC = () => {
   return (
     <Card padding="md">
       <div className="flex items-center justify-between mb-space-4">
-        <h2 className="text-sm font-normal text-text-primary">Lab Pipeline</h2>
-        <Link to={getLabTabPath('command-center')} className="text-xs text-brand hover:underline">
+        <h2 className={TYPE.amount}>Lab Pipeline</h2>
+        <Link to={getLabTabPath('command-center')} className={INLINE_LINK}>
           Command Center
         </Link>
       </div>

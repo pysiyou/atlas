@@ -15,7 +15,7 @@ import type { DetailFieldConfig } from '@/components';
 import { useUserLookup } from '@/lib/api/users';
 import { LAB_MODAL_DETAIL } from '../utils/labStyles';
 import { LabModalHeader, type LabWorkflowModalContext, type LabAuditLine } from './LabWorkflowHeader';
-import { DETAIL_TYPE } from '@/components/theme/recipes';
+import { DETAIL_TYPE, TYPE } from '@/components/theme/recipes';
 
 
 interface LabDetailModalProps {
@@ -220,7 +220,7 @@ export const ModalFooter: React.FC<ModalFooterProps> = ({
             <span>{statusMessage}</span>
           </div>
         ) : (
-          <div className={`flex items-center gap-space-1-5 text-xs ${statusClassName}`}>
+          <div className={`flex items-center gap-space-1-5 ${TYPE.value} ${statusClassName}`}>
             {statusIcon && (
               <div className="w-3.5 h-3.5 flex items-center justify-center shrink-0">{statusIcon}</div>
             )}

@@ -2,6 +2,7 @@
  * Unified quality issue form — used at collection (sample reject).
  */
 import React from 'react';
+import { TYPE } from '@/components/theme/recipes';
 import { Alert, SpinnerLoader } from '@/components';
 import { CatalogRejectionCriteriaFields } from './CatalogRejectionCriteriaFields';
 import { useQualityIssueOptions } from '../api/qualityIssues';
@@ -102,7 +103,7 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
 
   return (
     <div className="space-y-space-3">
-      {subtitle && <p className="text-xs text-muted-foreground">{subtitle}</p>}
+      {subtitle && <p className={TYPE.meta}>{subtitle}</p>}
 
       {isLoading || isSubmitting ? (
         <div className="flex justify-center py-space-4">
@@ -112,7 +113,7 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
         <>
           {error && (
             <Alert variant="danger" className="py-space-2">
-              <p className="text-xs">{error}</p>
+              <p className={TYPE.value}>{error}</p>
             </Alert>
           )}
 

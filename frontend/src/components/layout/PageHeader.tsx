@@ -47,9 +47,9 @@ function PageHeaderContent({
         role="banner"
       >
         <div className="min-w-0 flex-1 flex flex-col justify-center">
-          <h1 className={`${TYPE.pageTitle} truncate leading-tight`}>{title}</h1>
+          <h1 className={`${TYPE.pageTitle} truncate`}>{title}</h1>
           {subtitle != null && subtitle !== '' && (
-            <p className={`${TYPE.meta} truncate leading-tight`}>{subtitle}</p>
+            <p className={`${TYPE.meta} truncate`}>{subtitle}</p>
           )}
         </div>
         {actions != null && <div className={PAGE_HEADER.barActions}>{actions}</div>}

@@ -11,7 +11,7 @@ import { DialogHeader, DialogFooter } from './DialogChrome';
 import { MODULE_ICONS } from '@/config/icons';
 import { ICONS } from '@/config/icons';
 import { cn } from '@/utils';
-import { MENU_ITEM, RADIUS, TONE } from '@/components/theme/recipes';
+import { MENU_ITEM, RADIUS, TONE, TYPE } from '@/components/theme/recipes';
 
 export interface PopoverFormChromeProps {
   title: string;
@@ -147,19 +147,19 @@ export const RadioCard: React.FC<RadioCardProps> = ({
         {leading ? <div className="shrink-0">{leading}</div> : null}
         <div className="min-w-0 flex-1">
           <span
-            className={`block text-xs font-normal ${disabled ? 'text-text-disabled' : 'text-text-secondary'}`}
+            className={`block ${TYPE.label} font-normal ${disabled ? 'text-text-disabled' : 'text-text-secondary'}`}
           >
             {label}
           </span>
           {hasDescription ? (
             <span
-              className={`block text-xxs mt-space-0-5 ${disabled ? 'text-text-disabled' : 'text-text-tertiary'}`}
+              className={`block ${TYPE.caption} mt-space-0-5 ${disabled ? 'text-text-disabled' : 'text-text-tertiary'}`}
             >
               {description}
             </span>
           ) : null}
           {disabled && disabledReason ? (
-            <span className={`block text-xxs mt-space-1 ${TONE.danger.fg} font-normal`}>{disabledReason}</span>
+            <span className={`block ${TYPE.caption} mt-space-1 ${TONE.danger.fg} font-normal`}>{disabledReason}</span>
           ) : null}
         </div>
       </div>

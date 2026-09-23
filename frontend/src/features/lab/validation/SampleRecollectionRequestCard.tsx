@@ -3,7 +3,7 @@
  * Desktop uses LabWorkflowCardShell; mobile matches EscalationCard / ResultValidationCard layout.
  */
 import React, { useState } from 'react';
-import { RADIUS } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/components/theme/recipes';
 import { actionButtonPreset, Badge, Button, Card } from '@/components';
 import { cn, formatDateTime } from '@/utils';
 import { LabWorkflowCardShell } from '../components/LabWorkflowCardShell';
@@ -108,7 +108,7 @@ function RecollectionRequestCardDesktop({
   );
 
   const content = (
-    <div className="space-y-space-1 text-xs">
+    <div className={`space-y-space-1 ${TYPE.value}`}>
       <div>
         <span className={LAB_CARD_TYPOGRAPHY.fieldLabel}>Reason:</span>{' '}
         <span className={LAB_CARD_TYPOGRAPHY.fieldValue}>{request.reason}</span>
@@ -125,7 +125,7 @@ function RecollectionRequestCardDesktop({
         onClick={e => e.stopPropagation()}
         placeholder="Review notes (optional)"
         rows={2}
-        className={`w-full ${RADIUS.field} border border-border-default bg-surface px-space-2 py-space-1 resize-none text-xs`}
+        className={`w-full ${RADIUS.field} border border-border-default bg-surface px-space-2 py-space-1 resize-none ${TYPE.value}`}
       />
     </div>
   );
@@ -268,7 +268,7 @@ function RecollectionRequestCardMobile({
             onClick={e => e.stopPropagation()}
             placeholder="Review notes (optional)"
             rows={2}
-            className={`text-xs w-full ${RADIUS.field} border border-border-default bg-surface px-space-2 py-space-1 resize-none`}
+            className={`${TYPE.value} w-full ${RADIUS.field} border border-border-default bg-surface px-space-2 py-space-1 resize-none`}
           />
         </div>
       </LabMobileCardHeader>

@@ -26,7 +26,7 @@ import { MedicalHistorySection } from './MedicalHistorySection';
 import { VitalsSection } from './VitalsSection';
 import { usePatientFormAdapter } from '../hooks/usePatientFormAdapter';
 import { createFormDataAdapter, createErrorsAdapter } from '../utils/formTransformers';
-import { TYPE } from '@/components/theme/recipes';
+import { FORM_TAB_TITLE, TYPE } from '@/components/theme/recipes';
 
 
 export interface PatientFormTabsProps {
@@ -89,7 +89,7 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
               <div className={`${TYPE.meta} font-normal uppercase tracking-wide mb-space-1`}>
                 General
               </div>
-              <div className="text-base font-normal text-text-primary">Identity &amp; Contact</div>
+              <div className={`${FORM_TAB_TITLE} text-text-primary`}>Identity &amp; Contact</div>
             </div>
             <DemographicsSection
               formData={formData}
@@ -104,7 +104,7 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
               <div className={`${TYPE.meta} font-normal uppercase tracking-wide mb-space-1`}>
                 Primary Contact
               </div>
-              <div className="text-base font-normal text-text-primary">Emergency Contact</div>
+              <div className={`${FORM_TAB_TITLE} text-text-primary`}>Emergency Contact</div>
             </div>
             <EmergencyContactSection
               formData={formData}
@@ -122,7 +122,7 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
             <div className={`${TYPE.meta} font-normal uppercase tracking-wide mb-space-1`}>
               Medical Background
             </div>
-            <div className="text-base font-normal text-text-primary">
+            <div className={`${FORM_TAB_TITLE} text-text-primary`}>
               History, Conditions &amp; Lifestyle
             </div>
           </div>
@@ -137,7 +137,7 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
             <div className={`${TYPE.meta} font-normal uppercase tracking-wide mb-space-1`}>
               Vitals
             </div>
-            <div className="text-base font-normal text-text-primary">Measurements</div>
+            <div className={`${FORM_TAB_TITLE} text-text-primary`}>Measurements</div>
             <div className={`${TYPE.meta} mt-space-1-5 leading-relaxed`}>
               Fill any vitals you have. Hints show typical ranges.
             </div>
@@ -165,7 +165,7 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
             <div className={`${TYPE.meta} font-normal uppercase tracking-wide mb-space-1`}>
               Affiliation
             </div>
-            <div className="text-base font-normal text-text-primary">Select Your Plan</div>
+            <div className={`${FORM_TAB_TITLE} text-text-primary`}>Select Your Plan</div>
             <div className={`${TYPE.meta} mt-space-1-5 leading-relaxed`}>
               Choose a duration and pricing that works for you
             </div>

@@ -54,11 +54,16 @@ Feature code opens modals via **`useModal().openModal(...)`**, not by importing 
 | **`TYPE`** | Forms, filters, modals, page chrome, empty states | Table cells, detail panels |
 | **`TABLE_TYPE`** | `DataTable`, pagination, `*Table.config.tsx`, table column renders | `DetailField`, form inputs |
 | **`DETAIL_TYPE`** | `DetailField`, `DetailGroup`, `DetailsTable`, detail sections | Form inputs, table body cells |
+| **`RECEIPT_TYPE`** | `OrderReceipt` (all variants) | General forms / tables |
+| **`FIELD_ERROR`** / **`FIELD_ERROR_CAPTION`** | Validation messages under inputs | Body copy |
+| **`FILTER_TYPE`** | Filter modal section titles | Inline filter chips |
+| **`AUTH_TYPE`** | Login / auth module only | App chrome |
 
 - Table density: **`TABLE_TYPE.size`** (scale), **`TABLE_TYPE.columnTitle`** (column headers), **`TABLE_TYPE.cell`** (body); shell layout **`TABLE_SHELL`** in `recipes.ts`. Padding: **`TABLE_CELL`** + `data-table/constants.ts`.
 - Detail aliases in `@/utils/constants` (`DETAIL_LABEL`, `DETAIL_VALUE`, …) re-export **`DETAIL_TYPE`** for ergonomics.
-- **Global font scale:** edit `--font-size-*` in `components/theme/tokens/primitives.css` (`--font-size-base` is the document default on `body`).
-- **Exceptions:** compact print-style UIs (e.g. **`OrderReceipt`** compact/panel variants) may keep `text-xs` / `TYPE.caption` for density; detailed receipt line items use **`DETAIL_TYPE`** where noted in code.
+- **Global font scale:** tune `--type-base` (and optional `--type-ratio`) in `src/components/theme/tokens/typography.css`. Per-theme optical correction: set `--type-base` / role weights in `src/components/theme/themes/<skin>.css` (e.g. aurora-light). Legacy `--font-size-*` aliases map to the modular scale for `text-xs`…`text-lg` during migration.
+- **Semantic utilities:** `type-body`, `type-label`, etc. live in `src/components/theme/tokens/typography-utilities.css` (imported from `index.css`). **Do not** use raw `type-*` or `text-3xs`…`text-xl` in components/features (ESLint) — only in `src/components/theme/recipes.ts`.
+- **Print labels:** `SampleCollectionLabelActions` snapshots `--type-*` tokens into print HTML; class names `type-caption` / `type-amount` there are intentional.
 - Lab command center reference: **`commandCenterStyles.ts`** / **`dashboardStyles.ts`** (`TYPE` / `TONE`).
 
 ### Detail pages
