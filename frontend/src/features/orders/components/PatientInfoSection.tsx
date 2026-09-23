@@ -4,11 +4,13 @@
  */
 
 import React from 'react';
-import { Icon, Avatar, DetailField, EntityId } from '@/components';
+import { Icon, DetailField, EntityId } from '@/components';
 import { calculateAge } from '@/utils';
 import type { Patient } from '@/types';
 import { formatOrderDate } from '@/utils/date';
-import { ICONS } from '@/config/icons';
+import { ICONS, getDataFieldIcon } from '@/config/icons';
+
+import { formatAddress } from '@/features/patients';
 
 import { ORDER_DETAIL_INFO_FIELDS_LAYOUT } from './OrderInfoSection';
 
@@ -25,7 +27,7 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
 
   if (!patient) {
     return (
-      <div className="flex items-center justify-center h-full min-h-[200px]">
+      <div className="flex items-center justify-center h-full min-h-50">
         <div className="text-center">
           <Icon
             name={ICONS.dataFields.user}
@@ -37,23 +39,30 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
     );
   }
 
+  const age =
+    patient.dateOfBirth != null && patient.dateOfBirth !== ''
+      ? calculateAge(patient.dateOfBirth)
+      : null;
+  const showAge = age != null && Number.isFinite(age);
+
   return (
     <div className={containerClass}>
-      <div className="flex gap-space-3 items-center col-span-full">
-        <Avatar
-          primaryText={patient.fullName}
-          secondaryText={<EntityId type="patient" value={patient.id} />}
-          size="sm"
-        />
-      </div>
+      <DetailField
+        icon={getDataFieldIcon('user')}
+        label="Patient ID"
+        value={<EntityId type="patient" value={patient.id} />}
+        orientation="vertical"
+      />
       <DetailField
         icon={ICONS.dataFields.userHands}
-        label="Age & Gender"
-        value={
-          <span className="capitalize">
-            {calculateAge(patient.dateOfBirth)} years old • {patient.gender}
-          </span>
-        }
+        label="Patient Name"
+        value={patient.fullName}
+        orientation="vertical"
+      />
+      <DetailField
+        icon={ICONS.dataFields.gender}
+        label="Gender"
+        value={<span className="capitalize">{patient.gender}</span>}
         orientation="vertical"
       />
       <DetailField
@@ -62,6 +71,9 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
         value={
           <span className="whitespace-nowrap truncate">
             {formatOrderDate(patient.dateOfBirth, 'long')}
+            {showAge ? (
+              <span className="text-text-secondary"> ({age} years old)</span>
+            ) : null}
           </span>
         }
         orientation="vertical"
@@ -80,6 +92,12 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
           orientation="vertical"
         />
       )}
+      <DetailField
+        icon={ICONS.dataFields.address}
+        label="Address"
+        value={<span className="line-clamp-3 wrap-break-word">{formatAddress(patient.address)}</span>}
+        orientation="vertical"
+      />
     </div>
   );
 };
