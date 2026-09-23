@@ -4,7 +4,6 @@
  */
 
 import React, { forwardRef, memo, type ButtonHTMLAttributes } from 'react';
-import { ICONS, MODULE_ICONS } from '@/config/icons';
 import { SpinnerLoader } from '@/components/loaders/SpinnerLoader';
 import { CONTROL, RADIUS } from '@/components/theme/recipes';
 import { cn } from '@/utils/cn';
@@ -19,90 +18,12 @@ export type BaseVariant =
   | 'warning'
   | 'ghost';
 
-export type SemanticVariant =
-  | 'save'
-  | 'cancel'
-  | 'delete'
-  | 'reject'
-  | 'approve'
-  | 'collect'
-  | 'edit'
-  | 'add'
-  | 'create'
-  | 'close'
-  | 'next'
-  | 'previous'
-  | 'submit'
-  | 'retry'
-  | 'print'
-  | 'view'
-  | 'download'
-  | 'filter'
-  | 'search'
-  | 'refresh'
-  | 'back'
-  | 'logout'
-  | 'remove'
-  | 'home'
-  | 'confirm'
-  | 'expand'
-  | 'collapse'
-  | 'sidebarClose'
-  | 'menu';
-
-export type ButtonLikeVariant = BaseVariant | SemanticVariant;
-export type ButtonVariant = ButtonLikeVariant;
-export type IconButtonVariant = ButtonLikeVariant;
+export type ButtonVariant = BaseVariant;
+export type IconButtonVariant = BaseVariant;
 export type ButtonSize = 'sm' | 'md' | 'lg';
 export type IconButtonSize = ButtonSize;
 export type ButtonLayout = 'text' | 'icon-text';
 export type IconButtonShape = 'circle' | 'square';
-
-const SEMANTIC_VARIANTS: Record<SemanticVariant, { style: BaseVariant; icon: IconName }> = {
-  save: { style: 'primary', icon: ICONS.actions.save },
-  submit: { style: 'primary', icon: ICONS.actions.check },
-  approve: { style: 'success', icon: ICONS.actions.like },
-  collect: { style: 'primary', icon: MODULE_ICONS.laboratory },
-  confirm: { style: 'success', icon: ICONS.actions.check },
-  add: { style: 'primary', icon: ICONS.actions.add },
-  create: { style: 'primary', icon: ICONS.actions.add },
-  edit: { style: 'primary', icon: ICONS.actions.edit },
-  cancel: { style: 'outline', icon: ICONS.actions.cross },
-  close: { style: 'ghost', icon: ICONS.actions.cross },
-  back: { style: 'outline', icon: ICONS.actions.arrowLeft },
-  previous: { style: 'outline', icon: ICONS.actions.chevronLeft },
-  next: { style: 'primary', icon: ICONS.actions.chevronRight },
-  home: { style: 'primary', icon: ICONS.actions.home },
-  expand: { style: 'secondary', icon: ICONS.actions.chevronDown },
-  collapse: { style: 'secondary', icon: ICONS.actions.chevronLeft },
-  sidebarClose: { style: 'ghost', icon: ICONS.actions.doubleArrowLeft },
-  menu: { style: 'primary', icon: ICONS.actions.menuDots },
-  delete: { style: 'danger', icon: ICONS.actions.delete },
-  reject: { style: 'danger', icon: ICONS.actions.dislike },
-  retry: { style: 'primary', icon: ICONS.actions.loading },
-  refresh: { style: 'secondary', icon: ICONS.actions.loading },
-  print: { style: 'secondary', icon: ICONS.actions.printer },
-  view: { style: 'secondary', icon: ICONS.actions.view },
-  download: { style: 'secondary', icon: ICONS.actions.download },
-  filter: { style: 'primary', icon: ICONS.actions.filter },
-  search: { style: 'primary', icon: ICONS.actions.search },
-  logout: { style: 'danger', icon: ICONS.actions.logout },
-  remove: { style: 'danger', icon: ICONS.actions.cross },
-};
-
-function baseTone(variant: ButtonLikeVariant): BaseVariant {
-  if (variant in SEMANTIC_VARIANTS) {
-    return SEMANTIC_VARIANTS[variant as SemanticVariant].style;
-  }
-  return variant as BaseVariant;
-}
-
-function defaultIcon(variant: ButtonLikeVariant): IconName | undefined {
-  if (variant in SEMANTIC_VARIANTS) {
-    return SEMANTIC_VARIANTS[variant as SemanticVariant].icon;
-  }
-  return undefined;
-}
 
 const chrome =
   `inline-flex shrink-0 items-center justify-center font-normal whitespace-nowrap overflow-hidden cursor-pointer transition-colors duration-200 ${CONTROL.focusVisible} disabled:opacity-50 disabled:cursor-not-allowed`;
@@ -148,35 +69,30 @@ const iconButtonShape: Record<IconButtonShape, string> = {
 };
 
 function labelButtonClasses(
-  variant: ButtonLikeVariant,
+  variant: BaseVariant,
   size: ButtonSize,
   fullWidth?: boolean,
   className?: string
 ): string {
-  return cn(chrome, tone[baseTone(variant)], labelButtonSize[size], fullWidth && 'w-full', className);
+  return cn(chrome, tone[variant], labelButtonSize[size], fullWidth && 'w-full', className);
 }
 
 function iconButtonClasses(
-  variant: ButtonLikeVariant,
+  variant: BaseVariant,
   size: ButtonSize,
   shape: IconButtonShape,
   className?: string
 ): string {
-  let colors = tone[baseTone(variant)];
-  if (variant === 'close') colors = tone.danger;
-  if (variant === 'sidebarClose') {
-    colors = 'bg-surface-hover text-text-secondary hover:bg-border-subtle focus-visible:ring-text-muted';
-  }
-  return cn(chrome, colors, iconButtonBox[size], iconButtonShape[shape], className);
+  return cn(chrome, tone[variant], iconButtonBox[size], iconButtonShape[shape], className);
 }
 
 function resolveLayout(
   layout: ButtonLayout | undefined,
-  variant: ButtonLikeVariant,
-  icon: React.ReactNode | undefined
+  icon: React.ReactNode | undefined,
+  iconName: IconName | undefined
 ): ButtonLayout {
   if (layout) return layout;
-  if (icon != null || defaultIcon(variant)) return 'icon-text';
+  if (icon != null || iconName != null) return 'icon-text';
   return 'text';
 }
 
@@ -185,6 +101,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: ButtonSize;
   layout?: ButtonLayout;
   icon?: React.ReactNode;
+  iconName?: IconName;
   iconPosition?: 'left' | 'right';
   fullWidth?: boolean;
   isLoading?: boolean;
@@ -197,6 +114,7 @@ export const Button: React.FC<ButtonProps> = ({
   size = 'md',
   layout,
   icon,
+  iconName,
   iconPosition = 'left',
   fullWidth = false,
   isLoading = false,
@@ -205,9 +123,7 @@ export const Button: React.FC<ButtonProps> = ({
   disabled,
   ...props
 }) => {
-  const resolvedVariant = variant as ButtonLikeVariant;
-  const withIcon = resolveLayout(layout, resolvedVariant, icon) === 'icon-text';
-  const iconName = withIcon ? defaultIcon(resolvedVariant) : undefined;
+  const withIcon = resolveLayout(layout, icon, iconName) === 'icon-text';
   const shouldRenderIcon = withIcon && (icon != null || iconName != null);
   const iconClass = labelIconSize[size];
 
@@ -258,7 +174,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   return (
     <button
-      className={labelButtonClasses(resolvedVariant, size, fullWidth, className)}
+      className={labelButtonClasses(variant, size, fullWidth, className)}
       disabled={disabled || isLoading}
       {...props}
     >
@@ -269,6 +185,7 @@ export const Button: React.FC<ButtonProps> = ({
 
 interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
   icon?: React.ReactNode;
+  iconName?: IconName;
   variant?: IconButtonVariant;
   size?: IconButtonSize;
   shape?: IconButtonShape;
@@ -276,10 +193,8 @@ interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 
 
 export const IconButton = memo(
   forwardRef<HTMLButtonElement, IconButtonProps>(
-    ({ icon, variant = 'primary', size = 'md', shape = 'circle', className, disabled, ...props }, ref) => {
-      const resolvedVariant = variant as ButtonLikeVariant;
+    ({ icon, iconName, variant = 'primary', size = 'md', shape = 'circle', className, disabled, ...props }, ref) => {
       const iconClass = iconButtonIconSize[size];
-      const iconName = defaultIcon(resolvedVariant);
 
       let content: React.ReactNode = null;
       if (icon && React.isValidElement(icon)) {
@@ -296,7 +211,7 @@ export const IconButton = memo(
         <button
           ref={ref}
           disabled={disabled}
-          className={iconButtonClasses(resolvedVariant, size, shape, className)}
+          className={iconButtonClasses(variant, size, shape, className)}
           {...props}
         >
           {content}

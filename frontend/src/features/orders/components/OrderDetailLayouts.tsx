@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Panel, IconButton, Icon } from '@/components';
+import { actionButtonPreset, Panel, IconButton, Icon } from '@/components';
 import { ICONS } from '@/config/icons';
 import { LAYOUT, SPACING } from '@/components/theme/recipes';
 import { cn } from '@/utils';
@@ -47,7 +47,7 @@ function BillingSummaryPanelActions({
     <div className={`flex items-center ${SPACING.gapInline}`}>
       {invoice != null && (
         <IconButton
-          variant="print"
+          {...actionButtonPreset('print')}
           size="sm"
           title="View Invoice"
           icon={<Icon name={ICONS.dataFields.bill} className="w-4 h-4" />}
@@ -70,7 +70,6 @@ function getTestsHeaderMeta(totalTests: number, supersededCount: number, removed
 }
 
 interface OrderDetailPanelsProps extends LayoutProps {
-  infoLayout: 'grid' | 'column';
   testsVariant: 'simple' | 'detailed';
   fillHeight: boolean;
 }
@@ -88,7 +87,6 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
   onViewPatient,
   onViewInvoice,
   onPaymentSuccess,
-  infoLayout,
   testsVariant,
   fillHeight,
 }) => {
@@ -104,7 +102,7 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
     <>
       <div className={cn(LAYOUT.detailGrid3, fillHeight && 'min-h-0')}>
         <Panel title="Order Information" className={panelClass} scroll={fillScroll}>
-          <OrderInfoSection order={order} layout={infoLayout} />
+          <OrderInfoSection order={order} />
         </Panel>
 
         <Panel
@@ -113,11 +111,11 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
           scroll={fillScroll}
           headerEnd={
             patient ? (
-              <IconButton onClick={onViewPatient} variant="view" size="sm" title="View Patient" />
+              <IconButton onClick={onViewPatient} {...actionButtonPreset('view')} size="sm" title="View Patient" />
             ) : undefined
           }
         >
-          <PatientInfoSection patient={patient} onViewPatient={onViewPatient} layout={infoLayout} />
+          <PatientInfoSection patient={patient} onViewPatient={onViewPatient} />
         </Panel>
 
         <Panel
@@ -184,7 +182,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
   return (
     <div className={LAYOUT.detailScroll}>
       <Panel title="Order Information" className="shrink-0" scroll="visible">
-        <OrderInfoSection order={order} layout="grid" />
+        <OrderInfoSection order={order} />
       </Panel>
 
       <Panel
@@ -193,11 +191,11 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
         scroll="visible"
         headerEnd={
           patient ? (
-            <IconButton onClick={onViewPatient} variant="view" size="sm" title="View Patient" />
+            <IconButton onClick={onViewPatient} {...actionButtonPreset('view')} size="sm" title="View Patient" />
           ) : undefined
         }
       >
-        <PatientInfoSection patient={patient} onViewPatient={onViewPatient} layout="grid" />
+        <PatientInfoSection patient={patient} onViewPatient={onViewPatient} />
       </Panel>
 
       <Panel
@@ -243,7 +241,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
  */
 export const MediumScreenLayout: React.FC<LayoutProps> = props => (
   <div className={LAYOUT.detailGridRows2}>
-    <OrderDetailPanels {...props} infoLayout="column" testsVariant="detailed" fillHeight={false} />
+    <OrderDetailPanels {...props} testsVariant="detailed" fillHeight={false} />
   </div>
 );
 
@@ -252,6 +250,6 @@ export const MediumScreenLayout: React.FC<LayoutProps> = props => (
  */
 export const LargeScreenLayout: React.FC<LayoutProps> = props => (
   <div className={LAYOUT.detailGridRowsSplit} style={{ height: '100%', maxHeight: '100%' }}>
-    <OrderDetailPanels {...props} infoLayout="column" testsVariant="detailed" fillHeight />
+    <OrderDetailPanels {...props} testsVariant="detailed" fillHeight />
   </div>
 );

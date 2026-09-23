@@ -37,7 +37,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
 
   const baseClasses = `
     animate-pulse bg-surface-hover
-    ${circle ? RADIUS.pill : RADIUS.card}
+    ${circle ? RADIUS.pill : RADIUS.surface}
     ${className}
   `.trim();
 
@@ -112,7 +112,7 @@ export const SkeletonCard: React.FC<{
   showAvatar?: boolean;
   lines?: number;
 }> = ({ className = '', showAvatar = true, lines = 3 }) => (
-  <div className={`${SURFACE.raised} ${RADIUS.card} ${SHADOW.subtle} p-panel ${className}`}>
+  <div className={`${SURFACE.raised} ${RADIUS.surface} ${SHADOW.subtle} p-panel ${className}`}>
     <div className="flex items-start gap-layout-section">
       {showAvatar && <SkeletonAvatar size="md" />}
       <div className="flex-1">
@@ -188,7 +188,7 @@ export const SkeletonPage: React.FC<{
     </div>
 
     {/* Table */}
-    <div className={`${SURFACE.raised} ${RADIUS.card} ${SHADOW.subtle}`}>
+    <div className={`${SURFACE.raised} ${RADIUS.surface} ${SHADOW.subtle}`}>
       {/* Table header */}
       <div className="flex items-center gap-layout-section py-space-3 px-table-cell-x-default border border-border-default border-b bg-surface-page">
         {Array.from({ length: 6 }).map((_, index) => (

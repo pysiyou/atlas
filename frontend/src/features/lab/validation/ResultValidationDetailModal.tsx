@@ -12,7 +12,7 @@
 
 import React, { useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { Button, Panel, EntityId } from '@/components';
+import { actionButtonPreset, Button, Panel, EntityId } from '@/components';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { ResultValidationForm } from './ResultValidationForm';
 import {
@@ -129,7 +129,7 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
       footer={
         readOnly ? (
           <ModalFooter statusMessage="">
-            <Button onClick={onClose} variant="cancel" size="md" layout="icon-text">Close</Button>
+            <Button onClick={onClose} {...actionButtonPreset('cancel')} size="md" layout="icon-text">Close</Button>
           </ModalFooter>
         ) : (
           <ModalFooter statusMessage="" statusClassName="text-text-tertiary">
@@ -139,7 +139,7 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
               testName={test.testName}
               patientName={test.patientName}
               trigger={
-                <Button variant="reject" size="md" layout="icon-text">
+                <Button {...actionButtonPreset('reject')} size="md" layout="icon-text">
                   Reject
                 </Button>
               }
@@ -148,7 +148,7 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
                 onClose();
               }}
             />
-            <Button onClick={handleApprove} variant="approve" size="md" layout="icon-text" isLoading={isApproving}>
+            <Button onClick={handleApprove} {...actionButtonPreset('approve')} size="md" layout="icon-text" isLoading={isApproving}>
               Approve
             </Button>
           </ModalFooter>

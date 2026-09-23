@@ -44,6 +44,7 @@ export const DemographicsSection: React.FC<
       <div className="grid grid-cols-1 md:grid-cols-2 gap-layout-section">
         <div className="md:col-span-2">
           <Input
+            inferIcon
             label="Full Name"
             name="fullName"
             value={formData.fullName}
@@ -83,6 +84,7 @@ export const DemographicsSection: React.FC<
           {errors.gender && <p className={`mt-space-1 text-sm ${TONE.danger.fg}`}>{errors.gender}</p>}
         </div>
         <Input
+          inferIcon
           label="Phone Number"
           name="phone"
           type="tel"
@@ -95,6 +97,7 @@ export const DemographicsSection: React.FC<
           placeholder="(555) 123-4567"
         />
         <Input
+          inferIcon
           label="Email Address"
           name="email"
           type="email"
@@ -106,6 +109,7 @@ export const DemographicsSection: React.FC<
           placeholder="patient@email.com"
         />
         <Input
+          inferIcon
           label="Height (cm)"
           name="height"
           type="number"
@@ -120,6 +124,7 @@ export const DemographicsSection: React.FC<
           placeholder="175.5"
         />
         <Input
+          inferIcon
           label="Weight (kg)"
           name="weight"
           type="number"

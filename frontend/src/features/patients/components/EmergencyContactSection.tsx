@@ -47,6 +47,7 @@ export const EmergencyContactSection: React.FC<
     <div className="space-y-space-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-layout-section">
         <Input
+          inferIcon
           label="Contact Full Name"
           name="emergencyContactFullName"
           value={formData.emergencyContactFullName}
@@ -77,6 +78,7 @@ export const EmergencyContactSection: React.FC<
           )}
         </div>
         <Input
+          inferIcon
           label="Contact Phone"
           name="emergencyContactPhone"
           type="tel"
@@ -89,6 +91,7 @@ export const EmergencyContactSection: React.FC<
           placeholder="(555) 987-6543"
         />
         <Input
+          inferIcon
           label="Contact Email"
           name="emergencyContactEmail"
           type="email"

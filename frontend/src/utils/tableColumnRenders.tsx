@@ -1,5 +1,5 @@
 /**
- * Reusable table column render helpers for *TableConfig files.
+ * Shared table column render helpers for entity table configs.
  */
 
 import type { MouseEvent, ReactNode } from 'react';
@@ -9,7 +9,6 @@ import { formatDate, formatDateTime, formatPhoneNumber, calculateAge, formatCurr
 import { DATA_AMOUNT } from '@/utils/constants';
 import type { OrderTest } from '@/types';
 import { TYPE } from '@/components/theme/recipes';
-
 
 export function renderPatientId(patientId: string | number): ReactNode {
   return <EntityId type="patient" value={patientId} variant="block" />;

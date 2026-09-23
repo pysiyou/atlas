@@ -4,8 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { Popover, Button, Alert, FooterInfo } from '@/components';
-import { LabWorkflowPopoverChrome } from './LabWorkflowPopoverChrome';
+import { actionButtonPreset, Popover, Button, Alert, FooterInfo, PopoverFormChrome } from '@/components';
 import { MODULE_ICONS } from '@/config/icons';
 import { useQualityIssuePopover } from '../hooks/useQualityIssuePopover';
 import type { QualityIssueResult, RemedyType } from '@/types/lab-operations';
@@ -174,7 +173,7 @@ const QualityIssuePopoverContent: React.FC<QualityIssuePopoverContentProps> = ({
   }
 
   return (
-    <LabWorkflowPopoverChrome
+    <PopoverFormChrome
       title={copy.title}
       subtitle={subtitle || undefined}
       onCancel={onCancel}
@@ -203,7 +202,7 @@ const QualityIssuePopoverContent: React.FC<QualityIssuePopoverContentProps> = ({
           onRemedyChange: setPreferredRemedy,
         }}
       />
-    </LabWorkflowPopoverChrome>
+    </PopoverFormChrome>
   );
 };
 
@@ -233,7 +232,7 @@ export const QualityIssuePopover: React.FC<QualityIssuePopoverProps> = ({
       preventClose={effectiveSubmitting}
       trigger={
         trigger ?? (
-          <Button variant="reject" size="sm" title={QUALITY_ISSUE_POPOVER_COPY.triggerTitle}>
+          <Button {...actionButtonPreset('reject')} size="sm" title={QUALITY_ISSUE_POPOVER_COPY.triggerTitle}>
             {QUALITY_ISSUE_POPOVER_COPY.triggerTitle}
           </Button>
         )

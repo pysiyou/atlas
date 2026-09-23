@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { Badge, Card, IconButton } from '@/components';
+import { actionButtonPreset, Badge, Card, IconButton } from '@/components';
 import { cn } from '@/utils';
 import { usePatientNameLookup } from '@/features/patients';
 import { useLabWorkflowCardClickGuard, useOrderTestQueueState } from '@/features/lab/hooks';
@@ -152,7 +152,7 @@ function ResultEntryCardMobile({
 
   return (
     <Card
-      padding="list"
+      padding="sm"
       hover
       className={cn(
         LAB_MOBILE_CARD.surface,
@@ -182,7 +182,7 @@ function ResultEntryCardMobile({
         }
         actions={
           <IconButton
-            variant="edit"
+            {...actionButtonPreset('edit')}
             size="sm"
             title="Enter Results"
             onClick={e => {

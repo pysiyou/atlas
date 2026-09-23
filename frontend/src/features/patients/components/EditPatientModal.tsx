@@ -5,12 +5,10 @@
 
 import React from 'react';
 import type { Patient } from '@/types';
-import { Modal, CircularProgress, FooterInfo } from '@/components';
+import { Modal, CircularProgress, FooterInfo, FormDialogFooter, ErrorBoundary } from '@/components';
 import { MODULE_ICONS } from '@/config/icons';
-import { ErrorBoundary } from '@/components';
 import { useEditPatientForm } from '../hooks/useEditPatientForm';
 import { PatientFormTabs } from './PatientFormTabs';
-import { OrderModalFooter } from '@/features/orders';
 import { CONTROL, RADIUS } from '@/components/theme/recipes';
 
 interface EditPatientModalProps {
@@ -92,7 +90,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
         isOpen={isOpen}
         onClose={onClose}
         title={modalTitle}
-        maxWidth="max-w-3xl"
+        size="3xl"
         disableClose={isSubmitting}
       >
         <div className="flex flex-col h-full bg-surface-page">
@@ -104,7 +102,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
                 onTabChange={setActiveTab}
                 formProgress={formProgress}
               />
-              <div className={`${RADIUS.overlay} border border-border-default bg-surface p-space-6`}>
+              <div className={`${RADIUS.menu} border border-border-default bg-surface p-space-6`}>
                 <PatientFormTabs
                   activeTab={activeTab}
                   register={register}
@@ -118,7 +116,7 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
               </div>
             </form>
           </div>
-          <OrderModalFooter
+          <FormDialogFooter
             onClose={onClose}
             submitLabel={submitLabel}
             isSubmitting={isSubmitting}

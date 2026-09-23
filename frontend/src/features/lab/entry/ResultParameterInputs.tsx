@@ -11,7 +11,7 @@ import { ICONS } from '@/config/icons';
 import type { TestParameter } from '@/types';
 import { validatePhysiologicValue, getPhysiologicLimit } from '@/features/lab/utils';
 import { titleCaseWords } from '@/utils/string';
-import { RadioCard } from '../components/LabWorkflowPopoverChrome';
+import { RadioCard } from '@/components';
 
 const SelectParameterInput: React.FC<{
   param: TestParameter;

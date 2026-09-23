@@ -4,7 +4,7 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { Badge, Button } from '@/components';
+import { actionButtonPreset, Badge, Button } from '@/components';
 import { LabWorkflowDetailModal, ModalFooter } from '../components/LabWorkflowDetailModal';
 import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
@@ -112,7 +112,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
       footer={
         readOnly ? (
           <ModalFooter statusMessage="">
-            <Button onClick={onClose} variant="cancel" size="md" layout="icon-text">Close</Button>
+            <Button onClick={onClose} {...actionButtonPreset('cancel')} size="md" layout="icon-text">Close</Button>
           </ModalFooter>
         ) : (
           <EscalationResolutionFooter

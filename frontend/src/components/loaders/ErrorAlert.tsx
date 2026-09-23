@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Alert } from '@/components';
+import { actionButtonPreset, Alert } from '@/components';
 import { Button } from '@/components';
 
 /**
@@ -65,7 +65,7 @@ export const ErrorAlert: React.FC<ErrorAlertProps> = ({
         </div>
         {showRetry && onRetry && (
           <div className="flex gap-space-2 mt-space-2">
-            <Button variant="retry" size="sm" onClick={onRetry}>
+            <Button {...actionButtonPreset('retry')} size="sm" onClick={onRetry}>
               Retry
             </Button>
           </div>

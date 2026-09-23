@@ -3,116 +3,10 @@
  */
 
 import { TONE } from '@/components/theme/recipes';
+import { resolveStatusBadgeColor } from '@/utils/statusBadge';
+import type { BadgeColor } from './badgeTypes';
 
-export type BadgeColor =
-  | 'neutral'
-  | 'primary'
-  | 'success'
-  | 'warning'
-  | 'danger'
-  | 'info'
-  | 'purple'
-  | 'pink'
-  | 'teal'
-  | 'orange'
-  | 'indigo'
-  | 'cyan'
-  | 'muted';
-
-const ORDER_COLOR_MAP: Record<string, BadgeColor> = {
-  ordered: 'info',
-  running: 'warning',
-  completed: 'success',
-  cancelled: 'danger',
-};
-
-const SAMPLE_COLOR_MAP: Record<string, BadgeColor> = {
-  pending: 'neutral',
-  collected: 'info',
-  received: 'info',
-  accessioned: 'info',
-  'sample-collected': 'info',
-  resulted: 'purple',
-  validated: 'success',
-  cancelled: 'danger',
-  escalated: 'danger',
-  superseded: 'neutral',
-  removed: 'neutral',
-  stored: 'teal',
-  disposed: 'neutral',
-};
-
-const PAYMENT_COLOR_MAP: Record<string, BadgeColor> = {
-  unpaid: 'danger',
-  pending: 'warning',
-  partial: 'orange',
-  paid: 'success',
-  refunded: 'info',
-  cancelled: 'neutral',
-};
-
-const CATALOG_COLOR_MAP: Record<string, BadgeColor> = {
-  active: 'success',
-  inactive: 'neutral',
-  deprecated: 'warning',
-  draft: 'info',
-  blood: 'danger',
-  urine: 'warning',
-  stool: 'orange',
-  swab: 'info',
-  tissue: 'purple',
-  csf: 'teal',
-  sputum: 'indigo',
-  plasma: 'pink',
-  serum: 'cyan',
-  other: 'neutral',
-};
-
-const MISC_COLOR_MAP: Record<string, BadgeColor> = {
-  default: 'neutral',
-  primary: 'primary',
-  secondary: 'neutral',
-  outline: 'neutral',
-  ghost: 'neutral',
-  error: 'danger',
-  rejected: 'danger',
-  escalated: 'danger',
-  low: 'neutral',
-  medium: 'info',
-  high: 'warning',
-  urgent: 'danger',
-  male: 'info',
-  female: 'pink',
-  friend: 'purple',
-  child: 'info',
-  parent: 'success',
-  sibling: 'danger',
-  spouse: 'warning',
-  'chronic-condition': 'orange',
-  medication: 'info',
-  allergy: 'danger',
-  surgery: 'purple',
-  administrator: 'danger',
-  receptionist: 'info',
-  'lab-technician': 'success',
-  'lab-technician-plus': 'purple',
-  pathologist: 'purple',
-};
-
-const COLOR_MAP: Record<string, BadgeColor> = {
-  danger: 'danger',
-  warning: 'warning',
-  success: 'success',
-  info: 'info',
-  neutral: 'neutral',
-  ...MISC_COLOR_MAP,
-  ...ORDER_COLOR_MAP,
-  ...SAMPLE_COLOR_MAP,
-  ...PAYMENT_COLOR_MAP,
-  ...CATALOG_COLOR_MAP,
-};
-
-export type BadgeVariant = BadgeColor | keyof typeof COLOR_MAP | (string & {});
+export type { BadgeColor, BadgeVariant } from './badgeTypes';
 
 const UNIFIED_STYLES: Record<BadgeColor, { text: string; dot: string }> = {
   neutral: { text: TONE.neutral.fgEmphasis, dot: TONE.neutral.fill },
@@ -156,30 +50,6 @@ export const CONTAINER_STYLES: Record<string, string> = {
   'container-black': 'bg-container-black-bg text-container-black-text',
 };
 
-export const DISPLAY_LABELS: Record<string, string> = {
-  pending: 'PENDING',
-  'sample-collected': 'COLLECTED',
-  running: 'RUNNING',
-  resulted: 'RESULTED',
-  validated: 'VALIDATED',
-  cancelled: 'CANCELLED',
-  escalated: 'ESCALATED',
-  superseded: 'SUPERSEDED',
-  removed: 'REMOVED',
-  'chronic-condition': 'CHRONIC',
-  'credit-card': 'CREDIT CARD',
-  'debit-card': 'DEBIT CARD',
-  'bank-transfer': 'BANK TRANSFER',
-  mobile: 'MOBILE',
-  're-test': 'RE-TEST',
-  're-collect': 'RE-COLLECT',
-  escalate: 'ESCALATE',
-  authorize_retest: 'AUTHORIZE RE-TEST',
-  authorize_recollect: 'AUTHORIZE RE-COLLECT',
-  apply_amendment: 'APPLY AMENDMENT',
-  cancel_test: 'CANCEL TEST',
-};
-
 /** Unified = neutral surface + colored text; tinted = filled chip. */
 export function getColorStyles(color: BadgeColor, appearance: 'unified' | 'tinted') {
   if (appearance === 'tinted') {
@@ -190,5 +60,5 @@ export function getColorStyles(color: BadgeColor, appearance: 'unified' | 'tinte
 }
 
 export function resolveColor(variant: string): BadgeColor {
-  return COLOR_MAP[variant.toLowerCase()] ?? 'neutral';
+  return resolveStatusBadgeColor(variant);
 }

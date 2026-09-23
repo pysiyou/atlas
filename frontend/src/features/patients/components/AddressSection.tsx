@@ -9,6 +9,7 @@ export const AddressSection: React.FC<
     <div className="grid grid-cols-1 md:grid-cols-2 gap-layout-section">
       <div className="md:col-span-2">
         <Input
+          inferIcon
           label="Street Address"
           name="street"
           value={formData.street}
@@ -21,6 +22,7 @@ export const AddressSection: React.FC<
         />
       </div>
       <Input
+        inferIcon
         label="City"
         name="city"
         value={formData.city}
@@ -30,6 +32,7 @@ export const AddressSection: React.FC<
         placeholder="Springfield"
       />
       <Input
+        inferIcon
         label="Postal Code"
         name="postalCode"
         value={formData.postalCode}

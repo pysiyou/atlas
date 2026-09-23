@@ -10,7 +10,7 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { Badge, Button, Icon, CircularProgress, Panel, EntityId } from '@/components';
+import { actionButtonPreset, Badge, Button, Icon, CircularProgress, Panel, EntityId } from '@/components';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { ResultEntryForm } from './ResultEntryForm';
 import {
@@ -196,16 +196,16 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
       footer={
         readOnly ? (
           <ModalFooter statusMessage="">
-            <Button onClick={onClose} variant="cancel" size="md" layout="icon-text">Close</Button>
+            <Button onClick={onClose} {...actionButtonPreset('cancel')} size="md" layout="icon-text">Close</Button>
           </ModalFooter>
         ) : (
           <ModalFooter statusMessage="">
-            <Button onClick={onClose} variant="cancel" size="md" layout="icon-text" disabled={isSaving}>
+            <Button onClick={onClose} {...actionButtonPreset('cancel')} size="md" layout="icon-text" disabled={isSaving}>
               Cancel
             </Button>
             <Button
               onClick={handleSave}
-              variant="save"
+              {...actionButtonPreset('save')}
               size="md"
               layout="icon-text"
               disabled={!isComplete}

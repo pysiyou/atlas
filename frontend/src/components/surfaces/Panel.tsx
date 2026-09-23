@@ -4,7 +4,7 @@
 /* eslint-disable react-refresh/only-export-components -- single module: Panel + variant tokens */
 
 import React from 'react';
-import { PANEL_LAYOUT, RADIUS, SHADOW, SPACING, SURFACE, TYPE } from '@/components/theme/recipes';
+import { PANEL_SHELL, SPACING } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
 export type PanelVariant = 'page' | 'lab';
@@ -23,31 +23,6 @@ export const PANEL_SCROLL: Record<Exclude<PanelScroll, 'default'>, string> = {
   auto: 'overflow-y-auto',
   visible: 'overflow-visible',
 };
-
-export const PANEL_VARIANTS = {
-  page: {
-    shell: `h-full ${SURFACE.raised} ${RADIUS.field} ${SHADOW.subtle} overflow-hidden flex flex-col`,
-    header: PANEL_LAYOUT.pageHeader,
-    headerBetween: PANEL_LAYOUT.pageHeaderBetween,
-    title: `m-0 truncate leading-none ${TYPE.panelTitle}`,
-    meta: `flex h-6 shrink-0 items-center ${TYPE.caption}`,
-    headerActions: 'flex shrink-0 items-center min-h-0',
-    body: 'flex-1 min-h-0',
-    padding: PANEL_LAYOUT.pageBodyPadding,
-    scrollDefault: 'overflow-hidden',
-  },
-  lab: {
-    shell: `w-full ${SURFACE.recessed} ${RADIUS.card} overflow-hidden`,
-    header: PANEL_LAYOUT.labHeader,
-    headerBetween: PANEL_LAYOUT.labHeaderBetween,
-    title: `m-0 truncate ${TYPE.sectionTitle}`,
-    meta: `flex shrink-0 items-center ${TYPE.caption}`,
-    headerActions: 'flex shrink-0 items-center min-h-0',
-    body: '',
-    padding: SPACING.pSpace2,
-    scrollDefault: '',
-  },
-} as const;
 
 export interface PanelProps {
   /** Visual recipe. `page` is the default dashboard/detail shell; `lab` is compact modal/grid. */
@@ -84,7 +59,7 @@ export function Panel({
   bodyClassName,
   testId,
 }: PanelProps) {
-  const tokens = PANEL_VARIANTS[variant];
+  const tokens = PANEL_SHELL[variant];
   const resolvedSpacing = spacing ?? (variant === 'lab' ? 'normal' : 'none');
   const useBetweenLayout = Boolean(meta || headerEnd);
   const headerClass = useBetweenLayout ? tokens.headerBetween : tokens.header;

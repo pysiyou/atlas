@@ -2,7 +2,7 @@
  * Shared error fallback UI for error boundaries.
  */
 
-import { Button, Icon } from '@/components';
+import { actionButtonPreset, Button, Icon } from '@/components';
 import { ICONS } from '@/config/icons';
 
 import { RADIUS, SHADOW, TONE } from '@/components/theme/recipes';
@@ -19,7 +19,7 @@ export const ErrorFallback: React.FC<ErrorFallbackProps> = ({
   homeHref = '/',
 }) => (
   <div className="min-h-screen flex items-center justify-center bg-surface-page px-space-4">
-    <div className={`max-w-md w-full bg-surface ${RADIUS.overlay} ${SHADOW.overlay} p-space-6`}>
+    <div className={`max-w-md w-full bg-surface ${RADIUS.menu} ${SHADOW.overlay} p-space-6`}>
       <div className="flex items-center justify-start gap-space-3">
         <div className={`flex shrink-0 items-center justify-center w-12 h-12 ${RADIUS.pill}`}>
           <Icon name={ICONS.actions.alertCircle} className={`w-6 h-6 ${TONE.danger.fg}`} />
@@ -37,10 +37,10 @@ export const ErrorFallback: React.FC<ErrorFallbackProps> = ({
         </div>
       )}
       <div className="mt-space-6 flex gap-space-3">
-        <Button onClick={onRetry} variant="retry" size="md" className="flex-1">Try Again</Button>
+        <Button onClick={onRetry} {...actionButtonPreset('retry')} size="md" className="flex-1">Try Again</Button>
         <Button
           onClick={() => (window.location.href = homeHref)}
-          variant="home"
+          {...actionButtonPreset('home')}
           size="md"
           className="flex-1"
         >

@@ -1,7 +1,7 @@
 /**
  * Command center shared layout, surface, and tone styles.
  */
-import { PANEL_VARIANTS } from '@/components/surfaces/Panel';
+import { PANEL_SHELL } from '@/components/theme/recipes';
 import { CONTROL, PANEL, RADIUS, SHADOW, SPACING, TONE, TYPE } from '@/components/theme/recipes';
 export type CommandCenterKpiTone = 'brand' | 'success' | 'warning' | 'danger' | 'neutral';
 
@@ -20,7 +20,7 @@ export const COMMAND_CENTER_TEXT = {
 } as const;
 
 export const COMMAND_CENTER_PANEL = {
-  ...PANEL_VARIANTS.page,
+  ...PANEL_SHELL.page,
   page: 'flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-surface-page',
 } as const;
 

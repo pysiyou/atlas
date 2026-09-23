@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { Panel, IconButton } from '@/components';
+import { actionButtonPreset, Panel, IconButton } from '@/components';
 import { LAYOUT } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 import type { Patient, Order } from '@/types';
@@ -43,15 +43,15 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
   return (
     <div className={LAYOUT.detailScroll}>
       <Panel title="General Info" className="shrink-0" scroll="visible">
-        <GeneralInfoSection patient={patient} layout="grid" />
+        <GeneralInfoSection patient={patient} />
       </Panel>
 
       <Panel title="Medical History" className="shrink-0" scroll="visible">
-        <MedicalHistorySectionDisplay patient={patient} layout="grid" />
+        <MedicalHistorySectionDisplay patient={patient} />
       </Panel>
 
       <Panel title="Care Snapshot" className="shrink-0" scroll="visible">
-        <CareSnapshotSection patient={patient} layout="grid" />
+        <CareSnapshotSection patient={patient} />
       </Panel>
 
       <Panel
@@ -60,7 +60,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         className="shrink-0"
         padding="none"
         scroll="visible"
-        headerEnd={<IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />}
+        headerEnd={<IconButton onClick={onNewOrder} {...actionButtonPreset('add')} size="sm" title="New Order" />}
       >
         <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
       </Panel>
@@ -92,15 +92,15 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
   return (
     <div className={cn(LAYOUT.detailGrid2, 'w-full pb-layout-scroll-end')}>
       <Panel title="General Info" scroll="visible">
-        <GeneralInfoSection patient={patient} layout="column" />
+        <GeneralInfoSection patient={patient} />
       </Panel>
 
       <Panel title="Medical History" scroll="visible">
-        <MedicalHistorySectionDisplay patient={patient} layout="column" />
+        <MedicalHistorySectionDisplay patient={patient} />
       </Panel>
 
       <Panel title="Care Snapshot" className="col-span-2" scroll="visible">
-        <CareSnapshotSection patient={patient} layout="grid" />
+        <CareSnapshotSection patient={patient} />
       </Panel>
 
       <Panel
@@ -108,7 +108,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
         meta={countMeta(orders.length)}
         padding="none"
         scroll="visible"
-        headerEnd={<IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />}
+        headerEnd={<IconButton onClick={onNewOrder} {...actionButtonPreset('add')} size="sm" title="New Order" />}
       >
         <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
       </Panel>
@@ -156,7 +156,7 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
           scroll="auto"
           bodyClassName="flex min-h-0 flex-1 flex-col overflow-hidden"
         >
-          <MedicalHistorySectionDisplay patient={patient} layout="column" />
+          <MedicalHistorySectionDisplay patient={patient} />
         </Panel>
 
         <Panel
@@ -176,7 +176,7 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
           className="col-span-2 min-h-0"
           padding="none"
           scroll="auto"
-          headerEnd={<IconButton onClick={onNewOrder} variant="add" size="sm" title="New Order" />}
+          headerEnd={<IconButton onClick={onNewOrder} {...actionButtonPreset('add')} size="sm" title="New Order" />}
         >
           <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
         </Panel>

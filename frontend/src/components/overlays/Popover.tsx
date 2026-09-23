@@ -76,6 +76,12 @@ export interface PopoverProps {
   showBackdrop?: boolean;
   /** When true, prevents closing via backdrop click or escape (e.g. while submitting) */
   preventClose?: boolean;
+  /** Controlled open state (optional). */
+  open?: boolean;
+  /** Called when open state should change (controlled mode). */
+  onOpenChange?: (open: boolean) => void;
+  /** Uncontrolled initial open state. */
+  defaultOpen?: boolean;
 }
 
 // Note: .hide-scrollbar CSS lives in index.css — do not inject it per component instance.
@@ -145,8 +151,18 @@ export const Popover: React.FC<PopoverProps> = ({
   showBackdrop = true,
   preventClose = false,
   duration,
+  open: controlledOpen,
+  onOpenChange,
+  defaultOpen = false,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
+  const isControlled = controlledOpen !== undefined;
+  const isOpen = isControlled ? controlledOpen : uncontrolledOpen;
+
+  const setIsOpen = (next: boolean) => {
+    if (!isControlled) setUncontrolledOpen(next);
+    onOpenChange?.(next);
+  };
 
   // Floating UI setup for positioning
   const { refs, floatingStyles, context, update } = useFloating({
@@ -220,7 +236,7 @@ export const Popover: React.FC<PopoverProps> = ({
                   transition={{ duration: 0.2 }}
                   className="fixed inset-0 z-99"
                   style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                    backgroundColor: 'var(--overlay)',
                     backdropFilter: 'blur(2px)',
                   }}
                   onClick={() => {

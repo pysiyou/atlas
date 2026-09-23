@@ -60,6 +60,7 @@ function TableHeader<T>({
   return (
     <div
       className={`flex items-stretch border-b border-border-default bg-surface-table-header ${TEXT_SIZE[variant]} text-text-tertiary uppercase tracking-wider ${sticky ? 'sticky top-0 z-10' : ''}`}
+      role="row"
     >
       {visibleColumns.map(column => {
         const style = columnStyles.get(column.key) || {};
@@ -68,6 +69,7 @@ function TableHeader<T>({
         return (
           <div
             key={column.key}
+            role="columnheader"
             className={`${HEADER_PADDING[variant]} text-xxs flex items-center justify-start gap-space-2 whitespace-nowrap ${isSortable ? 'cursor-pointer hover:bg-surface-hover select-none' : ''} ${isActiveSort ? 'text-text-primary bg-surface-selected' : ''} ${column.headerClassName || ''}`.trim()}
             style={style}
             onClick={() => isSortable && onSort(column.key)}
@@ -116,6 +118,7 @@ function TableCell({ column, children, variant }: TableCellProps) {
     <div
       className={`${CELL_PADDING[variant]} ${TEXT_SIZE[variant]} text-text-primary overflow-hidden flex items-center ${alignClass} ${contentClass} ${stickyClass} ${column.className || ''}`.trim()}
       style={style}
+      role="cell"
     >
       <div className={`min-w-0 flex-1 flex items-center ${innerJustifyClass}`}>{children}</div>
     </div>
@@ -154,6 +157,7 @@ function TableRow<T>({
         return (
           <div
             key={rowKey}
+            role="row"
             className={`${tableRow.base} ${isClickable ? `${tableRow.clickable} ${tableRow.hover}` : ''} ${stripeClass} ${customRowClass}`}
             style={{ height: `${ROW_HEIGHTS[variant]}px` }}
             onClick={() => onRowClick?.(item, index)}
@@ -241,7 +245,7 @@ export function TableView<T>({
     return (
       <div className={containerClasses} role="table" aria-busy="true" aria-label={ariaLabel ?? 'Loading'}>
         {caption && <caption className="sr-only">{caption}</caption>}
-        <div className="flex-1 overflow-auto" style={maxHeight ? { maxHeight } : undefined}>
+        <div className="flex-1 overflow-auto" style={maxHeight ? { maxHeight } : undefined} role="rowgroup">
           {showHeader && (
             <TableHeader
               columns={columns}
@@ -294,9 +298,10 @@ export function TableView<T>({
       aria-rowcount={totalItems ?? data.length}
     >
       {caption && <caption className="sr-only">{caption}</caption>}
-      <div className="flex-1 overflow-auto" style={maxHeight ? { maxHeight } : undefined}>
+      <div className="flex-1 overflow-auto" style={maxHeight ? { maxHeight } : undefined} role="rowgroup">
         {showHeader && (
-          <TableHeader
+          <div role="rowgroup">
+            <TableHeader
             columns={columns}
             visibleColumns={columns}
             sort={sort}
@@ -304,6 +309,7 @@ export function TableView<T>({
             variant={variant}
             sticky={stickyHeader}
           />
+          </div>
         )}
         <TableRow<T>
           data={data}

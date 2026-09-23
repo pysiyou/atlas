@@ -6,7 +6,6 @@
 
 import React, { memo, useCallback, useEffect, useRef, type RefObject } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { IconButton } from '@/components/primitives';
 import { Portal } from './Portal';
 import { OVERLAY } from '@/components/theme/recipes';
 import { DialogHeader } from './DialogChrome';
@@ -20,6 +19,7 @@ const SIZE_CLASSES: Record<string, string> = {
   '3xl': 'max-w-3xl',
   '4xl': 'max-w-4xl',
   '5xl': 'max-w-5xl',
+  default: 'max-w-[600px]',
 };
 
 const FOCUSABLE_SELECTOR =
@@ -30,19 +30,15 @@ const BASE_MODAL_CLASSES = `relative ${OVERLAY.shellShadowXl} w-full`;
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm?: () => void;
   title: string | React.ReactNode;
   subtitle?: string | React.ReactNode;
   children: React.ReactNode;
-  confirmDisabled?: boolean;
-  confirmText?: string;
   closeOnBackdropClick?: boolean;
   className?: string;
   disableClose?: boolean;
-  maxWidth?: string;
   backdropOpacity?: number;
   backdropZIndex?: number;
-  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | 'default';
 }
 
 function useModalFocusTrap({
@@ -146,9 +142,6 @@ const ModalDialog = memo(
     subtitle,
     children,
     onClose,
-    onConfirm,
-    confirmDisabled = false,
-    confirmText = 'Confirm',
     disableClose = false,
     onModalClick,
   }: {
@@ -159,9 +152,6 @@ const ModalDialog = memo(
     subtitle?: string | React.ReactNode;
     children: React.ReactNode;
     onClose: () => void;
-    onConfirm?: () => void;
-    confirmDisabled?: boolean;
-    confirmText?: string;
     disableClose?: boolean;
     onModalClick: (e: React.MouseEvent) => void;
   }) => (
@@ -202,17 +192,6 @@ const ModalDialog = memo(
           titleId="modal-title"
           onClose={onClose}
           disabled={disableClose}
-          actions={
-            onConfirm ? (
-              <IconButton
-                onClick={onConfirm}
-                variant="confirm"
-                size="md"
-                disabled={confirmDisabled}
-                title={confirmText}
-              />
-            ) : undefined
-          }
         />
 
         <div className="grow overflow-hidden relative flex flex-col min-h-0">{children}</div>
@@ -225,22 +204,18 @@ const Modal = memo(
   ({
     isOpen,
     onClose,
-    onConfirm,
     title,
     subtitle,
     children,
-    confirmDisabled = false,
-    confirmText = 'Confirm',
     closeOnBackdropClick = true,
     className = '',
     disableClose = false,
-    maxWidth = 'max-w-[600px]',
     backdropOpacity = 0.3,
     backdropZIndex = 40,
-    size,
+    size = 'default',
   }: ModalProps) => {
     const modalRef = useRef<HTMLDivElement>(null);
-    const maxWidthClass = size && SIZE_CLASSES[size] ? SIZE_CLASSES[size] : maxWidth;
+    const maxWidthClass = SIZE_CLASSES[size] ?? SIZE_CLASSES.default;
 
     const handleModalClick = useCallback((e: React.MouseEvent) => {
       e.stopPropagation();
@@ -273,9 +248,6 @@ const Modal = memo(
                 subtitle={subtitle}
                 children={children}
                 onClose={onClose}
-                onConfirm={onConfirm}
-                confirmDisabled={confirmDisabled}
-                confirmText={confirmText}
                 disableClose={disableClose}
                 onModalClick={handleModalClick}
               />

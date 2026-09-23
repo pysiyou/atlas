@@ -21,7 +21,6 @@ export { LabWorkflowQueueLayout } from './components/LabWorkflowQueueLayout';
 export { LabWorkflowCardShell } from './components/LabWorkflowCardShell';
 export { LabWorkflowDetailModal } from './components/LabWorkflowDetailModal';
 export { LabQueueFilters } from './components/LabQueueFilters';
-export { LabWorkflowPopoverChrome } from './components/LabWorkflowPopoverChrome';
 export { useLabWorkflowResponsiveCard } from './hooks/useLabWorkflowResponsiveCard';
 
 // Critical Values

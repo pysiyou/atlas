@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { Button, Card } from '@/components';
+import { actionButtonPreset, Button, Card } from '@/components';
 import { cn } from '@/utils';
 import { useUserLookup } from '@/lib/api/users';
 import { usePatientNameLookup } from '@/features/patients';
@@ -123,7 +123,7 @@ function ResultValidationCardDesktop({
             onReject={onReject}
           />
           <Button
-            variant="approve"
+            {...actionButtonPreset('approve')}
             size="sm"
             title="Approve Results"
             isLoading={isApproving}
@@ -167,7 +167,7 @@ function ResultValidationCardMobile({
 
   return (
     <Card
-      padding="list"
+      padding="sm"
       hover
       className={cn(
         LAB_MOBILE_CARD.surface,
@@ -217,7 +217,7 @@ function ResultValidationCardMobile({
               onReject={onReject}
             />
             <Button
-              variant="approve"
+              {...actionButtonPreset('approve')}
               size="sm"
               title="Approve Results"
               isLoading={isApproving}

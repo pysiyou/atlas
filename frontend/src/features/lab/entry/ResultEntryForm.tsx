@@ -3,7 +3,7 @@
  */
 
 import React, { useCallback, useState } from 'react';
-import { Button, Textarea } from '@/components';
+import { actionButtonPreset, Button, Textarea } from '@/components';
 import { cn } from '@/utils';
 import { feedbackTitle } from '@/utils/feedback/copy';
 import type { Test, Patient } from '@/types';
@@ -51,7 +51,7 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
   if (!testDef?.parameters) return null;
 
   return (
-    <div className={cn(!isModal && cn('bg-surface-page p-panel border border-border-subtle', RADIUS.overlay))}>
+    <div className={cn(!isModal && cn('bg-surface-page p-panel border border-border-subtle', RADIUS.menu))}>
       <div className={RESULT_PANEL.grid}>
         {testDef.parameters.map(param => {
           const value = results[param.code] ?? '';
@@ -147,7 +147,7 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
           <Button
             onClick={onSave}
             disabled={!canSubmit}
-            variant="submit"
+            {...actionButtonPreset('submit')}
             size="sm"
             layout="icon-text"
             className={`${SHADOW.subtle} ml-auto`}

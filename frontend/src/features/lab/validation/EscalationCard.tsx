@@ -126,7 +126,7 @@ function EscalationCardMobile({
 
   return (
     <Card
-      padding="list"
+      padding="sm"
       hover
       className={cn(
         LAB_MOBILE_CARD.surface,

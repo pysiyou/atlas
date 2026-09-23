@@ -26,9 +26,9 @@ export interface OrderReceiptProps {
 }
 
 function receiptShellClass(variant: OrderReceiptVariant): string {
-  if (variant === 'compact') return `${RADIUS.control} border border-border-default`;
-  if (variant === 'detailed') return `${RADIUS.overlay} border border-border-default bg-surface`;
-  return `${RADIUS.control} flex-1`;
+  if (variant === 'compact') return `${RADIUS.field} border border-border-default`;
+  if (variant === 'detailed') return `${RADIUS.menu} border border-border-default bg-surface`;
+  return `${RADIUS.field} flex-1`;
 }
 
 function ReceiptHeader({

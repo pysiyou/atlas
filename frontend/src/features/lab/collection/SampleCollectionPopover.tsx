@@ -6,8 +6,7 @@
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { notify } from '@/utils/feedback';
-import { Popover, Button, Icon, FooterInfo, SelectionCheck } from '@/components';
-import { LabWorkflowPopoverChrome, RadioCard } from '../components/LabWorkflowPopoverChrome';
+import { actionButtonPreset, Popover, Button, Icon, FooterInfo, SelectionCheck, PopoverFormChrome, RadioCard } from '@/components';
 import { MODULE_ICONS } from '@/config/icons';
 import type { ContainerType } from '@/types';
 import { COLLECTION_TOP_COLOR_VALUES, CONTAINER_CONFIG } from '@/types';
@@ -117,7 +116,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
   }, [handleSubmit, onCancel]);
 
   return (
-    <LabWorkflowPopoverChrome
+    <PopoverFormChrome
       title={patientName || 'Collect Sample'}
       subtitle={`${requirement.sampleType.toUpperCase()} - ${testName || requirement.containerTypes.join(', ')}`}
       onCancel={onCancel}
@@ -250,7 +249,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
           className={cn(inputBase, 'resize-none')}
         />
       </div>
-    </LabWorkflowPopoverChrome>
+    </PopoverFormChrome>
   );
 };
 
@@ -302,7 +301,7 @@ export const SampleCollectionPopover: React.FC<CollectionPopoverProps> = ({
       preventClose={effectiveSubmitting}
       trigger={
         trigger || (
-          <Button variant="collect" size="sm">
+          <Button {...actionButtonPreset('collect')} size="sm">
             {isRecollection ? 'Recollect' : 'Collect'}
           </Button>
         )

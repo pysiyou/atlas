@@ -1,8 +1,5 @@
 /**
  * PaymentMethodSelector - Single source of truth for payment method selection UI.
- *
- * Renders a grid of options; exactly one can be selected. All elements stay static;
- * only the checkmark appears in the circle when selected.
  */
 
 import React from 'react';
@@ -13,11 +10,8 @@ import type { PaymentMethodOption, PaymentMethod } from '@/types/payments';
 import { RADIUS, TYPE } from '@/components/theme/recipes';
 
 export interface PaymentMethodSelectorProps {
-  /** Available options (e.g. from getEnabledPaymentMethods()) */
   methods: PaymentMethodOption[];
-  /** Current value */
   value: PaymentMethod | undefined;
-  /** Called when user selects a method */
   onChange: (method: PaymentMethod) => void;
   disabled?: boolean;
 }

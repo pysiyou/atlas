@@ -7,6 +7,8 @@ export * from './Modal';
 export * from './Popover';
 export * from './Portal';
 export * from './DialogChrome';
+export * from './FormDialogFooter';
+export * from './PopoverFormChrome';
 export * from './FilterTriggerShell';
 export * from './MultiSelectFilter';
 export * from './OverlaySearchInput';

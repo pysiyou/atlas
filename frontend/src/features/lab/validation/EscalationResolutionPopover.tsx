@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Button, Popover } from '@/components';
 import { cn, displayId } from '@/utils';
 import { inputBase } from '@/components/inputs/inputStyles';
-import { LabWorkflowPopoverChrome } from '../components/LabWorkflowPopoverChrome';
+import { PopoverFormChrome } from '@/components';
 import type { FeedbackId } from '@/config/feedbackCatalog';
 import type { CriticalReadBackPayload, EscalationResolutionAction } from '@/types/lab-operations';
 import { TYPE } from '@/components/theme/recipes';
@@ -11,7 +11,7 @@ import { TYPE } from '@/components/theme/recipes';
 interface ResolutionPopoverProps {
   resolving: boolean;
   triggerLabel: string;
-  triggerVariant: 'approve' | 'secondary' | 'reject';
+  triggerVariant: 'success' | 'secondary' | 'danger';
   triggerIcon?: ReactNode;
   title: string;
   subtitle: string;
@@ -63,7 +63,7 @@ export function ResolutionPopover({
     >
       {({ close }) => (
         <div data-popover-content onClick={e => e.stopPropagation()}>
-          <LabWorkflowPopoverChrome
+          <PopoverFormChrome
             title={title}
             subtitle={subtitle}
             onCancel={close}
@@ -90,7 +90,7 @@ export function ResolutionPopover({
                 maxLength={1000}
               />
             </div>
-          </LabWorkflowPopoverChrome>
+          </PopoverFormChrome>
         </div>
       )}
     </Popover>
@@ -141,7 +141,7 @@ export function ForceValidateAction({
     <ResolutionPopover
       resolving={resolving}
       triggerLabel="Force Validate"
-      triggerVariant="approve"
+      triggerVariant="success"
       title="Force Validate"
       subtitle={popoverSubtitle(orderTestId, 'Validation notes (optional)')}
       textareaId="escalation-force-validate-notes"

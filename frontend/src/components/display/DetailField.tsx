@@ -3,11 +3,7 @@ import { Badge, type BadgeVariant } from '@/components';
 import { Icon, type IconName } from '@/components/primitives/Icon';
 import { DETAIL_LABEL, DETAIL_VALUE } from '@/utils/constants';
 import { formatDateTime } from '@/utils';
-import { useUserLookup } from '@/lib/api/users';
 
-/**
- * Badge configuration for DetailField
- */
 interface BadgeConfig {
   value: string;
   variant?: BadgeVariant;
@@ -24,14 +20,12 @@ interface DetailFieldProps {
   labelClassName?: string;
   valueClassName?: string;
   variant?: DetailFieldVariant;
-  /** Layout orientation for icon + label + value blocks */
   orientation?: 'horizontal' | 'vertical';
-  /** Optional icon before label */
   icon?: IconName;
-  /** Span all columns when rendered inside {@link DetailGroup}. */
   span?: 'full';
   timestamp?: string;
-  user?: string;
+  /** Resolved display name for audit lines (pass from feature layer). */
+  userDisplay?: string;
   badge?: BadgeConfig;
 }
 
@@ -45,11 +39,9 @@ export const DetailField: React.FC<DetailFieldProps> = ({
   orientation = 'horizontal',
   icon,
   timestamp,
-  user,
+  userDisplay,
   badge,
 }) => {
-  const { getUserName } = useUserLookup();
-
   const renderValue = () => {
     if (badge?.value) {
       return (
@@ -61,13 +53,12 @@ export const DetailField: React.FC<DetailFieldProps> = ({
 
     if (timestamp) {
       const formattedDate = formatDateTime(timestamp);
-      const userName = user ? getUserName(user) : null;
 
-      if (userName) {
+      if (userDisplay) {
         return (
           <div className="text-right">
             <div className={DETAIL_VALUE}>{formattedDate}</div>
-            <div className={DETAIL_LABEL}>by {userName}</div>
+            <div className={DETAIL_LABEL}>by {userDisplay}</div>
           </div>
         );
       }

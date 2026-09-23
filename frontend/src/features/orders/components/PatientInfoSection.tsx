@@ -10,19 +10,18 @@ import type { Patient } from '@/types';
 import { formatOrderDate } from '@/utils/date';
 import { ICONS } from '@/config/icons';
 
+import { ORDER_DETAIL_INFO_FIELDS_LAYOUT } from './OrderInfoSection';
+
 export interface PatientInfoSectionProps {
   patient: Patient | null;
   onViewPatient?: () => void;
-  layout?: 'grid' | 'column';
 }
 
 export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
   patient,
   onViewPatient: _onViewPatient,
-  layout = 'column',
 }) => {
-  const containerClass =
-    layout === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 gap-layout-stack' : 'flex flex-col gap-space-3';
+  const containerClass = ORDER_DETAIL_INFO_FIELDS_LAYOUT;
 
   if (!patient) {
     return (

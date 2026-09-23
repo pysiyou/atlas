@@ -33,7 +33,7 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
           <Link
             key={order.orderId}
             to={`${ROUTES.ORDERS}/${order.orderId}`}
-            className={`flex items-center justify-between p-panel border border-border-default ${RADIUS.card} hover:bg-surface-page`}
+            className={`flex items-center justify-between p-panel border border-border-default ${RADIUS.surface} hover:bg-surface-page`}
           >
             <div>
               <p className="text-sm font-normal text-text-primary">

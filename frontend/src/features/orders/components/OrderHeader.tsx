@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Button, Icon, IconButton, PageHeader } from '@/components';
+import { actionButtonPreset, Button, Icon, IconButton, PageHeader } from '@/components';
 import type { Order, Invoice } from '@/types';
 import { ICONS } from '@/config/icons';
 
@@ -30,12 +30,12 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
       {isLarge ? (
         <>
           {onEdit != null && (
-            <Button variant="edit" size="sm" onClick={onEdit}>
+            <Button {...actionButtonPreset('edit')} size="sm" onClick={onEdit}>
               Edit
             </Button>
           )}
           <Button
-            variant="print"
+            {...actionButtonPreset('print')}
             size="sm"
             onClick={() => {
               /* Print */
@@ -44,7 +44,7 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
             Print
           </Button>
           {invoice != null && (
-            <Button variant="print" size="sm" onClick={onViewInvoice}>
+            <Button {...actionButtonPreset('print')} size="sm" onClick={onViewInvoice}>
               Invoice
             </Button>
           )}
@@ -53,7 +53,7 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
         <>
           {onEdit != null && (
             <IconButton
-              variant="view"
+              {...actionButtonPreset('view')}
               size="sm"
               title="Edit Order"
               icon={<Icon name={ICONS.actions.edit} className="w-4 h-4" />}
@@ -61,7 +61,7 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
             />
           )}
           <IconButton
-            variant="print"
+            {...actionButtonPreset('print')}
             size="sm"
             title="Print"
             onClick={() => {

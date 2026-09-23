@@ -8,6 +8,8 @@ export * from './Callout';
 export * from './BalancedColumnsLayout';
 export * from './DetailField';
 export * from './DetailFieldGroup';
+export * from './DetailFieldsColumnFlow';
+export * from './DetailGroup';
 export * from './DetailsTable';
 export * from './detailsTableUtils';
 export * from './EmptyState';

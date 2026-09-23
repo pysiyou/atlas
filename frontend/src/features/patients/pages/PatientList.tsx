@@ -6,7 +6,7 @@ import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePaginatedPatientContextList } from '../api/patients';
 import { useClientListFilter } from '@/hooks/useClientListFilter';
-import { ListView } from '@/components';
+import { actionButtonPreset, ListView } from '@/components';
 import { Button } from '@/components';
 import { useModal } from '@/lib/context/ModalContext';
 import { PatientFilters, type AffiliationStatus } from '../components/PatientFilters';
@@ -117,7 +117,7 @@ export const PatientList: React.FC = () => {
           onRowClick={(patient: PatientContext) => navigate(`/patients/${patient.id}`)}
           title="Patients"
           headerActions={
-            <Button variant="add" size="sm" onClick={() => setIsCreateModalOpen(true)}>
+            <Button {...actionButtonPreset('add')} size="sm" onClick={() => setIsCreateModalOpen(true)}>
               New Patient
             </Button>
           }

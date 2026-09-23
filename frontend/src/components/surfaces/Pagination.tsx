@@ -1,11 +1,9 @@
 import React, { useMemo } from 'react';
 
-import { Icon } from '@/components/primitives/Icon';
+import { actionButtonPreset, Button, IconButton } from '@/components/primitives';
 import { cn } from '@/utils';
-import { ICONS } from '@/config/icons';
 import { inputBase } from '@/components/inputs/inputStyles';
 import { CONTROL, RADIUS, TYPE } from '@/components/theme/recipes';
-
 
 interface PaginationProps {
   currentPage: number;
@@ -59,17 +57,6 @@ export const Pagination: React.FC<PaginationProps> = ({
     return rangeWithDots;
   }, [currentPage, totalPages]);
 
-  const getPageButtonClasses = (isActive: boolean) => {
-    const base =
-      `min-w-[26px] h-6 px-space-1-5 text-xxs font-normal ${RADIUS.field} transition-colors ${CONTROL.focusVisibleTight}`;
-    return isActive
-      ? `${base} bg-brand text-on-brand`
-      : `${base} text-text-primary border border-border-default bg-surface hover:border-border-hover hover:bg-surface-hover`;
-  };
-
-  const navButtonClass =
-    `w-6 h-6 flex items-center justify-center ${RADIUS.field} border border-transparent text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary ${CONTROL.focusVisibleTight} disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-text-secondary`;
-
   return (
     <div className="flex items-center justify-between gap-space-3 px-space-3 py-space-2 border-t border-border-default bg-surface">
       <div className="flex items-center gap-space-3">
@@ -97,15 +84,14 @@ export const Pagination: React.FC<PaginationProps> = ({
       </div>
 
       <div className="flex items-center gap-space-0-5">
-        <button
-          type="button"
+        <IconButton
+          {...actionButtonPreset('previous')}
+          size="sm"
+          shape="square"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className={navButtonClass}
           aria-label="Previous page"
-        >
-          <Icon name={ICONS.actions.chevronLeft} className="w-3.5 h-3.5" />
-        </button>
+        />
 
         <div className="flex items-center gap-space-0-5 mx-space-0-5">
           {pageNumbers.map((page, index) => (
@@ -118,29 +104,35 @@ export const Pagination: React.FC<PaginationProps> = ({
                   …
                 </span>
               ) : (
-                <button
+                <Button
                   type="button"
+                  variant={page === currentPage ? 'primary' : 'outline'}
+                  size="sm"
+                  layout="text"
                   onClick={() => onPageChange(page as number)}
-                  className={getPageButtonClasses(page === currentPage)}
+                  className={cn(
+                    `min-w-[26px] h-6 px-space-1-5 text-xxs font-normal ${RADIUS.field}`,
+                    page !== currentPage && 'border-border-default bg-surface',
+                    CONTROL.focusVisibleTight,
+                  )}
                   aria-label={page === currentPage ? `Page ${page}, current` : `Go to page ${page}`}
                   aria-current={page === currentPage ? 'page' : undefined}
                 >
                   {page}
-                </button>
+                </Button>
               )}
             </React.Fragment>
           ))}
         </div>
 
-        <button
-          type="button"
+        <IconButton
+          {...actionButtonPreset('next')}
+          size="sm"
+          shape="square"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={navButtonClass}
           aria-label="Next page"
-        >
-          <Icon name={ICONS.actions.chevronRight} className="w-3.5 h-3.5" />
-        </button>
+        />
       </div>
     </div>
   );

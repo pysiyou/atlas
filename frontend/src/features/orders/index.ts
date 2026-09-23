@@ -26,9 +26,18 @@ export { OrderUpsertModal } from './components/OrderUpsertModal';
 export type { OrderUpsertModalProps } from './components/OrderUpsertModal';
 export { OrderReceipt } from './components/OrderReceipt';
 export type { OrderReceiptProps, OrderReceiptVariant } from './components/OrderReceipt';
-export { OrderModalFooter } from './components/OrderModalFooter';
-export type { OrderModalFooterProps } from './components/OrderModalFooter';
+export { BillingSummarySection } from './components/BillingSummarySection';
+export type { BillingSummarySectionProps } from './components/BillingSummarySection';
+export { FormDialogFooter } from '@/components/overlays/FormDialogFooter';
+export type { FormDialogFooterProps } from '@/components/overlays/FormDialogFooter';
 
 export * from './utils/orderTimelineUtils';
 export * from './utils/orderCalculator';
 export { formInputToPayload, orderToFormInput } from './utils/formTransformers';
+export {
+  createOrderSharedColumns,
+  type OrderColumnAccessors,
+  type OrderColumnRenderers,
+  type OrderSharedColumnOptions,
+  type OrderSharedColumnKey,
+} from './utils/orderTableColumns';

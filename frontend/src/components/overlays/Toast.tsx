@@ -121,7 +121,7 @@ function ActionChip({ action }: { action: ToastAction }) {
   return (
     <button
       type="button"
-      className={`mt-space-2 inline-flex items-center ${RADIUS.card} border border-toast-action-border px-space-2-5 py-space-0-5 text-sm text-toast-fg hover:bg-toast-action-hover cursor-pointer`}
+      className={`mt-space-2 inline-flex items-center ${RADIUS.surface} border border-toast-action-border px-space-2-5 py-space-0-5 text-sm text-toast-fg hover:bg-toast-action-hover cursor-pointer`}
       onClick={event => {
         event.stopPropagation();
         action.onClick();
@@ -161,7 +161,7 @@ export const Toast: React.FC<BaseToastProps> = React.memo(
           <button
             type="button"
             aria-label="Dismiss"
-            className={`shrink-0 self-start -mr-space-1 -mt-space-0-5 flex h-7 w-7 items-center justify-center ${RADIUS.card} border-0 bg-transparent p-0 text-toast-close hover:text-toast-fg-muted cursor-pointer`}
+            className={`shrink-0 self-start -mr-space-1 -mt-space-0-5 flex h-7 w-7 items-center justify-center ${RADIUS.surface} border-0 bg-transparent p-0 text-toast-close hover:text-toast-fg-muted cursor-pointer`}
             onClick={event => {
               event.stopPropagation();
               onDismiss();

@@ -4,7 +4,7 @@
  */
 import React, { useState } from 'react';
 import { RADIUS } from '@/components/theme/recipes';
-import { Badge, Button, Card } from '@/components';
+import { actionButtonPreset, Badge, Button, Card } from '@/components';
 import { cn, formatDateTime } from '@/utils';
 import { LabWorkflowCardShell } from '../components/LabWorkflowCardShell';
 import { compactAuditLines } from '../constants/labWorkflowAuditLines';
@@ -70,7 +70,7 @@ function RecollectionRequestCardDesktop({
   const actions = (
     <div className="flex items-center gap-space-2 z-10" onClick={e => e.stopPropagation()}>
       <Button
-        variant="reject"
+        {...actionButtonPreset('reject')}
         size="sm"
         layout="icon-text"
         isLoading={isDenying}
@@ -83,7 +83,7 @@ function RecollectionRequestCardDesktop({
         Deny
       </Button>
       <Button
-        variant="approve"
+        {...actionButtonPreset('approve')}
         size="sm"
         layout="icon-text"
         isLoading={isApproving}
@@ -201,7 +201,7 @@ function RecollectionRequestCardMobile({
   const actions = (
     <>
       <Button
-        variant="reject"
+        {...actionButtonPreset('reject')}
         size="sm"
         layout="icon-text"
         isLoading={isDenying}
@@ -214,7 +214,7 @@ function RecollectionRequestCardMobile({
         Deny
       </Button>
       <Button
-        variant="approve"
+        {...actionButtonPreset('approve')}
         size="sm"
         layout="icon-text"
         isLoading={isApproving}
@@ -231,7 +231,7 @@ function RecollectionRequestCardMobile({
 
   return (
     <Card
-      padding="list"
+      padding="sm"
       hover
       className={cn(
         LAB_MOBILE_CARD.surface,

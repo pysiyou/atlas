@@ -3,7 +3,7 @@
  */
 
 import { type ReactNode } from 'react';
-import { IconButton } from '@/components/primitives';
+import { actionButtonPreset, IconButton } from '@/components/primitives';
 import { DIALOG, TYPE } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
@@ -76,7 +76,7 @@ export function DialogHeader({
         {onClose != null && (
           <IconButton
             onClick={onClose}
-            variant="close"
+            {...actionButtonPreset('close')}
             size={resolvedCloseSize}
             title="Close"
             disabled={disabled}

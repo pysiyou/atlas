@@ -1,5 +1,5 @@
 import { companyConfig } from '@/config';
-import { Icon, IconButton } from '@/components';
+import { actionButtonPreset, Icon, IconButton } from '@/components';
 import { ICONS } from '@/config/icons';
 import { CHROME, RADIUS, TYPE } from '@/components/theme/recipes';
 import { cn } from '@/utils';
@@ -62,7 +62,7 @@ export function SidebarHeader({
       </p>
       <div className={cn(CHROME.clipPane, 'flex items-center justify-end pr-chrome-page-header-trailing')}>
         <IconButton
-          variant="sidebarClose"
+          {...actionButtonPreset('sidebarClose')}
           size="sm"
           shape="square"
           icon={

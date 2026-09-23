@@ -192,7 +192,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 key={plan.duration}
                 onClick={() => handlePlanSelect(plan.duration)}
                 className={`
-                  group relative border-2 ${RADIUS.overlay} p-space-5 cursor-pointer transition-all duration-200
+                  group relative border-2 ${RADIUS.menu} p-space-5 cursor-pointer transition-all duration-200
                   ${
                     isSelected
                       ? `border-brand bg-brand-muted ${SHADOW.subtle}`
@@ -203,7 +203,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 {/* Best Value Badge */}
                 {plan.isBestValue && (
                   <div className="absolute -top-space-2 -right-space-2">
-                    <div className={`bg-danger text-on-danger text-xxs font-normal px-space-2 py-space-0-5 ${RADIUS.card} transform rotate-3 ${SHADOW.subtle}`}>
+                    <div className={`bg-danger text-on-danger text-xxs font-normal px-space-2 py-space-0-5 ${RADIUS.surface} transform rotate-3 ${SHADOW.subtle}`}>
                       Best Value
                     </div>
                   </div>

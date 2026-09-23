@@ -1,5 +1,5 @@
 import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { Badge, Avatar, IconButton, MobileEntityCard, EntityId } from '@/components';
+import { actionButtonPreset, Badge, Avatar, IconButton, MobileEntityCard, EntityId } from '@/components';
 import type { CardComponentProps } from '@/components';
 import { calculateAge, formatPhoneNumber } from '@/utils';
 import type { Patient } from '@/types';
@@ -70,7 +70,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
       {/* Bottom section: Add Order button - positioned at bottom right */}
       <div className="flex justify-between items-center mt-auto pt-space-3">
         <div></div>
-        <IconButton variant="add" size="sm" title="Add Order" onClick={handleAddOrder} />
+        <IconButton {...actionButtonPreset('add')} size="sm" title="Add Order" onClick={handleAddOrder} />
       </div>
     </MobileEntityCard>
   );

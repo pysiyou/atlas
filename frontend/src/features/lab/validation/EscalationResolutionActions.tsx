@@ -108,7 +108,7 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
         <ResolutionPopover
           resolving={resolving}
           triggerLabel="Apply Amendment"
-          triggerVariant="approve"
+          triggerVariant="success"
           title="Apply Amendment"
           subtitle={popoverSubtitle(orderTestId, 'Validation notes (optional)')}
           textareaId="escalation-apply-amendment-notes"
@@ -172,7 +172,7 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
       <ResolutionPopover
         resolving={resolving}
         triggerLabel="Cancel Test"
-        triggerVariant="reject"
+        triggerVariant="danger"
         title="Cancel Test"
         subtitle={popoverSubtitle(orderTestId, 'Clinical reason (required)')}
         textareaId="escalation-cancel-test-reason"

@@ -88,6 +88,19 @@ export default defineConfig([
     },
   },
   {
+    files: ['src/components/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': ['error', {
+        patterns: [
+          {
+            group: ['@/features/**'],
+            message: 'Shared components must not import from features. Move domain logic to @/utils or feature barrels.',
+          },
+        ],
+      }],
+    },
+  },
+  {
     files: ['src/types/enums/generated/**'],
     rules: {
       'no-restricted-syntax': 'off',
