@@ -51,8 +51,8 @@ export const PatientFilters: React.FC<PatientFiltersProps> = props => {
           onChange={props.onAgeRangeChange}
           min={AGE_RANGE_MIN}
           max={AGE_RANGE_MAX}
-          hint="Move the slider to filter by age"
-          formatLabel={v => `${v} years`}
+          boundLabels={{ min: 'Min age', max: 'Max age' }}
+          onReset={() => props.onAgeRangeChange([AGE_RANGE_MIN, AGE_RANGE_MAX])}
         />
         <div className="border-b border-border-default mt-space-4" />
       </div>
