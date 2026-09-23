@@ -142,7 +142,7 @@ export function createTestsTableConfig(
         return (
           <Link
             to={labUrl}
-            className="text-xs text-brand hover:underline whitespace-nowrap"
+            className="text-xs text-brand underline whitespace-nowrap"
             onClick={e => e.stopPropagation()}
           >
             View
