@@ -99,12 +99,9 @@ export const queryKeys = {
     lists: () => [...queryKeys.samples.all, 'list'] as const,
     list: (filters?: { status?: SampleStatus; orderId?: string } & PaginationParams) =>
       [...queryKeys.samples.lists(), filters] as const,
-    paginated: (params: { status?: SampleStatus; orderId?: string } & PaginationParams) =>
-      [...queryKeys.samples.all, 'paginated', params] as const,
     details: () => [...queryKeys.samples.all, 'detail'] as const,
     byId: (id: string) => [...queryKeys.samples.details(), id] as const,
     byOrder: (orderId: string) => [...queryKeys.samples.all, 'order', orderId] as const,
-    pending: () => [...queryKeys.samples.all, 'pending'] as const,
   },
 
   /**
@@ -127,8 +124,6 @@ export const queryKeys = {
     all: ['quality-issues'] as const,
     options: (targetType?: string, targetId?: number) =>
       [...queryKeys.qualityIssues.all, 'options', targetType, targetId] as const,
-    forOrder: (orderId?: number) =>
-      [...queryKeys.qualityIssues.all, 'order', orderId] as const,
   },
 
   /**
@@ -193,8 +188,6 @@ export const queryKeys = {
       [...queryKeys.worklists.all, 'entry', params] as const,
     validation: (params?: { page?: number; pageSize?: number; search?: string }) =>
       [...queryKeys.worklists.all, 'validation', params] as const,
-    dashboardBlocked: (params?: { page?: number; pageSize?: number; search?: string }) =>
-      [...queryKeys.worklists.all, 'dashboard-blocked', params] as const,
     dashboardToday: (params?: { page?: number; pageSize?: number; search?: string }) =>
       [...queryKeys.worklists.all, 'dashboard-today', params] as const,
   },

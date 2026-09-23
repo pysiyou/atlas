@@ -3,11 +3,7 @@
  */
 import { PANEL_VARIANTS } from '@/components/surfaces/Panel';
 import { CONTROL, PANEL, RADIUS, SHADOW, SPACING, TONE, TYPE } from '@/components/theme/recipes';
-import type { QueueAgeStats } from './commandCenterModel';
-
 export type CommandCenterKpiTone = 'brand' | 'success' | 'warning' | 'danger' | 'neutral';
-
-export type CommandCenterTextTone = 'default' | 'success' | 'warning' | 'danger';
 
 export const COMMAND_CENTER_TEXT = {
   panelTitle: 'text-text-primary',
@@ -22,21 +18,6 @@ export const COMMAND_CENTER_TEXT = {
   centerDetail: 'text-text-tertiary',
   empty: 'text-text-tertiary',
 } as const;
-
-export const COMMAND_CENTER_TEXT_TONE: Record<CommandCenterTextTone, string> = {
-  default: COMMAND_CENTER_TEXT.value,
-  success: TONE.success.fgEmphasis,
-  warning: TONE.warning.fgEmphasis,
-  danger: TONE.danger.fgEmphasis,
-};
-
-export function resolveCommandCenterTextTone(
-  tone: CommandCenterTextTone = 'default',
-  active = true,
-): string {
-  if (!active || tone === 'default') return COMMAND_CENTER_TEXT.value;
-  return COMMAND_CENTER_TEXT_TONE[tone];
-}
 
 export const COMMAND_CENTER_PANEL = {
   ...PANEL_VARIANTS.page,
@@ -137,9 +118,3 @@ export const COMMAND_CENTER_ATTENTION_ACCENT = {
   neutral: TONE.warning.fill,
 } as const;
 
-export function queueTileTone(count: number, age: QueueAgeStats): CommandCenterKpiTone {
-  if (count === 0) return 'neutral';
-  if (age.criticalCount > 0) return 'danger';
-  if (age.warningCount > 0) return 'warning';
-  return 'brand';
-}

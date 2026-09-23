@@ -206,10 +206,6 @@ function stageLabel(stage: OrderTestQueueStage): string {
   }
 }
 
-export function getBlockedReasonLabel(reason: OrderTestBlockReason): string {
-  return BLOCKED_LABELS[reason];
-}
-
 export function mapCollectionWorklistToSampleDisplay(item: CollectionWorklistItem): SampleCollectionQueueItem {
   const isCollectedLike = item.status === 'collected' || item.status === 'rejected';
   const sample = {

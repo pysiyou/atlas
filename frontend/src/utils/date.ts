@@ -100,35 +100,6 @@ export function formatRelativeDateLabel(date: string | Date | undefined | null):
   }
 }
 
-/**
- * Relative time for recent events; absolute short format for older timestamps.
- * Used by order timeline and similar activity feeds.
- */
-export function formatRelativeTime(
-  dateString: string | undefined | null,
-  options?: { absoluteFormat?: string }
-): string {
-  const date = parseAppDate(dateString);
-  if (!date) return '';
-
-  const now = new Date();
-  const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
-
-  if (diffInHours < 24) {
-    const diffInMinutes = Math.floor(diffInHours * 60);
-    if (diffInMinutes < 60) {
-      return `${diffInMinutes}m ago`;
-    }
-    return `${Math.floor(diffInHours)}h ago`;
-  }
-
-  if (options?.absoluteFormat) {
-    return format(date, options.absoluteFormat);
-  }
-
-  return formatDateTime(date);
-}
-
 /** PDF/report timestamp format. */
 export function formatReportTime(dateString?: string | null, emptyLabel = 'N/A'): string {
   if (!dateString) return emptyLabel;

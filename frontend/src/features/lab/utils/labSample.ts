@@ -145,51 +145,6 @@ export function calculateTotalVolume(tests: OrderTest[], testCatalog: Test[]): n
   }, 0);
 }
 
-export function calculateRequiredSamples(
-  tests: OrderTest[],
-  testCatalog: Test[],
-  orderPriority: 'low' | 'medium' | 'high' | 'urgent',
-  orderId: number
-): SampleRequirement[] {
-  const grouped = groupTestsBySample(tests, testCatalog);
-  const requiredSamples: SampleRequirement[] = [];
-
-  grouped.forEach((sampleTests, sampleType) => {
-    const seen = new Set<string>();
-    const uniqueTests = sampleTests.filter(t => {
-      if (seen.has(t.testCode)) return false;
-      seen.add(t.testCode);
-      return true;
-    });
-
-    const containerTypesSet = new Set<ContainerType>();
-    const containerTopColorsSet = new Set<ContainerTopColor>();
-    uniqueTests.forEach(orderTest => {
-      const testDef = testCatalog.find(t => t.code === orderTest.testCode);
-      if (testDef) {
-        testDef.containerTypes?.forEach(ct => containerTypesSet.add(ct));
-        testDef.containerTopColors?.forEach(color => containerTopColorsSet.add(color));
-      }
-    });
-
-    const testCodes = uniqueTests.map(t => t.testCode);
-    const testNames = testCodes.map(code => testCatalog.find(t => t.code === code)?.name || code);
-
-    requiredSamples.push({
-      sampleType: sampleType as SampleType,
-      testCodes,
-      testNames,
-      totalVolume: calculateTotalVolume(uniqueTests, testCatalog),
-      containerTypes: Array.from(containerTypesSet),
-      containerTopColors: Array.from(containerTopColorsSet),
-      priority: orderPriority,
-      orderId,
-    });
-  });
-
-  return requiredSamples;
-}
-
 export function formatVolume(volumeInMl: number): string {
   if (volumeInMl < 1) return `${(volumeInMl * 1000).toFixed(0)}µL`;
   return `${volumeInMl.toFixed(1)}mL`;

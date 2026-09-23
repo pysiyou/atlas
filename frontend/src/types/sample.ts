@@ -126,13 +126,6 @@ export function isCollectedSample(sample: Sample): sample is CollectedSample {
 }
 
 /**
- * Type guard to check if sample is pending
- */
-export function isPendingSample(sample: Sample): sample is PendingSample {
-  return sample.status === 'pending';
-}
-
-/**
  * Type guard to check if sample is rejected
  */
 export function isRejectedSample(sample: Sample): sample is RejectedSample {
