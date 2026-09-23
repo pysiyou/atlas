@@ -14,6 +14,8 @@ import { createPatientTableConfig } from '../config/PatientTable.config';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
 import { errorAlertMessage } from '@/utils/feedback';
 import { calculateAge } from '@/utils';
+import { buildRangeHistogram } from '@/utils/rangeHistogram';
+import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
 import type { PatientContext, Gender } from '@/types';
 import { EditPatientModal } from '../components/EditPatientModal';
 import { isAffiliationActive } from '../utils/patientHelpers';
@@ -67,6 +69,18 @@ export const PatientList: React.FC = () => {
     statusField: 'gender',
     defaultSort: undefined,
   });
+
+  const ageHistogram = useMemo(
+    () =>
+      buildRangeHistogram(
+        preFilteredPatients
+          .map(patient => calculateAge(patient.dateOfBirth))
+          .filter(age => Number.isFinite(age)),
+        AGE_RANGE_MIN,
+        AGE_RANGE_MAX
+      ),
+    [preFilteredPatients]
+  );
 
   const filteredPatients = useMemo(() => {
     let filtered = preFilteredPatients;
@@ -131,6 +145,7 @@ export const PatientList: React.FC = () => {
               onAgeRangeChange={setAgeRange}
               affiliationStatusFilters={affiliationStatusFilters}
               onAffiliationStatusFiltersChange={setAffiliationStatusFilters}
+              ageHistogram={ageHistogram}
             />
           }
           pagination={{

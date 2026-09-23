@@ -24,7 +24,6 @@ export {
   useSelectedAffiliationPrice,
 } from './api/affiliations';
 
-export { AgeFilter } from '@/components/filters/AgeFilter';
 export { PatientGenderBadge } from './components/PatientGenderBadge';
 export {
   renderPatientId,

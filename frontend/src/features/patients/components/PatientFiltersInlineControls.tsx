@@ -10,7 +10,7 @@ import { GENDER_VALUES, GENDER_CONFIG } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
 import { PATIENT_FILTER_PLACEHOLDERS } from '@/components/filters';
 import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
-import { AgeFilter } from '@/components/filters/AgeFilter';
+import { AgeFilter } from '@/components/filters';
 import type { Gender } from '@/types';
 import { CONTROL } from '@/components/theme/recipes';
 import type { AffiliationStatus } from './PatientFilterTypes';
@@ -30,6 +30,7 @@ export interface PatientFiltersInlineControlsProps {
   onSexFiltersChange: (values: Gender[]) => void;
   affiliationStatusFilters: AffiliationStatus[];
   onAffiliationStatusFiltersChange: (values: AffiliationStatus[]) => void;
+  ageHistogram?: number[];
 }
 
 export const PatientFiltersInlineControls: React.FC<PatientFiltersInlineControlsProps> = ({
@@ -41,6 +42,7 @@ export const PatientFiltersInlineControls: React.FC<PatientFiltersInlineControls
   onSexFiltersChange,
   affiliationStatusFilters,
   onAffiliationStatusFiltersChange,
+  ageHistogram,
 }) => (
   <>
     <div className={cn('flex', CONTROL.height, 'w-full items-center')}>
@@ -58,6 +60,7 @@ export const PatientFiltersInlineControls: React.FC<PatientFiltersInlineControls
         min={AGE_RANGE_MIN}
         max={AGE_RANGE_MAX}
         placeholder={PATIENT_FILTER_PLACEHOLDERS.ageRange}
+        histogram={ageHistogram}
         className="w-full"
       />
     </div>

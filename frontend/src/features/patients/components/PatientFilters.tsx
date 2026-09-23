@@ -4,7 +4,8 @@
  */
 
 import React from 'react';
-import { CheckboxList, OverlayRangeSlider } from '@/components';
+import { CheckboxList } from '@/components';
+import { AgeRangeSliderPanel } from '@/components/filters';
 import {
   ResponsiveEntityFilters,
   PATIENT_FILTER_PLACEHOLDERS,
@@ -34,6 +35,8 @@ export interface PatientFiltersProps {
   onSexFiltersChange: (values: Gender[]) => void;
   affiliationStatusFilters: AffiliationStatus[];
   onAffiliationStatusFiltersChange: (values: AffiliationStatus[]) => void;
+  /** Normalized age histogram for the range slider (0–1 per bucket). */
+  ageHistogram?: number[];
 }
 
 export const PatientFilters: React.FC<PatientFiltersProps> = props => {
@@ -46,12 +49,12 @@ export const PatientFilters: React.FC<PatientFiltersProps> = props => {
     <>
       <div className="w-full">
         <h4 className="text-sm font-semibold text-text-primary mb-space-3">Age Range</h4>
-        <OverlayRangeSlider
+        <AgeRangeSliderPanel
           value={props.ageRange}
           onChange={props.onAgeRangeChange}
           min={AGE_RANGE_MIN}
           max={AGE_RANGE_MAX}
-          boundLabels={{ min: 'Min age', max: 'Max age' }}
+          histogram={props.ageHistogram}
           onReset={() => props.onAgeRangeChange([AGE_RANGE_MIN, AGE_RANGE_MAX])}
         />
         <div className="border-b border-border-default mt-space-4" />

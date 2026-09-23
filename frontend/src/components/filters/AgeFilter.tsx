@@ -1,20 +1,21 @@
 /**
- * AgeFilter — popover trigger with dual-handle age range slider.
+ * AgeFilter — popover trigger with histogram age range slider.
  */
 
 import React from 'react';
-import { Popover, Icon, FilterTriggerShell, OverlayRangeSlider } from '@/components';
+import { Popover, Icon, FilterTriggerShell } from '@/components';
 import { ICONS } from '@/config/icons';
 import { cn } from '@/utils';
+import { AgeRangeSliderPanel } from './AgeRangeSliderPanel';
 
-interface AgeFilterProps {
+export interface AgeFilterProps {
   value: [number, number];
   onChange: (value: [number, number]) => void;
   min?: number;
   max?: number;
   placeholder?: string;
   className?: string;
-  /** Optional right-side footer copy (e.g. "Showing 12 of 48"). */
+  histogram?: number[];
   resultSummary?: string;
 }
 
@@ -25,6 +26,7 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
   max = 100,
   placeholder = 'Filter by Age',
   className,
+  histogram,
   resultSummary,
 }) => {
   const isDefault = value[0] === min && value[1] === max;
@@ -32,10 +34,6 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
 
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onChange([min, max]);
-  };
-
-  const handleReset = () => {
     onChange([min, max]);
   };
 
@@ -68,17 +66,17 @@ export const AgeFilter: React.FC<AgeFilterProps> = ({
           )}
         </FilterTriggerShell>
       )}
-      className="p-panel w-[20rem]"
+      className="p-panel w-[21rem]"
     >
       {() => (
-        <OverlayRangeSlider
+        <AgeRangeSliderPanel
           value={value}
           onChange={onChange}
           min={min}
           max={max}
-          boundLabels={{ min: 'Min age', max: 'Max age' }}
-          onReset={handleReset}
-          footerSummary={resultSummary}
+          histogram={histogram}
+          resultSummary={resultSummary}
+          onReset={() => onChange([min, max])}
         />
       )}
     </Popover>
