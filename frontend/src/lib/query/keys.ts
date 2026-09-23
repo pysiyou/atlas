@@ -136,12 +136,6 @@ export const queryKeys = {
       [...queryKeys.results.all, 'order-test', orderTestId] as const,
   },
 
-  audit: {
-    all: ['audit'] as const,
-    entityTimeline: (entityType?: string, entityId?: number) =>
-      [...queryKeys.audit.all, 'entity-timeline', entityType, entityId] as const,
-  },
-
   recollectionRequests: {
     all: ['recollection-requests'] as const,
     pending: () => [...queryKeys.recollectionRequests.all, 'pending'] as const,
@@ -170,8 +164,6 @@ export const queryKeys = {
    */
   commandCenter: {
     all: ['command-center'] as const,
-    timeline: (params: { hours_back: number; limit: number; categories?: string }) =>
-      [...queryKeys.commandCenter.all, 'timeline', params] as const,
     board: () => [...queryKeys.commandCenter.all, 'board'] as const,
   },
 

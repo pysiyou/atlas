@@ -1,7 +1,7 @@
 /**
  * Command center shared layout, surface, and tone styles.
  */
-import { PANEL_SHELL } from '@/components/theme/recipes';
+import { FORM_TAB_TITLE, INLINE_LINK, PANEL_SHELL } from '@/components/theme/recipes';
 import { CONTROL, PANEL, RADIUS, SHADOW, SPACING, TONE, TYPE } from '@/components/theme/recipes';
 export type CommandCenterKpiTone = 'brand' | 'success' | 'warning' | 'danger' | 'neutral';
 
@@ -101,5 +101,18 @@ export const COMMAND_CENTER_HEALTH_STYLES = {
 export const COMMAND_CENTER_ATTENTION_ACCENT = {
   problem: TONE.danger.fill,
   neutral: TONE.warning.fill,
+} as const;
+
+/** Shared typography/layout for attention feed rows (formerly timeline styles). */
+export const COMMAND_CENTER_FEED_STYLES = {
+  groupHeader: 'sticky top-0 z-[1] flex items-center gap-space-2 bg-transparent py-space-2',
+  groupDivider: 'flex-1 h-px bg-border-subtle',
+  groupLabel: `${TYPE.sectionTitle} tracking-widest`,
+  eventDetails: 'flex flex-wrap items-center gap-x-space-1 gap-y-space-0-5',
+  loadMore: 'flex justify-center border-t border-border-subtle bg-transparent px-space-4 py-space-2',
+  retryLink: INLINE_LINK,
+  retryLinkDisabled: `${INLINE_LINK} disabled:opacity-60`,
+  eventDetailText: TYPE.label,
+  eventHeadline: `min-w-0 ${FORM_TAB_TITLE} text-text-primary`,
 } as const;
 

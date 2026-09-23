@@ -9,7 +9,7 @@ import {
 import {
   renderPatientId,
   renderPatientNameWithAge,
-} from '@/features/patients';
+} from '../utils/patientTableColumnRenders';
 import { formatDate, formatDateTime } from '@/utils';
 import type { PatientContext } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';

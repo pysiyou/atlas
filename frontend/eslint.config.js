@@ -181,7 +181,6 @@ export default defineConfig([
       'src/features/lab/validation/**/*.{ts,tsx}',
       'src/features/lab/components/**/*.{ts,tsx}',
       'src/features/lab/pages/**/*.{ts,tsx}',
-      'src/features/timeline/timelineStyles.ts',
     ],
     rules: {
       'no-restricted-syntax': ['error', ...designTokenRestrictedSyntax],

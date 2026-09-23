@@ -10,10 +10,7 @@ export type {
   TestWithContext,
 } from './types';
 
-export type { TimelineEvent } from './api/labCommandCenter';
-
 export { useSampleLookup } from './api/samples';
-export { auditAPI } from './api/audit';
 
 export {
   useLabStageQueueCounts,

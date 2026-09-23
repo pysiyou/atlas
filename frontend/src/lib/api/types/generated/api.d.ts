@@ -769,23 +769,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/audit/entities/{entityType}/{entityId}/timeline": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Entity Timeline */
-        get: operations["get_entity_timeline_api_v1_audit_entities__entityType___entityId__timeline_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/lab/quality-issues/options": {
         parameters: {
             query?: never;
@@ -875,23 +858,6 @@ export interface paths {
          * @description Deny a recollection request and cancel affected tests.
          */
         post: operations["deny_recollection_request_api_v1_lab_recollection_requests__requestId__deny_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/command-center/timeline": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Timeline */
-        get: operations["get_timeline_api_v1_command_center_timeline_get"];
-        put?: never;
-        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1366,13 +1332,6 @@ export interface components {
             phone: string;
             /** Email */
             email?: string | null;
-        };
-        /** EntityTimelineResponse */
-        EntityTimelineResponse: {
-            /** Events */
-            events: components["schemas"]["TimelineEventResponse"][];
-            /** Total */
-            total: number;
         };
         /** EscalationResolveRequest */
         EscalationResolveRequest: {
@@ -2917,83 +2876,6 @@ export interface components {
             price?: number | null;
             /** Isactive */
             isActive?: boolean | null;
-        };
-        /** TimelineEvent */
-        TimelineEvent: {
-            /** Id */
-            id: number;
-            /** Type */
-            type: string;
-            /** Category */
-            category?: string | null;
-            /** Tone */
-            tone?: string | null;
-            /** Entitytype */
-            entityType: string;
-            /** Entityid */
-            entityId: number;
-            /** Timestamp */
-            timestamp: string;
-            /** Performedby */
-            performedBy: string;
-            /** Performedbyname */
-            performedByName: string | null;
-            /** Metadata */
-            metadata: {
-                [key: string]: unknown;
-            };
-            /** Beforestate */
-            beforeState?: {
-                [key: string]: unknown;
-            } | null;
-            /** Afterstate */
-            afterState?: {
-                [key: string]: unknown;
-            } | null;
-            /** Comment */
-            comment?: string | null;
-        };
-        /** TimelineEventResponse */
-        TimelineEventResponse: {
-            /** Id */
-            id: number;
-            /** Type */
-            type: string;
-            /** Category */
-            category?: string | null;
-            /** Tone */
-            tone?: string | null;
-            /** Entitytype */
-            entityType: string;
-            /** Entityid */
-            entityId: number;
-            /** Timestamp */
-            timestamp: string;
-            /** Performedby */
-            performedBy: string;
-            /** Performedbyname */
-            performedByName?: string | null;
-            /** Metadata */
-            metadata: {
-                [key: string]: unknown;
-            };
-            /** Beforestate */
-            beforeState?: {
-                [key: string]: unknown;
-            } | null;
-            /** Afterstate */
-            afterState?: {
-                [key: string]: unknown;
-            } | null;
-            /** Comment */
-            comment?: string | null;
-        };
-        /** TimelineResponse */
-        TimelineResponse: {
-            /** Events */
-            events: components["schemas"]["TimelineEvent"][];
-            /** Total */
-            total: number;
         };
         /** Token */
         Token: {
@@ -4871,38 +4753,6 @@ export interface operations {
             };
         };
     };
-    get_entity_timeline_api_v1_audit_entities__entityType___entityId__timeline_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                entityType: string;
-                entityId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EntityTimelineResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     get_quality_issue_options_api_v1_lab_quality_issues_options_get: {
         parameters: {
             query: {
@@ -5078,44 +4928,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RecollectionRequestResult"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_timeline_api_v1_command_center_timeline_get: {
-        parameters: {
-            query?: {
-                /** @description Lookback window in hours */
-                hours_back?: number;
-                /** @description Maximum events per page */
-                limit?: number;
-                /** @description Pagination offset */
-                offset?: number;
-                /** @description Optional categories: order, payment, sample, result, other (legacy: specimen→sample) */
-                categories?: string[] | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TimelineResponse"];
                 };
             };
             /** @description Validation Error */

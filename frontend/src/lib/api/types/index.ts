@@ -8,10 +8,6 @@ export type {
   ApiOrderResponse,
   ApiSampleResponse,
   ApiTestResponse,
-  ApiTimelineEvent,
-  ApiTimelineEventResponse,
-  ApiTimelineResponse,
-  ApiEntityTimelineResponse,
   ApiUserLookupResponse,
   ApiLoginTokenResponse,
   ApiRefreshTokenResponse,
@@ -26,10 +22,6 @@ export type {
   ApiEscalationResolveResponse,
 } from './schemas';
 
-/** Entity/audit timeline events include category/tone from OpenAPI TimelineEventResponse */
-export type TimelineEvent = import('./schemas').ApiTimelineEventResponse;
-export type TimelineResponse = import('./schemas').ApiTimelineResponse;
-export type EntityTimelineResponse = import('./schemas').ApiEntityTimelineResponse;
 export type MessageResponse = import('./schemas').ApiMessageResponse;
 export type UserLookupResponse = import('./schemas').ApiUserLookupResponse;
 export type LoginTokenResponse = Pick<

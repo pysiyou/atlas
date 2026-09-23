@@ -1,21 +1,14 @@
 """Audit API Endpoints."""
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from app.api.dependencies import get_current_user
 from app.db.database import get_db
 from app.models.user import User
-from app.schemas.audit import (
-    AuditLogsCountResponse,
-    EntityTimelineResponse,
-    LabOperationLogResponse,
-    TimelineEventResponse,
-)
+from app.schemas.audit import AuditLogsCountResponse, LabOperationLogResponse
 from app.schemas.enums import LabOperationType
 from app.services.audit.query import AuditQueryService
-from app.services.timeline import EntityTimelineService
-from app.utils.exceptions import LabOperationError
 
 router = APIRouter()
 
@@ -43,23 +36,3 @@ async def get_lab_operation_logs_count(
 ) -> AuditLogsCountResponse:
     count = AuditQueryService(db).count_logs(operation_type, entity_type, hours_back)
     return AuditLogsCountResponse(count=count)
-
-
-@router.get(
-    "/audit/entities/{entityType}/{entityId}/timeline",
-    response_model=EntityTimelineResponse,
-)
-async def get_entity_timeline(
-    entityType: str,
-    entityId: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-) -> EntityTimelineResponse:
-    try:
-        events, total = EntityTimelineService(db).get_timeline(entityType, entityId)
-    except LabOperationError as e:
-        raise HTTPException(status_code=e.status_code, detail=e.message)
-    return EntityTimelineResponse(
-        events=[TimelineEventResponse(**event) for event in events],
-        total=total,
-    )
