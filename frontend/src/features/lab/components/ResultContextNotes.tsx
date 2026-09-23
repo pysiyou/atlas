@@ -55,7 +55,7 @@ export const ResultContextNotes: React.FC<ResultContextNotesProps> = ({
           <p className={`${TYPE.sectionTitle} text-text-tertiary mb-space-1.5`}>
             Technician notes
           </p>
-          <p className="text-sm text-text-secondary leading-snug whitespace-pre-wrap">
+          <p className={`${TYPE.label} leading-snug whitespace-pre-wrap`}>
             {technicianNotes}
           </p>
         </div>

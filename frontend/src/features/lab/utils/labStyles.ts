@@ -3,7 +3,7 @@
  * Typography and wells come from theme recipes; layout objects stay here.
  */
 
-import { PANEL, RADIUS, SHADOW, SPACING, SURFACE, TONE, TYPE } from '@/components/theme/recipes';
+import { PANEL, RADIUS, SHADOW, SPACING, SURFACE, TONE, TYPE, CONTROL } from '@/components/theme/recipes';
 import type { BadgeSize } from '@/components';
 
 /** Canonical Badge size for lab cards — uses theme BADGE.size.xs. */
@@ -12,6 +12,17 @@ export const LAB_CARD_BADGE_SIZE: BadgeSize = 'xs';
 /** Collection / entry / validation queue panel — matches ListView table shell inside app well. */
 export const LAB_WORKFLOW_QUEUE_SHELL =
   `${PANEL.raisedShadowSm} flex flex-1 flex-col min-w-0 min-h-0` as const;
+
+/** Laboratory page tab segment control (collection / entry / validation / command center). */
+export const LAB_PAGE_TABS = {
+  rail: `bg-surface-hover p-space-0-5 ${RADIUS.field} flex items-center gap-space-0-5`,
+  buttonBase: `relative flex items-center gap-space-1-5 px-space-2-5 py-space-1 ${RADIUS.field} ${TYPE.caption} font-normal transition-all duration-200 cursor-pointer`,
+  buttonActive: `bg-surface ${TONE.brand.fg} ${CONTROL.segmentActive}`,
+  buttonInactive: 'text-text-tertiary hover:text-text-primary hover:bg-surface-hover',
+  iconActive: TONE.brand.fg,
+  iconInactive: 'text-text-disabled',
+  countBadgeMargin: 'ml-space-1',
+} as const;
 
 /** Shared lab header rows (modals; cards can reuse audit/badge row tokens) */
 export const LAB_HEADER = {

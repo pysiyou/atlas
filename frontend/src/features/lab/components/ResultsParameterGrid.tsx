@@ -4,7 +4,7 @@
 import React, { useMemo } from 'react';
 import { cn } from '@/utils';
 import { parseResultEntry, statusMapFromFlags, isCritical } from '../utils/labResult';
-import { LAB_CONFIG } from '@/features/lab/constants';
+import { LAB_CONFIG } from '../constants';
 import { TONE, TYPE } from '@/components/theme/recipes';
 import {
   RESULT_PANEL,
@@ -39,7 +39,7 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
   const entries = Object.entries(results ?? {});
 
   if (entries.length === 0) {
-    return <p className="text-sm text-text-tertiary">No result values recorded.</p>;
+    return <p className={TYPE.meta}>No result values recorded.</p>;
   }
 
   if (variant === 'tiles') {

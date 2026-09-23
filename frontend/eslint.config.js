@@ -75,7 +75,17 @@ export default defineConfig([
       'no-restricted-imports': ['error', {
         patterns: [
           {
-            group: ['@/features/*/components/*', '@/features/*/hooks/*', '@/features/*/api/*', '@/features/*/utils/*'],
+            group: [
+              '@/features/*/components/*',
+              '@/features/*/hooks/*',
+              '@/features/*/api/*',
+              '@/features/*/utils/*',
+              '@/features/*/collection/**',
+              '@/features/*/entry/**',
+              '@/features/*/validation/**',
+              '@/features/*/commandCenter/**',
+              '@/features/*/pages/**',
+            ],
             message: 'Import from the feature public API (@/features/<name>) unless this is an intra-feature relative import.',
           },
           {
@@ -95,6 +105,14 @@ export default defineConfig([
           {
             group: ['@/features/**'],
             message: 'Shared components must not import from features. Move domain logic to @/utils or feature barrels.',
+          },
+          {
+            group: ['@/utils/tableColumnRenders', '@/utils/tableColumnRenders.tsx'],
+            message: 'Generic table cell helpers only; domain renders live in @/features/orders or @/features/patients.',
+          },
+          {
+            group: ['@/features/*/utils/*TableColumnRenders*'],
+            message: 'Do not import feature table renders from shared components.',
           },
         ],
       }],
@@ -140,6 +158,11 @@ export default defineConfig([
       'src/features/lab/utils/labResult.ts',
       'src/features/lab/commandCenter/commandCenterStyles.ts',
       'src/features/lab/commandCenter/dashboardStyles.ts',
+      'src/features/lab/collection/**/*.{ts,tsx}',
+      'src/features/lab/entry/**/*.{ts,tsx}',
+      'src/features/lab/validation/**/*.{ts,tsx}',
+      'src/features/lab/components/**/*.{ts,tsx}',
+      'src/features/lab/pages/**/*.{ts,tsx}',
       'src/features/timeline/timelineStyles.ts',
     ],
     rules: {

@@ -16,7 +16,9 @@ Shared UI lives under `frontend/src/components/`. Feature-specific UI lives unde
 | App shell | `app/` | components, features (composition) | — |
 | Features | `features/*/` | `@/components`, other feature barrels | deep paths into other features |
 
-ESLint enforces: **`src/components/**` must not import `@/features/**`**. Cross-feature access uses `@/features/<name>` barrels only (no `@/features/foo/components/Bar`).
+ESLint enforces: **`src/components/**` must not import `@/features/**`** or **`@/utils/tableColumnRenders`**. Cross-feature access uses `@/features/<name>` barrels only (no `@/features/foo/components/Bar`, `@/features/foo/collection/...`, etc.). Inside a feature, prefer **relative imports** between subfolders; use the feature barrel from app and other features.
+
+Lazy routes in [`App.tsx`](frontend/src/app/App.tsx) should `import('@/features/<name>')` and load page exports from each feature’s `index.ts`.
 
 ## Buttons and badges
 
@@ -31,6 +33,7 @@ ESLint enforces: **`src/components/**` must not import `@/features/**`**. Cross-
 - **Order cells** (order id, tests block, totals, navigable id): `@/features/orders` → `orderTableColumnRenders`.
 - **Patient cells** (patient id, name + age): `@/features/patients` → `patientTableColumnRenders`.
 - Table configs live in each feature’s `config/*Table.config.tsx` and import helpers from the rows above.
+- ESLint blocks importing `@/utils/tableColumnRenders` from `components/**`.
 
 ## Modals
 

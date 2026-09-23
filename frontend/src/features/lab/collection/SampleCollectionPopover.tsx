@@ -15,7 +15,7 @@ import { cn } from '@/utils';
 import { getContainerIcon } from '@/config/icons';
 import { ICONS } from '@/config/icons';
 import { inputBase, inputError, FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
-import { RADIUS, SHADOW, TONE } from '@/components/theme/recipes';
+import { RADIUS, SHADOW, TONE, TYPE } from '@/components/theme/recipes';
 import {
   getDefaultCollectionTopColor,
   getEffectiveContainerType,
@@ -155,7 +155,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
             className={cn(inputBase, 'pr-space-8', volume < minimumVolume && inputError)}
             placeholder="0.0"
           />
-          <span className="absolute right-space-3 top-1/2 -translate-y-1/2 text-xs font-normal text-text-disabled pointer-events-none">
+          <span className={`absolute right-space-3 top-1/2 -translate-y-1/2 ${TYPE.meta} pointer-events-none select-none`}>
             mL
           </span>
         </div>

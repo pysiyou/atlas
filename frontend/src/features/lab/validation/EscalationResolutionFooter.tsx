@@ -6,6 +6,7 @@ import {
   EscalationResolutionActions,
   type EscalationResolveOptions,
 } from './EscalationResolutionActions';
+import { TYPE } from '@/components/theme/recipes';
 
 interface EscalationResolutionFooterProps {
   orderTestId?: number;
@@ -41,7 +42,7 @@ export const EscalationResolutionFooter: React.FC<EscalationResolutionFooterProp
   return (
     <ModalFooter statusMessage="" statusClassName="text-text-tertiary">
       {!canResolveEscalation ? (
-        <p className="text-sm text-text-tertiary">You do not have permission to resolve escalations.</p>
+        <p className={TYPE.meta}>You do not have permission to resolve escalations.</p>
       ) : (
         <EscalationResolutionActions
           {...actionProps}

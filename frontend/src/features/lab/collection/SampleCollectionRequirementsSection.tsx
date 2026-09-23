@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { RADIUS } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/components/theme/recipes';
 import { Callout, Panel, EntityId } from '@/components';
 import { formatArray } from '@/utils';
 import { formatRejectionCriteriaList } from '../utils/catalogRejectionCriteria';
@@ -45,7 +45,7 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
             <button
               key={`${test.code}-${index}`}
               onClick={() => setActiveTestCode(test.code)}
-              className={`px-space-2 py-space-1 text-xs ${RADIUS.field} transition-colors ${
+              className={`px-space-2 py-space-1 ${TYPE.caption} ${RADIUS.field} transition-colors ${
                 activeTestCode === test.code
                   ? 'bg-brand-muted text-brand font-normal'
                   : 'bg-surface-hover text-brand hover:bg-border-default'
@@ -68,7 +68,7 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
           <div className="flex items-start gap-space-2">
             <span className={`w-1.5 h-1.5 ${RADIUS.pill} bg-text-muted mt-space-1-5 shrink-0`} />
             <div className="flex-1">
-              <div className={`text-xs font-normal mb-space-1 ${LAB_CARD_TYPOGRAPHY.fieldLabel}`}>
+              <div className={`mb-space-1 ${LAB_CARD_TYPOGRAPHY.fieldLabel}`}>
                 Container Specifications
               </div>
               <div className={LAB_CARD_TYPOGRAPHY.sectionContent}>{activeTest.containerDescription}</div>
@@ -80,7 +80,7 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
           <div className="flex items-start gap-space-2">
             <span className={`w-1.5 h-1.5 ${RADIUS.pill} bg-text-muted mt-space-1-5 shrink-0`} />
             <div className="flex-1">
-              <div className={`text-xs font-normal mb-space-1 ${LAB_CARD_TYPOGRAPHY.fieldLabel}`}>
+              <div className={`mb-space-1 ${LAB_CARD_TYPOGRAPHY.fieldLabel}`}>
                 Collection Instructions
               </div>
               <div className={LAB_CARD_TYPOGRAPHY.sectionContent}>{activeTest.collectionNotes}</div>
@@ -92,7 +92,7 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
           <div className="flex items-start gap-space-2">
             <span className={`w-1.5 h-1.5 ${RADIUS.pill} bg-text-muted mt-space-1-5 shrink-0`} />
             <div className="flex-1">
-              <div className={`text-xs font-normal mb-space-1 ${LAB_CARD_TYPOGRAPHY.fieldLabel}`}>
+              <div className={`mb-space-1 ${LAB_CARD_TYPOGRAPHY.fieldLabel}`}>
                 Rejection Criteria
               </div>
               <div className={LAB_CARD_TYPOGRAPHY.sectionContent}>

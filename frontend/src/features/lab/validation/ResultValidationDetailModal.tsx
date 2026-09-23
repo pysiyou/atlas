@@ -23,8 +23,8 @@ import {
 import { ReviewRequiredBadge } from '../components/LabResultStatusBadges';
 import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { QualityIssuePopover } from '../components/QualityIssuePopover';
-import { CriticalValueActions } from '@/features/lab/criticalValues/CriticalValueActions';
-import { buildCriticalValueRecord } from '@/features/lab/criticalValues/criticalValues';
+import { CriticalValueActions } from '../criticalValues/CriticalValueActions';
+import { buildCriticalValueRecord } from '../criticalValues/criticalValues';
 import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { useOrderTestQueueState } from '../hooks';
@@ -32,6 +32,7 @@ import { useSampleRejectionDisplay } from '../hooks/useSampleRejectionDisplay';
 import { SampleRejectedBanner } from '../components/SampleRejectedBanner';
 import type { TestWithContext } from '@/types';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
+import { TYPE } from '@/components/theme/recipes';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import { LabEntityTimelinePanel } from '../components/LabEntityTimelinePanel';
 import { labModalSubtitle } from '../components/LabWorkflowModalSubtitles';
@@ -185,7 +186,7 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
         </Panel>
       ) : readOnly ? (
         <Panel variant="lab" title="Recorded Results">
-          <p className="text-sm text-text-secondary">No results were recorded on this test version.</p>
+          <p className={TYPE.label}>No results were recorded on this test version.</p>
         </Panel>
       ) : null}
 

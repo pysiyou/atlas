@@ -6,6 +6,7 @@ import { LabEntityTimelinePanel } from '../components/LabEntityTimelinePanel';
 import type { TestWithContext } from '@/types';
 import type { CriticalValueRecord } from '../criticalValues/criticalValues';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
+import { TYPE } from '@/components/theme/recipes';
 
 interface EscalationResolutionBodyProps {
   test: TestWithContext;
@@ -49,7 +50,7 @@ function EscalationSummaryPanel({
 }) {
   return (
     <Panel variant="lab" title="Escalation Summary">
-      <p className="text-sm text-text-secondary">
+      <p className={TYPE.label}>
         This test was escalated before results were entered. Review the context below and choose
         an action.
       </p>

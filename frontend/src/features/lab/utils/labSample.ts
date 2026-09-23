@@ -4,7 +4,7 @@ import { COLLECTION_TOP_COLOR_VALUES } from '@/types';
 import type { FeedbackId } from '@/config/feedbackCatalog';
 import { notify } from '@/utils/feedback';
 import { feedbackTitle } from '@/utils/feedback/copy';
-import { printCollectionLabel } from '@/features/lab/collection/SampleCollectionLabelActions';
+import { printCollectionLabel } from '../collection/SampleCollectionLabelActions';
 import type { SampleCollectionQueueItem } from '../types';
 
 export interface SampleDefinition {

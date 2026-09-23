@@ -26,3 +26,5 @@ export {
   PaymentMethodBadge,
   PaymentStatusBadge,
 } from './components/PaymentStatusBadge';
+
+export { PaymentList as PaymentListPage } from './pages/PaymentList';

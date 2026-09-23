@@ -9,7 +9,7 @@ import { useState, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { invalidateResultQueries } from '@/lib/query/invalidate';
 import { resultAPI, useValidateResults } from '../api/results';
-import { notifyQualityIssueSuccess } from '@/features/lab/validation/qualityIssueToastMessages';
+import { notifyQualityIssueSuccess } from './qualityIssueToastMessages';
 import { notify } from '@/utils/feedback';
 import { logger } from '@/utils/logger';
 import { useModal, ModalType } from '@/lib/context/ModalContext';

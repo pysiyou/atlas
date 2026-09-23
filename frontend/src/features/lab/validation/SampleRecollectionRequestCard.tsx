@@ -13,7 +13,7 @@ import { LAB_CARD_BADGE_SIZE, LAB_CARD_TYPOGRAPHY, LAB_MOBILE_CARD } from '../ut
 import { AttemptIndicator } from '../components/LabAttemptIndicators';
 import { SampleTypeBadge } from '../components/LabDomainBadges';
 import { BlockedReasonBadge } from '../components/LabResultStatusBadges';
-import { LAB_CONFIG } from '@/features/lab/constants';
+import { LAB_CONFIG } from '../constants';
 import type { RecollectionRequestSummary } from '@/types/lab-operations';
 
 interface RecollectionRequestCardProps {
