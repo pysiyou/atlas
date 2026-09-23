@@ -23,16 +23,16 @@ type LazyPage = LazyExoticComponent<ComponentType>;
 
 /** Lazy page loader that re-exports a named export as default for React.lazy */
 function lazyNamed(
-  factory: () => Promise<Record<string, ComponentType>>,
+  factory: () => Promise<Record<string, unknown>>,
   exportName: string
 ): LazyPage {
   return lazy(() =>
     factory().then(m => {
       const Component = m[exportName];
-      if (!Component) {
+      if (!Component || typeof Component !== 'function') {
         throw new Error(`Missing export "${exportName}" from lazy route module`);
       }
-      return { default: Component };
+      return { default: Component as ComponentType };
     })
   );
 }
@@ -41,20 +41,11 @@ const Dashboard = lazyNamed(
   () => import('@/features/dashboard'),
   'DashboardPage'
 );
-const Patients = lazyNamed(
-  () => import('@/features/patients/pages/PatientsPage'),
-  'Patients'
-);
-const Orders = lazyNamed(() => import('@/features/orders/pages/OrdersPage'), 'Orders');
-const Catalog = lazyNamed(() => import('@/features/catalog/pages/CatalogPage'), 'Catalog');
-const Laboratory = lazyNamed(
-  () => import('@/features/lab/pages/LaboratoryPage'),
-  'LaboratoryPage'
-);
-const Payments = lazyNamed(
-  () => import('@/features/payments/pages/PaymentList'),
-  'PaymentList'
-);
+const Patients = lazyNamed(() => import('@/features/patients'), 'PatientsPage');
+const Orders = lazyNamed(() => import('@/features/orders'), 'OrdersPage');
+const Catalog = lazyNamed(() => import('@/features/catalog'), 'CatalogPage');
+const Laboratory = lazyNamed(() => import('@/features/lab'), 'LaboratoryPage');
+const Payments = lazyNamed(() => import('@/features/payments'), 'PaymentListPage');
 const Reports = lazyNamed(() => import('@/features/reports'), 'ReportsPage');
 interface ProtectedRouteConfig {
   path: string;

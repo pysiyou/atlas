@@ -10,7 +10,7 @@ import type {
   QualityIssueTargetType,
   RemedyType,
 } from '@/types/lab-operations';
-import { notifyQualityIssueSuccess } from '@/features/lab/validation/qualityIssueToastMessages';
+import { notifyQualityIssueSuccess } from '../validation/qualityIssueToastMessages';
 
 interface UseSubmitQualityIssueOptions {
   onSuccess?: (result: QualityIssueResult) => void;

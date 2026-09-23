@@ -9,16 +9,15 @@ import Barcode from 'react-barcode';
 import { Badge, Icon, Panel, EntityId } from '@/components';
 import type { ContainerType, Sample, RejectedSample, Test } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_CONFIG } from '@/types';
-import { formatVolume } from '@/features/lab/utils';
+import { formatVolume } from '../utils';
 import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
+import { RADIUS, SURFACE, TONE, TYPE } from '@/components/theme/recipes';
 import { DetailGrid, type DetailGridSectionConfig } from '../components/LabWorkflowDetailModal';
 import { displayId, formatDateTime } from '@/utils';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import { SampleCollectionRequirementsSection } from './SampleCollectionRequirementsSection';
 import { formatRejectionReasons } from '../utils/labFormatters';
 import { ICONS } from '@/config/icons';
-import { RADIUS, SURFACE, TONE, TYPE } from '@/components/theme/recipes';
-
 
 interface CollectionDetailGridSectionsProps {
   sample: Sample;
@@ -241,7 +240,7 @@ export const SampleCollectionDetailContent: React.FC<CollectionDetailContentProp
 
       {isRejected && rejectedSample && (
         <Panel variant="lab" title="Rejection Details">
-          <div className="space-y-space-2 text-sm text-text-secondary">
+          <div className={`space-y-space-2 ${TYPE.label}`}>
             {rejectedSample.rejectionReasons && rejectedSample.rejectionReasons.length > 0 && (
               <p>
                 <span className="text-text-tertiary">Reason: </span>

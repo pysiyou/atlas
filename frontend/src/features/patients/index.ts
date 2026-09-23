@@ -25,7 +25,12 @@ export {
 } from './api/affiliations';
 
 export { PatientGenderBadge } from './components/PatientGenderBadge';
+export { AgeFilter } from '@/components/filters/AgeFilter';
 export {
   renderPatientId,
   renderPatientNameWithAge,
 } from './utils/patientTableColumnRenders';
+
+export { Patients as PatientsPage } from './pages/PatientsPage';
+export { PatientList } from './pages/PatientList';
+export { PatientDetail } from './pages/PatientDetail';

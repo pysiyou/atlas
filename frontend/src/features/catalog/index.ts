@@ -20,3 +20,7 @@ export {
   CatalogSampleTypeBadge,
   CatalogTestStatusBadge,
 } from './components/CatalogStatusBadge';
+
+export { Catalog as CatalogPage } from './pages/CatalogPage';
+export { CatalogList } from './pages/CatalogList';
+export { CatalogDetail } from './pages/CatalogDetail';

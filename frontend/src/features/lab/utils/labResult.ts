@@ -225,12 +225,11 @@ export const RESULT_PANEL = {
     `${RADIUS.surface} border px-space-3 py-space-2-5 flex flex-col gap-space-1-5 min-h-[4.5rem] transition-colors duration-150`,
   tileEmpty: 'border-border-subtle bg-surface-page/40',
   tileFilled: `border-border-default bg-surface ${SHADOW.subtle}`,
-  label: 'text-xxs font-medium text-text-secondary truncate',
+  label: `${TYPE.caption} font-medium truncate`,
   value: 'text-lg font-medium tabular-nums leading-tight',
   unit: `${TYPE.meta} font-normal ml-space-1`,
   reference: `${TYPE.caption} leading-none font-normal truncate shrink-0 max-w-[50%]`,
-  referenceUnavailable:
-    '!text-xxs leading-none font-normal text-text-secondary truncate shrink-0 max-w-[50%]',
+  referenceUnavailable: `${TYPE.caption} leading-none font-normal truncate shrink-0 max-w-[50%]`,
   notesSection: 'mt-space-4 pt-space-4 border-t border-border-subtle space-y-space-3',
   notesLabel: `${TYPE.label} font-normal`,
 } as const;

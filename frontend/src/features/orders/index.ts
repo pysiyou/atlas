@@ -56,3 +56,7 @@ export {
   renderOrderDateCell,
   type RenderOrderTestsBlockOptions,
 } from './utils/orderTableColumnRenders';
+
+export { Orders as OrdersPage } from './pages/OrdersPage';
+export { OrderList } from './pages/OrderList';
+export { OrderDetail } from './pages/OrderDetail';

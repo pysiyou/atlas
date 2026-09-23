@@ -12,8 +12,8 @@ import { LabCommandCenterBoard } from '../commandCenter/LabCommandCenterBoard';
 import { Icon, PageHeader, Badge, ErrorAlert } from '@/components';
 import { errorAlertMessage } from '@/utils/feedback';
 import { ICONS } from '@/config/icons';
-import { CONTROL, RADIUS, WORKSPACE } from '@/components/theme/recipes';
-import { LAB_WORKFLOW_QUEUE_SHELL } from '../utils/labStyles';
+import { WORKSPACE } from '@/components/theme/recipes';
+import { LAB_WORKFLOW_QUEUE_SHELL, LAB_PAGE_TABS } from '../utils/labStyles';
 import { useLabStageQueueCounts, getValidationTabCount } from '../hooks';
 import {
   DEFAULT_LAB_TAB,
@@ -91,7 +91,7 @@ export const LaboratoryPage: React.FC = () => {
         variant="bar"
         title={pageTitle}
         actions={
-          <div className={`bg-surface-hover p-space-0-5 ${RADIUS.field} flex items-center gap-space-0-5`}>
+          <div className={LAB_PAGE_TABS.rail}>
             {tabs.map(tab => {
               const isActive = activeTab === tab.id;
               const hasCount = typeof tab.count === 'number' && tab.count > 0;
@@ -99,17 +99,12 @@ export const LaboratoryPage: React.FC = () => {
                 <button
                   key={tab.id}
                   onClick={() => handleTabChange(tab.id)}
-                  className={`
-                  relative flex items-center gap-space-1-5 px-space-2-5 py-space-1 ${RADIUS.field} text-xs font-normal transition-all duration-200 cursor-pointer
-                  ${
-                    isActive
-                      ? `bg-surface text-brand ${CONTROL.segmentActive}`
-                      : 'text-text-tertiary hover:text-text-primary hover:bg-surface-hover'
-                  }
-                `}
+                  className={`${LAB_PAGE_TABS.buttonBase} ${
+                    isActive ? LAB_PAGE_TABS.buttonActive : LAB_PAGE_TABS.buttonInactive
+                  }`}
                 >
                   <div
-                    className={`${isActive ? 'text-brand' : 'text-text-disabled'} flex items-center`}
+                    className={`${isActive ? LAB_PAGE_TABS.iconActive : LAB_PAGE_TABS.iconInactive} flex items-center`}
                   >
                     {tab.icon}
                   </div>
@@ -118,7 +113,7 @@ export const LaboratoryPage: React.FC = () => {
                     <Badge
                       variant={isActive ? 'primary' : 'default'}
                       size="xs"
-                      className="ml-space-1"
+                      className={LAB_PAGE_TABS.countBadgeMargin}
                     >
                       {tab.count}
                     </Badge>

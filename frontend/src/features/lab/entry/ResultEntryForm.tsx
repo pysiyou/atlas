@@ -10,7 +10,7 @@ import type { Test, Patient } from '@/types';
 import { ParameterInput } from './ResultParameterInputs';
 import { getReferenceRangeDisplay, checkCriticalStatus } from './resultEntry';
 import { RESULT_PANEL, resultTileStatusClass } from '../utils/labResult';
-import { RADIUS, SHADOW, TONE } from '@/components/theme/recipes';
+import { RADIUS, SHADOW, TONE, TYPE } from '@/components/theme/recipes';
 
 interface EntryFormProps {
   testDef: Test;
@@ -108,7 +108,7 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
                 />
                 {valueType !== 'TEXT' && param.unit && (
                   <div className="absolute inset-y-0 right-0 pr-space-3 flex items-center pointer-events-none z-0">
-                    <span className="text-xs text-text-disabled select-none">{param.unit}</span>
+                    <span className={`${TYPE.meta} select-none`}>{param.unit}</span>
                   </div>
                 )}
               </div>

@@ -13,6 +13,7 @@ import {
   type CriticalValueRecord,
 } from './criticalValues';
 import { inputBase } from '@/components/inputs/inputStyles';
+import { TONE, TYPE } from '@/components/theme/recipes';
 
 interface CriticalValueActionsProps {
   record: CriticalValueRecord;
@@ -123,7 +124,7 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
       )}
 
       {record.criticalAcknowledgedAt && (
-        <p className="text-xs text-success-fg">
+        <p className={`${TYPE.caption} ${TONE.success.fg}`}>
           Acknowledged {formatDateTime(record.criticalAcknowledgedAt)}
         </p>
       )}
