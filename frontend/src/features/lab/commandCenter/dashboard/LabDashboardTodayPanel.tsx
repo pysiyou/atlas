@@ -2,8 +2,9 @@
  * Today — average time per workflow step (today's accessions).
  */
 import React from 'react';
+import { EmptyState, EMPTY_COPY, DASHBOARD_EMPTY_STATE_TEXT } from '@/components';
 import { Panel } from '@/components/surfaces/Panel';
-import { LAB_COPY, labStageLabel } from '../../constants/labConstants';
+import { labStageLabel } from '../../constants/labConstants';
 import type { LabPipelineStage, LabTodayPanelSnapshot } from '../commandCenterModel';
 import { TODAY_PANEL } from '../dashboardStyles';
 import { LabDashboardTodayStepChart } from './LabDashboardTodayStepChart';
@@ -21,7 +22,6 @@ export const LabDashboardTodayPanel: React.FC<LabDashboardTodayPanelProps> = ({
   totalActive,
   suggestedTab,
 }) => {
-  const copy = LAB_COPY.dashboard;
   const hasStepData = todayPanel.steps.some(step => step.sampleCount > 0);
 
   const panelMetaParts = [`${totalActive.toLocaleString()} active`, healthMessage];
@@ -40,7 +40,11 @@ export const LabDashboardTodayPanel: React.FC<LabDashboardTodayPanelProps> = ({
         {hasStepData ? (
           <LabDashboardTodayStepChart steps={todayPanel.steps} />
         ) : (
-          <p className={TODAY_PANEL.emptyHint}>{copy.todayPanelMetaEmpty}</p>
+          <EmptyState
+            {...DASHBOARD_EMPTY_STATE_TEXT}
+            title={EMPTY_COPY.dashboardTodaySteps.title}
+            description={EMPTY_COPY.dashboardTodaySteps.description}
+          />
         )}
       </div>
     </Panel>

@@ -119,6 +119,8 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
   const totalParams = resolvedTestDef.parameters.length;
   const completionPercentage = totalParams > 0 ? Math.round((filledCount / totalParams) * 100) : 0;
   const turnaroundTime = resolvedTestDef.turnaroundTime;
+  const showTurnaroundTime =
+    typeof turnaroundTime === 'number' && Number.isFinite(turnaroundTime) && turnaroundTime > 0;
   const remainingParams = totalParams - filledCount;
 
   const handleLocalResultChange = (key: string, paramCode: string, value: string) => {
@@ -159,7 +161,7 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
           <Badge size={LAB_CARD_BADGE_SIZE} variant="neutral" className="text-text-secondary">
             {filledCount} / {totalParams} parameters
           </Badge>
-          {turnaroundTime && (
+          {showTurnaroundTime && (
             <Badge
               size={LAB_CARD_BADGE_SIZE}
               variant="neutral"
@@ -302,10 +304,10 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
               },
               {
                 label: 'Turnaround Time',
-                value: turnaroundTime ? (
+                value: showTurnaroundTime ? (
                   <span className="flex items-center gap-space-1">
                     <Icon name={ICONS.dataFields.time} className="w-3.5 h-3.5" />
-                    {turnaroundTime} hours
+                    {turnaroundTime}h
                   </span>
                 ) : undefined,
               },

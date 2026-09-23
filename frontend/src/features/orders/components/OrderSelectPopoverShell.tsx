@@ -1,5 +1,5 @@
 import React from 'react';
-import { EmptyState } from '@/components';
+import { EmptyState, PANEL_EMPTY_STATE } from '@/components';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 import { OVERLAY, RADIUS, TYPE } from '@/components/theme/recipes';
 import { DEFAULT_EMPTY_DESCRIPTION_SEARCH } from '@/utils/constants';
@@ -39,7 +39,12 @@ export const OrderSelectPopoverShell: React.FC<OrderSelectPopoverShellProps> = (
     </div>
 
     {isEmpty ? (
-      <EmptyState variant="compact" title={emptyMessage} description={emptyDescription} />
+      <EmptyState
+        {...PANEL_EMPTY_STATE}
+        fill={false}
+        title={emptyMessage}
+        description={emptyDescription}
+      />
     ) : (
       <div className="max-h-[280px] overflow-y-auto divide-y divide-border-default/70">
         {children}

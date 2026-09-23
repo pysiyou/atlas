@@ -4,7 +4,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { DataTable, EmptyState, EMPTY_COPY } from '@/components';
+import { DataTable, EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components';
 import { useTestCatalog } from '@/features/catalog';
 import type { OrderTest } from '@/types';
 import { createTestsTableConfig } from '../config/TestsTable.config';
@@ -18,8 +18,7 @@ export interface TestsTableProps {
 
 const EMPTY_MESSAGE = (
   <EmptyState
-    variant="compact"
-    fill
+    {...PANEL_EMPTY_STATE}
     title={EMPTY_COPY.orderTests.title}
     description={EMPTY_COPY.orderTests.description}
   />

@@ -36,6 +36,13 @@ export const EMPTY_COPY = {
       'pipeline work is open or a row is updated today',
     ),
   },
+  dashboardTodaySteps: {
+    title: emptyTitle("step times for today's accessions"),
+    description: emptySubtitle(
+      'step timing metrics',
+      "today's accessions include tests in the pipeline",
+    ),
+  },
   pendingAttention: {
     title: 'No items in queue',
     description:

@@ -79,6 +79,8 @@ export const LabActivityFeed: React.FC<LabActivityFeedProps> = ({
       preset="commandCenter"
       events={events}
       interactiveEntities
+      emptyVisual="textOnly"
+      emptyVariant="dense"
       emptyMessage={EMPTY_COPY.recentActivity.title}
       emptyDescription={EMPTY_COPY.recentActivity.description}
       className="h-full px-space-3 py-space-1"

@@ -4,7 +4,7 @@
 
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE, Badge, EntityId } from '@/components';
+import { EmptyState, EMPTY_COPY, DASHBOARD_EMPTY_STATE_TEXT, Badge, EntityId } from '@/components';
 import { LabPriorityBadge } from '../components/LabDomainBadges';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import { cn, displayId } from '@/utils';
@@ -137,7 +137,7 @@ export const LabAttentionFeed: React.FC<LabAttentionFeedProps> = ({ items }) => 
     return (
       <div className="flex h-full min-h-0 flex-col bg-surface">
         <EmptyState
-          {...PANEL_EMPTY_STATE}
+          {...DASHBOARD_EMPTY_STATE_TEXT}
           title={EMPTY_COPY.pendingAttention.title}
           description={EMPTY_COPY.pendingAttention.description}
         />

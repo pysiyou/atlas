@@ -95,7 +95,7 @@ export function createTestsTableConfig(
     category: {
       key: 'category',
       header: 'Category',
-      width: 'md' as const,
+      width: 'lg' as const,
       accessor: (test: OrderTest) => getTestProperty(test.testCode, 'category', testCatalog) ?? '',
       render: (test: OrderTest) => renderTestCategoryBadge(test, testCatalog) ?? <span className={TYPE.meta}>—</span>,
     },
@@ -145,7 +145,7 @@ export function createTestsTableConfig(
             className="text-xs text-brand hover:underline whitespace-nowrap"
             onClick={e => e.stopPropagation()}
           >
-            View in Lab
+            View
           </Link>
         );
       },

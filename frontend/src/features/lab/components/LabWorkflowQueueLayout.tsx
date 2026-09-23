@@ -5,7 +5,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { EmptyState } from '@/components';
+import { EmptyState, PANEL_EMPTY_STATE } from '@/components';
 import { displayId } from '@/utils';
 import { SPACING, WORKSPACE } from '@/components/theme/recipes';
 
@@ -51,7 +51,7 @@ export function LabWorkflowQueueLayout<T>({
 
         {!hasItems && (
           <div className="flex-1">
-            <EmptyState fill title={emptyTitle} description={emptyDescription} />
+            <EmptyState {...PANEL_EMPTY_STATE} title={emptyTitle} description={emptyDescription} />
           </div>
         )}
       </div>
