@@ -1,0 +1,106 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   NOIR STUDIO DARK THEME
+   Primitive palette only. Shared dark semantics: tokens/semantic-dark.css
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme='noir-studio'] {
+  --primitive-brand-50: #ccfbf1;
+  --primitive-brand-100: #99f6e4;
+  --primitive-brand-200: #5eead4;
+  --primitive-brand-300: #2dd4bf;
+  --primitive-brand-400: #14b8a6;
+  --primitive-brand-500: #0d9488;
+  --primitive-brand-600: #0f766e;
+  --primitive-brand-700: #115e59;
+  --primitive-brand-800: #134e4a;
+  --primitive-brand-900: #042f2e;
+  --primitive-brand-950: #022c27;
+
+  --primitive-neutral-0: #0c0c0c;
+  --primitive-neutral-50: #121212;
+  --primitive-neutral-100: #181818;
+  --primitive-neutral-200: #222222;
+  --primitive-neutral-300: #2e2e2e;
+  --primitive-neutral-400: #454545;
+  --primitive-neutral-500: #6b6b6b;
+  --primitive-neutral-600: #8e8e8e;
+  --primitive-neutral-700: #b8b8b8;
+  --primitive-neutral-800: #d6d6d6;
+  --primitive-neutral-900: #f0f0f0;
+  --primitive-neutral-950: #fafafa;
+
+  --primitive-success-50: #052e16;
+  --primitive-success-100: #14532d;
+  --primitive-success-200: #166534;
+  --primitive-success-300: #15803d;
+  --primitive-success-400: #16a34a;
+  --primitive-success-500: #22c55e;
+  --primitive-success-600: #4ade80;
+  --primitive-success-700: #86efac;
+  --primitive-success-800: #bbf7d0;
+  --primitive-success-900: #dcfce7;
+  --primitive-success-950: #f0fdf4;
+
+  --primitive-warning-50: #451a03;
+  --primitive-warning-100: #78350f;
+  --primitive-warning-200: #92400e;
+  --primitive-warning-300: #b45309;
+  --primitive-warning-400: #d97706;
+  --primitive-warning-500: #f59e0b;
+  --primitive-warning-600: #fbbf24;
+  --primitive-warning-700: #fcd34d;
+  --primitive-warning-800: #fde68a;
+  --primitive-warning-900: #fef3c7;
+  --primitive-warning-950: #fffbeb;
+
+  --primitive-danger-50: #4c0519;
+  --primitive-danger-100: #881337;
+  --primitive-danger-200: #9f1239;
+  --primitive-danger-300: #be123c;
+  --primitive-danger-400: #e11d48;
+  --primitive-danger-500: #f43f5e;
+  --primitive-danger-600: #fb7185;
+  --primitive-danger-700: #fda4af;
+  --primitive-danger-800: #fecdd3;
+  --primitive-danger-900: #ffe4e6;
+  --primitive-danger-950: #fff1f2;
+
+  --primitive-info-50: #082f49;
+  --primitive-info-100: #0c4a6e;
+  --primitive-info-200: #075985;
+  --primitive-info-300: #0369a1;
+  --primitive-info-400: #0284c7;
+  --primitive-info-500: #0ea5e9;
+  --primitive-info-600: #38bdf8;
+  --primitive-info-700: #7dd3fc;
+  --primitive-info-800: #bae6fd;
+  --primitive-info-900: #e0f2fe;
+  --primitive-info-950: #f0f9ff;
+
+  --primitive-purple-100: #2e1065;
+  --primitive-purple-500: #a855f7;
+  --primitive-purple-600: #c084fc;
+  --primitive-purple-800: #e9d5ff;
+  --primitive-pink-100: #500724;
+  --primitive-pink-500: #ec4899;
+  --primitive-pink-600: #f472b6;
+  --primitive-pink-800: #fbcfe8;
+  --primitive-teal-100: #042f2e;
+  --primitive-teal-500: #14b8a6;
+  --primitive-teal-600: #2dd4bf;
+  --primitive-teal-800: #99f6e4;
+  --primitive-orange-100: #431407;
+  --primitive-orange-500: #f97316;
+  --primitive-orange-600: #fb923c;
+  --primitive-orange-800: #fed7aa;
+  --primitive-indigo-100: #1e1b4b;
+  --primitive-indigo-500: #6366f1;
+  --primitive-indigo-600: #818cf8;
+  --primitive-indigo-800: #c7d2fe;
+  --primitive-cyan-100: #164e63;
+  --primitive-cyan-500: #06b6d4;
+  --primitive-cyan-600: #22d3ee;
+  --primitive-cyan-800: #a5f3fc;
+
+  /* Override --workflow-* here to recolor a lab stage for this theme only. */
+}
