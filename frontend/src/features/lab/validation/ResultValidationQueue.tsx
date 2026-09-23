@@ -11,8 +11,8 @@ import {
   useLabQueueFilterState,
   useResultValidationQueueData,
   useLabQueueUrlSearch,
-} from '@/features/lab/hooks';
-import { validationFilterConfig } from '@/features/lab/constants';
+} from '../hooks';
+import { validationFilterConfig } from '../constants';
 import { ErrorBoundary } from '@/components';
 import { WORKSPACE } from '@/components/theme/recipes';
 import { SectionLoadingBoundary } from '@/components/loaders';

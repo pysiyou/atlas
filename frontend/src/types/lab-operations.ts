@@ -2,7 +2,33 @@
  * Quality issue and lab operation types — aligned with backend contracts.
  */
 
+import type { Order, Patient, Sample } from '@/types';
+import type { ContainerTopColor, ContainerType, SampleType } from '@/types';
 import { GENERATED_LAB_CONSTANTS } from '@/types/generated/labConstants';
+
+/** Collection requirement for a sample (shared with modal payloads and lab queue). */
+export interface SampleCollectionRequirement {
+  sampleType: SampleType;
+  testCodes: string[];
+  testNames?: string[];
+  totalVolume: number;
+  containerTypes: ContainerType[];
+  containerTopColors: ContainerTopColor[];
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  orderId: number;
+}
+
+/** Sample collection queue row — used by modals and lab collection workflow. */
+export interface SampleCollectionQueueItem {
+  sample?: Sample;
+  order: Order;
+  patient: Patient;
+  priority: string;
+  requirement?: SampleCollectionRequirement;
+}
+
+/** Alias used across lab collection code. */
+export type SampleRequirement = SampleCollectionRequirement;
 
 export type QualityIssueTargetType = 'sample' | 'test';
 

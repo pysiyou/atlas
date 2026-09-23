@@ -8,7 +8,7 @@ import { PaymentMethodBadge, PaymentStatusBadge } from '@/features/payments';
 import { cn, displayId, formatCurrency, formatDateTime } from '@/utils';
 import { getActiveTests, getActiveTotal } from '../utils/orderCalculator';
 import type { Order, OrderTest } from '@/types';
-import { RADIUS, TYPE } from '@/components/theme/recipes';
+import { DETAIL_TYPE, RADIUS, TYPE } from '@/components/theme/recipes';
 
 
 export type OrderReceiptVariant = 'panel' | 'compact' | 'detailed';
@@ -173,7 +173,7 @@ function ReceiptItemRow({ test, detailed }: { test: OrderTest; detailed: boolean
         <span className={cn(`w-1 h-1 ${RADIUS.pill} bg-text-muted shrink-0 mt-space-1-5`)} />
         {detailed ? (
           <span className="flex flex-col min-w-0 flex-1">
-            <span className={cn(TYPE.value, 'wrap-break-word font-normal')}>
+            <span className={cn(DETAIL_TYPE.value, 'wrap-break-word font-normal')}>
               {test.testName || test.testCode || 'Test'}
             </span>
             {code}

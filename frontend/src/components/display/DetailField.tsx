@@ -1,6 +1,7 @@
 import React from 'react';
 import { Badge, type BadgeVariant } from '@/components';
 import { Icon, type IconName } from '@/components/primitives/Icon';
+import { DETAIL_TYPE } from '@/components/theme/recipes';
 import { DETAIL_LABEL, DETAIL_VALUE } from '@/utils/constants';
 import { formatDateTime } from '@/utils';
 
@@ -56,7 +57,7 @@ export const DetailField: React.FC<DetailFieldProps> = ({
         return (
           <div className="text-right">
             <div className={DETAIL_VALUE}>{formattedDate}</div>
-            <div className={DETAIL_LABEL}>by {userDisplay}</div>
+            <div className={DETAIL_TYPE.meta}>by {userDisplay}</div>
           </div>
         );
       }

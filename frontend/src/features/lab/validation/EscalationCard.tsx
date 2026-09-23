@@ -7,7 +7,7 @@ import { Button, Card, Icon } from '@/components';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 import { useUserLookup } from '@/lib/api/users';
-import { useLabWorkflowCardClickGuard, useOrderTestQueueState } from '@/features/lab/hooks';
+import { useLabWorkflowCardClickGuard, useOrderTestQueueState } from '../hooks';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
 import { LabWorkflowCardShell } from '../components/LabWorkflowCardShell';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';

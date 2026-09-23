@@ -5,7 +5,7 @@ import type { FeedbackId } from '@/config/feedbackCatalog';
 import { notify } from '@/utils/feedback';
 import { feedbackTitle } from '@/utils/feedback/copy';
 import { printCollectionLabel } from '../collection/SampleCollectionLabelActions';
-import type { SampleCollectionQueueItem } from '../types';
+import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 
 export interface SampleDefinition {
   sampleType: SampleType;
@@ -99,16 +99,7 @@ export function getSampleDefinition(sampleType: SampleType): SampleDefinition {
   return SAMPLE_DEFINITIONS[sampleType] || SAMPLE_DEFINITIONS.other;
 }
 
-export interface SampleRequirement {
-  sampleType: SampleType;
-  testCodes: string[];
-  testNames?: string[];
-  totalVolume: number;
-  containerTypes: ContainerType[];
-  containerTopColors: ContainerTopColor[];
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  orderId: number;
-}
+export type { SampleCollectionRequirement as SampleRequirement } from '@/types/lab-operations';
 
 export function getCollectionRequirements(sampleType: SampleType): {
   collectionType: SampleType;

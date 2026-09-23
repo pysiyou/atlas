@@ -13,7 +13,7 @@ import type {
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/app/authStore';
 import { queryKeys, cacheConfig } from '@/lib/query';
-import { LAB_CONFIG } from '@/features/lab/constants';
+import { LAB_CONFIG } from '../constants';
 
 export interface WorklistPagination {
   page: number;

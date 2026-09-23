@@ -4,7 +4,7 @@
  */
 
 import { EMPTY_COPY, emptySubtitle, emptyTitle } from '@/components/display/emptyStateCopy';
-import { TYPE } from '@/components/theme/recipes';
+import { DETAIL_TYPE, TYPE, TABLE_TYPE } from '@/components/theme/recipes';
 
 // ---------------------------------------------------------------------------
 // Pagination & Display Limits
@@ -75,29 +75,32 @@ export function isEntityIdClassName(className?: string): boolean {
   return className?.includes('entity-id') ?? false;
 }
 
-/** Detail row label. */
-export const DETAIL_LABEL = TYPE.label;
+/** Detail row label — prefer DETAIL_TYPE from recipes for new code. */
+export const DETAIL_LABEL = DETAIL_TYPE.label;
 
 /** Key-value table label (e.g. catalog test detail). */
-export const DETAIL_TABLE_LABEL = TYPE.sectionTitle;
+export const DETAIL_TABLE_LABEL = DETAIL_TYPE.sectionTitleCompact;
 
 /** Detail row value. */
-export const DETAIL_VALUE = TYPE.value;
+export const DETAIL_VALUE = DETAIL_TYPE.value;
 
-/** Amount/currency cell. */
+/** Amount/currency in forms, receipts, non-table surfaces. */
 export const DATA_AMOUNT = TYPE.amount;
 
+/** Table currency cells — prefer in *Table.config.tsx. */
+export const TABLE_DATA_AMOUNT = TABLE_TYPE.amount;
+
 /** Metadata/secondary label text (timestamps, captions). */
-export const TEXT_METADATA = TYPE.meta;
+export const TEXT_METADATA = DETAIL_TYPE.meta;
 
 /** Body text secondary (descriptions, list content). */
-export const BODY_SECONDARY = TYPE.label;
+export const BODY_SECONDARY = DETAIL_TYPE.label;
 
 /** Detail page title (h1). */
-export const DETAIL_TITLE = TYPE.detailTitle;
+export const DETAIL_TITLE = DETAIL_TYPE.title;
 
 /** Detail page subtitle (under title). */
-export const DETAIL_SUBTITLE = TYPE.meta;
+export const DETAIL_SUBTITLE = DETAIL_TYPE.subtitle;
 
 /** List/page title. */
 export const PAGE_TITLE = TYPE.pageTitle;

@@ -2,7 +2,7 @@
  * Data table layout constants and defaults.
  */
 
-import { TABLE_CELL } from '@/components/theme/recipes';
+import { TABLE_CELL, TABLE_TYPE } from '@/components/theme/recipes';
 import type { ColumnWidth, TableVariant } from './types';
 
 export const SIZE_PRESETS: Record<string, ColumnWidth> = {
@@ -34,13 +34,14 @@ export const HEADER_PADDING: Record<TableVariant, string> = {
   comfortable: TABLE_CELL.comfortable,
 };
 
-/** Body/header type for all table density variants — matches `--font-size-base`. */
-export const TABLE_TEXT_SIZE = 'text-base';
+/** @deprecated Prefer TABLE_TYPE.size — kept for existing imports. */
+export const TABLE_TEXT_SIZE = TABLE_TYPE.size;
 
+/** @deprecated Prefer TABLE_TYPE.size — header/body scale per variant (same for all densities). */
 export const TEXT_SIZE: Record<TableVariant, string> = {
-  compact: TABLE_TEXT_SIZE,
-  default: TABLE_TEXT_SIZE,
-  comfortable: TABLE_TEXT_SIZE,
+  compact: TABLE_TYPE.size,
+  default: TABLE_TYPE.size,
+  comfortable: TABLE_TYPE.size,
 };
 
 export const DEFAULT_LOADING_ROWS = 5;

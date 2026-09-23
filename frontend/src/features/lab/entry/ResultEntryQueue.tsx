@@ -4,7 +4,7 @@
 
 import React, { useMemo } from 'react';
 import { useTestNameLookup } from '@/features/catalog';
-import { useResultEntryQueueData, useLabQueueFilters } from '@/features/lab/hooks';
+import { useResultEntryQueueData, useLabQueueFilters } from '../hooks';
 import type { TestWithContextResult } from '../hooks/useOrderTestsWithLabContext';
 import { useEntryWorklist } from '../api/worklists';
 import { mapEntryWorklistToOrderTestContext } from '../utils/labQueue';

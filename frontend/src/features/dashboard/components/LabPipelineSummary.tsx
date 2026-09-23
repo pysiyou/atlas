@@ -6,8 +6,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Badge, Icon, type IconName } from '@/components';
 import { ICONS } from '@/config/icons';
-import { useLabStageQueueCounts, getValidationTabCount } from '@/features/lab/hooks';
-import { getLabTabPath, LAB_TAB_LABELS, type LabTabId } from '@/features/lab/constants/labConstants';
+import {
+  useLabStageQueueCounts,
+  getValidationTabCount,
+  getLabTabPath,
+  LAB_TAB_LABELS,
+  type LabTabId,
+} from '@/features/lab';
 import { useAuthStore } from '@/app/authStore';
 import { RADIUS, TYPE } from '@/components/theme/recipes';
 

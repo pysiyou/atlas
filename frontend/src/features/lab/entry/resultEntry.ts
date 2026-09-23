@@ -3,7 +3,7 @@
  * Entry form helper utilities for parameter display and validation.
  */
 import type { TestParameter, Patient, TestResult, TestWithContext, Test } from '@/types';
-import { formatReferenceRange, isCriticalValue, checkReferenceRangeWithDemographics } from '@/features/lab/utils';
+import { formatReferenceRange, isCriticalValue, checkReferenceRangeWithDemographics } from '../utils';
 import { notify } from '@/utils/feedback';
 
 export const getReferenceRangeDisplay = (param: TestParameter, patient?: Patient): string => {

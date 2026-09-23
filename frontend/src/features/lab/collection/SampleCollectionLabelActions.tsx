@@ -1,4 +1,4 @@
-import type { SampleCollectionQueueItem } from '@/features/lab/types';
+import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { CONTAINER_COLOR_OPTIONS, isCollectedSample } from '@/types';
 import { displayId } from '@/utils';
 import { feedbackTitle } from '@/utils/feedback/copy';

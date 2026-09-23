@@ -1,7 +1,7 @@
 /**
  * Derives retest / recollection display state from a TestWithContext.
  */
-import { LAB_CONFIG } from '@/features/lab/constants';
+import { LAB_CONFIG } from '../constants';
 import type { TestWithContext } from '@/types';
 
 export interface TestRetestContext {

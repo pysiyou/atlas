@@ -4,7 +4,7 @@
  */
 import React from 'react';
 import { Icon } from '@/components';
-import { getContainerIconColor } from '@/features/lab/utils';
+import { getContainerIconColor } from '../utils';
 import type { ContainerType, ContainerTopColor } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import { getContainerIcon } from '@/config/icons';
