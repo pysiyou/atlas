@@ -23,6 +23,7 @@ export {
   CELL_PADDING,
   HEADER_PADDING,
   TEXT_SIZE,
+  TABLE_TEXT_SIZE,
 } from './constants';
 export type {
   TableProps,

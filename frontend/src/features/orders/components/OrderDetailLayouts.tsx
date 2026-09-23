@@ -3,12 +3,16 @@
  * Responsive layouts for order detail page
  */
 
-import React from 'react';
-import { actionButtonPreset, Panel, IconButton, Icon } from '@/components';
-import { ICONS } from '@/config/icons';
+import React, { useCallback, useMemo, useState } from 'react';
+import { actionButtonPreset, Panel, IconButton } from '@/components';
 import { LAYOUT, SPACING } from '@/components/theme/recipes';
 import { cn } from '@/utils';
-import { PaymentPopover } from '@/features/payments';
+import {
+  PaymentDetailModal,
+  PaymentPopover,
+  usePaymentsByOrder,
+  type OrderPaymentView,
+} from '@/features/payments';
 import type { Order, OrderTest, Patient, Invoice } from '@/types';
 import { OrderInfoSection } from './OrderInfoSection';
 import { PatientInfoSection } from './PatientInfoSection';
@@ -32,30 +36,57 @@ interface LayoutProps {
 
 function BillingSummaryPanelActions({
   order,
-  invoice,
-  onViewInvoice,
   onPaymentSuccess,
 }: {
   order: Order;
-  invoice: Invoice | null;
-  onViewInvoice: () => void;
   onPaymentSuccess?: () => void;
 }) {
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const { payments } = usePaymentsByOrder(String(order.orderId));
   const isPaid = order.paymentStatus === 'paid';
 
+  const paymentView: OrderPaymentView = useMemo(() => {
+    const latestPayment = payments[0];
+    return {
+      order,
+      paymentMethod:
+        latestPayment?.paymentMethod ??
+        (order.paymentStatus !== 'unpaid' ? order.paymentMethod : undefined),
+      paymentDate: latestPayment?.paidAt,
+    };
+  }, [order, payments]);
+
+  const handleOpenPaymentModal = useCallback(() => {
+    setPaymentModalOpen(true);
+  }, []);
+
+  const handleClosePaymentModal = useCallback(() => {
+    setPaymentModalOpen(false);
+  }, []);
+
+  const handlePaymentModalSuccess = useCallback(() => {
+    onPaymentSuccess?.();
+    setPaymentModalOpen(false);
+  }, [onPaymentSuccess]);
+
   return (
-    <div className={`flex items-center ${SPACING.gapInline}`}>
-      {invoice != null && (
+    <>
+      <div className={`flex items-center ${SPACING.gapInline}`}>
         <IconButton
-          {...actionButtonPreset('print')}
+          {...actionButtonPreset('view')}
           size="sm"
-          title="View Invoice"
-          icon={<Icon name={ICONS.dataFields.bill} className="w-4 h-4" />}
-          onClick={onViewInvoice}
+          title="View payment"
+          onClick={handleOpenPaymentModal}
         />
-      )}
-      {!isPaid && <PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
-    </div>
+        {!isPaid && <PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
+      </div>
+      <PaymentDetailModal
+        isOpen={paymentModalOpen}
+        onClose={handleClosePaymentModal}
+        order={paymentModalOpen ? paymentView : null}
+        onPaymentSuccess={handlePaymentModalSuccess}
+      />
+    </>
   );
 }
 
@@ -80,12 +111,10 @@ interface OrderDetailPanelsProps extends LayoutProps {
 const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
   order,
   patient,
-  invoice,
   activeTests,
   supersededCount,
   removedCount,
   onViewPatient,
-  onViewInvoice,
   onPaymentSuccess,
   testsVariant,
   fillHeight,
@@ -152,12 +181,7 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
           scroll={fillScroll}
           bodyClassName="flex flex-col"
           headerEnd={
-            <BillingSummaryPanelActions
-              order={order}
-              invoice={invoice}
-              onViewInvoice={onViewInvoice}
-              onPaymentSuccess={onPaymentSuccess}
-            />
+            <BillingSummaryPanelActions order={order} onPaymentSuccess={onPaymentSuccess} />
           }
         >
           <BillingSummarySection order={order} />
@@ -171,7 +195,7 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
  * SmallScreenLayout - Single column stack for small screens.
  */
 export const SmallScreenLayout: React.FC<LayoutProps> = props => {
-  const { order, patient, invoice, activeTests, supersededCount, removedCount, onViewPatient, onViewInvoice, onPaymentSuccess } =
+  const { order, patient, activeTests, supersededCount, removedCount, onViewPatient, onPaymentSuccess } =
     props;
   const testsHeaderMeta = getTestsHeaderMeta(
     order.tests?.length ?? activeTests.length,
@@ -222,12 +246,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
         padding="none"
         scroll="visible"
         headerEnd={
-          <BillingSummaryPanelActions
-            order={order}
-            invoice={invoice}
-            onViewInvoice={onViewInvoice}
-            onPaymentSuccess={onPaymentSuccess}
-          />
+          <BillingSummaryPanelActions order={order} onPaymentSuccess={onPaymentSuccess} />
         }
       >
         <BillingSummarySection order={order} />

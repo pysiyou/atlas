@@ -14,7 +14,7 @@ import { formatDate, formatDateTime } from '@/utils';
 import type { PatientContext } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { PatientCard } from '../components/PatientCard';
-import { TYPE } from '@/components/theme/recipes';
+import { TABLE_TYPE } from '@/components/theme/recipes';
 
 
 const PATIENT_VIEWS = {
@@ -66,13 +66,13 @@ export const createPatientTableConfig = (
       render: (patient: PatientContext) => {
         if (patient.orderCount === 0 || !patient.lastOrderDate) {
           return (
-            <span className={`${TYPE.meta} truncate block font-normal`}>No orders</span>
+            <span className={`${TABLE_TYPE.meta} truncate block font-normal`}>No orders</span>
           );
         }
         return (
           <div className="min-w-0 font-normal">
-            <div className={`${TYPE.amount} font-normal`}>{patient.orderCount} orders</div>
-            <div className={`${TYPE.meta} truncate font-normal`}>
+            <div className={`${TABLE_TYPE.amount} font-normal`}>{patient.orderCount} orders</div>
+            <div className={`${TABLE_TYPE.meta} truncate font-normal`}>
               Last: {formatDateTime(patient.lastOrderDate)}
             </div>
           </div>
@@ -88,14 +88,14 @@ export const createPatientTableConfig = (
       render: (patient: PatientContext) => {
         if (!patient.affiliation) {
           return (
-            <span className={`${TYPE.meta} truncate block font-normal`}>
+            <span className={`${TABLE_TYPE.meta} truncate block font-normal`}>
               No Affiliation
             </span>
           );
         }
         const isActive = isAffiliationActive(patient.affiliation);
         return (
-          <span className={`${TYPE.meta} truncate font-normal`}>
+          <span className={`${TABLE_TYPE.meta} truncate font-normal`}>
             {isActive ? 'Expires on' : 'Expired on'}: {formatDate(patient.affiliation.endDate)}
           </span>
         );

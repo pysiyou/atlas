@@ -2202,8 +2202,8 @@ export interface components {
              * Format: date-time
              */
             paidAt: string;
-            /** Receivedby */
-            receivedBy: string;
+            /** Createdby */
+            createdBy: string;
             /** Receiptgenerated */
             receiptGenerated: boolean;
             /** Notes */

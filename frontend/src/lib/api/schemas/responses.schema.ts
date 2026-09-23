@@ -24,10 +24,16 @@ export const authUserResponseSchema = z.object({
 export const paymentResponseSchema = z.object({
   paymentId: z.union([z.number(), z.string()]),
   orderId: z.number(),
+  invoiceId: z.number().nullable().optional(),
   amount: z.number(),
   paymentMethod: z.string(),
   paidAt: z.string(),
+  createdBy: z.string(),
+  receiptGenerated: z.boolean().optional(),
   notes: z.string().optional().nullable(),
+  orderTotalPrice: z.number().optional(),
+  numberOfTests: z.number().optional(),
+  patientName: z.string().optional(),
 });
 
 export const operationResponseSchema = z.object({

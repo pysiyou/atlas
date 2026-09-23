@@ -7,9 +7,8 @@ import type { NavigateFunction } from 'react-router-dom';
 import { EntityId } from '@/components/display/EntityId';
 import { formatCurrency, formatDateTime } from '@/utils';
 import { renderPatientNameBlock } from '@/utils/tableColumnRenders';
-import { DATA_AMOUNT } from '@/utils/constants';
 import type { OrderTest } from '@/types';
-import { TYPE } from '@/components/theme/recipes';
+import { TABLE_TYPE } from '@/components/theme/recipes';
 
 export function renderOrderId(orderId: string | number, clickable = false): ReactNode {
   return <EntityId type="order" value={orderId} variant={clickable ? 'clickable' : 'block'} />;
@@ -72,7 +71,7 @@ export function renderOrderTestsBlock(
     return (
       <div className="min-w-0 font-normal">
         <div
-          className={`${TYPE.value} wrap-break-word font-normal line-clamp-2`}
+          className={`${TABLE_TYPE.cell} wrap-break-word font-normal line-clamp-2`}
           title={labels.length > 0 ? labels.join(', ') : undefined}
         >
           {preview}
@@ -93,7 +92,7 @@ export function renderOrderTestsBlock(
         {activeCount} test{activeCount !== 1 ? 's' : ''}
       </div>
       {secondary ? (
-        <div className={`${TYPE.meta} truncate font-normal`}>{secondary}</div>
+        <div className={`${TABLE_TYPE.meta} truncate font-normal`}>{secondary}</div>
       ) : null}
     </div>
   );
@@ -101,13 +100,13 @@ export function renderOrderTestsBlock(
 
 export function renderOrderTotalPrice(totalPrice: number): ReactNode {
   return (
-    <div className={`${DATA_AMOUNT} truncate font-normal`}>{formatCurrency(totalPrice)}</div>
+    <div className={`${TABLE_TYPE.amount} truncate font-normal`}>{formatCurrency(totalPrice)}</div>
   );
 }
 
 export function renderOrderTotalPriceInline(totalPrice: number): ReactNode {
   return (
-    <span className={`${DATA_AMOUNT} truncate block font-normal`}>
+    <span className={`${TABLE_TYPE.amount} truncate block font-normal`}>
       {formatCurrency(totalPrice)}
     </span>
   );
@@ -118,7 +117,7 @@ export function renderOrderDateCell(date: string | Date | null | undefined): Rea
     return null;
   }
   return (
-    <span className={`${TYPE.meta} truncate block font-normal`}>
+    <span className={`${TABLE_TYPE.meta} truncate block font-normal`}>
       {formatDateTime(date)}
     </span>
   );

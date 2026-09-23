@@ -50,7 +50,7 @@ def enrich_payment(payment: Payment, order: Order | None) -> dict:
         "amount": payment.amount,
         "paymentMethod": payment.paymentMethod,
         "paidAt": payment.paidAt,
-        "receivedBy": payment.receivedBy,
+        "createdBy": payment.createdBy,
         "receiptGenerated": payment.receiptGenerated,
         "notes": payment.notes,
         "orderTotalPrice": order.totalPrice if order else None,
@@ -140,7 +140,7 @@ class PaymentService:
             amount=payment_data.amount,
             paymentMethod=payment_data.paymentMethod,
             paidAt=datetime.now(UTC),
-            receivedBy=str(user_id),
+            createdBy=str(user_id),
             receiptGenerated=False,
             notes=payment_data.notes if payment_data.notes is not None else "",
         )
@@ -504,7 +504,7 @@ class OrderService:
             clinicalNotes=order_data.clinicalNotes,
             specialInstructions=order_data.specialInstructions,
             patientPrepInstructions=order_data.patientPrepInstructions,
-            createdBy=user_id,
+            createdBy=str(user_id),
         )
         try:
             self.db.add(order)
@@ -534,7 +534,8 @@ class OrderService:
         except SQLAlchemyError:
             self.db.rollback()
             raise HTTPException(status_code=500, detail="Failed to create order")
-        return self._order_with_relations(order.orderId)
+        order = self._order_with_relations(order.orderId)
+        return OrderResponse.model_validate(order)
 
     def _order_with_relations(self, order_id: int) -> Order:
         return (
@@ -646,7 +647,8 @@ class OrderService:
 
         self.db.commit()
         self.db.refresh(order)
-        return self._order_with_relations(order.orderId)
+        order = self._order_with_relations(order.orderId)
+        return OrderResponse.model_validate(order)
 
     def update_order_payment(
         self,
@@ -669,7 +671,7 @@ class OrderService:
                 amount=amount_paid,
                 paymentMethod=PaymentMethod.CASH,
                 paidAt=datetime.now(UTC),
-                receivedBy=str(user_id),
+                createdBy=str(user_id),
                 receiptGenerated=False,
                 notes="",
             )
@@ -686,4 +688,5 @@ class OrderService:
         order.updatedAt = datetime.now(UTC)
         self.db.commit()
         self.db.refresh(order)
-        return self._order_with_relations(order.orderId)
+        order = self._order_with_relations(order.orderId)
+        return OrderResponse.model_validate(order)

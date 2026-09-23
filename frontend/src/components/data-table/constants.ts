@@ -34,10 +34,13 @@ export const HEADER_PADDING: Record<TableVariant, string> = {
   comfortable: TABLE_CELL.comfortable,
 };
 
+/** Body/header type for all table density variants — matches `--font-size-base`. */
+export const TABLE_TEXT_SIZE = 'text-base';
+
 export const TEXT_SIZE: Record<TableVariant, string> = {
-  compact: 'text-xs',
-  default: 'text-sm',
-  comfortable: 'text-sm',
+  compact: TABLE_TEXT_SIZE,
+  default: TABLE_TEXT_SIZE,
+  comfortable: TABLE_TEXT_SIZE,
 };
 
 export const DEFAULT_LOADING_ROWS = 5;

@@ -17,6 +17,17 @@ export const TYPE = {
   caption: 'text-xxs text-text-tertiary',
 } as const;
 
+/** Data table cells, headers, and list pagination — base type scale step. */
+export const TABLE_TYPE = {
+  cell: 'text-base text-text-primary',
+  secondary: 'text-base text-text-secondary',
+  meta: 'text-base text-text-tertiary',
+  amount: 'text-base text-text-primary',
+  label: 'text-base text-text-secondary',
+  caption: 'text-base text-text-tertiary',
+  link: 'text-base text-brand underline',
+} as const;
+
 /** Status roles: fg/fill/well from semantic --{role}-* tokens. Workflow stage tokens stay separate. */
 export const TONE = {
   neutral: {

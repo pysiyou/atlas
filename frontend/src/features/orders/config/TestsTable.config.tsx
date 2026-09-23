@@ -10,7 +10,7 @@ import { getLabQueueUrlForTest } from '@/features/lab';
 import { OrderTestStatusBadge } from '../components/OrderDomainBadges';
 import { getOrderTestLineageRowClass } from '../utils/orderTestLineage';
 import type { OrderTest, Test } from '@/types';
-import { TYPE, RADIUS } from '@/components/theme/recipes';
+import { TABLE_TYPE, RADIUS, TYPE } from '@/components/theme/recipes';
 
 
 const SIMPLE_VIEWS = {
@@ -25,15 +25,15 @@ const DETAILED_VIEWS = {
   compact: SIMPLE_VIEWS.compact,
 } as const;
 
-/** Test code under the display name — smaller than the name, secondary tone. */
-const TEST_CODE_TEXT = 'text-xxs text-text-secondary';
+/** Test code under the display name — secondary tone at table base size. */
+const TEST_CODE_TEXT = TABLE_TYPE.secondary;
 
 function renderOrderTestIdentity(test: OrderTest, testCatalog: Test[]) {
   const name = getTestName(test.testCode, testCatalog);
 
   return (
     <div className="min-w-0 flex flex-col gap-space-0-5">
-      <span className={cn(TYPE.value, 'block min-w-0 truncate')} title={name}>
+      <span className={cn(TABLE_TYPE.cell, 'block min-w-0 truncate')} title={name}>
         {name}
       </span>
       <EntityId variant="secondary" className={cn(TEST_CODE_TEXT, 'truncate')}>
@@ -97,7 +97,7 @@ export function createTestsTableConfig(
       header: 'Category',
       width: 'lg' as const,
       accessor: (test: OrderTest) => getTestProperty(test.testCode, 'category', testCatalog) ?? '',
-      render: (test: OrderTest) => renderTestCategoryBadge(test, testCatalog) ?? <span className={TYPE.meta}>—</span>,
+      render: (test: OrderTest) => renderTestCategoryBadge(test, testCatalog) ?? <span className={TABLE_TYPE.meta}>—</span>,
     },
     status: {
       key: 'status',
@@ -117,7 +117,7 @@ export function createTestsTableConfig(
         test.sampleId ? (
           <EntityId type="sample" value={test.sampleId} />
         ) : (
-          <span className={TYPE.meta}>—</span>
+          <span className={TABLE_TYPE.meta}>—</span>
         ),
     },
     updatedAt: {
@@ -127,9 +127,9 @@ export function createTestsTableConfig(
       accessor: (test: OrderTest) => test.updatedAt ?? '',
       render: (test: OrderTest) =>
         test.updatedAt ? (
-          <span className={TYPE.label}>{formatDateTime(test.updatedAt)}</span>
+          <span className={TABLE_TYPE.label}>{formatDateTime(test.updatedAt)}</span>
         ) : (
-          <span className={TYPE.meta}>—</span>
+          <span className={TABLE_TYPE.meta}>—</span>
         ),
     },
     lab: {
@@ -142,7 +142,7 @@ export function createTestsTableConfig(
         return (
           <Link
             to={labUrl}
-            className="text-xs text-brand underline whitespace-nowrap"
+            className={`${TABLE_TYPE.link} whitespace-nowrap`}
             onClick={e => e.stopPropagation()}
           >
             View

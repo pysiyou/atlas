@@ -4,7 +4,7 @@
 
 import type { ReactNode } from 'react';
 import { formatDate, formatDateTime, formatPhoneNumber } from '@/utils';
-import { TYPE } from '@/components/theme/recipes';
+import { TABLE_TYPE } from '@/components/theme/recipes';
 
 export function renderPatientNameBlock(fullName: string, secondary?: ReactNode): ReactNode {
   return (
@@ -17,12 +17,12 @@ export function renderPatientNameBlock(fullName: string, secondary?: ReactNode):
 
 export function renderContactBlock(phone: string, email?: string): ReactNode {
   return (
-    <div className="text-xs min-w-0 font-normal">
-      <div className={`${TYPE.value} truncate font-normal`}>
+    <div className="min-w-0 font-normal">
+      <div className={`${TABLE_TYPE.cell} truncate font-normal`}>
         {formatPhoneNumber(phone)}
       </div>
       {email ? (
-        <div className={`${TYPE.meta} truncate font-normal`}>{email}</div>
+        <div className={`${TABLE_TYPE.meta} truncate font-normal`}>{email}</div>
       ) : null}
     </div>
   );
@@ -33,9 +33,9 @@ export function renderDateCell(
   emptyLabel = '—'
 ): ReactNode {
   if (!date) {
-    return <span className={`${TYPE.meta} font-normal`}>{emptyLabel}</span>;
+    return <span className={`${TABLE_TYPE.meta} font-normal`}>{emptyLabel}</span>;
   }
-  return <span className={`${TYPE.value} font-normal`}>{formatDate(date)}</span>;
+  return <span className={`${TABLE_TYPE.cell} font-normal`}>{formatDate(date)}</span>;
 }
 
 export function renderDateTimeCell(
@@ -43,7 +43,7 @@ export function renderDateTimeCell(
   emptyLabel = '—'
 ): ReactNode {
   if (!date) {
-    return <span className={`${TYPE.meta} font-normal`}>{emptyLabel}</span>;
+    return <span className={`${TABLE_TYPE.meta} font-normal`}>{emptyLabel}</span>;
   }
-  return <span className={`${TYPE.value} font-normal`}>{formatDateTime(date)}</span>;
+  return <span className={`${TABLE_TYPE.cell} font-normal`}>{formatDateTime(date)}</span>;
 }

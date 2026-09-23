@@ -349,6 +349,7 @@
 
 body {
   font-family: var(--font-sans);
+  font-size: var(--font-size-base);
   font-weight: var(--font-weight-default);
 }
 
