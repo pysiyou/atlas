@@ -20,11 +20,24 @@ const ORDER_VIEWS = {
   compact: ['orderId', 'patientName', 'overallStatus', 'totalPrice'],
 } as const;
 
+const ORDER_VIEWS_WITHOUT_PATIENT = {
+  full: ORDER_VIEWS.full.filter(key => key !== 'patientName'),
+  medium: ORDER_VIEWS.medium.filter(key => key !== 'patientName'),
+  compact: ORDER_VIEWS.compact.filter(key => key !== 'patientName'),
+} as const;
+
+export type OrderTableConfigOptions = {
+  /** Omit patient column (e.g. orders shown on patient detail). */
+  hidePatientName?: boolean;
+};
+
 export const createOrderTableConfig = (
   _navigate: NavigateFunction,
   getPatientNameFn: (patientId: number | string) => string,
-  getTestNameFn: (testCode: string) => string
+  getTestNameFn: (testCode: string) => string,
+  options: OrderTableConfigOptions = {}
 ): TableViewConfig<Order> => {
+  const { hidePatientName = false } = options;
   const shared = createOrderSharedColumns<Order>(
     {
       getOrderId: order => order.orderId,
@@ -45,8 +58,16 @@ export const createOrderTableConfig = (
     { getTestName: getTestNameFn }
   );
 
+  const views = hidePatientName ? ORDER_VIEWS_WITHOUT_PATIENT : ORDER_VIEWS;
+
+  const CardComponent = hidePatientName
+    ? function PatientContextOrderCard(props) {
+        return <OrderTableCard {...props} hidePatientName />;
+      }
+    : OrderTableCard;
+
   return {
-    ...buildViews(shared, ORDER_VIEWS),
-    CardComponent: OrderTableCard,
+    ...buildViews(shared, views),
+    CardComponent,
   };
 };

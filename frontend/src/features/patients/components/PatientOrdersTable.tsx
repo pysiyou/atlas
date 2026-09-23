@@ -6,7 +6,6 @@ import React, { useMemo } from 'react';
 import { Table, EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components';
 import type { Order } from '@/types/order';
 import { useTestNameLookup } from '@/features/catalog';
-import { usePatientNameLookup } from '../api/patients';
 import { createOrderTableConfig } from '@/features/orders/config/OrderTable.config';
 export interface PatientOrdersTableProps {
   orders: Order[];
@@ -22,12 +21,11 @@ const EMPTY_MESSAGE = (
 );
 
 export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({ orders, onOrderClick }) => {
-  const { getPatientName } = usePatientNameLookup();
   const { getTestName } = useTestNameLookup();
 
   const viewConfig = useMemo(
-    () => createOrderTableConfig(() => {}, getPatientName, getTestName),
-    [getPatientName, getTestName]
+    () => createOrderTableConfig(() => {}, () => '', getTestName, { hidePatientName: true }),
+    [getTestName]
   );
 
   return (

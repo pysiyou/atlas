@@ -42,7 +42,6 @@ const SELECTION_CHIP = {
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: BadgeVariant;
   size?: BadgeSize;
-  strikethrough?: boolean;
   pulse?: boolean;
   icon?: IconName | React.ReactNode;
   dot?: boolean;
@@ -55,7 +54,6 @@ export const Badge: React.FC<BadgeProps> = ({
   className,
   variant = 'neutral',
   size = 'xs',
-  strikethrough = false,
   pulse,
   icon,
   dot = false,
@@ -88,7 +86,6 @@ export const Badge: React.FC<BadgeProps> = ({
         `inline-flex items-center font-normal ${RADIUS.control} whitespace-nowrap`,
         uppercase && 'uppercase tracking-normal',
         isContainer ? containerStyle : null,
-        strikethrough && 'line-through',
         pulse && 'animate-pulse',
         className,
         SIZES[size],
