@@ -54,7 +54,6 @@ export const OrderDetail: React.FC = () => {
 
   const orderTests = order?.tests ?? [];
   const activeTests = order != null ? getActiveTests(orderTests) : [];
-  // Count tests that are not shown: removed, and optionally superseded (shown with reduced opacity)
   const removedCount = order != null ? orderTests.filter(t => t.status === 'removed').length : 0;
   const supersededCount = order != null ? orderTests.filter(t => t.status === 'superseded').length : 0;
 

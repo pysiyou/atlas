@@ -144,15 +144,17 @@ function TableRow<T>({
       {data.map((item, index) => {
         const rowKey = getRowKey ? getRowKey(item, index) : index;
         const isClickable = !!onRowClick;
-        const stripeClass = striped
-          ? index % 2 === 0
-            ? tableRow.stripedEven
-            : tableRow.stripedOdd
-          : '';
+        const customRowClass = rowClassName?.(item, index) ?? '';
+        const stripeClass =
+          striped && !customRowClass
+            ? index % 2 === 0
+              ? tableRow.stripedEven
+              : tableRow.stripedOdd
+            : '';
         return (
           <div
             key={rowKey}
-            className={`${tableRow.base} ${isClickable ? `${tableRow.clickable} ${tableRow.hover}` : ''} ${stripeClass} ${rowClassName ? rowClassName(item, index) : ''}`}
+            className={`${tableRow.base} ${isClickable ? `${tableRow.clickable} ${tableRow.hover}` : ''} ${stripeClass} ${customRowClass}`}
             style={{ height: `${ROW_HEIGHTS[variant]}px` }}
             onClick={() => onRowClick?.(item, index)}
           >

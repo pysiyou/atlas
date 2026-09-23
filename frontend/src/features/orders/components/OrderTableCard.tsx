@@ -8,7 +8,12 @@ import type { Order } from '@/types';
 import { TYPE } from '@/components/theme/recipes';
 
 
-export function OrderTableCard({ item: order, onClick }: CardComponentProps<Order>) {
+type OrderTableCardProps = CardComponentProps<Order> & {
+  /** When true, omit patient name (e.g. patient detail related orders). */
+  hidePatientName?: boolean;
+};
+
+export function OrderTableCard({ item: order, onClick, hidePatientName = false }: OrderTableCardProps) {
   const { getTestName } = useTestNameLookup();
   const activeTests = getActiveTests(order.tests ?? []);
   const hasTests =
@@ -20,12 +25,16 @@ export function OrderTableCard({ item: order, onClick }: CardComponentProps<Orde
     <MobileEntityCard onClick={onClick}>
       <MobileEntityCard.Header
         leading={
-          <Avatar
-            primaryText={order.patientName || 'N/A'}
-            primaryTextClassName=""
-            secondaryText={<EntityId type="order" value={order.orderId} />}
-            size="xs"
-          />
+          hidePatientName ? (
+            <EntityId type="order" value={order.orderId} variant="block" />
+          ) : (
+            <Avatar
+              primaryText={order.patientName || 'N/A'}
+              primaryTextClassName=""
+              secondaryText={<EntityId type="order" value={order.orderId} />}
+              size="xs"
+            />
+          )
         }
         trailing={<div className="text-text-primary text-lg">{formatCurrency(order.totalPrice)}</div>}
       />

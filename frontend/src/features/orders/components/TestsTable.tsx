@@ -8,11 +8,11 @@ import { Table, EmptyState, EMPTY_COPY } from '@/components';
 import { useTestCatalog } from '@/features/catalog';
 import type { OrderTest } from '@/types';
 import { createTestsTableConfig } from '../config/TestsTable.config';
+import { getOrderTestLineageRowClass } from '../utils/orderTestLineage';
 
 export interface TestsTableProps {
   tests: OrderTest[];
   orderId: number;
-  supersededCount?: number;
   variant?: 'simple' | 'detailed';
 }
 
@@ -34,19 +34,13 @@ export const TestsTable: React.FC<TestsTableProps> = ({ tests, orderId, variant 
     [testCatalog, orderId, variant]
   );
 
-  const rowClassName = (test: OrderTest) => {
-    if (test.status === 'superseded') return 'bg-surface-page/50 opacity-60';
-    if (test.status === 'cancelled') return 'bg-danger/5 opacity-75';
-    return '';
-  };
-
   return (
     <Table<OrderTest>
       data={visibleTests}
       viewConfig={viewConfig}
       striped
       getRowKey={(t, i) => t.id ?? i}
-      rowClassName={rowClassName}
+      rowClassName={test => getOrderTestLineageRowClass(test)}
       pagination={{ mode: 'none' }}
       emptyMessage={EMPTY_MESSAGE}
       embedded

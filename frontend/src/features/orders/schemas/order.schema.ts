@@ -48,6 +48,8 @@ export const orderTestSchema = z.object({
   retestOfTestId: z.number().int().positive().nullable().optional(), // Backend returns null
   retestNumber: z.number().int().nonnegative().optional(), // Backend returns 0 for original, allow 0
   retestOrderTestId: z.number().int().positive().nullable().optional(),
+  createdAt: dateStringSchema,
+  updatedAt: dateStringSchema,
 });
 
 export const orderSchema = z.object({
