@@ -4,7 +4,7 @@
 
 import { Icon, Skeleton } from '@/components';
 import { ICONS } from '@/config/icons';
-import { getColumnStyle, useColumnStyles } from '@/hooks/useTable';
+import { useGridTemplateColumns } from '@/hooks/useTable';
 import type {
   ColumnConfig,
   TableBodyProps,
@@ -21,22 +21,27 @@ export function TableHeader<T>({
   variant,
   sticky = false,
 }: TableHeaderProps<T>) {
-  const columnStyles = useColumnStyles(visibleColumns);
+  const gridTemplateColumns = useGridTemplateColumns(visibleColumns);
   return (
     <div
-      className={`flex items-stretch border-b border-border-default bg-surface-table-header ${TEXT_SIZE[variant]} text-text-tertiary uppercase tracking-wider ${sticky ? 'sticky top-0 z-10' : ''}`}
+      className={`grid w-full min-w-full items-stretch border-b border-border-default bg-surface-table-header ${TEXT_SIZE[variant]} text-text-tertiary uppercase tracking-wider ${sticky ? 'sticky top-0 z-10' : ''}`}
+      style={{ gridTemplateColumns }}
       role="row"
     >
       {visibleColumns.map(column => {
-        const style = columnStyles.get(column.key) || {};
         const isSortable = column.sortable;
         const isActiveSort = sort?.key === column.key;
+        const headerAlignClass =
+          column.align === 'center'
+            ? 'justify-center'
+            : column.align === 'right'
+              ? 'justify-end'
+              : 'justify-start';
         return (
           <div
             key={column.key}
             role="columnheader"
-            className={`${HEADER_PADDING[variant]} ${TEXT_SIZE[variant]} flex items-center justify-start gap-space-2 whitespace-nowrap ${isSortable ? 'cursor-pointer hover:bg-surface-hover select-none' : ''} ${isActiveSort ? 'text-text-primary bg-surface-selected' : ''} ${column.headerClassName || ''}`.trim()}
-            style={style}
+            className={`${HEADER_PADDING[variant]} ${TEXT_SIZE[variant]} flex min-w-0 items-center gap-space-2 whitespace-nowrap ${headerAlignClass} ${isSortable ? 'cursor-pointer hover:bg-surface-hover select-none' : ''} ${isActiveSort ? 'text-text-primary bg-surface-selected' : ''} ${column.headerClassName || ''}`.trim()}
             onClick={() => isSortable && onSort(column.key)}
             aria-sort={
               isActiveSort
@@ -63,7 +68,6 @@ export function TableHeader<T>({
 }
 
 export function TableCell({ column, children, variant }: TableCellProps) {
-  const style = getColumnStyle(column);
   const alignClass =
     column.align === 'center'
       ? 'text-center justify-center'
@@ -81,8 +85,7 @@ export function TableCell({ column, children, variant }: TableCellProps) {
   const contentClass = column.truncate ? 'truncate' : '';
   return (
     <div
-      className={`${CELL_PADDING[variant]} ${TEXT_SIZE[variant]} text-text-primary overflow-hidden flex items-center ${alignClass} ${contentClass} ${stickyClass} ${column.className || ''}`.trim()}
-      style={style}
+      className={`${CELL_PADDING[variant]} ${TEXT_SIZE[variant]} text-text-primary min-w-0 overflow-hidden flex items-center ${alignClass} ${contentClass} ${stickyClass} ${column.className || ''}`.trim()}
       role="cell"
     >
       <div className={`min-w-0 flex-1 flex items-center ${innerJustifyClass}`}>{children}</div>
@@ -91,7 +94,7 @@ export function TableCell({ column, children, variant }: TableCellProps) {
 }
 
 const tableRow = {
-  base: 'flex items-center border-b border-border-default transition-colors duration-200',
+  base: 'grid w-full min-w-full items-center border-b border-border-default transition-colors duration-200',
   clickable: 'cursor-pointer',
   hover: 'hover:bg-surface-hover',
   stripedEven: 'bg-surface',
@@ -107,6 +110,7 @@ export function TableRow<T>({
   rowClassName,
   getRowKey,
 }: TableBodyProps<T>) {
+  const gridTemplateColumns = useGridTemplateColumns(visibleColumns);
   return (
     <>
       {data.map((item, index) => {
@@ -124,7 +128,7 @@ export function TableRow<T>({
             key={rowKey}
             role="row"
             className={`${tableRow.base} ${isClickable ? `${tableRow.clickable} ${tableRow.hover}` : ''} ${stripeClass} ${customRowClass}`}
-            style={{ height: `${ROW_HEIGHTS[variant]}px` }}
+            style={{ gridTemplateColumns, height: `${ROW_HEIGHTS[variant]}px` }}
             onClick={() => onRowClick?.(item, index)}
           >
             {visibleColumns.map(column => (
@@ -150,23 +154,21 @@ export function TableRow<T>({
 }
 
 export function TableSkeleton<T = unknown>({ columns, rows, variant }: TableSkeletonProps<T>) {
-  const columnStyles = useColumnStyles(columns);
+  const gridTemplateColumns = useGridTemplateColumns(columns);
   return (
     <>
       {Array.from({ length: rows }).map((_, rowIndex) => (
         <div
           key={rowIndex}
-          className="flex items-center border-b border-border-default"
-          style={{ height: `${ROW_HEIGHTS[variant]}px` }}
+          className="grid w-full min-w-full items-center border-b border-border-default"
+          style={{ gridTemplateColumns, height: `${ROW_HEIGHTS[variant]}px` }}
         >
           {columns.map(column => {
-            const style = columnStyles.get(column.key) || {};
             const skeletonWidth = rowIndex % 3 === 0 ? '90%' : rowIndex % 3 === 1 ? '75%' : '85%';
             return (
               <div
                 key={column.key}
-                className={`${CELL_PADDING[variant]} ${TEXT_SIZE[variant]}`}
-                style={style}
+                className={`${CELL_PADDING[variant]} ${TEXT_SIZE[variant]} min-w-0`}
               >
                 <Skeleton height={16} width={skeletonWidth} />
               </div>

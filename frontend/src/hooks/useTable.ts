@@ -194,6 +194,40 @@ export const getColumnStyle = <T>(column: ColumnConfig<T>): CSSProperties => {
   return style;
 };
 
+/** Shared grid track list so every row uses identical column widths (flex rows misalign). */
+export const getGridTemplateColumns = <T>(columns: ColumnConfig<T>[]): string => {
+  return columns
+    .map(column => {
+      const width = resolveWidth(column.width);
+      const minPx =
+        width.min !== undefined
+          ? toCssValue(width.min)
+          : width.base !== undefined
+            ? toCssValue(width.base)
+            : '0px';
+      const grow = width.grow ?? 0;
+
+      if (grow > 0) {
+        return `minmax(${minPx}, ${grow}fr)`;
+      }
+
+      if (width.base !== undefined) {
+        const basePx = toCssValue(width.base);
+        if (width.min !== undefined && width.min !== width.base) {
+          return `minmax(${minPx}, ${basePx})`;
+        }
+        return basePx;
+      }
+
+      if (width.min !== undefined) {
+        return minPx;
+      }
+
+      return 'minmax(0, max-content)';
+    })
+    .join(' ');
+};
+
 export const useColumnStyles = <T>(
   columns: ColumnConfig<T>[]
 ): Map<string, CSSProperties> => {
@@ -202,4 +236,8 @@ export const useColumnStyles = <T>(
     columns.forEach(column => styleMap.set(column.key, getColumnStyle(column)));
     return styleMap;
   }, [columns]);
+};
+
+export const useGridTemplateColumns = <T>(columns: ColumnConfig<T>[]): string => {
+  return useMemo(() => getGridTemplateColumns(columns), [columns]);
 };

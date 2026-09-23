@@ -7,11 +7,14 @@ import type {
   ColumnConfig,
   ColumnSizePreset,
   ColumnViewPreset,
+  ColumnWidth,
   CreateColumnOptions,
   ListViewPaginationConfig,
   PaginationConfig,
   TableViewConfig,
 } from './types';
+
+export type ColumnWidthOverride = ColumnWidth | ColumnSizePreset | string | number;
 
 export function createColumn<T>(
   key: string,
@@ -52,7 +55,7 @@ export function createBadgeColumn<T>(
 export function pickColumns<T>(
   columnIds: string[],
   columnMap: Record<string, ColumnConfig<T>>,
-  widthOverrides?: Partial<Record<string, ColumnSizePreset | string | number>>
+  widthOverrides?: Partial<Record<string, ColumnWidthOverride>>
 ): ColumnConfig<T>[] {
   return columnIds
     .map(id => {
@@ -69,7 +72,7 @@ export function buildViews<T>(
   columnMap: Record<string, ColumnConfig<T>>,
   views: Record<ColumnViewPreset, readonly string[]>,
   widthOverrides?: Partial<
-    Record<ColumnViewPreset, Partial<Record<string, ColumnSizePreset | string | number>>>
+    Record<ColumnViewPreset, Partial<Record<string, ColumnWidthOverride>>>
   >
 ): Pick<TableViewConfig<T>, 'fullColumns' | 'mediumColumns' | 'compactColumns'> {
   return {
