@@ -16,7 +16,6 @@ const BOX_VARIANT_CLASSES: Record<CardVariant, string> = {
 
 const PADDING_CLASSES = {
   none: '',
-  list: 'p-space-3',
   sm: 'p-space-3',
   md: 'p-panel',
   lg: 'p-space-5',
@@ -31,6 +30,8 @@ export interface CardProps {
   onClick?: (e: React.MouseEvent) => void;
 }
 
+const cardSurfaceClass = cn(SURFACE.raised, RADIUS.surface, 'duration-200');
+
 export const Card: React.FC<CardProps> = ({
   children,
   className = '',
@@ -38,30 +39,22 @@ export const Card: React.FC<CardProps> = ({
   variant = 'default',
   hover = false,
   onClick,
-}) => (
-  <div
-    className={cn(
-      SURFACE.raised,
-      `${RADIUS.surface} duration-200`,
-      PADDING_CLASSES[padding],
-      BOX_VARIANT_CLASSES[variant],
-      hover && 'cursor-pointer',
-      className,
-    )}
-    onClick={onClick}
-    role={onClick ? 'button' : undefined}
-    tabIndex={onClick ? 0 : undefined}
-    onKeyDown={
-      onClick
-        ? (e: React.KeyboardEvent) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              onClick(e as unknown as React.MouseEvent);
-            }
-          }
-        : undefined
-    }
-  >
-    {children}
-  </div>
-);
+}) => {
+  const classes = cn(
+    cardSurfaceClass,
+    PADDING_CLASSES[padding],
+    BOX_VARIANT_CLASSES[variant],
+    hover && 'cursor-pointer',
+    className,
+  );
+
+  if (onClick) {
+    return (
+      <button type="button" className={cn(classes, 'text-left w-full')} onClick={onClick}>
+        {children}
+      </button>
+    );
+  }
+
+  return <div className={classes}>{children}</div>;
+};

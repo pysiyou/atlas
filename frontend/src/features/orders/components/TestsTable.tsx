@@ -1,10 +1,10 @@
 /**
- * TestsTable – uses shared Table with viewConfig.
+ * TestsTable – uses shared DataTable with viewConfig.
  * testCatalog required for name/category/sample lookups; variant drives simple vs detailed columns.
  */
 
 import React, { useMemo } from 'react';
-import { Table, EmptyState, EMPTY_COPY } from '@/components';
+import { DataTable, EmptyState, EMPTY_COPY } from '@/components';
 import { useTestCatalog } from '@/features/catalog';
 import type { OrderTest } from '@/types';
 import { createTestsTableConfig } from '../config/TestsTable.config';
@@ -35,7 +35,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({ tests, orderId, variant 
   );
 
   return (
-    <Table<OrderTest>
+    <DataTable<OrderTest>
       data={visibleTests}
       viewConfig={viewConfig}
       striped

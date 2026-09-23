@@ -1,53 +1,33 @@
 /**
- * LabWorkflowPopoverChrome - Reusable popover form container
- *
- * Provides a consistent structure for all lab workflow popovers:
- * - Header with title, subtitle, and close button
- * - Scrollable body area for form content
- * - Footer with user info and action buttons
+ * PopoverFormChrome — header, scroll body, and cancel/confirm footer for anchored forms.
+ * Used by lab workflow popovers, payment popover, and similar flows.
  */
 
 import React, { type ReactNode } from 'react';
-import { Button, FooterInfo, Icon, DialogHeader, DialogFooter } from '@/components';
+import { actionButtonPreset, Button } from '@/components/primitives';
+import { FooterInfo } from '@/components/display/FooterInfo';
+import { Icon } from '@/components/primitives/Icon';
+import { DialogHeader, DialogFooter } from './DialogChrome';
 import { MODULE_ICONS } from '@/config/icons';
 import { ICONS } from '@/config/icons';
 import { cn } from '@/utils';
 import { MENU_ITEM, RADIUS, TONE } from '@/components/theme/recipes';
 
-interface LabWorkflowPopoverChromeProps {
-  /** Main title displayed in the header */
+export interface PopoverFormChromeProps {
   title: string;
-  /** Optional subtitle displayed below the title */
   subtitle?: string | ReactNode;
-  /** Cancel handler - closes the popover */
   onCancel: () => void;
-  /** Confirm handler - submits the form */
   onConfirm: () => void;
-  /** Label for the confirm button */
   confirmLabel: string;
-  /** Visual variant for the confirm button */
   confirmVariant: 'primary' | 'danger' | 'success';
-  /** Whether the form is currently submitting */
   isSubmitting?: boolean;
-  /** Whether the confirm button should be disabled */
   disabled?: boolean;
-  /** Optional custom content for the footer left side (defaults to user info) */
   footerInfo?: ReactNode;
-  /** Optional header badges/tags displayed after title */
   headerBadges?: ReactNode;
-  /** Form content */
   children: ReactNode;
 }
 
-/**
- * LabWorkflowPopoverChrome provides the shared structure for lab workflow popovers
- *
- * Structure:
- * - Header: title, subtitle, close button
- * - Body: scrollable content area
- * - Footer: user info + cancel/confirm buttons
- */
-export const LabWorkflowPopoverChrome: React.FC<LabWorkflowPopoverChromeProps> = ({
+export const PopoverFormChrome: React.FC<PopoverFormChromeProps> = ({
   title,
   subtitle,
   onCancel,
@@ -59,74 +39,57 @@ export const LabWorkflowPopoverChrome: React.FC<LabWorkflowPopoverChromeProps> =
   footerInfo,
   headerBadges,
   children,
-}) => {
-  return (
-    <div className="flex w-90 md:w-96 max-h-[600px] min-w-0 flex-col overflow-hidden">
-      <DialogHeader
-        size="popover"
-        title={title}
-        subtitle={subtitle}
-        badges={headerBadges}
-        onClose={onCancel}
-        disabled={isSubmitting}
-      />
-      <div className="p-panel space-y-space-4 overflow-y-auto flex-1">{children}</div>
-      <DialogFooter
-        density="popover"
-        start={footerInfo || <FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" />}
-        end={
-          <>
-            <Button
-              variant="cancel"
-              size="sm"
-              layout="text"
-              onClick={onCancel}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant={confirmVariant}
-              size="sm"
-              layout="text"
-              onClick={onConfirm}
-              isLoading={isSubmitting}
-              disabled={disabled}
-            >
-              {confirmLabel}
-            </Button>
-          </>
-        }
-      />
-    </div>
-  );
-};
+}) => (
+  <div className="flex w-90 md:w-96 max-h-[600px] min-w-0 flex-col overflow-hidden">
+    <DialogHeader
+      size="popover"
+      title={title}
+      subtitle={subtitle}
+      badges={headerBadges}
+      onClose={onCancel}
+      disabled={isSubmitting}
+    />
+    <div className="p-panel space-y-space-4 overflow-y-auto flex-1">{children}</div>
+    <DialogFooter
+      density="popover"
+      start={footerInfo ?? <FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" />}
+      end={
+        <>
+          <Button
+            {...actionButtonPreset('cancel')}
+            size="sm"
+            layout="text"
+            onClick={onCancel}
+            disabled={isSubmitting}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant={confirmVariant}
+            size="sm"
+            layout="text"
+            onClick={onConfirm}
+            isLoading={isSubmitting}
+            disabled={disabled}
+          >
+            {confirmLabel}
+          </Button>
+        </>
+      }
+    />
+  </div>
+);
 
-/**
- * RadioCard - Styled radio option card for lab workflow popovers.
- *
- * Matches PaymentMethodSelector: static border and text; only the checkmark appears when selected.
- */
 export interface RadioCardProps {
-  /** Whether this option is selected */
   selected: boolean;
-  /** Click handler to select this option */
   onClick: () => void;
-  /** Main label text */
   label: string;
-  /** Optional description content below the label */
   description?: React.ReactNode;
-  /** Optional leading content (e.g. icon) */
   leading?: React.ReactNode;
-  /** Vertical alignment for leading content and label block */
   align?: 'start' | 'center';
-  /** Color variant when selected (unused visually; kept for API compatibility) */
   variant?: 'sky' | 'red' | 'warning';
-  /** Radio input name for grouping */
   name: string;
-  /** Whether the option is disabled */
   disabled?: boolean;
-  /** Optional reason why the option is disabled (shown as tooltip) */
   disabledReason?: string;
 }
 

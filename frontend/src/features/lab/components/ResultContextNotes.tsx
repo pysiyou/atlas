@@ -42,7 +42,7 @@ export const ResultContextNotes: React.FC<ResultContextNotesProps> = ({
   return (
     <div className={cn('grid grid-cols-1 md:grid-cols-2 gap-space-3', className)}>
       {hasFlags && (
-        <div className={cn(TONE.danger.well, RADIUS.card, 'px-space-3 py-space-2-5')}>
+        <div className={cn(TONE.danger.well, RADIUS.surface, 'px-space-3 py-space-2-5')}>
           <p className={`${TYPE.sectionTitle} ${TONE.danger.fg} mb-space-1.5 flex items-center gap-space-1`}>
             <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
             Flags
@@ -51,7 +51,7 @@ export const ResultContextNotes: React.FC<ResultContextNotesProps> = ({
         </div>
       )}
       {hasNotes && (
-        <div className={`${RADIUS.card} border border-border-subtle bg-surface-page/60 px-space-3 py-space-2-5`}>
+        <div className={`${RADIUS.surface} border border-border-subtle bg-surface-page/60 px-space-3 py-space-2-5`}>
           <p className={`${TYPE.sectionTitle} text-text-tertiary mb-space-1.5`}>
             Technician notes
           </p>

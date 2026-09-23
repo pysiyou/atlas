@@ -158,8 +158,8 @@ function WorkflowGridSkeleton({ cardCount }: { cardCount: number }) {
       <div
         className={`shrink-0 ${SPACING.pxSpace4} py-space-3 border-b border-border-default bg-surface-page flex flex-wrap items-center ${SPACING.gapRelaxed}`}
       >
-        <Skeleton height={40} width={280} className={`${RADIUS.card}`} />
-        <Skeleton height={36} width={120} className={`${RADIUS.card}`} />
+        <Skeleton height={40} width={280} className={`${RADIUS.surface}`} />
+        <Skeleton height={36} width={120} className={`${RADIUS.surface}`} />
         <Skeleton height={32} width={100} className={`${RADIUS.pill}`} />
         <Skeleton height={32} width={100} className={`${RADIUS.pill}`} />
         <Skeleton height={32} width={90} className={`${RADIUS.pill}`} />

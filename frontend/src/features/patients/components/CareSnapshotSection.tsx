@@ -15,12 +15,10 @@ import {
   formatList,
   formatMeasurement,
 } from '../utils/patientFormatters';
-import { DetailFieldsColumnFlow } from './DetailFieldsColumnFlow';
+import { DetailFieldsColumnFlow } from '@/components';
 
 export interface CareSnapshotSectionProps {
   patient: Patient;
-  /** @deprecated Layout is fixed; kept for parent call sites. */
-  layout?: 'grid' | 'column';
 }
 
 function bodyMassTone(category: string): string {

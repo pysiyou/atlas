@@ -4,7 +4,7 @@
 /* eslint-disable max-lines -- single module: shared view-model + mobile/desktop */
 
 import React, { useMemo } from 'react';
-import { Badge, Card, IconButton } from '@/components';
+import { actionButtonPreset, Badge, Card, IconButton } from '@/components';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { useTestCatalog } from '@/features/catalog';
 import { usePatientNameLookup } from '@/features/patients';
@@ -204,7 +204,7 @@ function CollectionCardDesktop({
               />
               <IconButton
                 onClick={() => printSampleCollectionLabel(display, patientName)}
-                variant="print"
+                {...actionButtonPreset('print')}
                 size="sm"
                 title="Print Sample Label"
               />
@@ -270,7 +270,7 @@ function CollectionCardMobile({
     />
   ) : (
     <IconButton
-      variant="view"
+      {...actionButtonPreset('view')}
       size="sm"
       title="View Details"
       onClick={e => {
@@ -282,7 +282,7 @@ function CollectionCardMobile({
 
   return (
     <Card
-      padding="list"
+      padding="sm"
       hover
       className={LAB_MOBILE_CARD.surface}
       onClick={() => handleCardClick()}

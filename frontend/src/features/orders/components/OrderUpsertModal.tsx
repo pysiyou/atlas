@@ -7,12 +7,11 @@
 
 import React from 'react';
 import type { Order } from '@/types';
-import { Modal, FooterInfo, Icon } from '@/components';
+import { Modal, FooterInfo, Icon, FormDialogFooter } from '@/components';
 import { MODULE_ICONS } from '@/config/icons';
 import { formatCurrency } from '@/utils';
 import { ICONS } from '@/config/icons';
 import { useOrderUpsertModal } from '../hooks/useOrderUpsertModal';
-import { OrderModalFooter } from './OrderModalFooter';
 import { OrderUpsertFormFields } from './OrderUpsertFormFields';
 import type { BaseModalProps } from '@/components';
 
@@ -61,13 +60,13 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
             modalState={modalState}
           />
 
-          <OrderModalFooter
+          <FormDialogFooter
             onClose={onClose}
             submitLabel={submitLabel}
             isSubmitting={isSubmitting || isProcessingPayment}
             formId="order-form"
-            buttonVariant={paymentMethod && mode === 'create' ? 'primary' : 'save'}
-            buttonIcon={
+            submitVariant={paymentMethod && mode === 'create' ? 'primary' : 'save'}
+            submitIcon={
               paymentMethod && mode === 'create' && !isSubmitting && !isProcessingPayment ? (
                 <Icon name={ICONS.dataFields.wallet} />
               ) : undefined

@@ -21,29 +21,23 @@ interface FieldBadgeConfig {
  * Configuration for a single field in the DetailFieldGroup
  */
 export interface DetailFieldConfig {
-  /** Field label text */
   label: string;
-  /** Direct value to display */
   value?: React.ReactNode;
-  /** Timestamp to auto-format with formatDateTime */
   timestamp?: string;
-  /** User ID to display with getUserName */
+  /** User id — resolved via {@link DetailFieldGroupProps.resolveUserDisplay}. */
   user?: string;
-  /** Badge configuration for rendering value as a Badge */
+  userDisplay?: string;
   badge?: FieldBadgeConfig;
-  /** Override value cell typography */
   valueClassName?: string;
-  /** Whether to hide this field (useful for conditional rendering) */
   hidden?: boolean;
 }
 
 interface DetailFieldGroupProps {
-  /** Array of field configurations to render */
   fields: DetailFieldConfig[];
-  /** Additional CSS classes for the container */
   className?: string;
-  /** Gap between fields (default: 'space-y-space-2') */
   spacing?: 'tight' | 'normal' | 'loose';
+  /** Maps stored user ids to display names (feature layer). */
+  resolveUserDisplay?: (userId: string) => string | undefined;
 }
 
 /**
@@ -84,6 +78,7 @@ export const DetailFieldGroup: React.FC<DetailFieldGroupProps> = ({
   fields,
   className = '',
   spacing = 'normal',
+  resolveUserDisplay,
 }) => {
   // Filter out fields that have no displayable content or are hidden
   const visibleFields = fields.filter(field => {
@@ -111,7 +106,10 @@ export const DetailFieldGroup: React.FC<DetailFieldGroupProps> = ({
           label={field.label}
           value={field.value}
           timestamp={field.timestamp}
-          user={field.user}
+          userDisplay={
+            field.userDisplay ??
+            (field.user && resolveUserDisplay ? resolveUserDisplay(field.user) : undefined)
+          }
           badge={field.badge}
           valueClassName={field.valueClassName}
         />

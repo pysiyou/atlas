@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { CONTROL, RADIUS } from '@/components/theme/recipes';
-import { Button, Avatar, Icon, IconButton } from '@/components';
+import { actionButtonPreset, Button, Avatar, Icon, IconButton } from '@/components';
 import { PageHeader } from '@/components';
 import type { Patient } from '@/types/patient';
 import { isAffiliationActive } from '../utils/patientHelpers';
@@ -53,17 +53,17 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
     >
       {isLarge ? (
         <>
-          <Button variant="edit" size="sm" onClick={onEdit}>
+          <Button {...actionButtonPreset('edit')} size="sm" onClick={onEdit}>
             Edit
           </Button>
-          <Button variant="add" size="sm" onClick={onNewOrder}>
+          <Button {...actionButtonPreset('add')} size="sm" onClick={onNewOrder}>
             New Order
           </Button>
         </>
       ) : (
         <>
-          <IconButton variant="edit" size="sm" title="Edit Patient" onClick={onEdit} />
-          <IconButton variant="add" size="sm" title="New Order" onClick={onNewOrder} />
+          <IconButton {...actionButtonPreset('edit')} size="sm" title="Edit Patient" onClick={onEdit} />
+          <IconButton {...actionButtonPreset('add')} size="sm" title="New Order" onClick={onNewOrder} />
         </>
       )}
     </div>

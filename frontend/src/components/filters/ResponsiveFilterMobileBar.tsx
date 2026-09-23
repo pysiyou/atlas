@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Button, Badge, DebouncedSearchInput } from '@/components';
+import { actionButtonPreset, Button, Badge, DebouncedSearchInput } from '@/components';
 import { CONTROL } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
@@ -36,7 +36,7 @@ export const ResponsiveFilterMobileBar: React.FC<ResponsiveFilterMobileBarProps>
           />
         </div>
         <div className="relative flex shrink-0">
-          <Button variant="filter" size="sm" onClick={onOpenModal}>
+          <Button {...actionButtonPreset('filter')} size="sm" onClick={onOpenModal}>
             Filters
           </Button>
           {activeFilterCount > 0 && (

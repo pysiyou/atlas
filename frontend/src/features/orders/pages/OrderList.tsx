@@ -9,7 +9,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTestNameLookup } from '@/features/catalog';
 import { usePatientNameLookup } from '@/features/patients';
 import { usePaginatedOrders } from '../api/orders';
-import { ListView } from '@/components';
+import { actionButtonPreset, ListView } from '@/components';
 import { Button } from '@/components';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { OrderFilters } from '../components/OrderFilters';
@@ -135,7 +135,7 @@ export const OrderList: React.FC = () => {
         onRowClick={(order: Order) => navigate(`/orders/${order.orderId}`)}
         title="Orders"
         headerActions={
-          <Button variant="add" size="sm" onClick={() => openModal(ModalType.NEW_ORDER, {})}>
+          <Button {...actionButtonPreset('add')} size="sm" onClick={() => openModal(ModalType.NEW_ORDER, {})}>
             New Order
           </Button>
         }

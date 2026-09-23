@@ -1,6 +1,7 @@
 import type { NavigateFunction } from 'react-router-dom';
 import type { TableViewConfig } from '@/components';
-import { buildViews, createOrderSharedColumns, renderOrderId } from '@/components/data-table';
+import { buildViews, renderOrderId, type CardComponentProps } from '@/components/data-table';
+import { createOrderSharedColumns } from '@/features/orders';
 import { getActiveTests } from '../utils/orderCalculator';
 import type { Order } from '@/types';
 import { OrderTableCard } from '../components/OrderTableCard';
@@ -61,7 +62,7 @@ export const createOrderTableConfig = (
   const views = hidePatientName ? ORDER_VIEWS_WITHOUT_PATIENT : ORDER_VIEWS;
 
   const CardComponent = hidePatientName
-    ? function PatientContextOrderCard(props) {
+    ? function PatientContextOrderCard(props: CardComponentProps<Order>) {
         return <OrderTableCard {...props} hidePatientName />;
       }
     : OrderTableCard;

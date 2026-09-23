@@ -3,8 +3,8 @@
  * Operator chooses unfinished-test fate when linked unfinished work exists.
  */
 import React, { useCallback, useState } from 'react';
-import { Popover, Button, FooterInfo } from '@/components';
-import { LabWorkflowPopoverChrome } from '../components/LabWorkflowPopoverChrome';
+import { actionButtonPreset, Popover, Button, FooterInfo } from '@/components';
+import { PopoverFormChrome } from '@/components';
 import { MODULE_ICONS } from '@/config/icons';
 import { displayId } from '@/utils';
 import { QualityIssueForm } from '../components/QualityIssueForm';
@@ -112,7 +112,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
     .join(' · ');
 
   return (
-    <LabWorkflowPopoverChrome
+    <PopoverFormChrome
       title={LAB_COPY.quality.reportSampleIssue}
       subtitle={subtitle}
       onCancel={onCancel}
@@ -138,7 +138,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
           onOptionsLoaded={setOptions}
         />
       ) : null}
-    </LabWorkflowPopoverChrome>
+    </PopoverFormChrome>
   );
 };
 
@@ -168,7 +168,7 @@ export const SampleRejectionPopover: React.FC<CollectionRejectionPopoverProps> =
       preventClose={false}
       trigger={
         trigger ?? (
-          <Button variant="reject" size="sm" title={LAB_COPY.quality.reportSampleIssue}>
+          <Button {...actionButtonPreset('reject')} size="sm" title={LAB_COPY.quality.reportSampleIssue}>
             {LAB_COPY.quality.reportSampleIssue}
           </Button>
         )

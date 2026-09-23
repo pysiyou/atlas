@@ -6,7 +6,7 @@ export const ReportDetailSkeletonContent: React.FC = () => (
   <div className="flex flex-col gap-layout-section p-space-6 max-w-2xl mx-auto" aria-label="Loading report">
     <Skeleton height={24} width={200} className="mb-space-2" />
     <Skeleton height={16} width="60%" />
-    <div className={`border border-border-default ${RADIUS.card} overflow-hidden bg-surface mt-space-4`}>
+    <div className={`border border-border-default ${RADIUS.surface} overflow-hidden bg-surface mt-space-4`}>
       <div className="p-space-6 space-y-space-3">
         <Skeleton height={14} width="100%" />
         <Skeleton height={14} width="95%" />

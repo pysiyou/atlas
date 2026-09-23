@@ -4,8 +4,8 @@
  */
 
 import React from 'react';
-import { Alert, Button, Skeleton, DialogHeader, DialogFooter } from '@/components';
-import { RadioCard } from './LabWorkflowPopoverChrome';
+import { actionButtonPreset, Alert, Button, Skeleton, DialogHeader, DialogFooter } from '@/components';
+import { RadioCard } from '@/components';
 import { AttemptProgressBar } from './LabAttemptIndicators';
 import type { ResultRejectionType } from '@/types';
 import { cn } from '@/utils';
@@ -16,7 +16,7 @@ import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 import { TYPE, RADIUS } from '@/components/theme/recipes';
 
 
-/** Skeleton that mirrors LabWorkflowPopoverChrome layout (header, body, footer) to avoid layout shift when options load. */
+/** Skeleton that mirrors PopoverFormChrome layout (header, body, footer) to avoid layout shift when options load. */
 export const QualityIssuePopoverLoadingView: React.FC = () => (
   <div
     className={cn(
@@ -28,31 +28,31 @@ export const QualityIssuePopoverLoadingView: React.FC = () => (
   >
     <DialogHeader
       size="popover"
-      title={<Skeleton height={20} width="60%" className={`${RADIUS.card}`} />}
-      subtitle={<Skeleton height={12} width="40%" className={`${RADIUS.card}`} />}
-      actions={<Skeleton width={32} height={32} className={`${RADIUS.card} shrink-0`} />}
+      title={<Skeleton height={20} width="60%" className={`${RADIUS.surface}`} />}
+      subtitle={<Skeleton height={12} width="40%" className={`${RADIUS.surface}`} />}
+      actions={<Skeleton width={32} height={32} className={`${RADIUS.surface} shrink-0`} />}
     />
     <div className="p-panel space-y-space-4 overflow-y-auto flex-1">
       <div className="space-y-space-1-5">
-        <Skeleton height={14} width="100%" className={`${RADIUS.card}`} />
-        <Skeleton height={12} width="85%" className={`${RADIUS.card}`} />
+        <Skeleton height={14} width="100%" className={`${RADIUS.surface}`} />
+        <Skeleton height={12} width="85%" className={`${RADIUS.surface}`} />
       </div>
       <div className="space-y-space-2">
-        <Skeleton height={12} width="30%" className={`${RADIUS.card}`} />
-        <Skeleton height={52} width="100%" className={`${RADIUS.card}`} />
+        <Skeleton height={12} width="30%" className={`${RADIUS.surface}`} />
+        <Skeleton height={52} width="100%" className={`${RADIUS.surface}`} />
       </div>
       <div>
-        <Skeleton height={12} width="35%" className={`${RADIUS.card} mb-space-1`} />
-        <Skeleton height={60} width="100%" className={`${RADIUS.card}`} />
+        <Skeleton height={12} width="35%" className={`${RADIUS.surface} mb-space-1`} />
+        <Skeleton height={60} width="100%" className={`${RADIUS.surface}`} />
       </div>
     </div>
     <DialogFooter
       density="popover"
-      start={<Skeleton height={12} width="50%" className={`${RADIUS.card}`} />}
+      start={<Skeleton height={12} width="50%" className={`${RADIUS.surface}`} />}
       end={
         <>
-          <Skeleton height={32} width={70} className={`${RADIUS.card}`} />
-          <Skeleton height={32} width={70} className={`${RADIUS.card}`} />
+          <Skeleton height={32} width={70} className={`${RADIUS.surface}`} />
+          <Skeleton height={32} width={70} className={`${RADIUS.surface}`} />
         </>
       }
     />
@@ -78,10 +78,10 @@ export const QualityIssuePopoverErrorView: React.FC<QualityIssuePopoverErrorView
       <p className="text-xxs mt-space-1">{error}</p>
     </Alert>
     <div className="flex justify-end gap-space-2">
-      <Button variant="cancel" size="sm" layout="text" onClick={onCancel}>
+      <Button {...actionButtonPreset('cancel')} size="sm" layout="text" onClick={onCancel}>
         {QUALITY_ISSUE_POPOVER_COPY.error.cancel}
       </Button>
-      <Button variant="retry" size="sm" onClick={onRetry}>
+      <Button {...actionButtonPreset('retry')} size="sm" onClick={onRetry}>
         {QUALITY_ISSUE_POPOVER_COPY.error.retry}
       </Button>
     </div>

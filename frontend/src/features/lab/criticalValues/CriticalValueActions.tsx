@@ -3,7 +3,7 @@
  */
 
 import React, { useState } from 'react';
-import { Alert, Button, Badge, EntityId } from '@/components';
+import { actionButtonPreset, Alert, Button, Badge, EntityId } from '@/components';
 import { formatDateTime } from '@/utils';
 import { useAuthStore } from '@/app/authStore';
 import { notify } from '@/utils/feedback';
@@ -117,7 +117,7 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
       )}
 
       {record.criticalNotificationSent && !record.criticalAcknowledgedAt && (
-        <Button variant="approve" size="sm" onClick={handleAcknowledge} isLoading={acknowledgeMutation.isPending}>
+        <Button {...actionButtonPreset('approve')} size="sm" onClick={handleAcknowledge} isLoading={acknowledgeMutation.isPending}>
           Acknowledge
         </Button>
       )}

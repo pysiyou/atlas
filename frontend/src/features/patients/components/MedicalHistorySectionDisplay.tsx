@@ -9,11 +9,10 @@ import { DetailField } from '@/components/display/DetailField';
 import { formatList, formatFamilyHistory, formatLifestyle } from '../utils/patientFormatters';
 import { ICONS } from '@/config/icons';
 import { TONE } from '@/components/theme/recipes';
-import { DetailFieldsColumnFlow } from './DetailFieldsColumnFlow';
+import { DetailFieldsColumnFlow } from '@/components';
 
 export interface MedicalHistorySectionDisplayProps {
   patient: Patient;
-  layout?: 'grid' | 'column';
 }
 
 export const MedicalHistorySectionDisplay: React.FC<MedicalHistorySectionDisplayProps> = ({

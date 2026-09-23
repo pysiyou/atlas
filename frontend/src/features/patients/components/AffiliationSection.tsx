@@ -38,7 +38,7 @@ export const AffiliationSection: React.FC<
     <div className="space-y-space-6">
       {/* Existing Affiliation Info */}
       {hasExistingAffiliation && (
-        <div className={`${SURFACE.raised} ${RADIUS.overlay} p-space-5 space-y-space-4 ${SHADOW.subtle}`}>
+        <div className={`${SURFACE.raised} ${RADIUS.menu} p-space-5 space-y-space-4 ${SHADOW.subtle}`}>
           <div className="flex items-center justify-between pb-space-3 border-b border-border-subtle">
             <span className="text-sm font-normal text-text-primary">Current Affiliation</span>
             <Badge variant={isActive ? 'success' : 'danger'} size="xs" className="font-normal">
@@ -88,7 +88,7 @@ export const AffiliationSection: React.FC<
 
       {/* New/Renewal Affiliation Toggle */}
       {!hasExistingAffiliation && (
-        <div className={`p-panel ${SURFACE.recessed} ${RADIUS.overlay}`}>
+        <div className={`p-panel ${SURFACE.recessed} ${RADIUS.menu}`}>
           <Checkbox
             id="hasAffiliation"
             name="hasAffiliation"

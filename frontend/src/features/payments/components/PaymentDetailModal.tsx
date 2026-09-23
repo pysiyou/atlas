@@ -4,21 +4,19 @@
  * Modal that uses the same BillingSummarySection as order details, plus payment actions when unpaid.
  */
 import React, { useState, useCallback } from 'react';
-import {
-  Modal,
+import { actionButtonPreset, Modal,
   Panel,
   Icon,
   Button,
   Alert,
   FooterInfo,
-  PaymentMethodSelector,
   ErrorBoundary,
   DialogFooter,
   EntityId,
-  SkeletonText,
-} from '@/components';
+  SkeletonText, } from '@/components';
+import { PaymentMethodSelector } from './PaymentMethodSelector';
 import { cn, formatCurrency } from '@/utils';
-import { BillingSummarySection } from '@/features/orders/components/BillingSummarySection';
+import { BillingSummarySection } from '@/features/orders';
 import { useOrder } from '@/features/orders';
 import { inputBase } from '@/components/inputs/inputStyles';
 import { useCreatePayment, useOrderRemainingBalance } from '../api/payments';
@@ -57,7 +55,7 @@ const PaymentDetailFooter: React.FC<{
     end={
       <>
         <Button
-          variant="cancel"
+          {...actionButtonPreset('cancel')}
           size="md"
           layout="icon-text"
           onClick={onClose}

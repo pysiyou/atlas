@@ -10,11 +10,11 @@ import { Icon, type IconName } from './Icon';
 import { BADGE, CONTROL, RADIUS } from '@/components/theme/recipes';
 import {
   CONTAINER_STYLES,
-  DISPLAY_LABELS,
   getColorStyles,
   resolveColor,
   type BadgeVariant,
 } from './badgeStyles';
+import { STATUS_BADGE_DISPLAY_LABELS, resolveStatusBadgeLabel } from '@/utils/statusBadge';
 
 export type { BadgeColor, BadgeVariant } from './badgeStyles';
 
@@ -46,6 +46,8 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   icon?: IconName | React.ReactNode;
   dot?: boolean;
   uppercase?: boolean;
+  /** Explicit label; when omitted, children or status display labels may apply. */
+  label?: React.ReactNode;
 }
 
 const UNIFIED_BASE = 'bg-badge border border-border-default';
@@ -58,6 +60,7 @@ export const Badge: React.FC<BadgeProps> = ({
   icon,
   dot = false,
   uppercase = true,
+  label,
   children,
   ...props
 }) => {
@@ -68,9 +71,12 @@ export const Badge: React.FC<BadgeProps> = ({
   const color = resolveColor(normalizedVariant);
   const { className: colorClass, dotClassName } = getColorStyles(color, appearance);
   const content =
+    label ??
     children ??
     (variant !== 'neutral' && variant !== 'default'
-      ? (DISPLAY_LABELS[normalizedVariant] ?? String(variant).replace(/-/g, ' ').toUpperCase())
+      ? (STATUS_BADGE_DISPLAY_LABELS[normalizedVariant] ??
+        resolveStatusBadgeLabel(normalizedVariant) ??
+        String(variant).replace(/-/g, ' ').toUpperCase())
       : null);
 
   const iconElement = !icon
@@ -83,7 +89,7 @@ export const Badge: React.FC<BadgeProps> = ({
   return (
     <span
       className={cn(
-        `inline-flex items-center font-normal ${RADIUS.control} whitespace-nowrap`,
+        `inline-flex items-center font-normal ${RADIUS.field} whitespace-nowrap`,
         uppercase && 'uppercase tracking-normal',
         isContainer ? containerStyle : null,
         pulse && 'animate-pulse',
@@ -119,7 +125,7 @@ export const TagChip: React.FC<TagChipProps> = ({
   return (
     <div
       className={cn(
-        `inline-flex max-w-full shrink-0 items-center ${RADIUS.control} font-normal normal-case tracking-normal`,
+        `inline-flex max-w-full shrink-0 items-center ${RADIUS.field} font-normal normal-case tracking-normal`,
         chip.surface,
         emphasis === 'code' ? chip.code : chip.text,
         className,
@@ -150,7 +156,7 @@ export const RemovableTag: React.FC<RemovableTagProps> = ({
   return (
     <div
       className={cn(
-        `inline-flex max-w-full shrink-0 items-center gap-space-2 ${RADIUS.control} font-normal normal-case tracking-normal`,
+        `inline-flex max-w-full shrink-0 items-center gap-space-2 ${RADIUS.field} font-normal normal-case tracking-normal`,
         chip.surface,
         className,
         SIZES[size]
@@ -188,7 +194,7 @@ export const FilterChip: React.FC<FilterChipProps> = ({
   <button
     type={type}
     className={cn(
-      `inline-flex cursor-pointer items-center ${RADIUS.control} border font-normal transition-colors`,
+      `inline-flex cursor-pointer items-center ${RADIUS.field} border font-normal transition-colors`,
       active
         ? 'border-brand bg-brand-muted text-brand hover:border-brand-hover'
         : 'border-border-default bg-surface text-text-secondary hover:border-border-hover hover:bg-surface-hover hover:text-text-primary',

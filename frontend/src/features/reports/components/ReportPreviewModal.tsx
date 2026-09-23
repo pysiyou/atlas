@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { Modal, Button, FooterInfo, DialogFooter } from '@/components';
+import { actionButtonPreset, Modal, Button, FooterInfo, DialogFooter } from '@/components';
 import type { ValidatedTestReportPayload } from '../types';
 import { MODULE_ICONS } from '@/config/icons';
 import { useUserLookup } from '@/lib/api/users';
@@ -48,11 +48,11 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
           start={<FooterInfo icon={MODULE_ICONS.reports} label="Reports" size="md" />}
           end={
             <>
-              <Button variant="cancel" size="md" layout="icon-text" onClick={onClose} disabled={isGenerating}>
+              <Button {...actionButtonPreset('cancel')} size="md" layout="icon-text" onClick={onClose} disabled={isGenerating}>
                 Close
               </Button>
               <Button
-                variant="download"
+                {...actionButtonPreset('download')}
                 size="md"
                 layout="icon-text"
                 onClick={onGenerate}

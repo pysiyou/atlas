@@ -60,13 +60,13 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
     >
       <div className="relative">
         {/* Main card */}
-        <div className={`relative bg-auth-panel ${RADIUS.overlay} ${AUTH_SHADOW.card} border border-auth-stroke p-space-8 sm:p-space-10`}>
+        <div className={`relative bg-auth-panel ${RADIUS.menu} ${AUTH_SHADOW.card} border border-auth-stroke p-space-8 sm:p-space-10`}>
           {/* Subtle top accent line */}
           <div className="absolute top-0 left-space-8 right-space-8 h-px bg-auth-accent-medium/50" />
 
           {/* Mobile logo */}
           <div className="flex lg:hidden items-center gap-space-3 mb-space-8">
-            <div className={`w-11 h-11 bg-auth-accent ${RADIUS.control} flex items-center justify-center ${AUTH_SHADOW.logo}`}>
+            <div className={`w-11 h-11 bg-auth-accent ${RADIUS.field} flex items-center justify-center ${AUTH_SHADOW.logo}`}>
               <Icon name={ICONS.ui.appLogo} className="w-6 h-6 text-auth-fg" />
             </div>
             <div>
@@ -87,9 +87,9 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
 
           {/* Error message display */}
           {error && (
-            <div className={`mb-space-6 p-panel bg-auth-error border border-auth-error-stroke ${RADIUS.overlay} animate-[shake_0.5s_ease-in-out]`}>
+            <div className={`mb-space-6 p-panel bg-auth-error border border-auth-error-stroke ${RADIUS.menu} animate-[shake_0.5s_ease-in-out]`}>
               <div className="flex items-center gap-space-3">
-                <div className={`w-8 h-8 ${RADIUS.overlay} bg-auth-error-muted flex items-center justify-center flex-shrink-0`}>
+                <div className={`w-8 h-8 ${RADIUS.menu} bg-auth-error-muted flex items-center justify-center flex-shrink-0`}>
                   <Icon name={ICONS.actions.alertCircle} className="h-4 w-4 text-auth-error-fg" />
                 </div>
                 <p className="font-body text-sm text-auth-error-fg">{error}</p>
@@ -124,7 +124,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
                     onErrorDismiss();
                   }}
                   placeholder="Enter your username"
-                  className={`font-body block w-full pl-space-12 pr-space-4 py-space-3-5 bg-auth-input border border-auth-input-stroke ${RADIUS.overlay} text-auth-fg placeholder-auth-fg-subtle ${AUTH_CONTROL.focusField} hover:bg-auth-panel-hover transition-all duration-200`}
+                  className={`font-body block w-full pl-space-12 pr-space-4 py-space-3-5 bg-auth-input border border-auth-input-stroke ${RADIUS.menu} text-auth-fg placeholder-auth-fg-subtle ${AUTH_CONTROL.focusField} hover:bg-auth-panel-hover transition-all duration-200`}
                   required
                 />
               </div>
@@ -154,7 +154,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
                     onErrorDismiss();
                   }}
                   placeholder="Enter your password"
-                  className={`font-body block w-full pl-space-12 pr-space-12 py-space-3-5 bg-auth-input border border-auth-input-stroke ${RADIUS.overlay} text-auth-fg placeholder-auth-fg-subtle ${AUTH_CONTROL.focusField} hover:bg-auth-panel-hover transition-all duration-200`}
+                  className={`font-body block w-full pl-space-12 pr-space-12 py-space-3-5 bg-auth-input border border-auth-input-stroke ${RADIUS.menu} text-auth-fg placeholder-auth-fg-subtle ${AUTH_CONTROL.focusField} hover:bg-auth-panel-hover transition-all duration-200`}
                   required
                 />
                 <button
@@ -172,7 +172,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`relative w-full mt-space-2 font-body font-normal py-space-4 px-table-cell-x-default ${RADIUS.overlay} text-auth-fg overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-300 ${AUTH_CONTROL.focusSubmit}`}
+              className={`relative w-full mt-space-2 font-body font-normal py-space-4 px-table-cell-x-default ${RADIUS.menu} text-auth-fg overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-300 ${AUTH_CONTROL.focusSubmit}`}
             >
               <div className="absolute inset-0 bg-auth-accent transition-all duration-300 hover:bg-auth-accent-hover" />
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-shimmer" />

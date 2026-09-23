@@ -12,7 +12,7 @@ import { FilterFactory } from './FilterFactory';
 import { QuickFilters } from './QuickFilters';
 import { FilterSection } from './FilterSection';
 import { FilterModal } from './FilterModal';
-import { Button, Badge } from '@/components';
+import { actionButtonPreset, Button, Badge } from '@/components';
 import { CONTROL, FILTER } from '@/components/theme/recipes';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 import type { FilterConfig, FilterValues, ActiveFilterBadge } from './types';
@@ -282,7 +282,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
           {/* Filters button - auto width */}
           {nonSearchControls.length > 0 && (
             <div className="relative flex shrink-0">
-              <Button variant="filter" size="sm" onClick={() => setIsModalOpen(true)}>
+              <Button {...actionButtonPreset('filter')} size="sm" onClick={() => setIsModalOpen(true)}>
                 Filters
               </Button>
               {activeBadges.length > 0 && (

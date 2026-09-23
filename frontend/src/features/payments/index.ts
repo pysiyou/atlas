@@ -20,3 +20,5 @@ export type {
 } from './api/payments';
 
 export { PaymentPopover } from './components/PaymentPopover';
+export { PaymentMethodSelector } from './components/PaymentMethodSelector';
+export type { PaymentMethodSelectorProps } from './components/PaymentMethodSelector';

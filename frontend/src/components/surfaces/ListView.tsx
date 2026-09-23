@@ -3,7 +3,7 @@
  */
 
 import { type ReactNode } from 'react';
-import { Table, type TableViewConfig } from '@/components/data-table';
+import { DataTable, type TableViewConfig } from '@/components/data-table';
 import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components/data-table';
 import { EmptyState, PageHeader } from '@/components';
 import { ErrorAlert } from '@/components/loaders/ErrorAlert';
@@ -27,8 +27,8 @@ export interface ListViewProps<T extends TableDataItem = TableDataItem> {
   emptyState?: ReactNode;
   onRetry?: () => void;
   onDismissError?: () => void;
-  /** @deprecated Use pagination={{ mode: 'client' }} or pagination={{ mode: 'server', ... }} */
-  pagination?: boolean | PaginationConfig | ListViewPaginationConfig;
+  /** Use {@link ListViewPaginationConfig} (`mode: 'client' | 'server' | 'none'`). */
+  pagination?: PaginationConfig | ListViewPaginationConfig;
   pageSize?: number;
   pageSizeOptions?: number[];
   defaultSort?: SortConfig;
@@ -52,9 +52,7 @@ function normalizePagination(
   pagination: ListViewProps<TableDataItem>['pagination'],
   pageSize: number,
   pageSizeOptions: number[]
-): boolean | PaginationConfig | ListViewPaginationConfig {
-  if (pagination === false) return { mode: 'none' };
-  if (pagination === true) return { mode: 'client', pageSize, pageSizeOptions };
+): PaginationConfig | ListViewPaginationConfig {
   if (pagination === undefined) return { mode: 'client', pageSize, pageSizeOptions };
   return pagination;
 }
@@ -98,7 +96,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
       <div className={`${PANEL.raisedShadowSm} flex flex-col flex-1 min-h-0 overflow-hidden`}>
         {filters}
         <div className="flex-1 min-h-0 flex flex-col">
-          <Table
+          <DataTable
             data={items}
             viewConfig={viewConfig}
             striped

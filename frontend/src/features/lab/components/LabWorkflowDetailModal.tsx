@@ -12,6 +12,7 @@ import React, { type ReactNode } from 'react';
 import { Modal, Panel, DetailFieldGroup, FooterInfo, DialogFooter } from '@/components';
 import { MODULE_ICONS } from '@/config/icons';
 import type { DetailFieldConfig } from '@/components';
+import { useUserLookup } from '@/lib/api/users';
 import { LAB_MODAL_DETAIL } from '../utils/labStyles';
 import { LabModalHeader, type LabWorkflowModalContext, type LabAuditLine } from './LabWorkflowHeader';
 import { TYPE } from '@/components/theme/recipes';
@@ -147,6 +148,8 @@ interface DetailGridProps {
 }
 
 export const DetailGrid: React.FC<DetailGridProps> = ({ children, sections }) => {
+  const { getUserName } = useUserLookup();
+
   // If sections config is provided, render using the new declarative approach
   if (sections && sections.length > 0) {
     // Filter out sections with no displayable fields
@@ -173,7 +176,7 @@ export const DetailGrid: React.FC<DetailGridProps> = ({ children, sections }) =>
             title={section.title}
             headerEnd={section.headerEnd}
           >
-            <DetailFieldGroup fields={section.fields} spacing="tight" />
+            <DetailFieldGroup fields={section.fields} spacing="tight" resolveUserDisplay={getUserName} />
           </Panel>
         ))}
       </div>

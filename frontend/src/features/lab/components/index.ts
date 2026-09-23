@@ -3,7 +3,7 @@
  */
 
 export { LabWorkflowCardShell, ProgressBadge, TestList } from './LabWorkflowCardShell';
-export { LabWorkflowPopoverChrome, RadioCard } from './LabWorkflowPopoverChrome';
+export { PopoverFormChrome, RadioCard } from '@/components/overlays/PopoverFormChrome';
 export { QualityIssuePopover } from './QualityIssuePopover';
 export { LabWorkflowQueueLayout, createLabQueueSearchFilter } from './LabWorkflowQueueLayout';
 export { LabValidationQueueSection } from './LabValidationQueueSection';

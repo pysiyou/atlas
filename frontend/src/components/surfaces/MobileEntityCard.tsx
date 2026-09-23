@@ -13,7 +13,7 @@ export interface MobileEntityCardProps {
 }
 
 export const MOBILE_ENTITY_CARD_CLASS =
-  `${SURFACE.raised} ${RADIUS.card} p-space-3 duration-200 cursor-pointer flex flex-col h-full`;
+  `${SURFACE.raised} ${RADIUS.surface} p-space-3 duration-200 cursor-pointer flex flex-col h-full`;
 
 function MobileEntityCardRoot({ children, onClick, className }: MobileEntityCardProps) {
   return (

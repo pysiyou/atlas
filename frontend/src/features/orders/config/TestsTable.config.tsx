@@ -56,7 +56,7 @@ function createTestTableCard(testCatalog: Test[]): React.FC<CardComponentProps<O
     return (
       <div
         className={cn(
-          `p-space-3 border border-border-default ${RADIUS.overlay} hover:bg-surface-hover cursor-pointer`,
+          `p-space-3 border border-border-default ${RADIUS.menu} hover:bg-surface-hover cursor-pointer`,
           lineageRowClass
         )}
         onClick={onClick}

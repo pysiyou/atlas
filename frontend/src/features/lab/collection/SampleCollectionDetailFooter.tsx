@@ -2,7 +2,7 @@
  * SampleCollectionDetailFooter Component
  */
 import React from 'react';
-import { Button, Icon } from '@/components';
+import { actionButtonPreset, Button, Icon } from '@/components';
 import type { ContainerType, Sample, RejectedSample, Order } from '@/types';
 import { SampleCollectionPopover } from './SampleCollectionPopover';
 import { SampleRejectionPopover } from './SampleRejectionPopover';
@@ -59,7 +59,7 @@ export const SampleCollectionDetailFooter: React.FC<CollectionDetailFooterProps>
           }}
           onSubmittingChange={onPopoverSubmittingChange}
           trigger={
-            <Button variant="collect" size="md">
+            <Button {...actionButtonPreset('collect')} size="md">
               {isRecollection ? 'Recollect Sample' : 'Collect Sample'}
             </Button>
           }
@@ -85,7 +85,7 @@ export const SampleCollectionDetailFooter: React.FC<CollectionDetailFooterProps>
           isRecollection={sample.isRecollection || false}
           onSuccess={onClose}
           trigger={
-            <Button variant="reject" size="md">
+            <Button {...actionButtonPreset('reject')} size="md">
               {LAB_COPY.quality.reportSampleIssue}
             </Button>
           }

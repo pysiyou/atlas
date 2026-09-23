@@ -30,7 +30,7 @@ import { useOrderLookup } from '@/features/orders';
 import { useSampleLookup } from '../api/samples';
 import { getTestNames } from '@/features/catalog/testLookup';
 import { LabEntityTimelinePanel } from '../components/LabEntityTimelinePanel';
-import { Button, EntityId } from '@/components';
+import { actionButtonPreset, Button, EntityId } from '@/components';
 import type { SampleCollectionQueueItem } from '@/features/lab/types';
 
 interface CollectionDetailModalProps {
@@ -212,7 +212,7 @@ export const SampleCollectionDetailModal: React.FC<CollectionDetailModalProps> =
       footer={
         readOnly ? (
           <ModalFooter statusMessage="">
-            <Button onClick={onClose} variant="cancel" size="md" layout="icon-text">Close</Button>
+            <Button onClick={onClose} {...actionButtonPreset('cancel')} size="md" layout="icon-text">Close</Button>
           </ModalFooter>
         ) : (
           footerContent

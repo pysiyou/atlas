@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import type { RemedyType } from '@/types/lab-operations';
-import { RadioCard } from './LabWorkflowPopoverChrome';
+import { RadioCard } from '@/components';
 import { QUALITY_ISSUE_POPOVER_COPY, type RemedyOption } from '../constants/qualityIssuePopoverCopy';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 

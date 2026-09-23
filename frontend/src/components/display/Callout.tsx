@@ -62,7 +62,7 @@ export const Callout: React.FC<CalloutProps> = ({
 
   return (
     <div
-      className={`flex items-start gap-space-2 p-space-2 ${RADIUS.control} ${styles.container} ${className}`}
+      className={`flex items-start gap-space-2 p-space-2 ${RADIUS.field} ${styles.container} ${className}`}
       role={variant === 'danger' || variant === 'warning' ? 'alert' : undefined}
     >
       {iconName ? (

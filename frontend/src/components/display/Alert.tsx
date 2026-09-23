@@ -107,7 +107,7 @@ export const Alert: React.FC<AlertProps> = ({
         <button
           type="button"
           onClick={onClose}
-          className={`shrink-0 self-start -mr-space-1 -mt-space-0-5 flex h-7 w-7 items-center justify-center ${RADIUS.card} border-0 bg-transparent p-0 text-text-tertiary hover:text-text-secondary cursor-pointer`}
+          className={`shrink-0 self-start -mr-space-1 -mt-space-0-5 flex h-7 w-7 items-center justify-center ${RADIUS.surface} border-0 bg-transparent p-0 text-text-tertiary hover:text-text-secondary cursor-pointer`}
           aria-label="Close alert"
         >
           <Icon name="cross" className="w-4 h-4 pointer-events-none" />

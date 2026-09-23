@@ -40,10 +40,12 @@ function getDefaultIconForSelect(name: string): IconName {
 function getDefaultIconForField(
   kind: FormFieldKind,
   explicitIcon: IconName | undefined,
+  inferIcon: boolean,
   type?: string,
   name?: string
 ): IconName | undefined {
   if (explicitIcon !== undefined) return explicitIcon;
+  if (!inferIcon) return undefined;
 
   const n = (name ?? '').toLowerCase();
   const t = type ?? '';
@@ -105,6 +107,8 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string;
   helperText?: string;
   icon?: IconName;
+  /** When true, pick a default icon from the input `name` / `type`. */
+  inferIcon?: boolean;
 }
 
 export const Input: React.FC<InputProps> = ({
@@ -114,10 +118,11 @@ export const Input: React.FC<InputProps> = ({
   className = '',
   id,
   icon,
+  inferIcon = false,
   ...props
 }) => {
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
-  const displayIcon = getDefaultIconForField('input', icon, props.type, props.name);
+  const displayIcon = getDefaultIconForField('input', icon, inferIcon, props.type, props.name);
 
   return (
     <FormFieldWrapper
@@ -152,6 +157,7 @@ interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
   error?: string;
   helperText?: string;
   icon?: IconName;
+  inferIcon?: boolean;
 }
 
 export const Textarea: React.FC<TextareaProps> = ({
@@ -161,10 +167,11 @@ export const Textarea: React.FC<TextareaProps> = ({
   className = '',
   id,
   icon,
+  inferIcon = false,
   ...props
 }) => {
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
-  const displayIcon = getDefaultIconForField('textarea', icon, undefined, props.name);
+  const displayIcon = getDefaultIconForField('textarea', icon, inferIcon, undefined, props.name);
 
   return (
     <FormFieldWrapper
@@ -200,6 +207,7 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   helperText?: string;
   options: readonly { value: string; label: string }[] | { value: string; label: string }[];
   icon?: IconName;
+  inferIcon?: boolean;
 }
 
 export const Select: React.FC<SelectProps> = ({
@@ -210,10 +218,11 @@ export const Select: React.FC<SelectProps> = ({
   className = '',
   id,
   icon,
+  inferIcon = false,
   ...props
 }) => {
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
-  const displayIcon = getDefaultIconForField('select', icon, undefined, props.name);
+  const displayIcon = getDefaultIconForField('select', icon, inferIcon, undefined, props.name);
 
   return (
     <FormFieldWrapper

@@ -1,6 +1,5 @@
 /**
- * DetailFieldsColumnFlow
- * Stacks detail fields vertically in two columns: column one fills first, then column two.
+ * DetailFieldsColumnFlow — two-column vertical flow for detail fields.
  */
 
 import React from 'react';
@@ -10,11 +9,9 @@ import { cn } from '@/utils';
 export interface DetailFieldsColumnFlowProps {
   children: React.ReactNode;
   className?: string;
-  /** When true, the block grows with content and scrolls via a parent. */
   scrollable?: boolean;
 }
 
-/** Splits items so the first column receives the first half (rounded up). */
 function splitIntoColumns(items: React.ReactNode[]): [React.ReactNode[], React.ReactNode[]] {
   const splitAt = Math.ceil(items.length / 2);
   return [items.slice(0, splitAt), items.slice(splitAt)];
@@ -32,10 +29,6 @@ function Column({ items }: { items: React.ReactNode[] }) {
   );
 }
 
-/**
- * Renders fields top-to-bottom in column one, then continues in column two.
- * On narrow viewports, fields stay in a single vertical list.
- */
 export const DetailFieldsColumnFlow: React.FC<DetailFieldsColumnFlowProps> = ({
   children,
   className,
@@ -49,7 +42,7 @@ export const DetailFieldsColumnFlow: React.FC<DetailFieldsColumnFlowProps> = ({
       className={cn(
         'grid w-full min-h-0 grid-cols-1 items-start gap-x-layout-section',
         'sm:grid-cols-2',
-        className
+        className,
       )}
     >
       <Column items={firstColumn} />

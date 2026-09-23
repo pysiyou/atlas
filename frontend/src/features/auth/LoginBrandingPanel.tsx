@@ -33,10 +33,10 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
           {/* Logo container with matte finish */}
           <div className="relative">
             <div
-              className={`absolute inset-0 ${RADIUS.overlay} bg-auth-accent-medium blur-xl opacity-30`}
+              className={`absolute inset-0 ${RADIUS.menu} bg-auth-accent-medium blur-xl opacity-30`}
               style={{ animation: 'pulse-ring 3s ease-in-out infinite' }}
             />
-            <div className={`relative w-16 h-16 bg-auth-accent ${RADIUS.overlay} flex items-center justify-center ${AUTH_SHADOW.accent} transform hover:scale-105 transition-transform duration-300`}>
+            <div className={`relative w-16 h-16 bg-auth-accent ${RADIUS.menu} flex items-center justify-center ${AUTH_SHADOW.accent} transform hover:scale-105 transition-transform duration-300`}>
               <Icon name={ICONS.ui.appLogo} className="w-9 h-9" />
             </div>
           </div>
@@ -61,13 +61,13 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
         {features.map((feature, index) => (
           <div
             key={feature.title}
-            className={`group flex items-start gap-space-4 p-panel ${RADIUS.overlay} bg-auth-card border border-auth-card-stroke hover:bg-auth-card-hover hover:border-auth-card-stroke transition-all duration-300 ${
+            className={`group flex items-start gap-space-4 p-panel ${RADIUS.menu} bg-auth-card border border-auth-card-stroke hover:bg-auth-card-hover hover:border-auth-card-stroke transition-all duration-300 ${
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
             }`}
             style={{ transitionDelay: `${400 + index * 100}ms` }}
           >
             {/* Feature icon */}
-            <div className={`w-10 h-10 ${RADIUS.overlay} bg-auth-card-icon border border-auth-card-icon-border flex items-center justify-center flex-shrink-0 group-hover:bg-auth-card-icon-hover transition-colors duration-300`}>
+            <div className={`w-10 h-10 ${RADIUS.menu} bg-auth-card-icon border border-auth-card-icon-border flex items-center justify-center flex-shrink-0 group-hover:bg-auth-card-icon-hover transition-colors duration-300`}>
               <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-auth-fg-light" />
             </div>
             <div>

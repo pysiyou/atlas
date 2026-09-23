@@ -42,7 +42,7 @@ export const PendingCriticalValuesPanel: React.FC = () => {
         {criticalValues.map(record => (
           <div
             key={record.id}
-            className={cn(RADIUS.card, 'p-panel space-y-space-3', TONE.danger.well)}
+            className={cn(RADIUS.surface, 'p-panel space-y-space-3', TONE.danger.well)}
           >
             <div className="flex items-center justify-between gap-space-2">
               <div className="flex items-center gap-space-2 text-sm font-normal text-text-primary">

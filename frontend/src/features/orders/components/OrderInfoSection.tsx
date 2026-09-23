@@ -10,14 +10,16 @@ import { DetailField } from '@/components/display/DetailField';
 import { formatDateTime } from '@/utils/date';
 import { getDataFieldIcon, getPriorityIcon, getOrderStatusIcon } from '@/config/icons';
 
+/** Responsive field layout: two columns on narrow full-width panels, single column in multi-column grids. */
+export const ORDER_DETAIL_INFO_FIELDS_LAYOUT =
+  'grid grid-cols-1 gap-space-3 sm:grid-cols-2 sm:gap-layout-stack md:flex md:flex-col md:gap-space-3';
+
 export interface OrderInfoSectionProps {
   order: Order;
-  layout?: 'grid' | 'column';
 }
 
-export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order, layout = 'column' }) => {
-  const containerClass =
-    layout === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 gap-layout-stack' : 'flex flex-col gap-space-3';
+export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order }) => {
+  const containerClass = ORDER_DETAIL_INFO_FIELDS_LAYOUT;
 
   return (
     <div className={containerClass}>

@@ -199,14 +199,6 @@ export const RADIUS = {
   rangeStart: 'rounded-l-pill rounded-r-none',
   rangeEnd: 'rounded-r-pill rounded-l-none',
   bottomSurface: 'rounded-b-surface',
-  /** @deprecated use field */
-  control: 'rounded-field',
-  /** @deprecated use surface */
-  card: 'rounded-surface',
-  /** @deprecated use menu */
-  overlay: 'rounded-menu',
-  /** @deprecated use workspace */
-  shell: 'rounded-workspace',
 } as const;
 
 /** Empty state layout. */
@@ -232,6 +224,32 @@ export const SHADOW = {
   overlay: 'shadow-lg',
   modal: 'shadow-xl',
   footer: 'shadow-footer',
+} as const;
+
+/** In-page panel shell tokens (page + lab). Used by Panel and command-center layouts. */
+export const PANEL_SHELL = {
+  page: {
+    shell: `h-full ${SURFACE.raised} ${RADIUS.field} ${SHADOW.subtle} overflow-hidden flex flex-col`,
+    header: PANEL_LAYOUT.pageHeader,
+    headerBetween: PANEL_LAYOUT.pageHeaderBetween,
+    title: `m-0 truncate leading-none ${TYPE.panelTitle}`,
+    meta: `flex h-6 shrink-0 items-center ${TYPE.caption}`,
+    headerActions: 'flex shrink-0 items-center min-h-0',
+    body: 'flex-1 min-h-0',
+    padding: PANEL_LAYOUT.pageBodyPadding,
+    scrollDefault: 'overflow-hidden',
+  },
+  lab: {
+    shell: `w-full ${SURFACE.recessed} ${RADIUS.surface} overflow-hidden`,
+    header: PANEL_LAYOUT.labHeader,
+    headerBetween: PANEL_LAYOUT.labHeaderBetween,
+    title: `m-0 truncate ${TYPE.sectionTitle}`,
+    meta: `flex shrink-0 items-center ${TYPE.caption}`,
+    headerActions: 'flex shrink-0 items-center min-h-0',
+    body: '',
+    padding: SPACING.pSpace2,
+    scrollDefault: '',
+  },
 } as const;
 
 /** Range slider thumbs (webkit + moz pseudo-elements). */

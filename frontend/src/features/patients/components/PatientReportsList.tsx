@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Icon, IconButton, EmptyState, EntityId, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components';
+import { actionButtonPreset, Icon, IconButton, EmptyState, EntityId, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components';
 import { formatDateTime } from '@/utils';
 import type { Order } from '@/types';
 import { getReportableOrders } from '../utils/patientFormatters';
@@ -49,7 +49,7 @@ export const PatientReportsList: React.FC<PatientReportsListProps> = ({ orders }
               </p>
             </div>
           </div>
-          <IconButton variant="download" size="sm" title="Download Report" />
+          <IconButton {...actionButtonPreset('download')} size="sm" title="Download Report" />
         </div>
       ))}
     </div>

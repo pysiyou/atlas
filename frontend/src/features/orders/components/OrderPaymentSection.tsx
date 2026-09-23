@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
 import type { PaymentMethod } from '@/types';
 import { getEnabledPaymentMethods } from '@/types/payments';
-import { PaymentMethodSelector, Alert } from '@/components';
+import { Alert } from '@/components';
+import { PaymentMethodSelector } from '@/features/payments';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 
 export interface OrderPaymentSectionProps {

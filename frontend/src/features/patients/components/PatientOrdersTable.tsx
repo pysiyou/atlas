@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { Table, EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components';
+import { DataTable, EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components';
 import type { Order } from '@/types/order';
 import { useTestNameLookup } from '@/features/catalog';
 import { createOrderTableConfig } from '@/features/orders/config/OrderTable.config';
@@ -29,7 +29,7 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({ orders, 
   );
 
   return (
-    <Table<Order>
+    <DataTable<Order>
       data={orders}
       viewConfig={viewConfig}
       striped
