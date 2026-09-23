@@ -17,7 +17,7 @@ import {
   getAttentionTypeConfig,
 } from './commandCenterModel';
 import { formatLabAttentionQueueItem, type AttentionDetail } from './commandCenterAttentionFormat';
-import { TIMELINE_STYLES } from '@/features/timeline';
+import { COMMAND_CENTER_FEED_STYLES } from './commandCenterStyles';
 import { CONTROL, RADIUS, TYPE } from '@/components/theme/recipes';
 
 
@@ -76,7 +76,7 @@ function LabAttentionFeedRow({ item }: { item: LabAttentionQueueItem }) {
           </div>
 
           {formatted.details.length > 0 && (
-            <div className={TIMELINE_STYLES.eventDetails}>
+            <div className={COMMAND_CENTER_FEED_STYLES.eventDetails}>
               {formatted.details.map((detail, idx) => (
                 <FeedDetail key={idx} detail={detail} />
               ))}
@@ -99,13 +99,13 @@ function LabAttentionFeedGroup({
 
   return (
     <section className="pb-space-3 last:pb-0">
-      <div className={TIMELINE_STYLES.groupHeader}>
-        <div className={TIMELINE_STYLES.groupDivider} />
-        <span className={TIMELINE_STYLES.groupLabel}>
+      <div className={COMMAND_CENTER_FEED_STYLES.groupHeader}>
+        <div className={COMMAND_CENTER_FEED_STYLES.groupDivider} />
+        <span className={COMMAND_CENTER_FEED_STYLES.groupLabel}>
           {config.groupLabel}
           <span className="ml-space-1.5 tabular-nums text-text-tertiary">({items.length})</span>
         </span>
-        <div className={TIMELINE_STYLES.groupDivider} />
+        <div className={COMMAND_CENTER_FEED_STYLES.groupDivider} />
       </div>
       <ul className="space-y-space-1">
         {items.map(item => (

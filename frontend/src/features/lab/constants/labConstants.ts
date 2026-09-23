@@ -92,10 +92,6 @@ export const LAB_CONFIG = {
   PARAMETER_PREVIEW_LIMIT: 5,
   /** Tab badge / worklist poll interval */
   TAB_COUNT_REFRESH_MS: 30_000,
-  /** Command center timeline poll interval */
-  COMMAND_CENTER_REFETCH_MS: 60_000,
-  /** Command center query stale window (half of refetch interval) */
-  COMMAND_CENTER_STALE_MS: 30_000,
   COMPACT_RESULT_GRID_LIMIT: 8,
   POPOVER_OFFSET: 8,
   MODAL_SIZE_DEFAULT: '3xl' as const,

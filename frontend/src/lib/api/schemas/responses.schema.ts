@@ -41,27 +41,6 @@ export const operationResponseSchema = z.object({
   message: z.string(),
 });
 
-export const timelineEventSchema = z.object({
-  id: z.number(),
-  type: z.string(),
-  category: z.string().optional(),
-  tone: z.string().optional(),
-  entityType: z.string(),
-  entityId: z.number(),
-  timestamp: z.string(),
-  performedBy: z.string(),
-  performedByName: z.string().nullable(),
-  metadata: z.record(z.string(), z.unknown()),
-  beforeState: z.record(z.string(), z.unknown()).nullable().optional(),
-  afterState: z.record(z.string(), z.unknown()).nullable().optional(),
-  comment: z.string().nullable().optional(),
-});
-
-export const timelineResponseSchema = z.object({
-  events: z.array(timelineEventSchema),
-  total: z.number(),
-});
-
 export function parseApiResponse<T>(schema: z.ZodType<T>, data: unknown, label: string): T {
   const result = schema.safeParse(data);
   if (!result.success) {

@@ -4,7 +4,7 @@ from datetime import UTC, datetime, timedelta
 from app.models.lab_audit import LabOperationLog
 from app.schemas.audit import LabOperationLogResponse
 from app.schemas.enums import LabOperationType
-from app.services.timeline import TimelineFormatter
+from app.services.audit.user_names import build_performer_name_map
 from sqlalchemy import desc, func
 from sqlalchemy.orm import Session
 
@@ -12,7 +12,6 @@ from sqlalchemy.orm import Session
 class AuditQueryService:
     def __init__(self, db: Session):
         self.db = db
-        self._formatter = TimelineFormatter(db)
 
     def list_logs(
         self,
@@ -30,7 +29,7 @@ class AuditQueryService:
         if entity_type:
             query = query.filter(LabOperationLog.entityType == entity_type)
         logs = query.order_by(desc(LabOperationLog.performedAt)).offset(offset).limit(limit).all()
-        user_map = self._formatter.build_user_map(logs)
+        user_map = build_performer_name_map(self.db, logs)
         return [
             LabOperationLogResponse(
                 id=log.id,

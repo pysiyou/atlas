@@ -3,7 +3,10 @@
  */
 
 import React, { useMemo } from 'react';
-import { DataTable, EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components';
+import { EMPTY_COPY } from '@/components/display/emptyStateCopy';
+import { EmptyState } from '@/components/display/EmptyState';
+import { PANEL_EMPTY_STATE } from '@/components/display/emptyStatePresets';
+import { DataTable } from '@/components/data-table';
 import type { Order } from '@/types/order';
 import { useTestNameLookup } from '@/features/catalog';
 import { createPatientRelatedOrdersTableConfig } from '../config/PatientOrdersTable.config';

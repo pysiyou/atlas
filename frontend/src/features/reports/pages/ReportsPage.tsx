@@ -5,7 +5,8 @@
 
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { ReportList, ReportDetail } from '@/features/reports';
+import { ReportList } from './ReportList';
+import { ReportDetail } from './ReportDetail';
 
 /**
  * Reports Page Component

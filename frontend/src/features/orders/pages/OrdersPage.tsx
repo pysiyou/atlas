@@ -5,7 +5,8 @@
 
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { OrderList, OrderDetail } from '@/features/orders';
+import { OrderList } from './OrderList';
+import { OrderDetail } from './OrderDetail';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 
 export const Orders: React.FC = () => {

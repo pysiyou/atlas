@@ -1,4 +1,4 @@
-"""Context for physical sample rejection (audit / timeline)."""
+"""Context for physical sample rejection (audit)."""
 
 from dataclasses import dataclass
 
