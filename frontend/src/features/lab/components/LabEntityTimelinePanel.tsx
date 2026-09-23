@@ -56,6 +56,7 @@ export const LabEntityTimelinePanel: React.FC<LabEntityTimelinePanelProps> = ({
           events={data?.events ?? []}
           interactiveEntities
           showRetestDividers={false}
+          emptyVisual="textOnly"
           emptyMessage={EMPTY_COPY.recentActivity.title}
           emptyDescription={EMPTY_COPY.recentActivity.description}
           className="max-h-80 px-space-3 py-space-1"

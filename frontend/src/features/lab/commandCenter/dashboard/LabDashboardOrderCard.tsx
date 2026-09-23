@@ -12,6 +12,7 @@ import {
 import { BlockedReasonBadge } from '@/features/lab';
 import { formatDateTime, displayId } from '@/utils';
 import { DASHBOARD_TWO_LINE } from '../dashboardStyles';
+import { TYPE } from '@/components/theme/recipes';
 import type { LabDashboardOrderRow } from './dashboardOrders';
 
 export function LabDashboardOrderCard({
@@ -25,7 +26,7 @@ export function LabDashboardOrderCard({
           <div className="min-w-0">
             <div className={DASHBOARD_TWO_LINE.primary}>{item.testName}</div>
             <div className={DASHBOARD_TWO_LINE.mrn}>{item.testCode}</div>
-            <div className={DASHBOARD_TWO_LINE.secondary}>
+            <div className={DASHBOARD_TWO_LINE.primary}>
               {item.patientName}
               <span className={DASHBOARD_TWO_LINE.mrn}>
                 {' '}
@@ -49,7 +50,7 @@ export function LabDashboardOrderCard({
           <LabDepartmentBadge department={item.department} size="xs" className="border-none" />
         ) : null}
       </div>
-      <div className={`${DASHBOARD_TWO_LINE.secondary} mt-auto pt-space-3`}>
+      <div className={`${TYPE.value} font-normal mt-auto pt-space-3`}>
         {formatDateTime(item.date)}
       </div>
     </MobileEntityCard>

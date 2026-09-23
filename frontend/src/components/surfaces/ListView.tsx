@@ -5,7 +5,7 @@
 import { type ReactNode } from 'react';
 import { DataTable, type TableViewConfig } from '@/components/data-table';
 import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components/data-table';
-import { EmptyState, PageHeader } from '@/components';
+import { EmptyState, PageHeader, PANEL_EMPTY_STATE } from '@/components';
 import { ErrorAlert } from '@/components/loaders/ErrorAlert';
 import { emptyTitle } from '@/components/display/emptyStateCopy';
 import { DEFAULT_EMPTY_DESCRIPTION_SEARCH } from '@/utils/constants';
@@ -41,6 +41,7 @@ function renderDefaultEmptyState(title: string | undefined, emptyState: ReactNod
   return (
     emptyState || (
       <EmptyState
+        {...PANEL_EMPTY_STATE}
         title={emptyTitle(`matching ${(title || 'items').toLowerCase()}`)}
         description={DEFAULT_EMPTY_DESCRIPTION_SEARCH}
       />

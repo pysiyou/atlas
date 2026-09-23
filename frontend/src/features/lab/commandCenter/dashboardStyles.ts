@@ -14,16 +14,16 @@ export const DASHBOARD_BOTTOM_PANEL = 'min-h-72 overflow-hidden lg:min-h-0 lg:h-
 export const DASHBOARD_TABLE_WRAP = 'flex min-h-80 flex-1 flex-col lg:min-h-0' as const;
 
 export const DASHBOARD_TWO_LINE = {
-  primary: `truncate ${TYPE.label}`,
+  primary: `truncate ${TYPE.value} font-normal`,
   secondary: `${TYPE.meta} truncate`,
-  mrn: `${TYPE.caption} truncate uppercase tracking-wide`,
+  /** Subline codes, MRN, time — matches orders test identity subline. */
+  mrn: 'text-xxs text-text-secondary truncate uppercase tracking-wide',
 } as const;
 
 export const DASHBOARD_ROW_INTERACTIVE = `cursor-pointer ${CONTROL.focusVisibleFlat}` as const;
 
 export const TODAY_PANEL = {
   body: 'flex min-h-0 flex-1 flex-col justify-center overflow-hidden px-space-3 py-space-2',
-  emptyHint: `${TYPE.caption} text-center text-text-tertiary py-space-1`,
 } as const;
 
 export const TODAY_STEP_CHART = {

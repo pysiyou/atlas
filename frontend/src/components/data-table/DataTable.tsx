@@ -35,6 +35,7 @@ export function DataTable<T = Record<string, unknown>>({
   emptyMessage,
   emptyDescription,
   emptyIcon,
+  emptyVariant,
   caption,
   ariaLabel,
 }: TableProps<T>) {
@@ -110,6 +111,7 @@ export function DataTable<T = Record<string, unknown>>({
             emptyMessage={emptyMessage}
             emptyDescription={emptyDescription}
             emptyIcon={emptyIcon}
+            emptyVariant={emptyVariant}
             totalItems={totalItems}
           />
           </div>
@@ -154,6 +156,7 @@ export function DataTable<T = Record<string, unknown>>({
         emptyMessage={emptyMessage}
         emptyDescription={emptyDescription}
         emptyIcon={emptyIcon}
+        emptyVariant={emptyVariant}
         caption={caption}
         ariaLabel={ariaLabel}
         totalItems={totalItems}

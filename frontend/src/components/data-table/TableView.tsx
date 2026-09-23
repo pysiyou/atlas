@@ -4,6 +4,7 @@
 
 import { type ReactNode } from 'react';
 import { EmptyState, type IconName } from '@/components';
+import { PANEL_EMPTY_STATE, DASHBOARD_EMPTY_STATE } from '@/components/display/emptyStatePresets';
 import { DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';
 import type { ColumnConfig, SortConfig, TableVariant } from './types';
 import { PANEL } from '@/components/theme/recipes';
@@ -29,6 +30,7 @@ export interface TableViewProps<T> {
   emptyMessage?: ReactNode;
   emptyDescription?: string;
   emptyIcon?: string;
+  emptyVariant?: 'compact' | 'dense';
   caption?: string;
   ariaLabel?: string;
   totalItems?: number;
@@ -54,6 +56,7 @@ export function TableView<T>({
   emptyMessage,
   emptyDescription,
   emptyIcon,
+  emptyVariant = 'compact',
   caption,
   ariaLabel,
   totalItems,
@@ -84,28 +87,28 @@ export function TableView<T>({
   }
 
   if (data.length === 0) {
+    const emptyPreset = emptyVariant === 'dense' ? DASHBOARD_EMPTY_STATE : PANEL_EMPTY_STATE;
+    const emptyMinHeight = emptyVariant === 'dense' ? 'min-h-[9rem]' : 'min-h-[12rem]';
     const emptyContent =
       typeof emptyMessage === 'string' ? (
         <EmptyState
-          variant="compact"
-          fill
-          icon={emptyIcon as IconName | undefined}
+          {...emptyPreset}
+          icon={(emptyIcon as IconName | undefined) ?? emptyPreset.icon}
           title={emptyMessage}
           description={emptyDescription ?? DEFAULT_EMPTY_DESCRIPTION}
         />
       ) : (
         (emptyMessage ?? (
           <EmptyState
-            variant="compact"
-            fill
-            icon={emptyIcon as IconName | undefined}
+            {...emptyPreset}
+            icon={(emptyIcon as IconName | undefined) ?? emptyPreset.icon}
             title={DEFAULT_EMPTY_TITLE}
             description={emptyDescription ?? DEFAULT_EMPTY_DESCRIPTION}
           />
         ))
       );
     return (
-      <div className={`${containerClasses} flex flex-1 items-center justify-center min-h-[12rem]`}>
+      <div className={`${containerClasses} flex flex-1 items-center justify-center ${emptyMinHeight}`}>
         {emptyContent}
       </div>
     );

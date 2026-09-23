@@ -4,8 +4,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EMPTY_COPY } from '@/components/display/emptyStateCopy';
-import { EmptyState } from '@/components/display/EmptyState';
-import { PANEL_EMPTY_STATE } from '@/components/display/emptyStatePresets';
 import { DataTable } from '@/components/data-table';
 import { Panel } from '@/components/surfaces/Panel';
 import { DASHBOARD_ROW_INTERACTIVE } from '../dashboardStyles';
@@ -14,14 +12,6 @@ import { createLabDashboardOrdersTableConfig } from './LabDashboardOrdersTable.c
 import { useLabDashboardOrders } from './useLabDashboardOrders';
 
 const viewConfig = createLabDashboardOrdersTableConfig();
-
-const EMPTY_MESSAGE = (
-  <EmptyState
-    {...PANEL_EMPTY_STATE}
-    title={EMPTY_COPY.dashboardWorklist.title}
-    description={EMPTY_COPY.dashboardWorklist.description}
-  />
-);
 
 export const LabDashboardOrdersTable: React.FC = () => {
   const navigate = useNavigate();
@@ -39,7 +29,9 @@ export const LabDashboardOrdersTable: React.FC = () => {
         getRowKey={row => row.id}
         onRowClick={row => navigate(row.href)}
         rowClassName={() => DASHBOARD_ROW_INTERACTIVE}
-        emptyMessage={EMPTY_MESSAGE}
+        emptyMessage={EMPTY_COPY.dashboardWorklist.title}
+        emptyDescription={EMPTY_COPY.dashboardWorklist.description}
+        emptyVariant="dense"
         ariaLabel="Today's laboratory work"
       />
     </Panel>

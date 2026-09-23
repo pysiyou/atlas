@@ -4,9 +4,9 @@
  */
 
 import React from 'react';
-import { EmptyState, Panel } from '@/components';
+import { EmptyState, Panel, PANEL_EMPTY_STATE } from '@/components';
 import { TABLE_CELL } from '@/components/theme/recipes';
-import { DETAIL_TABLE_LABEL, DETAIL_VALUE, DEFAULT_EMPTY_TITLE } from '@/utils/constants';
+import { DETAIL_TABLE_LABEL, DETAIL_VALUE, DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';
 import { filterDetailRows, type DetailTableRow } from './detailsTableUtils';
 
 /** Re-export for consumers */
@@ -47,7 +47,11 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
           {filteredRows.length === 0 && (
             <tr>
               <td colSpan={2} className="px-space-4 py-space-4">
-                <EmptyState variant="compact" title={DEFAULT_EMPTY_TITLE} />
+                <EmptyState
+                  {...PANEL_EMPTY_STATE}
+                  title={DEFAULT_EMPTY_TITLE}
+                  description={DEFAULT_EMPTY_DESCRIPTION}
+                />
               </td>
             </tr>
           )}

@@ -3,7 +3,7 @@
  */
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { EmptyState, EMPTY_COPY, EntityId, PANEL_EMPTY_STATE } from '@/components';
+import { EmptyState, EMPTY_COPY, EntityId, DASHBOARD_EMPTY_STATE, DASHBOARD_EMPTY_STATE_TEXT, MODAL_EMPTY_STATE, PANEL_EMPTY_STATE } from '@/components';
 import { cn, formatRelativeDateLabel, formatRelativeDateTime } from '@/utils';
 import type { TimelineEvent } from '@/features/lab';
 import { useOpenHistoricalLabRecord } from '@/features/lab';
@@ -32,6 +32,9 @@ export interface TimelineProps {
   showRetestDividers?: boolean;
   emptyMessage?: string;
   emptyDescription?: string;
+  /** Tables use icon + copy; panels/modals use title + description only. */
+  emptyVisual?: 'withIcon' | 'textOnly';
+  emptyVariant?: 'compact' | 'dense';
   className?: string;
   footer?: React.ReactNode;
 }
@@ -173,6 +176,8 @@ export const Timeline: React.FC<TimelineProps> = ({
   showRetestDividers,
   emptyMessage = EMPTY_COPY.recordedActions.title,
   emptyDescription = EMPTY_COPY.recordedActions.description,
+  emptyVisual = 'withIcon',
+  emptyVariant = 'compact',
   className,
   footer,
 }) => {
@@ -211,10 +216,18 @@ export const Timeline: React.FC<TimelineProps> = ({
   }, [visibleEvents, retestDividers]);
 
   if (visibleEvents.length === 0) {
+    const emptyPreset =
+      emptyVariant === 'dense'
+        ? emptyVisual === 'textOnly'
+          ? DASHBOARD_EMPTY_STATE_TEXT
+          : DASHBOARD_EMPTY_STATE
+        : emptyVisual === 'textOnly'
+          ? MODAL_EMPTY_STATE
+          : PANEL_EMPTY_STATE;
     return (
       <div className={cn('flex min-h-0 flex-col bg-transparent', className ?? 'max-h-80')}>
         <EmptyState
-          {...PANEL_EMPTY_STATE}
+          {...emptyPreset}
           title={emptyMessage}
           description={emptyDescription}
         />

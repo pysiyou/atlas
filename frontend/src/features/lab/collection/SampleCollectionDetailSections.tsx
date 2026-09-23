@@ -221,15 +221,18 @@ export const SampleCollectionDetailContent: React.FC<CollectionDetailContentProp
           {testNames.map((testName, i) => {
             const testCode = testCodes[i];
             const test = testCode ? getTest(testCode) : undefined;
+            const tatHours = test?.turnaroundTime;
+            const showTat =
+              typeof tatHours === 'number' && Number.isFinite(tatHours) && tatHours > 0;
             return (
               <li key={testCode || i} className={`flex items-center ${TYPE.label}`}>
                 <span className={`w-1.5 h-1.5 ${RADIUS.pill} bg-text-muted mr-space-2`} />
                 <span className="font-normal mr-space-1">{testName}</span>
                 <EntityId variant="inline" className="mr-space-2">{testCode}</EntityId>
-                {test?.turnaroundTime && (
+                {showTat && (
                   <span className="text-text-disabled flex items-center gap-space-1">
                     <Icon name={ICONS.dataFields.time} className="w-2.5 h-2.5" />
-                    {test.turnaroundTime}h
+                    {tatHours}h
                   </span>
                 )}
               </li>

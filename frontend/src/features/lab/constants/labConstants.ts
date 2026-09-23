@@ -54,9 +54,6 @@ export const LAB_COPY = {
     activityTitle: 'Activity log',
     activityMeta: 'Last 24 hours · chronological record of accession and laboratory events',
   },
-  dashboard: {
-    todayPanelMetaEmpty: 'No tests on today\u2019s accessions to measure step times yet',
-  },
 } as const;
 
 export function labStageLabel(

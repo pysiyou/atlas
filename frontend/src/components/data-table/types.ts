@@ -83,6 +83,8 @@ export interface TableProps<T> {
   emptyDescription?: string;
   /** Passed to EmptyState when set */
   emptyIcon?: string;
+  /** EmptyState sizing when emptyMessage is a string */
+  emptyVariant?: 'compact' | 'dense';
   caption?: string;
   ariaLabel?: string;
 }

@@ -1,7 +1,7 @@
 import { ResultValidationCard } from './ResultValidationCard';
 import { EscalationCard } from './EscalationCard';
 import { LabValidationQueueSection } from '../components/LabValidationQueueSection';
-import { EmptyState, EMPTY_COPY } from '@/components';
+import { EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components';
 import type { TestWithContext } from '@/types';
 import type { RecollectionRequestSummary, QualityIssueResult } from '@/types/lab-operations';
 import { SampleRecollectionRequestCard } from './SampleRecollectionRequestCard';
@@ -58,7 +58,7 @@ export function ResultValidationQueueView({
   if (isEmpty) {
     return (
       <EmptyState
-        fill
+        {...PANEL_EMPTY_STATE}
         title={EMPTY_COPY.pendingValidation.title}
         description={EMPTY_COPY.pendingValidation.description}
       />
