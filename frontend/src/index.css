@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+@source './components/theme/recipes.ts';
+
 @theme {
   --text-3xs: var(--font-size-3xs);
   --text-2xs: var(--font-size-2xs);

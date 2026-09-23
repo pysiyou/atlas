@@ -6,8 +6,8 @@
 export const TYPE = {
   pageTitle: 'text-lg font-light text-text-primary',
   detailTitle: 'text-sm font-medium text-text-primary',
-  /** 40px page-panel header — sm + light, not the list pageTitle. */
-  panelTitle: 'text-sm font-light text-text-primary',
+  /** In-page panel header — xs scale, lighter than pageTitle. */
+  panelTitle: 'text-xs font-light text-text-primary',
   modalTitle: 'text-base font-medium text-text-primary',
   sectionTitle: 'text-xxs font-medium uppercase tracking-wide text-text-secondary',
   label: 'text-xs text-text-secondary',
@@ -17,14 +17,57 @@ export const TYPE = {
   caption: 'text-xxs text-text-tertiary',
 } as const;
 
-/** Data table cells, headers, and list pagination — base type scale step. */
+/** Body cell scale for DataTable rows — change once to resize table body text. */
+const TABLE_TEXT_SCALE = 'text-base';
+
+/** Column header font — CSS var so size applies even when utilities are composed in recipes. */
+const TABLE_HEADER_FONT = '[font-size:var(--font-size-xxs)]';
+
+/** Data table cells, headers, and list pagination. */
 export const TABLE_TYPE = {
-  cell: 'text-base text-text-primary',
-  secondary: 'text-base text-text-secondary',
+  /** Type scale step for body cells — matches `--font-size-base`. */
+  size: TABLE_TEXT_SCALE,
+  /** Column header label (DataTable `TableHeader` — apply on each column cell / label). */
+  columnTitle: `${TABLE_HEADER_FONT} font-normal text-text-tertiary uppercase tracking-wider`,
+  columnTitleActive: 'text-text-primary bg-surface-selected',
+  columnTitleSortable: 'cursor-pointer hover:bg-surface-hover select-none',
+  cell: `${TABLE_TEXT_SCALE} text-text-primary`,
+  secondary: `${TABLE_TEXT_SCALE} text-text-secondary`,
+  meta: `${TABLE_TEXT_SCALE} text-text-tertiary`,
+  amount: `${TABLE_TEXT_SCALE} text-text-primary`,
+  label: `${TABLE_TEXT_SCALE} text-text-secondary`,
+  caption: `${TABLE_TEXT_SCALE} text-text-tertiary`,
+  link: `${TABLE_TEXT_SCALE} text-brand underline`,
+} as const;
+
+/** DataTable shell layout — pairs with TABLE_TYPE + TABLE_CELL padding. */
+export const TABLE_SHELL = {
+  headerRow:
+    'grid w-full min-w-full items-stretch border-b border-border-default bg-surface-table-header',
+  headerRowSticky: 'sticky top-0 z-10',
+  headerCell: 'flex min-w-0 items-center gap-space-2 whitespace-nowrap',
+  bodyCell: 'min-w-0 overflow-hidden flex items-center',
+  row: 'grid w-full min-w-full items-center border-b border-border-default transition-colors duration-200',
+  rowClickable: 'cursor-pointer hover:bg-surface-hover',
+  rowStripedEven: 'bg-surface',
+  rowStripedOdd: 'bg-surface-hover/50',
+} as const;
+
+/**
+ * Detail pages, panels, receipts, and key-value blocks — not forms, not data tables.
+ * Prefer over TYPE for DetailField, DetailGroup, and detail sections.
+ */
+export const DETAIL_TYPE = {
+  value: 'text-base text-text-primary',
+  label: 'text-base text-text-secondary',
   meta: 'text-base text-text-tertiary',
   amount: 'text-base text-text-primary',
-  label: 'text-base text-text-secondary',
-  caption: 'text-base text-text-tertiary',
+  title: 'text-sm font-medium text-text-primary',
+  subtitle: 'text-base text-text-tertiary',
+  /** Larger section headings — use when promoting group labels to base scale. */
+  sectionTitle: 'text-base font-medium uppercase tracking-wide text-text-secondary',
+  /** Default for DetailGroup + DetailsTable row labels until hierarchy pass picks one token. */
+  sectionTitleCompact: 'text-xxs font-medium uppercase tracking-wide text-text-secondary',
   link: 'text-base text-brand underline',
 } as const;
 

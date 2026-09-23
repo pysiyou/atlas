@@ -1,7 +1,7 @@
 import type { SampleRequirement } from './labSample';
 import { PRIORITY_LEVEL_VALUES } from '@/types';
 import { differenceInHours, parseISO, isValid } from 'date-fns';
-import { LAB_CONFIG } from '@/features/lab/constants/labConstants';
+import { LAB_CONFIG } from '../constants/labConstants';
 import type {
   OrderTest,
   PaymentStatus,

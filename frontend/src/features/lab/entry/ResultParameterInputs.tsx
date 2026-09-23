@@ -9,7 +9,7 @@ import { inputTrigger, inputTriggerOpen, inputBase, inputError } from '@/compone
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 import type { TestParameter } from '@/types';
-import { validatePhysiologicValue, getPhysiologicLimit } from '@/features/lab/utils';
+import { validatePhysiologicValue, getPhysiologicLimit } from '../utils';
 import { titleCaseWords } from '@/utils/string';
 import { RadioCard } from '@/components';
 

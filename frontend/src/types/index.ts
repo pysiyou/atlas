@@ -41,4 +41,7 @@ export type {
   TestWithContext,
 } from './test';
 export type { Payment, PaymentMethod, Invoice } from './payments';
-// SampleCollectionQueueItem is a lab feature type; import from @/features/lab/types
+export type {
+  SampleCollectionQueueItem,
+  SampleCollectionRequirement,
+} from './lab-operations';

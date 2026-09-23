@@ -6,7 +6,7 @@
 import type { ModalType } from './ModalContext';
 import type { Order, Test, TestWithContext, ContainerType } from '@/types';
 import type { QualityIssueResult } from '@/types/lab-operations';
-import type { SampleCollectionQueueItem } from '@/features/lab/types';
+import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 
 /** Props every registered modal receives from ModalRenderer. */
 export interface BaseModalProps {

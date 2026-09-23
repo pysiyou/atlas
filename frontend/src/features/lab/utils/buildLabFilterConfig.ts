@@ -5,7 +5,7 @@
 import type { FilterConfig, FilterControl } from '@/components/filters';
 import { SHARED_FILTER_PLACEHOLDERS } from '@/components/filters';
 import { ICONS, MODULE_ICONS } from '@/config/icons';
-import { LAB_CONFIG } from '@/features/lab/constants';
+import { LAB_CONFIG } from '../constants';
 import { SAMPLE_TYPE_VALUES, SAMPLE_TYPE_CONFIG } from '@/types';
 import type { FilterOption } from '@/utils/filtering';
 

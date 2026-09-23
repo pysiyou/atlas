@@ -8,7 +8,7 @@ import type { PriorityLevel } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/app/authStore';
 import { queryKeys, cacheConfig } from '@/lib/query';
-import { LAB_CONFIG } from '@/features/lab/constants';
+import { LAB_CONFIG } from '../constants';
 
 export type { TimelineEvent, TimelineResponse };
 

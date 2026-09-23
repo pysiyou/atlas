@@ -5,8 +5,8 @@
 import React, { useMemo, useState } from 'react';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
-import { useLabQueueFilters, useLabQueueUrlSearch } from '@/features/lab/hooks';
-import type { SampleCollectionQueueItem } from '@/features/lab/types';
+import { useLabQueueFilters, useLabQueueUrlSearch } from '../hooks';
+import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { LAB_CONFIG } from '../constants';
 import { useCollectSample } from '../api/samples';
 import { useCollectionWorklist } from '../api/worklists';

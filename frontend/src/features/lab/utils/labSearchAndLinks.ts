@@ -2,7 +2,7 @@
 import type { TestWithContext, OrderTest } from '@/types';
 import { displayId } from '@/utils';
 import type { TestStatus } from '@/types/enums';
-import { getLabQueueUrl, getLabTabForTestStatus, type LabTabId } from '@/features/lab/constants/labConstants';
+import { getLabQueueUrl, getLabTabForTestStatus, type LabTabId } from '../constants/labConstants';
 
 export function orderTestKey(orderTestId: number): string {
   return `test-${orderTestId}`;

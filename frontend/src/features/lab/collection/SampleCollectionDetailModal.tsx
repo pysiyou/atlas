@@ -31,7 +31,7 @@ import { useSampleLookup } from '../api/samples';
 import { getTestNames } from '@/features/catalog/testLookup';
 import { LabEntityTimelinePanel } from '../components/LabEntityTimelinePanel';
 import { actionButtonPreset, Button, EntityId } from '@/components';
-import type { SampleCollectionQueueItem } from '@/features/lab/types';
+import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 
 interface CollectionDetailModalProps {
   isOpen: boolean;

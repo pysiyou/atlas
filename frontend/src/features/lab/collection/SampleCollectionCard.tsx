@@ -10,7 +10,7 @@ import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { useTestCatalog } from '@/features/catalog';
 import { usePatientNameLookup } from '@/features/patients';
 import { getTestNames } from '@/features/catalog/testLookup';
-import { useLabWorkflowCardClickGuard } from '@/features/lab/hooks';
+import { useLabWorkflowCardClickGuard } from '../hooks';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
 import { LabWorkflowCardShell, TestList } from '../components/LabWorkflowCardShell';
 import { CollectionHeaderBadges } from '../components/LabWorkflowBadges';
@@ -22,7 +22,7 @@ import { SampleRejectionPopover } from './SampleRejectionPopover';
 import { printSampleCollectionLabel, getEffectiveContainerType } from '../utils';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import type { ContainerType, Sample, RejectedSample } from '@/types';
-import type { SampleCollectionQueueItem, SampleRequirement } from '@/features/lab/types';
+import type { SampleCollectionQueueItem, SampleRequirement } from '@/types/lab-operations';
 
 export interface CollectionCardProps {
   display: SampleCollectionQueueItem;

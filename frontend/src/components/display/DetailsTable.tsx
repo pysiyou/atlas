@@ -5,8 +5,8 @@
 
 import React from 'react';
 import { EmptyState, Panel, PANEL_EMPTY_STATE } from '@/components';
-import { TABLE_CELL } from '@/components/theme/recipes';
-import { DETAIL_TABLE_LABEL, DETAIL_VALUE, DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';
+import { DETAIL_TYPE, TABLE_CELL } from '@/components/theme/recipes';
+import { DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';
 import { filterDetailRows, type DetailTableRow } from './detailsTableUtils';
 
 /** Re-export for consumers */
@@ -37,10 +37,10 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
               className="border-b border-border-subtle last:border-b-0"
             >
               <td className={`${TABLE_CELL.default} align-top w-2/5`}>
-                <span className={`block ${DETAIL_TABLE_LABEL}`}>{row.label}</span>
+                <span className={`block ${DETAIL_TYPE.sectionTitleCompact}`}>{row.label}</span>
               </td>
               <td className={`${TABLE_CELL.default} align-top w-3/5`}>
-                <div className={`break-words ${DETAIL_VALUE}`}>{row.value}</div>
+                <div className={`break-words ${DETAIL_TYPE.value}`}>{row.value}</div>
               </td>
             </tr>
           ))}

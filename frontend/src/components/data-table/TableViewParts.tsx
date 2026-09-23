@@ -12,7 +12,9 @@ import type {
   TableHeaderProps,
   TableSkeletonProps,
 } from './types';
-import { CELL_PADDING, HEADER_PADDING, ROW_HEIGHTS, TEXT_SIZE } from './constants';
+import { TABLE_SHELL, TABLE_TYPE } from '@/components/theme/recipes';
+import { cn } from '@/utils';
+import { CELL_PADDING, HEADER_PADDING, ROW_HEIGHTS } from './constants';
 
 export function TableHeader<T>({
   visibleColumns,
@@ -24,7 +26,7 @@ export function TableHeader<T>({
   const gridTemplateColumns = useGridTemplateColumns(visibleColumns);
   return (
     <div
-      className={`grid w-full min-w-full items-stretch border-b border-border-default bg-surface-table-header ${TEXT_SIZE[variant]} text-text-tertiary uppercase tracking-wider ${sticky ? 'sticky top-0 z-10' : ''}`}
+      className={cn(TABLE_SHELL.headerRow, sticky && TABLE_SHELL.headerRowSticky)}
       style={{ gridTemplateColumns }}
       role="row"
     >
@@ -41,7 +43,15 @@ export function TableHeader<T>({
           <div
             key={column.key}
             role="columnheader"
-            className={`${HEADER_PADDING[variant]} ${TEXT_SIZE[variant]} flex min-w-0 items-center gap-space-2 whitespace-nowrap ${headerAlignClass} ${isSortable ? 'cursor-pointer hover:bg-surface-hover select-none' : ''} ${isActiveSort ? 'text-text-primary bg-surface-selected' : ''} ${column.headerClassName || ''}`.trim()}
+            className={cn(
+              HEADER_PADDING[variant],
+              TABLE_SHELL.headerCell,
+              TABLE_TYPE.columnTitle,
+              headerAlignClass,
+              isSortable && TABLE_TYPE.columnTitleSortable,
+              isActiveSort && TABLE_TYPE.columnTitleActive,
+              column.headerClassName,
+            )}
             onClick={() => isSortable && onSort(column.key)}
             aria-sort={
               isActiveSort
@@ -85,7 +95,15 @@ export function TableCell({ column, children, variant }: TableCellProps) {
   const contentClass = column.truncate ? 'truncate' : '';
   return (
     <div
-      className={`${CELL_PADDING[variant]} ${TEXT_SIZE[variant]} text-text-primary min-w-0 overflow-hidden flex items-center ${alignClass} ${contentClass} ${stickyClass} ${column.className || ''}`.trim()}
+      className={cn(
+        CELL_PADDING[variant],
+        TABLE_TYPE.cell,
+        TABLE_SHELL.bodyCell,
+        alignClass,
+        contentClass,
+        stickyClass,
+        column.className,
+      )}
       role="cell"
     >
       <div className={`min-w-0 flex-1 flex items-center ${innerJustifyClass}`}>{children}</div>
@@ -94,11 +112,10 @@ export function TableCell({ column, children, variant }: TableCellProps) {
 }
 
 const tableRow = {
-  base: 'grid w-full min-w-full items-center border-b border-border-default transition-colors duration-200',
-  clickable: 'cursor-pointer',
-  hover: 'hover:bg-surface-hover',
-  stripedEven: 'bg-surface',
-  stripedOdd: 'bg-surface-hover/50',
+  base: TABLE_SHELL.row,
+  clickable: TABLE_SHELL.rowClickable,
+  stripedEven: TABLE_SHELL.rowStripedEven,
+  stripedOdd: TABLE_SHELL.rowStripedOdd,
 };
 
 export function TableRow<T>({
@@ -127,7 +144,7 @@ export function TableRow<T>({
           <div
             key={rowKey}
             role="row"
-            className={`${tableRow.base} ${isClickable ? `${tableRow.clickable} ${tableRow.hover}` : ''} ${stripeClass} ${customRowClass}`}
+            className={cn(tableRow.base, isClickable && tableRow.clickable, stripeClass, customRowClass)}
             style={{ gridTemplateColumns, height: `${ROW_HEIGHTS[variant]}px` }}
             onClick={() => onRowClick?.(item, index)}
           >
@@ -160,7 +177,7 @@ export function TableSkeleton<T = unknown>({ columns, rows, variant }: TableSkel
       {Array.from({ length: rows }).map((_, rowIndex) => (
         <div
           key={rowIndex}
-          className="grid w-full min-w-full items-center border-b border-border-default"
+          className={TABLE_SHELL.row}
           style={{ gridTemplateColumns, height: `${ROW_HEIGHTS[variant]}px` }}
         >
           {columns.map(column => {
@@ -168,7 +185,7 @@ export function TableSkeleton<T = unknown>({ columns, rows, variant }: TableSkel
             return (
               <div
                 key={column.key}
-                className={`${CELL_PADDING[variant]} ${TEXT_SIZE[variant]} min-w-0`}
+                className={cn(CELL_PADDING[variant], TABLE_TYPE.cell, 'min-w-0')}
               >
                 <Skeleton height={16} width={skeletonWidth} />
               </div>

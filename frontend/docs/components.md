@@ -45,8 +45,27 @@ Feature code opens modals via **`useModal().openModal(...)`**, not by importing 
 
 ## Design tokens
 
-- Use **`RADIUS`**, **`TYPE`**, **`TONE`**, **`CONTROL`**, **`PANEL`**, **`WORKSPACE`** from `@/components/theme/recipes`—not arbitrary `rounded-[…]` or `text-[Npx]`.
+- Use **`RADIUS`**, **`TONE`**, **`CONTROL`**, **`PANEL`**, **`WORKSPACE`** from `@/components/theme/recipes`—not arbitrary `rounded-[…]` or `text-[Npx]`.
+
+### Type roles (`recipes.ts`)
+
+| Object | Use for | Do not use for |
+|--------|---------|----------------|
+| **`TYPE`** | Forms, filters, modals, page chrome, empty states | Table cells, detail panels |
+| **`TABLE_TYPE`** | `DataTable`, pagination, `*Table.config.tsx`, table column renders | `DetailField`, form inputs |
+| **`DETAIL_TYPE`** | `DetailField`, `DetailGroup`, `DetailsTable`, detail sections | Form inputs, table body cells |
+
+- Table density: **`TABLE_TYPE.size`** (scale), **`TABLE_TYPE.columnTitle`** (column headers), **`TABLE_TYPE.cell`** (body); shell layout **`TABLE_SHELL`** in `recipes.ts`. Padding: **`TABLE_CELL`** + `data-table/constants.ts`.
+- Detail aliases in `@/utils/constants` (`DETAIL_LABEL`, `DETAIL_VALUE`, …) re-export **`DETAIL_TYPE`** for ergonomics.
+- **Global font scale:** edit `--font-size-*` in `components/theme/tokens/primitives.css` (`--font-size-base` is the document default on `body`).
+- **Exceptions:** compact print-style UIs (e.g. **`OrderReceipt`** compact/panel variants) may keep `text-xs` / `TYPE.caption` for density; detailed receipt line items use **`DETAIL_TYPE`** where noted in code.
 - Lab command center reference: **`commandCenterStyles.ts`** / **`dashboardStyles.ts`** (`TYPE` / `TONE`).
+
+### Detail pages
+
+- Shell: **`DetailPageShell`** + **`PageHeader`** (`components/layout`).
+- Feature layouts: `*DetailLayouts.tsx`; loading: `config/*DetailSkeleton*`.
+- Fields: **`DetailField`**, **`DetailGroup`**, **`DetailsTable`** (`components/display`).
 
 ## Deprecated patterns (avoid in new code)
 

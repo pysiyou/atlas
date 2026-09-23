@@ -7,7 +7,7 @@ import type { ContainerType, Sample, RejectedSample, Order } from '@/types';
 import { SampleCollectionPopover } from './SampleCollectionPopover';
 import { SampleRejectionPopover } from './SampleRejectionPopover';
 import { ModalFooter } from '../components/LabWorkflowDetailModal';
-import type { SampleCollectionQueueItem } from '@/features/lab/types';
+import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { getSampleStatusIcon } from '@/config/icons';
 import { LAB_COPY } from '../constants/labConstants';
 

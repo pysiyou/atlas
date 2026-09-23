@@ -9,7 +9,7 @@ import {
   formatVolume,
   getCollectionRequirements,
   getContainerIconColor,
-} from '@/features/lab/utils';
+} from '../utils';
 import { getContainerIcon, ICONS } from '@/config/icons';
 import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 import {

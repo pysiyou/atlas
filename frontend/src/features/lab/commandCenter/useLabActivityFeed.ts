@@ -4,7 +4,7 @@
 import { useCallback, useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query/keys';
-import { LAB_CONFIG } from '@/features/lab/constants';
+import { LAB_CONFIG } from '../constants';
 import { labCommandCenterAPI } from '../api/labCommandCenter';
 import type { TimelineCategory } from '@/features/timeline';
 

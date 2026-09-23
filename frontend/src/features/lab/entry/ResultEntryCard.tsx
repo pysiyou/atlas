@@ -6,7 +6,7 @@ import React, { useMemo } from 'react';
 import { actionButtonPreset, Badge, Card, IconButton } from '@/components';
 import { cn } from '@/utils';
 import { usePatientNameLookup } from '@/features/patients';
-import { useLabWorkflowCardClickGuard, useOrderTestQueueState } from '@/features/lab/hooks';
+import { useLabWorkflowCardClickGuard, useOrderTestQueueState } from '../hooks';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
 import { LabWorkflowCardShell, ProgressBadge } from '../components/LabWorkflowCardShell';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
