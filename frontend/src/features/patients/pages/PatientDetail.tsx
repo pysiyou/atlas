@@ -14,7 +14,10 @@ import { EditPatientModal } from '../components/EditPatientModal';
 import { PatientHeader } from '../components/PatientHeader';
 import { SmallScreenLayout, MediumScreenLayout, LargeScreenLayout } from '../components/PatientDetailLayouts';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
-import { PATIENT_DETAIL_SKELETON_SECTIONS } from '../config/PatientDetailSkeleton';
+import {
+  PATIENT_DETAIL_SKELETON_SECTIONS,
+  renderPatientDetailLargeSkeleton,
+} from '../config/PatientDetailSkeleton';
 import { feedbackTitle } from '@/utils/feedback/copy';
 
 export const PatientDetail: React.FC = () => {
@@ -64,7 +67,11 @@ export const PatientDetail: React.FC = () => {
         loading={patientLoading || ordersLoading}
         loadingMessage="Loading patient..."
         loadingSkeleton={
-          <DetailPageSkeleton sections={PATIENT_DETAIL_SKELETON_SECTIONS} aria-label="Loading patient" />
+          <DetailPageSkeleton
+            sections={PATIENT_DETAIL_SKELETON_SECTIONS}
+            renderLargeLayout={renderPatientDetailLargeSkeleton}
+            aria-label="Loading patient"
+          />
         }
         notFound={!patient}
         notFoundTitle={feedbackTitle('patient.detail.notFoundTitle')}

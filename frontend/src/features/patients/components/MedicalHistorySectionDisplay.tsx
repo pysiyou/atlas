@@ -1,13 +1,15 @@
 /**
- * MedicalHistorySectionDisplay Component
- * Displays patient medical history (read-only display version)
+ * MedicalHistorySectionDisplay
+ * Read-only medical history in a two-column vertical flow.
  */
 
 import React from 'react';
 import type { Patient } from '@/types';
 import { DetailField } from '@/components/display/DetailField';
-import { formatList, formatFamilyHistory } from '../utils/patientFormatters';
+import { formatList, formatFamilyHistory, formatLifestyle } from '../utils/patientFormatters';
 import { ICONS } from '@/config/icons';
+import { TONE } from '@/components/theme/recipes';
+import { DetailFieldsColumnFlow } from './DetailFieldsColumnFlow';
 
 export interface MedicalHistorySectionDisplayProps {
   patient: Patient;
@@ -16,43 +18,55 @@ export interface MedicalHistorySectionDisplayProps {
 
 export const MedicalHistorySectionDisplay: React.FC<MedicalHistorySectionDisplayProps> = ({
   patient,
-  layout = 'column',
 }) => {
-  const containerClass =
-    layout === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 gap-layout-stack' : 'flex flex-col gap-layout-section';
+  const history = patient.medicalHistory;
+  const allergies = history?.allergies ?? [];
+  const hasAllergies = allergies.length > 0;
 
   return (
-    <div className={containerClass}>
-      <DetailField
-        icon={ICONS.medicalHistory.chronicCondition}
-        label="Chronic Disease"
-        value={formatList(patient.medicalHistory?.chronicConditions)}
-        orientation="vertical"
-      />
-      <DetailField
-        icon={ICONS.medicalHistory.medication}
-        label="Current Medications"
-        value={formatList(patient.medicalHistory?.currentMedications)}
-        orientation="vertical"
-      />
-      <DetailField
-        icon={ICONS.medicalHistory.surgery}
-        label="Surgery"
-        value={formatList(patient.medicalHistory?.previousSurgeries)}
-        orientation="vertical"
-      />
-      <DetailField
-        icon={ICONS.medicalHistory.familyHistory}
-        label="Family Disease"
-        value={formatFamilyHistory(patient.medicalHistory?.familyHistory)}
-        orientation="vertical"
-      />
-      <DetailField
-        icon={ICONS.medicalHistory.allergy}
-        label="Allergies"
-        value={formatList(patient.medicalHistory?.allergies)}
-        orientation="vertical"
-      />
+    <div className="flex min-h-0 h-full flex-col">
+      <DetailFieldsColumnFlow>
+        <DetailField
+          icon={ICONS.medicalHistory.allergy}
+          label="Allergies"
+          value={
+            <span className={hasAllergies ? TONE.danger.fg : undefined}>
+              {formatList(allergies)}
+            </span>
+          }
+          orientation="vertical"
+        />
+        <DetailField
+          icon={ICONS.medicalHistory.chronicCondition}
+          label="Chronic Disease"
+          value={formatList(history?.chronicConditions)}
+          orientation="vertical"
+        />
+        <DetailField
+          icon={ICONS.medicalHistory.medication}
+          label="Current Medications"
+          value={formatList(history?.currentMedications)}
+          orientation="vertical"
+        />
+        <DetailField
+          icon={ICONS.medicalHistory.surgery}
+          label="Surgery"
+          value={formatList(history?.previousSurgeries)}
+          orientation="vertical"
+        />
+        <DetailField
+          icon={ICONS.medicalHistory.familyHistory}
+          label="Family Disease"
+          value={formatFamilyHistory(history?.familyHistory)}
+          orientation="vertical"
+        />
+        <DetailField
+          icon={ICONS.dataFields.health}
+          label="Lifestyle"
+          value={formatLifestyle(history?.lifestyle)}
+          orientation="vertical"
+        />
+      </DetailFieldsColumnFlow>
     </div>
   );
 };
