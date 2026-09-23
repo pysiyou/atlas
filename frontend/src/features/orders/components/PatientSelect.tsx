@@ -83,7 +83,7 @@ const PatientSearchTagInput: React.FC<{
         className={cn(
           inputContainerBase,
           `group relative ${SPACING.plSpace10} pr-space-3 py-space-2-5 flex flex-wrap gap-space-2 items-center ${CONTROL.heightMultiline}`,
-          disabled && 'bg-surface-page opacity-60 cursor-not-allowed',
+          disabled && 'cursor-not-allowed',
           error && inputContainerError
         )}
       >

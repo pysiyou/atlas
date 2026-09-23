@@ -26,10 +26,14 @@ export function renderOrderPatientName(patientName: string, patientId: string | 
   return renderPatientNameWithId(patientName, patientId);
 }
 
+export type OrderTestsBlockLayout = 'countFirst' | 'namesFirst';
+
 export interface RenderOrderTestsBlockOptions {
   fallbackCount?: number;
   testCodes?: string[];
   getTestName?: (testCode: string) => string;
+  /** namesFirst: test names on top (patient related orders). Default countFirst. */
+  layout?: OrderTestsBlockLayout;
 }
 
 export function renderOrderTestsBlock(
@@ -38,7 +42,7 @@ export function renderOrderTestsBlock(
 ): ReactNode {
   const resolved: RenderOrderTestsBlockOptions =
     typeof options === 'number' ? { fallbackCount: options } : (options ?? {});
-  const { fallbackCount, testCodes, getTestName } = resolved;
+  const { fallbackCount, testCodes, getTestName, layout = 'countFirst' } = resolved;
 
   const activeCount =
     fallbackCount ??
@@ -48,6 +52,34 @@ export function renderOrderTestsBlock(
     activeTests.length > 0
       ? activeTests.map(t => t.testName || t.testCode)
       : (testCodes ?? []).map(code => getTestName?.(code) || code);
+
+  if (layout === 'namesFirst') {
+    const preview =
+      labels.length === 0
+        ? activeCount > 0
+          ? `${activeCount} test${activeCount !== 1 ? 's' : ''}`
+          : ''
+        : labels.length === 1
+          ? labels[0]
+          : labels.length === 2
+            ? labels.join(', ')
+            : `${labels.slice(0, 2).join(', ')}, +${labels.length - 2} more`;
+
+    if (!preview) {
+      return null;
+    }
+
+    return (
+      <div className="min-w-0 font-normal">
+        <div
+          className={`${TYPE.value} wrap-break-word font-normal line-clamp-2`}
+          title={labels.length > 0 ? labels.join(', ') : undefined}
+        >
+          {preview}
+        </div>
+      </div>
+    );
+  }
 
   const firstName = labels[0];
   const secondary =
