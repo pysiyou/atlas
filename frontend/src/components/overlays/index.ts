@@ -12,5 +12,5 @@ export * from './PopoverFormChrome';
 export * from './FilterTriggerShell';
 export * from './MultiSelectFilter';
 export * from './OverlaySearchInput';
-export * from './OverlayRangeSlider';
+export * from './HistogramRangeSlider';
 export * from './Toast';

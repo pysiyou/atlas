@@ -1,26 +1,17 @@
 /**
- * PriceRangeControl Component
- * Price range slider for filters
+ * PriceRangeControl — popover trigger with price range slider.
  */
 
 import React from 'react';
 import { Popover, Icon, FilterTriggerShell } from '@/components';
 import type { PriceRangeFilterControl } from './types';
 import { ICONS } from '@/config/icons';
-import { useDualHandleSlider } from './useDualHandleSlider';
-import { PriceRangeSliderPanel } from './PriceRangeSliderPanel';
+import { PriceRangeSliderContent } from './PriceRangeSliderContent';
 
-/**
- * Props for PriceRangeControl component
- */
 export interface PriceRangeControlProps {
-  /** Current price range value */
   value: [number, number];
-  /** Callback when price range changes */
   onChange: (value: [number, number]) => void;
-  /** Filter control configuration */
   config: PriceRangeFilterControl;
-  /** Custom className */
   className?: string;
 }
 
@@ -52,12 +43,6 @@ function PriceRangeTriggerContent({
   );
 }
 
-/**
- * PriceRangeControl Component
- *
- * Provides a range slider for filtering by price range.
- * Similar to AgeFilter but with price-specific formatting.
- */
 export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
   value,
   onChange,
@@ -67,13 +52,6 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
   const min = config.min ?? 0;
   const max = config.max ?? 10000;
   const currency = config.currency ?? '';
-
-  const { localValue, sliderRef, getPercentage, onMouseDown } = useDualHandleSlider(
-    value,
-    onChange,
-    min,
-    max
-  );
 
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -111,14 +89,12 @@ export const PriceRangeControl: React.FC<PriceRangeControlProps> = ({
       className="p-panel"
     >
       {() => (
-        <PriceRangeSliderPanel
-          localValue={localValue}
+        <PriceRangeSliderContent
+          value={value}
+          onChange={onChange}
           min={min}
           max={max}
           currency={currency}
-          sliderRef={sliderRef}
-          getPercentage={getPercentage}
-          onMouseDown={onMouseDown}
         />
       )}
     </Popover>

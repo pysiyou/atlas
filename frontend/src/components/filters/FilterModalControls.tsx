@@ -1,6 +1,5 @@
 /**
- * Modal filter controls: search (shared), price slider (shared range), radio list.
- * Uses OverlaySearchInput and OverlayRangeSlider from @/components/overlays.
+ * Modal filter controls: search, price slider, radio list.
  */
 
 import React from 'react';
@@ -8,7 +7,8 @@ import { RADIUS } from '@/components/theme/recipes';
 import { Icon } from '@/components';
 import { uppercaseLabel, cn } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { OverlaySearchInput, OverlayRangeSlider } from '@/components';
+import { OverlaySearchInput } from '@/components';
+import { PriceRangeSliderContent } from './PriceRangeSliderContent';
 
 export const ModalSearchInput = OverlaySearchInput;
 
@@ -19,15 +19,12 @@ export const ModalPriceSlider: React.FC<{
   max: number;
   currency?: string;
 }> = ({ value, onChange, min, max, currency = '$' }) => (
-  <OverlayRangeSlider
+  <PriceRangeSliderContent
     value={value}
     onChange={onChange}
     min={min}
     max={max}
-    boundLabels={{ min: 'Min price', max: 'Max price' }}
-    valuePrefix={currency}
-    formatValue={v => v.toLocaleString()}
-    onReset={() => onChange([min, max])}
+    currency={currency}
   />
 );
 
