@@ -165,19 +165,19 @@ function ReceiptItemRow({ test, detailed }: { test: OrderTest; detailed: boolean
   return (
     <li
       className={cn(
-        'flex justify-between items-center gap-space-2',
-        detailed ? 'text-sm items-start gap-space-3' : 'text-xs',
+        'flex justify-between items-start gap-space-2',
+        detailed ? 'text-sm gap-space-3' : 'text-xs',
       )}
     >
-      <span className={cn('flex min-w-0 flex-1 gap-space-2', detailed ? 'items-start gap-space-2-5' : 'items-center')}>
-        <span className={cn(`w-1 h-1 ${RADIUS.pill} bg-text-muted shrink-0`, detailed && 'mt-space-1-5')} />
+      <span className={cn('flex min-w-0 flex-1 gap-space-2 items-start', detailed && 'gap-space-2-5')}>
+        <span className={cn(`w-1 h-1 ${RADIUS.pill} bg-text-muted shrink-0 mt-space-1-5`)} />
         {detailed ? (
           <span className="flex flex-col min-w-0 flex-1">
-            <span className="text-text-secondary truncate">{test.testName || test.testCode || 'Test'}</span>
+            <span className="text-text-secondary wrap-break-word">{test.testName || test.testCode || 'Test'}</span>
             {code}
           </span>
         ) : (
-          <span className="text-text-secondary truncate">
+          <span className="min-w-0 flex-1 text-text-secondary wrap-break-word">
             {test.testName || test.testCode || 'Test'}
             {code}
           </span>
