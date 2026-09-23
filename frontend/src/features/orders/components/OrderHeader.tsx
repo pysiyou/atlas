@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Badge, Button, Icon, IconButton, PageHeader, EntityId } from '@/components';
+import { Button, Icon, IconButton, PageHeader } from '@/components';
 import type { Order, Invoice } from '@/types';
 import { ICONS } from '@/config/icons';
 
@@ -23,12 +23,6 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
   onViewInvoice,
   onEdit,
 }) => {
-  const badges = (
-    <>
-      <Badge variant={order.priority} size="xs" />
-      <Badge variant={order.overallStatus} size="xs" />
-    </>
-  );
   const actions = (
     <div
       className={`flex items-center gap-space-2 ${!isLarge ? 'w-full sm:w-auto sm:justify-end justify-end' : ''}`}
@@ -88,10 +82,6 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
     </div>
   );
   return (
-    <PageHeader
-      title={<EntityId type="order" value={order.orderId} />}
-      badges={badges}
-      actions={actions}
-    />
+    <PageHeader title={order.patientName} actions={actions} />
   );
 };

@@ -93,14 +93,14 @@ export function createTestsTableConfig(
     category: {
       key: 'category',
       header: 'Category',
-      width: 'lg' as const,
+      width: 'md' as const,
       accessor: (test: OrderTest) => getTestProperty(test.testCode, 'category', testCatalog) ?? '',
       render: (test: OrderTest) => renderTestCategoryBadge(test, testCatalog) ?? <span className={TYPE.meta}>—</span>,
     },
     status: {
       key: 'status',
       header: 'Status',
-      width: 'sm' as const,
+      width: 'md' as const,
       accessor: (test: OrderTest) => test.status,
       render: (test: OrderTest) => (
         <Badge variant={test.status} size="xs" />

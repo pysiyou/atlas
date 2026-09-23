@@ -20,6 +20,8 @@ export interface PageHeaderProps {
   badges?: ReactNode;
   actions?: ReactNode;
   className?: string;
+  /** Override default detail title typography (e.g. dense ticker headers). */
+  titleClassName?: string;
 }
 
 function PageHeaderContent({
@@ -31,6 +33,7 @@ function PageHeaderContent({
   badges,
   actions,
   className,
+  titleClassName,
 }: PageHeaderProps & { placement: PageHeaderPlacement }) {
   if (variant === 'bar') {
     return (
@@ -67,7 +70,7 @@ function PageHeaderContent({
         {avatar != null && <div className="shrink-0">{avatar}</div>}
         <div className="min-w-0 flex-1">
           <div className={PAGE_HEADER.detailTitleRow}>
-            <h1 className={TYPE.detailTitle}>{title}</h1>
+            <h1 className={cn(TYPE.detailTitle, titleClassName)}>{title}</h1>
             {badges != null && <div className={PAGE_HEADER.detailBadges}>{badges}</div>}
           </div>
           {subtitle != null && subtitle !== '' && (
