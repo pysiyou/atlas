@@ -69,9 +69,9 @@ export function renderOrderTestsBlock(
     }
 
     return (
-      <div className="min-w-0 font-normal">
+      <div className="min-w-0 w-full font-normal text-left">
         <div
-          className={`${TABLE_TYPE.cell} wrap-break-word font-normal line-clamp-2`}
+          className={`${TABLE_TYPE.cell} wrap-break-word font-normal line-clamp-2 text-left`}
           title={labels.length > 0 ? labels.join(', ') : undefined}
         >
           {preview}

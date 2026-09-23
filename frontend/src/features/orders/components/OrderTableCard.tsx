@@ -53,7 +53,7 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
               order.testCount != null && activeTests.length === 0 ? order.testCount : undefined,
             testCodes: activeTests.length === 0 ? order.testCodes : undefined,
             getTestName,
-            layout: hidePatientName ? 'namesFirst' : 'countFirst',
+            layout: 'namesFirst',
           })}
         </div>
       )}
