@@ -37,35 +37,6 @@ export function compactAuditLines(
   return lines.filter((line): line is LabAuditLine => Boolean(line));
 }
 
-export interface LabSampleAuditInfo {
-  sampleId?: string | number;
-  collectedAt?: string;
-  collectedBy?: string;
-}
-
-export function auditLinesFromSampleInfo(
-  sampleInfo?: LabSampleAuditInfo,
-  extra?: ReactNode
-): LabAuditLine[] {
-  return compactAuditLines(
-    sampleInfo?.collectedAt
-      ? sampleInfo.sampleId != null
-        ? {
-            type: 'sample-collected',
-            sampleId: sampleInfo.sampleId,
-            collectedAt: sampleInfo.collectedAt,
-            collectedBy: sampleInfo.collectedBy,
-          }
-        : {
-            type: 'collection-only',
-            collectedAt: sampleInfo.collectedAt,
-            collectedBy: sampleInfo.collectedBy,
-          }
-      : null,
-    extra != null && extra !== false ? { type: 'custom', content: extra } : null
-  );
-}
-
 interface CollectionAuditSource {
   sampleId?: number;
   collectedAt?: string;

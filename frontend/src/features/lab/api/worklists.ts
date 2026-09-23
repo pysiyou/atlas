@@ -91,26 +91,6 @@ export interface DashboardWorklistItem {
   blockedLabel?: string | null;
 }
 
-export interface DashboardBlockedWorklistItem {
-  orderTestId: number;
-  orderId: number;
-  patientId: number;
-  patientName: string;
-  testCode: string;
-  testName: string;
-  priority: PriorityLevel;
-  status: TestStatus;
-  stage: 'collection' | 'entry' | 'validation';
-  orderDate: string;
-  blockedReason: 'recollection_approval';
-  blockedLabel: string;
-  waitingHours: number;
-  referringPhysician?: string | null;
-  testCategory?: string | null;
-  sampleType?: string | null;
-  recollectionRequestId: number;
-}
-
 export interface ValidationWorklistItem {
   orderTestId: number;
   orderId: number;
@@ -170,13 +150,6 @@ export const worklistsAPI = {
   getValidation(params?: WorklistParams) {
     return apiClient.get<{ items: ValidationWorklistItem[]; pagination: WorklistPagination }>(
       '/lab/worklists/validation',
-      buildParams(params)
-    );
-  },
-
-  getDashboardBlocked(params?: WorklistParams) {
-    return apiClient.get<{ items: DashboardBlockedWorklistItem[]; pagination: WorklistPagination }>(
-      '/lab/worklists/dashboard-blocked',
       buildParams(params)
     );
   },
@@ -248,23 +221,6 @@ export function useValidationWorklist(params?: WorklistHookParams) {
     isLoading: query.isLoading,
     isError: query.isError,
     error: query.error,
-    refetch: query.refetch,
-  };
-}
-
-export function useDashboardBlockedWorklist(params?: WorklistHookParams) {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
-  const query = useQuery({
-    queryKey: queryKeys.worklists.dashboardBlocked(params),
-    queryFn: () => worklistsAPI.getDashboardBlocked({ pageSize: 200, ...params }),
-    enabled: isAuthenticated && !isRestoring,
-    ...cacheConfig.dynamic,
-    refetchInterval: LAB_CONFIG.TAB_COUNT_REFRESH_MS,
-  });
-  return {
-    items: query.data?.items ?? [],
-    pagination: query.data?.pagination,
-    isLoading: query.isLoading,
     refetch: query.refetch,
   };
 }

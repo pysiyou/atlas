@@ -45,12 +45,6 @@ export function formatTurnaroundTime(hours: number): string {
   return formatDurationHours(hours);
 }
 
-export function capitalizeLabel(s: string | undefined | null): string {
-  if (!s || typeof s !== 'string') return '';
-  const t = s.trim();
-  return t.length === 0 ? '' : t.charAt(0).toUpperCase() + t.slice(1).toLowerCase();
-}
-
 export function uppercaseLabel(s: string | undefined | null): string {
   if (!s || typeof s !== 'string') return '';
   return s.trim().toUpperCase();

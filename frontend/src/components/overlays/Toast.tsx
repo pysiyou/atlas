@@ -63,12 +63,12 @@ const TOAST_ICON_CLASS: Record<ToastVariant, string> = {
 };
 
 /** Toast container — theme tokens + per-variant accent gradient. */
-export function getToastSurfaceClasses(variant: ToastVariant): string {
+function getToastSurfaceClasses(variant: ToastVariant): string {
   return TOAST_SURFACE[variant];
 }
 
 /** Semantic accent for the toast icon only. */
-export function getToastIconClasses(variant: ToastVariant): string {
+function getToastIconClasses(variant: ToastVariant): string {
   return TOAST_ICON_CLASS[variant];
 }
 

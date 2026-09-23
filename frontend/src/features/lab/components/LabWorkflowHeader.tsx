@@ -10,10 +10,7 @@ import { LAB_CARD_HEADER, LAB_CARD_TYPOGRAPHY, LAB_HEADER } from '../utils/labSt
 import { LabIdentityRow, type LabIdentityContext } from './LabIdentityRow';
 import type { LabAuditLine } from '../constants/labWorkflowAuditLines';
 
-export type {
-  LabAuditLine,
-  LabSampleAuditInfo,
-} from '../constants/labWorkflowAuditLines';
+export type { LabAuditLine } from '../constants/labWorkflowAuditLines';
 
 /** When true, badge rows hide tertiary chips (cards only; modals stay full). */
 // eslint-disable-next-line react-refresh/only-export-components -- compact flag for shared lab header consumers

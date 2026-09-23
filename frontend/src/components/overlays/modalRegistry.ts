@@ -46,7 +46,7 @@ const registry: Partial<Record<ModalType, ModalRegistryEntry>> = {};
 /**
  * Register a modal. getProps is typed to receive ModalPropsMap[T] for type-safe registration.
  */
-export function registerModal<T extends ModalType, P extends BaseModalProps>(
+function registerModal<T extends ModalType, P extends BaseModalProps>(
   type: T,
   component: ComponentType<P>,
   getProps: (
@@ -66,20 +66,6 @@ export function registerModal<T extends ModalType, P extends BaseModalProps>(
  */
 export function getRegisteredModal(type: ModalType): ModalRegistryEntry | undefined {
   return registry[type];
-}
-
-/**
- * Check if a modal type is registered
- */
-export function isModalRegistered(type: ModalType): boolean {
-  return type in registry;
-}
-
-/**
- * Get all registered modal types
- */
-export function getRegisteredModalTypes(): ModalType[] {
-  return Object.keys(registry) as ModalType[];
 }
 
 registerModal(ModalType.SAMPLE_DETAIL, SampleCollectionDetailModal, (props, baseProps, helpers) => {

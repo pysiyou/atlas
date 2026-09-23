@@ -6,7 +6,6 @@ import type { ApiUserLookupResponse } from '@/lib/api/types';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 import { queryKeys, cacheConfig } from '@/lib/query';
-import { useInvalidateQueryKey } from '@/lib/query/invalidate';
 import { useAuthStore } from '@/app/authStore';
 
 export type UserLookupResponse = ApiUserLookupResponse;
@@ -166,30 +165,3 @@ export function useUserLookup() {
   };
 }
 
-/**
- * Hook to get a single user by ID.
- *
- * @param userId - The user ID to look up
- * @returns The user display info or undefined
- */
-export function useUser(userId: string | undefined) {
-  const usersMap = useUsersMap();
-  const { isLoading } = useUsersList();
-
-  const user = userId ? usersMap.get(userId) : undefined;
-
-  return {
-    user,
-    isLoading,
-  };
-}
-
-/**
- * Hook to invalidate and refetch the users list.
- *
- * @returns Function to invalidate the users cache
- */
-export function useInvalidateUsers() {
-  const { invalidateAll: invalidate } = useInvalidateQueryKey(queryKeys.users.all);
-  return { invalidate };
-}

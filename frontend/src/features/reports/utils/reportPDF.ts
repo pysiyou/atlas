@@ -245,15 +245,6 @@ export function generateLabReport(
 }
 
 /**
- * Open PDF in new window for preview
- */
-export function previewPDF(doc: jsPDF): void {
-  const pdfBlob = doc.output('blob');
-  const pdfUrl = URL.createObjectURL(pdfBlob);
-  window.open(pdfUrl, '_blank');
-}
-
-/**
  * Download PDF file
  */
 export function downloadPDF(doc: jsPDF, filename: string): void {

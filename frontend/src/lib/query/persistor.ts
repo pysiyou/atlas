@@ -14,8 +14,6 @@
  */
 
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
-import type { PersistedClient } from '@tanstack/react-query-persist-client';
-
 /**
  * Storage key for the persisted cache
  */
@@ -77,35 +75,3 @@ export const dehydrateOptions = {
   },
 };
 
-/**
- * Filter to apply when restoring persisted cache
- * Ensures stale data is not restored
- */
-export function persistFilter(persistedClient: PersistedClient): PersistedClient {
-  const now = Date.now();
-  const maxAge = PERSIST_MAX_AGE;
-
-  // Filter out expired queries
-  const filteredQueries = persistedClient.clientState.queries.filter(query => {
-    const age = now - query.state.dataUpdatedAt;
-    return age < maxAge;
-  });
-
-  return {
-    ...persistedClient,
-    clientState: {
-      ...persistedClient.clientState,
-      queries: filteredQueries,
-    },
-  };
-}
-
-/**
- * Clear persisted cache
- * Useful for logout or cache reset
- */
-export function clearPersistedCache(): void {
-  if (typeof window !== 'undefined') {
-    window.localStorage.removeItem(PERSIST_STORAGE_KEY);
-  }
-}

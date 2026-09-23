@@ -5,7 +5,6 @@ import { apiClient } from '@/lib/api/client';
 import type { ApiQualityIssueOptions, ApiQualityIssueResult } from '@/lib/api/types';
 import type {
   QualityIssueOptions,
-  QualityIssueRecord,
   QualityIssueResult,
   QualityIssueTargetType,
   ReportQualityIssueRequest,
@@ -26,17 +25,6 @@ export const qualityIssuesAPI = {
     return apiClient.post<ApiQualityIssueResult>('/lab/quality-issues', body) as Promise<QualityIssueResult>;
   },
 
-  list(params: {
-    orderId?: number;
-    sampleId?: number;
-    orderTestId?: number;
-  }): Promise<QualityIssueRecord[]> {
-    const query: Record<string, string> = {};
-    if (params.orderId) query.orderId = String(params.orderId);
-    if (params.sampleId) query.sampleId = String(params.sampleId);
-    if (params.orderTestId) query.orderTestId = String(params.orderTestId);
-    return apiClient.get<QualityIssueRecord[]>('/lab/quality-issues', query);
-  },
 };
 
 /**
@@ -68,10 +56,3 @@ export function useReportQualityIssue() {
   });
 }
 
-export function useQualityIssuesForOrder(orderId?: number) {
-  return useQuery({
-    queryKey: queryKeys.qualityIssues.forOrder(orderId),
-    queryFn: () => qualityIssuesAPI.list({ orderId }),
-    enabled: !!orderId,
-  });
-}

@@ -94,20 +94,9 @@ export function setThemeMode(mode: ThemeMode): void {
   applyTheme(resolveTheme(mode), mode);
 }
 
-/** Coerces a palette name onto the instance pair (light names → configured light). */
-export function setTheme(theme: ThemeName): void {
-  const mode = isValidTheme(theme) ? themeNameToMode(theme) : DEFAULT_MODE;
-  setThemeMode(mode);
-}
-
 export function initializeTheme(): void {
   const stored = typeof localStorage === 'undefined' ? null : localStorage.getItem(STORAGE_KEY);
   setThemeMode(storedToMode(stored));
-}
-
-export function getBadgeAppearance(): BadgeAppearance {
-  const theme = getActiveTheme();
-  return THEME_BADGE_APPEARANCE[theme] ?? 'unified';
 }
 
 function subscribeTheme(onStoreChange: () => void): () => void {

@@ -175,32 +175,10 @@ export const getContainerIcon = (type: ContainerType | string): IconName => {
 export const getPriorityIcon = (_priority?: string): IconName => ICONS.priority;
 export const getOrderStatusIcon = (_status?: string): IconName => ICONS.orderStatus;
 export const getSampleStatusIcon = (_status?: string): IconName => ICONS.sampleStatus;
-export const getTestStatusIcon = (_status?: string): IconName => ICONS.testStatus;
-export const getPaymentStatusIcon = (_status?: string): IconName => ICONS.paymentStatus;
-export const getSampleTypeIcon = (_sampleType?: string): IconName => ICONS.sampleType;
-
 export const getDataFieldIcon = (field: string): IconName => {
   const fieldKey = field as keyof typeof ICONS.dataFields;
   return ICONS.dataFields[fieldKey] || ICONS.dataFields.user;
 };
-
-export const getActionIcon = (action: string): IconName => {
-  const actionKey = action as keyof typeof ICONS.actions;
-  return ICONS.actions[actionKey] || ICONS.actions.infoCircle;
-};
-
-export const getUIIcon = (element: string): IconName => {
-  const elementKey = element as keyof typeof ICONS.ui;
-  return ICONS.ui[elementKey] || ICONS.ui.dashboard;
-};
-
-export const getMedicalHistoryIcon = (field: string): IconName => {
-  const fieldKey = field as keyof typeof ICONS.medicalHistory;
-  return ICONS.medicalHistory[fieldKey] || ICONS.medicalHistory.chronicCondition;
-};
-export const getDemographicIcon = (field: string): IconName => getDataFieldIcon(field);
-
-export const getStatusIcon = (_status?: string): IconName => ICONS.orderStatus;
 
 /** Sidebar module icons — shared by navigation and modal/popover footers */
 export const MODULE_ICONS = {

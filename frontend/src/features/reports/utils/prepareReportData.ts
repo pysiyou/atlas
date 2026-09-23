@@ -1,7 +1,5 @@
 import type jsPDF from 'jspdf';
-import type { Order, OrderTest, Patient, Test } from '@/types';
-import { getOrderTests } from '@/types';
-import { calculateAge } from '@/utils';
+import type { OrderTest, Patient, Test } from '@/types';
 import type { ValidatedTestReportPayload, ValidatedTest } from '../types';
 import { companyConfig } from '@/config';
 
@@ -15,69 +13,6 @@ interface PrepareReportDataOptions {
   catalogTests: Test[];
   getSample: SampleLookup;
   getUserName: (userId: string) => string;
-}
-
-export function buildValidatedTestsFromOrders(
-  orders: Order[],
-  patients: Patient[] | undefined,
-  getPatientName: (patientId: number) => string
-): ValidatedTest[] {
-  const tests: ValidatedTest[] = [];
-
-  orders.forEach(order => {
-    getOrderTests(order)
-      .filter(test => test.status === 'validated' && test.id)
-      .forEach(test => {
-        const patient = patients?.find(p => p.id === order.patientId);
-        const age = patient?.dateOfBirth ? calculateAge(patient.dateOfBirth) : undefined;
-
-        tests.push({
-          testId: test.id!,
-          testCode: test.testCode,
-          testName: test.testName,
-          orderId: order.orderId,
-          orderDate: order.orderDate,
-          patientId: order.patientId,
-          patientName: getPatientName(order.patientId),
-          patientAge: age,
-          patientGender: patient?.gender,
-          test,
-          order,
-        });
-      });
-  });
-
-  return tests;
-}
-
-export function findValidatedTestById(
-  testId: number,
-  orders: Order[],
-  patients: Patient[] | undefined,
-  getPatientName: (patientId: number) => string
-): ValidatedTest | null {
-  for (const order of orders) {
-    const test = getOrderTests(order).find(t => t.id === testId && t.status === 'validated');
-    if (test) {
-      const patient = patients?.find(p => p.id === order.patientId);
-      const age = patient?.dateOfBirth ? calculateAge(patient.dateOfBirth) : undefined;
-
-      return {
-        testId: test.id!,
-        testCode: test.testCode,
-        testName: test.testName,
-        orderId: order.orderId,
-        orderDate: order.orderDate,
-        patientId: order.patientId,
-        patientName: getPatientName(order.patientId),
-        patientAge: age,
-        patientGender: patient?.gender,
-        test,
-        order,
-      };
-    }
-  }
-  return null;
 }
 
 export function filterValidatedTestsByDateRange(

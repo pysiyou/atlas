@@ -46,11 +46,3 @@ const hasValue = (value: React.ReactNode): boolean => {
 export const filterDetailRows = (rows: DetailTableRow[] | undefined | null): DetailTableRow[] =>
   Array.isArray(rows) ? rows.filter(r => hasValue(r.value)) : [];
 
-/**
- * Calculate effective height of a table (number of visible rows)
- * @param rows - Rows to calculate height for
- * @returns Number of visible rows (minimum 1)
- */
-export const calculateEffectiveHeight = (rows: DetailTableRow[]): number => {
-  return Math.max(filterDetailRows(rows).length, 1);
-};

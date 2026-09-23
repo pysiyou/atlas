@@ -36,21 +36,3 @@ export const displayId = {
   audit: (id: number | null | undefined) => formatDisplayId('audit', id),
 };
 
-export function parseDisplayId(
-  displayIdStr: string
-): { entityType: EntityType; id: number } | null {
-  if (!displayIdStr) return null;
-  const upperStr = displayIdStr.toUpperCase();
-  for (const [entityType, prefix] of Object.entries(ID_PREFIXES)) {
-    if (upperStr.startsWith(prefix)) {
-      const id = parseInt(upperStr.slice(prefix.length), 10);
-      if (!isNaN(id)) return { entityType: entityType as EntityType, id };
-    }
-  }
-  return null;
-}
-
-export function extractNumericId(displayIdStr: string): number | null {
-  const parsed = parseDisplayId(displayIdStr);
-  return parsed ? parsed.id : null;
-}
