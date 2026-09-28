@@ -40,7 +40,7 @@ def create_invoice_for_order(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    invoice = BillingService(db).create_invoice_for_order(orderId)
+    invoice = BillingService(db).create_invoice_for_order(orderId, current_user.id)
     db.commit()
     db.refresh(invoice)
     return invoice

@@ -8,6 +8,7 @@ from app.models.order import Order
 from app.models.patient import Patient
 from app.schemas.enums import PaymentStatus
 from app.schemas.patient import MedicalHistory, PatientCreate, PatientResponse, PatientUpdate
+from app.services.audit.emitter import AuditEmitter
 from app.utils.common import parse_display_id_from_search
 from fastapi import HTTPException, status
 from sqlalchemy import String, cast, or_
@@ -89,6 +90,7 @@ def _attach_order_summaries(db: Session, patients_data: list[dict]) -> list[dict
 class PatientService:
     def __init__(self, db: Session):
         self.db = db
+        self.emitter = AuditEmitter(db)
 
     def get_list(
         self,
@@ -119,13 +121,16 @@ class PatientService:
         )
         return [serialize_patient(p) for p in patients]
 
-    def get_by_id(self, patient_id: int) -> dict:
+    def get_by_id(self, patient_id: int, viewer_user_id: int | None = None) -> dict:
         patient = self.db.query(Patient).filter(Patient.id == patient_id).first()
         if not patient:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Patient {patient_id} not found",
             )
+        if viewer_user_id is not None:
+            self.emitter.patient_viewed(patient_id, viewer_user_id)
+            self.db.commit()
         return serialize_patient_full(patient)
 
     def create(self, patient_data: PatientCreate, user_id: int) -> dict:
@@ -152,9 +157,22 @@ class PatientService:
             updatedBy=user_id,
         )
         self.db.add(patient)
+        self.db.flush()
+        self.emitter.patient_created(patient.id, user_id)
         self.db.commit()
         self.db.refresh(patient)
         return serialize_patient_full(patient)
+
+    def delete(self, patient_id: int, user_id: int) -> None:
+        patient = self.db.query(Patient).filter(Patient.id == patient_id).first()
+        if not patient:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Patient {patient_id} not found",
+            )
+        self.emitter.patient_deleted(patient_id, user_id)
+        self.db.delete(patient)
+        self.db.commit()
 
     def update(self, patient_id: int, patient_data: PatientUpdate, user_id: int) -> dict:
         patient = self.db.query(Patient).filter(Patient.id == patient_id).first()
@@ -182,6 +200,7 @@ class PatientService:
             if field in ALLOWED and hasattr(patient, field):
                 setattr(patient, field, value)
         patient.updatedBy = user_id
+        self.emitter.patient_updated(patient_id, user_id, changes=update_data)
         self.db.commit()
         self.db.refresh(patient)
         return serialize_patient_full(patient)

@@ -22,6 +22,7 @@ from app.db.database import get_db
 from app.models.user import User
 from app.schemas.error import MessageResponse
 from app.schemas.user import LoginRequest, Token, UserResponse
+from app.services.audit.emitter import AuditEmitter
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -61,6 +62,9 @@ def login(credentials: LoginRequest, db: Session = Depends(get_db)):
         )
 
     access_token, refresh_token = create_tokens(user.id)
+
+    AuditEmitter(db).user_login(user.id)
+    db.commit()
 
     return Token(
         access_token=access_token,
@@ -113,11 +117,16 @@ def get_me(current_user: User = Depends(get_current_user)):
 
 
 @router.post("/logout", response_model=MessageResponse)
-def logout() -> MessageResponse:
+def logout(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> MessageResponse:
     """
     Logout endpoint.
 
     Note: JWT tokens are stateless - the client must discard tokens.
     This endpoint exists for API completeness and future token blacklisting.
     """
+    AuditEmitter(db).user_logout(current_user.id)
+    db.commit()
     return MessageResponse(message="Logged out successfully")

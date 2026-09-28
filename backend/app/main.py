@@ -10,7 +10,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1 import (
     affiliations,
     analyzer,
-    audit,
     auth,
     billing,
     critical_values,
@@ -98,7 +97,6 @@ app.include_router(payments.router, prefix=settings.API_V1_PREFIX, tags=["paymen
 app.include_router(affiliations.router, prefix=settings.API_V1_PREFIX, tags=["affiliations"])
 app.include_router(critical_values.router, prefix=settings.API_V1_PREFIX, tags=["critical-values"])
 app.include_router(analyzer.router, prefix=settings.API_V1_PREFIX, tags=["analyzer"])
-app.include_router(audit.router, prefix=settings.API_V1_PREFIX, tags=["audit"])
 app.include_router(quality_issues.router, prefix=settings.API_V1_PREFIX, tags=["quality-issues"])
 app.include_router(
     recollection_requests.router, prefix=settings.API_V1_PREFIX, tags=["recollection-requests"]

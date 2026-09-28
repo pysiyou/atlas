@@ -22,7 +22,7 @@ from app.schemas.enums import (
     SampleStatus,
     TestStatus,
 )
-from app.services.audit.logger import AuditService
+from app.services.audit.emitter import AuditEmitter
 from app.services.lab.escalation import EscalationEngine
 from app.services.lab.rejection import RejectionCriteriaService
 from app.services.lab.sample_rejection_context import SampleRejectionContext
@@ -97,10 +97,10 @@ class QualityIssueResult(BaseModel):
 
 
 class QualityIssueService:
-    def __init__(self, db: Session, audit: AuditService, escalation: EscalationEngine):
+    def __init__(self, db: Session, escalation: EscalationEngine, emitter: AuditEmitter):
         self.db = db
-        self.audit = audit
         self.escalation = escalation
+        self.emitter = emitter
         self.collection = SampleCollectionService(db)
         self.recollection_requests: Any | None = None
 
@@ -203,20 +203,30 @@ class QualityIssueService:
         )
         self.db.add(issue)
         self.db.flush()
-        self.audit.log_quality_issue_reported(
-            issue_id=issue.id,
-            order_id=order_id,
-            user_id=user_id,
-            stage=stage.value,
-            domain=domain.value,
-            remedy=remedy.value,
-            reason=reason,
-            test_code=test_code,
-            sample_id=sample_id,
-            order_test_id=order_test_id,
-            created_test_id=created_test_id,
-            created_sample_id=created_sample_id,
-        )
+        if stage == QualityStage.VALIDATION:
+            self.emitter.validation_rejected(
+                order_id=order_id,
+                order_test_id=order_test_id,
+                sample_id=sample_id,
+                user_id=user_id,
+                metadata={
+                    "quality_issue_id": issue.id,
+                    "stage": stage.value,
+                    "domain": domain.value,
+                    "remedy": remedy.value,
+                    "reason": reason,
+                    "test_code": test_code,
+                },
+            )
+            if created_test_id is not None and order_test_id is not None:
+                self.emitter.order_test_retest(
+                    order_id=order_id,
+                    original_test_id=order_test_id,
+                    new_test_id=created_test_id,
+                    test_code=test_code or "",
+                    user_id=user_id,
+                    reason=reason,
+                )
         return issue
 
     def _create_retest(
@@ -324,11 +334,7 @@ class QualityIssueService:
         if not can_reject:
             raise LabOperationError(reject_reason, status_code=400)
 
-        before_state = {
-            "status": sample.status.value if sample.status else None,
-            "sampleId": sample.sampleId,
-        }
-
+        old_status = sample.status.value if sample.status else None
         sample.status = SampleStatus.REJECTED
         sample.rejectedAt = datetime.now(UTC)
         sample.rejectedBy = str(user_id)
@@ -337,29 +343,20 @@ class QualityIssueService:
         sample.recollectionRequired = True
         sample.updatedBy = str(user_id)
 
-        audit_metadata: dict[str, Any] = {
-            "rejectionStage": context.stage.value,
-        }
+        audit_meta: dict[str, Any] = {"rejection_stage": context.stage.value}
         if notes:
-            audit_metadata["notes"] = notes
+            audit_meta["notes"] = notes
         if context.order_test_id is not None:
-            audit_metadata["orderTestId"] = context.order_test_id
+            audit_meta["order_test_id"] = context.order_test_id
         if context.quality_issue_id is not None:
-            audit_metadata["qualityIssueId"] = context.quality_issue_id
-
-        self.audit.log_sample_rejection(
-            sample_id=sample.sampleId,
-            user_id=user_id,
-            before_state=before_state,
-            after_state={
-                "status": SampleStatus.REJECTED.value,
-                "sampleId": sample.sampleId,
-                "rejectionReason": reason,
-            },
-            rejection_reason=reason,
-            recollection_required=True,
-            metadata=audit_metadata,
-            comment=notes or reason,
+            audit_meta["quality_issue_id"] = context.quality_issue_id
+        self.emitter.sample_rejected(
+            sample.sampleId,
+            sample.orderId,
+            user_id,
+            reason,
+            metadata=audit_meta,
+            old_status=old_status,
         )
 
         if not reset_unfinished:
@@ -679,6 +676,14 @@ class QualityIssueService:
         TestStateMachine.validate_transition(order_test.status, TestStatus.CANCELLED)
         order_test.status = TestStatus.CANCELLED
         order_test.validationNotes = notes or f"Cancelled at validation: {reason}"
+
+        self.emitter.order_test_cancelled(
+            order_test.orderId,
+            order_test.id,
+            order_test.testCode,
+            user_id,
+            reason=reason,
+        )
 
         issue = self._record_issue(
             order_id=order_test.orderId,

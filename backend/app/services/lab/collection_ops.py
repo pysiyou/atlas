@@ -28,7 +28,6 @@ class CollectionOperations:
         sample = self._svc._get_sample(sample_id, for_update=True)
         self._svc._assert_order_paid_for_collection(sample.orderId)
         before_state = self._svc._serialize_sample_state(sample)
-
         try:
             SampleStateMachine.validate_transition(sample.status, SampleStatus.COLLECTED)
         except StateTransitionError as e:
@@ -61,15 +60,14 @@ class CollectionOperations:
             # else: Skip invalid transitions (log warning if needed in production)
 
         after_state = self._svc._serialize_sample_state(sample)
-        self._svc.audit.log_sample_collection(
-            sample_id=sample_id,
-            user_id=user_id,
-            before_state=before_state,
-            after_state=after_state,
-            metadata={"testCodes": sample.testCodes},
-            comment=collection_notes,
+        self._svc.emitter.sample_collected(
+            sample_id,
+            sample.orderId,
+            user_id,
+            before_state,
+            after_state,
+            metadata={"test_codes": sample.testCodes},
         )
-
         self.db.commit()
         self._svc.recollection.mark_fulfilled_when_sample_collected(sample_id)
         self.db.commit()

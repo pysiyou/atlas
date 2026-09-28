@@ -1,4 +1,4 @@
-"""Sample rejection hub — audit stage and multi-test reset behavior."""
+"""Sample rejection hub — multi-test reset behavior."""
 
 from datetime import UTC, datetime
 from unittest.mock import MagicMock, patch
@@ -49,10 +49,9 @@ def _order_test(test_id: int, status: TestStatus, test_code: str = "T1") -> Orde
     )
 
 
-def test_reject_sample_record_audit_includes_collection_stage():
+def test_reject_sample_record_resets_unfinished_linked_tests():
     db = MagicMock()
-    audit = MagicMock()
-    service = QualityIssueService(db, audit, MagicMock())
+    service = QualityIssueService(db, MagicMock(), MagicMock())
     sample = _collected_sample()
     linked = [
         _order_test(1, TestStatus.RESULTED, "T1"),
@@ -68,20 +67,17 @@ def test_reject_sample_record_audit_includes_collection_stage():
             SampleRejectionContext(stage=QualityStage.COLLECTION),
         )
 
-    audit.log_sample_rejection.assert_called_once()
-    metadata = audit.log_sample_rejection.call_args.kwargs["metadata"]
-    assert metadata["rejectionStage"] == QualityStage.COLLECTION.value
-    assert metadata["notes"] == "bad tube"
     assert sample.status == SampleStatus.REJECTED
+    assert sample.rejectionReason == "hemolyzed"
+    assert sample.rejectionNotes == "bad tube"
     assert linked[0].status == TestStatus.RESULTED
     assert linked[1].status == TestStatus.PENDING
     assert linked[1].results is None
 
 
-def test_reject_sample_record_audit_includes_validation_stage_and_order_test():
+def test_reject_sample_record_validation_context_does_not_require_audit():
     db = MagicMock()
-    audit = MagicMock()
-    service = QualityIssueService(db, audit, MagicMock())
+    service = QualityIssueService(db, MagicMock(), MagicMock())
     sample = _collected_sample()
 
     with patch.object(service, "_linked_tests", return_value=[]):
@@ -93,15 +89,12 @@ def test_reject_sample_record_audit_includes_validation_stage_and_order_test():
             SampleRejectionContext(stage=QualityStage.VALIDATION, order_test_id=42),
         )
 
-    metadata = audit.log_sample_rejection.call_args.kwargs["metadata"]
-    assert metadata["rejectionStage"] == QualityStage.VALIDATION.value
-    assert metadata["orderTestId"] == 42
+    assert sample.status == SampleStatus.REJECTED
 
 
 def test_report_sample_issue_cancel_remedy_resets_unfinished_not_cancels():
     db = MagicMock()
-    audit = MagicMock()
-    service = QualityIssueService(db, audit, MagicMock())
+    service = QualityIssueService(db, MagicMock(), MagicMock())
     sample = _collected_sample()
 
     with (

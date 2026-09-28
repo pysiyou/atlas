@@ -15,7 +15,7 @@ from app.schemas.critical_values import (
     NotifyRequest,
 )
 from app.schemas.enums import ResultStatus
-from app.services.audit.logger import AuditService
+from app.services.audit.emitter import AuditEmitter
 from app.services.lab.results import ResultFlag
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
@@ -50,6 +50,7 @@ class CriticalNotificationService:
 
     def __init__(self, db: Session):
         self.db = db
+        self.emitter = AuditEmitter(db)
 
     def check_and_flag_critical(self, order_test: OrderTest, flags: list[ResultFlag]) -> bool:
         """
@@ -323,13 +324,15 @@ class CriticalNotificationService:
             notified_to=request.notifiedTo,
             notification_method=request.notificationMethod,
         )
-        AuditService(self.db).log_critical_value_notified(
-            order_id=test.orderId,
-            test_id=test.id,
-            test_code=test.testCode,
-            user_id=user_id,
-            notified_to=request.notifiedTo,
-            notification_method=request.notificationMethod,
+        self.emitter.result_critical_notified(
+            test.orderId,
+            test.id,
+            test.testCode,
+            user_id,
+            metadata={
+                "notified_to": request.notifiedTo,
+                "notification_method": request.notificationMethod,
+            },
         )
         self.db.commit()
         return {
@@ -351,12 +354,12 @@ class CriticalNotificationService:
         if test.criticalAcknowledgedAt:
             raise HTTPException(status_code=400, detail="Critical value already acknowledged")
         self.acknowledge_notification(test, request.acknowledgedBy)
-        AuditService(self.db).log_critical_value_acknowledged(
-            order_id=test.orderId,
-            test_id=test.id,
-            test_code=test.testCode,
-            acknowledged_by=request.acknowledgedBy,
-            user_id=user_id,
+        self.emitter.result_critical_acknowledged(
+            test.orderId,
+            test.id,
+            test.testCode,
+            user_id,
+            metadata={"acknowledged_by": request.acknowledgedBy},
         )
         self.db.commit()
         return {

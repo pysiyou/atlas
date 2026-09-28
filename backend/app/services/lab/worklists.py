@@ -9,6 +9,7 @@ import re
 from datetime import UTC, datetime
 from typing import Any
 
+from app.models.escalation import EscalationTicket
 from app.models.order import Order, OrderTest
 from app.models.patient import Patient
 from app.models.recollection_request import RecollectionRequest
@@ -22,10 +23,7 @@ from app.schemas.enums import (
     SampleStatus,
     TestStatus,
 )
-from app.models.escalation import EscalationTicket
-from app.services.lab.board import BLOCKED_LABELS
-from app.services.lab.board import LabBoardService
-from app.services.lab.board import blocked_reason_for_work_item
+from app.services.lab.board import BLOCKED_LABELS, LabBoardService, blocked_reason_for_work_item
 from app.utils.common import parse_display_id_from_search
 from sqlalchemy import String, or_
 from sqlalchemy.orm import Session

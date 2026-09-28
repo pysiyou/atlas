@@ -11,14 +11,12 @@ from app.models.patient import Patient
 from app.models.recollection_request import RecollectionRequest
 from app.models.sample import Sample
 from app.schemas.enums import (
-    LabOperationType,
     QualityDomain,
     QualityStage,
     RecollectionRequestStatus,
     RemedyType,
     TestStatus,
 )
-from app.services.audit.logger import AuditService
 from app.services.lab.samples import SampleCollectionService
 from app.services.lab.state import TestStateMachine
 from app.services.orders import update_order_status
@@ -65,9 +63,8 @@ class RecollectionRequestResult(BaseModel):
 
 
 class RecollectionRequestService:
-    def __init__(self, db: Session, audit: AuditService, quality_service: Any):
+    def __init__(self, db: Session, quality_service: Any):
         self.db = db
-        self.audit = audit
         self.quality = quality_service
         self.collection = SampleCollectionService(db)
 
@@ -164,17 +161,16 @@ class RecollectionRequestService:
         )
         self.db.add(request)
         self.db.flush()
-        self.audit.log_operation(
-            operation_type=LabOperationType.RECOLLECTION_REQUEST_CREATED,
-            entity_type="sample",
-            entity_id=sample.sampleId,
-            user_id=user_id,
+        self.quality.emitter.sample_recollect_requested(
+            sample.sampleId,
+            sample.orderId,
+            user_id,
             metadata={
-                "requestId": request.id,
-                "rejectedSampleId": sample.sampleId,
+                "request_id": request.id,
+                "rejected_sample_id": sample.sampleId,
                 "stage": QualityStage.COLLECTION.value,
-                "testCodes": list(sample.testCodes or []),
-                "affectedOrderTestIds": request.affectedOrderTestIds or [],
+                "test_codes": list(sample.testCodes or []),
+                "affected_order_test_ids": request.affectedOrderTestIds or [],
             },
         )
         return request
@@ -222,17 +218,16 @@ class RecollectionRequestService:
         )
         self.db.add(request)
         self.db.flush()
-        self.audit.log_operation(
-            operation_type=LabOperationType.RECOLLECTION_REQUEST_CREATED,
-            entity_type="order_test",
-            entity_id=order_test.id,
-            user_id=user_id,
+        self.quality.emitter.sample_recollect_requested(
+            sample.sampleId,
+            sample.orderId,
+            user_id,
             metadata={
-                "requestId": request.id,
-                "rejectedSampleId": sample.sampleId,
-                "orderTestId": order_test.id,
+                "request_id": request.id,
+                "rejected_sample_id": sample.sampleId,
+                "order_test_id": order_test.id,
                 "stage": QualityStage.VALIDATION.value,
-                "affectedOrderTestIds": request.affectedOrderTestIds or [],
+                "affected_order_test_ids": request.affectedOrderTestIds or [],
             },
         )
         return request
@@ -329,37 +324,18 @@ class RecollectionRequestService:
         request.createdSampleId = new_sample.sampleId
         request.createdTestId = created_test_id
 
-        self.audit.log_recollection_request(
-            original_sample_id=sample.sampleId,
-            new_sample_id=new_sample.sampleId,
-            user_id=user_id,
-            recollection_reason=request.reason,
-            recollection_attempt=new_sample.recollectionAttempt,
-            comment=review_notes or request.notes,
-        )
-        primary_test_id = request.orderTestId or ((request.affectedOrderTestIds or [None])[0])
-        approve_metadata = {
-            "requestId": request.id,
-            "orderId": request.orderId,
-            "rejectedSampleId": request.rejectedSampleId,
-            "createdSampleId": new_sample.sampleId,
-            "reason": request.reason,
-            "stage": request.stage.value if request.stage else None,
-            "testCodes": list(request.testCodes or []),
-            "affectedOrderTestIds": request.affectedOrderTestIds or [],
-        }
-        if primary_test_id is not None:
-            approve_metadata["orderTestId"] = primary_test_id
-        if created_test_id is not None:
-            approve_metadata["createdTestId"] = created_test_id
-        if review_notes:
-            approve_metadata["reviewNotes"] = review_notes
-        self.audit.log_operation(
-            operation_type=LabOperationType.RECOLLECTION_REQUEST_APPROVED,
-            entity_type="order_test" if primary_test_id is not None else "sample",
-            entity_id=primary_test_id if primary_test_id is not None else new_sample.sampleId,
-            user_id=user_id,
-            metadata=approve_metadata,
+        self.quality.emitter.sample_created(new_sample.sampleId, request.orderId, user_id)
+        self.quality.emitter.sample_recollect_approved(
+            new_sample.sampleId,
+            request.orderId,
+            user_id,
+            metadata={
+                "request_id": request.id,
+                "rejected_sample_id": request.rejectedSampleId,
+                "created_sample_id": new_sample.sampleId,
+                "created_test_id": created_test_id,
+                "reason": request.reason,
+            },
         )
 
         self.db.commit()
@@ -441,21 +417,15 @@ class RecollectionRequestService:
         request.reviewNotes = review_notes
         request.reviewedAt = datetime.now(UTC)
 
-        primary_test_id = request.orderTestId or ((request.affectedOrderTestIds or [None])[0])
-        deny_metadata = {
-            "requestId": request.id,
-            "reviewNotes": review_notes,
-            "affectedOrderTestIds": request.affectedOrderTestIds or [],
-            "rejectedSampleId": request.rejectedSampleId,
-        }
-        if primary_test_id is not None:
-            deny_metadata["orderTestId"] = primary_test_id
-        self.audit.log_operation(
-            operation_type=LabOperationType.RECOLLECTION_REQUEST_DENIED,
-            entity_type="order_test" if primary_test_id is not None else "sample",
-            entity_id=primary_test_id if primary_test_id is not None else request.rejectedSampleId,
-            user_id=user_id,
-            metadata=deny_metadata,
+        self.quality.emitter.sample_recollect_denied(
+            request.rejectedSampleId,
+            request.orderId,
+            user_id,
+            metadata={
+                "request_id": request.id,
+                "review_notes": review_notes,
+                "affected_order_test_ids": request.affectedOrderTestIds or [],
+            },
         )
 
         self.db.commit()

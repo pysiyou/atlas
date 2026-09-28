@@ -8,13 +8,16 @@ recollectionAttempt scale (matches UI 1..MAX_RECOLLECTION_ATTEMPTS):
 from __future__ import annotations
 
 from datetime import UTC, datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from app.data.lab_constants import MAX_RECOLLECTION_ATTEMPTS
 from app.models import Order, OrderTest, Sample, Test
 from app.schemas.enums import PriorityLevel, SampleStatus, SampleType, TestStatus
 from app.utils.exceptions import LabOperationError
 from sqlalchemy.orm import Session
+
+if TYPE_CHECKING:
+    from app.services.audit.emitter import AuditEmitter
 
 
 class SampleCollectionService:
@@ -159,7 +162,12 @@ def _sample_type_matches(sample: Sample, sample_type_key: str | SampleType) -> b
     return sample.sampleType == st
 
 
-def generate_samples_for_order(orderId: int, db: Session, createdBy: int) -> list[Sample]:
+def generate_samples_for_order(
+    orderId: int,
+    db: Session,
+    createdBy: int,
+    emitter: AuditEmitter | None = None,
+) -> list[Sample]:
     """
     Sync samples for an order: one active pending sample per sample type.
     Groups active tests by sample type; updates the pending/recollection sample or creates one.
@@ -252,6 +260,8 @@ def generate_samples_for_order(orderId: int, db: Session, createdBy: int) -> lis
                     required_container_colors=list(container_colors_set),
                     created_by=createdBy,
                 )
+                if emitter is not None:
+                    emitter.sample_created(sample.sampleId, orderId, createdBy)
                 samples.append(sample)
 
     # Delete obsolete: samples for this order whose type is not in sample_groups

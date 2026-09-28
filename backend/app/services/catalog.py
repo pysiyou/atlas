@@ -15,6 +15,7 @@ from app.models.test import Test
 from app.schemas.affiliation import AffiliationPricingResponse
 from app.schemas.enums import AffiliationDuration
 from app.schemas.test import TestCreate, TestResponse, TestUpdate
+from app.services.audit.emitter import AuditEmitter
 from fastapi import HTTPException, Response, status
 from sqlalchemy.orm import Session
 
@@ -80,6 +81,7 @@ def serialize_test(test: Test) -> dict:
 class TestService:
     def __init__(self, db: Session):
         self.db = db
+        self.emitter = AuditEmitter(db)
 
     def list_tests(
         self,
@@ -133,7 +135,7 @@ class TestService:
             .all()
         )
 
-    def create(self, test_data: TestCreate) -> Test:
+    def create(self, test_data: TestCreate, actor_user_id: int) -> Test:
         existing = self.db.query(Test).filter(Test.code == test_data.code).first()
         if existing:
             raise HTTPException(
@@ -143,6 +145,8 @@ class TestService:
         test = Test(**test_data.model_dump())
         try:
             self.db.add(test)
+            self.db.flush()
+            self.emitter.catalog_test_created(test.id, test.code, actor_user_id)
             self.db.commit()
             self.db.refresh(test)
         except Exception:
@@ -155,12 +159,13 @@ class TestService:
         invalidate_tests_cache()
         return test
 
-    def update(self, test_code: str, test_data: TestUpdate) -> Test:
+    def update(self, test_code: str, test_data: TestUpdate, actor_user_id: int) -> Test:
         test = self.get_by_code(test_code)
         update_data = test_data.model_dump(exclude_unset=True)
         for field, value in update_data.items():
             setattr(test, field, value)
         try:
+            self.emitter.catalog_test_updated(test.id, test.code, actor_user_id)
             self.db.commit()
             self.db.refresh(test)
         except Exception:

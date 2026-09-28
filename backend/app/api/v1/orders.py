@@ -91,7 +91,7 @@ def delete_order(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    OrderService(db).delete_order(orderId)
+    OrderService(db).delete_order(orderId, current_user.id)
     return None
 
 
@@ -115,4 +115,4 @@ def mark_as_reported(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> OrderReportResponse:
-    return OrderService(db).mark_as_reported(orderId)
+    return OrderService(db).mark_as_reported(orderId, current_user.id)

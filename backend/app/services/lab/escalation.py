@@ -12,17 +12,16 @@ from app.schemas.enums import (
     EscalationResolutionAction,
     EscalationSeverity,
     EscalationTicketStatus,
-    LabOperationType,
     QualityDomain,
     QualityStage,
     RemedyType,
     SampleStatus,
     TestStatus,
 )
-from app.services.audit.logger import AuditService
+from app.services.audit.emitter import AuditEmitter
 from app.services.lab.sample_rejection_context import SampleRejectionContext
 from app.services.lab.state import StateTransitionError, TestStateMachine
-from app.services.orders import build_order_completion_metadata, update_order_status
+from app.services.orders import update_order_status
 from app.utils.exceptions import LabOperationError
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -38,20 +37,12 @@ class EscalationResolveResult(BaseModel):
     newSampleId: int | None = None
 
 
-REASON_TO_TRIGGER_OP = {
-    EscalationReasonCode.CRIT_VAL: LabOperationType.ESCALATION_TRIGGER_CRIT_VAL,
-    EscalationReasonCode.REJ_SAMP: LabOperationType.ESCALATION_TRIGGER_REJ_SAMP,
-    EscalationReasonCode.LIMIT_HIT: LabOperationType.ESCALATION_TRIGGER_LIMIT_HIT,
-    EscalationReasonCode.AMEND_RES: LabOperationType.ESCALATION_TRIGGER_AMEND_RES,
-}
-
-
 class EscalationEngine:
     """Coordinates escalation tickets with OrderTest status transitions."""
 
-    def __init__(self, db: Session, audit: AuditService):
+    def __init__(self, db: Session, emitter: AuditEmitter):
         self.db = db
-        self.audit = audit
+        self.emitter = emitter
 
     def get_open_ticket(self, order_test_id: int) -> EscalationTicket | None:
         return (
@@ -107,16 +98,17 @@ class EscalationEngine:
         self.db.add(ticket)
         self.db.flush()
 
-        self.audit.log_escalation_trigger(
-            operation_type=REASON_TO_TRIGGER_OP[reason_code],
+        self.emitter.escalation_triggered(
             order_id=order_test.orderId,
+            order_test_id=order_test.id,
             test_code=order_test.testCode,
-            test_id=order_test.id,
-            ticket_id=ticket.id,
             user_id=user_id,
-            reason_code=reason_code.value,
-            before_status=prior_status.value,
-            metadata=metadata,
+            metadata={
+                "reason_code": reason_code.value,
+                "ticket_id": ticket.id,
+                "before_status": prior_status.value if prior_status else None,
+                **(metadata or {}),
+            },
         )
         return ticket
 
@@ -162,6 +154,20 @@ class EscalationEngine:
         ticket.resolutionNotes = notes
         ticket.resolvedByUserId = str(user_id)
         ticket.resolvedAt = datetime.now(UTC)
+
+        order_test = self.db.query(OrderTest).filter(OrderTest.id == order_test_id).first()
+        if order_test:
+            self.emitter.escalation_resolved(
+                order_id=order_test.orderId,
+                order_test_id=order_test_id,
+                test_code=order_test.testCode,
+                user_id=user_id,
+                metadata={
+                    "resolution": action.value,
+                    "ticket_id": ticket.id,
+                    "reason_code": ticket.reasonCode.value if ticket.reasonCode else None,
+                },
+            )
         return ticket
 
 
@@ -210,8 +216,7 @@ class EscalationOperations:
         read_back_payload: dict[str, Any] | None,
     ) -> EscalationResolveResult:
         order_id = order_test.orderId
-        test_code = order_test.testCode
-        ticket = self._svc.escalation.resolve_ticket(
+        self._svc.escalation.resolve_ticket(
             order_test.id,
             EscalationResolutionAction.FORCE_VALIDATE,
             user_id,
@@ -223,19 +228,6 @@ class EscalationOperations:
         order_test.validatedBy = str(user_id)
         order_test.validationNotes = validation_notes
         order_test.status = TestStatus.VALIDATED
-
-        order = self._svc.db.query(Order).filter(Order.orderId == order_id).first()
-        completion_meta = build_order_completion_metadata(order) if order else {}
-
-        self._svc.audit.log_escalation_resolution_force_validate(
-            order_id=order_id,
-            test_code=test_code,
-            test_id=order_test.id,
-            ticket_id=ticket.id,
-            user_id=user_id,
-            validation_notes=validation_notes,
-            metadata={**(ticket.ticketMetadata or {}), **completion_meta},
-        )
 
         self._svc.db.commit()
         self._svc.db.refresh(order_test)
@@ -285,15 +277,6 @@ class EscalationOperations:
             sample_id=original_test.sampleId,
             test_code=test_code,
             created_test_id=new_test.id,
-        )
-
-        self._svc.audit.log_escalation_resolution_authorize_retest(
-            order_id=order_id,
-            test_code=test_code,
-            original_test_id=original_test.id,
-            new_test_id=new_test.id,
-            user_id=user_id,
-            reason=reason,
         )
 
         self._svc.db.commit()
@@ -363,7 +346,7 @@ class EscalationOperations:
         self._svc.db.flush()
         original_test.retestOrderTestId = new_test.id
 
-        ticket = self._svc.escalation.resolve_ticket(
+        self._svc.escalation.resolve_ticket(
             original_test.id,
             EscalationResolutionAction.AUTHORIZE_RECOLLECT,
             user_id,
@@ -383,26 +366,6 @@ class EscalationOperations:
             test_code=test_code,
             created_test_id=new_test.id,
             created_sample_id=new_sample.sampleId,
-        )
-
-        self._svc.audit.log_escalation_resolution_authorize_recollect(
-            order_id=order_id,
-            test_code=test_code,
-            original_test_id=original_test.id,
-            new_test_id=new_test.id,
-            new_sample_id=new_sample.sampleId,
-            ticket_id=ticket.id,
-            user_id=user_id,
-            reason=reason,
-        )
-
-        self._svc.audit.log_recollection_request(
-            original_sample_id=sample.sampleId,
-            new_sample_id=new_sample.sampleId,
-            user_id=user_id,
-            recollection_reason=reason,
-            recollection_attempt=new_sample.recollectionAttempt,
-            comment=reason,
         )
 
         self._svc.db.commit()
@@ -474,19 +437,6 @@ class EscalationOperations:
             notes=validation_notes,
         )
 
-        order = self._svc.db.query(Order).filter(Order.orderId == order_id).first()
-        completion_meta = build_order_completion_metadata(order) if order else {}
-
-        self._svc.audit.log_escalation_resolution_apply_amendment(
-            order_id=order_id,
-            test_code=test_code,
-            test_id=order_test.id,
-            ticket_id=ticket.id,
-            user_id=user_id,
-            validation_notes=validation_notes,
-            metadata=completion_meta,
-        )
-
         self._svc.db.commit()
         self._svc.db.refresh(order_test)
         update_order_status(self._svc.db, order_id)
@@ -509,7 +459,7 @@ class EscalationOperations:
         original_test.status = TestStatus.CANCELLED
         original_test.validationNotes = reason
 
-        ticket = self._svc.escalation.resolve_ticket(
+        self._svc.escalation.resolve_ticket(
             original_test.id,
             EscalationResolutionAction.CANCEL_TEST,
             user_id,
@@ -527,16 +477,6 @@ class EscalationOperations:
             order_test_id=original_test.id,
             sample_id=original_test.sampleId,
             test_code=test_code,
-        )
-
-        self._svc.audit.log_escalation_resolution_cancel_test(
-            order_id=order_id,
-            test_code=test_code,
-            test_id=original_test.id,
-            sample_id=original_test.sampleId or 0,
-            user_id=user_id,
-            reason=reason,
-            metadata={"ticketId": ticket.id},
         )
 
         self._svc.db.commit()
