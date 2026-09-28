@@ -396,6 +396,8 @@ class EscalationOperations:
         if not proposed:
             raise LabOperationError("Amendment ticket has no proposed results", status_code=400)
 
+        prior_results = order_test.results
+
         order = self._svc.db.query(Order).filter(Order.orderId == order_id).first()
         test_def = self._svc.db.query(Test).filter(Test.code == test_code).first()
         result_items = test_def.resultItems if test_def else []
@@ -419,11 +421,22 @@ class EscalationOperations:
                 patient_dob=patient_dob,
             )
 
-        order_test.results = self._svc._results_to_json_serializable(proposed)
+        new_results = self._svc._results_to_json_serializable(proposed)
+        order_test.results = new_results
         if flags:
             order_test.flags = self._svc.flag_calculator.flags_to_string_list(flags)
             flag_modified(order_test, "flags")
         order_test.hasCriticalValues = self._svc.flag_calculator.has_critical_values(flags)
+
+        self._svc.emitter.result_updated(
+            order_id,
+            order_test.id,
+            test_code,
+            user_id,
+            prior_results,
+            new_results,
+            metadata={"source": "escalation_apply_amendment"},
+        )
 
         order_test.resultValidatedAt = datetime.now(UTC)
         order_test.validatedBy = str(user_id)

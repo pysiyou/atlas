@@ -360,6 +360,30 @@ class AuditEmitter:
             user_id,
         )
 
+    def result_updated(
+        self,
+        order_id: int,
+        order_test_id: int,
+        test_code: str,
+        user_id: int,
+        old_results: dict[str, Any] | list[Any] | None,
+        new_results: dict[str, Any] | list[Any] | None,
+        metadata: dict[str, Any] | None = None,
+    ) -> None:
+        self.emit(
+            AuditEventCreate(
+                eventType=EventType.LABORATORY_RESULT_UPDATE,
+                target=EventTarget(entityType="order_test", entityId=order_test_id),
+                context=self._order_context(order_id, test_id=order_test_id),
+                changes=EventChanges(
+                    oldValues={"results": old_results or {}},
+                    newValues={"results": new_results or {}},
+                ),
+                metadata={"test_code": test_code, **(metadata or {})},
+            ),
+            user_id,
+        )
+
     def result_critical_detected(
         self,
         order_id: int,
@@ -524,6 +548,23 @@ class AuditEmitter:
             user_id,
         )
 
+    def invoice_voided(
+        self,
+        order_id: int,
+        invoice_id: int,
+        user_id: int,
+        metadata: dict[str, Any] | None = None,
+    ) -> None:
+        self.emit(
+            AuditEventCreate(
+                eventType=EventType.BILLING_INVOICE_VOID,
+                target=EventTarget(entityType="invoice", entityId=invoice_id),
+                context=self._order_context(order_id),
+                metadata=metadata,
+            ),
+            user_id,
+        )
+
     def insurance_submitted(
         self,
         order_id: int,
@@ -549,6 +590,23 @@ class AuditEmitter:
                 eventType=EventType.REPORTING_GENERATE,
                 target=EventTarget(entityType="order", entityId=order_id),
                 context=self._order_context(order_id),
+            ),
+            user_id,
+        )
+
+    def reporting_downloaded(
+        self,
+        order_id: int,
+        order_test_id: int,
+        user_id: int,
+        metadata: dict[str, Any] | None = None,
+    ) -> None:
+        self.emit(
+            AuditEventCreate(
+                eventType=EventType.REPORTING_DOWNLOAD,
+                target=EventTarget(entityType="order_test", entityId=order_test_id),
+                context=self._order_context(order_id, test_id=order_test_id),
+                metadata=metadata,
             ),
             user_id,
         )
