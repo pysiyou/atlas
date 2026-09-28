@@ -1,5 +1,5 @@
 /**
- * Lab dashboard — today panel, attention queue, orders table.
+ * Lab dashboard — today panel, attention queue, activity panel, orders table.
  */
 
 import React from 'react';
@@ -12,6 +12,8 @@ import { LabCommandCenterBoardSkeleton } from './LabCommandCenterBoardSkeleton';
 import { LabDashboardOrdersTable } from './dashboard/LabDashboardOrdersTable';
 import { LabDashboardTodayPanel } from './dashboard/LabDashboardTodayPanel';
 import { LabAttentionQueue } from './panels/LabAttentionQueue';
+import { RecentActivityPanel } from './panels/RecentActivityPanel';
+
 export const LabCommandCenterBoard: React.FC = () => {
   const board = useLabCommandCenterViewModel();
 
@@ -46,6 +48,9 @@ export const LabCommandCenterBoard: React.FC = () => {
           </div>
           <div className={DASHBOARD_BOTTOM_PANEL}>
             <LabAttentionQueue items={board.attentionItems} attentionTotal={board.attentionTotal} />
+          </div>
+          <div className={DASHBOARD_BOTTOM_PANEL}>
+            <RecentActivityPanel />
           </div>
         </div>
         <div className={DASHBOARD_TABLE_WRAP}>

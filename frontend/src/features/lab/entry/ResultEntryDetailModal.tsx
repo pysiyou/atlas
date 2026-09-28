@@ -18,6 +18,7 @@ import {
   DetailGrid,
   ModalFooter,
 } from '../components/LabWorkflowDetailModal';
+import { LabEntityTimelinePanel } from '../components/LabEntityTimelinePanel';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { useOrderTestQueueState } from '../hooks';
 import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
@@ -314,6 +315,9 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
           },
         ]}
       />
+      {test.id != null && (
+        <LabEntityTimelinePanel entityType="order_test" entityId={test.id} />
+      )}
     </LabWorkflowDetailModal>
   );
 };

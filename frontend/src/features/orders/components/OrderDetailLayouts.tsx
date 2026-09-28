@@ -19,6 +19,7 @@ import { PatientInfoSection } from './PatientInfoSection';
 import { TestsTable } from './TestsTable';
 import { BillingSummarySection } from './BillingSummarySection';
 import { OrderCircularProgress } from './OrderCircularProgress';
+import { OrderEventTimeline } from './OrderEventTimeline';
 
 interface LayoutProps {
   order: Order;
@@ -151,10 +152,9 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
           className={panelClass}
           padding="none"
           scroll={fillScroll}
+          headerEnd={<OrderCircularProgress order={order} />}
         >
-          <div className="flex justify-center p-space-4">
-            <OrderCircularProgress order={order} />
-          </div>
+          <OrderEventTimeline orderId={order.orderId} />
         </Panel>
       </div>
 
@@ -222,10 +222,14 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
         <PatientInfoSection patient={patient} onViewPatient={onViewPatient} />
       </Panel>
 
-      <Panel title="Order Progress" className="shrink-0" padding="none" scroll="visible">
-        <div className="flex justify-center p-space-4">
-          <OrderCircularProgress order={order} />
-        </div>
+      <Panel
+        title="Order Progress"
+        className="shrink-0"
+        padding="none"
+        scroll="visible"
+        headerEnd={<OrderCircularProgress order={order} />}
+      >
+        <OrderEventTimeline orderId={order.orderId} />
       </Panel>
 
       <Panel title="Tests" meta={testsHeaderMeta} className="shrink-0" padding="none" scroll="visible">

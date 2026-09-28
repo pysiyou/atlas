@@ -51,6 +51,8 @@ export const LAB_COPY = {
     quality: 'Quality',
     order: 'Order',
     composition: 'Composition',
+    activityTitle: 'Activity log',
+    activityMeta: 'Last 24 hours · chronological record of accession and laboratory events',
   },
 } as const;
 
