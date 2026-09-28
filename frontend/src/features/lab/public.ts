@@ -15,7 +15,6 @@ export { useSampleLookup } from './api/samples';
 export {
   useLabStageQueueCounts,
   getValidationTabCount,
-  useOpenHistoricalLabRecord,
   useLabWorkflowResponsiveCard,
 } from './hooks';
 

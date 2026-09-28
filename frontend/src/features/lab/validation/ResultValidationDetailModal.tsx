@@ -34,7 +34,6 @@ import type { TestWithContext } from '@/types';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import { TYPE } from '@/components/theme/recipes';
 import type { QualityIssueResult } from '@/types/lab-operations';
-import { LabEntityTimelinePanel } from '../components/LabEntityTimelinePanel';
 import { labModalSubtitle } from '../components/LabWorkflowModalSubtitles';
 import { hasTestResults } from '../utils/labSearchAndLinks';
 
@@ -247,9 +246,6 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
           },
         ]}
       />
-      {test.id != null && (
-        <LabEntityTimelinePanel entityType="order_test" entityId={test.id} />
-      )}
     </LabWorkflowDetailModal>
   );
 };

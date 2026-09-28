@@ -2,7 +2,6 @@ import { Panel, EntityId } from '@/components';
 import { ResultValidationForm } from './ResultValidationForm';
 import { DetailGrid } from '../components/LabWorkflowDetailModal';
 import { CriticalValueActions } from '../criticalValues/CriticalValueActions';
-import { LabEntityTimelinePanel } from '../components/LabEntityTimelinePanel';
 import type { TestWithContext } from '@/types';
 import type { CriticalValueRecord } from '../criticalValues/criticalValues';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
@@ -146,9 +145,6 @@ export function EscalationResolutionBody({
           },
         ]}
       />
-      {test.id != null && (
-        <LabEntityTimelinePanel entityType="order_test" entityId={test.id} />
-      )}
     </>
   );
 }

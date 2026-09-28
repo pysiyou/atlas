@@ -12,5 +12,4 @@ export * from './useLabWorkflowCardClickGuard';
 export * from './useQualityIssuePopover';
 export * from './useSubmitQualityIssue';
 export * from './useOrderTestQueueState';
-export * from './useOpenHistoricalLabRecord';
 export * from './useLabWorkflowResponsiveCard';

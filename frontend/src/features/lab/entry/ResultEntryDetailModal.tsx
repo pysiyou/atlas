@@ -24,7 +24,6 @@ import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { ICONS } from '@/config/icons';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import { useTestCatalog } from '@/features/catalog';
-import { LabEntityTimelinePanel } from '../components/LabEntityTimelinePanel';
 import { labModalSubtitle } from '../components/LabWorkflowModalSubtitles';
 import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 import { ResultValidationForm } from '../validation/ResultValidationForm';
@@ -315,9 +314,6 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
           },
         ]}
       />
-      {test.id != null && (
-        <LabEntityTimelinePanel entityType="order_test" entityId={test.id} />
-      )}
     </LabWorkflowDetailModal>
   );
 };

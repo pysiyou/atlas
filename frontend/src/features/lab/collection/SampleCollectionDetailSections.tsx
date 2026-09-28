@@ -147,22 +147,6 @@ export const buildCollectionDetailGridSections = ({
     });
   }
 
-  // Audit Trail - collected/rejected only
-  if (isCollected || isRejected) {
-    sections.push({
-      title: 'Audit Trail',
-      fields: [
-        { label: 'Created', timestamp: sample.createdAt },
-        { label: 'Created By', value: getUserName(sample.createdBy.toString()) },
-        { label: 'Last Updated', timestamp: sample.updatedAt },
-        {
-          label: 'Updated By',
-          value: sample.updatedBy ? getUserName(sample.updatedBy.toString()) : undefined,
-        },
-      ],
-    });
-  }
-
   return sections;
 };
 
