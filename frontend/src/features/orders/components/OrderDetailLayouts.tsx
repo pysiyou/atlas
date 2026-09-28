@@ -19,7 +19,7 @@ import { PatientInfoSection } from './PatientInfoSection';
 import { TestsTable } from './TestsTable';
 import { BillingSummarySection } from './BillingSummarySection';
 import { OrderCircularProgress } from './OrderCircularProgress';
-import { OrderEventTimeline } from './OrderEventTimeline';
+import { OrderEventLogPanel } from '@/features/event-log';
 
 interface LayoutProps {
   order: Order;
@@ -154,9 +154,11 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
           scroll={fillScroll}
           headerEnd={<OrderCircularProgress order={order} />}
         >
-          <OrderEventTimeline orderId={order.orderId} />
+          <div className="min-h-24" aria-hidden />
         </Panel>
       </div>
+
+      <OrderEventLogPanel orderId={order.orderId} className={fillHeight ? 'min-h-72' : undefined} />
 
       <div className={cn(LAYOUT.detailGrid3, fillHeight && 'min-h-0')}>
         <Panel
@@ -229,8 +231,10 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
         scroll="visible"
         headerEnd={<OrderCircularProgress order={order} />}
       >
-        <OrderEventTimeline orderId={order.orderId} />
+        <div className="min-h-16" aria-hidden />
       </Panel>
+
+      <OrderEventLogPanel orderId={order.orderId} className="shrink-0 min-h-72" />
 
       <Panel title="Tests" meta={testsHeaderMeta} className="shrink-0" padding="none" scroll="visible">
         <TestsTable

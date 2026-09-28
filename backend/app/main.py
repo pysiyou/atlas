@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1 import (
     affiliations,
     analyzer,
+    audit,
     auth,
     billing,
     critical_values,
@@ -87,6 +88,7 @@ def health_check():
 
 # Include routers
 app.include_router(auth.router, prefix=settings.API_V1_PREFIX)
+app.include_router(audit.router, prefix=settings.API_V1_PREFIX)
 app.include_router(patients.router, prefix=settings.API_V1_PREFIX, tags=["patients"])
 app.include_router(tests.router, prefix=settings.API_V1_PREFIX, tags=["tests"])
 app.include_router(orders.router, prefix=settings.API_V1_PREFIX, tags=["orders"])

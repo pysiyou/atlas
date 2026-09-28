@@ -216,6 +216,8 @@ class QualityIssueService:
                     "remedy": remedy.value,
                     "reason": reason,
                     "test_code": test_code,
+                    **({"sample_id": sample_id} if sample_id is not None else {}),
+                    **({"notes": notes} if notes else {}),
                 },
             )
             if created_test_id is not None and order_test_id is not None:

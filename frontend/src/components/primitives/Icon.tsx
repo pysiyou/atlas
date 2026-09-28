@@ -126,6 +126,7 @@ export type IconName =
   | 'like'
   | 'dislike'
   | 'menu'
+  | 'question'
   | 'database';
 
 export interface IconProps {

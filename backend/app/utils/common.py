@@ -50,6 +50,8 @@ def get_or_404(
 
 def parse_display_id_from_search(search_term: str, prefix: str) -> int | None:
     compact = re.sub(r"[\s-]", "", search_term.strip())
+    if compact.startswith("#"):
+        compact = compact[1:]
     upper = compact.upper()
     pfx = prefix.upper()
     if upper.startswith(pfx) and len(upper) > len(pfx):
