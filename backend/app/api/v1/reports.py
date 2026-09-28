@@ -22,3 +22,16 @@ def list_validated_tests(
     _current_user: User = Depends(get_current_user),
 ):
     return ReportService(db).list_validated_tests(limit=limit)
+
+
+@router.get(
+    "/reports/validated-tests/{testId}/download",
+    response_model=ValidatedTestReportItem,
+    status_code=status.HTTP_200_OK,
+)
+def download_validated_test_report(
+    testId: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return ReportService(db).get_validated_test_report(testId, current_user.id)

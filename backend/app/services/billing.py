@@ -75,6 +75,48 @@ class BillingService:
     def list_invoices_for_order(self, order_id: int) -> list[Invoice]:
         return self.db.query(Invoice).filter(Invoice.orderId == order_id).all()
 
+    def _invoice_is_voided(self, invoice: Invoice) -> bool:
+        return (
+            invoice.amountPaid == 0
+            and invoice.amountDue == 0
+            and invoice.total == 0
+            and invoice.subtotal == 0
+            and invoice.items == []
+        )
+
+    def void_invoice(self, invoice_id: int, user_id: int, reason: str | None = None) -> Invoice:
+        invoice = self.get_invoice(invoice_id)
+        if self._invoice_is_voided(invoice):
+            raise HTTPException(status_code=409, detail="Invoice is already voided")
+        if invoice.amountPaid > 0:
+            raise HTTPException(
+                status_code=400,
+                detail="Cannot void an invoice that has recorded payments",
+            )
+
+        old_snapshot = {
+            "subtotal": invoice.subtotal,
+            "total": invoice.total,
+            "amount_due": invoice.amountDue,
+            "item_count": len(invoice.items or []),
+        }
+        invoice.items = []
+        invoice.subtotal = 0.0
+        invoice.discount = 0.0
+        invoice.tax = 0.0
+        invoice.total = 0.0
+        invoice.amountDue = 0.0
+
+        self.emitter.invoice_voided(
+            invoice.orderId,
+            invoice.invoiceId,
+            user_id,
+            metadata={"reason": reason, "previous": old_snapshot},
+        )
+        self.db.commit()
+        self.db.refresh(invoice)
+        return invoice
+
     def submit_insurance_claim(self, data: InsuranceClaimCreate, user_id: int) -> InsuranceClaim:
         invoice = self.get_invoice(data.invoiceId)
         if invoice.orderId != data.orderId:

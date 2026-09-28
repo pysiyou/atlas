@@ -35,6 +35,10 @@ class InvoiceResponse(BaseModel):
         from_attributes = True
 
 
+class InvoiceVoidRequest(BaseModel):
+    reason: str | None = Field(None, max_length=500)
+
+
 class InsuranceClaimCreate(BaseModel):
     orderId: int
     invoiceId: int

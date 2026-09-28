@@ -6,7 +6,12 @@ from sqlalchemy.orm import Session
 from app.api.dependencies import get_current_user
 from app.db.database import get_db
 from app.models.user import User
-from app.schemas.billing import InsuranceClaimCreate, InsuranceClaimResponse, InvoiceResponse
+from app.schemas.billing import (
+    InsuranceClaimCreate,
+    InsuranceClaimResponse,
+    InvoiceResponse,
+    InvoiceVoidRequest,
+)
 from app.services.billing import BillingService
 
 router = APIRouter(tags=["billing"])
@@ -44,6 +49,21 @@ def create_invoice_for_order(
     db.commit()
     db.refresh(invoice)
     return invoice
+
+
+@router.post(
+    "/invoices/{invoiceId}/void",
+    response_model=InvoiceResponse,
+    status_code=status.HTTP_200_OK,
+)
+def void_invoice(
+    invoiceId: int,
+    body: InvoiceVoidRequest | None = None,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    reason = body.reason if body else None
+    return BillingService(db).void_invoice(invoiceId, current_user.id, reason=reason)
 
 
 @router.get("/insurance-claims/order/{orderId}", response_model=list[InsuranceClaimResponse])
