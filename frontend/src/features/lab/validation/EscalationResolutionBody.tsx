@@ -1,7 +1,7 @@
 import { Panel, EntityId } from '@/components';
 import { ResultValidationForm } from './ResultValidationForm';
 import { DetailGrid } from '../components/LabWorkflowDetailModal';
-import { LabEntityTimelinePanel } from '../components/LabEntityTimelinePanel';
+import { ScopedEventLogPanel } from '@/features/event-log';
 import { CriticalValueActions } from '../criticalValues/CriticalValueActions';
 import type { TestWithContext } from '@/types';
 import type { CriticalValueRecord } from '../criticalValues/criticalValues';
@@ -147,7 +147,7 @@ export function EscalationResolutionBody({
         ]}
       />
       {test.id != null && (
-        <LabEntityTimelinePanel entityType="order_test" entityId={test.id} />
+        <ScopedEventLogPanel scope={{ targetType: 'order_test', targetId: test.id }} />
       )}
     </>
   );

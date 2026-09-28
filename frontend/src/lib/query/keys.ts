@@ -67,6 +67,16 @@ export const queryKeys = {
   },
 
   /**
+   * Audit event log (append-only backend trail)
+   */
+  auditEvents: {
+    all: ['auditEvents'] as const,
+    lists: () => [...queryKeys.auditEvents.all, 'list'] as const,
+    list: (params: Record<string, string | number | undefined>) =>
+      [...queryKeys.auditEvents.lists(), params] as const,
+  },
+
+  /**
    * Order queries (dynamic data)
    */
   orders: {

@@ -26,7 +26,7 @@ import { QualityIssuePopover } from '../components/QualityIssuePopover';
 import { CriticalValueActions } from '../criticalValues/CriticalValueActions';
 import { buildCriticalValueRecord } from '../criticalValues/criticalValues';
 import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
-import { LabEntityTimelinePanel } from '../components/LabEntityTimelinePanel';
+import { ScopedEventLogPanel } from '@/features/event-log';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { useOrderTestQueueState } from '../hooks';
 import { useSampleRejectionDisplay } from '../hooks/useSampleRejectionDisplay';
@@ -248,7 +248,7 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
         ]}
       />
       {test.id != null && (
-        <LabEntityTimelinePanel entityType="order_test" entityId={test.id} />
+        <ScopedEventLogPanel scope={{ targetType: 'order_test', targetId: test.id }} />
       )}
     </LabWorkflowDetailModal>
   );

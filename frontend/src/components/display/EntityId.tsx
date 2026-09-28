@@ -1,5 +1,5 @@
 import React, { type ElementType, type ReactNode } from 'react';
-import { cn, displayId, type EntityType } from '@/utils';
+import { cn, displayId, withHashPrefix, type EntityType } from '@/utils';
 import {
   ENTITY_ID,
   ENTITY_ID_BLOCK,
@@ -49,10 +49,13 @@ export function EntityId({
   ...rest
 }: EntityIdProps) {
   const content =
-    children ??
-    (type != null
-      ? displayId[type](typeof value === 'string' ? Number(value) : value)
-      : null);
+    children != null
+      ? typeof children === 'string' || typeof children === 'number'
+        ? withHashPrefix(String(children))
+        : children
+      : type != null
+        ? displayId[type](typeof value === 'string' ? Number(value) : value)
+        : null;
 
   if (content == null || content === '' || content === '-') {
     return null;

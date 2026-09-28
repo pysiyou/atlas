@@ -4,7 +4,7 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Raleway', system-ui, -apple-system, sans-serif;
 
   /* Font weight scale (CSS-aligned); default = normal (400) */
   --font-weight-thin: 100;

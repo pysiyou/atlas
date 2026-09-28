@@ -1,4 +1,4 @@
-"""Event logger — validates and persists audit events (optionally via BackgroundTasks)."""
+"""Persist audit events (sync or background)."""
 from __future__ import annotations
 
 import logging
@@ -94,7 +94,7 @@ def _persist_audit_event(row: dict[str, Any]) -> None:
         db.close()
 
 
-class EventLogger:
+class AuditWriter:
     """Writes audit events; use background_tasks for fire-and-forget HTTP paths."""
 
     def __init__(self, db: Session):
@@ -107,11 +107,6 @@ class EventLogger:
         background_tasks: BackgroundTasks | None = None,
         ip_address: str | None = None,
     ) -> UUID:
-        """
-        Validate and schedule or persist an audit event.
-
-        Returns the generated event_id (UUID).
-        """
         validated = AuditEventCreate.model_validate(create)
         row = _build_row_dict(validated, user, ip_address)
         event_id: UUID = row["eventId"]
@@ -130,9 +125,12 @@ class EventLogger:
         user: User | None,
         ip_address: str | None = None,
     ) -> AuditEvent:
-        """Persist using the caller's session (same transaction boundary if not yet committed)."""
         validated = AuditEventCreate.model_validate(create)
         row = _build_row_dict(validated, user, ip_address)
         entry = AuditEvent(**row)
         self.db.add(entry)
         return entry
+
+
+# Back-compat alias for opt-in example router
+EventLogger = AuditWriter

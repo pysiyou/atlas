@@ -302,7 +302,14 @@ class ResultOperations:
                 order_test.flags = existing_flags + delta_flag_strings
                 flag_modified(order_test, "flags")
 
-        enter_metadata: dict[str, Any] = {"source": "manual" if user_id > 0 else "analyzer"}
+        enter_metadata: dict[str, Any] = {
+            "source": "manual" if user_id > 0 else "analyzer",
+            "results": results_serializable,
+        }
+        if order_test.flags:
+            enter_metadata["flags"] = list(order_test.flags)
+        if technician_notes and str(technician_notes).strip():
+            enter_metadata["notes"] = str(technician_notes).strip()
         if delta_warnings:
             enter_metadata["delta_checks"] = [
                 {
@@ -388,12 +395,18 @@ class ResultOperations:
         order_test.validationNotes = validation_notes
         order_test.status = TestStatus.VALIDATED
 
+        approve_metadata: dict[str, Any] = {"validation_notes": validation_notes}
+        if order_test.results:
+            approve_metadata["results"] = order_test.results
+        if order_test.flags:
+            approve_metadata["flags"] = list(order_test.flags)
+
         self._svc.emitter.validation_approved(
             order_id,
             order_test.id,
             order_test.testCode,
             user_id,
-            metadata={"validation_notes": validation_notes},
+            metadata=approve_metadata,
         )
 
         reflex_added = ReflexEngine(self._svc.db).evaluate_after_validation(order_test, user_id)

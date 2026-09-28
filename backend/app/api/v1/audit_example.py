@@ -17,7 +17,7 @@ from app.api.dependencies import get_current_user
 from app.db.database import get_db
 from app.models.user import User
 from app.schemas.audit import AuditEventCreate, EventChanges, EventContext, EventTarget, EventType
-from app.services.audit.event_logger import EventLogger
+from app.services.audit.write import EventLogger
 
 router = APIRouter()
 

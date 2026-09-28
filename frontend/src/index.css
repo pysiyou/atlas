@@ -3,6 +3,7 @@
 @source './components/theme/recipes.ts';
 
 @theme {
+  --font-sans: 'Raleway', system-ui, -apple-system, sans-serif;
   --text-3xs: var(--font-size-3xs);
   --text-2xs: var(--font-size-2xs);
   --text-xxs: var(--font-size-xxs);
@@ -367,6 +368,7 @@
 
 body {
   font-family: var(--font-sans);
+  font-optical-sizing: auto;
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-default);
 }

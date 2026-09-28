@@ -4,7 +4,7 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 [data-theme='aurora-light'] {
-  --font-sans: 'Nunito', 'Inter', system-ui, sans-serif;
+  --font-sans: 'Raleway', system-ui, sans-serif;
   /* Optical correction for round sans x-height (tune via --type-base only). */
   --type-base: 0.71875rem;
   --type-page-title-weight: var(--font-weight-normal);

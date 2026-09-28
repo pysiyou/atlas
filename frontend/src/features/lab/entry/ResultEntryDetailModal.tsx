@@ -18,7 +18,7 @@ import {
   DetailGrid,
   ModalFooter,
 } from '../components/LabWorkflowDetailModal';
-import { LabEntityTimelinePanel } from '../components/LabEntityTimelinePanel';
+import { ScopedEventLogPanel } from '@/features/event-log';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { useOrderTestQueueState } from '../hooks';
 import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
@@ -316,7 +316,7 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
         ]}
       />
       {test.id != null && (
-        <LabEntityTimelinePanel entityType="order_test" entityId={test.id} />
+        <ScopedEventLogPanel scope={{ targetType: 'order_test', targetId: test.id }} />
       )}
     </LabWorkflowDetailModal>
   );

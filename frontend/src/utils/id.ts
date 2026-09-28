@@ -21,7 +21,15 @@ export function formatDisplayId(entityType: EntityType, id: number | null | unde
   if (id === null || id === undefined) return '-';
   const n = Number(id);
   if (!Number.isInteger(n) || n < 0) return '-';
-  return `${ID_PREFIXES[entityType]}${n.toString().padStart(4, '0')}`;
+  return `#${ID_PREFIXES[entityType]}${n.toString().padStart(4, '0')}`;
+}
+
+/** Prefix display refs (catalog test codes, string sample ids, etc.) with # once. */
+export function withHashPrefix(label: string | null | undefined): string {
+  if (label === null || label === undefined) return '-';
+  const trimmed = String(label).trim();
+  if (!trimmed || trimmed === '-') return '-';
+  return trimmed.startsWith('#') ? trimmed : `#${trimmed}`;
 }
 
 export const displayId = {
