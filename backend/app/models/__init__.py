@@ -2,9 +2,9 @@
 Import all models for easy access
 """
 from app.models.affiliation_pricing import AffiliationPricing
+from app.models.audit_event import AuditEvent
 from app.models.billing import InsuranceClaim, Invoice, Payment
 from app.models.escalation import EscalationTicket
-from app.models.lab_audit import LabOperationLog
 from app.models.order import Order, OrderTest
 from app.models.patient import Patient
 from app.models.quality_issue import QualityIssue
@@ -25,7 +25,7 @@ __all__ = [
     "Payment",
     "InsuranceClaim",
     "Report",
-    "LabOperationLog",
+    "AuditEvent",
     "EscalationTicket",
     "QualityIssue",
     "RecollectionRequest",

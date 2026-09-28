@@ -5,6 +5,7 @@ from app.models.billing import InsuranceClaim, Invoice
 from app.models.order import Order, OrderTest
 from app.schemas.billing import InsuranceClaimCreate
 from app.schemas.enums import ClaimStatus, TestStatus
+from app.services.audit.emitter import AuditEmitter
 from fastapi import HTTPException
 from sqlalchemy.orm import Session, joinedload
 
@@ -12,8 +13,9 @@ from sqlalchemy.orm import Session, joinedload
 class BillingService:
     def __init__(self, db: Session):
         self.db = db
+        self.emitter = AuditEmitter(db)
 
-    def create_invoice_for_order(self, order_id: int) -> Invoice:
+    def create_invoice_for_order(self, order_id: int, user_id: int | None = None) -> Invoice:
         existing = self.db.query(Invoice).filter(Invoice.orderId == order_id).first()
         if existing:
             return existing
@@ -61,6 +63,7 @@ class BillingService:
         )
         self.db.add(invoice)
         self.db.flush()
+        self.emitter.invoice_generated(order_id, invoice.invoiceId, user_id)
         return invoice
 
     def get_invoice(self, invoice_id: int) -> Invoice:
@@ -89,6 +92,17 @@ class BillingService:
             notes=data.notes,
         )
         self.db.add(claim)
+        self.db.flush()
+        self.emitter.insurance_submitted(
+            data.orderId,
+            claim.claimId,
+            user_id,
+            metadata={
+                "invoice_id": data.invoiceId,
+                "provider": data.insuranceProvider,
+                "claim_amount": data.claimAmount,
+            },
+        )
         self.db.commit()
         self.db.refresh(claim)
         return claim

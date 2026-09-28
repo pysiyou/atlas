@@ -4,6 +4,7 @@ import logging
 from app.core.security import get_password_hash
 from app.models.user import User
 from app.schemas.user import UserCreate, UserUpdate
+from app.services.audit.emitter import AuditEmitter
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -13,6 +14,7 @@ logger = logging.getLogger(__name__)
 class UserService:
     def __init__(self, db: Session):
         self.db = db
+        self.emitter = AuditEmitter(db)
 
     def list_all(self) -> list[User]:
         return self.db.query(User).all()
@@ -29,7 +31,7 @@ class UserService:
             )
         return user
 
-    def create(self, user_data: UserCreate) -> User:
+    def create(self, user_data: UserCreate, actor_user_id: int) -> User:
         existing = self.db.query(User).filter(User.username == user_data.username).first()
         if existing:
             raise HTTPException(
@@ -46,6 +48,8 @@ class UserService:
         )
         try:
             self.db.add(user)
+            self.db.flush()
+            self.emitter.user_created(user.id, actor_user_id)
             self.db.commit()
             self.db.refresh(user)
         except Exception:
@@ -57,7 +61,7 @@ class UserService:
             )
         return user
 
-    def update(self, user_id: int, user_data: UserUpdate) -> User:
+    def update(self, user_id: int, user_data: UserUpdate, actor_user_id: int) -> User:
         user = self.get_by_id(user_id)
         update_data = user_data.model_dump(exclude_unset=True)
         for field, value in update_data.items():
@@ -66,6 +70,7 @@ class UserService:
             else:
                 setattr(user, field, value)
         try:
+            self.emitter.user_updated(user_id, actor_user_id)
             self.db.commit()
             self.db.refresh(user)
         except Exception:
@@ -77,7 +82,7 @@ class UserService:
             )
         return user
 
-    def delete(self, user_id: int) -> None:
+    def delete(self, user_id: int, actor_user_id: int) -> None:
         user = self.get_by_id(user_id)
         try:
             self.db.delete(user)

@@ -49,7 +49,7 @@ def create_test(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    return TestService(db).create(test_data)
+    return TestService(db).create(test_data, current_user.id)
 
 
 @router.put("/tests/{testCode}", response_model=TestResponse)
@@ -59,4 +59,4 @@ def update_test(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    return TestService(db).update(testCode, test_data)
+    return TestService(db).update(testCode, test_data, current_user.id)

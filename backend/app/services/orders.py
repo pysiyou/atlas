@@ -6,14 +6,12 @@ from datetime import UTC, datetime
 from typing import Literal
 
 from app.models.billing import Invoice, Payment
-from app.models.lab_audit import LabOperationLog
 from app.models.order import Order, OrderTest
 from app.models.patient import Patient
 from app.models.sample import Sample
 from app.models.test import Test
 from app.schemas.billing import InvoiceResponse
 from app.schemas.enums import (
-    LabOperationType,
     OrderStatus,
     PaymentMethod,
     PaymentStatus,
@@ -31,7 +29,7 @@ from app.schemas.order import (
 from app.schemas.pagination import create_paginated_response, skip_to_page
 from app.schemas.patient import PatientResponse
 from app.schemas.payment import PaymentCreate, PaymentResponse
-from app.services.audit.logger import AuditService
+from app.services.audit.emitter import AuditEmitter
 from app.services.billing import BillingService
 from app.services.lab.samples import generate_samples_for_order
 from app.utils.common import get_or_404
@@ -62,6 +60,7 @@ def enrich_payment(payment: Payment, order: Order | None) -> dict:
 class PaymentService:
     def __init__(self, db: Session):
         self.db = db
+        self.emitter = AuditEmitter(db)
 
     def _payment_query(self):
         return self.db.query(Payment).options(
@@ -162,14 +161,17 @@ class PaymentService:
             if payment.invoiceId is None:
                 payment.invoiceId = invoice.invoiceId
 
-        AuditService(self.db).log_order_payment_recorded(
-            order_id=order.orderId,
-            payment_id=payment.paymentId,
-            user_id=user_id,
-            amount=payment_data.amount,
-            payment_method=payment_data.paymentMethod.value,
-            payment_status=order.paymentStatus.value,
-            metadata={"totalPaid": new_total_paid, "orderTotal": order.totalPrice},
+        self.emitter.payment_processed(
+            order.orderId,
+            payment.paymentId,
+            user_id,
+            metadata={
+                "amount": payment_data.amount,
+                "payment_method": payment_data.paymentMethod.value,
+                "payment_status": order.paymentStatus.value,
+                "total_paid": new_total_paid,
+                "order_total": order.totalPrice,
+            },
         )
         self.db.commit()
         self.db.refresh(payment)
@@ -267,19 +269,14 @@ def update_order_status(db: Session, order_id: int) -> None:
         old_status = order.overallStatus
         order.overallStatus = new_status
         order.updatedAt = datetime.now(UTC)
-        db.add(
-            LabOperationLog(
-                operationType=LabOperationType.ORDER_STATUS_CHANGE,
-                entityType="order",
-                entityId=order_id,
-                performedBy="system",
-                performedAt=datetime.now(UTC),
-                beforeState={"status": old_status.value if old_status else None},
-                afterState={"status": new_status.value},
-                operationData={"trigger": "automatic"},
-            )
-        )
         db.add(order)
+        AuditEmitter(db).order_status_changed(
+            order_id,
+            old_status.value if old_status else None,
+            new_status.value,
+            user_id=None,
+            metadata={"trigger": "automatic"},
+        )
         db.commit()
         logger.info("Order %s status changed from %s to %s", order_id, old_status, new_status)
 
@@ -339,6 +336,7 @@ def _order_to_summary(order: Order, test_count: int, test_codes: list[str] | Non
 class OrderService:
     def __init__(self, db: Session):
         self.db = db
+        self.emitter = AuditEmitter(db)
 
     def list_orders(
         self,
@@ -441,7 +439,7 @@ class OrderService:
             return OrderDetailResponse(**detail)
         return OrderResponse.model_validate(order)
 
-    def delete_order(self, order_id: int) -> None:
+    def delete_order(self, order_id: int, user_id: int) -> None:
         order = get_or_404(self.db, Order, order_id, "orderId")
         has_payments = (
             self.db.query(Payment).filter(Payment.orderId == order_id).first() is not None
@@ -452,6 +450,7 @@ class OrderService:
                 detail="Cannot delete order that has payments. Remove or void payments first.",
             )
         try:
+            self.emitter.order_deleted(order_id, user_id)
             self.db.query(Sample).filter(Sample.orderId == order_id).delete()
             self.db.delete(order)
             self.db.commit()
@@ -463,13 +462,15 @@ class OrderService:
                 detail="Failed to delete order",
             )
 
-    def mark_as_reported(self, order_id: int) -> OrderReportResponse:
+    def mark_as_reported(self, order_id: int, user_id: int) -> OrderReportResponse:
         order = get_or_404(self.db, Order, order_id, "orderId")
         if order.overallStatus != OrderStatus.COMPLETED:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Order must be COMPLETED before reporting. Current status: {order.overallStatus}",
             )
+        self.emitter.reporting_generated(order_id, user_id)
+        self.db.commit()
         return OrderReportResponse(
             orderId=order_id, status="completed", message="Order is complete"
         )
@@ -519,16 +520,12 @@ class OrderService:
                     )
                 )
             self.db.flush()
-            generate_samples_for_order(order.orderId, self.db, user_id)
-
-            BillingService(self.db).create_invoice_for_order(order.orderId)
-            AuditService(self.db).log_order_status_change(
-                order.orderId,
-                "",
-                OrderStatus.ORDERED.value,
-                user_id=user_id,
-                metadata={"trigger": "create"},
+            self.emitter.order_created(order.orderId, order_data.patientId, user_id)
+            generate_samples_for_order(
+                order.orderId, self.db, user_id, emitter=self.emitter
             )
+
+            BillingService(self.db).create_invoice_for_order(order.orderId, user_id)
             self.db.commit()
             self.db.refresh(order)
         except SQLAlchemyError:
@@ -588,18 +585,16 @@ class OrderService:
                 if ot.testCode not in tests_to_remove
                 and ot.status not in {TestStatus.SUPERSEDED, TestStatus.REMOVED}
             )
-            audit = AuditService(self.db)
-
             for ot in order.tests:
                 if ot.testCode in tests_to_remove:
                     old_status = ot.status.value if ot.status else "unknown"
                     ot.status = TestStatus.REMOVED
-                    audit.log_test_removed(
-                        order_id=order.orderId,
-                        test_id=ot.id,
-                        test_code=ot.testCode,
-                        user_id=user_id,
-                        old_status=old_status,
+                    self.emitter.order_test_removed(
+                        order.orderId,
+                        ot.id,
+                        ot.testCode,
+                        user_id,
+                        old_status,
                     )
 
             total_price_adjustment = 0.0
@@ -621,15 +616,24 @@ class OrderService:
                     self.db.add(order_test)
                     self.db.flush()
                     total_price_adjustment += test.price
-                    audit.log_test_added(
-                        order_id=order.orderId,
-                        test_id=order_test.id,
-                        test_code=test.code,
-                        user_id=user_id,
+                    self.emitter.order_test_added(
+                        order.orderId, order_test.id, test.code, user_id
                     )
 
             order.totalPrice = existing_tests_price + total_price_adjustment
-            generate_samples_for_order(order.orderId, self.db, user_id)
+            generate_samples_for_order(
+                order.orderId, self.db, user_id, emitter=self.emitter
+            )
+
+        if update_data or tests_to_update is not None:
+            self.emitter.order_updated(
+                order_id,
+                user_id,
+                metadata={
+                    "fields": list(update_data.keys()) if update_data else [],
+                    "tests_changed": tests_to_update is not None,
+                },
+            )
 
         for field, value in update_data.items():
             setattr(order, field, value)
@@ -677,13 +681,15 @@ class OrderService:
             )
             self.db.add(payment_record)
             self.db.flush()
-            AuditService(self.db).log_order_payment_recorded(
-                order_id=order_id,
-                payment_id=payment_record.paymentId,
-                user_id=user_id,
-                amount=amount_paid,
-                payment_method=PaymentMethod.CASH.value,
-                payment_status=payment_status.value,
+            self.emitter.payment_processed(
+                order_id,
+                payment_record.paymentId,
+                user_id,
+                metadata={
+                    "amount": amount_paid,
+                    "payment_method": PaymentMethod.CASH.value,
+                    "payment_status": payment_status.value,
+                },
             )
         order.updatedAt = datetime.now(UTC)
         self.db.commit()

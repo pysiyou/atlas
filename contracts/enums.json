@@ -210,36 +210,6 @@
       "REJECTED": "rejected"
     }
   },
-  "LabOperationType": {
-    "type": "string",
-    "values": {
-      "SAMPLE_COLLECT": "sample_collect",
-      "SAMPLE_REJECT": "sample_reject",
-      "SAMPLE_RECOLLECTION_REQUEST": "sample_recollection_request",
-      "RECOLLECTION_REQUEST_CREATED": "recollection_request_created",
-      "RECOLLECTION_REQUEST_APPROVED": "recollection_request_approved",
-      "RECOLLECTION_REQUEST_DENIED": "recollection_request_denied",
-      "RESULT_ENTRY": "result_entry",
-      "RESULT_VALIDATION_APPROVE": "result_validation_approve",
-      "QUALITY_ISSUE_REPORTED": "quality_issue_reported",
-      "ESCALATION_RESOLUTION_AUTHORIZE_RETEST": "escalation_resolution_authorize_retest",
-      "ESCALATION_RESOLUTION_AUTHORIZE_RECOLLECT": "escalation_resolution_authorize_recollect",
-      "ESCALATION_RESOLUTION_FORCE_VALIDATE": "escalation_resolution_force_validate",
-      "ESCALATION_TRIGGER_CRIT_VAL": "escalation_trigger_crit_val",
-      "ESCALATION_TRIGGER_REJ_SAMP": "escalation_trigger_rej_samp",
-      "ESCALATION_TRIGGER_LIMIT_HIT": "escalation_trigger_limit_hit",
-      "ESCALATION_TRIGGER_AMEND_RES": "escalation_trigger_amend_res",
-      "ESCALATION_RESOLUTION_CANCEL_TEST": "escalation_resolution_cancel_test",
-      "ESCALATION_RESOLUTION_APPLY_AMENDMENT": "escalation_resolution_apply_amendment",
-      "ORDER_STATUS_CHANGE": "order_status_change",
-      "ORDER_PAYMENT_RECORDED": "order_payment_recorded",
-      "TEST_REMOVED": "test_removed",
-      "TEST_ADDED": "test_added",
-      "CRITICAL_VALUE_DETECTED": "critical_value_detected",
-      "CRITICAL_VALUE_NOTIFIED": "critical_value_notified",
-      "CRITICAL_VALUE_ACKNOWLEDGED": "critical_value_acknowledged"
-    }
-  },
   "QualityIssueTargetType": {
     "type": "string",
     "values": {

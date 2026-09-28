@@ -12,7 +12,6 @@ from app.models.order import Order, OrderTest
 from app.models.test import Test
 from app.schemas.enums import (
     EscalationReasonCode,
-    LabOperationType,
     OrderStatus,
     RemedyType,
     SampleStatus,
@@ -20,7 +19,7 @@ from app.schemas.enums import (
 )
 from app.services.lab.samples import generate_samples_for_order
 from app.services.lab.state import TestStateMachine
-from app.services.orders import OrderService, build_order_completion_metadata, update_order_status
+from app.services.orders import OrderService, update_order_status
 from app.utils.common import parse_numeric_result_value
 from app.utils.exceptions import LabOperationError
 from sqlalchemy.orm import Session
@@ -287,6 +286,7 @@ class ResultOperations:
         has_critical = self._svc.flag_calculator.has_critical_values(flags)
         order_test.hasCriticalValues = has_critical
 
+        delta_warnings: list = []
         if order and patient:
             delta_warnings = DeltaCheckService(self._svc.db).check_results(
                 patient_id=order.patientId,
@@ -301,39 +301,35 @@ class ResultOperations:
                 existing_flags = list(order_test.flags or [])
                 order_test.flags = existing_flags + delta_flag_strings
                 flag_modified(order_test, "flags")
-                self._svc.audit.log_operation(
-                    operation_type=LabOperationType.RESULT_ENTRY,
-                    entity_type="order_test",
-                    entity_id=order_test.id,
-                    user_id=user_id,
-                    metadata={
-                        "deltaChecks": [
-                            {
-                                "itemCode": w.item_code,
-                                "percentChange": w.percent_change,
-                                "priorValue": w.prior_value,
-                                "currentValue": w.current_value,
-                            }
-                            for w in delta_warnings
-                        ]
-                    },
-                )
+
+        enter_metadata: dict[str, Any] = {"source": "manual" if user_id > 0 else "analyzer"}
+        if delta_warnings:
+            enter_metadata["delta_checks"] = [
+                {
+                    "item_code": w.item_code,
+                    "percent_change": w.percent_change,
+                    "prior_value": w.prior_value,
+                    "current_value": w.current_value,
+                }
+                for w in delta_warnings
+            ]
 
         if has_critical:
             critical_flags = self._svc.flag_calculator.get_critical_flags(flags)
-            self._svc.audit.log_critical_value_detected(
-                order_id=order_id,
-                test_id=order_test.id,
-                test_code=test_code,
-                user_id=user_id,
-                critical_values=self._svc.flag_calculator.flags_to_json(critical_flags),
+            crit_json = self._svc.flag_calculator.flags_to_json(critical_flags)
+            self._svc.emitter.result_critical_detected(
+                order_id,
+                order_test.id,
+                test_code,
+                user_id,
+                metadata={"critical_values": crit_json, "results": results_serializable},
             )
             self._svc.escalation.escalate_test(
                 order_test,
                 EscalationReasonCode.CRIT_VAL,
                 user_id,
                 metadata={
-                    "criticalValues": self._svc.flag_calculator.flags_to_json(critical_flags),
+                    "criticalValues": crit_json,
                     "results": results_serializable,
                 },
                 from_status=TestStatus.SAMPLE_COLLECTED,
@@ -341,13 +337,12 @@ class ResultOperations:
         else:
             order_test.status = TestStatus.RESULTED
 
-        self._svc.audit.log_result_entry(
-            order_id=order_id,
-            test_code=test_code,
-            test_id=order_test.id,
-            user_id=user_id,
-            results=results_serializable,
-            comment=technician_notes,
+        self._svc.emitter.result_entered(
+            order_id,
+            order_test.id,
+            test_code,
+            user_id,
+            metadata=enter_metadata,
         )
 
         self._svc.db.commit()
@@ -365,7 +360,6 @@ class ResultOperations:
             order_test_id, status=TestStatus.RESULTED, for_update=True
         )  # Add row lock
         order_id = order_test.orderId
-        test_code = order_test.testCode
 
         # Note: The status filter above ensures order_test.status == RESULTED,
         # so no need for additional escalation check here.
@@ -394,16 +388,12 @@ class ResultOperations:
         order_test.validationNotes = validation_notes
         order_test.status = TestStatus.VALIDATED
 
-        order = self._svc.db.query(Order).filter(Order.orderId == order_id).first()
-        completion_meta = build_order_completion_metadata(order) if order else {}
-
-        self._svc.audit.log_result_validation_approve(
-            order_id=order_id,
-            test_code=test_code,
-            test_id=order_test.id,
-            user_id=user_id,
-            validation_notes=validation_notes,
-            metadata=completion_meta,
+        self._svc.emitter.validation_approved(
+            order_id,
+            order_test.id,
+            order_test.testCode,
+            user_id,
+            metadata={"validation_notes": validation_notes},
         )
 
         reflex_added = ReflexEngine(self._svc.db).evaluate_after_validation(order_test, user_id)
@@ -414,6 +404,14 @@ class ResultOperations:
             order_test.validationNotes = (
                 f"{order_test.validationNotes or ''} [{reflex_note}]".strip()
             )
+            for reflex in reflex_added:
+                self._svc.emitter.order_test_reflex(
+                    order_id,
+                    reflex.order_test_id,
+                    reflex.added_test_code,
+                    order_test.testCode,
+                    user_id,
+                )
 
         self._svc.db.commit()
         self._svc.db.refresh(order_test)
@@ -481,24 +479,12 @@ class ResultOperations:
             metadata["proposedResults"] = proposed_results
 
         # Create escalation ticket
-        ticket = self._svc.escalation.escalate_test(
+        self._svc.escalation.escalate_test(
             order_test,
             EscalationReasonCode.AMEND_RES,
             user_id,
             metadata=metadata,
             from_status=TestStatus.VALIDATED,
-        )
-
-        self._svc.audit.log_operation(
-            operation_type=LabOperationType.QUALITY_ISSUE_REPORTED,
-            entity_type="order_test",
-            entity_id=order_test.id,
-            user_id=user_id,
-            metadata={
-                "stage": "amendment",
-                "reason": amendment_reason,
-                "ticketId": ticket.id,
-            },
         )
 
         self._svc.db.commit()

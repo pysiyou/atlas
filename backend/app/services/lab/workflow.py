@@ -7,7 +7,7 @@ from app.schemas.enums import (
     PaymentStatus,
     TestStatus,
 )
-from app.services.audit.logger import AuditService
+from app.services.audit.emitter import AuditEmitter
 from app.services.lab.collection_ops import CollectionOperations
 from app.services.lab.escalation import (
     EscalationEngine,
@@ -30,10 +30,10 @@ class LabOperationsService:
 
     def __init__(self, db: Session):
         self.db = db
-        self.audit = AuditService(db)
-        self.escalation = EscalationEngine(db, self.audit)
-        self.quality = QualityIssueService(db, self.audit, self.escalation)
-        self.recollection = RecollectionRequestService(db, self.audit, self.quality)
+        self.emitter = AuditEmitter(db)
+        self.escalation = EscalationEngine(db, self.emitter)
+        self.quality = QualityIssueService(db, self.escalation, self.emitter)
+        self.recollection = RecollectionRequestService(db, self.quality)
         self.quality.recollection_requests = self.recollection
         self.result_validator = ResultValidatorService()
         self.flag_calculator = FlagCalculatorService()

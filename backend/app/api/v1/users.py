@@ -43,7 +43,7 @@ def create_user(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    return UserService(db).create(user_data)
+    return UserService(db).create(user_data, current_user.id)
 
 
 @router.put("/users/{user_id}", response_model=UserResponse)
@@ -53,7 +53,7 @@ def update_user(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    return UserService(db).update(user_id, user_data)
+    return UserService(db).update(user_id, user_data, current_user.id)
 
 
 @router.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -62,5 +62,5 @@ def delete_user(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    UserService(db).delete(user_id)
+    UserService(db).delete(user_id, current_user.id)
     return None
