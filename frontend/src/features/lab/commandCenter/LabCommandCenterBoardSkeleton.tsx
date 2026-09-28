@@ -56,6 +56,9 @@ export const LabCommandCenterBoardSkeleton: React.FC = () => {
           <div className={DASHBOARD_BOTTOM_PANEL}>
             <PanelSkeleton />
           </div>
+          <div className={DASHBOARD_BOTTOM_PANEL}>
+            <PanelSkeleton />
+          </div>
         </div>
         <div className={DASHBOARD_TABLE_WRAP}>
           <Panel hideHeader padding="none" className="h-full min-h-0">
