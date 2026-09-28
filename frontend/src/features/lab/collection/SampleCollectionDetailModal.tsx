@@ -29,7 +29,6 @@ import { usePatientNameLookup } from '@/features/patients';
 import { useOrderLookup } from '@/features/orders';
 import { useSampleLookup } from '../api/samples';
 import { getTestNames } from '@/features/catalog/testLookup';
-import { LabEntityTimelinePanel } from '../components/LabEntityTimelinePanel';
 import { actionButtonPreset, Button, EntityId } from '@/components';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 
@@ -234,9 +233,6 @@ export const SampleCollectionDetailModal: React.FC<CollectionDetailModalProps> =
         gridSections={gridSections}
         showBarcode={(isCollected || isRejected) && sample.sampleId != null}
       />
-      {sample.sampleId && (
-        <LabEntityTimelinePanel entityType="sample" entityId={Number(sample.sampleId)} />
-      )}
     </LabWorkflowDetailModal>
   );
 };
