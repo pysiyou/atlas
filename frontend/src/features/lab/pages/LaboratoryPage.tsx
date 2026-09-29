@@ -19,6 +19,7 @@ import {
   DEFAULT_LAB_TAB,
   isLabTabId,
   LAB_TAB_LABELS,
+  LAB_WORKFLOW_TAB_ICONS,
   type LabTabId,
   getLabTabPath,
 } from '../constants/labConstants';
@@ -52,19 +53,19 @@ export const LaboratoryPage: React.FC = () => {
       {
         id: 'collection',
         label: LAB_TAB_LABELS.collection,
-        icon: <Icon name={ICONS.dataFields.flask} className="w-3.5 h-3.5" />,
+        icon: <Icon name={LAB_WORKFLOW_TAB_ICONS.collection} className="w-3.5 h-3.5" />,
         count: counts.collection,
       },
       {
         id: 'entry',
         label: LAB_TAB_LABELS.entry,
-        icon: <Icon name={ICONS.dataFields.notebook} className="w-3.5 h-3.5" />,
+        icon: <Icon name={LAB_WORKFLOW_TAB_ICONS.entry} className="w-3.5 h-3.5" />,
         count: counts.entry,
       },
       {
         id: 'validation',
         label: LAB_TAB_LABELS.validation,
-        icon: <Icon name={ICONS.ui.shieldCheck} className="w-3.5 h-3.5" />,
+        icon: <Icon name={LAB_WORKFLOW_TAB_ICONS.validation} className="w-3.5 h-3.5" />,
         count: getValidationTabCount(counts),
       },
       {

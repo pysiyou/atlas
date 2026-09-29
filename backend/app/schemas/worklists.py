@@ -199,19 +199,25 @@ class BoardAttentionItem(BaseModel):
     attentionType: str
 
 
-class LabTodayStepAverage(BaseModel):
-    """Mean hours tests spend in a workflow step (today's accessions)."""
+class LabTodayStatusCount(BaseModel):
+    """Order-test count by status among rows updated today (UTC)."""
 
-    step: Literal["collection", "entry", "validation"]
-    averageHours: float | None
-    sampleCount: int
+    status: TestStatus
+    count: int
 
 
 class LabTodayPanelSnapshot(BaseModel):
-    """Average time per workflow step for tests on today's accessions."""
+    """UTC day throughput KPIs for the lab dashboard Today panel."""
 
-    dayStartUtc: str
-    steps: list[LabTodayStepAverage]
+    dayStartUtc: datetime
+    testsUpdatedToday: int
+    testsWorkedCreatedToday: int
+    testsWorkedCreatedCompletedToday: int
+    specimensCollectedToday: int
+    testsResultedToday: int
+    testsValidatedToday: int
+    testsSentBackToday: int
+    statusCounts: list[LabTodayStatusCount]
 
 
 class LabBoardResponse(BaseModel):

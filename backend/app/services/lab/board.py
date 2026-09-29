@@ -15,6 +15,7 @@ from typing import Any, Literal
 from app.data.lab_constants import QUEUE_AGE_CRITICAL_HOURS, QUEUE_AGE_WARNING_HOURS
 from app.models.escalation import EscalationTicket
 from app.models.order import Order, OrderTest
+from app.models.quality_issue import QualityIssue
 from app.models.patient import Patient
 from app.models.recollection_request import RecollectionRequest
 from app.models.sample import Sample
@@ -28,6 +29,7 @@ from app.schemas.enums import (
     SampleStatus,
     TestStatus,
 )
+from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
 ATTENTION_LIMIT = 50
@@ -653,110 +655,111 @@ class LabBoardService:
         snapshot.update({"todayPanel": self._today_panel_snapshot()})
         return snapshot
 
-    def _normalize_utc(self, ts: datetime | None) -> datetime | None:
-        if ts is None:
-            return None
-        if ts.tzinfo is None:
-            return ts.replace(tzinfo=UTC)
-        return ts
-
-    def _hours_between(self, start: datetime, end: datetime) -> float:
-        return max(0.0, (end - start).total_seconds() / 3600.0)
-
-    def _accumulate_today_step_durations(
-        self,
-        *,
-        order_test: OrderTest,
-        order: Order,
-        sample: Sample | None,
-        now: datetime,
-        sums: dict[str, float],
-        counts: dict[str, int],
-    ) -> None:
-        """Add this test's time-in-step to running totals (today's accession cohort)."""
-        order_date = self._normalize_utc(order.orderDate)
-        if order_date is None:
-            return
-
-        status = _enum_value(order_test.status) or TestStatus.PENDING.value
-        collected_at = self._normalize_utc(sample.collectedAt) if sample else None
-        entered_at = self._normalize_utc(order_test.resultEnteredAt)
-        validated_at = self._normalize_utc(order_test.resultValidatedAt)
-
-        collection_end = collected_at
-        if collection_end is None and status == TestStatus.PENDING.value:
-            collection_end = now
-        if collection_end is not None:
-            sums["collection"] += self._hours_between(order_date, collection_end)
-            counts["collection"] += 1
-
-        if collected_at is None:
-            return
-
-        entry_end = entered_at
-        if entry_end is None and status == TestStatus.SAMPLE_COLLECTED.value:
-            entry_end = now
-        if entry_end is not None:
-            sums["entry"] += self._hours_between(collected_at, entry_end)
-            counts["entry"] += 1
-
-        if entered_at is None:
-            return
-
-        validation_end = validated_at
-        if validation_end is None and status in (
-            TestStatus.RESULTED.value,
-            TestStatus.ESCALATED.value,
-        ):
-            validation_end = now
-        if validation_end is not None:
-            sums["validation"] += self._hours_between(entered_at, validation_end)
-            counts["validation"] += 1
-
     def _today_panel_snapshot(self) -> dict[str, Any]:
-        """Average hours per workflow step for tests on today's accessions."""
+        """UTC day KPIs: milestone counts and status mix for tests updated today."""
         today_start = self._utc_today_start()
-        now = datetime.now(UTC)
-        sums = {"collection": 0.0, "entry": 0.0, "validation": 0.0}
-        counts = {"collection": 0, "entry": 0, "validation": 0}
 
-        rows = (
-            self.db.query(OrderTest, Order, Sample)
-            .join(Order, OrderTest.orderId == Order.orderId)
-            .outerjoin(Sample, Sample.sampleId == OrderTest.sampleId)
-            .filter(self._active_order_test_filter())
-            .filter(Order.orderDate >= today_start)
-            .all()
+        worked_today_filter = OrderTest.updatedAt >= today_start
+        created_today_filter = OrderTest.createdAt >= today_start
+        completed_today_filter = OrderTest.resultValidatedAt >= today_start
+
+        tests_updated_today = (
+            self.db.query(func.count(OrderTest.id))
+            .filter(worked_today_filter)
+            .scalar()
+            or 0
+        )
+        tests_worked_created_today = (
+            self.db.query(func.count(OrderTest.id))
+            .filter(worked_today_filter)
+            .filter(created_today_filter)
+            .scalar()
+            or 0
+        )
+        tests_worked_created_completed_today = (
+            self.db.query(func.count(OrderTest.id))
+            .filter(worked_today_filter)
+            .filter(created_today_filter)
+            .filter(completed_today_filter)
+            .scalar()
+            or 0
+        )
+        specimens_collected_today = (
+            self.db.query(func.count(Sample.sampleId))
+            .filter(Sample.collectedAt >= today_start)
+            .scalar()
+            or 0
+        )
+        tests_resulted_today = (
+            self.db.query(func.count(OrderTest.id))
+            .filter(OrderTest.resultEnteredAt >= today_start)
+            .scalar()
+            or 0
+        )
+        tests_validated_today = (
+            self.db.query(func.count(OrderTest.id))
+            .filter(OrderTest.resultValidatedAt >= today_start)
+            .scalar()
+            or 0
+        )
+        tests_sent_back_today = (
+            self.db.query(func.count(OrderTest.id))
+            .filter(OrderTest.updatedAt >= today_start)
+            .filter(self._order_test_sent_back_predicate())
+            .scalar()
+            or 0
         )
 
-        for order_test, order, sample in rows:
-            self._accumulate_today_step_durations(
-                order_test=order_test,
-                order=order,
-                sample=sample,
-                now=now,
-                sums=sums,
-                counts=counts,
-            )
+        status_rows = (
+            self.db.query(OrderTest.status, func.count(OrderTest.id))
+            .filter(OrderTest.updatedAt >= today_start)
+            .group_by(OrderTest.status)
+            .all()
+        )
+        counts_by_status: dict[TestStatus, int] = {}
+        for status, count in status_rows:
+            key = status if isinstance(status, TestStatus) else TestStatus(status)
+            counts_by_status[key] = int(count)
 
-        steps: list[dict[str, Any]] = []
-        for step in ("collection", "entry", "validation"):
-            sample_count = counts[step]
-            average = (
-                round(sums[step] / sample_count, 2) if sample_count > 0 else None
-            )
-            steps.append(
-                {
-                    "step": step,
-                    "averageHours": average,
-                    "sampleCount": sample_count,
-                }
-            )
+        status_order = list(TestStatus)
+        status_counts: list[dict[str, Any]] = []
+        for status in status_order:
+            count = counts_by_status.get(status, 0)
+            if count > 0:
+                status_counts.append({"status": status, "count": count})
 
         return {
-            "dayStartUtc": today_start.isoformat(),
-            "steps": steps,
+            "dayStartUtc": today_start,
+            "testsUpdatedToday": tests_updated_today,
+            "testsWorkedCreatedToday": tests_worked_created_today,
+            "testsWorkedCreatedCompletedToday": tests_worked_created_completed_today,
+            "specimensCollectedToday": specimens_collected_today,
+            "testsResultedToday": tests_resulted_today,
+            "testsValidatedToday": tests_validated_today,
+            "testsSentBackToday": tests_sent_back_today,
+            "statusCounts": status_counts,
         }
+
+    def _order_test_sent_back_predicate(self):
+        """Tests that left the happy path (re-test, superseded, or quality issue)."""
+        quality_test_ids = (
+            self.db.query(QualityIssue.orderTestId)
+            .filter(QualityIssue.orderTestId.isnot(None))
+            .distinct()
+        )
+        quality_sample_ids = (
+            self.db.query(QualityIssue.sampleId)
+            .filter(QualityIssue.sampleId.isnot(None))
+            .distinct()
+        )
+        return or_(
+            OrderTest.isRetest.is_(True),
+            OrderTest.retestOrderTestId.isnot(None),
+            OrderTest.retestNumber > 0,
+            OrderTest.status == TestStatus.SUPERSEDED,
+            OrderTest.id.in_(quality_test_ids),
+            OrderTest.sampleId.in_(quality_sample_ids),
+        )
 
     def _utc_today_start(self) -> datetime:
         today = datetime.now(UTC).date()
