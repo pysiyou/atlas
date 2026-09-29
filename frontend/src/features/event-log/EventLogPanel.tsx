@@ -82,8 +82,16 @@ export const OrderEventLogPanel: React.FC<{ orderId: number; className?: string 
   <EventLogPanel variant="order" orderId={props.orderId} className={props.className} />
 );
 
-export const ScopedEventLogPanel: React.FC<{ scope: EventLogScope; className?: string }> = props => (
-  <EventLogPanel variant="scope" scope={props.scope} panelVariant="lab" className={props.className} />
+export const ScopedEventLogPanel: React.FC<{
+  scope: EventLogScope;
+  className?: string;
+}> = props => (
+  <EventLogPanel
+    variant="scope"
+    scope={props.scope}
+    panelVariant="lab"
+    className={props.className}
+  />
 );
 
 export const CommandCenterEventLogPanel: React.FC = () => (

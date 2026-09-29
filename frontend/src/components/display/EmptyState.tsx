@@ -24,6 +24,37 @@ interface EmptyStateProps {
   fill?: boolean;
 }
 
+type EmptyStateVariant = NonNullable<EmptyStateProps['variant']>;
+
+function emptyStateVariantStyles(variant: EmptyStateVariant) {
+  switch (variant) {
+    case 'dense':
+      return {
+        container: EMPTY.containerDense,
+        iconWrap: EMPTY.iconWrapDense,
+        icon: 'w-4 h-4 text-text-disabled',
+        title: EMPTY.titleDense,
+        description: EMPTY.descriptionDense,
+      };
+    case 'compact':
+      return {
+        container: EMPTY.containerCompact,
+        iconWrap: EMPTY.iconWrapCompact,
+        icon: 'w-5 h-5 text-text-disabled',
+        title: EMPTY.titleCompact,
+        description: EMPTY.description,
+      };
+    default:
+      return {
+        container: EMPTY.containerDefault,
+        iconWrap: EMPTY.iconWrapDefault,
+        icon: 'w-8 h-8 text-text-disabled',
+        title: EMPTY.titleDefault,
+        description: EMPTY.description,
+      };
+  }
+}
+
 export const EmptyState: React.FC<EmptyStateProps> = ({
   icon,
   title,
@@ -34,54 +65,24 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   fill = false,
   iconOnly = false,
 }) => {
-  const isDense = variant === 'dense';
-  const isCompact = variant === 'compact';
-  const containerClasses = isDense
-    ? EMPTY.containerDense
-    : isCompact
-      ? EMPTY.containerCompact
-      : EMPTY.containerDefault;
-  const iconWrapperClasses = isDense
-    ? EMPTY.iconWrapDense
-    : isCompact
-      ? EMPTY.iconWrapCompact
-      : EMPTY.iconWrapDefault;
-  const iconClasses = isDense
-    ? 'w-4 h-4 text-text-disabled'
-    : isCompact
-      ? 'w-5 h-5 text-text-disabled'
-      : 'w-8 h-8 text-text-disabled';
-  const titleClasses = isDense
-    ? EMPTY.titleDense
-    : isCompact
-      ? EMPTY.titleCompact
-      : EMPTY.titleDefault;
-  const descriptionClasses = isDense ? EMPTY.descriptionDense : EMPTY.description;
+  const styles = emptyStateVariantStyles(variant);
   const ariaLabel =
-    iconOnly && title
-      ? description
-        ? `${title}. ${description}`
-        : title
-      : undefined;
+    iconOnly && title ? (description ? `${title}. ${description}` : title) : undefined;
 
   return (
     <div
-      className={cn(
-        containerClasses,
-        fill && 'h-full w-full flex-1 min-h-0',
-        className
-      )}
+      className={cn(styles.container, fill && 'h-full w-full flex-1 min-h-0', className)}
       role={iconOnly ? 'status' : undefined}
       aria-label={ariaLabel}
     >
       {icon != null && (
-        <div className={iconWrapperClasses}>
-          <Icon name={icon} className={iconClasses} aria-hidden={iconOnly ? true : undefined} />
+        <div className={styles.iconWrap}>
+          <Icon name={icon} className={styles.icon} aria-hidden={iconOnly ? true : undefined} />
         </div>
       )}
-      {!iconOnly && title != null && title !== '' && <p className={titleClasses}>{title}</p>}
+      {!iconOnly && title != null && title !== '' && <p className={styles.title}>{title}</p>}
       {!iconOnly && description != null && description !== '' && (
-        <p className={descriptionClasses}>{description}</p>
+        <p className={styles.description}>{description}</p>
       )}
       {action && <div className={EMPTY.actionWrap}>{action}</div>}
     </div>

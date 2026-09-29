@@ -10,14 +10,10 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { actionButtonPreset, Badge, Button, Icon, CircularProgress, Panel, EntityId } from '@/components';
+import { Badge, Icon, CircularProgress, EntityId } from '@/components';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
-import { ResultEntryForm } from './ResultEntryForm';
-import {
-  LabWorkflowDetailModal,
-  DetailGrid,
-  ModalFooter,
-} from '../components/LabWorkflowDetailModal';
+import { EntryDetailMainPanel, EntryDetailModalFooter } from './ResultEntryDetailModal.parts';
+import { LabWorkflowDetailModal, DetailGrid } from '../components/LabWorkflowDetailModal';
 import { ScopedEventLogPanel } from '@/features/event-log';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { useOrderTestQueueState } from '../hooks';
@@ -27,8 +23,6 @@ import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import { useTestCatalog } from '@/features/catalog';
 import { labModalSubtitle } from '../components/LabWorkflowModalSubtitles';
 import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
-import { ResultValidationForm } from '../validation/ResultValidationForm';
-import { hasTestResults } from '../utils/labSearchAndLinks';
 import type { Test, TestWithContext } from '@/types';
 
 interface EntryDetailModalProps {
@@ -60,8 +54,6 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
   onNotesChange,
   onSave,
   readOnly = false,
-  // High complexity is necessary for comprehensive result entry logic with validation, conditional rendering, and state management
-   
 }) => {
   const { tests: catalogTests = [] } = useTestCatalog();
   const resolvedTestDef = testDef ?? catalogTests.find(t => t.code === test.testCode);
@@ -86,9 +78,7 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
     return localResults;
   }, [readOnly, test.results, localResults]);
 
-  const displayNotes = readOnly
-    ? (test.technicianNotes ?? initialTechnicianNotes)
-    : localNotes;
+  const displayNotes = readOnly ? (test.technicianNotes ?? initialTechnicianNotes) : localNotes;
 
   const saveAction = useAsyncAction(
     useCallback(
@@ -197,59 +187,28 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
       }}
       headerAudit={testHeaderAudit(test)}
       footer={
-        readOnly ? (
-          <ModalFooter statusMessage="">
-            <Button onClick={onClose} {...actionButtonPreset('cancel')} size="md" layout="icon-text">Close</Button>
-          </ModalFooter>
-        ) : (
-          <ModalFooter statusMessage="">
-            <Button onClick={onClose} {...actionButtonPreset('cancel')} size="md" layout="icon-text" disabled={isSaving}>
-              Cancel
-            </Button>
-            <Button
-              onClick={handleSave}
-              {...actionButtonPreset('save')}
-              size="md"
-              layout="icon-text"
-              disabled={!isComplete}
-              isLoading={isSaving}
-            >
-              Save
-            </Button>
-          </ModalFooter>
-        )
+        <EntryDetailModalFooter
+          readOnly={readOnly}
+          isSaving={isSaving}
+          isComplete={isComplete}
+          onClose={onClose}
+          onSave={handleSave}
+        />
       }
     >
-      {readOnly && hasTestResults(test) ? (
-        <Panel variant="lab" title="Recorded Results">
-          <ResultValidationForm
-            results={test.results!}
-            flags={test.flags}
-            technicianNotes={test.technicianNotes}
-            comments={test.validationNotes ?? ''}
-            onCommentsChange={() => undefined}
-            onApprove={() => undefined}
-            readOnly
-            enableApproveShortcut={false}
-          />
-        </Panel>
-      ) : (
-        <Panel variant="lab" title="Result Entry" headerEnd={progressIndicator}>
-          <ResultEntryForm
-            testDef={resolvedTestDef}
-            resultKey={resultKey}
-            results={displayResults}
-            technicianNotes={displayNotes}
-            patient={test.patient}
-            onResultsChange={handleLocalResultChange}
-            onNotesChange={handleLocalNotesChange}
-            onSave={handleSave}
-            isComplete={isComplete}
-            isModal={true}
-            readOnly={readOnly}
-          />
-        </Panel>
-      )}
+      <EntryDetailMainPanel
+        readOnly={readOnly}
+        test={test}
+        resolvedTestDef={resolvedTestDef}
+        resultKey={resultKey}
+        displayResults={displayResults}
+        displayNotes={displayNotes}
+        progressIndicator={progressIndicator}
+        isComplete={isComplete}
+        onResultsChange={handleLocalResultChange}
+        onNotesChange={handleLocalNotesChange}
+        onSave={handleSave}
+      />
 
       {/* Test Details - using declarative sections config */}
       <DetailGrid
@@ -286,11 +245,23 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
             fields: [
               {
                 label: 'Test ID',
-                value: test.id != null ? <EntityId type="orderTest" value={test.id} variant="block" className="text-right" /> : undefined,
+                value:
+                  test.id != null ? (
+                    <EntityId
+                      type="orderTest"
+                      value={test.id}
+                      variant="block"
+                      className="text-right"
+                    />
+                  ) : undefined,
               },
               {
                 label: 'Test Code',
-                value: test.testCode ? <EntityId variant="block" className="text-right">{test.testCode}</EntityId> : undefined,
+                value: test.testCode ? (
+                  <EntityId variant="block" className="text-right">
+                    {test.testCode}
+                  </EntityId>
+                ) : undefined,
               },
               {
                 label: 'Sample Type',
@@ -300,7 +271,14 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
               },
               {
                 label: 'Sample ID',
-                value: test.sampleId ? <EntityId type="sample" value={test.sampleId} variant="block" className="text-right" /> : undefined,
+                value: test.sampleId ? (
+                  <EntityId
+                    type="sample"
+                    value={test.sampleId}
+                    variant="block"
+                    className="text-right"
+                  />
+                ) : undefined,
               },
               {
                 label: 'Turnaround Time',

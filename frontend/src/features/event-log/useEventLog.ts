@@ -3,7 +3,7 @@
  */
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useTestNameLookup } from '@/features/catalog/api/tests';
+import { useTestNameLookup } from '@/features/catalog';
 import { queryKeys } from '@/lib/query';
 import { fetchAuditEvents, type AuditEventQueryParams } from './api';
 import { resolveEventLogItems, type ResolveEventLogOptions } from './resolveItem';
@@ -43,7 +43,7 @@ export function useEventLog(filter: EventLogFilter, options?: UseEventLogOptions
       ...options?.resolve,
       getTestName,
     }),
-    [options?.resolve, getTestName],
+    [options?.resolve, getTestName]
   );
   const enabled = options?.enabled ?? true;
 
@@ -53,14 +53,11 @@ export function useEventLog(filter: EventLogFilter, options?: UseEventLogOptions
     enabled,
   });
 
-  const events = useMemo(
-    () => (query.data ? sortNewestFirst(query.data) : []),
-    [query.data],
-  );
+  const events = useMemo(() => (query.data ? sortNewestFirst(query.data) : []), [query.data]);
 
   const resolved = useMemo(
     () => resolveEventLogItems(events, resolveOptions),
-    [events, resolveOptions],
+    [events, resolveOptions]
   );
 
   return {
