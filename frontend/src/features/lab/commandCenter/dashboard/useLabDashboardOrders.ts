@@ -1,5 +1,5 @@
 /**
- * Dashboard table feed — in-pipeline tests plus rows updated today.
+ * Dashboard table feed — order tests updated today (UTC), newest first.
  */
 import { useMemo } from 'react';
 import { useDashboardWorklistToday } from '../../api/worklists';

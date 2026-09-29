@@ -79,7 +79,7 @@ const CATALOG_SEEDS: CatalogSeed[] = [
   {
     eventType: 'patient.view',
     domain: 'patient',
-    verbPhrase: 'patient chart viewed for',
+    verbPhrase: "patient profile viewed",
     domainLabel: 'Patient',
   },
   {

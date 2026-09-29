@@ -18,25 +18,88 @@ import {
 } from './commandCenterModel';
 import { formatLabAttentionQueueItem, type AttentionDetail } from './commandCenterAttentionFormat';
 import { COMMAND_CENTER_FEED_STYLES } from './commandCenterStyles';
-import { CONTROL, RADIUS, TYPE } from '@/components/theme/recipes';
-
+import { CONTROL, RADIUS, TABLE_TYPE } from '@/components/theme/recipes';
 
 export interface LabAttentionFeedProps {
   items: LabAttentionQueueItem[];
 }
 
+const PRIMARY_DETAIL_CLASS = `${TABLE_TYPE.cell} truncate font-normal`;
+const META_DETAIL_CLASS = `${TABLE_TYPE.meta} truncate font-normal`;
+
+const IDENTITY_DETAIL_TYPES = new Set<AttentionDetail['type']>(['patient', 'link', 'testId']);
+
+function isIdentityDetail(detail: AttentionDetail): boolean {
+  return IDENTITY_DETAIL_TYPES.has(detail.type);
+}
+
+const DETAIL_SEGMENT_WRAP = 'min-w-0 max-w-full shrink';
+
 function FeedDetail({ detail }: { detail: AttentionDetail }) {
   switch (detail.type) {
+    case 'patient':
+      return <span className={PRIMARY_DETAIL_CLASS}>{detail.value}</span>;
     case 'link':
     case 'testId':
-      return <EntityId variant="inline">{detail.value}</EntityId>;
+      return (
+        <EntityId variant="inline" className={PRIMARY_DETAIL_CLASS}>
+          {detail.value}
+        </EntityId>
+      );
+    case 'queueStage':
+      return <span className={META_DETAIL_CLASS}>{detail.stageLabel}</span>;
+    case 'queueCount':
+      return (
+        <span className={`${META_DETAIL_CLASS} tabular-nums`}>
+          {detail.count} {detail.unit}
+        </span>
+      );
     case 'priority':
       return <LabPriorityBadge priority={detail.value} size="xs" />;
     case 'wait':
-      return <span className={`${TYPE.meta} tabular-nums`}>{detail.value}</span>;
+      return <span className={`${META_DETAIL_CLASS} tabular-nums`}>{detail.value}</span>;
     default:
-      return <span className={TYPE.label}>{detail.value}</span>;
+      return <span className={META_DETAIL_CLASS}>{detail.value}</span>;
   }
+}
+
+function AttentionDetailDivider() {
+  return (
+    <span
+      className="h-3.5 w-px shrink-0 self-center bg-border-default"
+      aria-hidden
+    />
+  );
+}
+
+function AttentionDetailRow({
+  details,
+  className,
+}: {
+  details: AttentionDetail[];
+  className?: string;
+}) {
+  if (details.length === 0) {
+    return null;
+  }
+
+  return (
+    <div
+      className={cn(
+        'flex min-w-0 flex-wrap items-center gap-x-space-2 gap-y-space-1',
+        className,
+      )}
+    >
+      {details.map((detail, idx) => (
+        <React.Fragment key={idx}>
+          {idx > 0 ? <AttentionDetailDivider /> : null}
+          <div className={DETAIL_SEGMENT_WRAP}>
+            <FeedDetail detail={detail} />
+          </div>
+        </React.Fragment>
+      ))}
+    </div>
+  );
 }
 
 function LabAttentionFeedRow({ item }: { item: LabAttentionQueueItem }) {
@@ -48,13 +111,16 @@ function LabAttentionFeedRow({ item }: { item: LabAttentionQueueItem }) {
     search: displayId.order(item.orderId),
   });
 
+  const identityDetails = formatted.details.filter(isIdentityDetail);
+  const contextDetails = formatted.details.filter(detail => !isIdentityDetail(detail));
+
   return (
     <li>
       <Link
         to={href}
         className={cn(
-          `group flex min-w-0 gap-space-2 ${RADIUS.field} border border-border-subtle px-space-2 py-space-1-5`,
-          'transition-colors hover:border-border-hover hover:bg-surface-hover/50',
+          `flex min-w-0 gap-space-2 ${RADIUS.field} border border-border-subtle px-space-2 py-space-1-5`,
+          'transition-colors hover:bg-surface-hover',
           CONTROL.focusVisibleFlat,
         )}
       >
@@ -63,25 +129,18 @@ function LabAttentionFeedRow({ item }: { item: LabAttentionQueueItem }) {
           aria-hidden
         />
 
-        <div className="min-w-0 flex-1 space-y-space-1">
+        <div className="min-w-0 flex-1 space-y-space-1.5">
           <div className="flex min-w-0 flex-wrap items-center gap-x-space-2 gap-y-space-1">
             <Badge
               variant={resolveStatusBadgeColor(typeConfig.badgeVariant)}
               label={typeConfig.pillLabel}
               size="xs"
             />
-            <span className={`min-w-0 ${TYPE.value} font-light group-hover:text-brand-fg`}>
-              {formatted.action}
-            </span>
+            <span className={COMMAND_CENTER_FEED_STYLES.eventHeadline}>{formatted.action}</span>
           </div>
 
-          {formatted.details.length > 0 && (
-            <div className={COMMAND_CENTER_FEED_STYLES.eventDetails}>
-              {formatted.details.map((detail, idx) => (
-                <FeedDetail key={idx} detail={detail} />
-              ))}
-            </div>
-          )}
+          <AttentionDetailRow details={identityDetails} />
+          <AttentionDetailRow details={contextDetails} />
         </div>
       </Link>
     </li>

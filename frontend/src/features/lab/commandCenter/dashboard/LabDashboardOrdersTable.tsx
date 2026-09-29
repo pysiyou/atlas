@@ -1,5 +1,5 @@
 /**
- * Lab dashboard table — tests you collected, resulted, or validated today.
+ * Lab dashboard table — order tests updated today, sorted by last change.
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
