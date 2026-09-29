@@ -10,7 +10,7 @@ export const EVENT_LOG_COPY = {
   narrativeDefaultLabel: 'Note',
   reasonInlinePrefix: 'Reason: ',
   commentLabel: 'Comment',
-  resultsTitle: (count: number) => `Results (${count})`,
+  resultTitle: 'Result',
   showMore: 'Show more',
   showLess: 'Show less',
   systemActorName: 'Atlas',
