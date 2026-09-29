@@ -381,9 +381,11 @@ export const PANEL_LAYOUT = {
 
 /**
  * Semantic geometry — Tailwind classes map to CSS vars in semantic-light.css.
- * Themes override --radius-field | menu | menu-item | surface | workspace (not primitives directly).
+ * Themes override --radius-field | menu | menu-item | surface | workspace | inline (not primitives directly).
  */
 export const RADIUS = {
+  /** Small chips embedded in sentences (event log highlights, etc.) */
+  inline: 'rounded-inline',
   field: 'rounded-field',
   menu: 'rounded-menu',
   menuItem: 'rounded-menu-item',
@@ -616,5 +618,22 @@ export const BADGE = {
   filterChip: {
     xs: `px-space-3 py-space-1 ${BADGE_TYPE} ${SPACING.gapCompact}`,
     sm: `px-space-3 py-space-1-5 ${BADGE_TYPE} ${SPACING.gapCompact}`,
+  },
+} as const;
+
+/**
+ * Inline sentence highlights (icon + label). Unlike BADGE, uses inline flow so text can wrap
+ * across lines; box-decoration-clone paints padding/background on each line fragment.
+ * Color: inlineHighlightStyles + useBadgeAppearance().
+ */
+export const INLINE_HIGHLIGHT = {
+  rootBase: `box-decoration-clone inline max-w-full align-baseline break-words ${RADIUS.inline}`,
+  size: {
+    sm: 'py-0 px-space-0-5',
+    md: 'py-0 px-space-1',
+  },
+  icon: {
+    sm: 'me-space-0-5 inline-block h-2.5 w-2.5 shrink-0 align-middle',
+    md: 'me-space-1 inline-block h-3 w-3 shrink-0 align-middle',
   },
 } as const;

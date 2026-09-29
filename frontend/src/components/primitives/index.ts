@@ -13,3 +13,9 @@ export * from './Checkbox';
 export * from './CheckboxList';
 export * from './CircularProgress';
 export * from './Icon';
+export * from './InlineHighlight';
+export {
+  getInlineHighlightStyles,
+  resolveInlineHighlightVariant,
+  type InlineHighlightVariant,
+} from './inlineHighlightStyles';

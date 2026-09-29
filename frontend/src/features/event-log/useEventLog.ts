@@ -3,6 +3,7 @@
  */
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useTestNameLookup } from '@/features/catalog/api/tests';
 import { queryKeys } from '@/lib/query';
 import { fetchAuditEvents, type AuditEventQueryParams } from './api';
 import { resolveEventLogItems, type ResolveEventLogOptions } from './resolveItem';
@@ -36,7 +37,14 @@ export interface UseEventLogOptions {
 
 export function useEventLog(filter: EventLogFilter, options?: UseEventLogOptions) {
   const params = useMemo(() => filterToQueryParams(filter), [filter]);
-  const resolveOptions = options?.resolve;
+  const { getTestName } = useTestNameLookup();
+  const resolveOptions = useMemo(
+    () => ({
+      ...options?.resolve,
+      getTestName,
+    }),
+    [options?.resolve, getTestName],
+  );
   const enabled = options?.enabled ?? true;
 
   const query = useQuery({

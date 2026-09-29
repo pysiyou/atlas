@@ -44,7 +44,7 @@ export interface EventLogRecord {
   metadata?: Record<string, unknown> | null;
 }
 
-export type EventLogHeadlineHighlight = 'inline';
+export type EventLogHeadlineHighlight = 'inline' | 'test';
 
 export interface EventLogHeadlinePart {
   text: string;

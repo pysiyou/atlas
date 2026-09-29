@@ -88,7 +88,11 @@ export function TableView<T>({
 
   if (data.length === 0) {
     const emptyPreset = emptyVariant === 'dense' ? DASHBOARD_EMPTY_STATE : PANEL_EMPTY_STATE;
-    const emptyMinHeight = emptyVariant === 'dense' ? 'min-h-[9rem]' : 'min-h-[12rem]';
+    const emptyMinHeight = embedded
+      ? 'min-h-0'
+      : emptyVariant === 'dense'
+        ? 'min-h-[9rem]'
+        : 'min-h-[12rem]';
     const emptyContent =
       typeof emptyMessage === 'string' ? (
         <EmptyState
