@@ -1,18 +1,20 @@
 /**
- * Column registry for the lab dashboard orders table.
+ * Column registry and mobile card for the lab dashboard orders table.
  */
 import {
   LabDepartmentBadge,
   LabPriorityBadge,
   SampleStatusBadge,
   SampleTypeBadge,
-} from '../../components/LabDomainBadges';
+} from '../components/LabDomainBadges';
 import {
   buildViews,
   createBadgeColumn,
   createColumn,
   type TableViewConfig,
 } from '@/components/data-table';
+import { MobileEntityCard } from '@/components';
+import type { CardComponentProps } from '@/components';
 import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
 import { BlockedReasonBadge } from '@/features/lab';
 import { displayId } from '@/utils';
@@ -21,8 +23,7 @@ import {
   renderTableEmptyCell,
   renderTableTwoLineCell,
 } from '@/utils/tableColumnRenders';
-import type { LabDashboardOrderRow } from './dashboardOrders';
-import { LabDashboardOrderCard } from './LabDashboardOrderCard';
+import type { LabOrderTableRow } from './LabOrdersTable';
 
 const VIEWS = {
   full: ['test', 'patient', 'sampleType', 'doctor', 'priority', 'department', 'status', 'date'],
@@ -30,22 +31,55 @@ const VIEWS = {
   compact: ['test', 'patient', 'status'],
 } as const;
 
-export function createLabDashboardOrdersTableConfig(): TableViewConfig<LabDashboardOrderRow> {
+function LabOrderTableCard({ item, onClick }: CardComponentProps<LabOrderTableRow>) {
+  return (
+    <MobileEntityCard onClick={onClick}>
+      <MobileEntityCard.Header
+        leading={
+          <div className="min-w-0 space-y-space-1">
+            {renderTableTwoLineCell(item.testName, item.testCode)}
+            {renderTableTwoLineCell(
+              item.patientName,
+              `MRN: ${displayId.patient(item.patientId)}`,
+            )}
+          </div>
+        }
+        trailing={<LabPriorityBadge priority={item.priority} size="xs" />}
+      />
+      <div className="flex flex-wrap items-center gap-space-2">
+        {item.blockedLabel ? (
+          <BlockedReasonBadge label={item.blockedLabel} size="xs" showIcon={false} />
+        ) : (
+          <SampleStatusBadge status={item.status} size="xs" />
+        )}
+        {item.sampleType ? (
+          <SampleTypeBadge sampleType={item.sampleType} size="xs" className="border-none" />
+        ) : null}
+        {item.department ? (
+          <LabDepartmentBadge department={item.department} size="xs" className="border-none" />
+        ) : null}
+      </div>
+      <div className="mt-auto pt-space-3">{renderDateTimeCell(item.date)}</div>
+    </MobileEntityCard>
+  );
+}
+
+export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> {
   const columnMap = {
-    test: createColumn<LabDashboardOrderRow>('test', 'Test', {
+    test: createColumn<LabOrderTableRow>('test', 'Test', {
       width: 'xl',
       sortable: true,
       accessor: row => `${row.testName} ${row.testCode}`,
       render: row => renderTableTwoLineCell(row.testName, row.testCode),
     }),
-    patient: createColumn<LabDashboardOrderRow>('patient', 'Patient', {
+    patient: createColumn<LabOrderTableRow>('patient', 'Patient', {
       width: 'lg',
       sortable: true,
       accessor: row => row.patientName,
       render: row =>
         renderTableTwoLineCell(row.patientName, `MRN: ${displayId.patient(row.patientId)}`),
     }),
-    sampleType: createBadgeColumn<LabDashboardOrderRow>(
+    sampleType: createBadgeColumn<LabOrderTableRow>(
       'sampleType',
       'Sample Type',
       row =>
@@ -56,7 +90,7 @@ export function createLabDashboardOrdersTableConfig(): TableViewConfig<LabDashbo
         ),
       { accessor: row => row.sampleType, width: 'md', sortable: true },
     ),
-    doctor: createColumn<LabDashboardOrderRow>('doctor', 'Doctor', {
+    doctor: createColumn<LabOrderTableRow>('doctor', 'Doctor', {
       width: 'lg',
       accessor: row => row.doctorName ?? '',
       render: row =>
@@ -65,13 +99,13 @@ export function createLabDashboardOrdersTableConfig(): TableViewConfig<LabDashbo
           row.department ? getCategoryLabel(row.department) : null,
         ),
     }),
-    priority: createBadgeColumn<LabDashboardOrderRow>(
+    priority: createBadgeColumn<LabOrderTableRow>(
       'priority',
       'Priority',
       row => <LabPriorityBadge priority={row.priority} size="xs" />,
       { accessor: row => row.priority },
     ),
-    department: createBadgeColumn<LabDashboardOrderRow>(
+    department: createBadgeColumn<LabOrderTableRow>(
       'department',
       'Department',
       row =>
@@ -82,7 +116,7 @@ export function createLabDashboardOrdersTableConfig(): TableViewConfig<LabDashbo
         ),
       { accessor: row => row.department ?? '', width: 'md' },
     ),
-    status: createBadgeColumn<LabDashboardOrderRow>(
+    status: createBadgeColumn<LabOrderTableRow>(
       'status',
       'Status',
       row =>
@@ -93,7 +127,7 @@ export function createLabDashboardOrdersTableConfig(): TableViewConfig<LabDashbo
         ),
       { accessor: row => row.blockedLabel ?? row.status, width: 'md' },
     ),
-    date: createColumn<LabDashboardOrderRow>('date', 'Updated', {
+    date: createColumn<LabOrderTableRow>('date', 'Updated', {
       width: 'lg',
       sortable: true,
       accessor: row => row.date,
@@ -103,6 +137,6 @@ export function createLabDashboardOrdersTableConfig(): TableViewConfig<LabDashbo
 
   return {
     ...buildViews(columnMap, VIEWS),
-    CardComponent: LabDashboardOrderCard,
+    CardComponent: LabOrderTableCard,
   };
 }

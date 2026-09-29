@@ -1,46 +1,27 @@
 /**
- * Thin React Query wrapper for the lab tech command center board.
- * Board payload is server-authoritative.
+ * Lab dashboard board — maps `/lab/board` into UI state for today, attention, and loading.
  */
 
 import { useMemo } from 'react';
 import { useLabCommandCenterQuery } from '../api/labCommandCenter';
 import type { LabBoardResponse } from '../api/labCommandCenter';
 import type { OrderTestBlockReason } from '../utils/labQueue';
-import { ATTENTION_TYPE_CONFIG, type AttentionType } from './commandCenterModel';
-import type { LabAttentionQueueItem, LabCommandCenterSnapshot, LabPipelineStage } from './commandCenterModel';
 import { labStageLabel } from '../constants/labConstants';
+import { ATTENTION_TYPE_CONFIG, type AttentionType } from './commandCenterModel';
+import type { LabAttentionQueueItem, LabBoardViewState, LabPipelineStage } from './commandCenterModel';
 
-const EMPTY_QUEUE_AGE: LabCommandCenterSnapshot['queueAge'] = {
-  collection: { oldestHours: null, averageHours: null, warningCount: 0, criticalCount: 0 },
-  entry: { oldestHours: null, averageHours: null, warningCount: 0, criticalCount: 0 },
-  validation: { oldestHours: null, averageHours: null, warningCount: 0, criticalCount: 0 },
-};
-
-const EMPTY_TODAY_PANEL: LabCommandCenterSnapshot['todayPanel'] = {
+const EMPTY_TODAY_PANEL: LabBoardViewState['todayPanel'] = {
   dayStartUtc: '',
   testsUpdatedToday: 0,
-  testsWorkedCreatedToday: 0,
-  testsWorkedCreatedCompletedToday: 0,
-  specimensCollectedToday: 0,
-  testsResultedToday: 0,
-  testsValidatedToday: 0,
-  testsSentBackToday: 0,
-  statusCounts: [],
+  testsWithCollection: 0,
+  testsWithResultEntry: 0,
+  testsWithValidation: 0,
+  testsOffNormalPath: 0,
 };
 
-const EMPTY_BOARD: LabCommandCenterSnapshot = {
-  counts: { collection: 0, entry: 0, validation: 0, supervisor: 0 },
-  queueAge: EMPTY_QUEUE_AGE,
-  blockers: { paymentUnpaid: 0, retestPending: 0, recollectionWaiting: 0, total: 0 },
+const EMPTY_BOARD: LabBoardViewState = {
   attentionItems: [],
   attentionTotal: 0,
-  ageBuckets: { fresh: 0, onTrack: 0, warning: 0, critical: 0 },
-  priorityMix: { urgent: 0, high: 0, medium: 0, low: 0 },
-  health: 'healthy',
-  healthMessage: 'Queues within TAT',
-  suggestedTab: null,
-  totalActive: 0,
   todayPanel: EMPTY_TODAY_PANEL,
 };
 
@@ -71,37 +52,32 @@ function mapLabAttentionQueueItem(item: LabBoardResponse['attentionItems'][numbe
   };
 }
 
-function toBoardData(board: LabBoardResponse): LabCommandCenterSnapshot {
+function toBoardViewState(board: LabBoardResponse): LabBoardViewState {
+  const today = board.todayPanel;
   return {
-    counts: board.counts,
-    queueAge: {
-      collection: board.queueAge.collection,
-      entry: board.queueAge.entry,
-      validation: board.queueAge.validation,
-    },
-    blockers: board.blockers,
     attentionItems: board.attentionItems.map(mapLabAttentionQueueItem),
     attentionTotal: board.attentionTotal,
-    ageBuckets: board.ageBuckets,
-    priorityMix: board.priorityMix,
-    health: board.health,
-    healthMessage: board.healthMessage,
-    suggestedTab: isLabPipelineStage(board.suggestedTab) ? board.suggestedTab : null,
-    totalActive: board.totalActive,
-    computedAt: board.computedAt,
-    todayPanel: board.todayPanel ?? EMPTY_TODAY_PANEL,
+    todayPanel: today
+      ? {
+          dayStartUtc: today.dayStartUtc,
+          testsUpdatedToday: today.testsUpdatedToday,
+          testsWithCollection: today.testsWithCollection,
+          testsWithResultEntry: today.testsWithResultEntry,
+          testsWithValidation: today.testsWithValidation,
+          testsOffNormalPath: today.testsOffNormalPath,
+        }
+      : EMPTY_TODAY_PANEL,
   };
 }
 
-export function useLabCommandCenterViewModel(): LabCommandCenterSnapshot & {
+export function useLabCommandCenterViewModel(): LabBoardViewState & {
   isLoading: boolean;
   isError: boolean;
   error: unknown;
   refetch: () => Promise<unknown>;
-  dataUpdatedAt: number;
 } {
-  const { board, isLoading, isError, error, refetch, dataUpdatedAt } = useLabCommandCenterQuery();
-  const data = useMemo(() => (board ? toBoardData(board) : EMPTY_BOARD), [board]);
+  const { board, isLoading, isError, error, refetch } = useLabCommandCenterQuery();
+  const data = useMemo(() => (board ? toBoardViewState(board) : EMPTY_BOARD), [board]);
 
   return {
     ...data,
@@ -109,6 +85,5 @@ export function useLabCommandCenterViewModel(): LabCommandCenterSnapshot & {
     isError,
     error,
     refetch,
-    dataUpdatedAt,
   };
 }

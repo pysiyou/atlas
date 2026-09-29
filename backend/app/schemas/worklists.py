@@ -199,25 +199,15 @@ class BoardAttentionItem(BaseModel):
     attentionType: str
 
 
-class LabTodayStatusCount(BaseModel):
-    """Order-test count by status among rows updated today (UTC)."""
-
-    status: TestStatus
-    count: int
-
-
 class LabTodayPanelSnapshot(BaseModel):
-    """UTC day throughput KPIs for the lab dashboard Today panel."""
+    """UTC day KPIs for the lab dashboard Today panel (tests worked today cohort)."""
 
     dayStartUtc: datetime
     testsUpdatedToday: int
-    testsWorkedCreatedToday: int
-    testsWorkedCreatedCompletedToday: int
-    specimensCollectedToday: int
-    testsResultedToday: int
-    testsValidatedToday: int
-    testsSentBackToday: int
-    statusCounts: list[LabTodayStatusCount]
+    testsWithCollection: int
+    testsWithResultEntry: int
+    testsWithValidation: int
+    testsOffNormalPath: int
 
 
 class LabBoardResponse(BaseModel):

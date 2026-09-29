@@ -158,16 +158,7 @@ export function getAttentionTone(type: AttentionType): AttentionTone {
   return 'neutral';
 }
 
-export type LabBoardHealth = 'healthy' | 'attention' | 'critical';
-
 export type LabPipelineStage = 'collection' | 'entry' | 'validation';
-
-export interface QueueAgeStats {
-  oldestHours: number | null;
-  averageHours: number | null;
-  warningCount: number;
-  criticalCount: number;
-}
 
 export interface LabAttentionQueueItem {
   id: string;
@@ -186,58 +177,21 @@ export interface LabAttentionQueueItem {
   attentionType: AttentionType;
 }
 
-export interface BlockerSummary {
-  paymentUnpaid: number;
-  retestPending: number;
-  recollectionWaiting: number;
-  total: number;
-}
-
-export interface AgeBuckets {
-  fresh: number;
-  onTrack: number;
-  warning: number;
-  critical: number;
-}
-
-export interface PriorityMix {
-  urgent: number;
-  high: number;
-  medium: number;
-  low: number;
-}
-
-export interface LabTodayStatusCount {
-  status: string;
-  count: number;
-}
-
 /** Today panel — UTC day throughput KPIs. */
 export interface LabTodayPanelSnapshot {
   dayStartUtc: string;
+  /** Order tests with activity today (UTC), regardless of order age. */
   testsUpdatedToday: number;
-  testsWorkedCreatedToday: number;
-  testsWorkedCreatedCompletedToday: number;
-  specimensCollectedToday: number;
-  testsResultedToday: number;
-  testsValidatedToday: number;
-  testsSentBackToday: number;
-  statusCounts: LabTodayStatusCount[];
+  testsWithCollection: number;
+  testsWithResultEntry: number;
+  testsWithValidation: number;
+  testsOffNormalPath: number;
 }
 
-export interface LabCommandCenterSnapshot {
-  counts: { collection: number; entry: number; validation: number; supervisor: number };
-  queueAge: Record<LabPipelineStage, QueueAgeStats>;
-  blockers: BlockerSummary;
+/** UI state for the lab dashboard board (subset of `/lab/board`). */
+export interface LabBoardViewState {
+  todayPanel: LabTodayPanelSnapshot;
   attentionItems: LabAttentionQueueItem[];
   attentionTotal: number;
-  ageBuckets: AgeBuckets;
-  priorityMix: PriorityMix;
-  health: LabBoardHealth;
-  healthMessage: string;
-  suggestedTab: LabPipelineStage | null;
-  totalActive: number;
-  computedAt?: string | null;
-  todayPanel: LabTodayPanelSnapshot;
 }
 
