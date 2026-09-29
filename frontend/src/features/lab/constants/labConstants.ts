@@ -1,10 +1,15 @@
 /** Lab copy, config, tab routing, and workflow visual tokens. */
+import type { IconName } from '@/components';
 import { GENERATED_LAB_CONSTANTS } from '@/types/generated/labConstants';
 import { ROUTES } from '@/config';
+import { ICONS } from '@/config/icons';
 import type { TestStatus } from '@/types/enums';
 import type { BadgeColor } from '@/components/primitives/badgeTypes';
 
 export type LabWorkflowStage = 'collection' | 'entry' | 'validation';
+
+/** Extra Today KPI row (non-tab workflow). */
+export type LabWorkflowKpiStage = LabWorkflowStage | 'sentBack';
 
 export type LabStageLabelVariant = 'short' | 'nav' | 'full';
 
@@ -31,6 +36,8 @@ export const LAB_COPY = {
     validation: 'Validation',
     commandCenterNav: 'Dashboard',
     escalation: 'Escalation',
+    sentBack: 'Sent back',
+    sentBackShort: 'Rework',
   },
   quality: {
     sampleRejected: 'Sample rejected',
@@ -42,6 +49,15 @@ export const LAB_COPY = {
     recollection: 'Recollection',
     panelTitle: 'Attention queue',
     panelMetaEmpty: 'Escalations, holds, priority, and turnaround exceptions',
+  },
+  dashboardToday: {
+    /** Order tests with updatedAt on the UTC calendar day (activity cohort). */
+    activityCohort: 'order-test activity cohort (UTC)',
+    /** Active cohort ∩ order-test createdAt on the UTC day. */
+    intradayAccession: 'intraday accession (active cohort)',
+    /** Intraday accession subset with resultValidatedAt on the UTC day. */
+    sameDayResultRelease: 'same-day result release (accession subset)',
+    summaryAria: 'UTC day order-test throughput cohort',
   },
   timeline: {
     sample: 'Sample',
@@ -113,6 +129,21 @@ export const LAB_TAB_LABELS: Record<LabTabId, string> = {
   entry: labStageLabel('entry', 'nav'),
   validation: labStageLabel('validation', 'nav'),
   'command-center': LAB_COPY.workflow.commandCenterNav,
+};
+
+/** Icons for lab workflow KPI rows — tabs use collection / entry / validation only. */
+export const LAB_WORKFLOW_KPI_ICONS: Record<LabWorkflowKpiStage, IconName> = {
+  collection: ICONS.dataFields.flask,
+  entry: ICONS.dataFields.notebook,
+  validation: ICONS.ui.shieldCheck,
+  sentBack: ICONS.actions.refresh,
+};
+
+/** Icons for collection / entry / validation lab tabs. */
+export const LAB_WORKFLOW_TAB_ICONS: Record<LabWorkflowStage, IconName> = {
+  collection: LAB_WORKFLOW_KPI_ICONS.collection,
+  entry: LAB_WORKFLOW_KPI_ICONS.entry,
+  validation: LAB_WORKFLOW_KPI_ICONS.validation,
 };
 
 export const DEFAULT_LAB_TAB: LabTabId = 'command-center';

@@ -33,11 +33,11 @@ export const EMPTY_COPY = {
     title: emptyTitle("tests in today's view"),
     description: emptySubtitle('tests', 'an order test row is updated today'),
   },
-  dashboardTodaySteps: {
-    title: emptyTitle("step times for today's accessions"),
+  dashboardTodayKpi: {
+    title: emptyTitle('lab activity for today'),
     description: emptySubtitle(
-      'step timing metrics',
-      "today's accessions include tests in the pipeline",
+      'throughput metrics',
+      'tests are updated or specimens are collected today (UTC)',
     ),
   },
   pendingAttention: {

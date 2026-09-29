@@ -109,6 +109,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/audit/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Audit Events */
+        get: operations["list_audit_events_api_v1_audit_events_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/patients/search": {
         parameters: {
             query?: never;
@@ -735,40 +752,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/audit/logs": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Lab Operation Logs */
-        get: operations["get_lab_operation_logs_api_v1_audit_logs_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/audit/logs/count": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Lab Operation Logs Count */
-        get: operations["get_lab_operation_logs_count_api_v1_audit_logs_count_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/lab/quality-issues/options": {
         parameters: {
             query?: never;
@@ -1001,6 +984,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/invoices/{invoiceId}/void": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Void Invoice */
+        post: operations["void_invoice_api_v1_invoices__invoiceId__void_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/insurance-claims/order/{orderId}": {
         parameters: {
             query?: never;
@@ -1061,6 +1061,23 @@ export interface paths {
         };
         /** List Validated Tests */
         get: operations["list_validated_tests_api_v1_reports_validated_tests_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reports/validated-tests/{testId}/download": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Download Validated Test Report */
+        get: operations["download_validated_test_report_api_v1_reports_validated_tests__testId__download_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1180,10 +1197,44 @@ export interface components {
              */
             warnings: string[];
         };
-        /** AuditLogsCountResponse */
-        AuditLogsCountResponse: {
-            /** Count */
-            count: number;
+        /** AuditEventResponse */
+        AuditEventResponse: {
+            /**
+             * Eventid
+             * Format: uuid
+             */
+            eventId: string;
+            /**
+             * Createdat
+             * Format: date-time
+             */
+            createdAt: string;
+            /** Eventtype */
+            eventType: string;
+            /** Actorid */
+            actorId?: number | null;
+            /** Actorsnapshot */
+            actorSnapshot: {
+                [key: string]: unknown;
+            };
+            /** Targettype */
+            targetType: string;
+            /** Targetid */
+            targetId: number;
+            /** Patientid */
+            patientId?: number | null;
+            /** Orderid */
+            orderId?: number | null;
+            /** Testid */
+            testId?: number | null;
+            /** Changes */
+            changes?: {
+                [key: string]: unknown;
+            } | null;
+            /** Metadata */
+            metadata?: {
+                [key: string]: unknown;
+            } | null;
         };
         /** BlockerSummary */
         BlockerSummary: {
@@ -1479,6 +1530,11 @@ export interface components {
             /** Duedate */
             dueDate?: string | null;
         };
+        /** InvoiceVoidRequest */
+        InvoiceVoidRequest: {
+            /** Reason */
+            reason?: string | null;
+        };
         /** LabBoardCounts */
         LabBoardCounts: {
             /** Collection */
@@ -1519,69 +1575,41 @@ export interface components {
             computedAt?: string | null;
             todayPanel: components["schemas"]["LabTodayPanelSnapshot"];
         };
-        /** LabOperationLogResponse */
-        LabOperationLogResponse: {
-            /** Id */
-            id: number;
-            /** Operationtype */
-            operationType: string;
-            /** Entitytype */
-            entityType: string;
-            /** Entityid */
-            entityId: number;
-            /** Performedby */
-            performedBy: string;
-            /** Performedbyname */
-            performedByName?: string | null;
-            /**
-             * Performedat
-             * Format: date-time
-             */
-            performedAt: string;
-            /** Beforestate */
-            beforeState?: {
-                [key: string]: unknown;
-            } | null;
-            /** Afterstate */
-            afterState?: {
-                [key: string]: unknown;
-            } | null;
-            /** Operationdata */
-            operationData?: {
-                [key: string]: unknown;
-            } | null;
-            /** Comment */
-            comment?: string | null;
-        };
-        /**
-         * LabOperationType
-         * @enum {string}
-         */
-        LabOperationType: "sample_collect" | "sample_reject" | "sample_recollection_request" | "recollection_request_created" | "recollection_request_approved" | "recollection_request_denied" | "result_entry" | "result_validation_approve" | "quality_issue_reported" | "escalation_resolution_authorize_retest" | "escalation_resolution_authorize_recollect" | "escalation_resolution_force_validate" | "escalation_trigger_crit_val" | "escalation_trigger_rej_samp" | "escalation_trigger_limit_hit" | "escalation_trigger_amend_res" | "escalation_resolution_cancel_test" | "escalation_resolution_apply_amendment" | "order_status_change" | "order_payment_recorded" | "test_removed" | "test_added" | "critical_value_detected" | "critical_value_notified" | "critical_value_acknowledged";
         /**
          * LabTodayPanelSnapshot
-         * @description Average time per workflow step for tests on today's accessions.
+         * @description UTC day throughput KPIs for the lab dashboard Today panel.
          */
         LabTodayPanelSnapshot: {
-            /** Daystartutc */
+            /**
+             * Daystartutc
+             * Format: date-time
+             */
             dayStartUtc: string;
-            /** Steps */
-            steps: components["schemas"]["LabTodayStepAverage"][];
+            /** Testsupdatedtoday */
+            testsUpdatedToday: number;
+            /** Testsworkedcreatedtoday */
+            testsWorkedCreatedToday: number;
+            /** Testsworkedcreatedcompletedtoday */
+            testsWorkedCreatedCompletedToday: number;
+            /** Specimenscollectedtoday */
+            specimensCollectedToday: number;
+            /** Testsresultedtoday */
+            testsResultedToday: number;
+            /** Testsvalidatedtoday */
+            testsValidatedToday: number;
+            /** Testssentbacktoday */
+            testsSentBackToday: number;
+            /** Statuscounts */
+            statusCounts: components["schemas"]["LabTodayStatusCount"][];
         };
         /**
-         * LabTodayStepAverage
-         * @description Mean hours tests spend in a workflow step (today's accessions).
+         * LabTodayStatusCount
+         * @description Order-test count by status among rows updated today (UTC).
          */
-        LabTodayStepAverage: {
-            /**
-             * Step
-             * @enum {string}
-             */
-            step: "collection" | "entry" | "validation";
-            /** Averagehours */
-            averageHours: number | null;
-            /** Samplecount */
-            sampleCount: number;
+        LabTodayStatusCount: {
+            status: components["schemas"]["TestStatus"];
+            /** Count */
+            count: number;
         };
         /**
          * Lifestyle
@@ -3166,6 +3194,43 @@ export interface operations {
             };
         };
     };
+    list_audit_events_api_v1_audit_events_get: {
+        parameters: {
+            query?: {
+                orderId?: number | null;
+                patientId?: number | null;
+                targetType?: string | null;
+                targetId?: number | null;
+                /** @description Return events created within the last N hours (UTC) */
+                hours?: number | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuditEventResponse"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     search_patients_api_v1_patients_search_get: {
         parameters: {
             query: {
@@ -4685,74 +4750,6 @@ export interface operations {
             };
         };
     };
-    get_lab_operation_logs_api_v1_audit_logs_get: {
-        parameters: {
-            query?: {
-                limit?: number;
-                offset?: number;
-                operation_type?: components["schemas"]["LabOperationType"] | null;
-                entity_type?: string | null;
-                hours_back?: number | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LabOperationLogResponse"][];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_lab_operation_logs_count_api_v1_audit_logs_count_get: {
-        parameters: {
-            query?: {
-                operation_type?: components["schemas"]["LabOperationType"] | null;
-                entity_type?: string | null;
-                hours_back?: number | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AuditLogsCountResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     get_quality_issue_options_api_v1_lab_quality_issues_options_get: {
         parameters: {
             query: {
@@ -5220,6 +5217,41 @@ export interface operations {
             };
         };
     };
+    void_invoice_api_v1_invoices__invoiceId__void_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                invoiceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["InvoiceVoidRequest"] | null;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvoiceResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_claims_for_order_api_v1_insurance_claims_order__orderId__get: {
         parameters: {
             query?: never;
@@ -5322,6 +5354,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ValidatedTestReportItem"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    download_validated_test_report_api_v1_reports_validated_tests__testId__download_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                testId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidatedTestReportItem"];
                 };
             };
             /** @description Validation Error */

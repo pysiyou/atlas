@@ -19,11 +19,14 @@ const EMPTY_QUEUE_AGE: LabCommandCenterSnapshot['queueAge'] = {
 
 const EMPTY_TODAY_PANEL: LabCommandCenterSnapshot['todayPanel'] = {
   dayStartUtc: '',
-  steps: [
-    { step: 'collection', averageHours: null, sampleCount: 0 },
-    { step: 'entry', averageHours: null, sampleCount: 0 },
-    { step: 'validation', averageHours: null, sampleCount: 0 },
-  ],
+  testsUpdatedToday: 0,
+  testsWorkedCreatedToday: 0,
+  testsWorkedCreatedCompletedToday: 0,
+  specimensCollectedToday: 0,
+  testsResultedToday: 0,
+  testsValidatedToday: 0,
+  testsSentBackToday: 0,
+  statusCounts: [],
 };
 
 const EMPTY_BOARD: LabCommandCenterSnapshot = {

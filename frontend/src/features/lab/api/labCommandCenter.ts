@@ -61,11 +61,14 @@ export interface LabBoardResponse {
   computedAt?: string | null;
   todayPanel: {
     dayStartUtc: string;
-    steps: Array<{
-      step: 'collection' | 'entry' | 'validation';
-      averageHours: number | null;
-      sampleCount: number;
-    }>;
+    testsUpdatedToday: number;
+    testsWorkedCreatedToday: number;
+    testsWorkedCreatedCompletedToday: number;
+    specimensCollectedToday: number;
+    testsResultedToday: number;
+    testsValidatedToday: number;
+    testsSentBackToday: number;
+    statusCounts: Array<{ status: string; count: number }>;
   };
 }
 

@@ -10,7 +10,7 @@ import { DASHBOARD_BOTTOM_PANEL, DASHBOARD_BOTTOM_ROW, DASHBOARD_PAGE, DASHBOARD
 import { useLabCommandCenterViewModel } from './useLabCommandCenterViewModel';
 import { LabCommandCenterBoardSkeleton } from './LabCommandCenterBoardSkeleton';
 import { LabDashboardOrdersTable } from './dashboard/LabDashboardOrdersTable';
-import { LabDashboardTodayPanel } from './dashboard/LabDashboardTodayPanel';
+import { LabDashboardTodayKpiPanel } from './dashboard/LabDashboardTodayKpiPanel';
 import { LabAttentionQueue } from './panels/LabAttentionQueue';
 import { CommandCenterEventLogPanel } from '@/features/event-log';
 
@@ -39,12 +39,7 @@ export const LabCommandCenterBoard: React.FC = () => {
       <div className={DASHBOARD_PAGE}>
         <div className={DASHBOARD_BOTTOM_ROW}>
           <div className={DASHBOARD_BOTTOM_PANEL}>
-            <LabDashboardTodayPanel
-              todayPanel={board.todayPanel}
-              healthMessage={board.healthMessage}
-              totalActive={board.totalActive}
-              suggestedTab={board.suggestedTab}
-            />
+            <LabDashboardTodayKpiPanel todayPanel={board.todayPanel} />
           </div>
           <div className={DASHBOARD_BOTTOM_PANEL}>
             <LabAttentionQueue items={board.attentionItems} attentionTotal={board.attentionTotal} />

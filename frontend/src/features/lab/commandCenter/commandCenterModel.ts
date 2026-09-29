@@ -207,16 +207,22 @@ export interface PriorityMix {
   low: number;
 }
 
-/** Today panel — mean hours per workflow step for today's accessions. */
-export interface LabTodayStepAverage {
-  step: LabPipelineStage;
-  averageHours: number | null;
-  sampleCount: number;
+export interface LabTodayStatusCount {
+  status: string;
+  count: number;
 }
 
+/** Today panel — UTC day throughput KPIs. */
 export interface LabTodayPanelSnapshot {
   dayStartUtc: string;
-  steps: LabTodayStepAverage[];
+  testsUpdatedToday: number;
+  testsWorkedCreatedToday: number;
+  testsWorkedCreatedCompletedToday: number;
+  specimensCollectedToday: number;
+  testsResultedToday: number;
+  testsValidatedToday: number;
+  testsSentBackToday: number;
+  statusCounts: LabTodayStatusCount[];
 }
 
 export interface LabCommandCenterSnapshot {
