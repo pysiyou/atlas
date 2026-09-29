@@ -18,11 +18,7 @@ function TodayPanelSkeleton() {
   return (
     <Panel title={<Skeleton height={14} width={48} />} padding="none">
       <div className={TODAY_PANEL.body}>
-        <div className={TODAY_KPI.summaryBlock}>
-          <Skeleton height={14} className="w-full" />
-          <Skeleton height={14} className="w-full" />
-          <Skeleton height={14} className="col-span-2 w-full" />
-        </div>
+        <Skeleton height={18} className="w-full" />
         <div className={TODAY_KPI.list}>
           {Array.from({ length: 4 }).map((_, index) => (
             <div key={index} className={TODAY_KPI.row}>
