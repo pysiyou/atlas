@@ -381,11 +381,13 @@ export const PANEL_LAYOUT = {
 
 /**
  * Semantic geometry — Tailwind classes map to CSS vars in semantic-light.css.
- * Themes override --radius-field | menu | menu-item | surface | workspace | inline (not primitives directly).
+ * Themes override --radius-field | menu | menu-item | surface | workspace | inline | inset (not primitives directly).
  */
 export const RADIUS = {
   /** Small chips embedded in sentences (event log highlights, etc.) */
   inline: 'rounded-inline',
+  /** Muted inset blocks in body copy (smaller than surface / card) */
+  inset: 'rounded-inset',
   field: 'rounded-field',
   menu: 'rounded-menu',
   menuItem: 'rounded-menu-item',
@@ -439,7 +441,7 @@ export const PANEL_SHELL = {
     shell: `h-full ${SURFACE.raised} ${RADIUS.field} ${SHADOW.subtle} overflow-hidden flex flex-col`,
     header: PANEL_LAYOUT.pageHeader,
     headerBetween: PANEL_LAYOUT.pageHeaderBetween,
-    title: `m-0 truncate leading-none ${TYPE.panelTitle}`,
+    title: `m-0 min-w-0 truncate ${TYPE.panelTitle}`,
     meta: `flex h-6 shrink-0 items-center ${TYPE.caption}`,
     headerActions: 'flex shrink-0 items-center min-h-0',
     body: 'flex-1 min-h-0',

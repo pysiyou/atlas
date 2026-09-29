@@ -2,15 +2,13 @@
  * Layout and typography tokens for the vertical event log feed.
  */
 import { RADIUS, SPACING, TYPE } from '@/components/theme/recipes';
-import { ENTITY_ID } from '@/utils/constants';
 
 /** Matches headline `leading-5` — dot is centered in this box at the top of each row. */
 export const EVENT_LOG_HEADLINE_LINE_CLASS = 'leading-5';
 
 export const EVENT_LOG_STYLES = {
   feed: `flex flex-col ${SPACING.stackNormal} px-space-3 py-space-3`,
-  dateDivider: 'flex min-w-0 items-center gap-space-3 py-space-1',
-  dateDividerLine: 'min-w-0 flex-1 border-t border-dashed border-border-subtle',
+  dateDivider: 'flex w-full min-w-0 justify-end py-space-1',
   dateDividerLabel: `${TYPE.caption} shrink-0 text-text-tertiary`,
   row: 'relative flex items-start gap-space-3',
   /** Stretches with row height; connectors are absolute so the dot stays on the first line. */
@@ -29,27 +27,28 @@ export const EVENT_LOG_STYLES = {
   content: 'event-log-content min-w-0 flex-1 pb-space-2',
   headline: `${TYPE.value} ${EVENT_LOG_HEADLINE_LINE_CLASS} mb-0`,
   headlineActor: 'font-medium text-text-primary',
-  /** PAT/ORD/SAM/TST, catalog codes (#…), and other hash-prefixed refs (lowercase in event log only) */
-  headlineRef: `${ENTITY_ID} font-bold lowercase`,
-  /** Non-ref emphasis (e.g. order status labels without #) */
+  /** Emphasized ids, codes, and status labels in headlines */
   headlinePrimary: 'font-medium text-text-primary',
   /** Verb phrases and connector copy (e.g. "rejected sample", "entered results for ") */
   headlineSecondary: 'text-text-secondary',
   meta: `${TYPE.meta} text-text-tertiary`,
   /** Extra detail below the headline — title + body on a muted surface */
-  detailSection: `${RADIUS.none} space-y-space-0-5 bg-surface-hover px-space-2 py-space-2`,
-  detailTitle: `${TYPE.caption} text-text-tertiary`,
-  detailBody: `${TYPE.value} text-text-primary whitespace-pre-wrap m-0 leading-relaxed`,
-  detailList: 'list-none p-0 m-0 space-y-space-0-5',
+  detailSection: `${RADIUS.inset} space-y-space-0-5 bg-surface-hover px-space-2 py-space-2`,
+  /** Section label — caption scale (smaller than detail body) */
+  detailTitle: `${TYPE.caption} leading-tight font-normal`,
+  detailBody: `${TYPE.value} leading-relaxed font-normal m-0`,
+  /** Title + at most two lines of detail content, then ellipsis */
+  detailContentClamp: 'line-clamp-2 min-w-0 break-words',
+  detailResults: `${TYPE.value} leading-relaxed font-normal min-w-0 line-clamp-2 break-words`,
+  detailLine: 'inline whitespace-nowrap',
+  detailLineLabel: 'text-text-tertiary lowercase',
+  detailLineValue: 'text-text-primary',
   expandToggle: `${TYPE.caption} text-brand hover:text-brand/80 mt-space-2 cursor-pointer`,
   rowList:
     '[&>*:first-child_.event-log-spine-stem-top]:hidden [&>*:last-child_.event-log-spine-stem-bottom]:hidden [&>*:last-child_.event-log-content]:pb-0',
 } as const;
 
-/** Emphasized headline tokens: hash-prefixed ids/codes use brand entity-id styling. */
-export function eventLogPartClass(part: { text: string; emphasis?: boolean }): string {
-  if (!part.emphasis) return EVENT_LOG_STYLES.headlineSecondary;
-  const trimmed = part.text.trim();
-  if (trimmed.startsWith('#')) return EVENT_LOG_STYLES.headlineRef;
-  return EVENT_LOG_STYLES.headlinePrimary;
+export function eventLogPartClass(part: { text: string; main?: boolean }): string {
+  if (part.main) return EVENT_LOG_STYLES.headlinePrimary;
+  return EVENT_LOG_STYLES.headlineSecondary;
 }

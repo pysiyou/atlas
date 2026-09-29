@@ -29,7 +29,7 @@ from app.schemas.order import (
 from app.schemas.pagination import create_paginated_response, skip_to_page
 from app.schemas.patient import PatientResponse
 from app.schemas.payment import PaymentCreate, PaymentResponse
-from app.services.audit.emitter import AuditEmitter
+from app.services.audit import AuditEmitter
 from app.services.billing import BillingService
 from app.services.lab.samples import generate_samples_for_order
 from app.utils.common import get_or_404

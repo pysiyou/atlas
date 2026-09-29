@@ -18,7 +18,7 @@ from app.schemas.enums import (
     SampleStatus,
     TestStatus,
 )
-from app.services.audit.emitter import AuditEmitter
+from app.services.audit import AuditEmitter
 from app.services.lab.sample_rejection_context import SampleRejectionContext
 from app.services.lab.state import StateTransitionError, TestStateMachine
 from app.services.orders import update_order_status

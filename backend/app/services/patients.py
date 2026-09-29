@@ -8,7 +8,7 @@ from app.models.order import Order
 from app.models.patient import Patient
 from app.schemas.enums import PaymentStatus
 from app.schemas.patient import MedicalHistory, PatientCreate, PatientResponse, PatientUpdate
-from app.services.audit.emitter import AuditEmitter
+from app.services.audit import AuditEmitter
 from app.utils.common import parse_display_id_from_search
 from fastapi import HTTPException, status
 from sqlalchemy import String, cast, or_

@@ -15,7 +15,7 @@ from app.schemas.critical_values import (
     NotifyRequest,
 )
 from app.schemas.enums import ResultStatus
-from app.services.audit.emitter import AuditEmitter
+from app.services.audit import AuditEmitter
 from app.services.lab.results import ResultFlag
 from fastapi import HTTPException
 from sqlalchemy.orm import Session

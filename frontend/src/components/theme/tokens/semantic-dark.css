@@ -28,6 +28,7 @@
   --radius-surface: var(--radius-card);
   --radius-workspace: var(--radius-shell);
   --radius-inline: 0.125rem;
+  --radius-inset: 0.250rem;
 
   /* Marker wash (InlineHighlight) — same deeper tints as light (see semantic-light.css) */
   --inline-highlight-warning: var(--primitive-warning-300);

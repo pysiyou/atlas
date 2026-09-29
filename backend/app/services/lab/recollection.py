@@ -324,7 +324,12 @@ class RecollectionRequestService:
         request.createdSampleId = new_sample.sampleId
         request.createdTestId = created_test_id
 
-        self.quality.emitter.sample_created(new_sample.sampleId, request.orderId, user_id)
+        self.quality.emitter.sample_created(
+            new_sample.sampleId,
+            request.orderId,
+            None,
+            test_codes=list(new_sample.testCodes or []),
+        )
         self.quality.emitter.sample_recollect_approved(
             new_sample.sampleId,
             request.orderId,

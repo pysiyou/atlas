@@ -76,7 +76,9 @@ function EventLogDetailBox({ item }: { item: ResolvedEventLogItem }) {
           <div className={EVENT_LOG_STYLES.detailTitle}>
             {narrativeLabel ?? EVENT_LOG_COPY.narrativeDefaultLabel}
           </div>
-          <p className={EVENT_LOG_STYLES.detailBody}>{narrativeText}</p>
+          <p className={cn(EVENT_LOG_STYLES.detailBody, EVENT_LOG_STYLES.detailContentClamp)}>
+            {narrativeText}
+          </p>
         </div>
       ) : null}
     </>
@@ -110,6 +112,7 @@ export const EventLogRow: React.FC<{ item: ResolvedEventLogItem }> = ({ item }) 
                     variant={part.variant}
                     icon={part.icon}
                     decoration={part.decoration}
+                    className={part.main ? EVENT_LOG_STYLES.headlinePrimary : undefined}
                   >
                     {part.text}
                   </InlineHighlight>
@@ -125,7 +128,7 @@ export const EventLogRow: React.FC<{ item: ResolvedEventLogItem }> = ({ item }) 
             <>
               <span className={EVENT_LOG_STYLES.headlineSecondary}>{headline.verbPhrase} </span>
               <span
-                className={cn(eventLogPartClass({ text: headline.targetLabel, emphasis: true }))}
+                className={cn(eventLogPartClass({ text: headline.targetLabel, main: true }))}
               >
                 {headline.targetLabel}
               </span>

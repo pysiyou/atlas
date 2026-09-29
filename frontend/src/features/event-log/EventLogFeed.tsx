@@ -40,9 +40,7 @@ export const EventLogFeed: React.FC<EventLogFeedProps> = ({
       {dayGroups.map(group => (
         <section key={group.dayKey} aria-label={group.label}>
           <div className={EVENT_LOG_STYLES.dateDivider}>
-            <div className={EVENT_LOG_STYLES.dateDividerLine} />
             <span className={EVENT_LOG_STYLES.dateDividerLabel}>{group.label}</span>
-            <div className={EVENT_LOG_STYLES.dateDividerLine} />
           </div>
           <div className={`mt-space-3 flex flex-col ${EVENT_LOG_STYLES.rowList}`}>
             {group.items.map(item => (
