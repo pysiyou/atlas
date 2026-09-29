@@ -7,7 +7,12 @@ import type { IconName } from '@/components';
 import { Panel } from '@/components/surfaces/Panel';
 import type { LabTodayPanelSnapshot } from '../commandCenterModel';
 import { TODAY_KPI, TODAY_PANEL } from '../dashboardStyles';
-import { LAB_COPY, LAB_WORKFLOW_KPI_ICONS } from '../../constants/labConstants';
+import {
+  LAB_COPY,
+  LAB_WORKFLOW_KPI_ICONS,
+  getKpiStageVisual,
+  type LabWorkflowKpiStage,
+} from '../../constants/labConstants';
 import { formatDate } from '@/utils';
 
 export interface LabDashboardTodayKpiPanelProps {
@@ -19,42 +24,40 @@ type WorkflowKpiKey = keyof Pick<
   'specimensCollectedToday' | 'testsResultedToday' | 'testsValidatedToday' | 'testsSentBackToday'
 >;
 
-type IconTone = keyof typeof TODAY_KPI.iconTone;
-
 const WORKFLOW_KPI_ROWS: Array<{
+  stage: LabWorkflowKpiStage;
   key: WorkflowKpiKey;
   label: string;
   tag: string;
   icon: IconName;
-  tone: IconTone;
 }> = [
   {
+    stage: 'collection',
     key: 'specimensCollectedToday',
     label: 'Specimens collected',
     tag: 'Collection',
     icon: LAB_WORKFLOW_KPI_ICONS.collection,
-    tone: 'warning',
   },
   {
+    stage: 'entry',
     key: 'testsResultedToday',
     label: 'Results entered',
     tag: 'Entry',
     icon: LAB_WORKFLOW_KPI_ICONS.entry,
-    tone: 'info',
   },
   {
+    stage: 'validation',
     key: 'testsValidatedToday',
     label: 'Results validated',
     tag: 'Validation',
     icon: LAB_WORKFLOW_KPI_ICONS.validation,
-    tone: 'success',
   },
   {
+    stage: 'sentBack',
     key: 'testsSentBackToday',
     label: 'Tests sent back',
     tag: LAB_COPY.workflow.sentBackShort,
     icon: LAB_WORKFLOW_KPI_ICONS.sentBack,
-    tone: 'warning',
   },
 ];
 
@@ -72,24 +75,26 @@ function meterPercent(count: number, maxCount: number): number {
 }
 
 interface TodayKpiMeterRowProps {
+  stage: LabWorkflowKpiStage;
   label: string;
   tag: string;
   icon: IconName;
-  tone: IconTone;
   count: number;
   percent: number;
 }
 
 const TodayKpiMeterRow: React.FC<TodayKpiMeterRowProps> = ({
+  stage,
   label,
   tag,
   icon,
-  tone,
   count,
   percent,
-}) => (
+}) => {
+  const visual = getKpiStageVisual(stage);
+  return (
   <div className={TODAY_KPI.row}>
-    <div className={TODAY_KPI.iconWrap(tone)}>
+    <div className={TODAY_KPI.iconWrap(visual)}>
       <Icon name={icon} className={TODAY_KPI.icon} aria-hidden />
     </div>
     <div className={TODAY_KPI.labelBlock}>
@@ -97,15 +102,16 @@ const TodayKpiMeterRow: React.FC<TodayKpiMeterRowProps> = ({
       <span className={TODAY_KPI.tag}>{tag}</span>
     </div>
     <div className={TODAY_KPI.meterWrap}>
-      <div className={TODAY_KPI.meterTrack} role="presentation">
-        <div className={TODAY_KPI.meterFill} style={{ width: `${percent}%` }} />
+      <div className={TODAY_KPI.meterTrack(visual)} role="presentation">
+        <div className={TODAY_KPI.meterFill(visual)} style={{ width: `${percent}%` }} />
         <span className={TODAY_KPI.meterLabel}>
           {percent}% ({count.toLocaleString()})
         </span>
       </div>
     </div>
   </div>
-);
+  );
+};
 
 export const LabDashboardTodayKpiPanel: React.FC<LabDashboardTodayKpiPanelProps> = ({
   todayPanel,
@@ -163,10 +169,10 @@ export const LabDashboardTodayKpiPanel: React.FC<LabDashboardTodayKpiPanelProps>
                   return (
                     <li key={row.key}>
                       <TodayKpiMeterRow
+                        stage={row.stage}
                         label={row.label}
                         tag={row.tag}
                         icon={row.icon}
-                        tone={row.tone}
                         count={count}
                         percent={percent}
                       />

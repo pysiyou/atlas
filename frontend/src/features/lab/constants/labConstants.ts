@@ -186,6 +186,10 @@ export interface LabLaneVisual {
   bar: string;
   text: string;
   badgeVariant: BadgeColor;
+  /** Icon well / soft chip — pairs workflow bg + fg tokens for the lane. */
+  iconWell: string;
+  meterTrack: string;
+  meterFill: string;
 }
 
 const LANE_VISUAL: Record<LabTimelineLane, LabLaneVisual> = {
@@ -193,42 +197,63 @@ const LANE_VISUAL: Record<LabTimelineLane, LabLaneVisual> = {
     fill: 'fill-workflow-collection-fg',
     bar: 'bg-workflow-collection-fg',
     text: 'text-workflow-collection-fg',
+    iconWell: 'bg-workflow-collection-bg text-workflow-collection-fg',
+    meterTrack: 'bg-workflow-collection-bg',
+    meterFill: 'bg-workflow-collection-fg/80',
     badgeVariant: 'info',
   },
   results: {
     fill: 'fill-workflow-entry-fg',
     bar: 'bg-workflow-entry-fg',
     text: 'text-workflow-entry-fg',
+    iconWell: 'bg-workflow-entry-bg text-workflow-entry-fg',
+    meterTrack: 'bg-workflow-entry-bg',
+    meterFill: 'bg-workflow-entry-fg/80',
     badgeVariant: 'warning',
   },
   validation: {
     fill: 'fill-workflow-validation-fg',
     bar: 'bg-workflow-validation-fg',
     text: 'text-workflow-validation-fg',
+    iconWell: 'bg-workflow-validation-bg text-workflow-validation-fg',
+    meterTrack: 'bg-workflow-validation-bg',
+    meterFill: 'bg-workflow-validation-fg/80',
     badgeVariant: 'success',
   },
   escalation: {
     fill: 'fill-workflow-escalation-fg',
     bar: 'bg-workflow-escalation-fg',
     text: 'text-workflow-escalation-fg',
+    iconWell: 'bg-workflow-escalation-bg text-workflow-escalation-fg',
+    meterTrack: 'bg-workflow-escalation-bg',
+    meterFill: 'bg-workflow-escalation-fg/80',
     badgeVariant: 'danger',
   },
   quality: {
     fill: 'fill-workflow-quality-fg',
     bar: 'bg-workflow-quality-fg',
     text: 'text-workflow-quality-fg',
+    iconWell: 'bg-workflow-quality-bg text-workflow-quality-fg',
+    meterTrack: 'bg-workflow-quality-bg',
+    meterFill: 'bg-workflow-quality-fg/80',
     badgeVariant: 'warning',
   },
   order: {
     fill: 'fill-workflow-order-fg',
     bar: 'bg-workflow-order-fg',
     text: 'text-workflow-order-fg',
+    iconWell: 'bg-workflow-order-bg text-workflow-order-fg',
+    meterTrack: 'bg-workflow-order-bg',
+    meterFill: 'bg-workflow-order-fg/80',
     badgeVariant: 'neutral',
   },
   composition: {
     fill: 'fill-workflow-composition-fg',
     bar: 'bg-workflow-composition-fg',
     text: 'text-workflow-composition-fg',
+    iconWell: 'bg-workflow-composition-bg text-workflow-composition-fg',
+    meterTrack: 'bg-workflow-composition-bg',
+    meterFill: 'bg-workflow-composition-fg/80',
     badgeVariant: 'neutral',
   },
 };
@@ -245,5 +270,21 @@ export function getLaneVisual(lane: LabTimelineLane): LabLaneVisual {
 
 export function getStageVisual(stage: LabWorkflowStage): LabLaneVisual {
   return getLaneVisual(LAB_STAGE_LANE[stage]);
+}
+
+const KPI_STAGE_LANE: Record<LabWorkflowKpiStage, LabTimelineLane> = {
+  collection: 'sample',
+  entry: 'results',
+  validation: 'validation',
+  sentBack: 'quality',
+};
+
+/** Dashboard KPI rows and any UI keyed by workflow stage (includes sent-back / rework). */
+export function getKpiStageVisual(stage: LabWorkflowKpiStage): LabLaneVisual {
+  return getLaneVisual(KPI_STAGE_LANE[stage]);
+}
+
+export function isLabWorkflowStageTab(tab: LabTabId): tab is LabWorkflowStage {
+  return tab === 'collection' || tab === 'entry' || tab === 'validation';
 }
 

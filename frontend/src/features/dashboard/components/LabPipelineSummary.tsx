@@ -10,15 +10,16 @@ import {
   useLabStageQueueCounts,
   getValidationTabCount,
   getLabTabPath,
+  getStageVisual,
   LAB_TAB_LABELS,
-  type LabTabId,
+  type LabWorkflowStage,
 } from '@/features/lab';
 import { useAuthStore } from '@/app/authStore';
 import { INLINE_LINK, RADIUS, TYPE } from '@/components/theme/recipes';
 
 
 const LAB_QUEUE_ITEMS: Array<{
-  id: LabTabId;
+  id: LabWorkflowStage;
   icon: string;
   countKey: keyof ReturnType<typeof useLabStageQueueCounts>['counts'];
 }> = [
@@ -50,6 +51,7 @@ export const LabPipelineSummary: React.FC = () => {
             item.countKey === 'validation'
               ? getValidationTabCount(counts)
               : counts[item.countKey];
+          const stageVisual = getStageVisual(item.id);
           return (
             <Link
               key={item.id}
@@ -57,7 +59,10 @@ export const LabPipelineSummary: React.FC = () => {
               className={`flex items-center justify-between p-space-3 ${RADIUS.field} border border-border-default hover:bg-surface-page transition-colors`}
             >
               <div className="flex items-center gap-space-2 min-w-0">
-                <Icon name={item.icon as IconName} className="w-4 h-4 text-brand shrink-0" />
+                <Icon
+                  name={item.icon as IconName}
+                  className={`w-4 h-4 shrink-0 ${stageVisual.text}`}
+                />
                 <span className={`${TYPE.label} truncate`}>{LAB_TAB_LABELS[item.id]}</span>
               </div>
               {count > 0 && (

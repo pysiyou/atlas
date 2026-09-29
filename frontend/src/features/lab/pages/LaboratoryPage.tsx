@@ -12,17 +12,20 @@ import { LabCommandCenterBoard } from '../commandCenter/LabCommandCenterBoard';
 import { Icon, PageHeader, Badge, ErrorAlert } from '@/components';
 import { errorAlertMessage } from '@/utils/feedback';
 import { ICONS } from '@/config/icons';
-import { WORKSPACE } from '@/components/theme/recipes';
+import { WORKSPACE, CONTROL } from '@/components/theme/recipes';
 import { LAB_WORKFLOW_QUEUE_SHELL, LAB_PAGE_TABS } from '../utils/labStyles';
 import { useLabStageQueueCounts, getValidationTabCount } from '../hooks';
 import {
   DEFAULT_LAB_TAB,
   isLabTabId,
+  isLabWorkflowStageTab,
+  getStageVisual,
   LAB_TAB_LABELS,
   LAB_WORKFLOW_TAB_ICONS,
   type LabTabId,
   getLabTabPath,
 } from '../constants/labConstants';
+import { cn } from '@/utils';
 
 export const LaboratoryPage: React.FC = () => {
   const navigate = useNavigate();
@@ -96,16 +99,29 @@ export const LaboratoryPage: React.FC = () => {
             {tabs.map(tab => {
               const isActive = activeTab === tab.id;
               const hasCount = typeof tab.count === 'number' && tab.count > 0;
+              const stageVisual = isLabWorkflowStageTab(tab.id) ? getStageVisual(tab.id) : null;
               return (
                 <button
                   key={tab.id}
                   onClick={() => handleTabChange(tab.id)}
-                  className={`${LAB_PAGE_TABS.buttonBase} ${
-                    isActive ? LAB_PAGE_TABS.buttonActive : LAB_PAGE_TABS.buttonInactive
-                  }`}
+                  className={cn(
+                    LAB_PAGE_TABS.buttonBase,
+                    isActive
+                      ? stageVisual
+                        ? `bg-surface ${stageVisual.text} ${CONTROL.segmentActive}`
+                        : LAB_PAGE_TABS.buttonActive
+                      : LAB_PAGE_TABS.buttonInactive,
+                  )}
                 >
                   <div
-                    className={`${isActive ? LAB_PAGE_TABS.iconActive : LAB_PAGE_TABS.iconInactive} flex items-center`}
+                    className={cn(
+                      'flex items-center',
+                      isActive
+                        ? stageVisual
+                          ? stageVisual.text
+                          : LAB_PAGE_TABS.iconActive
+                        : LAB_PAGE_TABS.iconInactive,
+                    )}
                   >
                     {tab.icon}
                   </div>

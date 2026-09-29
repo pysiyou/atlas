@@ -106,15 +106,15 @@
 
   --category-hematology: var(--chart-danger);
   --category-biochemistry: var(--chart-warning);
-  --category-chemistry: var(--chart-warning);
-  --category-microbiology: var(--chart-brand);
-  --category-serology: var(--chart-accent);
-  --category-urinalysis: var(--chart-brand);
-  --category-imaging: var(--chart-accent);
-  --category-immunology: var(--chart-danger);
-  --category-molecular: var(--chart-brand);
-  --category-toxicology: var(--primitive-success-600);
-  --category-coagulation: var(--chart-danger);
+  --category-chemistry: var(--orange-fg-emphasis);
+  --category-microbiology: var(--teal-fg-emphasis);
+  --category-serology: var(--indigo-fg-emphasis);
+  --category-urinalysis: var(--cyan-fg-emphasis);
+  --category-imaging: var(--purple-fg-emphasis);
+  --category-immunology: var(--pink-fg-emphasis);
+  --category-molecular: var(--chart-accent);
+  --category-toxicology: var(--chart-success);
+  --category-coagulation: var(--danger-fg-emphasis);
   --category-default: var(--chart-brand);
 
   --toast-bg: var(--primitive-neutral-0);
