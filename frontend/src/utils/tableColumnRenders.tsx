@@ -6,6 +6,18 @@ import type { ReactNode } from 'react';
 import { formatDate, formatDateTime, formatPhoneNumber } from '@/utils';
 import { TABLE_TYPE } from '@/components/theme/recipes';
 
+/** Primary datetime/date in a dedicated table column. */
+export const TABLE_DATETIME_CELL_CLASS = `${TABLE_TYPE.datetime} truncate block font-normal`;
+
+/** Datetime/date shown as supporting text (caption scale, tertiary color). */
+export const TABLE_DATETIME_SECONDARY_CLASS = `${TABLE_TYPE.datetimeSecondary} truncate block font-normal`;
+
+export type TableDateTone = 'primary' | 'secondary';
+
+function tableDateClassName(tone: TableDateTone): string {
+  return tone === 'secondary' ? TABLE_DATETIME_SECONDARY_CLASS : TABLE_DATETIME_CELL_CLASS;
+}
+
 export function renderPatientNameBlock(fullName: string, secondary?: ReactNode): ReactNode {
   return (
     <div className="min-w-0 font-normal">
@@ -30,20 +42,22 @@ export function renderContactBlock(phone: string, email?: string): ReactNode {
 
 export function renderDateCell(
   date: string | Date | null | undefined,
-  emptyLabel = '—'
+  emptyLabel = '—',
+  tone: TableDateTone = 'primary'
 ): ReactNode {
   if (!date) {
     return <span className={`${TABLE_TYPE.meta} font-normal`}>{emptyLabel}</span>;
   }
-  return <span className={`${TABLE_TYPE.cell} font-normal`}>{formatDate(date)}</span>;
+  return <span className={tableDateClassName(tone)}>{formatDate(date)}</span>;
 }
 
 export function renderDateTimeCell(
   date: string | Date | null | undefined,
-  emptyLabel = '—'
+  emptyLabel = '—',
+  tone: TableDateTone = 'primary'
 ): ReactNode {
   if (!date) {
     return <span className={`${TABLE_TYPE.meta} font-normal`}>{emptyLabel}</span>;
   }
-  return <span className={`${TABLE_TYPE.cell} font-normal`}>{formatDateTime(date)}</span>;
+  return <span className={tableDateClassName(tone)}>{formatDateTime(date)}</span>;
 }

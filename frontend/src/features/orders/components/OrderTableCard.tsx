@@ -5,9 +5,10 @@ import { PaymentStatusBadge } from '@/features/payments';
 import { renderOrderTestsBlock } from '@/features/orders';
 import { useTestNameLookup } from '@/features/catalog';
 import { formatCurrency, formatDateTime } from '@/utils';
+import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
 import { getActiveTests } from '../utils/orderCalculator';
 import type { Order } from '@/types';
-import { CARD_PRICE, TYPE } from '@/components/theme/recipes';
+import { CARD_PRICE } from '@/components/theme/recipes';
 
 
 type OrderTableCardProps = CardComponentProps<Order> & {
@@ -31,7 +32,7 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
             <div className="min-w-0">
               <EntityId type="order" value={order.orderId} variant="block" />
               {order.orderDate ? (
-                <p className={`${TYPE.meta} mt-space-0-5 tabular-nums`}>{formatDateTime(order.orderDate)}</p>
+                <p className={`${TABLE_DATETIME_SECONDARY_CLASS} mt-space-0-5`}>{formatDateTime(order.orderDate)}</p>
               ) : null}
             </div>
           ) : (
@@ -66,7 +67,7 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
           </div>
         ) : (
           <>
-            <div className={`${TYPE.meta} tabular-nums`}>{formatDateTime(order.orderDate)}</div>
+            <div className={TABLE_DATETIME_SECONDARY_CLASS}>{formatDateTime(order.orderDate)}</div>
             <div className="flex items-center gap-space-2 shrink-0">
               {order.overallStatus && <OrderStatusBadge status={order.overallStatus} size="xs" />}
               {order.paymentStatus && <PaymentStatusBadge status={order.paymentStatus} size="xs" />}

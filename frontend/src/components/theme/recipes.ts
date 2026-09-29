@@ -32,6 +32,10 @@ export const TABLE_TYPE = {
   secondary: `${TABLE_TEXT_SCALE} text-text-secondary`,
   meta: `${TABLE_TEXT_SCALE} text-text-tertiary`,
   amount: `${TABLE_TEXT_SCALE} text-text-primary`,
+  /** Timestamps and calendar dates in DataTable cells (primary column content). */
+  datetime: `${TABLE_TEXT_SCALE} text-text-primary tabular-nums`,
+  /** Same formats as datetime, smaller type and tertiary color when the date is supporting text. */
+  datetimeSecondary: `type-caption text-text-tertiary tabular-nums`,
   label: `${TABLE_TEXT_SCALE} text-text-secondary`,
   caption: `${TABLE_TEXT_SCALE} text-text-tertiary`,
   link: `${TABLE_TEXT_SCALE} text-brand underline`,
@@ -42,8 +46,8 @@ export const TABLE_SHELL = {
   headerRow:
     'grid w-full min-w-full items-stretch border-b border-border-default bg-surface-table-header',
   headerRowSticky: 'sticky top-0 z-10',
-  headerCell: 'flex min-w-0 items-center gap-space-2 whitespace-nowrap',
-  bodyCell: 'min-w-0 overflow-hidden flex items-center',
+  headerCell: 'flex min-w-0 items-center justify-start gap-space-2 whitespace-nowrap text-left',
+  bodyCell: 'min-w-0 overflow-hidden flex items-center justify-start text-left',
   row: 'grid w-full min-w-full items-center border-b border-border-default transition-colors duration-200',
   rowClickable: 'cursor-pointer hover:bg-surface-hover',
   rowStripedEven: 'bg-surface',

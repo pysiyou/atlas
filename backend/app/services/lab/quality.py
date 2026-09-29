@@ -133,17 +133,6 @@ class QualityIssueService:
             current = parent
         return current
 
-    def _chain_root_sample(self, sample: Sample) -> Sample:
-        current = sample
-        while current.originalSampleId:
-            parent = (
-                self.db.query(Sample).filter(Sample.sampleId == current.originalSampleId).first()
-            )
-            if not parent:
-                break
-            current = parent
-        return current
-
     def _collect_chain_test_ids(self, order_test: OrderTest) -> set[int]:
         """All order-test row IDs in the retest chain (root through active successor)."""
         root = self._chain_root_test(order_test)

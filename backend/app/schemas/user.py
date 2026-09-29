@@ -56,10 +56,6 @@ class Token(BaseModel):
     role: UserRole
 
 
-class TokenData(BaseModel):
-    user_id: int | None = None
-
-
 class LoginRequest(BaseModel):
     username: str
     password: str

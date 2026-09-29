@@ -111,14 +111,6 @@ class RecollectionRequestService:
         )
         return [self._to_summary(row) for row in rows]
 
-    def get_request(self, request_id: int) -> RecollectionRequest:
-        row = (
-            self.db.query(RecollectionRequest).filter(RecollectionRequest.id == request_id).first()
-        )
-        if not row:
-            raise LabOperationError(f"Recollection request {request_id} not found", status_code=404)
-        return row
-
     def create_from_collection(
         self,
         *,

@@ -15,8 +15,8 @@ import {
 } from '@/components/data-table';
 import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
 import { BlockedReasonBadge } from '@/features/lab';
-import { formatDate, parseAppDate, displayId } from '@/utils';
-import { format } from 'date-fns';
+import { displayId } from '@/utils';
+import { renderDateTimeCell } from '@/utils/tableColumnRenders';
 import { DASHBOARD_TWO_LINE } from '../dashboardStyles';
 import type { LabDashboardOrderRow } from './dashboardOrders';
 import { LabDashboardOrderCard } from './LabDashboardOrderCard';
@@ -26,17 +26,6 @@ const VIEWS = {
   medium: ['test', 'patient', 'sampleType', 'priority', 'status', 'date'],
   compact: ['test', 'patient', 'status'],
 } as const;
-
-function twoLineDate(value: string) {
-  const parsed = parseAppDate(value);
-  if (!parsed) return <span className={DASHBOARD_TWO_LINE.secondary}>—</span>;
-  return (
-    <div className="min-w-0">
-      <div className={DASHBOARD_TWO_LINE.primary}>{formatDate(parsed, 'MMM d, yyyy')}</div>
-      <div className={DASHBOARD_TWO_LINE.mrn}>{format(parsed, 'hh:mm a')}</div>
-    </div>
-  );
-}
 
 export function createLabDashboardOrdersTableConfig(): TableViewConfig<LabDashboardOrderRow> {
   const columnMap = {
@@ -117,7 +106,7 @@ export function createLabDashboardOrdersTableConfig(): TableViewConfig<LabDashbo
       width: 'lg',
       sortable: true,
       accessor: row => row.date,
-      render: row => twoLineDate(row.date),
+      render: row => renderDateTimeCell(row.date),
     }),
   };
 

@@ -4,13 +4,14 @@ import type { TableViewConfig } from '@/components';
 import { buildViews } from '@/components/data-table';
 import {
   renderContactBlock,
+  renderDateCell,
   renderDateTimeCell,
 } from '@/utils/tableColumnRenders';
 import {
   renderPatientId,
   renderPatientNameWithAge,
+  renderPatientOrdersSummary,
 } from '../utils/patientTableColumnRenders';
-import { formatDate, formatDateTime } from '@/utils';
 import type { PatientContext } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { PatientCard } from '../components/PatientCard';
@@ -18,8 +19,8 @@ import { TABLE_TYPE } from '@/components/theme/recipes';
 
 
 const PATIENT_VIEWS = {
-  full: ['id', 'fullName', 'gender', 'contact', 'lastOrder', 'registrationDate', 'affiliation'],
-  medium: ['id', 'fullName', 'gender', 'contact', 'lastOrder', 'registrationDate'],
+  full: ['id', 'fullName', 'gender', 'contact', 'orders', 'registrationDate', 'affiliation'],
+  medium: ['id', 'fullName', 'gender', 'contact', 'orders', 'registrationDate'],
   compact: ['id', 'fullName', 'gender', 'contact'],
 } as const;
 
@@ -58,26 +59,14 @@ export const createPatientTableConfig = (
       accessor: (patient: PatientContext) => patient.gender,
       render: (patient: PatientContext) => <PatientGenderBadge gender={patient.gender} size="xs" />,
     },
-    lastOrder: {
-      key: 'lastOrder',
-      header: 'Last Order',
+    orders: {
+      key: 'orders',
+      header: 'Orders',
       width: 'lg' as const,
+      sortable: true,
       accessor: (patient: PatientContext) => patient.lastOrderDate ?? '',
-      render: (patient: PatientContext) => {
-        if (patient.orderCount === 0 || !patient.lastOrderDate) {
-          return (
-            <span className={`${TABLE_TYPE.meta} truncate block font-normal`}>No orders</span>
-          );
-        }
-        return (
-          <div className="min-w-0 font-normal">
-            <div className={`${TABLE_TYPE.amount} font-normal`}>{patient.orderCount} orders</div>
-            <div className={`${TABLE_TYPE.meta} truncate font-normal`}>
-              Last: {formatDateTime(patient.lastOrderDate)}
-            </div>
-          </div>
-        );
-      },
+      render: (patient: PatientContext) =>
+        renderPatientOrdersSummary(patient.orderCount, patient.lastOrderDate),
     },
     affiliation: {
       key: 'affiliation',
@@ -95,9 +84,12 @@ export const createPatientTableConfig = (
         }
         const isActive = isAffiliationActive(patient.affiliation);
         return (
-          <span className={`${TABLE_TYPE.meta} truncate font-normal`}>
-            {isActive ? 'Expires on' : 'Expired on'}: {formatDate(patient.affiliation.endDate)}
-          </span>
+          <div className="min-w-0 font-normal">
+            <div className={`${TABLE_TYPE.meta} truncate font-normal`}>
+              {isActive ? 'Expires on' : 'Expired on'}
+            </div>
+            {renderDateCell(patient.affiliation.endDate, '—', 'secondary')}
+          </div>
         );
       },
     },

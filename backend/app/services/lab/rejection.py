@@ -67,9 +67,6 @@ class RejectionCriteriaService:
             return self.get_specimen_criteria_items_for_test(test_code)
         return self.get_validation_criteria_items_for_test(test_code)
 
-    def get_specimen_criteria_for_test(self, test_code: str) -> list[str]:
-        return [item.reason for item in self.get_specimen_criteria_items_for_test(test_code)]
-
     def get_validation_criteria_for_test(self, test_code: str) -> list[str]:
         return [item.reason for item in self.get_validation_criteria_items_for_test(test_code)]
 
@@ -83,14 +80,6 @@ class RejectionCriteriaService:
                     criteria.append(item.reason)
         return criteria
 
-    def get_criteria_for_test(self, test_code: str) -> list[str]:
-        """Backward-compatible alias — returns validation criteria."""
-        return self.get_validation_criteria_for_test(test_code)
-
-    def get_criteria_for_tests(self, test_codes: list[str]) -> list[str]:
-        """Backward-compatible alias — returns specimen criteria union."""
-        return self.get_specimen_criteria_for_tests(test_codes)
-
     def get_criterion_for_reason(
         self,
         test_codes: list[str],
@@ -103,14 +92,6 @@ class RejectionCriteriaService:
                 if item.reason == rejection_reason:
                     return item
         return None
-
-    def has_specimen_criteria(
-        self, test_codes: list[str], *, context: QualityContext = "validation"
-    ) -> bool:
-        for code in test_codes:
-            if any(item.domain == "specimen" for item in self._items_for_context(code, context)):
-                return True
-        return False
 
     def validate_for_test(
         self,

@@ -6,6 +6,7 @@
 import React from 'react';
 import { actionButtonPreset, Icon, IconButton, EmptyState, EntityId, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components';
 import { formatDateTime } from '@/utils';
+import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
 import type { Order } from '@/types';
 import { getReportableOrders } from '../utils/patientFormatters';
 import { ICONS } from '@/config/icons';
@@ -44,7 +45,7 @@ export const PatientReportsList: React.FC<PatientReportsListProps> = ({ orders }
               <p className={`${TYPE.value} font-normal truncate`}>
                 Report_<EntityId type="order" value={order.orderId} />.pdf
               </p>
-              <p className={`${TYPE.meta} mt-space-0-5`}>
+              <p className={`${TABLE_DATETIME_SECONDARY_CLASS} mt-space-0-5`}>
                 {formatDateTime(order.orderDate)} • 1.2 MB
               </p>
             </div>

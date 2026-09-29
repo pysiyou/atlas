@@ -10,13 +10,8 @@ from __future__ import annotations
 import logging
 from datetime import UTC, datetime, timedelta
 from typing import Any
-from uuid import UUID, uuid4
+from uuid import uuid4
 
-from fastapi import BackgroundTasks
-from sqlalchemy import and_, or_
-from sqlalchemy.orm import Session
-
-from app.db.database import SessionLocal
 from app.models.audit_event import AuditEvent
 from app.models.order import Order, OrderTest
 from app.models.user import User
@@ -28,6 +23,8 @@ from app.schemas.audit import (
     EventTarget,
     EventType,
 )
+from sqlalchemy import and_, or_
+from sqlalchemy.orm import Session
 
 # ── Persist ──────────────────────────────────────────────────────────────
 
@@ -98,44 +95,11 @@ def _build_row_dict(
     }
 
 
-def _persist_audit_event(row: dict[str, Any]) -> None:
-    """Insert one audit row in a dedicated session (for BackgroundTasks)."""
-    db = SessionLocal()
-    try:
-        entry = AuditEvent(**row)
-        db.add(entry)
-        db.commit()
-    except Exception:
-        logger.exception("Failed to persist audit event %s", row.get("eventId"))
-        db.rollback()
-    finally:
-        db.close()
-
-
 class AuditWriter:
-    """Writes audit events; use background_tasks for fire-and-forget HTTP paths."""
+    """Writes audit events in the current database session."""
 
     def __init__(self, db: Session):
         self.db = db
-
-    def log_event(
-        self,
-        create: AuditEventCreate,
-        user: User | None,
-        background_tasks: BackgroundTasks | None = None,
-        ip_address: str | None = None,
-    ) -> UUID:
-        validated = AuditEventCreate.model_validate(create)
-        row = _build_row_dict(validated, user, ip_address)
-        event_id: UUID = row["eventId"]
-
-        if background_tasks is not None:
-            background_tasks.add_task(_persist_audit_event, row)
-            return event_id
-
-        entry = AuditEvent(**row)
-        self.db.add(entry)
-        return event_id
 
     def log_event_sync(
         self,
@@ -149,9 +113,6 @@ class AuditWriter:
         self.db.add(entry)
         return entry
 
-
-# Back-compat alias for opt-in example router
-EventLogger = AuditWriter
 
 # ── Query ───────────────────────────────────────────────────────────────
 
@@ -967,7 +928,6 @@ __all__ = [
     "AuditEmitter",
     "AuditEventQueryService",
     "AuditWriter",
-    "EventLogger",
     "audit_event_to_response",
     "build_actor_snapshot",
 ]

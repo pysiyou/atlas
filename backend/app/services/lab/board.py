@@ -762,29 +762,6 @@ class LabBoardService:
         today = datetime.now(UTC).date()
         return datetime.combine(today, datetime.min.time()).replace(tzinfo=UTC)
 
-    def _blocked_reason_for_order_test(
-        self,
-        order_test: OrderTest,
-        order: Order,
-        sample: Sample | None,
-        recollection_blocked: set[int],
-        tickets_by_test: dict[int, EscalationTicket],
-    ) -> str | None:
-        status = _enum_value(order_test.status) or TestStatus.PENDING.value
-        ticket = tickets_by_test.get(order_test.id)
-        escalation_code = ticket.reasonCode.value if ticket and ticket.reasonCode else None
-        blocked = blocked_reason_for_work_item(
-            status=status,
-            is_retest=bool(order_test.isRetest),
-            payment_status=_enum_value(order.paymentStatus),
-            sample_status=_enum_value(sample.status) if sample else None,
-            sample_is_recollection=bool(sample.isRecollection) if sample else False,
-            escalation_reason_code=escalation_code,
-        )
-        if order_test.id in recollection_blocked:
-            blocked = blocked or "recollection_approval"
-        return blocked
-
     def _active_order_test_filter(self):
         return ~OrderTest.status.in_(
             (TestStatus.CANCELLED, TestStatus.REMOVED, TestStatus.SUPERSEDED)
@@ -799,17 +776,6 @@ class LabBoardService:
             if order_test_id is not None:
                 blocked.add(int(order_test_id))
         return blocked
-
-    def _in_pipeline_order_test_filter(self):
-        """Tests still moving through the lab (excludes completed validated work)."""
-        return OrderTest.status.in_(
-            (
-                TestStatus.PENDING,
-                TestStatus.SAMPLE_COLLECTED,
-                TestStatus.RESULTED,
-                TestStatus.ESCALATED,
-            )
-        )
 
     def _collection_rows(self) -> list[dict[str, Any]]:
         rows = (

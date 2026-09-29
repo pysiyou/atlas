@@ -33,12 +33,6 @@ export function TableHeader<T>({
       {visibleColumns.map(column => {
         const isSortable = column.sortable;
         const isActiveSort = sort?.key === column.key;
-        const headerAlignClass =
-          column.align === 'center'
-            ? 'justify-center'
-            : column.align === 'right'
-              ? 'justify-end'
-              : 'justify-start';
         return (
           <div
             key={column.key}
@@ -47,7 +41,7 @@ export function TableHeader<T>({
               HEADER_PADDING[variant],
               TABLE_SHELL.headerCell,
               TABLE_TYPE.columnTitle,
-              headerAlignClass,
+              'justify-start text-left',
               isSortable && TABLE_TYPE.columnTitleSortable,
               isActiveSort && TABLE_TYPE.columnTitleActive,
               column.headerClassName,
@@ -78,14 +72,6 @@ export function TableHeader<T>({
 }
 
 export function TableCell({ column, children, variant }: TableCellProps) {
-  const alignClass =
-    column.align === 'center'
-      ? 'text-center justify-center'
-      : column.align === 'right'
-        ? 'text-right justify-end'
-        : 'text-left justify-start';
-  const innerJustifyClass =
-    column.align === 'center' ? 'justify-center' : column.align === 'right' ? 'justify-end' : 'justify-start';
   const stickyClass =
     column.sticky === 'left'
       ? 'sticky left-0 bg-surface z-[1]'
@@ -99,14 +85,14 @@ export function TableCell({ column, children, variant }: TableCellProps) {
         CELL_PADDING[variant],
         TABLE_TYPE.cell,
         TABLE_SHELL.bodyCell,
-        alignClass,
+        'text-left justify-start',
         contentClass,
         stickyClass,
         column.className,
       )}
       role="cell"
     >
-      <div className={`min-w-0 flex-1 flex items-center ${innerJustifyClass}`}>{children}</div>
+      <div className="min-w-0 flex-1 flex items-center justify-start">{children}</div>
     </div>
   );
 }

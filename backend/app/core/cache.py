@@ -1,19 +1,15 @@
 """
 Redis caching utilities for Atlas backend.
-Provides connection management, caching decorators, and invalidation helpers.
+Provides connection management and invalidation helpers.
 """
 import hashlib
 import json
-from collections.abc import Callable
 from datetime import datetime
-from functools import wraps
-from typing import Any, TypeVar
+from typing import Any
 
 import redis
 
 from app.core.config import settings
-
-T = TypeVar("T")
 
 # Redis client singleton
 _redis_client: redis.Redis | None = None
@@ -57,13 +53,6 @@ class CacheKeys:
     TESTS_CATALOG = "tests:catalog"
     TESTS_BY_CODE = "tests:code:{code}"
     AFFILIATIONS_PRICING = "affiliations:pricing"
-
-    # Semi-static data (5 min TTL)
-    PATIENTS_LIST = "patients:list"
-    PATIENTS_BY_ID = "patients:id:{id}"
-
-    # Dynamic data (1 min TTL) - generally not cached
-    ORDERS_LIST = "orders:list"
 
 
 def generate_cache_key(base_key: str, **params) -> str:
@@ -148,18 +137,6 @@ def invalidate_tests_cache():
     cache_delete_pattern("tests:catalog:*")
 
 
-def invalidate_affiliations_cache():
-    """Invalidate all affiliation-related caches."""
-    cache_delete(CacheKeys.AFFILIATIONS_PRICING)
-    cache_delete_pattern("affiliations:*")
-
-
-def invalidate_patients_cache():
-    """Invalidate all patient-related caches."""
-    cache_delete(CacheKeys.PATIENTS_LIST)
-    cache_delete_pattern("patients:*")
-
-
 def _json_serializer(obj: Any) -> str:
     """JSON serializer for objects not serializable by default."""
     if isinstance(obj, datetime):
@@ -167,46 +144,3 @@ def _json_serializer(obj: Any) -> str:
     if hasattr(obj, "__dict__"):
         return obj.__dict__
     raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
-
-
-def cached(
-    key_template: str,
-    ttl: int | None = None,
-    key_params: list[str] | None = None,
-):
-    """
-    Decorator to cache function results.
-
-    Args:
-        key_template: Cache key template (e.g., "tests:catalog")
-        ttl: Time-to-live in seconds. Defaults to CACHE_TTL_STATIC.
-        key_params: List of function argument names to include in cache key.
-    """
-
-    def decorator(func: Callable[..., T]) -> Callable[..., T]:
-        @wraps(func)
-        def wrapper(*args, **kwargs) -> T:
-            # Build cache key from parameters
-            if key_params:
-                param_values = {k: kwargs.get(k) for k in key_params}
-                cache_key = generate_cache_key(key_template, **param_values)
-            else:
-                cache_key = key_template
-
-            # Try to get from cache
-            cached_value = cache_get(cache_key)
-            if cached_value is not None:
-                return cached_value
-
-            # Execute function
-            result = func(*args, **kwargs)
-
-            # Cache the result
-            cache_ttl = ttl if ttl is not None else settings.CACHE_TTL_STATIC
-            cache_set(cache_key, result, cache_ttl)
-
-            return result
-
-        return wrapper
-
-    return decorator

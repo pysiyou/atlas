@@ -32,8 +32,6 @@ const ORDER_VIEWS_WITHOUT_PATIENT = {
   compact: ORDER_VIEWS.compact.filter(key => key !== 'patientName'),
 } as const;
 
-const BADGE_HEADER = 'justify-center' as const;
-
 const ORDER_LIST_WIDTH_OVERRIDES = {
   full: {
     orderId: 'id' as const,
@@ -106,18 +104,12 @@ export const createOrderTableConfig = (
     },
     priority: {
       ...shared.priority,
-      align: 'center' as const,
-      headerClassName: BADGE_HEADER,
     },
     overallStatus: {
       ...shared.overallStatus,
-      align: 'center' as const,
-      headerClassName: BADGE_HEADER,
     },
     paymentStatus: {
       ...shared.paymentStatus,
-      align: 'center' as const,
-      headerClassName: BADGE_HEADER,
     },
     tests: {
       ...shared.tests,
@@ -136,8 +128,6 @@ export const createOrderTableConfig = (
     totalPrice: {
       ...shared.totalPrice,
       header: 'Total',
-      align: 'right' as const,
-      headerClassName: 'justify-end',
     },
   };
 

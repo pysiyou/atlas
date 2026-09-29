@@ -3,7 +3,8 @@ import React from 'react';
 import { EntityId } from '@/components';
 import type { TableViewConfig, CardComponentProps } from '@/components';
 import { buildViews } from '@/components/data-table';
-import { cn, formatCurrency, formatDateTime } from '@/utils';
+import { cn, formatCurrency } from '@/utils';
+import { renderDateTimeCell } from '@/utils/tableColumnRenders';
 import { getTestName, getTestProperty } from '@/features/catalog/testLookup';
 import { CatalogCategoryBadge } from '@/features/catalog';
 import { getLabQueueUrlForTest } from '@/features/lab';
@@ -125,12 +126,7 @@ export function createTestsTableConfig(
       header: 'Updated',
       width: 'lg' as const,
       accessor: (test: OrderTest) => test.updatedAt ?? '',
-      render: (test: OrderTest) =>
-        test.updatedAt ? (
-          <span className={TABLE_TYPE.label}>{formatDateTime(test.updatedAt)}</span>
-        ) : (
-          <span className={TABLE_TYPE.meta}>—</span>
-        ),
+      render: (test: OrderTest) => renderDateTimeCell(test.updatedAt),
     },
     lab: {
       key: 'lab',

@@ -5,8 +5,8 @@
 import type { MouseEvent, ReactNode } from 'react';
 import type { NavigateFunction } from 'react-router-dom';
 import { EntityId } from '@/components/display/EntityId';
-import { formatCurrency, formatDateTime } from '@/utils';
-import { renderPatientNameBlock } from '@/utils/tableColumnRenders';
+import { formatCurrency } from '@/utils';
+import { renderDateTimeCell, renderPatientNameBlock } from '@/utils/tableColumnRenders';
 import type { OrderTest } from '@/types';
 import { TABLE_TYPE } from '@/components/theme/recipes';
 
@@ -116,11 +116,7 @@ export function renderOrderDateCell(date: string | Date | null | undefined): Rea
   if (!date) {
     return null;
   }
-  return (
-    <span className={`${TABLE_TYPE.meta} truncate block font-normal`}>
-      {formatDateTime(date)}
-    </span>
-  );
+  return renderDateTimeCell(date);
 }
 
 export function renderNavigableOrderId(
