@@ -62,13 +62,10 @@ export interface LabBoardResponse {
   todayPanel: {
     dayStartUtc: string;
     testsUpdatedToday: number;
-    testsWorkedCreatedToday: number;
-    testsWorkedCreatedCompletedToday: number;
-    specimensCollectedToday: number;
-    testsResultedToday: number;
-    testsValidatedToday: number;
-    testsSentBackToday: number;
-    statusCounts: Array<{ status: string; count: number }>;
+    testsWithCollection: number;
+    testsWithResultEntry: number;
+    testsWithValidation: number;
+    testsOffNormalPath: number;
   };
 }
 

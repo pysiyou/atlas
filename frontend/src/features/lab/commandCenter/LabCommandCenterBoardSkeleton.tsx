@@ -12,7 +12,7 @@ import {
   DASHBOARD_TABLE_WRAP,
   TODAY_KPI,
   TODAY_PANEL,
-} from './dashboardStyles';
+} from './commandCenterStyles';
 
 function TodayPanelSkeleton() {
   return (

@@ -175,7 +175,6 @@ export default defineConfig([
       'src/features/lab/utils/labStyles.ts',
       'src/features/lab/utils/labResult.ts',
       'src/features/lab/commandCenter/commandCenterStyles.ts',
-      'src/features/lab/commandCenter/dashboardStyles.ts',
       'src/features/lab/collection/**/*.{ts,tsx}',
       'src/features/lab/entry/**/*.{ts,tsx}',
       'src/features/lab/validation/**/*.{ts,tsx}',

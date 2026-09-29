@@ -1,101 +1,49 @@
 /**
- * Command center shared layout, surface, and tone styles.
+ * Lab dashboard layout, surfaces, and attention feed styles.
  */
-import { INLINE_LINK, PANEL_SHELL, TABLE_TYPE } from '@/components/theme/recipes';
-import { CONTROL, PANEL, RADIUS, SHADOW, SPACING, TONE, TYPE } from '@/components/theme/recipes';
-export type CommandCenterKpiTone = 'brand' | 'success' | 'warning' | 'danger' | 'neutral';
+import { PANEL_SHELL, TABLE_TYPE, TYPE } from '@/components/theme/recipes';
+import { CONTROL, RADIUS, SPACING } from '@/components/theme/recipes';
+import { TONE } from '@/components/theme/recipes';
+import type { LabLaneVisual } from '../constants/labConstants';
 
 export const COMMAND_CENTER_PANEL = {
   ...PANEL_SHELL.page,
   page: 'flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-surface-page',
 } as const;
 
-/** Top pipeline / KPI strip — aligned with lab workflow queue shell radius. */
-export const COMMAND_CENTER_PIPELINE_STRIP =
-  `${PANEL.raisedShadowSm} shrink-0 ${SPACING.pxSpace3} ${SPACING.pySpace2}` as const;
+export const DASHBOARD_PAGE =
+  `flex flex-1 h-full min-h-0 min-w-0 flex-col overflow-y-auto lg:overflow-hidden ${SPACING.gapSection}` as const;
 
-export const COMMAND_CENTER_BOARD = {
-  stack: `flex h-full min-h-0 flex-col ${SPACING.gapInline}`,
-  mainGrid: `grid min-h-0 flex-1 grid-cols-1 ${SPACING.gapInline} lg:grid-cols-12`,
-  primaryColumn: `flex min-h-0 flex-col ${SPACING.gapInline} lg:col-span-8 lg:h-full`,
-  secondaryColumn: `flex min-h-0 flex-col ${SPACING.gapInline} lg:col-span-4 lg:h-full`,
-  innerGrid: `grid min-h-0 grid-cols-1 ${SPACING.gapInline} sm:grid-cols-2 lg:min-h-0 lg:flex-[4]`,
+export const DASHBOARD_BOTTOM_ROW =
+  `grid min-h-72 shrink-0 grid-cols-1 ${SPACING.gapSection} lg:h-72 lg:grid-cols-3 lg:items-stretch` as const;
+
+export const DASHBOARD_BOTTOM_PANEL = 'min-h-72 overflow-hidden lg:min-h-0 lg:h-full' as const;
+
+export const DASHBOARD_TABLE_WRAP = 'flex min-h-80 flex-1 flex-col lg:min-h-0' as const;
+
+export const DASHBOARD_ROW_INTERACTIVE = `cursor-pointer ${CONTROL.focusVisibleFlat}` as const;
+
+export const TODAY_PANEL = {
+  body: 'flex min-h-0 flex-1 flex-col justify-center gap-space-2 overflow-y-auto px-space-3 py-space-2',
 } as const;
 
-const COMMAND_CENTER_MICRO_LABEL = `${TYPE.sectionTitle} font-light` as const;
-
-export const COMMAND_CENTER_SECTION = {
-  microLabel: COMMAND_CENTER_MICRO_LABEL,
-  title: `${COMMAND_CENTER_MICRO_LABEL} text-text-tertiary`,
-  summary: TYPE.caption,
-  aside: `shrink-0 tabular-nums ${TYPE.caption}`,
-  statLabel: `${COMMAND_CENTER_MICRO_LABEL} text-text-tertiary`,
-} as const;
-
-export const COMMAND_CENTER_KPI = {
-  tile:
-    `group relative flex min-w-0 flex-1 items-center gap-space-2-5 ${RADIUS.surface} border border-border-default bg-gradient-to-br from-surface via-surface to-surface-page/80 px-space-2-5 py-space-2 transition-all duration-200 hover:border-border-hover hover:${SHADOW.subtle}`,
-  tileInteractive: 'cursor-pointer',
-  tileLink: `min-w-0 flex-1 ${RADIUS.field} ${CONTROL.focusVisibleFlat}`,
-  tileWrap: 'min-w-0 flex-1',
-  iconWrap: `flex h-8 w-8 shrink-0 items-center justify-center ${RADIUS.field} bg-surface-hover`,
-  label: `truncate ${TYPE.sectionTitle} text-text-tertiary`,
-  value: `${TYPE.pageTitle} font-semibold tabular-nums leading-none`,
-  context: `truncate font-light tabular-nums leading-none ${TYPE.caption}`,
-  ringTrack: 'text-border-subtle',
-} as const;
-
-export const COMMAND_CENTER_KPI_TONE_ICON: Record<CommandCenterKpiTone, string> = {
-  brand: TONE.brand.fg,
-  success: TONE.success.fgEmphasis,
-  warning: TONE.warning.fgEmphasis,
-  danger: TONE.danger.fgEmphasis,
-  neutral: TONE.neutral.fg,
-};
-
-export const COMMAND_CENTER_KPI_TONE_VALUE: Record<CommandCenterKpiTone, string> = {
-  brand: 'text-text-primary',
-  success: TONE.success.fgEmphasis,
-  warning: TONE.warning.fgEmphasis,
-  danger: TONE.danger.fgEmphasis,
-  neutral: 'text-text-primary',
-};
-
-export const COMMAND_CENTER_KPI_RING_TONE: Record<CommandCenterKpiTone, string> = {
-  brand: TONE.brand.fg,
-  success: TONE.success.fg,
-  warning: TONE.warning.fg,
-  danger: TONE.danger.fg,
-  neutral: TONE.neutral.fg,
-};
-
-export const COMMAND_CENTER_AGE_COLORS = {
-  fresh: 'fill-brand',
-  onTrack: 'fill-info-fg-emphasis',
-  warning: 'fill-warning-fg-emphasis',
-  critical: 'fill-danger-fg-emphasis',
-} as const;
-
-export const COMMAND_CENTER_PRIORITY_COLORS = {
-  urgent: 'fill-danger-fg-emphasis',
-  high: 'fill-warning-fg-emphasis',
-  medium: 'fill-brand',
-  low: 'fill-chart-axis',
-} as const;
-
-export const COMMAND_CENTER_HEALTH_STYLES = {
-  healthy: {
-    dot: TONE.success.fill,
-    text: TONE.success.fgEmphasis,
-  },
-  attention: {
-    dot: TONE.warning.fill,
-    text: TONE.warning.fgEmphasis,
-  },
-  critical: {
-    dot: TONE.danger.fill,
-    text: TONE.danger.fgEmphasis,
-  },
+export const TODAY_KPI = {
+  headerRange: TYPE.caption,
+  summaryMeta: TYPE.caption,
+  summaryLine: `${TYPE.value} min-w-0 leading-snug`,
+  summaryValue: 'tabular-nums text-text-primary',
+  list: 'flex min-w-0 flex-col gap-space-2',
+  row: `flex min-w-0 items-center gap-space-2 ${RADIUS.surface} border border-border-subtle/80 bg-surface px-space-2 py-space-1`,
+  iconWrap: (visual: LabLaneVisual) =>
+    `flex size-8 shrink-0 items-center justify-center ${RADIUS.inset} ${visual.iconWell}`,
+  icon: 'size-4',
+  labelBlock: 'flex min-w-0 flex-1 flex-col gap-space-1 sm:flex-row sm:items-center sm:gap-space-2',
+  rowTitle: `${TYPE.value} font-medium truncate`,
+  tag: `type-caption shrink-0 ${RADIUS.pill} bg-surface-hover px-space-3 py-space-1 text-text-secondary`,
+  meterWrap: 'w-[7.5rem] shrink-0 sm:w-[8.75rem]',
+  meterTrack: `relative flex h-5 items-center justify-end overflow-hidden ${RADIUS.inset} bg-brand-muted px-space-1.5`,
+  meterFill: `absolute inset-y-0 left-0 ${RADIUS.inset} bg-brand/30 transition-[width] duration-300 ease-out`,
+  meterLabel: 'relative z-[1] type-caption font-medium tabular-nums text-text-primary',
 } as const;
 
 export const COMMAND_CENTER_ATTENTION_ACCENT = {
@@ -103,16 +51,9 @@ export const COMMAND_CENTER_ATTENTION_ACCENT = {
   neutral: TONE.warning.fill,
 } as const;
 
-/** Shared typography/layout for attention feed rows (formerly timeline styles). */
 export const COMMAND_CENTER_FEED_STYLES = {
   groupHeader: 'sticky top-0 z-[1] flex items-center gap-space-2 bg-transparent py-space-2',
   groupDivider: 'flex-1 h-px bg-border-subtle',
   groupLabel: `${TYPE.sectionTitle} tracking-widest`,
-  eventDetails: 'flex flex-wrap items-center gap-x-space-1 gap-y-space-0-5 font-normal',
-  loadMore: 'flex justify-center border-t border-border-subtle bg-transparent px-space-4 py-space-2',
-  retryLink: INLINE_LINK,
-  retryLinkDisabled: `${INLINE_LINK} disabled:opacity-60`,
-  eventDetailText: TABLE_TYPE.meta,
   eventHeadline: `min-w-0 ${TABLE_TYPE.cell} font-normal text-text-primary`,
 } as const;
-

@@ -656,92 +656,81 @@ class LabBoardService:
         return snapshot
 
     def _today_panel_snapshot(self) -> dict[str, Any]:
-        """UTC day KPIs: milestone counts and status mix for tests updated today."""
+        """UTC day KPIs: milestone mix among order tests updated today (any age)."""
         today_start = self._utc_today_start()
-
         worked_today_filter = OrderTest.updatedAt >= today_start
-        created_today_filter = OrderTest.createdAt >= today_start
-        completed_today_filter = OrderTest.resultValidatedAt >= today_start
 
         tests_updated_today = (
+            self.db.query(func.count(OrderTest.id)).filter(worked_today_filter).scalar() or 0
+        )
+        tests_with_collection = (
             self.db.query(func.count(OrderTest.id))
             .filter(worked_today_filter)
+            .filter(self._collection_milestone_predicate())
             .scalar()
             or 0
         )
-        tests_worked_created_today = (
+        tests_with_result_entry = (
             self.db.query(func.count(OrderTest.id))
             .filter(worked_today_filter)
-            .filter(created_today_filter)
+            .filter(self._result_entry_milestone_predicate())
             .scalar()
             or 0
         )
-        tests_worked_created_completed_today = (
+        tests_with_validation = (
             self.db.query(func.count(OrderTest.id))
             .filter(worked_today_filter)
-            .filter(created_today_filter)
-            .filter(completed_today_filter)
+            .filter(self._validation_milestone_predicate())
             .scalar()
             or 0
         )
-        specimens_collected_today = (
-            self.db.query(func.count(Sample.sampleId))
-            .filter(Sample.collectedAt >= today_start)
-            .scalar()
-            or 0
-        )
-        tests_resulted_today = (
+        tests_off_normal_path = (
             self.db.query(func.count(OrderTest.id))
-            .filter(OrderTest.resultEnteredAt >= today_start)
+            .filter(worked_today_filter)
+            .filter(self._off_normal_path_predicate())
             .scalar()
             or 0
         )
-        tests_validated_today = (
-            self.db.query(func.count(OrderTest.id))
-            .filter(OrderTest.resultValidatedAt >= today_start)
-            .scalar()
-            or 0
-        )
-        tests_sent_back_today = (
-            self.db.query(func.count(OrderTest.id))
-            .filter(OrderTest.updatedAt >= today_start)
-            .filter(self._order_test_sent_back_predicate())
-            .scalar()
-            or 0
-        )
-
-        status_rows = (
-            self.db.query(OrderTest.status, func.count(OrderTest.id))
-            .filter(OrderTest.updatedAt >= today_start)
-            .group_by(OrderTest.status)
-            .all()
-        )
-        counts_by_status: dict[TestStatus, int] = {}
-        for status, count in status_rows:
-            key = status if isinstance(status, TestStatus) else TestStatus(status)
-            counts_by_status[key] = int(count)
-
-        status_order = list(TestStatus)
-        status_counts: list[dict[str, Any]] = []
-        for status in status_order:
-            count = counts_by_status.get(status, 0)
-            if count > 0:
-                status_counts.append({"status": status, "count": count})
 
         return {
             "dayStartUtc": today_start,
             "testsUpdatedToday": tests_updated_today,
-            "testsWorkedCreatedToday": tests_worked_created_today,
-            "testsWorkedCreatedCompletedToday": tests_worked_created_completed_today,
-            "specimensCollectedToday": specimens_collected_today,
-            "testsResultedToday": tests_resulted_today,
-            "testsValidatedToday": tests_validated_today,
-            "testsSentBackToday": tests_sent_back_today,
-            "statusCounts": status_counts,
+            "testsWithCollection": tests_with_collection,
+            "testsWithResultEntry": tests_with_result_entry,
+            "testsWithValidation": tests_with_validation,
+            "testsOffNormalPath": tests_off_normal_path,
         }
 
-    def _order_test_sent_back_predicate(self):
-        """Tests that left the happy path (re-test, superseded, or quality issue)."""
+    @staticmethod
+    def _collection_milestone_predicate():
+        """Sample collection completed (or test progressed past collection)."""
+        return OrderTest.status.in_(
+            (
+                TestStatus.SAMPLE_COLLECTED,
+                TestStatus.RESULTED,
+                TestStatus.VALIDATED,
+                TestStatus.ESCALATED,
+            )
+        )
+
+    @staticmethod
+    def _result_entry_milestone_predicate():
+        return or_(
+            OrderTest.resultEnteredAt.isnot(None),
+            OrderTest.status.in_(
+                (TestStatus.RESULTED, TestStatus.VALIDATED, TestStatus.ESCALATED)
+            ),
+        )
+
+    @staticmethod
+    def _validation_milestone_predicate():
+        return or_(
+            OrderTest.resultValidatedAt.isnot(None),
+            OrderTest.status == TestStatus.VALIDATED,
+        )
+
+    def _off_normal_path_predicate(self):
+        """Rejections, cancellations, rework, escalations, and quality exceptions."""
         quality_test_ids = (
             self.db.query(QualityIssue.orderTestId)
             .filter(QualityIssue.orderTestId.isnot(None))
@@ -752,11 +741,24 @@ class LabBoardService:
             .filter(QualityIssue.sampleId.isnot(None))
             .distinct()
         )
+        rejected_sample_ids = (
+            self.db.query(Sample.sampleId)
+            .filter(Sample.status == SampleStatus.REJECTED)
+            .distinct()
+        )
         return or_(
+            OrderTest.status.in_(
+                (
+                    TestStatus.CANCELLED,
+                    TestStatus.REMOVED,
+                    TestStatus.SUPERSEDED,
+                    TestStatus.ESCALATED,
+                )
+            ),
+            OrderTest.sampleId.in_(rejected_sample_ids),
             OrderTest.isRetest.is_(True),
             OrderTest.retestOrderTestId.isnot(None),
             OrderTest.retestNumber > 0,
-            OrderTest.status == TestStatus.SUPERSEDED,
             OrderTest.id.in_(quality_test_ids),
             OrderTest.sampleId.in_(quality_sample_ids),
         )

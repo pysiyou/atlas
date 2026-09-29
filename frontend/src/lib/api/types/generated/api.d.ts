@@ -1577,7 +1577,7 @@ export interface components {
         };
         /**
          * LabTodayPanelSnapshot
-         * @description UTC day throughput KPIs for the lab dashboard Today panel.
+         * @description UTC day KPIs for the lab dashboard Today panel (tests worked today cohort).
          */
         LabTodayPanelSnapshot: {
             /**
@@ -1587,29 +1587,14 @@ export interface components {
             dayStartUtc: string;
             /** Testsupdatedtoday */
             testsUpdatedToday: number;
-            /** Testsworkedcreatedtoday */
-            testsWorkedCreatedToday: number;
-            /** Testsworkedcreatedcompletedtoday */
-            testsWorkedCreatedCompletedToday: number;
-            /** Specimenscollectedtoday */
-            specimensCollectedToday: number;
-            /** Testsresultedtoday */
-            testsResultedToday: number;
-            /** Testsvalidatedtoday */
-            testsValidatedToday: number;
-            /** Testssentbacktoday */
-            testsSentBackToday: number;
-            /** Statuscounts */
-            statusCounts: components["schemas"]["LabTodayStatusCount"][];
-        };
-        /**
-         * LabTodayStatusCount
-         * @description Order-test count by status among rows updated today (UTC).
-         */
-        LabTodayStatusCount: {
-            status: components["schemas"]["TestStatus"];
-            /** Count */
-            count: number;
+            /** Testswithcollection */
+            testsWithCollection: number;
+            /** Testswithresultentry */
+            testsWithResultEntry: number;
+            /** Testswithvalidation */
+            testsWithValidation: number;
+            /** Testsoffnormalpath */
+            testsOffNormalPath: number;
         };
         /**
          * Lifestyle
