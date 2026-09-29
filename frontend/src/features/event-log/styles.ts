@@ -35,12 +35,9 @@ export const EVENT_LOG_STYLES = {
   headlinePrimary: 'font-medium text-text-primary',
   /** Verb phrases and connector copy (e.g. "rejected sample", "entered results for ") */
   headlineSecondary: 'text-text-secondary',
-  /** Wraps with badge warning tokens; horizontal inset inside the highlight. */
-  headlineInlineHighlight: 'box-decoration-clone px-space-0-5',
-  headlineInlineHighlightIcon: 'me-space-0-5 h-2.5 w-2.5 align-[-0.05em]',
   meta: `${TYPE.meta} text-text-tertiary`,
-  noteCard: `${RADIUS.surface} mt-space-2 mb-space-1 border border-border-subtle bg-surface-hover px-space-3 py-space-2-5`,
-  noteCardLabel: `${TYPE.caption} font-medium text-text-secondary pb-space-1`,
+  noteCard: `${RADIUS.surface} mt-space-2 mb-space-1 border border-border-subtle bg-surface-hover px-space-2 py-space-2`,
+  noteCardLabel: `${TYPE.caption} font-medium text-text-secondary pb-space-0-5`,
   noteCardBody: `${TYPE.value} text-text-primary whitespace-pre-wrap leading-relaxed m-0`,
   expandToggle: `${TYPE.caption} text-brand hover:text-brand/80 mt-space-2 cursor-pointer`,
   rowList:

@@ -1,10 +1,23 @@
 /**
  * Natural-language event log sentences aligned with AuditEmitter metadata keys.
  */
-import { displayId, withHashPrefix } from '@/utils/id';
+import { eventLogId, withHashPrefix } from './formatRef';
 import { ORDER_STATUS_CONFIG, type OrderStatus } from '@/types/enums/generated/order';
 import type { EventLogHeadlinePart, EventLogRecord } from './types';
 import type { EventTypeRegistryEntry } from './registry';
+import {
+  collectTestCodes,
+  formatTestNamesLabel,
+  type TestNameLookup,
+} from './testDisplay';
+
+export interface EventLogHeadlineContext {
+  getTestName: TestNameLookup;
+}
+
+const DEFAULT_HEADLINE_CONTEXT: EventLogHeadlineContext = {
+  getTestName: code => code,
+};
 
 export interface BuiltEventLogHeadline {
   parts: EventLogHeadlinePart[];
@@ -36,13 +49,24 @@ function metaNumber(record: EventLogRecord, key: string): number | undefined {
   return undefined;
 }
 
-function metaCode(record: EventLogRecord, key: string): string | undefined {
-  const raw = metaString(record, key);
-  return raw ? withHashPrefix(raw) : undefined;
+function testHighlightFromCodes(
+  codes: string[],
+  context: EventLogHeadlineContext,
+): EventLogHeadlinePart {
+  return {
+    text: formatTestNamesLabel(codes, context.getTestName),
+    highlight: 'test',
+  };
 }
 
-function emphasizeCode(value: string): EventLogHeadlinePart {
-  return { text: withHashPrefix(value), emphasis: true };
+function testHighlightFromMetaKey(
+  record: EventLogRecord,
+  key: string,
+  context: EventLogHeadlineContext,
+): EventLogHeadlinePart | null {
+  const code = metaString(record, key);
+  if (!code) return null;
+  return testHighlightFromCodes([code], context);
 }
 
 function changeNew(record: EventLogRecord, field: string): string | undefined {
@@ -52,35 +76,30 @@ function changeNew(record: EventLogRecord, field: string): string | undefined {
 }
 
 function targetPatient(record: EventLogRecord): EventLogHeadlinePart {
-  return { text: displayId.patient(record.targetId), emphasis: true };
+  return { text: eventLogId.patient(record.targetId), emphasis: true };
 }
 
 function targetOrder(record: EventLogRecord): EventLogHeadlinePart {
   const id = record.orderId ?? record.targetId;
-  return { text: displayId.order(id), emphasis: true };
+  return { text: eventLogId.order(id), emphasis: true };
 }
 
 function targetSample(record: EventLogRecord): EventLogHeadlinePart {
-  return { text: displayId.sample(record.targetId), emphasis: true };
+  return { text: eventLogId.sample(record.targetId), emphasis: true };
 }
 
-/** Order-test row (#TST…) — catalog code only when no TST id is available. */
-function targetOrderTestRef(record: EventLogRecord): EventLogHeadlinePart[] {
+/** Catalog test name(s) in a chip; falls back to order-test id when code metadata is missing. */
+function targetOrderTestRef(
+  record: EventLogRecord,
+  context: EventLogHeadlineContext,
+): EventLogHeadlinePart[] {
+  const codes = collectTestCodes(record);
+  if (codes.length > 0) {
+    return [testHighlightFromCodes(codes, context)];
+  }
   const testId = resolveOrderTestId(record);
-  if (testId) {
-    return [
-      { text: 'test ' },
-      { text: displayId.orderTest(testId), emphasis: true },
-    ];
-  }
-  const code = metaString(record, 'test_code');
-  if (code) {
-    return [{ text: 'test ' }, emphasizeCode(code)];
-  }
-  return [
-    { text: 'test ' },
-    { text: displayId.orderTest(record.targetId), emphasis: true },
-  ];
+  const id = testId ?? record.targetId;
+  return [{ text: eventLogId.orderTest(id), emphasis: true }];
 }
 
 function append(parts: EventLogHeadlinePart[], ...next: EventLogHeadlinePart[]): EventLogHeadlinePart[] {
@@ -202,17 +221,17 @@ function appendOrderLineage(
   orderId: number,
   options?: { leadingComma?: boolean },
 ): EventLogHeadlinePart[] {
-  if (includesDisplayId(parts, displayId.order(orderId))) return parts;
+  if (includesDisplayId(parts, eventLogId.order(orderId))) return parts;
   const prefix = options?.leadingComma ? ', under order ' : ' under order ';
   let next = appendText(parts, prefix);
-  next = append(next, { text: displayId.order(orderId), emphasis: true });
+  next = append(next, { text: eventLogId.order(orderId), emphasis: true });
   return next;
 }
 
 function appendPatientLineage(parts: EventLogHeadlinePart[], patientId: number): EventLogHeadlinePart[] {
-  if (includesDisplayId(parts, displayId.patient(patientId))) return parts;
+  if (includesDisplayId(parts, eventLogId.patient(patientId))) return parts;
   let next = appendText(parts, ', for patient ');
-  next = append(next, { text: displayId.patient(patientId), emphasis: true });
+  next = append(next, { text: eventLogId.patient(patientId), emphasis: true });
   return next;
 }
 
@@ -239,9 +258,9 @@ function appendEntityLineage(
 
   switch (primary) {
     case 'sample': {
-      if (orderTestId && !includesDisplayId(next, displayId.orderTest(orderTestId))) {
+      if (orderTestId && !includesDisplayId(next, eventLogId.orderTest(orderTestId))) {
         next = appendText(next, ', belonging to test ');
-        next = append(next, { text: displayId.orderTest(orderTestId), emphasis: true });
+        next = append(next, { text: eventLogId.orderTest(orderTestId), emphasis: true });
       }
       if (orderId) {
         next = appendOrderLineage(next, orderId);
@@ -250,9 +269,9 @@ function appendEntityLineage(
     }
     case 'order_test': {
       let linkedSample = false;
-      if (sampleId && !includesDisplayId(next, displayId.sample(sampleId))) {
+      if (sampleId && !includesDisplayId(next, eventLogId.sample(sampleId))) {
         next = appendText(next, ', for sample ');
-        next = append(next, { text: displayId.sample(sampleId), emphasis: true });
+        next = append(next, { text: eventLogId.sample(sampleId), emphasis: true });
         linkedSample = true;
       }
       if (orderId) {
@@ -267,9 +286,9 @@ function appendEntityLineage(
       break;
     }
     case 'billing': {
-      if (orderId && !includesDisplayId(next, displayId.order(orderId))) {
+      if (orderId && !includesDisplayId(next, eventLogId.order(orderId))) {
         next = appendText(next, ', for order ');
-        next = append(next, { text: displayId.order(orderId), emphasis: true });
+        next = append(next, { text: eventLogId.order(orderId), emphasis: true });
       }
       break;
     }
@@ -283,6 +302,7 @@ function appendEntityLineage(
 function buildFromRegistryFallback(
   record: EventLogRecord,
   registry: EventTypeRegistryEntry,
+  context: EventLogHeadlineContext,
 ): EventLogHeadlinePart[] {
   const parts: EventLogHeadlinePart[] = [{ text: `${registry.verbPhrase} ` }];
   switch (record.targetType) {
@@ -293,14 +313,19 @@ function buildFromRegistryFallback(
     case 'sample':
       return append(parts, targetSample(record));
     case 'order_test':
-      return append(parts, ...targetOrderTestRef(record));
+      return append(parts, ...targetOrderTestRef(record, context));
     case 'user':
-      return append(parts, { text: displayId.user(record.targetId), emphasis: true });
-    case 'test_catalog':
-      return append(parts, {
-        text: metaCode(record, 'test_code') ?? withHashPrefix(String(record.targetId)),
-        emphasis: true,
-      });
+      return append(parts, { text: eventLogId.user(record.targetId), emphasis: true });
+    case 'test_catalog': {
+      const catalogHighlight = testHighlightFromMetaKey(record, 'test_code', context);
+      return append(
+        parts,
+        catalogHighlight ?? {
+          text: withHashPrefix(String(record.targetId)),
+          emphasis: true,
+        },
+      );
+    }
     default:
       return append(parts, {
         text: withHashPrefix(`${record.targetType}-${record.targetId}`),
@@ -312,6 +337,7 @@ function buildFromRegistryFallback(
 export function buildEventLogHeadline(
   record: EventLogRecord,
   registry: EventTypeRegistryEntry,
+  context: EventLogHeadlineContext = DEFAULT_HEADLINE_CONTEXT,
 ): BuiltEventLogHeadline {
   const type = record.eventType;
   let parts: EventLogHeadlinePart[] = [];
@@ -355,34 +381,34 @@ export function buildEventLogHeadline(
     }
     case 'order.test.add':
       parts = appendText(parts, 'added ');
-      parts = append(parts, ...targetOrderTestRef(record));
+      parts = append(parts, ...targetOrderTestRef(record, context));
       break;
     case 'order.test.remove':
       parts = appendText(parts, 'removed ');
-      parts = append(parts, ...targetOrderTestRef(record));
+      parts = append(parts, ...targetOrderTestRef(record, context));
       parts = append(parts, ...statusToPhrase(changeNew(record, 'status')));
       break;
     case 'order.test.cancel':
       parts = appendText(parts, 'cancelled ');
-      parts = append(parts, ...targetOrderTestRef(record));
+      parts = append(parts, ...targetOrderTestRef(record, context));
       parts = appendClause(parts, metaString(record, 'reason') ?? '');
       break;
     case 'order.test.retest':
       parts = appendText(parts, 'ordered retest for ');
-      parts = append(parts, ...targetOrderTestRef(record));
+      parts = append(parts, ...targetOrderTestRef(record, context));
       parts = appendClause(parts, metaString(record, 'reason') ?? '');
       break;
     case 'order.test.reflex':
       parts = appendText(parts, 'added reflex test ');
-      parts = append(parts, {
-        text: metaCode(record, 'added_test_code') ?? '—',
-        emphasis: true,
-      });
+      parts = append(
+        parts,
+        testHighlightFromMetaKey(record, 'added_test_code', context) ?? { text: '—', emphasis: true },
+      );
       parts = appendText(parts, ' triggered by ');
-      parts = append(parts, {
-        text: metaCode(record, 'triggered_by') ?? '—',
-        emphasis: true,
-      });
+      parts = append(
+        parts,
+        testHighlightFromMetaKey(record, 'triggered_by', context) ?? { text: '—', emphasis: true },
+      );
       break;
     case 'laboratory.sample.create':
       parts = appendText(parts, 'accessioned sample ');
@@ -412,60 +438,60 @@ export function buildEventLogHeadline(
       break;
     case 'laboratory.result.enter':
       parts = appendText(parts, 'entered results for ');
-      parts = append(parts, ...targetOrderTestRef(record));
+      parts = append(parts, ...targetOrderTestRef(record, context));
       break;
     case 'laboratory.result.update':
       parts = appendText(parts, 'updated results for ');
-      parts = append(parts, ...targetOrderTestRef(record));
+      parts = append(parts, ...targetOrderTestRef(record, context));
       parts = append(parts, ...statusToPhrase(changeNew(record, 'status')));
       break;
     case 'laboratory.result.critical_detect':
       parts = appendText(parts, 'detected critical result on ');
-      parts = append(parts, ...targetOrderTestRef(record));
+      parts = append(parts, ...targetOrderTestRef(record, context));
       break;
     case 'laboratory.result.critical_notify':
       parts = appendText(parts, 'sent critical notification for ');
-      parts = append(parts, ...targetOrderTestRef(record));
+      parts = append(parts, ...targetOrderTestRef(record, context));
       break;
     case 'laboratory.result.critical_acknowledge':
       parts = appendText(parts, 'acknowledged critical result on ');
-      parts = append(parts, ...targetOrderTestRef(record));
+      parts = append(parts, ...targetOrderTestRef(record, context));
       break;
     case 'laboratory.validation.approve':
       parts = appendText(parts, 'validated results for ');
-      parts = append(parts, ...targetOrderTestRef(record));
+      parts = append(parts, ...targetOrderTestRef(record, context));
       break;
     case 'laboratory.validation.reject':
       parts = appendText(parts, 'returned ');
-      parts = append(parts, ...targetOrderTestRef(record));
+      parts = append(parts, ...targetOrderTestRef(record, context));
       parts = appendText(parts, ' for correction');
       parts = appendClause(parts, metaString(record, 'reason') ?? '');
       break;
     case 'laboratory.escalation.trigger':
       parts = appendText(parts, 'escalated ');
-      parts = append(parts, ...targetOrderTestRef(record));
+      parts = append(parts, ...targetOrderTestRef(record, context));
       if (metaString(record, 'reason_code')) {
         parts = appendText(parts, ` (${metaString(record, 'reason_code')})`);
       }
       break;
     case 'laboratory.escalation.resolve':
       parts = appendText(parts, 'resolved escalation on ');
-      parts = append(parts, ...targetOrderTestRef(record));
+      parts = append(parts, ...targetOrderTestRef(record, context));
       if (metaString(record, 'resolution')) {
         parts = appendText(parts, ` (${metaString(record, 'resolution')})`);
       }
       break;
     case 'billing.payment.process':
       parts = appendText(parts, 'recorded payment ');
-      parts = append(parts, { text: displayId.payment(record.targetId), emphasis: true });
+      parts = append(parts, { text: eventLogId.payment(record.targetId), emphasis: true });
       break;
     case 'billing.invoice.generate':
       parts = appendText(parts, 'generated invoice ');
-      parts = append(parts, { text: displayId.invoice(record.targetId), emphasis: true });
+      parts = append(parts, { text: eventLogId.invoice(record.targetId), emphasis: true });
       break;
     case 'billing.invoice.void':
       parts = appendText(parts, 'voided invoice ');
-      parts = append(parts, { text: displayId.invoice(record.targetId), emphasis: true });
+      parts = append(parts, { text: eventLogId.invoice(record.targetId), emphasis: true });
       parts = append(parts, ...statusToPhrase(changeNew(record, 'status')));
       parts = appendClause(parts, metaString(record, 'reason') ?? '');
       break;
@@ -482,7 +508,7 @@ export function buildEventLogHeadline(
       break;
     case 'reporting.download':
       parts = appendText(parts, 'downloaded report for ');
-      parts = append(parts, ...targetOrderTestRef(record));
+      parts = append(parts, ...targetOrderTestRef(record, context));
       if (metaString(record, 'format')) {
         parts = appendText(parts, ` as ${metaString(record, 'format')}`);
       }
@@ -495,28 +521,34 @@ export function buildEventLogHeadline(
       break;
     case 'system.user.create':
       parts = appendText(parts, 'created user ');
-      parts = append(parts, { text: displayId.user(record.targetId), emphasis: true });
+      parts = append(parts, { text: eventLogId.user(record.targetId), emphasis: true });
       break;
     case 'system.user.update':
       parts = appendText(parts, 'updated user ');
-      parts = append(parts, { text: displayId.user(record.targetId), emphasis: true });
+      parts = append(parts, { text: eventLogId.user(record.targetId), emphasis: true });
       break;
     case 'system.catalog.create':
       parts = appendText(parts, 'added catalog test ');
-      parts = append(parts, {
-        text: metaCode(record, 'test_code') ?? withHashPrefix(String(record.targetId)),
-        emphasis: true,
-      });
+      parts = append(
+        parts,
+        testHighlightFromMetaKey(record, 'test_code', context) ?? {
+          text: withHashPrefix(String(record.targetId)),
+          emphasis: true,
+        },
+      );
       break;
     case 'system.catalog.update':
       parts = appendText(parts, 'updated catalog test ');
-      parts = append(parts, {
-        text: metaCode(record, 'test_code') ?? withHashPrefix(String(record.targetId)),
-        emphasis: true,
-      });
+      parts = append(
+        parts,
+        testHighlightFromMetaKey(record, 'test_code', context) ?? {
+          text: withHashPrefix(String(record.targetId)),
+          emphasis: true,
+        },
+      );
       break;
     default: {
-      parts = buildFromRegistryFallback(record, registry);
+      parts = buildFromRegistryFallback(record, registry, context);
       parts = append(parts, ...statusToPhrase(changeNew(record, 'status')));
       break;
     }

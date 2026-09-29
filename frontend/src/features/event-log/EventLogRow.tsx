@@ -1,7 +1,5 @@
 import React from 'react';
-import { Icon } from '@/components/primitives/Icon';
-import { getColorStyles } from '@/components/primitives/badgeStyles';
-import { useBadgeAppearance } from '@/components/theme/theme';
+import { InlineHighlight } from '@/components/primitives/InlineHighlight';
 import type { LabTimelineLane } from '@/features/lab/constants/labConstants';
 import { getLaneVisual } from '@/features/lab/constants/labConstants';
 import { ResultsParameterGrid } from '@/features/lab/components/ResultsParameterGrid';
@@ -48,16 +46,6 @@ function laneForDomain(
   }
 }
 
-function useInlineHighlightClass(): string {
-  const appearance = useBadgeAppearance();
-  const { className: tone } = getColorStyles('warning', appearance);
-  return cn(
-    EVENT_LOG_STYLES.headlineInlineHighlight,
-    appearance === 'unified' && 'bg-badge',
-    tone,
-  );
-}
-
 function EventLogSpineNode({ item }: { item: ResolvedEventLogItem }) {
   const lane = laneForDomain(item.domain, item.laboratorySubdomain);
   const visual = getLaneVisual(lane);
@@ -93,7 +81,7 @@ function EventLogDetailBox({ item }: { item: ResolvedEventLogItem }) {
         </>
       ) : null}
       {hasNote ? (
-        <div className={hasResults ? 'mt-space-3 border-t border-border-subtle pt-space-2-5' : undefined}>
+        <div className={hasResults ? 'mt-space-2 border-t border-border-subtle pt-space-2' : undefined}>
           <div className={EVENT_LOG_STYLES.noteCardLabel}>
             {narrativeLabel ?? EVENT_LOG_COPY.narrativeDefaultLabel}
           </div>
@@ -106,8 +94,6 @@ function EventLogDetailBox({ item }: { item: ResolvedEventLogItem }) {
 
 export const EventLogRow: React.FC<{ item: ResolvedEventLogItem }> = ({ item }) => {
   const { headline, headlineParts, omitActorInHeadline } = item;
-  const inlineHighlightClass = useInlineHighlightClass();
-
   return (
     <div className={EVENT_LOG_STYLES.row}>
       <div className={EVENT_LOG_STYLES.spineColumn} aria-hidden>
@@ -126,12 +112,14 @@ export const EventLogRow: React.FC<{ item: ResolvedEventLogItem }> = ({ item }) 
           ) : null}
           {headlineParts.length > 0 ? (
             headlineParts.map((part, index) => {
-              if (part.highlight === 'inline') {
+              if (part.highlight === 'inline' || part.highlight === 'test') {
                 return (
-                  <span key={`${part.text}-${index}`} className={inlineHighlightClass}>
-                    <Icon name="question" className={EVENT_LOG_STYLES.headlineInlineHighlightIcon} />
+                  <InlineHighlight
+                    key={`${part.text}-${index}`}
+                    variant={part.highlight === 'test' ? 'primary' : 'warning'}
+                  >
                     {part.text}
-                  </span>
+                  </InlineHighlight>
                 );
               }
               return (

@@ -25,6 +25,8 @@
   --radius-overlay: var(--radius-base);
   --radius-shell: var(--radius-base);
   --radius-notice: 0.875rem;
+  /** Tight chips / inline highlights in body copy (smaller than --radius-control). */
+  --radius-inline: 0.25rem;
   --radius-pill: 9999px;
   --button-radius: var(--radius-control);
   --button-radius-square: var(--radius-overlay);

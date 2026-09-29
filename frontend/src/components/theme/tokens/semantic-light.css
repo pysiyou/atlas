@@ -36,6 +36,7 @@
   --radius-menu-item: var(--radius-field);
   --radius-surface: var(--radius-card);
   --radius-workspace: var(--radius-shell);
+  --radius-inline: 0.25rem;
 
   /* ═══════════════════════════════════════════════════════════════════
      BORDER (Borders & Dividers)

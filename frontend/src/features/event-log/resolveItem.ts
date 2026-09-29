@@ -2,9 +2,10 @@
  * Maps audit rows to fully resolved feed items.
  */
 import { formatRelativeDateTime } from '@/utils/date';
-import { displayId, withHashPrefix } from '@/utils/id';
+import { eventLogId, withHashPrefix } from './formatRef';
 import { EVENT_LOG_COPY } from './copy';
 import { buildEventLogHeadline } from './headline';
+import { collectTestCodes, formatTestNamesLabel, type TestNameLookup } from './testDisplay';
 import { getRegistryEntry, HEADLINE_META_KEYS } from './registry';
 import type { EventLogHeadlinePart, EventLogRecord, ResolvedEventLogItem } from './types';
 
@@ -13,32 +14,31 @@ function isSystemActor(record: EventLogRecord): boolean {
   return snap.userId === 'system' || snap.role === 'system';
 }
 
-function formatTargetLabel(record: EventLogRecord): string {
-  const meta = record.metadata ?? {};
-  const testCode = typeof meta.test_code === 'string' ? meta.test_code : undefined;
+function formatTargetLabel(record: EventLogRecord, getTestName: TestNameLookup): string {
+  const testCodes = collectTestCodes(record);
 
   switch (record.targetType) {
     case 'patient':
-      return displayId.patient(record.targetId);
+      return eventLogId.patient(record.targetId);
     case 'order':
-      return displayId.order(record.targetId);
+      return eventLogId.order(record.targetId);
     case 'sample':
-      return displayId.sample(record.targetId);
+      return eventLogId.sample(record.targetId);
     case 'order_test':
-      return testCode
-        ? `${withHashPrefix(testCode)} (${displayId.orderTest(record.targetId)})`
-        : displayId.orderTest(record.targetId);
+      return testCodes.length > 0
+        ? formatTestNamesLabel(testCodes, getTestName)
+        : eventLogId.orderTest(record.targetId);
     case 'payment':
-      return displayId.payment(record.targetId);
+      return eventLogId.payment(record.targetId);
     case 'invoice':
-      return displayId.invoice(record.targetId);
+      return eventLogId.invoice(record.targetId);
     case 'insurance_claim':
       return `Claim ${withHashPrefix(String(record.targetId))}`;
     case 'user':
-      return displayId.user(record.targetId);
+      return eventLogId.user(record.targetId);
     case 'test_catalog':
-      return typeof meta.test_code === 'string'
-        ? withHashPrefix(meta.test_code)
+      return testCodes.length > 0
+        ? formatTestNamesLabel(testCodes, getTestName)
         : withHashPrefix(String(record.targetId));
     default:
       return withHashPrefix(`${record.targetType}-${record.targetId}`);
@@ -115,6 +115,7 @@ function pickResultFlags(record: EventLogRecord): string[] | undefined {
 
 export interface ResolveEventLogOptions {
   showEventTypeInMeta?: boolean;
+  getTestName?: TestNameLookup;
 }
 
 export function resolveEventLogItem(
@@ -123,13 +124,14 @@ export function resolveEventLogItem(
 ): ResolvedEventLogItem {
   const registry = getRegistryEntry(record.eventType);
   const system = isSystemActor(record);
-  const built = buildEventLogHeadline(record, registry);
+  const getTestName = options?.getTestName ?? (code => code);
+  const built = buildEventLogHeadline(record, registry, { getTestName });
   const note = pickNoteForCard(record, built.parts);
   const results = pickResultsForCard(record);
   const resultFlags = results ? pickResultFlags(record) : undefined;
 
   const actorName = system ? EVENT_LOG_COPY.systemActorName : record.actorSnapshot.name;
-  const targetLabel = formatTargetLabel(record);
+  const targetLabel = formatTargetLabel(record, getTestName);
 
   return {
     record,

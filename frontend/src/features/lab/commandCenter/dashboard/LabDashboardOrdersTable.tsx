@@ -18,7 +18,12 @@ export const LabDashboardOrdersTable: React.FC = () => {
   const { rows, isLoading } = useLabDashboardOrders();
 
   return (
-    <Panel hideHeader padding="none" className="h-full min-h-0">
+    <Panel
+      hideHeader
+      padding="none"
+      className="h-full min-h-0"
+      bodyClassName="flex min-h-0 flex-1 flex-col"
+    >
       <DataTable<LabDashboardOrderRow>
         data={rows}
         viewConfig={viewConfig}
