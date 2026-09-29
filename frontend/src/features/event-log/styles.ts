@@ -36,9 +36,11 @@ export const EVENT_LOG_STYLES = {
   /** Verb phrases and connector copy (e.g. "rejected sample", "entered results for ") */
   headlineSecondary: 'text-text-secondary',
   meta: `${TYPE.meta} text-text-tertiary`,
-  noteCard: `${RADIUS.surface} mt-space-2 mb-space-1 border border-border-subtle bg-surface-hover px-space-2 py-space-2`,
-  noteCardLabel: `${TYPE.caption} font-medium text-text-secondary pb-space-0-5`,
-  noteCardBody: `${TYPE.value} text-text-primary whitespace-pre-wrap leading-relaxed m-0`,
+  /** Extra detail below the headline — title + body on a muted surface */
+  detailSection: `${RADIUS.none} space-y-space-0-5 bg-surface-hover px-space-2 py-space-2`,
+  detailTitle: `${TYPE.caption} text-text-tertiary`,
+  detailBody: `${TYPE.value} text-text-primary whitespace-pre-wrap m-0 leading-relaxed`,
+  detailList: 'list-none p-0 m-0 space-y-space-0-5',
   expandToggle: `${TYPE.caption} text-brand hover:text-brand/80 mt-space-2 cursor-pointer`,
   rowList:
     '[&>*:first-child_.event-log-spine-stem-top]:hidden [&>*:last-child_.event-log-spine-stem-bottom]:hidden [&>*:last-child_.event-log-content]:pb-0',

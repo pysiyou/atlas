@@ -1,8 +1,9 @@
 import React from 'react';
 import { InlineHighlight } from '@/components/primitives/InlineHighlight';
-import { getLaneVisual, ResultsParameterGrid, type LabTimelineLane } from '@/features/lab';
+import { getLaneVisual, type LabTimelineLane } from '@/features/lab';
 import { cn } from '@/utils';
 import { EVENT_LOG_COPY } from './copy';
+import { EventLogResultsList } from './EventLogResultsList';
 import { EVENT_LOG_STYLES, eventLogPartClass } from './styles';
 import type { EventLogDomain, EventLogLaboratorySubdomain, ResolvedEventLogItem } from './types';
 
@@ -62,29 +63,23 @@ function EventLogDetailBox({ item }: { item: ResolvedEventLogItem }) {
 
   if (!hasResults && !hasNote) return null;
 
-  const resultCount = hasResults ? Object.keys(results).length : 0;
-
   return (
-    <div className={EVENT_LOG_STYLES.noteCard}>
+    <>
       {hasResults ? (
-        <>
-          <div className={EVENT_LOG_STYLES.noteCardLabel}>
-            {EVENT_LOG_COPY.resultsTitle(resultCount)}
-          </div>
-          <ResultsParameterGrid results={results!} flags={resultFlags} variant="inline" />
-        </>
-      ) : null}
-      {hasNote ? (
-        <div
-          className={hasResults ? 'mt-space-2 border-t border-border-subtle pt-space-2' : undefined}
-        >
-          <div className={EVENT_LOG_STYLES.noteCardLabel}>
-            {narrativeLabel ?? EVENT_LOG_COPY.narrativeDefaultLabel}
-          </div>
-          <p className={EVENT_LOG_STYLES.noteCardBody}>{narrativeText}</p>
+        <div className={EVENT_LOG_STYLES.detailSection}>
+          <div className={EVENT_LOG_STYLES.detailTitle}>{EVENT_LOG_COPY.resultTitle}</div>
+          <EventLogResultsList results={results!} flags={resultFlags} />
         </div>
       ) : null}
-    </div>
+      {hasNote ? (
+        <div className={EVENT_LOG_STYLES.detailSection}>
+          <div className={EVENT_LOG_STYLES.detailTitle}>
+            {narrativeLabel ?? EVENT_LOG_COPY.narrativeDefaultLabel}
+          </div>
+          <p className={EVENT_LOG_STYLES.detailBody}>{narrativeText}</p>
+        </div>
+      ) : null}
+    </>
   );
 }
 
