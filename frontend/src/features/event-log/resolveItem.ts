@@ -55,7 +55,7 @@ function headlineIncludesNote(parts: EventLogHeadlinePart[], note: string): bool
 
 function pickNoteForCard(
   record: EventLogRecord,
-  headlineParts: EventLogHeadlinePart[],
+  headlineParts: EventLogHeadlinePart[]
 ): { label: string; text: string } | null {
   const meta = record.metadata ?? {};
   const headlineKeys = new Set(HEADLINE_META_KEYS[record.eventType] ?? []);
@@ -96,8 +96,7 @@ function readPlainRecord(value: unknown): Record<string, unknown> | null {
 
 function pickResultsForCard(record: EventLogRecord): Record<string, unknown> | null {
   const meta = record.metadata ?? {};
-  const fromMeta =
-    readPlainRecord(meta.results) ?? readPlainRecord(meta.proposedResults);
+  const fromMeta = readPlainRecord(meta.results) ?? readPlainRecord(meta.proposedResults);
   if (fromMeta) return fromMeta;
 
   const fromChanges = readPlainRecord(record.changes?.newValues?.results);
@@ -120,7 +119,7 @@ export interface ResolveEventLogOptions {
 
 export function resolveEventLogItem(
   record: EventLogRecord,
-  options?: ResolveEventLogOptions,
+  options?: ResolveEventLogOptions
 ): ResolvedEventLogItem {
   const registry = getRegistryEntry(record.eventType);
   const system = isSystemActor(record);
@@ -157,7 +156,7 @@ export function resolveEventLogItem(
 
 export function resolveEventLogItems(
   records: EventLogRecord[],
-  options?: ResolveEventLogOptions,
+  options?: ResolveEventLogOptions
 ): ResolvedEventLogItem[] {
   return records.map(record => resolveEventLogItem(record, options));
 }

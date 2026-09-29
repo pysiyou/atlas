@@ -11,6 +11,83 @@ import { PANEL } from '@/components/theme/recipes';
 import { DEFAULT_LOADING_ROWS } from './constants';
 import { TableHeader, TableRow, TableSkeleton } from './TableViewParts';
 
+function resolveTableContainerClasses(embedded: boolean): string {
+  return embedded ? 'flex flex-col flex-1 min-h-0' : `${PANEL.raisedShadowSm} flex flex-col h-full`;
+}
+
+function resolveEmptyMinHeight(embedded: boolean, emptyVariant: 'compact' | 'dense'): string {
+  if (embedded) return 'min-h-0';
+  return emptyVariant === 'dense' ? 'min-h-[9rem]' : 'min-h-[12rem]';
+}
+
+function TableViewLoading<T>({
+  containerClasses,
+  caption,
+  ariaLabel,
+  maxHeight,
+  showHeader,
+  columns,
+  variant,
+  stickyHeader,
+  loadingRows,
+}: {
+  containerClasses: string;
+  caption?: string;
+  ariaLabel?: string;
+  maxHeight?: string;
+  showHeader: boolean;
+  columns: ColumnConfig<T>[];
+  variant: TableVariant;
+  stickyHeader: boolean;
+  loadingRows: number;
+}) {
+  return (
+    <div
+      className={containerClasses}
+      role="table"
+      aria-busy="true"
+      aria-label={ariaLabel ?? 'Loading'}
+    >
+      {caption && <caption className="sr-only">{caption}</caption>}
+      <div
+        className="flex-1 min-h-0 overflow-auto"
+        style={maxHeight ? { maxHeight } : undefined}
+        role="rowgroup"
+      >
+        {showHeader && (
+          <TableHeader
+            columns={columns}
+            visibleColumns={columns}
+            sort={null}
+            onSort={() => {}}
+            variant={variant}
+            sticky={stickyHeader}
+          />
+        )}
+        <TableSkeleton columns={columns} rows={loadingRows} variant={variant} />
+      </div>
+    </div>
+  );
+}
+
+function TableViewEmpty({
+  containerClasses,
+  emptyMinHeight,
+  emptyContent,
+}: {
+  containerClasses: string;
+  emptyMinHeight: string;
+  emptyContent: ReactNode;
+}) {
+  return (
+    <div
+      className={`${containerClasses} flex flex-1 items-center justify-center ${emptyMinHeight}`}
+    >
+      {emptyContent}
+    </div>
+  );
+}
+
 export interface TableViewProps<T> {
   data: T[];
   columns: ColumnConfig<T>[];
@@ -61,43 +138,33 @@ export function TableView<T>({
   ariaLabel,
   totalItems,
 }: TableViewProps<T>) {
-  const containerClasses = embedded
-    ? 'flex flex-col flex-1 min-h-0'
-    : `${PANEL.raisedShadowSm} flex flex-col h-full`;
+  const containerClasses = resolveTableContainerClasses(embedded);
 
   if (loading) {
     return (
-      <div className={containerClasses} role="table" aria-busy="true" aria-label={ariaLabel ?? 'Loading'}>
-        {caption && <caption className="sr-only">{caption}</caption>}
-        <div className="flex-1 min-h-0 overflow-auto" style={maxHeight ? { maxHeight } : undefined} role="rowgroup">
-          {showHeader && (
-            <TableHeader
-              columns={columns}
-              visibleColumns={columns}
-              sort={null}
-              onSort={() => {}}
-              variant={variant}
-              sticky={stickyHeader}
-            />
-          )}
-          <TableSkeleton columns={columns} rows={loadingRows} variant={variant} />
-        </div>
-      </div>
+      <TableViewLoading
+        containerClasses={containerClasses}
+        caption={caption}
+        ariaLabel={ariaLabel}
+        maxHeight={maxHeight}
+        showHeader={showHeader}
+        columns={columns}
+        variant={variant}
+        stickyHeader={stickyHeader}
+        loadingRows={loadingRows}
+      />
     );
   }
 
   if (data.length === 0) {
     const emptyPreset = emptyVariant === 'dense' ? DASHBOARD_EMPTY_STATE : PANEL_EMPTY_STATE;
-    const emptyMinHeight = embedded
-      ? 'min-h-0'
-      : emptyVariant === 'dense'
-        ? 'min-h-[9rem]'
-        : 'min-h-[12rem]';
+    const emptyMinHeight = resolveEmptyMinHeight(embedded, emptyVariant);
+    const resolvedIcon = (emptyIcon as IconName | undefined) ?? emptyPreset.icon;
     const emptyContent =
       typeof emptyMessage === 'string' ? (
         <EmptyState
           {...emptyPreset}
-          icon={(emptyIcon as IconName | undefined) ?? emptyPreset.icon}
+          icon={resolvedIcon}
           title={emptyMessage}
           description={emptyDescription ?? DEFAULT_EMPTY_DESCRIPTION}
         />
@@ -105,16 +172,18 @@ export function TableView<T>({
         (emptyMessage ?? (
           <EmptyState
             {...emptyPreset}
-            icon={(emptyIcon as IconName | undefined) ?? emptyPreset.icon}
+            icon={resolvedIcon}
             title={DEFAULT_EMPTY_TITLE}
             description={emptyDescription ?? DEFAULT_EMPTY_DESCRIPTION}
           />
         ))
       );
     return (
-      <div className={`${containerClasses} flex flex-1 items-center justify-center ${emptyMinHeight}`}>
-        {emptyContent}
-      </div>
+      <TableViewEmpty
+        containerClasses={containerClasses}
+        emptyMinHeight={emptyMinHeight}
+        emptyContent={emptyContent}
+      />
     );
   }
 
@@ -126,7 +195,11 @@ export function TableView<T>({
       aria-rowcount={totalItems ?? data.length}
     >
       {caption && <caption className="sr-only">{caption}</caption>}
-      <div className="flex-1 min-h-0 overflow-auto" style={maxHeight ? { maxHeight } : undefined} role="rowgroup">
+      <div
+        className="flex-1 min-h-0 overflow-auto"
+        style={maxHeight ? { maxHeight } : undefined}
+        role="rowgroup"
+      >
         {showHeader && (
           <div role="rowgroup">
             <TableHeader

@@ -87,6 +87,9 @@ function toQueryRecord(params: AuditEventQueryParams): Record<string, string> {
 }
 
 export async function fetchAuditEvents(params: AuditEventQueryParams): Promise<EventLogRecord[]> {
-  const rows = await apiClient.get<Record<string, unknown>[]>('/audit/events', toQueryRecord(params));
+  const rows = await apiClient.get<Record<string, unknown>[]>(
+    '/audit/events',
+    toQueryRecord(params)
+  );
   return rows.map(normalizeAuditEvent);
 }

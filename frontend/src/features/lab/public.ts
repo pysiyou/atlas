@@ -18,12 +18,10 @@ export {
   useLabWorkflowResponsiveCard,
 } from './hooks';
 
-export {
-  getLabTabPath,
-  LAB_TAB_LABELS,
-  LAB_CONFIG,
-} from './constants/labConstants';
-export type { LabTabId } from './constants/labConstants';
+export { getLabTabPath, getLaneVisual, LAB_TAB_LABELS, LAB_CONFIG } from './constants/labConstants';
+export type { LabTabId, LabTimelineLane } from './constants/labConstants';
+
+export { ResultsParameterGrid } from './components/ResultsParameterGrid';
 
 export { getLabQueueUrl, getLabQueueUrlForTest } from './utils/labSearchAndLinks';
 export { formatRejectionCriteriaList } from './utils/catalogRejectionCriteria';

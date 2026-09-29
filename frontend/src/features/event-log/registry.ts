@@ -51,19 +51,23 @@ const LAB_RESULT: Pick<EventTypeRegistryEntry, 'domain' | 'laboratorySubdomain' 
   domainLabel: 'Results',
 };
 
-const LAB_VALIDATION: Pick<EventTypeRegistryEntry, 'domain' | 'laboratorySubdomain' | 'domainLabel'> =
-  {
-    domain: 'laboratory',
-    laboratorySubdomain: 'validation',
-    domainLabel: 'Validation',
-  };
+const LAB_VALIDATION: Pick<
+  EventTypeRegistryEntry,
+  'domain' | 'laboratorySubdomain' | 'domainLabel'
+> = {
+  domain: 'laboratory',
+  laboratorySubdomain: 'validation',
+  domainLabel: 'Validation',
+};
 
-const LAB_ESCALATION: Pick<EventTypeRegistryEntry, 'domain' | 'laboratorySubdomain' | 'domainLabel'> =
-  {
-    domain: 'laboratory',
-    laboratorySubdomain: 'escalation',
-    domainLabel: 'Escalation',
-  };
+const LAB_ESCALATION: Pick<
+  EventTypeRegistryEntry,
+  'domain' | 'laboratorySubdomain' | 'domainLabel'
+> = {
+  domain: 'laboratory',
+  laboratorySubdomain: 'escalation',
+  domainLabel: 'Escalation',
+};
 
 export const EVENT_TYPE_REGISTRY: Record<string, EventTypeRegistryEntry> = {
   'patient.create': {

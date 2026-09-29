@@ -24,7 +24,7 @@ export const EVENT_LOG_STYLES = {
   spineStemBottom:
     'event-log-spine-stem-bottom pointer-events-none absolute bottom-0 left-1/2 w-px -translate-x-1/2 bg-border-default top-[calc(0.625rem+0.1875rem+0.25rem)]',
   spineDotSlot: 'relative z-[1] flex h-5 w-full shrink-0 items-center justify-center',
-  spineDot: 'h-1.5 w-1.5 shrink-0 rounded-full ring-1 ring-surface',
+  spineDot: `h-1.5 w-1.5 shrink-0 ${RADIUS.pill} ring-1 ring-surface`,
   spineDotMuted: 'bg-text-tertiary',
   content: 'event-log-content min-w-0 flex-1 pb-space-2',
   headline: `${TYPE.value} ${EVENT_LOG_HEADLINE_LINE_CLASS} mb-0`,

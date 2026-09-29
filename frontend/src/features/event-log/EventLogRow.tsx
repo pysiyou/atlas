@@ -1,20 +1,14 @@
 import React from 'react';
 import { InlineHighlight } from '@/components/primitives/InlineHighlight';
-import type { LabTimelineLane } from '@/features/lab/constants/labConstants';
-import { getLaneVisual } from '@/features/lab/constants/labConstants';
-import { ResultsParameterGrid } from '@/features/lab/components/ResultsParameterGrid';
+import { getLaneVisual, ResultsParameterGrid, type LabTimelineLane } from '@/features/lab';
 import { cn } from '@/utils';
 import { EVENT_LOG_COPY } from './copy';
 import { EVENT_LOG_STYLES, eventLogPartClass } from './styles';
-import type {
-  EventLogDomain,
-  EventLogLaboratorySubdomain,
-  ResolvedEventLogItem,
-} from './types';
+import type { EventLogDomain, EventLogLaboratorySubdomain, ResolvedEventLogItem } from './types';
 
 function laneForDomain(
   domain: EventLogDomain,
-  laboratorySubdomain?: EventLogLaboratorySubdomain,
+  laboratorySubdomain?: EventLogLaboratorySubdomain
 ): LabTimelineLane {
   if (domain === 'laboratory' && laboratorySubdomain) {
     switch (laboratorySubdomain) {
@@ -54,7 +48,7 @@ function EventLogSpineNode({ item }: { item: ResolvedEventLogItem }) {
     <div
       className={cn(
         EVENT_LOG_STYLES.spineDot,
-        item.isSystemActor ? EVENT_LOG_STYLES.spineDotMuted : visual.bar,
+        item.isSystemActor ? EVENT_LOG_STYLES.spineDotMuted : visual.bar
       )}
       aria-hidden
     />
@@ -81,7 +75,9 @@ function EventLogDetailBox({ item }: { item: ResolvedEventLogItem }) {
         </>
       ) : null}
       {hasNote ? (
-        <div className={hasResults ? 'mt-space-2 border-t border-border-subtle pt-space-2' : undefined}>
+        <div
+          className={hasResults ? 'mt-space-2 border-t border-border-subtle pt-space-2' : undefined}
+        >
           <div className={EVENT_LOG_STYLES.noteCardLabel}>
             {narrativeLabel ?? EVENT_LOG_COPY.narrativeDefaultLabel}
           </div>
@@ -133,7 +129,9 @@ export const EventLogRow: React.FC<{ item: ResolvedEventLogItem }> = ({ item }) 
           ) : (
             <>
               <span className={EVENT_LOG_STYLES.headlineSecondary}>{headline.verbPhrase} </span>
-              <span className={cn(eventLogPartClass({ text: headline.targetLabel, emphasis: true }))}>
+              <span
+                className={cn(eventLogPartClass({ text: headline.targetLabel, emphasis: true }))}
+              >
                 {headline.targetLabel}
               </span>
             </>
@@ -142,11 +140,15 @@ export const EventLogRow: React.FC<{ item: ResolvedEventLogItem }> = ({ item }) 
         <EventLogDetailBox item={item} />
         <p className={cn(EVENT_LOG_STYLES.meta, 'mt-0 mb-0')}>
           {item.metaTime}
-          <span className="mx-space-1" aria-hidden>·</span>
+          <span className="mx-space-1" aria-hidden>
+            ·
+          </span>
           {item.domainLabel}
           {item.showEventTypeInMeta ? (
             <>
-              <span className="mx-space-1" aria-hidden>·</span>
+              <span className="mx-space-1" aria-hidden>
+                ·
+              </span>
               <span className="font-mono text-text-tertiary">{item.record.eventType}</span>
             </>
           ) : null}
