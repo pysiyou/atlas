@@ -48,7 +48,8 @@ export interface EventLogRecord {
 
 export interface EventLogHeadlinePart {
   text: string;
-  emphasis?: boolean;
+  /** Primary emphasis (entity phrases like `order #ord…`, or catalog test chips). */
+  main?: boolean;
   variant?: InlineHighlightProps['variant'];
   decoration?: InlineHighlightProps['decoration'];
   icon?: InlineHighlightProps['icon'];

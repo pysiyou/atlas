@@ -15,7 +15,7 @@ from app.models.test import Test
 from app.schemas.affiliation import AffiliationPricingResponse
 from app.schemas.enums import AffiliationDuration
 from app.schemas.test import TestCreate, TestResponse, TestUpdate
-from app.services.audit.emitter import AuditEmitter
+from app.services.audit import AuditEmitter
 from fastapi import HTTPException, Response, status
 from sqlalchemy.orm import Session
 

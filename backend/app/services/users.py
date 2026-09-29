@@ -4,7 +4,7 @@ import logging
 from app.core.security import get_password_hash
 from app.models.user import User
 from app.schemas.user import UserCreate, UserUpdate
-from app.services.audit.emitter import AuditEmitter
+from app.services.audit import AuditEmitter
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 

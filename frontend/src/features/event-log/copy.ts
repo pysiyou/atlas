@@ -9,6 +9,7 @@ export const EVENT_LOG_COPY = {
   emptyDescription: 'Actions and status changes will appear here as they occur.',
   narrativeDefaultLabel: 'Note',
   reasonInlinePrefix: 'Reason: ',
+  outcomeInlinePrefix: 'Outcome: ',
   commentLabel: 'Comment',
   resultTitle: 'Result',
   showMore: 'Show more',

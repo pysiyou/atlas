@@ -2,7 +2,8 @@
  * Plain result lines for the event log detail box (not lab card grid styling).
  */
 import React, { useMemo } from 'react';
-import { parseResultEntry, statusMapFromFlags } from '@/features/lab/utils/labResult';
+import { parseResultEntry, statusMapFromFlags } from '@/features/lab';
+import { cn } from '@/utils';
 import { EVENT_LOG_STYLES } from './styles';
 
 interface EventLogResultsListProps {
@@ -19,16 +20,20 @@ export const EventLogResultsList: React.FC<EventLogResultsListProps> = ({ result
   }
 
   return (
-    <ul className={EVENT_LOG_STYLES.detailList}>
-      {entries.map(([key, rawValue]) => {
+    <div className={EVENT_LOG_STYLES.detailResults}>
+      {entries.map(([key, rawValue], index) => {
         const { resultValue, unit } = parseResultEntry(key, rawValue, flagStatusMap);
         const valueLabel = unit ? `${resultValue} ${unit}` : resultValue;
         return (
-          <li key={key} className={EVENT_LOG_STYLES.detailBody}>
-            {key}: {valueLabel}
-          </li>
+          <span
+            key={key}
+            className={cn(EVENT_LOG_STYLES.detailLine, index < entries.length - 1 && 'mr-space-4')}
+          >
+            <span className={EVENT_LOG_STYLES.detailLineLabel}>{key}: </span>
+            <span className={EVENT_LOG_STYLES.detailLineValue}>{valueLabel}</span>
+          </span>
         );
       })}
-    </ul>
+    </div>
   );
 };

@@ -241,6 +241,7 @@
   --radius-pill: var(--radius-pill);
   --radius-field: var(--radius-field);
   --radius-inline: var(--radius-inline);
+  --radius-inset: var(--radius-inset);
   --radius-menu: var(--radius-menu);
   --radius-menu-item: var(--radius-menu-item);
   --radius-surface: var(--radius-surface);

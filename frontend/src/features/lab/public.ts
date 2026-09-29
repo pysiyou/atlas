@@ -25,6 +25,7 @@ export { ResultsParameterGrid } from './components/ResultsParameterGrid';
 
 export { getLabQueueUrl, getLabQueueUrlForTest } from './utils/labSearchAndLinks';
 export { formatRejectionCriteriaList } from './utils/catalogRejectionCriteria';
+export { parseResultEntry, statusMapFromFlags } from './utils/labResult';
 
 export { LaboratoryPage } from './pages/LaboratoryPage';
 

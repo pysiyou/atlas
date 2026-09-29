@@ -7,7 +7,7 @@ from app.schemas.enums import (
     PaymentStatus,
     TestStatus,
 )
-from app.services.audit.emitter import AuditEmitter
+from app.services.audit import AuditEmitter
 from app.services.lab.collection_ops import CollectionOperations
 from app.services.lab.escalation import (
     EscalationEngine,

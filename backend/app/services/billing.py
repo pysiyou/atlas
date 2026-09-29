@@ -5,7 +5,7 @@ from app.models.billing import InsuranceClaim, Invoice
 from app.models.order import Order, OrderTest
 from app.schemas.billing import InsuranceClaimCreate
 from app.schemas.enums import ClaimStatus, TestStatus
-from app.services.audit.emitter import AuditEmitter
+from app.services.audit import AuditEmitter
 from fastapi import HTTPException
 from sqlalchemy.orm import Session, joinedload
 

@@ -3,7 +3,7 @@ from app.models.order import Order, OrderTest
 from app.schemas.enums import TestStatus
 from app.schemas.order import OrderResponse, OrderTestResponse
 from app.schemas.reports import ValidatedTestReportItem
-from app.services.audit.emitter import AuditEmitter
+from app.services.audit import AuditEmitter
 from fastapi import HTTPException
 from sqlalchemy.orm import Session, joinedload
 

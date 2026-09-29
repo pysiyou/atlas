@@ -22,7 +22,7 @@ from app.db.database import get_db
 from app.models.user import User
 from app.schemas.error import MessageResponse
 from app.schemas.user import LoginRequest, Token, UserResponse
-from app.services.audit.emitter import AuditEmitter
+from app.services.audit import AuditEmitter
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 

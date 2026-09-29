@@ -201,11 +201,11 @@ export const designTokenRestrictedSyntax = [
     message: 'Use RADIUS.* token utilities (e.g. RADIUS.field), not bare Tailwind rounded.',
   },
   {
-    selector: 'Literal[value=/\\brounded-(field|pill|surface|menu|menu-item|workspace|notice|button|b-surface)\\b/]',
+    selector: 'Literal[value=/\\brounded-(field|pill|surface|menu|menu-item|workspace|notice|button|b-surface|inset|inline)\\b/]',
     message: 'Use RADIUS from @/components/theme/recipes, not inline token class names.',
   },
   {
-    selector: 'TemplateElement[value.raw=/\\brounded-(field|pill|surface|menu|menu-item|workspace|notice|button|b-surface)\\b/]',
+    selector: 'TemplateElement[value.raw=/\\brounded-(field|pill|surface|menu|menu-item|workspace|notice|button|b-surface|inset|inline)\\b/]',
     message: 'Use RADIUS from @/components/theme/recipes, not inline token class names.',
   },
   {

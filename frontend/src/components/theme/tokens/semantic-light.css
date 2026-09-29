@@ -37,6 +37,8 @@
   --radius-surface: var(--radius-card);
   --radius-workspace: var(--radius-shell);
   --radius-inline: 0.125rem;
+  /** Inset panels inside copy (event log note/result box, etc.) — between inline and field */
+  --radius-inset: 0.250rem;
 
   /* Marker wash (InlineHighlight) — deeper *-200 tints (not pale *-50/100) */
   --inline-highlight-warning: var(--primitive-warning-200);
