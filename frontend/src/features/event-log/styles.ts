@@ -29,8 +29,8 @@ export const EVENT_LOG_STYLES = {
   content: 'event-log-content min-w-0 flex-1 pb-space-2',
   headline: `${TYPE.value} ${EVENT_LOG_HEADLINE_LINE_CLASS} mb-0`,
   headlineActor: 'font-medium text-text-primary',
-  /** PAT/ORD/SAM/TST, catalog codes (#…), and other hash-prefixed refs */
-  headlineRef: `${ENTITY_ID} font-semibold`,
+  /** PAT/ORD/SAM/TST, catalog codes (#…), and other hash-prefixed refs (lowercase in event log only) */
+  headlineRef: `${ENTITY_ID} font-bold lowercase`,
   /** Non-ref emphasis (e.g. order status labels without #) */
   headlinePrimary: 'font-medium text-text-primary',
   /** Verb phrases and connector copy (e.g. "rejected sample", "entered results for ") */

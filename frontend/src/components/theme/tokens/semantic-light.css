@@ -36,7 +36,15 @@
   --radius-menu-item: var(--radius-field);
   --radius-surface: var(--radius-card);
   --radius-workspace: var(--radius-shell);
-  --radius-inline: 0.25rem;
+  --radius-inline: 0.125rem;
+
+  /* Marker wash (InlineHighlight) — deeper *-200 tints (not pale *-50/100) */
+  --inline-highlight-warning: var(--primitive-warning-200);
+  --inline-highlight-primary: var(--primitive-brand-300);
+  --inline-highlight-success: var(--primitive-success-200);
+  --inline-highlight-danger: var(--primitive-danger-200);
+  --inline-highlight-info: var(--primitive-info-200);
+  --inline-highlight-neutral: var(--primitive-neutral-200);
 
   /* ═══════════════════════════════════════════════════════════════════
      BORDER (Borders & Dividers)

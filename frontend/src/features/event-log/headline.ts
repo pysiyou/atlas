@@ -1,6 +1,7 @@
 /**
  * Natural-language event log sentences aligned with AuditEmitter metadata keys.
  */
+import { EVENT_LOG_COPY } from './copy';
 import { eventLogId, withHashPrefix } from './formatRef';
 import { ORDER_STATUS_CONFIG, type OrderStatus } from '@/types/enums/generated/order';
 import type { EventLogHeadlinePart, EventLogRecord } from './types';
@@ -55,7 +56,7 @@ function testHighlightFromCodes(
 ): EventLogHeadlinePart {
   return {
     text: formatTestNamesLabel(codes, context.getTestName),
-    highlight: 'test',
+    variant: 'neutral',
   };
 }
 
@@ -117,11 +118,20 @@ function formatReasonLabel(raw: string): string {
 
 const REASON_LEAD_IN = '. ';
 
-/** Appends ". " then the inline highlighted reason (after lineage / main phrase). */
+/** Appends ". " then highlighted reason clause in the feed. */
 function appendClause(parts: EventLogHeadlinePart[], clause: string): EventLogHeadlinePart[] {
   if (!clause.trim()) return parts;
   const label = formatReasonLabel(clause);
-  return append(parts, { text: REASON_LEAD_IN }, { text: label, highlight: 'inline' });
+  return append(
+    parts,
+    { text: REASON_LEAD_IN },
+    {
+      text: `${EVENT_LOG_COPY.reasonInlinePrefix}${label}`,
+      variant: 'info',
+      icon: false,
+      decoration: 'underline',
+    },
+  );
 }
 
 /** Keeps the ". " separator on the reason tail so lineage is inserted before it. */
@@ -129,7 +139,7 @@ function splitHeadlineForLineage(parts: EventLogHeadlinePart[]): {
   head: EventLogHeadlinePart[];
   tail: EventLogHeadlinePart[];
 } {
-  const inlineAt = parts.findIndex(part => part.highlight === 'inline');
+  const inlineAt = parts.findIndex(part => part.variant === 'info');
   if (inlineAt < 0) {
     return { head: parts, tail: [] };
   }

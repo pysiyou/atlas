@@ -27,7 +27,15 @@
   --radius-menu-item: var(--radius-field);
   --radius-surface: var(--radius-card);
   --radius-workspace: var(--radius-shell);
-  --radius-inline: 0.25rem;
+  --radius-inline: 0.125rem;
+
+  /* Marker wash (InlineHighlight) — same deeper tints as light (see semantic-light.css) */
+  --inline-highlight-warning: var(--primitive-warning-300);
+  --inline-highlight-primary: var(--primitive-brand-600);
+  --inline-highlight-success: var(--primitive-success-300);
+  --inline-highlight-danger: var(--primitive-danger-300);
+  --inline-highlight-info: var(--primitive-info-300);
+  --inline-highlight-neutral: var(--primitive-neutral-300);
 
   --border: var(--primitive-neutral-200);
   --border-subtle: var(--primitive-neutral-100);

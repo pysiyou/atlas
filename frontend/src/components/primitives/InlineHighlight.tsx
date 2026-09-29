@@ -1,43 +1,38 @@
 /**
- * Inline highlight for body copy (event log, notes, help text).
- *
- * Unlike {@link Badge}, this is not a single-line chip: the label may wrap onto multiple
- * lines when space is tight. Use inside paragraphs; `box-decoration-clone` keeps background
- * and padding on each wrapped line.
- *
- * Geometry: recipes `INLINE_HIGHLIGHT`. Colors: `inlineHighlightStyles`.
+ * Inline highlight for body copy (event log, notes). Multi-line via `box-decoration-clone`.
+ * Styles: `INLINE_HIGHLIGHT` in `@/components/theme/recipes`.
  */
 import React from 'react';
 import { cn } from '@/utils';
-import { useBadgeAppearance } from '@/components/theme/theme';
 import { INLINE_HIGHLIGHT } from '@/components/theme/recipes';
+import { resolveColor } from './badgeStyles';
+import type { BadgeColor, BadgeVariant } from './badgeTypes';
 import { Icon, type IconName } from './Icon';
-import {
-  getInlineHighlightStyles,
-  type InlineHighlightVariant,
-} from './inlineHighlightStyles';
 
-export type { InlineHighlightVariant } from './inlineHighlightStyles';
-export {
-  getInlineHighlightStyles,
-  resolveInlineHighlightVariant,
-} from './inlineHighlightStyles';
+export type InlineHighlightVariant = BadgeVariant;
 
-export type InlineHighlightSize = keyof typeof INLINE_HIGHLIGHT.size;
+export type InlineHighlightSize = keyof typeof INLINE_HIGHLIGHT.icon;
 
-const SUGGESTED_ICONS: Partial<Record<string, IconName>> = {
-  warning: 'question',
-  primary: 'lab-tube',
-  info: 'info-circle',
-  danger: 'alert-circle',
-};
+export type InlineHighlightDecoration = keyof typeof INLINE_HIGHLIGHT.decoration;
+
+function markerClasses(variant: InlineHighlightVariant): string {
+  const color = resolveColor(String(variant)) as BadgeColor;
+  const wash =
+    INLINE_HIGHLIGHT.wash[color as keyof typeof INLINE_HIGHLIGHT.wash] ??
+    INLINE_HIGHLIGHT.wash.neutral;
+  return cn(INLINE_HIGHLIGHT.root, wash);
+}
+
+function defaultIconForVariant(variant: InlineHighlightVariant): IconName | undefined {
+  const color = resolveColor(String(variant)) as BadgeColor;
+  return INLINE_HIGHLIGHT.defaultIcon[color as keyof typeof INLINE_HIGHLIGHT.defaultIcon];
+}
 
 export interface InlineHighlightProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: InlineHighlightVariant;
   size?: InlineHighlightSize;
-  /** Icon name, custom node, or `false` to hide the leading icon. */
+  decoration?: InlineHighlightDecoration;
   icon?: IconName | React.ReactNode | false;
-  /** When set, used instead of `children` for the label text. */
   label?: React.ReactNode;
   children?: React.ReactNode;
 }
@@ -45,22 +40,17 @@ export interface InlineHighlightProps extends React.HTMLAttributes<HTMLSpanEleme
 export const InlineHighlight: React.FC<InlineHighlightProps> = ({
   variant = 'warning',
   size = 'sm',
+  decoration,
   icon,
   label,
   className,
   children,
   ...props
 }) => {
-  const appearance = useBadgeAppearance();
-  const { colorClass, surfaceClass } = getInlineHighlightStyles(variant, appearance);
   const content = label ?? children;
 
   const resolvedIcon =
-    icon === false
-      ? null
-      : icon === undefined
-        ? SUGGESTED_ICONS[String(variant).toLowerCase()]
-        : icon;
+    icon === false ? null : icon === undefined ? defaultIconForVariant(variant) : icon;
 
   const iconElement =
     resolvedIcon == null
@@ -75,17 +65,11 @@ export const InlineHighlight: React.FC<InlineHighlightProps> = ({
             />
           );
 
+  const decorationClass =
+    decoration != null ? INLINE_HIGHLIGHT.decoration[decoration] : undefined;
+
   return (
-    <span
-      className={cn(
-        INLINE_HIGHLIGHT.rootBase,
-        INLINE_HIGHLIGHT.size[size],
-        surfaceClass,
-        colorClass,
-        className,
-      )}
-      {...props}
-    >
+    <span className={cn(markerClasses(variant), decorationClass, className)} {...props}>
       {iconElement}
       {content}
     </span>
