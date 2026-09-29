@@ -51,13 +51,10 @@ export const LAB_COPY = {
     panelMetaEmpty: 'Escalations, holds, priority, and turnaround exceptions',
   },
   dashboardToday: {
-    /** Order tests with updatedAt on the UTC calendar day (activity cohort). */
-    activityCohort: 'order-test activity cohort (UTC)',
-    /** Active cohort ∩ order-test createdAt on the UTC day. */
-    intradayAccession: 'intraday accession (active cohort)',
-    /** Intraday accession subset with resultValidatedAt on the UTC day. */
-    sameDayResultRelease: 'same-day result release (accession subset)',
-    summaryAria: 'UTC day order-test throughput cohort',
+    testsWorked: 'tests worked',
+    createdToday: 'created today',
+    completedToday: 'completed today',
+    summaryAria: "Today's test activity summary",
   },
   timeline: {
     sample: 'Sample',

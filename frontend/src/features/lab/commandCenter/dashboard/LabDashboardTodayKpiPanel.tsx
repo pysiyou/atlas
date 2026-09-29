@@ -140,35 +140,21 @@ export const LabDashboardTodayKpiPanel: React.FC<LabDashboardTodayKpiPanelProps>
           />
         ) : (
           <>
-            <div
-              className={TODAY_KPI.summaryBlock}
-              aria-label={LAB_COPY.dashboardToday.summaryAria}
-            >
-              <p className={TODAY_KPI.summaryLine}>
-                <span className={TODAY_KPI.summaryValue}>
-                  {todayPanel.testsUpdatedToday.toLocaleString()}
-                </span>
-                <span className={TODAY_KPI.summaryLabel}>
-                  {LAB_COPY.dashboardToday.activityCohort}
-                </span>
-              </p>
-              <p className={TODAY_KPI.summaryLine}>
-                <span className={TODAY_KPI.summaryValue}>
-                  {todayPanel.testsWorkedCreatedToday.toLocaleString()}
-                </span>
-                <span className={TODAY_KPI.summaryLabel}>
-                  {LAB_COPY.dashboardToday.intradayAccession}
-                </span>
-              </p>
-              <p className={`${TODAY_KPI.summaryLine} col-span-2`}>
-                <span className={TODAY_KPI.summaryValue}>
-                  {todayPanel.testsWorkedCreatedCompletedToday.toLocaleString()}
-                </span>
-                <span className={TODAY_KPI.summaryLabel}>
-                  {LAB_COPY.dashboardToday.sameDayResultRelease}
-                </span>
-              </p>
-            </div>
+            <p className={TODAY_KPI.summaryLine} aria-label={LAB_COPY.dashboardToday.summaryAria}>
+              {LAB_COPY.dashboardToday.testsWorked}(
+              <span className={TODAY_KPI.summaryValue}>
+                {todayPanel.testsUpdatedToday.toLocaleString()}
+              </span>
+              ), {LAB_COPY.dashboardToday.createdToday} (
+              <span className={TODAY_KPI.summaryValue}>
+                {todayPanel.testsWorkedCreatedToday.toLocaleString()}
+              </span>
+              ) {LAB_COPY.dashboardToday.completedToday}(
+              <span className={TODAY_KPI.summaryValue}>
+                {todayPanel.testsWorkedCreatedCompletedToday.toLocaleString()}
+              </span>
+              )
+            </p>
             {showWorkflowRows ? (
               <ul className={TODAY_KPI.list}>
                 {WORKFLOW_KPI_ROWS.map(row => {
