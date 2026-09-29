@@ -8,6 +8,7 @@ export const EVENT_LOG_COPY = {
   emptyTitle: 'No events yet',
   emptyDescription: 'Actions and status changes will appear here as they occur.',
   narrativeDefaultLabel: 'Note',
+  reasonInlinePrefix: 'Reason: ',
   commentLabel: 'Comment',
   resultsTitle: (count: number) => `Results (${count})`,
   showMore: 'Show more',

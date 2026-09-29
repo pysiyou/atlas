@@ -3,11 +3,17 @@
  */
 import { displayId } from '@/utils/id';
 
+/** Event log copy uses lowercase id/code tokens (#ord…, #cbc…); rest of the app keeps displayId casing. */
+function eventLogRefBody(label: string): string {
+  return label.toLowerCase();
+}
+
 export function withHashPrefix(label: string | null | undefined): string {
   if (label === null || label === undefined) return '-';
   const trimmed = String(label).trim();
   if (!trimmed || trimmed === '-') return '-';
-  return trimmed.startsWith('#') ? trimmed : `#${trimmed}`;
+  const body = trimmed.startsWith('#') ? trimmed.slice(1) : trimmed;
+  return `#${eventLogRefBody(body)}`;
 }
 
 function hashDisplayId(format: (id: number | null | undefined) => string) {

@@ -112,11 +112,13 @@ export const EventLogRow: React.FC<{ item: ResolvedEventLogItem }> = ({ item }) 
           ) : null}
           {headlineParts.length > 0 ? (
             headlineParts.map((part, index) => {
-              if (part.highlight === 'inline' || part.highlight === 'test') {
+              if (part.variant != null) {
                 return (
                   <InlineHighlight
                     key={`${part.text}-${index}`}
-                    variant={part.highlight === 'test' ? 'primary' : 'warning'}
+                    variant={part.variant}
+                    icon={part.icon}
+                    decoration={part.decoration}
                   >
                     {part.text}
                   </InlineHighlight>

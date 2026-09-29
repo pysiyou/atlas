@@ -24,7 +24,8 @@ export function formatTestNamesLabel(codes: string[], lookup: TestNameLookup): s
   if (codes.length === 0) return '—';
   const names = codes.map(code => {
     const name = lookup(code).trim();
-    return name || code;
+    if (name) return name;
+    return code.toLowerCase();
   });
   const first = names[0];
   if (names.length === 1) return first;

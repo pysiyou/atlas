@@ -104,6 +104,13 @@
   --color-warning-stroke: var(--warning-stroke);
   --color-warning-stroke-emphasis: var(--warning-stroke-emphasis);
 
+  --color-inline-highlight-warning: var(--inline-highlight-warning);
+  --color-inline-highlight-primary: var(--inline-highlight-primary);
+  --color-inline-highlight-success: var(--inline-highlight-success);
+  --color-inline-highlight-danger: var(--inline-highlight-danger);
+  --color-inline-highlight-info: var(--inline-highlight-info);
+  --color-inline-highlight-neutral: var(--inline-highlight-neutral);
+
   /* ═══════════════════════════════════════════════════════════════════
      INFO
      ═══════════════════════════════════════════════════════════════════ */

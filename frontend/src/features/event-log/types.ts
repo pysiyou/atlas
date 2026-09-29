@@ -2,6 +2,8 @@
  * Event log view models — aligned with backend AuditEventResponse (camelCase).
  */
 
+import type { InlineHighlightProps } from '@/components/primitives/InlineHighlight';
+
 export type EventLogDomain =
   | 'patient'
   | 'order'
@@ -44,12 +46,12 @@ export interface EventLogRecord {
   metadata?: Record<string, unknown> | null;
 }
 
-export type EventLogHeadlineHighlight = 'inline' | 'test';
-
 export interface EventLogHeadlinePart {
   text: string;
   emphasis?: boolean;
-  highlight?: EventLogHeadlineHighlight;
+  variant?: InlineHighlightProps['variant'];
+  decoration?: InlineHighlightProps['decoration'];
+  icon?: InlineHighlightProps['icon'];
 }
 
 export interface ResolvedEventLogHeadline {

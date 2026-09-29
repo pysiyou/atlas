@@ -1,6 +1,7 @@
 /**
  * primitives/index.ts — Atomic, presentation-only building blocks.
  * Badge (+ TagChip, RemovableTag, FilterChip): ./Badge.tsx; colors in ./badgeStyles.ts.
+ * InlineHighlight: ./InlineHighlight.tsx; layout/wash in theme recipes `INLINE_HIGHLIGHT`.
  * Button + IconButton: ./Button.tsx (single module).
  */
 
@@ -14,8 +15,3 @@ export * from './CheckboxList';
 export * from './CircularProgress';
 export * from './Icon';
 export * from './InlineHighlight';
-export {
-  getInlineHighlightStyles,
-  resolveInlineHighlightVariant,
-  type InlineHighlightVariant,
-} from './inlineHighlightStyles';
