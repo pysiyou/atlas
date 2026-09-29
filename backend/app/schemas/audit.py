@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import enum
 from datetime import datetime
-from typing import Any, Literal
+from typing import Any
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -71,13 +71,6 @@ class EventType(str, enum.Enum):
     # System — catalog
     SYSTEM_CATALOG_CREATE = "system.catalog.create"
     SYSTEM_CATALOG_UPDATE = "system.catalog.update"
-
-
-class ActorSnapshot(BaseModel):
-    userId: int | Literal["system"]
-    name: str
-    role: str
-    ipAddress: str | None = None
 
 
 class EventTarget(BaseModel):

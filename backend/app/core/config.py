@@ -2,11 +2,19 @@
 Configuration management using Pydantic Settings
 """
 
+from pathlib import Path
+
 from pydantic import Field
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=str(Path(__file__).resolve().parents[2] / ".env"),
+        case_sensitive=True,
+        extra="ignore",
+    )
+
     # Database - PostgreSQL only (MUST be set via environment variable)
     DATABASE_URL: str = Field(..., description="PostgreSQL connection string (required)")
 
@@ -24,10 +32,6 @@ class Settings(BaseSettings):
     # API
     API_V1_PREFIX: str = "/api/v1"
     PROJECT_NAME: str = "Atlas Laboratory Management System"
-
-    # File Storage
-    REPORTS_DIR: str = "./storage/reports"
-    UPLOADS_DIR: str = "./storage/uploads"
 
     # Analyzer integration — required for /analyzer/* endpoints
     ANALYZER_API_KEY: str = Field(
@@ -47,10 +51,6 @@ class Settings(BaseSettings):
     CACHE_TTL_STATIC: int = Field(
         default=3600, description="TTL for static data like tests (seconds)"
     )
-    CACHE_TTL_SEMI_STATIC: int = Field(
-        default=300, description="TTL for semi-static data like patients (seconds)"
-    )
-    CACHE_TTL_DYNAMIC: int = Field(default=60, description="TTL for dynamic data (seconds)")
 
     @property
     def cors_origins_list(self) -> list[str]:
@@ -58,12 +58,6 @@ class Settings(BaseSettings):
         if not origins and self.ENVIRONMENT == "development":
             return ["http://localhost:5173"]
         return origins
-
-    class Config:
-        from pathlib import Path
-
-        env_file = str(Path(__file__).resolve().parents[2] / ".env")
-        case_sensitive = True
 
 
 settings = Settings()

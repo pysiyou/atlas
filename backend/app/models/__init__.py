@@ -9,7 +9,6 @@ from app.models.order import Order, OrderTest
 from app.models.patient import Patient
 from app.models.quality_issue import QualityIssue
 from app.models.recollection_request import RecollectionRequest
-from app.models.report import Report
 from app.models.sample import Sample
 from app.models.test import Test
 from app.models.user import User
@@ -24,7 +23,6 @@ __all__ = [
     "Invoice",
     "Payment",
     "InsuranceClaim",
-    "Report",
     "AuditEvent",
     "EscalationTicket",
     "QualityIssue",

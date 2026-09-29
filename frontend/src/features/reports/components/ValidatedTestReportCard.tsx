@@ -7,6 +7,7 @@
 import { Badge, Avatar, MobileEntityCard, EntityId } from '@/components';
 import type { CardComponentProps } from '@/components';
 import { formatDateTime } from '@/utils';
+import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
 import type { ValidatedTest } from '../types';
 import { ReportPreviewButton } from './ReportPreviewButton';
 import { TYPE } from '@/components/theme/recipes';
@@ -52,7 +53,7 @@ export function ValidatedTestReportCard({ item: test, onClick, onPreview }: Vali
 
       {/* Bottom section: Order date (left) + Preview button (right) */}
       <div className="flex justify-between items-center mt-auto pt-space-3">
-        <div className={TYPE.meta}>{formatDateTime(test.orderDate)}</div>
+        <div className={TABLE_DATETIME_SECONDARY_CLASS}>{formatDateTime(test.orderDate)}</div>
         <div onClick={e => e.stopPropagation()}>
           <ReportPreviewButton test={test} onPreview={onPreview} size="sm" />
         </div>

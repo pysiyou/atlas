@@ -63,10 +63,6 @@ class SampleStateMachine:
             return False, "Sample is already rejected"
         return False, f"Cannot reject sample with status '{status.value}'"
 
-    @classmethod
-    def is_terminal(cls, status: SampleStatus) -> bool:
-        return len(cls.TRANSITIONS.get(status, set())) == 0
-
 
 class TestStateMachine:
     """
@@ -179,16 +175,3 @@ class TestStateMachine:
         if status == TestStatus.REMOVED:
             return False, "This test has been removed from the order"
         return False, f"Cannot validate test with status '{status.value}'"
-
-    @classmethod
-    def is_terminal(cls, status: TestStatus) -> bool:
-        return len(cls.TRANSITIONS.get(status, set())) == 0
-
-    @classmethod
-    def is_active(cls, status: TestStatus) -> bool:
-        return status not in {
-            TestStatus.SUPERSEDED,
-            TestStatus.REMOVED,
-            TestStatus.VALIDATED,
-            TestStatus.CANCELLED,
-        }

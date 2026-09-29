@@ -5,24 +5,11 @@ import re
 from typing import Any, TypeVar
 
 from fastapi import HTTPException
-from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from app.schemas.enums import RejectionReason
 
 T = TypeVar("T")
-
-
-def apply_updates(db_model: Any, update_schema: BaseModel) -> None:
-    """
-    Apply Pydantic schema updates to SQLAlchemy model.
-    Only updates fields that are present in the schema (exclude_unset=True)
-    and exist on the model.
-    """
-    update_data = update_schema.model_dump(exclude_unset=True)
-    for field, value in update_data.items():
-        if hasattr(db_model, field):
-            setattr(db_model, field, value)
 
 
 def get_or_404(

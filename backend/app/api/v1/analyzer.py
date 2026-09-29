@@ -38,7 +38,7 @@ def verify_analyzer_auth(x_analyzer_key: str = Header(None)) -> bool:
 async def receive_hl7_result(
     request: HL7MessageRequest,
     db: Session = Depends(get_db),
-    authenticated: bool = Depends(verify_analyzer_auth),
+    _: bool = Depends(verify_analyzer_auth),
 ):
     return AnalyzerIngestService(db).ingest_hl7(request)
 
@@ -47,7 +47,7 @@ async def receive_hl7_result(
 async def receive_json_result(
     request: AnalyzerResultRequest,
     db: Session = Depends(get_db),
-    authenticated: bool = Depends(verify_analyzer_auth),
+    _: bool = Depends(verify_analyzer_auth),
 ):
     return AnalyzerIngestService(db).ingest_json(request)
 
@@ -56,6 +56,6 @@ async def receive_json_result(
 async def get_pending_samples(
     analyzer_id: str,
     db: Session = Depends(get_db),
-    authenticated: bool = Depends(verify_analyzer_auth),
+    _: bool = Depends(verify_analyzer_auth),
 ):
     return AnalyzerIngestService(db).list_pending(analyzer_id)

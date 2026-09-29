@@ -52,35 +52,6 @@ class CriticalNotificationService:
         self.db = db
         self.emitter = AuditEmitter(db)
 
-    def check_and_flag_critical(self, order_test: OrderTest, flags: list[ResultFlag]) -> bool:
-        """
-        Check for critical values and update OrderTest fields.
-
-        Args:
-            order_test: The OrderTest to check
-            flags: Calculated result flags
-
-        Returns:
-            True if critical values were found
-        """
-        critical_statuses = {
-            ResultStatus.CRITICAL,
-            ResultStatus.CRITICAL_HIGH,
-            ResultStatus.CRITICAL_LOW,
-        }
-        critical_flags = [f for f in flags if f.status in critical_statuses]
-
-        has_critical = len(critical_flags) > 0
-
-        # Update OrderTest
-        order_test.hasCriticalValues = has_critical
-
-        if has_critical:
-            # Store critical value details in flags field
-            order_test.flags = self._format_critical_flags(critical_flags)
-
-        return has_critical
-
     def create_notification(
         self,
         order_test: OrderTest,
@@ -139,14 +110,12 @@ class CriticalNotificationService:
 
         return notification
 
-    def acknowledge_notification(self, order_test: OrderTest, acknowledged_by: str) -> bool:
+    def acknowledge_notification(self, order_test: OrderTest, _acknowledged_by: str) -> bool:
         """
         Record acknowledgment of a critical value notification.
 
         Args:
             order_test: The OrderTest with the critical notification
-            acknowledged_by: Name/identifier of who acknowledged
-
         Returns:
             True if acknowledgment was recorded
         """
@@ -194,48 +163,6 @@ class CriticalNotificationService:
             )
             .all()
         )
-
-    def _format_critical_flags(self, flags: list[ResultFlag]) -> list[str]:
-        """Format critical flags as string list for storage"""
-        return [f"{f.item_code}:{f.status.value}:{f.value}" for f in flags]
-
-    def format_notification_message(
-        self, notification: CriticalNotification, include_values: bool = True
-    ) -> str:
-        """
-        Format a notification message for display or communication.
-
-        Args:
-            notification: The notification to format
-            include_values: Whether to include specific values
-
-        Returns:
-            Formatted message string
-        """
-        lines = [
-            "CRITICAL VALUE ALERT",
-            f"Patient: {notification.patient_name} (ID: {notification.patient_id})",
-            f"Order: {notification.order_id}",
-            f"Test: {notification.test_code}",
-        ]
-
-        if include_values:
-            lines.append("Critical Values:")
-            for cv in notification.critical_values:
-                value_str = f"{cv['value']}"
-                if cv.get("unit"):
-                    value_str += f" {cv['unit']}"
-                ref_str = f" (Ref: {cv['reference_range']})" if cv.get("reference_range") else ""
-                lines.append(
-                    f"  - {cv['item_name']}: {value_str} [{cv['status'].upper()}]{ref_str}"
-                )
-
-        lines.append(f"Notification sent to: {notification.notified_to}")
-        lines.append(
-            f"Notification time: {notification.notified_at.isoformat() if notification.notified_at else 'Pending'}"
-        )
-
-        return "\n".join(lines)
 
     def _to_response(self, test: OrderTest, order: Order | None) -> CriticalValueResponse:
         return CriticalValueResponse(

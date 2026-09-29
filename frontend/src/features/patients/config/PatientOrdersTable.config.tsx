@@ -92,7 +92,6 @@ export function createPatientRelatedOrdersTableConfig(
     totalPrice: {
       ...shared.totalPrice,
       header: 'Total',
-      align: 'right' as const,
     },
   };
 

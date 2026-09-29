@@ -366,17 +366,6 @@ class FlagCalculatorService:
         }
         return any(f.status in critical_statuses for f in flags)
 
-    def has_abnormal_values(self, flags: list[ResultFlag]) -> bool:
-        """Check if any flags indicate abnormal values"""
-        abnormal_statuses = {
-            ResultStatus.HIGH,
-            ResultStatus.LOW,
-            ResultStatus.CRITICAL,
-            ResultStatus.CRITICAL_HIGH,
-            ResultStatus.CRITICAL_LOW,
-        }
-        return any(f.status in abnormal_statuses for f in flags)
-
     def get_critical_flags(self, flags: list[ResultFlag]) -> list[ResultFlag]:
         """Get only critical flags"""
         critical_statuses = {

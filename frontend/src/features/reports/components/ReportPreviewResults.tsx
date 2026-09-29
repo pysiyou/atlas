@@ -35,7 +35,7 @@ export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ repo
                 <th className="px-table-cell-x-default py-space-3 text-left font-normal text-text-tertiary uppercase tracking-wider">
                   Reference Value
                 </th>
-                <th className="px-table-cell-x-default py-space-3 text-right font-normal text-text-tertiary uppercase tracking-wider">
+                <th className="px-table-cell-x-default py-space-3 text-left font-normal text-text-tertiary uppercase tracking-wider">
                   Unit
                 </th>
               </tr>
@@ -47,7 +47,7 @@ export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ repo
                   {(reportData.order.tests ?? [])[0]?.sampleType?.toUpperCase() || 'N/A'}
                 </td>
                 <td className="px-table-cell-x-default py-space-3 text-left text-text-secondary"></td>
-                <td className="px-table-cell-x-default py-space-3 text-right text-text-secondary"></td>
+                <td className="px-table-cell-x-default py-space-3 text-left text-text-secondary"></td>
               </tr>
 
               {test.parameters.map((param, paramIndex) => {
@@ -90,7 +90,7 @@ export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ repo
                     <td className="px-table-cell-x-default py-space-3 text-left text-text-secondary">
                       {param.referenceRange || ''}
                     </td>
-                    <td className="px-table-cell-x-default py-space-3 text-right text-text-secondary">{param.unit || '-'}</td>
+                    <td className="px-table-cell-x-default py-space-3 text-left text-text-secondary">{param.unit || '-'}</td>
                   </tr>
                 );
               })}

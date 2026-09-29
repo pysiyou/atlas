@@ -36,10 +36,10 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
               key={`${row.label}-${idx}`}
               className="border-b border-border-subtle last:border-b-0"
             >
-              <td className={`${TABLE_CELL.default} align-top w-2/5`}>
+              <td className={`${TABLE_CELL.default} align-top text-left w-2/5`}>
                 <span className={`block ${DETAIL_TYPE.sectionTitleCompact}`}>{row.label}</span>
               </td>
-              <td className={`${TABLE_CELL.default} align-top w-3/5`}>
+              <td className={`${TABLE_CELL.default} align-top text-left w-3/5`}>
                 <div className={`break-words ${DETAIL_TYPE.value}`}>{row.value}</div>
               </td>
             </tr>

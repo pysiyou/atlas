@@ -105,10 +105,8 @@ export const createPaymentTableConfig = (
       key: 'action',
       header: 'Action',
       width: 'md' as const,
-      headerClassName: 'justify-end',
-      align: 'right' as const,
       render: (item: OrderPaymentView) => (
-        <div className="flex items-center justify-end font-normal" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-start font-normal" onClick={e => e.stopPropagation()}>
           <PaymentButton order={item.order} onPaymentSuccess={onPaymentSuccess} />
         </div>
       ),

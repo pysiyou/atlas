@@ -5,10 +5,11 @@ import type { CardComponentProps } from '@/components';
 import { getActiveTests, renderOrderTestsBlock } from '@/features/orders';
 import { useTestNameLookup } from '@/features/catalog';
 import { formatCurrency, formatDateTime } from '@/utils';
+import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
 import type { OrderPaymentView } from '../types';
 import { PaymentButton } from './PaymentButton';
 import { useInvalidatePayments } from '../api/payments';
-import { CARD_PRICE, TYPE } from '@/components/theme/recipes';
+import { CARD_PRICE } from '@/components/theme/recipes';
 
 
 /**
@@ -57,7 +58,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
       )}
 
       <div className="flex justify-between items-center mt-auto pt-space-3 gap-space-2">
-        <div className={`${TYPE.meta} tabular-nums`}>{formatDateTime(displayDate)}</div>
+        <div className={TABLE_DATETIME_SECONDARY_CLASS}>{formatDateTime(displayDate)}</div>
         <div className="flex items-center gap-space-2 shrink-0">
           {order.overallStatus && <OrderStatusBadge status={order.overallStatus} size="xs" />}
           <PaymentStatusBadge status={order.paymentStatus} size="xs" />

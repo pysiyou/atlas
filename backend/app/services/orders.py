@@ -185,8 +185,6 @@ Order business logic and status derivation.
 
 logger = logging.getLogger(__name__)
 
-TERMINAL_STATUSES = {OrderStatus.CANCELLED}
-
 _STARTED_STATUSES = {
     TestStatus.SAMPLE_COLLECTED,
     TestStatus.RESULTED,
@@ -214,21 +212,6 @@ def _test_has_started(test: OrderTest, samples_by_id: dict[int, Sample]) -> bool
     if test.status == TestStatus.PENDING:
         return _pending_test_has_started(test, samples_by_id)
     return False
-
-
-def build_order_completion_metadata(order: Order) -> dict:
-    active_tests = [
-        t for t in order.tests if t.status not in {TestStatus.SUPERSEDED, TestStatus.REMOVED}
-    ]
-    active_count = len(active_tests)
-    all_terminal = all(
-        t.status in {TestStatus.VALIDATED, TestStatus.CANCELLED} for t in active_tests
-    )
-    return {
-        "orderCompleted": bool(all_terminal and active_count > 0),
-        "activeTestCount": active_count,
-        "singleTestOrder": active_count == 1,
-    }
 
 
 def _calculate_order_status(order: Order, samples: list[Sample]) -> OrderStatus:

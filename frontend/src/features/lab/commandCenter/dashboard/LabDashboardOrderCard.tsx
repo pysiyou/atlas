@@ -11,8 +11,8 @@ import {
 } from '../../components/LabDomainBadges';
 import { BlockedReasonBadge } from '@/features/lab';
 import { formatDateTime, displayId } from '@/utils';
+import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
 import { DASHBOARD_TWO_LINE } from '../dashboardStyles';
-import { TYPE } from '@/components/theme/recipes';
 import type { LabDashboardOrderRow } from './dashboardOrders';
 
 export function LabDashboardOrderCard({
@@ -50,7 +50,7 @@ export function LabDashboardOrderCard({
           <LabDepartmentBadge department={item.department} size="xs" className="border-none" />
         ) : null}
       </div>
-      <div className={`${TYPE.value} font-normal mt-auto pt-space-3`}>
+      <div className={`${TABLE_DATETIME_SECONDARY_CLASS} mt-auto pt-space-3`}>
         {formatDateTime(item.date)}
       </div>
     </MobileEntityCard>
