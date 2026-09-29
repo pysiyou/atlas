@@ -18,8 +18,8 @@ export {
   useLabWorkflowResponsiveCard,
 } from './hooks';
 
-export { getLabTabPath, getLaneVisual, LAB_TAB_LABELS, LAB_CONFIG } from './constants/labConstants';
-export type { LabTabId, LabTimelineLane } from './constants/labConstants';
+export { getLabTabPath, getLaneVisual, getStageVisual, getKpiStageVisual, isLabWorkflowStageTab, LAB_TAB_LABELS, LAB_CONFIG } from './constants/labConstants';
+export type { LabTabId, LabTimelineLane, LabWorkflowKpiStage, LabWorkflowStage } from './constants/labConstants';
 
 export { ResultsParameterGrid } from './components/ResultsParameterGrid';
 

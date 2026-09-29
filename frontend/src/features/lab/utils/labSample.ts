@@ -189,6 +189,25 @@ export const getEffectiveContainerType = (
 
 export type CollectionPopoverTopColor = (typeof COLLECTION_TOP_COLOR_VALUES)[number];
 
+/** Popover swatch backgrounds — subset of collection top colors (Tailwind safelist). */
+const COLLECTION_TOP_COLOR_BG: Record<
+  'red-top' | 'yellow-top' | 'green-top' | 'black-top' | 'blue-top',
+  string
+> = {
+  'red-top': 'bg-container-red-bg',
+  'yellow-top': 'bg-container-yellow-bg',
+  'green-top': 'bg-container-green-bg',
+  'black-top': 'bg-container-black-bg',
+  'blue-top': 'bg-container-blue-bg',
+};
+
+export function getCollectionTopColorBg(topColor: CollectionPopoverTopColor): string {
+  if (topColor in COLLECTION_TOP_COLOR_BG) {
+    return COLLECTION_TOP_COLOR_BG[topColor as keyof typeof COLLECTION_TOP_COLOR_BG];
+  }
+  return 'bg-container-gray-bg';
+}
+
 /** Default top-cap color in the collection popover swatch row, by sample type. */
 export function getDefaultCollectionTopColor(sampleType: SampleType): CollectionPopoverTopColor {
   switch (sampleType) {

@@ -19,6 +19,7 @@ import { FIELD_ERROR_CAPTION, RADIUS, SHADOW, TONE, TYPE } from '@/components/th
 import {
   getDefaultCollectionTopColor,
   getEffectiveContainerType,
+  getCollectionTopColorBg,
 } from '../utils';
 
 /** Container type choices for collection: tube or cup only */
@@ -26,18 +27,6 @@ const COLLECTION_CONTAINER_OPTIONS: { value: ContainerType; label: string }[] = 
   { value: 'tube', label: 'Tube' },
   { value: 'cup', label: 'Cup' },
 ];
-
-/** Static bg classes so Tailwind includes them (uses semantic container tokens). */
-const COLLECTION_TOP_COLOR_BG: Record<
-  'red-top' | 'yellow-top' | 'green-top' | 'black-top' | 'blue-top',
-  string
-> = {
-  'red-top': 'bg-container-red-bg',
-  'yellow-top': 'bg-container-yellow-bg',
-  'green-top': 'bg-container-green-bg',
-  'black-top': 'bg-container-black-bg',
-  'blue-top': 'bg-container-blue-bg',
-};
 
 interface CollectionPopoverContentProps {
   requirement: SampleRequirement;
@@ -200,10 +189,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
           {COLLECTION_TOP_COLOR_VALUES.map(value => {
             const isSelected = selectedColor === value;
             const config = CONTAINER_CONFIG[value];
-            const bgClass =
-              value in COLLECTION_TOP_COLOR_BG
-                ? COLLECTION_TOP_COLOR_BG[value as keyof typeof COLLECTION_TOP_COLOR_BG]
-                : 'bg-container-gray-bg';
+            const bgClass = getCollectionTopColorBg(value);
             return (
               <button
                 key={value}

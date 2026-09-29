@@ -69,6 +69,29 @@ export const CONTAINER_STYLES: Record<string, string> = {
   'container-black': 'bg-container-black-bg text-container-black-text',
 };
 
+/** Test catalog categories — paired with `--category-*` in semantic-light.css. */
+export const CATEGORY_BADGE_TEXT: Record<string, string> = {
+  hematology: 'text-category-hematology',
+  biochemistry: 'text-category-biochemistry',
+  chemistry: 'text-category-chemistry',
+  microbiology: 'text-category-microbiology',
+  serology: 'text-category-serology',
+  urinalysis: 'text-category-urinalysis',
+  imaging: 'text-category-imaging',
+  immunology: 'text-category-immunology',
+  molecular: 'text-category-molecular',
+  toxicology: 'text-category-toxicology',
+  coagulation: 'text-category-coagulation',
+};
+
+export function getCategoryBadgeTextClass(slug: string): string {
+  return CATEGORY_BADGE_TEXT[slug.toLowerCase()] ?? 'text-category-default';
+}
+
+export function isCategoryBadgeSlug(value: string): boolean {
+  return value.toLowerCase() in CATEGORY_BADGE_TEXT;
+}
+
 /** Unified = neutral surface + colored text; tinted = filled chip. */
 export function getColorStyles(color: BadgeColor, appearance: 'unified' | 'tinted') {
   if (appearance === 'tinted') {
@@ -94,6 +117,9 @@ export function parseBadgeVariant(value: string | undefined): BadgeVariant {
     return value as BadgeVariant;
   }
   if (key === 'default') return 'default';
+  if (key in CATEGORY_BADGE_TEXT) {
+    return key as BadgeVariant;
+  }
   if (key in PALETTE_COLORS) {
     return PALETTE_COLORS[key];
   }

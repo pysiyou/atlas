@@ -10,7 +10,9 @@ import { Icon, type IconName } from './Icon';
 import { BADGE, CONTROL, RADIUS } from '@/components/theme/recipes';
 import {
   CONTAINER_STYLES,
+  getCategoryBadgeTextClass,
   getColorStyles,
+  isCategoryBadgeSlug,
   resolveColor,
   type BadgeVariant,
 } from './badgeStyles';
@@ -66,6 +68,7 @@ export const Badge: React.FC<BadgeProps> = ({
   const normalizedVariant = String(variant).toLowerCase();
   const appearance = useBadgeAppearance();
   const isContainer = normalizedVariant.startsWith('container-');
+  const isCategory = isCategoryBadgeSlug(normalizedVariant);
   const containerStyle = isContainer ? CONTAINER_STYLES[normalizedVariant] : null;
   const color = resolveColor(normalizedVariant);
   const { className: colorClass, dotClassName } = getColorStyles(color, appearance);
@@ -76,7 +79,7 @@ export const Badge: React.FC<BadgeProps> = ({
     : React.isValidElement(icon)
       ? icon
       : <Icon name={icon as IconName} className={ICON_SIZES[size]} />;
-  const showDot = dot && !isContainer && dotClassName;
+  const showDot = dot && !isContainer && !isCategory && dotClassName;
 
   return (
     <span
@@ -88,7 +91,8 @@ export const Badge: React.FC<BadgeProps> = ({
         className,
         SIZES[size],
         !isContainer && appearance === 'unified' ? UNIFIED_BASE : null,
-        !isContainer ? colorClass : null
+        isCategory ? getCategoryBadgeTextClass(normalizedVariant) : null,
+        !isContainer && !isCategory ? colorClass : null
       )}
       {...props}
     >
