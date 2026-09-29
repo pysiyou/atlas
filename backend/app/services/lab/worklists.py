@@ -35,13 +35,6 @@ PRIORITY_ORDER = {
     PriorityLevel.LOW: 3,
 }
 
-IN_PIPELINE_TEST_STATUSES = (
-    TestStatus.PENDING,
-    TestStatus.SAMPLE_COLLECTED,
-    TestStatus.RESULTED,
-    TestStatus.ESCALATED,
-)
-
 COLLECTION_SAMPLE_LOOKUP_MIN_LEN = 3
 
 
@@ -480,23 +473,6 @@ class LabWorklistService:
             return ts.replace(tzinfo=UTC)
         return ts
 
-    def _activity_at_for_dashboard(
-        self,
-        *,
-        order_test: OrderTest,
-        sample: Sample | None,
-    ) -> datetime:
-        """Display/sort timestamp — prefer row update, then latest workflow milestone."""
-        candidates = [order_test.updatedAt]
-        if sample:
-            candidates.append(sample.updatedAt)
-            candidates.append(sample.collectedAt)
-        candidates.extend(
-            [order_test.resultEnteredAt, order_test.resultValidatedAt, order_test.createdAt]
-        )
-        normalized = [self._normalize_ts(ts) for ts in candidates if ts is not None]
-        return max(normalized) if normalized else datetime.now(UTC)
-
     def _blocked_label_for_dashboard(
         self,
         *,
@@ -538,19 +514,11 @@ class LabWorklistService:
         page: int = 1,
         page_size: int = 50,
     ) -> dict[str, Any]:
-        """Today's dashboard rows: in-pipeline work plus anything updated today (incl. completed)."""
+        """Today's dashboard rows: order tests whose row was updated today (UTC)."""
         _ = user_id  # reserved for future per-user scoping
         today_start = self._utc_today_start()
         board = LabBoardService(self.db)
         recollection_blocked = board._recollection_blocked_order_test_ids()
-
-        active_filter = ~OrderTest.status.in_(
-            (TestStatus.CANCELLED, TestStatus.REMOVED, TestStatus.SUPERSEDED)
-        )
-        visible_today = or_(
-            OrderTest.updatedAt >= today_start,
-            OrderTest.status.in_(IN_PIPELINE_TEST_STATUSES),
-        )
 
         rows = (
             self.db.query(OrderTest, Order, Patient, Test, Sample)
@@ -558,8 +526,7 @@ class LabWorklistService:
             .join(Patient, Order.patientId == Patient.id)
             .join(Test, OrderTest.testCode == Test.code)
             .outerjoin(Sample, Sample.sampleId == OrderTest.sampleId)
-            .filter(active_filter)
-            .filter(visible_today)
+            .filter(OrderTest.updatedAt >= today_start)
             .all()
         )
 
@@ -580,10 +547,7 @@ class LabWorklistService:
 
         items: list[dict[str, Any]] = []
         for order_test, order, patient, test, sample in rows:
-            activity_at = self._activity_at_for_dashboard(
-                order_test=order_test,
-                sample=sample,
-            )
+            updated_at = self._normalize_ts(order_test.updatedAt) or datetime.now(UTC)
             ticket = tickets_by_test.get(order_test.id)
             escalation_code = (
                 ticket.reasonCode.value if ticket and ticket.reasonCode else None
@@ -607,21 +571,21 @@ class LabWorklistService:
                     "priority": order.priority,
                     "status": order_test.status,
                     "stage": self._dashboard_stage(order_test),
-                    "activityAt": activity_at,
+                    "activityAt": updated_at,
                     "orderDate": order.orderDate,
                     "referringPhysician": order.referringPhysician,
                     "testCategory": test.category,
                     "blockedLabel": blocked_label,
-                    "_sort_activity": activity_at,
+                    "_sort_updated": updated_at,
                 }
             )
 
-        items.sort(key=lambda row: row["_sort_activity"], reverse=True)
+        items.sort(key=lambda row: row["_sort_updated"], reverse=True)
         total = len(items)
         start = (page - 1) * page_size
         page_items = items[start : start + page_size]
         for item in page_items:
-            item.pop("_sort_activity", None)
+            item.pop("_sort_updated", None)
         return {"items": page_items, "pagination": _paginate(total, page, page_size)}
 
     def get_board(self, include_supervisor: bool = True) -> dict[str, Any]:

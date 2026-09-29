@@ -1,5 +1,5 @@
 /**
- * Normalized dashboard order-row model for today's work table.
+ * Normalized dashboard order-row model — tests updated today.
  */
 import type { DashboardWorklistItem } from '../../api/worklists';
 import { getLabQueueUrl } from '../../constants/labConstants';

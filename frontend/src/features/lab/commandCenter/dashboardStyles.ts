@@ -13,13 +13,6 @@ export const DASHBOARD_BOTTOM_PANEL = 'min-h-72 overflow-hidden lg:min-h-0 lg:h-
 
 export const DASHBOARD_TABLE_WRAP = 'flex min-h-80 flex-1 flex-col lg:min-h-0' as const;
 
-export const DASHBOARD_TWO_LINE = {
-  primary: `truncate ${TYPE.value} font-normal`,
-  secondary: `${TYPE.meta} truncate`,
-  /** Subline codes, MRN, time — matches orders test identity subline. */
-  mrn: `${TYPE.sectionTitle} text-text-secondary truncate`,
-} as const;
-
 export const DASHBOARD_ROW_INTERACTIVE = `cursor-pointer ${CONTROL.focusVisibleFlat}` as const;
 
 export const TODAY_PANEL = {

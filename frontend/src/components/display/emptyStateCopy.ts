@@ -31,10 +31,7 @@ export const EMPTY_COPY = {
   },
   dashboardWorklist: {
     title: emptyTitle("tests in today's view"),
-    description: emptySubtitle(
-      'tests',
-      'pipeline work is open or a row is updated today',
-    ),
+    description: emptySubtitle('tests', 'an order test row is updated today'),
   },
   dashboardTodaySteps: {
     title: emptyTitle("step times for today's accessions"),

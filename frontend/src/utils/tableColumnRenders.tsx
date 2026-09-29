@@ -3,7 +3,7 @@
  */
 
 import type { ReactNode } from 'react';
-import { formatDate, formatDateTime, formatPhoneNumber } from '@/utils';
+import { cn, formatDate, formatDateTime, formatPhoneNumber } from '@/utils';
 import { TABLE_TYPE } from '@/components/theme/recipes';
 
 /** Primary datetime/date in a dedicated table column. */
@@ -38,6 +38,32 @@ export function renderContactBlock(phone: string, email?: string): ReactNode {
       ) : null}
     </div>
   );
+}
+
+/** Primary + secondary lines for DataTable cells (cell + meta), max two lines. */
+export function renderTableTwoLineCell(
+  primary: ReactNode,
+  secondary?: ReactNode | null,
+  options?: { secondaryClassName?: string }
+): ReactNode {
+  const hasSecondary =
+    secondary != null && secondary !== '' && secondary !== ' ';
+  return (
+    <div className="min-w-0 font-normal">
+      <div className={`${TABLE_TYPE.cell} truncate font-normal`}>{primary}</div>
+      {hasSecondary ? (
+        <div
+          className={cn(TABLE_TYPE.meta, 'truncate font-normal', options?.secondaryClassName)}
+        >
+          {secondary}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+export function renderTableEmptyCell(label = '—'): ReactNode {
+  return <span className={`${TABLE_TYPE.meta} truncate block font-normal`}>{label}</span>;
 }
 
 export function renderDateCell(

@@ -3,15 +3,17 @@
  */
 
 import { displayId } from '@/utils';
-import { LAB_CONFIG } from '../constants/labConstants';
-import { LAB_COPY } from '../constants/labConstants';
+import { LAB_CONFIG, LAB_COPY, labStageLabel } from '../constants/labConstants';
 import type { LabAttentionQueueItem } from './commandCenterModel';
 import type { AttentionType } from './commandCenterModel';
 
 export type AttentionDetail =
+  | { type: 'patient'; value: string }
   | { type: 'text'; value: string }
   | { type: 'link'; value: string; to: string }
   | { type: 'testId'; value: string }
+  | { type: 'queueStage'; stageLabel: string }
+  | { type: 'queueCount'; count: number; unit: string }
   | { type: 'priority'; value: string }
   | { type: 'wait'; value: string };
 
@@ -27,7 +29,7 @@ function orderLink(orderId: number): AttentionDetail {
 }
 
 function patientChip(item: LabAttentionQueueItem): AttentionDetail {
-  return { type: 'text', value: item.patientName };
+  return { type: 'patient', value: item.patientName };
 }
 
 function testIdChip(item: LabAttentionQueueItem): AttentionDetail | null {
@@ -41,18 +43,24 @@ function testIdChip(item: LabAttentionQueueItem): AttentionDetail | null {
   return { type: 'testId', value: `${preview}${suffix}` };
 }
 
-function queueChip(item: LabAttentionQueueItem): AttentionDetail {
+function queueDetails(item: LabAttentionQueueItem): AttentionDetail[] {
   const unit = item.stage === 'collection' ? LAB_COPY.entity.samples : 'tests';
-  const countLabel = item.workItemCount > 1 ? ` · ${item.workItemCount} ${unit}` : '';
-  return { type: 'text', value: `${item.stageLabel}${countLabel}` };
+  const details: AttentionDetail[] = [
+    { type: 'queueStage', stageLabel: labStageLabel(item.stage, 'full') },
+  ];
+  if (item.workItemCount > 1) {
+    details.push({ type: 'queueCount', count: item.workItemCount, unit });
+  }
+  return details;
 }
 
 function waitChip(item: LabAttentionQueueItem): AttentionDetail {
-  const label =
-    item.waitingHours < 1
-      ? 'Turnaround under 1 hour'
-      : `Turnaround ${item.waitingHours} hours`;
-  return { type: 'wait', value: label };
+  const hours = item.waitingHours;
+  if (hours < 1) {
+    return { type: 'wait', value: 'In queue under 1 h' };
+  }
+  const rounded = hours >= 10 ? Math.round(hours) : Math.round(hours * 10) / 10;
+  return { type: 'wait', value: `In queue ${rounded} h` };
 }
 
 function priorityChip(item: LabAttentionQueueItem, type: AttentionType): AttentionDetail | null {
@@ -78,7 +86,7 @@ function baseDetails(
   if (priority) details.push(priority);
   const blocked = blockedReasonChip(item);
   if (blocked) details.push(blocked);
-  details.push(...extras, queueChip(item), waitChip(item));
+  details.push(...extras, ...queueDetails(item), waitChip(item));
   return details;
 }
 

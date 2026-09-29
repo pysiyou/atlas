@@ -57,9 +57,8 @@ export const EVENT_HEADLINE_BUILDERS: Record<
     return appendText(parts, ' archived');
   },
   'patient.view': r => {
-    let parts = appendText([], 'Chart for ');
-    parts = append(parts, targetPatient(r));
-    return appendText(parts, ' viewed');
+    let parts = append([], targetPatient(r));
+    return appendText(parts, "'s profile viewed");
   },
   'order.create': r => {
     let parts = appendText([], 'New ');

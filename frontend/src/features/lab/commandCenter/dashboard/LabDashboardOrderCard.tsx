@@ -10,9 +10,8 @@ import {
   SampleTypeBadge,
 } from '../../components/LabDomainBadges';
 import { BlockedReasonBadge } from '@/features/lab';
-import { formatDateTime, displayId } from '@/utils';
-import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
-import { DASHBOARD_TWO_LINE } from '../dashboardStyles';
+import { displayId } from '@/utils';
+import { renderDateTimeCell, renderTableTwoLineCell } from '@/utils/tableColumnRenders';
 import type { LabDashboardOrderRow } from './dashboardOrders';
 
 export function LabDashboardOrderCard({
@@ -23,16 +22,12 @@ export function LabDashboardOrderCard({
     <MobileEntityCard onClick={onClick}>
       <MobileEntityCard.Header
         leading={
-          <div className="min-w-0">
-            <div className={DASHBOARD_TWO_LINE.primary}>{item.testName}</div>
-            <div className={DASHBOARD_TWO_LINE.mrn}>{item.testCode}</div>
-            <div className={DASHBOARD_TWO_LINE.primary}>
-              {item.patientName}
-              <span className={DASHBOARD_TWO_LINE.mrn}>
-                {' '}
-                · MRN: {displayId.patient(item.patientId)}
-              </span>
-            </div>
+          <div className="min-w-0 space-y-space-1">
+            {renderTableTwoLineCell(item.testName, item.testCode)}
+            {renderTableTwoLineCell(
+              item.patientName,
+              `MRN: ${displayId.patient(item.patientId)}`,
+            )}
           </div>
         }
         trailing={<LabPriorityBadge priority={item.priority} size="xs" />}
@@ -50,9 +45,7 @@ export function LabDashboardOrderCard({
           <LabDepartmentBadge department={item.department} size="xs" className="border-none" />
         ) : null}
       </div>
-      <div className={`${TABLE_DATETIME_SECONDARY_CLASS} mt-auto pt-space-3`}>
-        {formatDateTime(item.date)}
-      </div>
+      <div className="mt-auto pt-space-3">{renderDateTimeCell(item.date)}</div>
     </MobileEntityCard>
   );
 }
