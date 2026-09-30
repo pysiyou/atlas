@@ -176,15 +176,13 @@ def action_flags_for_collection(
 
 
 def action_flags_for_entry(
-    *, order_test: OrderTest, is_retest: bool
+    *, order_test: OrderTest
 ) -> tuple[WorklistAllowedActions, str | None]:
-    blocked = "retest_pending" if is_retest else None
+    """Entry worklist actions — retest rows use the same rules as primary tests once collected."""
     actions = _empty_actions()
-    if blocked:
-        return actions, blocked
     can_enter, _ = TestStateMachine.can_enter_results(order_test.status)
     actions["enterResults"] = can_enter
-    return actions, blocked
+    return actions, None
 
 
 def action_flags_for_validation(

@@ -145,14 +145,12 @@ def project_order_test_entry(ctx: LabWorkItemContext) -> LabWorkItemProjection:
     if ctx.recollection_approval_pending:
         blocked = blocked or "recollection_approval"
 
-    allowed, deny_reason = action_flags_for_entry(
-        order_test=order_test,
-        is_retest=bool(order_test.isRetest),
-    )
-    if order_test.isRetest and not deny_reason:
-        deny_reason = "retest_pending"
-    blocked = blocked or deny_reason
-    effective_deny = deny_reason or blocked
+    allowed, deny_reason = action_flags_for_entry(order_test=order_test)
+    enter_allowed = bool(allowed.get("enterResults"))
+    # retest_pending is informational (monitor/TAT); it must not deny entry after collection.
+    effective_deny = deny_reason if not enter_allowed else None
+    if not enter_allowed:
+        effective_deny = effective_deny or blocked
 
     return LabWorkItemProjection(
         pipelineStage="entry",

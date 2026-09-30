@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { ErrorAlert, Skeleton } from '@/components';
 import { Panel } from '@/components/surfaces/Panel';
+import { cn } from '@/utils';
 import { errorAlertMessage } from '@/utils/feedback';
 import { EVENT_LOG_COPY } from './types';
 import { EventLogFeed } from './EventLogFeed';
@@ -16,11 +17,12 @@ import type {
 } from './types';
 
 const ALL_FILTER_FIELDS: EventLogFilterField[] = [
-  'category',
+  'entityId',
   'dateRange',
-  'orderId',
-  'testId',
+  'category',
 ];
+
+export type EventLogPanelLayout = 'standalone' | 'embedded';
 
 export interface EventLogPanelProps {
   query: EventLogQuery;
@@ -28,6 +30,8 @@ export interface EventLogPanelProps {
   filterDefaults?: Partial<EventLogUserFilters>;
   className?: string;
   panelVariant?: 'default' | 'lab';
+  /** `embedded` matches list pages (Patients, Orders): no inner panel title, fills raised shell. */
+  layout?: EventLogPanelLayout;
   meta?: string;
   hideMeta?: boolean;
 }
@@ -67,6 +71,7 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
   filterDefaults,
   className,
   panelVariant = 'default',
+  layout = 'standalone',
   meta,
   hideMeta = false,
 }) => {
@@ -80,6 +85,7 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
   });
 
   const skipFetch =
+    panelState.entityIdInputInvalid ||
     panelState.orderIdInputInvalid ||
     panelState.testIdInputInvalid;
 
@@ -88,10 +94,62 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
   });
 
   const panelMeta = useMemo(() => {
-    if (hideMeta) return undefined;
+    if (hideMeta || layout === 'embedded') return undefined;
     if (meta) return meta;
     return metaForQuery(query, panelState.activeFilterCount > 0);
-  }, [hideMeta, meta, query, panelState.activeFilterCount]);
+  }, [hideMeta, layout, meta, query, panelState.activeFilterCount]);
+
+  const filters = showFilters ? (
+    <EventLogFilters
+      visibleFields={visibleFields}
+      lockedFields={panelState.lockedFields}
+      categories={panelState.userFilters.categories}
+      onCategoriesChange={categories =>
+        panelState.setUserFilters(prev => ({ ...prev, categories }))
+      }
+      dateRange={panelState.userFilters.dateRange}
+      onDateRangeChange={dateRange =>
+        panelState.setUserFilters(prev => ({ ...prev, dateRange }))
+      }
+      orderIdInput={panelState.orderIdInput}
+      onOrderIdInputChange={panelState.setOrderIdInput}
+      testIdInput={panelState.testIdInput}
+      onTestIdInputChange={panelState.setTestIdInput}
+      entityIdInput={panelState.entityIdInput}
+      onEntityIdInputChange={panelState.setEntityIdInput}
+      orderIdInputInvalid={panelState.orderIdInputInvalid}
+      testIdInputInvalid={panelState.testIdInputInvalid}
+      entityIdInputInvalid={panelState.entityIdInputInvalid}
+      activeFilterCount={panelState.activeFilterCount}
+      onReset={panelState.resetUserFilters}
+    />
+  ) : null;
+
+  const body = isLoading ? (
+    <div className="flex flex-col gap-space-3 p-space-4" aria-busy="true">
+      {Array.from({ length: 4 }).map((_, index) => (
+        <Skeleton key={index} height={56} className="w-full" />
+      ))}
+    </div>
+  ) : isError ? (
+    <div className="p-space-3">
+      <ErrorAlert
+        error={{ message: errorAlertMessage('lab.page.loadFailed', error) }}
+        onRetry={refetch}
+      />
+    </div>
+  ) : (
+    <EventLogFeed items={resolved} />
+  );
+
+  if (layout === 'embedded') {
+    return (
+      <div className={cn('flex min-h-0 flex-1 flex-col', className)}>
+        {filters}
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">{body}</div>
+      </div>
+    );
+  }
 
   return (
     <Panel
@@ -102,44 +160,8 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
       variant={panelVariant === 'lab' ? 'lab' : 'page'}
       className={className}
     >
-      {showFilters ? (
-        <EventLogFilters
-          visibleFields={visibleFields}
-          lockedFields={panelState.lockedFields}
-          categories={panelState.userFilters.categories}
-          onCategoriesChange={categories =>
-            panelState.setUserFilters(prev => ({ ...prev, categories }))
-          }
-          dateRange={panelState.userFilters.dateRange}
-          onDateRangeChange={dateRange =>
-            panelState.setUserFilters(prev => ({ ...prev, dateRange }))
-          }
-          orderIdInput={panelState.orderIdInput}
-          onOrderIdInputChange={panelState.setOrderIdInput}
-          testIdInput={panelState.testIdInput}
-          onTestIdInputChange={panelState.setTestIdInput}
-          orderIdInputInvalid={panelState.orderIdInputInvalid}
-          testIdInputInvalid={panelState.testIdInputInvalid}
-          activeFilterCount={panelState.activeFilterCount}
-          onReset={panelState.resetUserFilters}
-        />
-      ) : null}
-      {isLoading ? (
-        <div className="flex flex-col gap-space-3 p-space-4" aria-busy="true">
-          {Array.from({ length: 4 }).map((_, index) => (
-            <Skeleton key={index} height={56} className="w-full" />
-          ))}
-        </div>
-      ) : isError ? (
-        <div className="p-space-3">
-          <ErrorAlert
-            error={{ message: errorAlertMessage('lab.page.loadFailed', error) }}
-            onRetry={refetch}
-          />
-        </div>
-      ) : (
-        <EventLogFeed items={resolved} />
-      )}
+      {filters}
+      {body}
     </Panel>
   );
 };

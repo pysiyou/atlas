@@ -111,11 +111,21 @@ function MultiSelectTriggerContent({
   }
 
   return (
-    <span className="text-text-primary truncate block whitespace-nowrap">
-      <span className={`inline-flex items-center justify-center min-w-[18px] h-4 px-space-1 ${RADIUS.pill} text-on-brand ${TYPE.caption} font-normal align-middle mr-space-1 bg-brand`}>
+    <span className="inline-flex min-w-0 max-w-full items-center gap-space-2 text-text-primary">
+      <span
+        className={cn(
+          'inline-flex shrink-0 items-center justify-center',
+          'h-5 min-w-[20px] px-space-1.5',
+          RADIUS.pill,
+          'bg-brand-muted',
+          'type-caption text-text-primary',
+          'font-medium tabular-nums leading-none'
+        )}
+        aria-hidden
+      >
         {selectedIds.length}
       </span>
-      selected
+      <span className="truncate whitespace-nowrap text-text-primary">Selected</span>
     </span>
   );
 }

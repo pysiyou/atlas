@@ -22,8 +22,11 @@ export interface EventLogFiltersProps {
   onOrderIdInputChange: (value: string) => void;
   testIdInput: string;
   onTestIdInputChange: (value: string) => void;
+  entityIdInput?: string;
+  onEntityIdInputChange?: (value: string) => void;
   orderIdInputInvalid?: boolean;
   testIdInputInvalid?: boolean;
+  entityIdInputInvalid?: boolean;
   activeFilterCount: number;
   onReset: () => void;
 }
@@ -37,9 +40,21 @@ export const EventLogFilters: React.FC<EventLogFiltersProps> = props => {
     props.visibleFields.includes('orderId') && !props.lockedFields.has('orderId');
   const showTest =
     props.visibleFields.includes('testId') && !props.lockedFields.has('testId');
+  const showEntity =
+    props.visibleFields.includes('entityId') && !props.lockedFields.has('entityId');
 
   const modalExtras = (
     <>
+      {showEntity && props.onEntityIdInputChange ? (
+        <div className="w-full">
+          <h4 className={FILTER_TYPE.sectionTitle}>Order or test ID</h4>
+          <DebouncedSearchInput
+            value={props.entityIdInput ?? ''}
+            onChange={props.onEntityIdInputChange}
+            placeholder={EVENT_LOG_FILTER_PLACEHOLDERS.entityId}
+          />
+        </div>
+      ) : null}
       {showOrder ? (
         <div className="w-full">
           <h4 className={FILTER_TYPE.sectionTitle}>Order ID</h4>
@@ -86,8 +101,11 @@ export const EventLogFilters: React.FC<EventLogFiltersProps> = props => {
           onOrderIdInputChange={props.onOrderIdInputChange}
           testIdInput={props.testIdInput}
           onTestIdInputChange={props.onTestIdInputChange}
+          entityIdInput={props.entityIdInput}
+          onEntityIdInputChange={props.onEntityIdInputChange}
           orderIdInputInvalid={props.orderIdInputInvalid}
           testIdInputInvalid={props.testIdInputInvalid}
+          entityIdInputInvalid={props.entityIdInputInvalid}
         />
       }
     />

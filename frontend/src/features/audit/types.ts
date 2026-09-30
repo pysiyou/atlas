@@ -125,7 +125,13 @@ export interface EventLogQuery {
   limit?: number;
 }
 
-export type EventLogFilterField = 'category' | 'dateRange' | 'orderId' | 'testId';
+export type EventLogFilterField =
+  | 'category'
+  | 'dateRange'
+  | 'orderId'
+  | 'testId'
+  /** Single input accepting ORD… or TST… (global event log page). */
+  | 'entityId';
 
 export interface EventLogFilterUiConfig {
   fields?: EventLogFilterField[];
