@@ -31,10 +31,9 @@ from app.services.lab.state import SampleStateMachine, TestStateMachine
 from app.services.orders import update_order_status
 from app.utils.common import is_specimen_rejection_reason
 from app.utils.exceptions import LabOperationError
-from pydantic import BaseModel
+from app.schemas.lab import QualityIssueOptions, QualityIssueResult
 from sqlalchemy.orm import Session
 
-# Resulted / validated tests are left for the validator (or remain released).
 _SAMPLE_RESET_STATUSES = {
     TestStatus.PENDING,
     TestStatus.SAMPLE_COLLECTED,
@@ -55,54 +54,19 @@ _SAMPLE_UNFINISHED_REMEDIES: list[RemedyType] = [
 ]
 
 
-class QualityIssueOptions(BaseModel):
-    targetType: QualityIssueTargetType
-    targetId: int
-    orderId: int
-    testCode: str | None = None
-    sampleId: int | None = None
-    stage: QualityStage
-    allowedCriteria: list[str] = []
-    allowedRemedies: list[RemedyType] = []
-    suggestedRemedy: RemedyType | None = None
-    retestAttemptsUsed: int = 0
-    retestAttemptsRemaining: int = 0
-    recollectionAttemptsUsed: int = 0
-    recollectionAttemptsRemaining: int = 0
-    willEscalate: bool = False
-    previewRemedy: RemedyType | None = None
-    previewMessage: str = ""
-    hasSpecimenCriteria: bool = False
-    hasAnalyticalCriteria: bool = False
-    resultedTestsCount: int = 0
-    validatedTestsCount: int = 0
-    unfinishedTestsCount: int = 0
-    awaitingRecollectionTestsCount: int = 0
-    sampleRejected: bool = False
-
-
-class QualityIssueResult(BaseModel):
-    success: bool
-    remedy: RemedyType
-    message: str
-    qualityIssueId: int
-    orderId: int
-    testCode: str | None = None
-    sampleId: int | None = None
-    orderTestId: int | None = None
-    createdTestId: int | None = None
-    createdSampleId: int | None = None
-    recollectionRequestId: int | None = None
-    escalationRequired: bool = False
-
-
 class QualityIssueService:
-    def __init__(self, db: Session, escalation: EscalationEngine, emitter: AuditEmitter):
+    def __init__(
+        self,
+        db: Session,
+        escalation: EscalationEngine,
+        emitter: AuditEmitter,
+        recollection_requests: Any | None = None,
+    ):
         self.db = db
         self.escalation = escalation
         self.emitter = emitter
         self.collection = SampleCollectionService(db)
-        self.recollection_requests: Any | None = None
+        self.recollection_requests = recollection_requests
 
     # ── helpers ──────────────────────────────────────────────────────────
 

@@ -30,43 +30,12 @@ from app.services.lab.board import (
     age_bucket,
     blocked_reason_for_work_item,
 )
+from app.services.lab.blockers import priority_rank, priority_sort_key
 from app.utils.common import parse_display_id_from_search
-from sqlalchemy import String, case, desc, func, or_
+from sqlalchemy import String, desc, func, or_
 from sqlalchemy.orm import Session
 
-PRIORITY_ORDER = {
-    PriorityLevel.URGENT: 0,
-    PriorityLevel.HIGH: 1,
-    PriorityLevel.MEDIUM: 2,
-    PriorityLevel.LOW: 3,
-}
-
 COLLECTION_SAMPLE_LOOKUP_MIN_LEN = 3
-
-
-def _priority_sort_key(column):
-    return case(
-        (column == PriorityLevel.URGENT, 0),
-        (column == PriorityLevel.HIGH, 1),
-        (column == PriorityLevel.MEDIUM, 2),
-        (column == PriorityLevel.LOW, 3),
-        else_=99,
-    )
-
-
-def _worklist_result(
-    items: list[dict[str, Any]],
-    total: int,
-    page: int,
-    page_size: int,
-    *,
-    rows_loaded: int,
-) -> dict[str, Any]:
-    return {
-        "items": items,
-        "pagination": _paginate(total, page, page_size),
-        "rows_loaded": rows_loaded,
-    }
 
 
 def _collection_search_filter(search_term: str):
@@ -81,7 +50,7 @@ def _collection_search_filter(search_term: str):
     return or_(*predicates)
 
 
-def _hours_since(ts: datetime | None) -> float:
+def _worklist_hours_since(ts: datetime | None) -> float:
     if not ts:
         return 0.0
     now = datetime.now(UTC)
@@ -100,6 +69,21 @@ def _paginate(total: int, page: int, page_size: int) -> dict[str, Any]:
         "totalPages": total_pages,
         "hasNext": page < total_pages,
         "hasPrev": page > 1,
+    }
+
+
+def _worklist_result(
+    items: list[dict[str, Any]],
+    total: int,
+    page: int,
+    page_size: int,
+    *,
+    rows_loaded: int,
+) -> dict[str, Any]:
+    return {
+        "items": items,
+        "pagination": _paginate(total, page, page_size),
+        "rows_loaded": rows_loaded,
     }
 
 
@@ -179,7 +163,7 @@ class LabWorklistService:
             )
         else:
             query = query.order_by(
-                _priority_sort_key(Sample.priority),
+                priority_sort_key(Sample.priority),
                 Order.orderDate.asc(),
             )
         rows = query.offset(start).limit(page_size).all()
@@ -199,7 +183,7 @@ class LabWorklistService:
         items = []
         for sample, order, patient in rows:
             since = order.orderDate
-            hours = _hours_since(since)
+            hours = _worklist_hours_since(since)
             codes = sample.testCodes or []
             tat = self._max_tat_for_codes(codes)
             test_name, test_category = self._collection_test_display(codes)
@@ -235,7 +219,7 @@ class LabWorklistService:
                     "waitingHours": round(hours, 2),
                     "turnaroundHours": tat,
                     "queueAgeBand": tat_band,
-                    "priorityRank": PRIORITY_ORDER.get(sample.priority, 99),
+                    "priorityRank": priority_rank(sample.priority),
                     "actualContainerType": sample.actualContainerType,
                     "actualContainerColor": sample.actualContainerColor,
                     "collectedAt": sample.collectedAt,
@@ -311,7 +295,7 @@ class LabWorklistService:
             if not request:
                 continue
             since = request.createdAt or order.orderDate
-            hours = _hours_since(since)
+            hours = _worklist_hours_since(since)
             items.append(
                 {
                     "orderTestId": order_test.id,
@@ -331,7 +315,7 @@ class LabWorklistService:
                     "testCategory": test.category,
                     "sampleType": order_test.sampleType or "",
                     "recollectionRequestId": request.id,
-                    "_sort_priority": PRIORITY_ORDER.get(order.priority, 99),
+                    "_sort_priority": priority_rank(order.priority),
                     "_sort_since": since,
                 }
             )
@@ -384,7 +368,7 @@ class LabWorklistService:
         start = (page - 1) * page_size
         since_col = func.coalesce(Sample.collectedAt, Order.orderDate)
         rows = (
-            query.order_by(_priority_sort_key(Order.priority), since_col.asc())
+            query.order_by(priority_sort_key(Order.priority), since_col.asc())
             .offset(start)
             .limit(page_size)
             .all()
@@ -392,7 +376,7 @@ class LabWorklistService:
         items = []
         for ot, order, patient, test, sample in rows:
             since = sample.collectedAt if sample and sample.collectedAt else order.orderDate
-            hours = _hours_since(since)
+            hours = _worklist_hours_since(since)
             items.append(
                 {
                     "orderTestId": ot.id,
@@ -415,7 +399,7 @@ class LabWorklistService:
                     "blockedReason": "retest_pending" if ot.isRetest else None,
                     "blockedLabel": BLOCKED_LABELS.get("retest_pending") if ot.isRetest else None,
                     "queueAgeBand": None,
-                    "priorityRank": PRIORITY_ORDER.get(order.priority, 99),
+                    "priorityRank": priority_rank(order.priority),
                 }
             )
         return _worklist_result(items, total, page, page_size, rows_loaded=len(rows))
@@ -452,7 +436,7 @@ class LabWorklistService:
         start = (page - 1) * page_size
         since_col = func.coalesce(OrderTest.resultEnteredAt, Order.orderDate)
         rows = (
-            query.order_by(_priority_sort_key(Order.priority), since_col.asc())
+            query.order_by(priority_sort_key(Order.priority), since_col.asc())
             .offset(start)
             .limit(page_size)
             .all()
@@ -460,7 +444,7 @@ class LabWorklistService:
         items = []
         for ot, order, patient, test, sample in rows:
             since = ot.resultEnteredAt or order.orderDate
-            hours = _hours_since(since)
+            hours = _worklist_hours_since(since)
             tat_band = (
                 age_bucket(hours, test.turnaroundTimeHours)
                 if test.turnaroundTimeHours
@@ -495,7 +479,7 @@ class LabWorklistService:
                     "blockedReason": None,
                     "blockedLabel": None,
                     "queueAgeBand": tat_band,
-                    "priorityRank": PRIORITY_ORDER.get(order.priority, 99),
+                    "priorityRank": priority_rank(order.priority),
                 }
             )
         return _worklist_result(items, total, page, page_size, rows_loaded=len(rows))

@@ -86,6 +86,10 @@ function ResultValidationCardDesktop({
 }: ResultValidationCardSharedData) {
   const { showAttemptIndicator } = rejection;
   const resultCount = Object.keys(test.results!).length;
+  const auditLines = useMemo(
+    () => testHeaderAudit(test, { includeResultEntered: true }),
+    [test],
+  );
   const { showBanner: isSampleRejected, sampleId, sampleRejectionReason } = sampleRejection;
 
   return (
@@ -102,7 +106,7 @@ function ResultValidationCardDesktop({
         entityName: test.testName,
         referringPhysician: test.referringPhysician,
       }}
-      auditLines={testHeaderAudit(test, { includeResultEntered: true })}
+      auditLines={auditLines}
       badges={
         <TestHeaderBadges
           test={test}
@@ -164,6 +168,10 @@ function ResultValidationCardMobile({
 }: ResultValidationCardSharedData) {
   const { showAttemptIndicator } = rejection;
   const { showBanner: isSampleRejected, sampleId, sampleRejectionReason } = sampleRejection;
+  const auditLines = useMemo(
+    () => testHeaderAudit(test, { includeResultEntered: true }),
+    [test],
+  );
 
   return (
     <Card
@@ -195,7 +203,7 @@ function ResultValidationCardMobile({
           entityCode: test.testCode,
           entityName: test.testName,
         }}
-        auditLines={testHeaderAudit(test, { includeResultEntered: true })}
+        auditLines={auditLines}
         badges={
           <TestHeaderBadges
             test={test}

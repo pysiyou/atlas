@@ -33,7 +33,7 @@ class Settings(BaseSettings):
     API_V1_PREFIX: str = "/api/v1"
     PROJECT_NAME: str = "Atlas Laboratory Management System"
 
-    # Analyzer integration — required for /analyzer/* endpoints
+    # Analyzer integration — required for /lab/analyzer/* endpoints
     ANALYZER_API_KEY: str = Field(
         default="",
         description="Shared secret for analyzer ingest (X-Analyzer-Key header)",

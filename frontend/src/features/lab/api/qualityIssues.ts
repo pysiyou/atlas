@@ -12,17 +12,18 @@ import type {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query';
 import { invalidateResultQueries, invalidateQualityIssueQueries } from '@/lib/query/invalidate';
+import { LAB_PATHS } from '../constants/labConstants';
 
 export const qualityIssuesAPI = {
   getOptions(targetType: QualityIssueTargetType, targetId: number): Promise<QualityIssueOptions> {
-    return apiClient.get<ApiQualityIssueOptions>('/lab/quality-issues/options', {
+    return apiClient.get<ApiQualityIssueOptions>(LAB_PATHS.qualityIssues.options, {
       targetType,
       targetId: String(targetId),
     }) as Promise<QualityIssueOptions>;
   },
 
   reportIssue(body: ReportQualityIssueRequest): Promise<QualityIssueResult> {
-    return apiClient.post<ApiQualityIssueResult>('/lab/quality-issues', body) as Promise<QualityIssueResult>;
+    return apiClient.post<ApiQualityIssueResult>(LAB_PATHS.qualityIssues.list, body) as Promise<QualityIssueResult>;
   },
 
 };

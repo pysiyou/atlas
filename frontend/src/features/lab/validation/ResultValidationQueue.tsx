@@ -4,7 +4,7 @@
 
 import React, { useMemo } from 'react';
 import { useAuthStore } from '@/app/authStore';
-import { createLabQueueSearchFilter } from '../components/LabWorkflowQueueLayout';
+import { createLabQueueSearchFilter, LabWorkflowQueueScaffold } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import {
   applyLabQueueFilters,
@@ -13,7 +13,6 @@ import {
 } from '../hooks';
 import { validationFilterConfig } from '../constants';
 import { ErrorBoundary } from '@/components';
-import { WORKSPACE } from '@/components/theme/recipes';
 import { SectionLoadingBoundary } from '@/components/loaders';
 import { useMinDisplay } from '@/hooks/useMinDisplay';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
@@ -135,8 +134,8 @@ export const ResultValidationQueue: React.FC = () => {
   return (
     <ErrorBoundary>
       <SectionLoadingBoundary loading={sectionLoading} message="Loading validation..." size="lg">
-        <div className="h-full flex flex-col min-h-0">
-          <div className="shrink-0">
+        <LabWorkflowQueueScaffold
+          filterRow={
             <LabQueueFilters
               config={validationFilterConfig}
               searchQuery={searchQuery}
@@ -148,9 +147,9 @@ export const ResultValidationQueue: React.FC = () => {
               statusFilters={priorityFilters}
               onStatusFiltersChange={setPriorityFilters}
             />
-          </div>
-          <div className={`flex-1 min-h-0 overflow-y-auto ${WORKSPACE.contentInset}`}>
-            <ResultValidationQueueView
+          }
+        >
+          <ResultValidationQueueView
               isEmpty={!hasRecollection && !hasEscalated && !hasValidation}
               hasRecollection={hasRecollection}
               hasEscalated={hasEscalated}
@@ -173,9 +172,8 @@ export const ResultValidationQueue: React.FC = () => {
               onApprove={(testId, orderId) => handleValidate(testId, orderId, true)}
               onReject={(test, result) => handleValidate(test.id!, test.orderId, false, result)}
               onOpenValidation={openValidationModal}
-            />
-          </div>
-        </div>
+          />
+        </LabWorkflowQueueScaffold>
       </SectionLoadingBoundary>
     </ErrorBoundary>
   );

@@ -1,4 +1,4 @@
-"""Critical Values API Routes."""
+"""Lab critical value notification routes."""
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session

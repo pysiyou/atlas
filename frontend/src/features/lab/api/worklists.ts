@@ -13,7 +13,7 @@ import type {
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/app/authStore';
 import { queryKeys, cacheConfig } from '@/lib/query';
-import { LAB_CONFIG } from '../constants';
+import { LAB_CONFIG, LAB_PATHS } from '../constants/labConstants';
 
 export interface WorklistPagination {
   page: number;
@@ -135,28 +135,28 @@ function buildParams(params?: WorklistParams): Record<string, string> {
 export const worklistsAPI = {
   getCollection(params?: WorklistParams) {
     return apiClient.get<{ items: CollectionWorklistItem[]; pagination: WorklistPagination }>(
-      '/lab/worklists/collection',
+      LAB_PATHS.worklists.collection,
       buildParams(params)
     );
   },
 
   getEntry(params?: WorklistParams) {
     return apiClient.get<{ items: EntryWorklistItem[]; pagination: WorklistPagination }>(
-      '/lab/worklists/entry',
+      LAB_PATHS.worklists.entry,
       buildParams(params)
     );
   },
 
   getValidation(params?: WorklistParams) {
     return apiClient.get<{ items: ValidationWorklistItem[]; pagination: WorklistPagination }>(
-      '/lab/worklists/validation',
+      LAB_PATHS.worklists.validation,
       buildParams(params)
     );
   },
 
   getDashboardToday(params?: WorklistParams) {
     return apiClient.get<{ items: DashboardWorklistItem[]; pagination: WorklistPagination }>(
-      '/lab/worklists/dashboard-today',
+      LAB_PATHS.worklists.dashboardToday,
       buildParams(params)
     );
   },
@@ -172,72 +172,48 @@ interface WorklistHookParams {
   search?: string;
 }
 
-export function useCollectionWorklist(params?: WorklistHookParams) {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
-  const query = useQuery({
-    queryKey: queryKeys.worklists.collection(params),
-    queryFn: () => worklistsAPI.getCollection({ pageSize: 200, ...params }),
-    enabled: isAuthenticated && !isRestoring,
-    ...cacheConfig.dynamic,
-    refetchInterval: LAB_CONFIG.TAB_COUNT_REFRESH_MS,
-  });
-  return {
-    items: query.data?.items ?? [],
-    pagination: query.data?.pagination,
-    isLoading: query.isLoading,
-    refetch: query.refetch,
+type WorklistQueryKeyFn = (params?: WorklistHookParams) => readonly unknown[];
+
+function createWorklistQueryHook<TItem>(
+  queryKeyFn: WorklistQueryKeyFn,
+  fetchFn: (params?: WorklistHookParams) => Promise<{ items: TItem[]; pagination?: WorklistPagination }>,
+) {
+  return function useWorklistQuery(params?: WorklistHookParams) {
+    const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+    const query = useQuery({
+      queryKey: queryKeyFn(params),
+      queryFn: () => fetchFn({ pageSize: 200, ...params }),
+      enabled: isAuthenticated && !isRestoring,
+      ...cacheConfig.dynamic,
+      refetchInterval: LAB_CONFIG.TAB_COUNT_REFRESH_MS,
+    });
+    return {
+      items: query.data?.items ?? [],
+      pagination: query.data?.pagination,
+      isLoading: query.isLoading,
+      isError: query.isError,
+      error: query.error,
+      refetch: query.refetch,
+    };
   };
 }
 
-export function useEntryWorklist(params?: WorklistHookParams) {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
-  const query = useQuery({
-    queryKey: queryKeys.worklists.entry(params),
-    queryFn: () => worklistsAPI.getEntry({ pageSize: 200, ...params }),
-    enabled: isAuthenticated && !isRestoring,
-    ...cacheConfig.dynamic,
-    refetchInterval: LAB_CONFIG.TAB_COUNT_REFRESH_MS,
-  });
-  return {
-    items: query.data?.items ?? [],
-    pagination: query.data?.pagination,
-    isLoading: query.isLoading,
-    refetch: query.refetch,
-  };
-}
+export const useCollectionWorklist = createWorklistQueryHook(
+  queryKeys.worklists.collection,
+  worklistsAPI.getCollection,
+);
 
-export function useValidationWorklist(params?: WorklistHookParams) {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
-  const query = useQuery({
-    queryKey: queryKeys.worklists.validation(params),
-    queryFn: () => worklistsAPI.getValidation({ pageSize: 200, ...params }),
-    enabled: isAuthenticated && !isRestoring,
-    ...cacheConfig.dynamic,
-    refetchInterval: LAB_CONFIG.TAB_COUNT_REFRESH_MS,
-  });
-  return {
-    items: query.data?.items ?? [],
-    pagination: query.data?.pagination,
-    isLoading: query.isLoading,
-    isError: query.isError,
-    error: query.error,
-    refetch: query.refetch,
-  };
-}
+export const useEntryWorklist = createWorklistQueryHook(
+  queryKeys.worklists.entry,
+  worklistsAPI.getEntry,
+);
 
-export function useDashboardWorklistToday(params?: WorklistHookParams) {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
-  const query = useQuery({
-    queryKey: queryKeys.worklists.dashboardToday(params),
-    queryFn: () => worklistsAPI.getDashboardToday({ pageSize: 200, ...params }),
-    enabled: isAuthenticated && !isRestoring,
-    ...cacheConfig.dynamic,
-    refetchInterval: LAB_CONFIG.TAB_COUNT_REFRESH_MS,
-  });
-  return {
-    items: query.data?.items ?? [],
-    pagination: query.data?.pagination,
-    isLoading: query.isLoading,
-    refetch: query.refetch,
-  };
-}
+export const useValidationWorklist = createWorklistQueryHook(
+  queryKeys.worklists.validation,
+  worklistsAPI.getValidation,
+);
+
+export const useDashboardWorklistToday = createWorklistQueryHook(
+  queryKeys.worklists.dashboardToday,
+  worklistsAPI.getDashboardToday,
+);

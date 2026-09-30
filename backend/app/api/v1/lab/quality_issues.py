@@ -1,4 +1,4 @@
-"""Quality Issues API — unified endpoint for reporting lab quality problems."""
+"""Lab quality issue routes."""
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
@@ -7,15 +7,18 @@ from app.api.dependencies import assert_quality_issue_target_access, get_current
 from app.db.database import get_db
 from app.models.user import User
 from app.schemas.enums import QualityIssueTargetType
-from app.schemas.lab import QualityIssueResponse, ReportQualityIssueRequest
-from app.services.lab.quality import QualityIssueOptions, QualityIssueResult
+from app.schemas.lab import (
+    QualityIssueOptions,
+    QualityIssueResponse,
+    QualityIssueResult,
+    ReportQualityIssueRequest,
+)
 from app.services.lab.workflow import LabOperationsService
-from app.utils.exceptions import LabOperationError
 
 router = APIRouter()
 
 
-@router.get("/lab/quality-issues/options", response_model=QualityIssueOptions)
+@router.get("/quality-issues/options", response_model=QualityIssueOptions)
 def get_quality_issue_options(
     targetType: QualityIssueTargetType = Query(...),
     targetId: int = Query(...),
@@ -23,33 +26,27 @@ def get_quality_issue_options(
     current_user: User = Depends(get_current_user),
 ):
     assert_quality_issue_target_access(current_user, targetType)
-    try:
-        return LabOperationsService(db).quality.get_options(targetType, targetId)
-    except LabOperationError as e:
-        raise HTTPException(status_code=e.status_code, detail=e.message)
+    return LabOperationsService(db).quality.get_options(targetType, targetId)
 
 
-@router.post("/lab/quality-issues", response_model=QualityIssueResult)
+@router.post("/quality-issues", response_model=QualityIssueResult)
 def report_quality_issue(
     body: ReportQualityIssueRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
     assert_quality_issue_target_access(current_user, body.target.type)
-    try:
-        return LabOperationsService(db).quality.report_issue(
-            target_type=body.target.type,
-            target_id=body.target.id,
-            user_id=current_user.id,
-            reason=body.reason,
-            notes=body.notes,
-            preferred_remedy=body.preferredRemedy,
-        )
-    except LabOperationError as e:
-        raise HTTPException(status_code=e.status_code, detail=e.message)
+    return LabOperationsService(db).quality.report_issue(
+        target_type=body.target.type,
+        target_id=body.target.id,
+        user_id=current_user.id,
+        reason=body.reason,
+        notes=body.notes,
+        preferred_remedy=body.preferredRemedy,
+    )
 
 
-@router.get("/lab/quality-issues", response_model=list[QualityIssueResponse])
+@router.get("/quality-issues", response_model=list[QualityIssueResponse])
 def list_quality_issues(
     orderId: int | None = None,
     sampleId: int | None = None,

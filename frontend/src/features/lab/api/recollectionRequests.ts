@@ -8,24 +8,25 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { useAuthStore } from '@/app/authStore';
 import { invalidateRecollectionQueries, invalidateOrderQueries } from '@/lib/query/invalidate';
+import { LAB_PATHS } from '../constants/labConstants';
 
 export const recollectionRequestsAPI = {
   listPending(): Promise<RecollectionRequestSummary[]> {
     return apiClient.get<ApiRecollectionRequestSummary[]>(
-      '/lab/recollection-requests/pending'
+      LAB_PATHS.recollectionRequests.pending
     ) as Promise<RecollectionRequestSummary[]>;
   },
 
   approve(requestId: number, reviewNotes?: string): Promise<RecollectionRequestResult> {
     return apiClient.post<ApiRecollectionRequestResult>(
-      `/lab/recollection-requests/${requestId}/approve`,
+      LAB_PATHS.recollectionRequests.approve(requestId),
       { reviewNotes }
     ) as Promise<RecollectionRequestResult>;
   },
 
   deny(requestId: number, reviewNotes?: string): Promise<RecollectionRequestResult> {
     return apiClient.post<ApiRecollectionRequestResult>(
-      `/lab/recollection-requests/${requestId}/deny`,
+      LAB_PATHS.recollectionRequests.deny(requestId),
       { reviewNotes }
     ) as Promise<RecollectionRequestResult>;
   },

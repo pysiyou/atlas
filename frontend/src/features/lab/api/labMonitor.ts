@@ -6,7 +6,7 @@ import type { components } from '@/lib/api/types/generated/api';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/app/authStore';
 import { queryKeys, cacheConfig } from '@/lib/query';
-import { LAB_CONFIG } from '../constants';
+import { LAB_CONFIG, LAB_PATHS } from '../constants/labConstants';
 import { useEffect, useState } from 'react';
 
 export type LabBoardResponse = components['schemas']['LabBoardResponse'];
@@ -23,10 +23,10 @@ export interface LabBoardSummaryResponse {
 
 export const labMonitorAPI = {
   getBoardSummary() {
-    return apiClient.get<LabBoardSummaryResponse>('/lab/board/summary');
+    return apiClient.get<LabBoardSummaryResponse>(LAB_PATHS.board.summary);
   },
   getBoardFull() {
-    return apiClient.get<LabBoardResponse>('/lab/board', { detail: 'full' });
+    return apiClient.get<LabBoardResponse>(LAB_PATHS.board.full, { detail: 'full' });
   },
 };
 
@@ -90,10 +90,6 @@ export function useLabMonitorBoardQuery(options?: { enabled?: boolean }) {
     refetch: query.refetch,
   };
 }
-
-/** @deprecated Use useLabMonitorBoardQuery */
-export const useLabCommandCenterQuery = useLabMonitorBoardQuery;
-
 export interface LabPipelineCounts {
   collection: number;
   entry: number;

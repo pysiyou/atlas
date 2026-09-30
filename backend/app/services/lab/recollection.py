@@ -21,49 +21,12 @@ from app.services.lab.samples import SampleCollectionService
 from app.services.lab.state import TestStateMachine
 from app.services.orders import update_order_status
 from app.utils.exceptions import LabOperationError
-from pydantic import BaseModel
+from app.schemas.lab import RecollectionRequestResult, RecollectionRequestSummary
 from sqlalchemy.orm import Session
 
 
-class RecollectionRequestSummary(BaseModel):
-    id: int
-    orderId: int
-    qualityIssueId: int | None = None
-    rejectedSampleId: int
-    orderTestId: int | None = None
-    stage: str
-    status: str
-    reason: str
-    notes: str | None = None
-    testCodes: list[str]
-    affectedOrderTestIds: list[int]
-    recollectionAttemptsUsed: int
-    recollectionAttemptsRemaining: int
-    requiresSupervisorOverride: bool
-    requestedByUserId: str
-    reviewedByUserId: str | None = None
-    reviewNotes: str | None = None
-    reviewedAt: str | None = None
-    createdSampleId: int | None = None
-    createdTestId: int | None = None
-    createdAt: str
-    patientId: int | None = None
-    patientName: str | None = None
-    orderNumber: str | None = None
-    sampleType: str | None = None
-
-
-class RecollectionRequestResult(BaseModel):
-    success: bool
-    message: str
-    requestId: int
-    status: str
-    createdSampleId: int | None = None
-    createdTestId: int | None = None
-
-
 class RecollectionRequestService:
-    def __init__(self, db: Session, quality_service: Any):
+    def __init__(self, db: Session, quality_service: Any | None = None):
         self.db = db
         self.quality = quality_service
         self.collection = SampleCollectionService(db)

@@ -1,4 +1,4 @@
-"""Lab worklist API routes."""
+"""Lab worklist and monitor board routes."""
 
 from typing import Literal
 
@@ -23,7 +23,7 @@ from app.schemas.worklists import (
 from app.services.lab.observability import log_lab_read
 from app.services.lab.worklists import LabWorklistService
 
-router = APIRouter(tags=["lab-worklists"])
+router = APIRouter()
 
 
 def _worklist_response(items: list, pagination: dict) -> WorklistResponse:
@@ -33,7 +33,7 @@ def _worklist_response(items: list, pagination: dict) -> WorklistResponse:
     )
 
 
-@router.get("/lab/worklists/collection")
+@router.get("/worklists/collection")
 def get_collection_worklist(
     page: int = Query(1, ge=1),
     pageSize: int = Query(50, ge=1, le=200),
@@ -52,7 +52,7 @@ def get_collection_worklist(
     return _worklist_response(items, result["pagination"])
 
 
-@router.get("/lab/worklists/entry")
+@router.get("/worklists/entry")
 def get_entry_worklist(
     page: int = Query(1, ge=1),
     pageSize: int = Query(50, ge=1, le=200),
@@ -71,7 +71,7 @@ def get_entry_worklist(
     return _worklist_response(items, result["pagination"])
 
 
-@router.get("/lab/worklists/dashboard-blocked")
+@router.get("/worklists/dashboard-blocked")
 def get_dashboard_blocked_worklist(
     page: int = Query(1, ge=1),
     pageSize: int = Query(50, ge=1, le=200),
@@ -83,7 +83,7 @@ def get_dashboard_blocked_worklist(
     return _worklist_response(items, result["pagination"])
 
 
-@router.get("/lab/worklists/validation")
+@router.get("/worklists/validation")
 def get_validation_worklist(
     page: int = Query(1, ge=1),
     pageSize: int = Query(50, ge=1, le=200),
@@ -102,7 +102,7 @@ def get_validation_worklist(
     return _worklist_response(items, result["pagination"])
 
 
-@router.get("/lab/worklists/dashboard-today")
+@router.get("/worklists/dashboard-today")
 def get_dashboard_worklist_today(
     page: int = Query(1, ge=1),
     pageSize: int = Query(50, ge=1, le=200),
@@ -121,7 +121,7 @@ def get_dashboard_worklist_today(
     return _worklist_response(items, result["pagination"])
 
 
-@router.get("/lab/board", response_model=LabBoardResponse)
+@router.get("/board", response_model=LabBoardResponse)
 def get_lab_board(
     detail: Literal["summary", "full"] = Query("full"),
     db: Session = Depends(get_db),
@@ -146,17 +146,7 @@ def get_lab_board(
     return payload
 
 
-@router.get("/lab/monitor", response_model=LabBoardResponse)
-def get_lab_monitor(
-    detail: Literal["summary", "full"] = Query("full"),
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_lab_tech),
-):
-    """Alias for GET /lab/board (Lab monitor UI)."""
-    return get_lab_board(detail=detail, db=db, current_user=current_user)
-
-
-@router.get("/lab/board/summary", response_model=LabBoardSummaryResponse)
+@router.get("/board/summary", response_model=LabBoardSummaryResponse)
 def get_lab_board_summary(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_lab_tech),

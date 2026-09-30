@@ -1,4 +1,5 @@
-"""Analyzer Integration API Routes."""
+"""Lab analyzer integration routes."""
+
 from fastapi import APIRouter, Depends, Header, HTTPException, status
 from sqlalchemy.orm import Session
 

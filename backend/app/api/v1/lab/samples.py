@@ -1,5 +1,6 @@
-"""Sample API Routes"""
-from fastapi import APIRouter, Depends, HTTPException, Query
+"""Lab sample routes."""
+
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from app.api.dependencies import PaginationParams, get_current_user, require_sample_collector
@@ -10,7 +11,7 @@ from app.schemas.enums import SampleStatus
 from app.schemas.pagination import PaginatedResponse
 from app.schemas.sample import SampleCollectRequest, SampleResponse
 from app.services.lab.samples import SampleService
-from app.services.lab.workflow import LabOperationError, LabOperationsService
+from app.services.lab.workflow import LabOperationsService
 
 router = APIRouter()
 
@@ -66,14 +67,11 @@ def collect_sample(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_sample_collector),
 ):
-    try:
-        return LabOperationsService(db).collect_sample(
-            sample_id=sampleId,
-            user_id=current_user.id,
-            collected_volume=collect_data.collectedVolume,
-            container_type=collect_data.actualContainerType.value,
-            container_color=collect_data.actualContainerColor.value,
-            collection_notes=collect_data.collectionNotes,
-        )
-    except LabOperationError as e:
-        raise HTTPException(status_code=e.status_code, detail=e.message)
+    return LabOperationsService(db).collect_sample(
+        sample_id=sampleId,
+        user_id=current_user.id,
+        collected_volume=collect_data.collectedVolume,
+        container_type=collect_data.actualContainerType.value,
+        container_color=collect_data.actualContainerColor.value,
+        collection_notes=collect_data.collectionNotes,
+    )
