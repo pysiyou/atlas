@@ -6,11 +6,23 @@ Monorepo containing the Atlas LIMS frontend (React + Vite) and backend (FastAPI 
 
 ```
 Atlas/
-├── backend/     # FastAPI API server
+├── backend/     # FastAPI — app/domains/* mirrors frontend features
 ├── contracts/   # Cross-stack source of truth (enums, constants)
-├── frontend/    # React SPA
+├── frontend/    # React SPA — src/features/*
 └── scripts/     # Codegen and tooling
 ```
+
+| Frontend `features/` | Backend `app/domains/` |
+|----------------------|-------------------------|
+| auth | auth |
+| audit (was event-log) | audit |
+| patients | patients |
+| catalog (+ affiliation pricing API) | catalog |
+| orders | orders |
+| payments | payments |
+| lab | lab |
+| dashboard | dashboard |
+| reports | reports |
 
 ## Quick start
 

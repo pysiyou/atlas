@@ -1,0 +1,12 @@
+"""Context for physical sample rejection (audit)."""
+
+from dataclasses import dataclass
+
+from app.shared.contracts.enums import QualityStage
+
+
+@dataclass(frozen=True)
+class SampleRejectionContext:
+    stage: QualityStage
+    order_test_id: int | None = None
+    quality_issue_id: int | None = None

@@ -13,6 +13,13 @@ export {
   useInvalidateTestCatalog,
 } from './api/tests';
 
+export {
+  affiliationAPI,
+  useAffiliationPrice,
+  useAffiliationPricing,
+  useSelectedAffiliationPrice,
+} from './api/affiliations';
+
 export * from './testLookup';
 
 export {

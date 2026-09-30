@@ -34,7 +34,7 @@ export const SAMPLE_STATUS_FILTER_OPTIONS = [
 /**
  * Sample Type Enum - Aligned with backend
  * 
- * Must match backend/app/schemas/enums.py SampleType exactly
+ * Must match backend/app/shared/contracts/enums.py SampleType exactly
  */
 export const SAMPLE_TYPE_VALUES = [
   'blood',

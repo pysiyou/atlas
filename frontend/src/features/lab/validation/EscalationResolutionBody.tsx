@@ -1,7 +1,7 @@
 import { Panel, EntityId } from '@/components';
 import { ResultValidationForm } from './ResultValidationForm';
 import { DetailGrid } from '../components/LabWorkflowDetailModal';
-import { ScopedEventLogPanel } from '@/features/event-log';
+import { ScopedEventLogPanel } from '@/features/audit';
 import { CriticalValueActions } from '../criticalValues/CriticalValueActions';
 import type { TestWithContext } from '@/types';
 import type { CriticalValueRecord } from '../criticalValues/criticalValues';

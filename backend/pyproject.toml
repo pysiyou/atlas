@@ -23,7 +23,6 @@ redis = {extras = ["hiredis"], version = "^5.0.0"}
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.11"
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
@@ -33,9 +32,9 @@ target-version = "py311"
 line-length = 100
 src = ["app"]
 extend-exclude = [
-    "app/data/lab_constants.py",
-    "app/data/physiologic_limits.py",
-    "app/schemas/enums.py",
+    "app/shared/contracts/lab_constants.py",
+    "app/shared/contracts/physiologic_limits.py",
+    "app/shared/contracts/enums.py",
 ]
 
 [tool.ruff.lint]

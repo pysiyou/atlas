@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- table config + mobile card colocated */
 /**
  * Column registry and mobile card for the lab dashboard orders table.
  */

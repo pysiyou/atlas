@@ -20,7 +20,7 @@ import { labModalSubtitle } from '../components/LabWorkflowModalSubtitles';
 import { SampleCollectionDetailFooter } from './SampleCollectionDetailFooter';
 import { buildCollectionDetailGridSections } from './SampleCollectionDetailSections';
 import { SampleCollectionDetailContent } from './SampleCollectionDetailSections';
-import { ScopedEventLogPanel } from '@/features/event-log';
+import { ScopedEventLogPanel } from '@/features/audit';
 import { LabWorkflowDetailModal, ModalFooter } from '../components/LabWorkflowDetailModal';
 import { collectionHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { CollectionHeaderBadges } from '../components/LabWorkflowBadges';

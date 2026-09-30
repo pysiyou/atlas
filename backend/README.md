@@ -6,23 +6,12 @@ FastAPI + PostgreSQL API for the Atlas Laboratory Management System.
 
 ```text
 app/
-├── api/
-│   ├── dependencies.py    # DI: get_db, current_user, pagination, RBAC
-│   └── v1/                # HTTP routers
-├── core/
-│   ├── config.py          # Pydantic settings
-│   ├── security.py        # JWT, password hashing
-│   └── cache.py           # Redis
-├── db/
-│   ├── database.py        # Engine, session, Base
-│   └── bootstrap.py       # Dev reset: create_all + seed
-├── data/                  # Reference constants + test catalog JSON
-├── models/
-├── schemas/
-├── services/
-├── utils/
-├── middleware/
-└── main.py
+├── main.py
+├── platform/           # config, DB, cache, security, middleware, HTTP deps
+├── shared/
+│   ├── contracts/      # codegen enums + lab constants + test catalog JSON
+│   └── schemas/        # pagination, error DTOs
+└── domains/            # feature-aligned modules (auth, patients, orders, lab, …)
 ```
 
 ## Setup
@@ -36,7 +25,7 @@ poetry run uvicorn app.main:app --reload
 Reset and seed a fresh database (drops all tables):
 
 ```bash
-poetry run python -m app.db.bootstrap
+poetry run python -m app.platform.bootstrap
 ```
 
 Copy `.env.example` to `.env` and set `DATABASE_URL` and `SECRET_KEY`.

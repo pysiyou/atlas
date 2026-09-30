@@ -17,13 +17,6 @@ export {
 } from './api/patients';
 export type { PatientsFilter } from './api/patients';
 
-export {
-  affiliationAPI,
-  useAffiliationPricing,
-  useAffiliationPrice,
-  useSelectedAffiliationPrice,
-} from './api/affiliations';
-
 export { PatientGenderBadge } from './components/PatientGenderBadge';
 export { AgeFilter } from '@/components/filters/AgeFilter';
 export {

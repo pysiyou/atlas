@@ -43,11 +43,8 @@ export const paymentCreateSchema = z.object({
 // Form schema for UPDATE (all fields optional for partial updates)
 export const paymentUpdateSchema = paymentCreateSchema.partial();
 
-// Legacy: keep paymentFormSchema as alias to createSchema for backwards compatibility
-export const paymentFormSchema = paymentCreateSchema;
-
 export type Payment = z.infer<typeof paymentSchema>;
-export type PaymentFormInput = z.infer<typeof paymentFormSchema>;
+export type PaymentFormInput = z.infer<typeof paymentCreateSchema>;
 export type PaymentCreateInput = z.infer<typeof paymentCreateSchema>;
 export type PaymentUpdateInput = z.infer<typeof paymentUpdateSchema>;
 export type PaymentMethod = z.infer<typeof paymentMethodSchema>;

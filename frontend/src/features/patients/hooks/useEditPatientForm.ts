@@ -6,7 +6,7 @@ import { useMemo, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { Patient } from '@/types';
-import { patientFormSchema, type PatientFormInput } from '../schemas/patientFormSchemas';
+import { patientCreateSchema, type PatientFormInput } from '../schemas/patientFormSchemas';
 import { useCreatePatient, useUpdatePatient } from '../api/patients';
 import { patientToFormInput } from '../utils/formTransformers';
 import { calculateFormProgressV2 } from '../utils/patientHelpers';
@@ -37,7 +37,7 @@ export function useEditPatientForm({ patient, mode, onClose }: UseEditPatientFor
   }, [mode, patient]);
 
   const form = useForm<PatientFormInput>({
-    resolver: zodResolver(patientFormSchema),
+    resolver: zodResolver(patientCreateSchema),
     defaultValues,
     mode: 'onBlur',
   });

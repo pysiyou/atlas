@@ -28,7 +28,7 @@ export const ORDER_STATUS_TIMELINE = ORDER_STATUS_VALUES.map(status => ({
 /**
  * Payment Status Enum - Aligned with backend
  * 
- * Must match backend/app/schemas/enums.py PaymentStatus exactly
+ * Must match backend/app/shared/contracts/enums.py PaymentStatus exactly
  * Backend only supports unpaid and paid states.
  */
 export const PAYMENT_STATUS_VALUES = [

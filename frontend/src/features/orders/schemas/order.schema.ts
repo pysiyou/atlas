@@ -89,9 +89,6 @@ export const orderCreateSchema = z.object({
 // Form schema for UPDATE (all fields optional for partial updates)
 export const orderUpdateSchema = orderCreateSchema.partial();
 
-// Legacy: keep orderFormSchema as alias to createSchema for backwards compatibility
-export const orderFormSchema = orderCreateSchema;
-
-export type OrderFormInput = z.infer<typeof orderFormSchema>;
+export type OrderFormInput = z.infer<typeof orderCreateSchema>;
 export type OrderCreateInput = z.infer<typeof orderCreateSchema>;
 export type OrderUpdateInput = z.infer<typeof orderUpdateSchema>;
