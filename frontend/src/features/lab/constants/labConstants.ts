@@ -52,10 +52,11 @@ export const LAB_COPY = {
   },
   dashboardToday: {
     testsWorked: 'tests worked today',
+    total: 'Total',
     summaryAria: "Today's test activity summary",
     withCollection: 'Sample collection',
     withEntry: 'Result entry',
-    withValidation: 'Validation',
+    withValidation: 'Results validated',
     withQualityRework: 'Quality rework',
   },
   timeline: {
