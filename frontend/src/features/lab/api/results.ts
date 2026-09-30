@@ -15,6 +15,7 @@ import { invalidatePendingEscalationQueries, invalidateResultQueries } from '@/l
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { useAuthStore } from '@/app/authStore';
 import { feedbackTitle } from '@/utils/feedback/copy';
+import { LAB_PATHS } from '../constants/labConstants';
 
 interface ResultEntryRequest {
   results: Record<string, unknown>;
@@ -30,18 +31,18 @@ interface ResultValidationRequest {
 
 export const resultAPI = {
   async getPendingEscalation(): Promise<TestWithContext[]> {
-    return apiClient.get<TestWithContext[]>('/results/pending-escalation');
+    return apiClient.get<TestWithContext[]>(LAB_PATHS.results.pendingEscalation);
   },
 
   async getOrderTestContext(orderTestId: number): Promise<TestWithContext> {
-    return apiClient.get<TestWithContext>(`/results/order-tests/${orderTestId}`);
+    return apiClient.get<TestWithContext>(LAB_PATHS.results.orderTest(orderTestId));
   },
 
   async resolveEscalation(
     payload: EscalationResolveRequest & { orderTestId: number }
   ): Promise<EscalationResolveResult> {
     return apiClient.post<ApiEscalationResolveResponse>(
-      `/results/order-tests/${payload.orderTestId}/escalation/resolve`,
+      LAB_PATHS.results.resolveEscalation(payload.orderTestId),
       {
         action: payload.action,
         validationNotes: payload.validationNotes,
@@ -52,14 +53,11 @@ export const resultAPI = {
   },
 
   async enterResults(params: { orderTestId: number; data: ResultEntryRequest }) {
-    return apiClient.post(`/results/order-tests/${params.orderTestId}`, params.data);
+    return apiClient.post(LAB_PATHS.results.enterResults(params.orderTestId), params.data);
   },
 
   async validateResults(params: { orderTestId: number; data: ResultValidationRequest }) {
-    return apiClient.post(
-      `/results/order-tests/${params.orderTestId}/validate`,
-      params.data
-    );
+    return apiClient.post(LAB_PATHS.results.validate(params.orderTestId), params.data);
   },
 
   async rejectResults(params: {
@@ -70,7 +68,7 @@ export const resultAPI = {
     };
   }): Promise<QualityIssueResult> {
     return apiClient.post<QualityIssueResult>(
-      `/results/order-tests/${params.orderTestId}/validate`,
+      LAB_PATHS.results.validate(params.orderTestId),
       { decision: 'rejected', ...params.data }
     );
   },

@@ -83,6 +83,7 @@ function ResultEntryCardDesktop({
   rejection,
 }: ResultEntryCardSharedData) {
   const { showAttemptIndicator } = rejection;
+  const auditLines = useMemo(() => testHeaderAudit(test), [test]);
 
   return (
     <LabWorkflowCardShell
@@ -98,7 +99,7 @@ function ResultEntryCardDesktop({
         entityName: test.testName,
         referringPhysician: test.referringPhysician,
       }}
-      auditLines={testHeaderAudit(test)}
+      auditLines={auditLines}
       badges={
         <TestHeaderBadges
           test={test}
@@ -149,6 +150,7 @@ function ResultEntryCardMobile({
   rejection,
 }: ResultEntryCardSharedData) {
   const { showAttemptIndicator } = rejection;
+  const auditLines = useMemo(() => testHeaderAudit(test), [test]);
 
   return (
     <Card
@@ -170,7 +172,7 @@ function ResultEntryCardMobile({
           entityCode: test.testCode,
           entityName: test.testName,
         }}
-        auditLines={testHeaderAudit(test)}
+        auditLines={auditLines}
         badges={
           <TestHeaderBadges
             test={test}

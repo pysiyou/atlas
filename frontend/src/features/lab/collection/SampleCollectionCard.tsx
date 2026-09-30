@@ -3,7 +3,7 @@
  */
 /* eslint-disable max-lines -- single module: shared view-model + mobile/desktop */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { actionButtonPreset, Card, IconButton } from '@/components';
 import { SampleStatusBadge } from '../components/LabDomainBadges';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
@@ -89,6 +89,26 @@ function CollectionCardDesktop({
     collectedBy,
   } = getCollectionViewModel(display, sample);
 
+  const auditLines = useMemo(
+    () =>
+      collectionHeaderAudit({
+        sampleId: sample.sampleId,
+        collectedAt,
+        collectedBy,
+        isRecollection,
+        originalSampleId: sample.originalSampleId,
+        originalSampleCollectedAt: sample.originalSampleCollectedAt,
+      }),
+    [
+      sample.sampleId,
+      collectedAt,
+      collectedBy,
+      isRecollection,
+      sample.originalSampleId,
+      sample.originalSampleCollectedAt,
+    ],
+  );
+
   return (
     <LabWorkflowCardShell
       onClick={handleCardClick}
@@ -101,14 +121,7 @@ function CollectionCardDesktop({
         entityCode: sample.sampleType.toUpperCase(),
         referringPhysician: order.referringPhysician,
       }}
-      auditLines={collectionHeaderAudit({
-        sampleId: sample.sampleId,
-        collectedAt,
-        collectedBy,
-        isRecollection,
-        originalSampleId: sample.originalSampleId,
-        originalSampleCollectedAt: sample.originalSampleCollectedAt,
-      })}
+      auditLines={auditLines}
       badges={
         <CollectionHeaderBadges
           sample={sample}
@@ -194,6 +207,26 @@ function CollectionCardMobile({
   } = getCollectionViewModel(display, sample);
   const testCount = testNames.length;
 
+  const auditLines = useMemo(
+    () =>
+      collectionHeaderAudit({
+        sampleId: sample.sampleId,
+        collectedAt,
+        collectedBy,
+        isRecollection,
+        originalSampleId: sample.originalSampleId,
+        originalSampleCollectedAt: sample.originalSampleCollectedAt,
+      }),
+    [
+      sample.sampleId,
+      collectedAt,
+      collectedBy,
+      isRecollection,
+      sample.originalSampleId,
+      sample.originalSampleCollectedAt,
+    ],
+  );
+
   const statusAside = isPending ? (
     <SampleStatusBadge status="pending" size="xs" />
   ) : isCollected ? (
@@ -241,14 +274,7 @@ function CollectionCardMobile({
           entityCode: sample.sampleType.toUpperCase(),
         }}
         titleAside={statusAside}
-        auditLines={collectionHeaderAudit({
-          sampleId: sample.sampleId,
-          collectedAt,
-          collectedBy,
-          isRecollection,
-          originalSampleId: sample.originalSampleId,
-          originalSampleCollectedAt: sample.originalSampleCollectedAt,
-        })}
+        auditLines={auditLines}
         badges={
           <CollectionHeaderBadges
             sample={sample}

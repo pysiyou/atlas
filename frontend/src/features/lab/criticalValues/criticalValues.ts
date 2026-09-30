@@ -9,6 +9,7 @@ import { useAuthStore } from '@/app/authStore';
 import { queryKeys } from '@/lib/query';
 import { invalidateCriticalValueQueries } from '@/lib/query/invalidate';
 import type { TestWithContext } from '@/types';
+import { LAB_PATHS } from '../constants/labConstants';
 
 export interface CriticalValueRecord {
   id: number;
@@ -39,20 +40,20 @@ export interface AcknowledgeCriticalValueRequest {
 
 export const criticalValuesAPI = {
   getPending(): Promise<CriticalValueRecord[]> {
-    return apiClient.get<ApiCriticalValueResponse[]>('/critical-values/pending') as Promise<
+    return apiClient.get<ApiCriticalValueResponse[]>(LAB_PATHS.criticalValues.pending) as Promise<
       CriticalValueRecord[]
     >;
   },
 
   notify(testId: number, body: NotifyCriticalValueRequest) {
     return apiClient
-      .post(`/critical-values/${testId}/notify`, body)
+      .post(LAB_PATHS.criticalValues.notify(testId), body)
       .then(data => parseApiResponse(operationResponseSchema, data, 'critical value notify'));
   },
 
   acknowledge(testId: number, body: AcknowledgeCriticalValueRequest) {
     return apiClient
-      .post(`/critical-values/${testId}/acknowledge`, body)
+      .post(LAB_PATHS.criticalValues.acknowledge(testId), body)
       .then(data => parseApiResponse(operationResponseSchema, data, 'critical value acknowledge'));
   },
 };

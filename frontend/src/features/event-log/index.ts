@@ -14,7 +14,6 @@ export {
   OrderEventLogPanel,
   ScopedEventLogPanel,
   LabMonitorEventLogPanel,
-  CommandCenterEventLogPanel,
 } from './EventLogPanel';
 export { useEventLog } from './useEventLog';
 export { fetchAuditEvents, normalizeAuditEvent } from './api';

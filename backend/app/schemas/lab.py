@@ -4,7 +4,7 @@ from typing import Any, Literal
 
 from pydantic import AliasChoices, BaseModel, Field, model_validator
 
-from app.schemas.enums import QualityIssueTargetType, RemedyType, ValidationDecision
+from app.schemas.enums import QualityIssueTargetType, QualityStage, RemedyType, ValidationDecision
 from app.schemas.order import TestResultsDict
 
 
@@ -155,3 +155,85 @@ class QualityIssueResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class QualityIssueOptions(BaseModel):
+    targetType: QualityIssueTargetType
+    targetId: int
+    orderId: int
+    testCode: str | None = None
+    sampleId: int | None = None
+    stage: QualityStage
+    allowedCriteria: list[str] = []
+    allowedRemedies: list[RemedyType] = []
+    suggestedRemedy: RemedyType | None = None
+    retestAttemptsUsed: int = 0
+    retestAttemptsRemaining: int = 0
+    recollectionAttemptsUsed: int = 0
+    recollectionAttemptsRemaining: int = 0
+    willEscalate: bool = False
+    previewRemedy: RemedyType | None = None
+    previewMessage: str = ""
+    hasSpecimenCriteria: bool = False
+    hasAnalyticalCriteria: bool = False
+    resultedTestsCount: int = 0
+    validatedTestsCount: int = 0
+    unfinishedTestsCount: int = 0
+    awaitingRecollectionTestsCount: int = 0
+    sampleRejected: bool = False
+
+
+class QualityIssueResult(BaseModel):
+    success: bool
+    remedy: RemedyType
+    message: str
+    qualityIssueId: int
+    orderId: int
+    testCode: str | None = None
+    sampleId: int | None = None
+    orderTestId: int | None = None
+    createdTestId: int | None = None
+    createdSampleId: int | None = None
+    recollectionRequestId: int | None = None
+    escalationRequired: bool = False
+
+
+class RecollectionRequestSummary(BaseModel):
+    id: int
+    orderId: int
+    qualityIssueId: int | None = None
+    rejectedSampleId: int
+    orderTestId: int | None = None
+    stage: str
+    status: str
+    reason: str
+    notes: str | None = None
+    testCodes: list[str]
+    affectedOrderTestIds: list[int]
+    recollectionAttemptsUsed: int
+    recollectionAttemptsRemaining: int
+    requiresSupervisorOverride: bool
+    requestedByUserId: str
+    reviewedByUserId: str | None = None
+    reviewNotes: str | None = None
+    reviewedAt: str | None = None
+    createdSampleId: int | None = None
+    createdTestId: int | None = None
+    createdAt: str
+    patientId: int | None = None
+    patientName: str | None = None
+    orderNumber: str | None = None
+    sampleType: str | None = None
+
+
+class RecollectionRequestResult(BaseModel):
+    success: bool
+    message: str
+    requestId: int
+    status: str
+    createdSampleId: int | None = None
+    createdTestId: int | None = None
+
+
+class RecollectionReviewRequest(BaseModel):
+    reviewNotes: str | None = Field(None, max_length=1000)

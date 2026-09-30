@@ -177,11 +177,6 @@ export const queryKeys = {
     boardSummary: () => [...queryKeys.labMonitor.all, 'summary'] as const,
     boardFull: () => [...queryKeys.labMonitor.all, 'full'] as const,
   },
-  /** @deprecated Use labMonitor */
-  commandCenter: {
-    all: ['lab-monitor'] as const,
-    board: () => [...queryKeys.labMonitor.boardFull()] as const,
-  },
 
   reports: {
     all: ['reports'] as const,

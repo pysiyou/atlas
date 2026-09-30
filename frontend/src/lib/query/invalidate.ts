@@ -30,10 +30,6 @@ function settleInvalidations(tasks: Array<Promise<unknown>>): Promise<void> {
 }
 
 /** Lab tab badges read pipeline counts from the monitor board summary. */
-export function invalidateLabBoardQuery(client: QueryClient): Promise<void> {
-  return client.invalidateQueries({ queryKey: queryKeys.labMonitor.all });
-}
-
 export function invalidateLabMonitorQueries(client: QueryClient): Promise<void> {
   return client.invalidateQueries({ queryKey: queryKeys.labMonitor.all });
 }
@@ -41,7 +37,7 @@ export function invalidateLabMonitorQueries(client: QueryClient): Promise<void> 
 export function invalidateWorklistQueries(client: QueryClient): Promise<void> {
   return settleInvalidations([
     client.invalidateQueries({ queryKey: queryKeys.worklists.all }),
-    invalidateLabBoardQuery(client),
+    invalidateLabMonitorQueries(client),
   ]);
 }
 
@@ -160,12 +156,6 @@ export function invalidateCollectionQueries(client: QueryClient): Promise<void> 
     invalidateWorklistQueries(client),
   ]);
 }
-
-/** @deprecated Use invalidateLabMonitorQueries */
-export function invalidateCommandCenterQueries(client: QueryClient): Promise<void> {
-  return invalidateLabMonitorQueries(client);
-}
-
 export function invalidateLabMonitorQueriesFull(client: QueryClient): Promise<void> {
   return settleInvalidations([
     invalidateLabMonitorQueries(client),

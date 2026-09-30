@@ -1,4 +1,4 @@
-/** Lab copy, config, tab routing, and workflow visual tokens. */
+/** Lab copy, config, routing, visuals, and API path constants. */
 import type { IconName } from '@/components';
 import { GENERATED_LAB_CONSTANTS } from '@/types/generated/labConstants';
 import { ROUTES } from '@/config';
@@ -7,12 +7,8 @@ import type { TestStatus } from '@/types/enums';
 import type { BadgeColor } from '@/components/primitives/badgeTypes';
 
 export type LabWorkflowStage = 'collection' | 'entry' | 'validation';
-
-/** Extra Today KPI row (non-tab workflow). */
 export type LabWorkflowKpiStage = LabWorkflowStage | 'sentBack';
-
 export type LabStageLabelVariant = 'short' | 'nav' | 'full';
-
 export type LabTimelineLane =
   | 'sample'
   | 'results'
@@ -23,11 +19,7 @@ export type LabTimelineLane =
   | 'composition';
 
 export const LAB_COPY = {
-  entity: {
-    sample: 'Sample',
-    sampleType: 'Sample type',
-    samples: 'samples',
-  },
+  entity: { sample: 'Sample', sampleType: 'Sample type', samples: 'samples' },
   workflow: {
     collection: 'Collection',
     collectionNav: 'Sample Collection',
@@ -99,7 +91,6 @@ export function timelineLaneLabel(lane: LabTimelineLane): string {
   return LAB_COPY.timeline[lane];
 }
 
-/** Compact pipeline rows (command center KPIs, donuts, wait bars). */
 export const LAB_STAGE_SHORT_ROWS = [
   { key: 'collection' as const, label: labStageLabel('collection', 'short') },
   { key: 'entry' as const, label: labStageLabel('entry', 'short') },
@@ -110,12 +101,10 @@ export const LAB_CONFIG = {
   MAX_RETEST_ATTEMPTS: GENERATED_LAB_CONSTANTS.MAX_RETEST_ATTEMPTS,
   MAX_RECOLLECTION_ATTEMPTS: GENERATED_LAB_CONSTANTS.MAX_RECOLLECTION_ATTEMPTS,
   SEARCH_DEBOUNCE_MS: 300,
-  /** Min characters before collection search queries historical samples (sample ID or patient name). */
   SAMPLE_LOOKUP_MIN_CHARS: 3,
   DEFAULT_TEXTAREA_ROWS: 2,
   REJECTION_TEXTAREA_ROWS: 3,
   PARAMETER_PREVIEW_LIMIT: 5,
-  /** Tab badge / worklist poll interval */
   TAB_COUNT_REFRESH_MS: 30_000,
   COMPACT_RESULT_GRID_LIMIT: 8,
   POPOVER_OFFSET: 8,
@@ -127,10 +116,8 @@ export const LAB_CONFIG = {
 } as const;
 
 export const LAB_TAB_IDS = ['collection', 'entry', 'validation', 'monitor'] as const;
-
 export type LabTabId = (typeof LAB_TAB_IDS)[number];
 
-/** Legacy URL segment → canonical tab id */
 export const LEGACY_LAB_TAB_ALIASES: Record<string, LabTabId> = {
   'command-center': 'monitor',
 };
@@ -142,7 +129,6 @@ export const LAB_TAB_LABELS: Record<LabTabId, string> = {
   monitor: LAB_COPY.workflow.monitorNav,
 };
 
-/** Icons for lab workflow KPI rows — tabs use collection / entry / validation only. */
 export const LAB_WORKFLOW_KPI_ICONS: Record<LabWorkflowKpiStage, IconName> = {
   collection: ICONS.dataFields.flask,
   entry: ICONS.dataFields.notebook,
@@ -150,7 +136,6 @@ export const LAB_WORKFLOW_KPI_ICONS: Record<LabWorkflowKpiStage, IconName> = {
   sentBack: ICONS.actions.refresh,
 };
 
-/** Icons for collection / entry / validation lab tabs. */
 export const LAB_WORKFLOW_TAB_ICONS: Record<LabWorkflowStage, IconName> = {
   collection: LAB_WORKFLOW_KPI_ICONS.collection,
   entry: LAB_WORKFLOW_KPI_ICONS.entry,
@@ -170,23 +155,17 @@ export function isLabTabId(value: string | undefined): value is LabTabId {
   return normalizeLabTabParam(value) != null;
 }
 
-/** Build a deep-linkable lab tab path, e.g. /laboratory/validation */
 export function getLabTabPath(tab: LabTabId): string {
   return `${ROUTES.LABORATORY}/${tab}`;
 }
 
-/** Build a lab queue URL with optional search pre-fill for cross-links. */
-export function getLabQueueUrl(
-  tab: LabTabId,
-  options?: { search?: string }
-): string {
+export function getLabQueueUrl(tab: LabTabId, options?: { search?: string }): string {
   const path = getLabTabPath(tab);
   if (!options?.search) return path;
   const params = new URLSearchParams({ search: options.search });
   return `${path}?${params.toString()}`;
 }
 
-/** Map a test status to the appropriate lab workflow tab, if actionable. */
 export function getLabTabForTestStatus(status: TestStatus): LabTabId | null {
   switch (status) {
     case 'pending':
@@ -194,7 +173,6 @@ export function getLabTabForTestStatus(status: TestStatus): LabTabId | null {
     case 'sample-collected':
       return 'entry';
     case 'resulted':
-      return 'validation';
     case 'escalated':
       return 'validation';
     default:
@@ -207,7 +185,6 @@ export interface LabLaneVisual {
   bar: string;
   text: string;
   badgeVariant: BadgeColor;
-  /** Icon well / soft chip — pairs workflow bg + fg tokens for the lane. */
   iconWell: string;
 }
 
@@ -269,6 +246,13 @@ const LAB_STAGE_LANE: Record<LabWorkflowStage, LabTimelineLane> = {
   validation: 'validation',
 };
 
+const KPI_STAGE_LANE: Record<LabWorkflowKpiStage, LabTimelineLane> = {
+  collection: 'sample',
+  entry: 'results',
+  validation: 'validation',
+  sentBack: 'quality',
+};
+
 export function getLaneVisual(lane: LabTimelineLane): LabLaneVisual {
   return LANE_VISUAL[lane];
 }
@@ -277,14 +261,6 @@ export function getStageVisual(stage: LabWorkflowStage): LabLaneVisual {
   return getLaneVisual(LAB_STAGE_LANE[stage]);
 }
 
-const KPI_STAGE_LANE: Record<LabWorkflowKpiStage, LabTimelineLane> = {
-  collection: 'sample',
-  entry: 'results',
-  validation: 'validation',
-  sentBack: 'quality',
-};
-
-/** Dashboard KPI rows and any UI keyed by workflow stage (includes sent-back / rework). */
 export function getKpiStageVisual(stage: LabWorkflowKpiStage): LabLaneVisual {
   return getLaneVisual(KPI_STAGE_LANE[stage]);
 }
@@ -293,3 +269,46 @@ export function isLabWorkflowStageTab(tab: LabTabId): tab is LabWorkflowStage {
   return tab === 'collection' || tab === 'entry' || tab === 'validation';
 }
 
+/** Canonical lab API paths (relative to API v1 prefix). */
+export const LAB_PATHS = {
+  samples: {
+    list: '/lab/samples',
+    pending: '/lab/samples/pending',
+    byId: (sampleId: string | number) => `/lab/samples/${sampleId}`,
+    collect: (sampleId: string | number) => `/lab/samples/${sampleId}/collect`,
+  },
+  results: {
+    pendingEscalation: '/lab/results/pending-escalation',
+    orderTest: (orderTestId: number) => `/lab/results/order-tests/${orderTestId}`,
+    enterResults: (orderTestId: number) => `/lab/results/order-tests/${orderTestId}`,
+    validate: (orderTestId: number) => `/lab/results/order-tests/${orderTestId}/validate`,
+    resolveEscalation: (orderTestId: number) =>
+      `/lab/results/order-tests/${orderTestId}/escalation/resolve`,
+  },
+  worklists: {
+    collection: '/lab/worklists/collection',
+    entry: '/lab/worklists/entry',
+    validation: '/lab/worklists/validation',
+    dashboardToday: '/lab/worklists/dashboard-today',
+    dashboardBlocked: '/lab/worklists/dashboard-blocked',
+  },
+  board: { full: '/lab/board', summary: '/lab/board/summary' },
+  criticalValues: {
+    pending: '/lab/critical-values/pending',
+    all: '/lab/critical-values/all',
+    notify: (testId: number) => `/lab/critical-values/${testId}/notify`,
+    acknowledge: (testId: number) => `/lab/critical-values/${testId}/acknowledge`,
+    forOrder: (orderId: number) => `/lab/orders/${orderId}/critical-values`,
+  },
+  qualityIssues: { list: '/lab/quality-issues', options: '/lab/quality-issues/options' },
+  recollectionRequests: {
+    pending: '/lab/recollection-requests/pending',
+    approve: (requestId: number) => `/lab/recollection-requests/${requestId}/approve`,
+    deny: (requestId: number) => `/lab/recollection-requests/${requestId}/deny`,
+  },
+  analyzer: {
+    hl7: '/lab/analyzer/hl7',
+    json: '/lab/analyzer/json',
+    pending: (analyzerId: string) => `/lab/analyzer/pending/${analyzerId}`,
+  },
+} as const;

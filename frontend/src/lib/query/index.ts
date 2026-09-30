@@ -15,7 +15,6 @@ export {
   invalidateQualityIssueQueries,
   invalidateRecollectionQueries,
   invalidateCollectionQueries,
-  invalidateCommandCenterQueries,
   invalidateLabMonitorQueries,
   invalidateLabMonitorQueriesFull,
   invalidateLabWorkflowQueries,

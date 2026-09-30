@@ -10,6 +10,7 @@ import { useEntityLookup, parseNumericKey } from '@/hooks/useEntityLookup';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { invalidateCollectionQueries } from '@/lib/query/invalidate';
 import { useAuthStore } from '@/app/authStore';
+import { LAB_PATHS } from '../constants/labConstants';
 
 const BACKEND_COLOR_VALUES = [
   'red',
@@ -83,12 +84,12 @@ export const sampleAPI = {
     if (params?.status) queryParams.sampleStatus = params.status;
     if (params?.skip) queryParams.skip = String(params.skip);
     if (params?.limit) queryParams.limit = String(params.limit);
-    return apiClient.get<Sample[]>('/samples', queryParams);
+    return apiClient.get<Sample[]>(LAB_PATHS.samples.list, queryParams);
   },
 
   async getById(sampleId: string): Promise<Sample | null> {
     try {
-      return await apiClient.get<Sample>(`/samples/${sampleId}`);
+      return await apiClient.get<Sample>(LAB_PATHS.samples.byId(sampleId));
     } catch {
       return null;
     }
@@ -103,7 +104,7 @@ export const sampleAPI = {
         ? { collectionNotes: data.collectionNotes }
         : {}),
     };
-    return apiClient.patch<Sample>(`/samples/${sampleId}/collect`, body);
+    return apiClient.patch<Sample>(LAB_PATHS.samples.collect(sampleId), body);
   },
 };
 

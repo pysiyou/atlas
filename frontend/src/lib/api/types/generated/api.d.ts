@@ -322,160 +322,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/samples": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Samples */
-        get: operations["get_samples_api_v1_samples_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/samples/pending": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Pending Samples */
-        get: operations["get_pending_samples_api_v1_samples_pending_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/samples/{sampleId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Sample */
-        get: operations["get_sample_api_v1_samples__sampleId__get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/samples/{sampleId}/collect": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /** Collect Sample */
-        patch: operations["collect_sample_api_v1_samples__sampleId__collect_patch"];
-        trace?: never;
-    };
-    "/api/v1/results/pending-escalation": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Pending Escalation */
-        get: operations["get_pending_escalation_api_v1_results_pending_escalation_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/results/order-tests/{orderTestId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Order Test Context */
-        get: operations["get_order_test_context_api_v1_results_order_tests__orderTestId__get"];
-        put?: never;
-        /** Enter Results */
-        post: operations["enter_results_api_v1_results_order_tests__orderTestId__post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/results/order-tests/{orderTestId}/validate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Validate Results */
-        post: operations["validate_results_api_v1_results_order_tests__orderTestId__validate_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/results/order-tests/{orderTestId}/request-amendment": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Request Amendment */
-        post: operations["request_amendment_api_v1_results_order_tests__orderTestId__request_amendment_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/results/order-tests/{orderTestId}/escalation/resolve": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Resolve Escalation */
-        post: operations["resolve_escalation_api_v1_results_order_tests__orderTestId__escalation_resolve_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/users/lookup": {
         parameters: {
             query?: never;
@@ -616,15 +462,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/critical-values/pending": {
+    "/api/v1/lab/samples": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get Pending Critical Values */
-        get: operations["get_pending_critical_values_api_v1_critical_values_pending_get"];
+        /** Get Samples */
+        get: operations["get_samples_api_v1_lab_samples_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -633,109 +479,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/critical-values/all": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get All Critical Values */
-        get: operations["get_all_critical_values_api_v1_critical_values_all_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/critical-values/{test_id}/notify": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Notify Critical Value */
-        post: operations["notify_critical_value_api_v1_critical_values__test_id__notify_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/critical-values/{test_id}/acknowledge": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Acknowledge Critical Value */
-        post: operations["acknowledge_critical_value_api_v1_critical_values__test_id__acknowledge_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/orders/{order_id}/critical-values": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Order Critical Values */
-        get: operations["get_order_critical_values_api_v1_orders__order_id__critical_values_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/analyzer/hl7": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Receive Hl7 Result */
-        post: operations["receive_hl7_result_api_v1_analyzer_hl7_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/analyzer/json": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Receive Json Result */
-        post: operations["receive_json_result_api_v1_analyzer_json_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/analyzer/pending/{analyzer_id}": {
+    "/api/v1/lab/samples/pending": {
         parameters: {
             query?: never;
             header?: never;
@@ -743,7 +487,7 @@ export interface paths {
             cookie?: never;
         };
         /** Get Pending Samples */
-        get: operations["get_pending_samples_api_v1_analyzer_pending__analyzer_id__get"];
+        get: operations["get_pending_samples_api_v1_lab_samples_pending_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -752,15 +496,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/lab/quality-issues/options": {
+    "/api/v1/lab/samples/{sampleId}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get Quality Issue Options */
-        get: operations["get_quality_issue_options_api_v1_lab_quality_issues_options_get"];
+        /** Get Sample */
+        get: operations["get_sample_api_v1_lab_samples__sampleId__get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -769,45 +513,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/lab/quality-issues": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List Quality Issues */
-        get: operations["list_quality_issues_api_v1_lab_quality_issues_get"];
-        put?: never;
-        /** Report Quality Issue */
-        post: operations["report_quality_issue_api_v1_lab_quality_issues_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/lab/recollection-requests/pending": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Pending Recollection Requests
-         * @description List recollection requests awaiting supervisor approval.
-         */
-        get: operations["list_pending_recollection_requests_api_v1_lab_recollection_requests_pending_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/lab/recollection-requests/{requestId}/approve": {
+    "/api/v1/lab/samples/{sampleId}/collect": {
         parameters: {
             query?: never;
             header?: never;
@@ -816,18 +522,50 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /**
-         * Approve Recollection Request
-         * @description Approve a recollection request and create the pending collection tube.
-         */
-        post: operations["approve_recollection_request_api_v1_lab_recollection_requests__requestId__approve_post"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Collect Sample */
+        patch: operations["collect_sample_api_v1_lab_samples__sampleId__collect_patch"];
+        trace?: never;
+    };
+    "/api/v1/lab/results/pending-escalation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Pending Escalation */
+        get: operations["get_pending_escalation_api_v1_lab_results_pending_escalation_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/v1/lab/recollection-requests/{requestId}/deny": {
+    "/api/v1/lab/results/order-tests/{orderTestId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Order Test Context */
+        get: operations["get_order_test_context_api_v1_lab_results_order_tests__orderTestId__get"];
+        put?: never;
+        /** Enter Results */
+        post: operations["enter_results_api_v1_lab_results_order_tests__orderTestId__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/results/order-tests/{orderTestId}/validate": {
         parameters: {
             query?: never;
             header?: never;
@@ -836,11 +574,42 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /**
-         * Deny Recollection Request
-         * @description Deny a recollection request and cancel affected tests.
-         */
-        post: operations["deny_recollection_request_api_v1_lab_recollection_requests__requestId__deny_post"];
+        /** Validate Results */
+        post: operations["validate_results_api_v1_lab_results_order_tests__orderTestId__validate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/results/order-tests/{orderTestId}/request-amendment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Request Amendment */
+        post: operations["request_amendment_api_v1_lab_results_order_tests__orderTestId__request_amendment_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/results/order-tests/{orderTestId}/escalation/resolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Resolve Escalation */
+        post: operations["resolve_escalation_api_v1_lab_results_order_tests__orderTestId__escalation_resolve_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -898,23 +667,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/lab/worklists/dashboard-today": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Dashboard Worklist Today */
-        get: operations["get_dashboard_worklist_today_api_v1_lab_worklists_dashboard_today_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/lab/worklists/validation": {
         parameters: {
             query?: never;
@@ -924,6 +676,23 @@ export interface paths {
         };
         /** Get Validation Worklist */
         get: operations["get_validation_worklist_api_v1_lab_worklists_validation_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/worklists/dashboard-today": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Dashboard Worklist Today */
+        get: operations["get_dashboard_worklist_today_api_v1_lab_worklists_dashboard_today_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -943,6 +712,245 @@ export interface paths {
         get: operations["get_lab_board_api_v1_lab_board_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/board/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Lab Board Summary */
+        get: operations["get_lab_board_summary_api_v1_lab_board_summary_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/critical-values/pending": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Pending Critical Values */
+        get: operations["get_pending_critical_values_api_v1_lab_critical_values_pending_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/critical-values/all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get All Critical Values */
+        get: operations["get_all_critical_values_api_v1_lab_critical_values_all_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/critical-values/{test_id}/notify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Notify Critical Value */
+        post: operations["notify_critical_value_api_v1_lab_critical_values__test_id__notify_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/critical-values/{test_id}/acknowledge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Acknowledge Critical Value */
+        post: operations["acknowledge_critical_value_api_v1_lab_critical_values__test_id__acknowledge_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/orders/{order_id}/critical-values": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Order Critical Values */
+        get: operations["get_order_critical_values_api_v1_lab_orders__order_id__critical_values_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/analyzer/hl7": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Receive Hl7 Result */
+        post: operations["receive_hl7_result_api_v1_lab_analyzer_hl7_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/analyzer/json": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Receive Json Result */
+        post: operations["receive_json_result_api_v1_lab_analyzer_json_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/analyzer/pending/{analyzer_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Pending Samples */
+        get: operations["get_pending_samples_api_v1_lab_analyzer_pending__analyzer_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/quality-issues/options": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Quality Issue Options */
+        get: operations["get_quality_issue_options_api_v1_lab_quality_issues_options_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/quality-issues": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Quality Issues */
+        get: operations["list_quality_issues_api_v1_lab_quality_issues_get"];
+        put?: never;
+        /** Report Quality Issue */
+        post: operations["report_quality_issue_api_v1_lab_quality_issues_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/recollection-requests/pending": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Pending Recollection Requests */
+        get: operations["list_pending_recollection_requests_api_v1_lab_recollection_requests_pending_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/recollection-requests/{requestId}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Approve Recollection Request */
+        post: operations["approve_recollection_request_api_v1_lab_recollection_requests__requestId__approve_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/recollection-requests/{requestId}/deny": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Deny Recollection Request */
+        post: operations["deny_recollection_request_api_v1_lab_recollection_requests__requestId__deny_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1576,8 +1584,29 @@ export interface components {
             todayPanel: components["schemas"]["LabTodayPanelSnapshot"];
         };
         /**
+         * LabBoardSummaryResponse
+         * @description Lightweight board payload for tab badges and idle polling.
+         */
+        LabBoardSummaryResponse: {
+            counts: components["schemas"]["LabBoardCounts"];
+            /**
+             * Health
+             * @enum {string}
+             */
+            health: "healthy" | "attention" | "critical";
+            /** Healthmessage */
+            healthMessage: string;
+            /** Suggestedtab */
+            suggestedTab?: string | null;
+            /** Totalactive */
+            totalActive: number;
+            /** Computedat */
+            computedAt?: string | null;
+            todayPanel: components["schemas"]["LabTodayPanelSnapshot"];
+        };
+        /**
          * LabTodayPanelSnapshot
-         * @description UTC day KPIs for the lab dashboard Today panel (tests worked today cohort).
+         * @description UTC day KPIs: tests updated today, with milestone events that occurred today.
          */
         LabTodayPanelSnapshot: {
             /**
@@ -3816,320 +3845,6 @@ export interface operations {
             };
         };
     };
-    get_samples_api_v1_samples_get: {
-        parameters: {
-            query?: {
-                orderId?: number | null;
-                sampleStatus?: components["schemas"]["SampleStatus"] | null;
-                paginated?: boolean;
-                /** @description Number of records to skip */
-                skip?: number;
-                /** @description Max records to return */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SampleResponse"][] | components["schemas"]["PaginatedResponse_SampleResponse_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_pending_samples_api_v1_samples_pending_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SampleResponse"][];
-                };
-            };
-        };
-    };
-    get_sample_api_v1_samples__sampleId__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                sampleId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SampleResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    collect_sample_api_v1_samples__sampleId__collect_patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                sampleId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SampleCollectRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SampleResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_pending_escalation_api_v1_results_pending_escalation_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PendingEscalationItemResponse"][];
-                };
-            };
-        };
-    };
-    get_order_test_context_api_v1_results_order_tests__orderTestId__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                orderTestId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PendingEscalationItemResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    enter_results_api_v1_results_order_tests__orderTestId__post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                orderTestId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ResultEntryRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    validate_results_api_v1_results_order_tests__orderTestId__validate_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                orderTestId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ResultValidationRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    request_amendment_api_v1_results_order_tests__orderTestId__request_amendment_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                orderTestId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AmendmentRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    resolve_escalation_api_v1_results_order_tests__orderTestId__escalation_resolve_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                orderTestId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["EscalationResolveRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EscalationResolveResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     get_users_lookup_api_v1_users_lookup_get: {
         parameters: {
             query?: never;
@@ -4480,7 +4195,538 @@ export interface operations {
             };
         };
     };
-    get_pending_critical_values_api_v1_critical_values_pending_get: {
+    get_samples_api_v1_lab_samples_get: {
+        parameters: {
+            query?: {
+                orderId?: number | null;
+                sampleStatus?: components["schemas"]["SampleStatus"] | null;
+                paginated?: boolean;
+                /** @description Number of records to skip */
+                skip?: number;
+                /** @description Max records to return */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SampleResponse"][] | components["schemas"]["PaginatedResponse_SampleResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_pending_samples_api_v1_lab_samples_pending_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SampleResponse"][];
+                };
+            };
+        };
+    };
+    get_sample_api_v1_lab_samples__sampleId__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                sampleId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SampleResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    collect_sample_api_v1_lab_samples__sampleId__collect_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                sampleId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SampleCollectRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SampleResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_pending_escalation_api_v1_lab_results_pending_escalation_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PendingEscalationItemResponse"][];
+                };
+            };
+        };
+    };
+    get_order_test_context_api_v1_lab_results_order_tests__orderTestId__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderTestId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PendingEscalationItemResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    enter_results_api_v1_lab_results_order_tests__orderTestId__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderTestId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResultEntryRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    validate_results_api_v1_lab_results_order_tests__orderTestId__validate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderTestId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResultValidationRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    request_amendment_api_v1_lab_results_order_tests__orderTestId__request_amendment_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderTestId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AmendmentRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    resolve_escalation_api_v1_lab_results_order_tests__orderTestId__escalation_resolve_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderTestId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EscalationResolveRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EscalationResolveResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_collection_worklist_api_v1_lab_worklists_collection_get: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                search?: string | null;
+                priority?: components["schemas"]["PriorityLevel"] | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_entry_worklist_api_v1_lab_worklists_entry_get: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                search?: string | null;
+                priority?: components["schemas"]["PriorityLevel"] | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_dashboard_blocked_worklist_api_v1_lab_worklists_dashboard_blocked_get: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_validation_worklist_api_v1_lab_worklists_validation_get: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                search?: string | null;
+                priority?: components["schemas"]["PriorityLevel"] | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_dashboard_worklist_today_api_v1_lab_worklists_dashboard_today_get: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_lab_board_api_v1_lab_board_get: {
+        parameters: {
+            query?: {
+                detail?: "summary" | "full";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LabBoardResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_lab_board_summary_api_v1_lab_board_summary_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LabBoardSummaryResponse"];
+                };
+            };
+        };
+    };
+    get_pending_critical_values_api_v1_lab_critical_values_pending_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -4500,7 +4746,7 @@ export interface operations {
             };
         };
     };
-    get_all_critical_values_api_v1_critical_values_all_get: {
+    get_all_critical_values_api_v1_lab_critical_values_all_get: {
         parameters: {
             query?: {
                 acknowledged?: boolean | null;
@@ -4531,7 +4777,7 @@ export interface operations {
             };
         };
     };
-    notify_critical_value_api_v1_critical_values__test_id__notify_post: {
+    notify_critical_value_api_v1_lab_critical_values__test_id__notify_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -4566,7 +4812,7 @@ export interface operations {
             };
         };
     };
-    acknowledge_critical_value_api_v1_critical_values__test_id__acknowledge_post: {
+    acknowledge_critical_value_api_v1_lab_critical_values__test_id__acknowledge_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -4601,7 +4847,7 @@ export interface operations {
             };
         };
     };
-    get_order_critical_values_api_v1_orders__order_id__critical_values_get: {
+    get_order_critical_values_api_v1_lab_orders__order_id__critical_values_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -4632,7 +4878,7 @@ export interface operations {
             };
         };
     };
-    receive_hl7_result_api_v1_analyzer_hl7_post: {
+    receive_hl7_result_api_v1_lab_analyzer_hl7_post: {
         parameters: {
             query?: never;
             header?: {
@@ -4667,7 +4913,7 @@ export interface operations {
             };
         };
     };
-    receive_json_result_api_v1_analyzer_json_post: {
+    receive_json_result_api_v1_lab_analyzer_json_post: {
         parameters: {
             query?: never;
             header?: {
@@ -4702,7 +4948,7 @@ export interface operations {
             };
         };
     };
-    get_pending_samples_api_v1_analyzer_pending__analyzer_id__get: {
+    get_pending_samples_api_v1_lab_analyzer_pending__analyzer_id__get: {
         parameters: {
             query?: never;
             header?: {
@@ -4919,192 +5165,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_collection_worklist_api_v1_lab_worklists_collection_get: {
-        parameters: {
-            query?: {
-                page?: number;
-                pageSize?: number;
-                search?: string | null;
-                priority?: components["schemas"]["PriorityLevel"] | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_entry_worklist_api_v1_lab_worklists_entry_get: {
-        parameters: {
-            query?: {
-                page?: number;
-                pageSize?: number;
-                search?: string | null;
-                priority?: components["schemas"]["PriorityLevel"] | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_dashboard_blocked_worklist_api_v1_lab_worklists_dashboard_blocked_get: {
-        parameters: {
-            query?: {
-                page?: number;
-                pageSize?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_dashboard_worklist_today_api_v1_lab_worklists_dashboard_today_get: {
-        parameters: {
-            query?: {
-                page?: number;
-                pageSize?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_validation_worklist_api_v1_lab_worklists_validation_get: {
-        parameters: {
-            query?: {
-                page?: number;
-                pageSize?: number;
-                search?: string | null;
-                priority?: components["schemas"]["PriorityLevel"] | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_lab_board_api_v1_lab_board_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LabBoardResponse"];
                 };
             };
         };

@@ -13,6 +13,16 @@ from datetime import UTC, datetime
 from typing import Any, Literal
 
 from app.data.lab_constants import QUEUE_AGE_CRITICAL_HOURS, QUEUE_AGE_WARNING_HOURS
+from app.services.lab.blockers import (
+    ATTENTION_TYPE_SORT,
+    BLOCKED_LABELS,
+    PRIORITY_ATTENTION_TYPES,
+    PRIORITY_WEIGHT,
+    SUPERVISOR_ATTENTION_TYPES,
+    attention_type_for,
+    blocked_reason_for_work_item,
+    should_surface_attention,
+)
 from app.models.escalation import EscalationTicket
 from app.models.order import Order, OrderTest
 from app.models.quality_issue import QualityIssue
@@ -32,8 +42,6 @@ from app.schemas.enums import (
 from sqlalchemy import and_, func, or_
 from sqlalchemy.orm import Session
 
-ATTENTION_LIMIT = 50
-
 TatBucket = Literal["fresh", "onTrack", "warning", "critical"]
 TatStatus = Literal["fresh", "warning", "critical"]
 QueueStage = Literal["collection", "entry", "validation"]
@@ -44,70 +52,7 @@ STAGE_LABELS: dict[QueueStage, str] = {
     "validation": "Validation",
 }
 
-PRIORITY_WEIGHT = {
-    PriorityLevel.URGENT.value: 4,
-    PriorityLevel.HIGH.value: 3,
-    PriorityLevel.MEDIUM.value: 2,
-    PriorityLevel.LOW.value: 1,
-    "urgent": 4,
-    "high": 3,
-    "medium": 2,
-    "low": 1,
-}
-
-BLOCKED_LABELS = {
-    "payment_unpaid": "Payment required",
-    "specimen_recollection": "Recollection required",
-    "sample_rejected": "Sample rejected",
-    "retest_pending": "Re-test in progress",
-    "critical_value": "Critical value — supervisor review",
-    "amendment_pending": "Amendment pending",
-    "retry_limit": "Re-test limit reached",
-    "recollection_limit": "Recollection limit reached",
-    "supervisor_review": "Supervisor approval required",
-    "recollection_approval": "Recollection awaiting supervisor approval",
-}
-
-BLOCKED_ATTENTION_TYPE = {
-    "critical_value": "escalation_critical",
-    "amendment_pending": "escalation_amendment",
-    "retry_limit": "escalation_retry_limit",
-    "recollection_limit": "escalation_recollection_limit",
-    "supervisor_review": "supervisor_approval",
-    "recollection_approval": "supervisor_recollection_request",
-    "payment_unpaid": "payment_blocked",
-    "sample_rejected": "sample_rejected",
-    "specimen_recollection": "recollection_waiting",
-    "retest_pending": "retest_in_progress",
-}
-
-ATTENTION_TYPE_SORT = {
-    "escalation_critical": 10,
-    "escalation_amendment": 20,
-    "escalation_retry_limit": 30,
-    "escalation_recollection_limit": 40,
-    "supervisor_approval": 45,
-    "supervisor_recollection_request": 48,
-    "payment_blocked": 50,
-    "sample_rejected": 60,
-    "recollection_waiting": 70,
-    "retest_in_progress": 80,
-    "priority_urgent": 82,
-    "priority_high": 84,
-    "queue_overdue_critical": 90,
-    "queue_overdue_warning": 100,
-}
-
-SUPERVISOR_ATTENTION_TYPES = {
-    "escalation_critical",
-    "escalation_amendment",
-    "escalation_retry_limit",
-    "escalation_recollection_limit",
-    "supervisor_approval",
-    "supervisor_recollection_request",
-}
-
-PRIORITY_ATTENTION_TYPES = {"priority_urgent", "priority_high"}
+ATTENTION_LIMIT = 50
 
 
 def hours_since(ts: datetime | None, now: datetime | None = None) -> float:
@@ -146,70 +91,6 @@ def age_bucket(hours: float, turnaround_hours: int | None) -> TatBucket:
     if hours < 1:
         return "fresh"
     return "onTrack"
-
-
-def blocked_reason_for_work_item(
-    *,
-    status: str,
-    is_retest: bool = False,
-    payment_status: str | None = None,
-    sample_status: str | None = None,
-    sample_is_recollection: bool = False,
-    escalation_reason_code: str | None = None,
-) -> str | None:
-    """Canonical blocked-reason key for a pipeline work item."""
-    if payment_status == PaymentStatus.UNPAID.value and status in (
-        TestStatus.PENDING.value,
-        "pending",
-    ):
-        return "payment_unpaid"
-    if status == TestStatus.ESCALATED.value:
-        if escalation_reason_code == EscalationReasonCode.CRIT_VAL.value:
-            return "critical_value"
-        if escalation_reason_code == EscalationReasonCode.AMEND_RES.value:
-            return "amendment_pending"
-        if escalation_reason_code == EscalationReasonCode.LIMIT_HIT.value:
-            return "retry_limit"
-        if escalation_reason_code == EscalationReasonCode.REJ_SAMP.value:
-            return "recollection_limit"
-        return "supervisor_review"
-    if sample_status == SampleStatus.REJECTED.value:
-        return "sample_rejected"
-    if sample_is_recollection and status in (TestStatus.PENDING.value, "pending"):
-        return "specimen_recollection"
-    if is_retest and status == TestStatus.SAMPLE_COLLECTED.value:
-        return "retest_pending"
-    return None
-
-
-def should_surface_attention(
-    blocked_reason: str | None,
-    status: TatStatus,
-    *,
-    always: bool = False,
-) -> bool:
-    """Surface blocked work, TAT breaches, and always-on supervisor items. STAT-only work is excluded."""
-    if always or blocked_reason:
-        return True
-    return status in ("warning", "critical")
-
-
-def attention_type_for(
-    blocked_reason: str | None,
-    status: TatStatus,
-    priority: str,
-) -> str:
-    if blocked_reason:
-        return BLOCKED_ATTENTION_TYPE.get(blocked_reason, "queue_overdue_warning")
-    if status == "critical":
-        return "queue_overdue_critical"
-    if status == "warning":
-        return "queue_overdue_warning"
-    if priority == PriorityLevel.URGENT.value:
-        return "priority_urgent"
-    if priority == PriorityLevel.HIGH.value:
-        return "priority_high"
-    return "queue_overdue_warning"
 
 
 def _iso(ts: datetime | None) -> str:

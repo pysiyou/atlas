@@ -33,9 +33,14 @@ class LabOperationsService:
         self.db = db
         self.emitter = AuditEmitter(db)
         self.escalation = EscalationEngine(db, self.emitter)
-        self.quality = QualityIssueService(db, self.escalation, self.emitter)
-        self.recollection = RecollectionRequestService(db, self.quality)
-        self.quality.recollection_requests = self.recollection
+        self.recollection = RecollectionRequestService(db, quality_service=None)
+        self.quality = QualityIssueService(
+            db,
+            self.escalation,
+            self.emitter,
+            recollection_requests=self.recollection,
+        )
+        self.recollection.quality = self.quality
         self.result_validator = ResultValidatorService()
         self.flag_calculator = FlagCalculatorService()
         self._collection = CollectionOperations(self)

@@ -9,23 +9,17 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1 import (
     affiliations,
-    analyzer,
     audit,
     auth,
     billing,
-    critical_values,
     dashboard,
+    lab,
     orders,
     patients,
     payments,
-    quality_issues,
-    recollection_requests,
     reports,
-    results,
-    samples,
     tests,
     users,
-    worklists,
 )
 from app.core.cache import close_redis, get_redis
 from app.core.config import settings
@@ -92,18 +86,10 @@ app.include_router(audit.router, prefix=settings.API_V1_PREFIX)
 app.include_router(patients.router, prefix=settings.API_V1_PREFIX, tags=["patients"])
 app.include_router(tests.router, prefix=settings.API_V1_PREFIX, tags=["tests"])
 app.include_router(orders.router, prefix=settings.API_V1_PREFIX, tags=["orders"])
-app.include_router(samples.router, prefix=settings.API_V1_PREFIX, tags=["samples"])
-app.include_router(results.router, prefix=settings.API_V1_PREFIX, tags=["results"])
 app.include_router(users.router, prefix=settings.API_V1_PREFIX, tags=["users"])
 app.include_router(payments.router, prefix=settings.API_V1_PREFIX, tags=["payments"])
 app.include_router(affiliations.router, prefix=settings.API_V1_PREFIX, tags=["affiliations"])
-app.include_router(critical_values.router, prefix=settings.API_V1_PREFIX, tags=["critical-values"])
-app.include_router(analyzer.router, prefix=settings.API_V1_PREFIX, tags=["analyzer"])
-app.include_router(quality_issues.router, prefix=settings.API_V1_PREFIX, tags=["quality-issues"])
-app.include_router(
-    recollection_requests.router, prefix=settings.API_V1_PREFIX, tags=["recollection-requests"]
-)
-app.include_router(worklists.router, prefix=settings.API_V1_PREFIX)
+app.include_router(lab.router, prefix=settings.API_V1_PREFIX)
 app.include_router(billing.router, prefix=settings.API_V1_PREFIX)
 app.include_router(dashboard.router, prefix=settings.API_V1_PREFIX)
 app.include_router(reports.router, prefix=settings.API_V1_PREFIX)

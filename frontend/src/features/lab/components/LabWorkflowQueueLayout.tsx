@@ -9,6 +9,24 @@ import { EmptyState, PANEL_EMPTY_STATE } from '@/components';
 import { displayId } from '@/utils';
 import { SPACING, WORKSPACE } from '@/components/theme/recipes';
 
+/** Filter row + scroll region shared by workflow queues. */
+export function LabWorkflowQueueScaffold({
+  filterRow,
+  children,
+  scrollClassName = WORKSPACE.contentInset,
+}: {
+  filterRow: ReactNode;
+  children: ReactNode;
+  scrollClassName?: string;
+}): React.ReactElement {
+  return (
+    <div className="h-full flex flex-col min-h-0">
+      <div className="shrink-0">{filterRow}</div>
+      <div className={`flex-1 min-h-0 overflow-y-auto ${scrollClassName}`}>{children}</div>
+    </div>
+  );
+}
+
 interface LabWorkflowQueueLayoutProps<T> {
   /** All items (parent applies filterRow filters) */
   items: T[];
@@ -36,26 +54,27 @@ export function LabWorkflowQueueLayout<T>({
   const showEmptyState = items.length === 0;
 
   return (
-    <div className="h-full flex flex-col min-h-0">
-      <div className="shrink-0">{filterRow}</div>
+    <LabWorkflowQueueScaffold
+      filterRow={filterRow}
+      scrollClassName={
+        showEmptyState
+          ? `${WORKSPACE.contentInset} flex flex-col`
+          : `${WORKSPACE.contentInset} grid ${SPACING.gapSection} content-start`
+      }
+    >
+      {!showEmptyState &&
+        items.map((item, idx) => (
+          <React.Fragment key={getItemKey(item, idx)}>
+            {renderCard(item, idx, items)}
+          </React.Fragment>
+        ))}
 
-      <div
-        className={`flex-1 min-h-0 overflow-y-auto ${WORKSPACE.contentInset} ${showEmptyState ? 'flex flex-col' : `grid ${SPACING.gapSection} content-start`}`}
-      >
-        {!showEmptyState &&
-          items.map((item, idx) => (
-            <React.Fragment key={getItemKey(item, idx)}>
-              {renderCard(item, idx, items)}
-            </React.Fragment>
-          ))}
-
-        {!hasItems && (
-          <div className="flex-1">
-            <EmptyState {...PANEL_EMPTY_STATE} title={emptyTitle} description={emptyDescription} />
-          </div>
-        )}
-      </div>
-    </div>
+      {!hasItems && (
+        <div className="flex-1">
+          <EmptyState {...PANEL_EMPTY_STATE} title={emptyTitle} description={emptyDescription} />
+        </div>
+      )}
+    </LabWorkflowQueueScaffold>
   );
 }
 

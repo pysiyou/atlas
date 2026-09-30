@@ -99,4 +99,3 @@ export const LabMonitorEventLogPanel: React.FC = () => (
 );
 
 /** @deprecated Use LabMonitorEventLogPanel */
-export const CommandCenterEventLogPanel = LabMonitorEventLogPanel;
