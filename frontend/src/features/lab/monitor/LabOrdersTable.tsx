@@ -9,10 +9,10 @@ import { Panel } from '@/components/surfaces/Panel';
 import type { DashboardWorklistItem } from '../api/worklists';
 import { useDashboardWorklistToday } from '../api/worklists';
 import { getLabQueueUrl } from '../constants/labConstants';
-import type { LabPipelineStage } from './commandCenterModel';
+import type { LabPipelineStage } from './monitorModel';
 import type { PriorityLevel, TestStatus } from '@/types';
 import { displayId } from '@/utils';
-import { DASHBOARD_ROW_INTERACTIVE } from './commandCenterStyles';
+import { MONITOR_ROW_INTERACTIVE } from './monitorStyles';
 import { createLabOrdersTableConfig } from './LabOrdersTable.config';
 
 export interface LabOrderTableRow {
@@ -80,7 +80,7 @@ export const LabOrdersTable: React.FC = () => {
         pagination={{ mode: 'none' }}
         getRowKey={row => row.id}
         onRowClick={row => navigate(row.href)}
-        rowClassName={() => DASHBOARD_ROW_INTERACTIVE}
+        rowClassName={() => MONITOR_ROW_INTERACTIVE}
         emptyMessage={EMPTY_COPY.dashboardWorklist.title}
         emptyDescription={EMPTY_COPY.dashboardWorklist.description}
         emptyVariant="dense"

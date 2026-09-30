@@ -5,22 +5,22 @@ import { PANEL_SHELL, TABLE_TYPE, TYPE } from '@/components/theme/recipes';
 import { CONTROL, RADIUS, SPACING } from '@/components/theme/recipes';
 import { TONE } from '@/components/theme/recipes';
 
-export const COMMAND_CENTER_PANEL = {
+export const MONITOR_PANEL = {
   ...PANEL_SHELL.page,
   page: 'flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-surface-page',
 } as const;
 
-export const DASHBOARD_PAGE =
+export const MONITOR_PAGE =
   `flex flex-1 h-full min-h-0 min-w-0 flex-col overflow-y-auto lg:overflow-hidden ${SPACING.gapSection}` as const;
 
-export const DASHBOARD_BOTTOM_ROW =
+export const MONITOR_BOTTOM_ROW =
   `grid min-h-72 shrink-0 grid-cols-1 ${SPACING.gapSection} lg:h-72 lg:grid-cols-3 lg:items-stretch` as const;
 
-export const DASHBOARD_BOTTOM_PANEL = 'min-h-72 overflow-hidden lg:min-h-0 lg:h-full' as const;
+export const MONITOR_BOTTOM_PANEL = 'min-h-72 overflow-hidden lg:min-h-0 lg:h-full' as const;
 
-export const DASHBOARD_TABLE_WRAP = 'flex min-h-80 flex-1 flex-col lg:min-h-0' as const;
+export const MONITOR_TABLE_WRAP = 'flex min-h-80 flex-1 flex-col lg:min-h-0' as const;
 
-export const DASHBOARD_ROW_INTERACTIVE = `cursor-pointer ${CONTROL.focusVisibleFlat}` as const;
+export const MONITOR_ROW_INTERACTIVE = `cursor-pointer ${CONTROL.focusVisibleFlat}` as const;
 
 export const TODAY_PANEL = {
   body: 'flex min-h-0 flex-1 flex-col px-space-3 py-space-3',
@@ -69,12 +69,12 @@ export const TODAY_KPI = {
   footerCaption: `${TYPE.caption} mt-space-1.5 text-text-tertiary`,
 } as const;
 
-export const COMMAND_CENTER_ATTENTION_ACCENT = {
+export const MONITOR_ATTENTION_ACCENT = {
   problem: TONE.danger.fill,
   neutral: TONE.warning.fill,
 } as const;
 
-export const COMMAND_CENTER_FEED_STYLES = {
+export const MONITOR_FEED_STYLES = {
   groupHeader: 'sticky top-0 z-[1] flex items-center gap-space-2 bg-transparent py-space-2',
   groupDivider: 'flex-1 h-px bg-border-subtle',
   groupLabel: `${TYPE.sectionTitle} tracking-widest`,

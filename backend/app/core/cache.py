@@ -53,6 +53,7 @@ class CacheKeys:
     TESTS_CATALOG = "tests:catalog"
     TESTS_BY_CODE = "tests:code:{code}"
     AFFILIATIONS_PRICING = "affiliations:pricing"
+    LAB_BOARD_SUMMARY_PREFIX = "lab:board:summary"
 
 
 def generate_cache_key(base_key: str, **params) -> str:
@@ -128,6 +129,11 @@ def cache_delete_pattern(pattern: str) -> int:
         pass
 
     return 0
+
+
+def invalidate_lab_board_summary_cache() -> int:
+    """Invalidate cached lab monitor board summaries (all role scopes)."""
+    return cache_delete_pattern(f"{CacheKeys.LAB_BOARD_SUMMARY_PREFIX}:*")
 
 
 def invalidate_tests_cache():

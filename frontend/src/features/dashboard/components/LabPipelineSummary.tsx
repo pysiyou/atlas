@@ -41,7 +41,7 @@ export const LabPipelineSummary: React.FC = () => {
     <Card padding="md">
       <div className="flex items-center justify-between mb-space-4">
         <h2 className={TYPE.amount}>Lab Pipeline</h2>
-        <Link to={getLabTabPath('command-center')} className={INLINE_LINK}>
+        <Link to={getLabTabPath('monitor')} className={INLINE_LINK}>
           Command Center
         </Link>
       </div>

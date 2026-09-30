@@ -10,7 +10,7 @@
  * - Quality issues: report → invalidateQualityIssueQueries
  * - Recollection: approve/deny → invalidateRecollectionQueries
  * - Collection: collect sample → invalidateCollectionQueries
- * - Lab board refresh → invalidateCommandCenterQueries
+ * - Lab monitor board → invalidateLabMonitorQueries
  * - Full lab workflow (validation modals) → invalidateLabWorkflowQueries
  * - Worklists + lab tab counts: queue changes → invalidateWorklistQueries (also refreshes board)
  */
@@ -29,9 +29,13 @@ function settleInvalidations(tasks: Array<Promise<unknown>>): Promise<void> {
   return Promise.all(tasks).then(() => undefined);
 }
 
-/** Lab tab badges read pipeline counts from the command-center board snapshot. */
+/** Lab tab badges read pipeline counts from the monitor board summary. */
 export function invalidateLabBoardQuery(client: QueryClient): Promise<void> {
-  return client.invalidateQueries({ queryKey: queryKeys.commandCenter.board() });
+  return client.invalidateQueries({ queryKey: queryKeys.labMonitor.all });
+}
+
+export function invalidateLabMonitorQueries(client: QueryClient): Promise<void> {
+  return client.invalidateQueries({ queryKey: queryKeys.labMonitor.all });
 }
 
 export function invalidateWorklistQueries(client: QueryClient): Promise<void> {
@@ -157,9 +161,14 @@ export function invalidateCollectionQueries(client: QueryClient): Promise<void> 
   ]);
 }
 
+/** @deprecated Use invalidateLabMonitorQueries */
 export function invalidateCommandCenterQueries(client: QueryClient): Promise<void> {
+  return invalidateLabMonitorQueries(client);
+}
+
+export function invalidateLabMonitorQueriesFull(client: QueryClient): Promise<void> {
   return settleInvalidations([
-    client.invalidateQueries({ queryKey: queryKeys.commandCenter.all }),
+    invalidateLabMonitorQueries(client),
     client.invalidateQueries({ queryKey: queryKeys.results.pendingEscalation() }),
     client.invalidateQueries({ queryKey: queryKeys.recollectionRequests.all }),
     invalidateWorklistQueries(client),
@@ -179,7 +188,7 @@ export function invalidateLabWorkflowQueries(
   const { orderId, criticalValues = false, pendingEscalation = false } = options;
   const tasks: Array<Promise<unknown>> = [
     invalidateOrderQueries(client, { orderId, samples: true, payments: false }),
-    invalidateCommandCenterQueries(client),
+    invalidateLabMonitorQueriesFull(client),
   ];
   if (criticalValues) {
     tasks.push(client.invalidateQueries({ queryKey: queryKeys.criticalValues.all }));

@@ -32,7 +32,7 @@ export { LaboratoryPage } from './pages/LaboratoryPage';
 export { SampleCollectionQueue } from './collection/SampleCollectionQueue';
 export { ResultEntryQueue } from './entry/ResultEntryQueue';
 export { ResultValidationQueue } from './validation/ResultValidationQueue';
-export { LabCommandCenterBoard } from './commandCenter/LabCommandCenterBoard';
+export { LabMonitorBoard, LabMonitorBoard as LabCommandCenterBoard } from './monitor/LabMonitorBoard';
 
 export { LabWorkflowQueueLayout } from './components/LabWorkflowQueueLayout';
 export { LabWorkflowCardShell } from './components/LabWorkflowCardShell';

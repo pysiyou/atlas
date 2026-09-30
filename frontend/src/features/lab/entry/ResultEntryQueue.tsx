@@ -4,12 +4,13 @@
 
 import React, { useMemo } from 'react';
 import { useTestNameLookup } from '@/features/catalog';
-import { useResultEntryQueueData, useLabQueueFilters } from '../hooks';
-import type { TestWithContextResult } from '../hooks/useOrderTestsWithLabContext';
+import { useEntryTestCatalog, useLabQueueFilters } from '../hooks';
+import type { TestWithContextResult } from '../types';
 import { useEntryWorklist } from '../api/worklists';
 import { mapEntryWorklistToOrderTestContext } from '../utils/labQueue';
 import { ResultEntryCard } from './ResultEntryCard';
 import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
+import { LabWorklistPaginationNotice } from '../components/LabWorklistPaginationNotice';
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import { entryFilterConfig } from '../constants';
 import { EMPTY_COPY, ErrorBoundary } from '@/components';
@@ -22,8 +23,8 @@ export const ResultEntryQueue: React.FC = () => {
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
 
-  const { items: worklistItems, isLoading: worklistLoading } = useEntryWorklist();
-  const { tests: testCatalog } = useResultEntryQueueData();
+  const { items: worklistItems, pagination, isLoading: worklistLoading } = useEntryWorklist();
+  const { tests: testCatalog } = useEntryTestCatalog();
 
   const allTests = useMemo(
     () => worklistItems.map(mapEntryWorklistToOrderTestContext) as TestWithContextResult[],
@@ -106,17 +107,20 @@ export const ResultEntryQueue: React.FC = () => {
         emptyTitle={EMPTY_COPY.pendingResults.title}
         emptyDescription={EMPTY_COPY.pendingResults.description}
         filterRow={
-          <LabQueueFilters
-            config={entryFilterConfig}
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            dateRange={dateRange}
-            onDateRangeChange={setDateRange}
-            sampleTypeFilters={sampleTypeFilters}
-            onSampleTypeFiltersChange={setSampleTypeFilters}
-            statusFilters={statusFilters}
-            onStatusFiltersChange={setStatusFilters}
-          />
+          <>
+            <LabQueueFilters
+              config={entryFilterConfig}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              dateRange={dateRange}
+              onDateRangeChange={setDateRange}
+              sampleTypeFilters={sampleTypeFilters}
+              onSampleTypeFiltersChange={setSampleTypeFilters}
+              statusFilters={statusFilters}
+              onStatusFiltersChange={setStatusFilters}
+            />
+            <LabWorklistPaginationNotice pagination={pagination} />
+          </>
         }
       />
     </ErrorBoundary>

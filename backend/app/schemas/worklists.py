@@ -51,6 +51,8 @@ class CollectionWorklistItem(BaseModel):
     referringPhysician: str | None = None
     testName: str | None = None
     testCategory: str | None = None
+    queueAgeBand: Literal["fresh", "onTrack", "warning", "critical"] | None = None
+    priorityRank: int | None = None
 
 
 class EntryWorklistItem(BaseModel):
@@ -71,6 +73,10 @@ class EntryWorklistItem(BaseModel):
     isRetest: bool
     referringPhysician: str | None = None
     testCategory: str | None = None
+    blockedReason: str | None = None
+    blockedLabel: str | None = None
+    queueAgeBand: Literal["fresh", "onTrack", "warning", "critical"] | None = None
+    priorityRank: int | None = None
 
 
 class DashboardWorklistItem(BaseModel):
@@ -140,6 +146,10 @@ class ValidationWorklistItem(BaseModel):
     turnaroundHours: int
     hasCriticalValues: bool
     testCategory: str | None = None
+    blockedReason: str | None = None
+    blockedLabel: str | None = None
+    queueAgeBand: Literal["fresh", "onTrack", "warning", "critical"] | None = None
+    priorityRank: int | None = None
 
 
 class WorklistResponse(BaseModel):
@@ -208,6 +218,18 @@ class LabTodayPanelSnapshot(BaseModel):
     testsWithResultEntry: int
     testsWithValidation: int
     testsOffNormalPath: int
+
+
+class LabBoardSummaryResponse(BaseModel):
+    """Lightweight board payload for tab badges and idle polling."""
+
+    counts: LabBoardCounts
+    health: Literal["healthy", "attention", "critical"]
+    healthMessage: str
+    suggestedTab: str | None = None
+    totalActive: int
+    computedAt: str | None = None
+    todayPanel: LabTodayPanelSnapshot
 
 
 class LabBoardResponse(BaseModel):

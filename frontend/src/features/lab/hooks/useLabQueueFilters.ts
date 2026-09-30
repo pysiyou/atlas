@@ -11,17 +11,19 @@ import { useLabQueueUrlSearch } from './useLabQueueFilterState';
 import { createLabQueueSearchFilter } from '../components/LabWorkflowQueueLayout';
 import { displayId } from '@/utils';
 import type { SampleCollectionQueueItem } from '../types';
-import type { TestWithContextResult } from './useOrderTestsWithLabContext';
+import type { TestWithContextResult } from '../types';
+import { PRIORITY_LEVEL_VALUES, type PriorityLevel } from '@/types';
 import type { SampleStatus, TestStatus } from '@/types';
 
 // ─── Workflow Types ───────────────────────────────────────────────────────────
 
-type WorkflowType = 'collection' | 'entry' | 'validation';
+type WorkflowType = 'collection' | 'entry' | 'validation' | 'validationReview';
 
 type LabQueueItemByStage<T extends WorkflowType> = 
   T extends 'collection' ? SampleCollectionQueueItem :
   T extends 'entry' ? TestWithContextResult :
   T extends 'validation' ? TestWithContextResult :
+  T extends 'validationReview' ? TestWithContextResult :
   never;
 
 // ─── Filter Configurations ────────────────────────────────────────────────────
@@ -88,10 +90,25 @@ const VALIDATION_FILTER_CONFIG: LabQueueFilterConfig<TestWithContextResult, Test
   sortByPriority: true,
 };
 
+const VALIDATION_REVIEW_FILTER_CONFIG: LabQueueFilterConfig<TestWithContextResult, PriorityLevel> =
+  {
+    callbacks: {
+      getOrderDate: (t) => t.orderDate,
+      getSampleType: (t) => t.sampleType,
+      getStatus: (t) => t.priority as PriorityLevel,
+      getPriority: (t) => t.priority,
+      getQueueSince: (t) => t.resultEnteredAt ?? t.orderDate,
+      searchFilterFn: createLabQueueSearchFilter<TestWithContextResult>(),
+    },
+    defaultStatuses: [...PRIORITY_LEVEL_VALUES],
+    sortByPriority: true,
+  };
+
 const WORKFLOW_FILTER_CONFIGS = {
   collection: COLLECTION_FILTER_CONFIG,
   entry: ENTRY_FILTER_CONFIG,
   validation: VALIDATION_FILTER_CONFIG,
+  validationReview: VALIDATION_REVIEW_FILTER_CONFIG,
 } as const;
 
 // ─── Factory Hook ─────────────────────────────────────────────────────────────

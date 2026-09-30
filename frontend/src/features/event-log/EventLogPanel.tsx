@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { ErrorAlert, Skeleton } from '@/components';
 import { Panel } from '@/components/surfaces/Panel';
 import { errorAlertMessage } from '@/utils/feedback';
-import { EVENT_LOG_COPY } from './copy';
+import { EVENT_LOG_COPY } from './types';
 import { EventLogFeed } from './EventLogFeed';
 import { useEventLog } from './useEventLog';
 import type { EventLogFilter, EventLogScope } from './types';
@@ -25,7 +25,7 @@ function metaForVariant(variant: PanelVariant): string {
     case 'scope':
       return EVENT_LOG_COPY.panelMetaEntity;
     case 'recent':
-      return EVENT_LOG_COPY.panelMetaCommandCenter;
+      return EVENT_LOG_COPY.panelMetaMonitor;
   }
 }
 
@@ -94,6 +94,9 @@ export const ScopedEventLogPanel: React.FC<{
   />
 );
 
-export const CommandCenterEventLogPanel: React.FC = () => (
-  <EventLogPanel variant="recent" className="min-h-0 h-full" />
+export const LabMonitorEventLogPanel: React.FC = () => (
+  <EventLogPanel variant="recent" className="min-h-0 h-full" panelVariant="lab" />
 );
+
+/** @deprecated Use LabMonitorEventLogPanel */
+export const CommandCenterEventLogPanel = LabMonitorEventLogPanel;

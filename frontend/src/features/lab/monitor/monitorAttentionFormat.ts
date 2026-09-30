@@ -4,8 +4,8 @@
 
 import { displayId } from '@/utils';
 import { LAB_CONFIG, LAB_COPY, labStageLabel } from '../constants/labConstants';
-import type { LabAttentionQueueItem } from './commandCenterModel';
-import type { AttentionType } from './commandCenterModel';
+import type { LabAttentionQueueItem } from './monitorModel';
+import type { AttentionType } from './monitorModel';
 
 export type AttentionDetail =
   | { type: 'patient'; value: string }

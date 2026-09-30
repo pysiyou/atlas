@@ -11,4 +11,8 @@ export type {
 
 export type SampleRequirement = import('@/types/lab-operations').SampleCollectionRequirement;
 
-export type { TestWithContext } from '@/types';
+import type { TestWithContext } from '@/types';
+
+export type { TestWithContext };
+
+export type TestWithContextResult = TestWithContext & { hasCriticalValues?: boolean };

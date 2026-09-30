@@ -18,6 +18,7 @@ from app.services.lab.quality import QualityIssueService
 from app.services.lab.recollection import RecollectionRequestService
 from app.services.lab.result_ops import ResultOperations
 from app.services.lab.results import FlagCalculatorService, ResultValidatorService
+from app.core.cache import invalidate_lab_board_summary_cache
 from app.utils.exceptions import LabOperationError
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -120,20 +121,35 @@ class LabOperationsService:
             query = query.filter(OrderTest.status.notin_(exclude_statuses))
         return query.all()
 
+    def _invalidate_lab_monitor_cache(self) -> None:
+        invalidate_lab_board_summary_cache()
+
     def collect_sample(self, **kwargs) -> Sample:
-        return self._collection.collect_sample(**kwargs)
+        sample = self._collection.collect_sample(**kwargs)
+        self._invalidate_lab_monitor_cache()
+        return sample
 
     def enter_results(self, **kwargs) -> OrderTest:
-        return self._results.enter_results(**kwargs)
+        order_test = self._results.enter_results(**kwargs)
+        self._invalidate_lab_monitor_cache()
+        return order_test
 
     def validate_results(self, **kwargs) -> OrderTest:
-        return self._results.validate_results(**kwargs)
+        order_test = self._results.validate_results(**kwargs)
+        self._invalidate_lab_monitor_cache()
+        return order_test
 
     def reject_results(self, **kwargs):
-        return self._results.reject_results(**kwargs)
+        result = self._results.reject_results(**kwargs)
+        self._invalidate_lab_monitor_cache()
+        return result
 
     def request_amendment(self, **kwargs) -> OrderTest:
-        return self._results.request_amendment(**kwargs)
+        order_test = self._results.request_amendment(**kwargs)
+        self._invalidate_lab_monitor_cache()
+        return order_test
 
     def resolve_escalation(self, **kwargs) -> EscalationResolveResult:
-        return self._escalation_ops.resolve_escalation(**kwargs)
+        result = self._escalation_ops.resolve_escalation(**kwargs)
+        self._invalidate_lab_monitor_cache()
+        return result

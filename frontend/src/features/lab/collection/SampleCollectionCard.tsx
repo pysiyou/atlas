@@ -3,14 +3,9 @@
  */
 /* eslint-disable max-lines -- single module: shared view-model + mobile/desktop */
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import { actionButtonPreset, Card, IconButton } from '@/components';
 import { SampleStatusBadge } from '../components/LabDomainBadges';
-import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { useTestCatalog } from '@/features/catalog';
-import { usePatientNameLookup } from '@/features/patients';
-import { getTestNames } from '@/features/catalog/testLookup';
-import { useLabWorkflowCardClickGuard } from '../hooks';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
 import { LabWorkflowCardShell, TestList } from '../components/LabWorkflowCardShell';
 import { CollectionHeaderBadges } from '../components/LabWorkflowBadges';
@@ -22,7 +17,8 @@ import { SampleRejectionPopover } from './SampleRejectionPopover';
 import { printSampleCollectionLabel, getEffectiveContainerType } from '../utils';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import type { ContainerType, Sample, RejectedSample } from '@/types';
-import type { SampleCollectionQueueItem, SampleRequirement } from '@/types/lab-operations';
+import type { SampleCollectionQueueItem } from '@/types/lab-operations';
+import { useCollectionCardData, type CollectionCardSharedData } from './SampleCollectionCardData';
 
 export interface CollectionCardProps {
   display: SampleCollectionQueueItem;
@@ -35,58 +31,6 @@ export interface CollectionCardProps {
   ) => void;
   isCollecting?: boolean;
   isMobile?: boolean;
-}
-
-interface CollectionCardSharedData {
-  display: SampleCollectionQueueItem;
-  sample: Sample;
-  requirement: SampleRequirement;
-  onCollect: CollectionCardProps['onCollect'];
-  patientName: string;
-  testNames: string[];
-  handleCardClick: (e?: React.MouseEvent) => void;
-  isCollecting: boolean;
-}
-
-function useCollectionCardData(props: CollectionCardProps): CollectionCardSharedData | null {
-  const { display, onCollect, isCollecting = false } = props;
-  const { getPatientName } = usePatientNameLookup();
-  const { tests } = useTestCatalog();
-  const { openModal } = useModal();
-
-  const { sample, requirement } = display;
-
-  const openSampleModal = useMemo(() => {
-    return () => {
-      const isPending = sample?.status === 'pending';
-      const isCollected = sample?.status === 'collected';
-      const isRejected = sample?.status === 'rejected';
-
-      if ((isCollected || isRejected) && sample?.sampleId) {
-        openModal(ModalType.SAMPLE_DETAIL, { sampleId: sample.sampleId.toString() });
-      } else if (isPending) {
-        openModal(ModalType.SAMPLE_DETAIL, { pendingSampleDisplay: display, onCollect });
-      }
-    };
-  }, [sample, display, onCollect, openModal]);
-
-  const handleCardClick = useLabWorkflowCardClickGuard(openSampleModal);
-
-  if (!sample || !requirement) return null;
-
-  const patientName = getPatientName(display.order.patientId);
-  const testNames = requirement.testCodes ? getTestNames(requirement.testCodes, tests) : [];
-
-  return {
-    display,
-    sample,
-    requirement,
-    onCollect,
-    patientName,
-    testNames,
-    handleCardClick,
-    isCollecting,
-  };
 }
 
 function getCollectionViewModel(display: SampleCollectionQueueItem, sample: Sample) {
