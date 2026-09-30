@@ -11,17 +11,22 @@ import {
   headlineMetaKeysFor,
   isSystemActorRecord,
   withHashPrefix,
+  type PatientNameLookup,
   type TestNameLookup,
 } from './catalog';
 import { EVENT_LOG_COPY } from './types';
 import type { EventLogHeadlinePart, EventLogRecord, ResolvedEventLogItem } from './types';
 
-function formatTargetLabel(record: EventLogRecord, getTestName: TestNameLookup): string {
+function formatTargetLabel(
+  record: EventLogRecord,
+  getTestName: TestNameLookup,
+  getPatientName: PatientNameLookup
+): string {
   const testCodes = collectTestCodes(record);
 
   switch (record.targetType) {
     case 'patient':
-      return eventLogId.patient(record.targetId);
+      return getPatientName(record.targetId);
     case 'order':
       return eventLogId.order(record.targetId);
     case 'sample':
@@ -117,6 +122,7 @@ function pickResultFlags(record: EventLogRecord): string[] | undefined {
 export interface ResolveEventLogOptions {
   showEventTypeInMeta?: boolean;
   getTestName?: TestNameLookup;
+  getPatientName?: PatientNameLookup;
 }
 
 export function resolveEventLogItem(
@@ -126,13 +132,14 @@ export function resolveEventLogItem(
   const catalog = getCatalogEntry(record.eventType);
   const system = isSystemActorRecord(record, catalog);
   const getTestName = options?.getTestName ?? (code => code);
-  const built = buildEventLogHeadline(record, { getTestName });
+  const getPatientName = options?.getPatientName ?? (id => eventLogId.patient(id));
+  const built = buildEventLogHeadline(record, { getTestName, getPatientName });
   const note = pickNoteForCard(record, built.parts);
   const results = pickResultsForCard(record);
   const resultFlags = results ? pickResultFlags(record) : undefined;
 
   const actorName = system ? EVENT_LOG_COPY.systemActorName : record.actorSnapshot.name;
-  const targetLabel = formatTargetLabel(record, getTestName);
+  const targetLabel = formatTargetLabel(record, getTestName, getPatientName);
 
   return {
     record,

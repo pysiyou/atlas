@@ -95,7 +95,7 @@ export const ScopedEventLogPanel: React.FC<{
 );
 
 export const LabMonitorEventLogPanel: React.FC = () => (
-  <EventLogPanel variant="recent" className="min-h-0 h-full" panelVariant="lab" />
+  <EventLogPanel variant="recent" className="min-h-0 h-full" />
 );
 
 /** @deprecated Use LabMonitorEventLogPanel */
