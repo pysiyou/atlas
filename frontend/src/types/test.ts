@@ -252,5 +252,16 @@ export interface TestWithContext {
   severity?: string;
   ticketMetadata?: Record<string, unknown>;
 
+  /** Server-driven action gates from lab worklists (when present). */
+  allowedActions?: {
+    collect: boolean;
+    enterResults: boolean;
+    validate: boolean;
+    reject: boolean;
+  };
+  denyReason?: string | null;
+  denyMessage?: string | null;
+  allowForceValidate?: boolean;
+
   [key: string]: unknown;
 }

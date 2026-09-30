@@ -80,7 +80,11 @@ export function mapCollectionWorklistToSampleDisplay(item: CollectionWorklistIte
     orderId: item.orderId,
   };
 
-  return { sample, order, patient, priority: item.priority, requirement };
+  return { sample, order, patient, priority: item.priority, requirement,
+    allowedActions: item.allowedActions,
+    denyReason: item.denyReason ?? item.blockedReason ?? null,
+    denyMessage: item.denyMessage ?? item.blockedLabel ?? null,
+  };
 }
 
 export function mapEntryWorklistToOrderTestContext(item: EntryWorklistItem): TestWithContext {
@@ -98,6 +102,9 @@ export function mapEntryWorklistToOrderTestContext(item: EntryWorklistItem): Tes
     orderDate: item.orderDate,
     collectedAt: item.collectedAt ?? undefined,
     isRetest: item.isRetest,
+    allowedActions: item.allowedActions,
+    denyReason: item.denyReason ?? item.blockedReason ?? null,
+    denyMessage: item.denyMessage ?? item.blockedLabel ?? null,
   } as TestWithContext;
 }
 
@@ -126,6 +133,9 @@ export function mapValidationWorklistToOrderTestContext(
     isRetest: item.isRetest,
     retestOfTestId: item.retestOfTestId ?? undefined,
     retestNumber: item.retestNumber,
+    allowedActions: item.allowedActions,
+    denyReason: item.denyReason ?? item.blockedReason ?? null,
+    denyMessage: item.denyMessage ?? item.blockedLabel ?? null,
   } as TestWithContext;
 }
 

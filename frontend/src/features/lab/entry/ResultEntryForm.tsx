@@ -24,6 +24,8 @@ interface EntryFormProps {
   isComplete: boolean;
   isModal?: boolean;
   readOnly?: boolean;
+  canEnter?: boolean;
+  denyMessage?: string | null;
 }
 
 export const ResultEntryForm: React.FC<EntryFormProps> = ({
@@ -38,6 +40,8 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
   isComplete,
   isModal = false,
   readOnly = false,
+  canEnter = true,
+  denyMessage,
 }) => {
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
 
@@ -46,7 +50,8 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
   }, []);
 
   const hasValidationErrors = Object.values(validationErrors).some(error => !!error);
-  const canSubmit = isComplete && !hasValidationErrors;
+  const entryLocked = readOnly || !canEnter;
+  const canSubmit = isComplete && !hasValidationErrors && canEnter;
 
   if (!testDef?.parameters) return null;
 
@@ -104,7 +109,7 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
                   inputId={`result-${resultKey}-${param.code}`}
                   validationError={validationErrors[param.code]}
                   onValidationChange={error => handleValidationChange(param.code, error)}
-                  disabled={readOnly}
+                  disabled={entryLocked}
                 />
                 {valueType !== 'TEXT' && param.unit && (
                   <div className="absolute inset-y-0 right-0 pr-space-3 flex items-center pointer-events-none z-0">
@@ -133,7 +138,7 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
           onChange={e => onNotesChange(resultKey, e.target.value ?? '')}
           placeholder="Instrument flags, repeat run context, or other analysis notes…"
           rows={isModal ? 2 : 1}
-          disabled={readOnly}
+          disabled={entryLocked}
         />
       </div>
 
@@ -144,9 +149,13 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
               {feedbackTitle('lab.entry.fixValidationBeforeSubmit')}
             </span>
           )}
+          {!canEnter && !hasValidationErrors && denyMessage && (
+            <span className={FIELD_ERROR_CAPTION}>{denyMessage}</span>
+          )}
           <Button
             onClick={onSave}
             disabled={!canSubmit}
+            title={!canEnter ? denyMessage ?? undefined : undefined}
             {...actionButtonPreset('submit')}
             size="sm"
             layout="icon-text"

@@ -95,6 +95,10 @@ export function useResultEntryWorkflow({
         return;
       }
 
+      if (testItem.allowedActions?.enterResults === false) {
+        return;
+      }
+
       const testDef = getTest(testItem.testCode);
       if (!testDef?.parameters) {
         notify.toast('lab.entry.parametersMissing');

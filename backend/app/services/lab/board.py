@@ -13,32 +13,29 @@ from datetime import UTC, datetime
 from typing import Any, Literal
 
 from app.data.lab_constants import QUEUE_AGE_CRITICAL_HOURS, QUEUE_AGE_WARNING_HOURS
-from app.services.lab.blockers import (
-    ATTENTION_TYPE_SORT,
-    BLOCKED_LABELS,
-    PRIORITY_ATTENTION_TYPES,
-    PRIORITY_WEIGHT,
-    SUPERVISOR_ATTENTION_TYPES,
-    attention_type_for,
-    blocked_reason_for_work_item,
-    should_surface_attention,
-)
 from app.models.escalation import EscalationTicket
 from app.models.order import Order, OrderTest
-from app.models.quality_issue import QualityIssue
 from app.models.patient import Patient
+from app.models.quality_issue import QualityIssue
 from app.models.recollection_request import RecollectionRequest
 from app.models.sample import Sample
 from app.models.test import Test
 from app.schemas.enums import (
-    EscalationReasonCode,
     EscalationTicketStatus,
-    PaymentStatus,
     PriorityLevel,
     RecollectionRequestStatus,
     SampleStatus,
     TestStatus,
 )
+from app.services.lab.blockers import (
+    ATTENTION_TYPE_SORT,
+    PRIORITY_ATTENTION_TYPES,
+    PRIORITY_WEIGHT,
+    SUPERVISOR_ATTENTION_TYPES,
+    attention_type_for,
+    should_surface_attention,
+)
+from app.services.lab.eligibility import BLOCKED_LABELS, blocked_reason_for_work_item
 from sqlalchemy import and_, func, or_
 from sqlalchemy.orm import Session
 

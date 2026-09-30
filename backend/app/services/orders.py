@@ -236,32 +236,42 @@ def _calculate_order_status(order: Order, samples: list[Sample]) -> OrderStatus:
     return OrderStatus.ORDERED
 
 
-def update_order_status(db: Session, order_id: int) -> None:
+def apply_order_status_rollup(db: Session, order_id: int) -> bool:
+    """Recompute order.overallStatus from samples/tests; audit without committing."""
     order = db.query(Order).filter(Order.orderId == order_id).first()
     if not order:
-        return
+        return False
 
     if order.overallStatus == OrderStatus.CANCELLED:
         logger.debug("Order %s is cancelled, skipping status update", order_id)
-        return
+        return False
 
     samples = db.query(Sample).filter(Sample.orderId == order_id).all()
     new_status = _calculate_order_status(order, samples)
 
-    if order.overallStatus != new_status:
-        old_status = order.overallStatus
-        order.overallStatus = new_status
-        order.updatedAt = datetime.now(UTC)
-        db.add(order)
-        AuditEmitter(db).order_status_changed(
-            order_id,
-            old_status.value if old_status else None,
-            new_status.value,
-            user_id=None,
-            metadata={"trigger": "automatic"},
-        )
+    if order.overallStatus == new_status:
+        return False
+
+    old_status = order.overallStatus
+    order.overallStatus = new_status
+    order.updatedAt = datetime.now(UTC)
+    db.add(order)
+    AuditEmitter(db).order_status_changed(
+        order_id,
+        old_status.value if old_status else None,
+        new_status.value,
+        user_id=None,
+        metadata={"trigger": "automatic"},
+    )
+    logger.info("Order %s status changed from %s to %s", order_id, old_status, new_status)
+    return True
+
+
+def update_order_status(db: Session, order_id: int, *, commit: bool = True) -> None:
+    """Lab legacy entry: rollup and optionally commit (prefer facade run_lab_mutation)."""
+    changed = apply_order_status_rollup(db, order_id)
+    if commit and changed:
         db.commit()
-        logger.info("Order %s status changed from %s to %s", order_id, old_status, new_status)
 
 
 def _parse_include(include: str | None) -> set[str]:

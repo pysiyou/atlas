@@ -18,6 +18,14 @@ export interface SampleCollectionRequirement {
   orderId: number;
 }
 
+/** Server-driven gates from lab worklist API. */
+export interface LabWorklistAllowedActions {
+  collect: boolean;
+  enterResults: boolean;
+  validate: boolean;
+  reject: boolean;
+}
+
 /** Sample collection queue row — used by modals and lab collection workflow. */
 export interface SampleCollectionQueueItem {
   sample?: Sample;
@@ -25,6 +33,9 @@ export interface SampleCollectionQueueItem {
   patient: Patient;
   priority: string;
   requirement?: SampleCollectionRequirement;
+  allowedActions?: LabWorklistAllowedActions;
+  denyReason?: string | null;
+  denyMessage?: string | null;
 }
 
 /** Alias used across lab collection code. */

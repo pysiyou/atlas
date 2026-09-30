@@ -32,6 +32,7 @@ interface EscalationResolutionActionsProps {
   reasonFinalReject: string;
   onReasonFinalRejectChange: (value: string) => void;
   reasonCode?: string;
+  allowForceValidate?: boolean;
   hasResults?: boolean;
   resolveAsync: (
     action: EscalationResolutionAction,
@@ -46,13 +47,19 @@ function popoverSubtitle(orderTestId?: number, hint?: string): string {
   return [label, hint].filter(Boolean).join(' · ');
 }
 
-function visibleActions(reasonCode: string | undefined, hasResults: boolean) {
+function visibleActions(
+  reasonCode: string | undefined,
+  hasResults: boolean,
+  allowForceValidate: boolean,
+) {
   return {
     showRetest: hasResults && (!reasonCode || reasonCode === 'LIMIT-HIT'),
     showRecollect: !reasonCode || reasonCode === 'LIMIT-HIT',
     showApplyAmendment: reasonCode === 'AMEND-RES' && hasResults,
     showForceValidate:
-      hasResults && (reasonCode === 'CRIT-VAL' || reasonCode === 'LIMIT-HIT' || !reasonCode),
+      allowForceValidate &&
+      hasResults &&
+      (reasonCode === 'CRIT-VAL' || reasonCode === 'LIMIT-HIT' || !reasonCode),
   };
 }
 
@@ -75,6 +82,7 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
   reasonFinalReject,
   onReasonFinalRejectChange,
   reasonCode,
+  allowForceValidate = true,
   resolveAsync,
   onValidationError,
   hasResults = false,
@@ -82,6 +90,7 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
   const { showRetest, showRecollect, showApplyAmendment, showForceValidate } = visibleActions(
     reasonCode,
     hasResults,
+    allowForceValidate,
   );
 
   return (

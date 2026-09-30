@@ -4,9 +4,9 @@
 
 import { useQueryClient } from '@tanstack/react-query';
 import { logger } from '@/utils/logger';
-import { getErrorMessage, getErrorDetails, isLikelyNetworkOrTimeout } from '@/utils/errors';
+import { getErrorDetails, isLikelyNetworkOrTimeout } from '@/utils/errors';
 import { invalidateCollectionQueries } from '@/lib/query/invalidate';
-import { getFeedback, notify } from '@/utils/feedback';
+import { notify } from '@/utils/feedback';
 import type { ContainerType, ContainerTopColor } from '@/types';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import type { UseMutationResult } from '@tanstack/react-query';
@@ -70,12 +70,7 @@ export function useSubmitSampleCollection({
       if (isLikelyNetworkOrTimeout(error)) {
         notify.toast('lab.collection.networkAmbiguous');
       } else {
-        const message = getErrorMessage(
-          error,
-          getFeedback('lab.collection.error').subtitle ??
-            'The collection could not be saved. Check your connection and try again.'
-        );
-        notify.toast('lab.collection.error', { subtitle: message });
+        notify.apiError('lab.collection.error', error);
       }
     }
   };

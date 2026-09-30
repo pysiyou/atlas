@@ -149,7 +149,7 @@ def get_lab_board(
 @router.get("/board/summary", response_model=LabBoardSummaryResponse)
 def get_lab_board_summary(
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_lab_tech),
+    current_user: User = Depends(require_sample_collector),
 ):
     include_supervisor = current_user.role in (UserRole.ADMIN, UserRole.LAB_TECH_PLUS)
     with log_lab_read(

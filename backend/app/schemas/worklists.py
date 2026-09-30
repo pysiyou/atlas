@@ -2,7 +2,7 @@
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from app.schemas.enums import (
     ContainerTopColor,
@@ -24,6 +24,15 @@ class WorklistPagination(BaseModel):
     hasPrev: bool
 
 
+class LabWorklistAllowedActions(BaseModel):
+    model_config = {"populate_by_name": True}
+
+    collect: bool = False
+    enterResults: bool = False
+    can_validate: bool = Field(default=False, alias="validate")
+    reject: bool = False
+
+
 class CollectionWorklistItem(BaseModel):
     sampleId: int
     orderId: int
@@ -41,6 +50,10 @@ class CollectionWorklistItem(BaseModel):
     recollectionReason: str | None = None
     recollectionAttempt: int = 1
     blockedReason: str | None = None
+    blockedLabel: str | None = None
+    allowedActions: LabWorklistAllowedActions = LabWorklistAllowedActions()
+    denyReason: str | None = None
+    denyMessage: str | None = None
     waitingHours: float
     turnaroundHours: int
     actualContainerType: ContainerType | None = None
@@ -75,6 +88,9 @@ class EntryWorklistItem(BaseModel):
     testCategory: str | None = None
     blockedReason: str | None = None
     blockedLabel: str | None = None
+    allowedActions: LabWorklistAllowedActions = LabWorklistAllowedActions()
+    denyReason: str | None = None
+    denyMessage: str | None = None
     queueAgeBand: Literal["fresh", "onTrack", "warning", "critical"] | None = None
     priorityRank: int | None = None
 
@@ -148,6 +164,9 @@ class ValidationWorklistItem(BaseModel):
     testCategory: str | None = None
     blockedReason: str | None = None
     blockedLabel: str | None = None
+    allowedActions: LabWorklistAllowedActions = LabWorklistAllowedActions()
+    denyReason: str | None = None
+    denyMessage: str | None = None
     queueAgeBand: Literal["fresh", "onTrack", "warning", "critical"] | None = None
     priorityRank: int | None = None
 

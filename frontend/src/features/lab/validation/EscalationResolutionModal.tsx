@@ -136,6 +136,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
             onReasonAuthorizeRecollectChange={setReasonAuthorizeRecollect}
             reasonFinalReject={reasonFinalReject}
             onReasonFinalRejectChange={setReasonFinalReject}
+            allowForceValidate={test.allowForceValidate !== false}
             resolveAsync={resolveAsync}
           />
         )

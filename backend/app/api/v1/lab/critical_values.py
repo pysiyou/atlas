@@ -12,6 +12,7 @@ from app.schemas.critical_values import (
     NotifyRequest,
 )
 from app.services.lab.critical_values import CriticalNotificationService
+from app.services.lab.workflow import LabOperationsService
 
 router = APIRouter()
 
@@ -40,7 +41,7 @@ def notify_critical_value(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_lab_tech),
 ):
-    return CriticalNotificationService(db).notify(test_id, request, current_user.id)
+    return LabOperationsService(db).notify_critical_value(test_id, request, current_user.id)
 
 
 @router.post("/critical-values/{test_id}/acknowledge")
@@ -50,7 +51,9 @@ def acknowledge_critical_value(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_lab_tech),
 ):
-    return CriticalNotificationService(db).acknowledge(test_id, request, current_user.id)
+    return LabOperationsService(db).acknowledge_critical_value(
+        test_id, request, current_user.id
+    )
 
 
 @router.get("/orders/{order_id}/critical-values")

@@ -27,10 +27,27 @@ import {
   getLabTabPath,
 } from '../constants/labConstants';
 import { cn } from '@/utils';
+import { useAuthStore } from '@/app/authStore';
+import type { UserRole } from '@/types';
+
+const LAB_TECH_ROLES: UserRole[] = ['administrator', 'lab-technician', 'lab-technician-plus'];
+const COLLECTION_ROLES: UserRole[] = [
+  'administrator',
+  'receptionist',
+  'lab-technician',
+  'lab-technician-plus',
+];
+
+function tabAllowed(tab: LabTabId, hasRole: (roles: UserRole | UserRole[]) => boolean): boolean {
+  if (tab === 'collection') return hasRole(COLLECTION_ROLES);
+  if (tab === 'monitor') return hasRole(LAB_TECH_ROLES);
+  return hasRole(LAB_TECH_ROLES);
+}
 
 export const LaboratoryPage: React.FC = () => {
   const navigate = useNavigate();
   const { tab: tabParam } = useParams<{ tab?: string }>();
+  const { hasRole } = useAuthStore();
   const { counts, isError, error, refetch } = useLabStageQueueCounts();
 
   const activeTab: LabTabId = normalizeLabTabParam(tabParam) ?? DEFAULT_LAB_TAB;
@@ -58,7 +75,7 @@ export const LaboratoryPage: React.FC = () => {
   );
 
   const tabs = useMemo((): Array<{ id: LabTabId; label: string; icon: React.ReactNode; count?: number }> => {
-    return [
+    const all: Array<{ id: LabTabId; label: string; icon: React.ReactNode; count?: number }> = [
       {
         id: 'collection',
         label: LAB_TAB_LABELS.collection,
@@ -83,7 +100,8 @@ export const LaboratoryPage: React.FC = () => {
         icon: <Icon name={ICONS.dataFields.pulse} className="w-3.5 h-3.5" />,
       },
     ];
-  }, [counts]);
+    return all.filter(tab => tabAllowed(tab.id, hasRole));
+  }, [counts, hasRole]);
 
   if (!tabParam) {
     return <Navigate to={getLabTabPath(DEFAULT_LAB_TAB)} replace />;
@@ -91,6 +109,11 @@ export const LaboratoryPage: React.FC = () => {
 
   if (!normalizeLabTabParam(tabParam)) {
     return <Navigate to={getLabTabPath(DEFAULT_LAB_TAB)} replace />;
+  }
+
+  if (!tabAllowed(activeTab, hasRole)) {
+    const fallback = tabs[0]?.id ?? DEFAULT_LAB_TAB;
+    return <Navigate to={getLabTabPath(fallback)} replace />;
   }
 
   const pageTitle =
@@ -154,31 +177,32 @@ export const LaboratoryPage: React.FC = () => {
           activeTab === 'monitor' ? 'flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden' : LAB_WORKFLOW_QUEUE_SHELL
         }
       >
+        {isError && (
+          <div className={`${WORKSPACE.contentInset} shrink-0 pb-0`}>
+            <ErrorAlert
+              error={{
+                message: errorAlertMessage('lab.page.loadFailed', error),
+              }}
+              onRetry={() => refetch()}
+            />
+          </div>
+        )}
         <div
           className={`flex-1 flex flex-col min-h-0 overflow-hidden ${
             activeTab === 'monitor' ? '' : 'bg-surface-page'
           }`}
         >
-          {isError ? (
-            <div className={WORKSPACE.contentInset}>
-              <ErrorAlert
-                error={{
-                  message: errorAlertMessage('lab.page.loadFailed', error),
-                }}
-                onRetry={() => refetch()}
-              />
+          {activeTab === 'collection' && tabAllowed('collection', hasRole) && (
+            <SampleCollectionQueue />
+          )}
+          {activeTab === 'entry' && tabAllowed('entry', hasRole) && <ResultEntryQueue />}
+          {activeTab === 'validation' && tabAllowed('validation', hasRole) && (
+            <ResultValidationQueue />
+          )}
+          {activeTab === 'monitor' && tabAllowed('monitor', hasRole) && (
+            <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+              <LabMonitorBoard />
             </div>
-          ) : (
-            <>
-              {activeTab === 'collection' && <SampleCollectionQueue />}
-              {activeTab === 'entry' && <ResultEntryQueue />}
-              {activeTab === 'validation' && <ResultValidationQueue />}
-              {activeTab === 'monitor' && (
-                <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-                  <LabMonitorBoard />
-                </div>
-              )}
-            </>
           )}
         </div>
       </div>

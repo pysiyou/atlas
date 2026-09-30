@@ -45,6 +45,8 @@ interface ResultValidationCardSharedData {
   sampleRejection: ReturnType<typeof useSampleRejectionDisplay>;
   workItem: ReturnType<typeof useOrderTestQueueState>;
   rejection: ReturnType<typeof deriveRetestContext>;
+  canValidate: boolean;
+  canReject: boolean;
 }
 
 function useResultValidationCardData(props: ResultValidationCardProps): ResultValidationCardSharedData | null {
@@ -53,6 +55,8 @@ function useResultValidationCardData(props: ResultValidationCardProps): ResultVa
   const { getPatientName } = usePatientNameLookup();
   const handleCardClick = useLabWorkflowCardClickGuard(onClick);
   const workItem = useOrderTestQueueState(test);
+  const canValidate = test.allowedActions?.validate !== false;
+  const canReject = test.allowedActions?.reject !== false;
   const rejection = useMemo(() => deriveRetestContext(test), [test]);
   const sampleRejection = useSampleRejectionDisplay(test);
 
@@ -71,6 +75,8 @@ function useResultValidationCardData(props: ResultValidationCardProps): ResultVa
     sampleRejection,
     workItem,
     rejection,
+    canValidate,
+    canReject,
   };
 }
 
@@ -83,6 +89,8 @@ function ResultValidationCardDesktop({
   sampleRejection,
   workItem,
   rejection,
+  canValidate,
+  canReject,
 }: ResultValidationCardSharedData) {
   const { showAttemptIndicator } = rejection;
   const resultCount = Object.keys(test.results!).length;
@@ -125,12 +133,14 @@ function ResultValidationCardDesktop({
             testName={test.testName}
             patientName={test.patientName}
             onReject={onReject}
+            disabled={!canReject}
           />
           <Button
             {...actionButtonPreset('approve')}
             size="sm"
             title="Approve Results"
             isLoading={isApproving}
+            disabled={!canValidate}
             onClick={e => {
               e.stopPropagation();
               onApprove();
@@ -165,6 +175,8 @@ function ResultValidationCardMobile({
   sampleRejection,
   workItem,
   rejection,
+  canValidate,
+  canReject,
 }: ResultValidationCardSharedData) {
   const { showAttemptIndicator } = rejection;
   const { showBanner: isSampleRejected, sampleId, sampleRejectionReason } = sampleRejection;
@@ -223,12 +235,14 @@ function ResultValidationCardMobile({
               testName={test.testName}
               patientName={patientName}
               onReject={onReject}
+              disabled={!canReject}
             />
             <Button
               {...actionButtonPreset('approve')}
               size="sm"
               title="Approve Results"
               isLoading={isApproving}
+              disabled={!canValidate}
               onClick={e => {
                 e.stopPropagation();
                 onApprove();

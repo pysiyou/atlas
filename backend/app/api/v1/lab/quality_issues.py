@@ -36,7 +36,7 @@ def report_quality_issue(
     current_user: User = Depends(get_current_user),
 ):
     assert_quality_issue_target_access(current_user, body.target.type)
-    return LabOperationsService(db).quality.report_issue(
+    return LabOperationsService(db).report_quality_issue(
         target_type=body.target.type,
         target_id=body.target.id,
         user_id=current_user.id,

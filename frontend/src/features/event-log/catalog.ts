@@ -170,7 +170,6 @@ export function appendClause(parts: EventLogHeadlinePart[], clause: string): Eve
       text: `${EVENT_LOG_COPY.reasonInlinePrefix}${label}`,
       variant: 'info',
       icon: false,
-      decoration: 'underline',
     }
   );
 }
@@ -188,7 +187,6 @@ export function appendOutcomeClause(
       text: `${EVENT_LOG_COPY.outcomeInlinePrefix}${label}`,
       variant: 'info',
       icon: false,
-      decoration: 'underline',
     }
   );
 }

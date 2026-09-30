@@ -17,7 +17,7 @@ from app.schemas.critical_values import (
 from app.schemas.enums import ResultStatus
 from app.services.audit import AuditEmitter
 from app.services.lab.results import ResultFlag
-from fastapi import HTTPException
+from app.utils.exceptions import LabOperationError
 from sqlalchemy.orm import Session
 
 
@@ -206,7 +206,7 @@ class CriticalNotificationService:
     def list_for_order(self, order_id: int) -> list[CriticalValueResponse]:
         order = self.db.query(Order).filter(Order.orderId == order_id).first()
         if not order:
-            raise HTTPException(status_code=404, detail="Order not found")
+            raise LabOperationError("Order not found", status_code=404)
         tests = self.get_critical_values_for_order(order_id)
         return [self._to_response(test, order) for test in tests]
 
@@ -238,12 +238,19 @@ class CriticalNotificationService:
         return critical_flags
 
     def notify(self, test_id: int, request: NotifyRequest, user_id: int) -> dict:
-        test = self.db.query(OrderTest).filter(OrderTest.id == test_id).first()
+        test = (
+            self.db.query(OrderTest)
+            .filter(OrderTest.id == test_id)
+            .with_for_update()
+            .first()
+        )
         if not test:
-            raise HTTPException(status_code=404, detail="Test not found")
+            raise LabOperationError("Test not found", status_code=404)
         if not test.hasCriticalValues:
-            raise HTTPException(status_code=400, detail="Test does not have critical values")
+            raise LabOperationError("Test does not have critical values", status_code=400)
         order = self.db.query(Order).filter(Order.orderId == test.orderId).first()
+        if not order:
+            raise LabOperationError("Order not found", status_code=404)
         notification = self.create_notification(
             order_test=test,
             order=order,
@@ -261,7 +268,6 @@ class CriticalNotificationService:
                 "notification_method": request.notificationMethod,
             },
         )
-        self.db.commit()
         return {
             "success": True,
             "message": f"Notification recorded for {request.notifiedTo}",
@@ -271,15 +277,20 @@ class CriticalNotificationService:
         }
 
     def acknowledge(self, test_id: int, request: AcknowledgeRequest, user_id: int) -> dict:
-        test = self.db.query(OrderTest).filter(OrderTest.id == test_id).first()
+        test = (
+            self.db.query(OrderTest)
+            .filter(OrderTest.id == test_id)
+            .with_for_update()
+            .first()
+        )
         if not test:
-            raise HTTPException(status_code=404, detail="Test not found")
+            raise LabOperationError("Test not found", status_code=404)
         if not test.hasCriticalValues:
-            raise HTTPException(status_code=400, detail="Test does not have critical values")
+            raise LabOperationError("Test does not have critical values", status_code=400)
         if not test.criticalNotificationSent:
-            raise HTTPException(status_code=400, detail="Notification has not been sent yet")
+            raise LabOperationError("Notification has not been sent yet", status_code=400)
         if test.criticalAcknowledgedAt:
-            raise HTTPException(status_code=400, detail="Critical value already acknowledged")
+            raise LabOperationError("Critical value already acknowledged", status_code=400)
         self.acknowledge_notification(test, request.acknowledgedBy)
         self.emitter.result_critical_acknowledged(
             test.orderId,
@@ -288,7 +299,6 @@ class CriticalNotificationService:
             user_id,
             metadata={"acknowledged_by": request.acknowledgedBy},
         )
-        self.db.commit()
         return {
             "success": True,
             "message": f"Critical value acknowledged by {request.acknowledgedBy}",

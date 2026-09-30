@@ -38,6 +38,10 @@ class Settings(BaseSettings):
         default="",
         description="Shared secret for analyzer ingest (X-Analyzer-Key header)",
     )
+    ANALYZER_STRICT_VALIDATION: bool = Field(
+        default=False,
+        description="When true, analyzer ingest fails on catalog validation errors instead of warning-only",
+    )
 
     # Optional artificial delay for testing loading UI (ms). Set to 0 to disable.
     ARTIFICIAL_DELAY_MS: int = Field(

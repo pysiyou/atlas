@@ -13,12 +13,16 @@ export function EntryDetailModalFooter({
   readOnly,
   isSaving,
   isComplete,
+  canEnter,
+  denyMessage,
   onClose,
   onSave,
 }: {
   readOnly: boolean;
   isSaving: boolean;
   isComplete: boolean;
+  canEnter: boolean;
+  denyMessage?: string | null;
   onClose: () => void;
   onSave: () => void;
 }) {
@@ -32,7 +36,7 @@ export function EntryDetailModalFooter({
     );
   }
   return (
-    <ModalFooter statusMessage="">
+    <ModalFooter statusMessage={!canEnter && denyMessage ? denyMessage : ''}>
       <Button
         onClick={onClose}
         {...actionButtonPreset('cancel')}
@@ -47,7 +51,8 @@ export function EntryDetailModalFooter({
         {...actionButtonPreset('save')}
         size="md"
         layout="icon-text"
-        disabled={!isComplete}
+        disabled={!isComplete || !canEnter}
+        title={!canEnter ? denyMessage ?? undefined : undefined}
         isLoading={isSaving}
       >
         Save
@@ -65,6 +70,7 @@ export function EntryDetailMainPanel({
   displayNotes,
   progressIndicator,
   isComplete,
+  canEnter,
   onResultsChange,
   onNotesChange,
   onSave,
@@ -77,6 +83,7 @@ export function EntryDetailMainPanel({
   displayNotes: string;
   progressIndicator: React.ReactNode;
   isComplete: boolean;
+  canEnter: boolean;
   onResultsChange: (key: string, paramCode: string, value: string) => void;
   onNotesChange: (key: string, notes: string) => void;
   onSave: () => void;
@@ -111,6 +118,8 @@ export function EntryDetailMainPanel({
         isComplete={isComplete}
         isModal={true}
         readOnly={readOnly}
+        canEnter={canEnter}
+        denyMessage={test.denyMessage}
       />
     </Panel>
   );

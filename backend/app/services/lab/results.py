@@ -497,6 +497,10 @@ class ResultQueryService:
         sample = samples_by_id.get(t.sampleId) if t.sampleId else None
         test_def = t.test
         ticket = tickets_by_test.get(t.id) if tickets_by_test else None
+        reason_code = ticket.reasonCode.value if ticket and ticket.reasonCode else None
+        from app.services.lab.eligibility import escalation_action_flags
+
+        flags = escalation_action_flags(t, reason_code=reason_code)
         return PendingEscalationItemResponse(
             id=t.id,
             orderId=t.orderId,
@@ -533,4 +537,6 @@ class ResultQueryService:
             reasonCode=ticket.reasonCode.value if ticket and ticket.reasonCode else None,
             severity=ticket.severity.value if ticket and ticket.severity else None,
             ticketMetadata=ticket.ticketMetadata if ticket else None,
+            criticalNotificationSent=flags["criticalNotificationSent"],
+            allowForceValidate=flags["allowForceValidate"],
         )
