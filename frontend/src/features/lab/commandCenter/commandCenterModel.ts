@@ -180,7 +180,7 @@ export interface LabAttentionQueueItem {
 /** Today panel — UTC day throughput KPIs. */
 export interface LabTodayPanelSnapshot {
   dayStartUtc: string;
-  /** Order tests with activity today (UTC), regardless of order age. */
+  /** Order tests with activity today (UTC). Milestone counts are events today only. */
   testsUpdatedToday: number;
   testsWithCollection: number;
   testsWithResultEntry: number;

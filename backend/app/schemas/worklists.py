@@ -200,7 +200,7 @@ class BoardAttentionItem(BaseModel):
 
 
 class LabTodayPanelSnapshot(BaseModel):
-    """UTC day KPIs for the lab dashboard Today panel (tests worked today cohort)."""
+    """UTC day KPIs: tests updated today, with milestone events that occurred today."""
 
     dayStartUtc: datetime
     testsUpdatedToday: int
