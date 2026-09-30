@@ -99,10 +99,51 @@ export interface EventLogScope {
   targetId: number;
 }
 
-export type EventLogFilter =
-  | { mode: 'order'; orderId: number; limit?: number }
-  | { mode: 'scope'; scope: EventLogScope; limit?: number }
-  | { mode: 'recent'; hours?: number; limit?: number };
+export type EventLogDomainCategory = EventLogDomain;
+
+export type EventLogLaboratoryCategory =
+  | 'laboratory:sample'
+  | 'laboratory:result'
+  | 'laboratory:validation'
+  | 'laboratory:escalation'
+  | 'laboratory:quality'
+  | 'laboratory:analyzer';
+
+export type EventLogCategoryKey = EventLogDomainCategory | EventLogLaboratoryCategory;
+
+/** Server query for audit events — fixed constraints and/or merged user filters. */
+export interface EventLogQuery {
+  orderId?: number;
+  patientId?: number;
+  targetType?: string;
+  targetId?: number;
+  testId?: number;
+  hours?: number;
+  createdFrom?: string;
+  createdTo?: string;
+  categories?: EventLogCategoryKey[];
+  limit?: number;
+}
+
+export type EventLogFilterField = 'category' | 'dateRange' | 'orderId' | 'testId';
+
+export interface EventLogFilterUiConfig {
+  fields?: EventLogFilterField[];
+}
+
+export interface EventLogUserFilters {
+  categories: EventLogCategoryKey[];
+  dateRange: [Date, Date] | null;
+  orderId: number | null;
+  testId: number | null;
+}
+
+export const DEFAULT_EVENT_LOG_USER_FILTERS: EventLogUserFilters = {
+  categories: [],
+  dateRange: null,
+  orderId: null,
+  testId: null,
+};
 
 /** User-facing copy for event log surfaces. */
 export const EVENT_LOG_COPY = {
@@ -111,6 +152,7 @@ export const EVENT_LOG_COPY = {
   panelMetaEntity: 'Most recent actions for this item first',
   panelMetaCommandCenter: 'Last 24 hours · most recent activity first',
   panelMetaMonitor: 'Last 24 hours · most recent activity first',
+  panelMetaAll: 'Up to 2,000 most recent events · newest first',
   emptyTitle: 'No events yet',
   emptyDescription: 'Actions and status changes will appear here as they occur.',
   narrativeDefaultLabel: 'Note',

@@ -27,6 +27,7 @@ export const menuItems: MenuItem[] = [
   { path: ROUTES.PAYMENTS, label: 'Payments', icon: React.createElement(Icon, { name: MODULE_ICONS.payments, className: 'w-5 h-5' }), roles: [] },
   { path: ROUTES.REPORTS, label: 'Reports', icon: React.createElement(Icon, { name: MODULE_ICONS.reports, className: 'w-5 h-5' }), roles: [] },
   { path: ROUTES.CATALOG, label: 'Catalog', icon: React.createElement(Icon, { name: MODULE_ICONS.catalog, className: 'w-5 h-5' }), roles: [] },
+  { path: ROUTES.EVENT_LOG, label: 'Event log', icon: React.createElement(Icon, { name: MODULE_ICONS.eventLog, className: 'w-5 h-5' }), roles: [] },
 ];
 
 /** Placeholder items; shown disabled until those features exist. */

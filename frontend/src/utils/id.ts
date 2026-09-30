@@ -36,3 +36,26 @@ export const displayId = {
   audit: (id: number | null | undefined) => formatDisplayId('audit', id),
 };
 
+function stripEntityPrefix(raw: string, prefix: string): string {
+  const upper = raw.trim().toUpperCase();
+  if (upper.startsWith(prefix)) {
+    return upper.slice(prefix.length);
+  }
+  return upper;
+}
+
+function parsePaddedEntityDigits(digits: string): number | null {
+  const trimmed = digits.trim();
+  if (!trimmed) return null;
+  const n = Number.parseInt(trimmed, 10);
+  if (!Number.isInteger(n) || n < 0) return null;
+  return n;
+}
+
+/** Parse ORD/TST/PAT-style display tokens (prefix optional) into a numeric id. */
+export function parseEntityDisplayId(entityType: EntityType, input: string): number | null {
+  const prefix = ID_PREFIXES[entityType];
+  const body = stripEntityPrefix(input, prefix);
+  return parsePaddedEntityDigits(body);
+}
+
