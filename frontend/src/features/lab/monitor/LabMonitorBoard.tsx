@@ -12,7 +12,7 @@ import { LabMonitorBoardSkeleton } from './LabMonitorBoardSkeleton';
 import { LabOrdersTable } from './LabOrdersTable';
 import { LabTodayPanel } from './LabTodayPanel';
 import { LabAttentionPanel } from './LabAttentionPanel';
-import { LabMonitorEventLogPanel } from '@/features/event-log';
+import { LabMonitorEventLogPanel } from '@/features/audit';
 
 export const LabMonitorBoard: React.FC = () => {
   const board = useLabMonitorViewModel();

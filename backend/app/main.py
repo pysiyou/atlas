@@ -7,25 +7,13 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.v1 import (
-    affiliations,
-    audit,
-    auth,
-    billing,
-    dashboard,
-    lab,
-    orders,
-    patients,
-    payments,
-    reports,
-    tests,
-    users,
-)
-from app.core.cache import close_redis, get_redis
-from app.core.config import settings
-from app.db.database import Base, engine
-from app.middleware import CacheHeadersMiddleware, DelayMiddleware
-from app.middleware.error_handlers import register_exception_handlers
+import app.domains.registry  # noqa: F401 — register ORM models
+from app.platform.cache import close_redis, get_redis
+from app.platform.config import settings
+from app.platform.database import Base, engine
+from app.platform.http.v1_router import build_v1_router
+from app.platform.middleware import CacheHeadersMiddleware, DelayMiddleware
+from app.platform.middleware.error_handlers import register_exception_handlers
 
 logger = logging.getLogger(__name__)
 
@@ -33,9 +21,7 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan events."""
-    # Startup
     Base.metadata.create_all(bind=engine)
-    # Initialize Redis connection (optional - will fail gracefully if not available)
     redis_client = get_redis()
     if redis_client:
         logger.info("Redis cache connected")
@@ -44,7 +30,6 @@ async def lifespan(app: FastAPI):
 
     yield
 
-    # Shutdown
     close_redis()
 
 
@@ -56,7 +41,6 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins_list,
@@ -65,31 +49,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# HTTP caching headers middleware
 app.add_middleware(CacheHeadersMiddleware)
-# Optional artificial delay for API v1 (for testing loading UI). Add last so it runs first.
 app.add_middleware(DelayMiddleware)
 
-# Register global exception handlers
 register_exception_handlers(app)
 
 
-# Health check
 @app.get("/health")
 def health_check():
     return {"status": "healthy"}
 
 
-# Include routers
-app.include_router(auth.router, prefix=settings.API_V1_PREFIX)
-app.include_router(audit.router, prefix=settings.API_V1_PREFIX)
-app.include_router(patients.router, prefix=settings.API_V1_PREFIX, tags=["patients"])
-app.include_router(tests.router, prefix=settings.API_V1_PREFIX, tags=["tests"])
-app.include_router(orders.router, prefix=settings.API_V1_PREFIX, tags=["orders"])
-app.include_router(users.router, prefix=settings.API_V1_PREFIX, tags=["users"])
-app.include_router(payments.router, prefix=settings.API_V1_PREFIX, tags=["payments"])
-app.include_router(affiliations.router, prefix=settings.API_V1_PREFIX, tags=["affiliations"])
-app.include_router(lab.router, prefix=settings.API_V1_PREFIX)
-app.include_router(billing.router, prefix=settings.API_V1_PREFIX)
-app.include_router(dashboard.router, prefix=settings.API_V1_PREFIX)
-app.include_router(reports.router, prefix=settings.API_V1_PREFIX)
+app.include_router(build_v1_router(), prefix=settings.API_V1_PREFIX)

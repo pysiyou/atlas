@@ -182,10 +182,7 @@ export const patientCreateSchema = patientSchema
 // Form schema for UPDATE (all fields optional for partial updates)
 export const patientUpdateSchema = patientCreateSchema.partial();
 
-// Legacy: keep patientFormSchema as alias to createSchema for backwards compatibility
-export const patientFormSchema = patientCreateSchema;
-
-export type PatientFormInput = z.infer<typeof patientFormSchema>;
+export type PatientFormInput = z.infer<typeof patientCreateSchema>;
 export type PatientCreateInput = z.infer<typeof patientCreateSchema>;
 export type PatientUpdateInput = z.infer<typeof patientUpdateSchema>;
 

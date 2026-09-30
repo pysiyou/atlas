@@ -1,0 +1,90 @@
+"""
+Patient API Routes. All fields use camelCase. Delegates to PatientService.
+"""
+from app.domains.patients.schemas import PatientCreate, PatientResponse, PatientUpdate
+from app.domains.patients.service import PatientService
+from app.domains.users.models import User
+from app.platform.database import get_db
+from app.platform.http.dependencies import PaginationParams, get_current_user
+from app.shared.schemas.pagination import PaginatedResponse, create_paginated_response, skip_to_page
+from fastapi import APIRouter, Depends, Query
+from sqlalchemy.orm import Session
+
+router = APIRouter()
+
+
+@router.get("/patients/search", response_model=list[PatientResponse])
+def search_patients(
+    q: str = Query(..., min_length=1, max_length=100),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Search patients by name, id (numeric or PAT display id), or phone. Returns list (no pagination)."""
+    return PatientService(db).search(q, limit=10000)
+
+
+@router.get(
+    "/patients",
+    response_model=list[PatientResponse] | PaginatedResponse[PatientResponse],
+)
+def get_patients(
+    pagination: PaginationParams,
+    search: str | None = Query(None, max_length=100),
+    paginated: bool = Query(False, description="Return paginated response with total count"),
+    include: str | None = Query(None, description="Comma-separated embeds, e.g. orderSummary"),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Get all patients with pagination and optional search."""
+    skip, limit = pagination["skip"], pagination["limit"]
+    include_parts = {part.strip() for part in (include or "").split(",") if part.strip()}
+    include_order_summary = "orderSummary" in include_parts
+    data, total = PatientService(db).get_list(
+        skip=skip,
+        limit=limit,
+        search=search,
+        paginated=paginated,
+        include_order_summary=include_order_summary,
+    )
+    if paginated:
+        page = skip_to_page(skip, limit)
+        return create_paginated_response(data, total, page, limit)
+    return data
+
+
+@router.get("/patients/{patientId}", response_model=PatientResponse)
+def get_patient(
+    patientId: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
+):
+    """Get patient by ID."""
+    return PatientService(db).get_by_id(patientId, viewer_user_id=current_user.id)
+
+
+@router.post("/patients", status_code=201)
+def create_patient(
+    patient_data: PatientCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Create a new patient."""
+    return PatientService(db).create(patient_data, current_user.id)
+
+
+@router.put("/patients/{patientId}")
+def update_patient(
+    patientId: int,
+    patient_data: PatientUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Update patient information."""
+    return PatientService(db).update(patientId, patient_data, current_user.id)
+
+
+@router.delete("/patients/{patientId}", status_code=204)
+def delete_patient(
+    patientId: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
+):
+    """Delete a patient."""
+    PatientService(db).delete(patientId, current_user.id)
+    return None

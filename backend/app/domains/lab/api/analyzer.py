@@ -1,0 +1,61 @@
+"""Lab analyzer integration routes."""
+
+from app.domains.lab.integration.analyzer_ingest_service import AnalyzerIngestService
+from app.domains.lab.schemas.analyzer import (
+    AnalyzerResultRequest,
+    AnalyzerResultResponse,
+    HL7MessageRequest,
+)
+from app.platform.config import settings
+from app.platform.database import get_db
+from fastapi import APIRouter, Depends, Header, HTTPException, status
+from sqlalchemy.orm import Session
+
+router = APIRouter()
+
+
+def verify_analyzer_auth(x_analyzer_key: str = Header(None)) -> bool:
+    if not x_analyzer_key:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Missing analyzer authentication key",
+        )
+    expected = settings.ANALYZER_API_KEY
+    if not expected:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Analyzer API key is not configured on the server",
+        )
+    if x_analyzer_key != expected:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid analyzer authentication key",
+        )
+    return True
+
+
+@router.post("/analyzer/hl7", response_model=AnalyzerResultResponse)
+async def receive_hl7_result(
+    request: HL7MessageRequest,
+    db: Session = Depends(get_db),
+    _: bool = Depends(verify_analyzer_auth),
+):
+    return AnalyzerIngestService(db).ingest_hl7(request)
+
+
+@router.post("/analyzer/json", response_model=AnalyzerResultResponse)
+async def receive_json_result(
+    request: AnalyzerResultRequest,
+    db: Session = Depends(get_db),
+    _: bool = Depends(verify_analyzer_auth),
+):
+    return AnalyzerIngestService(db).ingest_json(request)
+
+
+@router.get("/analyzer/pending/{analyzer_id}")
+async def get_pending_samples(
+    analyzer_id: str,
+    db: Session = Depends(get_db),
+    _: bool = Depends(verify_analyzer_auth),
+):
+    return AnalyzerIngestService(db).list_pending(analyzer_id)

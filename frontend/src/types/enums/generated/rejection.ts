@@ -2,7 +2,7 @@
 /**
  * Rejection Reason Enum - Aligned with backend
  * 
- * Must match backend/app/schemas/enums.py RejectionReason exactly
+ * Must match backend/app/shared/contracts/enums.py RejectionReason exactly
  */
 export const REJECTION_REASON_VALUES = [
   'hemolyzed',

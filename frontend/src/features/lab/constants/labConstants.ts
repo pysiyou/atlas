@@ -118,10 +118,6 @@ export const LAB_CONFIG = {
 export const LAB_TAB_IDS = ['collection', 'entry', 'validation', 'monitor'] as const;
 export type LabTabId = (typeof LAB_TAB_IDS)[number];
 
-export const LEGACY_LAB_TAB_ALIASES: Record<string, LabTabId> = {
-  'command-center': 'monitor',
-};
-
 export const LAB_TAB_LABELS: Record<LabTabId, string> = {
   collection: labStageLabel('collection', 'nav'),
   entry: labStageLabel('entry', 'nav'),
@@ -146,7 +142,6 @@ export const DEFAULT_LAB_TAB: LabTabId = 'monitor';
 
 export function normalizeLabTabParam(value: string | undefined): LabTabId | null {
   if (!value) return null;
-  if (LEGACY_LAB_TAB_ALIASES[value]) return LEGACY_LAB_TAB_ALIASES[value];
   if (LAB_TAB_IDS.includes(value as LabTabId)) return value as LabTabId;
   return null;
 }

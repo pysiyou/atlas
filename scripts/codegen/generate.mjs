@@ -41,7 +41,7 @@ export const GENERATED_LAB_CONSTANTS = {
 ${tsBody}
 } as const;
 `;
-  writeFile('backend/app/data/lab_constants.py', py);
+  writeFile('backend/app/shared/contracts/lab_constants.py', py);
   writeFile('frontend/src/types/generated/labConstants.ts', ts);
 }
 
@@ -86,7 +86,7 @@ export const PHYSIOLOGIC_LIMITS: Record<string, PhysiologicLimit> = {
 ${tsEntries}
 };
 `;
-  writeFile('backend/app/data/physiologic_limits.py', py);
+  writeFile('backend/app/shared/contracts/physiologic_limits.py', py);
   writeFile('frontend/src/types/generated/physiologicLimits.ts', ts);
 }
 
@@ -112,7 +112,7 @@ import enum
 
 ${blocks.join('\n\n')}
 `;
-  writeFile('backend/app/schemas/enums.py', py);
+  writeFile('backend/app/shared/contracts/enums.py', py);
   generateFrontendEnums(enums);
 }
 

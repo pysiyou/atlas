@@ -209,8 +209,8 @@ export function useCreatePayment() {
 
   return useMutation({
     mutationFn: async (data: CreatePaymentData) => {
-      const { paymentFormSchema } = await import('@/features/payments/schemas/payment.schema');
-      const validated = paymentFormSchema.parse(data);
+      const { paymentCreateSchema } = await import('@/features/payments/schemas/payment.schema');
+      const validated = paymentCreateSchema.parse(data);
       return paymentAPI.create(validated);
     },
     onSuccess: (_, variables) => {

@@ -1,0 +1,52 @@
+"""
+Patient Model
+"""
+from app.platform.database import Base, contract_enum
+from app.shared.contracts.enums import Gender
+from sqlalchemy import JSON, Column, DateTime, Float, Integer, String
+from sqlalchemy.sql import func
+
+
+class Patient(Base):
+    __tablename__ = "patients"
+
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+    fullName = Column("full_name", String, nullable=False, index=True)
+    dateOfBirth = Column("date_of_birth", String, nullable=False)
+    gender = Column(contract_enum(Gender), nullable=False)
+    phone = Column(String, nullable=False)
+    email = Column(String, nullable=True)
+
+    # Physical measurements (optional)
+    height = Column(Float, nullable=True)  # Height in centimeters
+    weight = Column(Float, nullable=True)  # Weight in kilograms
+
+    # Address (JSON)
+    address = Column(JSON, nullable=False)  # {street, city, postalCode}
+
+    # Emergency Contact (JSON)
+    emergencyContact = Column(
+        "emergency_contact", JSON, nullable=False
+    )  # {fullName, relationship, phone, email}
+
+    # Medical History (JSON)
+    medicalHistory = Column(
+        "medical_history", JSON, nullable=False
+    )  # {chronicConditions, currentMedications, allergies, previousSurgeries, familyHistory, lifestyle}
+
+    # Affiliation (JSON, optional)
+    affiliation = Column(JSON, nullable=True)  # {assuranceNumber, startDate, endDate, duration}
+
+    # Vital Signs (JSON, optional)
+    vitalSigns = Column(
+        "vital_signs", JSON, nullable=True
+    )  # {temperature, heartRate, systolicBP, diastolicBP, respiratoryRate, oxygenSaturation}
+
+    # Metadata
+    registrationDate = Column("registration_date", DateTime(timezone=True), nullable=False)
+    createdBy = Column("created_by", String, nullable=False)
+    createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
+    updatedAt = Column(
+        "updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
+    updatedBy = Column("updated_by", String, nullable=False)
