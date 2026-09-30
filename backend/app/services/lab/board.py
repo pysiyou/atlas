@@ -29,7 +29,7 @@ from app.schemas.enums import (
     SampleStatus,
     TestStatus,
 )
-from sqlalchemy import func, or_
+from sqlalchemy import and_, func, or_
 from sqlalchemy.orm import Session
 
 ATTENTION_LIMIT = 50
@@ -656,7 +656,7 @@ class LabBoardService:
         return snapshot
 
     def _today_panel_snapshot(self) -> dict[str, Any]:
-        """UTC day KPIs: milestone mix among order tests updated today (any age)."""
+        """UTC day KPIs among order tests updated today — milestone *events* today only."""
         today_start = self._utc_today_start()
         worked_today_filter = OrderTest.updatedAt >= today_start
 
@@ -666,28 +666,28 @@ class LabBoardService:
         tests_with_collection = (
             self.db.query(func.count(OrderTest.id))
             .filter(worked_today_filter)
-            .filter(self._collection_milestone_predicate())
+            .filter(self._collection_today_predicate(today_start))
             .scalar()
             or 0
         )
         tests_with_result_entry = (
             self.db.query(func.count(OrderTest.id))
             .filter(worked_today_filter)
-            .filter(self._result_entry_milestone_predicate())
+            .filter(self._result_entry_today_predicate(today_start))
             .scalar()
             or 0
         )
         tests_with_validation = (
             self.db.query(func.count(OrderTest.id))
             .filter(worked_today_filter)
-            .filter(self._validation_milestone_predicate())
+            .filter(self._validation_today_predicate(today_start))
             .scalar()
             or 0
         )
         tests_off_normal_path = (
             self.db.query(func.count(OrderTest.id))
             .filter(worked_today_filter)
-            .filter(self._off_normal_path_predicate())
+            .filter(self._off_normal_path_today_predicate(today_start))
             .scalar()
             or 0
         )
@@ -701,52 +701,52 @@ class LabBoardService:
             "testsOffNormalPath": tests_off_normal_path,
         }
 
-    @staticmethod
-    def _collection_milestone_predicate():
-        """Sample collection completed (or test progressed past collection)."""
-        return OrderTest.status.in_(
-            (
-                TestStatus.SAMPLE_COLLECTED,
-                TestStatus.RESULTED,
-                TestStatus.VALIDATED,
-                TestStatus.ESCALATED,
-            )
+    def _collection_today_predicate(self, today_start: datetime):
+        """Specimen collection timestamp falls on the current UTC day."""
+        collected_sample_ids = (
+            self.db.query(Sample.sampleId)
+            .filter(Sample.collectedAt.isnot(None))
+            .filter(Sample.collectedAt >= today_start)
+            .distinct()
         )
+        return OrderTest.sampleId.in_(collected_sample_ids)
 
     @staticmethod
-    def _result_entry_milestone_predicate():
-        return or_(
+    def _result_entry_today_predicate(today_start: datetime):
+        return and_(
             OrderTest.resultEnteredAt.isnot(None),
-            OrderTest.status.in_(
-                (TestStatus.RESULTED, TestStatus.VALIDATED, TestStatus.ESCALATED)
-            ),
+            OrderTest.resultEnteredAt >= today_start,
         )
 
     @staticmethod
-    def _validation_milestone_predicate():
-        return or_(
+    def _validation_today_predicate(today_start: datetime):
+        return and_(
             OrderTest.resultValidatedAt.isnot(None),
-            OrderTest.status == TestStatus.VALIDATED,
+            OrderTest.resultValidatedAt >= today_start,
         )
 
-    def _off_normal_path_predicate(self):
-        """Rejections, cancellations, rework, escalations, and quality exceptions."""
+    def _off_normal_path_today_predicate(self, today_start: datetime):
+        """Quality/rework events recorded today (not lifetime exception state)."""
         quality_test_ids = (
             self.db.query(QualityIssue.orderTestId)
             .filter(QualityIssue.orderTestId.isnot(None))
+            .filter(QualityIssue.createdAt >= today_start)
             .distinct()
         )
         quality_sample_ids = (
             self.db.query(QualityIssue.sampleId)
             .filter(QualityIssue.sampleId.isnot(None))
+            .filter(QualityIssue.createdAt >= today_start)
             .distinct()
         )
         rejected_sample_ids = (
             self.db.query(Sample.sampleId)
             .filter(Sample.status == SampleStatus.REJECTED)
+            .filter(Sample.rejectedAt.isnot(None))
+            .filter(Sample.rejectedAt >= today_start)
             .distinct()
         )
-        return or_(
+        terminal_status_today = and_(
             OrderTest.status.in_(
                 (
                     TestStatus.CANCELLED,
@@ -755,10 +755,20 @@ class LabBoardService:
                     TestStatus.ESCALATED,
                 )
             ),
+            OrderTest.updatedAt >= today_start,
+        )
+        rework_created_today = and_(
+            or_(
+                OrderTest.isRetest.is_(True),
+                OrderTest.retestOrderTestId.isnot(None),
+                OrderTest.retestNumber > 0,
+            ),
+            OrderTest.createdAt >= today_start,
+        )
+        return or_(
+            terminal_status_today,
             OrderTest.sampleId.in_(rejected_sample_ids),
-            OrderTest.isRetest.is_(True),
-            OrderTest.retestOrderTestId.isnot(None),
-            OrderTest.retestNumber > 0,
+            rework_created_today,
             OrderTest.id.in_(quality_test_ids),
             OrderTest.sampleId.in_(quality_sample_ids),
         )
