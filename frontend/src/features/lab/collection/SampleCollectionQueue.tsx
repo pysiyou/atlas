@@ -13,6 +13,7 @@ import { useCollectionWorklist } from '../api/worklists';
 import { useSubmitSampleCollection } from './useSubmitSampleCollection';
 import { SampleCollectionCard } from './SampleCollectionCard';
 import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
+import { LabWorklistPaginationNotice } from '../components/LabWorklistPaginationNotice';
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import { collectionFilterConfig } from '../constants';
 import { mapCollectionWorklistToSampleDisplay } from '../utils/labQueue';
@@ -37,7 +38,7 @@ export const SampleCollectionQueue: React.FC = () => {
   const isLookupBelowMin =
     trimmedSearch.length > 0 && trimmedSearch.length < LAB_CONFIG.SAMPLE_LOOKUP_MIN_CHARS;
 
-  const { items: worklistItems, isLoading } = useCollectionWorklist(
+  const { items: worklistItems, pagination, isLoading } = useCollectionWorklist(
     isSampleLookup ? { search: trimmedSearch } : undefined
   );
   const collectionDisplays = useMemo(
@@ -106,17 +107,20 @@ export const SampleCollectionQueue: React.FC = () => {
               : EMPTY_COPY.pendingCollections.description
         }
         filterRow={
-          <LabQueueFilters
-            config={collectionFilterConfig}
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            dateRange={dateRange}
-            onDateRangeChange={setDateRange}
-            sampleTypeFilters={sampleTypeFilters}
-            onSampleTypeFiltersChange={setSampleTypeFilters}
-            statusFilters={statusFilters}
-            onStatusFiltersChange={setStatusFilters}
-          />
+          <>
+            <LabQueueFilters
+              config={collectionFilterConfig}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              dateRange={dateRange}
+              onDateRangeChange={setDateRange}
+              sampleTypeFilters={sampleTypeFilters}
+              onSampleTypeFiltersChange={setSampleTypeFilters}
+              statusFilters={statusFilters}
+              onStatusFiltersChange={setStatusFilters}
+            />
+            <LabWorklistPaginationNotice pagination={pagination} />
+          </>
         }
       />
     </ErrorBoundary>

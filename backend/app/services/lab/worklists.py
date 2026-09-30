@@ -23,9 +23,15 @@ from app.schemas.enums import (
     SampleStatus,
     TestStatus,
 )
-from app.services.lab.board import BLOCKED_LABELS, LabBoardService, blocked_reason_for_work_item
+from app.core.cache import CacheKeys, cache_get, cache_set
+from app.services.lab.board import (
+    BLOCKED_LABELS,
+    LabBoardService,
+    age_bucket,
+    blocked_reason_for_work_item,
+)
 from app.utils.common import parse_display_id_from_search
-from sqlalchemy import String, or_
+from sqlalchemy import String, case, desc, func, or_
 from sqlalchemy.orm import Session
 
 PRIORITY_ORDER = {
@@ -36,6 +42,31 @@ PRIORITY_ORDER = {
 }
 
 COLLECTION_SAMPLE_LOOKUP_MIN_LEN = 3
+
+
+def _priority_sort_key(column):
+    return case(
+        (column == PriorityLevel.URGENT, 0),
+        (column == PriorityLevel.HIGH, 1),
+        (column == PriorityLevel.MEDIUM, 2),
+        (column == PriorityLevel.LOW, 3),
+        else_=99,
+    )
+
+
+def _worklist_result(
+    items: list[dict[str, Any]],
+    total: int,
+    page: int,
+    page_size: int,
+    *,
+    rows_loaded: int,
+) -> dict[str, Any]:
+    return {
+        "items": items,
+        "pagination": _paginate(total, page, page_size),
+        "rows_loaded": rows_loaded,
+    }
 
 
 def _collection_search_filter(search_term: str):
@@ -138,7 +169,33 @@ class LabWorklistService:
             query = query.filter(Sample.status == SampleStatus.PENDING)
         if priority:
             query = query.filter(Sample.priority == priority)
-        rows = query.all()
+        total = query.count()
+        start = (page - 1) * page_size
+        if search_term:
+            query = query.order_by(
+                desc(Sample.updatedAt),
+                desc(Sample.collectedAt),
+                desc(Order.orderDate),
+            )
+        else:
+            query = query.order_by(
+                _priority_sort_key(Sample.priority),
+                Order.orderDate.asc(),
+            )
+        rows = query.offset(start).limit(page_size).all()
+        parent_ids = [
+            sample.originalSampleId for sample, _order, _patient in rows if sample.originalSampleId
+        ]
+        parents: dict[int, Sample] = {}
+        if parent_ids:
+            for parent in self.db.query(Sample).filter(Sample.sampleId.in_(parent_ids)).all():
+                parents[parent.sampleId] = parent
+        all_codes: list[str] = []
+        for sample, _order, _patient in rows:
+            all_codes.extend(sample.testCodes or [])
+        if all_codes:
+            for code in set(all_codes):
+                self._get_turnaround(code)
         items = []
         for sample, order, patient in rows:
             since = order.orderDate
@@ -147,11 +204,10 @@ class LabWorklistService:
             tat = self._max_tat_for_codes(codes)
             test_name, test_category = self._collection_test_display(codes)
             blocked = "payment_unpaid" if order.paymentStatus != PaymentStatus.PAID else None
+            tat_band = age_bucket(hours, tat)
             original_sample_collected_at = None
             if sample.originalSampleId:
-                parent = (
-                    self.db.query(Sample).filter(Sample.sampleId == sample.originalSampleId).first()
-                )
+                parent = parents.get(sample.originalSampleId)
                 if parent:
                     original_sample_collected_at = parent.collectedAt
             items.append(
@@ -175,33 +231,19 @@ class LabWorklistService:
                     "recollectionReason": sample.recollectionReason,
                     "recollectionAttempt": sample.recollectionAttempt or 1,
                     "blockedReason": blocked,
+                    "blockedLabel": BLOCKED_LABELS.get(blocked) if blocked else None,
                     "waitingHours": round(hours, 2),
                     "turnaroundHours": tat,
+                    "queueAgeBand": tat_band,
+                    "priorityRank": PRIORITY_ORDER.get(sample.priority, 99),
                     "actualContainerType": sample.actualContainerType,
                     "actualContainerColor": sample.actualContainerColor,
                     "collectedAt": sample.collectedAt,
                     "collectedBy": sample.collectedBy,
                     "collectedVolume": sample.collectedVolume,
-                    "_sort_priority": PRIORITY_ORDER.get(sample.priority, 99),
-                    "_sort_since": since,
-                    "_sort_recency": sample.updatedAt or sample.collectedAt or since,
                 }
             )
-        if search_term:
-            items.sort(
-                key=lambda x: x["_sort_recency"],
-                reverse=True,
-            )
-        else:
-            items.sort(key=lambda x: (x["_sort_priority"], x["_sort_since"]))
-        total = len(items)
-        start = (page - 1) * page_size
-        page_items = items[start : start + page_size]
-        for item in page_items:
-            item.pop("_sort_priority", None)
-            item.pop("_sort_since", None)
-            item.pop("_sort_recency", None)
-        return {"items": page_items, "pagination": _paginate(total, page, page_size)}
+        return _worklist_result(items, total, page, page_size, rows_loaded=len(rows))
 
     def _order_test_in_active_worklist(self, order_test: OrderTest, sample: Sample | None) -> bool:
         """True when the test already appears on collection, entry, or validation worklists."""
@@ -338,7 +380,15 @@ class LabWorklistService:
                     Sample.sampleId.cast(String).ilike(term),
                 )
             )
-        rows = query.all()
+        total = query.count()
+        start = (page - 1) * page_size
+        since_col = func.coalesce(Sample.collectedAt, Order.orderDate)
+        rows = (
+            query.order_by(_priority_sort_key(Order.priority), since_col.asc())
+            .offset(start)
+            .limit(page_size)
+            .all()
+        )
         items = []
         for ot, order, patient, test, sample in rows:
             since = sample.collectedAt if sample and sample.collectedAt else order.orderDate
@@ -362,23 +412,13 @@ class LabWorklistService:
                     "isRetest": bool(ot.isRetest),
                     "referringPhysician": order.referringPhysician,
                     "testCategory": test.category,
-                    "_sort_priority": PRIORITY_ORDER.get(order.priority, 99),
-                    "_sort_since": since,
+                    "blockedReason": "retest_pending" if ot.isRetest else None,
+                    "blockedLabel": BLOCKED_LABELS.get("retest_pending") if ot.isRetest else None,
+                    "queueAgeBand": None,
+                    "priorityRank": PRIORITY_ORDER.get(order.priority, 99),
                 }
             )
-        items.sort(
-            key=lambda x: (
-                x["_sort_priority"],
-                x["_sort_since"] or datetime.min.replace(tzinfo=UTC),
-            )
-        )
-        total = len(items)
-        start = (page - 1) * page_size
-        page_items = items[start : start + page_size]
-        for item in page_items:
-            item.pop("_sort_priority", None)
-            item.pop("_sort_since", None)
-        return {"items": page_items, "pagination": _paginate(total, page, page_size)}
+        return _worklist_result(items, total, page, page_size, rows_loaded=len(rows))
 
     def list_validation(
         self,
@@ -408,11 +448,24 @@ class LabWorklistService:
                 | (Order.orderId.cast(str).ilike(term))
                 | (Test.name.ilike(term))
             )
-        rows = query.all()
+        total = query.count()
+        start = (page - 1) * page_size
+        since_col = func.coalesce(OrderTest.resultEnteredAt, Order.orderDate)
+        rows = (
+            query.order_by(_priority_sort_key(Order.priority), since_col.asc())
+            .offset(start)
+            .limit(page_size)
+            .all()
+        )
         items = []
         for ot, order, patient, test, sample in rows:
             since = ot.resultEnteredAt or order.orderDate
             hours = _hours_since(since)
+            tat_band = (
+                age_bucket(hours, test.turnaroundTimeHours)
+                if test.turnaroundTimeHours
+                else None
+            )
             items.append(
                 {
                     "orderTestId": ot.id,
@@ -439,23 +492,13 @@ class LabWorklistService:
                     "isRetest": bool(ot.isRetest),
                     "retestOfTestId": ot.retestOfTestId,
                     "retestNumber": ot.retestNumber or 0,
-                    "_sort_priority": PRIORITY_ORDER.get(order.priority, 99),
-                    "_sort_since": since,
+                    "blockedReason": None,
+                    "blockedLabel": None,
+                    "queueAgeBand": tat_band,
+                    "priorityRank": PRIORITY_ORDER.get(order.priority, 99),
                 }
             )
-        items.sort(
-            key=lambda x: (
-                x["_sort_priority"],
-                x["_sort_since"] or datetime.min.replace(tzinfo=UTC),
-            )
-        )
-        total = len(items)
-        start = (page - 1) * page_size
-        page_items = items[start : start + page_size]
-        for item in page_items:
-            item.pop("_sort_priority", None)
-            item.pop("_sort_since", None)
-        return {"items": page_items, "pagination": _paginate(total, page, page_size)}
+        return _worklist_result(items, total, page, page_size, rows_loaded=len(rows))
 
     def _utc_today_start(self) -> datetime:
         today = datetime.now(UTC).date()
@@ -516,17 +559,25 @@ class LabWorklistService:
     ) -> dict[str, Any]:
         """Today's dashboard rows: order tests whose row was updated today (UTC)."""
         _ = user_id  # reserved for future per-user scoping
-        today_start = self._utc_today_start()
-        board = LabBoardService(self.db)
-        recollection_blocked = board._recollection_blocked_order_test_ids()
+        from app.services.lab.recollection_snapshot import recollection_blocked_order_test_ids
 
-        rows = (
+        today_start = self._utc_today_start()
+        recollection_blocked = recollection_blocked_order_test_ids(self.db)
+
+        base_query = (
             self.db.query(OrderTest, Order, Patient, Test, Sample)
             .join(Order, OrderTest.orderId == Order.orderId)
             .join(Patient, Order.patientId == Patient.id)
             .join(Test, OrderTest.testCode == Test.code)
             .outerjoin(Sample, Sample.sampleId == OrderTest.sampleId)
             .filter(OrderTest.updatedAt >= today_start)
+        )
+        total = base_query.count()
+        start = (page - 1) * page_size
+        rows = (
+            base_query.order_by(OrderTest.updatedAt.desc())
+            .offset(start)
+            .limit(page_size)
             .all()
         )
 
@@ -580,15 +631,56 @@ class LabWorklistService:
                 }
             )
 
-        items.sort(key=lambda row: row["_sort_updated"], reverse=True)
-        total = len(items)
-        start = (page - 1) * page_size
-        page_items = items[start : start + page_size]
-        for item in page_items:
+        for item in items:
             item.pop("_sort_updated", None)
-        return {"items": page_items, "pagination": _paginate(total, page, page_size)}
+        return _worklist_result(items, total, page, page_size, rows_loaded=len(rows))
 
-    def get_board(self, include_supervisor: bool = True) -> dict[str, Any]:
-        return LabBoardService(self.db).compute_board_snapshot(
-            include_supervisor=include_supervisor
+    def get_board(
+        self,
+        include_supervisor: bool = True,
+        *,
+        detail: str = "full",
+    ) -> dict[str, Any]:
+        if detail == "summary":
+            scope = "supervisor" if include_supervisor else "tech"
+            cache_key = f"{CacheKeys.LAB_BOARD_SUMMARY_PREFIX}:{scope}"
+            cached = cache_get(cache_key)
+            if cached is not None:
+                return cached
+            board = LabBoardService(self.db)
+            summary = board.compute_board_summary(include_supervisor=include_supervisor)
+            cache_set(cache_key, summary, ttl=15)
+            return summary
+        board = LabBoardService(self.db)
+        return board.compute_board_snapshot(
+            include_supervisor=include_supervisor,
+            detail="full",
         )
+
+    @staticmethod
+    def expand_summary_to_board_response(summary: dict[str, Any]) -> dict[str, Any]:
+        """Pad summary counts with empty monitor sections for LabBoardResponse compatibility."""
+        empty_age = {
+            "oldestHours": None,
+            "averageHours": None,
+            "warningCount": 0,
+            "criticalCount": 0,
+        }
+        return {
+            **summary,
+            "queueAge": {
+                "collection": empty_age,
+                "entry": empty_age,
+                "validation": empty_age,
+            },
+            "blockers": {
+                "paymentUnpaid": 0,
+                "retestPending": 0,
+                "recollectionWaiting": 0,
+                "total": 0,
+            },
+            "ageBuckets": {"fresh": 0, "onTrack": 0, "warning": 0, "critical": 0},
+            "priorityMix": {"urgent": 0, "high": 0, "medium": 0, "low": 0},
+            "attentionItems": [],
+            "attentionTotal": 0,
+        }

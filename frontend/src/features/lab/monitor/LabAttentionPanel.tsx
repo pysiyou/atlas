@@ -17,9 +17,9 @@ import {
   getAttentionTypeConfig,
   type AttentionType,
   type LabAttentionQueueItem,
-} from './commandCenterModel';
-import { formatLabAttentionQueueItem, type AttentionDetail } from './commandCenterAttentionFormat';
-import { COMMAND_CENTER_ATTENTION_ACCENT, COMMAND_CENTER_FEED_STYLES } from './commandCenterStyles';
+} from './monitorModel';
+import { formatLabAttentionQueueItem, type AttentionDetail } from './monitorAttentionFormat';
+import { MONITOR_ATTENTION_ACCENT, MONITOR_FEED_STYLES } from './monitorStyles';
 
 const PRIMARY_DETAIL_CLASS = `${TABLE_TYPE.cell} truncate font-normal`;
 const META_DETAIL_CLASS = `${TABLE_TYPE.meta} truncate font-normal`;
@@ -102,7 +102,7 @@ function AttentionFeedRow({ item }: { item: LabAttentionQueueItem }) {
         )}
       >
         <span
-          className={cn(`w-0.5 shrink-0 self-stretch ${RADIUS.pill}`, COMMAND_CENTER_ATTENTION_ACCENT[tone])}
+          className={cn(`w-0.5 shrink-0 self-stretch ${RADIUS.pill}`, MONITOR_ATTENTION_ACCENT[tone])}
           aria-hidden
         />
         <div className="min-w-0 flex-1 space-y-space-1.5">
@@ -112,7 +112,7 @@ function AttentionFeedRow({ item }: { item: LabAttentionQueueItem }) {
               label={typeConfig.pillLabel}
               size="xs"
             />
-            <span className={COMMAND_CENTER_FEED_STYLES.eventHeadline}>{formatted.action}</span>
+            <span className={MONITOR_FEED_STYLES.eventHeadline}>{formatted.action}</span>
           </div>
           <AttentionDetailRow details={identityDetails} />
           <AttentionDetailRow details={contextDetails} />
@@ -127,13 +127,13 @@ function AttentionFeedGroup({ type, items }: { type: AttentionType; items: LabAt
 
   return (
     <section className="pb-space-3 last:pb-0">
-      <div className={COMMAND_CENTER_FEED_STYLES.groupHeader}>
-        <div className={COMMAND_CENTER_FEED_STYLES.groupDivider} />
-        <span className={COMMAND_CENTER_FEED_STYLES.groupLabel}>
+      <div className={MONITOR_FEED_STYLES.groupHeader}>
+        <div className={MONITOR_FEED_STYLES.groupDivider} />
+        <span className={MONITOR_FEED_STYLES.groupLabel}>
           {config.groupLabel}
           <span className="ml-space-1.5 tabular-nums text-text-tertiary">({items.length})</span>
         </span>
-        <div className={COMMAND_CENTER_FEED_STYLES.groupDivider} />
+        <div className={MONITOR_FEED_STYLES.groupDivider} />
       </div>
       <ul className="space-y-space-1">
         {items.map(item => (

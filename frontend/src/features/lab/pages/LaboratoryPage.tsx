@@ -8,7 +8,7 @@ import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import { SampleCollectionQueue } from '../collection/SampleCollectionQueue';
 import { ResultEntryQueue } from '../entry/ResultEntryQueue';
 import { ResultValidationQueue } from '../validation/ResultValidationQueue';
-import { LabCommandCenterBoard } from '../commandCenter/LabCommandCenterBoard';
+import { LabMonitorBoard } from '../monitor/LabMonitorBoard';
 import { Icon, PageHeader, Badge, ErrorAlert } from '@/components';
 import { errorAlertMessage } from '@/utils/feedback';
 import { ICONS } from '@/config/icons';
@@ -17,9 +17,10 @@ import { LAB_WORKFLOW_QUEUE_SHELL, LAB_PAGE_TABS } from '../utils/labStyles';
 import { useLabStageQueueCounts, getValidationTabCount } from '../hooks';
 import {
   DEFAULT_LAB_TAB,
-  isLabTabId,
+  normalizeLabTabParam,
   isLabWorkflowStageTab,
   getStageVisual,
+  LAB_COPY,
   LAB_TAB_LABELS,
   LAB_WORKFLOW_TAB_ICONS,
   type LabTabId,
@@ -32,15 +33,20 @@ export const LaboratoryPage: React.FC = () => {
   const { tab: tabParam } = useParams<{ tab?: string }>();
   const { counts, isError, error, refetch } = useLabStageQueueCounts();
 
-  const activeTab: LabTabId = isLabTabId(tabParam) ? tabParam : DEFAULT_LAB_TAB;
+  const activeTab: LabTabId = normalizeLabTabParam(tabParam) ?? DEFAULT_LAB_TAB;
 
   useEffect(() => {
     if (!tabParam) {
       navigate(getLabTabPath(DEFAULT_LAB_TAB), { replace: true });
       return;
     }
-    if (!isLabTabId(tabParam)) {
+    const normalized = normalizeLabTabParam(tabParam);
+    if (!normalized) {
       navigate(getLabTabPath(DEFAULT_LAB_TAB), { replace: true });
+      return;
+    }
+    if (tabParam !== normalized) {
+      navigate(getLabTabPath(normalized), { replace: true });
     }
   }, [tabParam, navigate]);
 
@@ -72,9 +78,9 @@ export const LaboratoryPage: React.FC = () => {
         count: getValidationTabCount(counts),
       },
       {
-        id: 'command-center',
-        label: LAB_TAB_LABELS['command-center'],
-        icon: <Icon name={ICONS.ui.dashboard} className="w-3.5 h-3.5" />,
+        id: 'monitor',
+        label: LAB_TAB_LABELS.monitor,
+        icon: <Icon name={ICONS.dataFields.pulse} className="w-3.5 h-3.5" />,
       },
     ];
   }, [counts]);
@@ -83,11 +89,12 @@ export const LaboratoryPage: React.FC = () => {
     return <Navigate to={getLabTabPath(DEFAULT_LAB_TAB)} replace />;
   }
 
-  if (!isLabTabId(tabParam)) {
+  if (!normalizeLabTabParam(tabParam)) {
     return <Navigate to={getLabTabPath(DEFAULT_LAB_TAB)} replace />;
   }
 
-  const pageTitle = LAB_TAB_LABELS[activeTab];
+  const pageTitle =
+    activeTab === 'monitor' ? LAB_COPY.workflow.monitorPageTitle : LAB_TAB_LABELS[activeTab];
 
   return (
     <div className={WORKSPACE.page}>
@@ -144,12 +151,12 @@ export const LaboratoryPage: React.FC = () => {
 
       <div
         className={
-          activeTab === 'command-center' ? 'flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden' : LAB_WORKFLOW_QUEUE_SHELL
+          activeTab === 'monitor' ? 'flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden' : LAB_WORKFLOW_QUEUE_SHELL
         }
       >
         <div
           className={`flex-1 flex flex-col min-h-0 overflow-hidden ${
-            activeTab === 'command-center' ? '' : 'bg-surface-page'
+            activeTab === 'monitor' ? '' : 'bg-surface-page'
           }`}
         >
           {isError ? (
@@ -166,9 +173,9 @@ export const LaboratoryPage: React.FC = () => {
               {activeTab === 'collection' && <SampleCollectionQueue />}
               {activeTab === 'entry' && <ResultEntryQueue />}
               {activeTab === 'validation' && <ResultValidationQueue />}
-              {activeTab === 'command-center' && (
+              {activeTab === 'monitor' && (
                 <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-                  <LabCommandCenterBoard />
+                  <LabMonitorBoard />
                 </div>
               )}
             </>

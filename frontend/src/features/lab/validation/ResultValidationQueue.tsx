@@ -8,9 +8,8 @@ import { createLabQueueSearchFilter } from '../components/LabWorkflowQueueLayout
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import {
   applyLabQueueFilters,
-  useLabQueueFilterState,
+  useLabQueueFilters,
   useResultValidationQueueData,
-  useLabQueueUrlSearch,
 } from '../hooks';
 import { validationFilterConfig } from '../constants';
 import { ErrorBoundary } from '@/components';
@@ -33,18 +32,6 @@ const filterRecollectionRequest = createLabQueueSearchFilter<RecollectionRequest
   ),
 );
 
-function getOrderDate(t: TestWithContext & { orderDate?: string }) {
-  return t.orderDate;
-}
-function getSampleType(t: TestWithContext) {
-  return t.sampleType;
-}
-function getPriority(t: TestWithContext & { hasCriticalValues?: boolean }) {
-  return t.priority as PriorityLevel;
-}
-function getQueueSince(t: TestWithContext) {
-  return t.resultEnteredAt ?? t.orderDate;
-}
 function getCommentKey(test: TestWithContext) {
   return orderTestKey(test.id!);
 }
@@ -69,7 +56,6 @@ export const ResultValidationQueue: React.FC = () => {
     invalidatePendingEscalation,
   } = usePendingEscalation();
   const isMobile = isBreakpointAtMost(useBreakpoint(), 'sm');
-  const urlSearch = useLabQueueUrlSearch();
 
   const {
     comments,
@@ -103,16 +89,9 @@ export const ResultValidationQueue: React.FC = () => {
     setSampleTypeFilters,
     statusFilters: priorityFilters,
     setStatusFilters: setPriorityFilters,
-  } = useLabQueueFilterState<TestWithContext & { hasCriticalValues?: boolean }, PriorityLevel>({
+  } = useLabQueueFilters({
     items: allTests,
-    getOrderDate,
-    getSampleType,
-    getStatus: getPriority,
-    searchFilterFn: filterTest,
-    initialSearchQuery: urlSearch,
-    sortByQueuePriority: true,
-    getPriority,
-    getQueueSince,
+    workflowType: 'validationReview',
   });
 
   const filteredEscalatedTests = useMemo(
@@ -158,7 +137,7 @@ export const ResultValidationQueue: React.FC = () => {
       <SectionLoadingBoundary loading={sectionLoading} message="Loading validation..." size="lg">
         <div className="h-full flex flex-col min-h-0">
           <div className="shrink-0">
-            <LabQueueFilters<PriorityLevel[]>
+            <LabQueueFilters
               config={validationFilterConfig}
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}

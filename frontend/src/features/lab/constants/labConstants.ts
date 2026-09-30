@@ -34,7 +34,8 @@ export const LAB_COPY = {
     entry: 'Result Entry',
     entryShort: 'Entry',
     validation: 'Validation',
-    commandCenterNav: 'Dashboard',
+    monitorNav: 'Monitor',
+    monitorPageTitle: 'Lab monitor',
     escalation: 'Escalation',
     sentBack: 'Sent back',
     sentBackShort: 'Rework',
@@ -125,20 +126,20 @@ export const LAB_CONFIG = {
   QUEUE_AGE_CRITICAL_HOURS: GENERATED_LAB_CONSTANTS.QUEUE_AGE_CRITICAL_HOURS,
 } as const;
 
-export const LAB_TAB_IDS = [
-  'collection',
-  'entry',
-  'validation',
-  'command-center',
-] as const;
+export const LAB_TAB_IDS = ['collection', 'entry', 'validation', 'monitor'] as const;
 
 export type LabTabId = (typeof LAB_TAB_IDS)[number];
+
+/** Legacy URL segment → canonical tab id */
+export const LEGACY_LAB_TAB_ALIASES: Record<string, LabTabId> = {
+  'command-center': 'monitor',
+};
 
 export const LAB_TAB_LABELS: Record<LabTabId, string> = {
   collection: labStageLabel('collection', 'nav'),
   entry: labStageLabel('entry', 'nav'),
   validation: labStageLabel('validation', 'nav'),
-  'command-center': LAB_COPY.workflow.commandCenterNav,
+  monitor: LAB_COPY.workflow.monitorNav,
 };
 
 /** Icons for lab workflow KPI rows — tabs use collection / entry / validation only. */
@@ -156,10 +157,17 @@ export const LAB_WORKFLOW_TAB_ICONS: Record<LabWorkflowStage, IconName> = {
   validation: LAB_WORKFLOW_KPI_ICONS.validation,
 };
 
-export const DEFAULT_LAB_TAB: LabTabId = 'command-center';
+export const DEFAULT_LAB_TAB: LabTabId = 'monitor';
+
+export function normalizeLabTabParam(value: string | undefined): LabTabId | null {
+  if (!value) return null;
+  if (LEGACY_LAB_TAB_ALIASES[value]) return LEGACY_LAB_TAB_ALIASES[value];
+  if (LAB_TAB_IDS.includes(value as LabTabId)) return value as LabTabId;
+  return null;
+}
 
 export function isLabTabId(value: string | undefined): value is LabTabId {
-  return LAB_TAB_IDS.includes(value as LabTabId);
+  return normalizeLabTabParam(value) != null;
 }
 
 /** Build a deep-linkable lab tab path, e.g. /laboratory/validation */

@@ -4,15 +4,15 @@
 
 import React from 'react';
 import { Panel, Skeleton } from '@/components';
-import { COMMAND_CENTER_PANEL } from './commandCenterStyles';
+import { MONITOR_PANEL } from './monitorStyles';
 import {
-  DASHBOARD_BOTTOM_PANEL,
-  DASHBOARD_BOTTOM_ROW,
-  DASHBOARD_PAGE,
-  DASHBOARD_TABLE_WRAP,
+  MONITOR_BOTTOM_PANEL,
+  MONITOR_BOTTOM_ROW,
+  MONITOR_PAGE,
+  MONITOR_TABLE_WRAP,
   TODAY_KPI,
   TODAY_PANEL,
-} from './commandCenterStyles';
+} from './monitorStyles';
 
 function TodayPanelSkeleton() {
   return (
@@ -66,22 +66,22 @@ function PanelSkeleton({ className }: { className?: string }) {
   );
 }
 
-export const LabCommandCenterBoardSkeleton: React.FC = () => {
+export const LabMonitorBoardSkeleton: React.FC = () => {
   return (
-    <div className={COMMAND_CENTER_PANEL.page} aria-busy="true" aria-label="Loading dashboard">
-      <div className={DASHBOARD_PAGE}>
-        <div className={DASHBOARD_BOTTOM_ROW}>
-          <div className={DASHBOARD_BOTTOM_PANEL}>
+    <div className={MONITOR_PANEL.page} aria-busy="true" aria-label="Loading dashboard">
+      <div className={MONITOR_PAGE}>
+        <div className={MONITOR_BOTTOM_ROW}>
+          <div className={MONITOR_BOTTOM_PANEL}>
             <TodayPanelSkeleton />
           </div>
-          <div className={DASHBOARD_BOTTOM_PANEL}>
+          <div className={MONITOR_BOTTOM_PANEL}>
             <PanelSkeleton />
           </div>
-          <div className={DASHBOARD_BOTTOM_PANEL}>
+          <div className={MONITOR_BOTTOM_PANEL}>
             <PanelSkeleton />
           </div>
         </div>
-        <div className={DASHBOARD_TABLE_WRAP}>
+        <div className={MONITOR_TABLE_WRAP}>
           <Panel title={<Skeleton height={14} width={120} />} padding="none">
             <div className="flex flex-col gap-space-2 p-space-3">
               {Array.from({ length: 6 }).map((_, index) => (

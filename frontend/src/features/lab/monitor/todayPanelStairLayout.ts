@@ -1,7 +1,7 @@
 /**
  * Today panel stair-track layout — milestone percentages and shared pipeline offsets.
  */
-import type { LabTodayPanelSnapshot } from './commandCenterModel';
+import type { LabTodayPanelSnapshot } from './monitorModel';
 import {
   LAB_COPY,
   getKpiStageVisual,

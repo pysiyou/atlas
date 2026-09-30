@@ -119,7 +119,11 @@ class OrderTest(Base):
     # Metadata
     createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
     updatedAt = Column(
-        "updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+        "updated_at",
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        index=True,
     )
 
     # Relationships

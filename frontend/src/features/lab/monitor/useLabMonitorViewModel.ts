@@ -3,12 +3,11 @@
  */
 
 import { useMemo } from 'react';
-import { useLabCommandCenterQuery } from '../api/labCommandCenter';
-import type { LabBoardResponse } from '../api/labCommandCenter';
+import { useLabMonitorBoardQuery, type LabBoardResponse } from '../api/labMonitor';
 import type { OrderTestBlockReason } from '../utils/labQueue';
 import { labStageLabel } from '../constants/labConstants';
-import { ATTENTION_TYPE_CONFIG, type AttentionType } from './commandCenterModel';
-import type { LabAttentionQueueItem, LabBoardViewState, LabPipelineStage } from './commandCenterModel';
+import { ATTENTION_TYPE_CONFIG, type AttentionType } from './monitorModel';
+import type { LabAttentionQueueItem, LabBoardViewState, LabPipelineStage } from './monitorModel';
 
 const EMPTY_TODAY_PANEL: LabBoardViewState['todayPanel'] = {
   dayStartUtc: '',
@@ -70,13 +69,13 @@ function toBoardViewState(board: LabBoardResponse): LabBoardViewState {
   };
 }
 
-export function useLabCommandCenterViewModel(): LabBoardViewState & {
+export function useLabMonitorViewModel(): LabBoardViewState & {
   isLoading: boolean;
   isError: boolean;
   error: unknown;
   refetch: () => Promise<unknown>;
 } {
-  const { board, isLoading, isError, error, refetch } = useLabCommandCenterQuery();
+  const { board, isLoading, isError, error, refetch } = useLabMonitorBoardQuery({ enabled: true });
   const data = useMemo(() => (board ? toBoardViewState(board) : EMPTY_BOARD), [board]);
 
   return {

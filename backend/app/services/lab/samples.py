@@ -190,10 +190,15 @@ def generate_samples_for_order(
         _delete_pending_samples_for_order(orderId, db, set())
         return []
 
+    test_codes = list({order_test.testCode for order_test in order_tests})
+    tests_by_code = {
+        test.code: test for test in db.query(Test).filter(Test.code.in_(test_codes)).all()
+    }
+
     # Group active tests by sample type (key: string from Test.sampleType for consistency)
     sample_groups: dict[str, list[tuple[OrderTest, Test]]] = {}
     for order_test in order_tests:
-        test = db.query(Test).filter(Test.code == order_test.testCode).first()
+        test = tests_by_code.get(order_test.testCode)
         if not test:
             continue
         sample_type_key = test.sampleType

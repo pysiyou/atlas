@@ -4,8 +4,8 @@
 import React, { useMemo } from 'react';
 import { EmptyState, EMPTY_COPY, DASHBOARD_EMPTY_STATE_TEXT } from '@/components';
 import { Panel } from '@/components/surfaces/Panel';
-import type { LabTodayPanelSnapshot } from './commandCenterModel';
-import { TODAY_KPI, TODAY_PANEL } from './commandCenterStyles';
+import type { LabTodayPanelSnapshot } from './monitorModel';
+import { TODAY_KPI, TODAY_PANEL } from './monitorStyles';
 import { LAB_COPY } from '../constants/labConstants';
 import { formatDate } from '@/utils';
 import {

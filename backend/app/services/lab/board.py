@@ -1,7 +1,7 @@
 """
 Command-center board snapshot — single authoritative lab-state payload.
 
-Blocker mapping (aligned with frontend deriveWorkItemState):
+Blocker mapping (authoritative for lab worklists and monitor UI):
 - payment_unpaid: unpaid collection specimen
 - retest_pending: entry-queue retest
 - specimen_recollection: pending collection sample that is a redraw
@@ -157,7 +157,7 @@ def blocked_reason_for_work_item(
     sample_is_recollection: bool = False,
     escalation_reason_code: str | None = None,
 ) -> str | None:
-    """Mirror of frontend deriveWorkItemState blockedReason."""
+    """Canonical blocked-reason key for a pipeline work item."""
     if payment_status == PaymentStatus.UNPAID.value and status in (
         TestStatus.PENDING.value,
         "pending",
@@ -620,7 +620,7 @@ def _enum_value(value: Any) -> str | None:
 
 
 class LabBoardService:
-    """Loads lightweight stage rows and assembles the command-center snapshot."""
+    """Loads stage rows and assembles the lab monitor board snapshot."""
 
     def __init__(self, db: Session):
         self.db = db
@@ -639,12 +639,87 @@ class LabBoardService:
             return 24
         return max(self._get_turnaround(code) for code in codes)
 
-    def compute_board_snapshot(self, include_supervisor: bool = True) -> dict[str, Any]:
+    def compute_board_summary(self, include_supervisor: bool = True) -> dict[str, Any]:
+        """SQL-backed counts for tab badges — avoids loading full queue rows."""
+        from app.schemas.enums import SampleStatus, TestStatus
+
+        collection_count = (
+            self.db.query(Sample.sampleId).filter(Sample.status == SampleStatus.PENDING).count()
+        )
+        entry_count = (
+            self.db.query(OrderTest.id)
+            .filter(OrderTest.status == TestStatus.SAMPLE_COLLECTED)
+            .count()
+        )
+        validation_count = (
+            self.db.query(OrderTest.id)
+            .filter(
+                OrderTest.status == TestStatus.RESULTED,
+                OrderTest.resultValidatedAt.is_(None),
+            )
+            .count()
+        )
+        supervisor = 0
+        if include_supervisor:
+            supervisor = len(self._escalation_rows()) + len(self._recollection_rows())
+        counts = {
+            "collection": collection_count,
+            "entry": entry_count,
+            "validation": validation_count,
+            "supervisor": supervisor,
+        }
+        total_active = collection_count + entry_count + validation_count
+        if total_active == 0 and supervisor == 0:
+            health = "healthy"
+            health_message = "No active pipeline work"
+            suggested_tab = None
+        elif supervisor > 0:
+            health = "attention"
+            health_message = f"{supervisor} supervisor item(s) need review"
+            suggested_tab = "validation"
+        else:
+            health = "attention"
+            health_message = f"{total_active} active item(s) in pipeline"
+            suggested_tab = (
+                "collection"
+                if collection_count >= entry_count and collection_count >= validation_count
+                else "entry"
+                if entry_count >= validation_count
+                else "validation"
+            )
+        current = datetime.now(UTC)
+        return {
+            "counts": counts,
+            "health": health,
+            "healthMessage": health_message,
+            "suggestedTab": suggested_tab,
+            "totalActive": total_active,
+            "computedAt": current.isoformat(),
+            "todayPanel": self._today_panel_snapshot(),
+            "_rows_loaded": supervisor,
+        }
+
+    def compute_board_snapshot(
+        self,
+        include_supervisor: bool = True,
+        *,
+        detail: str = "full",
+    ) -> dict[str, Any]:
+        if detail == "summary":
+            return self.compute_board_summary(include_supervisor=include_supervisor)
+
         collection_rows = self._collection_rows()
         entry_rows = self._entry_rows()
         validation_rows = self._validation_rows()
         escalation_rows = self._escalation_rows() if include_supervisor else []
         recollection_rows = self._recollection_rows() if include_supervisor else []
+        rows_loaded = (
+            len(collection_rows)
+            + len(entry_rows)
+            + len(validation_rows)
+            + len(escalation_rows)
+            + len(recollection_rows)
+        )
         snapshot = assemble_board(
             collection_rows,
             entry_rows,
@@ -652,7 +727,7 @@ class LabBoardService:
             escalation_rows,
             recollection_rows,
         )
-        snapshot.update({"todayPanel": self._today_panel_snapshot()})
+        snapshot.update({"todayPanel": self._today_panel_snapshot(), "_rows_loaded": rows_loaded})
         return snapshot
 
     def _today_panel_snapshot(self) -> dict[str, Any]:
@@ -783,14 +858,9 @@ class LabBoardService:
         )
 
     def _recollection_blocked_order_test_ids(self) -> set[int]:
-        blocked: set[int] = set()
-        for row in self._recollection_rows():
-            for order_test_id in row.get("affected_order_test_ids") or []:
-                blocked.add(int(order_test_id))
-            order_test_id = row.get("order_test_id")
-            if order_test_id is not None:
-                blocked.add(int(order_test_id))
-        return blocked
+        from app.services.lab.recollection_snapshot import recollection_blocked_order_test_ids
+
+        return recollection_blocked_order_test_ids(self.db)
 
     def _collection_rows(self) -> list[dict[str, Any]]:
         rows = (
