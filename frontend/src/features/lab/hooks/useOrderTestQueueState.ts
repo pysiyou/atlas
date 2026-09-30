@@ -1,45 +1,29 @@
 /**
- * useOrderTestQueueState — React hook wrapping deriveOrderTestQueueState with order/sample context.
+ * useOrderTestQueueState — React hook wrapping deriveOrderTestQueueState with server lab projection.
  */
 
 import { useMemo } from 'react';
-import { useOrderLookup } from '@/features/orders';
-import { useSampleLookup } from '../api/samples';
 import {
   deriveOrderTestQueueState,
+  type LabWorkItemProjectionLike,
   type OrderTestQueueState,
 } from '../utils/labQueue';
-import type { SampleStatus, TestStatus, TestWithContext } from '@/types';
+import type { TestStatus, TestWithContext } from '@/types';
 
 export function useOrderTestQueueState(test: TestWithContext): OrderTestQueueState {
-  const { getOrder } = useOrderLookup();
-  const { getSample } = useSampleLookup();
-  const order = getOrder(test.orderId);
-  const linkedSample = test.sampleId ? getSample(test.sampleId) : undefined;
-  const sampleStatus = (linkedSample?.status ?? test.sampleStatus) as SampleStatus | undefined;
+  const lab = test.lab as LabWorkItemProjectionLike | undefined;
 
   return useMemo(
     () =>
       deriveOrderTestQueueState(
         { status: test.status as TestStatus, isRetest: test.isRetest },
         {
-          paymentStatus: order?.paymentStatus,
-          sampleStatus,
-          sampleIsRecollection: test.sampleIsRecollection,
-          escalationReasonCode: test.reasonCode,
-          serverDenyReason: test.denyReason ?? undefined,
-          serverDenyMessage: test.denyMessage ?? undefined,
+          serverDenyReason: test.denyReason ?? lab?.denyReason ?? undefined,
+          serverDenyMessage: test.denyMessage ?? lab?.denyMessage ?? undefined,
+          serverBlockedReason: lab?.blockedReason ?? undefined,
+          lab,
         }
       ),
-    [
-      test.status,
-      test.isRetest,
-      test.denyReason,
-      test.denyMessage,
-      sampleStatus,
-      test.sampleIsRecollection,
-      test.reasonCode,
-      order?.paymentStatus,
-    ]
+    [test.status, test.isRetest, test.denyReason, test.denyMessage, lab]
   );
 }

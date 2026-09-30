@@ -10,6 +10,7 @@ from app.domains.billing.service import BillingService
 from app.domains.catalog.models.catalog_test import CatalogTest
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.public import generate_samples_for_order
+from app.domains.lab.rules.order_test_lab_loader import lab_projections_for_order
 from app.domains.orders.models import Order, OrderTest
 from app.domains.orders.schemas import (
     OrderCreate,
@@ -185,6 +186,14 @@ class OrderService:
         self.db = db
         self.emitter = AuditEmitter(db)
 
+    def _order_response_with_lab(self, order: Order) -> OrderResponse:
+        base = OrderResponse.model_validate(order)
+        projections = lab_projections_for_order(self.db, order)
+        enriched_tests = [
+            test.model_copy(update={"lab": projections.get(test.id)}) for test in base.tests
+        ]
+        return base.model_copy(update={"tests": enriched_tests})
+
     def list_orders(
         self,
         skip: int,
@@ -238,7 +247,7 @@ class OrderService:
                 ]
             else:
                 serialized = [
-                    OrderResponse.model_validate(o).model_dump(mode="json") for o in orders
+                    self._order_response_with_lab(o).model_dump(mode="json") for o in orders
                 ]
         except Exception:
             logger.exception("Error serializing orders")
@@ -265,7 +274,7 @@ class OrderService:
                 detail=f"Order {order_id} not found",
             )
         if includes:
-            order_dump = OrderResponse.model_validate(order).model_dump(mode="json")
+            order_dump = self._order_response_with_lab(order).model_dump(mode="json")
             detail: dict = {**order_dump}
             if "payments" in includes:
                 detail["payments"] = [
@@ -284,7 +293,7 @@ class OrderService:
                     patient_to_response_dict(order.patient)
                 ).model_dump(mode="json")
             return OrderDetailResponse(**detail)
-        return OrderResponse.model_validate(order)
+        return self._order_response_with_lab(order)
 
     def delete_order(self, order_id: int, user_id: int) -> None:
         order = get_or_404(self.db, Order, order_id, "orderId")
@@ -322,7 +331,7 @@ class OrderService:
             orderId=order_id, status="completed", message="Order is complete"
         )
 
-    def create_order(self, order_data: OrderCreate, user_id: int) -> Order:
+    def create_order(self, order_data: OrderCreate, user_id: int) -> OrderResponse:
         patient = self.db.query(Patient).filter(Patient.id == order_data.patientId).first()
         if not patient:
             raise HTTPException(
@@ -377,7 +386,7 @@ class OrderService:
             self.db.rollback()
             raise HTTPException(status_code=500, detail="Failed to create order")
         order = self._order_with_relations(order.orderId)
-        return OrderResponse.model_validate(order)
+        return self._order_response_with_lab(order)
 
     def _order_with_relations(self, order_id: int) -> Order:
         return (
@@ -390,7 +399,7 @@ class OrderService:
             .first()
         )
 
-    def update_order(self, order_id: int, order_data: OrderUpdate, user_id: int) -> Order:
+    def update_order(self, order_id: int, order_data: OrderUpdate, user_id: int) -> OrderResponse:
         order = (
             self.db.query(Order)
             .filter(Order.orderId == order_id)
@@ -493,7 +502,7 @@ class OrderService:
         self.db.commit()
         self.db.refresh(order)
         order = self._order_with_relations(order.orderId)
-        return OrderResponse.model_validate(order)
+        return self._order_response_with_lab(order)
 
     def update_order_payment(
         self,
@@ -501,7 +510,7 @@ class OrderService:
         payment_status: PaymentStatus,
         amount_paid: float | None,
         user_id: int,
-    ) -> Order:
+    ) -> OrderResponse:
         order = self.db.query(Order).filter(Order.orderId == order_id).first()
         if not order:
             raise HTTPException(
@@ -536,4 +545,4 @@ class OrderService:
         self.db.commit()
         self.db.refresh(order)
         order = self._order_with_relations(order.orderId)
-        return OrderResponse.model_validate(order)
+        return self._order_response_with_lab(order)

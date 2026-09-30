@@ -18,13 +18,13 @@ from app.domains.lab.monitor.board import (
     age_bucket,
 )
 from app.domains.lab.rules.blockers import priority_rank, priority_sort_key
-from app.domains.lab.rules.eligibility import (
-    BLOCKED_LABELS,
-    action_flags_for_collection,
-    action_flags_for_entry,
-    action_flags_for_validation,
-    blocked_reason_for_work_item,
-    deny_message,
+from app.domains.lab.rules.work_item_projection import (
+    LabWorkItemContext,
+    project_collection_sample,
+    project_order_test_entry,
+    project_order_test_pipeline,
+    project_order_test_validation,
+    projection_to_worklist_fields,
 )
 from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient
@@ -37,6 +37,7 @@ from app.shared.contracts.enums import (
     SampleStatus,
     TestStatus,
 )
+from app.shared.contracts.lab_blockers import BLOCKED_LABELS
 from sqlalchemy import String, desc, func, or_
 from sqlalchemy.orm import Session
 
@@ -226,14 +227,14 @@ class LabWorklistService:
                 for ot in linked_by_sample.get(sample.sampleId, [])
                 if ot.orderId == order.orderId and ot.testCode in (codes or [])
             ]
-            blocked = blocked_reason_for_work_item(
-                status=TestStatus.PENDING.value,
-                payment_status=order.paymentStatus.value if order.paymentStatus else None,
-                sample_is_recollection=bool(sample.isRecollection),
+            projection = project_collection_sample(
+                LabWorkItemContext(
+                    order=order,
+                    sample=sample,
+                    linked_order_tests=linked_tests,
+                )
             )
-            allowed_actions, deny_reason = action_flags_for_collection(
-                sample=sample, order=order, order_tests=linked_tests
-            )
+            work_item_fields = projection_to_worklist_fields(projection)
             tat_band = age_bucket(hours, tat)
             original_sample_collected_at = None
             if sample.originalSampleId:
@@ -260,11 +261,7 @@ class LabWorklistService:
                     "originalSampleCollectedAt": original_sample_collected_at,
                     "recollectionReason": sample.recollectionReason,
                     "recollectionAttempt": sample.recollectionAttempt or 1,
-                    "blockedReason": blocked,
-                    "blockedLabel": BLOCKED_LABELS.get(blocked) if blocked else None,
-                    "allowedActions": allowed_actions,
-                    "denyReason": deny_reason,
-                    "denyMessage": deny_message(deny_reason),
+                    **work_item_fields,
                     "waitingHours": round(hours, 2),
                     "turnaroundHours": tat,
                     "queueAgeBand": tat_band,
@@ -426,10 +423,10 @@ class LabWorklistService:
         for ot, order, patient, test, sample in rows:
             since = sample.collectedAt if sample and sample.collectedAt else order.orderDate
             hours = _worklist_hours_since(since)
-            allowed_actions, deny_reason = action_flags_for_entry(
-                order_test=ot, is_retest=bool(ot.isRetest)
+            projection = project_order_test_entry(
+                LabWorkItemContext(order=order, order_test=ot, sample=sample)
             )
-            blocked = deny_reason or ("retest_pending" if ot.isRetest else None)
+            work_item_fields = projection_to_worklist_fields(projection)
             items.append(
                 {
                     "orderTestId": ot.id,
@@ -449,11 +446,7 @@ class LabWorklistService:
                     "isRetest": bool(ot.isRetest),
                     "referringPhysician": order.referringPhysician,
                     "testCategory": test.category,
-                    "blockedReason": blocked,
-                    "blockedLabel": BLOCKED_LABELS.get(blocked) if blocked else None,
-                    "allowedActions": allowed_actions,
-                    "denyReason": deny_reason,
-                    "denyMessage": deny_message(deny_reason),
+                    **work_item_fields,
                     "queueAgeBand": None,
                     "priorityRank": priority_rank(order.priority),
                 }
@@ -504,7 +497,10 @@ class LabWorklistService:
             tat_band = (
                 age_bucket(hours, test.turnaroundTimeHours) if test.turnaroundTimeHours else None
             )
-            allowed_actions, deny_reason = action_flags_for_validation(order_test=ot)
+            projection = project_order_test_validation(
+                LabWorkItemContext(order=order, order_test=ot, sample=sample)
+            )
+            work_item_fields = projection_to_worklist_fields(projection)
             items.append(
                 {
                     "orderTestId": ot.id,
@@ -531,11 +527,7 @@ class LabWorklistService:
                     "isRetest": bool(ot.isRetest),
                     "retestOfTestId": ot.retestOfTestId,
                     "retestNumber": ot.retestNumber or 0,
-                    "blockedReason": deny_reason,
-                    "blockedLabel": BLOCKED_LABELS.get(deny_reason) if deny_reason else None,
-                    "allowedActions": allowed_actions,
-                    "denyReason": deny_reason,
-                    "denyMessage": deny_message(deny_reason),
+                    **work_item_fields,
                     "queueAgeBand": tat_band,
                     "priorityRank": priority_rank(order.priority),
                 }
@@ -567,30 +559,16 @@ class LabWorklistService:
         recollection_blocked: set[int],
         escalation_code: str | None,
     ) -> str | None:
-        status = (
-            order_test.status.value
-            if hasattr(order_test.status, "value")
-            else str(order_test.status)
+        projection = project_order_test_pipeline(
+            LabWorkItemContext(
+                order=order,
+                order_test=order_test,
+                sample=sample,
+                escalation_reason_code=escalation_code,
+                recollection_approval_pending=order_test.id in recollection_blocked,
+            )
         )
-        blocked = blocked_reason_for_work_item(
-            status=status,
-            is_retest=bool(order_test.isRetest),
-            payment_status=(
-                order.paymentStatus.value
-                if hasattr(order.paymentStatus, "value")
-                else str(order.paymentStatus)
-            ),
-            sample_status=(
-                sample.status.value if sample and hasattr(sample.status, "value") else None
-            ),
-            sample_is_recollection=bool(sample.isRecollection) if sample else False,
-            escalation_reason_code=escalation_code,
-        )
-        if order_test.id in recollection_blocked:
-            blocked = blocked or "recollection_approval"
-        if not blocked:
-            return None
-        return BLOCKED_LABELS.get(blocked, blocked.replace("_", " ").title())
+        return projection.blockedLabel
 
     def list_dashboard_work_today(
         self,

@@ -12,11 +12,11 @@ from app.domains.lab.rules.blockers import (
     attention_type_for,
     should_surface_attention,
 )
-from app.domains.lab.rules.eligibility import BLOCKED_LABELS, blocked_reason_for_work_item
-from app.shared.contracts.enums import (
-    PriorityLevel,
-    TestStatus,
+from app.domains.lab.rules.work_item_projection import (
+    blocked_label_for_reason,
+    blocked_reason_for_monitor_row,
 )
+from app.shared.contracts.enums import PriorityLevel
 from app.shared.contracts.lab_constants import QUEUE_AGE_CRITICAL_HOURS, QUEUE_AGE_WARNING_HOURS
 
 TatBucket = Literal["fresh", "onTrack", "warning", "critical"]
@@ -137,7 +137,7 @@ def _attention_candidate(
         "priority": priority,
         "waitingHours": round(waiting_hours, 2),
         "blockedReason": blocked_reason,
-        "blockedLabel": BLOCKED_LABELS.get(blocked_reason) if blocked_reason else None,
+        "blockedLabel": blocked_label_for_reason(blocked_reason),
         "queueTab": stage,
         "since": _iso(since),
         "workItemCount": work_item_count,
@@ -302,8 +302,8 @@ def assemble_board(
         priority = _priority_value(row.get("priority"))
         tat = row.get("turnaround_hours") or 24
         hours, status, _ = track_wait("collection", since, tat, priority)
-        blocked = blocked_reason_for_work_item(
-            status=TestStatus.PENDING.value,
+        blocked = blocked_reason_for_monitor_row(
+            "collection",
             payment_status=_enum_value(row.get("payment_status")),
             sample_status=_enum_value(row.get("sample_status")),
             sample_is_recollection=bool(row.get("is_recollection")),
@@ -332,8 +332,8 @@ def assemble_board(
         priority = _priority_value(row.get("priority"))
         tat = row.get("turnaround_hours") or 24
         hours, status, _ = track_wait("entry", since, tat, priority)
-        blocked = blocked_reason_for_work_item(
-            status=TestStatus.SAMPLE_COLLECTED.value,
+        blocked = blocked_reason_for_monitor_row(
+            "entry",
             is_retest=bool(row.get("is_retest")),
             sample_status=_enum_value(row.get("sample_status")),
             sample_is_recollection=bool(row.get("sample_is_recollection")),
@@ -362,8 +362,8 @@ def assemble_board(
         priority = _priority_value(row.get("priority"))
         tat = row.get("turnaround_hours") or 24
         hours, status, _ = track_wait("validation", since, tat, priority)
-        blocked = blocked_reason_for_work_item(
-            status=TestStatus.RESULTED.value,
+        blocked = blocked_reason_for_monitor_row(
+            "validation",
             is_retest=bool(row.get("is_retest")),
             sample_status=_enum_value(row.get("sample_status")),
             escalation_reason_code=row.get("reason_code"),
@@ -389,14 +389,11 @@ def assemble_board(
         hours = hours_since(since, current)
         status = tat_status(hours, row.get("turnaround_hours") or 24)
         priority = _priority_value(row.get("priority"))
-        blocked = (
-            blocked_reason_for_work_item(
-                status=TestStatus.ESCALATED.value,
-                is_retest=bool(row.get("is_retest")),
-                sample_status=_enum_value(row.get("sample_status")),
-                escalation_reason_code=row.get("reason_code"),
-            )
-            or "supervisor_review"
+        blocked = blocked_reason_for_monitor_row(
+            "escalation",
+            is_retest=bool(row.get("is_retest")),
+            sample_status=_enum_value(row.get("sample_status")),
+            escalation_reason_code=row.get("reason_code"),
         )
         order_test_id = row.get("order_test_id")
         candidates.append(

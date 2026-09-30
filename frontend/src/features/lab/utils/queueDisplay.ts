@@ -1,7 +1,15 @@
 import { PRIORITY_LEVEL_VALUES } from '@/types';
+import {
+  BLOCKED_LABELS,
+  BLOCKED_REASON_KEYS,
+  type OrderTestBlockReason,
+} from '@/types/generated/labBlockers';
 import { differenceInHours, parseISO, isValid } from 'date-fns';
 import { LAB_CONFIG } from '../constants/labConstants';
-import type { OrderTest, PaymentStatus, SampleStatus, TestStatus } from '@/types';
+import type { OrderTest, TestStatus } from '@/types';
+
+export type { OrderTestBlockReason };
+export { BLOCKED_LABELS };
 
 /** Lab queue priority, age, and derived work-item state. */
 
@@ -74,26 +82,22 @@ export type OrderTestQueueStage =
   | 'completed'
   | 'cancelled';
 
-export type OrderTestBlockReason =
-  | 'payment_unpaid'
-  | 'specimen_recollection'
-  | 'sample_rejected'
-  | 'retest_pending'
-  | 'critical_value'
-  | 'amendment_pending'
-  | 'retry_limit'
-  | 'recollection_limit'
-  | 'supervisor_review'
-  | 'recollection_approval';
+const BLOCKED_REASON_SET = new Set<string>(BLOCKED_REASON_KEYS);
+
+export interface LabWorkItemProjectionLike {
+  denyReason?: string | null;
+  denyMessage?: string | null;
+  blockedReason?: string | null;
+  blockedLabel?: string | null;
+  pipelineStage?: string;
+}
 
 export interface OrderTestQueueContext {
-  paymentStatus?: PaymentStatus;
-  sampleStatus?: SampleStatus;
-  sampleIsRecollection?: boolean;
-  escalationReasonCode?: string | null;
-  /** When set by worklist API, used for display only (no client blocker inference). */
+  /** Server-driven fields from worklists or order test `lab` projection. */
   serverDenyReason?: string | null;
   serverDenyMessage?: string | null;
+  serverBlockedReason?: string | null;
+  lab?: LabWorkItemProjectionLike | null;
 }
 
 export interface OrderTestQueueState {
@@ -101,19 +105,6 @@ export interface OrderTestQueueState {
   blockedReason: OrderTestBlockReason | null;
   label: string;
 }
-
-const BLOCKED_LABELS: Record<OrderTestBlockReason, string> = {
-  payment_unpaid: 'Payment required',
-  specimen_recollection: 'Recollection required',
-  sample_rejected: 'Sample rejected',
-  retest_pending: 'Re-test in progress',
-  critical_value: 'Critical value — supervisor review',
-  amendment_pending: 'Amendment pending',
-  retry_limit: 'Re-test limit reached',
-  recollection_limit: 'Recollection limit reached',
-  supervisor_review: 'Supervisor approval required',
-  recollection_approval: 'Recollection awaiting supervisor approval',
-};
 
 function stageFromTestStatus(status: TestStatus): OrderTestQueueStage {
   switch (status) {
@@ -144,43 +135,28 @@ export function deriveOrderTestQueueState(
   const status = test.status as TestStatus;
   const stage = stageFromTestStatus(status);
 
-  if (context.serverDenyReason != null || context.serverDenyMessage != null) {
-    const reasonKey = context.serverDenyReason as OrderTestBlockReason | null | undefined;
+  const denyReason =
+    context.serverDenyReason ?? context.lab?.denyReason ?? null;
+  const denyMessage =
+    context.serverDenyMessage ?? context.lab?.denyMessage ?? null;
+  const blockedKey =
+    context.serverBlockedReason ??
+    context.lab?.blockedReason ??
+    denyReason;
+
+  if (blockedKey != null || denyMessage != null) {
     const blockedReason =
-      reasonKey && reasonKey in BLOCKED_LABELS ? reasonKey : null;
+      blockedKey && BLOCKED_REASON_SET.has(blockedKey)
+        ? (blockedKey as OrderTestBlockReason)
+        : null;
     const label =
-      context.serverDenyMessage ??
+      denyMessage ??
+      context.lab?.blockedLabel ??
       (blockedReason ? BLOCKED_LABELS[blockedReason] : stageLabel(stage));
     return { stage, blockedReason, label };
   }
 
-  let blockedReason: OrderTestBlockReason | null = null;
-
-  if (context.paymentStatus === 'unpaid' && stage === 'awaiting_collection') {
-    blockedReason = 'payment_unpaid';
-  } else if (status === 'escalated') {
-    if (context.escalationReasonCode === 'CRIT-VAL') {
-      blockedReason = 'critical_value';
-    } else if (context.escalationReasonCode === 'AMEND-RES') {
-      blockedReason = 'amendment_pending';
-    } else if (context.escalationReasonCode === 'LIMIT-HIT') {
-      blockedReason = 'retry_limit';
-    } else if (context.escalationReasonCode === 'REJ-SAMP') {
-      blockedReason = 'recollection_limit';
-    } else {
-      blockedReason = 'supervisor_review';
-    }
-  } else if (context.sampleStatus === 'rejected') {
-    blockedReason = 'sample_rejected';
-  } else if (context.sampleIsRecollection && stage === 'awaiting_collection') {
-    blockedReason = 'specimen_recollection';
-  } else if (test.isRetest && stage === 'awaiting_results') {
-    blockedReason = 'retest_pending';
-  }
-
-  const label = blockedReason ? BLOCKED_LABELS[blockedReason] : stageLabel(stage);
-
-  return { stage, blockedReason, label };
+  return { stage, blockedReason: null, label: stageLabel(stage) };
 }
 
 function stageLabel(stage: OrderTestQueueStage): string {

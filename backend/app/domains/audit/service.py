@@ -638,7 +638,45 @@ class AuditEmitter:
             metadata=metadata,
         )
 
-    # ── Laboratory — result / validation ─────────────────────────────────
+    # ── Laboratory — analyzer / result / validation ──────────────────────
+
+    def analyzer_duplicate_ingest(
+        self,
+        order_id: int,
+        order_test_id: int,
+        test_code: str,
+        metadata: dict[str, Any] | None = None,
+    ) -> None:
+        self._emit(
+            EventType.LABORATORY_ANALYZER_DUPLICATE_INGEST,
+            "order_test",
+            order_test_id,
+            None,
+            context=self._order_context(order_id, test_id=order_test_id),
+            metadata={"test_code": test_code, **(metadata or {})},
+        )
+
+    def analyzer_ingest_rejected(
+        self,
+        order_id: int | None,
+        order_test_id: int | None,
+        test_code: str | None,
+        metadata: dict[str, Any] | None = None,
+    ) -> None:
+        target_id = order_test_id if order_test_id is not None else (order_id or 0)
+        target_type = "order_test" if order_test_id is not None else "order"
+        ctx = EventContext(orderId=order_id, testId=order_test_id) if order_id else None
+        self._emit(
+            EventType.LABORATORY_ANALYZER_INGEST_REJECTED,
+            target_type,
+            target_id,
+            None,
+            context=ctx,
+            metadata={
+                **({"test_code": test_code} if test_code else {}),
+                **(metadata or {}),
+            },
+        )
 
     def result_entered(
         self,

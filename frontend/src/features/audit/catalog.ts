@@ -572,7 +572,21 @@ export const EVENT_HEADLINE_BUILDERS: Record<
   'laboratory.sample.recollect_approve': r => recollectionForSamplePhrase(r, 'approved'),
   'laboratory.sample.recollect_deny': r =>
     appendClause(recollectionForSamplePhrase(r, 'denied'), metaString(r, 'reason') ?? ''),
-  'laboratory.result.enter': (r, c) => resultsForTestUnderOrderPhrase(r, c, ' entered'),
+  'laboratory.analyzer.duplicate_ingest': (r, c) =>
+    testCentricUnderOrderPhrase(r, c, 'Duplicate analyzer ingest for ', ' ignored'),
+  'laboratory.analyzer.ingest_rejected': (r, c) =>
+    appendClause(
+      testCentricUnderOrderPhrase(r, c, 'Analyzer ingest rejected for ', ''),
+      metaString(r, 'reason') ?? ''
+    ),
+  'laboratory.result.enter': (r, c) => {
+    let parts = resultsForTestUnderOrderPhrase(r, c, ' entered');
+    if (metaString(r, 'source') === 'analyzer') {
+      const analyzerId = metaString(r, 'analyzer_id');
+      parts = appendText(parts, analyzerId ? ` from analyzer ${analyzerId}` : ' from analyzer');
+    }
+    return parts;
+  },
   'laboratory.result.update': (r, c) => resultsForTestUnderOrderPhrase(r, c, ' updated'),
   'laboratory.result.critical_detect': (r, c) =>
     testCentricUnderOrderPhrase(r, c, 'Critical value for ', ' detected'),
@@ -854,10 +868,24 @@ const CATALOG_SEEDS: CatalogSeed[] = [
     headlineMetaKeys: ['reason'],
   },
   {
+    eventType: 'laboratory.analyzer.duplicate_ingest',
+    ...LAB_RESULT,
+    verbPhrase: 'duplicate analyzer ingest for',
+    headlineMetaKeys: ['test_code', 'idempotency_key'],
+    treatAsSystemActor: true,
+  },
+  {
+    eventType: 'laboratory.analyzer.ingest_rejected',
+    ...LAB_RESULT,
+    verbPhrase: 'analyzer ingest rejected for',
+    headlineMetaKeys: ['test_code', 'reason'],
+    treatAsSystemActor: true,
+  },
+  {
     eventType: 'laboratory.result.enter',
     ...LAB_RESULT,
     verbPhrase: 'entered results for',
-    headlineMetaKeys: ['test_code'],
+    headlineMetaKeys: ['test_code', 'source', 'analyzer_id'],
   },
   {
     eventType: 'laboratory.result.update',

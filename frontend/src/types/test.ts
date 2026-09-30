@@ -262,6 +262,19 @@ export interface TestWithContext {
   denyReason?: string | null;
   denyMessage?: string | null;
   allowForceValidate?: boolean;
+  lab?: {
+    pipelineStage?: string;
+    blockedReason?: string | null;
+    blockedLabel?: string | null;
+    denyReason?: string | null;
+    denyMessage?: string | null;
+    allowedActions?: {
+      collect: boolean;
+      enterResults: boolean;
+      validate: boolean;
+      reject: boolean;
+    };
+  } | null;
 
   [key: string]: unknown;
 }

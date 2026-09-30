@@ -2,6 +2,7 @@
 from datetime import datetime
 from typing import Literal
 
+from app.domains.lab.schemas.allowed_actions import LabWorklistAllowedActions
 from app.domains.orders.schemas import TestResultsDict
 from app.shared.contracts.enums import (
     ContainerTopColor,
@@ -11,7 +12,7 @@ from app.shared.contracts.enums import (
     SampleStatus,
     TestStatus,
 )
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class WorklistPagination(BaseModel):
@@ -21,15 +22,6 @@ class WorklistPagination(BaseModel):
     totalPages: int
     hasNext: bool
     hasPrev: bool
-
-
-class LabWorklistAllowedActions(BaseModel):
-    model_config = {"populate_by_name": True}
-
-    collect: bool = False
-    enterResults: bool = False
-    can_validate: bool = Field(default=False, alias="validate")
-    reject: bool = False
 
 
 class CollectionWorklistItem(BaseModel):

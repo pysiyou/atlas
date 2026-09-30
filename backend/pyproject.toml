@@ -3,7 +3,6 @@ name = "atlas-backend"
 version = "0.1.0"
 description = "FastAPI backend for Atlas Laboratory Management System"
 authors = ["Atlas Team"]
-readme = "README.md"
 package-mode = false
 
 [tool.poetry.dependencies]
@@ -23,6 +22,7 @@ redis = {extras = ["hiredis"], version = "^5.0.0"}
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.11"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
@@ -35,6 +35,7 @@ extend-exclude = [
     "app/shared/contracts/lab_constants.py",
     "app/shared/contracts/physiologic_limits.py",
     "app/shared/contracts/enums.py",
+    "app/shared/contracts/lab_blockers.py",
 ]
 
 [tool.ruff.lint]
