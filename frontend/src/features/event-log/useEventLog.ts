@@ -4,6 +4,7 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTestNameLookup } from '@/features/catalog';
+import { usePatientNameLookup } from '@/features/patients';
 import { queryKeys } from '@/lib/query';
 import { fetchAuditEvents, type AuditEventQueryParams } from './api';
 import { resolveEventLogItems, type ResolveEventLogOptions } from './resolveItem';
@@ -38,12 +39,14 @@ export interface UseEventLogOptions {
 export function useEventLog(filter: EventLogFilter, options?: UseEventLogOptions) {
   const params = useMemo(() => filterToQueryParams(filter), [filter]);
   const { getTestName } = useTestNameLookup();
+  const { getPatientName: lookupPatientName } = usePatientNameLookup();
   const resolveOptions = useMemo(
     () => ({
       ...options?.resolve,
       getTestName,
+      getPatientName: (patientId: number) => lookupPatientName(patientId),
     }),
-    [options?.resolve, getTestName]
+    [options?.resolve, getTestName, lookupPatientName]
   );
   const enabled = options?.enabled ?? true;
 

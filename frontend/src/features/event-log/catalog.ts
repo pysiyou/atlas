@@ -50,6 +50,7 @@ export const eventLogId = {
 // --- testDisplay.ts ---
 
 export type TestNameLookup = (testCode: string) => string;
+export type PatientNameLookup = (patientId: number) => string;
 
 export function collectTestCodes(record: EventLogRecord): string[] {
   const meta = record.metadata ?? {};
@@ -83,10 +84,12 @@ export function formatTestNamesLabel(codes: string[], lookup: TestNameLookup): s
 
 export interface EventLogHeadlineContext {
   getTestName: TestNameLookup;
+  getPatientName: PatientNameLookup;
 }
 
 export const DEFAULT_HEADLINE_CONTEXT: EventLogHeadlineContext = {
   getTestName: code => code,
+  getPatientName: id => eventLogId.patient(id),
 };
 
 export interface BuiltEventLogHeadline {
@@ -212,8 +215,12 @@ export function entityPhrase(label: string, idText: string): EventLogHeadlinePar
   return mainPart(`${label}${idText}`);
 }
 
-export function patientEntityPhrase(patientId: number, label = 'patient '): EventLogHeadlinePart {
-  return entityPhrase(label, eventLogId.patient(patientId));
+export function patientEntityPhrase(
+  patientId: number,
+  context: EventLogHeadlineContext,
+  label = 'patient '
+): EventLogHeadlinePart {
+  return entityPhrase(label, context.getPatientName(patientId));
 }
 
 export function orderEntityPhrase(orderId: number, label = 'order '): EventLogHeadlinePart {
@@ -272,8 +279,12 @@ export function testHighlightFromMetaKey(
   return testHighlightFromCodes([code], context);
 }
 
-export function targetPatient(record: EventLogRecord): EventLogHeadlinePart {
-  return patientEntityPhrase(record.targetId);
+export function targetPatient(
+  record: EventLogRecord,
+  context: EventLogHeadlineContext,
+  label = 'patient '
+): EventLogHeadlinePart {
+  return patientEntityPhrase(record.targetId, context, label);
 }
 
 export function targetOrder(record: EventLogRecord, label = 'order '): EventLogHeadlinePart {
@@ -313,10 +324,13 @@ function resolvePatientId(record: EventLogRecord): number | undefined {
   return undefined;
 }
 
-export function targetPatientFromContext(record: EventLogRecord): EventLogHeadlinePart | null {
+export function targetPatientFromContext(
+  record: EventLogRecord,
+  context: EventLogHeadlineContext
+): EventLogHeadlinePart | null {
   const patientId = resolvePatientId(record);
   if (patientId == null) return null;
-  return patientEntityPhrase(patientId);
+  return patientEntityPhrase(patientId, context);
 }
 
 function partsText(parts: EventLogHeadlinePart[]): string {
@@ -452,30 +466,30 @@ export const EVENT_HEADLINE_BUILDERS: Record<
   string,
   (record: EventLogRecord, context: EventLogHeadlineContext) => EventLogHeadlinePart[]
 > = {
-  'patient.create': r => {
+  'patient.create': (r, c) => {
     let parts = appendText([], 'New profile for ');
-    parts = append(parts, targetPatient(r));
+    parts = append(parts, targetPatient(r, c));
     return appendText(parts, ' created');
   },
-  'patient.update': r => {
+  'patient.update': (r, c) => {
     let parts = appendText([], 'Details for ');
-    parts = append(parts, targetPatient(r));
+    parts = append(parts, targetPatient(r, c));
     return appendText(parts, ' updated');
   },
-  'patient.delete': r => {
+  'patient.delete': (r, c) => {
     let parts = appendText([], 'Profile for ');
-    parts = append(parts, targetPatient(r));
+    parts = append(parts, targetPatient(r, c));
     return appendText(parts, ' archived');
   },
-  'patient.view': r => {
-    let parts = append([], targetPatient(r));
+  'patient.view': (r, c) => {
+    let parts = append([], targetPatient(r, c, ''));
     return appendText(parts, "'s profile viewed");
   },
-  'order.create': r => {
+  'order.create': (r, c) => {
     let parts = appendText([], 'New ');
     parts = append(parts, targetOrder(r));
     parts = appendText(parts, ' placed');
-    const patient = targetPatientFromContext(r);
+    const patient = targetPatientFromContext(r, c);
     if (patient) {
       parts = appendText(parts, ' for ');
       parts = append(parts, patient);
@@ -649,7 +663,7 @@ export function buildFallbackHeadline(
   const parts: EventLogHeadlinePart[] = [{ text: `${entry.verbPhrase} ` }];
   switch (record.targetType) {
     case 'patient':
-      return append(parts, targetPatient(record));
+      return append(parts, targetPatient(record, context));
     case 'order':
       return append(parts, targetOrder(record));
     case 'sample':
