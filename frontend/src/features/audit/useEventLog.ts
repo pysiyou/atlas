@@ -6,23 +6,27 @@ import { useQuery } from '@tanstack/react-query';
 import { useTestNameLookup } from '@/features/catalog';
 import { usePatientNameLookup } from '@/features/patients';
 import { queryKeys } from '@/lib/query';
+import { eventLogQueryKeyParams } from './buildEventLogQuery';
 import { fetchAuditEvents, type AuditEventQueryParams } from './api';
 import { resolveEventLogItems, type ResolveEventLogOptions } from './resolveItem';
-import type { EventLogFilter, EventLogRecord } from './types';
+import type { EventLogQuery, EventLogRecord } from './types';
 
-function filterToQueryParams(filter: EventLogFilter): AuditEventQueryParams {
-  switch (filter.mode) {
-    case 'order':
-      return { orderId: filter.orderId, limit: filter.limit ?? 500 };
-    case 'scope':
-      return {
-        targetType: filter.scope.targetType,
-        targetId: filter.scope.targetId,
-        limit: filter.limit ?? 200,
-      };
-    case 'recent':
-      return { hours: filter.hours ?? 24, limit: filter.limit ?? 500 };
+function queryToApiParams(query: EventLogQuery): AuditEventQueryParams {
+  const params: AuditEventQueryParams = {
+    orderId: query.orderId,
+    patientId: query.patientId,
+    targetType: query.targetType,
+    targetId: query.targetId,
+    testId: query.testId,
+    hours: query.createdFrom ? undefined : query.hours,
+    createdFrom: query.createdFrom,
+    createdTo: query.createdTo,
+    limit: query.limit ?? 500,
+  };
+  if (query.categories?.length) {
+    params.categories = query.categories.join(',');
   }
+  return params;
 }
 
 function sortNewestFirst(events: EventLogRecord[]): EventLogRecord[] {
@@ -36,8 +40,9 @@ export interface UseEventLogOptions {
   enabled?: boolean;
 }
 
-export function useEventLog(filter: EventLogFilter, options?: UseEventLogOptions) {
-  const params = useMemo(() => filterToQueryParams(filter), [filter]);
+export function useEventLog(query: EventLogQuery, options?: UseEventLogOptions) {
+  const params = useMemo(() => queryToApiParams(query), [query]);
+  const keyParams = useMemo(() => eventLogQueryKeyParams(query), [query]);
   const { getTestName } = useTestNameLookup();
   const { getPatientName: lookupPatientName } = usePatientNameLookup();
   const resolveOptions = useMemo(
@@ -50,13 +55,16 @@ export function useEventLog(filter: EventLogFilter, options?: UseEventLogOptions
   );
   const enabled = options?.enabled ?? true;
 
-  const query = useQuery({
-    queryKey: queryKeys.auditEvents.list(params as Record<string, string | number | undefined>),
+  const queryResult = useQuery({
+    queryKey: queryKeys.auditEvents.list(keyParams),
     queryFn: () => fetchAuditEvents(params),
     enabled,
   });
 
-  const events = useMemo(() => (query.data ? sortNewestFirst(query.data) : []), [query.data]);
+  const events = useMemo(
+    () => (queryResult.data ? sortNewestFirst(queryResult.data) : []),
+    [queryResult.data]
+  );
 
   const resolved = useMemo(
     () => resolveEventLogItems(events, resolveOptions),
@@ -66,12 +74,12 @@ export function useEventLog(filter: EventLogFilter, options?: UseEventLogOptions
   return {
     events,
     resolved,
-    isLoading: query.isLoading,
-    isError: query.isError,
-    error: query.error instanceof Error ? query.error : null,
-    isEmpty: !query.isLoading && !query.isError && resolved.length === 0,
+    isLoading: queryResult.isLoading,
+    isError: queryResult.isError,
+    error: queryResult.error instanceof Error ? queryResult.error : null,
+    isEmpty: !queryResult.isLoading && !queryResult.isError && resolved.length === 0,
     refetch: () => {
-      void query.refetch();
+      void queryResult.refetch();
     },
   };
 }

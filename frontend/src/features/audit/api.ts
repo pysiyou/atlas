@@ -9,7 +9,12 @@ export interface AuditEventQueryParams {
   patientId?: number;
   targetType?: string;
   targetId?: number;
+  testId?: number;
   hours?: number;
+  createdFrom?: string;
+  createdTo?: string;
+  /** Comma-separated category keys */
+  categories?: string;
   limit?: number;
 }
 
@@ -81,7 +86,11 @@ function toQueryRecord(params: AuditEventQueryParams): Record<string, string> {
   if (params.patientId != null) out.patientId = String(params.patientId);
   if (params.targetType) out.targetType = params.targetType;
   if (params.targetId != null) out.targetId = String(params.targetId);
+  if (params.testId != null) out.testId = String(params.testId);
   if (params.hours != null) out.hours = String(params.hours);
+  if (params.createdFrom) out.createdFrom = params.createdFrom;
+  if (params.createdTo) out.createdTo = params.createdTo;
+  if (params.categories) out.categories = params.categories;
   if (params.limit != null) out.limit = String(params.limit);
   return out;
 }

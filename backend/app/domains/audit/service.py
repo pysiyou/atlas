@@ -12,6 +12,7 @@ from datetime import UTC, datetime, timedelta
 from typing import Any
 from uuid import uuid4
 
+from app.domains.audit.categories import categories_to_prefixes
 from app.domains.audit.models import AuditEvent
 from app.domains.audit.schemas import (
     AuditEventCreate,
@@ -241,7 +242,10 @@ class AuditEventQueryService:
         patient_id: int | None = None,
         target_type: str | None = None,
         target_id: int | None = None,
+        test_id: int | None = None,
         since: datetime | None = None,
+        until: datetime | None = None,
+        categories: list[str] | None = None,
         limit: int = 500,
     ) -> list[AuditEventResponse]:
         limit = min(max(limit, 1), 2000)
@@ -280,8 +284,20 @@ class AuditEventQueryService:
                     AuditEvent.targetId == target_id,
                 )
 
+        if test_id is not None:
+            query = query.filter(AuditEvent.testId == test_id)
+
         if since is not None:
             query = query.filter(AuditEvent.createdAt >= since)
+
+        if until is not None:
+            query = query.filter(AuditEvent.createdAt <= until)
+
+        prefixes = categories_to_prefixes(categories or [])
+        if prefixes:
+            query = query.filter(
+                or_(*[AuditEvent.eventType.like(f"{prefix}%") for prefix in prefixes])
+            )
 
         rows = query.order_by(AuditEvent.createdAt.desc()).limit(limit).all()
         order_test_results = _load_order_test_results_map(self.db, rows)
@@ -290,6 +306,35 @@ class AuditEventQueryService:
     def list_recent(self, hours: float, limit: int = 500) -> list[AuditEventResponse]:
         since = datetime.now(UTC) - timedelta(hours=hours)
         return self.list_events(since=since, limit=limit)
+
+    def list_filtered(
+        self,
+        *,
+        order_id: int | None = None,
+        patient_id: int | None = None,
+        target_type: str | None = None,
+        target_id: int | None = None,
+        test_id: int | None = None,
+        hours: float | None = None,
+        created_from: datetime | None = None,
+        created_to: datetime | None = None,
+        categories: list[str] | None = None,
+        limit: int = 500,
+    ) -> list[AuditEventResponse]:
+        since = created_from
+        if hours is not None and since is None:
+            since = datetime.now(UTC) - timedelta(hours=hours)
+        return self.list_events(
+            order_id=order_id,
+            patient_id=patient_id,
+            target_type=target_type,
+            target_id=target_id,
+            test_id=test_id,
+            since=since,
+            until=created_to,
+            categories=categories,
+            limit=limit,
+        )
 
 
 # ── Domain emissions ────────────────────────────────────────────────────
