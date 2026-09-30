@@ -19,10 +19,15 @@ export {
   ScopedEventLogPanel,
   LabMonitorEventLogPanel,
   ALL_FILTER_FIELDS,
+  type EventLogPanelLayout,
 } from './EventLogPanel';
 export { useEventLog } from './useEventLog';
 export { useEventLogPanelState } from './useEventLogPanelState';
 export { fetchAuditEvents, normalizeAuditEvent } from './api';
 export { EventLogPage } from './pages/EventLogPage';
 export { EVENT_LOG_CATEGORY_OPTIONS } from './eventLogCategories';
-export { parseOrderDisplayId, parseOrderTestDisplayId } from './parseEntityDisplayId';
+export {
+  parseOrderDisplayId,
+  parseOrderOrTestDisplayId,
+  parseOrderTestDisplayId,
+} from './parseEntityDisplayId';

@@ -72,6 +72,14 @@ export const EventLogFilterBar: React.FC<EventLogFilterBarProps> = ({
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Filter events" size="md">
           <div className="flex h-full flex-col bg-surface">
             <div className="flex-1 space-y-space-5 overflow-y-auto px-space-5 py-space-4">
+              {modalExtras}
+              {showDateInModal ? (
+                <div className="w-full">
+                  <h4 className={FILTER_TYPE.sectionTitle}>Date range</h4>
+                  <DatePresetBadges value={dateRange} onChange={onDateRangeChange} />
+                  <div className="mt-space-4 border-b border-border-default" />
+                </div>
+              ) : null}
               {showCategoryInModal ? (
                 <div className="w-full">
                   <h4 className={FILTER_TYPE.sectionTitle}>Category</h4>
@@ -84,14 +92,6 @@ export const EventLogFilterBar: React.FC<EventLogFilterBarProps> = ({
                   <div className="mt-space-4 border-b border-border-default" />
                 </div>
               ) : null}
-              {showDateInModal ? (
-                <div className="w-full">
-                  <h4 className={FILTER_TYPE.sectionTitle}>Date range</h4>
-                  <DatePresetBadges value={dateRange} onChange={onDateRangeChange} />
-                  <div className="mt-space-4 border-b border-border-default" />
-                </div>
-              ) : null}
-              {modalExtras}
             </div>
             <FilterModalFooter
               onReset={onReset}
