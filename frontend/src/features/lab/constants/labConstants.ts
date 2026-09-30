@@ -52,8 +52,18 @@ export const LAB_COPY = {
   },
   dashboardToday: {
     testsWorked: 'tests worked today',
+    testsWorkedFooter: 'Tests worked today',
     total: 'Total',
     summaryAria: "Today's test activity summary",
+    footnote:
+      'Milestones overlap — one test may appear in multiple rows. Bars show pipeline depth on a shared track.',
+    columnMilestone: 'Milestone',
+    columnActivity: 'Activity',
+    columnShare: 'Share',
+    leadActivityPrefix: 'Most activity',
+    reworkHint: 'Quality rework',
+    highChurnHint: 'Multiple milestone events per test today',
+    rowTitleOverlapNote: 'Milestones can overlap.',
     withCollection: 'Sample collection',
     withEntry: 'Result entry',
     withValidation: 'Results validated',
