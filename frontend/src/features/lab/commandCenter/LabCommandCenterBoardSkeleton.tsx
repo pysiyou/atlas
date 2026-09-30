@@ -16,25 +16,26 @@ import {
 
 function TodayPanelSkeleton() {
   return (
-    <Panel title={<Skeleton height={14} width={48} />} padding="none">
+    <Panel
+      title={<Skeleton height={14} width={48} />}
+      headerEnd={<Skeleton height={12} width={120} />}
+      padding="none"
+    >
       <div className={TODAY_PANEL.body}>
         <div className={TODAY_PANEL.main}>
           <div className={TODAY_PANEL.stack}>
-            <div className={TODAY_PANEL.chartBlock}>
-              <div className={TODAY_KPI.legendRow}>
-                {Array.from({ length: 4 }).map((_, index) => (
-                  <Skeleton key={index} height={12} width={72} />
-                ))}
-              </div>
-              <Skeleton height={10} className={TODAY_KPI.segmentBarEmpty} />
-            </div>
             <div className={`${TODAY_KPI.table} flex flex-col`}>
-              {Array.from({ length: 4 }).map((_, index) => (
-              <div key={index} className={TODAY_KPI.tableRow}>
-                <Skeleton height={12} width="72%" />
-                <Skeleton height={4} className="w-full" />
-                <Skeleton height={12} width={48} />
+              <div className={TODAY_KPI.tableHeadRow}>
+                <Skeleton height={12} width="40%" />
+                <Skeleton height={12} width="50%" />
+                <Skeleton height={12} width={32} className="ml-auto" />
               </div>
+              {Array.from({ length: 4 }).map((_, index) => (
+                <div key={index} className={TODAY_KPI.tableRow}>
+                  <Skeleton height={12} width="72%" />
+                  <Skeleton height={4} className="w-full" />
+                  <Skeleton height={12} width={48} />
+                </div>
               ))}
             </div>
           </div>
@@ -42,7 +43,8 @@ function TodayPanelSkeleton() {
         <div className={TODAY_PANEL.footer}>
           <div className={TODAY_KPI.tableTotal}>
             <Skeleton height={12} width={40} />
-            <Skeleton height={12} width={56} />
+            <span aria-hidden />
+            <Skeleton height={12} width={56} className="ml-auto" />
           </div>
         </div>
       </div>

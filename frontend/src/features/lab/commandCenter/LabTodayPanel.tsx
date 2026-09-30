@@ -6,58 +6,16 @@ import { EmptyState, EMPTY_COPY, DASHBOARD_EMPTY_STATE_TEXT } from '@/components
 import { Panel } from '@/components/surfaces/Panel';
 import type { LabTodayPanelSnapshot } from './commandCenterModel';
 import { TODAY_KPI, TODAY_PANEL } from './commandCenterStyles';
+import { LAB_COPY } from '../constants/labConstants';
+import { formatDate } from '@/utils';
 import {
-  LAB_COPY,
-  getKpiStageVisual,
-  labStageLabel,
-  type LabWorkflowKpiStage,
-} from '../constants/labConstants';
-import { cn, formatDate } from '@/utils';
+  buildTodayStairSegments,
+} from './todayPanelStairLayout';
+import { TodayMilestoneRow } from './TodayMilestoneRow';
+import { TodayPanelHeaderMeta } from './TodayPanelHeaderMeta';
 
 export interface LabTodayPanelProps {
   todayPanel: LabTodayPanelSnapshot;
-}
-
-type TodayMilestoneKey = keyof Pick<
-  LabTodayPanelSnapshot,
-  'testsWithCollection' | 'testsWithResultEntry' | 'testsWithValidation' | 'testsOffNormalPath'
->;
-
-const MILESTONE_ROWS: Array<{
-  key: TodayMilestoneKey;
-  legendLabel: string;
-  tableLabel: string;
-  stage: LabWorkflowKpiStage;
-}> = [
-  {
-    key: 'testsWithCollection',
-    legendLabel: labStageLabel('collection').toLowerCase(),
-    tableLabel: LAB_COPY.dashboardToday.withCollection,
-    stage: 'collection',
-  },
-  {
-    key: 'testsWithResultEntry',
-    legendLabel: labStageLabel('entry', 'short').toLowerCase(),
-    tableLabel: LAB_COPY.dashboardToday.withEntry,
-    stage: 'entry',
-  },
-  {
-    key: 'testsWithValidation',
-    legendLabel: labStageLabel('validation').toLowerCase(),
-    tableLabel: LAB_COPY.dashboardToday.withValidation,
-    stage: 'validation',
-  },
-  {
-    key: 'testsOffNormalPath',
-    legendLabel: LAB_COPY.workflow.sentBackShort.toLowerCase(),
-    tableLabel: LAB_COPY.dashboardToday.withQualityRework,
-    stage: 'sentBack',
-  },
-];
-
-function meterPercent(count: number, total: number): number {
-  if (total <= 0) return 0;
-  return Math.min(100, Math.round((count / total) * 100));
 }
 
 export const LabTodayPanel: React.FC<LabTodayPanelProps> = ({ todayPanel }) => {
@@ -68,34 +26,15 @@ export const LabTodayPanel: React.FC<LabTodayPanelProps> = ({ todayPanel }) => {
 
   const totalWorked = todayPanel.testsUpdatedToday;
   const headerRange = dayLabel ? `UTC · ${dayLabel}` : 'UTC · Today';
-  const headerMeta =
-    totalWorked > 0
-      ? `${headerRange} · ${totalWorked.toLocaleString()} ${LAB_COPY.dashboardToday.testsWorked}`
-      : headerRange;
 
-  const segments = useMemo(() => {
-    return MILESTONE_ROWS.map(row => {
-      const count = todayPanel[row.key];
-      const visual = getKpiStageVisual(row.stage);
-      const percentOfWorked = meterPercent(count, totalWorked);
-      return {
-        key: row.key,
-        legendLabel: row.legendLabel,
-        tableLabel: row.tableLabel,
-        count,
-        percentOfWorked,
-        barClass: visual.bar,
-        textClass: visual.text,
-      };
-    });
-  }, [todayPanel, totalWorked]);
-
-  const activeSegments = segments.filter(s => s.count > 0);
+  const segments = useMemo(() => buildTodayStairSegments(todayPanel), [todayPanel]);
 
   return (
     <Panel
       title="Today"
-      headerEnd={<span className={TODAY_KPI.headerRange}>{headerMeta}</span>}
+      headerEnd={
+        <TodayPanelHeaderMeta headerRange={headerRange} totalWorked={totalWorked} />
+      }
       bodyClassName="flex min-h-0 flex-1 flex-col overflow-hidden"
       padding="none"
     >
@@ -110,66 +49,26 @@ export const LabTodayPanel: React.FC<LabTodayPanelProps> = ({ todayPanel }) => {
           <>
             <div className={TODAY_PANEL.main} aria-label={LAB_COPY.dashboardToday.summaryAria}>
               <div className={TODAY_PANEL.stack}>
-                <div className={TODAY_PANEL.chartBlock}>
-                  <div className={TODAY_KPI.legendRow}>
-                    {segments.map(segment => (
-                      <span key={segment.key} className={TODAY_KPI.legendItem}>
-                        <span className={TODAY_KPI.legendLabel}>{segment.legendLabel}</span>
-                        <span className="text-text-tertiary" aria-hidden>·</span>
-                        <span className={cn(TODAY_KPI.legendValue, segment.textClass)}>
-                          {segment.percentOfWorked}%
-                        </span>
-                      </span>
-                    ))}
-                  </div>
-
-                  <div
-                    className={TODAY_KPI.segmentBar}
-                    role="img"
-                    aria-label="Today's milestone mix"
-                  >
-                    {activeSegments.length === 0 ? (
-                      <div className={TODAY_KPI.segmentBarEmpty} />
-                    ) : (
-                      activeSegments.map(segment => (
-                        <div
-                          key={segment.key}
-                          className={cn(TODAY_KPI.segment, segment.barClass)}
-                          style={{ flexGrow: segment.count }}
-                          title={`${segment.tableLabel}: ${segment.count}`}
-                        />
-                      ))
-                    )}
-                  </div>
-                </div>
-
                 <div className={TODAY_KPI.table} role="table">
+                  <div className={TODAY_KPI.tableHeadRow} role="row">
+                    <span className={TODAY_KPI.tableHeadCell} role="columnheader">
+                      {LAB_COPY.dashboardToday.columnMilestone}
+                    </span>
+                    <span className={TODAY_KPI.tableHeadCell} role="columnheader">
+                      {LAB_COPY.dashboardToday.columnActivity}
+                    </span>
+                    <span className={TODAY_KPI.tableHeadCellRight} role="columnheader">
+                      {LAB_COPY.dashboardToday.columnShare}
+                    </span>
+                  </div>
                   <div className={TODAY_KPI.tableBody} role="rowgroup">
-                    {segments.map(segment => (
-                      <div key={segment.key} className={TODAY_KPI.tableRow} role="row">
-                        <span className={TODAY_KPI.tableLabel} role="cell">
-                          {segment.tableLabel}
-                        </span>
-                        <div
-                          className={TODAY_KPI.tableRowMeterTrack}
-                          role="presentation"
-                          aria-hidden
-                        >
-                          <div
-                            className={cn(TODAY_KPI.tableRowMeterFill, segment.barClass)}
-                            style={{ width: `${segment.percentOfWorked}%` }}
-                          />
-                        </div>
-                        <span className={TODAY_KPI.tableValue} role="cell">
-                          <span className={TODAY_KPI.tablePercent}>
-                            {segment.percentOfWorked}%
-                          </span>
-                          <span className={TODAY_KPI.tableCount}>
-                            {' '}
-                            · {segment.count.toLocaleString()}
-                          </span>
-                        </span>
-                      </div>
+                    {segments.map((segment, index) => (
+                      <TodayMilestoneRow
+                        key={segment.key}
+                        segment={segment}
+                        totalWorked={totalWorked}
+                        isLast={index === segments.length - 1}
+                      />
                     ))}
                   </div>
                 </div>
@@ -179,6 +78,7 @@ export const LabTodayPanel: React.FC<LabTodayPanelProps> = ({ todayPanel }) => {
             <div className={TODAY_PANEL.footer}>
               <div className={TODAY_KPI.tableTotal} role="row">
                 <span className={TODAY_KPI.tableTotalLabel}>{LAB_COPY.dashboardToday.total}</span>
+                <span aria-hidden />
                 <span className={TODAY_KPI.tableTotalValue}>
                   100%
                   <span className={TODAY_KPI.tableCount}>
