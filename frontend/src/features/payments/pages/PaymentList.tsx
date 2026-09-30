@@ -10,6 +10,7 @@ import { PaymentFilters } from '../components/PaymentFilters';
 import { createPaymentTableConfig } from '../config/PaymentTable.config';
 import { PaymentDetailModal } from '../components/PaymentDetailModal';
 import { useTestNameLookup } from '@/features/catalog';
+import { usePatientNameLookup } from '@/features/patients';
 import { usePaginatedOrders } from '@/features/orders';
 import { usePaymentsForOrderIds } from '../api/payments';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
@@ -59,8 +60,10 @@ export const PaymentList: React.FC = () => {
 
   const orderIds = useMemo(() => orders.map(order => order.orderId), [orders]);
   const { payments, isLoading: paymentsLoading } = usePaymentsForOrderIds(orderIds);
+  const { getPatientName, isLoading: patientsLoading } = usePatientNameLookup();
   const { getTestName, isLoading: testsCatalogLoading } = useTestNameLookup();
-  const isLoading = ordersLoading || isFetching || paymentsLoading || testsCatalogLoading;
+  const isLoading =
+    ordersLoading || isFetching || paymentsLoading || patientsLoading || testsCatalogLoading;
 
   const error = ordersError
     ? {
@@ -79,7 +82,11 @@ export const PaymentList: React.FC = () => {
     searchQuery,
     setSearchQuery,
   } = useClientListFilter<OrderPaymentView>(orderPaymentViews, {
-    searchFields: item => [item.order.orderId.toString(), item.order.patientName || ''],
+    searchFields: item => [
+      item.order.orderId.toString(),
+      item.order.patientId.toString(),
+      getPatientName(item.order.patientId),
+    ],
   });
 
   const handleStatusFiltersChange = useCallback(
@@ -129,8 +136,8 @@ export const PaymentList: React.FC = () => {
   }, [refetch]);
 
   const paymentTableConfig = useMemo(
-    () => createPaymentTableConfig(navigate, handlePaymentSuccess, getTestName),
-    [navigate, handlePaymentSuccess, getTestName]
+    () => createPaymentTableConfig(navigate, getPatientName, getTestName, handlePaymentSuccess),
+    [navigate, getPatientName, getTestName, handlePaymentSuccess]
   );
 
   const handleRowClick = useCallback((item: OrderPaymentView) => {

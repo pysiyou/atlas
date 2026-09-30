@@ -53,6 +53,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
               order.testCount != null && activeTests.length === 0 ? order.testCount : undefined,
             testCodes: activeTests.length === 0 ? order.testCodes : undefined,
             getTestName,
+            layout: 'namesFirst',
           })}
         </div>
       )}

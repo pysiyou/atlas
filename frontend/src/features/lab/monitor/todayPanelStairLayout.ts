@@ -79,21 +79,12 @@ export function meterPercent(count: number, total: number): number {
   return Math.min(100, Math.round((count / total) * 100));
 }
 
-export function stairTrackConsumed(
-  percentOfWorked: number,
-  stairOffset: number,
-  rowsAfter: number,
-): number {
-  const reservedTail = rowsAfter * STAIR_ROW_STEP_PERCENT;
-  const room = Math.max(0, 100 - stairOffset - reservedTail);
-  if (room <= 0) {
+/** Activity column bar width — same scale as the share column (% of tests worked today). */
+export function stairTrackConsumed(percentOfWorked: number): number {
+  if (percentOfWorked <= 0) {
     return 0;
   }
-  if (percentOfWorked <= 0) {
-    return Math.min(STAIR_ROW_STEP_PERCENT, room);
-  }
-  const desired = Math.max(percentOfWorked, STAIR_ROW_STEP_PERCENT);
-  return Math.min(desired, room);
+  return percentOfWorked;
 }
 
 export function stairMarkOffset(stairOffset: number): number {
@@ -104,18 +95,19 @@ export function buildTodayStairSegments(snapshot: LabTodayPanelSnapshot): TodayS
   const totalWorked = snapshot.testsUpdatedToday;
   let stairOffset = 0;
 
-  return MILESTONE_ROWS.map((row, index) => {
+  return MILESTONE_ROWS.map((row) => {
     const count = snapshot[row.key];
     const visual = getKpiStageVisual(row.stage);
     const percentOfWorked = meterPercent(count, totalWorked);
-    const rowsAfter = MILESTONE_ROWS.length - 1 - index;
-    const consumed = stairTrackConsumed(percentOfWorked, stairOffset, rowsAfter);
-    const markOffset = stairMarkOffset(stairOffset);
-    const stairWidth = percentOfWorked <= 0 ? 0 : consumed;
+    const stairWidth = stairTrackConsumed(percentOfWorked);
+    let markOffset: number;
 
-    if (consumed > 0) {
-      stairOffset += consumed;
+    if (stairWidth > 0) {
+      // Start at the previous row's end when it fits; otherwise shift left so width matches share %.
+      markOffset = Math.min(stairOffset, 100 - stairWidth);
+      stairOffset = markOffset + stairWidth;
     } else {
+      markOffset = stairMarkOffset(stairOffset);
       stairOffset = Math.min(100, stairOffset + STAIR_ROW_STEP_PERCENT);
     }
 
