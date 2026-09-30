@@ -1394,6 +1394,19 @@ export interface components {
             /** Email */
             email?: string | null;
         };
+        /** EscalationActionFlags */
+        EscalationActionFlags: {
+            /**
+             * Criticalnotificationsent
+             * @default false
+             */
+            criticalNotificationSent: boolean;
+            /**
+             * Allowforcevalidate
+             * @default true
+             */
+            allowForceValidate: boolean;
+        };
         /** EscalationResolveRequest */
         EscalationResolveRequest: {
             /**
@@ -1626,6 +1639,47 @@ export interface components {
             testsWithValidation: number;
             /** Testsoffnormalpath */
             testsOffNormalPath: number;
+        };
+        /** LabWorkItemProjection */
+        LabWorkItemProjection: {
+            /**
+             * Pipelinestage
+             * @enum {string}
+             */
+            pipelineStage: "collection" | "entry" | "validation" | "escalation" | "completed" | "cancelled";
+            /** Blockedreason */
+            blockedReason?: string | null;
+            /** Blockedlabel */
+            blockedLabel?: string | null;
+            /** Denyreason */
+            denyReason?: string | null;
+            /** Denymessage */
+            denyMessage?: string | null;
+            allowedActions?: components["schemas"]["LabWorklistAllowedActions"];
+            escalation?: components["schemas"]["EscalationActionFlags"] | null;
+        };
+        /** LabWorklistAllowedActions */
+        LabWorklistAllowedActions: {
+            /**
+             * Collect
+             * @default false
+             */
+            collect: boolean;
+            /**
+             * Enterresults
+             * @default false
+             */
+            enterResults: boolean;
+            /**
+             * Validate
+             * @default false
+             */
+            validate: boolean;
+            /**
+             * Reject
+             * @default false
+             */
+            reject: boolean;
         };
         /**
          * Lifestyle
@@ -1941,6 +1995,7 @@ export interface components {
             retestNumber: number;
             /** Retestordertestid */
             retestOrderTestId?: number | null;
+            lab?: components["schemas"]["LabWorkItemProjection"] | null;
             /**
              * Createdat
              * Format: date-time

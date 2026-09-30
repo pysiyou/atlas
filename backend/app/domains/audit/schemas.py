@@ -37,6 +37,10 @@ class EventType(str, enum.Enum):
     LABORATORY_SAMPLE_RECOLLECT_APPROVE = "laboratory.sample.recollect_approve"
     LABORATORY_SAMPLE_RECOLLECT_DENY = "laboratory.sample.recollect_deny"
 
+    # Laboratory — analyzer
+    LABORATORY_ANALYZER_DUPLICATE_INGEST = "laboratory.analyzer.duplicate_ingest"
+    LABORATORY_ANALYZER_INGEST_REJECTED = "laboratory.analyzer.ingest_rejected"
+
     # Laboratory — result
     LABORATORY_RESULT_ENTER = "laboratory.result.enter"
     LABORATORY_RESULT_UPDATE = "laboratory.result.update"

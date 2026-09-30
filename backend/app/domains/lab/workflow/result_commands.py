@@ -30,6 +30,7 @@ class ResultCommandHandler:
         results: dict[str, Any],
         technician_notes: str | None = None,
         skip_validation: bool = False,
+        extra_metadata: dict[str, Any] | None = None,
     ) -> OrderTest:
         order_test = self._svc._get_order_test(order_test_id, for_update=True)
         order_id = order_test.orderId
@@ -94,6 +95,8 @@ class ResultCommandHandler:
             "source": "manual" if user_id > 0 else "analyzer",
             "results": results_serializable,
         }
+        if extra_metadata:
+            enter_metadata.update(extra_metadata)
         if order_test.flags:
             enter_metadata["flags"] = list(order_test.flags)
         if technician_notes and str(technician_notes).strip():

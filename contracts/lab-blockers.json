@@ -1,0 +1,78 @@
+{
+  "allowedActionKeys": ["collect", "enterResults", "validate", "reject"],
+  "pipelineStages": [
+    "collection",
+    "entry",
+    "validation",
+    "escalation",
+    "completed",
+    "cancelled"
+  ],
+  "reasons": {
+    "payment_unpaid": {
+      "label": "Payment required",
+      "attentionType": "payment_blocked"
+    },
+    "specimen_recollection": {
+      "label": "Recollection required",
+      "attentionType": "recollection_waiting"
+    },
+    "sample_rejected": {
+      "label": "Sample rejected",
+      "attentionType": "sample_rejected"
+    },
+    "retest_pending": {
+      "label": "Re-test in progress",
+      "attentionType": "retest_in_progress"
+    },
+    "critical_value": {
+      "label": "Critical value — supervisor review",
+      "attentionType": "escalation_critical"
+    },
+    "amendment_pending": {
+      "label": "Amendment pending",
+      "attentionType": "escalation_amendment"
+    },
+    "retry_limit": {
+      "label": "Re-test limit reached",
+      "attentionType": "escalation_retry_limit"
+    },
+    "recollection_limit": {
+      "label": "Recollection limit reached",
+      "attentionType": "escalation_recollection_limit"
+    },
+    "supervisor_review": {
+      "label": "Supervisor approval required",
+      "attentionType": "supervisor_approval"
+    },
+    "recollection_approval": {
+      "label": "Recollection awaiting supervisor approval",
+      "attentionType": "supervisor_recollection_request"
+    }
+  },
+  "attentionTypeSort": {
+    "escalation_critical": 10,
+    "escalation_amendment": 20,
+    "escalation_retry_limit": 30,
+    "escalation_recollection_limit": 40,
+    "supervisor_approval": 45,
+    "supervisor_recollection_request": 48,
+    "payment_blocked": 50,
+    "sample_rejected": 60,
+    "recollection_waiting": 70,
+    "retest_in_progress": 80,
+    "priority_urgent": 82,
+    "priority_high": 84,
+    "queue_overdue_critical": 90,
+    "queue_overdue_warning": 100
+  },
+  "supervisorAttentionTypes": [
+    "escalation_critical",
+    "escalation_amendment",
+    "escalation_retry_limit",
+    "escalation_recollection_limit",
+    "supervisor_approval",
+    "supervisor_recollection_request"
+  ],
+  "priorityAttentionTypes": ["priority_urgent", "priority_high"]
+}

@@ -41,11 +41,8 @@ function getCollectionViewModel(display: SampleCollectionQueueItem, sample: Samp
   const isDone = isCollected || isRejected;
   const hasContainerInfo = isDone && 'actualContainerColor' in sample;
   const containerColor = hasContainerInfo ? sample.actualContainerColor : undefined;
-  const collectAllowed =
-    display.allowedActions?.collect ??
-    (isPending && order.paymentStatus === 'paid');
-  const paymentBlocked =
-    isPending && (display.denyReason === 'payment_unpaid' || order.paymentStatus === 'unpaid');
+  const collectAllowed = display.allowedActions?.collect ?? false;
+  const paymentBlocked = isPending && display.denyReason === 'payment_unpaid';
 
   return {
     order,

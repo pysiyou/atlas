@@ -90,6 +90,118 @@ ${tsEntries}
   writeFile('frontend/src/types/generated/physiologicLimits.ts', ts);
 }
 
+function generateLabBlockers() {
+  const jsonPath = path.join(CONTRACTS, 'lab-blockers.json');
+  if (!fs.existsSync(jsonPath)) {
+    console.log('skip lab-blockers (contracts/lab-blockers.json not found)');
+    return;
+  }
+  const data = readJson('lab-blockers.json');
+  const reasons = data.reasons ?? {};
+  const keys = Object.keys(reasons);
+
+  const pyLabels = keys
+    .map(k => `    ${JSON.stringify(k)}: ${JSON.stringify(reasons[k].label)},`)
+    .join('\n');
+  const pyAttention = keys
+    .filter(k => reasons[k].attentionType)
+    .map(k => `    ${JSON.stringify(k)}: ${JSON.stringify(reasons[k].attentionType)},`)
+    .join('\n');
+
+  const py = `"""
+Lab blocker vocabulary — GENERATED from contracts/lab-blockers.json. DO NOT EDIT.
+"""
+from __future__ import annotations
+
+BLOCKED_REASON_KEYS: frozenset[str] = frozenset(
+    {
+${keys.map(k => `        ${JSON.stringify(k)},`).join('\n')}
+    }
+)
+
+BLOCKED_LABELS: dict[str, str] = {
+${pyLabels}
+}
+
+BLOCKED_ATTENTION_TYPE: dict[str, str] = {
+${pyAttention}
+}
+
+ALLOWED_ACTION_KEYS: tuple[str, ...] = (
+${(data.allowedActionKeys ?? []).map(k => `    ${JSON.stringify(k)},`).join('\n')}
+)
+
+PIPELINE_STAGES: tuple[str, ...] = (
+${(data.pipelineStages ?? []).map(s => `    ${JSON.stringify(s)},`).join('\n')}
+)
+
+ATTENTION_TYPE_SORT: dict[str, int] = {
+${Object.entries(data.attentionTypeSort ?? {})
+  .map(([k, v]) => `    ${JSON.stringify(k)}: ${v},`)
+  .join('\n')}
+}
+
+SUPERVISOR_ATTENTION_TYPES: frozenset[str] = frozenset(
+    {
+${(data.supervisorAttentionTypes ?? []).map(t => `        ${JSON.stringify(t)},`).join('\n')}
+    }
+)
+
+PRIORITY_ATTENTION_TYPES: frozenset[str] = frozenset(
+    {
+${(data.priorityAttentionTypes ?? []).map(t => `        ${JSON.stringify(t)},`).join('\n')}
+    }
+)
+`;
+  writeFile('backend/app/shared/contracts/lab_blockers.py', py);
+
+  const tsUnion = keys.map(k => JSON.stringify(k)).join(' | ');
+  const tsLabels = keys
+    .map(k => `  ${JSON.stringify(k)}: ${JSON.stringify(reasons[k].label)},`)
+    .join('\n');
+  const tsAttention = keys
+    .filter(k => reasons[k].attentionType)
+    .map(k => `  ${JSON.stringify(k)}: ${JSON.stringify(reasons[k].attentionType)},`)
+    .join('\n');
+
+  const ts = `/**
+ * Lab blocker vocabulary — GENERATED from contracts/lab-blockers.json. DO NOT EDIT.
+ */
+export const BLOCKED_REASON_KEYS = [
+${keys.map(k => `  ${JSON.stringify(k)},`).join('\n')}
+] as const;
+
+export type OrderTestBlockReason = ${tsUnion || 'string'};
+
+export const BLOCKED_LABELS: Record<OrderTestBlockReason, string> = {
+${tsLabels}
+};
+
+export const BLOCKED_ATTENTION_TYPE: Partial<Record<OrderTestBlockReason, string>> = {
+${tsAttention}
+};
+
+export const ALLOWED_ACTION_KEYS = ${JSON.stringify(data.allowedActionKeys ?? [])} as const;
+
+export const PIPELINE_STAGES = ${JSON.stringify(data.pipelineStages ?? [])} as const;
+
+export const ATTENTION_TYPE_SORT: Record<string, number> = ${JSON.stringify(
+    data.attentionTypeSort ?? {},
+    null,
+    2
+  )};
+
+export const SUPERVISOR_ATTENTION_TYPES = ${JSON.stringify(
+    data.supervisorAttentionTypes ?? []
+  )} as const;
+
+export const PRIORITY_ATTENTION_TYPES = ${JSON.stringify(
+    data.priorityAttentionTypes ?? []
+  )} as const;
+`;
+  writeFile('frontend/src/types/generated/labBlockers.ts', ts);
+}
+
 function generateEnums() {
   const jsonPath = path.join(CONTRACTS, 'enums.json');
   if (!fs.existsSync(jsonPath)) {
@@ -184,12 +296,42 @@ ${filterBlock}`;
 }
 
 generateLabConstants();
+if (fs.existsSync(path.join(CONTRACTS, 'lab-blockers.json'))) {
+  generateLabBlockers();
+}
 if (fs.existsSync(path.join(CONTRACTS, 'physiologic-limits.json'))) {
   generatePhysiologicLimits();
 }
 generateEnums();
+verifyAuditCatalogCoverage();
 generateOpenApiTypes();
 console.log('codegen complete');
+
+function verifyAuditCatalogCoverage() {
+  const pyPath = path.join(ROOT, 'backend/app/domains/audit/schemas.py');
+  const catalogPath = path.join(ROOT, 'frontend/src/features/audit/catalog.ts');
+  if (!fs.existsSync(pyPath) || !fs.existsSync(catalogPath)) {
+    console.log('skip audit catalog coverage check');
+    return;
+  }
+  const py = fs.readFileSync(pyPath, 'utf8');
+  const catalog = fs.readFileSync(catalogPath, 'utf8');
+  const eventTypes = new Set();
+  for (const match of py.matchAll(/=\s*"([a-z][a-z0-9_.]+)"/g)) {
+    const value = match[1];
+    if (value.includes('.')) eventTypes.add(value);
+  }
+  const seeds = new Set();
+  for (const match of catalog.matchAll(/eventType:\s*'([^']+)'/g)) {
+    seeds.add(match[1]);
+  }
+  const missing = [...eventTypes].filter(t => !seeds.has(t)).sort();
+  if (missing.length > 0) {
+    console.error('Audit catalog missing EventType seeds:', missing.join(', '));
+    process.exit(1);
+  }
+  console.log('audit catalog covers', eventTypes.size, 'event types');
+}
 
 function exportOpenApiSpec() {
   const openapiPath = path.join(CONTRACTS, 'openapi.json');

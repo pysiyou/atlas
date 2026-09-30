@@ -1,8 +1,13 @@
 """
 Pydantic schemas for Order
 """
+from __future__ import annotations
+
 from datetime import datetime
-from typing import Any, Literal
+from typing import TYPE_CHECKING, Any, Literal
+
+if TYPE_CHECKING:
+    from app.domains.lab.rules.work_item_projection import LabWorkItemProjection
 
 from app.domains.billing.schemas import InvoiceResponse
 from app.domains.patients.schemas import PatientResponse
@@ -63,6 +68,8 @@ class OrderTestResponse(BaseModel):
     retestOfTestId: int | None = None  # Original test ID that was rejected
     retestNumber: int = 0  # 0 = original, 1 = 1st retest, etc.
     retestOrderTestId: int | None = None
+
+    lab: LabWorkItemProjection | None = None
 
     createdAt: datetime
     updatedAt: datetime
@@ -173,3 +180,12 @@ class OrderReportResponse(BaseModel):
     orderId: int
     status: str
     message: str
+
+
+def _rebuild_order_test_lab_schema() -> None:
+    from app.domains.lab.rules.work_item_projection import LabWorkItemProjection
+
+    OrderTestResponse.model_rebuild(_types_namespace={"LabWorkItemProjection": LabWorkItemProjection})
+
+
+_rebuild_order_test_lab_schema()

@@ -8,7 +8,7 @@ echo "🚀 Setting up Atlas Backend..."
 if command -v pg_isready &> /dev/null; then
     if ! pg_isready -h localhost -p 5432 -q 2>/dev/null; then
         echo "⚠️  PostgreSQL does not appear to be running on localhost:5432."
-        echo "   Start PostgreSQL and ensure database atlas_lab and user atlas exist (see README)."
+        echo "   Start PostgreSQL and ensure database atlas_lab and user atlas exist (see .env.example)."
         read -p "   Continue anyway? [y/N] " -n 1 -r
         echo
         if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -18,7 +18,7 @@ if command -v pg_isready &> /dev/null; then
         echo "✅ PostgreSQL is reachable"
     fi
 else
-    echo "ℹ️  Install PostgreSQL locally and create database (see README)."
+    echo "ℹ️  Install PostgreSQL locally and create database (see .env.example)."
 fi
 
 # Install Python dependencies

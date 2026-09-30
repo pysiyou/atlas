@@ -4,6 +4,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Any
 
+from app.domains.audit.service import AuditEmitter
 from app.domains.catalog.models.catalog_test import CatalogTest
 from app.domains.lab.integration.hl7_parser import (
     AnalyzerResultAdapter,
@@ -66,6 +67,31 @@ class AnalyzerIngestService:
             ) from exc
 
     @staticmethod
+    def _http_reject_ingest(
+        self,
+        status_code: int,
+        detail: str,
+        *,
+        phase: str,
+        order_id: int | None = None,
+        order_test_id: int | None = None,
+        test_code: str | None = None,
+        analyzer_id: str | None = None,
+        extra_metadata: dict[str, Any] | None = None,
+    ) -> None:
+        metadata: dict[str, Any] = {"reason": detail, "phase": phase, **(extra_metadata or {})}
+        if analyzer_id:
+            metadata["analyzer_id"] = analyzer_id
+        AuditEmitter(self.db).analyzer_ingest_rejected(
+            order_id,
+            order_test_id,
+            test_code,
+            metadata=metadata,
+        )
+        self.db.commit()
+        raise HTTPException(status_code=status_code, detail=detail)
+
+    @staticmethod
     def _validation_blocks_ingest(validation_errors: list[str]) -> None:
         if validation_errors and settings.ANALYZER_STRICT_VALIDATION:
             raise LabOperationError(
@@ -111,8 +137,12 @@ class AnalyzerIngestService:
         warnings: list[str],
         *,
         idempotency_key: str | None = None,
+        analyzer_id: str | None = None,
     ) -> AnalyzerResultResponse:
         service = LabOperationsService(self.db)
+        extra_metadata: dict[str, Any] = {}
+        if analyzer_id:
+            extra_metadata["analyzer_id"] = analyzer_id
 
         def _mutate():
             if idempotency_key:
@@ -122,11 +152,36 @@ class AnalyzerIngestService:
                 user_id=ANALYZER_USER_ID,
                 results=results,
                 technician_notes=technician_notes,
+                extra_metadata=extra_metadata or None,
             )
 
         try:
             updated_test = service.run_lab_mutation(_mutate, order_id=sample.orderId)
         except LabOperationError as e:
+            emitter = AuditEmitter(self.db)
+            if e.error_code == "DUPLICATE_INGEST":
+                emitter.analyzer_duplicate_ingest(
+                    sample.orderId,
+                    order_test.id,
+                    test_code,
+                    metadata={
+                        "idempotency_key": idempotency_key,
+                        **extra_metadata,
+                    },
+                )
+                self.db.commit()
+            elif e.error_code == "VALIDATION_ERROR":
+                emitter.analyzer_ingest_rejected(
+                    sample.orderId,
+                    order_test.id,
+                    test_code,
+                    metadata={
+                        "reason": e.message,
+                        "idempotency_key": idempotency_key,
+                        **extra_metadata,
+                    },
+                )
+                self.db.commit()
             raise HTTPException(status_code=e.status_code, detail=e.message)
         return AnalyzerResultResponse(
             success=True,
@@ -139,31 +194,44 @@ class AnalyzerIngestService:
 
     def ingest_hl7(self, request: HL7MessageRequest) -> AnalyzerResultResponse:
         warnings: list[str] = []
+        analyzer_id = request.analyzer_id
         parser = HL7Parser()
         try:
             analyzer_result = parser.parse(request.message)
         except HL7ParseError as e:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Failed to parse HL7 message: {str(e)}",
+            detail = f"Failed to parse HL7 message: {str(e)}"
+            self._http_reject_ingest(
+                status.HTTP_400_BAD_REQUEST,
+                detail,
+                phase="hl7_parse",
+                analyzer_id=analyzer_id,
             )
         specimen_id = analyzer_result.specimen_id
         if not specimen_id:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="No specimen ID found in HL7 message",
+            self._http_reject_ingest(
+                status.HTTP_400_BAD_REQUEST,
+                "No specimen ID found in HL7 message",
+                phase="hl7_missing_specimen",
+                analyzer_id=analyzer_id,
             )
         sample = self.db.query(Sample).filter(Sample.sampleId == int(specimen_id)).first()
         if not sample:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Sample {specimen_id} not found",
+            self._http_reject_ingest(
+                status.HTTP_404_NOT_FOUND,
+                f"Sample {specimen_id} not found",
+                phase="specimen_not_found",
+                analyzer_id=analyzer_id,
+                extra_metadata={"specimen_id": specimen_id},
             )
         test_code = analyzer_result.test_code
         if not test_code:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="No test code found in HL7 message",
+            self._http_reject_ingest(
+                status.HTTP_400_BAD_REQUEST,
+                "No test code found in HL7 message",
+                phase="hl7_missing_test_code",
+                order_id=sample.orderId,
+                analyzer_id=analyzer_id,
+                extra_metadata={"specimen_id": specimen_id},
             )
         order_test = self._find_pending_test(sample, test_code)
         test_def = self.db.query(CatalogTest).filter(CatalogTest.code == test_code).first()
@@ -178,6 +246,7 @@ class AnalyzerIngestService:
             f"Auto-entered from analyzer "
             f"{request.analyzer_id or analyzer_result.analyzer_id or 'unknown'}"
         )
+        resolved_analyzer_id = analyzer_id or analyzer_result.analyzer_id or None
         return self._enter_results(
             order_test,
             internal_results,
@@ -186,6 +255,7 @@ class AnalyzerIngestService:
             test_code,
             warnings,
             idempotency_key=analyzer_result.message_id or None,
+            analyzer_id=resolved_analyzer_id,
         )
 
     def ingest_json(self, request: AnalyzerResultRequest) -> AnalyzerResultResponse:
@@ -225,6 +295,7 @@ class AnalyzerIngestService:
             request.test_code,
             [],
             idempotency_key=idempotency_key,
+            analyzer_id=request.analyzer_id,
         )
 
     def list_pending(self, analyzer_id: str) -> dict[str, Any]:

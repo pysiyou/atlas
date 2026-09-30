@@ -18,19 +18,7 @@ from app.shared.contracts.enums import (
     SampleStatus,
     TestStatus,
 )
-
-BLOCKED_LABELS: dict[str, str] = {
-    "payment_unpaid": "Payment required",
-    "specimen_recollection": "Recollection required",
-    "sample_rejected": "Sample rejected",
-    "retest_pending": "Re-test in progress",
-    "critical_value": "Critical value — supervisor review",
-    "amendment_pending": "Amendment pending",
-    "retry_limit": "Re-test limit reached",
-    "recollection_limit": "Recollection limit reached",
-    "supervisor_review": "Supervisor approval required",
-    "recollection_approval": "Recollection awaiting supervisor approval",
-}
+from app.shared.contracts.lab_blockers import BLOCKED_LABELS
 
 
 class WorklistAllowedActions(TypedDict):

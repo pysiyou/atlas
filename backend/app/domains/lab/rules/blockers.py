@@ -4,9 +4,24 @@ from __future__ import annotations
 
 from typing import Any
 
-from app.domains.lab.rules.eligibility import BLOCKED_LABELS, blocked_reason_for_work_item
+from app.domains.lab.rules.eligibility import blocked_reason_for_work_item
 from app.shared.contracts.enums import (
     PriorityLevel,
+)
+from app.shared.contracts.lab_blockers import (
+    ATTENTION_TYPE_SORT as _GENERATED_ATTENTION_SORT,
+)
+from app.shared.contracts.lab_blockers import (
+    BLOCKED_ATTENTION_TYPE as _GENERATED_ATTENTION,
+)
+from app.shared.contracts.lab_blockers import (
+    BLOCKED_LABELS,
+)
+from app.shared.contracts.lab_blockers import (
+    PRIORITY_ATTENTION_TYPES as _GENERATED_PRIORITY_ATTENTION,
+)
+from app.shared.contracts.lab_blockers import (
+    SUPERVISOR_ATTENTION_TYPES as _GENERATED_SUPERVISOR_ATTENTION,
 )
 from sqlalchemy import case
 
@@ -23,46 +38,10 @@ __all__ = [
     "priority_sort_key",
 ]
 
-BLOCKED_ATTENTION_TYPE = {
-    "critical_value": "escalation_critical",
-    "amendment_pending": "escalation_amendment",
-    "retry_limit": "escalation_retry_limit",
-    "recollection_limit": "escalation_recollection_limit",
-    "supervisor_review": "supervisor_approval",
-    "recollection_approval": "supervisor_recollection_request",
-    "payment_unpaid": "payment_blocked",
-    "sample_rejected": "sample_rejected",
-    "specimen_recollection": "recollection_waiting",
-    "retest_pending": "retest_in_progress",
-}
-
-ATTENTION_TYPE_SORT = {
-    "escalation_critical": 10,
-    "escalation_amendment": 20,
-    "escalation_retry_limit": 30,
-    "escalation_recollection_limit": 40,
-    "supervisor_approval": 45,
-    "supervisor_recollection_request": 48,
-    "payment_blocked": 50,
-    "sample_rejected": 60,
-    "recollection_waiting": 70,
-    "retest_in_progress": 80,
-    "priority_urgent": 82,
-    "priority_high": 84,
-    "queue_overdue_critical": 90,
-    "queue_overdue_warning": 100,
-}
-
-SUPERVISOR_ATTENTION_TYPES = {
-    "escalation_critical",
-    "escalation_amendment",
-    "escalation_retry_limit",
-    "escalation_recollection_limit",
-    "supervisor_approval",
-    "supervisor_recollection_request",
-}
-
-PRIORITY_ATTENTION_TYPES = {"priority_urgent", "priority_high"}
+BLOCKED_ATTENTION_TYPE = dict(_GENERATED_ATTENTION)
+ATTENTION_TYPE_SORT = dict(_GENERATED_ATTENTION_SORT)
+SUPERVISOR_ATTENTION_TYPES = set(_GENERATED_SUPERVISOR_ATTENTION)
+PRIORITY_ATTENTION_TYPES = set(_GENERATED_PRIORITY_ATTENTION)
 
 
 def should_surface_attention(

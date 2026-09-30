@@ -101,6 +101,9 @@ jobs:
       - name: Ruff format
         run: poetry run ruff format --check app/
 
+      - name: Bootstrap database
+        run: poetry run python -m app.platform.bootstrap
+
       - name: API health smoke test
         run: |
           poetry run uvicorn app.main:app --host 127.0.0.1 --port 8000 &
