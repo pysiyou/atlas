@@ -27,11 +27,15 @@ export function useOrderTestQueueState(test: TestWithContext): OrderTestQueueSta
           sampleStatus,
           sampleIsRecollection: test.sampleIsRecollection,
           escalationReasonCode: test.reasonCode,
+          serverDenyReason: test.denyReason ?? undefined,
+          serverDenyMessage: test.denyMessage ?? undefined,
         }
       ),
     [
       test.status,
       test.isRetest,
+      test.denyReason,
+      test.denyMessage,
       sampleStatus,
       test.sampleIsRecollection,
       test.reasonCode,

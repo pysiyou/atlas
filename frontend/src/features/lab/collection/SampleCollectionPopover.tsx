@@ -261,6 +261,9 @@ interface CollectionPopoverProps {
   onSubmittingChange?: (submitting: boolean) => void;
   /** Custom trigger element (uses default button if not provided) */
   trigger?: React.ReactNode;
+  /** When false, default collect trigger is disabled (server allowedActions). */
+  collectDisabled?: boolean;
+  collectDisabledTitle?: string;
 }
 
 export const SampleCollectionPopover: React.FC<CollectionPopoverProps> = ({
@@ -272,6 +275,8 @@ export const SampleCollectionPopover: React.FC<CollectionPopoverProps> = ({
   isSubmitting = false,
   onSubmittingChange,
   trigger,
+  collectDisabled = false,
+  collectDisabledTitle,
 }) => {
   const [localSubmitting, setLocalSubmitting] = useState(false);
   const effectiveSubmitting = isSubmitting || localSubmitting;
@@ -287,7 +292,12 @@ export const SampleCollectionPopover: React.FC<CollectionPopoverProps> = ({
       preventClose={effectiveSubmitting}
       trigger={
         trigger || (
-          <Button {...actionButtonPreset('collect')} size="sm">
+          <Button
+            {...actionButtonPreset('collect')}
+            size="sm"
+            disabled={collectDisabled}
+            title={collectDisabled ? collectDisabledTitle : undefined}
+          >
             {isRecollection ? 'Recollect' : 'Collect'}
           </Button>
         )

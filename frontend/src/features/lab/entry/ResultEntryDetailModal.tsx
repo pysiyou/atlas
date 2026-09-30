@@ -93,6 +93,10 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
   const isSaving = saveAction.isPending;
 
   const workItem = useOrderTestQueueState(test);
+  const canEnter = test.allowedActions?.enterResults !== false;
+  const blockedLabel =
+    test.denyMessage ??
+    (workItem.blockedReason ? workItem.label : undefined);
 
   const filledCount = useMemo(
     () => Object.values(displayResults).filter(v => v?.trim()).length,
@@ -124,7 +128,7 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
   };
 
   const handleSave = () => {
-    if (!isComplete) return;
+    if (!isComplete || !canEnter) return;
     saveAction.execute();
   };
 
@@ -145,7 +149,7 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
       variant="entry"
       showStatus
       queueSince={test.collectedAt}
-      blockedLabel={workItem.blockedReason ? workItem.label : undefined}
+      blockedLabel={blockedLabel}
       trailing={
         <>
           <Badge size={LAB_CARD_BADGE_SIZE} variant="neutral" className="text-text-secondary">
@@ -191,6 +195,8 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
           readOnly={readOnly}
           isSaving={isSaving}
           isComplete={isComplete}
+          canEnter={canEnter}
+          denyMessage={test.denyMessage}
           onClose={onClose}
           onSave={handleSave}
         />
@@ -205,6 +211,7 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
         displayNotes={displayNotes}
         progressIndicator={progressIndicator}
         isComplete={isComplete}
+        canEnter={canEnter}
         onResultsChange={handleLocalResultChange}
         onNotesChange={handleLocalNotesChange}
         onSave={handleSave}

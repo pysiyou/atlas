@@ -9,6 +9,7 @@ import re
 from datetime import UTC, datetime
 from typing import Any
 
+from app.core.cache import CacheKeys, cache_get, cache_set
 from app.models.escalation import EscalationTicket
 from app.models.order import Order, OrderTest
 from app.models.patient import Patient
@@ -17,20 +18,24 @@ from app.models.sample import Sample
 from app.models.test import Test
 from app.schemas.enums import (
     EscalationTicketStatus,
-    PaymentStatus,
     PriorityLevel,
     RecollectionRequestStatus,
     SampleStatus,
     TestStatus,
 )
-from app.core.cache import CacheKeys, cache_get, cache_set
+from app.services.lab.blockers import priority_rank, priority_sort_key
 from app.services.lab.board import (
-    BLOCKED_LABELS,
     LabBoardService,
     age_bucket,
-    blocked_reason_for_work_item,
 )
-from app.services.lab.blockers import priority_rank, priority_sort_key
+from app.services.lab.eligibility import (
+    BLOCKED_LABELS,
+    action_flags_for_collection,
+    action_flags_for_entry,
+    action_flags_for_validation,
+    blocked_reason_for_work_item,
+    deny_message,
+)
 from app.utils.common import parse_display_id_from_search
 from sqlalchemy import String, desc, func, or_
 from sqlalchemy.orm import Session
@@ -180,6 +185,27 @@ class LabWorklistService:
         if all_codes:
             for code in set(all_codes):
                 self._get_turnaround(code)
+        sample_ids = [sample.sampleId for sample, _order, _patient in rows]
+        linked_by_sample: dict[int, list[OrderTest]] = {sid: [] for sid in sample_ids}
+        if sample_ids:
+            linked_rows = (
+                self.db.query(OrderTest)
+                .filter(
+                    OrderTest.sampleId.in_(sample_ids),
+                    OrderTest.status.notin_(
+                        [
+                            TestStatus.SUPERSEDED,
+                            TestStatus.REMOVED,
+                            TestStatus.VALIDATED,
+                            TestStatus.CANCELLED,
+                        ]
+                    ),
+                )
+                .all()
+            )
+            for ot in linked_rows:
+                if ot.sampleId is not None:
+                    linked_by_sample.setdefault(ot.sampleId, []).append(ot)
         items = []
         for sample, order, patient in rows:
             since = order.orderDate
@@ -187,7 +213,19 @@ class LabWorklistService:
             codes = sample.testCodes or []
             tat = self._max_tat_for_codes(codes)
             test_name, test_category = self._collection_test_display(codes)
-            blocked = "payment_unpaid" if order.paymentStatus != PaymentStatus.PAID else None
+            linked_tests = [
+                ot
+                for ot in linked_by_sample.get(sample.sampleId, [])
+                if ot.orderId == order.orderId and ot.testCode in (codes or [])
+            ]
+            blocked = blocked_reason_for_work_item(
+                status=TestStatus.PENDING.value,
+                payment_status=order.paymentStatus.value if order.paymentStatus else None,
+                sample_is_recollection=bool(sample.isRecollection),
+            )
+            allowed_actions, deny_reason = action_flags_for_collection(
+                sample=sample, order=order, order_tests=linked_tests
+            )
             tat_band = age_bucket(hours, tat)
             original_sample_collected_at = None
             if sample.originalSampleId:
@@ -216,6 +254,9 @@ class LabWorklistService:
                     "recollectionAttempt": sample.recollectionAttempt or 1,
                     "blockedReason": blocked,
                     "blockedLabel": BLOCKED_LABELS.get(blocked) if blocked else None,
+                    "allowedActions": allowed_actions,
+                    "denyReason": deny_reason,
+                    "denyMessage": deny_message(deny_reason),
                     "waitingHours": round(hours, 2),
                     "turnaroundHours": tat,
                     "queueAgeBand": tat_band,
@@ -377,6 +418,8 @@ class LabWorklistService:
         for ot, order, patient, test, sample in rows:
             since = sample.collectedAt if sample and sample.collectedAt else order.orderDate
             hours = _worklist_hours_since(since)
+            allowed_actions, deny_reason = action_flags_for_entry(order_test=ot, is_retest=bool(ot.isRetest))
+            blocked = deny_reason or ("retest_pending" if ot.isRetest else None)
             items.append(
                 {
                     "orderTestId": ot.id,
@@ -396,8 +439,11 @@ class LabWorklistService:
                     "isRetest": bool(ot.isRetest),
                     "referringPhysician": order.referringPhysician,
                     "testCategory": test.category,
-                    "blockedReason": "retest_pending" if ot.isRetest else None,
-                    "blockedLabel": BLOCKED_LABELS.get("retest_pending") if ot.isRetest else None,
+                    "blockedReason": blocked,
+                    "blockedLabel": BLOCKED_LABELS.get(blocked) if blocked else None,
+                    "allowedActions": allowed_actions,
+                    "denyReason": deny_reason,
+                    "denyMessage": deny_message(deny_reason),
                     "queueAgeBand": None,
                     "priorityRank": priority_rank(order.priority),
                 }
@@ -450,6 +496,7 @@ class LabWorklistService:
                 if test.turnaroundTimeHours
                 else None
             )
+            allowed_actions, deny_reason = action_flags_for_validation(order_test=ot)
             items.append(
                 {
                     "orderTestId": ot.id,
@@ -476,8 +523,11 @@ class LabWorklistService:
                     "isRetest": bool(ot.isRetest),
                     "retestOfTestId": ot.retestOfTestId,
                     "retestNumber": ot.retestNumber or 0,
-                    "blockedReason": None,
-                    "blockedLabel": None,
+                    "blockedReason": deny_reason,
+                    "blockedLabel": BLOCKED_LABELS.get(deny_reason) if deny_reason else None,
+                    "allowedActions": allowed_actions,
+                    "denyReason": deny_reason,
+                    "denyMessage": deny_message(deny_reason),
                     "queueAgeBand": tat_band,
                     "priorityRank": priority_rank(order.priority),
                 }

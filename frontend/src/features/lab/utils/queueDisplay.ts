@@ -91,6 +91,9 @@ export interface OrderTestQueueContext {
   sampleStatus?: SampleStatus;
   sampleIsRecollection?: boolean;
   escalationReasonCode?: string | null;
+  /** When set by worklist API, used for display only (no client blocker inference). */
+  serverDenyReason?: string | null;
+  serverDenyMessage?: string | null;
 }
 
 export interface OrderTestQueueState {
@@ -140,6 +143,16 @@ export function deriveOrderTestQueueState(
 ): OrderTestQueueState {
   const status = test.status as TestStatus;
   const stage = stageFromTestStatus(status);
+
+  if (context.serverDenyReason != null || context.serverDenyMessage != null) {
+    const reasonKey = context.serverDenyReason as OrderTestBlockReason | null | undefined;
+    const blockedReason =
+      reasonKey && reasonKey in BLOCKED_LABELS ? reasonKey : null;
+    const label =
+      context.serverDenyMessage ??
+      (blockedReason ? BLOCKED_LABELS[blockedReason] : stageLabel(stage));
+    return { stage, blockedReason, label };
+  }
 
   let blockedReason: OrderTestBlockReason | null = null;
 

@@ -21,7 +21,6 @@ from app.schemas.enums import (
 from app.services.audit import AuditEmitter
 from app.services.lab.sample_rejection_context import SampleRejectionContext
 from app.services.lab.state import StateTransitionError, TestStateMachine
-from app.services.orders import update_order_status
 from app.utils.exceptions import LabOperationError
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -187,7 +186,9 @@ class EscalationOperations:
         rejection_reason: str | None = None,
         read_back_payload: dict[str, Any] | None = None,
     ) -> EscalationResolveResult:
-        order_test = self._svc._get_order_test(order_test_id, status=TestStatus.ESCALATED)
+        order_test = self._svc._get_order_test(
+            order_test_id, status=TestStatus.ESCALATED, for_update=True
+        )
         if action == EscalationResolutionAction.FORCE_VALIDATE:
             return self._resolve_force_validate(
                 order_test, user_id, validation_notes, read_back_payload
@@ -229,9 +230,6 @@ class EscalationOperations:
         order_test.validationNotes = validation_notes
         order_test.status = TestStatus.VALIDATED
 
-        self._svc.db.commit()
-        self._svc.db.refresh(order_test)
-        update_order_status(self._svc.db, order_id)
         return EscalationResolveResult(
             success=True,
             action=EscalationResolutionAction.FORCE_VALIDATE,
@@ -279,9 +277,6 @@ class EscalationOperations:
             created_test_id=new_test.id,
         )
 
-        self._svc.db.commit()
-        self._svc.db.refresh(new_test)
-        update_order_status(self._svc.db, order_id)
         return EscalationResolveResult(
             success=True,
             action=EscalationResolutionAction.AUTHORIZE_RETEST,
@@ -368,9 +363,6 @@ class EscalationOperations:
             created_sample_id=new_sample.sampleId,
         )
 
-        self._svc.db.commit()
-        self._svc.db.refresh(new_test)
-        update_order_status(self._svc.db, order_id)
         return EscalationResolveResult(
             success=True,
             action=EscalationResolutionAction.AUTHORIZE_RECOLLECT,
@@ -450,9 +442,6 @@ class EscalationOperations:
             notes=validation_notes,
         )
 
-        self._svc.db.commit()
-        self._svc.db.refresh(order_test)
-        update_order_status(self._svc.db, order_id)
         return EscalationResolveResult(
             success=True,
             action=EscalationResolutionAction.APPLY_AMENDMENT,
@@ -492,9 +481,6 @@ class EscalationOperations:
             test_code=test_code,
         )
 
-        self._svc.db.commit()
-        self._svc.db.refresh(original_test)
-        update_order_status(self._svc.db, order_id)
         return EscalationResolveResult(
             success=True,
             action=EscalationResolutionAction.CANCEL_TEST,

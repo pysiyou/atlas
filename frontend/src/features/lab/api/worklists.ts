@@ -24,6 +24,13 @@ export interface WorklistPagination {
   hasPrev: boolean;
 }
 
+export interface LabWorklistAllowedActions {
+  collect: boolean;
+  enterResults: boolean;
+  validate: boolean;
+  reject: boolean;
+}
+
 export interface CollectionWorklistItem {
   sampleId: number;
   orderId: number;
@@ -41,6 +48,10 @@ export interface CollectionWorklistItem {
   recollectionReason?: string | null;
   recollectionAttempt?: number;
   blockedReason?: string | null;
+  blockedLabel?: string | null;
+  allowedActions?: LabWorklistAllowedActions;
+  denyReason?: string | null;
+  denyMessage?: string | null;
   waitingHours: number;
   turnaroundHours: number;
   actualContainerType?: ContainerType | null;
@@ -71,6 +82,11 @@ export interface EntryWorklistItem {
   isRetest: boolean;
   referringPhysician?: string | null;
   testCategory?: string | null;
+  blockedReason?: string | null;
+  blockedLabel?: string | null;
+  allowedActions?: LabWorklistAllowedActions;
+  denyReason?: string | null;
+  denyMessage?: string | null;
 }
 
 export interface DashboardWorklistItem {
@@ -116,6 +132,11 @@ export interface ValidationWorklistItem {
   turnaroundHours: number;
   hasCriticalValues: boolean;
   testCategory?: string | null;
+  blockedReason?: string | null;
+  blockedLabel?: string | null;
+  allowedActions?: LabWorklistAllowedActions;
+  denyReason?: string | null;
+  denyMessage?: string | null;
 }
 
 interface WorklistParams {

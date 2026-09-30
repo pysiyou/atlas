@@ -1,10 +1,11 @@
 """Sample collection operations for lab workflow."""
 from datetime import UTC, datetime
 
+from app.models.order import Order
 from app.models.sample import Sample
 from app.schemas.enums import SampleStatus, TestStatus
+from app.services.lab.eligibility import assert_can_collect
 from app.services.lab.state import SampleStateMachine, StateTransitionError, TestStateMachine
-from app.services.orders import update_order_status
 from app.utils.exceptions import LabOperationError
 
 
@@ -26,12 +27,29 @@ class CollectionOperations:
         collection_notes: str | None = None,
     ) -> Sample:
         sample = self._svc._get_sample(sample_id, for_update=True)
-        self._svc._assert_order_paid_for_collection(sample.orderId)
+        order = self.db.query(Order).filter(Order.orderId == sample.orderId).first()
+        if not order:
+            raise LabOperationError(f"Order {sample.orderId} not found", status_code=404)
+        order_tests_all = self._svc._linked_order_tests(sample)
+        assert_can_collect(sample, order, order_tests_all)
+        order_tests = [
+            ot
+            for ot in order_tests_all
+            if ot.status
+            not in (
+                TestStatus.SUPERSEDED,
+                TestStatus.REMOVED,
+                TestStatus.VALIDATED,
+                TestStatus.CANCELLED,
+            )
+        ]
         before_state = self._svc._serialize_sample_state(sample)
         try:
             SampleStateMachine.validate_transition(sample.status, SampleStatus.COLLECTED)
         except StateTransitionError as e:
-            raise LabOperationError(e.message, status_code=400)
+            raise LabOperationError(
+                e.message, status_code=400, error_code="INVALID_TRANSITION"
+            )
 
         sample.status = SampleStatus.COLLECTED
         sample.collectedAt = datetime.now(UTC)
@@ -43,21 +61,25 @@ class CollectionOperations:
         sample.remainingVolume = collected_volume
         sample.updatedBy = str(user_id)
 
-        order_tests = self._svc._linked_order_tests(
-            sample,
-            exclude_statuses=[
-                TestStatus.SUPERSEDED,
-                TestStatus.REMOVED,
-                TestStatus.VALIDATED,
-                TestStatus.CANCELLED,
-            ],
-        )
         for order_test in order_tests:
-            # Validate state machine transition before forcing status change
             if TestStateMachine.can_transition(order_test.status, TestStatus.SAMPLE_COLLECTED):
                 order_test.status = TestStatus.SAMPLE_COLLECTED
                 order_test.sampleId = sample_id
-            # else: Skip invalid transitions (log warning if needed in production)
+            elif order_test.status not in (
+                TestStatus.SAMPLE_COLLECTED,
+                TestStatus.RESULTED,
+                TestStatus.ESCALATED,
+            ):
+                status_val = (
+                    order_test.status.value
+                    if order_test.status
+                    else str(order_test.status)
+                )
+                raise LabOperationError(
+                    f"Test {order_test.testCode} cannot be marked collected (status {status_val})",
+                    status_code=400,
+                    error_code="INVALID_TRANSITION",
+                )
 
         after_state = self._svc._serialize_sample_state(sample)
         self._svc.emitter.sample_collected(
@@ -68,9 +90,5 @@ class CollectionOperations:
             after_state,
             metadata={"test_codes": sample.testCodes},
         )
-        self.db.commit()
         self._svc.recollection.mark_fulfilled_when_sample_collected(sample_id)
-        self.db.commit()
-        self.db.refresh(sample)
-        update_order_status(self.db, sample.orderId)
         return sample

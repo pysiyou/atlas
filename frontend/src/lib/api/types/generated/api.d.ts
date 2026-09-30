@@ -1186,6 +1186,8 @@ export interface components {
             analyzer_id?: string | null;
             /** Observation Datetime */
             observation_datetime?: string | null;
+            /** Correlation Id */
+            correlation_id?: string | null;
         };
         /** AnalyzerResultResponse */
         AnalyzerResultResponse: {
@@ -2312,6 +2314,16 @@ export interface components {
             severity?: string | null;
             /** Ticketmetadata */
             ticketMetadata?: unknown | null;
+            /**
+             * Criticalnotificationsent
+             * @default false
+             */
+            criticalNotificationSent: boolean;
+            /**
+             * Allowforcevalidate
+             * @default true
+             */
+            allowForceValidate: boolean;
         };
         /**
          * PriorityLevel

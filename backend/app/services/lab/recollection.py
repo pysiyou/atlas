@@ -17,11 +17,10 @@ from app.schemas.enums import (
     RemedyType,
     TestStatus,
 )
+from app.schemas.lab import RecollectionRequestResult, RecollectionRequestSummary
 from app.services.lab.samples import SampleCollectionService
 from app.services.lab.state import TestStateMachine
-from app.services.orders import update_order_status
 from app.utils.exceptions import LabOperationError
-from app.schemas.lab import RecollectionRequestResult, RecollectionRequestSummary
 from sqlalchemy.orm import Session
 
 
@@ -298,8 +297,6 @@ class RecollectionRequestService:
             },
         )
 
-        self.db.commit()
-        update_order_status(self.db, request.orderId)
         return RecollectionRequestResult(
             success=True,
             message="Recollection approved. Pending sample created for collection.",
@@ -388,8 +385,6 @@ class RecollectionRequestService:
             },
         )
 
-        self.db.commit()
-        update_order_status(self.db, request.orderId)
         return RecollectionRequestResult(
             success=True,
             message="Recollection request denied. Affected tests cancelled.",

@@ -1,10 +1,9 @@
 """Shared recollection-approval blocking snapshot for board and dashboard-today."""
 from __future__ import annotations
 
-from sqlalchemy.orm import Session
-
 from app.models.recollection_request import RecollectionRequest
 from app.schemas.enums import RecollectionRequestStatus
+from sqlalchemy.orm import Session
 
 
 def recollection_blocked_order_test_ids(db: Session) -> set[int]:

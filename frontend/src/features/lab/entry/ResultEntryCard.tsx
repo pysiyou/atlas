@@ -42,14 +42,22 @@ interface ResultEntryCardSharedData {
   handleCardClick: (e?: React.MouseEvent) => void;
   workItem: ReturnType<typeof useOrderTestQueueState>;
   rejection: ReturnType<typeof deriveRetestContext>;
+  canEnter: boolean;
+  blockedLabel: string | undefined;
 }
 
 function useResultEntryCardData(props: ResultEntryCardProps): ResultEntryCardSharedData | null {
   const { test, testDef, results, isComplete, onClick } = props;
   const { getPatientName } = usePatientNameLookup();
-  const handleCardClick = useLabWorkflowCardClickGuard(onClick);
   const workItem = useOrderTestQueueState(test);
   const rejection = useMemo(() => deriveRetestContext(test), [test]);
+  const canEnter = test.allowedActions?.enterResults !== false;
+  const blockedLabel =
+    test.denyMessage ??
+    (workItem.blockedReason ? workItem.label : undefined);
+  const handleCardClick = useLabWorkflowCardClickGuard(() => {
+    if (canEnter) onClick();
+  });
 
   if (!testDef?.parameters) return null;
 
@@ -68,6 +76,8 @@ function useResultEntryCardData(props: ResultEntryCardProps): ResultEntryCardSha
     handleCardClick,
     workItem,
     rejection,
+    canEnter,
+    blockedLabel,
   };
 }
 
@@ -79,16 +89,20 @@ function ResultEntryCardDesktop({
   parameterCount,
   filledCount,
   handleCardClick,
-  workItem,
   rejection,
+  blockedLabel,
+  canEnter,
 }: ResultEntryCardSharedData) {
   const { showAttemptIndicator } = rejection;
   const auditLines = useMemo(() => testHeaderAudit(test), [test]);
 
   return (
     <LabWorkflowCardShell
-      onClick={handleCardClick}
-      className={showAttemptIndicator ? 'border-warning-stroke-emphasis' : ''}
+      onClick={canEnter ? handleCardClick : undefined}
+      className={cn(
+        showAttemptIndicator ? 'border-warning-stroke-emphasis' : '',
+        !canEnter && 'opacity-70 cursor-not-allowed'
+      )}
       context={{
         patientName: test.patientName,
         patientId: test.patientId,
@@ -105,7 +119,7 @@ function ResultEntryCardDesktop({
           test={test}
           variant="entry"
           queueSince={test.collectedAt}
-          blockedLabel={workItem.blockedReason ? workItem.label : undefined}
+          blockedLabel={blockedLabel}
         />
       }
       actions={
@@ -146,8 +160,9 @@ function ResultEntryCardMobile({
   test,
   patientName,
   handleCardClick,
-  workItem,
   rejection,
+  canEnter,
+  blockedLabel,
 }: ResultEntryCardSharedData) {
   const { showAttemptIndicator } = rejection;
   const auditLines = useMemo(() => testHeaderAudit(test), [test]);
@@ -155,12 +170,13 @@ function ResultEntryCardMobile({
   return (
     <Card
       padding="sm"
-      hover
+      hover={canEnter}
       className={cn(
         LAB_MOBILE_CARD.surface,
-        showAttemptIndicator && 'border-warning-stroke-emphasis'
+        showAttemptIndicator && 'border-warning-stroke-emphasis',
+        !canEnter && 'opacity-70 cursor-not-allowed'
       )}
-      onClick={handleCardClick}
+      onClick={canEnter ? handleCardClick : undefined}
     >
       <LabMobileCardHeader
         context={{
@@ -179,16 +195,18 @@ function ResultEntryCardMobile({
             variant="entry"
             size="xs"
             queueSince={test.collectedAt}
-            blockedLabel={workItem.blockedReason ? workItem.label : undefined}
+            blockedLabel={blockedLabel}
           />
         }
         actions={
           <IconButton
             {...actionButtonPreset('edit')}
             size="sm"
-            title="Enter Results"
+            title={canEnter ? 'Enter Results' : blockedLabel ?? 'Result entry not allowed'}
+            disabled={!canEnter}
             onClick={e => {
               e.stopPropagation();
+              if (!canEnter) return;
               handleCardClick();
             }}
           />

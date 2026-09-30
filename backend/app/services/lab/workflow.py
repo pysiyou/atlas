@@ -1,14 +1,21 @@
-"""Unified Lab Operations Service — thin facade delegating to domain operation modules."""
-from typing import Any
+"""Unified Lab Operations Service — composition root for lab workflow mutations.
 
+Transaction policy: every user-facing lab mutation runs through run_lab_mutation():
+domain code mutates the shared Session only (no commit); rollup via apply_order_status_rollup;
+one db.commit(); then board cache invalidation once.
+"""
+from collections.abc import Callable
+from typing import Any, TypeVar
+
+from app.core.cache import invalidate_lab_board_summary_cache
 from app.models.order import Order, OrderTest
 from app.models.sample import Sample
-from app.schemas.enums import (
-    PaymentStatus,
-    TestStatus,
-)
+from app.schemas.critical_values import AcknowledgeRequest, NotifyRequest
+from app.schemas.enums import PaymentStatus, SampleStatus, TestStatus
 from app.services.audit import AuditEmitter
 from app.services.lab.collection_ops import CollectionOperations
+from app.services.lab.critical_values import CriticalNotificationService
+from app.services.lab.eligibility import assert_can_collect
 from app.services.lab.escalation import (
     EscalationEngine,
     EscalationOperations,
@@ -18,10 +25,12 @@ from app.services.lab.quality import QualityIssueService
 from app.services.lab.recollection import RecollectionRequestService
 from app.services.lab.result_ops import ResultOperations
 from app.services.lab.results import FlagCalculatorService, ResultValidatorService
-from app.core.cache import invalidate_lab_board_summary_cache
+from app.services.orders import apply_order_status_rollup
 from app.utils.exceptions import LabOperationError
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
+
+T = TypeVar("T")
 
 __all__ = ["LabOperationsService", "LabOperationError", "EscalationResolveResult"]
 
@@ -80,11 +89,72 @@ class LabOperationsService:
         order = self.db.query(Order).filter(Order.orderId == order_id).first()
         if not order:
             raise LabOperationError(f"Order {order_id} not found", status_code=404)
-        if order.paymentStatus != PaymentStatus.PAID:
+        sample = (
+            self.db.query(Sample)
+            .filter(Sample.orderId == order_id, Sample.status == SampleStatus.PENDING)
+            .first()
+        )
+        if sample:
+            order_tests = self._linked_order_tests(sample)
+            assert_can_collect(sample, order, order_tests)
+        elif order.paymentStatus != PaymentStatus.PAID:
             raise LabOperationError(
                 "Sample collection requires payment. Mark the order as paid before collecting.",
                 status_code=402,
+                error_code="PAYMENT_REQUIRED",
             )
+
+    def after_lab_mutation(self, order_id: int | None = None) -> None:
+        """Deprecated: use run_lab_mutation. Kept for callers mid-migration."""
+        if order_id is not None:
+            apply_order_status_rollup(self.db, order_id)
+            self.db.commit()
+        self._invalidate_lab_monitor_cache()
+
+    @staticmethod
+    def _resolve_order_id(result: Any, explicit: int | None) -> int | None:
+        if explicit is not None:
+            return explicit
+        if result is None:
+            return None
+        if isinstance(result, dict):
+            oid = result.get("orderId") or result.get("order_id")
+            return int(oid) if oid is not None else None
+        for attr in ("orderId", "order_id"):
+            if hasattr(result, attr):
+                val = getattr(result, attr)
+                if val is not None:
+                    return int(val)
+        if hasattr(result, "sampleId"):
+            return None
+        return None
+
+    def _refresh_mutation_result(self, result: Any) -> None:
+        if isinstance(result, Sample | OrderTest):
+            self.db.refresh(result)
+
+    def run_lab_mutation(
+        self,
+        fn: Callable[[], T],
+        *,
+        order_id: int | None = None,
+    ) -> T:
+        """Single commit, in-session order rollup, cache invalidate. fn must not commit."""
+        try:
+            with self.db.begin_nested():
+                result = fn()
+                resolved_order_id = self._resolve_order_id(result, order_id)
+                if resolved_order_id is not None:
+                    apply_order_status_rollup(self.db, resolved_order_id)
+            self.db.commit()
+            self._refresh_mutation_result(result)
+            self._invalidate_lab_monitor_cache()
+            return result
+        except LabOperationError:
+            raise
+        except Exception:
+            self.db.rollback()
+            raise
 
     def _serialize_sample_state(self, sample: Sample) -> dict[str, Any]:
         return {
@@ -130,31 +200,143 @@ class LabOperationsService:
         invalidate_lab_board_summary_cache()
 
     def collect_sample(self, **kwargs) -> Sample:
-        sample = self._collection.collect_sample(**kwargs)
-        self._invalidate_lab_monitor_cache()
-        return sample
+        sample_id = kwargs["sample_id"]
+        row = self.db.query(Sample).filter(Sample.sampleId == sample_id).first()
+        order_id = row.orderId if row else None
+        return self.run_lab_mutation(
+            lambda: self._collection.collect_sample(**kwargs),
+            order_id=order_id,
+        )
 
     def enter_results(self, **kwargs) -> OrderTest:
-        order_test = self._results.enter_results(**kwargs)
-        self._invalidate_lab_monitor_cache()
-        return order_test
+        order_test_id = kwargs.get("order_test_id")
+        order_id = None
+        if order_test_id:
+            ot = self.db.query(OrderTest).filter(OrderTest.id == order_test_id).first()
+            order_id = ot.orderId if ot else None
+        return self.run_lab_mutation(
+            lambda: self._results.enter_results(**kwargs),
+            order_id=order_id,
+        )
 
     def validate_results(self, **kwargs) -> OrderTest:
-        order_test = self._results.validate_results(**kwargs)
-        self._invalidate_lab_monitor_cache()
+        from app.schemas.enums import OrderStatus
+        from app.services.orders import OrderService
+
+        order_test_id = kwargs.get("order_test_id")
+
+        def _mutate() -> OrderTest:
+            return self._results.validate_results(**kwargs)
+
+        order_id = None
+        if order_test_id:
+            ot = self.db.query(OrderTest).filter(OrderTest.id == order_test_id).first()
+            order_id = ot.orderId if ot else None
+        order_test = self.run_lab_mutation(_mutate, order_id=order_id)
+        order = self.db.query(Order).filter(Order.orderId == order_test.orderId).first()
+        if order and order.overallStatus == OrderStatus.COMPLETED:
+            import logging
+
+            logger = logging.getLogger(__name__)
+            try:
+                OrderService(self.db).mark_as_reported(order_test.orderId)
+            except Exception as exc:
+                logger.error(
+                    "mark_as_reported failed after validation for order %s: %s",
+                    order_test.orderId,
+                    exc,
+                    exc_info=True,
+                )
         return order_test
 
     def reject_results(self, **kwargs):
-        result = self._results.reject_results(**kwargs)
-        self._invalidate_lab_monitor_cache()
-        return result
+        order_test_id = kwargs.get("order_test_id")
+        order_id = None
+        if order_test_id:
+            ot = self.db.query(OrderTest).filter(OrderTest.id == order_test_id).first()
+            order_id = ot.orderId if ot else None
+        return self.run_lab_mutation(
+            lambda: self._results.reject_results(**kwargs),
+            order_id=order_id,
+        )
 
     def request_amendment(self, **kwargs) -> OrderTest:
-        order_test = self._results.request_amendment(**kwargs)
-        self._invalidate_lab_monitor_cache()
-        return order_test
+        order_test_id = kwargs.get("order_test_id")
+        order_id = None
+        if order_test_id:
+            ot = self.db.query(OrderTest).filter(OrderTest.id == order_test_id).first()
+            order_id = ot.orderId if ot else None
+        return self.run_lab_mutation(
+            lambda: self._results.request_amendment(**kwargs),
+            order_id=order_id,
+        )
 
     def resolve_escalation(self, **kwargs) -> EscalationResolveResult:
-        result = self._escalation_ops.resolve_escalation(**kwargs)
-        self._invalidate_lab_monitor_cache()
-        return result
+        order_test_id = kwargs.get("order_test_id")
+        order_id = None
+        if order_test_id:
+            ot = self.db.query(OrderTest).filter(OrderTest.id == order_test_id).first()
+            order_id = ot.orderId if ot else None
+        return self.run_lab_mutation(
+            lambda: self._escalation_ops.resolve_escalation(**kwargs),
+            order_id=order_id,
+        )
+
+    def report_quality_issue(self, **kwargs):
+        from app.schemas.enums import QualityIssueTargetType
+
+        target_id = kwargs.get("target_id")
+        target_type = kwargs.get("target_type")
+        order_id = None
+        if target_type == QualityIssueTargetType.SAMPLE:
+            sample = self.db.query(Sample).filter(Sample.sampleId == target_id).first()
+            order_id = sample.orderId if sample else None
+        elif target_id:
+            ot = self.db.query(OrderTest).filter(OrderTest.id == target_id).first()
+            order_id = ot.orderId if ot else None
+        return self.run_lab_mutation(
+            lambda: self.quality.report_issue(**kwargs),
+            order_id=order_id,
+        )
+
+    def approve_recollection_request(
+        self, request_id: int, user_id: int, review_notes: str | None
+    ):
+        from app.models.recollection_request import RecollectionRequest
+
+        req = self.db.query(RecollectionRequest).filter(RecollectionRequest.id == request_id).first()
+        order_id = req.orderId if req else None
+        return self.run_lab_mutation(
+            lambda: self.recollection.approve(request_id, user_id, review_notes),
+            order_id=order_id,
+        )
+
+    def deny_recollection_request(self, request_id: int, user_id: int, review_notes: str | None):
+        from app.models.recollection_request import RecollectionRequest
+
+        req = self.db.query(RecollectionRequest).filter(RecollectionRequest.id == request_id).first()
+        order_id = req.orderId if req else None
+        return self.run_lab_mutation(
+            lambda: self.recollection.deny(request_id, user_id, review_notes),
+            order_id=order_id,
+        )
+
+    def notify_critical_value(self, test_id: int, request: NotifyRequest, user_id: int) -> dict:
+        ot = self.db.query(OrderTest).filter(OrderTest.id == test_id).first()
+        order_id = ot.orderId if ot else None
+        return self.run_lab_mutation(
+            lambda: CriticalNotificationService(self.db).notify(test_id, request, user_id),
+            order_id=order_id,
+        )
+
+    def acknowledge_critical_value(
+        self, test_id: int, request: AcknowledgeRequest, user_id: int
+    ) -> dict:
+        ot = self.db.query(OrderTest).filter(OrderTest.id == test_id).first()
+        order_id = ot.orderId if ot else None
+        return self.run_lab_mutation(
+            lambda: CriticalNotificationService(self.db).acknowledge(
+                test_id, request, user_id
+            ),
+            order_id=order_id,
+        )

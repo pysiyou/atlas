@@ -114,6 +114,8 @@ class PendingEscalationItemResponse(BaseModel):
     reasonCode: str | None = None
     severity: str | None = None
     ticketMetadata: Any | None = None
+    criticalNotificationSent: bool = False
+    allowForceValidate: bool = True
 
     class Config:
         from_attributes = True

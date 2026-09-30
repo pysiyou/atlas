@@ -5,25 +5,23 @@ from __future__ import annotations
 from typing import Any
 
 from app.schemas.enums import (
-    EscalationReasonCode,
-    PaymentStatus,
     PriorityLevel,
-    SampleStatus,
-    TestStatus,
 )
+from app.services.lab.eligibility import BLOCKED_LABELS, blocked_reason_for_work_item
+from sqlalchemy import case
 
-BLOCKED_LABELS = {
-    "payment_unpaid": "Payment required",
-    "specimen_recollection": "Recollection required",
-    "sample_rejected": "Sample rejected",
-    "retest_pending": "Re-test in progress",
-    "critical_value": "Critical value — supervisor review",
-    "amendment_pending": "Amendment pending",
-    "retry_limit": "Re-test limit reached",
-    "recollection_limit": "Recollection limit reached",
-    "supervisor_review": "Supervisor approval required",
-    "recollection_approval": "Recollection awaiting supervisor approval",
-}
+__all__ = [
+    "BLOCKED_LABELS",
+    "blocked_reason_for_work_item",
+    "BLOCKED_ATTENTION_TYPE",
+    "ATTENTION_TYPE_SORT",
+    "SUPERVISOR_ATTENTION_TYPES",
+    "PRIORITY_ATTENTION_TYPES",
+    "should_surface_attention",
+    "attention_type_for",
+    "priority_rank",
+    "priority_sort_key",
+]
 
 BLOCKED_ATTENTION_TYPE = {
     "critical_value": "escalation_critical",
@@ -67,40 +65,6 @@ SUPERVISOR_ATTENTION_TYPES = {
 PRIORITY_ATTENTION_TYPES = {"priority_urgent", "priority_high"}
 
 
-def blocked_reason_for_work_item(
-    *,
-    status: str,
-    is_retest: bool = False,
-    payment_status: str | None = None,
-    sample_status: str | None = None,
-    sample_is_recollection: bool = False,
-    escalation_reason_code: str | None = None,
-) -> str | None:
-    """Canonical blocked-reason key for a pipeline work item."""
-    if payment_status == PaymentStatus.UNPAID.value and status in (
-        TestStatus.PENDING.value,
-        "pending",
-    ):
-        return "payment_unpaid"
-    if status == TestStatus.ESCALATED.value:
-        if escalation_reason_code == EscalationReasonCode.CRIT_VAL.value:
-            return "critical_value"
-        if escalation_reason_code == EscalationReasonCode.AMEND_RES.value:
-            return "amendment_pending"
-        if escalation_reason_code == EscalationReasonCode.LIMIT_HIT.value:
-            return "retry_limit"
-        if escalation_reason_code == EscalationReasonCode.REJ_SAMP.value:
-            return "recollection_limit"
-        return "supervisor_review"
-    if sample_status == SampleStatus.REJECTED.value:
-        return "sample_rejected"
-    if sample_is_recollection and status in (TestStatus.PENDING.value, "pending"):
-        return "specimen_recollection"
-    if is_retest and status == TestStatus.SAMPLE_COLLECTED.value:
-        return "retest_pending"
-    return None
-
-
 def should_surface_attention(
     blocked_reason: str | None,
     status: str,
@@ -132,8 +96,6 @@ def attention_type_for(
 
 
 # ── Priority ranking (worklist sort + attention merge) ─────────────────
-
-from sqlalchemy import case
 
 PRIORITY_RANK: dict[Any, int] = {
     PriorityLevel.URGENT: 0,

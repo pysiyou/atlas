@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { format, isSameDay, startOfDay } from 'date-fns';
 import { EmptyState } from '@/components/display/EmptyState';
 import { InlineHighlight } from '@/components/primitives/InlineHighlight';
-import { RADIUS, SPACING, TYPE } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/components/theme/recipes';
 import { ICONS } from '@/config/icons';
 import { getLaneVisual, parseResultEntry, statusMapFromFlags, type LabTimelineLane } from '@/features/lab';
 import { parseAppDate } from '@/utils/date';
@@ -18,17 +18,17 @@ import type {
 const EVENT_LOG_HEADLINE_LINE_CLASS = 'leading-5';
 
 const EVENT_LOG_STYLES = {
-  feed: `flex flex-col ${SPACING.stackNormal} px-space-3 py-space-3`,
-  dateDivider: 'flex w-full min-w-0 justify-end py-space-1',
-  dateDividerLabel: `${TYPE.caption} shrink-0 text-text-tertiary`,
+  feed: `flex flex-col px-space-3 py-space-3 [&>section+section]:mt-space-4`,
+  dateDividerRow: 'py-space-1',
+  dateDividerLabel: `${TYPE.caption} min-w-0 shrink-0 text-text-tertiary`,
   row: 'relative flex items-start gap-space-3',
   spineColumn: 'relative w-3 shrink-0 self-stretch',
   spineStemTop:
-    'event-log-spine-stem-top pointer-events-none absolute left-1/2 top-0 w-px -translate-x-1/2 bg-border-default h-[calc(0.625rem-0.1875rem-0.25rem)]',
+    'event-log-spine-stem-top pointer-events-none absolute left-1/2 top-0 w-px -translate-x-1/2 bg-border-default h-[calc(0.625rem-0.125rem-0.25rem)]',
   spineStemBottom:
-    'event-log-spine-stem-bottom pointer-events-none absolute bottom-0 left-1/2 w-px -translate-x-1/2 bg-border-default top-[calc(0.625rem+0.1875rem+0.25rem)]',
+    'event-log-spine-stem-bottom pointer-events-none absolute bottom-0 left-1/2 w-px -translate-x-1/2 bg-border-default top-[calc(0.625rem+0.125rem+0.25rem)]',
   spineDotSlot: 'relative z-[1] flex h-5 w-full shrink-0 items-center justify-center',
-  spineDot: `h-1.5 w-1.5 shrink-0 ${RADIUS.pill} ring-1 ring-surface`,
+  spineDot: `size-1 shrink-0 ${RADIUS.pill} ring-1 ring-surface`,
   spineDotMuted: 'bg-text-tertiary',
   content: 'event-log-content min-w-0 flex-1 pb-space-2',
   headline: `${TYPE.value} ${EVENT_LOG_HEADLINE_LINE_CLASS} mb-0`,
@@ -303,10 +303,10 @@ export const EventLogFeed: React.FC<EventLogFeedProps> = ({
     <div className={`${EVENT_LOG_STYLES.feed} ${className ?? ''}`}>
       {dayGroups.map(group => (
         <section key={group.dayKey} aria-label={group.label}>
-          <div className={EVENT_LOG_STYLES.dateDivider}>
+          <div className={EVENT_LOG_STYLES.dateDividerRow}>
             <span className={EVENT_LOG_STYLES.dateDividerLabel}>{group.label}</span>
           </div>
-          <div className={`mt-space-3 flex flex-col ${EVENT_LOG_STYLES.rowList}`}>
+          <div className={`mt-space-1 flex flex-col ${EVENT_LOG_STYLES.rowList}`}>
             {group.items.map(item => (
               <EventLogRow key={item.record.eventId} item={item} />
             ))}

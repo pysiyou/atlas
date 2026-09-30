@@ -41,8 +41,9 @@ def approve_recollection_request(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_recollection_reviewer),
 ):
-    service = LabOperationsService(db)
-    return service.recollection.approve(requestId, current_user.id, body.reviewNotes)
+    return LabOperationsService(db).approve_recollection_request(
+        requestId, current_user.id, body.reviewNotes
+    )
 
 
 @router.post(
@@ -55,5 +56,6 @@ def deny_recollection_request(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_recollection_reviewer),
 ):
-    service = LabOperationsService(db)
-    return service.recollection.deny(requestId, current_user.id, body.reviewNotes)
+    return LabOperationsService(db).deny_recollection_request(
+        requestId, current_user.id, body.reviewNotes
+    )

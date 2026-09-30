@@ -46,6 +46,7 @@ export const SampleCollectionDetailFooter: React.FC<CollectionDetailFooterProps>
 }) => {
   if (isPending && pendingSampleDisplay && onCollect) {
     const isRecollection = sample.isRecollection === true;
+    const collectAllowed = pendingSampleDisplay.allowedActions?.collect ?? true;
     return (
       <ModalFooter statusIcon={undefined} statusMessage="" statusClassName="text-text-tertiary">
         <SampleCollectionPopover
@@ -53,13 +54,15 @@ export const SampleCollectionDetailFooter: React.FC<CollectionDetailFooterProps>
           patientName={patientName}
           testName={testNames.join(', ')}
           isRecollection={isRecollection}
+          collectDisabled={!collectAllowed}
+          collectDisabledTitle={pendingSampleDisplay.denyMessage ?? undefined}
           onConfirm={async (volume, notes, color, ct) => {
             await Promise.resolve(onCollect(pendingSampleDisplay, volume, notes, color, ct));
             onClose();
           }}
           onSubmittingChange={onPopoverSubmittingChange}
           trigger={
-            <Button {...actionButtonPreset('collect')} size="md">
+            <Button {...actionButtonPreset('collect')} size="md" disabled={!collectAllowed}>
               {isRecollection ? 'Recollect Sample' : 'Collect Sample'}
             </Button>
           }

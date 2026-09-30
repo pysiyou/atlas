@@ -19,7 +19,6 @@ from app.schemas.enums import (
 )
 from app.services.lab.samples import generate_samples_for_order
 from app.services.lab.state import TestStateMachine
-from app.services.orders import OrderService, update_order_status
 from app.utils.common import parse_numeric_result_value
 from app.utils.exceptions import LabOperationError
 from sqlalchemy.orm import Session
@@ -243,13 +242,13 @@ class ResultOperations:
         technician_notes: str | None = None,
         skip_validation: bool = False,
     ) -> OrderTest:
-        order_test = self._svc._get_order_test(order_test_id, for_update=True)  # Add row lock
+        order_test = self._svc._get_order_test(order_test_id, for_update=True)
         order_id = order_test.orderId
         test_code = order_test.testCode
 
-        can_enter, reason = TestStateMachine.can_enter_results(order_test.status)
-        if not can_enter:
-            raise LabOperationError(reason, status_code=400)
+        from app.services.lab.eligibility import assert_can_enter_results
+
+        assert_can_enter_results(order_test)
 
         test_def = self._svc.db.query(Test).filter(Test.code == test_code).first()
         result_items = test_def.resultItems if test_def else []
@@ -352,9 +351,6 @@ class ResultOperations:
             metadata=enter_metadata,
         )
 
-        self._svc.db.commit()
-        self._svc.db.refresh(order_test)
-        update_order_status(self._svc.db, order_id)
         return order_test
 
     def validate_results(
@@ -371,9 +367,9 @@ class ResultOperations:
         # Note: The status filter above ensures order_test.status == RESULTED,
         # so no need for additional escalation check here.
 
-        can_validate, reason = TestStateMachine.can_validate(order_test.status)
-        if not can_validate:
-            raise LabOperationError(reason)
+        from app.services.lab.eligibility import assert_can_validate
+
+        assert_can_validate(order_test)
 
         # Allow approve even when linked specimen is rejected — validator owns the decision.
         # Record that context in validation notes for audit when applicable.
@@ -426,17 +422,6 @@ class ResultOperations:
                     user_id,
                 )
 
-        self._svc.db.commit()
-        self._svc.db.refresh(order_test)
-        update_order_status(self._svc.db, order_id)
-
-        order = self._svc.db.query(Order).filter(Order.orderId == order_id).first()
-        if order and order.overallStatus == OrderStatus.COMPLETED:
-            try:
-                OrderService(self._svc.db).mark_as_reported(order_id)
-            except Exception:
-                pass
-
         return order_test
 
     def reject_results(
@@ -468,7 +453,9 @@ class ResultOperations:
         Request amendment for a validated test result.
         Creates AMEND-RES escalation for supervisor review.
         """
-        order_test = self._svc._get_order_test(order_test_id, status=TestStatus.VALIDATED)
+        order_test = self._svc._get_order_test(
+            order_test_id, status=TestStatus.VALIDATED, for_update=True
+        )
         order_id = order_test.orderId
 
         # Validate transition from VALIDATED to ESCALATED
@@ -500,7 +487,4 @@ class ResultOperations:
             from_status=TestStatus.VALIDATED,
         )
 
-        self._svc.db.commit()
-        self._svc.db.refresh(order_test)
-        update_order_status(self._svc.db, order_id)
         return order_test

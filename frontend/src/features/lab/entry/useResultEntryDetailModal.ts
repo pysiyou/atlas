@@ -47,6 +47,10 @@ export function useResultEntryDetailModal({
       const resultKey = orderTestKey(test.id);
       if (!testDef?.parameters) return;
 
+      if (test.allowedActions?.enterResults === false) {
+        return;
+      }
+
       const isComplete = areAllParametersFilled(resultKey, testDef.parameters.length);
 
       openModal(ModalType.RESULT_DETAIL, {

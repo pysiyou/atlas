@@ -1,6 +1,7 @@
 """
 Import all models for easy access
 """
+from app.models.analyzer_ingest_dedup import AnalyzerIngestDedup
 from app.models.affiliation_pricing import AffiliationPricing
 from app.models.audit_event import AuditEvent
 from app.models.billing import InsuranceClaim, Invoice, Payment
@@ -28,4 +29,5 @@ __all__ = [
     "QualityIssue",
     "RecollectionRequest",
     "AffiliationPricing",
+    "AnalyzerIngestDedup",
 ]

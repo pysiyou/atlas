@@ -22,16 +22,15 @@ from app.schemas.enums import (
     SampleStatus,
     TestStatus,
 )
+from app.schemas.lab import QualityIssueOptions, QualityIssueResult
 from app.services.audit import AuditEmitter
 from app.services.lab.escalation import EscalationEngine
 from app.services.lab.rejection import RejectionCriteriaService
 from app.services.lab.sample_rejection_context import SampleRejectionContext
 from app.services.lab.samples import SampleCollectionService
 from app.services.lab.state import SampleStateMachine, TestStateMachine
-from app.services.orders import update_order_status
 from app.utils.common import is_specimen_rejection_reason
 from app.utils.exceptions import LabOperationError
-from app.schemas.lab import QualityIssueOptions, QualityIssueResult
 from sqlalchemy.orm import Session
 
 _SAMPLE_RESET_STATUSES = {
@@ -70,8 +69,11 @@ class QualityIssueService:
 
     # ── helpers ──────────────────────────────────────────────────────────
 
-    def _get_sample(self, sample_id: int) -> Sample:
-        sample = self.db.query(Sample).filter(Sample.sampleId == sample_id).first()
+    def _get_sample(self, sample_id: int, *, for_update: bool = False) -> Sample:
+        query = self.db.query(Sample).filter(Sample.sampleId == sample_id)
+        if for_update:
+            query = query.with_for_update()
+        sample = query.first()
         if not sample:
             raise LabOperationError(f"Sample {sample_id} not found", status_code=404)
         return sample
@@ -490,7 +492,7 @@ class QualityIssueService:
         notes: str | None,
         preferred_remedy: RemedyType | None,
     ) -> QualityIssueResult:
-        sample = self._get_sample(sample_id)
+        sample = self._get_sample(sample_id, for_update=True)
         RejectionCriteriaService(self.db).validate_for_tests(
             sample.testCodes, reason, context="sample"
         )
@@ -533,9 +535,6 @@ class QualityIssueService:
             user_id=user_id,
             sample_id=sample_id,
         )
-        self.db.commit()
-        update_order_status(self.db, sample.orderId)
-
         parts = ["Sample rejected."]
         if unfinished > 0 and remedy == RemedyType.CANCEL:
             parts.append("Unfinished tests were reset to await collection.")
@@ -562,7 +561,12 @@ class QualityIssueService:
         notes: str | None,
         preferred_remedy: RemedyType | None,
     ) -> QualityIssueResult:
-        order_test = self.db.query(OrderTest).filter(OrderTest.id == order_test_id).first()
+        order_test = (
+            self.db.query(OrderTest)
+            .filter(OrderTest.id == order_test_id)
+            .with_for_update()
+            .first()
+        )
         if not order_test:
             raise LabOperationError(f"Test {order_test_id} not found", status_code=404)
         if order_test.status != TestStatus.RESULTED:
@@ -652,8 +656,6 @@ class QualityIssueService:
             sample_id=order_test.sampleId,
             test_code=order_test.testCode,
         )
-        self.db.commit()
-        update_order_status(self.db, order_test.orderId)
         return QualityIssueResult(
             success=True,
             remedy=RemedyType.CANCEL,
@@ -701,8 +703,6 @@ class QualityIssueService:
             test_code=order_test.testCode,
             created_test_id=new_test.id,
         )
-        self.db.commit()
-        update_order_status(self.db, order_test.orderId)
         return QualityIssueResult(
             success=True,
             remedy=RemedyType.RETRY_SAME_SAMPLE,
@@ -748,8 +748,6 @@ class QualityIssueService:
             quality_issue_id=issue.id,
             affected_tests=unfinished,
         )
-        self.db.commit()
-        update_order_status(self.db, sample.orderId)
         return QualityIssueResult(
             success=True,
             remedy=RemedyType.REQUEST_RECOLLECTION,
@@ -823,8 +821,6 @@ class QualityIssueService:
             quality_issue_id=issue.id,
             affected_tests=affected,
         )
-        self.db.commit()
-        update_order_status(self.db, order_test.orderId)
         return QualityIssueResult(
             success=True,
             remedy=RemedyType.REQUEST_RECOLLECTION,
@@ -865,8 +861,6 @@ class QualityIssueService:
             sample_id=order_test.sampleId,
             test_code=order_test.testCode,
         )
-        self.db.commit()
-        update_order_status(self.db, order_test.orderId)
         return QualityIssueResult(
             success=True,
             remedy=RemedyType.ESCALATE,

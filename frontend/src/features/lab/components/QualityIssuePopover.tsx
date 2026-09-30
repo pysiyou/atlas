@@ -214,6 +214,7 @@ interface QualityIssuePopoverProps {
   patientName?: string;
   onReject: (result: QualityIssueResult) => void;
   trigger?: React.ReactNode;
+  disabled?: boolean;
 }
 
 export const QualityIssuePopover: React.FC<QualityIssuePopoverProps> = ({
@@ -223,6 +224,7 @@ export const QualityIssuePopover: React.FC<QualityIssuePopoverProps> = ({
   patientName,
   onReject,
   trigger,
+  disabled = false,
 }) => {
   const [effectiveSubmitting, setEffectiveSubmitting] = useState(false);
 
@@ -233,7 +235,12 @@ export const QualityIssuePopover: React.FC<QualityIssuePopoverProps> = ({
       preventClose={effectiveSubmitting}
       trigger={
         trigger ?? (
-          <Button {...actionButtonPreset('reject')} size="sm" title={QUALITY_ISSUE_POPOVER_COPY.triggerTitle}>
+          <Button
+            {...actionButtonPreset('reject')}
+            size="sm"
+            title={QUALITY_ISSUE_POPOVER_COPY.triggerTitle}
+            disabled={disabled}
+          >
             {QUALITY_ISSUE_POPOVER_COPY.triggerTitle}
           </Button>
         )

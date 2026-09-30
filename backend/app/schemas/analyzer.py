@@ -15,6 +15,7 @@ class AnalyzerResultRequest(BaseModel):
     results: dict
     analyzer_id: str | None = None
     observation_datetime: datetime | None = None
+    correlation_id: str | None = None
 
 
 class AnalyzerResultResponse(BaseModel):

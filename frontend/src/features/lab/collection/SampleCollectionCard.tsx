@@ -41,6 +41,11 @@ function getCollectionViewModel(display: SampleCollectionQueueItem, sample: Samp
   const isDone = isCollected || isRejected;
   const hasContainerInfo = isDone && 'actualContainerColor' in sample;
   const containerColor = hasContainerInfo ? sample.actualContainerColor : undefined;
+  const collectAllowed =
+    display.allowedActions?.collect ??
+    (isPending && order.paymentStatus === 'paid');
+  const paymentBlocked =
+    isPending && (display.denyReason === 'payment_unpaid' || order.paymentStatus === 'unpaid');
 
   return {
     order,
@@ -48,7 +53,9 @@ function getCollectionViewModel(display: SampleCollectionQueueItem, sample: Samp
     isCollected,
     isRejected,
     isRecollection: sample.isRecollection === true,
-    paymentBlocked: isPending && order.paymentStatus === 'unpaid',
+    paymentBlocked,
+    collectAllowed,
+    collectDisabledTitle: display.denyMessage ?? undefined,
     rejectedSample: isRejected ? (sample as RejectedSample) : null,
     containerColor,
     colorName: containerColor
@@ -80,6 +87,8 @@ function CollectionCardDesktop({
     isRejected,
     isRecollection,
     paymentBlocked,
+    collectAllowed,
+    collectDisabledTitle,
     rejectedSample,
     containerColor,
     colorName,
@@ -147,6 +156,8 @@ function CollectionCardDesktop({
               patientName={patientName}
               testName={testNames.join(', ')}
               isRecollection={isRecollection}
+              collectDisabled={!collectAllowed}
+              collectDisabledTitle={collectDisabledTitle}
               onConfirm={(volume, notes, color, containerType) =>
                 onCollect(display, volume, notes, color, containerType)
               }
@@ -197,6 +208,8 @@ function CollectionCardMobile({
     isRejected,
     isRecollection,
     paymentBlocked,
+    collectAllowed,
+    collectDisabledTitle,
     rejectedSample,
     containerColor,
     colorName,
@@ -241,6 +254,8 @@ function CollectionCardMobile({
       patientName={patientName}
       testName={testNames.join(', ')}
       isRecollection={isRecollection}
+      collectDisabled={!collectAllowed}
+      collectDisabledTitle={collectDisabledTitle}
       onConfirm={(volume, notes, color, containerType) =>
         onCollect(display, volume, notes, color, containerType)
       }
