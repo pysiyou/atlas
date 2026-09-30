@@ -18,18 +18,32 @@ function TodayPanelSkeleton() {
   return (
     <Panel title={<Skeleton height={14} width={48} />} padding="none">
       <div className={TODAY_PANEL.body}>
-        <Skeleton height={18} className="w-full" />
-        <div className={TODAY_KPI.list}>
-          {Array.from({ length: 4 }).map((_, index) => (
-            <div key={index} className={TODAY_KPI.row}>
-              <Skeleton height={32} width={32} className="shrink-0" />
-              <div className="flex min-w-0 flex-1 flex-col gap-space-1">
-                <Skeleton height={14} width="72%" />
-                <Skeleton height={12} width={56} />
+        <div className={TODAY_PANEL.main}>
+          <div className={TODAY_PANEL.stack}>
+            <div className={TODAY_PANEL.chartBlock}>
+              <div className={TODAY_KPI.legendRow}>
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <Skeleton key={index} height={12} width={72} />
+                ))}
               </div>
-              <Skeleton height={20} width={112} className="shrink-0" />
+              <Skeleton height={10} className={TODAY_KPI.segmentBarEmpty} />
             </div>
-          ))}
+            <div className={`${TODAY_KPI.table} flex flex-col`}>
+              {Array.from({ length: 4 }).map((_, index) => (
+              <div key={index} className={TODAY_KPI.tableRow}>
+                <Skeleton height={12} width="72%" />
+                <Skeleton height={4} className="w-full" />
+                <Skeleton height={12} width={48} />
+              </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className={TODAY_PANEL.footer}>
+          <div className={TODAY_KPI.tableTotal}>
+            <Skeleton height={12} width={40} />
+            <Skeleton height={12} width={56} />
+          </div>
         </div>
       </div>
     </Panel>

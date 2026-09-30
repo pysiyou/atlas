@@ -2,19 +2,17 @@
  * Lab dashboard Today panel — milestone mix among tests worked today (UTC).
  */
 import React, { useMemo } from 'react';
-import { EmptyState, EMPTY_COPY, DASHBOARD_EMPTY_STATE_TEXT, Icon } from '@/components';
-import type { IconName } from '@/components';
+import { EmptyState, EMPTY_COPY, DASHBOARD_EMPTY_STATE_TEXT } from '@/components';
 import { Panel } from '@/components/surfaces/Panel';
 import type { LabTodayPanelSnapshot } from './commandCenterModel';
 import { TODAY_KPI, TODAY_PANEL } from './commandCenterStyles';
 import {
   LAB_COPY,
-  LAB_WORKFLOW_KPI_ICONS,
   getKpiStageVisual,
   labStageLabel,
   type LabWorkflowKpiStage,
 } from '../constants/labConstants';
-import { formatDate } from '@/utils';
+import { cn, formatDate } from '@/utils';
 
 export interface LabTodayPanelProps {
   todayPanel: LabTodayPanelSnapshot;
@@ -26,82 +24,40 @@ type TodayMilestoneKey = keyof Pick<
 >;
 
 const MILESTONE_ROWS: Array<{
-  stage: LabWorkflowKpiStage;
   key: TodayMilestoneKey;
-  label: string;
-  tag: string;
-  icon: IconName;
+  legendLabel: string;
+  tableLabel: string;
+  stage: LabWorkflowKpiStage;
 }> = [
   {
-    stage: 'collection',
     key: 'testsWithCollection',
-    label: LAB_COPY.dashboardToday.withCollection,
-    tag: labStageLabel('collection', 'short'),
-    icon: LAB_WORKFLOW_KPI_ICONS.collection,
+    legendLabel: labStageLabel('collection').toLowerCase(),
+    tableLabel: LAB_COPY.dashboardToday.withCollection,
+    stage: 'collection',
   },
   {
-    stage: 'entry',
     key: 'testsWithResultEntry',
-    label: LAB_COPY.dashboardToday.withEntry,
-    tag: labStageLabel('entry', 'short'),
-    icon: LAB_WORKFLOW_KPI_ICONS.entry,
+    legendLabel: labStageLabel('entry', 'short').toLowerCase(),
+    tableLabel: LAB_COPY.dashboardToday.withEntry,
+    stage: 'entry',
   },
   {
-    stage: 'validation',
     key: 'testsWithValidation',
-    label: LAB_COPY.dashboardToday.withValidation,
-    tag: labStageLabel('validation', 'short'),
-    icon: LAB_WORKFLOW_KPI_ICONS.validation,
+    legendLabel: labStageLabel('validation').toLowerCase(),
+    tableLabel: LAB_COPY.dashboardToday.withValidation,
+    stage: 'validation',
   },
   {
-    stage: 'sentBack',
     key: 'testsOffNormalPath',
-    label: LAB_COPY.dashboardToday.withQualityRework,
-    tag: LAB_COPY.workflow.sentBackShort,
-    icon: LAB_WORKFLOW_KPI_ICONS.sentBack,
+    legendLabel: LAB_COPY.workflow.sentBackShort.toLowerCase(),
+    tableLabel: LAB_COPY.dashboardToday.withQualityRework,
+    stage: 'sentBack',
   },
 ];
 
 function meterPercent(count: number, total: number): number {
   if (total <= 0) return 0;
   return Math.min(100, Math.round((count / total) * 100));
-}
-
-function TodayKpiMeterRow({
-  stage,
-  label,
-  tag,
-  icon,
-  count,
-  percent,
-}: {
-  stage: LabWorkflowKpiStage;
-  label: string;
-  tag: string;
-  icon: IconName;
-  count: number;
-  percent: number;
-}) {
-  const visual = getKpiStageVisual(stage);
-  return (
-    <div className={TODAY_KPI.row}>
-      <div className={TODAY_KPI.iconWrap(visual)}>
-        <Icon name={icon} className={TODAY_KPI.icon} aria-hidden />
-      </div>
-      <div className={TODAY_KPI.labelBlock}>
-        <span className={TODAY_KPI.rowTitle}>{label}</span>
-        <span className={TODAY_KPI.tag}>{tag}</span>
-      </div>
-      <div className={TODAY_KPI.meterWrap}>
-        <div className={TODAY_KPI.meterTrack} role="presentation">
-          <div className={TODAY_KPI.meterFill} style={{ width: `${percent}%` }} />
-          <span className={TODAY_KPI.meterLabel}>
-            {percent}% ({count.toLocaleString()})
-          </span>
-        </div>
-      </div>
-    </div>
-  );
 }
 
 export const LabTodayPanel: React.FC<LabTodayPanelProps> = ({ todayPanel }) => {
@@ -112,11 +68,34 @@ export const LabTodayPanel: React.FC<LabTodayPanelProps> = ({ todayPanel }) => {
 
   const totalWorked = todayPanel.testsUpdatedToday;
   const headerRange = dayLabel ? `UTC · ${dayLabel}` : 'UTC · Today';
+  const headerMeta =
+    totalWorked > 0
+      ? `${headerRange} · ${totalWorked.toLocaleString()} ${LAB_COPY.dashboardToday.testsWorked}`
+      : headerRange;
+
+  const segments = useMemo(() => {
+    return MILESTONE_ROWS.map(row => {
+      const count = todayPanel[row.key];
+      const visual = getKpiStageVisual(row.stage);
+      const percentOfWorked = meterPercent(count, totalWorked);
+      return {
+        key: row.key,
+        legendLabel: row.legendLabel,
+        tableLabel: row.tableLabel,
+        count,
+        percentOfWorked,
+        barClass: visual.bar,
+        textClass: visual.text,
+      };
+    });
+  }, [todayPanel, totalWorked]);
+
+  const activeSegments = segments.filter(s => s.count > 0);
 
   return (
     <Panel
       title="Today"
-      headerEnd={<span className={TODAY_KPI.headerRange}>{headerRange}</span>}
+      headerEnd={<span className={TODAY_KPI.headerRange}>{headerMeta}</span>}
       bodyClassName="flex min-h-0 flex-1 flex-col overflow-hidden"
       padding="none"
     >
@@ -129,28 +108,86 @@ export const LabTodayPanel: React.FC<LabTodayPanelProps> = ({ todayPanel }) => {
           />
         ) : (
           <>
-            <p className={TODAY_KPI.summaryLine} aria-label={LAB_COPY.dashboardToday.summaryAria}>
-              <span className={TODAY_KPI.summaryValue}>{totalWorked.toLocaleString()}</span>{' '}
-              {LAB_COPY.dashboardToday.testsWorked}
-            </p>
-            <ul className={TODAY_KPI.list}>
-              {MILESTONE_ROWS.map(row => {
-                const count = todayPanel[row.key];
-                const percent = meterPercent(count, totalWorked);
-                return (
-                  <li key={row.key}>
-                    <TodayKpiMeterRow
-                      stage={row.stage}
-                      label={row.label}
-                      tag={row.tag}
-                      icon={row.icon}
-                      count={count}
-                      percent={percent}
-                    />
-                  </li>
-                );
-              })}
-            </ul>
+            <div className={TODAY_PANEL.main} aria-label={LAB_COPY.dashboardToday.summaryAria}>
+              <div className={TODAY_PANEL.stack}>
+                <div className={TODAY_PANEL.chartBlock}>
+                  <div className={TODAY_KPI.legendRow}>
+                    {segments.map(segment => (
+                      <span key={segment.key} className={TODAY_KPI.legendItem}>
+                        <span className={TODAY_KPI.legendLabel}>{segment.legendLabel}</span>
+                        <span className="text-text-tertiary" aria-hidden>·</span>
+                        <span className={cn(TODAY_KPI.legendValue, segment.textClass)}>
+                          {segment.percentOfWorked}%
+                        </span>
+                      </span>
+                    ))}
+                  </div>
+
+                  <div
+                    className={TODAY_KPI.segmentBar}
+                    role="img"
+                    aria-label="Today's milestone mix"
+                  >
+                    {activeSegments.length === 0 ? (
+                      <div className={TODAY_KPI.segmentBarEmpty} />
+                    ) : (
+                      activeSegments.map(segment => (
+                        <div
+                          key={segment.key}
+                          className={cn(TODAY_KPI.segment, segment.barClass)}
+                          style={{ flexGrow: segment.count }}
+                          title={`${segment.tableLabel}: ${segment.count}`}
+                        />
+                      ))
+                    )}
+                  </div>
+                </div>
+
+                <div className={TODAY_KPI.table} role="table">
+                  <div className={TODAY_KPI.tableBody} role="rowgroup">
+                    {segments.map(segment => (
+                      <div key={segment.key} className={TODAY_KPI.tableRow} role="row">
+                        <span className={TODAY_KPI.tableLabel} role="cell">
+                          {segment.tableLabel}
+                        </span>
+                        <div
+                          className={TODAY_KPI.tableRowMeterTrack}
+                          role="presentation"
+                          aria-hidden
+                        >
+                          <div
+                            className={cn(TODAY_KPI.tableRowMeterFill, segment.barClass)}
+                            style={{ width: `${segment.percentOfWorked}%` }}
+                          />
+                        </div>
+                        <span className={TODAY_KPI.tableValue} role="cell">
+                          <span className={TODAY_KPI.tablePercent}>
+                            {segment.percentOfWorked}%
+                          </span>
+                          <span className={TODAY_KPI.tableCount}>
+                            {' '}
+                            · {segment.count.toLocaleString()}
+                          </span>
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className={TODAY_PANEL.footer}>
+              <div className={TODAY_KPI.tableTotal} role="row">
+                <span className={TODAY_KPI.tableTotalLabel}>{LAB_COPY.dashboardToday.total}</span>
+                <span className={TODAY_KPI.tableTotalValue}>
+                  100%
+                  <span className={TODAY_KPI.tableCount}>
+                    {' '}
+                    · {totalWorked.toLocaleString()}
+                  </span>
+                </span>
+              </div>
+            </div>
           </>
         )}
       </div>

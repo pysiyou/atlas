@@ -4,7 +4,6 @@
 import { PANEL_SHELL, TABLE_TYPE, TYPE } from '@/components/theme/recipes';
 import { CONTROL, RADIUS, SPACING } from '@/components/theme/recipes';
 import { TONE } from '@/components/theme/recipes';
-import type { LabLaneVisual } from '../constants/labConstants';
 
 export const COMMAND_CENTER_PANEL = {
   ...PANEL_SHELL.page,
@@ -24,26 +23,35 @@ export const DASHBOARD_TABLE_WRAP = 'flex min-h-80 flex-1 flex-col lg:min-h-0' a
 export const DASHBOARD_ROW_INTERACTIVE = `cursor-pointer ${CONTROL.focusVisibleFlat}` as const;
 
 export const TODAY_PANEL = {
-  body: 'flex min-h-0 flex-1 flex-col justify-center gap-space-2 overflow-y-auto px-space-3 py-space-2',
+  body: 'flex min-h-0 flex-1 flex-col px-space-3 py-space-3',
+  main: 'flex min-h-0 flex-1 flex-col justify-center gap-space-3 overflow-y-auto',
+  stack: 'flex min-w-0 flex-col gap-space-3',
+  chartBlock: 'flex min-w-0 flex-col gap-0',
+  footer: 'mt-auto shrink-0 pt-space-3',
 } as const;
 
 export const TODAY_KPI = {
   headerRange: TYPE.caption,
-  summaryMeta: TYPE.caption,
-  summaryLine: `${TYPE.value} min-w-0 leading-snug`,
-  summaryValue: 'tabular-nums text-text-primary',
-  list: 'flex min-w-0 flex-col gap-space-2',
-  row: `flex min-w-0 items-center gap-space-2 ${RADIUS.surface} border border-border-subtle/80 bg-surface px-space-2 py-space-1`,
-  iconWrap: (visual: LabLaneVisual) =>
-    `flex size-8 shrink-0 items-center justify-center ${RADIUS.inset} ${visual.iconWell}`,
-  icon: 'size-4',
-  labelBlock: 'flex min-w-0 flex-1 flex-col gap-space-1 sm:flex-row sm:items-center sm:gap-space-2',
-  rowTitle: `${TYPE.value} font-medium truncate`,
-  tag: `type-caption shrink-0 ${RADIUS.pill} bg-surface-hover px-space-3 py-space-1 text-text-secondary`,
-  meterWrap: 'w-[7.5rem] shrink-0 sm:w-[8.75rem]',
-  meterTrack: `relative flex h-5 items-center justify-end overflow-hidden ${RADIUS.inset} bg-brand-muted px-space-1.5`,
-  meterFill: `absolute inset-y-0 left-0 ${RADIUS.inset} bg-brand/30 transition-[width] duration-300 ease-out`,
-  meterLabel: 'relative z-[1] type-caption font-medium tabular-nums text-text-primary',
+  legendRow: 'flex min-w-0 flex-wrap items-center justify-between gap-x-space-3 gap-y-space-1.5',
+  legendItem: 'inline-flex min-w-0 items-center gap-space-1.5',
+  legendLabel: `${TYPE.sectionTitle} capitalize text-text-primary`,
+  legendValue: `${TYPE.value} tabular-nums`,
+  segmentBar: `flex h-2.5 w-full min-w-0 gap-0.5 ${RADIUS.inline}`,
+  segment: `min-w-[2px] shrink-0 ${RADIUS.inline} transition-[flex-grow] duration-300 ease-out`,
+  segmentBarEmpty: `h-2.5 w-full bg-border-subtle ${RADIUS.inline}`,
+  table: `w-full min-w-0 overflow-hidden border border-border-subtle ${RADIUS.surface}`,
+  tableBody: 'divide-y divide-border-subtle/80',
+  tableRow:
+    'grid grid-cols-[minmax(0,1fr)_minmax(3.5rem,5.5rem)_auto] items-center gap-x-space-3 px-space-3 py-space-2',
+  tableLabel: `${TABLE_TYPE.cell} min-w-0 truncate text-text-secondary`,
+  tableRowMeterTrack: `h-1 w-full min-w-0 overflow-hidden bg-border-subtle ${RADIUS.inline}`,
+  tableRowMeterFill: `h-full ${RADIUS.inline} transition-[width] duration-300 ease-out`,
+  tableValue: `${TABLE_TYPE.cell} text-right tabular-nums text-text-primary`,
+  tablePercent: 'text-text-primary',
+  tableCount: 'text-text-tertiary',
+  tableTotal: 'grid grid-cols-[1fr_auto] items-baseline gap-x-space-4',
+  tableTotalLabel: `${TABLE_TYPE.cell} font-medium text-text-primary`,
+  tableTotalValue: `${TABLE_TYPE.cell} text-right font-medium tabular-nums text-text-primary`,
 } as const;
 
 export const COMMAND_CENTER_ATTENTION_ACCENT = {
