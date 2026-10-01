@@ -26,6 +26,7 @@ class AuditEvent(Base):
     patientId = Column("patient_id", Integer, nullable=True, index=True)
     orderId = Column("order_id", Integer, nullable=True, index=True)
     testId = Column("test_id", Integer, nullable=True, index=True)
+    eventScope = Column("event_scope", String(20), nullable=True, index=True)
     changes = Column("changes", JSONB, nullable=True)
     eventMetadata = Column("metadata", JSONB, nullable=True)
 

@@ -1,6 +1,7 @@
 /**
  * Event types, headline builders, and catalog registry for the event log feed.
  */
+/* eslint-disable max-lines -- single registry of headline builders for every eventType */
 import { displayId } from '@/utils/id';
 import { ORDER_STATUS_CONFIG, type OrderStatus } from '@/types/enums/generated/order';
 import { EVENT_LOG_COPY } from './types';
@@ -630,8 +631,9 @@ export const EVENT_HEADLINE_BUILDERS: Record<
     return appendForOrderPhrase(parts, r);
   },
   'reporting.generate': r => {
-    const parts = appendText([], 'Report for ');
-    return append(parts, targetOrder(r));
+    let parts = appendText([], 'Report for ');
+    parts = append(parts, targetOrder(r));
+    return appendText(parts, ' generated');
   },
   'reporting.download': (r, c) => {
     let parts = appendText([], 'Report for ');
@@ -650,10 +652,10 @@ export const EVENT_HEADLINE_BUILDERS: Record<
     appendText(append([], userAccountEntityPhrase(r.targetId)), ' updated'),
   'system.catalog.create': (r, c) => {
     const highlight = testHighlightFromMetaKey(r, 'test_code', c);
-    if (highlight) {
-      return append(append([], mainPart('Catalog test ')), highlight);
-    }
-    return [mainPart(`Catalog test ${withHashPrefix(String(r.targetId))}`)];
+    const parts: EventLogHeadlinePart[] = highlight
+      ? [mainPart('Catalog test '), highlight]
+      : [mainPart(`Catalog test ${withHashPrefix(String(r.targetId))}`)];
+    return appendText(parts, ' created');
   },
   'system.catalog.update': (r, c) => {
     const highlight = testHighlightFromMetaKey(r, 'test_code', c);
@@ -972,13 +974,13 @@ const CATALOG_SEEDS: CatalogSeed[] = [
   {
     eventType: 'reporting.generate',
     domain: 'reporting',
-    verbPhrase: 'generated report for order',
+    verbPhrase: 'report generated for order',
     domainLabel: 'Reporting',
   },
   {
     eventType: 'reporting.download',
     domain: 'reporting',
-    verbPhrase: 'downloaded report for order',
+    verbPhrase: 'report downloaded for order',
     domainLabel: 'Reporting',
     headlineMetaKeys: ['format'],
   },
@@ -1013,14 +1015,14 @@ const CATALOG_SEEDS: CatalogSeed[] = [
   {
     eventType: 'system.catalog.create',
     domain: 'system',
-    verbPhrase: 'added catalog entry',
+    verbPhrase: 'catalog test created',
     domainLabel: 'Catalog',
     headlineMetaKeys: ['test_code'],
   },
   {
     eventType: 'system.catalog.update',
     domain: 'system',
-    verbPhrase: 'updated catalog entry',
+    verbPhrase: 'catalog test updated',
     domainLabel: 'Catalog',
     headlineMetaKeys: ['test_code'],
   },
@@ -1049,6 +1051,7 @@ export function getCatalogEntry(eventType: string): EventCatalogEntry {
     domain,
     verbPhrase: 'updated',
     domainLabel: domain.charAt(0).toUpperCase() + domain.slice(1),
+    trailingActor: 'human',
     buildHeadline: (record, context) => buildFallbackHeadline(record, fallbackEntry, context),
   };
   return fallbackEntry;

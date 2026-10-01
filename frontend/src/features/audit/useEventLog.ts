@@ -1,7 +1,8 @@
 /**
  * Loads audit events from the backend and resolves presentation rows.
+ * Supports newest-first cursor pagination via loadMore().
  */
-import { useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTestNameLookup } from '@/features/catalog';
 import { usePatientNameLookup } from '@/features/patients';
@@ -22,6 +23,9 @@ function queryToApiParams(query: EventLogQuery): AuditEventQueryParams {
     createdFrom: query.createdFrom,
     createdTo: query.createdTo,
     includeAccess: query.includeAccess ? true : undefined,
+    eventScope: query.eventScope,
+    cursorCreatedAt: query.cursorCreatedAt,
+    cursorEventId: query.cursorEventId,
     limit: query.limit ?? 500,
   };
   if (query.kinds?.length) {
@@ -33,7 +37,11 @@ function queryToApiParams(query: EventLogQuery): AuditEventQueryParams {
 function sortNewestFirst(events: EventLogRecord[]): EventLogRecord[] {
   return events
     .slice()
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    .sort((a, b) => {
+      const byTime = new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      if (byTime !== 0) return byTime;
+      return b.eventId.localeCompare(a.eventId);
+    });
 }
 
 export interface UseEventLogOptions {
@@ -42,8 +50,11 @@ export interface UseEventLogOptions {
 }
 
 export function useEventLog(query: EventLogQuery, options?: UseEventLogOptions) {
-  const params = useMemo(() => queryToApiParams(query), [query]);
-  const keyParams = useMemo(() => eventLogQueryKeyParams(query), [query]);
+  const params = useMemo(() => queryToApiParams({ ...query, cursorCreatedAt: undefined, cursorEventId: undefined }), [query]);
+  const keyParams = useMemo(
+    () => eventLogQueryKeyParams({ ...query, cursorCreatedAt: undefined, cursorEventId: undefined }),
+    [query]
+  );
   const { getTestName } = useTestNameLookup();
   const { getPatientName: lookupPatientName } = usePatientNameLookup();
   const resolveOptions = useMemo(
@@ -51,10 +62,14 @@ export function useEventLog(query: EventLogQuery, options?: UseEventLogOptions) 
       ...options?.resolve,
       getTestName,
       getPatientName: (patientId: number) => lookupPatientName(patientId),
+      showEventTypeInMeta:
+        options?.resolve?.showEventTypeInMeta ?? query.verbosity === 'debug',
+      includeDebugPayload: query.verbosity === 'debug',
     }),
-    [options?.resolve, getTestName, lookupPatientName]
+    [options?.resolve, getTestName, lookupPatientName, query.verbosity]
   );
   const enabled = options?.enabled ?? true;
+  const pageLimit = query.limit ?? 500;
 
   const queryResult = useQuery({
     queryKey: queryKeys.auditEvents.list(keyParams),
@@ -62,15 +77,49 @@ export function useEventLog(query: EventLogQuery, options?: UseEventLogOptions) 
     enabled,
   });
 
+  const [olderPages, setOlderPages] = useState<EventLogRecord[]>([]);
+  const [hasMore, setHasMore] = useState(false);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
+  const queryIdentity = useMemo(() => JSON.stringify(keyParams), [keyParams]);
+
+  useEffect(() => {
+    setOlderPages([]);
+  }, [queryIdentity]);
+
+  useEffect(() => {
+    if (!queryResult.data) {
+      setHasMore(false);
+      return;
+    }
+    setHasMore(queryResult.data.length >= pageLimit);
+  }, [queryResult.data, pageLimit, queryIdentity]);
+
   const events = useMemo(
-    () => (queryResult.data ? sortNewestFirst(queryResult.data) : []),
-    [queryResult.data]
+    () => sortNewestFirst([...(queryResult.data ?? []), ...olderPages]),
+    [queryResult.data, olderPages]
   );
 
   const resolved = useMemo(
     () => resolveEventLogItems(events, resolveOptions),
     [events, resolveOptions]
   );
+
+  const loadMore = useCallback(async () => {
+    if (!hasMore || isFetchingMore || events.length === 0) return;
+    const oldest = events[events.length - 1];
+    setIsFetchingMore(true);
+    try {
+      const more = await fetchAuditEvents({
+        ...params,
+        cursorCreatedAt: oldest.createdAt,
+        cursorEventId: oldest.eventId,
+      });
+      setOlderPages(prev => [...prev, ...more]);
+      setHasMore(more.length >= pageLimit);
+    } finally {
+      setIsFetchingMore(false);
+    }
+  }, [hasMore, isFetchingMore, events, params, pageLimit]);
 
   return {
     events,
@@ -79,6 +128,9 @@ export function useEventLog(query: EventLogQuery, options?: UseEventLogOptions) 
     isError: queryResult.isError,
     error: queryResult.error instanceof Error ? queryResult.error : null,
     isEmpty: !queryResult.isLoading && !queryResult.isError && resolved.length === 0,
+    hasMore,
+    isFetchingMore,
+    loadMore,
     refetch: () => {
       void queryResult.refetch();
     },

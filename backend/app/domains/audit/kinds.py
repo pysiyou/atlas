@@ -1,7 +1,8 @@
 """Event log kinds → event_type SQL LIKE prefixes.
 
 Kinds are the six eventType roots (patient, order, laboratory, billing,
-reporting, system). Laboratory subdomains are row labels, not query keys.
+reporting, system) plus optional laboratory subcategory keys
+(``laboratory:sample``, Quality, Analyzer, …).
 """
 from __future__ import annotations
 
@@ -16,8 +17,32 @@ _KIND_KEYS = frozenset(
     }
 )
 
+# Nested laboratory filter tree → event_type LIKE prefixes (caller adds '%').
+_LABORATORY_SUBKIND_PREFIXES: dict[str, str] = {
+    "laboratory:sample": "laboratory.sample.",
+    "laboratory:result": "laboratory.result.",
+    "laboratory:validation": "laboratory.validation.",
+    "laboratory:escalation": "laboratory.escalation.",
+    "laboratory:quality": "laboratory.quality.",
+    "laboratory:analyzer": "laboratory.analyzer.",
+}
+
 # Read-only events hidden on stream/patient unless includeAccess=true.
 ACCESS_EVENT_TYPES = frozenset({"patient.view", "reporting.download"})
+
+# Stored containment lens derived from eventType (not the query `scope` param).
+STORED_EVENT_SCOPES = frozenset({"order", "lab", "patient", "system"})
+
+
+def stored_event_scope_for_type(event_type: str) -> str:
+    """Map an eventType string to the stored event_scope column value."""
+    if event_type.startswith("patient."):
+        return "patient"
+    if event_type.startswith("system."):
+        return "system"
+    if event_type.startswith("laboratory."):
+        return "lab"
+    return "order"
 
 
 def parse_kinds_param(raw: str | None) -> list[str]:
@@ -31,6 +56,8 @@ def kind_to_event_type_prefix(kind: str) -> str | None:
     """Return a dot-terminated prefix for event_type LIKE matching (caller adds '%')."""
     if kind in _KIND_KEYS:
         return f"{kind}."
+    if kind in _LABORATORY_SUBKIND_PREFIXES:
+        return _LABORATORY_SUBKIND_PREFIXES[kind]
     return None
 
 

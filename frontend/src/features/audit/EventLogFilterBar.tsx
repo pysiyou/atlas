@@ -82,7 +82,7 @@ export const EventLogFilterBar: React.FC<EventLogFilterBarProps> = ({
               ) : null}
               {showKindInModal ? (
                 <div className="w-full">
-                  <h4 className={FILTER_TYPE.sectionTitle}>Kind</h4>
+                  <h4 className={FILTER_TYPE.sectionTitle}>Event domain</h4>
                   <CheckboxList
                     options={kindCheckboxOptions}
                     selectedIds={kinds}

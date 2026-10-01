@@ -11,6 +11,7 @@ import { PaymentMethodSelector } from './PaymentMethodSelector';
 import { cn } from '@/utils';
 import type { Order } from '@/types';
 import { BillingSummarySection } from '@/features/orders';
+import { BillingEventLogPanel } from '@/features/audit';
 import { inputBase } from '@/components/inputs/inputStyles';
 import { TONE, TYPE } from '@/components/theme/recipes';
 import type { PaymentMethod, PaymentMethodOption } from '@/types/payments';
@@ -107,5 +108,7 @@ export const PaymentDetailModalBody: React.FC<PaymentDetailModalBodyProps> = ({
         <p className={TYPE.amount}>{error}</p>
       </Alert>
     )}
+
+    <BillingEventLogPanel orderId={view.order.orderId} />
   </div>
 );

@@ -17,7 +17,8 @@ export type EventLogLaboratorySubdomain =
   | 'result'
   | 'validation'
   | 'escalation'
-  | 'analyzer';
+  | 'analyzer'
+  | 'quality';
 
 export interface EventLogActorSnapshot {
   userId: number | 'system';
@@ -42,6 +43,7 @@ export interface EventLogRecord {
   patientId?: number | null;
   orderId?: number | null;
   testId?: number | null;
+  eventScope?: string | null;
   changes?: EventLogChanges | null;
   metadata?: Record<string, unknown> | null;
 }
@@ -75,6 +77,8 @@ export interface ResolvedEventLogItem {
   /** When present, shown in the detail box with ResultsParameterGrid (validation card layout). */
   results?: Record<string, unknown>;
   resultFlags?: string[];
+  /** Debug payload (verbosity=debug): raw metadata and changes. */
+  debugPayload?: Record<string, unknown> | null;
   isSystemActor: boolean;
   omitActorInHeadline?: boolean;
 }
@@ -88,8 +92,22 @@ export interface EventLogDayGroup {
 /** Containment lens for fetching events. Not stored on the row. */
 export type EventLogScopeName = 'order' | 'lab' | 'patient' | 'system' | 'stream';
 
-/** Optional kind filter — the six eventType roots. */
-export type EventLogKind = EventLogDomain;
+/** Optional kind filter — six eventType roots plus laboratory subcategory keys. */
+export type EventLogLaboratoryKindKey =
+  | 'laboratory:sample'
+  | 'laboratory:result'
+  | 'laboratory:validation'
+  | 'laboratory:escalation'
+  | 'laboratory:quality'
+  | 'laboratory:analyzer';
+
+export type EventLogKind = EventLogDomain | EventLogLaboratoryKindKey;
+
+/** Feed verbosity ladder (not a stored column). */
+export type EventLogVerbosity = 'summary' | 'detailed' | 'debug';
+
+/** Stored event_scope column values. Distinct from the query `scope` lens. */
+export type StoredEventScope = 'order' | 'lab' | 'patient' | 'system';
 
 /** Server query for audit events — fixed constraints and/or merged user filters. */
 export interface EventLogQuery {
@@ -104,10 +122,18 @@ export interface EventLogQuery {
   kinds?: EventLogKind[];
   /** When true, include read-only events such as patient.view. */
   includeAccess?: boolean;
+  /** Filter by stored event_scope column. */
+  eventScope?: StoredEventScope;
+  /** Newest-first page cursor (createdAt of the last row). */
+  cursorCreatedAt?: string;
+  /** Newest-first page cursor (eventId of the last row). */
+  cursorEventId?: string;
+  /** Display ladder: summary / detailed / debug. */
+  verbosity?: EventLogVerbosity;
   limit?: number;
 }
 
-export type EventLogFilterField = 'kind' | 'dateRange' | 'entityId' | 'includeAccess';
+export type EventLogFilterField = 'kind' | 'dateRange' | 'entityId' | 'includeAccess' | 'verbosity';
 
 export interface EventLogFilterUiConfig {
   fields?: EventLogFilterField[];
@@ -117,6 +143,7 @@ export interface EventLogUserFilters {
   kinds: EventLogKind[];
   dateRange: [Date, Date] | null;
   includeAccess: boolean;
+  verbosity: EventLogVerbosity;
   orderId: number | null;
   testId: number | null;
   sampleId: number | null;
@@ -127,6 +154,7 @@ export const DEFAULT_EVENT_LOG_USER_FILTERS: EventLogUserFilters = {
   kinds: [],
   dateRange: null,
   includeAccess: false,
+  verbosity: 'summary',
   orderId: null,
   testId: null,
   sampleId: null,
@@ -142,7 +170,7 @@ export const EVENT_LOG_COPY = {
   panelMetaEntity: 'Most recent actions for this item first',
   panelMetaCommandCenter: 'Last 24 hours · most recent activity first',
   panelMetaMonitor: 'Last 24 hours · most recent activity first',
-  panelMetaAll: 'Up to 2,000 most recent events · newest first',
+  panelMetaAll: 'Most recent events · newest first · load more for older rows',
   emptyTitle: 'No events yet',
   emptyDescription: 'Actions and status changes will appear here as they occur.',
   narrativeDefaultLabel: 'Note',
@@ -150,6 +178,11 @@ export const EVENT_LOG_COPY = {
   outcomeInlinePrefix: 'Outcome: ',
   commentLabel: 'Comment',
   resultTitle: 'Result',
+  debugTitle: 'Debug',
+  loadMore: 'Load older events',
+  verbositySummary: 'Summary',
+  verbosityDetailed: 'Detailed',
+  verbosityDebug: 'Debug',
   showMore: 'Show more',
   showLess: 'Show less',
   systemActorName: 'Atlas',

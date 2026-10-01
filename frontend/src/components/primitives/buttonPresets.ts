@@ -50,7 +50,7 @@ const PRESETS: Record<
   create: { variant: 'primary', iconName: ICONS.actions.add, layout: 'icon-text' },
   edit: { variant: 'primary', iconName: ICONS.actions.edit, layout: 'icon-text' },
   cancel: { variant: 'outline', iconName: ICONS.actions.cross, layout: 'icon-text' },
-  close: { variant: 'ghost', iconName: ICONS.actions.cross },
+  close: { variant: 'danger', iconName: ICONS.actions.cross },
   back: { variant: 'outline', iconName: ICONS.actions.arrowLeft, layout: 'icon-text' },
   previous: { variant: 'outline', iconName: ICONS.actions.chevronLeft, layout: 'icon-text' },
   next: { variant: 'primary', iconName: ICONS.actions.chevronRight, layout: 'icon-text' },

@@ -1237,6 +1237,8 @@ export interface components {
             orderId?: number | null;
             /** Testid */
             testId?: number | null;
+            /** Eventscope */
+            eventScope?: string | null;
             /** Changes */
             changes?: {
                 [key: string]: unknown;
@@ -3288,10 +3290,16 @@ export interface operations {
                 hours?: number | null;
                 createdFrom?: string | null;
                 createdTo?: string | null;
-                /** @description Comma-separated kind keys: patient, order, laboratory, billing, reporting, system */
+                /** @description Comma-separated kind keys: patient, order, laboratory, billing, reporting, system, plus laboratory:sample|result|validation|escalation|quality|analyzer */
                 kinds?: string | null;
                 /** @description When false, omit read-only events such as patient.view */
                 includeAccess?: boolean;
+                /** @description Filter by stored event_scope column (order, lab, patient, system) */
+                eventScope?: ("order" | "lab" | "patient" | "system") | null;
+                /** @description Newest-first cursor: createdAt of the last row from the previous page */
+                cursorCreatedAt?: string | null;
+                /** @description Newest-first cursor: eventId of the last row from the previous page */
+                cursorEventId?: string | null;
                 limit?: number;
             };
             header?: never;

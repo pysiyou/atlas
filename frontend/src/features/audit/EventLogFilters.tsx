@@ -9,7 +9,7 @@ import {
   EventLogFiltersInlineControls,
   EVENT_LOG_FILTER_PLACEHOLDERS,
 } from './EventLogFiltersInlineControls';
-import type { EventLogFilterField, EventLogKind } from './types';
+import type { EventLogFilterField, EventLogKind, EventLogVerbosity } from './types';
 
 export interface EventLogFiltersProps {
   visibleFields: EventLogFilterField[];
@@ -23,6 +23,8 @@ export interface EventLogFiltersProps {
   entityIdInputInvalid?: boolean;
   includeAccess: boolean;
   onIncludeAccessChange: (value: boolean) => void;
+  verbosity: EventLogVerbosity;
+  onVerbosityChange: (value: EventLogVerbosity) => void;
   activeFilterCount: number;
   onReset: () => void;
 }
@@ -35,6 +37,8 @@ export const EventLogFilters: React.FC<EventLogFiltersProps> = props => {
     props.visibleFields.includes('entityId') && !props.lockedFields.has('entityId');
   const showIncludeAccess =
     props.visibleFields.includes('includeAccess') && !props.lockedFields.has('includeAccess');
+  const showVerbosity =
+    props.visibleFields.includes('verbosity') && !props.lockedFields.has('verbosity');
 
   const modalExtras = (
     <>
@@ -50,12 +54,29 @@ export const EventLogFilters: React.FC<EventLogFiltersProps> = props => {
       ) : null}
       {showIncludeAccess ? (
         <div className="w-full">
-          <h4 className={FILTER_TYPE.sectionTitle}>Access events</h4>
+          <h4 className={FILTER_TYPE.sectionTitle}>Views & downloads</h4>
           <Checkbox
             id="event-log-include-access-modal"
             checked={props.includeAccess}
             onChange={props.onIncludeAccessChange}
             label={EVENT_LOG_FILTER_PLACEHOLDERS.includeAccess}
+          />
+        </div>
+      ) : null}
+      {showVerbosity ? (
+        <div className="w-full">
+          <h4 className={FILTER_TYPE.sectionTitle}>Detail level</h4>
+          <EventLogFiltersInlineControls
+            visibleFields={['verbosity']}
+            lockedFields={props.lockedFields}
+            kinds={props.kinds}
+            onKindsChange={props.onKindsChange}
+            dateRange={props.dateRange}
+            onDateRangeChange={props.onDateRangeChange}
+            includeAccess={props.includeAccess}
+            onIncludeAccessChange={props.onIncludeAccessChange}
+            verbosity={props.verbosity}
+            onVerbosityChange={props.onVerbosityChange}
           />
         </div>
       ) : null}
@@ -86,6 +107,8 @@ export const EventLogFilters: React.FC<EventLogFiltersProps> = props => {
           entityIdInputInvalid={props.entityIdInputInvalid}
           includeAccess={props.includeAccess}
           onIncludeAccessChange={props.onIncludeAccessChange}
+          verbosity={props.verbosity}
+          onVerbosityChange={props.onVerbosityChange}
         />
       }
     />

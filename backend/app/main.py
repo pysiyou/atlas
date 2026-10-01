@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import app.domains.registry  # noqa: F401 — register ORM models
 from app.platform.cache import close_redis, get_redis
 from app.platform.config import settings
-from app.platform.database import Base, engine
+from app.platform.database import Base, engine, ensure_audit_event_scope_column
 from app.platform.http.v1_router import build_v1_router
 from app.platform.middleware import CacheHeadersMiddleware, DelayMiddleware
 from app.platform.middleware.error_handlers import register_exception_handlers
@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     """Application lifespan events."""
     Base.metadata.create_all(bind=engine)
+    ensure_audit_event_scope_column()
     redis_client = get_redis()
     if redis_client:
         logger.info("Redis cache connected")

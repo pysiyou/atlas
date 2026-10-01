@@ -48,6 +48,7 @@ const Laboratory = lazyNamed(() => import('@/features/lab'), 'LaboratoryPage');
 const Payments = lazyNamed(() => import('@/features/payments'), 'PaymentListPage');
 const Reports = lazyNamed(() => import('@/features/reports'), 'ReportsPage');
 const EventLog = lazyNamed(() => import('@/features/audit'), 'EventLogPage');
+const Users = lazyNamed(() => import('@/features/users'), 'UsersPage');
 interface ProtectedRouteConfig {
   path: string;
   element: LazyPage;
@@ -63,6 +64,7 @@ const PROTECTED_ROUTES: ProtectedRouteConfig[] = [
   { path: ROUTES.PAYMENTS, element: Payments },
   { path: `${ROUTES.REPORTS}/*`, element: Reports },
   { path: ROUTES.EVENT_LOG, element: EventLog },
+  { path: ROUTES.USERS, element: Users },
 ];
 
 const AppRoutes: React.FC = () => {

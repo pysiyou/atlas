@@ -20,6 +20,7 @@ export {
   PatientEventLogPanel,
   LabMonitorEventLogPanel,
   SystemEventLogPanel,
+  BillingEventLogPanel,
   ALL_FILTER_FIELDS,
   type EventLogPanelLayout,
 } from './EventLogPanel';
