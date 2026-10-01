@@ -10,23 +10,23 @@ import { MODULE_ICONS } from '@/config/icons';
 import { FilterModalFooter } from '@/components/filters/FilterModalFooter';
 import { CheckboxList } from '@/components';
 import { DatePresetBadges } from '@/components/filters';
-import { EVENT_LOG_CATEGORY_OPTIONS } from './eventLogCategories';
-import type { EventLogCategoryKey } from './types';
+import { EVENT_LOG_KIND_OPTIONS } from './eventLogKinds';
+import type { EventLogKind } from './types';
 
 export interface EventLogFilterBarProps {
   activeFilterCount: number;
   inlineControls: ReactNode;
   modalExtras?: ReactNode;
-  categories: EventLogCategoryKey[];
-  onCategoriesChange: (values: EventLogCategoryKey[]) => void;
+  kinds: EventLogKind[];
+  onKindsChange: (values: EventLogKind[]) => void;
   dateRange: [Date, Date] | null;
   onDateRangeChange: (range: [Date, Date] | null) => void;
   onReset: () => void;
-  showCategoryInModal?: boolean;
+  showKindInModal?: boolean;
   showDateInModal?: boolean;
 }
 
-const categoryCheckboxOptions = EVENT_LOG_CATEGORY_OPTIONS.map(opt => ({
+const kindCheckboxOptions = EVENT_LOG_KIND_OPTIONS.map(opt => ({
   id: opt.id,
   label: opt.label,
 }));
@@ -35,12 +35,12 @@ export const EventLogFilterBar: React.FC<EventLogFilterBarProps> = ({
   activeFilterCount,
   inlineControls,
   modalExtras,
-  categories,
-  onCategoriesChange,
+  kinds,
+  onKindsChange,
   dateRange,
   onDateRangeChange,
   onReset,
-  showCategoryInModal,
+  showKindInModal,
   showDateInModal,
 }) => {
   const breakpoint = useBreakpoint();
@@ -80,13 +80,13 @@ export const EventLogFilterBar: React.FC<EventLogFilterBarProps> = ({
                   <div className="mt-space-4 border-b border-border-default" />
                 </div>
               ) : null}
-              {showCategoryInModal ? (
+              {showKindInModal ? (
                 <div className="w-full">
-                  <h4 className={FILTER_TYPE.sectionTitle}>Category</h4>
+                  <h4 className={FILTER_TYPE.sectionTitle}>Kind</h4>
                   <CheckboxList
-                    options={categoryCheckboxOptions}
-                    selectedIds={categories}
-                    onChange={values => onCategoriesChange(values as EventLogCategoryKey[])}
+                    options={kindCheckboxOptions}
+                    selectedIds={kinds}
+                    onChange={values => onKindsChange(values as EventLogKind[])}
                     columns={2}
                   />
                   <div className="mt-space-4 border-b border-border-default" />

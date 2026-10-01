@@ -1,7 +1,8 @@
-"""Audit event log read API."""
+"""Audit event log read API — fetch by containment scope, not category trees."""
 from datetime import datetime
+from typing import Literal
 
-from app.domains.audit.categories import parse_categories_param
+from app.domains.audit.kinds import parse_kinds_param
 from app.domains.audit.schemas import AuditEventResponse
 from app.domains.audit.service import AuditEventQueryService
 from app.domains.users.models import User
@@ -12,19 +13,19 @@ from sqlalchemy.orm import Session
 
 router = APIRouter(tags=["audit"])
 
+EventLogScopeParam = Literal["order", "lab", "patient", "system", "stream"]
+
 
 @router.get("/audit/events", response_model=list[AuditEventResponse])
 def list_audit_events(
+    scope: EventLogScopeParam = Query(
+        "stream",
+        description="Containment lens: order, lab, patient, system, or stream",
+    ),
     order_id: int | None = Query(None, alias="orderId"),
     patient_id: int | None = Query(None, alias="patientId"),
-    target_type: str | None = Query(None, alias="targetType", max_length=50),
-    target_id: int | None = Query(None, alias="targetId"),
     test_id: int | None = Query(None, alias="testId"),
-    sample_id: int | None = Query(
-        None,
-        alias="sampleId",
-        description="With targetType=order_test, also include sample-targeted lab events for this sample",
-    ),
+    sample_id: int | None = Query(None, alias="sampleId"),
     hours: float | None = Query(
         None,
         gt=0,
@@ -33,26 +34,31 @@ def list_audit_events(
     ),
     created_from: datetime | None = Query(None, alias="createdFrom"),
     created_to: datetime | None = Query(None, alias="createdTo"),
-    categories: str | None = Query(
+    kinds: str | None = Query(
         None,
-        description="Comma-separated event category keys (domain or laboratory:subdomain)",
+        description="Comma-separated kind keys: patient, order, laboratory, billing, reporting, system",
+    ),
+    include_access: bool = Query(
+        False,
+        alias="includeAccess",
+        description="When false, omit read-only events such as patient.view",
     ),
     limit: int = Query(500, ge=1, le=2000),
     db: Session = Depends(get_db),
     _current_user: User = Depends(get_current_user),
 ):
     service = AuditEventQueryService(db)
-    category_keys = parse_categories_param(categories)
+    kind_keys = parse_kinds_param(kinds)
     return service.list_filtered(
+        scope=scope,
         order_id=order_id,
         patient_id=patient_id,
-        target_type=target_type,
-        target_id=target_id,
         test_id=test_id,
         sample_id=sample_id,
         hours=hours,
         created_from=created_from,
         created_to=created_to,
-        categories=category_keys or None,
+        kinds=kind_keys or None,
+        include_access=include_access,
         limit=limit,
     )

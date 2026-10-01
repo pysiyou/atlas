@@ -3278,12 +3278,20 @@ export interface operations {
     list_audit_events_api_v1_audit_events_get: {
         parameters: {
             query?: {
+                /** @description Containment lens: order, lab, patient, system, or stream */
+                scope?: "order" | "lab" | "patient" | "system" | "stream";
                 orderId?: number | null;
                 patientId?: number | null;
-                targetType?: string | null;
-                targetId?: number | null;
-                /** @description Return events created within the last N hours (UTC) */
+                testId?: number | null;
+                sampleId?: number | null;
+                /** @description Return events created within the last N hours (UTC); ignored if createdFrom is set */
                 hours?: number | null;
+                createdFrom?: string | null;
+                createdTo?: string | null;
+                /** @description Comma-separated kind keys: patient, order, laboratory, billing, reporting, system */
+                kinds?: string | null;
+                /** @description When false, omit read-only events such as patient.view */
+                includeAccess?: boolean;
                 limit?: number;
             };
             header?: never;

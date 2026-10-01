@@ -20,7 +20,7 @@ import { labModalSubtitle } from '../components/LabWorkflowModalSubtitles';
 import { SampleCollectionDetailFooter } from './SampleCollectionDetailFooter';
 import { buildCollectionDetailGridSections } from './SampleCollectionDetailSections';
 import { SampleCollectionDetailContent } from './SampleCollectionDetailSections';
-import { ScopedEventLogPanel } from '@/features/audit';
+import { LabEventLogPanel } from '@/features/audit';
 import { LabWorkflowDetailModal, ModalFooter } from '../components/LabWorkflowDetailModal';
 import { collectionHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { CollectionHeaderBadges } from '../components/LabWorkflowBadges';
@@ -235,9 +235,7 @@ export const SampleCollectionDetailModal: React.FC<CollectionDetailModalProps> =
         showBarcode={(isCollected || isRejected) && sample.sampleId != null}
       />
       {sample.sampleId != null && (
-        <ScopedEventLogPanel
-          scope={{ targetType: 'sample', targetId: Number(sample.sampleId) }}
-        />
+        <LabEventLogPanel sampleId={Number(sample.sampleId)} />
       )}
     </LabWorkflowDetailModal>
   );

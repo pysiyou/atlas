@@ -16,7 +16,7 @@ export const EventLogPage: React.FC = () => {
         <div className={`${PANEL.raisedShadowSm} flex min-h-0 flex-1 flex-col overflow-hidden`}>
           <EventLogPanel
             layout="embedded"
-            query={{ limit: 2000 }}
+            query={{ scope: 'stream', limit: 2000 }}
             filterUi={{ fields: ALL_FILTER_FIELDS }}
           />
         </div>

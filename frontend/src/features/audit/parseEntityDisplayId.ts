@@ -1,5 +1,5 @@
 /**
- * Parse ORD/TST display tokens into numeric entity ids for audit filters.
+ * Parse ORD/TST/SAM/PAT display tokens into numeric entity ids for audit filters.
  */
 import { ID_PREFIXES } from '@/utils/id';
 
@@ -29,14 +29,29 @@ export function parseOrderTestDisplayId(input: string): number | null {
   return parsePaddedDigits(body);
 }
 
+export function parseSampleDisplayId(input: string): number | null {
+  const body = stripPrefix(input, ID_PREFIXES.sample);
+  return parsePaddedDigits(body);
+}
+
+export function parsePatientDisplayId(input: string): number | null {
+  const body = stripPrefix(input, ID_PREFIXES.patient);
+  return parsePaddedDigits(body);
+}
+
 export type ParsedEntityIdFilter =
   | { kind: 'empty' }
   | { kind: 'order'; orderId: number }
   | { kind: 'test'; testId: number }
+  | { kind: 'sample'; sampleId: number }
+  | { kind: 'patient'; patientId: number }
   | { kind: 'invalid' };
 
-/** Parse a combined order/test display token (TST… vs ORD…); bare digits → order. */
-export function parseOrderOrTestDisplayId(input: string): ParsedEntityIdFilter {
+/**
+ * Parse a combined entity display token (TST… / ORD… / SAM… / PAT…).
+ * Bare digits are treated as an order id.
+ */
+export function parseEntityFilterDisplayId(input: string): ParsedEntityIdFilter {
   const trimmed = input.trim();
   if (!trimmed) {
     return { kind: 'empty' };
@@ -50,6 +65,19 @@ export function parseOrderOrTestDisplayId(input: string): ParsedEntityIdFilter {
     const orderId = parseOrderDisplayId(input);
     return orderId != null ? { kind: 'order', orderId } : { kind: 'invalid' };
   }
+  if (upper.startsWith(ID_PREFIXES.sample)) {
+    const sampleId = parseSampleDisplayId(input);
+    return sampleId != null ? { kind: 'sample', sampleId } : { kind: 'invalid' };
+  }
+  if (upper.startsWith(ID_PREFIXES.patient)) {
+    const patientId = parsePatientDisplayId(input);
+    return patientId != null ? { kind: 'patient', patientId } : { kind: 'invalid' };
+  }
   const orderId = parseOrderDisplayId(input);
   return orderId != null ? { kind: 'order', orderId } : { kind: 'invalid' };
+}
+
+/** @deprecated Use parseEntityFilterDisplayId. */
+export function parseOrderOrTestDisplayId(input: string): ParsedEntityIdFilter {
+  return parseEntityFilterDisplayId(input);
 }

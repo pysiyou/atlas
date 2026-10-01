@@ -723,6 +723,12 @@ const LAB_ESCALATION = {
   domainLabel: 'Escalation',
 };
 
+const LAB_ANALYZER = {
+  domain: 'laboratory' as const,
+  laboratorySubdomain: 'analyzer' as const,
+  domainLabel: 'Analyzer',
+};
+
 type CatalogSeed = Omit<EventCatalogEntry, 'buildHeadline'> & {
   eventType: string;
 };
@@ -869,14 +875,14 @@ const CATALOG_SEEDS: CatalogSeed[] = [
   },
   {
     eventType: 'laboratory.analyzer.duplicate_ingest',
-    ...LAB_RESULT,
+    ...LAB_ANALYZER,
     verbPhrase: 'duplicate analyzer ingest for',
     headlineMetaKeys: ['test_code', 'idempotency_key'],
     treatAsSystemActor: true,
   },
   {
     eventType: 'laboratory.analyzer.ingest_rejected',
-    ...LAB_RESULT,
+    ...LAB_ANALYZER,
     verbPhrase: 'analyzer ingest rejected for',
     headlineMetaKeys: ['test_code', 'reason'],
     treatAsSystemActor: true,

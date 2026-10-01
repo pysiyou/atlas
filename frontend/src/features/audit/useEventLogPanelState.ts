@@ -3,11 +3,7 @@
  */
 import { useMemo, useState } from 'react';
 import { buildEventLogQuery } from './buildEventLogQuery';
-import {
-  parseOrderDisplayId,
-  parseOrderOrTestDisplayId,
-  parseOrderTestDisplayId,
-} from './parseEntityDisplayId';
+import { parseEntityFilterDisplayId } from './parseEntityDisplayId';
 import {
   DEFAULT_EVENT_LOG_USER_FILTERS as DEFAULT_FILTERS,
   type EventLogFilterField,
@@ -21,21 +17,22 @@ export interface UseEventLogPanelStateOptions {
   visibleFields?: EventLogFilterField[];
 }
 
-function isFieldLocked(
-  field: EventLogFilterField,
-  query: EventLogQuery
-): boolean {
+function isFieldLocked(field: EventLogFilterField, query: EventLogQuery): boolean {
   switch (field) {
-    case 'category':
-      return Boolean(query.categories?.length);
+    case 'kind':
+      return Boolean(query.kinds?.length);
     case 'dateRange':
       return query.hours != null || Boolean(query.createdFrom || query.createdTo);
-    case 'orderId':
-      return query.orderId != null;
-    case 'testId':
-      return query.testId != null;
     case 'entityId':
-      return query.orderId != null || query.testId != null;
+      return (
+        query.scope !== 'stream' ||
+        query.orderId != null ||
+        query.testId != null ||
+        query.sampleId != null ||
+        query.patientId != null
+      );
+    case 'includeAccess':
+      return query.includeAccess === true;
   }
 }
 
@@ -49,39 +46,30 @@ export function useEventLogPanelState({
     ...filterDefaults,
   }));
   const usesEntityIdField = visibleFields.includes('entityId');
-  const [orderIdInput, setOrderIdInput] = useState('');
-  const [testIdInput, setTestIdInput] = useState('');
   const [entityIdInput, setEntityIdInput] = useState('');
 
   const parsedEntity = useMemo(
-    () => parseOrderOrTestDisplayId(entityIdInput),
+    () => parseEntityFilterDisplayId(entityIdInput),
     [entityIdInput]
   );
 
-  const parsedOrderId = useMemo(() => {
-    if (usesEntityIdField) {
-      return parsedEntity.kind === 'order' ? parsedEntity.orderId : null;
-    }
-    if (!orderIdInput.trim()) return null;
-    return parseOrderDisplayId(orderIdInput);
-  }, [usesEntityIdField, parsedEntity, orderIdInput]);
-
-  const parsedTestId = useMemo(() => {
-    if (usesEntityIdField) {
-      return parsedEntity.kind === 'test' ? parsedEntity.testId : null;
-    }
-    if (!testIdInput.trim()) return null;
-    return parseOrderTestDisplayId(testIdInput);
-  }, [usesEntityIdField, parsedEntity, testIdInput]);
-
-  const effectiveUserFilters = useMemo(
-    (): EventLogUserFilters => ({
+  const effectiveUserFilters = useMemo((): EventLogUserFilters => {
+    const next: EventLogUserFilters = {
       ...userFilters,
-      orderId: parsedOrderId,
-      testId: parsedTestId,
-    }),
-    [userFilters, parsedOrderId, parsedTestId]
-  );
+      orderId: null,
+      testId: null,
+      sampleId: null,
+      patientId: null,
+    };
+    if (!usesEntityIdField) {
+      return next;
+    }
+    if (parsedEntity.kind === 'order') next.orderId = parsedEntity.orderId;
+    if (parsedEntity.kind === 'test') next.testId = parsedEntity.testId;
+    if (parsedEntity.kind === 'sample') next.sampleId = parsedEntity.sampleId;
+    if (parsedEntity.kind === 'patient') next.patientId = parsedEntity.patientId;
+    return next;
+  }, [userFilters, usesEntityIdField, parsedEntity]);
 
   const mergedQuery = useMemo(
     () => buildEventLogQuery(query, effectiveUserFilters),
@@ -99,39 +87,31 @@ export function useEventLogPanelState({
   }, [query, visibleFields]);
 
   const hasEntityFilter =
-    effectiveUserFilters.orderId != null || effectiveUserFilters.testId != null;
+    effectiveUserFilters.orderId != null ||
+    effectiveUserFilters.testId != null ||
+    effectiveUserFilters.sampleId != null ||
+    effectiveUserFilters.patientId != null;
 
   const activeFilterCount =
-    (effectiveUserFilters.categories.length > 0 ? 1 : 0) +
+    (effectiveUserFilters.kinds.length > 0 ? 1 : 0) +
     (effectiveUserFilters.dateRange ? 1 : 0) +
-    (usesEntityIdField ? (hasEntityFilter ? 1 : 0) : 0) +
-    (!usesEntityIdField && effectiveUserFilters.orderId != null ? 1 : 0) +
-    (!usesEntityIdField && effectiveUserFilters.testId != null ? 1 : 0);
+    (usesEntityIdField && hasEntityFilter ? 1 : 0) +
+    (effectiveUserFilters.includeAccess ? 1 : 0);
 
   const resetUserFilters = () => {
     setUserFilters({ ...DEFAULT_FILTERS, ...filterDefaults });
-    setOrderIdInput('');
-    setTestIdInput('');
     setEntityIdInput('');
   };
 
   return {
     userFilters,
     setUserFilters,
-    orderIdInput,
-    setOrderIdInput,
-    testIdInput,
-    setTestIdInput,
     entityIdInput,
     setEntityIdInput,
     mergedQuery,
     lockedFields,
     activeFilterCount,
     resetUserFilters,
-    orderIdInputInvalid:
-      !usesEntityIdField && orderIdInput.trim().length > 0 && parsedOrderId === null,
-    testIdInputInvalid:
-      !usesEntityIdField && testIdInput.trim().length > 0 && parsedTestId === null,
     entityIdInputInvalid:
       usesEntityIdField && entityIdInput.trim().length > 0 && parsedEntity.kind === 'invalid',
   };

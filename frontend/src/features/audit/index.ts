@@ -1,10 +1,10 @@
 export type {
   EventLogRecord,
-  EventLogScope,
+  EventLogScopeName,
   EventLogDomain,
+  EventLogKind,
   ResolvedEventLogItem,
   EventLogQuery,
-  EventLogCategoryKey,
   EventLogFilterField,
   EventLogFilterUiConfig,
   EventLogUserFilters,
@@ -16,8 +16,10 @@ export { EventLogFeed } from './EventLogFeed';
 export {
   EventLogPanel,
   OrderEventLogPanel,
-  ScopedEventLogPanel,
+  LabEventLogPanel,
+  PatientEventLogPanel,
   LabMonitorEventLogPanel,
+  SystemEventLogPanel,
   ALL_FILTER_FIELDS,
   type EventLogPanelLayout,
 } from './EventLogPanel';
@@ -25,9 +27,10 @@ export { useEventLog } from './useEventLog';
 export { useEventLogPanelState } from './useEventLogPanelState';
 export { fetchAuditEvents, normalizeAuditEvent } from './api';
 export { EventLogPage } from './pages/EventLogPage';
-export { EVENT_LOG_CATEGORY_OPTIONS } from './eventLogCategories';
+export { EVENT_LOG_KIND_OPTIONS } from './eventLogKinds';
 export {
   parseOrderDisplayId,
   parseOrderOrTestDisplayId,
   parseOrderTestDisplayId,
+  parseEntityFilterDisplayId,
 } from './parseEntityDisplayId';
