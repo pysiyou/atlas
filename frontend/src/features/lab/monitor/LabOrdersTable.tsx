@@ -67,7 +67,7 @@ export const LabOrdersTable: React.FC = () => {
   return (
     <Panel
       hideHeader
-      padding="none"
+      variant="pageEmbed"
       className="h-full min-h-0"
       bodyClassName="flex min-h-0 flex-1 flex-col"
     >

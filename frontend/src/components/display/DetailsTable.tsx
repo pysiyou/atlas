@@ -28,7 +28,7 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
   const filteredRows = providedFilteredRows ?? filterDetailRows(rows);
 
   return (
-    <Panel title={title} padding="none" className={className}>
+    <Panel title={title} variant="pageEmbed" className={className}>
       <table className="w-full">
         <tbody>
           {filteredRows.map((row, idx) => (

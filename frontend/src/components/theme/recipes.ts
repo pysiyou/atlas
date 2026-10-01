@@ -295,6 +295,9 @@ export const SPACING = {
   gapStack: 'gap-layout-stack',
   pPanel: 'p-panel',
   pxPanelHeader: 'px-panel-header-x',
+  pLabPanel: 'p-lab-panel',
+  pxLabPanelHeader: 'px-lab-panel-header-x',
+  pyLabPanelHeader: 'py-lab-panel-header-y',
   pyOverlayBody: 'py-overlay-body-y',
   pxOverlayBody: 'px-overlay-body-x',
   pyFilterBar: 'py-overlay-filter-y lg:py-overlay-filter-y-lg',
@@ -378,9 +381,9 @@ export const PANEL_LAYOUT = {
     'shrink-0 h-panel-header min-h-panel-header max-h-panel-header px-panel-header-x border-b border-border-default flex items-center justify-between gap-space-3 overflow-hidden',
   pageBodyPadding: SPACING.pPanel,
   labHeader:
-    'shrink-0 px-space-2 py-space-2 border-b border-border-default flex items-center gap-space-2',
+    `shrink-0 ${SPACING.pxLabPanelHeader} ${SPACING.pyLabPanelHeader} border-b border-border-default flex items-center gap-space-2`,
   labHeaderBetween:
-    'shrink-0 px-space-2 py-space-2 border-b border-border-default flex items-center justify-between gap-space-2',
+    `shrink-0 ${SPACING.pxLabPanelHeader} ${SPACING.pyLabPanelHeader} border-b border-border-default flex items-center justify-between gap-space-2`,
 } as const;
 
 /**
@@ -439,29 +442,45 @@ export const SHADOW = {
   footer: 'shadow-footer',
 } as const;
 
-/** In-page panel shell tokens (page + lab). Used by Panel and command-center layouts. */
+const PAGE_PANEL_CHROME = {
+  shell: `h-full ${SURFACE.raised} ${RADIUS.field} ${SHADOW.subtle} overflow-hidden flex flex-col`,
+  header: PANEL_LAYOUT.pageHeader,
+  headerBetween: PANEL_LAYOUT.pageHeaderBetween,
+  title: `m-0 min-w-0 truncate ${TYPE.panelTitle}`,
+  meta: `flex h-6 shrink-0 items-center ${TYPE.caption}`,
+  headerActions: 'flex shrink-0 items-center min-h-0',
+  scrollDefault: 'overflow-hidden',
+} as const;
+
+const LAB_PANEL_CHROME = {
+  shell: `w-full ${SURFACE.recessed} ${RADIUS.surface} overflow-hidden`,
+  header: PANEL_LAYOUT.labHeader,
+  headerBetween: PANEL_LAYOUT.labHeaderBetween,
+  title: `m-0 truncate ${TYPE.sectionTitle}`,
+  meta: `flex shrink-0 items-center ${TYPE.caption}`,
+  headerActions: 'flex shrink-0 items-center min-h-0',
+  scrollDefault: '',
+} as const;
+
+/** In-page panel shell tokens. Body inset is part of `body` per variant. */
 export const PANEL_SHELL = {
   page: {
-    shell: `h-full ${SURFACE.raised} ${RADIUS.field} ${SHADOW.subtle} overflow-hidden flex flex-col`,
-    header: PANEL_LAYOUT.pageHeader,
-    headerBetween: PANEL_LAYOUT.pageHeaderBetween,
-    title: `m-0 min-w-0 truncate ${TYPE.panelTitle}`,
-    meta: `flex h-6 shrink-0 items-center ${TYPE.caption}`,
-    headerActions: 'flex shrink-0 items-center min-h-0',
+    ...PAGE_PANEL_CHROME,
+    body: `flex-1 min-h-0 ${PANEL_LAYOUT.pageBodyPadding}`,
+  },
+  /** Raised page shell with flush body (embedded tables, feeds). */
+  pageEmbed: {
+    ...PAGE_PANEL_CHROME,
     body: 'flex-1 min-h-0',
-    padding: PANEL_LAYOUT.pageBodyPadding,
-    scrollDefault: 'overflow-hidden',
   },
   lab: {
-    shell: `w-full ${SURFACE.recessed} ${RADIUS.surface} overflow-hidden`,
-    header: PANEL_LAYOUT.labHeader,
-    headerBetween: PANEL_LAYOUT.labHeaderBetween,
-    title: `m-0 truncate ${TYPE.sectionTitle}`,
-    meta: `flex shrink-0 items-center ${TYPE.caption}`,
-    headerActions: 'flex shrink-0 items-center min-h-0',
-    body: '',
-    padding: SPACING.pSpace2,
-    scrollDefault: '',
+    ...LAB_PANEL_CHROME,
+    body: SPACING.pLabPanel,
+  },
+  /** Lab modal shell with flush body (scoped event log, full-bleed content). */
+  labEmbed: {
+    ...LAB_PANEL_CHROME,
+    body: 'min-w-0',
   },
 } as const;
 

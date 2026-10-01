@@ -270,6 +270,9 @@
   --spacing-layout-scroll-end: var(--layout-scroll-end);
   --spacing-panel: var(--panel-padding);
   --spacing-panel-header-x: var(--panel-header-padding-x);
+  --spacing-lab-panel: var(--lab-panel-padding);
+  --spacing-lab-panel-header-x: var(--lab-panel-header-padding-x);
+  --spacing-lab-panel-header-y: var(--lab-panel-header-padding-y);
   --spacing-space-0-5: var(--space-0-5);
   --spacing-space-1: var(--space-1);
   --spacing-space-1-5: var(--space-1-5);

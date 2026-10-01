@@ -7,8 +7,7 @@ import React from 'react';
 import { PANEL_SHELL, SPACING } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
-export type PanelVariant = 'page' | 'lab';
-export type PanelPadding = 'default' | 'none';
+export type PanelVariant = keyof typeof PANEL_SHELL;
 export type PanelScroll = 'default' | 'auto' | 'visible';
 export type PanelSpacing = 'none' | 'compact' | 'normal' | 'relaxed';
 
@@ -24,16 +23,18 @@ export const PANEL_SCROLL: Record<Exclude<PanelScroll, 'default'>, string> = {
   visible: 'overflow-visible',
 };
 
+function isLabVariant(variant: PanelVariant): boolean {
+  return variant === 'lab' || variant === 'labEmbed';
+}
+
 export interface PanelProps {
-  /** Visual recipe. `page` is the default dashboard/detail shell; `lab` is compact modal/grid. */
+  /** Visual recipe — padding and chrome come from the variant tokens in `PANEL_SHELL`. */
   variant?: PanelVariant;
   title?: string | React.ReactNode;
   meta?: string;
   headerStart?: React.ReactNode;
   headerEnd?: React.ReactNode;
   children: React.ReactNode;
-  /** Body inset. Defaults per variant (`page` 16px, `lab` 8px). Use `none` for embedded tables. */
-  padding?: PanelPadding;
   /** Body overflow. `default` keeps the variant body token; `auto`/`visible` override it. */
   scroll?: PanelScroll;
   /** Vertical gap between body children. Defaults to `none` (`page`) or `normal` (`lab`). */
@@ -51,7 +52,6 @@ export function Panel({
   headerStart,
   headerEnd,
   children,
-  padding = 'default',
   scroll = 'default',
   spacing,
   hideHeader = false,
@@ -60,7 +60,7 @@ export function Panel({
   testId,
 }: PanelProps) {
   const tokens = PANEL_SHELL[variant];
-  const resolvedSpacing = spacing ?? (variant === 'lab' ? 'normal' : 'none');
+  const resolvedSpacing = spacing ?? (isLabVariant(variant) ? 'normal' : 'none');
   const useBetweenLayout = Boolean(meta || headerEnd);
   const headerClass = useBetweenLayout ? tokens.headerBetween : tokens.header;
 
@@ -84,7 +84,6 @@ export function Panel({
       <div
         className={cn(
           tokens.body,
-          padding === 'none' ? 'p-0' : tokens.padding,
           scroll === 'default' ? tokens.scrollDefault : PANEL_SCROLL[scroll],
           PANEL_SPACING[resolvedSpacing],
           bodyClassName,

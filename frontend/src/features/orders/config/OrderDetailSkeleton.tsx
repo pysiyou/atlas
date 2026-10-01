@@ -15,14 +15,14 @@ export const ORDER_DETAIL_SKELETON_SECTIONS: DetailSkeletonSection[] = [
         <OrderProgressSkeleton />
       </div>
     ),
-    padding: 'none',
+    variant: 'pageEmbed',
     scroll: 'visible',
   },
   {
     title: 'Tests',
     tableColumns: 4,
     tableRows: 4,
-    padding: 'none',
+    variant: 'pageEmbed',
     scroll: 'visible',
   },
   { title: 'Billing Summary', rows: 3, layout: 'column' },
@@ -38,7 +38,7 @@ export function renderOrderDetailLargeSkeleton() {
         <Panel title="Patient Information" className="min-h-0" scroll="auto">
           <SkeletonInfoSection rows={4} layout="column" />
         </Panel>
-        <Panel title="Order Progress" className="min-h-0" padding="none" scroll="auto">
+        <Panel title="Order Progress" className="min-h-0" variant="pageEmbed" scroll="auto">
           <div className={SPACING.pPanel}>
             <OrderProgressSkeleton />
           </div>
@@ -46,7 +46,7 @@ export function renderOrderDetailLargeSkeleton() {
       </div>
 
       <div className={cn(LAYOUT.detailGrid3, 'min-h-0')}>
-        <Panel title="Tests" className="min-h-0 col-span-2" padding="none" scroll="auto">
+        <Panel title="Tests" className="min-h-0 col-span-2" variant="pageEmbed" scroll="auto">
           <div className="border-t border-border-default">
             {Array.from({ length: 4 }).map((_, i) => (
               <SkeletonTableRow key={i} columns={5} />

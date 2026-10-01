@@ -58,7 +58,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         title="Related Orders"
         meta={countMeta(orders.length)}
         className="shrink-0"
-        padding="none"
+        variant="pageEmbed"
         scroll="visible"
         headerEnd={<IconButton onClick={onNewOrder} {...actionButtonPreset('add')} size="sm" title="New Order" />}
       >
@@ -106,7 +106,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
       <Panel
         title="Related Orders"
         meta={countMeta(orders.length)}
-        padding="none"
+        variant="pageEmbed"
         scroll="visible"
         headerEnd={<IconButton onClick={onNewOrder} {...actionButtonPreset('add')} size="sm" title="New Order" />}
       >
@@ -174,7 +174,7 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
           title="Related Orders"
           meta={countMeta(orders.length)}
           className="col-span-2 min-h-0"
-          padding="none"
+          variant="pageEmbed"
           scroll="auto"
           headerEnd={<IconButton onClick={onNewOrder} {...actionButtonPreset('add')} size="sm" title="New Order" />}
         >

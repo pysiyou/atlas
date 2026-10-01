@@ -20,6 +20,11 @@ def list_audit_events(
     target_type: str | None = Query(None, alias="targetType", max_length=50),
     target_id: int | None = Query(None, alias="targetId"),
     test_id: int | None = Query(None, alias="testId"),
+    sample_id: int | None = Query(
+        None,
+        alias="sampleId",
+        description="With targetType=order_test, also include sample-targeted lab events for this sample",
+    ),
     hours: float | None = Query(
         None,
         gt=0,
@@ -44,6 +49,7 @@ def list_audit_events(
         target_type=target_type,
         target_id=target_id,
         test_id=test_id,
+        sample_id=sample_id,
         hours=hours,
         created_from=created_from,
         created_to=created_to,

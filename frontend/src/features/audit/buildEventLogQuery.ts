@@ -39,6 +39,7 @@ export function eventLogQueryKeyParams(
     targetType: query.targetType,
     targetId: query.targetId,
     testId: query.testId,
+    sampleId: query.sampleId,
     hours: query.hours,
     createdFrom: query.createdFrom,
     createdTo: query.createdTo,

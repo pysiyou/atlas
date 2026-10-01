@@ -203,7 +203,7 @@ export const LabAttentionPanel: React.FC<LabAttentionPanelProps> = ({ items, att
             : `${items.length} accessions · ${attentionTotal} tests`
           : LAB_COPY.attention.panelMetaEmpty
       }
-      padding="none"
+      variant="pageEmbed"
     >
       <AttentionFeed items={items} />
     </Panel>

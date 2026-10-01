@@ -19,7 +19,7 @@ function TodayPanelSkeleton() {
     <Panel
       title={<Skeleton height={14} width={48} />}
       headerEnd={<Skeleton height={12} width={120} />}
-      padding="none"
+      variant="pageEmbed"
     >
       <div className={TODAY_PANEL.body}>
         <div className={TODAY_PANEL.main}>
@@ -82,7 +82,7 @@ export const LabMonitorBoardSkeleton: React.FC = () => {
           </div>
         </div>
         <div className={MONITOR_TABLE_WRAP}>
-          <Panel title={<Skeleton height={14} width={120} />} padding="none">
+          <Panel title={<Skeleton height={14} width={120} />} variant="pageEmbed">
             <div className="flex flex-col gap-space-2 p-space-3">
               {Array.from({ length: 6 }).map((_, index) => (
                 <Skeleton key={index} height={36} className="w-full" />

@@ -36,7 +36,7 @@ export const LabTodayPanel: React.FC<LabTodayPanelProps> = ({ todayPanel }) => {
         <TodayPanelHeaderMeta headerRange={headerRange} totalWorked={totalWorked} />
       }
       bodyClassName="flex min-h-0 flex-1 flex-col overflow-hidden"
-      padding="none"
+      variant="pageEmbed"
     >
       <div className={TODAY_PANEL.body}>
         {totalWorked === 0 ? (

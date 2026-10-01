@@ -5,7 +5,7 @@
 import React, { type ReactNode } from 'react';
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import { useBreakpoint } from '@/hooks/useBreakpoint';
-import { Panel, type PanelPadding, type PanelScroll } from '@/components';
+import { Panel, type PanelScroll, type PanelVariant } from '@/components';
 import { Skeleton, SkeletonCard, SkeletonInfoSection, SkeletonTableRow } from './Skeleton';
 import { LAYOUT, RADIUS, SPACING } from '@/components/theme/recipes';
 import { cn } from '@/utils';
@@ -17,7 +17,7 @@ export interface DetailSkeletonSection {
   tableColumns?: number;
   tableRows?: number;
   colSpan?: number;
-  padding?: PanelPadding;
+  variant?: PanelVariant;
   scroll?: PanelScroll;
   panelClassName?: string;
   customContent?: ReactNode;
@@ -64,7 +64,7 @@ function SkeletonPanel({
     <Panel
       title={section.title}
       className={className}
-      padding={section.padding}
+      variant={section.variant}
       scroll={section.scroll ?? scroll}
     >
       {renderSectionContent(section)}
@@ -144,7 +144,7 @@ function BalancedGridSkeleton({ sections }: { sections: DetailSkeletonSection[] 
       aria-busy="true"
     >
       {sections.map(section => (
-        <Panel key={section.title} title={section.title} padding={section.padding}>
+        <Panel key={section.title} title={section.title} variant={section.variant}>
           {renderSectionContent({ ...section, layout: 'column' })}
         </Panel>
       ))}

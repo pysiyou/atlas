@@ -48,7 +48,7 @@ export const PaymentDetailModalBody: React.FC<PaymentDetailModalBodyProps> = ({
   <div className="flex-1 overflow-y-auto p-space-6 space-y-space-6">
     <Panel
       title="Billing Summary"
-      padding="none"
+      variant="pageEmbed"
       scroll="visible"
       bodyClassName="flex flex-col"
       className="h-auto shrink-0"
