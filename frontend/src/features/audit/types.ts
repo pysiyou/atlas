@@ -17,7 +17,7 @@ export type EventLogLaboratorySubdomain =
   | 'result'
   | 'validation'
   | 'escalation'
-  | 'quality';
+  | 'analyzer';
 
 export interface EventLogActorSnapshot {
   userId: number | 'system';
@@ -85,78 +85,60 @@ export interface EventLogDayGroup {
   items: ResolvedEventLogItem[];
 }
 
-export type EventLogTargetType =
-  | 'patient'
-  | 'order'
-  | 'order_test'
-  | 'sample'
-  | 'payment'
-  | 'invoice'
-  | 'insurance_claim';
+/** Containment lens for fetching events. Not stored on the row. */
+export type EventLogScopeName = 'order' | 'lab' | 'patient' | 'system' | 'stream';
 
-export interface EventLogScope {
-  targetType: EventLogTargetType;
-  targetId: number;
-}
-
-export type EventLogDomainCategory = EventLogDomain;
-
-export type EventLogLaboratoryCategory =
-  | 'laboratory:sample'
-  | 'laboratory:result'
-  | 'laboratory:validation'
-  | 'laboratory:escalation'
-  | 'laboratory:quality'
-  | 'laboratory:analyzer';
-
-export type EventLogCategoryKey = EventLogDomainCategory | EventLogLaboratoryCategory;
+/** Optional kind filter — the six eventType roots. */
+export type EventLogKind = EventLogDomain;
 
 /** Server query for audit events — fixed constraints and/or merged user filters. */
 export interface EventLogQuery {
+  scope: EventLogScopeName;
   orderId?: number;
   patientId?: number;
-  targetType?: string;
-  targetId?: number;
   testId?: number;
-  /** With targetType order_test, include sample-targeted events for this sample id. */
   sampleId?: number;
   hours?: number;
   createdFrom?: string;
   createdTo?: string;
-  categories?: EventLogCategoryKey[];
+  kinds?: EventLogKind[];
+  /** When true, include read-only events such as patient.view. */
+  includeAccess?: boolean;
   limit?: number;
 }
 
-export type EventLogFilterField =
-  | 'category'
-  | 'dateRange'
-  | 'orderId'
-  | 'testId'
-  /** Single input accepting ORD… or TST… (global event log page). */
-  | 'entityId';
+export type EventLogFilterField = 'kind' | 'dateRange' | 'entityId' | 'includeAccess';
 
 export interface EventLogFilterUiConfig {
   fields?: EventLogFilterField[];
 }
 
 export interface EventLogUserFilters {
-  categories: EventLogCategoryKey[];
+  kinds: EventLogKind[];
   dateRange: [Date, Date] | null;
+  includeAccess: boolean;
   orderId: number | null;
   testId: number | null;
+  sampleId: number | null;
+  patientId: number | null;
 }
 
 export const DEFAULT_EVENT_LOG_USER_FILTERS: EventLogUserFilters = {
-  categories: [],
+  kinds: [],
   dateRange: null,
+  includeAccess: false,
   orderId: null,
   testId: null,
+  sampleId: null,
+  patientId: null,
 };
 
 /** User-facing copy for event log surfaces. */
 export const EVENT_LOG_COPY = {
   panelTitle: 'Event log',
   panelMetaOrder: 'Most recent actions on this order first',
+  panelMetaLab: 'Most recent laboratory actions for this item first',
+  panelMetaPatient: 'Most recent actions on this patient first',
   panelMetaEntity: 'Most recent actions for this item first',
   panelMetaCommandCenter: 'Last 24 hours · most recent activity first',
   panelMetaMonitor: 'Last 24 hours · most recent activity first',

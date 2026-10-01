@@ -5,17 +5,17 @@ import { apiClient } from '@/lib/api/client';
 import type { EventLogActorSnapshot, EventLogChanges, EventLogRecord } from './types';
 
 export interface AuditEventQueryParams {
+  scope?: string;
   orderId?: number;
   patientId?: number;
-  targetType?: string;
-  targetId?: number;
   testId?: number;
   sampleId?: number;
   hours?: number;
   createdFrom?: string;
   createdTo?: string;
-  /** Comma-separated category keys */
-  categories?: string;
+  /** Comma-separated kind keys */
+  kinds?: string;
+  includeAccess?: boolean;
   limit?: number;
 }
 
@@ -83,16 +83,16 @@ export function normalizeAuditEvent(raw: Record<string, unknown>): EventLogRecor
 
 function toQueryRecord(params: AuditEventQueryParams): Record<string, string> {
   const out: Record<string, string> = {};
+  if (params.scope) out.scope = params.scope;
   if (params.orderId != null) out.orderId = String(params.orderId);
   if (params.patientId != null) out.patientId = String(params.patientId);
-  if (params.targetType) out.targetType = params.targetType;
-  if (params.targetId != null) out.targetId = String(params.targetId);
   if (params.testId != null) out.testId = String(params.testId);
   if (params.sampleId != null) out.sampleId = String(params.sampleId);
   if (params.hours != null) out.hours = String(params.hours);
   if (params.createdFrom) out.createdFrom = params.createdFrom;
   if (params.createdTo) out.createdTo = params.createdTo;
-  if (params.categories) out.categories = params.categories;
+  if (params.kinds) out.kinds = params.kinds;
+  if (params.includeAccess) out.includeAccess = 'true';
   if (params.limit != null) out.limit = String(params.limit);
   return out;
 }

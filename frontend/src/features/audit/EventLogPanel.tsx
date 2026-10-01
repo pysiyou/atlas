@@ -1,3 +1,6 @@
+/**
+ * Event log panel — fetch by named scope and optional kind / date / entity filters.
+ */
 import React, { useMemo } from 'react';
 import { ErrorAlert, Skeleton } from '@/components';
 import { Panel } from '@/components/surfaces/Panel';
@@ -12,14 +15,14 @@ import type {
   EventLogFilterField,
   EventLogFilterUiConfig,
   EventLogQuery,
-  EventLogScope,
   EventLogUserFilters,
 } from './types';
 
 const ALL_FILTER_FIELDS: EventLogFilterField[] = [
   'entityId',
   'dateRange',
-  'category',
+  'kind',
+  'includeAccess',
 ];
 
 export type EventLogPanelLayout = 'standalone' | 'embedded';
@@ -36,25 +39,21 @@ export interface EventLogPanelProps {
   hideMeta?: boolean;
 }
 
-function scopeToQuery(scope: EventLogScope): Pick<EventLogQuery, 'targetType' | 'targetId'> {
-  return {
-    targetType: scope.targetType,
-    targetId: scope.targetId,
-  };
-}
-
 function metaForQuery(query: EventLogQuery, hasUserFilters: boolean): string {
   if (hasUserFilters) {
     return 'Newest first';
   }
-  if (query.categories?.includes('laboratory') && query.hours === 24) {
+  if (query.scope === 'stream' && query.kinds?.includes('laboratory') && query.hours === 24) {
     return EVENT_LOG_COPY.panelMetaMonitor;
   }
-  if (query.orderId != null) {
+  if (query.scope === 'order') {
     return EVENT_LOG_COPY.panelMetaOrder;
   }
-  if (query.targetType && query.targetId != null) {
-    return EVENT_LOG_COPY.panelMetaEntity;
+  if (query.scope === 'lab') {
+    return EVENT_LOG_COPY.panelMetaLab;
+  }
+  if (query.scope === 'patient') {
+    return EVENT_LOG_COPY.panelMetaPatient;
   }
   if (query.limit === 2000 && !query.hours) {
     return EVENT_LOG_COPY.panelMetaAll;
@@ -84,10 +83,7 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
     visibleFields,
   });
 
-  const skipFetch =
-    panelState.entityIdInputInvalid ||
-    panelState.orderIdInputInvalid ||
-    panelState.testIdInputInvalid;
+  const skipFetch = panelState.entityIdInputInvalid;
 
   const { resolved, isLoading, isError, error, refetch } = useEventLog(panelState.mergedQuery, {
     enabled: !skipFetch,
@@ -103,23 +99,19 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
     <EventLogFilters
       visibleFields={visibleFields}
       lockedFields={panelState.lockedFields}
-      categories={panelState.userFilters.categories}
-      onCategoriesChange={categories =>
-        panelState.setUserFilters(prev => ({ ...prev, categories }))
-      }
+      kinds={panelState.userFilters.kinds}
+      onKindsChange={kinds => panelState.setUserFilters(prev => ({ ...prev, kinds }))}
       dateRange={panelState.userFilters.dateRange}
       onDateRangeChange={dateRange =>
         panelState.setUserFilters(prev => ({ ...prev, dateRange }))
       }
-      orderIdInput={panelState.orderIdInput}
-      onOrderIdInputChange={panelState.setOrderIdInput}
-      testIdInput={panelState.testIdInput}
-      onTestIdInputChange={panelState.setTestIdInput}
       entityIdInput={panelState.entityIdInput}
       onEntityIdInputChange={panelState.setEntityIdInput}
-      orderIdInputInvalid={panelState.orderIdInputInvalid}
-      testIdInputInvalid={panelState.testIdInputInvalid}
       entityIdInputInvalid={panelState.entityIdInputInvalid}
+      includeAccess={panelState.userFilters.includeAccess}
+      onIncludeAccessChange={includeAccess =>
+        panelState.setUserFilters(prev => ({ ...prev, includeAccess }))
+      }
       activeFilterCount={panelState.activeFilterCount}
       onReset={panelState.resetUserFilters}
     />
@@ -167,30 +159,35 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
 
 export const OrderEventLogPanel: React.FC<{ orderId: number; className?: string }> = props => (
   <EventLogPanel
-    query={{ orderId: props.orderId, limit: 500 }}
-    filterUi={{ fields: ['category', 'dateRange', 'testId'] }}
+    query={{ scope: 'order', orderId: props.orderId, limit: 500 }}
+    filterUi={{ fields: ['kind', 'dateRange'] }}
     className={props.className}
   />
 );
 
-export const ScopedEventLogPanel: React.FC<{
-  scope: EventLogScope;
-  /**
-   * When scope is order_test, pass the linked sample id so collection/rejection
-   * events (sample target) appear in the same timeline as result/validation events.
-   */
+/**
+ * Laboratory workflow timeline for a test (plus its sample) or a sample (plus its tests).
+ *
+ * Pass `testId` from result/validation/escalation modals so sibling tests on the
+ * same tube are excluded. Pass `sampleId` from collection so every test on the
+ * tube is included. The backend resolves the sample↔test graph.
+ */
+export const LabEventLogPanel: React.FC<{
+  testId?: number;
   sampleId?: number;
   className?: string;
 }> = props => {
-  const scopeQuery = scopeToQuery(props.scope);
-  const includeSampleStory =
-    scopeQuery.targetType === 'order_test' && props.sampleId != null;
+  const hasTest = props.testId != null;
+  const hasSample = props.sampleId != null;
+  if (!hasTest && !hasSample) {
+    return null;
+  }
 
   return (
     <EventLogPanel
       query={{
-        ...scopeQuery,
-        ...(includeSampleStory ? { sampleId: props.sampleId } : {}),
+        scope: 'lab',
+        ...(hasTest ? { testId: props.testId } : { sampleId: props.sampleId }),
         limit: 200,
       }}
       filterUi={{ fields: [] }}
@@ -200,11 +197,31 @@ export const ScopedEventLogPanel: React.FC<{
   );
 };
 
+export const PatientEventLogPanel: React.FC<{
+  patientId: number;
+  className?: string;
+}> = props => (
+  <EventLogPanel
+    query={{ scope: 'patient', patientId: props.patientId, limit: 200 }}
+    filterUi={{ fields: ['includeAccess', 'dateRange'] }}
+    className={props.className}
+  />
+);
+
 export const LabMonitorEventLogPanel: React.FC = () => (
   <EventLogPanel
-    query={{ hours: 24, categories: ['laboratory'], limit: 500 }}
+    query={{ scope: 'stream', hours: 24, kinds: ['laboratory'], limit: 500 }}
     filterUi={{ fields: [] }}
     className="min-h-0 h-full"
+  />
+);
+
+/** Auth, user-admin, and catalog events. Not mounted on a page yet. */
+export const SystemEventLogPanel: React.FC<{ className?: string }> = props => (
+  <EventLogPanel
+    query={{ scope: 'system', limit: 500 }}
+    filterUi={{ fields: ['dateRange'] }}
+    className={props.className}
   />
 );
 

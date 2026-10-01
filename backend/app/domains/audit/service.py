@@ -12,7 +12,7 @@ from datetime import UTC, datetime, timedelta
 from typing import Any
 from uuid import uuid4
 
-from app.domains.audit.categories import categories_to_prefixes
+from app.domains.audit.kinds import ACCESS_EVENT_TYPES, kinds_to_prefixes
 from app.domains.audit.models import AuditEvent
 from app.domains.audit.schemas import (
     AuditEventCreate,
@@ -24,7 +24,7 @@ from app.domains.audit.schemas import (
 )
 from app.domains.orders.models import Order, OrderTest
 from app.domains.users.models import User
-from sqlalchemy import and_, or_
+from sqlalchemy import and_, false, or_
 from sqlalchemy.orm import Session
 
 # ── Persist ──────────────────────────────────────────────────────────────
@@ -235,65 +235,135 @@ class AuditEventQueryService:
     def __init__(self, db: Session):
         self.db = db
 
-    def list_events(
+    def _lab_scope_ids(
         self,
         *,
-        order_id: int | None = None,
-        patient_id: int | None = None,
-        target_type: str | None = None,
-        target_id: int | None = None,
-        test_id: int | None = None,
-        sample_id: int | None = None,
-        since: datetime | None = None,
-        until: datetime | None = None,
-        categories: list[str] | None = None,
-        limit: int = 500,
-    ) -> list[AuditEventResponse]:
-        limit = min(max(limit, 1), 2000)
-        query = self.db.query(AuditEvent)
+        test_id: int | None,
+        sample_id: int | None,
+    ) -> tuple[list[int], list[int]]:
+        """
+        Expand a lab lens into order_test ids and sample ids.
 
-        if order_id is not None:
-            query = query.filter(
+        From a test: that order_test plus its sample (sibling tests stay out).
+        From a sample: that sample plus every order_test on it.
+        """
+        order_test_ids: list[int] = []
+        sample_ids: list[int] = []
+
+        if test_id is not None:
+            order_test_ids.append(test_id)
+            row = (
+                self.db.query(OrderTest.sampleId).filter(OrderTest.id == test_id).first()
+            )
+            if row is not None and row.sampleId is not None:
+                sample_ids.append(int(row.sampleId))
+            return list(dict.fromkeys(order_test_ids)), list(dict.fromkeys(sample_ids))
+
+        if sample_id is not None:
+            sample_ids.append(sample_id)
+            linked = (
+                self.db.query(OrderTest.id).filter(OrderTest.sampleId == sample_id).all()
+            )
+            order_test_ids.extend(int(row.id) for row in linked)
+
+        return list(dict.fromkeys(order_test_ids)), list(dict.fromkeys(sample_ids))
+
+    def _apply_scope(
+        self,
+        query,
+        *,
+        scope: str,
+        order_id: int | None,
+        patient_id: int | None,
+        test_id: int | None,
+        sample_id: int | None,
+    ):
+        """Restrict the query to one containment lens. Empty identity → no rows."""
+        if scope == "order":
+            if order_id is None:
+                return query.filter(false())
+            return query.filter(
                 or_(
                     AuditEvent.orderId == order_id,
                     and_(AuditEvent.targetType == "order", AuditEvent.targetId == order_id),
                 )
             )
 
-        if patient_id is not None:
-            query = query.filter(
-                or_(
-                    AuditEvent.patientId == patient_id,
-                    and_(AuditEvent.targetType == "patient", AuditEvent.targetId == patient_id),
-                )
+        if scope == "lab":
+            order_test_ids, sample_ids = self._lab_scope_ids(
+                test_id=test_id, sample_id=sample_id
             )
-
-        order_test_scope = target_type == "order_test" and target_id is not None
-
-        if order_test_scope:
-            workflow_clauses = [
-                and_(
-                    AuditEvent.targetType == "order_test",
-                    AuditEvent.targetId == target_id,
-                ),
-                AuditEvent.testId == target_id,
-            ]
-            if sample_id is not None:
-                workflow_clauses.append(
+            clauses = []
+            if order_test_ids:
+                clauses.append(
                     and_(
-                        AuditEvent.targetType == "sample",
-                        AuditEvent.targetId == sample_id,
+                        AuditEvent.targetType == "order_test",
+                        AuditEvent.targetId.in_(order_test_ids),
                     )
                 )
-            query = query.filter(or_(*workflow_clauses))
-        elif target_type is not None and target_id is not None:
-            query = query.filter(
-                AuditEvent.targetType == target_type,
-                AuditEvent.targetId == target_id,
+                clauses.append(AuditEvent.testId.in_(order_test_ids))
+            if sample_ids:
+                clauses.append(
+                    and_(
+                        AuditEvent.targetType == "sample",
+                        AuditEvent.targetId.in_(sample_ids),
+                    )
+                )
+            if not clauses:
+                return query.filter(false())
+            return query.filter(or_(*clauses))
+
+        if scope == "patient":
+            if patient_id is None:
+                return query.filter(false())
+            return query.filter(
+                AuditEvent.eventType.like("patient.%"),
+                or_(
+                    AuditEvent.patientId == patient_id,
+                    and_(
+                        AuditEvent.targetType == "patient",
+                        AuditEvent.targetId == patient_id,
+                    ),
+                ),
             )
 
-        if test_id is not None and not order_test_scope:
-            query = query.filter(AuditEvent.testId == test_id)
+        if scope == "system":
+            return query.filter(AuditEvent.eventType.like("system.%"))
+
+        # stream: time window + optional kinds applied by the caller
+        return query
+
+    def list_events(
+        self,
+        *,
+        scope: str = "stream",
+        order_id: int | None = None,
+        patient_id: int | None = None,
+        test_id: int | None = None,
+        sample_id: int | None = None,
+        since: datetime | None = None,
+        until: datetime | None = None,
+        kinds: list[str] | None = None,
+        include_access: bool = False,
+        limit: int = 500,
+    ) -> list[AuditEventResponse]:
+        """
+        List events for a named scope.
+
+        Scope expands containment (order / lab graph / patient / system / stream).
+        Kinds optionally restrict eventType prefixes. Access events are omitted
+        unless include_access is true.
+        """
+        limit = min(max(limit, 1), 2000)
+        query = self.db.query(AuditEvent)
+        query = self._apply_scope(
+            query,
+            scope=scope,
+            order_id=order_id,
+            patient_id=patient_id,
+            test_id=test_id,
+            sample_id=sample_id,
+        )
 
         if since is not None:
             query = query.filter(AuditEvent.createdAt >= since)
@@ -301,11 +371,14 @@ class AuditEventQueryService:
         if until is not None:
             query = query.filter(AuditEvent.createdAt <= until)
 
-        prefixes = categories_to_prefixes(categories or [])
+        prefixes = kinds_to_prefixes(kinds or [])
         if prefixes:
             query = query.filter(
                 or_(*[AuditEvent.eventType.like(f"{prefix}%") for prefix in prefixes])
             )
+
+        if not include_access and scope in ("stream", "patient"):
+            query = query.filter(AuditEvent.eventType.notin_(ACCESS_EVENT_TYPES))
 
         rows = query.order_by(AuditEvent.createdAt.desc()).limit(limit).all()
         order_test_results = _load_order_test_results_map(self.db, rows)
@@ -313,36 +386,36 @@ class AuditEventQueryService:
 
     def list_recent(self, hours: float, limit: int = 500) -> list[AuditEventResponse]:
         since = datetime.now(UTC) - timedelta(hours=hours)
-        return self.list_events(since=since, limit=limit)
+        return self.list_events(scope="stream", since=since, limit=limit)
 
     def list_filtered(
         self,
         *,
+        scope: str = "stream",
         order_id: int | None = None,
         patient_id: int | None = None,
-        target_type: str | None = None,
-        target_id: int | None = None,
         test_id: int | None = None,
         sample_id: int | None = None,
         hours: float | None = None,
         created_from: datetime | None = None,
         created_to: datetime | None = None,
-        categories: list[str] | None = None,
+        kinds: list[str] | None = None,
+        include_access: bool = False,
         limit: int = 500,
     ) -> list[AuditEventResponse]:
         since = created_from
         if hours is not None and since is None:
             since = datetime.now(UTC) - timedelta(hours=hours)
         return self.list_events(
+            scope=scope,
             order_id=order_id,
             patient_id=patient_id,
-            target_type=target_type,
-            target_id=target_id,
             test_id=test_id,
             sample_id=sample_id,
             since=since,
             until=created_to,
-            categories=categories,
+            kinds=kinds,
+            include_access=include_access,
             limit=limit,
         )
 
@@ -720,6 +793,7 @@ class AuditEmitter:
     ) -> None:
         target_id = order_test_id if order_test_id is not None else (order_id or 0)
         target_type = "order_test" if order_test_id is not None else "order"
+        # Unmatched analyzer rejects have no orderId — they only appear on stream feeds.
         ctx = EventContext(orderId=order_id, testId=order_test_id) if order_id else None
         self._emit(
             EventType.LABORATORY_ANALYZER_INGEST_REJECTED,
@@ -859,6 +933,7 @@ class AuditEmitter:
     ) -> None:
         target_type = "order_test" if order_test_id else "sample"
         target_id = order_test_id if order_test_id else (sample_id or 0)
+        # Always attach orderId so sample-targeted rejects still appear on order scope.
         self._emit(
             EventType.LABORATORY_VALIDATION_REJECT,
             target_type,

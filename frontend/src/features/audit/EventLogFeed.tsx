@@ -103,8 +103,8 @@ function laneForDomain(
         return 'validation';
       case 'escalation':
         return 'escalation';
-      case 'quality':
-        return 'quality';
+      case 'analyzer':
+        return 'results';
     }
   }
   switch (domain) {

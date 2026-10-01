@@ -4,14 +4,18 @@
 import { endOfDay, startOfDay } from 'date-fns';
 import type { EventLogQuery, EventLogUserFilters } from './types';
 
+/**
+ * Apply user filters onto a fixed panel query.
+ * On a stream panel, an entity id upgrades the scope (order / lab / patient).
+ */
 export function buildEventLogQuery(
   fixed: EventLogQuery,
   user: EventLogUserFilters
 ): EventLogQuery {
   const merged: EventLogQuery = { ...fixed };
 
-  if (user.categories.length > 0 && !fixed.categories?.length) {
-    merged.categories = user.categories;
+  if (user.kinds.length > 0 && !fixed.kinds?.length) {
+    merged.kinds = user.kinds;
   }
 
   if (user.dateRange && !fixed.createdFrom && !fixed.createdTo && fixed.hours == null) {
@@ -19,12 +23,25 @@ export function buildEventLogQuery(
     merged.createdTo = endOfDay(user.dateRange[1]).toISOString();
   }
 
-  if (user.orderId != null && fixed.orderId == null) {
-    merged.orderId = user.orderId;
+  if (user.includeAccess) {
+    merged.includeAccess = true;
   }
 
-  if (user.testId != null && fixed.testId == null) {
-    merged.testId = user.testId;
+  const canUpgradeStream = fixed.scope === 'stream';
+  if (canUpgradeStream) {
+    if (user.orderId != null) {
+      merged.scope = 'order';
+      merged.orderId = user.orderId;
+    } else if (user.testId != null) {
+      merged.scope = 'lab';
+      merged.testId = user.testId;
+    } else if (user.sampleId != null) {
+      merged.scope = 'lab';
+      merged.sampleId = user.sampleId;
+    } else if (user.patientId != null) {
+      merged.scope = 'patient';
+      merged.patientId = user.patientId;
+    }
   }
 
   return merged;
@@ -34,16 +51,16 @@ export function eventLogQueryKeyParams(
   query: EventLogQuery
 ): Record<string, string | number | undefined> {
   return {
+    scope: query.scope,
     orderId: query.orderId,
     patientId: query.patientId,
-    targetType: query.targetType,
-    targetId: query.targetId,
     testId: query.testId,
     sampleId: query.sampleId,
     hours: query.hours,
     createdFrom: query.createdFrom,
     createdTo: query.createdTo,
-    categories: query.categories?.length ? query.categories.join(',') : undefined,
+    kinds: query.kinds?.length ? query.kinds.join(',') : undefined,
+    includeAccess: query.includeAccess ? 'true' : undefined,
     limit: query.limit,
   };
 }

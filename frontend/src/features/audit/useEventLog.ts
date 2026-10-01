@@ -13,19 +13,19 @@ import type { EventLogQuery, EventLogRecord } from './types';
 
 function queryToApiParams(query: EventLogQuery): AuditEventQueryParams {
   const params: AuditEventQueryParams = {
+    scope: query.scope,
     orderId: query.orderId,
     patientId: query.patientId,
-    targetType: query.targetType,
-    targetId: query.targetId,
     testId: query.testId,
     sampleId: query.sampleId,
     hours: query.createdFrom ? undefined : query.hours,
     createdFrom: query.createdFrom,
     createdTo: query.createdTo,
+    includeAccess: query.includeAccess ? true : undefined,
     limit: query.limit ?? 500,
   };
-  if (query.categories?.length) {
-    params.categories = query.categories.join(',');
+  if (query.kinds?.length) {
+    params.kinds = query.kinds.join(',');
   }
   return params;
 }

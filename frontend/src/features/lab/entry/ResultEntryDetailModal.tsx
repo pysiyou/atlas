@@ -14,7 +14,7 @@ import { Badge, Icon, CircularProgress, EntityId } from '@/components';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { EntryDetailMainPanel, EntryDetailModalFooter } from './ResultEntryDetailModal.parts';
 import { LabWorkflowDetailModal, DetailGrid } from '../components/LabWorkflowDetailModal';
-import { ScopedEventLogPanel } from '@/features/audit';
+import { LabEventLogPanel } from '@/features/audit';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { useOrderTestQueueState } from '../hooks';
 import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
@@ -301,10 +301,7 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
         ]}
       />
       {test.id != null && (
-        <ScopedEventLogPanel
-          scope={{ targetType: 'order_test', targetId: test.id }}
-          sampleId={test.sampleId}
-        />
+        <LabEventLogPanel testId={test.id} />
       )}
     </LabWorkflowDetailModal>
   );
