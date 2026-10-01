@@ -155,9 +155,8 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
     <Panel
       title={EVENT_LOG_COPY.panelTitle}
       meta={panelMeta}
-      padding="none"
       scroll="auto"
-      variant={panelVariant === 'lab' ? 'lab' : 'page'}
+      variant={panelVariant === 'lab' ? 'labEmbed' : 'pageEmbed'}
       className={className}
     >
       {filters}
@@ -176,20 +175,30 @@ export const OrderEventLogPanel: React.FC<{ orderId: number; className?: string 
 
 export const ScopedEventLogPanel: React.FC<{
   scope: EventLogScope;
-  testId?: number;
+  /**
+   * When scope is order_test, pass the linked sample id so collection/rejection
+   * events (sample target) appear in the same timeline as result/validation events.
+   */
+  sampleId?: number;
   className?: string;
-}> = props => (
-  <EventLogPanel
-    query={{
-      ...scopeToQuery(props.scope),
-      testId: props.testId,
-      limit: 200,
-    }}
-    filterUi={{ fields: [] }}
-    panelVariant="lab"
-    className={props.className}
-  />
-);
+}> = props => {
+  const scopeQuery = scopeToQuery(props.scope);
+  const includeSampleStory =
+    scopeQuery.targetType === 'order_test' && props.sampleId != null;
+
+  return (
+    <EventLogPanel
+      query={{
+        ...scopeQuery,
+        ...(includeSampleStory ? { sampleId: props.sampleId } : {}),
+        limit: 200,
+      }}
+      filterUi={{ fields: [] }}
+      panelVariant="lab"
+      className={props.className}
+    />
+  );
+};
 
 export const LabMonitorEventLogPanel: React.FC = () => (
   <EventLogPanel

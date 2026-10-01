@@ -88,6 +88,11 @@
   --panel-header-height: var(--chrome-nav-indicator);
   --panel-header-padding-x: var(--space-4);
 
+  /** Lab modal panels (Panel variant `lab` — sample / result detail modals). */
+  --lab-panel-padding: var(--space-3);
+  --lab-panel-header-padding-x: var(--space-3);
+  --lab-panel-header-padding-y: var(--space-3);
+
   /** Data table cell padding. */
   --table-cell-x-compact: var(--space-4);
   --table-cell-x-default: var(--space-6);

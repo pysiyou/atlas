@@ -303,7 +303,7 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
       {test.id != null && (
         <ScopedEventLogPanel
           scope={{ targetType: 'order_test', targetId: test.id }}
-          testId={test.id}
+          sampleId={test.sampleId}
         />
       )}
     </LabWorkflowDetailModal>

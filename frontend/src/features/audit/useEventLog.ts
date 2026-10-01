@@ -18,6 +18,7 @@ function queryToApiParams(query: EventLogQuery): AuditEventQueryParams {
     targetType: query.targetType,
     targetId: query.targetId,
     testId: query.testId,
+    sampleId: query.sampleId,
     hours: query.createdFrom ? undefined : query.hours,
     createdFrom: query.createdFrom,
     createdTo: query.createdTo,

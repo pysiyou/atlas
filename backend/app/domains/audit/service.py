@@ -243,6 +243,7 @@ class AuditEventQueryService:
         target_type: str | None = None,
         target_id: int | None = None,
         test_id: int | None = None,
+        sample_id: int | None = None,
         since: datetime | None = None,
         until: datetime | None = None,
         categories: list[str] | None = None,
@@ -267,24 +268,31 @@ class AuditEventQueryService:
                 )
             )
 
-        if target_type is not None and target_id is not None:
-            if target_type == "order_test":
-                query = query.filter(
-                    or_(
-                        and_(
-                            AuditEvent.targetType == "order_test",
-                            AuditEvent.targetId == target_id,
-                        ),
-                        AuditEvent.testId == target_id,
+        order_test_scope = target_type == "order_test" and target_id is not None
+
+        if order_test_scope:
+            workflow_clauses = [
+                and_(
+                    AuditEvent.targetType == "order_test",
+                    AuditEvent.targetId == target_id,
+                ),
+                AuditEvent.testId == target_id,
+            ]
+            if sample_id is not None:
+                workflow_clauses.append(
+                    and_(
+                        AuditEvent.targetType == "sample",
+                        AuditEvent.targetId == sample_id,
                     )
                 )
-            else:
-                query = query.filter(
-                    AuditEvent.targetType == target_type,
-                    AuditEvent.targetId == target_id,
-                )
+            query = query.filter(or_(*workflow_clauses))
+        elif target_type is not None and target_id is not None:
+            query = query.filter(
+                AuditEvent.targetType == target_type,
+                AuditEvent.targetId == target_id,
+            )
 
-        if test_id is not None:
+        if test_id is not None and not order_test_scope:
             query = query.filter(AuditEvent.testId == test_id)
 
         if since is not None:
@@ -315,6 +323,7 @@ class AuditEventQueryService:
         target_type: str | None = None,
         target_id: int | None = None,
         test_id: int | None = None,
+        sample_id: int | None = None,
         hours: float | None = None,
         created_from: datetime | None = None,
         created_to: datetime | None = None,
@@ -330,6 +339,7 @@ class AuditEventQueryService:
             target_type=target_type,
             target_id=target_id,
             test_id=test_id,
+            sample_id=sample_id,
             since=since,
             until=created_to,
             categories=categories,

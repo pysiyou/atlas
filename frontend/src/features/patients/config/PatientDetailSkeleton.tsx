@@ -17,7 +17,7 @@ export const PATIENT_DETAIL_SKELETON_SECTIONS: DetailSkeletonSection[] = [
     title: 'Related Orders',
     tableColumns: 5,
     tableRows: 4,
-    padding: 'none',
+    variant: 'pageEmbed',
     scroll: 'visible',
   },
   { title: 'Reports', rows: 3, layout: 'column' },
@@ -43,7 +43,7 @@ export function renderPatientDetailLargeSkeleton() {
       </div>
 
       <div className={cn(LAYOUT.detailGrid3, 'min-h-0')}>
-        <Panel title="Related Orders" className="min-h-0 col-span-2" padding="none" scroll="auto">
+        <Panel title="Related Orders" className="min-h-0 col-span-2" variant="pageEmbed" scroll="auto">
           <div className="border-t border-border-default">
             {Array.from({ length: 4 }).map((_, index) => (
               <SkeletonTableRow key={index} columns={5} />

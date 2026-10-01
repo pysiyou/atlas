@@ -250,7 +250,7 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
       {test.id != null && (
         <ScopedEventLogPanel
           scope={{ targetType: 'order_test', targetId: test.id }}
-          testId={test.id}
+          sampleId={test.sampleId}
         />
       )}
     </LabWorkflowDetailModal>

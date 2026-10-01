@@ -10,6 +10,7 @@ export interface AuditEventQueryParams {
   targetType?: string;
   targetId?: number;
   testId?: number;
+  sampleId?: number;
   hours?: number;
   createdFrom?: string;
   createdTo?: string;
@@ -87,6 +88,7 @@ function toQueryRecord(params: AuditEventQueryParams): Record<string, string> {
   if (params.targetType) out.targetType = params.targetType;
   if (params.targetId != null) out.targetId = String(params.targetId);
   if (params.testId != null) out.testId = String(params.testId);
+  if (params.sampleId != null) out.sampleId = String(params.sampleId);
   if (params.hours != null) out.hours = String(params.hours);
   if (params.createdFrom) out.createdFrom = params.createdFrom;
   if (params.createdTo) out.createdTo = params.createdTo;

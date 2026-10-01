@@ -118,6 +118,8 @@ export interface EventLogQuery {
   targetType?: string;
   targetId?: number;
   testId?: number;
+  /** With targetType order_test, include sample-targeted events for this sample id. */
+  sampleId?: number;
   hours?: number;
   createdFrom?: string;
   createdTo?: string;

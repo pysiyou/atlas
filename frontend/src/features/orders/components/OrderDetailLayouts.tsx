@@ -149,7 +149,7 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
         <Panel
           title="Order Progress"
           className={panelClass}
-          padding="none"
+          variant="pageEmbed"
           scroll={fillScroll}
           headerEnd={<OrderCircularProgress order={order} />}
         >
@@ -162,7 +162,7 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
           title="Tests"
           meta={testsHeaderMeta}
           className={cn(panelClass, 'col-span-2')}
-          padding="none"
+          variant="pageEmbed"
           scroll={fillHeight ? 'auto' : 'visible'}
           bodyClassName={fillHeight ? 'flex flex-col' : undefined}
         >
@@ -176,7 +176,7 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
         <Panel
           title="Billing Summary"
           className={panelClass}
-          padding="none"
+          variant="pageEmbed"
           scroll={fillScroll}
           bodyClassName="flex flex-col"
           headerEnd={
@@ -224,14 +224,14 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
       <Panel
         title="Order Progress"
         className="shrink-0"
-        padding="none"
+        variant="pageEmbed"
         scroll="visible"
         headerEnd={<OrderCircularProgress order={order} />}
       >
         <div className="min-h-16" aria-hidden />
       </Panel>
 
-      <Panel title="Tests" meta={testsHeaderMeta} className="shrink-0" padding="none" scroll="visible">
+      <Panel title="Tests" meta={testsHeaderMeta} className="shrink-0" variant="pageEmbed" scroll="visible">
         <TestsTable
           tests={order.tests ?? []}
           orderId={order.orderId}
@@ -242,7 +242,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
       <Panel
         title="Billing Summary"
         className="shrink-0"
-        padding="none"
+        variant="pageEmbed"
         scroll="visible"
         headerEnd={
           <BillingSummaryPanelActions order={order} onPaymentSuccess={onPaymentSuccess} />
