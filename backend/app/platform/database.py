@@ -6,7 +6,7 @@ from typing import TypeVar
 
 from app.platform.config import settings
 from sqlalchemy import Enum as SAEnum
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -43,3 +43,40 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+def ensure_audit_event_scope_column() -> None:
+    """
+    Add and backfill audit_events.event_scope on existing databases.
+
+    create_all does not ALTER existing tables, so production DBs need this
+    additive step after the ORM model gains the column.
+    """
+    with engine.begin() as conn:
+        conn.execute(
+            text(
+                "ALTER TABLE audit_events "
+                "ADD COLUMN IF NOT EXISTS event_scope VARCHAR(20)"
+            )
+        )
+        conn.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_audit_events_event_scope "
+                "ON audit_events (event_scope)"
+            )
+        )
+        conn.execute(
+            text(
+                """
+                UPDATE audit_events
+                SET event_scope = CASE
+                    WHEN event_type LIKE 'patient.%' THEN 'patient'
+                    WHEN event_type LIKE 'system.%' THEN 'system'
+                    WHEN event_type LIKE 'laboratory.%' THEN 'lab'
+                    ELSE 'order'
+                END
+                WHERE event_scope IS NULL
+                """
+            )
+        )
+

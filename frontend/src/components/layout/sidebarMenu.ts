@@ -6,6 +6,7 @@ import React, { type ReactNode } from 'react';
 import { ROUTES } from '@/config';
 import { MODULE_ICONS } from '@/config/icons';
 import { Icon } from '@/components';
+import type { UserRole } from '@/types';
 
 export interface MenuItem {
   path: string;
@@ -17,6 +18,8 @@ export interface MenuItem {
 export interface SettingsItem {
   label: string;
   icon: ReactNode;
+  path?: string;
+  roles?: UserRole[];
 }
 
 export const menuItems: MenuItem[] = [
@@ -30,13 +33,27 @@ export const menuItems: MenuItem[] = [
   { path: ROUTES.EVENT_LOG, label: 'Event log', icon: React.createElement(Icon, { name: MODULE_ICONS.eventLog, className: 'w-5 h-5' }), roles: [] },
 ];
 
-/** Placeholder items; shown disabled until those features exist. */
+/** Settings: User management is live; remaining items stay disabled until those features exist. */
 export const settingsItems: SettingsItem[] = [
-  { label: 'User Management', icon: React.createElement(Icon, { name: 'user-cog', className: 'w-5 h-5' }) },
+  {
+    label: 'User Management',
+    icon: React.createElement(Icon, { name: MODULE_ICONS.users, className: 'w-5 h-5' }),
+    path: ROUTES.USERS,
+    roles: ['administrator'],
+  },
   { label: 'System Settings', icon: React.createElement(Icon, { name: 'settings', className: 'w-5 h-5' }) },
   { label: 'Notification & Alerts', icon: React.createElement(Icon, { name: 'bell', className: 'w-5 h-5' }) },
 ];
 
 export function getFilteredMenuItems(): MenuItem[] {
   return menuItems;
+}
+
+export function getFilteredSettingsItems(
+  hasRole: (roles: UserRole | UserRole[]) => boolean
+): SettingsItem[] {
+  return settingsItems.filter(item => {
+    if (!item.roles || item.roles.length === 0) return true;
+    return hasRole(item.roles);
+  });
 }

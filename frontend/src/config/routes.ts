@@ -13,6 +13,7 @@ export const ROUTES = {
   REPORTS: '/reports',
   CATALOG: '/catalog',
   EVENT_LOG: '/event-log',
+  USERS: '/users',
 } as const;
 
 export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES];

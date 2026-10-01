@@ -10,9 +10,13 @@ from __future__ import annotations
 import logging
 from datetime import UTC, datetime, timedelta
 from typing import Any
-from uuid import uuid4
+from uuid import UUID, uuid4
 
-from app.domains.audit.kinds import ACCESS_EVENT_TYPES, kinds_to_prefixes
+from app.domains.audit.kinds import (
+    ACCESS_EVENT_TYPES,
+    kinds_to_prefixes,
+    stored_event_scope_for_type,
+)
 from app.domains.audit.models import AuditEvent
 from app.domains.audit.schemas import (
     AuditEventCreate,
@@ -24,7 +28,7 @@ from app.domains.audit.schemas import (
 )
 from app.domains.orders.models import Order, OrderTest
 from app.domains.users.models import User
-from sqlalchemy import and_, false, or_
+from sqlalchemy import and_, false, or_, tuple_
 from sqlalchemy.orm import Session
 
 # ── Persist ──────────────────────────────────────────────────────────────
@@ -91,6 +95,7 @@ def _build_row_dict(
         "patientId": context.patientId if context else None,
         "orderId": context.orderId if context else None,
         "testId": context.testId if context else None,
+        "eventScope": stored_event_scope_for_type(create.eventType.value),
         "changes": _changes_to_jsonb(create.changes),
         "eventMetadata": create.metadata,
     }
@@ -226,6 +231,7 @@ def audit_event_to_response(
         patientId=row.patientId,
         orderId=row.orderId,
         testId=row.testId,
+        eventScope=row.eventScope or stored_event_scope_for_type(row.eventType),
         changes=_changes_for_api(row.changes),
         metadata=metadata,
     )
@@ -345,6 +351,9 @@ class AuditEventQueryService:
         until: datetime | None = None,
         kinds: list[str] | None = None,
         include_access: bool = False,
+        event_scope: str | None = None,
+        cursor_created_at: datetime | None = None,
+        cursor_event_id: UUID | None = None,
         limit: int = 500,
     ) -> list[AuditEventResponse]:
         """
@@ -352,7 +361,7 @@ class AuditEventQueryService:
 
         Scope expands containment (order / lab graph / patient / system / stream).
         Kinds optionally restrict eventType prefixes. Access events are omitted
-        unless include_access is true.
+        unless include_access is true. Newest-first cursor uses createdAt + eventId.
         """
         limit = min(max(limit, 1), 2000)
         query = self.db.query(AuditEvent)
@@ -377,10 +386,23 @@ class AuditEventQueryService:
                 or_(*[AuditEvent.eventType.like(f"{prefix}%") for prefix in prefixes])
             )
 
+        if event_scope:
+            query = query.filter(AuditEvent.eventScope == event_scope)
+
         if not include_access and scope in ("stream", "patient"):
             query = query.filter(AuditEvent.eventType.notin_(ACCESS_EVENT_TYPES))
 
-        rows = query.order_by(AuditEvent.createdAt.desc()).limit(limit).all()
+        if cursor_created_at is not None and cursor_event_id is not None:
+            query = query.filter(
+                tuple_(AuditEvent.createdAt, AuditEvent.eventId)
+                < (cursor_created_at, cursor_event_id)
+            )
+
+        rows = (
+            query.order_by(AuditEvent.createdAt.desc(), AuditEvent.eventId.desc())
+            .limit(limit)
+            .all()
+        )
         order_test_results = _load_order_test_results_map(self.db, rows)
         return [audit_event_to_response(row, order_test_results) for row in rows]
 
@@ -401,6 +423,9 @@ class AuditEventQueryService:
         created_to: datetime | None = None,
         kinds: list[str] | None = None,
         include_access: bool = False,
+        event_scope: str | None = None,
+        cursor_created_at: datetime | None = None,
+        cursor_event_id: UUID | None = None,
         limit: int = 500,
     ) -> list[AuditEventResponse]:
         since = created_from
@@ -416,6 +441,9 @@ class AuditEventQueryService:
             until=created_to,
             kinds=kinds,
             include_access=include_access,
+            event_scope=event_scope,
+            cursor_created_at=cursor_created_at,
+            cursor_event_id=cursor_event_id,
             limit=limit,
         )
 
@@ -791,7 +819,14 @@ class AuditEmitter:
         test_code: str | None,
         metadata: dict[str, Any] | None = None,
     ) -> None:
-        target_id = order_test_id if order_test_id is not None else (order_id or 0)
+        if order_id is None and order_test_id is None:
+            logger.warning(
+                "Skipping analyzer_ingest_rejected persist: no order_id or order_test_id"
+            )
+            return
+        target_id = order_test_id if order_test_id is not None else order_id
+        if target_id is None:
+            return
         target_type = "order_test" if order_test_id is not None else "order"
         # Unmatched analyzer rejects have no orderId — they only appear on stream feeds.
         ctx = EventContext(orderId=order_id, testId=order_test_id) if order_id else None

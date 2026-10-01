@@ -2,7 +2,7 @@
  * Event log panel — fetch by named scope and optional kind / date / entity filters.
  */
 import React, { useMemo } from 'react';
-import { ErrorAlert, Skeleton } from '@/components';
+import { Button, ErrorAlert, Skeleton } from '@/components';
 import { Panel } from '@/components/surfaces/Panel';
 import { cn } from '@/utils';
 import { errorAlertMessage } from '@/utils/feedback';
@@ -22,6 +22,7 @@ const ALL_FILTER_FIELDS: EventLogFilterField[] = [
   'entityId',
   'dateRange',
   'kind',
+  'verbosity',
   'includeAccess',
 ];
 
@@ -85,9 +86,10 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
 
   const skipFetch = panelState.entityIdInputInvalid;
 
-  const { resolved, isLoading, isError, error, refetch } = useEventLog(panelState.mergedQuery, {
-    enabled: !skipFetch,
-  });
+  const { resolved, isLoading, isError, error, refetch, hasMore, isFetchingMore, loadMore } =
+    useEventLog(panelState.mergedQuery, {
+      enabled: !skipFetch,
+    });
 
   const panelMeta = useMemo(() => {
     if (hideMeta || layout === 'embedded') return undefined;
@@ -112,6 +114,10 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
       onIncludeAccessChange={includeAccess =>
         panelState.setUserFilters(prev => ({ ...prev, includeAccess }))
       }
+      verbosity={panelState.userFilters.verbosity}
+      onVerbosityChange={verbosity =>
+        panelState.setUserFilters(prev => ({ ...prev, verbosity }))
+      }
       activeFilterCount={panelState.activeFilterCount}
       onReset={panelState.resetUserFilters}
     />
@@ -131,7 +137,25 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
       />
     </div>
   ) : (
-    <EventLogFeed items={resolved} />
+    <div className="flex min-h-0 flex-1 flex-col">
+      <EventLogFeed items={resolved} />
+      {hasMore ? (
+        <div className="flex justify-center px-space-3 pb-space-3">
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            onClick={() => {
+              void loadMore();
+            }}
+            isLoading={isFetchingMore}
+            disabled={isFetchingMore}
+          >
+            {EVENT_LOG_COPY.loadMore}
+          </Button>
+        </div>
+      ) : null}
+    </div>
   );
 
   if (layout === 'embedded') {
@@ -216,11 +240,26 @@ export const LabMonitorEventLogPanel: React.FC = () => (
   />
 );
 
-/** Auth, user-admin, and catalog events. Not mounted on a page yet. */
-export const SystemEventLogPanel: React.FC<{ className?: string }> = props => (
+/** Auth, user-admin, and catalog events. Mounted on User management. */
+export const SystemEventLogPanel: React.FC<{
+  className?: string;
+  layout?: EventLogPanelLayout;
+}> = props => (
   <EventLogPanel
     query={{ scope: 'system', limit: 500 }}
-    filterUi={{ fields: ['dateRange'] }}
+    filterUi={{ fields: ['dateRange', 'verbosity'] }}
+    layout={props.layout}
+    className={props.className}
+  />
+);
+
+/**
+ * Billing events for an order — payment and invoice rows on payment detail.
+ */
+export const BillingEventLogPanel: React.FC<{ orderId: number; className?: string }> = props => (
+  <EventLogPanel
+    query={{ scope: 'order', orderId: props.orderId, kinds: ['billing'], limit: 200 }}
+    filterUi={{ fields: [] }}
     className={props.className}
   />
 );

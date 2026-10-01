@@ -29,6 +29,11 @@ function settleInvalidations(tasks: Array<Promise<unknown>>): Promise<void> {
   return Promise.all(tasks).then(() => undefined);
 }
 
+/** Refresh event log feeds after mutations that emit audit rows. */
+export function invalidateAuditEventQueries(client: QueryClient): Promise<void> {
+  return client.invalidateQueries({ queryKey: queryKeys.auditEvents.all });
+}
+
 /** Lab tab badges read pipeline counts from the monitor board summary. */
 export function invalidateLabMonitorQueries(client: QueryClient): Promise<void> {
   return client.invalidateQueries({ queryKey: queryKeys.labMonitor.all });
@@ -50,6 +55,7 @@ export function invalidateOrderQueries(
 
   const tasks: Array<Promise<unknown>> = [
     client.invalidateQueries({ queryKey: queryKeys.orders.all }),
+    invalidateAuditEventQueries(client),
   ];
   if (orderIdStr) {
     tasks.push(client.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) }));
@@ -105,6 +111,7 @@ export function invalidateResultQueries(
     client.invalidateQueries({ queryKey: queryKeys.orders.all }),
     client.invalidateQueries({ queryKey: queryKeys.results.all }),
     invalidateWorklistQueries(client),
+    invalidateAuditEventQueries(client),
   ];
   if (orderIdStr) {
     tasks.push(client.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) }));
@@ -139,6 +146,7 @@ export function invalidateQualityIssueQueries(client: QueryClient): Promise<void
     client.invalidateQueries({ queryKey: queryKeys.qualityIssues.all }),
     client.invalidateQueries({ queryKey: queryKeys.recollectionRequests.all }),
     invalidateWorklistQueries(client),
+    invalidateAuditEventQueries(client),
   ]);
 }
 
@@ -146,6 +154,7 @@ export function invalidateRecollectionQueries(client: QueryClient): Promise<void
   return settleInvalidations([
     client.invalidateQueries({ queryKey: queryKeys.recollectionRequests.all }),
     invalidateWorklistQueries(client),
+    invalidateAuditEventQueries(client),
   ]);
 }
 
@@ -154,6 +163,7 @@ export function invalidateCollectionQueries(client: QueryClient): Promise<void> 
     client.invalidateQueries({ queryKey: queryKeys.samples.all }),
     client.invalidateQueries({ queryKey: queryKeys.orders.all }),
     invalidateWorklistQueries(client),
+    invalidateAuditEventQueries(client),
   ]);
 }
 export function invalidateLabMonitorQueriesFull(client: QueryClient): Promise<void> {

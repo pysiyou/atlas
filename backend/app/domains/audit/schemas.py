@@ -112,6 +112,7 @@ class AuditEventResponse(BaseModel):
     patientId: int | None = None
     orderId: int | None = None
     testId: int | None = None
+    eventScope: str | None = None
     changes: dict[str, Any] | None = None
     metadata: dict[str, Any] | None = None
 

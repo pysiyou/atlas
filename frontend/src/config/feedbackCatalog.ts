@@ -152,6 +152,11 @@ export type FeedbackId =
   | 'lab.qualityIssue.dialog.actions.cancel'
   | 'lab.qualityIssue.dialog.actions.cancelDescription'
   | 'lab.qualityIssue.dialog.actions.retestLimit'
+  | 'users.list.loadFailed'
+  | 'users.create.success'
+  | 'users.create.error'
+  | 'users.update.success'
+  | 'users.update.error'
   | 'lab.qualityIssue.dialog.actions.retestHint'
   | 'lab.qualityIssue.dialog.recollectBlocked'
   | 'lab.qualityIssue.dialog.trigger'
@@ -657,6 +662,31 @@ export const FEEDBACK_CATALOG: Record<FeedbackId, FeedbackEntry> = {
     channel: 'errorAlert',
     variant: 'danger',
     title: 'Failed to load data',
+  },
+  'users.list.loadFailed': {
+    channel: 'errorAlert',
+    variant: 'danger',
+    title: 'Failed to load users',
+  },
+  'users.create.success': {
+    channel: 'toast',
+    variant: 'success',
+    title: 'User created',
+  },
+  'users.create.error': {
+    channel: 'toast',
+    variant: 'error',
+    title: 'Failed to create user',
+  },
+  'users.update.success': {
+    channel: 'toast',
+    variant: 'success',
+    title: 'User updated',
+  },
+  'users.update.error': {
+    channel: 'toast',
+    variant: 'error',
+    title: 'Failed to update user',
   },
   'lab.page.loadFailed': {
     channel: 'errorAlert',

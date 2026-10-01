@@ -23,8 +23,12 @@ export function buildEventLogQuery(
     merged.createdTo = endOfDay(user.dateRange[1]).toISOString();
   }
 
-  if (user.includeAccess) {
+  if (user.includeAccess || user.verbosity === 'detailed' || user.verbosity === 'debug') {
     merged.includeAccess = true;
+  }
+
+  if (user.verbosity && user.verbosity !== 'summary') {
+    merged.verbosity = user.verbosity;
   }
 
   const canUpgradeStream = fixed.scope === 'stream';
@@ -61,6 +65,10 @@ export function eventLogQueryKeyParams(
     createdTo: query.createdTo,
     kinds: query.kinds?.length ? query.kinds.join(',') : undefined,
     includeAccess: query.includeAccess ? 'true' : undefined,
+    eventScope: query.eventScope,
+    cursorCreatedAt: query.cursorCreatedAt,
+    cursorEventId: query.cursorEventId,
+    verbosity: query.verbosity,
     limit: query.limit,
   };
 }

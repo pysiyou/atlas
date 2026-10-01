@@ -16,6 +16,9 @@ export interface AuditEventQueryParams {
   /** Comma-separated kind keys */
   kinds?: string;
   includeAccess?: boolean;
+  eventScope?: string;
+  cursorCreatedAt?: string;
+  cursorEventId?: string;
   limit?: number;
 }
 
@@ -76,6 +79,7 @@ export function normalizeAuditEvent(raw: Record<string, unknown>): EventLogRecor
     patientId: (raw.patientId ?? raw.patient_id) as number | null | undefined,
     orderId: (raw.orderId ?? raw.order_id) as number | null | undefined,
     testId: (raw.testId ?? raw.test_id) as number | null | undefined,
+    eventScope: (raw.eventScope ?? raw.event_scope) as string | null | undefined,
     changes: normalizeChanges(raw.changes),
     metadata,
   };
@@ -93,6 +97,9 @@ function toQueryRecord(params: AuditEventQueryParams): Record<string, string> {
   if (params.createdTo) out.createdTo = params.createdTo;
   if (params.kinds) out.kinds = params.kinds;
   if (params.includeAccess) out.includeAccess = 'true';
+  if (params.eventScope) out.eventScope = params.eventScope;
+  if (params.cursorCreatedAt) out.cursorCreatedAt = params.cursorCreatedAt;
+  if (params.cursorEventId) out.cursorEventId = params.cursorEventId;
   if (params.limit != null) out.limit = String(params.limit);
   return out;
 }

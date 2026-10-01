@@ -22,8 +22,8 @@ from app.domains.orders.schemas import (
 )
 from app.domains.patients.models import Patient
 from app.domains.patients.schemas import PatientResponse
-from app.domains.payments.schemas import PaymentResponse
-from app.domains.payments.service import enrich_payment
+from app.domains.payments.schemas import PaymentCreate, PaymentResponse
+from app.domains.payments.service import PaymentService, enrich_payment
 from app.platform.utils.common import get_or_404
 from app.shared.contracts.enums import (
     OrderStatus,
@@ -517,30 +517,26 @@ class OrderService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Order {order_id} not found",
             )
-        order.paymentStatus = payment_status
         if amount_paid is not None and amount_paid > 0:
-            payment_record = Payment(
-                orderId=order_id,
-                invoiceId=None,
-                amount=amount_paid,
-                paymentMethod=PaymentMethod.CASH,
-                paidAt=datetime.now(UTC),
-                createdBy=str(user_id),
-                receiptGenerated=False,
-                notes="",
-            )
-            self.db.add(payment_record)
-            self.db.flush()
-            self.emitter.payment_processed(
-                order_id,
-                payment_record.paymentId,
+            # Single emit path: PaymentService.create_payment writes billing.payment.process.
+            PaymentService(self.db).create_payment(
+                PaymentCreate(
+                    orderId=order_id,
+                    amount=amount_paid,
+                    paymentMethod=PaymentMethod.CASH,
+                    notes="",
+                ),
                 user_id,
-                metadata={
-                    "amount": amount_paid,
-                    "payment_method": PaymentMethod.CASH.value,
-                    "payment_status": payment_status.value,
-                },
             )
+            order = self._order_with_relations(order_id)
+            if order.paymentStatus != payment_status:
+                order.paymentStatus = payment_status
+                order.updatedAt = datetime.now(UTC)
+                self.db.commit()
+                order = self._order_with_relations(order_id)
+            return self._order_response_with_lab(order)
+
+        order.paymentStatus = payment_status
         order.updatedAt = datetime.now(UTC)
         self.db.commit()
         self.db.refresh(order)

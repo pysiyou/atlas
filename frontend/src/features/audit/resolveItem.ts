@@ -121,6 +121,7 @@ function pickResultFlags(record: EventLogRecord): string[] | undefined {
 
 export interface ResolveEventLogOptions {
   showEventTypeInMeta?: boolean;
+  includeDebugPayload?: boolean;
   getTestName?: TestNameLookup;
   getPatientName?: PatientNameLookup;
 }
@@ -158,6 +159,16 @@ export function resolveEventLogItem(
     narrativeText: note?.text,
     results: results ?? undefined,
     resultFlags,
+    debugPayload: options?.includeDebugPayload
+      ? {
+          eventType: record.eventType,
+          eventScope: record.eventScope ?? undefined,
+          targetType: record.targetType,
+          targetId: record.targetId,
+          metadata: record.metadata ?? undefined,
+          changes: record.changes ?? undefined,
+        }
+      : undefined,
     isSystemActor: system,
     omitActorInHeadline: built.omitActorPrefix,
   };

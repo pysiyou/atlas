@@ -4,10 +4,11 @@ import { EmptyState } from '@/components/display/EmptyState';
 import { InlineHighlight } from '@/components/primitives/InlineHighlight';
 import { RADIUS, TYPE } from '@/components/theme/recipes';
 import { ICONS } from '@/config/icons';
-import { getLaneVisual, parseResultEntry, statusMapFromFlags, type LabTimelineLane } from '@/features/lab';
+import { getLaneVisual, type LabTimelineLane } from '@/features/lab';
 import { parseAppDate } from '@/utils/date';
 import { cn } from '@/utils';
 import { EVENT_LOG_COPY } from './types';
+import { EventLogDetailBox } from './EventLogFeedDetails';
 import type {
   EventLogDayGroup,
   EventLogDomain,
@@ -36,14 +37,6 @@ const EVENT_LOG_STYLES = {
   headlinePrimary: 'font-medium text-text-primary',
   headlineSecondary: 'text-text-secondary',
   meta: `${TYPE.meta} text-text-tertiary`,
-  detailSection: `${RADIUS.inset} space-y-space-0-5 bg-surface-hover px-space-2 py-space-2`,
-  detailTitle: `${TYPE.caption} leading-tight font-normal`,
-  detailBody: `${TYPE.value} leading-relaxed font-normal m-0`,
-  detailContentClamp: 'line-clamp-2 min-w-0 break-words',
-  detailResults: `${TYPE.value} leading-relaxed font-normal min-w-0 line-clamp-2 break-words`,
-  detailLine: 'inline whitespace-nowrap',
-  detailLineLabel: 'text-text-tertiary lowercase',
-  detailLineValue: 'text-text-primary',
   rowList:
     '[&>*:first-child_.event-log-spine-stem-top]:hidden [&>*:last-child_.event-log-spine-stem-bottom]:hidden [&>*:last-child_.event-log-content]:pb-0',
 } as const;
@@ -105,6 +98,8 @@ function laneForDomain(
         return 'escalation';
       case 'analyzer':
         return 'results';
+      case 'quality':
+        return 'validation';
     }
   }
   switch (domain) {
@@ -123,39 +118,6 @@ function laneForDomain(
   }
 }
 
-function EventLogResultsList({
-  results,
-  flags,
-}: {
-  results: Record<string, unknown>;
-  flags?: string[];
-}) {
-  const flagStatusMap = useMemo(() => statusMapFromFlags(flags), [flags]);
-  const entries = Object.entries(results ?? {});
-
-  if (entries.length === 0) {
-    return null;
-  }
-
-  return (
-    <div className={EVENT_LOG_STYLES.detailResults}>
-      {entries.map(([key, rawValue], index) => {
-        const { resultValue, unit } = parseResultEntry(key, rawValue, flagStatusMap);
-        const valueLabel = unit ? `${resultValue} ${unit}` : resultValue;
-        return (
-          <span
-            key={key}
-            className={cn(EVENT_LOG_STYLES.detailLine, index < entries.length - 1 && 'mr-space-4')}
-          >
-            <span className={EVENT_LOG_STYLES.detailLineLabel}>{key}: </span>
-            <span className={EVENT_LOG_STYLES.detailLineValue}>{valueLabel}</span>
-          </span>
-        );
-      })}
-    </div>
-  );
-}
-
 function EventLogSpineNode({ item }: { item: ResolvedEventLogItem }) {
   const lane = laneForDomain(item.domain, item.laboratorySubdomain);
   const visual = getLaneVisual(lane);
@@ -168,35 +130,6 @@ function EventLogSpineNode({ item }: { item: ResolvedEventLogItem }) {
       )}
       aria-hidden
     />
-  );
-}
-
-function EventLogDetailBox({ item }: { item: ResolvedEventLogItem }) {
-  const { narrativeLabel, narrativeText, results, resultFlags } = item;
-  const hasResults = results && Object.keys(results).length > 0;
-  const hasNote = Boolean(narrativeText?.trim());
-
-  if (!hasResults && !hasNote) return null;
-
-  return (
-    <>
-      {hasResults ? (
-        <div className={EVENT_LOG_STYLES.detailSection}>
-          <div className={EVENT_LOG_STYLES.detailTitle}>{EVENT_LOG_COPY.resultTitle}</div>
-          <EventLogResultsList results={results!} flags={resultFlags} />
-        </div>
-      ) : null}
-      {hasNote ? (
-        <div className={EVENT_LOG_STYLES.detailSection}>
-          <div className={EVENT_LOG_STYLES.detailTitle}>
-            {narrativeLabel ?? EVENT_LOG_COPY.narrativeDefaultLabel}
-          </div>
-          <p className={cn(EVENT_LOG_STYLES.detailBody, EVENT_LOG_STYLES.detailContentClamp)}>
-            {narrativeText}
-          </p>
-        </div>
-      ) : null}
-    </>
   );
 }
 

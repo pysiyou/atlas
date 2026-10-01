@@ -86,16 +86,29 @@ export function SidebarNav({ menuItems, settingsItems, onNavigate }: SidebarNavP
           </div>
           <SectionTitle>Settings</SectionTitle>
           <div className={CHROME.navList} role="group" aria-label="Settings">
-            {settingsItems.map((item, index) => (
-              <button
-                key={index}
-                type="button"
-                disabled
-                className={cn(CHROME.navItem, navRowReset, 'cursor-not-allowed')}
-              >
-                <NavRowBody icon={item.icon} label={item.label} interactive={false} />
-              </button>
-            ))}
+            {settingsItems.map((item, index) =>
+              item.path ? (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  onClick={handleNavClick}
+                  className={cn(CHROME.navItem, navRowReset)}
+                >
+                  {({ isActive }) => (
+                    <NavRowBody icon={item.icon} label={item.label} isActive={isActive} />
+                  )}
+                </NavLink>
+              ) : (
+                <button
+                  key={index}
+                  type="button"
+                  disabled
+                  className={cn(CHROME.navItem, navRowReset, 'cursor-not-allowed')}
+                >
+                  <NavRowBody icon={item.icon} label={item.label} interactive={false} />
+                </button>
+              )
+            )}
           </div>
         </>
       )}

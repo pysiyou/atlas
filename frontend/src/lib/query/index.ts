@@ -19,6 +19,7 @@ export {
   invalidateLabMonitorQueriesFull,
   invalidateLabWorkflowQueries,
   invalidateWorklistQueries,
+  invalidateAuditEventQueries,
   invalidateSampleDetailQueries,
   useInvalidateQueryKey,
 } from './invalidate';
