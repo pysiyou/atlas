@@ -18,15 +18,16 @@ import type {
   EventLogUserFilters,
 } from './types';
 
-const ALL_FILTER_FIELDS: EventLogFilterField[] = [
-  'entityId',
+/** Global Event Log page — simplified filter bar. */
+export const GLOBAL_EVENT_LOG_FILTER_FIELDS: EventLogFilterField[] = [
+  'search',
   'dateRange',
   'kind',
   'actorRole',
-  'actorSearch',
-  'verbosity',
-  'includeAccess',
 ];
+
+/** @deprecated Prefer GLOBAL_EVENT_LOG_FILTER_FIELDS on the global page. */
+const ALL_FILTER_FIELDS: EventLogFilterField[] = GLOBAL_EVENT_LOG_FILTER_FIELDS;
 
 export type EventLogPanelLayout = 'standalone' | 'embedded';
 
@@ -128,6 +129,8 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
       onActorSearchChange={actorSearch =>
         panelState.setUserFilters(prev => ({ ...prev, actorSearch }))
       }
+      search={panelState.userFilters.search}
+      onSearchChange={search => panelState.setUserFilters(prev => ({ ...prev, search }))}
       activeFilterCount={panelState.activeFilterCount}
       onReset={panelState.resetUserFilters}
     />
@@ -237,7 +240,7 @@ export const PatientEventLogPanel: React.FC<{
 }> = props => (
   <EventLogPanel
     query={{ scope: 'patient', patientId: props.patientId, limit: 200 }}
-    filterUi={{ fields: ['includeAccess', 'dateRange'] }}
+    filterUi={{ fields: ['dateRange'] }}
     className={props.className}
   />
 );
@@ -257,7 +260,7 @@ export const SystemEventLogPanel: React.FC<{
 }> = props => (
   <EventLogPanel
     query={{ scope: 'system', limit: 500 }}
-    filterUi={{ fields: ['dateRange', 'actorRole', 'actorSearch', 'verbosity'] }}
+    filterUi={{ fields: ['dateRange', 'actorRole', 'actorSearch'] }}
     layout={props.layout}
     className={props.className}
   />

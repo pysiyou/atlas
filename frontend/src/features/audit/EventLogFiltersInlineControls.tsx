@@ -35,6 +35,7 @@ export const EVENT_LOG_FILTER_PLACEHOLDERS = {
   verbosity: 'Detail level',
   actorRole: 'Actor role',
   actorSearch: 'Username or name…',
+  search: 'ORD, PAT, TST, SAM, name…',
 } as const;
 
 export interface EventLogFiltersInlineControlsProps {
@@ -55,6 +56,8 @@ export interface EventLogFiltersInlineControlsProps {
   onActorRolesChange: (values: UserRole[]) => void;
   actorSearch: string;
   onActorSearchChange: (value: string) => void;
+  search: string;
+  onSearchChange: (value: string) => void;
 }
 
 function renderFieldControl(
@@ -65,6 +68,16 @@ function renderFieldControl(
   if (!show(field)) return null;
 
   switch (field) {
+    case 'search':
+      return (
+        <div key={field} className="flex h-9 w-full flex-col justify-center">
+          <DebouncedSearchInput
+            value={props.search}
+            onChange={props.onSearchChange}
+            placeholder={EVENT_LOG_FILTER_PLACEHOLDERS.search}
+          />
+        </div>
+      );
     case 'entityId':
       if (!props.onEntityIdInputChange) return null;
       return (

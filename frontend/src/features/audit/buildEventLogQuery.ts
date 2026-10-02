@@ -23,12 +23,17 @@ export function buildEventLogQuery(
     merged.createdTo = endOfDay(user.dateRange[1]).toISOString();
   }
 
-  if (user.includeAccess || user.verbosity === 'detailed' || user.verbosity === 'debug') {
+  if (user.includeAccess) {
     merged.includeAccess = true;
   }
 
   if (user.verbosity && user.verbosity !== 'summary') {
     merged.verbosity = user.verbosity;
+  }
+
+  const searchTrimmed = user.search.trim();
+  if (searchTrimmed && !fixed.search) {
+    merged.search = searchTrimmed;
   }
 
   if (user.actorRoles.length > 0 && !fixed.actorRoles?.length) {
@@ -40,7 +45,7 @@ export function buildEventLogQuery(
     merged.actorSearch = actorSearchTrimmed;
   }
 
-  const canUpgradeStream = fixed.scope === 'stream';
+  const canUpgradeStream = fixed.scope === 'stream' && !merged.search;
   if (canUpgradeStream) {
     if (user.orderId != null) {
       merged.scope = 'order';
@@ -80,6 +85,7 @@ export function eventLogQueryKeyParams(
     actorId: query.actorId,
     actorRoles: query.actorRoles?.length ? query.actorRoles.join(',') : undefined,
     actorSearch: query.actorSearch,
+    search: query.search,
     verbosity: query.verbosity,
     limit: query.limit,
   };

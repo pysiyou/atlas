@@ -85,6 +85,14 @@ def list_audit_events(
         max_length=100,
         description="Partial match on actor display name (snapshot) or account username",
     ),
+    search: str | None = Query(
+        None,
+        max_length=100,
+        description=(
+            "Unified stream search: ORD/TST/SAM/PAT display ids, numeric ids, "
+            "patient name, actor name, or username"
+        ),
+    ),
     limit: int = Query(500, ge=1, le=2000),
     db: Session = Depends(get_db),
     _current_user: User = Depends(get_current_user),
@@ -110,9 +118,12 @@ def list_audit_events(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail=str(exc),
             ) from exc
-    search_term = actor_search.strip() if actor_search else None
-    if search_term == "":
-        search_term = None
+    actor_search_term = actor_search.strip() if actor_search else None
+    if actor_search_term == "":
+        actor_search_term = None
+    unified_search = search.strip() if search else None
+    if unified_search == "":
+        unified_search = None
     return service.list_filtered(
         scope=scope,
         order_id=order_id,
@@ -129,6 +140,7 @@ def list_audit_events(
         cursor_event_id=cursor_event_id,
         actor_id=actor_id,
         actor_roles=role_keys or None,
-        actor_search=search_term,
+        actor_search=actor_search_term,
+        search=unified_search,
         limit=limit,
     )

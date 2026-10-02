@@ -30,6 +30,8 @@ export interface EventLogFiltersProps {
   onActorRolesChange: (values: UserRole[]) => void;
   actorSearch: string;
   onActorSearchChange: (value: string) => void;
+  search: string;
+  onSearchChange: (value: string) => void;
   activeFilterCount: number;
   onReset: () => void;
 }
@@ -47,6 +49,8 @@ const inlineActorProps = (props: EventLogFiltersProps) => ({
   onActorRolesChange: props.onActorRolesChange,
   actorSearch: props.actorSearch,
   onActorSearchChange: props.onActorSearchChange,
+  search: props.search,
+  onSearchChange: props.onSearchChange,
 });
 
 export const EventLogFilters: React.FC<EventLogFiltersProps> = props => {
@@ -63,9 +67,22 @@ export const EventLogFilters: React.FC<EventLogFiltersProps> = props => {
     props.visibleFields.includes('actorRole') && !props.lockedFields.has('actorRole');
   const showActorSearch =
     props.visibleFields.includes('actorSearch') && !props.lockedFields.has('actorSearch');
+  const showSearch =
+    props.visibleFields.includes('search') && !props.lockedFields.has('search');
 
   const modalExtras = (
     <>
+      {showSearch ? (
+        <div className="w-full">
+          <h4 className={FILTER_TYPE.sectionTitle}>Search</h4>
+          <DebouncedSearchInput
+            value={props.search}
+            onChange={props.onSearchChange}
+            placeholder={EVENT_LOG_FILTER_PLACEHOLDERS.search}
+          />
+          <div className="mt-space-4 border-b border-border-default" />
+        </div>
+      ) : null}
       {showEntity && props.onEntityIdInputChange ? (
         <div className="w-full">
           <h4 className={FILTER_TYPE.sectionTitle}>Entity ID</h4>
@@ -152,6 +169,8 @@ export const EventLogFilters: React.FC<EventLogFiltersProps> = props => {
           onActorRolesChange={props.onActorRolesChange}
           actorSearch={props.actorSearch}
           onActorSearchChange={props.onActorSearchChange}
+          search={props.search}
+          onSearchChange={props.onSearchChange}
         />
       }
     />

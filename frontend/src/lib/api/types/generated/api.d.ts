@@ -3306,6 +3306,8 @@ export interface operations {
                 actorRoles?: string | null;
                 /** @description Partial match on actor display name (snapshot) or account username */
                 actorSearch?: string | null;
+                /** @description Unified stream search: ORD/TST/SAM/PAT display ids, numeric ids, patient name, actor name, or username */
+                search?: string | null;
                 limit?: number;
             };
             header?: never;
