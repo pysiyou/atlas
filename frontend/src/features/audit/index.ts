@@ -22,6 +22,7 @@ export {
   SystemEventLogPanel,
   BillingEventLogPanel,
   ALL_FILTER_FIELDS,
+  GLOBAL_EVENT_LOG_FILTER_FIELDS,
   type EventLogPanelLayout,
 } from './EventLogPanel';
 export { useEventLog } from './useEventLog';

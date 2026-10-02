@@ -106,13 +106,14 @@ function AttentionFeedRow({ item }: { item: LabAttentionQueueItem }) {
           aria-hidden
         />
         <div className="min-w-0 flex-1 space-y-space-1.5">
-          <div className="flex min-w-0 flex-wrap items-center gap-x-space-2 gap-y-space-1">
+          <div className="flex min-w-0 items-start justify-between gap-x-space-2 gap-y-space-1">
+            <span className={cn(MONITOR_FEED_STYLES.eventHeadline, 'min-w-0')}>{formatted.action}</span>
             <Badge
               variant={resolveStatusBadgeColor(typeConfig.badgeVariant)}
               label={typeConfig.pillLabel}
               size="xs"
+              className="shrink-0"
             />
-            <span className={MONITOR_FEED_STYLES.eventHeadline}>{formatted.action}</span>
           </div>
           <AttentionDetailRow details={identityDetails} />
           <AttentionDetailRow details={contextDetails} />

@@ -5,7 +5,7 @@
 import React from 'react';
 import { PageHeader } from '@/components';
 import { PANEL, WORKSPACE } from '@/components/theme/recipes';
-import { EventLogPanel, ALL_FILTER_FIELDS } from '../EventLogPanel';
+import { EventLogPanel, GLOBAL_EVENT_LOG_FILTER_FIELDS } from '../EventLogPanel';
 import { EVENT_LOG_COPY } from '../types';
 
 export const EventLogPage: React.FC = () => {
@@ -17,7 +17,7 @@ export const EventLogPage: React.FC = () => {
           <EventLogPanel
             layout="embedded"
             query={{ scope: 'stream', limit: 2000 }}
-            filterUi={{ fields: ALL_FILTER_FIELDS }}
+            filterUi={{ fields: GLOBAL_EVENT_LOG_FILTER_FIELDS }}
           />
         </div>
       </div>

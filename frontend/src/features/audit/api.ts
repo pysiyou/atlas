@@ -22,6 +22,7 @@ export interface AuditEventQueryParams {
   actorId?: number;
   actorRoles?: string;
   actorSearch?: string;
+  search?: string;
   limit?: number;
 }
 
@@ -106,6 +107,7 @@ function toQueryRecord(params: AuditEventQueryParams): Record<string, string> {
   if (params.actorId != null) out.actorId = String(params.actorId);
   if (params.actorRoles) out.actorRoles = params.actorRoles;
   if (params.actorSearch) out.actorSearch = params.actorSearch;
+  if (params.search) out.search = params.search;
   if (params.limit != null) out.limit = String(params.limit);
   return out;
 }

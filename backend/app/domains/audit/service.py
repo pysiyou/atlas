@@ -13,10 +13,10 @@ from typing import Any
 from uuid import UUID, uuid4
 
 from app.domains.audit.kinds import (
-    ACCESS_EVENT_TYPES,
     kinds_to_prefixes,
     stored_event_scope_for_type,
 )
+from app.domains.audit.search import access_event_types_to_hide, apply_unified_search
 from app.domains.audit.models import AuditEvent
 from app.domains.audit.schemas import (
     AuditEventCreate,
@@ -357,6 +357,7 @@ class AuditEventQueryService:
         actor_id: int | None = None,
         actor_roles: list[str] | None = None,
         actor_search: str | None = None,
+        search: str | None = None,
         limit: int = 500,
     ) -> list[AuditEventResponse]:
         """
@@ -367,6 +368,7 @@ class AuditEventQueryService:
         unless include_access is true. Newest-first cursor uses createdAt + eventId.
         Optional actor_id restricts rows to a single user.
         actor_roles filters actor_snapshot.role; actor_search matches snapshot name or user username.
+        search matches entity ids, patient name, and actor name/username on stream scope.
         """
         limit = min(max(limit, 1), 2000)
         query = self.db.query(AuditEvent)
@@ -410,8 +412,16 @@ class AuditEventQueryService:
                     or_(name_match, User.username.ilike(pattern))
                 )
 
-        if not include_access and scope in ("stream", "patient"):
-            query = query.filter(AuditEvent.eventType.notin_(ACCESS_EVENT_TYPES))
+        if search:
+            query = apply_unified_search(query, search, scope=scope)
+
+        hidden_access = access_event_types_to_hide(
+            scope=scope,
+            kinds=kinds,
+            include_access=include_access,
+        )
+        if hidden_access:
+            query = query.filter(AuditEvent.eventType.notin_(hidden_access))
 
         if cursor_created_at is not None and cursor_event_id is not None:
             query = query.filter(
@@ -450,6 +460,7 @@ class AuditEventQueryService:
         actor_id: int | None = None,
         actor_roles: list[str] | None = None,
         actor_search: str | None = None,
+        search: str | None = None,
         limit: int = 500,
     ) -> list[AuditEventResponse]:
         since = created_from
@@ -471,6 +482,7 @@ class AuditEventQueryService:
             actor_id=actor_id,
             actor_roles=actor_roles,
             actor_search=actor_search,
+            search=search,
             limit=limit,
         )
 

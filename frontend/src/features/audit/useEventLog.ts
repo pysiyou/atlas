@@ -38,6 +38,9 @@ function queryToApiParams(query: EventLogQuery): AuditEventQueryParams {
   if (query.actorSearch) {
     params.actorSearch = query.actorSearch;
   }
+  if (query.search) {
+    params.search = query.search;
+  }
   return params;
 }
 

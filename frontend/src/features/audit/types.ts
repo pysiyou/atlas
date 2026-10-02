@@ -135,6 +135,8 @@ export interface EventLogQuery {
   actorRoles?: UserRole[];
   /** Partial match on actor display name or account username. */
   actorSearch?: string;
+  /** Unified search: entity ids, patient name, actor name/username. */
+  search?: string;
   /** Display ladder: summary / detailed / debug. */
   verbosity?: EventLogVerbosity;
   limit?: number;
@@ -143,6 +145,7 @@ export interface EventLogQuery {
 export type EventLogFilterField =
   | 'kind'
   | 'dateRange'
+  | 'search'
   | 'entityId'
   | 'actorRole'
   | 'actorSearch'
@@ -160,6 +163,7 @@ export interface EventLogUserFilters {
   verbosity: EventLogVerbosity;
   actorRoles: UserRole[];
   actorSearch: string;
+  search: string;
   orderId: number | null;
   testId: number | null;
   sampleId: number | null;
@@ -173,6 +177,7 @@ export const DEFAULT_EVENT_LOG_USER_FILTERS: EventLogUserFilters = {
   verbosity: 'summary',
   actorRoles: [],
   actorSearch: '',
+  search: '',
   orderId: null,
   testId: null,
   sampleId: null,

@@ -37,6 +37,8 @@ function isFieldLocked(field: EventLogFilterField, query: EventLogQuery): boolea
       return Boolean(query.actorRoles?.length);
     case 'actorSearch':
       return Boolean(query.actorSearch?.trim());
+    case 'search':
+      return Boolean(query.search?.trim());
     case 'verbosity':
       return query.verbosity != null && query.verbosity !== 'summary';
   }
@@ -105,6 +107,7 @@ export function useEventLogPanelState({
     (effectiveUserFilters.includeAccess ? 1 : 0) +
     (effectiveUserFilters.actorRoles.length > 0 ? 1 : 0) +
     (effectiveUserFilters.actorSearch.trim().length > 0 ? 1 : 0) +
+    (effectiveUserFilters.search.trim().length > 0 ? 1 : 0) +
     (effectiveUserFilters.verbosity !== 'summary' ? 1 : 0);
 
   const resetUserFilters = () => {
