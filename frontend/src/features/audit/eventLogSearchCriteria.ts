@@ -3,6 +3,7 @@
  */
 import type { IconName } from '@/components';
 import { ICONS } from '@/config/icons';
+import { formatDisplayId } from '@/utils/id';
 import { EVENT_LOG_COPY } from './types';
 import type {
   EventLogSearchDimension,
@@ -15,6 +16,8 @@ export interface EventLogSearchCriterion {
   icon: IconName;
   title: string;
   detail: string;
+  /** Value written into the search field when this row is selected. */
+  searchValue: string;
   emphasis?: string;
 }
 
@@ -58,6 +61,7 @@ export function getEventLogSearchCriteria(intent: EventLogSearchIntent): EventLo
         icon: ICONS.dataFields.document,
         title: `${EVENT_LOG_COPY.searchIntentOrder} ${intent.displayToken}`,
         detail: EVENT_LOG_COPY.searchIntentOrderDetail,
+        searchValue: intent.displayToken,
         emphasis: intent.displayToken,
       },
     ];
@@ -69,6 +73,7 @@ export function getEventLogSearchCriteria(intent: EventLogSearchIntent): EventLo
         icon: ICONS.dataFields.testId,
         title: `${EVENT_LOG_COPY.searchIntentTest} ${intent.displayToken}`,
         detail: EVENT_LOG_COPY.searchIntentTestDetail,
+        searchValue: intent.displayToken,
         emphasis: intent.displayToken,
       },
     ];
@@ -80,6 +85,7 @@ export function getEventLogSearchCriteria(intent: EventLogSearchIntent): EventLo
         icon: ICONS.dataFields.sampleId,
         title: `${EVENT_LOG_COPY.searchIntentSample} ${intent.displayToken}`,
         detail: EVENT_LOG_COPY.searchIntentSampleDetail,
+        searchValue: intent.displayToken,
         emphasis: intent.displayToken,
       },
     ];
@@ -91,39 +97,53 @@ export function getEventLogSearchCriteria(intent: EventLogSearchIntent): EventLo
         icon: ICONS.dataFields.patientId,
         title: `${EVENT_LOG_COPY.searchIntentPatient} ${intent.displayToken}`,
         detail: EVENT_LOG_COPY.searchIntentPatientDetail,
+        searchValue: intent.displayToken,
         emphasis: intent.displayToken,
       },
     ];
   }
   if (intent.mode === 'numeric' && intent.textTerm) {
     const term = intent.textTerm;
+    const numeric = Number.parseInt(term, 10);
     return [
       {
         key: 'numeric-order',
         icon: ICONS.dataFields.orderId,
-        title: EVENT_LOG_COPY.searchIntentNumeric,
+        title: `${EVENT_LOG_COPY.searchIntentOrder} ${formatDisplayId('order', numeric)}`,
         detail: EVENT_LOG_COPY.searchIntentNumericOrderDetail,
+        searchValue: formatDisplayId('order', numeric),
         emphasis: term,
       },
       {
         key: 'numeric-patient',
         icon: ICONS.dataFields.patientId,
-        title: EVENT_LOG_COPY.searchIntentNumeric,
+        title: `${EVENT_LOG_COPY.searchIntentPatient} ${formatDisplayId('patient', numeric)}`,
         detail: EVENT_LOG_COPY.searchIntentNumericPatientDetail,
+        searchValue: formatDisplayId('patient', numeric),
         emphasis: term,
       },
       {
         key: 'numeric-test',
         icon: ICONS.dataFields.testId,
-        title: EVENT_LOG_COPY.searchIntentNumeric,
+        title: `${EVENT_LOG_COPY.searchIntentTest} ${formatDisplayId('orderTest', numeric)}`,
         detail: EVENT_LOG_COPY.searchIntentNumericTestDetail,
+        searchValue: formatDisplayId('orderTest', numeric),
+        emphasis: term,
+      },
+      {
+        key: 'numeric-sample',
+        icon: ICONS.dataFields.sampleId,
+        title: `${EVENT_LOG_COPY.searchIntentSample} ${formatDisplayId('sample', numeric)}`,
+        detail: EVENT_LOG_COPY.searchIntentSampleDetail,
+        searchValue: formatDisplayId('sample', numeric),
         emphasis: term,
       },
       {
         key: 'numeric-target',
-        icon: ICONS.dataFields.orderId,
-        title: EVENT_LOG_COPY.searchIntentNumeric,
+        icon: ICONS.dataFields.sampleId,
+        title: `${EVENT_LOG_COPY.searchIntentNumericTargetTitle} “${term}”`,
         detail: EVENT_LOG_COPY.searchIntentNumericTargetDetail,
+        searchValue: term,
         emphasis: term,
       },
     ];
@@ -135,6 +155,7 @@ export function getEventLogSearchCriteria(intent: EventLogSearchIntent): EventLo
     icon: DIMENSION_ICONS[dim],
     title: `${DIMENSION_COPY[dim].title} contains “${term}”`,
     detail: DIMENSION_COPY[dim].detail,
+    searchValue: term,
     emphasis: term,
   }));
 }
