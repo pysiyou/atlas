@@ -123,7 +123,7 @@ export function createTestsTableConfig(
     },
     updatedAt: {
       key: 'updatedAt',
-      header: 'Updated',
+      header: 'Date',
       width: 'lg' as const,
       accessor: (test: OrderTest) => test.updatedAt ?? '',
       render: (test: OrderTest) => renderDateTimeCell(test.updatedAt),

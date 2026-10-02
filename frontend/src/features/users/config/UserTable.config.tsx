@@ -90,8 +90,8 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
     },
     lastLogin: {
       key: 'lastLogin',
-      header: 'Last login',
-      width: 'md' as const,
+      header: 'Last Login',
+      width: 'lg' as const,
       sortable: true,
       accessor: (user: UserAdminRecord) => user.loggedInAt ?? '',
       render: (user: UserAdminRecord) => (
@@ -103,7 +103,7 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
     created: {
       key: 'created',
       header: 'Created',
-      width: 'md' as const,
+      width: 'lg' as const,
       sortable: true,
       accessor: (user: UserAdminRecord) => user.createdAt,
       render: (user: UserAdminRecord) => (

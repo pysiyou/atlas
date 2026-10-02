@@ -2,6 +2,10 @@ import type { NavigateFunction } from 'react-router-dom';
 import type { TableViewConfig } from '@/components';
 import { buildViews, type CardComponentProps } from '@/components/data-table';
 import {
+  ORDER_TABLE_VIEW_KEYS,
+  ORDER_TABLE_VIEW_KEYS_WITHOUT_PATIENT,
+} from '../constants/orderTableColumns';
+import {
   createOrderSharedColumns,
   renderOrderId,
   renderOrderTestsBlock,
@@ -9,28 +13,6 @@ import {
 import { getActiveTests } from '../utils/orderCalculator';
 import type { Order } from '@/types';
 import { OrderTableCard } from '../components/OrderTableCard';
-
-/** Identity → clinical → status → billing (left to right). */
-const ORDER_VIEWS = {
-  full: [
-    'orderId',
-    'patientName',
-    'orderDate',
-    'tests',
-    'priority',
-    'overallStatus',
-    'paymentStatus',
-    'totalPrice',
-  ],
-  medium: ['orderId', 'patientName', 'orderDate', 'tests', 'overallStatus', 'totalPrice'],
-  compact: ['orderId', 'patientName', 'orderDate', 'overallStatus', 'totalPrice'],
-} as const;
-
-const ORDER_VIEWS_WITHOUT_PATIENT = {
-  full: ORDER_VIEWS.full.filter(key => key !== 'patientName'),
-  medium: ORDER_VIEWS.medium.filter(key => key !== 'patientName'),
-  compact: ORDER_VIEWS.compact.filter(key => key !== 'patientName'),
-} as const;
 
 const ORDER_LIST_WIDTH_OVERRIDES = {
   full: {
@@ -94,23 +76,6 @@ export const createOrderTableConfig = (
 
   const columnMap = {
     ...shared,
-    orderId: {
-      ...shared.orderId,
-      header: 'Order',
-    },
-    orderDate: {
-      ...shared.orderDate,
-      header: 'Ordered',
-    },
-    priority: {
-      ...shared.priority,
-    },
-    overallStatus: {
-      ...shared.overallStatus,
-    },
-    paymentStatus: {
-      ...shared.paymentStatus,
-    },
     tests: {
       ...shared.tests,
       render: (order: Order) => {
@@ -125,13 +90,9 @@ export const createOrderTableConfig = (
         });
       },
     },
-    totalPrice: {
-      ...shared.totalPrice,
-      header: 'Total',
-    },
   };
 
-  const views = hidePatientName ? ORDER_VIEWS_WITHOUT_PATIENT : ORDER_VIEWS;
+  const views = hidePatientName ? ORDER_TABLE_VIEW_KEYS_WITHOUT_PATIENT : ORDER_TABLE_VIEW_KEYS;
 
   const CardComponent = hidePatientName
     ? function PatientContextOrderCard(props: CardComponentProps<Order>) {

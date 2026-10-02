@@ -41,6 +41,13 @@ export * from './utils/orderTimelineUtils';
 export * from './utils/orderCalculator';
 export { formInputToPayload, orderToFormInput } from './utils/formTransformers';
 export {
+  ORDER_TABLE_COLUMN_HEADERS,
+  ORDER_TABLE_VIEW_KEYS,
+  ORDER_TABLE_VIEW_KEYS_WITHOUT_PATIENT,
+  ORDER_TABLE_VIEW_KEYS_PAYMENT,
+} from './constants/orderTableColumns';
+export type { PaymentTableViewKey } from './constants/orderTableColumns';
+export {
   createOrderSharedColumns,
   type OrderColumnAccessors,
   type OrderColumnRenderers,
