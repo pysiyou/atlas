@@ -109,6 +109,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/audit/search-preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Audit Search Preview
+         * @description Preview how unified event-log search interprets a query string.
+         */
+        get: operations["audit_search_preview_api_v1_audit_search_preview_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/audit/events": {
         parameters: {
             query?: never;
@@ -1247,6 +1267,57 @@ export interface components {
             metadata?: {
                 [key: string]: unknown;
             } | null;
+        };
+        /** AuditSearchIntent */
+        AuditSearchIntent: {
+            /** Mode */
+            mode: string;
+            /** Textterm */
+            textTerm?: string | null;
+            /** Dimensions */
+            dimensions?: string[];
+            parsedIds?: components["schemas"]["AuditSearchParsedIds"] | null;
+            /** Displaytoken */
+            displayToken?: string | null;
+        };
+        /** AuditSearchParsedIds */
+        AuditSearchParsedIds: {
+            /** Orderid */
+            orderId?: number | null;
+            /** Testid */
+            testId?: number | null;
+            /** Sampleid */
+            sampleId?: number | null;
+            /** Patientid */
+            patientId?: number | null;
+        };
+        /** AuditSearchPreviewPatient */
+        AuditSearchPreviewPatient: {
+            /** Id */
+            id: number;
+            /** Fullname */
+            fullName: string;
+            /** Displayid */
+            displayId: string;
+        };
+        /** AuditSearchPreviewResponse */
+        AuditSearchPreviewResponse: {
+            intent: components["schemas"]["AuditSearchIntent"];
+            /** Patients */
+            patients?: components["schemas"]["AuditSearchPreviewPatient"][];
+            /** Users */
+            users?: components["schemas"]["AuditSearchPreviewUser"][];
+            /** Eventcount */
+            eventCount?: number | null;
+        };
+        /** AuditSearchPreviewUser */
+        AuditSearchPreviewUser: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /** Username */
+            username: string;
         };
         /** BlockerSummary */
         BlockerSummary: {
@@ -3273,6 +3344,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MessageResponse"];
+                };
+            };
+        };
+    };
+    audit_search_preview_api_v1_audit_search_preview_get: {
+        parameters: {
+            query: {
+                q: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuditSearchPreviewResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

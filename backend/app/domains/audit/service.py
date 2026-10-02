@@ -16,11 +16,23 @@ from app.domains.audit.kinds import (
     kinds_to_prefixes,
     stored_event_scope_for_type,
 )
-from app.domains.audit.search import access_event_types_to_hide, apply_unified_search
+from app.domains.audit.search import (
+    access_event_types_to_hide,
+    apply_unified_search,
+    classify_search_term,
+    format_entity_display_id,
+)
+from app.domains.patients.models import Patient
+from sqlalchemy import func
 from app.domains.audit.models import AuditEvent
 from app.domains.audit.schemas import (
     AuditEventCreate,
     AuditEventResponse,
+    AuditSearchIntent,
+    AuditSearchParsedIds,
+    AuditSearchPreviewPatient,
+    AuditSearchPreviewResponse,
+    AuditSearchPreviewUser,
     EventChanges,
     EventContext,
     EventTarget,
@@ -440,6 +452,87 @@ class AuditEventQueryService:
     def list_recent(self, hours: float, limit: int = 500) -> list[AuditEventResponse]:
         since = datetime.now(UTC) - timedelta(hours=hours)
         return self.list_events(scope="stream", since=since, limit=limit)
+
+    def search_preview(self, q: str) -> AuditSearchPreviewResponse:
+        """Preview unified stream search: intent, entity suggestions, and match count."""
+        trimmed = q.strip()
+        raw_intent = classify_search_term(trimmed)
+        parsed_raw = raw_intent.get("parsedIds")
+        parsed_ids = (
+            AuditSearchParsedIds(**{k: v for k, v in parsed_raw.items() if v is not None})
+            if parsed_raw
+            else None
+        )
+        intent = AuditSearchIntent(
+            mode=raw_intent["mode"],
+            textTerm=raw_intent.get("textTerm"),
+            dimensions=raw_intent.get("dimensions") or [],
+            parsedIds=parsed_ids,
+            displayToken=raw_intent.get("displayToken"),
+        )
+
+        patients: list[AuditSearchPreviewPatient] = []
+        users: list[AuditSearchPreviewUser] = []
+        if intent.mode in ("text", "numeric"):
+            from app.domains.patients.service import _patient_search_filter
+
+            patient_rows = (
+                self.db.query(Patient)
+                .filter(_patient_search_filter(trimmed))
+                .order_by(Patient.updatedAt.desc())
+                .limit(5)
+                .all()
+            )
+            patients = [
+                AuditSearchPreviewPatient(
+                    id=row.id,
+                    fullName=row.fullName,
+                    displayId=format_entity_display_id("PAT", row.id),
+                )
+                for row in patient_rows
+            ]
+            pattern = f"%{trimmed}%"
+            user_rows = (
+                self.db.query(User)
+                .filter(
+                    or_(
+                        User.name.ilike(pattern),
+                        User.username.ilike(pattern),
+                    )
+                )
+                .limit(5)
+                .all()
+            )
+            users = [
+                AuditSearchPreviewUser(id=row.id, name=row.name, username=row.username)
+                for row in user_rows
+            ]
+
+        count_query = self.db.query(AuditEvent)
+        count_query = self._apply_scope(
+            count_query,
+            scope="stream",
+            order_id=None,
+            patient_id=None,
+            test_id=None,
+            sample_id=None,
+        )
+        count_query = apply_unified_search(count_query, trimmed, scope="stream")
+        hidden_access = access_event_types_to_hide(
+            scope="stream",
+            kinds=None,
+            include_access=False,
+        )
+        if hidden_access:
+            count_query = count_query.filter(AuditEvent.eventType.notin_(hidden_access))
+        event_count = count_query.with_entities(func.count(func.distinct(AuditEvent.id))).scalar()
+
+        return AuditSearchPreviewResponse(
+            intent=intent,
+            patients=patients,
+            users=users,
+            eventCount=int(event_count or 0),
+        )
 
     def list_filtered(
         self,

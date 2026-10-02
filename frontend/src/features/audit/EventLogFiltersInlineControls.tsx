@@ -9,6 +9,7 @@ import type { UserRole } from '@/types';
 import { USER_ROLE_OPTIONS } from '@/types';
 import { EVENT_LOG_KIND_OPTIONS } from './eventLogKinds';
 import { EVENT_LOG_FILTER_FIELD_ORDER } from './eventLogFilterFieldOrder';
+import { EventLogSearchField } from './EventLogSearchField';
 import { EVENT_LOG_COPY, type EventLogFilterField, type EventLogKind, type EventLogVerbosity } from './types';
 
 const kindFilterOptions = EVENT_LOG_KIND_OPTIONS.map(opt => ({
@@ -71,11 +72,7 @@ function renderFieldControl(
     case 'search':
       return (
         <div key={field} className="flex h-9 w-full flex-col justify-center">
-          <DebouncedSearchInput
-            value={props.search}
-            onChange={props.onSearchChange}
-            placeholder={EVENT_LOG_FILTER_PLACEHOLDERS.search}
-          />
+          <EventLogSearchField value={props.search} onChange={props.onSearchChange} />
         </div>
       );
     case 'entityId':

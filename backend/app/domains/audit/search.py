@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import re
+from typing import Any, Literal
 
 from app.domains.audit.kinds import ACCESS_EVENT_TYPES
 from app.domains.audit.models import AuditEvent
@@ -9,6 +10,92 @@ from app.domains.patients.models import Patient
 from app.domains.users.models import User
 from app.platform.utils.common import parse_display_id_from_search
 from sqlalchemy import String, and_, cast, or_
+
+SearchIntentMode = Literal[
+    "empty",
+    "entity_order",
+    "entity_test",
+    "entity_sample",
+    "entity_patient",
+    "numeric",
+    "text",
+]
+
+TEXT_SEARCH_DIMENSIONS = ("patientName", "actorName", "username")
+
+
+def format_entity_display_id(prefix: str, entity_id: int) -> str:
+    return f"{prefix.upper()}{entity_id:04d}"
+
+
+def classify_search_term(term: str) -> dict[str, Any]:
+    """Describe how unified audit search interprets a query string."""
+    trimmed = term.strip()
+    if not trimmed:
+        return {"mode": "empty", "textTerm": None, "dimensions": [], "parsedIds": None}
+
+    compact = re.sub(r"[\s-]", "", trimmed)
+    upper = compact.upper()
+
+    if upper.startswith("TST"):
+        test_id = parse_display_id_from_search(trimmed, "TST")
+        if test_id is not None:
+            return {
+                "mode": "entity_test",
+                "textTerm": None,
+                "dimensions": [],
+                "parsedIds": {"testId": test_id},
+                "displayToken": format_entity_display_id("TST", test_id),
+            }
+    if upper.startswith("ORD"):
+        order_id = parse_display_id_from_search(trimmed, "ORD")
+        if order_id is not None:
+            return {
+                "mode": "entity_order",
+                "textTerm": None,
+                "dimensions": [],
+                "parsedIds": {"orderId": order_id},
+                "displayToken": format_entity_display_id("ORD", order_id),
+            }
+    if upper.startswith("SAM"):
+        sample_id = parse_display_id_from_search(trimmed, "SAM")
+        if sample_id is not None:
+            return {
+                "mode": "entity_sample",
+                "textTerm": None,
+                "dimensions": [],
+                "parsedIds": {"sampleId": sample_id},
+                "displayToken": format_entity_display_id("SAM", sample_id),
+            }
+    if upper.startswith("PAT"):
+        patient_id = parse_display_id_from_search(trimmed, "PAT")
+        if patient_id is not None:
+            return {
+                "mode": "entity_patient",
+                "textTerm": None,
+                "dimensions": [],
+                "parsedIds": {"patientId": patient_id},
+                "displayToken": format_entity_display_id("PAT", patient_id),
+            }
+    if compact.isdigit():
+        numeric = int(compact)
+        return {
+            "mode": "numeric",
+            "textTerm": compact,
+            "dimensions": [],
+            "parsedIds": {
+                "orderId": numeric,
+                "patientId": numeric,
+                "testId": numeric,
+            },
+        }
+
+    return {
+        "mode": "text",
+        "textTerm": trimmed,
+        "dimensions": list(TEXT_SEARCH_DIMENSIONS),
+        "parsedIds": None,
+    }
 
 
 def access_event_types_to_hide(

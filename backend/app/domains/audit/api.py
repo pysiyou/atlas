@@ -9,7 +9,7 @@ from app.domains.audit.kinds import (
     parse_kinds_param,
     validate_actor_roles,
 )
-from app.domains.audit.schemas import AuditEventResponse
+from app.domains.audit.schemas import AuditEventResponse, AuditSearchPreviewResponse
 from app.domains.audit.service import AuditEventQueryService
 from app.domains.users.models import User
 from app.platform.database import get_db
@@ -21,6 +21,22 @@ router = APIRouter(tags=["audit"])
 
 EventLogScopeParam = Literal["order", "lab", "patient", "system", "stream"]
 StoredEventScopeParam = Literal["order", "lab", "patient", "system"]
+
+
+@router.get("/audit/search-preview", response_model=AuditSearchPreviewResponse)
+def audit_search_preview(
+    q: str = Query(..., min_length=1, max_length=100),
+    db: Session = Depends(get_db),
+    _current_user: User = Depends(get_current_user),
+):
+    """Preview how unified event-log search interprets a query string."""
+    term = q.strip()
+    if not term:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="q must not be empty",
+        )
+    return AuditEventQueryService(db).search_preview(term)
 
 
 @router.get("/audit/events", response_model=list[AuditEventResponse])
