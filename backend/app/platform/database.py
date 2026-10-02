@@ -80,3 +80,25 @@ def ensure_audit_event_scope_column() -> None:
             )
         )
 
+
+def ensure_user_admin_columns() -> None:
+    """
+    Add users.is_active and users.last_login_at on existing databases.
+
+    create_all does not ALTER existing tables, so production DBs need this
+    additive step after the ORM model gains the columns.
+    """
+    with engine.begin() as conn:
+        conn.execute(
+            text(
+                "ALTER TABLE users "
+                "ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT TRUE"
+            )
+        )
+        conn.execute(
+            text(
+                "ALTER TABLE users "
+                "ADD COLUMN IF NOT EXISTS last_login_at TIMESTAMPTZ"
+            )
+        )
+

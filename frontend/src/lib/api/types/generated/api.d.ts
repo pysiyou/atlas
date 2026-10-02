@@ -34,7 +34,7 @@ export interface paths {
          * Login
          * @description Authenticate user and return access/refresh tokens.
          *
-         *     Returns 401 for invalid credentials.
+         *     Returns 401 for invalid credentials or a disabled account.
          */
         post: operations["login_api_v1_auth_login_post"];
         delete?: never;
@@ -75,7 +75,7 @@ export interface paths {
         };
         /**
          * Get Me
-         * @description Get the current authenticated user's information. Sets loggedInAt to current time for frontend AuthUser.
+         * @description Return the current authenticated user, including persisted last-login time.
          */
         get: operations["get_me_api_v1_auth_me_get"];
         put?: never;
@@ -3098,7 +3098,10 @@ export interface components {
             /** Username */
             username: string;
         };
-        /** UserResponse */
+        /**
+         * UserResponse
+         * @description Admin/auth user payload. `loggedInAt` is the persisted last login time.
+         */
         UserResponse: {
             /** Username */
             username: string;
@@ -3116,6 +3119,11 @@ export interface components {
              * Format: date-time
              */
             createdAt: string;
+            /**
+             * Isactive
+             * @default true
+             */
+            isActive: boolean;
             /** Loggedinat */
             loggedInAt?: string | null;
         };
@@ -3134,6 +3142,9 @@ export interface components {
             phone?: string | null;
             /** Password */
             password?: string | null;
+            role?: components["schemas"]["UserRole"] | null;
+            /** Isactive */
+            isActive?: boolean | null;
         };
         /** ValidatedTestReportItem */
         ValidatedTestReportItem: {

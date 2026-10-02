@@ -12,8 +12,13 @@ export interface FormDialogFooterProps {
   isSubmitting: boolean;
   formId: string;
   footerInfo?: React.ReactNode;
-  submitVariant?: 'save' | 'primary';
+  submitVariant?: 'save' | 'primary' | 'danger';
   submitIcon?: React.ReactNode;
+  /** Extra buttons rendered before Cancel (e.g. disable/enable). */
+  leadingActions?: React.ReactNode;
+  /** Hide the primary submit button (confirm-only footers). */
+  hideSubmit?: boolean;
+  cancelLabel?: string;
 }
 
 export const FormDialogFooter: React.FC<FormDialogFooterProps> = ({
@@ -24,15 +29,23 @@ export const FormDialogFooter: React.FC<FormDialogFooterProps> = ({
   footerInfo,
   submitVariant = 'save',
   submitIcon,
+  leadingActions,
+  hideSubmit = false,
+  cancelLabel = 'Cancel',
 }) => {
   const submitPreset =
-    submitVariant === 'save' ? actionButtonPreset('save') : { variant: 'primary' as const };
+    submitVariant === 'save'
+      ? actionButtonPreset('save')
+      : submitVariant === 'danger'
+        ? actionButtonPreset('delete')
+        : { variant: 'primary' as const };
 
   return (
     <DialogFooter
       start={footerInfo}
       end={
         <>
+          {leadingActions}
           <Button
             type="button"
             {...actionButtonPreset('cancel')}
@@ -41,20 +54,22 @@ export const FormDialogFooter: React.FC<FormDialogFooterProps> = ({
             onClick={onClose}
             disabled={isSubmitting}
           >
-            Cancel
+            {cancelLabel}
           </Button>
-          <Button
-            type="submit"
-            {...submitPreset}
-            size="md"
-            layout="icon-text"
-            form={formId}
-            isLoading={isSubmitting}
-            disabled={isSubmitting}
-            icon={submitIcon}
-          >
-            {submitLabel}
-          </Button>
+          {hideSubmit ? null : (
+            <Button
+              type="submit"
+              {...submitPreset}
+              size="md"
+              layout="icon-text"
+              form={formId}
+              isLoading={isSubmitting}
+              disabled={isSubmitting}
+              icon={submitIcon}
+            >
+              {submitLabel}
+            </Button>
+          )}
         </>
       }
     />

@@ -35,6 +35,8 @@ export interface ListViewProps<T extends TableDataItem = TableDataItem> {
   sort?: SortConfig | null;
   onSortChange?: (sort: SortConfig | null) => void;
   className?: string;
+  rowClassName?: (item: T, index: number) => string;
+  ariaLabel?: string;
 }
 
 function renderDefaultEmptyState(title: string | undefined, emptyState: ReactNode | undefined) {
@@ -78,6 +80,8 @@ export function ListView<T extends TableDataItem = TableDataItem>({
   sort,
   onSortChange,
   className = '',
+  rowClassName,
+  ariaLabel,
 }: ListViewProps<T>) {
   const resolvedPagination = normalizePagination(pagination, pageSize, pageSizeOptions);
 
@@ -110,6 +114,8 @@ export function ListView<T extends TableDataItem = TableDataItem>({
             sort={sort}
             onSortChange={onSortChange}
             onRowClick={onRowClick ? (item, index) => onRowClick(item, index) : undefined}
+            rowClassName={rowClassName}
+            ariaLabel={ariaLabel}
             embedded={true}
           />
         </div>

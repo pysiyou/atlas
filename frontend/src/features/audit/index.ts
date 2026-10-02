@@ -19,7 +19,6 @@ export {
   LabEventLogPanel,
   PatientEventLogPanel,
   LabMonitorEventLogPanel,
-  SystemEventLogPanel,
   BillingEventLogPanel,
   ALL_FILTER_FIELDS,
   GLOBAL_EVENT_LOG_FILTER_FIELDS,

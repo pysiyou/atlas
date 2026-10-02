@@ -49,7 +49,7 @@ def login(credentials: LoginRequest, db: Session = Depends(get_db)):
     """
     Authenticate user and return access/refresh tokens.
 
-    Returns 401 for invalid credentials.
+    Returns 401 for invalid credentials or a disabled account.
     """
     user = db.query(User).filter(User.username == credentials.username).first()
 
@@ -60,8 +60,16 @@ def login(credentials: LoginRequest, db: Session = Depends(get_db)):
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+    if not user.isActive:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Account is disabled",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
     access_token, refresh_token = create_tokens(user.id)
 
+    user.loggedInAt = datetime.now(UTC)
     AuditEmitter(db).user_login(user.id)
     db.commit()
 
@@ -96,12 +104,18 @@ def refresh_token(request: RefreshRequest, db: Session = Depends(get_db)):
             detail="Invalid token payload",
         )
 
-    # Verify user still exists
+    # Verify user still exists and is allowed to refresh
     user = db.query(User).filter(User.id == int(user_id)).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="User not found",
+        )
+    if not user.isActive:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Account is disabled",
+            headers={"WWW-Authenticate": "Bearer"},
         )
 
     return RefreshResponse(access_token=create_access_token(user.id))
@@ -109,10 +123,8 @@ def refresh_token(request: RefreshRequest, db: Session = Depends(get_db)):
 
 @router.get("/me", response_model=UserResponse)
 def get_me(current_user: User = Depends(get_current_user)):
-    """Get the current authenticated user's information. Sets loggedInAt to current time for frontend AuthUser."""
-    data = UserResponse.model_validate(current_user).model_dump()
-    data["loggedInAt"] = datetime.now(UTC)
-    return UserResponse(**data)
+    """Return the current authenticated user, including persisted last-login time."""
+    return current_user
 
 
 @router.post("/logout", response_model=MessageResponse)

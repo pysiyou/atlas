@@ -253,19 +253,6 @@ export const LabMonitorEventLogPanel: React.FC = () => (
   />
 );
 
-/** Auth, user-admin, and catalog events. Mounted on User management. */
-export const SystemEventLogPanel: React.FC<{
-  className?: string;
-  layout?: EventLogPanelLayout;
-}> = props => (
-  <EventLogPanel
-    query={{ scope: 'system', limit: 500 }}
-    filterUi={{ fields: ['dateRange', 'actorRole', 'actorSearch'] }}
-    layout={props.layout}
-    className={props.className}
-  />
-);
-
 /**
  * Billing events for an order — payment and invoice rows on payment detail.
  */

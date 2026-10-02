@@ -1,24 +1,34 @@
 /**
- * User management — directory plus system event log (login, user, catalog).
+ * Administrator-only user directory — create, edit, disable, and assign roles.
  */
 import React, { useMemo, useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { actionButtonPreset, Button, DataTable, ErrorAlert, PageHeader } from '@/components';
-import { PANEL, WORKSPACE } from '@/components/theme/recipes';
+import { actionButtonPreset, Button, ListView } from '@/components';
 import { useAuthStore } from '@/app/authStore';
 import { ROUTES } from '@/config';
-import { SystemEventLogPanel } from '@/features/audit';
 import { errorAlertMessage } from '@/utils/feedback';
 import { useUsersAdminList, type UserAdminRecord } from '../api/usersAdmin';
+import { UserFilters } from '../components/UserFilters';
 import { UserUpsertModal } from '../components/UserUpsertModal';
 import { createUserTableConfig } from '../config/UserTable.config';
+import { useUsersFilters } from '../hooks/useUsersFilters';
+import { isUserActive } from '../utils/userAccountGuards';
 
 /**
- * Administrator-only users page with SystemEventLogPanel.
+ * Administrator-only users page with searchable directory and account actions.
  */
 export const UsersPage: React.FC = () => {
-  const { hasRole } = useAuthStore();
+  const { hasRole, user: currentUser } = useAuthStore();
   const { users, isLoading, isError, error, refetch } = useUsersAdminList();
+  const {
+    filteredUsers,
+    searchQuery,
+    setSearchQuery,
+    roleFilters,
+    setRoleFilters,
+    statusFilters,
+    setStatusFilters,
+  } = useUsersFilters({ users });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserAdminRecord | null>(null);
   const tableConfig = useMemo(() => createUserTableConfig(), []);
@@ -43,42 +53,43 @@ export const UsersPage: React.FC = () => {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className={WORKSPACE.page}>
-        <PageHeader
-          variant="bar"
-          title="User management"
-          actions={
-            <Button {...actionButtonPreset('add')} size="sm" onClick={openCreate}>
-              New user
-            </Button>
-          }
-        />
-        {listError ? (
-          <ErrorAlert error={listError} onRetry={refetch} className="shrink-0" />
-        ) : null}
-        <div className="flex min-h-0 flex-1 flex-col gap-workspace-page-gap lg:flex-row">
-          <div className={`${PANEL.raisedShadowSm} flex min-h-0 flex-1 flex-col overflow-hidden`}>
-            <DataTable
-              data={users}
-              viewConfig={tableConfig}
-              loading={isLoading}
-              embedded
-              striped
-              onRowClick={openEdit}
-              ariaLabel="Users"
-            />
-          </div>
-          <div className={`${PANEL.raisedShadowSm} flex min-h-0 flex-1 flex-col overflow-hidden`}>
-            <SystemEventLogPanel layout="embedded" className="min-h-0 h-full" />
-          </div>
-        </div>
-      </div>
+      <ListView
+        items={filteredUsers}
+        viewConfig={tableConfig}
+        loading={isLoading}
+        error={listError}
+        onRetry={refetch}
+        onDismissError={() => undefined}
+        onRowClick={openEdit}
+        title="User management"
+        headerActions={
+          <Button {...actionButtonPreset('add')} size="sm" onClick={openCreate}>
+            New user
+          </Button>
+        }
+        filters={
+          <UserFilters
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            roleFilters={roleFilters}
+            onRoleFiltersChange={setRoleFilters}
+            statusFilters={statusFilters}
+            onStatusFiltersChange={setStatusFilters}
+          />
+        }
+        pagination={{ mode: 'client', pageSize: 20 }}
+        defaultSort={{ key: 'name', direction: 'asc' }}
+        rowClassName={user => (isUserActive(user) ? '' : 'opacity-60')}
+        ariaLabel="Users"
+      />
       {isModalOpen ? (
         <UserUpsertModal
           key={selectedUser?.id ?? 'create'}
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           user={selectedUser}
+          users={users}
+          currentUserId={currentUser?.id ?? null}
         />
       ) : null}
     </div>
