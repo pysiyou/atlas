@@ -51,7 +51,7 @@ export const EventLogSearchField: React.FC<EventLogSearchFieldProps> = ({
   const hasDraft = draft.trim().length > 0;
   const instantIntent = useMemo(() => classifyEventLogSearchIntent(draft), [draft]);
   const criteriaCount = useMemo(() => getEventLogSearchCriteria(instantIntent).length, [instantIntent]);
-  const { preview, isFetching } = useEventLogSearchPreview(draft);
+  const { preview, isFetching, previewInSync } = useEventLogSearchPreview(draft);
 
   const isDebouncing = draft !== value;
   const showPopover = isPopoverOpen && hasDraft;
@@ -85,19 +85,12 @@ export const EventLogSearchField: React.FC<EventLogSearchFieldProps> = ({
     setIsPopoverOpen(false);
   }, [onChange, setDraft]);
 
-  const handleSelectPatient = useCallback(
-    (displayId: string) => {
-      setDraft(displayId);
-      onChange(displayId);
-      setIsPopoverOpen(false);
-    },
-    [onChange, setDraft]
-  );
-
-  const handleSelectUser = useCallback(
-    (username: string) => {
-      setDraft(username);
-      onChange(username);
+  const handleSelectMatch = useCallback(
+    (searchValue: string) => {
+      const next = searchValue.trim();
+      if (!next) return;
+      setDraft(next);
+      onChange(next);
       setIsPopoverOpen(false);
     },
     [onChange, setDraft]
@@ -149,9 +142,9 @@ export const EventLogSearchField: React.FC<EventLogSearchFieldProps> = ({
             instantIntent={instantIntent}
             preview={preview}
             isFetching={isFetching}
+            previewInSync={previewInSync}
             isEmpty={criteriaCount === 0 && suggestionCount === 0 && !isFetching}
-            onSelectPatient={handleSelectPatient}
-            onSelectUser={handleSelectUser}
+            onSelectMatch={handleSelectMatch}
           />
         </div>
       ) : null}
