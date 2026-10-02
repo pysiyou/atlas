@@ -22,6 +22,8 @@ const ALL_FILTER_FIELDS: EventLogFilterField[] = [
   'entityId',
   'dateRange',
   'kind',
+  'actorRole',
+  'actorSearch',
   'verbosity',
   'includeAccess',
 ];
@@ -117,6 +119,14 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
       verbosity={panelState.userFilters.verbosity}
       onVerbosityChange={verbosity =>
         panelState.setUserFilters(prev => ({ ...prev, verbosity }))
+      }
+      actorRoles={panelState.userFilters.actorRoles}
+      onActorRolesChange={actorRoles =>
+        panelState.setUserFilters(prev => ({ ...prev, actorRoles }))
+      }
+      actorSearch={panelState.userFilters.actorSearch}
+      onActorSearchChange={actorSearch =>
+        panelState.setUserFilters(prev => ({ ...prev, actorSearch }))
       }
       activeFilterCount={panelState.activeFilterCount}
       onReset={panelState.resetUserFilters}
@@ -247,7 +257,7 @@ export const SystemEventLogPanel: React.FC<{
 }> = props => (
   <EventLogPanel
     query={{ scope: 'system', limit: 500 }}
-    filterUi={{ fields: ['dateRange', 'verbosity'] }}
+    filterUi={{ fields: ['dateRange', 'actorRole', 'actorSearch', 'verbosity'] }}
     layout={props.layout}
     className={props.className}
   />

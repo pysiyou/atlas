@@ -3,7 +3,12 @@ from datetime import datetime
 from typing import Literal
 from uuid import UUID
 
-from app.domains.audit.kinds import STORED_EVENT_SCOPES, parse_kinds_param
+from app.domains.audit.kinds import (
+    STORED_EVENT_SCOPES,
+    parse_actor_roles_param,
+    parse_kinds_param,
+    validate_actor_roles,
+)
 from app.domains.audit.schemas import AuditEventResponse
 from app.domains.audit.service import AuditEventQueryService
 from app.domains.users.models import User
@@ -63,6 +68,23 @@ def list_audit_events(
         alias="cursorEventId",
         description="Newest-first cursor: eventId of the last row from the previous page",
     ),
+    actor_id: int | None = Query(
+        None,
+        alias="actorId",
+        ge=1,
+        description="When set, only events performed by this user id",
+    ),
+    actor_roles: str | None = Query(
+        None,
+        alias="actorRoles",
+        description="Comma-separated UserRole values; matches actor_snapshot.role at event time",
+    ),
+    actor_search: str | None = Query(
+        None,
+        alias="actorSearch",
+        max_length=100,
+        description="Partial match on actor display name (snapshot) or account username",
+    ),
     limit: int = Query(500, ge=1, le=2000),
     db: Session = Depends(get_db),
     _current_user: User = Depends(get_current_user),
@@ -79,6 +101,18 @@ def list_audit_events(
         )
     service = AuditEventQueryService(db)
     kind_keys = parse_kinds_param(kinds)
+    role_keys = parse_actor_roles_param(actor_roles)
+    if role_keys:
+        try:
+            validate_actor_roles(role_keys)
+        except ValueError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=str(exc),
+            ) from exc
+    search_term = actor_search.strip() if actor_search else None
+    if search_term == "":
+        search_term = None
     return service.list_filtered(
         scope=scope,
         order_id=order_id,
@@ -93,5 +127,8 @@ def list_audit_events(
         event_scope=event_scope,
         cursor_created_at=cursor_created_at,
         cursor_event_id=cursor_event_id,
+        actor_id=actor_id,
+        actor_roles=role_keys or None,
+        actor_search=search_term,
         limit=limit,
     )

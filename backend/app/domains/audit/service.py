@@ -354,6 +354,9 @@ class AuditEventQueryService:
         event_scope: str | None = None,
         cursor_created_at: datetime | None = None,
         cursor_event_id: UUID | None = None,
+        actor_id: int | None = None,
+        actor_roles: list[str] | None = None,
+        actor_search: str | None = None,
         limit: int = 500,
     ) -> list[AuditEventResponse]:
         """
@@ -362,6 +365,8 @@ class AuditEventQueryService:
         Scope expands containment (order / lab graph / patient / system / stream).
         Kinds optionally restrict eventType prefixes. Access events are omitted
         unless include_access is true. Newest-first cursor uses createdAt + eventId.
+        Optional actor_id restricts rows to a single user.
+        actor_roles filters actor_snapshot.role; actor_search matches snapshot name or user username.
         """
         limit = min(max(limit, 1), 2000)
         query = self.db.query(AuditEvent)
@@ -388,6 +393,22 @@ class AuditEventQueryService:
 
         if event_scope:
             query = query.filter(AuditEvent.eventScope == event_scope)
+
+        if actor_id is not None:
+            query = query.filter(AuditEvent.actorId == actor_id)
+
+        if actor_roles:
+            query = query.filter(AuditEvent.actorSnapshot["role"].astext.in_(actor_roles))
+
+        if actor_search:
+            term = actor_search.strip()
+            if term:
+                pattern = f"%{term}%"
+                name_match = AuditEvent.actorSnapshot["name"].astext.ilike(pattern)
+                query = query.outerjoin(User, User.id == AuditEvent.actorId)
+                query = query.filter(
+                    or_(name_match, User.username.ilike(pattern))
+                )
 
         if not include_access and scope in ("stream", "patient"):
             query = query.filter(AuditEvent.eventType.notin_(ACCESS_EVENT_TYPES))
@@ -426,6 +447,9 @@ class AuditEventQueryService:
         event_scope: str | None = None,
         cursor_created_at: datetime | None = None,
         cursor_event_id: UUID | None = None,
+        actor_id: int | None = None,
+        actor_roles: list[str] | None = None,
+        actor_search: str | None = None,
         limit: int = 500,
     ) -> list[AuditEventResponse]:
         since = created_from
@@ -444,6 +468,9 @@ class AuditEventQueryService:
             event_scope=event_scope,
             cursor_created_at=cursor_created_at,
             cursor_event_id=cursor_event_id,
+            actor_id=actor_id,
+            actor_roles=actor_roles,
+            actor_search=actor_search,
             limit=limit,
         )
 

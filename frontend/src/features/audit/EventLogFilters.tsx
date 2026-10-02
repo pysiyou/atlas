@@ -4,6 +4,7 @@
 import React from 'react';
 import { FILTER_TYPE } from '@/components/theme/recipes';
 import { Checkbox, DebouncedSearchInput } from '@/components';
+import type { UserRole } from '@/types';
 import { EventLogFilterBar } from './EventLogFilterBar';
 import {
   EventLogFiltersInlineControls,
@@ -25,9 +26,28 @@ export interface EventLogFiltersProps {
   onIncludeAccessChange: (value: boolean) => void;
   verbosity: EventLogVerbosity;
   onVerbosityChange: (value: EventLogVerbosity) => void;
+  actorRoles: UserRole[];
+  onActorRolesChange: (values: UserRole[]) => void;
+  actorSearch: string;
+  onActorSearchChange: (value: string) => void;
   activeFilterCount: number;
   onReset: () => void;
 }
+
+const inlineActorProps = (props: EventLogFiltersProps) => ({
+  kinds: props.kinds,
+  onKindsChange: props.onKindsChange,
+  dateRange: props.dateRange,
+  onDateRangeChange: props.onDateRangeChange,
+  includeAccess: props.includeAccess,
+  onIncludeAccessChange: props.onIncludeAccessChange,
+  verbosity: props.verbosity,
+  onVerbosityChange: props.onVerbosityChange,
+  actorRoles: props.actorRoles,
+  onActorRolesChange: props.onActorRolesChange,
+  actorSearch: props.actorSearch,
+  onActorSearchChange: props.onActorSearchChange,
+});
 
 export const EventLogFilters: React.FC<EventLogFiltersProps> = props => {
   const showKind = props.visibleFields.includes('kind') && !props.lockedFields.has('kind');
@@ -39,6 +59,10 @@ export const EventLogFilters: React.FC<EventLogFiltersProps> = props => {
     props.visibleFields.includes('includeAccess') && !props.lockedFields.has('includeAccess');
   const showVerbosity =
     props.visibleFields.includes('verbosity') && !props.lockedFields.has('verbosity');
+  const showActorRole =
+    props.visibleFields.includes('actorRole') && !props.lockedFields.has('actorRole');
+  const showActorSearch =
+    props.visibleFields.includes('actorSearch') && !props.lockedFields.has('actorSearch');
 
   const modalExtras = (
     <>
@@ -50,6 +74,28 @@ export const EventLogFilters: React.FC<EventLogFiltersProps> = props => {
             onChange={props.onEntityIdInputChange}
             placeholder={EVENT_LOG_FILTER_PLACEHOLDERS.entityId}
           />
+        </div>
+      ) : null}
+      {showActorRole ? (
+        <div className="w-full">
+          <h4 className={FILTER_TYPE.sectionTitle}>Actor role</h4>
+          <EventLogFiltersInlineControls
+            visibleFields={['actorRole']}
+            lockedFields={props.lockedFields}
+            {...inlineActorProps(props)}
+          />
+          <div className="mt-space-4 border-b border-border-default" />
+        </div>
+      ) : null}
+      {showActorSearch ? (
+        <div className="w-full">
+          <h4 className={FILTER_TYPE.sectionTitle}>Actor</h4>
+          <EventLogFiltersInlineControls
+            visibleFields={['actorSearch']}
+            lockedFields={props.lockedFields}
+            {...inlineActorProps(props)}
+          />
+          <div className="mt-space-4 border-b border-border-default" />
         </div>
       ) : null}
       {showIncludeAccess ? (
@@ -69,14 +115,7 @@ export const EventLogFilters: React.FC<EventLogFiltersProps> = props => {
           <EventLogFiltersInlineControls
             visibleFields={['verbosity']}
             lockedFields={props.lockedFields}
-            kinds={props.kinds}
-            onKindsChange={props.onKindsChange}
-            dateRange={props.dateRange}
-            onDateRangeChange={props.onDateRangeChange}
-            includeAccess={props.includeAccess}
-            onIncludeAccessChange={props.onIncludeAccessChange}
-            verbosity={props.verbosity}
-            onVerbosityChange={props.onVerbosityChange}
+            {...inlineActorProps(props)}
           />
         </div>
       ) : null}
@@ -109,6 +148,10 @@ export const EventLogFilters: React.FC<EventLogFiltersProps> = props => {
           onIncludeAccessChange={props.onIncludeAccessChange}
           verbosity={props.verbosity}
           onVerbosityChange={props.onVerbosityChange}
+          actorRoles={props.actorRoles}
+          onActorRolesChange={props.onActorRolesChange}
+          actorSearch={props.actorSearch}
+          onActorSearchChange={props.onActorSearchChange}
         />
       }
     />

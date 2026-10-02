@@ -3,6 +3,7 @@
  */
 
 import type { InlineHighlightProps } from '@/components/primitives/InlineHighlight';
+import type { UserRole } from '@/types';
 
 export type EventLogDomain =
   | 'patient'
@@ -128,12 +129,25 @@ export interface EventLogQuery {
   cursorCreatedAt?: string;
   /** Newest-first page cursor (eventId of the last row). */
   cursorEventId?: string;
+  /** When set, only events performed by this user id (fixed panel queries). */
+  actorId?: number;
+  /** Filter by actor_snapshot.role at event time. */
+  actorRoles?: UserRole[];
+  /** Partial match on actor display name or account username. */
+  actorSearch?: string;
   /** Display ladder: summary / detailed / debug. */
   verbosity?: EventLogVerbosity;
   limit?: number;
 }
 
-export type EventLogFilterField = 'kind' | 'dateRange' | 'entityId' | 'includeAccess' | 'verbosity';
+export type EventLogFilterField =
+  | 'kind'
+  | 'dateRange'
+  | 'entityId'
+  | 'actorRole'
+  | 'actorSearch'
+  | 'includeAccess'
+  | 'verbosity';
 
 export interface EventLogFilterUiConfig {
   fields?: EventLogFilterField[];
@@ -144,6 +158,8 @@ export interface EventLogUserFilters {
   dateRange: [Date, Date] | null;
   includeAccess: boolean;
   verbosity: EventLogVerbosity;
+  actorRoles: UserRole[];
+  actorSearch: string;
   orderId: number | null;
   testId: number | null;
   sampleId: number | null;
@@ -155,6 +171,8 @@ export const DEFAULT_EVENT_LOG_USER_FILTERS: EventLogUserFilters = {
   dateRange: null,
   includeAccess: false,
   verbosity: 'summary',
+  actorRoles: [],
+  actorSearch: '',
   orderId: null,
   testId: null,
   sampleId: null,

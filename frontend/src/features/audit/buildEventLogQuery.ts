@@ -31,6 +31,15 @@ export function buildEventLogQuery(
     merged.verbosity = user.verbosity;
   }
 
+  if (user.actorRoles.length > 0 && !fixed.actorRoles?.length) {
+    merged.actorRoles = user.actorRoles;
+  }
+
+  const actorSearchTrimmed = user.actorSearch.trim();
+  if (actorSearchTrimmed && !fixed.actorSearch) {
+    merged.actorSearch = actorSearchTrimmed;
+  }
+
   const canUpgradeStream = fixed.scope === 'stream';
   if (canUpgradeStream) {
     if (user.orderId != null) {
@@ -68,6 +77,9 @@ export function eventLogQueryKeyParams(
     eventScope: query.eventScope,
     cursorCreatedAt: query.cursorCreatedAt,
     cursorEventId: query.cursorEventId,
+    actorId: query.actorId,
+    actorRoles: query.actorRoles?.length ? query.actorRoles.join(',') : undefined,
+    actorSearch: query.actorSearch,
     verbosity: query.verbosity,
     limit: query.limit,
   };

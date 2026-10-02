@@ -26,10 +26,17 @@ function queryToApiParams(query: EventLogQuery): AuditEventQueryParams {
     eventScope: query.eventScope,
     cursorCreatedAt: query.cursorCreatedAt,
     cursorEventId: query.cursorEventId,
+    actorId: query.actorId,
     limit: query.limit ?? 500,
   };
   if (query.kinds?.length) {
     params.kinds = query.kinds.join(',');
+  }
+  if (query.actorRoles?.length) {
+    params.actorRoles = query.actorRoles.join(',');
+  }
+  if (query.actorSearch) {
+    params.actorSearch = query.actorSearch;
   }
   return params;
 }

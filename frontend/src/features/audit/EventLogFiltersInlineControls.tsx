@@ -5,12 +5,19 @@ import React from 'react';
 import { Checkbox, DateFilter, DebouncedSearchInput, MultiSelectFilter, Select } from '@/components';
 import { RADIUS } from '@/components/theme/recipes';
 import { ICONS } from '@/config/icons';
+import type { UserRole } from '@/types';
+import { USER_ROLE_OPTIONS } from '@/types';
 import { EVENT_LOG_KIND_OPTIONS } from './eventLogKinds';
 import { EVENT_LOG_FILTER_FIELD_ORDER } from './eventLogFilterFieldOrder';
 import { EVENT_LOG_COPY, type EventLogFilterField, type EventLogKind, type EventLogVerbosity } from './types';
 
 const kindFilterOptions = EVENT_LOG_KIND_OPTIONS.map(opt => ({
   id: opt.id,
+  label: opt.label,
+}));
+
+const actorRoleFilterOptions = USER_ROLE_OPTIONS.map(opt => ({
+  id: opt.value,
   label: opt.label,
 }));
 
@@ -26,6 +33,8 @@ export const EVENT_LOG_FILTER_PLACEHOLDERS = {
   entityId: 'ORD… / TST… / SAM… / PAT…',
   includeAccess: 'Include views & downloads',
   verbosity: 'Detail level',
+  actorRole: 'Actor role',
+  actorSearch: 'Username or name…',
 } as const;
 
 export interface EventLogFiltersInlineControlsProps {
@@ -42,6 +51,10 @@ export interface EventLogFiltersInlineControlsProps {
   onIncludeAccessChange: (value: boolean) => void;
   verbosity: EventLogVerbosity;
   onVerbosityChange: (value: EventLogVerbosity) => void;
+  actorRoles: UserRole[];
+  onActorRolesChange: (values: UserRole[]) => void;
+  actorSearch: string;
+  onActorSearchChange: (value: string) => void;
 }
 
 function renderFieldControl(
@@ -74,6 +87,31 @@ function renderFieldControl(
             onChange={props.onDateRangeChange}
             placeholder={EVENT_LOG_FILTER_PLACEHOLDERS.dateRange}
             className="w-full"
+          />
+        </div>
+      );
+    case 'actorRole':
+      return (
+        <div key={field} className="flex h-9 w-full items-center">
+          <MultiSelectFilter
+            label="Actor role"
+            options={actorRoleFilterOptions}
+            selectedIds={props.actorRoles}
+            onChange={values => props.onActorRolesChange(values as UserRole[])}
+            placeholder={EVENT_LOG_FILTER_PLACEHOLDERS.actorRole}
+            selectAllLabel="All roles"
+            icon={ICONS.dataFields.userHands}
+            className="w-full"
+          />
+        </div>
+      );
+    case 'actorSearch':
+      return (
+        <div key={field} className="flex h-9 w-full flex-col justify-center">
+          <DebouncedSearchInput
+            value={props.actorSearch}
+            onChange={props.onActorSearchChange}
+            placeholder={EVENT_LOG_FILTER_PLACEHOLDERS.actorSearch}
           />
         </div>
       );
