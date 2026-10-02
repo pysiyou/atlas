@@ -29,6 +29,7 @@ export { useEventLog } from './useEventLog';
 export { useEventLogPanelState } from './useEventLogPanelState';
 export { fetchAuditEvents, normalizeAuditEvent } from './api';
 export { EventLogPage } from './pages/EventLogPage';
+export { EventLogSearchField } from './EventLogSearchField';
 export { EVENT_LOG_KIND_OPTIONS } from './eventLogKinds';
 export {
   parseOrderDisplayId,

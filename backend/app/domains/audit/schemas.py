@@ -101,6 +101,40 @@ class AuditEventCreate(BaseModel):
     metadata: dict[str, Any] | None = None
 
 
+class AuditSearchParsedIds(BaseModel):
+    orderId: int | None = None
+    testId: int | None = None
+    sampleId: int | None = None
+    patientId: int | None = None
+
+
+class AuditSearchIntent(BaseModel):
+    mode: str
+    textTerm: str | None = None
+    dimensions: list[str] = Field(default_factory=list)
+    parsedIds: AuditSearchParsedIds | None = None
+    displayToken: str | None = None
+
+
+class AuditSearchPreviewPatient(BaseModel):
+    id: int
+    fullName: str
+    displayId: str
+
+
+class AuditSearchPreviewUser(BaseModel):
+    id: int
+    name: str
+    username: str
+
+
+class AuditSearchPreviewResponse(BaseModel):
+    intent: AuditSearchIntent
+    patients: list[AuditSearchPreviewPatient] = Field(default_factory=list)
+    users: list[AuditSearchPreviewUser] = Field(default_factory=list)
+    eventCount: int | None = None
+
+
 class AuditEventResponse(BaseModel):
     eventId: UUID
     createdAt: datetime

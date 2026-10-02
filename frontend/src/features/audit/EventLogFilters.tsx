@@ -4,6 +4,7 @@
 import React from 'react';
 import { FILTER_TYPE } from '@/components/theme/recipes';
 import { Checkbox, DebouncedSearchInput } from '@/components';
+import { EventLogSearchField } from './EventLogSearchField';
 import type { UserRole } from '@/types';
 import { EventLogFilterBar } from './EventLogFilterBar';
 import {
@@ -75,11 +76,7 @@ export const EventLogFilters: React.FC<EventLogFiltersProps> = props => {
       {showSearch ? (
         <div className="w-full">
           <h4 className={FILTER_TYPE.sectionTitle}>Search</h4>
-          <DebouncedSearchInput
-            value={props.search}
-            onChange={props.onSearchChange}
-            placeholder={EVENT_LOG_FILTER_PLACEHOLDERS.search}
-          />
+          <EventLogSearchField value={props.search} onChange={props.onSearchChange} />
           <div className="mt-space-4 border-b border-border-default" />
         </div>
       ) : null}

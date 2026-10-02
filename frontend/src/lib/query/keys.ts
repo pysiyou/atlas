@@ -75,6 +75,7 @@ export const queryKeys = {
     lists: () => [...queryKeys.auditEvents.all, 'list'] as const,
     list: (params: Record<string, string | number | undefined>) =>
       [...queryKeys.auditEvents.lists(), params] as const,
+    searchPreview: (q: string) => [...queryKeys.auditEvents.all, 'searchPreview', q] as const,
   },
 
   /**

@@ -112,6 +112,28 @@ function toQueryRecord(params: AuditEventQueryParams): Record<string, string> {
   return out;
 }
 
+export interface AuditSearchPreviewResponse {
+  intent: {
+    mode: string;
+    textTerm?: string | null;
+    dimensions?: string[];
+    parsedIds?: {
+      orderId?: number | null;
+      testId?: number | null;
+      sampleId?: number | null;
+      patientId?: number | null;
+    } | null;
+    displayToken?: string | null;
+  };
+  patients: Array<{ id: number; fullName: string; displayId: string }>;
+  users: Array<{ id: number; name: string; username: string }>;
+  eventCount?: number | null;
+}
+
+export async function fetchAuditSearchPreview(q: string): Promise<AuditSearchPreviewResponse> {
+  return apiClient.get<AuditSearchPreviewResponse>('/audit/search-preview', { q });
+}
+
 export async function fetchAuditEvents(params: AuditEventQueryParams): Promise<EventLogRecord[]> {
   const rows = await apiClient.get<Record<string, unknown>[]>(
     '/audit/events',
