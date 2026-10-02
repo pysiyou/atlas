@@ -19,6 +19,9 @@ export interface AuditEventQueryParams {
   eventScope?: string;
   cursorCreatedAt?: string;
   cursorEventId?: string;
+  actorId?: number;
+  actorRoles?: string;
+  actorSearch?: string;
   limit?: number;
 }
 
@@ -100,6 +103,9 @@ function toQueryRecord(params: AuditEventQueryParams): Record<string, string> {
   if (params.eventScope) out.eventScope = params.eventScope;
   if (params.cursorCreatedAt) out.cursorCreatedAt = params.cursorCreatedAt;
   if (params.cursorEventId) out.cursorEventId = params.cursorEventId;
+  if (params.actorId != null) out.actorId = String(params.actorId);
+  if (params.actorRoles) out.actorRoles = params.actorRoles;
+  if (params.actorSearch) out.actorSearch = params.actorSearch;
   if (params.limit != null) out.limit = String(params.limit);
   return out;
 }

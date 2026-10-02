@@ -6,6 +6,8 @@ reporting, system) plus optional laboratory subcategory keys
 """
 from __future__ import annotations
 
+from app.shared.contracts.enums import UserRole
+
 _KIND_KEYS = frozenset(
     {
         "patient",
@@ -50,6 +52,21 @@ def parse_kinds_param(raw: str | None) -> list[str]:
     if not raw or not raw.strip():
         return []
     return [part.strip() for part in raw.split(",") if part.strip()]
+
+
+_VALID_ACTOR_ROLE_VALUES = frozenset(role.value for role in UserRole)
+
+
+def parse_actor_roles_param(raw: str | None) -> list[str]:
+    """Split comma-separated UserRole values from actorRoles query param."""
+    return parse_kinds_param(raw)
+
+
+def validate_actor_roles(roles: list[str]) -> None:
+    """Raise ValueError when any role is not a known UserRole value."""
+    invalid = [role for role in roles if role not in _VALID_ACTOR_ROLE_VALUES]
+    if invalid:
+        raise ValueError(f"Unknown actor role(s): {', '.join(invalid)}")
 
 
 def kind_to_event_type_prefix(kind: str) -> str | None:

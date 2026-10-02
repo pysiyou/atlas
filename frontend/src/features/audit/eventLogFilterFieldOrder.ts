@@ -5,6 +5,8 @@ export const EVENT_LOG_FILTER_FIELD_ORDER: EventLogFilterField[] = [
   'entityId',
   'dateRange',
   'kind',
+  'actorRole',
+  'actorSearch',
   'verbosity',
   'includeAccess',
 ];

@@ -33,6 +33,10 @@ function isFieldLocked(field: EventLogFilterField, query: EventLogQuery): boolea
       );
     case 'includeAccess':
       return query.includeAccess === true;
+    case 'actorRole':
+      return Boolean(query.actorRoles?.length);
+    case 'actorSearch':
+      return Boolean(query.actorSearch?.trim());
     case 'verbosity':
       return query.verbosity != null && query.verbosity !== 'summary';
   }
@@ -99,6 +103,8 @@ export function useEventLogPanelState({
     (effectiveUserFilters.dateRange ? 1 : 0) +
     (usesEntityIdField && hasEntityFilter ? 1 : 0) +
     (effectiveUserFilters.includeAccess ? 1 : 0) +
+    (effectiveUserFilters.actorRoles.length > 0 ? 1 : 0) +
+    (effectiveUserFilters.actorSearch.trim().length > 0 ? 1 : 0) +
     (effectiveUserFilters.verbosity !== 'summary' ? 1 : 0);
 
   const resetUserFilters = () => {

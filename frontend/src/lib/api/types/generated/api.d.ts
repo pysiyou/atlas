@@ -3300,6 +3300,12 @@ export interface operations {
                 cursorCreatedAt?: string | null;
                 /** @description Newest-first cursor: eventId of the last row from the previous page */
                 cursorEventId?: string | null;
+                /** @description When set, only events performed by this user id */
+                actorId?: number | null;
+                /** @description Comma-separated UserRole values; matches actor_snapshot.role at event time */
+                actorRoles?: string | null;
+                /** @description Partial match on actor display name (snapshot) or account username */
+                actorSearch?: string | null;
                 limit?: number;
             };
             header?: never;
