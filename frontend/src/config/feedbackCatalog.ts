@@ -157,6 +157,12 @@ export type FeedbackId =
   | 'users.create.error'
   | 'users.update.success'
   | 'users.update.error'
+  | 'users.disable.success'
+  | 'users.disable.error'
+  | 'users.enable.success'
+  | 'users.enable.error'
+  | 'users.disable.self'
+  | 'users.disable.lastAdmin'
   | 'lab.qualityIssue.dialog.actions.retestHint'
   | 'lab.qualityIssue.dialog.recollectBlocked'
   | 'lab.qualityIssue.dialog.trigger'
@@ -687,6 +693,36 @@ export const FEEDBACK_CATALOG: Record<FeedbackId, FeedbackEntry> = {
     channel: 'toast',
     variant: 'error',
     title: 'Failed to update user',
+  },
+  'users.disable.success': {
+    channel: 'toast',
+    variant: 'success',
+    title: 'User disabled',
+  },
+  'users.disable.error': {
+    channel: 'toast',
+    variant: 'error',
+    title: 'Failed to disable user',
+  },
+  'users.enable.success': {
+    channel: 'toast',
+    variant: 'success',
+    title: 'User enabled',
+  },
+  'users.enable.error': {
+    channel: 'toast',
+    variant: 'error',
+    title: 'Failed to enable user',
+  },
+  'users.disable.self': {
+    channel: 'toast',
+    variant: 'error',
+    title: 'You cannot disable your own account',
+  },
+  'users.disable.lastAdmin': {
+    channel: 'toast',
+    variant: 'error',
+    title: 'Cannot disable the last active administrator',
   },
   'lab.page.loadFailed': {
     channel: 'errorAlert',

@@ -67,6 +67,13 @@ def get_current_user(
             detail="User not found",
         )
 
+    if not user.isActive:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Account is disabled",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
     return user
 
 

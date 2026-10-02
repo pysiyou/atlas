@@ -3,7 +3,7 @@ User Model - All fields use camelCase
 """
 from app.platform.database import Base, contract_enum
 from app.shared.contracts.enums import UserRole
-from sqlalchemy import Column, DateTime, Integer, String
+from sqlalchemy import Boolean, Column, DateTime, Integer, String
 from sqlalchemy.sql import func
 
 
@@ -17,6 +17,9 @@ class User(Base):
     role = Column(contract_enum(UserRole), nullable=False)
     email = Column(String, nullable=True)
     phone = Column(String, nullable=True)
+    isActive = Column("is_active", Boolean, nullable=False, default=True, server_default="true")
+    # Persisted last successful login; exposed on UserResponse as loggedInAt.
+    loggedInAt = Column("last_login_at", DateTime(timezone=True), nullable=True)
     createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
     updatedAt = Column(
         "updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now()

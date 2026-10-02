@@ -1240,8 +1240,19 @@ class AuditEmitter:
     def user_created(self, new_user_id: int, actor_user_id: int) -> None:
         self._emit(EventType.SYSTEM_USER_CREATE, "user", new_user_id, actor_user_id)
 
-    def user_updated(self, target_user_id: int, actor_user_id: int) -> None:
-        self._emit(EventType.SYSTEM_USER_UPDATE, "user", target_user_id, actor_user_id)
+    def user_updated(
+        self,
+        target_user_id: int,
+        actor_user_id: int,
+        metadata: dict[str, Any] | None = None,
+    ) -> None:
+        self._emit(
+            EventType.SYSTEM_USER_UPDATE,
+            "user",
+            target_user_id,
+            actor_user_id,
+            metadata=metadata,
+        )
 
     def catalog_test_created(self, test_id: int, test_code: str, actor_user_id: int) -> None:
         self._emit(

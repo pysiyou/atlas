@@ -1,5 +1,5 @@
 /**
- * Global event log unified search with anchored preview popover (order-upsert style).
+ * Global event log unified search with categorized match popover.
  */
 import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Icon, SpinnerLoader } from '@/components';
@@ -8,9 +8,8 @@ import { ICONS } from '@/config/icons';
 import { inputClearButton, inputInner, inputText, inputWrapper } from '@/components/inputs/inputStyles';
 import { EVENT_LOG_COPY } from './types';
 import { EVENT_LOG_FILTER_PLACEHOLDERS } from './EventLogFiltersInlineControls';
-import { classifyEventLogSearchIntent } from './eventLogSearchIntent';
-import { getEventLogSearchCriteria } from './eventLogSearchCriteria';
-import { EventLogSearchPreviewPanel } from './EventLogSearchPreviewPanel';
+import { buildEventLogSearchMatchGroups } from './eventLogSearchMatchGroups';
+import { EventLogSearchPopover } from './EventLogSearchPopover';
 import { useEventLogSearchPreview } from './useEventLogSearchPreview';
 
 export interface EventLogSearchFieldProps {
@@ -49,15 +48,14 @@ export const EventLogSearchField: React.FC<EventLogSearchFieldProps> = ({
   const [draft, setDraft] = useDebouncedCallback(value, onChange, debounceMs);
 
   const hasDraft = draft.trim().length > 0;
-  const instantIntent = useMemo(() => classifyEventLogSearchIntent(draft), [draft]);
-  const criteriaCount = useMemo(() => getEventLogSearchCriteria(instantIntent).length, [instantIntent]);
   const { preview, isFetching, previewInSync } = useEventLogSearchPreview(draft);
+  const groups = useMemo(
+    () => buildEventLogSearchMatchGroups(draft, preview, previewInSync),
+    [draft, preview, previewInSync]
+  );
 
   const isDebouncing = draft !== value;
   const showPopover = isPopoverOpen && hasDraft;
-
-  const suggestionCount =
-    (preview?.patients.length ?? 0) + (preview?.users.length ?? 0);
 
   useEffect(() => {
     const handlePointerDown = (e: MouseEvent | TouchEvent) => {
@@ -86,8 +84,8 @@ export const EventLogSearchField: React.FC<EventLogSearchFieldProps> = ({
   }, [onChange, setDraft]);
 
   const handleSelectMatch = useCallback(
-    (searchValue: string) => {
-      const next = searchValue.trim();
+    (applyValue: string) => {
+      const next = applyValue.trim();
       if (!next) return;
       setDraft(next);
       onChange(next);
@@ -138,12 +136,11 @@ export const EventLogSearchField: React.FC<EventLogSearchFieldProps> = ({
 
       {showPopover ? (
         <div id={listId} role="listbox" aria-label={EVENT_LOG_COPY.searchPreviewTitle}>
-          <EventLogSearchPreviewPanel
-            instantIntent={instantIntent}
+          <EventLogSearchPopover
+            groups={groups}
             preview={preview}
-            isFetching={isFetching}
             previewInSync={previewInSync}
-            isEmpty={criteriaCount === 0 && suggestionCount === 0 && !isFetching}
+            isFetching={isFetching}
             onSelectMatch={handleSelectMatch}
           />
         </div>
