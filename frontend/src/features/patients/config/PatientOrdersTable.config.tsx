@@ -1,5 +1,6 @@
 import type { TableViewConfig } from '@/components';
 import { buildViews, type CardComponentProps } from '@/components/data-table';
+import { ORDER_TABLE_VIEW_KEYS_WITHOUT_PATIENT } from '@/features/orders/constants/orderTableColumns';
 import {
   createOrderSharedColumns,
   getActiveTests,
@@ -10,18 +11,13 @@ import {
 import type { Order } from '@/types';
 
 /** Column sets tuned for the patient detail “Related Orders” panel (patient name omitted). */
-const PATIENT_RELATED_ORDER_VIEWS = {
-  full: ['orderId', 'orderDate', 'tests', 'overallStatus', 'paymentStatus', 'totalPrice'],
-  medium: ['orderId', 'orderDate', 'tests', 'overallStatus', 'totalPrice'],
-  compact: ['orderId', 'orderDate', 'overallStatus', 'totalPrice'],
-} as const;
-
 const PATIENT_RELATED_WIDTH_OVERRIDES = {
   full: {
     orderId: 'id' as const,
     orderDate: { min: 148, base: 168, grow: 0, shrink: 0 },
     tests: { min: 200, grow: 2, shrink: 1 },
     overallStatus: 'md' as const,
+    priority: 'sm' as const,
     paymentStatus: 'sm' as const,
     totalPrice: 'md' as const,
   },
@@ -65,17 +61,8 @@ export function createPatientRelatedOrdersTableConfig(
 
   const columnMap = {
     ...shared,
-    orderId: {
-      ...shared.orderId,
-      header: 'Order',
-    },
-    orderDate: {
-      ...shared.orderDate,
-      header: 'Ordered',
-    },
     tests: {
       ...shared.tests,
-      header: 'Tests',
       width: { min: 200, grow: 2, shrink: 1 },
       render: (order: Order) => {
         const tests = getActiveTests(order.tests ?? []);
@@ -89,10 +76,6 @@ export function createPatientRelatedOrdersTableConfig(
         });
       },
     },
-    totalPrice: {
-      ...shared.totalPrice,
-      header: 'Total',
-    },
   };
 
   function PatientRelatedOrderCard(props: CardComponentProps<Order>) {
@@ -100,7 +83,7 @@ export function createPatientRelatedOrdersTableConfig(
   }
 
   return {
-    ...buildViews(columnMap, PATIENT_RELATED_ORDER_VIEWS, PATIENT_RELATED_WIDTH_OVERRIDES),
+    ...buildViews(columnMap, ORDER_TABLE_VIEW_KEYS_WITHOUT_PATIENT, PATIENT_RELATED_WIDTH_OVERRIDES),
     CardComponent: PatientRelatedOrderCard,
   };
 }

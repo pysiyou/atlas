@@ -21,6 +21,7 @@ import { logger } from '@/utils/logger';
  * Available icon names - add new icons here as SVG files are added to public/icons/
  */
 export type IconName =
+  | 'activity'
   | 'app-logo'
   | 'alert-circle'
   | 'check'

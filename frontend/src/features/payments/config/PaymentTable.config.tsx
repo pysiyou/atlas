@@ -4,6 +4,8 @@ import { PaymentMethodBadge } from '../components/PaymentStatusBadge';
 import type { TableViewConfig } from '@/components';
 import { buildViews } from '@/components/data-table';
 import {
+  ORDER_TABLE_COLUMN_HEADERS,
+  ORDER_TABLE_VIEW_KEYS_PAYMENT,
   createOrderSharedColumns,
   renderOrderDateCell,
   renderOrderId,
@@ -13,40 +15,6 @@ import { PaymentButton } from '../components/PaymentButton';
 import { PaymentCard } from '../components/PaymentCard';
 import type { OrderPaymentView } from '../types';
 
-/** Order → patient → date → tests → status → total → payment → method → action. */
-const PAYMENT_VIEWS = {
-  full: [
-    'orderId',
-    'patientName',
-    'paidDate',
-    'tests',
-    'overallStatus',
-    'totalPrice',
-    'paymentStatus',
-    'paymentMethod',
-    'action',
-  ],
-  medium: [
-    'orderId',
-    'patientName',
-    'paidDate',
-    'tests',
-    'overallStatus',
-    'totalPrice',
-    'paymentStatus',
-    'action',
-  ],
-  compact: [
-    'orderId',
-    'patientName',
-    'paidDate',
-    'overallStatus',
-    'totalPrice',
-    'paymentStatus',
-    'action',
-  ],
-} as const;
-
 const PAYMENT_LIST_WIDTH_OVERRIDES = {
   full: {
     orderId: 'id' as const,
@@ -54,6 +22,7 @@ const PAYMENT_LIST_WIDTH_OVERRIDES = {
     overallStatus: 'md' as const,
     tests: { min: 200, grow: 1, shrink: 1 },
     paidDate: { min: 148, base: 168, grow: 0, shrink: 0 },
+    priority: 'sm' as const,
     totalPrice: 'md' as const,
     paymentStatus: 'sm' as const,
     paymentMethod: 'sm' as const,
@@ -105,6 +74,7 @@ export const createPaymentTableConfig = (
       getPaymentStatus: item => item.order.paymentStatus,
       getOrderDate: item => item.order.orderDate,
       getOverallStatus: item => item.order.overallStatus,
+      getPriority: item => item.order.priority,
       getTestsSortValue: item => getTestsSortValue(item),
     },
     {
@@ -115,14 +85,6 @@ export const createPaymentTableConfig = (
 
   const columnMap = {
     ...shared,
-    orderId: {
-      ...shared.orderId,
-      header: 'Order',
-    },
-    totalPrice: {
-      ...shared.totalPrice,
-      header: 'Total',
-    },
     tests: {
       ...shared.tests,
       render: (item: OrderPaymentView) => {
@@ -137,10 +99,6 @@ export const createPaymentTableConfig = (
         });
       },
     },
-    paymentStatus: {
-      ...shared.paymentStatus,
-      header: 'Payment',
-    },
     paymentMethod: {
       key: 'paymentMethod',
       header: 'Method',
@@ -154,7 +112,7 @@ export const createPaymentTableConfig = (
     },
     paidDate: {
       key: 'paidDate',
-      header: 'Date',
+      header: ORDER_TABLE_COLUMN_HEADERS.orderDate,
       width: 'lg' as const,
       sortable: true,
       accessor: (item: OrderPaymentView) => getPaymentSortDate(item),
@@ -173,7 +131,7 @@ export const createPaymentTableConfig = (
   };
 
   return {
-    ...buildViews(columnMap, PAYMENT_VIEWS, PAYMENT_LIST_WIDTH_OVERRIDES),
+    ...buildViews(columnMap, ORDER_TABLE_VIEW_KEYS_PAYMENT, PAYMENT_LIST_WIDTH_OVERRIDES),
     CardComponent: PaymentCard,
   };
 };

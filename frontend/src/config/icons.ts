@@ -188,7 +188,7 @@ export const MODULE_ICONS = {
   payments: 'wallet' as IconName,
   reports: 'document-medicine' as IconName,
   catalog: 'book' as IconName,
-  eventLog: 'clock' as IconName,
+  eventLog: 'activity' as IconName,
   users: 'user-cog' as IconName,
 } as const;
 

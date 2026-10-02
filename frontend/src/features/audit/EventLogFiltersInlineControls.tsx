@@ -4,7 +4,7 @@
 import React from 'react';
 import { Checkbox, DateFilter, DebouncedSearchInput, MultiSelectFilter, Select } from '@/components';
 import { RADIUS } from '@/components/theme/recipes';
-import { ICONS } from '@/config/icons';
+import { ICONS, MODULE_ICONS } from '@/config/icons';
 import type { UserRole } from '@/types';
 import { USER_ROLE_OPTIONS } from '@/types';
 import { EVENT_LOG_KIND_OPTIONS } from './eventLogKinds';
@@ -135,7 +135,7 @@ function renderFieldControl(
             onChange={values => props.onKindsChange(values as EventLogKind[])}
             placeholder={EVENT_LOG_FILTER_PLACEHOLDERS.kind}
             selectAllLabel="All domains"
-            icon={ICONS.dataFields.clock}
+            icon={MODULE_ICONS.eventLog}
             className="w-full"
           />
         </div>

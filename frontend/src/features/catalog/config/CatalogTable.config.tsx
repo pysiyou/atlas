@@ -33,7 +33,7 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
     },
     name: {
       key: 'name',
-      header: 'Test Name',
+      header: 'Test',
       width: 'fill' as const,
       sortable: true,
       truncate: true,

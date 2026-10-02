@@ -7,16 +7,16 @@ import type { NavigateFunction } from 'react-router-dom';
 import { Badge, EntityId } from '@/components';
 import type { TableViewConfig } from '@/components';
 import { buildViews } from '@/components/data-table';
-import { renderOrderPatientName } from '@/features/orders';
+import { ORDER_TABLE_COLUMN_HEADERS, renderOrderPatientName } from '@/features/orders';
 import { renderDateTimeCell } from '@/utils/tableColumnRenders';
 import type { ValidatedTest } from '../types';
 import { ReportPreviewButton } from '../components/ReportPreviewButton';
 import { ValidatedTestReportCard } from '../components/ValidatedTestReportCard';
 
 const REPORT_VIEWS = {
-  full: ['testId', 'orderId', 'patientName', 'testName', 'orderDate', 'status', 'action'],
-  medium: ['testId', 'patientName', 'testName', 'status', 'action'],
-  compact: ['testId', 'patientName', 'status', 'action'],
+  full: ['orderId', 'patientName', 'testName', 'orderDate', 'status', 'testId', 'action'],
+  medium: ['orderId', 'patientName', 'testName', 'status', 'action'],
+  compact: ['patientName', 'testName', 'status', 'action'],
 } as const;
 
 export const createReportTableConfig = (
@@ -37,7 +37,7 @@ export const createReportTableConfig = (
     },
     orderId: {
       key: 'orderId',
-      header: 'Order ID',
+      header: ORDER_TABLE_COLUMN_HEADERS.orderId,
       width: 'id' as const,
       sortable: true,
       accessor: (test: ValidatedTest) => test.orderId,

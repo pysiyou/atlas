@@ -128,7 +128,7 @@ export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> 
         ),
       { accessor: row => row.blockedLabel ?? row.status, width: 'md' },
     ),
-    date: createColumn<LabOrderTableRow>('date', 'Updated', {
+    date: createColumn<LabOrderTableRow>('date', 'Date', {
       width: 'lg',
       sortable: true,
       accessor: row => row.date,

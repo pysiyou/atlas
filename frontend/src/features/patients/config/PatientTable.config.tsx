@@ -19,9 +19,9 @@ import { TABLE_TYPE } from '@/components/theme/recipes';
 
 
 const PATIENT_VIEWS = {
-  full: ['id', 'fullName', 'gender', 'contact', 'orders', 'registrationDate', 'affiliation'],
-  medium: ['id', 'fullName', 'gender', 'contact', 'orders', 'registrationDate'],
-  compact: ['id', 'fullName', 'gender', 'contact'],
+  full: ['id', 'fullName', 'contact', 'gender', 'orders', 'registrationDate', 'affiliation'],
+  medium: ['id', 'fullName', 'contact', 'gender', 'orders', 'registrationDate'],
+  compact: ['id', 'fullName', 'contact', 'gender'],
 } as const;
 
 export const createPatientTableConfig = (

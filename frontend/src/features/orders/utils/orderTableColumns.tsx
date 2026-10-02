@@ -11,6 +11,7 @@ import {
   OrderStatusBadge,
 } from '../components/OrderDomainBadges';
 import { PaymentStatusBadge } from '@/features/payments';
+import { ORDER_TABLE_COLUMN_HEADERS } from '../constants/orderTableColumns';
 import {
   renderOrderDateCell,
   renderOrderPatientName,
@@ -61,13 +62,18 @@ export function createOrderSharedColumns<T>(
   const { testsSortable = false, getTestName } = options;
 
   const columns: Partial<Record<OrderSharedColumnKey, ColumnConfig<T>>> = {
-    orderId: createIdColumn<T>('orderId', 'Order ID', item => renderers.renderOrderId(item), {
+    orderId: createIdColumn<T>(
+      'orderId',
+      ORDER_TABLE_COLUMN_HEADERS.orderId,
+      item => renderers.renderOrderId(item),
+      {
       sortable: true,
-      accessor: item => accessors.getOrderId(item),
-    }),
+        accessor: item => accessors.getOrderId(item),
+      }
+    ),
     patientName: {
       key: 'patientName',
-      header: 'Patient',
+      header: ORDER_TABLE_COLUMN_HEADERS.patientName,
       width: 'fill',
       sortable: true,
       accessor: item => accessors.getPatientName(item),
@@ -76,7 +82,7 @@ export function createOrderSharedColumns<T>(
     },
     tests: {
       key: 'tests',
-      header: 'Tests',
+      header: ORDER_TABLE_COLUMN_HEADERS.tests,
       width: 'fill',
       sortable: testsSortable,
       accessor: accessors.getTestsSortValue
@@ -95,7 +101,7 @@ export function createOrderSharedColumns<T>(
     },
     totalPrice: {
       key: 'totalPrice',
-      header: 'Amount',
+      header: ORDER_TABLE_COLUMN_HEADERS.totalPrice,
       width: 'md',
       sortable: true,
       accessor: item => accessors.getTotalPrice(item),
@@ -106,7 +112,7 @@ export function createOrderSharedColumns<T>(
     },
     paymentStatus: createBadgeColumn<T>(
       'paymentStatus',
-      'Payment',
+      ORDER_TABLE_COLUMN_HEADERS.paymentStatus,
       item => <PaymentStatusBadge status={accessors.getPaymentStatus(item)} size="xs" />,
       {
         sortable: true,
@@ -116,7 +122,7 @@ export function createOrderSharedColumns<T>(
     ),
     orderDate: {
       key: 'orderDate',
-      header: 'Date',
+      header: ORDER_TABLE_COLUMN_HEADERS.orderDate,
       width: 'lg',
       sortable: true,
       accessor: item => accessors.getOrderDate(item),
@@ -127,7 +133,7 @@ export function createOrderSharedColumns<T>(
   if (accessors.getPriority) {
     columns.priority = createBadgeColumn<T>(
       'priority',
-      'Priority',
+      ORDER_TABLE_COLUMN_HEADERS.priority,
       item => <OrderPriorityBadge priority={accessors.getPriority!(item)} size="xs" className="border-none" />,
       {
         sortable: true,
@@ -140,7 +146,7 @@ export function createOrderSharedColumns<T>(
   if (accessors.getOverallStatus) {
     columns.overallStatus = createBadgeColumn<T>(
       'overallStatus',
-      'Status',
+      ORDER_TABLE_COLUMN_HEADERS.overallStatus,
       item => <OrderStatusBadge status={accessors.getOverallStatus!(item)} size="xs" />,
       {
         sortable: true,

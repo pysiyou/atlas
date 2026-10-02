@@ -3,7 +3,7 @@ import { format, isSameDay, startOfDay } from 'date-fns';
 import { EmptyState } from '@/components/display/EmptyState';
 import { InlineHighlight } from '@/components/primitives/InlineHighlight';
 import { RADIUS, TYPE } from '@/components/theme/recipes';
-import { ICONS } from '@/config/icons';
+import { MODULE_ICONS } from '@/config/icons';
 import { getLaneVisual, type LabTimelineLane } from '@/features/lab';
 import { parseAppDate } from '@/utils/date';
 import { cn } from '@/utils';
@@ -224,7 +224,7 @@ export const EventLogFeed: React.FC<EventLogFeedProps> = ({
       <EmptyState
         variant="dense"
         fill
-        icon={ICONS.dataFields.clock}
+        icon={MODULE_ICONS.eventLog}
         title={emptyTitle}
         description={emptyDescription}
         className={className}
