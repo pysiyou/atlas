@@ -18,29 +18,25 @@ import type { OrderPaymentView } from '../types';
 const PAYMENT_LIST_WIDTH_OVERRIDES = {
   full: {
     orderId: 'id' as const,
-    patientName: { min: 168, base: 176, grow: 0, shrink: 1 },
-    overallStatus: 'md' as const,
+    patientName: { min: 192, base: 208, grow: 0, shrink: 1 },
     tests: { min: 200, grow: 1, shrink: 1 },
     paidDate: { min: 148, base: 168, grow: 0, shrink: 0 },
-    priority: 'sm' as const,
-    totalPrice: 'md' as const,
+    totalPrice: 'sm' as const,
     paymentStatus: 'sm' as const,
     paymentMethod: 'sm' as const,
   },
   medium: {
     orderId: 'id' as const,
-    patientName: { min: 148, base: 160, grow: 0, shrink: 1 },
-    overallStatus: 'md' as const,
+    patientName: { min: 172, base: 184, grow: 0, shrink: 1 },
     tests: { min: 160, grow: 1, shrink: 1 },
     paidDate: { min: 132, base: 152, grow: 0, shrink: 0 },
-    totalPrice: 'md' as const,
+    totalPrice: 'sm' as const,
   },
   compact: {
     orderId: 'id' as const,
-    patientName: { min: 128, base: 140, grow: 0, shrink: 1 },
+    patientName: { min: 148, base: 164, grow: 0, shrink: 1 },
     paidDate: 'lg' as const,
-    overallStatus: 'sm' as const,
-    totalPrice: 'md' as const,
+    totalPrice: 'sm' as const,
   },
 } as const;
 

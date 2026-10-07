@@ -1,6 +1,6 @@
 /**
  * Canonical order-list table column headers and responsive view key order.
- * id → patient → tests → date → status → priority → payment → total
+ * id → patient → tests → date → status → priority → total → payment
  */
 
 import type { OrderSharedColumnKey } from '../utils/orderTableColumns';
@@ -23,8 +23,8 @@ const ORDER_TABLE_VIEW_KEYS_FULL: OrderSharedColumnKey[] = [
   'orderDate',
   'overallStatus',
   'priority',
-  'paymentStatus',
   'totalPrice',
+  'paymentStatus',
 ];
 
 const ORDER_TABLE_VIEW_KEYS_MEDIUM: OrderSharedColumnKey[] = [
@@ -72,8 +72,6 @@ const PAYMENT_VIEW_KEYS_FULL: PaymentTableViewKey[] = [
   'patientName',
   'tests',
   'paidDate',
-  'overallStatus',
-  'priority',
   'paymentStatus',
   'totalPrice',
   'paymentMethod',
@@ -85,7 +83,6 @@ const PAYMENT_VIEW_KEYS_MEDIUM: PaymentTableViewKey[] = [
   'patientName',
   'tests',
   'paidDate',
-  'overallStatus',
   'totalPrice',
   'paymentStatus',
   'action',
@@ -95,7 +92,6 @@ const PAYMENT_VIEW_KEYS_COMPACT: PaymentTableViewKey[] = [
   'orderId',
   'patientName',
   'paidDate',
-  'overallStatus',
   'totalPrice',
   'paymentStatus',
   'action',
