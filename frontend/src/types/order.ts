@@ -91,6 +91,9 @@ export interface OrderTest {
   criticalNotifiedTo?: string;
   criticalAcknowledgedAt?: string;
 
+  /** Server lab projection when order is loaded with lab enrichment. */
+  lab?: import('@/types/labProjection').LabWorkItemProjection | null;
+
   // Metadata
   createdAt: string;
   updatedAt: string;
@@ -120,6 +123,7 @@ export interface Order {
   totalPrice: number;
   paymentStatus: PaymentStatusType;
   overallStatus: OrderStatusType;
+  statusPresentation?: import('@/types/labProjection').StatusPresentation | null;
 
   // Scheduling
   scheduledCollectionTime?: string;

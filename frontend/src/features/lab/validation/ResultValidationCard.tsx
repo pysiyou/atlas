@@ -7,7 +7,7 @@ import { actionButtonPreset, Button, Card } from '@/components';
 import { cn } from '@/utils';
 import { useUserLookup } from '@/lib/api/users';
 import { usePatientNameLookup } from '@/features/patients';
-import { useLabWorkflowCardClickGuard, useOrderTestQueueState } from '../hooks';
+import { useLabWorkflowCardClickGuard } from '../hooks';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
 import { LabWorkflowCardShell } from '../components/LabWorkflowCardShell';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
@@ -43,7 +43,6 @@ interface ResultValidationCardSharedData {
   handleCardClick: () => void;
   getUserName: (id: string) => string;
   sampleRejection: ReturnType<typeof useSampleRejectionDisplay>;
-  workItem: ReturnType<typeof useOrderTestQueueState>;
   rejection: ReturnType<typeof deriveRetestContext>;
   canValidate: boolean;
   canReject: boolean;
@@ -54,7 +53,6 @@ function useResultValidationCardData(props: ResultValidationCardProps): ResultVa
   const { getUserName } = useUserLookup();
   const { getPatientName } = usePatientNameLookup();
   const handleCardClick = useLabWorkflowCardClickGuard(onClick);
-  const workItem = useOrderTestQueueState(test);
   const canValidate = test.allowedActions?.validate !== false;
   const canReject = test.allowedActions?.reject !== false;
   const rejection = useMemo(() => deriveRetestContext(test), [test]);
@@ -73,7 +71,6 @@ function useResultValidationCardData(props: ResultValidationCardProps): ResultVa
     handleCardClick,
     getUserName,
     sampleRejection,
-    workItem,
     rejection,
     canValidate,
     canReject,
@@ -87,7 +84,6 @@ function ResultValidationCardDesktop({
   isApproving,
   handleCardClick,
   sampleRejection,
-  workItem,
   rejection,
   canValidate,
   canReject,
@@ -121,7 +117,7 @@ function ResultValidationCardDesktop({
           variant="validation"
           emphasizeCritical
           queueSince={test.resultEnteredAt}
-          blockedLabel={workItem.blockedReason ? workItem.label : undefined}
+          showStatus
           flagCount={test.flags?.length}
         />
       }
@@ -173,7 +169,6 @@ function ResultValidationCardMobile({
   isApproving,
   handleCardClick,
   sampleRejection,
-  workItem,
   rejection,
   canValidate,
   canReject,
@@ -223,7 +218,7 @@ function ResultValidationCardMobile({
             size="xs"
             emphasizeCritical
             queueSince={test.resultEnteredAt}
-            blockedLabel={workItem.blockedReason ? workItem.label : undefined}
+            showStatus
             flagCount={test.flags?.length}
           />
         }

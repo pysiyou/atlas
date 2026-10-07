@@ -42,15 +42,12 @@ function getCollectionViewModel(display: SampleCollectionQueueItem, sample: Samp
   const hasContainerInfo = isDone && 'actualContainerColor' in sample;
   const containerColor = hasContainerInfo ? sample.actualContainerColor : undefined;
   const collectAllowed = display.allowedActions?.collect ?? false;
-  const paymentBlocked = isPending && display.denyReason === 'payment_unpaid';
-
   return {
     order,
     isPending,
     isCollected,
     isRejected,
     isRecollection: sample.isRecollection === true,
-    paymentBlocked,
     collectAllowed,
     collectDisabledTitle: display.denyMessage ?? undefined,
     rejectedSample: isRejected ? (sample as RejectedSample) : null,
@@ -83,7 +80,6 @@ function CollectionCardDesktop({
     isCollected,
     isRejected,
     isRecollection,
-    paymentBlocked,
     collectAllowed,
     collectDisabledTitle,
     rejectedSample,
@@ -136,7 +132,7 @@ function CollectionCardDesktop({
           isRejected={isRejected}
           rejectedSample={rejectedSample}
           orderDate={order.orderDate}
-          paymentBlocked={paymentBlocked}
+          statusPresentation={display.statusPresentation}
           requiredVolume={requirement.totalVolume}
           collectedVolume={collectedVolume}
           containerColor={containerColor}
@@ -204,7 +200,6 @@ function CollectionCardMobile({
     isCollected,
     isRejected,
     isRecollection,
-    paymentBlocked,
     collectAllowed,
     collectDisabledTitle,
     rejectedSample,
@@ -295,7 +290,7 @@ function CollectionCardMobile({
             isRejected={isRejected}
             rejectedSample={rejectedSample}
             orderDate={order.orderDate}
-            paymentBlocked={paymentBlocked}
+            statusPresentation={display.statusPresentation}
             requiredVolume={requirement.totalVolume}
             collectedVolume={collectedVolume}
             containerColor={containerColor}

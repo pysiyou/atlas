@@ -4,7 +4,8 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { EmptyState, EMPTY_COPY, Panel, Badge, EntityId, PANEL_EMPTY_STATE } from '@/components';
+import { EmptyState, EMPTY_COPY, Panel, EntityId, PANEL_EMPTY_STATE } from '@/components';
+import { OrderStatusBadge } from '@/features/orders';
 import { ROUTES } from '@/config';
 import type { Order } from '@/types';
 import { INLINE_LINK, RADIUS, TYPE } from '@/components/theme/recipes';
@@ -44,18 +45,11 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
                 {order.testCount ?? order.tests?.length ?? 0} test(s)
               </p>
             </div>
-            <Badge
-              variant={
-                order.overallStatus === 'completed'
-                  ? 'success'
-                  : order.overallStatus === 'running'
-                    ? 'warning'
-                    : 'info'
-              }
-              className="border-none font-normal"
-            >
-              {order.overallStatus}
-            </Badge>
+            <OrderStatusBadge
+              status={order.overallStatus}
+              presentation={order.statusPresentation}
+              size="xs"
+            />
           </Link>
         ))
       ) : (

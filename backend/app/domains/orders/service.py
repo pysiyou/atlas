@@ -159,6 +159,8 @@ def _active_test_codes_by_order_id(db, order_ids: list[int]) -> dict[int, list[s
 
 
 def _order_to_summary(order: Order, test_count: int, test_codes: list[str] | None = None) -> dict:
+    from app.domains.lab.rules.status_presentation import resolve_order_presentation
+
     patient_name = order.patient.fullName if order.patient else "Unknown"
     return OrderSummaryResponse(
         orderId=order.orderId,
@@ -170,6 +172,7 @@ def _order_to_summary(order: Order, test_count: int, test_codes: list[str] | Non
         totalPrice=float(order.totalPrice or 0),
         paymentStatus=order.paymentStatus,
         overallStatus=order.overallStatus,
+        statusPresentation=resolve_order_presentation(order.overallStatus),
         priority=order.priority,
         referringPhysician=order.referringPhysician,
         clinicalNotes=order.clinicalNotes,
@@ -187,12 +190,19 @@ class OrderService:
         self.emitter = AuditEmitter(db)
 
     def _order_response_with_lab(self, order: Order) -> OrderResponse:
+        from app.domains.lab.rules.status_presentation import resolve_order_presentation
+
         base = OrderResponse.model_validate(order)
         projections = lab_projections_for_order(self.db, order)
         enriched_tests = [
             test.model_copy(update={"lab": projections.get(test.id)}) for test in base.tests
         ]
-        return base.model_copy(update={"tests": enriched_tests})
+        return base.model_copy(
+            update={
+                "tests": enriched_tests,
+                "statusPresentation": resolve_order_presentation(order.overallStatus),
+            }
+        )
 
     def list_orders(
         self,

@@ -8,7 +8,6 @@ import { actionButtonPreset, Badge, Button } from '@/components';
 import { LabWorkflowDetailModal, ModalFooter } from '../components/LabWorkflowDetailModal';
 import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
-import { useOrderTestQueueState } from '../hooks';
 import { buildCriticalValueRecord } from '../criticalValues/criticalValues';
 import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
 import type { TestWithContext } from '@/types';
@@ -71,7 +70,6 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
     onResetForm: resetForm,
   });
 
-  const workItem = useOrderTestQueueState(test);
   if (test.id == null) return null;
 
   const hasResults = Boolean(test.results && Object.keys(test.results).length > 0);
@@ -80,7 +78,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
       test={test}
       variant="escalation"
       reasonCode={test.reasonCode}
-      blockedLabel={workItem.blockedReason ? workItem.label : undefined}
+      showStatus
       trailing={
         <Badge size={LAB_CARD_BADGE_SIZE} variant="danger">
           Requires Supervisor Action

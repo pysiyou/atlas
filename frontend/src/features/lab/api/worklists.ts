@@ -10,6 +10,7 @@ import type {
   SampleStatus,
   TestStatus,
 } from '@/types';
+import type { StatusPresentation } from '@/types/labProjection';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/app/authStore';
 import { queryKeys, cacheConfig } from '@/lib/query';
@@ -52,6 +53,7 @@ export interface CollectionWorklistItem {
   allowedActions?: LabWorklistAllowedActions;
   denyReason?: string | null;
   denyMessage?: string | null;
+  statusPresentation?: StatusPresentation | null;
   waitingHours: number;
   turnaroundHours: number;
   actualContainerType?: ContainerType | null;
@@ -87,6 +89,7 @@ export interface EntryWorklistItem {
   allowedActions?: LabWorklistAllowedActions;
   denyReason?: string | null;
   denyMessage?: string | null;
+  statusPresentation?: StatusPresentation | null;
 }
 
 export interface DashboardWorklistItem {
@@ -104,7 +107,9 @@ export interface DashboardWorklistItem {
   orderDate: string;
   referringPhysician?: string | null;
   testCategory?: string | null;
+  blockedReason?: string | null;
   blockedLabel?: string | null;
+  statusPresentation?: StatusPresentation | null;
 }
 
 export interface ValidationWorklistItem {
@@ -137,6 +142,7 @@ export interface ValidationWorklistItem {
   allowedActions?: LabWorklistAllowedActions;
   denyReason?: string | null;
   denyMessage?: string | null;
+  statusPresentation?: StatusPresentation | null;
 }
 
 interface WorklistParams {

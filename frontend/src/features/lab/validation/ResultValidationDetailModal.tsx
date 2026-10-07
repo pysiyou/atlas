@@ -28,7 +28,6 @@ import { buildCriticalValueRecord } from '../criticalValues/criticalValues';
 import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
 import { LabEventLogPanel } from '@/features/audit';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
-import { useOrderTestQueueState } from '../hooks';
 import { useSampleRejectionDisplay } from '../hooks/useSampleRejectionDisplay';
 import { SampleRejectedBanner } from '../components/SampleRejectedBanner';
 import type { TestWithContext } from '@/types';
@@ -85,7 +84,6 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
     invalidateLabWorkflowQueries(queryClient, { criticalValues: true });
   }, [queryClient]);
 
-  const workItem = useOrderTestQueueState(test);
   const sampleRejection = useSampleRejectionDisplay(test);
 
   if (!readOnly && !test.results) return null;
@@ -101,7 +99,6 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
       emphasizeCritical
       showStatus
       queueSince={test.resultEnteredAt}
-      blockedLabel={workItem.blockedReason ? workItem.label : undefined}
       flagCount={flagCount}
     />
   );

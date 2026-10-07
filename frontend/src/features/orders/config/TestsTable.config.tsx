@@ -69,7 +69,13 @@ function createTestTableCard(testCatalog: Test[]): React.FC<CardComponentProps<O
       >
         <div className="flex items-start justify-between gap-space-2">
           <div className="min-w-0 flex-1">{renderOrderTestIdentity(item, testCatalog)}</div>
-          <OrderTestStatusBadge status={item.status} size="xs" className="shrink-0" />
+          <OrderTestStatusBadge
+            status={item.status}
+            presentation={item.lab?.statusPresentation}
+            layout="compact"
+            size="xs"
+            className="shrink-0"
+          />
         </div>
         {categoryBadge ? <div className="mt-space-2">{categoryBadge}</div> : null}
         <div className={`${TYPE.meta} mt-space-1`}>{formatCurrency(item.priceAtOrder)}</div>
@@ -106,7 +112,12 @@ export function createTestsTableConfig(
       width: 'md' as const,
       accessor: (test: OrderTest) => test.status,
       render: (test: OrderTest) => (
-        <OrderTestStatusBadge status={test.status} size="xs" />
+        <OrderTestStatusBadge
+          status={test.status}
+          presentation={test.lab?.statusPresentation}
+          layout="compact"
+          size="xs"
+        />
       ),
     },
     sampleId: {
