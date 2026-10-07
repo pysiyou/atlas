@@ -5,7 +5,6 @@
 import {
   LabDepartmentBadge,
   LabPriorityBadge,
-  SampleStatusBadge,
   SampleTypeBadge,
 } from '../components/LabDomainBadges';
 import {
@@ -17,8 +16,12 @@ import {
 import { MobileEntityCard } from '@/components';
 import type { CardComponentProps } from '@/components';
 import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
-import { BlockedReasonBadge } from '@/features/lab';
-import { displayId } from '@/utils';
+import { getOrderTestLineageRowClass } from '@/features/orders/utils/orderTestLineage';
+import { cn, displayId } from '@/utils';
+import {
+  getLabMonitorTableStatusKey,
+  renderLabMonitorTableStatusCell,
+} from './labMonitorTableStatus';
 import {
   renderDateTimeCell,
   renderTableEmptyCell,
@@ -34,7 +37,10 @@ const VIEWS = {
 
 function LabOrderTableCard({ item, onClick }: CardComponentProps<LabOrderTableRow>) {
   return (
-    <MobileEntityCard onClick={onClick}>
+    <MobileEntityCard
+      onClick={onClick}
+      className={cn(getOrderTestLineageRowClass({ status: item.status }))}
+    >
       <MobileEntityCard.Header
         leading={
           <div className="min-w-0 space-y-space-1">
@@ -48,11 +54,7 @@ function LabOrderTableCard({ item, onClick }: CardComponentProps<LabOrderTableRo
         trailing={<LabPriorityBadge priority={item.priority} size="xs" />}
       />
       <div className="flex flex-wrap items-center gap-space-2">
-        {item.blockedLabel ? (
-          <BlockedReasonBadge label={item.blockedLabel} size="xs" showIcon={false} />
-        ) : (
-          <SampleStatusBadge status={item.status} size="xs" />
-        )}
+        {renderLabMonitorTableStatusCell(item)}
         {item.sampleType ? (
           <SampleTypeBadge sampleType={item.sampleType} size="xs" className="border-none" />
         ) : null}
@@ -120,13 +122,8 @@ export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> 
     status: createBadgeColumn<LabOrderTableRow>(
       'status',
       'Status',
-      row =>
-        row.blockedLabel ? (
-          <BlockedReasonBadge label={row.blockedLabel} size="xs" showIcon={false} />
-        ) : (
-          <SampleStatusBadge status={row.status} size="xs" />
-        ),
-      { accessor: row => row.blockedLabel ?? row.status, width: 'md' },
+      row => renderLabMonitorTableStatusCell(row),
+      { accessor: row => getLabMonitorTableStatusKey(row), width: 'md' },
     ),
     date: createColumn<LabOrderTableRow>('date', 'Date', {
       width: 'lg',

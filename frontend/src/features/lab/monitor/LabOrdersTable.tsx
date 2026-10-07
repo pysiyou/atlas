@@ -11,7 +11,8 @@ import { useDashboardWorklistToday } from '../api/worklists';
 import { getLabQueueUrl } from '../constants/labConstants';
 import type { LabPipelineStage } from './monitorModel';
 import type { PriorityLevel, TestStatus } from '@/types';
-import { displayId } from '@/utils';
+import { cn, displayId } from '@/utils';
+import { getOrderTestLineageRowClass } from '@/features/orders/utils/orderTestLineage';
 import { MONITOR_ROW_INTERACTIVE } from './monitorStyles';
 import { createLabOrdersTableConfig } from './LabOrdersTable.config';
 
@@ -80,7 +81,9 @@ export const LabOrdersTable: React.FC = () => {
         pagination={{ mode: 'none' }}
         getRowKey={row => row.id}
         onRowClick={row => navigate(row.href)}
-        rowClassName={() => MONITOR_ROW_INTERACTIVE}
+        rowClassName={row =>
+          cn(MONITOR_ROW_INTERACTIVE, getOrderTestLineageRowClass({ status: row.status }))
+        }
         emptyMessage={EMPTY_COPY.dashboardWorklist.title}
         emptyDescription={EMPTY_COPY.dashboardWorklist.description}
         emptyVariant="dense"
