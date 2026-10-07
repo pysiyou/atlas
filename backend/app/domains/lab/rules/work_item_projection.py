@@ -23,8 +23,13 @@ from app.domains.lab.rules.eligibility import (
 )
 from app.domains.lab.schemas.allowed_actions import LabWorklistAllowedActions
 from app.domains.orders.models import Order, OrderTest
+from app.domains.lab.rules.status_presentation import (
+    resolve_sample_presentation,
+    resolve_test_presentation,
+)
 from app.shared.contracts.enums import TestStatus
 from app.shared.contracts.lab_blockers import BLOCKED_LABELS
+from app.shared.schemas.status_presentation import StatusPresentation
 from pydantic import BaseModel, Field
 
 MonitorAttentionStage = Literal["collection", "entry", "validation", "escalation"]
@@ -49,6 +54,7 @@ class LabWorkItemProjection(BaseModel):
     denyMessage: str | None = None
     allowedActions: LabWorklistAllowedActions = Field(default_factory=LabWorklistAllowedActions)
     escalation: EscalationActionFlags | None = None
+    statusPresentation: StatusPresentation | None = None
 
 
 @dataclass
@@ -97,6 +103,21 @@ def _sample_status_value(sample: Sample | None) -> str | None:
     return sample.status.value if hasattr(sample.status, "value") else str(sample.status)
 
 
+def _with_test_presentation(
+    projection: LabWorkItemProjection,
+    test_status: TestStatus | str,
+) -> LabWorkItemProjection:
+    return projection.model_copy(
+        update={
+            "statusPresentation": resolve_test_presentation(
+                status=test_status,
+                blocked_reason=projection.blockedReason,
+                blocked_label=projection.blockedLabel,
+            )
+        }
+    )
+
+
 def project_collection_sample(ctx: LabWorkItemContext) -> LabWorkItemProjection:
     if ctx.sample is None:
         raise ValueError("sample is required for collection projection")
@@ -118,14 +139,20 @@ def project_collection_sample(ctx: LabWorkItemContext) -> LabWorkItemProjection:
     )
     effective_deny = deny_reason or blocked
 
-    return LabWorkItemProjection(
+    base = LabWorkItemProjection(
         pipelineStage="collection",
         blockedReason=blocked,
         blockedLabel=_blocked_label(blocked),
         denyReason=effective_deny,
         denyMessage=deny_message(effective_deny),
         allowedActions=_actions_model(allowed),
+        statusPresentation=resolve_sample_presentation(
+            status=sample.status,
+            blocked_reason=blocked,
+            blocked_label=_blocked_label(blocked),
+        ),
     )
+    return base
 
 
 def project_order_test_entry(ctx: LabWorkItemContext) -> LabWorkItemProjection:
@@ -152,13 +179,16 @@ def project_order_test_entry(ctx: LabWorkItemContext) -> LabWorkItemProjection:
     if not enter_allowed:
         effective_deny = effective_deny or blocked
 
-    return LabWorkItemProjection(
-        pipelineStage="entry",
-        blockedReason=blocked,
-        blockedLabel=_blocked_label(blocked),
-        denyReason=effective_deny,
-        denyMessage=deny_message(effective_deny),
-        allowedActions=_actions_model(allowed),
+    return _with_test_presentation(
+        LabWorkItemProjection(
+            pipelineStage="entry",
+            blockedReason=blocked,
+            blockedLabel=_blocked_label(blocked),
+            denyReason=effective_deny,
+            denyMessage=deny_message(effective_deny),
+            allowedActions=_actions_model(allowed),
+        ),
+        order_test.status,
     )
 
 
@@ -183,14 +213,17 @@ def project_order_test_validation(ctx: LabWorkItemContext) -> LabWorkItemProject
     if status == TestStatus.ESCALATED.value:
         esc = escalation_action_flags(order_test, reason_code=ctx.escalation_reason_code)
 
-    return LabWorkItemProjection(
-        pipelineStage="validation",
-        blockedReason=blocked,
-        blockedLabel=_blocked_label(blocked),
-        denyReason=effective_deny,
-        denyMessage=deny_message(effective_deny),
-        allowedActions=_actions_model(allowed),
-        escalation=EscalationActionFlags.model_validate(esc) if esc else None,
+    return _with_test_presentation(
+        LabWorkItemProjection(
+            pipelineStage="validation",
+            blockedReason=blocked,
+            blockedLabel=_blocked_label(blocked),
+            denyReason=effective_deny,
+            denyMessage=deny_message(effective_deny),
+            allowedActions=_actions_model(allowed),
+            escalation=EscalationActionFlags.model_validate(esc) if esc else None,
+        ),
+        order_test.status,
     )
 
 
@@ -207,21 +240,31 @@ def project_order_test_pipeline(ctx: LabWorkItemContext) -> LabWorkItemProjectio
     if status == TestStatus.ESCALATED:
         return project_order_test_validation(ctx)
     if status in (TestStatus.VALIDATED, TestStatus.SUPERSEDED, TestStatus.REMOVED):
-        return LabWorkItemProjection(
-            pipelineStage="completed",
-            allowedActions=_actions_model({}),
+        return _with_test_presentation(
+            LabWorkItemProjection(
+                pipelineStage="completed",
+                allowedActions=_actions_model({}),
+            ),
+            status,
         )
     if status == TestStatus.CANCELLED:
-        return LabWorkItemProjection(
-            pipelineStage="cancelled",
-            allowedActions=_actions_model({}),
+        return _with_test_presentation(
+            LabWorkItemProjection(
+                pipelineStage="cancelled",
+                allowedActions=_actions_model({}),
+            ),
+            status,
         )
     if status == TestStatus.PENDING and ctx.sample is not None:
-        return project_collection_sample(ctx)
+        collection = project_collection_sample(ctx)
+        return _with_test_presentation(collection, status)
 
-    return LabWorkItemProjection(
-        pipelineStage="entry",
-        allowedActions=_actions_model({}),
+    return _with_test_presentation(
+        LabWorkItemProjection(
+            pipelineStage="entry",
+            allowedActions=_actions_model({}),
+        ),
+        status,
     )
 
 
@@ -263,10 +306,14 @@ def blocked_reason_for_monitor_row(
 
 def projection_to_worklist_fields(projection: LabWorkItemProjection) -> dict[str, Any]:
     """Flatten projection for legacy worklist dict builders."""
+    presentation = None
+    if projection.statusPresentation is not None:
+        presentation = projection.statusPresentation.model_dump()
     return {
         "blockedReason": projection.blockedReason,
         "blockedLabel": projection.blockedLabel,
         "allowedActions": projection.allowedActions.model_dump(by_alias=True),
         "denyReason": projection.denyReason,
         "denyMessage": projection.denyMessage,
+        "statusPresentation": presentation,
     }

@@ -36,6 +36,7 @@ export interface SampleCollectionQueueItem {
   allowedActions?: LabWorklistAllowedActions;
   denyReason?: string | null;
   denyMessage?: string | null;
+  statusPresentation?: import('@/types/labProjection').StatusPresentation | null;
 }
 
 /** Alias used across lab collection code. */

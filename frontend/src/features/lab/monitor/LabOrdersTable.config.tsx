@@ -16,12 +16,9 @@ import {
 import { MobileEntityCard } from '@/components';
 import type { CardComponentProps } from '@/components';
 import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
+import { OrderTestStatusBadge } from '@/features/orders';
 import { getOrderTestLineageRowClass } from '@/features/orders/utils/orderTestLineage';
 import { cn, displayId } from '@/utils';
-import {
-  getLabMonitorTableStatusKey,
-  renderLabMonitorTableStatusCell,
-} from './labMonitorTableStatus';
 import {
   renderDateTimeCell,
   renderTableEmptyCell,
@@ -34,6 +31,26 @@ const VIEWS = {
   medium: ['test', 'patient', 'sampleType', 'priority', 'status', 'date'],
   compact: ['test', 'patient', 'status'],
 } as const;
+
+function renderMonitorStatus(row: LabOrderTableRow) {
+  return (
+    <OrderTestStatusBadge
+      status={row.status}
+      presentation={row.statusPresentation}
+      layout="compact"
+      size="xs"
+    />
+  );
+}
+
+function monitorStatusAccessor(row: LabOrderTableRow): string {
+  const presentation = row.statusPresentation;
+  if (presentation?.primary) {
+    const secondary = presentation.secondary?.trim();
+    return secondary ?? presentation.primary;
+  }
+  return row.status;
+}
 
 function LabOrderTableCard({ item, onClick }: CardComponentProps<LabOrderTableRow>) {
   return (
@@ -54,7 +71,7 @@ function LabOrderTableCard({ item, onClick }: CardComponentProps<LabOrderTableRo
         trailing={<LabPriorityBadge priority={item.priority} size="xs" />}
       />
       <div className="flex flex-wrap items-center gap-space-2">
-        {renderLabMonitorTableStatusCell(item)}
+        {renderMonitorStatus(item)}
         {item.sampleType ? (
           <SampleTypeBadge sampleType={item.sampleType} size="xs" className="border-none" />
         ) : null}
@@ -122,8 +139,8 @@ export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> 
     status: createBadgeColumn<LabOrderTableRow>(
       'status',
       'Status',
-      row => renderLabMonitorTableStatusCell(row),
-      { accessor: row => getLabMonitorTableStatusKey(row), width: 'md' },
+      row => renderMonitorStatus(row),
+      { accessor: row => monitorStatusAccessor(row), width: 'md' },
     ),
     date: createColumn<LabOrderTableRow>('date', 'Date', {
       width: 'lg',

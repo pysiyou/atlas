@@ -46,7 +46,7 @@ export function mapCollectionWorklistToSampleDisplay(item: CollectionWorklistIte
     orderDate: item.orderDate,
     totalPrice: 0,
     paymentStatus: item.paymentStatus,
-    overallStatus: 'running',
+    overallStatus: 'ordered',
     priority: item.priority,
     tests: [],
     createdBy: '',
@@ -80,10 +80,16 @@ export function mapCollectionWorklistToSampleDisplay(item: CollectionWorklistIte
     orderId: item.orderId,
   };
 
-  return { sample, order, patient, priority: item.priority, requirement,
+  return {
+    sample,
+    order,
+    patient,
+    priority: item.priority,
+    requirement,
     allowedActions: item.allowedActions,
     denyReason: item.denyReason ?? null,
     denyMessage: item.denyMessage ?? null,
+    statusPresentation: item.statusPresentation ?? null,
   };
 }
 
@@ -105,6 +111,11 @@ export function mapEntryWorklistToOrderTestContext(item: EntryWorklistItem): Tes
     allowedActions: item.allowedActions,
     denyReason: item.denyReason ?? null,
     denyMessage: item.denyMessage ?? null,
+    lab: {
+      blockedReason: item.blockedReason ?? null,
+      blockedLabel: item.blockedLabel ?? null,
+      statusPresentation: item.statusPresentation ?? null,
+    },
   } as TestWithContext;
 }
 
@@ -136,6 +147,11 @@ export function mapValidationWorklistToOrderTestContext(
     allowedActions: item.allowedActions,
     denyReason: item.denyReason ?? null,
     denyMessage: item.denyMessage ?? null,
+    lab: {
+      blockedReason: item.blockedReason ?? null,
+      blockedLabel: item.blockedLabel ?? null,
+      statusPresentation: item.statusPresentation ?? null,
+    },
   } as TestWithContext;
 }
 

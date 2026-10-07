@@ -16,4 +16,5 @@ export * from './EmptyState';
 export * from './emptyStatePresets';
 export * from './emptyStateCopy';
 export * from './EntityId';
+export * from './StatusPresentationBadge';
 export * from './FooterInfo';

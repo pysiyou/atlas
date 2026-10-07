@@ -202,6 +202,78 @@ export const PRIORITY_ATTENTION_TYPES = ${JSON.stringify(
   writeFile('frontend/src/types/generated/labBlockers.ts', ts);
 }
 
+function generateStatusPresentation() {
+  const jsonPath = path.join(CONTRACTS, 'status-presentation.json');
+  if (!fs.existsSync(jsonPath)) {
+    console.log('skip status-presentation (contracts/status-presentation.json not found)');
+    return;
+  }
+  const data = readJson('status-presentation.json');
+  const primary = data.canonicalPrimary ?? [];
+  const variants = data.badgeVariants ?? {};
+  const labels = data.displayLabels ?? {};
+  const terminalTest = data.terminalTestStatuses ?? [];
+
+  const pyPrimary = primary.map(v => `    ${JSON.stringify(v)},`).join('\n');
+  const pyVariants = Object.entries(variants)
+    .map(([k, v]) => `    ${JSON.stringify(k)}: ${JSON.stringify(v)},`)
+    .join('\n');
+  const pyLabels = Object.entries(labels)
+    .map(([k, v]) => `    ${JSON.stringify(k)}: ${JSON.stringify(v)},`)
+    .join('\n');
+
+  const py = `"""
+Status presentation vocabulary — GENERATED from contracts/status-presentation.json. DO NOT EDIT.
+"""
+from __future__ import annotations
+
+CANONICAL_PRIMARY_VALUES: tuple[str, ...] = (
+${pyPrimary}
+)
+
+BADGE_VARIANTS: dict[str, str] = {
+${pyVariants}
+}
+
+DISPLAY_LABELS: dict[str, str] = {
+${pyLabels}
+}
+
+TERMINAL_TEST_STATUSES: frozenset[str] = frozenset(
+    {
+${terminalTest.map(t => `        ${JSON.stringify(t)},`).join('\n')}
+    }
+)
+`;
+  writeFile('backend/app/shared/contracts/status_presentation_contract.py', py);
+
+  const tsPrimary = primary.map(v => JSON.stringify(v)).join(' | ');
+  const ts = `/**
+ * Status presentation — GENERATED from contracts/status-presentation.json. DO NOT EDIT.
+ */
+export const CANONICAL_PRIMARY_VALUES = [
+${primary.map(v => `  ${JSON.stringify(v)},`).join('\n')}
+] as const;
+
+export type CanonicalPresentationPrimary = ${tsPrimary || 'string'};
+
+export const PRESENTATION_BADGE_VARIANTS: Record<CanonicalPresentationPrimary, string> = ${JSON.stringify(
+    variants,
+    null,
+    2
+  )} as Record<CanonicalPresentationPrimary, string>;
+
+export const PRESENTATION_DISPLAY_LABELS: Record<CanonicalPresentationPrimary, string> = ${JSON.stringify(
+    labels,
+    null,
+    2
+  )} as Record<CanonicalPresentationPrimary, string>;
+
+export const TERMINAL_TEST_STATUSES = ${JSON.stringify(terminalTest)} as const;
+`;
+  writeFile('frontend/src/types/generated/statusPresentation.ts', ts);
+}
+
 function generateEnums() {
   const jsonPath = path.join(CONTRACTS, 'enums.json');
   if (!fs.existsSync(jsonPath)) {
@@ -298,6 +370,9 @@ ${filterBlock}`;
 generateLabConstants();
 if (fs.existsSync(path.join(CONTRACTS, 'lab-blockers.json'))) {
   generateLabBlockers();
+}
+if (fs.existsSync(path.join(CONTRACTS, 'status-presentation.json'))) {
+  generateStatusPresentation();
 }
 if (fs.existsSync(path.join(CONTRACTS, 'physiologic-limits.json'))) {
   generatePhysiologicLimits();

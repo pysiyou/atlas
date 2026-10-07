@@ -90,7 +90,6 @@ function ResultEntryCardDesktop({
   filledCount,
   handleCardClick,
   rejection,
-  blockedLabel,
   canEnter,
 }: ResultEntryCardSharedData) {
   const { showAttemptIndicator } = rejection;
@@ -118,8 +117,8 @@ function ResultEntryCardDesktop({
         <TestHeaderBadges
           test={test}
           variant="entry"
+          showStatus
           queueSince={test.collectedAt}
-          blockedLabel={blockedLabel}
         />
       }
       actions={
@@ -195,7 +194,7 @@ function ResultEntryCardMobile({
             variant="entry"
             size="xs"
             queueSince={test.collectedAt}
-            blockedLabel={blockedLabel}
+            showStatus
           />
         }
         actions={

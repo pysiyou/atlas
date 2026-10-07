@@ -16,7 +16,6 @@ import { EntryDetailMainPanel, EntryDetailModalFooter } from './ResultEntryDetai
 import { LabWorkflowDetailModal, DetailGrid } from '../components/LabWorkflowDetailModal';
 import { LabEventLogPanel } from '@/features/audit';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
-import { useOrderTestQueueState } from '../hooks';
 import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { ICONS } from '@/config/icons';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
@@ -92,11 +91,7 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
   );
   const isSaving = saveAction.isPending;
 
-  const workItem = useOrderTestQueueState(test);
   const canEnter = test.allowedActions?.enterResults !== false;
-  const blockedLabel =
-    test.denyMessage ??
-    (workItem.blockedReason ? workItem.label : undefined);
 
   const filledCount = useMemo(
     () => Object.values(displayResults).filter(v => v?.trim()).length,
@@ -149,7 +144,6 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
       variant="entry"
       showStatus
       queueSince={test.collectedAt}
-      blockedLabel={blockedLabel}
       trailing={
         <>
           <Badge size={LAB_CARD_BADGE_SIZE} variant="neutral" className="text-text-secondary">

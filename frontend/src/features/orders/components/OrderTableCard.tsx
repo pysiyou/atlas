@@ -62,14 +62,26 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
       <div className="flex justify-between items-center mt-auto pt-space-3 gap-space-2">
         {hidePatientName ? (
           <div className="flex items-center gap-space-2 shrink-0 flex-wrap">
-            {order.overallStatus && <OrderStatusBadge status={order.overallStatus} size="xs" />}
+            {order.overallStatus && (
+              <OrderStatusBadge
+                status={order.overallStatus}
+                presentation={order.statusPresentation}
+                size="xs"
+              />
+            )}
             {order.paymentStatus && <PaymentStatusBadge status={order.paymentStatus} size="xs" />}
           </div>
         ) : (
           <>
             <div className={TABLE_DATETIME_SECONDARY_CLASS}>{formatDateTime(order.orderDate)}</div>
             <div className="flex items-center gap-space-2 shrink-0">
-              {order.overallStatus && <OrderStatusBadge status={order.overallStatus} size="xs" />}
+              {order.overallStatus && (
+              <OrderStatusBadge
+                status={order.overallStatus}
+                presentation={order.statusPresentation}
+                size="xs"
+              />
+            )}
               {order.paymentStatus && <PaymentStatusBadge status={order.paymentStatus} size="xs" />}
             </div>
           </>

@@ -8,13 +8,15 @@ import { Badge, Icon, type BadgeSize } from '@/components';
 import type { TestWithContext } from '@/types';
 import { ICONS } from '@/config/icons';
 import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
+import { OrderTestStatusBadge } from '@/features/orders';
 import {
   LabPriorityBadge,
   SampleStatusBadge,
   SampleTypeBadge,
 } from './LabDomainBadges';
 import { QueueAgeBadge } from './QueueAgeBadge';
-import { BlockedReasonBadge, FlagCountBadge } from './LabResultStatusBadges';
+import { StatusPresentationStack } from '@/components/display/StatusPresentationBadge';
+import { FlagCountBadge } from './LabResultStatusBadges';
 import { LabRejectionTailBadgesFromTest } from './LabRejectionTailBadges';
 import { CompactMd } from './LabWorkflowBadgeChrome';
 
@@ -29,7 +31,6 @@ export interface TestHeaderBadgesProps {
   size?: BadgeSize;
   showStatus?: boolean;
   queueSince?: string;
-  blockedLabel?: string;
   emphasizeCritical?: boolean;
   flagCount?: number;
   reasonCode?: string;
@@ -40,13 +41,34 @@ function compactBadgeSize(size: BadgeSize): 'xs' | 'sm' {
   return size === 'md' ? 'sm' : size;
 }
 
+function TestStatusChip({
+  test,
+  size,
+  variant,
+}: {
+  test: TestWithContext;
+  size: BadgeSize;
+  variant: 'entry' | 'validation' | 'escalation';
+}) {
+  const presentation = test.lab?.statusPresentation ?? null;
+  if (presentation) {
+    return <StatusPresentationStack presentation={presentation} size={size} />;
+  }
+  if (variant === 'escalation') {
+    return <SampleStatusBadge status="escalated" size={size} />;
+  }
+  if (test.status) {
+    return <OrderTestStatusBadge status={test.status} size={size} />;
+  }
+  return null;
+}
+
 function TestHeaderBadgesView({
   test,
   variant = 'entry',
   size = LAB_CARD_BADGE_SIZE,
   showStatus = false,
   queueSince,
-  blockedLabel,
   emphasizeCritical = false,
   flagCount,
   reasonCode,
@@ -59,13 +81,12 @@ function TestHeaderBadgesView({
   if (variant === 'escalation') {
     return (
       <>
-        <SampleStatusBadge status="escalated" size={size} />
+        <TestStatusChip test={test} size={size} variant="escalation" />
         {reasonCode ? (
           <Badge variant="warning" size={size}>
             {reasonCode}
           </Badge>
         ) : null}
-        {blockedLabel ? <BlockedReasonBadge label={blockedLabel} size={compactSize} /> : null}
         {showPriority && test.priority ? <LabPriorityBadge priority={test.priority} size={size} /> : null}
         {test.sampleType ? <SampleTypeBadge sampleType={test.sampleType} size={size} /> : null}
         {trailing}
@@ -85,9 +106,9 @@ function TestHeaderBadgesView({
         <LabPriorityBadge priority={test.priority} size={size} />
       ) : null}
       {test.sampleType ? <SampleTypeBadge sampleType={test.sampleType} size={size} /> : null}
-      {showStatus && test.status ? (
+      {showStatus ? (
         <CompactMd>
-          <SampleStatusBadge status={test.status} size={size} />
+          <TestStatusChip test={test} size={size} variant={variant} />
         </CompactMd>
       ) : null}
       {queueSince ? (
@@ -95,7 +116,6 @@ function TestHeaderBadgesView({
           <QueueAgeBadge since={queueSince} />
         </CompactMd>
       ) : null}
-      {blockedLabel ? <BlockedReasonBadge label={blockedLabel} size={compactSize} /> : null}
       {variant === 'validation' && flagCount != null && flagCount > 0 ? (
         <FlagCountBadge count={flagCount} size={compactSize} />
       ) : null}

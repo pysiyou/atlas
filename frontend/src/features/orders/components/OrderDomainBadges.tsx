@@ -3,15 +3,40 @@
  */
 
 import { Badge, type BadgeProps } from '@/components';
+import {
+  StatusPresentationCompactBadge,
+  StatusPresentationStack,
+} from '@/components/display/StatusPresentationBadge';
 import type { OrderStatus, OrderTest, PriorityLevel } from '@/types';
+import type { StatusPresentation } from '@/types/labProjection';
 import { formatStatusBadgeLabel, resolveStatusBadgeColor } from '@/utils/statusBadge';
 
 type DomainBadgeProps = Omit<BadgeProps, 'variant' | 'label' | 'children'>;
 
+export type StatusPresentationLayout = 'stack' | 'compact';
+
 export function OrderStatusBadge({
   status,
+  presentation,
+  layout = 'stack',
   ...props
-}: DomainBadgeProps & { status: OrderStatus | string }) {
+}: DomainBadgeProps & {
+  status: OrderStatus | string;
+  presentation?: StatusPresentation | null;
+  layout?: StatusPresentationLayout;
+}) {
+  if (presentation) {
+    if (layout === 'compact') {
+      return (
+        <StatusPresentationCompactBadge
+          presentation={presentation}
+          size={props.size}
+          className={props.className}
+        />
+      );
+    }
+    return <StatusPresentationStack presentation={presentation} size={props.size} />;
+  }
   return (
     <Badge
       variant={resolveStatusBadgeColor(status)}
@@ -36,8 +61,26 @@ export function OrderPriorityBadge({
 
 export function OrderTestStatusBadge({
   status,
+  presentation,
+  layout = 'stack',
   ...props
-}: DomainBadgeProps & { status: OrderTest['status'] | string }) {
+}: DomainBadgeProps & {
+  status: OrderTest['status'] | string;
+  presentation?: StatusPresentation | null;
+  layout?: StatusPresentationLayout;
+}) {
+  if (presentation) {
+    if (layout === 'compact') {
+      return (
+        <StatusPresentationCompactBadge
+          presentation={presentation}
+          size={props.size}
+          className={props.className}
+        />
+      );
+    }
+    return <StatusPresentationStack presentation={presentation} size={props.size} />;
+  }
   return (
     <Badge
       variant={resolveStatusBadgeColor(status)}

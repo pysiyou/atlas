@@ -7,7 +7,7 @@ import { Button, Card, Icon } from '@/components';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 import { useUserLookup } from '@/lib/api/users';
-import { useLabWorkflowCardClickGuard, useOrderTestQueueState } from '../hooks';
+import { useLabWorkflowCardClickGuard } from '../hooks';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
 import { LabWorkflowCardShell } from '../components/LabWorkflowCardShell';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
@@ -29,7 +29,6 @@ interface EscalationCardSharedData {
   handleCardClick: (e?: React.MouseEvent) => void;
   getUserName: (userId: string) => string;
   rejection: ReturnType<typeof deriveRetestContext>;
-  blockedLabel?: string;
   isRetest: boolean;
   hasRejectionHistory: boolean;
 }
@@ -38,7 +37,6 @@ function useEscalationCardData(props: EscalationCardProps): EscalationCardShared
   const { test, onClick } = props;
   const { getUserName } = useUserLookup();
   const handleCardClick = useLabWorkflowCardClickGuard(onClick);
-  const workItem = useOrderTestQueueState(test);
   const rejection = useMemo(() => deriveRetestContext(test), [test]);
 
   return {
@@ -47,7 +45,6 @@ function useEscalationCardData(props: EscalationCardProps): EscalationCardShared
     handleCardClick,
     getUserName: (userId: string) => getUserName(userId),
     rejection,
-    blockedLabel: workItem.blockedReason ? workItem.label : undefined,
     isRetest: rejection.isRetest,
     hasRejectionHistory: rejection.showAttemptIndicator,
   };
@@ -58,7 +55,6 @@ function EscalationCardDesktop({
   onClick,
   handleCardClick,
   rejection,
-  blockedLabel,
 }: EscalationCardSharedData) {
   const { showAttemptIndicator } = rejection;
 
@@ -82,7 +78,7 @@ function EscalationCardDesktop({
           test={test}
           variant="escalation"
           reasonCode={test.reasonCode}
-          blockedLabel={blockedLabel}
+          showStatus
         />
       }
       actions={
@@ -119,7 +115,6 @@ function EscalationCardMobile({
   test,
   onClick,
   handleCardClick,
-  blockedLabel,
   rejection,
 }: EscalationCardSharedData) {
   const { showAttemptIndicator } = rejection;
@@ -151,7 +146,7 @@ function EscalationCardMobile({
             variant="escalation"
             size="xs"
             reasonCode={test.reasonCode}
-            blockedLabel={blockedLabel}
+            showStatus
           />
         }
         actions={

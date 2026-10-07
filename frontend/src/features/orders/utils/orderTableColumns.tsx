@@ -4,6 +4,7 @@
 
 import type { ReactNode } from 'react';
 import type { OrderTest, PaymentStatus, PriorityLevel, OrderStatus } from '@/types';
+import type { StatusPresentation } from '@/types/labProjection';
 import { createIdColumn, createBadgeColumn } from '@/components/data-table/columnHelpers';
 import type { ColumnConfig } from '@/components/data-table/types';
 import {
@@ -31,6 +32,7 @@ export interface OrderColumnAccessors<T> {
   getOrderDate: (item: T) => string;
   getPriority?: (item: T) => PriorityLevel;
   getOverallStatus?: (item: T) => OrderStatus;
+  getStatusPresentation?: (item: T) => StatusPresentation | null | undefined;
   getTestsSortValue?: (item: T) => string;
 }
 
@@ -147,7 +149,14 @@ export function createOrderSharedColumns<T>(
     columns.overallStatus = createBadgeColumn<T>(
       'overallStatus',
       ORDER_TABLE_COLUMN_HEADERS.overallStatus,
-      item => <OrderStatusBadge status={accessors.getOverallStatus!(item)} size="xs" />,
+      item => (
+        <OrderStatusBadge
+          status={accessors.getOverallStatus!(item)}
+          presentation={accessors.getStatusPresentation?.(item)}
+          layout="compact"
+          size="xs"
+        />
+      ),
       {
         sortable: true,
         width: 'md',

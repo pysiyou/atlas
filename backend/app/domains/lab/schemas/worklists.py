@@ -12,6 +12,7 @@ from app.shared.contracts.enums import (
     SampleStatus,
     TestStatus,
 )
+from app.shared.schemas.status_presentation import StatusPresentation
 from pydantic import BaseModel
 
 
@@ -45,6 +46,7 @@ class CollectionWorklistItem(BaseModel):
     allowedActions: LabWorklistAllowedActions = LabWorklistAllowedActions()
     denyReason: str | None = None
     denyMessage: str | None = None
+    statusPresentation: StatusPresentation | None = None
     waitingHours: float
     turnaroundHours: int
     actualContainerType: ContainerType | None = None
@@ -82,6 +84,7 @@ class EntryWorklistItem(BaseModel):
     allowedActions: LabWorklistAllowedActions = LabWorklistAllowedActions()
     denyReason: str | None = None
     denyMessage: str | None = None
+    statusPresentation: StatusPresentation | None = None
     queueAgeBand: Literal["fresh", "onTrack", "warning", "critical"] | None = None
     priorityRank: int | None = None
 
@@ -103,7 +106,9 @@ class DashboardWorklistItem(BaseModel):
     orderDate: datetime
     referringPhysician: str | None = None
     testCategory: str | None = None
+    blockedReason: str | None = None
     blockedLabel: str | None = None
+    statusPresentation: StatusPresentation | None = None
 
 
 class DashboardBlockedWorklistItem(BaseModel):
@@ -158,6 +163,7 @@ class ValidationWorklistItem(BaseModel):
     allowedActions: LabWorklistAllowedActions = LabWorklistAllowedActions()
     denyReason: str | None = None
     denyMessage: str | None = None
+    statusPresentation: StatusPresentation | None = None
     queueAgeBand: Literal["fresh", "onTrack", "warning", "critical"] | None = None
     priorityRank: int | None = None
 

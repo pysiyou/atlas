@@ -1730,6 +1730,7 @@ export interface components {
             denyMessage?: string | null;
             allowedActions?: components["schemas"]["LabWorklistAllowedActions"];
             escalation?: components["schemas"]["EscalationActionFlags"] | null;
+            statusPresentation?: components["schemas"]["StatusPresentation"] | null;
         };
         /** LabWorklistAllowedActions */
         LabWorklistAllowedActions: {
@@ -1856,6 +1857,7 @@ export interface components {
             totalPrice: number;
             paymentStatus: components["schemas"]["PaymentStatus"];
             overallStatus: components["schemas"]["OrderStatus"];
+            statusPresentation?: components["schemas"]["StatusPresentation"] | null;
             priority: components["schemas"]["PriorityLevel"];
             /** Referringphysician */
             referringPhysician?: string | null;
@@ -1924,6 +1926,7 @@ export interface components {
             totalPrice: number;
             paymentStatus: components["schemas"]["PaymentStatus"];
             overallStatus: components["schemas"]["OrderStatus"];
+            statusPresentation?: components["schemas"]["StatusPresentation"] | null;
             priority: components["schemas"]["PriorityLevel"];
             /** Referringphysician */
             referringPhysician?: string | null;
@@ -1978,6 +1981,7 @@ export interface components {
             totalPrice: number;
             paymentStatus: components["schemas"]["PaymentStatus"];
             overallStatus: components["schemas"]["OrderStatus"];
+            statusPresentation?: components["schemas"]["StatusPresentation"] | null;
             priority: components["schemas"]["PriorityLevel"];
             /** Referringphysician */
             referringPhysician?: string | null;
@@ -2895,6 +2899,27 @@ export interface components {
          * @enum {string}
          */
         SampleType: "blood" | "urine" | "stool" | "saliva" | "swab" | "tissue" | "sputum" | "csf" | "pleural_fluid" | "serum" | "plasma" | "other";
+        /**
+         * StatusPresentation
+         * @description UI-facing primary status and optional secondary reason label.
+         */
+        StatusPresentation: {
+            /**
+             * Primary
+             * @description Canonical presentation primary (e.g. pending, blocked)
+             */
+            primary: string;
+            /**
+             * Secondary
+             * @description Human reason when blocked or rejected (from contracts)
+             */
+            secondary?: string | null;
+            /**
+             * Variant
+             * @description Badge color token aligned with frontend BadgeColor
+             */
+            variant: string;
+        };
         /** TestCreate */
         TestCreate: {
             /** Code */

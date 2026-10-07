@@ -11,6 +11,7 @@ import { useDashboardWorklistToday } from '../api/worklists';
 import { getLabQueueUrl } from '../constants/labConstants';
 import type { LabPipelineStage } from './monitorModel';
 import type { PriorityLevel, TestStatus } from '@/types';
+import type { StatusPresentation } from '@/types/labProjection';
 import { cn, displayId } from '@/utils';
 import { getOrderTestLineageRowClass } from '@/features/orders/utils/orderTestLineage';
 import { MONITOR_ROW_INTERACTIVE } from './monitorStyles';
@@ -31,7 +32,7 @@ export interface LabOrderTableRow {
   date: string;
   orderId: number;
   href: string;
-  blockedLabel?: string | null;
+  statusPresentation?: StatusPresentation | null;
 }
 
 function mapWorkTodayRow(item: DashboardWorklistItem): LabOrderTableRow {
@@ -50,7 +51,7 @@ function mapWorkTodayRow(item: DashboardWorklistItem): LabOrderTableRow {
     date: item.activityAt,
     orderId: item.orderId,
     href: getLabQueueUrl(item.stage, { search: displayId.order(item.orderId) }),
-    blockedLabel: item.blockedLabel,
+    statusPresentation: item.statusPresentation ?? null,
   };
 }
 

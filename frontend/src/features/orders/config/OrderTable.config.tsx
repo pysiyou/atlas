@@ -67,6 +67,7 @@ export const createOrderTableConfig = (
       getOrderDate: order => order.orderDate,
       getPriority: order => order.priority,
       getOverallStatus: order => order.overallStatus,
+      getStatusPresentation: order => order.statusPresentation,
     },
     {
       renderOrderId: order => renderOrderId(order.orderId),

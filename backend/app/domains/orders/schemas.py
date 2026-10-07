@@ -13,6 +13,7 @@ from app.domains.billing.schemas import InvoiceResponse
 from app.domains.patients.schemas import PatientResponse
 from app.domains.payments.schemas import PaymentResponse
 from app.shared.contracts.enums import OrderStatus, PaymentStatus, PriorityLevel, TestStatus
+from app.shared.schemas.status_presentation import StatusPresentation
 from pydantic import BaseModel, Field, field_validator
 
 
@@ -121,6 +122,7 @@ class OrderSummaryResponse(BaseModel):
     totalPrice: float
     paymentStatus: PaymentStatus
     overallStatus: OrderStatus
+    statusPresentation: StatusPresentation | None = None
     priority: PriorityLevel
     referringPhysician: str | None = None
     clinicalNotes: str | None = None
@@ -143,6 +145,7 @@ class OrderResponse(BaseModel):
     totalPrice: float
     paymentStatus: PaymentStatus
     overallStatus: OrderStatus
+    statusPresentation: StatusPresentation | None = None
     priority: PriorityLevel
     referringPhysician: str | None = None
     clinicalNotes: str | None = None

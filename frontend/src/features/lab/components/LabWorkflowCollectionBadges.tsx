@@ -18,7 +18,8 @@ import {
   SampleTypeBadge,
 } from './LabDomainBadges';
 import { QueueAgeBadge } from './QueueAgeBadge';
-import { BlockedReasonBadge } from './LabResultStatusBadges';
+import { StatusPresentationStack } from '@/components/display/StatusPresentationBadge';
+import type { StatusPresentation } from '@/types/labProjection';
 import { LabRejectionTailBadgesFromSample } from './LabRejectionTailBadges';
 import { CompactMd, CompactOnly } from './LabWorkflowBadgeChrome';
 
@@ -29,7 +30,7 @@ export interface CollectionHeaderBadgesProps {
   isRejected: boolean;
   rejectedSample?: RejectedSample | null;
   orderDate?: string;
-  paymentBlocked?: boolean;
+  statusPresentation?: StatusPresentation | null;
   requiredVolume?: number;
   collectedVolume?: number;
   containerColor?: ContainerTopColor | string;
@@ -171,10 +172,6 @@ function CollectionStatusExtras({
   );
 }
 
-function compactBadgeSize(size: BadgeSize): 'xs' | 'sm' {
-  return size === 'md' ? 'sm' : size;
-}
-
 export const CollectionHeaderBadges = React.memo(({
   sample,
   isPending,
@@ -182,7 +179,7 @@ export const CollectionHeaderBadges = React.memo(({
   isRejected,
   rejectedSample = null,
   orderDate,
-  paymentBlocked = false,
+  statusPresentation = null,
   requiredVolume,
   collectedVolume,
   containerColor,
@@ -196,8 +193,6 @@ export const CollectionHeaderBadges = React.memo(({
   const showPriority = priority === 'urgent' || priority === 'high';
   const hasContainer = (isCollected || isRejected) && Boolean(containerColor && effectiveContainerType);
   const required = requiredVolume ?? sample.requiredVolume;
-  const compactSize = compactBadgeSize(size);
-
   return (
     <>
       {showPriority && priority && <LabPriorityBadge priority={priority} size={size} />}
@@ -207,7 +202,6 @@ export const CollectionHeaderBadges = React.memo(({
           <QueueAgeBadge since={orderDate} />
         </CompactMd>
       )}
-      {paymentBlocked && <BlockedReasonBadge label="Payment required" size={compactSize} />}
       <CollectionVolumeBadges
         isPending={isPending}
         isCollected={isCollected}
@@ -225,10 +219,14 @@ export const CollectionHeaderBadges = React.memo(({
         sampleType={sample.sampleType}
         size={size}
       />
-      <SampleStatusBadge
-        status={isPending ? 'pending' : isRejected ? 'rejected' : 'collected'}
-        size={size}
-      />
+      {statusPresentation ? (
+        <StatusPresentationStack presentation={statusPresentation} size={size} />
+      ) : (
+        <SampleStatusBadge
+          status={isPending ? 'pending' : isRejected ? 'rejected' : 'collected'}
+          size={size}
+        />
+      )}
       <CollectionStatusExtras
         sample={sample}
         isCollected={isCollected}

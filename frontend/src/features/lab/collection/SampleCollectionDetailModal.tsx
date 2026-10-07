@@ -131,7 +131,6 @@ export const SampleCollectionDetailModal: React.FC<CollectionDetailModalProps> =
     (isCollected || isRejected) && 'collectionNotes' in sample ? sample.collectionNotes : undefined;
 
   // Build header badges
-  const paymentBlocked = isPending && order?.paymentStatus === 'unpaid';
 
   const headerBadges = (
     <CollectionHeaderBadges
@@ -141,7 +140,7 @@ export const SampleCollectionDetailModal: React.FC<CollectionDetailModalProps> =
       isRejected={isRejected}
       rejectedSample={rejectedSample}
       orderDate={order?.orderDate}
-      paymentBlocked={paymentBlocked}
+      statusPresentation={pendingSampleDisplay?.statusPresentation}
       requiredVolume={sample.requiredVolume}
       collectedVolume={collectedVolume}
       containerColor={containerColor}

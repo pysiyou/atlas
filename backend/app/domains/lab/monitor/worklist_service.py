@@ -550,26 +550,6 @@ class LabWorklistService:
             return ts.replace(tzinfo=UTC)
         return ts
 
-    def _blocked_label_for_dashboard(
-        self,
-        *,
-        order_test: OrderTest,
-        order: Order,
-        sample: Sample | None,
-        recollection_blocked: set[int],
-        escalation_code: str | None,
-    ) -> str | None:
-        projection = project_order_test_pipeline(
-            LabWorkItemContext(
-                order=order,
-                order_test=order_test,
-                sample=sample,
-                escalation_reason_code=escalation_code,
-                recollection_approval_pending=order_test.id in recollection_blocked,
-            )
-        )
-        return projection.blockedLabel
-
     def list_dashboard_work_today(
         self,
         *,
@@ -620,13 +600,16 @@ class LabWorklistService:
             updated_at = self._normalize_ts(order_test.updatedAt) or datetime.now(UTC)
             ticket = tickets_by_test.get(order_test.id)
             escalation_code = ticket.reasonCode.value if ticket and ticket.reasonCode else None
-            blocked_label = self._blocked_label_for_dashboard(
-                order_test=order_test,
-                order=order,
-                sample=sample,
-                recollection_blocked=recollection_blocked,
-                escalation_code=escalation_code,
+            projection = project_order_test_pipeline(
+                LabWorkItemContext(
+                    order=order,
+                    order_test=order_test,
+                    sample=sample,
+                    escalation_reason_code=escalation_code,
+                    recollection_approval_pending=order_test.id in recollection_blocked,
+                )
             )
+            work_item_fields = projection_to_worklist_fields(projection)
             items.append(
                 {
                     "orderTestId": order_test.id,
@@ -643,7 +626,7 @@ class LabWorklistService:
                     "orderDate": order.orderDate,
                     "referringPhysician": order.referringPhysician,
                     "testCategory": test.category,
-                    "blockedLabel": blocked_label,
+                    **work_item_fields,
                     "_sort_updated": updated_at,
                 }
             )
