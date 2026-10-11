@@ -44,6 +44,23 @@ export const LAB_MODAL_DETAIL = {
   sectionStack: SPACING.stackRelaxed,
 } as const;
 
+export const LAB_MODAL_HEADER = {
+  identityBlock: 'min-w-0 w-full',
+  badgeRow: `flex min-w-0 flex-wrap items-center ${SPACING.gapInline}`,
+  metaRow: `min-w-0 w-full ${TYPE.label} leading-snug`,
+} as const;
+
+export const LAB_MODAL_TYPOGRAPHY = {
+  auditLine: TYPE.label,
+  meta: TYPE.label,
+  sectionTitle: TYPE.sectionTitle,
+} as const;
+
+/** Card-only alert row (warnings, queue urgency, attempts). */
+export const LAB_CARD_ALERT = {
+  row: `flex min-w-0 w-full flex-col ${SPACING.gapHairline} ${TYPE.meta} leading-snug`,
+} as const;
+
 // Typography Constants (shared tokens for body/metadata; lab-specific for title/section)
 export const LAB_CARD_TYPOGRAPHY = {
   title: TYPE.detailTitle,
@@ -127,18 +144,32 @@ export const LAB_CARD_LIST_ITEMS = {
 // Context Row Constants (Patient/Order info)
 export const LAB_CARD_CONTEXT = {
   container:
-    `flex items-center gap-x-space-2 gap-y-0 ${TYPE.meta} flex-wrap min-w-0 w-full leading-snug`,
+    `flex items-baseline gap-x-space-2 gap-y-0 ${TYPE.meta} flex-wrap min-w-0 w-full leading-snug`,
   patientName: 'font-normal text-text-primary capitalize',
   separator: 'text-text-disabled select-none',
   inlineDot: '•',
 } as const;
 
 export const LAB_CARD_HEADER = {
-  /** Identity row; actions float top-right so they don't stretch row height */
-  identityShell: 'relative min-w-0 w-full',
-  identityPadActions: 'pe-[5.5rem] sm:pe-28',
+  /**
+   * Two columns: left stacks identity + alerts + audit; badges on the right (row 1).
+   * With header actions: three columns — left | badges | buttons (row 1).
+   */
+  shell:
+    'grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto] items-start gap-x-space-2',
+  shellWithActions:
+    'grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto_auto] items-start gap-x-space-2',
+  leftColumn: `col-start-1 flex min-w-0 flex-col ${SPACING.gapHairline}`,
+  badgeColumn:
+    'col-start-2 row-start-1 flex shrink-0 flex-nowrap items-start justify-end gap-space-1 self-start leading-none',
+  /** Extra separation between badges and header action buttons (3-column header). */
+  badgeColumnBeforeActions: 'mr-space-4',
   actionColumn:
-    'absolute top-0 right-0 z-10 flex max-w-[46%] shrink-0 flex-wrap items-start justify-end gap-space-2',
+    'col-start-3 row-start-1 z-10 flex shrink-0 flex-wrap items-start justify-end gap-space-2 self-start',
+} as const;
+
+export const LAB_CARD_FOOTER = {
+  actions: 'flex flex-wrap items-center justify-end gap-space-2 pt-space-1',
 } as const;
 
 /** Narrow / list-padding workflow cards (breakpoint mobile layouts) */

@@ -12,14 +12,20 @@ import {
   SampleStatusBadge,
   SampleTypeBadge,
 } from './LabDomainBadges';
-import { StatusPresentationStack } from '@/components/display/StatusPresentationBadge';
+import {
+  StatusPresentationCompactBadge,
+  StatusPresentationStack,
+} from '@/components/display/StatusPresentationBadge';
+import { useLabHeaderCompact } from './LabWorkflowHeader';
 import type { StatusPresentation } from '@/types/labProjection';
 import {
   LabCardMetaRow,
+  LabModalMetaRow,
   QueueAgeMeta,
   RecollectionRequestedMeta,
   SampleRejectionTailMeta,
 } from './LabCardMetaRow';
+import { LAB_CONFIG } from '../constants';
 
 export interface CollectionHeaderBadgesProps {
   sample: Sample;
@@ -38,6 +44,7 @@ export const CollectionHeaderBadges = React.memo(({
   statusPresentation = null,
   size = LAB_CARD_BADGE_SIZE,
 }: CollectionHeaderBadgesProps) => {
+  const compact = useLabHeaderCompact();
   const priority = sample.priority;
   const showPriority = priority === 'urgent' || priority === 'high';
 
@@ -46,7 +53,11 @@ export const CollectionHeaderBadges = React.memo(({
       {showPriority && priority ? <LabPriorityBadge priority={priority} size={size} /> : null}
       <SampleTypeBadge sampleType={sample.sampleType} size={size} />
       {statusPresentation ? (
-        <StatusPresentationStack presentation={statusPresentation} size={size} />
+        compact ? (
+          <StatusPresentationCompactBadge presentation={statusPresentation} size={size} />
+        ) : (
+          <StatusPresentationStack presentation={statusPresentation} size={size} />
+        )
       ) : (
         <SampleStatusBadge
           status={isPending ? 'pending' : isRejected ? 'rejected' : 'collected'}
@@ -71,7 +82,7 @@ export interface CollectionCardMetaProps {
   colorName?: string;
 }
 
-export const CollectionCardMeta: React.FC<CollectionCardMetaProps> = ({
+function CollectionOperationalMeta({
   sample,
   isPending,
   isCollected,
@@ -83,15 +94,21 @@ export const CollectionCardMeta: React.FC<CollectionCardMetaProps> = ({
   effectiveContainerType,
   containerColor,
   colorName,
-}) => {
+  MetaRow,
+}: CollectionCardMetaProps & {
+  MetaRow: typeof LabCardMetaRow | typeof LabModalMetaRow;
+}) {
   const required = requiredVolume ?? sample.requiredVolume;
   const derived = getCollectionRequirements(sample.sampleType);
   const hasContainer =
     (isCollected || isRejected) && Boolean(effectiveContainerType && containerColor);
+  const attempt = sample.recollectionAttempt ?? 1;
+  const max = LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS;
+  const showAttemptAlert = sample.isRecollection && attempt > 1;
 
   return (
     <>
-      <LabCardMetaRow>
+      <MetaRow>
         {isPending && orderDate ? <QueueAgeMeta since={orderDate} /> : null}
         {isPending && required != null ? <span>{formatVolume(required)} required</span> : null}
         {(isCollected || isRejected) && collectedVolume != null ? (
@@ -112,8 +129,23 @@ export const CollectionCardMeta: React.FC<CollectionCardMetaProps> = ({
         {isRejected && rejectedSample?.recollectionSampleId ? (
           <RecollectionRequestedMeta recollectionSampleId={rejectedSample.recollectionSampleId} />
         ) : null}
-      </LabCardMetaRow>
+        {showAttemptAlert ? (
+          <span className={attempt >= max - 1 ? 'text-warning-fg' : undefined}>
+            Attempt {attempt}/{max}
+          </span>
+        ) : null}
+      </MetaRow>
       <SampleRejectionTailMeta sample={sample} />
     </>
   );
-};
+}
+
+/** Queue card — full collection context (same facts as modal, card typography). */
+export const CollectionCardAlerts: React.FC<CollectionCardMetaProps> = props => (
+  <CollectionOperationalMeta {...props} MetaRow={LabCardMetaRow} />
+);
+
+/** Detail modal — full collection context. */
+export const CollectionModalMeta: React.FC<CollectionCardMetaProps> = props => (
+  <CollectionOperationalMeta {...props} MetaRow={LabModalMetaRow} />
+);

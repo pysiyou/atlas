@@ -13,12 +13,22 @@ import {
   SampleStatusBadge,
   SampleTypeBadge,
 } from './LabDomainBadges';
-import { StatusPresentationStack } from '@/components/display/StatusPresentationBadge';
-import { LabCardMetaRow, QueueAgeMeta, TestRejectionTailMeta } from './LabCardMetaRow';
+import {
+  StatusPresentationCompactBadge,
+  StatusPresentationStack,
+} from '@/components/display/StatusPresentationBadge';
+import { useLabHeaderCompact } from './LabWorkflowHeader';
+import {
+  LabCardMetaRow,
+  LabModalMetaRow,
+  QueueAgeMeta,
+  TestRejectionTailMeta,
+} from './LabCardMetaRow';
 
 export {
   CollectionHeaderBadges,
-  CollectionCardMeta,
+  CollectionCardAlerts,
+  CollectionModalMeta,
   type CollectionHeaderBadgesProps,
   type CollectionCardMetaProps,
 } from './LabWorkflowCollectionBadges';
@@ -40,9 +50,14 @@ function TestStatusChip({
   size: BadgeSize;
   variant: 'entry' | 'validation' | 'escalation';
 }) {
+  const compact = useLabHeaderCompact();
   const presentation = test.lab?.statusPresentation ?? null;
   if (presentation) {
-    return <StatusPresentationStack presentation={presentation} size={size} />;
+    return compact ? (
+      <StatusPresentationCompactBadge presentation={presentation} size={size} />
+    ) : (
+      <StatusPresentationStack presentation={presentation} size={size} />
+    );
   }
   if (variant === 'escalation') {
     return <SampleStatusBadge status="escalated" size={size} />;
@@ -95,17 +110,18 @@ export interface TestCardMetaProps {
   reasonCode?: string;
 }
 
-export function TestCardMeta({
+function TestOperationalMeta({
   test,
   variant = 'entry',
   queueSince,
   emphasizeCritical = false,
   flagCount,
   reasonCode,
-}: TestCardMetaProps) {
+  MetaRow,
+}: TestCardMetaProps & { MetaRow: typeof LabCardMetaRow | typeof LabModalMetaRow }) {
   return (
     <>
-      <LabCardMetaRow>
+      <MetaRow>
         {queueSince ? <QueueAgeMeta since={queueSince} /> : null}
         {variant === 'validation' && emphasizeCritical && test.hasCriticalValues ? (
           <span className="text-danger-fg font-normal">Critical values</span>
@@ -114,8 +130,21 @@ export function TestCardMeta({
           <span>{flagCount} flag{flagCount !== 1 ? 's' : ''}</span>
         ) : null}
         {variant === 'escalation' && reasonCode ? <span>Reason: {reasonCode}</span> : null}
-      </LabCardMetaRow>
+      </MetaRow>
       <TestRejectionTailMeta test={test} />
     </>
   );
 }
+
+/** Queue card — same operational meta as modal (card typography). */
+export function TestCardAlerts(props: TestCardMetaProps) {
+  return <TestOperationalMeta {...props} MetaRow={LabCardMetaRow} />;
+}
+
+/** Detail modal — full operational meta. */
+export function TestModalMeta(props: TestCardMetaProps) {
+  return <TestOperationalMeta {...props} MetaRow={LabModalMetaRow} />;
+}
+
+/** @deprecated Use TestModalMeta or TestCardAlerts. */
+export const TestCardMeta = TestModalMeta;

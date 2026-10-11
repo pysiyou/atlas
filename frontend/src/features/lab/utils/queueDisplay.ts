@@ -174,6 +174,6 @@ function stageLabel(stage: OrderTestQueueStage): string {
     case 'cancelled':
       return 'Cancelled';
     default:
-      return 'In progress';
+      return 'Running';
   }
 }

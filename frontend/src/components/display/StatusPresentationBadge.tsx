@@ -73,7 +73,7 @@ export function StatusPresentationStack({
     <div className={`flex min-w-0 flex-wrap items-center gap-space-1 ${className ?? ''}`}>
       <StatusPresentationBadge presentation={presentation} size={size} />
       {secondary ? (
-        <Badge size={secondarySize} variant="warning" className="max-w-full truncate font-normal">
+        <Badge size={secondarySize} variant="warning" className="shrink-0 font-normal">
           {secondary}
         </Badge>
       ) : null}

@@ -14,12 +14,8 @@ import React, { useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { actionButtonPreset, Button, Panel, EntityId } from '@/components';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
-import { ResultValidationForm } from './ResultValidationForm';
-import {
-  LabWorkflowDetailModal,
-  DetailGrid,
-  ModalFooter,
-} from '../components/LabWorkflowDetailModal';
+import { ResultValidationForm } from '../validation/ResultValidationForm';
+import { QueueModalShell, DetailGrid, ModalFooter } from './detailModalLayout';
 import { ReviewRequiredBadge } from '../components/LabResultStatusBadges';
 import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { QualityIssuePopover } from '../components/QualityIssuePopover';
@@ -27,14 +23,14 @@ import { CriticalValueActions } from '../criticalValues/CriticalValueActions';
 import { buildCriticalValueRecord } from '../criticalValues/criticalValues';
 import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
 import { LabEventLogPanel } from '@/features/audit';
-import { TestCardMeta, TestHeaderBadges } from '../components/LabWorkflowBadges';
+import { TestCardAlerts, TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { useSampleRejectionDisplay } from '../hooks/useSampleRejectionDisplay';
 import { SampleRejectedBanner } from '../components/SampleRejectedBanner';
 import type { TestWithContext } from '@/types';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import { TYPE } from '@/components/theme/recipes';
 import type { QualityIssueResult } from '@/types/lab-operations';
-import { labModalSubtitle } from '../components/LabWorkflowModalSubtitles';
+import { labModalSubtitle } from './detailModalLayout';
 import { hasTestResults } from '../utils/labSearchAndLinks';
 
 interface ValidationDetailModalProps {
@@ -94,7 +90,7 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
 
   const headerBadges = <TestHeaderBadges test={test} variant="validation" showStatus />;
   const headerMeta = (
-    <TestCardMeta
+    <TestCardAlerts
       test={test}
       variant="validation"
       emphasizeCritical
@@ -106,7 +102,7 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
   const validationSectionHeaderRight = hasFlags ? <ReviewRequiredBadge /> : null;
 
   return (
-    <LabWorkflowDetailModal
+    <QueueModalShell
       isOpen={isOpen}
       onClose={onClose}
       title={test.testName}
@@ -248,6 +244,6 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
       {test.id != null && (
         <LabEventLogPanel testId={test.id} />
       )}
-    </LabWorkflowDetailModal>
+    </QueueModalShell>
   );
 };

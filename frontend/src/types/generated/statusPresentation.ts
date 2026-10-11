@@ -30,7 +30,7 @@ export const PRESENTATION_BADGE_VARIANTS: Record<CanonicalPresentationPrimary, s
 export const PRESENTATION_DISPLAY_LABELS: Record<CanonicalPresentationPrimary, string> = {
   "pending": "PENDING",
   "blocked": "BLOCKED",
-  "in_progress": "IN PROGRESS",
+  "in_progress": "RUNNING",
   "completed": "COMPLETED",
   "cancelled": "CANCELLED",
   "superseded": "SUPERSEDED",
