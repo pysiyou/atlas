@@ -1,11 +1,5 @@
 /**
- * LabWorkflowDetailModal - Shared modal structure for lab workflow detail views
- *
- * Provides consistent structure for SampleDetail, ResultDetail, and ValidationDetail:
- * - Header with badges
- * - Patient/Order context section
- * - Flexible content sections
- * - Action footer
+ * Shared layout for lab workflow detail modals — shell, field grid, footer, stage subtitle.
  */
 
 import React, { type ReactNode } from 'react';
@@ -14,43 +8,32 @@ import { MODULE_ICONS } from '@/config/icons';
 import type { DetailFieldConfig } from '@/components';
 import { useUserLookup } from '@/lib/api/users';
 import { LAB_MODAL_DETAIL } from '../utils/labStyles';
-import { LabModalHeader, type LabWorkflowModalContext, type LabAuditLine } from './LabWorkflowHeader';
+import {
+  LabHeaderCompactContext,
+  LabModalHeader,
+  type LabWorkflowModalContext,
+  type LabAuditLine,
+} from '../components/LabWorkflowHeader';
 import { DETAIL_TYPE, TYPE } from '@/components/theme/recipes';
+import { LAB_COPY, labStageLabel, type LabWorkflowStage } from '../constants/labConstants';
 
-
-interface LabDetailModalProps {
-  /** Modal open state */
+export interface QueueModalShellProps {
   isOpen: boolean;
-  /** Close handler */
   onClose: () => void;
-  /** Modal title (e.g., sample ID or test name) */
   title: string | React.ReactNode;
-  /** Modal subtitle (e.g., patient name - sample type) */
   subtitle: string | React.ReactNode;
-  /** React key for forcing re-render on item change */
   modalKey?: string;
-  /** Badge elements for the header section */
   headerBadges: ReactNode;
-  /** Plain-text metadata below badges (queue age, volumes, etc.) */
   headerMeta?: ReactNode;
-  /** Patient and order context */
   contextInfo: LabWorkflowModalContext;
-  /** Structured audit lines (collection, entry, recollection, etc.) */
   headerAudit?: LabAuditLine[];
-  /** Main content sections */
   children: ReactNode;
-  /** Footer actions */
   footer?: ReactNode;
-  /** Footer info icon and text (defaults to lab workflow) */
   footerInfo?: ReactNode;
-  /** When true, prevents closing via header close button, backdrop click, or Escape (e.g. while saving) */
   disableClose?: boolean;
 }
 
-/**
- * LabWorkflowDetailModal provides the shared structure for all lab detail modals
- */
-export const LabWorkflowDetailModal: React.FC<LabDetailModalProps> = ({
+export const QueueModalShell: React.FC<QueueModalShellProps> = ({
   isOpen,
   onClose,
   title,
@@ -72,21 +55,26 @@ export const LabWorkflowDetailModal: React.FC<LabDetailModalProps> = ({
       onClose={onClose}
       title={title}
       subtitle={subtitle}
+      badges={
+        headerBadges ? (
+          <LabHeaderCompactContext.Provider value={false}>
+            {headerBadges}
+          </LabHeaderCompactContext.Provider>
+        ) : undefined
+      }
       size="3xl"
       disableClose={disableClose}
     >
       <div className="flex flex-col h-full bg-surface-page">
         <div className={`flex-1 overflow-y-auto p-space-6 ${LAB_MODAL_DETAIL.sectionStack}`}>
           <LabModalHeader
-            badges={headerBadges}
-            meta={headerMeta}
+            alerts={headerMeta}
             contextInfo={contextInfo}
             auditLines={headerAudit}
           />
           {children}
         </div>
 
-        {/* Footer */}
         {(footer || footerInfo) && (
           <DialogFooter
             start={footerInfo || <FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" size="md" />}
@@ -98,65 +86,21 @@ export const LabWorkflowDetailModal: React.FC<LabDetailModalProps> = ({
   );
 };
 
-/**
- * Configuration for a section in the DetailGrid
- */
 export interface DetailGridSectionConfig {
-  /** Section title */
   title: string;
-  /** Array of field configurations for this section */
   fields: DetailFieldConfig[];
-  /** Content to display in the header right side */
   headerEnd?: ReactNode;
 }
 
-/**
- * DetailGrid - Two-column grid for detail sections
- *
- * Can be used in two ways:
- * 1. With children (legacy): Pass Panel components as children
- * 2. With sections config (new): Pass array of section configurations
- *
- * @example
- * // Using sections config (recommended)
- * <DetailGrid
- *   sections={[
- *     {
- *       title: "Collection Information",
- *       fields: [
- *         { label: "Sample ID", badge: { value: "SAM-001", variant: "primary" } },
- *         { label: "Collected", timestamp: "2024-01-01", user: "user123" },
- *       ]
- *     },
- *     {
- *       title: "Test Information",
- *       fields: [
- *         { label: "Test Code", badge: { value: "CBC", variant: "primary" } },
- *       ]
- *     }
- *   ]}
- * />
- *
- * @example
- * // Using children (legacy)
- * <DetailGrid>
- *   <Panel variant="lab" title="Section 1">...</Panel>
- *   <Panel variant="lab" title="Section 2">...</Panel>
- * </DetailGrid>
- */
 interface DetailGridProps {
-  /** Child elements (legacy usage) */
   children?: ReactNode;
-  /** Section configurations (new declarative approach) */
   sections?: DetailGridSectionConfig[];
 }
 
 export const DetailGrid: React.FC<DetailGridProps> = ({ children, sections }) => {
   const { getUserName } = useUserLookup();
 
-  // If sections config is provided, render using the new declarative approach
   if (sections && sections.length > 0) {
-    // Filter out sections with no displayable fields
     const visibleSections = sections.filter(section => {
       return section.fields.some(field => {
         if (field.hidden) return false;
@@ -187,21 +131,13 @@ export const DetailGrid: React.FC<DetailGridProps> = ({ children, sections }) =>
     );
   }
 
-  // Legacy: render children directly
   return <div className="grid grid-cols-1 md:grid-cols-2 gap-layout-section">{children}</div>;
 };
 
-/**
- * ModalFooter - Common footer layout with status message and action buttons
- */
 interface ModalFooterProps {
-  /** Optional icon to display before status message */
   statusIcon?: ReactNode;
-  /** Status message text */
   statusMessage: string;
-  /** Custom className for status text */
   statusClassName?: string;
-  /** Optional action buttons (displayed on the right side) */
   children?: ReactNode;
 }
 
@@ -235,3 +171,17 @@ export const ModalFooter: React.FC<ModalFooterProps> = ({
     </div>
   );
 };
+
+export type LabModalStage = LabWorkflowStage | 'escalation';
+
+export function labModalStageLabel(stage: LabModalStage): string {
+  return stage === 'escalation' ? LAB_COPY.workflow.escalation : labStageLabel(stage, 'full');
+}
+
+export function labModalSubtitle(stage: LabModalStage): React.ReactNode {
+  return (
+    <span className={`${TYPE.caption} uppercase tracking-widest font-light`}>
+      {labModalStageLabel(stage)}
+    </span>
+  );
+}

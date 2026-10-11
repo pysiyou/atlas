@@ -1,14 +1,13 @@
 /**
  * SampleRecollectionRequestCard — supervisor review for patient redraw approval.
- * Desktop uses LabWorkflowCardShell; mobile matches EscalationCard / ResultValidationCard layout.
  */
 import React, { useState } from 'react';
 import { RADIUS, TYPE } from '@/components/theme/recipes';
 import { actionButtonPreset, Badge, Button, Card } from '@/components';
 import { cn, formatDateTime } from '@/utils';
-import { LabWorkflowCardShell } from '../components/LabWorkflowCardShell';
 import { compactAuditLines } from '../constants/labWorkflowAuditLines';
-import { LabMobileCardHeader } from '../components/LabWorkflowMobileHeader';
+import { QueueCard } from './queueCardLayout';
+import { QueueCardMobile } from './queueCardLayout';
 import { LAB_CARD_BADGE_SIZE, LAB_CARD_TYPOGRAPHY, LAB_MOBILE_CARD } from '../utils/labStyles';
 import { AttemptIndicator } from '../components/LabAttemptIndicators';
 import { SampleTypeBadge } from '../components/LabDomainBadges';
@@ -131,7 +130,7 @@ function RecollectionRequestCardDesktop({
   );
 
   return (
-    <LabWorkflowCardShell
+    <QueueCard
       className={request.requiresSupervisorOverride ? 'border-warning-stroke-emphasis' : ''}
       context={{
         patientName: request.patientName,
@@ -146,6 +145,7 @@ function RecollectionRequestCardDesktop({
         content: additionalInfo,
       })}
       actions={actions}
+      actionsPlacement="header"
       content={content}
       contentTitle="Recollection request"
     />
@@ -239,7 +239,7 @@ function RecollectionRequestCardMobile({
         request.requiresSupervisorOverride && 'border-warning-stroke-emphasis'
       )}
     >
-      <LabMobileCardHeader
+      <QueueCardMobile
         context={{
           patientName: request.patientName,
           patientId: request.patientId,
@@ -250,6 +250,7 @@ function RecollectionRequestCardMobile({
         meta={<p className={LAB_MOBILE_CARD.metaLine}>{meta}</p>}
         badges={badges}
         actions={actions}
+        actionsPlacement="header"
       >
         <div className={cn(LAB_MOBILE_CARD.body, 'space-y-space-0-5')}>
           <div>
@@ -271,7 +272,7 @@ function RecollectionRequestCardMobile({
             className={`${TYPE.value} w-full ${RADIUS.field} border border-border-default bg-surface px-space-2 py-space-1 resize-none`}
           />
         </div>
-      </LabMobileCardHeader>
+      </QueueCardMobile>
     </Card>
   );
 }

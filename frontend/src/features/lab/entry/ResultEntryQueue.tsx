@@ -8,7 +8,7 @@ import { useEntryTestCatalog, useLabQueueFilters } from '../hooks';
 import type { TestWithContextResult } from '../types';
 import { useEntryWorklist } from '../api/worklists';
 import { mapEntryWorklistToOrderTestContext } from '../utils/labQueue';
-import { ResultEntryCard } from './ResultEntryCard';
+import { ResultEntryCard } from '../workflow';
 import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabWorklistPaginationNotice } from '../components/LabWorklistPaginationNotice';
 import { LabQueueFilters } from '../components/LabQueueFilters';

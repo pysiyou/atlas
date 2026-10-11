@@ -1,28 +1,40 @@
-/**
- * Shared data hook for SampleCollectionCard (mobile + desktop layouts).
- */
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { useTestCatalog } from '@/features/catalog';
 import { usePatientNameLookup } from '@/features/patients';
 import { getTestNames } from '@/features/catalog/testLookup';
 import { useLabWorkflowCardClickGuard } from '../hooks';
+import type { ContainerType } from '@/types';
 import type { Sample } from '@/types';
 import type { SampleCollectionQueueItem, SampleRequirement } from '@/types/lab-operations';
-import type { CollectionCardProps } from './SampleCollectionCard';
 
-export interface CollectionCardSharedData {
+export interface SampleCollectionCardProps {
+  display: SampleCollectionQueueItem;
+  onCollect: (
+    display: SampleCollectionQueueItem,
+    volume: number,
+    notes?: string,
+    selectedColor?: string,
+    containerType?: ContainerType
+  ) => void;
+  isCollecting?: boolean;
+  isMobile?: boolean;
+}
+
+export interface SampleCollectionCardSharedData {
   display: SampleCollectionQueueItem;
   sample: Sample;
   requirement: SampleRequirement;
-  onCollect: CollectionCardProps['onCollect'];
+  onCollect: SampleCollectionCardProps['onCollect'];
   patientName: string;
   testNames: string[];
   handleCardClick: (e?: React.MouseEvent) => void;
   isCollecting: boolean;
 }
 
-export function useCollectionCardData(props: CollectionCardProps): CollectionCardSharedData | null {
+export function useSampleCollectionCardData(
+  props: SampleCollectionCardProps
+): SampleCollectionCardSharedData | null {
   const { display, onCollect, isCollecting = false } = props;
   const { getPatientName } = usePatientNameLookup();
   const { tests } = useTestCatalog();

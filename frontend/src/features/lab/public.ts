@@ -35,8 +35,7 @@ export { ResultValidationQueue } from './validation/ResultValidationQueue';
 export { LabMonitorBoard } from './monitor/LabMonitorBoard';
 
 export { LabWorkflowQueueLayout } from './components/LabWorkflowQueueLayout';
-export { LabWorkflowCardShell } from './components/LabWorkflowCardShell';
-export { LabWorkflowDetailModal } from './components/LabWorkflowDetailModal';
+export { QueueCard, QueueModalShell } from './workflow';
 export { LabQueueFilters } from './components/LabQueueFilters';
 
 export {
@@ -54,9 +53,11 @@ export {
   SampleTypeBadge,
 } from './components/LabDomainBadges';
 
-export { SampleCollectionDetailModal } from './collection/SampleCollectionDetailModal';
-export { ResultEntryDetailModal } from './entry/ResultEntryDetailModal';
-export { ResultValidationDetailModal } from './validation/ResultValidationDetailModal';
-export { EscalationResolutionModal } from './validation/EscalationResolutionModal';
+export {
+  SampleCollectionDetailModal,
+  ResultEntryDetailModal,
+  ResultValidationDetailModal,
+  EscalationResolutionModal,
+} from './workflow';
 
 export { PendingCriticalValuesPanel } from './criticalValues/PendingCriticalValuesPanel';

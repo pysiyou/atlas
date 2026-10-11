@@ -11,7 +11,7 @@ import { LAB_CONFIG } from '../constants';
 import { useCollectSample } from '../api/samples';
 import { useCollectionWorklist } from '../api/worklists';
 import { useSubmitSampleCollection } from './useSubmitSampleCollection';
-import { SampleCollectionCard } from './SampleCollectionCard';
+import { SampleCollectionCard } from '../workflow';
 import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabWorklistPaginationNotice } from '../components/LabWorklistPaginationNotice';
 import { LabQueueFilters } from '../components/LabQueueFilters';

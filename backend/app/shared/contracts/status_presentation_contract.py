@@ -30,7 +30,7 @@ BADGE_VARIANTS: dict[str, str] = {
 DISPLAY_LABELS: dict[str, str] = {
     "pending": "PENDING",
     "blocked": "BLOCKED",
-    "in_progress": "IN PROGRESS",
+    "in_progress": "RUNNING",
     "completed": "COMPLETED",
     "cancelled": "CANCELLED",
     "superseded": "SUPERSEDED",

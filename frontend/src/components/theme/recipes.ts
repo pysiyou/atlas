@@ -494,7 +494,7 @@ export const RANGE_SLIDER = {
 /** Modal / dialog chrome. */
 export const DIALOG = {
   modalHeader:
-    'px-overlay-dialog-footer-x py-space-3-5 border-b border-border-default bg-surface flex items-center justify-between shrink-0',
+    'px-overlay-dialog-footer-x py-space-3-5 border-b border-border-default bg-surface shrink-0',
   popoverHeader:
     `${SPACING.pxSpace4} py-space-3 bg-surface-page border-b border-border-subtle flex items-start justify-between shrink-0`,
   modalFooter:
@@ -502,6 +502,14 @@ export const DIALOG = {
   popoverFooter:
     `${SPACING.pSpace2} bg-surface-page border-t border-border-subtle flex items-center justify-between ${SPACING.gapInline} shrink-0`,
   modalTitleRow: `flex items-start ${SPACING.gapRelaxed} min-w-0`,
+  /** Title stack (incl. badges under title) | close column. */
+  modalHeaderGrid:
+    'grid w-full min-w-0 items-start gap-x-space-2 grid-cols-[minmax(0,1fr)_minmax(7rem,7rem)]',
+  modalTitleStack: `col-start-1 flex min-w-0 flex-col ${SPACING.gapHairline}`,
+  modalTitleFirstLine: 'min-w-0',
+  modalBadgeInline:
+    'inline-flex align-middle flex-wrap items-center gap-space-1 leading-none ml-space-2',
+  modalCloseColumn: `col-start-2 row-start-1 flex w-full min-w-0 shrink-0 items-start justify-end ${SPACING.gapInline} self-start`,
   modalBadges: `flex items-center ${SPACING.gapInline} ${SPACING.ptSpace1}`,
   headerActions: `flex ${SPACING.gapInline} shrink-0`,
 } as const;

@@ -12,16 +12,20 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Icon, CircularProgress, EntityId } from '@/components';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
-import { EntryDetailMainPanel, EntryDetailModalFooter } from './ResultEntryDetailModal.parts';
-import { LabWorkflowDetailModal, DetailGrid } from '../components/LabWorkflowDetailModal';
+import { QueueModalShell, DetailGrid, ModalFooter } from './detailModalLayout';
 import { LabEventLogPanel } from '@/features/audit';
-import { LabCardMetaRow } from '../components/LabCardMetaRow';
-import { TestCardMeta, TestHeaderBadges } from '../components/LabWorkflowBadges';
+import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
+import { ResultEntryCardAlerts } from './queueCard.resultEntry';
 import { ICONS } from '@/config/icons';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import { useTestCatalog } from '@/features/catalog';
-import { labModalSubtitle } from '../components/LabWorkflowModalSubtitles';
+import { labModalSubtitle } from './detailModalLayout';
+
+import { actionButtonPreset, Button, Panel } from '@/components';
+import { ResultEntryForm } from '../entry/ResultEntryForm';
+import { ResultValidationForm } from '../validation/ResultValidationForm';
+import { hasTestResults } from '../utils/labSearchAndLinks';
 import type { Test, TestWithContext } from '@/types';
 
 interface EntryDetailModalProps {
@@ -140,17 +144,16 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
 
   const headerBadges = <TestHeaderBadges test={test} variant="entry" showStatus />;
   const headerMeta = (
-    <>
-      <TestCardMeta test={test} variant="entry" queueSince={test.collectedAt} />
-      <LabCardMetaRow>
-        <span>{filledCount}/{totalParams} parameters</span>
-        {showTurnaroundTime ? <span>{turnaroundTime}h turnaround</span> : null}
-      </LabCardMetaRow>
-    </>
+    <ResultEntryCardAlerts
+      test={test}
+      filledCount={filledCount}
+      parameterCount={totalParams}
+      turnaroundTime={turnaroundTime}
+    />
   );
 
   return (
-    <LabWorkflowDetailModal
+    <QueueModalShell
       isOpen={isOpen}
       onClose={onClose}
       title={test.testName}
@@ -283,6 +286,124 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
       {test.id != null && (
         <LabEventLogPanel testId={test.id} />
       )}
-    </LabWorkflowDetailModal>
+    </QueueModalShell>
   );
 };
+
+function EntryDetailModalFooter({
+  readOnly,
+  isSaving,
+  isComplete,
+  canEnter,
+  denyMessage,
+  onClose,
+  onSave,
+}: {
+  readOnly: boolean;
+  isSaving: boolean;
+  isComplete: boolean;
+  canEnter: boolean;
+  denyMessage?: string | null;
+  onClose: () => void;
+  onSave: () => void;
+}) {
+  if (readOnly) {
+    return (
+      <ModalFooter statusMessage="">
+        <Button onClick={onClose} {...actionButtonPreset('cancel')} size="md" layout="icon-text">
+          Close
+        </Button>
+      </ModalFooter>
+    );
+  }
+  return (
+    <ModalFooter statusMessage={!canEnter && denyMessage ? denyMessage : ''}>
+      <Button
+        onClick={onClose}
+        {...actionButtonPreset('cancel')}
+        size="md"
+        layout="icon-text"
+        disabled={isSaving}
+      >
+        Cancel
+      </Button>
+      <Button
+        onClick={onSave}
+        {...actionButtonPreset('save')}
+        size="md"
+        layout="icon-text"
+        disabled={!isComplete || !canEnter}
+        title={!canEnter ? denyMessage ?? undefined : undefined}
+        isLoading={isSaving}
+      >
+        Save
+      </Button>
+    </ModalFooter>
+  );
+}
+
+
+
+function EntryDetailMainPanel({
+  readOnly,
+  test,
+  resolvedTestDef,
+  resultKey,
+  displayResults,
+  displayNotes,
+  progressIndicator,
+  isComplete,
+  canEnter,
+  onResultsChange,
+  onNotesChange,
+  onSave,
+}: {
+  readOnly: boolean;
+  test: TestWithContext;
+  resolvedTestDef: Test;
+  resultKey: string;
+  displayResults: Record<string, string>;
+  displayNotes: string;
+  progressIndicator: React.ReactNode;
+  isComplete: boolean;
+  canEnter: boolean;
+  onResultsChange: (key: string, paramCode: string, value: string) => void;
+  onNotesChange: (key: string, notes: string) => void;
+  onSave: () => void;
+}) {
+  if (readOnly && hasTestResults(test)) {
+    return (
+      <Panel variant="lab" title="Recorded Results">
+        <ResultValidationForm
+          results={test.results!}
+          flags={test.flags}
+          technicianNotes={test.technicianNotes}
+          comments={test.validationNotes ?? ''}
+          onCommentsChange={() => undefined}
+          onApprove={() => undefined}
+          readOnly
+          enableApproveShortcut={false}
+        />
+      </Panel>
+    );
+  }
+  return (
+    <Panel variant="lab" title="Result Entry" headerEnd={progressIndicator}>
+      <ResultEntryForm
+        testDef={resolvedTestDef}
+        resultKey={resultKey}
+        results={displayResults}
+        technicianNotes={displayNotes}
+        patient={test.patient}
+        onResultsChange={onResultsChange}
+        onNotesChange={onNotesChange}
+        onSave={onSave}
+        isComplete={isComplete}
+        isModal={true}
+        readOnly={readOnly}
+        canEnter={canEnter}
+        denyMessage={test.denyMessage}
+      />
+    </Panel>
+  );
+}

@@ -5,7 +5,7 @@
 import React, { type ReactNode } from 'react';
 import { cn } from '@/utils';
 import { EntityId } from '@/components';
-import { LAB_CARD_TYPOGRAPHY } from '../utils/labStyles';
+import { LAB_CARD_TYPOGRAPHY, LAB_MODAL_TYPOGRAPHY } from '../utils/labStyles';
 import { getQueueAgeInfo } from '../utils/labQueue';
 import { TONE } from '@/components/theme/recipes';
 import type { Sample, TestWithContext } from '@/types';
@@ -59,6 +59,43 @@ export function QueueAgeMeta({ since }: { since?: string | null }) {
   return <span className={tone}>{info.label}</span>;
 }
 
+/** Queue cards — only show waiting time when it is elevated (warning/danger). */
+export function QueueAgeAlert({ since }: { since?: string | null }) {
+  const info = getQueueAgeInfo(since);
+  if (!info || info.variant === 'default') return null;
+  return <QueueAgeMeta since={since} />;
+}
+
+export function LabModalMetaRow({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  const items = collectNodes(children);
+  if (items.length === 0) return null;
+
+  return (
+    <div
+      className={cn(
+        LAB_MODAL_TYPOGRAPHY.meta,
+        'flex min-w-0 flex-wrap items-center gap-x-space-2 gap-y-space-0-5 leading-snug',
+        className
+      )}
+    >
+      {items.map((item, index) => (
+        <React.Fragment key={index}>
+          {index > 0 ? (
+            <span className={LAB_CARD_TYPOGRAPHY.separator} aria-hidden>•</span>
+          ) : null}
+          <span className="min-w-0">{item}</span>
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
 export function TestRejectionTailMeta({ test }: { test: TestWithContext }) {
   const ctx = deriveRetestContext(test);
 
@@ -104,7 +141,13 @@ export function TestRejectionTailMeta({ test }: { test: TestWithContext }) {
   return null;
 }
 
-export function SampleRejectionTailMeta({ sample }: { sample: Sample }) {
+export function SampleRejectionTailMeta({
+  sample,
+  showAttempt = true,
+}: {
+  sample: Sample;
+  showAttempt?: boolean;
+}) {
   if (!sample.isRecollection || sample.originalSampleId == null) return null;
   const attempt = sample.recollectionAttempt ?? 1;
   const max = LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS;
@@ -115,7 +158,7 @@ export function SampleRejectionTailMeta({ sample }: { sample: Sample }) {
         Recollection of{' '}
         <EntityId type="sample" value={sample.originalSampleId} variant="inline" />
       </span>
-      {attempt > 1 ? (
+      {showAttempt && attempt > 1 ? (
         <span className={attempt >= max - 1 ? TONE.warning.fg : undefined}>
           Attempt {attempt}/{max}
         </span>

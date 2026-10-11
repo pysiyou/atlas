@@ -32,6 +32,8 @@ interface ModalProps {
   onClose: () => void;
   title: string | React.ReactNode;
   subtitle?: string | React.ReactNode;
+  /** Status / workflow badges shown in the dialog header (below subtitle). */
+  badges?: React.ReactNode;
   children: React.ReactNode;
   closeOnBackdropClick?: boolean;
   className?: string;
@@ -140,6 +142,7 @@ const ModalDialog = memo(
     className,
     title,
     subtitle,
+    badges,
     children,
     onClose,
     disableClose = false,
@@ -150,6 +153,7 @@ const ModalDialog = memo(
     className: string;
     title: string | React.ReactNode;
     subtitle?: string | React.ReactNode;
+    badges?: React.ReactNode;
     children: React.ReactNode;
     onClose: () => void;
     disableClose?: boolean;
@@ -189,6 +193,7 @@ const ModalDialog = memo(
         <DialogHeader
           title={title}
           subtitle={subtitle}
+          badges={badges}
           titleId="modal-title"
           onClose={onClose}
           disabled={disableClose}
@@ -206,6 +211,7 @@ const Modal = memo(
     onClose,
     title,
     subtitle,
+    badges,
     children,
     closeOnBackdropClick = true,
     className = '',
@@ -246,6 +252,7 @@ const Modal = memo(
                 className={className}
                 title={title}
                 subtitle={subtitle}
+                badges={badges}
                 children={children}
                 onClose={onClose}
                 disableClose={disableClose}

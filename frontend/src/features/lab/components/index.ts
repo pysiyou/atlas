@@ -2,15 +2,24 @@
  * Lab Shared Components Index
  */
 
-export { LabWorkflowCardShell, ProgressMeta, TestList } from './LabWorkflowCardShell';
+export {
+  QueueCard,
+  QueueCardTestList,
+  QueueCardProgressMeta,
+  QueueCardMobile,
+  QueueCardHeader,
+  QueueCardPanel,
+  QueueModalShell,
+  DetailGrid,
+  ModalFooter,
+  type DetailGridSectionConfig,
+} from '../workflow';
 export { PopoverFormChrome, RadioCard } from '@/components/overlays/PopoverFormChrome';
 export { QualityIssuePopover } from './QualityIssuePopover';
 export { LabWorkflowQueueLayout, createLabQueueSearchFilter } from './LabWorkflowQueueLayout';
 export { LabValidationQueueSection } from './LabValidationQueueSection';
 export { LabQueueFilters } from './LabQueueFilters';
 export type { LabQueueFiltersProps } from './LabQueueFilters';
-export { LabWorkflowDetailModal, DetailGrid, ModalFooter } from './LabWorkflowDetailModal';
-export type { DetailGridSectionConfig } from './LabWorkflowDetailModal';
 export { SampleContainerInfo } from './LabWorkflowMeta';
 export { SampleCollectionMetaLine } from './LabWorkflowMeta';
 export { ResultEntryMetaLine } from './LabWorkflowMeta';

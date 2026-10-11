@@ -55,35 +55,75 @@ export function DialogHeader({
   const TitleTag = size === 'popover' ? 'h4' : 'h2';
   const resolvedCloseSize = closeSize ?? (size === 'popover' ? 'sm' : 'md');
 
+  const titleLine = (
+    <TitleTag
+      id={titleId}
+      className={
+        size === 'modal'
+          ? badges != null
+            ? cn(TYPE.modalTitle, 'leading-snug inline')
+            : TITLE_CLASS.modal
+          : TITLE_CLASS[size]
+      }
+      title={typeof title === 'string' ? title : undefined}
+    >
+      {title}
+    </TitleTag>
+  );
+
+  const subtitleLine =
+    subtitle != null && subtitle !== false ? (
+      <div className={SUBTITLE_CLASS[size]}>{subtitle}</div>
+    ) : null;
+
+  const titleBlock = (
+    <>
+      {titleLine}
+      {subtitleLine}
+    </>
+  );
+
+  const closeControl =
+    onClose != null ? (
+      <IconButton
+        onClick={onClose}
+        {...actionButtonPreset('close')}
+        size={resolvedCloseSize}
+        title="Close"
+        disabled={disabled}
+      />
+    ) : null;
+
   return (
     <div className={HEADER_CLASS[size]}>
-      <div className={size === 'popover' ? 'space-y-space-0-5 min-w-0' : DIALOG.modalTitleRow}>
-        <div className="flex flex-col min-w-0 gap-space-0-5">
-          <TitleTag
-            id={titleId}
-            className={TITLE_CLASS[size]}
-            title={typeof title === 'string' ? title : undefined}
-          >
-            {title}
-          </TitleTag>
-          {subtitle != null && subtitle !== false && (
-            <div className={SUBTITLE_CLASS[size]}>{subtitle}</div>
-          )}
-          {badges != null && <div className={DIALOG.modalBadges}>{badges}</div>}
+      {size === 'modal' ? (
+        <div className={DIALOG.modalHeaderGrid}>
+          <div className={DIALOG.modalTitleStack}>
+            <div className={DIALOG.modalTitleFirstLine}>
+              {titleLine}
+              {badges != null ? (
+                <span className={DIALOG.modalBadgeInline}>{badges}</span>
+              ) : null}
+            </div>
+            {subtitleLine}
+          </div>
+          <div className={DIALOG.modalCloseColumn}>
+            {closeControl}
+            {actions}
+          </div>
         </div>
-      </div>
-      <div className={DIALOG.headerActions}>
-        {onClose != null && (
-          <IconButton
-            onClick={onClose}
-            {...actionButtonPreset('close')}
-            size={resolvedCloseSize}
-            title="Close"
-            disabled={disabled}
-          />
-        )}
-        {actions}
-      </div>
+      ) : (
+        <>
+          <div className="space-y-space-0-5 min-w-0">
+            {titleBlock}
+            {badges != null ? <div className={DIALOG.modalBadges}>{badges}</div> : null}
+          </div>
+          <div className={DIALOG.headerActions}>
+            {closeControl}
+            {actions}
+          </div>
+        </>
+      )}
     </div>
   );
 }
