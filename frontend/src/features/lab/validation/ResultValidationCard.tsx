@@ -10,7 +10,7 @@ import { usePatientNameLookup } from '@/features/patients';
 import { useLabWorkflowCardClickGuard } from '../hooks';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
 import { LabWorkflowCardShell } from '../components/LabWorkflowCardShell';
-import { TestHeaderBadges } from '../components/LabWorkflowBadges';
+import { TestCardMeta, TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { QualityIssuePopover } from '../components';
 import { ResultsParameterGrid } from '../components/ResultsParameterGrid';
 import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
@@ -89,9 +89,9 @@ function ResultValidationCardDesktop({
   canReject,
 }: ResultValidationCardSharedData) {
   const { showAttemptIndicator } = rejection;
-  const resultCount = Object.keys(test.results!).length;
+  const flagCount = test.flags?.length ?? 0;
   const auditLines = useMemo(
-    () => testHeaderAudit(test, { includeResultEntered: true }),
+    () => testHeaderAudit(test, { includeResultEntered: true, omitSampleId: true }),
     [test],
   );
   const { showBanner: isSampleRejected, sampleId, sampleRejectionReason } = sampleRejection;
@@ -111,16 +111,16 @@ function ResultValidationCardDesktop({
         referringPhysician: test.referringPhysician,
       }}
       auditLines={auditLines}
-      badges={
-        <TestHeaderBadges
+      meta={
+        <TestCardMeta
           test={test}
           variant="validation"
           emphasizeCritical
           queueSince={test.resultEnteredAt}
-          showStatus
-          flagCount={test.flags?.length}
+          flagCount={flagCount}
         />
       }
+      badges={<TestHeaderBadges test={test} variant="validation" showStatus />}
       actions={
         <div className="flex items-center gap-space-2 z-10" onClick={e => e.stopPropagation()}>
           <QualityIssuePopover
@@ -156,7 +156,7 @@ function ResultValidationCardDesktop({
           <ResultsParameterGrid results={test.results!} flags={test.flags} variant="inline" />
         </>
       }
-      contentTitle={`Results (${resultCount})`}
+      contentTitle="Results"
     />
   );
 }
@@ -176,9 +176,10 @@ function ResultValidationCardMobile({
   const { showAttemptIndicator } = rejection;
   const { showBanner: isSampleRejected, sampleId, sampleRejectionReason } = sampleRejection;
   const auditLines = useMemo(
-    () => testHeaderAudit(test, { includeResultEntered: true }),
+    () => testHeaderAudit(test, { includeResultEntered: true, omitSampleId: true }),
     [test],
   );
+  const flagCount = test.flags?.length ?? 0;
 
   return (
     <Card
@@ -211,17 +212,16 @@ function ResultValidationCardMobile({
           entityName: test.testName,
         }}
         auditLines={auditLines}
-        badges={
-          <TestHeaderBadges
+        meta={
+          <TestCardMeta
             test={test}
             variant="validation"
-            size="xs"
             emphasizeCritical
             queueSince={test.resultEnteredAt}
-            showStatus
-            flagCount={test.flags?.length}
+            flagCount={flagCount}
           />
         }
+        badges={<TestHeaderBadges test={test} variant="validation" size="xs" showStatus />}
         actions={
           <>
             <QualityIssuePopover

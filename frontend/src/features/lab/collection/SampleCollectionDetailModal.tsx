@@ -10,7 +10,7 @@
  * - LabModalHeader sampleInfo for collection metadata (same as entry/validation modals)
  */
 
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query';
 import { sampleAPI } from '../api/samples';
@@ -23,7 +23,7 @@ import { SampleCollectionDetailContent } from './SampleCollectionDetailSections'
 import { LabEventLogPanel } from '@/features/audit';
 import { LabWorkflowDetailModal, ModalFooter } from '../components/LabWorkflowDetailModal';
 import { collectionHeaderAudit } from '../constants/labWorkflowAuditLines';
-import { CollectionHeaderBadges } from '../components/LabWorkflowBadges';
+import { CollectionCardMeta, CollectionHeaderBadges } from '../components/LabWorkflowBadges';
 import { useTestCatalog } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users';
 import { usePatientNameLookup } from '@/features/patients';
@@ -66,8 +66,6 @@ export const SampleCollectionDetailModal: React.FC<CollectionDetailModalProps> =
   const { getOrder } = useOrderLookup();
   const { tests = [] } = useTestCatalog();
   const [isPopoverSubmitting, setIsPopoverSubmitting] = useState(false);
-
-  const getTest = useCallback((code: string) => tests.find(t => t.code === code), [tests]);
 
   const cachedSample = sampleId ? getSample(sampleId) : undefined;
   const { data: fetchedSample } = useQuery({
@@ -138,15 +136,23 @@ export const SampleCollectionDetailModal: React.FC<CollectionDetailModalProps> =
       isPending={isPending}
       isCollected={isCollected}
       isRejected={isRejected}
+      statusPresentation={pendingSampleDisplay?.statusPresentation}
+    />
+  );
+
+  const headerMeta = (
+    <CollectionCardMeta
+      sample={sample}
+      isPending={isPending}
+      isCollected={isCollected}
+      isRejected={isRejected}
       rejectedSample={rejectedSample}
       orderDate={order?.orderDate}
-      statusPresentation={pendingSampleDisplay?.statusPresentation}
       requiredVolume={sample.requiredVolume}
       collectedVolume={collectedVolume}
       containerColor={containerColor}
       effectiveContainerType={effectiveContainerType}
       colorName={colorName}
-      containerIconClassName="w-7 h-7"
     />
   );
 
@@ -192,11 +198,11 @@ export const SampleCollectionDetailModal: React.FC<CollectionDetailModalProps> =
       title={<EntityId type="sample" value={sample.sampleId} />}
       subtitle={labModalSubtitle('collection')}
       headerBadges={headerBadges}
+      headerMeta={headerMeta}
       contextInfo={{
         patientName,
         patientId,
         orderId,
-        entityCode: sample.sampleType.toUpperCase(),
         referringPhysician: order?.referringPhysician,
         sampleId: sample.sampleId,
       }}
@@ -222,12 +228,10 @@ export const SampleCollectionDetailModal: React.FC<CollectionDetailModalProps> =
         sample={sample}
         isPending={isPending}
         isRejected={isRejected}
-        isCollected={isCollected}
         rejectedSample={rejectedSample}
         testNames={testNames}
         testDetails={testDetails}
         testCodes={sample.testCodes || []}
-        getTest={getTest}
         getUserName={getUserName}
         collectionNotes={collectionNotes}
         gridSections={gridSections}

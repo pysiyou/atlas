@@ -10,10 +10,10 @@ import { useUserLookup } from '@/lib/api/users';
 import { useLabWorkflowCardClickGuard } from '../hooks';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
 import { LabWorkflowCardShell } from '../components/LabWorkflowCardShell';
-import { TestHeaderBadges } from '../components/LabWorkflowBadges';
+import { TestCardMeta, TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { LabMobileCardHeader } from '../components/LabWorkflowMobileHeader';
-import { LAB_CARD_TYPOGRAPHY, LAB_MOBILE_CARD } from '../utils/labStyles';
+import { LAB_MOBILE_CARD } from '../utils/labStyles';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
 import type { TestWithContext } from '@/types';
 
@@ -72,15 +72,9 @@ function EscalationCardDesktop({
         entityName: test.testName,
         referringPhysician: test.referringPhysician,
       }}
-      auditLines={testHeaderAudit(test, { includeResultEntered: true })}
-      badges={
-        <TestHeaderBadges
-          test={test}
-          variant="escalation"
-          reasonCode={test.reasonCode}
-          showStatus
-        />
-      }
+      auditLines={testHeaderAudit(test, { includeResultEntered: true, omitSampleId: true })}
+      meta={<TestCardMeta test={test} variant="escalation" reasonCode={test.reasonCode} />}
+      badges={<TestHeaderBadges test={test} variant="escalation" showStatus />}
       actions={
         <div className="flex items-center gap-space-2 z-10" onClick={e => e.stopPropagation()}>
           <Button
@@ -96,17 +90,6 @@ function EscalationCardDesktop({
           </Button>
         </div>
       }
-      content={
-        <div className={LAB_CARD_TYPOGRAPHY.sectionContent}>
-          {test.reasonCode && (
-            <span>
-              <span className={LAB_CARD_TYPOGRAPHY.fieldLabel}>Reason:</span>{' '}
-              <span className={LAB_CARD_TYPOGRAPHY.fieldValue}>{test.reasonCode}</span>
-            </span>
-          )}
-        </div>
-      }
-      contentTitle="Details"
     />
   );
 }
@@ -139,16 +122,9 @@ function EscalationCardMobile({
           entityCode: test.testCode,
           entityName: test.testName,
         }}
-        auditLines={testHeaderAudit(test, { includeResultEntered: true })}
-        badges={
-          <TestHeaderBadges
-            test={test}
-            variant="escalation"
-            size="xs"
-            reasonCode={test.reasonCode}
-            showStatus
-          />
-        }
+        auditLines={testHeaderAudit(test, { includeResultEntered: true, omitSampleId: true })}
+        meta={<TestCardMeta test={test} variant="escalation" reasonCode={test.reasonCode} />}
+        badges={<TestHeaderBadges test={test} variant="escalation" size="xs" showStatus />}
         actions={
           <Button
             variant="primary"

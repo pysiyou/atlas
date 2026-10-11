@@ -6,7 +6,7 @@
  */
 import React from 'react';
 import Barcode from 'react-barcode';
-import { Badge, Icon, Panel, EntityId } from '@/components';
+import { Badge, Panel } from '@/components';
 import type { ContainerType, Sample, RejectedSample, Test } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_CONFIG } from '@/types';
 import { formatVolume } from '../utils';
@@ -17,7 +17,8 @@ import { displayId, formatDateTime } from '@/utils';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import { SampleCollectionRequirementsSection } from './SampleCollectionRequirementsSection';
 import { formatRejectionReasons } from '../utils/labFormatters';
-import { ICONS } from '@/config/icons';
+import { LabCardContentPanel } from '../components/LabCardSectionHeader';
+import { TestList } from '../components/LabWorkflowCardShell';
 
 interface CollectionDetailGridSectionsProps {
   sample: Sample;
@@ -159,12 +160,10 @@ interface CollectionDetailContentProps {
   sample: Sample;
   isPending: boolean;
   isRejected: boolean;
-  isCollected: boolean;
   rejectedSample: RejectedSample | null;
   testNames: string[];
   testDetails: Test[];
   testCodes: string[];
-  getTest: (code: string) => Test | undefined;
   getUserName: (userId: string) => string;
   collectionNotes?: string;
   gridSections: DetailGridSectionConfig[];
@@ -175,12 +174,10 @@ export const SampleCollectionDetailContent: React.FC<CollectionDetailContentProp
   sample,
   isPending,
   isRejected,
-  isCollected,
   rejectedSample,
   testNames,
   testDetails,
   testCodes,
-  getTest,
   getUserName,
   collectionNotes,
   gridSections,
@@ -200,30 +197,11 @@ export const SampleCollectionDetailContent: React.FC<CollectionDetailContentProp
           />
         </div>
       )}
-      <Panel variant="lab" title={isCollected ? 'Linked Tests' : 'Required for'}>
-        <ul className="space-y-space-1">
-          {testNames.map((testName, i) => {
-            const testCode = testCodes[i];
-            const test = testCode ? getTest(testCode) : undefined;
-            const tatHours = test?.turnaroundTime;
-            const showTat =
-              typeof tatHours === 'number' && Number.isFinite(tatHours) && tatHours > 0;
-            return (
-              <li key={testCode || i} className={`flex items-center ${TYPE.label}`}>
-                <span className={`w-1.5 h-1.5 ${RADIUS.pill} bg-text-muted mr-space-2`} />
-                <span className="font-normal mr-space-1">{testName}</span>
-                <EntityId variant="inline" className="mr-space-2">{testCode}</EntityId>
-                {showTat && (
-                  <span className="text-text-disabled flex items-center gap-space-1">
-                    <Icon name={ICONS.dataFields.time} className="w-2.5 h-2.5" />
-                    {tatHours}h
-                  </span>
-                )}
-              </li>
-            );
-          })}
-        </ul>
-      </Panel>
+      <LabCardContentPanel title="Required for">
+        <TestList
+          tests={testNames.map((name, i) => ({ name, code: testCodes[i] || '' }))}
+        />
+      </LabCardContentPanel>
 
       {isRejected && rejectedSample && (
         <Panel variant="lab" title="Rejection Details">

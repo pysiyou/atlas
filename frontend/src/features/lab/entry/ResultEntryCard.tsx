@@ -3,13 +3,13 @@
  */
 
 import React, { useMemo } from 'react';
-import { actionButtonPreset, Badge, Card, IconButton } from '@/components';
+import { actionButtonPreset, Card, IconButton } from '@/components';
 import { cn } from '@/utils';
 import { usePatientNameLookup } from '@/features/patients';
 import { useLabWorkflowCardClickGuard, useOrderTestQueueState } from '../hooks';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
-import { LabWorkflowCardShell, ProgressBadge } from '../components/LabWorkflowCardShell';
-import { TestHeaderBadges } from '../components/LabWorkflowBadges';
+import { LabWorkflowCardShell, ProgressMeta } from '../components/LabWorkflowCardShell';
+import { TestCardMeta, TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { LabMobileCardHeader } from '../components/LabWorkflowMobileHeader';
 import { LAB_CONFIG } from '../constants';
@@ -93,7 +93,13 @@ function ResultEntryCardDesktop({
   canEnter,
 }: ResultEntryCardSharedData) {
   const { showAttemptIndicator } = rejection;
-  const auditLines = useMemo(() => testHeaderAudit(test), [test]);
+  const auditLines = useMemo(
+    () => testHeaderAudit(test, { omitSampleId: true }),
+    [test]
+  );
+
+  const previewParams = (testDef.parameters ?? []).slice(0, LAB_CONFIG.PARAMETER_PREVIEW_LIMIT);
+  const remainingParams = parameterCount - previewParams.length;
 
   return (
     <LabWorkflowCardShell
@@ -113,44 +119,32 @@ function ResultEntryCardDesktop({
         referringPhysician: test.referringPhysician,
       }}
       auditLines={auditLines}
-      badges={
-        <TestHeaderBadges
-          test={test}
-          variant="entry"
-          showStatus
-          queueSince={test.collectedAt}
-        />
-      }
+      meta={<TestCardMeta test={test} variant="entry" queueSince={test.collectedAt} />}
+      badges={<TestHeaderBadges test={test} variant="entry" showStatus />}
       actions={
-        <ProgressBadge
+        <ProgressMeta
           count={filledCount}
           total={parameterCount}
-          label="PARAMS"
+          label="params"
           isComplete={isComplete}
         />
       }
       content={
-        <div className="flex flex-wrap gap-space-1-5">
-          {testDef.parameters &&
-            testDef.parameters.slice(0, LAB_CONFIG.PARAMETER_PREVIEW_LIMIT).map(param => (
-              <Badge
-                key={param.code}
-                size="xs"
-                uppercase={false}
-                className={results[param.code] ? 'text-text-primary' : 'text-text-secondary'}
-                variant={results[param.code] ? 'primary' : 'neutral'}
-              >
+        <p className="leading-snug">
+          {previewParams.map((param, index) => (
+            <span key={param.code}>
+              {index > 0 ? ' · ' : null}
+              <span className={results[param.code]?.trim() ? 'text-text-primary' : 'text-text-tertiary'}>
                 {param.name}
-              </Badge>
-            ))}
-          {parameterCount > LAB_CONFIG.PARAMETER_PREVIEW_LIMIT && (
-            <Badge size="xs" variant="neutral" uppercase={false} className="text-text-secondary">
-              +{parameterCount - LAB_CONFIG.PARAMETER_PREVIEW_LIMIT} more
-            </Badge>
-          )}
-        </div>
+              </span>
+            </span>
+          ))}
+          {remainingParams > 0 ? (
+            <span className="text-text-tertiary"> · +{remainingParams} more</span>
+          ) : null}
+        </p>
       }
-      contentTitle={`Parameters (${parameterCount})`}
+      contentTitle="Parameters"
     />
   );
 }
@@ -164,7 +158,10 @@ function ResultEntryCardMobile({
   blockedLabel,
 }: ResultEntryCardSharedData) {
   const { showAttemptIndicator } = rejection;
-  const auditLines = useMemo(() => testHeaderAudit(test), [test]);
+  const auditLines = useMemo(
+    () => testHeaderAudit(test, { omitSampleId: true }),
+    [test]
+  );
 
   return (
     <Card
@@ -188,15 +185,8 @@ function ResultEntryCardMobile({
           entityName: test.testName,
         }}
         auditLines={auditLines}
-        badges={
-          <TestHeaderBadges
-            test={test}
-            variant="entry"
-            size="xs"
-            queueSince={test.collectedAt}
-            showStatus
-          />
-        }
+        meta={<TestCardMeta test={test} variant="entry" queueSince={test.collectedAt} />}
+        badges={<TestHeaderBadges test={test} variant="entry" size="xs" showStatus />}
         actions={
           <IconButton
             {...actionButtonPreset('edit')}

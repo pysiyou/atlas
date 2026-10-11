@@ -2,7 +2,7 @@
  * Lab Shared Components Index
  */
 
-export { LabWorkflowCardShell, ProgressBadge, TestList } from './LabWorkflowCardShell';
+export { LabWorkflowCardShell, ProgressMeta, TestList } from './LabWorkflowCardShell';
 export { PopoverFormChrome, RadioCard } from '@/components/overlays/PopoverFormChrome';
 export { QualityIssuePopover } from './QualityIssuePopover';
 export { LabWorkflowQueueLayout, createLabQueueSearchFilter } from './LabWorkflowQueueLayout';

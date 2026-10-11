@@ -112,7 +112,14 @@ export function LabMobileCardHeader({
     context.entityCode ??
     displayId.order(context.orderId);
 
-  const metaNode = meta ?? (auditLines.length > 0 ? <MobileAuditMeta lines={auditLines} /> : null);
+  const auditNode = auditLines.length > 0 ? <MobileAuditMeta lines={auditLines} /> : null;
+  const metaNode =
+    meta || auditNode ? (
+      <>
+        {meta}
+        {auditNode}
+      </>
+    ) : null;
   const showFooter = Boolean(badges) || Boolean(actions);
 
   return (

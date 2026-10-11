@@ -35,6 +35,7 @@ export interface LabWorkflowModalContext {
 export interface LabModalHeaderProps {
   contextInfo: LabWorkflowModalContext;
   badges?: ReactNode;
+  meta?: ReactNode;
   auditLines?: LabAuditLine[];
 }
 
@@ -209,6 +210,7 @@ function LabAuditBlock({
 export function LabHeaderContent({
   context,
   badges,
+  meta,
   auditLines = [],
   actions,
   stackAs = 'div',
@@ -216,6 +218,7 @@ export function LabHeaderContent({
 }: {
   context: LabIdentityContext;
   badges?: ReactNode;
+  meta?: ReactNode;
   auditLines?: LabAuditLine[];
   actions?: ReactNode;
   stackAs?: 'header' | 'div';
@@ -242,6 +245,7 @@ export function LabHeaderContent({
           <div className={LAB_HEADER.badgeRow}>{badges}</div>
         </LabHeaderCompactContext.Provider>
       ) : null}
+      {meta ? <div className={LAB_HEADER.row}>{meta}</div> : null}
       {auditLines.length > 0 ? (
         <LabAuditBlock lines={auditLines} compact={compact} />
       ) : null}
@@ -252,6 +256,7 @@ export function LabHeaderContent({
 export function LabModalHeader({
   contextInfo,
   badges,
+  meta,
   auditLines = [],
 }: LabModalHeaderProps) {
   return (
@@ -259,6 +264,7 @@ export function LabModalHeader({
       stackAs="header"
       context={parseModalIdentity(contextInfo)}
       badges={badges}
+      meta={meta}
       auditLines={auditLines}
     />
   );
