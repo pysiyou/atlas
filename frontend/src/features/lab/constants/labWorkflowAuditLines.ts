@@ -46,15 +46,24 @@ interface CollectionAuditSource {
   originalSampleCollectedAt?: string;
 }
 
-export function collectionHeaderAudit(sample: CollectionAuditSource): LabAuditLine[] {
+export function collectionHeaderAudit(
+  sample: CollectionAuditSource,
+  options?: { omitSampleId?: boolean }
+): LabAuditLine[] {
   return compactAuditLines(
-    sample.collectedAt && sample.sampleId != null
-      ? {
-          type: 'sample-collected',
-          sampleId: sample.sampleId,
-          collectedAt: sample.collectedAt,
-          collectedBy: sample.collectedBy,
-        }
+    sample.collectedAt
+      ? options?.omitSampleId || sample.sampleId == null
+        ? {
+            type: 'collection-only',
+            collectedAt: sample.collectedAt,
+            collectedBy: sample.collectedBy,
+          }
+        : {
+            type: 'sample-collected',
+            sampleId: sample.sampleId,
+            collectedAt: sample.collectedAt,
+            collectedBy: sample.collectedBy,
+          }
       : null,
     sample.isRecollection &&
       sample.originalSampleId != null &&
@@ -78,19 +87,19 @@ interface TestAuditSource {
 
 export function testHeaderAudit(
   test: TestAuditSource,
-  options?: { includeResultEntered?: boolean }
+  options?: { includeResultEntered?: boolean; omitSampleId?: boolean }
 ): LabAuditLine[] {
   return compactAuditLines(
     test.collectedAt
-      ? test.sampleId != null
+      ? options?.omitSampleId || test.sampleId == null
         ? {
-            type: 'sample-collected',
-            sampleId: test.sampleId,
+            type: 'collection-only',
             collectedAt: test.collectedAt,
             collectedBy: test.collectedBy,
           }
         : {
-            type: 'collection-only',
+            type: 'sample-collected',
+            sampleId: test.sampleId,
             collectedAt: test.collectedAt,
             collectedBy: test.collectedBy,
           }

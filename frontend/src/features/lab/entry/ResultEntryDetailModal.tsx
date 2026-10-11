@@ -10,18 +10,18 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { Badge, Icon, CircularProgress, EntityId } from '@/components';
+import { Icon, CircularProgress, EntityId } from '@/components';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { EntryDetailMainPanel, EntryDetailModalFooter } from './ResultEntryDetailModal.parts';
 import { LabWorkflowDetailModal, DetailGrid } from '../components/LabWorkflowDetailModal';
 import { LabEventLogPanel } from '@/features/audit';
-import { TestHeaderBadges } from '../components/LabWorkflowBadges';
+import { LabCardMetaRow } from '../components/LabCardMetaRow';
+import { TestCardMeta, TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { ICONS } from '@/config/icons';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import { useTestCatalog } from '@/features/catalog';
 import { labModalSubtitle } from '../components/LabWorkflowModalSubtitles';
-import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 import type { Test, TestWithContext } from '@/types';
 
 interface EntryDetailModalProps {
@@ -138,30 +138,15 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
     />
   );
 
-  const headerBadges = (
-    <TestHeaderBadges
-      test={test}
-      variant="entry"
-      showStatus
-      queueSince={test.collectedAt}
-      trailing={
-        <>
-          <Badge size={LAB_CARD_BADGE_SIZE} variant="neutral" className="text-text-secondary">
-            {filledCount} / {totalParams} parameters
-          </Badge>
-          {showTurnaroundTime && (
-            <Badge
-              size={LAB_CARD_BADGE_SIZE}
-              variant="neutral"
-              className="text-text-secondary flex items-center gap-space-1-5"
-            >
-              <Icon name={ICONS.dataFields.time} className="w-3 h-3 text-text-tertiary" />
-              {turnaroundTime}h TAT
-            </Badge>
-          )}
-        </>
-      }
-    />
+  const headerBadges = <TestHeaderBadges test={test} variant="entry" showStatus />;
+  const headerMeta = (
+    <>
+      <TestCardMeta test={test} variant="entry" queueSince={test.collectedAt} />
+      <LabCardMetaRow>
+        <span>{filledCount}/{totalParams} parameters</span>
+        {showTurnaroundTime ? <span>{turnaroundTime}h turnaround</span> : null}
+      </LabCardMetaRow>
+    </>
   );
 
   return (
@@ -173,6 +158,7 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
       modalKey={readOnly ? `historical-${test.id}` : resultKey}
       disableClose={isSaving}
       headerBadges={headerBadges}
+      headerMeta={headerMeta}
       contextInfo={{
         patientName: test.patientName,
         patientId: test.patientId,

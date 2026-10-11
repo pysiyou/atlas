@@ -27,7 +27,7 @@ import { CriticalValueActions } from '../criticalValues/CriticalValueActions';
 import { buildCriticalValueRecord } from '../criticalValues/criticalValues';
 import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
 import { LabEventLogPanel } from '@/features/audit';
-import { TestHeaderBadges } from '../components/LabWorkflowBadges';
+import { TestCardMeta, TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { useSampleRejectionDisplay } from '../hooks/useSampleRejectionDisplay';
 import { SampleRejectedBanner } from '../components/SampleRejectedBanner';
 import type { TestWithContext } from '@/types';
@@ -92,12 +92,12 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
   const hasFlags = test.flags && test.flags.length > 0;
   const flagCount = test.flags?.length || 0;
 
-  const headerBadges = (
-    <TestHeaderBadges
+  const headerBadges = <TestHeaderBadges test={test} variant="validation" showStatus />;
+  const headerMeta = (
+    <TestCardMeta
       test={test}
       variant="validation"
       emphasizeCritical
-      showStatus
       queueSince={test.resultEnteredAt}
       flagCount={flagCount}
     />
@@ -114,6 +114,7 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
       modalKey={readOnly ? `historical-${test.id}` : commentKey}
       disableClose={isApproving}
       headerBadges={headerBadges}
+      headerMeta={headerMeta}
       contextInfo={{
         patientName: test.patientName,
         patientId: test.patientId,

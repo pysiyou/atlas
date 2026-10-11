@@ -4,10 +4,11 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { actionButtonPreset, Badge, Button } from '@/components';
+import { actionButtonPreset, Button } from '@/components';
 import { LabWorkflowDetailModal, ModalFooter } from '../components/LabWorkflowDetailModal';
 import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
-import { TestHeaderBadges } from '../components/LabWorkflowBadges';
+import { LabCardMetaRow } from '../components/LabCardMetaRow';
+import { TestCardMeta, TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { buildCriticalValueRecord } from '../criticalValues/criticalValues';
 import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
 import type { TestWithContext } from '@/types';
@@ -15,7 +16,6 @@ import { useEscalationResolution } from './useEscalationResolution';
 import { EscalationResolutionFooter } from './EscalationResolutionFooter';
 import { EscalationResolutionBody } from './EscalationResolutionBody';
 import { labModalSubtitle } from '../components/LabWorkflowModalSubtitles';
-import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 
 interface EscalationResolutionModalProps {
   isOpen: boolean;
@@ -73,18 +73,14 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   if (test.id == null) return null;
 
   const hasResults = Boolean(test.results && Object.keys(test.results).length > 0);
-  const headerBadges = (
-    <TestHeaderBadges
-      test={test}
-      variant="escalation"
-      reasonCode={test.reasonCode}
-      showStatus
-      trailing={
-        <Badge size={LAB_CARD_BADGE_SIZE} variant="danger">
-          Requires Supervisor Action
-        </Badge>
-      }
-    />
+  const headerBadges = <TestHeaderBadges test={test} variant="escalation" showStatus />;
+  const headerMeta = (
+    <>
+      <TestCardMeta test={test} variant="escalation" reasonCode={test.reasonCode} />
+      <LabCardMetaRow>
+        <span className="text-danger-fg">Requires supervisor action</span>
+      </LabCardMetaRow>
+    </>
   );
 
   return (
@@ -95,6 +91,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
       subtitle={labModalSubtitle('escalation')}
       modalKey={readOnly ? `historical-${test.id}` : `escalation-${test.id}`}
       headerBadges={headerBadges}
+      headerMeta={headerMeta}
       contextInfo={{
         patientName: test.patientName,
         patientId: test.patientId,

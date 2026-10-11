@@ -5,12 +5,12 @@
 
 import React, { useMemo } from 'react';
 import { actionButtonPreset, Card, IconButton } from '@/components';
-import { SampleStatusBadge } from '../components/LabDomainBadges';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
 import { LabWorkflowCardShell, TestList } from '../components/LabWorkflowCardShell';
-import { CollectionHeaderBadges } from '../components/LabWorkflowBadges';
+import { CollectionCardMeta, CollectionHeaderBadges } from '../components/LabWorkflowBadges';
 import { collectionHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { LabMobileCardHeader } from '../components/LabWorkflowMobileHeader';
+import { LabCardContentPanel } from '../components/LabCardSectionHeader';
 import { LAB_MOBILE_CARD } from '../utils/labStyles';
 import { SampleCollectionPopover } from './SampleCollectionPopover';
 import { SampleRejectionPopover } from './SampleRejectionPopover';
@@ -93,14 +93,17 @@ function CollectionCardDesktop({
 
   const auditLines = useMemo(
     () =>
-      collectionHeaderAudit({
-        sampleId: sample.sampleId,
-        collectedAt,
-        collectedBy,
-        isRecollection,
-        originalSampleId: sample.originalSampleId,
-        originalSampleCollectedAt: sample.originalSampleCollectedAt,
-      }),
+      collectionHeaderAudit(
+        {
+          sampleId: sample.sampleId,
+          collectedAt,
+          collectedBy,
+          isRecollection,
+          originalSampleId: sample.originalSampleId,
+          originalSampleCollectedAt: sample.originalSampleCollectedAt,
+        },
+        { omitSampleId: true }
+      ),
     [
       sample.sampleId,
       collectedAt,
@@ -109,6 +112,22 @@ function CollectionCardDesktop({
       sample.originalSampleId,
       sample.originalSampleCollectedAt,
     ],
+  );
+
+  const cardMeta = (
+    <CollectionCardMeta
+      sample={sample}
+      isPending={isPending}
+      isCollected={isCollected}
+      isRejected={isRejected}
+      rejectedSample={rejectedSample}
+      orderDate={order.orderDate}
+      requiredVolume={requirement.totalVolume}
+      collectedVolume={collectedVolume}
+      containerColor={containerColor}
+      effectiveContainerType={effectiveContainerType}
+      colorName={colorName}
+    />
   );
 
   return (
@@ -120,25 +139,17 @@ function CollectionCardDesktop({
         patientId: display.order.patientId,
         orderId: order.orderId,
         sampleId: sample.sampleId,
-        entityCode: sample.sampleType.toUpperCase(),
         referringPhysician: order.referringPhysician,
       }}
       auditLines={auditLines}
+      meta={cardMeta}
       badges={
         <CollectionHeaderBadges
           sample={sample}
           isPending={isPending}
           isCollected={isCollected}
           isRejected={isRejected}
-          rejectedSample={rejectedSample}
-          orderDate={order.orderDate}
           statusPresentation={display.statusPresentation}
-          requiredVolume={requirement.totalVolume}
-          collectedVolume={collectedVolume}
-          containerColor={containerColor}
-          effectiveContainerType={effectiveContainerType}
-          colorName={colorName}
-          showBarcode={isCollected && !!sample.sampleId}
         />
       }
       actions={
@@ -210,18 +221,19 @@ function CollectionCardMobile({
     collectedAt,
     collectedBy,
   } = getCollectionViewModel(display, sample);
-  const testCount = testNames.length;
-
   const auditLines = useMemo(
     () =>
-      collectionHeaderAudit({
-        sampleId: sample.sampleId,
-        collectedAt,
-        collectedBy,
-        isRecollection,
-        originalSampleId: sample.originalSampleId,
-        originalSampleCollectedAt: sample.originalSampleCollectedAt,
-      }),
+      collectionHeaderAudit(
+        {
+          sampleId: sample.sampleId,
+          collectedAt,
+          collectedBy,
+          isRecollection,
+          originalSampleId: sample.originalSampleId,
+          originalSampleCollectedAt: sample.originalSampleCollectedAt,
+        },
+        { omitSampleId: true }
+      ),
     [
       sample.sampleId,
       collectedAt,
@@ -231,14 +243,6 @@ function CollectionCardMobile({
       sample.originalSampleCollectedAt,
     ],
   );
-
-  const statusAside = isPending ? (
-    <SampleStatusBadge status="pending" size="xs" />
-  ) : isCollected ? (
-    <SampleStatusBadge status="collected" size="xs" />
-  ) : isRejected ? (
-    <SampleStatusBadge status="rejected" size="xs" />
-  ) : null;
 
   const actions = isPending ? (
     <SampleCollectionPopover
@@ -278,33 +282,40 @@ function CollectionCardMobile({
           patientId: display.order.patientId,
           orderId: order.orderId,
           sampleId: sample.sampleId,
-          entityCode: sample.sampleType.toUpperCase(),
         }}
-        titleAside={statusAside}
         auditLines={auditLines}
-        badges={
-          <CollectionHeaderBadges
+        meta={
+          <CollectionCardMeta
             sample={sample}
             isPending={isPending}
             isCollected={isCollected}
             isRejected={isRejected}
             rejectedSample={rejectedSample}
             orderDate={order.orderDate}
-            statusPresentation={display.statusPresentation}
             requiredVolume={requirement.totalVolume}
             collectedVolume={collectedVolume}
             containerColor={containerColor}
             effectiveContainerType={effectiveContainerType}
             colorName={colorName}
+          />
+        }
+        badges={
+          <CollectionHeaderBadges
+            sample={sample}
+            isPending={isPending}
+            isCollected={isCollected}
+            isRejected={isRejected}
+            statusPresentation={display.statusPresentation}
             size="xs"
           />
         }
         actions={actions}
       >
-        <p className={LAB_MOBILE_CARD.body}>
-          {testCount} test{testCount !== 1 ? 's' : ''}: {testNames.slice(0, 2).join(', ')}
-          {testCount > 2 && ` +${testCount - 2} more`}
-        </p>
+        <LabCardContentPanel title="Required for">
+          <TestList
+            tests={testNames.map((name, i) => ({ name, code: requirement.testCodes[i] || '' }))}
+          />
+        </LabCardContentPanel>
       </LabMobileCardHeader>
     </Card>
   );

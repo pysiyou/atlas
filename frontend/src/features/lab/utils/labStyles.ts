@@ -105,6 +105,7 @@ export const LAB_CARD_CONTAINERS = {
   cardBase: `${SHADOW.subtle} hover:bg-surface-hover transition-colors duration-200`,
 
   contentSection: `${SURFACE.recessed} ${RADIUS.field} ${LAB_CARD_PANEL_INSET}`,
+
   flagsSection: `${SURFACE.dangerWell} ${RADIUS.field} ${LAB_CARD_PANEL_INSET}`,
 } as const;
 
@@ -152,7 +153,7 @@ export const LAB_MOBILE_CARD = {
   sublineName: 'truncate capitalize font-normal text-text-secondary',
   metaLine: `${TYPE.label} leading-snug`,
   body: `${TYPE.label} leading-snug`,
-  footer: 'flex items-center justify-between gap-space-2 pt-space-2 mt-auto border-t border-border-subtle',
+  footer: 'flex items-center justify-between gap-space-2 pt-space-1 mt-auto',
   badgeRail: 'flex min-w-0 flex-1 flex-wrap items-center gap-space-1-5',
   actionRail: 'flex shrink-0 items-center justify-end gap-space-1-5',
   titleAside: 'col-start-2 row-start-1 shrink-0',

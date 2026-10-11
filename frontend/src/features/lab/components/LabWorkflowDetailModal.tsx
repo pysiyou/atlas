@@ -31,6 +31,8 @@ interface LabDetailModalProps {
   modalKey?: string;
   /** Badge elements for the header section */
   headerBadges: ReactNode;
+  /** Plain-text metadata below badges (queue age, volumes, etc.) */
+  headerMeta?: ReactNode;
   /** Patient and order context */
   contextInfo: LabWorkflowModalContext;
   /** Structured audit lines (collection, entry, recollection, etc.) */
@@ -55,6 +57,7 @@ export const LabWorkflowDetailModal: React.FC<LabDetailModalProps> = ({
   subtitle,
   modalKey,
   headerBadges,
+  headerMeta,
   contextInfo,
   headerAudit,
   children,
@@ -76,6 +79,7 @@ export const LabWorkflowDetailModal: React.FC<LabDetailModalProps> = ({
         <div className={`flex-1 overflow-y-auto p-space-6 ${LAB_MODAL_DETAIL.sectionStack}`}>
           <LabModalHeader
             badges={headerBadges}
+            meta={headerMeta}
             contextInfo={contextInfo}
             auditLines={headerAudit}
           />
