@@ -2,18 +2,17 @@
  * Event log row detail blocks (results, notes, debug payload).
  */
 import { useMemo } from 'react';
-import { RADIUS, TYPE } from '@/components/theme/recipes';
+import { TYPE } from '@/components/theme/recipes';
 import { parseResultEntry, statusMapFromFlags } from '@/features/lab';
 import { cn } from '@/utils';
 import { EVENT_LOG_COPY } from './types';
 import type { ResolvedEventLogItem } from './types';
 
 const DETAIL_STYLES = {
-  section: `${RADIUS.inset} space-y-space-0-5 bg-surface-hover px-space-2 py-space-2`,
-  title: `${TYPE.caption} leading-tight font-normal`,
-  body: `${TYPE.value} leading-relaxed font-normal m-0`,
-  contentClamp: 'line-clamp-2 min-w-0 break-words',
-  results: `${TYPE.value} leading-relaxed font-normal min-w-0 line-clamp-2 break-words`,
+  row: `pl-space-4 mt-space-0-5 ${TYPE.value} leading-relaxed font-normal min-w-0 m-0`,
+  label: 'text-text-tertiary',
+  contentClamp: 'line-clamp-2 break-words',
+  results: 'inline min-w-0 line-clamp-2 break-words',
   line: 'inline whitespace-nowrap',
   lineLabel: 'text-text-tertiary lowercase',
   lineValue: 'text-text-primary',
@@ -63,26 +62,26 @@ export function EventLogDetailBox({ item }: { item: ResolvedEventLogItem }) {
 
   if (!hasResults && !hasNote && !hasDebug) return null;
 
+  const noteLabel = narrativeLabel ?? EVENT_LOG_COPY.narrativeDefaultLabel;
+
   return (
     <>
       {hasResults ? (
-        <div className={DETAIL_STYLES.section}>
-          <div className={DETAIL_STYLES.title}>{EVENT_LOG_COPY.resultTitle}</div>
+        <p className={cn(DETAIL_STYLES.row, DETAIL_STYLES.contentClamp)}>
+          <span className={DETAIL_STYLES.label}>{EVENT_LOG_COPY.resultTitle}: </span>
           <EventLogResultsList results={results!} flags={resultFlags} />
-        </div>
+        </p>
       ) : null}
       {hasNote ? (
-        <div className={DETAIL_STYLES.section}>
-          <div className={DETAIL_STYLES.title}>
-            {narrativeLabel ?? EVENT_LOG_COPY.narrativeDefaultLabel}
-          </div>
-          <p className={cn(DETAIL_STYLES.body, DETAIL_STYLES.contentClamp)}>{narrativeText}</p>
-        </div>
+        <p className={cn(DETAIL_STYLES.row, DETAIL_STYLES.contentClamp)}>
+          <span className={DETAIL_STYLES.label}>{noteLabel}: </span>
+          {narrativeText}
+        </p>
       ) : null}
       {hasDebug ? (
-        <div className={DETAIL_STYLES.section}>
-          <div className={DETAIL_STYLES.title}>{EVENT_LOG_COPY.debugTitle}</div>
-          <pre className={cn(DETAIL_STYLES.body, 'whitespace-pre-wrap break-all font-mono')}>
+        <div className={DETAIL_STYLES.row}>
+          <span className={DETAIL_STYLES.label}>{EVENT_LOG_COPY.debugTitle}: </span>
+          <pre className="mt-space-0-5 whitespace-pre-wrap break-all font-mono text-text-primary">
             {JSON.stringify(debugPayload, null, 2)}
           </pre>
         </div>
