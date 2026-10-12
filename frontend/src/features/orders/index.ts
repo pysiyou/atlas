@@ -24,6 +24,7 @@ export { useOrderSearch, useOrderLookup, useInvalidateOrders } from './hooks/use
 
 export { OrderUpsertModal } from './components/OrderUpsertModal';
 export type { OrderUpsertModalProps } from './components/OrderUpsertModal';
+export { OrderTestDetailModal } from './components/OrderTestDetailModal';
 export {
   OrderPriorityBadge,
   OrderStatusBadge,

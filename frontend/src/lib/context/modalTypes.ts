@@ -4,7 +4,7 @@
  */
 
 import type { ModalType } from './ModalContext';
-import type { Order, Test, TestWithContext, ContainerType } from '@/types';
+import type { Order, OrderTest, Patient, Test, TestWithContext, ContainerType } from '@/types';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 
@@ -71,6 +71,13 @@ export interface OrderUpsertModalProps {
   mode?: 'create' | 'edit';
 }
 
+/** Payload for read-only order test detail modal (order detail page). */
+export interface OrderTestDetailProps {
+  order: Order;
+  orderTest: OrderTest;
+  patient?: Patient | null;
+}
+
 /**
  * Map of ModalType to the props payload passed to openModal(type, props).
  * Unregistered modals use empty object.
@@ -81,6 +88,7 @@ export interface ModalPropsMap {
   VALIDATION_DETAIL: ValidationDetailProps;
   ESCALATION_RESOLUTION_DETAIL: EscalationResolutionDetailProps;
   NEW_ORDER: OrderUpsertModalProps;
+  ORDER_TEST_DETAIL: OrderTestDetailProps;
 }
 
 export type ModalPropsFor<T extends ModalType> = ModalPropsMap[T];

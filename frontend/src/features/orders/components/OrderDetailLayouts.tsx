@@ -168,7 +168,8 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
         >
           <TestsTable
             tests={order.tests ?? []}
-            orderId={order.orderId}
+            order={order}
+            patient={patient}
             variant={testsVariant}
           />
         </Panel>
@@ -234,7 +235,8 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
       <Panel title="Tests" meta={testsHeaderMeta} className="shrink-0" variant="pageEmbed" scroll="visible">
         <TestsTable
           tests={order.tests ?? []}
-          orderId={order.orderId}
+          order={order}
+          patient={patient}
           variant="simple"
         />
       </Panel>

@@ -110,7 +110,7 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
             key={key}
             className="grid grid-cols-[1fr_auto] items-baseline gap-x-space-2 whitespace-nowrap min-w-0"
           >
-            <span className={`${TYPE.caption} text-text-secondary truncate text-right`} title={key}>
+            <span className={`${TYPE.caption} text-text-secondary truncate`} title={key}>
               {key}:
             </span>
             <span className={`${TYPE.value} font-normal tabular-nums ${inlineValueClass(status)}`}>
