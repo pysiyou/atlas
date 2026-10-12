@@ -13,7 +13,7 @@ import {
   ResultValidationDetailModal,
   EscalationResolutionModal,
 } from '@/features/lab';
-import { OrderUpsertModal } from '@/features/orders';
+import { OrderUpsertModal, OrderTestDetailModal } from '@/features/orders';
 
 /**
  * Base props that all modals receive
@@ -126,6 +126,13 @@ registerModal(ModalType.NEW_ORDER, OrderUpsertModal, (props, baseProps) => ({
   patientId: props.patientId,
   order: props.order,
   mode: props.mode ?? (props.order ? 'edit' : 'create'),
+}));
+
+registerModal(ModalType.ORDER_TEST_DETAIL, OrderTestDetailModal, (props, baseProps) => ({
+  ...baseProps,
+  order: props.order,
+  orderTest: props.orderTest,
+  patient: props.patient,
 }));
 
 /** Side-effect import hook so registration runs on module load. */

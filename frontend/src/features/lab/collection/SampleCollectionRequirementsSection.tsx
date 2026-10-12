@@ -2,9 +2,10 @@
  * SampleCollectionRequirementsSection - Collection requirements with tabs for each test
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { RADIUS, TYPE } from '@/components/theme/recipes';
 import { Callout, Panel, EntityId } from '@/components';
+import { PanelHeaderSegmentTabs } from '@/components/display/PanelHeaderSegmentTabs';
 import { formatArray } from '@/utils';
 import { formatRejectionCriteriaList } from '../utils/catalogRejectionCriteria';
 import { LAB_CARD_TYPOGRAPHY } from '../utils/labStyles';
@@ -33,6 +34,20 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
   const [activeTestCode, setActiveTestCode] = React.useState(testDetails[0]?.code || '');
   const activeTest = testDetails.find(t => t.code === activeTestCode) || testDetails[0];
 
+  const segmentTabs = useMemo(
+    () =>
+      testDetails.map((test, index) => ({
+        id: `${test.code}-${index}`,
+        label: <EntityId>{test.code}</EntityId>,
+      })),
+    [testDetails]
+  );
+
+  const activeSegmentId =
+    segmentTabs.find((_tab, index) => testDetails[index]?.code === activeTestCode)?.id ??
+    segmentTabs[0]?.id ??
+    '';
+
   if (!activeTest) return null;
 
   return (
@@ -40,21 +55,17 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
       variant="lab"
       title="Collection Requirements & Instructions"
       headerEnd={
-        <div className="flex gap-space-1">
-          {testDetails.map((test, index) => (
-            <button
-              key={`${test.code}-${index}`}
-              onClick={() => setActiveTestCode(test.code)}
-              className={`px-space-2 py-space-1 ${TYPE.caption} ${RADIUS.field} transition-colors ${
-                activeTestCode === test.code
-                  ? 'bg-brand-muted text-brand font-normal'
-                  : 'bg-surface-hover text-brand hover:bg-border-default'
-              }`}
-            >
-              <EntityId>{test.code}</EntityId>
-            </button>
-          ))}
-        </div>
+        testDetails.length > 1 ? (
+          <PanelHeaderSegmentTabs
+            tabs={segmentTabs}
+            activeId={activeSegmentId}
+            onTabChange={id => {
+              const index = segmentTabs.findIndex(tab => tab.id === id);
+              const test = testDetails[index];
+              if (test) setActiveTestCode(test.code);
+            }}
+          />
+        ) : undefined
       }
     >
       <div className="space-y-space-3 pt-space-2 animate-in fade-in duration-200">

@@ -96,12 +96,16 @@ export const DetailField: React.FC<DetailFieldProps> = ({
   }
 
   return (
-    <div className={`flex items-center justify-between gap-layout-section ${className}`}>
-      <div className="flex items-center gap-space-2 min-w-0">
-        {icon && <Icon name={icon} className="w-4 h-4 text-text-tertiary flex-shrink-0" />}
+    <div className={`flex items-start justify-between gap-layout-section ${className}`}>
+      <div className="flex items-start gap-space-2 min-w-0 shrink-0">
+        {icon && <Icon name={icon} className="mt-space-0-5 w-4 h-4 text-text-tertiary flex-shrink-0" />}
         <span className={`font-normal whitespace-nowrap ${labelClassName}`}>{label}</span>
       </div>
-      <span className={`text-right min-w-0 ${valueClassName}`}>{renderValue()}</span>
+      <div
+        className={`text-right min-w-0 flex-1 break-words whitespace-normal ${valueClassName}`}
+      >
+        {renderValue()}
+      </div>
     </div>
   );
 };
