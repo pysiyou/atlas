@@ -7,8 +7,8 @@
 [data-theme='github'],
 [data-theme='noir-studio'] {
   --text: var(--primitive-neutral-900);
-  --text-secondary: var(--primitive-neutral-700);
   --text-tertiary: var(--primitive-neutral-600);
+  --text-secondary: var(--text-tertiary);
   --text-muted: var(--primitive-neutral-500);
   --text-disabled: var(--primitive-neutral-400);
   --text-inverse: var(--primitive-neutral-0);

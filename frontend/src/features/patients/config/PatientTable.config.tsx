@@ -1,7 +1,7 @@
 import type { NavigateFunction } from 'react-router-dom';
 import { PatientGenderBadge } from '../components/PatientGenderBadge';
 import type { TableViewConfig } from '@/components';
-import { buildViews } from '@/components/data-table';
+import { buildViews, COLUMN_SIZE } from '@/components/data-table';
 import {
   renderContactBlock,
   renderDateCell,
@@ -31,7 +31,7 @@ export const createPatientTableConfig = (
     id: {
       key: 'id',
       header: 'Patient ID',
-      width: 'id' as const,
+      width: COLUMN_SIZE.md,
       sortable: true,
       accessor: (patient: PatientContext) => patient.id,
       render: (patient: PatientContext) => renderPatientId(patient.id),
@@ -39,7 +39,7 @@ export const createPatientTableConfig = (
     fullName: {
       key: 'fullName',
       header: 'Name',
-      width: 'fill' as const,
+      width: COLUMN_SIZE.fill,
       sortable: true,
       accessor: (patient: PatientContext) => patient.fullName,
       render: (patient: PatientContext) =>
@@ -48,13 +48,13 @@ export const createPatientTableConfig = (
     contact: {
       key: 'contact',
       header: 'Contact',
-      width: 'fill' as const,
+      width: COLUMN_SIZE.fill,
       render: (patient: PatientContext) => renderContactBlock(patient.phone, patient.email),
     },
     gender: {
       key: 'gender',
       header: 'Gender',
-      width: 'sm' as const,
+      width: COLUMN_SIZE.sm,
       sortable: true,
       accessor: (patient: PatientContext) => patient.gender,
       render: (patient: PatientContext) => <PatientGenderBadge gender={patient.gender} size="xs" />,
@@ -62,7 +62,7 @@ export const createPatientTableConfig = (
     orders: {
       key: 'orders',
       header: 'Orders',
-      width: 'lg' as const,
+      width: COLUMN_SIZE.lg,
       sortable: true,
       accessor: (patient: PatientContext) => patient.lastOrderDate ?? '',
       render: (patient: PatientContext) =>
@@ -71,7 +71,7 @@ export const createPatientTableConfig = (
     affiliation: {
       key: 'affiliation',
       header: 'Affiliation',
-      width: 'lg' as const,
+      width: COLUMN_SIZE.lg,
       sortable: true,
       accessor: (patient: PatientContext) => patient.affiliation?.endDate ?? '',
       render: (patient: PatientContext) => {
@@ -96,7 +96,7 @@ export const createPatientTableConfig = (
     registrationDate: {
       key: 'registrationDate',
       header: 'Registered',
-      width: 'lg' as const,
+      width: COLUMN_SIZE.md,
       sortable: true,
       accessor: (patient: PatientContext) => patient.registrationDate,
       render: (patient: PatientContext) => renderDateTimeCell(patient.registrationDate),

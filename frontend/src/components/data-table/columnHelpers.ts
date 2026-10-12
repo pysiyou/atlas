@@ -3,6 +3,7 @@
  */
 
 import type { ReactNode } from 'react';
+import { COLUMN_SIZE } from './constants';
 import type {
   ColumnConfig,
   ColumnSizePreset,
@@ -33,7 +34,7 @@ export function createIdColumn<T>(
 ): ColumnConfig<T> {
   return createColumn(key, header, {
     ...options,
-    width: options.width ?? 'id',
+    width: options.width ?? COLUMN_SIZE.md,
     render: item => renderId(item),
   });
 }
@@ -47,7 +48,7 @@ export function createBadgeColumn<T>(
 ): ColumnConfig<T> {
   return createColumn(key, header, {
     ...options,
-    width: options.width ?? 'sm',
+    width: options.width ?? COLUMN_SIZE.sm,
     render: item => renderBadge(item),
   });
 }

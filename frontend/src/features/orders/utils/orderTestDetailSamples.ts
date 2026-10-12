@@ -3,6 +3,7 @@
  */
 
 import type { Order, OrderTest, Patient, Sample, TestWithContext } from '@/types';
+import { expandSamplesWithRecollectionChain } from './orderTestRelations';
 
 /** Samples tied to this order test: linked id + any sample listing this test code. */
 export function getRelatedSamplesForOrderTest(
@@ -25,13 +26,15 @@ export function getRelatedSamplesForOrderTest(
   }
 
   const linkedId = orderTest.sampleId;
-  return Array.from(byId.values()).sort((a, b) => {
+  const byTestCode = Array.from(byId.values()).sort((a, b) => {
     if (linkedId != null) {
       if (a.sampleId === linkedId) return -1;
       if (b.sampleId === linkedId) return 1;
     }
     return a.sampleId - b.sampleId;
   });
+
+  return expandSamplesWithRecollectionChain(byTestCode, orderSamples, linkedId);
 }
 
 /** Partial TestWithContext for lab meta components on the order detail modal. */

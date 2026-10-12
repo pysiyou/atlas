@@ -14,7 +14,15 @@ export interface ColumnWidth {
   shrink?: number;
 }
 
-export type ColumnSizePreset = 'xs' | 'sm' | 'id' | 'md' | 'lg' | 'xl' | 'auto' | 'fill';
+export type ColumnSizePreset =
+  | 'xs'
+  | 'sm'
+  | 'md'
+  | 'lg'
+  | 'xl'
+  | '2xl'
+  | 'auto'
+  | 'fill';
 export type ColumnAlign = 'left' | 'center' | 'right';
 export type StickyPosition = 'left' | 'right';
 

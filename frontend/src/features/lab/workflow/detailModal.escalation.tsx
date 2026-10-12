@@ -17,11 +17,12 @@ import { ResultValidationForm } from '../validation/ResultValidationForm';
 import { LabEventLogPanel } from '@/features/audit';
 import { CriticalValueActions } from '../criticalValues/CriticalValueActions';
 import type { CriticalValueRecord } from '../criticalValues/criticalValues';
-import { resolveStatusBadgeColor } from '@/utils/statusBadge';
+import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { TYPE } from '@/components/theme/recipes';
 import { notify } from '@/utils/feedback';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
 import { EscalationResolutionActions, type EscalationResolveOptions } from '../validation/EscalationResolutionActions';
+import { LabRelatedTestsPanel } from '../components/LabRelatedWorkflowPanel';
 
 
 import { labModalSubtitle } from './detailModalLayout';
@@ -143,6 +144,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
     >
       <EscalationResolutionBody
         test={test}
+        isOpen={isOpen}
         readOnly={readOnly}
         hasResults={hasResults}
         rejectionReason={ticketString(test.ticketMetadata?.rejectionReason)}
@@ -156,6 +158,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
 
 interface EscalationResolutionBodyProps {
   test: TestWithContext;
+  isOpen: boolean;
   readOnly: boolean;
   hasResults: boolean;
   rejectionReason?: string;
@@ -222,6 +225,7 @@ function EscalationSummaryPanel({
 
 function EscalationResolutionBody({
   test,
+  isOpen,
   readOnly,
   hasResults,
   rejectionReason,
@@ -246,6 +250,8 @@ function EscalationResolutionBody({
         </Panel>
       )}
 
+      <LabRelatedTestsPanel test={test} isOpen={isOpen} />
+
       <DetailGrid
         sections={[
           {
@@ -260,9 +266,7 @@ function EscalationResolutionBody({
               { label: 'Collected', timestamp: test.collectedAt, user: test.collectedBy },
               {
                 label: 'Sample Type',
-                badge: test.sampleType
-                  ? { value: test.sampleType, variant: resolveStatusBadgeColor(test.sampleType) }
-                  : undefined,
+                value: test.sampleType ? formatStatusBadgeLabel(test.sampleType) : undefined,
               },
             ],
           },

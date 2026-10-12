@@ -3,7 +3,7 @@
  */
 
 import React, { useState } from 'react';
-import { actionButtonPreset, Alert, Button, Badge, EntityId } from '@/components';
+import { actionButtonPreset, Alert, Button, EntityId } from '@/components';
 import { formatDateTime } from '@/utils';
 import { useAuthStore } from '@/app/authStore';
 import { notify } from '@/utils/feedback';
@@ -79,21 +79,13 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
     <div className={compact ? 'space-y-space-2' : 'space-y-space-3'}>
       <div className={`flex flex-wrap items-center gap-space-2 ${TYPE.value}`}>
         <EntityId type="orderTest" value={record.id} />
-        <Badge variant="danger" size="xs">
-          {record.testCode}
-        </Badge>
+        <span className={TONE.danger.fg}>{record.testCode}</span>
         <span className="text-text-secondary">{record.patientName}</span>
         <EntityId type="order" value={record.orderId} variant="secondary" />
       </div>
 
       {record.flags && record.flags.length > 0 && (
-        <div className="flex flex-wrap gap-space-1">
-          {record.flags.map(flag => (
-            <Badge key={flag} variant="danger" size="xs">
-              {flag}
-            </Badge>
-          ))}
-        </div>
+        <p className={`${TYPE.value} ${TONE.danger.fg}`}>{record.flags.join(', ')}</p>
       )}
 
       {record.criticalNotificationSent ? (

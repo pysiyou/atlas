@@ -18,7 +18,7 @@ import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { ResultEntryCardAlerts } from './queueCard.resultEntry';
 import { ICONS } from '@/config/icons';
-import { resolveStatusBadgeColor } from '@/utils/statusBadge';
+import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { useTestCatalog } from '@/features/catalog';
 import { labModalSubtitle } from './detailModalLayout';
 
@@ -27,6 +27,7 @@ import { ResultEntryForm } from '../entry/ResultEntryForm';
 import { ResultValidationForm } from '../validation/ResultValidationForm';
 import { hasTestResults } from '../utils/labSearchAndLinks';
 import type { Test, TestWithContext } from '@/types';
+import { LabRelatedTestsPanel } from '../components/LabRelatedWorkflowPanel';
 
 interface EntryDetailModalProps {
   isOpen: boolean;
@@ -200,6 +201,8 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
         onSave={handleSave}
       />
 
+      <LabRelatedTestsPanel test={test} isOpen={isOpen} />
+
       {/* Test Details - using declarative sections config */}
       <DetailGrid
         sections={[
@@ -255,9 +258,7 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
               },
               {
                 label: 'Sample Type',
-                badge: test.sampleType
-                  ? { value: test.sampleType, variant: resolveStatusBadgeColor(test.sampleType) }
-                  : undefined,
+                value: test.sampleType ? formatStatusBadgeLabel(test.sampleType) : undefined,
               },
               {
                 label: 'Sample ID',

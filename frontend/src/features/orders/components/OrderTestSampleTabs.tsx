@@ -5,8 +5,12 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Panel } from '@/components';
-import { DetailFieldGroup, type DetailFieldConfig } from '@/components/display/DetailFieldGroup';
+import type { DetailFieldConfig } from '@/components/display/DetailFieldGroup';
 import { useUserLookup } from '@/lib/api/users';
+import {
+  OrderTestDetailFieldGrid,
+  splitDetailFieldsIntoTwoColumns,
+} from '../utils/orderTestDetailFieldColumns';
 import {
   CONTAINER_COLOR_OPTIONS,
   CONTAINER_CONFIG,
@@ -36,24 +40,6 @@ function sampleTabLabel(sample: Sample, linkedSampleId?: number): string {
     return `${id} (recollect)`;
   }
   return id;
-}
-
-function sampleFieldIsVisible(field: DetailFieldConfig): boolean {
-  if (field.hidden) return false;
-  const hasValue = field.value !== undefined && field.value !== null && field.value !== '';
-  const hasTimestamp = field.timestamp !== undefined && field.timestamp !== '';
-  const hasBadge = field.badge?.value !== undefined && field.badge?.value !== '';
-  return hasValue || hasTimestamp || hasBadge;
-}
-
-/** Split fields into two columns with as equal a row count as possible (first column gets the extra when odd). */
-function splitFieldsIntoTwoColumns(fields: DetailFieldConfig[]): DetailFieldConfig[][] {
-  const visible = fields.filter(sampleFieldIsVisible);
-  if (visible.length === 0) {
-    return [[], []];
-  }
-  const mid = Math.ceil(visible.length / 2);
-  return [visible.slice(0, mid), visible.slice(mid)];
 }
 
 function buildSampleFields(sample: Sample): DetailFieldConfig[] {
@@ -135,32 +121,6 @@ function buildSampleFields(sample: Sample): DetailFieldConfig[] {
   return fields;
 }
 
-function buildSampleFieldColumns(sample: Sample): DetailFieldConfig[][] {
-  return splitFieldsIntoTwoColumns(buildSampleFields(sample));
-}
-
-function SampleDetailsFieldGrid({
-  columns,
-  resolveUserDisplay,
-}: {
-  columns: DetailFieldConfig[][];
-  resolveUserDisplay: (id: string) => string;
-}) {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-layout-section gap-y-space-4 items-start w-full">
-      {columns.map((fields, index) => (
-        <DetailFieldGroup
-          key={index}
-          fields={fields}
-          spacing="tight"
-          resolveUserDisplay={resolveUserDisplay}
-          className="min-w-0"
-        />
-      ))}
-    </div>
-  );
-}
-
 function CatalogSampleRequirements({ catalogTest }: { catalogTest: Test }) {
   return (
     <div className={`${TYPE.meta} space-y-space-2`}>
@@ -229,8 +189,8 @@ export const OrderTestSampleTabs: React.FC<OrderTestSampleTabsProps> = ({
 
   return (
     <Panel variant="lab" title="Collection Requirements & Instructions" headerEnd={headerEnd}>
-      <SampleDetailsFieldGrid
-        columns={buildSampleFieldColumns(activeSample)}
+      <OrderTestDetailFieldGrid
+        columns={splitDetailFieldsIntoTwoColumns(buildSampleFields(activeSample))}
         resolveUserDisplay={getUserName}
       />
       <button

@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Alert, Icon, Badge } from '@/components';
+import { Alert, Icon } from '@/components';
 import { ICONS } from '@/config/icons';
 import { FIELD_ERROR, TONE, TYPE } from '@/components/theme/recipes';
 
@@ -42,9 +42,7 @@ export const ResultCriticalValueBanner: React.FC<CriticalValueBannerProps> = ({
         <div className="pl-space-6 space-y-space-1">
           {criticalParameters.map((param, index) => (
             <div key={index} className={`flex items-baseline gap-space-2 ${TYPE.value}`}>
-              <Badge variant="danger" size="xs" className="shrink-0">
-                {param.name}
-              </Badge>
+              <span className={`shrink-0 font-medium ${TONE.danger.fg}`}>{param.name}</span>
               <span className={`font-normal ${TONE.danger.fg}`}>
                 {param.value}
                 {param.unit && <span className={`ml-space-1 ${TYPE.caption}`}>{param.unit}</span>}

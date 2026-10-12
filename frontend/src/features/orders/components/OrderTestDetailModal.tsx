@@ -6,7 +6,6 @@ import React, { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { actionButtonPreset, Button, Panel } from '@/components';
 import {
-  DetailGrid,
   ModalFooter,
   QueueModalShell,
   labModalSubtitle,
@@ -14,8 +13,7 @@ import {
 } from '@/features/lab/workflow/detailModalLayout';
 import { testHeaderAudit } from '@/features/lab/constants/labWorkflowAuditLines';
 import { ResultValidationForm } from '@/features/lab/validation/ResultValidationForm';
-import { TestCardAlerts } from '@/features/lab/components/LabWorkflowBadges';
-import { formatStatusBadgeLabel } from '@/utils/statusBadge';
+import { TestCardAlerts, TestHeaderBadges } from '@/features/lab/components/LabWorkflowBadges';
 import { useSampleRejectionDisplay } from '@/features/lab/hooks/useSampleRejectionDisplay';
 import { SampleRejectedBanner } from '@/features/lab/components/SampleRejectedBanner';
 import { getLabQueueUrlForTest } from '@/features/lab';
@@ -28,15 +26,14 @@ import type { BaseModalProps, OrderTestDetailProps } from '@/lib/context/modalTy
 import type { LabWorkItemProjection } from '@/types/labProjection';
 import type { OrderTest } from '@/types';
 import { TYPE } from '@/components/theme/recipes';
-import { displayId } from '@/utils';
 import { OrderTestSampleTabs } from './OrderTestSampleTabs';
 import { useOrderTestDetailSamples } from '../hooks/useOrderTestDetailSamples';
 import { buildTestContextForLabMeta } from '../utils/orderTestDetailSamples';
 import { findLinkedOrderTests } from '../utils/orderTestLineage';
-import {
-  buildOrderTestDetailGridSections,
-  formatPipelinePendingMessage,
-} from '../utils/orderTestDetailSections';
+import { formatPipelinePendingMessage } from '../utils/orderTestDetailSections';
+import { OrderTestOverviewPanel } from './OrderTestOverviewPanel';
+import { OrderTestWorkflowPanel } from './OrderTestWorkflowPanel';
+import { OrderTestRelatedTestsPanel } from './OrderTestRelatedTestsPanel';
 
 export type OrderTestDetailModalProps = BaseModalProps & OrderTestDetailProps;
 
@@ -104,75 +101,12 @@ export const OrderTestDetailModal: React.FC<OrderTestDetailModalProps> = ({
     [openModal]
   );
 
-  const detailSections = useMemo(
-    () => buildOrderTestDetailGridSections(orderTest, catalogTest, { onCatalogNavigate: onClose }),
-    [orderTest, catalogTest, onClose]
+  const hasResults = hasTestResults(labContext);
+  const omitWorkflowResultDuplicates = hasResults;
+
+  const headerBadges = (
+    <TestHeaderBadges test={labContext} variant={headerVariant} showStatus />
   );
-
-  const lineageSection =
-    linked.prior || linked.replacement || orderTest.status === 'superseded'
-      ? [
-          {
-            title: 'Test lineage',
-            fields: [
-              {
-                label: 'Status note',
-                value:
-                  orderTest.status === 'superseded'
-                    ? 'This entry was superseded by a later test on the order.'
-                    : orderTest.isRetest
-                      ? `Retest attempt ${(orderTest.retestNumber ?? 0) + 1}`
-                      : undefined,
-              },
-              {
-                label: 'Prior test',
-                value: linked.prior ? (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="ml-auto"
-                    onClick={() => openLinkedTest(linked.prior!)}
-                  >
-                    {displayId.orderTest(linked.prior.id)}
-                  </Button>
-                ) : undefined,
-              },
-              {
-                label: 'Replacement test',
-                value: linked.replacement ? (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="ml-auto"
-                    onClick={() => openLinkedTest(linked.replacement!)}
-                  >
-                    {displayId.orderTest(linked.replacement.id)}
-                  </Button>
-                ) : undefined,
-              },
-            ],
-          },
-        ]
-      : [];
-
-  const headerStatusLine = useMemo(() => {
-    const presentation = orderTest.lab?.statusPresentation;
-    const statusText = presentation
-      ? [formatStatusBadgeLabel(presentation.primary), presentation.secondary]
-          .filter(Boolean)
-          .join(' — ')
-      : formatStatusBadgeLabel(orderTest.status);
-    const parts = [
-      statusText,
-      labContext.sampleType ? formatStatusBadgeLabel(labContext.sampleType) : null,
-      labContext.priority === 'urgent' || labContext.priority === 'high'
-        ? formatStatusBadgeLabel(labContext.priority)
-        : null,
-    ].filter((part): part is string => Boolean(part));
-    return parts.join(' · ');
-  }, [orderTest.status, orderTest.lab?.statusPresentation, labContext.sampleType, labContext.priority]);
-
-  const headerBadges = <span className={TYPE.meta}>{headerStatusLine}</span>;
   const headerMeta = (
     <TestCardAlerts
       test={labContext}
@@ -243,8 +177,34 @@ export const OrderTestDetailModal: React.FC<OrderTestDetailModalProps> = ({
         </div>
       )}
 
-      {hasTestResults(labContext) ? (
-        <Panel variant="lab" title="Recorded results">
+      <OrderTestOverviewPanel
+        orderTest={orderTest}
+        catalogTest={catalogTest}
+        onCatalogNavigate={onClose}
+      />
+
+      <OrderTestWorkflowPanel
+        orderTest={orderTest}
+        linked={linked}
+        onOpenLinkedTest={openLinkedTest}
+        omitResultDuplicates={omitWorkflowResultDuplicates}
+      />
+
+      <OrderTestRelatedTestsPanel
+        order={order}
+        orderTest={orderTest}
+        onOpenOrderTest={openLinkedTest}
+      />
+
+      <OrderTestSampleTabs
+        samples={relatedSamples}
+        linkedSampleId={orderTest.sampleId}
+        catalogTest={catalogTest}
+        onViewFullSample={handleViewFullSample}
+      />
+
+      {hasResults ? (
+        <Panel variant="lab" title="Recorded Results">
           <ResultValidationForm
             results={orderTest.results!}
             flags={orderTest.flags}
@@ -257,19 +217,10 @@ export const OrderTestDetailModal: React.FC<OrderTestDetailModalProps> = ({
           />
         </Panel>
       ) : (
-        <Panel variant="lab" title="Recorded results">
+        <Panel variant="lab" title="Recorded Results">
           <p className={TYPE.label}>{formatPipelinePendingMessage(orderTest)}</p>
         </Panel>
       )}
-
-      <OrderTestSampleTabs
-        samples={relatedSamples}
-        linkedSampleId={orderTest.sampleId}
-        catalogTest={catalogTest}
-        onViewFullSample={handleViewFullSample}
-      />
-
-      <DetailGrid sections={[...lineageSection, ...detailSections]} />
 
       {orderTest.id != null ? <LabEventLogPanel testId={orderTest.id} /> : null}
     </QueueModalShell>

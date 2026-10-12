@@ -6,10 +6,10 @@ import type { DetailSkeletonSection } from '@/components/loaders/DetailPageSkele
 import { OrderProgressSkeleton } from './OrderProgressSkeleton';
 
 export const ORDER_DETAIL_SKELETON_SECTIONS: DetailSkeletonSection[] = [
-  { title: 'Order Information', rows: 5, layout: 'grid' },
+  { title: 'Order Information', rows: 6, layout: 'grid' },
   { title: 'Patient Information', rows: 4, layout: 'grid' },
   {
-    title: 'Order Progress',
+    title: 'Order activity',
     customContent: (
       <div className={SPACING.pPanel}>
         <OrderProgressSkeleton />
@@ -33,12 +33,12 @@ export function renderOrderDetailLargeSkeleton() {
     <div className={LAYOUT.detailGridRowsSplit} style={{ height: '100%', maxHeight: '100%' }}>
       <div className={cn(LAYOUT.detailGrid3, 'min-h-0')}>
         <Panel title="Order Information" className="min-h-0" scroll="auto">
-          <SkeletonInfoSection rows={5} layout="column" />
+          <SkeletonInfoSection rows={6} layout="column" />
         </Panel>
         <Panel title="Patient Information" className="min-h-0" scroll="auto">
           <SkeletonInfoSection rows={4} layout="column" />
         </Panel>
-        <Panel title="Order Progress" className="min-h-0" variant="pageEmbed" scroll="auto">
+        <Panel title="Order activity" className="min-h-0" variant="pageEmbed" scroll="auto">
           <div className={SPACING.pPanel}>
             <OrderProgressSkeleton />
           </div>

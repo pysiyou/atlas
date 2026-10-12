@@ -194,11 +194,15 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
   );
 };
 
-export const OrderEventLogPanel: React.FC<{ orderId: number; className?: string }> = props => (
+export const OrderEventLogPanel: React.FC<{
+  orderId: number;
+  className?: string;
+  layout?: EventLogPanelLayout;
+}> = props => (
   <EventLogPanel
     query={{ scope: 'order', orderId: props.orderId, limit: 500 }}
-    filterUi={{ fields: ['kind', 'dateRange'] }}
     className={props.className}
+    layout={props.layout ?? 'standalone'}
   />
 );
 

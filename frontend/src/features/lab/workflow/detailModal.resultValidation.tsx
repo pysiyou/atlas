@@ -16,7 +16,6 @@ import { actionButtonPreset, Button, Panel, EntityId } from '@/components';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { ResultValidationForm } from '../validation/ResultValidationForm';
 import { QueueModalShell, DetailGrid, ModalFooter } from './detailModalLayout';
-import { ReviewRequiredBadge } from '../components/LabResultStatusBadges';
 import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { QualityIssuePopover } from '../components/QualityIssuePopover';
 import { CriticalValueActions } from '../criticalValues/CriticalValueActions';
@@ -27,11 +26,12 @@ import { TestCardAlerts, TestHeaderBadges } from '../components/LabWorkflowBadge
 import { useSampleRejectionDisplay } from '../hooks/useSampleRejectionDisplay';
 import { SampleRejectedBanner } from '../components/SampleRejectedBanner';
 import type { TestWithContext } from '@/types';
-import { resolveStatusBadgeColor } from '@/utils/statusBadge';
+import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { TYPE } from '@/components/theme/recipes';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import { labModalSubtitle } from './detailModalLayout';
 import { hasTestResults } from '../utils/labSearchAndLinks';
+import { LabRelatedTestsPanel } from '../components/LabRelatedWorkflowPanel';
 
 interface ValidationDetailModalProps {
   isOpen: boolean;
@@ -84,8 +84,6 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
 
   if (!readOnly && !test.results) return null;
 
-  // Flags and rejection state
-  const hasFlags = test.flags && test.flags.length > 0;
   const flagCount = test.flags?.length || 0;
 
   const headerBadges = <TestHeaderBadges test={test} variant="validation" showStatus />;
@@ -98,8 +96,6 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
       flagCount={flagCount}
     />
   );
-
-  const validationSectionHeaderRight = hasFlags ? <ReviewRequiredBadge /> : null;
 
   return (
     <QueueModalShell
@@ -162,11 +158,7 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
 
       {/* Validation Form Section */}
       {hasTestResults(test) ? (
-        <Panel
-          variant="lab"
-          title={readOnly ? 'Recorded Results' : 'Result Validation'}
-          headerEnd={validationSectionHeaderRight}
-        >
+        <Panel variant="lab" title={readOnly ? 'Recorded Results' : 'Result Validation'}>
           <ResultValidationForm
             results={test.results!}
             flags={test.flags}
@@ -193,7 +185,8 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
         </Panel>
       )}
 
-      {/* Previous Rejection History - show for both retests and recollections */}
+      <LabRelatedTestsPanel test={test} isOpen={isOpen} />
+
       {/* Test Details - using declarative sections config */}
       <DetailGrid
         sections={[
@@ -209,9 +202,7 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
               { label: 'Collected', timestamp: test.collectedAt, user: test.collectedBy },
               {
                 label: 'Sample Type',
-                badge: test.sampleType
-                  ? { value: test.sampleType, variant: resolveStatusBadgeColor(test.sampleType) }
-                  : undefined,
+                value: test.sampleType ? formatStatusBadgeLabel(test.sampleType) : undefined,
               },
             ],
           },

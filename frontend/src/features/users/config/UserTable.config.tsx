@@ -3,7 +3,7 @@
  */
 import { Badge } from '@/components/primitives/Badge';
 import type { TableViewConfig } from '@/components';
-import { buildViews } from '@/components/data-table';
+import { buildViews, COLUMN_SIZE } from '@/components/data-table';
 import { TABLE_TYPE } from '@/components/theme/recipes';
 import { USER_ROLE_CONFIG, type UserRole } from '@/types';
 import { formatDateTime } from '@/utils';
@@ -30,7 +30,7 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
     name: {
       key: 'name',
       header: 'Name',
-      width: 'fill' as const,
+      width: COLUMN_SIZE.fill,
       sortable: true,
       truncate: true,
       accessor: (user: UserAdminRecord) => user.name,
@@ -41,7 +41,7 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
     username: {
       key: 'username',
       header: 'Username',
-      width: 'md' as const,
+      width: COLUMN_SIZE.md,
       sortable: true,
       accessor: (user: UserAdminRecord) => user.username,
       render: (user: UserAdminRecord) => (
@@ -51,7 +51,7 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
     role: {
       key: 'role',
       header: 'Role',
-      width: 'lg' as const,
+      width: COLUMN_SIZE.lg,
       sortable: true,
       accessor: (user: UserAdminRecord) => user.role,
       render: (user: UserAdminRecord) => {
@@ -66,7 +66,7 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
     status: {
       key: 'status',
       header: 'Status',
-      width: 'sm' as const,
+      width: COLUMN_SIZE.sm,
       sortable: true,
       accessor: (user: UserAdminRecord) => (isUserActive(user) ? 'active' : 'disabled'),
       render: (user: UserAdminRecord) => {
@@ -81,7 +81,7 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
     email: {
       key: 'email',
       header: 'Email',
-      width: 'lg' as const,
+      width: COLUMN_SIZE.lg,
       sortable: true,
       accessor: (user: UserAdminRecord) => user.email ?? '',
       render: (user: UserAdminRecord) => (
@@ -91,7 +91,7 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
     lastLogin: {
       key: 'lastLogin',
       header: 'Last Login',
-      width: 'lg' as const,
+      width: COLUMN_SIZE.md,
       sortable: true,
       accessor: (user: UserAdminRecord) => user.loggedInAt ?? '',
       render: (user: UserAdminRecord) => (
@@ -103,7 +103,7 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
     created: {
       key: 'created',
       header: 'Created',
-      width: 'lg' as const,
+      width: COLUMN_SIZE.md,
       sortable: true,
       accessor: (user: UserAdminRecord) => user.createdAt,
       render: (user: UserAdminRecord) => (
