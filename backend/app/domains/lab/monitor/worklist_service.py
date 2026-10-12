@@ -37,7 +37,7 @@ from app.shared.contracts.enums import (
     SampleStatus,
     TestStatus,
 )
-from app.shared.contracts.lab_blockers import BLOCKED_LABELS
+from app.shared.contracts.lab_blockers import ATTENTION_LABELS
 from sqlalchemy import String, desc, func, or_
 from sqlalchemy.orm import Session
 
@@ -332,7 +332,7 @@ class LabWorklistService:
             .all()
         )
 
-        blocked_label = BLOCKED_LABELS["recollection_approval"]
+        attention_label = ATTENTION_LABELS["recollection_approval"]
         items: list[dict[str, Any]] = []
         for order_test, order, patient, test, sample in rows:
             if self._order_test_in_active_worklist(order_test, sample):
@@ -354,8 +354,8 @@ class LabWorklistService:
                     "status": order_test.status,
                     "stage": self._pipeline_stage_for_test(order_test),
                     "orderDate": order.orderDate,
-                    "blockedReason": "recollection_approval",
-                    "blockedLabel": blocked_label,
+                    "attentionReason": "recollection_approval",
+                    "attentionLabel": attention_label,
                     "waitingHours": round(hours, 2),
                     "referringPhysician": order.referringPhysician,
                     "testCategory": test.category,

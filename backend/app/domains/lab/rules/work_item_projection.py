@@ -3,8 +3,8 @@ Unified lab work-item projection for worklists, orders, and monitor.
 
 Semantics:
 - denyReason: primary reason the row's main action is disabled (fix this to proceed).
-- blockedReason: contextual blocker for badges/attention (often equals denyReason).
-- blockedLabel / denyMessage: human copy from contracts/lab-blockers.json.
+- attentionReason: contextual reason for badges/monitor (may block progress).
+- attentionLabel / denyMessage: human copy from contracts/lab-blockers.json.
 """
 
 from __future__ import annotations
@@ -17,8 +17,9 @@ from app.domains.lab.rules.eligibility import (
     action_flags_for_collection,
     action_flags_for_entry,
     action_flags_for_validation,
-    blocked_reason_for_work_item,
+    attention_reason_for_work_item,
     deny_message,
+    effective_deny_reason,
     escalation_action_flags,
 )
 from app.domains.lab.schemas.allowed_actions import LabWorklistAllowedActions
@@ -28,7 +29,7 @@ from app.domains.lab.rules.status_presentation import (
     resolve_test_presentation,
 )
 from app.shared.contracts.enums import TestStatus
-from app.shared.contracts.lab_blockers import BLOCKED_LABELS
+from app.shared.contracts.lab_blockers import ATTENTION_LABELS, reason_blocks_progress
 from app.shared.schemas.status_presentation import StatusPresentation
 from pydantic import BaseModel, Field
 
@@ -48,8 +49,8 @@ class LabWorkItemProjection(BaseModel):
     model_config = {"populate_by_name": True}
 
     pipelineStage: PipelineStage
-    blockedReason: str | None = None
-    blockedLabel: str | None = None
+    attentionReason: str | None = None
+    attentionLabel: str | None = None
     denyReason: str | None = None
     denyMessage: str | None = None
     allowedActions: LabWorklistAllowedActions = Field(default_factory=LabWorklistAllowedActions)
@@ -67,10 +68,19 @@ class LabWorkItemContext:
     recollection_approval_pending: bool = False
 
 
-def _blocked_label(reason: str | None) -> str | None:
+def _attention_label(reason: str | None) -> str | None:
     if not reason:
         return None
-    return BLOCKED_LABELS.get(reason)
+    return ATTENTION_LABELS.get(reason)
+
+
+def _surface_attention(reason: str | None) -> tuple[str | None, str | None]:
+    """Expose reason/label only when it blocks progress (or is an explicit gate)."""
+    if not reason:
+        return None, None
+    if reason_blocks_progress(reason):
+        return reason, _attention_label(reason)
+    return None, None
 
 
 def _actions_model(actions: dict[str, bool]) -> LabWorklistAllowedActions:
@@ -111,8 +121,8 @@ def _with_test_presentation(
         update={
             "statusPresentation": resolve_test_presentation(
                 status=test_status,
-                blocked_reason=projection.blockedReason,
-                blocked_label=projection.blockedLabel,
+                attention_reason=projection.attentionReason,
+                attention_label=projection.attentionLabel,
             )
         }
     )
@@ -124,32 +134,37 @@ def project_collection_sample(ctx: LabWorkItemContext) -> LabWorkItemProjection:
 
     sample = ctx.sample
     order = ctx.order
-    blocked = blocked_reason_for_work_item(
+    raw_attention = attention_reason_for_work_item(
         status=TestStatus.PENDING.value,
         payment_status=_payment_status(order),
-        sample_is_recollection=bool(sample.isRecollection),
     )
     if ctx.recollection_approval_pending:
-        blocked = blocked or "recollection_approval"
+        raw_attention = raw_attention or "recollection_approval"
 
     allowed, deny_reason = action_flags_for_collection(
         sample=sample,
         order=order,
         order_tests=ctx.linked_order_tests,
     )
-    effective_deny = deny_reason or blocked
+    collect_allowed = bool(allowed.get("collect"))
+    effective_deny = effective_deny_reason(
+        deny_reason=deny_reason,
+        attention_reason=raw_attention,
+        primary_action_allowed=collect_allowed,
+    )
+    attention_reason, attention_label = _surface_attention(raw_attention)
 
     base = LabWorkItemProjection(
         pipelineStage="collection",
-        blockedReason=blocked,
-        blockedLabel=_blocked_label(blocked),
+        attentionReason=attention_reason,
+        attentionLabel=attention_label,
         denyReason=effective_deny,
         denyMessage=deny_message(effective_deny),
         allowedActions=_actions_model(allowed),
         statusPresentation=resolve_sample_presentation(
             status=sample.status,
-            blocked_reason=blocked,
-            blocked_label=_blocked_label(blocked),
+            attention_reason=raw_attention,
+            attention_label=_attention_label(raw_attention),
         ),
     )
     return base
@@ -161,29 +176,29 @@ def project_order_test_entry(ctx: LabWorkItemContext) -> LabWorkItemProjection:
 
     order_test = ctx.order_test
     status = _test_status_value(order_test)
-    blocked = blocked_reason_for_work_item(
+    raw_attention = attention_reason_for_work_item(
         status=status,
-        is_retest=bool(order_test.isRetest),
         payment_status=_payment_status(ctx.order),
         sample_status=_sample_status_value(ctx.sample),
-        sample_is_recollection=bool(ctx.sample.isRecollection) if ctx.sample else False,
         escalation_reason_code=ctx.escalation_reason_code,
     )
     if ctx.recollection_approval_pending:
-        blocked = blocked or "recollection_approval"
+        raw_attention = raw_attention or "recollection_approval"
 
     allowed, deny_reason = action_flags_for_entry(order_test=order_test)
     enter_allowed = bool(allowed.get("enterResults"))
-    # retest_pending is informational (monitor/TAT); it must not deny entry after collection.
-    effective_deny = deny_reason if not enter_allowed else None
-    if not enter_allowed:
-        effective_deny = effective_deny or blocked
+    effective_deny = effective_deny_reason(
+        deny_reason=deny_reason,
+        attention_reason=raw_attention,
+        primary_action_allowed=enter_allowed,
+    )
+    attention_reason, attention_label = _surface_attention(raw_attention)
 
     return _with_test_presentation(
         LabWorkItemProjection(
             pipelineStage="entry",
-            blockedReason=blocked,
-            blockedLabel=_blocked_label(blocked),
+            attentionReason=attention_reason,
+            attentionLabel=attention_label,
             denyReason=effective_deny,
             denyMessage=deny_message(effective_deny),
             allowedActions=_actions_model(allowed),
@@ -198,17 +213,22 @@ def project_order_test_validation(ctx: LabWorkItemContext) -> LabWorkItemProject
 
     order_test = ctx.order_test
     status = _test_status_value(order_test)
-    blocked = blocked_reason_for_work_item(
+    raw_attention = attention_reason_for_work_item(
         status=status,
-        is_retest=bool(order_test.isRetest),
         sample_status=_sample_status_value(ctx.sample),
         escalation_reason_code=ctx.escalation_reason_code,
     )
     if ctx.recollection_approval_pending:
-        blocked = blocked or "recollection_approval"
+        raw_attention = raw_attention or "recollection_approval"
 
     allowed, deny_reason = action_flags_for_validation(order_test=order_test)
-    effective_deny = deny_reason or blocked
+    validate_allowed = bool(allowed.get("validate"))
+    effective_deny = effective_deny_reason(
+        deny_reason=deny_reason,
+        attention_reason=raw_attention,
+        primary_action_allowed=validate_allowed,
+    )
+    attention_reason, attention_label = _surface_attention(raw_attention)
     esc: dict[str, Any] | None = None
     if status == TestStatus.ESCALATED.value:
         esc = escalation_action_flags(order_test, reason_code=ctx.escalation_reason_code)
@@ -216,8 +236,8 @@ def project_order_test_validation(ctx: LabWorkItemContext) -> LabWorkItemProject
     return _with_test_presentation(
         LabWorkItemProjection(
             pipelineStage="validation",
-            blockedReason=blocked,
-            blockedLabel=_blocked_label(blocked),
+            attentionReason=attention_reason,
+            attentionLabel=attention_label,
             denyReason=effective_deny,
             denyMessage=deny_message(effective_deny),
             allowedActions=_actions_model(allowed),
@@ -268,17 +288,20 @@ def project_order_test_pipeline(ctx: LabWorkItemContext) -> LabWorkItemProjectio
     )
 
 
+def attention_label_for_reason(reason: str | None) -> str | None:
+    return _attention_label(reason)
+
+
 def blocked_label_for_reason(reason: str | None) -> str | None:
-    return _blocked_label(reason)
+    """Backward-compatible alias."""
+    return attention_label_for_reason(reason)
 
 
-def blocked_reason_for_monitor_row(
+def attention_reason_for_monitor_row(
     stage: MonitorAttentionStage,
     *,
     payment_status: str | None = None,
     sample_status: str | None = None,
-    sample_is_recollection: bool = False,
-    is_retest: bool = False,
     escalation_reason_code: str | None = None,
 ) -> str | None:
     """Board/TAT attention rows (dict snapshots) — same rules as work-item projection."""
@@ -291,17 +314,23 @@ def blocked_reason_for_monitor_row(
     else:
         status = TestStatus.ESCALATED.value
 
-    blocked = blocked_reason_for_work_item(
+    attention = attention_reason_for_work_item(
         status=status,
         payment_status=payment_status,
         sample_status=sample_status,
-        sample_is_recollection=sample_is_recollection,
-        is_retest=is_retest,
         escalation_reason_code=escalation_reason_code,
     )
     if stage == "escalation":
-        return blocked or "supervisor_review"
-    return blocked
+        return attention or "supervisor_review"
+    return attention
+
+
+def blocked_reason_for_monitor_row(
+    stage: MonitorAttentionStage,
+    **kwargs: Any,
+) -> str | None:
+    """Backward-compatible alias."""
+    return attention_reason_for_monitor_row(stage, **kwargs)
 
 
 def projection_to_worklist_fields(projection: LabWorkItemProjection) -> dict[str, Any]:
@@ -310,8 +339,8 @@ def projection_to_worklist_fields(projection: LabWorkItemProjection) -> dict[str
     if projection.statusPresentation is not None:
         presentation = projection.statusPresentation.model_dump()
     return {
-        "blockedReason": projection.blockedReason,
-        "blockedLabel": projection.blockedLabel,
+        "attentionReason": projection.attentionReason,
+        "attentionLabel": projection.attentionLabel,
         "allowedActions": projection.allowedActions.model_dump(by_alias=True),
         "denyReason": projection.denyReason,
         "denyMessage": projection.denyMessage,

@@ -1,15 +1,16 @@
 import { PRIORITY_LEVEL_VALUES } from '@/types';
 import {
-  BLOCKED_LABELS,
-  BLOCKED_REASON_KEYS,
-  type OrderTestBlockReason,
+  ATTENTION_LABELS,
+  ATTENTION_REASON_KEYS,
+  reasonBlocksProgress,
+  type LabAttentionReason,
 } from '@/types/generated/labBlockers';
 import { differenceInHours, parseISO, isValid } from 'date-fns';
 import { LAB_CONFIG } from '../constants/labConstants';
 import type { OrderTest, TestStatus } from '@/types';
 
-export type { OrderTestBlockReason };
-export { BLOCKED_LABELS };
+export type { LabAttentionReason };
+export { ATTENTION_LABELS };
 
 /** Lab queue priority, age, and derived work-item state. */
 
@@ -82,27 +83,32 @@ export type OrderTestQueueStage =
   | 'completed'
   | 'cancelled';
 
-const BLOCKED_REASON_SET = new Set<string>(BLOCKED_REASON_KEYS);
+const ATTENTION_REASON_SET = new Set<string>(ATTENTION_REASON_KEYS);
 
 export interface LabWorkItemProjectionLike {
   denyReason?: string | null;
   denyMessage?: string | null;
-  blockedReason?: string | null;
-  blockedLabel?: string | null;
+  attentionReason?: string | null;
+  attentionLabel?: string | null;
   pipelineStage?: string;
+  allowedActions?: {
+    collect?: boolean;
+    enterResults?: boolean;
+    validate?: boolean;
+  };
 }
 
 export interface OrderTestQueueContext {
   /** Server-driven fields from worklists or order test `lab` projection. */
   serverDenyReason?: string | null;
   serverDenyMessage?: string | null;
-  serverBlockedReason?: string | null;
+  serverAttentionReason?: string | null;
   lab?: LabWorkItemProjectionLike | null;
 }
 
 export interface OrderTestQueueState {
   stage: OrderTestQueueStage;
-  blockedReason: OrderTestBlockReason | null;
+  attentionReason: LabAttentionReason | null;
   label: string;
 }
 
@@ -126,7 +132,7 @@ function stageFromTestStatus(status: TestStatus): OrderTestQueueStage {
 }
 
 /**
- * Derive queue stage and optional blockage reason for an order test.
+ * Derive queue stage and optional attention reason for an order test.
  */
 export function deriveOrderTestQueueState(
   test: Pick<OrderTest, 'status' | 'isRetest'>,
@@ -135,28 +141,36 @@ export function deriveOrderTestQueueState(
   const status = test.status as TestStatus;
   const stage = stageFromTestStatus(status);
 
-  const denyReason =
-    context.serverDenyReason ?? context.lab?.denyReason ?? null;
-  const denyMessage =
-    context.serverDenyMessage ?? context.lab?.denyMessage ?? null;
-  const blockedKey =
-    context.serverBlockedReason ??
-    context.lab?.blockedReason ??
-    denyReason;
+  const denyReason = context.serverDenyReason ?? context.lab?.denyReason ?? null;
+  const denyMessage = context.serverDenyMessage ?? context.lab?.denyMessage ?? null;
+  const attentionKey =
+    context.serverAttentionReason ?? context.lab?.attentionReason ?? null;
 
-  if (blockedKey != null || denyMessage != null) {
-    const blockedReason =
-      blockedKey && BLOCKED_REASON_SET.has(blockedKey)
-        ? (blockedKey as OrderTestBlockReason)
-        : null;
+  const attentionReason =
+    attentionKey && ATTENTION_REASON_SET.has(attentionKey)
+      ? (attentionKey as LabAttentionReason)
+      : null;
+
+  if (denyReason != null || denyMessage != null) {
     const label =
       denyMessage ??
-      context.lab?.blockedLabel ??
-      (blockedReason ? BLOCKED_LABELS[blockedReason] : stageLabel(stage));
-    return { stage, blockedReason, label };
+      (denyReason && ATTENTION_REASON_SET.has(denyReason)
+        ? ATTENTION_LABELS[denyReason as LabAttentionReason]
+        : stageLabel(stage));
+    return {
+      stage,
+      attentionReason: reasonBlocksProgress(denyReason) ? (denyReason as LabAttentionReason) : attentionReason,
+      label,
+    };
   }
 
-  return { stage, blockedReason: null, label: stageLabel(stage) };
+  if (attentionReason != null && reasonBlocksProgress(attentionReason)) {
+    const label =
+      context.lab?.attentionLabel ?? ATTENTION_LABELS[attentionReason] ?? stageLabel(stage);
+    return { stage, attentionReason, label };
+  }
+
+  return { stage, attentionReason: null, label: stageLabel(stage) };
 }
 
 function stageLabel(stage: OrderTestQueueStage): string {

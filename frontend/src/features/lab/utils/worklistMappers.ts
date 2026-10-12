@@ -112,8 +112,8 @@ export function mapEntryWorklistToOrderTestContext(item: EntryWorklistItem): Tes
     denyReason: item.denyReason ?? null,
     denyMessage: item.denyMessage ?? null,
     lab: {
-      blockedReason: item.blockedReason ?? null,
-      blockedLabel: item.blockedLabel ?? null,
+      attentionReason: item.attentionReason ?? null,
+      attentionLabel: item.attentionLabel ?? null,
       statusPresentation: item.statusPresentation ?? null,
     },
   } as TestWithContext;
@@ -148,8 +148,8 @@ export function mapValidationWorklistToOrderTestContext(
     denyReason: item.denyReason ?? null,
     denyMessage: item.denyMessage ?? null,
     lab: {
-      blockedReason: item.blockedReason ?? null,
-      blockedLabel: item.blockedLabel ?? null,
+      attentionReason: item.attentionReason ?? null,
+      attentionLabel: item.attentionLabel ?? null,
       statusPresentation: item.statusPresentation ?? null,
     },
   } as TestWithContext;

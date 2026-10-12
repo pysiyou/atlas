@@ -13,8 +13,8 @@ from app.domains.lab.rules.blockers import (
     should_surface_attention,
 )
 from app.domains.lab.rules.work_item_projection import (
-    blocked_label_for_reason,
-    blocked_reason_for_monitor_row,
+    attention_label_for_reason,
+    attention_reason_for_monitor_row,
 )
 from app.shared.contracts.enums import PriorityLevel
 from app.shared.contracts.lab_constants import QUEUE_AGE_CRITICAL_HOURS, QUEUE_AGE_WARNING_HOURS
@@ -122,7 +122,7 @@ def _attention_candidate(
     patient_name: str,
     priority: str,
     waiting_hours: float,
-    blocked_reason: str | None,
+    attention_reason: str | None,
     since: datetime | None,
     order_test_ids: list[int],
     attention_type: str,
@@ -136,8 +136,8 @@ def _attention_candidate(
         "patientName": patient_name or "Unknown patient",
         "priority": priority,
         "waitingHours": round(waiting_hours, 2),
-        "blockedReason": blocked_reason,
-        "blockedLabel": blocked_label_for_reason(blocked_reason),
+        "attentionReason": attention_reason,
+        "attentionLabel": attention_label_for_reason(attention_reason),
         "queueTab": stage,
         "since": _iso(since),
         "workItemCount": work_item_count,
@@ -302,17 +302,14 @@ def assemble_board(
         priority = _priority_value(row.get("priority"))
         tat = row.get("turnaround_hours") or 24
         hours, status, _ = track_wait("collection", since, tat, priority)
-        blocked = blocked_reason_for_monitor_row(
+        attention = attention_reason_for_monitor_row(
             "collection",
             payment_status=_enum_value(row.get("payment_status")),
             sample_status=_enum_value(row.get("sample_status")),
-            sample_is_recollection=bool(row.get("is_recollection")),
         )
-        if blocked == "payment_unpaid":
+        if attention == "payment_unpaid":
             blockers["paymentUnpaid"] += 1
-        if blocked == "specimen_recollection":
-            blockers["recollectionWaiting"] += 1
-        if should_surface_attention(blocked, status):
+        if should_surface_attention(attention, status):
             candidates.append(
                 _attention_candidate(
                     stage="collection",
@@ -320,10 +317,10 @@ def assemble_board(
                     patient_name=row.get("patient_name") or "Unknown patient",
                     priority=priority,
                     waiting_hours=hours,
-                    blocked_reason=blocked,
+                    attention_reason=attention,
                     since=since,
                     order_test_ids=[],
-                    attention_type=attention_type_for(blocked, status, priority),
+                    attention_type=attention_type_for(attention, status, priority),
                 )
             )
 
@@ -332,17 +329,13 @@ def assemble_board(
         priority = _priority_value(row.get("priority"))
         tat = row.get("turnaround_hours") or 24
         hours, status, _ = track_wait("entry", since, tat, priority)
-        blocked = blocked_reason_for_monitor_row(
+        attention = attention_reason_for_monitor_row(
             "entry",
-            is_retest=bool(row.get("is_retest")),
             sample_status=_enum_value(row.get("sample_status")),
-            sample_is_recollection=bool(row.get("sample_is_recollection")),
             escalation_reason_code=row.get("reason_code"),
         )
-        if blocked == "retest_pending":
-            blockers["retestPending"] += 1
         order_test_id = row.get("order_test_id")
-        if should_surface_attention(blocked, status):
+        if should_surface_attention(attention, status):
             candidates.append(
                 _attention_candidate(
                     stage="entry",
@@ -350,10 +343,10 @@ def assemble_board(
                     patient_name=row.get("patient_name") or "Unknown patient",
                     priority=priority,
                     waiting_hours=hours,
-                    blocked_reason=blocked,
+                    attention_reason=attention,
                     since=since,
                     order_test_ids=[order_test_id] if order_test_id is not None else [],
-                    attention_type=attention_type_for(blocked, status, priority),
+                    attention_type=attention_type_for(attention, status, priority),
                 )
             )
 
@@ -362,14 +355,13 @@ def assemble_board(
         priority = _priority_value(row.get("priority"))
         tat = row.get("turnaround_hours") or 24
         hours, status, _ = track_wait("validation", since, tat, priority)
-        blocked = blocked_reason_for_monitor_row(
+        attention = attention_reason_for_monitor_row(
             "validation",
-            is_retest=bool(row.get("is_retest")),
             sample_status=_enum_value(row.get("sample_status")),
             escalation_reason_code=row.get("reason_code"),
         )
         order_test_id = row.get("order_test_id")
-        if should_surface_attention(blocked, status):
+        if should_surface_attention(attention, status):
             candidates.append(
                 _attention_candidate(
                     stage="validation",
@@ -377,10 +369,10 @@ def assemble_board(
                     patient_name=row.get("patient_name") or "Unknown patient",
                     priority=priority,
                     waiting_hours=hours,
-                    blocked_reason=blocked,
+                    attention_reason=attention,
                     since=since,
                     order_test_ids=[order_test_id] if order_test_id is not None else [],
-                    attention_type=attention_type_for(blocked, status, priority),
+                    attention_type=attention_type_for(attention, status, priority),
                 )
             )
 
@@ -389,12 +381,13 @@ def assemble_board(
         hours = hours_since(since, current)
         status = tat_status(hours, row.get("turnaround_hours") or 24)
         priority = _priority_value(row.get("priority"))
-        blocked = blocked_reason_for_monitor_row(
+        attention = attention_reason_for_monitor_row(
             "escalation",
-            is_retest=bool(row.get("is_retest")),
             sample_status=_enum_value(row.get("sample_status")),
             escalation_reason_code=row.get("reason_code"),
         )
+        if attention == "retry_limit":
+            blockers["retestPending"] += 1
         order_test_id = row.get("order_test_id")
         candidates.append(
             _attention_candidate(
@@ -403,10 +396,10 @@ def assemble_board(
                 patient_name=row.get("patient_name") or "Unknown patient",
                 priority=priority,
                 waiting_hours=hours,
-                blocked_reason=blocked,
+                attention_reason=attention,
                 since=since,
                 order_test_ids=[order_test_id] if order_test_id is not None else [],
-                attention_type=attention_type_for(blocked, status, priority),
+                attention_type=attention_type_for(attention, status, priority),
             )
         )
 
@@ -421,6 +414,7 @@ def assemble_board(
             if affected
             else ([order_test_id] if order_test_id is not None else [])
         )
+        blockers["recollectionWaiting"] += 1
         candidates.append(
             _attention_candidate(
                 stage="validation",
@@ -428,7 +422,7 @@ def assemble_board(
                 patient_name=row.get("patient_name") or "Unknown patient",
                 priority=priority,
                 waiting_hours=hours,
-                blocked_reason="recollection_approval",
+                attention_reason="recollection_approval",
                 since=since,
                 order_test_ids=order_test_ids,
                 attention_type="supervisor_recollection_request",

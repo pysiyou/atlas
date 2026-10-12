@@ -11,43 +11,43 @@
   "reasons": {
     "payment_unpaid": {
       "label": "Payment required",
-      "attentionType": "payment_blocked"
-    },
-    "specimen_recollection": {
-      "label": "Recollection required",
-      "attentionType": "recollection_waiting"
+      "attentionType": "payment_blocked",
+      "blocksProgress": true
     },
     "sample_rejected": {
       "label": "Sample rejected",
-      "attentionType": "sample_rejected"
-    },
-    "retest_pending": {
-      "label": "Re-test in progress",
-      "attentionType": "retest_in_progress"
+      "attentionType": "sample_rejected",
+      "blocksProgress": true
     },
     "critical_value": {
       "label": "Critical value — supervisor review",
-      "attentionType": "escalation_critical"
+      "attentionType": "escalation_critical",
+      "blocksProgress": true
     },
     "amendment_pending": {
       "label": "Amendment pending",
-      "attentionType": "escalation_amendment"
+      "attentionType": "escalation_amendment",
+      "blocksProgress": true
     },
     "retry_limit": {
       "label": "Re-test limit reached",
-      "attentionType": "escalation_retry_limit"
+      "attentionType": "escalation_retry_limit",
+      "blocksProgress": true
     },
     "recollection_limit": {
       "label": "Recollection limit reached",
-      "attentionType": "escalation_recollection_limit"
+      "attentionType": "escalation_recollection_limit",
+      "blocksProgress": true
     },
     "supervisor_review": {
       "label": "Supervisor approval required",
-      "attentionType": "supervisor_approval"
+      "attentionType": "supervisor_approval",
+      "blocksProgress": true
     },
     "recollection_approval": {
       "label": "Recollection awaiting supervisor approval",
-      "attentionType": "supervisor_recollection_request"
+      "attentionType": "supervisor_recollection_request",
+      "blocksProgress": true
     }
   },
   "attentionTypeSort": {
@@ -59,8 +59,6 @@
     "supervisor_recollection_request": 48,
     "payment_blocked": 50,
     "sample_rejected": 60,
-    "recollection_waiting": 70,
-    "retest_in_progress": 80,
     "priority_urgent": 82,
     "priority_high": 84,
     "queue_overdue_critical": 90,

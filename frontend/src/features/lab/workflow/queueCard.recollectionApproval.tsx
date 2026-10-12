@@ -11,7 +11,7 @@ import { QueueCardMobile } from './queueCardLayout';
 import { LAB_CARD_BADGE_SIZE, LAB_CARD_TYPOGRAPHY, LAB_MOBILE_CARD } from '../utils/labStyles';
 import { AttemptIndicator } from '../components/LabAttemptIndicators';
 import { SampleTypeBadge } from '../components/LabDomainBadges';
-import { BlockedReasonBadge } from '../components/LabResultStatusBadges';
+import { SupervisorApprovalBadge } from '../components/LabResultStatusBadges';
 import { LAB_CONFIG } from '../constants';
 import type { RecollectionRequestSummary } from '@/types/lab-operations';
 
@@ -52,7 +52,7 @@ function RecollectionRequestCardDesktop({
 
   const badges = (
     <>
-      <BlockedReasonBadge label="Recollection approval" size={LAB_CARD_BADGE_SIZE} showIcon={false} />
+      <SupervisorApprovalBadge size={LAB_CARD_BADGE_SIZE} />
       {request.sampleType && (
         <SampleTypeBadge sampleType={request.sampleType} size={LAB_CARD_BADGE_SIZE} />
       )}
@@ -174,7 +174,7 @@ function RecollectionRequestCardMobile({
 
   const badges = (
     <>
-      <BlockedReasonBadge label="Recollection approval" size={LAB_CARD_BADGE_SIZE} showIcon={false} />
+      <SupervisorApprovalBadge size={LAB_CARD_BADGE_SIZE} />
       {request.sampleType && (
         <SampleTypeBadge sampleType={request.sampleType} size={LAB_CARD_BADGE_SIZE} />
       )}

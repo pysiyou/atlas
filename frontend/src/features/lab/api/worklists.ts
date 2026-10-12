@@ -48,8 +48,8 @@ export interface CollectionWorklistItem {
   originalSampleCollectedAt?: string | null;
   recollectionReason?: string | null;
   recollectionAttempt?: number;
-  blockedReason?: string | null;
-  blockedLabel?: string | null;
+  attentionReason?: string | null;
+  attentionLabel?: string | null;
   allowedActions?: LabWorklistAllowedActions;
   denyReason?: string | null;
   denyMessage?: string | null;
@@ -84,8 +84,8 @@ export interface EntryWorklistItem {
   isRetest: boolean;
   referringPhysician?: string | null;
   testCategory?: string | null;
-  blockedReason?: string | null;
-  blockedLabel?: string | null;
+  attentionReason?: string | null;
+  attentionLabel?: string | null;
   allowedActions?: LabWorklistAllowedActions;
   denyReason?: string | null;
   denyMessage?: string | null;
@@ -107,8 +107,8 @@ export interface DashboardWorklistItem {
   orderDate: string;
   referringPhysician?: string | null;
   testCategory?: string | null;
-  blockedReason?: string | null;
-  blockedLabel?: string | null;
+  attentionReason?: string | null;
+  attentionLabel?: string | null;
   statusPresentation?: StatusPresentation | null;
 }
 
@@ -137,8 +137,8 @@ export interface ValidationWorklistItem {
   turnaroundHours: number;
   hasCriticalValues: boolean;
   testCategory?: string | null;
-  blockedReason?: string | null;
-  blockedLabel?: string | null;
+  attentionReason?: string | null;
+  attentionLabel?: string | null;
   allowedActions?: LabWorklistAllowedActions;
   denyReason?: string | null;
   denyMessage?: string | null;

@@ -41,8 +41,8 @@ class CollectionWorklistItem(BaseModel):
     originalSampleCollectedAt: datetime | None = None
     recollectionReason: str | None = None
     recollectionAttempt: int = 1
-    blockedReason: str | None = None
-    blockedLabel: str | None = None
+    attentionReason: str | None = None
+    attentionLabel: str | None = None
     allowedActions: LabWorklistAllowedActions = LabWorklistAllowedActions()
     denyReason: str | None = None
     denyMessage: str | None = None
@@ -79,8 +79,8 @@ class EntryWorklistItem(BaseModel):
     isRetest: bool
     referringPhysician: str | None = None
     testCategory: str | None = None
-    blockedReason: str | None = None
-    blockedLabel: str | None = None
+    attentionReason: str | None = None
+    attentionLabel: str | None = None
     allowedActions: LabWorklistAllowedActions = LabWorklistAllowedActions()
     denyReason: str | None = None
     denyMessage: str | None = None
@@ -106,8 +106,8 @@ class DashboardWorklistItem(BaseModel):
     orderDate: datetime
     referringPhysician: str | None = None
     testCategory: str | None = None
-    blockedReason: str | None = None
-    blockedLabel: str | None = None
+    attentionReason: str | None = None
+    attentionLabel: str | None = None
     statusPresentation: StatusPresentation | None = None
 
 
@@ -124,8 +124,8 @@ class DashboardBlockedWorklistItem(BaseModel):
     status: TestStatus
     stage: Literal["collection", "entry", "validation"]
     orderDate: datetime
-    blockedReason: Literal["recollection_approval"]
-    blockedLabel: str
+    attentionReason: Literal["recollection_approval"]
+    attentionLabel: str
     waitingHours: float
     referringPhysician: str | None = None
     testCategory: str | None = None
@@ -158,8 +158,8 @@ class ValidationWorklistItem(BaseModel):
     turnaroundHours: int
     hasCriticalValues: bool
     testCategory: str | None = None
-    blockedReason: str | None = None
-    blockedLabel: str | None = None
+    attentionReason: str | None = None
+    attentionLabel: str | None = None
     allowedActions: LabWorklistAllowedActions = LabWorklistAllowedActions()
     denyReason: str | None = None
     denyMessage: str | None = None
@@ -216,8 +216,8 @@ class BoardAttentionItem(BaseModel):
     patientName: str
     priority: PriorityLevel
     waitingHours: float
-    blockedReason: str | None = None
-    blockedLabel: str | None = None
+    attentionReason: str | None = None
+    attentionLabel: str | None = None
     queueTab: Literal["collection", "entry", "validation"]
     since: str
     workItemCount: int

@@ -18,7 +18,7 @@ from app.shared.contracts.enums import (
     SampleStatus,
     TestStatus,
 )
-from app.shared.contracts.lab_blockers import BLOCKED_LABELS
+from app.shared.contracts.lab_blockers import ATTENTION_LABELS, reason_blocks_progress
 
 
 class WorklistAllowedActions(TypedDict):
@@ -40,19 +40,17 @@ def _empty_actions() -> WorklistAllowedActions:
 def deny_message(reason: str | None) -> str | None:
     if not reason:
         return None
-    return BLOCKED_LABELS.get(reason)
+    return ATTENTION_LABELS.get(reason)
 
 
-def blocked_reason_for_work_item(
+def attention_reason_for_work_item(
     *,
     status: str,
-    is_retest: bool = False,
     payment_status: str | None = None,
     sample_status: str | None = None,
-    sample_is_recollection: bool = False,
     escalation_reason_code: str | None = None,
 ) -> str | None:
-    """Canonical blocked-reason key for a pipeline work item."""
+    """Canonical attention-reason key for a pipeline work item (not lineage)."""
     if payment_status == PaymentStatus.UNPAID.value and status in (
         TestStatus.PENDING.value,
         "pending",
@@ -70,10 +68,6 @@ def blocked_reason_for_work_item(
         return "supervisor_review"
     if sample_status == SampleStatus.REJECTED.value:
         return "sample_rejected"
-    if sample_is_recollection and status in (TestStatus.PENDING.value, "pending"):
-        return "specimen_recollection"
-    if is_retest and status == TestStatus.SAMPLE_COLLECTED.value:
-        return "retest_pending"
     return None
 
 
@@ -150,26 +144,25 @@ def action_flags_for_collection(
     order_tests: list[OrderTest],
 ) -> tuple[WorklistAllowedActions, str | None]:
     payment_status = order.paymentStatus.value if order.paymentStatus else None
-    blocked = blocked_reason_for_work_item(
+    attention = attention_reason_for_work_item(
         status=TestStatus.PENDING.value,
         payment_status=payment_status,
-        sample_is_recollection=bool(sample.isRecollection),
     )
     actions = _empty_actions()
     if sample.status != SampleStatus.PENDING:
-        return actions, blocked
+        return actions, None
 
-    if blocked == "payment_unpaid":
-        return actions, blocked
+    if attention == "payment_unpaid":
+        return actions, attention
 
     try:
         SampleStateMachine.validate_transition(sample.status, SampleStatus.COLLECTED)
     except StateTransitionError:
-        return actions, blocked or "supervisor_review"
+        return actions, attention or "supervisor_review"
 
     ok, _ = _tests_must_transition_on_collect(order_tests)
     if not ok:
-        return actions, blocked or "supervisor_review"
+        return actions, attention or "supervisor_review"
 
     actions["collect"] = True
     return actions, None
@@ -209,3 +202,19 @@ def escalation_action_flags(order_test: OrderTest, *, reason_code: str | None) -
             order_test, reason_code=reason_code
         ),
     }
+
+
+def effective_deny_reason(
+    *,
+    deny_reason: str | None,
+    attention_reason: str | None,
+    primary_action_allowed: bool,
+) -> str | None:
+    """Deny only when the queue action is disabled or attention blocks progress."""
+    if primary_action_allowed:
+        return None
+    if deny_reason:
+        return deny_reason
+    if attention_reason and reason_blocks_progress(attention_reason):
+        return attention_reason
+    return deny_reason

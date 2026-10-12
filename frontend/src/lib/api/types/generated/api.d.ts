@@ -1348,10 +1348,10 @@ export interface components {
             priority: components["schemas"]["PriorityLevel"];
             /** Waitinghours */
             waitingHours: number;
-            /** Blockedreason */
-            blockedReason?: string | null;
-            /** Blockedlabel */
-            blockedLabel?: string | null;
+            /** Attentionreason */
+            attentionReason?: string | null;
+            /** Attentionlabel */
+            attentionLabel?: string | null;
             /**
              * Queuetab
              * @enum {string}
@@ -1720,10 +1720,10 @@ export interface components {
              * @enum {string}
              */
             pipelineStage: "collection" | "entry" | "validation" | "escalation" | "completed" | "cancelled";
-            /** Blockedreason */
-            blockedReason?: string | null;
-            /** Blockedlabel */
-            blockedLabel?: string | null;
+            /** Attentionreason */
+            attentionReason?: string | null;
+            /** Attentionlabel */
+            attentionLabel?: string | null;
             /** Denyreason */
             denyReason?: string | null;
             /** Denymessage */

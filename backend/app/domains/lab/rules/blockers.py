@@ -1,10 +1,10 @@
-"""Lab blocker vocabulary and blocked-reason resolution."""
+"""Lab attention vocabulary and attention-reason resolution."""
 
 from __future__ import annotations
 
 from typing import Any
 
-from app.domains.lab.rules.eligibility import blocked_reason_for_work_item
+from app.domains.lab.rules.eligibility import attention_reason_for_work_item
 from app.shared.contracts.enums import (
     PriorityLevel,
 )
@@ -12,10 +12,8 @@ from app.shared.contracts.lab_blockers import (
     ATTENTION_TYPE_SORT as _GENERATED_ATTENTION_SORT,
 )
 from app.shared.contracts.lab_blockers import (
-    BLOCKED_ATTENTION_TYPE as _GENERATED_ATTENTION,
-)
-from app.shared.contracts.lab_blockers import (
-    BLOCKED_LABELS,
+    ATTENTION_LABELS,
+    ATTENTION_TYPE_BY_REASON as _GENERATED_ATTENTION,
 )
 from app.shared.contracts.lab_blockers import (
     PRIORITY_ATTENTION_TYPES as _GENERATED_PRIORITY_ATTENTION,
@@ -26,9 +24,9 @@ from app.shared.contracts.lab_blockers import (
 from sqlalchemy import case
 
 __all__ = [
-    "BLOCKED_LABELS",
-    "blocked_reason_for_work_item",
-    "BLOCKED_ATTENTION_TYPE",
+    "ATTENTION_LABELS",
+    "attention_reason_for_work_item",
+    "ATTENTION_TYPE_BY_REASON",
     "ATTENTION_TYPE_SORT",
     "SUPERVISOR_ATTENTION_TYPES",
     "PRIORITY_ATTENTION_TYPES",
@@ -36,33 +34,38 @@ __all__ = [
     "attention_type_for",
     "priority_rank",
     "priority_sort_key",
+    # Backward-compatible aliases
+    "BLOCKED_LABELS",
+    "BLOCKED_ATTENTION_TYPE",
 ]
 
-BLOCKED_ATTENTION_TYPE = dict(_GENERATED_ATTENTION)
+BLOCKED_LABELS = ATTENTION_LABELS
+ATTENTION_TYPE_BY_REASON = dict(_GENERATED_ATTENTION)
+BLOCKED_ATTENTION_TYPE = ATTENTION_TYPE_BY_REASON
 ATTENTION_TYPE_SORT = dict(_GENERATED_ATTENTION_SORT)
 SUPERVISOR_ATTENTION_TYPES = set(_GENERATED_SUPERVISOR_ATTENTION)
 PRIORITY_ATTENTION_TYPES = set(_GENERATED_PRIORITY_ATTENTION)
 
 
 def should_surface_attention(
-    blocked_reason: str | None,
+    attention_reason: str | None,
     status: str,
     *,
     always: bool = False,
 ) -> bool:
     """Surface blocked work, TAT breaches, and always-on supervisor items."""
-    if always or blocked_reason:
+    if always or attention_reason:
         return True
     return status in ("warning", "critical")
 
 
 def attention_type_for(
-    blocked_reason: str | None,
+    attention_reason: str | None,
     status: str,
     priority: str,
 ) -> str:
-    if blocked_reason:
-        return BLOCKED_ATTENTION_TYPE.get(blocked_reason, "queue_overdue_warning")
+    if attention_reason:
+        return ATTENTION_TYPE_BY_REASON.get(attention_reason, "queue_overdue_warning")
     if status == "critical":
         return "queue_overdue_critical"
     if status == "warning":
