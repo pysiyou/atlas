@@ -121,7 +121,7 @@ function ResultEntryCardMobile({
   handleCardClick,
   rejection,
   canEnter,
-  blockedLabel,
+  denyTooltipLabel,
 }: ResultEntryCardSharedData) {
   const { showAttemptIndicator } = rejection;
   const auditLines = useMemo(() => testHeaderAudit(test), [test]);
@@ -162,7 +162,7 @@ function ResultEntryCardMobile({
           <IconButton
             {...actionButtonPreset('edit')}
             size="sm"
-            title={canEnter ? 'Enter Results' : blockedLabel ?? 'Result entry not allowed'}
+            title={canEnter ? 'Enter Results' : denyTooltipLabel ?? 'Result entry not allowed'}
             disabled={!canEnter}
             onClick={e => {
               e.stopPropagation();

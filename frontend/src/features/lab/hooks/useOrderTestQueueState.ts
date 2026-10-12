@@ -20,7 +20,7 @@ export function useOrderTestQueueState(test: TestWithContext): OrderTestQueueSta
         {
           serverDenyReason: test.denyReason ?? lab?.denyReason ?? undefined,
           serverDenyMessage: test.denyMessage ?? lab?.denyMessage ?? undefined,
-          serverBlockedReason: lab?.blockedReason ?? undefined,
+          serverAttentionReason: lab?.attentionReason ?? undefined,
           lab,
         }
       ),

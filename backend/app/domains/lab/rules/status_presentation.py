@@ -1,10 +1,10 @@
 """
-Map stored entity status + lab blockers to canonical presentation for UI.
+Map stored entity status + lab attention reasons to canonical presentation for UI.
 """
 from __future__ import annotations
 
 from app.shared.contracts.enums import OrderStatus, SampleStatus, TestStatus
-from app.shared.contracts.lab_blockers import BLOCKED_LABELS
+from app.shared.contracts.lab_blockers import ATTENTION_LABELS, reason_blocks_progress
 from app.shared.contracts.status_presentation_contract import (
     BADGE_VARIANTS,
     TERMINAL_TEST_STATUSES,
@@ -19,7 +19,7 @@ def _variant(primary: str) -> str:
 def _label_for_reason(reason: str | None) -> str | None:
     if not reason:
         return None
-    return BLOCKED_LABELS.get(reason)
+    return ATTENTION_LABELS.get(reason)
 
 
 def _test_status_value(status: TestStatus | str) -> str:
@@ -46,17 +46,26 @@ def _test_lifecycle_primary(status: str) -> str:
     return "pending"
 
 
+def _presentation_blocks_progress(attention_reason: str | None) -> bool:
+    return reason_blocks_progress(attention_reason)
+
+
 def resolve_test_presentation(
     *,
     status: TestStatus | str,
+    attention_reason: str | None = None,
+    attention_label: str | None = None,
+    # Backward-compatible kwargs
     blocked_reason: str | None = None,
     blocked_label: str | None = None,
 ) -> StatusPresentation:
     """Presentation for an order test row."""
+    reason = attention_reason if attention_reason is not None else blocked_reason
+    label = attention_label if attention_label is not None else blocked_label
     status_str = _test_status_value(status)
-    secondary_label = blocked_label or _label_for_reason(blocked_reason)
+    secondary_label = label or _label_for_reason(reason)
 
-    if status_str not in TERMINAL_TEST_STATUSES and blocked_reason:
+    if status_str not in TERMINAL_TEST_STATUSES and reason and _presentation_blocks_progress(reason):
         return StatusPresentation(
             primary="blocked",
             secondary=secondary_label,
@@ -74,15 +83,23 @@ def resolve_test_presentation(
 def resolve_sample_presentation(
     *,
     status: SampleStatus | str,
+    attention_reason: str | None = None,
+    attention_label: str | None = None,
+    rejection_secondary: str | None = None,
     blocked_reason: str | None = None,
     blocked_label: str | None = None,
-    rejection_secondary: str | None = None,
 ) -> StatusPresentation:
     """Presentation for a sample (collection queue)."""
+    reason = attention_reason if attention_reason is not None else blocked_reason
+    label = attention_label if attention_label is not None else blocked_label
     status_str = status.value if hasattr(status, "value") else str(status)
-    secondary_label = blocked_label or _label_for_reason(blocked_reason)
+    secondary_label = label or _label_for_reason(reason)
 
-    if status_str == SampleStatus.PENDING.value and blocked_reason:
+    if (
+        status_str == SampleStatus.PENDING.value
+        and reason
+        and _presentation_blocks_progress(reason)
+    ):
         return StatusPresentation(
             primary="blocked",
             secondary=secondary_label,

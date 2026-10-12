@@ -30,7 +30,7 @@ export interface ResultEntryCardSharedData {
   workItem: ReturnType<typeof useOrderTestQueueState>;
   rejection: ReturnType<typeof deriveRetestContext>;
   canEnter: boolean;
-  blockedLabel: string | undefined;
+  denyTooltipLabel: string | undefined;
 }
 
 export function useResultEntryCardData(props: ResultEntryCardProps): ResultEntryCardSharedData | null {
@@ -39,8 +39,8 @@ export function useResultEntryCardData(props: ResultEntryCardProps): ResultEntry
   const workItem = useOrderTestQueueState(test);
   const rejection = useMemo(() => deriveRetestContext(test), [test]);
   const canEnter = test.allowedActions?.enterResults !== false;
-  const blockedLabel =
-    test.denyMessage ?? (workItem.blockedReason ? workItem.label : undefined);
+  const denyTooltipLabel =
+    test.denyMessage ?? (!canEnter ? workItem.label : undefined);
   const handleCardClick = useLabWorkflowCardClickGuard(() => {
     if (canEnter) onClick();
   });
@@ -63,6 +63,6 @@ export function useResultEntryCardData(props: ResultEntryCardProps): ResultEntry
     workItem,
     rejection,
     canEnter,
-    blockedLabel,
+    denyTooltipLabel,
   };
 }

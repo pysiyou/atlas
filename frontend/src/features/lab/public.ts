@@ -39,7 +39,8 @@ export { QueueCard, QueueModalShell } from './workflow';
 export { LabQueueFilters } from './components/LabQueueFilters';
 
 export {
-  BlockedReasonBadge,
+  AttentionReasonBadge,
+  SupervisorApprovalBadge,
   ReviewRequiredBadge,
   FlagCountBadge,
   RetestBadge,

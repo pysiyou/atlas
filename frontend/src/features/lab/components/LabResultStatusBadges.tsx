@@ -6,6 +6,7 @@ import React from 'react';
 import { Badge, Icon, SpinnerLoader } from '@/components';
 import type { BadgeSize } from '@/components';
 import { ICONS } from '@/config/icons';
+import { ATTENTION_LABELS } from '@/types/generated/labBlockers';
 import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 
 interface RetestBadgeProps {
@@ -83,22 +84,24 @@ export const ReviewRequiredBadge: React.FC<ReviewRequiredBadgeProps> = ({
   </Badge>
 );
 
-interface OrderTestBlockReasonBadgeProps {
+interface AttentionReasonBadgeProps {
   label: string;
   size?: BadgeSize;
   className?: string;
   showIcon?: boolean;
+  variant?: 'warning' | 'danger' | 'info';
 }
 
-export const BlockedReasonBadge: React.FC<OrderTestBlockReasonBadgeProps> = ({
+export const AttentionReasonBadge: React.FC<AttentionReasonBadgeProps> = ({
   label,
   size = 'xs',
   className = '',
   showIcon = true,
+  variant = 'warning',
 }) => (
   <Badge
     size={size}
-    variant="warning"
+    variant={variant}
     className={`${showIcon ? 'flex items-center gap-space-1' : ''} ${className}`}
   >
     {showIcon ? (
@@ -106,4 +109,25 @@ export const BlockedReasonBadge: React.FC<OrderTestBlockReasonBadgeProps> = ({
     ) : null}
     {label}
   </Badge>
+);
+
+/** @deprecated Use AttentionReasonBadge */
+export const BlockedReasonBadge = AttentionReasonBadge;
+
+interface SupervisorApprovalBadgeProps {
+  size?: BadgeSize;
+  className?: string;
+}
+
+/** Supervisor gate — recollection / authorization queues (not specimen blocked). */
+export const SupervisorApprovalBadge: React.FC<SupervisorApprovalBadgeProps> = ({
+  size = LAB_CARD_BADGE_SIZE,
+  className = '',
+}) => (
+  <AttentionReasonBadge
+    label={ATTENTION_LABELS.recollection_approval}
+    size={size}
+    variant="danger"
+    className={className}
+  />
 );

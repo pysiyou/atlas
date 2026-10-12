@@ -28,7 +28,8 @@ export {
   RecollectionAttemptBadge,
   FlagCountBadge,
   ReviewRequiredBadge,
-  BlockedReasonBadge,
+  AttentionReasonBadge,
+  SupervisorApprovalBadge,
 } from './LabResultStatusBadges';
 export { RecollectionOfBadge } from './LabLineageBadges';
 export { RetestOfBadge } from './LabLineageBadges';

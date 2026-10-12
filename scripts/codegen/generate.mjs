@@ -100,6 +100,8 @@ function generateLabBlockers() {
   const reasons = data.reasons ?? {};
   const keys = Object.keys(reasons);
 
+  const blocksProgressKeys = keys.filter(k => reasons[k].blocksProgress !== false);
+
   const pyLabels = keys
     .map(k => `    ${JSON.stringify(k)}: ${JSON.stringify(reasons[k].label)},`)
     .join('\n');
@@ -109,23 +111,39 @@ function generateLabBlockers() {
     .join('\n');
 
   const py = `"""
-Lab blocker vocabulary — GENERATED from contracts/lab-blockers.json. DO NOT EDIT.
+Lab attention reason vocabulary — GENERATED from contracts/lab-blockers.json. DO NOT EDIT.
 """
 from __future__ import annotations
 
-BLOCKED_REASON_KEYS: frozenset[str] = frozenset(
+ATTENTION_REASON_KEYS: frozenset[str] = frozenset(
     {
 ${keys.map(k => `        ${JSON.stringify(k)},`).join('\n')}
     }
 )
 
-BLOCKED_LABELS: dict[str, str] = {
+BLOCKS_PROGRESS_REASONS: frozenset[str] = frozenset(
+    {
+${blocksProgressKeys.map(k => `        ${JSON.stringify(k)},`).join('\n')}
+    }
+)
+
+def reason_blocks_progress(reason: str | None) -> bool:
+    if not reason:
+        return False
+    return reason in BLOCKS_PROGRESS_REASONS
+
+ATTENTION_LABELS: dict[str, str] = {
 ${pyLabels}
 }
 
-BLOCKED_ATTENTION_TYPE: dict[str, str] = {
+ATTENTION_TYPE_BY_REASON: dict[str, str] = {
 ${pyAttention}
 }
+
+# Backward-compatible aliases
+BLOCKED_REASON_KEYS = ATTENTION_REASON_KEYS
+BLOCKED_LABELS = ATTENTION_LABELS
+BLOCKED_ATTENTION_TYPE = ATTENTION_TYPE_BY_REASON
 
 ALLOWED_ACTION_KEYS: tuple[str, ...] = (
 ${(data.allowedActionKeys ?? []).map(k => `    ${JSON.stringify(k)},`).join('\n')}
@@ -164,22 +182,39 @@ ${(data.priorityAttentionTypes ?? []).map(t => `        ${JSON.stringify(t)},`).
     .map(k => `  ${JSON.stringify(k)}: ${JSON.stringify(reasons[k].attentionType)},`)
     .join('\n');
 
+  const tsBlocksProgress = blocksProgressKeys.map(k => JSON.stringify(k)).join(', ');
+
   const ts = `/**
- * Lab blocker vocabulary — GENERATED from contracts/lab-blockers.json. DO NOT EDIT.
+ * Lab attention reason vocabulary — GENERATED from contracts/lab-blockers.json. DO NOT EDIT.
  */
-export const BLOCKED_REASON_KEYS = [
+export const ATTENTION_REASON_KEYS = [
 ${keys.map(k => `  ${JSON.stringify(k)},`).join('\n')}
 ] as const;
 
-export type OrderTestBlockReason = ${tsUnion || 'string'};
+export const BLOCKS_PROGRESS_REASONS = new Set<string>([${tsBlocksProgress}]);
 
-export const BLOCKED_LABELS: Record<OrderTestBlockReason, string> = {
+export function reasonBlocksProgress(reason: string | null | undefined): boolean {
+  return reason != null && BLOCKS_PROGRESS_REASONS.has(reason);
+}
+
+export type LabAttentionReason = ${tsUnion || 'string'};
+
+/** @deprecated Use LabAttentionReason */
+export type OrderTestBlockReason = LabAttentionReason;
+
+export const ATTENTION_LABELS: Record<LabAttentionReason, string> = {
 ${tsLabels}
 };
 
-export const BLOCKED_ATTENTION_TYPE: Partial<Record<OrderTestBlockReason, string>> = {
+/** @deprecated Use ATTENTION_LABELS */
+export const BLOCKED_LABELS = ATTENTION_LABELS;
+
+export const ATTENTION_ATTENTION_TYPE: Partial<Record<LabAttentionReason, string>> = {
 ${tsAttention}
 };
+
+/** @deprecated Use ATTENTION_ATTENTION_TYPE */
+export const BLOCKED_ATTENTION_TYPE = ATTENTION_ATTENTION_TYPE;
 
 export const ALLOWED_ACTION_KEYS = ${JSON.stringify(data.allowedActionKeys ?? [])} as const;
 

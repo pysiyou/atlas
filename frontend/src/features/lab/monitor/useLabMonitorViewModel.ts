@@ -4,7 +4,7 @@
 
 import { useMemo } from 'react';
 import { useLabMonitorBoardQuery, type LabBoardResponse } from '../api/labMonitor';
-import type { OrderTestBlockReason } from '../utils/labQueue';
+import type { LabAttentionReason } from '../utils/labQueue';
 import { labStageLabel } from '../constants/labConstants';
 import { ATTENTION_TYPE_CONFIG, type AttentionType } from './monitorModel';
 import type { LabAttentionQueueItem, LabBoardViewState, LabPipelineStage } from './monitorModel';
@@ -41,8 +41,8 @@ function mapLabAttentionQueueItem(item: LabBoardResponse['attentionItems'][numbe
     patientName: item.patientName,
     priority: item.priority,
     waitingHours: item.waitingHours,
-    blockedReason: (item.blockedReason as OrderTestBlockReason | null) ?? null,
-    blockedLabel: item.blockedLabel ?? null,
+    attentionReason: (item.attentionReason as LabAttentionReason | null) ?? null,
+    attentionLabel: item.attentionLabel ?? null,
     queueTab: isLabPipelineStage(item.queueTab) ? item.queueTab : 'validation',
     since: item.since,
     workItemCount: item.workItemCount,

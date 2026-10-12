@@ -69,9 +69,9 @@ function priorityChip(item: LabAttentionQueueItem, type: AttentionType): Attenti
   return { type: 'priority', value: item.priority };
 }
 
-function blockedReasonChip(item: LabAttentionQueueItem): AttentionDetail | null {
-  if (!item.blockedLabel) return null;
-  return { type: 'text', value: item.blockedLabel };
+function attentionReasonChip(item: LabAttentionQueueItem): AttentionDetail | null {
+  if (!item.attentionLabel) return null;
+  return { type: 'text', value: item.attentionLabel };
 }
 
 function baseDetails(
@@ -84,7 +84,7 @@ function baseDetails(
   if (testId) details.push(testId);
   const priority = priorityChip(item, type);
   if (priority) details.push(priority);
-  const blocked = blockedReasonChip(item);
+  const blocked = attentionReasonChip(item);
   if (blocked) details.push(blocked);
   details.push(...extras, ...queueDetails(item), waitChip(item));
   return details;

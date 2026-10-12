@@ -1,6 +1,6 @@
 /** Command center board types and attention-queue categories. */
 import { LAB_CONFIG, LAB_COPY } from '../constants/labConstants';
-import type { OrderTestBlockReason } from '../utils/labQueue';
+import type { LabAttentionReason } from '../utils/labQueue';
 import type { PriorityLevel } from '@/types';
 
 /** Accent severity for attention feed rows */
@@ -168,8 +168,8 @@ export interface LabAttentionQueueItem {
   patientName: string;
   priority: PriorityLevel;
   waitingHours: number;
-  blockedReason: OrderTestBlockReason | null;
-  blockedLabel: string | null;
+  attentionReason: LabAttentionReason | null;
+  attentionLabel: string | null;
   queueTab: LabPipelineStage;
   since: string;
   workItemCount: number;
