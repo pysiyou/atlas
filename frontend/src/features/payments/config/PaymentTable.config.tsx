@@ -14,31 +14,8 @@ import {
 import { PaymentButton } from '../components/PaymentButton';
 import { PaymentCard } from '../components/PaymentCard';
 import type { OrderPaymentView } from '../types';
-
-const PAYMENT_LIST_WIDTH_OVERRIDES = {
-  full: {
-    orderId: 'id' as const,
-    patientName: { min: 192, base: 208, grow: 0, shrink: 1 },
-    tests: { min: 200, grow: 1, shrink: 1 },
-    paidDate: { min: 148, base: 168, grow: 0, shrink: 0 },
-    totalPrice: 'sm' as const,
-    paymentStatus: 'sm' as const,
-    paymentMethod: 'sm' as const,
-  },
-  medium: {
-    orderId: 'id' as const,
-    patientName: { min: 172, base: 184, grow: 0, shrink: 1 },
-    tests: { min: 160, grow: 1, shrink: 1 },
-    paidDate: { min: 132, base: 152, grow: 0, shrink: 0 },
-    totalPrice: 'sm' as const,
-  },
-  compact: {
-    orderId: 'id' as const,
-    patientName: { min: 148, base: 164, grow: 0, shrink: 1 },
-    paidDate: 'lg' as const,
-    totalPrice: 'sm' as const,
-  },
-} as const;
+import { PAYMENT_LIST_WIDTH_OVERRIDES } from '@/features/orders/constants/orderTableWidthOverrides';
+import { COLUMN_SIZE } from '@/components/data-table';
 
 function getPaymentSortDate(item: OrderPaymentView): string {
   return item.paymentDate ?? item.order.orderDate;
@@ -98,7 +75,7 @@ export const createPaymentTableConfig = (
     paymentMethod: {
       key: 'paymentMethod',
       header: 'Method',
-      width: 'sm' as const,
+      width: COLUMN_SIZE.sm,
       sortable: true,
       accessor: (item: OrderPaymentView) => item.paymentMethod ?? '',
       render: (item: OrderPaymentView) => {
@@ -109,7 +86,7 @@ export const createPaymentTableConfig = (
     paidDate: {
       key: 'paidDate',
       header: ORDER_TABLE_COLUMN_HEADERS.orderDate,
-      width: 'lg' as const,
+      width: COLUMN_SIZE.md,
       sortable: true,
       accessor: (item: OrderPaymentView) => getPaymentSortDate(item),
       render: (item: OrderPaymentView) => renderOrderDateCell(getPaymentSortDate(item)),
@@ -117,7 +94,7 @@ export const createPaymentTableConfig = (
     action: {
       key: 'action',
       header: 'Action',
-      width: 'md' as const,
+      width: COLUMN_SIZE.md,
       render: (item: OrderPaymentView) => (
         <div className="flex items-center justify-start font-normal" onClick={e => e.stopPropagation()}>
           <PaymentButton order={item.order} onPaymentSuccess={onPaymentSuccess} />

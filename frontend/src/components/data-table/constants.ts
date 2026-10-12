@@ -3,18 +3,34 @@
  */
 
 import { TABLE_CELL, TABLE_TYPE } from '@/components/theme/recipes';
-import type { ColumnWidth, TableVariant } from './types';
+import type { ColumnSizePreset, ColumnWidth, TableVariant } from './types';
 
-export const SIZE_PRESETS: Record<string, ColumnWidth> = {
+/** Canonical pixel layout for every table column width token. */
+export const SIZE_PRESETS: Record<ColumnSizePreset, ColumnWidth> = {
   xs: { base: 60, min: 50, grow: 0, shrink: 0 },
   sm: { base: 100, min: 80, grow: 0, shrink: 0 },
-  id: { base: 118, min: 96, grow: 0, shrink: 0 },
   md: { base: 120, min: 100, grow: 0, shrink: 0 },
   lg: { base: 160, min: 140, grow: 0, shrink: 0 },
-  xl: { base: 200, min: 160, grow: 2, shrink: 1 },
+  xl: { min: 200, grow: 2, shrink: 1 },
+  '2xl': { min: 280, grow: 2, shrink: 1 },
   auto: { grow: 0, shrink: 0 },
   fill: { base: 0, min: 200, grow: 1, shrink: 1 },
 };
+
+/**
+ * Use these tokens for `ColumnConfig.width` so every page references the same sizes.
+ * Values resolve through {@link SIZE_PRESETS} in `getGridTemplateColumns`.
+ */
+export const COLUMN_SIZE = {
+  xs: 'xs',
+  sm: 'sm',
+  md: 'md',
+  lg: 'lg',
+  xl: 'xl',
+  '2xl': '2xl',
+  auto: 'auto',
+  fill: 'fill',
+} as const satisfies Record<ColumnSizePreset, ColumnSizePreset>;
 
 export const ROW_HEIGHTS: Record<TableVariant, number> = {
   compact: 40,

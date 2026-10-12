@@ -37,8 +37,8 @@ export const TestsTable: React.FC<TestsTableProps> = ({
   const visibleTests = useMemo(() => tests.filter(t => t.status !== 'removed'), [tests]);
 
   const viewConfig = useMemo(
-    () => createTestsTableConfig(testCatalog, order.orderId, variant),
-    [testCatalog, order.orderId, variant]
+    () => createTestsTableConfig(testCatalog, variant),
+    [testCatalog, variant]
   );
 
   const handleRowClick = useCallback(

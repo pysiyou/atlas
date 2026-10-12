@@ -102,3 +102,57 @@ def ensure_user_admin_columns() -> None:
             )
         )
 
+
+def ensure_order_referring_physician_column() -> None:
+    """
+    Re-add orders.referring_physician on DBs that dropped it; backfill empty values.
+
+    create_all does not ALTER existing tables, so this runs additive DDL plus a
+    one-time placeholder fill for legacy rows (dev/demo data).
+    """
+    placeholder_names = (
+        "Dr. Jaures Nolack",
+        "Prof. Aminata Diallo",
+        "Dr. Chikezie Okafor",
+        "Pharm. Kwame Mensah",
+        "Dr. Sandrine Mba",
+        "Chief Surg. Modibo Keita",
+        "Dr. Awa Traoré",
+        "Prof. Yvan Kamdem",
+        "Chief Matron Ngozi Eze",
+        "Dr. Fally Ilunga",
+        "Pharm. Ndèye Cissé",
+        "Med. Dir. Kojo Asare",
+        "Surg. Emeka Nwosu",
+        "Prof. Chantal Ngoma",
+        "Lab. Dir. Koffi Kouadio",
+    )
+    names_sql = ", ".join(f"'{name.replace(chr(39), chr(39) * 2)}'" for name in placeholder_names)
+    array_len = len(placeholder_names)
+
+    with engine.begin() as conn:
+        conn.execute(
+            text(
+                "ALTER TABLE orders "
+                "ADD COLUMN IF NOT EXISTS referring_physician VARCHAR(200)"
+            )
+        )
+        conn.execute(
+            text(
+                f"""
+                UPDATE orders o
+                SET referring_physician = pick.name
+                FROM (
+                    SELECT order_id,
+                        (ARRAY[{names_sql}])[
+                            1 + floor(random() * {array_len})::int
+                        ] AS name
+                    FROM orders
+                    WHERE referring_physician IS NULL
+                       OR btrim(referring_physician) = ''
+                ) AS pick
+                WHERE o.order_id = pick.order_id
+                """
+            )
+        )
+

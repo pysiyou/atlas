@@ -49,6 +49,7 @@ export function mapCollectionWorklistToSampleDisplay(item: CollectionWorklistIte
     overallStatus: 'ordered',
     priority: item.priority,
     tests: [],
+    referringPhysician: item.referringPhysician ?? undefined,
     createdBy: '',
     createdAt: item.orderDate,
     updatedAt: item.orderDate,
@@ -111,6 +112,7 @@ export function mapEntryWorklistToOrderTestContext(item: EntryWorklistItem): Tes
     allowedActions: item.allowedActions,
     denyReason: item.denyReason ?? null,
     denyMessage: item.denyMessage ?? null,
+    referringPhysician: item.referringPhysician ?? undefined,
     lab: {
       attentionReason: item.attentionReason ?? null,
       attentionLabel: item.attentionLabel ?? null,

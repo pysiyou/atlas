@@ -5,6 +5,7 @@
 import type { ReactNode } from 'react';
 import type { OrderTest, PaymentStatus, PriorityLevel, OrderStatus } from '@/types';
 import type { StatusPresentation } from '@/types/labProjection';
+import { COLUMN_SIZE } from '@/components/data-table';
 import { createIdColumn, createBadgeColumn } from '@/components/data-table/columnHelpers';
 import type { ColumnConfig } from '@/components/data-table/types';
 import {
@@ -76,7 +77,7 @@ export function createOrderSharedColumns<T>(
     patientName: {
       key: 'patientName',
       header: ORDER_TABLE_COLUMN_HEADERS.patientName,
-      width: 'fill',
+      width: COLUMN_SIZE.fill,
       sortable: true,
       accessor: item => accessors.getPatientName(item),
       render: item =>
@@ -85,7 +86,7 @@ export function createOrderSharedColumns<T>(
     tests: {
       key: 'tests',
       header: ORDER_TABLE_COLUMN_HEADERS.tests,
-      width: 'fill',
+      width: COLUMN_SIZE.fill,
       sortable: testsSortable,
       accessor: accessors.getTestsSortValue
         ? item => accessors.getTestsSortValue!(item)
@@ -104,7 +105,7 @@ export function createOrderSharedColumns<T>(
     totalPrice: {
       key: 'totalPrice',
       header: ORDER_TABLE_COLUMN_HEADERS.totalPrice,
-      width: 'md',
+      width: COLUMN_SIZE.md,
       sortable: true,
       accessor: item => accessors.getTotalPrice(item),
       render: item =>
@@ -118,14 +119,14 @@ export function createOrderSharedColumns<T>(
       item => <PaymentStatusBadge status={accessors.getPaymentStatus(item)} size="xs" />,
       {
         sortable: true,
-        width: 'sm',
+        width: COLUMN_SIZE.sm,
         accessor: item => accessors.getPaymentStatus(item),
       }
     ),
     orderDate: {
       key: 'orderDate',
       header: ORDER_TABLE_COLUMN_HEADERS.orderDate,
-      width: 'lg',
+      width: COLUMN_SIZE.md,
       sortable: true,
       accessor: item => accessors.getOrderDate(item),
       render: item => renderOrderDateCell(accessors.getOrderDate(item)),
@@ -139,7 +140,7 @@ export function createOrderSharedColumns<T>(
       item => <OrderPriorityBadge priority={accessors.getPriority!(item)} size="xs" className="border-none" />,
       {
         sortable: true,
-        width: 'sm',
+        width: COLUMN_SIZE.sm,
         accessor: item => accessors.getPriority!(item),
       }
     );
@@ -159,7 +160,7 @@ export function createOrderSharedColumns<T>(
       ),
       {
         sortable: true,
-        width: 'md',
+        width: COLUMN_SIZE.md,
         accessor: item => accessors.getOverallStatus!(item),
       }
     );

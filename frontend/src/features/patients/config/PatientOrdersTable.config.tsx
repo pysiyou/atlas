@@ -9,32 +9,8 @@ import {
   renderOrderTestsBlock,
 } from '@/features/orders';
 import type { Order } from '@/types';
-
-/** Column sets tuned for the patient detail “Related Orders” panel (patient name omitted). */
-const PATIENT_RELATED_WIDTH_OVERRIDES = {
-  full: {
-    orderId: 'id' as const,
-    orderDate: { min: 148, base: 168, grow: 0, shrink: 0 },
-    tests: { min: 200, grow: 2, shrink: 1 },
-    overallStatus: 'md' as const,
-    priority: 'sm' as const,
-    paymentStatus: 'sm' as const,
-    totalPrice: 'md' as const,
-  },
-  medium: {
-    orderId: 'id' as const,
-    orderDate: { min: 132, base: 152, grow: 0, shrink: 0 },
-    tests: { min: 160, grow: 2, shrink: 1 },
-    overallStatus: 'md' as const,
-    totalPrice: 'md' as const,
-  },
-  compact: {
-    orderId: 'id' as const,
-    orderDate: 'lg' as const,
-    overallStatus: 'sm' as const,
-    totalPrice: 'md' as const,
-  },
-} as const;
+import { COLUMN_SIZE } from '@/components/data-table';
+import { ORDER_LIST_WIDTH_OVERRIDES_WITHOUT_PATIENT } from '@/features/orders/constants/orderTableWidthOverrides';
 
 export function createPatientRelatedOrdersTableConfig(
   getTestName: (testCode: string) => string
@@ -63,7 +39,7 @@ export function createPatientRelatedOrdersTableConfig(
     ...shared,
     tests: {
       ...shared.tests,
-      width: { min: 200, grow: 2, shrink: 1 },
+      width: COLUMN_SIZE.xl,
       render: (order: Order) => {
         const tests = getActiveTests(order.tests ?? []);
         const count = order.testCount ?? order.tests?.length;
@@ -83,7 +59,7 @@ export function createPatientRelatedOrdersTableConfig(
   }
 
   return {
-    ...buildViews(columnMap, ORDER_TABLE_VIEW_KEYS_WITHOUT_PATIENT, PATIENT_RELATED_WIDTH_OVERRIDES),
+    ...buildViews(columnMap, ORDER_TABLE_VIEW_KEYS_WITHOUT_PATIENT, ORDER_LIST_WIDTH_OVERRIDES_WITHOUT_PATIENT),
     CardComponent: PatientRelatedOrderCard,
   };
 }

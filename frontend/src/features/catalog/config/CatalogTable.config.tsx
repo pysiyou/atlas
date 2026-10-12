@@ -6,7 +6,7 @@ import type { NavigateFunction } from 'react-router-dom';
 import { EntityId } from '@/components';
 import { CatalogCategoryBadge, CatalogSampleTypeBadge } from '../components/CatalogStatusBadge';
 import type { TableViewConfig } from '@/components';
-import { buildViews } from '@/components/data-table';
+import { buildViews, COLUMN_SIZE } from '@/components/data-table';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';
 import { CatalogCard } from '../components/CatalogCard';
@@ -24,7 +24,7 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
     code: {
       key: 'code',
       header: 'Code',
-      width: 'id' as const,
+      width: COLUMN_SIZE.md,
       sortable: true,
       accessor: (test: Test) => test.code,
       render: (test: Test) => (
@@ -34,7 +34,7 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
     name: {
       key: 'name',
       header: 'Test',
-      width: 'fill' as const,
+      width: COLUMN_SIZE.fill,
       sortable: true,
       truncate: true,
       accessor: (test: Test) => test.name,
@@ -53,7 +53,7 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
     loincCodes: {
       key: 'loincCodes',
       header: 'LOINC',
-      width: 'sm' as const,
+      width: COLUMN_SIZE.sm,
       accessor: (test: Test) => test.loincCodes?.join(', ') ?? '',
       render: (test: Test) => {
         if (!test.loincCodes || test.loincCodes.length === 0) {
@@ -69,7 +69,7 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
     category: {
       key: 'category',
       header: 'Category',
-      width: 'lg' as const,
+      width: COLUMN_SIZE.lg,
       sortable: true,
       accessor: (test: Test) => test.category,
       render: (test: Test) => <CatalogCategoryBadge category={test.category} size="xs" className="border-none" />,
@@ -77,7 +77,7 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
     sampleType: {
       key: 'sampleType',
       header: 'Sample Type',
-      width: 'sm' as const,
+      width: COLUMN_SIZE.sm,
       sortable: true,
       accessor: (test: Test) => test.sampleType,
       render: (test: Test) => <CatalogSampleTypeBadge sampleType={test.sampleType} size="xs" />,
@@ -85,7 +85,7 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
     price: {
       key: 'price',
       header: 'Price',
-      width: 'sm' as const,
+      width: COLUMN_SIZE.sm,
       sortable: true,
       accessor: (test: Test) => test.price,
       render: (test: Test) => (

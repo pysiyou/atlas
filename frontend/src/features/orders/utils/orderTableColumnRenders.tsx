@@ -33,6 +33,8 @@ export interface RenderOrderTestsBlockOptions {
   getTestName?: (testCode: string) => string;
   /** namesFirst: test names on top (patient related orders). Default countFirst. */
   layout?: OrderTestsBlockLayout;
+  /** When true with namesFirst, list every test name (no "+N more"). */
+  showAllNames?: boolean;
 }
 
 export function renderOrderTestsBlock(
@@ -41,7 +43,8 @@ export function renderOrderTestsBlock(
 ): ReactNode {
   const resolved: RenderOrderTestsBlockOptions =
     typeof options === 'number' ? { fallbackCount: options } : (options ?? {});
-  const { fallbackCount, testCodes, getTestName, layout = 'countFirst' } = resolved;
+  const { fallbackCount, testCodes, getTestName, layout = 'countFirst', showAllNames = false } =
+    resolved;
 
   const activeCount =
     fallbackCount ??
@@ -58,11 +61,13 @@ export function renderOrderTestsBlock(
         ? activeCount > 0
           ? `${activeCount} test${activeCount !== 1 ? 's' : ''}`
           : ''
-        : labels.length === 1
-          ? labels[0]
-          : labels.length === 2
-            ? labels.join(', ')
-            : `${labels.slice(0, 2).join(', ')}, +${labels.length - 2} more`;
+        : showAllNames
+          ? labels.join(', ')
+          : labels.length === 1
+            ? labels[0]
+            : labels.length === 2
+              ? labels.join(', ')
+              : `${labels.slice(0, 2).join(', ')}, +${labels.length - 2} more`;
 
     if (!preview) {
       return null;
@@ -71,8 +76,8 @@ export function renderOrderTestsBlock(
     return (
       <div className="min-w-0 w-full font-normal text-left">
         <div
-          className={`${TABLE_TYPE.cell} wrap-break-word font-normal line-clamp-2 text-left`}
-          title={labels.length > 0 ? labels.join(', ') : undefined}
+          className={`${TABLE_TYPE.cell} wrap-break-word font-normal text-left${showAllNames ? '' : ' line-clamp-2'}`}
+          title={!showAllNames && labels.length > 0 ? labels.join(', ') : undefined}
         >
           {preview}
         </div>

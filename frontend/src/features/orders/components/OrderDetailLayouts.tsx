@@ -18,7 +18,10 @@ import { OrderInfoSection } from './OrderInfoSection';
 import { PatientInfoSection } from './PatientInfoSection';
 import { TestsTable } from './TestsTable';
 import { BillingSummarySection } from './BillingSummarySection';
-import { OrderCircularProgress } from './OrderCircularProgress';
+import { OrderEventLogPanel } from '@/features/audit';
+
+/** Third column on order detail — order-scoped event log. */
+const ORDER_ACTIVITY_PANEL_TITLE = 'Order activity';
 
 interface LayoutProps {
   order: Order;
@@ -147,13 +150,17 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
         </Panel>
 
         <Panel
-          title="Order Progress"
+          title={ORDER_ACTIVITY_PANEL_TITLE}
           className={panelClass}
           variant="pageEmbed"
           scroll={fillScroll}
-          headerEnd={<OrderCircularProgress order={order} />}
+          bodyClassName={fillHeight ? 'flex flex-col min-h-0' : undefined}
         >
-          <div className="min-h-24" aria-hidden />
+          <OrderEventLogPanel
+            orderId={order.orderId}
+            layout="embedded"
+            className={fillHeight ? 'min-h-0 flex-1' : undefined}
+          />
         </Panel>
       </div>
 
@@ -223,13 +230,12 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
       </Panel>
 
       <Panel
-        title="Order Progress"
-        className="shrink-0"
+        title={ORDER_ACTIVITY_PANEL_TITLE}
+        className="shrink-0 min-h-48"
         variant="pageEmbed"
         scroll="visible"
-        headerEnd={<OrderCircularProgress order={order} />}
       >
-        <div className="min-h-16" aria-hidden />
+        <OrderEventLogPanel orderId={order.orderId} layout="embedded" />
       </Panel>
 
       <Panel title="Tests" meta={testsHeaderMeta} className="shrink-0" variant="pageEmbed" scroll="visible">

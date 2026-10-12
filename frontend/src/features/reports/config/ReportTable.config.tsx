@@ -6,7 +6,7 @@ import type { MouseEvent } from 'react';
 import type { NavigateFunction } from 'react-router-dom';
 import { Badge, EntityId } from '@/components';
 import type { TableViewConfig } from '@/components';
-import { buildViews } from '@/components/data-table';
+import { buildViews, COLUMN_SIZE } from '@/components/data-table';
 import { ORDER_TABLE_COLUMN_HEADERS, renderOrderPatientName } from '@/features/orders';
 import { renderDateTimeCell } from '@/utils/tableColumnRenders';
 import type { ValidatedTest } from '../types';
@@ -28,7 +28,7 @@ export const createReportTableConfig = (
     testId: {
       key: 'testId',
       header: 'Test ID',
-      width: 'id' as const,
+      width: COLUMN_SIZE.md,
       sortable: true,
       accessor: (test: ValidatedTest) => test.testId,
       render: (test: ValidatedTest) => (
@@ -38,7 +38,7 @@ export const createReportTableConfig = (
     orderId: {
       key: 'orderId',
       header: ORDER_TABLE_COLUMN_HEADERS.orderId,
-      width: 'id' as const,
+      width: COLUMN_SIZE.md,
       sortable: true,
       accessor: (test: ValidatedTest) => test.orderId,
       render: (test: ValidatedTest) => (
@@ -57,7 +57,7 @@ export const createReportTableConfig = (
     patientName: {
       key: 'patientName',
       header: 'Patient',
-      width: 'fill' as const,
+      width: COLUMN_SIZE.fill,
       sortable: true,
       accessor: (test: ValidatedTest) => test.patientName,
       render: (test: ValidatedTest) => renderOrderPatientName(test.patientName, test.patientId),
@@ -65,7 +65,7 @@ export const createReportTableConfig = (
     testName: {
       key: 'testName',
       header: 'Test',
-      width: 'fill' as const,
+      width: COLUMN_SIZE.fill,
       sortable: true,
       accessor: (test: ValidatedTest) => test.testName,
       render: (test: ValidatedTest) => (
@@ -78,7 +78,7 @@ export const createReportTableConfig = (
     orderDate: {
       key: 'orderDate',
       header: 'Date',
-      width: 'lg' as const,
+      width: COLUMN_SIZE.md,
       sortable: true,
       accessor: (test: ValidatedTest) => test.orderDate,
       render: (test: ValidatedTest) => renderDateTimeCell(test.orderDate),
@@ -86,13 +86,13 @@ export const createReportTableConfig = (
     status: {
       key: 'status',
       header: 'Status',
-      width: 'md' as const,
+      width: COLUMN_SIZE.md,
       render: () => <Badge variant="success" label="VALIDATED" size="xs" />,
     },
     action: {
       key: 'action',
       header: 'Action',
-      width: 'md' as const,
+      width: COLUMN_SIZE.md,
       render: (test: ValidatedTest) => (
         <div className="font-normal" onClick={e => e.stopPropagation()}>
           <ReportPreviewButton test={test} onPreview={onPreview} />

@@ -15,15 +15,14 @@ import { useQuery } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query';
 import { sampleAPI } from '../api/samples';
 import Barcode from 'react-barcode';
-import { actionButtonPreset, Badge, Button, EntityId, Icon, Panel } from '@/components';
+import { actionButtonPreset, Button, EntityId, Icon, Panel } from '@/components';
 import type { ContainerType, Order, RejectedSample, Sample, Test } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_CONFIG } from '@/types';
 import { formatVolume } from '../utils';
-import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 import { RADIUS, SURFACE, TONE, TYPE } from '@/components/theme/recipes';
 import { DetailGrid } from './detailModalLayout';
 import { displayId, formatDateTime } from '@/utils';
-import { resolveStatusBadgeColor } from '@/utils/statusBadge';
+import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { SampleCollectionRequirementsSection } from '../collection/SampleCollectionRequirementsSection';
 import { formatRejectionReasons } from '../utils/labFormatters';
 import { QueueCardTestList } from './queueCardLayout';
@@ -41,6 +40,8 @@ import { useUserLookup } from '@/lib/api/users';
 import { usePatientNameLookup } from '@/features/patients';
 import { useOrderLookup } from '@/features/orders';
 import { useSampleLookup } from '../api/samples';
+import { LabRelatedSamplesPanel } from '../components/LabRelatedWorkflowPanel';
+import { ModalType, useModal } from '@/lib/context/ModalContext';
 import { getTestNames } from '@/features/catalog/testLookup';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 
@@ -76,6 +77,7 @@ export const SampleCollectionDetailModal: React.FC<CollectionDetailModalProps> =
   const { getPatientName } = usePatientNameLookup();
   const { getOrder } = useOrderLookup();
   const { tests = [] } = useTestCatalog();
+  const { openModal } = useModal();
   const [isPopoverSubmitting, setIsPopoverSubmitting] = useState(false);
 
   const cachedSample = sampleId ? getSample(sampleId) : undefined;
@@ -248,6 +250,13 @@ export const SampleCollectionDetailModal: React.FC<CollectionDetailModalProps> =
         gridSections={gridSections}
         showBarcode={(isCollected || isRejected) && sample.sampleId != null}
       />
+      <LabRelatedSamplesPanel
+        sample={sample}
+        isOpen={isOpen}
+        onOpenSample={sampleId =>
+          openModal(ModalType.SAMPLE_DETAIL, { sampleId: String(sampleId), readOnly })
+        }
+      />
       {sample.sampleId != null && (
         <LabEventLogPanel sampleId={Number(sample.sampleId)} />
       )}
@@ -302,18 +311,13 @@ function buildCollectionDetailGridSections({
         { label: 'Collected By', value: collectedBy ? getUserName(collectedBy) : undefined },
         {
           label: 'Container',
-          value: (
-            <div className="flex items-center gap-space-2">
-              <Badge size={LAB_CARD_BADGE_SIZE} variant="primary" className="capitalize">
-                {effectiveContainerType}
-              </Badge>
-              {containerColor && (
-                <Badge size={LAB_CARD_BADGE_SIZE} variant={`container-${containerColor}` as never}>
-                  {colorName} Top
-                </Badge>
-              )}
-            </div>
-          ),
+          value: (() => {
+            const containerLabel =
+              CONTAINER_CONFIG[effectiveContainerType]?.label ?? effectiveContainerType;
+            return containerColor
+              ? `${containerLabel} · ${colorName} top`
+              : containerLabel;
+          })(),
         },
       ],
     });
@@ -347,35 +351,28 @@ function buildCollectionDetailGridSections({
       fields: [
         {
           label: 'Priority',
-          badge: sample.priority
-            ? { value: sample.priority, variant: resolveStatusBadgeColor(sample.priority) }
-            : undefined,
+          value: sample.priority ? formatStatusBadgeLabel(sample.priority) : undefined,
         },
         {
           label: 'Required Container Types',
           value:
-            requirement.containerTypes.length > 0 ? (
-              <div className="flex flex-wrap gap-space-1 justify-end">
-                {requirement.containerTypes.map((type, idx) => (
-                  <Badge key={idx} size={LAB_CARD_BADGE_SIZE} variant="primary" className="capitalize">
-                    {CONTAINER_CONFIG[type]?.label || type}
-                  </Badge>
-                ))}
-              </div>
-            ) : undefined,
+            requirement.containerTypes.length > 0
+              ? requirement.containerTypes
+                  .map(type => CONTAINER_CONFIG[type]?.label || type)
+                  .join(', ')
+              : undefined,
         },
         {
           label: 'Required Container Colors',
           value:
-            requirement.containerTopColors.length > 0 ? (
-              <div className="flex flex-wrap gap-space-1 justify-end">
-                {requirement.containerTopColors.map((color, idx) => (
-                  <Badge key={idx} size={LAB_CARD_BADGE_SIZE} variant={`container-${color}` as never}>
-                    {CONTAINER_COLOR_OPTIONS.find(opt => opt.value === color)?.label || color} Top
-                  </Badge>
-                ))}
-              </div>
-            ) : undefined,
+            requirement.containerTopColors.length > 0
+              ? requirement.containerTopColors
+                  .map(
+                    color =>
+                      `${CONTAINER_COLOR_OPTIONS.find(opt => opt.value === color)?.label || color} top`
+                  )
+                  .join(', ')
+              : undefined,
         },
       ],
     });

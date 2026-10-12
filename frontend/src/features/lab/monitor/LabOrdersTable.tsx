@@ -61,10 +61,7 @@ export const LabOrdersTable: React.FC = () => {
   const navigate = useNavigate();
   const workToday = useDashboardWorklistToday({ pageSize: 200 });
 
-  const rows = useMemo(
-    () => workToday.items.map(mapWorkTodayRow),
-    [workToday.items],
-  );
+  const rows = useMemo(() => workToday.items.map(mapWorkTodayRow), [workToday.items]);
 
   return (
     <Panel

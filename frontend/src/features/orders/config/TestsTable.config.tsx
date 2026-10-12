@@ -1,13 +1,11 @@
-import { Link } from 'react-router-dom';
 import React from 'react';
 import { EntityId } from '@/components';
 import type { TableViewConfig, CardComponentProps } from '@/components';
-import { buildViews } from '@/components/data-table';
+import { buildViews, COLUMN_SIZE } from '@/components/data-table';
 import { cn, formatCurrency } from '@/utils';
 import { renderDateTimeCell } from '@/utils/tableColumnRenders';
 import { getTestName, getTestProperty } from '@/features/catalog/testLookup';
 import { CatalogCategoryBadge } from '@/features/catalog';
-import { getLabQueueUrlForTest } from '@/features/lab';
 import { OrderTestStatusBadge } from '../components/OrderDomainBadges';
 import { getOrderTestLineageRowClass } from '../utils/orderTestLineage';
 import type { OrderTest, Test } from '@/types';
@@ -15,14 +13,14 @@ import { TABLE_TYPE, RADIUS, TYPE } from '@/components/theme/recipes';
 
 
 const SIMPLE_VIEWS = {
-  full: ['test', 'category', 'status', 'lab'],
-  medium: ['test', 'category', 'status', 'lab'],
-  compact: ['test', 'category', 'status', 'lab'],
+  full: ['test', 'category', 'status'],
+  medium: ['test', 'category', 'status'],
+  compact: ['test', 'category', 'status'],
 } as const;
 
 const DETAILED_VIEWS = {
-  full: ['test', 'category', 'status', 'sampleId', 'updatedAt', 'lab'],
-  medium: ['test', 'category', 'status', 'sampleId', 'updatedAt', 'lab'],
+  full: ['test', 'category', 'status', 'sampleId', 'updatedAt'],
+  medium: ['test', 'category', 'status', 'sampleId', 'updatedAt'],
   compact: SIMPLE_VIEWS.compact,
 } as const;
 
@@ -86,14 +84,13 @@ function createTestTableCard(testCatalog: Test[]): React.FC<CardComponentProps<O
 
 export function createTestsTableConfig(
   testCatalog: Test[],
-  orderId: number,
   variant: 'simple' | 'detailed' = 'detailed'
 ): TableViewConfig<OrderTest> {
   const columnMap = {
     test: {
       key: 'test',
       header: 'Test',
-      width: { min: 280, grow: 2, shrink: 1 },
+      width: COLUMN_SIZE['2xl'],
       truncate: true,
       accessor: (test: OrderTest) =>
         `${getTestName(test.testCode, testCatalog)} ${test.testCode}`,
@@ -102,14 +99,14 @@ export function createTestsTableConfig(
     category: {
       key: 'category',
       header: 'Category',
-      width: 'lg' as const,
+      width: COLUMN_SIZE.lg,
       accessor: (test: OrderTest) => getTestProperty(test.testCode, 'category', testCatalog) ?? '',
       render: (test: OrderTest) => renderTestCategoryBadge(test, testCatalog) ?? <span className={TABLE_TYPE.meta}>—</span>,
     },
     status: {
       key: 'status',
       header: 'Status',
-      width: 'md' as const,
+      width: COLUMN_SIZE.md,
       accessor: (test: OrderTest) => test.status,
       render: (test: OrderTest) => (
         <OrderTestStatusBadge
@@ -123,7 +120,7 @@ export function createTestsTableConfig(
     sampleId: {
       key: 'sampleId',
       header: 'Sample',
-      width: 'id' as const,
+      width: COLUMN_SIZE.md,
       accessor: (test: OrderTest) => test.sampleId ?? '',
       render: (test: OrderTest) =>
         test.sampleId ? (
@@ -135,27 +132,9 @@ export function createTestsTableConfig(
     updatedAt: {
       key: 'updatedAt',
       header: 'Date',
-      width: 'lg' as const,
+      width: COLUMN_SIZE.md,
       accessor: (test: OrderTest) => test.updatedAt ?? '',
       render: (test: OrderTest) => renderDateTimeCell(test.updatedAt),
-    },
-    lab: {
-      key: 'lab',
-      header: '',
-      width: { min: 100, base: 108, grow: 0, shrink: 0 },
-      render: (test: OrderTest) => {
-        const labUrl = getLabQueueUrlForTest(test, orderId);
-        if (!labUrl) return null;
-        return (
-          <Link
-            to={labUrl}
-            className={`${TABLE_TYPE.link} whitespace-nowrap`}
-            onClick={e => e.stopPropagation()}
-          >
-            View
-          </Link>
-        );
-      },
     },
   };
 

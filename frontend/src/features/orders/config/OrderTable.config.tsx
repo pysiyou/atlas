@@ -13,34 +13,7 @@ import {
 import { getActiveTests } from '../utils/orderCalculator';
 import type { Order } from '@/types';
 import { OrderTableCard } from '../components/OrderTableCard';
-
-const ORDER_LIST_WIDTH_OVERRIDES = {
-  full: {
-    orderId: 'id' as const,
-    patientName: { min: 168, base: 176, grow: 0, shrink: 1 },
-    orderDate: { min: 148, base: 168, grow: 0, shrink: 0 },
-    tests: { min: 200, grow: 1, shrink: 1 },
-    priority: 'sm' as const,
-    overallStatus: 'md' as const,
-    paymentStatus: 'sm' as const,
-    totalPrice: 'md' as const,
-  },
-  medium: {
-    orderId: 'id' as const,
-    patientName: { min: 148, base: 160, grow: 0, shrink: 1 },
-    orderDate: { min: 132, base: 152, grow: 0, shrink: 0 },
-    tests: { min: 160, grow: 1, shrink: 1 },
-    overallStatus: 'md' as const,
-    totalPrice: 'md' as const,
-  },
-  compact: {
-    orderId: 'id' as const,
-    patientName: { min: 128, base: 140, grow: 0, shrink: 1 },
-    orderDate: 'lg' as const,
-    overallStatus: 'sm' as const,
-    totalPrice: 'md' as const,
-  },
-} as const;
+import { ORDER_LIST_WIDTH_OVERRIDES } from '../constants/orderTableWidthOverrides';
 
 export type OrderTableConfigOptions = {
   /** Omit patient column (e.g. orders shown on patient detail). */

@@ -9,6 +9,7 @@ import {
 } from '../components/LabDomainBadges';
 import {
   buildViews,
+  COLUMN_SIZE,
   createBadgeColumn,
   createColumn,
   type TableViewConfig,
@@ -87,13 +88,13 @@ function LabOrderTableCard({ item, onClick }: CardComponentProps<LabOrderTableRo
 export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> {
   const columnMap = {
     test: createColumn<LabOrderTableRow>('test', 'Test', {
-      width: 'xl',
+      width: COLUMN_SIZE['2xl'],
       sortable: true,
       accessor: row => `${row.testName} ${row.testCode}`,
       render: row => renderTableTwoLineCell(row.testName, row.testCode),
     }),
     patient: createColumn<LabOrderTableRow>('patient', 'Patient', {
-      width: 'lg',
+      width: COLUMN_SIZE.lg,
       sortable: true,
       accessor: row => row.patientName,
       render: row =>
@@ -108,10 +109,10 @@ export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> 
         ) : (
           renderTableEmptyCell()
         ),
-      { accessor: row => row.sampleType, width: 'md', sortable: true },
+      { accessor: row => row.sampleType, width: COLUMN_SIZE.md, sortable: true },
     ),
     doctor: createColumn<LabOrderTableRow>('doctor', 'Doctor', {
-      width: 'lg',
+      width: COLUMN_SIZE.lg,
       accessor: row => row.doctorName ?? '',
       render: row =>
         renderTableTwoLineCell(
@@ -134,16 +135,16 @@ export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> 
         ) : (
           renderTableEmptyCell()
         ),
-      { accessor: row => row.department ?? '', width: 'md' },
+      { accessor: row => row.department ?? '', width: COLUMN_SIZE.md },
     ),
     status: createBadgeColumn<LabOrderTableRow>(
       'status',
       'Status',
       row => renderMonitorStatus(row),
-      { accessor: row => monitorStatusAccessor(row), width: 'md' },
+      { accessor: row => monitorStatusAccessor(row), width: COLUMN_SIZE.md },
     ),
     date: createColumn<LabOrderTableRow>('date', 'Date', {
-      width: 'lg',
+      width: COLUMN_SIZE.md,
       sortable: true,
       accessor: row => row.date,
       render: row => renderDateTimeCell(row.date),
