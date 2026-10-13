@@ -48,14 +48,16 @@ export const OrderList: React.FC = () => {
   const statusFilters = useMemo(() => (filters.status as OrderStatus[]) ?? [], [filters.status]);
   const paymentFilters = useMemo(() => (filters.paymentStatus as PaymentStatus[]) ?? [], [filters.paymentStatus]);
   const patientIdFilter = urlFilters.patientId;
+  const orderIdFilter = urlFilters.orderId;
 
   const serverFilters = useMemo(
     () => ({
       patientId: patientIdFilter ?? undefined,
+      orderId: orderIdFilter ? Number(orderIdFilter) : undefined,
       status: statusFilters.length === 1 ? statusFilters[0] : undefined,
       paymentStatus: paymentFilters.length === 1 ? paymentFilters[0] : undefined,
     }),
-    [patientIdFilter, statusFilters, paymentFilters]
+    [patientIdFilter, orderIdFilter, statusFilters, paymentFilters]
   );
 
   const {

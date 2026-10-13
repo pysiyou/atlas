@@ -160,6 +160,7 @@ export const ResultValidationQueue: React.FC = () => {
                 onSampleTypeFiltersChange={setSampleTypeFilters}
                 statusFilters={priorityFilters}
                 onStatusFiltersChange={setPriorityFilters}
+                statusFilterKey="priority"
               />
             </>
           }

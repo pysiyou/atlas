@@ -58,11 +58,11 @@ export function useUrlFilters(options: UseUrlFiltersOptions): UseUrlFiltersRetur
       if (!urlFilterKeys.includes(key)) return;
       const normalized = normalizeUrlFilterValue(value);
       applyParams(params => {
-        for (const entityKey of urlFilterKeys) {
-          params.delete(entityKey);
-        }
+        // Only modify the specified key, don't touch other entity filters
         if (normalized !== undefined) {
           params.set(key, normalized);
+        } else {
+          params.delete(key);
         }
       });
     },

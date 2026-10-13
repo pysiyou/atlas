@@ -61,7 +61,7 @@ export const PaymentList: React.FC = () => {
   const serverFilters = useMemo(
     () => ({
       patientId: urlFilters.patientId ?? undefined,
-      orderId: urlFilters.orderId ?? undefined,
+      orderId: urlFilters.orderId ? Number(urlFilters.orderId) : undefined,
       paymentStatus: statusFilters.length === 1 ? statusFilters[0] : undefined,
     }),
     [urlFilters.patientId, urlFilters.orderId, statusFilters]

@@ -40,6 +40,9 @@ interface LabQueueFilterConfig<T, S> {
     getPriority: (item: T) => string | undefined;
     getQueueSince: (item: T) => string | undefined;
     searchFilterFn: (item: T, query: string) => boolean;
+    getId?: (item: T) => number | undefined;
+    getOrderId: (item: T) => number | undefined;
+    getSampleId?: (item: T) => number | undefined;
   };
   defaultStatuses: S[];
   sortByPriority: boolean;
@@ -52,6 +55,8 @@ const COLLECTION_FILTER_CONFIG: LabQueueFilterConfig<SampleCollectionQueueItem, 
     getStatus: (d) => d.sample?.status,
     getPriority: (d) => d.priority,
     getQueueSince: (d) => d.order?.orderDate,
+    getOrderId: (d) => d.order?.orderId,
+    getSampleId: (d) => d.sample?.sampleId,
     searchFilterFn: (item, query) => {
       const lowerQuery = query.toLowerCase();
       const fields = [
@@ -75,6 +80,9 @@ const ENTRY_FILTER_CONFIG: LabQueueFilterConfig<TestWithContextResult, TestStatu
     getStatus: (t) => t.status as TestStatus,
     getPriority: (t) => t.priority,
     getQueueSince: (t) => t.collectedAt,
+    getId: (t) => t.id,
+    getOrderId: (t) => t.orderId,
+    getSampleId: (t) => t.sampleId,
     searchFilterFn: createLabQueueSearchFilter<TestWithContextResult>(),
   },
   defaultStatuses: ['sample-collected'],
@@ -88,6 +96,9 @@ const VALIDATION_FILTER_CONFIG: LabQueueFilterConfig<TestWithContextResult, Test
     getStatus: (t) => t.status as TestStatus,
     getPriority: (t) => t.priority,
     getQueueSince: (t) => t.resultEnteredAt,
+    getId: (t) => t.id,
+    getOrderId: (t) => t.orderId,
+    getSampleId: (t) => t.sampleId,
     searchFilterFn: createLabQueueSearchFilter<TestWithContextResult>(),
   },
   defaultStatuses: ['resulted'],
@@ -97,6 +108,9 @@ const VALIDATION_FILTER_CONFIG: LabQueueFilterConfig<TestWithContextResult, Test
 const VALIDATION_REVIEW_FILTER_CONFIG: LabQueueFilterConfig<TestWithContextResult, PriorityLevel> =
   {
     callbacks: {
+      getId: (t) => t.id,
+      getOrderId: (t) => t.orderId,
+      getSampleId: (t) => t.sampleId,
       getOrderDate: (t) => t.orderDate,
       getSampleType: (t) => t.sampleType,
       getStatus: (t) => t.priority as PriorityLevel,
@@ -160,6 +174,7 @@ export function useLabQueueFilters<T extends WorkflowType>({
       skipSearchFilter,
       appliedStatusFilters,
       collectionSampleLookup,
+      urlFilters,
     }),
     [
       items,
@@ -170,6 +185,7 @@ export function useLabQueueFilters<T extends WorkflowType>({
       skipSearchFilter,
       appliedStatusFilters,
       collectionSampleLookup,
+      urlFilters,
     ]
   );
 

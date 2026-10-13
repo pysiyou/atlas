@@ -3,10 +3,12 @@
  * Encapsulates date range, sample type, status, and search filtering.
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { compareQueuePriority } from '../utils/labQueue';
 import { resolveCollectionStatusFilters } from '../utils/labSearchAndLinks';
+import type { UrlFilters } from '@/utils/filters';
+import { displayId } from '@/utils';
 
 /** Reads the `search` query param used for lab queue deep-links. */
 export function useLabQueueUrlSearch(): string {
@@ -36,6 +38,14 @@ export interface UseLabQueueFilterStateOptions<T, S> {
   appliedStatusFilters?: S[];
   /** Collection tab: historical sample search — show all statuses unless user filters. */
   collectionSampleLookup?: boolean;
+  /** URL entity filters for targeting specific records */
+  urlFilters?: UrlFilters;
+  /** Get test/item ID for testId filtering */
+  getId?: (item: T) => number | undefined;
+  /** Get order ID for orderId filtering */
+  getOrderId?: (item: T) => number | undefined;
+  /** Get sample ID for sampleId filtering */
+  getSampleId?: (item: T) => number | undefined;
 }
 
 export interface LabQueueFilterState<S> {
@@ -77,6 +87,10 @@ export function applyLabQueueFilters<T, S>({
   getQueueSince,
   applyStatusFilter = true,
   skipSearchFilter = false,
+  urlFilters,
+  getId,
+  getOrderId,
+  getSampleId,
 }: {
   items: T[];
   filters: LabQueueFilterState<S>;
@@ -90,8 +104,32 @@ export function applyLabQueueFilters<T, S>({
   /** When false, priority/status filters are skipped (e.g. recollection requests without priority). */
   applyStatusFilter?: boolean;
   skipSearchFilter?: boolean;
+  /** URL entity filters for targeting specific records */
+  urlFilters?: UrlFilters;
+  /** Get test/item ID for testId filtering */
+  getId?: (item: T) => number | undefined;
+  /** Get order ID for orderId filtering */
+  getOrderId?: (item: T) => number | undefined;
+  /** Get sample ID for sampleId filtering */
+  getSampleId?: (item: T) => number | undefined;
 }): T[] {
   let out = items;
+
+  // Apply entity URL filters first - these are targeting filters that narrow to specific records
+  if (urlFilters) {
+    if (urlFilters.testId && getId) {
+      const targetId = Number(urlFilters.testId);
+      out = out.filter(item => getId(item) === targetId);
+    }
+    if (urlFilters.orderId && getOrderId) {
+      const targetOrderId = Number(urlFilters.orderId);
+      out = out.filter(item => getOrderId(item) === targetOrderId);
+    }
+    if (urlFilters.sampleId && getSampleId) {
+      const targetSampleId = Number(urlFilters.sampleId);
+      out = out.filter(item => getSampleId(item) === targetSampleId);
+    }
+  }
   out = applyDateRange(out, filters.dateRange, getOrderDate);
   if (filters.sampleTypeFilters.length > 0) {
     out = out.filter(item => {
@@ -132,10 +170,36 @@ export function useLabQueueFilterState<T, S>({
   skipSearchFilter = false,
   appliedStatusFilters,
   collectionSampleLookup = false,
+  urlFilters,
+  getId,
+  getOrderId,
+  getSampleId,
 }: UseLabQueueFilterStateOptions<T, S>) {
-  const [internalSearchQuery, setInternalSearchQuery] = useState(initialSearchQuery);
+  // Auto-generate search hint from entity URL filters if present
+  const searchFromEntityFilter = useMemo(() => {
+    if (!urlFilters) return initialSearchQuery;
+    if (urlFilters.testId) return displayId.orderTest(Number(urlFilters.testId));
+    if (urlFilters.sampleId) return displayId.sample(Number(urlFilters.sampleId));
+    if (urlFilters.orderId) return displayId.order(Number(urlFilters.orderId));
+    return initialSearchQuery;
+  }, [urlFilters, initialSearchQuery]);
+
+  const [internalSearchQuery, setInternalSearchQuery] = useState(searchFromEntityFilter);
   const searchQuery = controlledSearchQuery ?? internalSearchQuery;
   const setSearchQuery = controlledOnSearchChange ?? setInternalSearchQuery;
+  
+  // Sync internal search when entity filter from URL changes (including when cleared)
+  // This ensures clearing URL filter badges also clears the auto-filled search
+  useEffect(() => {
+    // Only update if NOT controlled by parent (parent controls during sample lookup mode)
+    if (controlledSearchQuery === undefined) {
+      // Queue microtask to avoid render-phase setState
+      queueMicrotask(() => {
+        setInternalSearchQuery(searchFromEntityFilter);
+      });
+    }
+  }, [searchFromEntityFilter, controlledSearchQuery]);
+  
   const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
   const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
   const [statusFilters, setStatusFilters] = useState<S[]>(initialStatusFilters);
@@ -151,7 +215,11 @@ export function useLabQueueFilterState<T, S>({
   );
 
   const filtersForApply = useMemo((): LabQueueFilterState<S> => {
-    const resolvedStatus: S[] = collectionSampleLookup
+    // When entity URL filters are active, treat like sample lookup mode - clear default status filters
+    const hasEntityFilters = urlFilters && (urlFilters.testId || urlFilters.orderId || urlFilters.sampleId);
+    const isLookupMode = collectionSampleLookup || hasEntityFilters;
+    
+    const resolvedStatus: S[] = isLookupMode
       ? (resolveCollectionStatusFilters(
           true,
           filterState.statusFilters as string[]
@@ -161,7 +229,7 @@ export function useLabQueueFilterState<T, S>({
       ...filterState,
       statusFilters: resolvedStatus,
     };
-  }, [filterState, appliedStatusFilters, collectionSampleLookup]);
+  }, [filterState, appliedStatusFilters, collectionSampleLookup, urlFilters]);
 
   const filteredItems = useMemo(
     () =>
@@ -175,6 +243,10 @@ export function useLabQueueFilterState<T, S>({
         sortByQueuePriority,
         getPriority,
         getQueueSince,
+        urlFilters,
+        getId,
+        getOrderId,
+        getSampleId,
         applyStatusFilter: true,
         skipSearchFilter,
       }),
@@ -189,6 +261,10 @@ export function useLabQueueFilterState<T, S>({
       getPriority,
       getQueueSince,
       skipSearchFilter,
+      urlFilters,
+      getId,
+      getOrderId,
+      getSampleId,
     ]
   );
 
