@@ -45,6 +45,7 @@ export interface OrderDetailApiResponse extends Order {
 
 export interface OrdersFilter {
   patientId?: string;
+  orderId?: number;
   status?: OrderStatus;
   paymentStatus?: PaymentStatus;
   page?: number;
@@ -68,6 +69,7 @@ export const orderAPI = {
     const params: Record<string, string> = { paginated: 'true', sort: 'updatedAt', summary: 'true' };
 
     if (filters?.patientId) params.patientId = filters.patientId;
+    if (filters?.orderId) params.orderId = String(filters.orderId);
     if (filters?.status) params.status = filters.status;
     if (filters?.paymentStatus) params.paymentStatus = filters.paymentStatus;
     if (filters?.page) params.skip = String((filters.page - 1) * (filters.pageSize || DEFAULT_LIST_PAGE_SIZE));
@@ -127,6 +129,7 @@ export const orderAPI = {
  */
 export interface OrdersFilters {
   patientId?: string;
+  orderId?: number;
   status?: OrderStatus;
   paymentStatus?: PaymentStatus;
 }

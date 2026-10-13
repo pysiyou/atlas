@@ -63,10 +63,15 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Use filter state management
-  const { filters, setFilter, clearAll, isFilterActive } = useFilterState({
+  const { filters, setFilter, clearAll, isFilterActive, setFilters } = useFilterState({
     initialFilters: value,
     onChange,
   });
+
+  // Sync internal state when parent value changes (back button, programmatic nav, URL filter changes)
+  React.useEffect(() => {
+    setFilters(value);
+  }, [value, setFilters]);
 
   // Quick filters
   const { applyPreset, activePresetId } = useQuickFilters({

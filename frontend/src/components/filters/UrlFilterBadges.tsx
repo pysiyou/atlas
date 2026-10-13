@@ -19,7 +19,7 @@ const FILTER_LABELS: Record<string, { label: string; formatValue: (value: string
   patientId: { label: 'Patient', formatValue: (value) => displayId.patient(Number(value)) },
   orderId: { label: 'Order', formatValue: (value) => displayId.order(Number(value)) },
   sampleId: { label: 'Sample', formatValue: (value) => displayId.sample(Number(value)) },
-  testId: { label: 'Test', formatValue: (value) => String(value) },
+  testId: { label: 'Test', formatValue: (value) => displayId.orderTest(Number(value)) },
 };
 
 export function UrlFilterBadges({ urlFilters, onClear, onClearSingle }: UrlFilterBadgesProps) {

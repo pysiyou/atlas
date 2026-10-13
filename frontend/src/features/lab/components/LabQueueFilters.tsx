@@ -17,6 +17,8 @@ export interface LabQueueFiltersProps<S = string[]> {
   onSampleTypeFiltersChange: (values: string[]) => void;
   statusFilters: S;
   onStatusFiltersChange: (values: S) => void;
+  /** Key for status filter in config - defaults to 'status', use 'priority' for validation */
+  statusFilterKey?: 'status' | 'priority';
 }
 
 export function LabQueueFilters<S = string[]>({
@@ -29,15 +31,16 @@ export function LabQueueFilters<S = string[]>({
   onSampleTypeFiltersChange,
   statusFilters,
   onStatusFiltersChange,
+  statusFilterKey = 'status',
 }: LabQueueFiltersProps<S>): React.ReactElement {
   const filterValues = useMemo<FilterValues>(
     () => ({
       searchQuery,
       dateRange,
       sampleType: sampleTypeFilters,
-      status: statusFilters,
+      [statusFilterKey]: statusFilters,
     }),
-    [searchQuery, dateRange, sampleTypeFilters, statusFilters]
+    [searchQuery, dateRange, sampleTypeFilters, statusFilters, statusFilterKey]
   );
 
   const handleFilterChange = (filters: FilterValues) => {
@@ -45,7 +48,9 @@ export function LabQueueFilters<S = string[]>({
     if (filters.dateRange !== undefined)
       onDateRangeChange(filters.dateRange as [Date, Date] | null);
     if (filters.sampleType !== undefined) onSampleTypeFiltersChange(filters.sampleType as string[]);
+    // Support both 'status' and 'priority' keys
     if (filters.status !== undefined) onStatusFiltersChange(filters.status as S);
+    if (filters.priority !== undefined) onStatusFiltersChange(filters.priority as S);
   };
 
   return <FilterBar config={config} value={filterValues} onChange={handleFilterChange} />;

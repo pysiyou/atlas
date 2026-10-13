@@ -29,6 +29,8 @@ export interface UseFilterStateReturn {
   clearFilter: (key: string) => void;
   /** Clear all filters */
   clearAll: () => void;
+  /** Set all filters at once (for controlled sync) */
+  setFilters: (filters: FilterValues) => void;
   /** Number of active filters */
   activeCount: number;
   /** Check if any filter is active */
@@ -131,6 +133,7 @@ export function useFilterState(options: UseFilterStateOptions = {}): UseFilterSt
     setFilter,
     clearFilter,
     clearAll,
+    setFilters,
     activeCount,
     isActive,
     isFilterActive,

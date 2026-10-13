@@ -26,7 +26,7 @@ export function resolveCollectionStatusFilters<T extends string>(
 
 /**
  * Returns a lab queue URL for an order test with proper filter support.
- * Uses URL filters (testId, orderId) for direct navigation to the test in the queue.
+ * Uses URL filters (testId, orderId, sampleId) for direct navigation to the test in the queue.
  */
 export function getLabQueueUrlForTest(test: OrderTest, orderId: number): string | null {
   const tab = getLabTabForTestStatus(test.status as TestStatus);
@@ -34,10 +34,17 @@ export function getLabQueueUrlForTest(test: OrderTest, orderId: number): string 
 
   // Use URL filters for direct test navigation
   if (test.id) {
-    return buildFilteredUrl(getLabTabPath(tab), { 
+    const filters: Record<string, string> = {
       testId: String(test.id),
-      orderId: String(orderId) 
-    });
+      orderId: String(orderId)
+    };
+    
+    // Include sampleId for collection tab to help narrow results
+    if (test.sampleId && tab === 'collection') {
+      filters.sampleId = String(test.sampleId);
+    }
+    
+    return buildFilteredUrl(getLabTabPath(tab), filters);
   }
 
   // Fallback to search-based URL (for tests without IDs)
