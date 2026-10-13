@@ -1,5 +1,5 @@
 /**
- * Order-domain table cell render helpers.
+ * Order-domain table cell render helpers with filter navigation support.
  */
 
 import type { MouseEvent, ReactNode } from 'react';
@@ -7,6 +7,7 @@ import type { NavigateFunction } from 'react-router-dom';
 import { EntityId } from '@/components/display/EntityId';
 import { formatCurrency } from '@/utils';
 import { renderDateTimeCell, renderPatientNameBlock } from '@/utils/tableColumnRenders';
+import { ROUTES } from '@/config';
 import type { OrderTest } from '@/types';
 import { TABLE_TYPE } from '@/components/theme/recipes';
 import {
@@ -18,15 +19,57 @@ export function renderOrderId(orderId: string | number, clickable = false): Reac
   return <EntityId type="order" value={orderId} variant={clickable ? 'clickable' : 'block'} />;
 }
 
-function renderPatientNameWithId(fullName: string, patientId: string | number): ReactNode {
+function renderPatientNameWithId(
+  fullName: string,
+  patientId: string | number,
+  enableNavigation = false
+): ReactNode {
   return renderPatientNameBlock(
     fullName,
-    <EntityId type="patient" value={patientId} variant="secondary" className="truncate" />
+    <EntityId
+      type="patient"
+      value={patientId}
+      variant="secondary"
+      className="truncate"
+      navigateToFiltered={
+        enableNavigation
+          ? { targetPage: ROUTES.ORDERS, filterKey: 'patientId' }
+          : undefined
+      }
+    />
   );
 }
 
 export function renderOrderPatientName(patientName: string, patientId: string | number): ReactNode {
-  return renderPatientNameWithId(patientName, patientId);
+  return renderPatientNameWithId(patientName, patientId, false);
+}
+
+/**
+ * Renders patient name with clickable ID that navigates to orders filtered by patient.
+ */
+export function renderOrderPatientNameNavigable(
+  patientName: string,
+  patientId: string | number
+): ReactNode {
+  return renderPatientNameWithId(patientName, patientId, true);
+}
+
+/**
+ * Renders sample ID with navigation to lab collection filtered by sample.
+ */
+export function renderNavigableSampleId(sampleId: string | number): ReactNode {
+  return (
+    <EntityId
+      type="sample"
+      value={sampleId}
+      variant="clickable"
+      navigateToFiltered={{
+        targetPage: '/laboratory/collection',
+        filterKey: 'sampleId',
+        labTab: 'collection',
+      }}
+    />
+  );
 }
 
 export type { OrderTestsBlockLayout };

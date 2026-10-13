@@ -15,9 +15,9 @@ import { SampleCollectionCard } from '../workflow';
 import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabWorklistPaginationNotice } from '../components/LabWorklistPaginationNotice';
 import { LabQueueFilters } from '../components/LabQueueFilters';
-import { collectionFilterConfig } from '../constants';
+import { collectionFilterConfig, LAB_URL_FILTER_KEYS } from '../constants';
 import { mapCollectionWorklistToSampleDisplay } from '../utils/labQueue';
-import { EMPTY_COPY, ErrorBoundary, emptySubtitle } from '@/components';
+import { EMPTY_COPY, ErrorBoundary, emptySubtitle, UrlFilterBadges } from '@/components';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { useAuthStore } from '@/app/authStore';
 export const SampleCollectionQueue: React.FC = () => {
@@ -54,6 +54,9 @@ export const SampleCollectionQueue: React.FC = () => {
     setSampleTypeFilters,
     statusFilters,
     setStatusFilters,
+    urlFilters,
+    clearUrlFilters,
+    setUrlFilter,
   } = useLabQueueFilters({
     items: collectionDisplays,
     workflowType: 'collection',
@@ -108,6 +111,16 @@ export const SampleCollectionQueue: React.FC = () => {
         }
         filterRow={
           <>
+            {urlFilters && Object.keys(urlFilters).length > 0 && (
+              <UrlFilterBadges
+                urlFilters={urlFilters}
+                onClear={clearUrlFilters}
+                onClearSingle={(key) => {
+                  const urlKey = LAB_URL_FILTER_KEYS.find(k => k === key);
+                  if (urlKey) setUrlFilter(urlKey, undefined);
+                }}
+              />
+            )}
             <LabQueueFilters
               config={collectionFilterConfig}
               searchQuery={searchQuery}

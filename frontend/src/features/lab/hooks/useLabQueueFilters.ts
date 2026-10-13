@@ -3,12 +3,16 @@
  *
  * Eliminates boilerplate of wiring getOrderDate, getSampleType, getStatus,
  * searchFilterFn callbacks across SampleCollectionQueue, ResultEntryQueue, ResultValidationQueue.
+ * 
+ * Now supports URL-synced entity filters (sampleId, orderId, testId) for cross-page navigation.
  */
 
 import { useMemo } from 'react';
 import { useLabQueueFilterState, type UseLabQueueFilterStateOptions } from './useLabQueueFilterState';
 import { useLabQueueUrlSearch } from './useLabQueueFilterState';
 import { createLabQueueSearchFilter } from '../components/LabWorkflowQueueLayout';
+import { usePageFilters } from '@/hooks/usePageFilters';
+import { LAB_URL_FILTER_KEYS } from '../config/labFilters.config';
 import { displayId } from '@/utils';
 import type { SampleCollectionQueueItem } from '../types';
 import type { TestWithContextResult } from '../types';
@@ -134,6 +138,11 @@ export function useLabQueueFilters<T extends WorkflowType>({
 }: UseLabQueueFiltersOptions<T>) {
   const urlSearch = useLabQueueUrlSearch();
 
+  // URL-synced entity filters for cross-page navigation
+  const { urlFilters, clearUrlFilters, setUrlFilter } = usePageFilters({
+    urlFilterKeys: LAB_URL_FILTER_KEYS,
+  });
+
   const filterConfig = useMemo(
     () => WORKFLOW_FILTER_CONFIGS[workflowType],
     [workflowType]
@@ -164,7 +173,15 @@ export function useLabQueueFilters<T extends WorkflowType>({
     ]
   );
 
-  return useLabQueueFilterState(
+  const result = useLabQueueFilterState(
     options as UseLabQueueFilterStateOptions<LabQueueItemByStage<T>, SampleStatus | TestStatus>
   );
+
+  // Extend return with URL filters for cross-page navigation awareness
+  return {
+    ...result,
+    urlFilters,
+    clearUrlFilters,
+    setUrlFilter,
+  };
 }

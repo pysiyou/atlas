@@ -11,8 +11,8 @@ import {
   useLabQueueFilters,
   useResultValidationQueueData,
 } from '../hooks';
-import { validationFilterConfig } from '../constants';
-import { ErrorBoundary } from '@/components';
+import { validationFilterConfig, LAB_URL_FILTER_KEYS } from '../constants';
+import { ErrorBoundary, UrlFilterBadges } from '@/components';
 import { SectionLoadingBoundary } from '@/components/loaders';
 import { useMinDisplay } from '@/hooks/useMinDisplay';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
@@ -88,6 +88,9 @@ export const ResultValidationQueue: React.FC = () => {
     setSampleTypeFilters,
     statusFilters: priorityFilters,
     setStatusFilters: setPriorityFilters,
+    urlFilters,
+    clearUrlFilters,
+    setUrlFilter,
   } = useLabQueueFilters({
     items: allTests,
     workflowType: 'validationReview',
@@ -136,17 +139,29 @@ export const ResultValidationQueue: React.FC = () => {
       <SectionLoadingBoundary loading={sectionLoading} message="Loading validation..." size="lg">
         <LabWorkflowQueueScaffold
           filterRow={
-            <LabQueueFilters
-              config={validationFilterConfig}
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              dateRange={dateRange}
-              onDateRangeChange={setDateRange}
-              sampleTypeFilters={sampleTypeFilters}
-              onSampleTypeFiltersChange={setSampleTypeFilters}
-              statusFilters={priorityFilters}
-              onStatusFiltersChange={setPriorityFilters}
-            />
+            <>
+              {urlFilters && Object.keys(urlFilters).length > 0 && (
+                <UrlFilterBadges
+                  urlFilters={urlFilters}
+                  onClear={clearUrlFilters}
+                  onClearSingle={(key) => {
+                    const urlKey = LAB_URL_FILTER_KEYS.find(k => k === key);
+                    if (urlKey) setUrlFilter(urlKey, undefined);
+                  }}
+                />
+              )}
+              <LabQueueFilters
+                config={validationFilterConfig}
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                dateRange={dateRange}
+                onDateRangeChange={setDateRange}
+                sampleTypeFilters={sampleTypeFilters}
+                onSampleTypeFiltersChange={setSampleTypeFilters}
+                statusFilters={priorityFilters}
+                onStatusFiltersChange={setPriorityFilters}
+              />
+            </>
           }
         >
           <ResultValidationQueueView

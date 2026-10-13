@@ -12,8 +12,8 @@ import { ResultEntryCard } from '../workflow';
 import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabWorklistPaginationNotice } from '../components/LabWorklistPaginationNotice';
 import { LabQueueFilters } from '../components/LabQueueFilters';
-import { entryFilterConfig } from '../constants';
-import { EMPTY_COPY, ErrorBoundary } from '@/components';
+import { entryFilterConfig, LAB_URL_FILTER_KEYS } from '../constants';
+import { EMPTY_COPY, ErrorBoundary, UrlFilterBadges } from '@/components';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { useResultEntryWorkflow } from './useResultEntryWorkflow';
@@ -51,6 +51,9 @@ export const ResultEntryQueue: React.FC = () => {
     setSampleTypeFilters,
     statusFilters,
     setStatusFilters,
+    urlFilters,
+    clearUrlFilters,
+    setUrlFilter,
   } = useLabQueueFilters({
     items: allTests,
     workflowType: 'entry',
@@ -108,6 +111,16 @@ export const ResultEntryQueue: React.FC = () => {
         emptyDescription={EMPTY_COPY.pendingResults.description}
         filterRow={
           <>
+            {urlFilters && Object.keys(urlFilters).length > 0 && (
+              <UrlFilterBadges
+                urlFilters={urlFilters}
+                onClear={clearUrlFilters}
+                onClearSingle={(key) => {
+                  const urlKey = LAB_URL_FILTER_KEYS.find(k => k === key);
+                  if (urlKey) setUrlFilter(urlKey, undefined);
+                }}
+              />
+            )}
             <LabQueueFilters
               config={entryFilterConfig}
               searchQuery={searchQuery}

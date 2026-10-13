@@ -1,8 +1,8 @@
 /** Lab search keys, result presence, collection lookup filters, and queue deep-links. */
 import type { TestWithContext, OrderTest } from '@/types';
-import { displayId } from '@/utils';
+import { displayId, buildFilteredUrl } from '@/utils';
 import type { TestStatus } from '@/types/enums';
-import { getLabQueueUrl, getLabTabForTestStatus, type LabTabId } from '../constants/labConstants';
+import { getLabQueueUrl, getLabTabForTestStatus, getLabTabPath, type LabTabId } from '../constants/labConstants';
 
 export function orderTestKey(orderTestId: number): string {
   return `test-${orderTestId}`;
@@ -25,14 +25,38 @@ export function resolveCollectionStatusFilters<T extends string>(
 }
 
 /**
- * Returns a lab queue URL for an order test, or null if not in an actionable queue.
+ * Returns a lab queue URL for an order test with proper filter support.
+ * Uses URL filters (testId, orderId) for direct navigation to the test in the queue.
  */
 export function getLabQueueUrlForTest(test: OrderTest, orderId: number): string | null {
   const tab = getLabTabForTestStatus(test.status as TestStatus);
   if (!tab) return null;
 
+  // Use URL filters for direct test navigation
+  if (test.id) {
+    return buildFilteredUrl(getLabTabPath(tab), { 
+      testId: String(test.id),
+      orderId: String(orderId) 
+    });
+  }
+
+  // Fallback to search-based URL (for tests without IDs)
   const searchTerms = [displayId.order(orderId), test.testCode].filter(Boolean);
   return getLabQueueUrl(tab, { search: searchTerms.join(' ') });
+}
+
+/**
+ * Build URL to lab queue filtered by sample ID.
+ */
+export function getLabQueueUrlForSample(sampleId: number | string, tab: LabTabId = 'collection'): string {
+  return buildFilteredUrl(getLabTabPath(tab), { sampleId: String(sampleId) });
+}
+
+/**
+ * Build URL to lab queue filtered by order ID.
+ */
+export function getLabQueueUrlForOrder(orderId: number | string, tab: LabTabId = 'collection'): string {
+  return buildFilteredUrl(getLabTabPath(tab), { orderId: String(orderId) });
 }
 
 export { getLabTabForTestStatus, getLabQueueUrl, type LabTabId };

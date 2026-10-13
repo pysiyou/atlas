@@ -23,7 +23,7 @@ export type { LabTabId, LabTimelineLane, LabWorkflowKpiStage, LabWorkflowStage }
 
 export { ResultsParameterGrid } from './components/ResultsParameterGrid';
 
-export { getLabQueueUrl, getLabQueueUrlForTest, hasTestResults } from './utils/labSearchAndLinks';
+export { getLabQueueUrl, getLabQueueUrlForTest, getLabQueueUrlForSample, getLabQueueUrlForOrder, hasTestResults } from './utils/labSearchAndLinks';
 export { formatVolume } from './utils/labSample';
 export { formatRejectionCriteriaList } from './utils/catalogRejectionCriteria';
 export { parseResultEntry, statusMapFromFlags } from './utils/labResult';

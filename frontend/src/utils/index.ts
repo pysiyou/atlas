@@ -32,3 +32,6 @@ export * from './constants';
 // Filtering (pure functions + types; hooks are in @/hooks/useClientListFilter)
 export * from './filtering';
 export * from './formatDuration';
+
+// Filter URL encoding/decoding and navigation
+export * from './filters';
