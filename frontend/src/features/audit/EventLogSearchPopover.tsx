@@ -4,7 +4,7 @@
 import React from 'react';
 import { Avatar, Icon, SpinnerLoader } from '@/components';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
-import { OrderSelectPopoverShell } from '@/features/orders/components/OrderSelectPopoverShell';
+import { OrderSelectPopoverShell } from '@/features/orders';
 import { CONTROL, TYPE } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 import type { AuditSearchPreviewResponse } from './api';
@@ -24,7 +24,7 @@ export interface EventLogSearchPopoverProps {
 
 const ROW_CLASS = cn(
   'w-full text-left px-space-3 py-space-2',
-  'transition-colors flex items-center gap-space-2',
+  'transition-colors cursor-pointer flex items-center gap-space-2',
   'hover:bg-surface-page bg-surface',
   CONTROL.focusVisibleTight
 );

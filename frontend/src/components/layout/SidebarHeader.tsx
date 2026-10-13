@@ -43,7 +43,13 @@ export function SidebarHeader({
         <button
           type="button"
           onClick={isCollapsed && !onMobileClose ? onToggleCollapse : undefined}
-          className={`${RADIUS.field} transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]`}
+          className={cn(
+            RADIUS.field,
+            'transition-transform duration-200',
+            isCollapsed && !onMobileClose
+              ? 'cursor-pointer hover:scale-[1.03] active:scale-[0.98]'
+              : 'cursor-default',
+          )}
           title={isCollapsed && !onMobileClose ? 'Expand sidebar' : displayName}
           aria-label={isCollapsed && !onMobileClose ? 'Expand sidebar' : displayName}
         >

@@ -9,6 +9,10 @@ import { formatCurrency } from '@/utils';
 import { renderDateTimeCell, renderPatientNameBlock } from '@/utils/tableColumnRenders';
 import type { OrderTest } from '@/types';
 import { TABLE_TYPE } from '@/components/theme/recipes';
+import {
+  buildOrderTestsBlockPreview,
+  type OrderTestsBlockLayout,
+} from './orderTestsBlockPreview';
 
 export function renderOrderId(orderId: string | number, clickable = false): ReactNode {
   return <EntityId type="order" value={orderId} variant={clickable ? 'clickable' : 'block'} />;
@@ -25,7 +29,7 @@ export function renderOrderPatientName(patientName: string, patientId: string | 
   return renderPatientNameWithId(patientName, patientId);
 }
 
-export type OrderTestsBlockLayout = 'countFirst' | 'namesFirst';
+export type { OrderTestsBlockLayout };
 
 export interface RenderOrderTestsBlockOptions {
   fallbackCount?: number;
@@ -43,61 +47,40 @@ export function renderOrderTestsBlock(
 ): ReactNode {
   const resolved: RenderOrderTestsBlockOptions =
     typeof options === 'number' ? { fallbackCount: options } : (options ?? {});
-  const { fallbackCount, testCodes, getTestName, layout = 'countFirst', showAllNames = false } =
-    resolved;
 
-  const activeCount =
-    fallbackCount ??
-    (activeTests.length > 0 ? activeTests.length : (testCodes?.length ?? 0));
+  const preview = buildOrderTestsBlockPreview({
+    activeTests,
+    ...resolved,
+  });
 
-  const labels =
-    activeTests.length > 0
-      ? activeTests.map(t => t.testName || t.testCode)
-      : (testCodes ?? []).map(code => getTestName?.(code) || code);
-
-  if (layout === 'namesFirst') {
-    const preview =
-      labels.length === 0
-        ? activeCount > 0
-          ? `${activeCount} test${activeCount !== 1 ? 's' : ''}`
-          : ''
-        : showAllNames
-          ? labels.join(', ')
-          : labels.length === 1
-            ? labels[0]
-            : labels.length === 2
-              ? labels.join(', ')
-              : `${labels.slice(0, 2).join(', ')}, +${labels.length - 2} more`;
-
-    if (!preview) {
+  if (resolved.layout === 'namesFirst') {
+    if (!preview.namesFirstPreview) {
       return null;
     }
+
+    const showAllNames = resolved.showAllNames ?? false;
 
     return (
       <div className="min-w-0 w-full font-normal text-left">
         <div
           className={`${TABLE_TYPE.cell} wrap-break-word font-normal text-left${showAllNames ? '' : ' line-clamp-2'}`}
-          title={!showAllNames && labels.length > 0 ? labels.join(', ') : undefined}
+          title={!showAllNames && preview.labels.length > 0 ? preview.labels.join(', ') : undefined}
         >
-          {preview}
+          {preview.namesFirstPreview}
         </div>
       </div>
     );
   }
 
-  const firstName = labels[0];
-  const secondary =
-    firstName && labels.length > 1
-      ? `${firstName}, +${labels.length - 1}`
-      : firstName ?? '';
+  const { activeCount, countFirstSecondary } = preview;
 
   return (
     <div className="min-w-0 font-normal">
       <div className="text-text-primary truncate font-normal">
         {activeCount} test{activeCount !== 1 ? 's' : ''}
       </div>
-      {secondary ? (
-        <div className={`${TABLE_TYPE.meta} truncate font-normal`}>{secondary}</div>
+      {countFirstSecondary ? (
+        <div className={`${TABLE_TYPE.meta} truncate font-normal`}>{countFirstSecondary}</div>
       ) : null}
     </div>
   );

@@ -34,11 +34,12 @@ export {
   DetailGrid,
   ModalFooter,
   labModalSubtitle,
+  type LabModalStage,
   type QueueModalShellProps,
   type DetailGridSectionConfig,
 } from './detailModalLayout';
 
 export { SampleCollectionDetailModal } from './detailModal.sampleCollection';
 export { ResultEntryDetailModal } from './detailModal.resultEntry';
-export { ResultValidationDetailModal } from './detailModal.resultValidation';
+export { TestDetailModal } from './detailModal.test';
 export { EscalationResolutionModal } from './detailModal.escalation';

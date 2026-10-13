@@ -114,13 +114,17 @@ export function useResultValidationWorkflow(queueLoading: boolean): ResultValida
       void (async () => {
         try {
           const enriched = await resultAPI.getOrderTestContext(test.id!);
-          openModal(ModalType.VALIDATION_DETAIL, {
+          openModal(ModalType.TEST_DETAIL, {
+            orderTestId: test.id!,
             test: enriched,
-            commentKey,
-            comments: comments[commentKey] || '',
-            onCommentsChange: handleCommentsChange,
-            onApprove: () => handleValidate(test.id!, test.orderId, true),
-            onReject: result => handleValidate(test.id!, test.orderId, false, result),
+            interaction: 'validate',
+            validation: {
+              commentKey,
+              comments: comments[commentKey] || '',
+              onCommentsChange: handleCommentsChange,
+              onApprove: () => handleValidate(test.id!, test.orderId, true),
+              onReject: result => handleValidate(test.id!, test.orderId, false, result),
+            },
           });
         } catch (error) {
           logger.error('Error loading validation context', error instanceof Error ? error : undefined);

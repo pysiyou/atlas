@@ -38,7 +38,7 @@ export const TABLE_TYPE = {
   datetimeSecondary: `type-caption text-text-tertiary tabular-nums`,
   label: `${TABLE_TEXT_SCALE} text-text-secondary`,
   caption: `${TABLE_TEXT_SCALE} text-text-tertiary`,
-  link: `${TABLE_TEXT_SCALE} text-brand underline`,
+  link: `${TABLE_TEXT_SCALE} text-brand underline cursor-pointer`,
 } as const;
 
 /** DataTable shell layout — pairs with TABLE_TYPE + TABLE_CELL padding. */
@@ -540,7 +540,7 @@ export const CHROME = {
     'flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto py-chrome-nav-menu-gutter hide-scrollbar',
   navList: `flex flex-col ${SPACING.gapCompact}`,
   navItem:
-    'group/nav relative flex min-h-chrome-nav-indicator w-full items-stretch text-left',
+    'group/nav relative flex min-h-chrome-nav-indicator w-full items-stretch text-left cursor-pointer',
   navHit:
     `flex min-h-chrome-nav-indicator w-full min-w-0 flex-1 items-center overflow-hidden ${RADIUS.field} text-text-secondary transition-colors duration-200 ease-out`,
   navHitHover: 'group-hover/nav:bg-surface-hover',

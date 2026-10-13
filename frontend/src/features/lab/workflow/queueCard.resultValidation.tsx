@@ -1,6 +1,7 @@
 /**
  * Result validation queue card — desktop/mobile shells, left header, data hooks.
  */
+/* eslint-disable react-refresh/only-export-components -- queue card + colocated data hook */
 
 import { useMemo, type FC } from 'react';
 import { actionButtonPreset, Button, Card } from '@/components';

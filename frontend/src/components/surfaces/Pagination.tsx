@@ -59,13 +59,13 @@ export const Pagination: React.FC<PaginationProps> = ({
   }, [currentPage, totalPages]);
 
   const getPageButtonClasses = (isActive: boolean) => {
-    const base = `min-w-[26px] h-6 px-space-1-5 ${PAGINATION_TYPE.pageButtonBase} ${RADIUS.field} transition-colors ${CONTROL.focusVisibleTight}`;
+    const base = `min-w-[26px] h-6 px-space-1-5 cursor-pointer ${PAGINATION_TYPE.pageButtonBase} ${RADIUS.field} transition-colors ${CONTROL.focusVisibleTight}`;
     return isActive
       ? `${base} bg-brand text-on-brand`
       : `${base} text-text-primary border border-border-default bg-surface hover:border-border-hover hover:bg-surface-hover`;
   };
 
-  const navButtonClass = `w-6 h-6 flex shrink-0 items-center justify-center ${RADIUS.field} border border-transparent text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary ${CONTROL.focusVisibleTight} disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-text-secondary`;
+  const navButtonClass = `w-6 h-6 flex shrink-0 cursor-pointer items-center justify-center ${RADIUS.field} border border-transparent text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary ${CONTROL.focusVisibleTight} disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-text-secondary`;
 
   return (
     <div className="flex min-h-[2.75rem] shrink-0 flex-wrap items-center justify-between gap-x-space-3 gap-y-space-2 border-t border-border-default bg-surface px-space-3 py-space-2">

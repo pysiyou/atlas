@@ -13,7 +13,7 @@ import type { LabPipelineStage } from './monitorModel';
 import type { PriorityLevel, TestStatus } from '@/types';
 import type { StatusPresentation } from '@/types/labProjection';
 import { cn, displayId } from '@/utils';
-import { getOrderTestLineageRowClass } from '@/features/orders/utils/orderTestLineage';
+import { getOrderTestLineageRowClass } from '@/features/orders';
 import { MONITOR_ROW_INTERACTIVE } from './monitorStyles';
 import { createLabOrdersTableConfig } from './LabOrdersTable.config';
 

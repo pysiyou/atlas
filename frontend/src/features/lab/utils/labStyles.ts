@@ -58,7 +58,7 @@ export const LAB_MODAL_TYPOGRAPHY = {
 
 /** Card-only alert row (warnings, queue urgency, attempts). */
 export const LAB_CARD_ALERT = {
-  row: `flex min-w-0 w-full flex-col ${SPACING.gapHairline} ${TYPE.meta} leading-snug`,
+  row: `flex min-w-0 w-full flex-col ${SPACING.gapHairline} ${TYPE.label} leading-snug`,
 } as const;
 
 // Typography Constants (shared tokens for body/metadata; lab-specific for title/section)
@@ -70,7 +70,8 @@ export const LAB_CARD_TYPOGRAPHY = {
   fieldValue: TYPE.value,
   patientName: 'font-normal text-text-primary capitalize',
   bodyText: TYPE.label,
-  metadata: TYPE.meta,
+  /** Queue/modal header ops rows — same scale as primary lines; color conveys hierarchy. */
+  metadata: TYPE.label,
   separator: 'text-text-disabled',
   emphasizedInline: 'text-text-primary',
   flagText: `${FIELD_ERROR}`,
@@ -144,7 +145,7 @@ export const LAB_CARD_LIST_ITEMS = {
 // Context Row Constants (Patient/Order info)
 export const LAB_CARD_CONTEXT = {
   container:
-    `flex items-baseline gap-x-space-2 gap-y-0 ${TYPE.meta} flex-wrap min-w-0 w-full leading-snug`,
+    `flex items-baseline gap-x-space-2 gap-y-0 ${TYPE.label} flex-wrap min-w-0 w-full leading-snug`,
   patientName: 'font-normal text-text-primary capitalize',
   separator: 'text-text-disabled select-none',
   inlineDot: '•',
@@ -153,9 +154,9 @@ export const LAB_CARD_CONTEXT = {
 /** Queue card two-line identity (sample + test workflow cards). */
 export const LAB_CARD_QUEUE_IDENTITY = {
   primaryLine: `flex items-baseline gap-x-space-2 gap-y-0 ${TYPE.label} flex-wrap min-w-0 w-full leading-snug`,
-  secondaryLine: `flex items-baseline gap-x-space-2 gap-y-0 ${TYPE.meta} flex-wrap min-w-0 w-full leading-snug`,
+  secondaryLine: `flex items-baseline gap-x-space-2 gap-y-0 ${TYPE.label} flex-wrap min-w-0 w-full leading-snug`,
   secondaryText: 'font-normal text-text-secondary',
-  secondaryDate: 'whitespace-nowrap text-text-secondary tabular-nums',
+  secondaryDate: `whitespace-nowrap tabular-nums ${TYPE.label} text-text-secondary`,
 } as const;
 
 /** @deprecated Use LAB_CARD_QUEUE_IDENTITY */

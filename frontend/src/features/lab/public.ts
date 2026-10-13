@@ -10,7 +10,7 @@ export type {
   TestWithContext,
 } from './types';
 
-export { useSampleLookup } from './api/samples';
+export { sampleAPI, useSampleLookup } from './api/samples';
 
 export {
   useLabStageQueueCounts,
@@ -23,7 +23,8 @@ export type { LabTabId, LabTimelineLane, LabWorkflowKpiStage, LabWorkflowStage }
 
 export { ResultsParameterGrid } from './components/ResultsParameterGrid';
 
-export { getLabQueueUrl, getLabQueueUrlForTest } from './utils/labSearchAndLinks';
+export { getLabQueueUrl, getLabQueueUrlForTest, hasTestResults } from './utils/labSearchAndLinks';
+export { formatVolume } from './utils/labSample';
 export { formatRejectionCriteriaList } from './utils/catalogRejectionCriteria';
 export { parseResultEntry, statusMapFromFlags } from './utils/labResult';
 
@@ -35,7 +36,7 @@ export { ResultValidationQueue } from './validation/ResultValidationQueue';
 export { LabMonitorBoard } from './monitor/LabMonitorBoard';
 
 export { LabWorkflowQueueLayout } from './components/LabWorkflowQueueLayout';
-export { QueueCard, QueueModalShell } from './workflow';
+export { QueueCard } from './workflow';
 export { LabQueueFilters } from './components/LabQueueFilters';
 
 export {
@@ -57,8 +58,17 @@ export {
 export {
   SampleCollectionDetailModal,
   ResultEntryDetailModal,
-  ResultValidationDetailModal,
+  TestDetailModal,
   EscalationResolutionModal,
+  QueueModalShell,
+  ModalFooter,
+  labModalSubtitle,
+  type LabModalStage,
 } from './workflow';
+export { ResultValidationForm } from './validation/ResultValidationForm';
+export { TestHeaderBadges } from './components/LabWorkflowBadges';
+export { TestWorkflowCardLeftColumn } from './workflow/queueCard.testWorkflowLeftColumn';
+export { useSampleRejectionDisplay } from './hooks/useSampleRejectionDisplay';
+export { SampleRejectedBanner } from './components/SampleRejectedBanner';
 
 export { PendingCriticalValuesPanel } from './criticalValues/PendingCriticalValuesPanel';

@@ -68,7 +68,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
                     className={cn(
                       CHROME.navIndicator,
                       SURFACE.raised,
-                      `text-text-primary ${SHADOW.subtle} hover:bg-surface-hover lg:hidden`,
+                      `cursor-pointer text-text-primary ${SHADOW.subtle} hover:bg-surface-hover lg:hidden`,
                     )}
                     aria-label="Open navigation menu"
                   >

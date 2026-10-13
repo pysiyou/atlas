@@ -5,44 +5,23 @@
 
 import React, { useMemo, useCallback, useEffect } from 'react';
 import { useNavigate, useParams, Navigate } from 'react-router-dom';
-import { SampleCollectionQueue } from '../collection/SampleCollectionQueue';
-import { ResultEntryQueue } from '../entry/ResultEntryQueue';
-import { ResultValidationQueue } from '../validation/ResultValidationQueue';
-import { LabMonitorBoard } from '../monitor/LabMonitorBoard';
-import { Icon, PageHeader, Badge, ErrorAlert } from '@/components';
-import { errorAlertMessage } from '@/utils/feedback';
+import { Icon, PageHeader } from '@/components';
 import { ICONS } from '@/config/icons';
-import { WORKSPACE, CONTROL } from '@/components/theme/recipes';
-import { LAB_WORKFLOW_QUEUE_SHELL, LAB_PAGE_TABS } from '../utils/labStyles';
+import { WORKSPACE } from '@/components/theme/recipes';
 import { useLabStageQueueCounts, getValidationTabCount } from '../hooks';
 import {
   DEFAULT_LAB_TAB,
   normalizeLabTabParam,
-  isLabWorkflowStageTab,
-  getStageVisual,
   LAB_COPY,
   LAB_TAB_LABELS,
   LAB_WORKFLOW_TAB_ICONS,
   type LabTabId,
   getLabTabPath,
 } from '../constants/labConstants';
-import { cn } from '@/utils';
 import { useAuthStore } from '@/app/authStore';
-import type { UserRole } from '@/types';
-
-const LAB_TECH_ROLES: UserRole[] = ['administrator', 'lab-technician', 'lab-technician-plus'];
-const COLLECTION_ROLES: UserRole[] = [
-  'administrator',
-  'receptionist',
-  'lab-technician',
-  'lab-technician-plus',
-];
-
-function tabAllowed(tab: LabTabId, hasRole: (roles: UserRole | UserRole[]) => boolean): boolean {
-  if (tab === 'collection') return hasRole(COLLECTION_ROLES);
-  if (tab === 'monitor') return hasRole(LAB_TECH_ROLES);
-  return hasRole(LAB_TECH_ROLES);
-}
+import { tabAllowed } from './laboratoryPageAccess';
+import { LaboratoryPageTabRail, type LaboratoryPageTabDef } from './LaboratoryPageTabRail';
+import { LaboratoryPageStageContent } from './LaboratoryPageStageContent';
 
 export const LaboratoryPage: React.FC = () => {
   const navigate = useNavigate();
@@ -74,8 +53,8 @@ export const LaboratoryPage: React.FC = () => {
     [navigate]
   );
 
-  const tabs = useMemo((): Array<{ id: LabTabId; label: string; icon: React.ReactNode; count?: number }> => {
-    const all: Array<{ id: LabTabId; label: string; icon: React.ReactNode; count?: number }> = [
+  const tabs = useMemo((): LaboratoryPageTabDef[] => {
+    const all: LaboratoryPageTabDef[] = [
       {
         id: 'collection',
         label: LAB_TAB_LABELS.collection,
@@ -125,87 +104,21 @@ export const LaboratoryPage: React.FC = () => {
         variant="bar"
         title={pageTitle}
         actions={
-          <div className={LAB_PAGE_TABS.rail}>
-            {tabs.map(tab => {
-              const isActive = activeTab === tab.id;
-              const hasCount = typeof tab.count === 'number' && tab.count > 0;
-              const stageVisual = isLabWorkflowStageTab(tab.id) ? getStageVisual(tab.id) : null;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => handleTabChange(tab.id)}
-                  className={cn(
-                    LAB_PAGE_TABS.buttonBase,
-                    isActive
-                      ? stageVisual
-                        ? `bg-surface ${stageVisual.text} ${CONTROL.segmentActive}`
-                        : LAB_PAGE_TABS.buttonActive
-                      : LAB_PAGE_TABS.buttonInactive,
-                  )}
-                >
-                  <div
-                    className={cn(
-                      'flex items-center',
-                      isActive
-                        ? stageVisual
-                          ? stageVisual.text
-                          : LAB_PAGE_TABS.iconActive
-                        : LAB_PAGE_TABS.iconInactive,
-                    )}
-                  >
-                    {tab.icon}
-                  </div>
-                  {tab.label}
-                  {hasCount && (
-                    <Badge
-                      variant={isActive ? 'primary' : 'default'}
-                      size="xs"
-                      className={LAB_PAGE_TABS.countBadgeMargin}
-                    >
-                      {tab.count}
-                    </Badge>
-                  )}
-                </button>
-              );
-            })}
-          </div>
+          <LaboratoryPageTabRail
+            tabs={tabs}
+            activeTab={activeTab}
+            onTabChange={handleTabChange}
+          />
         }
       />
 
-      <div
-        className={
-          activeTab === 'monitor' ? 'flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden' : LAB_WORKFLOW_QUEUE_SHELL
-        }
-      >
-        {isError && (
-          <div className={`${WORKSPACE.contentInset} shrink-0 pb-0`}>
-            <ErrorAlert
-              error={{
-                message: errorAlertMessage('lab.page.loadFailed', error),
-              }}
-              onRetry={() => refetch()}
-            />
-          </div>
-        )}
-        <div
-          className={`flex-1 flex flex-col min-h-0 overflow-hidden ${
-            activeTab === 'monitor' ? '' : 'bg-surface-page'
-          }`}
-        >
-          {activeTab === 'collection' && tabAllowed('collection', hasRole) && (
-            <SampleCollectionQueue />
-          )}
-          {activeTab === 'entry' && tabAllowed('entry', hasRole) && <ResultEntryQueue />}
-          {activeTab === 'validation' && tabAllowed('validation', hasRole) && (
-            <ResultValidationQueue />
-          )}
-          {activeTab === 'monitor' && tabAllowed('monitor', hasRole) && (
-            <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-              <LabMonitorBoard />
-            </div>
-          )}
-        </div>
-      </div>
+      <LaboratoryPageStageContent
+        activeTab={activeTab}
+        hasRole={hasRole}
+        isError={isError}
+        error={error}
+        onRetry={() => refetch()}
+      />
     </div>
   );
 };

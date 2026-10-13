@@ -7,13 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Panel } from '@/components';
 import { sampleAPI } from '../api/samples';
 import { queryKeys, cacheConfig } from '@/lib/query';
-import { useOrder } from '@/features/orders/api/orders';
-import { LinkedOrderTestsList } from '@/features/orders/components/LinkedOrderTestsList';
-import {
-  getRelatedOrderTestEntries,
-  getSampleRecollectionChain,
-  getSiblingOrderTestsOnSample,
-} from '@/features/orders/utils/orderTestRelations';
+import { useOrder, getSampleRecollectionChain, TestRelatedTestsPanel } from '@/features/orders';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
 import type { OrderTest, Sample } from '@/types';
 import type { TestWithContext } from '@/types';
@@ -30,50 +24,28 @@ export const LabRelatedTestsPanel: React.FC<LabRelatedTestsPanelProps> = ({ test
   const { openModal } = useModal();
   const { order } = useOrder(isOpen && test.orderId > 0 ? String(test.orderId) : undefined);
 
-  const currentRow = useMemo(
-    (): Pick<OrderTest, 'id' | 'sampleId' | 'testCode'> => ({
-      id: test.id,
-      sampleId: test.sampleId,
-      testCode: test.testCode,
-    }),
-    [test.id, test.sampleId, test.testCode]
+  const orderTest = useMemo(
+    () => (order?.tests && test.id != null ? order.tests.find(t => t.id === test.id) : undefined),
+    [order, test.id]
   );
 
-  const onSample = useMemo(
-    () => (order ? getSiblingOrderTestsOnSample(order, currentRow) : []),
-    [order, currentRow]
-  );
-  const sameTestEntries = useMemo(
-    () => (order ? getRelatedOrderTestEntries(order, currentRow) : []),
-    [order, currentRow]
-  );
-
-  const openOrderTest = (orderTest: OrderTest) => {
-    if (!order) return;
-    openModal(ModalType.ORDER_TEST_DETAIL, { order, orderTest, patient: null });
+  const openOrderTest = (row: OrderTest) => {
+    if (!order || row.id == null) return;
+    openModal(ModalType.TEST_DETAIL, {
+      orderTestId: row.id,
+      order,
+      orderTest: row,
+      patient: null,
+      interaction: 'view',
+    });
   };
 
-  if (!order || (onSample.length === 0 && sameTestEntries.length === 0)) {
+  if (!order || !orderTest) {
     return null;
   }
 
   return (
-    <Panel variant="lab" title="Related tests" className="w-full">
-      <div className="space-y-space-4">
-        {onSample.length > 0 ? (
-          <div className="space-y-space-2">
-            <p className={TYPE.sectionTitle}>On same sample</p>
-            <LinkedOrderTestsList tests={onSample} onOpen={openOrderTest} />
-          </div>
-        ) : null}
-        {sameTestEntries.length > 0 ? (
-          <div className="space-y-space-2">
-            <p className={TYPE.sectionTitle}>Other entries for this test</p>
-            <LinkedOrderTestsList tests={sameTestEntries} onOpen={openOrderTest} />
-          </div>
-        ) : null}
-      </div>
-    </Panel>
+    <TestRelatedTestsPanel order={order} orderTest={orderTest} onOpenOrderTest={openOrderTest} />
   );
 };
 

@@ -6,13 +6,21 @@ import {
   ENTITY_ID_CLICKABLE,
   ENTITY_ID_INLINE,
   ENTITY_ID_SECONDARY,
+  ENTITY_ID_HEADER_SECONDARY,
 } from '@/utils/constants';
 
-export type EntityIdVariant = 'default' | 'secondary' | 'block' | 'inline' | 'clickable';
+export type EntityIdVariant =
+  | 'default'
+  | 'secondary'
+  | 'headerSecondary'
+  | 'block'
+  | 'inline'
+  | 'clickable';
 
 const VARIANT_CLASSES: Record<EntityIdVariant, string> = {
   default: ENTITY_ID,
   secondary: ENTITY_ID_SECONDARY,
+  headerSecondary: ENTITY_ID_HEADER_SECONDARY,
   block: ENTITY_ID_BLOCK,
   inline: ENTITY_ID_INLINE,
   clickable: ENTITY_ID_CLICKABLE,
@@ -58,9 +66,12 @@ export function EntityId({
     return null;
   }
 
+  const resolvedVariant =
+    onClick != null && variant === 'default' ? 'clickable' : variant;
+
   return (
     <Component
-      className={cn(VARIANT_CLASSES[variant], 'font-normal', className)}
+      className={cn(VARIANT_CLASSES[resolvedVariant], 'font-normal', className)}
       title={title}
       onClick={onClick}
       {...rest}

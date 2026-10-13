@@ -3,22 +3,13 @@
  * Uses lab workflow Panel with fields inline (no nested section panels).
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Panel } from '@/components';
-import type { DetailFieldConfig } from '@/components/display/DetailFieldGroup';
 import { useUserLookup } from '@/lib/api/users';
-import {
-  OrderTestDetailFieldGrid,
-  splitDetailFieldsIntoTwoColumns,
-} from '../utils/orderTestDetailFieldColumns';
-import {
-  CONTAINER_COLOR_OPTIONS,
-  CONTAINER_CONFIG,
-  type ContainerType,
-  type Sample,
-  type Test,
-} from '@/types';
-import { formatVolume } from '@/features/lab/utils';
+import { OrderTestDetailFieldGrid } from '../utils/orderTestDetailFieldColumns';
+import { splitDetailFieldsIntoTwoColumns } from '../utils/orderTestDetailFieldLayout';
+import type { Sample, Test } from '@/types';
+import { buildSampleFields } from '../utils/buildSampleFields';
 import { PanelHeaderSegmentTabs } from '@/components/display/PanelHeaderSegmentTabs';
 import { INLINE_LINK, TYPE } from '@/components/theme/recipes';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
@@ -40,85 +31,6 @@ function sampleTabLabel(sample: Sample, linkedSampleId?: number): string {
     return `${id} (recollect)`;
   }
   return id;
-}
-
-function buildSampleFields(sample: Sample): DetailFieldConfig[] {
-  const isPending = sample.status === 'pending';
-  const isCollected = sample.status === 'collected';
-  const isRejected = sample.status === 'rejected';
-  const hasCollection = (isCollected || isRejected) && 'collectedAt' in sample;
-
-  const collectedVolume =
-    hasCollection && 'collectedVolume' in sample ? sample.collectedVolume : undefined;
-  const remainingVolume =
-    hasCollection && 'remainingVolume' in sample ? sample.remainingVolume : undefined;
-  const containerColor =
-    hasCollection && 'actualContainerColor' in sample ? sample.actualContainerColor : undefined;
-  const containerType =
-    hasCollection && 'actualContainerType' in sample
-      ? sample.actualContainerType
-      : sample.requiredContainerTypes?.[0];
-  const colorName = containerColor
-    ? CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerColor)?.label ?? 'N/A'
-    : undefined;
-
-  const fields: DetailFieldConfig[] = [
-    { label: 'Status', value: formatStatusBadgeLabel(sample.status) },
-    { label: 'Type', value: formatStatusBadgeLabel(sample.sampleType) },
-    {
-      label: 'Priority',
-      value: sample.priority ? formatStatusBadgeLabel(sample.priority) : undefined,
-    },
-    { label: 'Required', value: formatVolume(sample.requiredVolume) },
-  ];
-
-  if (isPending && sample.requiredContainerTypes?.length) {
-    fields.push({
-      label: 'Containers',
-      value: sample.requiredContainerTypes
-        .map(t => CONTAINER_CONFIG[t]?.label ?? t)
-        .join(', '),
-    });
-  }
-
-  if (hasCollection) {
-    fields.push(
-      { label: 'Collected', timestamp: sample.collectedAt, user: sample.collectedBy },
-      {
-        label: 'Vol. collected',
-        value: collectedVolume !== undefined ? formatVolume(collectedVolume) : undefined,
-      },
-      {
-        label: 'Remaining',
-        value: remainingVolume !== undefined ? formatVolume(remainingVolume) : undefined,
-      }
-    );
-    if (containerType) {
-      const containerLabel =
-        CONTAINER_CONFIG[containerType as ContainerType]?.label ?? containerType;
-      const containerText =
-        containerColor && colorName
-          ? `${containerLabel} · ${colorName} top`
-          : containerLabel;
-      fields.push({ label: 'Container', value: containerText });
-    }
-  }
-
-  if (sample.isRecollection) {
-    fields.push(
-      { label: 'Recollect #', value: String(sample.recollectionAttempt ?? '—') },
-      {
-        label: 'Original',
-        value:
-          sample.originalSampleId != null
-            ? displayId.sample(sample.originalSampleId)
-            : undefined,
-      },
-      { label: 'Reason', value: sample.recollectionReason }
-    );
-  }
-
-  return fields;
 }
 
 function CatalogSampleRequirements({ catalogTest }: { catalogTest: Test }) {
@@ -150,14 +62,10 @@ export const OrderTestSampleTabs: React.FC<OrderTestSampleTabsProps> = ({
   );
 
   const [activeTabId, setActiveTabId] = useState(() => tabs[0]?.id ?? '');
-  useEffect(() => {
-    if (tabs.length === 0) {
-      setActiveTabId('');
-      return;
-    }
-    if (!tabs.some(t => t.id === activeTabId)) {
-      setActiveTabId(tabs[0].id);
-    }
+  const resolvedActiveTabId = useMemo(() => {
+    if (tabs.length === 0) return '';
+    if (tabs.some(t => t.id === activeTabId)) return activeTabId;
+    return tabs[0].id;
   }, [tabs, activeTabId]);
 
   const segmentTabs = useMemo(
@@ -170,7 +78,7 @@ export const OrderTestSampleTabs: React.FC<OrderTestSampleTabsProps> = ({
       ? (
           <PanelHeaderSegmentTabs
             tabs={segmentTabs}
-            activeId={activeTabId}
+            activeId={resolvedActiveTabId}
             onTabChange={setActiveTabId}
           />
         )
@@ -185,7 +93,8 @@ export const OrderTestSampleTabs: React.FC<OrderTestSampleTabsProps> = ({
     );
   }
 
-  const activeSample = tabs.find(t => t.id === activeTabId)?.sample ?? samples[0];
+  const activeSample =
+    tabs.find(t => t.id === resolvedActiveTabId)?.sample ?? samples[0];
 
   return (
     <Panel variant="lab" title="Collection Requirements & Instructions" headerEnd={headerEnd}>

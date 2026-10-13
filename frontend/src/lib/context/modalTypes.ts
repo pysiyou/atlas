@@ -46,15 +46,24 @@ export interface ResultDetailProps {
   onSave: (finalResults?: Record<string, string>, finalNotes?: string) => void;
 }
 
-/** Payload for validation detail modal. */
-export interface ValidationDetailProps {
-  test: TestWithContext;
+/** Validation workflow callbacks when test detail modal is opened in validate mode. */
+export interface TestDetailValidationSession {
   commentKey: string;
   comments: string;
-  readOnly?: boolean;
   onCommentsChange: (commentKey: string, comments: string) => void;
-  onApprove: () => void;
+  onApprove: () => void | Promise<void>;
   onReject: (result: QualityIssueResult) => void;
+}
+
+/** Unified test detail modal (view or validate). */
+export interface TestDetailProps {
+  orderTestId: number;
+  order?: Order;
+  orderTest?: OrderTest;
+  patient?: Patient | null;
+  test?: TestWithContext;
+  interaction?: 'view' | 'validate';
+  validation?: TestDetailValidationSession;
 }
 
 /** Payload for escalation resolution modal. */
@@ -71,13 +80,6 @@ export interface OrderUpsertModalProps {
   mode?: 'create' | 'edit';
 }
 
-/** Payload for read-only order test detail modal (order detail page). */
-export interface OrderTestDetailProps {
-  order: Order;
-  orderTest: OrderTest;
-  patient?: Patient | null;
-}
-
 /**
  * Map of ModalType to the props payload passed to openModal(type, props).
  * Unregistered modals use empty object.
@@ -85,10 +87,9 @@ export interface OrderTestDetailProps {
 export interface ModalPropsMap {
   SAMPLE_DETAIL: SampleDetailByIdProps | SampleDetailPendingProps;
   RESULT_DETAIL: ResultDetailProps;
-  VALIDATION_DETAIL: ValidationDetailProps;
   ESCALATION_RESOLUTION_DETAIL: EscalationResolutionDetailProps;
   NEW_ORDER: OrderUpsertModalProps;
-  ORDER_TEST_DETAIL: OrderTestDetailProps;
+  TEST_DETAIL: TestDetailProps;
 }
 
 export type ModalPropsFor<T extends ModalType> = ModalPropsMap[T];

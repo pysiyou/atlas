@@ -1,12 +1,8 @@
 import React from 'react';
 import type { BadgeSize } from '@/components';
 import type { ContainerType, ContainerTopColor, Sample, RejectedSample } from '@/types';
-import { CONTAINER_CONFIG } from '@/types';
-import {
-  formatVolume,
-  getCollectionRequirements,
-} from '../utils';
 import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
+import { buildCollectionOperationalMetaItems } from '../utils/collectionOperationalMetaItems';
 import {
   LabPriorityBadge,
   SampleStatusBadge,
@@ -21,10 +17,8 @@ import type { StatusPresentation } from '@/types/labProjection';
 import {
   LabCardMetaRow,
   LabModalMetaRow,
-  QueueAgeMeta,
-  RecollectionRequestedMeta,
 } from './LabCardMetaRow';
-import { LAB_CONFIG } from '../constants';
+import { CollectionOperationalMetaItems } from './CollectionOperationalMetaItems';
 
 export interface CollectionHeaderBadgesProps {
   sample: Sample;
@@ -82,59 +76,17 @@ export interface CollectionCardMetaProps {
 }
 
 function CollectionOperationalMeta({
-  sample,
-  isPending,
-  isCollected,
-  isRejected,
-  rejectedSample = null,
-  orderDate,
-  requiredVolume,
-  collectedVolume,
-  effectiveContainerType,
-  containerColor,
-  colorName,
   MetaRow,
+  ...metaProps
 }: CollectionCardMetaProps & {
   MetaRow: typeof LabCardMetaRow | typeof LabModalMetaRow;
 }) {
-  const required = requiredVolume ?? sample.requiredVolume;
-  const derived = getCollectionRequirements(sample.sampleType);
-  const hasContainer =
-    (isCollected || isRejected) && Boolean(effectiveContainerType && containerColor);
-  const attempt = sample.recollectionAttempt ?? 1;
-  const max = LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS;
-  const showAttemptAlert = sample.isRecollection && attempt > 1;
+  const items = buildCollectionOperationalMetaItems(metaProps);
 
   return (
-    <>
-      <MetaRow>
-        {isPending && orderDate ? <QueueAgeMeta since={orderDate} /> : null}
-        {isPending && required != null ? <span>{formatVolume(required)} required</span> : null}
-        {(isCollected || isRejected) && collectedVolume != null ? (
-          <span>
-            {formatVolume(collectedVolume)} {isRejected ? 'was collected' : 'collected'}
-          </span>
-        ) : null}
-        {(isCollected || isRejected) && required != null ? (
-          <span>{formatVolume(required)} required</span>
-        ) : null}
-        {hasContainer && effectiveContainerType ? (
-          <span>
-            {CONTAINER_CONFIG[effectiveContainerType]?.label ?? effectiveContainerType}
-            {colorName && colorName !== 'N/A' ? ` · ${colorName} cap` : null}
-          </span>
-        ) : null}
-        {derived.isDerived ? <span>{derived.label}</span> : null}
-        {isRejected && rejectedSample?.recollectionSampleId ? (
-          <RecollectionRequestedMeta recollectionSampleId={rejectedSample.recollectionSampleId} />
-        ) : null}
-        {showAttemptAlert ? (
-          <span className={attempt >= max - 1 ? 'text-warning-fg' : undefined}>
-            Attempt {attempt}/{max}
-          </span>
-        ) : null}
-      </MetaRow>
-    </>
+    <MetaRow>
+      <CollectionOperationalMetaItems items={items} />
+    </MetaRow>
   );
 }
 

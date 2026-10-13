@@ -63,7 +63,7 @@ export function SidebarProfile({ currentUser, isCollapsed, onLogout }: SidebarPr
             <button
               type="button"
               className={cn(
-                `flex w-full items-center gap-space-2-5 px-space-2-5 py-space-2 text-left ${MENU_ITEM_TYPE}`,
+                `flex w-full cursor-pointer items-center gap-space-2-5 px-space-2-5 py-space-2 text-left ${MENU_ITEM_TYPE}`,
                 RADIUS.menuItem,
                 TONE.danger.fg,
                 'hover:bg-danger-bg transition-colors duration-150',

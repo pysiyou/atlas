@@ -101,18 +101,18 @@ function TestWorkflowIdentityLines({
   if (orderId) {
     if (line2.length > 0) line2.push(<InlineDot key="dot-ord" />);
     line2.push(
-      <EntityId key="ord" type="order" value={orderId} variant="secondary" className={idClass} />
+      <EntityId key="ord" type="order" value={orderId} variant="headerSecondary" className={idClass} />
     );
   }
   if (sampleId != null) {
     if (line2.length > 0) line2.push(<InlineDot key="dot-sam" />);
     line2.push(
-      <EntityId key="sam" type="sample" value={sampleId} variant="secondary" className={idClass} />
+      <EntityId key="sam" type="sample" value={sampleId} variant="headerSecondary" className={idClass} />
     );
   }
   if (testCode) {
     if (line2.length > 0) line2.push(<InlineDot key="dot-code" />);
-    line2.push(<EntityId key="code" variant="secondary" className={idClass}>{testCode}</EntityId>);
+    line2.push(<EntityId key="code" variant="headerSecondary" className={idClass}>{testCode}</EntityId>);
   }
 
   return (

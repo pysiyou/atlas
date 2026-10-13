@@ -21,10 +21,24 @@ export {
 export type { OrdersFilter, OrdersFilters, PaginationOptions } from './api/orders';
 
 export { useOrderSearch, useOrderLookup, useInvalidateOrders } from './hooks/useOrderDisplayHelpers';
+export { useOrderTestDetailSamples } from './hooks/useOrderTestDetailSamples';
+export {
+  buildTestContextForLabMeta,
+  getRelatedSamplesForOrderTest,
+} from './utils/orderTestDetailSamples';
 
 export { OrderUpsertModal } from './components/OrderUpsertModal';
 export type { OrderUpsertModalProps } from './components/OrderUpsertModal';
-export { OrderTestDetailModal } from './components/OrderTestDetailModal';
+export { TestRelatedTestsPanel } from './components/TestRelatedTestsPanel';
+export type { TestRelatedTestsPanelProps } from './components/TestRelatedTestsPanel';
+export { OrderTestSampleTabs } from './components/OrderTestSampleTabs';
+export type { OrderTestSampleTabsProps } from './components/OrderTestSampleTabs';
+export {
+  buildOrderTestOverviewFields,
+  buildOrderTestWorkflowFields,
+  formatPipelinePendingMessage,
+} from './utils/orderTestDetailSections';
+export type { OrderTestOverviewOptions, OrderTestWorkflowOptions } from './utils/orderTestDetailSections';
 export {
   OrderPriorityBadge,
   OrderStatusBadge,
@@ -33,6 +47,20 @@ export {
 export { OrderReceipt } from './components/OrderReceipt';
 export type { OrderReceiptProps, OrderReceiptVariant } from './components/OrderReceipt';
 export { OrderTableCard } from './components/OrderTableCard';
+export { OrderSelectPopoverShell } from './components/OrderSelectPopoverShell';
+export type { OrderSelectPopoverShellProps } from './components/OrderSelectPopoverShell';
+export { LinkedOrderTestsList } from './components/LinkedOrderTestsList';
+export type { LinkedOrderTestsListProps } from './components/LinkedOrderTestsList';
+export {
+  getRelatedOrderTestEntries,
+  getSampleRecollectionChain,
+  getSiblingOrderTestsOnSample,
+} from './utils/orderTestRelations';
+export {
+  findLinkedOrderTests,
+  getOrderTestLineageRowClass,
+} from './utils/orderTestLineage';
+export type { LinkedOrderTests } from './utils/orderTestLineage';
 export { BillingSummarySection } from './components/BillingSummarySection';
 export type { BillingSummarySectionProps } from './components/BillingSummarySection';
 export { FormDialogFooter } from '@/components/overlays/FormDialogFooter';

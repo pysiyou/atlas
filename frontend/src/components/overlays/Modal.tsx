@@ -128,7 +128,7 @@ function ModalBackdrop({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className={`fixed inset-0 ${className}`}
+      className={`fixed inset-0 cursor-default ${className}`}
       style={{ ...inlineStyle, opacity }}
       onClick={onClick}
     />

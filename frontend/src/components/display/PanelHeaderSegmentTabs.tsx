@@ -44,8 +44,8 @@ export function PanelHeaderSegmentTabs({
             onClick={() => onTabChange(tab.id)}
             className={
               isActive
-                ? `px-space-3 py-space-1-5 ${RADIUS.field} ${TYPE.value} font-normal bg-surface text-brand ${CONTROL.segmentActive}`
-                : `px-space-3 py-space-1-5 ${RADIUS.field} ${TYPE.value} font-normal text-text-tertiary hover:text-text-primary hover:bg-surface-hover`
+                ? `px-space-3 py-space-1-5 ${RADIUS.field} ${TYPE.value} font-normal cursor-pointer bg-surface text-brand ${CONTROL.segmentActive}`
+                : `px-space-3 py-space-1-5 ${RADIUS.field} ${TYPE.value} font-normal cursor-pointer text-text-tertiary hover:text-text-primary hover:bg-surface-hover`
             }
           >
             {tab.label}

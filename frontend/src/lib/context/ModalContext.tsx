@@ -21,10 +21,9 @@ import type { ModalPropsMap } from './modalTypes';
 export const ModalType = {
   SAMPLE_DETAIL: 'SAMPLE_DETAIL',
   RESULT_DETAIL: 'RESULT_DETAIL',
-  VALIDATION_DETAIL: 'VALIDATION_DETAIL',
   ESCALATION_RESOLUTION_DETAIL: 'ESCALATION_RESOLUTION_DETAIL',
   NEW_ORDER: 'NEW_ORDER',
-  ORDER_TEST_DETAIL: 'ORDER_TEST_DETAIL',
+  TEST_DETAIL: 'TEST_DETAIL',
 } as const;
 
 export type ModalType = (typeof ModalType)[keyof typeof ModalType];
