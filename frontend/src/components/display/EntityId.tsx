@@ -1,4 +1,5 @@
 import React, { type ElementType, type ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { cn, displayId, type EntityType } from '@/utils';
 import {
   ENTITY_ID,
@@ -8,6 +9,7 @@ import {
   ENTITY_ID_SECONDARY,
   ENTITY_ID_HEADER_SECONDARY,
 } from '@/utils/constants';
+import { createEntityFilterNavigateHandler, type EntityNavigateTarget } from '@/utils/filters';
 
 export type EntityIdVariant =
   | 'default'
