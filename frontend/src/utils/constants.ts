@@ -61,6 +61,9 @@ export const ENTITY_ID = 'entity-id';
 /** Smaller / muted ID under a primary label. */
 export const ENTITY_ID_SECONDARY = 'entity-id entity-id--secondary';
 
+/** Muted ID in queue/modal headers — same size as primary IDs, secondary color only. */
+export const ENTITY_ID_HEADER_SECONDARY = 'entity-id entity-id--header-secondary';
+
 /** ID as a block-level truncated cell. */
 export const ENTITY_ID_BLOCK = 'entity-id truncate block';
 

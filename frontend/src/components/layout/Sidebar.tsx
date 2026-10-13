@@ -65,7 +65,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="fixed inset-0 bg-overlay z-40"
+            className="fixed inset-0 z-40 cursor-default bg-overlay"
             onClick={onMobileClose}
             aria-hidden="true"
           />

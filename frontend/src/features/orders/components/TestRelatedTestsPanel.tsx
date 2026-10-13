@@ -12,13 +12,13 @@ import {
 } from '../utils/orderTestRelations';
 import { LinkedOrderTestsList } from './LinkedOrderTestsList';
 
-export type OrderTestRelatedTestsPanelProps = {
+export type TestRelatedTestsPanelProps = {
   order: Order;
   orderTest: OrderTest;
   onOpenOrderTest: (test: OrderTest) => void;
 };
 
-export const OrderTestRelatedTestsPanel: React.FC<OrderTestRelatedTestsPanelProps> = ({
+export const TestRelatedTestsPanel: React.FC<TestRelatedTestsPanelProps> = ({
   order,
   orderTest,
   onOpenOrderTest,

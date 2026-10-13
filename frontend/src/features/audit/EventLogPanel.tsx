@@ -12,23 +12,10 @@ import { EventLogFilters } from './EventLogFilters';
 import { useEventLog } from './useEventLog';
 import { useEventLogPanelState } from './useEventLogPanelState';
 import type {
-  EventLogFilterField,
   EventLogFilterUiConfig,
   EventLogQuery,
   EventLogUserFilters,
 } from './types';
-
-/** Global Event Log page — simplified filter bar. */
-export const GLOBAL_EVENT_LOG_FILTER_FIELDS: EventLogFilterField[] = [
-  'search',
-  'dateRange',
-  'kind',
-  'actorRole',
-];
-
-/** @deprecated Prefer GLOBAL_EVENT_LOG_FILTER_FIELDS on the global page. */
-const ALL_FILTER_FIELDS: EventLogFilterField[] = GLOBAL_EVENT_LOG_FILTER_FIELDS;
-
 export type EventLogPanelLayout = 'standalone' | 'embedded';
 
 export interface EventLogPanelProps {
@@ -268,4 +255,3 @@ export const BillingEventLogPanel: React.FC<{ orderId: number; className?: strin
   />
 );
 
-export { ALL_FILTER_FIELDS };

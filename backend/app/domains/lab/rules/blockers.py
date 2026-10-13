@@ -9,11 +9,13 @@ from app.shared.contracts.enums import (
     PriorityLevel,
 )
 from app.shared.contracts.lab_blockers import (
-    ATTENTION_TYPE_SORT as _GENERATED_ATTENTION_SORT,
+    ATTENTION_LABELS,
 )
 from app.shared.contracts.lab_blockers import (
-    ATTENTION_LABELS,
     ATTENTION_TYPE_BY_REASON as _GENERATED_ATTENTION,
+)
+from app.shared.contracts.lab_blockers import (
+    ATTENTION_TYPE_SORT as _GENERATED_ATTENTION_SORT,
 )
 from app.shared.contracts.lab_blockers import (
     PRIORITY_ATTENTION_TYPES as _GENERATED_PRIORITY_ATTENTION,

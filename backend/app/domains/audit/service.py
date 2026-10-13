@@ -16,14 +16,6 @@ from app.domains.audit.kinds import (
     kinds_to_prefixes,
     stored_event_scope_for_type,
 )
-from app.domains.audit.search import (
-    access_event_types_to_hide,
-    apply_unified_search,
-    classify_search_term,
-    format_entity_display_id,
-)
-from app.domains.patients.models import Patient
-from sqlalchemy import func
 from app.domains.audit.models import AuditEvent
 from app.domains.audit.schemas import (
     AuditEventCreate,
@@ -38,9 +30,16 @@ from app.domains.audit.schemas import (
     EventTarget,
     EventType,
 )
+from app.domains.audit.search import (
+    access_event_types_to_hide,
+    apply_unified_search,
+    classify_search_term,
+    format_entity_display_id,
+)
 from app.domains.orders.models import Order, OrderTest
+from app.domains.patients.models import Patient
 from app.domains.users.models import User
-from sqlalchemy import and_, false, or_, tuple_
+from sqlalchemy import and_, false, func, or_, tuple_
 from sqlalchemy.orm import Session
 
 # ── Persist ──────────────────────────────────────────────────────────────

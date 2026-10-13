@@ -20,12 +20,51 @@
   color: var(--id-color-secondary);
 }
 
+.entity-id--header-secondary {
+  font-size: var(--id-font-size);
+  font-weight: var(--id-font-weight);
+  color: var(--id-color-secondary);
+  letter-spacing: var(--id-letter-spacing);
+}
+
 .entity-id--clickable {
   cursor: pointer;
 }
 
 .entity-id--clickable:hover {
   text-decoration: underline;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Interactive elements — consistent pointer / disabled cursors app-wide
+   ───────────────────────────────────────────────────────────────────────── */
+
+:where(
+  button:not(:disabled),
+  a[href],
+  [role='button']:not([aria-disabled='true']),
+  [role='menuitem']:not([aria-disabled='true']),
+  [role='tab']:not([aria-disabled='true']),
+  [role='checkbox']:not([aria-disabled='true']),
+  [role='radio']:not([aria-disabled='true']),
+  [role='option']:not([aria-disabled='true']),
+  label[for],
+  select:not(:disabled),
+  summary
+) {
+  cursor: pointer;
+}
+
+:where(
+  button:disabled,
+  select:disabled,
+  [aria-disabled='true']
+) {
+  cursor: not-allowed;
+}
+
+:where(input[type='checkbox']:not(:disabled), input[type='radio']:not(:disabled)) {
+  cursor: pointer;
 }
 
 :is(h1, h2, h3, h4) .entity-id,

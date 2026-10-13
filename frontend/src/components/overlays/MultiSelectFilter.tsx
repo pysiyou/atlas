@@ -118,7 +118,8 @@ function MultiSelectTriggerContent({
           'h-5 min-w-[20px] px-space-1.5',
           RADIUS.pill,
           'bg-brand-muted',
-          'type-caption text-text-primary',
+          TYPE.caption,
+          'text-text-primary',
           'font-medium tabular-nums leading-none'
         )}
         aria-hidden

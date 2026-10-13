@@ -22,12 +22,12 @@ from app.domains.lab.rules.eligibility import (
     effective_deny_reason,
     escalation_action_flags,
 )
-from app.domains.lab.schemas.allowed_actions import LabWorklistAllowedActions
-from app.domains.orders.models import Order, OrderTest
 from app.domains.lab.rules.status_presentation import (
     resolve_sample_presentation,
     resolve_test_presentation,
 )
+from app.domains.lab.schemas.allowed_actions import LabWorklistAllowedActions
+from app.domains.orders.models import Order, OrderTest
 from app.shared.contracts.enums import TestStatus
 from app.shared.contracts.lab_blockers import ATTENTION_LABELS, reason_blocks_progress
 from app.shared.schemas.status_presentation import StatusPresentation

@@ -1,6 +1,7 @@
 /**
  * Shared layout for lab workflow detail modals — shell, field grid, footer, stage subtitle.
  */
+/* eslint-disable react-refresh/only-export-components -- modal shell + stage subtitle helpers */
 
 import React, { type ReactNode } from 'react';
 import { Modal, Panel, DetailFieldGroup, FooterInfo, DialogFooter } from '@/components';

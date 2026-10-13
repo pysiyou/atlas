@@ -4,7 +4,7 @@
 
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { sampleAPI } from '@/features/lab/api/samples';
+import { sampleAPI } from '@/features/lab';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import type { OrderTest, Sample } from '@/types';
 import { getRelatedSamplesForOrderTest } from '../utils/orderTestDetailSamples';

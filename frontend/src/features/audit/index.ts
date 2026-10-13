@@ -20,10 +20,9 @@ export {
   PatientEventLogPanel,
   LabMonitorEventLogPanel,
   BillingEventLogPanel,
-  ALL_FILTER_FIELDS,
-  GLOBAL_EVENT_LOG_FILTER_FIELDS,
   type EventLogPanelLayout,
 } from './EventLogPanel';
+export { ALL_FILTER_FIELDS, GLOBAL_EVENT_LOG_FILTER_FIELDS } from './eventLogFilterFields';
 export { useEventLog } from './useEventLog';
 export { useEventLogPanelState } from './useEventLogPanelState';
 export { fetchAuditEvents, normalizeAuditEvent } from './api';

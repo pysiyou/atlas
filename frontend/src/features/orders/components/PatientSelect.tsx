@@ -212,7 +212,7 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                       }}
                       className={cn(
                         'w-full text-left px-space-3 py-space-2',
-                        'transition-colors flex items-center gap-space-2',
+                        'transition-colors cursor-pointer flex items-center gap-space-2',
                         'hover:bg-surface-page',
                         `${CONTROL.focusVisibleTight}`,
                         isSelected ? 'bg-surface-page' : 'bg-surface'

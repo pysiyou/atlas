@@ -10,10 +10,10 @@ import type { ModalPropsMap, BaseModalProps } from '@/lib/context/modalTypes';
 import {
   SampleCollectionDetailModal,
   ResultEntryDetailModal,
-  ResultValidationDetailModal,
+  TestDetailModal,
   EscalationResolutionModal,
 } from '@/features/lab';
-import { OrderUpsertModal, OrderTestDetailModal } from '@/features/orders';
+import { OrderUpsertModal } from '@/features/orders';
 
 /**
  * Base props that all modals receive
@@ -99,15 +99,15 @@ registerModal(ModalType.RESULT_DETAIL, ResultEntryDetailModal, (props, baseProps
   onSave: props.onSave,
 }));
 
-registerModal(ModalType.VALIDATION_DETAIL, ResultValidationDetailModal, (props, baseProps) => ({
+registerModal(ModalType.TEST_DETAIL, TestDetailModal, (props, baseProps) => ({
   ...baseProps,
+  orderTestId: props.orderTestId,
+  order: props.order,
+  orderTest: props.orderTest,
+  patient: props.patient,
   test: props.test,
-  commentKey: props.commentKey,
-  comments: props.comments,
-  readOnly: props.readOnly,
-  onCommentsChange: props.onCommentsChange,
-  onApprove: props.onApprove,
-  onReject: props.onReject,
+  interaction: props.interaction,
+  validation: props.validation,
 }));
 
 registerModal(
@@ -126,13 +126,6 @@ registerModal(ModalType.NEW_ORDER, OrderUpsertModal, (props, baseProps) => ({
   patientId: props.patientId,
   order: props.order,
   mode: props.mode ?? (props.order ? 'edit' : 'create'),
-}));
-
-registerModal(ModalType.ORDER_TEST_DETAIL, OrderTestDetailModal, (props, baseProps) => ({
-  ...baseProps,
-  order: props.order,
-  orderTest: props.orderTest,
-  patient: props.patient,
 }));
 
 /** Side-effect import hook so registration runs on module load. */

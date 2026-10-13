@@ -10,24 +10,18 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { Icon, CircularProgress, EntityId } from '@/components';
+import { CircularProgress } from '@/components';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
-import { QueueModalShell, DetailGrid, ModalFooter } from './detailModalLayout';
+import { QueueModalShell, labModalSubtitle } from './detailModalLayout';
 import { LabEventLogPanel } from '@/features/audit';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { usePatientNameLookup } from '@/features/patients';
 import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';
-import { ICONS } from '@/config/icons';
-import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { useTestCatalog } from '@/features/catalog';
-import { labModalSubtitle } from './detailModalLayout';
-
-import { actionButtonPreset, Button, Panel } from '@/components';
-import { ResultEntryForm } from '../entry/ResultEntryForm';
-import { ResultValidationForm } from '../validation/ResultValidationForm';
-import { hasTestResults } from '../utils/labSearchAndLinks';
 import type { Test, TestWithContext } from '@/types';
 import { LabRelatedTestsPanel } from '../components/LabRelatedWorkflowPanel';
+import { EntryDetailMainPanel, EntryDetailModalFooter } from './detailModal.resultEntry.helpers';
+import { ResultEntryDetailGrid } from './detailModal.resultEntry.grid';
 
 interface EntryDetailModalProps {
   isOpen: boolean;
@@ -44,8 +38,6 @@ interface EntryDetailModalProps {
   readOnly?: boolean;
 }
 
-// Large component is necessary for comprehensive entry detail modal with result entry, validation, and multiple conditional sections
-// eslint-disable-next-line max-lines-per-function
 export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
   isOpen,
   onClose,
@@ -198,208 +190,16 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
 
       <LabRelatedTestsPanel test={test} isOpen={isOpen} />
 
-      {/* Test Details - using declarative sections config */}
-      <DetailGrid
-        sections={[
-          {
-            title: 'Test Parameters',
-            fields: [
-              {
-                label: 'Total Parameters',
-                value: <span className="font-normal">{totalParams}</span>,
-              },
-              {
-                label: 'Filled',
-                value: (
-                  <span className={isComplete ? 'text-success-fg' : 'text-warning-fg'}>
-                    {filledCount}
-                  </span>
-                ),
-              },
-              {
-                label: 'Remaining',
-                value: (
-                  <span
-                    className={remainingParams === 0 ? 'text-success-fg' : 'text-text-tertiary'}
-                  >
-                    {remainingParams}
-                  </span>
-                ),
-              },
-            ],
-          },
-          {
-            title: 'Test Information',
-            fields: [
-              {
-                label: 'Test ID',
-                value:
-                  test.id != null ? (
-                    <EntityId
-                      type="orderTest"
-                      value={test.id}
-                      variant="block"
-                      className="text-right"
-                    />
-                  ) : undefined,
-              },
-              {
-                label: 'Test Code',
-                value: test.testCode ? (
-                  <EntityId variant="block" className="text-right">
-                    {test.testCode}
-                  </EntityId>
-                ) : undefined,
-              },
-              {
-                label: 'Sample Type',
-                value: test.sampleType ? formatStatusBadgeLabel(test.sampleType) : undefined,
-              },
-              {
-                label: 'Sample ID',
-                value: test.sampleId ? (
-                  <EntityId
-                    type="sample"
-                    value={test.sampleId}
-                    variant="block"
-                    className="text-right"
-                  />
-                ) : undefined,
-              },
-              {
-                label: 'Turnaround Time',
-                value: showTurnaroundTime ? (
-                  <span className="flex items-center gap-space-1">
-                    <Icon name={ICONS.dataFields.time} className="w-3.5 h-3.5" />
-                    {turnaroundTime}h
-                  </span>
-                ) : undefined,
-              },
-            ],
-          },
-        ]}
+      <ResultEntryDetailGrid
+        test={test}
+        totalParams={totalParams}
+        filledCount={filledCount}
+        isComplete={isComplete}
+        remainingParams={remainingParams}
+        showTurnaroundTime={showTurnaroundTime}
+        turnaroundTime={turnaroundTime}
       />
-      {test.id != null && (
-        <LabEventLogPanel testId={test.id} />
-      )}
+      {test.id != null && <LabEventLogPanel testId={test.id} />}
     </QueueModalShell>
   );
 };
-
-function EntryDetailModalFooter({
-  readOnly,
-  isSaving,
-  isComplete,
-  canEnter,
-  denyMessage,
-  onClose,
-  onSave,
-}: {
-  readOnly: boolean;
-  isSaving: boolean;
-  isComplete: boolean;
-  canEnter: boolean;
-  denyMessage?: string | null;
-  onClose: () => void;
-  onSave: () => void;
-}) {
-  if (readOnly) {
-    return (
-      <ModalFooter statusMessage="">
-        <Button onClick={onClose} {...actionButtonPreset('cancel')} size="md" layout="icon-text">
-          Close
-        </Button>
-      </ModalFooter>
-    );
-  }
-  return (
-    <ModalFooter statusMessage={!canEnter && denyMessage ? denyMessage : ''}>
-      <Button
-        onClick={onClose}
-        {...actionButtonPreset('cancel')}
-        size="md"
-        layout="icon-text"
-        disabled={isSaving}
-      >
-        Cancel
-      </Button>
-      <Button
-        onClick={onSave}
-        {...actionButtonPreset('save')}
-        size="md"
-        layout="icon-text"
-        disabled={!isComplete || !canEnter}
-        title={!canEnter ? denyMessage ?? undefined : undefined}
-        isLoading={isSaving}
-      >
-        Save
-      </Button>
-    </ModalFooter>
-  );
-}
-
-
-
-function EntryDetailMainPanel({
-  readOnly,
-  test,
-  resolvedTestDef,
-  resultKey,
-  displayResults,
-  displayNotes,
-  progressIndicator,
-  isComplete,
-  canEnter,
-  onResultsChange,
-  onNotesChange,
-  onSave,
-}: {
-  readOnly: boolean;
-  test: TestWithContext;
-  resolvedTestDef: Test;
-  resultKey: string;
-  displayResults: Record<string, string>;
-  displayNotes: string;
-  progressIndicator: React.ReactNode;
-  isComplete: boolean;
-  canEnter: boolean;
-  onResultsChange: (key: string, paramCode: string, value: string) => void;
-  onNotesChange: (key: string, notes: string) => void;
-  onSave: () => void;
-}) {
-  if (readOnly && hasTestResults(test)) {
-    return (
-      <Panel variant="lab" title="Recorded Results">
-        <ResultValidationForm
-          results={test.results!}
-          flags={test.flags}
-          technicianNotes={test.technicianNotes}
-          comments={test.validationNotes ?? ''}
-          onCommentsChange={() => undefined}
-          onApprove={() => undefined}
-          readOnly
-          enableApproveShortcut={false}
-        />
-      </Panel>
-    );
-  }
-  return (
-    <Panel variant="lab" title="Result Entry" headerEnd={progressIndicator}>
-      <ResultEntryForm
-        testDef={resolvedTestDef}
-        resultKey={resultKey}
-        results={displayResults}
-        technicianNotes={displayNotes}
-        patient={test.patient}
-        onResultsChange={onResultsChange}
-        onNotesChange={onNotesChange}
-        onSave={onSave}
-        isComplete={isComplete}
-        isModal={true}
-        readOnly={readOnly}
-        canEnter={canEnter}
-        denyMessage={test.denyMessage}
-      />
-    </Panel>
-  );
-}

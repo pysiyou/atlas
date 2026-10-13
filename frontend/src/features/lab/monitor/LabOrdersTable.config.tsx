@@ -18,7 +18,7 @@ import { MobileEntityCard } from '@/components';
 import type { CardComponentProps } from '@/components';
 import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
 import { OrderTestStatusBadge } from '@/features/orders';
-import { getOrderTestLineageRowClass } from '@/features/orders/utils/orderTestLineage';
+import { getOrderTestLineageRowClass } from '@/features/orders';
 import { cn, displayId } from '@/utils';
 import {
   renderDateTimeCell,

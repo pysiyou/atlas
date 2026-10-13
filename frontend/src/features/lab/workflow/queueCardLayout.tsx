@@ -1,6 +1,7 @@
 /**
  * Shared layout for lab queue cards — header, desktop shell, mobile shell, recessed panel.
  */
+/* eslint-disable react-refresh/only-export-components -- card layout + small layout helpers */
 
 import { type ReactNode } from 'react';
 import { cn } from '@/utils';
