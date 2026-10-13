@@ -1,15 +1,13 @@
 /**
- * Escalation queue card — desktop/mobile shells, left header, data hooks.
+ * Supervisor exception queue card — same shell as recollection requests; actions in modal only.
  */
 /* eslint-disable react-refresh/only-export-components -- queue card + colocated data hook */
 
 import { useMemo, type FC } from 'react';
-import { Button, Card, Icon } from '@/components';
+import { Card } from '@/components';
 import { cn } from '@/utils';
-import { ICONS } from '@/config/icons';
 import { useUserLookup } from '@/lib/api/users';
 import { usePatientNameLookup } from '@/features/patients';
-import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { useLabWorkflowCardClickGuard } from '../hooks';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
@@ -17,6 +15,10 @@ import { LAB_MOBILE_CARD } from '../utils/labStyles';
 import type { TestWithContext } from '@/types';
 import { QueueCard, QueueCardMobile } from './queueCardLayout';
 import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';
+import {
+  EscalationExceptionBadges,
+  EscalationExceptionReviewBody,
+} from './queueCard.escalation.helpers';
 
 export interface EscalationCardProps {
   test: TestWithContext;
@@ -26,12 +28,9 @@ export interface EscalationCardProps {
 
 export interface EscalationCardSharedData {
   test: TestWithContext;
-  onClick: () => void;
   handleCardClick: (e?: React.MouseEvent) => void;
   getUserName: (userId: string) => string;
   rejection: ReturnType<typeof deriveRetestContext>;
-  isRetest: boolean;
-  hasRejectionHistory: boolean;
   patientName: string;
 }
 
@@ -44,12 +43,9 @@ export function useEscalationCardData(props: EscalationCardProps): EscalationCar
 
   return {
     test,
-    onClick,
     handleCardClick,
     getUserName: (userId: string) => getUserName(userId),
     rejection,
-    isRetest: rejection.isRetest,
-    hasRejectionHistory: rejection.showAttemptIndicator,
     patientName: getPatientName(test.patientId),
   };
 }
@@ -61,6 +57,7 @@ function useEscalationCardHeader(test: TestWithContext, patientName: string) {
         test={test}
         patientName={patientName}
         variant="escalation"
+        queueSince={test.resultEnteredAt ?? test.orderDate}
         reasonCode={test.reasonCode}
         includeResultEntered
       />
@@ -68,18 +65,12 @@ function useEscalationCardHeader(test: TestWithContext, patientName: string) {
     [test, patientName]
   );
 
-  const badges = <TestHeaderBadges test={test} variant="escalation" showStatus />;
+  const badges = <EscalationExceptionBadges test={test} />;
 
   return { leftColumn, badges };
 }
 
-function EscalationCardDesktop({
-  test,
-  onClick,
-  handleCardClick,
-  rejection,
-  patientName,
-}: EscalationCardSharedData) {
+function EscalationCardDesktop({ test, handleCardClick, rejection, patientName }: EscalationCardSharedData) {
   const { showAttemptIndicator } = rejection;
   const { leftColumn, badges } = useEscalationCardHeader(test, patientName);
 
@@ -89,35 +80,15 @@ function EscalationCardDesktop({
       className={showAttemptIndicator ? 'border-warning-stroke-emphasis' : ''}
       leftColumn={leftColumn}
       badges={badges}
-      actionsPlacement="header"
-      actions={
-        <div className="flex items-center gap-space-2">
-          <Button
-            variant="primary"
-            size="sm"
-            icon={<Icon name={ICONS.actions.eye} className="text-on-brand" />}
-            onClick={e => {
-              e.stopPropagation();
-              onClick();
-            }}
-          >
-            View
-          </Button>
-        </div>
-      }
+      contentTitle="Supervisor exception"
+      content={<EscalationExceptionReviewBody test={test} />}
     />
   );
 }
 
-function EscalationCardMobile({
-  test,
-  onClick,
-  handleCardClick,
-  rejection,
-  patientName,
-}: EscalationCardSharedData) {
+function EscalationCardMobile({ test, handleCardClick, rejection, patientName }: EscalationCardSharedData) {
   const { showAttemptIndicator } = rejection;
-  const { leftColumn } = useEscalationCardHeader(test, patientName);
+  const { leftColumn, badges } = useEscalationCardHeader(test, patientName);
 
   return (
     <Card
@@ -129,24 +100,11 @@ function EscalationCardMobile({
       )}
       onClick={handleCardClick}
     >
-      <QueueCardMobile
-        leftColumn={leftColumn}
-        badges={<TestHeaderBadges test={test} variant="escalation" size="xs" showStatus />}
-        actionsPlacement="header"
-        actions={
-          <Button
-            variant="primary"
-            size="sm"
-            icon={<Icon name={ICONS.actions.eye} className="text-on-brand" />}
-            onClick={e => {
-              e.stopPropagation();
-              onClick();
-            }}
-          >
-            View
-          </Button>
-        }
-      />
+      <QueueCardMobile leftColumn={leftColumn} badges={badges}>
+        <div className={cn(LAB_MOBILE_CARD.body, 'space-y-space-0-5')}>
+          <EscalationExceptionReviewBody test={test} />
+        </div>
+      </QueueCardMobile>
     </Card>
   );
 }
