@@ -6,8 +6,9 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { actionButtonPreset, Button } from '@/components';
 import { QueueModalShell, DetailGrid, ModalFooter } from './detailModalLayout';
-import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
-import { TestCardAlerts, TestHeaderBadges } from '../components/LabWorkflowBadges';
+import { TestHeaderBadges } from '../components/LabWorkflowBadges';
+import { usePatientNameLookup } from '@/features/patients';
+import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';
 import { buildCriticalValueRecord } from '../criticalValues/criticalValues';
 import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
 import type { TestWithContext } from '@/types';
@@ -46,6 +47,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   onResolved,
   readOnly = false,
 }) => {
+  const { getPatientName } = usePatientNameLookup();
   const [validationNotesForceValidate, setValidationNotesForceValidate] = useState('');
   const [reasonAuthorizeRetest, setReasonAuthorizeRetest] = useState('');
   const [reasonAuthorizeRecollect, setReasonAuthorizeRecollect] = useState('');
@@ -83,9 +85,17 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   if (test.id == null) return null;
 
   const hasResults = Boolean(test.results && Object.keys(test.results).length > 0);
+  const patientName = getPatientName(test.patientId);
   const headerBadges = <TestHeaderBadges test={test} variant="escalation" showStatus />;
-  const headerMeta = (
-    <TestCardAlerts test={test} variant="escalation" reasonCode={test.reasonCode} />
+  const headerLeftColumn = (
+    <TestWorkflowCardLeftColumn
+      test={test}
+      patientName={patientName}
+      variant="escalation"
+      reasonCode={test.reasonCode}
+      includeResultEntered
+      tone="modal"
+    />
   );
 
   return (
@@ -96,18 +106,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
       subtitle={labModalSubtitle('escalation')}
       modalKey={readOnly ? `historical-${test.id}` : `escalation-${test.id}`}
       headerBadges={headerBadges}
-      headerMeta={headerMeta}
-      contextInfo={{
-        patientName: test.patientName,
-        patientId: test.patientId,
-        orderId: test.orderId,
-        orderTestId: test.id,
-        entityCode: test.testCode,
-        entityName: test.testName,
-        referringPhysician: test.referringPhysician,
-        sampleId: test.sampleId,
-      }}
-      headerAudit={testHeaderAudit(test, { includeResultEntered: true })}
+      headerLeftColumn={headerLeftColumn}
       disableClose={resolving}
       footer={
         readOnly ? (

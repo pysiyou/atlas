@@ -15,11 +15,14 @@ export {
   type QueueCardPanelProps,
 } from './queueCardLayout';
 
-export { SampleCollectionCard, type SampleCollectionCardProps } from './queueCard.sampleCollection';
 export {
+  SampleCollectionCard,
+  SampleCollectionCardLeftColumn,
   useSampleCollectionCardData,
+  type SampleCollectionCardProps,
   type SampleCollectionCardSharedData,
-} from './queueCard.sampleCollection.data';
+  type SampleCollectionCardLeftColumnProps,
+} from './queueCard.sampleCollection';
 
 export { ResultEntryCard, type ResultEntryCardProps } from './queueCard.resultEntry';
 export { ResultValidationCard, type ResultValidationCardProps } from './queueCard.resultValidation';

@@ -150,6 +150,17 @@ export const LAB_CARD_CONTEXT = {
   inlineDot: '•',
 } as const;
 
+/** Queue card two-line identity (sample + test workflow cards). */
+export const LAB_CARD_QUEUE_IDENTITY = {
+  primaryLine: `flex items-baseline gap-x-space-2 gap-y-0 ${TYPE.label} flex-wrap min-w-0 w-full leading-snug`,
+  secondaryLine: `flex items-baseline gap-x-space-2 gap-y-0 ${TYPE.meta} flex-wrap min-w-0 w-full leading-snug`,
+  secondaryText: 'font-normal text-text-secondary',
+  secondaryDate: 'whitespace-nowrap text-text-secondary tabular-nums',
+} as const;
+
+/** @deprecated Use LAB_CARD_QUEUE_IDENTITY */
+export const LAB_CARD_SAMPLE_IDENTITY = LAB_CARD_QUEUE_IDENTITY;
+
 export const LAB_CARD_HEADER = {
   /**
    * Two columns: left stacks identity + alerts + audit; badges on the right (row 1).

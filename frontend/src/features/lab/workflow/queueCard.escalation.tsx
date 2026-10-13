@@ -1,46 +1,93 @@
-import type { FC } from 'react';
+/**
+ * Escalation queue card — desktop/mobile shells, left header, data hooks.
+ */
+
+import { useMemo, type FC } from 'react';
 import { Button, Card, Icon } from '@/components';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { TestCardAlerts, TestHeaderBadges } from '../components/LabWorkflowBadges';
-import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
-import { QueueCard } from './queueCardLayout';
-import { QueueCardMobile } from './queueCardLayout';
-import { LAB_MOBILE_CARD } from '../utils/labStyles';
+import { useUserLookup } from '@/lib/api/users';
+import { usePatientNameLookup } from '@/features/patients';
+import { TestHeaderBadges } from '../components/LabWorkflowBadges';
+import { useLabWorkflowCardClickGuard } from '../hooks';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
-import {
-  useEscalationCardData,
-  type EscalationCardProps,
-  type EscalationCardSharedData,
-} from './queueCard.escalation.data';
+import { deriveRetestContext } from '../utils/deriveRetestContext';
+import { LAB_MOBILE_CARD } from '../utils/labStyles';
+import type { TestWithContext } from '@/types';
+import { QueueCard, QueueCardMobile } from './queueCardLayout';
+import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';
 
-export type { EscalationCardProps } from './queueCard.escalation.data';
+export interface EscalationCardProps {
+  test: TestWithContext;
+  onClick: () => void;
+  isMobile?: boolean;
+}
+
+export interface EscalationCardSharedData {
+  test: TestWithContext;
+  onClick: () => void;
+  handleCardClick: (e?: React.MouseEvent) => void;
+  getUserName: (userId: string) => string;
+  rejection: ReturnType<typeof deriveRetestContext>;
+  isRetest: boolean;
+  hasRejectionHistory: boolean;
+  patientName: string;
+}
+
+export function useEscalationCardData(props: EscalationCardProps): EscalationCardSharedData {
+  const { test, onClick } = props;
+  const { getUserName } = useUserLookup();
+  const { getPatientName } = usePatientNameLookup();
+  const handleCardClick = useLabWorkflowCardClickGuard(onClick);
+  const rejection = useMemo(() => deriveRetestContext(test), [test]);
+
+  return {
+    test,
+    onClick,
+    handleCardClick,
+    getUserName: (userId: string) => getUserName(userId),
+    rejection,
+    isRetest: rejection.isRetest,
+    hasRejectionHistory: rejection.showAttemptIndicator,
+    patientName: getPatientName(test.patientId),
+  };
+}
+
+function useEscalationCardHeader(test: TestWithContext, patientName: string) {
+  const leftColumn = useMemo(
+    () => (
+      <TestWorkflowCardLeftColumn
+        test={test}
+        patientName={patientName}
+        variant="escalation"
+        reasonCode={test.reasonCode}
+        includeResultEntered
+      />
+    ),
+    [test, patientName]
+  );
+
+  const badges = <TestHeaderBadges test={test} variant="escalation" showStatus />;
+
+  return { leftColumn, badges };
+}
 
 function EscalationCardDesktop({
   test,
   onClick,
   handleCardClick,
   rejection,
+  patientName,
 }: EscalationCardSharedData) {
   const { showAttemptIndicator } = rejection;
+  const { leftColumn, badges } = useEscalationCardHeader(test, patientName);
 
   return (
     <QueueCard
       onClick={handleCardClick}
       className={showAttemptIndicator ? 'border-warning-stroke-emphasis' : ''}
-      context={{
-        patientName: test.patientName,
-        patientId: test.patientId,
-        orderId: test.orderId,
-        orderTestId: test.id,
-        sampleId: test.sampleId,
-        entityCode: test.testCode,
-        entityName: test.testName,
-        referringPhysician: test.referringPhysician,
-      }}
-      auditLines={testHeaderAudit(test, { includeResultEntered: true, omitSampleId: true })}
-      alerts={<TestCardAlerts test={test} variant="escalation" reasonCode={test.reasonCode} />}
-      badges={<TestHeaderBadges test={test} variant="escalation" showStatus />}
+      leftColumn={leftColumn}
+      badges={badges}
       actionsPlacement="header"
       actions={
         <div className="flex items-center gap-space-2">
@@ -66,8 +113,10 @@ function EscalationCardMobile({
   onClick,
   handleCardClick,
   rejection,
+  patientName,
 }: EscalationCardSharedData) {
   const { showAttemptIndicator } = rejection;
+  const { leftColumn } = useEscalationCardHeader(test, patientName);
 
   return (
     <Card
@@ -80,17 +129,7 @@ function EscalationCardMobile({
       onClick={handleCardClick}
     >
       <QueueCardMobile
-        context={{
-          patientName: test.patientName,
-          patientId: test.patientId,
-          orderId: test.orderId,
-          orderTestId: test.id,
-          sampleId: test.sampleId,
-          entityCode: test.testCode,
-          entityName: test.testName,
-        }}
-        auditLines={testHeaderAudit(test, { includeResultEntered: true, omitSampleId: true })}
-        alerts={<TestCardAlerts test={test} variant="escalation" reasonCode={test.reasonCode} />}
+        leftColumn={leftColumn}
         badges={<TestHeaderBadges test={test} variant="escalation" size="xs" showStatus />}
         actionsPlacement="header"
         actions={
@@ -116,7 +155,7 @@ export const EscalationCard: FC<EscalationCardProps> = props => {
 
   return useLabWorkflowResponsiveCard({
     item: props,
-    deriveSharedData: () => sharedData as EscalationCardSharedData,
+    deriveSharedData: () => sharedData,
     renderMobile: EscalationCardMobile,
     renderDesktop: EscalationCardDesktop,
     isMobile: props.isMobile,

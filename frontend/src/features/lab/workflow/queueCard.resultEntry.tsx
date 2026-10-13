@@ -1,48 +1,109 @@
+/**
+ * Result entry queue card — desktop/mobile shells, left header, data hooks.
+ */
+
 import { useMemo, type FC } from 'react';
 import { actionButtonPreset, Card, IconButton } from '@/components';
 import { cn } from '@/utils';
-import { TestCardAlerts, TestHeaderBadges } from '../components/LabWorkflowBadges';
-import { LabCardMetaRow } from '../components/LabCardMetaRow';
-import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
-import { QueueCard } from './queueCardLayout';
-import type { TestWithContext } from '@/types';
-import { QueueCardMobile } from './queueCardLayout';
+import { usePatientNameLookup } from '@/features/patients';
+import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { LAB_CONFIG } from '../constants';
-import { LAB_MOBILE_CARD } from '../utils/labStyles';
+import { useLabWorkflowCardClickGuard, useOrderTestQueueState } from '../hooks';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
-import {
-  useResultEntryCardData,
-  type ResultEntryCardProps,
-  type ResultEntryCardSharedData,
-} from './queueCard.resultEntry.data';
+import { deriveRetestContext } from '../utils/deriveRetestContext';
+import { LAB_MOBILE_CARD } from '../utils/labStyles';
+import type { Test, TestWithContext } from '@/types';
+import { QueueCard, QueueCardMobile } from './queueCardLayout';
+import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';
 
-export type { ResultEntryCardProps } from './queueCard.resultEntry.data';
-
-export function ResultEntryCardAlerts({
-  test,
-  filledCount,
-  parameterCount,
-  turnaroundTime,
-}: {
+export interface ResultEntryCardProps {
   test: TestWithContext;
-  filledCount: number;
-  parameterCount: number;
-  turnaroundTime?: number;
-}) {
-  const showTurnaroundTime =
-    typeof turnaroundTime === 'number' && Number.isFinite(turnaroundTime) && turnaroundTime > 0;
+  testDef: Test | undefined;
+  resultKey: string;
+  results: Record<string, string>;
+  technicianNotes: string;
+  isComplete: boolean;
+  onResultsChange: (resultKey: string, paramCode: string, value: string) => void;
+  onNotesChange: (resultKey: string, notes: string) => void;
+  onSave: () => void;
+  onClick: () => void;
+  isMobile?: boolean;
+}
 
-  return (
-    <>
-      <TestCardAlerts test={test} variant="entry" queueSince={test.collectedAt} />
-      <LabCardMetaRow>
-        <span>
-          {filledCount}/{parameterCount} parameters
-        </span>
-        {showTurnaroundTime ? <span>{turnaroundTime}h turnaround</span> : null}
-      </LabCardMetaRow>
-    </>
+export interface ResultEntryCardSharedData {
+  test: TestWithContext;
+  testDef: Test;
+  results: Record<string, string>;
+  isComplete: boolean;
+  patientName: string;
+  parameterCount: number;
+  filledCount: number;
+  handleCardClick: (e?: React.MouseEvent) => void;
+  workItem: ReturnType<typeof useOrderTestQueueState>;
+  rejection: ReturnType<typeof deriveRetestContext>;
+  canEnter: boolean;
+  denyTooltipLabel: string | undefined;
+}
+
+export function useResultEntryCardData(props: ResultEntryCardProps): ResultEntryCardSharedData | null {
+  const { test, testDef, results, isComplete, onClick } = props;
+  const { getPatientName } = usePatientNameLookup();
+  const workItem = useOrderTestQueueState(test);
+  const rejection = useMemo(() => deriveRetestContext(test), [test]);
+  const canEnter = test.allowedActions?.enterResults !== false;
+  const denyTooltipLabel =
+    test.denyMessage ?? (!canEnter ? workItem.label : undefined);
+  const handleCardClick = useLabWorkflowCardClickGuard(() => {
+    if (canEnter) onClick();
+  });
+
+  if (!testDef?.parameters) return null;
+
+  const patientName = getPatientName(test.patientId);
+  const parameterCount = testDef.parameters.length;
+  const filledCount = Object.values(results).filter(v => v?.trim()).length;
+
+  return {
+    test,
+    testDef,
+    results,
+    isComplete,
+    patientName,
+    parameterCount,
+    filledCount,
+    handleCardClick,
+    workItem,
+    rejection,
+    canEnter,
+    denyTooltipLabel,
+  };
+}
+
+function useResultEntryCardHeader(
+  test: TestWithContext,
+  patientName: string,
+  testDef: Test,
+  filledCount: number,
+  parameterCount: number
+) {
+  const leftColumn = useMemo(
+    () => (
+      <TestWorkflowCardLeftColumn
+        test={test}
+        patientName={patientName}
+        variant="entry"
+        queueSince={test.collectedAt}
+        filledCount={filledCount}
+        parameterCount={parameterCount}
+        turnaroundHours={testDef.turnaroundTime}
+      />
+    ),
+    [test, patientName, testDef.turnaroundTime, filledCount, parameterCount]
   );
+
+  const badges = <TestHeaderBadges test={test} variant="entry" showStatus />;
+
+  return { leftColumn, badges };
 }
 
 function ResultEntryCardDesktop({
@@ -54,10 +115,16 @@ function ResultEntryCardDesktop({
   handleCardClick,
   rejection,
   canEnter,
+  patientName,
 }: ResultEntryCardSharedData) {
   const { showAttemptIndicator } = rejection;
-  const auditLines = useMemo(() => testHeaderAudit(test), [test]);
-  const turnaroundTime = testDef.turnaroundTime;
+  const { leftColumn, badges } = useResultEntryCardHeader(
+    test,
+    patientName,
+    testDef,
+    filledCount,
+    parameterCount
+  );
   const previewParams = (testDef.parameters ?? []).slice(0, LAB_CONFIG.PARAMETER_PREVIEW_LIMIT);
   const remainingParams = parameterCount - previewParams.length;
 
@@ -68,26 +135,8 @@ function ResultEntryCardDesktop({
         showAttemptIndicator ? 'border-warning-stroke-emphasis' : '',
         !canEnter && 'opacity-70 cursor-not-allowed'
       )}
-      context={{
-        patientName: test.patientName,
-        patientId: test.patientId,
-        orderId: test.orderId,
-        orderTestId: test.id,
-        sampleId: test.sampleId,
-        entityCode: test.testCode,
-        entityName: test.testName,
-        referringPhysician: test.referringPhysician,
-      }}
-      auditLines={auditLines}
-      alerts={
-        <ResultEntryCardAlerts
-          test={test}
-          filledCount={filledCount}
-          parameterCount={parameterCount}
-          turnaroundTime={turnaroundTime}
-        />
-      }
-      badges={<TestHeaderBadges test={test} variant="entry" showStatus />}
+      leftColumn={leftColumn}
+      badges={badges}
       content={
         <p className="leading-snug">
           {previewParams.map((param, index) => (
@@ -124,7 +173,13 @@ function ResultEntryCardMobile({
   denyTooltipLabel,
 }: ResultEntryCardSharedData) {
   const { showAttemptIndicator } = rejection;
-  const auditLines = useMemo(() => testHeaderAudit(test), [test]);
+  const { leftColumn } = useResultEntryCardHeader(
+    test,
+    patientName,
+    testDef,
+    filledCount,
+    parameterCount
+  );
 
   return (
     <Card
@@ -138,24 +193,7 @@ function ResultEntryCardMobile({
       onClick={canEnter ? handleCardClick : undefined}
     >
       <QueueCardMobile
-        context={{
-          patientName,
-          patientId: test.patientId,
-          orderId: test.orderId,
-          orderTestId: test.id,
-          sampleId: test.sampleId,
-          entityCode: test.testCode,
-          entityName: test.testName,
-        }}
-        auditLines={auditLines}
-        alerts={
-          <ResultEntryCardAlerts
-            test={test}
-            filledCount={filledCount}
-            parameterCount={parameterCount}
-            turnaroundTime={testDef.turnaroundTime}
-          />
-        }
+        leftColumn={leftColumn}
         badges={<TestHeaderBadges test={test} variant="entry" size="xs" showStatus />}
         actionsPlacement="header"
         actions={
