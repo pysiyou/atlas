@@ -33,8 +33,8 @@ import { LAB_COPY } from '../constants/labConstants';
 import { LabEventLogPanel } from '@/features/audit';
 import { QueueModalShell, ModalFooter, type DetailGridSectionConfig } from './detailModalLayout';
 import { labModalSubtitle } from './detailModalLayout';
-import { collectionHeaderAudit } from '../constants/labWorkflowAuditLines';
-import { CollectionCardAlerts, CollectionHeaderBadges } from '../components/LabWorkflowBadges';
+import { CollectionHeaderBadges } from '../components/LabWorkflowBadges';
+import { SampleCollectionCardLeftColumn } from './queueCard.sampleCollection';
 import { useTestCatalog } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users';
 import { usePatientNameLookup } from '@/features/patients';
@@ -110,7 +110,6 @@ export const SampleCollectionDetailModal: React.FC<CollectionDetailModalProps> =
   const isCollected = sample.status === 'collected';
   const rejectedSample = isRejected ? (sample as RejectedSample) : null;
 
-  const patientId = order?.patientId || 0;
   const patientName =
     pendingSampleDisplay?.patient?.fullName ||
     (order ? getPatientName(order.patientId) : 'Unknown');
@@ -153,19 +152,25 @@ export const SampleCollectionDetailModal: React.FC<CollectionDetailModalProps> =
     />
   );
 
-  const headerMeta = (
-    <CollectionCardAlerts
+  const headerLeftColumn = (
+    <SampleCollectionCardLeftColumn
+      patientName={patientName}
+      orderId={orderId}
+      referringPhysician={order?.referringPhysician}
+      orderDate={order?.orderDate}
       sample={sample}
       isPending={isPending}
       isCollected={isCollected}
       isRejected={isRejected}
       rejectedSample={rejectedSample}
-      orderDate={order?.orderDate}
       requiredVolume={sample.requiredVolume}
       collectedVolume={collectedVolume}
-      containerColor={containerColor}
       effectiveContainerType={effectiveContainerType}
+      containerColor={containerColor}
       colorName={colorName}
+      collectedAt={collectedAt}
+      collectedBy={collectedBy}
+      tone="modal"
     />
   );
 
@@ -211,22 +216,7 @@ export const SampleCollectionDetailModal: React.FC<CollectionDetailModalProps> =
       title={<EntityId type="sample" value={sample.sampleId} />}
       subtitle={labModalSubtitle('collection')}
       headerBadges={headerBadges}
-      headerMeta={headerMeta}
-      contextInfo={{
-        patientName,
-        patientId,
-        orderId,
-        referringPhysician: order?.referringPhysician,
-        sampleId: sample.sampleId,
-      }}
-      headerAudit={collectionHeaderAudit({
-        sampleId: sample.sampleId,
-        collectedAt,
-        collectedBy,
-        isRecollection: sample.isRecollection,
-        originalSampleId: sample.originalSampleId,
-        originalSampleCollectedAt: sample.originalSampleCollectedAt,
-      })}
+      headerLeftColumn={headerLeftColumn}
       footer={
         readOnly ? (
           <ModalFooter statusMessage="">

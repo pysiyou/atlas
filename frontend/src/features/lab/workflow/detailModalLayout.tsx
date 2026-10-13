@@ -25,8 +25,10 @@ export interface QueueModalShellProps {
   modalKey?: string;
   headerBadges: ReactNode;
   headerMeta?: ReactNode;
-  contextInfo: LabWorkflowModalContext;
+  contextInfo?: LabWorkflowModalContext;
   headerAudit?: LabAuditLine[];
+  /** Replaces LabModalHeader (sample collection modal). */
+  headerLeftColumn?: ReactNode;
   children: ReactNode;
   footer?: ReactNode;
   footerInfo?: ReactNode;
@@ -43,6 +45,7 @@ export const QueueModalShell: React.FC<QueueModalShellProps> = ({
   headerMeta,
   contextInfo,
   headerAudit,
+  headerLeftColumn,
   children,
   footer,
   footerInfo,
@@ -67,11 +70,15 @@ export const QueueModalShell: React.FC<QueueModalShellProps> = ({
     >
       <div className="flex flex-col h-full bg-surface-page">
         <div className={`flex-1 overflow-y-auto p-space-6 ${LAB_MODAL_DETAIL.sectionStack}`}>
-          <LabModalHeader
-            alerts={headerMeta}
-            contextInfo={contextInfo}
-            auditLines={headerAudit}
-          />
+          {headerLeftColumn ? (
+            <header className="min-w-0 w-full">{headerLeftColumn}</header>
+          ) : contextInfo ? (
+            <LabModalHeader
+              alerts={headerMeta}
+              contextInfo={contextInfo}
+              auditLines={headerAudit}
+            />
+          ) : null}
           {children}
         </div>
 

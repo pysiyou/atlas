@@ -52,7 +52,7 @@ export function LabAuditLineView({
     case 'collection-only':
       return (
         <span className={base}>
-          collected{' '}
+          Collected{' '}
           <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>
             {formatDateTime(line.collectedAt)}
           </span>
@@ -67,15 +67,33 @@ export function LabAuditLineView({
           )}
         </span>
       );
-    case 'previous-sample-rejected':
+    case 'recollection-lineage':
       return (
         <span className={cn(base, compact && tone === 'card' && 'hidden md:inline')}>
-          Previous sample <span className="text-warning-fg font-normal">rejected</span>
-          {' — '}
-          <EntityId type="sample" value={line.sampleId} /> collected{' '}
-          <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>
-            {formatDateTime(line.collectedAt)}
-          </span>
+          <span>Recollection of </span>
+          <EntityId type="sample" value={line.sampleId} variant="inline" />
+          {line.collectedAt ? (
+            <>
+              <span> — collected on </span>
+              <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>
+                {formatDateTime(line.collectedAt)}
+              </span>
+            </>
+          ) : null}
+        </span>
+      );
+    case 'retest-lineage':
+      return (
+        <span className={cn(base, compact && tone === 'card' && 'hidden md:inline')}>
+          <span>Re-test of </span>
+          <EntityId type="orderTest" value={line.orderTestId} variant="inline" />
+        </span>
+      );
+    case 'test-recollection-lineage':
+      return (
+        <span className={cn(base, compact && tone === 'card' && 'hidden md:inline')}>
+          <span>Recollection of </span>
+          <EntityId type="sample" value={line.sampleId} variant="inline" />
         </span>
       );
     case 'result-entered':

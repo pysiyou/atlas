@@ -20,7 +20,9 @@ import {
 } from '../utils/labStyles';
 
 export interface QueueCardHeaderProps {
-  context: LabIdentityContext;
+  context?: LabIdentityContext;
+  /** Replaces generic identity + alerts + audit (sample collection card). */
+  leftColumn?: ReactNode;
   badges?: ReactNode;
   alerts?: ReactNode;
   auditLines?: LabAuditLine[];
@@ -30,6 +32,7 @@ export interface QueueCardHeaderProps {
 
 export function QueueCardHeader({
   context,
+  leftColumn,
   badges,
   alerts,
   auditLines = [],
@@ -43,7 +46,13 @@ export function QueueCardHeader({
         showHeaderActions ? LAB_CARD_HEADER.shellWithActions : LAB_CARD_HEADER.shell
       }
     >
-      <LabWorkflowLeftColumn context={context} alerts={alerts} auditLines={auditLines} />
+      {leftColumn ?? (
+        <LabWorkflowLeftColumn
+          context={context!}
+          alerts={alerts}
+          auditLines={auditLines}
+        />
+      )}
       {badges ? (
         <LabHeaderCompactContext.Provider value={true}>
           <div
@@ -95,7 +104,8 @@ export function hasQueueCardActions(actions: ReactNode): boolean {
 
 export interface QueueCardProps {
   onClick?: (e: React.MouseEvent) => void;
-  context: LabIdentityContext;
+  context?: LabIdentityContext;
+  leftColumn?: ReactNode;
   auditLines?: LabAuditLine[];
   badges: ReactNode;
   alerts?: ReactNode;
@@ -113,6 +123,7 @@ export interface QueueCardProps {
 export function QueueCard({
   onClick,
   context,
+  leftColumn,
   auditLines,
   badges,
   alerts,
@@ -134,6 +145,7 @@ export function QueueCard({
         <div className={`flex flex-col ${LAB_CARD_SPACING.cardGap}`}>
           <QueueCardHeader
             context={context}
+            leftColumn={leftColumn}
             badges={badges}
             alerts={alerts}
             auditLines={auditLines}
@@ -159,7 +171,8 @@ export function QueueCard({
 }
 
 export interface QueueCardMobileProps {
-  context: LabIdentityContext;
+  context?: LabIdentityContext;
+  leftColumn?: ReactNode;
   badges?: ReactNode;
   actions?: ReactNode;
   auditLines?: LabAuditLine[];
@@ -173,6 +186,7 @@ export interface QueueCardMobileProps {
 /** Narrow / mobile queue list card shell. */
 export function QueueCardMobile({
   context,
+  leftColumn,
   badges,
   actions,
   auditLines = [],
@@ -191,6 +205,7 @@ export function QueueCardMobile({
     <div className={cn(LAB_MOBILE_CARD.stack, className)}>
       <QueueCardHeader
         context={context}
+        leftColumn={leftColumn}
         badges={badges}
         alerts={alertNode}
         auditLines={auditLines}

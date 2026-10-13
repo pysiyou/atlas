@@ -16,13 +16,14 @@ import { actionButtonPreset, Button, Panel, EntityId } from '@/components';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { ResultValidationForm } from '../validation/ResultValidationForm';
 import { QueueModalShell, DetailGrid, ModalFooter } from './detailModalLayout';
-import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
 import { QualityIssuePopover } from '../components/QualityIssuePopover';
 import { CriticalValueActions } from '../criticalValues/CriticalValueActions';
 import { buildCriticalValueRecord } from '../criticalValues/criticalValues';
 import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
 import { LabEventLogPanel } from '@/features/audit';
-import { TestCardAlerts, TestHeaderBadges } from '../components/LabWorkflowBadges';
+import { TestHeaderBadges } from '../components/LabWorkflowBadges';
+import { usePatientNameLookup } from '@/features/patients';
+import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';
 import { useSampleRejectionDisplay } from '../hooks/useSampleRejectionDisplay';
 import { SampleRejectedBanner } from '../components/SampleRejectedBanner';
 import type { TestWithContext } from '@/types';
@@ -61,6 +62,7 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
   // High complexity is necessary for comprehensive validation logic with multiple conditional branches and state management
    
 }) => {
+  const { getPatientName } = usePatientNameLookup();
   const queryClient = useQueryClient();
   const approveHandler = useCallback(
     async (_signal: AbortSignal) => {
@@ -86,14 +88,18 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
 
   const flagCount = test.flags?.length || 0;
 
+  const patientName = getPatientName(test.patientId);
   const headerBadges = <TestHeaderBadges test={test} variant="validation" showStatus />;
-  const headerMeta = (
-    <TestCardAlerts
+  const headerLeftColumn = (
+    <TestWorkflowCardLeftColumn
       test={test}
+      patientName={patientName}
       variant="validation"
-      emphasizeCritical
       queueSince={test.resultEnteredAt}
+      emphasizeCritical
       flagCount={flagCount}
+      includeResultEntered
+      tone="modal"
     />
   );
 
@@ -106,18 +112,7 @@ export const ResultValidationDetailModal: React.FC<ValidationDetailModalProps> =
       modalKey={readOnly ? `historical-${test.id}` : commentKey}
       disableClose={isApproving}
       headerBadges={headerBadges}
-      headerMeta={headerMeta}
-      contextInfo={{
-        patientName: test.patientName,
-        patientId: test.patientId,
-        orderId: test.orderId,
-        orderTestId: test.id,
-        entityCode: test.testCode,
-        entityName: test.testName,
-        referringPhysician: test.referringPhysician,
-        sampleId: test.sampleId,
-      }}
-      headerAudit={testHeaderAudit(test, { includeResultEntered: true })}
+      headerLeftColumn={headerLeftColumn}
       footer={
         readOnly ? (
           <ModalFooter statusMessage="">

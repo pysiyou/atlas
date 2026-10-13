@@ -15,8 +15,8 @@ import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { QueueModalShell, DetailGrid, ModalFooter } from './detailModalLayout';
 import { LabEventLogPanel } from '@/features/audit';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
-import { testHeaderAudit } from '../constants/labWorkflowAuditLines';
-import { ResultEntryCardAlerts } from './queueCard.resultEntry';
+import { usePatientNameLookup } from '@/features/patients';
+import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';
 import { ICONS } from '@/config/icons';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { useTestCatalog } from '@/features/catalog';
@@ -59,6 +59,7 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
   onSave,
   readOnly = false,
 }) => {
+  const { getPatientName } = usePatientNameLookup();
   const { tests: catalogTests = [] } = useTestCatalog();
   const resolvedTestDef = testDef ?? catalogTests.find(t => t.code === test.testCode);
   const [localResults, setLocalResults] = useState<Record<string, string>>(() => {
@@ -143,13 +144,18 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
     />
   );
 
+  const patientName = getPatientName(test.patientId);
   const headerBadges = <TestHeaderBadges test={test} variant="entry" showStatus />;
-  const headerMeta = (
-    <ResultEntryCardAlerts
+  const headerLeftColumn = (
+    <TestWorkflowCardLeftColumn
       test={test}
+      patientName={patientName}
+      variant="entry"
+      queueSince={test.collectedAt}
       filledCount={filledCount}
       parameterCount={totalParams}
-      turnaroundTime={turnaroundTime}
+      turnaroundHours={turnaroundTime}
+      tone="modal"
     />
   );
 
@@ -162,18 +168,7 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
       modalKey={readOnly ? `historical-${test.id}` : resultKey}
       disableClose={isSaving}
       headerBadges={headerBadges}
-      headerMeta={headerMeta}
-      contextInfo={{
-        patientName: test.patientName,
-        patientId: test.patientId,
-        orderId: test.orderId,
-        orderTestId: test.id,
-        entityCode: test.testCode,
-        entityName: test.testName,
-        referringPhysician: test.referringPhysician,
-        sampleId: test.sampleId,
-      }}
-      headerAudit={testHeaderAudit(test)}
+      headerLeftColumn={headerLeftColumn}
       footer={
         <EntryDetailModalFooter
           readOnly={readOnly}

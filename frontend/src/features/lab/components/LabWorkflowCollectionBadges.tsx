@@ -23,7 +23,6 @@ import {
   LabModalMetaRow,
   QueueAgeMeta,
   RecollectionRequestedMeta,
-  SampleRejectionTailMeta,
 } from './LabCardMetaRow';
 import { LAB_CONFIG } from '../constants';
 
@@ -135,7 +134,6 @@ function CollectionOperationalMeta({
           </span>
         ) : null}
       </MetaRow>
-      <SampleRejectionTailMeta sample={sample} />
     </>
   );
 }
