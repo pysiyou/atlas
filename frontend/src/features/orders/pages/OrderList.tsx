@@ -1,11 +1,12 @@
 /**
- * OrderList Component - Migrated to use ListView
+ * OrderList Component - Migrated to use ListView with URL filter support
  *
  * Uses server-side pagination via usePaginatedOrders; client-side search/date/multi-filter on current page.
+ * Supports URL-based entity filters (patientId, orderId) for cross-page navigation.
  */
 
-import React, { useMemo, useState, useCallback } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import React, { useMemo, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTestNameLookup } from '@/features/catalog';
 import { usePatientNameLookup } from '@/features/patients';
 import { usePaginatedOrders } from '../api/orders';
@@ -16,18 +17,37 @@ import { OrderFilters } from '../components/OrderFilters';
 import { createOrderTableConfig } from '../config/OrderTable.config';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
 import { errorAlertMessage } from '@/utils/feedback';
+import { usePageFilters } from '@/hooks/usePageFilters';
+import { ORDER_URL_FILTER_KEYS } from '../config/orderFilters.config';
 import type { Order, OrderStatus, PaymentStatus } from '@/types';
+import { UrlFilterBadges } from '@/components';
 
 export const OrderList: React.FC = () => {
   const navigate = useNavigate();
   const { openModal } = useModal();
-  const [searchParams] = useSearchParams();
-  const patientIdFilter = searchParams.get('patientId');
 
-  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
-  const [paymentFilters, setPaymentFilters] = useState<PaymentStatus[]>([]);
-  const [statusFilters, setStatusFilters] = useState<OrderStatus[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  // URL-synced entity filters + local UI filters
+  const {
+    filters,
+    urlFilters,
+    setFilter,
+    clearUrlFilters,
+    setUrlFilter,
+  } = usePageFilters({
+    urlFilterKeys: ORDER_URL_FILTER_KEYS,
+    initialFilters: {
+      search: '',
+      dateRange: null,
+      status: [] as OrderStatus[],
+      paymentStatus: [] as PaymentStatus[],
+    },
+  });
+
+  const searchQuery = (filters.search as string) ?? '';
+  const dateRange = (filters.dateRange as [Date, Date] | null) ?? null;
+  const statusFilters = useMemo(() => (filters.status as OrderStatus[]) ?? [], [filters.status]);
+  const paymentFilters = useMemo(() => (filters.paymentStatus as PaymentStatus[]) ?? [], [filters.paymentStatus]);
+  const patientIdFilter = urlFilters.patientId;
 
   const serverFilters = useMemo(
     () => ({
@@ -53,18 +73,18 @@ export const OrderList: React.FC = () => {
 
   const handleStatusFiltersChange = useCallback(
     (filters: OrderStatus[]) => {
-      setStatusFilters(filters);
+      setFilter('status', filters);
       resetPage();
     },
-    [resetPage]
+    [setFilter, resetPage]
   );
 
   const handlePaymentFiltersChange = useCallback(
     (filters: PaymentStatus[]) => {
-      setPaymentFilters(filters);
+      setFilter('paymentStatus', filters);
       resetPage();
     },
-    [resetPage]
+    [setFilter, resetPage]
   );
 
   const { getPatientName, isLoading: patientsLoading } = usePatientNameLookup();
@@ -140,16 +160,28 @@ export const OrderList: React.FC = () => {
           </Button>
         }
         filters={
-          <OrderFilters
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            dateRange={dateRange}
-            onDateRangeChange={setDateRange}
-            statusFilters={statusFilters}
-            onStatusFiltersChange={handleStatusFiltersChange}
-            paymentFilters={paymentFilters}
-            onPaymentFiltersChange={handlePaymentFiltersChange}
-          />
+          <>
+            {urlFilters && Object.keys(urlFilters).length > 0 && (
+              <UrlFilterBadges
+                urlFilters={urlFilters}
+                onClear={clearUrlFilters}
+                onClearSingle={(key) => {
+                  const urlKey = ORDER_URL_FILTER_KEYS.find(k => k === key);
+                  if (urlKey) setUrlFilter(urlKey, undefined);
+                }}
+              />
+            )}
+            <OrderFilters
+              searchQuery={searchQuery}
+              onSearchChange={(value) => setFilter('search', value)}
+              dateRange={dateRange}
+              onDateRangeChange={(value) => setFilter('dateRange', value)}
+              statusFilters={statusFilters}
+              onStatusFiltersChange={handleStatusFiltersChange}
+              paymentFilters={paymentFilters}
+              onPaymentFiltersChange={handlePaymentFiltersChange}
+            />
+          </>
         }
         pagination={{
           mode: 'server',

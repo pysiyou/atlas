@@ -17,6 +17,7 @@ import { ORDER_TABLE_COLUMN_HEADERS } from '../constants/orderTableColumns';
 import {
   renderOrderDateCell,
   renderOrderPatientName,
+  renderOrderPatientNameNavigable,
   renderOrderTestsBlock,
   renderOrderTotalPrice,
 } from './orderTableColumnRenders';
@@ -45,6 +46,8 @@ export interface OrderColumnRenderers<T> {
 export interface OrderSharedColumnOptions {
   testsSortable?: boolean;
   getTestName?: (testCode: string) => string;
+  /** When true, patient names link to filtered order view. */
+  enablePatientNavigation?: boolean;
 }
 
 export type OrderSharedColumnKey =
@@ -62,7 +65,7 @@ export function createOrderSharedColumns<T>(
   renderers: OrderColumnRenderers<T>,
   options: OrderSharedColumnOptions = {}
 ): Record<OrderSharedColumnKey, ColumnConfig<T>> {
-  const { testsSortable = false, getTestName } = options;
+  const { testsSortable = false, getTestName, enablePatientNavigation = true } = options;
 
   const columns: Partial<Record<OrderSharedColumnKey, ColumnConfig<T>>> = {
     orderId: createIdColumn<T>(
@@ -81,7 +84,9 @@ export function createOrderSharedColumns<T>(
       sortable: true,
       accessor: item => accessors.getPatientName(item),
       render: item =>
-        renderOrderPatientName(accessors.getPatientName(item), accessors.getPatientId(item)),
+        enablePatientNavigation
+          ? renderOrderPatientNameNavigable(accessors.getPatientName(item), accessors.getPatientId(item))
+          : renderOrderPatientName(accessors.getPatientName(item), accessors.getPatientId(item)),
     },
     tests: {
       key: 'tests',

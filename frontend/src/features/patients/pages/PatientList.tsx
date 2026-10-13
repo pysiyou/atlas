@@ -1,11 +1,14 @@
 /**
- * PatientList - Uses ListView with server-side pagination.
+ * PatientList - Uses ListView with server-side pagination and URL filter support.
  */
 
 import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePaginatedPatientContextList } from '../api/patients';
 import { useClientListFilter } from '@/hooks/useClientListFilter';
+import { usePageFilters } from '@/hooks/usePageFilters';
+import { PATIENT_URL_FILTER_KEYS } from '../config/patientFilters.config';
+import { UrlFilterBadges } from '@/components';
 import { actionButtonPreset, ListView } from '@/components';
 import { Button } from '@/components';
 import { useModal } from '@/lib/context/ModalContext';
@@ -23,12 +26,27 @@ import { isAffiliationActive } from '../utils/patientHelpers';
 export const PatientList: React.FC = () => {
   const navigate = useNavigate();
   useModal();
-  const [searchQuery, setSearchQuery] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [ageRange, setAgeRange] = useState<[number, number]>([0, 150]);
-  const [affiliationStatusFilters, setAffiliationStatusFilters] = useState<AffiliationStatus[]>(
-    []
-  );
+
+  // URL-synced entity filters + local UI filters
+  const {
+    filters,
+    urlFilters,
+    setFilter,
+    clearUrlFilters,
+    setUrlFilter,
+  } = usePageFilters({
+    urlFilterKeys: PATIENT_URL_FILTER_KEYS,
+    initialFilters: {
+      search: '',
+      ageRange: [AGE_RANGE_MIN, AGE_RANGE_MAX] as [number, number],
+      affiliationStatus: [] as AffiliationStatus[],
+    },
+  });
+
+  const searchQuery = (filters.search as string) ?? '';
+  const ageRange = useMemo(() => (filters.ageRange as [number, number]) ?? [AGE_RANGE_MIN, AGE_RANGE_MAX], [filters.ageRange]);
+  const affiliationStatusFilters = useMemo(() => (filters.affiliationStatus as AffiliationStatus[]) ?? [], [filters.affiliationStatus]);
 
   const {
     patients,
@@ -45,21 +63,28 @@ export const PatientList: React.FC = () => {
 
   const handleSearchChange = useCallback(
     (query: string) => {
-      setSearchQuery(query);
+      setFilter('search', query);
       resetPage();
     },
-    [resetPage]
+    [setFilter, resetPage]
   );
 
   const error = isError
     ? { message: errorAlertMessage('patients.list.loadFailed', patientsError), operation: 'load' as const }
     : null;
 
+  // Apply URL filter for patientId
+  const urlFilteredPatients = useMemo(() => {
+    if (!urlFilters.patientId) return patients;
+    const patientId = Number(urlFilters.patientId);
+    return patients.filter(p => p.id === patientId);
+  }, [patients, urlFilters.patientId]);
+
   const {
     filteredItems: preFilteredPatients,
     statusFilters: sexFilters,
     setStatusFilters: setSexFilters,
-  } = useClientListFilter<PatientContext, Gender>(patients, {
+  } = useClientListFilter<PatientContext, Gender>(urlFilteredPatients, {
     searchFields: patient => [
       patient.fullName,
       patient.id.toString(),
@@ -136,17 +161,29 @@ export const PatientList: React.FC = () => {
             </Button>
           }
           filters={
-            <PatientFilters
-              searchQuery={searchQuery}
-              onSearchChange={handleSearchChange}
-              sexFilters={sexFilters}
-              onSexFiltersChange={setSexFilters}
-              ageRange={ageRange}
-              onAgeRangeChange={setAgeRange}
-              affiliationStatusFilters={affiliationStatusFilters}
-              onAffiliationStatusFiltersChange={setAffiliationStatusFilters}
-              ageHistogram={ageHistogram}
-            />
+            <>
+              {urlFilters && Object.keys(urlFilters).length > 0 && (
+                <UrlFilterBadges
+                  urlFilters={urlFilters}
+                  onClear={clearUrlFilters}
+                  onClearSingle={(key) => {
+                    const urlKey = PATIENT_URL_FILTER_KEYS.find(k => k === key);
+                    if (urlKey) setUrlFilter(urlKey, undefined);
+                  }}
+                />
+              )}
+              <PatientFilters
+                searchQuery={searchQuery}
+                onSearchChange={handleSearchChange}
+                sexFilters={sexFilters}
+                onSexFiltersChange={setSexFilters}
+                ageRange={ageRange}
+                onAgeRangeChange={(value) => setFilter('ageRange', value)}
+                affiliationStatusFilters={affiliationStatusFilters}
+                onAffiliationStatusFiltersChange={(value) => setFilter('affiliationStatus', value)}
+                ageHistogram={ageHistogram}
+              />
+            </>
           }
           pagination={{
             mode: 'server',

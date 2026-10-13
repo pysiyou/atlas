@@ -40,12 +40,16 @@ export interface EntityIdProps {
   title?: string;
   as?: ElementType;
   onClick?: React.MouseEventHandler<HTMLElement>;
+  /** When set, clicking navigates to targetPage with the entity filter applied. */
+  navigateToFiltered?: EntityNavigateTarget;
   [key: string]: unknown;
 }
 
 /**
  * Consistent typography for entity IDs (PAT/ORD/SAM/TST) and catalog/test codes.
  * Uses theme tokens via the `.entity-id` class.
+ * 
+ * Supports filtered navigation via `navigateToFiltered` prop for cross-page navigation.
  */
 export function EntityId({
   type,
@@ -56,8 +60,11 @@ export function EntityId({
   title,
   as: Component = 'span',
   onClick,
+  navigateToFiltered,
   ...rest
 }: EntityIdProps) {
+  const navigate = useNavigate();
+
   const content =
     children ??
     (type != null
@@ -68,18 +75,27 @@ export function EntityId({
     return null;
   }
 
+  // Build filtered navigation handler if specified
+  const handleFilteredNavigation = navigateToFiltered && value != null
+    ? createEntityFilterNavigateHandler(navigate, value, navigateToFiltered)
+    : undefined;
+
+  const effectiveOnClick = onClick ?? handleFilteredNavigation;
+
   const resolvedVariant =
-    onClick != null && variant === 'default' ? 'clickable' : variant;
+    effectiveOnClick != null && variant === 'default' ? 'clickable' : variant;
+
+  const EffectiveComponent = (effectiveOnClick != null && Component === 'span' ? 'button' : Component) as ElementType;
 
   return (
-    <Component
+    <EffectiveComponent
       className={cn(VARIANT_CLASSES[resolvedVariant], 'font-normal', className)}
       title={title}
-      onClick={onClick}
+      onClick={effectiveOnClick}
       {...rest}
-      {...(Component === 'button' ? { type: 'button' } : {})}
+      {...(EffectiveComponent === 'button' ? { type: 'button' } : {})}
     >
       {content}
-    </Component>
+    </EffectiveComponent>
   );
 }

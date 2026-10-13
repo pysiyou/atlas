@@ -1,11 +1,12 @@
 /**
- * PaymentList — server-paginated orders joined with cached payments.
+ * PaymentList — server-paginated orders joined with cached payments with URL filter support.
  */
 
 import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useClientListFilter } from '@/hooks/useClientListFilter';
-import { ListView } from '@/components';
+import { usePageFilters } from '@/hooks/usePageFilters';
+import { ListView, UrlFilterBadges } from '@/components';
 import { PaymentFilters } from '../components/PaymentFilters';
 import { createPaymentTableConfig } from '../config/PaymentTable.config';
 import { PaymentDetailModal } from '../components/PaymentDetailModal';
@@ -17,6 +18,8 @@ import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
 import { errorAlertMessage } from '@/utils/feedback';
 import type { Order, Payment, PaymentStatus, PaymentMethod } from '@/types';
 import type { OrderPaymentView } from '../types';
+
+const PAYMENT_URL_FILTER_KEYS = ['orderId', 'patientId'] as const;
 
 function buildOrderPaymentViews(orders: Order[], payments: Payment[]): OrderPaymentView[] {
   const paymentByOrder = new Map(payments.map(p => [p.orderId, p]));
@@ -32,17 +35,36 @@ function buildOrderPaymentViews(orders: Order[], payments: Payment[]): OrderPaym
 
 export const PaymentList: React.FC = () => {
   const navigate = useNavigate();
-  const [methodFilters, setMethodFilters] = useState<PaymentMethod[]>([]);
-  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
-  const [statusFilters, setStatusFilters] = useState<PaymentStatus[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<OrderPaymentView | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // URL-synced entity filters + local UI filters
+  const {
+    filters,
+    urlFilters,
+    setFilter,
+    clearUrlFilters,
+    setUrlFilter,
+  } = usePageFilters({
+    urlFilterKeys: PAYMENT_URL_FILTER_KEYS,
+    initialFilters: {
+      methodFilters: [] as PaymentMethod[],
+      dateRange: null,
+      statusFilters: [] as PaymentStatus[],
+    },
+  });
+
+  const methodFilters = useMemo(() => (filters.methodFilters as PaymentMethod[]) ?? [], [filters.methodFilters]);
+  const dateRange = (filters.dateRange as [Date, Date] | null) ?? null;
+  const statusFilters = useMemo(() => (filters.statusFilters as PaymentStatus[]) ?? [], [filters.statusFilters]);
+
   const serverFilters = useMemo(
     () => ({
+      patientId: urlFilters.patientId ?? undefined,
+      orderId: urlFilters.orderId ?? undefined,
       paymentStatus: statusFilters.length === 1 ? statusFilters[0] : undefined,
     }),
-    [statusFilters]
+    [urlFilters.patientId, urlFilters.orderId, statusFilters]
   );
 
   const {
@@ -91,10 +113,10 @@ export const PaymentList: React.FC = () => {
 
   const handleStatusFiltersChange = useCallback(
     (filters: PaymentStatus[]) => {
-      setStatusFilters(filters);
+      setFilter('statusFilters', filters);
       resetPage();
     },
-    [resetPage]
+    [setFilter, resetPage]
   );
 
   const filteredOrders = useMemo(() => {
@@ -163,16 +185,28 @@ export const PaymentList: React.FC = () => {
           onRowClick={handleRowClick}
           title="Payments"
           filters={
-            <PaymentFilters
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              dateRange={dateRange}
-              onDateRangeChange={setDateRange}
-              statusFilters={statusFilters}
-              onStatusFiltersChange={handleStatusFiltersChange}
-              methodFilters={methodFilters}
-              onMethodFiltersChange={setMethodFilters}
-            />
+            <>
+              {urlFilters && Object.keys(urlFilters).length > 0 && (
+                <UrlFilterBadges
+                  urlFilters={urlFilters}
+                  onClear={clearUrlFilters}
+                  onClearSingle={(key) => {
+                    const urlKey = PAYMENT_URL_FILTER_KEYS.find(k => k === key);
+                    if (urlKey) setUrlFilter(urlKey, undefined);
+                  }}
+                />
+              )}
+              <PaymentFilters
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                dateRange={dateRange}
+                onDateRangeChange={(value) => setFilter('dateRange', value)}
+                statusFilters={statusFilters}
+                onStatusFiltersChange={handleStatusFiltersChange}
+                methodFilters={methodFilters}
+                onMethodFiltersChange={(value) => setFilter('methodFilters', value)}
+              />
+            </>
           }
           pagination={{
             mode: 'server',

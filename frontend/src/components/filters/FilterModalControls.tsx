@@ -4,10 +4,10 @@
 
 import React from 'react';
 import { RADIUS, TYPE } from '@/components/theme/recipes';
-import { Icon } from '@/components';
+import { Icon } from '@/components/primitives';
 import { uppercaseLabel, cn } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { OverlaySearchInput } from '@/components';
+import { OverlaySearchInput } from '@/components/overlays/OverlaySearchInput';
 import { PriceRangeSliderContent } from './PriceRangeSliderContent';
 
 export const ModalSearchInput = OverlaySearchInput;
