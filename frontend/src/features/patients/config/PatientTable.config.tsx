@@ -31,7 +31,7 @@ export const createPatientTableConfig = (
     id: {
       key: 'id',
       header: 'Patient ID',
-      width: COLUMN_SIZE.md,
+      width: COLUMN_SIZE.sm,
       sortable: true,
       accessor: (patient: PatientContext) => patient.id,
       render: (patient: PatientContext) => renderPatientId(patient.id),

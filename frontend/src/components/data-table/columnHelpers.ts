@@ -34,7 +34,7 @@ export function createIdColumn<T>(
 ): ColumnConfig<T> {
   return createColumn(key, header, {
     ...options,
-    width: options.width ?? COLUMN_SIZE.md,
+    width: options.width ?? COLUMN_SIZE.sm,
     render: item => renderId(item),
   });
 }

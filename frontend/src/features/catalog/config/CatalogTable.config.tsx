@@ -24,7 +24,7 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
     code: {
       key: 'code',
       header: 'Code',
-      width: COLUMN_SIZE.md,
+      width: COLUMN_SIZE.sm,
       sortable: true,
       accessor: (test: Test) => test.code,
       render: (test: Test) => (

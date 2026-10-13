@@ -120,7 +120,7 @@ export function createTestsTableConfig(
     sampleId: {
       key: 'sampleId',
       header: 'Sample',
-      width: COLUMN_SIZE.md,
+      width: COLUMN_SIZE.sm,
       accessor: (test: OrderTest) => test.sampleId ?? '',
       render: (test: OrderTest) =>
         test.sampleId ? (

@@ -8,8 +8,8 @@ import type { ColumnSizePreset, ColumnWidth, TableVariant } from './types';
 /** Canonical pixel layout for every table column width token. */
 export const SIZE_PRESETS: Record<ColumnSizePreset, ColumnWidth> = {
   xs: { base: 60, min: 50, grow: 0, shrink: 0 },
-  sm: { base: 100, min: 80, grow: 0, shrink: 0 },
-  md: { base: 120, min: 100, grow: 0, shrink: 0 },
+  sm: { base: 108, min: 88, grow: 0, shrink: 0 },
+  md: { base: 144, min: 124, grow: 0, shrink: 0 },
   lg: { base: 160, min: 140, grow: 0, shrink: 0 },
   xl: { min: 200, grow: 2, shrink: 1 },
   '2xl': { min: 280, grow: 2, shrink: 1 },

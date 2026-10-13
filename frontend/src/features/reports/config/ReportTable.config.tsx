@@ -28,7 +28,7 @@ export const createReportTableConfig = (
     testId: {
       key: 'testId',
       header: 'Test ID',
-      width: COLUMN_SIZE.md,
+      width: COLUMN_SIZE.sm,
       sortable: true,
       accessor: (test: ValidatedTest) => test.testId,
       render: (test: ValidatedTest) => (
@@ -38,7 +38,7 @@ export const createReportTableConfig = (
     orderId: {
       key: 'orderId',
       header: ORDER_TABLE_COLUMN_HEADERS.orderId,
-      width: COLUMN_SIZE.md,
+      width: COLUMN_SIZE.sm,
       sortable: true,
       accessor: (test: ValidatedTest) => test.orderId,
       render: (test: ValidatedTest) => (

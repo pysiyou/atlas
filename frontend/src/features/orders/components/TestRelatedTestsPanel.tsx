@@ -38,16 +38,16 @@ export const TestRelatedTestsPanel: React.FC<TestRelatedTestsPanelProps> = ({
 
   return (
     <Panel variant="lab" title="Related tests" className="w-full">
-      <div className="space-y-space-4">
+      <div className="space-y-space-3">
         {onSample.length > 0 ? (
-          <div className="space-y-space-2">
-            <p className={TYPE.sectionTitle}>On same sample</p>
+          <div className="space-y-space-0-5">
+            <p className={`${TYPE.sectionTitle} leading-tight`}>On same sample</p>
             <LinkedOrderTestsList tests={onSample} onOpen={onOpenOrderTest} />
           </div>
         ) : null}
         {sameTestEntries.length > 0 ? (
-          <div className="space-y-space-2">
-            <p className={TYPE.sectionTitle}>Other entries for this test</p>
+          <div className="space-y-space-0-5">
+            <p className={`${TYPE.sectionTitle} leading-tight`}>Other entries for this test</p>
             <LinkedOrderTestsList tests={sameTestEntries} onOpen={onOpenOrderTest} />
           </div>
         ) : null}
