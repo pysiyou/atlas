@@ -105,7 +105,7 @@ export function createOrderSharedColumns<T>(
     totalPrice: {
       key: 'totalPrice',
       header: ORDER_TABLE_COLUMN_HEADERS.totalPrice,
-      width: COLUMN_SIZE.md,
+      width: COLUMN_SIZE.sm,
       sortable: true,
       accessor: item => accessors.getTotalPrice(item),
       render: item =>

@@ -14,13 +14,19 @@ export function getSiblingOrderTestsOnSample(
   return (order.tests ?? []).filter(t => t.sampleId === sampleId && t.id !== orderTest.id);
 }
 
-/** Other order rows for the same catalog test (retests / superseded entries). */
+/** Same catalog test on a different sample (retests / superseded rows not on the current tube). */
 export function getRelatedOrderTestEntries(
   order: Pick<Order, 'tests'>,
-  orderTest: Pick<OrderTest, 'id' | 'testCode'>
+  orderTest: Pick<OrderTest, 'id' | 'testCode' | 'sampleId'>
 ): OrderTest[] {
+  const sampleId = orderTest.sampleId;
   return (order.tests ?? [])
-    .filter(t => t.testCode === orderTest.testCode && t.id !== orderTest.id)
+    .filter(
+      t =>
+        t.testCode === orderTest.testCode &&
+        t.id !== orderTest.id &&
+        (sampleId == null || t.sampleId !== sampleId)
+    )
     .sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
 }
 

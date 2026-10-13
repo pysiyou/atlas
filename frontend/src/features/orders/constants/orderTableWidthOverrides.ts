@@ -11,26 +11,26 @@ type ResponsiveWidthOverrides = Partial<Record<ColumnViewPreset, ViewWidthOverri
 
 const ORDER_CORE_WIDTHS: ResponsiveWidthOverrides = {
   full: {
-    orderId: COLUMN_SIZE.md,
+    orderId: COLUMN_SIZE.sm,
     orderDate: COLUMN_SIZE.md,
     tests: COLUMN_SIZE.xl,
     overallStatus: COLUMN_SIZE.md,
     priority: COLUMN_SIZE.sm,
     paymentStatus: COLUMN_SIZE.sm,
-    totalPrice: COLUMN_SIZE.md,
+    totalPrice: COLUMN_SIZE.sm,
   },
   medium: {
-    orderId: COLUMN_SIZE.md,
+    orderId: COLUMN_SIZE.sm,
     orderDate: COLUMN_SIZE.md,
     tests: COLUMN_SIZE.xl,
     overallStatus: COLUMN_SIZE.md,
-    totalPrice: COLUMN_SIZE.md,
+    totalPrice: COLUMN_SIZE.sm,
   },
   compact: {
-    orderId: COLUMN_SIZE.md,
+    orderId: COLUMN_SIZE.sm,
     orderDate: COLUMN_SIZE.md,
     overallStatus: COLUMN_SIZE.sm,
-    totalPrice: COLUMN_SIZE.md,
+    totalPrice: COLUMN_SIZE.sm,
   },
 };
 

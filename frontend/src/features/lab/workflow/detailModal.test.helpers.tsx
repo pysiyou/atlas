@@ -257,14 +257,14 @@ export function TestDetailModalBody({
 
       {ready && order && orderTest ? (
         <>
+          {detailGridSections ? <DetailGrid sections={detailGridSections} /> : null}
+
           <OrderTestSampleTabs
             samples={relatedSamples}
             linkedSampleId={orderTest.sampleId}
             catalogTest={catalogTest}
             onViewFullSample={onViewFullSample}
           />
-
-          {detailGridSections ? <DetailGrid sections={detailGridSections} /> : null}
 
           <TestRelatedTestsPanel
             order={order}

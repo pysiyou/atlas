@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Button, EntityId } from '@/components';
+import { EntityId } from '@/components';
 import type { OrderTest } from '@/types';
 import { displayId } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
@@ -18,13 +18,13 @@ export const LinkedOrderTestsList: React.FC<LinkedOrderTestsListProps> = ({ test
   if (tests.length === 0) return null;
 
   return (
-    <ul className={`space-y-space-2 ${TYPE.value}`}>
+    <ul className={`space-y-space-0-5 leading-snug ${TYPE.value}`}>
       {tests.map(test => (
         <li
           key={test.id ?? `${test.testCode}-${test.createdAt}`}
-          className="flex flex-wrap items-baseline justify-between gap-x-space-3 gap-y-space-1"
+          className="flex flex-wrap items-center justify-between gap-x-space-2 min-h-0"
         >
-          <div className="min-w-0 flex flex-wrap items-baseline gap-x-space-2 gap-y-space-0-5">
+          <div className="min-w-0 flex flex-wrap items-baseline gap-x-space-2 gap-y-0">
             <span className="font-medium text-text-primary">{test.testName}</span>
             <EntityId variant="inline">{test.testCode}</EntityId>
             {test.id != null ? (
@@ -32,15 +32,9 @@ export const LinkedOrderTestsList: React.FC<LinkedOrderTestsListProps> = ({ test
             ) : null}
             <span className={TYPE.meta}>{formatStatusBadgeLabel(test.status)}</span>
           </div>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className={INLINE_LINK}
-            onClick={() => onOpen(test)}
-          >
+          <button type="button" className={`shrink-0 ${INLINE_LINK}`} onClick={() => onOpen(test)}>
             View
-          </Button>
+          </button>
         </li>
       ))}
     </ul>
