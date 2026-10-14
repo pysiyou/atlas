@@ -40,6 +40,7 @@ function EscalationResultsPanel({
       <ResultValidationForm
         results={test.results!}
         flags={test.flags}
+        testCode={test.testCode}
         technicianNotes={test.technicianNotes}
         comments={test.validationNotes ?? ''}
         onCommentsChange={() => {}}

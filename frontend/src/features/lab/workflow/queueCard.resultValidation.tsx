@@ -156,7 +156,13 @@ function ResultValidationCardDesktop({
               <SampleRejectedBanner sampleId={sampleId} sampleRejectionReason={sampleRejectionReason} />
             </div>
           )}
-          <ResultsParameterGrid results={test.results!} flags={test.flags} variant="inline" />
+          <ResultsParameterGrid
+            results={test.results!}
+            flags={test.flags}
+            testCode={test.testCode}
+            variant="inline"
+            layout="compact"
+          />
         </>
       }
       contentTitle="Results"
@@ -230,7 +236,14 @@ function ResultValidationCardMobile({
           </>
         }
       >
-        <ResultsParameterGrid results={test.results!} flags={test.flags} variant="inline" dense />
+        <ResultsParameterGrid
+          results={test.results!}
+          flags={test.flags}
+          testCode={test.testCode}
+          variant="inline"
+          layout="compact"
+          dense
+        />
       </QueueCardMobile>
     </Card>
   );

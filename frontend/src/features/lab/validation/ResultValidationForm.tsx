@@ -10,11 +10,13 @@ import { ResultsParameterGrid } from '../components/ResultsParameterGrid';
 import { ResultContextNotes } from '../components/ResultContextNotes';
 import { RESULT_PANEL } from '../utils/labResult';
 import { TYPE } from '@/components/theme/recipes';
+import { resolveParameterLabel, useParameterLabelMap } from '@/features/catalog';
 
 
 interface ValidationFormProps {
   results: Record<string, unknown>;
   flags?: string[];
+  testCode?: string;
   technicianNotes?: string;
   comments: string;
   onCommentsChange: (comments: string) => void;
@@ -27,6 +29,7 @@ interface ValidationFormProps {
 export const ResultValidationForm: React.FC<ValidationFormProps> = ({
   results,
   flags,
+  testCode,
   technicianNotes,
   comments,
   onCommentsChange,
@@ -35,6 +38,7 @@ export const ResultValidationForm: React.FC<ValidationFormProps> = ({
   readOnly = false,
 }) => {
   const hasResults = results && Object.keys(results).length > 0;
+  const parameterLabels = useParameterLabelMap(testCode);
   const flagStatusMap = useMemo(() => statusMapFromFlags(flags), [flags]);
 
   const criticalValues = useMemo(() => {
@@ -46,13 +50,13 @@ export const ResultValidationForm: React.FC<ValidationFormProps> = ({
         if (!isCritical(status)) return null;
 
         return {
-          name: key,
+          name: resolveParameterLabel(key, parameterLabels),
           value: resultValue,
           unit,
         };
       })
       .filter((cv): cv is NonNullable<typeof cv> => cv !== null);
-  }, [results, flagStatusMap, hasResults]);
+  }, [results, flagStatusMap, hasResults, parameterLabels]);
 
   return (
     <div className="space-y-space-3">
@@ -61,10 +65,16 @@ export const ResultValidationForm: React.FC<ValidationFormProps> = ({
       )}
 
       {hasResults && (
-        <ResultsParameterGrid results={results} flags={flags} variant="inline" />
+        <ResultsParameterGrid
+          results={results}
+          flags={flags}
+          testCode={testCode}
+          variant="inline"
+          layout="validation"
+        />
       )}
 
-      <ResultContextNotes flags={flags} technicianNotes={technicianNotes} compact />
+      <ResultContextNotes flags={flags} testCode={testCode} technicianNotes={technicianNotes} compact />
 
       {!readOnly && (
         <div className="pt-space-3 border-t border-border-subtle space-y-space-2">
