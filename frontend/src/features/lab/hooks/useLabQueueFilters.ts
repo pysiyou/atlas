@@ -175,6 +175,7 @@ export function useLabQueueFilters<T extends WorkflowType>({
       appliedStatusFilters,
       collectionSampleLookup,
       urlFilters,
+      preferSampleInSearch: workflowType === 'collection',
     }),
     [
       items,
@@ -186,6 +187,7 @@ export function useLabQueueFilters<T extends WorkflowType>({
       appliedStatusFilters,
       collectionSampleLookup,
       urlFilters,
+      workflowType,
     ]
   );
 

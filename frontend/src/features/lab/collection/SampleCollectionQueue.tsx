@@ -2,10 +2,16 @@
  * SampleCollectionQueue - Main view for sample collection workflow
  */
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
+import { decodeFiltersFromUrl } from '@/utils/filters';
 import { useLabQueueFilters, useLabQueueUrlSearch } from '../hooks';
+import {
+  getLabQueueSearchFromUrlFilters,
+  hasActiveEntityUrlFilters,
+} from '../utils/labSearchAndLinks';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { LAB_CONFIG } from '../constants';
 import { useCollectSample } from '../api/samples';
@@ -15,7 +21,7 @@ import { SampleCollectionCard } from '../workflow';
 import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
-import { collectionFilterConfig } from '../constants';
+import { collectionFilterConfig, LAB_URL_FILTER_KEYS } from '../constants';
 import { mapCollectionWorklistToSampleDisplay } from '../utils/labQueue';
 import { EMPTY_COPY, emptySubtitle } from '@/components/display';
 import { ErrorBoundary } from '@/components/loaders';
@@ -29,11 +35,15 @@ export const SampleCollectionQueue: React.FC = () => {
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
 
   const { tests: catalogTests } = useTestCatalog();
+  const [searchParams] = useSearchParams();
   const urlSearch = useLabQueueUrlSearch();
-  const [searchQuery, setSearchQuery] = useState(urlSearch);
-  React.useEffect(() => {
-    setSearchQuery(urlSearch);
-  }, [urlSearch]);
+  const [searchQuery, setSearchQuery] = useState(() =>
+    getLabQueueSearchFromUrlFilters(
+      decodeFiltersFromUrl(searchParams, LAB_URL_FILTER_KEYS),
+      urlSearch,
+      true
+    )
+  );
 
   const debouncedSearch = useDebouncedValue(searchQuery, LAB_CONFIG.SEARCH_DEBOUNCE_MS);
   const trimmedSearch = debouncedSearch.trim();
@@ -68,6 +78,16 @@ export const SampleCollectionQueue: React.FC = () => {
     skipSearchFilter: isSampleLookup,
     collectionSampleLookup: isSampleLookup,
   });
+
+  useEffect(() => {
+    const entitySearch = getLabQueueSearchFromUrlFilters(urlFilters, urlSearch, true);
+    if (hasActiveEntityUrlFilters(urlFilters)) {
+      setSearchQuery(entitySearch);
+      return;
+    }
+    setSearchQuery(urlSearch);
+  }, [urlFilters, urlSearch]);
+
   const filteredDisplays = filteredDisplaysRaw as SampleCollectionQueueItem[];
 
   const { handleCollect } = useSubmitSampleCollection({

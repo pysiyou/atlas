@@ -2,7 +2,32 @@
 import type { TestWithContext, OrderTest } from '@/types';
 import { displayId, buildFilteredUrl } from '@/utils';
 import type { TestStatus } from '@/types/enums';
+import type { UrlFilters } from '@/utils/filters';
 import { getLabQueueUrl, getLabTabForTestStatus, getLabTabPath, type LabTabId } from '../constants/labConstants';
+
+export function hasActiveEntityUrlFilters(urlFilters?: UrlFilters): boolean {
+  if (!urlFilters) return false;
+  return Boolean(urlFilters.patientId || urlFilters.orderId || urlFilters.sampleId || urlFilters.testId);
+}
+
+/**
+ * Text to show in the lab queue search input when opened via entity URL filters.
+ * Collection prefers sample id (SAMxxxx) because that is what users search by on that tab.
+ */
+export function getLabQueueSearchFromUrlFilters(
+  urlFilters: UrlFilters | undefined,
+  fallback = '',
+  preferSampleId = false
+): string {
+  if (!urlFilters) return fallback;
+  if (preferSampleId && urlFilters.sampleId) {
+    return displayId.sample(Number(urlFilters.sampleId));
+  }
+  if (urlFilters.testId) return displayId.orderTest(Number(urlFilters.testId));
+  if (urlFilters.sampleId) return displayId.sample(Number(urlFilters.sampleId));
+  if (urlFilters.orderId) return displayId.order(Number(urlFilters.orderId));
+  return fallback;
+}
 
 export function orderTestKey(orderTestId: number): string {
   return `test-${orderTestId}`;
@@ -35,19 +60,22 @@ export function getLabQueueUrlForTest(
   const tab = getLabTabForTestStatus(test.status as TestStatus);
   if (!tab) return null;
 
-  // Use URL filters for direct test navigation
-  if (test.id) {
-    const filters: Record<string, string> = {
-      testId: String(test.id),
-      orderId: String(orderId)
-    };
-    
-    // Include sampleId for collection tab to help narrow results
-    if (test.sampleId && tab === 'collection') {
+  if (tab === 'collection') {
+    const filters: Record<string, string> = { orderId: String(orderId) };
+    if (test.sampleId) {
       filters.sampleId = String(test.sampleId);
+    } else if (test.id) {
+      filters.testId = String(test.id);
     }
-    
     return buildFilteredUrl(getLabTabPath(tab), filters);
+  }
+
+  // Entry / validation: target the order test row
+  if (test.id) {
+    return buildFilteredUrl(getLabTabPath(tab), {
+      testId: String(test.id),
+      orderId: String(orderId),
+    });
   }
 
   // Fallback to search-based URL (for tests without IDs)
