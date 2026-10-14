@@ -6,7 +6,9 @@ import { expectArray } from '@/lib/api/errors';
 import type { ApiTestResponse } from '@/lib/api/types';
 import { REFERENCE_DATA_LIMIT } from '@/lib/api/constants';
 import type { Test, TestCategory, TestParameter, ResultItem } from '@/types';
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { buildParameterLabelMapFromCatalog } from '../testLookup';
 import { useEntityLookup } from '@/hooks/useEntityLookup';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { useInvalidateQueryKey } from '@/lib/query/invalidate';
@@ -153,6 +155,15 @@ export function useTestCatalog() {
     error: query.error,
     refetch: query.refetch,
   };
+}
+
+/** Catalog parameter code → display name for a test (cached with useTestCatalog). */
+export function useParameterLabelMap(testCode?: string): Record<string, string> {
+  const { tests } = useTestCatalog();
+  return useMemo(
+    () => (testCode ? buildParameterLabelMapFromCatalog(testCode, tests) : {}),
+    [testCode, tests]
+  );
 }
 
 /**

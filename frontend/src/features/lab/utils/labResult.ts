@@ -42,16 +42,17 @@ export function parseResultEntry(
   key: string,
   raw: unknown,
   flagStatusMap: Record<string, ResultStatus>
-): { resultValue: string; unit: string; status: ResultStatus } {
+): { resultValue: string; unit: string; referenceRange: string; status: ResultStatus } {
   const obj =
     typeof raw === 'object' && raw !== null && 'value' in (raw as object)
-      ? (raw as { value: unknown; unit?: string; status?: string })
+      ? (raw as { value: unknown; unit?: string; referenceRange?: string; status?: string })
       : null;
   const resultValue = obj ? String(obj.value) : String(raw);
   const unit = obj?.unit ?? '';
+  const referenceRange = obj?.referenceRange?.trim() ?? '';
   const statusFromResult = obj?.status as ResultStatus | undefined;
   const status = flagStatusMap[key] ?? statusFromResult ?? 'normal';
-  return { resultValue, unit, status };
+  return { resultValue, unit, referenceRange, status };
 }
 
 interface ParsedRange {
@@ -257,5 +258,13 @@ export function resultStatusLabel(status: ResultStatus): string | null {
   if (status === 'high' || status === 'critical-high') return 'High';
   if (status === 'low' || status === 'critical-low') return 'Low';
   return status;
+}
+
+/** Compact chip after the numeric result (unit uses RESULT_PANEL.unit). */
+export function resultStatusBadgeClass(status: ResultStatus): string {
+  const base = `${TYPE.caption} font-semibold uppercase tracking-wide leading-none px-space-1 py-0.5 rounded-sm shrink-0`;
+  if (isCritical(status)) return `${base} ${TONE.danger.well} ${TONE.danger.fg}`;
+  if (status !== 'normal') return `${base} ${TONE.warning.well} text-warning-fg`;
+  return base;
 }
 

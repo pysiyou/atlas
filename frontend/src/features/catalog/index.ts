@@ -10,6 +10,7 @@ export {
   useTestsByCategory,
   useActiveTests,
   useTestNameLookup,
+  useParameterLabelMap,
   useInvalidateTestCatalog,
 } from './api/tests';
 

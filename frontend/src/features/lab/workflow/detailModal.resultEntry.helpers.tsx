@@ -96,6 +96,7 @@ export function EntryDetailMainPanel({
         <ResultValidationForm
           results={test.results!}
           flags={test.flags}
+          testCode={test.testCode}
           technicianNotes={test.technicianNotes}
           comments={test.validationNotes ?? ''}
           onCommentsChange={() => undefined}

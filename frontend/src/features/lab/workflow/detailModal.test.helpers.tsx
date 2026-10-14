@@ -230,6 +230,7 @@ export function TestDetailModalBody({
           <ResultValidationForm
             results={orderTest.results}
             flags={orderTest.flags}
+            testCode={orderTest.testCode}
             technicianNotes={orderTest.technicianNotes}
             comments={comments}
             onCommentsChange={
