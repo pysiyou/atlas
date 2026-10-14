@@ -9,8 +9,7 @@ import type { ContainerTopColor } from '@/types';
 import type { SampleCollectionQueueItem, SampleRequirement } from '@/types/lab-operations';
 import { cn, formatDate } from '@/utils';
 import { LabAuditBlock } from '../components/LabWorkflowHeader.parts';
-import { LabCardMetaRow } from '../components/LabCardMetaRow';
-import { CollectionOperationalMetaItems } from '../components/CollectionOperationalMetaItems';
+import { CollectionOperationalMetaRow } from '../components/CollectionOperationalMetaItems';
 import { buildCollectionOperationalMetaItems } from '../utils/collectionOperationalMetaItems';
 import { buildSampleCollectionTimelineLines } from '../constants/labWorkflowAuditLines';
 import {
@@ -139,11 +138,7 @@ function SampleCollectionOperationsRow(
 ) {
   const items = buildCollectionOperationalMetaItems(props);
 
-  return (
-    <LabCardMetaRow>
-      <CollectionOperationalMetaItems items={items} />
-    </LabCardMetaRow>
-  );
+  return <CollectionOperationalMetaRow items={items} />;
 }
 
 export function SampleCollectionCardLeftColumn({

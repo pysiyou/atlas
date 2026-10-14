@@ -6,9 +6,9 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { compareQueuePriority } from '../utils/labQueue';
-import { resolveCollectionStatusFilters } from '../utils/labSearchAndLinks';
+import { getLabQueueSearchFromUrlFilters, resolveCollectionStatusFilters } from '../utils/labSearchAndLinks';
 import type { UrlFilters } from '@/utils/filters';
-import { displayId, isDateInInclusiveRange } from '@/utils';
+import { isDateInInclusiveRange } from '@/utils';
 
 /** Reads the `search` query param used for lab queue deep-links. */
 export function useLabQueueUrlSearch(): string {
@@ -46,6 +46,8 @@ export interface UseLabQueueFilterStateOptions<T, S> {
   getOrderId?: (item: T) => number | undefined;
   /** Get sample ID for sampleId filtering */
   getSampleId?: (item: T) => number | undefined;
+  /** Collection tab: prefer sample display id in search when sampleId is in the URL */
+  preferSampleInSearch?: boolean;
 }
 
 export interface LabQueueFilterState<S> {
@@ -164,15 +166,12 @@ export function useLabQueueFilterState<T, S>({
   getId,
   getOrderId,
   getSampleId,
+  preferSampleInSearch = false,
 }: UseLabQueueFilterStateOptions<T, S>) {
-  // Auto-generate search hint from entity URL filters if present
-  const searchFromEntityFilter = useMemo(() => {
-    if (!urlFilters) return initialSearchQuery;
-    if (urlFilters.testId) return displayId.orderTest(Number(urlFilters.testId));
-    if (urlFilters.sampleId) return displayId.sample(Number(urlFilters.sampleId));
-    if (urlFilters.orderId) return displayId.order(Number(urlFilters.orderId));
-    return initialSearchQuery;
-  }, [urlFilters, initialSearchQuery]);
+  const searchFromEntityFilter = useMemo(
+    () => getLabQueueSearchFromUrlFilters(urlFilters, initialSearchQuery, preferSampleInSearch),
+    [urlFilters, initialSearchQuery, preferSampleInSearch]
+  );
 
   const [internalSearchQuery, setInternalSearchQuery] = useState(searchFromEntityFilter);
   const searchQuery = controlledSearchQuery ?? internalSearchQuery;

@@ -1,32 +1,36 @@
 import type { CollectionOperationalMetaItem } from '../utils/collectionOperationalMetaItems';
-import { QueueAgeMeta, RecollectionRequestedMeta } from './LabCardMetaRow';
+import {
+  LabCardMetaRow,
+  LabModalMetaRow,
+  QueueAgeMeta,
+  RecollectionRequestedMeta,
+} from './LabCardMetaRow';
 
-export function CollectionOperationalMetaItems({
+function CollectionOperationalMetaItemNode({ item }: { item: CollectionOperationalMetaItem }) {
+  if (item.type === 'queue-age') {
+    return <QueueAgeMeta since={item.since} />;
+  }
+  if (item.type === 'recollection-requested') {
+    return <RecollectionRequestedMeta recollectionSampleId={item.recollectionSampleId} />;
+  }
+  return <span className={item.className}>{item.text}</span>;
+}
+
+/** Renders collection operational facts with card/modal meta-row separators between each item. */
+export function CollectionOperationalMetaRow({
   items,
+  MetaRow = LabCardMetaRow,
 }: {
   items: CollectionOperationalMetaItem[];
+  MetaRow?: typeof LabCardMetaRow | typeof LabModalMetaRow;
 }) {
+  if (items.length === 0) return null;
+
   return (
-    <>
-      {items.map((item, index) => {
-        const key = `${item.type}-${index}`;
-        if (item.type === 'queue-age') {
-          return <QueueAgeMeta key={key} since={item.since} />;
-        }
-        if (item.type === 'recollection-requested') {
-          return (
-            <RecollectionRequestedMeta
-              key={key}
-              recollectionSampleId={item.recollectionSampleId}
-            />
-          );
-        }
-        return (
-          <span key={key} className={item.className}>
-            {item.text}
-          </span>
-        );
-      })}
-    </>
+    <MetaRow>
+      {items.map((item, index) => (
+        <CollectionOperationalMetaItemNode key={`${item.type}-${index}`} item={item} />
+      ))}
+    </MetaRow>
   );
 }

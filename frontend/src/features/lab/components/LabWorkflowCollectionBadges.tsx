@@ -14,11 +14,8 @@ import {
 } from '@/components/display/StatusPresentationBadge';
 import { useLabHeaderCompact } from './LabWorkflowHeader';
 import type { StatusPresentation } from '@/types/labProjection';
-import {
-  LabCardMetaRow,
-  LabModalMetaRow,
-} from './LabCardMetaRow';
-import { CollectionOperationalMetaItems } from './CollectionOperationalMetaItems';
+import { LabCardMetaRow, LabModalMetaRow } from './LabCardMetaRow';
+import { CollectionOperationalMetaRow } from './CollectionOperationalMetaItems';
 
 export interface CollectionHeaderBadgesProps {
   sample: Sample;
@@ -83,11 +80,7 @@ function CollectionOperationalMeta({
 }) {
   const items = buildCollectionOperationalMetaItems(metaProps);
 
-  return (
-    <MetaRow>
-      <CollectionOperationalMetaItems items={items} />
-    </MetaRow>
-  );
+  return <CollectionOperationalMetaRow items={items} MetaRow={MetaRow} />;
 }
 
 /** Queue card — full collection context (same facts as modal, card typography). */
