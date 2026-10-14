@@ -10,9 +10,6 @@ import { Modal, DialogFooter } from '@/components/overlays';
 import { FooterInfo } from '@/components/display';
 import type { ValidatedTestReportPayload } from '../types';
 import { MODULE_ICONS } from '@/config/icons';
-import { useUserLookup } from '@/lib/api/users';
-import { ReportPreviewHeader } from './ReportPreviewHeader';
-import { ReportPreviewResults } from './ReportPreviewResults';
 
 interface ReportPreviewModalProps {
   isOpen: boolean;
@@ -29,8 +26,6 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
   onGenerate,
   isGenerating = false,
 }) => {
-  const { getUserName } = useUserLookup();
-
   return (
     <Modal
       isOpen={isOpen}
@@ -41,11 +36,6 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
       disableClose={isGenerating}
     >
       <div className="flex flex-col h-full bg-surface-page">
-        <div className="flex-1 overflow-y-auto ">
-          <ReportPreviewHeader reportData={reportData} getUserName={getUserName} />
-          <ReportPreviewResults reportData={reportData} />
-        </div>
-
         <DialogFooter
           start={<FooterInfo icon={MODULE_ICONS.reports} label="Reports" size="md" />}
           end={
