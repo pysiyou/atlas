@@ -20,6 +20,14 @@ function resolveEmptyMinHeight(embedded: boolean, emptyVariant: 'compact' | 'den
   return emptyVariant === 'dense' ? 'min-h-[9rem]' : 'min-h-[12rem]';
 }
 
+/**
+ * Visually hidden table name. A real `<caption>` is invalid inside `div role="table"`.
+ */
+function TableAccessibleName({ caption }: { caption?: string }) {
+  if (!caption) return null;
+  return <span className="sr-only">{caption}</span>;
+}
+
 function TableViewLoading<T>({
   containerClasses,
   caption,
@@ -46,9 +54,9 @@ function TableViewLoading<T>({
       className={containerClasses}
       role="table"
       aria-busy="true"
-      aria-label={ariaLabel ?? 'Loading'}
+      aria-label={ariaLabel ?? caption ?? 'Loading'}
     >
-      {caption && <caption className="sr-only">{caption}</caption>}
+      <TableAccessibleName caption={caption} />
       <div
         className="flex-1 min-h-0 overflow-auto"
         style={maxHeight ? { maxHeight } : undefined}
@@ -191,10 +199,10 @@ export function TableView<T>({
     <div
       className={containerClasses}
       role="table"
-      aria-label={ariaLabel}
+      aria-label={ariaLabel ?? caption}
       aria-rowcount={totalItems ?? data.length}
     >
-      {caption && <caption className="sr-only">{caption}</caption>}
+      <TableAccessibleName caption={caption} />
       <div
         className="flex-1 min-h-0 overflow-auto"
         style={maxHeight ? { maxHeight } : undefined}

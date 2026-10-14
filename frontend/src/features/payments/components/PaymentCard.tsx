@@ -1,7 +1,9 @@
-import { Avatar, MobileEntityCard, EntityId } from '@/components';
+import { Avatar } from '@/components/primitives';
+import { MobileEntityCard } from '@/components/surfaces';
+import { EntityId } from '@/components/display';
 import { OrderStatusBadge } from '@/features/orders';
 import { PaymentMethodBadge, PaymentStatusBadge } from './PaymentStatusBadge';
-import type { CardComponentProps } from '@/components';
+import type { CardComponentProps } from '@/components/data-table';
 import { getActiveTests, renderOrderTestsBlock } from '@/features/orders';
 import { useTestNameLookup } from '@/features/catalog';
 import { formatCurrency, formatDateTime } from '@/utils';

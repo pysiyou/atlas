@@ -4,7 +4,8 @@
  */
 
 import React from 'react';
-import { actionButtonPreset, Icon, IconButton, EmptyState, EntityId, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components';
+import { actionButtonPreset, Icon, IconButton } from '@/components/primitives';
+import { EmptyState, EntityId, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components/display';
 import { formatDateTime } from '@/utils';
 import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
 import type { Order } from '@/types';

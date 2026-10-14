@@ -1,6 +1,5 @@
 /** PDF lab report generation — template, results tables, signature/footers, and public API. */
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import type jsPDF from 'jspdf';
 import { format } from 'date-fns';
 import { companyConfig } from '@/config';
 import type { ValidatedTestReportPayload, ReportTemplate } from '../types';
@@ -26,13 +25,16 @@ interface TableRow {
   hasCode?: boolean;
 }
 
+type AutoTableFn = typeof import('jspdf-autotable').default;
+
 export function drawTestResultsSection(
   doc: jsPDF,
   reportData: ValidatedTestReportPayload,
   startY: number,
   margin: number,
   pageWidth: number,
-  pageHeight: number
+  pageHeight: number,
+  autoTable: AutoTableFn
 ): number {
   let yPosition = startY;
 
@@ -227,18 +229,31 @@ export function drawSignatureAndPageFooters(
 
 /**
  * Generate PDF report for lab results with company header, patient details, test results, and footer.
+ * Dynamically imports jsPDF so the PDF stack is a separate chunk until a report is generated.
  */
-export function generateLabReport(
+export async function generateLabReport(
   reportData: ValidatedTestReportPayload,
   template: ReportTemplate = getDefaultTemplate()
-): jsPDF {
-  const doc = new jsPDF();
+): Promise<jsPDF> {
+  const [{ default: JsPDF }, { default: autoTable }] = await Promise.all([
+    import('jspdf'),
+    import('jspdf-autotable'),
+  ]);
+  const doc = new JsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
   const margin = 15;
 
   let yPosition = drawReportHeader(doc, reportData, template, margin);
-  yPosition = drawTestResultsSection(doc, reportData, yPosition, margin, pageWidth, pageHeight);
+  yPosition = drawTestResultsSection(
+    doc,
+    reportData,
+    yPosition,
+    margin,
+    pageWidth,
+    pageHeight,
+    autoTable
+  );
   drawSignatureAndPageFooters(doc, reportData, template, yPosition, margin, pageWidth, pageHeight);
 
   return doc;

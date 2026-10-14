@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { ErrorAlert } from '@/components';
+import { ErrorAlert } from '@/components/loaders';
 import { errorAlertMessage } from '@/utils/feedback';
 import { MONITOR_PANEL } from './monitorStyles';
 import { MONITOR_BOTTOM_PANEL, MONITOR_BOTTOM_ROW, MONITOR_PAGE, MONITOR_TABLE_WRAP } from './monitorStyles';

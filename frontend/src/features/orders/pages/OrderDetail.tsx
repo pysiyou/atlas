@@ -12,7 +12,7 @@ import { notify } from '@/utils/feedback';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { formatCurrency, displayId } from '@/utils';
 import type { Invoice } from '@/types';
-import { DetailPageShell, PageHeader } from '@/components';
+import { DetailPageShell, PageHeader } from '@/components/layout';
 import { OrderHeader } from '../components/OrderHeader';
 import {
   SmallScreenLayout,

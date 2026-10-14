@@ -1,5 +1,7 @@
-import { Avatar, MobileEntityCard, EntityId } from '@/components';
-import type { CardComponentProps } from '@/components';
+import { Avatar } from '@/components/primitives';
+import { MobileEntityCard } from '@/components/surfaces';
+import { EntityId } from '@/components/display';
+import type { CardComponentProps } from '@/components/data-table';
 import { OrderStatusBadge } from './OrderDomainBadges';
 import { PaymentStatusBadge } from '@/features/payments';
 import { renderOrderTestsBlock } from '@/features/orders';

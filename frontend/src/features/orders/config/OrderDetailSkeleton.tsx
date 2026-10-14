@@ -1,4 +1,4 @@
-import { Panel } from '@/components';
+import { Panel } from '@/components/surfaces';
 import { LAYOUT, SPACING } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 import { SkeletonInfoSection, SkeletonTableRow } from '@/components/loaders/Skeleton';

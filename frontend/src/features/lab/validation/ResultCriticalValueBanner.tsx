@@ -3,7 +3,8 @@
  */
 
 import React from 'react';
-import { Alert, Icon } from '@/components';
+import { Alert } from '@/components/display';
+import { Icon } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 import { FIELD_ERROR, TONE, TYPE } from '@/components/theme/recipes';
 

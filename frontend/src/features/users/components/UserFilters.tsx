@@ -1,19 +1,12 @@
 /**
- * Filter bar for the user management directory.
+ * UserFilters — FilterBar wrapper for the user directory.
  */
-import React from 'react';
-import { FILTER_TYPE } from '@/components/theme/recipes';
-import { CheckboxList } from '@/components';
-import { ResponsiveEntityFilters } from '@/components/filters';
-import { MODULE_ICONS } from '@/config/icons';
+
+import React, { useMemo } from 'react';
+import { FilterBar, type FilterValues } from '@/components/filters';
 import type { UserRole } from '@/types';
-import {
-  USER_ACCOUNT_STATUS_OPTIONS,
-  USER_FILTER_PLACEHOLDERS,
-  userRoleFilterOptions,
-  type UserAccountStatusFilter,
-} from '../constants/userFilterConfig';
-import { UserFiltersInlineControls } from './UserFiltersInlineControls';
+import { userFilterConfig } from '../constants/userFilterBar.config';
+import type { UserAccountStatusFilter } from '../constants/userFilterConfig';
 
 export interface UserFiltersProps {
   searchQuery: string;
@@ -24,50 +17,34 @@ export interface UserFiltersProps {
   onStatusFiltersChange: (values: UserAccountStatusFilter[]) => void;
 }
 
-/**
- * Responsive filters: inline popover multi-selects on md+, modal on small screens.
- */
-export const UserFilters: React.FC<UserFiltersProps> = props => {
-  const activeFilterCount = props.roleFilters.length + props.statusFilters.length;
-
-  const modalContent = (
-    <>
-      <div className="w-full">
-        <h4 className={FILTER_TYPE.sectionTitle}>Role</h4>
-        <CheckboxList
-          options={userRoleFilterOptions}
-          selectedIds={props.roleFilters}
-          onChange={values => props.onRoleFiltersChange(values as UserRole[])}
-          columns={userRoleFilterOptions.length > 4 ? 2 : 1}
-        />
-        <div className="border-b border-border-default mt-space-4" />
-      </div>
-      <div className="w-full">
-        <h4 className={FILTER_TYPE.sectionTitle}>Status</h4>
-        <CheckboxList
-          options={[...USER_ACCOUNT_STATUS_OPTIONS]}
-          selectedIds={props.statusFilters}
-          onChange={values => props.onStatusFiltersChange(values as UserAccountStatusFilter[])}
-          columns={2}
-        />
-      </div>
-    </>
+export const UserFilters: React.FC<UserFiltersProps> = ({
+  searchQuery,
+  onSearchChange,
+  roleFilters,
+  onRoleFiltersChange,
+  statusFilters,
+  onStatusFiltersChange,
+}) => {
+  const filterValues = useMemo<FilterValues>(
+    () => ({
+      search: searchQuery,
+      role: roleFilters,
+      accountStatus: statusFilters,
+    }),
+    [searchQuery, roleFilters, statusFilters]
   );
 
-  return (
-    <ResponsiveEntityFilters
-      searchQuery={props.searchQuery}
-      onSearchChange={props.onSearchChange}
-      searchPlaceholder={USER_FILTER_PLACEHOLDERS.search}
-      activeFilterCount={activeFilterCount}
-      inlineControls={<UserFiltersInlineControls {...props} />}
-      modalContent={modalContent}
-      footerIcon={MODULE_ICONS.users}
-      footerLabel="Users"
-      onReset={() => {
-        props.onRoleFiltersChange([]);
-        props.onStatusFiltersChange([]);
-      }}
-    />
-  );
+  const handleFilterChange = (next: FilterValues) => {
+    if (next.search !== undefined && next.search !== searchQuery) {
+      onSearchChange((next.search as string) ?? '');
+    }
+    if (next.role !== undefined && next.role !== roleFilters) {
+      onRoleFiltersChange((next.role as UserRole[]) ?? []);
+    }
+    if (next.accountStatus !== undefined && next.accountStatus !== statusFilters) {
+      onStatusFiltersChange((next.accountStatus as UserAccountStatusFilter[]) ?? []);
+    }
+  };
+
+  return <FilterBar config={userFilterConfig} value={filterValues} onChange={handleFilterChange} />;
 };

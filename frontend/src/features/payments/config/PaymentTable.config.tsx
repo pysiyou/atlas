@@ -1,7 +1,7 @@
 import type { NavigateFunction } from 'react-router-dom';
 import { getActiveTests } from '@/features/orders';
 import { PaymentMethodBadge } from '../components/PaymentStatusBadge';
-import type { TableViewConfig } from '@/components';
+import type { TableViewConfig } from '@/components/data-table';
 import { buildViews } from '@/components/data-table';
 import {
   ORDER_TABLE_COLUMN_HEADERS,

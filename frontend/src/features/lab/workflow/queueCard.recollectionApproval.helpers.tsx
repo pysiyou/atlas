@@ -4,7 +4,8 @@
 
 import { type ReactNode } from 'react';
 import { RADIUS, TYPE } from '@/components/theme/recipes';
-import { actionButtonPreset, Badge, Button, EntityId } from '@/components';
+import { actionButtonPreset, Badge, Button } from '@/components/primitives';
+import { EntityId } from '@/components/display';
 import { cn, formatDateTime } from '@/utils';
 import { compactAuditLines } from '../constants/labWorkflowAuditLines';
 import { LabAuditBlock } from '../components/LabWorkflowHeader.parts';

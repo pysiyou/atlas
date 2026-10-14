@@ -2,7 +2,8 @@
  * Global event log unified search with categorized match popover.
  */
 import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
-import { Icon, SpinnerLoader } from '@/components';
+import { Icon } from '@/components/primitives';
+import { SpinnerLoader } from '@/components/loaders';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 import { inputClearButton, inputInner, inputText, inputWrapper } from '@/components/inputs/inputStyles';

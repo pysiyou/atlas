@@ -2,7 +2,8 @@
  * Sample collection queue card — desktop and mobile card shells.
  */
 
-import { actionButtonPreset, Card, IconButton } from '@/components';
+import { actionButtonPreset, IconButton } from '@/components/primitives';
+import { Card } from '@/components/surfaces';
 import { CollectionHeaderBadges } from '../components/LabWorkflowBadges';
 import { SampleCollectionPopover } from '../collection/SampleCollectionPopover';
 import { SampleRejectionPopover } from '../collection/SampleRejectionPopover';

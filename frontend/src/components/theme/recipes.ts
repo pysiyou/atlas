@@ -327,10 +327,13 @@ export const SPACING = {
 } as const;
 
 /** List filter bar + responsive entity filters. */
+/** Direct children grow evenly so N controls span the full filter row. */
+const filterBarRow = `[&>*]:min-w-0 [&>*]:flex-1`;
+
 export const FILTER = {
   barInset: `w-full ${SPACING.pxFilterBar} ${SPACING.pyFilterBar}`,
-  barGridDesktop: `grid grid-cols-4 ${SPACING.gapRelaxed} lg:gap-layout-section items-center w-full`,
-  barGridCompact: `grid grid-cols-4 ${SPACING.gapInline} items-center w-full`,
+  barGridDesktop: `flex ${SPACING.gapRelaxed} lg:gap-layout-section items-center w-full ${filterBarRow}`,
+  barGridCompact: `flex ${SPACING.gapInline} items-center w-full ${filterBarRow}`,
   mobileGrid: `grid grid-cols-[1fr_auto] ${SPACING.gapInline} items-center w-full`,
   mobileTwoCol: `grid grid-cols-2 ${SPACING.gapInline} items-center w-full`,
   modalBody: 'px-space-5 py-space-4',

@@ -11,8 +11,8 @@ import { useMemo } from 'react';
 import { useLabQueueFilterState, type UseLabQueueFilterStateOptions } from './useLabQueueFilterState';
 import { useLabQueueUrlSearch } from './useLabQueueFilterState';
 import { createLabQueueSearchFilter } from '../components/LabWorkflowQueueLayout';
-import { usePageFilters } from '@/hooks/usePageFilters';
-import { LAB_URL_FILTER_KEYS } from '../config/labFilters.config';
+import { useUrlFilters } from '@/hooks/useUrlFilters';
+import { LAB_URL_FILTER_KEYS } from '../constants/labFilterConfigs';
 import { displayId } from '@/utils';
 import type { SampleCollectionQueueItem } from '../types';
 import type { TestWithContextResult } from '../types';
@@ -153,7 +153,7 @@ export function useLabQueueFilters<T extends WorkflowType>({
   const urlSearch = useLabQueueUrlSearch();
 
   // URL-synced entity filters for cross-page navigation
-  const { urlFilters, clearUrlFilters, setUrlFilter } = usePageFilters({
+  const { urlFilters, clearUrlFilters, setUrlFilter } = useUrlFilters({
     urlFilterKeys: LAB_URL_FILTER_KEYS,
   });
 

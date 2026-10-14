@@ -1,5 +1,5 @@
 import React from 'react';
-import type { BadgeSize } from '@/components';
+import type { BadgeSize } from '@/components/primitives';
 import type { ContainerType, ContainerTopColor, Sample, RejectedSample } from '@/types';
 import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 import { buildCollectionOperationalMetaItems } from '../utils/collectionOperationalMetaItems';

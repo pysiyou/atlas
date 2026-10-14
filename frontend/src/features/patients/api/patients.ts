@@ -3,7 +3,8 @@
  */
 import { apiClient } from '@/lib/api/client';
 import { WORKFLOW_QUERY_LIMIT, DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
-import type { Patient, PatientContext } from '@/types';
+import type { Gender, Patient, PatientContext } from '@/types';
+import { serializeQueryList } from '@/utils/filtering';
 import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { useCallback, useMemo, useState } from 'react';
@@ -22,6 +23,11 @@ export interface PatientsFilter {
   page?: number;
   pageSize?: number;
   includeOrderSummary?: boolean;
+  patientId?: string;
+  gender?: Gender[];
+  affiliationStatus?: Array<'active' | 'inactive'>;
+  ageMin?: number;
+  ageMax?: number;
 }
 
 export interface PatientOrderSummary {
@@ -42,6 +48,13 @@ export const patientAPI = {
     const params: Record<string, string> = { paginated: 'true' };
 
     if (filters?.search) params.search = filters.search;
+    if (filters?.patientId) params.patientId = filters.patientId;
+    const genderParam = serializeQueryList(filters?.gender);
+    if (genderParam) params.gender = genderParam;
+    const affiliationParam = serializeQueryList(filters?.affiliationStatus);
+    if (affiliationParam) params.affiliationStatus = affiliationParam;
+    if (filters?.ageMin != null) params.ageMin = String(filters.ageMin);
+    if (filters?.ageMax != null) params.ageMax = String(filters.ageMax);
     if (filters?.page) params.skip = String((filters.page - 1) * (filters.pageSize || DEFAULT_LIST_PAGE_SIZE));
     if (filters?.pageSize) params.limit = String(filters.pageSize);
     if (filters?.includeOrderSummary) params.include = 'orderSummary';
@@ -126,33 +139,31 @@ export function usePatientsList() {
  * @param pageSize - Items per page (default: 20)
  */
 export function usePaginatedPatients(
-  search?: string,
+  filters?: PatientsFilter,
   initialPage = 1,
-  pageSize = DEFAULT_LIST_PAGE_SIZE,
-  options?: { includeOrderSummary?: boolean }
+  pageSize = DEFAULT_LIST_PAGE_SIZE
 ) {
   const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
   const [page, setPage] = useState(initialPage);
-  const [prevSearch, setPrevSearch] = useState(search);
+  const filterSnapshot = JSON.stringify(filters ?? null);
+  const [prevFilterSnapshot, setPrevFilterSnapshot] = useState(filterSnapshot);
 
-  if (prevSearch !== search) {
-    setPrevSearch(search);
+  if (prevFilterSnapshot !== filterSnapshot) {
+    setPrevFilterSnapshot(filterSnapshot);
     setPage(initialPage);
   }
 
   const query = useQuery({
     queryKey: queryKeys.patients.paginated({
-      search,
+      ...filters,
       page,
       pageSize,
-      includeOrderSummary: options?.includeOrderSummary,
     }),
     queryFn: () =>
       patientAPI.getPaginated({
-        search,
+        ...filters,
         page,
         pageSize,
-        includeOrderSummary: options?.includeOrderSummary,
       }),
     enabled: isAuthenticated && !isRestoring,
     placeholderData: keepPreviousData,
@@ -215,10 +226,12 @@ function mapPatientOrderSummary(patient: PatientWithOrderSummary): PatientContex
   } satisfies PatientContext;
 }
 
-export function usePaginatedPatientContextList(search?: string) {
-  const paginated = usePaginatedPatients(search, 1, DEFAULT_LIST_PAGE_SIZE, {
-    includeOrderSummary: true,
-  });
+export function usePaginatedPatientContextList(filters?: PatientsFilter) {
+  const queryFilters = useMemo(
+    () => ({ ...filters, includeOrderSummary: true as const }),
+    [filters]
+  );
+  const paginated = usePaginatedPatients(queryFilters, 1, DEFAULT_LIST_PAGE_SIZE);
 
   const patients = useMemo(
     () => paginated.patients.map(mapPatientOrderSummary),

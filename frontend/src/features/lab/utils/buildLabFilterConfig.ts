@@ -60,11 +60,5 @@ export function buildLabFilterConfig(options: BuildLabFilterConfigOptions): Filt
         ...options.extraControls,
       ],
     },
-    advancedFilters: {
-      title: 'Advanced Filters',
-      collapsible: true,
-      defaultCollapsed: true,
-      controls: [],
-    },
   };
 }

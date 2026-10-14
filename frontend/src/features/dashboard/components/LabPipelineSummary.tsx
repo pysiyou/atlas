@@ -4,7 +4,8 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Card, Badge, Icon, type IconName } from '@/components';
+import { Card } from '@/components/surfaces';
+import { Badge, Icon, type IconName } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 import {
   useLabStageQueueCounts,

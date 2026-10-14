@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { formatDateTime } from '@/utils';
-import { EntityId } from '@/components';
+import { EntityId } from '@/components/display';
 import { companyConfig } from '@/config';
 import type { ValidatedTestReportPayload } from '../types';
 import { FORM_TAB_TITLE, TYPE } from '@/components/theme/recipes';

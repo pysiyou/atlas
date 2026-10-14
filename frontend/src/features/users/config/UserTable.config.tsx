@@ -2,7 +2,7 @@
  * User management table columns.
  */
 import { Badge } from '@/components/primitives/Badge';
-import type { TableViewConfig } from '@/components';
+import type { TableViewConfig } from '@/components/data-table';
 import { buildViews, COLUMN_SIZE } from '@/components/data-table';
 import { TABLE_TYPE } from '@/components/theme/recipes';
 import { USER_ROLE_CONFIG, type UserRole } from '@/types';

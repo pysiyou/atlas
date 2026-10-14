@@ -9,7 +9,7 @@ import { DetailField } from '@/components/display/DetailField';
 import { calculateAge } from '@/utils';
 import { formatPatientDetailDate, formatAddress, formatRelationship } from '../utils/patientFormatters';
 import { ICONS } from '@/config/icons';
-import { DetailFieldsColumnFlow } from '@/components';
+import { DetailFieldsColumnFlow } from '@/components/display';
 
 export interface GeneralInfoSectionProps {
   patient: Patient;

@@ -4,16 +4,35 @@
  * getProps receives typed modalProps per ModalType via ModalPropsMap.
  */
 
-import type { ComponentType } from 'react';
+import { lazy, type ComponentType } from 'react';
 import { ModalType } from '@/lib/context/ModalContext';
 import type { ModalPropsMap, BaseModalProps } from '@/lib/context/modalTypes';
-import {
-  SampleCollectionDetailModal,
-  ResultEntryDetailModal,
-  TestDetailModal,
-  EscalationResolutionModal,
-} from '@/features/lab';
-import { OrderUpsertModal } from '@/features/orders';
+
+const SampleCollectionDetailModal = lazy(() =>
+  import('@/features/lab/workflow/detailModal.sampleCollection').then(module => ({
+    default: module.SampleCollectionDetailModal,
+  }))
+);
+const ResultEntryDetailModal = lazy(() =>
+  import('@/features/lab/workflow/detailModal.resultEntry').then(module => ({
+    default: module.ResultEntryDetailModal,
+  }))
+);
+const TestDetailModal = lazy(() =>
+  import('@/features/lab/workflow/detailModal.test').then(module => ({
+    default: module.TestDetailModal,
+  }))
+);
+const EscalationResolutionModal = lazy(() =>
+  import('@/features/lab/workflow/detailModal.escalation').then(module => ({
+    default: module.EscalationResolutionModal,
+  }))
+);
+const OrderUpsertModal = lazy(() =>
+  import('@/features/orders/OrderUpsertModal').then(module => ({
+    default: module.OrderUpsertModal,
+  }))
+);
 
 /**
  * Base props that all modals receive

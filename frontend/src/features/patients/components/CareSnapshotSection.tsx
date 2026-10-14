@@ -4,7 +4,8 @@
  */
 
 import React from 'react';
-import { Badge, DetailField } from '@/components';
+import { Badge } from '@/components/primitives';
+import { DetailField } from '@/components/display';
 import { TONE } from '@/components/theme/recipes';
 import type { Patient, VitalSigns } from '@/types';
 import { cn, formatDate } from '@/utils';
@@ -15,7 +16,7 @@ import {
   formatList,
   formatMeasurement,
 } from '../utils/patientFormatters';
-import { DetailFieldsColumnFlow } from '@/components';
+import { DetailFieldsColumnFlow } from '@/components/display';
 
 export interface CareSnapshotSectionProps {
   patient: Patient;

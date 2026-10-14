@@ -11,11 +11,6 @@ import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
 
 const genderOptions = createFilterOptions(GENDER_VALUES, GENDER_CONFIG);
 
-const affiliationStatusOptions = [
-  { id: 'active', label: 'Active', color: 'success' },
-  { id: 'inactive', label: 'Inactive', color: 'default' },
-];
-
 export const patientFilterConfig: FilterConfig = {
   footerIcon: MODULE_ICONS.patients,
   footerLabel: 'Patients',
@@ -34,17 +29,6 @@ export const patientFilterConfig: FilterConfig = {
         label: 'Sex',
         options: genderOptions,
       },
-      {
-        key: 'affiliationStatus',
-        type: 'multiSelect',
-        label: 'Affiliation Status',
-        options: affiliationStatusOptions,
-      },
-    ],
-  },
-  advancedFilters: {
-    title: 'Advanced Filters',
-    controls: [
       {
         key: 'ageRange',
         type: 'ageRange',

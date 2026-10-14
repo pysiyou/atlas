@@ -5,7 +5,8 @@
 
 import { type ReactNode } from 'react';
 import { cn } from '@/utils';
-import { Card, EntityId } from '@/components';
+import { Card } from '@/components/surfaces';
+import { EntityId } from '@/components/display';
 import { LabHeaderCompactContext } from '../components/LabWorkflowHeader';
 import type { LabAuditLine } from '../constants/labWorkflowAuditLines';
 import { LabWorkflowLeftColumn } from '../components/LabWorkflowLeftColumn';

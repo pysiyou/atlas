@@ -1,29 +1,11 @@
 /**
- * PaymentFilters Component
- * Responsive filter controls with modal for smaller screens
+ * PaymentFilters — FilterBar wrapper keeping the list-page prop interface.
  */
 
-import React from 'react';
-import { FILTER_TYPE } from '@/components/theme/recipes';
-import { CheckboxList } from '@/components';
-import {
-  ResponsiveEntityFilters,
-  DatePresetBadges,
-  PAYMENT_FILTER_PLACEHOLDERS,
-} from '@/components/filters';
-import { PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG } from '@/types';
-import { createFilterOptions } from '@/utils/filtering';
-import { getEnabledPaymentMethods, PAYMENT_METHOD_FILTER_CONFIG } from '@/types/payments';
-import { MODULE_ICONS } from '@/config/icons';
-import { PaymentFiltersInlineControls } from './PaymentFiltersInlineControls';
-import type { PaymentStatus, PaymentMethod } from '@/types';
-
-const statusOptions = createFilterOptions(PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG);
-
-const methodOptions = createFilterOptions(
-  getEnabledPaymentMethods().map(m => m.value) as PaymentMethod[],
-  PAYMENT_METHOD_FILTER_CONFIG
-);
+import React, { useMemo } from 'react';
+import { FilterBar, type FilterValues } from '@/components/filters';
+import { paymentFilterConfig } from '../config/paymentFilters.config';
+import type { PaymentStatus } from '@/types';
 
 export interface PaymentFiltersProps {
   searchQuery: string;
@@ -32,58 +14,38 @@ export interface PaymentFiltersProps {
   onDateRangeChange: (range: [Date, Date] | null) => void;
   statusFilters: PaymentStatus[];
   onStatusFiltersChange: (values: PaymentStatus[]) => void;
-  methodFilters: PaymentMethod[];
-  onMethodFiltersChange: (values: PaymentMethod[]) => void;
 }
 
-export const PaymentFilters: React.FC<PaymentFiltersProps> = props => {
-  const activeFilterCount =
-    (props.dateRange ? 1 : 0) + props.statusFilters.length + props.methodFilters.length;
-
-  const modalContent = (
-    <>
-      <div className="w-full">
-        <h4 className={FILTER_TYPE.sectionTitle}>Date Range</h4>
-        <DatePresetBadges value={props.dateRange} onChange={props.onDateRangeChange} />
-        <div className="border-b border-border-default mt-space-4" />
-      </div>
-      <div className="w-full">
-        <h4 className={FILTER_TYPE.sectionTitle}>Payment Status</h4>
-        <CheckboxList
-          options={statusOptions}
-          selectedIds={props.statusFilters}
-          onChange={values => props.onStatusFiltersChange(values as PaymentStatus[])}
-          columns={statusOptions.length > 4 ? 2 : 1}
-        />
-        <div className="border-b border-border-default mt-space-4" />
-      </div>
-      <div className="w-full">
-        <h4 className={FILTER_TYPE.sectionTitle}>Payment Method</h4>
-        <CheckboxList
-          options={methodOptions}
-          selectedIds={props.methodFilters}
-          onChange={values => props.onMethodFiltersChange(values as PaymentMethod[])}
-          columns={methodOptions.length > 4 ? 2 : 1}
-        />
-      </div>
-    </>
+export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
+  searchQuery,
+  onSearchChange,
+  dateRange,
+  onDateRangeChange,
+  statusFilters,
+  onStatusFiltersChange,
+}) => {
+  const filterValues = useMemo<FilterValues>(
+    () => ({
+      search: searchQuery,
+      statusFilters,
+      dateRange,
+    }),
+    [searchQuery, statusFilters, dateRange]
   );
 
+  const handleFilterChange = (next: FilterValues) => {
+    if (next.search !== undefined && next.search !== searchQuery) {
+      onSearchChange((next.search as string) ?? '');
+    }
+    if (next.statusFilters !== undefined && next.statusFilters !== statusFilters) {
+      onStatusFiltersChange((next.statusFilters as PaymentStatus[]) ?? []);
+    }
+    if (next.dateRange !== undefined && next.dateRange !== dateRange) {
+      onDateRangeChange((next.dateRange as [Date, Date] | null) ?? null);
+    }
+  };
+
   return (
-    <ResponsiveEntityFilters
-      searchQuery={props.searchQuery}
-      onSearchChange={props.onSearchChange}
-      searchPlaceholder={PAYMENT_FILTER_PLACEHOLDERS.search}
-      activeFilterCount={activeFilterCount}
-      inlineControls={<PaymentFiltersInlineControls {...props} />}
-      modalContent={modalContent}
-      footerIcon={MODULE_ICONS.payments}
-      footerLabel="Payments"
-      onReset={() => {
-        props.onDateRangeChange(null);
-        props.onStatusFiltersChange([]);
-        props.onMethodFiltersChange([]);
-      }}
-    />
+    <FilterBar config={paymentFilterConfig} value={filterValues} onChange={handleFilterChange} />
   );
 };

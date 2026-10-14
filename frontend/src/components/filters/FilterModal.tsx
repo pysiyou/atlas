@@ -35,9 +35,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
 }) => {
   // Get search and non-search controls
   const searchControl = config.primaryFilters.controls.find(c => c.type === 'search');
-  const nonSearchControls = config.primaryFilters.controls.filter(c => c.type !== 'search');
-  const advancedControls = config.advancedFilters?.controls || [];
-  const allFilterControls = [...nonSearchControls, ...advancedControls];
+  const allFilterControls = config.primaryFilters.controls.filter(c => c.type !== 'search');
 
   /**
    * Handle apply filters and close

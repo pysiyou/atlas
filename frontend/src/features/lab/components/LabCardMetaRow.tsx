@@ -4,7 +4,7 @@
 
 import React, { type ReactNode } from 'react';
 import { cn } from '@/utils';
-import { EntityId } from '@/components';
+import { EntityId } from '@/components/display';
 import { LAB_CARD_TYPOGRAPHY, LAB_MODAL_TYPOGRAPHY } from '../utils/labStyles';
 import { getQueueAgeInfo } from '../utils/labQueue';
 import { TONE } from '@/components/theme/recipes';

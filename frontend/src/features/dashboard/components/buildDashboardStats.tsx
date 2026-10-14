@@ -2,7 +2,7 @@
  * Builds dashboard stat cards based on user role and metrics.
  */
 
-import { Icon } from '@/components';
+import { Icon } from '@/components/primitives';
 import { formatCurrency } from '@/utils';
 import { ICONS } from '@/config/icons';
 import type { DashboardStat } from './DashboardStatsGrid';

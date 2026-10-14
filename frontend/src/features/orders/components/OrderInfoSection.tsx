@@ -4,7 +4,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { EntityId } from '@/components';
+import { EntityId } from '@/components/display';
 import type { Order } from '@/types';
 import { OrderPriorityBadge, OrderStatusBadge } from './OrderDomainBadges';
 import { DetailField } from '@/components/display/DetailField';

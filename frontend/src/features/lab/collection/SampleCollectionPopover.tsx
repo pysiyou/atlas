@@ -6,7 +6,10 @@
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { notify } from '@/utils/feedback';
-import { actionButtonPreset, Popover, Button, Icon, FooterInfo, SelectionCheck, PopoverFormChrome, RadioCard } from '@/components';
+import { actionButtonPreset, Button, Icon } from '@/components/primitives';
+import { Popover, PopoverFormChrome, RadioCard } from '@/components/overlays';
+import { FooterInfo } from '@/components/display';
+import { SelectionCheck } from '@/components/inputs';
 import { MODULE_ICONS } from '@/config/icons';
 import type { ContainerType } from '@/types';
 import { COLLECTION_TOP_COLOR_VALUES, CONTAINER_CONFIG } from '@/types';

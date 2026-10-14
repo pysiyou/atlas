@@ -1,6 +1,6 @@
 import React from 'react';
-import { EntityId } from '@/components';
-import type { TableViewConfig, CardComponentProps } from '@/components';
+import { EntityId } from '@/components/display';
+import type { TableViewConfig, CardComponentProps } from '@/components/data-table';
 import { buildViews, COLUMN_SIZE } from '@/components/data-table';
 import { cn, formatCurrency } from '@/utils';
 import { renderDateTimeCell } from '@/utils/tableColumnRenders';

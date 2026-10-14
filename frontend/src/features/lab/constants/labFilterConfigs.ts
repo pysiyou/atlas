@@ -3,6 +3,7 @@
  */
 
 import type { PriorityLevel } from '@/types';
+import type { UrlFilterKey } from '@/utils/filters';
 import type { FilterOption } from '@/utils/filtering';
 import { createFilterOptions } from '@/utils/filtering';
 import {
@@ -19,6 +20,9 @@ const COLLECTION_STATUS_OPTIONS: FilterOption[] = [
   { id: 'collected', label: 'Collected', color: 'collected' },
   { id: 'rejected', label: 'Rejected', color: 'rejected' },
 ];
+
+/** Entity filter keys that sync to URL for lab queue navigation. */
+export const LAB_URL_FILTER_KEYS = ['sampleId', 'orderId', 'testId'] as const satisfies readonly UrlFilterKey[];
 
 export const collectionFilterConfig = buildLabFilterConfig({
   searchPlaceholder: 'Sample ID (SAM0042) or patient name, min 3 characters...',

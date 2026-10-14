@@ -2,7 +2,8 @@
  * Presentational sections for TestDetailModal (keeps main modal file under lint limits).
  */
 import { useNavigate } from 'react-router-dom';
-import { actionButtonPreset, Button, Panel } from '@/components';
+import { actionButtonPreset, Button } from '@/components/primitives';
+import { Panel } from '@/components/surfaces';
 import { LabEventLogPanel } from '@/features/audit';
 import {
   buildOrderTestOverviewFields,

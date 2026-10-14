@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
-import { Input, MultiSelectFilter } from '@/components';
-import type { FilterOption } from '@/components';
+import { Input } from '@/components/inputs';
+import { MultiSelectFilter } from '@/components/overlays';
+import type { FilterOption } from '@/components/overlays';
 import { RELATIONSHIP_VALUES, RELATIONSHIP_CONFIG, type Relationship } from '@/types';
 import { ICONS } from '@/config/icons';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';

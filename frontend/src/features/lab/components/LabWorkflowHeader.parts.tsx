@@ -1,7 +1,7 @@
 /** Audit line rendering — shared by card alerts and modal headers. */
 
 import { cn, formatDateTime } from '@/utils';
-import { EntityId } from '@/components';
+import { EntityId } from '@/components/display';
 import { useUserLookup } from '@/lib/api/users';
 import { LAB_CARD_TYPOGRAPHY, LAB_HEADER, LAB_MODAL_TYPOGRAPHY } from '../utils/labStyles';
 import type { LabAuditLine } from '../constants/labWorkflowAuditLines';

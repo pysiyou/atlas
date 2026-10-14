@@ -3,7 +3,8 @@
  */
 
 import React, { useCallback } from 'react';
-import { Popover, Icon } from '@/components';
+import { Popover } from '@/components/overlays';
+import { Icon } from '@/components/primitives';
 import { CONTROL, RADIUS, TYPE } from '@/components/theme/recipes';
 import { inputTrigger, inputTriggerOpen, inputBase, inputError } from '@/components/inputs/inputStyles';
 import { cn } from '@/utils';
@@ -11,7 +12,7 @@ import { ICONS } from '@/config/icons';
 import type { TestParameter } from '@/types';
 import { validatePhysiologicValue, getPhysiologicLimit } from '../utils';
 import { titleCaseWords } from '@/utils/string';
-import { RadioCard } from '@/components';
+import { RadioCard } from '@/components/overlays';
 
 const SelectParameterInput: React.FC<{
   param: TestParameter;

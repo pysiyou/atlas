@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Badge } from '@/components';
+import { Badge } from '@/components/primitives';
 import { CONTROL } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 import { getStageVisual, isLabWorkflowStageTab, type LabTabId } from '../constants/labConstants';

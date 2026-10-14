@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Alert } from '@/components';
+import { Alert } from '@/components/display';
 import { cn } from '@/utils';
 import { inputBase, FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 import { TONE, TYPE } from '@/components/theme/recipes';

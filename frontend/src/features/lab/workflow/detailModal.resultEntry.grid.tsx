@@ -2,7 +2,8 @@
  * Result entry detail modal — DetailGrid section for test metadata.
  */
 
-import { Icon, EntityId } from '@/components';
+import { Icon } from '@/components/primitives';
+import { EntityId } from '@/components/display';
 import { DetailGrid } from './detailModalLayout';
 import type { TestWithContext } from '@/types';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';

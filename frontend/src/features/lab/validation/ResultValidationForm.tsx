@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { Textarea } from '@/components';
+import { Textarea } from '@/components/inputs';
 import { ResultCriticalValueBanner } from './ResultCriticalValueBanner';
 import { statusMapFromFlags, parseResultEntry, isCritical } from '../utils/labResult';
 import { ResultsParameterGrid } from '../components/ResultsParameterGrid';

@@ -9,7 +9,7 @@ import { DetailField } from '@/components/display/DetailField';
 import { formatList, formatFamilyHistory, formatLifestyle } from '../utils/patientFormatters';
 import { ICONS } from '@/config/icons';
 import { TONE } from '@/components/theme/recipes';
-import { DetailFieldsColumnFlow } from '@/components';
+import { DetailFieldsColumnFlow } from '@/components/display';
 
 export interface MedicalHistorySectionDisplayProps {
   patient: Patient;

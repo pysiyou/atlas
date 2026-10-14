@@ -4,9 +4,11 @@
 /* eslint-disable react-refresh/only-export-components -- modal shell + stage subtitle helpers */
 
 import React, { type ReactNode } from 'react';
-import { Modal, Panel, DetailFieldGroup, FooterInfo, DialogFooter } from '@/components';
+import { Modal, DialogFooter } from '@/components/overlays';
+import { Panel } from '@/components/surfaces';
+import { DetailFieldGroup, FooterInfo } from '@/components/display';
 import { MODULE_ICONS } from '@/config/icons';
-import type { DetailFieldConfig } from '@/components';
+import type { DetailFieldConfig } from '@/components/display';
 import { useUserLookup } from '@/lib/api/users';
 import { LAB_MODAL_DETAIL } from '../utils/labStyles';
 import {

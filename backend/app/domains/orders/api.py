@@ -1,4 +1,5 @@
 """Order API Routes"""
+from datetime import date
 from typing import Literal
 
 from app.domains.orders.schemas import (
@@ -14,7 +15,8 @@ from app.domains.orders.service import OrderService
 from app.domains.users.models import User
 from app.platform.database import get_db
 from app.platform.http.dependencies import PaginationParams, get_current_user
-from app.shared.contracts.enums import OrderStatus, PaymentStatus
+from app.platform.utils.common import parse_csv_values
+from app.shared.contracts.enums import OrderStatus, PaymentMethod, PaymentStatus
 from app.shared.schemas.pagination import PaginatedResponse
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
@@ -29,12 +31,21 @@ OrderListUnion = (
 )
 
 
+def _parse_enums(raw: str | None, enum_cls: type):
+    return [enum_cls(token) for token in parse_csv_values(raw)]
+
+
 @router.get("/orders", response_model=OrderListUnion)
 def get_orders(
     pagination: PaginationParams,
     patientId: int | None = None,
-    order_status: OrderStatus | None = Query(None, alias="status"),
-    paymentStatus: PaymentStatus | None = Query(None, alias="paymentStatus"),
+    orderId: int | None = None,
+    order_status: str | None = Query(None, alias="status"),
+    paymentStatus: str | None = Query(None, alias="paymentStatus"),
+    paymentMethod: str | None = Query(None, alias="paymentMethod"),
+    search: str | None = Query(None, max_length=100),
+    dateFrom: date | None = None,
+    dateTo: date | None = None,
     sort: Literal["createdAt", "updatedAt"] = Query("updatedAt"),
     paginated: bool = Query(False),
     summary: bool = Query(False, description="Return lightweight order rows without nested tests"),
@@ -45,11 +56,16 @@ def get_orders(
         pagination["skip"],
         pagination["limit"],
         patientId,
-        order_status,
-        paymentStatus,
+        _parse_enums(order_status, OrderStatus) or None,
+        _parse_enums(paymentStatus, PaymentStatus) or None,
         sort,
         paginated,
         summary,
+        order_id=orderId,
+        payment_methods=_parse_enums(paymentMethod, PaymentMethod) or None,
+        search=search,
+        date_from=dateFrom,
+        date_to=dateTo,
     )
 
 

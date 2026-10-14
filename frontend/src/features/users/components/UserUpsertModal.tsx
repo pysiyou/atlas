@@ -2,14 +2,9 @@
  * Create or edit a user account (administrator).
  */
 import React, { useState } from 'react';
-import {
-  actionButtonPreset,
-  Alert,
-  Button,
-  FooterInfo,
-  FormDialogFooter,
-  Modal,
-} from '@/components';
+import { actionButtonPreset, Button } from '@/components/primitives';
+import { Alert, FooterInfo } from '@/components/display';
+import { FormDialogFooter, Modal } from '@/components/overlays';
 import { MODULE_ICONS } from '@/config/icons';
 import type { UserAdminRecord } from '../api/usersAdmin';
 import { useUserUpsertSubmit } from '../hooks/useUserUpsertSubmit';

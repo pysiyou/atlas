@@ -3,9 +3,9 @@
  */
 
 import type { NavigateFunction } from 'react-router-dom';
-import { EntityId } from '@/components';
+import { EntityId } from '@/components/display';
 import { CatalogCategoryBadge, CatalogSampleTypeBadge } from '../components/CatalogStatusBadge';
-import type { TableViewConfig } from '@/components';
+import type { TableViewConfig } from '@/components/data-table';
 import { buildViews, COLUMN_SIZE } from '@/components/data-table';
 import { formatCurrency } from '@/utils';
 import type { Test } from '@/types';

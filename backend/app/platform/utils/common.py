@@ -34,6 +34,13 @@ def get_or_404(
 """Resolve numeric entity ids from search terms (raw digits or prefixed display ids e.g. PAT0001)."""
 
 
+def parse_csv_values(raw: str | None) -> list[str]:
+    """Split a comma-separated query param into trimmed non-empty tokens."""
+    if not raw:
+        return []
+    return [token.strip() for token in raw.split(",") if token.strip()]
+
+
 def parse_display_id_from_search(search_term: str, prefix: str) -> int | None:
     compact = re.sub(r"[\s-]", "", search_term.strip())
     if compact.startswith("#"):

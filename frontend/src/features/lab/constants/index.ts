@@ -6,4 +6,3 @@ export * from './labConstants';
 export * from './labFilterConfigs';
 export * from './labWorkflowAuditLines';
 export * from './qualityIssuePopoverCopy';
-export { LAB_URL_FILTER_KEYS } from '../config/labFilters.config';

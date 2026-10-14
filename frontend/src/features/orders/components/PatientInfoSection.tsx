@@ -5,7 +5,8 @@
 
 import React from 'react';
 import { TYPE } from '@/components/theme/recipes';
-import { Icon, DetailField, EntityId } from '@/components';
+import { Icon } from '@/components/primitives';
+import { DetailField, EntityId } from '@/components/display';
 import { calculateAge } from '@/utils';
 import type { Patient } from '@/types';
 import { formatOrderDate } from '@/utils/date';

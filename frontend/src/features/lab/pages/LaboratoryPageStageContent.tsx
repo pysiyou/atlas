@@ -1,14 +1,36 @@
+/**
+ * Lab page stage body: lazy-loads the active queue/board so inactive tabs stay out of the bundle.
+ */
+import { lazy, Suspense } from 'react';
 import type { UserRole } from '@/types';
-import { ErrorAlert } from '@/components';
+import { ErrorAlert } from '@/components/loaders';
 import { WORKSPACE } from '@/components/theme/recipes';
 import { errorAlertMessage } from '@/utils/feedback';
-import { SampleCollectionQueue } from '../collection/SampleCollectionQueue';
-import { ResultEntryQueue } from '../entry/ResultEntryQueue';
-import { ResultValidationQueue } from '../validation/ResultValidationQueue';
-import { LabMonitorBoard } from '../monitor/LabMonitorBoard';
 import type { LabTabId } from '../constants/labConstants';
 import { LAB_WORKFLOW_QUEUE_SHELL } from '../utils/labStyles';
 import { tabAllowed } from './laboratoryPageAccess';
+import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
+
+const SampleCollectionQueue = lazy(() =>
+  import('../collection/SampleCollectionQueue').then(module => ({
+    default: module.SampleCollectionQueue,
+  }))
+);
+const ResultEntryQueue = lazy(() =>
+  import('../entry/ResultEntryQueue').then(module => ({
+    default: module.ResultEntryQueue,
+  }))
+);
+const ResultValidationQueue = lazy(() =>
+  import('../validation/ResultValidationQueue').then(module => ({
+    default: module.ResultValidationQueue,
+  }))
+);
+const LabMonitorBoard = lazy(() =>
+  import('../monitor/LabMonitorBoard').then(module => ({
+    default: module.LabMonitorBoard,
+  }))
+);
 
 export interface LaboratoryPageStageContentProps {
   activeTab: LabTabId;
@@ -16,6 +38,10 @@ export interface LaboratoryPageStageContentProps {
   isError: boolean;
   error: unknown;
   onRetry: () => void;
+}
+
+function StageFallback({ isMonitor }: { isMonitor: boolean }) {
+  return <DetailPageSkeleton variant={isMonitor ? 'responsive-detail' : 'workflow-grid'} />;
 }
 
 export function LaboratoryPageStageContent({
@@ -48,18 +74,20 @@ export function LaboratoryPageStageContent({
           activeTab === 'monitor' ? '' : 'bg-surface-page'
         }`}
       >
-        {activeTab === 'collection' && tabAllowed('collection', hasRole) && (
-          <SampleCollectionQueue />
-        )}
-        {activeTab === 'entry' && tabAllowed('entry', hasRole) && <ResultEntryQueue />}
-        {activeTab === 'validation' && tabAllowed('validation', hasRole) && (
-          <ResultValidationQueue />
-        )}
-        {activeTab === 'monitor' && tabAllowed('monitor', hasRole) && (
-          <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-            <LabMonitorBoard />
-          </div>
-        )}
+        <Suspense fallback={<StageFallback isMonitor={activeTab === 'monitor'} />}>
+          {activeTab === 'collection' && tabAllowed('collection', hasRole) && (
+            <SampleCollectionQueue />
+          )}
+          {activeTab === 'entry' && tabAllowed('entry', hasRole) && <ResultEntryQueue />}
+          {activeTab === 'validation' && tabAllowed('validation', hasRole) && (
+            <ResultValidationQueue />
+          )}
+          {activeTab === 'monitor' && tabAllowed('monitor', hasRole) && (
+            <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+              <LabMonitorBoard />
+            </div>
+          )}
+        </Suspense>
       </div>
     </div>
   );

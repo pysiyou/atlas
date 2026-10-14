@@ -1,13 +1,14 @@
 /**
- * PaymentList — server-paginated orders joined with cached payments with URL filter support.
+ * PaymentList — server-paginated orders joined with cached payments.
  */
 
 import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useClientListFilter } from '@/hooks/useClientListFilter';
 import { usePageFilters } from '@/hooks/usePageFilters';
-import { ListView, UrlFilterBadges } from '@/components';
+import { ListView } from '@/components/surfaces';
+import { EntityUrlFilterBar } from '@/components/filters';
 import { PaymentFilters } from '../components/PaymentFilters';
+import { PAYMENT_URL_FILTER_KEYS } from '../config/paymentFilters.config';
 import { createPaymentTableConfig } from '../config/PaymentTable.config';
 import { PaymentDetailModal } from '../components/PaymentDetailModal';
 import { useTestNameLookup } from '@/features/catalog';
@@ -16,10 +17,9 @@ import { usePaginatedOrders } from '@/features/orders';
 import { usePaymentsForOrderIds } from '../api/payments';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
 import { errorAlertMessage } from '@/utils/feedback';
-import type { Order, Payment, PaymentStatus, PaymentMethod } from '@/types';
+import { inclusiveDateRangeBounds, toIsoDateParam } from '@/utils';
+import type { Order, Payment, PaymentStatus } from '@/types';
 import type { OrderPaymentView } from '../types';
-
-const PAYMENT_URL_FILTER_KEYS = ['orderId', 'patientId'] as const;
 
 function buildOrderPaymentViews(orders: Order[], payments: Payment[]): OrderPaymentView[] {
   const paymentByOrder = new Map(payments.map(p => [p.orderId, p]));
@@ -38,7 +38,6 @@ export const PaymentList: React.FC = () => {
   const [selectedOrder, setSelectedOrder] = useState<OrderPaymentView | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // URL-synced entity filters + local UI filters
   const {
     filters,
     urlFilters,
@@ -48,24 +47,30 @@ export const PaymentList: React.FC = () => {
   } = usePageFilters({
     urlFilterKeys: PAYMENT_URL_FILTER_KEYS,
     initialFilters: {
-      methodFilters: [] as PaymentMethod[],
+      search: '',
       dateRange: null,
       statusFilters: [] as PaymentStatus[],
     },
   });
 
-  const methodFilters = useMemo(() => (filters.methodFilters as PaymentMethod[]) ?? [], [filters.methodFilters]);
+  const searchQuery = (filters.search as string) ?? '';
   const dateRange = (filters.dateRange as [Date, Date] | null) ?? null;
-  const statusFilters = useMemo(() => (filters.statusFilters as PaymentStatus[]) ?? [], [filters.statusFilters]);
+  const statusFilters = useMemo(
+    () => (filters.statusFilters as PaymentStatus[]) ?? [],
+    [filters.statusFilters]
+  );
 
-  const serverFilters = useMemo(
-    () => ({
+  const serverFilters = useMemo(() => {
+    const bounds = inclusiveDateRangeBounds(dateRange);
+    return {
       patientId: urlFilters.patientId ?? undefined,
       orderId: urlFilters.orderId ? Number(urlFilters.orderId) : undefined,
-      paymentStatus: statusFilters.length === 1 ? statusFilters[0] : undefined,
-    }),
-    [urlFilters.patientId, urlFilters.orderId, statusFilters]
-  );
+      paymentStatus: statusFilters.length > 0 ? statusFilters : undefined,
+      search: searchQuery.trim() || undefined,
+      dateFrom: bounds ? toIsoDateParam(bounds.start) : undefined,
+      dateTo: bounds ? toIsoDateParam(bounds.end) : undefined,
+    };
+  }, [urlFilters.patientId, urlFilters.orderId, statusFilters, searchQuery, dateRange]);
 
   const {
     orders,
@@ -99,60 +104,6 @@ export const PaymentList: React.FC = () => {
     [orders, payments]
   );
 
-  const {
-    filteredItems: searchFilteredOrders,
-    searchQuery,
-    setSearchQuery,
-  } = useClientListFilter<OrderPaymentView>(orderPaymentViews, {
-    searchFields: item => [
-      item.order.orderId.toString(),
-      item.order.patientId.toString(),
-      getPatientName(item.order.patientId),
-    ],
-  });
-
-  const handleStatusFiltersChange = useCallback(
-    (filters: PaymentStatus[]) => {
-      setFilter('statusFilters', filters);
-      resetPage();
-    },
-    [setFilter, resetPage]
-  );
-
-  const filteredOrders = useMemo(() => {
-    let filtered = searchFilteredOrders;
-
-    if (statusFilters.length > 1) {
-      filtered = filtered.filter(item =>
-        statusFilters.includes(item.order.paymentStatus)
-      );
-    }
-
-    if (dateRange) {
-      const [start, end] = dateRange;
-      const endDate = new Date(end);
-      endDate.setHours(23, 59, 59, 999);
-      const startDate = new Date(start);
-      startDate.setHours(0, 0, 0, 0);
-
-      filtered = filtered.filter(item => {
-        const dateValue = item.paymentDate ?? item.order.orderDate;
-        const rowDate = new Date(dateValue);
-        return rowDate >= startDate && rowDate <= endDate;
-      });
-    }
-
-    if (methodFilters.length > 0) {
-      filtered = filtered.filter(
-        item =>
-          item.paymentMethod &&
-          (methodFilters as string[]).includes(item.paymentMethod as string)
-      );
-    }
-
-    return filtered;
-  }, [searchFilteredOrders, statusFilters, dateRange, methodFilters]);
-
   const handlePaymentSuccess = useCallback(() => {
     refetch();
   }, [refetch]);
@@ -176,7 +127,7 @@ export const PaymentList: React.FC = () => {
     <>
       <div className="flex h-full min-h-0 flex-col">
         <ListView
-          items={filteredOrders}
+          items={orderPaymentViews}
           viewConfig={paymentTableConfig}
           loading={isLoading}
           error={error}
@@ -186,25 +137,28 @@ export const PaymentList: React.FC = () => {
           title="Payments"
           filters={
             <>
-              {urlFilters && Object.keys(urlFilters).length > 0 && (
-                <UrlFilterBadges
-                  urlFilters={urlFilters}
-                  onClear={clearUrlFilters}
-                  onClearSingle={(key) => {
-                    const urlKey = PAYMENT_URL_FILTER_KEYS.find(k => k === key);
-                    if (urlKey) setUrlFilter(urlKey, undefined);
-                  }}
-                />
-              )}
+              <EntityUrlFilterBar
+                urlFilters={urlFilters}
+                urlFilterKeys={PAYMENT_URL_FILTER_KEYS}
+                onClear={clearUrlFilters}
+                onClearSingle={key => setUrlFilter(key, undefined)}
+              />
               <PaymentFilters
                 searchQuery={searchQuery}
-                onSearchChange={setSearchQuery}
+                onSearchChange={value => {
+                  setFilter('search', value);
+                  resetPage();
+                }}
                 dateRange={dateRange}
-                onDateRangeChange={(value) => setFilter('dateRange', value)}
+                onDateRangeChange={value => {
+                  setFilter('dateRange', value);
+                  resetPage();
+                }}
                 statusFilters={statusFilters}
-                onStatusFiltersChange={handleStatusFiltersChange}
-                methodFilters={methodFilters}
-                onMethodFiltersChange={(value) => setFilter('methodFilters', value)}
+                onStatusFiltersChange={values => {
+                  setFilter('statusFilters', values);
+                  resetPage();
+                }}
               />
             </>
           }

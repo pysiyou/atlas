@@ -1,7 +1,7 @@
 /**
  * Categorized searchable matches for the event log popover — aligned with audit/search.py.
  */
-import type { IconName } from '@/components';
+import type { IconName } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 import { formatDisplayId } from '@/utils/id';
 import type { AuditSearchPreviewResponse } from './api';

@@ -4,7 +4,8 @@
 
 import React, { useMemo } from 'react';
 import { RADIUS, TYPE } from '@/components/theme/recipes';
-import { Callout, Panel, EntityId } from '@/components';
+import { Callout, EntityId } from '@/components/display';
+import { Panel } from '@/components/surfaces';
 import { PanelHeaderSegmentTabs } from '@/components/display/PanelHeaderSegmentTabs';
 import { formatArray } from '@/utils';
 import { formatRejectionCriteriaList } from '../utils/catalogRejectionCriteria';

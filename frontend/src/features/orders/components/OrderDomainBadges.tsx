@@ -2,7 +2,7 @@
  * Order-domain status chips — color/label from @/utils/statusBadge.
  */
 
-import { Badge, type BadgeProps } from '@/components';
+import { Badge, type BadgeProps } from '@/components/primitives';
 import {
   StatusPresentationCompactBadge,
   StatusPresentationStack,

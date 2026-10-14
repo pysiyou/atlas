@@ -2,7 +2,7 @@
  * Payment-domain status and method chips.
  */
 
-import { Badge, type BadgeProps } from '@/components';
+import { Badge, type BadgeProps } from '@/components/primitives';
 import type { PaymentMethod, PaymentStatus } from '@/types';
 import { formatStatusBadgeLabel, resolveStatusBadgeColor } from '@/utils/statusBadge';
 

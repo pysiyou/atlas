@@ -1,7 +1,7 @@
 /**
  * Warning banner when a resulted test's linked sample was rejected after result entry.
  */
-import { Alert, EntityId } from '@/components';
+import { Alert, EntityId } from '@/components/display';
 import { TYPE } from '@/components/theme/recipes';
 import { LAB_COPY } from '../constants/labConstants';
 

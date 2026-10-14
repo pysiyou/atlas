@@ -11,8 +11,9 @@ import {
   useLabQueueFilters,
   useResultValidationQueueData,
 } from '../hooks';
-import { validationFilterConfig, LAB_URL_FILTER_KEYS } from '../constants';
-import { ErrorBoundary, UrlFilterBadges } from '@/components';
+import { validationFilterConfig } from '../constants';
+import { ErrorBoundary } from '@/components/loaders';
+import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { SectionLoadingBoundary } from '@/components/loaders';
 import { useMinDisplay } from '@/hooks/useMinDisplay';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
@@ -108,8 +109,12 @@ export const ResultValidationQueue: React.FC = () => {
         sortByQueuePriority: true,
         getPriority: test => test.priority,
         getQueueSince: test => test.resultEnteredAt ?? test.orderDate,
+        urlFilters,
+        getId: test => test.id,
+        getOrderId: test => test.orderId,
+        getSampleId: test => test.sampleId,
       }),
-    [escalatedTests, filterState],
+    [escalatedTests, filterState, urlFilters],
   );
 
   const filteredRecollectionRequests = useMemo(
@@ -125,8 +130,12 @@ export const ResultValidationQueue: React.FC = () => {
         getPriority: () => undefined,
         getQueueSince: request => request.createdAt,
         applyStatusFilter: false,
+        urlFilters,
+        getId: request => request.orderTestId,
+        getOrderId: request => request.orderId,
+        getSampleId: request => request.rejectedSampleId,
       }),
-    [recollectionRequests, filterState, canResolveFromProvider],
+    [recollectionRequests, filterState, canResolveFromProvider, urlFilters],
   );
 
   const sectionLoading = useMinDisplay(dataLoading || (canViewEscalations && escalationLoading), 500);
@@ -139,17 +148,11 @@ export const ResultValidationQueue: React.FC = () => {
       <SectionLoadingBoundary loading={sectionLoading} message="Loading validation..." size="lg">
         <LabWorkflowQueueScaffold
           filterRow={
-            <>
-              {urlFilters && Object.keys(urlFilters).length > 0 && (
-                <UrlFilterBadges
-                  urlFilters={urlFilters}
-                  onClear={clearUrlFilters}
-                  onClearSingle={(key) => {
-                    const urlKey = LAB_URL_FILTER_KEYS.find(k => k === key);
-                    if (urlKey) setUrlFilter(urlKey, undefined);
-                  }}
-                />
-              )}
+            <LabQueueFilterRow
+              urlFilters={urlFilters}
+              onClearUrlFilters={clearUrlFilters}
+              onClearUrlFilter={key => setUrlFilter(key, undefined)}
+            >
               <LabQueueFilters
                 config={validationFilterConfig}
                 searchQuery={searchQuery}
@@ -162,7 +165,7 @@ export const ResultValidationQueue: React.FC = () => {
                 onStatusFiltersChange={setPriorityFilters}
                 statusFilterKey="priority"
               />
-            </>
+            </LabQueueFilterRow>
           }
         >
           <ResultValidationQueueView

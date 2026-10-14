@@ -2,29 +2,34 @@
  * ResultEntryQueue - Main view for result entry workflow
  */
 
-import React, { useMemo } from 'react';
-import { useTestNameLookup } from '@/features/catalog';
-import { useEntryTestCatalog, useLabQueueFilters } from '../hooks';
+import React, { useCallback, useMemo } from 'react';
+import { useTestCatalog, useTestNameLookup } from '@/features/catalog';
+import { useLabQueueFilters } from '../hooks';
 import type { TestWithContextResult } from '../types';
 import { useEntryWorklist } from '../api/worklists';
 import { mapEntryWorklistToOrderTestContext } from '../utils/labQueue';
-import { ResultEntryCard } from '../workflow';
 import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
-import { LabWorklistPaginationNotice } from '../components/LabWorklistPaginationNotice';
 import { LabQueueFilters } from '../components/LabQueueFilters';
-import { entryFilterConfig, LAB_URL_FILTER_KEYS } from '../constants';
-import { EMPTY_COPY, ErrorBoundary, UrlFilterBadges } from '@/components';
+import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
+import { entryFilterConfig } from '../constants';
+import { EMPTY_COPY } from '@/components/display';
+import { ErrorBoundary } from '@/components/loaders';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { useResultEntryWorkflow } from './useResultEntryWorkflow';
 import { orderTestKey } from '../utils/labSearchAndLinks';
+import { ResultEntryQueueItem } from './ResultEntryQueueCards';
+
+/** Stable empty map so unedited cards keep the same `results` identity. */
+const EMPTY_RESULT_VALUES: Record<string, string> = {};
+
 export const ResultEntryQueue: React.FC = () => {
   const { getTest } = useTestNameLookup();
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
 
   const { items: worklistItems, pagination, isLoading: worklistLoading } = useEntryWorklist();
-  const { tests: testCatalog } = useEntryTestCatalog();
+  const { tests: testCatalog } = useTestCatalog();
 
   const allTests = useMemo(
     () => worklistItems.map(mapEntryWorklistToOrderTestContext) as TestWithContextResult[],
@@ -59,6 +64,21 @@ export const ResultEntryQueue: React.FC = () => {
     workflowType: 'entry',
   });
 
+  const handleSaveTest = useCallback(
+    (test: TestWithContextResult) => {
+      if (test.id == null) return;
+      void handleSaveResults(test.id, test.orderId, allTests, testCatalog);
+    },
+    [handleSaveResults, allTests, testCatalog]
+  );
+
+  const handleOpenTest = useCallback(
+    (test: TestWithContextResult) => {
+      openTestModal(test);
+    },
+    [openTestModal]
+  );
+
   const hasNoItems = allTests.length === 0;
   if ((worklistLoading && hasNoItems) || !testCatalog) {
     return (
@@ -72,7 +92,7 @@ export const ResultEntryQueue: React.FC = () => {
     <ErrorBoundary>
       <LabWorkflowQueueLayout
         items={filteredTests}
-        renderCard={(test, idx, _filtered) => {
+        renderCard={(test, idx) => {
           const testItem = test as TestWithContextResult;
           if (testItem.id == null) return null;
           const testDef = getTest(testItem.testCode);
@@ -80,25 +100,19 @@ export const ResultEntryQueue: React.FC = () => {
           const isComplete = testDef?.parameters
             ? areAllParametersFilled(resultKey, testDef.parameters.length)
             : false;
-
-          const cardProps = {
-            test: testItem,
-            testDef,
-            resultKey,
-            results: results[resultKey] || {},
-            technicianNotes: technicianNotes[resultKey] || '',
-            isComplete,
-            onResultsChange: handleResultChange,
-            onNotesChange: handleNotesChange,
-            onSave: () => handleSaveResults(testItem.id!, testItem.orderId, allTests, testCatalog),
-            onClick: () => openTestModal(testItem, _filtered as TestWithContextResult[]),
-          };
-
           return (
-            <ResultEntryCard
-              key={`entry-${testItem.id}-${idx}`}
-              {...cardProps}
+            <ResultEntryQueueItem
+              test={testItem}
+              idx={idx}
+              testDef={testDef}
+              results={results[resultKey] ?? EMPTY_RESULT_VALUES}
+              technicianNotes={technicianNotes[resultKey] ?? ''}
+              isComplete={isComplete}
               isMobile={isMobile}
+              onResultsChange={handleResultChange}
+              onNotesChange={handleNotesChange}
+              onSaveTest={handleSaveTest}
+              onOpenTest={handleOpenTest}
             />
           );
         }}
@@ -110,17 +124,12 @@ export const ResultEntryQueue: React.FC = () => {
         emptyTitle={EMPTY_COPY.pendingResults.title}
         emptyDescription={EMPTY_COPY.pendingResults.description}
         filterRow={
-          <>
-            {urlFilters && Object.keys(urlFilters).length > 0 && (
-              <UrlFilterBadges
-                urlFilters={urlFilters}
-                onClear={clearUrlFilters}
-                onClearSingle={(key) => {
-                  const urlKey = LAB_URL_FILTER_KEYS.find(k => k === key);
-                  if (urlKey) setUrlFilter(urlKey, undefined);
-                }}
-              />
-            )}
+          <LabQueueFilterRow
+            urlFilters={urlFilters}
+            onClearUrlFilters={clearUrlFilters}
+            onClearUrlFilter={key => setUrlFilter(key, undefined)}
+            pagination={pagination}
+          >
             <LabQueueFilters
               config={entryFilterConfig}
               searchQuery={searchQuery}
@@ -132,8 +141,7 @@ export const ResultEntryQueue: React.FC = () => {
               statusFilters={statusFilters}
               onStatusFiltersChange={setStatusFilters}
             />
-            <LabWorklistPaginationNotice pagination={pagination} />
-          </>
+          </LabQueueFilterRow>
         }
       />
     </ErrorBoundary>

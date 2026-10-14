@@ -1,4 +1,4 @@
-import type { TableViewConfig } from '@/components';
+import type { TableViewConfig } from '@/components/data-table';
 import { buildViews, type CardComponentProps } from '@/components/data-table';
 import { ORDER_TABLE_VIEW_KEYS_WITHOUT_PATIENT } from '@/features/orders/constants/orderTableColumns';
 import {

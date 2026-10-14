@@ -8,7 +8,7 @@ import { useSearchParams } from 'react-router-dom';
 import { compareQueuePriority } from '../utils/labQueue';
 import { resolveCollectionStatusFilters } from '../utils/labSearchAndLinks';
 import type { UrlFilters } from '@/utils/filters';
-import { displayId } from '@/utils';
+import { displayId, isDateInInclusiveRange } from '@/utils';
 
 /** Reads the `search` query param used for lab queue deep-links. */
 export function useLabQueueUrlSearch(): string {
@@ -61,17 +61,7 @@ function applyDateRange<T>(
   getOrderDate: (item: T) => string | undefined
 ): T[] {
   if (!dateRange) return out;
-  const [start, end] = dateRange;
-  const startDate = new Date(start);
-  startDate.setHours(0, 0, 0, 0);
-  const endDate = new Date(end);
-  endDate.setHours(23, 59, 59, 999);
-  return out.filter(item => {
-    const d = getOrderDate(item);
-    if (!d) return false;
-    const orderDate = new Date(d);
-    return orderDate >= startDate && orderDate <= endDate;
-  });
+  return out.filter(item => isDateInInclusiveRange(getOrderDate(item), dateRange));
 }
 
 /** Apply the same lab queue filters used by workflow views (search, date, sample type, priority). */

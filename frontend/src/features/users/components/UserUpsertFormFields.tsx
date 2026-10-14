@@ -2,7 +2,8 @@
  * Profile fields for create/edit user accounts.
  */
 import React, { useMemo } from 'react';
-import { Input, MultiSelectFilter } from '@/components';
+import { Input } from '@/components/inputs';
+import { MultiSelectFilter } from '@/components/overlays';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 import { TONE, TYPE } from '@/components/theme/recipes';
 import { ICONS } from '@/config/icons';

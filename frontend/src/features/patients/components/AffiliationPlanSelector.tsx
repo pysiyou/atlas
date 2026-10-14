@@ -5,8 +5,9 @@
  */
 
 import React, { useMemo } from 'react';
-import { Button, Callout, Icon } from '@/components';
-import { SpinnerLoader } from '@/components';
+import { Button, Icon } from '@/components/primitives';
+import { Callout } from '@/components/display';
+import { SpinnerLoader } from '@/components/loaders';
 import { useAffiliationPricing } from '@/features/catalog';
 import { formatCurrency } from '@/utils';
 import { getFeedback } from '@/utils/feedback';

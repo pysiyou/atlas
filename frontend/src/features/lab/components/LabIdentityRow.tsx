@@ -4,7 +4,7 @@
 
 import React, { type ReactNode } from 'react';
 import { cn, formatDate } from '@/utils';
-import { EntityId } from '@/components';
+import { EntityId } from '@/components/display';
 import { LAB_CARD_CONTEXT } from '../utils/labStyles';
 
 export interface LabIdentityContext {

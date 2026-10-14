@@ -4,8 +4,11 @@
  */
 
 import React from 'react';
-import { actionButtonPreset, Alert, Button, Skeleton, DialogHeader, DialogFooter } from '@/components';
-import { RadioCard } from '@/components';
+import { actionButtonPreset, Button } from '@/components/primitives';
+import { Alert } from '@/components/display';
+import { Skeleton } from '@/components/loaders';
+import { DialogHeader, DialogFooter } from '@/components/overlays';
+import { RadioCard } from '@/components/overlays';
 import { AttemptProgressBar } from './LabAttemptIndicators';
 import type { ResultRejectionType } from '@/types';
 import { cn } from '@/utils';

@@ -7,7 +7,7 @@
  * @see https://tkdodo.eu/blog/effective-react-query-keys
  */
 
-import type { OrderStatus, PaymentStatus, SampleStatus, TestCategory } from '@/types';
+import type { Gender, OrderStatus, PaymentMethod, PaymentStatus, SampleStatus, TestCategory } from '@/types';
 
 /**
  * Pagination parameters for paginated queries
@@ -60,8 +60,17 @@ export const queryKeys = {
     lists: () => [...queryKeys.patients.all, 'list'] as const,
     list: (filters?: { search?: string } & PaginationParams) =>
       [...queryKeys.patients.lists(), filters] as const,
-    paginated: (params: { search?: string; includeOrderSummary?: boolean } & PaginationParams) =>
-      [...queryKeys.patients.all, 'paginated', params] as const,
+    paginated: (
+      params: {
+        search?: string;
+        includeOrderSummary?: boolean;
+        patientId?: string;
+        gender?: Gender[];
+        affiliationStatus?: Array<'active' | 'inactive'>;
+        ageMin?: number;
+        ageMax?: number;
+      } & PaginationParams
+    ) => [...queryKeys.patients.all, 'paginated', params] as const,
     details: () => [...queryKeys.patients.all, 'detail'] as const,
     byId: (id: string) => [...queryKeys.patients.details(), id] as const,
     search: (query: string) => [...queryKeys.patients.all, 'search', query] as const,
@@ -87,15 +96,25 @@ export const queryKeys = {
     list: (
       filters?: {
         patientId?: string;
-        status?: OrderStatus;
-        paymentStatus?: PaymentStatus;
+        orderId?: number;
+        status?: OrderStatus[];
+        paymentStatus?: PaymentStatus[];
+        paymentMethod?: PaymentMethod[];
+        search?: string;
+        dateFrom?: string;
+        dateTo?: string;
       } & PaginationParams
     ) => [...queryKeys.orders.lists(), filters] as const,
     paginated: (
       params: {
         patientId?: string;
-        status?: OrderStatus;
-        paymentStatus?: PaymentStatus;
+        orderId?: number;
+        status?: OrderStatus[];
+        paymentStatus?: PaymentStatus[];
+        paymentMethod?: PaymentMethod[];
+        search?: string;
+        dateFrom?: string;
+        dateTo?: string;
       } & PaginationParams
     ) => [...queryKeys.orders.all, 'paginated', params] as const,
     details: () => [...queryKeys.orders.all, 'detail'] as const,

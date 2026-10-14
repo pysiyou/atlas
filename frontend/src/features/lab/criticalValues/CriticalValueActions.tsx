@@ -3,7 +3,8 @@
  */
 
 import React, { useState } from 'react';
-import { actionButtonPreset, Alert, Button, EntityId } from '@/components';
+import { actionButtonPreset, Button } from '@/components/primitives';
+import { Alert, EntityId } from '@/components/display';
 import { formatDateTime } from '@/utils';
 import { useAuthStore } from '@/app/authStore';
 import { notify } from '@/utils/feedback';

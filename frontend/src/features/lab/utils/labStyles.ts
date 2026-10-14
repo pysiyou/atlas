@@ -4,7 +4,7 @@
  */
 
 import { CONTROL, FIELD_ERROR, PANEL, RADIUS, SHADOW, SPACING, SURFACE, TONE, TYPE } from '@/components/theme/recipes';
-import type { BadgeSize } from '@/components';
+import type { BadgeSize } from '@/components/primitives';
 
 /** Canonical Badge size for lab cards — uses theme BADGE.size.xs. */
 export const LAB_CARD_BADGE_SIZE: BadgeSize = 'xs';

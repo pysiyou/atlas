@@ -1,5 +1,6 @@
 import React from 'react';
-import { Textarea, TagInput, Checkbox } from '@/components';
+import { Textarea, TagInput } from '@/components/inputs';
+import { Checkbox } from '@/components/primitives';
 import type { PatientFormSectionProps } from '../patientFormTypes';
 
 export const MedicalHistorySection: React.FC<

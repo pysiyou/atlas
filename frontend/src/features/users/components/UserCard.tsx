@@ -1,5 +1,5 @@
-import { MobileEntityCard } from '@/components';
-import type { CardComponentProps } from '@/components';
+import { MobileEntityCard } from '@/components/surfaces';
+import type { CardComponentProps } from '@/components/data-table';
 import { Badge } from '@/components/primitives/Badge';
 import { TYPE } from '@/components/theme/recipes';
 import { USER_ROLE_CONFIG, type UserRole } from '@/types';

@@ -4,7 +4,8 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { EmptyState, EMPTY_COPY, Panel, EntityId, PANEL_EMPTY_STATE } from '@/components';
+import { EmptyState, EMPTY_COPY, EntityId, PANEL_EMPTY_STATE } from '@/components/display';
+import { Panel } from '@/components/surfaces';
 import { OrderStatusBadge } from '@/features/orders';
 import { ROUTES } from '@/config';
 import type { Order } from '@/types';

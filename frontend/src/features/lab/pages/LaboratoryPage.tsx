@@ -5,7 +5,8 @@
 
 import React, { useMemo, useCallback, useEffect } from 'react';
 import { useNavigate, useParams, Navigate } from 'react-router-dom';
-import { Icon, PageHeader } from '@/components';
+import { Icon } from '@/components/primitives';
+import { PageHeader } from '@/components/layout';
 import { ICONS } from '@/config/icons';
 import { WORKSPACE } from '@/components/theme/recipes';
 import { useLabStageQueueCounts, getValidationTabCount } from '../hooks';

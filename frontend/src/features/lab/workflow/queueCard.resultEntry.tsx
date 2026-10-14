@@ -3,8 +3,9 @@
  */
 /* eslint-disable react-refresh/only-export-components -- queue card + colocated data hook */
 
-import { useMemo, type FC } from 'react';
-import { actionButtonPreset, Card, IconButton } from '@/components';
+import { memo, useMemo, type FC } from 'react';
+import { actionButtonPreset, IconButton } from '@/components/primitives';
+import { Card } from '@/components/surfaces';
 import { cn } from '@/utils';
 import { usePatientNameLookup } from '@/features/patients';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
@@ -215,12 +216,18 @@ function ResultEntryCardMobile({
   );
 }
 
-export const ResultEntryCard: FC<ResultEntryCardProps> = props => {
+function passThroughEntrySharedData(
+  data: ResultEntryCardSharedData | null
+): ResultEntryCardSharedData {
+  return data as ResultEntryCardSharedData;
+}
+
+export const ResultEntryCard: FC<ResultEntryCardProps> = memo(props => {
   const sharedData = useResultEntryCardData(props);
 
   const card = useLabWorkflowResponsiveCard({
-    item: props,
-    deriveSharedData: () => sharedData as ResultEntryCardSharedData,
+    item: sharedData,
+    deriveSharedData: passThroughEntrySharedData,
     renderMobile: ResultEntryCardMobile,
     renderDesktop: ResultEntryCardDesktop,
     isMobile: props.isMobile,
@@ -229,4 +236,5 @@ export const ResultEntryCard: FC<ResultEntryCardProps> = props => {
   if (!sharedData) return null;
 
   return card;
-};
+});
+ResultEntryCard.displayName = 'ResultEntryCard';

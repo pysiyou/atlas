@@ -4,7 +4,8 @@
 /* eslint-disable react-refresh/only-export-components -- queue card + colocated data hook */
 
 import { useMemo, type FC } from 'react';
-import { actionButtonPreset, Button, Card } from '@/components';
+import { actionButtonPreset, Button } from '@/components/primitives';
+import { Card } from '@/components/surfaces';
 import { cn } from '@/utils';
 import { useUserLookup } from '@/lib/api/users';
 import { usePatientNameLookup } from '@/features/patients';

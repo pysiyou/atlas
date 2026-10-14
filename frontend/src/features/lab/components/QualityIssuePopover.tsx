@@ -5,7 +5,9 @@
 
 import React, { useState } from 'react';
 import { TYPE } from '@/components/theme/recipes';
-import { actionButtonPreset, Popover, Button, Alert, FooterInfo, PopoverFormChrome } from '@/components';
+import { actionButtonPreset, Button } from '@/components/primitives';
+import { Popover, PopoverFormChrome } from '@/components/overlays';
+import { Alert, FooterInfo } from '@/components/display';
 import { MODULE_ICONS } from '@/config/icons';
 import { useQualityIssuePopover } from '../hooks/useQualityIssuePopover';
 import type { QualityIssueResult, RemedyType } from '@/types/lab-operations';

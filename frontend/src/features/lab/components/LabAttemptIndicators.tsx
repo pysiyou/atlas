@@ -2,7 +2,7 @@
  * Attempt count indicator and remaining-attempt progress bar.
  */
 import React, { useState } from 'react';
-import { Badge } from '@/components';
+import { Badge } from '@/components/primitives';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 import { OVERLAY, RADIUS, TONE, TYPE } from '@/components/theme/recipes';

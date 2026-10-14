@@ -3,7 +3,7 @@
  */
 
 import { type ReactNode } from 'react';
-import { EntityId } from '@/components';
+import { EntityId } from '@/components/display';
 import { type ContainerType, type Sample, type RejectedSample } from '@/types';
 import type { ContainerTopColor } from '@/types';
 import type { SampleCollectionQueueItem, SampleRequirement } from '@/types/lab-operations';

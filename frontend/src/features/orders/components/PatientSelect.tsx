@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Avatar, EMPTY_COPY, Icon, RemovableTag, TagChip } from '@/components';
+import { Avatar, Icon, RemovableTag, TagChip } from '@/components/primitives';
+import { EMPTY_COPY } from '@/components/display';
 import { cn, formatPhoneNumber } from '@/utils';
 import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/components/inputs/inputStyles';
 import type { Patient } from '@/types';

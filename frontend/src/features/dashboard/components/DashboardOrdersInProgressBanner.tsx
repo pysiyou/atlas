@@ -3,7 +3,8 @@
  */
 
 import React from 'react';
-import { Card, Icon } from '@/components';
+import { Card } from '@/components/surfaces';
+import { Icon } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 import { TYPE } from '@/components/theme/recipes';
 

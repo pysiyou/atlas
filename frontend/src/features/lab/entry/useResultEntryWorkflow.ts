@@ -35,7 +35,7 @@ export interface EntryWorkflow {
     finalResults?: Record<string, string>,
     finalNotes?: string
   ) => Promise<void>;
-  openTestModal: (test: TestWithContext, filteredTests: TestWithContext[]) => void;
+  openTestModal: (test: TestWithContext) => void;
 }
 
 export function useResultEntryWorkflow({

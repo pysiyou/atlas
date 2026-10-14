@@ -2,7 +2,8 @@
  * Escalation resolution modal — body panels, detail sections, and footer.
  */
 
-import { Panel, EntityId } from '@/components';
+import { Panel } from '@/components/surfaces';
+import { EntityId } from '@/components/display';
 import { DetailGrid, ModalFooter } from './detailModalLayout';
 import { ResultValidationForm } from '../validation/ResultValidationForm';
 import { CriticalValueActions } from '../criticalValues/CriticalValueActions';

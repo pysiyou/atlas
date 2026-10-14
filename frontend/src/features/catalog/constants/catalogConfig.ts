@@ -153,10 +153,4 @@ export const catalogFilterConfig: FilterConfig = {
       },
     ],
   },
-  advancedFilters: {
-    title: 'Advanced Filters',
-    collapsible: true,
-    defaultCollapsed: true,
-    controls: [],
-  },
 };

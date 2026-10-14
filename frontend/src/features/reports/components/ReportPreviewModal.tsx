@@ -5,7 +5,9 @@
  */
 
 import React from 'react';
-import { actionButtonPreset, Modal, Button, FooterInfo, DialogFooter } from '@/components';
+import { actionButtonPreset, Button } from '@/components/primitives';
+import { Modal, DialogFooter } from '@/components/overlays';
+import { FooterInfo } from '@/components/display';
 import type { ValidatedTestReportPayload } from '../types';
 import { MODULE_ICONS } from '@/config/icons';
 import { useUserLookup } from '@/lib/api/users';

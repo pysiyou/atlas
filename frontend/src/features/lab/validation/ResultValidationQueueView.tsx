@@ -1,6 +1,6 @@
 import { EscalationCard, ResultValidationCard } from '../workflow';
 import { LabValidationQueueSection } from '../components/LabValidationQueueSection';
-import { EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components';
+import { EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components/display';
 import type { TestWithContext } from '@/types';
 import type { RecollectionRequestSummary, QualityIssueResult } from '@/types/lab-operations';
 import { SampleRecollectionRequestCard } from '../workflow';

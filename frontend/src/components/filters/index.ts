@@ -36,15 +36,11 @@ export {
   ResponsiveFilterMobileBar,
   type ResponsiveFilterMobileBarProps,
 } from './ResponsiveFilterMobileBar';
-export { FilterSection, type FilterSectionProps } from './FilterSection';
 export { DatePresetBadges, type DatePresetBadgesProps } from './DatePresetBadges';
 export { QuickFilters, type QuickFiltersProps } from './QuickFilters';
 export { FilterFactory, type FilterFactoryProps } from './FilterFactory';
 export { EntityFilterModal, type EntityFilterModalProps } from './EntityFilterModal';
-export {
-  ResponsiveEntityFilters,
-  type ResponsiveEntityFiltersProps,
-} from './ResponsiveEntityFilters';
+export { EntityUrlFilterBar, type EntityUrlFilterBarProps } from './EntityUrlFilterBar';
 
 export { SearchControl, type SearchControlProps } from './SearchControl';
 export { DateRangeControl, type DateRangeControlProps } from './DateRangeControl';

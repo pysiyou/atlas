@@ -4,7 +4,7 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { actionButtonPreset, Button } from '@/components';
+import { actionButtonPreset, Button } from '@/components/primitives';
 import { QueueModalShell, ModalFooter } from './detailModalLayout';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { usePatientNameLookup } from '@/features/patients';

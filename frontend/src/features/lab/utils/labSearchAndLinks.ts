@@ -28,7 +28,10 @@ export function resolveCollectionStatusFilters<T extends string>(
  * Returns a lab queue URL for an order test with proper filter support.
  * Uses URL filters (testId, orderId, sampleId) for direct navigation to the test in the queue.
  */
-export function getLabQueueUrlForTest(test: OrderTest, orderId: number): string | null {
+export function getLabQueueUrlForTest(
+  test: Pick<OrderTest, 'id' | 'status' | 'testCode'> & { sampleId?: number | null },
+  orderId: number
+): string | null {
   const tab = getLabTabForTestStatus(test.status as TestStatus);
   if (!tab) return null;
 

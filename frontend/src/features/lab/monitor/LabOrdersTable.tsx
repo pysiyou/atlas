@@ -8,11 +8,11 @@ import { DataTable } from '@/components/data-table';
 import { Panel } from '@/components/surfaces/Panel';
 import type { DashboardWorklistItem } from '../api/worklists';
 import { useDashboardWorklistToday } from '../api/worklists';
-import { getLabQueueUrl } from '../constants/labConstants';
+import { getLabQueueUrlForTest } from '../utils/labSearchAndLinks';
 import type { LabPipelineStage } from './monitorModel';
 import type { PriorityLevel, TestStatus } from '@/types';
 import type { StatusPresentation } from '@/types/labProjection';
-import { cn, displayId } from '@/utils';
+import { cn } from '@/utils';
 import { getOrderTestLineageRowClass } from '@/features/orders';
 import { MONITOR_ROW_INTERACTIVE } from './monitorStyles';
 import { createLabOrdersTableConfig } from './LabOrdersTable.config';
@@ -50,7 +50,16 @@ function mapWorkTodayRow(item: DashboardWorklistItem): LabOrderTableRow {
     status: item.status,
     date: item.activityAt,
     orderId: item.orderId,
-    href: getLabQueueUrl(item.stage, { search: displayId.order(item.orderId) }),
+    href:
+      getLabQueueUrlForTest(
+        {
+          id: item.orderTestId,
+          status: item.status,
+          testCode: item.testCode,
+          sampleId: null,
+        },
+        item.orderId
+      ) ?? '',
     statusPresentation: item.statusPresentation ?? null,
   };
 }

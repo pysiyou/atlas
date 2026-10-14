@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon } from '@/components';
+import { Icon } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 import type { FeedbackId } from '@/config/feedbackCatalog';
 import { displayId } from '@/utils';

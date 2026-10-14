@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { PageHeader } from '@/components';
+import { PageHeader } from '@/components/layout';
 import { PANEL, WORKSPACE } from '@/components/theme/recipes';
 import { EventLogPanel } from '../EventLogPanel';
 import { GLOBAL_EVENT_LOG_FILTER_FIELDS } from '../eventLogFilterFields';

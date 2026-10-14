@@ -8,7 +8,9 @@
 import React from 'react';
 import { TYPE } from '@/components/theme/recipes';
 import type { Order } from '@/types';
-import { Modal, FooterInfo, Icon, FormDialogFooter } from '@/components';
+import { Modal, FormDialogFooter } from '@/components/overlays';
+import { FooterInfo } from '@/components/display';
+import { Icon } from '@/components/primitives';
 import { MODULE_ICONS } from '@/config/icons';
 import { formatCurrency } from '@/utils';
 import { ICONS } from '@/config/icons';

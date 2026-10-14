@@ -2,7 +2,9 @@
  * Inline filter controls for the event log panel (tablet/desktop).
  */
 import React from 'react';
-import { Checkbox, DateFilter, DebouncedSearchInput, MultiSelectFilter, Select } from '@/components';
+import { Checkbox } from '@/components/primitives';
+import { DateFilter, DebouncedSearchInput, Select } from '@/components/inputs';
+import { MultiSelectFilter } from '@/components/overlays';
 import { RADIUS } from '@/components/theme/recipes';
 import { ICONS, MODULE_ICONS } from '@/config/icons';
 import type { UserRole } from '@/types';
