@@ -201,7 +201,7 @@ export const queryKeys = {
 
   reports: {
     all: ['reports'] as const,
-    validatedTests: () => [...queryKeys.reports.all, 'validated-tests'] as const,
+    reportableOrders: () => [...queryKeys.reports.all, 'reportable-orders'] as const,
   },
 
   worklists: {

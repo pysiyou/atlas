@@ -6,22 +6,22 @@
  */
 import React from 'react';
 import { actionButtonPreset, IconButton } from '@/components/primitives';
-import type { ValidatedTest } from '../types';
+import type { ReportableOrder } from '../types';
 
 interface ReportPreviewButtonProps {
-  /** Validated test to preview report for */
-  test: ValidatedTest;
+  /** Reportable order to preview the report for */
+  order: ReportableOrder;
   /** Callback invoked when preview is clicked */
-  onPreview: (test: ValidatedTest) => void;
+  onPreview: (order: ReportableOrder) => void;
   /** Button size */
   size?: 'sm' | 'md' | 'lg';
 }
 
 /**
- * ReportPreviewButton - Displays preview action for validated tests
+ * ReportPreviewButton - Displays preview action for reportable orders
  */
 export const ReportPreviewButton: React.FC<ReportPreviewButtonProps> = ({
-  test,
+  order,
   onPreview,
   size = 'sm',
 }) => {
@@ -29,7 +29,7 @@ export const ReportPreviewButton: React.FC<ReportPreviewButtonProps> = ({
     <IconButton
       {...actionButtonPreset('view')}
       size={size}
-      onClick={() => onPreview(test)}
+      onClick={() => onPreview(order)}
       title="Preview report"
     />
   );

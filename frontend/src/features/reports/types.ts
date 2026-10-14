@@ -2,37 +2,30 @@
  * Lab Reports Types
  */
 
-import type { Order, OrderTest } from '@/types';
+import type { Order } from '@/types';
 
 /**
- * ValidatedTest - Represents a single validated test ready for reporting
- * Each test gets its own report
+ * ReportableOrder - One lab report row for a non-cancelled order with active tests.
  */
-export interface ValidatedTest {
-  // Test identification
-  testId: number;
-  testCode: string;
-  testName: string;
-
-  // Order context
+export interface ReportableOrder {
   orderId: number;
   orderDate: string;
-
-  // Patient context
   patientId: number;
   patientName: string;
   patientAge?: number;
   patientGender?: string;
-
-  // Test data
-  test: OrderTest;
+  activeTestCount: number;
+  validatedTestCount: number;
   order: Order;
 }
 
+/** Placeholder shown when a catalog investigation has no result yet. */
+export const RESULT_NOT_AVAILABLE = 'Not available';
+
 /**
- * ValidatedTestReportPayload - Data structure for generating a single test report
+ * LabReportPayload - Data structure for generating a lab report PDF.
  */
-export interface ValidatedTestReportPayload {
+export interface LabReportPayload {
   order: Order;
   patientId: number;
   patientName: string;
@@ -44,9 +37,9 @@ export interface ValidatedTestReportPayload {
     collectedBy?: string;
   };
   timestamps?: {
-    registeredAt?: string; // Order creation date
-    collectedAt?: string; // Sample collection date
-    reportedAt?: string; // Report generation date
+    registeredAt?: string;
+    collectedAt?: string;
+    reportedAt?: string;
   };
   testResults: Array<{
     testCode: string;

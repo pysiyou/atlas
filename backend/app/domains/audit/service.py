@@ -1217,16 +1217,26 @@ class AuditEmitter:
     def reporting_downloaded(
         self,
         order_id: int,
-        order_test_id: int,
         user_id: int,
+        order_test_id: int | None = None,
         metadata: dict[str, Any] | None = None,
     ) -> None:
+        if order_test_id is not None:
+            self._emit(
+                EventType.REPORTING_DOWNLOAD,
+                "order_test",
+                order_test_id,
+                user_id,
+                context=self._order_context(order_id, test_id=order_test_id),
+                metadata=metadata,
+            )
+            return
         self._emit(
             EventType.REPORTING_DOWNLOAD,
-            "order_test",
-            order_test_id,
+            "order",
+            order_id,
             user_id,
-            context=self._order_context(order_id, test_id=order_test_id),
+            context=self._order_context(order_id),
             metadata=metadata,
         )
 

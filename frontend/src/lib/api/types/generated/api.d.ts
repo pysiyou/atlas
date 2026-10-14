@@ -1080,15 +1080,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/reports/validated-tests": {
+    "/api/v1/reports/orders": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** List Validated Tests */
-        get: operations["list_validated_tests_api_v1_reports_validated_tests_get"];
+        /** List Reportable Orders */
+        get: operations["list_reportable_orders_api_v1_reports_orders_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1097,15 +1097,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/reports/validated-tests/{testId}/download": {
+    "/api/v1/reports/orders/{orderId}/download": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Download Validated Test Report */
-        get: operations["download_validated_test_report_api_v1_reports_validated_tests__testId__download_get"];
+        /** Download Order Report */
+        get: operations["download_order_report_api_v1_reports_orders__orderId__download_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2781,6 +2781,34 @@ export interface components {
             notes?: string | null;
             preferredRemedy?: components["schemas"]["RemedyType"] | null;
         };
+        /**
+         * ReportableOrderItem
+         * @description One lab report row: a non-cancelled order with at least one active test.
+         */
+        ReportableOrderItem: {
+            /** Orderid */
+            orderId: number;
+            /**
+             * Orderdate
+             * Format: date-time
+             */
+            orderDate: string;
+            /** Patientid */
+            patientId: number;
+            /** Patientname */
+            patientName: string;
+            /** Patientdob */
+            patientDob?: string | null;
+            patientGender?: components["schemas"]["Gender"] | null;
+            /** Activetestcount */
+            activeTestCount: number;
+            /** Validatedtestcount */
+            validatedTestCount: number;
+            /** Order */
+            order: {
+                [key: string]: unknown;
+            };
+        };
         /** ResultEntryRequest */
         ResultEntryRequest: {
             /** Results */
@@ -3171,34 +3199,6 @@ export interface components {
             /** Isactive */
             isActive?: boolean | null;
         };
-        /** ValidatedTestReportItem */
-        ValidatedTestReportItem: {
-            /** Testid */
-            testId: number;
-            /** Testcode */
-            testCode: string;
-            /** Testname */
-            testName: string;
-            /** Orderid */
-            orderId: number;
-            /**
-             * Orderdate
-             * Format: date-time
-             */
-            orderDate: string;
-            /** Patientid */
-            patientId: number;
-            /** Patientname */
-            patientName: string;
-            /** Patientdob */
-            patientDob?: string | null;
-            patientGender?: components["schemas"]["Gender"] | null;
-            test: components["schemas"]["OrderTestResponse"];
-            /** Order */
-            order: {
-                [key: string]: unknown;
-            };
-        };
         /**
          * ValidationDecision
          * @enum {string}
@@ -3509,6 +3509,11 @@ export interface operations {
         parameters: {
             query?: {
                 search?: string | null;
+                patientId?: number | null;
+                gender?: string | null;
+                affiliationStatus?: string | null;
+                ageMin?: number | null;
+                ageMax?: number | null;
                 /** @description Return paginated response with total count */
                 paginated?: boolean;
                 /** @description Comma-separated embeds, e.g. orderSummary */
@@ -3840,8 +3845,13 @@ export interface operations {
         parameters: {
             query?: {
                 patientId?: number | null;
-                status?: components["schemas"]["OrderStatus"] | null;
-                paymentStatus?: components["schemas"]["PaymentStatus"] | null;
+                orderId?: number | null;
+                status?: string | null;
+                paymentStatus?: string | null;
+                paymentMethod?: string | null;
+                search?: string | null;
+                dateFrom?: string | null;
+                dateTo?: string | null;
                 sort?: "createdAt" | "updatedAt";
                 paginated?: boolean;
                 /** @description Return lightweight order rows without nested tests */
@@ -5610,7 +5620,7 @@ export interface operations {
             };
         };
     };
-    list_validated_tests_api_v1_reports_validated_tests_get: {
+    list_reportable_orders_api_v1_reports_orders_get: {
         parameters: {
             query?: {
                 limit?: number;
@@ -5627,7 +5637,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ValidatedTestReportItem"][];
+                    "application/json": components["schemas"]["ReportableOrderItem"][];
                 };
             };
             /** @description Validation Error */
@@ -5641,12 +5651,12 @@ export interface operations {
             };
         };
     };
-    download_validated_test_report_api_v1_reports_validated_tests__testId__download_get: {
+    download_order_report_api_v1_reports_orders__orderId__download_get: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                testId: number;
+                orderId: number;
             };
             cookie?: never;
         };
@@ -5658,7 +5668,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ValidatedTestReportItem"];
+                    "application/json": components["schemas"]["ReportableOrderItem"];
                 };
             };
             /** @description Validation Error */

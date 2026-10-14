@@ -1,7 +1,7 @@
 /**
  * ReportList Component - Migrated to use ListView
  *
- * Displays a list of validated tests ready for report generation.
+ * Displays a list of reportable orders ready for report generation.
  */
 
 import React, { useMemo, useState, useCallback } from 'react';
@@ -10,7 +10,7 @@ import { useTestCatalog } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users';
 import { usePatientNameLookup } from '@/features/patients';
 import { useSampleLookup } from '@/features/lab';
-import { useValidatedTestsReport } from '../api/reports';
+import { reportsAPI, useReportableOrders } from '../api/reports';
 import { useClientListFilter } from '@/hooks/useClientListFilter';
 import { ListView } from '@/components/surfaces';
 import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components/data-table';
@@ -18,11 +18,12 @@ import { createReportTableConfig } from '../config/ReportTable.config';
 import { ReportPreviewModal } from '../components/ReportPreviewModal';
 import { ReportFilters } from '../components/ReportFilters';
 import { generateLabReport, downloadPDF } from '../utils/reportPDF';
-import type { ValidatedTest } from '../types';
+import type { ReportableOrder } from '../types';
 import {
-  filterValidatedTestsByDateRange,
+  filterReportableOrdersByDateRange,
+  getActiveOrderTests,
   prepareReportData,
-  downloadValidatedTestReport,
+  downloadLabReport,
 } from '../utils/prepareReportData';
 import { formatDate } from '@/utils';
 import { notify, errorAlertMessage } from '@/utils/feedback';
@@ -31,12 +32,12 @@ export const ReportList: React.FC = () => {
   const navigate = useNavigate();
 
   const {
-    validatedTests,
+    reportableOrders,
     isLoading: reportsLoading,
     isError,
     error: queryError,
     refetch,
-  } = useValidatedTestsReport();
+  } = useReportableOrders();
   const { tests, isLoading: testsLoading } = useTestCatalog();
   const { getPatientName } = usePatientNameLookup();
   const { getSample } = useSampleLookup();
@@ -51,35 +52,33 @@ export const ReportList: React.FC = () => {
       }
     : null;
 
-  const [previewTest, setPreviewTest] = useState<ValidatedTest | null>(null);
+  const [previewOrder, setPreviewOrder] = useState<ReportableOrder | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
 
   const {
-    filteredItems: preFilteredTests,
+    filteredItems: preFilteredOrders,
     searchQuery,
     setSearchQuery,
-  } = useClientListFilter<ValidatedTest, never>(validatedTests, {
-    searchFields: test => [
-      test.testId.toString(),
-      test.orderId.toString(),
-      test.testCode,
-      test.testName,
-      test.patientId.toString(),
-      test.patientName,
+  } = useClientListFilter<ReportableOrder, never>(reportableOrders, {
+    searchFields: order => [
+      order.orderId.toString(),
+      order.patientId.toString(),
+      order.patientName,
+      ...getActiveOrderTests(order.order).flatMap(test => [test.testCode, test.testName]),
     ],
     defaultSort: undefined,
   });
 
-  const filteredTests = useMemo(
-    () => filterValidatedTestsByDateRange(preFilteredTests, dateRange),
-    [preFilteredTests, dateRange]
+  const filteredOrders = useMemo(
+    () => filterReportableOrdersByDateRange(preFilteredOrders, dateRange),
+    [preFilteredOrders, dateRange]
   );
 
   const buildReportData = useCallback(
-    (validatedTest: ValidatedTest) =>
+    (reportableOrder: ReportableOrder) =>
       prepareReportData({
-        validatedTest,
+        reportableOrder,
         patients: undefined,
         catalogTests: tests,
         getSample,
@@ -88,25 +87,26 @@ export const ReportList: React.FC = () => {
     [tests, getSample, getUserName]
   );
 
-  const handlePreview = (validatedTest: ValidatedTest) => {
-    setPreviewTest(validatedTest);
+  const handlePreview = (reportableOrder: ReportableOrder) => {
+    setPreviewOrder(reportableOrder);
   };
 
   const handleGenerateReport = async () => {
-    if (!previewTest) return;
+    if (!previewOrder) return;
 
     try {
       setIsGenerating(true);
-      const reportData = buildReportData(previewTest);
-      await downloadValidatedTestReport(
-        previewTest,
+      const reportData = buildReportData(previewOrder);
+      await reportsAPI.recordOrderReportDownload(previewOrder.orderId);
+      await downloadLabReport(
+        previewOrder,
         reportData,
         generateLabReport,
         downloadPDF,
         formatDate
       );
       notify.toast('report.download.success');
-      setPreviewTest(null);
+      setPreviewOrder(null);
     } catch (error) {
       console.error('Error generating report:', error);
       notify.apiError('report.download.error', error);
@@ -124,15 +124,15 @@ export const ReportList: React.FC = () => {
     <>
       <div className="flex h-full min-h-0 flex-col">
       <ListView
-        items={filteredTests}
+        items={filteredOrders}
         viewConfig={reportTableConfig}
         loading={loading}
         error={error}
         onRetry={refetch}
         onDismissError={() => {}}
-        onRowClick={(test: ValidatedTest) => navigate(`/reports/${test.testId}`)}
+        onRowClick={(order: ReportableOrder) => navigate(`/reports/${order.orderId}`)}
         title="Reports"
-        subtitle={`${filteredTests.length} report(s) available`}
+        subtitle={`${filteredOrders.length} report(s) available`}
         filters={
           <ReportFilters
             searchQuery={searchQuery}
@@ -146,11 +146,11 @@ export const ReportList: React.FC = () => {
       />
       </div>
 
-      {previewTest && (
+      {previewOrder && (
         <ReportPreviewModal
-          isOpen={!!previewTest}
-          onClose={() => setPreviewTest(null)}
-          reportData={buildReportData(previewTest)}
+          isOpen={!!previewOrder}
+          onClose={() => setPreviewOrder(null)}
+          reportData={buildReportData(previewOrder)}
           onGenerate={handleGenerateReport}
           isGenerating={isGenerating}
         />
