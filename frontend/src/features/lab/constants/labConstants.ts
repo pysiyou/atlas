@@ -1,5 +1,5 @@
 /** Lab copy, config, routing, visuals, and API path constants. */
-import type { IconName } from '@/components';
+import type { IconName } from '@/components/primitives';
 import { GENERATED_LAB_CONSTANTS } from '@/types/generated/labConstants';
 import { ROUTES } from '@/config';
 import { ICONS } from '@/config/icons';

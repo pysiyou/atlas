@@ -5,10 +5,9 @@
 
 import { useMemo, type FC } from 'react';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { useTestCatalog } from '@/features/catalog';
 import { usePatientNameLookup } from '@/features/patients';
 import { getTestNames } from '@/features/catalog/testLookup';
-import type { ContainerType } from '@/types';
+import type { ContainerType, Test } from '@/types';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { useLabWorkflowCardClickGuard } from '../hooks';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
@@ -37,6 +36,8 @@ export interface SampleCollectionCardProps {
   ) => void;
   isCollecting?: boolean;
   isMobile?: boolean;
+  /** Catalog tests hoisted from the queue to avoid per-card fetches. */
+  tests: Test[];
 }
 
 export function useSampleCollectionCardData(
@@ -44,7 +45,7 @@ export function useSampleCollectionCardData(
 ): SampleCollectionCardSharedData | null {
   const { display, onCollect, isCollecting = false } = props;
   const { getPatientName } = usePatientNameLookup();
-  const { tests } = useTestCatalog();
+  const { tests } = props;
   const { openModal } = useModal();
 
   const { sample, requirement } = display;
@@ -82,12 +83,18 @@ export function useSampleCollectionCardData(
   };
 }
 
+function passThroughSharedData(
+  data: SampleCollectionCardSharedData | null
+): SampleCollectionCardSharedData {
+  return data as SampleCollectionCardSharedData;
+}
+
 export const SampleCollectionCard: FC<SampleCollectionCardProps> = props => {
   const sharedData = useSampleCollectionCardData(props);
 
   const card = useLabWorkflowResponsiveCard({
-    item: props,
-    deriveSharedData: () => sharedData as SampleCollectionCardSharedData,
+    item: sharedData,
+    deriveSharedData: passThroughSharedData,
     renderMobile: SampleCollectionCardMobile,
     renderDesktop: SampleCollectionCardDesktop,
     isMobile: props.isMobile,

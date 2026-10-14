@@ -4,8 +4,10 @@
  * Custom mobile card component for report data in table view.
  * Displays validated test information in a mobile-friendly card layout.
  */
-import { Badge, Avatar, MobileEntityCard, EntityId } from '@/components';
-import type { CardComponentProps } from '@/components';
+import { Badge, Avatar } from '@/components/primitives';
+import { MobileEntityCard } from '@/components/surfaces';
+import { EntityId } from '@/components/display';
+import type { CardComponentProps } from '@/components/data-table';
 import { formatDateTime } from '@/utils';
 import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
 import type { ValidatedTest } from '../types';

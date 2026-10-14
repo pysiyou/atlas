@@ -1,6 +1,7 @@
-import { MobileEntityCard, EntityId } from '@/components';
+import { MobileEntityCard } from '@/components/surfaces';
+import { EntityId } from '@/components/display';
 import { CatalogCategoryBadge, CatalogSampleTypeBadge } from './CatalogStatusBadge';
-import type { CardComponentProps } from '@/components';
+import type { CardComponentProps } from '@/components/data-table';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import type { Test } from '@/types';
 import { CARD_PRICE, TYPE } from '@/components/theme/recipes';

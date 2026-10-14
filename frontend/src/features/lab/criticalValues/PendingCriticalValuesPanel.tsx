@@ -4,7 +4,9 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Badge, Icon, Panel, EntityId } from '@/components';
+import { Badge, Icon } from '@/components/primitives';
+import { Panel } from '@/components/surfaces';
+import { EntityId } from '@/components/display';
 import { ICONS } from '@/config/icons';
 import { cn, displayId } from '@/utils';
 import { getLabQueueUrl } from '../constants/labConstants';

@@ -5,8 +5,8 @@
 
 import React, { useState } from 'react';
 import { FILTER_TYPE } from '@/components/theme/recipes';
-import { DateFilter } from '@/components';
-import { DebouncedSearchInput } from '@/components';
+import { DateFilter } from '@/components/inputs';
+import { DebouncedSearchInput } from '@/components/inputs';
 import { MODULE_ICONS } from '@/config/icons';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import {

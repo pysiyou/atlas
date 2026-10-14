@@ -1,29 +1,11 @@
 /**
- * OrderFilters Component
- * Responsive filter controls with modal for smaller screens
+ * OrderFilters — FilterBar wrapper keeping the list-page prop interface.
  */
 
-import React from 'react';
-import { FILTER_TYPE } from '@/components/theme/recipes';
-import { CheckboxList } from '@/components';
-import {
-  ResponsiveEntityFilters,
-  DatePresetBadges,
-  ORDER_FILTER_PLACEHOLDERS,
-} from '@/components/filters';
-import {
-  ORDER_STATUS_VALUES,
-  PAYMENT_STATUS_VALUES,
-  ORDER_STATUS_CONFIG,
-  PAYMENT_STATUS_CONFIG,
-} from '@/types';
-import { createFilterOptions } from '@/utils/filtering';
-import { MODULE_ICONS } from '@/config/icons';
-import { OrderFiltersInlineControls } from './OrderFiltersInlineControls';
-import type { OrderStatus, PaymentStatus } from '@/types';
-
-const orderStatusOptions = createFilterOptions(ORDER_STATUS_VALUES, ORDER_STATUS_CONFIG);
-const paymentStatusOptions = createFilterOptions(PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG);
+import React, { useMemo } from 'react';
+import { FilterBar, type FilterValues } from '@/components/filters';
+import { orderFilterConfig } from '../config/orderFilters.config';
+import type { OrderStatus } from '@/types';
 
 export interface OrderFiltersProps {
   searchQuery: string;
@@ -32,59 +14,36 @@ export interface OrderFiltersProps {
   onDateRangeChange: (range: [Date, Date] | null) => void;
   statusFilters: OrderStatus[];
   onStatusFiltersChange: (values: OrderStatus[]) => void;
-  paymentFilters: PaymentStatus[];
-  onPaymentFiltersChange: (values: PaymentStatus[]) => void;
 }
 
-export const OrderFilters: React.FC<OrderFiltersProps> = props => {
-  const activeFilterCount =
-    (props.dateRange ? 1 : 0) + props.statusFilters.length + props.paymentFilters.length;
-
-  const modalContent = (
-    <>
-      <div className="w-full">
-        <h4 className={FILTER_TYPE.sectionTitle}>Date Range</h4>
-        <DatePresetBadges value={props.dateRange} onChange={props.onDateRangeChange} />
-        <div className="border-b border-border-default mt-space-4" />
-      </div>
-      <div className="w-full">
-        <h4 className={FILTER_TYPE.sectionTitle}>Order Status</h4>
-        <CheckboxList
-          options={orderStatusOptions}
-          selectedIds={props.statusFilters}
-          onChange={values => props.onStatusFiltersChange(values as OrderStatus[])}
-          columns={orderStatusOptions.length > 4 ? 2 : 1}
-        />
-        <div className="border-b border-border-default mt-space-4" />
-      </div>
-      <div className="w-full">
-        <h4 className={FILTER_TYPE.sectionTitle}>Payment Status</h4>
-        <CheckboxList
-          options={paymentStatusOptions}
-          selectedIds={props.paymentFilters}
-          onChange={values => props.onPaymentFiltersChange(values as PaymentStatus[])}
-          columns={paymentStatusOptions.length > 4 ? 2 : 1}
-        />
-      </div>
-    </>
+export const OrderFilters: React.FC<OrderFiltersProps> = ({
+  searchQuery,
+  onSearchChange,
+  dateRange,
+  onDateRangeChange,
+  statusFilters,
+  onStatusFiltersChange,
+}) => {
+  const filterValues = useMemo<FilterValues>(
+    () => ({
+      search: searchQuery,
+      status: statusFilters,
+      dateRange,
+    }),
+    [searchQuery, statusFilters, dateRange]
   );
 
-  return (
-    <ResponsiveEntityFilters
-      searchQuery={props.searchQuery}
-      onSearchChange={props.onSearchChange}
-      searchPlaceholder={ORDER_FILTER_PLACEHOLDERS.search}
-      activeFilterCount={activeFilterCount}
-      inlineControls={<OrderFiltersInlineControls {...props} />}
-      modalContent={modalContent}
-      footerIcon={MODULE_ICONS.orders}
-      footerLabel="Orders"
-      onReset={() => {
-        props.onDateRangeChange(null);
-        props.onStatusFiltersChange([]);
-        props.onPaymentFiltersChange([]);
-      }}
-      searchRowHeight="h-9"
-    />
-  );
+  const handleFilterChange = (next: FilterValues) => {
+    if (next.search !== undefined && next.search !== searchQuery) {
+      onSearchChange((next.search as string) ?? '');
+    }
+    if (next.status !== undefined && next.status !== statusFilters) {
+      onStatusFiltersChange((next.status as OrderStatus[]) ?? []);
+    }
+    if (next.dateRange !== undefined && next.dateRange !== dateRange) {
+      onDateRangeChange((next.dateRange as [Date, Date] | null) ?? null);
+    }
+  };
+
+  return <FilterBar config={orderFilterConfig} value={filterValues} onChange={handleFilterChange} />;
 };

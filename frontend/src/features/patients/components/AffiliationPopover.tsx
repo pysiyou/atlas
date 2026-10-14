@@ -1,6 +1,7 @@
 import React from 'react';
 import { TYPE } from '@/components/theme/recipes';
-import { Popover, FooterInfo } from '@/components';
+import { Popover } from '@/components/overlays';
+import { FooterInfo } from '@/components/display';
 import type { Affiliation } from '@/types';
 import { AffiliationInfo } from './AffiliationInfoSection';
 import { MODULE_ICONS } from '@/config/icons';

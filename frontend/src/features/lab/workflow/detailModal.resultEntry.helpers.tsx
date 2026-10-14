@@ -3,7 +3,8 @@
  */
 
 import React from 'react';
-import { actionButtonPreset, Button, Panel } from '@/components';
+import { actionButtonPreset, Button } from '@/components/primitives';
+import { Panel } from '@/components/surfaces';
 import { ModalFooter } from './detailModalLayout';
 import { ResultEntryForm } from '../entry/ResultEntryForm';
 import { ResultValidationForm } from '../validation/ResultValidationForm';

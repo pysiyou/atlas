@@ -1,34 +1,30 @@
 /**
- * PatientList - Uses ListView with server-side pagination and URL filter support.
+ * PatientList — server-paginated patients with URL entity filters.
  */
 
 import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePaginatedPatientContextList } from '../api/patients';
-import { useClientListFilter } from '@/hooks/useClientListFilter';
 import { usePageFilters } from '@/hooks/usePageFilters';
 import { PATIENT_URL_FILTER_KEYS } from '../config/patientFilters.config';
-import { UrlFilterBadges } from '@/components';
-import { actionButtonPreset, ListView } from '@/components';
-import { Button } from '@/components';
+import { EntityUrlFilterBar } from '@/components/filters';
+import { actionButtonPreset } from '@/components/primitives';
+import { ListView } from '@/components/surfaces';
+import { Button } from '@/components/primitives';
 import { useModal } from '@/lib/context/ModalContext';
-import { PatientFilters, type AffiliationStatus } from '../components/PatientFilters';
+import { PatientFilters } from '../components/PatientFilters';
 import { createPatientTableConfig } from '../config/PatientTable.config';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
 import { errorAlertMessage } from '@/utils/feedback';
-import { calculateAge } from '@/utils';
-import { buildRangeHistogram } from '@/utils/rangeHistogram';
 import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
 import type { PatientContext, Gender } from '@/types';
 import { EditPatientModal } from '../components/EditPatientModal';
-import { isAffiliationActive } from '../utils/patientHelpers';
 
 export const PatientList: React.FC = () => {
   const navigate = useNavigate();
   useModal();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-  // URL-synced entity filters + local UI filters
   const {
     filters,
     urlFilters,
@@ -39,14 +35,29 @@ export const PatientList: React.FC = () => {
     urlFilterKeys: PATIENT_URL_FILTER_KEYS,
     initialFilters: {
       search: '',
+      sex: [] as Gender[],
       ageRange: [AGE_RANGE_MIN, AGE_RANGE_MAX] as [number, number],
-      affiliationStatus: [] as AffiliationStatus[],
     },
   });
 
   const searchQuery = (filters.search as string) ?? '';
-  const ageRange = useMemo(() => (filters.ageRange as [number, number]) ?? [AGE_RANGE_MIN, AGE_RANGE_MAX], [filters.ageRange]);
-  const affiliationStatusFilters = useMemo(() => (filters.affiliationStatus as AffiliationStatus[]) ?? [], [filters.affiliationStatus]);
+  const ageRange = useMemo(
+    () => (filters.ageRange as [number, number]) ?? [AGE_RANGE_MIN, AGE_RANGE_MAX],
+    [filters.ageRange]
+  );
+  const sexFilters = useMemo(() => (filters.sex as Gender[]) ?? [], [filters.sex]);
+
+  const serverFilters = useMemo(() => {
+    const [minAge, maxAge] = ageRange;
+    const hasCustomAge = minAge !== AGE_RANGE_MIN || maxAge !== AGE_RANGE_MAX;
+    return {
+      search: searchQuery.trim() || undefined,
+      patientId: urlFilters.patientId,
+      gender: sexFilters.length > 0 ? sexFilters : undefined,
+      ageMin: hasCustomAge ? minAge : undefined,
+      ageMax: hasCustomAge ? maxAge : undefined,
+    };
+  }, [searchQuery, urlFilters.patientId, sexFilters, ageRange]);
 
   const {
     patients,
@@ -59,7 +70,7 @@ export const PatientList: React.FC = () => {
     isError,
     error: patientsError,
     refetch,
-  } = usePaginatedPatientContextList(searchQuery.trim() || undefined);
+  } = usePaginatedPatientContextList(serverFilters);
 
   const handleSearchChange = useCallback(
     (query: string) => {
@@ -73,81 +84,13 @@ export const PatientList: React.FC = () => {
     ? { message: errorAlertMessage('patients.list.loadFailed', patientsError), operation: 'load' as const }
     : null;
 
-  // Apply URL filter for patientId
-  const urlFilteredPatients = useMemo(() => {
-    if (!urlFilters.patientId) return patients;
-    const patientId = Number(urlFilters.patientId);
-    return patients.filter(p => p.id === patientId);
-  }, [patients, urlFilters.patientId]);
-
-  const {
-    filteredItems: preFilteredPatients,
-    statusFilters: sexFilters,
-    setStatusFilters: setSexFilters,
-  } = useClientListFilter<PatientContext, Gender>(urlFilteredPatients, {
-    searchFields: patient => [
-      patient.fullName,
-      patient.id.toString(),
-      patient.phone,
-      patient.email || '',
-    ],
-    statusField: 'gender',
-    defaultSort: undefined,
-  });
-
-  const ageHistogram = useMemo(
-    () =>
-      buildRangeHistogram(
-        preFilteredPatients
-          .map(patient => calculateAge(patient.dateOfBirth))
-          .filter(age => Number.isFinite(age)),
-        AGE_RANGE_MIN,
-        AGE_RANGE_MAX
-      ),
-    [preFilteredPatients]
-  );
-
-  const filteredPatients = useMemo(() => {
-    let filtered = preFilteredPatients;
-
-    const [minAge, maxAge] = ageRange;
-    if (minAge !== 0 || maxAge !== 150) {
-      filtered = filtered.filter(patient => {
-        const age = calculateAge(patient.dateOfBirth);
-        return age >= minAge && age <= maxAge;
-      });
-    }
-
-    if (affiliationStatusFilters.length > 0) {
-      filtered = filtered.filter(patient => {
-        const isActive = isAffiliationActive(patient.affiliation);
-        const hasInactive = !patient.affiliation || !isActive;
-
-        if (
-          affiliationStatusFilters.includes('active') &&
-          affiliationStatusFilters.includes('inactive')
-        ) {
-          return true;
-        }
-        if (affiliationStatusFilters.includes('active')) return isActive;
-        if (affiliationStatusFilters.includes('inactive')) return hasInactive;
-        return true;
-      });
-    }
-
-    return filtered;
-  }, [preFilteredPatients, ageRange, affiliationStatusFilters]);
-
-  const patientTableConfig = useMemo(
-    () => createPatientTableConfig(navigate),
-    [navigate]
-  );
+  const patientTableConfig = useMemo(() => createPatientTableConfig(navigate), [navigate]);
 
   return (
     <>
       <div className="flex h-full min-h-0 flex-col">
         <ListView
-          items={filteredPatients}
+          items={patients}
           viewConfig={patientTableConfig}
           loading={isLoading || isFetching}
           error={error}
@@ -162,26 +105,25 @@ export const PatientList: React.FC = () => {
           }
           filters={
             <>
-              {urlFilters && Object.keys(urlFilters).length > 0 && (
-                <UrlFilterBadges
-                  urlFilters={urlFilters}
-                  onClear={clearUrlFilters}
-                  onClearSingle={(key) => {
-                    const urlKey = PATIENT_URL_FILTER_KEYS.find(k => k === key);
-                    if (urlKey) setUrlFilter(urlKey, undefined);
-                  }}
-                />
-              )}
+              <EntityUrlFilterBar
+                urlFilters={urlFilters}
+                urlFilterKeys={PATIENT_URL_FILTER_KEYS}
+                onClear={clearUrlFilters}
+                onClearSingle={key => setUrlFilter(key, undefined)}
+              />
               <PatientFilters
                 searchQuery={searchQuery}
                 onSearchChange={handleSearchChange}
                 sexFilters={sexFilters}
-                onSexFiltersChange={setSexFilters}
+                onSexFiltersChange={values => {
+                  setFilter('sex', values);
+                  resetPage();
+                }}
                 ageRange={ageRange}
-                onAgeRangeChange={(value) => setFilter('ageRange', value)}
-                affiliationStatusFilters={affiliationStatusFilters}
-                onAffiliationStatusFiltersChange={(value) => setFilter('affiliationStatus', value)}
-                ageHistogram={ageHistogram}
+                onAgeRangeChange={value => {
+                  setFilter('ageRange', value);
+                  resetPage();
+                }}
               />
             </>
           }

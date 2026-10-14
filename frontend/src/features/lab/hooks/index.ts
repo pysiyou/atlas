@@ -5,7 +5,6 @@
 export * from './useLabQueueFilterState';
 export type { TestWithContextResult } from '../types';
 export { useLabStageQueueCounts, getValidationTabCount } from '../api/labMonitor';
-export { useEntryTestCatalog } from './useEntryTestCatalog';
 export * from './useResultValidationQueueData';
 export * from './useLabQueueFilters';
 export * from './useLabWorkflowCardClickGuard';

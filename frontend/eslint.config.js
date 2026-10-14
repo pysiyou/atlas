@@ -112,6 +112,53 @@ export default defineConfig([
     },
   },
   {
+    files: ['src/features/**/*.{ts,tsx}', 'src/app/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': ['error', {
+        paths: [
+          {
+            name: '@/components',
+            message: 'Import from @/components/<subpath> (primitives, data-table, filters, overlays, etc.) instead of the top-level barrel.',
+          },
+        ],
+        patterns: [
+          {
+            group: [
+              '@/features/*/components/*',
+              '@/features/*/hooks/*',
+              '@/features/*/api/*',
+              '@/features/*/utils/*',
+              '@/features/*/collection/**',
+              '@/features/*/entry/**',
+              '@/features/*/validation/**',
+              '@/features/*/monitor/**',
+              '@/features/*/pages/**',
+            ],
+            message: 'Import from the feature public API (@/features/<name>) unless this is an intra-feature relative import.',
+          },
+          {
+            group: [
+              '@/features/lab/hooks',
+              '@/features/lab/hooks/**',
+              '@/features/lab/utils',
+              '@/features/lab/utils/**',
+              '@/features/lab/types',
+              '@/features/lab/types/**',
+              '@/features/lab/constants',
+              '@/features/lab/constants/**',
+            ],
+            message: 'Use @/features/lab barrel from outside lab; use relative imports inside features/lab.',
+          },
+          {
+            group: ['@/utils'],
+            importNames: ['ICONS'],
+            message: 'Import ICONS from @/config/icons instead of @/utils.',
+          },
+        ],
+      }],
+    },
+  },
+  {
     files: ['src/components/**/*.{ts,tsx}'],
     rules: {
       'no-restricted-imports': ['error', {

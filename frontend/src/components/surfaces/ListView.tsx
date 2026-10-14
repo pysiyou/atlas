@@ -115,7 +115,8 @@ export function ListView<T extends TableDataItem = TableDataItem>({
             onSortChange={onSortChange}
             onRowClick={onRowClick ? (item, index) => onRowClick(item, index) : undefined}
             rowClassName={rowClassName}
-            ariaLabel={ariaLabel}
+            caption={title}
+            ariaLabel={ariaLabel ?? title}
             embedded={true}
           />
         </div>

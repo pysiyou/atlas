@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo, useState } from 'react';
-import { Card } from '@/components';
+import { Card } from '@/components/surfaces';
 import { cn } from '@/utils';
 import type { RecollectionRequestSummary } from '@/types/lab-operations';
 import { LAB_MOBILE_CARD } from '../utils/labStyles';

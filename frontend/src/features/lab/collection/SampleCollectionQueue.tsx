@@ -13,23 +13,26 @@ import { useCollectionWorklist } from '../api/worklists';
 import { useSubmitSampleCollection } from './useSubmitSampleCollection';
 import { SampleCollectionCard } from '../workflow';
 import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
-import { LabWorklistPaginationNotice } from '../components/LabWorklistPaginationNotice';
 import { LabQueueFilters } from '../components/LabQueueFilters';
-import { collectionFilterConfig, LAB_URL_FILTER_KEYS } from '../constants';
+import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
+import { collectionFilterConfig } from '../constants';
 import { mapCollectionWorklistToSampleDisplay } from '../utils/labQueue';
-import { EMPTY_COPY, ErrorBoundary, emptySubtitle, UrlFilterBadges } from '@/components';
+import { EMPTY_COPY, emptySubtitle } from '@/components/display';
+import { ErrorBoundary } from '@/components/loaders';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { useAuthStore } from '@/app/authStore';
+import { useTestCatalog } from '@/features/catalog';
 export const SampleCollectionQueue: React.FC = () => {
   const { user: currentUser } = useAuthStore();
   const collectSampleMutation = useCollectSample();
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
 
+  const { tests: catalogTests } = useTestCatalog();
   const urlSearch = useLabQueueUrlSearch();
   const [searchQuery, setSearchQuery] = useState(urlSearch);
   React.useEffect(() => {
-    if (urlSearch) setSearchQuery(urlSearch);
+    setSearchQuery(urlSearch);
   }, [urlSearch]);
 
   const debouncedSearch = useDebouncedValue(searchQuery, LAB_CONFIG.SEARCH_DEBOUNCE_MS);
@@ -91,6 +94,7 @@ export const SampleCollectionQueue: React.FC = () => {
             onCollect={handleCollect}
             isCollecting={collectSampleMutation.isPending}
             isMobile={isMobile}
+            tests={catalogTests}
           />
         )}
         getItemKey={(display: SampleCollectionQueueItem, idx: number) =>
@@ -110,17 +114,12 @@ export const SampleCollectionQueue: React.FC = () => {
               : EMPTY_COPY.pendingCollections.description
         }
         filterRow={
-          <>
-            {urlFilters && Object.keys(urlFilters).length > 0 && (
-              <UrlFilterBadges
-                urlFilters={urlFilters}
-                onClear={clearUrlFilters}
-                onClearSingle={(key) => {
-                  const urlKey = LAB_URL_FILTER_KEYS.find(k => k === key);
-                  if (urlKey) setUrlFilter(urlKey, undefined);
-                }}
-              />
-            )}
+          <LabQueueFilterRow
+            urlFilters={urlFilters}
+            onClearUrlFilters={clearUrlFilters}
+            onClearUrlFilter={key => setUrlFilter(key, undefined)}
+            pagination={pagination}
+          >
             <LabQueueFilters
               config={collectionFilterConfig}
               searchQuery={searchQuery}
@@ -132,8 +131,7 @@ export const SampleCollectionQueue: React.FC = () => {
               statusFilters={statusFilters}
               onStatusFiltersChange={setStatusFilters}
             />
-            <LabWorklistPaginationNotice pagination={pagination} />
-          </>
+          </LabQueueFilterRow>
         }
       />
     </ErrorBoundary>

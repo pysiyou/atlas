@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input } from '@/components';
+import { Input } from '@/components/inputs';
 import type { PatientFormSectionProps } from '../patientFormTypes';
 
 export const AddressSection: React.FC<

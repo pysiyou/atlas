@@ -4,7 +4,8 @@
  */
 
 import React from 'react';
-import { Badge, DetailField } from '@/components';
+import { Badge } from '@/components/primitives';
+import { DetailField } from '@/components/display';
 import { formatDate } from '@/utils';
 import type { Affiliation } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';

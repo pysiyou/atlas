@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { TYPE } from '@/components/theme/recipes';
 import type { Order } from '@/types';
-import { CircularProgress } from '@/components';
+import { CircularProgress } from '@/components/primitives';
 import { STATUS_TIMELINE_STEPS, getOrderStepProgress } from '../utils/orderTimelineUtils';
 
 interface OrderCircularProgressProps {

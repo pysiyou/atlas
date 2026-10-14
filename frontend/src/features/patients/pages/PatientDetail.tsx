@@ -9,7 +9,7 @@ import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import { usePatient } from '../api/patients';
 import { useOrdersByPatient } from '@/features/orders';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { DetailPageShell, PageHeader } from '@/components';
+import { DetailPageShell, PageHeader } from '@/components/layout';
 import { EditPatientModal } from '../components/EditPatientModal';
 import { PatientHeader } from '../components/PatientHeader';
 import { SmallScreenLayout, MediumScreenLayout, LargeScreenLayout } from '../components/PatientDetailLayouts';

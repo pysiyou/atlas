@@ -3,7 +3,8 @@
  */
 import React from 'react';
 import { FILTER_TYPE } from '@/components/theme/recipes';
-import { Checkbox, DebouncedSearchInput } from '@/components';
+import { Checkbox } from '@/components/primitives';
+import { DebouncedSearchInput } from '@/components/inputs';
 import { EventLogSearchField } from './EventLogSearchField';
 import type { UserRole } from '@/types';
 import { EventLogFilterBar } from './EventLogFilterBar';

@@ -6,6 +6,8 @@ from app.domains.patients.service import PatientService
 from app.domains.users.models import User
 from app.platform.database import get_db
 from app.platform.http.dependencies import PaginationParams, get_current_user
+from app.platform.utils.common import parse_csv_values
+from app.shared.contracts.enums import Gender
 from app.shared.schemas.pagination import PaginatedResponse, create_paginated_response, skip_to_page
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
@@ -30,6 +32,11 @@ def search_patients(
 def get_patients(
     pagination: PaginationParams,
     search: str | None = Query(None, max_length=100),
+    patientId: int | None = None,
+    gender: str | None = Query(None),
+    affiliationStatus: str | None = Query(None),
+    ageMin: int | None = Query(None, ge=0, le=150),
+    ageMax: int | None = Query(None, ge=0, le=150),
     paginated: bool = Query(False, description="Return paginated response with total count"),
     include: str | None = Query(None, description="Comma-separated embeds, e.g. orderSummary"),
     db: Session = Depends(get_db),
@@ -39,12 +46,18 @@ def get_patients(
     skip, limit = pagination["skip"], pagination["limit"]
     include_parts = {part.strip() for part in (include or "").split(",") if part.strip()}
     include_order_summary = "orderSummary" in include_parts
+    genders = [Gender(token) for token in parse_csv_values(gender)]
     data, total = PatientService(db).get_list(
         skip=skip,
         limit=limit,
         search=search,
         paginated=paginated,
         include_order_summary=include_order_summary,
+        patient_id=patientId,
+        genders=genders or None,
+        affiliation_statuses=parse_csv_values(affiliationStatus) or None,
+        age_min=ageMin,
+        age_max=ageMax,
     )
     if paginated:
         page = skip_to_page(skip, limit)

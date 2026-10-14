@@ -3,8 +3,9 @@
  */
 
 import React from 'react';
-import { Badge, Icon, SpinnerLoader } from '@/components';
-import type { BadgeSize } from '@/components';
+import { Badge, Icon } from '@/components/primitives';
+import { SpinnerLoader } from '@/components/loaders';
+import type { BadgeSize } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 import { ATTENTION_LABELS } from '@/types/generated/labBlockers';
 import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';

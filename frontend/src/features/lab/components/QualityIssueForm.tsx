@@ -3,7 +3,8 @@
  */
 import React from 'react';
 import { TYPE } from '@/components/theme/recipes';
-import { Alert, SpinnerLoader } from '@/components';
+import { Alert } from '@/components/display';
+import { SpinnerLoader } from '@/components/loaders';
 import { CatalogRejectionCriteriaFields } from './CatalogRejectionCriteriaFields';
 import { useQualityIssueOptions } from '../api/qualityIssues';
 import type { QualityIssueOptions, QualityIssueTargetType, RemedyType } from '@/types/lab-operations';

@@ -6,7 +6,7 @@
  * (single place for all modal registration).
  */
 
-import React, { useMemo, createElement } from 'react';
+import React, { Suspense, useMemo, createElement } from 'react';
 import { useModal } from '@/lib/context/ModalContext';
 import { useSampleLookup } from '@/features/lab';
 import { getRegisteredModal, initializeModalRegistry } from './modalRegistry';
@@ -47,5 +47,5 @@ export const ModalRenderer: React.FC = () => {
     return createElement(entry.component, componentProps);
   }, [isOpen, modalType, modalProps, closeModal, getSample]);
 
-  return <>{modalComponent}</>;
+  return <Suspense fallback={null}>{modalComponent}</Suspense>;
 };

@@ -1,6 +1,6 @@
 import type { NavigateFunction } from 'react-router-dom';
 import { PatientGenderBadge } from '../components/PatientGenderBadge';
-import type { TableViewConfig } from '@/components';
+import type { TableViewConfig } from '@/components/data-table';
 import { buildViews, COLUMN_SIZE } from '@/components/data-table';
 import {
   renderContactBlock,

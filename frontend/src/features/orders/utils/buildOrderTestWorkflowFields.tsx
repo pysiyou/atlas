@@ -4,7 +4,7 @@
 
 import type { DetailFieldConfig } from '@/components/display/DetailFieldGroup';
 import type { OrderTest } from '@/types';
-import { Button } from '@/components';
+import { Button } from '@/components/primitives';
 import { displayId } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import type { LinkedOrderTests } from './orderTestLineage';

@@ -2,7 +2,8 @@
  * Categorized match list for global event log search (order-upsert popover chrome).
  */
 import React from 'react';
-import { Avatar, Icon, SpinnerLoader } from '@/components';
+import { Avatar, Icon } from '@/components/primitives';
+import { SpinnerLoader } from '@/components/loaders';
 import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
 import { OrderSelectPopoverShell } from '@/features/orders';
 import { CONTROL, TYPE } from '@/components/theme/recipes';

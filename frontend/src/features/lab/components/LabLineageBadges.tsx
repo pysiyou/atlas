@@ -4,8 +4,9 @@
  */
 
 import React from 'react';
-import { Badge, Icon, EntityId } from '@/components';
-import type { BadgeSize } from '@/components';
+import { Badge, Icon } from '@/components/primitives';
+import { EntityId } from '@/components/display';
+import type { BadgeSize } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
 

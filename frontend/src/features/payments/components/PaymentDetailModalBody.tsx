@@ -2,11 +2,9 @@
  * Scrollable payment modal body (billing, method, notes, errors).
  */
 import React from 'react';
-import {
-  Panel,
-  Alert,
-  SkeletonText,
-} from '@/components';
+import { Panel } from '@/components/surfaces';
+import { Alert } from '@/components/display';
+import { SkeletonText } from '@/components/loaders';
 import { PaymentMethodSelector } from './PaymentMethodSelector';
 import { cn } from '@/utils';
 import type { Order } from '@/types';

@@ -5,7 +5,7 @@
  * Shows an eye icon button that opens the preview modal
  */
 import React from 'react';
-import { actionButtonPreset, IconButton } from '@/components';
+import { actionButtonPreset, IconButton } from '@/components/primitives';
 import type { ValidatedTest } from '../types';
 
 interface ReportPreviewButtonProps {

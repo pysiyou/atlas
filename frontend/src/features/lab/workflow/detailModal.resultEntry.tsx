@@ -10,7 +10,7 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { CircularProgress } from '@/components';
+import { CircularProgress } from '@/components/primitives';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { QueueModalShell, labModalSubtitle } from './detailModalLayout';
 import { LabEventLogPanel } from '@/features/audit';

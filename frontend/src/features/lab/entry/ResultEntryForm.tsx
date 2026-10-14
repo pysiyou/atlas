@@ -3,7 +3,8 @@
  */
 
 import React, { useCallback, useState } from 'react';
-import { actionButtonPreset, Button, Textarea } from '@/components';
+import { actionButtonPreset, Button } from '@/components/primitives';
+import { Textarea } from '@/components/inputs';
 import { cn } from '@/utils';
 import { feedbackTitle } from '@/utils/feedback/copy';
 import type { Test, Patient } from '@/types';

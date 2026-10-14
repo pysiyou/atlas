@@ -4,7 +4,7 @@
 
 import { type ReactNode } from 'react';
 import { cn } from '@/utils';
-import { EntityId } from '@/components';
+import { EntityId } from '@/components/display';
 import type { TestWithContext } from '@/types';
 import { buildTestQueueTimelineLines } from '../constants/labWorkflowAuditLines';
 import { LabAuditBlock } from '../components/LabWorkflowHeader.parts';

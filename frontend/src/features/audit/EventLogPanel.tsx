@@ -2,7 +2,8 @@
  * Event log panel — fetch by named scope and optional kind / date / entity filters.
  */
 import React, { useMemo } from 'react';
-import { Button, ErrorAlert, Skeleton } from '@/components';
+import { Button } from '@/components/primitives';
+import { ErrorAlert, Skeleton } from '@/components/loaders';
 import { Panel } from '@/components/surfaces/Panel';
 import { cn } from '@/utils';
 import { errorAlertMessage } from '@/utils/feedback';

@@ -5,7 +5,10 @@
 
 import React from 'react';
 import type { Patient } from '@/types';
-import { Modal, CircularProgress, FooterInfo, FormDialogFooter, ErrorBoundary } from '@/components';
+import { Modal, FormDialogFooter } from '@/components/overlays';
+import { CircularProgress } from '@/components/primitives';
+import { FooterInfo } from '@/components/display';
+import { ErrorBoundary } from '@/components/loaders';
 import { MODULE_ICONS } from '@/config/icons';
 import { useEditPatientForm } from '../hooks/useEditPatientForm';
 import { PatientFormTabs } from './PatientFormTabs';

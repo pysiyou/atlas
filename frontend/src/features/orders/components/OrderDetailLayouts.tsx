@@ -4,7 +4,8 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { actionButtonPreset, Panel, IconButton } from '@/components';
+import { actionButtonPreset, IconButton } from '@/components/primitives';
+import { Panel } from '@/components/surfaces';
 import { LAYOUT, SPACING } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 import {

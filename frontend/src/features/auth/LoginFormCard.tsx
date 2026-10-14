@@ -4,7 +4,8 @@
  */
 
 import React, { useRef, useEffect } from 'react';
-import { Icon, SpinnerLoader } from '@/components';
+import { Icon } from '@/components/primitives';
+import { SpinnerLoader } from '@/components/loaders';
 import { ICONS } from '@/config/icons';
 import { companyConfig } from '@/config';
 import { AUTH_CONTROL, AUTH_SHADOW, AUTH_TYPE, RADIUS } from '@/components/theme/recipes';

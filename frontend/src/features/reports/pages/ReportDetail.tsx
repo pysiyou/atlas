@@ -17,7 +17,7 @@ import {
 } from '../utils/prepareReportData';
 import { formatDate } from '@/utils';
 import { notify } from '@/utils/feedback';
-import { DetailPageShell, PageHeader } from '@/components';
+import { DetailPageShell, PageHeader } from '@/components/layout';
 import { ReportDetailSkeletonContent } from '../config/ReportDetailSkeleton';
 
 export const ReportDetail: React.FC = () => {

@@ -3,7 +3,8 @@
  */
 import React, { useMemo, useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { actionButtonPreset, Button, ListView } from '@/components';
+import { actionButtonPreset, Button } from '@/components/primitives';
+import { ListView } from '@/components/surfaces';
 import { useAuthStore } from '@/app/authStore';
 import { ROUTES } from '@/config';
 import { errorAlertMessage } from '@/utils/feedback';

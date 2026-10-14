@@ -1,7 +1,9 @@
 import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { actionButtonPreset, Avatar, IconButton, MobileEntityCard, EntityId } from '@/components';
+import { actionButtonPreset, Avatar, IconButton } from '@/components/primitives';
+import { MobileEntityCard } from '@/components/surfaces';
+import { EntityId } from '@/components/display';
 import { PatientGenderBadge } from './PatientGenderBadge';
-import type { CardComponentProps } from '@/components';
+import type { CardComponentProps } from '@/components/data-table';
 import { calculateAge, formatPhoneNumber } from '@/utils';
 import type { Patient } from '@/types';
 import { RADIUS, TYPE } from '@/components/theme/recipes';

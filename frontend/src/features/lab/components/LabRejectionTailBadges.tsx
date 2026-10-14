@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import type { BadgeSize } from '@/components';
+import type { BadgeSize } from '@/components/primitives';
 import type { Sample, TestWithContext } from '@/types';
 import { AttemptIndicator } from './LabAttemptIndicators';
 import { RecollectionOfBadge } from './LabLineageBadges';

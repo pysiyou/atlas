@@ -167,6 +167,41 @@ export function getDateRangeFromPreset(preset: DatePreset): [Date, Date] {
   }
 }
 
+/**
+ * Inclusive calendar-day bounds for a `[start, end]` filter range.
+ * Start is 00:00:00.000; end is 23:59:59.999 local time.
+ */
+export function inclusiveDateRangeBounds(
+  dateRange: [Date, Date] | null
+): { start: Date; end: Date } | null {
+  if (!dateRange) return null;
+  return {
+    start: startOfDay(dateRange[0]),
+    end: endOfDay(dateRange[1]),
+  };
+}
+
+/**
+ * True when `value` falls inside an inclusive date-range filter.
+ * Missing `dateRange` matches everything; unparsable dates never match a range.
+ */
+export function isDateInInclusiveRange(
+  value: string | Date | undefined | null,
+  dateRange: [Date, Date] | null
+): boolean {
+  if (!dateRange) return true;
+  const parsed = parseAppDate(value);
+  if (!parsed) return false;
+  const bounds = inclusiveDateRangeBounds(dateRange);
+  if (!bounds) return true;
+  return parsed >= bounds.start && parsed <= bounds.end;
+}
+
+/** ISO calendar date (`yyyy-MM-dd`) for query params. */
+export function toIsoDateParam(date: Date): string {
+  return format(date, 'yyyy-MM-dd');
+}
+
 export function getActivePresetId(dateRange: [Date, Date] | null): DatePreset | null {
   if (!dateRange) return null;
   for (const preset of DATE_PRESETS) {

@@ -2,7 +2,7 @@
  * Technician notes and analytical flags below a result grid.
  */
 import React from 'react';
-import { Icon } from '@/components';
+import { Icon } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 import { FIELD_ERROR, RADIUS, TONE, TYPE } from '@/components/theme/recipes';
 import { cn } from '@/utils';

@@ -14,8 +14,8 @@ import {
   createColumn,
   type TableViewConfig,
 } from '@/components/data-table';
-import { MobileEntityCard } from '@/components';
-import type { CardComponentProps } from '@/components';
+import { MobileEntityCard } from '@/components/surfaces';
+import type { CardComponentProps } from '@/components/data-table';
 import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
 import { OrderTestStatusBadge } from '@/features/orders';
 import { getOrderTestLineageRowClass } from '@/features/orders';

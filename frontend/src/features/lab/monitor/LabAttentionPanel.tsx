@@ -4,7 +4,9 @@
 
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { EmptyState, EMPTY_COPY, DASHBOARD_EMPTY_STATE_TEXT, Badge, EntityId, Panel } from '@/components';
+import { EmptyState, EMPTY_COPY, DASHBOARD_EMPTY_STATE_TEXT, EntityId } from '@/components/display';
+import { Badge } from '@/components/primitives';
+import { Panel } from '@/components/surfaces';
 import { LabPriorityBadge } from '../components/LabDomainBadges';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import { cn, displayId } from '@/utils';

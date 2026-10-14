@@ -3,7 +3,7 @@
  * Mirrors the record row (profile, history, care snapshot) and the orders | reports row.
  */
 
-import { Panel } from '@/components';
+import { Panel } from '@/components/surfaces';
 import { LAYOUT } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 import { SkeletonInfoSection, SkeletonTableRow } from '@/components/loaders/Skeleton';

@@ -3,7 +3,7 @@
  * Sample container type and color icon for collection cards and modals.
  */
 import React from 'react';
-import { Icon } from '@/components';
+import { Icon } from '@/components/primitives';
 import { getContainerIconColor } from '../utils';
 import type { ContainerType, ContainerTopColor } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';

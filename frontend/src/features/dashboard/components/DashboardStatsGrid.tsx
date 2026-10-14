@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { RADIUS, TYPE } from '@/components/theme/recipes';
-import { Card } from '@/components';
+import { Card } from '@/components/surfaces';
 
 export interface DashboardStat {
   label: string;

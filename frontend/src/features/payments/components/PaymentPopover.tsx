@@ -6,17 +6,12 @@
  * Payment methods are sourced from the centralized PAYMENT_METHOD_OPTIONS in types/payments.
  */
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import {
-  Popover,
-  Button,
-  Icon,
-  Alert,
-  FooterInfo,
-  EntityId,
-} from '@/components';
+import { Popover } from '@/components/overlays';
+import { Button, Icon } from '@/components/primitives';
+import { Alert, FooterInfo, EntityId } from '@/components/display';
 import { PaymentStatusBadge } from './PaymentStatusBadge';
 import { PaymentMethodSelector } from './PaymentMethodSelector';
-import { PopoverFormChrome } from '@/components';
+import { PopoverFormChrome } from '@/components/overlays';
 import { cn, formatCurrency } from '@/utils';
 import { OrderReceipt } from '@/features/orders';
 import { inputBase, FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';

@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { EntityId } from '@/components';
+import { EntityId } from '@/components/display';
 import type { OrderTest } from '@/types';
 import { displayId } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';

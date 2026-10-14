@@ -4,7 +4,7 @@
 
 import React, { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Panel } from '@/components';
+import { Panel } from '@/components/surfaces';
 import { sampleAPI } from '../api/samples';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { useOrder, getSampleRecollectionChain, TestRelatedTestsPanel } from '@/features/orders';

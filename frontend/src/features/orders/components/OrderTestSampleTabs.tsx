@@ -4,7 +4,7 @@
  */
 
 import React, { useMemo, useState } from 'react';
-import { Panel } from '@/components';
+import { Panel } from '@/components/surfaces';
 import { useUserLookup } from '@/lib/api/users';
 import { OrderTestDetailFieldGrid } from '../utils/orderTestDetailFieldColumns';
 import { splitDetailFieldsIntoTwoColumns } from '../utils/orderTestDetailFieldLayout';

@@ -4,7 +4,8 @@
  */
 
 import React from 'react';
-import { actionButtonPreset, Button, Icon, IconButton, PageHeader } from '@/components';
+import { actionButtonPreset, Button, Icon, IconButton } from '@/components/primitives';
+import { PageHeader } from '@/components/layout';
 import type { Order, Invoice } from '@/types';
 import { ICONS } from '@/config/icons';
 

@@ -2,7 +2,8 @@
  * Hero summary for the user upsert modal (create callout or edit identity strip).
  */
 import React from 'react';
-import { Avatar, Badge, Callout } from '@/components';
+import { Avatar, Badge } from '@/components/primitives';
+import { Callout } from '@/components/display';
 import { MODULE_ICONS } from '@/config/icons';
 import { ERROR_SURFACE_TYPE, RADIUS, TYPE } from '@/components/theme/recipes';
 import { USER_ROLE_CONFIG, type UserRole } from '@/types';

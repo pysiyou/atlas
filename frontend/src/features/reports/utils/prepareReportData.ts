@@ -2,6 +2,7 @@ import type jsPDF from 'jspdf';
 import type { OrderTest, Patient, Test } from '@/types';
 import type { ValidatedTestReportPayload, ValidatedTest } from '../types';
 import { companyConfig } from '@/config';
+import { isDateInInclusiveRange } from '@/utils';
 
 interface SampleLookup {
   (sampleId: number): { status: string; collectedAt?: string; collectedBy?: string } | undefined;
@@ -20,17 +21,7 @@ export function filterValidatedTestsByDateRange(
   dateRange: [Date, Date] | null
 ): ValidatedTest[] {
   if (!dateRange) return tests;
-
-  const [start, end] = dateRange;
-  const endDate = new Date(end);
-  endDate.setHours(23, 59, 59, 999);
-  const startDate = new Date(start);
-  startDate.setHours(0, 0, 0, 0);
-
-  return tests.filter(test => {
-    const orderDate = new Date(test.orderDate);
-    return orderDate >= startDate && orderDate <= endDate;
-  });
+  return tests.filter(test => isDateInInclusiveRange(test.orderDate, dateRange));
 }
 
 function buildTestResultEntry(
@@ -118,11 +109,11 @@ export function prepareReportData({
 export async function downloadValidatedTestReport(
   validatedTest: ValidatedTest,
   reportData: ValidatedTestReportPayload,
-  generateLabReport: (data: ValidatedTestReportPayload) => jsPDF,
+  generateLabReport: (data: ValidatedTestReportPayload) => jsPDF | Promise<jsPDF>,
   downloadPDF: (doc: jsPDF, filename: string) => void,
   formatDate: (date: Date) => string
 ): Promise<void> {
-  const doc = generateLabReport(reportData);
+  const doc = await generateLabReport(reportData);
   const filename = `Lab_Report_TST${validatedTest.testId.toString().padStart(6, '0')}_${formatDate(new Date())}.pdf`;
   downloadPDF(doc, filename);
 }

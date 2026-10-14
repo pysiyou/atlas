@@ -3,8 +3,10 @@
  * Operator chooses unfinished-test fate when linked unfinished work exists.
  */
 import React, { useCallback, useState } from 'react';
-import { actionButtonPreset, Popover, Button, FooterInfo } from '@/components';
-import { PopoverFormChrome } from '@/components';
+import { actionButtonPreset, Button } from '@/components/primitives';
+import { Popover } from '@/components/overlays';
+import { FooterInfo } from '@/components/display';
+import { PopoverFormChrome } from '@/components/overlays';
 import { MODULE_ICONS } from '@/config/icons';
 import { displayId } from '@/utils';
 import { QualityIssueForm } from '../components/QualityIssueForm';

@@ -154,8 +154,6 @@ export interface FilterConfig {
   quickFilters?: QuickFilterPreset[];
   /** Primary filter section (always visible) */
   primaryFilters: FilterSection;
-  /** Advanced filter section (collapsible) */
-  advancedFilters?: FilterSection;
 }
 
 /**

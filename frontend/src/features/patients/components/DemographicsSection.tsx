@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
-import { Input, DateInput, MultiSelectFilter } from '@/components';
-import type { FilterOption } from '@/components';
+import { Input, DateInput } from '@/components/inputs';
+import { MultiSelectFilter } from '@/components/overlays';
+import type { FilterOption } from '@/components/overlays';
 import { GENDER_VALUES, GENDER_CONFIG, type Gender } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
 import { ICONS } from '@/config/icons';

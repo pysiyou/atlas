@@ -4,16 +4,10 @@
  * Modal that uses the same BillingSummarySection as order details, plus payment actions when unpaid.
  */
 import React, { useState, useCallback } from 'react';
-import {
-  actionButtonPreset,
-  Modal,
-  Icon,
-  Button,
-  FooterInfo,
-  ErrorBoundary,
-  DialogFooter,
-  EntityId,
-} from '@/components';
+import { actionButtonPreset, Icon, Button } from '@/components/primitives';
+import { Modal, DialogFooter } from '@/components/overlays';
+import { FooterInfo, EntityId } from '@/components/display';
+import { ErrorBoundary } from '@/components/loaders';
 import { PaymentDetailModalBody } from './PaymentDetailModalBody';
 import { formatCurrency } from '@/utils';
 import { useOrder } from '@/features/orders';

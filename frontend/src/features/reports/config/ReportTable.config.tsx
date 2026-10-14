@@ -4,8 +4,9 @@
 
 import type { MouseEvent } from 'react';
 import type { NavigateFunction } from 'react-router-dom';
-import { Badge, EntityId } from '@/components';
-import type { TableViewConfig } from '@/components';
+import { Badge } from '@/components/primitives';
+import { EntityId } from '@/components/display';
+import type { TableViewConfig } from '@/components/data-table';
 import { buildViews, COLUMN_SIZE } from '@/components/data-table';
 import { ORDER_TABLE_COLUMN_HEADERS, renderOrderPatientName } from '@/features/orders';
 import { renderDateTimeCell } from '@/utils/tableColumnRenders';

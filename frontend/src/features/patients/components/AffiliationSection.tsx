@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Badge, Button, Checkbox } from '@/components';
+import { Badge, Button, Checkbox } from '@/components/primitives';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
 import type { AffiliationDuration } from '@/types';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';

@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react';
-import { Button, Popover } from '@/components';
+import { Button } from '@/components/primitives';
+import { Popover } from '@/components/overlays';
 import { cn, displayId } from '@/utils';
 import { inputBase } from '@/components/inputs/inputStyles';
-import { PopoverFormChrome } from '@/components';
+import { PopoverFormChrome } from '@/components/overlays';
 import type { FeedbackId } from '@/config/feedbackCatalog';
 import type { CriticalReadBackPayload, EscalationResolutionAction } from '@/types/lab-operations';
 import { TYPE } from '@/components/theme/recipes';

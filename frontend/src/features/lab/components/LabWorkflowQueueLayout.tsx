@@ -5,7 +5,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { EmptyState, PANEL_EMPTY_STATE } from '@/components';
+import { EmptyState, PANEL_EMPTY_STATE } from '@/components/display';
 import { displayId } from '@/utils';
 import { SPACING, WORKSPACE } from '@/components/theme/recipes';
 

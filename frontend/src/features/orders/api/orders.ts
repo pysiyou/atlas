@@ -4,7 +4,8 @@
  */
 import { apiClient } from '@/lib/api/client';
 import { WORKFLOW_QUERY_LIMIT, DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
-import type { Order, OrderStatus, PaymentStatus, Patient, Invoice } from '@/types';
+import type { Order, OrderStatus, PaymentMethod, PaymentStatus, Patient, Invoice } from '@/types';
+import { serializeQueryList } from '@/utils/filtering';
 import { getOrderTestCount, getOrderTests } from '@/types';
 import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
 import { useQuery, keepPreviousData, useMutation, useQueryClient, useQueries } from '@tanstack/react-query';
@@ -46,8 +47,12 @@ export interface OrderDetailApiResponse extends Order {
 export interface OrdersFilter {
   patientId?: string;
   orderId?: number;
-  status?: OrderStatus;
-  paymentStatus?: PaymentStatus;
+  status?: OrderStatus[];
+  paymentStatus?: PaymentStatus[];
+  paymentMethod?: PaymentMethod[];
+  search?: string;
+  dateFrom?: string;
+  dateTo?: string;
   page?: number;
   pageSize?: number;
 }
@@ -70,8 +75,15 @@ export const orderAPI = {
 
     if (filters?.patientId) params.patientId = filters.patientId;
     if (filters?.orderId) params.orderId = String(filters.orderId);
-    if (filters?.status) params.status = filters.status;
-    if (filters?.paymentStatus) params.paymentStatus = filters.paymentStatus;
+    const statusParam = serializeQueryList(filters?.status);
+    if (statusParam) params.status = statusParam;
+    const paymentStatusParam = serializeQueryList(filters?.paymentStatus);
+    if (paymentStatusParam) params.paymentStatus = paymentStatusParam;
+    const paymentMethodParam = serializeQueryList(filters?.paymentMethod);
+    if (paymentMethodParam) params.paymentMethod = paymentMethodParam;
+    if (filters?.search) params.search = filters.search;
+    if (filters?.dateFrom) params.dateFrom = filters.dateFrom;
+    if (filters?.dateTo) params.dateTo = filters.dateTo;
     if (filters?.page) params.skip = String((filters.page - 1) * (filters.pageSize || DEFAULT_LIST_PAGE_SIZE));
     if (filters?.pageSize) params.limit = String(filters.pageSize);
 
@@ -130,8 +142,12 @@ export const orderAPI = {
 export interface OrdersFilters {
   patientId?: string;
   orderId?: number;
-  status?: OrderStatus;
-  paymentStatus?: PaymentStatus;
+  status?: OrderStatus[];
+  paymentStatus?: PaymentStatus[];
+  paymentMethod?: PaymentMethod[];
+  search?: string;
+  dateFrom?: string;
+  dateTo?: string;
 }
 
 /**
@@ -197,11 +213,11 @@ export function useOrdersList(filters?: OrdersFilters, refetchOptions?: LabQuery
         typeof filters.patientId === 'string' ? parseInt(filters.patientId, 10) : filters.patientId;
       orders = orders.filter(o => o.patientId === numericPatientId);
     }
-    if (filters?.status) {
-      orders = orders.filter(o => o.overallStatus === filters.status);
+    if (filters?.status?.length) {
+      orders = orders.filter(o => filters.status!.includes(o.overallStatus));
     }
-    if (filters?.paymentStatus) {
-      orders = orders.filter(o => o.paymentStatus === filters.paymentStatus);
+    if (filters?.paymentStatus?.length) {
+      orders = orders.filter(o => filters.paymentStatus!.includes(o.paymentStatus));
     }
 
     return orders;
@@ -297,10 +313,11 @@ export function useOrdersByStatus(status: OrderStatus | undefined) {
 export function usePaginatedOrders(filters?: OrdersFilters, initialPage = 1, pageSize = DEFAULT_LIST_PAGE_SIZE) {
   const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
   const [page, setPage] = useState(initialPage);
-  const [prevFilters, setPrevFilters] = useState(filters);
+  const filterSnapshot = JSON.stringify(filters ?? null);
+  const [prevFilterSnapshot, setPrevFilterSnapshot] = useState(filterSnapshot);
 
-  if (prevFilters !== filters) {
-    setPrevFilters(filters);
+  if (prevFilterSnapshot !== filterSnapshot) {
+    setPrevFilterSnapshot(filterSnapshot);
     setPage(initialPage);
   }
 

@@ -3,7 +3,8 @@
  */
 
 import React from 'react';
-import { Panel, Skeleton } from '@/components';
+import { Panel } from '@/components/surfaces';
+import { Skeleton } from '@/components/loaders';
 import { MONITOR_PANEL } from './monitorStyles';
 import {
   MONITOR_BOTTOM_PANEL,

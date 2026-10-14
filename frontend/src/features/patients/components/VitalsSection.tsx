@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Icon, type IconName } from '@/components';
+import { Icon, type IconName } from '@/components/primitives';
 import type { VitalSigns } from '@/types/patient';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';

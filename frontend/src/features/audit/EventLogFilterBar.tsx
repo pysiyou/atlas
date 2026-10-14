@@ -2,13 +2,14 @@
  * Responsive filter bar for event log (no free-text search).
  */
 import React, { useState, type ReactNode } from 'react';
-import { actionButtonPreset, Badge, Button, Modal } from '@/components';
+import { actionButtonPreset, Badge, Button } from '@/components/primitives';
+import { Modal } from '@/components/overlays';
 import { FILTER, FILTER_TYPE } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { MODULE_ICONS } from '@/config/icons';
 import { FilterModalFooter } from '@/components/filters/FilterModalFooter';
-import { CheckboxList } from '@/components';
+import { CheckboxList } from '@/components/primitives';
 import { DatePresetBadges } from '@/components/filters';
 import { EVENT_LOG_KIND_OPTIONS } from './eventLogKinds';
 import type { EventLogKind } from './types';

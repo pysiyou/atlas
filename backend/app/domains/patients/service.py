@@ -14,9 +14,9 @@ from app.domains.patients.schemas import (
     PatientUpdate,
 )
 from app.platform.utils.common import parse_display_id_from_search
-from app.shared.contracts.enums import PaymentStatus
+from app.shared.contracts.enums import Gender, PaymentStatus
 from fastapi import HTTPException, status
-from sqlalchemy import String, cast, or_
+from sqlalchemy import String, and_, cast, or_
 from sqlalchemy.inspection import inspect
 from sqlalchemy.orm import Session
 
@@ -57,6 +57,15 @@ def _patient_search_filter(search_term: str):
         if compact != term:
             predicates.append(Patient.phone.contains(compact))
     return or_(*predicates)
+
+
+def _years_ago_iso(years: int) -> str:
+    today = datetime.now(UTC).date()
+    try:
+        cutoff = today.replace(year=today.year - years)
+    except ValueError:
+        cutoff = today.replace(year=today.year - years, month=2, day=28)
+    return cutoff.isoformat()
 
 
 def _attach_order_summaries(db: Session, patients_data: list[dict]) -> list[dict]:
@@ -102,10 +111,33 @@ class PatientService:
         search: str | None = None,
         paginated: bool = False,
         include_order_summary: bool = False,
+        patient_id: int | None = None,
+        genders: list[Gender] | None = None,
+        affiliation_statuses: list[str] | None = None,
+        age_min: int | None = None,
+        age_max: int | None = None,
     ) -> tuple[list[dict], int]:
         query = self.db.query(Patient)
+        if patient_id:
+            query = query.filter(Patient.id == patient_id)
         if search:
             query = query.filter(_patient_search_filter(search))
+        if genders:
+            query = query.filter(Patient.gender.in_(genders))
+        if age_min is not None:
+            query = query.filter(Patient.dateOfBirth <= _years_ago_iso(age_min))
+        if age_max is not None:
+            query = query.filter(Patient.dateOfBirth > _years_ago_iso(age_max + 1))
+        statuses = {status for status in (affiliation_statuses or []) if status in {"active", "inactive"}}
+        if statuses and statuses != {"active", "inactive"}:
+            today = datetime.now(UTC).date().isoformat()
+            end_date = Patient.affiliation.op("->>")("endDate")
+            is_active = and_(Patient.affiliation.isnot(None), end_date >= today)
+            is_inactive = or_(Patient.affiliation.is_(None), end_date < today)
+            if statuses == {"active"}:
+                query = query.filter(is_active)
+            else:
+                query = query.filter(is_inactive)
         query = query.order_by(Patient.updatedAt.desc())
         total = query.count() if paginated else 0
         patients = query.offset(skip).limit(limit).all()

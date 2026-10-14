@@ -4,7 +4,8 @@
  */
 
 import React, { useCallback, useMemo } from 'react';
-import { DataTable, EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components';
+import { DataTable } from '@/components/data-table';
+import { EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components/display';
 import { useTestCatalog } from '@/features/catalog';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
 import type { Order, OrderTest, Patient } from '@/types';
