@@ -5,7 +5,7 @@
 import { Panel } from '@/components/surfaces';
 import { EntityId } from '@/components/display';
 import { DetailGrid, ModalFooter } from './detailModalLayout';
-import { ResultValidationForm } from '../validation/ResultValidationForm';
+import { ResultValidationPanel } from '../validation/ResultValidationForm';
 import { CriticalValueActions } from '../criticalValues/CriticalValueActions';
 import type { CriticalValueRecord } from '../criticalValues/criticalValues';
 import { LabRelatedTestsPanel } from '../components/LabRelatedWorkflowPanel';
@@ -36,19 +36,19 @@ function EscalationResultsPanel({
   readOnly: boolean;
 }) {
   return (
-    <Panel variant="lab" title={readOnly ? 'Recorded Results' : 'Result Validation'}>
-      <ResultValidationForm
-        results={test.results!}
-        flags={test.flags}
-        testCode={test.testCode}
-        technicianNotes={test.technicianNotes}
-        comments={test.validationNotes ?? ''}
-        onCommentsChange={() => {}}
-        onApprove={() => {}}
-        readOnly={readOnly}
-        enableApproveShortcut={false}
-      />
-    </Panel>
+    <ResultValidationPanel
+      title={readOnly ? 'Recorded Results' : 'Result Validation'}
+      results={test.results!}
+      flags={test.flags}
+      testCode={test.testCode}
+      patient={test.patient}
+      technicianNotes={test.technicianNotes}
+      comments={test.validationNotes ?? ''}
+      onCommentsChange={() => {}}
+      onApprove={() => {}}
+      readOnly={readOnly}
+      enableApproveShortcut={false}
+    />
   );
 }
 

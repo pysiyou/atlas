@@ -65,7 +65,12 @@ export {
   labModalSubtitle,
   type LabModalStage,
 } from './workflow';
-export { ResultValidationForm } from './validation/ResultValidationForm';
+export {
+  ResultValidationForm,
+  ResultValidationPanel,
+  ResultValidationResultsBody,
+  ResultValidationNotesSection,
+} from './validation/ResultValidationForm';
 export { TestHeaderBadges } from './components/LabWorkflowBadges';
 export { TestWorkflowCardLeftColumn } from './workflow/queueCard.testWorkflowLeftColumn';
 export { useSampleRejectionDisplay } from './hooks/useSampleRejectionDisplay';

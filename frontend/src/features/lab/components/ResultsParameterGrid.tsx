@@ -2,17 +2,19 @@
  * Read-only parameter display — inline (validation card) or tile (entry) layouts.
  */
 import React, { useMemo } from 'react';
-import { parseResultEntry, statusMapFromFlags } from '../utils/labResult';
+import { getParameterReferenceIntervalLines, parseResultEntry, statusMapFromFlags } from '../utils/labResult';
+import { ReferenceIntervalCell } from './ReferenceIntervalCell';
 import { LAB_CONFIG } from '../constants';
 import { TYPE } from '@/components/theme/recipes';
 import { RESULT_PANEL, resultTileStatusClass } from '../utils/labResult';
 import {
-  catalogParameterReferenceRanges,
+  catalogParametersByCode,
   resolveParameterLabel,
   useParameterLabelMap,
   useTestCatalog,
 } from '@/features/catalog';
 import { ResultValueAnnotations } from './ResultValueAnnotations';
+import type { Gender, Patient } from '@/types';
 
 export type ResultsGridVariant = 'inline' | 'tiles';
 export type ResultsGridLayout = 'compact' | 'validation';
@@ -21,6 +23,7 @@ interface ResultsParameterGridProps {
   results: Record<string, unknown>;
   flags?: string[];
   testCode?: string;
+  patient?: Patient | { gender?: Gender; age?: number; dateOfBirth?: string };
   variant?: ResultsGridVariant;
   /** Validation: label, value, reference interval columns. */
   layout?: ResultsGridLayout;
@@ -28,19 +31,11 @@ interface ResultsParameterGridProps {
   dense?: boolean;
 }
 
-function resolveReferenceInterval(
-  code: string,
-  fromResult: string,
-  catalogRanges: Record<string, string>
-): string {
-  if (fromResult) return fromResult;
-  return catalogRanges[code] || '—';
-}
-
 export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
   results,
   flags,
   testCode,
+  patient,
   variant = 'inline',
   layout = 'compact',
   dense = false,
@@ -48,9 +43,8 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
   const flagStatusMap = useMemo(() => statusMapFromFlags(flags), [flags]);
   const parameterLabels = useParameterLabelMap(testCode);
   const { tests } = useTestCatalog();
-  const catalogRanges = useMemo(
-    () =>
-      layout === 'validation' && testCode ? catalogParameterReferenceRanges(testCode, tests) : {},
+  const catalogParameters = useMemo(
+    () => (layout === 'validation' && testCode ? catalogParametersByCode(testCode, tests) : {}),
     [layout, testCode, tests]
   );
   const entries = Object.entries(results ?? {});
@@ -62,7 +56,7 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
 
   if (layout === 'validation' && variant === 'inline') {
     const headerClass = `${TYPE.caption} text-text-tertiary uppercase tracking-wide font-normal text-left`;
-    const cellClass = 'py-space-2 pr-space-4 align-top text-left last:pr-0';
+    const cellClass = 'py-space-1 pr-space-4 align-top text-left leading-snug last:pr-0';
 
     return (
       <div className="overflow-x-auto min-w-0">
@@ -73,10 +67,10 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
             <col className="w-[25%]" />
           </colgroup>
           <thead>
-            <tr className="border-b border-border-subtle">
-              <th scope="col" className={`${headerClass} pb-space-2 ${cellClass}`}>Parameter</th>
-              <th scope="col" className={`${headerClass} pb-space-2 ${cellClass}`}>Result</th>
-              <th scope="col" className={`${headerClass} pb-space-2 ${cellClass}`}>
+            <tr>
+              <th scope="col" className={`${headerClass} pb-space-1-5 ${cellClass}`}>Parameter</th>
+              <th scope="col" className={`${headerClass} pb-space-1-5 ${cellClass}`}>Result</th>
+              <th scope="col" className={`${headerClass} pb-space-1-5 ${cellClass}`}>
                 Reference interval
               </th>
             </tr>
@@ -89,10 +83,14 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
                 flagStatusMap
               );
               const label = resolveParameterLabel(key, parameterLabels);
-              const interval = resolveReferenceInterval(key, referenceRange, catalogRanges);
+              const intervalLines = getParameterReferenceIntervalLines(
+                catalogParameters[key],
+                referenceRange,
+                patient
+              );
 
               return (
-                <tr key={key} className="border-b border-border-subtle last:border-0">
+                <tr key={key}>
                   <td className={`${TYPE.label} text-text-secondary ${cellClass}`} title={label}>
                     {label}
                   </td>
@@ -104,11 +102,8 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
                       showStatus={showStatus}
                     />
                   </td>
-                  <td
-                    className={`${TYPE.caption} text-text-tertiary tabular-nums ${cellClass}`}
-                    title="Reference interval"
-                  >
-                    {interval}
+                  <td className={cellClass} title="Reference interval">
+                    <ReferenceIntervalCell lines={intervalLines} />
                   </td>
                 </tr>
               );

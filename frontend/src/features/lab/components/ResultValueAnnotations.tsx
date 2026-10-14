@@ -1,12 +1,11 @@
 /**
- * Value + unit + abnormal status chip (shared by result grids and event log).
+ * Value + unit + abnormal status text (shared by result grids and event log).
  */
 import { cn } from '@/utils';
 import { TYPE } from '@/components/theme/recipes';
 import type { ResultStatus } from '@/types/enums';
 import {
   RESULT_PANEL,
-  resultStatusBadgeClass,
   resultStatusLabel,
   resultValueClass,
 } from '../utils/labResult';
@@ -48,7 +47,11 @@ export function ResultValueAnnotations({
               {unit}
             </span>
           )}
-          {statusLabel && <span className={resultStatusBadgeClass(status)}>{statusLabel}</span>}
+          {statusLabel && (
+            <span className={cn(TYPE.caption, 'font-medium', resultValueClass(status))}>
+              {statusLabel}
+            </span>
+          )}
         </span>
       )}
     </span>

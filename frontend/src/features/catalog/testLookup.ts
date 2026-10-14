@@ -51,15 +51,15 @@ export function resolveParameterLabel(
   return parameterLabels?.[code] ?? code;
 }
 
-export function catalogParameterReferenceRanges(
+export function catalogParametersByCode(
   testCode: string,
   testCatalog: Test[]
-): Record<string, string> {
+): Record<string, TestParameter> {
   const test = testCatalog.find(t => t.code === testCode);
-  const map: Record<string, string> = {};
+  const map: Record<string, TestParameter> = {};
   for (const param of test?.parameters ?? []) {
-    if (param.code && param.referenceRange) {
-      map[param.code] = param.referenceRange;
+    if (param.code) {
+      map[param.code] = param;
     }
   }
   return map;

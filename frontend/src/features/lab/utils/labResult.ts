@@ -1,6 +1,7 @@
 /** Result flags, reference ranges, physiologic limits, and result tile styles. */
 import type { ResultStatus } from '@/types/enums';
 import type { CatalogReferenceRange, CriticalRange, TestParameter, Patient, Gender } from '@/types';
+import type { DemographicRange } from '@/types/test';
 import { calculateAge } from '@/utils/string';
 import { PHYSIOLOGIC_LIMITS, type PhysiologicLimit } from '@/types/generated/physiologicLimits';
 import { RADIUS, SHADOW, TONE, TYPE } from '@/components/theme/recipes';
@@ -142,6 +143,48 @@ export function checkReferenceRangeWithDemographics(
   return checkReferenceRange(value, parameter.referenceRange);
 }
 
+function formatDemographicRangeSegment(range?: DemographicRange): string {
+  if (!range) return '';
+  if (range.low !== undefined && range.high !== undefined) return `${range.low}-${range.high}`;
+  if (range.low !== undefined) return `>${range.low}`;
+  if (range.high !== undefined) return `<${range.high}`;
+  return '';
+}
+
+export type ReferenceIntervalLine = { label?: string; value: string };
+
+function singleReferenceLine(value: string): ReferenceIntervalLine[] {
+  const trimmed = value.trim();
+  return trimmed ? [{ value: trimmed }] : [{ value: '—' }];
+}
+
+/** Reference interval column — split Male/Female lines when catalog ranges differ. */
+export function getParameterReferenceIntervalLines(
+  parameter?: TestParameter,
+  storedReferenceRange?: string,
+  patient?: Patient | { gender?: Gender; age?: number; dateOfBirth?: string }
+): ReferenceIntervalLine[] {
+  const catalog = parameter?.catalogReferenceRange;
+  if (catalog) {
+    const male = formatDemographicRangeSegment(catalog.adult_male);
+    const female = formatDemographicRangeSegment(catalog.adult_female);
+    if (male && female && male !== female) {
+      return [{ label: 'Male', value: male }, { label: 'Female', value: female }];
+    }
+    if (male && female) return singleReferenceLine(male);
+    if (patient) {
+      const resolved = formatReferenceRange(catalog, patient);
+      if (resolved !== 'N/A') return singleReferenceLine(resolved);
+    }
+    const general = formatDemographicRangeSegment(catalog.adult_general);
+    if (general) return singleReferenceLine(general);
+    if (male || female) return singleReferenceLine(male || female);
+  }
+
+  const fallback = storedReferenceRange?.trim() || parameter?.referenceRange?.trim();
+  return singleReferenceLine(fallback || '—');
+}
+
 export function formatReferenceRange(
   range: CatalogReferenceRange | ReferenceRangeDisplay,
   demographics?: { gender?: Gender; age?: number; dateOfBirth?: string }
@@ -258,13 +301,5 @@ export function resultStatusLabel(status: ResultStatus): string | null {
   if (status === 'high' || status === 'critical-high') return 'High';
   if (status === 'low' || status === 'critical-low') return 'Low';
   return status;
-}
-
-/** Compact chip after the numeric result (unit uses RESULT_PANEL.unit). */
-export function resultStatusBadgeClass(status: ResultStatus): string {
-  const base = `${TYPE.caption} font-semibold uppercase tracking-wide leading-none px-space-1 py-0.5 rounded-sm shrink-0`;
-  if (isCritical(status)) return `${base} ${TONE.danger.well} ${TONE.danger.fg}`;
-  if (status !== 'normal') return `${base} ${TONE.warning.well} text-warning-fg`;
-  return base;
 }
 

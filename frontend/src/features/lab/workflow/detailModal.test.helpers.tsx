@@ -12,10 +12,10 @@ import {
   OrderTestSampleTabs,
   TestRelatedTestsPanel,
 } from '@/features/orders';
-import type { Order, OrderTest, Test, TestWithContext } from '@/types';
+import type { Order, OrderTest, Patient, Test, TestWithContext } from '@/types';
 import { TYPE } from '@/components/theme/recipes';
 import type { TestDetailProps } from '@/lib/context/modalTypes';
-import { ResultValidationForm } from '../validation/ResultValidationForm';
+import { ResultValidationPanel } from '../validation/ResultValidationForm';
 import { QualityIssuePopover } from '../components/QualityIssuePopover';
 import { CriticalValueActions } from '../criticalValues/CriticalValueActions';
 import type { CriticalValueRecord } from '../criticalValues/criticalValues';
@@ -191,6 +191,7 @@ type TestDetailModalBodyProps = {
   onViewFullSample: (sampleId: number) => void;
   onOpenLinkedTest: (linkedTest: OrderTest) => void;
   orderTestId: number | undefined;
+  patient?: Patient;
 };
 
 export function TestDetailModalBody({
@@ -213,6 +214,7 @@ export function TestDetailModalBody({
   onViewFullSample,
   onOpenLinkedTest,
   orderTestId,
+  patient,
 }: TestDetailModalBodyProps) {
   return (
     <>
@@ -226,23 +228,23 @@ export function TestDetailModalBody({
       ) : null}
 
       {hasResults && orderTest?.results ? (
-        <Panel variant="lab" title={resultsPanelTitle}>
-          <ResultValidationForm
-            results={orderTest.results}
-            flags={orderTest.flags}
-            testCode={orderTest.testCode}
-            technicianNotes={orderTest.technicianNotes}
-            comments={comments}
-            onCommentsChange={
-              isValidate && validation
-                ? value => validation.onCommentsChange(commentKey, value)
-                : () => {}
-            }
-            onApprove={isValidate ? onApprove : () => {}}
-            readOnly={!isValidate}
-            enableApproveShortcut={isValidate}
-          />
-        </Panel>
+        <ResultValidationPanel
+          title={resultsPanelTitle}
+          results={orderTest.results}
+          flags={orderTest.flags}
+          testCode={orderTest.testCode}
+          patient={patient}
+          technicianNotes={orderTest.technicianNotes}
+          comments={comments}
+          onCommentsChange={
+            isValidate && validation
+              ? value => validation.onCommentsChange(commentKey, value)
+              : () => {}
+          }
+          onApprove={isValidate ? onApprove : () => {}}
+          readOnly={!isValidate}
+          enableApproveShortcut={isValidate}
+        />
       ) : (
         <Panel variant="lab" title={resultsPanelTitle}>
           <p className={TYPE.label}>

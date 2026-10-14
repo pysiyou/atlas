@@ -452,6 +452,7 @@ const PAGE_PANEL_CHROME = {
   title: `m-0 min-w-0 truncate ${TYPE.panelTitle}`,
   meta: `flex h-6 shrink-0 items-center ${TYPE.caption}`,
   headerActions: 'flex shrink-0 items-center min-h-0',
+  footer: `shrink-0 border-t border-border-subtle ${SPACING.pPanel}`,
   scrollDefault: 'overflow-hidden',
 } as const;
 
@@ -462,6 +463,7 @@ const LAB_PANEL_CHROME = {
   title: `m-0 truncate ${TYPE.sectionTitle}`,
   meta: `flex shrink-0 items-center ${TYPE.caption}`,
   headerActions: 'flex shrink-0 items-center min-h-0',
+  footer: `shrink-0 border-t border-border-subtle ${SPACING.pLabPanel}`,
   scrollDefault: '',
 } as const;
 

@@ -7,7 +7,7 @@ import { actionButtonPreset, Button } from '@/components/primitives';
 import { Panel } from '@/components/surfaces';
 import { ModalFooter } from './detailModalLayout';
 import { ResultEntryForm } from '../entry/ResultEntryForm';
-import { ResultValidationForm } from '../validation/ResultValidationForm';
+import { ResultValidationPanel } from '../validation/ResultValidationForm';
 import { hasTestResults } from '../utils/labSearchAndLinks';
 import type { Test, TestWithContext } from '@/types';
 
@@ -92,19 +92,19 @@ export function EntryDetailMainPanel({
 }) {
   if (readOnly && hasTestResults(test)) {
     return (
-      <Panel variant="lab" title="Recorded Results">
-        <ResultValidationForm
-          results={test.results!}
-          flags={test.flags}
-          testCode={test.testCode}
-          technicianNotes={test.technicianNotes}
-          comments={test.validationNotes ?? ''}
-          onCommentsChange={() => undefined}
-          onApprove={() => undefined}
-          readOnly
-          enableApproveShortcut={false}
-        />
-      </Panel>
+      <ResultValidationPanel
+        title="Recorded Results"
+        results={test.results!}
+        flags={test.flags}
+        testCode={test.testCode}
+        patient={test.patient}
+        technicianNotes={test.technicianNotes}
+        comments={test.validationNotes ?? ''}
+        onCommentsChange={() => undefined}
+        onApprove={() => undefined}
+        readOnly
+        enableApproveShortcut={false}
+      />
     );
   }
   return (

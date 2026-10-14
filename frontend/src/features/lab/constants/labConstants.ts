@@ -107,6 +107,8 @@ export const LAB_CONFIG = {
   PARAMETER_PREVIEW_LIMIT: 5,
   TAB_COUNT_REFRESH_MS: 30_000,
   COMPACT_RESULT_GRID_LIMIT: 8,
+  /** Result validation panel body — scroll when results + flags exceed this height. */
+  RESULT_VALIDATION_PANEL_MAX_HEIGHT: 'max-h-[min(32rem,65vh)]',
   POPOVER_OFFSET: 8,
   MODAL_SIZE_DEFAULT: '3xl' as const,
   MODAL_SIZE_LARGE: '4xl' as const,
