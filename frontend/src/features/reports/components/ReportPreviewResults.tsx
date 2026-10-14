@@ -1,110 +1,100 @@
 /**
- * Report preview test results table section.
+ * Report preview results — one lab results panel per active test,
+ * matching the Result Validation modal grid (parameter, result, reference interval).
  */
 
 import React from 'react';
-import { cn } from '@/utils';
-import type { ValidatedTestReportPayload } from '../types';
-import { TONE, TYPE } from '@/components/theme/recipes';
-
+import { Panel } from '@/components/surfaces';
+import { EntityId } from '@/components/display';
+import {
+  ResultValidationNotesSection,
+  ResultValidationResultsBody,
+} from '@/features/lab';
+import type { Gender } from '@/types';
+import { SPACING, TYPE } from '@/components/theme/recipes';
+import type { LabReportPayload } from '../types';
+import { getActiveOrderTests } from '../utils/prepareReportData';
 
 interface ReportPreviewResultsProps {
-  reportData: ValidatedTestReportPayload;
+  reportData: LabReportPayload;
 }
 
-export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ reportData }) => (
-  <div className="p-space-6 space-y-space-4">
-    {reportData.testResults.map((test, index) => (
-      <div key={index} className="space-y-space-4">
-        <div className="text-center">
-          <h3 className={`${TYPE.pageTitle} font-bold`}>
-            {test.testName} ({test.testCode})
-          </h3>
-        </div>
+type ReportTestResult = LabReportPayload['testResults'][number];
 
-        <div className="overflow-x-auto">
-          <table className={`${TYPE.value} w-full`}>
-            <thead>
-              <tr className="bg-surface-page border-b border-border-strong">
-                <th className="px-table-cell-x-default py-space-3 text-left font-normal text-text-tertiary uppercase tracking-wider">
-                  Investigation
-                </th>
-                <th className="px-table-cell-x-default py-space-3 text-left font-normal text-text-tertiary uppercase tracking-wider">
-                  Result
-                </th>
-                <th className="px-table-cell-x-default py-space-3 text-left font-normal text-text-tertiary uppercase tracking-wider">
-                  Reference Value
-                </th>
-                <th className="px-table-cell-x-default py-space-3 text-left font-normal text-text-tertiary uppercase tracking-wider">
-                  Unit
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b border-border-subtle hover:bg-surface-page transition-colors">
-                <td className="px-table-cell-x-default py-space-3 text-text-primary">Primary Sample Type :</td>
-                <td className="px-table-cell-x-default py-space-3 text-left text-text-primary">
-                  {(reportData.order.tests ?? [])[0]?.sampleType?.toUpperCase() || 'N/A'}
-                </td>
-                <td className="px-table-cell-x-default py-space-3 text-left text-text-secondary"></td>
-                <td className="px-table-cell-x-default py-space-3 text-left text-text-secondary"></td>
-              </tr>
+/**
+ * Converts report parameter rows into the OrderTest.results record the validation grid expects.
+ */
+function parametersToResultsRecord(
+  parameters: ReportTestResult['parameters']
+): Record<string, unknown> {
+  const record: Record<string, unknown> = {};
+  for (const parameter of parameters) {
+    if (!parameter.code) continue;
+    record[parameter.code] = {
+      value: parameter.value,
+      unit: parameter.unit,
+      referenceRange: parameter.referenceRange,
+      status: parameter.status,
+    };
+  }
+  return record;
+}
 
-              {test.parameters.map((param, paramIndex) => {
-                const isSectionHeader =
-                  param.name === param.name.toUpperCase() &&
-                  param.name.length > 3 &&
-                  !param.name.includes(':');
-                const isAbnormal = param.status && param.status.toLowerCase() !== 'normal';
+function reportPatient(
+  reportData: LabReportPayload
+): { gender?: Gender; age?: number } {
+  const gender =
+    reportData.patientGender === 'male' || reportData.patientGender === 'female'
+      ? reportData.patientGender
+      : undefined;
+  return { gender, age: reportData.patientAge };
+}
 
-                return (
-                  <tr
-                    key={paramIndex}
-                    className={cn(
-                      'border-b border-border-subtle last:border-0 hover:bg-surface-page transition-colors',
-                      isSectionHeader && 'bg-surface-page/50'
-                    )}
-                  >
-                    <td
-                      className={cn('px-table-cell-x-default py-space-3 text-text-primary', isSectionHeader && 'font-normal')}
-                    >
-                      {isSectionHeader ? (
-                        param.name
-                      ) : (
-                        <div className="min-w-0">
-                          <div className="font-normal text-text-primary truncate">{param.name}</div>
-                          {param.code && (
-                            <div className={`${TYPE.value} truncate`}>{param.code}</div>
-                          )}
-                        </div>
-                      )}
-                    </td>
-                    <td
-                      className={cn(
-                        'px-table-cell-x-default py-space-3 text-left',
-                        isAbnormal ? cn(TONE.danger.fg, 'font-normal') : 'text-text-primary'
-                      )}
-                    >
-                      {param.value}
-                    </td>
-                    <td className="px-table-cell-x-default py-space-3 text-left text-text-secondary">
-                      {param.referenceRange || ''}
-                    </td>
-                    <td className="px-table-cell-x-default py-space-3 text-left text-text-secondary">{param.unit || '-'}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ reportData }) => {
+  const patient = reportPatient(reportData);
+  const orderTests = getActiveOrderTests(reportData.order);
 
-        <div className={`space-y-space-2 ${TYPE.value} mt-space-4`}>
-          {test.technicianNotes && <p>Instruments: {test.technicianNotes}</p>}
-          {test.validationNotes && <p>Interpretation: {test.validationNotes}</p>}
-          <p>Thanks for Reference</p>
-          <p className="text-center font-normal mt-space-4">****End of Report****</p>
-        </div>
-      </div>
-    ))}
-  </div>
-);
+  if (reportData.testResults.length === 0) {
+    return <p className={TYPE.meta}>No active tests on this order.</p>;
+  }
+
+  return (
+    <div className={SPACING.stackRelaxed}>
+      {reportData.testResults.map((test, index) => {
+        const orderTest = orderTests[index];
+        const validationNotes = test.validationNotes?.trim();
+
+        return (
+          <Panel
+            key={`${test.testCode}-${orderTest?.id ?? index}`}
+            variant="lab"
+            title={
+              <span className="flex min-w-0 items-baseline gap-space-2">
+                <span className="truncate">{test.testName}</span>
+                <EntityId variant="secondary">{test.testCode}</EntityId>
+              </span>
+            }
+            footer={
+              validationNotes ? (
+                <ResultValidationNotesSection
+                  comments={validationNotes}
+                  onCommentsChange={() => {}}
+                  onApprove={() => {}}
+                  readOnly
+                />
+              ) : undefined
+            }
+          >
+            <ResultValidationResultsBody
+              results={parametersToResultsRecord(test.parameters)}
+              flags={orderTest?.flags}
+              testCode={test.testCode}
+              patient={patient}
+              technicianNotes={test.technicianNotes}
+            />
+          </Panel>
+        );
+      })}
+    </div>
+  );
+};

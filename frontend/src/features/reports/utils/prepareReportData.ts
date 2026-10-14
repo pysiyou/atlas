@@ -1,27 +1,130 @@
 import type jsPDF from 'jspdf';
-import type { OrderTest, Patient, Test } from '@/types';
-import type { ValidatedTestReportPayload, ValidatedTest } from '../types';
-import { companyConfig } from '@/config';
-import { isDateInInclusiveRange } from '@/utils';
+import type { Order, OrderTest, Patient, Test, TestParameter, TestResult } from '@/types';
+import type { LabReportPayload, ReportableOrder } from '../types';
+import { RESULT_NOT_AVAILABLE } from '../types';
+import { companyConfig } from '@/config/company';
+import { isDateInInclusiveRange } from '@/utils/date';
+
+const INACTIVE_TEST_STATUSES = new Set(['removed', 'superseded']);
 
 interface SampleLookup {
   (sampleId: number): { status: string; collectedAt?: string; collectedBy?: string } | undefined;
 }
 
 interface PrepareReportDataOptions {
-  validatedTest: ValidatedTest;
+  reportableOrder: ReportableOrder;
   patients: Patient[] | undefined;
   catalogTests: Test[];
   getSample: SampleLookup;
   getUserName: (userId: string) => string;
 }
 
-export function filterValidatedTestsByDateRange(
-  tests: ValidatedTest[],
+export type LabReportParameter = LabReportPayload['testResults'][number]['parameters'][number];
+
+/**
+ * Active order tests exclude removed and superseded lines.
+ */
+export function getActiveOrderTests(order: Order): OrderTest[] {
+  return (order.tests ?? [])
+    .filter(test => !INACTIVE_TEST_STATUSES.has(test.status))
+    .sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
+}
+
+/**
+ * Filters reportable orders by inclusive order-date range.
+ */
+export function filterReportableOrdersByDateRange(
+  orders: ReportableOrder[],
   dateRange: [Date, Date] | null
-): ValidatedTest[] {
-  if (!dateRange) return tests;
-  return tests.filter(test => isDateInInclusiveRange(test.orderDate, dateRange));
+): ReportableOrder[] {
+  if (!dateRange) return orders;
+  return orders.filter(order => isDateInInclusiveRange(order.orderDate, dateRange));
+}
+
+function hasResultValue(value: unknown): boolean {
+  if (value === null || value === undefined) return false;
+  if (typeof value === 'string' && value.trim() === '') return false;
+  return true;
+}
+
+function isCriticalStatus(status: string | undefined): boolean {
+  return (
+    status === 'critical' || status === 'critical-high' || status === 'critical-low'
+  );
+}
+
+function placeholderParameter(name: string, code: string): LabReportParameter {
+  return {
+    name,
+    code,
+    value: RESULT_NOT_AVAILABLE,
+  };
+}
+
+function parameterFromResult(
+  name: string,
+  code: string,
+  result: { value?: string | number | null; unit?: string; referenceRange?: string; status?: string }
+): LabReportParameter {
+  if (!hasResultValue(result.value)) {
+    return {
+      name,
+      code,
+      value: RESULT_NOT_AVAILABLE,
+      unit: result.unit,
+      referenceRange: result.referenceRange,
+    };
+  }
+  return {
+    name,
+    code,
+    value: result.value as string | number,
+    unit: result.unit,
+    referenceRange: result.referenceRange,
+    status: result.status,
+    isCritical: isCriticalStatus(result.status),
+  };
+}
+
+function parameterFromCatalog(
+  parameter: TestParameter,
+  result: TestResult | undefined
+): LabReportParameter {
+  if (!result) {
+    return placeholderParameter(parameter.name, parameter.code);
+  }
+  return parameterFromResult(parameter.name, parameter.code, result);
+}
+
+/**
+ * Builds investigation rows from catalog parameters when present, merging stored results.
+ * Missing values use {@link RESULT_NOT_AVAILABLE}. Extra result keys not in the catalog are appended.
+ */
+function buildParameterRows(test: OrderTest, catalogTest: Test | undefined): LabReportParameter[] {
+  const results = test.results ?? {};
+  const catalogParameters = catalogTest?.parameters ?? [];
+
+  if (catalogParameters.length > 0) {
+    const catalogCodes = new Set(catalogParameters.map(parameter => parameter.code));
+    const rows = catalogParameters.map(parameter =>
+      parameterFromCatalog(parameter, results[parameter.code])
+    );
+    for (const [code, result] of Object.entries(results)) {
+      if (catalogCodes.has(code) || !result) continue;
+      const catalogMatch = catalogTest?.parameters?.find(parameter => parameter.code === code);
+      rows.push(parameterFromResult(catalogMatch?.name || code, code, result));
+    }
+    return rows;
+  }
+
+  const resultEntries = Object.entries(results);
+  if (resultEntries.length > 0) {
+    return resultEntries.map(([code, result]) =>
+      parameterFromResult(code, code, result ?? {})
+    );
+  }
+
+  return [placeholderParameter(test.testName, test.testCode)];
 }
 
 function buildTestResultEntry(
@@ -32,23 +135,7 @@ function buildTestResultEntry(
   return {
     testCode: test.testCode,
     testName: test.testName,
-    parameters: Object.entries(test.results || {}).map(([code, result]) => {
-      const parameter = catalogTest?.parameters?.find(p => p.code === code);
-      const fullName = parameter?.name || code;
-
-      return {
-        name: fullName,
-        code,
-        value: result.value,
-        unit: result.unit,
-        referenceRange: result.referenceRange,
-        status: result.status,
-        isCritical:
-          result.status === 'critical' ||
-          result.status === 'critical-high' ||
-          result.status === 'critical-low',
-      };
-    }),
+    parameters: buildParameterRows(test, catalogTest),
     technicianNotes: test.technicianNotes,
     validationNotes: test.validationNotes,
     enteredBy: test.enteredBy?.toString(),
@@ -61,24 +148,39 @@ function buildTestResultEntry(
   };
 }
 
+function latestValidatedAt(tests: OrderTest[]): string | undefined {
+  const timestamps = tests
+    .map(test => test.resultValidatedAt)
+    .filter((value): value is string => Boolean(value));
+  if (timestamps.length === 0) return undefined;
+  return timestamps.reduce((latest, current) => (current > latest ? current : latest));
+}
+
+/**
+ * Assembles PDF payload for every active test on the order.
+ */
 export function prepareReportData({
-  validatedTest,
+  reportableOrder,
   patients,
   catalogTests,
   getSample,
   getUserName,
-}: PrepareReportDataOptions): ValidatedTestReportPayload {
-  const { test, order } = validatedTest;
-  const patient = patients?.find(p => p.id === validatedTest.patientId);
+}: PrepareReportDataOptions): LabReportPayload {
+  const { order } = reportableOrder;
+  const patient = patients?.find(p => p.id === reportableOrder.patientId);
+  const activeTests = getActiveOrderTests(order);
 
-  const sample = test.sampleId ? getSample(test.sampleId) : undefined;
+  const sampleSource = activeTests.find(test => test.sampleId);
+  const sample = sampleSource?.sampleId ? getSample(sampleSource.sampleId) : undefined;
   const collectedAt =
     sample && sample.status === 'collected' ? sample.collectedAt : undefined;
   const collectedBy =
     sample && sample.status === 'collected' ? sample.collectedBy : undefined;
 
-  const catalogTest = catalogTests.find(t => t.code === test.testCode);
-  const testResults = [buildTestResultEntry(test, catalogTest, getUserName)];
+  const testResults = activeTests.map(test => {
+    const catalogTest = catalogTests.find(catalog => catalog.code === test.testCode);
+    return buildTestResultEntry(test, catalogTest, getUserName);
+  });
 
   const orderWithPatientInfo = {
     ...order,
@@ -88,14 +190,14 @@ export function prepareReportData({
 
   return {
     order: orderWithPatientInfo,
-    patientId: validatedTest.patientId,
-    patientName: validatedTest.patientName,
-    patientAge: validatedTest.patientAge,
-    patientGender: validatedTest.patientGender,
+    patientId: reportableOrder.patientId,
+    patientName: reportableOrder.patientName,
+    patientAge: reportableOrder.patientAge,
+    patientGender: reportableOrder.patientGender,
     timestamps: {
       registeredAt: order.orderDate || order.createdAt,
       collectedAt,
-      reportedAt: test.resultValidatedAt || new Date().toISOString(),
+      reportedAt: latestValidatedAt(activeTests) || new Date().toISOString(),
     },
     sampleCollection: {
       collectedAt,
@@ -106,14 +208,17 @@ export function prepareReportData({
   };
 }
 
-export async function downloadValidatedTestReport(
-  validatedTest: ValidatedTest,
-  reportData: ValidatedTestReportPayload,
-  generateLabReport: (data: ValidatedTestReportPayload) => jsPDF | Promise<jsPDF>,
+/**
+ * Generates and downloads a lab report PDF named by order id.
+ */
+export async function downloadLabReport(
+  reportableOrder: ReportableOrder,
+  reportData: LabReportPayload,
+  generateLabReport: (data: LabReportPayload) => jsPDF | Promise<jsPDF>,
   downloadPDF: (doc: jsPDF, filename: string) => void,
   formatDate: (date: Date) => string
 ): Promise<void> {
   const doc = await generateLabReport(reportData);
-  const filename = `Lab_Report_TST${validatedTest.testId.toString().padStart(6, '0')}_${formatDate(new Date())}.pdf`;
+  const filename = `Lab_Report_ORD${reportableOrder.orderId.toString().padStart(6, '0')}_${formatDate(new Date())}.pdf`;
   downloadPDF(doc, filename);
 }

@@ -2,7 +2,8 @@
 import type jsPDF from 'jspdf';
 import { format } from 'date-fns';
 import { companyConfig } from '@/config';
-import type { ValidatedTestReportPayload, ReportTemplate } from '../types';
+import type { LabReportPayload, ReportTemplate } from '../types';
+import { RESULT_NOT_AVAILABLE } from '../types';
 import { drawReportHeader } from './reportPDFHeader';
 
 export function getDefaultTemplate(): ReportTemplate {
@@ -29,7 +30,7 @@ type AutoTableFn = typeof import('jspdf-autotable').default;
 
 export function drawTestResultsSection(
   doc: jsPDF,
-  reportData: ValidatedTestReportPayload,
+  reportData: LabReportPayload,
   startY: number,
   margin: number,
   pageWidth: number,
@@ -55,12 +56,18 @@ export function drawTestResultsSection(
     doc.line(margin, yPosition, pageWidth - margin, yPosition);
     yPosition += 2;
 
-    const sampleType = ((reportData.order.tests ?? [])[0]?.sampleType || 'N/A').toUpperCase();
+    const orderTest = (reportData.order.tests ?? []).find(t => t.testCode === test.testCode);
+    const sampleType = (orderTest?.sampleType || 'N/A').toUpperCase();
     const tableData: TableRow[] = [
       { investigation: 'Primary Sample Type :', result: sampleType, referenceValue: '', unit: '' },
     ];
 
-    test.parameters.forEach(param => {
+    const parameters =
+      test.parameters.length > 0
+        ? test.parameters
+        : [{ name: test.testName, code: test.testCode, value: RESULT_NOT_AVAILABLE }];
+
+    parameters.forEach(param => {
       const resultValue = String(param.value);
       const isAbnormal = !!(param.status && param.status.toLowerCase() !== 'normal');
       const isSectionHeader =
@@ -162,7 +169,7 @@ export function drawTestResultsSection(
 
 export function drawSignatureAndPageFooters(
   doc: jsPDF,
-  reportData: ValidatedTestReportPayload,
+  reportData: LabReportPayload,
   template: ReportTemplate,
   startY: number,
   margin: number,
@@ -232,7 +239,7 @@ export function drawSignatureAndPageFooters(
  * Dynamically imports jsPDF so the PDF stack is a separate chunk until a report is generated.
  */
 export async function generateLabReport(
-  reportData: ValidatedTestReportPayload,
+  reportData: LabReportPayload,
   template: ReportTemplate = getDefaultTemplate()
 ): Promise<jsPDF> {
   const [{ default: JsPDF }, { default: autoTable }] = await Promise.all([

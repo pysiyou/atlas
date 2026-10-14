@@ -7,14 +7,15 @@
 import React from 'react';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Modal, DialogFooter } from '@/components/overlays';
-import { FooterInfo } from '@/components/display';
-import type { ValidatedTestReportPayload } from '../types';
+import { EntityId, FooterInfo } from '@/components/display';
+import type { LabReportPayload } from '../types';
 import { MODULE_ICONS } from '@/config/icons';
+import { ReportPreviewResults } from './ReportPreviewResults';
 
 interface ReportPreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
-  reportData: ValidatedTestReportPayload;
+  reportData: LabReportPayload;
   onGenerate: () => void;
   isGenerating?: boolean;
 }
@@ -31,11 +32,20 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title="Report Preview"
-      subtitle={`${reportData.patientName} - ${reportData.testResults.map(t => t.testName).join(', ')}`}
+      subtitle={
+        <span className="inline-flex min-w-0 items-baseline gap-space-2">
+          <span className="truncate">{reportData.patientName}</span>
+          <span aria-hidden="true">-</span>
+          <EntityId type="order" value={reportData.order.orderId} />
+        </span>
+      }
       size="3xl"
       disableClose={isGenerating}
     >
       <div className="flex flex-col h-full bg-surface-page">
+        <div className="flex-1 overflow-y-auto p-space-6">
+          <ReportPreviewResults reportData={reportData} />
+        </div>
         <DialogFooter
           start={<FooterInfo icon={MODULE_ICONS.reports} label="Reports" size="md" />}
           end={

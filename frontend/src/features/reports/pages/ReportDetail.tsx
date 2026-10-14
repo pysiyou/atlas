@@ -1,19 +1,19 @@
 /**
  * ReportDetail Component
- * Detail view for a specific report - opens preview modal for a validated test
+ * Detail view for a specific report - opens preview modal for a reportable order
  */
 
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTestCatalog } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users';
-import { useValidatedTestsReport } from '../api/reports';
+import { reportsAPI, useReportableOrders } from '../api/reports';
 import { useSampleLookup } from '@/features/lab';
 import { ReportPreviewModal } from '../components/ReportPreviewModal';
 import { generateLabReport, downloadPDF } from '../utils/reportPDF';
 import {
   prepareReportData,
-  downloadValidatedTestReport,
+  downloadLabReport,
 } from '../utils/prepareReportData';
 import { formatDate } from '@/utils';
 import { notify } from '@/utils/feedback';
@@ -23,46 +23,47 @@ import { ReportDetailSkeletonContent } from '../config/ReportDetailSkeleton';
 export const ReportDetail: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const testId = id ? parseInt(id, 10) : null;
+  const orderId = id ? parseInt(id, 10) : null;
 
-  const { validatedTests, isLoading: reportsLoading } = useValidatedTestsReport();
+  const { reportableOrders, isLoading: reportsLoading } = useReportableOrders();
   const { tests, isLoading: testsLoading } = useTestCatalog();
   const { getSample } = useSampleLookup();
   const { getUserName } = useUserLookup();
 
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const validatedTest = useMemo(() => {
-    if (!testId) return null;
-    return validatedTests.find(test => test.testId === testId) ?? null;
-  }, [testId, validatedTests]);
+  const reportableOrder = useMemo(() => {
+    if (!orderId) return null;
+    return reportableOrders.find(order => order.orderId === orderId) ?? null;
+  }, [orderId, reportableOrders]);
 
   useEffect(() => {
-    if (!reportsLoading && !testsLoading && !validatedTest) {
+    if (!reportsLoading && !testsLoading && !reportableOrder) {
       navigate('/reports', { replace: true });
     }
-  }, [reportsLoading, testsLoading, validatedTest, navigate]);
+  }, [reportsLoading, testsLoading, reportableOrder, navigate]);
 
   const buildReportData = useCallback(() => {
-    if (!validatedTest) return null;
+    if (!reportableOrder) return null;
     return prepareReportData({
-      validatedTest,
+      reportableOrder,
       patients: undefined,
       catalogTests: tests,
       getSample,
       getUserName: id => getUserName(id),
     });
-  }, [validatedTest, tests, getSample, getUserName]);
+  }, [reportableOrder, tests, getSample, getUserName]);
 
   const handleGenerateReport = async () => {
-    if (!validatedTest) return;
+    if (!reportableOrder) return;
     const reportData = buildReportData();
     if (!reportData) return;
 
     try {
       setIsGenerating(true);
-      await downloadValidatedTestReport(
-        validatedTest,
+      await reportsAPI.recordOrderReportDownload(reportableOrder.orderId);
+      await downloadLabReport(
+        reportableOrder,
         reportData,
         generateLabReport,
         downloadPDF,
@@ -94,7 +95,7 @@ export const ReportDetail: React.FC = () => {
     );
   }
 
-  if (!validatedTest) {
+  if (!reportableOrder) {
     return null;
   }
 

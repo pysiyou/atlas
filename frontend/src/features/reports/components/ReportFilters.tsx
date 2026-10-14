@@ -1,6 +1,6 @@
 /**
  * ReportFilters Component
- * Responsive filter controls for validated test reports
+ * Responsive filter controls for reportable order reports
  */
 
 import React, { useState } from 'react';
