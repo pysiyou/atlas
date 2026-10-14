@@ -35,6 +35,8 @@ export interface PanelProps {
   headerStart?: React.ReactNode;
   headerEnd?: React.ReactNode;
   children: React.ReactNode;
+  /** Optional pinned footer (e.g. validation notes). Enables flex column + scrollable body. */
+  footer?: React.ReactNode;
   /** Body overflow. `default` keeps the variant body token; `auto`/`visible` override it. */
   scroll?: PanelScroll;
   /** Vertical gap between body children. Defaults to `none` (`page`) or `normal` (`lab`). */
@@ -42,6 +44,7 @@ export interface PanelProps {
   hideHeader?: boolean;
   className?: string;
   bodyClassName?: string;
+  footerClassName?: string;
   testId?: string;
 }
 
@@ -52,17 +55,20 @@ export function Panel({
   headerStart,
   headerEnd,
   children,
+  footer,
   scroll = 'default',
   spacing,
   hideHeader = false,
   className,
   bodyClassName,
+  footerClassName,
   testId,
 }: PanelProps) {
   const tokens = PANEL_SHELL[variant];
   const resolvedSpacing = spacing ?? (isLabVariant(variant) ? 'normal' : 'none');
   const useBetweenLayout = Boolean(meta || headerEnd);
   const headerClass = useBetweenLayout ? tokens.headerBetween : tokens.header;
+  const hasFooter = footer != null && footer !== false;
 
   const titleNode =
     title == null || title === ''
@@ -71,8 +77,18 @@ export function Panel({
         ? <h3 className={tokens.title}>{title}</h3>
         : <div className={tokens.title}>{title}</div>;
 
+  const bodyScrollClass =
+    scroll === 'default' ? tokens.scrollDefault : PANEL_SCROLL[scroll];
+
   return (
-    <section className={cn(tokens.shell, className)} data-testid={testId}>
+    <section
+      className={cn(
+        tokens.shell,
+        hasFooter && 'flex flex-col min-h-0',
+        className
+      )}
+      data-testid={testId}
+    >
       {!hideHeader && (
         <div className={headerClass}>
           {headerStart}
@@ -84,13 +100,17 @@ export function Panel({
       <div
         className={cn(
           tokens.body,
-          scroll === 'default' ? tokens.scrollDefault : PANEL_SCROLL[scroll],
+          hasFooter && 'flex-1 min-h-0',
+          bodyScrollClass,
           PANEL_SPACING[resolvedSpacing],
           bodyClassName,
         )}
       >
         {children}
       </div>
+      {hasFooter ? (
+        <div className={cn(tokens.footer, footerClassName)}>{footer}</div>
+      ) : null}
     </section>
   );
 }

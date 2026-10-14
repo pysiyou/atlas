@@ -13,7 +13,7 @@ import {
   parseAnalyticalFlags,
 } from '../utils/analyticalFlags';
 
-const FLAG_TABLE_CELL = 'py-space-1 pr-space-4 align-top text-left last:pr-0';
+const FLAG_TABLE_CELL = 'py-space-1 pr-space-4 align-top text-left leading-snug last:pr-0';
 
 interface ResultContextNotesProps {
   flags?: string[];
@@ -63,7 +63,7 @@ function AnalyticalFlagsBlock({
 
   if (compact) {
     return (
-      <div className="pt-space-2 space-y-space-2">
+      <div className="pt-space-1-5 space-y-space-1-5">
         <p className={`${TYPE.caption} font-medium text-text-tertiary uppercase tracking-wide`}>
           Analytical flags
         </p>

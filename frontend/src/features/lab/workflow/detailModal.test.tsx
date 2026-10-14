@@ -63,6 +63,7 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({
     modalStage,
     headerVariant,
     patientName,
+    patient,
     ready,
   } = model;
 
@@ -172,6 +173,7 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({
         onViewFullSample={handleViewFullSample}
         onOpenLinkedTest={openLinkedTest}
         orderTestId={orderTest?.id}
+        patient={patient ?? undefined}
       />
     </QueueModalShell>
   );
