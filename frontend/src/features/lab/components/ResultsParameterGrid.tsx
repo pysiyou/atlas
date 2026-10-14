@@ -2,7 +2,11 @@
  * Read-only parameter display — inline (validation card) or tile (entry) layouts.
  */
 import React, { useMemo } from 'react';
-import { getParameterReferenceIntervalLines, parseResultEntry, statusMapFromFlags } from '../utils/labResult';
+import {
+  getParameterReferenceIntervalLines,
+  parseResultEntry,
+  statusMapFromFlags,
+} from '../utils/labResult';
 import { ReferenceIntervalCell } from './ReferenceIntervalCell';
 import { LAB_CONFIG } from '../constants';
 import { TYPE } from '@/components/theme/recipes';
@@ -50,13 +54,32 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
   const entries = Object.entries(results ?? {});
   const showStatus = layout === 'validation';
 
+  const referenceValueColumnCh = useMemo(() => {
+    if (layout !== 'validation' || variant !== 'inline') {
+      return 4;
+    }
+    let maxLen = 0;
+    for (const [key, rawValue] of entries) {
+      const { referenceRange } = parseResultEntry(key, rawValue, flagStatusMap);
+      const lines = getParameterReferenceIntervalLines(
+        catalogParameters[key],
+        referenceRange,
+        patient
+      );
+      for (const line of lines) {
+        maxLen = Math.max(maxLen, line.value.length);
+      }
+    }
+    return Math.max(maxLen, 4);
+  }, [layout, variant, entries, catalogParameters, patient, flagStatusMap]);
+
   if (entries.length === 0) {
     return <p className={TYPE.meta}>No result values recorded.</p>;
   }
 
   if (layout === 'validation' && variant === 'inline') {
     const headerClass = `${TYPE.caption} text-text-tertiary uppercase tracking-wide font-normal text-left`;
-    const cellClass = 'py-space-1 pr-space-4 align-top text-left leading-snug last:pr-0';
+    const cellClass = 'py-space-0-5 pr-space-4 align-top text-left leading-tight last:pr-0';
 
     return (
       <div className="overflow-x-auto min-w-0">
@@ -103,7 +126,10 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
                     />
                   </td>
                   <td className={cellClass} title="Reference interval">
-                    <ReferenceIntervalCell lines={intervalLines} />
+                    <ReferenceIntervalCell
+                      lines={intervalLines}
+                      valueColumnCh={referenceValueColumnCh}
+                    />
                   </td>
                 </tr>
               );

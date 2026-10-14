@@ -1,21 +1,26 @@
 /**
- * Reference interval — fixed-width value column so Male/Female labels align across all rows.
+ * Reference interval — shared value column width (ch) so sex labels align; values left-aligned.
  */
 import { Fragment } from 'react';
 import { TYPE } from '@/components/theme/recipes';
 import type { ReferenceIntervalLine } from '../utils/labResult';
 
-/** Shared across every cell so sex labels line up in the reference column. */
-const VALUE_COLUMN_CLASS = 'w-[7.5rem] max-w-[7.5rem]';
-
-export function ReferenceIntervalCell({ lines }: { lines: ReferenceIntervalLine[] }) {
+export function ReferenceIntervalCell({
+  lines,
+  valueColumnCh,
+}: {
+  lines: ReferenceIntervalLine[];
+  /** Longest range string in the table (tabular-nums ch units). */
+  valueColumnCh: number;
+}) {
   return (
     <div
-      className={`inline-grid grid-cols-[7.5rem_auto] gap-x-space-2 gap-y-space-0.5 items-baseline ${TYPE.caption} text-text-tertiary text-left`}
+      className={`inline-grid gap-x-space-1 gap-y-space-1 items-baseline leading-tight ${TYPE.caption} text-text-tertiary text-left`}
+      style={{ gridTemplateColumns: `${valueColumnCh}ch auto` }}
     >
       {lines.map((line, index) => (
         <Fragment key={index}>
-          <span className={`tabular-nums ${VALUE_COLUMN_CLASS}`}>{line.value}</span>
+          <span className="tabular-nums text-left">{line.value}</span>
           <span className="whitespace-nowrap">{line.label ?? ''}</span>
         </Fragment>
       ))}

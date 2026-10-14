@@ -143,18 +143,34 @@ export function checkReferenceRangeWithDemographics(
   return checkReferenceRange(value, parameter.referenceRange);
 }
 
+function formatRangeBounds(low: number, high: number): string {
+  return `${low} - ${high}`;
+}
+
+/** Display spacing for stored / legacy range strings (e.g. `3.5-11` → `3.5 - 11`). */
+export function normalizeReferenceRangeDisplay(value: string): string {
+  const trimmed = value.trim();
+  if (!trimmed || trimmed === '—') return trimmed;
+  return trimmed
+    .replace(/^<\s*/, '< ')
+    .replace(/^>\s*/, '> ')
+    .replace(/(\d(?:\.\d+)?)\s*-\s*(\d(?:\.\d+)?)/g, '$1 - $2');
+}
+
 function formatDemographicRangeSegment(range?: DemographicRange): string {
   if (!range) return '';
-  if (range.low !== undefined && range.high !== undefined) return `${range.low}-${range.high}`;
-  if (range.low !== undefined) return `>${range.low}`;
-  if (range.high !== undefined) return `<${range.high}`;
+  if (range.low !== undefined && range.high !== undefined) {
+    return formatRangeBounds(range.low, range.high);
+  }
+  if (range.low !== undefined) return `> ${range.low}`;
+  if (range.high !== undefined) return `< ${range.high}`;
   return '';
 }
 
 export type ReferenceIntervalLine = { label?: string; value: string };
 
 function singleReferenceLine(value: string): ReferenceIntervalLine[] {
-  const trimmed = value.trim();
+  const trimmed = normalizeReferenceRangeDisplay(value);
   return trimmed ? [{ value: trimmed }] : [{ value: '—' }];
 }
 
@@ -190,17 +206,20 @@ export function formatReferenceRange(
   demographics?: { gender?: Gender; age?: number; dateOfBirth?: string }
 ): string {
   if ('source' in range && range.source !== 'none') {
-    if (range.low !== undefined && range.high !== undefined) return `${range.low}-${range.high}`;
-    if (range.low !== undefined) return `>${range.low}`;
-    if (range.high !== undefined) return `<${range.high}`;
+    if (range.low !== undefined && range.high !== undefined) {
+      return formatRangeBounds(range.low, range.high);
+    }
+    if (range.low !== undefined) return `> ${range.low}`;
+    if (range.high !== undefined) return `< ${range.high}`;
     return 'N/A';
   }
   if ('adult_general' in range || 'adult_male' in range || 'adult_female' in range) {
     const resolved = getPatientSpecificRange(range as CatalogReferenceRange, demographics);
-    if (resolved.low !== undefined && resolved.high !== undefined)
-      return `${resolved.low}-${resolved.high}`;
-    if (resolved.low !== undefined) return `>${resolved.low}`;
-    if (resolved.high !== undefined) return `<${resolved.high}`;
+    if (resolved.low !== undefined && resolved.high !== undefined) {
+      return formatRangeBounds(resolved.low, resolved.high);
+    }
+    if (resolved.low !== undefined) return `> ${resolved.low}`;
+    if (resolved.high !== undefined) return `< ${resolved.high}`;
   }
   return 'N/A';
 }

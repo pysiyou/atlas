@@ -13,8 +13,6 @@ import {
   parseAnalyticalFlags,
 } from '../utils/analyticalFlags';
 
-const FLAG_TABLE_CELL = 'py-space-1 pr-space-4 align-top text-left leading-snug last:pr-0';
-
 interface ResultContextNotesProps {
   flags?: string[];
   testCode?: string;
@@ -38,36 +36,36 @@ function AnalyticalFlagsBlock({
 
   if (rows.length === 0) return null;
 
-  const table = (
-    <div className="overflow-x-auto min-w-0">
-      <table className="w-full min-w-[20rem] table-fixed border-collapse text-left">
-        <colgroup>
-          <col className="w-[40%]" />
-          <col className="w-[60%]" />
-        </colgroup>
-        <tbody>
-          {rows.map((flag, index) => (
-            <tr key={`${flag.kind}-${flag.code}-${index}`}>
-              <td className={`${TYPE.label} text-text-secondary ${FLAG_TABLE_CELL}`}>
-                {analyticalFlagLabel(flag, parameterLabels)}
-              </td>
-              <td className={`${TYPE.caption} ${TONE.warning.fg} leading-snug ${FLAG_TABLE_CELL}`}>
-                {analyticalFlagDetail(flag)}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+  const flagGrid = (
+    <div
+      className={cn(
+        'grid gap-x-space-6 gap-y-space-2 min-w-0',
+        compact ? 'grid-cols-2' : 'grid-cols-1 sm:grid-cols-2'
+      )}
+    >
+      {rows.map((flag, index) => (
+        <div
+          key={`${flag.kind}-${flag.code}-${index}`}
+          className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] gap-x-space-2 items-baseline min-w-0"
+        >
+          <span className={`${TYPE.label} text-text-secondary truncate`}>
+            {analyticalFlagLabel(flag, parameterLabels)}
+          </span>
+          <span className={`${TYPE.caption} ${TONE.warning.fg} leading-snug`}>
+            {analyticalFlagDetail(flag)}
+          </span>
+        </div>
+      ))}
     </div>
   );
 
   if (compact) {
     return (
-      <div className="pt-space-1-5 space-y-space-1-5">
+      <div className="pt-space-4 space-y-space-1-5">
         <p className={`${TYPE.caption} font-medium text-text-tertiary uppercase tracking-wide`}>
           Analytical flags
         </p>
-        {table}
+        {flagGrid}
       </div>
     );
   }
@@ -78,7 +76,7 @@ function AnalyticalFlagsBlock({
         <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
         Analytical flags
       </p>
-      <div className={FIELD_ERROR}>{table}</div>
+      <div className={FIELD_ERROR}>{flagGrid}</div>
     </div>
   );
 }
