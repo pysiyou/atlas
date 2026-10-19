@@ -10,7 +10,7 @@ import { useUserLookup } from '@/lib/api/users';
 import { reportsAPI, useReportableOrders } from '../api/reports';
 import { useSampleLookup } from '@/features/lab';
 import { ReportPreviewModal } from '../components/ReportPreviewModal';
-import { generateLabReport, downloadPDF } from '../utils/reportPDF';
+import { generateLabReport, downloadPDF, getDefaultTemplate } from '../utils/reportPDF';
 import {
   prepareReportData,
   downloadLabReport,
@@ -65,7 +65,8 @@ export const ReportDetail: React.FC = () => {
       await downloadLabReport(
         reportableOrder,
         reportData,
-        generateLabReport,
+        tests,
+        (data, catalog) => generateLabReport(data, getDefaultTemplate(), catalog),
         downloadPDF,
         formatDate
       );

@@ -1,5 +1,6 @@
 /**
- * FormDialogFooter — cancel + submit actions for modal forms (orders, patients, etc.).
+ * FormDialogFooter — primary submit actions for modal forms (orders, patients, etc.).
+ * Dismiss via the modal header close control (no footer cancel).
  */
 
 import React from 'react';
@@ -7,22 +8,19 @@ import { actionButtonPreset, Button } from '@/components/primitives';
 import { DialogFooter } from './DialogChrome';
 
 export interface FormDialogFooterProps {
-  onClose: () => void;
   submitLabel: string;
   isSubmitting: boolean;
   formId: string;
   footerInfo?: React.ReactNode;
   submitVariant?: 'save' | 'primary' | 'danger';
   submitIcon?: React.ReactNode;
-  /** Extra buttons rendered before Cancel (e.g. disable/enable). */
+  /** Extra buttons rendered before submit (e.g. disable/enable). */
   leadingActions?: React.ReactNode;
   /** Hide the primary submit button (confirm-only footers). */
   hideSubmit?: boolean;
-  cancelLabel?: string;
 }
 
 export const FormDialogFooter: React.FC<FormDialogFooterProps> = ({
-  onClose,
   submitLabel,
   isSubmitting,
   formId,
@@ -31,7 +29,6 @@ export const FormDialogFooter: React.FC<FormDialogFooterProps> = ({
   submitIcon,
   leadingActions,
   hideSubmit = false,
-  cancelLabel = 'Cancel',
 }) => {
   const submitPreset =
     submitVariant === 'save'
@@ -46,16 +43,6 @@ export const FormDialogFooter: React.FC<FormDialogFooterProps> = ({
       end={
         <>
           {leadingActions}
-          <Button
-            type="button"
-            {...actionButtonPreset('cancel')}
-            size="md"
-            layout="icon-text"
-            onClick={onClose}
-            disabled={isSubmitting}
-          >
-            {cancelLabel}
-          </Button>
           {hideSubmit ? null : (
             <Button
               type="submit"

@@ -17,7 +17,7 @@ import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components/data-table';
 import { createReportTableConfig } from '../config/ReportTable.config';
 import { ReportPreviewModal } from '../components/ReportPreviewModal';
 import { ReportFilters } from '../components/ReportFilters';
-import { generateLabReport, downloadPDF } from '../utils/reportPDF';
+import { generateLabReport, downloadPDF, getDefaultTemplate } from '../utils/reportPDF';
 import type { ReportableOrder } from '../types';
 import {
   filterReportableOrdersByDateRange,
@@ -101,7 +101,8 @@ export const ReportList: React.FC = () => {
       await downloadLabReport(
         previewOrder,
         reportData,
-        generateLabReport,
+        tests,
+        (data, catalog) => generateLabReport(data, getDefaultTemplate(), catalog),
         downloadPDF,
         formatDate
       );

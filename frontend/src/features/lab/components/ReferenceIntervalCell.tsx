@@ -21,7 +21,7 @@ export function ReferenceIntervalCell({
       {lines.map((line, index) => (
         <Fragment key={index}>
           <span className="tabular-nums text-left">{line.value}</span>
-          <span className="whitespace-nowrap">{line.label ?? ''}</span>
+          <span className={`whitespace-nowrap ${TYPE.meta}`}>{line.label ?? ''}</span>
         </Fragment>
       ))}
     </div>

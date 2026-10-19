@@ -1,234 +1,330 @@
 /**
- * PDF report header: company panel, report title, patient and processing details.
+ * Legacy-style lab report header — left metadata block + right column anchored to page margin.
  */
 
+import { format, isValid, parseISO } from 'date-fns';
 import type jsPDF from 'jspdf';
-import type { LabReportPayload, ReportTemplate } from '../types';
 import { companyConfig } from '@/config';
-import { formatReportTime } from '@/utils/date';
+import { displayId } from '@/utils';
+import type { LabReportPayload } from '../types';
 
-interface HeaderLayout {
-  pageWidth: number;
+const FONT = 'courier';
+const FONT_SIZE = 10;
+const LINE_HEIGHT = 5.2;
+
+/** Character width for label text before ` :` (Courier is fixed-width). */
+const LEFT_LABEL_CHARS = 11;
+const RIGHT_LABEL_CHARS = 12;
+
+const LEFT_LABELS = {
+  patient: 'Patient',
+  orderNo: 'Order No.',
+  branch: 'Branch',
+  address: 'Address',
+  referrer: 'Referrer',
+} as const;
+
+const RIGHT_LABELS = {
+  orderDate: 'Order Date',
+  reportDate: 'Report Date',
+  pageNumber: 'Page Number',
+} as const;
+
+export interface LabReportHeaderLayout {
   margin: number;
-  headerStartY: number;
-  headerHeight: number;
-  leftPanelWidth: number;
-  rightPanelWidth: number;
-  leftPanelX: number;
-  rightPanelX: number;
+  pageWidth: number;
+  leftX: number;
+  rightX: number;
+  rightEdge: number;
+  leftValueX: number;
+  rightValueX: number;
+  pageNumberY: number;
+  referrerRowY: number;
 }
 
-function getHeaderLayout(doc: jsPDF, margin: number): HeaderLayout {
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const headerStartY = margin;
-  const headerHeight = 50;
-  const leftPanelWidth = (pageWidth - margin * 2) * 0.4;
-  const rightPanelWidth = (pageWidth - margin * 2) * 0.6;
-  const leftPanelX = margin;
-  const rightPanelX = leftPanelX + leftPanelWidth;
+export interface LabReportHeaderPageInfo {
+  pageNumber: number;
+  pageCount: number;
+}
+
+function formatLabel(label: string, widthChars: number): string {
+  return `${label.padEnd(widthChars, ' ')} :`;
+}
+
+function formatReportDate(dateString?: string | null): string {
+  if (!dateString) return '';
+  try {
+    const date = parseISO(dateString);
+    if (!isValid(date)) return '';
+    return format(date, 'dd/MM/yyyy');
+  } catch {
+    return '';
+  }
+}
+
+function formatReportClock(dateString?: string | null): string {
+  if (!dateString) return '';
+  try {
+    const date = parseISO(dateString);
+    if (!isValid(date)) return '';
+    return format(date, 'HH:mm');
+  } catch {
+    return '';
+  }
+}
+
+/** Single header value: `dd/MM/yyyy HH:mm` (no separate time row). */
+function formatReportDateTime(dateString?: string | null): string {
+  const datePart = formatReportDate(dateString);
+  const timePart = formatReportClock(dateString);
+  if (datePart && timePart) return `${datePart} ${timePart}`;
+  return datePart || timePart;
+}
+
+function genderSuffix(gender?: string): string {
+  if (!gender) return '';
+  const normalized = gender.toLowerCase();
+  if (normalized === 'male' || normalized === 'm') return 'M';
+  if (normalized === 'female' || normalized === 'f') return 'F';
+  return gender.charAt(0).toUpperCase();
+}
+
+function formatPatientDemographics(reportData: LabReportPayload): string {
+  const agePart =
+    reportData.patientAge !== undefined ? `${reportData.patientAge}/` : '';
+  const genderPart = genderSuffix(reportData.patientGender);
+  const suffix =
+    agePart || genderPart ? ` (${agePart}${genderPart})` : '';
+  return `${reportData.patientName}${suffix}`;
+}
+
+function resolveBranchName(): string {
+  const city = companyConfig.getContact().address.city?.trim();
+  if (city) return city;
+  return companyConfig.getName();
+}
+
+function resolveReferrer(reportData: LabReportPayload): string {
+  const raw = reportData.order.referringPhysician?.trim();
+  return raw || '-';
+}
+
+function measureValueStart(doc: jsPDF, labelChars: number): number {
+  doc.setFont(FONT, 'normal');
+  doc.setFontSize(FONT_SIZE);
+  const sample = formatLabel('X'.repeat(labelChars), labelChars);
+  return doc.getTextWidth(sample) + 1.2;
+}
+
+/** Right column: labels + values flush to the right page margin. */
+function resolveRightColumn(
+  doc: jsPDF,
+  pageWidth: number,
+  margin: number
+): { rightX: number; rightValueX: number; rightEdge: number } {
+  const rightEdge = pageWidth - margin;
+  doc.setFont(FONT, 'normal');
+  doc.setFontSize(FONT_SIZE);
+
+  const valueOffset = measureValueStart(doc, RIGHT_LABEL_CHARS);
+  const sampleValues = ['14/10/2026 12:31', '1 / 999'];
+  const maxValueWidth = sampleValues.reduce(
+    (max, sample) => Math.max(max, doc.getTextWidth(sample)),
+    0
+  );
+  const blockWidth = valueOffset + maxValueWidth + 1.5;
+  const rightX = rightEdge - blockWidth;
 
   return {
-    pageWidth,
-    margin,
-    headerStartY,
-    headerHeight,
-    leftPanelWidth,
-    rightPanelWidth,
-    leftPanelX,
-    rightPanelX,
+    rightX,
+    rightValueX: rightX + valueOffset,
+    rightEdge,
   };
 }
 
-function drawCompanyPanel(doc: jsPDF, layout: HeaderLayout): void {
-  const { headerStartY, headerHeight, leftPanelWidth, leftPanelX } = layout;
-
-  doc.setFillColor(224, 242, 247);
-  doc.rect(leftPanelX, headerStartY, leftPanelWidth, headerHeight, 'F');
-
+function drawLabel(doc: jsPDF, x: number, y: number, label: string, labelChars: number): void {
+  doc.setFont(FONT, 'normal');
+  doc.setFontSize(FONT_SIZE);
   doc.setTextColor(0, 0, 0);
-  doc.setFontSize(18);
-  doc.setFont('helvetica', 'bold');
-  let currentY = headerStartY + 8;
-  doc.text(companyConfig.getName(), leftPanelX + 5, currentY);
-  currentY += 6;
-
-  const company = companyConfig.getConfig();
-  const contact = company.contact;
-  if (company.company.subtitle) {
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'bold');
-    doc.text(company.company.subtitle, leftPanelX + 5, currentY);
-    currentY += 4;
-  }
-
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(55, 65, 81);
-  if (contact.address.street) {
-    doc.text(contact.address.street, leftPanelX + 5, currentY);
-    currentY += 3.5;
-  }
-  const { city, state, zipCode } = contact.address;
-  const addressParts = [city, state, zipCode].filter(Boolean);
-  if (addressParts.length > 0) {
-    doc.text(addressParts.join(', '), leftPanelX + 5, currentY);
-    currentY += 3.5;
-  }
-  if (contact.address.country) {
-    doc.text(contact.address.country, leftPanelX + 5, currentY);
-  }
+  doc.text(formatLabel(label, labelChars), x, y);
 }
 
-function drawReportTitle(doc: jsPDF, layout: HeaderLayout, reportData: LabReportPayload): number {
-  const { headerStartY, rightPanelX } = layout;
-  const currentY = headerStartY + 5;
-
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(0, 0, 0);
-  const reportTitle =
-    reportData.testResults.length > 0
-      ? `${reportData.testResults.map(t => t.testName).join(', ')} Results ( ${reportData.testResults.map(t => t.testCode).join(', ')} )`
-      : 'Test Results';
-  doc.text(reportTitle, rightPanelX + 5, currentY);
-  return currentY + 6;
-}
-
-function drawLabelValue(
+function drawValue(
   doc: jsPDF,
   x: number,
   y: number,
-  label: string,
   value: string,
-  valueX: number
+  bold = false
 ): void {
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(55, 65, 81);
-  doc.text(label, x, y);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(31, 41, 55);
-  doc.text(value, valueX, y);
+  doc.setFont(FONT, bold ? 'bold' : 'normal');
+  doc.setFontSize(FONT_SIZE);
+  doc.setTextColor(0, 0, 0);
+  doc.text(value, x, y);
 }
 
-function drawPatientDetails(doc: jsPDF, layout: HeaderLayout, reportData: LabReportPayload, startY: number): void {
-  const { rightPanelX } = layout;
-  const subCol1X = rightPanelX;
-  let subColY = startY;
-
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'bold');
-  doc.text(reportData.patientName, subCol1X + 5, subColY);
-  subColY += 5;
-
-  if (reportData.patientAge !== undefined) {
-    drawLabelValue(doc, subCol1X + 5, subColY, 'Age:', String(reportData.patientAge), subCol1X + 20);
-    subColY += 4;
-  }
-  if (reportData.patientGender) {
-    drawLabelValue(
-      doc,
-      subCol1X + 5,
-      subColY,
-      'Gender:',
-      reportData.patientGender.toUpperCase(),
-      subCol1X + 25
-    );
-    subColY += 4;
-  }
-
-  const orderExtended = reportData.order as typeof reportData.order & {
-    patientPhone?: string;
-    patientEmail?: string;
-  };
-  if (orderExtended.patientPhone) {
-    drawLabelValue(doc, subCol1X + 5, subColY, 'Phone:', orderExtended.patientPhone, subCol1X + 25);
-  } else if (orderExtended.patientEmail) {
-    drawLabelValue(doc, subCol1X + 5, subColY, 'Email:', orderExtended.patientEmail, subCol1X + 25);
-  }
-}
-
-function drawProcessingDetails(
+function drawColumnField(
   doc: jsPDF,
-  layout: HeaderLayout,
-  reportData: LabReportPayload,
-  startY: number
+  colX: number,
+  valueX: number,
+  y: number,
+  label: string,
+  labelChars: number,
+  value: string,
+  options: {
+    boldValue?: boolean;
+    highlightValue?: boolean;
+  } = {}
 ): void {
-  const { rightPanelWidth, rightPanelX } = layout;
-  const subCol1Width = rightPanelWidth * 0.5;
-  const subCol2X = rightPanelX + subCol1Width;
-  let subColY = startY;
-
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(31, 41, 55);
-  doc.text('Processing Details', subCol2X + 5, subColY);
-  subColY += 5;
-
-  const collectedAt =
-    reportData.timestamps?.collectedAt || reportData.sampleCollection?.collectedAt;
-  if (collectedAt) {
-    drawLabelValue(
-      doc,
-      subCol2X + 5,
-      subColY,
-      'Sample:',
-      formatReportTime(collectedAt),
-      subCol2X + 25
-    );
-    subColY += 4;
+  drawLabel(doc, colX, y, label, labelChars);
+  if (options.highlightValue && value) {
+    doc.setFont(FONT, 'bold');
+    doc.setFontSize(FONT_SIZE);
+    const width = doc.getTextWidth(value) + 1.5;
+    doc.setFillColor(235, 225, 248);
+    doc.rect(valueX - 0.4, y - 3.1, width, 4.2, 'F');
   }
+  drawValue(doc, valueX, y, value, options.boldValue ?? false);
+}
 
+function drawPatientField(
+  doc: jsPDF,
+  colX: number,
+  valueX: number,
+  y: number,
+  reportData: LabReportPayload
+): void {
+  drawLabel(doc, colX, y, LEFT_LABELS.patient, LEFT_LABEL_CHARS);
+  const patientCode = displayId.patient(reportData.patientId);
+  drawValue(doc, valueX, y, `${patientCode} `, false);
+  const nameX = valueX + doc.getTextWidth(`${patientCode} `);
+  drawValue(doc, nameX, y, formatPatientDemographics(reportData), true);
+}
+
+/**
+ * Renders the reference-style header block.
+ */
+export function drawLabReportHeader(
+  doc: jsPDF,
+  reportData: LabReportPayload,
+  margin: number,
+  pageInfo: LabReportHeaderPageInfo
+): { layout: LabReportHeaderLayout; endY: number } {
+  const pageWidth = doc.internal.pageSize.getWidth();
+
+  const leftX = margin;
+  const leftValueX = leftX + measureValueStart(doc, LEFT_LABEL_CHARS);
+  const { rightX, rightValueX, rightEdge } = resolveRightColumn(doc, pageWidth, margin);
+
+  let y = margin;
+
+  const registeredAt =
+    reportData.timestamps?.registeredAt ??
+    reportData.order.orderDate ??
+    reportData.order.createdAt;
   const reportedAt = reportData.timestamps?.reportedAt;
-  drawLabelValue(
-    doc,
-    subCol2X + 5,
-    subColY,
-    'Results:',
-    formatReportTime(reportedAt || new Date().toISOString()),
-    subCol2X + 25
-  );
-  subColY += 4;
+  const address = reportData.sampleCollection?.address?.trim() ?? '';
 
-  if (reportData.testResults[0]) {
-    const testResult = reportData.testResults[0];
-    let verifiedByName = 'N/A';
-    if (
-      testResult.validatedByName &&
-      testResult.validatedByName !== 'N/A' &&
-      testResult.validatedByName !== 'Unknown'
-    ) {
-      verifiedByName = testResult.validatedByName;
-    } else if (testResult.validatedBy) {
-      verifiedByName = testResult.validatedBy;
-    } else if (!testResult.validatedAt) {
-      verifiedByName = '-';
-    }
-    drawLabelValue(doc, subCol2X + 5, subColY, 'Verified by:', verifiedByName, subCol2X + 30);
-  }
+  drawPatientField(doc, leftX, leftValueX, y, reportData);
+  drawColumnField(
+    doc,
+    rightX,
+    rightValueX,
+    y,
+    RIGHT_LABELS.orderDate,
+    RIGHT_LABEL_CHARS,
+    formatReportDateTime(registeredAt)
+  );
+  y += LINE_HEIGHT;
+
+  drawColumnField(
+    doc,
+    leftX,
+    leftValueX,
+    y,
+    LEFT_LABELS.orderNo,
+    LEFT_LABEL_CHARS,
+    displayId.order(reportData.order.orderId),
+    { boldValue: true }
+  );
+  drawColumnField(
+    doc,
+    rightX,
+    rightValueX,
+    y,
+    RIGHT_LABELS.reportDate,
+    RIGHT_LABEL_CHARS,
+    formatReportDateTime(reportedAt)
+  );
+  y += LINE_HEIGHT;
+
+  drawColumnField(doc, leftX, leftValueX, y, LEFT_LABELS.branch, LEFT_LABEL_CHARS, resolveBranchName(), {
+    boldValue: true,
+    highlightValue: true,
+  });
+  const pageNumberY = y;
+  drawColumnField(
+    doc,
+    rightX,
+    rightValueX,
+    y,
+    RIGHT_LABELS.pageNumber,
+    RIGHT_LABEL_CHARS,
+    `${pageInfo.pageNumber} / ${pageInfo.pageCount}`
+  );
+  y += LINE_HEIGHT;
+
+  drawColumnField(doc, leftX, leftValueX, y, LEFT_LABELS.address, LEFT_LABEL_CHARS, address);
+  y += LINE_HEIGHT;
+
+  const referrerRowY = y;
+  drawColumnField(
+    doc,
+    leftX,
+    leftValueX,
+    y,
+    LEFT_LABELS.referrer,
+    LEFT_LABEL_CHARS,
+    resolveReferrer(reportData),
+    { boldValue: true }
+  );
+  y += LINE_HEIGHT;
+
+  doc.setFont(FONT, 'bold');
+  doc.setFontSize(FONT_SIZE);
+  doc.setTextColor(0, 0, 0);
+  doc.text('Final Report', leftX, y);
+  y += LINE_HEIGHT;
+
+  const layout: LabReportHeaderLayout = {
+    margin,
+    pageWidth,
+    leftX,
+    rightX,
+    rightEdge,
+    leftValueX,
+    rightValueX,
+    pageNumberY,
+    referrerRowY,
+  };
+
+  return { layout, endY: y + 2 };
 }
 
-export function drawReportHeader(
+/**
+ * Updates only the page-number field on an already-drawn header.
+ */
+export function drawLabReportPageNumber(
   doc: jsPDF,
-  reportData: LabReportPayload,
-  _template: ReportTemplate,
-  margin: number
-): number {
-  const layout = getHeaderLayout(doc, margin);
-
-  drawCompanyPanel(doc, layout);
-  const titleEndY = drawReportTitle(doc, layout, reportData);
-  drawPatientDetails(doc, layout, reportData, titleEndY);
-  drawProcessingDetails(doc, layout, reportData, titleEndY);
-
-  doc.setDrawColor(220, 220, 220);
-  doc.setLineWidth(0.3);
-  doc.line(
-    layout.margin,
-    layout.headerStartY + layout.headerHeight,
-    layout.pageWidth - layout.margin,
-    layout.headerStartY + layout.headerHeight
+  layout: LabReportHeaderLayout,
+  pageInfo: LabReportHeaderPageInfo
+): void {
+  drawColumnField(
+    doc,
+    layout.rightX,
+    layout.rightValueX,
+    layout.pageNumberY,
+    RIGHT_LABELS.pageNumber,
+    RIGHT_LABEL_CHARS,
+    `${pageInfo.pageNumber} / ${pageInfo.pageCount}`
   );
-
-  return layout.headerStartY + layout.headerHeight + 10;
 }

@@ -50,7 +50,7 @@ function formFromUser(user: UserAdminRecord | null): UserUpsertFormState {
 }
 
 /**
- * Disable or enable buttons shown beside Cancel in the edit footer.
+ * Disable or enable buttons shown in the edit footer (before save).
  */
 function AccountStatusActions({
   allowDisable,
@@ -130,7 +130,7 @@ export const UserUpsertModal: React.FC<UserUpsertModalProps> = ({
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={confirmingDisable ? () => setConfirmingDisable(false) : onClose}
       title={modalTitle}
       subtitle={modalSubtitle}
       size="2xl"
@@ -161,7 +161,6 @@ export const UserUpsertModal: React.FC<UserUpsertModalProps> = ({
         </div>
         <FormDialogFooter
           formId={FORM_ID}
-          onClose={confirmingDisable ? () => setConfirmingDisable(false) : onClose}
           submitLabel={
             confirmingDisable ? 'Disable account' : isEdit ? 'Save changes' : 'Create user'
           }

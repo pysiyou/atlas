@@ -2,9 +2,8 @@
  * Sample collection detail modal — shell and body when sample is loaded.
  */
 
-import { actionButtonPreset, Button } from '@/components/primitives';
 import type { ContainerType, Order, Sample, Test } from '@/types';
-import { ModalFooter, QueueModalShell, labModalHeaderContext } from './detailModalLayout';
+import { QueueModalShell, labModalHeaderContext } from './detailModalLayout';
 import { CollectionHeaderBadges } from '../components/LabWorkflowBadges';
 import { SampleCollectionCardLeftColumn } from './queueCard.sampleCollection.leftColumn.helpers';
 import { LabRelatedSamplesPanel } from '../components/LabRelatedWorkflowPanel';
@@ -136,17 +135,7 @@ export function SampleCollectionDetailModalView({
       title={modalTitle}
       subtitle={modalSubtitle}
       headerLeftColumn={headerLeftColumn}
-      footer={
-        readOnly ? (
-          <ModalFooter statusMessage="">
-            <Button onClick={onClose} {...actionButtonPreset('cancel')} size="md" layout="icon-text">
-              Close
-            </Button>
-          </ModalFooter>
-        ) : (
-          footerContent
-        )
-      }
+      footer={readOnly ? undefined : footerContent}
     >
       <SampleCollectionDetailContent
         sample={sample}

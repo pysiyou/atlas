@@ -23,7 +23,7 @@ export interface ReportableOrder {
 export const RESULT_NOT_AVAILABLE = 'Not available';
 
 /**
- * LabReportPayload - Data structure for generating a lab report PDF.
+ * LabReportPayload - Data structure for lab report preview and printable export.
  */
 export interface LabReportPayload {
   order: Order;
@@ -44,6 +44,10 @@ export interface LabReportPayload {
   testResults: Array<{
     testCode: string;
     testName: string;
+    /** Catalog exam category (e.g. Clinical Chemistry). */
+    category: string;
+    /** Common method from catalog, shown under exam title on PDF. */
+    methodology?: string;
     parameters: Array<{
       name: string;
       code: string;

@@ -1,10 +1,16 @@
-/** PDF lab report generation — template, results tables, signature/footers, and public API. */
+/** Lab report PDF — printable export (header + body; body expanded incrementally). */
 import type jsPDF from 'jspdf';
-import { format } from 'date-fns';
 import { companyConfig } from '@/config';
+import type { Test } from '@/types';
 import type { LabReportPayload, ReportTemplate } from '../types';
-import { RESULT_NOT_AVAILABLE } from '../types';
-import { drawReportHeader } from './reportPDFHeader';
+import { drawLabReportBody } from './reportPDFBody';
+import {
+  drawLabReportHeader,
+  drawLabReportPageNumber,
+  type LabReportHeaderLayout,
+} from './reportPDFHeader';
+
+const MARGIN = 12.7;
 
 export function getDefaultTemplate(): ReportTemplate {
   const reports = companyConfig.getReports();
@@ -16,260 +22,45 @@ export function getDefaultTemplate(): ReportTemplate {
   };
 }
 
-interface TableRow {
-  investigation: string;
-  result: string;
-  referenceValue: string;
-  unit: string;
-  isSectionHeader?: boolean;
-  isAbnormal?: boolean;
-  hasCode?: boolean;
+function drawBodySeparator(doc: jsPDF, startY: number, margin: number, pageWidth: number): void {
+  doc.setDrawColor(210, 210, 210);
+  doc.setLineWidth(0.3);
+  doc.line(margin, startY, pageWidth - margin, startY);
 }
 
-type AutoTableFn = typeof import('jspdf-autotable').default;
-
-export function drawTestResultsSection(
-  doc: jsPDF,
-  reportData: LabReportPayload,
-  startY: number,
-  margin: number,
-  pageWidth: number,
-  pageHeight: number,
-  autoTable: AutoTableFn
-): number {
-  let yPosition = startY;
-
-  reportData.testResults.forEach(test => {
-    if (yPosition > pageHeight - 100) {
-      doc.addPage();
-      yPosition = margin;
-    }
-
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(0, 0, 0);
-    doc.text(`${test.testName} (${test.testCode})`, pageWidth / 2, yPosition, { align: 'center' });
-    yPosition += 7;
-
-    doc.setDrawColor(0, 0, 0);
-    doc.setLineWidth(0.5);
-    doc.line(margin, yPosition, pageWidth - margin, yPosition);
-    yPosition += 2;
-
-    const orderTest = (reportData.order.tests ?? []).find(t => t.testCode === test.testCode);
-    const sampleType = (orderTest?.sampleType || 'N/A').toUpperCase();
-    const tableData: TableRow[] = [
-      { investigation: 'Primary Sample Type :', result: sampleType, referenceValue: '', unit: '' },
-    ];
-
-    const parameters =
-      test.parameters.length > 0
-        ? test.parameters
-        : [{ name: test.testName, code: test.testCode, value: RESULT_NOT_AVAILABLE }];
-
-    parameters.forEach(param => {
-      const resultValue = String(param.value);
-      const isAbnormal = !!(param.status && param.status.toLowerCase() !== 'normal');
-      const isSectionHeader =
-        param.name === param.name.toUpperCase() &&
-        param.name.length > 3 &&
-        !param.name.includes(':');
-      const referenceValue = param.referenceRange || '';
-      const paramDisplayName = param.code ? `${param.name}\n${param.code}` : param.name;
-      tableData.push({
-        investigation: paramDisplayName,
-        result: resultValue,
-        referenceValue,
-        unit: param.unit || '-',
-        isSectionHeader,
-        isAbnormal,
-        hasCode: !!param.code,
-      });
-    });
-
-    const tableBody = tableData.map(row => [
-      row.investigation,
-      row.result,
-      row.referenceValue,
-      row.unit,
-    ]);
-
-    autoTable(doc, {
-      startY: yPosition,
-      head: [['INVESTIGATION', 'RESULT', 'REFERENCE VALUE', 'UNIT']],
-      body: tableBody,
-      theme: 'plain',
-      margin: { left: margin, right: margin },
-      columnStyles: {
-        0: { cellWidth: 'auto', halign: 'left' },
-        1: { cellWidth: 'auto', halign: 'left' },
-        2: { cellWidth: 'auto', halign: 'left' },
-        3: { cellWidth: 20, halign: 'right' },
-      },
-      styles: {
-        lineColor: [220, 220, 220],
-        lineWidth: 0.3,
-      },
-      headStyles: {
-        fillColor: [250, 250, 250],
-        textColor: [107, 114, 128],
-        fontStyle: 'bold',
-        fontSize: 9,
-        lineWidth: 0.5,
-        lineColor: [229, 231, 235],
-      },
-      bodyStyles: {
-        fontSize: 9,
-        lineWidth: 0.3,
-        lineColor: [220, 220, 220],
-        textColor: [31, 41, 55],
-      },
-      didParseCell: data => {
-        const rowIndex = data.row.index;
-        const rowData = tableData[rowIndex];
-        if (data.section === 'body' && data.column.index === 0 && rowData?.isSectionHeader) {
-          data.cell.styles.fontStyle = 'bold';
-          data.cell.styles.fillColor = [250, 250, 250];
-        }
-        if (data.section === 'body' && data.column.index === 1 && rowData?.isAbnormal) {
-          data.cell.styles.textColor = [220, 38, 38];
-          data.cell.styles.fontStyle = 'bold';
-        }
-      },
-    });
-
-    yPosition = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 10;
-
-    if (yPosition > pageHeight - 60) {
-      doc.addPage();
-      yPosition = margin;
-    }
-    yPosition += 5;
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(31, 41, 55);
-    if (test.technicianNotes) {
-      doc.text(`Instruments: ${test.technicianNotes}`, margin, yPosition);
-      yPosition += 5;
-    }
-    if (test.validationNotes) {
-      doc.text(`Interpretation: ${test.validationNotes}`, margin, yPosition);
-      yPosition += 5;
-    }
-    doc.text('Thanks for Reference', margin, yPosition);
-    yPosition += 8;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.text('****End of Report****', pageWidth / 2, yPosition, { align: 'center' });
-    yPosition += 10;
-  });
-
-  return yPosition;
-}
-
-export function drawSignatureAndPageFooters(
-  doc: jsPDF,
-  reportData: LabReportPayload,
-  template: ReportTemplate,
-  startY: number,
-  margin: number,
-  pageWidth: number,
-  pageHeight: number
-): void {
-  let yPosition = startY;
-
-  if (template.includeSignature) {
-    if (yPosition > pageHeight - 60) {
-      doc.addPage();
-      yPosition = margin;
-    }
-    yPosition += 10;
-    doc.setDrawColor(200, 200, 200);
-    doc.setLineWidth(0.3);
-    doc.line(margin, yPosition, pageWidth / 2 - 10, yPosition);
-    yPosition += 5;
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-
-    const lastTest = reportData.testResults[reportData.testResults.length - 1];
-    if (lastTest?.validatedAt) {
-      let validatedByName = 'N/A';
-      if (
-        lastTest.validatedByName &&
-        lastTest.validatedByName !== 'N/A' &&
-        lastTest.validatedByName !== 'Unknown'
-      ) {
-        validatedByName = lastTest.validatedByName;
-      } else if (lastTest.validatedBy) {
-        validatedByName = lastTest.validatedBy;
-      } else {
-        validatedByName = '-';
-      }
-      doc.text(`Validated by: ${validatedByName}`, margin, yPosition);
-      yPosition += 5;
-      doc.text(
-        `Date: ${format(new Date(lastTest.validatedAt), 'yyyy-MM-dd hh:mm a')}`,
-        margin,
-        yPosition
-      );
-    }
-  }
-
+function stampPageNumbers(doc: jsPDF, layout: LabReportHeaderLayout): void {
   const pageCount = doc.getNumberOfPages();
-  doc.setFontSize(7);
-  doc.setFont('helvetica', 'italic');
-  doc.setTextColor(100, 100, 100);
-
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i);
-    doc.setDrawColor(200, 200, 200);
-    doc.setLineWidth(0.3);
-    doc.line(margin, pageHeight - 20, pageWidth - margin, pageHeight - 20);
-    const footerText = `${template.footerText} Generated: ${format(new Date(), 'MMM dd, yyyy HH:mm')}`;
-    const footerLines = doc.splitTextToSize(footerText, pageWidth - margin * 2);
-    doc.text(footerLines, pageWidth / 2, pageHeight - 15, { align: 'center' });
-    doc.text(`Page ${i} of ${pageCount}`, pageWidth - margin - 5, pageHeight - 8, {
-      align: 'right',
-    });
+  for (let page = 1; page <= pageCount; page += 1) {
+    doc.setPage(page);
+    drawLabReportPageNumber(doc, layout, { pageNumber: page, pageCount });
   }
 }
 
 /**
- * Generate PDF report for lab results with company header, patient details, test results, and footer.
- * Dynamically imports jsPDF so the PDF stack is a separate chunk until a report is generated.
+ * Generate a lab report PDF. Dynamically imports jsPDF to keep the bundle split.
  */
 export async function generateLabReport(
   reportData: LabReportPayload,
-  template: ReportTemplate = getDefaultTemplate()
+  _template: ReportTemplate = getDefaultTemplate(),
+  catalogTests: Test[] = []
 ): Promise<jsPDF> {
-  const [{ default: JsPDF }, { default: autoTable }] = await Promise.all([
-    import('jspdf'),
-    import('jspdf-autotable'),
-  ]);
+  const { default: JsPDF } = await import('jspdf');
   const doc = new JsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
-  const margin = 15;
 
-  let yPosition = drawReportHeader(doc, reportData, template, margin);
-  yPosition = drawTestResultsSection(
-    doc,
-    reportData,
-    yPosition,
-    margin,
-    pageWidth,
-    pageHeight,
-    autoTable
-  );
-  drawSignatureAndPageFooters(doc, reportData, template, yPosition, margin, pageWidth, pageHeight);
+  const { layout, endY } = drawLabReportHeader(doc, reportData, MARGIN, {
+    pageNumber: 1,
+    pageCount: 1,
+  });
+
+  drawBodySeparator(doc, endY, MARGIN, pageWidth);
+  drawLabReportBody(doc, reportData, endY, MARGIN, catalogTests);
+  stampPageNumbers(doc, layout);
 
   return doc;
 }
 
-/**
- * Download PDF file
- */
+/** Trigger a browser download for the generated PDF. */
 export function downloadPDF(doc: jsPDF, filename: string): void {
   doc.save(filename);
 }
-

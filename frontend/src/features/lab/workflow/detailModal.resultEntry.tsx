@@ -173,7 +173,6 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
           isComplete={isComplete}
           canEnter={canEnter}
           denyMessage={test.denyMessage}
-          onClose={onClose}
           onSave={handleSave}
         />
       }
