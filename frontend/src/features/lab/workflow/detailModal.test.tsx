@@ -94,7 +94,7 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({
     modalKey,
     comments,
     commentKey,
-    resultsPanelTitle,
+    resultsPanelPreset,
   } = useTestDetailModalDerived({
     order,
     orderTest,
@@ -170,7 +170,7 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({
         validation={validation}
         comments={comments}
         commentKey={commentKey}
-        resultsPanelTitle={resultsPanelTitle}
+        resultsPanelPreset={resultsPanelPreset}
         onApprove={handleApprove}
         criticalRecord={criticalRecord}
         onCriticalValueUpdated={handleCriticalValueUpdated}

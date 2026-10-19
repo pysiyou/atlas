@@ -4,7 +4,7 @@
 
 import React, { useMemo } from 'react';
 import { Textarea } from '@/components/inputs';
-import { Panel } from '@/components/surfaces';
+import { Panel, type PanelPresetId } from '@/components/surfaces';
 import { ResultCriticalValueBanner } from './ResultCriticalValueBanner';
 import { statusMapFromFlags, parseResultEntry, isCritical } from '../utils/labResult';
 import { ResultsParameterGrid } from '../components/ResultsParameterGrid';
@@ -134,26 +134,13 @@ function validationNotesFooter(props: ValidationFormProps): React.ReactNode | un
 
 /** Lab panel with scrollable results and pinned validation notes footer. */
 export function ResultValidationPanel({
-  title,
+  preset,
   ...formProps
-}: ValidationFormProps & { title: React.ReactNode }) {
+}: ValidationFormProps & { preset: PanelPresetId }) {
   const footer = validationNotesFooter(formProps);
-  const scrollPanelProps = {
-    scroll: 'auto' as const,
-    className: LAB_CONFIG.RESULT_VALIDATION_PANEL_MAX_HEIGHT,
-    bodyClassName: 'min-h-0',
-  };
-
-  if (footer) {
-    return (
-      <Panel variant="lab" title={title} footer={footer} {...scrollPanelProps}>
-        <ResultValidationResultsBody {...formProps} />
-      </Panel>
-    );
-  }
 
   return (
-    <Panel variant="lab" title={title} {...scrollPanelProps}>
+    <Panel preset={preset} footer={footer}>
       <ResultValidationResultsBody {...formProps} />
     </Panel>
   );

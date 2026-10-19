@@ -11,7 +11,7 @@ export const SIZE_PRESETS: Record<ColumnSizePreset, ColumnWidth> = {
   sm: { base: 108, min: 88, grow: 0, shrink: 0 },
   md: { base: 144, min: 124, grow: 0, shrink: 0 },
   lg: { base: 160, min: 140, grow: 0, shrink: 0 },
-  xl: { min: 200, grow: 2, shrink: 1 },
+  xl: { base: 200, min: 180, grow: 0, shrink: 0 },
   '2xl': { min: 280, grow: 2, shrink: 1 },
   auto: { grow: 0, shrink: 0 },
   fill: { base: 0, min: 200, grow: 1, shrink: 1 },

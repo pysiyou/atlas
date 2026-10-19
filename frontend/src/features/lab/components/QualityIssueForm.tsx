@@ -9,6 +9,7 @@ import { CatalogRejectionCriteriaFields } from './CatalogRejectionCriteriaFields
 import { useQualityIssueOptions } from '../api/qualityIssues';
 import type { QualityIssueOptions, QualityIssueTargetType, RemedyType } from '@/types/lab-operations';
 import { QUALITY_ISSUE_POPOVER_COPY } from '../constants/qualityIssuePopoverCopy';
+import { QualityIssueInlineWarning } from './QualityIssueInlineWarning';
 import { LAB_COPY } from '../constants/labConstants';
 import { QualityIssueRemedyPicker } from './QualityIssueRemedyPicker';
 import {
@@ -17,7 +18,7 @@ import {
 } from '../constants/qualityIssuePopoverCopy';
 
 type CollectionFormCopy = {
-  alert: { title: string; description: string } | null;
+  alert: { message: string } | null;
   reasonLabel: string;
   notesLabel: string;
 };
@@ -31,8 +32,7 @@ function getCollectionFormCopy(options: QualityIssueOptions): CollectionFormCopy
   if (hasResultedOrValidated) {
     return {
       alert: {
-        title: escalate.warningTitle,
-        description: options.previewMessage || escalate.warningBody,
+        message: escalate.warningTitle,
       },
       reasonLabel: escalate.reasonLabel,
       notesLabel: escalate.notesLabel,
@@ -119,12 +119,7 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
           )}
 
           {collectionCopy?.alert && (
-            <Alert
-              variant="warning"
-              title={collectionCopy.alert.title}
-              description={collectionCopy.alert.description}
-              className="py-space-3"
-            />
+            <QualityIssueInlineWarning message={collectionCopy.alert.message} />
           )}
 
           <CatalogRejectionCriteriaFields

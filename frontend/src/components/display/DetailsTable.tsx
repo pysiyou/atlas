@@ -4,7 +4,9 @@
  */
 
 import React from 'react';
-import { EmptyState, Panel, PANEL_EMPTY_STATE } from '@/components';
+import { Panel, type PanelPresetId } from '@/components/surfaces';
+import { EmptyState } from './EmptyState';
+import { PANEL_EMPTY_STATE } from './emptyStatePresets';
 import { DETAIL_TYPE, TABLE_CELL } from '@/components/theme/recipes';
 import { DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';
 import { filterDetailRows, type DetailTableRow } from './detailsTableUtils';
@@ -13,22 +15,22 @@ import { filterDetailRows, type DetailTableRow } from './detailsTableUtils';
 export type { DetailTableRow };
 
 export interface DetailsTableProps {
-  title: string;
+  preset: PanelPresetId;
+  meta?: string;
   rows: DetailTableRow[];
   filteredRows?: DetailTableRow[];
-  className?: string;
 }
 
 export const DetailsTable: React.FC<DetailsTableProps> = ({
-  title,
+  preset,
+  meta,
   rows,
   filteredRows: providedFilteredRows,
-  className = '',
 }) => {
   const filteredRows = providedFilteredRows ?? filterDetailRows(rows);
 
   return (
-    <Panel title={title} variant="pageEmbed" className={className}>
+    <Panel preset={preset} meta={meta}>
       <table className="w-full">
         <tbody>
           {filteredRows.map((row, idx) => (
@@ -46,7 +48,7 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
           ))}
           {filteredRows.length === 0 && (
             <tr>
-              <td colSpan={2} className="px-space-4 py-space-4">
+              <td colSpan={2} className={TABLE_CELL.default}>
                 <EmptyState
                   {...PANEL_EMPTY_STATE}
                   title={DEFAULT_EMPTY_TITLE}

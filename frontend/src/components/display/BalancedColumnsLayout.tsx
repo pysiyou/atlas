@@ -7,13 +7,15 @@
 
 import React from 'react';
 import { LAYOUT } from '@/components/theme/recipes';
+import type { PanelPresetId } from '@/components/surfaces';
 import { DetailsTable, type DetailTableRow } from '@/components/display/DetailsTable';
 import { cn } from '@/utils';
 import { filterDetailRows } from '@/components/display/detailsTableUtils';
 
 export interface TableInput {
   key: string;
-  title: string;
+  preset: PanelPresetId;
+  meta?: string;
   rows: DetailTableRow[];
 }
 
@@ -26,7 +28,8 @@ export interface BalancedColumnsLayoutProps {
 
 interface TableSpec {
   key: string;
-  title: string;
+  preset: PanelPresetId;
+  meta?: string;
   rows: DetailTableRow[];
   filteredRows: DetailTableRow[];
   effectiveHeight: number;
@@ -43,7 +46,8 @@ const preprocessTables = (tables: TableInput[]): TableSpec[] =>
     const filteredRows = filterDetailRows(t.rows);
     return {
       key: t.key,
-      title: t.title,
+      preset: t.preset,
+      meta: t.meta,
       rows: t.rows,
       filteredRows,
       effectiveHeight: Math.max(filteredRows.length, 1),
@@ -100,7 +104,8 @@ export const BalancedColumnsLayout: React.FC<BalancedColumnsLayoutProps> = ({
           {col.items.map(spec => (
             <DetailsTable
               key={spec.key}
-              title={spec.title}
+              preset={spec.preset}
+              meta={spec.meta}
               rows={spec.rows}
               filteredRows={spec.filteredRows}
             />

@@ -327,6 +327,16 @@ export const chromeRestrictedSyntax = [
   },
 ]
 
+/** Panel chrome belongs in panelPresets — call sites pass preset + slots only. */
+export const panelPresetRestrictedSyntax = [
+  {
+    selector:
+      'JSXOpeningElement[name.name="Panel"] > JSXAttribute[name.name=/^(title|variant|scroll|spacing|hideHeader|className|bodyClassName|footerClassName)$/]',
+    message:
+      'Use a Panel preset from @/components/surfaces. Do not pass title, variant, className, or other chrome props.',
+  },
+]
+
 export const allRestrictedSyntax = [
   ...designTokenRestrictedSyntax,
   ...spacingRestrictedSyntax,

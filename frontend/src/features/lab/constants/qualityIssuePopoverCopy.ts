@@ -80,8 +80,8 @@ export const QUALITY_ISSUE_POPOVER_COPY = {
 };
 
 export interface ValidationFormCopy {
-  /** Shown only for true warnings (e.g. re-test limit); not for routine “choose next step” guidance */
-  alert: { variant: 'warning'; title: string; description: string } | null;
+  /** Shown only for true warnings (e.g. re-test limit); single-line icon + text */
+  alert: { message: string } | null;
   confirmLabel: string;
   reasonLabel: string;
   notesLabel: string;
@@ -93,11 +93,7 @@ export function getValidationFormCopy(options: QualityIssueOptions): ValidationF
   if (options.willEscalate) {
     const escalation = QUALITY_ISSUE_POPOVER_COPY.escalation;
     return {
-      alert: {
-        variant: 'warning',
-        title: escalation.warningTitle,
-        description: escalation.warningBody,
-      },
+      alert: { message: escalation.warningTitle },
       confirmLabel: escalation.confirmLabel,
       reasonLabel: escalation.reasonLabel,
       notesLabel: escalation.notesLabel,

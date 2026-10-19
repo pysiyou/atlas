@@ -1,7 +1,7 @@
 import type { DetailSkeletonSection } from '@/components/loaders/DetailPageSkeleton';
 
 export const CATALOG_DETAIL_SKELETON_SECTIONS: DetailSkeletonSection[] = [
-  { title: 'Test Overview', rows: 8 },
-  { title: 'Sample Requirements', rows: 8 },
-  { title: 'Pricing & Status', rows: 4 },
+  { preset: 'catalog.detail.testOverview', rows: 8 },
+  { preset: 'catalog.detail.sampleRequirements', rows: 8 },
+  { preset: 'catalog.detail.pricingStatus', rows: 4 },
 ];

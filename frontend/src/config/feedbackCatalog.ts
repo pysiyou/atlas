@@ -933,12 +933,12 @@ export const FEEDBACK_CATALOG: Record<FeedbackId, FeedbackEntry> = {
   },
   'lab.qualityIssue.dialog.escalation.warningTitle': {
     channel: 'inline',
-    variant: 'danger',
+    variant: 'warning',
     title: 'Re-test Limit Reached',
   },
   'lab.qualityIssue.dialog.escalation.warningBody': {
     channel: 'inline',
-    variant: 'danger',
+    variant: 'warning',
     title:
       'Re-test attempts are exhausted. You can still choose re-test — it will escalate to a supervisor for approval before another run.',
   },

@@ -6,39 +6,35 @@ import type { DetailSkeletonSection } from '@/components/loaders/DetailPageSkele
 import { OrderProgressSkeleton } from './OrderProgressSkeleton';
 
 export const ORDER_DETAIL_SKELETON_SECTIONS: DetailSkeletonSection[] = [
-  { title: 'Order Information', rows: 6, layout: 'grid' },
-  { title: 'Patient Information', rows: 4, layout: 'grid' },
+  { preset: 'order.detail.information.stack', rows: 6, layout: 'grid' },
+  { preset: 'order.detail.patient.stack', rows: 4, layout: 'grid' },
   {
-    title: 'Order activity',
+    preset: 'order.detail.activity',
     customContent: (
       <div className={SPACING.pPanel}>
         <OrderProgressSkeleton />
       </div>
     ),
-    variant: 'pageEmbed',
-    scroll: 'visible',
   },
   {
-    title: 'Tests',
+    preset: 'order.detail.tests',
     tableColumns: 4,
     tableRows: 4,
-    variant: 'pageEmbed',
-    scroll: 'visible',
   },
-  { title: 'Billing Summary', rows: 3, layout: 'column' },
+  { preset: 'order.detail.billing', rows: 3, layout: 'column' },
 ];
 
 export function renderOrderDetailLargeSkeleton() {
   return (
     <div className={LAYOUT.detailGridRowsSplit} style={{ height: '100%', maxHeight: '100%' }}>
       <div className={cn(LAYOUT.detailGrid3, 'min-h-0')}>
-        <Panel title="Order Information" className="min-h-0" scroll="auto">
+        <Panel preset="order.detail.information.fill">
           <SkeletonInfoSection rows={6} layout="column" />
         </Panel>
-        <Panel title="Patient Information" className="min-h-0" scroll="auto">
+        <Panel preset="order.detail.patient.fill">
           <SkeletonInfoSection rows={4} layout="column" />
         </Panel>
-        <Panel title="Order activity" className="min-h-0" variant="pageEmbed" scroll="auto">
+        <Panel preset="order.detail.activity.fill">
           <div className={SPACING.pPanel}>
             <OrderProgressSkeleton />
           </div>
@@ -46,19 +42,14 @@ export function renderOrderDetailLargeSkeleton() {
       </div>
 
       <div className={cn(LAYOUT.detailGrid3, 'min-h-0')}>
-        <Panel title="Tests" className="min-h-0 col-span-2" variant="pageEmbed" scroll="auto">
+        <Panel preset="order.detail.tests.span2Fill">
           <div className="border-t border-border-default">
             {Array.from({ length: 4 }).map((_, i) => (
               <SkeletonTableRow key={i} columns={5} />
             ))}
           </div>
         </Panel>
-        <Panel
-          title="Billing Summary"
-          className="min-h-0"
-          scroll="auto"
-          bodyClassName="flex flex-col"
-        >
+        <Panel preset="order.detail.billing.fill">
           <SkeletonInfoSection rows={3} layout="column" />
         </Panel>
       </div>

@@ -18,9 +18,8 @@ import {
 function TodayPanelSkeleton() {
   return (
     <Panel
-      title={<Skeleton height={14} width={48} />}
+      preset="lab.monitor.today"
       headerEnd={<Skeleton height={12} width={120} />}
-      variant="pageEmbed"
     >
       <div className={TODAY_PANEL.body}>
         <div className={TODAY_PANEL.main}>
@@ -53,20 +52,6 @@ function TodayPanelSkeleton() {
   );
 }
 
-function PanelSkeleton({ className }: { className?: string }) {
-  return (
-    <Panel
-      title={<Skeleton height={14} width={96} />}
-      headerEnd={<Skeleton height={12} width={72} />}
-      className={className}
-    >
-      <div className="flex min-h-48 flex-col gap-space-3">
-        <Skeleton height={120} className="w-full" />
-      </div>
-    </Panel>
-  );
-}
-
 export const LabMonitorBoardSkeleton: React.FC = () => {
   return (
     <div className={MONITOR_PANEL.page} aria-busy="true" aria-label="Loading dashboard">
@@ -76,14 +61,22 @@ export const LabMonitorBoardSkeleton: React.FC = () => {
             <TodayPanelSkeleton />
           </div>
           <div className={MONITOR_BOTTOM_PANEL}>
-            <PanelSkeleton />
+            <Panel preset="lab.monitor.attention" headerEnd={<Skeleton height={12} width={72} />}>
+              <div className="flex min-h-48 flex-col gap-space-3">
+                <Skeleton height={120} className="w-full" />
+              </div>
+            </Panel>
           </div>
           <div className={MONITOR_BOTTOM_PANEL}>
-            <PanelSkeleton />
+            <Panel preset="audit.eventLog.monitor" headerEnd={<Skeleton height={12} width={72} />}>
+              <div className="flex min-h-48 flex-col gap-space-3">
+                <Skeleton height={120} className="w-full" />
+              </div>
+            </Panel>
           </div>
         </div>
         <div className={MONITOR_TABLE_WRAP}>
-          <Panel title={<Skeleton height={14} width={120} />} variant="pageEmbed">
+          <Panel preset="lab.monitor.ordersTable">
             <div className="flex flex-col gap-space-2 p-space-3">
               {Array.from({ length: 6 }).map((_, index) => (
                 <Skeleton key={index} height={36} className="w-full" />

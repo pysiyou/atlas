@@ -53,8 +53,7 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
 
   return (
     <Panel
-      variant="lab"
-      title="Collection Requirements & Instructions"
+      preset="lab.modal.collectionRequirementsInstructions"
       headerEnd={
         testDetails.length > 1 ? (
           <PanelHeaderSegmentTabs

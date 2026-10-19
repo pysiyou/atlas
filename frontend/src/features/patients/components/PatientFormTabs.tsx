@@ -84,7 +84,7 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
     case 'general':
       return (
         <div className="space-y-space-6">
-          <Panel title="Identity & Contact" scroll="visible" spacing="normal">
+          <Panel preset="patient.form.identityContact">
             <DemographicsSection
               formData={formData}
               errors={flatErrors}
@@ -92,7 +92,7 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
             />
             <AddressSection formData={formData} errors={flatErrors} onFieldChange={onFieldChange} />
           </Panel>
-          <Panel title="Emergency Contact" scroll="visible" spacing="normal">
+          <Panel preset="patient.form.emergencyContact">
             <EmergencyContactSection
               formData={formData}
               errors={flatErrors}
@@ -104,19 +104,14 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
 
     case 'medical':
       return (
-        <Panel title="History, Conditions & Lifestyle" scroll="visible" spacing="normal">
+        <Panel preset="patient.form.medicalHistory">
           <MedicalHistorySection formData={formData} onFieldChange={onFieldChange} />
         </Panel>
       );
 
     case 'vitals':
       return (
-        <Panel
-          title="Measurements"
-          meta="Fill any vitals you have. Hints show typical ranges."
-          scroll="visible"
-          spacing="normal"
-        >
+        <Panel preset="patient.form.vitals">
           <VitalsSection
             vitalSigns={{
               temperature: formData.temperature,
@@ -135,12 +130,7 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
 
     case 'affiliation':
       return (
-        <Panel
-          title="Select Your Plan"
-          meta="Choose a duration and pricing that works for you"
-          scroll="visible"
-          spacing="normal"
-        >
+        <Panel preset="patient.form.affiliation">
           <AffiliationSection
             formData={formData}
             errors={flatErrors}

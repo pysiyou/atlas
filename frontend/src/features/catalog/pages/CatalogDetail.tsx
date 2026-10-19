@@ -90,7 +90,7 @@ export const CatalogDetail: React.FC = () => {
   const tables: TableInput[] = [
     {
       key: 'overview',
-      title: 'Test Overview',
+      preset: 'catalog.detail.testOverview',
       rows: [
         { label: 'Test Code', value: <EntityId>{test.code}</EntityId> },
         { label: 'Test Name', value: test.name },
@@ -105,7 +105,7 @@ export const CatalogDetail: React.FC = () => {
     },
     {
       key: 'sample',
-      title: 'Sample Requirements',
+      preset: 'catalog.detail.sampleRequirements',
       rows: [
         { label: 'Sample Type', value: capitalize(test.sampleType) },
         { label: 'Container', value: test.containerDescription || '-' },
@@ -131,7 +131,7 @@ export const CatalogDetail: React.FC = () => {
     },
     {
       key: 'pricing',
-      title: 'Pricing & Status',
+      preset: 'catalog.detail.pricingStatus',
       rows: [
         { label: 'Price', value: formatCurrency(test.price) },
         { label: 'Status', value: test.isActive ? 'Active' : 'Inactive' },
@@ -146,7 +146,8 @@ export const CatalogDetail: React.FC = () => {
   if (test.parameters && test.parameters.length > 0) {
     tables.push({
       key: 'parameters',
-      title: `Result Parameters (${test.parameters.length})`,
+      preset: 'catalog.detail.resultParameters',
+      meta: String(test.parameters.length),
       rows: test.parameters.map(param => ({
         label: param.code,
         value: `${param.name}${param.unit ? ` (${param.unit})` : ''}${param.referenceRange ? ` — ${param.referenceRange}` : ''}`,
@@ -158,7 +159,8 @@ export const CatalogDetail: React.FC = () => {
   if (test.referenceRanges && test.referenceRanges.length > 0) {
     tables.push({
       key: 'ranges',
-      title: `Reference Ranges (${test.referenceRanges.length})`,
+      preset: 'catalog.detail.referenceRanges',
+      meta: String(test.referenceRanges.length),
       rows: test.referenceRanges.map((range, idx) => {
         const rangeStr =
           range.text ||

@@ -37,7 +37,7 @@ export const TestRelatedTestsPanel: React.FC<TestRelatedTestsPanelProps> = ({
   }
 
   return (
-    <Panel variant="lab" title="Related tests" className="w-full">
+    <Panel preset="order.modal.relatedTests">
       <div className="space-y-space-3">
         {onSample.length > 0 ? (
           <div className="space-y-space-0-5">

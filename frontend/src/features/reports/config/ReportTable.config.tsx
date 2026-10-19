@@ -4,7 +4,6 @@
 
 import type { MouseEvent } from 'react';
 import type { NavigateFunction } from 'react-router-dom';
-import { Badge } from '@/components/primitives';
 import { EntityId } from '@/components/display';
 import type { TableViewConfig } from '@/components/data-table';
 import { buildViews, COLUMN_SIZE } from '@/components/data-table';
@@ -14,6 +13,7 @@ import type { ReportableOrder } from '../types';
 import { ReportPreviewButton } from '../components/ReportPreviewButton';
 import { ValidatedTestReportCard } from '../components/ValidatedTestReportCard';
 import { getActiveOrderTests } from '../utils/prepareReportData';
+import { TYPE } from '@/components/theme/recipes';
 
 const REPORT_VIEWS = {
   full: ['orderId', 'patientName', 'tests', 'orderDate', 'status', 'action'],
@@ -29,15 +29,8 @@ function testsSummary(order: ReportableOrder): { names: string; codes: string } 
   };
 }
 
-function validationBadge(order: ReportableOrder) {
-  const label = `${order.activeTestCount} tests · ${order.validatedTestCount} validated`;
-  const variant =
-    order.activeTestCount > 0 && order.validatedTestCount === order.activeTestCount
-      ? 'success'
-      : order.validatedTestCount > 0
-        ? 'warning'
-        : 'neutral';
-  return <Badge variant={variant} label={label} size="xs" />;
+function validationStatusLabel(order: ReportableOrder): string {
+  return `${order.validatedTestCount}/${order.activeTestCount}`;
 }
 
 export const createReportTableConfig = (
@@ -68,7 +61,7 @@ export const createReportTableConfig = (
     patientName: {
       key: 'patientName',
       header: 'Patient',
-      width: COLUMN_SIZE.fill,
+      width: COLUMN_SIZE.xl,
       sortable: true,
       accessor: (order: ReportableOrder) => order.patientName,
       render: (order: ReportableOrder) =>
@@ -103,8 +96,12 @@ export const createReportTableConfig = (
     status: {
       key: 'status',
       header: 'Status',
-      width: COLUMN_SIZE.md,
-      render: (order: ReportableOrder) => validationBadge(order),
+      width: COLUMN_SIZE.xs,
+      sortable: true,
+      accessor: (order: ReportableOrder) => order.validatedTestCount,
+      render: (order: ReportableOrder) => (
+        <span className={`${TYPE.value} tabular-nums`}>{validationStatusLabel(order)}</span>
+      ),
     },
     action: {
       key: 'action',
@@ -124,8 +121,8 @@ export const createReportTableConfig = (
 
   return {
     ...buildViews(columnMap, REPORT_VIEWS, {
-      medium: { status: 'sm' },
-      compact: { status: 'sm' },
+      medium: { status: 'xs' },
+      compact: { status: 'xs' },
     }),
     CardComponent,
   };
