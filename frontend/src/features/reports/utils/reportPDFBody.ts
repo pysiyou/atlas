@@ -13,6 +13,8 @@ const FONT = 'courier';
 const TITLE_SIZE = 7;
 const SUBTITLE_SIZE = 7;
 const TABLE_SIZE = 7;
+const TABLE_HEAD_SIZE = 6;
+const TABLE_HEAD_GAP = 1;
 /** Reference range numbers (right column). */
 const REFERENCE_VALUE_SIZE = 6;
 /** Sex labels beside reference range values (Male / Female). */
@@ -422,6 +424,23 @@ function drawParameterRow(
   return y + rowHeight;
 }
 
+function drawResultsTableHeader(
+  doc: jsPDF,
+  y: number,
+  resultsLayout: BodyLayout,
+  rowLayout: ResultRowLayout,
+  referenceSubColumns: ReferenceSubColumnLayout
+): number {
+  doc.setFont(FONT, 'normal');
+  doc.setFontSize(TABLE_HEAD_SIZE);
+  doc.setTextColor(COLOR_UNIT.r, COLOR_UNIT.g, COLOR_UNIT.b);
+  doc.text('PARAMETER', resultsLayout.colParameter, y, { align: 'left' });
+  doc.text('RESULT', rowLayout.resultBarX, y, { align: 'left' });
+  doc.text('REFERENCE INTERVAL', referenceSubColumns.valueRightX, y, { align: 'right' });
+  doc.setTextColor(COLOR_TEXT.r, COLOR_TEXT.g, COLOR_TEXT.b);
+  return y + TABLE_HEAD_GAP + ROW_HEIGHT * 0.65;
+}
+
 function drawNoteBlock(doc: jsPDF, y: number, layout: BodyLayout, note: string): number {
   doc.setFont(FONT, 'bold');
   doc.setFontSize(NOTES_SIZE);
@@ -496,6 +515,9 @@ function drawTestSection(
     catalogParameters,
     patient
   );
+
+  y = ensureVerticalSpace(doc, y, ROW_HEIGHT, resultsLayout);
+  y = drawResultsTableHeader(doc, y, resultsLayout, rowLayout, referenceSubColumns);
 
   for (const parameter of test.parameters) {
     const refLines = referenceLineCount(parameter, catalogParameters, patient);
