@@ -12,6 +12,7 @@ import { formatDateTime } from '@/utils';
 import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
 import type { ReportableOrder } from '../types';
 import { ReportPreviewButton } from './ReportPreviewButton';
+import { ReportPrintButton } from './ReportPrintButton';
 import { TYPE } from '@/components/theme/recipes';
 import { getActiveOrderTests } from '../utils/prepareReportData';
 
@@ -19,6 +20,8 @@ import { getActiveOrderTests } from '../utils/prepareReportData';
 interface ValidatedTestReportCardProps extends CardComponentProps<ReportableOrder> {
   /** Callback when preview button is clicked */
   onPreview: (order: ReportableOrder) => void;
+  onPrint: (order: ReportableOrder) => void;
+  generatingOrderId: number | null;
 }
 
 /**
@@ -28,7 +31,13 @@ interface ValidatedTestReportCardProps extends CardComponentProps<ReportableOrde
  * @param onClick - Optional click handler for the card
  * @param onPreview - Handler for preview button
  */
-export function ValidatedTestReportCard({ item: order, onClick, onPreview }: ValidatedTestReportCardProps) {
+export function ValidatedTestReportCard({
+  item: order,
+  onClick,
+  onPreview,
+  onPrint,
+  generatingOrderId,
+}: ValidatedTestReportCardProps) {
   const tests = getActiveOrderTests(order.order);
   const testNames = tests.map(test => test.testName).join(', ') || `${order.activeTestCount} test(s)`;
   const statusLabel = `${order.validatedTestCount}/${order.activeTestCount}`;
@@ -56,8 +65,17 @@ export function ValidatedTestReportCard({ item: order, onClick, onPreview }: Val
 
       <div className="flex justify-between items-center mt-auto pt-space-3">
         <div className={TABLE_DATETIME_SECONDARY_CLASS}>{formatDateTime(order.orderDate)}</div>
-        <div onClick={e => e.stopPropagation()}>
+        <div
+          className="flex items-center gap-space-1"
+          onClick={e => e.stopPropagation()}
+        >
           <ReportPreviewButton order={order} onPreview={onPreview} size="sm" />
+          <ReportPrintButton
+            order={order}
+            onPrint={onPrint}
+            size="sm"
+            disabled={generatingOrderId === order.orderId}
+          />
         </div>
       </div>
     </MobileEntityCard>

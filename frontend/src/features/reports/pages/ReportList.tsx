@@ -54,6 +54,7 @@ export const ReportList: React.FC = () => {
 
   const [previewOrder, setPreviewOrder] = useState<ReportableOrder | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generatingOrderId, setGeneratingOrderId] = useState<number | null>(null);
   const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
 
   const {
@@ -91,6 +92,31 @@ export const ReportList: React.FC = () => {
     setPreviewOrder(reportableOrder);
   };
 
+  const handlePrint = useCallback(
+    async (reportableOrder: ReportableOrder) => {
+      try {
+        setGeneratingOrderId(reportableOrder.orderId);
+        const reportData = buildReportData(reportableOrder);
+        await reportsAPI.recordOrderReportDownload(reportableOrder.orderId);
+        await downloadLabReport(
+          reportableOrder,
+          reportData,
+          tests,
+          (data, catalog) => generateLabReport(data, getDefaultTemplate(), catalog),
+          downloadPDF,
+          formatDate
+        );
+        notify.toast('report.download.success');
+      } catch (error) {
+        console.error('Error generating report:', error);
+        notify.apiError('report.download.error', error);
+      } finally {
+        setGeneratingOrderId(null);
+      }
+    },
+    [buildReportData, tests]
+  );
+
   const handleGenerateReport = async () => {
     if (!previewOrder) return;
 
@@ -117,8 +143,15 @@ export const ReportList: React.FC = () => {
   };
 
   const reportTableConfig = useMemo(
-    () => createReportTableConfig(navigate, getPatientName, handlePreview),
-    [navigate, getPatientName]
+    () =>
+      createReportTableConfig(
+        navigate,
+        getPatientName,
+        handlePreview,
+        handlePrint,
+        generatingOrderId
+      ),
+    [navigate, getPatientName, handlePrint, generatingOrderId]
   );
 
   return (
