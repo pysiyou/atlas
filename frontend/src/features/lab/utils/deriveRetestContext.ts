@@ -9,7 +9,10 @@ export interface TestRetestContext {
   retestNumber: number;
   isSampleRecollection: boolean;
   sampleRecollectionAttempt: number;
+  /** Matches collection cards: show Attempt N/M in the operational meta row */
+  showAttemptInMeta: boolean;
   showAttemptIndicator: boolean;
+  /** 1-based UI slot (original run = 1, first re-test = 2, …) — same scale as recollectionAttempt */
   attemptNumber: number;
   attemptMax: number;
   attemptType: 'retest' | 'recollection';
@@ -24,8 +27,11 @@ export function deriveRetestContext(test: TestWithContext): TestRetestContext {
   const isSampleRecollection = test.sampleIsRecollection === true;
   const sampleRecollectionAttempt = test.sampleRecollectionAttempt ?? 1;
 
-  const showAttemptIndicator = isRetest || isSampleRecollection;
-  const attemptNumber = isRetest ? retestNumber || 1 : sampleRecollectionAttempt;
+  const attemptNumber = isRetest ? retestNumber + 1 : sampleRecollectionAttempt;
+  const showAttemptInMeta =
+    attemptNumber > 1 &&
+    (isRetest || (isSampleRecollection && !isRetest));
+  const showAttemptIndicator = showAttemptInMeta;
   const attemptMax = isRetest
     ? LAB_CONFIG.MAX_RETEST_ATTEMPTS
     : LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS;
@@ -36,6 +42,7 @@ export function deriveRetestContext(test: TestWithContext): TestRetestContext {
     retestNumber,
     isSampleRecollection,
     sampleRecollectionAttempt,
+    showAttemptInMeta,
     showAttemptIndicator,
     attemptNumber,
     attemptMax,

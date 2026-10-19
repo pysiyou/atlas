@@ -58,22 +58,44 @@ export function DialogHeader({
   const titleLine = (
     <TitleTag
       id={titleId}
-      className={
-        size === 'modal'
-          ? badges != null
-            ? cn(TYPE.modalTitle, 'leading-snug inline')
-            : TITLE_CLASS.modal
-          : TITLE_CLASS[size]
-      }
+      className={size === 'modal' ? TITLE_CLASS.modal : TITLE_CLASS[size]}
       title={typeof title === 'string' ? title : undefined}
     >
       {title}
     </TitleTag>
   );
 
+  const hasSubtitle = subtitle != null && subtitle !== false;
+  const hasBadges = badges != null && badges !== false;
+  const subtitleRowClass =
+    size === 'modal'
+      ? 'inline-flex min-w-0 max-w-full items-center gap-space-2 overflow-hidden'
+      : 'inline-flex min-w-0 flex-wrap items-baseline gap-space-2';
+
   const subtitleLine =
-    subtitle != null && subtitle !== false ? (
-      <div className={SUBTITLE_CLASS[size]}>{subtitle}</div>
+    hasSubtitle || hasBadges ? (
+      <div className={cn(SUBTITLE_CLASS[size], size === 'modal' && 'min-w-0 overflow-hidden')}>
+        <span className={subtitleRowClass}>
+          {hasSubtitle ? (
+            <span
+              className={cn(
+                size === 'modal' && 'min-w-0 max-w-full overflow-hidden',
+                size === 'modal' && typeof subtitle === 'string' && 'truncate',
+              )}
+            >
+              {subtitle}
+            </span>
+          ) : null}
+          {hasBadges ? (
+            <>
+              {hasSubtitle ? (
+                <span className="shrink-0 text-text-tertiary" aria-hidden="true">-</span>
+              ) : null}
+              <span className="inline-flex shrink-0 items-center gap-space-1">{badges}</span>
+            </>
+          ) : null}
+        </span>
+      </div>
     ) : null;
 
   const titleBlock = (
@@ -99,12 +121,7 @@ export function DialogHeader({
       {size === 'modal' ? (
         <div className={DIALOG.modalHeaderGrid}>
           <div className={DIALOG.modalTitleStack}>
-            <div className={DIALOG.modalTitleFirstLine}>
-              {titleLine}
-              {badges != null ? (
-                <span className={DIALOG.modalBadgeInline}>{badges}</span>
-              ) : null}
-            </div>
+            <div className={DIALOG.modalTitleFirstLine}>{titleLine}</div>
             {subtitleLine}
           </div>
           <div className={DIALOG.modalCloseColumn}>

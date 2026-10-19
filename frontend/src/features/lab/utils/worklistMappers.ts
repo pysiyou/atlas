@@ -109,6 +109,8 @@ export function mapEntryWorklistToOrderTestContext(item: EntryWorklistItem): Tes
     orderDate: item.orderDate,
     collectedAt: item.collectedAt ?? undefined,
     isRetest: item.isRetest,
+    retestOfTestId: item.retestOfTestId ?? undefined,
+    retestNumber: item.retestNumber,
     allowedActions: item.allowedActions,
     denyReason: item.denyReason ?? null,
     denyMessage: item.denyMessage ?? null,

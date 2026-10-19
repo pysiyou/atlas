@@ -16,6 +16,8 @@ import { ModalType, useModal } from '@/lib/context/ModalContext';
 import { getTestNames } from '@/features/catalog/testLookup';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { deriveCollectionModalFields } from './detailModal.sampleCollection.derive';
+import { Modal } from '@/components/overlays';
+import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { SampleCollectionDetailModalView } from './detailModal.sampleCollection.view';
 
 interface CollectionDetailModalProps {
@@ -50,7 +52,7 @@ export const SampleCollectionDetailModal: React.FC<CollectionDetailModalProps> =
   const [isPopoverSubmitting, setIsPopoverSubmitting] = useState(false);
 
   const cachedSample = sampleId ? getSample(sampleId) : undefined;
-  const { data: fetchedSample } = useQuery({
+  const { data: fetchedSample, isLoading: isFetchingSample } = useQuery({
     queryKey: queryKeys.samples.byId(sampleId ?? ''),
     queryFn: () => sampleAPI.getById(sampleId!),
     enabled: isOpen && !!sampleId && !cachedSample,
@@ -79,7 +81,16 @@ export const SampleCollectionDetailModal: React.FC<CollectionDetailModalProps> =
     [openModal, readOnly]
   );
 
-  if (!sample) return null;
+  if (!sample) {
+    if (isOpen && sampleId && isFetchingSample) {
+      return (
+        <Modal isOpen={isOpen} onClose={onClose} title="Sample" size="3xl">
+          <DetailPageSkeleton variant="responsive-detail" />
+        </Modal>
+      );
+    }
+    return null;
+  }
 
   const fields = deriveCollectionModalFields(
     sample,

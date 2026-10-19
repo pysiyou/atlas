@@ -24,9 +24,9 @@ import { EmergencyContactSection } from './EmergencyContactSection';
 import { AffiliationSection } from './AffiliationSection';
 import { MedicalHistorySection } from './MedicalHistorySection';
 import { VitalsSection } from './VitalsSection';
+import { Panel } from '@/components/surfaces';
 import { usePatientFormAdapter } from '../hooks/usePatientFormAdapter';
 import { createFormDataAdapter, createErrorsAdapter } from '../utils/formTransformers';
-import { FORM_TAB_TITLE, TYPE } from '@/components/theme/recipes';
 
 
 export interface PatientFormTabsProps {
@@ -83,65 +83,40 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
   switch (activeTab) {
     case 'general':
       return (
-        <div className="space-y-space-8">
-          <div className="space-y-space-6">
-            <div className="pb-space-1">
-              <div className={`${TYPE.meta} font-normal uppercase tracking-wide mb-space-1`}>
-                General
-              </div>
-              <div className={`${FORM_TAB_TITLE} text-text-primary`}>Identity &amp; Contact</div>
-            </div>
+        <div className="space-y-space-6">
+          <Panel title="Identity & Contact" scroll="visible" spacing="normal">
             <DemographicsSection
               formData={formData}
               errors={flatErrors}
               onFieldChange={onFieldChange}
             />
             <AddressSection formData={formData} errors={flatErrors} onFieldChange={onFieldChange} />
-          </div>
-
-          <div className="border-t border-border-default pt-space-6 space-y-space-6">
-            <div className="pb-space-1">
-              <div className={`${TYPE.meta} font-normal uppercase tracking-wide mb-space-1`}>
-                Primary Contact
-              </div>
-              <div className={`${FORM_TAB_TITLE} text-text-primary`}>Emergency Contact</div>
-            </div>
+          </Panel>
+          <Panel title="Emergency Contact" scroll="visible" spacing="normal">
             <EmergencyContactSection
               formData={formData}
               errors={flatErrors}
               onFieldChange={onFieldChange}
             />
-          </div>
+          </Panel>
         </div>
       );
 
     case 'medical':
       return (
-        <div className="space-y-space-6">
-          <div className="pb-space-1">
-            <div className={`${TYPE.meta} font-normal uppercase tracking-wide mb-space-1`}>
-              Medical Background
-            </div>
-            <div className={`${FORM_TAB_TITLE} text-text-primary`}>
-              History, Conditions &amp; Lifestyle
-            </div>
-          </div>
+        <Panel title="History, Conditions & Lifestyle" scroll="visible" spacing="normal">
           <MedicalHistorySection formData={formData} onFieldChange={onFieldChange} />
-        </div>
+        </Panel>
       );
 
     case 'vitals':
       return (
-        <div className="space-y-space-6">
-          <div className="pb-space-1">
-            <div className={`${TYPE.meta} font-normal uppercase tracking-wide mb-space-1`}>
-              Vitals
-            </div>
-            <div className={`${FORM_TAB_TITLE} text-text-primary`}>Measurements</div>
-            <div className={`${TYPE.meta} mt-space-1-5 leading-relaxed`}>
-              Fill any vitals you have. Hints show typical ranges.
-            </div>
-          </div>
+        <Panel
+          title="Measurements"
+          meta="Fill any vitals you have. Hints show typical ranges."
+          scroll="visible"
+          spacing="normal"
+        >
           <VitalsSection
             vitalSigns={{
               temperature: formData.temperature,
@@ -155,21 +130,17 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
             onFieldChange={onFieldChange}
             emptyKeysReadOnly={emptyVitalKeysReadOnly}
           />
-        </div>
+        </Panel>
       );
 
     case 'affiliation':
       return (
-        <div className="space-y-space-6">
-          <div className="pb-space-1">
-            <div className={`${TYPE.meta} font-normal uppercase tracking-wide mb-space-1`}>
-              Affiliation
-            </div>
-            <div className={`${FORM_TAB_TITLE} text-text-primary`}>Select Your Plan</div>
-            <div className={`${TYPE.meta} mt-space-1-5 leading-relaxed`}>
-              Choose a duration and pricing that works for you
-            </div>
-          </div>
+        <Panel
+          title="Select Your Plan"
+          meta="Choose a duration and pricing that works for you"
+          scroll="visible"
+          spacing="normal"
+        >
           <AffiliationSection
             formData={formData}
             errors={flatErrors}
@@ -177,7 +148,7 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
             existingAffiliation={existingAffiliation}
             onRenew={() => {}}
           />
-        </div>
+        </Panel>
       );
 
     default:

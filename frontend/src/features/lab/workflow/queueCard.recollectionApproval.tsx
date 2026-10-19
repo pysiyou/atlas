@@ -2,10 +2,12 @@
  * Supervisor recollection approval queue card — desktop/mobile, left header, review body.
  */
 
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Card } from '@/components/surfaces';
 import { cn } from '@/utils';
+import { ModalType, useModal } from '@/lib/context/ModalContext';
 import type { RecollectionRequestSummary } from '@/types/lab-operations';
+import { useLabWorkflowCardClickGuard } from '../hooks';
 import { LAB_MOBILE_CARD } from '../utils/labStyles';
 import { QueueCard, QueueCardMobile } from './queueCardLayout';
 import {
@@ -32,6 +34,7 @@ function RecollectionRequestCardDesktop({
   isDenying,
   reviewNotes,
   onReviewNotesChange,
+  onCardClick,
 }: {
   request: RecollectionRequestSummary;
   onApprove: RecollectionRequestCardProps['onApprove'];
@@ -40,6 +43,7 @@ function RecollectionRequestCardDesktop({
   isDenying?: boolean;
   reviewNotes: string;
   onReviewNotesChange: (value: string) => void;
+  onCardClick: (e?: React.MouseEvent) => void;
 }) {
   const leftColumn = useMemo(
     () => <RecollectionRequestCardLeftColumn request={request} />,
@@ -48,6 +52,7 @@ function RecollectionRequestCardDesktop({
 
   return (
     <QueueCard
+      onClick={onCardClick}
       className={request.requiresSupervisorOverride ? 'border-warning-stroke-emphasis' : ''}
       leftColumn={leftColumn}
       badges={<RecollectionRequestBadges request={request} />}
@@ -82,6 +87,7 @@ function RecollectionRequestCardMobile({
   isDenying,
   reviewNotes,
   onReviewNotesChange,
+  onCardClick,
 }: {
   request: RecollectionRequestSummary;
   onApprove: RecollectionRequestCardProps['onApprove'];
@@ -90,6 +96,7 @@ function RecollectionRequestCardMobile({
   isDenying?: boolean;
   reviewNotes: string;
   onReviewNotesChange: (value: string) => void;
+  onCardClick: (e?: React.MouseEvent) => void;
 }) {
   const leftColumn = useMemo(
     () => <RecollectionRequestCardLeftColumn request={request} />,
@@ -104,6 +111,7 @@ function RecollectionRequestCardMobile({
         LAB_MOBILE_CARD.surface,
         request.requiresSupervisorOverride && 'border-warning-stroke-emphasis'
       )}
+      onClick={onCardClick}
     >
       <QueueCardMobile
         leftColumn={leftColumn}
@@ -141,6 +149,16 @@ export const SampleRecollectionRequestCard: React.FC<RecollectionRequestCardProp
   isMobile = false,
 }) => {
   const [reviewNotes, setReviewNotes] = useState('');
+  const { openModal } = useModal();
+
+  const openRequestDetail = useCallback(() => {
+    openModal(ModalType.SAMPLE_DETAIL, {
+      sampleId: String(request.rejectedSampleId),
+      readOnly: true,
+    });
+  }, [openModal, request.rejectedSampleId]);
+
+  const onCardClick = useLabWorkflowCardClickGuard(openRequestDetail);
 
   if (isMobile) {
     return (
@@ -152,6 +170,7 @@ export const SampleRecollectionRequestCard: React.FC<RecollectionRequestCardProp
         isDenying={isDenying}
         reviewNotes={reviewNotes}
         onReviewNotesChange={setReviewNotes}
+        onCardClick={onCardClick}
       />
     );
   }
@@ -165,6 +184,7 @@ export const SampleRecollectionRequestCard: React.FC<RecollectionRequestCardProp
       isDenying={isDenying}
       reviewNotes={reviewNotes}
       onReviewNotesChange={setReviewNotes}
+      onCardClick={onCardClick}
     />
   );
 };

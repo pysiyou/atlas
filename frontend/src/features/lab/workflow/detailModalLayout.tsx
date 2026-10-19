@@ -6,7 +6,7 @@
 import React, { type ReactNode } from 'react';
 import { Modal, DialogFooter } from '@/components/overlays';
 import { Panel } from '@/components/surfaces';
-import { DetailFieldGroup, FooterInfo } from '@/components/display';
+import { DetailFieldGroup, FooterInfo, ModalContextSubtitle } from '@/components/display';
 import { MODULE_ICONS } from '@/config/icons';
 import type { DetailFieldConfig } from '@/components/display';
 import { useUserLookup } from '@/lib/api/users';
@@ -26,7 +26,6 @@ export interface QueueModalShellProps {
   title: string | React.ReactNode;
   subtitle: string | React.ReactNode;
   modalKey?: string;
-  headerBadges: ReactNode;
   headerMeta?: ReactNode;
   contextInfo?: LabWorkflowModalContext;
   headerAudit?: LabAuditLine[];
@@ -44,7 +43,6 @@ export const QueueModalShell: React.FC<QueueModalShellProps> = ({
   title,
   subtitle,
   modalKey,
-  headerBadges,
   headerMeta,
   contextInfo,
   headerAudit,
@@ -61,13 +59,6 @@ export const QueueModalShell: React.FC<QueueModalShellProps> = ({
       onClose={onClose}
       title={title}
       subtitle={subtitle}
-      badges={
-        headerBadges ? (
-          <LabHeaderCompactContext.Provider value={false}>
-            {headerBadges}
-          </LabHeaderCompactContext.Provider>
-        ) : undefined
-      }
       size="3xl"
       disableClose={disableClose}
     >
@@ -188,6 +179,32 @@ export function labModalStageLabel(stage: LabModalStage): string {
   return stage === 'escalation' ? LAB_COPY.workflow.escalation : labStageLabel(stage, 'full');
 }
 
+/** Modal title + context line for lab workflow detail modals (matches report preview chrome). */
+export function labModalHeaderContext({
+  stage,
+  contextLabel,
+  orderId,
+  badges,
+}: {
+  stage: LabModalStage;
+  contextLabel: string;
+  orderId: string | number;
+  badges?: ReactNode;
+}): { title: string; subtitle: ReactNode } {
+  const wrappedBadges =
+    badges != null ? (
+      <LabHeaderCompactContext.Provider value={false}>{badges}</LabHeaderCompactContext.Provider>
+    ) : undefined;
+
+  return {
+    title: labModalStageLabel(stage),
+    subtitle: (
+      <ModalContextSubtitle label={contextLabel} orderId={orderId} badges={wrappedBadges} />
+    ),
+  };
+}
+
+/** @deprecated Use labModalHeaderContext — stage label now lives on the title line. */
 export function labModalSubtitle(stage: LabModalStage): React.ReactNode {
   return (
     <span className={`${TYPE.caption} uppercase tracking-widest font-light`}>

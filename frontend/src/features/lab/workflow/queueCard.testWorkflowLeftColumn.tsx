@@ -169,7 +169,7 @@ function TestWorkflowOperationsRow({
         <span>{flagCount} flag{flagCount !== 1 ? 's' : ''}</span>
       ) : null}
       {variant === 'escalation' && reasonCode ? <span>Reason: {reasonCode}</span> : null}
-      {showAttempt && attemptNumber > 1 ? (
+      {showAttempt ? (
         <span className={attemptNumber >= attemptMax - 1 ? 'text-warning-fg' : undefined}>
           Attempt {attemptNumber}/{attemptMax}
         </span>

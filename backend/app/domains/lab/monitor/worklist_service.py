@@ -444,6 +444,8 @@ class LabWorklistService:
                     "waitingHours": round(hours, 2),
                     "turnaroundHours": test.turnaroundTimeHours,
                     "isRetest": bool(ot.isRetest),
+                    "retestOfTestId": ot.retestOfTestId,
+                    "retestNumber": ot.retestNumber or 0,
                     "referringPhysician": order.referringPhysician,
                     "testCategory": test.category,
                     **work_item_fields,

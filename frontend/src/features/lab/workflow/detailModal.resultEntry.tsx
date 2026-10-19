@@ -12,7 +12,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { CircularProgress } from '@/components/primitives';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
-import { QueueModalShell, labModalSubtitle } from './detailModalLayout';
+import { QueueModalShell, labModalHeaderContext } from './detailModalLayout';
 import { LabEventLogPanel } from '@/features/audit';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { usePatientNameLookup } from '@/features/patients';
@@ -138,6 +138,12 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
 
   const patientName = getPatientName(test.patientId);
   const headerBadges = <TestHeaderBadges test={test} variant="entry" showStatus />;
+  const { title: modalTitle, subtitle: modalSubtitle } = labModalHeaderContext({
+    stage: 'entry',
+    contextLabel: test.testName,
+    orderId: test.orderId,
+    badges: headerBadges,
+  });
   const headerLeftColumn = (
     <TestWorkflowCardLeftColumn
       test={test}
@@ -155,11 +161,10 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
     <QueueModalShell
       isOpen={isOpen}
       onClose={onClose}
-      title={test.testName}
-      subtitle={labModalSubtitle('entry')}
+      title={modalTitle}
+      subtitle={modalSubtitle}
       modalKey={readOnly ? `historical-${test.id}` : resultKey}
       disableClose={isSaving}
-      headerBadges={headerBadges}
       headerLeftColumn={headerLeftColumn}
       footer={
         <EntryDetailModalFooter

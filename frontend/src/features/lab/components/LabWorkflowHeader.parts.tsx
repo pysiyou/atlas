@@ -69,7 +69,7 @@ export function LabAuditLineView({
       );
     case 'recollection-lineage':
       return (
-        <span className={cn(base, compact && tone === 'card' && 'hidden md:inline')}>
+        <span className={base}>
           <span>Recollection of </span>
           <EntityId type="sample" value={line.sampleId} variant="inline" />
           {line.collectedAt ? (
@@ -84,14 +84,14 @@ export function LabAuditLineView({
       );
     case 'retest-lineage':
       return (
-        <span className={cn(base, compact && tone === 'card' && 'hidden md:inline')}>
+        <span className={base}>
           <span>Re-test of </span>
           <EntityId type="orderTest" value={line.orderTestId} variant="inline" />
         </span>
       );
     case 'test-recollection-lineage':
       return (
-        <span className={cn(base, compact && tone === 'card' && 'hidden md:inline')}>
+        <span className={base}>
           <span>Recollection of </span>
           <EntityId type="sample" value={line.sampleId} variant="inline" />
         </span>

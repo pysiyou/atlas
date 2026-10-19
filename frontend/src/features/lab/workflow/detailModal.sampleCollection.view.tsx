@@ -3,9 +3,8 @@
  */
 
 import { actionButtonPreset, Button } from '@/components/primitives';
-import { EntityId } from '@/components/display';
 import type { ContainerType, Order, Sample, Test } from '@/types';
-import { ModalFooter, QueueModalShell, labModalSubtitle } from './detailModalLayout';
+import { ModalFooter, QueueModalShell, labModalHeaderContext } from './detailModalLayout';
 import { CollectionHeaderBadges } from '../components/LabWorkflowBadges';
 import { SampleCollectionCardLeftColumn } from './queueCard.sampleCollection.leftColumn.helpers';
 import { LabRelatedSamplesPanel } from '../components/LabRelatedWorkflowPanel';
@@ -83,6 +82,12 @@ export function SampleCollectionDetailModalView({
       statusPresentation={pendingSampleDisplay?.statusPresentation}
     />
   );
+  const { title: modalTitle, subtitle: modalSubtitle } = labModalHeaderContext({
+    stage: 'collection',
+    contextLabel: patientName,
+    orderId: sample.orderId,
+    badges: headerBadges,
+  });
 
   const headerLeftColumn = (
     <SampleCollectionCardLeftColumn
@@ -128,9 +133,8 @@ export function SampleCollectionDetailModalView({
       isOpen={isOpen}
       onClose={onClose}
       disableClose={isPopoverSubmitting}
-      title={<EntityId type="sample" value={sample.sampleId} />}
-      subtitle={labModalSubtitle('collection')}
-      headerBadges={headerBadges}
+      title={modalTitle}
+      subtitle={modalSubtitle}
       headerLeftColumn={headerLeftColumn}
       footer={
         readOnly ? (

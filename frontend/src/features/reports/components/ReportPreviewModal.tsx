@@ -7,7 +7,7 @@
 import React from 'react';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Modal, DialogFooter } from '@/components/overlays';
-import { EntityId, FooterInfo } from '@/components/display';
+import { FooterInfo, ModalContextSubtitle } from '@/components/display';
 import type { LabReportPayload } from '../types';
 import { MODULE_ICONS } from '@/config/icons';
 import { ReportPreviewResults } from './ReportPreviewResults';
@@ -33,11 +33,10 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
       onClose={onClose}
       title="Report Preview"
       subtitle={
-        <span className="inline-flex min-w-0 items-baseline gap-space-2">
-          <span className="truncate">{reportData.patientName}</span>
-          <span aria-hidden="true">-</span>
-          <EntityId type="order" value={reportData.order.orderId} />
-        </span>
+        <ModalContextSubtitle
+          label={reportData.patientName}
+          orderId={reportData.order.orderId}
+        />
       }
       size="3xl"
       disableClose={isGenerating}

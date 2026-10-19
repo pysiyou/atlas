@@ -77,6 +77,8 @@ class EntryWorklistItem(BaseModel):
     waitingHours: float
     turnaroundHours: int
     isRetest: bool
+    retestOfTestId: int | None = None
+    retestNumber: int = 0
     referringPhysician: str | None = None
     testCategory: str | None = None
     attentionReason: str | None = None

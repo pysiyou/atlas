@@ -105,7 +105,7 @@ export function TestRejectionTailMeta({ test }: { test: TestWithContext }) {
         <span>
           Re-test of <EntityId type="orderTest" value={test.retestOfTestId} variant="inline" />
         </span>
-        {ctx.showAttemptIndicator && ctx.attemptNumber > 1 ? (
+        {ctx.showAttemptInMeta ? (
           <span className={ctx.attemptNumber >= ctx.attemptMax - 1 ? TONE.warning.fg : undefined}>
             Attempt {ctx.attemptNumber}/{ctx.attemptMax}
           </span>
@@ -120,7 +120,7 @@ export function TestRejectionTailMeta({ test }: { test: TestWithContext }) {
           Recollection of{' '}
           <EntityId type="sample" value={test.sampleOriginalSampleId} variant="inline" />
         </span>
-        {ctx.showAttemptIndicator && ctx.attemptNumber > 1 ? (
+        {ctx.showAttemptInMeta ? (
           <span className={ctx.attemptNumber >= ctx.attemptMax - 1 ? TONE.warning.fg : undefined}>
             Attempt {ctx.attemptNumber}/{ctx.attemptMax}
           </span>
@@ -128,7 +128,7 @@ export function TestRejectionTailMeta({ test }: { test: TestWithContext }) {
       </LabCardMetaRow>
     );
   }
-  if (ctx.showAttemptIndicator && ctx.attemptNumber > 1) {
+  if (ctx.showAttemptInMeta) {
     const typeLabel = ctx.attemptType === 'retest' ? 'Re-test' : 'Recollection';
     return (
       <LabCardMetaRow>
