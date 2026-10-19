@@ -66,7 +66,6 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
           </form>
         </div>
         <FormDialogFooter
-          onClose={onClose}
           submitLabel={submitLabel}
           isSubmitting={isSubmitting || isProcessingPayment}
           formId="order-form"

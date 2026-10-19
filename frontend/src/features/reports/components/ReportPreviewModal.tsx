@@ -1,7 +1,6 @@
 /**
  * Report Preview Modal
  * Preview lab report before generating PDF
- * Uses consistent modal structure matching other detail modals
  */
 
 import React from 'react';
@@ -49,9 +48,6 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
           start={<FooterInfo icon={MODULE_ICONS.reports} label="Reports" size="md" />}
           end={
             <>
-              <Button {...actionButtonPreset('cancel')} size="md" layout="icon-text" onClick={onClose} disabled={isGenerating}>
-                Close
-              </Button>
               <Button
                 {...actionButtonPreset('download')}
                 size="md"

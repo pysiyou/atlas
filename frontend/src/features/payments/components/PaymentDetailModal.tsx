@@ -4,7 +4,7 @@
  * Modal that uses the same BillingSummarySection as order details, plus payment actions when unpaid.
  */
 import React, { useState, useCallback } from 'react';
-import { actionButtonPreset, Icon, Button } from '@/components/primitives';
+import { Icon, Button } from '@/components/primitives';
 import { Modal, DialogFooter } from '@/components/overlays';
 import { FooterInfo, ModalContextSubtitle } from '@/components/display';
 import { ErrorBoundary } from '@/components/loaders';
@@ -38,36 +38,28 @@ interface PaymentDetailModalProps {
 const PAYMENT_METHODS = getEnabledPaymentMethods();
 
 const PaymentDetailFooter: React.FC<{
-  isPaid: boolean; submitting: boolean; paymentsLoading: boolean; remainingAmount: number;
-  onClose: () => void; onPay: () => void;
-}> = ({ isPaid, submitting, paymentsLoading, remainingAmount, onClose, onPay }) => (
+  isPaid: boolean;
+  submitting: boolean;
+  paymentsLoading: boolean;
+  remainingAmount: number;
+  onPay: () => void;
+}> = ({ isPaid, submitting, paymentsLoading, remainingAmount, onPay }) => (
   <DialogFooter
     start={<FooterInfo icon={MODULE_ICONS.payments} label="Payments" size="md" />}
     end={
-      <>
+      !isPaid ? (
         <Button
-          {...actionButtonPreset('cancel')}
+          variant="primary"
           size="md"
           layout="icon-text"
-          onClick={onClose}
-          disabled={submitting}
+          onClick={onPay}
+          disabled={submitting || paymentsLoading || remainingAmount <= 0}
+          isLoading={submitting}
+          icon={<Icon name={ICONS.dataFields.wallet} />}
         >
-          {isPaid ? 'Close' : 'Cancel'}
+          {`Pay ${formatCurrency(remainingAmount)}`}
         </Button>
-        {!isPaid && (
-          <Button
-            variant="primary"
-            size="md"
-            layout="icon-text"
-            onClick={onPay}
-            disabled={submitting || paymentsLoading || remainingAmount <= 0}
-            isLoading={submitting}
-            icon={<Icon name={ICONS.dataFields.wallet} />}
-          >
-            {`Pay ${formatCurrency(remainingAmount)}`}
-          </Button>
-        )}
-      </>
+      ) : null
     }
   />
 );
@@ -188,7 +180,6 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
             submitting={submitting}
             paymentsLoading={paymentsLoading}
             remainingAmount={remainingAmount}
-            onClose={onClose}
             onPay={handlePayment}
           />
         </div>

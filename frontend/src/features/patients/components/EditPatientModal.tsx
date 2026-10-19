@@ -89,7 +89,6 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
             </form>
           </div>
           <FormDialogFooter
-            onClose={onClose}
             submitLabel={submitLabel}
             isSubmitting={isSubmitting}
             formId="patient-form"

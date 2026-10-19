@@ -4,8 +4,7 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { actionButtonPreset, Button } from '@/components/primitives';
-import { QueueModalShell, ModalFooter } from './detailModalLayout';
+import { QueueModalShell } from './detailModalLayout';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { usePatientNameLookup } from '@/features/patients';
 import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';
@@ -106,11 +105,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
       headerLeftColumn={headerLeftColumn}
       disableClose={resolving}
       footer={
-        readOnly ? (
-          <ModalFooter statusMessage="">
-            <Button onClick={onClose} {...actionButtonPreset('cancel')} size="md" layout="icon-text">Close</Button>
-          </ModalFooter>
-        ) : (
+        readOnly ? undefined : (
           <EscalationResolutionFooter
             orderTestId={test.id}
             canResolveEscalation={canResolveEscalation}

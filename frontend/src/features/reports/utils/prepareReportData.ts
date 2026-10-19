@@ -135,6 +135,8 @@ function buildTestResultEntry(
   return {
     testCode: test.testCode,
     testName: test.testName,
+    category: catalogTest?.category ?? 'Uncategorized',
+    methodology: catalogTest?.methodology?.trim() || undefined,
     parameters: buildParameterRows(test, catalogTest),
     technicianNotes: test.technicianNotes,
     validationNotes: test.validationNotes,
@@ -214,11 +216,12 @@ export function prepareReportData({
 export async function downloadLabReport(
   reportableOrder: ReportableOrder,
   reportData: LabReportPayload,
-  generateLabReport: (data: LabReportPayload) => jsPDF | Promise<jsPDF>,
+  catalogTests: Test[],
+  generateLabReport: (data: LabReportPayload, catalogTests: Test[]) => jsPDF | Promise<jsPDF>,
   downloadPDF: (doc: jsPDF, filename: string) => void,
   formatDate: (date: Date) => string
 ): Promise<void> {
-  const doc = await generateLabReport(reportData);
+  const doc = await generateLabReport(reportData, catalogTests);
   const filename = `Lab_Report_ORD${reportableOrder.orderId.toString().padStart(6, '0')}_${formatDate(new Date())}.pdf`;
   downloadPDF(doc, filename);
 }

@@ -149,24 +149,25 @@ export function TestDetailModalFooter({
     );
   }
 
+  if (!labUrl) {
+    return (
+      <ModalFooter statusMessage={orderTest?.lab?.denyMessage ?? ''} />
+    );
+  }
+
   return (
     <ModalFooter statusMessage={orderTest?.lab?.denyMessage ?? ''}>
-      <Button onClick={onClose} {...actionButtonPreset('cancel')} size="md" layout="icon-text">
-        Close
+      <Button
+        variant="primary"
+        size="md"
+        layout="icon-text"
+        onClick={() => {
+          onClose();
+          navigate(labUrl);
+        }}
+      >
+        Open in lab
       </Button>
-      {labUrl ? (
-        <Button
-          variant="primary"
-          size="md"
-          layout="icon-text"
-          onClick={() => {
-            onClose();
-            navigate(labUrl);
-          }}
-        >
-          Open in lab
-        </Button>
-      ) : null}
     </ModalFooter>
   );
 }

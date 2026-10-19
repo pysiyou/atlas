@@ -17,7 +17,6 @@ export function EntryDetailModalFooter({
   isComplete,
   canEnter,
   denyMessage,
-  onClose,
   onSave,
 }: {
   readOnly: boolean;
@@ -25,29 +24,13 @@ export function EntryDetailModalFooter({
   isComplete: boolean;
   canEnter: boolean;
   denyMessage?: string | null;
-  onClose: () => void;
   onSave: () => void;
 }) {
   if (readOnly) {
-    return (
-      <ModalFooter statusMessage="">
-        <Button onClick={onClose} {...actionButtonPreset('cancel')} size="md" layout="icon-text">
-          Close
-        </Button>
-      </ModalFooter>
-    );
+    return null;
   }
   return (
     <ModalFooter statusMessage={!canEnter && denyMessage ? denyMessage : ''}>
-      <Button
-        onClick={onClose}
-        {...actionButtonPreset('cancel')}
-        size="md"
-        layout="icon-text"
-        disabled={isSaving}
-      >
-        Cancel
-      </Button>
       <Button
         onClick={onSave}
         {...actionButtonPreset('save')}
