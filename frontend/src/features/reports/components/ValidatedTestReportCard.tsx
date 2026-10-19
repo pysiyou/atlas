@@ -4,7 +4,7 @@
  * Custom mobile card component for report data in table view.
  * Displays reportable-order information in a mobile-friendly card layout.
  */
-import { Avatar, Badge } from '@/components/primitives';
+import { Avatar } from '@/components/primitives';
 import { MobileEntityCard } from '@/components/surfaces';
 import { EntityId } from '@/components/display';
 import type { CardComponentProps } from '@/components/data-table';
@@ -31,13 +31,7 @@ interface ValidatedTestReportCardProps extends CardComponentProps<ReportableOrde
 export function ValidatedTestReportCard({ item: order, onClick, onPreview }: ValidatedTestReportCardProps) {
   const tests = getActiveOrderTests(order.order);
   const testNames = tests.map(test => test.testName).join(', ') || `${order.activeTestCount} test(s)`;
-  const badgeLabel = `${order.activeTestCount} tests · ${order.validatedTestCount} validated`;
-  const badgeVariant =
-    order.activeTestCount > 0 && order.validatedTestCount === order.activeTestCount
-      ? 'success'
-      : order.validatedTestCount > 0
-        ? 'warning'
-        : 'neutral';
+  const statusLabel = `${order.validatedTestCount}/${order.activeTestCount}`;
 
   return (
     <MobileEntityCard onClick={onClick}>
@@ -50,7 +44,7 @@ export function ValidatedTestReportCard({ item: order, onClick, onPreview }: Val
             size="xs"
           />
         }
-        trailing={<Badge variant={badgeVariant} label={badgeLabel} size="xs" />}
+        trailing={<span className={`${TYPE.label} tabular-nums`}>{statusLabel}</span>}
       />
 
       <div className="grow space-y-space-2">

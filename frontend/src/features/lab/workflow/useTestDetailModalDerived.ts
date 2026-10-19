@@ -48,7 +48,9 @@ export function useTestDetailModalDerived({
   const modalKey = isValidate && validation ? validation.commentKey : `test-detail-${orderTestId}`;
   const comments = isValidate && validation ? validation.comments : (orderTest?.validationNotes ?? '');
   const commentKey = validation?.commentKey ?? '';
-  const resultsPanelTitle = isValidate ? 'Result Validation' : 'Recorded Results';
+  const resultsPanelPreset = isValidate
+    ? ('lab.modal.resultValidation' as const)
+    : ('lab.modal.recordedResults' as const);
 
   return {
     hasResults,
@@ -57,6 +59,6 @@ export function useTestDetailModalDerived({
     modalKey,
     comments,
     commentKey,
-    resultsPanelTitle,
+    resultsPanelPreset,
   };
 }

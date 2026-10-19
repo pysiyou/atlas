@@ -73,12 +73,7 @@ export const LabOrdersTable: React.FC = () => {
   const rows = useMemo(() => workToday.items.map(mapWorkTodayRow), [workToday.items]);
 
   return (
-    <Panel
-      hideHeader
-      variant="pageEmbed"
-      className="h-full min-h-0"
-      bodyClassName="flex min-h-0 flex-1 flex-col"
-    >
+    <Panel preset="lab.monitor.ordersTable">
       <DataTable<LabOrderTableRow>
         data={rows}
         viewConfig={viewConfig}

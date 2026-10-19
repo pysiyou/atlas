@@ -22,7 +22,7 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
   getPatientName,
 }) => (
   <Panel
-    title="Recent Orders"
+    preset="dashboard.recentOrders"
     headerEnd={
       <Link to={ROUTES.ORDERS} className={INLINE_LINK}>
         View all

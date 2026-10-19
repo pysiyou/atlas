@@ -45,13 +45,7 @@ export const PaymentDetailModalBody: React.FC<PaymentDetailModalBodyProps> = ({
   paymentMethods,
 }) => (
   <div className="flex-1 overflow-y-auto p-space-6 space-y-space-6">
-    <Panel
-      title="Billing Summary"
-      variant="pageEmbed"
-      scroll="visible"
-      bodyClassName="flex flex-col"
-      className="h-auto shrink-0"
-    >
+    <Panel preset="payment.modal.billing">
       {orderDetailLoading ? (
         <div className="p-panel">
           <SkeletonText lines={6} />

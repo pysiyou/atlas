@@ -60,12 +60,7 @@ export const OrderUpsertFormFields: React.FC<OrderUpsertFormFieldsProps> = ({
   } = modalState;
 
   return (
-    <Panel
-      hideHeader
-      scroll="visible"
-      spacing="none"
-      bodyClassName="space-y-space-6"
-    >
+    <Panel preset="order.form.upsert">
       <Controller
         name="patientId"
         control={control}
@@ -181,17 +176,15 @@ export const OrderUpsertFormFields: React.FC<OrderUpsertFormFieldsProps> = ({
       />
 
       {mode === 'create' ? (
-        <div className="pt-space-6 border-t border-border-default">
-          <OrderPaymentSection
-            mode={mode}
-            paymentMethod={paymentMethod}
-            onPaymentMethodChange={setPaymentMethod}
-            isSubmitting={isSubmitting}
-            isProcessingPayment={isProcessingPayment}
-            paymentError={paymentError}
-            onClearError={() => setPaymentError(null)}
-          />
-        </div>
+        <OrderPaymentSection
+          mode={mode}
+          paymentMethod={paymentMethod}
+          onPaymentMethodChange={setPaymentMethod}
+          isSubmitting={isSubmitting}
+          isProcessingPayment={isProcessingPayment}
+          paymentError={paymentError}
+          onClearError={() => setPaymentError(null)}
+        />
       ) : null}
     </Panel>
   );

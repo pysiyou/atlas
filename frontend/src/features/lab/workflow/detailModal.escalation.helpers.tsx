@@ -37,7 +37,7 @@ function EscalationResultsPanel({
 }) {
   return (
     <ResultValidationPanel
-      title={readOnly ? 'Recorded Results' : 'Result Validation'}
+      preset={readOnly ? 'lab.modal.recordedResults' : 'lab.modal.resultValidation'}
       results={test.results!}
       flags={test.flags}
       testCode={test.testCode}
@@ -60,7 +60,7 @@ function EscalationSummaryPanel({
   rejectionNotes?: string;
 }) {
   return (
-    <Panel variant="lab" title="Escalation Summary">
+    <Panel preset="lab.modal.escalationSummary">
       <p className={TYPE.label}>
         This test was escalated before results were entered. Review the context below and choose
         an action.
@@ -107,7 +107,7 @@ export function EscalationResolutionBody({
       )}
 
       {criticalRecord && (
-        <Panel variant="lab" title="Critical Value Notification">
+        <Panel preset="lab.modal.criticalValueNotification">
           <CriticalValueActions record={criticalRecord} onUpdated={onCriticalValueUpdated} />
         </Panel>
       )}
@@ -117,7 +117,7 @@ export function EscalationResolutionBody({
       <DetailGrid
         sections={[
           {
-            title: 'Collection Information',
+            preset: 'lab.modal.collectionInformation',
             fields: [
               {
                 label: 'Sample ID',
@@ -133,7 +133,7 @@ export function EscalationResolutionBody({
             ],
           },
           {
-            title: 'Result Entry Information',
+            preset: 'lab.modal.resultEntryInformation',
             fields: [
               { label: 'Entered', timestamp: test.resultEnteredAt, user: test.enteredBy },
               {

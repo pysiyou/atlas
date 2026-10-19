@@ -5,7 +5,7 @@
 
 import React, { type ReactNode } from 'react';
 import { Modal, DialogFooter } from '@/components/overlays';
-import { Panel } from '@/components/surfaces';
+import { Panel, type PanelPresetId } from '@/components/surfaces';
 import { DetailFieldGroup, FooterInfo, ModalContextSubtitle } from '@/components/display';
 import { MODULE_ICONS } from '@/config/icons';
 import type { DetailFieldConfig } from '@/components/display';
@@ -88,7 +88,7 @@ export const QueueModalShell: React.FC<QueueModalShellProps> = ({
 };
 
 export interface DetailGridSectionConfig {
-  title: string;
+  preset: PanelPresetId;
   fields: DetailFieldConfig[];
   headerEnd?: ReactNode;
 }
@@ -120,9 +120,8 @@ export const DetailGrid: React.FC<DetailGridProps> = ({ children, sections }) =>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-layout-section">
         {visibleSections.map(section => (
           <Panel
-            key={section.title}
-            variant="lab"
-            title={section.title}
+            key={section.preset}
+            preset={section.preset}
             headerEnd={section.headerEnd}
           >
             <DetailFieldGroup fields={section.fields} spacing="tight" resolveUserDisplay={getUserName} />

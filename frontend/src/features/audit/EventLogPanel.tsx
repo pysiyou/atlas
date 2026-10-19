@@ -4,7 +4,7 @@
 import React, { useMemo } from 'react';
 import { Button } from '@/components/primitives';
 import { ErrorAlert, Skeleton } from '@/components/loaders';
-import { Panel } from '@/components/surfaces/Panel';
+import { Panel, type PanelPresetId } from '@/components/surfaces/Panel';
 import { cn } from '@/utils';
 import { errorAlertMessage } from '@/utils/feedback';
 import { EVENT_LOG_COPY } from './types';
@@ -19,12 +19,22 @@ import type {
 } from './types';
 export type EventLogPanelLayout = 'standalone' | 'embedded';
 
+const EVENT_LOG_PRESET: Record<'default' | 'lab' | 'monitor', PanelPresetId> = {
+  default: 'audit.eventLog',
+  lab: 'audit.eventLog.lab',
+  monitor: 'audit.eventLog.monitor',
+};
+
+function eventLogPreset(panelVariant: 'default' | 'lab' | 'monitor'): PanelPresetId {
+  return EVENT_LOG_PRESET[panelVariant];
+}
+
 export interface EventLogPanelProps {
   query: EventLogQuery;
   filterUi?: EventLogFilterUiConfig;
   filterDefaults?: Partial<EventLogUserFilters>;
   className?: string;
-  panelVariant?: 'default' | 'lab';
+  panelVariant?: 'default' | 'lab' | 'monitor';
   /** `embedded` matches list pages (Patients, Orders): no inner panel title, fills raised shell. */
   layout?: EventLogPanelLayout;
   meta?: string;
@@ -170,11 +180,8 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
 
   return (
     <Panel
-      title={EVENT_LOG_COPY.panelTitle}
+      preset={eventLogPreset(panelVariant)}
       meta={panelMeta}
-      scroll="auto"
-      variant={panelVariant === 'lab' ? 'labEmbed' : 'pageEmbed'}
-      className={className}
     >
       {filters}
       {body}
@@ -241,7 +248,7 @@ export const LabMonitorEventLogPanel: React.FC = () => (
   <EventLogPanel
     query={{ scope: 'stream', hours: 24, kinds: ['laboratory'], limit: 500 }}
     filterUi={{ fields: [] }}
-    className="min-h-0 h-full"
+    panelVariant="monitor"
   />
 );
 

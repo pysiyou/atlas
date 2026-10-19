@@ -20,7 +20,7 @@ export const PendingCriticalValuesPanel: React.FC = () => {
 
   if (isLoading) {
     return (
-      <Panel variant="lab" title="Critical Values">
+      <Panel preset="lab.monitor.criticalValues">
         <p className={`${TYPE.meta} py-space-4`}>Loading critical values...</p>
       </Panel>
     );
@@ -32,8 +32,7 @@ export const PendingCriticalValuesPanel: React.FC = () => {
 
   return (
     <Panel
-      variant="lab"
-      title="Critical Values Pending"
+      preset="lab.monitor.criticalValuesPending"
       headerEnd={
         <Badge variant="danger" size={LAB_CARD_BADGE_SIZE}>
           {criticalValues.length}

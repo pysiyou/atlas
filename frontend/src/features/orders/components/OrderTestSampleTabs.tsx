@@ -86,7 +86,7 @@ export const OrderTestSampleTabs: React.FC<OrderTestSampleTabsProps> = ({
 
   if (samples.length === 0) {
     return (
-      <Panel variant="lab" title="Collection Requirements & Instructions">
+      <Panel preset="lab.modal.collectionRequirementsInstructions">
         <p className={TYPE.label}>No sample is linked to this test yet.</p>
         {catalogTest ? <CatalogSampleRequirements catalogTest={catalogTest} /> : null}
       </Panel>
@@ -97,7 +97,7 @@ export const OrderTestSampleTabs: React.FC<OrderTestSampleTabsProps> = ({
     tabs.find(t => t.id === resolvedActiveTabId)?.sample ?? samples[0];
 
   return (
-    <Panel variant="lab" title="Collection Requirements & Instructions" headerEnd={headerEnd}>
+    <Panel preset="lab.modal.collectionRequirementsInstructions" headerEnd={headerEnd}>
       <OrderTestDetailFieldGrid
         columns={splitDetailFieldsIntoTwoColumns(buildSampleFields(activeSample))}
         resolveUserDisplay={getUserName}

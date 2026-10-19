@@ -39,7 +39,7 @@ export function createPatientRelatedOrdersTableConfig(
     ...shared,
     tests: {
       ...shared.tests,
-      width: COLUMN_SIZE.xl,
+      width: COLUMN_SIZE.fill,
       render: (order: Order) => {
         const tests = getActiveTests(order.tests ?? []);
         const count = order.testCount ?? order.tests?.length;

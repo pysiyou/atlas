@@ -13,7 +13,7 @@ const ORDER_CORE_WIDTHS: ResponsiveWidthOverrides = {
   full: {
     orderId: COLUMN_SIZE.sm,
     orderDate: COLUMN_SIZE.md,
-    tests: COLUMN_SIZE.xl,
+    tests: COLUMN_SIZE.fill,
     overallStatus: COLUMN_SIZE.md,
     priority: COLUMN_SIZE.sm,
     paymentStatus: COLUMN_SIZE.sm,
@@ -22,7 +22,7 @@ const ORDER_CORE_WIDTHS: ResponsiveWidthOverrides = {
   medium: {
     orderId: COLUMN_SIZE.sm,
     orderDate: COLUMN_SIZE.md,
-    tests: COLUMN_SIZE.xl,
+    tests: COLUMN_SIZE.fill,
     overallStatus: COLUMN_SIZE.md,
     totalPrice: COLUMN_SIZE.sm,
   },
@@ -36,9 +36,9 @@ const ORDER_CORE_WIDTHS: ResponsiveWidthOverrides = {
 
 function withPatientName(overrides: ResponsiveWidthOverrides): ResponsiveWidthOverrides {
   return {
-    full: { ...overrides.full, patientName: COLUMN_SIZE.lg },
-    medium: { ...overrides.medium, patientName: COLUMN_SIZE.lg },
-    compact: { ...overrides.compact, patientName: COLUMN_SIZE.lg },
+    full: { ...overrides.full, patientName: COLUMN_SIZE.xl },
+    medium: { ...overrides.medium, patientName: COLUMN_SIZE.xl },
+    compact: { ...overrides.compact, patientName: COLUMN_SIZE.xl },
   };
 }
 

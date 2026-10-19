@@ -7,6 +7,7 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 import {
   allRestrictedSyntax,
   designTokenRestrictedSyntax,
+  panelPresetRestrictedSyntax,
   typeUtilityRestrictedSyntax,
 } from './eslint.restricted-syntax.mjs'
 
@@ -236,11 +237,12 @@ export default defineConfig([
     files: ['src/components/**/*.{ts,tsx}', 'src/features/**/*.{ts,tsx}'],
     ignores: [
       'src/components/theme/recipes.ts',
+      'src/components/surfaces/Panel.tsx',
       'src/features/auth/**/*.{ts,tsx}',
       'src/features/lab/collection/SampleCollectionLabelActions.tsx',
     ],
     rules: {
-      'no-restricted-syntax': ['error', ...allRestrictedSyntax, ...typeUtilityRestrictedSyntax],
+      'no-restricted-syntax': ['error', ...allRestrictedSyntax, ...typeUtilityRestrictedSyntax, ...panelPresetRestrictedSyntax],
     },
   },
 ])

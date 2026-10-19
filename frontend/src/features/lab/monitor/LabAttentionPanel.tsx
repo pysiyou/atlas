@@ -198,7 +198,7 @@ export const LabAttentionPanel: React.FC<LabAttentionPanelProps> = ({ items, att
 
   return (
     <Panel
-      title={LAB_COPY.attention.panelTitle}
+      preset="lab.monitor.attention"
       meta={
         items.length > 0
           ? capped
@@ -206,7 +206,6 @@ export const LabAttentionPanel: React.FC<LabAttentionPanelProps> = ({ items, att
             : `${items.length} accessions · ${attentionTotal} tests`
           : LAB_COPY.attention.panelMetaEmpty
       }
-      variant="pageEmbed"
     >
       <AttentionFeed items={items} />
     </Panel>

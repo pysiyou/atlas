@@ -179,7 +179,7 @@ type TestDetailModalBodyProps = {
   validation: TestDetailProps['validation'];
   comments: string;
   commentKey: string;
-  resultsPanelTitle: string;
+  resultsPanelPreset: 'lab.modal.resultValidation' | 'lab.modal.recordedResults';
   onApprove: () => void;
   criticalRecord: CriticalValueRecord | undefined;
   onCriticalValueUpdated: () => void;
@@ -202,7 +202,7 @@ export function TestDetailModalBody({
   validation,
   comments,
   commentKey,
-  resultsPanelTitle,
+  resultsPanelPreset,
   onApprove,
   criticalRecord,
   onCriticalValueUpdated,
@@ -229,7 +229,7 @@ export function TestDetailModalBody({
 
       {hasResults && orderTest?.results ? (
         <ResultValidationPanel
-          title={resultsPanelTitle}
+          preset={resultsPanelPreset}
           results={orderTest.results}
           flags={orderTest.flags}
           testCode={orderTest.testCode}
@@ -246,7 +246,7 @@ export function TestDetailModalBody({
           enableApproveShortcut={isValidate}
         />
       ) : (
-        <Panel variant="lab" title={resultsPanelTitle}>
+        <Panel preset={resultsPanelPreset}>
           <p className={TYPE.label}>
             {orderTest ? formatPipelinePendingMessage(orderTest) : 'Loading test details…'}
           </p>
@@ -254,7 +254,7 @@ export function TestDetailModalBody({
       )}
 
       {isValidate && criticalRecord ? (
-        <Panel variant="lab" title="Critical Value Notification">
+        <Panel preset="lab.modal.criticalValueNotification">
           <CriticalValueActions record={criticalRecord} onUpdated={onCriticalValueUpdated} />
         </Panel>
       ) : null}
@@ -295,7 +295,7 @@ export function buildTestDetailGridSections(
 ): DetailGridSectionConfig[] {
   return [
     {
-      title: 'Workflow',
+      preset: 'lab.modal.workflow',
       fields: buildOrderTestWorkflowFields(orderTest, {
         linked,
         onOpenLinkedTest: options.onOpenLinkedTest,
@@ -303,7 +303,7 @@ export function buildTestDetailGridSections(
       }),
     },
     {
-      title: 'Test overview',
+      preset: 'lab.modal.testOverview',
       fields: buildOrderTestOverviewFields(orderTest, catalogTest, {
         onCatalogNavigate: options.onCatalogNavigate,
       }),

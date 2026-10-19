@@ -31,6 +31,12 @@ function countMeta(count: number): string {
   return String(count);
 }
 
+function RelatedOrdersHeader({ onNewOrder }: { onNewOrder: () => void }) {
+  return (
+    <IconButton onClick={onNewOrder} {...actionButtonPreset('add')} size="sm" title="New Order" />
+  );
+}
+
 /**
  * SmallScreenLayout — single column.
  * Record panels first, then orders, then reports directly underneath.
@@ -43,36 +49,27 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 }) => {
   return (
     <div className={LAYOUT.detailScroll}>
-      <Panel title="General Info" className="shrink-0" scroll="visible">
+      <Panel preset="patient.detail.generalInfo.stack">
         <GeneralInfoSection patient={patient} />
       </Panel>
 
-      <Panel title="Medical History" className="shrink-0" scroll="visible">
+      <Panel preset="patient.detail.medicalHistory.stack">
         <MedicalHistorySectionDisplay patient={patient} />
       </Panel>
 
-      <Panel title="Care Snapshot" className="shrink-0" scroll="visible">
+      <Panel preset="patient.detail.careSnapshot.stack">
         <CareSnapshotSection patient={patient} />
       </Panel>
 
       <Panel
-        title="Related Orders"
+        preset="patient.detail.relatedOrders.stack"
         meta={countMeta(orders.length)}
-        className="shrink-0"
-        variant="pageEmbed"
-        scroll="visible"
-        headerEnd={<IconButton onClick={onNewOrder} {...actionButtonPreset('add')} size="sm" title="New Order" />}
+        headerEnd={<RelatedOrdersHeader onNewOrder={onNewOrder} />}
       >
         <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
       </Panel>
 
-      <Panel
-        title="Reports"
-        meta={countMeta(getReportableOrders(orders).length)}
-        className="shrink-0"
-        scroll="visible"
-        bodyClassName="flex flex-col"
-      >
+      <Panel preset="patient.detail.reports.stack" meta={countMeta(getReportableOrders(orders).length)}>
         <PatientReportsList orders={orders} />
       </Panel>
     </div>
@@ -92,34 +89,27 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 }) => {
   return (
     <div className={cn(LAYOUT.detailGrid2, 'w-full pb-layout-scroll-end')}>
-      <Panel title="General Info" scroll="visible">
+      <Panel preset="patient.detail.generalInfo">
         <GeneralInfoSection patient={patient} />
       </Panel>
 
-      <Panel title="Medical History" scroll="visible">
+      <Panel preset="patient.detail.medicalHistory">
         <MedicalHistorySectionDisplay patient={patient} />
       </Panel>
 
-      <Panel title="Care Snapshot" className="col-span-2" scroll="visible">
+      <Panel preset="patient.detail.careSnapshot.span2">
         <CareSnapshotSection patient={patient} />
       </Panel>
 
       <Panel
-        title="Related Orders"
+        preset="patient.detail.relatedOrders"
         meta={countMeta(orders.length)}
-        variant="pageEmbed"
-        scroll="visible"
-        headerEnd={<IconButton onClick={onNewOrder} {...actionButtonPreset('add')} size="sm" title="New Order" />}
+        headerEnd={<RelatedOrdersHeader onNewOrder={onNewOrder} />}
       >
         <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
       </Panel>
 
-      <Panel
-        title="Reports"
-        meta={countMeta(getReportableOrders(orders).length)}
-        scroll="visible"
-        bodyClassName="flex flex-col"
-      >
+      <Panel preset="patient.detail.reports" meta={countMeta(getReportableOrders(orders).length)}>
         <PatientReportsList orders={orders} />
       </Panel>
     </div>
@@ -142,53 +132,29 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
       style={{ height: '100%', maxHeight: '100%' }}
     >
       <div className={cn(LAYOUT.detailGrid3, 'min-h-0 h-full items-stretch')}>
-        <Panel
-          title="General Info"
-          className="min-h-0 h-full"
-          scroll="auto"
-          bodyClassName="flex min-h-0 flex-1 flex-col overflow-hidden"
-        >
+        <Panel preset="patient.detail.generalInfo.fill">
           <GeneralInfoSection patient={patient} />
         </Panel>
 
-        <Panel
-          title="Medical History"
-          className="min-h-0 h-full"
-          scroll="auto"
-          bodyClassName="flex min-h-0 flex-1 flex-col overflow-hidden"
-        >
+        <Panel preset="patient.detail.medicalHistory.fill">
           <MedicalHistorySectionDisplay patient={patient} />
         </Panel>
 
-        <Panel
-          title="Care Snapshot"
-          className="min-h-0 h-full"
-          scroll="auto"
-          bodyClassName="flex min-h-0 flex-1 flex-col overflow-hidden"
-        >
+        <Panel preset="patient.detail.careSnapshot.fill">
           <CareSnapshotSection patient={patient} />
         </Panel>
       </div>
 
       <div className={cn(LAYOUT.detailGrid3, 'min-h-0 h-full items-stretch')}>
         <Panel
-          title="Related Orders"
+          preset="patient.detail.relatedOrders.span2Fill"
           meta={countMeta(orders.length)}
-          className="col-span-2 min-h-0"
-          variant="pageEmbed"
-          scroll="auto"
-          headerEnd={<IconButton onClick={onNewOrder} {...actionButtonPreset('add')} size="sm" title="New Order" />}
+          headerEnd={<RelatedOrdersHeader onNewOrder={onNewOrder} />}
         >
           <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
         </Panel>
 
-        <Panel
-          title="Reports"
-          meta={countMeta(getReportableOrders(orders).length)}
-          className="min-h-0"
-          scroll="auto"
-          bodyClassName="flex flex-col"
-        >
+        <Panel preset="patient.detail.reports.fill" meta={countMeta(getReportableOrders(orders).length)}>
           <PatientReportsList orders={orders} />
         </Panel>
       </div>

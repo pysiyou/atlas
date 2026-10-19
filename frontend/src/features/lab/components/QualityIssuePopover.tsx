@@ -22,6 +22,7 @@ import {
   QualityIssueRemedyPicker,
   type RemedyOption,
 } from './QualityIssueRemedyPicker';
+import { QualityIssueInlineWarning } from './QualityIssueInlineWarning';
 
 /** Re-export views for consumers that render them directly */
 export { QualityIssuePopoverLoadingView, QualityIssuePopoverErrorView } from './QualityIssuePopoverStates';
@@ -83,14 +84,7 @@ export const QualityIssuePopoverFormBody: React.FC<QualityIssuePopoverFormBodyPr
         </Alert>
       )}
 
-      {copy.alert && (
-        <Alert
-          variant={copy.alert.variant}
-          title={copy.alert.title}
-          description={copy.alert.description}
-          className="py-space-3"
-        />
-      )}
+      {copy.alert && <QualityIssueInlineWarning message={copy.alert.message} />}
 
       <CatalogRejectionCriteriaFields
         criteria={allowedCriteria}

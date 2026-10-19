@@ -5,21 +5,17 @@
 import React, { type ReactNode } from 'react';
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import { useBreakpoint } from '@/hooks/useBreakpoint';
-import { Panel, type PanelScroll, type PanelVariant } from '@/components';
+import { Panel, type PanelPresetId } from '@/components/surfaces';
 import { Skeleton, SkeletonCard, SkeletonInfoSection, SkeletonTableRow } from './Skeleton';
 import { LAYOUT, RADIUS, SPACING } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 
 export interface DetailSkeletonSection {
-  title: string;
+  preset: PanelPresetId;
   rows?: number;
   layout?: 'grid' | 'column';
   tableColumns?: number;
   tableRows?: number;
-  colSpan?: number;
-  variant?: PanelVariant;
-  scroll?: PanelScroll;
-  panelClassName?: string;
   customContent?: ReactNode;
 }
 
@@ -51,25 +47,8 @@ function renderSectionContent(section: DetailSkeletonSection) {
   return <SkeletonInfoSection rows={section.rows ?? 4} layout={section.layout ?? 'column'} />;
 }
 
-function SkeletonPanel({
-  section,
-  className,
-  scroll,
-}: {
-  section: DetailSkeletonSection;
-  className?: string;
-  scroll?: PanelScroll;
-}) {
-  return (
-    <Panel
-      title={section.title}
-      className={className}
-      variant={section.variant}
-      scroll={section.scroll ?? scroll}
-    >
-      {renderSectionContent(section)}
-    </Panel>
-  );
+function SkeletonPanel({ section }: { section: DetailSkeletonSection }) {
+  return <Panel preset={section.preset}>{renderSectionContent(section)}</Panel>;
 }
 
 function ResponsiveDetailSkeleton({
@@ -85,12 +64,7 @@ function ResponsiveDetailSkeleton({
     return (
       <div className={LAYOUT.detailScroll}>
         {sections.map(section => (
-          <SkeletonPanel
-            key={section.title}
-            section={section}
-            className={section.panelClassName ?? 'shrink-0'}
-            scroll={section.scroll ?? 'visible'}
-          />
+          <SkeletonPanel key={section.preset} section={section} />
         ))}
       </div>
     );
@@ -101,10 +75,8 @@ function ResponsiveDetailSkeleton({
       <div className={cn(LAYOUT.detailGrid2, 'w-full pb-layout-scroll-end')}>
         {sections.map(section => (
           <SkeletonPanel
-            key={section.title}
+            key={section.preset}
             section={{ ...section, layout: section.layout ?? 'column' }}
-            className={`${section.colSpan === 2 ? 'col-span-2' : ''} ${section.panelClassName ?? ''}`}
-            scroll={section.scroll ?? 'visible'}
           />
         ))}
       </div>
@@ -122,10 +94,8 @@ function ResponsiveDetailSkeleton({
     >
       {sections.map(section => (
         <SkeletonPanel
-          key={section.title}
+          key={section.preset}
           section={{ ...section, layout: section.layout ?? 'column' }}
-          className={`min-h-0 ${section.colSpan === 3 ? 'col-span-3' : ''} ${section.panelClassName ?? ''}`}
-          scroll={section.scroll ?? 'auto'}
         />
       ))}
     </div>
@@ -144,7 +114,7 @@ function BalancedGridSkeleton({ sections }: { sections: DetailSkeletonSection[] 
       aria-busy="true"
     >
       {sections.map(section => (
-        <Panel key={section.title} title={section.title} variant={section.variant}>
+        <Panel key={section.preset} preset={section.preset}>
           {renderSectionContent({ ...section, layout: 'column' })}
         </Panel>
       ))}
