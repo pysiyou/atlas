@@ -1,18 +1,17 @@
 /**
- * EditPatientModal - Create/edit patient with tabs and progress.
+ * EditPatientModal - Create/edit patient with tabs.
  * Form logic in useEditPatientForm.
  */
 
 import React from 'react';
 import type { Patient } from '@/types';
 import { Modal, FormDialogFooter } from '@/components/overlays';
-import { CircularProgress } from '@/components/primitives';
 import { FooterInfo } from '@/components/display';
+import { PanelHeaderSegmentTabs } from '@/components/display/PanelHeaderSegmentTabs';
 import { ErrorBoundary } from '@/components/loaders';
 import { MODULE_ICONS } from '@/config/icons';
 import { useEditPatientForm } from '../hooks/useEditPatientForm';
 import { PatientFormTabs } from './PatientFormTabs';
-import { CONTROL, RADIUS, TYPE } from '@/components/theme/recipes';
 
 interface EditPatientModalProps {
   isOpen: boolean;
@@ -25,42 +24,14 @@ interface TabNavigationProps {
   tabs: Array<{ id: string; label: string }>;
   activeTab: string;
   onTabChange: (tabId: string) => void;
-  formProgress: { percentage: number; filled: number; total: number };
 }
 
-const TabNavigation: React.FC<TabNavigationProps> = ({
-  tabs,
-  activeTab,
-  onTabChange,
-  formProgress,
-}) => (
-  <div className="flex items-center justify-between gap-layout-section mb-space-6">
-    <div className={`bg-surface-hover p-space-1 ${RADIUS.field} flex items-center gap-space-1`}>
-      {tabs.map(tab => {
-        const isActive = activeTab === tab.id;
-        return (
-          <button
-            key={tab.id}
-            type="button"
-            onClick={() => onTabChange(tab.id)}
-            className={
-              isActive
-                ? `relative flex items-center gap-space-2 px-space-3 py-space-1-5 ${RADIUS.field} ${TYPE.value} font-normal cursor-pointer bg-surface text-brand ${CONTROL.segmentActive}`
-                : `relative flex items-center gap-space-2 px-space-3 py-space-1-5 ${RADIUS.field} ${TYPE.value} font-normal cursor-pointer text-text-tertiary hover:text-text-primary hover:bg-surface-hover`
-            }
-          >
-            {tab.label}
-          </button>
-        );
-      })}
-    </div>
-    <CircularProgress
-      size={18}
-      percentage={formProgress.percentage}
-      trackColorClass="stroke-border-default"
-      progressColorClass={formProgress.percentage === 100 ? 'stroke-success' : 'stroke-brand'}
-      label={`${formProgress.filled}/${formProgress.total}`}
-      className="h-7"
+const TabNavigation: React.FC<TabNavigationProps> = ({ tabs, activeTab, onTabChange }) => (
+  <div className="flex items-center justify-start mb-space-6">
+    <PanelHeaderSegmentTabs
+      tabs={tabs.map(tab => ({ id: tab.id, label: tab.label }))}
+      activeId={activeTab}
+      onTabChange={onTabChange}
     />
   </div>
 );
@@ -79,9 +50,9 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
     isSubmitting,
     activeTab,
     setActiveTab,
-    formProgress,
     tabs,
     modalTitle,
+    subtitle,
     submitLabel,
     watch,
     setValue,
@@ -93,30 +64,28 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
         isOpen={isOpen}
         onClose={onClose}
         title={modalTitle}
+        subtitle={subtitle}
         size="3xl"
         disableClose={isSubmitting}
       >
         <div className="flex flex-col h-full bg-surface-page">
-          <div className="flex-1 overflow-y-auto px-table-cell-x-default py-space-5">
-            <form id="patient-form" onSubmit={handleSubmit} className="max-w-full">
+          <div className="flex-1 overflow-y-auto p-space-6">
+            <form id="patient-form" onSubmit={handleSubmit} className="max-w-full space-y-space-6">
               <TabNavigation
                 tabs={[...tabs]}
                 activeTab={activeTab}
                 onTabChange={setActiveTab}
-                formProgress={formProgress}
               />
-              <div className={`${RADIUS.menu} border border-border-default bg-surface p-space-6`}>
-                <PatientFormTabs
-                  activeTab={activeTab}
-                  register={register}
-                  control={control}
-                  errors={errors}
-                  existingAffiliation={patient?.affiliation}
-                  existingVitalSigns={patient?.vitalSigns}
-                  watch={watch}
-                  setValue={setValue}
-                />
-              </div>
+              <PatientFormTabs
+                activeTab={activeTab}
+                register={register}
+                control={control}
+                errors={errors}
+                existingAffiliation={patient?.affiliation}
+                existingVitalSigns={patient?.vitalSigns}
+                watch={watch}
+                setValue={setValue}
+              />
             </form>
           </div>
           <FormDialogFooter

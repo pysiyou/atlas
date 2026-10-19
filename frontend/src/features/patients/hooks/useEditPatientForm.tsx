@@ -1,15 +1,15 @@
 /**
- * useEditPatientForm — form state, tabs, progress, and submit for EditPatientModal.
+ * useEditPatientForm — form state, tabs, and submit for EditPatientModal.
  */
 
-import { useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { ModalContextSubtitle } from '@/components/display';
 import type { Patient } from '@/types';
 import { patientCreateSchema, type PatientFormInput } from '../schemas/patientFormSchemas';
 import { useCreatePatient, useUpdatePatient } from '../api/patients';
 import { patientToFormInput } from '../utils/formTransformers';
-import { calculateFormProgressV2 } from '../utils/patientHelpers';
 
 export interface UseEditPatientFormParams {
   patient?: Patient;
@@ -76,11 +76,18 @@ export function useEditPatientForm({ patient, mode, onClose }: UseEditPatientFor
     }
   );
 
-  const formProgress = useMemo(
-    () => calculateFormProgressV2((formValues ?? {}) as Partial<PatientFormInput>),
-    [formValues],
-  );
   const modalTitle = mode === 'edit' ? 'Edit Patient' : 'New Patient';
+  const subtitle = useMemo((): React.ReactNode => {
+    const draftName = formValues?.fullName?.trim() ?? '';
+    if (mode === 'edit' && patient) {
+      const label = draftName || patient.fullName;
+      return <ModalContextSubtitle label={label} patientId={patient.id} />;
+    }
+    if (draftName) {
+      return <ModalContextSubtitle label={draftName} />;
+    }
+    return 'Enter patient details below';
+  }, [formValues?.fullName, mode, patient]);
   const submitLabel = isPendingMutation
     ? (mode === 'edit' ? 'Saving...' : 'Creating...')
     : (mode === 'edit' ? 'Save Changes' : 'Create Patient');
@@ -96,9 +103,9 @@ export function useEditPatientForm({ patient, mode, onClose }: UseEditPatientFor
     setValue,
     activeTab,
     setActiveTab,
-    formProgress,
     tabs: TABS,
     modalTitle,
+    subtitle,
     submitLabel,
     mode,
     patient,

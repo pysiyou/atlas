@@ -6,7 +6,7 @@
 import React, { useState, useCallback } from 'react';
 import { actionButtonPreset, Icon, Button } from '@/components/primitives';
 import { Modal, DialogFooter } from '@/components/overlays';
-import { FooterInfo, EntityId } from '@/components/display';
+import { FooterInfo, ModalContextSubtitle } from '@/components/display';
 import { ErrorBoundary } from '@/components/loaders';
 import { PaymentDetailModalBody } from './PaymentDetailModalBody';
 import { formatCurrency } from '@/utils';
@@ -158,9 +158,10 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
         onClose={onClose}
         title="Process Payment"
         subtitle={
-          <span>
-            Order <EntityId type="order" value={sourceOrder.orderId} />
-          </span>
+          <ModalContextSubtitle
+            label={sourceOrder.patientName}
+            orderId={sourceOrder.orderId}
+          />
         }
         size="xl"
         disableClose={submitting}

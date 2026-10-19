@@ -2,6 +2,7 @@ import { Controller, type Control } from 'react-hook-form';
 import type { Patient, PriorityLevel } from '@/types';
 import { Input, Textarea } from '@/components/inputs';
 import { MultiSelectFilter } from '@/components/overlays';
+import { Panel } from '@/components/surfaces';
 import { ICONS } from '@/config/icons';
 import type { OrderFormInput } from '../schemas/order.schema';
 import { PatientSelect } from './PatientSelect';
@@ -59,7 +60,12 @@ export const OrderUpsertFormFields: React.FC<OrderUpsertFormFieldsProps> = ({
   } = modalState;
 
   return (
-    <div className="flex-1 overflow-y-auto px-table-cell-x-default py-space-5 space-y-space-6">
+    <Panel
+      hideHeader
+      scroll="visible"
+      spacing="none"
+      bodyClassName="space-y-space-6"
+    >
       <Controller
         name="patientId"
         control={control}
@@ -174,15 +180,19 @@ export const OrderUpsertFormFields: React.FC<OrderUpsertFormFieldsProps> = ({
         )}
       />
 
-      <OrderPaymentSection
-        mode={mode}
-        paymentMethod={paymentMethod}
-        onPaymentMethodChange={setPaymentMethod}
-        isSubmitting={isSubmitting}
-        isProcessingPayment={isProcessingPayment}
-        paymentError={paymentError}
-        onClearError={() => setPaymentError(null)}
-      />
-    </div>
+      {mode === 'create' ? (
+        <div className="pt-space-6 border-t border-border-default">
+          <OrderPaymentSection
+            mode={mode}
+            paymentMethod={paymentMethod}
+            onPaymentMethodChange={setPaymentMethod}
+            isSubmitting={isSubmitting}
+            isProcessingPayment={isProcessingPayment}
+            paymentError={paymentError}
+            onClearError={() => setPaymentError(null)}
+          />
+        </div>
+      ) : null}
+    </Panel>
   );
 };

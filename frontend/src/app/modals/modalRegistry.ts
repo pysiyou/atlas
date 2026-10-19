@@ -86,12 +86,8 @@ export function getRegisteredModal(type: ModalType): ModalRegistryEntry | undefi
   return registry[type];
 }
 
-registerModal(ModalType.SAMPLE_DETAIL, SampleCollectionDetailModal, (props, baseProps, helpers) => {
+registerModal(ModalType.SAMPLE_DETAIL, SampleCollectionDetailModal, (props, baseProps) => {
   if ('sampleId' in props && props.sampleId) {
-    if (!props.readOnly) {
-      const sample = helpers.getSample(props.sampleId);
-      if (!sample) return null;
-    }
     return { ...baseProps, sampleId: props.sampleId, readOnly: props.readOnly };
   }
   if ('pendingSampleDisplay' in props && props.pendingSampleDisplay) {

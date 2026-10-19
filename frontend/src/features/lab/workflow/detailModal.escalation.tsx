@@ -18,7 +18,7 @@ import {
   EscalationResolutionFooter,
 } from './detailModal.escalation.helpers';
 
-import { labModalSubtitle } from './detailModalLayout';
+import { labModalHeaderContext } from './detailModalLayout';
 
 function ticketString(value: unknown): string | undefined {
   return typeof value === 'string' ? value : undefined;
@@ -79,6 +79,12 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   const hasResults = Boolean(test.results && Object.keys(test.results).length > 0);
   const patientName = getPatientName(test.patientId);
   const headerBadges = <TestHeaderBadges test={test} variant="escalation" showStatus />;
+  const { title: modalTitle, subtitle: modalSubtitle } = labModalHeaderContext({
+    stage: 'escalation',
+    contextLabel: test.testName,
+    orderId: test.orderId,
+    badges: headerBadges,
+  });
   const headerLeftColumn = (
     <TestWorkflowCardLeftColumn
       test={test}
@@ -94,10 +100,9 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
     <QueueModalShell
       isOpen={isOpen}
       onClose={onClose}
-      title={test.testName}
-      subtitle={labModalSubtitle('escalation')}
+      title={modalTitle}
+      subtitle={modalSubtitle}
       modalKey={readOnly ? `historical-${test.id}` : `escalation-${test.id}`}
-      headerBadges={headerBadges}
       headerLeftColumn={headerLeftColumn}
       disableClose={resolving}
       footer={

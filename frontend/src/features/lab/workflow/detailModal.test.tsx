@@ -8,7 +8,7 @@ import type { TestWithContext } from '@/types';
 import { buildCriticalValueRecord } from '../criticalValues/criticalValues';
 import { useSampleRejectionDisplay } from '../hooks/useSampleRejectionDisplay';
 import { useTestDetailModalActions } from './useTestDetailModalActions';
-import { QueueModalShell, labModalSubtitle } from './detailModalLayout';
+import { QueueModalShell, labModalHeaderContext } from './detailModalLayout';
 import { useTestDetailModel } from './useTestDetailModel';
 import { useTestDetailModalDerived } from './useTestDetailModalDerived';
 import {
@@ -112,6 +112,16 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({
     ? <TestDetailModalHeaderBadges labContext={labContext} headerVariant={headerVariant} />
     : null;
 
+  const modalHeader =
+    ready && order
+      ? labModalHeaderContext({
+          stage: modalStage,
+          contextLabel: testDisplayName,
+          orderId: order.orderId,
+          badges: headerBadges ?? undefined,
+        })
+      : { title: testDisplayName, subtitle: null };
+
   const headerLeftColumn =
     ready && labContext && order && orderTest ? (
       <TestDetailHeaderColumn
@@ -130,11 +140,10 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({
     <QueueModalShell
       isOpen={isOpen}
       onClose={onClose}
-      title={testDisplayName}
-      subtitle={labModalSubtitle(modalStage)}
+      title={modalHeader.title}
+      subtitle={modalHeader.subtitle ?? ''}
       modalKey={modalKey}
       disableClose={isApproving}
-      headerBadges={headerBadges}
       headerLeftColumn={headerLeftColumn}
       footer={
         <TestDetailModalFooter

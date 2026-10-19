@@ -34,6 +34,7 @@ export {
   DetailGrid,
   ModalFooter,
   labModalSubtitle,
+  labModalHeaderContext,
   type LabModalStage,
   type QueueModalShellProps,
   type DetailGridSectionConfig,

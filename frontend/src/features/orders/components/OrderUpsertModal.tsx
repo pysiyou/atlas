@@ -55,36 +55,37 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
       disableClose={isSubmitting || isProcessingPayment}
     >
       <div className="flex flex-col h-full bg-surface-page">
-        <form id="order-form" onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
-          <OrderUpsertFormFields
-            control={control}
-            mode={mode}
-            patientId={patientId}
-            modalState={modalState}
-          />
-
-          <FormDialogFooter
-            onClose={onClose}
-            submitLabel={submitLabel}
-            isSubmitting={isSubmitting || isProcessingPayment}
-            formId="order-form"
-            submitVariant={paymentMethod && mode === 'create' ? 'primary' : 'save'}
-            submitIcon={
-              paymentMethod && mode === 'create' && !isSubmitting && !isProcessingPayment ? (
-                <Icon name={ICONS.dataFields.wallet} />
-              ) : undefined
-            }
-            footerInfo={
-              mode === 'edit' && order ? (
-                <FooterInfo icon={MODULE_ICONS.orders} label="Orders" size="md" />
-              ) : (
-                <div className={`${TYPE.value} text-brand`}>
-                  Total: {formatCurrency(totalPrice)}
-                </div>
-              )
-            }
-          />
-        </form>
+        <div className="flex-1 overflow-y-auto px-space-6 py-space-8">
+          <form id="order-form" onSubmit={handleSubmit} className="max-w-full">
+            <OrderUpsertFormFields
+              control={control}
+              mode={mode}
+              patientId={patientId}
+              modalState={modalState}
+            />
+          </form>
+        </div>
+        <FormDialogFooter
+          onClose={onClose}
+          submitLabel={submitLabel}
+          isSubmitting={isSubmitting || isProcessingPayment}
+          formId="order-form"
+          submitVariant={paymentMethod && mode === 'create' ? 'primary' : 'save'}
+          submitIcon={
+            paymentMethod && mode === 'create' && !isSubmitting && !isProcessingPayment ? (
+              <Icon name={ICONS.dataFields.wallet} />
+            ) : undefined
+          }
+          footerInfo={
+            mode === 'edit' && order ? (
+              <FooterInfo icon={MODULE_ICONS.orders} label="Orders" size="md" />
+            ) : (
+              <div className={`${TYPE.value} text-brand`}>
+                Total: {formatCurrency(totalPrice)}
+              </div>
+            )
+          }
+        />
       </div>
     </Modal>
   );

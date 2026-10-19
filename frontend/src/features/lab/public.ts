@@ -63,6 +63,7 @@ export {
   QueueModalShell,
   ModalFooter,
   labModalSubtitle,
+  labModalHeaderContext,
   type LabModalStage,
 } from './workflow';
 export {

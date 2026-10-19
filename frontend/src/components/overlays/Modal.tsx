@@ -32,7 +32,7 @@ interface ModalProps {
   onClose: () => void;
   title: string | React.ReactNode;
   subtitle?: string | React.ReactNode;
-  /** Status / workflow badges shown in the dialog header (below subtitle). */
+  /** Status / workflow badges shown on the context line (after subtitle, when present). */
   badges?: React.ReactNode;
   children: React.ReactNode;
   closeOnBackdropClick?: boolean;

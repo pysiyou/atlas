@@ -82,6 +82,8 @@ export interface EntryWorklistItem {
   waitingHours: number;
   turnaroundHours: number;
   isRetest: boolean;
+  retestOfTestId?: number | null;
+  retestNumber?: number;
   referringPhysician?: string | null;
   testCategory?: string | null;
   attentionReason?: string | null;
