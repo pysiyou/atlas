@@ -11,6 +11,7 @@ import { ORDER_TABLE_COLUMN_HEADERS, renderOrderPatientName } from '@/features/o
 import { renderDateTimeCell } from '@/utils/tableColumnRenders';
 import type { ReportableOrder } from '../types';
 import { ReportPreviewButton } from '../components/ReportPreviewButton';
+import { ReportPrintButton } from '../components/ReportPrintButton';
 import { ValidatedTestReportCard } from '../components/ValidatedTestReportCard';
 import { getActiveOrderTests } from '../utils/prepareReportData';
 import { TYPE } from '@/components/theme/recipes';
@@ -36,7 +37,9 @@ function validationStatusLabel(order: ReportableOrder): string {
 export const createReportTableConfig = (
   navigate: NavigateFunction,
   _getPatientName: (patientId: number | string) => string,
-  onPreview: (order: ReportableOrder) => void
+  onPreview: (order: ReportableOrder) => void,
+  onPrint: (order: ReportableOrder) => void,
+  generatingOrderId: number | null
 ): TableViewConfig<ReportableOrder> => {
   const columnMap = {
     orderId: {
@@ -106,17 +109,30 @@ export const createReportTableConfig = (
     action: {
       key: 'action',
       header: 'Action',
-      width: COLUMN_SIZE.md,
+      width: COLUMN_SIZE.lg,
       render: (order: ReportableOrder) => (
-        <div className="font-normal" onClick={e => e.stopPropagation()}>
+        <div
+          className="flex items-center justify-start gap-space-1 font-normal"
+          onClick={e => e.stopPropagation()}
+        >
           <ReportPreviewButton order={order} onPreview={onPreview} />
+          <ReportPrintButton
+            order={order}
+            onPrint={onPrint}
+            disabled={generatingOrderId === order.orderId}
+          />
         </div>
       ),
     },
   };
 
   const CardComponent = (props: { item: ReportableOrder; index: number; onClick?: () => void }) => (
-    <ValidatedTestReportCard {...props} onPreview={onPreview} />
+    <ValidatedTestReportCard
+      {...props}
+      onPreview={onPreview}
+      onPrint={onPrint}
+      generatingOrderId={generatingOrderId}
+    />
   );
 
   return {

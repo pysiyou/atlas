@@ -9,7 +9,7 @@ import { displayId } from '@/utils';
 import type { LabReportPayload } from '../types';
 
 const FONT = 'courier';
-const FONT_SIZE = 10;
+const FONT_SIZE = 8;
 const LINE_HEIGHT = 5.2;
 
 /** Character width for label text before ` :` (Courier is fixed-width). */

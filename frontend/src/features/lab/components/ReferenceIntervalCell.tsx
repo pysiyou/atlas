@@ -15,13 +15,17 @@ export function ReferenceIntervalCell({
 }) {
   return (
     <div
-      className={`inline-grid gap-x-space-1 gap-y-space-1 items-baseline leading-tight ${TYPE.caption} text-text-tertiary text-left`}
+      className={`inline-grid gap-x-space-1 gap-y-0 items-baseline leading-none ${TYPE.caption} text-left`}
       style={{ gridTemplateColumns: `${valueColumnCh}ch auto` }}
     >
       {lines.map((line, index) => (
         <Fragment key={index}>
-          <span className="tabular-nums text-left">{line.value}</span>
-          <span className={`whitespace-nowrap ${TYPE.meta}`}>{line.label ?? ''}</span>
+          <span className={`tabular-nums text-left ${TYPE.meta} text-text-primary`}>
+            {line.value}
+          </span>
+          <span className={`whitespace-nowrap ${TYPE.meta} text-text-tertiary`}>
+            {line.label ?? ''}
+          </span>
         </Fragment>
       ))}
     </div>

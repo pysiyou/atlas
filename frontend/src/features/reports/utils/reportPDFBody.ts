@@ -1,5 +1,5 @@
 /**
- * Lab report PDF body — results grouped by exam category (validation-style grid, no flags).
+ * Lab report PDF body — classic result table (gray value bars, aligned units, right-aligned ranges).
  */
 
 import type jsPDF from 'jspdf';
@@ -10,31 +10,37 @@ import type { LabReportPayload } from '../types';
 import { RESULT_NOT_AVAILABLE } from '../types';
 
 const FONT = 'courier';
-const TITLE_SIZE = 11;
-const SUBTITLE_SIZE = 9;
-const TABLE_SIZE = 9;
-const TABLE_HEAD_SIZE = 8;
+const TITLE_SIZE = 7;
+const SUBTITLE_SIZE = 7;
+const TABLE_SIZE = 7;
+/** Reference range numbers (right column). */
+const REFERENCE_VALUE_SIZE = 6;
 /** Sex labels beside reference range values (Male / Female). */
-const REFERENCE_LABEL_SIZE = 7;
-const NOTES_SIZE = 8;
+const REFERENCE_LABEL_SIZE = 5;
+const NOTES_SIZE = 6;
 
-const ROW_HEIGHT = 4.8;
-/** Tighter line spacing for multi-line reference cells (Male / Female pairs). */
-const REFERENCE_LINE_HEIGHT = 4.1;
-const SECTION_GAP = 6;
-const CATEGORY_GAP = 8;
-const TABLE_HEAD_GAP = 2;
+const ROW_HEIGHT = 3.6;
+/** Stacked Male / Female reference lines (minimal leading). */
+const REFERENCE_PAIR_LINE_HEIGHT = 2.35;
+const SECTION_GAP = 3.5;
+const CATEGORY_GAP = 5;
 
 const BOTTOM_MARGIN = 18;
-/** Gap between value / unit / status sub-columns inside REFERENCE INTERVAL labels. */
-const RESULT_SUBCOL_GAP = 2;
-/** Tight gap after result value before unit (matches preview inline-flex). */
-const RESULT_INLINE_GAP = 1;
+const RESULT_BAR_PADDING = 0.6;
+const RESULT_BAR_HEIGHT = 3.1;
+/** Vertical offset from text baseline to top of result / note gray bar (mm). */
+const RESULT_BAR_BASELINE_OFFSET = 0.9;
+const COL_GAP = 2;
+const FLAG_COLUMN_WIDTH = 3;
+/** Indent before parameter / result rows under each exam (one tab). */
+const RESULT_TAB_INDENT = 3.5;
 
 const COLOR_TEXT = { r: 0, g: 0, b: 0 } as const;
 const COLOR_UNIT = { r: 107, g: 114, b: 128 } as const;
 const COLOR_ABNORMAL = { r: 234, g: 88, b: 12 } as const;
 const COLOR_CRITICAL = { r: 220, g: 38, b: 38 } as const;
+const COLOR_RESULT_BAR = { r: 232, g: 232, b: 232 } as const;
+const COLOR_NOTE_BAR = { r: 232, g: 232, b: 232 } as const;
 
 type ReportTest = LabReportPayload['testResults'][number];
 type ReportParameter = ReportTest['parameters'][number];
@@ -50,11 +56,25 @@ interface BodyLayout {
   pageHeight: number;
   contentWidth: number;
   colParameter: number;
-  colResult: number;
-  colReference: number;
   colParameterW: number;
-  colResultW: number;
-  colReferenceW: number;
+  contentRight: number;
+}
+
+interface ResultRowLayout {
+  resultBarX: number;
+  resultBarW: number;
+  flagX: number;
+  unitX: number;
+}
+
+interface ReferenceSubColumnLayout {
+  valueRightX: number;
+  labelRightX: number;
+}
+
+interface ReportPatientContext {
+  gender?: Gender;
+  age?: number;
 }
 
 function groupTestsByCategory(testResults: ReportTest[]): CategoryGroup[] {
@@ -76,14 +96,19 @@ function groupTestsByCategory(testResults: ReportTest[]): CategoryGroup[] {
   }));
 }
 
+function withResultIndent(layout: BodyLayout, indent: number): BodyLayout {
+  return {
+    ...layout,
+    colParameter: layout.margin + indent,
+    colParameterW: Math.max(layout.colParameterW - indent, 20),
+  };
+}
+
 function getBodyLayout(doc: jsPDF, margin: number): BodyLayout {
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
   const contentWidth = pageWidth - margin * 2;
-
-  const colParameterW = contentWidth * 0.4;
-  const colResultW = contentWidth * 0.32;
-  const colReferenceW = contentWidth * 0.28;
+  const colParameterW = contentWidth * 0.36;
 
   return {
     margin,
@@ -91,11 +116,8 @@ function getBodyLayout(doc: jsPDF, margin: number): BodyLayout {
     pageHeight,
     contentWidth,
     colParameter: margin,
-    colResult: margin + colParameterW,
-    colReference: margin + colParameterW + colResultW,
     colParameterW,
-    colResultW,
-    colReferenceW,
+    contentRight: margin + contentWidth,
   };
 }
 
@@ -127,13 +149,11 @@ function resultUnitText(parameter: ReportParameter): string | undefined {
   return unit || undefined;
 }
 
-function resultStatusLabel(status?: string): string | null {
+/** Directional flag like classic lab printouts (`<` low, `>` high). */
+function resultFlagSymbol(status?: string): string | null {
   if (!status || status === 'normal') return null;
-  if (status === 'critical' || status === 'critical-high' || status === 'critical-low') {
-    return 'Critical';
-  }
-  if (status === 'high') return 'High';
-  if (status === 'low') return 'Low';
+  if (status === 'low' || status === 'critical-low') return '<';
+  if (status === 'high' || status === 'critical-high' || status === 'critical') return '>';
   return null;
 }
 
@@ -147,20 +167,6 @@ function isCriticalStatus(status?: string): boolean {
 
 function isAbnormalStatus(status?: string): boolean {
   return Boolean(status && status !== 'normal');
-}
-
-interface ResultSubColumnLayout {
-  unitStartX: number;
-  statusStartX: number;
-}
-
-interface ReferenceSubColumnLayout {
-  labelStartX: number;
-}
-
-interface ReportPatientContext {
-  gender?: Gender;
-  age?: number;
 }
 
 function reportPatientFromPayload(reportData: LabReportPayload): ReportPatientContext {
@@ -198,33 +204,29 @@ export function formatUnitForPdf(unit: string): string {
     .join('');
 }
 
-/** Aligned unit + status columns within RESULT (values stay left at colResult). */
-function computeResultSubColumnLayout(
+function computeResultRowLayout(
   doc: jsPDF,
   layout: BodyLayout,
   parameters: ReportParameter[]
-): ResultSubColumnLayout {
-  doc.setFont(FONT, 'normal');
+): ResultRowLayout {
+  doc.setFont(FONT, 'bold');
   doc.setFontSize(TABLE_SIZE);
 
   let maxValueWidth = 0;
-  let maxUnitWidth = 0;
 
   for (const parameter of parameters) {
     maxValueWidth = Math.max(maxValueWidth, doc.getTextWidth(resultValueText(parameter)));
-    const unit = resultUnitText(parameter);
-    if (unit) {
-      maxUnitWidth = Math.max(maxUnitWidth, doc.getTextWidth(formatUnitForPdf(unit)));
-    }
   }
 
-  const unitStartX = layout.colResult + maxValueWidth + RESULT_INLINE_GAP;
-  const statusStartX = unitStartX + maxUnitWidth + RESULT_INLINE_GAP;
+  const resultBarX = layout.colParameter + layout.colParameterW + COL_GAP;
+  const resultBarW = maxValueWidth + RESULT_BAR_PADDING * 2;
+  const flagX = resultBarX + resultBarW + COL_GAP;
+  const unitX = flagX + FLAG_COLUMN_WIDTH + COL_GAP;
 
-  return { unitStartX, statusStartX };
+  doc.setFont(FONT, 'normal');
+  return { resultBarX, resultBarW, flagX, unitX };
 }
 
-/** Value / Male|Female label columns within REFERENCE INTERVAL (matches preview grid). */
 function computeReferenceSubColumnLayout(
   doc: jsPDF,
   layout: BodyLayout,
@@ -233,7 +235,7 @@ function computeReferenceSubColumnLayout(
   patient: ReportPatientContext
 ): ReferenceSubColumnLayout {
   doc.setFont(FONT, 'normal');
-  doc.setFontSize(TABLE_SIZE);
+  doc.setFontSize(REFERENCE_VALUE_SIZE);
 
   let maxValueWidth = 0;
 
@@ -248,8 +250,10 @@ function computeReferenceSubColumnLayout(
     }
   }
 
-  const labelStartX = layout.colReference + maxValueWidth + RESULT_SUBCOL_GAP;
-  return { labelStartX };
+  const valueRightX = layout.contentRight;
+  const labelRightX = valueRightX - maxValueWidth - COL_GAP;
+
+  return { valueRightX, labelRightX };
 }
 
 function referenceLineCount(
@@ -267,12 +271,86 @@ function referenceLineCount(
 
 function referenceBlockHeight(lineCount: number): number {
   if (lineCount <= 1) return ROW_HEIGHT;
-  return lineCount * REFERENCE_LINE_HEIGHT;
+  return lineCount * REFERENCE_PAIR_LINE_HEIGHT;
+}
+
+function drawResultBar(
+  doc: jsPDF,
+  y: number,
+  value: string,
+  rowLayout: ResultRowLayout,
+  abnormal: boolean,
+  critical: boolean
+): void {
+  const barTop = y - RESULT_BAR_HEIGHT + RESULT_BAR_BASELINE_OFFSET;
+  doc.setFillColor(COLOR_RESULT_BAR.r, COLOR_RESULT_BAR.g, COLOR_RESULT_BAR.b);
+  doc.rect(rowLayout.resultBarX, barTop, rowLayout.resultBarW, RESULT_BAR_HEIGHT, 'F');
+
+  doc.setFont(FONT, 'bold');
+  doc.setFontSize(TABLE_SIZE);
+  if (abnormal) {
+    doc.setTextColor(
+      critical ? COLOR_CRITICAL.r : COLOR_ABNORMAL.r,
+      critical ? COLOR_CRITICAL.g : COLOR_ABNORMAL.g,
+      critical ? COLOR_CRITICAL.b : COLOR_ABNORMAL.b
+    );
+  } else {
+    doc.setTextColor(COLOR_TEXT.r, COLOR_TEXT.g, COLOR_TEXT.b);
+  }
+
+  const textX = rowLayout.resultBarX + rowLayout.resultBarW - RESULT_BAR_PADDING;
+  doc.text(value, textX, y, { align: 'right' });
+  doc.setFont(FONT, 'normal');
+  doc.setTextColor(COLOR_TEXT.r, COLOR_TEXT.g, COLOR_TEXT.b);
+}
+
+function drawResultCell(
+  doc: jsPDF,
+  y: number,
+  parameter: ReportParameter,
+  rowLayout: ResultRowLayout
+): void {
+  const value = resultValueText(parameter);
+  const unit = resultUnitText(parameter);
+  const unitText = unit ? formatUnitForPdf(unit) : undefined;
+  const flag = resultFlagSymbol(parameter.status);
+  const abnormal = isAbnormalStatus(parameter.status);
+  const critical = isCriticalStatus(parameter.status);
+
+  if (value !== RESULT_NOT_AVAILABLE) {
+    drawResultBar(doc, y, value, rowLayout, abnormal, critical);
+  } else {
+    doc.setFont(FONT, 'normal');
+    doc.setFontSize(TABLE_SIZE);
+    doc.setTextColor(COLOR_UNIT.r, COLOR_UNIT.g, COLOR_UNIT.b);
+    doc.text(value, rowLayout.resultBarX, y, { align: 'left' });
+    doc.setTextColor(COLOR_TEXT.r, COLOR_TEXT.g, COLOR_TEXT.b);
+  }
+
+  if (flag) {
+    doc.setFont(FONT, 'bold');
+    doc.setFontSize(TABLE_SIZE);
+    doc.setTextColor(
+      critical ? COLOR_CRITICAL.r : COLOR_ABNORMAL.r,
+      critical ? COLOR_CRITICAL.g : COLOR_ABNORMAL.g,
+      critical ? COLOR_CRITICAL.b : COLOR_ABNORMAL.b
+    );
+    doc.text(flag, rowLayout.flagX, y, { align: 'left' });
+    doc.setFont(FONT, 'normal');
+    doc.setTextColor(COLOR_TEXT.r, COLOR_TEXT.g, COLOR_TEXT.b);
+  }
+
+  if (unitText) {
+    doc.setFont(FONT, 'normal');
+    doc.setFontSize(TABLE_SIZE);
+    doc.setTextColor(COLOR_UNIT.r, COLOR_UNIT.g, COLOR_UNIT.b);
+    doc.text(unitText, rowLayout.unitX, y, { align: 'left' });
+    doc.setTextColor(COLOR_TEXT.r, COLOR_TEXT.g, COLOR_TEXT.b);
+  }
 }
 
 function drawReferenceCell(
   doc: jsPDF,
-  layout: BodyLayout,
   y: number,
   parameter: ReportParameter,
   subColumns: ReferenceSubColumnLayout,
@@ -286,78 +364,24 @@ function drawReferenceCell(
   );
 
   doc.setFont(FONT, 'normal');
-  doc.setFontSize(TABLE_SIZE);
-  setTextColor(doc, COLOR_UNIT);
 
-  const lineHeight = lines.length > 1 ? REFERENCE_LINE_HEIGHT : ROW_HEIGHT;
+  const lineHeight = lines.length > 1 ? REFERENCE_PAIR_LINE_HEIGHT : 0;
   for (let i = 0; i < lines.length; i += 1) {
-    const lineY = y + i * lineHeight;
-    doc.setFontSize(TABLE_SIZE);
-    doc.text(lines[i].value, layout.colReference, lineY, { align: 'left' });
+    const lineY = lines.length > 1 ? y + i * lineHeight : y;
+    doc.setFontSize(REFERENCE_VALUE_SIZE);
+    doc.setTextColor(COLOR_TEXT.r, COLOR_TEXT.g, COLOR_TEXT.b);
+    doc.text(lines[i].value, subColumns.valueRightX, lineY, { align: 'right' });
     const label = lines[i].label;
     if (label) {
       doc.setFontSize(REFERENCE_LABEL_SIZE);
-      doc.text(label, subColumns.labelStartX, lineY, { align: 'left' });
+      doc.setTextColor(COLOR_UNIT.r, COLOR_UNIT.g, COLOR_UNIT.b);
+      doc.text(label, subColumns.labelRightX, lineY, { align: 'right' });
     }
   }
 
   doc.setFontSize(TABLE_SIZE);
-  setTextColor(doc, COLOR_TEXT);
+  doc.setTextColor(COLOR_TEXT.r, COLOR_TEXT.g, COLOR_TEXT.b);
   return lines.length;
-}
-
-function setTextColor(doc: jsPDF, color: { r: number; g: number; b: number }): void {
-  doc.setTextColor(color.r, color.g, color.b);
-}
-
-/** Value left-aligned; unit and status in shared sub-columns per exam table. */
-function drawResultCell(
-  doc: jsPDF,
-  layout: BodyLayout,
-  y: number,
-  parameter: ReportParameter,
-  subColumns: ResultSubColumnLayout
-): number {
-  const value = resultValueText(parameter);
-  const unit = resultUnitText(parameter);
-  const unitText = unit ? formatUnitForPdf(unit) : undefined;
-  const statusLabel = resultStatusLabel(parameter.status);
-  const abnormal = isAbnormalStatus(parameter.status);
-  const statusColor = isCriticalStatus(parameter.status) ? COLOR_CRITICAL : COLOR_ABNORMAL;
-
-  doc.setFont(FONT, 'normal');
-  doc.setFontSize(TABLE_SIZE);
-
-  if (abnormal) {
-    setTextColor(doc, statusColor);
-  } else {
-    setTextColor(doc, COLOR_TEXT);
-  }
-  doc.text(value, layout.colResult, y, { align: 'left' });
-
-  if (unitText) {
-    setTextColor(doc, COLOR_UNIT);
-    doc.text(unitText, subColumns.unitStartX, y, { align: 'left' });
-  }
-
-  if (statusLabel) {
-    setTextColor(doc, statusColor);
-    doc.text(statusLabel, subColumns.statusStartX, y, { align: 'left' });
-  }
-
-  setTextColor(doc, COLOR_TEXT);
-  return 1;
-}
-
-function drawTableHeader(doc: jsPDF, y: number, layout: BodyLayout): number {
-  doc.setFont(FONT, 'normal');
-  doc.setFontSize(TABLE_HEAD_SIZE);
-  doc.setTextColor(107, 114, 128);
-  doc.text('PARAMETER', layout.colParameter, y);
-  doc.text('RESULT', layout.colResult, y);
-  doc.text('REFERENCE INTERVAL', layout.colReference, y);
-  doc.setTextColor(0, 0, 0);
-  return y + TABLE_HEAD_GAP + ROW_HEIGHT;
 }
 
 function drawParameterRow(
@@ -365,19 +389,19 @@ function drawParameterRow(
   y: number,
   layout: BodyLayout,
   parameter: ReportParameter,
-  resultSubColumns: ResultSubColumnLayout,
+  rowLayout: ResultRowLayout,
   referenceSubColumns: ReferenceSubColumnLayout,
   catalogParameters: Record<string, TestParameter>,
   patient: ReportPatientContext
 ): number {
   doc.setFont(FONT, 'normal');
   doc.setFontSize(TABLE_SIZE);
+  doc.setTextColor(COLOR_TEXT.r, COLOR_TEXT.g, COLOR_TEXT.b);
 
   const nameLines = doc.splitTextToSize(parameter.name, layout.colParameterW - 1);
-  drawResultCell(doc, layout, y, parameter, resultSubColumns);
+  drawResultCell(doc, y, parameter, rowLayout);
   const refLineCount = drawReferenceCell(
     doc,
-    layout,
     y,
     parameter,
     referenceSubColumns,
@@ -398,6 +422,42 @@ function drawParameterRow(
   return y + rowHeight;
 }
 
+function drawNoteBlock(doc: jsPDF, y: number, layout: BodyLayout, note: string): number {
+  doc.setFont(FONT, 'bold');
+  doc.setFontSize(NOTES_SIZE);
+  doc.setTextColor(COLOR_TEXT.r, COLOR_TEXT.g, COLOR_TEXT.b);
+  const label = 'NOTE:';
+  doc.text(label, layout.colParameter, y);
+
+  const labelWidth = doc.getTextWidth(label) + COL_GAP;
+  const barX = layout.colParameter + labelWidth;
+  const barW = layout.contentRight - barX;
+  const barTop = y - RESULT_BAR_HEIGHT + RESULT_BAR_BASELINE_OFFSET;
+
+  doc.setFillColor(COLOR_NOTE_BAR.r, COLOR_NOTE_BAR.g, COLOR_NOTE_BAR.b);
+  doc.rect(barX, barTop, barW, RESULT_BAR_HEIGHT, 'F');
+
+  doc.setFont(FONT, 'normal');
+  const lines = doc.splitTextToSize(note, barW - RESULT_BAR_PADDING * 2);
+  for (let i = 0; i < lines.length; i += 1) {
+    const lineY = y + i * ROW_HEIGHT;
+    if (i > 0) {
+      doc.setFillColor(COLOR_NOTE_BAR.r, COLOR_NOTE_BAR.g, COLOR_NOTE_BAR.b);
+      doc.rect(
+        barX,
+        lineY - RESULT_BAR_HEIGHT + RESULT_BAR_BASELINE_OFFSET,
+        barW,
+        RESULT_BAR_HEIGHT,
+        'F'
+      );
+    }
+    doc.text(lines[i], barX + RESULT_BAR_PADDING, lineY, { align: 'left' });
+  }
+
+  doc.setTextColor(COLOR_TEXT.r, COLOR_TEXT.g, COLOR_TEXT.b);
+  return y + lines.length * ROW_HEIGHT;
+}
+
 function drawTestSection(
   doc: jsPDF,
   test: ReportTest,
@@ -406,30 +466,32 @@ function drawTestSection(
   catalogTests: Test[],
   patient: ReportPatientContext
 ): number {
-  let y = ensureVerticalSpace(doc, startY, SECTION_GAP + ROW_HEIGHT * 3, layout);
-  y += SECTION_GAP * 0.5;
+  let y = ensureVerticalSpace(doc, startY, ROW_HEIGHT * 3, layout);
+  y += 2;
 
-  const title = `${test.testName} (${test.testCode})`;
-  doc.setFont(FONT, 'bold');
+  const title = test.testName;
+  doc.setFont(FONT, 'normal');
   doc.setFontSize(TITLE_SIZE);
   doc.text(title, layout.margin, y);
-  y += 5;
+  y += 3.5;
 
   if (test.methodology) {
     doc.setFont(FONT, 'normal');
     doc.setFontSize(SUBTITLE_SIZE);
-    doc.text(`Method: ${test.methodology}`, layout.margin, y);
-    y += 5;
+    doc.setTextColor(COLOR_UNIT.r, COLOR_UNIT.g, COLOR_UNIT.b);
+    doc.text(`(Method: ${test.methodology})`, layout.margin, y);
+    doc.setTextColor(COLOR_TEXT.r, COLOR_TEXT.g, COLOR_TEXT.b);
+    y += 3.5;
   }
 
-  y = ensureVerticalSpace(doc, y, ROW_HEIGHT * 2, layout);
-  y = drawTableHeader(doc, y, layout);
+  y += 1;
 
+  const resultsLayout = withResultIndent(layout, RESULT_TAB_INDENT);
   const catalogParameters = catalogParametersByCode(test.testCode, catalogTests);
-  const resultSubColumns = computeResultSubColumnLayout(doc, layout, test.parameters);
+  const rowLayout = computeResultRowLayout(doc, resultsLayout, test.parameters);
   const referenceSubColumns = computeReferenceSubColumnLayout(
     doc,
-    layout,
+    resultsLayout,
     test,
     catalogParameters,
     patient
@@ -438,13 +500,13 @@ function drawTestSection(
   for (const parameter of test.parameters) {
     const refLines = referenceLineCount(parameter, catalogParameters, patient);
     const neededHeight = Math.max(ROW_HEIGHT * 2, referenceBlockHeight(refLines));
-    y = ensureVerticalSpace(doc, y, neededHeight, layout);
+    y = ensureVerticalSpace(doc, y, neededHeight, resultsLayout);
     y = drawParameterRow(
       doc,
       y,
-      layout,
+      resultsLayout,
       parameter,
-      resultSubColumns,
+      rowLayout,
       referenceSubColumns,
       catalogParameters,
       patient
@@ -455,20 +517,12 @@ function drawTestSection(
     (note): note is string => Boolean(note)
   );
   if (notes.length > 0) {
-    y = ensureVerticalSpace(doc, y, ROW_HEIGHT * 2, layout);
-    y += 2;
-    doc.setFont(FONT, 'normal');
-    doc.setFontSize(NOTES_SIZE);
-    doc.setTextColor(55, 65, 81);
+    y = ensureVerticalSpace(doc, y, ROW_HEIGHT * 2, resultsLayout);
+    y += 1;
     for (const note of notes) {
-      const lines = doc.splitTextToSize(note, layout.contentWidth);
-      for (const line of lines) {
-        y = ensureVerticalSpace(doc, y, ROW_HEIGHT, layout);
-        doc.text(line, layout.margin, y);
-        y += ROW_HEIGHT;
-      }
+      y = ensureVerticalSpace(doc, y, ROW_HEIGHT, resultsLayout);
+      y = drawNoteBlock(doc, y, resultsLayout, note);
     }
-    doc.setTextColor(0, 0, 0);
   }
 
   return y + SECTION_GAP;
@@ -483,12 +537,14 @@ function drawCategorySection(
   patient: ReportPatientContext
 ): number {
   let y = ensureVerticalSpace(doc, startY, CATEGORY_GAP + ROW_HEIGHT * 4, layout);
-  y += CATEGORY_GAP;
+  if (startY > layout.margin + 4) {
+    y += CATEGORY_GAP;
+  }
 
   doc.setFont(FONT, 'bold');
   doc.setFontSize(TITLE_SIZE);
   doc.text(group.category.toUpperCase(), layout.margin, y);
-  y += 6;
+  y += 3.5;
 
   for (const test of group.tests) {
     y = drawTestSection(doc, test, y, layout, catalogTests, patient);
