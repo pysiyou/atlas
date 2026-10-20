@@ -5,8 +5,7 @@ import { apiClient } from '@/lib/api/client';
 import { WORKFLOW_QUERY_LIMIT } from '@/lib/api/constants';
 import type { Order } from '@/types';
 import { useQuery } from '@tanstack/react-query';
-import { useAuthStore } from '@/app/authStore';
-import { queryKeys, cacheConfig } from '@/lib/query';
+import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import type { ReportableOrder } from '../types';
 import { calculateAge } from '@/utils';
 
@@ -46,26 +45,73 @@ export const reportsAPI = {
       limit: String(limit),
     });
   },
+  getReportableOrder(orderId: number): Promise<ReportableOrderItem> {
+    return apiClient.get<ReportableOrderItem>(`/reports/orders/${orderId}`);
+  },
   recordOrderReportDownload(orderId: number): Promise<ReportableOrderItem> {
     return apiClient.get<ReportableOrderItem>(`/reports/orders/${orderId}/download`);
   },
 };
 
+const EMPTY_REPORTABLE_ORDERS: ReportableOrder[] = [];
+
 export function useReportableOrders() {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const enabled = useAuthQueryEnabled();
   const query = useQuery({
     queryKey: queryKeys.reports.reportableOrders(),
     queryFn: () => reportsAPI.getReportableOrders(),
-    enabled: isAuthenticated && !isRestoring,
+    enabled,
     ...cacheConfig.dynamic,
     select: (items: ReportableOrderItem[]) => items.map(toReportableOrder),
   });
 
   return {
-    reportableOrders: query.data ?? [],
+    reportableOrders: query.data ?? EMPTY_REPORTABLE_ORDERS,
     isLoading: query.isLoading,
+    isPending: query.isPending,
     isError: query.isError,
     error: query.error,
     refetch: query.refetch,
+  };
+}
+
+/**
+ * Load a single reportable order for the detail/preview route.
+ * Falls back to the list cache so a missing/404 detail endpoint still opens preview
+ * for a row the user just clicked.
+ */
+export function useReportableOrder(orderId: number | null) {
+  const enabled = useAuthQueryEnabled(orderId != null && Number.isFinite(orderId));
+  const listQuery = useQuery({
+    queryKey: queryKeys.reports.reportableOrders(),
+    queryFn: () => reportsAPI.getReportableOrders(),
+    enabled,
+    ...cacheConfig.dynamic,
+    select: (items: ReportableOrderItem[]) => items.map(toReportableOrder),
+  });
+  const detailQuery = useQuery({
+    queryKey: queryKeys.reports.byOrder(orderId ?? 0),
+    queryFn: () => reportsAPI.getReportableOrder(orderId!),
+    enabled,
+    ...cacheConfig.dynamic,
+    select: (item: ReportableOrderItem) => toReportableOrder(item),
+  });
+
+  const fromList =
+    orderId == null
+      ? null
+      : (listQuery.data?.find(order => order.orderId === orderId) ?? null);
+  const reportableOrder = detailQuery.data ?? fromList;
+
+  return {
+    reportableOrder,
+    isPending: !reportableOrder && (detailQuery.isPending || listQuery.isPending),
+    isLoading: !reportableOrder && (detailQuery.isLoading || listQuery.isLoading),
+    isError: !reportableOrder && detailQuery.isFetched && listQuery.isFetched && (detailQuery.isError || !fromList),
+    error: detailQuery.error ?? listQuery.error,
+    refetch: () => {
+      void detailQuery.refetch();
+      void listQuery.refetch();
+    },
   };
 }

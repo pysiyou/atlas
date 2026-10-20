@@ -4,8 +4,8 @@
  */
 
 import React from 'react';
-import { MultiSelectFilter } from '@/components';
-import type { IconName } from '@/components';
+import { MultiSelectFilter } from '@/components/overlays';
+import type { IconName } from '@/components/primitives';
 import type { MultiSelectFilterControl } from './types';
 
 /**

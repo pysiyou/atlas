@@ -5,7 +5,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { cn, uppercaseLabel } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { Badge } from '@/components';
+import { Badge } from '@/components/primitives';
 import { parseBadgeVariant } from '@/components/primitives/badgeStyles';
 import { Icon, type IconName } from '@/components/primitives/Icon';
 import { Popover } from './Popover';

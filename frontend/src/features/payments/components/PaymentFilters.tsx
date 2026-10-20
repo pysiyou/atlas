@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { FilterBar, type FilterValues } from '@/components/filters';
+import { FilterBar, useFilterBarBridge } from '@/components/filters';
 import { paymentFilterConfig } from '../config/paymentFilters.config';
 import type { PaymentStatus } from '@/types';
 
@@ -24,7 +24,7 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
   statusFilters,
   onStatusFiltersChange,
 }) => {
-  const filterValues = useMemo<FilterValues>(
+  const value = useMemo(
     () => ({
       search: searchQuery,
       statusFilters,
@@ -33,17 +33,11 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
     [searchQuery, statusFilters, dateRange]
   );
 
-  const handleFilterChange = (next: FilterValues) => {
-    if (next.search !== undefined && next.search !== searchQuery) {
-      onSearchChange((next.search as string) ?? '');
-    }
-    if (next.statusFilters !== undefined && next.statusFilters !== statusFilters) {
-      onStatusFiltersChange((next.statusFilters as PaymentStatus[]) ?? []);
-    }
-    if (next.dateRange !== undefined && next.dateRange !== dateRange) {
-      onDateRangeChange((next.dateRange as [Date, Date] | null) ?? null);
-    }
-  };
+  const { filterValues, handleFilterChange } = useFilterBarBridge(value, {
+    search: onSearchChange,
+    statusFilters: onStatusFiltersChange,
+    dateRange: onDateRangeChange,
+  });
 
   return (
     <FilterBar config={paymentFilterConfig} value={filterValues} onChange={handleFilterChange} />

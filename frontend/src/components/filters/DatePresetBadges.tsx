@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { FilterChip } from '@/components';
+import { FilterChip } from '@/components/primitives';
 import {
   DATE_PRESETS,
   getDateRangeFromPreset,

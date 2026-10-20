@@ -1,5 +1,5 @@
 import { companyConfig } from '@/config';
-import { actionButtonPreset, Icon, IconButton } from '@/components';
+import { actionButtonPreset, Icon, IconButton } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 import { CHROME, RADIUS, TYPE } from '@/components/theme/recipes';
 import { cn } from '@/utils';

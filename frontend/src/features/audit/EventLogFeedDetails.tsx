@@ -38,7 +38,7 @@ function EventLogResultsList({
   }
 
   return (
-    <div className={DETAIL_STYLES.results}>
+    <span className={DETAIL_STYLES.results}>
       {entries.map(([key, rawValue], index) => {
         const { resultValue, unit, status } = parseResultEntry(key, rawValue, flagStatusMap);
         return (
@@ -58,7 +58,7 @@ function EventLogResultsList({
           </span>
         );
       })}
-    </div>
+    </span>
   );
 }
 
@@ -79,10 +79,10 @@ export function EventLogDetailBox({ item }: { item: ResolvedEventLogItem }) {
   return (
     <>
       {hasResults ? (
-        <p className={cn(DETAIL_STYLES.row, DETAIL_STYLES.contentClamp)}>
+        <div className={cn(DETAIL_STYLES.row, DETAIL_STYLES.contentClamp)}>
           <span className={DETAIL_STYLES.label}>{EVENT_LOG_COPY.resultTitle}: </span>
           <EventLogResultsList results={results!} flags={resultFlags} testCode={testCode} />
-        </p>
+        </div>
       ) : null}
       {hasNote ? (
         <p className={cn(DETAIL_STYLES.row, DETAIL_STYLES.contentClamp)}>

@@ -5,7 +5,7 @@
 import React, { type ReactNode } from 'react';
 import { ROUTES } from '@/config';
 import { MODULE_ICONS } from '@/config/icons';
-import { Icon } from '@/components';
+import { Icon } from '@/components/primitives';
 import type { UserRole } from '@/types';
 
 export interface MenuItem {

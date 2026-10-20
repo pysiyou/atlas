@@ -8,12 +8,14 @@ import {
 import {
   createOrderSharedColumns,
   renderOrderId,
-  renderOrderTestsBlock,
 } from '@/features/orders';
 import { getActiveTests } from '../utils/orderCalculator';
 import type { Order } from '@/types';
 import { OrderTableCard } from '../components/OrderTableCard';
-import { ORDER_LIST_WIDTH_OVERRIDES } from '../constants/orderTableWidthOverrides';
+import {
+  ORDER_LIST_WIDTH_OVERRIDES,
+  ORDER_LIST_WIDTH_OVERRIDES_WITHOUT_PATIENT,
+} from '../constants/orderTableWidthOverrides';
 
 export type OrderTableConfigOptions = {
   /** Omit patient column (e.g. orders shown on patient detail). */
@@ -31,7 +33,7 @@ export const createOrderTableConfig = (
     {
       getOrderId: order => order.orderId,
       getPatientId: order => order.patientId,
-      getPatientName: order => getPatientNameFn(order.patientId),
+      getPatientName: order => order.patientName || getPatientNameFn(order.patientId),
       getTests: order => getActiveTests(order.tests ?? []),
       getTestCount: order => order.testCount ?? order.tests?.length,
       getTestCodes: order => order.testCodes,
@@ -48,23 +50,7 @@ export const createOrderTableConfig = (
     { getTestName: getTestNameFn }
   );
 
-  const columnMap = {
-    ...shared,
-    tests: {
-      ...shared.tests,
-      render: (order: Order) => {
-        const tests = getActiveTests(order.tests ?? []);
-        const count = order.testCount ?? order.tests?.length;
-        const testCodes = order.testCodes;
-        return renderOrderTestsBlock(tests, {
-          fallbackCount: count != null && tests.length === 0 ? count : undefined,
-          testCodes: tests.length === 0 ? testCodes : undefined,
-          getTestName: getTestNameFn,
-          layout: 'namesFirst',
-        });
-      },
-    },
-  };
+  const columnMap = shared;
 
   const views = hidePatientName ? ORDER_TABLE_VIEW_KEYS_WITHOUT_PATIENT : ORDER_TABLE_VIEW_KEYS;
 
@@ -75,7 +61,20 @@ export const createOrderTableConfig = (
     : OrderTableCard;
 
   return {
-    ...buildViews(columnMap, views, ORDER_LIST_WIDTH_OVERRIDES),
+    ...buildViews(
+      columnMap,
+      views,
+      hidePatientName ? ORDER_LIST_WIDTH_OVERRIDES_WITHOUT_PATIENT : ORDER_LIST_WIDTH_OVERRIDES
+    ),
     CardComponent,
   };
 };
+
+/** Patient detail related-orders table (no patient column). */
+export function createPatientRelatedOrdersTableConfig(
+  getTestName: (testCode: string) => string
+): TableViewConfig<Order> {
+  return createOrderTableConfig((() => undefined) as NavigateFunction, () => '', getTestName, {
+    hidePatientName: true,
+  });
+}

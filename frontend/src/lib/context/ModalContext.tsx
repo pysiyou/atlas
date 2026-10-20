@@ -81,7 +81,7 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
    */
   const openModal = useCallback(<T extends ModalType>(type: T, props?: ModalPropsMap[T]) => {
     setModalType(type);
-    setModalProps((props ?? null) as Record<string, unknown> | null);
+    setModalProps((props ?? {}) as Record<string, unknown>);
   }, []);
 
   /**

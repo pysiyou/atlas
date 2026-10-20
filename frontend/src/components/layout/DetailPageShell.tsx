@@ -7,7 +7,7 @@
 import React, { type ReactNode } from 'react';
 import { LoadingState } from '@/components/loaders/LoadingState';
 import { ErrorAlert } from '@/components/loaders/ErrorAlert';
-import { EmptyState } from '@/components';
+import { EmptyState } from '@/components/display';
 import { ICONS } from '@/config/icons';
 import { WORKSPACE } from '@/components/theme/recipes';
 import { useAppChromeMount } from './appChromeMount';

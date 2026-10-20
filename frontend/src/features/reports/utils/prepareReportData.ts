@@ -4,8 +4,7 @@ import type { LabReportPayload, ReportableOrder } from '../types';
 import { RESULT_NOT_AVAILABLE } from '../types';
 import { companyConfig } from '@/config/company';
 import { isDateInInclusiveRange } from '@/utils/date';
-
-const INACTIVE_TEST_STATUSES = new Set(['removed', 'superseded']);
+import { INACTIVE_REPORTABLE_TEST_STATUSES } from '@/features/orders/utils/orderCalculator';
 
 interface SampleLookup {
   (sampleId: number): { status: string; collectedAt?: string; collectedBy?: string } | undefined;
@@ -26,7 +25,7 @@ export type LabReportParameter = LabReportPayload['testResults'][number]['parame
  */
 export function getActiveOrderTests(order: Order): OrderTest[] {
   return (order.tests ?? [])
-    .filter(test => !INACTIVE_TEST_STATUSES.has(test.status))
+    .filter(test => !INACTIVE_REPORTABLE_TEST_STATUSES.has(test.status))
     .sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
 }
 
@@ -179,8 +178,9 @@ export function prepareReportData({
   const collectedBy =
     sample && sample.status === 'collected' ? sample.collectedBy : undefined;
 
+  const catalogByCode = new Map(catalogTests.map(catalog => [catalog.code, catalog]));
   const testResults = activeTests.map(test => {
-    const catalogTest = catalogTests.find(catalog => catalog.code === test.testCode);
+    const catalogTest = catalogByCode.get(test.testCode);
     return buildTestResultEntry(test, catalogTest, getUserName);
   });
 

@@ -9,9 +9,8 @@ import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { useCallback, useMemo, useState } from 'react';
 import { useEntityLookup, parseNumericKey } from '@/hooks/useEntityLookup';
-import { queryKeys, cacheConfig } from '@/lib/query';
+import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { invalidatePatientQueries } from '@/lib/query/invalidate';
-import { useAuthStore } from '@/app/authStore';
 import { notify } from '@/utils/feedback';
 import { patientSchema, patientCreateSchema, patientUpdateSchema } from '../schemas/patientFormSchemas';
 import { formInputToPayload } from '../utils/formTransformers';
@@ -108,12 +107,12 @@ export const patientAPI = {
  * ```
  */
 export function usePatientsList() {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const enabled = useAuthQueryEnabled();
 
   const query = useQuery({
     queryKey: queryKeys.patients.list(),
     queryFn: () => patientAPI.getAll(),
-    enabled: isAuthenticated && !isRestoring, // Only fetch when authenticated and not restoring
+    enabled,
     ...cacheConfig.semiStatic, // 5 min stale, 30 min gc
   });
 
@@ -143,7 +142,7 @@ export function usePaginatedPatients(
   initialPage = 1,
   pageSize = DEFAULT_LIST_PAGE_SIZE
 ) {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const enabled = useAuthQueryEnabled();
   const [page, setPage] = useState(initialPage);
   const filterSnapshot = JSON.stringify(filters ?? null);
   const [prevFilterSnapshot, setPrevFilterSnapshot] = useState(filterSnapshot);
@@ -165,7 +164,7 @@ export function usePaginatedPatients(
         page,
         pageSize,
       }),
-    enabled: isAuthenticated && !isRestoring,
+    enabled,
     placeholderData: keepPreviousData,
     ...cacheConfig.semiStatic,
   });
@@ -257,12 +256,12 @@ export function usePaginatedPatientContextList(filters?: PatientsFilter) {
  * ```
  */
 export function usePatient(patientId: string | undefined) {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const enabled = useAuthQueryEnabled(Boolean(patientId));
 
   const query = useQuery({
     queryKey: queryKeys.patients.byId(patientId ?? ''),
     queryFn: () => patientAPI.getById(patientId!),
-    enabled: isAuthenticated && !isRestoring && !!patientId, // Only fetch when authenticated and not restoring
+    enabled,
     ...cacheConfig.semiStatic,
   });
 
@@ -327,12 +326,12 @@ export function usePatientSearch(searchQuery: string) {
  * ```
  */
 export function usePatientOptions() {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const enabled = useAuthQueryEnabled();
 
   const query = useQuery({
     queryKey: queryKeys.patients.list(),
     queryFn: () => patientAPI.getAll(),
-    enabled: isAuthenticated && !isRestoring,
+    enabled,
     ...cacheConfig.semiStatic,
     // SELECT PATTERN: Transform full patient list to dropdown options
     // Only re-renders when the derived options change, not the full data
@@ -365,12 +364,12 @@ export function usePatientOptions() {
  * ```
  */
 export function usePatientNames() {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const enabled = useAuthQueryEnabled();
 
   const query = useQuery({
     queryKey: queryKeys.patients.list(),
     queryFn: () => patientAPI.getAll(),
-    enabled: isAuthenticated && !isRestoring,
+    enabled,
     ...cacheConfig.semiStatic,
     // SELECT PATTERN: Transform to Map for efficient lookups
     select: (patients: Patient[]) => {

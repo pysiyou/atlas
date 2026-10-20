@@ -10,7 +10,7 @@ export type {
   TestWithContext,
 } from './types';
 
-export { sampleAPI, useSampleLookup } from './api/samples';
+export { sampleAPI, useSampleLookup, createSampleLookupForOrder } from './api/samples';
 
 export {
   useLabStageQueueCounts,

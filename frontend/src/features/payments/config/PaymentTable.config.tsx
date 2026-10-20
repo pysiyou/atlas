@@ -9,7 +9,6 @@ import {
   createOrderSharedColumns,
   renderOrderDateCell,
   renderOrderId,
-  renderOrderTestsBlock,
 } from '@/features/orders';
 import { PaymentButton } from '../components/PaymentButton';
 import { PaymentCard } from '../components/PaymentCard';
@@ -39,7 +38,7 @@ export const createPaymentTableConfig = (
     {
       getOrderId: item => item.order.orderId,
       getPatientId: item => item.order.patientId,
-      getPatientName: item => getPatientNameFn(item.order.patientId),
+      getPatientName: item => item.order.patientName || getPatientNameFn(item.order.patientId),
       getTests: item => getActiveTests(item.order.tests ?? []),
       getTestCount: item => item.order.testCount ?? item.order.tests?.length,
       getTestCodes: item => item.order.testCodes,
@@ -58,20 +57,6 @@ export const createPaymentTableConfig = (
 
   const columnMap = {
     ...shared,
-    tests: {
-      ...shared.tests,
-      render: (item: OrderPaymentView) => {
-        const tests = getActiveTests(item.order.tests ?? []);
-        const count = item.order.testCount ?? item.order.tests?.length;
-        const testCodes = item.order.testCodes;
-        return renderOrderTestsBlock(tests, {
-          fallbackCount: count != null && tests.length === 0 ? count : undefined,
-          testCodes: tests.length === 0 ? testCodes : undefined,
-          getTestName,
-          layout: 'namesFirst',
-        });
-      },
-    },
     paymentMethod: {
       key: 'paymentMethod',
       header: 'Method',

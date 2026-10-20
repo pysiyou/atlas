@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { FilterBar, type FilterValues } from '@/components/filters';
+import { FilterBar, useFilterBarBridge } from '@/components/filters';
 import type { UserRole } from '@/types';
 import { userFilterConfig } from '../constants/userFilterBar.config';
 import type { UserAccountStatusFilter } from '../constants/userFilterConfig';
@@ -25,7 +25,7 @@ export const UserFilters: React.FC<UserFiltersProps> = ({
   statusFilters,
   onStatusFiltersChange,
 }) => {
-  const filterValues = useMemo<FilterValues>(
+  const value = useMemo(
     () => ({
       search: searchQuery,
       role: roleFilters,
@@ -34,17 +34,11 @@ export const UserFilters: React.FC<UserFiltersProps> = ({
     [searchQuery, roleFilters, statusFilters]
   );
 
-  const handleFilterChange = (next: FilterValues) => {
-    if (next.search !== undefined && next.search !== searchQuery) {
-      onSearchChange((next.search as string) ?? '');
-    }
-    if (next.role !== undefined && next.role !== roleFilters) {
-      onRoleFiltersChange((next.role as UserRole[]) ?? []);
-    }
-    if (next.accountStatus !== undefined && next.accountStatus !== statusFilters) {
-      onStatusFiltersChange((next.accountStatus as UserAccountStatusFilter[]) ?? []);
-    }
-  };
+  const { filterValues, handleFilterChange } = useFilterBarBridge(value, {
+    search: onSearchChange,
+    role: onRoleFiltersChange,
+    accountStatus: onStatusFiltersChange,
+  });
 
   return <FilterBar config={userFilterConfig} value={filterValues} onChange={handleFilterChange} />;
 };

@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { HistogramRangeSlider } from '@/components';
+import { HistogramRangeSlider } from '@/components/overlays';
 
 export interface AgeRangeSliderPanelProps {
   value: [number, number];

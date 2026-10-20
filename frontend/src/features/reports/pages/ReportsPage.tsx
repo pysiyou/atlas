@@ -1,25 +1,23 @@
 /**
  * Reports Page
- * Report generation and management with PDF support
+ * Report generation and management with PDF support.
+ * `/reports` and `/reports/:id` both render the list so the table stays
+ * visible behind the preview modal.
  */
 
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ReportList } from './ReportList';
-import { ReportDetail } from './ReportDetail';
 
 /**
  * Reports Page Component
- * Handles routing between report list and detail views
+ * Handles routing between the report list and a deep-linked preview.
  */
 export const Reports: React.FC = () => {
   return (
     <Routes>
-      {/* Default route: show report list */}
       <Route index element={<ReportList />} />
-      {/* Detail route: show individual report preview */}
-      <Route path=":id" element={<ReportDetail />} />
-      {/* Fallback: redirect to report list */}
+      <Route path=":id" element={<ReportList />} />
       <Route path="*" element={<Navigate to="/reports" replace />} />
     </Routes>
   );

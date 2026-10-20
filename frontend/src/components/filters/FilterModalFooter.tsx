@@ -3,8 +3,9 @@
  */
 
 import React from 'react';
-import { Button, DialogFooter, FooterInfo } from '@/components';
-import type { IconName } from '@/components';
+import { FooterInfo } from '@/components/display';
+import { DialogFooter } from '@/components/overlays';
+import { Button, type IconName } from '@/components/primitives';
 
 export interface FilterModalFooterProps {
   onReset: () => void;

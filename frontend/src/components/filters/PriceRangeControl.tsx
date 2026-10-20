@@ -3,7 +3,8 @@
  */
 
 import React from 'react';
-import { Popover, Icon, FilterTriggerShell } from '@/components';
+import { FilterTriggerShell, Popover } from '@/components/overlays';
+import { Icon } from '@/components/primitives';
 import type { PriceRangeFilterControl } from './types';
 import { ICONS } from '@/config/icons';
 import { PriceRangeSliderContent } from './PriceRangeSliderContent';

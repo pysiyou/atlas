@@ -4,18 +4,17 @@
  * Implements route-based code splitting for optimal performance
  */
 
-import React, { lazy, type ComponentType, type LazyExoticComponent } from 'react';
+import React, { lazy, Suspense, type ComponentType, type LazyExoticComponent } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
 import { AppProviders } from '@/app/AppProviders';
-import { ErrorBoundary } from '@/components/loaders';
+import { ErrorBoundary, PageLoadingFallback } from '@/components/loaders';
 import { AppToastBar } from '@/app/AppToastBar';
 import { TOAST_DEFAULT_DURATION_MS } from '@/components/overlays/Toast';
 import { InitialDataPreload } from '@/app/InitialDataPreload';
 import { ProtectedLayout } from '@/app/ProtectedLayout';
 import { PublicRoute } from '@/app/PublicRoute';
-import { LoginPage } from '@/features/auth';
 import { ModalRenderer } from '@/app/modals/ModalRenderer';
 import { ROUTES } from '@/config';
 
@@ -37,6 +36,8 @@ function lazyNamed(
   );
 }
 
+/** Login is code-split so its decorative SVGs stay off the authenticated bundle. */
+const LoginPage = lazyNamed(() => import('@/features/auth/LoginPage'), 'LoginPage');
 const Dashboard = lazyNamed(
   () => import('@/features/dashboard'),
   'DashboardPage'
@@ -74,7 +75,9 @@ const AppRoutes: React.FC = () => {
         path={ROUTES.LOGIN}
         element={
           <PublicRoute>
-            <LoginPage />
+            <Suspense fallback={<PageLoadingFallback />}>
+              <LoginPage />
+            </Suspense>
           </PublicRoute>
         }
       />

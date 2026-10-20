@@ -1,10 +1,10 @@
-import { Avatar, Icon, Popover } from '@/components';
-import type { PopoverPlacement } from '@/components';
+import { Avatar } from '@/components/primitives/Avatar';
+import { Icon } from '@/components/primitives/Icon';
+import { Popover, type PopoverPlacement } from '@/components/overlays/Popover';
 import { ICONS } from '@/config/icons';
 import { cn } from '@/utils';
 import { formatStatus } from '@/utils/string';
 import type { AuthUser } from '@/types';
-import defaultAvatar from '@/assets/default-avatar.jpg';
 import { CHROME, CONTROL, MENU_ITEM_TYPE, RADIUS, TONE, TYPE } from '@/components/theme/recipes';
 
 export interface SidebarProfileProps {
@@ -35,7 +35,6 @@ export function SidebarProfile({ currentUser, isCollapsed, onLogout }: SidebarPr
               <Avatar
                 primaryText={currentUser.name}
                 secondaryText={formatStatus(currentUser.role)}
-                src={defaultAvatar}
                 size="sm"
                 avatarOnly
               />
@@ -51,7 +50,7 @@ export function SidebarProfile({ currentUser, isCollapsed, onLogout }: SidebarPr
       {({ close }) => (
         <div className="flex flex-col">
           <div className="flex items-center gap-space-3 border-b border-border-default bg-surface-page px-space-3 py-space-3">
-            <Avatar primaryText={currentUser.name} src={defaultAvatar} size="sm" avatarOnly />
+            <Avatar primaryText={currentUser.name} size="sm" avatarOnly />
             <div className="min-w-0 flex-1">
               <p className={`${TYPE.detailTitle} truncate`}>{currentUser.name}</p>
               <p className={`${TYPE.sectionTitle} mt-space-0-5 truncate`}>

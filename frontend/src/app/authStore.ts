@@ -5,6 +5,8 @@ import { authAPI, bindAuthClientHandlers } from '@/lib/api/auth';
 import { notify } from '@/utils/feedback';
 import { feedbackTitle } from '@/utils/feedback/copy';
 import { clearSessionExpired, markSessionExpired } from '@/utils/feedback/sessionExpiry';
+import { getQueryClient } from '@/lib/query/client';
+import { clearPersistedQueryCache } from '@/lib/query/persistor';
 
 interface AuthState {
   user: AuthUser | null;
@@ -64,6 +66,9 @@ export const useAuthStore = create<AuthState>()(
             // Ignore logout errors
           }
 
+          getQueryClient().clear();
+          clearPersistedQueryCache();
+
           set({
             user: null,
             token: null,
@@ -83,6 +88,8 @@ export const useAuthStore = create<AuthState>()(
           } catch {
             markSessionExpired();
             notify.toast('session.expired');
+            getQueryClient().clear();
+            clearPersistedQueryCache();
             set({
               user: null,
               token: null,

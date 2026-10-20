@@ -36,7 +36,6 @@ function validationStatusLabel(order: ReportableOrder): string {
 
 export const createReportTableConfig = (
   navigate: NavigateFunction,
-  _getPatientName: (patientId: number | string) => string,
   onPreview: (order: ReportableOrder) => void,
   onPrint: (order: ReportableOrder) => void,
   generatingOrderId: number | null

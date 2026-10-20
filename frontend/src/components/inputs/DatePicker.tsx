@@ -15,7 +15,8 @@ import {
   startOfDay,
   endOfDay,
 } from 'date-fns';
-import { Popover, Icon, FilterTriggerShell, FilterChip } from '@/components';
+import { FilterTriggerShell, Popover } from '@/components/overlays';
+import { FilterChip, Icon } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 import { CALENDAR_TYPE, RADIUS, TYPE } from '@/components/theme/recipes';
 import { cn } from '@/utils';

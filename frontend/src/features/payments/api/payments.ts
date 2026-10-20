@@ -8,9 +8,8 @@ import type { ApiPaymentResponse } from '@/lib/api/types';
 import type { Payment, PaymentMethod } from '@/types';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { queryKeys, cacheConfig } from '@/lib/query';
+import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { invalidateOrderQueries, useInvalidateQueryKey, invalidatePaymentDetailQueries } from '@/lib/query/invalidate';
-import { useAuthStore } from '@/app/authStore';
 
 export interface PaymentCreate {
   orderId: number | string;
@@ -21,6 +20,8 @@ export interface PaymentCreate {
 
 export interface PaymentFilters {
   orderId?: string;
+  /** Comma-separated order IDs for a batched page join. */
+  orderIds?: string;
   paymentMethod?: PaymentMethod;
   skip?: number;
   limit?: number;
@@ -32,6 +33,7 @@ function buildPaymentQueryParams(filters?: PaymentFilters): Record<string, strin
   };
 
   if (filters?.orderId) params.orderId = filters.orderId;
+  if (filters?.orderIds) params.orderIds = filters.orderIds;
   if (filters?.paymentMethod) params.paymentMethod = filters.paymentMethod;
   if (filters?.skip !== undefined) params.skip = String(filters.skip);
 
@@ -77,12 +79,12 @@ export interface PaymentsFilters {
 }
 
 export function usePaymentsList(filters?: PaymentsFilters) {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const enabled = useAuthQueryEnabled();
 
   const query = useQuery({
     queryKey: queryKeys.payments.list(filters),
     queryFn: () => paymentAPI.getAll(filters),
-    enabled: isAuthenticated && !isRestoring,
+    enabled,
     ...cacheConfig.dynamic,
   });
 
@@ -99,19 +101,20 @@ export function usePaymentsList(filters?: PaymentsFilters) {
 
 /** Fetch payments only for the given order IDs (paginated list join). */
 export function usePaymentsForOrderIds(orderIds: number[]) {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
   const cacheKey = useMemo(
     () => [...orderIds].sort((a, b) => a - b).join(','),
     [orderIds]
   );
+  const enabled = useAuthQueryEnabled(orderIds.length > 0);
 
   const query = useQuery({
-    queryKey: [...queryKeys.payments.all, 'for-orders', cacheKey] as const,
-    queryFn: async () => {
-      const batches = await Promise.all(orderIds.map(id => paymentAPI.getByOrder(String(id))));
-      return batches.flat();
-    },
-    enabled: isAuthenticated && !isRestoring && orderIds.length > 0,
+    queryKey: queryKeys.payments.list({ orderIds: cacheKey }),
+    queryFn: () =>
+      paymentAPI.getAll({
+        orderIds: cacheKey,
+        limit: Math.max(orderIds.length * 4, 50),
+      }),
+    enabled,
     ...cacheConfig.dynamic,
   });
 
@@ -122,12 +125,12 @@ export function usePaymentsForOrderIds(orderIds: number[]) {
 }
 
 export function usePayment(paymentId: string | undefined) {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const enabled = useAuthQueryEnabled(Boolean(paymentId));
 
   const query = useQuery({
     queryKey: queryKeys.payments.byId(paymentId ?? ''),
     queryFn: () => paymentAPI.getById(paymentId!),
-    enabled: isAuthenticated && !isRestoring && !!paymentId,
+    enabled,
     ...cacheConfig.dynamic,
   });
 
@@ -142,12 +145,12 @@ export function usePayment(paymentId: string | undefined) {
 }
 
 export function usePaymentsByOrder(orderId: string | undefined) {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const enabled = useAuthQueryEnabled(Boolean(orderId));
 
   const query = useQuery({
     queryKey: queryKeys.payments.byOrder(orderId ?? ''),
     queryFn: () => paymentAPI.getByOrder(orderId!),
-    enabled: isAuthenticated && !isRestoring && !!orderId,
+    enabled,
     ...cacheConfig.dynamic,
   });
 

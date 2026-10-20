@@ -7,6 +7,7 @@ import type { Patient, Order, Relationship } from '@/types';
 import { RELATIONSHIP_CONFIG, RELATIONSHIP_VALUES } from '@/types';
 import { formatArrayWithFallback } from '@/utils/array';
 import { formatDetailDate as formatDetailDateUtil, formatOrderDate } from '@/utils/date';
+import { INACTIVE_REPORTABLE_TEST_STATUSES } from '@/features/orders/utils/orderCalculator';
 
 export const formatPatientDetailDate = (
   date: string | Date | undefined | null,
@@ -48,15 +49,13 @@ export const formatAddress = (address: Patient['address']): string => {
   return parts.join(', ') || 'N/A';
 };
 
-const INACTIVE_TEST_STATUSES = new Set(['removed', 'superseded']);
-
 /**
- * Gets reportable orders (non-cancelled orders with at least one active test).
+ * Gets reportable orders (non-cancelled orders with at least one reportable test).
  */
 export const getReportableOrders = (orders: Order[]): Order[] => {
   return orders.filter(order => {
     if (order.overallStatus === 'cancelled') return false;
-    return (order.tests ?? []).some(test => !INACTIVE_TEST_STATUSES.has(test.status));
+    return (order.tests ?? []).some(test => !INACTIVE_REPORTABLE_TEST_STATUSES.has(test.status));
   });
 };
 

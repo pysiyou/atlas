@@ -6,13 +6,12 @@ import { expectArray } from '@/lib/api/errors';
 import type { ApiTestResponse } from '@/lib/api/types';
 import { REFERENCE_DATA_LIMIT } from '@/lib/api/constants';
 import type { Test, TestCategory, TestParameter, ResultItem } from '@/types';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { buildParameterLabelMapFromCatalog } from '../testLookup';
 import { useEntityLookup } from '@/hooks/useEntityLookup';
-import { queryKeys, cacheConfig } from '@/lib/query';
+import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { useInvalidateQueryKey } from '@/lib/query/invalidate';
-import { useAuthStore } from '@/app/authStore';
 
 interface GetTestsParams {
   category?: TestCategory;
@@ -137,18 +136,21 @@ export const testAPI = {
  * const { tests, isLoading, error } = useTestCatalog();
  * ```
  */
+const getTestCode = (test: Test) => test.code;
+const EMPTY_TESTS: Test[] = [];
+
 export function useTestCatalog() {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const enabled = useAuthQueryEnabled();
 
   const query = useQuery({
     queryKey: queryKeys.tests.all,
     queryFn: () => testAPI.getAll(),
-    enabled: isAuthenticated && !isRestoring, // Only fetch when authenticated and not restoring
+    enabled,
     ...cacheConfig.static, // Infinity cache - never refetch automatically
   });
 
   return {
-    tests: query.data ?? [],
+    tests: query.data ?? EMPTY_TESTS,
     isLoading: query.isLoading,
     isPending: query.isPending,
     isError: query.isError,
@@ -180,12 +182,12 @@ export function useParameterLabelMap(testCode?: string): Record<string, string> 
  * ```
  */
 export function useTest(testCode: string | undefined) {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const enabled = useAuthQueryEnabled(Boolean(testCode));
 
   const query = useQuery({
     queryKey: queryKeys.tests.byCode(testCode ?? ''),
     queryFn: () => testAPI.getByCode(testCode!),
-    enabled: isAuthenticated && !isRestoring && !!testCode, // Only fetch when authenticated and not restoring
+    enabled,
     ...cacheConfig.static,
   });
 
@@ -288,10 +290,10 @@ export function useActiveTests() {
  */
 export function useTestNameLookup() {
   const { tests, isLoading } = useTestCatalog();
-  const { get } = useEntityLookup(tests, t => t.code, { isLoading });
+  const { get } = useEntityLookup(tests, getTestCode, { isLoading });
 
-  const getTestName = (testCode: string): string => get(testCode)?.name ?? testCode;
-  const getTest = (testCode: string): Test | undefined => get(testCode);
+  const getTestName = useCallback((testCode: string): string => get(testCode)?.name ?? testCode, [get]);
+  const getTest = useCallback((testCode: string): Test | undefined => get(testCode), [get]);
 
   return {
     getTestName,

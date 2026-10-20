@@ -3,23 +3,27 @@
  * Test orders management
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { OrderList } from './OrderList';
 import { OrderDetail } from './OrderDetail';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 
-export const Orders: React.FC = () => {
+/**
+ * Redirect /orders/new to the list and open the create-order modal.
+ * Defined at module scope so the route element type is stable across renders.
+ */
+function NewOrderRedirect() {
   const { openModal } = useModal();
 
-  // Redirect /new to list and open modal
-  const NewOrderRedirect = () => {
-    React.useEffect(() => {
-      openModal(ModalType.NEW_ORDER);
-    }, []);
-    return <Navigate to="/orders" replace />;
-  };
+  useEffect(() => {
+    openModal(ModalType.NEW_ORDER, {});
+  }, [openModal]);
 
+  return <Navigate to="/orders" replace />;
+}
+
+export const Orders: React.FC = () => {
   return (
     <Routes>
       <Route index element={<OrderList />} />

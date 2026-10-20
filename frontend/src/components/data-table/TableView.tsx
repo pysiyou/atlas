@@ -3,7 +3,8 @@
  */
 
 import { type ReactNode } from 'react';
-import { EmptyState, type IconName } from '@/components';
+import { EmptyState } from '@/components/display';
+import type { IconName } from '@/components/primitives';
 import { PANEL_EMPTY_STATE, DASHBOARD_EMPTY_STATE } from '@/components/display/emptyStatePresets';
 import { DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';
 import type { ColumnConfig, SortConfig, TableVariant } from './types';

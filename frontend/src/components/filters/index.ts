@@ -27,6 +27,7 @@ export type {
 } from './types';
 
 export { useFilterState } from './useFilterState';
+export { useFilterBarBridge } from './useFilterBarBridge';
 export { useQuickFilters } from './useQuickFilters';
 
 export { FilterBar, type FilterBarProps } from './FilterBar';

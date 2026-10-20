@@ -141,7 +141,7 @@ export const queryKeys = {
   payments: {
     all: ['payments'] as const,
     lists: () => [...queryKeys.payments.all, 'list'] as const,
-    list: (filters?: { orderId?: string; paymentMethod?: string }) =>
+    list: (filters?: { orderId?: string; orderIds?: string; paymentMethod?: string }) =>
       [...queryKeys.payments.lists(), filters] as const,
     details: () => [...queryKeys.payments.all, 'detail'] as const,
     byId: (id: string) => [...queryKeys.payments.details(), id] as const,
@@ -202,6 +202,7 @@ export const queryKeys = {
   reports: {
     all: ['reports'] as const,
     reportableOrders: () => [...queryKeys.reports.all, 'reportable-orders'] as const,
+    byOrder: (orderId: number) => [...queryKeys.reports.all, 'order', orderId] as const,
   },
 
   worklists: {

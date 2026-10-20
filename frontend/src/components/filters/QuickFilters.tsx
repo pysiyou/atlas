@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { FilterChip, type IconName } from '@/components';
+import { FilterChip, type IconName } from '@/components/primitives';
 import { cn } from '@/utils';
 import type { QuickFilterPreset } from './types';
 

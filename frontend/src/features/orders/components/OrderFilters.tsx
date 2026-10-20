@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { FilterBar, type FilterValues } from '@/components/filters';
+import { FilterBar, useFilterBarBridge } from '@/components/filters';
 import { orderFilterConfig } from '../config/orderFilters.config';
 import type { OrderStatus } from '@/types';
 
@@ -24,7 +24,7 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
   statusFilters,
   onStatusFiltersChange,
 }) => {
-  const filterValues = useMemo<FilterValues>(
+  const value = useMemo(
     () => ({
       search: searchQuery,
       status: statusFilters,
@@ -33,17 +33,11 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
     [searchQuery, statusFilters, dateRange]
   );
 
-  const handleFilterChange = (next: FilterValues) => {
-    if (next.search !== undefined && next.search !== searchQuery) {
-      onSearchChange((next.search as string) ?? '');
-    }
-    if (next.status !== undefined && next.status !== statusFilters) {
-      onStatusFiltersChange((next.status as OrderStatus[]) ?? []);
-    }
-    if (next.dateRange !== undefined && next.dateRange !== dateRange) {
-      onDateRangeChange((next.dateRange as [Date, Date] | null) ?? null);
-    }
-  };
+  const { filterValues, handleFilterChange } = useFilterBarBridge(value, {
+    search: onSearchChange,
+    status: onStatusFiltersChange,
+    dateRange: onDateRangeChange,
+  });
 
   return <FilterBar config={orderFilterConfig} value={filterValues} onChange={handleFilterChange} />;
 };

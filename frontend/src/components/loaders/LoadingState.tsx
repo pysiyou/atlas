@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { SpinnerLoader } from '@/components';
+import { SpinnerLoader } from './SpinnerLoader';
 import { RADIUS, TYPE } from '@/components/theme/recipes';
 import { cn } from '@/utils/cn';
 

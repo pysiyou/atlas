@@ -4,7 +4,7 @@
 
 import React, { type ReactNode } from 'react';
 import { Icon, type IconName } from '@/components/primitives/Icon';
-import { getColorStyles, type BadgeColor } from '@/components';
+import { getColorStyles, type BadgeColor } from '@/components/primitives';
 import { useBadgeAppearance, type BadgeAppearance } from '@/components/theme/theme';
 import { ALERT_SURFACE_TYPE, RADIUS, SHADOW } from '@/components/theme/recipes';
 import { cn } from '@/utils';

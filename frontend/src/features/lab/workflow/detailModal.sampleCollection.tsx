@@ -9,9 +9,7 @@ import { sampleAPI } from '../api/samples';
 import type { ContainerType } from '@/types';
 import { useTestCatalog } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users';
-import { usePatientNameLookup } from '@/features/patients';
-import { useOrderLookup } from '@/features/orders';
-import { useSampleLookup } from '../api/samples';
+import { useOrder } from '@/features/orders';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
 import { getTestNames } from '@/features/catalog/testLookup';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
@@ -44,21 +42,19 @@ export const SampleCollectionDetailModal: React.FC<CollectionDetailModalProps> =
   readOnly = false,
 }) => {
   const { getUserName } = useUserLookup();
-  const { getSample } = useSampleLookup();
-  const { getPatientName } = usePatientNameLookup();
-  const { getOrder } = useOrderLookup();
   const { tests = [] } = useTestCatalog();
   const { openModal } = useModal();
   const [isPopoverSubmitting, setIsPopoverSubmitting] = useState(false);
 
-  const cachedSample = sampleId ? getSample(sampleId) : undefined;
   const { data: fetchedSample, isLoading: isFetchingSample } = useQuery({
     queryKey: queryKeys.samples.byId(sampleId ?? ''),
     queryFn: () => sampleAPI.getById(sampleId!),
-    enabled: isOpen && !!sampleId && !cachedSample,
+    enabled: isOpen && !!sampleId,
   });
-  const sample = cachedSample ?? fetchedSample ?? pendingSampleDisplay?.sample;
-  const order = pendingSampleDisplay?.order || (sample ? getOrder(sample.orderId) : undefined);
+  const sample = fetchedSample ?? pendingSampleDisplay?.sample;
+  const orderId = pendingSampleDisplay?.order ? undefined : sample?.orderId;
+  const { order: fetchedOrder } = useOrder(orderId != null ? String(orderId) : undefined);
+  const order = pendingSampleDisplay?.order || fetchedOrder;
   const requirement = pendingSampleDisplay?.requirement;
 
   const testDetails = useMemo(() => {
@@ -97,8 +93,7 @@ export const SampleCollectionDetailModal: React.FC<CollectionDetailModalProps> =
   const fields = deriveCollectionModalFields(
     sample,
     order,
-    pendingSampleDisplay?.patient?.fullName,
-    getPatientName
+    pendingSampleDisplay?.patient?.fullName
   );
   const testNames = sample.testCodes ? getTestNames(sample.testCodes, tests) : [];
 

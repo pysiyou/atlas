@@ -4,9 +4,9 @@
  */
 
 import React from 'react';
-import { Popover, Icon, Badge, FilterTriggerShell } from '@/components';
+import { FilterTriggerShell, Popover } from '@/components/overlays';
+import { Badge, Icon, type IconName } from '@/components/primitives';
 import { parseBadgeVariant } from '@/components/primitives/badgeStyles';
-import type { IconName } from '@/components';
 import { cn, uppercaseLabel } from '@/utils';
 import { ICONS } from '@/config/icons';
 import type { SingleSelectFilterControl } from './types';

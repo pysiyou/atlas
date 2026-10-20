@@ -3,8 +3,8 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { Modal, ModalPageShell, OverlaySearchInput } from '@/components';
-import type { IconName } from '@/components';
+import { Modal, ModalPageShell, OverlaySearchInput } from '@/components/overlays';
+import type { IconName } from '@/components/primitives';
 import { FilterModalFooter } from './FilterModalFooter';
 
 export interface EntityFilterModalProps {

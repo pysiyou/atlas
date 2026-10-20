@@ -45,9 +45,12 @@ class PaymentService:
         limit: int,
         order_id: int | None = None,
         payment_method=None,
+        order_ids: list[int] | None = None,
     ) -> list[dict]:
         query = self._payment_query()
-        if order_id:
+        if order_ids:
+            query = query.filter(Payment.orderId.in_(order_ids))
+        elif order_id:
             query = query.filter(Payment.orderId == order_id)
         if payment_method:
             query = query.filter(Payment.paymentMethod == payment_method)

@@ -12,9 +12,9 @@ import type {
 } from '@/types';
 import type { StatusPresentation } from '@/types/labProjection';
 import { useQuery } from '@tanstack/react-query';
-import { useAuthStore } from '@/app/authStore';
-import { queryKeys, cacheConfig } from '@/lib/query';
+import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { LAB_CONFIG, LAB_PATHS } from '../constants/labConstants';
+import { useDocumentVisible } from '@/hooks/useDocumentVisible';
 
 export interface WorklistPagination {
   page: number;
@@ -208,13 +208,14 @@ function createWorklistQueryHook<TItem>(
   fetchFn: (params?: WorklistHookParams) => Promise<{ items: TItem[]; pagination?: WorklistPagination }>,
 ) {
   return function useWorklistQuery(params?: WorklistHookParams) {
-    const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+    const enabled = useAuthQueryEnabled();
+    const visible = useDocumentVisible();
     const query = useQuery({
       queryKey: queryKeyFn(params),
       queryFn: () => fetchFn({ pageSize: 200, ...params }),
-      enabled: isAuthenticated && !isRestoring,
+      enabled,
       ...cacheConfig.dynamic,
-      refetchInterval: LAB_CONFIG.TAB_COUNT_REFRESH_MS,
+      refetchInterval: visible ? LAB_CONFIG.TAB_COUNT_REFRESH_MS : false,
     });
     return {
       items: query.data?.items ?? [],

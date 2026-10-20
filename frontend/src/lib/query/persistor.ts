@@ -44,6 +44,19 @@ function shouldPersistQuery(queryKey: readonly unknown[]): boolean {
 /**
  * Create the storage persister for localStorage
  */
+/**
+ * Remove the persisted TanStack Query cache from localStorage.
+ * Call on logout so the next session cannot restore another user's catalog.
+ */
+export function clearPersistedQueryCache(): void {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.removeItem(PERSIST_STORAGE_KEY);
+  } catch {
+    // Ignore storage errors (private mode, quota, etc.)
+  }
+}
+
 export function createPersister() {
   // Only create persister in browser environment
   if (typeof window === 'undefined') {

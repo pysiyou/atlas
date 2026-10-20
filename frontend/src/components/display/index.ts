@@ -12,6 +12,7 @@ export * from './DetailFieldsColumnFlow';
 export * from './DetailGroup';
 export * from './DetailsTable';
 export * from './detailsTableUtils';
+export * from './DomainStatusBadge';
 export * from './EmptyState';
 export * from './emptyStatePresets';
 export * from './emptyStateCopy';

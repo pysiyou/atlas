@@ -7,7 +7,6 @@ import { useMemo, type FC } from 'react';
 import { Card } from '@/components/surfaces';
 import { cn } from '@/utils';
 import { useUserLookup } from '@/lib/api/users';
-import { usePatientNameLookup } from '@/features/patients';
 import { useLabWorkflowCardClickGuard } from '../hooks';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
@@ -37,7 +36,6 @@ export interface EscalationCardSharedData {
 export function useEscalationCardData(props: EscalationCardProps): EscalationCardSharedData {
   const { test, onClick } = props;
   const { getUserName } = useUserLookup();
-  const { getPatientName } = usePatientNameLookup();
   const handleCardClick = useLabWorkflowCardClickGuard(onClick);
   const rejection = useMemo(() => deriveRetestContext(test), [test]);
 
@@ -46,7 +44,7 @@ export function useEscalationCardData(props: EscalationCardProps): EscalationCar
     handleCardClick,
     getUserName: (userId: string) => getUserName(userId),
     rejection,
-    patientName: getPatientName(test.patientId),
+    patientName: test.patientName || '—',
   };
 }
 

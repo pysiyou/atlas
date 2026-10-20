@@ -53,7 +53,7 @@ class ReportService:
         )
         return [self._to_item(order) for order in orders]
 
-    def get_reportable_order(self, order_id: int, user_id: int) -> ReportableOrderItem:
+    def _load_reportable_order(self, order_id: int) -> Order:
         order = (
             self.db.query(Order)
             .options(*_order_load_options())
@@ -62,11 +62,18 @@ class ReportService:
         )
         if not order or not is_reportable_order(order):
             raise HTTPException(status_code=404, detail="Reportable order not found")
+        return order
 
+    def get_reportable_order_view(self, order_id: int) -> ReportableOrderItem:
+        """Load one reportable order without recording a download audit event."""
+        return self._to_item(self._load_reportable_order(order_id))
+
+    def get_reportable_order(self, order_id: int, user_id: int) -> ReportableOrderItem:
+        order = self._load_reportable_order(order_id)
         item = self._to_item(order)
         active_tests = active_order_tests(order)
         AuditEmitter(self.db).reporting_downloaded(
-            order.orderId,
+            item.orderId,
             user_id,
             metadata={"test_codes": [test.testCode for test in active_tests]},
         )
