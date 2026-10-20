@@ -14,6 +14,8 @@ class ReportableOrderItem(BaseModel):
     patientName: str
     patientDob: str | None = None
     patientGender: Gender | None = None
+    patientEmail: str | None = None
+    patientPhone: str | None = None
     activeTestCount: int
     validatedTestCount: int
     testCodes: list[str] = Field(default_factory=list)

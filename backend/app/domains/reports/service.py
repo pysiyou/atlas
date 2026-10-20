@@ -41,6 +41,8 @@ class ReportService:
             patientName=patient.fullName,
             patientDob=patient.dateOfBirth,
             patientGender=patient.gender,
+            patientEmail=patient.email,
+            patientPhone=patient.phone,
             activeTestCount=len(active_tests),
             validatedTestCount=validated_count,
             testCodes=[test.testCode for test in active_tests],
