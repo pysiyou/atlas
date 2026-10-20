@@ -5,7 +5,6 @@
 
 import React from 'react';
 import { useAuthStore } from '@/app/authStore';
-import { usePatientNameLookup } from '@/features/patients';
 import { formatDate } from '@/utils';
 import { useDashboardSummary } from '../api/dashboard';
 import { LabPipelineSummary } from '../components/LabPipelineSummary';
@@ -21,7 +20,6 @@ import { TYPE, WORKSPACE } from '@/components/theme/recipes';
 export const Dashboard: React.FC = () => {
   const { user: currentUser, hasRole } = useAuthStore();
   const { summary } = useDashboardSummary();
-  const { getPatientName } = usePatientNameLookup();
 
   const isLabRole = hasRole(['administrator', 'lab-technician', 'lab-technician-plus']);
   const isReceptionRole = hasRole(['administrator', 'receptionist']);
@@ -63,7 +61,7 @@ export const Dashboard: React.FC = () => {
           )}
 
           {isReceptionRole && (
-            <DashboardRecentOrders orders={recentOrders} getPatientName={getPatientName} />
+            <DashboardRecentOrders orders={recentOrders} />
           )}
         </div>
       </div>

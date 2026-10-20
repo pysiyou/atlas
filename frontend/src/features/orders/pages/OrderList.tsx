@@ -5,7 +5,6 @@
 import React, { useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTestNameLookup } from '@/features/catalog';
-import { usePatientNameLookup } from '@/features/patients';
 import { usePaginatedOrders } from '../api/orders';
 import { actionButtonPreset } from '@/components/primitives';
 import { ListView } from '@/components/surfaces';
@@ -77,10 +76,9 @@ export const OrderList: React.FC = () => {
     [setFilter, resetPage]
   );
 
-  const { getPatientName, isLoading: patientsLoading } = usePatientNameLookup();
   const { getTestName, isLoading: testsLoading } = useTestNameLookup();
 
-  const loading = isLoading || isFetching || patientsLoading || testsLoading;
+  const loading = isLoading || isFetching || testsLoading;
 
   const error = isError
     ? {
@@ -90,8 +88,8 @@ export const OrderList: React.FC = () => {
     : null;
 
   const orderTableConfig = useMemo(
-    () => createOrderTableConfig(navigate, getPatientName, getTestName),
-    [navigate, getPatientName, getTestName]
+    () => createOrderTableConfig(navigate, () => '—', getTestName),
+    [navigate, getTestName]
   );
 
   return (

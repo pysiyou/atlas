@@ -15,7 +15,6 @@ import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { QueueModalShell, labModalHeaderContext } from './detailModalLayout';
 import { LabEventLogPanel } from '@/features/audit';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
-import { usePatientNameLookup } from '@/features/patients';
 import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';
 import { useTestCatalog } from '@/features/catalog';
 import type { Test, TestWithContext } from '@/types';
@@ -51,7 +50,6 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
   onSave,
   readOnly = false,
 }) => {
-  const { getPatientName } = usePatientNameLookup();
   const { tests: catalogTests = [] } = useTestCatalog();
   const resolvedTestDef = testDef ?? catalogTests.find(t => t.code === test.testCode);
   const [localResults, setLocalResults] = useState<Record<string, string>>(() => {
@@ -136,7 +134,7 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
     />
   );
 
-  const patientName = getPatientName(test.patientId);
+  const patientName = test.patientName || '—';
   const headerBadges = <TestHeaderBadges test={test} variant="entry" showStatus />;
   const { title: modalTitle, subtitle: modalSubtitle } = labModalHeaderContext({
     stage: 'entry',

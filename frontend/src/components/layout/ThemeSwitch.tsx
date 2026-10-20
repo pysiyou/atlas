@@ -1,4 +1,4 @@
-import { Icon } from '@/components';
+import { Icon } from '@/components/primitives';
 import { useActiveThemeMode, setThemeMode } from '@/components/theme';
 import type { ThemeMode } from '@/components/theme';
 import type { IconName } from '@/components/primitives/Icon';

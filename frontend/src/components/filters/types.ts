@@ -4,7 +4,7 @@
  */
 
 import type { FilterOption } from '@/utils/filtering';
-import type { IconName } from '@/components';
+import type { IconName } from '@/components/primitives';
 
 /**
  * Filter control types

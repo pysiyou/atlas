@@ -4,7 +4,8 @@
  */
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Icon, SpinnerLoader } from '@/components';
+import { SpinnerLoader } from '@/components/loaders';
+import { Icon } from '@/components/primitives';
 import { inputWrapper, inputInner, inputText, inputClearButton } from '@/components/inputs/inputStyles';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';

@@ -6,7 +6,6 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { QueueModalShell } from './detailModalLayout';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
-import { usePatientNameLookup } from '@/features/patients';
 import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';
 import { buildCriticalValueRecord } from '../criticalValues/criticalValues';
 import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
@@ -38,7 +37,6 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   onResolved,
   readOnly = false,
 }) => {
-  const { getPatientName } = usePatientNameLookup();
   const [validationNotesForceValidate, setValidationNotesForceValidate] = useState('');
   const [reasonAuthorizeRetest, setReasonAuthorizeRetest] = useState('');
   const [reasonAuthorizeRecollect, setReasonAuthorizeRecollect] = useState('');
@@ -76,7 +74,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   if (test.id == null) return null;
 
   const hasResults = Boolean(test.results && Object.keys(test.results).length > 0);
-  const patientName = getPatientName(test.patientId);
+  const patientName = test.patientName || '—';
   const headerBadges = <TestHeaderBadges test={test} variant="escalation" showStatus />;
   const { title: modalTitle, subtitle: modalSubtitle } = labModalHeaderContext({
     stage: 'escalation',

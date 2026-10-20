@@ -104,6 +104,7 @@ export function createOrderSharedColumns<T>(
           fallbackCount: count != null && tests.length === 0 ? count : undefined,
           testCodes: tests.length === 0 ? testCodes : undefined,
           getTestName,
+          layout: 'namesFirst',
         });
       },
     },

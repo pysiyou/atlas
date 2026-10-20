@@ -7,9 +7,8 @@ import type { Sample, SampleStatus, ContainerType, ContainerTopColor } from '@/t
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { useEntityLookup, parseNumericKey } from '@/hooks/useEntityLookup';
-import { queryKeys, cacheConfig } from '@/lib/query';
+import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { invalidateCollectionQueries } from '@/lib/query/invalidate';
-import { useAuthStore } from '@/app/authStore';
 import { LAB_PATHS } from '../constants/labConstants';
 
 const BACKEND_COLOR_VALUES = [
@@ -144,12 +143,12 @@ export interface LabQueryRefetchOptions {
 }
 
 export function useSamplesList(filters?: SamplesFilters, refetchOptions?: LabQueryRefetchOptions) {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const enabled = useAuthQueryEnabled();
 
   const query = useQuery({
     queryKey: queryKeys.samples.list(filters),
     queryFn: () => sampleAPI.getAll(filters),
-    enabled: isAuthenticated && !isRestoring, // Only fetch when authenticated and not restoring
+    enabled,
     ...cacheConfig.dynamic, // 30s stale, 5 min gc
     ...(refetchOptions?.refetchInterval != null
       ? { refetchInterval: refetchOptions.refetchInterval }
@@ -173,6 +172,18 @@ export function useSamplesList(filters?: SamplesFilters, refetchOptions?: LabQue
  *
  * @returns Object with getSample function
  */
+/**
+ * Fetch samples for one order and return a synchronous id lookup.
+ * Used by report generation so list pages do not mount a 500-row sample query.
+ */
+export async function createSampleLookupForOrder(
+  orderId: number
+): Promise<(sampleId: number) => Sample | undefined> {
+  const samples = await sampleAPI.getAll({ orderId: String(orderId), limit: 50 });
+  const byId = new Map(samples.map(sample => [sample.sampleId, sample]));
+  return (sampleId: number) => byId.get(sampleId);
+}
+
 export function useSampleLookup() {
   const { samples, isLoading } = useSamplesList();
   const { get: getSample } = useEntityLookup(samples, s => s.sampleId, {

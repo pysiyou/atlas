@@ -2,7 +2,8 @@
  * TableView presentational subcomponents (header, cells, rows, skeleton).
  */
 
-import { Icon, Skeleton } from '@/components';
+import { Icon } from '@/components/primitives';
+import { Skeleton } from '@/components/loaders';
 import { ICONS } from '@/config/icons';
 import { useGridTemplateColumns } from '@/hooks/useTable';
 import type {

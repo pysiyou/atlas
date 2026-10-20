@@ -7,7 +7,6 @@ import { memo, useMemo, type FC } from 'react';
 import { actionButtonPreset, IconButton } from '@/components/primitives';
 import { Card } from '@/components/surfaces';
 import { cn } from '@/utils';
-import { usePatientNameLookup } from '@/features/patients';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { LAB_CONFIG } from '../constants';
 import { useLabWorkflowCardClickGuard, useOrderTestQueueState } from '../hooks';
@@ -49,7 +48,6 @@ export interface ResultEntryCardSharedData {
 
 export function useResultEntryCardData(props: ResultEntryCardProps): ResultEntryCardSharedData | null {
   const { test, testDef, results, isComplete, onClick } = props;
-  const { getPatientName } = usePatientNameLookup();
   const workItem = useOrderTestQueueState(test);
   const rejection = useMemo(() => deriveRetestContext(test), [test]);
   const canEnter = test.allowedActions?.enterResults !== false;
@@ -61,7 +59,7 @@ export function useResultEntryCardData(props: ResultEntryCardProps): ResultEntry
 
   if (!testDef?.parameters) return null;
 
-  const patientName = getPatientName(test.patientId);
+  const patientName = test.patientName || '—';
   const parameterCount = testDef.parameters.length;
   const filledCount = Object.values(results).filter(v => v?.trim()).length;
 

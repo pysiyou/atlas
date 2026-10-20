@@ -55,17 +55,15 @@ export function deriveCollectionTimestamps(
 
 export function resolveCollectionPatientName(
   pendingPatientFullName: string | undefined,
-  order: Order | undefined,
-  getPatientName: (patientId: string | number) => string
+  order: Order | undefined
 ): string {
-  return pendingPatientFullName || (order ? getPatientName(order.patientId) : 'Unknown');
+  return pendingPatientFullName || order?.patientName || 'Unknown';
 }
 
 export function deriveCollectionModalFields(
   sample: Sample,
   order: Order | undefined,
-  pendingPatientFullName: string | undefined,
-  getPatientName: (patientId: string | number) => string
+  pendingPatientFullName: string | undefined
 ) {
   const { isPending, isRejected, isCollected, rejectedSample } = deriveCollectionStatus(sample);
   const { containerColor, colorName, effectiveContainerType } = deriveCollectionContainerInfo(
@@ -74,7 +72,7 @@ export function deriveCollectionModalFields(
     isRejected
   );
   const timestamps = deriveCollectionTimestamps(sample, isCollected, isRejected);
-  const patientName = resolveCollectionPatientName(pendingPatientFullName, order, getPatientName);
+  const patientName = resolveCollectionPatientName(pendingPatientFullName, order);
 
   return {
     isPending,

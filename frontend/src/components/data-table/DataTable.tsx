@@ -5,7 +5,7 @@
 import { useMemo } from 'react';
 import { useBreakpoint, isBreakpointAtMost, type Breakpoint } from '@/hooks/useBreakpoint';
 import { useDataTable } from '@/hooks/useDataTable';
-import { Pagination } from '@/components';
+import { Pagination } from '@/components/surfaces';
 import { DEFAULT_LOADING_ROWS } from './constants';
 import type { TableProps } from './types';
 import { CardGridView } from './CardGridView';

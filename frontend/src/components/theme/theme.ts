@@ -77,6 +77,34 @@ export function getActiveTheme(): ThemeName {
 const THEME_TRANSITION_CLASS = 'theme-transitioning';
 const THEME_TRANSITION_MS = 420;
 
+const THEME_STYLE_LOADERS: Record<ThemeName, () => Promise<unknown>> = {
+  'studio-light': () => import('./themes/studio-light.css'),
+  'playful-light': () => import('./themes/playful-light.css'),
+  'aurora-light': () => import('./themes/aurora-light.css'),
+  github: () => import('./themes/github.css'),
+  'noir-studio': () => import('./themes/noir-studio.css'),
+};
+
+const themeStylePromises = new Map<ThemeName, Promise<unknown>>();
+
+/** Load CSS for one theme file. Tokens (semantic light/dark) stay in the main bundle. */
+export function ensureThemeStyles(theme: ThemeName): Promise<unknown> {
+  const existing = themeStylePromises.get(theme);
+  if (existing) return existing;
+  const pending = THEME_STYLE_LOADERS[theme]().catch((error: unknown) => {
+    themeStylePromises.delete(theme);
+    throw error;
+  });
+  themeStylePromises.set(theme, pending);
+  return pending;
+}
+
+/** Prefetch the configured light/dark pair so runtime toggles do not wait on CSS. */
+export function preloadThemePair(): Promise<unknown> {
+  const { light, dark } = getThemePair();
+  return Promise.all([ensureThemeStyles(light), ensureThemeStyles(dark)]);
+}
+
 function applyTheme(theme: ThemeName, mode: ThemeMode): void {
   if (typeof document === 'undefined') return;
   const root = document.documentElement;
@@ -91,10 +119,14 @@ function applyTheme(theme: ThemeName, mode: ThemeMode): void {
 
 /** Apply the instance palette for this mode (Light / Dark). */
 export function setThemeMode(mode: ThemeMode): void {
-  applyTheme(resolveTheme(mode), mode);
+  const theme = resolveTheme(mode);
+  void ensureThemeStyles(theme);
+  applyTheme(theme, mode);
 }
 
+/** Apply stored mode and start loading both palettes in the instance pair. */
 export function initializeTheme(): void {
+  void preloadThemePair();
   const stored = typeof localStorage === 'undefined' ? null : localStorage.getItem(STORAGE_KEY);
   setThemeMode(storedToMode(stored));
 }

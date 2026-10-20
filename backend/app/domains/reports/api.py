@@ -24,6 +24,19 @@ def list_reportable_orders(
 
 
 @router.get(
+    "/reports/orders/{orderId}",
+    response_model=ReportableOrderItem,
+    status_code=status.HTTP_200_OK,
+)
+def get_reportable_order(
+    orderId: int,
+    db: Session = Depends(get_db),
+    _current_user: User = Depends(get_current_user),
+):
+    return ReportService(db).get_reportable_order_view(orderId)
+
+
+@router.get(
     "/reports/orders/{orderId}/download",
     response_model=ReportableOrderItem,
     status_code=status.HTTP_200_OK,

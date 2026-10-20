@@ -2,7 +2,7 @@
  * Shared error fallback UI for error boundaries.
  */
 
-import { actionButtonPreset, Button, Icon } from '@/components';
+import { actionButtonPreset, Button, Icon } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 
 import { ERROR_SURFACE_TYPE, RADIUS, SHADOW, TONE } from '@/components/theme/recipes';

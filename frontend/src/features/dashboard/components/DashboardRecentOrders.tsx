@@ -14,12 +14,10 @@ import { INLINE_LINK, RADIUS, TYPE } from '@/components/theme/recipes';
 
 export interface DashboardRecentOrdersProps {
   orders: Order[];
-  getPatientName: (patientId: string) => string;
 }
 
 export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
   orders,
-  getPatientName,
 }) => (
   <Panel
     preset="dashboard.recentOrders"
@@ -39,7 +37,7 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
           >
             <div>
               <p className={TYPE.amount}>
-                {getPatientName(String(order.patientId))}
+                {order.patientName || '—'}
               </p>
               <p className={TYPE.meta}>
                 <EntityId type="order" value={order.orderId} /> •{' '}

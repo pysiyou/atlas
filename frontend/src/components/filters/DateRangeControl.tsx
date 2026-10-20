@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { DateFilter } from '@/components';
+import { DateFilter } from '@/components/inputs';
 import type { DateRangeFilterControl } from './types';
 
 /**

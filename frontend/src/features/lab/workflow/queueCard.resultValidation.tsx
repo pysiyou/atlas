@@ -8,7 +8,6 @@ import { actionButtonPreset, Button } from '@/components/primitives';
 import { Card } from '@/components/surfaces';
 import { cn } from '@/utils';
 import { useUserLookup } from '@/lib/api/users';
-import { usePatientNameLookup } from '@/features/patients';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { QualityIssuePopover } from '../components';
 import { ResultsParameterGrid } from '../components/ResultsParameterGrid';
@@ -54,7 +53,6 @@ export function useResultValidationCardData(
 ): ResultValidationCardSharedData | null {
   const { test, onApprove, onReject, onClick, isApproving = false } = props;
   const { getUserName } = useUserLookup();
-  const { getPatientName } = usePatientNameLookup();
   const handleCardClick = useLabWorkflowCardClickGuard(onClick);
   const canValidate = test.allowedActions?.validate !== false;
   const canReject = test.allowedActions?.reject !== false;
@@ -65,7 +63,7 @@ export function useResultValidationCardData(
 
   return {
     test,
-    patientName: getPatientName(test.patientId),
+    patientName: test.patientName || '—',
     onApprove,
     onReject,
     isApproving,

@@ -5,7 +5,8 @@
 
 import React, { useState } from 'react';
 import { format, isSameMonth, isSameDay, endOfMonth, setYear, isBefore, isAfter } from 'date-fns';
-import { Popover, Icon } from '@/components';
+import { Popover } from '@/components/overlays';
+import { Icon } from '@/components/primitives';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 import {

@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Modal, ModalPageShell } from '@/components';
+import { Modal, ModalPageShell } from '@/components/overlays';
 import { FILTER_TYPE } from '@/components/theme/recipes';
 import { QuickFilters } from './QuickFilters';
 import { FilterModalFooter } from './FilterModalFooter';

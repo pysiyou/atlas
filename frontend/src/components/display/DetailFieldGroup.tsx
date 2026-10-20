@@ -1,7 +1,7 @@
 import React from 'react';
 import { SPACING } from '@/components/theme/recipes';
 import { DetailField } from './DetailField';
-import type { BadgeVariant } from '@/components';
+import type { BadgeVariant } from '@/components/primitives';
 
 /**
  * Badge configuration for a field in the group

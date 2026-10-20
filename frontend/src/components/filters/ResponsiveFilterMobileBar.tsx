@@ -3,7 +3,8 @@
  */
 
 import React from 'react';
-import { actionButtonPreset, Button, Badge, DebouncedSearchInput } from '@/components';
+import { DebouncedSearchInput } from '@/components/inputs';
+import { actionButtonPreset, Badge, Button } from '@/components/primitives';
 import { CONTROL } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 

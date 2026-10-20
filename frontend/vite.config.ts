@@ -15,6 +15,8 @@ export default defineConfig({
     extensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
     alias: {
       '@': path.resolve(__dirname, './src'),
+      // jspdf optionally imports html2canvas; Atlas only draws vector PDFs.
+      html2canvas: path.resolve(__dirname, './src/lib/empty-html2canvas.ts'),
     },
   },
   build: {
@@ -37,11 +39,17 @@ export default defineConfig({
             if (id.includes('jspdf')) {
               return 'jspdf';
             }
+            if (id.includes('date-fns')) {
+              return 'date-fns';
+            }
           }
         },
       },
     },
     chunkSizeWarningLimit: 600,
     sourcemap: false, // Disable in production for smaller builds
+  },
+  optimizeDeps: {
+    exclude: ['html2canvas'],
   },
 })

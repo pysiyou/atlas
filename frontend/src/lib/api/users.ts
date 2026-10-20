@@ -40,6 +40,8 @@ export const usersAPI = {
  * const { users, isLoading } = useUsersList();
  * ```
  */
+const EMPTY_USER_LOOKUP: UserLookupResponse[] = [];
+
 export function useUsersList() {
   const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
 
@@ -59,7 +61,7 @@ export function useUsersList() {
   });
 
   return {
-    users: query.data ?? [],
+    users: query.data ?? EMPTY_USER_LOOKUP,
     isLoading: query.isLoading,
     isPending: query.isPending,
     isError: query.isError,
@@ -105,8 +107,19 @@ export function useUsersMap(): Map<string, UserDisplayInfo> {
  * ```
  */
 export function useUserLookup() {
-  const usersMap = useUsersMap();
-  const { isLoading } = useUsersList();
+  const { users, isLoading, isPending } = useUsersList();
+  const usersMap = useMemo(() => {
+    const map = new Map<string, UserDisplayInfo>();
+    users.forEach(user => {
+      const idKey = String(user.id);
+      map.set(idKey, {
+        id: String(user.id),
+        name: user.name,
+        username: user.username,
+      });
+    });
+    return map;
+  }, [users]);
 
   /**
    * Get user name by ID with fallback
@@ -161,6 +174,7 @@ export function useUserLookup() {
     getUserName,
     getUserInfo,
     isLoading,
+    isPending,
     usersMap,
   };
 }

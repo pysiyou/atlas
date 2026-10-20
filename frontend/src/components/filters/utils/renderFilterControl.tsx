@@ -4,7 +4,7 @@
 
 import { type ReactNode } from 'react';
 import { TYPE } from '@/components/theme/recipes';
-import { CheckboxList } from '@/components';
+import { CheckboxList } from '@/components/primitives';
 import type { FilterControl } from '../types';
 import {
   SearchControl,

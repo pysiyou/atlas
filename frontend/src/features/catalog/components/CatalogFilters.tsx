@@ -8,40 +8,21 @@
  */
 
 import React, { useMemo } from 'react';
-import { FilterBar, type FilterValues } from '@/components/filters';
+import { FilterBar, useFilterBarBridge } from '@/components/filters';
 import { catalogFilterConfig } from '../constants/catalogConfig';
 import type { TestCategory } from '@/types';
 
-/**
- * Props interface for CatalogFilters component
- */
 export interface CatalogFiltersProps {
-  /** Current search query string */
   searchQuery: string;
-  /** Callback fired when search query changes */
   onSearchChange: (value: string) => void;
-  /** Array of currently selected test categories */
   categoryFilters: TestCategory[];
-  /** Callback fired when category filters change */
   onCategoryFiltersChange: (values: TestCategory[]) => void;
-  /** Array of currently selected sample types */
   sampleTypeFilters: string[];
-  /** Callback fired when sample type filters change */
   onSampleTypeFiltersChange: (values: string[]) => void;
-  /** Currently selected price range [min, max] */
   priceRange: [number, number];
-  /** Callback fired when price range changes */
   onPriceRangeChange: (range: [number, number]) => void;
 }
 
-/**
- * CatalogFilters Component
- *
- * Composes FilterBar with catalog-specific configuration.
- * Maps between legacy prop interface and new filter value structure.
- *
- * @component
- */
 export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
   searchQuery,
   onSearchChange,
@@ -52,12 +33,9 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
   priceRange,
   onPriceRangeChange,
 }) => {
-  /**
-   * Convert props to filter values format
-   */
-  const filterValues = useMemo<FilterValues>(
+  const value = useMemo(
     () => ({
-      searchQuery,
+      search: searchQuery,
       category: categoryFilters,
       sampleType: sampleTypeFilters,
       priceRange,
@@ -65,23 +43,12 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
     [searchQuery, categoryFilters, sampleTypeFilters, priceRange]
   );
 
-  /**
-   * Handle filter changes and map back to props
-   */
-  const handleFilterChange = (filters: FilterValues) => {
-    if (filters.searchQuery !== undefined) {
-      onSearchChange(filters.searchQuery as string);
-    }
-    if (filters.category !== undefined) {
-      onCategoryFiltersChange(filters.category as TestCategory[]);
-    }
-    if (filters.sampleType !== undefined) {
-      onSampleTypeFiltersChange(filters.sampleType as string[]);
-    }
-    if (filters.priceRange !== undefined) {
-      onPriceRangeChange(filters.priceRange as [number, number]);
-    }
-  };
+  const { filterValues, handleFilterChange } = useFilterBarBridge(value, {
+    search: onSearchChange,
+    category: onCategoryFiltersChange,
+    sampleType: onSampleTypeFiltersChange,
+    priceRange: onPriceRangeChange,
+  });
 
   return (
     <FilterBar config={catalogFilterConfig} value={filterValues} onChange={handleFilterChange} />

@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/app/authStore';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { LAB_CONFIG, LAB_PATHS } from '../constants/labConstants';
-import { useEffect, useState } from 'react';
+import { useDocumentVisible } from '@/hooks/useDocumentVisible';
 
 export type LabBoardResponse = components['schemas']['LabBoardResponse'];
 
@@ -29,18 +29,6 @@ export const labMonitorAPI = {
     return apiClient.get<LabBoardResponse>(LAB_PATHS.board.full, { detail: 'full' });
   },
 };
-
-function useDocumentVisible(): boolean {
-  const [visible, setVisible] = useState(
-    typeof document === 'undefined' ? true : document.visibilityState === 'visible',
-  );
-  useEffect(() => {
-    const onVisibility = () => setVisible(document.visibilityState === 'visible');
-    document.addEventListener('visibilitychange', onVisibility);
-    return () => document.removeEventListener('visibilitychange', onVisibility);
-  }, []);
-  return visible;
-}
 
 function summaryPollInterval(visible: boolean): number | false {
   if (!visible) return false;

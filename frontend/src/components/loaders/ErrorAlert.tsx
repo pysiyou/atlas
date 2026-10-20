@@ -4,8 +4,8 @@
  */
 
 import React from 'react';
-import { actionButtonPreset, Alert } from '@/components';
-import { Button } from '@/components';
+import { Alert } from '@/components/display';
+import { actionButtonPreset, Button } from '@/components/primitives';
 import { ERROR_SURFACE_TYPE } from '@/components/theme/recipes';
 
 /**

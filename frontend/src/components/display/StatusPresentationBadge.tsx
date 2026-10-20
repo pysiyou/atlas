@@ -1,7 +1,7 @@
 /**
  * Renders canonical primary status and optional secondary reason from API presentation.
  */
-import { Badge, type BadgeProps } from '@/components';
+import { Badge, type BadgeProps } from '@/components/primitives';
 import type { BadgeColor } from '@/components/primitives/badgeTypes';
 import {
   PRESENTATION_BADGE_VARIANTS,

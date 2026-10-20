@@ -1,7 +1,6 @@
 /**
  * Single-line quality-issue warning — warning icon + text only (no alert surface).
  */
-import React from 'react';
 import { Icon } from '@/components/primitives';
 import { TONE, TYPE } from '@/components/theme/recipes';
 

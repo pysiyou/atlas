@@ -1,28 +1,37 @@
 /**
  * LabWorkflowQueueLayout - Shared layout for lab workflow pages
  *
- * Structure: filterRow (e.g. LabQueueFilters) then grid of cards.
+ * Structure: filterRow (e.g. LabQueueFilters) then a virtualized list of cards.
  */
 
-import React, { type ReactNode } from 'react';
+import React, { type ReactNode, useRef } from 'react';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { EmptyState, PANEL_EMPTY_STATE } from '@/components/display';
 import { displayId } from '@/utils';
 import { SPACING, WORKSPACE } from '@/components/theme/recipes';
+
+/** Estimated card height used until the virtualizer measures the real node. */
+const ESTIMATED_QUEUE_CARD_HEIGHT_PX = 160;
+const QUEUE_OVERSCAN = 8;
 
 /** Filter row + scroll region shared by workflow queues. */
 export function LabWorkflowQueueScaffold({
   filterRow,
   children,
   scrollClassName = WORKSPACE.contentInset,
+  scrollRef,
 }: {
   filterRow: ReactNode;
   children: ReactNode;
   scrollClassName?: string;
+  scrollRef?: React.Ref<HTMLDivElement>;
 }): React.ReactElement {
   return (
     <div className="h-full flex flex-col min-h-0">
       <div className="shrink-0">{filterRow}</div>
-      <div className={`flex-1 min-h-0 overflow-y-auto ${scrollClassName}`}>{children}</div>
+      <div ref={scrollRef} className={`flex-1 min-h-0 overflow-y-auto ${scrollClassName}`}>
+        {children}
+      </div>
     </div>
   );
 }
@@ -51,25 +60,46 @@ export function LabWorkflowQueueLayout<T>({
   filterRow,
 }: LabWorkflowQueueLayoutProps<T>): React.ReactElement {
   const hasItems = items.length > 0;
-  const showEmptyState = items.length === 0;
+  const parentRef = useRef<HTMLDivElement>(null);
+  const virtualizer = useVirtualizer({
+    count: items.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => ESTIMATED_QUEUE_CARD_HEIGHT_PX,
+    overscan: QUEUE_OVERSCAN,
+    enabled: hasItems,
+  });
 
   return (
     <LabWorkflowQueueScaffold
       filterRow={filterRow}
+      scrollRef={parentRef}
       scrollClassName={
-        showEmptyState
-          ? `${WORKSPACE.contentInset} flex flex-col`
-          : `${WORKSPACE.contentInset} grid ${SPACING.gapSection} content-start`
+        hasItems
+          ? `${WORKSPACE.contentInset}`
+          : `${WORKSPACE.contentInset} flex flex-col`
       }
     >
-      {!showEmptyState &&
-        items.map((item, idx) => (
-          <React.Fragment key={getItemKey(item, idx)}>
-            {renderCard(item, idx, items)}
-          </React.Fragment>
-        ))}
-
-      {!hasItems && (
+      {hasItems ? (
+        <div
+          className={`relative w-full ${SPACING.gapSection}`}
+          style={{ height: virtualizer.getTotalSize() }}
+        >
+          {virtualizer.getVirtualItems().map(virtualRow => {
+            const item = items[virtualRow.index];
+            return (
+              <div
+                key={getItemKey(item, virtualRow.index)}
+                data-index={virtualRow.index}
+                ref={virtualizer.measureElement}
+                className="absolute left-0 top-0 w-full"
+                style={{ transform: `translateY(${virtualRow.start}px)` }}
+              >
+                {renderCard(item, virtualRow.index, items)}
+              </div>
+            );
+          })}
+        </div>
+      ) : (
         <div className="flex-1">
           <EmptyState {...PANEL_EMPTY_STATE} title={emptyTitle} description={emptyDescription} />
         </div>

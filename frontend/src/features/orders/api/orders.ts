@@ -10,10 +10,9 @@ import { getOrderTestCount, getOrderTests } from '@/types';
 import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
 import { useQuery, keepPreviousData, useMutation, useQueryClient, useQueries } from '@tanstack/react-query';
 import { useMemo, useState, useCallback } from 'react';
-import { queryKeys, cacheConfig } from '@/lib/query';
+import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { invalidateOrderQueries } from '@/lib/query/invalidate';
 import { notify } from '@/utils/feedback';
-import { useAuthStore } from '@/app/authStore';
 import { orderCreateSchema, orderUpdateSchema, orderSchema } from '@/features/orders/schemas/order.schema';
 import { formInputToPayload } from '../utils/formTransformers';
 
@@ -162,13 +161,13 @@ export interface PaginationOptions {
  * Fetch orders for a set of patient IDs (paginated list enrichment).
  */
 export function useOrdersForPatientIds(patientIds: number[]) {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const authEnabled = useAuthQueryEnabled();
 
   const queries = useQueries({
     queries: patientIds.map(patientId => ({
       queryKey: queryKeys.orders.byPatient(String(patientId)),
       queryFn: () => orderAPI.getByPatientId(String(patientId)),
-      enabled: isAuthenticated && !isRestoring && patientId > 0,
+      enabled: authEnabled && patientId > 0,
       ...cacheConfig.dynamic,
     })),
   });
@@ -192,12 +191,12 @@ export interface LabQueryRefetchOptions {
 }
 
 export function useOrdersList(filters?: OrdersFilters, refetchOptions?: LabQueryRefetchOptions) {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const enabled = useAuthQueryEnabled();
 
   const query = useQuery({
     queryKey: queryKeys.orders.list(filters),
     queryFn: ({ signal }) => orderAPI.getAll({ signal }),
-    enabled: isAuthenticated && !isRestoring,
+    enabled,
     ...cacheConfig.dynamic,
     ...(refetchOptions?.refetchInterval != null
       ? { refetchInterval: refetchOptions.refetchInterval }
@@ -242,7 +241,7 @@ export function useOrder(
   orderId: string | undefined,
   options?: { include?: string }
 ) {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const enabled = useAuthQueryEnabled(Boolean(orderId));
   const include = options?.include ?? 'patient,invoices';
 
   const query = useQuery({
@@ -252,7 +251,7 @@ export function useOrder(
       if (!data) throw new Error('Order not found');
       return data;
     },
-    enabled: isAuthenticated && !isRestoring && !!orderId,
+    enabled,
     ...cacheConfig.dynamic,
   });
 
@@ -269,21 +268,22 @@ export function useOrder(
 }
 
 /**
- * Hook to get orders by patient ID using cached data
+ * Hook to get orders for one patient from the patient-scoped endpoint.
+ * Avoids fetching the workflow-wide 500-order list just to client-filter.
  */
 export function useOrdersByPatient(patientId: string | undefined) {
-  const { orders, isLoading } = useOrdersList();
+  const enabled = useAuthQueryEnabled(Boolean(patientId));
 
-  const patientOrders = useMemo(() => {
-    if (!patientId) return [];
-    const numericPatientId = typeof patientId === 'string' ? parseInt(patientId, 10) : patientId;
-    if (isNaN(numericPatientId)) return [];
-    return orders.filter(o => o.patientId === numericPatientId);
-  }, [orders, patientId]);
+  const query = useQuery({
+    queryKey: queryKeys.orders.byPatient(patientId ?? ''),
+    queryFn: () => orderAPI.getByPatientId(patientId!),
+    enabled,
+    ...cacheConfig.dynamic,
+  });
 
   return {
-    orders: patientOrders,
-    isLoading,
+    orders: query.data ?? [],
+    isLoading: query.isLoading,
   };
 }
 
@@ -311,7 +311,7 @@ export function useOrdersByStatus(status: OrderStatus | undefined) {
  * Keeps previous data visible while fetching new page.
  */
 export function usePaginatedOrders(filters?: OrdersFilters, initialPage = 1, pageSize = DEFAULT_LIST_PAGE_SIZE) {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const enabled = useAuthQueryEnabled();
   const [page, setPage] = useState(initialPage);
   const filterSnapshot = JSON.stringify(filters ?? null);
   const [prevFilterSnapshot, setPrevFilterSnapshot] = useState(filterSnapshot);
@@ -333,7 +333,7 @@ export function usePaginatedOrders(filters?: OrdersFilters, initialPage = 1, pag
         page,
         pageSize,
       }),
-    enabled: isAuthenticated && !isRestoring,
+    enabled,
     // Keep showing previous data while fetching new page
     placeholderData: keepPreviousData,
     ...cacheConfig.dynamic,
@@ -403,12 +403,12 @@ export function usePaginatedOrders(filters?: OrdersFilters, initialPage = 1, pag
  * ```
  */
 export function useOrderStats() {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const enabled = useAuthQueryEnabled();
 
   const query = useQuery({
     queryKey: queryKeys.orders.list(),
     queryFn: () => orderAPI.getAll(),
-    enabled: isAuthenticated && !isRestoring,
+    enabled,
     ...cacheConfig.dynamic,
     // SELECT PATTERN: Compute statistics from orders
     // Only re-renders when the stats actually change
@@ -464,7 +464,7 @@ export function useOrderStats() {
  * ```
  */
 export function useOrderSummary(orderId: string | undefined) {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const enabled = useAuthQueryEnabled(Boolean(orderId));
 
   const query = useQuery({
     queryKey: queryKeys.orders.byId(orderId ?? ''),
@@ -473,7 +473,7 @@ export function useOrderSummary(orderId: string | undefined) {
       if (!data) throw new Error('Order not found');
       return data;
     },
-    enabled: isAuthenticated && !isRestoring && !!orderId,
+    enabled,
     ...cacheConfig.dynamic,
     // SELECT PATTERN: Extract only summary fields
     select: (order: Order) => ({
@@ -506,7 +506,7 @@ export function useOrderSummary(orderId: string | undefined) {
  * ```
  */
 export function useRecentOrders(limit = 10) {
-  const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
+  const enabled = useAuthQueryEnabled();
   const sevenDaysAgo = useMemo(() => {
     const date = new Date();
     date.setDate(date.getDate() - 7);
@@ -516,7 +516,7 @@ export function useRecentOrders(limit = 10) {
   const query = useQuery({
     queryKey: queryKeys.orders.list(),
     queryFn: () => orderAPI.getAll(),
-    enabled: isAuthenticated && !isRestoring,
+    enabled,
     ...cacheConfig.dynamic,
     // SELECT PATTERN: Filter to recent orders and limit
     select: (orders: Order[]) =>

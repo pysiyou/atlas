@@ -3,7 +3,8 @@
  */
 
 import React from 'react';
-import { Popover, Icon, FilterTriggerShell } from '@/components';
+import { FilterTriggerShell, Popover } from '@/components/overlays';
+import { Icon } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 import { cn } from '@/utils';
 import { AgeRangeSliderPanel } from './AgeRangeSliderPanel';

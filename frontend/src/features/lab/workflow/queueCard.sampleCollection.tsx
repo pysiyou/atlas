@@ -5,7 +5,6 @@
 
 import { useMemo, type FC } from 'react';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { usePatientNameLookup } from '@/features/patients';
 import { getTestNames } from '@/features/catalog/testLookup';
 import type { ContainerType, Test } from '@/types';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
@@ -44,7 +43,6 @@ export function useSampleCollectionCardData(
   props: SampleCollectionCardProps
 ): SampleCollectionCardSharedData | null {
   const { display, onCollect, isCollecting = false } = props;
-  const { getPatientName } = usePatientNameLookup();
   const { tests } = props;
   const { openModal } = useModal();
 
@@ -68,7 +66,7 @@ export function useSampleCollectionCardData(
 
   if (!sample || !requirement) return null;
 
-  const patientName = getPatientName(display.order.patientId);
+  const patientName = display.patient?.fullName || display.order.patientName || '—';
   const testNames = requirement.testCodes ? getTestNames(requirement.testCodes, tests) : [];
 
   return {
