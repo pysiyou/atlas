@@ -152,7 +152,8 @@ export const SampleRecollectionRequestCard: React.FC<RecollectionRequestCardProp
   const { openModal } = useModal();
 
   const openRequestDetail = useCallback(() => {
-    openModal(ModalType.SAMPLE_DETAIL, {
+    openModal({
+      type: ModalType.SAMPLE_DETAIL,
       sampleId: String(request.rejectedSampleId),
       readOnly: true,
     });

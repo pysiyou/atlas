@@ -1,18 +1,17 @@
 /**
  * useResultEntryWorkflow
  *
- * Encapsulates result entry state, result formatting, validation,
- * mutation logic, and modal opening for the result entry workflow.
+ * Queue-side selectors over the lab draft store plus save/open helpers.
  */
 
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useTestNameLookup } from '@/features/catalog';
 import { useEnterResults } from '../api/results';
 import { notify } from '@/utils/feedback';
 import { logger } from '@/utils/logger';
 import { formatParameterResults, findTestById } from './resultEntry';
-import { orderTestKey } from '../utils/labSearchAndLinks';
 import { useResultEntryDetailModal } from './useResultEntryDetailModal';
+import { useLabDraftStore } from '../state/labDraftStore';
 import type { TestWithContext, Test } from '@/types';
 
 export interface UseEntryWorkflowOptions {
@@ -21,12 +20,11 @@ export interface UseEntryWorkflowOptions {
 }
 
 export interface EntryWorkflow {
-  results: Record<string, Record<string, string>>;
-  technicianNotes: Record<string, string>;
+  entryDrafts: Record<number, { results: Record<string, string>; technicianNotes: string }>;
   enterMutation: ReturnType<typeof useEnterResults>;
-  handleResultChange: (resultKey: string, paramCode: string, value: string) => void;
-  handleNotesChange: (resultKey: string, notes: string) => void;
-  areAllParametersFilled: (resultKey: string, parameterCount: number) => boolean;
+  handleResultChange: (orderTestId: number, paramCode: string, value: string) => void;
+  handleNotesChange: (orderTestId: number, notes: string) => void;
+  areAllParametersFilled: (orderTestId: number, parameterCount: number) => boolean;
   handleSaveResults: (
     orderTestId: number,
     orderId: number | string,
@@ -43,47 +41,51 @@ export function useResultEntryWorkflow({
   testCatalog,
 }: UseEntryWorkflowOptions): EntryWorkflow {
   const { getTest } = useTestNameLookup();
-  const [results, setResults] = useState<Record<string, Record<string, string>>>({});
-  const [technicianNotes, setTechnicianNotes] = useState<Record<string, string>>({});
+  const entryDrafts = useLabDraftStore(s => s.entry);
+  const setEntryResultParam = useLabDraftStore(s => s.setEntryResultParam);
+  const setEntryNotes = useLabDraftStore(s => s.setEntryNotes);
+  const clearEntryDraft = useLabDraftStore(s => s.clearEntryDraft);
   const enterMutation = useEnterResults();
 
-  const handleResultChange = useCallback((resultKey: string, paramCode: string, value: string) => {
-    setResults(prev => ({
-      ...prev,
-      [resultKey]: { ...(prev[resultKey] || {}), [paramCode]: value ?? '' },
-    }));
-  }, []);
+  const handleResultChange = useCallback(
+    (orderTestId: number, paramCode: string, value: string) => {
+      setEntryResultParam(orderTestId, paramCode, value);
+    },
+    [setEntryResultParam]
+  );
 
-  const handleNotesChange = useCallback((resultKey: string, notes: string) => {
-    setTechnicianNotes(prev => ({ ...prev, [resultKey]: notes ?? '' }));
-  }, []);
+  const handleNotesChange = useCallback(
+    (orderTestId: number, notes: string) => {
+      setEntryNotes(orderTestId, notes);
+    },
+    [setEntryNotes]
+  );
 
   const areAllParametersFilled = useCallback(
-    (resultKey: string, parameterCount: number): boolean => {
-      const testResults = results[resultKey];
+    (orderTestId: number, parameterCount: number): boolean => {
+      const testResults = entryDrafts[orderTestId]?.results;
       if (!testResults) return false;
       return Object.values(testResults).filter(v => v?.trim()).length === parameterCount;
     },
-    [results]
+    [entryDrafts]
   );
 
   const handleSaveResults = useCallback(
     async (
       orderTestId: number,
       orderId: number | string,
-      saveAllTests: TestWithContext[],
-      saveTestCatalog: Test[] | undefined,
+      saveAllTests: TestWithContext[] = allTests,
+      saveTestCatalog: Test[] | undefined = testCatalog,
       finalResults?: Record<string, string>,
       finalNotes?: string
     ) => {
       if (!saveTestCatalog) return;
 
       const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
-      const resultKey = orderTestKey(orderTestId);
 
       if (enterMutation.isPending) return;
 
-      const testResults = finalResults || results[resultKey];
+      const testResults = finalResults || entryDrafts[orderTestId]?.results;
       if (!testResults || Object.keys(testResults).length === 0) {
         notify.toast('lab.entry.noResults');
         return;
@@ -113,42 +115,23 @@ export function useResultEntryWorkflow({
           orderId: orderIdStr,
           orderTestId,
           results: formattedResults,
-          technicianNotes: finalNotes || technicianNotes[resultKey] || undefined,
+          technicianNotes: finalNotes || entryDrafts[orderTestId]?.technicianNotes || undefined,
         });
         notify.toast('lab.entry.save.success');
-        setResults(prev => {
-          const n = { ...prev };
-          delete n[resultKey];
-          return n;
-        });
-        setTechnicianNotes(prev => {
-          const n = { ...prev };
-          delete n[resultKey];
-          return n;
-        });
+        clearEntryDraft(orderTestId);
       } catch (error) {
         logger.error('Error saving results', error instanceof Error ? error : undefined);
         notify.apiError('lab.entry.save.error', error);
         throw error;
       }
     },
-    [results, technicianNotes, getTest, enterMutation]
+    [allTests, testCatalog, entryDrafts, getTest, enterMutation, clearEntryDraft]
   );
 
-  const openTestModal = useResultEntryDetailModal({
-    testCatalog,
-    allTests,
-    results,
-    technicianNotes,
-    areAllParametersFilled,
-    handleResultChange,
-    handleNotesChange,
-    handleSaveResults,
-  });
+  const openTestModal = useResultEntryDetailModal();
 
   return {
-    results,
-    technicianNotes,
+    entryDrafts,
     enterMutation,
     handleResultChange,
     handleNotesChange,

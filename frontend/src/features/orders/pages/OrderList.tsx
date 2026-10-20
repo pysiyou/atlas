@@ -104,7 +104,7 @@ export const OrderList: React.FC = () => {
         onRowClick={(order: Order) => navigate(`/orders/${order.orderId}`)}
         title="Orders"
         headerActions={
-          <Button {...actionButtonPreset('add')} size="sm" onClick={() => openModal(ModalType.NEW_ORDER, {})}>
+          <Button {...actionButtonPreset('add')} size="sm" onClick={() => openModal({ type: ModalType.NEW_ORDER })}>
             New Order
           </Button>
         }

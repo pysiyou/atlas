@@ -14,7 +14,7 @@ import {
 } from '@/features/orders';
 import type { Order, OrderTest, Patient, Test, TestWithContext } from '@/types';
 import { TYPE } from '@/components/theme/recipes';
-import type { TestDetailProps } from '@/lib/context/modalTypes';
+import type { QualityIssueResult } from '@/types/lab-operations';
 import { ResultValidationPanel } from '../validation/ResultValidationForm';
 import { QualityIssuePopover } from '../components/QualityIssuePopover';
 import { CriticalValueActions } from '../criticalValues/CriticalValueActions';
@@ -88,7 +88,6 @@ export function TestDetailModalHeaderBadges({
 
 type TestDetailModalFooterProps = {
   isValidate: boolean;
-  validation: TestDetailProps['validation'];
   orderTestId: number;
   labContext: TestWithContext | undefined;
   orderTest: OrderTest | undefined;
@@ -98,12 +97,12 @@ type TestDetailModalFooterProps = {
   isApproving: boolean;
   onClose: () => void;
   onApprove: () => void;
+  onReject: (result: QualityIssueResult) => void | Promise<void>;
   labUrl: string | undefined;
 };
 
 export function TestDetailModalFooter({
   isValidate,
-  validation,
   orderTestId,
   labContext,
   orderTest,
@@ -113,11 +112,12 @@ export function TestDetailModalFooter({
   isApproving,
   onClose,
   onApprove,
+  onReject,
   labUrl,
 }: TestDetailModalFooterProps) {
   const navigate = useNavigate();
 
-  if (isValidate && validation) {
+  if (isValidate) {
     return (
       <ModalFooter statusMessage="" statusClassName="text-text-tertiary">
         <QualityIssuePopover
@@ -131,8 +131,7 @@ export function TestDetailModalFooter({
             </Button>
           }
           onReject={result => {
-            validation.onReject(result);
-            onClose();
+            void onReject(result);
           }}
         />
         <Button
@@ -177,10 +176,9 @@ type TestDetailModalBodyProps = {
   hasResults: boolean;
   orderTest: OrderTest | undefined;
   isValidate: boolean;
-  validation: TestDetailProps['validation'];
   comments: string;
-  commentKey: string;
   resultsPanelPreset: 'lab.modal.resultValidation' | 'lab.modal.recordedResults';
+  onCommentsChange: (value: string) => void;
   onApprove: () => void;
   criticalRecord: CriticalValueRecord | undefined;
   onCriticalValueUpdated: () => void;
@@ -200,10 +198,9 @@ export function TestDetailModalBody({
   hasResults,
   orderTest,
   isValidate,
-  validation,
   comments,
-  commentKey,
   resultsPanelPreset,
+  onCommentsChange,
   onApprove,
   criticalRecord,
   onCriticalValueUpdated,
@@ -237,11 +234,7 @@ export function TestDetailModalBody({
           patient={patient}
           technicianNotes={orderTest.technicianNotes}
           comments={comments}
-          onCommentsChange={
-            isValidate && validation
-              ? value => validation.onCommentsChange(commentKey, value)
-              : () => {}
-          }
+          onCommentsChange={onCommentsChange}
           onApprove={isValidate ? onApprove : () => {}}
           readOnly={!isValidate}
           enableApproveShortcut={isValidate}

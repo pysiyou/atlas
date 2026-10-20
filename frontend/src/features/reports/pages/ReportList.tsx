@@ -69,7 +69,7 @@ export const ReportList: React.FC = () => {
       }
     : null;
 
-  const { openModal, closeModal } = useModal();
+  const { openModal } = useModal();
   const [generatingOrderId, setGeneratingOrderId] = useState<number | null>(null);
   const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
 
@@ -102,36 +102,10 @@ export const ReportList: React.FC = () => {
   );
 
   const handlePreview = useCallback(
-    async (reportableOrder: ReportableOrder) => {
-      try {
-        const reportData = await buildReportData(reportableOrder);
-        openModal(ModalType.REPORT_PREVIEW, {
-          reportData,
-          onGenerate: async () => {
-            try {
-              await reportsAPI.recordOrderReportDownload(reportableOrder.orderId);
-              await downloadLabReport(
-                reportableOrder,
-                reportData,
-                tests,
-                (data, catalog) => generateLabReport(data, getDefaultTemplate(), catalog),
-                downloadPDF,
-                formatDate
-              );
-              notify.toast('report.download.success');
-              closeModal();
-            } catch (error) {
-              console.error('Error generating report:', error);
-              notify.apiError('report.download.error', error);
-              throw error;
-            }
-          },
-        });
-      } catch (error) {
-        notify.apiError('report.download.error', error);
-      }
+    (reportableOrder: ReportableOrder) => {
+      openModal({ type: ModalType.REPORT_PREVIEW, orderId: reportableOrder.orderId });
     },
-    [buildReportData, tests, openModal, closeModal]
+    [openModal]
   );
 
   /**
@@ -139,13 +113,11 @@ export const ReportList: React.FC = () => {
    * so the table stays mounted behind the modal.
    */
   useEffect(() => {
-    if (deepLinkOrderId == null || loading) return;
+    if (deepLinkOrderId == null) return;
     if (openedDeepLinkIdRef.current === deepLinkOrderId) return;
-    const order = reportableOrders.find(item => item.orderId === deepLinkOrderId);
-    if (!order) return;
     openedDeepLinkIdRef.current = deepLinkOrderId;
-    void handlePreview(order);
-  }, [deepLinkOrderId, loading, reportableOrders, handlePreview]);
+    openModal({ type: ModalType.REPORT_PREVIEW, orderId: deepLinkOrderId });
+  }, [deepLinkOrderId, openModal]);
 
   const handlePrint = useCallback(
     async (reportableOrder: ReportableOrder) => {

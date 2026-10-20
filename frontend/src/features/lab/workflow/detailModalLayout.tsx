@@ -34,6 +34,7 @@ export interface QueueModalShellProps {
   footer?: ReactNode;
   footerInfo?: ReactNode;
   disableClose?: boolean;
+  isActive?: boolean;
 }
 
 export const QueueModalShell: React.FC<QueueModalShellProps> = ({
@@ -50,6 +51,7 @@ export const QueueModalShell: React.FC<QueueModalShellProps> = ({
   footer,
   footerInfo,
   disableClose = false,
+  isActive = true,
 }) => {
   return (
     <Modal
@@ -60,6 +62,7 @@ export const QueueModalShell: React.FC<QueueModalShellProps> = ({
       subtitle={subtitle}
       size="3xl"
       disableClose={disableClose}
+      isActive={isActive}
     >
       <ModalPageShell
         bodyClassName={MODAL_WORKFLOW_BODY_STACK}

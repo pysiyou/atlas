@@ -14,21 +14,29 @@ import { useOrderForm } from './useOrderForm';
 import { useTestCatalog, useTestSearch } from '@/features/catalog';
 import { usePatientSearch, usePatientsList } from '@/features/patients';
 import { useCreatePayment } from '@/features/payments';
+import { useOrder } from '../api/orders';
 
 export interface UseOrderUpsertModalParams {
   isOpen: boolean;
   order?: Order;
+  orderId?: number;
   mode: 'create' | 'edit';
   patientId?: string;
   onClose: () => void;
 }
 
 export function useOrderUpsertModal({
-  order,
+  order: orderProp,
+  orderId,
   mode,
   patientId,
   onClose,
 }: UseOrderUpsertModalParams) {
+  const shouldFetchOrder = mode === 'edit' && !orderProp && orderId != null;
+  const { order: fetchedOrder, isLoading: isOrderLoading } = useOrder(
+    shouldFetchOrder ? String(orderId) : undefined
+  );
+  const order = orderProp ?? fetchedOrder;
   const [patientSearch, setPatientSearch] = useState('');
   const [testSearch, setTestSearch] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | undefined>(undefined);
@@ -183,6 +191,7 @@ export function useOrderUpsertModal({
     subtitle,
     submitLabel,
     handleClose,
+    isOrderLoading,
   };
 }
 

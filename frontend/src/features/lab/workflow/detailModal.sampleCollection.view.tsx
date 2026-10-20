@@ -20,6 +20,7 @@ type CollectionFields = ReturnType<typeof deriveCollectionModalFields>;
 export function SampleCollectionDetailModalView({
   isOpen,
   onClose,
+  isActive = true,
   sample,
   order,
   requirement,
@@ -36,6 +37,7 @@ export function SampleCollectionDetailModalView({
 }: {
   isOpen: boolean;
   onClose: () => void;
+  isActive?: boolean;
   sample: Sample;
   order: Order | undefined;
   requirement?: SampleCollectionQueueItem['requirement'];
@@ -131,6 +133,7 @@ export function SampleCollectionDetailModalView({
     <QueueModalShell
       isOpen={isOpen}
       onClose={onClose}
+      isActive={isActive}
       disableClose={isPopoverSubmitting}
       title={modalTitle}
       subtitle={modalSubtitle}

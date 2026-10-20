@@ -1,12 +1,12 @@
 /**
- * SampleCollectionDetailModal - Extended view for sample details
+ * SampleCollectionDetailModal — loads a sample by id and owns collect mutations.
  */
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query';
-import { sampleAPI } from '../api/samples';
-import type { ContainerType } from '@/types';
+import { sampleAPI, useCollectSample } from '../api/samples';
+import type { ContainerType, Order, Patient, Sample } from '@/types';
 import { useTestCatalog } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users';
 import { useOrder } from '@/features/orders';
@@ -17,45 +17,98 @@ import { deriveCollectionModalFields } from './detailModal.sampleCollection.deri
 import { Modal, ModalPageShell } from '@/components/overlays';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { SampleCollectionDetailModalView } from './detailModal.sampleCollection.view';
+import { findCollectionQueueItem } from '../utils/findCollectionQueueItem';
+import { useSubmitSampleCollection } from '../collection/useSubmitSampleCollection';
+import { useAuthStore } from '@/app/authStore';
+import type { SampleDetailModalProps } from '@/lib/context/modalTypes';
 
-interface CollectionDetailModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  sampleId?: string;
-  pendingSampleDisplay?: SampleCollectionQueueItem;
-  onCollect?: (
-    display: SampleCollectionQueueItem,
-    volume: number,
-    notes?: string,
-    selectedColor?: string,
-    containerType?: ContainerType
-  ) => void;
-  readOnly?: boolean;
+/**
+ * When the collection worklist cache has no row for this sample, still allow collect
+ * if the sample itself is pending (getById does not include queue extras).
+ */
+function fallbackPendingDisplay(
+  sample: Sample,
+  order: Order | undefined
+): SampleCollectionQueueItem {
+  const patient = {
+    id: order?.patientId ?? 0,
+    fullName: order?.patientName ?? '—',
+  } as Patient;
+
+  return {
+    sample,
+    order: order ?? ({
+      orderId: sample.orderId,
+      patientId: 0,
+      patientName: '',
+      orderDate: sample.createdAt,
+      totalPrice: 0,
+      paymentStatus: 'unpaid',
+      overallStatus: 'ordered',
+      priority: sample.priority,
+      tests: [],
+      createdBy: '',
+      createdAt: sample.createdAt,
+      updatedAt: sample.updatedAt,
+    } as Order),
+    patient,
+    priority: sample.priority,
+    requirement: {
+      sampleType: sample.sampleType,
+      testCodes: sample.testCodes ?? [],
+      totalVolume: sample.requiredVolume ?? 0,
+      containerTypes: sample.requiredContainerTypes ?? [],
+      containerTopColors: sample.requiredContainerColors ?? [],
+      priority: sample.priority,
+      orderId: sample.orderId,
+    },
+    allowedActions: {
+      collect: sample.status === 'pending',
+      enterResults: false,
+      validate: false,
+      reject: false,
+    },
+  };
 }
 
-export const SampleCollectionDetailModal: React.FC<CollectionDetailModalProps> = ({
+export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({
   isOpen,
   onClose,
+  isActive = true,
   sampleId,
-  pendingSampleDisplay,
-  onCollect,
   readOnly = false,
 }) => {
   const { getUserName } = useUserLookup();
   const { tests = [] } = useTestCatalog();
-  const { openModal } = useModal();
+  const { pushModal } = useModal();
+  const queryClient = useQueryClient();
+  const { isAuthenticated } = useAuthStore();
+  const collectSampleMutation = useCollectSample();
+  const { handleCollect } = useSubmitSampleCollection({
+    isAuthenticated,
+    collectSampleMutation,
+  });
   const [isPopoverSubmitting, setIsPopoverSubmitting] = useState(false);
 
+  const numericSampleId = Number(sampleId);
+  const cachedDisplay = Number.isFinite(numericSampleId)
+    ? findCollectionQueueItem(queryClient, numericSampleId)
+    : undefined;
+
   const { data: fetchedSample, isLoading: isFetchingSample } = useQuery({
-    queryKey: queryKeys.samples.byId(sampleId ?? ''),
-    queryFn: () => sampleAPI.getById(sampleId!),
-    enabled: isOpen && !!sampleId,
+    queryKey: queryKeys.samples.byId(sampleId),
+    queryFn: () => sampleAPI.getById(sampleId),
+    enabled: isOpen && Boolean(sampleId),
   });
-  const sample = fetchedSample ?? pendingSampleDisplay?.sample;
-  const orderId = pendingSampleDisplay?.order ? undefined : sample?.orderId;
+  const sample = fetchedSample ?? cachedDisplay?.sample;
+  const orderId = cachedDisplay?.order ? undefined : sample?.orderId;
   const { order: fetchedOrder } = useOrder(orderId != null ? String(orderId) : undefined);
-  const order = pendingSampleDisplay?.order || fetchedOrder;
-  const requirement = pendingSampleDisplay?.requirement;
+  const order = cachedDisplay?.order || fetchedOrder;
+
+  const pendingSampleDisplay = useMemo(() => {
+    if (!sample || sample.status !== 'pending') return cachedDisplay;
+    return cachedDisplay ?? fallbackPendingDisplay(sample, order);
+  }, [sample, cachedDisplay, order]);
 
   const testDetails = useMemo(() => {
     if (!sample?.testCodes) return [];
@@ -72,15 +125,32 @@ export const SampleCollectionDetailModal: React.FC<CollectionDetailModalProps> =
 
   const openSampleDetail = useCallback(
     (id: string | number) => {
-      openModal(ModalType.SAMPLE_DETAIL, { sampleId: String(id), readOnly });
+      pushModal({
+        type: ModalType.SAMPLE_DETAIL,
+        sampleId: String(id),
+        readOnly,
+      });
     },
-    [openModal, readOnly]
+    [pushModal, readOnly]
+  );
+
+  const onCollect = useCallback(
+    async (
+      display: SampleCollectionQueueItem,
+      volume: number,
+      notes?: string,
+      selectedColor?: string,
+      containerType?: ContainerType
+    ) => {
+      await handleCollect(display, volume, notes, selectedColor, containerType);
+    },
+    [handleCollect]
   );
 
   if (!sample) {
     if (isOpen && sampleId && isFetchingSample) {
       return (
-        <Modal isOpen={isOpen} onClose={onClose} title="Sample" size="3xl">
+        <Modal isOpen={isOpen} onClose={onClose} title="Sample" size="3xl" isActive={isActive}>
           <ModalPageShell>
             <DetailPageSkeleton variant="responsive-detail" />
           </ModalPageShell>
@@ -101,11 +171,12 @@ export const SampleCollectionDetailModal: React.FC<CollectionDetailModalProps> =
     <SampleCollectionDetailModalView
       isOpen={isOpen}
       onClose={onClose}
+      isActive={isActive}
       sample={sample}
       order={order}
-      requirement={requirement}
+      requirement={pendingSampleDisplay?.requirement}
       pendingSampleDisplay={pendingSampleDisplay}
-      onCollect={onCollect}
+      onCollect={readOnly ? undefined : onCollect}
       readOnly={readOnly}
       isPopoverSubmitting={isPopoverSubmitting}
       onPopoverSubmittingChange={setIsPopoverSubmitting}

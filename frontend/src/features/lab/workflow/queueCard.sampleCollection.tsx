@@ -50,17 +50,13 @@ export function useSampleCollectionCardData(
 
   const openSampleModal = useMemo(() => {
     return () => {
-      const isPending = sample?.status === 'pending';
-      const isCollected = sample?.status === 'collected';
-      const isRejected = sample?.status === 'rejected';
-
-      if ((isCollected || isRejected) && sample?.sampleId) {
-        openModal(ModalType.SAMPLE_DETAIL, { sampleId: sample.sampleId.toString() });
-      } else if (isPending) {
-        openModal(ModalType.SAMPLE_DETAIL, { pendingSampleDisplay: display, onCollect });
-      }
+      if (sample?.sampleId == null) return;
+      openModal({
+        type: ModalType.SAMPLE_DETAIL,
+        sampleId: sample.sampleId.toString(),
+      });
     };
-  }, [sample, display, onCollect, openModal]);
+  }, [sample, openModal]);
 
   const handleCardClick = useLabWorkflowCardClickGuard(openSampleModal);
 

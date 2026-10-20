@@ -7,7 +7,6 @@
 
 import React from 'react';
 import { TYPE } from '@/components/theme/recipes';
-import type { Order } from '@/types';
 import { FormDialogFooter, Modal, ModalPageShell } from '@/components/overlays';
 import { FooterInfo } from '@/components/display';
 import { Icon } from '@/components/primitives';
@@ -16,22 +15,27 @@ import { formatCurrency } from '@/utils';
 import { ICONS } from '@/config/icons';
 import { useOrderUpsertModal } from '../hooks/useOrderUpsertModal';
 import { OrderUpsertFormFields } from './OrderUpsertFormFields';
-import type { BaseModalProps } from '@/lib/context/modalTypes';
+import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
+import type { OrderUpsertModalOpenProps } from '@/lib/context/modalTypes';
 
-export interface OrderUpsertModalProps extends BaseModalProps {
-  order?: Order;
-  mode: 'create' | 'edit';
-  patientId?: string;
-}
+export type OrderUpsertModalProps = OrderUpsertModalOpenProps;
 
 export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
   isOpen,
   onClose,
-  order,
-  mode,
+  isActive = true,
+  orderId,
+  mode: modeProp,
   patientId,
 }) => {
-  const modalState = useOrderUpsertModal({ isOpen, order, mode, patientId, onClose });
+  const mode = modeProp ?? (orderId != null ? 'edit' : 'create');
+  const modalState = useOrderUpsertModal({
+    isOpen,
+    orderId,
+    mode,
+    patientId,
+    onClose,
+  });
   const {
     control,
     handleSubmit,
@@ -43,7 +47,11 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
     submitLabel,
     handleClose,
     totalPrice,
+    isOrderLoading,
+    order: resolvedOrder,
   } = modalState;
+
+  const waitingOnOrder = mode === 'edit' && isOrderLoading && !resolvedOrder;
 
   return (
     <Modal
@@ -53,40 +61,47 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
       subtitle={subtitle}
       size="2xl"
       disableClose={isSubmitting || isProcessingPayment}
+      isActive={isActive}
     >
       <ModalPageShell
         bodyPadding="order"
         footer={
-          <FormDialogFooter
-            submitLabel={submitLabel}
-            isSubmitting={isSubmitting || isProcessingPayment}
-            formId="order-form"
-            submitVariant={paymentMethod && mode === 'create' ? 'primary' : 'save'}
-            submitIcon={
-              paymentMethod && mode === 'create' && !isSubmitting && !isProcessingPayment ? (
-                <Icon name={ICONS.dataFields.wallet} />
-              ) : undefined
-            }
-            footerInfo={
-              mode === 'edit' && order ? (
-                <FooterInfo icon={MODULE_ICONS.orders} label="Orders" size="md" />
-              ) : (
-                <div className={`${TYPE.value} text-brand`}>
-                  Total: {formatCurrency(totalPrice)}
-                </div>
-              )
-            }
-          />
+          waitingOnOrder ? undefined : (
+            <FormDialogFooter
+              submitLabel={submitLabel}
+              isSubmitting={isSubmitting || isProcessingPayment}
+              formId="order-form"
+              submitVariant={paymentMethod && mode === 'create' ? 'primary' : 'save'}
+              submitIcon={
+                paymentMethod && mode === 'create' && !isSubmitting && !isProcessingPayment ? (
+                  <Icon name={ICONS.dataFields.wallet} />
+                ) : undefined
+              }
+              footerInfo={
+                mode === 'edit' && resolvedOrder ? (
+                  <FooterInfo icon={MODULE_ICONS.orders} label="Orders" size="md" />
+                ) : (
+                  <div className={`${TYPE.value} text-brand`}>
+                    Total: {formatCurrency(totalPrice)}
+                  </div>
+                )
+              }
+            />
+          )
         }
       >
-        <form id="order-form" onSubmit={handleSubmit} className="max-w-full">
-          <OrderUpsertFormFields
-            control={control}
-            mode={mode}
-            patientId={patientId}
-            modalState={modalState}
-          />
-        </form>
+        {waitingOnOrder ? (
+          <DetailPageSkeleton variant="responsive-detail" />
+        ) : (
+          <form id="order-form" onSubmit={handleSubmit} className="max-w-full">
+            <OrderUpsertFormFields
+              control={control}
+              mode={mode}
+              patientId={patientId}
+              modalState={modalState}
+            />
+          </form>
+        )}
       </ModalPageShell>
     </Modal>
   );

@@ -1,5 +1,5 @@
 /**
- * EscalationResolutionModal - Resolve escalated tests (admin/labtech_plus only)
+ * EscalationResolutionModal — loads the escalated test by id and owns resolution.
  */
 
 import React, { useState, useCallback, useMemo } from 'react';
@@ -9,34 +9,29 @@ import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';
 import { buildCriticalValueRecord } from '../criticalValues/criticalValues';
 import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
-import type { TestWithContext } from '@/types';
 import { useEscalationResolution } from '../validation/useEscalationResolution';
 import {
   EscalationResolutionBody,
   EscalationResolutionFooter,
 } from './detailModal.escalation.helpers';
-
 import { labModalHeaderContext } from './detailModalLayout';
+import { useOrderTestContext } from '../api/results';
+import { Modal, ModalPageShell } from '@/components/overlays';
+import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
+import type { EscalationResolutionModalProps } from '@/lib/context/modalTypes';
 
 function ticketString(value: unknown): string | undefined {
   return typeof value === 'string' ? value : undefined;
 }
 
-interface EscalationResolutionModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  test: TestWithContext;
-  onResolved: () => void | Promise<void>;
-  readOnly?: boolean;
-}
-
 export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps> = ({
   isOpen,
   onClose,
-  test,
-  onResolved,
+  isActive = true,
+  orderTestId,
   readOnly = false,
 }) => {
+  const { test, isLoading } = useOrderTestContext(orderTestId, isOpen);
   const [validationNotesForceValidate, setValidationNotesForceValidate] = useState('');
   const [reasonAuthorizeRetest, setReasonAuthorizeRetest] = useState('');
   const [reasonAuthorizeRecollect, setReasonAuthorizeRecollect] = useState('');
@@ -46,7 +41,10 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   const [readBackConfirmed, setReadBackConfirmed] = useState(false);
   const queryClient = useQueryClient();
 
-  const criticalRecord = useMemo(() => buildCriticalValueRecord(test), [test]);
+  const criticalRecord = useMemo(
+    () => (test ? buildCriticalValueRecord(test) : undefined),
+    [test]
+  );
   const handleCriticalValueUpdated = useCallback(() => {
     invalidateLabWorkflowQueries(queryClient, {
       criticalValues: true,
@@ -65,13 +63,25 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   }, []);
 
   const { canResolveEscalation, resolving, resolveAsync } = useEscalationResolution({
-    orderTestId: test.id ?? 0,
-    onResolved,
+    orderTestId,
+    onResolved: async () => {
+      await invalidateLabWorkflowQueries(queryClient, { pendingEscalation: true });
+    },
     onClose,
     onResetForm: resetForm,
   });
 
-  if (test.id == null) return null;
+  if (isOpen && isLoading && !test) {
+    return (
+      <Modal isOpen={isOpen} onClose={onClose} title="Escalation" size="3xl" isActive={isActive}>
+        <ModalPageShell>
+          <DetailPageSkeleton variant="responsive-detail" />
+        </ModalPageShell>
+      </Modal>
+    );
+  }
+
+  if (!test || test.id == null) return null;
 
   const hasResults = Boolean(test.results && Object.keys(test.results).length > 0);
   const patientName = test.patientName || '—';
@@ -97,6 +107,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
     <QueueModalShell
       isOpen={isOpen}
       onClose={onClose}
+      isActive={isActive}
       title={modalTitle}
       subtitle={modalSubtitle}
       modalKey={readOnly ? `historical-${test.id}` : `escalation-${test.id}`}
@@ -138,7 +149,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
         hasResults={hasResults}
         rejectionReason={ticketString(test.ticketMetadata?.rejectionReason)}
         rejectionNotes={ticketString(test.ticketMetadata?.rejectionNotes)}
-        criticalRecord={criticalRecord}
+        criticalRecord={criticalRecord ?? null}
         onCriticalValueUpdated={handleCriticalValueUpdated}
       />
     </QueueModalShell>

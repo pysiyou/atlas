@@ -11,7 +11,6 @@ import { EntityUrlFilterBar } from '@/components/filters';
 import { actionButtonPreset } from '@/components/primitives';
 import { ListView } from '@/components/surfaces';
 import { Button } from '@/components/primitives';
-import { useModal } from '@/lib/context/ModalContext';
 import { PatientFilters } from '../components/PatientFilters';
 import { createPatientTableConfig } from '../config/PatientTable.config';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
@@ -22,7 +21,6 @@ import { EditPatientModal } from '../components/EditPatientModal';
 
 export const PatientList: React.FC = () => {
   const navigate = useNavigate();
-  useModal();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const {

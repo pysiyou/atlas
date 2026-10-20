@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import type { BaseModalProps, TestDetailProps } from '@/lib/context/modalTypes';
+import type { TestDetailModalProps } from '@/lib/context/modalTypes';
 import type { TestWithContext } from '@/types';
 import { buildCriticalValueRecord } from '../criticalValues/criticalValues';
 import { useSampleRejectionDisplay } from '../hooks/useSampleRejectionDisplay';
@@ -17,8 +17,9 @@ import {
   TestDetailModalFooter,
   TestDetailModalHeaderBadges,
 } from './detailModal.test.helpers';
-
-export type TestDetailModalProps = BaseModalProps & TestDetailProps;
+import { useOrderTestContext } from '../api/results';
+import { Modal, ModalPageShell } from '@/components/overlays';
+import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 
 const EMPTY_REJECTION_CONTEXT: TestWithContext = {
   orderId: 0,
@@ -33,23 +34,16 @@ const EMPTY_REJECTION_CONTEXT: TestWithContext = {
 export const TestDetailModal: React.FC<TestDetailModalProps> = ({
   isOpen,
   onClose,
+  isActive = true,
   orderTestId,
-  order: orderProp,
-  orderTest: orderTestProp,
-  patient: patientProp,
-  test: testProp,
   interaction = 'view',
-  validation,
 }) => {
-  const isValidate = interaction === 'validate' && validation != null;
+  const { test: fetchedTest, isLoading: isContextLoading } = useOrderTestContext(orderTestId, isOpen);
 
   const model = useTestDetailModel({
     isOpen,
     orderTestId,
-    order: orderProp,
-    orderTest: orderTestProp,
-    patient: patientProp,
-    test: testProp,
+    test: fetchedTest,
   });
 
   const {
@@ -67,7 +61,7 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({
     ready,
   } = model;
 
-  const sampleRejection = useSampleRejectionDisplay(labContext ?? testProp ?? EMPTY_REJECTION_CONTEXT);
+  const sampleRejection = useSampleRejectionDisplay(labContext ?? fetchedTest ?? EMPTY_REJECTION_CONTEXT);
   const criticalRecord = useMemo(() => {
     if (!labContext) return undefined;
     return buildCriticalValueRecord(labContext) ?? undefined;
@@ -76,25 +70,26 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({
   const {
     handleApprove,
     isApproving,
+    handleReject,
     handleCriticalValueUpdated,
     openLinkedTest,
     handleViewFullSample,
   } = useTestDetailModalActions({
-    validation,
+    interaction,
+    orderTestId,
+    orderId: order?.orderId ?? fetchedTest?.orderId,
     onClose,
-    order,
-    patientProp,
-    modelPatient: model.patient,
   });
 
   const {
+    isValidate,
     hasResults,
     detailGridSections,
     labUrl,
     modalKey,
     comments,
-    commentKey,
     resultsPanelPreset,
+    onCommentsChange,
   } = useTestDetailModalDerived({
     order,
     orderTest,
@@ -103,10 +98,19 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({
     openLinkedTest,
     onClose,
     labContext,
-    isValidate,
-    validation,
+    interaction,
     orderTestId,
   });
+
+  if (isOpen && isContextLoading && !fetchedTest && !ready) {
+    return (
+      <Modal isOpen={isOpen} onClose={onClose} title="Test" size="3xl" isActive={isActive}>
+        <ModalPageShell>
+          <DetailPageSkeleton variant="responsive-detail" />
+        </ModalPageShell>
+      </Modal>
+    );
+  }
 
   const headerBadges = labContext
     ? <TestDetailModalHeaderBadges labContext={labContext} headerVariant={headerVariant} />
@@ -140,6 +144,7 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({
     <QueueModalShell
       isOpen={isOpen}
       onClose={onClose}
+      isActive={isActive}
       title={modalHeader.title}
       subtitle={modalHeader.subtitle ?? ''}
       modalKey={modalKey}
@@ -148,7 +153,6 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({
       footer={
         <TestDetailModalFooter
           isValidate={isValidate}
-          validation={validation}
           orderTestId={orderTestId}
           labContext={labContext}
           orderTest={orderTest}
@@ -158,6 +162,7 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({
           isApproving={isApproving}
           onClose={onClose}
           onApprove={handleApprove}
+          onReject={handleReject}
           labUrl={labUrl}
         />
       }
@@ -167,10 +172,9 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({
         hasResults={hasResults}
         orderTest={orderTest}
         isValidate={isValidate}
-        validation={validation}
         comments={comments}
-        commentKey={commentKey}
         resultsPanelPreset={resultsPanelPreset}
+        onCommentsChange={onCommentsChange}
         onApprove={handleApprove}
         criticalRecord={criticalRecord}
         onCriticalValueUpdated={handleCriticalValueUpdated}
