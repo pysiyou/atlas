@@ -13,6 +13,7 @@ import { QualityIssuePopover } from '../components';
 import { ResultsParameterGrid } from '../components/ResultsParameterGrid';
 import { SampleRejectedBanner } from '../components/SampleRejectedBanner';
 import { useLabWorkflowCardClickGuard } from '../hooks';
+import { isLabActionAllowed } from '../utils/queueDisplay';
 import { useSampleRejectionDisplay } from '../hooks/useSampleRejectionDisplay';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
@@ -54,8 +55,8 @@ export function useResultValidationCardData(
   const { test, onApprove, onReject, onClick, isApproving = false } = props;
   const { getUserName } = useUserLookup();
   const handleCardClick = useLabWorkflowCardClickGuard(onClick);
-  const canValidate = test.allowedActions?.validate !== false;
-  const canReject = test.allowedActions?.reject !== false;
+  const canValidate = isLabActionAllowed(test.allowedActions, 'validate');
+  const canReject = isLabActionAllowed(test.allowedActions, 'reject');
   const rejection = useMemo(() => deriveRetestContext(test), [test]);
   const sampleRejection = useSampleRejectionDisplay(test);
 

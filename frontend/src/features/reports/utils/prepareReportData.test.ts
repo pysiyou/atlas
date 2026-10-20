@@ -43,8 +43,13 @@ function reportable(tests: OrderTest[]): ReportableOrder {
     orderDate: '2026-02-01T10:00:00Z',
     patientId: 3,
     patientName: 'Ada Lovelace',
+    patientDob: '2004-06-10',
+    patientAge: 22,
+    patientGender: 'female',
     activeTestCount: active.length,
     validatedTestCount: active.filter(test => test.status === 'validated').length,
+    testCodes: active.map(test => test.testCode),
+    testNames: active.map(test => test.testName),
     order: order(tests),
   };
 }
@@ -94,6 +99,7 @@ describe('prepareReportData', () => {
           testName: 'Glucose',
           status: 'validated',
           results: { GLU: { value: 95, unit: 'mg/dL', status: 'normal' } },
+          resultEnteredAt: '2026-02-02T11:30:00Z',
           resultValidatedAt: '2026-02-02T12:00:00Z',
         }),
         orderTest({ id: 3, testCode: 'OLD', testName: 'Old', status: 'removed' }),
@@ -114,6 +120,33 @@ describe('prepareReportData', () => {
       value: 95,
     });
     expect(payload.timestamps?.reportedAt).toBe('2026-02-02T12:00:00Z');
+    expect(payload.patientDob).toBe('2004-06-10');
+    expect(payload.timestamps?.acceptedAt).toBe('2026-02-02T11:30:00Z');
+  });
+
+  it('uses collection time as lab acceptance when no result has been entered', () => {
+    const payload = prepareReportData({
+      reportableOrder: reportable([
+        orderTest({
+          id: 1,
+          testCode: 'GLU',
+          testName: 'Glucose',
+          status: 'pending',
+          sampleId: 9,
+        }),
+      ]),
+      patients: undefined,
+      catalogTests: [],
+      getSample: () => ({
+        status: 'collected',
+        collectedAt: '2026-02-01T11:00:00Z',
+        collectedBy: '1',
+      }),
+      getUserName: () => 'Tech',
+    });
+
+    expect(payload.timestamps?.collectedAt).toBe('2026-02-01T11:00:00Z');
+    expect(payload.timestamps?.acceptedAt).toBe('2026-02-01T11:00:00Z');
   });
 
   it('emits a single placeholder row when a test has no catalog parameters and no results', () => {

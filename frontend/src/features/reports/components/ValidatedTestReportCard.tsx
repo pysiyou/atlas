@@ -38,8 +38,12 @@ export function ValidatedTestReportCard({
   onPrint,
   generatingOrderId,
 }: ValidatedTestReportCardProps) {
-  const tests = getActiveOrderTests(order.order);
-  const testNames = tests.map(test => test.testName).join(', ') || `${order.activeTestCount} test(s)`;
+  const testNames =
+    order.testNames.length > 0
+      ? order.testNames.join(', ')
+      : order.order
+        ? getActiveOrderTests(order.order).map(test => test.testName).join(', ')
+        : `${order.activeTestCount} test(s)`;
   const statusLabel = `${order.validatedTestCount}/${order.activeTestCount}`;
 
   return (
@@ -59,7 +63,14 @@ export function ValidatedTestReportCard({
       <div className="grow space-y-space-2">
         <div>
           <div className={TYPE.amount}>{testNames}</div>
-          <EntityId variant="block">{tests.map(test => test.testCode).join(', ')}</EntityId>
+          <EntityId variant="block">
+            {(order.testCodes.length > 0
+              ? order.testCodes
+              : order.order
+                ? getActiveOrderTests(order.order).map(test => test.testCode)
+                : []
+            ).join(', ')}
+          </EntityId>
         </div>
       </div>
 

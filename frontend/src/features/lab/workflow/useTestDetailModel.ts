@@ -3,7 +3,7 @@
  */
 
 import { useMemo } from 'react';
-import { useTest, useTestCatalog } from '@/features/catalog';
+import { useTest } from '@/features/catalog';
 import { useOrder, useOrderTestDetailSamples } from '@/features/orders';
 import type { Order, OrderTest, Patient, Test, TestWithContext } from '@/types';
 import {
@@ -87,10 +87,9 @@ export function useTestDetailModel(input: UseTestDetailModelInput): UseTestDetai
   );
 
   const code = orderTest?.testCode ?? test?.testCode ?? '';
-  const { getTestName } = useTestCatalog();
   const { test: catalogTest } = useTest(isOpen && code ? code : undefined);
   const testDisplayName =
-    (code ? getTestName(code) : '') || orderTest?.testName || test?.testName || '';
+    orderTest?.testName || test?.testName || catalogTest?.name || '';
 
   const linked = useMemo(() => resolveLinkedOrderTests(order, orderTest), [order, orderTest]);
   const { modalStage, headerVariant } = resolveModalPresentation(orderTest, test);

@@ -41,6 +41,7 @@ class CollectionWorklistItem(BaseModel):
     originalSampleCollectedAt: datetime | None = None
     recollectionReason: str | None = None
     recollectionAttempt: int = 1
+    pipelineStage: Literal["collection", "entry", "validation", "escalation", "completed", "cancelled"] | None = None
     attentionReason: str | None = None
     attentionLabel: str | None = None
     allowedActions: LabWorklistAllowedActions = LabWorklistAllowedActions()
@@ -81,6 +82,7 @@ class EntryWorklistItem(BaseModel):
     retestNumber: int = 0
     referringPhysician: str | None = None
     testCategory: str | None = None
+    pipelineStage: Literal["collection", "entry", "validation", "escalation", "completed", "cancelled"] | None = None
     attentionReason: str | None = None
     attentionLabel: str | None = None
     allowedActions: LabWorklistAllowedActions = LabWorklistAllowedActions()
@@ -160,6 +162,7 @@ class ValidationWorklistItem(BaseModel):
     turnaroundHours: int
     hasCriticalValues: bool
     testCategory: str | None = None
+    pipelineStage: Literal["collection", "entry", "validation", "escalation", "completed", "cancelled"] | None = None
     attentionReason: str | None = None
     attentionLabel: str | None = None
     allowedActions: LabWorklistAllowedActions = LabWorklistAllowedActions()

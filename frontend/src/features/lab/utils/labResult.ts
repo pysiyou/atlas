@@ -4,6 +4,7 @@ import type { CatalogReferenceRange, CriticalRange, TestParameter, Patient, Gend
 import type { DemographicRange } from '@/types/test';
 import { calculateAge } from '@/utils/string';
 import { PHYSIOLOGIC_LIMITS, type PhysiologicLimit } from '@/types/generated/physiologicLimits';
+import { PHYSIOLOGIC_LIMIT_ALIASES } from '@/types/generated/physiologicAliases';
 import { RADIUS, SHADOW, TONE, TYPE } from '@/components/theme/recipes';
 
 export type { ResultStatus };
@@ -223,11 +224,6 @@ export function formatReferenceRange(
   }
   return 'N/A';
 }
-
-/** Catalog item codes that differ from physiologic-limits contract keys (matches backend). */
-const PHYSIOLOGIC_LIMIT_ALIASES: Record<string, string> = {
-  PLAT: 'PLT',
-};
 
 export function getPhysiologicLimit(itemCode: string): PhysiologicLimit | undefined {
   const resolvedCode = PHYSIOLOGIC_LIMIT_ALIASES[itemCode] ?? itemCode;

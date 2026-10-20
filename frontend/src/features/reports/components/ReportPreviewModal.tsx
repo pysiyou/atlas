@@ -35,7 +35,11 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
   const { reportableOrder, isLoading, isError } = useReportableOrder(isOpen ? orderId : null);
   const orderTestCodes = useMemo(
     () =>
-      uniqueSortedTestCodes((reportableOrder?.order.tests ?? []).map(test => test.testCode)),
+      uniqueSortedTestCodes(
+        reportableOrder?.testCodes.length
+          ? reportableOrder.testCodes
+          : (reportableOrder?.order?.tests ?? []).map(test => test.testCode)
+      ),
     [reportableOrder]
   );
   const { tests, isLoading: catalogLoading } = useTestsByCodes(orderTestCodes);
@@ -44,8 +48,8 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
   const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
-    if (!isOpen || !reportableOrder || (orderTestCodes.length > 0 && catalogLoading)) {
-      if (!isOpen || !reportableOrder) setReportData(null);
+    if (!isOpen || !reportableOrder?.order || (orderTestCodes.length > 0 && catalogLoading)) {
+      if (!isOpen || !reportableOrder?.order) setReportData(null);
       return;
     }
 

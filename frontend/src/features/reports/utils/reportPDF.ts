@@ -22,12 +22,6 @@ export function getDefaultTemplate(): ReportTemplate {
   };
 }
 
-function drawBodySeparator(doc: jsPDF, startY: number, margin: number, pageWidth: number): void {
-  doc.setDrawColor(210, 210, 210);
-  doc.setLineWidth(0.3);
-  doc.line(margin, startY, pageWidth - margin, startY);
-}
-
 function stampPageNumbers(doc: jsPDF, layout: LabReportHeaderLayout): void {
   const pageCount = doc.getNumberOfPages();
   for (let page = 1; page <= pageCount; page += 1) {
@@ -46,15 +40,12 @@ export async function generateLabReport(
 ): Promise<jsPDF> {
   const { default: JsPDF } = await import('jspdf');
   const doc = new JsPDF();
-  const pageWidth = doc.internal.pageSize.getWidth();
 
-  const { layout, endY } = drawLabReportHeader(doc, reportData, MARGIN, {
-    pageNumber: 1,
-    pageCount: 1,
+  const { layout, endY } = drawLabReportHeader(doc, reportData, MARGIN);
+  drawLabReportBody(doc, reportData, endY, MARGIN, catalogTests, nextDoc => {
+    const nextHeader = drawLabReportHeader(nextDoc, reportData, MARGIN);
+    return nextHeader.endY;
   });
-
-  drawBodySeparator(doc, endY, MARGIN, pageWidth);
-  drawLabReportBody(doc, reportData, endY, MARGIN, catalogTests);
   stampPageNumbers(doc, layout);
 
   return doc;

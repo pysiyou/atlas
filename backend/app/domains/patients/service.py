@@ -16,7 +16,7 @@ from app.domains.patients.schemas import (
 from app.platform.utils.common import parse_display_id_from_search
 from app.shared.contracts.enums import Gender, PaymentStatus
 from fastapi import HTTPException, status
-from sqlalchemy import String, and_, cast, or_
+from sqlalchemy import String, and_, cast, func, or_
 from sqlalchemy.inspection import inspect
 from sqlalchemy.orm import Session
 
@@ -69,32 +69,57 @@ def _years_ago_iso(years: int) -> str:
 
 
 def _attach_order_summaries(db: Session, patients_data: list[dict]) -> list[dict]:
+    """Attach per-patient order counts from SQL aggregates, not a full order load."""
     if not patients_data:
         return patients_data
     patient_ids = [p["id"] for p in patients_data]
-    orders = db.query(Order).filter(Order.patientId.in_(patient_ids)).all()
-    orders_by_patient: dict[int, list[Order]] = {}
-    for order in orders:
-        orders_by_patient.setdefault(order.patientId, []).append(order)
+    empty_summary = {
+        "orderCount": 0,
+        "lastOrderDate": None,
+        "lastOrderStatus": None,
+        "hasUnpaidOrders": False,
+    }
+    if not patient_ids:
+        for patient in patients_data:
+            patient["orderSummary"] = dict(empty_summary)
+        return patients_data
+
+    aggregates = (
+        db.query(
+            Order.patientId,
+            func.count(Order.orderId).label("order_count"),
+            func.max(Order.orderDate).label("last_order_date"),
+            func.bool_or(Order.paymentStatus == PaymentStatus.UNPAID).label("has_unpaid"),
+        )
+        .filter(Order.patientId.in_(patient_ids))
+        .group_by(Order.patientId)
+        .all()
+    )
+    aggregate_by_patient = {row.patientId: row for row in aggregates}
+
+    last_orders = (
+        db.query(Order.patientId, Order.overallStatus)
+        .filter(Order.patientId.in_(patient_ids))
+        .distinct(Order.patientId)
+        .order_by(Order.patientId, Order.orderDate.desc())
+        .all()
+    )
+    last_status_by_patient: dict[int, str | None] = {}
+    for patient_id, overall_status in last_orders:
+        last_status_by_patient[patient_id] = (
+            overall_status.value if hasattr(overall_status, "value") else overall_status
+        )
 
     for patient in patients_data:
-        patient_orders = orders_by_patient.get(patient["id"], [])
-        if not patient_orders:
-            patient["orderSummary"] = {
-                "orderCount": 0,
-                "lastOrderDate": None,
-                "lastOrderStatus": None,
-                "hasUnpaidOrders": False,
-            }
+        row = aggregate_by_patient.get(patient["id"])
+        if not row:
+            patient["orderSummary"] = dict(empty_summary)
             continue
-        sorted_orders = sorted(patient_orders, key=lambda o: o.orderDate, reverse=True)
-        last_order = sorted_orders[0]
-        last_status = last_order.overallStatus
         patient["orderSummary"] = {
-            "orderCount": len(patient_orders),
-            "lastOrderDate": last_order.orderDate,
-            "lastOrderStatus": last_status.value if hasattr(last_status, "value") else last_status,
-            "hasUnpaidOrders": any(o.paymentStatus == PaymentStatus.UNPAID for o in patient_orders),
+            "orderCount": int(row.order_count),
+            "lastOrderDate": row.last_order_date,
+            "lastOrderStatus": last_status_by_patient.get(patient["id"]),
+            "hasUnpaidOrders": bool(row.has_unpaid),
         }
     return patients_data
 
@@ -146,7 +171,7 @@ class PatientService:
             data = _attach_order_summaries(self.db, data)
         return data, total
 
-    def search(self, q: str, limit: int = 10000) -> list[dict]:
+    def search(self, q: str, limit: int = 20) -> list[dict]:
         patients = (
             self.db.query(Patient)
             .filter(_patient_search_filter(q))

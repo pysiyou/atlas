@@ -7,9 +7,10 @@ import type { Sample, SampleStatus, ContainerType, ContainerTopColor } from '@/t
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { useEntityLookup, parseNumericKey } from '@/hooks/useEntityLookup';
-import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
+import { queryKeys, cacheConfig, getQueryClient, useAuthQueryEnabled } from '@/lib/query';
 import { invalidateCollectionQueries } from '@/lib/query/invalidate';
 import { LAB_PATHS } from '../constants/labConstants';
+import type { CollectionWorklistItem } from './worklists';
 
 const BACKEND_COLOR_VALUES = [
   'red',
@@ -92,6 +93,13 @@ export const sampleAPI = {
     } catch {
       return null;
     }
+  },
+
+  /**
+   * Server eligibility and queue display for a sample (deep-link / modal).
+   */
+  async getWorkContext(sampleId: string | number): Promise<CollectionWorklistItem> {
+    return apiClient.get<CollectionWorklistItem>(LAB_PATHS.samples.workContext(sampleId));
   },
 
   async collect(sampleId: string, data: CollectSampleRequest): Promise<Sample> {
@@ -179,7 +187,12 @@ export function useSamplesList(filters?: SamplesFilters, refetchOptions?: LabQue
 export async function createSampleLookupForOrder(
   orderId: number
 ): Promise<(sampleId: number) => Sample | undefined> {
-  const samples = await sampleAPI.getAll({ orderId: String(orderId), limit: 50 });
+  const client = getQueryClient();
+  const samples = await client.fetchQuery({
+    queryKey: queryKeys.samples.byOrder(String(orderId)),
+    queryFn: () => sampleAPI.getAll({ orderId: String(orderId), limit: 50 }),
+    ...cacheConfig.dynamic,
+  });
   const byId = new Map(samples.map(sample => [sample.sampleId, sample]));
   return (sampleId: number) => byId.get(sampleId);
 }
@@ -249,4 +262,25 @@ export function useCollectSample() {
       }),
     onSuccess: () => invalidateCollectionQueries(queryClient),
   });
+}
+
+/**
+ * Load canonical collection eligibility for a sample when the worklist cache has no row.
+ */
+export function useSampleWorkContext(sampleId: string | undefined, enabled = true) {
+  const authEnabled = useAuthQueryEnabled(enabled && Boolean(sampleId));
+  const query = useQuery({
+    queryKey: queryKeys.samples.workContext(sampleId ?? ''),
+    queryFn: () => sampleAPI.getWorkContext(sampleId!),
+    enabled: authEnabled,
+    ...cacheConfig.dynamic,
+  });
+
+  return {
+    workContext: query.data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+    refetch: query.refetch,
+  };
 }

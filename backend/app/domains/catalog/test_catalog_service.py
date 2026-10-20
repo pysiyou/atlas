@@ -87,7 +87,7 @@ class TestCatalogService:
             )
         return test
 
-    def search(self, q: str) -> list[CatalogTest]:
+    def search(self, q: str, limit: int = 50) -> list[CatalogTest]:
         search_term = f"%{q.lower()}%"
         return (
             self.db.query(CatalogTest)
@@ -97,6 +97,7 @@ class TestCatalogService:
                 | (CatalogTest.code.ilike(search_term))
             )
             .order_by(CatalogTest.updatedAt.desc())
+            .limit(limit)
             .all()
         )
 

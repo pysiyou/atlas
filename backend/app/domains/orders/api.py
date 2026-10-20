@@ -47,8 +47,8 @@ def get_orders(
     dateFrom: date | None = None,
     dateTo: date | None = None,
     sort: Literal["createdAt", "updatedAt"] = Query("updatedAt"),
-    paginated: bool = Query(False),
-    summary: bool = Query(False, description="Return lightweight order rows without nested tests"),
+    paginated: bool = Query(True, description="Return a page envelope with total count"),
+    summary: bool = Query(True, description="Return lightweight order rows without nested tests"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):

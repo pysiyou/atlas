@@ -32,8 +32,16 @@ export interface UseLabQueueFilterStateOptions<T, S> {
   /** When set, search text is controlled by the parent (e.g. server-side sample lookup). */
   searchQuery?: string;
   onSearchChange?: (value: string) => void;
+  dateRange?: [Date, Date] | null;
+  onDateRangeChange?: (value: [Date, Date] | null) => void;
+  sampleTypeFilters?: string[];
+  onSampleTypeFiltersChange?: (value: string[]) => void;
   /** Skip client-side search filtering when the server already applied the query. */
   skipSearchFilter?: boolean;
+  /** Skip client-side date filtering when the server already applied the window. */
+  skipDateFilter?: boolean;
+  /** Skip client-side sample-type filtering when the server already applied it. */
+  skipSampleTypeFilter?: boolean;
   /** When set, overrides `statusFilters` during apply (e.g. collection lookup vs queue). */
   appliedStatusFilters?: S[];
   /** Collection tab: historical sample search — show all statuses unless user filters. */
@@ -79,6 +87,8 @@ export function applyLabQueueFilters<T, S>({
   getQueueSince,
   applyStatusFilter = true,
   skipSearchFilter = false,
+  skipDateFilter = false,
+  skipSampleTypeFilter = false,
   urlFilters,
   getId,
   getOrderId,
@@ -96,6 +106,8 @@ export function applyLabQueueFilters<T, S>({
   /** When false, priority/status filters are skipped (e.g. recollection requests without priority). */
   applyStatusFilter?: boolean;
   skipSearchFilter?: boolean;
+  skipDateFilter?: boolean;
+  skipSampleTypeFilter?: boolean;
   /** URL entity filters for targeting specific records */
   urlFilters?: UrlFilters;
   /** Get test/item ID for testId filtering */
@@ -122,8 +134,10 @@ export function applyLabQueueFilters<T, S>({
       out = out.filter(item => getSampleId(item) === targetSampleId);
     }
   }
-  out = applyDateRange(out, filters.dateRange, getOrderDate);
-  if (filters.sampleTypeFilters.length > 0) {
+  if (!skipDateFilter) {
+    out = applyDateRange(out, filters.dateRange, getOrderDate);
+  }
+  if (!skipSampleTypeFilter && filters.sampleTypeFilters.length > 0) {
     out = out.filter(item => {
       const st = getSampleType(item);
       return st && filters.sampleTypeFilters.includes(st);
@@ -159,7 +173,13 @@ export function useLabQueueFilterState<T, S>({
   getQueueSince,
   searchQuery: controlledSearchQuery,
   onSearchChange: controlledOnSearchChange,
+  dateRange: controlledDateRange,
+  onDateRangeChange: controlledOnDateRangeChange,
+  sampleTypeFilters: controlledSampleTypeFilters,
+  onSampleTypeFiltersChange: controlledOnSampleTypeFiltersChange,
   skipSearchFilter = false,
+  skipDateFilter = false,
+  skipSampleTypeFilter = false,
   appliedStatusFilters,
   collectionSampleLookup = false,
   urlFilters,
@@ -189,8 +209,13 @@ export function useLabQueueFilterState<T, S>({
     }
   }, [searchFromEntityFilter, controlledSearchQuery]);
   
-  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
-  const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
+  const [internalDateRange, setInternalDateRange] = useState<[Date, Date] | null>(null);
+  const dateRange = controlledDateRange !== undefined ? controlledDateRange : internalDateRange;
+  const setDateRange = controlledOnDateRangeChange ?? setInternalDateRange;
+  const [internalSampleTypeFilters, setInternalSampleTypeFilters] = useState<string[]>([]);
+  const sampleTypeFilters =
+    controlledSampleTypeFilters !== undefined ? controlledSampleTypeFilters : internalSampleTypeFilters;
+  const setSampleTypeFilters = controlledOnSampleTypeFiltersChange ?? setInternalSampleTypeFilters;
   const [statusFilters, setStatusFilters] = useState<S[]>(initialStatusFilters);
 
   const filterState = useMemo<LabQueueFilterState<S>>(
@@ -238,6 +263,8 @@ export function useLabQueueFilterState<T, S>({
         getSampleId,
         applyStatusFilter: true,
         skipSearchFilter,
+        skipDateFilter,
+        skipSampleTypeFilter,
       }),
     [
       items,
@@ -250,6 +277,8 @@ export function useLabQueueFilterState<T, S>({
       getPriority,
       getQueueSince,
       skipSearchFilter,
+      skipDateFilter,
+      skipSampleTypeFilter,
       urlFilters,
       getId,
       getOrderId,

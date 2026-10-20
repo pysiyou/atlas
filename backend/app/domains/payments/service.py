@@ -5,6 +5,7 @@ from app.domains.audit.service import AuditEmitter
 from app.domains.billing.models import Invoice, Payment
 from app.domains.orders.models import Order
 from app.domains.payments.schemas import PaymentCreate
+from app.platform.cache import invalidate_lab_board_summary_cache
 from app.shared.contracts.enums import PaymentStatus
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session, joinedload, selectinload
@@ -79,7 +80,7 @@ class PaymentService:
         order = (
             self.db.query(Order)
             .filter(Order.orderId == payment_data.orderId)
-            .options(joinedload(Order.patient), selectinload(Order.tests))
+            .with_for_update()
             .first()
         )
         if not order:
@@ -87,13 +88,18 @@ class PaymentService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Order {payment_data.orderId} not found",
             )
+        _ = order.patient
+        _ = order.tests
         if payment_data.amount <= 0:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Payment amount must be greater than zero",
             )
         existing_payments = (
-            self.db.query(Payment).filter(Payment.orderId == payment_data.orderId).all()
+            self.db.query(Payment)
+            .filter(Payment.orderId == payment_data.orderId)
+            .with_for_update()
+            .all()
         )
         total_paid = sum(p.amount for p in existing_payments)
         remaining = order.totalPrice - total_paid
@@ -151,5 +157,6 @@ class PaymentService:
             },
         )
         self.db.commit()
+        invalidate_lab_board_summary_cache()
         self.db.refresh(payment)
         return enrich_payment(payment, order)

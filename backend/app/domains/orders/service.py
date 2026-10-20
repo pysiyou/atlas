@@ -10,7 +10,11 @@ from app.domains.billing.service import BillingService
 from app.domains.catalog.models.catalog_test import CatalogTest
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.public import generate_samples_for_order
-from app.domains.lab.rules.order_test_lab_loader import lab_projections_for_order
+from app.domains.lab.quality.recollection_snapshot import recollection_blocked_order_test_ids
+from app.domains.lab.rules.order_test_lab_loader import (
+    lab_projections_for_order,
+    lab_projections_for_orders,
+)
 from app.domains.orders.models import Order, OrderTest
 from app.domains.orders.schemas import (
     OrderCreate,
@@ -25,6 +29,7 @@ from app.domains.patients.schemas import PatientResponse
 from app.domains.payments.schemas import PaymentCreate, PaymentResponse
 from app.domains.payments.service import PaymentService, enrich_payment
 from app.domains.orders.search import order_search_filter
+from app.platform.cache import invalidate_lab_board_summary_cache
 from app.platform.utils.common import get_or_404
 from app.shared.contracts.enums import (
     OrderStatus,
@@ -95,7 +100,13 @@ def _calculate_order_status(order: Order, samples: list[Sample]) -> OrderStatus:
 
 def apply_order_status_rollup(db: Session, order_id: int) -> bool:
     """Recompute order.overallStatus from samples/tests; audit without committing."""
-    order = db.query(Order).filter(Order.orderId == order_id).first()
+    order = (
+        db.query(Order)
+        .filter(Order.orderId == order_id)
+        .options(selectinload(Order.tests))
+        .with_for_update()
+        .first()
+    )
     if not order:
         return False
 
@@ -191,13 +202,22 @@ class OrderService:
         self.db = db
         self.emitter = AuditEmitter(db)
 
-    def _order_response_with_lab(self, order: Order) -> OrderResponse:
+    def _order_response_with_lab(
+        self,
+        order: Order,
+        projections: dict[int, object] | None = None,
+        blocked: set[int] | None = None,
+    ) -> OrderResponse:
         from app.domains.lab.rules.status_presentation import resolve_order_presentation
 
         base = OrderResponse.model_validate(order)
-        projections = lab_projections_for_order(self.db, order)
+        resolved = (
+            projections
+            if projections is not None
+            else lab_projections_for_order(self.db, order, blocked=blocked)
+        )
         enriched_tests = [
-            test.model_copy(update={"lab": projections.get(test.id)}) for test in base.tests
+            test.model_copy(update={"lab": resolved.get(test.id)}) for test in base.tests
         ]
         return base.model_copy(
             update={
@@ -205,6 +225,21 @@ class OrderService:
                 "statusPresentation": resolve_order_presentation(order.overallStatus),
             }
         )
+
+    def _catalog_tests_by_code(self, codes: list[str]) -> dict[str, CatalogTest]:
+        """Load catalog rows for the given codes once; 404 if any code is missing."""
+        unique_codes = list(dict.fromkeys(codes))
+        if not unique_codes:
+            return {}
+        found = self.db.query(CatalogTest).filter(CatalogTest.code.in_(unique_codes)).all()
+        by_code = {test.code: test for test in found}
+        missing = [code for code in unique_codes if code not in by_code]
+        if missing:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"CatalogTest {', '.join(missing)} not found",
+            )
+        return by_code
 
     def list_orders(
         self,
@@ -214,8 +249,8 @@ class OrderService:
         order_status: OrderStatus | list[OrderStatus] | None = None,
         payment_status: PaymentStatus | list[PaymentStatus] | None = None,
         sort: Literal["createdAt", "updatedAt"] = "updatedAt",
-        paginated: bool = False,
-        summary: bool = False,
+        paginated: bool = True,
+        summary: bool = True,
         order_id: int | None = None,
         payment_methods: list[PaymentMethod] | None = None,
         search: str | None = None,
@@ -295,8 +330,16 @@ class OrderService:
                     for order in orders
                 ]
             else:
+                blocked = recollection_blocked_order_test_ids(self.db)
+                projections_by_order = lab_projections_for_orders(
+                    self.db, orders, blocked=blocked
+                )
                 serialized = [
-                    self._order_response_with_lab(o).model_dump(mode="json") for o in orders
+                    self._order_response_with_lab(
+                        order,
+                        projections=projections_by_order.get(order.orderId, {}),
+                    ).model_dump(mode="json")
+                    for order in orders
                 ]
         except Exception:
             logger.exception("Error serializing orders")
@@ -359,6 +402,7 @@ class OrderService:
             self.db.query(Sample).filter(Sample.orderId == order_id).delete()
             self.db.delete(order)
             self.db.commit()
+            invalidate_lab_board_summary_cache()
         except Exception:
             self.db.rollback()
             logger.exception("Failed to delete order %s", order_id)
@@ -387,15 +431,13 @@ class OrderService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Patient {order_data.patientId} not found",
             )
+        catalog_by_code = self._catalog_tests_by_code(
+            [test_data.testCode for test_data in order_data.tests]
+        )
         total_price = 0.0
         test_entries = []
         for test_data in order_data.tests:
-            test = self.db.query(CatalogTest).filter(CatalogTest.code == test_data.testCode).first()
-            if not test:
-                raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    detail=f"CatalogTest {test_data.testCode} not found",
-                )
+            test = catalog_by_code[test_data.testCode]
             total_price += test.price
             test_entries.append((test.code, test.price))
 
@@ -430,6 +472,7 @@ class OrderService:
 
             BillingService(self.db).create_invoice_for_order(order.orderId, user_id)
             self.db.commit()
+            invalidate_lab_board_summary_cache()
             self.db.refresh(order)
         except SQLAlchemyError:
             self.db.rollback()
@@ -500,16 +543,12 @@ class OrderService:
                         old_status,
                     )
 
+            catalog_by_code = self._catalog_tests_by_code(list(tests_to_add))
             total_price_adjustment = 0.0
             for test_data in tests_to_update:
                 test_code = test_data["testCode"]
                 if test_code in tests_to_add:
-                    test = self.db.query(CatalogTest).filter(CatalogTest.code == test_code).first()
-                    if not test:
-                        raise HTTPException(
-                            status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"CatalogTest {test_code} not found",
-                        )
+                    test = catalog_by_code[test_code]
                     order_test = OrderTest(
                         orderId=order.orderId,
                         testCode=test.code,

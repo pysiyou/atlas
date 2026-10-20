@@ -13,10 +13,15 @@ export interface ReportableOrder {
   patientId: number;
   patientName: string;
   patientAge?: number;
+  /** ISO date of birth from the report DTO; used on the printable header. */
+  patientDob?: string;
   patientGender?: string;
   activeTestCount: number;
   validatedTestCount: number;
-  order: Order;
+  testCodes: string[];
+  testNames: string[];
+  /** Present on detail/download payloads; omitted from list rows. */
+  order?: Order;
 }
 
 /** Placeholder shown when a catalog investigation has no result yet. */
@@ -30,6 +35,8 @@ export interface LabReportPayload {
   patientId: number;
   patientName: string;
   patientAge?: number;
+  /** ISO date of birth for the header Date of Birth field. */
+  patientDob?: string;
   patientGender?: string;
   sampleCollection?: {
     address?: string;
@@ -39,6 +46,8 @@ export interface LabReportPayload {
   timestamps?: {
     registeredAt?: string;
     collectedAt?: string;
+    /** Earliest lab processing time (result entry, else collection). */
+    acceptedAt?: string;
     reportedAt?: string;
   };
   testResults: Array<{

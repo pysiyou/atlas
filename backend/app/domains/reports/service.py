@@ -29,11 +29,11 @@ class ReportService:
     def __init__(self, db: Session):
         self.db = db
 
-    def _to_item(self, order: Order) -> ReportableOrderItem:
+    def _to_item(self, order: Order, *, include_order: bool = True) -> ReportableOrderItem:
+        """Map an order to the report DTO. List rows omit the nested order graph."""
         patient = order.patient
         active_tests = active_order_tests(order)
         validated_count = sum(1 for test in active_tests if test.status == TestStatus.VALIDATED)
-        order_payload = OrderResponse.model_validate(order).model_dump(mode="json")
         return ReportableOrderItem(
             orderId=order.orderId,
             orderDate=order.orderDate,
@@ -43,7 +43,9 @@ class ReportService:
             patientGender=patient.gender,
             activeTestCount=len(active_tests),
             validatedTestCount=validated_count,
-            order=order_payload,
+            testCodes=[test.testCode for test in active_tests],
+            testNames=[test.testName for test in active_tests],
+            order=OrderResponse.model_validate(order).model_dump(mode="json") if include_order else None,
         )
 
     def _reportable_query(self):
@@ -91,7 +93,11 @@ class ReportService:
             .all()
         )
         by_id = {order.orderId: order for order in orders}
-        items = [self._to_item(by_id[order_id]) for order_id in page_ids if order_id in by_id]
+        items = [
+            self._to_item(by_id[order_id], include_order=False)
+            for order_id in page_ids
+            if order_id in by_id
+        ]
         return create_paginated_response(items, total, skip_to_page(skip, limit), limit)
 
     def _load_reportable_order(self, order_id: int) -> Order:

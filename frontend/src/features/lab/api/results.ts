@@ -126,7 +126,11 @@ export function useEnterResults() {
             ? variables.orderId.toString()
             : variables.orderId
           : undefined;
-      await invalidateResultQueries(queryClient, { orderId: orderIdStr, samples: false });
+      await invalidateResultQueries(queryClient, {
+        orderId: orderIdStr,
+        orderTestId: variables.orderTestId,
+        samples: false,
+      });
     },
   });
 }
@@ -161,7 +165,11 @@ export function useValidateResults() {
             ? variables.orderId.toString()
             : variables.orderId
           : undefined;
-      await invalidateResultQueries(queryClient, { orderId: orderIdStr, samples: false });
+      await invalidateResultQueries(queryClient, {
+        orderId: orderIdStr,
+        orderTestId: variables.orderTestId,
+        samples: false,
+      });
     },
   });
 }
@@ -208,6 +216,7 @@ export function useResolveEscalation() {
           : undefined;
       await invalidateResultQueries(queryClient, {
         orderId: orderIdStr,
+        orderTestId: variables.orderTestId,
         samples: true,
         pendingEscalation: true,
       });

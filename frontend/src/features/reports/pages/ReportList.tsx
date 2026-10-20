@@ -7,7 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { uniqueSortedTestCodes, useTestsByCodes } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users';
 import { createSampleLookupForOrder } from '@/features/lab';
-import { reportsAPI, usePaginatedReportableOrders } from '../api/reports';
+import { reportsAPI, toReportableOrder, usePaginatedReportableOrders } from '../api/reports';
 import { ListView } from '@/components/surfaces';
 import { createReportTableConfig } from '../config/ReportTable.config';
 import { ReportFilters } from '../components/ReportFilters';
@@ -57,10 +57,7 @@ export const ReportList: React.FC = () => {
   } = usePaginatedReportableOrders(serverFilters);
 
   const pageTestCodes = useMemo(
-    () =>
-      uniqueSortedTestCodes(
-        reportableOrders.flatMap(item => (item.order.tests ?? []).map(test => test.testCode))
-      ),
+    () => uniqueSortedTestCodes(reportableOrders.flatMap(item => item.testCodes)),
     [reportableOrders]
   );
   const { tests } = useTestsByCodes(pageTestCodes);
@@ -112,10 +109,14 @@ export const ReportList: React.FC = () => {
     async (reportableOrder: ReportableOrder) => {
       try {
         setGeneratingOrderId(reportableOrder.orderId);
-        const reportData = await buildReportData(reportableOrder);
-        await reportsAPI.recordOrderReportDownload(reportableOrder.orderId);
+        const hydrated =
+          reportableOrder.order != null
+            ? reportableOrder
+            : toReportableOrder(await reportsAPI.getReportableOrder(reportableOrder.orderId));
+        const reportData = await buildReportData(hydrated);
+        await reportsAPI.recordOrderReportDownload(hydrated.orderId);
         await downloadLabReport(
-          reportableOrder,
+          hydrated,
           reportData,
           tests,
           (data, catalog) => generateLabReport(data, getDefaultTemplate(), catalog),

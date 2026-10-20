@@ -156,3 +156,51 @@ def ensure_order_referring_physician_column() -> None:
             )
         )
 
+
+def ensure_list_indexes() -> None:
+    """
+    Add list/search indexes that create_all will not attach to existing tables.
+
+    pg_trgm GIN indexes are skipped when the extension cannot be created.
+    """
+    with engine.begin() as conn:
+        conn.execute(
+            text("CREATE INDEX IF NOT EXISTS ix_orders_overall_status ON orders (overall_status)")
+        )
+        conn.execute(
+            text("CREATE INDEX IF NOT EXISTS ix_orders_payment_status ON orders (payment_status)")
+        )
+        conn.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_orders_order_date_desc ON orders (order_date DESC)"
+            )
+        )
+        conn.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_orders_updated_at_desc ON orders (updated_at DESC)"
+            )
+        )
+        try:
+            conn.execute(text("CREATE EXTENSION IF NOT EXISTS pg_trgm"))
+            conn.execute(
+                text(
+                    "CREATE INDEX IF NOT EXISTS ix_patients_full_name_trgm "
+                    "ON patients USING gin (full_name gin_trgm_ops)"
+                )
+            )
+            conn.execute(
+                text(
+                    "CREATE INDEX IF NOT EXISTS ix_tests_name_trgm "
+                    "ON tests USING gin (name gin_trgm_ops)"
+                )
+            )
+            conn.execute(
+                text(
+                    "CREATE INDEX IF NOT EXISTS ix_tests_code_trgm "
+                    "ON tests USING gin (code gin_trgm_ops)"
+                )
+            )
+        except Exception:
+            # Managed databases may deny CREATE EXTENSION; btree name/code indexes still help.
+            pass
+

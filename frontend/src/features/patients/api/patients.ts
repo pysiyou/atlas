@@ -9,6 +9,7 @@ import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useEntityLookup, parseNumericKey } from '@/hooks/useEntityLookup';
+import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { invalidatePatientQueries } from '@/lib/query/invalidate';
 import { notify } from '@/utils/feedback';
@@ -272,38 +273,25 @@ export function usePatient(patientId: string | undefined) {
 }
 
 /**
- * Hook to search patients by name, ID, or phone.
- * Uses client-side filtering on cached data for fast results.
+ * Debounced server search by name, display id, or phone (`GET /patients/search`).
  *
- * @param searchQuery - Search query string
- * @returns Filtered array of patients
- *
- * @example
- * ```tsx
- * const { results } = usePatientSearch('john');
- * ```
+ * @param searchQuery - Raw search box value; requests fire after 300ms idle and 2+ characters
  */
 export function usePatientSearch(searchQuery: string) {
-  const { patients, isLoading } = usePatientsList();
+  const term = useDebouncedValue(searchQuery.trim(), 300);
+  const enabled = useAuthQueryEnabled(term.length >= 2);
 
-  const results = useMemo(() => {
-    if (!searchQuery.trim()) {
-      return patients;
-    }
-
-    const query = searchQuery.toLowerCase();
-    return patients.filter(
-      patient =>
-        patient.fullName.toLowerCase().includes(query) ||
-        patient.id.toString().toLowerCase().includes(query) ||
-        patient.phone.includes(searchQuery)
-    );
-  }, [patients, searchQuery]);
+  const query = useQuery({
+    queryKey: queryKeys.patients.search(term),
+    queryFn: () => patientAPI.search(term),
+    enabled,
+    ...cacheConfig.semiStatic,
+  });
 
   return {
-    results,
-    isSearching: isLoading,
-    totalCount: patients.length,
+    results: query.data ?? [],
+    isSearching: query.isFetching,
+    totalCount: query.data?.length ?? 0,
   };
 }
 

@@ -1,9 +1,11 @@
 """Lab worklist and monitor board routes."""
 
+from datetime import date
 from typing import Literal
 
 from app.domains.lab.monitor.observability import log_lab_read
 from app.domains.lab.monitor.worklist_service import LabWorklistService
+from app.platform.utils.common import parse_csv_values
 from app.domains.lab.schemas.worklists import (
     CollectionWorklistItem,
     DashboardBlockedWorklistItem,
@@ -38,12 +40,21 @@ def get_collection_worklist(
     pageSize: int = Query(50, ge=1, le=200),
     search: str | None = None,
     priority: PriorityLevel | None = None,
+    dateFrom: date | None = Query(None),
+    dateTo: date | None = Query(None),
+    sampleType: str | None = Query(None, description="Comma-separated sample types"),
     db: Session = Depends(get_db),
     _user: User = Depends(require_sample_collector),
 ):
     with log_lab_read("lab.worklists.collection", page=page, page_size=pageSize) as metrics:
         result = LabWorklistService(db).list_collection(
-            page=page, page_size=pageSize, search=search, priority=priority
+            page=page,
+            page_size=pageSize,
+            search=search,
+            priority=priority,
+            date_from=dateFrom,
+            date_to=dateTo,
+            sample_types=parse_csv_values(sampleType) or None,
         )
         metrics["rows_loaded"] = result.get("rows_loaded")
         metrics["rows_returned"] = len(result["items"])
@@ -57,12 +68,21 @@ def get_entry_worklist(
     pageSize: int = Query(50, ge=1, le=200),
     search: str | None = None,
     priority: PriorityLevel | None = None,
+    dateFrom: date | None = Query(None),
+    dateTo: date | None = Query(None),
+    sampleType: str | None = Query(None, description="Comma-separated sample types"),
     db: Session = Depends(get_db),
     _user: User = Depends(require_lab_tech),
 ):
     with log_lab_read("lab.worklists.entry", page=page, page_size=pageSize) as metrics:
         result = LabWorklistService(db).list_entry(
-            page=page, page_size=pageSize, search=search, priority=priority
+            page=page,
+            page_size=pageSize,
+            search=search,
+            priority=priority,
+            date_from=dateFrom,
+            date_to=dateTo,
+            sample_types=parse_csv_values(sampleType) or None,
         )
         metrics["rows_loaded"] = result.get("rows_loaded")
         metrics["rows_returned"] = len(result["items"])
@@ -88,12 +108,21 @@ def get_validation_worklist(
     pageSize: int = Query(50, ge=1, le=200),
     search: str | None = None,
     priority: PriorityLevel | None = None,
+    dateFrom: date | None = Query(None),
+    dateTo: date | None = Query(None),
+    sampleType: str | None = Query(None, description="Comma-separated sample types"),
     db: Session = Depends(get_db),
     _user: User = Depends(require_lab_tech),
 ):
     with log_lab_read("lab.worklists.validation", page=page, page_size=pageSize) as metrics:
         result = LabWorklistService(db).list_validation(
-            page=page, page_size=pageSize, search=search, priority=priority
+            page=page,
+            page_size=pageSize,
+            search=search,
+            priority=priority,
+            date_from=dateFrom,
+            date_to=dateTo,
+            sample_types=parse_csv_values(sampleType) or None,
         )
         metrics["rows_loaded"] = result.get("rows_loaded")
         metrics["rows_returned"] = len(result["items"])

@@ -1,5 +1,5 @@
 """Read models for result entry and escalation queues."""
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload, selectinload
 
 
 class ResultQueryService:
@@ -8,18 +8,33 @@ class ResultQueryService:
     def __init__(self, db: Session):
         self.db = db
 
+    @staticmethod
+    def _with_lab_projection(item, projection):
+        """Attach canonical lab eligibility fields onto an order-test DTO."""
+        if projection is None:
+            return item
+        return item.model_copy(
+            update={
+                "lab": projection,
+                "allowedActions": projection.allowedActions,
+                "denyReason": projection.denyReason,
+                "denyMessage": projection.denyMessage,
+            }
+        )
+
     def get_pending_escalation(self) -> list:
         from app.domains.lab.models.escalation import EscalationTicket
         from app.domains.lab.models.sample import Sample
+        from app.domains.lab.rules.order_test_lab_loader import lab_projections_for_orders
         from app.domains.orders.models import Order, OrderTest
         from app.shared.contracts.enums import EscalationTicketStatus, TestStatus
-        from sqlalchemy.orm import joinedload
 
         tests = (
             self.db.query(OrderTest)
             .filter(OrderTest.status == TestStatus.ESCALATED)
             .options(
                 joinedload(OrderTest.order).joinedload(Order.patient),
+                joinedload(OrderTest.order).selectinload(Order.tests),
                 joinedload(OrderTest.test),
             )
             .all()
@@ -43,22 +58,39 @@ class ResultQueryService:
             ):
                 tickets_by_test[ticket.orderTestId] = ticket
 
-        return [self._enrich_order_test(t, samples_by_id, tickets_by_test) for t in tests]
+        unique_orders: list = []
+        seen_order_ids: set[int] = set()
+        for test in tests:
+            order = test.order
+            if order is not None and order.orderId not in seen_order_ids:
+                seen_order_ids.add(order.orderId)
+                unique_orders.append(order)
+        projections_by_order = lab_projections_for_orders(self.db, unique_orders)
+        items = []
+        for t in tests:
+            item = self._enrich_order_test(t, samples_by_id, tickets_by_test)
+            order = t.order
+            projection = (
+                projections_by_order.get(order.orderId, {}).get(t.id) if order else None
+            )
+            items.append(self._with_lab_projection(item, projection))
+        return items
 
     def get_order_test_context(self, order_test_id: int):
         from app.domains.lab.models.escalation import EscalationTicket
         from app.domains.lab.models.sample import Sample
+        from app.domains.lab.rules.order_test_lab_loader import lab_projections_for_order
         from app.domains.orders.models import Order, OrderTest
         from app.shared.contracts.enums import EscalationTicketStatus
         from fastapi import HTTPException
         from fastapi import status as http_status
-        from sqlalchemy.orm import joinedload
 
         order_test = (
             self.db.query(OrderTest)
             .filter(OrderTest.id == order_test_id)
             .options(
                 joinedload(OrderTest.order).joinedload(Order.patient),
+                joinedload(OrderTest.order).selectinload(Order.tests),
                 joinedload(OrderTest.test),
             )
             .first()
@@ -87,7 +119,11 @@ class ResultQueryService:
         if open_ticket:
             tickets_by_test[order_test_id] = open_ticket
 
-        return self._enrich_order_test(order_test, samples_by_id, tickets_by_test)
+        item = self._enrich_order_test(order_test, samples_by_id, tickets_by_test)
+        projection = None
+        if order_test.order is not None:
+            projection = lab_projections_for_order(self.db, order_test.order).get(order_test.id)
+        return self._with_lab_projection(item, projection)
 
     @staticmethod
     def _enrich_order_test(t, samples_by_id, tickets_by_test=None):

@@ -6,7 +6,7 @@ Replaces client-side filtering of full order/sample lists for lab queues.
 from __future__ import annotations
 
 import re
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime, time
 from typing import Any
 
 from app.domains.catalog.models.catalog_test import CatalogTest
@@ -18,6 +18,7 @@ from app.domains.lab.monitor.board import (
     age_bucket,
 )
 from app.domains.lab.rules.blockers import priority_rank, priority_sort_key
+from app.domains.lab.quality.recollection_snapshot import recollection_blocked_order_test_ids
 from app.domains.lab.rules.work_item_projection import (
     LabWorkItemContext,
     project_collection_sample,
@@ -42,6 +43,27 @@ from sqlalchemy import String, desc, func, or_
 from sqlalchemy.orm import Session
 
 COLLECTION_SAMPLE_LOOKUP_MIN_LEN = 3
+
+
+def _apply_worklist_window_filters(
+    query,
+    *,
+    order_date_col,
+    sample_type_col,
+    date_from: date | None,
+    date_to: date | None,
+    sample_types: list[str] | None,
+):
+    """Restrict a worklist query by order date window and sample types."""
+    if date_from:
+        start = datetime.combine(date_from, time.min, tzinfo=UTC)
+        query = query.filter(order_date_col >= start)
+    if date_to:
+        end = datetime.combine(date_to, time.max, tzinfo=UTC)
+        query = query.filter(order_date_col <= end)
+    if sample_types:
+        query = query.filter(sample_type_col.in_(sample_types))
+    return query
 
 
 def _collection_search_filter(search_term: str):
@@ -152,6 +174,9 @@ class LabWorklistService:
         page_size: int = 50,
         search: str | None = None,
         priority: PriorityLevel | None = None,
+        date_from: date | None = None,
+        date_to: date | None = None,
+        sample_types: list[str] | None = None,
     ) -> dict[str, Any]:
         search_term = search.strip() if search else ""
         if len(search_term) < COLLECTION_SAMPLE_LOOKUP_MIN_LEN:
@@ -167,6 +192,14 @@ class LabWorklistService:
             query = query.filter(Sample.status == SampleStatus.PENDING)
         if priority:
             query = query.filter(Sample.priority == priority)
+        query = _apply_worklist_window_filters(
+            query,
+            order_date_col=Order.orderDate,
+            sample_type_col=Sample.sampleType,
+            date_from=date_from,
+            date_to=date_to,
+            sample_types=sample_types,
+        )
         total = query.count()
         start = (page - 1) * page_size
         if search_term:
@@ -275,6 +308,94 @@ class LabWorklistService:
             )
         return _worklist_result(items, total, page, page_size, rows_loaded=len(rows))
 
+    def get_sample_work_context(self, sample_id: int) -> dict[str, Any]:
+        """Canonical collection eligibility for one sample (deep-link / modal)."""
+        from fastapi import HTTPException
+        from fastapi import status as http_status
+
+        row = (
+            self.db.query(Sample, Order, Patient)
+            .join(Order, Sample.orderId == Order.orderId)
+            .join(Patient, Order.patientId == Patient.id)
+            .filter(Sample.sampleId == sample_id)
+            .first()
+        )
+        if not row:
+            raise HTTPException(
+                status_code=http_status.HTTP_404_NOT_FOUND,
+                detail=f"Sample {sample_id} not found",
+            )
+        sample, order, patient = row
+        codes = sample.testCodes or []
+        linked_tests = (
+            self.db.query(OrderTest)
+            .filter(
+                OrderTest.sampleId == sample.sampleId,
+                OrderTest.orderId == order.orderId,
+                OrderTest.status.notin_(
+                    [
+                        TestStatus.SUPERSEDED,
+                        TestStatus.REMOVED,
+                        TestStatus.VALIDATED,
+                        TestStatus.CANCELLED,
+                    ]
+                ),
+            )
+            .all()
+        )
+        if codes:
+            linked_tests = [ot for ot in linked_tests if ot.testCode in codes]
+        blocked = recollection_blocked_order_test_ids(self.db)
+        recollection_pending = any(ot.id in blocked for ot in linked_tests)
+        projection = project_collection_sample(
+            LabWorkItemContext(
+                order=order,
+                sample=sample,
+                linked_order_tests=linked_tests,
+                recollection_approval_pending=recollection_pending,
+            )
+        )
+        work_item_fields = projection_to_worklist_fields(projection)
+        original_sample_collected_at = None
+        if sample.originalSampleId:
+            parent = (
+                self.db.query(Sample).filter(Sample.sampleId == sample.originalSampleId).first()
+            )
+            if parent:
+                original_sample_collected_at = parent.collectedAt
+        test_name, test_category = self._collection_test_display(codes)
+        since = order.orderDate
+        hours = _worklist_hours_since(since)
+        tat = self._max_tat_for_codes(codes)
+        return {
+            "sampleId": sample.sampleId,
+            "orderId": order.orderId,
+            "patientId": patient.id,
+            "patientName": patient.fullName,
+            "sampleType": sample.sampleType.value if sample.sampleType else "",
+            "status": sample.status,
+            "priority": sample.priority,
+            "paymentStatus": order.paymentStatus,
+            "orderDate": order.orderDate,
+            "testCodes": codes,
+            "referringPhysician": order.referringPhysician,
+            "testName": test_name,
+            "testCategory": test_category,
+            "isRecollection": bool(sample.isRecollection),
+            "originalSampleId": sample.originalSampleId,
+            "originalSampleCollectedAt": original_sample_collected_at,
+            "recollectionReason": sample.recollectionReason,
+            "recollectionAttempt": sample.recollectionAttempt or 1,
+            **work_item_fields,
+            "waitingHours": round(hours, 2),
+            "turnaroundHours": tat,
+            "actualContainerType": sample.actualContainerType,
+            "actualContainerColor": sample.actualContainerColor,
+            "collectedAt": sample.collectedAt,
+            "collectedBy": sample.collectedBy,
+            "collectedVolume": sample.collectedVolume,
+        }
+
     def _order_test_in_active_worklist(self, order_test: OrderTest, sample: Sample | None) -> bool:
         """True when the test already appears on collection, entry, or validation worklists."""
         if order_test.status == TestStatus.SAMPLE_COLLECTED:
@@ -301,14 +422,18 @@ class LabWorklistService:
         page_size: int = 50,
     ) -> dict[str, Any]:
         """Tests blocked on pending recollection approval (not surfaced by stage worklists)."""
+        request_query = self.db.query(RecollectionRequest).filter(
+            RecollectionRequest.status == RecollectionRequestStatus.PENDING_APPROVAL
+        )
+        total_requests = request_query.count()
+        if total_requests == 0:
+            return {"items": [], "pagination": _paginate(0, page, page_size)}
         requests = (
-            self.db.query(RecollectionRequest)
-            .filter(RecollectionRequest.status == RecollectionRequestStatus.PENDING_APPROVAL)
-            .order_by(RecollectionRequest.createdAt.asc())
+            request_query.order_by(RecollectionRequest.createdAt.asc())
+            .offset((page - 1) * page_size)
+            .limit(page_size)
             .all()
         )
-        if not requests:
-            return {"items": [], "pagination": _paginate(0, page, page_size)}
 
         request_by_test_id: dict[int, RecollectionRequest] = {}
         for request in requests:
@@ -320,7 +445,7 @@ class LabWorklistService:
 
         test_ids = list(request_by_test_id.keys())
         if not test_ids:
-            return {"items": [], "pagination": _paginate(0, page, page_size)}
+            return {"items": [], "pagination": _paginate(total_requests, page, page_size)}
 
         rows = (
             self.db.query(OrderTest, Order, Patient, CatalogTest, Sample)
@@ -372,13 +497,10 @@ class LabWorklistService:
                 x["_sort_since"] or datetime.min.replace(tzinfo=UTC),
             )
         )
-        total = len(items)
-        start = (page - 1) * page_size
-        page_items = items[start : start + page_size]
-        for item in page_items:
+        for item in items:
             item.pop("_sort_priority", None)
             item.pop("_sort_since", None)
-        return {"items": page_items, "pagination": _paginate(total, page, page_size)}
+        return {"items": items, "pagination": _paginate(total_requests, page, page_size)}
 
     def list_entry(
         self,
@@ -387,6 +509,9 @@ class LabWorklistService:
         page_size: int = 50,
         search: str | None = None,
         priority: PriorityLevel | None = None,
+        date_from: date | None = None,
+        date_to: date | None = None,
+        sample_types: list[str] | None = None,
     ) -> dict[str, Any]:
         query = (
             self.db.query(OrderTest, Order, Patient, CatalogTest, Sample)
@@ -398,6 +523,14 @@ class LabWorklistService:
         )
         if priority:
             query = query.filter(Order.priority == priority)
+        query = _apply_worklist_window_filters(
+            query,
+            order_date_col=Order.orderDate,
+            sample_type_col=CatalogTest.sampleType,
+            date_from=date_from,
+            date_to=date_to,
+            sample_types=sample_types,
+        )
         search_term = search.strip() if search else ""
         if search_term:
             term = f"%{search_term}%"
@@ -462,6 +595,9 @@ class LabWorklistService:
         page_size: int = 50,
         search: str | None = None,
         priority: PriorityLevel | None = None,
+        date_from: date | None = None,
+        date_to: date | None = None,
+        sample_types: list[str] | None = None,
     ) -> dict[str, Any]:
         query = (
             self.db.query(OrderTest, Order, Patient, CatalogTest, Sample)
@@ -476,6 +612,14 @@ class LabWorklistService:
         )
         if priority:
             query = query.filter(Order.priority == priority)
+        query = _apply_worklist_window_filters(
+            query,
+            order_date_col=Order.orderDate,
+            sample_type_col=CatalogTest.sampleType,
+            date_from=date_from,
+            date_to=date_to,
+            sample_types=sample_types,
+        )
         if search:
             term = f"%{search.strip()}%"
             query = query.filter(

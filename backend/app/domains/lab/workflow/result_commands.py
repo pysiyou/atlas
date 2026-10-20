@@ -6,22 +6,69 @@ from typing import Any
 
 from app.domains.catalog.models.catalog_test import CatalogTest
 from app.domains.lab.results.delta_check import DeltaCheckService
+from app.domains.lab.results.flags import ResultFlag
 from app.domains.lab.results.reflex import ReflexEngine
 from app.domains.lab.rules.state_machines import TestStateMachine
 from app.domains.orders.models import Order, OrderTest
+from app.platform.utils.common import parse_numeric_result_value
 from app.platform.utils.exceptions import LabOperationError
 from app.shared.contracts.enums import (
     EscalationReasonCode,
     RemedyType,
+    ResultStatus,
     SampleStatus,
     TestStatus,
 )
 from sqlalchemy.orm.attributes import flag_modified
 
 
+def _scalar_result_value(raw: Any) -> Any:
+    """Unwrap `{value: ...}` payloads while keeping plain scalars."""
+    numeric = parse_numeric_result_value(raw)
+    if numeric is not None:
+        return numeric
+    if isinstance(raw, dict) and "value" in raw:
+        return raw.get("value")
+    return raw
+
+
+def _reference_range_text(flag: ResultFlag | None) -> str:
+    if flag is None:
+        return ""
+    if flag.reference_low is not None and flag.reference_high is not None:
+        return f"{flag.reference_low} - {flag.reference_high}"
+    if flag.reference_low is not None:
+        return f"> {flag.reference_low}"
+    if flag.reference_high is not None:
+        return f"< {flag.reference_high}"
+    return ""
+
+
 class ResultCommandHandler:
     def __init__(self, svc):
         self._svc = svc
+
+    def _shape_stored_results(
+        self,
+        results: dict[str, Any],
+        result_items: list[dict[str, Any]],
+        flags: list[ResultFlag],
+    ) -> dict[str, Any]:
+        """Persist value + catalog unit/reference/status so clients do not own flags."""
+        flags_by_code = {flag.item_code: flag for flag in flags}
+        items_by_code = {item.get("item_code"): item for item in result_items if item.get("item_code")}
+        shaped: dict[str, Any] = {}
+        for code, raw in results.items():
+            item = items_by_code.get(code) or {}
+            flag = flags_by_code.get(code)
+            status = flag.status.value if flag is not None else ResultStatus.NORMAL.value
+            shaped[code] = {
+                "value": _scalar_result_value(raw),
+                "unit": item.get("unit") or (flag.unit if flag is not None else None),
+                "referenceRange": _reference_range_text(flag),
+                "status": status,
+            }
+        return self._svc._results_to_json_serializable(shaped)
 
     def enter_results(
         self,
@@ -63,8 +110,13 @@ class ResultCommandHandler:
                 patient_dob=patient_dob,
             )
 
-        results_serializable = self._svc._results_to_json_serializable(results)
+        results_serializable = (
+            self._shape_stored_results(results, result_items, flags)
+            if result_items
+            else self._svc._results_to_json_serializable(results)
+        )
         order_test.results = results_serializable
+        flag_modified(order_test, "results")
         order_test.resultEnteredAt = datetime.now(UTC)
         order_test.enteredBy = str(user_id)
         order_test.technicianNotes = technician_notes

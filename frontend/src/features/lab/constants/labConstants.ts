@@ -163,7 +163,23 @@ export function getLabQueueUrl(tab: LabTabId, options?: { search?: string }): st
   return `${path}?${params.toString()}`;
 }
 
-export function getLabTabForTestStatus(status: TestStatus): LabTabId | null {
+/**
+ * Map a server pipeline stage to a lab queue tab.
+ * Escalation lives on the validation queue.
+ */
+export function getLabTabForPipelineStage(stage?: string | null): LabTabId | null {
+  if (stage === 'collection') return 'collection';
+  if (stage === 'entry') return 'entry';
+  if (stage === 'validation' || stage === 'escalation') return 'validation';
+  return null;
+}
+
+export function getLabTabForTestStatus(
+  status: TestStatus,
+  pipelineStage?: string | null
+): LabTabId | null {
+  const fromPipeline = getLabTabForPipelineStage(pipelineStage);
+  if (fromPipeline) return fromPipeline;
   switch (status) {
     case 'pending':
       return 'collection';
@@ -272,6 +288,7 @@ export const LAB_PATHS = {
     list: '/lab/samples',
     pending: '/lab/samples/pending',
     byId: (sampleId: string | number) => `/lab/samples/${sampleId}`,
+    workContext: (sampleId: string | number) => `/lab/samples/${sampleId}/work-context`,
     collect: (sampleId: string | number) => `/lab/samples/${sampleId}/collect`,
   },
   results: {

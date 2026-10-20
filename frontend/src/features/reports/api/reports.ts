@@ -20,7 +20,10 @@ export interface ReportableOrderItem {
   patientGender?: string | null;
   activeTestCount: number;
   validatedTestCount: number;
-  order: Order;
+  testCodes?: string[];
+  testNames?: string[];
+  /** Nested order is hydrated only on GET /reports/orders/{id}. */
+  order?: Order | null;
 }
 
 export interface ReportableOrdersFilters {
@@ -32,7 +35,10 @@ export interface ReportableOrdersFilters {
 /**
  * Maps the API list item into the client ReportableOrder shape, including derived age.
  */
-function toReportableOrder(item: ReportableOrderItem): ReportableOrder {
+/**
+ * Maps the API DTO (list or detail) into the client ReportableOrder shape.
+ */
+export function toReportableOrder(item: ReportableOrderItem): ReportableOrder {
   const age = item.patientDob ? calculateAge(item.patientDob) : undefined;
   return {
     orderId: item.orderId,
@@ -40,10 +46,13 @@ function toReportableOrder(item: ReportableOrderItem): ReportableOrder {
     patientId: item.patientId,
     patientName: item.patientName,
     patientAge: age,
+    patientDob: item.patientDob ?? undefined,
     patientGender: item.patientGender ?? undefined,
     activeTestCount: item.activeTestCount,
     validatedTestCount: item.validatedTestCount,
-    order: item.order,
+    testCodes: item.testCodes ?? [],
+    testNames: item.testNames ?? [],
+    order: item.order ?? undefined,
   };
 }
 

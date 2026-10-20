@@ -23,11 +23,19 @@ const REPORT_VIEWS = {
 } as const;
 
 function testsSummary(order: ReportableOrder): { names: string; codes: string } {
-  const tests = getActiveOrderTests(order.order);
-  return {
-    names: tests.map(test => test.testName).join(', ') || `${order.activeTestCount} test(s)`,
-    codes: tests.map(test => test.testCode).join(', '),
-  };
+  const names =
+    order.testNames.length > 0
+      ? order.testNames.join(', ')
+      : order.order
+        ? getActiveOrderTests(order.order).map(test => test.testName).join(', ')
+        : `${order.activeTestCount} test(s)`;
+  const codes =
+    order.testCodes.length > 0
+      ? order.testCodes.join(', ')
+      : order.order
+        ? getActiveOrderTests(order.order).map(test => test.testCode).join(', ')
+        : '';
+  return { names, codes };
 }
 
 function validationStatusLabel(order: ReportableOrder): string {

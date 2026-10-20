@@ -61,12 +61,6 @@ Helpers for parsing structured or scalar laboratory result values.
 """
 
 
-# Known item-code aliases for physiologic limit lookup.
-PHYSIOLOGIC_LIMIT_ALIASES = {
-    "PLAT": "PLT",
-}
-
-
 def parse_numeric_result_value(value: Any) -> float | None:
     """
     Extract a numeric value from a result entry.
