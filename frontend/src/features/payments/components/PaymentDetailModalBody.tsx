@@ -44,7 +44,7 @@ export const PaymentDetailModalBody: React.FC<PaymentDetailModalBodyProps> = ({
   error,
   paymentMethods,
 }) => (
-  <div className="flex-1 overflow-y-auto p-space-6 space-y-space-6">
+  <div className="space-y-space-6 p-space-6">
     <Panel preset="payment.modal.billing">
       {orderDetailLoading ? (
         <div className="p-panel">

@@ -4,13 +4,12 @@
 /* eslint-disable react-refresh/only-export-components -- modal shell + stage subtitle helpers */
 
 import React, { type ReactNode } from 'react';
-import { Modal, DialogFooter } from '@/components/overlays';
+import { DialogFooter, Modal, ModalPageShell, MODAL_WORKFLOW_BODY_STACK } from '@/components/overlays';
 import { Panel, type PanelPresetId } from '@/components/surfaces';
 import { DetailFieldGroup, FooterInfo, ModalContextSubtitle } from '@/components/display';
 import { MODULE_ICONS } from '@/config/icons';
 import type { DetailFieldConfig } from '@/components/display';
 import { useUserLookup } from '@/lib/api/users';
-import { LAB_MODAL_DETAIL } from '../utils/labStyles';
 import {
   LabHeaderCompactContext,
   LabModalHeader,
@@ -62,9 +61,10 @@ export const QueueModalShell: React.FC<QueueModalShellProps> = ({
       size="3xl"
       disableClose={disableClose}
     >
-      <div className="flex flex-col h-full bg-surface-page">
-        <div className={`flex-1 overflow-y-auto p-space-6 ${LAB_MODAL_DETAIL.sectionStack}`}>
-          {headerLeftColumn ? (
+      <ModalPageShell
+        bodyClassName={MODAL_WORKFLOW_BODY_STACK}
+        beforeBody={
+          headerLeftColumn ? (
             <header className="min-w-0 w-full">{headerLeftColumn}</header>
           ) : contextInfo ? (
             <LabModalHeader
@@ -72,17 +72,25 @@ export const QueueModalShell: React.FC<QueueModalShellProps> = ({
               contextInfo={contextInfo}
               auditLines={headerAudit}
             />
-          ) : null}
-          {children}
-        </div>
-
-        {(footer || footerInfo) && (
-          <DialogFooter
-            start={footerInfo || <FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" size="md" />}
-            end={footer}
-          />
-        )}
-      </div>
+          ) : null
+        }
+        footer={
+          footer || footerInfo
+            ? (
+                <DialogFooter
+                  start={
+                    footerInfo || (
+                      <FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" size="md" />
+                    )
+                  }
+                  end={footer}
+                />
+              )
+            : undefined
+        }
+      >
+        {children}
+      </ModalPageShell>
     </Modal>
   );
 };

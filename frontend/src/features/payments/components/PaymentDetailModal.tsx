@@ -5,7 +5,7 @@
  */
 import React, { useState, useCallback } from 'react';
 import { Icon, Button } from '@/components/primitives';
-import { Modal, DialogFooter } from '@/components/overlays';
+import { DialogFooter, Modal, ModalPageShell } from '@/components/overlays';
 import { FooterInfo, ModalContextSubtitle } from '@/components/display';
 import { ErrorBoundary } from '@/components/loaders';
 import { PaymentDetailModalBody } from './PaymentDetailModalBody';
@@ -159,7 +159,18 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
         disableClose={submitting}
         closeOnBackdropClick={!submitting}
       >
-        <div className="flex flex-col h-full bg-surface-page">
+        <ModalPageShell
+          bodyPadding="none"
+          footer={
+            <PaymentDetailFooter
+              isPaid={isPaid}
+              submitting={submitting}
+              paymentsLoading={paymentsLoading}
+              remainingAmount={remainingAmount}
+              onPay={handlePayment}
+            />
+          }
+        >
           <PaymentDetailModalBody
             view={view}
             isPaid={isPaid}
@@ -174,15 +185,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
             error={error}
             paymentMethods={PAYMENT_METHODS}
           />
-
-          <PaymentDetailFooter
-            isPaid={isPaid}
-            submitting={submitting}
-            paymentsLoading={paymentsLoading}
-            remainingAmount={remainingAmount}
-            onPay={handlePayment}
-          />
-        </div>
+        </ModalPageShell>
       </Modal>
     </ErrorBoundary>
   );

@@ -16,7 +16,7 @@ import { ModalType, useModal } from '@/lib/context/ModalContext';
 import { getTestNames } from '@/features/catalog/testLookup';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { deriveCollectionModalFields } from './detailModal.sampleCollection.derive';
-import { Modal } from '@/components/overlays';
+import { Modal, ModalPageShell } from '@/components/overlays';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { SampleCollectionDetailModalView } from './detailModal.sampleCollection.view';
 
@@ -85,7 +85,9 @@ export const SampleCollectionDetailModal: React.FC<CollectionDetailModalProps> =
     if (isOpen && sampleId && isFetchingSample) {
       return (
         <Modal isOpen={isOpen} onClose={onClose} title="Sample" size="3xl">
-          <DetailPageSkeleton variant="responsive-detail" />
+          <ModalPageShell>
+            <DetailPageSkeleton variant="responsive-detail" />
+          </ModalPageShell>
         </Modal>
       );
     }

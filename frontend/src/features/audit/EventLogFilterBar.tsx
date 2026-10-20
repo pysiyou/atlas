@@ -3,7 +3,7 @@
  */
 import React, { useState, type ReactNode } from 'react';
 import { actionButtonPreset, Badge, Button } from '@/components/primitives';
-import { Modal } from '@/components/overlays';
+import { Modal, ModalPageShell } from '@/components/overlays';
 import { FILTER, FILTER_TYPE } from '@/components/theme/recipes';
 import { cn } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
@@ -71,36 +71,40 @@ export const EventLogFilterBar: React.FC<EventLogFilterBarProps> = ({
           </div>
         </div>
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Filter events" size="md">
-          <div className="flex h-full flex-col bg-surface">
-            <div className="flex-1 space-y-space-5 overflow-y-auto px-space-5 py-space-4">
-              {modalExtras}
-              {showDateInModal ? (
-                <div className="w-full">
-                  <h4 className={FILTER_TYPE.sectionTitle}>Date range</h4>
-                  <DatePresetBadges value={dateRange} onChange={onDateRangeChange} />
-                  <div className="mt-space-4 border-b border-border-default" />
-                </div>
-              ) : null}
-              {showKindInModal ? (
-                <div className="w-full">
-                  <h4 className={FILTER_TYPE.sectionTitle}>Event domain</h4>
-                  <CheckboxList
-                    options={kindCheckboxOptions}
-                    selectedIds={kinds}
-                    onChange={values => onKindsChange(values as EventLogKind[])}
-                    columns={2}
-                  />
-                  <div className="mt-space-4 border-b border-border-default" />
-                </div>
-              ) : null}
-            </div>
-            <FilterModalFooter
-              onReset={onReset}
-              onApply={() => setIsModalOpen(false)}
-              icon={MODULE_ICONS.eventLog}
-              label="Event log"
-            />
-          </div>
+          <ModalPageShell
+            tone="panel"
+            bodyPadding="filter"
+            bodyClassName="space-y-space-5"
+            footer={
+              <FilterModalFooter
+                onReset={onReset}
+                onApply={() => setIsModalOpen(false)}
+                icon={MODULE_ICONS.eventLog}
+                label="Event log"
+              />
+            }
+          >
+            {modalExtras}
+            {showDateInModal ? (
+              <div className="w-full">
+                <h4 className={FILTER_TYPE.sectionTitle}>Date range</h4>
+                <DatePresetBadges value={dateRange} onChange={onDateRangeChange} />
+                <div className="mt-space-4 border-b border-border-default" />
+              </div>
+            ) : null}
+            {showKindInModal ? (
+              <div className="w-full">
+                <h4 className={FILTER_TYPE.sectionTitle}>Event domain</h4>
+                <CheckboxList
+                  options={kindCheckboxOptions}
+                  selectedIds={kinds}
+                  onChange={values => onKindsChange(values as EventLogKind[])}
+                  columns={2}
+                />
+                <div className="mt-space-4 border-b border-border-default" />
+              </div>
+            ) : null}
+          </ModalPageShell>
         </Modal>
       </>
     );

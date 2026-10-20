@@ -9,6 +9,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Portal } from './Portal';
 import { OVERLAY } from '@/components/theme/recipes';
 import { DialogHeader } from './DialogChrome';
+import { OverlayBackdrop, OVERLAY_PANEL_Z_INDEX } from './OverlayBackdrop';
 
 const SIZE_CLASSES: Record<string, string> = {
   sm: 'max-w-sm',
@@ -38,8 +39,6 @@ interface ModalProps {
   closeOnBackdropClick?: boolean;
   className?: string;
   disableClose?: boolean;
-  backdropOpacity?: number;
-  backdropZIndex?: number;
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | 'default';
 }
 
@@ -105,36 +104,6 @@ function useModalFocusTrap({
   }, [isOpen, disableClose, modalRef]);
 }
 
-function ModalBackdrop({
-  onClick,
-  zIndex = 40,
-  opacity = 0.3,
-  className = '',
-}: {
-  onClick?: () => void;
-  zIndex?: number;
-  opacity?: number;
-  className?: string;
-}) {
-  const inlineStyle: React.CSSProperties = {
-    zIndex,
-    backgroundColor: 'var(--overlay)',
-    backdropFilter: 'blur(2px)',
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
-      className={`fixed inset-0 cursor-default ${className}`}
-      style={{ ...inlineStyle, opacity }}
-      onClick={onClick}
-    />
-  );
-}
-
 const ModalDialog = memo(
   ({
     modalRef,
@@ -159,7 +128,10 @@ const ModalDialog = memo(
     disableClose?: boolean;
     onModalClick: (e: React.MouseEvent) => void;
   }) => (
-    <div className="fixed inset-0 z-50 flex items-start justify-center lg:justify-end p-space-2 md:p-space-6 pointer-events-none">
+    <div
+      className="fixed inset-0 flex items-start justify-center lg:justify-end p-space-2 md:p-space-6 pointer-events-none"
+      style={{ zIndex: OVERLAY_PANEL_Z_INDEX }}
+    >
       <motion.div
         ref={modalRef}
         role="dialog"
@@ -205,6 +177,8 @@ const ModalDialog = memo(
   )
 );
 
+ModalDialog.displayName = 'ModalDialog';
+
 const Modal = memo(
   ({
     isOpen,
@@ -216,8 +190,6 @@ const Modal = memo(
     closeOnBackdropClick = true,
     className = '',
     disableClose = false,
-    backdropOpacity = 0.3,
-    backdropZIndex = 40,
     size = 'default',
   }: ModalProps) => {
     const modalRef = useRef<HTMLDivElement>(null);
@@ -240,11 +212,7 @@ const Modal = memo(
         <AnimatePresence>
           {isOpen && (
             <>
-              <ModalBackdrop
-                onClick={handleBackdropClickWrapper}
-                opacity={backdropOpacity}
-                zIndex={backdropZIndex}
-              />
+              <OverlayBackdrop onClick={handleBackdropClickWrapper} />
 
               <ModalDialog
                 modalRef={modalRef}

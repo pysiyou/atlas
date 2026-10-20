@@ -15,8 +15,8 @@ import { useClientListFilter } from '@/hooks/useClientListFilter';
 import { ListView } from '@/components/surfaces';
 import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components/data-table';
 import { createReportTableConfig } from '../config/ReportTable.config';
-import { ReportPreviewModal } from '../components/ReportPreviewModal';
 import { ReportFilters } from '../components/ReportFilters';
+import { ModalType, useModal } from '@/lib/context/ModalContext';
 import { generateLabReport, downloadPDF, getDefaultTemplate } from '../utils/reportPDF';
 import type { ReportableOrder } from '../types';
 import {
@@ -52,8 +52,7 @@ export const ReportList: React.FC = () => {
       }
     : null;
 
-  const [previewOrder, setPreviewOrder] = useState<ReportableOrder | null>(null);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const { openModal, closeModal } = useModal();
   const [generatingOrderId, setGeneratingOrderId] = useState<number | null>(null);
   const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
 
@@ -88,9 +87,34 @@ export const ReportList: React.FC = () => {
     [tests, getSample, getUserName]
   );
 
-  const handlePreview = (reportableOrder: ReportableOrder) => {
-    setPreviewOrder(reportableOrder);
-  };
+  const handlePreview = useCallback(
+    (reportableOrder: ReportableOrder) => {
+      const reportData = buildReportData(reportableOrder);
+      openModal(ModalType.REPORT_PREVIEW, {
+        reportData,
+        onGenerate: async () => {
+          try {
+            await reportsAPI.recordOrderReportDownload(reportableOrder.orderId);
+            await downloadLabReport(
+              reportableOrder,
+              reportData,
+              tests,
+              (data, catalog) => generateLabReport(data, getDefaultTemplate(), catalog),
+              downloadPDF,
+              formatDate
+            );
+            notify.toast('report.download.success');
+            closeModal();
+          } catch (error) {
+            console.error('Error generating report:', error);
+            notify.apiError('report.download.error', error);
+            throw error;
+          }
+        },
+      });
+    },
+    [buildReportData, tests, openModal, closeModal]
+  );
 
   const handlePrint = useCallback(
     async (reportableOrder: ReportableOrder) => {
@@ -116,31 +140,6 @@ export const ReportList: React.FC = () => {
     },
     [buildReportData, tests]
   );
-
-  const handleGenerateReport = async () => {
-    if (!previewOrder) return;
-
-    try {
-      setIsGenerating(true);
-      const reportData = buildReportData(previewOrder);
-      await reportsAPI.recordOrderReportDownload(previewOrder.orderId);
-      await downloadLabReport(
-        previewOrder,
-        reportData,
-        tests,
-        (data, catalog) => generateLabReport(data, getDefaultTemplate(), catalog),
-        downloadPDF,
-        formatDate
-      );
-      notify.toast('report.download.success');
-      setPreviewOrder(null);
-    } catch (error) {
-      console.error('Error generating report:', error);
-      notify.apiError('report.download.error', error);
-    } finally {
-      setIsGenerating(false);
-    }
-  };
 
   const reportTableConfig = useMemo(
     () =>
@@ -179,16 +178,6 @@ export const ReportList: React.FC = () => {
         defaultSort={{ key: 'orderDate', direction: 'desc' }}
       />
       </div>
-
-      {previewOrder && (
-        <ReportPreviewModal
-          isOpen={!!previewOrder}
-          onClose={() => setPreviewOrder(null)}
-          reportData={buildReportData(previewOrder)}
-          onGenerate={handleGenerateReport}
-          isGenerating={isGenerating}
-        />
-      )}
     </>
   );
 };

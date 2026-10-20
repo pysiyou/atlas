@@ -3,7 +3,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { Modal, OverlaySearchInput } from '@/components';
+import { Modal, ModalPageShell, OverlaySearchInput } from '@/components';
 import type { IconName } from '@/components';
 import { FilterModalFooter } from './FilterModalFooter';
 
@@ -31,23 +31,26 @@ export const EntityFilterModal: React.FC<EntityFilterModalProps> = ({
   children,
 }) => (
   <Modal isOpen={isOpen} onClose={onClose} title="Filter" size="md">
-    <div className="flex flex-col h-full bg-surface">
-      <div className="flex-1 overflow-y-auto px-space-5 py-space-4">
-        <div className="mb-space-6">
-          <OverlaySearchInput
-            value={searchQuery}
-            onChange={onSearchChange}
-            placeholder={searchPlaceholder}
-          />
-        </div>
-        <div className="space-y-space-5">{children}</div>
+    <ModalPageShell
+      tone="panel"
+      bodyPadding="filter"
+      footer={
+        <FilterModalFooter
+          onReset={onReset}
+          onApply={onClose}
+          icon={footerIcon}
+          label={footerLabel}
+        />
+      }
+    >
+      <div className="mb-space-6">
+        <OverlaySearchInput
+          value={searchQuery}
+          onChange={onSearchChange}
+          placeholder={searchPlaceholder}
+        />
       </div>
-      <FilterModalFooter
-        onReset={onReset}
-        onApply={onClose}
-        icon={footerIcon}
-        label={footerLabel}
-      />
-    </div>
+      <div className="space-y-space-5">{children}</div>
+    </ModalPageShell>
   </Modal>
 );

@@ -7,14 +7,11 @@ import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTestCatalog } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users';
+import { ModalType, useModal } from '@/lib/context/ModalContext';
 import { reportsAPI, useReportableOrders } from '../api/reports';
 import { useSampleLookup } from '@/features/lab';
-import { ReportPreviewModal } from '../components/ReportPreviewModal';
 import { generateLabReport, downloadPDF, getDefaultTemplate } from '../utils/reportPDF';
-import {
-  prepareReportData,
-  downloadLabReport,
-} from '../utils/prepareReportData';
+import { prepareReportData, downloadLabReport } from '../utils/prepareReportData';
 import { formatDate } from '@/utils';
 import { notify } from '@/utils/feedback';
 import { DetailPageShell, PageHeader } from '@/components/layout';
@@ -29,8 +26,9 @@ export const ReportDetail: React.FC = () => {
   const { tests, isLoading: testsLoading } = useTestCatalog();
   const { getSample } = useSampleLookup();
   const { getUserName } = useUserLookup();
+  const { openModal, closeModal } = useModal();
 
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [openedPreview, setOpenedPreview] = useState(false);
 
   const reportableOrder = useMemo(() => {
     if (!orderId) return null;
@@ -54,35 +52,61 @@ export const ReportDetail: React.FC = () => {
     });
   }, [reportableOrder, tests, getSample, getUserName]);
 
-  const handleGenerateReport = async () => {
-    if (!reportableOrder) return;
+  useEffect(() => {
+    if (reportsLoading || testsLoading || !reportableOrder || openedPreview) {
+      return;
+    }
+
     const reportData = buildReportData();
     if (!reportData) return;
 
-    try {
-      setIsGenerating(true);
-      await reportsAPI.recordOrderReportDownload(reportableOrder.orderId);
-      await downloadLabReport(
-        reportableOrder,
-        reportData,
-        tests,
-        (data, catalog) => generateLabReport(data, getDefaultTemplate(), catalog),
-        downloadPDF,
-        formatDate
-      );
-      notify.toast('report.download.success');
-      navigate('/reports');
-    } catch (error) {
-      console.error('Error generating report:', error);
-      notify.apiError('report.download.error', error);
-    } finally {
-      setIsGenerating(false);
-    }
-  };
+    setOpenedPreview(true);
 
-  const handleClose = () => {
-    navigate('/reports');
-  };
+    const handleClose = () => {
+      closeModal();
+      navigate('/reports');
+    };
+
+    openModal(ModalType.REPORT_PREVIEW, {
+      reportData,
+      onClose: handleClose,
+      onGenerate: async () => {
+        try {
+          await reportsAPI.recordOrderReportDownload(reportableOrder.orderId);
+          await downloadLabReport(
+            reportableOrder,
+            reportData,
+            tests,
+            (data, catalog) => generateLabReport(data, getDefaultTemplate(), catalog),
+            downloadPDF,
+            formatDate
+          );
+          notify.toast('report.download.success');
+          handleClose();
+        } catch (error) {
+          console.error('Error generating report:', error);
+          notify.apiError('report.download.error', error);
+          throw error;
+        }
+      },
+    });
+  }, [
+    reportsLoading,
+    testsLoading,
+    reportableOrder,
+    openedPreview,
+    buildReportData,
+    tests,
+    openModal,
+    closeModal,
+    navigate,
+  ]);
+
+  useEffect(() => {
+    return () => {
+      closeModal();
+    };
+  }, [closeModal]);
 
   if (reportsLoading || testsLoading) {
     return (
@@ -96,22 +120,5 @@ export const ReportDetail: React.FC = () => {
     );
   }
 
-  if (!reportableOrder) {
-    return null;
-  }
-
-  const reportData = buildReportData();
-  if (!reportData) {
-    return null;
-  }
-
-  return (
-    <ReportPreviewModal
-      isOpen={true}
-      onClose={handleClose}
-      reportData={reportData}
-      onGenerate={handleGenerateReport}
-      isGenerating={isGenerating}
-    />
-  );
+  return null;
 };

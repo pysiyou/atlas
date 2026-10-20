@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Alert, FooterInfo } from '@/components/display';
-import { FormDialogFooter, Modal } from '@/components/overlays';
+import { FormDialogFooter, Modal, ModalPageShell } from '@/components/overlays';
 import { MODULE_ICONS } from '@/config/icons';
 import type { UserAdminRecord } from '../api/usersAdmin';
 import { useUserUpsertSubmit } from '../hooks/useUserUpsertSubmit';
@@ -136,50 +136,52 @@ export const UserUpsertModal: React.FC<UserUpsertModalProps> = ({
       size="2xl"
       disableClose={isSubmitting}
     >
-      <div className="flex flex-col h-full bg-surface-page">
-        <div className="flex-1 overflow-y-auto px-table-cell-x-default py-space-5">
-          {confirmingDisable && user ? (
-            <>
-              <Alert
-                variant="danger"
-                title="Disable account"
-                description={`${user.name} will not be able to sign in. Historical records will still show this name.`}
-              />
-              <form id={FORM_ID} className="hidden" onSubmit={handleSubmit} />
-            </>
-          ) : (
-            <UserUpsertFormFields
-              formId={FORM_ID}
-              isEdit={isEdit}
-              user={user}
-              form={form}
-              roleLocked={lastActiveAdmin}
-              onChange={patch => setForm(prev => ({ ...prev, ...patch }))}
-              onSubmit={handleSubmit}
+      <ModalPageShell
+        bodyPadding="form"
+        footer={
+          <FormDialogFooter
+            formId={FORM_ID}
+            submitLabel={
+              confirmingDisable ? 'Disable account' : isEdit ? 'Save changes' : 'Create user'
+            }
+            submitVariant={confirmingDisable ? 'danger' : 'save'}
+            isSubmitting={isSubmitting}
+            leadingActions={
+              confirmingDisable ? null : (
+                <AccountStatusActions
+                  allowDisable={allowDisable}
+                  allowEnable={allowEnable}
+                  isSubmitting={isSubmitting}
+                  onAskDisable={() => setConfirmingDisable(true)}
+                  onEnable={() => setActive(true)}
+                />
+              )
+            }
+            footerInfo={<FooterInfo icon={MODULE_ICONS.users} label="Users" size="md" />}
+          />
+        }
+      >
+        {confirmingDisable && user ? (
+          <>
+            <Alert
+              variant="danger"
+              title="Disable account"
+              description={`${user.name} will not be able to sign in. Historical records will still show this name.`}
             />
-          )}
-        </div>
-        <FormDialogFooter
-          formId={FORM_ID}
-          submitLabel={
-            confirmingDisable ? 'Disable account' : isEdit ? 'Save changes' : 'Create user'
-          }
-          submitVariant={confirmingDisable ? 'danger' : 'save'}
-          isSubmitting={isSubmitting}
-          leadingActions={
-            confirmingDisable ? null : (
-              <AccountStatusActions
-                allowDisable={allowDisable}
-                allowEnable={allowEnable}
-                isSubmitting={isSubmitting}
-                onAskDisable={() => setConfirmingDisable(true)}
-                onEnable={() => setActive(true)}
-              />
-            )
-          }
-          footerInfo={<FooterInfo icon={MODULE_ICONS.users} label="Users" size="md" />}
-        />
-      </div>
+            <form id={FORM_ID} className="hidden" onSubmit={handleSubmit} />
+          </>
+        ) : (
+          <UserUpsertFormFields
+            formId={FORM_ID}
+            isEdit={isEdit}
+            user={user}
+            form={form}
+            roleLocked={lastActiveAdmin}
+            onChange={patch => setForm(prev => ({ ...prev, ...patch }))}
+            onSubmit={handleSubmit}
+          />
+        )}
+      </ModalPageShell>
     </Modal>
   );
 };

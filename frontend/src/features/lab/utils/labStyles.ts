@@ -41,6 +41,7 @@ export const LAB_HEADER = {
 export const LAB_MODAL_DETAIL = {
   headerStack: LAB_HEADER.stack,
   headerRow: LAB_HEADER.row,
+  /** @deprecated Use `MODAL_WORKFLOW_BODY_STACK` from `@/components/overlays`. */
   sectionStack: SPACING.stackRelaxed,
 } as const;
 
