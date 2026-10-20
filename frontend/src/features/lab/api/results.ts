@@ -12,7 +12,7 @@ import type {
 } from '@/types/lab-operations';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { invalidatePendingEscalationQueries, invalidateResultQueries } from '@/lib/query/invalidate';
-import { queryKeys, cacheConfig } from '@/lib/query';
+import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { useAuthStore } from '@/app/authStore';
 import { feedbackTitle } from '@/utils/feedback/copy';
 import { LAB_PATHS } from '../constants/labConstants';
@@ -77,6 +77,25 @@ export const resultAPI = {
 /**
  * Results API hooks — React Query layer.
  */
+
+/** Load a single order-test worklist row by id for lab detail modals. */
+export function useOrderTestContext(orderTestId: number | undefined, enabled = true) {
+  const authEnabled = useAuthQueryEnabled(enabled && orderTestId != null && Number.isFinite(orderTestId));
+  const query = useQuery({
+    queryKey: queryKeys.results.orderTest(orderTestId),
+    queryFn: () => resultAPI.getOrderTestContext(orderTestId!),
+    enabled: authEnabled,
+    ...cacheConfig.dynamic,
+  });
+
+  return {
+    test: query.data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+    refetch: query.refetch,
+  };
+}
 
 export function useEnterResults() {
   const queryClient = useQueryClient();

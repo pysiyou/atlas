@@ -5,38 +5,86 @@ import { useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
-import type { TestDetailProps } from '@/lib/context/modalTypes';
-import type { Order, OrderTest, Patient } from '@/types';
-import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
+import type { OrderTest } from '@/types';
+import type { TestDetailInteraction } from '@/lib/context/modalTypes';
+import type { QualityIssueResult } from '@/types/lab-operations';
+import { invalidateLabWorkflowQueries, invalidateResultQueries } from '@/lib/query/invalidate';
+import { useValidateResults } from '../api/results';
+import { useLabDraftStore } from '../state/labDraftStore';
+import { notify } from '@/utils/feedback';
+import { notifyQualityIssueSuccess } from '../validation/qualityIssueToastMessages';
+import { isLikelyNetworkOrTimeout } from '@/utils/errors';
+import { logger } from '@/utils/logger';
 
 export function useTestDetailModalActions({
-  validation,
+  interaction,
+  orderTestId,
+  orderId,
   onClose,
-  order,
-  patientProp,
-  modelPatient,
 }: {
-  validation: TestDetailProps['validation'];
+  interaction: TestDetailInteraction;
+  orderTestId: number;
+  orderId: number | string | undefined;
   onClose: () => void;
-  order: Order | undefined;
-  patientProp: Patient | null | undefined;
-  modelPatient: Patient | null | undefined;
 }) {
-  const { openModal } = useModal();
+  const { pushModal } = useModal();
   const queryClient = useQueryClient();
+  const validateMutation = useValidateResults();
+  const getValidationComments = useLabDraftStore(s => s.getValidationComments);
+  const clearValidationComments = useLabDraftStore(s => s.clearValidationComments);
 
   const approveHandler = useCallback(
     async (_signal: AbortSignal) => {
-      if (!validation?.onApprove) return;
-      await validation.onApprove();
-      onClose();
+      if (interaction !== 'validate') return;
+      const orderIdStr = orderId == null ? undefined : String(orderId);
+      try {
+        await validateMutation.mutateAsync({
+          orderId: orderIdStr,
+          orderTestId,
+          validationNotes: getValidationComments(orderTestId) || undefined,
+        });
+        notify.toast('lab.validation.approve.success');
+        clearValidationComments(orderTestId);
+        onClose();
+      } catch (error) {
+        logger.error('Error validating results', error instanceof Error ? error : undefined);
+        if (isLikelyNetworkOrTimeout(error)) {
+          notify.toast('lab.validation.approve.networkAmbiguous');
+        } else {
+          notify.apiError('lab.validation.approve.error', error);
+        }
+        throw error;
+      }
     },
-    [validation, onClose]
+    [
+      interaction,
+      orderId,
+      orderTestId,
+      validateMutation,
+      getValidationComments,
+      clearValidationComments,
+      onClose,
+    ]
   );
   const { execute: handleApprove, isPending: isApproving } = useAsyncAction(approveHandler, {
     minDisplayMs: 500,
     scope: 'inline',
   });
+
+  const handleReject = useCallback(
+    async (result: QualityIssueResult) => {
+      const orderIdStr = orderId == null ? undefined : String(orderId);
+      await invalidateResultQueries(queryClient, {
+        orderId: orderIdStr,
+        samples: true,
+        pendingEscalation: true,
+      });
+      notifyQualityIssueSuccess(result);
+      clearValidationComments(orderTestId);
+      onClose();
+    },
+    [orderId, queryClient, clearValidationComments, orderTestId, onClose]
+  );
 
   const handleCriticalValueUpdated = useCallback(() => {
     invalidateLabWorkflowQueries(queryClient, { criticalValues: true });
@@ -44,28 +92,31 @@ export function useTestDetailModalActions({
 
   const openLinkedTest = useCallback(
     (linkedTest: OrderTest) => {
-      if (!order) return;
-      openModal(ModalType.TEST_DETAIL, {
-        orderTestId: linkedTest.id!,
-        order,
-        orderTest: linkedTest,
-        patient: patientProp ?? modelPatient ?? null,
+      if (linkedTest.id == null) return;
+      pushModal({
+        type: ModalType.TEST_DETAIL,
+        orderTestId: linkedTest.id,
         interaction: 'view',
       });
     },
-    [openModal, order, patientProp, modelPatient]
+    [pushModal]
   );
 
   const handleViewFullSample = useCallback(
     (sampleId: number) => {
-      openModal(ModalType.SAMPLE_DETAIL, { sampleId: String(sampleId), readOnly: true });
+      pushModal({
+        type: ModalType.SAMPLE_DETAIL,
+        sampleId: String(sampleId),
+        readOnly: true,
+      });
     },
-    [openModal]
+    [pushModal]
   );
 
   return {
     handleApprove,
     isApproving,
+    handleReject,
     handleCriticalValueUpdated,
     openLinkedTest,
     handleViewFullSample,

@@ -33,7 +33,7 @@ export const PatientDetail: React.FC = () => {
   const handleEdit = () => setIsEditModalOpen(true);
   const handleCloseEdit = () => setIsEditModalOpen(false);
   const handleNewOrder = () =>
-    openModal(ModalType.NEW_ORDER, { patientId: patient?.id.toString() ?? '' });
+    openModal({ type: ModalType.NEW_ORDER, patientId: patient?.id.toString() ?? '' });
   const handleOrderClick = (orderId: string) => navigate(`/orders/${orderId}`);
 
   const renderContent = () => {

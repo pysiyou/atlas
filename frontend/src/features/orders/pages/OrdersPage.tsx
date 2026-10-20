@@ -17,7 +17,7 @@ function NewOrderRedirect() {
   const { openModal } = useModal();
 
   useEffect(() => {
-    openModal(ModalType.NEW_ORDER, {});
+    openModal({ type: ModalType.NEW_ORDER });
   }, [openModal]);
 
   return <Navigate to="/orders" replace />;

@@ -7,6 +7,7 @@ import { feedbackTitle } from '@/utils/feedback/copy';
 import { clearSessionExpired, markSessionExpired } from '@/utils/feedback/sessionExpiry';
 import { getQueryClient } from '@/lib/query/client';
 import { clearPersistedQueryCache } from '@/lib/query/persistor';
+import { clearAllLabDrafts } from '@/features/lab/state/labDraftStore';
 
 interface AuthState {
   user: AuthUser | null;
@@ -68,6 +69,7 @@ export const useAuthStore = create<AuthState>()(
 
           getQueryClient().clear();
           clearPersistedQueryCache();
+          clearAllLabDrafts();
 
           set({
             user: null,
@@ -90,6 +92,7 @@ export const useAuthStore = create<AuthState>()(
             notify.toast('session.expired');
             getQueryClient().clear();
             clearPersistedQueryCache();
+            clearAllLabDrafts();
             set({
               user: null,
               token: null,

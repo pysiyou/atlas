@@ -1,15 +1,8 @@
 /**
- * ResultEntryDetailModal - Extended view for result entry
- *
- * Provides a larger interface for entering test results with full parameter display.
- *
- * Uses centralized components:
- * - DetailGrid with sections config for consistent layout
- * - Panel (lab variant) for form section
- * - CollectionInfoLine for sample metadata
+ * ResultEntryDetailModal — loads the order-test by id and owns entry drafts/mutations.
  */
 
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { CircularProgress } from '@/components/primitives';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { QueueModalShell, labModalHeaderContext } from './detailModalLayout';
@@ -17,105 +10,128 @@ import { LabEventLogPanel } from '@/features/audit';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';
 import { useTestCatalog } from '@/features/catalog';
-import type { Test, TestWithContext } from '@/types';
 import { LabRelatedTestsPanel } from '../components/LabRelatedWorkflowPanel';
 import { EntryDetailMainPanel, EntryDetailModalFooter } from './detailModal.resultEntry.helpers';
 import { ResultEntryDetailGrid } from './detailModal.resultEntry.grid';
+import { useEnterResults, useOrderTestContext } from '../api/results';
+import { useLabDraftStore } from '../state/labDraftStore';
+import { formatParameterResults } from '../entry/resultEntry';
+import { orderTestKey } from '../utils/labSearchAndLinks';
+import { notify } from '@/utils/feedback';
+import { logger } from '@/utils/logger';
+import { Modal, ModalPageShell } from '@/components/overlays';
+import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
+import type { ResultDetailModalProps } from '@/lib/context/modalTypes';
 
-interface EntryDetailModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  test: TestWithContext;
-  testDef: Test | undefined;
-  resultKey: string;
-  results: Record<string, string>;
-  technicianNotes: string;
-  isComplete: boolean;
-  onResultsChange: (resultKey: string, paramCode: string, value: string) => void;
-  onNotesChange: (resultKey: string, notes: string) => void;
-  onSave: (finalResults?: Record<string, string>, finalNotes?: string) => void | Promise<void>;
-  readOnly?: boolean;
+function resultsFromTest(results: Record<string, unknown> | undefined): Record<string, string> {
+  if (!results) return {};
+  return Object.fromEntries(
+    Object.entries(results).map(([key, value]) => [key, String(value ?? '')])
+  );
 }
 
-export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
+export const ResultEntryDetailModal: React.FC<ResultDetailModalProps> = ({
   isOpen,
   onClose,
-  test,
-  testDef,
-  resultKey,
-  results: initialResults,
-  technicianNotes: initialTechnicianNotes,
-  onResultsChange,
-  onNotesChange,
-  onSave,
+  isActive = true,
+  orderTestId,
   readOnly = false,
 }) => {
-  const { tests: catalogTests = [] } = useTestCatalog();
-  const resolvedTestDef = testDef ?? catalogTests.find(t => t.code === test.testCode);
-  const [localResults, setLocalResults] = useState<Record<string, string>>(() => {
-    if (readOnly && test.results) {
-      return Object.fromEntries(
-        Object.entries(test.results).map(([key, value]) => [key, String(value ?? '')])
-      );
-    }
-    return initialResults;
-  });
-  const [localNotes, setLocalNotes] = useState<string>(() =>
-    readOnly ? (test.technicianNotes ?? initialTechnicianNotes) : initialTechnicianNotes
-  );
+  const { test, isLoading } = useOrderTestContext(orderTestId, isOpen);
+  const { tests: catalogTests = [], isLoading: catalogLoading } = useTestCatalog();
+  const enterMutation = useEnterResults();
+  const draft = useLabDraftStore(s => s.entry[orderTestId]);
+  const seedEntryDraft = useLabDraftStore(s => s.seedEntryDraft);
+  const setEntryResults = useLabDraftStore(s => s.setEntryResults);
+  const setEntryNotes = useLabDraftStore(s => s.setEntryNotes);
+  const clearEntryDraft = useLabDraftStore(s => s.clearEntryDraft);
+
+  useEffect(() => {
+    if (!isOpen || !test || readOnly) return;
+    seedEntryDraft(orderTestId, {
+      results: resultsFromTest(test.results as Record<string, unknown> | undefined),
+      technicianNotes: test.technicianNotes ?? '',
+    });
+  }, [isOpen, test, readOnly, orderTestId, seedEntryDraft]);
+
+  const resolvedTestDef = test
+    ? catalogTests.find(catalogTest => catalogTest.code === test.testCode)
+    : undefined;
+  const resultKey = orderTestKey(orderTestId);
 
   const displayResults = useMemo(() => {
-    if (readOnly && test.results) {
-      return Object.fromEntries(
-        Object.entries(test.results).map(([key, value]) => [key, String(value ?? '')])
-      );
-    }
-    return localResults;
-  }, [readOnly, test.results, localResults]);
+    if (readOnly && test?.results) return resultsFromTest(test.results as Record<string, unknown>);
+    return draft?.results ?? {};
+  }, [readOnly, test, draft]);
 
-  const displayNotes = readOnly ? (test.technicianNotes ?? initialTechnicianNotes) : localNotes;
+  const displayNotes = readOnly ? (test?.technicianNotes ?? '') : (draft?.technicianNotes ?? '');
 
   const saveAction = useAsyncAction(
     useCallback(
       async (_signal: AbortSignal) => {
-        await Promise.resolve(onSave(localResults, localNotes));
-        onClose();
+        if (!test || !resolvedTestDef) return;
+        const formatted = formatParameterResults(displayResults, resolvedTestDef, test);
+        if (!formatted) return;
+        try {
+          await enterMutation.mutateAsync({
+            orderId: test.orderId,
+            orderTestId,
+            results: formatted,
+            technicianNotes: displayNotes || undefined,
+          });
+          notify.toast('lab.entry.save.success');
+          clearEntryDraft(orderTestId);
+          onClose();
+        } catch (error) {
+          logger.error('Error saving results', error instanceof Error ? error : undefined);
+          notify.apiError('lab.entry.save.error', error);
+          throw error;
+        }
       },
-      [onSave, localResults, localNotes, onClose]
+      [
+        test,
+        resolvedTestDef,
+        displayResults,
+        displayNotes,
+        enterMutation,
+        orderTestId,
+        clearEntryDraft,
+        onClose,
+      ]
     ),
     { minDisplayMs: 100 }
   );
   const isSaving = saveAction.isPending;
 
+  const waitingOnCatalog = Boolean(test) && catalogLoading && !resolvedTestDef;
+  if (isOpen && ((isLoading && !test) || waitingOnCatalog)) {
+    return (
+      <Modal isOpen={isOpen} onClose={onClose} title="Result entry" size="3xl" isActive={isActive}>
+        <ModalPageShell>
+          <DetailPageSkeleton variant="responsive-detail" />
+        </ModalPageShell>
+      </Modal>
+    );
+  }
+
+  if (!test || !resolvedTestDef?.parameters) return null;
+
   const canEnter = test.allowedActions?.enterResults !== false;
-
-  const filledCount = useMemo(
-    () => Object.values(displayResults).filter(v => v?.trim()).length,
-    [displayResults]
-  );
-
-  const isComplete = useMemo(() => {
-    if (!resolvedTestDef?.parameters) return false;
-    return filledCount === resolvedTestDef.parameters.length;
-  }, [filledCount, resolvedTestDef]);
-
-  if (!resolvedTestDef?.parameters) return null;
-
+  const filledCount = Object.values(displayResults).filter(value => value?.trim()).length;
   const totalParams = resolvedTestDef.parameters.length;
+  const isComplete = filledCount === totalParams;
   const completionPercentage = totalParams > 0 ? Math.round((filledCount / totalParams) * 100) : 0;
   const turnaroundTime = resolvedTestDef.turnaroundTime;
   const showTurnaroundTime =
     typeof turnaroundTime === 'number' && Number.isFinite(turnaroundTime) && turnaroundTime > 0;
   const remainingParams = totalParams - filledCount;
 
-  const handleLocalResultChange = (key: string, paramCode: string, value: string) => {
-    setLocalResults(prev => ({ ...prev, [paramCode]: value }));
-    onResultsChange(key, paramCode, value);
+  const handleLocalResultChange = (_key: string, paramCode: string, value: string) => {
+    setEntryResults(orderTestId, { ...displayResults, [paramCode]: value });
   };
 
-  const handleLocalNotesChange = (key: string, notes: string) => {
-    setLocalNotes(notes);
-    onNotesChange(key, notes);
+  const handleLocalNotesChange = (_key: string, notes: string) => {
+    setEntryNotes(orderTestId, notes);
   };
 
   const handleSave = () => {
@@ -159,6 +175,7 @@ export const ResultEntryDetailModal: React.FC<EntryDetailModalProps> = ({
     <QueueModalShell
       isOpen={isOpen}
       onClose={onClose}
+      isActive={isActive}
       title={modalTitle}
       subtitle={modalSubtitle}
       modalKey={readOnly ? `historical-${test.id}` : resultKey}

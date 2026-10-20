@@ -29,8 +29,6 @@ const EMPTY_MESSAGE = (
 
 export const TestsTable: React.FC<TestsTableProps> = ({
   tests,
-  order,
-  patient = null,
   variant = 'simple',
 }) => {
   const { openModal } = useModal();
@@ -45,15 +43,13 @@ export const TestsTable: React.FC<TestsTableProps> = ({
   const handleRowClick = useCallback(
     (orderTest: OrderTest) => {
       if (orderTest.id == null) return;
-      openModal(ModalType.TEST_DETAIL, {
+      openModal({
+        type: ModalType.TEST_DETAIL,
         orderTestId: orderTest.id,
-        order,
-        orderTest,
-        patient,
         interaction: 'view',
       });
     },
-    [openModal, order, patient]
+    [openModal]
   );
 
   return (

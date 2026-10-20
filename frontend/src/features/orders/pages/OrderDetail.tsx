@@ -66,7 +66,7 @@ export const OrderDetail: React.FC = () => {
   };
   const handleEdit = () => {
     if (order?.overallStatus === 'ordered') {
-      openModal(ModalType.NEW_ORDER, { order, mode: 'edit' });
+      openModal({ type: ModalType.NEW_ORDER, orderId: order.orderId, mode: 'edit' });
     }
   };
 

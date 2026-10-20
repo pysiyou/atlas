@@ -17,7 +17,6 @@ import { ErrorBoundary } from '@/components/loaders';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { useResultEntryWorkflow } from './useResultEntryWorkflow';
-import { orderTestKey } from '../utils/labSearchAndLinks';
 import { ResultEntryQueueItem } from './ResultEntryQueueCards';
 
 /** Stable empty map so unedited cards keep the same `results` identity. */
@@ -37,8 +36,7 @@ export const ResultEntryQueue: React.FC = () => {
   );
 
   const {
-    results,
-    technicianNotes,
+    entryDrafts,
     handleResultChange,
     handleNotesChange,
     areAllParametersFilled,
@@ -96,21 +94,23 @@ export const ResultEntryQueue: React.FC = () => {
           const testItem = test as TestWithContextResult;
           if (testItem.id == null) return null;
           const testDef = getTest(testItem.testCode);
-          const resultKey = orderTestKey(testItem.id);
           const isComplete = testDef?.parameters
-            ? areAllParametersFilled(resultKey, testDef.parameters.length)
+            ? areAllParametersFilled(testItem.id, testDef.parameters.length)
             : false;
+          const draft = entryDrafts[testItem.id];
           return (
             <ResultEntryQueueItem
               test={testItem}
               idx={idx}
               testDef={testDef}
-              results={results[resultKey] ?? EMPTY_RESULT_VALUES}
-              technicianNotes={technicianNotes[resultKey] ?? ''}
+              results={draft?.results ?? EMPTY_RESULT_VALUES}
+              technicianNotes={draft?.technicianNotes ?? ''}
               isComplete={isComplete}
               isMobile={isMobile}
-              onResultsChange={handleResultChange}
-              onNotesChange={handleNotesChange}
+              onResultsChange={(_key, paramCode, value) =>
+                handleResultChange(testItem.id!, paramCode, value)
+              }
+              onNotesChange={(_key, notes) => handleNotesChange(testItem.id!, notes)}
               onSaveTest={handleSaveTest}
               onOpenTest={handleOpenTest}
             />

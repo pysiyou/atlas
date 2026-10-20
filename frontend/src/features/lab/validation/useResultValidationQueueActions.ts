@@ -16,8 +16,6 @@ interface UseResultValidationQueueActionsParams {
 
 export function useResultValidationQueueActions({
   canResolveEscalation,
-  invalidatePendingEscalation,
-  refetchEscalation,
 }: UseResultValidationQueueActionsParams) {
   const approveRecollection = useApproveRecollectionRequest();
   const denyRecollection = useDenyRecollectionRequest();
@@ -52,23 +50,14 @@ export function useResultValidationQueueActions({
 
   const openEscalationModal = useCallback(
     (test: TestWithContext) => {
-      openModal(ModalType.ESCALATION_RESOLUTION_DETAIL, {
-        test,
+      if (test.id == null) return;
+      openModal({
+        type: ModalType.ESCALATION_RESOLUTION_DETAIL,
+        orderTestId: test.id,
         readOnly: !canResolveEscalation,
-        onResolved: async () => {
-          invalidatePendingEscalation();
-          await invalidateOrders();
-          await refetchEscalation();
-        },
       });
     },
-    [
-      openModal,
-      canResolveEscalation,
-      invalidatePendingEscalation,
-      invalidateOrders,
-      refetchEscalation,
-    ],
+    [openModal, canResolveEscalation],
   );
 
   return {

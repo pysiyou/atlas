@@ -24,7 +24,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
 
   const handleAddOrder = (e: React.MouseEvent) => {
     e.stopPropagation();
-    openModal(ModalType.NEW_ORDER, { patientId: patient.id.toString() });
+    openModal({ type: ModalType.NEW_ORDER, patientId: patient.id.toString() });
   };
 
   return (

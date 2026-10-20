@@ -1,10 +1,9 @@
 /**
- * Report Preview Modal
- * Preview lab report before generating PDF
+ * Report Preview Modal — loads reportable order by id and generates the PDF itself.
  */
 
-import React, { useState } from 'react';
-import type { BaseModalProps } from '@/lib/context/modalTypes';
+import React, { useCallback, useEffect, useState } from 'react';
+import type { ReportPreviewModalProps } from '@/lib/context/modalTypes';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import {
   DialogFooter,
@@ -13,31 +12,90 @@ import {
   MODAL_WORKFLOW_BODY_STACK,
 } from '@/components/overlays';
 import { FooterInfo, ModalContextSubtitle } from '@/components/display';
-import type { LabReportPayload } from '../types';
 import { MODULE_ICONS } from '@/config/icons';
 import { ReportPreviewResults } from './ReportPreviewResults';
-
-export interface ReportPreviewModalProps extends BaseModalProps {
-  reportData: LabReportPayload;
-  onGenerate: () => void | Promise<void>;
-}
+import { useTestCatalog } from '@/features/catalog';
+import { useUserLookup } from '@/lib/api/users';
+import { createSampleLookupForOrder } from '@/features/lab';
+import { reportsAPI, useReportableOrder } from '../api/reports';
+import { generateLabReport, downloadPDF, getDefaultTemplate } from '../utils/reportPDF';
+import { downloadLabReport, prepareReportData } from '../utils/prepareReportData';
+import type { LabReportPayload } from '../types';
+import { formatDate } from '@/utils';
+import { notify } from '@/utils/feedback';
+import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 
 export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
   isOpen,
   onClose,
-  reportData,
-  onGenerate,
+  isActive = true,
+  orderId,
 }) => {
+  const { tests } = useTestCatalog();
+  const { getUserName } = useUserLookup();
+  const { reportableOrder, isLoading, isError } = useReportableOrder(isOpen ? orderId : null);
+  const [reportData, setReportData] = useState<LabReportPayload | null>(null);
+  const [isBuilding, setIsBuilding] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const handleGenerate = async () => {
+  useEffect(() => {
+    if (!isOpen || !reportableOrder) {
+      setReportData(null);
+      return;
+    }
+
+    let cancelled = false;
+    setIsBuilding(true);
+    void (async () => {
+      try {
+        const getSample = await createSampleLookupForOrder(reportableOrder.orderId);
+        const payload = prepareReportData({
+          reportableOrder,
+          patients: undefined,
+          catalogTests: tests,
+          getSample,
+          getUserName: id => getUserName(id),
+        });
+        if (!cancelled) setReportData(payload);
+      } catch (error) {
+        if (!cancelled) {
+          notify.apiError('report.download.error', error);
+          setReportData(null);
+        }
+      } finally {
+        if (!cancelled) setIsBuilding(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen, reportableOrder, tests, getUserName]);
+
+  const handleGenerate = useCallback(async () => {
+    if (!reportableOrder || !reportData) return;
     setIsGenerating(true);
     try {
-      await onGenerate();
+      await reportsAPI.recordOrderReportDownload(reportableOrder.orderId);
+      await downloadLabReport(
+        reportableOrder,
+        reportData,
+        tests,
+        (data, catalog) => generateLabReport(data, getDefaultTemplate(), catalog),
+        downloadPDF,
+        formatDate
+      );
+      notify.toast('report.download.success');
+      onClose();
+    } catch (error) {
+      console.error('Error generating report:', error);
+      notify.apiError('report.download.error', error);
     } finally {
       setIsGenerating(false);
     }
-  };
+  }, [reportableOrder, reportData, tests, onClose]);
+
+  const waiting = isLoading || isBuilding || !reportData;
 
   return (
     <Modal
@@ -45,13 +103,16 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
       onClose={onClose}
       title="Report Preview"
       subtitle={
-        <ModalContextSubtitle
-          label={reportData.patientName}
-          orderId={reportData.order.orderId}
-        />
+        reportData ? (
+          <ModalContextSubtitle
+            label={reportData.patientName}
+            orderId={reportData.order.orderId}
+          />
+        ) : undefined
       }
       size="3xl"
       disableClose={isGenerating}
+      isActive={isActive}
     >
       <ModalPageShell
         bodyClassName={MODAL_WORKFLOW_BODY_STACK}
@@ -63,8 +124,8 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                 {...actionButtonPreset('download')}
                 size="md"
                 layout="icon-text"
-                onClick={handleGenerate}
-                disabled={isGenerating}
+                onClick={() => void handleGenerate()}
+                disabled={isGenerating || waiting || isError}
                 isLoading={isGenerating}
               >
                 {isGenerating ? 'Generating...' : 'Download PDF'}
@@ -73,7 +134,11 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
           />
         }
       >
-        <ReportPreviewResults reportData={reportData} />
+        {waiting ? (
+          <DetailPageSkeleton variant="responsive-detail" />
+        ) : (
+          <ReportPreviewResults reportData={reportData} />
+        )}
       </ModalPageShell>
     </Modal>
   );

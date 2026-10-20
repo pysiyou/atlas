@@ -40,15 +40,19 @@ interface ModalProps {
   className?: string;
   disableClose?: boolean;
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | 'default';
+  /** False when stacked under another modal — stay mounted, skip focus/Escape/backdrop. */
+  isActive?: boolean;
 }
 
 function useModalFocusTrap({
   isOpen,
+  isActive,
   modalRef,
   disableClose,
   onClose,
 }: {
   isOpen: boolean;
+  isActive: boolean;
   modalRef: RefObject<HTMLDivElement | null>;
   disableClose: boolean;
   onClose: () => void;
@@ -59,7 +63,7 @@ function useModalFocusTrap({
   }, [onClose]);
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || !isActive) return;
 
     const timer = setTimeout(() => {
       const firstFocusable = modalRef.current?.querySelector(
@@ -69,10 +73,10 @@ function useModalFocusTrap({
     }, 50);
 
     return () => clearTimeout(timer);
-  }, [isOpen, modalRef]);
+  }, [isOpen, isActive, modalRef]);
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || !isActive) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && !disableClose) {
@@ -101,7 +105,7 @@ function useModalFocusTrap({
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, disableClose, modalRef]);
+  }, [isOpen, isActive, disableClose, modalRef]);
 }
 
 const ModalDialog = memo(
@@ -116,6 +120,7 @@ const ModalDialog = memo(
     onClose,
     disableClose = false,
     onModalClick,
+    isActive,
   }: {
     modalRef: React.RefObject<HTMLDivElement | null>;
     maxWidthClass: string;
@@ -127,15 +132,18 @@ const ModalDialog = memo(
     onClose: () => void;
     disableClose?: boolean;
     onModalClick: (e: React.MouseEvent) => void;
+    isActive: boolean;
   }) => (
     <div
       className="fixed inset-0 flex items-start justify-center lg:justify-end p-space-2 md:p-space-6 pointer-events-none"
-      style={{ zIndex: OVERLAY_PANEL_Z_INDEX }}
+      style={{ zIndex: isActive ? OVERLAY_PANEL_Z_INDEX : OVERLAY_PANEL_Z_INDEX - 10 }}
+      inert={!isActive ? true : undefined}
+      aria-hidden={!isActive}
     >
       <motion.div
         ref={modalRef}
         role="dialog"
-        aria-modal="true"
+        aria-modal={isActive}
         aria-labelledby="modal-title"
         variants={{
           initial: { opacity: 0, x: 15, y: 15 },
@@ -167,7 +175,10 @@ const ModalDialog = memo(
           subtitle={subtitle}
           badges={badges}
           titleId="modal-title"
-          onClose={onClose}
+          onClose={() => {
+            if (!isActive) return;
+            onClose();
+          }}
           disabled={disableClose}
         />
 
@@ -191,6 +202,7 @@ const Modal = memo(
     className = '',
     disableClose = false,
     size = 'default',
+    isActive = true,
   }: ModalProps) => {
     const modalRef = useRef<HTMLDivElement>(null);
     const maxWidthClass = SIZE_CLASSES[size] ?? SIZE_CLASSES.default;
@@ -200,19 +212,20 @@ const Modal = memo(
     }, []);
 
     const handleBackdropClickWrapper = useCallback(() => {
+      if (!isActive) return;
       if (closeOnBackdropClick && !disableClose) {
         onClose();
       }
-    }, [closeOnBackdropClick, disableClose, onClose]);
+    }, [isActive, closeOnBackdropClick, disableClose, onClose]);
 
-    useModalFocusTrap({ isOpen, modalRef, disableClose, onClose });
+    useModalFocusTrap({ isOpen, isActive, modalRef, disableClose, onClose });
 
     return (
       <Portal>
         <AnimatePresence>
           {isOpen && (
             <>
-              <OverlayBackdrop onClick={handleBackdropClickWrapper} />
+              {isActive ? <OverlayBackdrop onClick={handleBackdropClickWrapper} /> : null}
 
               <ModalDialog
                 modalRef={modalRef}
@@ -225,6 +238,7 @@ const Modal = memo(
                 onClose={onClose}
                 disableClose={disableClose}
                 onModalClick={handleModalClick}
+                isActive={isActive}
               />
             </>
           )}

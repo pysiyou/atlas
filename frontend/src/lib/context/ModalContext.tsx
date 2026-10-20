@@ -1,8 +1,6 @@
 /**
- * Modal Context - Global modal state management
- *
- * Provides a centralized way to open and close modals throughout the application.
- * openModal is typed per ModalType via ModalPropsMap.
+ * Modal stack — serializable frames only. Actions and stack state live in separate contexts
+ * so `openModal` consumers do not re-render when another modal opens.
  */
 
 import React, {
@@ -13,94 +11,81 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import type { ModalPropsMap } from './modalTypes';
+import {
+  type ModalFrame,
+  type ModalStack,
+  popModalStack,
+  pushModalFrame,
+  replaceModalStack,
+} from './modalTypes';
 
-/**
- * Available modal types in the application
- */
-export const ModalType = {
-  SAMPLE_DETAIL: 'SAMPLE_DETAIL',
-  RESULT_DETAIL: 'RESULT_DETAIL',
-  ESCALATION_RESOLUTION_DETAIL: 'ESCALATION_RESOLUTION_DETAIL',
-  NEW_ORDER: 'NEW_ORDER',
-  TEST_DETAIL: 'TEST_DETAIL',
-  REPORT_PREVIEW: 'REPORT_PREVIEW',
-} as const;
+export { ModalType } from './modalTypes';
+export type { ModalFrame, ModalStack, ModalType as ModalTypeName } from './modalTypes';
 
-export type ModalType = (typeof ModalType)[keyof typeof ModalType];
-
-/**
- * Modal context interface.
- * openModal(type, props) is typed so props must match ModalPropsMap[type].
- */
-interface ModalContextType {
-  modalType: ModalType | null;
-  modalProps: Record<string, unknown> | null;
-  openModal: <T extends ModalType>(type: T, props?: ModalPropsMap[T]) => void;
+export interface ModalActions {
+  /** Replace the stack (page/card open). */
+  openModal: (frame: ModalFrame) => void;
+  /** Append a nested frame (open from an already-open modal). */
+  pushModal: (frame: ModalFrame) => void;
+  /** Pop the top frame. */
   closeModal: () => void;
 }
 
-const ModalContext = createContext<ModalContextType>({
-  modalType: null,
-  modalProps: null,
+const NOOP_ACTIONS: ModalActions = {
   openModal: () => {},
+  pushModal: () => {},
   closeModal: () => {},
-});
+};
+
+const ModalActionsContext = createContext<ModalActions>(NOOP_ACTIONS);
+const ModalStateContext = createContext<ModalStack>([]);
 
 /**
- * useModal Hook
- *
- * Provides access to modal UI state and actions.
- * Used to open and close modals throughout the application.
+ * Actions only. Safe to call from queue cards without subscribing to stack changes.
  */
 // eslint-disable-next-line react-refresh/only-export-components
-export const useModal = () => {
-  const context = useContext(ModalContext);
-  if (!context) {
-    throw new Error('useModal must be used within a ModalProvider');
-  }
-  return context;
-};
+export function useModal(): ModalActions {
+  return useContext(ModalActionsContext);
+}
+
+/**
+ * Current stack. ModalRenderer is the only intended subscriber.
+ */
+// eslint-disable-next-line react-refresh/only-export-components
+export function useModalStack(): ModalStack {
+  return useContext(ModalStateContext);
+}
 
 interface ModalProviderProps {
   children: ReactNode;
 }
 
 /**
- * ModalProvider
- *
- * Manages modal UI state (what modal is open and its props).
- * Provides access to modal state via useModal hook.
+ * Holds the modal stack and stable action callbacks.
  */
 export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
-  const [modalType, setModalType] = useState<ModalType | null>(null);
-  const [modalProps, setModalProps] = useState<Record<string, unknown> | null>(null);
+  const [stack, setStack] = useState<ModalStack>([]);
 
-  /**
-   * Open a modal with the specified type and props (typed per ModalType).
-   */
-  const openModal = useCallback(<T extends ModalType>(type: T, props?: ModalPropsMap[T]) => {
-    setModalType(type);
-    setModalProps((props ?? {}) as Record<string, unknown>);
+  const openModal = useCallback((frame: ModalFrame) => {
+    setStack(replaceModalStack(frame));
   }, []);
 
-  /**
-   * Close the currently open modal
-   */
+  const pushModal = useCallback((frame: ModalFrame) => {
+    setStack(current => pushModalFrame(current, frame));
+  }, []);
+
   const closeModal = useCallback(() => {
-    setModalType(null);
-    setModalProps(null);
+    setStack(current => popModalStack(current));
   }, []);
 
-  const value = useMemo(
-    () => ({
-      modalType,
-      modalProps,
-      openModal,
-      closeModal,
-    }),
-    [modalType, modalProps, openModal, closeModal]
+  const actions = useMemo(
+    () => ({ openModal, pushModal, closeModal }),
+    [openModal, pushModal, closeModal]
   );
 
-  return <ModalContext.Provider value={value}>{children}</ModalContext.Provider>;
+  return (
+    <ModalActionsContext.Provider value={actions}>
+      <ModalStateContext.Provider value={stack}>{children}</ModalStateContext.Provider>
+    </ModalActionsContext.Provider>
+  );
 };
