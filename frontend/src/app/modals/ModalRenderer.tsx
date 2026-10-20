@@ -1,5 +1,5 @@
 /**
- * Renders every frame in the modal stack. Lower frames stay mounted and inert.
+ * Renders the current modal frame (at most one visible at a time).
  */
 
 import React, { createElement, useEffect } from 'react';
@@ -30,16 +30,15 @@ export const ModalRenderer: React.FC = () => {
 
   return (
     <>
-      {stack.map((frame, index) => {
+      {stack.map(frame => {
         const entry = getRegisteredModal(frame.type);
         if (!entry) return null;
-        const isActive = index === stack.length - 1;
         const frameKey = modalFrameKey(frame);
         return createElement(entry.component, {
           key: frameKey,
           isOpen: true,
           onClose: closeModal,
-          isActive,
+          isActive: true,
           ...modalFramePayload(frame),
         });
       })}

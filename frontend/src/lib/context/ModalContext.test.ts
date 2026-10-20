@@ -1,12 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ModalType } from './modalTypes';
-import {
-  MAX_MODAL_STACK_DEPTH,
-  modalFrameKey,
-  popModalStack,
-  pushModalFrame,
-  replaceModalStack,
-} from './modalTypes';
+import { modalFrameKey, planModalOpen, popModalStack, replaceModalStack } from './modalTypes';
 
 const sample = { type: ModalType.SAMPLE_DETAIL, sampleId: '12' } as const;
 const testView = {
@@ -30,33 +24,36 @@ describe('modal stack helpers', () => {
     expect(replaceModalStack(sample)).toEqual([sample]);
   });
 
-  it('pushModalFrame appends a nested frame', () => {
-    const stack = pushModalFrame([testView], nestedSample);
-    expect(stack).toEqual([testView, nestedSample]);
+  it('planModalOpen opens immediately when the stack is empty', () => {
+    expect(planModalOpen([], sample)).toEqual({
+      kind: 'immediate',
+      stack: [sample],
+    });
   });
 
-  it('pushModalFrame on an empty stack opens a root frame', () => {
-    expect(pushModalFrame([], sample)).toEqual([sample]);
+  it('planModalOpen closes the current modal before opening another', () => {
+    expect(planModalOpen([testView], nestedSample)).toEqual({
+      kind: 'close_then_open',
+      stack: [],
+      frame: nestedSample,
+    });
   });
 
-  it('pushModalFrame replaces the top when at the depth cap', () => {
-    const full = [sample, testView, nestedSample];
-    expect(full).toHaveLength(MAX_MODAL_STACK_DEPTH);
-    const next = pushModalFrame(full, extra);
-    expect(next).toHaveLength(MAX_MODAL_STACK_DEPTH);
-    expect(next[2]).toEqual(extra);
-    expect(next[0]).toEqual(sample);
-    expect(next[1]).toEqual(testView);
-  });
-
-  it('popModalStack restores the parent frame', () => {
-    const stack = [testView, nestedSample];
-    expect(popModalStack(stack)).toEqual([testView]);
+  it('popModalStack clears the only frame', () => {
     expect(popModalStack([testView])).toEqual([]);
     expect(popModalStack([])).toEqual([]);
   });
 
   it('modalFrameKey distinguishes view vs validate for the same test', () => {
     expect(modalFrameKey(testView)).not.toBe(modalFrameKey(testValidate));
+  });
+
+  it('planModalOpen replaces the pending frame when switching targets', () => {
+    const second = planModalOpen([testView], extra);
+    expect(second).toEqual({
+      kind: 'close_then_open',
+      stack: [],
+      frame: extra,
+    });
   });
 });

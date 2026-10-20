@@ -33,7 +33,7 @@ export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({
 }) => {
   const { getUserName } = useUserLookup();
   const { tests = [] } = useTestCatalog();
-  const { pushModal } = useModal();
+  const { openModal } = useModal();
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuthStore();
   const collectSampleMutation = useCollectSample();
@@ -95,13 +95,13 @@ export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({
 
   const openSampleDetail = useCallback(
     (id: string | number) => {
-      pushModal({
+      openModal({
         type: ModalType.SAMPLE_DETAIL,
         sampleId: String(id),
         readOnly,
       });
     },
-    [pushModal, readOnly]
+    [openModal, readOnly]
   );
 
   const onCollect = useCallback(
