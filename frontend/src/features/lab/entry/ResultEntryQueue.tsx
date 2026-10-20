@@ -2,7 +2,7 @@
  * ResultEntryQueue - Main view for result entry workflow
  */
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { uniqueSortedTestCodes, useTestsByCodes } from '@/features/catalog';
 import { useLabQueueFilters } from '../hooks';
 import type { TestWithContextResult } from '../types';
@@ -11,13 +11,17 @@ import { mapEntryWorklistToOrderTestContext } from '../utils/labQueue';
 import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
-import { entryFilterConfig } from '../constants';
+import { entryFilterConfig, LAB_CONFIG } from '../constants';
 import { EMPTY_COPY } from '@/components/display';
-import { ErrorBoundary } from '@/components/loaders';
+import { ErrorAlert, ErrorBoundary } from '@/components/loaders';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
+import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { useResultEntryWorkflow } from './useResultEntryWorkflow';
+import { useLabDraftStore } from '../state/labDraftStore';
 import { ResultEntryQueueItem } from './ResultEntryQueueCards';
+import { worklistServerFilters } from '../utils/labSearchAndLinks';
+import { errorAlertMessage } from '@/utils/feedback';
 
 /** Stable empty map so unedited cards keep the same `results` identity. */
 const EMPTY_RESULT_VALUES: Record<string, string> = {};
@@ -26,7 +30,24 @@ export const ResultEntryQueue: React.FC = () => {
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
 
-  const { items: worklistItems, pagination, isLoading: worklistLoading } = useEntryWorklist();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
+  const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
+  const debouncedSearch = useDebouncedValue(searchQuery, LAB_CONFIG.SEARCH_DEBOUNCE_MS);
+  const serverFilters = worklistServerFilters({
+    search: debouncedSearch,
+    dateRange,
+    sampleTypeFilters,
+  });
+  const {
+    items: worklistItems,
+    pagination,
+    isLoading: worklistLoading,
+    isError: worklistError,
+    error: worklistQueryError,
+    refetch: refetchWorklist,
+    goToPage,
+  } = useEntryWorklist(serverFilters);
 
   const allTests = useMemo(
     () => worklistItems.map(mapEntryWorklistToOrderTestContext) as TestWithContextResult[],
@@ -47,14 +68,15 @@ export const ResultEntryQueue: React.FC = () => {
     openTestModal,
   } = useResultEntryWorkflow({ allTests, fullByCode });
 
+  useEffect(() => {
+    const ids = allTests
+      .map(test => test.id)
+      .filter((id): id is number => typeof id === 'number');
+    useLabDraftStore.getState().retainEntryDrafts(ids);
+  }, [allTests]);
+
   const {
     filteredItems: filteredTests,
-    searchQuery,
-    setSearchQuery,
-    dateRange,
-    setDateRange,
-    sampleTypeFilters,
-    setSampleTypeFilters,
     statusFilters,
     setStatusFilters,
     urlFilters,
@@ -63,6 +85,15 @@ export const ResultEntryQueue: React.FC = () => {
   } = useLabQueueFilters({
     items: allTests,
     workflowType: 'entry',
+    searchQuery,
+    onSearchChange: setSearchQuery,
+    dateRange,
+    onDateRangeChange: setDateRange,
+    sampleTypeFilters,
+    onSampleTypeFiltersChange: setSampleTypeFilters,
+    skipSearchFilter: true,
+    skipDateFilter: true,
+    skipSampleTypeFilter: true,
   });
 
   const handleSaveTest = useCallback(
@@ -87,6 +118,19 @@ export const ResultEntryQueue: React.FC = () => {
     return (
       <ErrorBoundary>
         <DetailPageSkeleton variant="workflow-grid" />
+      </ErrorBoundary>
+    );
+  }
+
+  if (worklistError) {
+    return (
+      <ErrorBoundary>
+        <ErrorAlert
+          error={{ message: errorAlertMessage('lab.worklist.loadFailed', worklistQueryError) }}
+          onRetry={() => {
+            void refetchWorklist();
+          }}
+        />
       </ErrorBoundary>
     );
   }
@@ -134,6 +178,7 @@ export const ResultEntryQueue: React.FC = () => {
             onClearUrlFilters={clearUrlFilters}
             onClearUrlFilter={key => setUrlFilter(key, undefined)}
             pagination={pagination}
+            onPageChange={goToPage}
           >
             <LabQueueFilters
               config={entryFilterConfig}

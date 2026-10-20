@@ -4,6 +4,7 @@ import type { LabReportPayload, ReportableOrder } from '../types';
 import { RESULT_NOT_AVAILABLE } from '../types';
 import { companyConfig } from '@/config/company';
 import { isDateInInclusiveRange } from '@/utils/date';
+import { calculateAge } from '@/utils/string';
 import { INACTIVE_REPORTABLE_TEST_STATUSES } from '@/features/orders/utils/orderCalculator';
 
 interface SampleLookup {
@@ -158,6 +159,18 @@ function latestValidatedAt(tests: OrderTest[]): string | undefined {
 }
 
 /**
+ * Earliest result-entry time across active tests — used as lab acceptance when
+ * the specimen workflow has no separate accession timestamp.
+ */
+function earliestEnteredAt(tests: OrderTest[]): string | undefined {
+  const timestamps = tests
+    .map(test => test.resultEnteredAt)
+    .filter((value): value is string => Boolean(value));
+  if (timestamps.length === 0) return undefined;
+  return timestamps.reduce((earliest, current) => (current < earliest ? current : earliest));
+}
+
+/**
  * Assembles PDF payload for every active test on the order.
  */
 export function prepareReportData({
@@ -168,6 +181,9 @@ export function prepareReportData({
   getUserName,
 }: PrepareReportDataOptions): LabReportPayload {
   const { order } = reportableOrder;
+  if (!order) {
+    throw new Error('Reportable order is missing nested order data.');
+  }
   const patient = patients?.find(p => p.id === reportableOrder.patientId);
   const activeTests = getActiveOrderTests(order);
 
@@ -190,15 +206,21 @@ export function prepareReportData({
     patientEmail: patient?.email,
   };
 
+  const patientDob = reportableOrder.patientDob ?? patient?.dateOfBirth;
+  const patientAge =
+    reportableOrder.patientAge ?? (patientDob ? calculateAge(patientDob) : undefined);
+
   return {
     order: orderWithPatientInfo,
     patientId: reportableOrder.patientId,
     patientName: reportableOrder.patientName,
-    patientAge: reportableOrder.patientAge,
-    patientGender: reportableOrder.patientGender,
+    patientAge,
+    patientDob,
+    patientGender: reportableOrder.patientGender ?? patient?.gender,
     timestamps: {
       registeredAt: order.orderDate || order.createdAt,
       collectedAt,
+      acceptedAt: earliestEnteredAt(activeTests) || collectedAt,
       reportedAt: latestValidatedAt(activeTests) || new Date().toISOString(),
     },
     sampleCollection: {

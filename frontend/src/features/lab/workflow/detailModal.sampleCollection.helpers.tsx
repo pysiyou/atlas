@@ -18,6 +18,7 @@ import { SampleRejectionPopover } from '../collection/SampleRejectionPopover';
 import { getSampleStatusIcon } from '@/config/icons';
 import { LAB_COPY } from '../constants/labConstants';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
+import { isLabActionAllowed } from '../utils/queueDisplay';
 
 export function SampleCollectionDetailContent({
   sample,
@@ -173,7 +174,7 @@ export function SampleCollectionDetailFooter({
 }) {
   if (isPending && pendingSampleDisplay && onCollect) {
     const isRecollection = sample.isRecollection === true;
-    const collectAllowed = pendingSampleDisplay.allowedActions?.collect ?? true;
+    const collectAllowed = isLabActionAllowed(pendingSampleDisplay.allowedActions, 'collect');
     return (
       <ModalFooter statusIcon={undefined} statusMessage="" statusClassName="text-text-tertiary">
         <SampleCollectionPopover

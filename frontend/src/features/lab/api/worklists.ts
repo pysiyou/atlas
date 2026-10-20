@@ -11,10 +11,13 @@ import type {
   TestStatus,
 } from '@/types';
 import type { StatusPresentation } from '@/types/labProjection';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useCallback, useEffect, useState } from 'react';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
-import { LAB_CONFIG, LAB_PATHS } from '../constants/labConstants';
-import { useDocumentVisible } from '@/hooks/useDocumentVisible';
+import { LAB_PATHS } from '../constants/labConstants';
+
+/** Default server page size for lab queues (backend max is 200). */
+export const WORKLIST_PAGE_SIZE = 50;
 
 export interface WorklistPagination {
   page: number;
@@ -48,6 +51,7 @@ export interface CollectionWorklistItem {
   originalSampleCollectedAt?: string | null;
   recollectionReason?: string | null;
   recollectionAttempt?: number;
+  pipelineStage?: 'collection' | 'entry' | 'validation' | 'escalation' | 'completed' | 'cancelled' | null;
   attentionReason?: string | null;
   attentionLabel?: string | null;
   allowedActions?: LabWorklistAllowedActions;
@@ -86,6 +90,7 @@ export interface EntryWorklistItem {
   retestNumber?: number;
   referringPhysician?: string | null;
   testCategory?: string | null;
+  pipelineStage?: 'collection' | 'entry' | 'validation' | 'escalation' | 'completed' | 'cancelled' | null;
   attentionReason?: string | null;
   attentionLabel?: string | null;
   allowedActions?: LabWorklistAllowedActions;
@@ -139,6 +144,7 @@ export interface ValidationWorklistItem {
   turnaroundHours: number;
   hasCriticalValues: boolean;
   testCategory?: string | null;
+  pipelineStage?: 'collection' | 'entry' | 'validation' | 'escalation' | 'completed' | 'cancelled' | null;
   attentionReason?: string | null;
   attentionLabel?: string | null;
   allowedActions?: LabWorklistAllowedActions;
@@ -151,6 +157,9 @@ interface WorklistParams {
   page?: number;
   pageSize?: number;
   search?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  sampleType?: string;
 }
 
 function buildParams(params?: WorklistParams): Record<string, string> {
@@ -158,6 +167,9 @@ function buildParams(params?: WorklistParams): Record<string, string> {
   if (params?.page != null) q.page = String(params.page);
   if (params?.pageSize != null) q.pageSize = String(params.pageSize);
   if (params?.search) q.search = params.search;
+  if (params?.dateFrom) q.dateFrom = params.dateFrom;
+  if (params?.dateTo) q.dateTo = params.dateTo;
+  if (params?.sampleType) q.sampleType = params.sampleType;
   return q;
 }
 
@@ -199,6 +211,9 @@ interface WorklistHookParams {
   page?: number;
   pageSize?: number;
   search?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  sampleType?: string;
 }
 
 type WorklistQueryKeyFn = (params?: WorklistHookParams) => readonly unknown[];
@@ -209,14 +224,37 @@ function createWorklistQueryHook<TItem>(
 ) {
   return function useWorklistQuery(params?: WorklistHookParams) {
     const enabled = useAuthQueryEnabled();
-    const visible = useDocumentVisible();
-    const query = useQuery({
-      queryKey: queryKeyFn(params),
-      queryFn: () => fetchFn({ pageSize: 200, ...params }),
-      enabled,
-      ...cacheConfig.dynamic,
-      refetchInterval: visible ? LAB_CONFIG.TAB_COUNT_REFRESH_MS : false,
+    const pageSize = params?.pageSize ?? WORKLIST_PAGE_SIZE;
+    const [page, setPage] = useState(params?.page ?? 1);
+    const filterSnapshot = JSON.stringify({
+      search: params?.search ?? null,
+      dateFrom: params?.dateFrom ?? null,
+      dateTo: params?.dateTo ?? null,
+      sampleType: params?.sampleType ?? null,
+      pageSize,
     });
+
+    useEffect(() => {
+      setPage(1);
+    }, [filterSnapshot]);
+
+    const queryParams: WorklistHookParams = {
+      ...params,
+      page,
+      pageSize,
+    };
+    const query = useQuery({
+      queryKey: queryKeyFn(queryParams),
+      queryFn: () => fetchFn(queryParams),
+      enabled,
+      placeholderData: keepPreviousData,
+      ...cacheConfig.dynamic,
+    });
+
+    const goToPage = useCallback((nextPage: number) => {
+      setPage(nextPage);
+    }, []);
+
     return {
       items: query.data?.items ?? [],
       pagination: query.data?.pagination,
@@ -224,6 +262,8 @@ function createWorklistQueryHook<TItem>(
       isError: query.isError,
       error: query.error,
       refetch: query.refetch,
+      page,
+      goToPage,
     };
   };
 }

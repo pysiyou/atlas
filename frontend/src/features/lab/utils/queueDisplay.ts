@@ -95,7 +95,39 @@ export interface LabWorkItemProjectionLike {
     collect?: boolean;
     enterResults?: boolean;
     validate?: boolean;
+    reject?: boolean;
   };
+}
+
+type LabWorklistAction = 'collect' | 'enterResults' | 'validate' | 'reject';
+
+/**
+ * Fail closed: missing server flags mean the action is denied.
+ */
+export function isLabActionAllowed(
+  allowedActions: LabWorkItemProjectionLike['allowedActions'] | undefined,
+  action: LabWorklistAction
+): boolean {
+  return allowedActions?.[action] === true;
+}
+
+function stageFromPipeline(pipelineStage?: string): OrderTestQueueStage | null {
+  switch (pipelineStage) {
+    case 'collection':
+      return 'awaiting_collection';
+    case 'entry':
+      return 'awaiting_results';
+    case 'validation':
+      return 'awaiting_validation';
+    case 'escalation':
+      return 'awaiting_supervisor';
+    case 'completed':
+      return 'completed';
+    case 'cancelled':
+      return 'cancelled';
+    default:
+      return null;
+  }
 }
 
 export interface OrderTestQueueContext {
@@ -139,7 +171,7 @@ export function deriveOrderTestQueueState(
   context: OrderTestQueueContext = {}
 ): OrderTestQueueState {
   const status = test.status as TestStatus;
-  const stage = stageFromTestStatus(status);
+  const stage = stageFromPipeline(context.lab?.pipelineStage) ?? stageFromTestStatus(status);
 
   const denyReason = context.serverDenyReason ?? context.lab?.denyReason ?? null;
   const denyMessage = context.serverDenyMessage ?? context.lab?.denyMessage ?? null;

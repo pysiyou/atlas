@@ -136,7 +136,13 @@ export interface UseLabQueueFiltersOptions<T extends WorkflowType> {
   workflowType: T;
   searchQuery?: string;
   onSearchChange?: (value: string) => void;
+  dateRange?: [Date, Date] | null;
+  onDateRangeChange?: (value: [Date, Date] | null) => void;
+  sampleTypeFilters?: string[];
+  onSampleTypeFiltersChange?: (value: string[]) => void;
   skipSearchFilter?: boolean;
+  skipDateFilter?: boolean;
+  skipSampleTypeFilter?: boolean;
   appliedStatusFilters?: SampleStatus[] | TestStatus[];
   collectionSampleLookup?: boolean;
 }
@@ -146,7 +152,13 @@ export function useLabQueueFilters<T extends WorkflowType>({
   workflowType,
   searchQuery,
   onSearchChange,
+  dateRange,
+  onDateRangeChange,
+  sampleTypeFilters,
+  onSampleTypeFiltersChange,
   skipSearchFilter,
+  skipDateFilter,
+  skipSampleTypeFilter,
   appliedStatusFilters,
   collectionSampleLookup,
 }: UseLabQueueFiltersOptions<T>) {
@@ -171,7 +183,13 @@ export function useLabQueueFilters<T extends WorkflowType>({
       sortByQueuePriority: filterConfig.sortByPriority,
       searchQuery,
       onSearchChange,
+      dateRange,
+      onDateRangeChange,
+      sampleTypeFilters,
+      onSampleTypeFiltersChange,
       skipSearchFilter,
+      skipDateFilter,
+      skipSampleTypeFilter,
       appliedStatusFilters,
       collectionSampleLookup,
       urlFilters,
@@ -183,7 +201,13 @@ export function useLabQueueFilters<T extends WorkflowType>({
       urlSearch,
       searchQuery,
       onSearchChange,
+      dateRange,
+      onDateRangeChange,
+      sampleTypeFilters,
+      onSampleTypeFiltersChange,
       skipSearchFilter,
+      skipDateFilter,
+      skipSampleTypeFilter,
       appliedStatusFilters,
       collectionSampleLookup,
       urlFilters,

@@ -339,6 +339,7 @@ def projection_to_worklist_fields(projection: LabWorkItemProjection) -> dict[str
     if projection.statusPresentation is not None:
         presentation = projection.statusPresentation.model_dump()
     return {
+        "pipelineStage": projection.pipelineStage,
         "attentionReason": projection.attentionReason,
         "attentionLabel": projection.attentionLabel,
         "allowedActions": projection.allowedActions.model_dump(by_alias=True),

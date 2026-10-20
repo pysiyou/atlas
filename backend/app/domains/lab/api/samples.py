@@ -1,7 +1,9 @@
 """Lab sample routes."""
 
 from app.domains.lab.models.sample import Sample
+from app.domains.lab.monitor.worklist_service import LabWorklistService
 from app.domains.lab.schemas.sample import SampleCollectRequest, SampleResponse
+from app.domains.lab.schemas.worklists import CollectionWorklistItem
 from app.domains.lab.specimen import SpecimenQueryService
 from app.domains.lab.workflow.service import LabOperationsService
 from app.domains.users.models import User
@@ -51,6 +53,16 @@ def get_pending_samples(
     current_user: User = Depends(get_current_user),
 ):
     return SpecimenQueryService(db).list_pending()
+
+
+@router.get("/samples/{sampleId}/work-context", response_model=CollectionWorklistItem)
+def get_sample_work_context(
+    sampleId: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Collection eligibility and display fields for a sample deep-link or modal."""
+    return LabWorklistService(db).get_sample_work_context(sampleId)
 
 
 @router.get("/samples/{sampleId}", response_model=SampleResponse)

@@ -5,6 +5,7 @@
 import { CONTAINER_COLOR_OPTIONS, type Sample, type RejectedSample } from '@/types';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { getEffectiveContainerType } from '../utils';
+import { isLabActionAllowed } from '../utils/queueDisplay';
 
 export function getSampleCollectionViewModel(display: SampleCollectionQueueItem, sample: Sample) {
   const { order } = display;
@@ -21,7 +22,7 @@ export function getSampleCollectionViewModel(display: SampleCollectionQueueItem,
     isCollected,
     isRejected,
     isRecollection: sample.isRecollection === true,
-    collectAllowed: display.allowedActions?.collect ?? false,
+    collectAllowed: isLabActionAllowed(display.allowedActions, 'collect'),
     collectDisabledTitle: display.denyMessage ?? undefined,
     rejectedSample: isRejected ? (sample as RejectedSample) : null,
     containerColor,

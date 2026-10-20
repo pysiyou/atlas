@@ -11,7 +11,7 @@ from fastapi import Depends, HTTPException, Query, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
-DEFAULT_PAGE_SIZE = 10000
+DEFAULT_PAGE_SIZE = 50
 MAX_PAGE_SIZE = 10000
 
 _bearer = HTTPBearer(auto_error=False)

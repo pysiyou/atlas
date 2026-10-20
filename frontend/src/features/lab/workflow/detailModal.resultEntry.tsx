@@ -14,19 +14,30 @@ import { LabRelatedTestsPanel } from '../components/LabRelatedWorkflowPanel';
 import { EntryDetailMainPanel, EntryDetailModalFooter } from './detailModal.resultEntry.helpers';
 import { ResultEntryDetailGrid } from './detailModal.resultEntry.grid';
 import { useEnterResults, useOrderTestContext } from '../api/results';
-import { useLabDraftStore } from '../state/labDraftStore';
-import { formatParameterResults } from '../entry/resultEntry';
+import { entryDraftLifecycleKey, useLabDraftStore } from '../state/labDraftStore';
+import { toRawResultPayload } from '../entry/resultEntry';
 import { orderTestKey } from '../utils/labSearchAndLinks';
-import { notify } from '@/utils/feedback';
+import { isLabActionAllowed } from '../utils/queueDisplay';
+import { errorAlertMessage, notify } from '@/utils/feedback';
 import { logger } from '@/utils/logger';
 import { Modal, ModalPageShell } from '@/components/overlays';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
+import { ErrorAlert } from '@/components/loaders';
 import type { ResultDetailModalProps } from '@/lib/context/modalTypes';
+
+function scalarResultValue(value: unknown): string {
+  if (value == null) return '';
+  if (typeof value === 'object' && value !== null && 'value' in value) {
+    const nested = (value as { value: unknown }).value;
+    return nested == null ? '' : String(nested);
+  }
+  return String(value);
+}
 
 function resultsFromTest(results: Record<string, unknown> | undefined): Record<string, string> {
   if (!results) return {};
   return Object.fromEntries(
-    Object.entries(results).map(([key, value]) => [key, String(value ?? '')])
+    Object.entries(results).map(([key, value]) => [key, scalarResultValue(value)])
   );
 }
 
@@ -37,10 +48,13 @@ export const ResultEntryDetailModal: React.FC<ResultDetailModalProps> = ({
   orderTestId,
   readOnly = false,
 }) => {
-  const { test, isLoading } = useOrderTestContext(orderTestId, isOpen);
-  const { test: resolvedTestDef, isLoading: catalogLoading } = useTest(
-    isOpen ? test?.testCode : undefined
-  );
+  const { test, isLoading, isError, error, refetch } = useOrderTestContext(orderTestId, isOpen);
+  const {
+    test: resolvedTestDef,
+    isLoading: catalogLoading,
+    isError: catalogError,
+    error: catalogQueryError,
+  } = useTest(isOpen ? test?.testCode : undefined);
   const enterMutation = useEnterResults();
   const draft = useLabDraftStore(s => s.entry[orderTestId]);
   const seedEntryDraft = useLabDraftStore(s => s.seedEntryDraft);
@@ -53,6 +67,7 @@ export const ResultEntryDetailModal: React.FC<ResultDetailModalProps> = ({
     seedEntryDraft(orderTestId, {
       results: resultsFromTest(test.results as Record<string, unknown> | undefined),
       technicianNotes: test.technicianNotes ?? '',
+      lifecycleKey: entryDraftLifecycleKey(test.status, test.resultEnteredAt),
     });
   }, [isOpen, test, readOnly, orderTestId, seedEntryDraft]);
 
@@ -69,13 +84,13 @@ export const ResultEntryDetailModal: React.FC<ResultDetailModalProps> = ({
     useCallback(
       async (_signal: AbortSignal) => {
         if (!test || !resolvedTestDef) return;
-        const formatted = formatParameterResults(displayResults, resolvedTestDef, test);
-        if (!formatted) return;
+        const rawResults = toRawResultPayload(displayResults, resolvedTestDef);
+        if (!rawResults) return;
         try {
           await enterMutation.mutateAsync({
             orderId: test.orderId,
             orderTestId,
-            results: formatted,
+            results: rawResults,
             technicianNotes: displayNotes || undefined,
           });
           notify.toast('lab.entry.save.success');
@@ -113,9 +128,29 @@ export const ResultEntryDetailModal: React.FC<ResultDetailModalProps> = ({
     );
   }
 
+  if (isOpen && (isError || catalogError)) {
+    return (
+      <Modal isOpen={isOpen} onClose={onClose} title="Result entry" size="3xl" isActive={isActive}>
+        <ModalPageShell>
+          <ErrorAlert
+            error={{
+              message: errorAlertMessage(
+                'lab.entry.context.loadFailed',
+                error ?? catalogQueryError
+              ),
+            }}
+            onRetry={() => {
+              void refetch();
+            }}
+          />
+        </ModalPageShell>
+      </Modal>
+    );
+  }
+
   if (!test || !resolvedTestDef?.parameters) return null;
 
-  const canEnter = test.allowedActions?.enterResults !== false;
+  const canEnter = isLabActionAllowed(test.allowedActions, 'enterResults');
   const filledCount = Object.values(displayResults).filter(value => value?.trim()).length;
   const totalParams = resolvedTestDef.parameters.length;
   const isComplete = filledCount === totalParams;

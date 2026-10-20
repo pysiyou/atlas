@@ -134,6 +134,7 @@ export const queryKeys = {
     details: () => [...queryKeys.samples.all, 'detail'] as const,
     byId: (id: string) => [...queryKeys.samples.details(), id] as const,
     byOrder: (orderId: string) => [...queryKeys.samples.all, 'order', orderId] as const,
+    workContext: (id: string) => [...queryKeys.samples.all, 'work-context', id] as const,
   },
 
   /**
@@ -215,12 +216,36 @@ export const queryKeys = {
 
   worklists: {
     all: ['lab-worklists'] as const,
-    collection: (params?: { page?: number; pageSize?: number; search?: string }) =>
-      [...queryKeys.worklists.all, 'collection', params] as const,
-    entry: (params?: { page?: number; pageSize?: number; search?: string }) =>
-      [...queryKeys.worklists.all, 'entry', params] as const,
-    validation: (params?: { page?: number; pageSize?: number; search?: string }) =>
-      [...queryKeys.worklists.all, 'validation', params] as const,
+    collection: (
+      params?: {
+        page?: number;
+        pageSize?: number;
+        search?: string;
+        dateFrom?: string;
+        dateTo?: string;
+        sampleType?: string;
+      }
+    ) => [...queryKeys.worklists.all, 'collection', params] as const,
+    entry: (
+      params?: {
+        page?: number;
+        pageSize?: number;
+        search?: string;
+        dateFrom?: string;
+        dateTo?: string;
+        sampleType?: string;
+      }
+    ) => [...queryKeys.worklists.all, 'entry', params] as const,
+    validation: (
+      params?: {
+        page?: number;
+        pageSize?: number;
+        search?: string;
+        dateFrom?: string;
+        dateTo?: string;
+        sampleType?: string;
+      }
+    ) => [...queryKeys.worklists.all, 'validation', params] as const,
     dashboardToday: (params?: { page?: number; pageSize?: number; search?: string }) =>
       [...queryKeys.worklists.all, 'dashboard-today', params] as const,
   },

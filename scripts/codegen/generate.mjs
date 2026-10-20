@@ -90,6 +90,34 @@ ${tsEntries}
   writeFile('frontend/src/types/generated/physiologicLimits.ts', ts);
 }
 
+function generatePhysiologicAliases() {
+  const aliases = readJson('physiologic-aliases.json');
+  const pyEntries = Object.entries(aliases)
+    .map(([from, to]) => `    ${JSON.stringify(from)}: ${JSON.stringify(to)}`)
+    .join(',\n');
+  const tsEntries = Object.entries(aliases)
+    .map(([from, to]) => `  ${JSON.stringify(from)}: ${JSON.stringify(to)}`)
+    .join(',\n');
+  const py = `"""
+Physiologic limit aliases — GENERATED from contracts/physiologic-aliases.json. DO NOT EDIT.
+"""
+from typing import Dict
+
+PHYSIOLOGIC_LIMIT_ALIASES: Dict[str, str] = {
+${pyEntries}
+}
+`;
+  const ts = `/**
+ * Physiologic limit aliases — GENERATED from contracts/physiologic-aliases.json. DO NOT EDIT.
+ */
+export const PHYSIOLOGIC_LIMIT_ALIASES: Record<string, string> = {
+${tsEntries}
+};
+`;
+  writeFile('backend/app/shared/contracts/physiologic_aliases.py', py);
+  writeFile('frontend/src/types/generated/physiologicAliases.ts', ts);
+}
+
 function generateLabBlockers() {
   const jsonPath = path.join(CONTRACTS, 'lab-blockers.json');
   if (!fs.existsSync(jsonPath)) {
@@ -411,6 +439,9 @@ if (fs.existsSync(path.join(CONTRACTS, 'status-presentation.json'))) {
 }
 if (fs.existsSync(path.join(CONTRACTS, 'physiologic-limits.json'))) {
   generatePhysiologicLimits();
+}
+if (fs.existsSync(path.join(CONTRACTS, 'physiologic-aliases.json'))) {
+  generatePhysiologicAliases();
 }
 generateEnums();
 verifyAuditCatalogCoverage();

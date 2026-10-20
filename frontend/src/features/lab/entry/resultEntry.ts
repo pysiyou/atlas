@@ -2,8 +2,8 @@
 /**
  * Entry form helper utilities for parameter display and validation.
  */
-import type { TestParameter, Patient, TestResult, TestWithContext, Test } from '@/types';
-import { formatReferenceRange, isCriticalValue, checkReferenceRangeWithDemographics } from '../utils';
+import type { TestParameter, Patient, TestWithContext, Test } from '@/types';
+import { formatReferenceRange, isCriticalValue } from '../utils';
 import { notify } from '@/utils/feedback';
 
 export const getReferenceRangeDisplay = (param: TestParameter, patient?: Patient): string => {
@@ -20,30 +20,21 @@ export const checkCriticalStatus = (param: TestParameter, value: string): boolea
   return isCriticalValue(numValue, { low: param.criticalLow, high: param.criticalHigh });
 };
 
-export function formatParameterResults(
+/**
+ * Build the POST body for result entry: raw parameter values only.
+ * SELECT options are checked here for inline UX; flags and units are owned by the server.
+ */
+export function toRawResultPayload(
   testResults: Record<string, string>,
-  testDef: Test,
-  testItem: TestWithContext
-): Record<string, unknown> | null {
-  const formattedResults: Record<string, unknown> = {};
+  testDef: Test
+): Record<string, string | number> | null {
+  const payload: Record<string, string | number> = {};
 
   for (const param of testDef.parameters ?? []) {
-    const value = testResults[param.code];
+    const value = testResults[param.code]?.trim();
     if (!value) continue;
 
-    let status: TestResult['status'] = 'normal';
-    let processedValue: string | number = value;
-
-    if (param.valueType === 'NUMERIC' || param.type === 'numeric') {
-      const numValue = parseFloat(value);
-      if (!isNaN(numValue)) {
-        processedValue = numValue;
-        status = checkReferenceRangeWithDemographics(numValue, param, testItem.patient);
-        if (param.criticalLow !== undefined && numValue < param.criticalLow) status = 'critical';
-        else if (param.criticalHigh !== undefined && numValue > param.criticalHigh)
-          status = 'critical';
-      }
-    } else if ((param.valueType === 'SELECT' || param.type === 'select') && param.allowedValues) {
+    if ((param.valueType === 'SELECT' || param.type === 'select') && param.allowedValues) {
       if (!param.allowedValues.includes(value)) {
         notify.toast('lab.entry.selectInvalid', {
           title: `${param.name}: Invalid value. Must be one of: ${param.allowedValues.join(', ')}`,
@@ -52,15 +43,15 @@ export function formatParameterResults(
       }
     }
 
-    formattedResults[param.code] = {
-      value: processedValue,
-      unit: param.unit,
-      referenceRange: param.referenceRange,
-      status,
-    };
+    if (param.valueType === 'NUMERIC' || param.type === 'numeric') {
+      const numValue = parseFloat(value);
+      payload[param.code] = Number.isNaN(numValue) ? value : numValue;
+    } else {
+      payload[param.code] = value;
+    }
   }
 
-  return formattedResults;
+  return payload;
 }
 
 export function findTestById(

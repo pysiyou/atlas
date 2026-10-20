@@ -14,6 +14,7 @@ from app.platform.database import (
     Base,
     engine,
     ensure_audit_event_scope_column,
+    ensure_list_indexes,
     ensure_order_referring_physician_column,
     ensure_user_admin_columns,
 )
@@ -31,6 +32,7 @@ async def lifespan(app: FastAPI):
     ensure_audit_event_scope_column()
     ensure_user_admin_columns()
     ensure_order_referring_physician_column()
+    ensure_list_indexes()
     redis_client = get_redis()
     if redis_client:
         logger.info("Redis cache connected")

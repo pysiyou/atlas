@@ -60,6 +60,8 @@ interface BodyLayout {
   colParameter: number;
   colParameterW: number;
   contentRight: number;
+  /** Returns the Y where body content may resume after a new page chrome. */
+  onNewPage?: (doc: jsPDF) => number;
 }
 
 interface ResultRowLayout {
@@ -106,7 +108,11 @@ function withResultIndent(layout: BodyLayout, indent: number): BodyLayout {
   };
 }
 
-function getBodyLayout(doc: jsPDF, margin: number): BodyLayout {
+function getBodyLayout(
+  doc: jsPDF,
+  margin: number,
+  onNewPage?: (doc: jsPDF) => number
+): BodyLayout {
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
   const contentWidth = pageWidth - margin * 2;
@@ -120,6 +126,7 @@ function getBodyLayout(doc: jsPDF, margin: number): BodyLayout {
     colParameter: margin,
     colParameterW,
     contentRight: margin + contentWidth,
+    onNewPage,
   };
 }
 
@@ -133,7 +140,7 @@ function ensureVerticalSpace(
     return y;
   }
   doc.addPage();
-  return layout.margin;
+  return layout.onNewPage ? layout.onNewPage(doc) : layout.margin;
 }
 
 function resultValueText(parameter: ReportParameter): string {
@@ -583,9 +590,10 @@ export function drawLabReportBody(
   reportData: LabReportPayload,
   startY: number,
   margin: number,
-  catalogTests: Test[] = []
+  catalogTests: Test[] = [],
+  onNewPage?: (doc: jsPDF) => number
 ): number {
-  const layout = getBodyLayout(doc, margin);
+  const layout = getBodyLayout(doc, margin, onNewPage);
   const patient = reportPatientFromPayload(reportData);
   let y = startY + 4;
 

@@ -12,9 +12,9 @@ import { LAB_CONFIG } from '../constants';
 import { TYPE } from '@/components/theme/recipes';
 import { RESULT_PANEL, resultTileStatusClass } from '../utils/labResult';
 import {
+  buildParameterLabelMap,
   catalogParametersFromTest,
   resolveParameterLabel,
-  useParameterLabelMap,
   useTest,
 } from '@/features/catalog';
 import { ResultValueAnnotations } from './ResultValueAnnotations';
@@ -45,8 +45,11 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
   dense = false,
 }) => {
   const flagStatusMap = useMemo(() => statusMapFromFlags(flags), [flags]);
-  const parameterLabels = useParameterLabelMap(testCode);
-  const { test: catalogTest } = useTest(layout === 'validation' ? testCode : undefined);
+  const { test: catalogTest } = useTest(testCode);
+  const parameterLabels = useMemo(
+    () => buildParameterLabelMap(catalogTest),
+    [catalogTest]
+  );
   const catalogParameters = useMemo(
     () => (layout === 'validation' ? catalogParametersFromTest(catalogTest) : {}),
     [layout, catalogTest]

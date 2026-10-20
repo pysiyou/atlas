@@ -8,7 +8,8 @@ import { useCallback } from 'react';
 import { useEnterResults } from '../api/results';
 import { notify } from '@/utils/feedback';
 import { logger } from '@/utils/logger';
-import { formatParameterResults, findTestById } from './resultEntry';
+import { toRawResultPayload, findTestById } from './resultEntry';
+import { isLabActionAllowed } from '../utils/queueDisplay';
 import { useResultEntryDetailModal } from './useResultEntryDetailModal';
 import { useLabDraftStore } from '../state/labDraftStore';
 import type { TestWithContext, Test } from '@/types';
@@ -94,7 +95,7 @@ export function useResultEntryWorkflow({
         return;
       }
 
-      if (testItem.allowedActions?.enterResults === false) {
+      if (!isLabActionAllowed(testItem.allowedActions, 'enterResults')) {
         return;
       }
 
@@ -104,14 +105,14 @@ export function useResultEntryWorkflow({
         return;
       }
 
-      const formattedResults = formatParameterResults(testResults, testDef, testItem);
-      if (!formattedResults) return;
+      const rawResults = toRawResultPayload(testResults, testDef);
+      if (!rawResults) return;
 
       try {
         await enterMutation.mutateAsync({
           orderId: orderIdStr,
           orderTestId,
-          results: formattedResults,
+          results: rawResults,
           technicianNotes: finalNotes || entryDrafts[orderTestId]?.technicianNotes || undefined,
         });
         notify.toast('lab.entry.save.success');

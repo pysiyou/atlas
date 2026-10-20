@@ -10,6 +10,7 @@ import { cn } from '@/utils';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { LAB_CONFIG } from '../constants';
 import { useLabWorkflowCardClickGuard, useOrderTestQueueState } from '../hooks';
+import { isLabActionAllowed } from '../utils/queueDisplay';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
 import { LAB_MOBILE_CARD } from '../utils/labStyles';
@@ -50,7 +51,7 @@ export function useResultEntryCardData(props: ResultEntryCardProps): ResultEntry
   const { test, testDef, results, isComplete, onClick } = props;
   const workItem = useOrderTestQueueState(test);
   const rejection = useMemo(() => deriveRetestContext(test), [test]);
-  const canEnter = test.allowedActions?.enterResults !== false;
+  const canEnter = isLabActionAllowed(test.allowedActions, 'enterResults');
   const denyTooltipLabel =
     test.denyMessage ?? (!canEnter ? workItem.label : undefined);
   const handleCardClick = useLabWorkflowCardClickGuard(() => {

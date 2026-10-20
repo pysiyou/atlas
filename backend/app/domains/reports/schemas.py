@@ -2,7 +2,7 @@
 from datetime import datetime
 
 from app.shared.contracts.enums import Gender
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class ReportableOrderItem(BaseModel):
@@ -16,4 +16,7 @@ class ReportableOrderItem(BaseModel):
     patientGender: Gender | None = None
     activeTestCount: int
     validatedTestCount: int
-    order: dict
+    testCodes: list[str] = Field(default_factory=list)
+    testNames: list[str] = Field(default_factory=list)
+    # Full order graph is omitted from list rows and hydrated on the detail endpoint.
+    order: dict | None = None

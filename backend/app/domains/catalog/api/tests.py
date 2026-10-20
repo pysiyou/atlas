@@ -51,10 +51,11 @@ def get_tests(
 @router.get("/tests/search", response_model=list[TestResponse])
 def search_tests(
     q: str,
+    limit: int = Query(50, ge=1, le=100),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    return TestCatalogService(db).search(q)
+    return TestCatalogService(db).search(q, limit=limit)
 
 
 @router.get("/tests/by-codes", response_model=list[TestResponse])

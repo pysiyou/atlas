@@ -62,6 +62,7 @@ export const orderAPI = {
     const params: Record<string, string> = {
       limit: String(WORKFLOW_QUERY_LIMIT),
       sort: 'updatedAt',
+      paginated: 'false',
     };
     if (options?.summary !== false) {
       params.summary = 'true';
@@ -100,7 +101,13 @@ export const orderAPI = {
   },
 
   async getByPatientId(patientId: string): Promise<Order[]> {
-    return apiClient.get<Order[]>('/orders', { patientId, sort: 'updatedAt' });
+    return apiClient.get<Order[]>('/orders', {
+      patientId,
+      sort: 'updatedAt',
+      paginated: 'false',
+      summary: 'true',
+      limit: String(WORKFLOW_QUERY_LIMIT),
+    });
   },
 
   async create(order: Partial<Order>): Promise<Order> {
@@ -603,8 +610,7 @@ export function useUpdateOrder() {
       }
       notify.apiError('order.update.error', error);
     },
-    onSuccess: async (_, variables) => {
-      await invalidateOrderQueries(queryClient, { orderId: variables.orderId.toString(), samples: true });
+    onSuccess: () => {
       notify.toast('order.update.success');
     },
     onSettled: (_, __, variables) => {

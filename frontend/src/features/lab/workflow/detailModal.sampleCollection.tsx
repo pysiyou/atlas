@@ -5,8 +5,8 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query';
-import { sampleAPI, useCollectSample } from '../api/samples';
-import type { ContainerType, Order, Patient, Sample } from '@/types';
+import { sampleAPI, useCollectSample, useSampleWorkContext } from '../api/samples';
+import type { ContainerType } from '@/types';
 import { uniqueSortedTestCodes, useTestCatalog, useTestsByCodes } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users';
 import { useOrder } from '@/features/orders';
@@ -16,60 +16,14 @@ import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { deriveCollectionModalFields } from './detailModal.sampleCollection.derive';
 import { Modal, ModalPageShell } from '@/components/overlays';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
+import { ErrorAlert } from '@/components/loaders';
 import { SampleCollectionDetailModalView } from './detailModal.sampleCollection.view';
 import { findCollectionQueueItem } from '../utils/findCollectionQueueItem';
 import { useSubmitSampleCollection } from '../collection/useSubmitSampleCollection';
 import { useAuthStore } from '@/app/authStore';
 import type { SampleDetailModalProps } from '@/lib/context/modalTypes';
-
-/**
- * When the collection worklist cache has no row for this sample, still allow collect
- * if the sample itself is pending (getById does not include queue extras).
- */
-function fallbackPendingDisplay(
-  sample: Sample,
-  order: Order | undefined
-): SampleCollectionQueueItem {
-  const patient = {
-    id: order?.patientId ?? 0,
-    fullName: order?.patientName ?? '—',
-  } as Patient;
-
-  return {
-    sample,
-    order: order ?? ({
-      orderId: sample.orderId,
-      patientId: 0,
-      patientName: '',
-      orderDate: sample.createdAt,
-      totalPrice: 0,
-      paymentStatus: 'unpaid',
-      overallStatus: 'ordered',
-      priority: sample.priority,
-      tests: [],
-      createdBy: '',
-      createdAt: sample.createdAt,
-      updatedAt: sample.updatedAt,
-    } as Order),
-    patient,
-    priority: sample.priority,
-    requirement: {
-      sampleType: sample.sampleType,
-      testCodes: sample.testCodes ?? [],
-      totalVolume: sample.requiredVolume ?? 0,
-      containerTypes: sample.requiredContainerTypes ?? [],
-      containerTopColors: sample.requiredContainerColors ?? [],
-      priority: sample.priority,
-      orderId: sample.orderId,
-    },
-    allowedActions: {
-      collect: sample.status === 'pending',
-      enterResults: false,
-      validate: false,
-      reject: false,
-    },
-  };
-}
+import { mapCollectionWorklistToSampleDisplay } from '../utils/labQueue';
+import { errorAlertMessage } from '@/utils/feedback';
 
 export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({
   isOpen,
@@ -101,14 +55,25 @@ export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({
     enabled: isOpen && Boolean(sampleId),
   });
   const sample = fetchedSample ?? cachedDisplay?.sample;
-  const orderId = cachedDisplay?.order ? undefined : sample?.orderId;
+  const needsWorkContext = isOpen && Boolean(sampleId) && !cachedDisplay;
+  const {
+    workContext,
+    isLoading: isLoadingWorkContext,
+    isError: workContextError,
+    error: workContextQueryError,
+    refetch: refetchWorkContext,
+  } = useSampleWorkContext(needsWorkContext ? sampleId : undefined, needsWorkContext);
+  const workContextDisplay = workContext
+    ? mapCollectionWorklistToSampleDisplay(workContext)
+    : undefined;
+  const orderId = cachedDisplay?.order || workContextDisplay?.order ? undefined : sample?.orderId;
   const { order: fetchedOrder } = useOrder(orderId != null ? String(orderId) : undefined);
-  const order = cachedDisplay?.order || fetchedOrder;
+  const order = cachedDisplay?.order || workContextDisplay?.order || fetchedOrder;
 
   const pendingSampleDisplay = useMemo(() => {
-    if (!sample || sample.status !== 'pending') return cachedDisplay;
-    return cachedDisplay ?? fallbackPendingDisplay(sample, order);
-  }, [sample, cachedDisplay, order]);
+    if (!sample || sample.status !== 'pending') return cachedDisplay ?? workContextDisplay;
+    return cachedDisplay ?? workContextDisplay;
+  }, [sample, cachedDisplay, workContextDisplay]);
 
   const sampleTestCodes = useMemo(
     () => uniqueSortedTestCodes(sample?.testCodes ?? []),
@@ -164,6 +129,48 @@ export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({
       );
     }
     return null;
+  }
+
+  if (
+    isOpen &&
+    sample.status === 'pending' &&
+    needsWorkContext &&
+    isLoadingWorkContext &&
+    !pendingSampleDisplay
+  ) {
+    return (
+      <Modal isOpen={isOpen} onClose={onClose} title="Sample" size="3xl" isActive={isActive}>
+        <ModalPageShell>
+          <DetailPageSkeleton variant="responsive-detail" />
+        </ModalPageShell>
+      </Modal>
+    );
+  }
+
+  if (
+    isOpen &&
+    sample.status === 'pending' &&
+    needsWorkContext &&
+    workContextError &&
+    !pendingSampleDisplay
+  ) {
+    return (
+      <Modal isOpen={isOpen} onClose={onClose} title="Sample" size="3xl" isActive={isActive}>
+        <ModalPageShell>
+          <ErrorAlert
+            error={{
+              message: errorAlertMessage(
+                'lab.collection.workContext.loadFailed',
+                workContextQueryError
+              ),
+            }}
+            onRetry={() => {
+              void refetchWorkContext();
+            }}
+          />
+        </ModalPageShell>
+      </Modal>
+    );
   }
 
   const fields = deriveCollectionModalFields(

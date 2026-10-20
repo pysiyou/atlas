@@ -155,7 +155,7 @@ export interface paths {
         };
         /**
          * Search Patients
-         * @description Search patients by name, id (numeric or PAT display id), or phone. Returns list (no pagination).
+         * @description Search patients by name, id (numeric or PAT display id), or phone.
          */
         get: operations["search_patients_api_v1_patients_search_get"];
         put?: never;
@@ -525,6 +525,26 @@ export interface paths {
         };
         /** Get Pending Samples */
         get: operations["get_pending_samples_api_v1_lab_samples_pending_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/samples/{sampleId}/work-context": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Sample Work Context
+         * @description Collection eligibility and display fields for a sample deep-link or modal.
+         */
+        get: operations["get_sample_work_context_api_v1_lab_samples__sampleId__work_context_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1405,6 +1425,84 @@ export interface components {
          * @enum {string}
          */
         ClaimStatus: "submitted" | "processing" | "approved" | "denied" | "paid";
+        /** CollectionWorklistItem */
+        CollectionWorklistItem: {
+            /** Sampleid */
+            sampleId: number;
+            /** Orderid */
+            orderId: number;
+            /** Patientid */
+            patientId: number;
+            /** Patientname */
+            patientName: string;
+            /** Sampletype */
+            sampleType: string;
+            status: components["schemas"]["SampleStatus"];
+            priority: components["schemas"]["PriorityLevel"];
+            paymentStatus: components["schemas"]["PaymentStatus"];
+            /**
+             * Orderdate
+             * Format: date-time
+             */
+            orderDate: string;
+            /** Testcodes */
+            testCodes: string[];
+            /** Isrecollection */
+            isRecollection: boolean;
+            /** Originalsampleid */
+            originalSampleId?: number | null;
+            /** Originalsamplecollectedat */
+            originalSampleCollectedAt?: string | null;
+            /** Recollectionreason */
+            recollectionReason?: string | null;
+            /**
+             * Recollectionattempt
+             * @default 1
+             */
+            recollectionAttempt: number;
+            /** Pipelinestage */
+            pipelineStage?: ("collection" | "entry" | "validation" | "escalation" | "completed" | "cancelled") | null;
+            /** Attentionreason */
+            attentionReason?: string | null;
+            /** Attentionlabel */
+            attentionLabel?: string | null;
+            /**
+             * @default {
+             *       "collect": false,
+             *       "enterResults": false,
+             *       "validate": false,
+             *       "reject": false
+             *     }
+             */
+            allowedActions: components["schemas"]["LabWorklistAllowedActions"];
+            /** Denyreason */
+            denyReason?: string | null;
+            /** Denymessage */
+            denyMessage?: string | null;
+            statusPresentation?: components["schemas"]["StatusPresentation"] | null;
+            /** Waitinghours */
+            waitingHours: number;
+            /** Turnaroundhours */
+            turnaroundHours: number;
+            actualContainerType?: components["schemas"]["ContainerType"] | null;
+            actualContainerColor?: components["schemas"]["ContainerTopColor"] | null;
+            /** Collectedat */
+            collectedAt?: string | null;
+            /** Collectedby */
+            collectedBy?: string | null;
+            /** Collectedvolume */
+            collectedVolume?: number | null;
+            /** Referringphysician */
+            referringPhysician?: string | null;
+            /** Testname */
+            testName?: string | null;
+            /** Testcategory */
+            testCategory?: string | null;
+            /** Queueageband */
+            queueAgeBand?: ("fresh" | "onTrack" | "warning" | "critical") | null;
+            /** Priorityrank */
+            priorityRank?: number | null;
+        };
         /**
          * ContainerTopColor
          * @enum {string}
@@ -2500,6 +2598,12 @@ export interface components {
              * @default true
              */
             allowForceValidate: boolean;
+            lab?: components["schemas"]["LabWorkItemProjection"] | null;
+            allowedActions?: components["schemas"]["LabWorklistAllowedActions"] | null;
+            /** Denyreason */
+            denyReason?: string | null;
+            /** Denymessage */
+            denyMessage?: string | null;
         };
         /**
          * PriorityLevel
@@ -2848,10 +2952,14 @@ export interface components {
             activeTestCount: number;
             /** Validatedtestcount */
             validatedTestCount: number;
+            /** Testcodes */
+            testCodes?: string[];
+            /** Testnames */
+            testNames?: string[];
             /** Order */
-            order: {
+            order?: {
                 [key: string]: unknown;
-            };
+            } | null;
         };
         /** ResultEntryRequest */
         ResultEntryRequest: {
@@ -3569,6 +3677,8 @@ export interface operations {
         parameters: {
             query: {
                 q: string;
+                /** @description Maximum matches to return */
+                limit?: number;
             };
             header?: never;
             path?: never;
@@ -3839,6 +3949,7 @@ export interface operations {
         parameters: {
             query: {
                 q: string;
+                limit?: number;
             };
             header?: never;
             path?: never;
@@ -3976,6 +4087,7 @@ export interface operations {
                 dateFrom?: string | null;
                 dateTo?: string | null;
                 sort?: "createdAt" | "updatedAt";
+                /** @description Return a page envelope with total count */
                 paginated?: boolean;
                 /** @description Return lightweight order rows without nested tests */
                 summary?: boolean;
@@ -4616,6 +4728,37 @@ export interface operations {
             };
         };
     };
+    get_sample_work_context_api_v1_lab_samples__sampleId__work_context_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                sampleId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CollectionWorklistItem"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_sample_api_v1_lab_samples__sampleId__get: {
         parameters: {
             query?: never;
@@ -4880,6 +5023,10 @@ export interface operations {
                 pageSize?: number;
                 search?: string | null;
                 priority?: components["schemas"]["PriorityLevel"] | null;
+                dateFrom?: string | null;
+                dateTo?: string | null;
+                /** @description Comma-separated sample types */
+                sampleType?: string | null;
             };
             header?: never;
             path?: never;
@@ -4914,6 +5061,10 @@ export interface operations {
                 pageSize?: number;
                 search?: string | null;
                 priority?: components["schemas"]["PriorityLevel"] | null;
+                dateFrom?: string | null;
+                dateTo?: string | null;
+                /** @description Comma-separated sample types */
+                sampleType?: string | null;
             };
             header?: never;
             path?: never;
@@ -4980,6 +5131,10 @@ export interface operations {
                 pageSize?: number;
                 search?: string | null;
                 priority?: components["schemas"]["PriorityLevel"] | null;
+                dateFrom?: string | null;
+                dateTo?: string | null;
+                /** @description Comma-separated sample types */
+                sampleType?: string | null;
             };
             header?: never;
             path?: never;

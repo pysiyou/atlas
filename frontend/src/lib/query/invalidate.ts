@@ -96,6 +96,8 @@ export function invalidatePatientQueries(
 
 export interface InvalidateResultOptions {
   orderId?: string | number;
+  /** When set, refresh only that order-test context instead of every results query. */
+  orderTestId?: number;
   samples?: boolean;
   pendingEscalation?: boolean;
 }
@@ -104,17 +106,22 @@ export function invalidateResultQueries(
   client: QueryClient,
   options: InvalidateResultOptions = {}
 ): Promise<void> {
-  const { orderId, samples = true, pendingEscalation = true } = options;
+  const { orderId, orderTestId, samples = true, pendingEscalation = true } = options;
   const orderIdStr = orderId !== undefined ? String(orderId) : undefined;
 
   const tasks: Array<Promise<unknown>> = [
-    client.invalidateQueries({ queryKey: queryKeys.orders.all }),
-    client.invalidateQueries({ queryKey: queryKeys.results.all }),
     invalidateWorklistQueries(client),
     invalidateAuditEventQueries(client),
   ];
   if (orderIdStr) {
     tasks.push(client.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) }));
+  } else {
+    tasks.push(client.invalidateQueries({ queryKey: queryKeys.orders.all }));
+  }
+  if (orderTestId != null) {
+    tasks.push(client.invalidateQueries({ queryKey: queryKeys.results.orderTest(orderTestId) }));
+  } else {
+    tasks.push(client.invalidateQueries({ queryKey: queryKeys.results.all }));
   }
   if (samples) {
     tasks.push(client.invalidateQueries({ queryKey: queryKeys.samples.all }));

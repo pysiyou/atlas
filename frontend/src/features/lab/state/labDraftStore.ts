@@ -8,6 +8,16 @@ import { create } from 'zustand';
 export interface EntryDraft {
   results: Record<string, string>;
   technicianNotes: string;
+  /** Invalidates the draft when status or resultEnteredAt changes on the server. */
+  lifecycleKey: string;
+}
+
+/** Version key for in-progress drafts: status + last server result timestamp. */
+export function entryDraftLifecycleKey(
+  status?: string,
+  resultEnteredAt?: string | null
+): string {
+  return `${status ?? ''}::${resultEnteredAt ?? ''}`;
 }
 
 interface LabDraftState {
@@ -18,6 +28,7 @@ interface LabDraftState {
   setEntryResultParam: (orderTestId: number, paramCode: string, value: string) => void;
   setEntryNotes: (orderTestId: number, notes: string) => void;
   seedEntryDraft: (orderTestId: number, draft: EntryDraft) => void;
+  retainEntryDrafts: (orderTestIds: Iterable<number>) => void;
   clearEntryDraft: (orderTestId: number) => void;
   getValidationComments: (orderTestId: number) => string;
   setValidationComments: (orderTestId: number, comments: string) => void;
@@ -25,7 +36,7 @@ interface LabDraftState {
   clearAllDrafts: () => void;
 }
 
-const EMPTY_ENTRY: EntryDraft = { results: {}, technicianNotes: '' };
+const EMPTY_ENTRY: EntryDraft = { results: {}, technicianNotes: '', lifecycleKey: '' };
 
 export const useLabDraftStore = create<LabDraftState>((set, get) => ({
   entry: {},
@@ -73,10 +84,42 @@ export const useLabDraftStore = create<LabDraftState>((set, get) => ({
   },
 
   seedEntryDraft: (orderTestId, draft) => {
-    if (get().entry[orderTestId]) return;
+    const current = get().entry[orderTestId];
+    if (current && current.lifecycleKey === draft.lifecycleKey) return;
     set(state => ({
-      entry: { ...state.entry, [orderTestId]: draft },
+      entry: {
+        ...state.entry,
+        [orderTestId]: {
+          results: draft.results ?? {},
+          technicianNotes: draft.technicianNotes ?? '',
+          lifecycleKey: draft.lifecycleKey ?? '',
+        },
+      },
     }));
+  },
+
+  retainEntryDrafts: orderTestIds => {
+    const keep = new Set(orderTestIds);
+    set(state => {
+      let changed = false;
+      const nextEntry = { ...state.entry };
+      for (const key of Object.keys(nextEntry)) {
+        const id = Number(key);
+        if (!keep.has(id)) {
+          delete nextEntry[id];
+          changed = true;
+        }
+      }
+      const nextComments = { ...state.validationComments };
+      for (const key of Object.keys(nextComments)) {
+        const id = Number(key);
+        if (!keep.has(id)) {
+          delete nextComments[id];
+          changed = true;
+        }
+      }
+      return changed ? { entry: nextEntry, validationComments: nextComments } : state;
+    });
   },
 
   clearEntryDraft: orderTestId => {

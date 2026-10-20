@@ -116,9 +116,13 @@ export function mapEntryWorklistToOrderTestContext(item: EntryWorklistItem): Tes
     denyMessage: item.denyMessage ?? null,
     referringPhysician: item.referringPhysician ?? undefined,
     lab: {
+      pipelineStage: item.pipelineStage ?? undefined,
       attentionReason: item.attentionReason ?? null,
       attentionLabel: item.attentionLabel ?? null,
       statusPresentation: item.statusPresentation ?? null,
+      denyReason: item.denyReason ?? null,
+      denyMessage: item.denyMessage ?? null,
+      allowedActions: item.allowedActions,
     },
   } as TestWithContext;
 }
@@ -152,9 +156,13 @@ export function mapValidationWorklistToOrderTestContext(
     denyReason: item.denyReason ?? null,
     denyMessage: item.denyMessage ?? null,
     lab: {
+      pipelineStage: item.pipelineStage ?? undefined,
       attentionReason: item.attentionReason ?? null,
       attentionLabel: item.attentionLabel ?? null,
       statusPresentation: item.statusPresentation ?? null,
+      denyReason: item.denyReason ?? null,
+      denyMessage: item.denyMessage ?? null,
+      allowedActions: item.allowedActions,
     },
   } as TestWithContext;
 }

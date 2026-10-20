@@ -12,7 +12,7 @@ import { getErrorMessage } from '@/utils/errors';
 import { getFeedback } from '@/utils/feedback';
 import { useOrderForm } from './useOrderForm';
 import { useTestCatalog, useTestSearch } from '@/features/catalog';
-import { usePatientSearch, usePatientsList } from '@/features/patients';
+import { usePatient, usePatientSearch } from '@/features/patients';
 import { useCreatePayment } from '@/features/payments';
 import { useOrder } from '../api/orders';
 
@@ -33,9 +33,13 @@ export function useOrderUpsertModal({
   onClose,
 }: UseOrderUpsertModalParams) {
   const shouldFetchOrder = mode === 'edit' && !orderProp && orderId != null;
-  const { order: fetchedOrder, isLoading: isOrderLoading } = useOrder(
-    shouldFetchOrder ? String(orderId) : undefined
-  );
+  const {
+    order: fetchedOrder,
+    isLoading: isOrderLoading,
+    isError: isOrderError,
+    error: orderError,
+    refetch: refetchOrder,
+  } = useOrder(shouldFetchOrder ? String(orderId) : undefined);
   const order = orderProp ?? fetchedOrder;
   const [patientSearch, setPatientSearch] = useState('');
   const [testSearch, setTestSearch] = useState('');
@@ -105,12 +109,16 @@ export function useOrderUpsertModal({
   const selectedPatientId = formValues.patientId;
   const testCodes = formValues.testCodes;
 
-  const { patients } = usePatientsList();
   const { results: filteredPatients } = usePatientSearch(patientSearch);
-  const selectedPatient = useMemo(
-    () => (selectedPatientId ? patients.find(p => p.id === selectedPatientId) : null),
-    [patients, selectedPatientId]
+  const selectedPatientIdKey =
+    selectedPatientId != null ? String(selectedPatientId) : undefined;
+  const initialPatientIdKey =
+    initialPatientId != null ? String(initialPatientId) : undefined;
+  const { patient: selectedPatientById } = usePatient(selectedPatientIdKey);
+  const { patient: initialPatient } = usePatient(
+    !selectedPatientIdKey && initialPatientIdKey ? initialPatientIdKey : undefined
   );
+  const selectedPatient = selectedPatientById ?? initialPatient ?? null;
 
   const { tests, byCode } = useTestCatalog();
   const { results: filteredTests } = useTestSearch(testSearch);
@@ -125,11 +133,10 @@ export function useOrderUpsertModal({
   }, [testCodes, byCode]);
 
   useEffect(() => {
-    if (mode === 'create' && initialPatientId && !selectedPatientId && patients.length > 0) {
-      const patient = patients.find(p => p.id === initialPatientId);
-      if (patient) setValue('patientId', initialPatientId, { shouldValidate: false });
+    if (mode === 'create' && initialPatientId != null && selectedPatientId == null) {
+      setValue('patientId', initialPatientId, { shouldValidate: false });
     }
-  }, [mode, initialPatientId, patients, selectedPatientId, setValue]);
+  }, [mode, initialPatientId, selectedPatientId, setValue]);
 
   const priorityOptions = useMemo(
     () => createFilterOptions(PRIORITY_LEVEL_VALUES, PRIORITY_LEVEL_CONFIG),
@@ -192,6 +199,9 @@ export function useOrderUpsertModal({
     submitLabel,
     handleClose,
     isOrderLoading,
+    isOrderError,
+    orderError,
+    refetchOrder,
   };
 }
 

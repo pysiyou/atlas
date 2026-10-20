@@ -24,10 +24,12 @@ import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { collectionFilterConfig, LAB_URL_FILTER_KEYS } from '../constants';
 import { mapCollectionWorklistToSampleDisplay } from '../utils/labQueue';
 import { EMPTY_COPY, emptySubtitle } from '@/components/display';
-import { ErrorBoundary } from '@/components/loaders';
+import { ErrorAlert, ErrorBoundary } from '@/components/loaders';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { useAuthStore } from '@/app/authStore';
 import { useTestCatalog } from '@/features/catalog';
+import { worklistServerFilters } from '../utils/labSearchAndLinks';
+import { errorAlertMessage } from '@/utils/feedback';
 export const SampleCollectionQueue: React.FC = () => {
   const { user: currentUser } = useAuthStore();
   const collectSampleMutation = useCollectSample();
@@ -51,9 +53,22 @@ export const SampleCollectionQueue: React.FC = () => {
   const isLookupBelowMin =
     trimmedSearch.length > 0 && trimmedSearch.length < LAB_CONFIG.SAMPLE_LOOKUP_MIN_CHARS;
 
-  const { items: worklistItems, pagination, isLoading } = useCollectionWorklist(
-    isSampleLookup ? { search: trimmedSearch } : undefined
-  );
+  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
+  const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
+  const serverFilters = worklistServerFilters({
+    search: isSampleLookup ? trimmedSearch : undefined,
+    dateRange,
+    sampleTypeFilters,
+  });
+  const {
+    items: worklistItems,
+    pagination,
+    isLoading,
+    isError,
+    error: worklistError,
+    refetch,
+    goToPage,
+  } = useCollectionWorklist(serverFilters);
   const collectionDisplays = useMemo(
     () => worklistItems.map(mapCollectionWorklistToSampleDisplay),
     [worklistItems]
@@ -61,10 +76,6 @@ export const SampleCollectionQueue: React.FC = () => {
 
   const {
     filteredItems: filteredDisplaysRaw,
-    dateRange,
-    setDateRange,
-    sampleTypeFilters,
-    setSampleTypeFilters,
     statusFilters,
     setStatusFilters,
     urlFilters,
@@ -75,7 +86,13 @@ export const SampleCollectionQueue: React.FC = () => {
     workflowType: 'collection',
     searchQuery,
     onSearchChange: setSearchQuery,
+    dateRange,
+    onDateRangeChange: setDateRange,
+    sampleTypeFilters,
+    onSampleTypeFiltersChange: setSampleTypeFilters,
     skipSearchFilter: isSampleLookup,
+    skipDateFilter: true,
+    skipSampleTypeFilter: true,
     collectionSampleLookup: isSampleLookup,
   });
 
@@ -100,6 +117,19 @@ export const SampleCollectionQueue: React.FC = () => {
     return (
       <ErrorBoundary>
         <DetailPageSkeleton variant="workflow-grid" />
+      </ErrorBoundary>
+    );
+  }
+
+  if (isError) {
+    return (
+      <ErrorBoundary>
+        <ErrorAlert
+          error={{ message: errorAlertMessage('lab.worklist.loadFailed', worklistError) }}
+          onRetry={() => {
+            void refetch();
+          }}
+        />
       </ErrorBoundary>
     );
   }
@@ -139,6 +169,7 @@ export const SampleCollectionQueue: React.FC = () => {
             onClearUrlFilters={clearUrlFilters}
             onClearUrlFilter={key => setUrlFilter(key, undefined)}
             pagination={pagination}
+            onPageChange={goToPage}
           >
             <LabQueueFilters
               config={collectionFilterConfig}

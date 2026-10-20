@@ -3,7 +3,7 @@ Order and OrderTest Models - All fields use camelCase
 """
 from app.platform.database import Base, contract_enum
 from app.shared.contracts.enums import OrderStatus, PaymentStatus, PriorityLevel, TestStatus
-from sqlalchemy import JSON, Boolean, Column, DateTime, Float, ForeignKey, Integer, String
+from sqlalchemy import JSON, Boolean, Column, DateTime, Float, ForeignKey, Index, Integer, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
@@ -48,6 +48,13 @@ class Order(Base):
     patient = relationship("Patient", foreign_keys=[patientId])
     tests = relationship("OrderTest", back_populates="order", cascade="all, delete-orphan")
     payments = relationship("Payment", back_populates="order", lazy="select")
+
+    __table_args__ = (
+        Index("ix_orders_overall_status", "overall_status"),
+        Index("ix_orders_payment_status", "payment_status"),
+        Index("ix_orders_order_date_desc", orderDate.desc()),
+        Index("ix_orders_updated_at_desc", updatedAt.desc()),
+    )
 
     @property
     def patientName(self) -> str:

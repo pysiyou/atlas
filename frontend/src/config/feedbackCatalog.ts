@@ -100,6 +100,9 @@ export type FeedbackId =
   | 'reports.list.loadFailed'
   | 'payments.list.loadFailed'
   | 'lab.page.loadFailed'
+  | 'lab.worklist.loadFailed'
+  | 'lab.entry.context.loadFailed'
+  | 'lab.collection.workContext.loadFailed'
   | 'billing.claims.loadFailed'
   | 'patients.affiliation.pricingLoadFailed'
   | 'lab.history.panel.loadFailed'
@@ -728,6 +731,21 @@ export const FEEDBACK_CATALOG: Record<FeedbackId, FeedbackEntry> = {
     channel: 'errorAlert',
     variant: 'danger',
     title: 'Failed to load laboratory data',
+  },
+  'lab.worklist.loadFailed': {
+    channel: 'errorAlert',
+    variant: 'danger',
+    title: 'Failed to load the lab worklist',
+  },
+  'lab.entry.context.loadFailed': {
+    channel: 'errorAlert',
+    variant: 'danger',
+    title: 'Failed to load this test for result entry',
+  },
+  'lab.collection.workContext.loadFailed': {
+    channel: 'errorAlert',
+    variant: 'danger',
+    title: 'Failed to load sample collection eligibility',
   },
   'billing.claims.loadFailed': {
     channel: 'errorAlert',

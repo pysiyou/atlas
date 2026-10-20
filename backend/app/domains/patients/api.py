@@ -18,11 +18,12 @@ router = APIRouter()
 @router.get("/patients/search", response_model=list[PatientResponse])
 def search_patients(
     q: str = Query(..., min_length=1, max_length=100),
+    limit: int = Query(20, ge=1, le=50, description="Maximum matches to return"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Search patients by name, id (numeric or PAT display id), or phone. Returns list (no pagination)."""
-    return PatientService(db).search(q, limit=10000)
+    """Search patients by name, id (numeric or PAT display id), or phone."""
+    return PatientService(db).search(q, limit=limit)
 
 
 @router.get(

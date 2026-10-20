@@ -7,7 +7,8 @@ Prevents entry of impossible values that could lead to patient harm.
 from dataclasses import dataclass
 from typing import Any
 
-from app.platform.utils.common import PHYSIOLOGIC_LIMIT_ALIASES, parse_numeric_result_value
+from app.platform.utils.common import parse_numeric_result_value
+from app.shared.contracts.physiologic_aliases import PHYSIOLOGIC_LIMIT_ALIASES
 from app.shared.contracts.physiologic_limits import PHYSIOLOGIC_LIMITS
 
 

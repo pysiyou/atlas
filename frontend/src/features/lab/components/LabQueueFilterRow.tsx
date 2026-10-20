@@ -15,6 +15,7 @@ export interface LabQueueFilterRowProps<K extends UrlFilterKey = (typeof LAB_URL
   onClearUrlFilters: () => void;
   onClearUrlFilter: (key: K) => void;
   pagination?: WorklistPagination;
+  onPageChange?: (page: number) => void;
   children: ReactNode;
 }
 
@@ -27,6 +28,7 @@ export function LabQueueFilterRow<K extends UrlFilterKey = (typeof LAB_URL_FILTE
   onClearUrlFilters,
   onClearUrlFilter,
   pagination,
+  onPageChange,
   children,
 }: LabQueueFilterRowProps<K>) {
   return (
@@ -38,7 +40,9 @@ export function LabQueueFilterRow<K extends UrlFilterKey = (typeof LAB_URL_FILTE
         onClearSingle={onClearUrlFilter}
       />
       {children}
-      {pagination ? <LabWorklistPaginationNotice pagination={pagination} /> : null}
+      {pagination ? (
+        <LabWorklistPaginationNotice pagination={pagination} onPageChange={onPageChange} />
+      ) : null}
     </>
   );
 }
