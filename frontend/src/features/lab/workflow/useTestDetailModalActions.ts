@@ -27,7 +27,7 @@ export function useTestDetailModalActions({
   orderId: number | string | undefined;
   onClose: () => void;
 }) {
-  const { pushModal } = useModal();
+  const { openModal } = useModal();
   const queryClient = useQueryClient();
   const validateMutation = useValidateResults();
   const getValidationComments = useLabDraftStore(s => s.getValidationComments);
@@ -92,24 +92,24 @@ export function useTestDetailModalActions({
   const openLinkedTest = useCallback(
     (linkedTest: OrderTest) => {
       if (linkedTest.id == null) return;
-      pushModal({
+      openModal({
         type: ModalType.TEST_DETAIL,
         orderTestId: linkedTest.id,
         interaction: 'view',
       });
     },
-    [pushModal]
+    [openModal]
   );
 
   const handleViewFullSample = useCallback(
     (sampleId: number) => {
-      pushModal({
+      openModal({
         type: ModalType.SAMPLE_DETAIL,
         sampleId: String(sampleId),
         readOnly: true,
       });
     },
-    [pushModal]
+    [openModal]
   );
 
   return {

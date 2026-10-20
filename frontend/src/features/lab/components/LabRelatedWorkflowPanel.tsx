@@ -21,7 +21,7 @@ type LabRelatedTestsPanelProps = {
 };
 
 export const LabRelatedTestsPanel: React.FC<LabRelatedTestsPanelProps> = ({ test, isOpen }) => {
-  const { pushModal } = useModal();
+  const { openModal } = useModal();
   const { order } = useOrder(isOpen && test.orderId > 0 ? String(test.orderId) : undefined);
 
   const orderTest = useMemo(
@@ -31,7 +31,7 @@ export const LabRelatedTestsPanel: React.FC<LabRelatedTestsPanelProps> = ({ test
 
   const openOrderTest = (row: OrderTest) => {
     if (!order || row.id == null) return;
-    pushModal({
+    openModal({
       type: ModalType.TEST_DETAIL,
       orderTestId: row.id,
       interaction: 'view',

@@ -13,8 +13,8 @@ export const ModalType = {
 
 export type ModalType = (typeof ModalType)[keyof typeof ModalType];
 
-/** Nested lab opens are depth 2 today; cap at 3 so a mistaken loop cannot grow forever. */
-export const MAX_MODAL_STACK_DEPTH = 3;
+/** Keep in sync with `exit` transition in `Modal.tsx` (seconds → ms). */
+export const MODAL_EXIT_TRANSITION_MS = 200;
 
 export type TestDetailInteraction = 'view' | 'validate';
 
@@ -41,7 +41,7 @@ export type ModalStack = ModalFrame[];
 export interface BaseModalProps {
   isOpen: boolean;
   onClose: () => void;
-  /** False when another frame is stacked on top — keep mounted, skip focus/Escape. */
+  /** Reserved for stacked modals; only one modal is shown at a time today. */
   isActive?: boolean;
 }
 
@@ -82,15 +82,18 @@ export function replaceModalStack(frame: ModalFrame): ModalStack {
   return [frame];
 }
 
+export type ModalOpenPlan =
+  | { kind: 'immediate'; stack: ModalStack }
+  | { kind: 'close_then_open'; stack: ModalStack; frame: ModalFrame };
+
 /**
- * Push a nested frame. At the depth cap, replace the top instead of growing.
+ * At most one modal frame is mounted. When one is already open, close it before opening the next.
  */
-export function pushModalFrame(stack: ModalStack, frame: ModalFrame): ModalStack {
-  if (stack.length === 0) return [frame];
-  if (stack.length >= MAX_MODAL_STACK_DEPTH) {
-    return [...stack.slice(0, -1), frame];
+export function planModalOpen(current: ModalStack, frame: ModalFrame): ModalOpenPlan {
+  if (current.length === 0) {
+    return { kind: 'immediate', stack: replaceModalStack(frame) };
   }
-  return [...stack, frame];
+  return { kind: 'close_then_open', stack: [], frame };
 }
 
 /** Pop the top frame. Empty stack means no modal is open. */
