@@ -4,6 +4,7 @@
  */
 
 import type { ModalType } from './ModalContext';
+import type { LabReportPayload } from '@/features/reports/types';
 import type { Order, OrderTest, Patient, Test, TestWithContext, ContainerType } from '@/types';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
@@ -80,6 +81,14 @@ export interface OrderUpsertModalProps {
   mode?: 'create' | 'edit';
 }
 
+/** Lab report preview before PDF download. */
+export interface ReportPreviewProps {
+  reportData: LabReportPayload;
+  onGenerate: () => void | Promise<void>;
+  /** When set, replaces the default context `onClose` (e.g. navigate after dismiss). */
+  onClose?: () => void;
+}
+
 /**
  * Map of ModalType to the props payload passed to openModal(type, props).
  * Unregistered modals use empty object.
@@ -90,6 +99,7 @@ export interface ModalPropsMap {
   ESCALATION_RESOLUTION_DETAIL: EscalationResolutionDetailProps;
   NEW_ORDER: OrderUpsertModalProps;
   TEST_DETAIL: TestDetailProps;
+  REPORT_PREVIEW: ReportPreviewProps;
 }
 
 export type ModalPropsFor<T extends ModalType> = ModalPropsMap[T];

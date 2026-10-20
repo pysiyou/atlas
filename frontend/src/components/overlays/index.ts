@@ -3,7 +3,9 @@
  * Modals, popovers, portals, filter controls, overlay inputs.
  */
 
+export * from './OverlayBackdrop';
 export * from './Modal';
+export * from './ModalPageShell';
 export * from './Popover';
 export * from './Portal';
 export * from './DialogChrome';

@@ -5,7 +5,7 @@
 
 import React from 'react';
 import type { Patient } from '@/types';
-import { Modal, FormDialogFooter } from '@/components/overlays';
+import { FormDialogFooter, Modal, ModalPageShell } from '@/components/overlays';
 import { FooterInfo } from '@/components/display';
 import { PanelHeaderSegmentTabs } from '@/components/display/PanelHeaderSegmentTabs';
 import { ErrorBoundary } from '@/components/loaders';
@@ -68,33 +68,30 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
         size="3xl"
         disableClose={isSubmitting}
       >
-        <div className="flex flex-col h-full bg-surface-page">
-          <div className="flex-1 overflow-y-auto p-space-6">
-            <form id="patient-form" onSubmit={handleSubmit} className="max-w-full space-y-space-6">
-              <TabNavigation
-                tabs={[...tabs]}
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
-              />
-              <PatientFormTabs
-                activeTab={activeTab}
-                register={register}
-                control={control}
-                errors={errors}
-                existingAffiliation={patient?.affiliation}
-                existingVitalSigns={patient?.vitalSigns}
-                watch={watch}
-                setValue={setValue}
-              />
-            </form>
-          </div>
-          <FormDialogFooter
-            submitLabel={submitLabel}
-            isSubmitting={isSubmitting}
-            formId="patient-form"
-            footerInfo={<FooterInfo icon={MODULE_ICONS.patients} label="Patients" size="md" />}
-          />
-        </div>
+        <ModalPageShell
+          footer={
+            <FormDialogFooter
+              submitLabel={submitLabel}
+              isSubmitting={isSubmitting}
+              formId="patient-form"
+              footerInfo={<FooterInfo icon={MODULE_ICONS.patients} label="Patients" size="md" />}
+            />
+          }
+        >
+          <form id="patient-form" onSubmit={handleSubmit} className="max-w-full space-y-space-6">
+            <TabNavigation tabs={[...tabs]} activeTab={activeTab} onTabChange={setActiveTab} />
+            <PatientFormTabs
+              activeTab={activeTab}
+              register={register}
+              control={control}
+              errors={errors}
+              existingAffiliation={patient?.affiliation}
+              existingVitalSigns={patient?.vitalSigns}
+              watch={watch}
+              setValue={setValue}
+            />
+          </form>
+        </ModalPageShell>
       </Modal>
     </ErrorBoundary>
   );

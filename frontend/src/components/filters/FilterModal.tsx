@@ -4,8 +4,8 @@
  */
 
 import React from 'react';
-import { Modal } from '@/components';
-import { FILTER, FILTER_TYPE } from '@/components/theme/recipes';
+import { Modal, ModalPageShell } from '@/components';
+import { FILTER_TYPE } from '@/components/theme/recipes';
 import { QuickFilters } from './QuickFilters';
 import { FilterModalFooter } from './FilterModalFooter';
 import type { FilterConfig, ActiveFilterBadge, FilterValues } from './types';
@@ -51,59 +51,53 @@ export const FilterModal: React.FC<FilterModalProps> = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Filter" size="md">
-      <div className="flex flex-col h-full bg-surface">
-        {/* Filter Controls - Scrollable */}
-        <div className={`flex-1 overflow-y-auto ${FILTER.modalBody}`}>
-          {/* Search Control */}
-          {searchControl && (
-            <div className="mb-space-6">
-              {renderFilterControl(
-                searchControl,
-                filters[searchControl.key],
-                (value) => setFilter(searchControl.key, value),
-                { variant: 'modal' }
-              )}
-            </div>
-          )}
+      <ModalPageShell
+        tone="panel"
+        bodyPadding="filter"
+        footer={
+          <FilterModalFooter
+            onReset={onClearAll}
+            onApply={handleApplyFilters}
+            icon={config.footerIcon}
+            label={config.footerLabel}
+          />
+        }
+      >
+        {searchControl && (
+          <div className="mb-space-6">
+            {renderFilterControl(
+              searchControl,
+              filters[searchControl.key],
+              (value) => setFilter(searchControl.key, value),
+              { variant: 'modal' }
+            )}
+          </div>
+        )}
 
-          {/* Quick Filters */}
-          {config.quickFilters && config.quickFilters.length > 0 && (
-            <div className="mb-space-6">
-              <QuickFilters
-                presets={config.quickFilters}
-                activePresetId={activePresetId}
-                onPresetClick={onPresetClick}
-              />
-            </div>
-          )}
+        {config.quickFilters && config.quickFilters.length > 0 && (
+          <div className="mb-space-6">
+            <QuickFilters
+              presets={config.quickFilters}
+              activePresetId={activePresetId}
+              onPresetClick={onPresetClick}
+            />
+          </div>
+        )}
 
-          {/* All Filter Controls - Each with its own label */}
-          {allFilterControls.length > 0 && (
-            <div className="space-y-space-5">
-              {allFilterControls.map((control, index) => (
-                <div key={control.key} className="w-full">
-                  {/* Filter Label */}
-                  <h4 className={FILTER_TYPE.sectionTitle}>{control.label}</h4>
-                  {/* Filter Options */}
-                  {renderModalControl(control)}
-                  {/* Separator line (except for last item) */}
-                  {index < allFilterControls.length - 1 && (
-                    <div className="border-b border-border-default mt-space-4" />
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Footer with Filter Button */}
-        <FilterModalFooter
-          onReset={onClearAll}
-          onApply={handleApplyFilters}
-          icon={config.footerIcon}
-          label={config.footerLabel}
-        />
-      </div>
+        {allFilterControls.length > 0 && (
+          <div className="space-y-space-5">
+            {allFilterControls.map((control, index) => (
+              <div key={control.key} className="w-full">
+                <h4 className={FILTER_TYPE.sectionTitle}>{control.label}</h4>
+                {renderModalControl(control)}
+                {index < allFilterControls.length - 1 && (
+                  <div className="border-b border-border-default mt-space-4" />
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </ModalPageShell>
     </Modal>
   );
 };

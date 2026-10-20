@@ -33,6 +33,11 @@ const OrderUpsertModal = lazy(() =>
     default: module.OrderUpsertModal,
   }))
 );
+const ReportPreviewModal = lazy(() =>
+  import('@/features/reports/components/ReportPreviewModal').then(module => ({
+    default: module.ReportPreviewModal,
+  }))
+);
 
 /**
  * Base props that all modals receive
@@ -141,6 +146,13 @@ registerModal(ModalType.NEW_ORDER, OrderUpsertModal, (props, baseProps) => ({
   patientId: props.patientId,
   order: props.order,
   mode: props.mode ?? (props.order ? 'edit' : 'create'),
+}));
+
+registerModal(ModalType.REPORT_PREVIEW, ReportPreviewModal, (props, baseProps) => ({
+  ...baseProps,
+  onClose: props.onClose ?? baseProps.onClose,
+  reportData: props.reportData,
+  onGenerate: props.onGenerate,
 }));
 
 /** Side-effect import hook so registration runs on module load. */
