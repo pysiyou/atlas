@@ -7,7 +7,7 @@ import type { Gender, Patient, PatientContext } from '@/types';
 import { serializeQueryList } from '@/utils/filtering';
 import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useEntityLookup, parseNumericKey } from '@/hooks/useEntityLookup';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { invalidatePatientQueries } from '@/lib/query/invalidate';
@@ -145,12 +145,10 @@ export function usePaginatedPatients(
   const enabled = useAuthQueryEnabled();
   const [page, setPage] = useState(initialPage);
   const filterSnapshot = JSON.stringify(filters ?? null);
-  const [prevFilterSnapshot, setPrevFilterSnapshot] = useState(filterSnapshot);
 
-  if (prevFilterSnapshot !== filterSnapshot) {
-    setPrevFilterSnapshot(filterSnapshot);
+  useEffect(() => {
     setPage(initialPage);
-  }
+  }, [filterSnapshot, initialPage]);
 
   const query = useQuery({
     queryKey: queryKeys.patients.paginated({

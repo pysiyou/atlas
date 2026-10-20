@@ -2,9 +2,11 @@
  * Report listing API — reportable orders from server projection.
  */
 import { apiClient } from '@/lib/api/client';
-import { WORKFLOW_QUERY_LIMIT } from '@/lib/api/constants';
+import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
 import type { Order } from '@/types';
-import { useQuery } from '@tanstack/react-query';
+import type { PaginatedResponse } from '@/types/pagination';
+import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback, useEffect, useState } from 'react';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import type { ReportableOrder } from '../types';
 import { calculateAge } from '@/utils';
@@ -19,6 +21,12 @@ export interface ReportableOrderItem {
   activeTestCount: number;
   validatedTestCount: number;
   order: Order;
+}
+
+export interface ReportableOrdersFilters {
+  search?: string;
+  dateFrom?: string;
+  dateTo?: string;
 }
 
 /**
@@ -39,11 +47,37 @@ function toReportableOrder(item: ReportableOrderItem): ReportableOrder {
   };
 }
 
+/**
+ * Peek paginated list cache for a row the user just clicked (placeholder only).
+ */
+function findReportableOrderInPaginatedCache(
+  queryClient: ReturnType<typeof useQueryClient>,
+  orderId: number | null
+): ReportableOrderItem | undefined {
+  if (orderId == null) return undefined;
+  const queries = queryClient.getQueriesData<PaginatedResponse<ReportableOrderItem>>({
+    queryKey: [...queryKeys.reports.all, 'paginated'],
+  });
+  for (const [, page] of queries) {
+    const found = page?.data?.find(item => item.orderId === orderId);
+    if (found) return found;
+  }
+  return undefined;
+}
+
 export const reportsAPI = {
-  getReportableOrders(limit = WORKFLOW_QUERY_LIMIT): Promise<ReportableOrderItem[]> {
-    return apiClient.get<ReportableOrderItem[]>('/reports/orders', {
-      limit: String(limit),
-    });
+  getPaginated(
+    filters?: ReportableOrdersFilters & { page?: number; pageSize?: number }
+  ): Promise<PaginatedResponse<ReportableOrderItem>> {
+    const pageSize = filters?.pageSize || DEFAULT_LIST_PAGE_SIZE;
+    const params: Record<string, string> = {
+      skip: String(((filters?.page ?? 1) - 1) * pageSize),
+      limit: String(pageSize),
+    };
+    if (filters?.search) params.search = filters.search;
+    if (filters?.dateFrom) params.dateFrom = filters.dateFrom;
+    if (filters?.dateTo) params.dateTo = filters.dateTo;
+    return apiClient.get<PaginatedResponse<ReportableOrderItem>>('/reports/orders', params);
   },
   getReportableOrder(orderId: number): Promise<ReportableOrderItem> {
     return apiClient.get<ReportableOrderItem>(`/reports/orders/${orderId}`);
@@ -53,65 +87,95 @@ export const reportsAPI = {
   },
 };
 
-const EMPTY_REPORTABLE_ORDERS: ReportableOrder[] = [];
+const EMPTY_PAGINATION = {
+  page: 1,
+  pageSize: DEFAULT_LIST_PAGE_SIZE,
+  total: 0,
+  totalPages: 0,
+  hasNext: false,
+  hasPrev: false,
+};
 
-export function useReportableOrders() {
+/**
+ * Server-paginated reportable orders. Resets to page 1 when filters change.
+ */
+export function usePaginatedReportableOrders(
+  filters?: ReportableOrdersFilters,
+  initialPage = 1,
+  pageSize = DEFAULT_LIST_PAGE_SIZE
+) {
   const enabled = useAuthQueryEnabled();
+  const [page, setPage] = useState(initialPage);
+  const filterSnapshot = JSON.stringify(filters ?? null);
+
+  useEffect(() => {
+    setPage(initialPage);
+  }, [filterSnapshot, initialPage]);
+
   const query = useQuery({
-    queryKey: queryKeys.reports.reportableOrders(),
-    queryFn: () => reportsAPI.getReportableOrders(),
+    queryKey: queryKeys.reports.paginated({
+      ...filters,
+      page,
+      pageSize,
+    }),
+    queryFn: () =>
+      reportsAPI.getPaginated({
+        ...filters,
+        page,
+        pageSize,
+      }),
     enabled,
+    placeholderData: keepPreviousData,
     ...cacheConfig.dynamic,
-    select: (items: ReportableOrderItem[]) => items.map(toReportableOrder),
   });
 
+  const goToPage = useCallback((newPage: number) => {
+    setPage(newPage);
+  }, []);
+
+  const resetPage = useCallback(() => {
+    setPage(1);
+  }, []);
+
   return {
-    reportableOrders: query.data ?? EMPTY_REPORTABLE_ORDERS,
+    reportableOrders: (query.data?.data ?? []).map(toReportableOrder),
+    pagination: query.data?.pagination ?? { ...EMPTY_PAGINATION, pageSize, page },
     isLoading: query.isLoading,
     isPending: query.isPending,
+    isFetching: query.isFetching,
+    isPlaceholderData: query.isPlaceholderData,
     isError: query.isError,
     error: query.error,
     refetch: query.refetch,
+    page,
+    goToPage,
+    resetPage,
   };
 }
 
 /**
- * Load a single reportable order for the detail/preview route.
- * Falls back to the list cache so a missing/404 detail endpoint still opens preview
- * for a row the user just clicked.
+ * Load one reportable order by id. Uses the current paginated page as placeholder
+ * so preview can open immediately after a row click.
  */
 export function useReportableOrder(orderId: number | null) {
+  const queryClient = useQueryClient();
   const enabled = useAuthQueryEnabled(orderId != null && Number.isFinite(orderId));
-  const listQuery = useQuery({
-    queryKey: queryKeys.reports.reportableOrders(),
-    queryFn: () => reportsAPI.getReportableOrders(),
-    enabled,
-    ...cacheConfig.dynamic,
-    select: (items: ReportableOrderItem[]) => items.map(toReportableOrder),
-  });
-  const detailQuery = useQuery({
+
+  const query = useQuery({
     queryKey: queryKeys.reports.byOrder(orderId ?? 0),
     queryFn: () => reportsAPI.getReportableOrder(orderId!),
     enabled,
     ...cacheConfig.dynamic,
+    placeholderData: () => findReportableOrderInPaginatedCache(queryClient, orderId),
     select: (item: ReportableOrderItem) => toReportableOrder(item),
   });
 
-  const fromList =
-    orderId == null
-      ? null
-      : (listQuery.data?.find(order => order.orderId === orderId) ?? null);
-  const reportableOrder = detailQuery.data ?? fromList;
-
   return {
-    reportableOrder,
-    isPending: !reportableOrder && (detailQuery.isPending || listQuery.isPending),
-    isLoading: !reportableOrder && (detailQuery.isLoading || listQuery.isLoading),
-    isError: !reportableOrder && detailQuery.isFetched && listQuery.isFetched && (detailQuery.isError || !fromList),
-    error: detailQuery.error ?? listQuery.error,
-    refetch: () => {
-      void detailQuery.refetch();
-      void listQuery.refetch();
-    },
+    reportableOrder: query.data,
+    isPending: query.isPending,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+    refetch: query.refetch,
   };
 }

@@ -4,7 +4,7 @@
 
 import { type ReactNode } from 'react';
 import { DataTable, type TableViewConfig } from '@/components/data-table';
-import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components/data-table';
+import { DEFAULT_PAGE_SIZE_OPTIONS } from '@/components/data-table';
 import { EmptyState, PANEL_EMPTY_STATE } from '@/components/display';
 import { PageHeader } from '@/components/layout';
 import { ErrorAlert } from '@/components/loaders/ErrorAlert';
@@ -76,7 +76,7 @@ export function ListView<T extends TableDataItem = TableDataItem>({
   onDismissError,
   pagination,
   pageSize = 20,
-  pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL,
+  pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
   defaultSort,
   sort,
   onSortChange,

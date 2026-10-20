@@ -24,7 +24,8 @@ from app.domains.patients.models import Patient
 from app.domains.patients.schemas import PatientResponse
 from app.domains.payments.schemas import PaymentCreate, PaymentResponse
 from app.domains.payments.service import PaymentService, enrich_payment
-from app.platform.utils.common import get_or_404, parse_display_id_from_search
+from app.domains.orders.search import order_search_filter
+from app.platform.utils.common import get_or_404
 from app.shared.contracts.enums import (
     OrderStatus,
     PaymentMethod,
@@ -34,28 +35,11 @@ from app.shared.contracts.enums import (
 )
 from app.shared.schemas.pagination import create_paginated_response, skip_to_page
 from fastapi import HTTPException, status
-from sqlalchemy import String, cast, func, or_
+from sqlalchemy import func
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session, joinedload, selectinload
 
 logger = logging.getLogger(__name__)
-
-
-def _order_search_filter(search_term: str):
-    """Match order id, patient id, display ids, or patient name."""
-    term = search_term.strip()
-    compact = term.replace(" ", "").replace("-", "")
-    predicates = [Patient.fullName.ilike(f"%{term}%")]
-    order_id = parse_display_id_from_search(term, "ORD")
-    patient_id = parse_display_id_from_search(term, "PAT")
-    if order_id is not None:
-        predicates.append(Order.orderId == order_id)
-    if patient_id is not None:
-        predicates.append(Order.patientId == patient_id)
-    if compact.isdigit():
-        predicates.append(cast(Order.orderId, String).ilike(f"%{compact}%"))
-        predicates.append(cast(Order.patientId, String).ilike(f"%{compact}%"))
-    return or_(*predicates)
 
 
 _STARTED_STATUSES = {
@@ -270,7 +254,7 @@ class OrderService:
                 )
             )
         if search:
-            query = query.filter(_order_search_filter(search))
+            query = query.filter(order_search_filter(search))
         if date_from:
             start = datetime.combine(date_from, time.min, tzinfo=UTC)
             query = query.filter(Order.orderDate >= start)

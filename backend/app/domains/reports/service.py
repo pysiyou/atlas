@@ -1,7 +1,11 @@
 """Per-order lab report listing."""
+from datetime import UTC, date, datetime, time
+
 from app.domains.audit.service import AuditEmitter
 from app.domains.orders.models import Order, OrderTest
 from app.domains.orders.schemas import OrderResponse
+from app.domains.orders.search import reportable_order_search_filter
+from app.domains.patients.models import Patient
 from app.domains.reports.eligibility import (
     INACTIVE_TEST_STATUSES,
     active_order_tests,
@@ -9,6 +13,7 @@ from app.domains.reports.eligibility import (
 )
 from app.domains.reports.schemas import ReportableOrderItem
 from app.shared.contracts.enums import OrderStatus, TestStatus
+from app.shared.schemas.pagination import create_paginated_response, skip_to_page
 from fastapi import HTTPException
 from sqlalchemy.orm import Session, joinedload, selectinload
 
@@ -41,17 +46,53 @@ class ReportService:
             order=order_payload,
         )
 
-    def list_reportable_orders(self, limit: int = 500) -> list[ReportableOrderItem]:
+    def _reportable_query(self):
+        """Non-cancelled orders with at least one active test line."""
+        return (
+            self.db.query(Order)
+            .filter(Order.overallStatus != OrderStatus.CANCELLED)
+            .filter(Order.tests.any(OrderTest.status.notin_(tuple(INACTIVE_TEST_STATUSES))))
+        )
+
+    def list_reportable_orders(
+        self,
+        skip: int = 0,
+        limit: int = 20,
+        search: str | None = None,
+        date_from: date | None = None,
+        date_to: date | None = None,
+    ) -> dict:
+        """Return one page of reportable orders with pagination metadata."""
+        query = self._reportable_query()
+        if search:
+            query = query.outerjoin(Patient, Order.patientId == Patient.id)
+            query = query.filter(reportable_order_search_filter(search))
+        if date_from:
+            start = datetime.combine(date_from, time.min, tzinfo=UTC)
+            query = query.filter(Order.orderDate >= start)
+        if date_to:
+            end = datetime.combine(date_to, time.max, tzinfo=UTC)
+            query = query.filter(Order.orderDate <= end)
+
+        id_query = query.with_entities(Order.orderId, Order.orderDate).distinct()
+        total = id_query.order_by(None).count()
+        page_ids = [
+            row[0]
+            for row in id_query.order_by(Order.orderDate.desc()).offset(skip).limit(limit).all()
+        ]
+        if not page_ids:
+            return create_paginated_response([], total, skip_to_page(skip, limit), limit)
+
         orders = (
             self.db.query(Order)
             .options(*_order_load_options())
-            .filter(Order.overallStatus != OrderStatus.CANCELLED)
-            .filter(Order.tests.any(OrderTest.status.notin_(tuple(INACTIVE_TEST_STATUSES))))
+            .filter(Order.orderId.in_(page_ids))
             .order_by(Order.orderDate.desc())
-            .limit(limit)
             .all()
         )
-        return [self._to_item(order) for order in orders]
+        by_id = {order.orderId: order for order in orders}
+        items = [self._to_item(by_id[order_id]) for order_id in page_ids if order_id in by_id]
+        return create_paginated_response(items, total, skip_to_page(skip, limit), limit)
 
     def _load_reportable_order(self, order_id: int) -> Order:
         order = (
