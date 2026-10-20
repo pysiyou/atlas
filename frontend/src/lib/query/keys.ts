@@ -37,6 +37,7 @@ export const queryKeys = {
       [...queryKeys.tests.lists(), filters] as const,
     details: () => [...queryKeys.tests.all, 'detail'] as const,
     byCode: (code: string) => [...queryKeys.tests.details(), code] as const,
+    byCodes: (codes: string[]) => [...queryKeys.tests.all, 'byCodes', codes] as const,
     search: (query: string) => [...queryKeys.tests.all, 'search', query] as const,
   },
 

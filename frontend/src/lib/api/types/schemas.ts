@@ -9,6 +9,7 @@ export type ApiPaymentResponse = Schemas['PaymentResponse'];
 export type ApiOrderResponse = Schemas['OrderResponse'];
 export type ApiSampleResponse = Schemas['SampleResponse'];
 export type ApiTestResponse = Schemas['TestResponse'];
+export type ApiTestSummaryResponse = Schemas['TestSummaryResponse'];
 export type ApiUserLookupResponse = Schemas['UserLookupResponse'];
 export type ApiLoginTokenResponse = Schemas['Token'];
 export type ApiRefreshTokenResponse = Schemas['RefreshResponse'];

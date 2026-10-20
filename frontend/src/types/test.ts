@@ -122,42 +122,45 @@ export interface TestCatalogEntry {
 }
 
 /**
- * Test interface - application-level type
+ * Slim catalog row used for list, search, and name lookup.
+ * Full parameter documents are loaded separately via `useTest` / `useTestsByCodes`.
  */
-export interface Test {
-  code: string; // e.g., HEM001
+export interface TestSummary {
+  code: string;
   name: string;
-  synonyms?: string[]; // Alternative names for search
+  synonyms?: string[];
   category: TestCategory;
-  price: number; // Editable - catalog provides default
-  turnaroundTime: number; // in hours
+  price: number;
+  turnaroundTime: number;
   sampleType: SampleType;
-  sampleVolume: string; // e.g., "3ml", "5-10ml"
-  minimumVolume?: number; // Minimum mL needed
-  optimalVolume?: number; // Optimal mL for best results
-  specialRequirements?: string;
-  referenceRanges: ReferenceRange[]; // Legacy format for backward compatibility
-  parameters?: TestParameter[]; // For multi-parameter tests like CBC
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  containerTypes: ContainerType[];
+  containerTopColors: ContainerTopColor[];
+  panels?: string[];
+  loincCodes?: string[];
+  fastingRequired?: boolean;
+}
 
-  // Container requirements
-  containerTypes: ContainerType[]; // Required container types (cup/tube)
-  containerTopColors: ContainerTopColor[]; // Required container top colors
-  numberOfContainers?: number; // How many containers needed
-
-  // New fields from catalog
-  panels?: string[]; // Related test panels
-  loincCodes?: string[]; // LOINC codes
-  methodology?: string; // Method description
-  containerDescription?: string; // Detailed container description from sample.container
-  collectionNotes?: string; // Special collection instructions
+/**
+ * Full catalog document including parameters and collection metadata.
+ */
+export interface Test extends TestSummary {
+  sampleVolume: string;
+  minimumVolume?: number;
+  optimalVolume?: number;
+  specialRequirements?: string;
+  referenceRanges: ReferenceRange[];
+  parameters?: TestParameter[];
+  numberOfContainers?: number;
+  methodology?: string;
+  containerDescription?: string;
+  collectionNotes?: string;
   rejectionCriteria?: Array<string | { reason: string; domain?: string; label?: string }>;
   validationRejectionCriteria?: Array<string | { reason: string; domain?: string; label?: string }>;
-  fastingRequired?: boolean; // Whether fasting is required
-  confidence?: 'HIGH' | 'MEDIUM' | 'LOW'; // Data confidence level
-  notes?: string; // Additional test notes
+  confidence?: 'HIGH' | 'MEDIUM' | 'LOW';
+  notes?: string;
 }
 
 /**

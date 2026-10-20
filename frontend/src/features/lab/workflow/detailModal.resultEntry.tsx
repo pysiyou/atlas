@@ -9,7 +9,7 @@ import { QueueModalShell, labModalHeaderContext } from './detailModalLayout';
 import { LabEventLogPanel } from '@/features/audit';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';
-import { useTestCatalog } from '@/features/catalog';
+import { useTest } from '@/features/catalog';
 import { LabRelatedTestsPanel } from '../components/LabRelatedWorkflowPanel';
 import { EntryDetailMainPanel, EntryDetailModalFooter } from './detailModal.resultEntry.helpers';
 import { ResultEntryDetailGrid } from './detailModal.resultEntry.grid';
@@ -38,7 +38,9 @@ export const ResultEntryDetailModal: React.FC<ResultDetailModalProps> = ({
   readOnly = false,
 }) => {
   const { test, isLoading } = useOrderTestContext(orderTestId, isOpen);
-  const { tests: catalogTests = [], isLoading: catalogLoading } = useTestCatalog();
+  const { test: resolvedTestDef, isLoading: catalogLoading } = useTest(
+    isOpen ? test?.testCode : undefined
+  );
   const enterMutation = useEnterResults();
   const draft = useLabDraftStore(s => s.entry[orderTestId]);
   const seedEntryDraft = useLabDraftStore(s => s.seedEntryDraft);
@@ -54,9 +56,6 @@ export const ResultEntryDetailModal: React.FC<ResultDetailModalProps> = ({
     });
   }, [isOpen, test, readOnly, orderTestId, seedEntryDraft]);
 
-  const resolvedTestDef = test
-    ? catalogTests.find(catalogTest => catalogTest.code === test.testCode)
-    : undefined;
   const resultKey = orderTestKey(orderTestId);
 
   const displayResults = useMemo(() => {

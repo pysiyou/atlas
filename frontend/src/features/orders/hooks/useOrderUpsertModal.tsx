@@ -112,17 +112,17 @@ export function useOrderUpsertModal({
     [patients, selectedPatientId]
   );
 
-  const { tests } = useTestCatalog();
+  const { tests, byCode } = useTestCatalog();
   const { results: filteredTests } = useTestSearch(testSearch);
 
   const totalPrice = useMemo(() => {
     const selectedTestCodes = testCodes ?? [];
     if (!selectedTestCodes.length) return 0;
     return selectedTestCodes.reduce((sum, code) => {
-      const test = tests.find(t => t.code === code);
+      const test = byCode.get(code);
       return sum + (test?.price || 0);
     }, 0);
-  }, [testCodes, tests]);
+  }, [testCodes, byCode]);
 
   useEffect(() => {
     if (mode === 'create' && initialPatientId && !selectedPatientId && patients.length > 0) {

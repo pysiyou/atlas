@@ -6,7 +6,7 @@
 import { useMemo, type FC } from 'react';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { getTestNames } from '@/features/catalog/testLookup';
-import type { ContainerType, Test } from '@/types';
+import type { ContainerType, TestSummary } from '@/types';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { useLabWorkflowCardClickGuard } from '../hooks';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
@@ -36,7 +36,7 @@ export interface SampleCollectionCardProps {
   isCollecting?: boolean;
   isMobile?: boolean;
   /** Catalog tests hoisted from the queue to avoid per-card fetches. */
-  tests: Test[];
+  tests: TestSummary[];
 }
 
 export function useSampleCollectionCardData(

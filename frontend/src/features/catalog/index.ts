@@ -6,6 +6,7 @@ export {
   testAPI,
   useTestCatalog,
   useTest,
+  useTestsByCodes,
   useTestSearch,
   useTestsByCategory,
   useActiveTests,

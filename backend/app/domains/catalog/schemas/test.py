@@ -85,6 +85,20 @@ class TestUpdate(BaseModel):
     isActive: bool | None = None
 
 
+class TestSummaryResponse(TestBase):
+    """List/search index shape — no resultItems, ranges, or collection notes."""
+
+    synonyms: list[str] | None = None
+    panels: list[str] | None = None
+    loincCodes: list[str] | None = None
+    fastingRequired: bool | None = None
+    createdAt: datetime
+    updatedAt: datetime
+
+    class Config:
+        from_attributes = True
+
+
 class TestResponse(TestBase):
     synonyms: list[str] | None = None
     sampleVolume: str | None = None

@@ -5,7 +5,6 @@
  */
 
 import { useCallback } from 'react';
-import { useTestNameLookup } from '@/features/catalog';
 import { useEnterResults } from '../api/results';
 import { notify } from '@/utils/feedback';
 import { logger } from '@/utils/logger';
@@ -16,7 +15,8 @@ import type { TestWithContext, Test } from '@/types';
 
 export interface UseEntryWorkflowOptions {
   allTests: TestWithContext[];
-  testCatalog: Test[] | undefined;
+  /** Full catalog documents keyed by code — summaries do not include parameters. */
+  fullByCode: Map<string, Test>;
 }
 
 export interface EntryWorkflow {
@@ -29,7 +29,7 @@ export interface EntryWorkflow {
     orderTestId: number,
     orderId: number | string,
     allTests: TestWithContext[],
-    testCatalog: Test[] | undefined,
+    fullByCode: Map<string, Test>,
     finalResults?: Record<string, string>,
     finalNotes?: string
   ) => Promise<void>;
@@ -38,9 +38,8 @@ export interface EntryWorkflow {
 
 export function useResultEntryWorkflow({
   allTests,
-  testCatalog,
+  fullByCode,
 }: UseEntryWorkflowOptions): EntryWorkflow {
-  const { getTest } = useTestNameLookup();
   const entryDrafts = useLabDraftStore(s => s.entry);
   const setEntryResultParam = useLabDraftStore(s => s.setEntryResultParam);
   const setEntryNotes = useLabDraftStore(s => s.setEntryNotes);
@@ -75,12 +74,10 @@ export function useResultEntryWorkflow({
       orderTestId: number,
       orderId: number | string,
       saveAllTests: TestWithContext[] = allTests,
-      saveTestCatalog: Test[] | undefined = testCatalog,
+      saveFullByCode: Map<string, Test> = fullByCode,
       finalResults?: Record<string, string>,
       finalNotes?: string
     ) => {
-      if (!saveTestCatalog) return;
-
       const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
 
       if (enterMutation.isPending) return;
@@ -101,7 +98,7 @@ export function useResultEntryWorkflow({
         return;
       }
 
-      const testDef = getTest(testItem.testCode);
+      const testDef = saveFullByCode.get(testItem.testCode);
       if (!testDef?.parameters) {
         notify.toast('lab.entry.parametersMissing');
         return;
@@ -125,7 +122,7 @@ export function useResultEntryWorkflow({
         throw error;
       }
     },
-    [allTests, testCatalog, entryDrafts, getTest, enterMutation, clearEntryDraft]
+    [allTests, fullByCode, entryDrafts, enterMutation, clearEntryDraft]
   );
 
   const openTestModal = useResultEntryDetailModal();

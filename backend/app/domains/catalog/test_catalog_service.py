@@ -3,7 +3,7 @@ import logging
 
 from app.domains.audit.service import AuditEmitter
 from app.domains.catalog.models.catalog_test import CatalogTest
-from app.domains.catalog.schemas.test import TestCreate, TestResponse, TestUpdate
+from app.domains.catalog.schemas.test import TestCreate, TestResponse, TestSummaryResponse, TestUpdate
 from app.platform.cache import (
     CacheKeys,
     cache_delete,
@@ -18,9 +18,21 @@ from sqlalchemy.orm import Session
 
 logger = logging.getLogger(__name__)
 
+BY_CODES_MAX = 100
+
 
 def serialize_test(test: CatalogTest) -> dict:
     return TestResponse.model_validate(test).model_dump(mode="json")
+
+
+def serialize_test_summary(test: CatalogTest) -> dict:
+    return TestSummaryResponse.model_validate(test).model_dump(mode="json")
+
+
+def order_found_tests(found: list[CatalogTest], codes: list[str]) -> list[CatalogTest]:
+    """Return found tests in request order, skipping codes that are not in the catalog."""
+    by_code = {test.code: test for test in found}
+    return [by_code[code] for code in codes if code in by_code]
 
 
 class TestCatalogService:
@@ -39,6 +51,7 @@ class TestCatalogService:
         response.headers["Cache-Control"] = "private, no-store"
         cache_key = generate_cache_key(
             CacheKeys.TESTS_CATALOG,
+            shape="summary",
             category=category,
             activeOnly=active_only,
             skip=skip,
@@ -54,9 +67,16 @@ class TestCatalogService:
         if category:
             query = query.filter(CatalogTest.category == category)
         tests = query.order_by(CatalogTest.updatedAt.desc()).offset(skip).limit(limit).all()
-        result = [serialize_test(t) for t in tests]
+        result = [serialize_test_summary(t) for t in tests]
         cache_set(cache_key, result, settings.CACHE_TTL_STATIC)
         return result
+
+    def list_tests_by_codes(self, codes: list[str]) -> list[dict]:
+        """Full TestResponse rows for the given codes. Does not filter activeOnly."""
+        if not codes:
+            return []
+        found = self.db.query(CatalogTest).filter(CatalogTest.code.in_(codes)).all()
+        return [serialize_test(test) for test in order_found_tests(found, codes)]
 
     def get_by_code(self, test_code: str) -> CatalogTest:
         test = self.db.query(CatalogTest).filter(CatalogTest.code == test_code).first()

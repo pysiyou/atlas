@@ -3,7 +3,7 @@
  */
 
 import React, { useCallback, useMemo } from 'react';
-import { useTestCatalog, useTestNameLookup } from '@/features/catalog';
+import { uniqueSortedTestCodes, useTestsByCodes } from '@/features/catalog';
 import { useLabQueueFilters } from '../hooks';
 import type { TestWithContextResult } from '../types';
 import { useEntryWorklist } from '../api/worklists';
@@ -23,17 +23,20 @@ import { ResultEntryQueueItem } from './ResultEntryQueueCards';
 const EMPTY_RESULT_VALUES: Record<string, string> = {};
 
 export const ResultEntryQueue: React.FC = () => {
-  const { getTest } = useTestNameLookup();
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
 
   const { items: worklistItems, pagination, isLoading: worklistLoading } = useEntryWorklist();
-  const { tests: testCatalog } = useTestCatalog();
 
   const allTests = useMemo(
     () => worklistItems.map(mapEntryWorklistToOrderTestContext) as TestWithContextResult[],
     [worklistItems]
   );
+  const uniqueCodes = useMemo(
+    () => uniqueSortedTestCodes(allTests.map(test => test.testCode)),
+    [allTests]
+  );
+  const { byCode: fullByCode, isLoading: catalogLoading } = useTestsByCodes(uniqueCodes);
 
   const {
     entryDrafts,
@@ -42,7 +45,7 @@ export const ResultEntryQueue: React.FC = () => {
     areAllParametersFilled,
     handleSaveResults,
     openTestModal,
-  } = useResultEntryWorkflow({ allTests, testCatalog });
+  } = useResultEntryWorkflow({ allTests, fullByCode });
 
   const {
     filteredItems: filteredTests,
@@ -65,9 +68,9 @@ export const ResultEntryQueue: React.FC = () => {
   const handleSaveTest = useCallback(
     (test: TestWithContextResult) => {
       if (test.id == null) return;
-      void handleSaveResults(test.id, test.orderId, allTests, testCatalog);
+      void handleSaveResults(test.id, test.orderId, allTests, fullByCode);
     },
-    [handleSaveResults, allTests, testCatalog]
+    [handleSaveResults, allTests, fullByCode]
   );
 
   const handleOpenTest = useCallback(
@@ -78,7 +81,9 @@ export const ResultEntryQueue: React.FC = () => {
   );
 
   const hasNoItems = allTests.length === 0;
-  if ((worklistLoading && hasNoItems) || !testCatalog) {
+  const waitingOnCatalog =
+    uniqueCodes.length > 0 && catalogLoading && fullByCode.size === 0;
+  if ((worklistLoading && hasNoItems) || waitingOnCatalog) {
     return (
       <ErrorBoundary>
         <DetailPageSkeleton variant="workflow-grid" />
@@ -93,7 +98,7 @@ export const ResultEntryQueue: React.FC = () => {
         renderCard={(test, idx) => {
           const testItem = test as TestWithContextResult;
           if (testItem.id == null) return null;
-          const testDef = getTest(testItem.testCode);
+          const testDef = fullByCode.get(testItem.testCode);
           const isComplete = testDef?.parameters
             ? areAllParametersFilled(testItem.id, testDef.parameters.length)
             : false;
