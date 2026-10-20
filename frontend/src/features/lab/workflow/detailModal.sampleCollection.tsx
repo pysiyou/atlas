@@ -7,7 +7,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query';
 import { sampleAPI, useCollectSample } from '../api/samples';
 import type { ContainerType, Order, Patient, Sample } from '@/types';
-import { useTestCatalog } from '@/features/catalog';
+import { uniqueSortedTestCodes, useTestCatalog, useTestsByCodes } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users';
 import { useOrder } from '@/features/orders';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
@@ -110,18 +110,24 @@ export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({
     return cachedDisplay ?? fallbackPendingDisplay(sample, order);
   }, [sample, cachedDisplay, order]);
 
+  const sampleTestCodes = useMemo(
+    () => uniqueSortedTestCodes(sample?.testCodes ?? []),
+    [sample?.testCodes]
+  );
+  const { byCode: fullByCode } = useTestsByCodes(isOpen ? sampleTestCodes : []);
+
   const testDetails = useMemo(() => {
     if (!sample?.testCodes) return [];
     const seen = new Set<string>();
     return sample.testCodes
-      .map(code => tests.find(t => t.code === code))
+      .map(code => fullByCode.get(code))
       .filter((test): test is NonNullable<typeof test> => test !== undefined)
       .filter(test => {
         if (seen.has(test.code)) return false;
         seen.add(test.code);
         return true;
       });
-  }, [sample, tests]);
+  }, [sample, fullByCode]);
 
   const openSampleDetail = useCallback(
     (id: string | number) => {

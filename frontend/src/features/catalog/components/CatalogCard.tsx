@@ -3,7 +3,7 @@ import { EntityId } from '@/components/display';
 import { CatalogCategoryBadge, CatalogSampleTypeBadge } from './CatalogStatusBadge';
 import type { CardComponentProps } from '@/components/data-table';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
-import type { Test } from '@/types';
+import type { TestSummary } from '@/types';
 import { CARD_PRICE, TYPE } from '@/components/theme/recipes';
 
 
@@ -17,7 +17,7 @@ import { CARD_PRICE, TYPE } from '@/components/theme/recipes';
  * @param index - Index of the test in the list
  * @param onClick - Optional click handler
  */
-export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
+export function CatalogCard({ item: test, onClick }: CardComponentProps<TestSummary>) {
   return (
     <MobileEntityCard onClick={onClick}>
       <MobileEntityCard.Header
@@ -32,7 +32,6 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
         }
       />
 
-      {/* Synonyms and volume */}
       <div className="grow">
         <div className="space-y-space-1">
           {test.synonyms && test.synonyms.length > 0 && (
@@ -40,9 +39,6 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Test>) {
               {test.synonyms.slice(0, 2).join(', ')}
               {test.synonyms.length > 2 && ` +${test.synonyms.length - 2} more`}
             </div>
-          )}
-          {test.sampleVolume && (
-            <div className={TYPE.label}>Volume: {test.sampleVolume}</div>
           )}
         </div>
       </div>

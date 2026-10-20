@@ -15,7 +15,7 @@ import { CatalogFilters } from '../components/CatalogFilters';
 import { createCatalogTableConfig } from '../config/CatalogTable.config';
 import { useCatalogFilters } from '../hooks/useCatalogFilters';
 import { errorAlertMessage } from '@/utils/feedback';
-import type { Test } from '@/types';
+import type { TestSummary } from '@/types';
 
 /**
  * CatalogList Component
@@ -73,7 +73,7 @@ export const CatalogList: React.FC = () => {
       error={error}
       onRetry={refetch}
       onDismissError={handleDismissError}
-      onRowClick={(test: Test) => navigate(`/catalog/${test.code}`)}
+      onRowClick={(test: TestSummary) => navigate(`/catalog/${test.code}`)}
       title="Test Catalog"
       filters={
         <CatalogFilters

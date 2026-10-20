@@ -8,7 +8,7 @@ import { CatalogCategoryBadge, CatalogSampleTypeBadge } from '../components/Cata
 import type { TableViewConfig } from '@/components/data-table';
 import { buildViews, COLUMN_SIZE } from '@/components/data-table';
 import { formatCurrency } from '@/utils';
-import type { Test } from '@/types';
+import type { TestSummary } from '@/types';
 import { CatalogCard } from '../components/CatalogCard';
 import { TABLE_TYPE } from '@/components/theme/recipes';
 
@@ -19,15 +19,15 @@ const CATALOG_VIEWS = {
   compact: ['code', 'name', 'price'],
 } as const;
 
-export const createCatalogTableConfig = (_navigate: NavigateFunction): TableViewConfig<Test> => {
+export const createCatalogTableConfig = (_navigate: NavigateFunction): TableViewConfig<TestSummary> => {
   const columnMap = {
     code: {
       key: 'code',
       header: 'Code',
       width: COLUMN_SIZE.sm,
       sortable: true,
-      accessor: (test: Test) => test.code,
-      render: (test: Test) => (
+      accessor: (test: TestSummary) => test.code,
+      render: (test: TestSummary) => (
         <EntityId variant="block">{test.code}</EntityId>
       ),
     },
@@ -37,8 +37,8 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
       width: COLUMN_SIZE.fill,
       sortable: true,
       truncate: true,
-      accessor: (test: Test) => test.name,
-      render: (test: Test) => (
+      accessor: (test: TestSummary) => test.name,
+      render: (test: TestSummary) => (
         <div className="min-w-0 font-normal">
           <div className="text-text-primary truncate font-normal">{test.name}</div>
           {test.synonyms && test.synonyms.length > 0 && (
@@ -54,8 +54,8 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
       key: 'loincCodes',
       header: 'LOINC',
       width: COLUMN_SIZE.sm,
-      accessor: (test: Test) => test.loincCodes?.join(', ') ?? '',
-      render: (test: Test) => {
+      accessor: (test: TestSummary) => test.loincCodes?.join(', ') ?? '',
+      render: (test: TestSummary) => {
         if (!test.loincCodes || test.loincCodes.length === 0) {
           return <div className={`${TABLE_TYPE.meta} text-text-disabled truncate font-normal`}>-</div>;
         }
@@ -71,24 +71,24 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
       header: 'Category',
       width: COLUMN_SIZE.lg,
       sortable: true,
-      accessor: (test: Test) => test.category,
-      render: (test: Test) => <CatalogCategoryBadge category={test.category} size="xs" className="border-none" />,
+      accessor: (test: TestSummary) => test.category,
+      render: (test: TestSummary) => <CatalogCategoryBadge category={test.category} size="xs" className="border-none" />,
     },
     sampleType: {
       key: 'sampleType',
       header: 'Sample Type',
       width: COLUMN_SIZE.sm,
       sortable: true,
-      accessor: (test: Test) => test.sampleType,
-      render: (test: Test) => <CatalogSampleTypeBadge sampleType={test.sampleType} size="xs" />,
+      accessor: (test: TestSummary) => test.sampleType,
+      render: (test: TestSummary) => <CatalogSampleTypeBadge sampleType={test.sampleType} size="xs" />,
     },
     price: {
       key: 'price',
       header: 'Price',
       width: COLUMN_SIZE.sm,
       sortable: true,
-      accessor: (test: Test) => test.price,
-      render: (test: Test) => (
+      accessor: (test: TestSummary) => test.price,
+      render: (test: TestSummary) => (
         <div className={`${TABLE_TYPE.amount} truncate font-normal`}>{formatCurrency(test.price)}</div>
       ),
     },

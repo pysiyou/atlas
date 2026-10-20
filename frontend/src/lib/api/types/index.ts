@@ -8,6 +8,7 @@ export type {
   ApiOrderResponse,
   ApiSampleResponse,
   ApiTestResponse,
+  ApiTestSummaryResponse,
   ApiUserLookupResponse,
   ApiLoginTokenResponse,
   ApiRefreshTokenResponse,

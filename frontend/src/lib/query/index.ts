@@ -5,7 +5,12 @@
  */
 
 export { getQueryClient, createQueryClient, resetQueryClient, cacheConfig } from './client';
-export { clearPersistedQueryCache, PERSIST_STORAGE_KEY } from './persistor';
+export {
+  clearPersistedQueryCache,
+  PERSIST_STORAGE_KEY,
+  PERSIST_BUSTER,
+  shouldPersistQuery,
+} from './persistor';
 export { queryKeys } from './keys';
 export type { QueryKeys } from './keys';
 export {

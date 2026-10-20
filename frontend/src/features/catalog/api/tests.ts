@@ -1,16 +1,29 @@
 /**
- * Tests API service — pure HTTP, no React.
+ * Tests API service — slim list for names/search, full documents by code.
  */
 import { apiClient } from '@/lib/api/client';
 import { expectArray } from '@/lib/api/errors';
-import type { ApiTestResponse } from '@/lib/api/types';
+import type { ApiTestResponse, ApiTestSummaryResponse } from '@/lib/api/types';
 import { REFERENCE_DATA_LIMIT } from '@/lib/api/constants';
-import type { Test, TestCategory, TestParameter, ResultItem } from '@/types';
+import type {
+  ContainerTopColor,
+  ContainerType,
+  ResultItem,
+  SampleType,
+  Test,
+  TestCategory,
+  TestParameter,
+  TestSummary,
+} from '@/types';
 import { useCallback, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { buildParameterLabelMapFromCatalog } from '../testLookup';
-import { useEntityLookup } from '@/hooks/useEntityLookup';
-import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
+import {
+  buildParameterLabelMap,
+  chunkTestCodes,
+  indexTestsByCode,
+  uniqueSortedTestCodes,
+} from '../testLookup';
+import { cacheConfig, getQueryClient, queryKeys, useAuthQueryEnabled } from '@/lib/query';
 import { useInvalidateQueryKey } from '@/lib/query/invalidate';
 
 interface GetTestsParams {
@@ -20,10 +33,15 @@ interface GetTestsParams {
   limit?: number;
 }
 
-/** Backend test DTO with resultItems before domain transform */
+/** Backend full test DTO with resultItems before domain transform. */
 type APITestResponse = ApiTestResponse & {
   resultItems?: ResultItem[];
 };
+
+const EMPTY_SUMMARIES: TestSummary[] = [];
+const EMPTY_SUMMARY_BY_CODE = new Map<string, TestSummary>();
+const EMPTY_FULL_TESTS: Test[] = [];
+const EMPTY_FULL_BY_CODE = new Map<string, Test>();
 
 function mapResultItemsToParameters(resultItems?: ResultItem[]): TestParameter[] | undefined {
   if (!resultItems || resultItems.length === 0) return undefined;
@@ -68,6 +86,26 @@ function mapResultItemsToParameters(resultItems?: ResultItem[]): TestParameter[]
   });
 }
 
+function transformAPITestSummary(apiTest: ApiTestSummaryResponse): TestSummary {
+  return {
+    code: apiTest.code,
+    name: apiTest.name,
+    synonyms: apiTest.synonyms ?? undefined,
+    category: apiTest.category as TestCategory,
+    price: apiTest.price,
+    turnaroundTime: apiTest.turnaroundTimeHours ?? 0,
+    sampleType: apiTest.sampleType as SampleType,
+    isActive: apiTest.isActive,
+    createdAt: apiTest.createdAt,
+    updatedAt: apiTest.updatedAt,
+    containerTypes: (apiTest.containerTypes ?? []) as ContainerType[],
+    containerTopColors: (apiTest.containerTopColors ?? []) as ContainerTopColor[],
+    panels: apiTest.panels ?? undefined,
+    loincCodes: apiTest.loincCodes ?? undefined,
+    fastingRequired: apiTest.fastingRequired ?? undefined,
+  };
+}
+
 function transformAPITest(apiTest: APITestResponse): Test {
   const { resultItems, turnaroundTimeHours, ...rest } = apiTest;
   return {
@@ -78,7 +116,7 @@ function transformAPITest(apiTest: APITestResponse): Test {
 }
 
 export const testAPI = {
-  async getAll(params?: GetTestsParams): Promise<Test[]> {
+  async getAll(params?: GetTestsParams): Promise<TestSummary[]> {
     const queryParams: Record<string, string> = {
       limit: String(REFERENCE_DATA_LIMIT),
     };
@@ -87,11 +125,11 @@ export const testAPI = {
     if (params?.skip) queryParams.skip = String(params.skip);
     if (params?.limit) queryParams.limit = String(params.limit);
 
-    const apiTests = expectArray<APITestResponse>(
-      await apiClient.get<APITestResponse[]>('/tests', queryParams),
+    const apiTests = expectArray<ApiTestSummaryResponse>(
+      await apiClient.get<ApiTestSummaryResponse[]>('/tests', queryParams),
       'catalog'
     );
-    return apiTests.map(transformAPITest);
+    return apiTests.map(transformAPITestSummary);
   },
 
   async getByCode(testCode: string): Promise<Test | null> {
@@ -101,6 +139,15 @@ export const testAPI = {
     } catch {
       return null;
     }
+  },
+
+  async getByCodes(codes: string[]): Promise<Test[]> {
+    if (codes.length === 0) return [];
+    const apiTests = expectArray<APITestResponse>(
+      await apiClient.get<APITestResponse[]>('/tests/by-codes', { codes: codes.join(',') }),
+      'catalog by-codes'
+    );
+    return apiTests.map(transformAPITest);
   },
 
   async search(query: string): Promise<Test[]> {
@@ -121,36 +168,34 @@ export const testAPI = {
 };
 
 /**
- * Tests API hooks — React Query layer.
+ * Prefetched slim catalog (names, search, pickers). Full parameters are not included.
  */
-
-/**
- * Hook to fetch and cache all tests from the catalog.
- * Uses Infinity cache - data is fetched once per session.
- * Only fetches when user is authenticated to prevent race conditions on login.
- *
- * @returns Query result containing tests array, loading state, and error
- *
- * @example
- * ```tsx
- * const { tests, isLoading, error } = useTestCatalog();
- * ```
- */
-const getTestCode = (test: Test) => test.code;
-const EMPTY_TESTS: Test[] = [];
-
 export function useTestCatalog() {
   const enabled = useAuthQueryEnabled();
 
   const query = useQuery({
-    queryKey: queryKeys.tests.all,
-    queryFn: () => testAPI.getAll(),
+    queryKey: queryKeys.tests.list({ activeOnly: true }),
+    queryFn: () => testAPI.getAll({ activeOnly: true }),
     enabled,
-    ...cacheConfig.static, // Infinity cache - never refetch automatically
+    ...cacheConfig.static,
   });
 
+  const tests = query.data ?? EMPTY_SUMMARIES;
+  const byCode = useMemo(
+    () => (tests.length > 0 ? indexTestsByCode(tests) : EMPTY_SUMMARY_BY_CODE),
+    [tests]
+  );
+  const getTest = useCallback((testCode: string): TestSummary | undefined => byCode.get(testCode), [byCode]);
+  const getTestName = useCallback(
+    (testCode: string): string => byCode.get(testCode)?.name ?? testCode,
+    [byCode]
+  );
+
   return {
-    tests: query.data ?? EMPTY_TESTS,
+    tests,
+    byCode,
+    getTest,
+    getTestName,
     isLoading: query.isLoading,
     isPending: query.isPending,
     isError: query.isError,
@@ -159,27 +204,17 @@ export function useTestCatalog() {
   };
 }
 
-/** Catalog parameter code → display name for a test (cached with useTestCatalog). */
+/**
+ * Parameter code → display name for one full catalog document.
+ */
 export function useParameterLabelMap(testCode?: string): Record<string, string> {
-  const { tests } = useTestCatalog();
-  return useMemo(
-    () => (testCode ? buildParameterLabelMapFromCatalog(testCode, tests) : {}),
-    [testCode, tests]
-  );
+  const { test } = useTest(testCode);
+  return useMemo(() => buildParameterLabelMap(test ?? undefined), [test]);
 }
 
 /**
- * Hook to fetch a single test by code.
- * Uses the cached test catalog to avoid additional API calls.
- * Only fetches when user is authenticated to prevent race conditions on login.
- *
- * @param testCode - The unique test code (e.g., 'CBC', 'HEM001')
- * @returns The test object or undefined if not found
- *
- * @example
- * ```tsx
- * const { test, isLoading } = useTest('HEM001');
- * ```
+ * Fetch one full catalog document by code (`GET /tests/{code}`).
+ * Does not treat a slim list row as a full Test.
  */
 export function useTest(testCode: string | undefined) {
   const enabled = useAuthQueryEnabled(Boolean(testCode));
@@ -192,7 +227,7 @@ export function useTest(testCode: string | undefined) {
   });
 
   return {
-    test: query.data,
+    test: query.data ?? undefined,
     isLoading: query.isLoading,
     isError: query.isError,
     error: query.error,
@@ -200,21 +235,52 @@ export function useTest(testCode: string | undefined) {
 }
 
 /**
- * Hook to search tests by query string.
- * Searches name, code, synonyms, LOINC codes, and panels.
- *
- * @param query - Search query string
- * @returns Filtered array of tests matching the query
- *
- * @example
- * ```tsx
- * const { results, isSearching } = useTestSearch('blood count');
- * ```
+ * Batch-load full catalog documents for the given codes and seed `tests.byCode` cache.
+ */
+export function useTestsByCodes(codes: readonly string[]) {
+  const codesKey = uniqueSortedTestCodes(codes).join(',');
+  const sortedCodes = useMemo(() => (codesKey ? codesKey.split(',') : []), [codesKey]);
+  const enabled = useAuthQueryEnabled(sortedCodes.length > 0);
+
+  const query = useQuery({
+    queryKey: queryKeys.tests.byCodes(sortedCodes),
+    queryFn: async () => {
+      const tests: Test[] = [];
+      for (const chunk of chunkTestCodes(sortedCodes)) {
+        tests.push(...(await testAPI.getByCodes(chunk)));
+      }
+      const client = getQueryClient();
+      for (const test of tests) {
+        client.setQueryData(queryKeys.tests.byCode(test.code), test);
+      }
+      return tests;
+    },
+    enabled,
+    ...cacheConfig.static,
+  });
+
+  const tests = query.data ?? EMPTY_FULL_TESTS;
+  const byCode = useMemo(
+    () => (tests.length > 0 ? indexTestsByCode(tests) : EMPTY_FULL_BY_CODE),
+    [tests]
+  );
+
+  return {
+    tests,
+    byCode,
+    isLoading: query.isLoading,
+    isPending: query.isPending,
+    isError: query.isError,
+    error: query.error,
+  };
+}
+
+/**
+ * Client-side search over the slim catalog (name, code, synonyms, LOINC, panels).
  */
 export function useTestSearch(searchQuery: string) {
   const { tests, isLoading } = useTestCatalog();
 
-  // Client-side search since catalog is fully cached
   const results = searchQuery.trim()
     ? tests.filter(test => {
         const query = searchQuery.toLowerCase();
@@ -236,15 +302,7 @@ export function useTestSearch(searchQuery: string) {
 }
 
 /**
- * Hook to get tests filtered by category.
- *
- * @param category - Test category to filter by
- * @returns Array of tests in the specified category
- *
- * @example
- * ```tsx
- * const { tests } = useTestsByCategory('hematology');
- * ```
+ * Slim catalog rows for one category (active only).
  */
 export function useTestsByCategory(category: TestCategory | undefined) {
   const { tests, isLoading } = useTestCatalog();
@@ -260,9 +318,7 @@ export function useTestsByCategory(category: TestCategory | undefined) {
 }
 
 /**
- * Hook to get only active tests.
- *
- * @returns Array of active tests
+ * Active slim catalog rows.
  */
 export function useActiveTests() {
   const { tests, isLoading } = useTestCatalog();
@@ -277,36 +333,15 @@ export function useActiveTests() {
 }
 
 /**
- * Hook to get a test by its name (for display purposes).
- * Returns a lookup function that can be used to resolve test codes to names.
- *
- * @returns Object with getTestName function
- *
- * @example
- * ```tsx
- * const { getTestName } = useTestNameLookup();
- * const name = getTestName('HEM001'); // "Complete Blood Count (CBC)"
- * ```
+ * Name lookup over the slim catalog Map. `getTest` returns a summary, not parameters.
  */
 export function useTestNameLookup() {
-  const { tests, isLoading } = useTestCatalog();
-  const { get } = useEntityLookup(tests, getTestCode, { isLoading });
-
-  const getTestName = useCallback((testCode: string): string => get(testCode)?.name ?? testCode, [get]);
-  const getTest = useCallback((testCode: string): Test | undefined => get(testCode), [get]);
-
-  return {
-    getTestName,
-    getTest,
-    isLoading,
-  };
+  const { getTest, getTestName, isLoading } = useTestCatalog();
+  return { getTestName, getTest, isLoading };
 }
 
 /**
- * Hook to invalidate and refetch the test catalog.
- * Useful for admin actions that modify the catalog.
- *
- * @returns Function to invalidate the test cache
+ * Invalidate the slim catalog list (and nested test queries under `tests`).
  */
 export function useInvalidateTestCatalog() {
   const { invalidateAll: invalidate } = useInvalidateQueryKey(queryKeys.tests.all);

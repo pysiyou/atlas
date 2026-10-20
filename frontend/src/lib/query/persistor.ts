@@ -31,13 +31,21 @@ export const PERSIST_MAX_AGE = 1000 * 60 * 60 * 24; // 24 hours
  */
 const PERSISTABLE_QUERY_KEYS = ['tests', 'users', 'affiliations'];
 
+/** Discard pre-summary catalog blobs still sitting in localStorage. */
+export const PERSIST_BUSTER = 'catalog-summary-v1';
+
 /**
- * Check if a query should be persisted based on its key
+ * Persist slim catalog lists and individual full documents, plus users/affiliations.
+ * Skip `byCodes` batch keys — they are per-page and noisy.
  */
-function shouldPersistQuery(queryKey: readonly unknown[]): boolean {
+export function shouldPersistQuery(queryKey: readonly unknown[]): boolean {
   if (!queryKey.length) return false;
   const firstKey = queryKey[0];
   if (typeof firstKey !== 'string') return false;
+  if (firstKey === 'tests') {
+    const second = queryKey[1];
+    return second === 'list' || second === 'detail';
+  }
   return PERSISTABLE_QUERY_KEYS.includes(firstKey);
 }
 

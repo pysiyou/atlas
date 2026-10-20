@@ -253,6 +253,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/tests/by-codes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Tests By Codes */
+        get: operations["get_tests_by_codes_api_v1_tests_by_codes_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/tests/{testCode}": {
         parameters: {
             query?: never;
@@ -3132,6 +3149,53 @@ export interface components {
          * @enum {string}
          */
         TestStatus: "pending" | "sample-collected" | "resulted" | "validated" | "cancelled" | "escalated" | "superseded" | "removed";
+        /**
+         * TestSummaryResponse
+         * @description List/search index shape — no resultItems, ranges, or collection notes.
+         */
+        TestSummaryResponse: {
+            /** Code */
+            code: string;
+            /** Name */
+            name: string;
+            /** Displayname */
+            displayName: string;
+            /** Category */
+            category: string;
+            /** Price */
+            price: number;
+            /** Turnaroundtimehours */
+            turnaroundTimeHours: number;
+            /** Sampletype */
+            sampleType: string;
+            /** Containertypes */
+            containerTypes: string[];
+            /** Containertopcolors */
+            containerTopColors: string[];
+            /**
+             * Isactive
+             * @default true
+             */
+            isActive: boolean;
+            /** Synonyms */
+            synonyms?: string[] | null;
+            /** Panels */
+            panels?: string[] | null;
+            /** Loinccodes */
+            loincCodes?: string[] | null;
+            /** Fastingrequired */
+            fastingRequired?: boolean | null;
+            /**
+             * Createdat
+             * Format: date-time
+             */
+            createdAt: string;
+            /**
+             * Updatedat
+             * Format: date-time
+             */
+            updatedAt: string;
+        };
         /** TestUpdate */
         TestUpdate: {
             /** Price */
@@ -3724,7 +3788,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TestResponse"][];
+                    "application/json": components["schemas"]["TestSummaryResponse"][];
                 };
             };
             /** @description Validation Error */
@@ -3775,6 +3839,38 @@ export interface operations {
         parameters: {
             query: {
                 q: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TestResponse"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_tests_by_codes_api_v1_tests_by_codes_get: {
+        parameters: {
+            query: {
+                /** @description Comma-separated test codes (max 100) */
+                codes: string;
             };
             header?: never;
             path?: never;

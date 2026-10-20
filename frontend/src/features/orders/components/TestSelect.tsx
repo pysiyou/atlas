@@ -12,7 +12,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { EMPTY_COPY } from '@/components/display';
 import { Icon, RemovableTag, CheckboxIndicator } from '@/components/primitives';
-import type { Test } from '@/types';
+import type { TestSummary } from '@/types';
+import { indexTestsByCode } from '@/features/catalog/testLookup';
 import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
 import { cn, formatCurrency, formatTurnaroundTime, titleCaseWords } from '@/utils';
 import { ICONS } from '@/config/icons';
@@ -24,7 +25,7 @@ import { CONTROL, FIELD_ERROR, SPACING, TYPE } from '@/components/theme/recipes'
 const SELECTED_CHIP_CLASS =
   'max-w-[min(100%,20rem)] items-start gap-space-2 py-space-1-5 px-space-2 bg-surface-page border-border-default/80 shadow-none';
 
-function TestSelectMetaLine({ code, test }: { code: string; test: Test }) {
+function TestSelectMetaLine({ code, test }: { code: string; test: TestSummary }) {
   const segments: Array<{ id: string; label: string }> = [];
 
   if (test.category) {
@@ -70,7 +71,7 @@ function TestSelectedChip({
 }: {
   code: string;
   name: string;
-  test?: Test;
+  test?: TestSummary;
 }) {
   return (
     <div className="min-w-0 flex flex-col">
@@ -88,11 +89,11 @@ interface TestSelectorProps {
   selectedTests: string[];
   testSearch: string;
   onTestSearchChange: (value: string) => void;
-  filteredTests: Test[];
+  filteredTests: TestSummary[];
   onToggleTest: (testCode: string) => void;
   error?: string;
-  /** Full test catalog for looking up test details by code */
-  tests?: Test[];
+  /** Slim catalog for looking up names and prices by code */
+  tests?: TestSummary[];
 }
 
 /**
@@ -103,7 +104,7 @@ interface TestSelectorProps {
  * Tags match the patient tag styling (bg-brand-muted, border-border-default) but without avatars.
  */
 const TestSearchTagInput: React.FC<{
-  selectedTags: Array<{ code: string; name: string; test?: Test }>;
+  selectedTags: Array<{ code: string; name: string; test?: TestSummary }>;
   selectedCount: number;
   value: string;
   onValueChange: (value: string) => void;
@@ -167,7 +168,7 @@ const TestSearchTagInput: React.FC<{
   );
 
 interface TestSelectPopoverProps {
-  visibleTests: Test[];
+  visibleTests: TestSummary[];
   selectedSet: Set<string>;
   onToggleTest: (testCode: string) => void;
 }
@@ -281,18 +282,19 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
 
   // Build tags with test details (code and name) for display inside the input.
   // Matches patient tag styling but without avatar.
+  const catalogIndex = useMemo(() => indexTestsByCode(tests), [tests]);
   const selectedTags = useMemo(() => {
     return selectedTests
       .filter(code => typeof code === 'string' && code.trim().length > 0)
       .map(code => {
-        const test = tests.find(t => t.code === code);
+        const test = catalogIndex.get(code);
         return {
           code,
           name: test?.name || code,
           test,
         };
       });
-  }, [selectedTests, tests]);
+  }, [selectedTests, catalogIndex]);
 
   return (
     <div ref={containerRef} className="relative">

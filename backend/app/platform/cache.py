@@ -48,8 +48,8 @@ def close_redis():
 class CacheKeys:
     """Cache key patterns for different data types."""
 
-    # Static data (1 hour TTL)
-    TESTS_CATALOG = "tests:catalog"
+    # Static data (1 hour TTL). Summary prefix so leftover full-list payloads are never reused.
+    TESTS_CATALOG = "tests:catalog:summary"
     TESTS_BY_CODE = "tests:code:{code}"
     AFFILIATIONS_PRICING = "affiliations:pricing"
     LAB_BOARD_SUMMARY_PREFIX = "lab:board:summary"

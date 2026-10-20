@@ -4,7 +4,7 @@
 
 import React, { useMemo, useState, useCallback, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useTestCatalog } from '@/features/catalog';
+import { uniqueSortedTestCodes, useTestsByCodes } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users';
 import { createSampleLookupForOrder } from '@/features/lab';
 import { reportsAPI, usePaginatedReportableOrders } from '../api/reports';
@@ -56,7 +56,14 @@ export const ReportList: React.FC = () => {
     resetPage,
   } = usePaginatedReportableOrders(serverFilters);
 
-  const { tests } = useTestCatalog();
+  const pageTestCodes = useMemo(
+    () =>
+      uniqueSortedTestCodes(
+        reportableOrders.flatMap(item => (item.order.tests ?? []).map(test => test.testCode))
+      ),
+    [reportableOrders]
+  );
+  const { tests } = useTestsByCodes(pageTestCodes);
   const { getUserName } = useUserLookup();
 
   const error = isError

@@ -5,11 +5,11 @@
  */
 
 import { useState, useMemo } from 'react';
-import type { Test, TestCategory } from '@/types';
+import type { TestCategory, TestSummary } from '@/types';
 import { PRICE_RANGE } from '@/utils/constants';
 
 interface UseCatalogFiltersOptions {
-  tests: Test[];
+  tests: TestSummary[];
 }
 
 /**

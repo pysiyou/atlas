@@ -2,7 +2,7 @@
  * Report Preview Modal — loads reportable order by id and generates the PDF itself.
  */
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import type { ReportPreviewModalProps } from '@/lib/context/modalTypes';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import {
@@ -14,7 +14,7 @@ import {
 import { FooterInfo, ModalContextSubtitle } from '@/components/display';
 import { MODULE_ICONS } from '@/config/icons';
 import { ReportPreviewResults } from './ReportPreviewResults';
-import { useTestCatalog } from '@/features/catalog';
+import { uniqueSortedTestCodes, useTestsByCodes } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users';
 import { createSampleLookupForOrder } from '@/features/lab';
 import { reportsAPI, useReportableOrder } from '../api/reports';
@@ -31,16 +31,21 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
   isActive = true,
   orderId,
 }) => {
-  const { tests } = useTestCatalog();
   const { getUserName } = useUserLookup();
   const { reportableOrder, isLoading, isError } = useReportableOrder(isOpen ? orderId : null);
+  const orderTestCodes = useMemo(
+    () =>
+      uniqueSortedTestCodes((reportableOrder?.order.tests ?? []).map(test => test.testCode)),
+    [reportableOrder]
+  );
+  const { tests, isLoading: catalogLoading } = useTestsByCodes(orderTestCodes);
   const [reportData, setReportData] = useState<LabReportPayload | null>(null);
   const [isBuilding, setIsBuilding] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
-    if (!isOpen || !reportableOrder) {
-      setReportData(null);
+    if (!isOpen || !reportableOrder || (orderTestCodes.length > 0 && catalogLoading)) {
+      if (!isOpen || !reportableOrder) setReportData(null);
       return;
     }
 
@@ -70,7 +75,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
     return () => {
       cancelled = true;
     };
-  }, [isOpen, reportableOrder, tests, getUserName]);
+  }, [isOpen, reportableOrder, orderTestCodes.length, catalogLoading, tests, getUserName]);
 
   const handleGenerate = useCallback(async () => {
     if (!reportableOrder || !reportData) return;
@@ -95,7 +100,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
     }
   }, [reportableOrder, reportData, tests, onClose]);
 
-  const waiting = isLoading || isBuilding || !reportData;
+  const waiting = isLoading || isBuilding || catalogLoading || !reportData;
 
   return (
     <Modal

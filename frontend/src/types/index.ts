@@ -33,6 +33,7 @@ export type { User, AuthUser } from './user';
 export type { PaginatedResponse, PaginationMeta } from './pagination';
 export type {
   Test,
+  TestSummary,
   TestCategory,
   TestParameter,
   CatalogReferenceRange,

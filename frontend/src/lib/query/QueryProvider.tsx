@@ -12,7 +12,7 @@ import React, { type ReactNode } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { getQueryClient } from './client';
-import { createPersister, dehydrateOptions, PERSIST_MAX_AGE } from './persistor';
+import { createPersister, dehydrateOptions, PERSIST_BUSTER, PERSIST_MAX_AGE } from './persistor';
 
 interface QueryProviderProps {
   children: ReactNode;
@@ -51,8 +51,7 @@ export const QueryProvider: React.FC<QueryProviderProps> = ({ children }) => {
           persister,
           maxAge: PERSIST_MAX_AGE,
           dehydrateOptions,
-          // Don't block rendering while restoring cache
-          buster: undefined,
+          buster: PERSIST_BUSTER,
         }}
       >
         {children}

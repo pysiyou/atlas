@@ -8,7 +8,7 @@ import { getTestName, getTestProperty } from '@/features/catalog/testLookup';
 import { CatalogCategoryBadge } from '@/features/catalog';
 import { OrderTestStatusBadge } from '../components/OrderDomainBadges';
 import { getOrderTestLineageRowClass } from '../utils/orderTestLineage';
-import type { OrderTest, Test } from '@/types';
+import type { OrderTest, TestSummary } from '@/types';
 import { TABLE_TYPE, RADIUS, TYPE } from '@/components/theme/recipes';
 
 
@@ -27,7 +27,7 @@ const DETAILED_VIEWS = {
 /** Test code under the display name — secondary tone at table base size. */
 const TEST_CODE_TEXT = TABLE_TYPE.secondary;
 
-function renderOrderTestIdentity(test: OrderTest, testCatalog: Test[]) {
+function renderOrderTestIdentity(test: OrderTest, testCatalog: TestSummary[]) {
   const name = getTestName(test.testCode, testCatalog);
 
   return (
@@ -42,13 +42,13 @@ function renderOrderTestIdentity(test: OrderTest, testCatalog: Test[]) {
   );
 }
 
-function renderTestCategoryBadge(test: OrderTest, testCatalog: Test[]) {
+function renderTestCategoryBadge(test: OrderTest, testCatalog: TestSummary[]) {
   const category = getTestProperty(test.testCode, 'category', testCatalog);
   if (!category) return null;
   return <CatalogCategoryBadge category={category} size="xs" className="border-none" />;
 }
 
-function createTestTableCard(testCatalog: Test[]): React.FC<CardComponentProps<OrderTest>> {
+function createTestTableCard(testCatalog: TestSummary[]): React.FC<CardComponentProps<OrderTest>> {
   return function TestTableCard({ item, onClick }) {
     const categoryBadge = renderTestCategoryBadge(item, testCatalog);
 
@@ -83,7 +83,7 @@ function createTestTableCard(testCatalog: Test[]): React.FC<CardComponentProps<O
 }
 
 export function createTestsTableConfig(
-  testCatalog: Test[],
+  testCatalog: TestSummary[],
   variant: 'simple' | 'detailed' = 'detailed'
 ): TableViewConfig<OrderTest> {
   const columnMap = {
