@@ -1,7 +1,5 @@
 /**
- * ReportList Component - Migrated to use ListView
- *
- * Displays a list of reportable orders ready for report generation.
+ * ReportList — server-paginated reportable orders.
  */
 
 import React, { useMemo, useState, useCallback, useEffect, useRef } from 'react';
@@ -9,23 +7,17 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useTestCatalog } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users';
 import { createSampleLookupForOrder } from '@/features/lab';
-import { reportsAPI, useReportableOrders } from '../api/reports';
-import { useClientListFilter } from '@/hooks/useClientListFilter';
+import { reportsAPI, usePaginatedReportableOrders } from '../api/reports';
 import { ListView } from '@/components/surfaces';
-import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components/data-table';
 import { createReportTableConfig } from '../config/ReportTable.config';
 import { ReportFilters } from '../components/ReportFilters';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
 import { generateLabReport, downloadPDF, getDefaultTemplate } from '../utils/reportPDF';
 import type { ReportableOrder } from '../types';
-import {
-  filterReportableOrdersByDateRange,
-  getActiveOrderTests,
-  prepareReportData,
-  downloadLabReport,
-} from '../utils/prepareReportData';
-import { formatDate } from '@/utils';
+import { prepareReportData, downloadLabReport } from '../utils/prepareReportData';
+import { formatDate, inclusiveDateRangeBounds, toIsoDateParam } from '@/utils';
 import { notify, errorAlertMessage } from '@/utils/feedback';
+import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
 
 /** Parse `/reports/:id` so a deep link can open preview without unmounting the list. */
 function parseReportOrderId(id: string | undefined): number | null {
@@ -34,33 +26,38 @@ function parseReportOrderId(id: string | undefined): number | null {
   return Number.isFinite(orderId) ? orderId : null;
 }
 
-/** Stable search extractor — identity must not change per ReportList render. */
-function reportSearchFields(order: ReportableOrder): string[] {
-  return [
-    String(order.orderId),
-    String(order.patientId),
-    order.patientName,
-    ...getActiveOrderTests(order.order).flatMap(test => [test.testCode, test.testName]),
-  ];
-}
-
 export const ReportList: React.FC = () => {
   const navigate = useNavigate();
   const { id: routeOrderId } = useParams<{ id?: string }>();
   const deepLinkOrderId = parseReportOrderId(routeOrderId);
   const openedDeepLinkIdRef = useRef<number | null>(null);
 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
+
+  const serverFilters = useMemo(() => {
+    const bounds = inclusiveDateRangeBounds(dateRange);
+    return {
+      search: searchQuery.trim() || undefined,
+      dateFrom: bounds ? toIsoDateParam(bounds.start) : undefined,
+      dateTo: bounds ? toIsoDateParam(bounds.end) : undefined,
+    };
+  }, [searchQuery, dateRange]);
+
   const {
     reportableOrders,
+    pagination,
     isLoading: reportsLoading,
     isError,
     error: queryError,
     refetch,
-  } = useReportableOrders();
-  const { tests, isLoading: testsLoading } = useTestCatalog();
-  const { getUserName, isLoading: usersLoading } = useUserLookup();
+    page,
+    goToPage,
+    resetPage,
+  } = usePaginatedReportableOrders(serverFilters);
 
-  const loading = reportsLoading || testsLoading || usersLoading;
+  const { tests } = useTestCatalog();
+  const { getUserName } = useUserLookup();
 
   const error = isError
     ? {
@@ -71,21 +68,6 @@ export const ReportList: React.FC = () => {
 
   const { openModal } = useModal();
   const [generatingOrderId, setGeneratingOrderId] = useState<number | null>(null);
-  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
-
-  const {
-    filteredItems: preFilteredOrders,
-    searchQuery,
-    setSearchQuery,
-  } = useClientListFilter<ReportableOrder, never>(reportableOrders, {
-    searchFields: reportSearchFields,
-    defaultSort: undefined,
-  });
-
-  const filteredOrders = useMemo(
-    () => filterReportableOrdersByDateRange(preFilteredOrders, dateRange),
-    [preFilteredOrders, dateRange]
-  );
 
   const buildReportData = useCallback(
     async (reportableOrder: ReportableOrder) => {
@@ -145,36 +127,46 @@ export const ReportList: React.FC = () => {
   );
 
   const reportTableConfig = useMemo(
-    () =>
-      createReportTableConfig(navigate, handlePreview, handlePrint, generatingOrderId),
+    () => createReportTableConfig(navigate, handlePreview, handlePrint, generatingOrderId),
     [navigate, handlePreview, handlePrint, generatingOrderId]
   );
 
   return (
-    <>
-      <div className="flex h-full min-h-0 flex-col">
+    <div className="flex h-full min-h-0 flex-col">
       <ListView
-        items={filteredOrders}
+        items={reportableOrders}
         viewConfig={reportTableConfig}
-        loading={loading}
+        loading={reportsLoading}
         error={error}
         onRetry={refetch}
         onDismissError={() => {}}
         onRowClick={handlePreview}
         title="Reports"
-        subtitle={`${filteredOrders.length} report(s) available`}
+        subtitle={`${pagination.total} report(s) available`}
         filters={
           <ReportFilters
             searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
+            onSearchChange={value => {
+              setSearchQuery(value);
+              resetPage();
+            }}
             dateRange={dateRange}
-            onDateRangeChange={setDateRange}
+            onDateRangeChange={value => {
+              setDateRange(value);
+              resetPage();
+            }}
           />
         }
-        pagination={{ mode: 'client', pageSize: 20, pageSizeOptions: DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL }}
+        pagination={{
+          mode: 'server',
+          currentPage: page,
+          pageSize: pagination.pageSize,
+          totalItems: pagination.total,
+          onPageChange: goToPage,
+          pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
+        }}
         defaultSort={{ key: 'orderDate', direction: 'desc' }}
       />
-      </div>
-    </>
+    </div>
   );
 };

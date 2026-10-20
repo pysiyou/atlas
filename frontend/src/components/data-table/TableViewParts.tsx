@@ -12,6 +12,7 @@ import type {
   TableCellProps,
   TableHeaderProps,
   TableSkeletonProps,
+  TableVariant,
 } from './types';
 import { TABLE_SHELL, TABLE_TYPE } from '@/components/theme/recipes';
 import { cn } from '@/utils';
@@ -105,6 +106,70 @@ const tableRow = {
   stripedOdd: TABLE_SHELL.rowStripedOdd,
 };
 
+export interface TableDataRowProps<T> {
+  item: T;
+  /** Source index in the full dataset — used for stripes, keys, and aria-rowindex. */
+  index: number;
+  visibleColumns: ColumnConfig<T>[];
+  variant: TableVariant;
+  striped?: boolean;
+  onRowClick?: (item: T, index: number) => void;
+  rowClassName?: (item: T, index: number) => string;
+  gridTemplateColumns: string;
+  /** 1-based aria-rowindex including the header when present. */
+  ariaRowIndex?: number;
+}
+
+/**
+ * One data row. Virtualizers render this by source index so stripes stay stable.
+ */
+export function TableDataRow<T>({
+  item,
+  index,
+  visibleColumns,
+  variant,
+  striped = false,
+  onRowClick,
+  rowClassName,
+  gridTemplateColumns,
+  ariaRowIndex,
+}: TableDataRowProps<T>) {
+  const isClickable = !!onRowClick;
+  const customRowClass = rowClassName?.(item, index) ?? '';
+  const stripeClass =
+    striped && !customRowClass
+      ? index % 2 === 0
+        ? tableRow.stripedEven
+        : tableRow.stripedOdd
+      : '';
+
+  return (
+    <div
+      role="row"
+      aria-rowindex={ariaRowIndex}
+      className={cn(tableRow.base, isClickable && tableRow.clickable, stripeClass, customRowClass)}
+      style={{ gridTemplateColumns, height: `${ROW_HEIGHTS[variant]}px` }}
+      onClick={() => onRowClick?.(item, index)}
+    >
+      {visibleColumns.map(column => (
+        <TableCell
+          key={column.key}
+          column={column as ColumnConfig<unknown>}
+          variant={variant}
+        >
+          {column.render ? (
+            column.render(item, index)
+          ) : (
+            <span className={column.truncate ? 'block truncate' : ''}>
+              {String((item as Record<string, unknown>)[column.key] ?? '')}
+            </span>
+          )}
+        </TableCell>
+      ))}
+    </div>
+  );
+}
+
 export function TableRow<T>({
   data,
   visibleColumns,
@@ -117,42 +182,20 @@ export function TableRow<T>({
   const gridTemplateColumns = useGridTemplateColumns(visibleColumns);
   return (
     <>
-      {data.map((item, index) => {
-        const rowKey = getRowKey ? getRowKey(item, index) : index;
-        const isClickable = !!onRowClick;
-        const customRowClass = rowClassName?.(item, index) ?? '';
-        const stripeClass =
-          striped && !customRowClass
-            ? index % 2 === 0
-              ? tableRow.stripedEven
-              : tableRow.stripedOdd
-            : '';
-        return (
-          <div
-            key={rowKey}
-            role="row"
-            className={cn(tableRow.base, isClickable && tableRow.clickable, stripeClass, customRowClass)}
-            style={{ gridTemplateColumns, height: `${ROW_HEIGHTS[variant]}px` }}
-            onClick={() => onRowClick?.(item, index)}
-          >
-            {visibleColumns.map(column => (
-              <TableCell
-                key={column.key}
-                column={column as ColumnConfig<unknown>}
-                variant={variant}
-              >
-                {column.render ? (
-                  column.render(item, index)
-                ) : (
-                  <span className={column.truncate ? 'block truncate' : ''}>
-                    {String((item as Record<string, unknown>)[column.key] ?? '')}
-                  </span>
-                )}
-              </TableCell>
-            ))}
-          </div>
-        );
-      })}
+      {data.map((item, index) => (
+        <TableDataRow
+          key={getRowKey ? getRowKey(item, index) : index}
+          item={item}
+          index={index}
+          visibleColumns={visibleColumns}
+          variant={variant}
+          striped={striped}
+          onRowClick={onRowClick}
+          rowClassName={rowClassName}
+          gridTemplateColumns={gridTemplateColumns}
+          ariaRowIndex={index + 1}
+        />
+      ))}
     </>
   );
 }

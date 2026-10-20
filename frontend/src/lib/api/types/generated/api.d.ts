@@ -1097,6 +1097,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/reports/orders/{orderId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Reportable Order */
+        get: operations["get_reportable_order_api_v1_reports_orders__orderId__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/reports/orders/{orderId}/download": {
         parameters: {
             query?: never;
@@ -2123,6 +2140,16 @@ export interface components {
              * @description List of items for the current page
              */
             data: components["schemas"]["PatientResponse"][];
+            /** @description Pagination metadata */
+            pagination: components["schemas"]["PaginationMeta"];
+        };
+        /** PaginatedResponse[ReportableOrderItem] */
+        PaginatedResponse_ReportableOrderItem_: {
+            /**
+             * Data
+             * @description List of items for the current page
+             */
+            data: components["schemas"]["ReportableOrderItem"][];
             /** @description Pagination metadata */
             pagination: components["schemas"]["PaginationMeta"];
         };
@@ -4256,6 +4283,8 @@ export interface operations {
         parameters: {
             query?: {
                 orderId?: number | null;
+                /** @description Comma-separated order IDs */
+                orderIds?: string | null;
                 paymentMethod?: components["schemas"]["PaymentMethod"] | null;
                 /** @description Number of records to skip */
                 skip?: number;
@@ -5623,7 +5652,13 @@ export interface operations {
     list_reportable_orders_api_v1_reports_orders_get: {
         parameters: {
             query?: {
+                /** @description Number of records to skip */
+                skip?: number;
+                /** @description Page size */
                 limit?: number;
+                search?: string | null;
+                dateFrom?: string | null;
+                dateTo?: string | null;
             };
             header?: never;
             path?: never;
@@ -5637,7 +5672,38 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ReportableOrderItem"][];
+                    "application/json": components["schemas"]["PaginatedResponse_ReportableOrderItem_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_reportable_order_api_v1_reports_orders__orderId__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReportableOrderItem"];
                 };
             };
             /** @description Validation Error */

@@ -1,16 +1,20 @@
 /**
- * TableView — presentational table body (header, rows, skeleton, empty).
+ * TableView — presentational table body (header, virtualized rows, skeleton, empty).
  */
 
-import { type ReactNode } from 'react';
+import { type ReactNode, useRef } from 'react';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { EmptyState } from '@/components/display';
 import type { IconName } from '@/components/primitives';
 import { PANEL_EMPTY_STATE, DASHBOARD_EMPTY_STATE } from '@/components/display/emptyStatePresets';
 import { DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';
 import type { ColumnConfig, SortConfig, TableVariant } from './types';
 import { PANEL } from '@/components/theme/recipes';
-import { DEFAULT_LOADING_ROWS } from './constants';
-import { TableHeader, TableRow, TableSkeleton } from './TableViewParts';
+import { DEFAULT_LOADING_ROWS, ROW_HEIGHTS } from './constants';
+import { TableHeader, TableDataRow, TableSkeleton } from './TableViewParts';
+import { useGridTemplateColumns } from '@/hooks/useTable';
+
+const TABLE_ROW_OVERSCAN = 8;
 
 function resolveTableContainerClasses(embedded: boolean): string {
   return embedded ? 'flex flex-col flex-1 min-h-0' : `${PANEL.raisedShadowSm} flex flex-col h-full`;
@@ -37,7 +41,6 @@ function TableViewLoading<T>({
   showHeader,
   columns,
   variant,
-  stickyHeader,
   loadingRows,
 }: {
   containerClasses: string;
@@ -47,7 +50,6 @@ function TableViewLoading<T>({
   showHeader: boolean;
   columns: ColumnConfig<T>[];
   variant: TableVariant;
-  stickyHeader: boolean;
   loadingRows: number;
 }) {
   return (
@@ -58,21 +60,22 @@ function TableViewLoading<T>({
       aria-label={ariaLabel ?? caption ?? 'Loading'}
     >
       <TableAccessibleName caption={caption} />
-      <div
-        className="flex-1 min-h-0 overflow-auto"
-        style={maxHeight ? { maxHeight } : undefined}
-        role="rowgroup"
-      >
-        {showHeader && (
+      {showHeader && (
+        <div className="shrink-0" role="rowgroup">
           <TableHeader
             columns={columns}
             visibleColumns={columns}
             sort={null}
             onSort={() => {}}
             variant={variant}
-            sticky={stickyHeader}
           />
-        )}
+        </div>
+      )}
+      <div
+        className="flex-1 min-h-0 overflow-auto"
+        style={maxHeight ? { maxHeight } : undefined}
+        role="rowgroup"
+      >
         <TableSkeleton columns={columns} rows={loadingRows} variant={variant} />
       </div>
     </div>
@@ -122,7 +125,10 @@ export interface TableViewProps<T> {
   totalItems?: number;
 }
 
-/** Presentational table body — no sort/pagination logic */
+/**
+ * Presentational table body. Rows are virtualized against the overflow scroller;
+ * the header stays pinned outside that region.
+ */
 export function TableView<T>({
   data,
   columns,
@@ -130,7 +136,6 @@ export function TableView<T>({
   onSort,
   variant = 'default',
   striped = false,
-  stickyHeader = false,
   maxHeight,
   embedded = false,
   showHeader = true,
@@ -148,6 +153,18 @@ export function TableView<T>({
   totalItems,
 }: TableViewProps<T>) {
   const containerClasses = resolveTableContainerClasses(embedded);
+  const scrollParentRef = useRef<HTMLDivElement>(null);
+  const gridTemplateColumns = useGridTemplateColumns(columns);
+  const rowHeight = ROW_HEIGHTS[variant];
+  const hasRows = data.length > 0;
+
+  const virtualizer = useVirtualizer({
+    count: data.length,
+    getScrollElement: () => scrollParentRef.current,
+    estimateSize: () => rowHeight,
+    overscan: TABLE_ROW_OVERSCAN,
+    enabled: hasRows && !loading,
+  });
 
   if (loading) {
     return (
@@ -159,7 +176,6 @@ export function TableView<T>({
         showHeader={showHeader}
         columns={columns}
         variant={variant}
-        stickyHeader={stickyHeader}
         loadingRows={loadingRows}
       />
     );
@@ -196,6 +212,8 @@ export function TableView<T>({
     );
   }
 
+  const headerRowCount = showHeader ? 1 : 0;
+
   return (
     <div
       className={containerClasses}
@@ -204,32 +222,55 @@ export function TableView<T>({
       aria-rowcount={totalItems ?? data.length}
     >
       <TableAccessibleName caption={caption} />
+      {showHeader && (
+        <div className="shrink-0" role="rowgroup">
+          <TableHeader
+            columns={columns}
+            visibleColumns={columns}
+            sort={sort}
+            onSort={onSort}
+            variant={variant}
+          />
+        </div>
+      )}
       <div
+        ref={scrollParentRef}
         className="flex-1 min-h-0 overflow-auto"
         style={maxHeight ? { maxHeight } : undefined}
         role="rowgroup"
       >
-        {showHeader && (
-          <div role="rowgroup">
-            <TableHeader
-              columns={columns}
-              visibleColumns={columns}
-              sort={sort}
-              onSort={onSort}
-              variant={variant}
-              sticky={stickyHeader}
-            />
-          </div>
-        )}
-        <TableRow<T>
-          data={data}
-          visibleColumns={columns}
-          variant={variant}
-          striped={striped}
-          onRowClick={onRowClick}
-          rowClassName={rowClassName}
-          getRowKey={getRowKey}
-        />
+        <div
+          className="relative w-full"
+          style={{ height: virtualizer.getTotalSize() }}
+        >
+          {virtualizer.getVirtualItems().map(virtualRow => {
+            const item = data[virtualRow.index];
+            if (item === undefined) return null;
+            const rowKey = getRowKey ? getRowKey(item, virtualRow.index) : virtualRow.index;
+            return (
+              <div
+                key={rowKey}
+                className="absolute left-0 top-0 w-full"
+                style={{
+                  height: `${virtualRow.size}px`,
+                  transform: `translateY(${virtualRow.start}px)`,
+                }}
+              >
+                <TableDataRow
+                  item={item}
+                  index={virtualRow.index}
+                  visibleColumns={columns}
+                  variant={variant}
+                  striped={striped}
+                  onRowClick={onRowClick}
+                  rowClassName={rowClassName}
+                  gridTemplateColumns={gridTemplateColumns}
+                  ariaRowIndex={virtualRow.index + 1 + headerRowCount}
+                />
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

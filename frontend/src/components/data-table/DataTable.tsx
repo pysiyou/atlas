@@ -2,7 +2,7 @@
  * DataTable — responsive orchestrator with single sort → paginate pipeline.
  */
 
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { useBreakpoint, isBreakpointAtMost, type Breakpoint } from '@/hooks/useBreakpoint';
 import { useDataTable } from '@/hooks/useDataTable';
 import { Pagination } from '@/components/surfaces';
@@ -39,6 +39,7 @@ export function DataTable<T = Record<string, unknown>>({
   caption,
   ariaLabel,
 }: TableProps<T>) {
+  const cardScrollRef = useRef<HTMLDivElement>(null);
   const detectedBreakpoint = useBreakpoint();
   const breakpoint: Breakpoint = overrideBreakpoint || detectedBreakpoint;
 
@@ -122,12 +123,14 @@ export function DataTable<T = Record<string, unknown>>({
 
     return (
       <div className={wrapperClass}>
-        <div className="flex-1 min-h-0 overflow-y-auto p-panel">
+        <div ref={cardScrollRef} className="flex-1 min-h-0 overflow-y-auto p-panel">
           <CardGridView<T>
             data={rows}
             CardComponent={viewConfig.CardComponent}
             onRowClick={onRowClick}
             getRowKey={getRowKey}
+            columns="1"
+            scrollRef={cardScrollRef}
           />
         </div>
         {paginationFooter}

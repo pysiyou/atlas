@@ -9,7 +9,7 @@ import { serializeQueryList } from '@/utils/filtering';
 import { getOrderTestCount, getOrderTests } from '@/types';
 import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
 import { useQuery, keepPreviousData, useMutation, useQueryClient, useQueries } from '@tanstack/react-query';
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { invalidateOrderQueries } from '@/lib/query/invalidate';
 import { notify } from '@/utils/feedback';
@@ -314,12 +314,10 @@ export function usePaginatedOrders(filters?: OrdersFilters, initialPage = 1, pag
   const enabled = useAuthQueryEnabled();
   const [page, setPage] = useState(initialPage);
   const filterSnapshot = JSON.stringify(filters ?? null);
-  const [prevFilterSnapshot, setPrevFilterSnapshot] = useState(filterSnapshot);
 
-  if (prevFilterSnapshot !== filterSnapshot) {
-    setPrevFilterSnapshot(filterSnapshot);
+  useEffect(() => {
     setPage(initialPage);
-  }
+  }, [filterSnapshot, initialPage]);
 
   const query = useQuery({
     queryKey: queryKeys.orders.paginated({

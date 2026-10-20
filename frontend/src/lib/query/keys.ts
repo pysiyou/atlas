@@ -202,6 +202,13 @@ export const queryKeys = {
   reports: {
     all: ['reports'] as const,
     reportableOrders: () => [...queryKeys.reports.all, 'reportable-orders'] as const,
+    paginated: (
+      params: {
+        search?: string;
+        dateFrom?: string;
+        dateTo?: string;
+      } & PaginationParams
+    ) => [...queryKeys.reports.all, 'paginated', params] as const,
     byOrder: (orderId: number) => [...queryKeys.reports.all, 'order', orderId] as const,
   },
 
