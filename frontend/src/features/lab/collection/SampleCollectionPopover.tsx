@@ -14,7 +14,7 @@ import { MODULE_ICONS } from '@/config/icons';
 import type { ContainerType } from '@/types';
 import { COLLECTION_TOP_COLOR_VALUES, CONTAINER_CONFIG } from '@/types';
 import type { SampleRequirement } from '../types';
-import { cn } from '@/utils';
+import { cn, formatArray } from '@/utils';
 import { getContainerIcon } from '@/config/icons';
 import { ICONS } from '@/config/icons';
 import { inputBase, inputError, FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
@@ -31,10 +31,22 @@ const COLLECTION_CONTAINER_OPTIONS: { value: ContainerType; label: string }[] = 
   { value: 'cup', label: 'Cup' },
 ];
 
+/** Match lab card "Required for" collapsed preview (3 names, then +N more). */
+const COLLECTION_POPOVER_MAX_TEST_NAMES = 3;
+
+function formatCollectionPopoverTests(testNames: string[]): {
+  summary: string;
+  full: string;
+} {
+  const full = testNames.join(', ');
+  const summary = formatArray(testNames, COLLECTION_POPOVER_MAX_TEST_NAMES);
+  return { summary, full };
+}
+
 interface CollectionPopoverContentProps {
   requirement: SampleRequirement;
   patientName?: string;
-  testName?: string;
+  testNames?: string[];
   onConfirm: (
     volume: number,
     notes?: string,
@@ -49,7 +61,7 @@ interface CollectionPopoverContentProps {
 const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
   requirement,
   patientName,
-  testName,
+  testNames,
   onConfirm,
   onCancel,
   isSubmitting = false,
@@ -107,10 +119,29 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleSubmit, onCancel]);
 
+  const testSummary = useMemo(() => {
+    if (!testNames?.length) return undefined;
+    return formatCollectionPopoverTests(testNames);
+  }, [testNames]);
+
+  const subtitleSuffix =
+    testSummary?.summary || requirement.containerTypes.join(', ');
+
   return (
     <PopoverFormChrome
       title={patientName || 'Collect Sample'}
-      subtitle={`${requirement.sampleType.toUpperCase()} - ${testName || requirement.containerTypes.join(', ')}`}
+      subtitle={
+        <span
+          className="line-clamp-2"
+          title={
+            testSummary && testSummary.full !== testSummary.summary
+              ? testSummary.full
+              : undefined
+          }
+        >
+          {requirement.sampleType.toUpperCase()} - {subtitleSuffix}
+        </span>
+      }
       onCancel={onCancel}
       onConfirm={handleSubmit}
       confirmLabel="Confirm"
@@ -247,8 +278,8 @@ interface CollectionPopoverProps {
   requirement: SampleRequirement;
   /** Patient name for display */
   patientName?: string;
-  /** Test name for display */
-  testName?: string;
+  /** Tests required for this sample (truncated in popover header when long) */
+  testNames?: string[];
   /** Whether this is a recollection */
   isRecollection?: boolean;
   /** Callback when collection is confirmed */
@@ -272,7 +303,7 @@ interface CollectionPopoverProps {
 export const SampleCollectionPopover: React.FC<CollectionPopoverProps> = ({
   requirement,
   patientName,
-  testName,
+  testNames,
   isRecollection = false,
   onConfirm,
   isSubmitting = false,
@@ -311,7 +342,7 @@ export const SampleCollectionPopover: React.FC<CollectionPopoverProps> = ({
           <CollectionPopoverContent
             requirement={requirement}
             patientName={patientName}
-            testName={testName}
+            testNames={testNames}
             onConfirm={async (volume, notes, color, containerType) => {
               setLocalSubmitting(true);
               try {
