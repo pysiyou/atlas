@@ -163,10 +163,12 @@ export function TableView<T>({
     getScrollElement: () => scrollParentRef.current,
     estimateSize: () => rowHeight,
     overscan: TABLE_ROW_OVERSCAN,
-    enabled: hasRows && !loading,
+    enabled: hasRows,
   });
 
-  if (loading) {
+  const showSkeleton = loading && !hasRows;
+
+  if (showSkeleton) {
     return (
       <TableViewLoading
         containerClasses={containerClasses}
@@ -220,6 +222,7 @@ export function TableView<T>({
       role="table"
       aria-label={ariaLabel ?? caption}
       aria-rowcount={totalItems ?? data.length}
+      aria-busy={loading || undefined}
     >
       <TableAccessibleName caption={caption} />
       {showHeader && (

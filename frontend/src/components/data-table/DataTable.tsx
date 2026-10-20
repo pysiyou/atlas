@@ -81,8 +81,10 @@ export function DataTable<T = Record<string, unknown>>({
     ? 'flex min-h-0 flex-1 flex-col'
     : `${PANEL.raisedShadowSm} flex h-full min-h-0 flex-col`;
 
+  const showInitialLoad = loading && rows.length === 0;
+
   const paginationFooter =
-    paginationEnabled && !loading ? (
+    paginationEnabled && !showInitialLoad ? (
       <div className="shrink-0">
         <Pagination
           currentPage={currentPage}
@@ -96,7 +98,7 @@ export function DataTable<T = Record<string, unknown>>({
     ) : null;
 
   if (shouldShowCard) {
-    if (loading || rows.length === 0) {
+    if (showInitialLoad || rows.length === 0) {
       return (
         <div className={wrapperClass}>
           <div className="flex min-h-0 flex-1 flex-col">
@@ -107,7 +109,7 @@ export function DataTable<T = Record<string, unknown>>({
             onSort={handleSort}
             variant={variant}
             embedded={true}
-            loading={loading}
+            loading={showInitialLoad}
             loadingRows={loadingRows}
             emptyMessage={emptyMessage}
             emptyDescription={emptyDescription}
@@ -122,7 +124,7 @@ export function DataTable<T = Record<string, unknown>>({
     }
 
     return (
-      <div className={wrapperClass}>
+      <div className={wrapperClass} aria-busy={loading || undefined}>
         <div ref={cardScrollRef} className="flex-1 min-h-0 overflow-y-auto p-panel">
           <CardGridView<T>
             data={rows}

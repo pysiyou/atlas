@@ -171,6 +171,24 @@ function earliestEnteredAt(tests: OrderTest[]): string | undefined {
 }
 
 /**
+ * Earliest collection time across samples linked to active tests (collected or rejected).
+ */
+function resolveSampleCollectedAt(
+  activeTests: OrderTest[],
+  getSample: SampleLookup
+): string | undefined {
+  const collectedAt: string[] = [];
+  for (const test of activeTests) {
+    if (!test.sampleId) continue;
+    const sample = getSample(test.sampleId);
+    if (!sample || sample.status === 'pending') continue;
+    if (sample.collectedAt) collectedAt.push(sample.collectedAt);
+  }
+  if (collectedAt.length === 0) return undefined;
+  return collectedAt.reduce((earliest, current) => (current < earliest ? current : earliest));
+}
+
+/**
  * Assembles PDF payload for every active test on the order.
  */
 export function prepareReportData({
@@ -190,9 +208,9 @@ export function prepareReportData({
   const sampleSource = activeTests.find(test => test.sampleId);
   const sample = sampleSource?.sampleId ? getSample(sampleSource.sampleId) : undefined;
   const collectedAt =
-    sample && sample.status === 'collected' ? sample.collectedAt : undefined;
+    resolveSampleCollectedAt(activeTests, getSample) ?? order.scheduledCollectionTime;
   const collectedBy =
-    sample && sample.status === 'collected' ? sample.collectedBy : undefined;
+    sample && sample.status !== 'pending' ? sample.collectedBy : undefined;
 
   const catalogByCode = new Map(catalogTests.map(catalog => [catalog.code, catalog]));
   const testResults = activeTests.map(test => {
@@ -200,10 +218,15 @@ export function prepareReportData({
     return buildTestResultEntry(test, catalogTest, getUserName);
   });
 
+  const patientEmail =
+    reportableOrder.patientEmail?.trim() || patient?.email?.trim() || undefined;
+  const patientPhone =
+    reportableOrder.patientPhone?.trim() || patient?.phone?.trim() || undefined;
+
   const orderWithPatientInfo = {
     ...order,
-    patientPhone: patient?.phone,
-    patientEmail: patient?.email,
+    patientEmail,
+    patientPhone,
   };
 
   const patientDob = reportableOrder.patientDob ?? patient?.dateOfBirth;
@@ -217,6 +240,8 @@ export function prepareReportData({
     patientAge,
     patientDob,
     patientGender: reportableOrder.patientGender ?? patient?.gender,
+    patientEmail,
+    patientPhone,
     timestamps: {
       registeredAt: order.orderDate || order.createdAt,
       collectedAt,

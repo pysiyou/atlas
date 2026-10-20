@@ -65,7 +65,6 @@ export const PatientDetail: React.FC = () => {
       <DetailPageShell
         header={header}
         loading={patientLoading || ordersLoading}
-        loadingMessage="Loading patient..."
         loadingSkeleton={
           <DetailPageSkeleton
             sections={PATIENT_DETAIL_SKELETON_SECTIONS}

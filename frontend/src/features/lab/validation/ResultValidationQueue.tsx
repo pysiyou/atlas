@@ -12,14 +12,13 @@ import {
   useResultValidationQueueData,
 } from '../hooks';
 import { validationFilterConfig } from '../constants';
+import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { ErrorAlert, ErrorBoundary } from '@/components/loaders';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { LAB_CONFIG } from '../constants';
 import { worklistServerFilters } from '../utils/labSearchAndLinks';
 import { errorAlertMessage } from '@/utils/feedback';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
-import { SectionLoadingBoundary } from '@/components/loaders';
-import { useMinDisplay } from '@/hooks/useMinDisplay';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import type { PriorityLevel, TestWithContext } from '@/types';
 import type { RecollectionRequestSummary } from '@/types/lab-operations';
@@ -159,7 +158,14 @@ export const ResultValidationQueue: React.FC = () => {
     [recollectionRequests, filterState, canResolveFromProvider, urlFilters],
   );
 
-  const sectionLoading = useMinDisplay(dataLoading || (canViewEscalations && escalationLoading), 500);
+  const hasNoWorklistData =
+    validationTests.length === 0 &&
+    escalatedTests.length === 0 &&
+    recollectionRequests.length === 0;
+  const waitingOnInitialLoad =
+    hasNoWorklistData &&
+    (dataLoading || (canViewEscalations && escalationLoading));
+
   if (worklistError) {
     return (
       <ErrorBoundary>
@@ -172,14 +178,23 @@ export const ResultValidationQueue: React.FC = () => {
       </ErrorBoundary>
     );
   }
+
+  if (waitingOnInitialLoad) {
+    return (
+      <ErrorBoundary>
+        <DetailPageSkeleton variant="workflow-grid" />
+      </ErrorBoundary>
+    );
+  }
+
   const hasRecollection = canResolveEscalation && filteredRecollectionRequests.length > 0;
   const hasEscalated = canViewEscalations && filteredEscalatedTests.length > 0;
   const hasValidation = filteredTests.length > 0;
 
   return (
     <ErrorBoundary>
-      <SectionLoadingBoundary loading={sectionLoading} message="Loading validation..." size="lg">
         <LabWorkflowQueueScaffold
+          aria-busy={dataLoading || undefined}
           filterRow={
             <LabQueueFilterRow
               urlFilters={urlFilters}
@@ -228,7 +243,6 @@ export const ResultValidationQueue: React.FC = () => {
               onOpenValidation={openValidationModal}
           />
         </LabWorkflowQueueScaffold>
-      </SectionLoadingBoundary>
     </ErrorBoundary>
   );
 };

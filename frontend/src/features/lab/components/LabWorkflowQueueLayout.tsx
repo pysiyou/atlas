@@ -20,14 +20,16 @@ export function LabWorkflowQueueScaffold({
   children,
   scrollClassName = WORKSPACE.contentInset,
   scrollRef,
+  'aria-busy': ariaBusy,
 }: {
   filterRow: ReactNode;
   children: ReactNode;
   scrollClassName?: string;
   scrollRef?: React.Ref<HTMLDivElement>;
+  'aria-busy'?: boolean;
 }): React.ReactElement {
   return (
-    <div className="h-full flex flex-col min-h-0">
+    <div className="h-full flex flex-col min-h-0" aria-busy={ariaBusy || undefined}>
       <div className="shrink-0">{filterRow}</div>
       <div ref={scrollRef} className={`flex-1 min-h-0 overflow-y-auto ${scrollClassName}`}>
         {children}

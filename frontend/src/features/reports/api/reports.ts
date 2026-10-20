@@ -18,6 +18,8 @@ export interface ReportableOrderItem {
   patientName: string;
   patientDob?: string | null;
   patientGender?: string | null;
+  patientEmail?: string | null;
+  patientPhone?: string | null;
   activeTestCount: number;
   validatedTestCount: number;
   testCodes?: string[];
@@ -48,6 +50,8 @@ export function toReportableOrder(item: ReportableOrderItem): ReportableOrder {
     patientAge: age,
     patientDob: item.patientDob ?? undefined,
     patientGender: item.patientGender ?? undefined,
+    patientEmail: item.patientEmail ?? undefined,
+    patientPhone: item.patientPhone ?? undefined,
     activeTestCount: item.activeTestCount,
     validatedTestCount: item.validatedTestCount,
     testCodes: item.testCodes ?? [],

@@ -23,7 +23,6 @@ import { downloadLabReport, prepareReportData } from '../utils/prepareReportData
 import type { LabReportPayload } from '../types';
 import { formatDate } from '@/utils';
 import { notify } from '@/utils/feedback';
-import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 
 export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
   isOpen,
@@ -125,6 +124,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
     >
       <ModalPageShell
         bodyClassName={MODAL_WORKFLOW_BODY_STACK}
+        loading={waiting}
         footer={
           <DialogFooter
             start={<FooterInfo icon={MODULE_ICONS.reports} label="Reports" size="md" />}
@@ -143,11 +143,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
           />
         }
       >
-        {waiting ? (
-          <DetailPageSkeleton variant="responsive-detail" />
-        ) : (
-          <ReportPreviewResults reportData={reportData} />
-        )}
+        {reportData ? <ReportPreviewResults reportData={reportData} /> : null}
       </ModalPageShell>
     </Modal>
   );

@@ -5,7 +5,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { LoadingState } from '@/components/loaders/LoadingState';
+import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { ErrorAlert } from '@/components/loaders/ErrorAlert';
 import { EmptyState } from '@/components/display';
 import { ICONS } from '@/config/icons';
@@ -24,11 +24,9 @@ export interface DetailPageShellProps {
   header: ReactNode;
   /** Main content (rendered in scrollable area when not loading/error/notFound) */
   children: ReactNode;
-  /** When true, show full-screen loading instead of content (or loadingSkeleton if provided) */
+  /** When true, show loading skeleton in the scroll area instead of content */
   loading?: boolean;
-  /** Loading message when loading is true (used only when loadingSkeleton is not provided) */
-  loadingMessage?: string;
-  /** Optional skeleton to show in place of content when loading; shell still shows header + this in scroll area */
+  /** Optional skeleton when loading; defaults to a generic detail layout */
   loadingSkeleton?: ReactNode;
   /** When set, show ErrorAlert above content (or instead of content if no children yet) */
   error?: DetailPageShellError | null;
@@ -49,7 +47,6 @@ export const DetailPageShell: React.FC<DetailPageShellProps> = ({
   header,
   children,
   loading = false,
-  loadingMessage = 'Loading...',
   loadingSkeleton,
   error = null,
   onRetry,
@@ -63,17 +60,16 @@ export const DetailPageShell: React.FC<DetailPageShellProps> = ({
   const headerSlotClass = headerInChrome ? 'contents' : 'shrink-0';
 
   if (loading) {
-    if (loadingSkeleton != null) {
-      return (
-        <div className={cn(WORKSPACE.page, className)}>
-          <div className={headerSlotClass}>{header}</div>
-          <div className="flex-1 min-h-0 overflow-auto" aria-busy="true">
-            {loadingSkeleton}
-          </div>
+    const skeleton =
+      loadingSkeleton ?? <DetailPageSkeleton variant="responsive-detail" aria-label="Loading" />;
+    return (
+      <div className={cn(WORKSPACE.page, className)}>
+        <div className={headerSlotClass}>{header}</div>
+        <div className="flex-1 min-h-0 overflow-auto" aria-busy="true">
+          {skeleton}
         </div>
-      );
-    }
-    return <LoadingState message={loadingMessage} fullScreen />;
+      </div>
+    );
   }
 
   return (

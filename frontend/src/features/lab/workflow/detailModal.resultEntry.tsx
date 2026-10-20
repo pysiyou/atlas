@@ -21,7 +21,6 @@ import { isLabActionAllowed } from '../utils/queueDisplay';
 import { errorAlertMessage, notify } from '@/utils/feedback';
 import { logger } from '@/utils/logger';
 import { Modal, ModalPageShell } from '@/components/overlays';
-import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { ErrorAlert } from '@/components/loaders';
 import type { ResultDetailModalProps } from '@/lib/context/modalTypes';
 
@@ -121,9 +120,7 @@ export const ResultEntryDetailModal: React.FC<ResultDetailModalProps> = ({
   if (isOpen && ((isLoading && !test) || waitingOnCatalog)) {
     return (
       <Modal isOpen={isOpen} onClose={onClose} title="Result entry" size="3xl" isActive={isActive}>
-        <ModalPageShell>
-          <DetailPageSkeleton variant="responsive-detail" />
-        </ModalPageShell>
+        <ModalPageShell loading />
       </Modal>
     );
   }

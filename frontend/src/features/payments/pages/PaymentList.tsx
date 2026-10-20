@@ -78,7 +78,6 @@ export const PaymentList: React.FC = () => {
     goToPage,
     resetPage,
     isLoading: ordersLoading,
-    isFetching,
     isError: ordersError,
     error: ordersErrorObj,
     refetch,
@@ -87,7 +86,7 @@ export const PaymentList: React.FC = () => {
   const orderIds = useMemo(() => orders.map(order => order.orderId), [orders]);
   const { payments, isLoading: paymentsLoading } = usePaymentsForOrderIds(orderIds);
   const { getTestName, isLoading: testsCatalogLoading } = useTestNameLookup();
-  const isLoading = ordersLoading || isFetching || paymentsLoading || testsCatalogLoading;
+  const isLoading = ordersLoading || paymentsLoading || testsCatalogLoading;
 
   const error = ordersError
     ? {

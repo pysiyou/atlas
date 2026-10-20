@@ -2,7 +2,7 @@
  * Renders every frame in the modal stack. Lower frames stay mounted and inert.
  */
 
-import React, { Suspense, createElement, useEffect } from 'react';
+import React, { createElement, useEffect } from 'react';
 import { useModal, useModalStack } from '@/lib/context/ModalContext';
 import { modalFrameKey, modalFramePayload } from '@/lib/context/modalTypes';
 import { getRegisteredModal, initializeModalRegistry } from './modalRegistry';
@@ -29,19 +29,20 @@ export const ModalRenderer: React.FC = () => {
   }, [unknownType, closeModal]);
 
   return (
-    <Suspense fallback={null}>
+    <>
       {stack.map((frame, index) => {
         const entry = getRegisteredModal(frame.type);
         if (!entry) return null;
         const isActive = index === stack.length - 1;
+        const frameKey = modalFrameKey(frame);
         return createElement(entry.component, {
-          key: modalFrameKey(frame),
+          key: frameKey,
           isOpen: true,
           onClose: closeModal,
           isActive,
           ...modalFramePayload(frame),
         });
       })}
-    </Suspense>
+    </>
   );
 };

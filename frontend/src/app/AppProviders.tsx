@@ -6,7 +6,6 @@
 import React, { type ReactNode } from 'react';
 import { QueryProvider } from '@/lib/query';
 import { ModalProvider } from '@/lib/context/ModalContext';
-import { LoadingScopeProvider } from '@/components/loaders';
 
 interface AppProvidersProps {
   children: ReactNode;
@@ -19,7 +18,7 @@ function composeProviders(
     providers.reduceRight((acc, Provider) => <Provider>{acc}</Provider>, children);
 }
 
-const featureProviders = [LoadingScopeProvider, ModalProvider];
+const featureProviders = [ModalProvider];
 const ComposedProviders = composeProviders(featureProviders);
 
 export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => (
@@ -28,4 +27,4 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => (
   </QueryProvider>
 );
 
-export { QueryProvider, ModalProvider, LoadingScopeProvider };
+export { QueryProvider, ModalProvider };

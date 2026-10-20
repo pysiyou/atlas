@@ -20,7 +20,6 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
   getUserName,
 }) => {
   const orderExtended = reportData.order as typeof reportData.order & {
-    patientPhone?: string;
     patientEmail?: string;
   };
 
@@ -104,15 +103,7 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
                 </span>
               </div>
             )}
-            {orderExtended.patientPhone && (
-              <div className="flex gap-space-2">
-                <span className={`${TYPE.label} min-w-[50px] truncate`}>Phone:</span>
-                <span className={`${TYPE.value} font-normal`}>
-                  {orderExtended.patientPhone}
-                </span>
-              </div>
-            )}
-            {!orderExtended.patientPhone && orderExtended.patientEmail && (
+            {orderExtended.patientEmail && (
               <div className="flex gap-space-2">
                 <span className={`${TYPE.label} min-w-[50px] truncate`}>Email:</span>
                 <span className={`${TYPE.value} font-normal`}>

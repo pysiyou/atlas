@@ -64,7 +64,6 @@ export const PatientList: React.FC = () => {
     goToPage,
     resetPage,
     isLoading,
-    isFetching,
     isError,
     error: patientsError,
     refetch,
@@ -90,7 +89,7 @@ export const PatientList: React.FC = () => {
         <ListView
           items={patients}
           viewConfig={patientTableConfig}
-          loading={isLoading || isFetching}
+          loading={isLoading}
           error={error}
           onRetry={refetch}
           onDismissError={() => undefined}
