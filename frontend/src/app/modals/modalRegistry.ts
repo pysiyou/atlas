@@ -1,42 +1,17 @@
 /**
- * Modal Registry — lazy components keyed by ModalType.
- * Frames are already typed; the renderer spreads payload + base props.
+ * Modal Registry — components keyed by ModalType.
+ * Eager imports keep a single Modal instance per open (no Suspense shell swap).
  */
 
-import { lazy, type ComponentType } from 'react';
+import type { ComponentType } from 'react';
 import { ModalType } from '@/lib/context/ModalContext';
 import type { BaseModalProps, ModalType as ModalTypeName } from '@/lib/context/modalTypes';
-
-const SampleCollectionDetailModal = lazy(() =>
-  import('@/features/lab/workflow/detailModal.sampleCollection').then(module => ({
-    default: module.SampleCollectionDetailModal,
-  }))
-);
-const ResultEntryDetailModal = lazy(() =>
-  import('@/features/lab/workflow/detailModal.resultEntry').then(module => ({
-    default: module.ResultEntryDetailModal,
-  }))
-);
-const TestDetailModal = lazy(() =>
-  import('@/features/lab/workflow/detailModal.test').then(module => ({
-    default: module.TestDetailModal,
-  }))
-);
-const EscalationResolutionModal = lazy(() =>
-  import('@/features/lab/workflow/detailModal.escalation').then(module => ({
-    default: module.EscalationResolutionModal,
-  }))
-);
-const OrderUpsertModal = lazy(() =>
-  import('@/features/orders/OrderUpsertModal').then(module => ({
-    default: module.OrderUpsertModal,
-  }))
-);
-const ReportPreviewModal = lazy(() =>
-  import('@/features/reports/components/ReportPreviewModal').then(module => ({
-    default: module.ReportPreviewModal,
-  }))
-);
+import { SampleCollectionDetailModal } from '@/features/lab/workflow/detailModal.sampleCollection';
+import { ResultEntryDetailModal } from '@/features/lab/workflow/detailModal.resultEntry';
+import { TestDetailModal } from '@/features/lab/workflow/detailModal.test';
+import { EscalationResolutionModal } from '@/features/lab/workflow/detailModal.escalation';
+import { OrderUpsertModal } from '@/features/orders/OrderUpsertModal';
+import { ReportPreviewModal } from '@/features/reports/components/ReportPreviewModal';
 
 export type { BaseModalProps } from '@/lib/context/modalTypes';
 

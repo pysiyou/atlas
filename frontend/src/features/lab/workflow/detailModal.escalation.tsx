@@ -17,7 +17,6 @@ import {
 import { labModalHeaderContext } from './detailModalLayout';
 import { useOrderTestContext } from '../api/results';
 import { Modal, ModalPageShell } from '@/components/overlays';
-import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import type { EscalationResolutionModalProps } from '@/lib/context/modalTypes';
 
 function ticketString(value: unknown): string | undefined {
@@ -74,9 +73,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   if (isOpen && isLoading && !test) {
     return (
       <Modal isOpen={isOpen} onClose={onClose} title="Escalation" size="3xl" isActive={isActive}>
-        <ModalPageShell>
-          <DetailPageSkeleton variant="responsive-detail" />
-        </ModalPageShell>
+        <ModalPageShell loading />
       </Modal>
     );
   }

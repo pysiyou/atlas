@@ -68,7 +68,6 @@ export function useTestDetailModalActions({
   );
   const { execute: handleApprove, isPending: isApproving } = useAsyncAction(approveHandler, {
     minDisplayMs: 500,
-    scope: 'inline',
   });
 
   const handleReject = useCallback(

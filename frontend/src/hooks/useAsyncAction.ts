@@ -1,12 +1,10 @@
 /**
- * useAsyncAction - Async action with cancellation, min display time, and optional scope registration.
- * Replaces useAsyncHandler for modal/button flows when cancellation or scope is needed.
+ * useAsyncAction - Async action with cancellation and optional minimum pending display time.
  * @module hooks/useAsyncAction
  */
 
-import { useState, useCallback, useRef, useEffect, useId } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import type { UseAsyncActionOptions, LoadingStatus } from '@/components/loaders';
-import { useLoadingScopeActions } from '@/components/loaders';
 
 export interface UseAsyncActionReturn<T extends unknown[]> {
   execute: (...args: T) => Promise<void>;
@@ -17,17 +15,13 @@ export interface UseAsyncActionReturn<T extends unknown[]> {
 }
 
 /**
- * Handler receives AbortSignal as first argument; new execute() aborts previous run.
- * When scope is 'global' or 'section', registers with LoadingScopeContext for the duration of the run.
+ * Handler receives AbortSignal as first argument; new execute() aborts the previous run.
  */
 export function useAsyncAction<T extends unknown[]>(
   handler: (signal: AbortSignal, ...args: T) => void | Promise<void>,
   options: UseAsyncActionOptions = {}
 ): UseAsyncActionReturn<T> {
-  const { minDisplayMs = 0, scope = 'inline', scopeId, onError } = options;
-
-  const id = useId();
-  const { register, unregister } = useLoadingScopeActions();
+  const { minDisplayMs = 0, onError } = options;
 
   const [status, setStatus] = useState<LoadingStatus>('idle');
   const [error, setError] = useState<unknown>(null);
@@ -44,13 +38,10 @@ export function useAsyncAction<T extends unknown[]>(
   const finishRun = useCallback(
     (newStatus: LoadingStatus, err?: unknown) => {
       clearMinDisplayTimeout();
-      if (scope === 'global' || scope === 'section') {
-        unregister(scope, scope === 'section' ? scopeId : undefined, id);
-      }
       setStatus(newStatus);
       setError(err ?? null);
     },
-    [clearMinDisplayTimeout, scope, scopeId, id, unregister]
+    [clearMinDisplayTimeout]
   );
 
   const execute = useCallback(
@@ -62,9 +53,6 @@ export function useAsyncAction<T extends unknown[]>(
       controllerRef.current = controller;
       const start = Date.now();
 
-      if (scope === 'global' || scope === 'section') {
-        register(scope, scope === 'section' ? scopeId : undefined, id);
-      }
       setStatus('pending');
       setError(null);
 
@@ -98,7 +86,7 @@ export function useAsyncAction<T extends unknown[]>(
         }
       }
     },
-    [handler, minDisplayMs, scope, scopeId, id, register, finishRun, onError]
+    [handler, minDisplayMs, finishRun, onError]
   );
 
   const cancel = useCallback(() => {
@@ -108,23 +96,17 @@ export function useAsyncAction<T extends unknown[]>(
     }
     clearMinDisplayTimeout();
     if (status === 'pending') {
-      if (scope === 'global' || scope === 'section') {
-        unregister(scope, scope === 'section' ? scopeId : undefined, id);
-      }
       setStatus('idle');
       setError(null);
     }
-  }, [status, scope, scopeId, id, unregister, clearMinDisplayTimeout]);
+  }, [status, clearMinDisplayTimeout]);
 
   useEffect(() => {
     return () => {
       if (controllerRef.current) controllerRef.current.abort();
       clearMinDisplayTimeout();
-      if (scope === 'global' || scope === 'section') {
-        unregister(scope, scope === 'section' ? scopeId : undefined, id);
-      }
     };
-  }, [scope, scopeId, id, unregister, clearMinDisplayTimeout]);
+  }, [clearMinDisplayTimeout]);
 
   const isPending = status === 'pending';
 

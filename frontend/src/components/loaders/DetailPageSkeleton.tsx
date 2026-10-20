@@ -21,6 +21,11 @@ export interface DetailSkeletonSection {
 
 export type DetailPageSkeletonVariant = 'responsive-detail' | 'balanced-grid' | 'workflow-grid';
 
+/** Fallback when responsive/balanced variants render without feature-specific sections. */
+export const DEFAULT_DETAIL_SKELETON_SECTIONS: DetailSkeletonSection[] = [
+  { preset: 'catalog.detail.testOverview', rows: 6, layout: 'column' },
+];
+
 export interface DetailPageSkeletonProps {
   variant?: DetailPageSkeletonVariant;
   sections?: DetailSkeletonSection[];
@@ -152,15 +157,21 @@ export const DetailPageSkeleton: React.FC<DetailPageSkeletonProps> = ({
   renderLargeLayout,
   'aria-label': ariaLabel = 'Loading',
 }) => {
+  const layoutSections =
+    sections.length > 0 ? sections : DEFAULT_DETAIL_SKELETON_SECTIONS;
+
   if (variant === 'workflow-grid') {
     return <WorkflowGridSkeleton cardCount={workflowCardCount} />;
   }
   if (variant === 'balanced-grid') {
-    return <BalancedGridSkeleton sections={sections} />;
+    return <BalancedGridSkeleton sections={layoutSections} />;
   }
   return (
     <div aria-busy="true" aria-label={ariaLabel}>
-      <ResponsiveDetailSkeleton sections={sections} renderLargeLayout={renderLargeLayout} />
+      <ResponsiveDetailSkeleton
+        sections={layoutSections}
+        renderLargeLayout={renderLargeLayout}
+      />
     </div>
   );
 };

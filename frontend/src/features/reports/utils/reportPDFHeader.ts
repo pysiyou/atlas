@@ -1,95 +1,107 @@
 /**
- * Hospital-style lab report header — request metadata left, patient identity right.
+ * Lab report PDF header — left column (lab / order) and right column (patient).
+ * Each row: fixed-width label + bold value.
  */
 
 import { format, isValid, parseISO } from 'date-fns';
 import type jsPDF from 'jspdf';
-import { companyConfig } from '@/config/company';
-import { displayId } from '@/utils/id';
+import { companyConfig } from '@/config';
+import { displayId } from '@/utils';
 import type { LabReportPayload } from '../types';
 
-const FONT = 'helvetica';
-const FONT_SIZE = 9;
-const PATIENT_NAME_SIZE = 10;
-const LINE_HEIGHT = 4.8;
-const COLUMN_GAP = 8;
-const EMPTY_VALUE = '—';
+const FONT = 'courier';
+/** Same 7pt as the result table in reportPDFBody. */
+const FONT_SIZE = 7;
+const LINE_HEIGHT = 4;
+
+const LEFT_LABEL_CHARS = 15;
+const RIGHT_LABEL_CHARS = 10;
 
 const LEFT_LABELS = {
-  department: 'Department',
-  request: 'Request',
-  collectedAt: 'Collection Date',
-  printedAt: 'Print Date',
-  acceptedAt: 'Lab Acceptance',
-  prescriber: 'Prescriber',
+  branch: 'Branch',
+  order: 'Order',
+  sampling: 'Sampling',
+  printingDate: 'Printing date',
+  referentDoctor: 'Referent doctor',
 } as const;
 
 const RIGHT_LABELS = {
   patient: 'Patient',
-  dateOfBirth: 'Date of Birth',
-  age: 'Age',
+  birthday: 'Birthday',
   sex: 'Sex',
-  mrn: 'MRN',
+  email: 'Email',
 } as const;
+
+interface HeaderFieldRow {
+  label: string;
+  value: string;
+  highlightValue?: boolean;
+}
 
 export interface LabReportHeaderLayout {
   margin: number;
   pageWidth: number;
+  leftX: number;
+  rightX: number;
+  rightEdge: number;
+  leftValueX: number;
+  rightValueX: number;
+  referrerRowY: number;
 }
 
-export interface LabReportHeaderPageInfo {
+export interface LabReportPageInfo {
   pageNumber: number;
   pageCount: number;
 }
 
-/**
- * Parses an ISO/date value into a valid Date, or null when missing/invalid.
- */
-function parseHeaderDate(dateString?: string | Date | null): Date | null {
+type OrderWithPatientContact = LabReportPayload['order'] & {
+  patientEmail?: string;
+};
+
+function formatLabel(label: string, widthChars: number): string {
+  return `${label.padEnd(widthChars, ' ')} :`;
+}
+
+function parseReportInstant(dateString?: string | null): Date | null {
   if (!dateString) return null;
   try {
-    const date = typeof dateString === 'string' ? parseISO(dateString) : dateString;
-    return isValid(date) ? date : null;
+    const parsed = parseISO(dateString);
+    return isValid(parsed) ? parsed : null;
   } catch {
     return null;
   }
 }
 
-/** Header date: `dd/MM/yyyy`. */
-export function formatHeaderDate(dateString?: string | Date | null): string {
-  const date = parseHeaderDate(dateString);
-  if (!date) return '';
-  return format(date, 'dd/MM/yyyy');
+function formatReportDate(dateString?: string | null): string {
+  const parsed = parseReportInstant(dateString);
+  return parsed ? format(parsed, 'dd/MM/yyyy') : '';
 }
 
-/** Header clock: `HH:mm`. */
-export function formatHeaderClock(dateString?: string | Date | null): string {
-  const date = parseHeaderDate(dateString);
-  if (!date) return '';
-  return format(date, 'HH:mm');
+function formatReportClock(dateString?: string | null): string {
+  const parsed = parseReportInstant(dateString);
+  return parsed ? format(parsed, 'HH:mm') : '';
 }
 
-/**
- * Header datetime matching the reference layout: `dd/MM/yyyy Time: HH:mm`.
- */
-export function formatHeaderDateTime(dateString?: string | Date | null): string {
-  const datePart = formatHeaderDate(dateString);
-  const timePart = formatHeaderClock(dateString);
-  if (datePart && timePart) return `${datePart} Time: ${timePart}`;
+/** `on: dd/MM/yyyy at: HH:mm` */
+function formatOnAt(dateString?: string | null): string {
+  const datePart = formatReportDate(dateString);
+  const timePart = formatReportClock(dateString);
+  if (datePart && timePart) return `on: ${datePart} at: ${timePart}`;
+  if (datePart) return `on: ${datePart}`;
+  if (timePart) return `at: ${timePart}`;
+  return '';
+}
+
+/** `dd/MM/yyyy at: HH:mm` */
+function formatAtDateTime(dateString?: string | null): string {
+  const datePart = formatReportDate(dateString);
+  const timePart = formatReportClock(dateString);
+  if (datePart && timePart) return `${datePart} at: ${timePart}`;
   return datePart || timePart;
 }
 
-/**
- * Request value: `{orderId} of {dd/MM/yyyy} Time: {HH:mm}`.
- */
-export function formatRequestValue(
-  orderId: number,
-  dateString?: string | Date | null
-): string {
-  if (!Number.isInteger(orderId) || orderId < 0) return EMPTY_VALUE;
-  const id = displayId.order(orderId);
-  const dateTime = formatHeaderDateTime(dateString);
-  return dateTime ? `${id} of ${dateTime}` : id;
+function formatAtFromDate(date: Date): string {
+  return `${format(date, 'dd/MM/yyyy')} at: ${format(date, 'HH:mm')}`;
 }
 
 function genderLetter(gender?: string): string {
@@ -100,141 +112,202 @@ function genderLetter(gender?: string): string {
   return gender.charAt(0).toUpperCase();
 }
 
-function resolveDepartmentName(): string {
+function resolveBranchName(): string {
   const city = companyConfig.getContact().address.city?.trim();
   if (city) return city;
   return companyConfig.getName();
 }
 
-function resolvePrescriber(reportData: LabReportPayload): string {
-  const raw = reportData.order.referringPhysician?.trim();
-  return raw || EMPTY_VALUE;
-}
-
-function displayOrEmpty(value?: string | null): string {
-  const trimmed = value?.trim();
-  return trimmed ? trimmed : EMPTY_VALUE;
-}
-
-/**
- * Truncates text with an ellipsis so it fits `maxWidth` in the current font.
- */
-function fitText(doc: jsPDF, text: string, maxWidth: number): string {
-  if (maxWidth <= 0) return '';
-  if (doc.getTextWidth(text) <= maxWidth) return text;
-  const ellipsis = '...';
-  const ellipsisWidth = doc.getTextWidth(ellipsis);
-  if (ellipsisWidth >= maxWidth) return '';
-  let next = text;
-  while (next.length > 0 && doc.getTextWidth(next) + ellipsisWidth > maxWidth) {
-    next = next.slice(0, -1);
-  }
-  return next.length > 0 ? `${next}${ellipsis}` : '';
-}
-
-/**
- * Draws `Label: Value` at (x, y) and returns the x after the last character.
- */
-function drawLabeledValue(
-  doc: jsPDF,
-  x: number,
-  y: number,
-  label: string,
-  value: string,
-  options: { maxWidth?: number; valueSize?: number } = {}
-): number {
-  doc.setFont(FONT, 'bold');
-  doc.setFontSize(FONT_SIZE);
-  doc.setTextColor(0, 0, 0);
-  const labelText = `${label}: `;
-  doc.text(labelText, x, y);
-  const valueX = x + doc.getTextWidth(labelText);
-  const valueSize = options.valueSize ?? FONT_SIZE;
-  doc.setFontSize(valueSize);
-  const remainingWidth =
-    options.maxWidth != null
-      ? Math.max(options.maxWidth - (valueX - x), 4)
-      : undefined;
-  const fitted =
-    remainingWidth != null ? fitText(doc, value, remainingWidth) : value;
-  doc.text(fitted, valueX, y);
-  return valueX + doc.getTextWidth(fitted);
-}
-
-export interface LabReportHeaderField {
-  label: string;
-  value: string;
-  valueSize?: number;
-}
-
-export interface LabReportHeaderModel {
-  left: LabReportHeaderField[];
-  right: LabReportHeaderField[][];
-}
-
-/**
- * Builds the printable header rows. `printedAt` is injected so tests can freeze print time.
- */
-export function buildLabReportHeaderModel(
-  reportData: LabReportPayload,
-  printedAt: Date = new Date()
-): LabReportHeaderModel {
-  const registeredAt =
+function resolveRegisteredAt(reportData: LabReportPayload): string | undefined {
+  return (
     reportData.timestamps?.registeredAt ??
     reportData.order.orderDate ??
-    reportData.order.createdAt;
-  const collectedAt =
-    reportData.timestamps?.collectedAt ?? reportData.sampleCollection?.collectedAt;
-  const acceptedAt = reportData.timestamps?.acceptedAt ?? collectedAt;
+    reportData.order.createdAt
+  );
+}
 
-  const patientName = displayOrEmpty(reportData.patientName?.toUpperCase());
-  const dateOfBirth = displayOrEmpty(formatHeaderDate(reportData.patientDob));
-  const sex = genderLetter(reportData.patientGender) || EMPTY_VALUE;
-  const dobRow: LabReportHeaderField[] = [
-    { label: RIGHT_LABELS.dateOfBirth, value: dateOfBirth },
-  ];
-  if (reportData.patientAge !== undefined && reportData.patientAge >= 0) {
-    dobRow.push({ label: RIGHT_LABELS.age, value: `${reportData.patientAge} Years` });
+function resolveCollectedAt(reportData: LabReportPayload): string | undefined {
+  return (
+    reportData.timestamps?.collectedAt ??
+    reportData.sampleCollection?.collectedAt ??
+    reportData.timestamps?.acceptedAt ??
+    reportData.order.scheduledCollectionTime
+  );
+}
+
+function resolveReferrer(reportData: LabReportPayload): string {
+  return reportData.order.referringPhysician?.trim() ?? '';
+}
+
+function resolvePatientEmail(reportData: LabReportPayload): string {
+  const order = reportData.order as OrderWithPatientContact;
+  return reportData.patientEmail?.trim() || order.patientEmail?.trim() || '';
+}
+
+function formatPatientNameAndCode(reportData: LabReportPayload): string {
+  const code = displayId.patient(reportData.patientId);
+  return `${reportData.patientName}(Internal: ${code})`;
+}
+
+function formatBirthdayValue(reportData: LabReportPayload): string {
+  const dobPart = reportData.patientDob
+    ? formatReportDate(reportData.patientDob)
+    : '';
+  const age = reportData.patientAge;
+  if (dobPart && age !== undefined) {
+    const ageLabel = age === 1 ? '1 year old' : `${age} years old`;
+    return `${dobPart} (${ageLabel})`;
   }
+  if (dobPart) return dobPart;
+  if (age !== undefined) {
+    const ageLabel = age === 1 ? '1 year old' : `${age} years old`;
+    return `(${ageLabel})`;
+  }
+  return '';
+}
+
+function formatOrderValue(reportData: LabReportPayload): string {
+  const orderId = displayId.order(reportData.order.orderId);
+  const when = formatOnAt(resolveRegisteredAt(reportData));
+  return when ? `${orderId} ${when}` : orderId;
+}
+
+function measureValueStart(doc: jsPDF, labelChars: number): number {
+  doc.setFont(FONT, 'normal');
+  doc.setFontSize(FONT_SIZE);
+  return doc.getTextWidth(formatLabel('X'.repeat(labelChars), labelChars)) + 1.2;
+}
+
+function measureMaxBoldTextWidth(doc: jsPDF, values: string[]): number {
+  doc.setFont(FONT, 'bold');
+  doc.setFontSize(FONT_SIZE);
+  let max = 0;
+  for (const value of values) {
+    if (!value) continue;
+    max = Math.max(max, doc.getTextWidth(value));
+  }
+  return max;
+}
+
+/** Labels + values as one block, flush to the right page margin. */
+function resolveRightColumnPositions(
+  doc: jsPDF,
+  pageWidth: number,
+  margin: number,
+  values: string[]
+): { rightX: number; rightValueX: number; rightEdge: number } {
+  const rightEdge = pageWidth - margin;
+  const valueOffset = measureValueStart(doc, RIGHT_LABEL_CHARS);
+  const maxValueWidth = measureMaxBoldTextWidth(doc, values) + 1;
+  const blockWidth = valueOffset + maxValueWidth;
+  const rightX = rightEdge - blockWidth;
 
   return {
-    left: [
-      { label: LEFT_LABELS.department, value: resolveDepartmentName() },
-      {
-        label: LEFT_LABELS.request,
-        value: formatRequestValue(reportData.order.orderId, registeredAt),
-      },
-      {
-        label: LEFT_LABELS.collectedAt,
-        value: displayOrEmpty(formatHeaderDateTime(collectedAt)),
-      },
-      {
-        label: LEFT_LABELS.printedAt,
-        value: formatHeaderDateTime(printedAt),
-      },
-      {
-        label: LEFT_LABELS.acceptedAt,
-        value: displayOrEmpty(formatHeaderDateTime(acceptedAt)),
-      },
-      { label: LEFT_LABELS.prescriber, value: resolvePrescriber(reportData) },
-    ],
-    right: [
-      [{ label: RIGHT_LABELS.patient, value: patientName, valueSize: PATIENT_NAME_SIZE }],
-      dobRow,
-      [{ label: RIGHT_LABELS.sex, value: sex }],
-      [{ label: RIGHT_LABELS.mrn, value: displayId.patient(reportData.patientId) }],
-    ],
+    rightX,
+    rightValueX: rightX + valueOffset,
+    rightEdge,
   };
 }
 
-function drawHeaderRule(doc: jsPDF, y: number, margin: number, pageWidth: number): void {
-  doc.setDrawColor(0, 0, 0);
-  doc.setLineWidth(0.45);
-  doc.line(margin, y, pageWidth - margin, y);
+function resolveColumnPositions(
+  doc: jsPDF,
+  pageWidth: number,
+  margin: number,
+  rightColumnValues: string[]
+): { leftX: number; leftValueX: number; rightX: number; rightValueX: number; rightEdge: number } {
+  const leftX = margin;
+  const leftValueX = leftX + measureValueStart(doc, LEFT_LABEL_CHARS);
+  const right = resolveRightColumnPositions(doc, pageWidth, margin, rightColumnValues);
+
+  return {
+    leftX,
+    leftValueX,
+    ...right,
+  };
+}
+
+function drawHeaderField(
+  doc: jsPDF,
+  colX: number,
+  valueX: number,
+  y: number,
+  label: string,
+  labelChars: number,
+  value: string,
+  options: { highlightValue?: boolean } = {}
+): void {
+  doc.setFont(FONT, 'normal');
+  doc.setFontSize(FONT_SIZE);
+  doc.setTextColor(0, 0, 0);
+  doc.text(formatLabel(label, labelChars), colX, y);
+
+  if (!value) return;
+
+  if (options.highlightValue) {
+    doc.setFont(FONT, 'bold');
+    const width = doc.getTextWidth(value) + 1.5;
+    doc.setFillColor(235, 225, 248);
+    doc.rect(valueX - 0.4, y - 2.2, width, 3, 'F');
+  }
+
+  doc.setFont(FONT, 'bold');
+  doc.setFontSize(FONT_SIZE);
+  doc.setTextColor(0, 0, 0);
+  doc.text(value, valueX, y);
+}
+
+function buildLeftColumnRows(reportData: LabReportPayload): HeaderFieldRow[] {
+  const collectedAt = resolveCollectedAt(reportData);
+  const samplingValue = formatAtDateTime(collectedAt);
+
+  return [
+    {
+      label: LEFT_LABELS.branch,
+      value: resolveBranchName(),
+      highlightValue: true,
+    },
+    {
+      label: LEFT_LABELS.order,
+      value: formatOrderValue(reportData),
+    },
+    {
+      label: LEFT_LABELS.sampling,
+      value: samplingValue,
+    },
+    {
+      label: LEFT_LABELS.printingDate,
+      value: formatAtFromDate(new Date()),
+    },
+    {
+      label: LEFT_LABELS.referentDoctor,
+      value: resolveReferrer(reportData),
+    },
+  ];
+}
+
+function buildRightColumnRows(reportData: LabReportPayload): HeaderFieldRow[] {
+  return [
+    {
+      label: RIGHT_LABELS.patient,
+      value: formatPatientNameAndCode(reportData),
+    },
+    {
+      label: RIGHT_LABELS.birthday,
+      value: formatBirthdayValue(reportData),
+    },
+    {
+      label: RIGHT_LABELS.sex,
+      value: genderLetter(reportData.patientGender),
+    },
+    {
+      label: RIGHT_LABELS.email,
+      value: resolvePatientEmail(reportData),
+    },
+  ];
 }
 
 /**
- * Renders the two-column identity header and the rule beneath it.
+ * Renders the two-column lab report header.
  */
 export function drawLabReportHeader(
   doc: jsPDF,
@@ -242,68 +315,81 @@ export function drawLabReportHeader(
   margin: number
 ): { layout: LabReportHeaderLayout; endY: number } {
   const pageWidth = doc.internal.pageSize.getWidth();
-  const contentWidth = pageWidth - margin * 2;
-  const leftWidth = contentWidth * 0.54;
-  const rightX = margin + leftWidth + COLUMN_GAP;
-  const rightWidth = Math.max(contentWidth - leftWidth - COLUMN_GAP, 40);
-  const model = buildLabReportHeaderModel(reportData);
-  const rowCount = Math.max(model.left.length, model.right.length);
+  const leftRows = buildLeftColumnRows(reportData);
+  const rightRows = buildRightColumnRows(reportData);
+  const rightColumnValues = rightRows.map(row => row.value);
+  const { leftX, leftValueX, rightX, rightValueX, rightEdge } = resolveColumnPositions(
+    doc,
+    pageWidth,
+    margin,
+    rightColumnValues
+  );
+  const rowCount = Math.max(leftRows.length, rightRows.length);
 
   let y = margin;
+  let referrerRowY = y;
+
   for (let index = 0; index < rowCount; index += 1) {
-    const leftField = model.left[index];
-    if (leftField) {
-      drawLabeledValue(doc, margin, y, leftField.label, leftField.value, {
-        maxWidth: leftWidth,
-        valueSize: leftField.valueSize,
-      });
+    const leftRow = leftRows[index];
+    const rightRow = rightRows[index];
+
+    if (leftRow) {
+      if (leftRow.label === LEFT_LABELS.referentDoctor) {
+        referrerRowY = y;
+      }
+      drawHeaderField(
+        doc,
+        leftX,
+        leftValueX,
+        y,
+        leftRow.label,
+        LEFT_LABEL_CHARS,
+        leftRow.value,
+        { highlightValue: leftRow.highlightValue }
+      );
     }
 
-    const rightFields = model.right[index] ?? [];
-    let cursorX = rightX;
-    const lastRightIndex = rightFields.length - 1;
-    rightFields.forEach((field, fieldIndex) => {
-      const remaining = rightX + rightWidth - cursorX;
-      if (remaining < 8) return;
-      const fieldMaxWidth =
-        fieldIndex === lastRightIndex
-          ? remaining
-          : Math.min(remaining, rightWidth * 0.62);
-      cursorX =
-        drawLabeledValue(doc, cursorX, y, field.label, field.value, {
-          maxWidth: fieldMaxWidth,
-          valueSize: field.valueSize,
-        }) + 5;
-    });
+    if (rightRow) {
+      drawHeaderField(
+        doc,
+        rightX,
+        rightValueX,
+        y,
+        rightRow.label,
+        RIGHT_LABEL_CHARS,
+        rightRow.value
+      );
+    }
+
     y += LINE_HEIGHT;
   }
-  y += 1.2;
 
-  drawHeaderRule(doc, y, margin, pageWidth);
-
-  return {
-    layout: { margin, pageWidth },
-    endY: y + 2,
+  const layout: LabReportHeaderLayout = {
+    margin,
+    pageWidth,
+    leftX,
+    rightX,
+    rightEdge,
+    leftValueX,
+    rightValueX,
+    referrerRowY,
   };
+
+  return { layout, endY: y + 2 };
 }
 
-/**
- * Draws `Page n / total` in the bottom-right footer.
- */
-export function drawLabReportPageNumber(
+/** Bottom-right page indicator: `Page x/y`. */
+export function drawLabReportPageFooter(
   doc: jsPDF,
-  layout: LabReportHeaderLayout,
-  pageInfo: LabReportHeaderPageInfo
+  margin: number,
+  pageInfo: LabReportPageInfo
 ): void {
+  const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
-  const y = pageHeight - Math.max(layout.margin - 4, 8);
+  const label = `Page ${pageInfo.pageNumber}/${pageInfo.pageCount}`;
+
   doc.setFont(FONT, 'normal');
-  doc.setFontSize(8);
-  doc.setTextColor(80, 80, 80);
-  doc.text(
-    `Page ${pageInfo.pageNumber} / ${pageInfo.pageCount}`,
-    layout.pageWidth - layout.margin,
-    y,
-    { align: 'right' }
-  );
+  doc.setFontSize(FONT_SIZE);
+  doc.setTextColor(0, 0, 0);
+  doc.text(label, pageWidth - margin, pageHeight - margin / 2, { align: 'right' });
 }

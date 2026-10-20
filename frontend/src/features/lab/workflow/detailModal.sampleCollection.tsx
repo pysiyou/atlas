@@ -15,7 +15,6 @@ import { getTestNames } from '@/features/catalog/testLookup';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { deriveCollectionModalFields } from './detailModal.sampleCollection.derive';
 import { Modal, ModalPageShell } from '@/components/overlays';
-import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { ErrorAlert } from '@/components/loaders';
 import { SampleCollectionDetailModalView } from './detailModal.sampleCollection.view';
 import { findCollectionQueueItem } from '../utils/findCollectionQueueItem';
@@ -122,9 +121,7 @@ export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({
     if (isOpen && sampleId && isFetchingSample) {
       return (
         <Modal isOpen={isOpen} onClose={onClose} title="Sample" size="3xl" isActive={isActive}>
-          <ModalPageShell>
-            <DetailPageSkeleton variant="responsive-detail" />
-          </ModalPageShell>
+          <ModalPageShell loading />
         </Modal>
       );
     }
@@ -140,9 +137,7 @@ export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({
   ) {
     return (
       <Modal isOpen={isOpen} onClose={onClose} title="Sample" size="3xl" isActive={isActive}>
-        <ModalPageShell>
-          <DetailPageSkeleton variant="responsive-detail" />
-        </ModalPageShell>
+        <ModalPageShell loading />
       </Modal>
     );
   }

@@ -19,7 +19,6 @@ import {
 } from './detailModal.test.helpers';
 import { useOrderTestContext } from '../api/results';
 import { Modal, ModalPageShell } from '@/components/overlays';
-import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 
 const EMPTY_REJECTION_CONTEXT: TestWithContext = {
   orderId: 0,
@@ -105,9 +104,7 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({
   if (isOpen && isContextLoading && !fetchedTest && !ready) {
     return (
       <Modal isOpen={isOpen} onClose={onClose} title="Test" size="3xl" isActive={isActive}>
-        <ModalPageShell>
-          <DetailPageSkeleton variant="responsive-detail" />
-        </ModalPageShell>
+        <ModalPageShell loading />
       </Modal>
     );
   }

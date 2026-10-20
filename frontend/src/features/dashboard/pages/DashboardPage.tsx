@@ -15,11 +15,26 @@ import {
 import { buildDashboardStats } from '../components/buildDashboardStats';
 import { DashboardOrdersInProgressBanner } from '../components/DashboardOrdersInProgressBanner';
 import { DashboardRecentOrders } from '../components/DashboardRecentOrders';
+import { SkeletonCard } from '@/components/loaders';
 import { TYPE, WORKSPACE } from '@/components/theme/recipes';
+
+function DashboardLoadingSkeleton() {
+  return (
+    <div className="space-y-space-6" aria-busy="true" aria-label="Loading dashboard">
+      <div className="grid grid-cols-1 gap-space-6 md:grid-cols-2 lg:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <SkeletonCard key={index} />
+        ))}
+      </div>
+      <SkeletonCard />
+    </div>
+  );
+}
 
 export const Dashboard: React.FC = () => {
   const { user: currentUser, hasRole } = useAuthStore();
-  const { summary } = useDashboardSummary();
+  const { summary, isLoading } = useDashboardSummary();
+  const showInitialLoad = isLoading && summary == null;
 
   const isLabRole = hasRole(['administrator', 'lab-technician', 'lab-technician-plus']);
   const isReceptionRole = hasRole(['administrator', 'receptionist']);
@@ -51,6 +66,10 @@ export const Dashboard: React.FC = () => {
 
       <div className="flex-1 min-h-0 overflow-y-auto">
         <div className="space-y-space-6">
+          {showInitialLoad ? (
+            <DashboardLoadingSkeleton />
+          ) : (
+            <>
           <DashboardStatsGrid stats={stats} />
 
           {isLabRole && <LabPipelineSummary />}
@@ -62,6 +81,8 @@ export const Dashboard: React.FC = () => {
 
           {isReceptionRole && (
             <DashboardRecentOrders orders={recentOrders} />
+          )}
+            </>
           )}
         </div>
       </div>

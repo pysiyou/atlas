@@ -16,6 +16,9 @@ export interface ReportableOrder {
   /** ISO date of birth from the report DTO; used on the printable header. */
   patientDob?: string;
   patientGender?: string;
+  patientEmail?: string;
+  /** Loaded for report payloads; not printed on PDF/preview. */
+  patientPhone?: string;
   activeTestCount: number;
   validatedTestCount: number;
   testCodes: string[];
@@ -38,6 +41,9 @@ export interface LabReportPayload {
   /** ISO date of birth for the header Date of Birth field. */
   patientDob?: string;
   patientGender?: string;
+  patientEmail?: string;
+  /** Present on payload for future use; omitted from printable header. */
+  patientPhone?: string;
   sampleCollection?: {
     address?: string;
     collectedAt?: string;

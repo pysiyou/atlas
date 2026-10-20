@@ -124,6 +124,23 @@ describe('prepareReportData', () => {
     expect(payload.timestamps?.acceptedAt).toBe('2026-02-02T11:30:00Z');
   });
 
+  it('maps patient contact fields from the reportable order DTO', () => {
+    const payload = prepareReportData({
+      reportableOrder: {
+        ...reportable([]),
+        patientEmail: 'patient@example.com',
+        patientPhone: '+39 333 1234567',
+      },
+      patients: undefined,
+      catalogTests: [],
+      getSample: () => undefined,
+      getUserName: () => 'Tech',
+    });
+
+    expect(payload.patientEmail).toBe('patient@example.com');
+    expect(payload.patientPhone).toBe('+39 333 1234567');
+  });
+
   it('uses collection time as lab acceptance when no result has been entered', () => {
     const payload = prepareReportData({
       reportableOrder: reportable([

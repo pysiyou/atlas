@@ -2948,6 +2948,10 @@ export interface components {
             /** Patientdob */
             patientDob?: string | null;
             patientGender?: components["schemas"]["Gender"] | null;
+            /** Patientemail */
+            patientEmail?: string | null;
+            /** Patientphone */
+            patientPhone?: string | null;
             /** Activetestcount */
             activeTestCount: number;
             /** Validatedtestcount */

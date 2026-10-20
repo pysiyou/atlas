@@ -104,7 +104,6 @@ export const OrderDetail: React.FC = () => {
     <DetailPageShell
       header={header}
       loading={orderLoading}
-      loadingMessage="Loading order..."
       loadingSkeleton={
         <DetailPageSkeleton
           sections={ORDER_DETAIL_SKELETON_SECTIONS}

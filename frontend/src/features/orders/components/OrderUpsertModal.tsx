@@ -15,7 +15,6 @@ import { formatCurrency } from '@/utils';
 import { ICONS } from '@/config/icons';
 import { useOrderUpsertModal } from '../hooks/useOrderUpsertModal';
 import { OrderUpsertFormFields } from './OrderUpsertFormFields';
-import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { ErrorAlert } from '@/components/loaders';
 import { errorAlertMessage } from '@/utils/feedback';
 import type { OrderUpsertModalOpenProps } from '@/lib/context/modalTypes';
@@ -71,8 +70,8 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
     >
       <ModalPageShell
         bodyPadding="order"
+        loading={waitingOnOrder}
         footer={
-          waitingOnOrder ? undefined : (
             <FormDialogFooter
               submitLabel={submitLabel}
               isSubmitting={isSubmitting || isProcessingPayment}
@@ -93,7 +92,6 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
                 )
               }
             />
-          )
         }
       >
         {orderLoadFailed ? (
@@ -103,8 +101,6 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
               void refetchOrder();
             }}
           />
-        ) : waitingOnOrder ? (
-          <DetailPageSkeleton variant="responsive-detail" />
         ) : (
           <form id="order-form" onSubmit={handleSubmit} className="max-w-full">
             <OrderUpsertFormFields

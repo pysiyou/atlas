@@ -65,7 +65,6 @@ export const OrderList: React.FC = () => {
     page,
     goToPage,
     resetPage,
-    isFetching,
   } = usePaginatedOrders(serverFilters, 1, DEFAULT_LIST_PAGE_SIZE);
 
   const handleStatusFiltersChange = useCallback(
@@ -76,9 +75,9 @@ export const OrderList: React.FC = () => {
     [setFilter, resetPage]
   );
 
-  const { getTestName, isLoading: testsLoading } = useTestNameLookup();
+  const { getTestName } = useTestNameLookup();
 
-  const loading = isLoading || isFetching || testsLoading;
+  const loading = isLoading;
 
   const error = isError
     ? {
