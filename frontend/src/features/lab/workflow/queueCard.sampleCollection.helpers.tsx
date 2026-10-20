@@ -59,7 +59,7 @@ export function SampleCollectionCardDesktop({
             <SampleCollectionPopover
               requirement={requirement}
               patientName={patientName}
-              testName={testNames.join(', ')}
+              testNames={testNames}
               isRecollection={vm.isRecollection}
               collectDisabled={!vm.collectAllowed}
               collectDisabledTitle={vm.collectDisabledTitle}
@@ -131,7 +131,7 @@ export function SampleCollectionCardMobile({
     <SampleCollectionPopover
       requirement={requirement}
       patientName={patientName}
-      testName={testNames.join(', ')}
+      testNames={testNames}
       isRecollection={vm.isRecollection}
       collectDisabled={!vm.collectAllowed}
       collectDisabledTitle={vm.collectDisabledTitle}

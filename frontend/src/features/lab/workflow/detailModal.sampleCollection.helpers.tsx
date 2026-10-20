@@ -180,7 +180,7 @@ export function SampleCollectionDetailFooter({
         <SampleCollectionPopover
           requirement={pendingSampleDisplay.requirement!}
           patientName={patientName}
-          testName={testNames.join(', ')}
+          testNames={testNames}
           isRecollection={isRecollection}
           collectDisabled={!collectAllowed}
           collectDisabledTitle={pendingSampleDisplay.denyMessage ?? undefined}

@@ -3,7 +3,7 @@
  */
 /* eslint-disable react-refresh/only-export-components -- card layout + small layout helpers */
 
-import { type ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 import { cn } from '@/utils';
 import { Card } from '@/components/surfaces';
 import { EntityId } from '@/components/display';
@@ -226,16 +226,62 @@ export function QueueCardMobile({
   );
 }
 
+/** Max rows in "Required for" before collapsing the remainder behind a link. */
+const QUEUE_CARD_TEST_LIST_MAX_VISIBLE = 4;
+const QUEUE_CARD_TEST_LIST_COLLAPSED_COUNT = QUEUE_CARD_TEST_LIST_MAX_VISIBLE - 1;
+
+const queueCardTestListToggleClass = cn(
+  LAB_CARD_LIST_ITEMS.testName,
+  'underline text-text-secondary hover:text-text-primary',
+);
+
 export function QueueCardTestList({ tests }: { tests: Array<{ name: string; code: string }> }) {
+  const [expanded, setExpanded] = useState(false);
+  const canTruncate = tests.length > QUEUE_CARD_TEST_LIST_MAX_VISIBLE;
+  const shouldCollapse = canTruncate && !expanded;
+  const visibleTests = shouldCollapse
+    ? tests.slice(0, QUEUE_CARD_TEST_LIST_COLLAPSED_COUNT)
+    : tests;
+  const remainingCount = tests.length - QUEUE_CARD_TEST_LIST_COLLAPSED_COUNT;
+
+  const handleToggleClick = (e: React.MouseEvent, nextExpanded: boolean) => {
+    e.stopPropagation();
+    setExpanded(nextExpanded);
+  };
+
   return (
     <ul className={LAB_CARD_SPACING.listGap}>
-      {tests.map((test, i) => (
+      {visibleTests.map((test, i) => (
         <li key={test.code || i} className={LAB_CARD_LIST_ITEMS.testItem}>
           <span className={LAB_CARD_LIST_ITEMS.bullet} />
           <span className={LAB_CARD_LIST_ITEMS.testName}>{test.name}</span>
           <EntityId variant="inline">{test.code}</EntityId>
         </li>
       ))}
+      {shouldCollapse ? (
+        <li className={LAB_CARD_LIST_ITEMS.testItem}>
+          <span className={LAB_CARD_LIST_ITEMS.bullet} />
+          <button
+            type="button"
+            className={queueCardTestListToggleClass}
+            onClick={e => handleToggleClick(e, true)}
+          >
+            +{remainingCount} more
+          </button>
+        </li>
+      ) : null}
+      {canTruncate && expanded ? (
+        <li className={LAB_CARD_LIST_ITEMS.testItem}>
+          <span className={LAB_CARD_LIST_ITEMS.bullet} />
+          <button
+            type="button"
+            className={queueCardTestListToggleClass}
+            onClick={e => handleToggleClick(e, false)}
+          >
+            Show less
+          </button>
+        </li>
+      ) : null}
     </ul>
   );
 }
