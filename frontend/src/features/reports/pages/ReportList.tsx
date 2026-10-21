@@ -4,11 +4,7 @@
 
 import React, { useMemo, useState, useCallback, useEffect, useRef } from 'react';
 import { usePageFilters } from '@/hooks/usePageFilters';
-import {
-  buildServerListPagination,
-  toListLoadError,
-  useFilterChangeWithPageReset,
-} from '@/hooks/listPage';
+import { useServerListChrome } from '@/hooks';
 import { useNavigate, useParams } from 'react-router-dom';
 import { uniqueSortedTestCodes, useTestsByCodes } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users';
@@ -76,20 +72,19 @@ export const ReportList: React.FC = () => {
   const { tests } = useTestsByCodes(pageTestCodes);
   const { getUserName } = useUserLookup();
 
-  const { setFilterAndReset } = useFilterChangeWithPageReset(setFilter, resetPage);
-
-  const error = isError ? toListLoadError('reports.list.loadFailed', queryError) : null;
-
-  const listPagination = useMemo(
-    () =>
-      buildServerListPagination({
-        page,
-        pagination,
-        goToPage,
-        pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
-      }),
-    [page, pagination, goToPage],
-  );
+  const { loading, error, listPagination, setFilterAndReset, onRetry } = useServerListChrome({
+    setFilter,
+    resetPage,
+    loadFailedKey: 'reports.list.loadFailed',
+    isLoading: reportsLoading,
+    isError,
+    error: queryError,
+    refetch,
+    page,
+    pagination,
+    goToPage,
+    pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
+  });
 
   const { openModal } = useModal();
   const [generatingOrderId, setGeneratingOrderId] = useState<number | null>(null);
@@ -165,9 +160,9 @@ export const ReportList: React.FC = () => {
       <ListView
         items={reportableOrders}
         viewConfig={reportTableConfig}
-        loading={reportsLoading}
+        loading={loading}
         error={error}
-        onRetry={refetch}
+        onRetry={onRetry}
         onDismissError={() => {}}
         onRowClick={handlePreview}
         title="Reports"

@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { RecordId } from '@/features/shared';
-import { PaymentMethodBadge, PaymentStatusBadge } from '@/features/payments';
+import { StatusValueBadge } from '@/features/shared';
 import { cn, displayId, formatCurrency, formatDateTime } from '@/utils';
 import { getActiveTests, getActiveTotal } from '../utils/orderCalculator';
 import type { Order, OrderTest } from '@/types';
@@ -66,8 +66,8 @@ function ReceiptHeader({
               <p className={DOCUMENT_TYPE.detailedPatientMissing}>No patient name</p>
             )}
             <div className="flex items-center gap-space-2">
-              <PaymentStatusBadge status={order.paymentStatus} size="xs" />
-              {paymentMethod && <PaymentMethodBadge method={paymentMethod} size="xs" />}
+              <StatusValueBadge value={order.paymentStatus} size="xs" />
+              {paymentMethod && <StatusValueBadge value={paymentMethod} size="xs" />}
             </div>
           </div>
           <div className="space-y-space-1-5">
@@ -119,9 +119,9 @@ function ReceiptHeader({
           </div>
           {showPaymentStatusBadge && (
             <div className="flex items-center gap-space-1-5 shrink-0">
-              <PaymentStatusBadge status={order.paymentStatus} size="xs" />
+              <StatusValueBadge value={order.paymentStatus} size="xs" />
               {paymentMethod && order.paymentStatus !== 'unpaid' && (
-                <PaymentMethodBadge method={paymentMethod} size="xs" />
+                <StatusValueBadge value={paymentMethod} size="xs" />
               )}
             </div>
           )}
@@ -136,7 +136,7 @@ function ReceiptHeader({
               className={DOCUMENT_TYPE.compactRecordId}
             />
             {showPaymentStatusBadge && (
-              <PaymentStatusBadge status={order.paymentStatus} size="xs" className="shrink-0" />
+              <StatusValueBadge value={order.paymentStatus} size="xs" className="shrink-0" />
             )}
           </div>
           {order.patientName && (

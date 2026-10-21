@@ -1,14 +1,25 @@
 /**
- * useLabQueueFilterState - Shared filter state and apply logic for lab workflow views
- * Encapsulates date range, sample type, status, and search filtering.
+ * Lab queue filters: URL search, apply logic, filter state, page wiring, entity search sync.
  */
 
 import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { compareQueuePriority } from '../utils/labQueue';
-import { getLabQueueSearchFromUrlFilters, resolveCollectionStatusFilters } from '../utils/labSearchAndLinks';
-import type { UrlFilters } from '@/utils/filters';
+import { usePageFilters } from '@/hooks/usePageFilters';
+import type { SampleStatus, TestStatus } from '@/types';
 import { isDateInInclusiveRange } from '@/utils';
+import type { UrlFilters } from '@/utils/filters';
+import { LAB_URL_FILTER_KEYS } from '../constants/labFilterConfigs';
+import { compareQueuePriority } from '../utils/labQueue';
+import {
+  getLabQueueSearchFromUrlFilters,
+  hasActiveRecordUrlFilters,
+  resolveCollectionStatusFilters,
+} from '../utils/labSearchAndLinks';
+import {
+  getLabQueueStageConfig,
+  type LabQueueItemByStage,
+  type LabQueueWorkflowType,
+} from '../utils/labQueueStageFilterConfig';
 
 /** Reads the `search` query param used for lab queue deep-links. */
 export function useLabQueueUrlSearch(): string {
@@ -197,18 +208,13 @@ export function useLabQueueFilterState<T, S>({
   const searchQuery = controlledSearchQuery ?? internalSearchQuery;
   const setSearchQuery = controlledOnSearchChange ?? setInternalSearchQuery;
   
-  // Sync internal search when entity filter from URL changes (including when cleared)
-  // This ensures clearing URL filter badges also clears the auto-filled search
   useEffect(() => {
-    // Only update if NOT controlled by parent (parent controls during sample lookup mode)
-    if (controlledSearchQuery === undefined) {
-      // Queue microtask to avoid render-phase setState
-      queueMicrotask(() => {
-        setInternalSearchQuery(searchFromEntityFilter);
-      });
-    }
+    if (controlledSearchQuery !== undefined) return;
+    queueMicrotask(() => {
+      setInternalSearchQuery(searchFromEntityFilter);
+    });
   }, [searchFromEntityFilter, controlledSearchQuery]);
-  
+
   const [internalDateRange, setInternalDateRange] = useState<[Date, Date] | null>(null);
   const dateRange = controlledDateRange !== undefined ? controlledDateRange : internalDateRange;
   const setDateRange = controlledOnDateRangeChange ?? setInternalDateRange;
@@ -297,5 +303,123 @@ export function useLabQueueFilterState<T, S>({
     setSampleTypeFilters,
     statusFilters,
     setStatusFilters,
+  };
+}
+
+/** Sync lab queue search field from URL entity filters and `search` query param. */
+export interface UseLabEntitySearchSyncOptions {
+  urlFilters: UrlFilters;
+  urlSearch: string;
+  preferSample: boolean;
+  setSearchQuery: (value: string) => void;
+}
+
+export function useLabEntitySearchSync({
+  urlFilters,
+  urlSearch,
+  preferSample,
+  setSearchQuery,
+}: UseLabEntitySearchSyncOptions): void {
+  useEffect(() => {
+    const entitySearch = getLabQueueSearchFromUrlFilters(urlFilters, urlSearch, preferSample);
+    /* eslint-disable react-hooks/set-state-in-effect -- URL → search field sync */
+    if (hasActiveRecordUrlFilters(urlFilters)) {
+      setSearchQuery(entitySearch);
+      return;
+    }
+    setSearchQuery(urlSearch);
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, [urlFilters, urlSearch, preferSample, setSearchQuery]);
+}
+
+export interface UseLabQueuePageFiltersOptions<T extends LabQueueWorkflowType> {
+  items: LabQueueItemByStage<T>[];
+  workflowType: T;
+  searchQuery?: string;
+  onSearchChange?: (value: string) => void;
+  dateRange?: [Date, Date] | null;
+  onDateRangeChange?: (value: [Date, Date] | null) => void;
+  sampleTypeFilters?: string[];
+  onSampleTypeFiltersChange?: (value: string[]) => void;
+  skipSearchFilter?: boolean;
+  skipDateFilter?: boolean;
+  skipSampleTypeFilter?: boolean;
+  appliedStatusFilters?: SampleStatus[] | TestStatus[];
+  collectionSampleLookup?: boolean;
+}
+
+export function useLabQueuePageFilters<T extends LabQueueWorkflowType>({
+  items,
+  workflowType,
+  searchQuery,
+  onSearchChange,
+  dateRange,
+  onDateRangeChange,
+  sampleTypeFilters,
+  onSampleTypeFiltersChange,
+  skipSearchFilter,
+  skipDateFilter,
+  skipSampleTypeFilter,
+  appliedStatusFilters,
+  collectionSampleLookup,
+}: UseLabQueuePageFiltersOptions<T>) {
+  const urlSearch = useLabQueueUrlSearch();
+
+  const { urlFilters, clearUrlFilters, setUrlFilter } = usePageFilters({
+    urlFilterKeys: LAB_URL_FILTER_KEYS,
+  });
+
+  const filterConfig = useMemo(() => getLabQueueStageConfig(workflowType), [workflowType]);
+
+  const options = useMemo(
+    () => ({
+      items,
+      ...filterConfig.callbacks,
+      initialStatusFilters: filterConfig.defaultStatuses,
+      initialSearchQuery: urlSearch,
+      sortByQueuePriority: filterConfig.sortByPriority,
+      searchQuery,
+      onSearchChange,
+      dateRange,
+      onDateRangeChange,
+      sampleTypeFilters,
+      onSampleTypeFiltersChange,
+      skipSearchFilter,
+      skipDateFilter,
+      skipSampleTypeFilter,
+      appliedStatusFilters,
+      collectionSampleLookup,
+      urlFilters,
+      preferSampleInSearch: workflowType === 'collection',
+    }),
+    [
+      items,
+      filterConfig,
+      urlSearch,
+      searchQuery,
+      onSearchChange,
+      dateRange,
+      onDateRangeChange,
+      sampleTypeFilters,
+      onSampleTypeFiltersChange,
+      skipSearchFilter,
+      skipDateFilter,
+      skipSampleTypeFilter,
+      appliedStatusFilters,
+      collectionSampleLookup,
+      urlFilters,
+      workflowType,
+    ],
+  );
+
+  const result = useLabQueueFilterState(
+    options as UseLabQueueFilterStateOptions<LabQueueItemByStage<T>, SampleStatus | TestStatus>,
+  );
+
+  return {
+    ...result,
+    urlFilters,
+    clearUrlFilters,
+    setUrlFilter,
   };
 }

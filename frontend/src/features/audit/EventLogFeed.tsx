@@ -7,8 +7,11 @@ import { MODULE_ICONS } from '@/config/icons';
 import { getLaneVisual, type LabTimelineLane } from '@/features/lab';
 import { parseAppDate } from '@/utils/date';
 import { cn } from '@/utils';
+import { text as detailText, FG } from '@/theme/recipes';
+import { parseResultEntry, ResultValueAnnotations, statusMapFromFlags } from '@/features/lab';
+import { resolveParameterLabel, useParameterLabelMap } from '@/features/catalog';
+import { collectTestCodes } from './catalog';
 import { EVENT_LOG_COPY } from './types';
-import { EventLogDetailBox } from './EventLogFeedDetails';
 import type {
   EventLogDayGroup,
   EventLogDomain,
@@ -17,6 +20,99 @@ import type {
 } from './types';
 
 const EVENT_LOG_HEADLINE_LINE_CLASS = 'leading-5';
+
+const DETAIL_STYLES = {
+  row: `mt-space-0-5 ${detailText({ role: 'body' })} leading-relaxed font-normal min-w-0 m-0 break-words`,
+  label: detailText({ role: 'label', intent: 'muted' }),
+  results: 'min-w-0 break-words [overflow-wrap:anywhere]',
+  line: 'inline align-baseline break-words [overflow-wrap:anywhere]',
+  lineLabel: `${detailText({ role: 'label', intent: 'muted' })} lowercase`,
+} as const;
+
+function EventLogLabeledDetail({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className={cn(DETAIL_STYLES.row, 'grid grid-cols-[auto_minmax(0,1fr)] gap-x-space-1')}>
+      <span className={cn(DETAIL_STYLES.label, 'shrink-0')}>{label}:</span>
+      <div className="min-w-0 break-words [overflow-wrap:anywhere]">{children}</div>
+    </div>
+  );
+}
+
+function EventLogResultsList({
+  results,
+  flags,
+  testCode,
+}: {
+  results: Record<string, unknown>;
+  flags?: string[];
+  testCode?: string;
+}) {
+  const flagStatusMap = useMemo(() => statusMapFromFlags(flags), [flags]);
+  const parameterLabels = useParameterLabelMap(testCode);
+  const entries = Object.entries(results ?? {});
+
+  if (entries.length === 0) {
+    return null;
+  }
+
+  return (
+    <span className={DETAIL_STYLES.results}>
+      {entries.map(([key, rawValue], index) => {
+        const { resultValue, unit, status } = parseResultEntry(key, rawValue, flagStatusMap);
+        return (
+          <React.Fragment key={key}>
+            {index > 0 ? <span className="mr-space-1"> </span> : null}
+            <span className={DETAIL_STYLES.line}>
+              <span className={DETAIL_STYLES.lineLabel}>
+                {resolveParameterLabel(key, parameterLabels)}:{' '}
+              </span>
+              <ResultValueAnnotations resultValue={resultValue} unit={unit} status={status} dense />
+            </span>
+          </React.Fragment>
+        );
+      })}
+    </span>
+  );
+}
+
+function EventLogDetailBox({ item }: { item: ResolvedEventLogItem }) {
+  const { narrativeLabel, narrativeText, results, resultFlags, debugPayload, record } = item;
+  const testCode = collectTestCodes(record)[0];
+  const hasResults = results && Object.keys(results).length > 0;
+  const hasNote = Boolean(narrativeText?.trim());
+  const hasDebug = Boolean(debugPayload && Object.keys(debugPayload).length > 0);
+
+  if (!hasResults && !hasNote && !hasDebug) return null;
+
+  const noteLabel = narrativeLabel ?? EVENT_LOG_COPY.narrativeDefaultLabel;
+
+  return (
+    <>
+      {hasResults ? (
+        <EventLogLabeledDetail label={EVENT_LOG_COPY.resultTitle}>
+          <EventLogResultsList results={results!} flags={resultFlags} testCode={testCode} />
+        </EventLogLabeledDetail>
+      ) : null}
+      {hasNote ? (
+        <EventLogLabeledDetail label={noteLabel}>{narrativeText}</EventLogLabeledDetail>
+      ) : null}
+      {hasDebug ? (
+        <div className={DETAIL_STYLES.row}>
+          <span className={DETAIL_STYLES.label}>{EVENT_LOG_COPY.debugTitle}: </span>
+          <pre className={`mt-space-0-5 whitespace-pre-wrap break-all font-mono ${FG.body}`}>
+            {JSON.stringify(debugPayload, null, 2)}
+          </pre>
+        </div>
+      ) : null}
+    </>
+  );
+}
 
 const EVENT_LOG_STYLES = {
   feed: `flex flex-col px-space-3 py-space-3 [&>section+section]:mt-space-4`,

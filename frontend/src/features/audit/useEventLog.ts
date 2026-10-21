@@ -9,7 +9,7 @@ import { usePatientNameLookup } from '@/features/patients';
 import { queryKeys } from '@/lib/query';
 import { eventLogQueryKeyParams } from './buildEventLogQuery';
 import { fetchAuditEvents, type AuditEventQueryParams } from './api';
-import { resolveEventLogItems, type ResolveEventLogOptions } from './resolveItem';
+import { resolveEventLogItems, type ResolveEventLogOptions } from './catalog';
 import type { EventLogQuery, EventLogRecord } from './types';
 
 function queryToApiParams(query: EventLogQuery): AuditEventQueryParams {

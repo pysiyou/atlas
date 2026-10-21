@@ -15,11 +15,7 @@ import { useTestNameLookup } from '@/features/catalog';
 import { usePaginatedOrders } from '@/features/orders';
 import { usePaymentsForOrderIds } from '../api/payments';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
-import {
-  buildServerListPagination,
-  toListLoadError,
-  useFilterChangeWithPageReset,
-} from '@/hooks/listPage';
+import { useServerListChrome } from '@/hooks';
 import { inclusiveDateRangeBounds, toIsoDateParam } from '@/utils';
 import type { Order, Payment, PaymentStatus } from '@/types';
 import type { OrderPaymentView } from '../types';
@@ -92,20 +88,20 @@ export const PaymentList: React.FC = () => {
   const { getTestName, isLoading: testsCatalogLoading } = useTestNameLookup();
   const isLoading = ordersLoading || paymentsLoading || testsCatalogLoading;
 
-  const { setFilterAndReset } = useFilterChangeWithPageReset(setFilter, resetPage);
-
-  const error = ordersError ? toListLoadError('payments.list.loadFailed', ordersErrorObj) : null;
-
-  const listPagination = useMemo(
-    () =>
-      buildServerListPagination({
-        page,
-        pagination,
-        goToPage,
-        pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
-      }),
-    [page, pagination, goToPage],
-  );
+  const { loading, error, listPagination, setFilterAndReset, onRetry } = useServerListChrome({
+    setFilter,
+    resetPage,
+    loadFailedKey: 'payments.list.loadFailed',
+    isLoading: ordersLoading,
+    isError: ordersError,
+    error: ordersErrorObj,
+    refetch,
+    page,
+    pagination,
+    goToPage,
+    pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
+    loading: isLoading,
+  });
 
   const orderPaymentViews = useMemo(
     () => buildOrderPaymentViews(orders, payments),
@@ -137,9 +133,9 @@ export const PaymentList: React.FC = () => {
         <ListView
           items={orderPaymentViews}
           viewConfig={paymentTableConfig}
-          loading={isLoading}
+          loading={loading}
           error={error}
-          onRetry={refetch}
+          onRetry={onRetry}
           onDismissError={() => undefined}
           onRowClick={handleRowClick}
           title="Payments"

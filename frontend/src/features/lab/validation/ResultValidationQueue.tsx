@@ -8,7 +8,7 @@ import { createLabQueueSearchFilter, LabWorkflowQueueScaffold } from '../compone
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import {
   applyLabQueueFilters,
-  useLabQueueFilters,
+  useLabQueuePageFilters,
   useResultValidationQueueData,
 } from '../hooks';
 import { validationFilterConfig } from '../constants';
@@ -17,7 +17,7 @@ import { ErrorAlert, ErrorBoundary } from '@/components/feedback';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { LAB_CONFIG } from '../constants';
 import { worklistServerFilters } from '../utils/labSearchAndLinks';
-import { toListLoadError } from '@/hooks/listPage';
+import { toListLoadError } from '@/hooks';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import type { PriorityLevel, TestWithContext } from '@/types';
@@ -103,7 +103,7 @@ export const ResultValidationQueue: React.FC = () => {
     urlFilters,
     clearUrlFilters,
     setUrlFilter,
-  } = useLabQueueFilters({
+  } = useLabQueuePageFilters({
     items: allTests,
     workflowType: 'validationReview',
     searchQuery,

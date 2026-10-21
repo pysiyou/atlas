@@ -13,15 +13,19 @@ export const PANEL_LAYOUT = {
   compactHeader:
     `shrink-0 ${SPACING.pxPanelDensityCompactHeader} ${SPACING.pyPanelDensityCompactHeader} border-b border-border-default flex items-center gap-space-2`,
   compactHeaderBetween:
-    `shrink-0 ${SPACING.pxPanelDensityCompactHeader} ${SPACING.pyPanelDensityCompactHeader} border-b border-border-default flex items-center justify-between gap-space-2`,
+    `shrink-0 min-w-0 ${SPACING.pxPanelDensityCompactHeader} ${SPACING.pyPanelDensityCompactHeader} border-b border-border-default flex items-center justify-between gap-space-2`,
 } as const;
 
 /** Shared panel header title — page, lab, and lab modal presets. */
 const PANEL_TITLE = `m-0 min-w-0 truncate ${text({ role: 'title-panel' })}`;
 
-/** Right side of panel header — caption (meta) and actions share one cluster. */
-const PANEL_HEADER_ASIDE = `flex shrink-0 items-center justify-end ${SPACING.gapInline} min-h-0 max-w-[55%]`;
-const PANEL_HEADER_META = text({ role: 'caption' });
+/**
+ * Right side of panel header — caption (meta) and actions share one cluster.
+ * Must shrink and scroll horizontally so tab rails in headerEnd do not wrap or overflow the shell.
+ */
+const PANEL_HEADER_ASIDE = `flex min-w-0 shrink items-center justify-end overflow-x-auto ${SPACING.gapInline}`;
+const PANEL_HEADER_META = `${text({ role: 'caption' })} shrink-0`;
+const PANEL_HEADER_ACTIONS = 'min-w-0 shrink flex justify-end overflow-x-auto';
 
 const PAGE_PANEL_CHROME = {
   shell: `h-full ${SURFACE.raised} ${RADIUS.field} ${SHADOW.subtle} overflow-hidden flex flex-col`,
@@ -31,7 +35,7 @@ const PAGE_PANEL_CHROME = {
   headerLead: `flex min-w-0 flex-1 items-center ${SPACING.gapRelaxed} overflow-hidden`,
   headerAside: PANEL_HEADER_ASIDE,
   meta: PANEL_HEADER_META,
-  headerActions: 'contents',
+  headerActions: PANEL_HEADER_ACTIONS,
   footer: `shrink-0 border-t border-border-subtle ${SPACING.pPanel}`,
   scrollDefault: 'overflow-hidden',
 } as const;
@@ -44,7 +48,7 @@ const COMPACT_PANEL_CHROME = {
   headerLead: `flex min-w-0 flex-1 items-center ${SPACING.gapInline} overflow-hidden`,
   headerAside: PANEL_HEADER_ASIDE,
   meta: PANEL_HEADER_META,
-  headerActions: 'contents',
+  headerActions: PANEL_HEADER_ACTIONS,
   footer: `shrink-0 border-t border-border-subtle ${SPACING.pPanelDensityCompact}`,
   scrollDefault: '',
 } as const;

@@ -21,7 +21,7 @@ import { CriticalValueActions } from '../criticalValues/CriticalValueActions';
 import type { CriticalValueRecord } from '../criticalValues/criticalValues';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { SampleRejectedBanner } from '../components/SampleRejectedBanner';
-import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';
+import { TestWorkflowCardLeftColumn } from './queueCardLeftColumn';
 import { DetailGrid, ModalFooter } from './detailModalLayout';
 import type { LabModalStage } from './detailModalLayout';
 import type { DetailGridSectionConfig } from './detailModalLayout';

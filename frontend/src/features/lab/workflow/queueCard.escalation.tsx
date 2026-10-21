@@ -13,11 +13,11 @@ import { deriveRetestContext } from '../utils/deriveRetestContext';
 import { MOBILE_LIST_CARD } from '@/theme/recipes';
 import type { TestWithContext } from '@/types';
 import { QueueCard, QueueCardMobile } from './queueCardLayout';
-import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';
+import { TestWorkflowCardLeftColumn } from './queueCardLeftColumn';
 import {
   EscalationExceptionBadges,
   EscalationExceptionReviewBody,
-} from './queueCard.escalation.helpers';
+} from './escalation.helpers';
 
 export interface EscalationCardProps {
   test: TestWithContext;

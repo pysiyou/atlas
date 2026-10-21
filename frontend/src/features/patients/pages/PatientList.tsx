@@ -14,11 +14,7 @@ import { Button } from '@/components/primitives';
 import { PatientFilters } from '../components/PatientFilters';
 import { createPatientTableConfig } from '../config/PatientTable.config';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
-import {
-  buildServerListPagination,
-  toListLoadError,
-  useFilterChangeWithPageReset,
-} from '@/hooks/listPage';
+import { useServerListChrome } from '@/hooks';
 import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
 import type { PatientContext, Gender } from '@/types';
 import { EditPatientModal } from '../components/EditPatientModal';
@@ -73,26 +69,25 @@ export const PatientList: React.FC = () => {
     refetch,
   } = usePaginatedPatientContextList(serverFilters);
 
-  const { setFilterAndReset } = useFilterChangeWithPageReset(setFilter, resetPage);
+  const { loading, error, listPagination, setFilterAndReset, onRetry } = useServerListChrome({
+    setFilter,
+    resetPage,
+    loadFailedKey: 'patients.list.loadFailed',
+    isLoading,
+    isError,
+    error: patientsError,
+    refetch,
+    page,
+    pagination,
+    goToPage,
+    pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
+  });
 
   const handleSearchChange = useCallback(
     (query: string) => {
       setFilterAndReset('search', query);
     },
     [setFilterAndReset],
-  );
-
-  const error = isError ? toListLoadError('patients.list.loadFailed', patientsError) : null;
-
-  const listPagination = useMemo(
-    () =>
-      buildServerListPagination({
-        page,
-        pagination,
-        goToPage,
-        pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
-      }),
-    [page, pagination, goToPage],
   );
 
   const patientTableConfig = useMemo(() => createPatientTableConfig(navigate), [navigate]);
@@ -103,9 +98,9 @@ export const PatientList: React.FC = () => {
         <ListView
           items={patients}
           viewConfig={patientTableConfig}
-          loading={isLoading}
+          loading={loading}
           error={error}
-          onRetry={refetch}
+          onRetry={onRetry}
           onDismissError={() => undefined}
           onRowClick={(patient: PatientContext) => navigate(`/patients/${patient.id}`)}
           title="Patients"

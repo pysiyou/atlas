@@ -8,7 +8,7 @@ import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { QueueModalShell, labModalHeaderContext } from './detailModalLayout';
 import { LabEventLogPanel } from '@/features/audit';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
-import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';
+import { TestWorkflowCardLeftColumn } from './queueCardLeftColumn';
 import { useTest } from '@/features/catalog';
 import { LabRelatedTestsPanel } from '../components/LabRelatedWorkflowPanel';
 import { EntryDetailMainPanel, EntryDetailModalFooter } from './detailModal.resultEntry.helpers';

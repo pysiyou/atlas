@@ -5,7 +5,7 @@
 import type { ContainerType, Order, Sample, Test } from '@/types';
 import { QueueModalShell, labModalHeaderContext } from './detailModalLayout';
 import { CollectionHeaderBadges } from '../components/LabWorkflowBadges';
-import { SampleCollectionCardLeftColumn } from './queueCard.sampleCollection.leftColumn.helpers';
+import { SampleCollectionCardLeftColumn } from './queueCardLeftColumn';
 import { LabRelatedSamplesPanel } from '../components/LabRelatedWorkflowPanel';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import {

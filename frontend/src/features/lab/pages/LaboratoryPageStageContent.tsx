@@ -5,7 +5,7 @@ import { lazy, Suspense } from 'react';
 import type { UserRole } from '@/types';
 import { ErrorAlert } from '@/components/feedback';
 import { WORKSPACE } from '@/theme/recipes';
-import { toListLoadError } from '@/hooks/listPage';
+import { toListLoadError } from '@/hooks';
 import type { LabTabId } from '../constants/labConstants';
 import { WORKLIST_SHELL } from '@/theme/recipes';
 import { tabAllowed } from './laboratoryPageAccess';

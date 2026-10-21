@@ -1,21 +1,93 @@
 /**
- * Escalation resolution modal — body panels, detail sections, and footer.
+ * Escalation queue card and resolution modal helpers.
  */
 
 import { Panel } from '@/components/surfaces';
 import { RecordId } from '@/features/shared';
-import { DetailGrid, ModalFooter } from './detailModalLayout';
-import { ResultValidationPanel } from '../validation/ResultValidationForm';
+import { LabEventLogPanel } from '@/features/audit';
+import { AttemptIndicator } from '../components/LabAttemptIndicators';
+import { TestHeaderBadges } from '../components/LabWorkflowBadges';
+import { SupervisorApprovalBadge } from '../components/LabResultStatusBadges';
+import { LabRelatedTestsPanel } from '../components/LabRelatedWorkflowPanel';
 import { CriticalValueActions } from '../criticalValues/CriticalValueActions';
 import type { CriticalValueRecord } from '../criticalValues/criticalValues';
-import { LabRelatedTestsPanel } from '../components/LabRelatedWorkflowPanel';
-import { LabEventLogPanel } from '@/features/audit';
+import { ResultValidationPanel } from '../validation/ResultValidationForm';
+import {
+  EscalationResolutionActions,
+  type EscalationResolveOptions,
+} from '../validation/EscalationResolutionActions';
+import { deriveRetestContext } from '../utils/deriveRetestContext';
+import { text, FG, WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
 import type { TestWithContext } from '@/types';
-import { formatStatusBadgeLabel } from '@/utils/statusBadge';
-import { text , FG } from '@/theme/recipes';
-import { notify } from '@/utils/feedback';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
-import { EscalationResolutionActions, type EscalationResolveOptions } from '../validation/EscalationResolutionActions';
+import { formatStatusBadgeLabel } from '@/utils/statusBadge';
+import { notify } from '@/utils/feedback';
+import { DetailGrid, ModalFooter } from './detailModalLayout';
+
+function ticketString(value: unknown): string | undefined {
+  return typeof value === 'string' && value.trim() !== '' ? value : undefined;
+}
+
+export function EscalationExceptionBadges({ test }: { test: TestWithContext }) {
+  const rejection = deriveRetestContext(test);
+
+  return (
+    <>
+      <SupervisorApprovalBadge size={WORKLIST_CARD_BADGE_SIZE} />
+      <TestHeaderBadges test={test} variant="escalation" showStatus />
+      {rejection.showAttemptIndicator ? (
+        <AttemptIndicator
+          attemptNumber={rejection.attemptNumber}
+          maxAttempts={rejection.attemptMax}
+          type={rejection.attemptType}
+        />
+      ) : null}
+    </>
+  );
+}
+
+export function EscalationExceptionReviewBody({ test }: { test: TestWithContext }) {
+  const rejectionReason = ticketString(test.ticketMetadata?.rejectionReason);
+  const rejectionNotes = ticketString(test.ticketMetadata?.rejectionNotes);
+  const denyMessage = test.denyMessage ?? test.lab?.denyMessage ?? undefined;
+  const reasonCode = test.reasonCode ? formatStatusBadgeLabel(test.reasonCode) : undefined;
+
+  const hasContent = Boolean(reasonCode || denyMessage || rejectionReason || rejectionNotes);
+  if (!hasContent) {
+    return (
+      <p className={text({ role: 'label' })}>Open to review this exception and choose a resolution.</p>
+    );
+  }
+
+  return (
+    <div className={`space-y-space-1 ${text({ role: 'body' })}`}>
+      {reasonCode ? (
+        <div>
+          <span className={text({ role: 'label' })}>Exception:</span>{' '}
+          <span className={text({ role: 'body' })}>{reasonCode}</span>
+        </div>
+      ) : null}
+      {denyMessage ? (
+        <div>
+          <span className={text({ role: 'label' })}>Blocked:</span>{' '}
+          <span className={text({ role: 'body' })}>{denyMessage}</span>
+        </div>
+      ) : null}
+      {rejectionReason ? (
+        <div>
+          <span className={text({ role: 'label' })}>Reason:</span>{' '}
+          <span className={text({ role: 'body' })}>{rejectionReason}</span>
+        </div>
+      ) : null}
+      {rejectionNotes ? (
+        <div>
+          <span className={text({ role: 'label' })}>Notes:</span>{' '}
+          <span className={text({ role: 'body' })}>{rejectionNotes}</span>
+        </div>
+      ) : null}
+    </div>
+  );
+}
 
 export interface EscalationResolutionBodyProps {
   test: TestWithContext;
@@ -63,8 +135,8 @@ function EscalationSummaryPanel({
   return (
     <Panel preset="panel.compact.standard" title="Escalation Summary">
       <p className={text({ role: 'label' })}>
-        This test was escalated before results were entered. Review the context below and choose
-        an action.
+        This test was escalated before results were entered. Review the context below and choose an
+        action.
       </p>
       {(rejectionReason || rejectionNotes) && (
         <dl className={`mt-space-3 space-y-space-2 ${text({ role: 'amount' })}`}>
@@ -118,7 +190,8 @@ export function EscalationResolutionBody({
       <DetailGrid
         sections={[
           {
-            preset: 'panel.compact.standard', title: 'Collection Information',
+            preset: 'panel.compact.standard',
+            title: 'Collection Information',
             fields: [
               {
                 label: 'Sample ID',
@@ -134,14 +207,16 @@ export function EscalationResolutionBody({
             ],
           },
           {
-            preset: 'panel.compact.standard', title: 'Result Entry Information',
+            preset: 'panel.compact.standard',
+            title: 'Result Entry Information',
             fields: [
               { label: 'Entered', timestamp: test.resultEnteredAt, user: test.enteredBy },
               {
                 label: 'Test ID',
-                value: test.id != null ? (
-                  <RecordId type="orderTest" value={test.id} emphasis="block" className="text-right" />
-                ) : undefined,
+                value:
+                  test.id != null ? (
+                    <RecordId type="orderTest" value={test.id} emphasis="block" className="text-right" />
+                  ) : undefined,
               },
               {
                 label: 'Test Code',
@@ -159,9 +234,7 @@ export function EscalationResolutionBody({
           },
         ]}
       />
-      {test.id != null && (
-        <LabEventLogPanel testId={test.id} />
-      )}
+      {test.id != null && <LabEventLogPanel testId={test.id} />}
     </>
   );
 }
@@ -191,7 +264,7 @@ export interface EscalationResolutionFooterProps {
   resolveAsync: (
     action: EscalationResolutionAction,
     reasonOrNotes?: string,
-    options?: EscalationResolveOptions
+    options?: EscalationResolveOptions,
   ) => Promise<void>;
 }
 
@@ -201,7 +274,9 @@ export function EscalationResolutionFooter(props: EscalationResolutionFooterProp
   return (
     <ModalFooter statusMessage="" statusClassName={FG.modalStatus}>
       {!canResolveEscalation ? (
-        <p className={text({ role: 'body', intent: 'muted' })}>You do not have permission to resolve escalations.</p>
+        <p className={text({ role: 'body', intent: 'muted' })}>
+          You do not have permission to resolve escalations.
+        </p>
       ) : (
         <EscalationResolutionActions
           {...actionProps}

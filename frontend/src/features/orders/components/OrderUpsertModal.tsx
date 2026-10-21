@@ -16,7 +16,7 @@ import { ICONS } from '@/config/icons';
 import { useOrderUpsertModal } from '../hooks/useOrderUpsertModal';
 import { OrderUpsertFormFields } from './OrderUpsertFormFields';
 import { ErrorAlert } from '@/components/feedback';
-import { toListLoadError } from '@/hooks/listPage';
+import { toListLoadError } from '@/hooks';
 import type { OrderUpsertModalOpenProps } from '@/lib/context/modalTypes';
 
 export type OrderUpsertModalProps = OrderUpsertModalOpenProps;

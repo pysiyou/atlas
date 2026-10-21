@@ -4,7 +4,7 @@
 
 import type { NavigateFunction } from 'react-router-dom';
 import { RecordId } from '@/features/shared';
-import { CatalogCategoryBadge, CatalogSampleTypeBadge } from '../components/CatalogStatusBadge';
+import { StatusValueBadge } from '@/features/shared';
 import type { TableViewConfig } from '@/components/data-table';
 import { buildViews, TABLE_COLUMN_WIDTH } from '@/components/data-table';
 import { formatCurrency } from '@/utils';
@@ -73,7 +73,7 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
       sortable: true,
       accessor: (test: TestSummary) => test.category,
       render: (test: TestSummary) => (
-        <CatalogCategoryBadge category={test.category} size="xs" className={BADGE.tableEmbed} />
+        <StatusValueBadge value={test.category} size="xs" className={BADGE.tableEmbed} />
       ),
     },
     sampleType: {
@@ -82,7 +82,7 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
       width: TABLE_COLUMN_WIDTH.badge,
       sortable: true,
       accessor: (test: TestSummary) => test.sampleType,
-      render: (test: TestSummary) => <CatalogSampleTypeBadge sampleType={test.sampleType} size="xs" />,
+      render: (test: TestSummary) => <StatusValueBadge value={test.sampleType} size="xs" />,
     },
     price: {
       key: 'price',

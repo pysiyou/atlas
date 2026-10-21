@@ -6,14 +6,14 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { QueueModalShell } from './detailModalLayout';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
-import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';
+import { TestWorkflowCardLeftColumn } from './queueCardLeftColumn';
 import { buildCriticalValueRecord } from '../criticalValues/criticalValues';
 import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
 import { useEscalationResolution } from '../validation/useEscalationResolution';
 import {
   EscalationResolutionBody,
   EscalationResolutionFooter,
-} from './detailModal.escalation.helpers';
+} from './escalation.helpers';
 import { labModalHeaderContext } from './detailModalLayout';
 import { useOrderTestContext } from '../api/results';
 import { Modal, ModalPageShell } from '@/components/overlays';

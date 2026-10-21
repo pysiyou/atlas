@@ -10,7 +10,7 @@ import {
 } from '@/components/data-table';
 import { cn, formatCurrency } from '@/utils';
 import { getTestName, getTestProperty } from '@/features/catalog/testLookup';
-import { CatalogCategoryBadge } from '@/features/catalog';
+import { StatusValueBadge } from '@/features/shared';
 import { OrderTestStatusBadge } from '../components/OrderDomainBadges';
 import { getOrderTestLineageRowClass } from '../utils/orderTestLineage';
 import type { OrderTest, TestSummary } from '@/types';
@@ -45,7 +45,7 @@ function renderOrderTestIdentity(test: OrderTest, testCatalog: TestSummary[]) {
 function renderTestCategoryBadge(test: OrderTest, testCatalog: TestSummary[]) {
   const category = getTestProperty(test.testCode, 'category', testCatalog);
   if (!category) return null;
-  return <CatalogCategoryBadge category={category} size="xs" className={BADGE.tableEmbed} />;
+  return <StatusValueBadge value={category} size="xs" className={BADGE.tableEmbed} />;
 }
 
 function createTestTableCard(testCatalog: TestSummary[]): React.FC<CardComponentProps<OrderTest>> {

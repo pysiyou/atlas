@@ -21,7 +21,7 @@ import { MOBILE_LIST_CARD } from '@/theme/recipes';
 import type { TestWithContext } from '@/types';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import { QueueCard, QueueCardMobile } from './queueCardLayout';
-import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';
+import { TestWorkflowCardLeftColumn } from './queueCardLeftColumn';
 
 export interface ResultValidationCardProps {
   test: TestWithContext;
