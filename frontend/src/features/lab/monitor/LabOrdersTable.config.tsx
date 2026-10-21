@@ -12,6 +12,7 @@ import {
   COLUMN_SIZE,
   createBadgeColumn,
   createColumn,
+  TABLE_COLUMN_WIDTH,
   type TableViewConfig,
 } from '@/components/data-table';
 import { MobileEntityCard } from '@/components/surfaces';
@@ -26,6 +27,7 @@ import {
   renderTableTwoLineCell,
 } from '@/utils/tableColumnRenders';
 import type { LabOrderTableRow } from './LabOrdersTable';
+import { BADGE } from '@/components/theme/recipes';
 
 const VIEWS = {
   full: ['test', 'patient', 'sampleType', 'doctor', 'priority', 'department', 'status', 'date'],
@@ -74,10 +76,10 @@ function LabOrderTableCard({ item, onClick }: CardComponentProps<LabOrderTableRo
       <div className="flex flex-wrap items-center gap-space-2">
         {renderMonitorStatus(item)}
         {item.sampleType ? (
-          <SampleTypeBadge sampleType={item.sampleType} size="xs" className="border-none" />
+          <SampleTypeBadge sampleType={item.sampleType} size="xs" className={BADGE.tableEmbed} />
         ) : null}
         {item.department ? (
-          <LabDepartmentBadge department={item.department} size="xs" className="border-none" />
+          <LabDepartmentBadge department={item.department} size="xs" className={BADGE.tableEmbed} />
         ) : null}
       </div>
       <div className="mt-auto pt-space-3">{renderDateTimeCell(item.date)}</div>
@@ -105,7 +107,7 @@ export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> 
       'Sample Type',
       row =>
         row.sampleType ? (
-          <SampleTypeBadge sampleType={row.sampleType} size="xs" className="border-none" />
+          <SampleTypeBadge sampleType={row.sampleType} size="xs" className={BADGE.tableEmbed} />
         ) : (
           renderTableEmptyCell()
         ),
@@ -131,7 +133,7 @@ export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> 
       'Department',
       row =>
         row.department ? (
-          <LabDepartmentBadge department={row.department} size="xs" className="border-none" />
+          <LabDepartmentBadge department={row.department} size="xs" className={BADGE.tableEmbed} />
         ) : (
           renderTableEmptyCell()
         ),
@@ -144,7 +146,7 @@ export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> 
       { accessor: row => monitorStatusAccessor(row), width: COLUMN_SIZE.md },
     ),
     date: createColumn<LabOrderTableRow>('date', 'Date', {
-      width: COLUMN_SIZE.md,
+      width: TABLE_COLUMN_WIDTH.datetime,
       sortable: true,
       accessor: row => row.date,
       render: row => renderDateTimeCell(row.date),

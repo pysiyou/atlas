@@ -9,7 +9,8 @@ import { serializeQueryList } from '@/utils/filtering';
 import { getOrderTestCount, getOrderTests } from '@/types';
 import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
 import { useQuery, keepPreviousData, useMutation, useQueryClient, useQueries } from '@tanstack/react-query';
-import { useMemo, useState, useCallback, useEffect } from 'react';
+import { useMemo, useCallback } from 'react';
+import { useResettablePage } from '@/hooks/useResettablePage';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { invalidateOrderQueries } from '@/lib/query/invalidate';
 import { notify } from '@/utils/feedback';
@@ -319,12 +320,8 @@ export function useOrdersByStatus(status: OrderStatus | undefined) {
  */
 export function usePaginatedOrders(filters?: OrdersFilters, initialPage = 1, pageSize = DEFAULT_LIST_PAGE_SIZE) {
   const enabled = useAuthQueryEnabled();
-  const [page, setPage] = useState(initialPage);
   const filterSnapshot = JSON.stringify(filters ?? null);
-
-  useEffect(() => {
-    setPage(initialPage);
-  }, [filterSnapshot, initialPage]);
+  const [page, setPage] = useResettablePage(initialPage, filterSnapshot);
 
   const query = useQuery({
     queryKey: queryKeys.orders.paginated({
@@ -346,23 +343,23 @@ export function usePaginatedOrders(filters?: OrdersFilters, initialPage = 1, pag
 
   const goToPage = useCallback((newPage: number) => {
     setPage(newPage);
-  }, []);
+  }, [setPage]);
 
   const resetPage = useCallback(() => {
     setPage(1);
-  }, []);
+  }, [setPage]);
 
   const nextPage = useCallback(() => {
     if (query.data?.pagination.hasNext) {
       setPage(p => p + 1);
     }
-  }, [query.data?.pagination.hasNext]);
+  }, [query.data?.pagination.hasNext, setPage]);
 
   const prevPage = useCallback(() => {
     if (query.data?.pagination.hasPrev) {
       setPage(p => p - 1);
     }
-  }, [query.data?.pagination.hasPrev]);
+  }, [query.data?.pagination.hasPrev, setPage]);
 
   return {
     orders: query.data?.data ?? [],

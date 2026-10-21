@@ -19,14 +19,24 @@ export const typeUtilityRestrictedSyntax = [
 
 export const typeScaleRestrictedSyntax = [
   {
-    selector: 'Literal[value=/\\btext-(3xs|2xs|xxs|xs|sm|base|lg|xl)\\b/]',
+    selector: 'Literal[value=/\\btext-(3xs|2xs|xxs|xs|sm|base|lg|xl|2xl)\\b/]',
     message:
       'Use semantic typography from @/components/theme/recipes (TYPE, TABLE_TYPE, DETAIL_TYPE, FIELD_ERROR), not raw text-* scale classes.',
   },
   {
-    selector: 'TemplateElement[value.raw=/\\btext-(3xs|2xs|xxs|xs|sm|base|lg|xl)\\b/]',
+    selector: 'TemplateElement[value.raw=/\\btext-(3xs|2xs|xxs|xs|sm|base|lg|xl|2xl)\\b/]',
     message:
       'Use semantic typography from @/components/theme/recipes (TYPE, TABLE_TYPE, DETAIL_TYPE, FIELD_ERROR), not raw text-* scale classes.',
+  },
+  {
+    selector: 'Literal[value=/text-text-primary truncate font-normal/]',
+    message:
+      'Use TABLE_TYPE.cell or TABLE_PRIMARY_CELL_CLASS from @/utils/tableColumnRenders for table body text.',
+  },
+  {
+    selector: 'TemplateElement[value.raw=/text-text-primary truncate font-normal/]',
+    message:
+      'Use TABLE_TYPE.cell or TABLE_PRIMARY_CELL_CLASS from @/utils/tableColumnRenders for table body text.',
   },
 ]
 

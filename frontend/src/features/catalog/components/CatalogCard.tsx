@@ -4,7 +4,7 @@ import { CatalogCategoryBadge, CatalogSampleTypeBadge } from './CatalogStatusBad
 import type { CardComponentProps } from '@/components/data-table';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import type { TestSummary } from '@/types';
-import { CARD_PRICE, TYPE } from '@/components/theme/recipes';
+import { BADGE, CARD_PRICE, TYPE } from '@/components/theme/recipes';
 
 
 /**
@@ -49,7 +49,7 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<TestSumm
           TAT: {formatTurnaroundTime(test.turnaroundTime)}
         </div>
         <div className="flex items-center gap-space-2">
-          <CatalogCategoryBadge category={test.category} size="xs" className="border-none" />
+          <CatalogCategoryBadge category={test.category} size="xs" className={BADGE.tableEmbed} />
           <CatalogSampleTypeBadge sampleType={test.sampleType} size="xs" />
         </div>
       </div>

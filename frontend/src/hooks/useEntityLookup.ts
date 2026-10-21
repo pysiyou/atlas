@@ -2,7 +2,7 @@
  * useEntityLookup — generic Map-based entity lookup from a cached list.
  */
 
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo } from 'react';
 
 export interface UseEntityLookupOptions<K extends string | number> {
   isLoading?: boolean;
@@ -16,23 +16,18 @@ export function useEntityLookup<T, K extends string | number>(
   options: UseEntityLookupOptions<K> = {}
 ) {
   const { isLoading = false, normalizeKey } = options;
-  const getKeyRef = useRef(getKey);
-  getKeyRef.current = getKey;
-  const normalizeKeyRef = useRef(normalizeKey);
-  normalizeKeyRef.current = normalizeKey;
 
   const map = useMemo(() => {
     const entityMap = new Map<K, T>();
-    items?.forEach(item => entityMap.set(getKeyRef.current(item), item));
+    items?.forEach(item => entityMap.set(getKey(item), item));
     return entityMap;
-  }, [items]);
+  }, [items, getKey]);
 
   const get = useCallback((key: string | number): T | undefined => {
-    const normalize = normalizeKeyRef.current;
-    const normalized = normalize ? normalize(key) : (key as K);
+    const normalized = normalizeKey ? normalizeKey(key) : (key as K);
     if (normalized === undefined) return undefined;
     return map.get(normalized);
-  }, [map]);
+  }, [map, normalizeKey]);
 
   return { get, map, isLoading };
 }

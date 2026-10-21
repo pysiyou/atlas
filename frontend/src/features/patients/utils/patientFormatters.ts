@@ -7,7 +7,7 @@ import type { Patient, Order, Relationship } from '@/types';
 import { RELATIONSHIP_CONFIG, RELATIONSHIP_VALUES } from '@/types';
 import { formatArrayWithFallback } from '@/utils/array';
 import { formatDetailDate as formatDetailDateUtil, formatOrderDate } from '@/utils/date';
-import { INACTIVE_REPORTABLE_TEST_STATUSES } from '@/features/orders/utils/orderCalculator';
+import { INACTIVE_REPORTABLE_TEST_STATUSES } from '@/features/orders/constants/reportableTestStatus';
 
 export const formatPatientDetailDate = (
   date: string | Date | undefined | null,

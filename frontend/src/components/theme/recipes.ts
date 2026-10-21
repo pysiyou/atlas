@@ -216,6 +216,12 @@ export const CARD_PRICE = `${TYPE.pageTitle} leading-none` as const;
 /** Patient form tab section labels. */
 export const FORM_TAB_TITLE = `${TYPE.value} font-normal` as const;
 
+/** Lab report preview / print header — semantic scale only, no stacked font weights. */
+export const REPORT_PREVIEW_TYPE = {
+  companyName: `${TYPE.pageTitle} mb-space-3`,
+  reportTitle: `${TYPE.detailTitle} mb-space-2`,
+} as const;
+
 /** Select / menu row text scale. */
 export const MENU_ITEM_TYPE = 'type-amount' as const;
 
@@ -256,6 +262,7 @@ export const AUTH_TYPE = {
   fieldLabel: 'block font-body type-amount font-normal text-auth-fg-muted',
   formFooter: 'font-body text-center type-amount text-auth-fg-subtle',
   companySubtitle: 'font-body text-auth-fg-light type-body tracking-wider uppercase',
+  mobileBrandTitle: 'font-display type-page-title text-auth-fg',
   brandingKicker:
     'font-body text-auth-fg-light type-amount tracking-widest uppercase mt-space-1',
   brandingLead: 'font-body type-page-title text-auth-fg-muted leading-relaxed max-w-md',
@@ -643,6 +650,8 @@ const BADGE_TYPE = 'type-badge';
 
 /** Chip geometry (type scale only). Color: badgeStyles + useBadgeAppearance() + semantic --badge / --*-fg. */
 export const BADGE = {
+  /** Drop default badge border when embedded in DataTable cells. */
+  tableEmbed: 'border-none',
   size: {
     xs: `px-space-2 py-space-1 ${BADGE_TYPE} ${SPACING.gapCompact}`,
     sm: `px-space-2 py-space-1 ${BADGE_TYPE} ${SPACING.gapCompact}`,

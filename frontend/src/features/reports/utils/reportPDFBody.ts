@@ -5,7 +5,9 @@
 import type jsPDF from 'jspdf';
 import type { Gender, Test, TestParameter } from '@/types';
 import { catalogParametersByCode } from '@/features/catalog/testLookup';
-import { getParameterReferenceIntervalLines } from '@/features/lab/utils/labResult';
+// Lab barrel pulls auth-backed hooks; use thin constants re-export for PDF utils.
+// eslint-disable-next-line no-restricted-imports -- intentional lightweight lab import
+import { getParameterReferenceIntervalLines } from '@/features/lab/constants/referenceIntervalLines';
 import type { LabReportPayload } from '../types';
 import { RESULT_NOT_AVAILABLE } from '../types';
 

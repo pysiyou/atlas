@@ -11,7 +11,7 @@ import { ResultEntryDetailModal } from '@/features/lab/workflow/detailModal.resu
 import { TestDetailModal } from '@/features/lab/workflow/detailModal.test';
 import { EscalationResolutionModal } from '@/features/lab/workflow/detailModal.escalation';
 import { OrderUpsertModal } from '@/features/orders/OrderUpsertModal';
-import { ReportPreviewModal } from '@/features/reports/components/ReportPreviewModal';
+import { ReportPreviewModal } from '@/features/reports';
 
 export type { BaseModalProps } from '@/lib/context/modalTypes';
 

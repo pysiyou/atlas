@@ -44,8 +44,8 @@ export const TODAY_KPI = {
   table: `w-full min-w-0 overflow-hidden border border-border-subtle ${TODAY_METER_RADIUS}`,
   tableHeadRow:
     `grid ${TODAY_TABLE_GRID} items-center gap-x-space-3 border-b border-border-subtle/80 bg-surface-hover/40 px-space-3 py-space-2`,
-  tableHeadCell: `${TABLE_TYPE.columnTitle} font-medium text-text-secondary`,
-  tableHeadCellRight: `${TABLE_TYPE.columnTitle} text-right font-medium text-text-secondary`,
+  tableHeadCell: TABLE_TYPE.columnTitle,
+  tableHeadCellRight: `${TABLE_TYPE.columnTitle} text-right`,
   tableBody: 'divide-y divide-border-subtle/80',
   tableRow:
     `grid ${TODAY_TABLE_GRID} items-center gap-x-space-3 px-space-3 py-space-2`,

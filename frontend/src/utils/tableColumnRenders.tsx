@@ -12,6 +12,9 @@ export const TABLE_DATETIME_CELL_CLASS = `${TABLE_TYPE.datetime} truncate block 
 /** Datetime/date shown as supporting text (caption scale, tertiary color). */
 export const TABLE_DATETIME_SECONDARY_CLASS = `${TABLE_TYPE.datetimeSecondary} truncate block font-normal`;
 
+/** Primary table body line — prefer over raw text-text-primary in column renders. */
+export const TABLE_PRIMARY_CELL_CLASS = `${TABLE_TYPE.cell} truncate font-normal`;
+
 export type TableDateTone = 'primary' | 'secondary';
 
 function tableDateClassName(tone: TableDateTone): string {
@@ -21,7 +24,7 @@ function tableDateClassName(tone: TableDateTone): string {
 export function renderPatientNameBlock(fullName: string, secondary?: ReactNode): ReactNode {
   return (
     <div className="min-w-0 font-normal">
-      <div className="text-text-primary truncate font-normal capitalize">{fullName}</div>
+      <div className={`${TABLE_PRIMARY_CELL_CLASS} capitalize`}>{fullName}</div>
       {secondary}
     </div>
   );

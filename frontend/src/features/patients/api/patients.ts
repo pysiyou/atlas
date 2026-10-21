@@ -7,7 +7,8 @@ import type { Gender, Patient, PatientContext } from '@/types';
 import { serializeQueryList } from '@/utils/filtering';
 import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
+import { useResettablePage } from '@/hooks/useResettablePage';
 import { useEntityLookup, parseNumericKey } from '@/hooks/useEntityLookup';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
@@ -144,12 +145,8 @@ export function usePaginatedPatients(
   pageSize = DEFAULT_LIST_PAGE_SIZE
 ) {
   const enabled = useAuthQueryEnabled();
-  const [page, setPage] = useState(initialPage);
   const filterSnapshot = JSON.stringify(filters ?? null);
-
-  useEffect(() => {
-    setPage(initialPage);
-  }, [filterSnapshot, initialPage]);
+  const [page, setPage] = useResettablePage(initialPage, filterSnapshot);
 
   const query = useQuery({
     queryKey: queryKeys.patients.paginated({
@@ -170,23 +167,23 @@ export function usePaginatedPatients(
 
   const goToPage = useCallback((newPage: number) => {
     setPage(newPage);
-  }, []);
+  }, [setPage]);
 
   const resetPage = useCallback(() => {
     setPage(1);
-  }, []);
+  }, [setPage]);
 
   const nextPage = useCallback(() => {
     if (query.data?.pagination.hasNext) {
       setPage(p => p + 1);
     }
-  }, [query.data?.pagination.hasNext]);
+  }, [query.data?.pagination.hasNext, setPage]);
 
   const prevPage = useCallback(() => {
     if (query.data?.pagination.hasPrev) {
       setPage(p => p - 1);
     }
-  }, [query.data?.pagination.hasPrev]);
+  }, [query.data?.pagination.hasPrev, setPage]);
 
   return {
     patients: query.data?.data ?? [],

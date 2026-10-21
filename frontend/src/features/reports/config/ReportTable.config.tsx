@@ -6,7 +6,7 @@ import type { MouseEvent } from 'react';
 import type { NavigateFunction } from 'react-router-dom';
 import { EntityId } from '@/components/display';
 import type { TableViewConfig } from '@/components/data-table';
-import { buildViews, COLUMN_SIZE } from '@/components/data-table';
+import { buildViews, COLUMN_SIZE, TABLE_COLUMN_WIDTH } from '@/components/data-table';
 import { ORDER_TABLE_COLUMN_HEADERS, renderOrderPatientName } from '@/features/orders';
 import { renderDateTimeCell } from '@/utils/tableColumnRenders';
 import type { ReportableOrder } from '../types';
@@ -14,7 +14,7 @@ import { ReportPreviewButton } from '../components/ReportPreviewButton';
 import { ReportPrintButton } from '../components/ReportPrintButton';
 import { ValidatedTestReportCard } from '../components/ValidatedTestReportCard';
 import { getActiveOrderTests } from '../utils/prepareReportData';
-import { TYPE } from '@/components/theme/recipes';
+import { TABLE_TYPE } from '@/components/theme/recipes';
 
 const REPORT_VIEWS = {
   full: ['orderId', 'patientName', 'tests', 'orderDate', 'status', 'action'],
@@ -87,7 +87,7 @@ export const createReportTableConfig = (
         const summary = testsSummary(order);
         return (
           <div className="min-w-0 font-normal">
-            <div className="text-text-primary truncate font-normal">{summary.names}</div>
+            <div className={`${TABLE_TYPE.cell} truncate font-normal`}>{summary.names}</div>
             {summary.codes && (
               <EntityId variant="secondary" className="truncate">{summary.codes}</EntityId>
             )}
@@ -98,7 +98,7 @@ export const createReportTableConfig = (
     orderDate: {
       key: 'orderDate',
       header: 'Date',
-      width: COLUMN_SIZE.md,
+      width: TABLE_COLUMN_WIDTH.datetime,
       sortable: true,
       accessor: (order: ReportableOrder) => order.orderDate,
       render: (order: ReportableOrder) => renderDateTimeCell(order.orderDate),
@@ -110,13 +110,15 @@ export const createReportTableConfig = (
       sortable: true,
       accessor: (order: ReportableOrder) => order.validatedTestCount,
       render: (order: ReportableOrder) => (
-        <span className={`${TYPE.value} tabular-nums`}>{validationStatusLabel(order)}</span>
+        <span className={`${TABLE_TYPE.cell} tabular-nums font-normal`}>
+          {validationStatusLabel(order)}
+        </span>
       ),
     },
     action: {
       key: 'action',
       header: 'Action',
-      width: COLUMN_SIZE.lg,
+      width: TABLE_COLUMN_WIDTH.actionDual,
       render: (order: ReportableOrder) => (
         <div
           className="flex items-center justify-start gap-space-1 font-normal"

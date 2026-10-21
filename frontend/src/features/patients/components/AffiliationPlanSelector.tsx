@@ -110,9 +110,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
         )}
         <div className="space-y-space-4">
           <div>
-            <h3 className={`${TYPE.pageTitle} font-semibold mb-space-2`}>
-              Lab Affiliation Benefits
-            </h3>
+            <h3 className={`${TYPE.detailTitle} mb-space-2`}>Lab Affiliation Benefits</h3>
             <p className={`${TYPE.amount} text-text-tertiary leading-relaxed`}>
               Choose a plan that fits your needs. All plans include priority services and discounted
               pricing for lab tests.
@@ -121,7 +119,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
 
           {/* Included Features - icons follow theme (brand) */}
           <div className="space-y-space-3">
-            <h4 className={`${TYPE.amount} font-semibold`}>What's Included</h4>
+            <h4 className={TYPE.sectionTitle}>What&apos;s Included</h4>
             <div className="space-y-space-2-5">
               <div className="flex items-start gap-space-3">
                 <div className={`flex-shrink-0 w-4 h-4 ${RADIUS.pill} bg-brand flex items-center justify-center mt-space-0-5`}>
@@ -232,7 +230,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                   {/* Plan Details */}
                   <div className="flex-1 min-w-0">
                     <div className="mb-space-2">
-                      <h5 className={`${TYPE.value} font-semibold`}>{plan.label}</h5>
+                      <h5 className={TYPE.amount}>{plan.label}</h5>
                     </div>
 
                     {/* Pricing */}
@@ -241,7 +239,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                         {plan.duration === 12 ? (
                           <>
                             <div className="flex items-baseline gap-space-2">
-                              <span className="text-2xl font-normal text-text-primary">
+                              <span className={`${TYPE.pageTitle} font-normal`}>
                                 {formatCurrency(plan.monthlyPrice)}
                               </span>
                               <span className={`${TYPE.amount} text-text-tertiary font-normal`}>/month</span>

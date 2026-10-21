@@ -6,7 +6,8 @@ import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
 import type { Order } from '@/types';
 import type { PaginatedResponse } from '@/types/pagination';
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
+import { useResettablePage } from '@/hooks/useResettablePage';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import type { ReportableOrder } from '../types';
 import { calculateAge } from '@/utils';
@@ -118,12 +119,8 @@ export function usePaginatedReportableOrders(
   pageSize = DEFAULT_LIST_PAGE_SIZE
 ) {
   const enabled = useAuthQueryEnabled();
-  const [page, setPage] = useState(initialPage);
   const filterSnapshot = JSON.stringify(filters ?? null);
-
-  useEffect(() => {
-    setPage(initialPage);
-  }, [filterSnapshot, initialPage]);
+  const [page, setPage] = useResettablePage(initialPage, filterSnapshot);
 
   const query = useQuery({
     queryKey: queryKeys.reports.paginated({
@@ -144,11 +141,11 @@ export function usePaginatedReportableOrders(
 
   const goToPage = useCallback((newPage: number) => {
     setPage(newPage);
-  }, []);
+  }, [setPage]);
 
   const resetPage = useCallback(() => {
     setPage(1);
-  }, []);
+  }, [setPage]);
 
   return {
     reportableOrders: (query.data?.data ?? []).map(toReportableOrder),

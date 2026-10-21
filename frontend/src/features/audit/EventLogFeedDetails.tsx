@@ -3,8 +3,7 @@
  */
 import { useMemo } from 'react';
 import { TYPE } from '@/components/theme/recipes';
-import { parseResultEntry, statusMapFromFlags } from '@/features/lab';
-import { ResultValueAnnotations } from '@/features/lab/components/ResultValueAnnotations';
+import { parseResultEntry, ResultValueAnnotations, statusMapFromFlags } from '@/features/lab';
 import { resolveParameterLabel, useParameterLabelMap } from '@/features/catalog';
 import { cn } from '@/utils';
 import { collectTestCodes } from './catalog';

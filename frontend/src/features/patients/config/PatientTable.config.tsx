@@ -1,7 +1,7 @@
 import type { NavigateFunction } from 'react-router-dom';
 import { PatientGenderBadge } from '../components/PatientGenderBadge';
 import type { TableViewConfig } from '@/components/data-table';
-import { buildViews, COLUMN_SIZE } from '@/components/data-table';
+import { buildViews, COLUMN_SIZE, TABLE_COLUMN_WIDTH } from '@/components/data-table';
 import {
   renderContactBlock,
   renderDateCell,
@@ -96,7 +96,7 @@ export const createPatientTableConfig = (
     registrationDate: {
       key: 'registrationDate',
       header: 'Registered',
-      width: COLUMN_SIZE.md,
+      width: TABLE_COLUMN_WIDTH.datetime,
       sortable: true,
       accessor: (patient: PatientContext) => patient.registrationDate,
       render: (patient: PatientContext) => renderDateTimeCell(patient.registrationDate),
