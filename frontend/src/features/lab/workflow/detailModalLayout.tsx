@@ -215,3 +215,7 @@ export function labModalHeaderContext({
     ),
   };
 }
+
+/** Stage-specific detail field grids (shared {@link DetailGrid} shell). */
+export { CollectionDetailGrid } from './detailModal.sampleCollection.grid';
+export { ResultEntryDetailGrid } from './detailModal.resultEntry.grid';

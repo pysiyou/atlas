@@ -11,10 +11,14 @@ export interface SegmentOption {
   label: React.ReactNode;
 }
 
+export type SegmentedControlLayout = 'wrap' | 'scroll';
+
 export interface SegmentedControlProps {
   options: SegmentOption[];
   activeId: string;
   onActiveIdChange: (id: string) => void;
+  /** `scroll` — single row with horizontal scroll (panel headers). Default `wrap`. */
+  layout?: SegmentedControlLayout;
   className?: string;
 }
 
@@ -22,14 +26,21 @@ export function SegmentedControl({
   options,
   activeId,
   onActiveIdChange,
+  layout = 'wrap',
   className,
 }: SegmentedControlProps) {
   if (options.length === 0) return null;
 
+  const railLayout =
+    layout === 'scroll'
+      ? 'flex flex-nowrap items-center gap-space-1 max-w-full overflow-x-auto'
+      : 'flex flex-wrap items-center gap-space-1';
+
   return (
     <div
       className={cn(
-        `bg-surface-hover p-space-1 ${RADIUS.field} flex flex-wrap items-center gap-space-1`,
+        `bg-surface-hover p-space-1 ${RADIUS.field}`,
+        railLayout,
         className
       )}
     >
@@ -40,11 +51,12 @@ export function SegmentedControl({
             key={opt.id}
             type="button"
             onClick={() => onActiveIdChange(opt.id)}
-            className={
+            className={cn(
+              `px-space-3 py-space-1-5 ${RADIUS.field} ${text({ role: 'body' })} font-normal cursor-pointer shrink-0 whitespace-nowrap`,
               isActive
-                ? `px-space-3 py-space-1-5 ${RADIUS.field} ${text({ role: 'body' })} font-normal cursor-pointer bg-surface text-brand ${CONTROL.segmentActive}`
-                : `px-space-3 py-space-1-5 ${RADIUS.field} ${text({ role: 'body' })} font-normal cursor-pointer text-text-tertiary hover:text-text-primary hover:bg-surface-hover`
-            }
+                ? `bg-surface text-brand ${CONTROL.segmentActive}`
+                : 'text-text-tertiary hover:text-text-primary hover:bg-surface-hover'
+            )}
           >
             {opt.label}
           </button>

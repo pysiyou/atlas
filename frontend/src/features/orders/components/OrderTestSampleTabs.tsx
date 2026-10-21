@@ -77,6 +77,7 @@ export const OrderTestSampleTabs: React.FC<OrderTestSampleTabsProps> = ({
     samples.length > 1
       ? (
           <SegmentedControl
+            layout="scroll"
             options={segmentTabs}
             activeId={resolvedActiveTabId}
             onActiveIdChange={setActiveTabId}

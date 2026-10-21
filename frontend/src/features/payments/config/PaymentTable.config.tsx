@@ -1,6 +1,6 @@
 import type { NavigateFunction } from 'react-router-dom';
 import { getActiveTests } from '@/features/orders';
-import { PaymentMethodBadge } from '../components/PaymentStatusBadge';
+import { StatusValueBadge } from '@/features/shared';
 import type { TableViewConfig } from '@/components/data-table';
 import { buildViews } from '@/components/data-table';
 import {
@@ -65,7 +65,7 @@ export const createPaymentTableConfig = (
       accessor: (item: OrderPaymentView) => item.paymentMethod ?? '',
       render: (item: OrderPaymentView) => {
         if (!item.paymentMethod || item.order.paymentStatus === 'unpaid') return null;
-        return <PaymentMethodBadge method={item.paymentMethod} size="xs" />;
+        return <StatusValueBadge value={item.paymentMethod} size="xs" />;
       },
     },
     paidDate: {

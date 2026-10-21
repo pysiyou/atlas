@@ -7,8 +7,7 @@ import { actionButtonPreset, Button } from '@/components/primitives';
 import { ListView } from '@/components/surfaces';
 import { useAuthStore } from '@/app/authStore';
 import { ROUTES } from '@/config';
-import { toListLoadError } from '@/hooks/listPage';
-import { applyPageFilters, usePageFilters } from '@/hooks/usePageFilters';
+import { applyPageFilters, useClientListChrome, usePageFilters } from '@/hooks';
 import { useUsersAdminList, type UserAdminRecord } from '../api/usersAdmin';
 import { UserFilters } from '../components/UserFilters';
 import { UserUpsertModal } from '../components/UserUpsertModal';
@@ -29,12 +28,17 @@ export const UsersPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserAdminRecord | null>(null);
   const tableConfig = useMemo(() => createUserTableConfig(), []);
+  const { loading, error: listError, onRetry } = useClientListChrome({
+    loadFailedKey: 'users.list.loadFailed',
+    isLoading,
+    isError,
+    error,
+    refetch,
+  });
 
   if (!hasRole('administrator')) {
     return <Navigate to={ROUTES.DASHBOARD} replace />;
   }
-
-  const listError = isError ? toListLoadError('users.list.loadFailed', error) : null;
 
   const openCreate = () => {
     setSelectedUser(null);
@@ -51,9 +55,9 @@ export const UsersPage: React.FC = () => {
       <ListView
         items={filteredUsers}
         viewConfig={tableConfig}
-        loading={isLoading}
+        loading={loading}
         error={listError}
-        onRetry={refetch}
+        onRetry={onRetry}
         onDismissError={() => undefined}
         onRowClick={openEdit}
         title="User management"

@@ -4,7 +4,7 @@ import { RecordId } from '@/features/shared';
 import { renderTableSecondaryRecordId } from '@/utils/presentationRenders';
 import type { CardComponentProps } from '@/components/data-table';
 import { OrderStatusBadge } from './OrderDomainBadges';
-import { PaymentStatusBadge } from '@/features/payments';
+import { StatusValueBadge } from '@/features/shared';
 import { renderOrderTestsBlock } from '@/features/orders';
 import { useTestNameLookup } from '@/features/catalog';
 import { formatCurrency, formatDateTime } from '@/utils';
@@ -78,7 +78,7 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
                 size="xs"
               />
             )}
-            {order.paymentStatus && <PaymentStatusBadge status={order.paymentStatus} size="xs" />}
+            {order.paymentStatus && <StatusValueBadge value={order.paymentStatus} size="xs" />}
           </div>
         ) : (
           <>
@@ -94,7 +94,7 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
                   size="xs"
                 />
               )}
-              {order.paymentStatus && <PaymentStatusBadge status={order.paymentStatus} size="xs" />}
+              {order.paymentStatus && <StatusValueBadge value={order.paymentStatus} size="xs" />}
             </div>
           </>
         )}

@@ -6,12 +6,12 @@ import { Button } from '@/components/primitives';
 import { ErrorAlert, Skeleton } from '@/components/feedback';
 import { Panel, type PanelPresetId } from '@/components/surfaces/Panel';
 import { cn } from '@/utils';
-import { toListLoadError } from '@/hooks/listPage';
+import { toListLoadError } from '@/hooks';
 import { EVENT_LOG_COPY } from './types';
 import { EventLogFeed } from './EventLogFeed';
 import { EventLogFilters } from './EventLogFilters';
 import { useEventLog } from './useEventLog';
-import { useEventLogPanelState } from './useEventLogPanelState';
+import { useEventLogPanelState, type EventLogPanelFilterState } from './eventLogPanelState';
 import type {
   EventLogFilterUiConfig,
   EventLogQuery,
@@ -39,6 +39,8 @@ export interface EventLogPanelProps {
   layout?: EventLogPanelLayout;
   meta?: string;
   hideMeta?: boolean;
+  /** When set (e.g. global event log page), skips local filter state in favor of URL-synced state. */
+  filterPanelState?: EventLogPanelFilterState;
 }
 
 function metaForQuery(query: EventLogQuery, hasUserFilters: boolean): string {
@@ -75,15 +77,17 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
   layout = 'standalone',
   meta,
   hideMeta = false,
+  filterPanelState,
 }) => {
   const visibleFields = filterUi?.fields ?? [];
   const showFilters = visibleFields.length > 0;
 
-  const panelState = useEventLogPanelState({
+  const localPanelState = useEventLogPanelState({
     query,
     filterDefaults,
     visibleFields,
   });
+  const panelState = filterPanelState ?? localPanelState;
 
   const skipFetch = panelState.recordIdInputInvalid;
 

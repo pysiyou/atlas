@@ -3,7 +3,7 @@ import { ListCard } from '@/components/surfaces';
 import { RecordId } from '@/features/shared';
 import { renderTableSecondaryRecordId } from '@/utils/presentationRenders';
 import { OrderStatusBadge } from '@/features/orders';
-import { PaymentMethodBadge, PaymentStatusBadge } from './PaymentStatusBadge';
+import { StatusValueBadge } from '@/features/shared';
 import type { CardComponentProps } from '@/components/data-table';
 import { getActiveTests, renderOrderTestsBlock } from '@/features/orders';
 import { useTestNameLookup } from '@/features/catalog';
@@ -72,9 +72,9 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
         </div>
         <div className="flex items-center gap-space-2 shrink-0">
           {order.overallStatus && <OrderStatusBadge status={order.overallStatus} size="xs" />}
-          <PaymentStatusBadge status={order.paymentStatus} size="xs" />
+          <StatusValueBadge value={order.paymentStatus} size="xs" />
           {item.paymentMethod && order.paymentStatus !== 'unpaid' ? (
-            <PaymentMethodBadge method={item.paymentMethod} size="xs" />
+            <StatusValueBadge value={item.paymentMethod} size="xs" />
           ) : order.paymentStatus === 'unpaid' ? (
             <div onClick={e => e.stopPropagation()}>
               <PaymentButton order={order} size="sm" onPaymentSuccess={handlePaymentSuccess} />

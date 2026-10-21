@@ -77,7 +77,7 @@ export {
   ResultValidationNotesSection,
 } from './validation/ResultValidationForm';
 export { TestHeaderBadges } from './components/LabWorkflowBadges';
-export { TestWorkflowCardLeftColumn } from './workflow/queueCard.testWorkflowLeftColumn';
+export { TestWorkflowCardLeftColumn } from './workflow/queueCardLeftColumn';
 export { useSampleRejectionDisplay } from './hooks/useSampleRejectionDisplay';
 export { SampleRejectedBanner } from './components/SampleRejectedBanner';
 

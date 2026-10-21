@@ -10,7 +10,7 @@ import { Popover } from '@/components/overlays';
 import { Button, Icon } from '@/components/primitives';
 import { Alert, FooterInfo } from '@/components/display';
 import { RecordId } from '@/features/shared';
-import { PaymentStatusBadge } from './PaymentStatusBadge';
+import { StatusValueBadge } from '@/features/shared';
 import { PaymentMethodSelector } from './PaymentMethodSelector';
 import { PopoverFormChrome } from '@/components/overlays';
 import { cn, formatCurrency } from '@/utils';
@@ -260,7 +260,7 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
 
   const isPaid = order.paymentStatus === 'paid' || (!paymentsLoading && remainingAmount <= 0);
   if (isPaid && trigger == null) {
-    return <PaymentStatusBadge status="paid" size="xs" />;
+    return <StatusValueBadge value="paid" size="xs" />;
   }
 
   const defaultTrigger = (

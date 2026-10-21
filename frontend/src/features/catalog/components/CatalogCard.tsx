@@ -1,6 +1,6 @@
 import { ListCard } from '@/components/surfaces';
 import { RecordId } from '@/features/shared';
-import { CatalogCategoryBadge, CatalogSampleTypeBadge } from './CatalogStatusBadge';
+import { StatusValueBadge } from '@/features/shared';
 import type { CardComponentProps } from '@/components/data-table';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import type { TestSummary } from '@/types';
@@ -49,8 +49,8 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<TestSumm
           TAT: {formatTurnaroundTime(test.turnaroundTime)}
         </div>
         <div className="flex items-center gap-space-2">
-          <CatalogCategoryBadge category={test.category} size="xs" className={BADGE.tableEmbed} />
-          <CatalogSampleTypeBadge sampleType={test.sampleType} size="xs" />
+          <StatusValueBadge value={test.category} size="xs" className={BADGE.tableEmbed} />
+          <StatusValueBadge value={test.sampleType} size="xs" />
         </div>
       </div>
     </ListCard>

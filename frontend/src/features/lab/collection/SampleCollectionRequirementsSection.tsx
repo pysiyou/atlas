@@ -58,6 +58,7 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
       headerEnd={
         testDetails.length > 1 ? (
           <SegmentedControl
+            layout="scroll"
             options={segmentTabs}
             activeId={activeSegmentId}
             onActiveIdChange={id => {

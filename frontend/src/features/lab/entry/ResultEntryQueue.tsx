@@ -4,7 +4,7 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { uniqueSortedTestCodes, useTestsByCodes } from '@/features/catalog';
-import { useLabQueueFilters } from '../hooks';
+import { useLabQueuePageFilters } from '../hooks';
 import type { TestWithContextResult } from '../types';
 import { useEntryWorklist } from '../api/worklists';
 import { mapEntryWorklistToOrderTestContext } from '../utils/labQueue';
@@ -21,7 +21,7 @@ import { useResultEntryWorkflow } from './useResultEntryWorkflow';
 import { useLabDraftStore } from '../state/labDraftStore';
 import { ResultEntryQueueItem } from './ResultEntryQueueCards';
 import { worklistServerFilters } from '../utils/labSearchAndLinks';
-import { toListLoadError } from '@/hooks/listPage';
+import { toListLoadError } from '@/hooks';
 
 /** Stable empty map so unedited cards keep the same `results` identity. */
 const EMPTY_RESULT_VALUES: Record<string, string> = {};
@@ -82,7 +82,7 @@ export const ResultEntryQueue: React.FC = () => {
     urlFilters,
     clearUrlFilters,
     setUrlFilter,
-  } = useLabQueueFilters({
+  } = useLabQueuePageFilters({
     items: allTests,
     workflowType: 'entry',
     searchQuery,

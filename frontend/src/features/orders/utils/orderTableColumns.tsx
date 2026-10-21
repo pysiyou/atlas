@@ -13,7 +13,7 @@ import {
   OrderPriorityBadge,
   OrderStatusBadge,
 } from '../components/OrderDomainBadges';
-import { PaymentStatusBadge } from '@/features/payments';
+import { StatusValueBadge } from '@/features/shared';
 import { ORDER_TABLE_COLUMN_HEADERS } from '../constants/orderTableColumns';
 import {
   renderOrderDateCell,
@@ -123,7 +123,7 @@ export function createOrderSharedColumns<T>(
     paymentStatus: createBadgeColumn<T>(
       'paymentStatus',
       ORDER_TABLE_COLUMN_HEADERS.paymentStatus,
-      item => <PaymentStatusBadge status={accessors.getPaymentStatus(item)} size="xs" />,
+      item => <StatusValueBadge value={accessors.getPaymentStatus(item)} size="xs" />,
       {
         sortable: true,
         accessor: item => accessors.getPaymentStatus(item),

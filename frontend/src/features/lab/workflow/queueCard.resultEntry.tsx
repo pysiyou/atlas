@@ -16,7 +16,7 @@ import { deriveRetestContext } from '../utils/deriveRetestContext';
 import { FG, MOBILE_LIST_CARD } from '@/theme/recipes';
 import type { Test, TestWithContext } from '@/types';
 import { QueueCard, QueueCardMobile } from './queueCardLayout';
-import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';
+import { TestWorkflowCardLeftColumn } from './queueCardLeftColumn';
 
 export interface ResultEntryCardProps {
   test: TestWithContext;

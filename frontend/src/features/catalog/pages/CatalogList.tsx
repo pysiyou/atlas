@@ -13,8 +13,7 @@ import {
   catalogListInitialFilters,
   filterCatalogTests,
 } from '../utils/filterCatalogTests';
-import { applyPageFilters, usePageFilters } from '@/hooks/usePageFilters';
-import { toListLoadError } from '@/hooks/listPage';
+import { applyPageFilters, useClientListChrome, usePageFilters } from '@/hooks';
 import type { TestSummary } from '@/types';
 
 export const CatalogList: React.FC = () => {
@@ -31,7 +30,13 @@ export const CatalogList: React.FC = () => {
     [tests, filters],
   );
 
-  const error = isError ? toListLoadError('catalog.list.loadFailed', queryError) : null;
+  const { loading, error, onRetry } = useClientListChrome({
+    loadFailedKey: 'catalog.list.loadFailed',
+    isLoading,
+    isError,
+    error: queryError,
+    refetch,
+  });
 
   const catalogTableConfig = useMemo(() => createCatalogTableConfig(navigate), [navigate]);
 
@@ -40,9 +45,9 @@ export const CatalogList: React.FC = () => {
       <ListView
         items={filteredTests}
         viewConfig={catalogTableConfig}
-        loading={isLoading}
+        loading={loading}
         error={error}
-        onRetry={refetch}
+        onRetry={onRetry}
         onDismissError={() => undefined}
         onRowClick={(test: TestSummary) => navigate(`/catalog/${test.code}`)}
         title="Test Catalog"

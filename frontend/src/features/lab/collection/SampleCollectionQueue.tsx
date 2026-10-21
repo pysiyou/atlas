@@ -2,16 +2,13 @@
  * SampleCollectionQueue - Main view for sample collection workflow
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { decodeFiltersFromUrl } from '@/utils/filters';
-import { useLabQueueFilters, useLabQueueUrlSearch } from '../hooks';
-import {
-  getLabQueueSearchFromUrlFilters,
-  hasActiveRecordUrlFilters,
-} from '../utils/labSearchAndLinks';
+import { useLabEntitySearchSync, useLabQueuePageFilters, useLabQueueUrlSearch } from '../hooks';
+import { getLabQueueSearchFromUrlFilters } from '../utils/labSearchAndLinks';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { LAB_CONFIG } from '../constants';
 import { useCollectSample } from '../api/samples';
@@ -29,7 +26,7 @@ import { DetailPageSkeleton } from '@/components/feedback/DetailPageSkeleton';
 import { useAuthStore } from '@/app/authStore';
 import { useTestCatalog } from '@/features/catalog';
 import { worklistServerFilters } from '../utils/labSearchAndLinks';
-import { toListLoadError } from '@/hooks/listPage';
+import { toListLoadError } from '@/hooks';
 export const SampleCollectionQueue: React.FC = () => {
   const { user: currentUser } = useAuthStore();
   const collectSampleMutation = useCollectSample();
@@ -81,7 +78,7 @@ export const SampleCollectionQueue: React.FC = () => {
     urlFilters,
     clearUrlFilters,
     setUrlFilter,
-  } = useLabQueueFilters({
+  } = useLabQueuePageFilters({
     items: collectionDisplays,
     workflowType: 'collection',
     searchQuery,
@@ -96,17 +93,12 @@ export const SampleCollectionQueue: React.FC = () => {
     collectionSampleLookup: isSampleLookup,
   });
 
-  useEffect(() => {
-    const entitySearch = getLabQueueSearchFromUrlFilters(urlFilters, urlSearch, true);
-    // URL-driven search must follow filter hydration from useLabQueueFilters.
-    /* eslint-disable react-hooks/set-state-in-effect -- intentional URL → field sync */
-    if (hasActiveRecordUrlFilters(urlFilters)) {
-      setSearchQuery(entitySearch);
-      return;
-    }
-    setSearchQuery(urlSearch);
-    /* eslint-enable react-hooks/set-state-in-effect */
-  }, [urlFilters, urlSearch]);
+  useLabEntitySearchSync({
+    urlFilters,
+    urlSearch,
+    preferSample: true,
+    setSearchQuery,
+  });
 
   const filteredDisplays = filteredDisplaysRaw as SampleCollectionQueueItem[];
 

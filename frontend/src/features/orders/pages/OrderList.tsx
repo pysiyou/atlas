@@ -13,11 +13,7 @@ import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { OrderFilters } from '../components/OrderFilters';
 import { createOrderTableConfig } from '../config/OrderTable.config';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
-import {
-  buildServerListPagination,
-  toListLoadError,
-  useFilterChangeWithPageReset,
-} from '@/hooks/listPage';
+import { useServerListChrome } from '@/hooks';
 import { inclusiveDateRangeBounds, toIsoDateParam } from '@/utils';
 import { usePageFilters } from '@/hooks/usePageFilters';
 import { ORDER_URL_FILTER_KEYS } from '../config/orderFilters.config';
@@ -71,7 +67,19 @@ export const OrderList: React.FC = () => {
     resetPage,
   } = usePaginatedOrders(serverFilters, 1, DEFAULT_LIST_PAGE_SIZE);
 
-  const { setFilterAndReset } = useFilterChangeWithPageReset(setFilter, resetPage);
+  const { loading, error, listPagination, setFilterAndReset, onRetry } = useServerListChrome({
+    setFilter,
+    resetPage,
+    loadFailedKey: 'orders.list.loadFailed',
+    isLoading,
+    isError,
+    error: queryError,
+    refetch,
+    page,
+    pagination,
+    goToPage,
+    pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
+  });
 
   const handleStatusFiltersChange = useCallback(
     (next: OrderStatus[]) => {
@@ -81,21 +89,6 @@ export const OrderList: React.FC = () => {
   );
 
   const { getTestName } = useTestNameLookup();
-
-  const loading = isLoading;
-
-  const error = isError ? toListLoadError('orders.list.loadFailed', queryError) : null;
-
-  const listPagination = useMemo(
-    () =>
-      buildServerListPagination({
-        page,
-        pagination,
-        goToPage,
-        pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
-      }),
-    [page, pagination, goToPage],
-  );
 
   const orderTableConfig = useMemo(
     () => createOrderTableConfig(navigate, () => '—', getTestName),
@@ -109,7 +102,7 @@ export const OrderList: React.FC = () => {
         viewConfig={orderTableConfig}
         loading={loading}
         error={error}
-        onRetry={refetch}
+        onRetry={onRetry}
         onDismissError={() => undefined}
         onRowClick={(order: Order) => navigate(`/orders/${order.orderId}`)}
         title="Orders"
