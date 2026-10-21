@@ -9,7 +9,7 @@ import { Icon } from '@/components/primitives';
 import { PaymentPopover } from './PaymentPopover';
 import type { Order } from '@/types';
 import { ICONS } from '@/config/icons';
-import { BADGE } from '@/theme/recipes';
+import {BADGE, FG } from '@/theme/recipes';
 
 interface PaymentButtonProps {
   /** Order to display payment action for */
@@ -39,7 +39,7 @@ export const PaymentButton: React.FC<PaymentButtonProps> = ({
       <div className="flex items-center justify-start">
         <Icon
           name={ICONS.actions.checkCircle}
-          className={`${BADGE.icon.sm} text-text-disabled`}
+          className={`${BADGE.icon.sm} ${FG.disabled}`}
         />
       </div>
     );

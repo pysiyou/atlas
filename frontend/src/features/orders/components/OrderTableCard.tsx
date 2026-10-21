@@ -1,6 +1,7 @@
 import { Avatar } from '@/components/primitives';
 import { MobileEntityCard } from '@/components/surfaces';
 import { EntityId } from '@/components/display';
+import { renderTableSecondaryEntityId } from '@/utils/presentationRenders';
 import type { CardComponentProps } from '@/components/data-table';
 import { OrderStatusBadge } from './OrderDomainBadges';
 import { PaymentStatusBadge } from '@/features/payments';
@@ -41,7 +42,11 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
             <Avatar
               primaryText={order.patientName || 'N/A'}
               primaryTextClassName=""
-              secondaryText={<EntityId type="order" value={order.orderId} />}
+              secondarySlot="entity"
+              secondaryText={renderTableSecondaryEntityId({
+                type: 'patient',
+                value: order.patientId,
+              })}
               size="xs"
             />
           )
@@ -77,7 +82,10 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
           </div>
         ) : (
           <>
-            <div className={TABLE_DATETIME_SECONDARY_CLASS}>{formatDateTime(order.orderDate)}</div>
+            <div className={TABLE_DATETIME_SECONDARY_CLASS}>
+              <EntityId type="order" value={order.orderId} variant="secondaryBlock" />
+              <span className="block mt-space-0-5">{formatDateTime(order.orderDate)}</span>
+            </div>
             <div className="flex items-center gap-space-2 shrink-0">
               {order.overallStatus && (
                 <OrderStatusBadge

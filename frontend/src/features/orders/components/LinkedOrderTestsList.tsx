@@ -7,7 +7,7 @@ import { EntityId } from '@/components/display';
 import type { OrderTest } from '@/types';
 import { displayId } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
-import { text, INLINE_LINK } from '@/theme/recipes';
+import { text, INLINE_LINK_BUTTON } from '@/theme/recipes';
 
 export type LinkedOrderTestsListProps = {
   tests: OrderTest[];
@@ -25,14 +25,14 @@ export const LinkedOrderTestsList: React.FC<LinkedOrderTestsListProps> = ({ test
           className="flex flex-wrap items-center justify-between gap-x-space-2 min-h-0"
         >
           <div className="min-w-0 flex flex-wrap items-baseline gap-x-space-2 gap-y-0">
-            <span className="font-medium text-text-primary">{test.testName}</span>
+            <span className={`font-medium ${text({ role: 'body' })}`}>{test.testName}</span>
             <EntityId variant="inline">{test.testCode}</EntityId>
             {test.id != null ? (
               <span className={text({ role: 'body', intent: 'muted' })}>{displayId.orderTest(test.id)}</span>
             ) : null}
             <span className={text({ role: 'body', intent: 'muted' })}>{formatStatusBadgeLabel(test.status)}</span>
           </div>
-          <button type="button" className={`shrink-0 ${INLINE_LINK}`} onClick={() => onOpen(test)}>
+          <button type="button" className={INLINE_LINK_BUTTON} onClick={() => onOpen(test)}>
             View
           </button>
         </li>

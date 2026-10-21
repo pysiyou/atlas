@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { Badge } from '@/components/primitives';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { text, OVERLAY, RADIUS, TONE } from '@/theme/recipes';
+import { text, OVERLAY, RADIUS, TONE , FG } from '@/theme/recipes';
 
 
 interface AttemptIndicatorProps {
@@ -65,11 +65,11 @@ export const AttemptIndicator: React.FC<AttemptIndicatorProps> = ({
             </p>
             {previousReason && (
               <p className={`${text({ role: 'caption' })} leading-tight`}>
-                <span className="text-text-secondary">Previous: </span>
+                <span className={FG.labelMuted}>Previous: </span>
                 {previousReason}
               </p>
             )}
-            <p className={`${text({ role: 'caption' })} text-text-disabled`}>
+            <p className={`${text({ role: 'caption' })} ${FG.disabled}`}>
               {maxAttempts - attemptNumber} {maxAttempts - attemptNumber === 1 ? 'attempt' : 'attempts'} remaining
             </p>
           </div>
@@ -120,7 +120,7 @@ export const AttemptProgressBar: React.FC<AttemptProgressBarProps> = ({
   return (
     <div className={cn('space-y-space-1', className)}>
       <div className={`flex items-center justify-between ${text({ role: 'caption' })}`}>
-        <span className="font-normal text-text-secondary">{label}</span>
+        <span className={`font-normal ${FG.labelMuted}`}>{label}</span>
         <span className={cn('font-normal', colors.fg)}>
           {remaining} {remaining === 1 ? 'left' : 'left'}
         </span>

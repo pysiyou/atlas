@@ -63,51 +63,51 @@ export const designTokenRestrictedSyntax = [
   ...typeScaleRestrictedSyntax,
   {
     selector: 'Literal[value=/text-xs text-text-secondary/]',
-    message: 'Use TYPE.label from @/theme/recipes.',
+    message: 'Use text({ role: "label" }) or <Text role="label" />.',
   },
   {
     selector: 'TemplateElement[value.raw=/text-xs text-text-secondary/]',
-    message: 'Use TYPE.label from @/theme/recipes.',
+    message: 'Use text({ role: "label" }) or <Text role="label" />.',
   },
   {
     selector: 'Literal[value=/text-xs text-text-primary/]',
-    message: 'Use TYPE.value from @/theme/recipes.',
+    message: 'Use text({ role: "body" }) or <Text role="body" />.',
   },
   {
     selector: 'TemplateElement[value.raw=/text-xs text-text-primary/]',
-    message: 'Use TYPE.value from @/theme/recipes.',
+    message: 'Use text({ role: "body" }) or <Text role="body" />.',
   },
   {
     selector: 'Literal[value=/text-xs text-text-tertiary/]',
-    message: 'Use TYPE.meta from @/theme/recipes.',
+    message: 'Use text({ role: "body", intent: "muted" }) or <Text intent="muted" />.',
   },
   {
     selector: 'TemplateElement[value.raw=/text-xs text-text-tertiary/]',
-    message: 'Use TYPE.meta from @/theme/recipes.',
+    message: 'Use text({ role: "body", intent: "muted" }) or <Text intent="muted" />.',
   },
   {
     selector: 'Literal[value=/text-xxs text-text-tertiary/]',
-    message: 'Use TYPE.caption from @/theme/recipes.',
+    message: 'Use text({ role: "caption", intent: "muted" }) or <Text role="caption" intent="muted" />.',
   },
   {
     selector: 'TemplateElement[value.raw=/text-xxs text-text-tertiary/]',
-    message: 'Use TYPE.caption from @/theme/recipes.',
+    message: 'Use text({ role: "caption", intent: "muted" }) or <Text role="caption" intent="muted" />.',
   },
   {
     selector: 'Literal[value=/text-sm font-medium text-text-primary/]',
-    message: 'Use TYPE.detailTitle from @/theme/recipes.',
+    message: 'Use text({ role: "body" }) with font-medium or <Text role="body" />.',
   },
   {
     selector: 'TemplateElement[value.raw=/text-sm font-medium text-text-primary/]',
-    message: 'Use TYPE.detailTitle from @/theme/recipes.',
+    message: 'Use text({ role: "body" }) with font-medium or <Text role="body" />.',
   },
   {
     selector: 'Literal[value=/text-sm text-text-primary/]',
-    message: 'Use TYPE.amount from @/theme/recipes.',
+    message: 'Use text({ role: "amount" }) or <Text role="amount" />.',
   },
   {
     selector: 'TemplateElement[value.raw=/text-sm text-text-primary/]',
-    message: 'Use TYPE.amount from @/theme/recipes.',
+    message: 'Use text({ role: "amount" }) or <Text role="amount" />.',
   },
   {
     selector: 'Literal[value=/bg-surface border border-border-default/]',
@@ -380,6 +380,20 @@ export const hexColorLiteralSyntax = [
   {
     selector: 'TemplateElement[value.raw=/#[0-9a-fA-F]{3,8}/]',
     message: 'Use semantic color tokens or theme recipes, not hex literals in TSX.',
+  },
+]
+
+/** Raw semantic text colors in feature UI — prefer Text / text({ intent }). */
+export const featureSemanticTextRestrictedSyntax = [
+  {
+    selector: 'Literal[value=/\\btext-text-(primary|secondary|tertiary|muted)\\b/]',
+    message:
+      'Use <Text role="…" intent="muted" /> or text({ role, intent }) from @/theme/recipes, not raw text-text-* in features.',
+  },
+  {
+    selector: 'TemplateElement[value.raw=/\\btext-text-(primary|secondary|tertiary|muted)\\b/]',
+    message:
+      'Use <Text role="…" intent="muted" /> or text({ role, intent }) from @/theme/recipes, not raw text-text-* in features.',
   },
 ]
 

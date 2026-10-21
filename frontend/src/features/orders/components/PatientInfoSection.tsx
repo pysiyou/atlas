@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { text } from '@/theme/recipes';
+import {text, FG } from '@/theme/recipes';
 import { Icon } from '@/components/primitives';
 import { DetailField, EntityId } from '@/components/display';
 import { calculateAge } from '@/utils';
@@ -33,9 +33,9 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
         <div className="text-center">
           <Icon
             name={ICONS.dataFields.user}
-            className="w-12 h-12 text-text-disabled mx-auto mb-space-2"
+            className={`w-12 h-12 ${FG.disabled} mx-auto mb-space-2`}
           />
-          <p className={`${text({ role: 'amount' })} text-text-tertiary`}>Patient Not Found</p>
+          <p className={text({ role: 'amount', intent: 'muted' })}>Patient Not Found</p>
         </div>
       </div>
     );
@@ -74,7 +74,7 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
           <span className="whitespace-nowrap truncate">
             {formatOrderDate(patient.dateOfBirth, 'long')}
             {showAge ? (
-              <span className="text-text-secondary"> ({age} years old)</span>
+              <span className={text({ role: 'body', intent: 'muted' })}> ({age} years old)</span>
             ) : null}
           </span>
         }

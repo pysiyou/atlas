@@ -56,6 +56,10 @@ export const ENTITY_ID = 'entity-id';
 /** Smaller / muted ID under a primary label. */
 export const ENTITY_ID_SECONDARY = 'entity-id entity-id--secondary';
 
+/** Secondary ID as a left-aligned table/card sub-line (block, full width). */
+export const ENTITY_ID_SECONDARY_BLOCK =
+  'entity-id entity-id--secondary truncate block max-w-full w-full text-left self-start';
+
 /** Muted ID in queue/modal headers — same size as primary IDs, secondary color only. */
 export const ENTITY_ID_HEADER_SECONDARY = 'entity-id entity-id--header-secondary';
 
@@ -68,7 +72,3 @@ export const ENTITY_ID_INLINE = 'entity-id truncate';
 /** Clickable ID link style. */
 export const ENTITY_ID_CLICKABLE = 'entity-id entity-id--clickable truncate block max-w-full';
 
-/** True when a class string applies entity-id typography (used by Avatar, etc.). */
-export function isEntityIdClassName(className?: string): boolean {
-  return className?.includes('entity-id') ?? false;
-}

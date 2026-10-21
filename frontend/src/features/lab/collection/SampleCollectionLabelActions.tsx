@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax -- isolated print document uses typography token keys and utility class names in HTML/CSS strings */
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { CONTAINER_COLOR_OPTIONS, isCollectedSample } from '@/types';
 import { displayId } from '@/utils';
@@ -51,8 +52,8 @@ function snapshotPrintThemeCss(): string {
             }
             .bg-surface { background-color: var(--surface); }
             .bg-surface-hover { background-color: var(--surface-hover); }
-            .text-text-primary { color: var(--text); }
-            .text-text-tertiary { color: var(--text-tertiary); }
+            .label-print-primary { color: var(--text); }
+            .label-print-muted { color: var(--text-tertiary); }
             .border-border-strong { border-color: var(--border-strong); }
             .type-caption {
               font-size: var(--type-caption-size);
@@ -149,18 +150,18 @@ export const generatePrintLabelHTML = (display: SampleCollectionQueueItem, patie
         <div class="label-wrapper">
           <div class="w-full max-w-[3.75in] flex flex-col items-center justify-center gap-space-1-5 p-space-2 border border-dashed border-border-strong print:border-none print:max-w-full print:p-0">
             <!-- Patient Name -->
-            <div class="type-ui-md font-normal text-center text-text-primary leading-snug w-full">
+            <div class="type-ui-md font-normal text-center label-print-primary leading-snug w-full">
               ${patientName}
             </div>
 
             <!-- Patient ID and Sample Type -->
             <div class="type-caption text-center leading-tight">
               <span class="entity-id entity-id--secondary">${patientIdDisplay}</span>
-              <span class="text-text-tertiary"> | ${sampleType.toUpperCase()}</span>
+              <span class="label-print-muted"> | ${sampleType.toUpperCase()}</span>
             </div>
 
             <!-- Container Info -->
-            <div class="w-full type-caption font-normal text-center text-text-primary bg-surface-hover ${RADIUS.field} px-space-2 py-space-1 print:py-space-0-5">
+            <div class="w-full type-caption font-normal text-center label-print-primary bg-surface-hover ${RADIUS.field} px-space-2 py-space-1 print:py-space-0-5">
               ${containerType.toUpperCase()}: ${colorName.toUpperCase()}
             </div>
 

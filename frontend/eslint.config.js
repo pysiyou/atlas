@@ -10,6 +10,7 @@ import {
   hexColorLiteralSyntax,
   panelPresetRestrictedSyntax,
   typeUtilityRestrictedSyntax,
+  featureSemanticTextRestrictedSyntax,
 } from './eslint.restricted-syntax.mjs'
 
 export default defineConfig([
@@ -251,6 +252,19 @@ export default defineConfig([
         ...typeUtilityRestrictedSyntax,
         ...panelPresetRestrictedSyntax,
         ...hexColorLiteralSyntax,
+      ],
+    },
+  },
+  {
+    files: ['src/features/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        ...allRestrictedSyntax,
+        ...typeUtilityRestrictedSyntax,
+        ...panelPresetRestrictedSyntax,
+        ...hexColorLiteralSyntax,
+        ...featureSemanticTextRestrictedSyntax,
       ],
     },
   },

@@ -21,7 +21,7 @@ const EVENT_LOG_HEADLINE_LINE_CLASS = 'leading-5';
 const EVENT_LOG_STYLES = {
   feed: `flex flex-col px-space-3 py-space-3 [&>section+section]:mt-space-4`,
   dateDividerRow: 'py-space-1',
-  dateDividerLabel: `${text({ role: 'caption' })} min-w-0 shrink-0 text-text-tertiary`,
+  dateDividerLabel: `${text({ role: 'caption', intent: 'muted' })} min-w-0 shrink-0`,
   row: 'relative flex items-start gap-space-3',
   spineColumn: 'relative w-3 shrink-0 self-stretch',
   spineStemTop:
@@ -33,10 +33,10 @@ const EVENT_LOG_STYLES = {
   spineDotMuted: 'bg-text-tertiary',
   content: 'event-log-content min-w-0 flex-1 pb-space-2',
   headline: `${text({ role: 'body' })} ${EVENT_LOG_HEADLINE_LINE_CLASS} mb-0`,
-  headlineActor: 'font-medium text-text-primary',
-  headlinePrimary: 'font-medium text-text-primary',
-  headlineSecondary: 'text-text-secondary',
-  meta: `${text({ role: 'body', intent: 'muted' })} text-text-tertiary`,
+  headlineActor: `font-medium ${text({ role: 'body' })}`,
+  headlinePrimary: `font-medium ${text({ role: 'body' })}`,
+  headlineSecondary: text({ role: 'label', intent: 'muted' }),
+  meta: text({ role: 'body', intent: 'muted' }),
   rowList:
     '[&>*:first-child_.event-log-spine-stem-top]:hidden [&>*:last-child_.event-log-spine-stem-bottom]:hidden [&>*:last-child_.event-log-content]:pb-0',
 } as const;
@@ -195,7 +195,9 @@ function EventLogRow({ item }: { item: ResolvedEventLogItem }) {
               <span className="mx-space-1" aria-hidden>
                 ·
               </span>
-              <span className="font-mono text-text-tertiary">{item.record.eventType}</span>
+              <span className={`font-mono ${text({ role: 'caption', intent: 'muted' })}`}>
+                {item.record.eventType}
+              </span>
             </>
           ) : null}
         </p>

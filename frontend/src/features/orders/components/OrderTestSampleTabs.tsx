@@ -11,7 +11,7 @@ import { splitDetailFieldsIntoTwoColumns } from '../utils/orderTestDetailFieldLa
 import type { Sample, Test } from '@/types';
 import { buildSampleFields } from '../utils/buildSampleFields';
 import { PanelHeaderSegmentTabs } from '@/components/display/PanelHeaderSegmentTabs';
-import { text, INLINE_LINK } from '@/theme/recipes';
+import { text, INLINE_LINK_BUTTON } from '@/theme/recipes';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { displayId } from '@/utils';
 
@@ -105,7 +105,7 @@ export const OrderTestSampleTabs: React.FC<OrderTestSampleTabsProps> = ({
       <button
         type="button"
         onClick={() => onViewFullSample(activeSample.sampleId)}
-        className={`${INLINE_LINK} mt-space-1`}
+        className={`${INLINE_LINK_BUTTON} mt-space-1`}
       >
         View full sample
       </button>

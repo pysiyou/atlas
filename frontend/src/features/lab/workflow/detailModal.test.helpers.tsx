@@ -13,7 +13,7 @@ import {
   TestRelatedTestsPanel,
 } from '@/features/orders';
 import type { Order, OrderTest, Patient, Test, TestWithContext } from '@/types';
-import { text } from '@/theme/recipes';
+import { text , FG } from '@/theme/recipes';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import { ResultValidationPanel } from '../validation/ResultValidationForm';
 import { QualityIssuePopover } from '../components/QualityIssuePopover';
@@ -119,7 +119,7 @@ export function TestDetailModalFooter({
 
   if (isValidate) {
     return (
-      <ModalFooter statusMessage="" statusClassName="text-text-tertiary">
+      <ModalFooter statusMessage="" statusClassName={FG.modalStatus}>
         <QualityIssuePopover
           orderTestId={orderTestId}
           testCode={labContext?.testCode ?? orderTest?.testCode ?? ''}

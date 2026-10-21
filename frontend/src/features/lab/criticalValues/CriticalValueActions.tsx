@@ -13,8 +13,7 @@ import {
   useNotifyCriticalValue,
   type CriticalValueRecord,
 } from './criticalValues';
-import { text, inputBase } from '@/theme/recipes';
-import { TONE } from '@/theme/recipes';
+import { FG, inputBase, text, TONE } from '@/theme/recipes';
 
 interface CriticalValueActionsProps {
   record: CriticalValueRecord;
@@ -81,8 +80,8 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
       <div className={`flex flex-wrap items-center gap-space-2 ${text({ role: 'body' })}`}>
         <EntityId type="orderTest" value={record.id} />
         <span className={TONE.danger.fg}>{record.testCode}</span>
-        <span className="text-text-secondary">{record.patientName}</span>
-        <EntityId type="order" value={record.orderId} variant="secondary" />
+        <span className={FG.labelMuted}>{record.patientName}</span>
+        <EntityId type="order" value={record.orderId} variant="secondaryBlock" />
       </div>
 
       {record.flags && record.flags.length > 0 && (

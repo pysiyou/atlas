@@ -71,7 +71,7 @@ export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ repo
             headerStart={
               <span className="flex min-w-0 items-baseline gap-space-2">
                 <span className="truncate">{test.testName}</span>
-                <EntityId variant="secondary">{test.testCode}</EntityId>
+                <EntityId variant="secondaryBlock">{test.testCode}</EntityId>
               </span>
             }
             footer={

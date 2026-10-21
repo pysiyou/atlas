@@ -5,6 +5,7 @@ import type { FeedbackId } from '@/config/feedbackCatalog';
 import { feedbackTitle, notify } from '@/utils/feedback';
 import { printCollectionLabel } from '../collection/SampleCollectionLabelActions';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
+import { FG } from '@/theme/recipes';
 
 export interface SampleDefinition {
   sampleType: SampleType;
@@ -153,21 +154,21 @@ const CONTAINER_ICON_COLOR: Record<ContainerTopColor, string> = {
   'black-top': 'text-container-black-bg',
   'orange-top': 'text-orange-fg-emphasis',
   'royal-blue-top': 'text-indigo-fg-emphasis',
-  'white-top': 'text-text-muted',
+  'white-top': FG.muted,
   'tan-top': 'text-orange-fg-emphasis',
   'urine-cup': 'text-container-yellow-bg',
   'stool-container': 'text-orange-fg-emphasis',
   'swab-tube': 'text-teal-fg-emphasis',
   'gold-top': 'text-container-yellow-bg',
   'tiger-top': 'text-orange-fg-emphasis',
-  'clear-top': 'text-text-disabled',
+  'clear-top': FG.disabled,
   cup: 'text-orange-fg-emphasis',
-  tube: 'text-text-muted',
-  other: 'text-text-muted',
+  tube: FG.muted,
+  other: FG.muted,
 };
 
 export function getContainerIconColor(containerTopColor: ContainerTopColor): string {
-  return CONTAINER_ICON_COLOR[containerTopColor] ?? 'text-text-disabled';
+  return CONTAINER_ICON_COLOR[containerTopColor] ?? FG.disabled;
 }
 
 /** Blood-derived samples use a tube; all other sample types default to a cup in collection UI. */

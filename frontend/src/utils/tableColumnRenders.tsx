@@ -5,7 +5,8 @@
 import type { ReactNode } from 'react';
 import { Text } from '@/components/layout/Text';
 import { cn, formatDate, formatDateTime, formatPhoneNumber } from '@/utils';
-import { TABLE_TYPE } from '@/theme/recipes';
+import { PRESENTATION_STACK_CLASS, TABLE_TYPE } from '@/theme/recipes';
+import { renderStackedIdentity } from '@/utils/presentationRenders';
 
 /** Primary datetime/date in a dedicated table column. */
 export const TABLE_DATETIME_CELL_CLASS = `${TABLE_TYPE.datetime} truncate block font-normal`;
@@ -23,18 +24,13 @@ function tableDateClassName(tone: TableDateTone): string {
 }
 
 export function renderPatientNameBlock(fullName: string, secondary?: ReactNode): ReactNode {
-  return (
-    <div className="flex min-w-0 flex-col gap-space-0-5 font-normal">
-      <Text as="div" role="body" truncate className="capitalize font-normal">{fullName}</Text>
-      {secondary}
-    </div>
-  );
+  return renderStackedIdentity(fullName, secondary, { density: 'table' });
 }
 
 export function renderContactBlock(phone: string, email?: string): ReactNode {
   return (
-    <div className="flex min-w-0 flex-col gap-space-0-5 font-normal">
-      <Text as="div" role="body" truncate className="font-normal">{formatPhoneNumber(phone)}</Text>
+    <div className={PRESENTATION_STACK_CLASS}>
+      <Text as="div" role="body" density="table" truncate className="font-normal">{formatPhoneNumber(phone)}</Text>
       {email ? (
         <Text as="div" role="body" intent="muted" truncate className="font-normal">{email}</Text>
       ) : null}
@@ -51,8 +47,8 @@ export function renderTableTwoLineCell(
   const hasSecondary =
     secondary != null && secondary !== '' && secondary !== ' ';
   return (
-    <div className="flex min-w-0 flex-col gap-space-0-5 font-normal">
-      <Text as="div" role="body" truncate className="font-normal">{primary}</Text>
+    <div className={PRESENTATION_STACK_CLASS}>
+      <Text as="div" role="body" density="table" truncate className="font-normal">{primary}</Text>
       {hasSecondary ? (
         <Text
           as="div"

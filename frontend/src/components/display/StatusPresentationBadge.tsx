@@ -9,6 +9,8 @@ import {
   type CanonicalPresentationPrimary,
 } from '@/types/generated/statusPresentation';
 import type { StatusPresentation } from '@/types/labProjection';
+import { Text } from '@/components/layout/Text';
+import { PRESENTATION_STACK_CLASS } from '@/theme/recipes';
 
 type StackProps = {
   presentation: StatusPresentation;
@@ -36,6 +38,25 @@ export function StatusPresentationBadge({ presentation, size = 'xs', className }
       label={resolvePrimaryLabel(presentation)}
       className={className}
     />
+  );
+}
+
+/** Table cell: primary status badge with optional reason caption below. */
+export function StatusPresentationTableCell({
+  presentation,
+  size = 'xs',
+  className,
+}: StackProps) {
+  const secondary = presentation.secondary?.trim();
+  return (
+    <div className={`${PRESENTATION_STACK_CLASS} ${className ?? ''}`}>
+      <StatusPresentationBadge presentation={presentation} size={size} />
+      {secondary ? (
+        <Text as="div" role="caption" intent="muted" truncate className="max-w-full" title={secondary}>
+          {secondary}
+        </Text>
+      ) : null}
+    </div>
   );
 }
 

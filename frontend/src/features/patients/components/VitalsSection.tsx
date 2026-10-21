@@ -10,7 +10,7 @@ import { Icon, type IconName } from '@/components/primitives';
 import type { VitalSigns } from '@/types/patient';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { text, inputBase, inputError } from '@/theme/recipes';
+import { text, inputBase, inputError , FG } from '@/theme/recipes';
 import { FIELD_ERROR, FIELD_ERROR_CAPTION, RADIUS, TONE } from '@/theme/recipes';
 
 
@@ -158,7 +158,7 @@ const getStatusColors = (status: 'normal' | 'borderline' | 'abnormal' | null) =>
   if (!status) {
     return {
       chrome: 'border-border-strong bg-transparent',
-      text: 'text-text-tertiary',
+      text: FG.captionMuted,
     };
   }
 
@@ -209,7 +209,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
             <div className="flex justify-between items-baseline mb-space-1 gap-space-2">
               <label
                 htmlFor={isNa ? undefined : `vital-${fieldName}`}
-                className={`${text({ role: 'body' })} truncate min-w-0 ${isNa ? 'text-text-tertiary cursor-default' : 'text-text-tertiary cursor-pointer'}`}
+                className={`${text({ role: 'body' })} truncate min-w-0 ${isNa ? '${FG.captionMuted} cursor-default' : '${FG.captionMuted} cursor-pointer'}`}
               >
                 {config.label}
               </label>
@@ -230,14 +230,14 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                   name={config.icon}
                   className={cn(
                     'w-4 h-4 shrink-0 transition-colors',
-                    isNa ? 'text-text-muted/70' : 'text-text-muted group-hover:text-brand'
+                    isNa ? '${FG.muted}/70' : '${FG.muted} group-hover:text-brand'
                   )}
                 />
               </div>
 
               {isNa ? (
                 <div
-                  className={`w-full ${RADIUS.field} border border-border-default bg-surface-hover/30 px-space-3 py-space-1-5 ${text({ role: 'amount' })} text-text-tertiary pl-space-10 pr-space-12`}
+                  className={`w-full ${RADIUS.field} border border-border-default bg-surface-hover/30 px-space-3 py-space-1-5 ${text({ role: 'amount' })} ${FG.captionMuted} pl-space-10 pr-space-12`}
                   aria-label={`${config.label} not provided`}
                 >
                   N/A

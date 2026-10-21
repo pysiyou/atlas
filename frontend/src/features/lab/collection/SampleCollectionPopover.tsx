@@ -17,7 +17,7 @@ import type { SampleRequirement } from '../types';
 import { cn, formatArray } from '@/utils';
 import { getContainerIcon } from '@/config/icons';
 import { ICONS } from '@/config/icons';
-import { text, inputBase, inputError, FORM_FIELD_LABEL } from '@/theme/recipes';
+import {text, inputBase, inputError, FORM_FIELD_LABEL, FG } from '@/theme/recipes';
 import { FIELD_ERROR_CAPTION, RADIUS, SHADOW, TONE } from '@/theme/recipes';
 import {
   getDefaultCollectionTopColor,
@@ -205,7 +205,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
               leading={
                 <Icon
                   name={getContainerIcon(option.value)}
-                  className="w-7 h-7 text-text-disabled"
+                  className={`w-7 h-7 ${FG.disabled}`}
                 />
               }
               onClick={() => setSelectedContainerType(option.value)}

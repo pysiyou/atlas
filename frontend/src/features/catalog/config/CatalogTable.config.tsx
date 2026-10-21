@@ -10,7 +10,7 @@ import { buildViews, TABLE_COLUMN_WIDTH } from '@/components/data-table';
 import { formatCurrency } from '@/utils';
 import type { TestSummary } from '@/types';
 import { CatalogCard } from '../components/CatalogCard';
-import { BADGE, TABLE_TYPE } from '@/theme/recipes';
+import {BADGE, TABLE_TYPE, FG } from '@/theme/recipes';
 
 
 const CATALOG_VIEWS = {
@@ -57,7 +57,7 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
       accessor: (test: TestSummary) => test.loincCodes?.join(', ') ?? '',
       render: (test: TestSummary) => {
         if (!test.loincCodes || test.loincCodes.length === 0) {
-          return <div className={`${TABLE_TYPE.meta} text-text-disabled truncate font-normal`}>-</div>;
+          return <div className={`${TABLE_TYPE.meta} ${FG.disabled} truncate font-normal`}>-</div>;
         }
         return (
           <div className={`${TABLE_TYPE.cell} truncate font-normal`}>

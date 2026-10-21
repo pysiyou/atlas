@@ -15,19 +15,20 @@ import {
   TABLE_COLUMN_WIDTH,
   type TableViewConfig,
 } from '@/components/data-table';
-import { StatusPresentationBadge } from '@/components/display/StatusPresentationBadge';
-import { Text } from '@/components/layout/Text';
+import { StatusPresentationTableCell } from '@/components/display/StatusPresentationBadge';
 import { MobileEntityCard } from '@/components/surfaces';
 import type { CardComponentProps } from '@/components/data-table';
 import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
 import { OrderTestStatusBadge } from '@/features/orders';
 import { getOrderTestLineageRowClass } from '@/features/orders';
-import { cn, displayId } from '@/utils';
+import { cn } from '@/utils';
 import {
   renderDateTimeCell,
+  renderPatientNameBlock,
   renderTableEmptyCell,
   renderTableTwoLineCell,
 } from '@/utils/tableColumnRenders';
+import { renderTableSecondaryEntityId } from '@/utils/presentationRenders';
 import type { LabOrderTableRow } from './LabOrdersTable';
 import { BADGE } from '@/theme/recipes';
 
@@ -40,17 +41,7 @@ const VIEWS = {
 function renderMonitorStatus(row: LabOrderTableRow) {
   const presentation = row.statusPresentation;
   if (presentation) {
-    const secondary = presentation.secondary?.trim();
-    return (
-      <div className="flex min-w-0 flex-col items-start gap-space-0-5">
-        <StatusPresentationBadge presentation={presentation} size="xs" />
-        {secondary ? (
-          <Text as="div" role="caption" intent="muted" truncate className="max-w-full" title={secondary}>
-            {secondary}
-          </Text>
-        ) : null}
-      </div>
-    );
+    return <StatusPresentationTableCell presentation={presentation} size="xs" />;
   }
   return (
     <OrderTestStatusBadge status={row.status} presentation={null} layout="compact" size="xs" />
@@ -76,9 +67,9 @@ function LabOrderTableCard({ item, onClick }: CardComponentProps<LabOrderTableRo
         leading={
           <div className="min-w-0 space-y-space-1">
             {renderTableTwoLineCell(item.testName, item.testCode)}
-            {renderTableTwoLineCell(
+            {renderPatientNameBlock(
               item.patientName,
-              `MRN: ${displayId.patient(item.patientId)}`,
+              renderTableSecondaryEntityId({ type: 'patient', value: item.patientId }),
             )}
           </div>
         }
@@ -111,7 +102,10 @@ export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> 
       sortable: true,
       accessor: row => row.patientName,
       render: row =>
-        renderTableTwoLineCell(row.patientName, `MRN: ${displayId.patient(row.patientId)}`),
+        renderPatientNameBlock(
+          row.patientName,
+          renderTableSecondaryEntityId({ type: 'patient', value: row.patientId }),
+        ),
     }),
     sampleType: createBadgeColumn<LabOrderTableRow>(
       'sampleType',

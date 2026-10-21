@@ -11,6 +11,7 @@
 .entity-id--secondary {
   font-size: var(--id-font-size-secondary);
   color: var(--id-color-secondary);
+  font-weight: var(--font-weight-normal);
 }
 
 .entity-id--header-secondary {
@@ -28,11 +29,44 @@
   text-decoration: underline;
 }
 
-:is(h1, h2, h3, h4) .entity-id,
-:is(button, a).entity-id {
+/* Interactive reset — table sub-line IDs align left like block cells */
+button.entity-id,
+a.entity-id {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font: inherit;
+}
+
+:is(h1, h2, h3, h4) .entity-id {
   font-family: var(--id-font-family);
   font-size: var(--id-font-size);
   font-weight: var(--id-font-weight);
   color: var(--id-color);
   letter-spacing: var(--id-letter-spacing);
+}
+
+/* Primary entity on buttons/links (order ID column, etc.) */
+:is(button, a).entity-id:not(.entity-id--secondary):not(.entity-id--header-secondary) {
+  font-family: var(--id-font-family);
+  font-size: var(--id-font-size);
+  font-weight: var(--id-font-weight);
+  color: var(--id-color);
+  letter-spacing: var(--id-letter-spacing);
+}
+
+/* Secondary sub-lines stay tertiary when navigable */
+:is(button, a).entity-id.entity-id--secondary,
+:is(button, a).entity-id.entity-id--header-secondary {
+  font-size: var(--id-font-size-secondary);
+  color: var(--id-color-secondary);
+  font-weight: var(--font-weight-normal);
+  letter-spacing: var(--id-letter-spacing);
+}
+
+:is(button, a).entity-id.entity-id--header-secondary {
+  font-size: var(--id-font-size);
+  font-weight: var(--id-font-weight);
 }

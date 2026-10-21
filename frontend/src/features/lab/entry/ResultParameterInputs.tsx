@@ -5,7 +5,7 @@
 import React, { useCallback } from 'react';
 import { Popover } from '@/components/overlays';
 import { Icon } from '@/components/primitives';
-import { text, CONTROL, RADIUS } from '@/theme/recipes';
+import { text, CONTROL, RADIUS , FG } from '@/theme/recipes';
 import { inputTrigger, inputTriggerOpen, inputBase, inputError } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
@@ -45,15 +45,15 @@ const SelectParameterInput: React.FC<{
         >
           <div className={`flex-1 ${text({ role: 'body' })} truncate`}>
             {value ? (
-              <span className="text-text-primary">{titleCaseWords(value)}</span>
+              <span className={FG.body}>{titleCaseWords(value)}</span>
             ) : (
-              <span className="text-text-disabled">-- Select --</span>
+              <span className={FG.disabled}>-- Select --</span>
             )}
           </div>
           <Icon
             name={ICONS.actions.chevronDown}
             className={cn(
-              'w-4 h-4 text-text-disabled transition-transform flex-shrink-0',
+              'w-4 h-4 ${FG.disabled} transition-transform flex-shrink-0',
               isOpen && 'rotate-180'
             )}
           />
@@ -64,7 +64,7 @@ const SelectParameterInput: React.FC<{
             >
               <Icon
                 name={ICONS.actions.closeCircle}
-                className="w-4 h-4 text-text-disabled hover:text-text-tertiary"
+                className={`w-4 h-4 ${FG.disabled} hover:${FG.captionMuted}`}
               />
             </button>
           )}

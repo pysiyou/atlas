@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { AVATAR_TYPE, RADIUS } from '@/theme/recipes';
+import { AVATAR_TYPE, RADIUS, text } from '@/theme/recipes';
 import { cn, getInitials } from '@/utils';
-import { isEntityIdClassName } from '@/utils/constants';
 
 export interface AvatarProps {
   primaryText: string;
@@ -12,6 +11,8 @@ export interface AvatarProps {
   secondaryText?: React.ReactNode;
   /** Optional className for secondary text */
   secondaryTextClassName?: string;
+  /** When `entity`, secondary is an EntityId (no tertiary text wrapper). */
+  secondarySlot?: 'meta' | 'entity';
   /** Optional className for primary text */
   primaryTextClassName?: string;
   /** If true, only shows the avatar circle without text labels */
@@ -20,7 +21,6 @@ export interface AvatarProps {
 
 type AvatarSize = NonNullable<AvatarProps['size']>;
 
-// Module-level constants: do not re-create these objects on every render.
 const CIRCLE_SIZE_CLASSES: Record<AvatarSize, string> = {
   xxs: `w-6 h-6 ${AVATAR_TYPE.circle.xxs}`,
   xs: `w-7 h-7 ${AVATAR_TYPE.circle.xs}`,
@@ -47,6 +47,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   onClick,
   secondaryText,
   secondaryTextClassName = '',
+  secondarySlot = 'meta',
   primaryTextClassName = '',
   avatarOnly = false,
 }) => {
@@ -55,7 +56,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   const isButton = Boolean(onClick);
   const hasText = primaryText && !avatarOnly;
   const labelSizes = LABEL_SIZE_CLASSES[size];
-  const secondaryUsesEntityId = isEntityIdClassName(secondaryTextClassName);
+  const secondaryUsesEntityId = secondarySlot === 'entity';
 
   return (
     <div
@@ -65,7 +66,6 @@ export const Avatar: React.FC<AvatarProps> = ({
       onClick={onClick}
       onKeyDown={isButton ? (e) => { if (e.key === 'Enter' || e.key === ' ') onClick?.(); } : undefined}
     >
-      {/* Avatar circle */}
       {src && !imageError ? (
         <img
           src={src}
@@ -81,27 +81,28 @@ export const Avatar: React.FC<AvatarProps> = ({
         </div>
       )}
 
-      {/* Optional text labels */}
       {hasText && (
         <div className="flex flex-col min-w-0">
           <span
-            className={`font-medium text-text-primary truncate ${labelSizes.primary} ${primaryTextClassName}`}
+            className={cn('font-medium truncate', labelSizes.primary, primaryTextClassName)}
           >
             {primaryText}
           </span>
-          {secondaryText && (
-            <span
-              className={cn(
-                'truncate',
-                labelSizes.secondary,
-                secondaryUsesEntityId
-                  ? secondaryTextClassName
-                  : cn('text-text-tertiary', secondaryTextClassName)
-              )}
-            >
-              {secondaryText}
-            </span>
-          )}
+          {secondaryText &&
+            (secondaryUsesEntityId ? (
+              <div className={cn('min-w-0 w-full', secondaryTextClassName)}>{secondaryText}</div>
+            ) : (
+              <span
+                className={cn(
+                  'truncate',
+                  labelSizes.secondary,
+                  text({ role: 'caption', intent: 'muted' }),
+                  secondaryTextClassName,
+                )}
+              >
+                {secondaryText}
+              </span>
+            ))}
         </div>
       )}
     </div>

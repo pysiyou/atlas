@@ -22,7 +22,7 @@ export const TABLE_TYPE = {
   datetimeSecondary: `${tableCaption} tabular-nums`,
   label: tableBodySecondary,
   caption: tableBodyMuted,
-  link: `${tableBody} text-brand underline cursor-pointer`,
+  link: text({ role: 'link', density: 'table' }),
 } as const;
 
 export const TABLE_SHELL = {
@@ -30,14 +30,17 @@ export const TABLE_SHELL = {
     'grid w-full min-w-full items-stretch border-b border-border-default bg-surface-table-header',
   headerRowSticky: 'sticky top-0 z-10',
   headerCell: 'flex min-w-0 items-center justify-start gap-space-2 whitespace-nowrap text-left',
-  bodyCell: 'min-w-0 overflow-hidden flex items-center justify-start text-left',
+  bodyCell: 'min-w-0 overflow-hidden flex items-start justify-start text-left',
   row: 'grid w-full min-w-full items-center border-b border-border-default transition-colors duration-200',
   rowClickable: 'cursor-pointer hover:bg-surface-hover',
   rowStripedEven: 'bg-surface',
   rowStripedOdd: 'bg-surface-hover/50',
 } as const;
 
-export const INLINE_LINK = `${TABLE_TYPE.link} hover:underline`;
+export const INLINE_LINK = `${TABLE_TYPE.link} hover:opacity-90`;
+
+/** Reset `<button>` chrome for inline text links (e.g. “View”). */
+export const INLINE_LINK_BUTTON = `${INLINE_LINK} inline-flex shrink-0 border-0 bg-transparent p-0 m-0 font-normal`;
 
 export const PAGINATION_TYPE = {
   pageButtonBase: `${TABLE_TYPE.size} font-normal`,

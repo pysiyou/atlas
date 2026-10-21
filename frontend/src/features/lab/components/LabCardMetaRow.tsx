@@ -5,7 +5,7 @@
 import React, { type ReactNode } from 'react';
 import { cn } from '@/utils';
 import { EntityId } from '@/components/display';
-import { text, LIST_MARKER } from '@/theme/recipes';
+import { text, LIST_MARKER , FG } from '@/theme/recipes';
 import { getQueueAgeInfo } from '../utils/labQueue';
 import { TONE } from '@/theme/recipes';
 import type { Sample, TestWithContext } from '@/types';
@@ -55,7 +55,7 @@ export function QueueAgeMeta({ since }: { since?: string | null }) {
       ? TONE.danger.fg
       : info.variant === 'warning'
         ? TONE.warning.fg
-        : 'text-text-secondary';
+        : FG.labelMuted;
   return <span className={tone}>{info.label}</span>;
 }
 
@@ -182,5 +182,5 @@ export function RecollectionRequestedMeta({
 }
 
 export function BarcodeMeta({ sampleId }: { sampleId: number }) {
-  return <span className="font-mono text-text-secondary">{displayId.sample(sampleId)}</span>;
+  return <span className={FG.monoCaptionMuted}>{displayId.sample(sampleId)}</span>;
 }

@@ -14,7 +14,7 @@ import { ReportPreviewButton } from '../components/ReportPreviewButton';
 import { ReportPrintButton } from '../components/ReportPrintButton';
 import { ValidatedTestReportCard } from '../components/ValidatedTestReportCard';
 import { getActiveOrderTests } from '../utils/prepareReportData';
-import { TABLE_TYPE } from '@/theme/recipes';
+import { PRESENTATION_STACK_CLASS, TABLE_TYPE } from '@/theme/recipes';
 
 const REPORT_VIEWS = {
   full: ['orderId', 'patientName', 'tests', 'orderDate', 'status', 'action'],
@@ -86,11 +86,11 @@ export const createReportTableConfig = (
       render: (order: ReportableOrder) => {
         const summary = testsSummary(order);
         return (
-          <div className="min-w-0 font-normal">
+          <div className={PRESENTATION_STACK_CLASS}>
             <div className={`${TABLE_TYPE.cell} truncate font-normal`}>{summary.names}</div>
-            {summary.codes && (
-              <EntityId variant="secondary" className="truncate">{summary.codes}</EntityId>
-            )}
+            {summary.codes ? (
+              <EntityId variant="secondaryBlock">{summary.codes}</EntityId>
+            ) : null}
           </div>
         );
       },

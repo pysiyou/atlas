@@ -2,7 +2,7 @@
  * Reference interval — shared value column width (ch) so sex labels align; values left-aligned.
  */
 import { Fragment } from 'react';
-import { text } from '@/theme/recipes';
+import {text, FG } from '@/theme/recipes';
 import type { ReferenceIntervalLine } from '../utils/labResult';
 
 export function ReferenceIntervalCell({
@@ -20,10 +20,10 @@ export function ReferenceIntervalCell({
     >
       {lines.map((line, index) => (
         <Fragment key={index}>
-          <span className={`tabular-nums text-left ${text({ role: 'body', intent: 'muted' })} text-text-primary`}>
+          <span className={`tabular-nums text-left ${text({ role: 'body', intent: 'muted' })} ${FG.body}`}>
             {line.value}
           </span>
-          <span className={`whitespace-nowrap ${text({ role: 'body', intent: 'muted' })} text-text-tertiary`}>
+          <span className={`whitespace-nowrap ${text({ role: 'body', intent: 'muted' })} ${FG.captionMuted}`}>
             {line.label ?? ''}
           </span>
         </Fragment>

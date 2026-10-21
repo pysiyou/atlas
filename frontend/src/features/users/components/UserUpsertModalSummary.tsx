@@ -5,7 +5,7 @@ import React from 'react';
 import { Avatar, Badge } from '@/components/primitives';
 import { Callout } from '@/components/display';
 import { MODULE_ICONS } from '@/config/icons';
-import { text, ERROR_SURFACE_TYPE, RADIUS } from '@/theme/recipes';
+import { text, ERROR_SURFACE_TYPE, RADIUS , FG } from '@/theme/recipes';
 import { USER_ROLE_CONFIG, type UserRole } from '@/types';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import type { UserAdminRecord } from '../api/usersAdmin';
@@ -21,12 +21,12 @@ export interface UserUpsertModalSummaryProps {
 function AccountMetaItem({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
     <div className="flex min-w-[7.5rem] flex-col gap-space-0-5">
-      <span className={`${text({ role: 'caption' })} uppercase tracking-wider text-text-tertiary`}>{label}</span>
+      <span className={`${text({ role: 'caption' })} uppercase tracking-wider ${FG.captionMuted}`}>{label}</span>
       <span
         className={
           mono
-            ? `${ERROR_SURFACE_TYPE.code} tabular-nums text-text-secondary`
-            : `${text({ role: 'body' })} tabular-nums text-text-secondary`
+            ? `${ERROR_SURFACE_TYPE.code} tabular-nums ${FG.labelMuted}`
+            : `${text({ role: 'body' })} tabular-nums ${FG.labelMuted}`
         }
       >
         {value}
@@ -46,7 +46,7 @@ export const UserUpsertModalSummary: React.FC<UserUpsertModalSummaryProps> = ({
   if (!isEdit || !user) {
     return (
       <Callout variant="neutral" icon={MODULE_ICONS.users} title="Provision account">
-        Pick a unique <span className="font-mono text-text-primary">username</span> (login handle) and
+        Pick a unique <span className={`font-mono ${FG.body}`}>username</span> (login handle) and
         role. Password is set here once; you can reset or disable the account later from this panel.
       </Callout>
     );
@@ -65,13 +65,13 @@ export const UserUpsertModalSummary: React.FC<UserUpsertModalSummaryProps> = ({
           secondaryText={
             <span className="font-mono tabular-nums">
               @{user.username}
-              <span className="text-text-disabled"> · </span>
+              <span className={FG.disabled}> · </span>
               uid {user.id}
             </span>
           }
           size="lg"
           primaryTextClassName={text({ role: 'amount' })}
-          secondaryTextClassName="!text-text-tertiary"
+          secondaryTextClassName={text({ role: 'caption', intent: 'muted' })}
         />
         <div className="flex flex-wrap items-center gap-space-2 sm:justify-end">
           <Badge variant={resolveStatusBadgeColor(role)} size="sm">

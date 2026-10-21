@@ -4,7 +4,7 @@
 import React from 'react';
 import { Avatar, Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/loaders';
-import { text, FORM_FIELD_LABEL } from '@/theme/recipes';
+import { text, FORM_FIELD_LABEL , FG } from '@/theme/recipes';
 import { OrderSelectPopoverShell } from '@/features/orders';
 import { CONTROL } from '@/theme/recipes';
 import { cn } from '@/utils';
@@ -60,18 +60,18 @@ export const EventLogSearchPopover: React.FC<EventLogSearchPopoverProps> = ({
           className={cn(
             'px-space-4 py-space-2 border-b border-border-default/70 flex items-center justify-between gap-space-2',
             text({ role: 'caption' }),
-            'text-text-muted'
+            FG.muted
           )}
         >
           <span>
-            <span className="font-medium text-text-primary tabular-nums">{preview.eventCount}</span>
+            <span className={`font-medium ${FG.body} tabular-nums`}>{preview.eventCount}</span>
             {' '}
             {EVENT_LOG_COPY.searchPreviewEventCount}
           </span>
           {isFetching ? <SpinnerLoader size="xs" /> : null}
         </div>
       ) : isFetching ? (
-        <div className={`px-space-4 py-space-2 border-b border-border-default/70 ${text({ role: 'caption' })} text-text-muted flex items-center gap-space-2`}>
+        <div className={`px-space-4 py-space-2 border-b border-border-default/70 ${text({ role: 'caption' })} ${FG.muted} flex items-center gap-space-2`}>
           <SpinnerLoader size="xs" />
           {EVENT_LOG_COPY.searchPreviewEventCountLoading}
         </div>
@@ -92,7 +92,7 @@ export const EventLogSearchPopover: React.FC<EventLogSearchPopoverProps> = ({
                   {item.avatarName ? (
                     <Avatar primaryText={item.avatarName} size="xs" avatarOnly className="shrink-0" />
                   ) : item.icon ? (
-                    <Icon name={item.icon} className="w-4 h-4 shrink-0 text-text-muted" />
+                    <Icon name={item.icon} className={`w-4 h-4 shrink-0 ${FG.muted}`} />
                   ) : null}
                   <div className="min-w-0 flex-1">
                     <p
@@ -104,7 +104,7 @@ export const EventLogSearchPopover: React.FC<EventLogSearchPopoverProps> = ({
                       {item.primary}
                     </p>
                     {item.secondary ? (
-                      <p className={`${text({ role: 'caption' })} truncate text-text-muted`}>{item.secondary}</p>
+                      <p className={`${text({ role: 'caption' })} truncate ${FG.muted}`}>{item.secondary}</p>
                     ) : null}
                   </div>
                 </button>

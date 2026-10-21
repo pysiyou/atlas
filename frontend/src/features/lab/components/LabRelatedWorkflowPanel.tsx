@@ -13,7 +13,7 @@ import type { OrderTest, Sample } from '@/types';
 import type { TestWithContext } from '@/types';
 import { displayId } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
-import { text, INLINE_LINK } from '@/theme/recipes';
+import { text, INLINE_LINK_BUTTON } from '@/theme/recipes';
 
 type LabRelatedTestsPanelProps = {
   test: TestWithContext;
@@ -90,7 +90,7 @@ export const LabRelatedSamplesPanel: React.FC<LabRelatedSamplesPanelProps> = ({
             </div>
             <button
               type="button"
-              className={INLINE_LINK}
+              className={INLINE_LINK_BUTTON}
               onClick={() => onOpenSample(s.sampleId)}
             >
               View

@@ -7,7 +7,7 @@ import { formatDateTime } from '@/utils';
 import { EntityId } from '@/components/display';
 import { companyConfig } from '@/config';
 import type { LabReportPayload } from '../types';
-import { text, FORM_TAB_TITLE, PREVIEW_HEADER_TYPE } from '@/theme/recipes';
+import {text, FORM_TAB_TITLE, PREVIEW_HEADER_TYPE, FG } from '@/theme/recipes';
 
 
 interface ReportPreviewHeaderProps {
@@ -88,7 +88,7 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
 
         <div className="grid grid-cols-2 gap-space-2">
           <div className="space-y-space-0-5">
-            <p className={`${FORM_TAB_TITLE} text-text-primary`}>{reportData.patientName}</p>
+            <p className={`${FORM_TAB_TITLE} ${FG.body}`}>{reportData.patientName}</p>
             {reportData.patientAge && (
               <div className="flex gap-space-2">
                 <span className={`${text({ role: 'label' })} min-w-[50px] truncate`}>Age:</span>
@@ -114,7 +114,7 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
           </div>
 
           <div className="space-y-space-0-5">
-            <p className={`${FORM_TAB_TITLE} text-text-primary`}>Processing Details</p>
+            <p className={`${FORM_TAB_TITLE} ${FG.body}`}>Processing Details</p>
             {collectedAt && (
               <div className="flex gap-space-2">
                 <span className={`${text({ role: 'label' })} min-w-[60px] truncate`}>Sample:</span>

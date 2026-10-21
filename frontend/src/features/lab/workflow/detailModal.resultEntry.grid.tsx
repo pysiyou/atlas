@@ -8,6 +8,7 @@ import { DetailGrid } from './detailModalLayout';
 import type { TestWithContext } from '@/types';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { ICONS } from '@/config/icons';
+import { FG } from '@/theme/recipes';
 
 export function ResultEntryDetailGrid({
   test,
@@ -47,7 +48,7 @@ export function ResultEntryDetailGrid({
             {
               label: 'Remaining',
               value: (
-                <span className={remainingParams === 0 ? 'text-success-fg' : 'text-text-tertiary'}>
+                <span className={remainingParams === 0 ? 'text-success-fg' : FG.captionMuted}>
                   {remainingParams}
                 </span>
               ),

@@ -6,7 +6,7 @@ import { Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/loaders';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { inputClearButton, inputInner, inputText, inputWrapper } from '@/theme/recipes';
+import {inputClearButton, inputInner, inputText, inputWrapper, FG } from '@/theme/recipes';
 import { EVENT_LOG_COPY } from './types';
 import { EVENT_LOG_FILTER_PLACEHOLDERS } from './EventLogFiltersInlineControls';
 import { buildEventLogSearchMatchGroups } from './eventLogSearchMatchGroups';
@@ -100,7 +100,7 @@ export const EventLogSearchField: React.FC<EventLogSearchFieldProps> = ({
       <div className={cn(inputWrapper, 'group')}>
         <Icon
           name={ICONS.actions.search}
-          className="w-3.5 h-3.5 shrink-0 text-text-muted group-hover:text-brand transition-colors"
+          className={`w-3.5 h-3.5 shrink-0 ${FG.muted} group-hover:text-brand transition-colors`}
         />
         <input
           type="search"
@@ -129,7 +129,7 @@ export const EventLogSearchField: React.FC<EventLogSearchFieldProps> = ({
               className={cn(inputClearButton, 'hover:bg-surface-page')}
               aria-label="Clear search"
             >
-              <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-tertiary" />
+              <Icon name={ICONS.actions.closeCircle} className={`w-4 h-4 ${FG.captionMuted}`} />
             </button>
           )}
         </div>

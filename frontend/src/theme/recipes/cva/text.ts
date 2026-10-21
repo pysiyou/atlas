@@ -12,6 +12,7 @@ export const text = cva('', {
       body: 'type-body',
       caption: 'type-caption',
       amount: 'type-ui-md tabular-nums',
+      link: 'cursor-pointer',
     },
     intent: {
       default: '',
@@ -38,6 +39,10 @@ export const text = cva('', {
     { role: 'title-modal', intent: 'default', class: 'text-text-primary' },
     { role: 'amount', intent: 'default', class: 'text-text-primary' },
     { role: 'amount', intent: 'muted', class: 'text-text-tertiary' },
+    { role: 'link', density: 'default', class: 'type-body text-brand underline' },
+    { role: 'link', density: 'table', class: 'type-ui-sm text-brand underline' },
+    { role: 'link', density: 'compact', class: 'type-caption text-brand underline' },
+    { role: 'link', intent: 'muted', class: 'text-text-tertiary' },
   ],
   defaultVariants: {
     role: 'body',
@@ -48,5 +53,5 @@ export const text = cva('', {
 
 export type TextRecipeProps = VariantProps<typeof text>;
 
-/** Detail / key-value link line */
-export const TEXT_LINK = `${text({ role: 'body' })} text-brand underline`;
+/** Inline text link (body scale). */
+export const TEXT_LINK = text({ role: 'link' });

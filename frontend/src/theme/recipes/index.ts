@@ -20,6 +20,7 @@ export * from './segmentedControl';
 export * from './workspaceSplit';
 export * from './meterKpi';
 export * from './feedGrouped';
+export * from './presentation';
 export {
   text,
   tableCell,

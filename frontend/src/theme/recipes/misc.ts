@@ -32,7 +32,7 @@ export const THEME_SWITCH_TYPE = {
 
 export const PRICE_RANGE_TYPE = {
   value: `${text({ role: 'amount' })} font-normal text-text-tertiary`,
-  bound: `${text({ role: 'body', intent: 'muted' })} text-text-disabled`,
+  bound: `${text({ role: 'body', intent: 'muted' })} opacity-60`,
 } as const;
 
 export const DOCUMENT_TYPE = {
@@ -40,6 +40,9 @@ export const DOCUMENT_TYPE = {
   metaRow: `flex flex-wrap items-center gap-x-space-2 gap-y-space-0-5 min-w-0 ${text({ role: 'body', intent: 'muted' })}`,
   detailedPatientName: text({ role: 'amount', intent: 'muted' }),
   detailedPatientMissing: `${text({ role: 'amount', intent: 'muted' })} italic`,
+  fieldLabel: `${text({ role: 'label', intent: 'muted' })} w-28 shrink-0`,
+  fieldValueMuted: `${text({ role: 'body', intent: 'muted' })} font-normal`,
+  metaSeparator: 'text-text-disabled select-none',
   fieldRow: text({ role: 'body' }),
   panelPatientName: text({ role: 'body' }),
   compactEntityId: `${text({ role: 'body' })} min-w-0 truncate`,
