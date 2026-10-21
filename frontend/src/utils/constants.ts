@@ -3,7 +3,7 @@
  * Shared pagination sizes, display limits, empty-state copy, and typography aliases.
  */
 
-import { EMPTY_COPY, emptySubtitle, emptyTitle } from '@/components/display/emptyStateCopy';
+import { EMPTY_COPY, emptySubtitle, emptyTitle } from '@/config/emptyStateCopy';
 
 // ---------------------------------------------------------------------------
 // Pagination & Display Limits

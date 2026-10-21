@@ -51,7 +51,7 @@ export interface EventLogRecord {
 
 export interface EventLogHeadlinePart {
   text: string;
-  /** Primary emphasis (entity phrases like `order #ord…`, or catalog test chips). */
+  /** Primary emphasis (record phrases like `order #ord…`, or catalog test chips). */
   main?: boolean;
   variant?: InlineHighlightProps['variant'];
   decoration?: InlineHighlightProps['decoration'];
@@ -135,7 +135,7 @@ export interface EventLogQuery {
   actorRoles?: UserRole[];
   /** Partial match on actor display name or account username. */
   actorSearch?: string;
-  /** Unified search: entity ids, patient name, actor name/username. */
+  /** Unified search: record ids, patient name, actor name/username. */
   search?: string;
   /** Display ladder: summary / detailed / debug. */
   verbosity?: EventLogVerbosity;
@@ -146,7 +146,7 @@ export type EventLogFilterField =
   | 'kind'
   | 'dateRange'
   | 'search'
-  | 'entityId'
+  | 'recordId'
   | 'actorRole'
   | 'actorSearch'
   | 'includeAccess'
@@ -190,7 +190,7 @@ export const EVENT_LOG_COPY = {
   panelMetaOrder: 'Most recent actions on this order first',
   panelMetaLab: 'Most recent laboratory actions for this item first',
   panelMetaPatient: 'Most recent actions on this patient first',
-  panelMetaEntity: 'Most recent actions for this item first',
+  panelMetaRecord: 'Most recent actions for this item first',
   panelMetaCommandCenter: 'Last 24 hours · most recent activity first',
   panelMetaMonitor: 'Last 24 hours · most recent activity first',
   panelMetaAll: 'Most recent events · newest first · load more for older rows',
@@ -204,7 +204,7 @@ export const EVENT_LOG_COPY = {
   debugTitle: 'Debug',
   loadMore: 'Load older events',
   searchPreviewTitle: 'Search matches',
-  searchPreviewEntityIds: 'Entity IDs',
+  searchPreviewRecordIds: 'Record IDs',
   searchPreviewPatients: 'Patients',
   searchPreviewUsers: 'Users',
   searchPreviewEventCount: 'events match',

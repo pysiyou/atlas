@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Panel } from '@/components/surfaces';
-import { Skeleton } from '@/components/loaders';
+import { Skeleton } from '@/components/feedback';
 import { SPLIT_WORKSPACE_PANEL } from '@/theme/recipes';
 import {
   SPLIT_BOTTOM_PANEL,

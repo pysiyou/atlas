@@ -14,8 +14,6 @@ export interface PatientFiltersProps {
   onAgeRangeChange: (range: [number, number]) => void;
   sexFilters: Gender[];
   onSexFiltersChange: (values: Gender[]) => void;
-  /** Kept for call-site compatibility; FilterBar age control does not consume it. */
-  ageHistogram?: number[];
 }
 
 export const PatientFilters: React.FC<PatientFiltersProps> = ({

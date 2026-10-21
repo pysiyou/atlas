@@ -1,4 +1,4 @@
-import { MobileEntityCard } from '@/components/surfaces';
+import { ListCard } from '@/components/surfaces';
 import type { CardComponentProps } from '@/components/data-table';
 import { Badge } from '@/components/primitives/Badge';
 import { text } from '@/theme/recipes';
@@ -14,8 +14,8 @@ export function UserCard({ item, onClick }: CardComponentProps<UserAdminRecord>)
   const role = item.role as UserRole;
   const active = isUserActive(item);
   return (
-    <MobileEntityCard onClick={onClick} className={active ? undefined : 'opacity-60'}>
-      <MobileEntityCard.Header
+    <ListCard onPress={onClick} className={active ? undefined : 'opacity-60'}>
+      <ListCard.Header
         leading={
           <div className="flex min-w-0 flex-col">
             <div className={`${text({ role: 'amount' })} truncate`}>{item.name}</div>
@@ -34,6 +34,6 @@ export function UserCard({ item, onClick }: CardComponentProps<UserAdminRecord>)
         }
       />
       {item.email ? <div className={text({ role: 'label' })}>{item.email}</div> : null}
-    </MobileEntityCard>
+    </ListCard>
   );
 }

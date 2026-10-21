@@ -45,7 +45,7 @@ export const DOCUMENT_TYPE = {
   metaSeparator: 'text-text-disabled select-none',
   fieldRow: text({ role: 'body' }),
   panelPatientName: text({ role: 'body' }),
-  compactEntityId: `${text({ role: 'body' })} min-w-0 truncate`,
+  compactRecordId: `${text({ role: 'body' })} min-w-0 truncate`,
   rowListCompact: `flex justify-between items-start gap-space-2 ${text({ role: 'body' })}`,
   rowListDetailed: `flex justify-between items-start gap-space-2 ${text({ role: 'amount' })} gap-space-3`,
   emptyCompact: `${text({ role: 'body', intent: 'muted' })} italic`,

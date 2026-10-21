@@ -3,7 +3,7 @@
  */
 import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Icon } from '@/components/primitives';
-import { SpinnerLoader } from '@/components/loaders';
+import { SpinnerLoader } from '@/components/feedback';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 import {inputClearButton, inputInner, inputText, inputWrapper, FG } from '@/theme/recipes';

@@ -75,56 +75,6 @@ export function buildSampleCollectionTimelineLines(
   );
 }
 
-interface CollectionAuditSource {
-  sampleId?: number;
-  collectedAt?: string;
-  collectedBy?: string;
-  isRecollection?: boolean;
-  originalSampleId?: number;
-  originalSampleCollectedAt?: string;
-}
-
-/** @deprecated Prefer buildSampleCollectionTimelineLines for sample collection headers. */
-export function collectionHeaderAudit(
-  sample: CollectionAuditSource,
-  options?: { omitSampleId?: boolean }
-): LabAuditLine[] {
-  if (options?.omitSampleId) {
-    return buildSampleCollectionTimelineLines(sample);
-  }
-  return compactAuditLines(
-    sample.collectedAt
-      ? sample.sampleId == null
-        ? {
-            type: 'collection-only',
-            collectedAt: sample.collectedAt,
-            collectedBy: sample.collectedBy,
-          }
-        : {
-            type: 'sample-collected',
-            sampleId: sample.sampleId,
-            collectedAt: sample.collectedAt,
-            collectedBy: sample.collectedBy,
-          }
-      : null,
-    sample.isRecollection && sample.originalSampleId != null
-      ? {
-          type: 'recollection-lineage',
-          sampleId: sample.originalSampleId,
-          collectedAt: sample.originalSampleCollectedAt,
-        }
-      : null
-  );
-}
-
-interface TestAuditSource {
-  sampleId?: number;
-  collectedAt?: string;
-  collectedBy?: string;
-  resultEnteredAt?: string;
-  enteredBy?: string;
-}
-
 export interface TestQueueTimelineSource {
   collectedAt?: string;
   collectedBy?: string;
@@ -158,40 +108,6 @@ export function buildTestQueueTimelineLines(
           type: 'result-entered',
           enteredAt: source.resultEnteredAt,
           enteredBy: source.enteredBy,
-        }
-      : null
-  );
-}
-
-export function testHeaderAudit(
-  test: TestAuditSource,
-  options?: { includeResultEntered?: boolean; omitSampleId?: boolean }
-): LabAuditLine[] {
-  if (options?.omitSampleId) {
-    return buildTestQueueTimelineLines(test, {
-      includeResultEntered: options.includeResultEntered,
-    });
-  }
-  return compactAuditLines(
-    test.collectedAt
-      ? test.sampleId == null
-        ? {
-            type: 'collection-only',
-            collectedAt: test.collectedAt,
-            collectedBy: test.collectedBy,
-          }
-        : {
-            type: 'sample-collected',
-            sampleId: test.sampleId,
-            collectedAt: test.collectedAt,
-            collectedBy: test.collectedBy,
-          }
-      : null,
-    options?.includeResultEntered && test.resultEnteredAt
-      ? {
-          type: 'result-entered',
-          enteredAt: test.resultEnteredAt,
-          enteredBy: test.enteredBy,
         }
       : null
   );

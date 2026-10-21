@@ -6,9 +6,9 @@
 
 import React, { useMemo, useState } from 'react';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import { useFilterState } from './useFilterState';
-import { useQuickFilters } from './useQuickFilters';
-import { FilterFactory } from './FilterFactory';
+import { useFilterState } from '@/hooks/filters/useFilterState';
+import { useQuickFilters } from '@/hooks/filters/useQuickFilters';
+import { FilterControl as FilterControlView } from './FilterControl';
 import { QuickFilters } from './QuickFilters';
 import { FilterModal } from './FilterModal';
 import { actionButtonPreset, Button, Badge } from '@/components/primitives';
@@ -145,17 +145,19 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
   );
 
   const renderControl = (control: FilterControl) => (
-    <FilterFactory
+    <FilterControlView
       key={control.key}
       control={control}
-      value={filters}
-      onChange={setFilter}
+      value={filters[control.key]}
+      onChange={v => setFilter(control.key, v)}
+      surface="bar"
       className="w-full"
     />
   );
 
-  const nonSearchControls = config.primaryFilters.controls.filter(c => c.type !== 'search');
-  const searchControl = config.primaryFilters.controls.find(c => c.type === 'search');
+  const isTextControl = (c: FilterControl) => c.type === 'search' || c.type === 'text';
+  const nonSearchControls = config.primaryFilters.controls.filter(c => !isTextControl(c));
+  const searchControl = config.primaryFilters.controls.find(c => isTextControl(c));
   const gridFilters = nonSearchControls.slice(0, 3);
 
   if (isSmall) {

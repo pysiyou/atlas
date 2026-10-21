@@ -1,7 +1,8 @@
 /**
  * Warning banner when a resulted test's linked sample was rejected after result entry.
  */
-import { Alert, EntityId } from '@/components/display';
+import { Alert } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import {text, FG } from '@/theme/recipes';
 import { LAB_COPY } from '../constants/labConstants';
 
@@ -30,7 +31,7 @@ export function SampleRejectedBanner({
           <p
             className={`${FG.labelMuted} leading-tight mt-space-0-5 ${isCompact ? text({ role: 'caption' }) : text({ role: 'body' })}`}
           >
-            {LAB_COPY.entity.sample} <EntityId type="sample" value={sampleId} /> was rejected
+            {LAB_COPY.entity.sample} <RecordId type="sample" value={sampleId} /> was rejected
             {sampleRejectionReason && (
               <>
                 : <span className="italic">{sampleRejectionReason}</span>

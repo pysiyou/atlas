@@ -8,7 +8,8 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Popover } from '@/components/overlays';
 import { Button, Icon } from '@/components/primitives';
-import { Alert, FooterInfo, EntityId } from '@/components/display';
+import { Alert, FooterInfo } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import { PaymentStatusBadge } from './PaymentStatusBadge';
 import { PaymentMethodSelector } from './PaymentMethodSelector';
 import { PopoverFormChrome } from '@/components/overlays';
@@ -110,7 +111,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
       title="Process Payment"
       subtitle={
         <span>
-          Order <EntityId type="order" value={order.orderId} />
+          Order <RecordId type="order" value={order.orderId} />
         </span>
       }
       onCancel={onCancel}

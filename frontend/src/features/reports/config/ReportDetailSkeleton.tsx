@@ -1,5 +1,5 @@
 import React from 'react';
-import { Skeleton } from '@/components/loaders/Skeleton';
+import { Skeleton } from '@/components/feedback/Skeleton';
 import { RADIUS } from '@/theme/recipes';
 
 export const ReportDetailSkeletonContent: React.FC = () => (

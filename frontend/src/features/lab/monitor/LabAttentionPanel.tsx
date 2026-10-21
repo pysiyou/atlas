@@ -4,7 +4,8 @@
 
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { EmptyState, EMPTY_COPY, DENSE_EMPTY_STATE_TEXT, EntityId } from '@/components/display';
+import { EmptyState, EMPTY_COPY, DENSE_EMPTY_STATE_TEXT } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import { Badge } from '@/components/primitives';
 import { Panel } from '@/components/surfaces';
 import { LabPriorityBadge } from '../components/LabDomainBadges';
@@ -39,7 +40,7 @@ function FeedDetail({ detail }: { detail: AttentionDetail }) {
       );
     case 'link':
     case 'testId':
-      return <EntityId variant="inline">{detail.value}</EntityId>;
+      return <RecordId emphasis="inline">{detail.value}</RecordId>;
     case 'queueStage':
       return (
         <Text role="body" intent="muted" density="table" truncate className="font-normal">

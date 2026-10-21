@@ -1,7 +1,3 @@
-/**
- * Global layout chrome + semantic layout primitives.
- */
-
 export * from './AppShell';
 export * from './PageHeader';
 export * from './DetailPageShell';
@@ -17,4 +13,5 @@ export {
   type MetadataItemProps,
 } from './MetadataGrid';
 export { CardFooter, type CardFooterProps } from './CardFooter';
-export { IdentityInline, type IdentityInlineProps, type IdentitySegment } from './IdentityInline';
+export { TextStack, type TextStackProps, type TextStackSecondarySlot } from './TextStack';
+export { InlineSegments, type InlineSegmentsProps, type InlineSegment } from './InlineSegments';

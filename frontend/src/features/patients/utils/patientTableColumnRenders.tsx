@@ -3,13 +3,13 @@
  */
 
 import type { ReactNode } from 'react';
-import { EntityId } from '@/components/display/EntityId';
+import { RecordId } from '@/features/shared/components/RecordId';
 import { calculateAge, formatDateTime } from '@/utils';
 import { renderPatientNameBlock, renderTableTwoLineCell } from '@/utils/tableColumnRenders';
 import { TABLE_TYPE } from '@/theme/recipes';
 
 export function renderPatientId(patientId: string | number): ReactNode {
-  return <EntityId type="patient" value={patientId} variant="block" />;
+  return <RecordId type="patient" value={patientId} emphasis="block" />;
 }
 
 /** Two-line orders summary — matches contact / name column pattern (cell + meta). */

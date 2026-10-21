@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { Badge } from '@/components/primitives';
-import { DetailField } from '@/components/display';
+import { DescriptionItem } from '@/components/display';
 import { TONE } from '@/theme/recipes';
 import type { Patient, VitalSigns } from '@/types';
 import { cn, formatDate } from '@/utils';
@@ -16,7 +16,7 @@ import {
   formatList,
   formatMeasurement,
 } from '../utils/patientFormatters';
-import { DetailFieldsColumnFlow } from '@/components/display';
+import { DescriptionColumns } from '@/components/display';
 
 export interface CareSnapshotSectionProps {
   patient: Patient;
@@ -60,8 +60,8 @@ export const CareSnapshotSection: React.FC<CareSnapshotSectionProps> = ({ patien
 
   return (
     <div className="flex min-h-0 h-full flex-col">
-      <DetailFieldsColumnFlow>
-        <DetailField
+      <DescriptionColumns>
+        <DescriptionItem
           icon={ICONS.medicalHistory.allergy}
           label="Allergies"
           value={
@@ -74,7 +74,7 @@ export const CareSnapshotSection: React.FC<CareSnapshotSectionProps> = ({ patien
 
         {affiliation ? (
           <>
-            <DetailField
+            <DescriptionItem
               icon={ICONS.ui.shieldCheck}
               label="Coverage"
               value={
@@ -84,13 +84,13 @@ export const CareSnapshotSection: React.FC<CareSnapshotSectionProps> = ({ patien
               }
               orientation="vertical"
             />
-            <DetailField
+            <DescriptionItem
               icon={ICONS.dataFields.document}
               label="Assurance"
               value={affiliation.assuranceNumber || 'N/A'}
               orientation="vertical"
             />
-            <DetailField
+            <DescriptionItem
               icon={ICONS.dataFields.date}
               label="Coverage period"
               value={formatCoveragePeriod(
@@ -102,7 +102,7 @@ export const CareSnapshotSection: React.FC<CareSnapshotSectionProps> = ({ patien
             />
           </>
         ) : (
-          <DetailField
+          <DescriptionItem
             icon={ICONS.ui.shield}
             label="Coverage"
             value="No affiliation"
@@ -110,19 +110,19 @@ export const CareSnapshotSection: React.FC<CareSnapshotSectionProps> = ({ patien
           />
         )}
 
-        <DetailField
+        <DescriptionItem
           icon={ICONS.dataFields.height}
           label="Height"
           value={formatMeasurement(patient.height, 'cm')}
           orientation="vertical"
         />
-        <DetailField
+        <DescriptionItem
           icon={ICONS.dataFields.weight}
           label="Weight"
           value={formatMeasurement(patient.weight, 'kg')}
           orientation="vertical"
         />
-        <DetailField
+        <DescriptionItem
           icon={ICONS.dataFields.health}
           label="BMI"
           value={
@@ -140,7 +140,7 @@ export const CareSnapshotSection: React.FC<CareSnapshotSectionProps> = ({ patien
         {hasVitals ? (
           <>
             {hasNumber(temperature) && (
-              <DetailField
+              <DescriptionItem
                 icon={ICONS.dataFields.thermometer}
                 label="Temperature"
                 value={`${temperature} °C`}
@@ -148,7 +148,7 @@ export const CareSnapshotSection: React.FC<CareSnapshotSectionProps> = ({ patien
               />
             )}
             {hasNumber(heartRate) && (
-              <DetailField
+              <DescriptionItem
                 icon={ICONS.dataFields.heartPulse}
                 label="Heart Rate"
                 value={`${heartRate} bpm`}
@@ -156,7 +156,7 @@ export const CareSnapshotSection: React.FC<CareSnapshotSectionProps> = ({ patien
               />
             )}
             {bloodPressure && (
-              <DetailField
+              <DescriptionItem
                 icon={ICONS.dataFields.heartPulse}
                 label="Blood Pressure"
                 value={bloodPressure}
@@ -164,7 +164,7 @@ export const CareSnapshotSection: React.FC<CareSnapshotSectionProps> = ({ patien
               />
             )}
             {hasNumber(respiratoryRate) && (
-              <DetailField
+              <DescriptionItem
                 icon={ICONS.dataFields.pulse}
                 label="Respiratory Rate"
                 value={`${respiratoryRate} /min`}
@@ -172,7 +172,7 @@ export const CareSnapshotSection: React.FC<CareSnapshotSectionProps> = ({ patien
               />
             )}
             {hasNumber(oxygenSaturation) && (
-              <DetailField
+              <DescriptionItem
                 icon={ICONS.dataFields.blood}
                 label="O₂ Saturation"
                 value={`${oxygenSaturation}%`}
@@ -181,14 +181,14 @@ export const CareSnapshotSection: React.FC<CareSnapshotSectionProps> = ({ patien
             )}
           </>
         ) : (
-          <DetailField
+          <DescriptionItem
             icon={ICONS.dataFields.stethoscope}
             label="Vitals"
             value="Not recorded"
             orientation="vertical"
           />
         )}
-      </DetailFieldsColumnFlow>
+      </DescriptionColumns>
     </div>
   );
 };

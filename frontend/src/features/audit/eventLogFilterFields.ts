@@ -10,6 +10,3 @@ export const GLOBAL_EVENT_LOG_FILTER_FIELDS: EventLogFilterField[] = [
   'kind',
   'actorRole',
 ];
-
-/** @deprecated Prefer GLOBAL_EVENT_LOG_FILTER_FIELDS on the global page. */
-export const ALL_FILTER_FIELDS: EventLogFilterField[] = GLOBAL_EVENT_LOG_FILTER_FIELDS;

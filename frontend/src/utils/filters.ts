@@ -198,7 +198,7 @@ export type EntityNavigateTarget = {
 };
 
 /**
- * Builds navigation handler for EntityId filtered navigation.
+ * Builds navigation handler for RecordId filtered navigation.
  */
 export function createEntityFilterNavigateHandler(
   navigate: NavigateFunction,

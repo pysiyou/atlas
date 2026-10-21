@@ -15,7 +15,7 @@ import {
 import { buildDashboardStats } from '../components/buildDashboardStats';
 import { DashboardOrdersInProgressBanner } from '../components/DashboardOrdersInProgressBanner';
 import { DashboardRecentOrders } from '../components/DashboardRecentOrders';
-import { SkeletonCard } from '@/components/loaders';
+import { SkeletonCard } from '@/components/feedback';
 import { PageHeader } from '@/components/layout';
 import { WORKSPACE } from '@/theme/recipes';
 

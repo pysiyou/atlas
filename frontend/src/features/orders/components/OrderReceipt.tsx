@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { EntityId } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import { PaymentMethodBadge, PaymentStatusBadge } from '@/features/payments';
 import { cn, displayId, formatCurrency, formatDateTime } from '@/utils';
 import { getActiveTests, getActiveTotal } from '../utils/orderCalculator';
@@ -73,11 +73,11 @@ function ReceiptHeader({
           <div className="space-y-space-1-5">
             <div className={cn('flex items-center', DOCUMENT_TYPE.fieldRow)}>
               <span className={DOCUMENT_TYPE.fieldLabel}>Order Number:</span>
-              <EntityId type="order" value={order.orderId} />
+              <RecordId type="order" value={order.orderId} />
             </div>
             <div className={cn('flex items-center', DOCUMENT_TYPE.fieldRow)}>
               <span className={DOCUMENT_TYPE.fieldLabel}>Patient Number:</span>
-              <EntityId type="patient" value={order.patientId} />
+              <RecordId type="patient" value={order.patientId} />
             </div>
             <div className={cn('flex items-center', DOCUMENT_TYPE.fieldRow)}>
               <span className={DOCUMENT_TYPE.fieldLabel}>Order Date:</span>
@@ -129,11 +129,11 @@ function ReceiptHeader({
       ) : (
         <>
           <div className="flex justify-between items-center gap-space-2">
-            <EntityId
+            <RecordId
               type="order"
               value={order.orderId}
-              variant="secondaryBlock"
-              className={DOCUMENT_TYPE.compactEntityId}
+              emphasis="mutedBlock"
+              className={DOCUMENT_TYPE.compactRecordId}
             />
             {showPaymentStatusBadge && (
               <PaymentStatusBadge status={order.paymentStatus} size="xs" className="shrink-0" />
@@ -151,9 +151,9 @@ function ReceiptHeader({
 function ReceiptItemRow({ test, detailed }: { test: OrderTest; detailed: boolean }) {
   const code =
     test.testCode && test.testName !== test.testCode ? (
-      <EntityId variant="inline" className={detailed ? 'mt-space-0-5' : 'ml-space-1'}>
+      <RecordId emphasis="inline" className={detailed ? 'mt-space-0-5' : 'ml-space-1'}>
         {detailed ? test.testCode : `(${test.testCode})`}
-      </EntityId>
+      </RecordId>
     ) : null;
 
   return (

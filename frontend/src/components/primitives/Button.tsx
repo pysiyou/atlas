@@ -4,7 +4,7 @@
  */
 
 import React, { forwardRef, memo, type ButtonHTMLAttributes } from 'react';
-import { SpinnerLoader } from '@/components/loaders/SpinnerLoader';
+import { SpinnerLoader } from '@/components/feedback/SpinnerLoader';
 import { ICON_SIZE, iconButton as iconButtonRecipe, labelButton as labelButtonRecipe } from '@/theme/recipes';
 import { cn } from '@/utils/cn';
 import { Icon, type IconName } from './Icon';

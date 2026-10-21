@@ -1,7 +1,7 @@
 import { Avatar } from '@/components/primitives';
-import { MobileEntityCard } from '@/components/surfaces';
-import { EntityId } from '@/components/display';
-import { renderTableSecondaryEntityId } from '@/utils/presentationRenders';
+import { ListCard } from '@/components/surfaces';
+import { RecordId } from '@/features/shared/components';
+import { renderTableSecondaryRecordId } from '@/utils/presentationRenders';
 import type { CardComponentProps } from '@/components/data-table';
 import { OrderStatusBadge } from './OrderDomainBadges';
 import { PaymentStatusBadge } from '@/features/payments';
@@ -28,12 +28,12 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
     (order.testCount ?? 0) > 0;
 
   return (
-    <MobileEntityCard onClick={onClick}>
-      <MobileEntityCard.Header
+    <ListCard onPress={onClick}>
+      <ListCard.Header
         leading={
           hidePatientName ? (
             <div className="min-w-0">
-              <EntityId type="order" value={order.orderId} variant="block" />
+              <RecordId type="order" value={order.orderId} emphasis="block" />
               {order.orderDate ? (
                 <p className={`${TABLE_DATETIME_SECONDARY_CLASS} mt-space-0-5`}>{formatDateTime(order.orderDate)}</p>
               ) : null}
@@ -43,7 +43,7 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
               primaryText={order.patientName || 'N/A'}
               primaryTextClassName=""
               secondarySlot="entity"
-              secondaryText={renderTableSecondaryEntityId({
+              secondaryText={renderTableSecondaryRecordId({
                 type: 'patient',
                 value: order.patientId,
               })}
@@ -83,7 +83,7 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
         ) : (
           <>
             <div className={TABLE_DATETIME_SECONDARY_CLASS}>
-              <EntityId type="order" value={order.orderId} variant="secondaryBlock" />
+              <RecordId type="order" value={order.orderId} emphasis="mutedBlock" />
               <span className="block mt-space-0-5">{formatDateTime(order.orderDate)}</span>
             </div>
             <div className="flex items-center gap-space-2 shrink-0">
@@ -99,6 +99,6 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
           </>
         )}
       </CardFooter>
-    </MobileEntityCard>
+    </ListCard>
   );
 }

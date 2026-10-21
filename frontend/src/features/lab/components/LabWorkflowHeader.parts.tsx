@@ -1,7 +1,7 @@
 /** Audit line rendering — shared by card alerts and modal headers. */
 
 import { cn, formatDateTime } from '@/utils';
-import { EntityId } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import { useUserLookup } from '@/lib/api/users';
 import { text, WORKLIST_EMPHASIZED_INLINE, WORKLIST_HEADER } from '@/theme/recipes';
 import type { LabAuditLine } from '../constants/labWorkflowAuditLines';
@@ -30,9 +30,9 @@ export function LabAuditLineView({
         <span className={base}>
           Sample{' '}
           {typeof line.sampleId === 'number' ? (
-            <EntityId type="sample" value={line.sampleId} />
+            <RecordId type="sample" value={line.sampleId} />
           ) : (
-            <EntityId>{line.sampleId}</EntityId>
+            <RecordId>{line.sampleId}</RecordId>
           )}{' '}
           collected{' '}
           <span className={WORKLIST_EMPHASIZED_INLINE}>
@@ -71,7 +71,7 @@ export function LabAuditLineView({
       return (
         <span className={base}>
           <span>Recollection of </span>
-          <EntityId type="sample" value={line.sampleId} variant="inline" />
+          <RecordId type="sample" value={line.sampleId} emphasis="inline" />
           {line.collectedAt ? (
             <>
               <span> — collected on </span>
@@ -86,14 +86,14 @@ export function LabAuditLineView({
       return (
         <span className={base}>
           <span>Re-test of </span>
-          <EntityId type="orderTest" value={line.orderTestId} variant="inline" />
+          <RecordId type="orderTest" value={line.orderTestId} emphasis="inline" />
         </span>
       );
     case 'test-recollection-lineage':
       return (
         <span className={base}>
           <span>Recollection of </span>
-          <EntityId type="sample" value={line.sampleId} variant="inline" />
+          <RecordId type="sample" value={line.sampleId} emphasis="inline" />
         </span>
       );
     case 'result-entered':

@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { EntityId } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import type { OrderTest } from '@/types';
 import { displayId } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
@@ -26,7 +26,7 @@ export const LinkedOrderTestsList: React.FC<LinkedOrderTestsListProps> = ({ test
         >
           <div className="min-w-0 flex flex-wrap items-baseline gap-x-space-2 gap-y-0">
             <span className={`font-medium ${text({ role: 'body' })}`}>{test.testName}</span>
-            <EntityId variant="inline">{test.testCode}</EntityId>
+            <RecordId emphasis="inline">{test.testCode}</RecordId>
             {test.id != null ? (
               <span className={text({ role: 'body', intent: 'muted' })}>{displayId.orderTest(test.id)}</span>
             ) : null}

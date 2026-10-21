@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { Badge } from '@/components/primitives';
-import { DetailField } from '@/components/display';
+import { DescriptionItem } from '@/components/display';
 import { formatDate } from '@/utils';
 import type { Affiliation } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';
@@ -23,13 +23,13 @@ export const AffiliationInfo: React.FC<AffiliationInfoProps> = ({ affiliation })
 
   return (
     <div className={`grid grid-cols-2 gap-x-space-4 gap-y-space-3 ${text({ role: 'amount' })}`}>
-      <DetailField
+      <DescriptionItem
         orientation="vertical"
         label="Assurance Number"
         value={affiliation.assuranceNumber}
         className="col-span-2"
       />
-      <DetailField
+      <DescriptionItem
         orientation="vertical"
         label="Status"
         value={
@@ -38,17 +38,17 @@ export const AffiliationInfo: React.FC<AffiliationInfoProps> = ({ affiliation })
           </Badge>
         }
       />
-      <DetailField
+      <DescriptionItem
         orientation="vertical"
         label="Duration"
         value={`${affiliation.duration} Months`}
       />
-      <DetailField
+      <DescriptionItem
         orientation="vertical"
         label="Start Date"
         value={formatDate(affiliation.startDate)}
       />
-      <DetailField
+      <DescriptionItem
         orientation="vertical"
         label="End Date"
         value={

@@ -54,9 +54,7 @@ export interface CriticalRange {
   high?: number;
 }
 
-/**
- * Legacy reference range interface (for backward compatibility)
- */
+/** Demographic reference range row (catalog / display). */
 export interface ReferenceRange {
   min?: number;
   max?: number;
@@ -170,7 +168,7 @@ export interface TestParameter {
   name: string;
   code: string;
   unit: string;
-  referenceRange: string; // Legacy string format for display
+  referenceRange: string; // Stored display string when catalog range is unavailable
   type: 'numeric' | 'text' | 'qualitative' | 'select'; // Extended type
   criticalLow?: number;
   criticalHigh?: number;

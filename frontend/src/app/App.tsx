@@ -9,7 +9,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { Toaster } from 'react-hot-toast';
 
 import { AppProviders } from '@/app/AppProviders';
-import { ErrorBoundary, PageLoadingFallback } from '@/components/loaders';
+import { ErrorBoundary, PageLoadingFallback } from '@/components/feedback';
 import { AppToastBar } from '@/app/AppToastBar';
 import { TOAST_DEFAULT_DURATION_MS } from '@/components/overlays/Toast';
 import { InitialDataPreload } from '@/app/InitialDataPreload';

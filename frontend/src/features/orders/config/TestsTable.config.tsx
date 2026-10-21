@@ -1,5 +1,5 @@
 import React from 'react';
-import { EntityId } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import type { TableViewConfig, CardComponentProps } from '@/components/data-table';
 import {
   buildViews,
@@ -37,7 +37,7 @@ function renderOrderTestIdentity(test: OrderTest, testCatalog: TestSummary[]) {
       <span className={cn(TABLE_TYPE.cell, 'block min-w-0 truncate')} title={name}>
         {name}
       </span>
-      <EntityId variant="secondaryBlock">{test.testCode}</EntityId>
+      <RecordId emphasis="mutedBlock">{test.testCode}</RecordId>
     </div>
   );
 }
@@ -126,7 +126,7 @@ export function createTestsTableConfig(
       'Sample',
       test =>
         test.sampleId ? (
-          <EntityId type="sample" value={test.sampleId} />
+          <RecordId type="sample" value={test.sampleId} />
         ) : (
           <span className={TABLE_TYPE.meta}>—</span>
         ),

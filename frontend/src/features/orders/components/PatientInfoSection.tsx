@@ -6,7 +6,8 @@
 import React from 'react';
 import {text, FG } from '@/theme/recipes';
 import { Icon } from '@/components/primitives';
-import { DetailField, EntityId } from '@/components/display';
+import { DescriptionItem } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import { calculateAge } from '@/utils';
 import type { Patient } from '@/types';
 import { formatOrderDate } from '@/utils/date';
@@ -49,25 +50,25 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
 
   return (
     <div className={containerClass}>
-      <DetailField
+      <DescriptionItem
         icon={getDataFieldIcon('user')}
         label="Patient ID"
-        value={<EntityId type="patient" value={patient.id} />}
+        value={<RecordId type="patient" value={patient.id} />}
         orientation="vertical"
       />
-      <DetailField
+      <DescriptionItem
         icon={ICONS.dataFields.userHands}
         label="Patient Name"
         value={patient.fullName}
         orientation="vertical"
       />
-      <DetailField
+      <DescriptionItem
         icon={ICONS.dataFields.gender}
         label="Gender"
         value={<span className="capitalize">{patient.gender}</span>}
         orientation="vertical"
       />
-      <DetailField
+      <DescriptionItem
         icon={ICONS.dataFields.dateOfBirth}
         label="Date of Birth"
         value={
@@ -80,21 +81,21 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
         }
         orientation="vertical"
       />
-      <DetailField
+      <DescriptionItem
         icon={ICONS.dataFields.phone}
         label="Phone"
         value={patient.phone}
         orientation="vertical"
       />
       {patient.email && (
-        <DetailField
+        <DescriptionItem
           icon={ICONS.dataFields.email}
           label="Email"
           value={<span className="line-clamp-2 break-all">{patient.email}</span>}
           orientation="vertical"
         />
       )}
-      <DetailField
+      <DescriptionItem
         icon={ICONS.dataFields.address}
         label="Address"
         value={<span className="line-clamp-3 wrap-break-word">{formatAddress(patient.address)}</span>}

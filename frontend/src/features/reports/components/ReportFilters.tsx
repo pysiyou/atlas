@@ -6,12 +6,12 @@
 import React, { useState } from 'react';
 import { FILTER_TYPE } from '@/theme/recipes';
 import { DateFilter } from '@/components/inputs';
-import { DebouncedSearchInput } from '@/components/inputs';
+import { SearchTextInput } from '@/components/inputs';
 import { MODULE_ICONS } from '@/config/icons';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import {
-  DatePresetBadges,
-  EntityFilterModal,
+  DatePresetChipSelect,
+  ListFilterModal,
   REPORT_FILTER_PLACEHOLDERS,
   ResponsiveFilterMobileBar,
 } from '@/components/filters';
@@ -29,7 +29,7 @@ export interface ReportFiltersProps {
 /**
  * ReportFilters - Responsive filter layout
  * - lg+/md: 2-column grid (search + date)
- * - sm/xs: Search bar + Filters button (opens EntityFilterModal)
+ * - sm/xs: Search bar + Filters button (opens ListFilterModal)
  */
 export const ReportFilters: React.FC<ReportFiltersProps> = ({
   searchQuery,
@@ -46,7 +46,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
   const renderFilters = () => (
     <>
       <div className="flex h-9 w-full items-center">
-        <DebouncedSearchInput
+        <SearchTextInput
           value={searchQuery}
           onChange={onSearchChange}
           placeholder={REPORT_FILTER_PLACEHOLDERS.searchLong}
@@ -74,7 +74,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
           onOpenModal={() => setIsModalOpen(true)}
           searchRowHeight="h-9"
         />
-        <EntityFilterModal
+        <ListFilterModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           searchQuery={searchQuery}
@@ -86,9 +86,9 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
         >
           <div className="w-full">
             <h4 className={FILTER_TYPE.sectionTitle}>Date Range</h4>
-            <DatePresetBadges value={dateRange} onChange={onDateRangeChange} />
+            <DatePresetChipSelect value={dateRange} onChange={onDateRangeChange} />
           </div>
-        </EntityFilterModal>
+        </ListFilterModal>
       </>
     );
   }

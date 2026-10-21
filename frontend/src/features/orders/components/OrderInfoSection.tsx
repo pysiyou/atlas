@@ -4,10 +4,10 @@
  */
 
 import React, { useMemo } from 'react';
-import { EntityId } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import type { Order } from '@/types';
 import { OrderPriorityBadge, OrderStatusBadge } from './OrderDomainBadges';
-import { DetailField } from '@/components/display/DetailField';
+import { DescriptionItem } from '@/components/display';
 import { formatDateTime } from '@/utils/date';
 import { getDataFieldIcon, getPriorityIcon, getOrderStatusIcon } from '@/config/icons';
 import { useUserLookup } from '@/lib/api/users';
@@ -44,13 +44,13 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order }) => 
 
   return (
     <div className={containerClass}>
-      <DetailField
+      <DescriptionItem
         icon={getDataFieldIcon('orderId')}
         label="Order ID"
-        value={<EntityId type="order" value={order.orderId} />}
+        value={<RecordId type="order" value={order.orderId} />}
         orientation="vertical"
       />
-      <DetailField
+      <DescriptionItem
         icon={getDataFieldIcon('orderDate')}
         label="Order Date"
         value={
@@ -60,20 +60,20 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order }) => 
         }
         orientation="vertical"
       />
-      <DetailField
+      <DescriptionItem
         icon={getPriorityIcon(order.priority)}
         label="Priority"
         value={<OrderPriorityBadge priority={order.priority} size="xs" />}
         orientation="vertical"
       />
-      <DetailField
+      <DescriptionItem
         icon={getOrderStatusIcon(order.overallStatus)}
         label="Status"
         value={<OrderStatusBadge status={order.overallStatus} size="xs" />}
         orientation="vertical"
       />
       {createdByName && (
-        <DetailField
+        <DescriptionItem
           icon={getDataFieldIcon('user')}
           label="Created by"
           value={createdByName}
@@ -81,7 +81,7 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order }) => 
         />
       )}
       {order.referringPhysician && (
-        <DetailField
+        <DescriptionItem
           icon={getDataFieldIcon('referringPhysician')}
           label="Referring physician"
           value={order.referringPhysician}
@@ -89,7 +89,7 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order }) => 
         />
       )}
       {testsDisplay != null && (
-        <DetailField
+        <DescriptionItem
           icon={getDataFieldIcon('medicalKit')}
           label="Tests"
           className="sm:col-span-2"
@@ -98,7 +98,7 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order }) => 
         />
       )}
       {order.clinicalNotes && (
-        <DetailField
+        <DescriptionItem
           icon={getDataFieldIcon('clinicalNotes')}
           label="Clinical Notes"
           value={<span className="line-clamp-3 wrap-break-word">{order.clinicalNotes}</span>}

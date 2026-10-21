@@ -5,8 +5,8 @@
  * Displays reportable-order information in a mobile-friendly card layout.
  */
 import { Avatar } from '@/components/primitives';
-import { MobileEntityCard } from '@/components/surfaces';
-import { EntityId } from '@/components/display';
+import { ListCard } from '@/components/surfaces';
+import { RecordId } from '@/features/shared/components';
 import type { CardComponentProps } from '@/components/data-table';
 import { formatDateTime } from '@/utils';
 import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
@@ -47,14 +47,14 @@ export function ValidatedTestReportCard({
   const statusLabel = `${order.validatedTestCount}/${order.activeTestCount}`;
 
   return (
-    <MobileEntityCard onClick={onClick}>
-      <MobileEntityCard.Header
+    <ListCard onPress={onClick}>
+      <ListCard.Header
         leading={
           <Avatar
             primaryText={order.patientName}
             primaryTextClassName="capitalize"
             secondarySlot="entity"
-            secondaryText={<EntityId type="patient" value={order.patientId} variant="secondaryBlock" />}
+            secondaryText={<RecordId type="patient" value={order.patientId} emphasis="mutedBlock" />}
             size="xs"
           />
         }
@@ -64,20 +64,20 @@ export function ValidatedTestReportCard({
       <div className="grow space-y-space-2">
         <div>
           <div className={text({ role: 'amount' })}>{testNames}</div>
-          <EntityId variant="block">
+          <RecordId emphasis="block">
             {(order.testCodes.length > 0
               ? order.testCodes
               : order.order
                 ? getActiveOrderTests(order.order).map(test => test.testCode)
                 : []
             ).join(', ')}
-          </EntityId>
+          </RecordId>
         </div>
       </div>
 
       <div className="flex justify-between items-center mt-auto pt-space-3">
         <div className={TABLE_DATETIME_SECONDARY_CLASS}>
-          <EntityId type="order" value={order.orderId} variant="secondaryBlock" />
+          <RecordId type="order" value={order.orderId} emphasis="mutedBlock" />
           <span className="block mt-space-0-5">{formatDateTime(order.orderDate)}</span>
         </div>
         <div
@@ -93,6 +93,6 @@ export function ValidatedTestReportCard({
           />
         </div>
       </div>
-    </MobileEntityCard>
+    </ListCard>
   );
 }

@@ -2,7 +2,7 @@
  * Field configs for order test detail sample panels.
  */
 
-import type { DetailFieldConfig } from '@/components/display/DetailFieldGroup';
+import type { DescriptionListItemConfig } from '@/components/display/DescriptionList';
 import {
   CONTAINER_COLOR_OPTIONS,
   CONTAINER_CONFIG,
@@ -60,7 +60,7 @@ function getSampleCollectionSlice(sample: Sample): SampleCollectionSlice {
 }
 
 function appendPendingContainerFields(
-  fields: DetailFieldConfig[],
+  fields: DescriptionListItemConfig[],
   sample: Sample
 ): void {
   if (sample.status !== 'pending' || !sample.requiredContainerTypes?.length) {
@@ -74,8 +74,8 @@ function appendPendingContainerFields(
   });
 }
 
-function appendCollectionDetailFields(
-  fields: DetailFieldConfig[],
+function appendCollectionDescriptionItems(
+  fields: DescriptionListItemConfig[],
   slice: SampleCollectionSlice
 ): void {
   if (!slice.hasCollection) {
@@ -105,7 +105,7 @@ function appendCollectionDetailFields(
   }
 }
 
-function appendRecollectionFields(fields: DetailFieldConfig[], sample: Sample): void {
+function appendRecollectionFields(fields: DescriptionListItemConfig[], sample: Sample): void {
   if (!sample.isRecollection) {
     return;
   }
@@ -122,10 +122,10 @@ function appendRecollectionFields(fields: DetailFieldConfig[], sample: Sample): 
   );
 }
 
-export function buildSampleFields(sample: Sample): DetailFieldConfig[] {
+export function buildSampleFields(sample: Sample): DescriptionListItemConfig[] {
   const slice = getSampleCollectionSlice(sample);
 
-  const fields: DetailFieldConfig[] = [
+  const fields: DescriptionListItemConfig[] = [
     { label: 'Status', value: formatStatusBadgeLabel(sample.status) },
     { label: 'Type', value: formatStatusBadgeLabel(sample.sampleType) },
     {
@@ -136,7 +136,7 @@ export function buildSampleFields(sample: Sample): DetailFieldConfig[] {
   ];
 
   appendPendingContainerFields(fields, sample);
-  appendCollectionDetailFields(fields, slice);
+  appendCollectionDescriptionItems(fields, slice);
   appendRecollectionFields(fields, sample);
 
   return fields;

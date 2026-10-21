@@ -226,7 +226,6 @@ export default defineConfig([
     files: [
       'src/components/surfaces/Panel.tsx',
       'src/components/data-table/constants.ts',
-      'src/components/display/DetailField.tsx',
       'src/components/display/DetailGroup.tsx',
       'src/components/display/DetailsTable.tsx',
       'src/features/**/config/*Table.config.tsx',
@@ -241,7 +240,7 @@ export default defineConfig([
     ignores: [
       'src/theme/recipes/**',
       'src/components/surfaces/Panel.tsx',
-      'src/components/loaders/SpinnerLoader.tsx',
+      'src/components/feedback/SpinnerLoader.tsx',
       'src/features/auth/**/*.{ts,tsx}',
       'src/features/lab/collection/SampleCollectionLabelActions.tsx',
     ],

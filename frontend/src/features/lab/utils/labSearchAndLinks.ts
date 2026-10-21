@@ -5,7 +5,7 @@ import type { TestStatus } from '@/types/enums';
 import type { UrlFilters } from '@/utils/filters';
 import { getLabQueueUrl, getLabTabForTestStatus, getLabTabPath, type LabTabId } from '../constants/labConstants';
 
-export function hasActiveEntityUrlFilters(urlFilters?: UrlFilters): boolean {
+export function hasActiveRecordUrlFilters(urlFilters?: UrlFilters): boolean {
   if (!urlFilters) return false;
   return Boolean(urlFilters.patientId || urlFilters.orderId || urlFilters.sampleId || urlFilters.testId);
 }

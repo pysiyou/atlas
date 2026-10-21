@@ -3,14 +3,14 @@
  */
 
 import { useMemo } from 'react';
-import type { ColumnConfig, PaginationConfig, SortConfig } from '@/utils/table';
-import { resolvePaginationConfig, isPaginationEnabled } from '@/utils/table';
+import type { ColumnConfig, PaginationConfig, SortConfig } from '@/components/data-table';
+import { resolvePaginationConfig, isPaginationEnabled } from '@/components/data-table';
 import { useTableSort, useTablePagination } from '@/hooks/useTable';
 
 export interface UseDataTableOptions<T> {
   data: T[];
   columns: ColumnConfig<T>[];
-  pagination?: PaginationConfig | boolean | import('@/utils/table').ListViewPaginationConfig;
+  pagination?: PaginationConfig | boolean | import('@/components/data-table').ListViewPaginationConfig;
   initialPageSize?: number;
   pageSizeOptions?: number[];
   defaultSort?: SortConfig;

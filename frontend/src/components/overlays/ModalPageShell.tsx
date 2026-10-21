@@ -3,7 +3,7 @@
  */
 
 import type { ReactNode } from 'react';
-import { ModalBodySkeleton } from '@/components/loaders/ModalBodySkeleton';
+import { ModalBodySkeleton } from '@/components/feedback/ModalBodySkeleton';
 import { cn } from '@/utils';
 import { FILTER } from '@/theme/recipes';
 

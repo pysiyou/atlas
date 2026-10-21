@@ -18,7 +18,7 @@ import { inclusiveDateRangeBounds, toIsoDateParam } from '@/utils';
 import { usePageFilters } from '@/hooks/usePageFilters';
 import { ORDER_URL_FILTER_KEYS } from '../config/orderFilters.config';
 import type { Order, OrderStatus } from '@/types';
-import { EntityUrlFilterBar } from '@/components/filters';
+import { UrlFilterChipBar } from '@/components/filters';
 
 export const OrderList: React.FC = () => {
   const navigate = useNavigate();
@@ -109,7 +109,7 @@ export const OrderList: React.FC = () => {
         }
         filters={
           <>
-            <EntityUrlFilterBar
+            <UrlFilterChipBar
               urlFilters={urlFilters}
               urlFilterKeys={ORDER_URL_FILTER_KEYS}
               onClear={clearUrlFilters}

@@ -1,9 +1,3 @@
-/**
- * inputs/index.ts — Form controls and input components.
- * Text inputs, selects, date pickers, search, tag input.
- */
-
-// FormField contains Input, Textarea, Select
 export * from './FormField';
 export {
   FORM_CONTROL_LABEL,
@@ -23,7 +17,10 @@ export {
 export * from './DateInput';
 export * from './DatePicker';
 export { DatePicker as DateFilter } from './DatePicker';
-export * from './DebouncedSearchInput';
-export * from './EntityIdFilterInput';
+export * from './TextInput';
+export { SearchTextInput, type SearchTextInputProps } from './TextInput';
+export * from './ChipSelectGroup';
+export * from './SegmentedControl';
+export * from './ThemeSwitch';
 export * from './TagInput';
 export * from './SelectionCheck';

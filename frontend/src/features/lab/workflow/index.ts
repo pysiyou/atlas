@@ -33,7 +33,6 @@ export {
   QueueModalShell,
   DetailGrid,
   ModalFooter,
-  labModalSubtitle,
   labModalHeaderContext,
   type LabModalStage,
   type QueueModalShellProps,

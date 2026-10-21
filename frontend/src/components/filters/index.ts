@@ -1,5 +1,5 @@
 /**
- * Filters Module — shared filter components, hooks, and utilities.
+ * Filters — bar, modal, and control dispatch.
  */
 
 export {
@@ -8,15 +8,14 @@ export {
   PAYMENT_FILTER_PLACEHOLDERS,
   REPORT_FILTER_PLACEHOLDERS,
   SHARED_FILTER_PLACEHOLDERS,
-} from './constants';
+} from '@/config/filterPlaceholders';
 
 export type {
   FilterControlType,
-  FilterControl,
-  SearchFilterControl,
+  FilterControl as FilterControlConfig,
+  TextFilterControl,
   DateRangeFilterControl,
-  AgeRangeFilterControl,
-  PriceRangeFilterControl,
+  NumberRangeFilterControl,
   MultiSelectFilterControl,
   SingleSelectFilterControl,
   QuickFilterPreset,
@@ -26,9 +25,7 @@ export type {
   ActiveFilterBadge,
 } from './types';
 
-export { useFilterState } from './useFilterState';
-export { useFilterBarBridge } from './useFilterBarBridge';
-export { useQuickFilters } from './useQuickFilters';
+export { useFilterState, useFilterBarBridge, useQuickFilters } from '@/hooks/filters';
 
 export { FilterBar, type FilterBarProps } from './FilterBar';
 export { FilterModal, type FilterModalProps } from './FilterModal';
@@ -37,18 +34,15 @@ export {
   ResponsiveFilterMobileBar,
   type ResponsiveFilterMobileBarProps,
 } from './ResponsiveFilterMobileBar';
-export { DatePresetBadges, type DatePresetBadgesProps } from './DatePresetBadges';
 export { QuickFilters, type QuickFiltersProps } from './QuickFilters';
-export { FilterFactory, type FilterFactoryProps } from './FilterFactory';
-export { EntityFilterModal, type EntityFilterModalProps } from './EntityFilterModal';
-export { EntityUrlFilterBar, type EntityUrlFilterBarProps } from './EntityUrlFilterBar';
-
-export { SearchControl, type SearchControlProps } from './SearchControl';
-export { DateRangeControl, type DateRangeControlProps } from './DateRangeControl';
-export { AgeFilter, type AgeFilterProps } from './AgeFilter';
-export { AgeRangeSliderPanel, type AgeRangeSliderPanelProps } from './AgeRangeSliderPanel';
-export { AgeRangeControl, type AgeRangeControlProps } from './AgeRangeControl';
-export { PriceRangeControl, type PriceRangeControlProps } from './PriceRangeControl';
-export { MultiSelectControl, type MultiSelectControlProps } from './MultiSelectControl';
-export { SingleSelectControl, type SingleSelectControlProps } from './SingleSelectControl';
-export { UrlFilterBadges, type UrlFilterBadgesProps } from './UrlFilterBadges';
+export {
+  FilterControl,
+  renderFilterControl,
+  type FilterControlProps,
+  type FilterControlSurface,
+} from './FilterControl';
+export { UrlFilterChipBar, type UrlFilterChipBarProps } from './UrlFilterChipBar';
+export { DatePresetChipSelect, type DatePresetChipSelectProps } from './DatePresetChipSelect';
+export { ListFilterModal, type ListFilterModalProps } from './ListFilterModal';
+export { ActiveFilterChipBar, type ActiveFilterChipBarProps, type ActiveFilterItem } from './ActiveFilterChipBar';
+export { RangeFilterField, type RangeFilterFieldProps } from './RangeFilterField';

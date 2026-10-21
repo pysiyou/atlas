@@ -55,17 +55,16 @@ def resolve_test_presentation(
     status: TestStatus | str,
     attention_reason: str | None = None,
     attention_label: str | None = None,
-    # Backward-compatible kwargs
-    blocked_reason: str | None = None,
-    blocked_label: str | None = None,
 ) -> StatusPresentation:
     """Presentation for an order test row."""
-    reason = attention_reason if attention_reason is not None else blocked_reason
-    label = attention_label if attention_label is not None else blocked_label
     status_str = _test_status_value(status)
-    secondary_label = label or _label_for_reason(reason)
+    secondary_label = attention_label or _label_for_reason(attention_reason)
 
-    if status_str not in TERMINAL_TEST_STATUSES and reason and _presentation_blocks_progress(reason):
+    if (
+        status_str not in TERMINAL_TEST_STATUSES
+        and attention_reason
+        and _presentation_blocks_progress(attention_reason)
+    ):
         return StatusPresentation(
             primary="blocked",
             secondary=secondary_label,
@@ -86,19 +85,15 @@ def resolve_sample_presentation(
     attention_reason: str | None = None,
     attention_label: str | None = None,
     rejection_secondary: str | None = None,
-    blocked_reason: str | None = None,
-    blocked_label: str | None = None,
 ) -> StatusPresentation:
     """Presentation for a sample (collection queue)."""
-    reason = attention_reason if attention_reason is not None else blocked_reason
-    label = attention_label if attention_label is not None else blocked_label
     status_str = status.value if hasattr(status, "value") else str(status)
-    secondary_label = label or _label_for_reason(reason)
+    secondary_label = attention_label or _label_for_reason(attention_reason)
 
     if (
         status_str == SampleStatus.PENDING.value
-        and reason
-        and _presentation_blocks_progress(reason)
+        and attention_reason
+        and _presentation_blocks_progress(attention_reason)
     ):
         return StatusPresentation(
             primary="blocked",

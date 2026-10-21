@@ -1,10 +1,10 @@
 /**
- * Event log filter row — kind, date, entity id, include-access.
+ * Event log filter row — kind, date, record id, include-access.
  */
 import React from 'react';
 import { FILTER_TYPE } from '@/theme/recipes';
 import { Checkbox } from '@/components/primitives';
-import { DebouncedSearchInput } from '@/components/inputs';
+import { SearchTextInput } from '@/components/inputs';
 import { EventLogSearchField } from './EventLogSearchField';
 import type { UserRole } from '@/types';
 import { EventLogFilterBar } from './EventLogFilterBar';
@@ -21,9 +21,9 @@ export interface EventLogFiltersProps {
   onKindsChange: (values: EventLogKind[]) => void;
   dateRange: [Date, Date] | null;
   onDateRangeChange: (range: [Date, Date] | null) => void;
-  entityIdInput?: string;
-  onEntityIdInputChange?: (value: string) => void;
-  entityIdInputInvalid?: boolean;
+  recordIdInput?: string;
+  onRecordIdInputChange?: (value: string) => void;
+  recordIdInputInvalid?: boolean;
   includeAccess: boolean;
   onIncludeAccessChange: (value: boolean) => void;
   verbosity: EventLogVerbosity;
@@ -59,8 +59,8 @@ export const EventLogFilters: React.FC<EventLogFiltersProps> = props => {
   const showKind = props.visibleFields.includes('kind') && !props.lockedFields.has('kind');
   const showDate =
     props.visibleFields.includes('dateRange') && !props.lockedFields.has('dateRange');
-  const showEntity =
-    props.visibleFields.includes('entityId') && !props.lockedFields.has('entityId');
+  const showRecordId =
+    props.visibleFields.includes('recordId') && !props.lockedFields.has('recordId');
   const showIncludeAccess =
     props.visibleFields.includes('includeAccess') && !props.lockedFields.has('includeAccess');
   const showVerbosity =
@@ -81,13 +81,13 @@ export const EventLogFilters: React.FC<EventLogFiltersProps> = props => {
           <div className="mt-space-4 border-b border-border-default" />
         </div>
       ) : null}
-      {showEntity && props.onEntityIdInputChange ? (
+      {showRecordId && props.onRecordIdInputChange ? (
         <div className="w-full">
-          <h4 className={FILTER_TYPE.sectionTitle}>Entity ID</h4>
-          <DebouncedSearchInput
-            value={props.entityIdInput ?? ''}
-            onChange={props.onEntityIdInputChange}
-            placeholder={EVENT_LOG_FILTER_PLACEHOLDERS.entityId}
+          <h4 className={FILTER_TYPE.sectionTitle}>Record ID</h4>
+          <SearchTextInput
+            value={props.recordIdInput ?? ''}
+            onChange={props.onRecordIdInputChange}
+            placeholder={EVENT_LOG_FILTER_PLACEHOLDERS.recordId}
           />
         </div>
       ) : null}
@@ -156,9 +156,9 @@ export const EventLogFilters: React.FC<EventLogFiltersProps> = props => {
           onKindsChange={props.onKindsChange}
           dateRange={props.dateRange}
           onDateRangeChange={props.onDateRangeChange}
-          entityIdInput={props.entityIdInput}
-          onEntityIdInputChange={props.onEntityIdInputChange}
-          entityIdInputInvalid={props.entityIdInputInvalid}
+          recordIdInput={props.recordIdInput}
+          onRecordIdInputChange={props.onRecordIdInputChange}
+          recordIdInputInvalid={props.recordIdInputInvalid}
           includeAccess={props.includeAccess}
           onIncludeAccessChange={props.onIncludeAccessChange}
           verbosity={props.verbosity}

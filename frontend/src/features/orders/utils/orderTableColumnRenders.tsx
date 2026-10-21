@@ -4,14 +4,14 @@
 
 import type { MouseEvent, ReactNode } from 'react';
 import type { NavigateFunction } from 'react-router-dom';
-import { EntityId } from '@/components/display/EntityId';
+import { RecordId } from '@/features/shared/components/RecordId';
 import { formatCurrency } from '@/utils';
 import {
   renderDateTimeCell,
   renderPatientNameBlock,
   TABLE_PRIMARY_CELL_CLASS,
 } from '@/utils/tableColumnRenders';
-import { renderTableSecondaryEntityId } from '@/utils/presentationRenders';
+import { renderTableSecondaryRecordId } from '@/utils/presentationRenders';
 import { PRESENTATION_STACK_CLASS } from '@/theme/recipes';
 import { ROUTES } from '@/config';
 import type { OrderTest } from '@/types';
@@ -22,7 +22,7 @@ import {
 } from './orderTestsBlockPreview';
 
 export function renderOrderId(orderId: string | number, clickable = false): ReactNode {
-  return <EntityId type="order" value={orderId} variant={clickable ? 'clickable' : 'block'} />;
+  return <RecordId type="order" value={orderId} emphasis={clickable ? 'interactive' : 'block'} />;
 }
 
 function renderPatientNameWithId(
@@ -32,7 +32,7 @@ function renderPatientNameWithId(
 ): ReactNode {
   return renderPatientNameBlock(
     fullName,
-    renderTableSecondaryEntityId({
+    renderTableSecondaryRecordId({
       type: 'patient',
       value: patientId,
       navigateToFiltered:
@@ -62,10 +62,10 @@ export function renderOrderPatientNameNavigable(
  */
 export function renderNavigableSampleId(sampleId: string | number): ReactNode {
   return (
-    <EntityId
+    <RecordId
       type="sample"
       value={sampleId}
-      variant="clickable"
+      emphasis="interactive"
       navigateToFiltered={{
         targetPage: '/laboratory/collection',
         filterKey: 'sampleId',
@@ -155,10 +155,10 @@ export function renderNavigableOrderId(
   navigate: NavigateFunction
 ): ReactNode {
   return (
-    <EntityId
+    <RecordId
       type="order"
       value={orderId}
-      variant="clickable"
+      emphasis="interactive"
       as="button"
       onClick={(e: MouseEvent<HTMLElement>) => {
         e.stopPropagation();

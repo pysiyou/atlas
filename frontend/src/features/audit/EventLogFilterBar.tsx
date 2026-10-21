@@ -10,7 +10,7 @@ import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { MODULE_ICONS } from '@/config/icons';
 import { FilterModalFooter } from '@/components/filters/FilterModalFooter';
 import { CheckboxList } from '@/components/primitives';
-import { DatePresetBadges } from '@/components/filters';
+import { DatePresetChipSelect } from '@/components/filters';
 import { EVENT_LOG_KIND_OPTIONS } from './eventLogKinds';
 import type { EventLogKind } from './types';
 
@@ -88,7 +88,7 @@ export const EventLogFilterBar: React.FC<EventLogFilterBarProps> = ({
             {showDateInModal ? (
               <div className="w-full">
                 <h4 className={FILTER_TYPE.sectionTitle}>Date range</h4>
-                <DatePresetBadges value={dateRange} onChange={onDateRangeChange} />
+                <DatePresetChipSelect value={dateRange} onChange={onDateRangeChange} />
                 <div className="mt-space-4 border-b border-border-default" />
               </div>
             ) : null}

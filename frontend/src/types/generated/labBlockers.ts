@@ -20,9 +20,6 @@ export function reasonBlocksProgress(reason: string | null | undefined): boolean
 
 export type LabAttentionReason = "payment_unpaid" | "sample_rejected" | "critical_value" | "amendment_pending" | "retry_limit" | "recollection_limit" | "supervisor_review" | "recollection_approval";
 
-/** @deprecated Use LabAttentionReason */
-export type OrderTestBlockReason = LabAttentionReason;
-
 export const ATTENTION_LABELS: Record<LabAttentionReason, string> = {
   "payment_unpaid": "Payment required",
   "sample_rejected": "Sample rejected",
@@ -34,9 +31,6 @@ export const ATTENTION_LABELS: Record<LabAttentionReason, string> = {
   "recollection_approval": "Recollection awaiting supervisor approval",
 };
 
-/** @deprecated Use ATTENTION_LABELS */
-export const BLOCKED_LABELS = ATTENTION_LABELS;
-
 export const ATTENTION_ATTENTION_TYPE: Partial<Record<LabAttentionReason, string>> = {
   "payment_unpaid": "payment_blocked",
   "sample_rejected": "sample_rejected",
@@ -47,9 +41,6 @@ export const ATTENTION_ATTENTION_TYPE: Partial<Record<LabAttentionReason, string
   "supervisor_review": "supervisor_approval",
   "recollection_approval": "supervisor_recollection_request",
 };
-
-/** @deprecated Use ATTENTION_ATTENTION_TYPE */
-export const BLOCKED_ATTENTION_TYPE = ATTENTION_ATTENTION_TYPE;
 
 export const ALLOWED_ACTION_KEYS = ["collect","enterResults","validate","reject"] as const;
 

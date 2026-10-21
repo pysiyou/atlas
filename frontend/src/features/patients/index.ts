@@ -18,7 +18,6 @@ export {
 export type { PatientsFilter } from './api/patients';
 
 export { PatientGenderBadge } from './components/PatientGenderBadge';
-export { AgeFilter } from '@/components/filters/AgeFilter';
 export {
   renderPatientId,
   renderPatientNameWithAge,

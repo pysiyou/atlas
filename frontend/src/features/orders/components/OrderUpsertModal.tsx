@@ -15,7 +15,7 @@ import { formatCurrency } from '@/utils';
 import { ICONS } from '@/config/icons';
 import { useOrderUpsertModal } from '../hooks/useOrderUpsertModal';
 import { OrderUpsertFormFields } from './OrderUpsertFormFields';
-import { ErrorAlert } from '@/components/loaders';
+import { ErrorAlert } from '@/components/feedback';
 import { errorAlertMessage } from '@/utils/feedback';
 import type { OrderUpsertModalOpenProps } from '@/lib/context/modalTypes';
 

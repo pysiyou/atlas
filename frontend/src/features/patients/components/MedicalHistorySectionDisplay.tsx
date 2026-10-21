@@ -5,11 +5,11 @@
 
 import React from 'react';
 import type { Patient } from '@/types';
-import { DetailField } from '@/components/display/DetailField';
+import { DescriptionItem } from '@/components/display';
 import { formatList, formatFamilyHistory, formatLifestyle } from '../utils/patientFormatters';
 import { ICONS } from '@/config/icons';
 import { TONE } from '@/theme/recipes';
-import { DetailFieldsColumnFlow } from '@/components/display';
+import { DescriptionColumns } from '@/components/display';
 
 export interface MedicalHistorySectionDisplayProps {
   patient: Patient;
@@ -24,8 +24,8 @@ export const MedicalHistorySectionDisplay: React.FC<MedicalHistorySectionDisplay
 
   return (
     <div className="flex min-h-0 h-full flex-col">
-      <DetailFieldsColumnFlow>
-        <DetailField
+      <DescriptionColumns>
+        <DescriptionItem
           icon={ICONS.medicalHistory.allergy}
           label="Allergies"
           value={
@@ -35,37 +35,37 @@ export const MedicalHistorySectionDisplay: React.FC<MedicalHistorySectionDisplay
           }
           orientation="vertical"
         />
-        <DetailField
+        <DescriptionItem
           icon={ICONS.medicalHistory.chronicCondition}
           label="Chronic Disease"
           value={formatList(history?.chronicConditions)}
           orientation="vertical"
         />
-        <DetailField
+        <DescriptionItem
           icon={ICONS.medicalHistory.medication}
           label="Current Medications"
           value={formatList(history?.currentMedications)}
           orientation="vertical"
         />
-        <DetailField
+        <DescriptionItem
           icon={ICONS.medicalHistory.surgery}
           label="Surgery"
           value={formatList(history?.previousSurgeries)}
           orientation="vertical"
         />
-        <DetailField
+        <DescriptionItem
           icon={ICONS.medicalHistory.familyHistory}
           label="Family Disease"
           value={formatFamilyHistory(history?.familyHistory)}
           orientation="vertical"
         />
-        <DetailField
+        <DescriptionItem
           icon={ICONS.dataFields.health}
           label="Lifestyle"
           value={formatLifestyle(history?.lifestyle)}
           orientation="vertical"
         />
-      </DetailFieldsColumnFlow>
+      </DescriptionColumns>
     </div>
   );
 };

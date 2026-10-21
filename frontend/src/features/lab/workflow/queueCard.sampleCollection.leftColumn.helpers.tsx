@@ -3,7 +3,7 @@
  */
 
 import { type ReactNode } from 'react';
-import { EntityId } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import { type ContainerType, type Sample, type RejectedSample } from '@/types';
 import type { ContainerTopColor } from '@/types';
 import type { SampleCollectionQueueItem, SampleRequirement } from '@/types/lab-operations';
@@ -85,7 +85,7 @@ function SampleCollectionIdentityLines({
     );
   }
   line1.push(<InlineDot key="dot-sam" />);
-  line1.push(<EntityId key="sam" type="sample" value={sampleId} className={idClass} />);
+  line1.push(<RecordId key="sam" type="sample" value={sampleId} className={idClass} />);
 
   const line2: ReactNode[] = [];
   if (referringPhysician) {
@@ -98,7 +98,7 @@ function SampleCollectionIdentityLines({
   if (orderId) {
     if (line2.length > 0) line2.push(<InlineDot key="dot-ord" />);
     line2.push(
-      <EntityId key="ord" type="order" value={orderId} variant="headerSecondary" className={idClass} />
+      <RecordId key="ord" type="order" value={orderId} emphasis="headerMuted" className={idClass} />
     );
   }
   if (orderDate) {

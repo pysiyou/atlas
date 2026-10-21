@@ -6,7 +6,7 @@
 import { type ReactNode, useState } from 'react';
 import { cn } from '@/utils';
 import { Card } from '@/components/surfaces';
-import { EntityId } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import { LabHeaderCompactContext } from '../components/LabWorkflowHeader';
 import type { LabAuditLine } from '../constants/labWorkflowAuditLines';
 import { LabWorkflowLeftColumn } from '../components/LabWorkflowLeftColumn';
@@ -254,7 +254,7 @@ export function QueueCardTestList({ tests }: { tests: Array<{ name: string; code
         <li key={test.code || i} className={WORKLIST_CARD_LIST_ITEM.row}>
           <span className={WORKLIST_CARD_LIST_ITEM.bullet} />
           <span className={WORKLIST_CARD_LIST_ITEM.label}>{test.name}</span>
-          <EntityId variant="inline">{test.code}</EntityId>
+          <RecordId emphasis="inline">{test.code}</RecordId>
         </li>
       ))}
       {shouldCollapse ? (

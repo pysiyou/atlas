@@ -9,7 +9,7 @@ import { FILTER_TYPE } from '@/theme/recipes';
 import { QuickFilters } from './QuickFilters';
 import { FilterModalFooter } from './FilterModalFooter';
 import type { FilterConfig, ActiveFilterBadge, FilterValues } from './types';
-import { renderFilterControl } from './utils/renderFilterControl';
+import { renderFilterControl } from './FilterControl';
 
 export interface FilterModalProps {
   isOpen: boolean;
@@ -34,8 +34,10 @@ export const FilterModal: React.FC<FilterModalProps> = ({
   onPresetClick,
 }) => {
   // Get search and non-search controls
-  const searchControl = config.primaryFilters.controls.find(c => c.type === 'search');
-  const allFilterControls = config.primaryFilters.controls.filter(c => c.type !== 'search');
+  const isTextControl = (c: (typeof config.primaryFilters.controls)[0]) =>
+    c.type === 'search' || c.type === 'text';
+  const searchControl = config.primaryFilters.controls.find(c => isTextControl(c));
+  const allFilterControls = config.primaryFilters.controls.filter(c => !isTextControl(c));
 
   /**
    * Handle apply filters and close

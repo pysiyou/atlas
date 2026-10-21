@@ -11,7 +11,7 @@ export interface AvatarProps {
   secondaryText?: React.ReactNode;
   /** Optional className for secondary text */
   secondaryTextClassName?: string;
-  /** When `entity`, secondary is an EntityId (no tertiary text wrapper). */
+  /** When `entity`, secondary is a `RecordId` (no tertiary text wrapper). */
   secondarySlot?: 'meta' | 'entity';
   /** Optional className for primary text */
   primaryTextClassName?: string;
@@ -56,7 +56,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   const isButton = Boolean(onClick);
   const hasText = primaryText && !avatarOnly;
   const labelSizes = LABEL_SIZE_CLASSES[size];
-  const secondaryUsesEntityId = secondarySlot === 'entity';
+  const secondaryUsesRecordId = secondarySlot === 'entity';
 
   return (
     <div
@@ -89,7 +89,7 @@ export const Avatar: React.FC<AvatarProps> = ({
             {primaryText}
           </span>
           {secondaryText &&
-            (secondaryUsesEntityId ? (
+            (secondaryUsesRecordId ? (
               <div className={cn('min-w-0 w-full', secondaryTextClassName)}>{secondaryText}</div>
             ) : (
               <span

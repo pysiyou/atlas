@@ -1,8 +1,3 @@
-/**
- * overlays/index.ts — Everything rendered outside normal DOM flow.
- * Modals, popovers, portals, filter controls, overlay inputs.
- */
-
 export * from './OverlayBackdrop';
 export * from './Modal';
 export * from './ModalPageShell';
@@ -13,6 +8,7 @@ export * from './FormDialogFooter';
 export * from './PopoverFormChrome';
 export * from './FilterTriggerShell';
 export * from './MultiSelectFilter';
+export { MultiSelectFilter as SelectMenu } from './MultiSelectFilter';
 export * from './OverlaySearchInput';
-export * from './HistogramRangeSlider';
+export * from './RangeSlider';
 export * from './Toast';

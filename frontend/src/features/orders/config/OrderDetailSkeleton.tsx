@@ -1,8 +1,8 @@
 import { Panel } from '@/components/surfaces';
 import { LAYOUT, SPACING } from '@/theme/recipes';
 import { cn } from '@/utils';
-import { SkeletonInfoSection, SkeletonTableRow } from '@/components/loaders/Skeleton';
-import type { DetailSkeletonSection } from '@/components/loaders/DetailPageSkeleton';
+import { SkeletonInfoSection, SkeletonTableRow } from '@/components/feedback/Skeleton';
+import type { DetailSkeletonSection } from '@/components/feedback/DetailPageSkeleton';
 import { OrderProgressSkeleton } from './OrderProgressSkeleton';
 
 export const ORDER_DETAIL_SKELETON_SECTIONS: DetailSkeletonSection[] = [

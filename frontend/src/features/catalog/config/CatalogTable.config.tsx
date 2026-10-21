@@ -3,7 +3,7 @@
  */
 
 import type { NavigateFunction } from 'react-router-dom';
-import { EntityId } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import { CatalogCategoryBadge, CatalogSampleTypeBadge } from '../components/CatalogStatusBadge';
 import type { TableViewConfig } from '@/components/data-table';
 import { buildViews, TABLE_COLUMN_WIDTH } from '@/components/data-table';
@@ -28,7 +28,7 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
       sortable: true,
       accessor: (test: TestSummary) => test.code,
       render: (test: TestSummary) => (
-        <EntityId variant="block">{test.code}</EntityId>
+        <RecordId emphasis="block">{test.code}</RecordId>
       ),
     },
     name: {

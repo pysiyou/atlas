@@ -4,7 +4,7 @@
 
 import React, { type ReactNode } from 'react';
 import { cn } from '@/utils';
-import { EntityId } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import { text, LIST_MARKER , FG } from '@/theme/recipes';
 import { getQueueAgeInfo } from '../utils/labQueue';
 import { TONE } from '@/theme/recipes';
@@ -103,7 +103,7 @@ export function TestRejectionTailMeta({ test }: { test: TestWithContext }) {
     return (
       <LabCardMetaRow>
         <span>
-          Re-test of <EntityId type="orderTest" value={test.retestOfTestId} variant="inline" />
+          Re-test of <RecordId type="orderTest" value={test.retestOfTestId} emphasis="inline" />
         </span>
         {ctx.showAttemptInMeta ? (
           <span className={ctx.attemptNumber >= ctx.attemptMax - 1 ? TONE.warning.fg : undefined}>
@@ -118,7 +118,7 @@ export function TestRejectionTailMeta({ test }: { test: TestWithContext }) {
       <LabCardMetaRow>
         <span>
           Recollection of{' '}
-          <EntityId type="sample" value={test.sampleOriginalSampleId} variant="inline" />
+          <RecordId type="sample" value={test.sampleOriginalSampleId} emphasis="inline" />
         </span>
         {ctx.showAttemptInMeta ? (
           <span className={ctx.attemptNumber >= ctx.attemptMax - 1 ? TONE.warning.fg : undefined}>
@@ -156,7 +156,7 @@ export function SampleRejectionTailMeta({
     <LabCardMetaRow>
       <span>
         Recollection of{' '}
-        <EntityId type="sample" value={sample.originalSampleId} variant="inline" />
+        <RecordId type="sample" value={sample.originalSampleId} emphasis="inline" />
       </span>
       {showAttempt && attempt > 1 ? (
         <span className={attempt >= max - 1 ? TONE.warning.fg : undefined}>
@@ -176,7 +176,7 @@ export function RecollectionRequestedMeta({
   return (
     <span>
       Recollection requested:{' '}
-      <EntityId type="sample" value={recollectionSampleId} variant="inline" />
+      <RecordId type="sample" value={recollectionSampleId} emphasis="inline" />
     </span>
   );
 }

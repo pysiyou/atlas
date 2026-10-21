@@ -3,9 +3,9 @@
  */
 
 import { Link } from 'react-router-dom';
-import type { DetailFieldConfig } from '@/components/display/DetailFieldGroup';
+import type { DescriptionListItemConfig } from '@/components/display/DescriptionList';
 import type { OrderTest, Test } from '@/types';
-import { EntityId } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import { INLINE_LINK } from '@/theme/recipes';
 import { formatCurrency } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
@@ -26,19 +26,19 @@ export function buildOrderTestOverviewFields(
   orderTest: OrderTest,
   catalogTest: Test | undefined,
   options?: OrderTestOverviewOptions
-): DetailFieldConfig[] {
-  const fields: DetailFieldConfig[] = [
+): DescriptionListItemConfig[] {
+  const fields: DescriptionListItemConfig[] = [
     {
       label: 'Test ID',
       value:
         orderTest.id != null ? (
-          <EntityId type="orderTest" value={orderTest.id} variant="block" className="text-right" />
+          <RecordId type="orderTest" value={orderTest.id} emphasis="block" className="text-right" />
         ) : undefined,
     },
     {
       label: 'Test code',
       value: orderTest.testCode ? (
-        <EntityId variant="block" className="text-right">{orderTest.testCode}</EntityId>
+        <RecordId emphasis="block" className="text-right">{orderTest.testCode}</RecordId>
       ) : undefined,
     },
     {

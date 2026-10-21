@@ -19,7 +19,7 @@ import {
   MediumScreenLayout,
   LargeScreenLayout,
 } from '../components/OrderDetailLayouts';
-import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
+import { DetailPageSkeleton } from '@/components/feedback/DetailPageSkeleton';
 import {
   ORDER_DETAIL_SKELETON_SECTIONS,
   renderOrderDetailLargeSkeleton,

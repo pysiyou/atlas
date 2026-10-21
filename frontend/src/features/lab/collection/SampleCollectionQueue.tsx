@@ -10,7 +10,7 @@ import { decodeFiltersFromUrl } from '@/utils/filters';
 import { useLabQueueFilters, useLabQueueUrlSearch } from '../hooks';
 import {
   getLabQueueSearchFromUrlFilters,
-  hasActiveEntityUrlFilters,
+  hasActiveRecordUrlFilters,
 } from '../utils/labSearchAndLinks';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { LAB_CONFIG } from '../constants';
@@ -24,8 +24,8 @@ import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { collectionFilterConfig, LAB_URL_FILTER_KEYS } from '../constants';
 import { mapCollectionWorklistToSampleDisplay } from '../utils/labQueue';
 import { EMPTY_COPY, emptySubtitle } from '@/components/display';
-import { ErrorAlert, ErrorBoundary } from '@/components/loaders';
-import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
+import { ErrorAlert, ErrorBoundary } from '@/components/feedback';
+import { DetailPageSkeleton } from '@/components/feedback/DetailPageSkeleton';
 import { useAuthStore } from '@/app/authStore';
 import { useTestCatalog } from '@/features/catalog';
 import { worklistServerFilters } from '../utils/labSearchAndLinks';
@@ -100,7 +100,7 @@ export const SampleCollectionQueue: React.FC = () => {
     const entitySearch = getLabQueueSearchFromUrlFilters(urlFilters, urlSearch, true);
     // URL-driven search must follow filter hydration from useLabQueueFilters.
     /* eslint-disable react-hooks/set-state-in-effect -- intentional URL → field sync */
-    if (hasActiveEntityUrlFilters(urlFilters)) {
+    if (hasActiveRecordUrlFilters(urlFilters)) {
       setSearchQuery(entitySearch);
       return;
     }

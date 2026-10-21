@@ -14,10 +14,10 @@ import {
   PANEL_SPACING,
   type PanelPresetId,
   type PanelVariant,
-} from './panelPresets';
+} from '@/config/panelLayouts';
 
-export type { PanelPresetId, PanelScroll, PanelSpacing, PanelVariant } from './panelPresets';
-export { getPanelPreset, PANEL_PRESETS } from './panelPresets';
+export type { PanelPresetId, PanelScroll, PanelSpacing, PanelVariant } from '@/config/panelLayouts';
+export { getPanelPreset, PANEL_PRESETS } from '@/config/panelLayouts';
 
 function isCompactPanelVariant(variant: PanelVariant): boolean {
   return variant === 'compact' || variant === 'compactEmbed';

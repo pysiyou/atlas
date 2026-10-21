@@ -3,13 +3,13 @@
  */
 import { lazy, Suspense } from 'react';
 import type { UserRole } from '@/types';
-import { ErrorAlert } from '@/components/loaders';
+import { ErrorAlert } from '@/components/feedback';
 import { WORKSPACE } from '@/theme/recipes';
 import { errorAlertMessage } from '@/utils/feedback';
 import type { LabTabId } from '../constants/labConstants';
 import { WORKLIST_SHELL } from '@/theme/recipes';
 import { tabAllowed } from './laboratoryPageAccess';
-import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
+import { DetailPageSkeleton } from '@/components/feedback/DetailPageSkeleton';
 
 const SampleCollectionQueue = lazy(() =>
   import('../collection/SampleCollectionQueue').then(module => ({

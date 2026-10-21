@@ -15,7 +15,7 @@ import { getTestNames } from '@/features/catalog/testLookup';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { deriveCollectionModalFields } from './detailModal.sampleCollection.derive';
 import { Modal, ModalPageShell } from '@/components/overlays';
-import { ErrorAlert } from '@/components/loaders';
+import { ErrorAlert } from '@/components/feedback';
 import { SampleCollectionDetailModalView } from './detailModal.sampleCollection.view';
 import { findCollectionQueueItem } from '../utils/findCollectionQueueItem';
 import { useSubmitSampleCollection } from '../collection/useSubmitSampleCollection';

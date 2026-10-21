@@ -15,8 +15,8 @@ import {
   TABLE_COLUMN_WIDTH,
   type TableViewConfig,
 } from '@/components/data-table';
-import { StatusPresentationTableCell } from '@/components/display/StatusPresentationBadge';
-import { MobileEntityCard } from '@/components/surfaces';
+import { LabPresentationTableCell } from '@/features/lab/components/LabPresentationBadge';
+import { ListCard } from '@/components/surfaces';
 import type { CardComponentProps } from '@/components/data-table';
 import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
 import { OrderTestStatusBadge } from '@/features/orders';
@@ -28,7 +28,7 @@ import {
   renderTableEmptyCell,
   renderTableTwoLineCell,
 } from '@/utils/tableColumnRenders';
-import { renderTableSecondaryEntityId } from '@/utils/presentationRenders';
+import { renderTableSecondaryRecordId } from '@/utils/presentationRenders';
 import type { LabOrderTableRow } from './LabOrdersTable';
 import { BADGE } from '@/theme/recipes';
 
@@ -41,7 +41,7 @@ const VIEWS = {
 function renderMonitorStatus(row: LabOrderTableRow) {
   const presentation = row.statusPresentation;
   if (presentation) {
-    return <StatusPresentationTableCell presentation={presentation} size="xs" />;
+    return <LabPresentationTableCell presentation={presentation} size="xs" />;
   }
   return (
     <OrderTestStatusBadge status={row.status} presentation={null} layout="compact" size="xs" />
@@ -59,17 +59,17 @@ function monitorStatusAccessor(row: LabOrderTableRow): string {
 
 function LabOrderTableCard({ item, onClick }: CardComponentProps<LabOrderTableRow>) {
   return (
-    <MobileEntityCard
-      onClick={onClick}
+    <ListCard
+      onPress={onClick}
       className={cn(getOrderTestLineageRowClass({ status: item.status }))}
     >
-      <MobileEntityCard.Header
+      <ListCard.Header
         leading={
           <div className="min-w-0 space-y-space-1">
             {renderTableTwoLineCell(item.testName, item.testCode)}
             {renderPatientNameBlock(
               item.patientName,
-              renderTableSecondaryEntityId({ type: 'patient', value: item.patientId }),
+              renderTableSecondaryRecordId({ type: 'patient', value: item.patientId }),
             )}
           </div>
         }
@@ -85,7 +85,7 @@ function LabOrderTableCard({ item, onClick }: CardComponentProps<LabOrderTableRo
         ) : null}
       </div>
       <div className="mt-auto pt-space-3">{renderDateTimeCell(item.date)}</div>
-    </MobileEntityCard>
+    </ListCard>
   );
 }
 
@@ -104,7 +104,7 @@ export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> 
       render: row =>
         renderPatientNameBlock(
           row.patientName,
-          renderTableSecondaryEntityId({ type: 'patient', value: row.patientId }),
+          renderTableSecondaryRecordId({ type: 'patient', value: row.patientId }),
         ),
     }),
     sampleType: createBadgeColumn<LabOrderTableRow>(

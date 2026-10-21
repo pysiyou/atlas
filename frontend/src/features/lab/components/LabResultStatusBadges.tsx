@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Badge, Icon } from '@/components/primitives';
-import { SpinnerLoader } from '@/components/loaders';
+import { SpinnerLoader } from '@/components/feedback';
 import type { BadgeSize } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 import { ATTENTION_LABELS } from '@/types/generated/labBlockers';
@@ -111,9 +111,6 @@ export const AttentionReasonBadge: React.FC<AttentionReasonBadgeProps> = ({
     {label}
   </Badge>
 );
-
-/** @deprecated Use AttentionReasonBadge */
-export const BlockedReasonBadge = AttentionReasonBadge;
 
 interface SupervisorApprovalBadgeProps {
   size?: BadgeSize;

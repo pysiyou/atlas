@@ -10,13 +10,13 @@ import type {
   ColumnConfig,
   ColumnWidth,
   ColumnSizePreset,
-} from '@/utils/table';
+} from '@/components/data-table';
 import {
   DEFAULT_PAGE_SIZE,
   DEFAULT_PAGE_SIZE_OPTIONS,
   SHOW_ALL_PAGE_SIZE,
   SIZE_PRESETS,
-} from '@/utils/table';
+} from '@/components/data-table';
 
 interface UseTablePaginationOptions<T> {
   data: T[];

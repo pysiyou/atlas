@@ -5,8 +5,8 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
-import { ErrorAlert } from '@/components/loaders/ErrorAlert';
+import { DetailPageSkeleton } from '@/components/feedback/DetailPageSkeleton';
+import { ErrorAlert } from '@/components/feedback/ErrorAlert';
 import { EmptyState } from '@/components/display';
 import { ICONS } from '@/config/icons';
 import { WORKSPACE } from '@/theme/recipes';
