@@ -3,7 +3,7 @@
 import { cn, formatDateTime } from '@/utils';
 import { EntityId } from '@/components/display';
 import { useUserLookup } from '@/lib/api/users';
-import { LAB_CARD_TYPOGRAPHY, LAB_HEADER, LAB_MODAL_TYPOGRAPHY } from '@/theme/recipes';
+import { QUEUE_CARD_TYPE, WORKFLOW_HEADER, MODAL_HEADER_TYPE } from '@/theme/recipes';
 import type { LabAuditLine } from '../constants/labWorkflowAuditLines';
 
 export function LabAuditLineView({
@@ -19,7 +19,7 @@ export function LabAuditLineView({
 }) {
   const { getUserName } = useUserLookup();
   const base = cn(
-    tone === 'modal' ? LAB_MODAL_TYPOGRAPHY.auditLine : LAB_HEADER.auditLine,
+    tone === 'modal' ? MODAL_HEADER_TYPE.auditLine : WORKFLOW_HEADER.auditLine,
     className
   );
   const byUserClass = compact ? 'hidden md:inline' : undefined;
@@ -35,14 +35,14 @@ export function LabAuditLineView({
             <EntityId>{line.sampleId}</EntityId>
           )}{' '}
           collected{' '}
-          <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>
+          <span className={QUEUE_CARD_TYPE.emphasizedInline}>
             {formatDateTime(line.collectedAt)}
           </span>
           {line.collectedBy && (
             <span className={byUserClass}>
               {' '}
               by{' '}
-              <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>
+              <span className={QUEUE_CARD_TYPE.emphasizedInline}>
                 {getUserName(line.collectedBy)}
               </span>
             </span>
@@ -53,14 +53,14 @@ export function LabAuditLineView({
       return (
         <span className={base}>
           Collected{' '}
-          <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>
+          <span className={QUEUE_CARD_TYPE.emphasizedInline}>
             {formatDateTime(line.collectedAt)}
           </span>
           {line.collectedBy && (
             <span className={byUserClass}>
               {' '}
               by{' '}
-              <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>
+              <span className={QUEUE_CARD_TYPE.emphasizedInline}>
                 {getUserName(line.collectedBy)}
               </span>
             </span>
@@ -75,7 +75,7 @@ export function LabAuditLineView({
           {line.collectedAt ? (
             <>
               <span> — collected on </span>
-              <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>
+              <span className={QUEUE_CARD_TYPE.emphasizedInline}>
                 {formatDateTime(line.collectedAt)}
               </span>
             </>
@@ -100,14 +100,14 @@ export function LabAuditLineView({
       return (
         <span className={base}>
           Results entered{' '}
-          <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>
+          <span className={QUEUE_CARD_TYPE.emphasizedInline}>
             {formatDateTime(line.enteredAt)}
           </span>
           {line.enteredBy && (
             <span className={byUserClass}>
               {' '}
               by{' '}
-              <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>
+              <span className={QUEUE_CARD_TYPE.emphasizedInline}>
                 {getUserName(line.enteredBy)}
               </span>
             </span>
@@ -136,7 +136,7 @@ export function LabAuditBlock({
 }) {
   if (lines.length === 0) return null;
   return (
-    <div className={cn(LAB_HEADER.auditStack, className)}>
+    <div className={cn(WORKFLOW_HEADER.auditStack, className)}>
       {lines.map((line, index) => (
         <LabAuditLineView
           key={`${line.type}-${index}`}

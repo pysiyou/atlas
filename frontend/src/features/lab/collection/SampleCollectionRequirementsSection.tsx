@@ -9,7 +9,7 @@ import { Panel } from '@/components/surfaces';
 import { PanelHeaderSegmentTabs } from '@/components/display/PanelHeaderSegmentTabs';
 import { formatArray } from '@/utils';
 import { formatRejectionCriteriaList } from '../utils/catalogRejectionCriteria';
-import { LAB_CARD_TYPOGRAPHY } from '@/theme/recipes';
+import { QUEUE_CARD_TYPE } from '@/theme/recipes';
 
 /** Test detail for requirements display */
 export interface TestDetail {
@@ -53,7 +53,7 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
 
   return (
     <Panel
-      preset="lab.modal.collectionRequirementsInstructions"
+      preset="compact.modal.collectionRequirementsInstructions"
       headerEnd={
         testDetails.length > 1 ? (
           <PanelHeaderSegmentTabs
@@ -79,10 +79,10 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
           <div className="flex items-start gap-space-2">
             <span className={`w-1.5 h-1.5 ${RADIUS.pill} bg-text-muted mt-space-1-5 shrink-0`} />
             <div className="flex-1">
-              <div className={`mb-space-1 ${LAB_CARD_TYPOGRAPHY.fieldLabel}`}>
+              <div className={`mb-space-1 ${QUEUE_CARD_TYPE.fieldLabel}`}>
                 Container Specifications
               </div>
-              <div className={LAB_CARD_TYPOGRAPHY.sectionContent}>{activeTest.containerDescription}</div>
+              <div className={QUEUE_CARD_TYPE.sectionContent}>{activeTest.containerDescription}</div>
             </div>
           </div>
         )}
@@ -91,10 +91,10 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
           <div className="flex items-start gap-space-2">
             <span className={`w-1.5 h-1.5 ${RADIUS.pill} bg-text-muted mt-space-1-5 shrink-0`} />
             <div className="flex-1">
-              <div className={`mb-space-1 ${LAB_CARD_TYPOGRAPHY.fieldLabel}`}>
+              <div className={`mb-space-1 ${QUEUE_CARD_TYPE.fieldLabel}`}>
                 Collection Instructions
               </div>
-              <div className={LAB_CARD_TYPOGRAPHY.sectionContent}>{activeTest.collectionNotes}</div>
+              <div className={QUEUE_CARD_TYPE.sectionContent}>{activeTest.collectionNotes}</div>
             </div>
           </div>
         )}
@@ -103,10 +103,10 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
           <div className="flex items-start gap-space-2">
             <span className={`w-1.5 h-1.5 ${RADIUS.pill} bg-text-muted mt-space-1-5 shrink-0`} />
             <div className="flex-1">
-              <div className={`mb-space-1 ${LAB_CARD_TYPOGRAPHY.fieldLabel}`}>
+              <div className={`mb-space-1 ${QUEUE_CARD_TYPE.fieldLabel}`}>
                 Rejection Criteria
               </div>
-              <div className={LAB_CARD_TYPOGRAPHY.sectionContent}>
+              <div className={QUEUE_CARD_TYPE.sectionContent}>
                 {formatArray(formatRejectionCriteriaList(activeTest.rejectionCriteria))}
               </div>
             </div>
@@ -115,8 +115,8 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
 
         {activeTest.minimumVolume && (
           <div className={`flex items-center gap-space-2 ${TYPE.value}`}>
-            <span className={`font-normal ${LAB_CARD_TYPOGRAPHY.fieldLabel}`}>Minimum Volume:</span>
-            <span className={LAB_CARD_TYPOGRAPHY.fieldValue}>{activeTest.minimumVolume} mL</span>
+            <span className={`font-normal ${QUEUE_CARD_TYPE.fieldLabel}`}>Minimum Volume:</span>
+            <span className={QUEUE_CARD_TYPE.fieldValue}>{activeTest.minimumVolume} mL</span>
           </div>
         )}
       </div>

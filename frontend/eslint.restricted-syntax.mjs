@@ -7,13 +7,13 @@ export const typeUtilityRestrictedSyntax = [
     selector:
       'Literal[value=/\\btype-(body|label|caption|amount|micro|page-title|table-cell|detail-value|detail-label|button-sm|button-md|button-lg|chrome-|empty-|section-title|panel-title|modal-title|badge)\\b/]',
     message:
-      'Use recipe tokens from @/theme/recipes (TYPE, TABLE_TYPE, RECEIPT_TYPE, etc.), not raw type-* utilities.',
+      'Use recipe tokens from @/theme/recipes (TYPE, TABLE_TYPE, DOCUMENT_TYPE, etc.), not raw type-* utilities.',
   },
   {
     selector:
       'TemplateElement[value.raw=/\\btype-(body|label|caption|amount|micro|page-title|table-cell|detail-value|detail-label|button-sm|button-md|button-lg|chrome-|empty-|section-title|panel-title|modal-title|badge)\\b/]',
     message:
-      'Use recipe tokens from @/theme/recipes (TYPE, TABLE_TYPE, RECEIPT_TYPE, etc.), not raw type-* utilities.',
+      'Use recipe tokens from @/theme/recipes (TYPE, TABLE_TYPE, DOCUMENT_TYPE, etc.), not raw type-* utilities.',
   },
 ]
 
@@ -321,19 +321,19 @@ export const chromeRestrictedSyntax = [
   },
   {
     selector: 'Literal[value=/focus-visible:outline-none focus-visible:ring-2/]',
-    message: 'Use CONTROL.focusVisible, CONTROL.focusVisibleTight, or AUTH_CONTROL from recipes.',
+    message: 'Use CONTROL.focusVisible, CONTROL.focusVisibleTight, or PROMO_CONTROL from recipes.',
   },
   {
     selector: 'TemplateElement[value.raw=/focus-visible:outline-none focus-visible:ring-2/]',
-    message: 'Use CONTROL.focusVisible, CONTROL.focusVisibleTight, or AUTH_CONTROL from recipes.',
+    message: 'Use CONTROL.focusVisible, CONTROL.focusVisibleTight, or PROMO_CONTROL from recipes.',
   },
   {
     selector: 'Literal[value=/focus:outline-none focus:ring-2 focus:ring-brand\\//]',
-    message: 'Use CONTROL.focusBrand, CONTROL.focusBrandSoft, or AUTH_CONTROL from @/theme/recipes.',
+    message: 'Use CONTROL.focusBrand, CONTROL.focusBrandSoft, or PROMO_CONTROL from @/theme/recipes.',
   },
   {
     selector: 'TemplateElement[value.raw=/focus:outline-none focus:ring-2 focus:ring-brand\\//]',
-    message: 'Use CONTROL.focusBrand, CONTROL.focusBrandSoft, or AUTH_CONTROL from @/theme/recipes.',
+    message: 'Use CONTROL.focusBrand, CONTROL.focusBrandSoft, or PROMO_CONTROL from @/theme/recipes.',
   },
 ]
 
@@ -344,6 +344,18 @@ export const panelPresetRestrictedSyntax = [
       'JSXOpeningElement[name.name="Panel"] > JSXAttribute[name.name=/^(title|variant|scroll|spacing|hideHeader|className|bodyClassName|footerClassName)$/]',
     message:
       'Use a Panel preset from @/components/surfaces. Do not pass title, variant, className, or other chrome props.',
+  },
+]
+
+/** Raw hex colors in UI code — use tokens and @/theme/recipes. */
+export const hexColorLiteralSyntax = [
+  {
+    selector: 'Literal[value=/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/]',
+    message: 'Use semantic color tokens or theme recipes, not hex literals in TSX.',
+  },
+  {
+    selector: 'TemplateElement[value.raw=/#[0-9a-fA-F]{3,8}/]',
+    message: 'Use semantic color tokens or theme recipes, not hex literals in TSX.',
   },
 ]
 

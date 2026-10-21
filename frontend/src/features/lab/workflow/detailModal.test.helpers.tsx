@@ -177,7 +177,7 @@ type TestDetailModalBodyProps = {
   orderTest: OrderTest | undefined;
   isValidate: boolean;
   comments: string;
-  resultsPanelPreset: 'lab.modal.resultValidation' | 'lab.modal.recordedResults';
+  resultsPanelPreset: 'compact.modal.resultValidation' | 'compact.modal.recordedResults';
   onCommentsChange: (value: string) => void;
   onApprove: () => void;
   criticalRecord: CriticalValueRecord | undefined;
@@ -248,7 +248,7 @@ export function TestDetailModalBody({
       )}
 
       {isValidate && criticalRecord ? (
-        <Panel preset="lab.modal.criticalValueNotification">
+        <Panel preset="compact.modal.criticalValueNotification">
           <CriticalValueActions record={criticalRecord} onUpdated={onCriticalValueUpdated} />
         </Panel>
       ) : null}
@@ -289,7 +289,7 @@ export function buildTestDetailGridSections(
 ): DetailGridSectionConfig[] {
   return [
     {
-      preset: 'lab.modal.workflow',
+      preset: 'compact.modal.workflow',
       fields: buildOrderTestWorkflowFields(orderTest, {
         linked,
         onOpenLinkedTest: options.onOpenLinkedTest,
@@ -297,7 +297,7 @@ export function buildTestDetailGridSections(
       }),
     },
     {
-      preset: 'lab.modal.testOverview',
+      preset: 'compact.modal.testOverview',
       fields: buildOrderTestOverviewFields(orderTest, catalogTest, {
         onCatalogNavigate: options.onCatalogNavigate,
       }),

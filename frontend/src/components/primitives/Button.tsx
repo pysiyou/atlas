@@ -5,7 +5,7 @@
 
 import React, { forwardRef, memo, type ButtonHTMLAttributes } from 'react';
 import { SpinnerLoader } from '@/components/loaders/SpinnerLoader';
-import { BUTTON_TYPE, CONTROL, ICON_SIZE, RADIUS } from '@/theme/recipes';
+import { ICON_SIZE, iconButton as iconButtonRecipe, labelButton as labelButtonRecipe } from '@/theme/recipes';
 import { cn } from '@/utils/cn';
 import { Icon, type IconName } from './Icon';
 
@@ -25,36 +25,10 @@ export type IconButtonSize = ButtonSize;
 export type ButtonLayout = 'text' | 'icon-text';
 export type IconButtonShape = 'circle' | 'square';
 
-const chrome =
-  `inline-flex shrink-0 items-center justify-center font-normal whitespace-nowrap overflow-hidden cursor-pointer transition-colors duration-200 ${CONTROL.focusVisible} disabled:opacity-50 disabled:cursor-not-allowed`;
-
-const tone: Record<BaseVariant, string> = {
-  primary: 'bg-brand text-on-brand hover:bg-brand-hover focus-visible:ring-brand',
-  secondary: 'bg-surface-hover text-text-primary hover:bg-border-subtle focus-visible:ring-text-muted',
-  danger: 'bg-danger text-on-danger hover:bg-danger-hover focus-visible:ring-danger',
-  success: 'bg-success text-on-success hover:bg-success-hover focus-visible:ring-success',
-  warning: 'bg-warning text-on-warning hover:bg-warning-hover focus-visible:ring-warning',
-  outline:
-    'border-2 border-border-strong bg-transparent text-text-secondary hover:bg-surface-hover focus-visible:ring-text-muted',
-  ghost: 'bg-transparent text-text-secondary hover:bg-surface-hover focus-visible:ring-text-muted',
-};
-
-const labelButtonSize: Record<ButtonSize, string> = {
-  sm: `gap-space-1-5 px-space-3 py-space-1-5 ${BUTTON_TYPE.sm} ${RADIUS.button}`,
-  md: `gap-space-1-5 px-space-4 py-space-2 ${BUTTON_TYPE.md} ${RADIUS.button}`,
-  lg: `gap-space-1-5 px-table-cell-x-default py-space-3 ${BUTTON_TYPE.lg} ${RADIUS.button}`,
-};
-
 const labelIconSize: Record<ButtonSize, string> = {
   sm: ICON_SIZE.labelIcon.sm,
   md: ICON_SIZE.labelIcon.md,
   lg: ICON_SIZE.labelIcon.lg,
-};
-
-const iconButtonBox: Record<ButtonSize, string> = {
-  sm: ICON_SIZE.button.sm,
-  md: ICON_SIZE.button.md,
-  lg: ICON_SIZE.button.lg,
 };
 
 const iconButtonIconSize: Record<ButtonSize, string> = {
@@ -63,18 +37,16 @@ const iconButtonIconSize: Record<ButtonSize, string> = {
   lg: ICON_SIZE.md,
 };
 
-const iconButtonShape: Record<IconButtonShape, string> = {
-  circle: RADIUS.buttonCircle,
-  square: RADIUS.buttonSquare,
-};
-
 function labelButtonClasses(
   variant: BaseVariant,
   size: ButtonSize,
   fullWidth?: boolean,
   className?: string
 ): string {
-  return cn(chrome, tone[variant], labelButtonSize[size], fullWidth && 'w-full', className);
+  return cn(
+    labelButtonRecipe({ intent: variant, size, fullWidth: fullWidth ? true : false }),
+    className
+  );
 }
 
 function iconButtonClasses(
@@ -83,7 +55,7 @@ function iconButtonClasses(
   shape: IconButtonShape,
   className?: string
 ): string {
-  return cn(chrome, tone[variant], iconButtonBox[size], iconButtonShape[shape], className);
+  return cn(iconButtonRecipe({ intent: variant, size, shape }), className);
 }
 
 function resolveLayout(

@@ -3,7 +3,7 @@
  */
 
 import { auditPanelPresets, catalogPanelPresets, dashboardPanelPresets, paymentPanelPresets, reportPanelPresets } from './shared';
-import { labPanelPresets } from './lab';
+import { compactPanelPresets } from './compactPanels';
 import { orderPanelPresets } from './orders';
 import { patientPanelPresets } from './patient';
 import type { PanelPresetDefinition } from './types';
@@ -22,7 +22,7 @@ export { PANEL_BODY_LAYOUT, PANEL_SCROLL, PANEL_SHELL_LAYOUT, PANEL_SPACING } fr
 export const PANEL_PRESETS = {
   ...patientPanelPresets,
   ...orderPanelPresets,
-  ...labPanelPresets,
+  ...compactPanelPresets,
   ...dashboardPanelPresets,
   ...auditPanelPresets,
   ...paymentPanelPresets,

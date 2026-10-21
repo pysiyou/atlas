@@ -13,7 +13,7 @@ import { useLabWorkflowCardClickGuard, useOrderTestQueueState } from '../hooks';
 import { isLabActionAllowed } from '../utils/queueDisplay';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
-import { LAB_MOBILE_CARD } from '@/theme/recipes';
+import { MOBILE_LIST_CARD } from '@/theme/recipes';
 import type { Test, TestWithContext } from '@/types';
 import { QueueCard, QueueCardMobile } from './queueCardLayout';
 import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';
@@ -187,7 +187,7 @@ function ResultEntryCardMobile({
       padding="sm"
       hover={canEnter}
       className={cn(
-        LAB_MOBILE_CARD.surface,
+        MOBILE_LIST_CARD.surface,
         showAttemptIndicator && 'border-warning-stroke-emphasis',
         !canEnter && 'opacity-70 cursor-not-allowed'
       )}

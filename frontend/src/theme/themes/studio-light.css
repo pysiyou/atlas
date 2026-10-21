@@ -35,7 +35,7 @@
   --primitive-neutral-900: #1a1d1f;
   --primitive-neutral-950: #0f1112;
 
-  --primitive-surface-report: #eef6f6;
+  --primitive-surface-document: #eef6f6;
 
   --text: #1a1d1f;
   --text-secondary: #6f767e;
@@ -122,10 +122,10 @@
   --toast-border: rgb(26 29 31 / 0.08);
   --toast-track: rgb(26 29 31 / 0.06);
 
-  --primitive-auth-accent: var(--primitive-brand-600);
-  --primitive-auth-accent-medium: var(--primitive-brand-500);
-  --primitive-auth-input-focus: var(--primitive-brand-400);
-  --primitive-auth-text-light: var(--primitive-brand-300);
+  --primitive-promo-accent: var(--primitive-brand-600);
+  --primitive-promo-accent-medium: var(--primitive-brand-500);
+  --primitive-promo-input-focus: var(--primitive-brand-400);
+  --primitive-promo-text-light: var(--primitive-brand-300);
 
   --workflow-collection-fg: var(--primitive-brand-800);
   --workflow-collection-bg: var(--primitive-brand-100);

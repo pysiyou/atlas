@@ -2,10 +2,10 @@
  * Patient, test name, and IDs — one wrapping row; cards hide secondary fields at narrow widths.
  */
 
-import React, { type ReactNode } from 'react';
-import { cn, formatDate } from '@/utils';
+import React from 'react';
 import { EntityId } from '@/components/display';
-import { LAB_CARD_CONTEXT } from '@/theme/recipes';
+import { IdentityInline, type IdentitySegment } from '@/components/layout';
+import { formatDate } from '@/utils';
 
 export interface LabIdentityContext {
   patientName?: string;
@@ -25,103 +25,91 @@ interface LabIdentityRowProps {
   compact?: boolean;
 }
 
-function InlineDot({ className }: { className?: string }) {
-  return (
-    <span className={cn(LAB_CARD_CONTEXT.separator, className)}>{LAB_CARD_CONTEXT.inlineDot}</span>
-  );
-}
-
-function HiddenAt({ hide, children }: { hide?: string; children: ReactNode }) {
-  if (!hide) return <>{children}</>;
-  return <span className={hide}>{children}</span>;
-}
-
 export const LabIdentityRow: React.FC<LabIdentityRowProps> = ({
   context,
   className,
   compact = false,
 }) => {
   const idClass = 'whitespace-nowrap';
-  const nameClass = cn(LAB_CARD_CONTEXT.patientName, compact && 'min-w-0 truncate');
-  const hideMd = compact ? 'hidden md:inline' : undefined;
-  const hideLg = compact ? 'hidden lg:inline' : undefined;
+  const hideMd = compact ? ('md' as const) : undefined;
+  const hideLg = compact ? ('lg' as const) : undefined;
 
-  const parts: ReactNode[] = [];
-  let needsSep = false;
+  const segments: IdentitySegment[] = [];
 
   if (context.patientName) {
-    parts.push(
-      <span key="patient" className={nameClass}>
-        {context.patientName}
-      </span>
-    );
-    needsSep = true;
+    segments.push({
+      kind: 'text',
+      key: 'patient',
+      text: context.patientName,
+      emphasis: 'primary',
+      truncate: compact,
+    });
   }
   if (context.entityName) {
-    if (needsSep) parts.push(<InlineDot key="dot-name" />);
-    parts.push(
-      <span key="entityName" className={cn(nameClass, 'normal-case')} title={context.entityName}>
-        {context.entityName}
-      </span>
-    );
-    needsSep = true;
+    segments.push({
+      kind: 'text',
+      key: 'entityName',
+      text: context.entityName,
+      emphasis: 'primary',
+      capitalize: false,
+      truncate: compact,
+    });
   }
 
-  if (needsSep) parts.push(<InlineDot key="dot-ord" />);
-  parts.push(
-    <EntityId key="ord" type="order" value={context.orderId} className={idClass} />
-  );
+  segments.push({
+    kind: 'node',
+    key: 'ord',
+    node: <EntityId type="order" value={context.orderId} className={idClass} />,
+  });
 
   if (context.orderTestId != null) {
-    parts.push(<InlineDot key="dot-tst" className={hideMd} />);
-    parts.push(
-      <HiddenAt key="tst" hide={hideMd}>
-        <EntityId type="orderTest" value={context.orderTestId} className={idClass} />
-      </HiddenAt>
-    );
+    segments.push({
+      kind: 'node',
+      key: 'tst',
+      node: <EntityId type="orderTest" value={context.orderTestId} className={idClass} />,
+      hideBelow: hideMd,
+    });
   }
   if (context.sampleId != null) {
-    parts.push(<InlineDot key="dot-sam" className={hideMd} />);
-    parts.push(
-      <HiddenAt key="sam" hide={hideMd}>
-        <EntityId type="sample" value={context.sampleId} className={idClass} />
-      </HiddenAt>
-    );
+    segments.push({
+      kind: 'node',
+      key: 'sam',
+      node: <EntityId type="sample" value={context.sampleId} className={idClass} />,
+      hideBelow: hideMd,
+    });
   }
   if (context.entityCode) {
-    parts.push(<InlineDot key="dot-code" className={context.entityName ? hideLg : hideMd} />);
-    parts.push(
-      <HiddenAt key="code" hide={context.entityName ? hideLg : hideMd}>
-        <EntityId className={idClass}>{context.entityCode}</EntityId>
-      </HiddenAt>
-    );
+    segments.push({
+      kind: 'node',
+      key: 'code',
+      node: <EntityId className={idClass}>{context.entityCode}</EntityId>,
+      hideBelow: context.entityName ? hideLg : hideMd,
+    });
   }
   if (context.patientDob) {
-    parts.push(<InlineDot key="dot-dob" className={hideLg} />);
-    parts.push(
-      <HiddenAt key="dob" hide={hideLg}>
-        <span className="whitespace-nowrap">DOB {formatDate(context.patientDob)}</span>
-      </HiddenAt>
-    );
+    segments.push({
+      kind: 'text',
+      key: 'dob',
+      text: `DOB ${formatDate(context.patientDob)}`,
+      hideBelow: hideLg,
+    });
   }
   if (context.referringPhysician) {
-    parts.push(<InlineDot key="dot-phys" className={hideLg} />);
-    parts.push(
-      <HiddenAt key="phys" hide={hideLg}>
-        <span className={cn(nameClass, 'truncate')}>{context.referringPhysician}</span>
-      </HiddenAt>
-    );
+    segments.push({
+      kind: 'text',
+      key: 'phys',
+      text: context.referringPhysician,
+      emphasis: 'primary',
+      truncate: true,
+      hideBelow: hideLg,
+    });
   }
 
   return (
-    <div
-      className={cn(
-        LAB_CARD_CONTEXT.container,
-        compact && 'flex-nowrap overflow-hidden',
-        className
-      )}
-    >
-      {parts}
-    </div>
+    <IdentityInline
+      className={className}
+      nowrap={compact}
+      segments={segments}
+    />
   );
 };

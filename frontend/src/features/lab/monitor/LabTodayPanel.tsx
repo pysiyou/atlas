@@ -2,10 +2,10 @@
  * Lab dashboard Today panel — milestone mix among tests worked today (UTC).
  */
 import React, { useMemo } from 'react';
-import { EmptyState, EMPTY_COPY, DASHBOARD_EMPTY_STATE_TEXT } from '@/components/display';
+import { EmptyState, EMPTY_COPY, DENSE_EMPTY_STATE_TEXT } from '@/components/display';
 import { Panel } from '@/components/surfaces/Panel';
 import type { LabTodayPanelSnapshot } from './monitorModel';
-import { TODAY_KPI, TODAY_PANEL } from '@/theme/recipes';
+import { METER_KPI, KPI_PANEL } from '@/theme/recipes';
 import { LAB_COPY } from '../constants/labConstants';
 import { formatDate } from '@/utils';
 import {
@@ -36,30 +36,30 @@ export const LabTodayPanel: React.FC<LabTodayPanelProps> = ({ todayPanel }) => {
         <TodayPanelHeaderMeta headerRange={headerRange} totalWorked={totalWorked} />
       }
     >
-      <div className={TODAY_PANEL.body}>
+      <div className={KPI_PANEL.body}>
         {totalWorked === 0 ? (
           <EmptyState
-            {...DASHBOARD_EMPTY_STATE_TEXT}
+            {...DENSE_EMPTY_STATE_TEXT}
             title={EMPTY_COPY.dashboardTodayKpi.title}
             description={EMPTY_COPY.dashboardTodayKpi.description}
           />
         ) : (
           <>
-            <div className={TODAY_PANEL.main} aria-label={LAB_COPY.dashboardToday.summaryAria}>
-              <div className={TODAY_PANEL.stack}>
-                <div className={TODAY_KPI.table} role="table">
-                  <div className={TODAY_KPI.tableHeadRow} role="row">
-                    <span className={TODAY_KPI.tableHeadCell} role="columnheader">
+            <div className={KPI_PANEL.main} aria-label={LAB_COPY.dashboardToday.summaryAria}>
+              <div className={KPI_PANEL.stack}>
+                <div className={METER_KPI.table} role="table">
+                  <div className={METER_KPI.tableHeadRow} role="row">
+                    <span className={METER_KPI.tableHeadCell} role="columnheader">
                       {LAB_COPY.dashboardToday.columnMilestone}
                     </span>
-                    <span className={TODAY_KPI.tableHeadCell} role="columnheader">
+                    <span className={METER_KPI.tableHeadCell} role="columnheader">
                       {LAB_COPY.dashboardToday.columnActivity}
                     </span>
-                    <span className={TODAY_KPI.tableHeadCellRight} role="columnheader">
+                    <span className={METER_KPI.tableHeadCellRight} role="columnheader">
                       {LAB_COPY.dashboardToday.columnShare}
                     </span>
                   </div>
-                  <div className={TODAY_KPI.tableBody} role="rowgroup">
+                  <div className={METER_KPI.tableBody} role="rowgroup">
                     {segments.map((segment, index) => (
                       <TodayMilestoneRow
                         key={segment.key}
@@ -73,13 +73,13 @@ export const LabTodayPanel: React.FC<LabTodayPanelProps> = ({ todayPanel }) => {
               </div>
             </div>
 
-            <div className={TODAY_PANEL.footer}>
-              <div className={TODAY_KPI.tableTotal} role="row">
-                <span className={TODAY_KPI.tableTotalLabel}>{LAB_COPY.dashboardToday.total}</span>
+            <div className={KPI_PANEL.footer}>
+              <div className={METER_KPI.tableTotal} role="row">
+                <span className={METER_KPI.tableTotalLabel}>{LAB_COPY.dashboardToday.total}</span>
                 <span aria-hidden />
-                <span className={TODAY_KPI.tableTotalValue}>
+                <span className={METER_KPI.tableTotalValue}>
                   100%
-                  <span className={TODAY_KPI.tableCount}>
+                  <span className={METER_KPI.tableCount}>
                     {' '}
                     · {totalWorked.toLocaleString()}
                   </span>

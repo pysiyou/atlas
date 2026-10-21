@@ -22,7 +22,7 @@
   --surface-hover: var(--primitive-neutral-50);
   --surface-selected: var(--primitive-brand-100);
   --surface-elev: var(--primitive-neutral-0);
-  --surface-report: var(--primitive-surface-report);
+  --surface-document: var(--primitive-surface-document);
   --surface-sidebar: var(--surface);
   --surface-table-header: var(--surface-page);
 
@@ -247,40 +247,40 @@
   --toast-action-hover: rgba(0, 0, 0, 0.05);
 
   /* ═══════════════════════════════════════════════════════════════════
-     AUTH (Isolated module)
+     PROMO (marketing / sign-in surfaces — canonical names)
      ═══════════════════════════════════════════════════════════════════ */
-  --auth-canvas: var(--primitive-auth-canvas);
-  --auth-panel: var(--primitive-auth-panel);
-  --auth-panel-hover: var(--primitive-auth-panel-hover);
-  --auth-input-bg: var(--primitive-auth-panel);
-  --auth-input-border: var(--primitive-auth-border);
-  --auth-input-border-focus: var(--primitive-auth-input-focus);
-  --auth-text-primary: var(--primitive-auth-text);
-  --auth-text-secondary: var(--primitive-auth-text-secondary);
-  --auth-text-muted: var(--primitive-auth-text-muted);
-  --auth-text-light: var(--primitive-auth-text-light);
-  --auth-accent: var(--primitive-auth-accent);
-  --auth-accent-medium: var(--primitive-auth-accent-medium);
-  --auth-accent-hover: var(--primitive-auth-accent-medium);
-  --auth-border: var(--primitive-auth-border);
-  --auth-border-light: var(--primitive-auth-border-light);
-  --auth-border-hover: var(--primitive-auth-border-hover);
-  --auth-error-bg: var(--primitive-auth-error-bg);
-  --auth-error-bg-light: var(--primitive-auth-error-bg-light);
-  --auth-error-border: var(--primitive-auth-error-border);
-  --auth-error-text: var(--primitive-auth-error-text);
-  --auth-feature-card-bg: var(--primitive-auth-panel);
-  --auth-feature-card-hover: var(--primitive-auth-panel-hover);
-  --auth-feature-card-border: var(--primitive-auth-border);
-  --auth-card-icon-bg: var(--primitive-auth-border);
-  --auth-card-icon-hover: var(--primitive-auth-border-light);
-  --auth-card-icon-border: var(--primitive-auth-border);
-  --auth-badge-bg: var(--primitive-auth-border);
-  --auth-badge-border: var(--primitive-auth-panel);
-  --auth-badge-icon: var(--primitive-auth-text-light);
-  --auth-gradient-start: color-mix(in srgb, var(--primitive-auth-accent) 40%, transparent);
-  --auth-gradient-end: color-mix(in srgb, var(--primitive-auth-canvas) 80%, transparent);
-  --auth-gradient-accent: color-mix(in srgb, var(--primitive-auth-text-light) 15%, transparent);
+  --promo-canvas: var(--primitive-promo-canvas);
+  --promo-panel: var(--primitive-promo-panel);
+  --promo-panel-hover: var(--primitive-promo-panel-hover);
+  --promo-input-bg: var(--primitive-promo-panel);
+  --promo-input-border: var(--primitive-promo-border);
+  --promo-input-border-focus: var(--primitive-promo-input-focus);
+  --promo-text-primary: var(--primitive-promo-text);
+  --promo-text-secondary: var(--primitive-promo-text-secondary);
+  --promo-text-muted: var(--primitive-promo-text-muted);
+  --promo-text-light: var(--primitive-promo-text-light);
+  --promo-accent: var(--primitive-promo-accent);
+  --promo-accent-medium: var(--primitive-promo-accent-medium);
+  --promo-accent-hover: var(--primitive-promo-accent-medium);
+  --promo-border: var(--primitive-promo-border);
+  --promo-border-light: var(--primitive-promo-border-light);
+  --promo-border-hover: var(--primitive-promo-border-hover);
+  --promo-error-bg: var(--primitive-promo-error-bg);
+  --promo-error-bg-light: var(--primitive-promo-error-bg-light);
+  --promo-error-border: var(--primitive-promo-error-border);
+  --promo-error-text: var(--primitive-promo-error-text);
+  --promo-feature-card-bg: var(--primitive-promo-panel);
+  --promo-feature-card-hover: var(--primitive-promo-panel-hover);
+  --promo-feature-card-border: var(--primitive-promo-border);
+  --promo-card-icon-bg: var(--primitive-promo-border);
+  --promo-card-icon-hover: var(--primitive-promo-border-light);
+  --promo-card-icon-border: var(--primitive-promo-border);
+  --promo-badge-bg: var(--primitive-promo-border);
+  --promo-badge-border: var(--primitive-promo-panel);
+  --promo-badge-icon: var(--primitive-promo-text-light);
+  --promo-gradient-start: color-mix(in srgb, var(--primitive-promo-accent) 40%, transparent);
+  --promo-gradient-end: color-mix(in srgb, var(--primitive-promo-canvas) 80%, transparent);
+  --promo-gradient-accent: color-mix(in srgb, var(--primitive-promo-text-light) 15%, transparent);
 
   /* ═══════════════════════════════════════════════════════════════════
      CONTAINER COLORS (sample tube caps)

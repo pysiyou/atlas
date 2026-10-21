@@ -7,7 +7,7 @@ import React from 'react';
 import { Icon } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 import { companyConfig } from '@/config';
-import { AUTH_SHADOW, AUTH_TYPE, RADIUS } from '@/theme/recipes';
+import { PROMO_SHADOW, PROMO_TYPE, RADIUS } from '@/theme/recipes';
 
 interface LoginBrandingPanelProps {
   isVisible: boolean;
@@ -23,7 +23,7 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
 
   return (
     <div
-      className={`hidden lg:flex flex-col items-start text-auth-fg space-y-space-10 flex-1 max-w-lg transition-all duration-1000 delay-200 ${
+      className={`hidden lg:flex flex-col items-start text-promo-fg space-y-space-10 flex-1 max-w-lg transition-all duration-1000 delay-200 ${
         isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
       }`}
     >
@@ -33,25 +33,25 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
           {/* Logo container with matte finish */}
           <div className="relative">
             <div
-              className={`absolute inset-0 ${RADIUS.menu} bg-auth-accent-medium blur-xl opacity-30`}
+              className={`absolute inset-0 ${RADIUS.menu} bg-promo-accent-medium blur-xl opacity-30`}
               style={{ animation: 'pulse-ring 3s ease-in-out infinite' }}
             />
-            <div className={`relative w-16 h-16 bg-auth-accent ${RADIUS.menu} flex items-center justify-center ${AUTH_SHADOW.accent} transform hover:scale-105 transition-transform duration-300`}>
+            <div className={`relative w-16 h-16 bg-promo-accent ${RADIUS.menu} flex items-center justify-center ${PROMO_SHADOW.accent} transform hover:scale-105 transition-transform duration-300`}>
               <Icon name={ICONS.ui.appLogo} className="w-9 h-9" />
             </div>
           </div>
           <div>
-            <h1 className="font-display text-5xl text-auth-fg tracking-tight">
+            <h1 className="font-display text-5xl text-promo-fg tracking-tight">
               {company.company.name}
             </h1>
-            <p className={AUTH_TYPE.brandingKicker}>
+            <p className={PROMO_TYPE.brandingKicker}>
               {company.company.subtitle}
             </p>
           </div>
         </div>
 
         {/* Tagline */}
-        <p className={AUTH_TYPE.brandingLead}>
+        <p className={PROMO_TYPE.brandingLead}>
           {company.company.tagline}
         </p>
       </div>
@@ -61,20 +61,20 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
         {features.map((feature, index) => (
           <div
             key={feature.title}
-            className={`group flex items-start gap-space-4 p-panel ${RADIUS.menu} bg-auth-card border border-auth-card-stroke hover:bg-auth-card-hover hover:border-auth-card-stroke transition-all duration-300 ${
+            className={`group flex items-start gap-space-4 p-panel ${RADIUS.menu} bg-promo-card border border-promo-card-stroke hover:bg-promo-card-hover hover:border-promo-card-stroke transition-all duration-300 ${
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
             }`}
             style={{ transitionDelay: `${400 + index * 100}ms` }}
           >
             {/* Feature icon */}
-            <div className={`w-10 h-10 ${RADIUS.menu} bg-auth-card-icon border border-auth-card-icon-border flex items-center justify-center flex-shrink-0 group-hover:bg-auth-card-icon-hover transition-colors duration-300`}>
-              <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-auth-fg-light" />
+            <div className={`w-10 h-10 ${RADIUS.menu} bg-promo-card-icon border border-promo-card-icon-border flex items-center justify-center flex-shrink-0 group-hover:bg-promo-card-icon-hover transition-colors duration-300`}>
+              <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-promo-fg-light" />
             </div>
             <div>
-              <h3 className={AUTH_TYPE.featureTitle}>
+              <h3 className={PROMO_TYPE.featureTitle}>
                 {feature.title}
               </h3>
-              <p className={`${AUTH_TYPE.featureBody} mt-space-1 leading-relaxed`}>
+              <p className={`${PROMO_TYPE.featureBody} mt-space-1 leading-relaxed`}>
                 {feature.description}
               </p>
             </div>
@@ -83,21 +83,21 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
       </div>
 
       {/* Trust indicators */}
-      <div className="pt-space-6 border-t border-auth-stroke w-full">
+      <div className="pt-space-6 border-t border-promo-stroke w-full">
         <div className="flex items-center gap-space-3">
           <div className="flex -space-x-space-2">
             {[1, 2, 3].map(i => (
               <div
                 key={i}
-                className={`w-8 h-8 ${RADIUS.pill} bg-auth-badge border-2 border-auth-badge-border flex items-center justify-center`}
+                className={`w-8 h-8 ${RADIUS.pill} bg-promo-badge border-2 border-promo-badge-border flex items-center justify-center`}
               >
-                <Icon name={ICONS.dataFields.user} className="w-4 h-4 text-auth-badge-icon" />
+                <Icon name={ICONS.dataFields.user} className="w-4 h-4 text-promo-badge-icon" />
               </div>
             ))}
           </div>
-          <p className={AUTH_TYPE.footer}>
+          <p className={PROMO_TYPE.footer}>
             {company.marketing.trustIndicator.text}{' '}
-            <span className="text-auth-fg-light font-normal">
+            <span className="text-promo-fg-light font-normal">
               {company.marketing.trustIndicator.count}
             </span>{' '}
             {company.marketing.trustIndicator.audience}

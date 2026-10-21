@@ -8,7 +8,7 @@ import { PaymentMethodBadge, PaymentStatusBadge } from '@/features/payments';
 import { cn, displayId, formatCurrency, formatDateTime } from '@/utils';
 import { getActiveTests, getActiveTotal } from '../utils/orderCalculator';
 import type { Order, OrderTest } from '@/types';
-import { DETAIL_TYPE, RADIUS, RECEIPT_TYPE, TYPE } from '@/theme/recipes';
+import { DETAIL_TYPE, RADIUS, DOCUMENT_TYPE, TYPE } from '@/theme/recipes';
 
 export type OrderReceiptVariant = 'panel' | 'compact' | 'detailed';
 
@@ -61,9 +61,9 @@ function ReceiptHeader({
         <>
           <div className="flex justify-between items-center mb-space-2">
             {order.patientName ? (
-              <p className={RECEIPT_TYPE.detailedPatientName}>{order.patientName}</p>
+              <p className={DOCUMENT_TYPE.detailedPatientName}>{order.patientName}</p>
             ) : (
-              <p className={RECEIPT_TYPE.detailedPatientMissing}>No patient name</p>
+              <p className={DOCUMENT_TYPE.detailedPatientMissing}>No patient name</p>
             )}
             <div className="flex items-center gap-space-2">
               <PaymentStatusBadge status={order.paymentStatus} size="xs" />
@@ -71,22 +71,22 @@ function ReceiptHeader({
             </div>
           </div>
           <div className="space-y-space-1-5">
-            <div className={cn('flex items-center', RECEIPT_TYPE.fieldRow)}>
+            <div className={cn('flex items-center', DOCUMENT_TYPE.fieldRow)}>
               <span className="text-text-tertiary w-28">Order Number:</span>
               <EntityId type="order" value={order.orderId} />
             </div>
-            <div className={cn('flex items-center', RECEIPT_TYPE.fieldRow)}>
+            <div className={cn('flex items-center', DOCUMENT_TYPE.fieldRow)}>
               <span className="text-text-tertiary w-28">Patient Number:</span>
               <EntityId type="patient" value={order.patientId} />
             </div>
-            <div className={cn('flex items-center', RECEIPT_TYPE.fieldRow)}>
+            <div className={cn('flex items-center', DOCUMENT_TYPE.fieldRow)}>
               <span className="text-text-tertiary w-28">Order Date:</span>
               <span className="text-text-secondary font-normal">
                 {formatDateTime(order.orderDate)}
               </span>
             </div>
             {paymentDate && (
-              <div className={cn('flex items-center', RECEIPT_TYPE.fieldRow)}>
+              <div className={cn('flex items-center', DOCUMENT_TYPE.fieldRow)}>
                 <span className="text-text-tertiary w-28">Payment Date:</span>
                 <span className="text-text-secondary font-normal">
                   {formatDateTime(paymentDate)}
@@ -99,10 +99,10 @@ function ReceiptHeader({
         <div className="flex items-center justify-between gap-space-3">
           <div className="min-w-0 flex-1 space-y-space-0-5">
             {order.patientName ? (
-              <p className={cn(RECEIPT_TYPE.panelPatientName, 'truncate')}>{order.patientName}</p>
+              <p className={cn(DOCUMENT_TYPE.panelPatientName, 'truncate')}>{order.patientName}</p>
             ) : null}
-            <div className={RECEIPT_TYPE.metaRow}>
-              <span className={cn(RECEIPT_TYPE.metaPart, 'min-w-0 truncate')}>
+            <div className={DOCUMENT_TYPE.metaRow}>
+              <span className={cn(DOCUMENT_TYPE.metaPart, 'min-w-0 truncate')}>
                 {displayId.order(order.orderId)}
               </span>
               {order.orderDate && (
@@ -110,7 +110,7 @@ function ReceiptHeader({
                   <span className="text-text-disabled select-none" aria-hidden>
                     •
                   </span>
-                  <span className={cn(RECEIPT_TYPE.metaPart, 'shrink-0 whitespace-nowrap')}>
+                  <span className={cn(DOCUMENT_TYPE.metaPart, 'shrink-0 whitespace-nowrap')}>
                     {formatDateTime(order.orderDate)}
                   </span>
                 </>
@@ -133,7 +133,7 @@ function ReceiptHeader({
               type="order"
               value={order.orderId}
               variant="secondary"
-              className={RECEIPT_TYPE.compactEntityId}
+              className={DOCUMENT_TYPE.compactEntityId}
             />
             {showPaymentStatusBadge && (
               <PaymentStatusBadge status={order.paymentStatus} size="xs" className="shrink-0" />
@@ -157,7 +157,7 @@ function ReceiptItemRow({ test, detailed }: { test: OrderTest; detailed: boolean
     ) : null;
 
   return (
-    <li className={detailed ? RECEIPT_TYPE.rowListDetailed : RECEIPT_TYPE.rowListCompact}>
+    <li className={detailed ? DOCUMENT_TYPE.rowListDetailed : DOCUMENT_TYPE.rowListCompact}>
       <span className={cn('flex min-w-0 flex-1 gap-space-2 items-start', detailed && 'gap-space-2-5')}>
         <span className={cn(`w-1 h-1 ${RADIUS.pill} bg-text-muted shrink-0 mt-space-1-5`)} />
         {detailed ? (
@@ -215,7 +215,7 @@ function ReceiptItems({
           ))}
         </ul>
       ) : (
-        <p className={isDetailed ? RECEIPT_TYPE.emptyDetailed : RECEIPT_TYPE.emptyCompact}>
+        <p className={isDetailed ? DOCUMENT_TYPE.emptyDetailed : DOCUMENT_TYPE.emptyCompact}>
           No items
         </p>
       )}
@@ -246,10 +246,10 @@ export function ReceiptTotal({
           isDetailed && 'bg-surface-page',
         )}
       >
-        <span className={isDetailed ? RECEIPT_TYPE.totalLabelDetailed : RECEIPT_TYPE.totalLabelCompact}>
+        <span className={isDetailed ? DOCUMENT_TYPE.totalLabelDetailed : DOCUMENT_TYPE.totalLabelCompact}>
           Total
         </span>
-        <span className={cn('font-normal tabular-nums', isDetailed ? RECEIPT_TYPE.totalValueDetailed : RECEIPT_TYPE.totalValueCompact)}>
+        <span className={cn('font-normal tabular-nums', isDetailed ? DOCUMENT_TYPE.totalValueDetailed : DOCUMENT_TYPE.totalValueCompact)}>
           {formatCurrency(total)}
         </span>
       </div>

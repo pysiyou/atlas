@@ -13,10 +13,10 @@ import { CollectionOperationalMetaRow } from '../components/CollectionOperationa
 import { buildCollectionOperationalMetaItems } from '../utils/collectionOperationalMetaItems';
 import { buildSampleCollectionTimelineLines } from '../constants/labWorkflowAuditLines';
 import {
-  LAB_CARD_ALERT,
-  LAB_CARD_CONTEXT,
-  LAB_CARD_HEADER,
-  LAB_CARD_QUEUE_IDENTITY,
+  QUEUE_CARD_ALERT,
+  IDENTITY_INLINE,
+  CARD_HEADER_GRID,
+  IDENTITY_STACK,
 } from '@/theme/recipes';
 
 export interface SampleCollectionCardLeftColumnProps {
@@ -58,7 +58,7 @@ export interface SampleCollectionCardSharedData {
 }
 
 function InlineDot() {
-  return <span className={LAB_CARD_CONTEXT.separator}>{LAB_CARD_CONTEXT.inlineDot}</span>;
+  return <span className={IDENTITY_INLINE.separator}>{IDENTITY_INLINE.inlineDot}</span>;
 }
 
 function SampleCollectionIdentityLines({
@@ -79,7 +79,7 @@ function SampleCollectionIdentityLines({
   const line1: ReactNode[] = [];
   if (patientName) {
     line1.push(
-      <span key="patient" className={cn(LAB_CARD_CONTEXT.patientName, 'min-w-0 truncate')}>
+      <span key="patient" className={cn(IDENTITY_INLINE.primaryText, 'min-w-0 truncate')}>
         {patientName}
       </span>
     );
@@ -90,7 +90,7 @@ function SampleCollectionIdentityLines({
   const line2: ReactNode[] = [];
   if (referringPhysician) {
     line2.push(
-      <span key="phys" className={cn(LAB_CARD_QUEUE_IDENTITY.secondaryText, 'min-w-0 truncate')}>
+      <span key="phys" className={cn(IDENTITY_STACK.secondaryText, 'min-w-0 truncate')}>
         {referringPhysician}
       </span>
     );
@@ -104,7 +104,7 @@ function SampleCollectionIdentityLines({
   if (orderDate) {
     if (line2.length > 0) line2.push(<InlineDot key="dot-date" />);
     line2.push(
-      <span key="date" className={LAB_CARD_QUEUE_IDENTITY.secondaryDate}>
+      <span key="date" className={IDENTITY_STACK.secondaryDate}>
         {formatDate(orderDate)}
       </span>
     );
@@ -112,9 +112,9 @@ function SampleCollectionIdentityLines({
 
   return (
     <div className="flex min-w-0 flex-col gap-space-0-5">
-      <div className={cn(LAB_CARD_QUEUE_IDENTITY.primaryLine, 'min-w-0')}>{line1}</div>
+      <div className={cn(IDENTITY_STACK.primaryLine, 'min-w-0')}>{line1}</div>
       {line2.length > 0 ? (
-        <div className={cn(LAB_CARD_QUEUE_IDENTITY.secondaryLine, 'min-w-0')}>{line2}</div>
+        <div className={cn(IDENTITY_STACK.secondaryLine, 'min-w-0')}>{line2}</div>
       ) : null}
     </div>
   );
@@ -170,7 +170,7 @@ export function SampleCollectionCardLeftColumn({
   });
 
   return (
-    <div className={cn(LAB_CARD_HEADER.leftColumn, className)}>
+    <div className={cn(CARD_HEADER_GRID.leftColumn, className)}>
       <SampleCollectionIdentityLines
         patientName={patientName}
         sampleId={sample.sampleId}
@@ -178,7 +178,7 @@ export function SampleCollectionCardLeftColumn({
         referringPhysician={referringPhysician}
         orderDate={orderDate}
       />
-      <div className={LAB_CARD_ALERT.row}>
+      <div className={QUEUE_CARD_ALERT.row}>
         <SampleCollectionOperationsRow
           sample={sample}
           isPending={isPending}

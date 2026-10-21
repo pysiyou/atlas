@@ -6,11 +6,11 @@ import React, { type ReactNode } from 'react';
 import { RADIUS, SHADOW, SURFACE } from '@/theme/recipes';
 import { cn } from '@/utils';
 
-export type CardVariant = 'default' | 'lab' | 'metric';
+export type CardVariant = 'default' | 'interactive' | 'metric';
 
 const BOX_VARIANT_CLASSES: Record<CardVariant, string> = {
   default: '',
-  lab: `${SHADOW.subtle} hover:bg-surface-hover transition-colors duration-200`,
+  interactive: `${SHADOW.subtle} hover:bg-surface-hover transition-colors duration-200`,
   metric: 'hover:border-brand hover:border-opacity-50 transition-colors duration-200',
 };
 

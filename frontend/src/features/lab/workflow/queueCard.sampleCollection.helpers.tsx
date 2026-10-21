@@ -8,7 +8,7 @@ import { CollectionHeaderBadges } from '../components/LabWorkflowBadges';
 import { SampleCollectionPopover } from '../collection/SampleCollectionPopover';
 import { SampleRejectionPopover } from '../collection/SampleRejectionPopover';
 import { printSampleCollectionLabel } from '../utils';
-import { LAB_MOBILE_CARD } from '@/theme/recipes';
+import { MOBILE_LIST_CARD } from '@/theme/recipes';
 import { QueueCard, QueueCardMobile, QueueCardPanel, QueueCardTestList } from './queueCardLayout';
 import {
   SampleCollectionCardLeftColumn,
@@ -153,7 +153,7 @@ export function SampleCollectionCardMobile({
   );
 
   return (
-    <Card padding="sm" hover className={LAB_MOBILE_CARD.surface} onClick={() => handleCardClick()}>
+    <Card padding="sm" hover className={MOBILE_LIST_CARD.surface} onClick={() => handleCardClick()}>
       <QueueCardMobile
         leftColumn={leftColumn}
         badges={badges}

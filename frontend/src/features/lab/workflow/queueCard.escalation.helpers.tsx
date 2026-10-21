@@ -6,7 +6,7 @@ import { AttemptIndicator } from '../components/LabAttemptIndicators';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { SupervisorApprovalBadge } from '../components/LabResultStatusBadges';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
-import { LAB_CARD_BADGE_SIZE, LAB_CARD_TYPOGRAPHY } from '@/theme/recipes';
+import { QUEUE_CARD_BADGE_SIZE, QUEUE_CARD_TYPE } from '@/theme/recipes';
 import type { TestWithContext } from '@/types';
 import { TYPE } from '@/theme/recipes';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
@@ -20,7 +20,7 @@ export function EscalationExceptionBadges({ test }: { test: TestWithContext }) {
 
   return (
     <>
-      <SupervisorApprovalBadge size={LAB_CARD_BADGE_SIZE} />
+      <SupervisorApprovalBadge size={QUEUE_CARD_BADGE_SIZE} />
       <TestHeaderBadges test={test} variant="escalation" showStatus />
       {rejection.showAttemptIndicator ? (
         <AttemptIndicator
@@ -50,26 +50,26 @@ export function EscalationExceptionReviewBody({ test }: { test: TestWithContext 
     <div className={`space-y-space-1 ${TYPE.value}`}>
       {reasonCode ? (
         <div>
-          <span className={LAB_CARD_TYPOGRAPHY.fieldLabel}>Exception:</span>{' '}
-          <span className={LAB_CARD_TYPOGRAPHY.fieldValue}>{reasonCode}</span>
+          <span className={QUEUE_CARD_TYPE.fieldLabel}>Exception:</span>{' '}
+          <span className={QUEUE_CARD_TYPE.fieldValue}>{reasonCode}</span>
         </div>
       ) : null}
       {denyMessage ? (
         <div>
-          <span className={LAB_CARD_TYPOGRAPHY.fieldLabel}>Blocked:</span>{' '}
-          <span className={LAB_CARD_TYPOGRAPHY.fieldValue}>{denyMessage}</span>
+          <span className={QUEUE_CARD_TYPE.fieldLabel}>Blocked:</span>{' '}
+          <span className={QUEUE_CARD_TYPE.fieldValue}>{denyMessage}</span>
         </div>
       ) : null}
       {rejectionReason ? (
         <div>
-          <span className={LAB_CARD_TYPOGRAPHY.fieldLabel}>Reason:</span>{' '}
-          <span className={LAB_CARD_TYPOGRAPHY.fieldValue}>{rejectionReason}</span>
+          <span className={QUEUE_CARD_TYPE.fieldLabel}>Reason:</span>{' '}
+          <span className={QUEUE_CARD_TYPE.fieldValue}>{rejectionReason}</span>
         </div>
       ) : null}
       {rejectionNotes ? (
         <div>
-          <span className={LAB_CARD_TYPOGRAPHY.fieldLabel}>Notes:</span>{' '}
-          <span className={LAB_CARD_TYPOGRAPHY.fieldValue}>{rejectionNotes}</span>
+          <span className={QUEUE_CARD_TYPE.fieldLabel}>Notes:</span>{' '}
+          <span className={QUEUE_CARD_TYPE.fieldValue}>{rejectionNotes}</span>
         </div>
       ) : null}
     </div>

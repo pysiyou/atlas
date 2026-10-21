@@ -5,8 +5,8 @@
 import React from 'react';
 import { ErrorAlert } from '@/components/loaders';
 import { errorAlertMessage } from '@/utils/feedback';
-import { MONITOR_PANEL } from '@/theme/recipes';
-import { MONITOR_BOTTOM_PANEL, MONITOR_BOTTOM_ROW, MONITOR_PAGE, MONITOR_TABLE_WRAP } from '@/theme/recipes';
+import { SPLIT_WORKSPACE_PANEL } from '@/theme/recipes';
+import { SPLIT_BOTTOM_PANEL, SPLIT_BOTTOM_ROW, SPLIT_WORKSPACE_PAGE, SPLIT_TABLE_WRAP } from '@/theme/recipes';
 import { useLabMonitorViewModel } from './useLabMonitorViewModel';
 import { LabMonitorBoardSkeleton } from './LabMonitorBoardSkeleton';
 import { LabOrdersTable } from './LabOrdersTable';
@@ -23,7 +23,7 @@ export const LabMonitorBoard: React.FC = () => {
 
   if (board.isError) {
     return (
-      <div className={MONITOR_PANEL.page}>
+      <div className={SPLIT_WORKSPACE_PANEL.page}>
         <ErrorAlert
           error={{
             message: errorAlertMessage('lab.page.loadFailed', board.error),
@@ -35,20 +35,20 @@ export const LabMonitorBoard: React.FC = () => {
   }
 
   return (
-    <div className={MONITOR_PANEL.page}>
-      <div className={MONITOR_PAGE}>
-        <div className={MONITOR_BOTTOM_ROW}>
-          <div className={MONITOR_BOTTOM_PANEL}>
+    <div className={SPLIT_WORKSPACE_PANEL.page}>
+      <div className={SPLIT_WORKSPACE_PAGE}>
+        <div className={SPLIT_BOTTOM_ROW}>
+          <div className={SPLIT_BOTTOM_PANEL}>
             <LabTodayPanel todayPanel={board.todayPanel} />
           </div>
-          <div className={MONITOR_BOTTOM_PANEL}>
+          <div className={SPLIT_BOTTOM_PANEL}>
             <LabAttentionPanel items={board.attentionItems} attentionTotal={board.attentionTotal} />
           </div>
-          <div className={MONITOR_BOTTOM_PANEL}>
+          <div className={SPLIT_BOTTOM_PANEL}>
             <LabMonitorEventLogPanel />
           </div>
         </div>
-        <div className={MONITOR_TABLE_WRAP}>
+        <div className={SPLIT_TABLE_WRAP}>
           <LabOrdersTable />
         </div>
       </div>

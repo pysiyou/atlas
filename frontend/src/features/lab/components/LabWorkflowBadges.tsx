@@ -6,7 +6,7 @@
 import { memo, type ReactNode } from 'react';
 import type { BadgeSize } from '@/components/primitives';
 import type { TestWithContext } from '@/types';
-import { LAB_CARD_BADGE_SIZE } from '@/theme/recipes';
+import { QUEUE_CARD_BADGE_SIZE } from '@/theme/recipes';
 import { OrderTestStatusBadge } from '@/features/orders';
 import {
   LabPriorityBadge,
@@ -71,7 +71,7 @@ function TestStatusChip({
 function TestHeaderBadgesView({
   test,
   variant = 'entry',
-  size = LAB_CARD_BADGE_SIZE,
+  size = QUEUE_CARD_BADGE_SIZE,
   showStatus = false,
   trailing,
 }: TestHeaderBadgesProps) {

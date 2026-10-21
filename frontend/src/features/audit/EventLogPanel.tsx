@@ -19,13 +19,13 @@ import type {
 } from './types';
 export type EventLogPanelLayout = 'standalone' | 'embedded';
 
-const EVENT_LOG_PRESET: Record<'default' | 'lab' | 'monitor', PanelPresetId> = {
+const EVENT_LOG_PRESET: Record<'default' | 'compact' | 'monitor', PanelPresetId> = {
   default: 'audit.eventLog',
-  lab: 'audit.eventLog.lab',
+  compact: 'audit.eventLog.compact',
   monitor: 'audit.eventLog.monitor',
 };
 
-function eventLogPreset(panelVariant: 'default' | 'lab' | 'monitor'): PanelPresetId {
+function eventLogPreset(panelVariant: 'default' | 'compact' | 'monitor'): PanelPresetId {
   return EVENT_LOG_PRESET[panelVariant];
 }
 
@@ -34,7 +34,7 @@ export interface EventLogPanelProps {
   filterUi?: EventLogFilterUiConfig;
   filterDefaults?: Partial<EventLogUserFilters>;
   className?: string;
-  panelVariant?: 'default' | 'lab' | 'monitor';
+  panelVariant?: 'default' | 'compact' | 'monitor';
   /** `embedded` matches list pages (Patients, Orders): no inner panel title, fills raised shell. */
   layout?: EventLogPanelLayout;
   meta?: string;
@@ -227,7 +227,7 @@ export const LabEventLogPanel: React.FC<{
         limit: 200,
       }}
       filterUi={{ fields: [] }}
-      panelVariant="lab"
+      panelVariant="compact"
       className={props.className}
     />
   );

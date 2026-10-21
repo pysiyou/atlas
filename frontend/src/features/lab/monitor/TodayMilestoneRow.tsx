@@ -2,7 +2,7 @@
  * Single milestone row — pipeline chip, stair activity meter, and share column.
  */
 import React from 'react';
-import { TODAY_KPI } from '@/theme/recipes';
+import { METER_KPI } from '@/theme/recipes';
 import {
   formatTodayRowAriaLabel,
   formatTodayRowTitle,
@@ -35,23 +35,23 @@ export const TodayMilestoneRow: React.FC<TodayMilestoneRowProps> = ({
 
   return (
     <div
-      className={TODAY_KPI.tableRow}
+      className={METER_KPI.tableRow}
       role="row"
       title={rowTitle}
       aria-label={rowAria}
     >
-      <div className={TODAY_KPI.rowLabelWrap} role="cell">
-        <div className={TODAY_KPI.pipelineRailCell} aria-hidden>
-          <span className={cn(TODAY_KPI.stageChip, segment.barClass)} />
-          {!isLast ? <span className={TODAY_KPI.pipelineRailLine} /> : null}
+      <div className={METER_KPI.rowLabelWrap} role="cell">
+        <div className={METER_KPI.pipelineRailCell} aria-hidden>
+          <span className={cn(METER_KPI.stageChip, segment.barClass)} />
+          {!isLast ? <span className={METER_KPI.pipelineRailLine} /> : null}
         </div>
-        <span className={TODAY_KPI.tableLabel}>{segment.tableLabel}</span>
+        <span className={METER_KPI.tableLabel}>{segment.tableLabel}</span>
       </div>
-      <div className={TODAY_KPI.tableRowMeterTrack} role="presentation" aria-hidden>
-        <div className={TODAY_KPI.stairGhostTrack} />
+      <div className={METER_KPI.tableRowMeterTrack} role="presentation" aria-hidden>
+        <div className={METER_KPI.stairGhostTrack} />
         {segment.stairWidth > 0 ? (
           <div
-            className={cn(TODAY_KPI.tableRowMeterFill, segment.barClass)}
+            className={cn(METER_KPI.tableRowMeterFill, segment.barClass)}
             style={{
               left: `${segment.stairOffset}%`,
               width: `${segment.stairWidth}%`,
@@ -59,14 +59,14 @@ export const TodayMilestoneRow: React.FC<TodayMilestoneRowProps> = ({
           />
         ) : (
           <div
-            className={cn(TODAY_KPI.tableRowMeterDot, segment.barClass)}
+            className={cn(METER_KPI.tableRowMeterDot, segment.barClass)}
             style={{ left: `${segment.stairOffset}%` }}
           />
         )}
       </div>
-      <span className={TODAY_KPI.tableValue} role="cell">
-        <span className={TODAY_KPI.tablePercent}>{segment.percentOfWorked}%</span>
-        <span className={TODAY_KPI.tableCount}>
+      <span className={METER_KPI.tableValue} role="cell">
+        <span className={METER_KPI.tablePercent}>{segment.percentOfWorked}%</span>
+        <span className={METER_KPI.tableCount}>
           {' '}
           · {segment.count.toLocaleString()}
         </span>

@@ -16,7 +16,14 @@ import type {
 } from './types';
 import { TABLE_SHELL, TABLE_TYPE } from '@/theme/recipes';
 import { cn } from '@/utils';
-import { CELL_PADDING, HEADER_PADDING, ROW_HEIGHTS } from './constants';
+import { composedTableCell } from './columnHelpers';
+import { HEADER_PADDING, ROW_HEIGHTS } from './constants';
+
+const TABLE_CELL_DENSITY = {
+  compact: 'compact',
+  default: 'md',
+  comfortable: 'comfortable',
+} as const satisfies Record<TableVariant, 'compact' | 'md' | 'comfortable'>;
 
 export function TableHeader<T>({
   visibleColumns,
@@ -84,10 +91,12 @@ export function TableCell({ column, children, variant }: TableCellProps) {
   return (
     <div
       className={cn(
-        CELL_PADDING[variant],
-        TABLE_TYPE.cell,
+        composedTableCell({
+          density: TABLE_CELL_DENSITY[variant],
+          tone: 'primary',
+          align: 'start',
+        }),
         TABLE_SHELL.bodyCell,
-        'text-left justify-start',
         contentClass,
         stickyClass,
         column.className,
@@ -215,7 +224,14 @@ export function TableSkeleton<T = unknown>({ columns, rows, variant }: TableSkel
             return (
               <div
                 key={column.key}
-                className={cn(CELL_PADDING[variant], TABLE_TYPE.cell, 'min-w-0')}
+                className={cn(
+                  composedTableCell({
+                    density: TABLE_CELL_DENSITY[variant],
+                    tone: 'primary',
+                    align: 'start',
+                  }),
+                  'min-w-0'
+                )}
               >
                 <Skeleton height={16} width={skeletonWidth} />
               </div>

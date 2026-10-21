@@ -44,7 +44,7 @@
   --color-surface-hover: var(--surface-hover);
   --color-surface-selected: var(--surface-selected);
   --color-surface-elev: var(--surface-elev);
-  --color-surface-report: var(--surface-report);
+  --color-surface-document: var(--surface-document);
   --color-surface-sidebar: var(--surface-sidebar);
   --color-surface-table-header: var(--surface-table-header);
 
@@ -270,9 +270,9 @@
   --spacing-layout-scroll-end: var(--layout-scroll-end);
   --spacing-panel: var(--panel-padding);
   --spacing-panel-header-x: var(--panel-header-padding-x);
-  --spacing-lab-panel: var(--lab-panel-padding);
-  --spacing-lab-panel-header-x: var(--lab-panel-header-padding-x);
-  --spacing-lab-panel-header-y: var(--lab-panel-header-padding-y);
+  --spacing-panel-density-compact: var(--panel-density-compact-padding);
+  --spacing-panel-density-compact-header-x: var(--panel-density-compact-header-padding-x);
+  --spacing-panel-density-compact-header-y: var(--panel-density-compact-header-padding-y);
   --spacing-space-0-5: var(--space-0-5);
   --spacing-space-1: var(--space-1);
   --spacing-space-1-5: var(--space-1-5);
@@ -309,11 +309,11 @@
   --spacing-icon-button-sm: var(--icon-button-size-sm);
   --spacing-icon-button-md: var(--icon-button-size-md);
   --spacing-icon-button-lg: var(--icon-button-size-lg);
-  --spacing-dashboard-bottom-row-min: var(--dashboard-bottom-row-min-height);
-  --spacing-dashboard-table-wrap-min: var(--dashboard-table-wrap-min-height);
-  --height-dashboard-meter-track: var(--dashboard-meter-track-height);
-  --spacing-dashboard-meter-dot: var(--dashboard-meter-dot-size);
-  --spacing-dashboard-meter-stage: var(--dashboard-meter-stage-chip-size);
+  --spacing-split-bottom-row-min: var(--split-bottom-row-min-height);
+  --spacing-split-table-wrap-min: var(--split-table-wrap-min-height);
+  --height-meter-track: var(--meter-track-height);
+  --spacing-meter-dot: var(--meter-dot-size);
+  --spacing-meter-stage: var(--meter-stage-chip-size);
   --size-icon-xs: var(--icon-size-xs);
   --size-icon-sm: var(--icon-size-sm);
   --size-icon-md: var(--icon-size-md);
@@ -321,12 +321,11 @@
   --size-icon-button-sm: var(--icon-button-size-sm);
   --size-icon-button-md: var(--icon-button-size-md);
   --size-icon-button-lg: var(--icon-button-size-lg);
-  --min-height-dashboard-bottom-row: var(--dashboard-bottom-row-min-height);
-  --min-height-dashboard-table-wrap: var(--dashboard-table-wrap-min-height);
-  --height-dashboard-bottom-row: var(--dashboard-bottom-row-min-height);
-  --height-dashboard-meter-track: var(--dashboard-meter-track-height);
-  --size-dashboard-meter-dot: var(--dashboard-meter-dot-size);
-  --size-dashboard-meter-stage: var(--dashboard-meter-stage-chip-size);
+  --min-height-split-bottom-row: var(--split-bottom-row-min-height);
+  --min-height-split-table-wrap: var(--split-table-wrap-min-height);
+  --height-split-bottom-row: var(--split-bottom-row-min-height);
+  --size-meter-dot: var(--meter-dot-size);
+  --size-meter-stage: var(--meter-stage-chip-size);
 
   /* ═══════════════════════════════════════════════════════════════════
      FOCUS
@@ -349,38 +348,36 @@
   --color-toast-action-border: var(--toast-action-border);
   --color-toast-action-hover: var(--toast-action-hover);
 
-  /* ═══════════════════════════════════════════════════════════════════
-     AUTH (Isolated module - different visual language)
-     ═══════════════════════════════════════════════════════════════════ */
-  --color-auth-canvas: var(--auth-canvas);
-  --color-auth-panel: var(--auth-panel);
-  --color-auth-panel-hover: var(--auth-panel-hover);
-  --color-auth-input: var(--auth-input-bg);
-  --color-auth-input-stroke: var(--auth-input-border);
-  --color-auth-input-focus: var(--auth-input-border-focus);
-  --color-auth-fg: var(--auth-text-primary);
-  --color-auth-fg-muted: var(--auth-text-secondary);
-  --color-auth-fg-subtle: var(--auth-text-muted);
-  --color-auth-fg-light: var(--auth-text-light);
-  --color-auth-accent: var(--auth-accent);
-  --color-auth-accent-medium: var(--auth-accent-medium);
-  --color-auth-accent-hover: var(--auth-accent-hover);
-  --color-auth-stroke: var(--auth-border);
-  --color-auth-stroke-muted: var(--auth-border-light);
-  --color-auth-stroke-hover: var(--auth-border-hover);
-  --color-auth-error: var(--auth-error-bg);
-  --color-auth-error-muted: var(--auth-error-bg-light);
-  --color-auth-error-stroke: var(--auth-error-border);
-  --color-auth-error-fg: var(--auth-error-text);
-  --color-auth-card: var(--auth-feature-card-bg);
-  --color-auth-card-hover: var(--auth-feature-card-hover);
-  --color-auth-card-stroke: var(--auth-feature-card-border);
-  --color-auth-card-icon: var(--auth-card-icon-bg);
-  --color-auth-card-icon-hover: var(--auth-card-icon-hover);
-  --color-auth-card-icon-border: var(--auth-card-icon-border);
-  --color-auth-badge: var(--auth-badge-bg);
-  --color-auth-badge-border: var(--auth-badge-border);
-  --color-auth-badge-icon: var(--auth-badge-icon);
+  /* PROMO (marketing / sign-in palette) */
+  --color-promo-canvas: var(--promo-canvas);
+  --color-promo-panel: var(--promo-panel);
+  --color-promo-panel-hover: var(--promo-panel-hover);
+  --color-promo-input: var(--promo-input-bg);
+  --color-promo-input-stroke: var(--promo-input-border);
+  --color-promo-input-focus: var(--promo-input-border-focus);
+  --color-promo-fg: var(--promo-text-primary);
+  --color-promo-fg-muted: var(--promo-text-secondary);
+  --color-promo-fg-subtle: var(--promo-text-muted);
+  --color-promo-fg-light: var(--promo-text-light);
+  --color-promo-accent: var(--promo-accent);
+  --color-promo-accent-medium: var(--promo-accent-medium);
+  --color-promo-accent-hover: var(--promo-accent-hover);
+  --color-promo-stroke: var(--promo-border);
+  --color-promo-stroke-muted: var(--promo-border-light);
+  --color-promo-stroke-hover: var(--promo-border-hover);
+  --color-promo-error: var(--promo-error-bg);
+  --color-promo-error-muted: var(--promo-error-bg-light);
+  --color-promo-error-stroke: var(--promo-error-border);
+  --color-promo-error-fg: var(--promo-error-text);
+  --color-promo-card: var(--promo-feature-card-bg);
+  --color-promo-card-hover: var(--promo-feature-card-hover);
+  --color-promo-card-stroke: var(--promo-feature-card-border);
+  --color-promo-card-icon: var(--promo-card-icon-bg);
+  --color-promo-card-icon-hover: var(--promo-card-icon-hover);
+  --color-promo-card-icon-border: var(--promo-card-icon-border);
+  --color-promo-badge: var(--promo-badge-bg);
+  --color-promo-badge-border: var(--promo-badge-border);
+  --color-promo-badge-icon: var(--promo-badge-icon);
 
   /* ═══════════════════════════════════════════════════════════════════
      CONTAINER COLORS (sample tube caps)

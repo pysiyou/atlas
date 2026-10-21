@@ -16,17 +16,17 @@ import { SupervisorApprovalBadge } from '../components/LabResultStatusBadges';
 import { LAB_CONFIG } from '../constants';
 import type { RecollectionRequestSummary } from '@/types/lab-operations';
 import {
-  LAB_CARD_ALERT,
-  LAB_CARD_BADGE_SIZE,
-  LAB_CARD_CONTEXT,
-  LAB_CARD_HEADER,
-  LAB_CARD_QUEUE_IDENTITY,
-  LAB_CARD_TYPOGRAPHY,
+  QUEUE_CARD_ALERT,
+  QUEUE_CARD_BADGE_SIZE,
+  IDENTITY_INLINE,
+  CARD_HEADER_GRID,
+  IDENTITY_STACK,
+  QUEUE_CARD_TYPE,
 } from '@/theme/recipes';
 
 function InlineDot() {
   return (
-    <span className={LAB_CARD_CONTEXT.separator}>{LAB_CARD_CONTEXT.inlineDot}</span>
+    <span className={IDENTITY_INLINE.separator}>{IDENTITY_INLINE.inlineDot}</span>
   );
 }
 
@@ -45,7 +45,7 @@ export function RecollectionRequestCardLeftColumn({ request }: { request: Recoll
 
   const line1: ReactNode[] = [];
   line1.push(
-    <span key="patient" className={cn(LAB_CARD_CONTEXT.patientName, 'min-w-0 truncate')}>
+    <span key="patient" className={cn(IDENTITY_INLINE.primaryText, 'min-w-0 truncate')}>
       {patientName}
     </span>
   );
@@ -72,7 +72,7 @@ export function RecollectionRequestCardLeftColumn({ request }: { request: Recoll
     content: (
       <>
         <span>Requested </span>
-        <span className={LAB_CARD_TYPOGRAPHY.emphasizedInline}>
+        <span className={QUEUE_CARD_TYPE.emphasizedInline}>
           {formatDateTime(request.createdAt)}
         </span>
         <span> · {stageLabel}</span>
@@ -81,14 +81,14 @@ export function RecollectionRequestCardLeftColumn({ request }: { request: Recoll
   });
 
   return (
-    <div className={LAB_CARD_HEADER.leftColumn}>
+    <div className={CARD_HEADER_GRID.leftColumn}>
       <div className="flex min-w-0 flex-col gap-space-0-5">
-        <div className={cn(LAB_CARD_QUEUE_IDENTITY.primaryLine, 'min-w-0')}>{line1}</div>
+        <div className={cn(IDENTITY_STACK.primaryLine, 'min-w-0')}>{line1}</div>
         {line2.length > 0 ? (
-          <div className={cn(LAB_CARD_QUEUE_IDENTITY.secondaryLine, 'min-w-0')}>{line2}</div>
+          <div className={cn(IDENTITY_STACK.secondaryLine, 'min-w-0')}>{line2}</div>
         ) : null}
       </div>
-      <div className={LAB_CARD_ALERT.row}>
+      <div className={QUEUE_CARD_ALERT.row}>
         <LabCardMetaRow>
           <QueueAgeMeta since={request.createdAt} />
           <span>
@@ -112,12 +112,12 @@ export function RecollectionRequestBadges({ request }: { request: RecollectionRe
 
   return (
     <>
-      <SupervisorApprovalBadge size={LAB_CARD_BADGE_SIZE} />
+      <SupervisorApprovalBadge size={QUEUE_CARD_BADGE_SIZE} />
       {request.sampleType ? (
-        <SampleTypeBadge sampleType={request.sampleType} size={LAB_CARD_BADGE_SIZE} />
+        <SampleTypeBadge sampleType={request.sampleType} size={QUEUE_CARD_BADGE_SIZE} />
       ) : null}
       {request.requiresSupervisorOverride ? (
-        <Badge variant="danger" size={LAB_CARD_BADGE_SIZE}>Limit override</Badge>
+        <Badge variant="danger" size={QUEUE_CARD_BADGE_SIZE}>Limit override</Badge>
       ) : null}
       <AttemptIndicator
         attemptNumber={attemptUsed}
@@ -140,13 +140,13 @@ export function RecollectionReviewBody({
   return (
     <div className={`space-y-space-1 ${TYPE.value}`}>
       <div>
-        <span className={LAB_CARD_TYPOGRAPHY.fieldLabel}>Reason:</span>{' '}
-        <span className={LAB_CARD_TYPOGRAPHY.fieldValue}>{request.reason}</span>
+        <span className={QUEUE_CARD_TYPE.fieldLabel}>Reason:</span>{' '}
+        <span className={QUEUE_CARD_TYPE.fieldValue}>{request.reason}</span>
       </div>
       {request.notes ? (
         <div>
-          <span className={LAB_CARD_TYPOGRAPHY.fieldLabel}>Notes:</span>{' '}
-          <span className={LAB_CARD_TYPOGRAPHY.fieldValue}>{request.notes}</span>
+          <span className={QUEUE_CARD_TYPE.fieldLabel}>Notes:</span>{' '}
+          <span className={QUEUE_CARD_TYPE.fieldValue}>{request.notes}</span>
         </div>
       ) : null}
       <textarea

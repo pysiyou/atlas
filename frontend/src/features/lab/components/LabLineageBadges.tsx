@@ -8,7 +8,7 @@ import { Badge, Icon } from '@/components/primitives';
 import { EntityId } from '@/components/display';
 import type { BadgeSize } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
-import { LAB_CARD_BADGE_SIZE } from '@/theme/recipes';
+import { QUEUE_CARD_BADGE_SIZE } from '@/theme/recipes';
 
 interface RecollectionOfBadgeProps {
   originalSampleId: number;
@@ -18,7 +18,7 @@ interface RecollectionOfBadgeProps {
 
 export const RecollectionOfBadge: React.FC<RecollectionOfBadgeProps> = ({
   originalSampleId,
-  size = LAB_CARD_BADGE_SIZE,
+  size = QUEUE_CARD_BADGE_SIZE,
   className = '',
 }) => (
   <Badge
@@ -44,7 +44,7 @@ interface RetestOfBadgeProps {
 
 export const RetestOfBadge: React.FC<RetestOfBadgeProps> = ({
   retestOfTestId,
-  size = LAB_CARD_BADGE_SIZE,
+  size = QUEUE_CARD_BADGE_SIZE,
   className = '',
 }) => (
   <Badge size={size} variant="warning" className={`flex items-center gap-space-1 ${className}`}>

@@ -8,7 +8,7 @@ import { Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/loaders';
 import { ICONS } from '@/config/icons';
 import { companyConfig } from '@/config';
-import { AUTH_CONTROL, AUTH_SHADOW, AUTH_TYPE, RADIUS } from '@/theme/recipes';
+import { PROMO_CONTROL, PROMO_SHADOW, PROMO_TYPE, RADIUS } from '@/theme/recipes';
 
 interface LoginFormCardProps {
   username: string;
@@ -61,18 +61,18 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
     >
       <div className="relative">
         {/* Main card */}
-        <div className={`relative bg-auth-panel ${RADIUS.menu} ${AUTH_SHADOW.card} border border-auth-stroke p-space-8 sm:p-space-10`}>
+        <div className={`relative bg-promo-panel ${RADIUS.menu} ${PROMO_SHADOW.card} border border-promo-stroke p-space-8 sm:p-space-10`}>
           {/* Subtle top accent line */}
-          <div className="absolute top-0 left-space-8 right-space-8 h-px bg-auth-accent-medium/50" />
+          <div className="absolute top-0 left-space-8 right-space-8 h-px bg-promo-accent-medium/50" />
 
           {/* Mobile logo */}
           <div className="flex lg:hidden items-center gap-space-3 mb-space-8">
-            <div className={`w-11 h-11 bg-auth-accent ${RADIUS.field} flex items-center justify-center ${AUTH_SHADOW.logo}`}>
-              <Icon name={ICONS.ui.appLogo} className="w-6 h-6 text-auth-fg" />
+            <div className={`w-11 h-11 bg-promo-accent ${RADIUS.field} flex items-center justify-center ${PROMO_SHADOW.logo}`}>
+              <Icon name={ICONS.ui.appLogo} className="w-6 h-6 text-promo-fg" />
             </div>
             <div>
-              <h1 className={AUTH_TYPE.mobileBrandTitle}>{company.company.name}</h1>
-              <p className={AUTH_TYPE.companySubtitle}>
+              <h1 className={PROMO_TYPE.mobileBrandTitle}>{company.company.name}</h1>
+              <p className={PROMO_TYPE.companySubtitle}>
                 {company.company.subtitle}
               </p>
             </div>
@@ -80,20 +80,20 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
 
           {/* Form header */}
           <div className="mb-space-8">
-            <h2 className="font-display text-3xl sm:text-4xl text-auth-fg mb-space-2">Welcome back</h2>
-            <p className={AUTH_TYPE.formSubtitle}>
+            <h2 className="font-display text-3xl sm:text-4xl text-promo-fg mb-space-2">Welcome back</h2>
+            <p className={PROMO_TYPE.formSubtitle}>
               Sign in to continue to your dashboard
             </p>
           </div>
 
           {/* Error message display */}
           {error && (
-            <div className={`mb-space-6 p-panel bg-auth-error border border-auth-error-stroke ${RADIUS.menu} animate-[shake_0.5s_ease-in-out]`}>
+            <div className={`mb-space-6 p-panel bg-promo-error border border-promo-error-stroke ${RADIUS.menu} animate-[shake_0.5s_ease-in-out]`}>
               <div className="flex items-center gap-space-3">
-                <div className={`w-8 h-8 ${RADIUS.menu} bg-auth-error-muted flex items-center justify-center flex-shrink-0`}>
-                  <Icon name={ICONS.actions.alertCircle} className="h-4 w-4 text-auth-error-fg" />
+                <div className={`w-8 h-8 ${RADIUS.menu} bg-promo-error-muted flex items-center justify-center flex-shrink-0`}>
+                  <Icon name={ICONS.actions.alertCircle} className="h-4 w-4 text-promo-error-fg" />
                 </div>
-                <p className={AUTH_TYPE.formError}>{error}</p>
+                <p className={PROMO_TYPE.formError}>{error}</p>
               </div>
             </div>
           )}
@@ -104,7 +104,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
             <div className="space-y-space-2">
               <label
                 htmlFor="username"
-                className={AUTH_TYPE.fieldLabel}
+                className={PROMO_TYPE.fieldLabel}
               >
                 Username
               </label>
@@ -112,7 +112,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
                 <div className="absolute inset-y-0 left-0 pl-space-4 flex items-center pointer-events-none z-10">
                   <Icon
                     name={ICONS.dataFields.user}
-                    className="h-5 w-5 text-auth-fg-subtle group-focus-within:text-auth-fg-light transition-colors duration-200"
+                    className="h-5 w-5 text-promo-fg-subtle group-focus-within:text-promo-fg-light transition-colors duration-200"
                   />
                 </div>
                 <input
@@ -125,7 +125,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
                     onErrorDismiss();
                   }}
                   placeholder="Enter your username"
-                  className={`font-body block w-full pl-space-12 pr-space-4 py-space-3-5 bg-auth-input border border-auth-input-stroke ${RADIUS.menu} text-auth-fg placeholder-auth-fg-subtle ${AUTH_CONTROL.focusField} hover:bg-auth-panel-hover transition-all duration-200`}
+                  className={`font-body block w-full pl-space-12 pr-space-4 py-space-3-5 bg-promo-input border border-promo-input-stroke ${RADIUS.menu} text-promo-fg placeholder-promo-fg-subtle ${PROMO_CONTROL.focusField} hover:bg-promo-panel-hover transition-all duration-200`}
                   required
                 />
               </div>
@@ -135,7 +135,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
             <div className="space-y-space-2">
               <label
                 htmlFor="password"
-                className={AUTH_TYPE.fieldLabel}
+                className={PROMO_TYPE.fieldLabel}
               >
                 Password
               </label>
@@ -143,7 +143,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
                 <div className="absolute inset-y-0 left-0 pl-space-4 flex items-center pointer-events-none z-10">
                   <Icon
                     name={ICONS.ui.lock}
-                    className="h-5 w-5 text-auth-fg-subtle group-focus-within:text-auth-fg-light transition-colors duration-200"
+                    className="h-5 w-5 text-promo-fg-subtle group-focus-within:text-promo-fg-light transition-colors duration-200"
                   />
                 </div>
                 <input
@@ -155,13 +155,13 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
                     onErrorDismiss();
                   }}
                   placeholder="Enter your password"
-                  className={`font-body block w-full pl-space-12 pr-space-12 py-space-3-5 bg-auth-input border border-auth-input-stroke ${RADIUS.menu} text-auth-fg placeholder-auth-fg-subtle ${AUTH_CONTROL.focusField} hover:bg-auth-panel-hover transition-all duration-200`}
+                  className={`font-body block w-full pl-space-12 pr-space-12 py-space-3-5 bg-promo-input border border-promo-input-stroke ${RADIUS.menu} text-promo-fg placeholder-promo-fg-subtle ${PROMO_CONTROL.focusField} hover:bg-promo-panel-hover transition-all duration-200`}
                   required
                 />
                 <button
                   type="button"
                   onClick={onTogglePasswordVisibility}
-                  className="absolute inset-y-0 right-0 pr-space-4 flex items-center text-auth-fg-subtle hover:text-auth-fg-light transition-colors duration-200 z-10 cursor-pointer"
+                  className="absolute inset-y-0 right-0 pr-space-4 flex items-center text-promo-fg-subtle hover:text-promo-fg-light transition-colors duration-200 z-10 cursor-pointer"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   <Icon name={ICONS.actions.view} className="h-5 w-5" />
@@ -173,9 +173,9 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`relative w-full mt-space-2 font-body font-normal py-space-4 px-table-cell-x-default ${RADIUS.menu} text-auth-fg overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-300 ${AUTH_CONTROL.focusSubmit}`}
+              className={`relative w-full mt-space-2 font-body font-normal py-space-4 px-table-cell-x-default ${RADIUS.menu} text-promo-fg overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-300 ${PROMO_CONTROL.focusSubmit}`}
             >
-              <div className="absolute inset-0 bg-auth-accent transition-all duration-300 hover:bg-auth-accent-hover" />
+              <div className="absolute inset-0 bg-promo-accent transition-all duration-300 hover:bg-promo-accent-hover" />
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-shimmer" />
               <span className="relative flex items-center justify-center">
                 {isSubmitting ? (
@@ -190,8 +190,8 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
           </form>
 
           {/* Footer */}
-          <div className="mt-space-8 pt-space-6 border-t border-auth-stroke">
-            <p className={AUTH_TYPE.formFooter}>
+          <div className="mt-space-8 pt-space-6 border-t border-promo-stroke">
+            <p className={PROMO_TYPE.formFooter}>
               {company.company.copyright}
             </p>
           </div>

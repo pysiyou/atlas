@@ -11,15 +11,15 @@ import { LabAuditBlock } from '../components/LabWorkflowHeader.parts';
 import { LabCardMetaRow, QueueAgeMeta } from '../components/LabCardMetaRow';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
 import {
-  LAB_CARD_ALERT,
-  LAB_CARD_CONTEXT,
-  LAB_CARD_HEADER,
-  LAB_CARD_QUEUE_IDENTITY,
+  QUEUE_CARD_ALERT,
+  IDENTITY_INLINE,
+  CARD_HEADER_GRID,
+  IDENTITY_STACK,
 } from '@/theme/recipes';
 
 function InlineDot() {
   return (
-    <span className={LAB_CARD_CONTEXT.separator}>{LAB_CARD_CONTEXT.inlineDot}</span>
+    <span className={IDENTITY_INLINE.separator}>{IDENTITY_INLINE.inlineDot}</span>
   );
 }
 
@@ -63,7 +63,7 @@ function TestWorkflowIdentityLines({
   const line1: ReactNode[] = [];
   if (patientName) {
     line1.push(
-      <span key="patient" className={cn(LAB_CARD_CONTEXT.patientName, 'min-w-0 truncate')}>
+      <span key="patient" className={cn(IDENTITY_INLINE.primaryText, 'min-w-0 truncate')}>
         {patientName}
       </span>
     );
@@ -73,7 +73,7 @@ function TestWorkflowIdentityLines({
     line1.push(
       <span
         key="test"
-        className={cn(LAB_CARD_CONTEXT.patientName, 'min-w-0 truncate normal-case')}
+        className={cn(IDENTITY_INLINE.primaryText, 'min-w-0 truncate normal-case')}
         title={testName}
       >
         {testName}
@@ -92,7 +92,7 @@ function TestWorkflowIdentityLines({
     line2.push(
       <span
         key="phys"
-        className={cn(LAB_CARD_QUEUE_IDENTITY.secondaryText, 'min-w-0 truncate')}
+        className={cn(IDENTITY_STACK.secondaryText, 'min-w-0 truncate')}
       >
         {referringPhysician}
       </span>
@@ -117,9 +117,9 @@ function TestWorkflowIdentityLines({
 
   return (
     <div className="flex min-w-0 flex-col gap-space-0-5">
-      <div className={cn(LAB_CARD_QUEUE_IDENTITY.primaryLine, 'min-w-0')}>{line1}</div>
+      <div className={cn(IDENTITY_STACK.primaryLine, 'min-w-0')}>{line1}</div>
       {line2.length > 0 ? (
-        <div className={cn(LAB_CARD_QUEUE_IDENTITY.secondaryLine, 'min-w-0')}>{line2}</div>
+        <div className={cn(IDENTITY_STACK.secondaryLine, 'min-w-0')}>{line2}</div>
       ) : null}
     </div>
   );
@@ -207,7 +207,7 @@ export function TestWorkflowCardLeftColumn({
   );
 
   return (
-    <div className={cn(LAB_CARD_HEADER.leftColumn, className)}>
+    <div className={cn(CARD_HEADER_GRID.leftColumn, className)}>
       <TestWorkflowIdentityLines
         patientName={patientName}
         testName={test.testName}
@@ -217,7 +217,7 @@ export function TestWorkflowCardLeftColumn({
         sampleId={test.sampleId}
         testCode={test.testCode}
       />
-      <div className={LAB_CARD_ALERT.row}>
+      <div className={QUEUE_CARD_ALERT.row}>
         <TestWorkflowOperationsRow
           variant={variant}
           queueSince={queueSince}

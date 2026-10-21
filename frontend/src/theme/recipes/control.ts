@@ -33,14 +33,14 @@ export const CONTROL = {
   minHeight: 'min-h-control',
 } as const;
 
-export const AUTH_CONTROL = {
+export const PROMO_CONTROL = {
   focusField:
-    'focus:outline-none focus:ring-2 focus:ring-auth-input-focus focus:ring-opacity-50 focus:border-auth-input-focus',
+    'focus:outline-none focus:ring-2 focus:ring-promo-input-focus focus:ring-opacity-50 focus:border-promo-input-focus',
   focusSubmit:
-    'focus:outline-none focus:ring-2 focus:ring-auth-input-focus focus:ring-opacity-50 focus:ring-offset-2 focus:ring-offset-auth-panel',
+    'focus:outline-none focus:ring-2 focus:ring-promo-input-focus focus:ring-opacity-50 focus:ring-offset-2 focus:ring-offset-promo-panel',
 } as const;
 
-export const AUTH_SHADOW = {
+export const PROMO_SHADOW = {
   card: SHADOW.modal,
   accent: SHADOW.overlay,
   logo: SHADOW.raised,
