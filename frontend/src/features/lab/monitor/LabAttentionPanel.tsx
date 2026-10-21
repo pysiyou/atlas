@@ -33,7 +33,7 @@ function FeedDetail({ detail }: { detail: AttentionDetail }) {
   switch (detail.type) {
     case 'patient':
       return (
-        <Text role="value" density="table" truncate className="font-normal">
+        <Text role="body" density="table" truncate className="font-normal">
           {detail.value}
         </Text>
       );
@@ -46,13 +46,13 @@ function FeedDetail({ detail }: { detail: AttentionDetail }) {
       );
     case 'queueStage':
       return (
-        <Text role="meta" density="table" truncate className="font-normal">
+        <Text role="body" intent="muted" density="table" truncate className="font-normal">
           {detail.stageLabel}
         </Text>
       );
     case 'queueCount':
       return (
-        <Text role="meta" density="table" truncate className="font-normal tabular-nums">
+        <Text role="body" intent="muted" density="table" truncate className="font-normal tabular-nums">
           {detail.count} {detail.unit}
         </Text>
       );
@@ -60,13 +60,13 @@ function FeedDetail({ detail }: { detail: AttentionDetail }) {
       return <LabPriorityBadge priority={detail.value} size="xs" />;
     case 'wait':
       return (
-        <Text role="meta" density="table" truncate className="font-normal tabular-nums">
+        <Text role="body" intent="muted" density="table" truncate className="font-normal tabular-nums">
           {detail.value}
         </Text>
       );
     default:
       return (
-        <Text role="meta" density="table" truncate className="font-normal">
+        <Text role="body" intent="muted" density="table" truncate className="font-normal">
           {detail.value}
         </Text>
       );

@@ -5,7 +5,7 @@ import { ICONS } from '@/config/icons';
 import { cn } from '@/utils';
 import { formatStatus } from '@/utils/string';
 import type { AuthUser } from '@/types';
-import { CHROME, CONTROL, MENU_ITEM_TYPE, RADIUS, TONE, TYPE } from '@/theme/recipes';
+import { text, CHROME, CONTROL, MENU_ITEM_TYPE, RADIUS, TONE } from '@/theme/recipes';
 
 export interface SidebarProfileProps {
   currentUser: AuthUser;
@@ -40,8 +40,8 @@ export function SidebarProfile({ currentUser, isCollapsed, onLogout }: SidebarPr
               />
             </div>
             <div className={cn(CHROME.navLabel, 'flex flex-col justify-center gap-space-0-5')}>
-              <p className={`${TYPE.detailTitle} truncate leading-tight`}>{currentUser.name}</p>
-              <p className={`${TYPE.meta} truncate leading-tight`}>{formatStatus(currentUser.role)}</p>
+              <p className={`${text({ role: 'title-section' })} truncate leading-tight`}>{currentUser.name}</p>
+              <p className={`${text({ role: 'body', intent: 'muted' })} truncate leading-tight`}>{formatStatus(currentUser.role)}</p>
             </div>
           </div>
         </div>
@@ -52,8 +52,8 @@ export function SidebarProfile({ currentUser, isCollapsed, onLogout }: SidebarPr
           <div className="flex items-center gap-space-3 border-b border-border-default bg-surface-page px-space-3 py-space-3">
             <Avatar primaryText={currentUser.name} size="sm" avatarOnly />
             <div className="min-w-0 flex-1">
-              <p className={`${TYPE.detailTitle} truncate`}>{currentUser.name}</p>
-              <p className={`${TYPE.sectionTitle} mt-space-0-5 truncate`}>
+              <p className={`${text({ role: 'title-section' })} truncate`}>{currentUser.name}</p>
+              <p className={`${text({ role: 'section-title' })} mt-space-0-5 truncate`}>
                 {formatStatus(currentUser.role)}
               </p>
             </div>

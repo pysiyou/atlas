@@ -5,7 +5,7 @@
 import React, { useMemo } from 'react';
 import { Panel } from '@/components/surfaces';
 import type { Order, OrderTest } from '@/types';
-import { TYPE } from '@/theme/recipes';
+import { text } from '@/theme/recipes';
 import {
   getRelatedOrderTestEntries,
   getSiblingOrderTestsOnSample,
@@ -41,13 +41,13 @@ export const TestRelatedTestsPanel: React.FC<TestRelatedTestsPanelProps> = ({
       <div className="space-y-space-3">
         {onSample.length > 0 ? (
           <div className="space-y-space-0-5">
-            <p className={`${TYPE.sectionTitle} leading-tight`}>On same sample</p>
+            <p className={`${text({ role: 'section-title' })} leading-tight`}>On same sample</p>
             <LinkedOrderTestsList tests={onSample} onOpen={onOpenOrderTest} />
           </div>
         ) : null}
         {sameTestEntries.length > 0 ? (
           <div className="space-y-space-0-5">
-            <p className={`${TYPE.sectionTitle} leading-tight`}>Other entries for this test</p>
+            <p className={`${text({ role: 'section-title' })} leading-tight`}>Other entries for this test</p>
             <LinkedOrderTestsList tests={sameTestEntries} onOpen={onOpenOrderTest} />
           </div>
         ) : null}

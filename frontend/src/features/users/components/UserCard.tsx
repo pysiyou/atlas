@@ -1,7 +1,7 @@
 import { MobileEntityCard } from '@/components/surfaces';
 import type { CardComponentProps } from '@/components/data-table';
 import { Badge } from '@/components/primitives/Badge';
-import { TYPE } from '@/theme/recipes';
+import { text } from '@/theme/recipes';
 import { USER_ROLE_CONFIG, type UserRole } from '@/types';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import type { UserAdminRecord } from '../api/usersAdmin';
@@ -18,8 +18,8 @@ export function UserCard({ item, onClick }: CardComponentProps<UserAdminRecord>)
       <MobileEntityCard.Header
         leading={
           <div className="flex min-w-0 flex-col">
-            <div className={`${TYPE.amount} truncate`}>{item.name}</div>
-            <div className={`${TYPE.meta} truncate`}>{item.username}</div>
+            <div className={`${text({ role: 'amount' })} truncate`}>{item.name}</div>
+            <div className={`${text({ role: 'body', intent: 'muted' })} truncate`}>{item.username}</div>
           </div>
         }
         trailing={
@@ -33,7 +33,7 @@ export function UserCard({ item, onClick }: CardComponentProps<UserAdminRecord>)
           </div>
         }
       />
-      {item.email ? <div className={TYPE.label}>{item.email}</div> : null}
+      {item.email ? <div className={text({ role: 'label' })}>{item.email}</div> : null}
     </MobileEntityCard>
   );
 }

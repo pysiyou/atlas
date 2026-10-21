@@ -9,7 +9,7 @@ import {
 } from '../utils/labResult';
 import { ReferenceIntervalCell } from './ReferenceIntervalCell';
 import { LAB_CONFIG } from '../constants';
-import { DATA_GRID, METRIC_TILE, TYPE } from '@/theme/recipes';
+import { text, DATA_GRID, METRIC_TILE } from '@/theme/recipes';
 import { resultTileStatusClass } from '../utils/labResult';
 import { Text } from '@/components/layout';
 import {
@@ -78,7 +78,7 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
   }, [layout, variant, entries, catalogParameters, patient, flagStatusMap]);
 
   if (entries.length === 0) {
-    return <Text role="meta">No result values recorded.</Text>;
+    return <Text role="body" intent="muted">No result values recorded.</Text>;
   }
 
   if (layout === 'validation' && variant === 'inline') {
@@ -186,7 +186,7 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
           );
         })}
         {remainingCount > 0 && (
-          <div className={`${TYPE.caption} col-span-full pt-space-0-5`}>
+          <div className={`${text({ role: 'caption' })} col-span-full pt-space-0-5`}>
             +{remainingCount} more
           </div>
         )}

@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { format, isSameDay, startOfDay } from 'date-fns';
 import { EmptyState } from '@/components/display/EmptyState';
 import { InlineHighlight } from '@/components/primitives/InlineHighlight';
-import { RADIUS, TYPE } from '@/theme/recipes';
+import { text, RADIUS } from '@/theme/recipes';
 import { MODULE_ICONS } from '@/config/icons';
 import { getLaneVisual, type LabTimelineLane } from '@/features/lab';
 import { parseAppDate } from '@/utils/date';
@@ -21,7 +21,7 @@ const EVENT_LOG_HEADLINE_LINE_CLASS = 'leading-5';
 const EVENT_LOG_STYLES = {
   feed: `flex flex-col px-space-3 py-space-3 [&>section+section]:mt-space-4`,
   dateDividerRow: 'py-space-1',
-  dateDividerLabel: `${TYPE.caption} min-w-0 shrink-0 text-text-tertiary`,
+  dateDividerLabel: `${text({ role: 'caption' })} min-w-0 shrink-0 text-text-tertiary`,
   row: 'relative flex items-start gap-space-3',
   spineColumn: 'relative w-3 shrink-0 self-stretch',
   spineStemTop:
@@ -32,11 +32,11 @@ const EVENT_LOG_STYLES = {
   spineDot: `size-1 shrink-0 ${RADIUS.pill} ring-1 ring-surface`,
   spineDotMuted: 'bg-text-tertiary',
   content: 'event-log-content min-w-0 flex-1 pb-space-2',
-  headline: `${TYPE.value} ${EVENT_LOG_HEADLINE_LINE_CLASS} mb-0`,
+  headline: `${text({ role: 'body' })} ${EVENT_LOG_HEADLINE_LINE_CLASS} mb-0`,
   headlineActor: 'font-medium text-text-primary',
   headlinePrimary: 'font-medium text-text-primary',
   headlineSecondary: 'text-text-secondary',
-  meta: `${TYPE.meta} text-text-tertiary`,
+  meta: `${text({ role: 'body', intent: 'muted' })} text-text-tertiary`,
   rowList:
     '[&>*:first-child_.event-log-spine-stem-top]:hidden [&>*:last-child_.event-log-spine-stem-bottom]:hidden [&>*:last-child_.event-log-content]:pb-0',
 } as const;

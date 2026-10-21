@@ -13,6 +13,7 @@ export interface TextProps extends TextRecipeProps {
 export function Text({
   as: Component = 'span',
   role,
+  intent,
   density,
   className,
   children,
@@ -21,7 +22,7 @@ export function Text({
 }: TextProps) {
   return (
     <Component
-      className={cn(text({ role, density }), truncate && 'truncate', className)}
+      className={cn(text({ role, intent, density }), truncate && 'truncate', className)}
       title={title}
     >
       {children}

@@ -9,48 +9,33 @@
 
 ## Import rules
 
-- App and feature code: `import { TYPE, SPACING } from '@/theme/recipes'` (barrel only).
-- Do not import recipe subpaths from features.
+- App and feature code: `import { text, SPACING } from '@/theme/recipes'` (barrel only).
+- Typography in JSX: `import { Text } from '@/components/layout/Text'`.
 
-## Key recipe modules
+## Typography (single API)
 
-- `worklistCard.ts` — dense worklist / queue list cards
-- `workspaceSplit.ts`, `meterKpi.ts`, `feedGrouped.ts` — monitor / KPI layouts
-- `segmentedControl.ts` — in-page segment tab rails
-- `promo.ts` — sign-in / marketing surface typography
-- `cva/` — `text`, `tableCell`, `button`, `metricTile`, `dataGrid`, `selectableCard`, `panelShell`
+Use **`text({ role, intent?, density? })`** in recipes and **`Text`** in components.
 
-## Token groups
+| `role` | Use for |
+|--------|---------|
+| `title-page` | Page / hero titles |
+| `title-section` | Section or card titles |
+| `title-panel` | Panel headers |
+| `title-modal` | Modal chrome titles |
+| `section-title` | Uppercase group labels (tables, detail groups, chrome) |
+| `label` | Field / row labels |
+| `body` | Values, descriptions, default copy |
+| `caption` | Fine print |
+| `amount` | Currency, counts, emphasized figures |
 
-| CSS variable (semantic) | Tailwind utility | Notes |
-|-------------------------|------------------|--------|
-| `--text`, `--text-secondary` | `text-text-primary`, `text-text-secondary` | Foreground |
-| `--surface`, `--surface-page` | `bg-surface`, `bg-surface-page` | Surfaces |
-| `--lane-1-fg` … `--lane-7-fg` | `text-lane-1-fg`, `bg-lane-1-bg` | Pipeline lane accents |
-| `--accent-chart-1` … `--accent-chart-12` | `text-accent-chart-1` | Chart series slots |
-| `--space-*` | `gap-space-*`, `p-space-*` | Spacing scale |
+**`intent`:** `default` | `muted` only.
 
-## Typography
-
-Role utilities live in `tokens/typography-utilities.css`. Use `Text` / `text()` CVA or `TYPE` in TSX — not raw `type-*` classes in features (ESLint).
-
-## Panel presets
-
-Layout-intent ids only: `components/surfaces/panelPresets/layoutPresets.ts`. Pass section copy with the `title` (and optional `meta`) props on `<Panel>`.
-
-## Themes
-
-Runtime palettes load from `themes/*.css`. Semantic light/dark tokens ship in the main bundle; `data-theme` selects brand overrides.
+Canonical CSS utilities: `type-body`, `type-ui-sm`, `type-ui-md`, `type-heading-sm`, `type-heading-xs`, `type-value`, `type-caption`, `type-section-title`, `type-page-title`, `type-panel-title`, `type-badge`, `type-micro`.
 
 ## Rules of engagement
 
-1. **Four tiers only** — no new per-feature CSS files; global CSS is tokens + cross-cutting behavior (`theme/components/`).
-2. **Barrel imports** — `@/theme/recipes` only from features.
-3. **No business words in tokens or recipe export names** — map domain → UI in feature config (e.g. lab stage → `lane-*`).
-4. **Typography** — prefer `<Text role="…" />` or `text({ role })`; avoid raw `type-*` in features.
-5. **Tables** — `columnHelpers` + `TABLE_TYPE` / `tableCell()`; one datetime style app-wide.
-6. **Spacing** — `gap-space-*`, `SPACING.*`, or `<Stack gap="…" />`.
-7. **Color & radius** — semantic utilities + `RADIUS.*` from recipes; no Tailwind palette grays.
-8. **Panels** — layout `preset` + `title` when needed; chrome stays in preset registry.
-9. **Repeated patterns** — extend `theme/recipes`, not feature `*_LAYOUT` style constants.
-10. **PR checklist** — `npm run lint`, spot-check two themes.
+1. **Four tiers only** — no per-feature CSS files.
+2. **Barrel imports** — `@/theme/recipes` from features.
+3. **No `TYPE`, `DETAIL_TYPE`, or raw legacy `type-*` utilities** in features.
+4. **Tables** — `tableCell()` + `Text` / `TABLE_TYPE` (recipe-only strings built from `text()`).
+5. **PR checklist** — `npm run lint`, two themes.

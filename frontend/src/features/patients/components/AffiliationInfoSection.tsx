@@ -9,7 +9,7 @@ import { DetailField } from '@/components/display';
 import { formatDate } from '@/utils';
 import type { Affiliation } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';
-import { TONE, TYPE } from '@/theme/recipes';
+import { text, TONE } from '@/theme/recipes';
 
 interface AffiliationInfoProps {
   affiliation: Affiliation;
@@ -22,7 +22,7 @@ export const AffiliationInfo: React.FC<AffiliationInfoProps> = ({ affiliation })
   const isActive = isAffiliationActive(affiliation);
 
   return (
-    <div className={`grid grid-cols-2 gap-x-space-4 gap-y-space-3 ${TYPE.amount}`}>
+    <div className={`grid grid-cols-2 gap-x-space-4 gap-y-space-3 ${text({ role: 'amount' })}`}>
       <DetailField
         orientation="vertical"
         label="Assurance Number"

@@ -3,6 +3,7 @@
  */
 
 import type { ReactNode } from 'react';
+import { Text } from '@/components/layout/Text';
 import { cn, formatDate, formatDateTime, formatPhoneNumber } from '@/utils';
 import { TABLE_TYPE } from '@/theme/recipes';
 
@@ -23,8 +24,8 @@ function tableDateClassName(tone: TableDateTone): string {
 
 export function renderPatientNameBlock(fullName: string, secondary?: ReactNode): ReactNode {
   return (
-    <div className="min-w-0 font-normal">
-      <div className={`${TABLE_PRIMARY_CELL_CLASS} capitalize`}>{fullName}</div>
+    <div className="flex min-w-0 flex-col gap-space-0-5 font-normal">
+      <Text as="div" role="body" truncate className="capitalize font-normal">{fullName}</Text>
       {secondary}
     </div>
   );
@@ -32,12 +33,10 @@ export function renderPatientNameBlock(fullName: string, secondary?: ReactNode):
 
 export function renderContactBlock(phone: string, email?: string): ReactNode {
   return (
-    <div className="min-w-0 font-normal">
-      <div className={`${TABLE_TYPE.cell} truncate font-normal`}>
-        {formatPhoneNumber(phone)}
-      </div>
+    <div className="flex min-w-0 flex-col gap-space-0-5 font-normal">
+      <Text as="div" role="body" truncate className="font-normal">{formatPhoneNumber(phone)}</Text>
       {email ? (
-        <div className={`${TABLE_TYPE.meta} truncate font-normal`}>{email}</div>
+        <Text as="div" role="body" intent="muted" truncate className="font-normal">{email}</Text>
       ) : null}
     </div>
   );
@@ -52,21 +51,27 @@ export function renderTableTwoLineCell(
   const hasSecondary =
     secondary != null && secondary !== '' && secondary !== ' ';
   return (
-    <div className="min-w-0 font-normal">
-      <div className={`${TABLE_TYPE.cell} truncate font-normal`}>{primary}</div>
+    <div className="flex min-w-0 flex-col gap-space-0-5 font-normal">
+      <Text as="div" role="body" truncate className="font-normal">{primary}</Text>
       {hasSecondary ? (
-        <div
-          className={cn(TABLE_TYPE.meta, 'truncate font-normal', options?.secondaryClassName)}
+        <Text
+          as="div"
+          role="body"
+          intent="muted"
+          truncate
+          className={cn('font-normal', options?.secondaryClassName)}
         >
           {secondary}
-        </div>
+        </Text>
       ) : null}
     </div>
   );
 }
 
 export function renderTableEmptyCell(label = '—'): ReactNode {
-  return <span className={`${TABLE_TYPE.meta} truncate block font-normal`}>{label}</span>;
+  return (
+    <Text role="body" intent="muted" truncate className="block font-normal">{label}</Text>
+  );
 }
 
 export function renderDateCell(
@@ -75,7 +80,7 @@ export function renderDateCell(
   tone: TableDateTone = 'primary'
 ): ReactNode {
   if (!date) {
-    return <span className={`${TABLE_TYPE.meta} font-normal`}>{emptyLabel}</span>;
+    return <Text role="body" intent="muted" className="font-normal">{emptyLabel}</Text>;
   }
   return <span className={tableDateClassName(tone)}>{formatDate(date)}</span>;
 }
@@ -86,7 +91,7 @@ export function renderDateTimeCell(
   tone: TableDateTone = 'primary'
 ): ReactNode {
   if (!date) {
-    return <span className={`${TABLE_TYPE.meta} font-normal`}>{emptyLabel}</span>;
+    return <Text role="body" intent="muted" className="font-normal">{emptyLabel}</Text>;
   }
   return <span className={tableDateClassName(tone)}>{formatDateTime(date)}</span>;
 }

@@ -3,11 +3,11 @@
 import { CONTROL } from './control';
 import { RADIUS } from './spacing';
 import { TONE } from './tone';
-import { TYPE } from './type';
+import { text } from './cva/text';
 
 export const SEGMENTED_CONTROL = {
   rail: `bg-surface-hover p-space-0-5 ${RADIUS.field} flex items-center gap-space-0-5`,
-  buttonBase: `relative flex items-center gap-space-1-5 px-space-2-5 py-space-1 ${RADIUS.field} ${TYPE.meta} font-normal transition-all duration-200 cursor-pointer`,
+  buttonBase: `relative flex items-center gap-space-1-5 px-space-2-5 py-space-1 ${RADIUS.field} ${text({ role: 'body', intent: 'muted' })} font-normal transition-all duration-200 cursor-pointer`,
   buttonActive: `bg-surface ${TONE.brand.fg} ${CONTROL.segmentActive}`,
   buttonInactive: 'text-text-tertiary hover:text-text-primary hover:bg-surface-hover',
   iconActive: TONE.brand.fg,

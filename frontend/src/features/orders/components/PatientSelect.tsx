@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Avatar, Icon, RemovableTag, TagChip } from '@/components/primitives';
 import { EMPTY_COPY } from '@/components/display';
 import { cn, formatPhoneNumber } from '@/utils';
-import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/theme/recipes';
+import { text, inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/theme/recipes';
 import type { Patient } from '@/types';
 import { ICONS } from '@/config/icons';
 import { OrderSelectPopoverShell } from './OrderSelectPopoverShell';
-import { CONTROL, FIELD_ERROR, SPACING, TYPE } from '@/theme/recipes';
+import { CONTROL, FIELD_ERROR, SPACING } from '@/theme/recipes';
 
 
 const SELECTED_CHIP_CLASS =
@@ -32,10 +32,10 @@ function PatientSelectedChip({ patient }: { patient: Patient }) {
         className="shrink-0 self-center"
       />
       <div className="min-w-0 flex flex-col">
-        <span className={`${TYPE.value} font-normal truncate capitalize`}>
+        <span className={`${text({ role: 'body' })} font-normal truncate capitalize`}>
           {patient.fullName}
         </span>
-        <span className={`${TYPE.caption} font-normal truncate`}>
+        <span className={`${text({ role: 'caption' })} font-normal truncate`}>
           {contactLine || 'No contact on file'}
         </span>
       </div>
@@ -119,7 +119,7 @@ const PatientSearchTagInput: React.FC<{
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => onValueChange(e.target.value)}
           onFocus={() => onValueChange(value)}
           placeholder={selectedPatient ? '' : 'Search by name, ID, or phone…'}
-          className={`flex-1 min-w-[140px] outline-none ${TYPE.value} placeholder:text-text-muted bg-transparent leading-normal`}
+          className={`flex-1 min-w-[140px] outline-none ${text({ role: 'body' })} placeholder:text-text-muted bg-transparent leading-normal`}
           autoComplete="off"
           disabled={disabled}
         />
@@ -226,13 +226,13 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                         className="shrink-0"
                       />
                       <div className="min-w-0 flex-1">
-                        <p className={`${TYPE.value} font-normal truncate capitalize`}>
+                        <p className={`${text({ role: 'body' })} font-normal truncate capitalize`}>
                           {patient.fullName}
                         </p>
                         {contactLine ? (
-                          <p className={`${TYPE.caption} truncate`}>{contactLine}</p>
+                          <p className={`${text({ role: 'caption' })} truncate`}>{contactLine}</p>
                         ) : (
-                          <p className={`${TYPE.caption} text-text-muted truncate`}>No contact on file</p>
+                          <p className={`${text({ role: 'caption' })} text-text-muted truncate`}>No contact on file</p>
                         )}
                       </div>
                     </button>

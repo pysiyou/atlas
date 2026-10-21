@@ -6,7 +6,7 @@ import React from 'react';
 import { Card } from '@/components/surfaces';
 import { Icon } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
-import { TYPE } from '@/theme/recipes';
+import { text } from '@/theme/recipes';
 
 
 export interface DashboardOrdersInProgressBannerProps {
@@ -20,8 +20,8 @@ export const DashboardOrdersInProgressBanner: React.FC<DashboardOrdersInProgress
     <div className="flex items-center gap-space-3">
       <Icon name={ICONS.dataFields.trendingUp} className="w-6 h-6 text-warning-fg" />
       <div>
-        <p className={TYPE.amount}>Orders In Progress</p>
-        <p className={TYPE.label}>
+        <p className={text({ role: 'amount' })}>Orders In Progress</p>
+        <p className={text({ role: 'label' })}>
           {pendingOrders} order{pendingOrders !== 1 ? 's' : ''} awaiting completion
         </p>
       </div>

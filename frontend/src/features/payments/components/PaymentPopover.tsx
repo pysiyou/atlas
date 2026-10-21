@@ -14,8 +14,8 @@ import { PaymentMethodSelector } from './PaymentMethodSelector';
 import { PopoverFormChrome } from '@/components/overlays';
 import { cn, formatCurrency } from '@/utils';
 import { OrderReceipt } from '@/features/orders';
-import { inputBase, FORM_FIELD_LABEL } from '@/theme/recipes';
-import { TONE, TYPE } from '@/theme/recipes';
+import { text, inputBase, FORM_FIELD_LABEL } from '@/theme/recipes';
+import { TONE } from '@/theme/recipes';
 import type { Order } from '@/types';
 import {
   getEnabledPaymentMethods,
@@ -150,7 +150,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
       {/* Error Display */}
       {error && (
         <Alert variant="danger" className="py-space-2">
-          <p className={TYPE.value}>{error}</p>
+          <p className={text({ role: 'body' })}>{error}</p>
         </Alert>
       )}
     </PopoverFormChrome>

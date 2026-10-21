@@ -4,8 +4,8 @@
 import React, { useMemo } from 'react';
 import { Input } from '@/components/inputs';
 import { MultiSelectFilter } from '@/components/overlays';
-import { FORM_FIELD_LABEL } from '@/theme/recipes';
-import { TONE, TYPE } from '@/theme/recipes';
+import { text, FORM_FIELD_LABEL } from '@/theme/recipes';
+import { TONE } from '@/theme/recipes';
 import { ICONS } from '@/config/icons';
 import type { UserRole } from '@/types';
 import { formatDateTime } from '@/utils';
@@ -91,7 +91,7 @@ export const UserUpsertFormFields: React.FC<UserUpsertFormFieldsProps> = ({
         />
       </div>
       {roleLocked ? (
-        <p className={`-mt-space-2 ${TYPE.meta}`}>
+        <p className={`-mt-space-2 ${text({ role: 'body', intent: 'muted' })}`}>
           The last active administrator cannot be demoted.
         </p>
       ) : null}

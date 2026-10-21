@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { Badge } from '@/components/primitives';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { OVERLAY, RADIUS, TONE, TYPE } from '@/theme/recipes';
+import { text, OVERLAY, RADIUS, TONE } from '@/theme/recipes';
 
 
 interface AttemptIndicatorProps {
@@ -60,16 +60,16 @@ export const AttemptIndicator: React.FC<AttemptIndicatorProps> = ({
       {showTooltip && (
         <div className={`absolute top-full right-0 mt-space-1 z-50 w-64 p-space-3 ${OVERLAY.shellShadowXl}`}>
           <div className="space-y-space-1">
-            <p className={`${TYPE.value} font-normal`}>
+            <p className={`${text({ role: 'body' })} font-normal`}>
               {typeLabel} Attempt #{attemptNumber}
             </p>
             {previousReason && (
-              <p className={`${TYPE.caption} leading-tight`}>
+              <p className={`${text({ role: 'caption' })} leading-tight`}>
                 <span className="text-text-secondary">Previous: </span>
                 {previousReason}
               </p>
             )}
-            <p className={`${TYPE.caption} text-text-disabled`}>
+            <p className={`${text({ role: 'caption' })} text-text-disabled`}>
               {maxAttempts - attemptNumber} {maxAttempts - attemptNumber === 1 ? 'attempt' : 'attempts'} remaining
             </p>
           </div>
@@ -119,7 +119,7 @@ export const AttemptProgressBar: React.FC<AttemptProgressBarProps> = ({
 
   return (
     <div className={cn('space-y-space-1', className)}>
-      <div className={`flex items-center justify-between ${TYPE.caption}`}>
+      <div className={`flex items-center justify-between ${text({ role: 'caption' })}`}>
         <span className="font-normal text-text-secondary">{label}</span>
         <span className={cn('font-normal', colors.fg)}>
           {remaining} {remaining === 1 ? 'left' : 'left'}

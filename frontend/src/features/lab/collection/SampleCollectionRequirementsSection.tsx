@@ -3,13 +3,13 @@
  */
 
 import React, { useMemo } from 'react';
-import { RADIUS, TYPE } from '@/theme/recipes';
+import { RADIUS } from '@/theme/recipes';
 import { Callout, EntityId } from '@/components/display';
 import { Panel } from '@/components/surfaces';
 import { PanelHeaderSegmentTabs } from '@/components/display/PanelHeaderSegmentTabs';
+import { Text } from '@/components/layout/Text';
 import { formatArray } from '@/utils';
 import { formatRejectionCriteriaList } from '../utils/catalogRejectionCriteria';
-import { WORKLIST_CARD_TYPE } from '@/theme/recipes';
 
 /** Test detail for requirements display */
 export interface TestDetail {
@@ -79,10 +79,8 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
           <div className="flex items-start gap-space-2">
             <span className={`w-1.5 h-1.5 ${RADIUS.pill} bg-text-muted mt-space-1-5 shrink-0`} />
             <div className="flex-1">
-              <div className={`mb-space-1 ${WORKLIST_CARD_TYPE.fieldLabel}`}>
-                Container Specifications
-              </div>
-              <div className={WORKLIST_CARD_TYPE.sectionContent}>{activeTest.containerDescription}</div>
+              <Text as="div" role="label" className="mb-space-1">Container Specifications</Text>
+              <Text as="div" role="body">{activeTest.containerDescription}</Text>
             </div>
           </div>
         )}
@@ -91,10 +89,8 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
           <div className="flex items-start gap-space-2">
             <span className={`w-1.5 h-1.5 ${RADIUS.pill} bg-text-muted mt-space-1-5 shrink-0`} />
             <div className="flex-1">
-              <div className={`mb-space-1 ${WORKLIST_CARD_TYPE.fieldLabel}`}>
-                Collection Instructions
-              </div>
-              <div className={WORKLIST_CARD_TYPE.sectionContent}>{activeTest.collectionNotes}</div>
+              <Text as="div" role="label" className="mb-space-1">Collection Instructions</Text>
+              <Text as="div" role="body">{activeTest.collectionNotes}</Text>
             </div>
           </div>
         )}
@@ -103,20 +99,18 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
           <div className="flex items-start gap-space-2">
             <span className={`w-1.5 h-1.5 ${RADIUS.pill} bg-text-muted mt-space-1-5 shrink-0`} />
             <div className="flex-1">
-              <div className={`mb-space-1 ${WORKLIST_CARD_TYPE.fieldLabel}`}>
-                Rejection Criteria
-              </div>
-              <div className={WORKLIST_CARD_TYPE.sectionContent}>
+              <Text as="div" role="label" className="mb-space-1">Rejection Criteria</Text>
+              <Text as="div" role="body">
                 {formatArray(formatRejectionCriteriaList(activeTest.rejectionCriteria))}
-              </div>
+              </Text>
             </div>
           </div>
         )}
 
         {activeTest.minimumVolume && (
-          <div className={`flex items-center gap-space-2 ${TYPE.value}`}>
-            <span className={`font-normal ${WORKLIST_CARD_TYPE.fieldLabel}`}>Minimum Volume:</span>
-            <span className={WORKLIST_CARD_TYPE.fieldValue}>{activeTest.minimumVolume} mL</span>
+          <div className="flex items-center gap-space-2">
+            <Text role="label" className="font-normal">Minimum Volume:</Text>
+            <Text role="body">{activeTest.minimumVolume} mL</Text>
           </div>
         )}
       </div>

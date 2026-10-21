@@ -11,7 +11,7 @@ import { splitDetailFieldsIntoTwoColumns } from '../utils/orderTestDetailFieldLa
 import type { Sample, Test } from '@/types';
 import { buildSampleFields } from '../utils/buildSampleFields';
 import { PanelHeaderSegmentTabs } from '@/components/display/PanelHeaderSegmentTabs';
-import { INLINE_LINK, TYPE } from '@/theme/recipes';
+import { text, INLINE_LINK } from '@/theme/recipes';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { displayId } from '@/utils';
 
@@ -35,7 +35,7 @@ function sampleTabLabel(sample: Sample, linkedSampleId?: number): string {
 
 function CatalogSampleRequirements({ catalogTest }: { catalogTest: Test }) {
   return (
-    <div className={`${TYPE.meta} space-y-space-2`}>
+    <div className={`${text({ role: 'body', intent: 'muted' })} space-y-space-2`}>
       <p>Expected sample type: {formatStatusBadgeLabel(catalogTest.sampleType)}</p>
       {catalogTest.sampleVolume ? <p>Volume: {catalogTest.sampleVolume}</p> : null}
       {catalogTest.fastingRequired ? <p>Fasting required</p> : null}
@@ -87,7 +87,7 @@ export const OrderTestSampleTabs: React.FC<OrderTestSampleTabsProps> = ({
   if (samples.length === 0) {
     return (
       <Panel preset="panel.compact.standard" title="Collection Requirements & Instructions">
-        <p className={TYPE.label}>No sample is linked to this test yet.</p>
+        <p className={text({ role: 'label' })}>No sample is linked to this test yet.</p>
         {catalogTest ? <CatalogSampleRequirements catalogTest={catalogTest} /> : null}
       </Panel>
     );

@@ -9,8 +9,7 @@ import { ResultCriticalValueBanner } from './ResultCriticalValueBanner';
 import { statusMapFromFlags, parseResultEntry, isCritical } from '../utils/labResult';
 import { ResultsParameterGrid } from '../components/ResultsParameterGrid';
 import { ResultContextNotes } from '../components/ResultContextNotes';
-import { METRIC_TILE } from '@/theme/recipes';
-import { TYPE } from '@/theme/recipes';
+import { text, METRIC_TILE } from '@/theme/recipes';
 import { resolveParameterLabel, useParameterLabelMap } from '@/features/catalog';
 import { LAB_CONFIG } from '../constants';
 import type { Gender, Patient } from '@/types';
@@ -117,7 +116,7 @@ export function ResultValidationNotesSection({
   return (
     <div className="space-y-space-1">
       <p className={METRIC_TILE.notesLabel}>Validation notes</p>
-      <p className={`${TYPE.amount} whitespace-pre-wrap leading-snug`}>{comments}</p>
+      <p className={`${text({ role: 'amount' })} whitespace-pre-wrap leading-snug`}>{comments}</p>
     </div>
   );
 }

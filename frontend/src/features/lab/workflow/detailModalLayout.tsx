@@ -16,7 +16,7 @@ import {
   type LabWorkflowModalContext,
   type LabAuditLine,
 } from '../components/LabWorkflowHeader';
-import { DETAIL_TYPE, TYPE } from '@/theme/recipes';
+import { text } from '@/theme/recipes';
 import { LAB_COPY, labStageLabel, type LabWorkflowStage } from '../constants/labConstants';
 
 export interface QueueModalShellProps {
@@ -168,12 +168,12 @@ export const ModalFooter: React.FC<ModalFooterProps> = ({
     >
       {hasStatus &&
         (statusIcon && statusMessage ? (
-          <div className={`${DETAIL_TYPE.meta} flex items-center gap-space-1-5`}>
+          <div className={`${text({ role: 'body', intent: 'muted' })} flex items-center gap-space-1-5`}>
             <div className="w-3.5 h-3.5 flex items-center justify-center">{statusIcon}</div>
             <span>{statusMessage}</span>
           </div>
         ) : (
-          <div className={`flex items-center gap-space-1-5 ${TYPE.value} ${statusClassName}`}>
+          <div className={`flex items-center gap-space-1-5 ${text({ role: 'body' })} ${statusClassName}`}>
             {statusIcon && (
               <div className="w-3.5 h-3.5 flex items-center justify-center shrink-0">{statusIcon}</div>
             )}
@@ -219,7 +219,7 @@ export function labModalHeaderContext({
 /** @deprecated Use labModalHeaderContext — stage label now lives on the title line. */
 export function labModalSubtitle(stage: LabModalStage): React.ReactNode {
   return (
-    <span className={`${TYPE.caption} uppercase tracking-widest font-light`}>
+    <span className={`${text({ role: 'caption' })} uppercase tracking-widest font-light`}>
       {labModalStageLabel(stage)}
     </span>
   );

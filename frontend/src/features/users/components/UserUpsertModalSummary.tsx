@@ -5,7 +5,7 @@ import React from 'react';
 import { Avatar, Badge } from '@/components/primitives';
 import { Callout } from '@/components/display';
 import { MODULE_ICONS } from '@/config/icons';
-import { ERROR_SURFACE_TYPE, RADIUS, TYPE } from '@/theme/recipes';
+import { text, ERROR_SURFACE_TYPE, RADIUS } from '@/theme/recipes';
 import { USER_ROLE_CONFIG, type UserRole } from '@/types';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import type { UserAdminRecord } from '../api/usersAdmin';
@@ -21,12 +21,12 @@ export interface UserUpsertModalSummaryProps {
 function AccountMetaItem({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
     <div className="flex min-w-[7.5rem] flex-col gap-space-0-5">
-      <span className={`${TYPE.caption} uppercase tracking-wider text-text-tertiary`}>{label}</span>
+      <span className={`${text({ role: 'caption' })} uppercase tracking-wider text-text-tertiary`}>{label}</span>
       <span
         className={
           mono
             ? `${ERROR_SURFACE_TYPE.code} tabular-nums text-text-secondary`
-            : `${TYPE.value} tabular-nums text-text-secondary`
+            : `${text({ role: 'body' })} tabular-nums text-text-secondary`
         }
       >
         {value}
@@ -70,7 +70,7 @@ export const UserUpsertModalSummary: React.FC<UserUpsertModalSummaryProps> = ({
             </span>
           }
           size="lg"
-          primaryTextClassName={TYPE.amount}
+          primaryTextClassName={text({ role: 'amount' })}
           secondaryTextClassName="!text-text-tertiary"
         />
         <div className="flex flex-wrap items-center gap-space-2 sm:justify-end">

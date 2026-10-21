@@ -13,8 +13,8 @@ import {
   useNotifyCriticalValue,
   type CriticalValueRecord,
 } from './criticalValues';
-import { inputBase } from '@/theme/recipes';
-import { TONE, TYPE } from '@/theme/recipes';
+import { text, inputBase } from '@/theme/recipes';
+import { TONE } from '@/theme/recipes';
 
 interface CriticalValueActionsProps {
   record: CriticalValueRecord;
@@ -78,7 +78,7 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
 
   return (
     <div className={compact ? 'space-y-space-2' : 'space-y-space-3'}>
-      <div className={`flex flex-wrap items-center gap-space-2 ${TYPE.value}`}>
+      <div className={`flex flex-wrap items-center gap-space-2 ${text({ role: 'body' })}`}>
         <EntityId type="orderTest" value={record.id} />
         <span className={TONE.danger.fg}>{record.testCode}</span>
         <span className="text-text-secondary">{record.patientName}</span>
@@ -86,11 +86,11 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
       </div>
 
       {record.flags && record.flags.length > 0 && (
-        <p className={`${TYPE.value} ${TONE.danger.fg}`}>{record.flags.join(', ')}</p>
+        <p className={`${text({ role: 'body' })} ${TONE.danger.fg}`}>{record.flags.join(', ')}</p>
       )}
 
       {record.criticalNotificationSent ? (
-        <Alert variant="warning" className={TYPE.value}>
+        <Alert variant="warning" className={text({ role: 'body' })}>
           Notified {record.criticalNotifiedTo ? `to ${record.criticalNotifiedTo}` : ''}
           {record.criticalNotifiedAt ? ` on ${formatDateTime(record.criticalNotifiedAt)}` : ''}
         </Alert>
@@ -117,7 +117,7 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
       )}
 
       {record.criticalAcknowledgedAt && (
-        <p className={`${TYPE.caption} ${TONE.success.fg}`}>
+        <p className={`${text({ role: 'caption' })} ${TONE.success.fg}`}>
           Acknowledged {formatDateTime(record.criticalAcknowledgedAt)}
         </p>
       )}

@@ -13,7 +13,7 @@ import {
   TestRelatedTestsPanel,
 } from '@/features/orders';
 import type { Order, OrderTest, Patient, Test, TestWithContext } from '@/types';
-import { TYPE } from '@/theme/recipes';
+import { text } from '@/theme/recipes';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import { ResultValidationPanel } from '../validation/ResultValidationForm';
 import { QualityIssuePopover } from '../components/QualityIssuePopover';
@@ -245,7 +245,7 @@ export function TestDetailModalBody({
           preset={resultsPanelPreset}
           title={isValidate ? 'Result Validation' : 'Recorded Results'}
         >
-          <p className={TYPE.label}>
+          <p className={text({ role: 'label' })}>
             {orderTest ? formatPipelinePendingMessage(orderTest) : 'Loading test details…'}
           </p>
         </Panel>

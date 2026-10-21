@@ -5,7 +5,7 @@
 
 import React, { type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { CHROME, PAGE_HEADER, RADIUS, SURFACE, TYPE } from '@/theme/recipes';
+import { text, CHROME, PAGE_HEADER, RADIUS, SURFACE } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { useAppChromeMount } from './appChromeMount';
 
@@ -47,9 +47,9 @@ function PageHeaderContent({
         role="banner"
       >
         <div className="min-w-0 flex-1 flex flex-col justify-center">
-          <h1 className={`${TYPE.pageTitle} truncate`}>{title}</h1>
+          <h1 className={`${text({ role: 'title-page' })} truncate`}>{title}</h1>
           {subtitle != null && subtitle !== '' && (
-            <p className={`${TYPE.meta} truncate`}>{subtitle}</p>
+            <p className={`${text({ role: 'body', intent: 'muted' })} truncate`}>{subtitle}</p>
           )}
         </div>
         {actions != null && <div className={PAGE_HEADER.barActions}>{actions}</div>}
@@ -70,11 +70,11 @@ function PageHeaderContent({
         {avatar != null && <div className="shrink-0">{avatar}</div>}
         <div className="min-w-0 flex-1">
           <div className={PAGE_HEADER.detailTitleRow}>
-            <h1 className={cn(TYPE.detailTitle, titleClassName)}>{title}</h1>
+            <h1 className={cn(text({ role: 'title-section' }), titleClassName)}>{title}</h1>
             {badges != null && <div className={PAGE_HEADER.detailBadges}>{badges}</div>}
           </div>
           {subtitle != null && subtitle !== '' && (
-            <p className={`${TYPE.meta} mt-space-0-5`}>{subtitle}</p>
+            <p className={`${text({ role: 'body', intent: 'muted' })} mt-space-0-5`}>{subtitle}</p>
           )}
         </div>
       </div>

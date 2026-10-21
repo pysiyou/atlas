@@ -1,9 +1,12 @@
 import React from 'react';
 import { Badge, type BadgeVariant } from '@/components/primitives';
 import { Icon, type IconName } from '@/components/primitives/Icon';
-import { DETAIL_TYPE } from '@/theme/recipes';
-import { DETAIL_LABEL, DETAIL_VALUE } from '@/utils/constants';
+import { Text } from '@/components/layout/Text';
+import { text } from '@/theme/recipes';
 import { formatDateTime } from '@/utils';
+
+const defaultLabelClass = text({ role: 'label' });
+const defaultValueClass = `font-normal text-right ${text({ role: 'body' })}`;
 
 interface BadgeConfig {
   value: string;
@@ -34,8 +37,8 @@ export const DetailField: React.FC<DetailFieldProps> = ({
   label,
   value,
   className = '',
-  labelClassName = DETAIL_LABEL,
-  valueClassName = `font-normal text-right ${DETAIL_VALUE}`,
+  labelClassName = defaultLabelClass,
+  valueClassName = defaultValueClass,
   variant = 'default',
   orientation = 'horizontal',
   icon,
@@ -56,13 +59,13 @@ export const DetailField: React.FC<DetailFieldProps> = ({
       if (userDisplay) {
         return (
           <div className="text-right">
-            <div className={DETAIL_VALUE}>{formattedDate}</div>
-            <div className={DETAIL_TYPE.meta}>by {userDisplay}</div>
+            <Text as="div" role="body">{formattedDate}</Text>
+            <Text role="body" intent="muted">by {userDisplay}</Text>
           </div>
         );
       }
 
-      return <span className={DETAIL_VALUE}>{formattedDate}</span>;
+      return <Text role="body">{formattedDate}</Text>;
     }
 
     return value;
@@ -75,9 +78,9 @@ export const DetailField: React.FC<DetailFieldProps> = ({
           <Icon name={icon} className="mt-space-0-5 w-4 h-4 shrink-0 text-text-disabled" />
         )}
         <div className="min-w-0 flex-1">
-          <div className={DETAIL_LABEL}>{label}</div>
+          <Text role="label">{label}</Text>
           <div
-            className={`mt-space-0-5 text-left break-words whitespace-normal ${DETAIL_VALUE}`}
+            className={`mt-space-0-5 text-left break-words whitespace-normal ${text({ role: 'body' })}`}
           >
             {renderValue()}
           </div>

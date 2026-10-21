@@ -11,7 +11,7 @@ import {
   ResultValidationResultsBody,
 } from '@/features/lab';
 import type { Gender } from '@/types';
-import { SPACING, TYPE } from '@/theme/recipes';
+import { text, SPACING } from '@/theme/recipes';
 import type { LabReportPayload } from '../types';
 import { getActiveOrderTests } from '../utils/prepareReportData';
 
@@ -55,7 +55,7 @@ export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ repo
   const orderTests = getActiveOrderTests(reportData.order);
 
   if (reportData.testResults.length === 0) {
-    return <p className={TYPE.meta}>No active tests on this order.</p>;
+    return <p className={text({ role: 'body', intent: 'muted' })}>No active tests on this order.</p>;
   }
 
   return (

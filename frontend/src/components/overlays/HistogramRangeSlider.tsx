@@ -4,7 +4,7 @@
  */
 
 import React, { useCallback, useMemo } from 'react';
-import { RANGE_SLIDER, RADIUS, TYPE } from '@/theme/recipes';
+import { text, RANGE_SLIDER, RADIUS } from '@/theme/recipes';
 import { cn } from '@/utils';
 
 const SLIDER_THUMB_CLASS = cn(
@@ -147,7 +147,7 @@ export const HistogramRangeSlider: React.FC<HistogramRangeSliderProps> = ({
           <span
             className={cn(
               'absolute -translate-x-1/2 tabular-nums text-text-primary font-medium',
-              TYPE.amount
+              text({ role: 'amount' })
             )}
             style={{ left: `${minPercent}%` }}
           >
@@ -156,7 +156,7 @@ export const HistogramRangeSlider: React.FC<HistogramRangeSliderProps> = ({
           <span
             className={cn(
               'absolute -translate-x-1/2 tabular-nums text-text-primary font-medium',
-              TYPE.amount
+              text({ role: 'amount' })
             )}
             style={{ left: `${maxPercent}%` }}
           >
@@ -173,7 +173,7 @@ export const HistogramRangeSlider: React.FC<HistogramRangeSliderProps> = ({
               onClick={onReset}
               disabled={isDefault}
               className={cn(
-                TYPE.value,
+                text({ role: 'body' }),
                 'text-text-primary transition-colors',
                 isDefault
                   ? 'opacity-40 cursor-not-allowed'
@@ -186,7 +186,7 @@ export const HistogramRangeSlider: React.FC<HistogramRangeSliderProps> = ({
             <span />
           )}
           {footerSummary ? (
-            <span className={cn(TYPE.caption, 'text-text-disabled')}>{footerSummary}</span>
+            <span className={cn(text({ role: 'caption' }), 'text-text-disabled')}>{footerSummary}</span>
           ) : null}
         </div>
       )}

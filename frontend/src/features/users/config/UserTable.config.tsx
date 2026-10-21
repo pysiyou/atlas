@@ -9,7 +9,7 @@ import {
   createDateTimeColumn,
   TABLE_COLUMN_WIDTH,
 } from '@/components/data-table';
-import { TABLE_TYPE } from '@/theme/recipes';
+import { Text } from '@/components/layout/Text';
 import { USER_ROLE_CONFIG, type UserRole } from '@/types';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import type { UserAdminRecord } from '../api/usersAdmin';
@@ -32,7 +32,7 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
       truncate: true,
       accessor: (user: UserAdminRecord) => user.name,
       render: (user: UserAdminRecord) => (
-        <div className={`${TABLE_TYPE.cell} truncate font-normal`}>{user.name}</div>
+        <Text role="body" truncate className="font-normal">{user.name}</Text>
       ),
     },
     username: {
@@ -42,7 +42,7 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
       sortable: true,
       accessor: (user: UserAdminRecord) => user.username,
       render: (user: UserAdminRecord) => (
-        <div className={`${TABLE_TYPE.secondary} truncate font-normal`}>{user.username}</div>
+        <Text role="label" truncate className="font-normal">{user.username}</Text>
       ),
     },
     role: createBadgeColumn<UserAdminRecord>(
@@ -85,7 +85,7 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
       sortable: true,
       accessor: (user: UserAdminRecord) => user.email ?? '',
       render: (user: UserAdminRecord) => (
-        <div className={`${TABLE_TYPE.meta} truncate font-normal`}>{user.email ?? '—'}</div>
+        <Text role="body" intent="muted" truncate className="font-normal">{user.email ?? '—'}</Text>
       ),
     },
     lastLogin: createDateTimeColumn<UserAdminRecord>(

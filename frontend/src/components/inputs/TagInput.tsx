@@ -8,8 +8,8 @@
 import React, { useState, type KeyboardEvent, type ChangeEvent } from 'react';
 import { RemovableTag } from '@/components/primitives';
 import { cn } from '@/utils';
-import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/theme/recipes';
-import { CONTROL, FIELD_ERROR, TONE, TYPE } from '@/theme/recipes';
+import { text, inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/theme/recipes';
+import { CONTROL, FIELD_ERROR, TONE } from '@/theme/recipes';
 
 
 export interface TagInputProps {
@@ -112,13 +112,13 @@ export const TagInput: React.FC<TagInputProps> = ({
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           placeholder={tags.length === 0 ? placeholder : ''}
-          className={`flex-1 min-w-[120px] outline-none ${TYPE.value} placeholder:text-text-muted bg-transparent leading-normal`}
+          className={`flex-1 min-w-[120px] outline-none ${text({ role: 'body' })} placeholder:text-text-muted bg-transparent leading-normal`}
           disabled={maxTags !== undefined && tags.length >= maxTags}
         />
       </div>
 
       {error && <p className={`${FIELD_ERROR} mt-space-1-5`}>{error}</p>}
-      {helperText && !error && <p className={`${TYPE.meta} mt-space-1-5`}>{helperText}</p>}
+      {helperText && !error && <p className={`${text({ role: 'body', intent: 'muted' })} mt-space-1-5`}>{helperText}</p>}
     </div>
   );
 };

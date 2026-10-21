@@ -1,7 +1,7 @@
 import { companyConfig } from '@/config';
 import { actionButtonPreset, Icon, IconButton } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
-import { CHROME, RADIUS, TYPE } from '@/theme/recipes';
+import { text, CHROME, RADIUS } from '@/theme/recipes';
 import { cn } from '@/utils';
 
 export interface SidebarHeaderProps {
@@ -56,7 +56,7 @@ export function SidebarHeader({
           <BrandMark />
         </button>
       </div>
-      <p className={cn(CHROME.clipPane, TYPE.detailTitle, 'leading-none')}>
+      <p className={cn(CHROME.clipPane, text({ role: 'title-section' }), 'leading-none')}>
         {part1 != null && part2 != null ? (
           <>
             <span className="text-brand">{part1}</span>

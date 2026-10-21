@@ -10,9 +10,9 @@ import { feedbackTitle } from '@/utils/feedback';
 import type { Test, Patient } from '@/types';
 import { ParameterInput } from './ResultParameterInputs';
 import { getReferenceRangeDisplay, checkCriticalStatus } from './resultEntry';
-import { METRIC_TILE } from '@/theme/recipes';
+import { text, METRIC_TILE } from '@/theme/recipes';
 import { resultTileStatusClass } from '../utils/labResult';
-import { FIELD_ERROR_CAPTION, RADIUS, SHADOW, TONE, TYPE } from '@/theme/recipes';
+import { FIELD_ERROR_CAPTION, RADIUS, SHADOW, TONE } from '@/theme/recipes';
 
 interface EntryFormProps {
   testDef: Test;
@@ -115,7 +115,7 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
                 />
                 {valueType !== 'TEXT' && param.unit && (
                   <div className="absolute inset-y-0 right-0 pr-space-3 flex items-center pointer-events-none z-0">
-                    <span className={`${TYPE.meta} select-none`}>{param.unit}</span>
+                    <span className={`${text({ role: 'body', intent: 'muted' })} select-none`}>{param.unit}</span>
                   </div>
                 )}
               </div>

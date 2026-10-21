@@ -9,14 +9,12 @@ import { Popover } from '@/components/overlays';
 import { Icon } from '@/components/primitives';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
-import {
-  inputTrigger,
+import { text, inputTrigger,
   inputTriggerOpen,
   inputError,
   inputClearButton,
-  FORM_CONTROL_LABEL,
-} from '@/theme/recipes';
-import { CALENDAR_TYPE, FIELD_ERROR, RADIUS, TONE, TYPE } from '@/theme/recipes';
+  FORM_CONTROL_LABEL, } from '@/theme/recipes';
+import { CALENDAR_TYPE, FIELD_ERROR, RADIUS, TONE } from '@/theme/recipes';
 import {
   generateCalendarDays,
   generateCalendarMonths,
@@ -71,7 +69,7 @@ function DateInputHeader({
       <button
         type="button"
         onClick={onTitleClick}
-        className={`${TYPE.amount} text-text-secondary hover:bg-surface-page px-space-2 py-space-1 ${RADIUS.field} transition-colors cursor-pointer`}
+        className={`${text({ role: 'amount' })} text-text-secondary hover:bg-surface-page px-space-2 py-space-1 ${RADIUS.field} transition-colors cursor-pointer`}
       >
         {getTitle()}
       </button>
@@ -283,7 +281,7 @@ export const DateInput: React.FC<DateInputProps> = ({
               name={ICONS.dataFields.date}
               className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors shrink-0"
             />
-            <div className={`flex-1 min-w-0 ${TYPE.value} truncate`}>
+            <div className={`flex-1 min-w-0 ${text({ role: 'body' })} truncate`}>
               {dateValue ? (
                 <span className="text-text-primary">{format(dateValue, 'dd MMM yyyy')}</span>
               ) : (

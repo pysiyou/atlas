@@ -4,7 +4,7 @@
 
 import { type ReactNode } from 'react';
 import { actionButtonPreset, IconButton } from '@/components/primitives';
-import { DIALOG, TYPE } from '@/theme/recipes';
+import { text, DIALOG } from '@/theme/recipes';
 import { cn } from '@/utils';
 
 export type DialogChromeSize = 'modal' | 'popover';
@@ -15,14 +15,14 @@ const HEADER_CLASS: Record<DialogChromeSize, string> = {
 };
 
 const TITLE_CLASS: Record<DialogChromeSize, string> = {
-  modal: `${TYPE.modalTitle} truncate leading-snug`,
-  popover: TYPE.detailTitle,
+  modal: `${text({ role: 'title-modal' })} truncate leading-snug`,
+  popover: text({ role: 'title-section' }),
 };
 
 const SUBTITLE_CLASS: Record<DialogChromeSize, string> = {
   /** Same scale as modal title (`type-step-xs`); tertiary body text vs medium modal title. */
-  modal: `${TYPE.meta} leading-snug`,
-  popover: TYPE.meta,
+  modal: `${text({ role: 'body', intent: 'muted' })} leading-snug`,
+  popover: text({ role: 'body', intent: 'muted' }),
 };
 
 const FOOTER_CLASS: Record<DialogChromeSize, string> = {

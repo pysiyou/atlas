@@ -2,7 +2,7 @@ import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { CONTAINER_COLOR_OPTIONS, isCollectedSample } from '@/types';
 import { displayId } from '@/utils';
 import { feedbackTitle } from '@/utils/feedback';
-import { RADIUS, TYPE } from '@/theme/recipes';
+import { text, RADIUS } from '@/theme/recipes';
 
 
 const PRINT_TOKEN_KEYS = [
@@ -20,9 +20,9 @@ const PRINT_TOKEN_KEYS = [
   '--type-caption-size',
   '--type-caption-leading',
   '--type-caption-weight',
-  '--type-amount-size',
-  '--type-amount-leading',
-  '--type-amount-weight',
+  '--type-ui-md-size',
+  '--type-ui-md-leading',
+  '--type-ui-md-weight',
 ] as const;
 
 /**
@@ -59,10 +59,10 @@ function snapshotPrintThemeCss(): string {
               line-height: var(--type-caption-leading);
               font-weight: var(--type-caption-weight);
             }
-            .type-amount {
-              font-size: var(--type-amount-size);
-              line-height: var(--type-amount-leading);
-              font-weight: var(--type-amount-weight);
+            .type-ui-md {
+              font-size: var(--type-ui-md-size);
+              line-height: var(--type-ui-md-leading);
+              font-weight: var(--type-ui-md-weight);
             }
 `;
 }
@@ -149,7 +149,7 @@ export const generatePrintLabelHTML = (display: SampleCollectionQueueItem, patie
         <div class="label-wrapper">
           <div class="w-full max-w-[3.75in] flex flex-col items-center justify-center gap-space-1-5 p-space-2 border border-dashed border-border-strong print:border-none print:max-w-full print:p-0">
             <!-- Patient Name -->
-            <div class="type-amount font-normal text-center text-text-primary leading-snug w-full">
+            <div class="type-ui-md font-normal text-center text-text-primary leading-snug w-full">
               ${patientName}
             </div>
 
@@ -175,7 +175,7 @@ export const generatePrintLabelHTML = (display: SampleCollectionQueueItem, patie
             </div>
 
             <!-- Date and Time -->
-            <div class="${TYPE.caption} text-center leading-tight">
+            <div class="${text({ role: 'caption' })} text-center leading-tight">
               ${formattedDate} ${formattedTime}
             </div>
           </div>

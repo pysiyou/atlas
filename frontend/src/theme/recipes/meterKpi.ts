@@ -2,7 +2,7 @@
 
 import { RADIUS } from './spacing';
 import { TABLE_TYPE } from './table';
-import { TYPE } from './type';
+import { text } from './cva/text';
 
 const METER_GRID_COLS =
   'grid-cols-[minmax(8rem,1.25fr)_minmax(4.75rem,2.15fr)_auto]' as const;
@@ -12,9 +12,9 @@ const METER_RADIUS = RADIUS.inline;
 export const METER_KPI = {
   headerEndWrap:
     'flex min-w-0 flex-col items-end gap-space-0.5 text-right sm:flex-row sm:flex-wrap sm:items-center sm:justify-end sm:gap-x-space-2 sm:gap-y-space-0.5',
-  headerRange: TYPE.caption,
-  headerInsight: `${TYPE.caption} tabular-nums`,
-  headerInsightMuted: `${TYPE.caption} tabular-nums text-text-tertiary`,
+  headerRange: text({ role: 'caption' }),
+  headerInsight: `${text({ role: 'caption' })} tabular-nums`,
+  headerInsightMuted: `${text({ role: 'caption' })} tabular-nums text-text-tertiary`,
   table: `w-full min-w-0 overflow-hidden border border-border-subtle ${METER_RADIUS}`,
   tableHeadRow:
     `grid ${METER_GRID_COLS} items-center gap-x-space-3 border-b border-border-subtle/80 bg-surface-hover/40 px-space-3 py-space-2`,
@@ -38,5 +38,5 @@ export const METER_KPI = {
   tableTotal: `grid ${METER_GRID_COLS} items-center gap-x-space-3`,
   tableTotalLabel: `${TABLE_TYPE.cell} text-text-primary`,
   tableTotalValue: `${TABLE_TYPE.cell} text-right tabular-nums text-text-primary`,
-  footerCaption: `${TYPE.caption} mt-space-1.5 text-text-tertiary`,
+  footerCaption: `${text({ role: 'caption' })} mt-space-1.5 text-text-tertiary`,
 } as const;

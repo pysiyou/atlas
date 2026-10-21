@@ -6,7 +6,7 @@ import Barcode from 'react-barcode';
 import { actionButtonPreset, Button, Icon } from '@/components/primitives';
 import { Panel } from '@/components/surfaces';
 import type { ContainerType, Order, RejectedSample, Sample, Test } from '@/types';
-import { RADIUS, SURFACE, TYPE } from '@/theme/recipes';
+import { text, RADIUS, SURFACE } from '@/theme/recipes';
 import { ModalFooter } from './detailModalLayout';
 import { displayId, formatDateTime } from '@/utils';
 import { CollectionDetailGrid } from './detailModal.sampleCollection.grid';
@@ -86,7 +86,7 @@ export function SampleCollectionDetailContent({
 
       {isRejected && rejectedSample && (
         <Panel preset="panel.compact.standard" title="Rejection Details">
-          <div className={`space-y-space-2 ${TYPE.label}`}>
+          <div className={`space-y-space-2 ${text({ role: 'label' })}`}>
             {rejectedSample.rejectionReasons && rejectedSample.rejectionReasons.length > 0 && (
               <p>
                 <span className="text-text-tertiary">Reason: </span>
@@ -118,7 +118,7 @@ export function SampleCollectionDetailContent({
 
       {collectionNotes && (
         <Panel preset="panel.compact.standard" title="Collection Notes">
-          <div className={TYPE.amount}>{collectionNotes}</div>
+          <div className={text({ role: 'amount' })}>{collectionNotes}</div>
         </Panel>
       )}
 

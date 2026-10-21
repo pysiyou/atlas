@@ -11,7 +11,7 @@ import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
 import type { Order } from '@/types';
 import { getReportableOrders } from '../utils/patientFormatters';
 import { ICONS } from '@/config/icons';
-import { TONE, TYPE } from '@/theme/recipes';
+import { text, TONE } from '@/theme/recipes';
 
 
 export interface PatientReportsListProps {
@@ -43,7 +43,7 @@ export const PatientReportsList: React.FC<PatientReportsListProps> = ({ orders }
               <Icon name={ICONS.dataFields.pdf} className={`w-full h-full ${TONE.danger.fg}`} />
             </div>
             <div className="min-w-0">
-              <p className={`${TYPE.value} font-normal truncate`}>
+              <p className={`${text({ role: 'body' })} font-normal truncate`}>
                 Report_<EntityId type="order" value={order.orderId} />.pdf
               </p>
               <p className={`${TABLE_DATETIME_SECONDARY_CLASS} mt-space-0-5`}>

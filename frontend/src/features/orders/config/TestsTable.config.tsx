@@ -14,7 +14,7 @@ import { CatalogCategoryBadge } from '@/features/catalog';
 import { OrderTestStatusBadge } from '../components/OrderDomainBadges';
 import { getOrderTestLineageRowClass } from '../utils/orderTestLineage';
 import type { OrderTest, TestSummary } from '@/types';
-import { BADGE, TABLE_TYPE, RADIUS, TYPE } from '@/theme/recipes';
+import { text, BADGE, TABLE_TYPE, RADIUS } from '@/theme/recipes';
 
 
 const SIMPLE_VIEWS = {
@@ -81,7 +81,7 @@ function createTestTableCard(testCatalog: TestSummary[]): React.FC<CardComponent
           />
         </div>
         {categoryBadge ? <div className="mt-space-2">{categoryBadge}</div> : null}
-        <div className={`${TYPE.meta} mt-space-1`}>{formatCurrency(item.priceAtOrder)}</div>
+        <div className={`${text({ role: 'body', intent: 'muted' })} mt-space-1`}>{formatCurrency(item.priceAtOrder)}</div>
       </div>
     );
   };

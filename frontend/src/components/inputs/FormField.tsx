@@ -7,8 +7,8 @@
 import React, { type InputHTMLAttributes } from 'react';
 import { Icon, type IconName } from '@/components/primitives/Icon';
 import { ICONS } from '@/config/icons';
-import { inputBase, inputError, FORM_CONTROL_LABEL } from '@/theme/recipes';
-import { FIELD_ERROR, SPACING, TONE, TYPE } from '@/theme/recipes';
+import { text, inputBase, inputError, FORM_CONTROL_LABEL } from '@/theme/recipes';
+import { FIELD_ERROR, SPACING, TONE } from '@/theme/recipes';
 
 type FormFieldKind = 'input' | 'textarea' | 'select';
 
@@ -92,7 +92,7 @@ const FormFieldWrapper: React.FC<FormFieldWrapperProps> = ({
     )}
     {children}
     {error && <p className={`${FIELD_ERROR} mt-space-1`}>{error}</p>}
-    {helperText && !error && <p className={`${TYPE.meta} mt-space-1`}>{helperText}</p>}
+    {helperText && !error && <p className={`${text({ role: 'body', intent: 'muted' })} mt-space-1`}>{helperText}</p>}
   </div>
 );
 

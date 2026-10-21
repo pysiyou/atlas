@@ -11,6 +11,8 @@
   --text-secondary: var(--primitive-neutral-600);
   --text-tertiary: var(--primitive-neutral-500);
   --text-muted: var(--primitive-neutral-400);
+  --text-on-tint: var(--primitive-container-on-light);
+  --text-on-tint-warm: var(--primitive-container-on-yellow);
   --text-disabled: var(--primitive-neutral-300);
   --text-inverse: var(--primitive-neutral-0);
 
@@ -142,7 +144,7 @@
      CHART
      ═══════════════════════════════════════════════════════════════════ */
   --chart-grid: var(--primitive-neutral-200);
-  --chart-axis: var(--primitive-neutral-500);
+  --chart-axis: var(--text-tertiary);
   --chart-tooltip: var(--primitive-neutral-0);
   --chart-tooltip-stroke: var(--primitive-neutral-200);
   --chart-brand: var(--primitive-brand-500);
@@ -233,8 +235,8 @@
      ═══════════════════════════════════════════════════════════════════ */
   --toast-bg: var(--primitive-neutral-0);
   --toast-fg: var(--primitive-neutral-900);
-  --toast-fg-muted: var(--primitive-neutral-600);
-  --toast-close: var(--primitive-neutral-500);
+  --toast-fg-muted: var(--text-secondary);
+  --toast-close: var(--text-tertiary);
   --toast-success: var(--success-fg);
   --toast-info: var(--info-fg);
   --toast-warning: var(--warning-fg);
@@ -287,17 +289,17 @@
      CONTAINER COLORS (sample tube caps)
      ═══════════════════════════════════════════════════════════════════ */
   --container-red-bg: var(--primitive-container-red);
-  --container-red-text: var(--primitive-container-on-light);
+  --container-red-text: var(--text-on-tint);
   --container-yellow-bg: var(--primitive-container-yellow);
-  --container-yellow-text: var(--primitive-container-on-yellow);
+  --container-yellow-text: var(--text-on-tint-warm);
   --container-purple-bg: var(--primitive-container-purple);
-  --container-purple-text: var(--primitive-container-on-light);
+  --container-purple-text: var(--text-on-tint);
   --container-blue-bg: var(--primitive-container-blue);
-  --container-blue-text: var(--primitive-container-on-light);
+  --container-blue-text: var(--text-on-tint);
   --container-green-bg: var(--primitive-container-green);
-  --container-green-text: var(--primitive-container-on-light);
+  --container-green-text: var(--text-on-tint);
   --container-gray-bg: var(--primitive-container-gray);
-  --container-gray-text: var(--primitive-container-on-light);
+  --container-gray-text: var(--text-on-tint);
   --container-black-bg: var(--primitive-container-black);
-  --container-black-text: var(--primitive-container-on-light);
+  --container-black-text: var(--text-on-tint);
 }

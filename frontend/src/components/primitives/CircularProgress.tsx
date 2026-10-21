@@ -1,5 +1,5 @@
 import React from 'react';
-import { TYPE } from '@/theme/recipes';
+import { text } from '@/theme/recipes';
 
 export interface CircularProgressProps {
   /** Size of the circular progress in pixels */
@@ -14,7 +14,7 @@ export interface CircularProgressProps {
   percentage: number;
   /** Optional label text or node to display next to the progress */
   label?: React.ReactNode;
-  /** Typography stack for the label (defaults to TYPE.meta). */
+  /** Typography stack for the label (defaults to text({ role: 'body', intent: 'muted' })). */
   labelClassName?: string;
   /** Additional CSS class names */
   className?: string;
@@ -27,7 +27,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
   progressColorClass = 'stroke-brand',
   percentage,
   label,
-  labelClassName = `${TYPE.meta} normal-case font-normal`,
+  labelClassName = `${text({ role: 'body', intent: 'muted' })} normal-case font-normal`,
   className = '',
 }) => {
   const center = size / 2;

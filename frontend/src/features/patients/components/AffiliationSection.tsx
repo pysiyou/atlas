@@ -4,10 +4,10 @@ import { useAsyncAction } from '@/hooks/useAsyncAction';
 import type { AffiliationDuration } from '@/types';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import { formatDate } from '@/utils';
-import { FORM_FIELD_LABEL } from '@/theme/recipes';
+import { text, FORM_FIELD_LABEL } from '@/theme/recipes';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { AffiliationPlanSelector } from './AffiliationPlanSelector';
-import { FIELD_ERROR, RADIUS, SHADOW, SURFACE, TONE, TYPE } from '@/theme/recipes';
+import { FIELD_ERROR, RADIUS, SHADOW, SURFACE, TONE } from '@/theme/recipes';
 import type { PatientFormSectionProps } from '../patientFormTypes';
 
 export const AffiliationSection: React.FC<
@@ -40,7 +40,7 @@ export const AffiliationSection: React.FC<
       {hasExistingAffiliation && (
         <div className={`${SURFACE.raised} ${RADIUS.menu} p-space-5 space-y-space-4 ${SHADOW.subtle}`}>
           <div className="flex items-center justify-between pb-space-3 border-b border-border-subtle">
-            <span className={TYPE.amount}>Current Affiliation</span>
+            <span className={text({ role: 'amount' })}>Current Affiliation</span>
             <Badge variant={isActive ? 'success' : 'danger'} size="xs" className="font-normal">
               {isActive ? 'Active' : 'Expired'}
             </Badge>
@@ -50,7 +50,7 @@ export const AffiliationSection: React.FC<
               <span className={FORM_FIELD_LABEL}>
                 Assurance Number
               </span>
-              <p className={TYPE.amount}>
+              <p className={text({ role: 'amount' })}>
                 {existingAffiliation.assuranceNumber}
               </p>
             </div>
@@ -58,7 +58,7 @@ export const AffiliationSection: React.FC<
               <span className={FORM_FIELD_LABEL}>
                 Duration
               </span>
-              <p className={TYPE.amount}>
+              <p className={text({ role: 'amount' })}>
                 {AFFILIATION_DURATION_OPTIONS.find(
                   opt => opt.value === existingAffiliation.duration
                 )?.label || `${existingAffiliation.duration} Months`}
@@ -68,7 +68,7 @@ export const AffiliationSection: React.FC<
               <span className={FORM_FIELD_LABEL}>
                 Start Date
               </span>
-              <p className={TYPE.amount}>
+              <p className={text({ role: 'amount' })}>
                 {formatDate(existingAffiliation.startDate)}
               </p>
             </div>
@@ -77,7 +77,7 @@ export const AffiliationSection: React.FC<
                 Expiry Date
               </span>
               <p
-                className={`font-normal ${TYPE.amount} ${isActive ? 'text-text-primary' : TONE.danger.fg}`}
+                className={`font-normal ${text({ role: 'amount' })} ${isActive ? 'text-text-primary' : TONE.danger.fg}`}
               >
                 {formatDate(existingAffiliation.endDate)}
               </p>

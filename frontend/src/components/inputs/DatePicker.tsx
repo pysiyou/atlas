@@ -18,7 +18,7 @@ import {
 import { FilterTriggerShell, Popover } from '@/components/overlays';
 import { FilterChip, Icon } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
-import { CALENDAR_TYPE, RADIUS, TYPE } from '@/theme/recipes';
+import { text, CALENDAR_TYPE, RADIUS } from '@/theme/recipes';
 import { cn } from '@/utils';
 import {
   isDateDisabledForPicker,
@@ -81,7 +81,7 @@ function DatePickerHeader({
       <button
         onClick={onTitleClick}
         className={cn(
-          `${TYPE.amount} text-text-secondary hover:bg-surface-page px-space-2 py-space-1 ${RADIUS.field} transition-colors cursor-pointer`,
+          `${text({ role: 'amount' })} text-text-secondary hover:bg-surface-page px-space-2 py-space-1 ${RADIUS.field} transition-colors cursor-pointer`,
           view === 'years' && 'pointer-events-none hover:bg-transparent cursor-default'
         )}
       >

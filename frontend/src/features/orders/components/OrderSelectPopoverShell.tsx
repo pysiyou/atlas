@@ -1,7 +1,7 @@
 import React from 'react';
 import { EmptyState, PANEL_EMPTY_STATE } from '@/components/display';
-import { FORM_FIELD_LABEL } from '@/theme/recipes';
-import { OVERLAY, RADIUS, TYPE } from '@/theme/recipes';
+import { text, FORM_FIELD_LABEL } from '@/theme/recipes';
+import { OVERLAY, RADIUS } from '@/theme/recipes';
 import { DEFAULT_EMPTY_DESCRIPTION_SEARCH } from '@/utils/constants';
 
 
@@ -35,7 +35,7 @@ export const OrderSelectPopoverShell: React.FC<OrderSelectPopoverShellProps> = (
   <div className={POPOVER_SHELL_CLASS}>
     <div className="px-space-4 py-space-2-5 bg-surface-page/70 border-b border-border-default/70 flex items-center justify-between">
       <div className={FORM_FIELD_LABEL}>{title}</div>
-      <div className={TYPE.meta}>{resultCount} result(s)</div>
+      <div className={text({ role: 'body', intent: 'muted' })}>{resultCount} result(s)</div>
     </div>
 
     {isEmpty ? (

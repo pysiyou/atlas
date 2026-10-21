@@ -1,5 +1,6 @@
 /** App chrome / sidebar. */
 
+import { text } from './cva/text';
 import { SPACING, RADIUS, SHADOW } from './spacing';
 
 export const CHROME_RAIL_VAR = 'var(--chrome-rail)' as const;
@@ -51,11 +52,11 @@ export const CHROME = {
   clipPane:
     'chrome-clip min-w-0 flex-1 overflow-hidden whitespace-nowrap transition-opacity duration-200 ease-out',
   sectionTitle:
-    `chrome-section-title shrink-0 overflow-hidden pl-chrome-rail pr-space-3 pt-0 pb-space-2 min-h-6 type-chrome-section-title text-text-secondary transition-opacity duration-200 ease-out`,
+    `chrome-section-title shrink-0 overflow-hidden pl-chrome-rail pr-space-3 pt-0 pb-space-2 min-h-6 ${text({ role: 'section-title' })} leading-none transition-opacity duration-200 ease-out`,
   navLabel:
-    'chrome-clip min-w-0 flex-1 truncate pr-space-3 type-chrome-nav-label whitespace-nowrap transition-opacity duration-200 ease-out',
+    `chrome-clip min-w-0 flex-1 truncate pr-space-3 ${text({ role: 'title-section' })} whitespace-nowrap transition-opacity duration-200 ease-out`,
   navTooltip:
-    `pointer-events-none absolute left-full z-50 ml-space-2 hidden whitespace-nowrap ${RADIUS.pill} bg-brand px-space-2-5 py-space-1 type-chrome-nav-tooltip text-on-brand ${SHADOW.subtle} group-data-[collapsed=true]/chrome:group-hover/nav:block`,
+    `pointer-events-none absolute left-full z-50 ml-space-2 hidden whitespace-nowrap ${RADIUS.pill} bg-brand px-space-2-5 py-space-1 ${text({ role: 'title-modal' })} text-on-brand ${SHADOW.subtle} group-data-[collapsed=true]/chrome:group-hover/nav:block`,
   footerDivider: 'chrome-nav-split',
   footerDividerRule: 'chrome-nav-split-line',
   footerBlock: `flex shrink-0 flex-col ${SPACING.gapRelaxed} pb-chrome-nav-menu-gutter`,

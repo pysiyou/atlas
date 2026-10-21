@@ -6,9 +6,8 @@ import { AttemptIndicator } from '../components/LabAttemptIndicators';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { SupervisorApprovalBadge } from '../components/LabResultStatusBadges';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
-import { WORKLIST_CARD_BADGE_SIZE, WORKLIST_CARD_TYPE } from '@/theme/recipes';
+import { text, WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
 import type { TestWithContext } from '@/types';
-import { TYPE } from '@/theme/recipes';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 
 function ticketString(value: unknown): string | undefined {
@@ -42,34 +41,34 @@ export function EscalationExceptionReviewBody({ test }: { test: TestWithContext 
   const hasContent = Boolean(reasonCode || denyMessage || rejectionReason || rejectionNotes);
   if (!hasContent) {
     return (
-      <p className={TYPE.label}>Open to review this exception and choose a resolution.</p>
+      <p className={text({ role: 'label' })}>Open to review this exception and choose a resolution.</p>
     );
   }
 
   return (
-    <div className={`space-y-space-1 ${TYPE.value}`}>
+    <div className={`space-y-space-1 ${text({ role: 'body' })}`}>
       {reasonCode ? (
         <div>
-          <span className={WORKLIST_CARD_TYPE.fieldLabel}>Exception:</span>{' '}
-          <span className={WORKLIST_CARD_TYPE.fieldValue}>{reasonCode}</span>
+          <span className={text({ role: 'label' })}>Exception:</span>{' '}
+          <span className={text({ role: 'body' })}>{reasonCode}</span>
         </div>
       ) : null}
       {denyMessage ? (
         <div>
-          <span className={WORKLIST_CARD_TYPE.fieldLabel}>Blocked:</span>{' '}
-          <span className={WORKLIST_CARD_TYPE.fieldValue}>{denyMessage}</span>
+          <span className={text({ role: 'label' })}>Blocked:</span>{' '}
+          <span className={text({ role: 'body' })}>{denyMessage}</span>
         </div>
       ) : null}
       {rejectionReason ? (
         <div>
-          <span className={WORKLIST_CARD_TYPE.fieldLabel}>Reason:</span>{' '}
-          <span className={WORKLIST_CARD_TYPE.fieldValue}>{rejectionReason}</span>
+          <span className={text({ role: 'label' })}>Reason:</span>{' '}
+          <span className={text({ role: 'body' })}>{rejectionReason}</span>
         </div>
       ) : null}
       {rejectionNotes ? (
         <div>
-          <span className={WORKLIST_CARD_TYPE.fieldLabel}>Notes:</span>{' '}
-          <span className={WORKLIST_CARD_TYPE.fieldValue}>{rejectionNotes}</span>
+          <span className={text({ role: 'label' })}>Notes:</span>{' '}
+          <span className={text({ role: 'body' })}>{rejectionNotes}</span>
         </div>
       ) : null}
     </div>

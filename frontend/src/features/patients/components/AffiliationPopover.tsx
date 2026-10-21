@@ -1,5 +1,5 @@
 import React from 'react';
-import { TYPE } from '@/theme/recipes';
+import { text } from '@/theme/recipes';
 import { Popover } from '@/components/overlays';
 import { FooterInfo } from '@/components/display';
 import type { Affiliation } from '@/types';
@@ -25,7 +25,7 @@ export const AffiliationPopover: React.FC<AffiliationPopoverProps> = ({ affiliat
       {() => (
         <div className="flex flex-col w-full max-w-xs">
           <div className="p-panel">
-            <h3 className={`${TYPE.amount} mb-space-3 border-b border-border-subtle pb-space-2`}>
+            <h3 className={`${text({ role: 'amount' })} mb-space-3 border-b border-border-subtle pb-space-2`}>
               Affiliation Details
             </h3>
             <AffiliationInfo affiliation={affiliation} />

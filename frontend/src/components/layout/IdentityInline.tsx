@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { IDENTITY_INLINE, TYPE } from '@/theme/recipes';
+import { text, IDENTITY_INLINE } from '@/theme/recipes';
 import { cn } from '@/utils/cn';
 import { InlineSeparator } from './ListMarker';
 
@@ -54,7 +54,7 @@ export function IdentityInline({ segments, className, nowrap = false }: Identity
           ? IDENTITY_INLINE.primaryText
           : segment.emphasis === 'secondary'
             ? 'font-normal text-text-secondary'
-            : TYPE.label,
+            : text({ role: 'label' }),
         segment.capitalize === false && 'normal-case',
         segment.truncate && 'min-w-0 truncate'
       );
