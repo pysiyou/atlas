@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { Modal, ModalPageShell } from '@/components/overlays';
-import { FILTER_TYPE } from '@/components/theme/recipes';
+import { FILTER_TYPE } from '@/theme/recipes';
 import { QuickFilters } from './QuickFilters';
 import { FilterModalFooter } from './FilterModalFooter';
 import type { FilterConfig, ActiveFilterBadge, FilterValues } from './types';

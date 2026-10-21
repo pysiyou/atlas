@@ -2,7 +2,7 @@
  * Reference interval — shared value column width (ch) so sex labels align; values left-aligned.
  */
 import { Fragment } from 'react';
-import { TYPE } from '@/components/theme/recipes';
+import { TYPE } from '@/theme/recipes';
 import type { ReferenceIntervalLine } from '../utils/labResult';
 
 export function ReferenceIntervalCell({

@@ -5,7 +5,7 @@ import React from 'react';
 import { Checkbox } from '@/components/primitives';
 import { DateFilter, DebouncedSearchInput, Select } from '@/components/inputs';
 import { MultiSelectFilter } from '@/components/overlays';
-import { RADIUS } from '@/components/theme/recipes';
+import { RADIUS } from '@/theme/recipes';
 import { ICONS, MODULE_ICONS } from '@/config/icons';
 import type { UserRole } from '@/types';
 import { USER_ROLE_OPTIONS } from '@/types';

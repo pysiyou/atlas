@@ -8,7 +8,7 @@ import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import { Icon } from '@/components/primitives';
 import { PageHeader } from '@/components/layout';
 import { ICONS } from '@/config/icons';
-import { WORKSPACE } from '@/components/theme/recipes';
+import { WORKSPACE } from '@/theme/recipes';
 import { useLabStageQueueCounts, getValidationTabCount } from '../hooks';
 import {
   DEFAULT_LAB_TAB,

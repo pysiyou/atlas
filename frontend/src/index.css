@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-@source './components/theme/recipes.ts';
+@source './theme/recipes/**/*.ts';
 
 @theme {
   --font-sans: 'Raleway', system-ui, -apple-system, sans-serif;
@@ -302,6 +302,31 @@
   --spacing-overlay-dialog-footer-x: var(--overlay-dialog-footer-x);
   --spacing-overlay-dialog-footer-y: var(--overlay-dialog-footer-y);
   --height-panel-header: var(--panel-header-height);
+  --spacing-icon-xs: var(--icon-size-xs);
+  --spacing-icon-sm: var(--icon-size-sm);
+  --spacing-icon-md: var(--icon-size-md);
+  --spacing-icon-lg: var(--icon-size-lg);
+  --spacing-icon-button-sm: var(--icon-button-size-sm);
+  --spacing-icon-button-md: var(--icon-button-size-md);
+  --spacing-icon-button-lg: var(--icon-button-size-lg);
+  --spacing-dashboard-bottom-row-min: var(--dashboard-bottom-row-min-height);
+  --spacing-dashboard-table-wrap-min: var(--dashboard-table-wrap-min-height);
+  --height-dashboard-meter-track: var(--dashboard-meter-track-height);
+  --spacing-dashboard-meter-dot: var(--dashboard-meter-dot-size);
+  --spacing-dashboard-meter-stage: var(--dashboard-meter-stage-chip-size);
+  --size-icon-xs: var(--icon-size-xs);
+  --size-icon-sm: var(--icon-size-sm);
+  --size-icon-md: var(--icon-size-md);
+  --size-icon-lg: var(--icon-size-lg);
+  --size-icon-button-sm: var(--icon-button-size-sm);
+  --size-icon-button-md: var(--icon-button-size-md);
+  --size-icon-button-lg: var(--icon-button-size-lg);
+  --min-height-dashboard-bottom-row: var(--dashboard-bottom-row-min-height);
+  --min-height-dashboard-table-wrap: var(--dashboard-table-wrap-min-height);
+  --height-dashboard-bottom-row: var(--dashboard-bottom-row-min-height);
+  --height-dashboard-meter-track: var(--dashboard-meter-track-height);
+  --size-dashboard-meter-dot: var(--dashboard-meter-dot-size);
+  --size-dashboard-meter-stage: var(--dashboard-meter-stage-chip-size);
 
   /* ═══════════════════════════════════════════════════════════════════
      FOCUS
@@ -376,7 +401,7 @@
   --color-container-black-text: var(--container-black-text);
 }
 
-@import './components/theme/tokens/typography-utilities.css';
+@import './theme/tokens/typography-utilities.css';
 
 body {
   font-family: var(--font-sans);

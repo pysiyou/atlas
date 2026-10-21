@@ -3,7 +3,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { RADIUS, SHADOW, SURFACE } from '@/components/theme/recipes';
+import { RADIUS, SHADOW, SURFACE } from '@/theme/recipes';
 import { cn } from '@/utils';
 
 export type CardVariant = 'default' | 'lab' | 'metric';

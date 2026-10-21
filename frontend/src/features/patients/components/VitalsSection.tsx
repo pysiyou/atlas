@@ -10,8 +10,8 @@ import { Icon, type IconName } from '@/components/primitives';
 import type { VitalSigns } from '@/types/patient';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { inputBase, inputError } from '@/components/inputs/inputStyles';
-import { FIELD_ERROR, FIELD_ERROR_CAPTION, RADIUS, TONE, TYPE } from '@/components/theme/recipes';
+import { inputBase, inputError } from '@/theme/recipes';
+import { FIELD_ERROR, FIELD_ERROR_CAPTION, RADIUS, TONE, TYPE } from '@/theme/recipes';
 
 
 export interface VitalsSectionProps {

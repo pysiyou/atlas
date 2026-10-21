@@ -9,7 +9,7 @@ import type { IconName } from '@/components/primitives';
 import { PANEL_EMPTY_STATE, DASHBOARD_EMPTY_STATE } from '@/components/display/emptyStatePresets';
 import { DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';
 import type { ColumnConfig, SortConfig, TableVariant } from './types';
-import { PANEL } from '@/components/theme/recipes';
+import { PANEL } from '@/theme/recipes';
 import { DEFAULT_LOADING_ROWS, ROW_HEIGHTS } from './constants';
 import { TableHeader, TableDataRow, TableSkeleton } from './TableViewParts';
 import { useGridTemplateColumns } from '@/hooks/useTable';

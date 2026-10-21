@@ -14,7 +14,7 @@ import { PaymentButton } from '../components/PaymentButton';
 import { PaymentCard } from '../components/PaymentCard';
 import type { OrderPaymentView } from '../types';
 import { PAYMENT_LIST_WIDTH_OVERRIDES } from '@/features/orders/constants/orderTableWidthOverrides';
-import { COLUMN_SIZE, TABLE_COLUMN_WIDTH } from '@/components/data-table';
+import { TABLE_COLUMN_WIDTH } from '@/components/data-table';
 
 function getPaymentSortDate(item: OrderPaymentView): string {
   return item.paymentDate ?? item.order.orderDate;
@@ -60,7 +60,7 @@ export const createPaymentTableConfig = (
     paymentMethod: {
       key: 'paymentMethod',
       header: 'Method',
-      width: COLUMN_SIZE.sm,
+      width: TABLE_COLUMN_WIDTH.badge,
       sortable: true,
       accessor: (item: OrderPaymentView) => item.paymentMethod ?? '',
       render: (item: OrderPaymentView) => {

@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Avatar, Icon, RemovableTag, TagChip } from '@/components/primitives';
 import { EMPTY_COPY } from '@/components/display';
 import { cn, formatPhoneNumber } from '@/utils';
-import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/components/inputs/inputStyles';
+import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/theme/recipes';
 import type { Patient } from '@/types';
 import { ICONS } from '@/config/icons';
 import { OrderSelectPopoverShell } from './OrderSelectPopoverShell';
-import { CONTROL, FIELD_ERROR, SPACING, TYPE } from '@/components/theme/recipes';
+import { CONTROL, FIELD_ERROR, SPACING, TYPE } from '@/theme/recipes';
 
 
 const SELECTED_CHIP_CLASS =

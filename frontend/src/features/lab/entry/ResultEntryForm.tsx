@@ -6,12 +6,12 @@ import React, { useCallback, useState } from 'react';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Textarea } from '@/components/inputs';
 import { cn } from '@/utils';
-import { feedbackTitle } from '@/utils/feedback/copy';
+import { feedbackTitle } from '@/utils/feedback';
 import type { Test, Patient } from '@/types';
 import { ParameterInput } from './ResultParameterInputs';
 import { getReferenceRangeDisplay, checkCriticalStatus } from './resultEntry';
 import { RESULT_PANEL, resultTileStatusClass } from '../utils/labResult';
-import { FIELD_ERROR_CAPTION, RADIUS, SHADOW, TONE, TYPE } from '@/components/theme/recipes';
+import { FIELD_ERROR_CAPTION, RADIUS, SHADOW, TONE, TYPE } from '@/theme/recipes';
 
 interface EntryFormProps {
   testDef: Test;

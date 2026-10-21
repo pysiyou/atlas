@@ -7,8 +7,8 @@
 import React, { type InputHTMLAttributes } from 'react';
 import { Icon, type IconName } from '@/components/primitives/Icon';
 import { ICONS } from '@/config/icons';
-import { inputBase, inputError, FORM_CONTROL_LABEL } from '@/components/inputs/inputStyles';
-import { FIELD_ERROR, SPACING, TONE, TYPE } from '@/components/theme/recipes';
+import { inputBase, inputError, FORM_CONTROL_LABEL } from '@/theme/recipes';
+import { FIELD_ERROR, SPACING, TONE, TYPE } from '@/theme/recipes';
 
 type FormFieldKind = 'input' | 'textarea' | 'select';
 

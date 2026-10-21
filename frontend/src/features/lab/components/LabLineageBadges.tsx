@@ -8,7 +8,7 @@ import { Badge, Icon } from '@/components/primitives';
 import { EntityId } from '@/components/display';
 import type { BadgeSize } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
-import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
+import { LAB_CARD_BADGE_SIZE } from '@/theme/recipes';
 
 interface RecollectionOfBadgeProps {
   originalSampleId: number;

@@ -7,7 +7,7 @@ import { SpinnerLoader } from '@/components/loaders/SpinnerLoader';
 import { ENTITY_ID } from '@/utils/constants';
 import { cn, ID_PREFIXES, type EntityType } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { inputWrapper, inputInner, inputText, inputClearButton, inputContainerError } from './inputStyles';
+import { inputWrapper, inputInner, inputText, inputClearButton, inputContainerError } from '@/theme/recipes';
 
 export type EntityIdFilterEntityType = Extract<EntityType, 'order' | 'orderTest'>;
 

@@ -11,7 +11,7 @@ import { splitDetailFieldsIntoTwoColumns } from '../utils/orderTestDetailFieldLa
 import type { Sample, Test } from '@/types';
 import { buildSampleFields } from '../utils/buildSampleFields';
 import { PanelHeaderSegmentTabs } from '@/components/display/PanelHeaderSegmentTabs';
-import { INLINE_LINK, TYPE } from '@/components/theme/recipes';
+import { INLINE_LINK, TYPE } from '@/theme/recipes';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { displayId } from '@/utils';
 

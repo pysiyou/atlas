@@ -13,7 +13,7 @@ import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
 import type { ReportableOrder } from '../types';
 import { ReportPreviewButton } from './ReportPreviewButton';
 import { ReportPrintButton } from './ReportPrintButton';
-import { TYPE } from '@/components/theme/recipes';
+import { TYPE } from '@/theme/recipes';
 import { getActiveOrderTests } from '../utils/prepareReportData';
 
 

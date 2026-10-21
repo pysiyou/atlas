@@ -13,7 +13,7 @@ import {
   TestRelatedTestsPanel,
 } from '@/features/orders';
 import type { Order, OrderTest, Patient, Test, TestWithContext } from '@/types';
-import { TYPE } from '@/components/theme/recipes';
+import { TYPE } from '@/theme/recipes';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import { ResultValidationPanel } from '../validation/ResultValidationForm';
 import { QualityIssuePopover } from '../components/QualityIssuePopover';

@@ -15,8 +15,8 @@ import {
   inputError,
   inputClearButton,
   FORM_CONTROL_LABEL,
-} from '@/components/inputs/inputStyles';
-import { CALENDAR_TYPE, FIELD_ERROR, RADIUS, TONE, TYPE } from '@/components/theme/recipes';
+} from '@/theme/recipes';
+import { CALENDAR_TYPE, FIELD_ERROR, RADIUS, TONE, TYPE } from '@/theme/recipes';
 import {
   generateCalendarDays,
   generateCalendarMonths,

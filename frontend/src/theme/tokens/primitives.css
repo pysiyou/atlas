@@ -112,6 +112,23 @@
   --overlay-dialog-footer-x: var(--space-6);
   --overlay-dialog-footer-y: var(--space-4);
 
+  /** Icon sizes — buttons, badges, inline controls. */
+  --icon-size-xs: 0.75rem;
+  --icon-size-sm: 0.875rem;
+  --icon-size-md: 1rem;
+  --icon-size-lg: 1.25rem;
+  --icon-button-size-sm: 1.75rem;
+  --icon-button-size-md: 2rem;
+  --icon-button-size-lg: 2.5rem;
+
+  /** Lab command center / dashboard meter layouts. */
+  --dashboard-bottom-row-min-height: 18rem;
+  --dashboard-table-wrap-min-height: 20rem;
+  --dashboard-meter-track-height: 0.25rem;
+  --dashboard-meter-dot-size: 0.25rem;
+  --dashboard-meter-stage-chip-size: 0.5rem;
+  --dashboard-meter-grid-cols: minmax(8rem, 1.25fr) minmax(4.75rem, 2.15fr) auto;
+
   /* Type scale — see tokens/typography.css */
 
   /* Brand — clinical teal */

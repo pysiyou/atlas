@@ -5,10 +5,10 @@
 import type { ReactNode } from 'react';
 import type { OrderTest, PaymentStatus, PriorityLevel, OrderStatus } from '@/types';
 import type { StatusPresentation } from '@/types/labProjection';
-import { COLUMN_SIZE, TABLE_COLUMN_WIDTH } from '@/components/data-table';
+import { TABLE_COLUMN_WIDTH } from '@/components/data-table';
 import { createIdColumn, createBadgeColumn } from '@/components/data-table/columnHelpers';
 import type { ColumnConfig } from '@/components/data-table/types';
-import { BADGE } from '@/components/theme/recipes';
+import { BADGE } from '@/theme/recipes';
 import {
   OrderPriorityBadge,
   OrderStatusBadge,
@@ -81,7 +81,7 @@ export function createOrderSharedColumns<T>(
     patientName: {
       key: 'patientName',
       header: ORDER_TABLE_COLUMN_HEADERS.patientName,
-      width: COLUMN_SIZE.fill,
+      width: TABLE_COLUMN_WIDTH.flex,
       sortable: true,
       accessor: item => accessors.getPatientName(item),
       render: item =>
@@ -92,7 +92,7 @@ export function createOrderSharedColumns<T>(
     tests: {
       key: 'tests',
       header: ORDER_TABLE_COLUMN_HEADERS.tests,
-      width: COLUMN_SIZE.fill,
+      width: TABLE_COLUMN_WIDTH.flex,
       sortable: testsSortable,
       accessor: accessors.getTestsSortValue
         ? item => accessors.getTestsSortValue!(item)
@@ -112,7 +112,7 @@ export function createOrderSharedColumns<T>(
     totalPrice: {
       key: 'totalPrice',
       header: ORDER_TABLE_COLUMN_HEADERS.totalPrice,
-      width: COLUMN_SIZE.sm,
+      width: TABLE_COLUMN_WIDTH.amount,
       sortable: true,
       accessor: item => accessors.getTotalPrice(item),
       render: item =>
@@ -126,7 +126,6 @@ export function createOrderSharedColumns<T>(
       item => <PaymentStatusBadge status={accessors.getPaymentStatus(item)} size="xs" />,
       {
         sortable: true,
-        width: COLUMN_SIZE.sm,
         accessor: item => accessors.getPaymentStatus(item),
       }
     ),
@@ -153,7 +152,6 @@ export function createOrderSharedColumns<T>(
       ),
       {
         sortable: true,
-        width: COLUMN_SIZE.sm,
         accessor: item => accessors.getPriority!(item),
       }
     );
@@ -173,7 +171,7 @@ export function createOrderSharedColumns<T>(
       ),
       {
         sortable: true,
-        width: COLUMN_SIZE.md,
+        width: TABLE_COLUMN_WIDTH.badgeWide,
         accessor: item => accessors.getOverallStatus!(item),
       }
     );

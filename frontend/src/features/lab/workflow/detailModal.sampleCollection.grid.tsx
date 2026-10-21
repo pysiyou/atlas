@@ -5,7 +5,7 @@
 import type { ContainerType, Sample } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_CONFIG } from '@/types';
 import { formatVolume } from '../utils';
-import { TONE } from '@/components/theme/recipes';
+import { TONE } from '@/theme/recipes';
 import { DetailGrid, type DetailGridSectionConfig } from './detailModalLayout';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 

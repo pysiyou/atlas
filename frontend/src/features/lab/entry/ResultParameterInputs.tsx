@@ -5,8 +5,8 @@
 import React, { useCallback } from 'react';
 import { Popover } from '@/components/overlays';
 import { Icon } from '@/components/primitives';
-import { CONTROL, RADIUS, TYPE } from '@/components/theme/recipes';
-import { inputTrigger, inputTriggerOpen, inputBase, inputError } from '@/components/inputs/inputStyles';
+import { CONTROL, RADIUS, TYPE } from '@/theme/recipes';
+import { inputTrigger, inputTriggerOpen, inputBase, inputError } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 import type { TestParameter } from '@/types';

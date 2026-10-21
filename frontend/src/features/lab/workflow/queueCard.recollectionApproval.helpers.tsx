@@ -3,7 +3,7 @@
  */
 
 import { type ReactNode } from 'react';
-import { RADIUS, TYPE } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/theme/recipes';
 import { actionButtonPreset, Badge, Button } from '@/components/primitives';
 import { EntityId } from '@/components/display';
 import { cn, formatDateTime } from '@/utils';
@@ -22,7 +22,7 @@ import {
   LAB_CARD_HEADER,
   LAB_CARD_QUEUE_IDENTITY,
   LAB_CARD_TYPOGRAPHY,
-} from '../utils/labStyles';
+} from '@/theme/recipes';
 
 function InlineDot() {
   return (

@@ -17,7 +17,7 @@ import {
   LAB_CARD_CONTEXT,
   LAB_CARD_HEADER,
   LAB_CARD_QUEUE_IDENTITY,
-} from '../utils/labStyles';
+} from '@/theme/recipes';
 
 export interface SampleCollectionCardLeftColumnProps {
   patientName: string;

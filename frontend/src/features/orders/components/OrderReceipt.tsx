@@ -8,7 +8,7 @@ import { PaymentMethodBadge, PaymentStatusBadge } from '@/features/payments';
 import { cn, displayId, formatCurrency, formatDateTime } from '@/utils';
 import { getActiveTests, getActiveTotal } from '../utils/orderCalculator';
 import type { Order, OrderTest } from '@/types';
-import { DETAIL_TYPE, RADIUS, RECEIPT_TYPE, TYPE } from '@/components/theme/recipes';
+import { DETAIL_TYPE, RADIUS, RECEIPT_TYPE, TYPE } from '@/theme/recipes';
 
 export type OrderReceiptVariant = 'panel' | 'compact' | 'detailed';
 

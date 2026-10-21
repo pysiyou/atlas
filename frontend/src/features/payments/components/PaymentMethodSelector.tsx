@@ -7,7 +7,7 @@ import { Icon } from '@/components/primitives/Icon';
 import type { IconName } from '@/components/primitives/Icon';
 import { ICONS } from '@/config/icons';
 import type { PaymentMethodOption, PaymentMethod } from '@/types/payments';
-import { RADIUS, TYPE } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/theme/recipes';
 
 export interface PaymentMethodSelectorProps {
   methods: PaymentMethodOption[];

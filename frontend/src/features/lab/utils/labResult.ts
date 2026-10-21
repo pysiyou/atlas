@@ -5,7 +5,7 @@ import type { DemographicRange } from '@/types/test';
 import { calculateAge } from '@/utils/string';
 import { PHYSIOLOGIC_LIMITS, type PhysiologicLimit } from '@/types/generated/physiologicLimits';
 import { PHYSIOLOGIC_LIMIT_ALIASES } from '@/types/generated/physiologicAliases';
-import { RADIUS, SHADOW, TONE, TYPE } from '@/components/theme/recipes';
+import { RADIUS, SHADOW, TONE, TYPE } from '@/theme/recipes';
 
 export type { ResultStatus };
 export { PHYSIOLOGIC_LIMITS, type PhysiologicLimit };

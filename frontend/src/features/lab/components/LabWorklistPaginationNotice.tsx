@@ -4,7 +4,7 @@
 import React from 'react';
 import type { WorklistPagination } from '../api/worklists';
 import { Button } from '@/components/primitives';
-import { TYPE } from '@/components/theme/recipes';
+import { TYPE } from '@/theme/recipes';
 
 interface LabWorklistPaginationNoticeProps {
   pagination: WorklistPagination | undefined;

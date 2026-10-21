@@ -6,7 +6,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { SpinnerLoader } from '@/components/loaders';
 import { Icon } from '@/components/primitives';
-import { inputWrapper, inputInner, inputText, inputClearButton } from '@/components/inputs/inputStyles';
+import { inputWrapper, inputInner, inputText, inputClearButton } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 

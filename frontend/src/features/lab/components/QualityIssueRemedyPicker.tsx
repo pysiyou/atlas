@@ -5,7 +5,7 @@ import React from 'react';
 import type { RemedyType } from '@/types/lab-operations';
 import { RadioCard } from '@/components/overlays';
 import { QUALITY_ISSUE_POPOVER_COPY, type RemedyOption } from '../constants/qualityIssuePopoverCopy';
-import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
+import { FORM_FIELD_LABEL } from '@/theme/recipes';
 
 export type { RemedyOption };
 

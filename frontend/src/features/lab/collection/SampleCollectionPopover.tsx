@@ -17,8 +17,8 @@ import type { SampleRequirement } from '../types';
 import { cn, formatArray } from '@/utils';
 import { getContainerIcon } from '@/config/icons';
 import { ICONS } from '@/config/icons';
-import { inputBase, inputError, FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
-import { FIELD_ERROR_CAPTION, RADIUS, SHADOW, TONE, TYPE } from '@/components/theme/recipes';
+import { inputBase, inputError, FORM_FIELD_LABEL } from '@/theme/recipes';
+import { FIELD_ERROR_CAPTION, RADIUS, SHADOW, TONE, TYPE } from '@/theme/recipes';
 import {
   getDefaultCollectionTopColor,
   getEffectiveContainerType,

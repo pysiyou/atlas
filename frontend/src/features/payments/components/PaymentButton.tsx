@@ -9,7 +9,7 @@ import { Icon } from '@/components/primitives';
 import { PaymentPopover } from './PaymentPopover';
 import type { Order } from '@/types';
 import { ICONS } from '@/config/icons';
-import { BADGE } from '@/components/theme/recipes';
+import { BADGE } from '@/theme/recipes';
 
 interface PaymentButtonProps {
   /** Order to display payment action for */

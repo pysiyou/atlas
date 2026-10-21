@@ -7,7 +7,7 @@ import { Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/loaders/SpinnerLoader';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { inputWrapper, inputInner, inputText, inputClearButton } from './inputStyles';
+import { inputWrapper, inputInner, inputText, inputClearButton } from '@/theme/recipes';
 
 export interface DebouncedSearchInputProps {
   value: string;

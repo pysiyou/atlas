@@ -7,7 +7,7 @@
 import React, { memo, useCallback, useEffect, useRef, type RefObject } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Portal } from './Portal';
-import { OVERLAY } from '@/components/theme/recipes';
+import { OVERLAY } from '@/theme/recipes';
 import { DialogHeader } from './DialogChrome';
 import { OverlayBackdrop, OVERLAY_PANEL_Z_INDEX } from './OverlayBackdrop';
 

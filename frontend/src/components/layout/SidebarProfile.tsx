@@ -5,7 +5,7 @@ import { ICONS } from '@/config/icons';
 import { cn } from '@/utils';
 import { formatStatus } from '@/utils/string';
 import type { AuthUser } from '@/types';
-import { CHROME, CONTROL, MENU_ITEM_TYPE, RADIUS, TONE, TYPE } from '@/components/theme/recipes';
+import { CHROME, CONTROL, MENU_ITEM_TYPE, RADIUS, TONE, TYPE } from '@/theme/recipes';
 
 export interface SidebarProfileProps {
   currentUser: AuthUser;

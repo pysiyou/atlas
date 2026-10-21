@@ -6,7 +6,7 @@
 
 import React, { type HTMLAttributes, type ReactNode } from 'react';
 import { Icon, type IconName } from '@/components/primitives/Icon';
-import { RADIUS, TOAST_TYPE } from '@/components/theme/recipes';
+import { RADIUS, TOAST_TYPE } from '@/theme/recipes';
 import { cn } from '@/utils';
 
 export type ToastVariant = 'success' | 'error' | 'info' | 'warning' | 'loading';

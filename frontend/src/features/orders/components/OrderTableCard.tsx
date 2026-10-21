@@ -10,7 +10,7 @@ import { formatCurrency, formatDateTime } from '@/utils';
 import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
 import { getActiveTests } from '../utils/orderCalculator';
 import type { Order } from '@/types';
-import { CARD_PRICE } from '@/components/theme/recipes';
+import { CARD_PRICE } from '@/theme/recipes';
 
 
 type OrderTableCardProps = CardComponentProps<Order> & {

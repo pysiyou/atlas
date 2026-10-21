@@ -18,8 +18,7 @@ import {
   type PaymentMethod,
 } from '@/types/payments';
 import { getPaymentErrorMessage } from '@/utils/errors';
-import { getFeedback } from '@/utils/feedback';
-import { feedbackTitle } from '@/utils/feedback/copy';
+import { feedbackTitle, getFeedback } from '@/utils/feedback';
 import type { OrderPaymentView } from '../types';
 import { ICONS, MODULE_ICONS } from '@/config/icons';
 

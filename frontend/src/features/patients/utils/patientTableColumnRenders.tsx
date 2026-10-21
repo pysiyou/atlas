@@ -6,7 +6,7 @@ import type { ReactNode } from 'react';
 import { EntityId } from '@/components/display/EntityId';
 import { calculateAge, formatDateTime } from '@/utils';
 import { renderPatientNameBlock, renderTableTwoLineCell } from '@/utils/tableColumnRenders';
-import { TABLE_TYPE } from '@/components/theme/recipes';
+import { TABLE_TYPE } from '@/theme/recipes';
 
 export function renderPatientId(patientId: string | number): ReactNode {
   return <EntityId type="patient" value={patientId} variant="block" />;

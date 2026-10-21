@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
-import { TYPE } from '@/components/theme/recipes';
+import { TYPE } from '@/theme/recipes';
 import type { PaymentMethod } from '@/types';
 import { getEnabledPaymentMethods } from '@/types/payments';
 import { Alert } from '@/components/display';
 import { PaymentMethodSelector } from '@/features/payments';
-import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
+import { FORM_FIELD_LABEL } from '@/theme/recipes';
 
 export interface OrderPaymentSectionProps {
   mode: 'create' | 'edit';

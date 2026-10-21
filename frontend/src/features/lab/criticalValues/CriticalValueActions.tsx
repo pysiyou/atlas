@@ -13,8 +13,8 @@ import {
   useNotifyCriticalValue,
   type CriticalValueRecord,
 } from './criticalValues';
-import { inputBase } from '@/components/inputs/inputStyles';
-import { TONE, TYPE } from '@/components/theme/recipes';
+import { inputBase } from '@/theme/recipes';
+import { TONE, TYPE } from '@/theme/recipes';
 
 interface CriticalValueActionsProps {
   record: CriticalValueRecord;

@@ -5,7 +5,7 @@
 import React from 'react';
 import { Panel } from '@/components/surfaces';
 import { Skeleton } from '@/components/loaders';
-import { MONITOR_PANEL } from './monitorStyles';
+import { MONITOR_PANEL } from '@/theme/recipes';
 import {
   MONITOR_BOTTOM_PANEL,
   MONITOR_BOTTOM_ROW,
@@ -13,7 +13,7 @@ import {
   MONITOR_TABLE_WRAP,
   TODAY_KPI,
   TODAY_PANEL,
-} from './monitorStyles';
+} from '@/theme/recipes';
 
 function TodayPanelSkeleton() {
   return (

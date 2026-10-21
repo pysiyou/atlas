@@ -6,7 +6,7 @@ import { PatientGenderBadge } from './PatientGenderBadge';
 import type { CardComponentProps } from '@/components/data-table';
 import { calculateAge, formatPhoneNumber } from '@/utils';
 import type { Patient } from '@/types';
-import { RADIUS, TYPE } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/theme/recipes';
 
 
 /**

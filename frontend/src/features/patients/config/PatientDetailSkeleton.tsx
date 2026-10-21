@@ -4,7 +4,7 @@
  */
 
 import { Panel } from '@/components/surfaces';
-import { LAYOUT } from '@/components/theme/recipes';
+import { LAYOUT } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { SkeletonInfoSection, SkeletonTableRow } from '@/components/loaders/Skeleton';
 import type { DetailSkeletonSection } from '@/components/loaders/DetailPageSkeleton';

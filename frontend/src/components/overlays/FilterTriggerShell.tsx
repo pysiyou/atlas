@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { Icon } from '@/components/primitives/Icon';
-import { inputTrigger, inputTriggerOpen, filterTriggerText, inputClearButton } from '@/components/inputs/inputStyles';
+import { inputTrigger, inputTriggerOpen, filterTriggerText, inputClearButton } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 

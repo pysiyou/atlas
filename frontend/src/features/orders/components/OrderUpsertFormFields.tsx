@@ -8,7 +8,7 @@ import type { OrderFormInput } from '../schemas/order.schema';
 import { PatientSelect } from './PatientSelect';
 import { TestSelect } from './TestSelect';
 import { OrderPaymentSection } from './OrderPaymentSection';
-import { FIELD_ERROR } from '@/components/theme/recipes';
+import { FIELD_ERROR } from '@/theme/recipes';
 import type { useOrderUpsertModal } from '../hooks/useOrderUpsertModal';
 
 interface OrderUpsertFormFieldsProps {

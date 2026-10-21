@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { format, isSameDay, startOfDay } from 'date-fns';
 import { EmptyState } from '@/components/display/EmptyState';
 import { InlineHighlight } from '@/components/primitives/InlineHighlight';
-import { RADIUS, TYPE } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/theme/recipes';
 import { MODULE_ICONS } from '@/config/icons';
 import { getLaneVisual, type LabTimelineLane } from '@/features/lab';
 import { parseAppDate } from '@/utils/date';

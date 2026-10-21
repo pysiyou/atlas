@@ -4,7 +4,7 @@
 
 import type { ReactNode } from 'react';
 import { cn, formatDate, formatDateTime, formatPhoneNumber } from '@/utils';
-import { TABLE_TYPE } from '@/components/theme/recipes';
+import { TABLE_TYPE } from '@/theme/recipes';
 
 /** Primary datetime/date in a dedicated table column. */
 export const TABLE_DATETIME_CELL_CLASS = `${TABLE_TYPE.datetime} truncate block font-normal`;

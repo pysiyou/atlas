@@ -2,7 +2,7 @@
  * Event log row detail blocks (results, notes, debug payload).
  */
 import { useMemo } from 'react';
-import { TYPE } from '@/components/theme/recipes';
+import { TYPE } from '@/theme/recipes';
 import { parseResultEntry, ResultValueAnnotations, statusMapFromFlags } from '@/features/lab';
 import { resolveParameterLabel, useParameterLabelMap } from '@/features/catalog';
 import { cn } from '@/utils';

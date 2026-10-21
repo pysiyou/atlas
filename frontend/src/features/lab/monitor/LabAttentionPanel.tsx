@@ -11,7 +11,7 @@ import { LabPriorityBadge } from '../components/LabDomainBadges';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import { cn, displayId } from '@/utils';
 import { getLabQueueUrl } from '@/features/lab';
-import { CONTROL, RADIUS, TABLE_TYPE } from '@/components/theme/recipes';
+import { CONTROL, RADIUS, TABLE_TYPE } from '@/theme/recipes';
 import { LAB_COPY } from '../constants/labConstants';
 import {
   ATTENTION_TYPE_ORDER,
@@ -21,7 +21,7 @@ import {
   type LabAttentionQueueItem,
 } from './monitorModel';
 import { formatLabAttentionQueueItem, type AttentionDetail } from './monitorAttentionFormat';
-import { MONITOR_ATTENTION_ACCENT, MONITOR_FEED_STYLES } from './monitorStyles';
+import { MONITOR_ATTENTION_ACCENT, MONITOR_FEED_STYLES } from '@/theme/recipes';
 
 const PRIMARY_DETAIL_CLASS = `${TABLE_TYPE.cell} truncate font-normal`;
 const META_DETAIL_CLASS = `${TABLE_TYPE.meta} truncate font-normal`;

@@ -8,7 +8,7 @@ import { SpinnerLoader } from '@/components/loaders';
 import type { BadgeSize } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 import { ATTENTION_LABELS } from '@/types/generated/labBlockers';
-import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
+import { LAB_CARD_BADGE_SIZE } from '@/theme/recipes';
 
 interface RetestBadgeProps {
   retestNumber: number;

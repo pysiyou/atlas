@@ -6,7 +6,7 @@
 import React from 'react';
 import { Alert } from '@/components/display';
 import { actionButtonPreset, Button } from '@/components/primitives';
-import { ERROR_SURFACE_TYPE } from '@/components/theme/recipes';
+import { ERROR_SURFACE_TYPE } from '@/theme/recipes';
 
 /**
  * Generic error type that matches all context error types

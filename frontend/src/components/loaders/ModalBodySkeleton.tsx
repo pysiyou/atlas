@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { RADIUS } from '@/components/theme/recipes';
+import { RADIUS } from '@/theme/recipes';
 import { Skeleton, SkeletonText } from './Skeleton';
 
 export interface ModalBodySkeletonProps {

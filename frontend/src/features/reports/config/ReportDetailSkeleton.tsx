@@ -1,6 +1,6 @@
 import React from 'react';
 import { Skeleton } from '@/components/loaders/Skeleton';
-import { RADIUS } from '@/components/theme/recipes';
+import { RADIUS } from '@/theme/recipes';
 
 export const ReportDetailSkeletonContent: React.FC = () => (
   <div className="flex flex-col gap-layout-section p-space-6 max-w-2xl mx-auto" aria-label="Loading report">

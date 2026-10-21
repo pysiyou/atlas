@@ -7,7 +7,7 @@ import React from 'react';
 import { Panel, type PanelPresetId } from '@/components/surfaces';
 import { EmptyState } from './EmptyState';
 import { PANEL_EMPTY_STATE } from './emptyStatePresets';
-import { DETAIL_TYPE, TABLE_CELL } from '@/components/theme/recipes';
+import { DETAIL_TYPE, TABLE_CELL } from '@/theme/recipes';
 import { DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';
 import { filterDetailRows, type DetailTableRow } from './detailsTableUtils';
 

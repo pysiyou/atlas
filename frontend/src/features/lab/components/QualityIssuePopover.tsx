@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { TYPE } from '@/components/theme/recipes';
+import { TYPE } from '@/theme/recipes';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Popover, PopoverFormChrome } from '@/components/overlays';
 import { Alert, FooterInfo } from '@/components/display';

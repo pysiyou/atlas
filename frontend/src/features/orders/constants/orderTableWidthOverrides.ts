@@ -1,9 +1,8 @@
 /**
  * Shared responsive column widths for order-family tables (orders, payments, patient orders).
- * All tokens resolve via global {@link COLUMN_SIZE} / {@link SIZE_PRESETS}.
  */
 
-import { COLUMN_SIZE, type ColumnViewPreset } from '@/components/data-table';
+import { TABLE_COLUMN_WIDTH, type ColumnViewPreset } from '@/components/data-table';
 import type { ColumnWidthOverride } from '@/components/data-table/columnHelpers';
 
 type ViewWidthOverrides = Partial<Record<string, ColumnWidthOverride>>;
@@ -11,34 +10,34 @@ type ResponsiveWidthOverrides = Partial<Record<ColumnViewPreset, ViewWidthOverri
 
 const ORDER_CORE_WIDTHS: ResponsiveWidthOverrides = {
   full: {
-    orderId: COLUMN_SIZE.sm,
-    orderDate: COLUMN_SIZE.md,
-    tests: COLUMN_SIZE.fill,
-    overallStatus: COLUMN_SIZE.md,
-    priority: COLUMN_SIZE.sm,
-    paymentStatus: COLUMN_SIZE.sm,
-    totalPrice: COLUMN_SIZE.sm,
+    orderId: TABLE_COLUMN_WIDTH.id,
+    orderDate: TABLE_COLUMN_WIDTH.datetime,
+    tests: TABLE_COLUMN_WIDTH.flex,
+    overallStatus: TABLE_COLUMN_WIDTH.badgeWide,
+    priority: TABLE_COLUMN_WIDTH.badge,
+    paymentStatus: TABLE_COLUMN_WIDTH.badge,
+    totalPrice: TABLE_COLUMN_WIDTH.amount,
   },
   medium: {
-    orderId: COLUMN_SIZE.sm,
-    orderDate: COLUMN_SIZE.md,
-    tests: COLUMN_SIZE.fill,
-    overallStatus: COLUMN_SIZE.md,
-    totalPrice: COLUMN_SIZE.sm,
+    orderId: TABLE_COLUMN_WIDTH.id,
+    orderDate: TABLE_COLUMN_WIDTH.datetime,
+    tests: TABLE_COLUMN_WIDTH.flex,
+    overallStatus: TABLE_COLUMN_WIDTH.badgeWide,
+    totalPrice: TABLE_COLUMN_WIDTH.amount,
   },
   compact: {
-    orderId: COLUMN_SIZE.sm,
-    orderDate: COLUMN_SIZE.md,
-    overallStatus: COLUMN_SIZE.sm,
-    totalPrice: COLUMN_SIZE.sm,
+    orderId: TABLE_COLUMN_WIDTH.id,
+    orderDate: TABLE_COLUMN_WIDTH.datetime,
+    overallStatus: TABLE_COLUMN_WIDTH.badge,
+    totalPrice: TABLE_COLUMN_WIDTH.amount,
   },
 };
 
 function withPatientName(overrides: ResponsiveWidthOverrides): ResponsiveWidthOverrides {
   return {
-    full: { ...overrides.full, patientName: COLUMN_SIZE.xl },
-    medium: { ...overrides.medium, patientName: COLUMN_SIZE.xl },
-    compact: { ...overrides.compact, patientName: COLUMN_SIZE.xl },
+    full: { ...overrides.full, patientName: TABLE_COLUMN_WIDTH.patientName },
+    medium: { ...overrides.medium, patientName: TABLE_COLUMN_WIDTH.patientName },
+    compact: { ...overrides.compact, patientName: TABLE_COLUMN_WIDTH.patientName },
   };
 }
 
@@ -52,21 +51,21 @@ export const ORDER_LIST_WIDTH_OVERRIDES_WITHOUT_PATIENT = ORDER_CORE_WIDTHS;
 export const PAYMENT_LIST_WIDTH_OVERRIDES: ResponsiveWidthOverrides = {
   full: {
     ...ORDER_LIST_WIDTH_OVERRIDES.full,
-    paidDate: COLUMN_SIZE.md,
-    totalPrice: COLUMN_SIZE.sm,
-    paymentMethod: COLUMN_SIZE.sm,
-    action: COLUMN_SIZE.md,
+    paidDate: TABLE_COLUMN_WIDTH.datetime,
+    totalPrice: TABLE_COLUMN_WIDTH.amount,
+    paymentMethod: TABLE_COLUMN_WIDTH.badge,
+    action: TABLE_COLUMN_WIDTH.action,
   },
   medium: {
     ...ORDER_LIST_WIDTH_OVERRIDES.medium,
-    paidDate: COLUMN_SIZE.md,
-    totalPrice: COLUMN_SIZE.sm,
-    action: COLUMN_SIZE.md,
+    paidDate: TABLE_COLUMN_WIDTH.datetime,
+    totalPrice: TABLE_COLUMN_WIDTH.amount,
+    action: TABLE_COLUMN_WIDTH.action,
   },
   compact: {
     ...ORDER_LIST_WIDTH_OVERRIDES.compact,
-    paidDate: COLUMN_SIZE.md,
-    totalPrice: COLUMN_SIZE.sm,
-    action: COLUMN_SIZE.md,
+    paidDate: TABLE_COLUMN_WIDTH.datetime,
+    totalPrice: TABLE_COLUMN_WIDTH.amount,
+    action: TABLE_COLUMN_WIDTH.action,
   },
 };

@@ -10,7 +10,7 @@ import { parseBadgeVariant } from '@/components/primitives/badgeStyles';
 import { cn, uppercaseLabel } from '@/utils';
 import { ICONS } from '@/config/icons';
 import type { SingleSelectFilterControl } from './types';
-import { MENU_ITEM_TYPE, RADIUS } from '@/components/theme/recipes';
+import { MENU_ITEM_TYPE, RADIUS } from '@/theme/recipes';
 
 /**
  * Props for SingleSelectControl component

@@ -8,7 +8,7 @@ import React, { type ReactNode, useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { EmptyState, PANEL_EMPTY_STATE } from '@/components/display';
 import { displayId } from '@/utils';
-import { SPACING, WORKSPACE } from '@/components/theme/recipes';
+import { SPACING, WORKSPACE } from '@/theme/recipes';
 
 /** Estimated card height used until the virtualizer measures the real node. */
 const ESTIMATED_QUEUE_CARD_HEIGHT_PX = 160;

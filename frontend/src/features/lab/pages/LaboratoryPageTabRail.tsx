@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
 import { Badge } from '@/components/primitives';
-import { CONTROL } from '@/components/theme/recipes';
+import { CONTROL } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { getStageVisual, isLabWorkflowStageTab, type LabTabId } from '../constants/labConstants';
-import { LAB_PAGE_TABS } from '../utils/labStyles';
+import { LAB_PAGE_TABS } from '@/theme/recipes';
 
 export interface LaboratoryPageTabDef {
   id: LabTabId;

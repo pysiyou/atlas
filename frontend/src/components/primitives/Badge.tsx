@@ -4,10 +4,10 @@
 
 import React from 'react';
 import { cn } from '@/utils';
-import { useBadgeAppearance } from '@/components/theme/theme';
+import { useBadgeAppearance } from '@/theme/theme';
 import { ICONS } from '@/config/icons';
 import { Icon, type IconName } from './Icon';
-import { BADGE, CONTROL, RADIUS } from '@/components/theme/recipes';
+import { BADGE, CONTROL, RADIUS } from '@/theme/recipes';
 import {
   CONTAINER_STYLES,
   getCategoryBadgeTextClass,

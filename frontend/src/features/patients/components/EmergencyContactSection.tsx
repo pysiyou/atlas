@@ -4,8 +4,8 @@ import { MultiSelectFilter } from '@/components/overlays';
 import type { FilterOption } from '@/components/overlays';
 import { RELATIONSHIP_VALUES, RELATIONSHIP_CONFIG, type Relationship } from '@/types';
 import { ICONS } from '@/config/icons';
-import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
-import { FIELD_ERROR, TONE } from '@/components/theme/recipes';
+import { FORM_FIELD_LABEL } from '@/theme/recipes';
+import { FIELD_ERROR, TONE } from '@/theme/recipes';
 import type { PatientFormSectionProps } from '../patientFormTypes';
 
 export const EmergencyContactSection: React.FC<

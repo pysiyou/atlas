@@ -1,5 +1,5 @@
 import React from 'react';
-import { RADIUS } from '@/components/theme/recipes';
+import { RADIUS } from '@/theme/recipes';
 import { Skeleton } from '@/components/loaders/Skeleton';
 
 const TIMELINE_STEPS = 4;

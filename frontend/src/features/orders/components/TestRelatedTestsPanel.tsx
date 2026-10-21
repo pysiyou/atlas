@@ -5,7 +5,7 @@
 import React, { useMemo } from 'react';
 import { Panel } from '@/components/surfaces';
 import type { Order, OrderTest } from '@/types';
-import { TYPE } from '@/components/theme/recipes';
+import { TYPE } from '@/theme/recipes';
 import {
   getRelatedOrderTestEntries,
   getSiblingOrderTestsOnSample,

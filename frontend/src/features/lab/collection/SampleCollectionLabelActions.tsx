@@ -1,8 +1,8 @@
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { CONTAINER_COLOR_OPTIONS, isCollectedSample } from '@/types';
 import { displayId } from '@/utils';
-import { feedbackTitle } from '@/utils/feedback/copy';
-import { RADIUS, TYPE } from '@/components/theme/recipes';
+import { feedbackTitle } from '@/utils/feedback';
+import { RADIUS, TYPE } from '@/theme/recipes';
 
 
 const PRINT_TOKEN_KEYS = [

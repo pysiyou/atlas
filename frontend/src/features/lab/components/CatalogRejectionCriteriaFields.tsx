@@ -5,8 +5,8 @@
 import React from 'react';
 import { Alert } from '@/components/display';
 import { cn } from '@/utils';
-import { inputBase, FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
-import { TONE, TYPE } from '@/components/theme/recipes';
+import { inputBase, FORM_FIELD_LABEL } from '@/theme/recipes';
+import { TONE, TYPE } from '@/theme/recipes';
 
 
 export interface CatalogRejectionFieldsProps {

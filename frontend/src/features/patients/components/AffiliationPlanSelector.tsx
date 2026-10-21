@@ -15,7 +15,7 @@ import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import type { AffiliationPlan } from '@/types/affiliation';
 import type { AffiliationDuration } from '@/types';
 import { ICONS } from '@/config/icons';
-import { RADIUS, SHADOW, TYPE } from '@/components/theme/recipes';
+import { RADIUS, SHADOW, TYPE } from '@/theme/recipes';
 
 
 export interface AffiliationPlanSelectorProps {

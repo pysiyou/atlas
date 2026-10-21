@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { TYPE } from '@/components/theme/recipes';
+import { TYPE } from '@/theme/recipes';
 import { Icon } from '@/components/primitives';
 import { DetailField, EntityId } from '@/components/display';
 import { calculateAge } from '@/utils';

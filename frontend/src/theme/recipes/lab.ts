@@ -1,19 +1,21 @@
 /**
- * Lab Card Style Constants
- * Typography and wells come from theme recipes; layout objects stay here.
+ * Lab workflow cards, queue shells, and page tabs.
  */
 
-import { CONTROL, FIELD_ERROR, PANEL, RADIUS, SHADOW, SPACING, SURFACE, TONE, TYPE } from '@/components/theme/recipes';
-import type { BadgeSize } from '@/components/primitives';
+import { CONTROL } from './control';
+import { FIELD_ERROR } from './misc';
+import { PANEL } from './panel';
+import { RADIUS, SHADOW, SPACING } from './spacing';
+import { SURFACE } from './surface';
+import { TONE } from './tone';
+import { TYPE } from './type';
 
-/** Canonical Badge size for lab cards — uses theme BADGE.size.xs. */
-export const LAB_CARD_BADGE_SIZE: BadgeSize = 'xs';
+/** Lab queue badge density (`xs` | `sm` | `md` — same as Badge `size`). */
+export const LAB_CARD_BADGE_SIZE = 'xs' as const;
 
-/** Collection / entry / validation queue panel — matches ListView table shell inside app well. */
 export const LAB_WORKFLOW_QUEUE_SHELL =
   `${PANEL.raisedShadowSm} flex flex-1 flex-col min-w-0 min-h-0` as const;
 
-/** Laboratory page tab segment control (collection / entry / validation / command center). */
 export const LAB_PAGE_TABS = {
   rail: `bg-surface-hover p-space-0-5 ${RADIUS.field} flex items-center gap-space-0-5`,
   buttonBase: `relative flex items-center gap-space-1-5 px-space-2-5 py-space-1 ${RADIUS.field} ${TYPE.meta} font-normal transition-all duration-200 cursor-pointer`,
@@ -24,24 +26,18 @@ export const LAB_PAGE_TABS = {
   countBadgeMargin: 'ml-space-1',
 } as const;
 
-/** Shared lab header rows (modals; cards can reuse audit/badge row tokens) */
 export const LAB_HEADER = {
-  /** Space between identity / badges / audit blocks */
   stack: `flex flex-col ${SPACING.gapInline} min-w-0`,
   cardStack: `flex flex-col ${SPACING.gapHairline} min-w-0`,
   row: 'min-h-0 min-w-0 w-full leading-snug',
   badgeRow: `flex min-w-0 flex-1 flex-wrap items-center ${SPACING.gapInline} overflow-hidden`,
-  /** Space between multiple audit lines within the audit block */
   auditStack: `flex flex-col ${SPACING.gapHairline} min-w-0`,
-  /** Labels (e.g. "Requested", "collected") — values use emphasizedInline (primary) */
   auditLine: TYPE.label,
 } as const;
 
-/** Lab detail modal layout — header metadata + grid field stacks */
 export const LAB_MODAL_DETAIL = {
   headerStack: LAB_HEADER.stack,
   headerRow: LAB_HEADER.row,
-  /** @deprecated Use `MODAL_WORKFLOW_BODY_STACK` from `@/components/overlays`. */
   sectionStack: SPACING.stackRelaxed,
 } as const;
 
@@ -54,15 +50,13 @@ export const LAB_MODAL_HEADER = {
 export const LAB_MODAL_TYPOGRAPHY = {
   auditLine: TYPE.label,
   meta: TYPE.label,
-  sectionTitle: TYPE.sectionTitle,
+  sectionTitle: TYPE.panelTitle,
 } as const;
 
-/** Card-only alert row (warnings, queue urgency, attempts). */
 export const LAB_CARD_ALERT = {
   row: `flex min-w-0 w-full flex-col ${SPACING.gapHairline} ${TYPE.label} leading-snug`,
 } as const;
 
-// Typography Constants (shared tokens for body/metadata; lab-specific for title/section)
 export const LAB_CARD_TYPOGRAPHY = {
   title: TYPE.detailTitle,
   sectionTitle: TYPE.sectionTitle,
@@ -71,7 +65,6 @@ export const LAB_CARD_TYPOGRAPHY = {
   fieldValue: TYPE.value,
   patientName: 'font-normal text-text-primary capitalize',
   bodyText: TYPE.label,
-  /** Queue/modal header ops rows — same scale as primary lines; color conveys hierarchy. */
   metadata: TYPE.label,
   separator: 'text-text-disabled',
   emphasizedInline: 'text-text-primary',
@@ -79,71 +72,35 @@ export const LAB_CARD_TYPOGRAPHY = {
   flagTitle: `${TYPE.sectionTitle} ${TONE.danger.fg}`,
 } as const;
 
-/** Shared inset for titled panels on lab cards (tighter top than sides/bottom). */
 const LAB_CARD_PANEL_INSET = 'px-space-2 pb-space-2 pt-space-1';
 
-// Spacing Constants
 export const LAB_CARD_SPACING = {
-  // Card internal gaps
   cardGap: 'gap-space-1',
-
-  // Section content margins
   sectionTitleMargin: 'mb-space-1',
-
-  // Flags section title margin
   flagsTitleMargin: 'mb-space-1',
-
-  // List item spacing
   listGap: 'space-y-space-1',
-
-  // Flags list spacing
   flagsListGap: 'space-y-space-0-5',
-
-  // Row padding
   rowPadding: 'py-0',
-
-  // Content section padding
   contentPadding: 'p-panel',
-
-  // Flags section padding
   flagsPadding: 'p-space-2',
-
-  // Badge group gap
   badgeGap: 'gap-space-3',
-
-  // Action group gap
   actionGap: 'gap-space-2',
 } as const;
 
-// Container Constants
 export const LAB_CARD_CONTAINERS = {
-  // Main card wrapper
   cardWrapper: 'cursor-pointer',
-
-  // Card base styling (applied via Card component)
   cardBase: `${SHADOW.subtle} hover:bg-surface-hover transition-colors duration-200`,
-
   contentSection: `${SURFACE.recessed} ${RADIUS.field} ${LAB_CARD_PANEL_INSET}`,
-
   flagsSection: `${SURFACE.dangerWell} ${RADIUS.field} ${LAB_CARD_PANEL_INSET}`,
 } as const;
 
-// List Item Constants
 export const LAB_CARD_LIST_ITEMS = {
-  // Test list item
   testItem: `flex items-center ${LAB_CARD_TYPOGRAPHY.sectionContent}`,
-
-  // List bullet (gray)
   bullet: `w-1 h-1 ${RADIUS.pill} bg-text-muted mr-space-2`,
-
-  // List bullet (red for flags)
   bulletRed: `w-1 h-1 ${RADIUS.pill} ${TONE.danger.fill} mr-space-2`,
-
-  // Test name in list
   testName: `font-normal mr-space-1 ${LAB_CARD_TYPOGRAPHY.fieldValue}`,
 } as const;
 
-// Context Row Constants (Patient/Order info)
 export const LAB_CARD_CONTEXT = {
   container:
     `flex items-baseline gap-x-space-2 gap-y-0 ${TYPE.label} flex-wrap min-w-0 w-full leading-snug`,
@@ -152,7 +109,6 @@ export const LAB_CARD_CONTEXT = {
   inlineDot: '•',
 } as const;
 
-/** Queue card two-line identity (sample + test workflow cards). */
 export const LAB_CARD_QUEUE_IDENTITY = {
   primaryLine: `flex items-baseline gap-x-space-2 gap-y-0 ${TYPE.label} flex-wrap min-w-0 w-full leading-snug`,
   secondaryLine: `flex items-baseline gap-x-space-2 gap-y-0 ${TYPE.label} flex-wrap min-w-0 w-full leading-snug`,
@@ -164,18 +120,12 @@ export const LAB_CARD_QUEUE_IDENTITY = {
 export const LAB_CARD_SAMPLE_IDENTITY = LAB_CARD_QUEUE_IDENTITY;
 
 export const LAB_CARD_HEADER = {
-  /**
-   * Two columns: left stacks identity + alerts + audit; badges on the right (row 1).
-   * With header actions: three columns — left | badges | buttons (row 1).
-   */
-  shell:
-    'grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto] items-start gap-x-space-2',
+  shell: 'grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto] items-start gap-x-space-2',
   shellWithActions:
     'grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto_auto] items-start gap-x-space-2',
   leftColumn: `col-start-1 flex min-w-0 flex-col ${SPACING.gapHairline}`,
   badgeColumn:
     'col-start-2 row-start-1 flex shrink-0 flex-nowrap items-start justify-end gap-space-1 self-start leading-none',
-  /** Extra separation between badges and header action buttons (3-column header). */
   badgeColumnBeforeActions: 'mr-space-4',
   actionColumn:
     'col-start-3 row-start-1 z-10 flex shrink-0 flex-wrap items-start justify-end gap-space-2 self-start',
@@ -185,15 +135,13 @@ export const LAB_CARD_FOOTER = {
   actions: 'flex flex-wrap items-center justify-end gap-space-2 pt-space-1',
 } as const;
 
-/** Narrow / list-padding workflow cards (breakpoint mobile layouts) */
 export const LAB_MOBILE_CARD = {
   surface: 'flex flex-col h-full min-h-0',
   stack: 'flex flex-col min-h-0 min-w-0 w-full flex-1 gap-space-1-5',
   titleHead:
     'grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto] grid-rows-[auto_auto] gap-x-space-2 gap-y-space-0-5 items-start',
   title: `m-0 col-start-1 row-start-1 ${TYPE.detailTitle} truncate leading-snug normal-case`,
-  subline:
-    `col-start-1 row-start-2 flex items-center gap-space-1-5 min-w-0 ${TYPE.label} leading-snug`,
+  subline: `col-start-1 row-start-2 flex items-center gap-space-1-5 min-w-0 ${TYPE.label} leading-snug`,
   sublineName: 'truncate capitalize font-normal text-text-secondary',
   metaLine: `${TYPE.label} leading-snug`,
   body: `${TYPE.label} leading-snug`,

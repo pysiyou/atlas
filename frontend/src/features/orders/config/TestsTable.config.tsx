@@ -1,15 +1,20 @@
 import React from 'react';
 import { EntityId } from '@/components/display';
 import type { TableViewConfig, CardComponentProps } from '@/components/data-table';
-import { buildViews, COLUMN_SIZE, TABLE_COLUMN_WIDTH } from '@/components/data-table';
+import {
+  buildViews,
+  createBadgeColumn,
+  createDateTimeColumn,
+  createIdColumn,
+  TABLE_COLUMN_WIDTH,
+} from '@/components/data-table';
 import { cn, formatCurrency } from '@/utils';
-import { renderDateTimeCell } from '@/utils/tableColumnRenders';
 import { getTestName, getTestProperty } from '@/features/catalog/testLookup';
 import { CatalogCategoryBadge } from '@/features/catalog';
 import { OrderTestStatusBadge } from '../components/OrderDomainBadges';
 import { getOrderTestLineageRowClass } from '../utils/orderTestLineage';
 import type { OrderTest, TestSummary } from '@/types';
-import { BADGE, TABLE_TYPE, RADIUS, TYPE } from '@/components/theme/recipes';
+import { BADGE, TABLE_TYPE, RADIUS, TYPE } from '@/theme/recipes';
 
 
 const SIMPLE_VIEWS = {
@@ -90,25 +95,25 @@ export function createTestsTableConfig(
     test: {
       key: 'test',
       header: 'Test',
-      width: COLUMN_SIZE['2xl'],
+      width: TABLE_COLUMN_WIDTH.primary,
       truncate: true,
       accessor: (test: OrderTest) =>
         `${getTestName(test.testCode, testCatalog)} ${test.testCode}`,
       render: (test: OrderTest) => renderOrderTestIdentity(test, testCatalog),
     },
-    category: {
-      key: 'category',
-      header: 'Category',
-      width: COLUMN_SIZE.lg,
-      accessor: (test: OrderTest) => getTestProperty(test.testCode, 'category', testCatalog) ?? '',
-      render: (test: OrderTest) => renderTestCategoryBadge(test, testCatalog) ?? <span className={TABLE_TYPE.meta}>—</span>,
-    },
-    status: {
-      key: 'status',
-      header: 'Status',
-      width: COLUMN_SIZE.md,
-      accessor: (test: OrderTest) => test.status,
-      render: (test: OrderTest) => (
+    category: createBadgeColumn<OrderTest>(
+      'category',
+      'Category',
+      test => renderTestCategoryBadge(test, testCatalog) ?? <span className={TABLE_TYPE.meta}>—</span>,
+      {
+        width: TABLE_COLUMN_WIDTH.category,
+        accessor: test => getTestProperty(test.testCode, 'category', testCatalog) ?? '',
+      }
+    ),
+    status: createBadgeColumn<OrderTest>(
+      'status',
+      'Status',
+      test => (
         <OrderTestStatusBadge
           status={test.status}
           presentation={test.lab?.statusPresentation}
@@ -116,26 +121,27 @@ export function createTestsTableConfig(
           size="xs"
         />
       ),
-    },
-    sampleId: {
-      key: 'sampleId',
-      header: 'Sample',
-      width: COLUMN_SIZE.sm,
-      accessor: (test: OrderTest) => test.sampleId ?? '',
-      render: (test: OrderTest) =>
+      {
+        width: TABLE_COLUMN_WIDTH.badgeWide,
+        accessor: test => test.status,
+      }
+    ),
+    sampleId: createIdColumn<OrderTest>(
+      'sampleId',
+      'Sample',
+      test =>
         test.sampleId ? (
           <EntityId type="sample" value={test.sampleId} />
         ) : (
           <span className={TABLE_TYPE.meta}>—</span>
         ),
-    },
-    updatedAt: {
-      key: 'updatedAt',
-      header: 'Date',
-      width: TABLE_COLUMN_WIDTH.datetime,
-      accessor: (test: OrderTest) => test.updatedAt ?? '',
-      render: (test: OrderTest) => renderDateTimeCell(test.updatedAt),
-    },
+      { accessor: test => test.sampleId ?? '' }
+    ),
+    updatedAt: createDateTimeColumn<OrderTest>(
+      'updatedAt',
+      'Date',
+      test => test.updatedAt
+    ),
   };
 
   const views = variant === 'simple' ? SIMPLE_VIEWS : DETAILED_VIEWS;

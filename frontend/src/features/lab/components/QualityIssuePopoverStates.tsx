@@ -15,8 +15,8 @@ import { cn } from '@/utils';
 import { getFeedback } from '@/utils/feedback';
 import { QUALITY_ISSUE_POPOVER_LAYOUT, QUALITY_ISSUE_POPOVER_COPY } from '../constants/qualityIssuePopoverCopy';
 import { LAB_CONFIG } from '../constants';
-import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
-import { RADIUS, TYPE } from '@/components/theme/recipes';
+import { FORM_FIELD_LABEL } from '@/theme/recipes';
+import { RADIUS, TYPE } from '@/theme/recipes';
 
 
 /** Skeleton that mirrors PopoverFormChrome layout (header, body, footer) to avoid layout shift when options load. */

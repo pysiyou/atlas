@@ -9,7 +9,7 @@ import {
 } from '../utils/labResult';
 import { ReferenceIntervalCell } from './ReferenceIntervalCell';
 import { LAB_CONFIG } from '../constants';
-import { TYPE } from '@/components/theme/recipes';
+import { TYPE } from '@/theme/recipes';
 import { RESULT_PANEL, resultTileStatusClass } from '../utils/labResult';
 import {
   buildParameterLabelMap,

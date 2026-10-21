@@ -9,7 +9,7 @@
 import React from 'react';
 import { actionButtonPreset, IconButton } from '@/components/primitives';
 import { Panel } from '@/components/surfaces';
-import { LAYOUT } from '@/components/theme/recipes';
+import { LAYOUT } from '@/theme/recipes';
 import { cn } from '@/utils';
 import type { Patient, Order } from '@/types';
 import { GeneralInfoSection } from './GeneralInfoSection';

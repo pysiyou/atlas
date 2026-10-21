@@ -5,7 +5,7 @@
 
 import { type ComponentType, type RefObject } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { LAYOUT } from '@/components/theme/recipes';
+import { LAYOUT } from '@/theme/recipes';
 import { cn } from '@/utils';
 import type { CardComponentProps } from './types';
 

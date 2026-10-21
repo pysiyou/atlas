@@ -3,10 +3,19 @@
  */
 
 import { createElement, type ReactNode } from 'react';
-import { TABLE_TYPE } from '@/components/theme/recipes';
+import { TABLE_TYPE } from '@/theme/recipes';
 import { formatDateTime } from '@/utils';
-import { COLUMN_SIZE } from './constants';
 import { TABLE_COLUMN_WIDTH } from './columnWidthTokens';
+import type {
+  ColumnConfig,
+  ColumnSizePreset,
+  ColumnViewPreset,
+  ColumnWidth,
+  CreateColumnOptions,
+  ListViewPaginationConfig,
+  PaginationConfig,
+  TableViewConfig,
+} from './types';
 
 const DATETIME_CELL_CLASS = `${TABLE_TYPE.datetime} truncate block font-normal`;
 
@@ -22,16 +31,6 @@ function renderStandardDateTimeCell(
     formatDateTime(date)
   );
 }
-import type {
-  ColumnConfig,
-  ColumnSizePreset,
-  ColumnViewPreset,
-  ColumnWidth,
-  CreateColumnOptions,
-  ListViewPaginationConfig,
-  PaginationConfig,
-  TableViewConfig,
-} from './types';
 
 export type ColumnWidthOverride = ColumnWidth | ColumnSizePreset | string | number;
 
@@ -52,7 +51,7 @@ export function createIdColumn<T>(
 ): ColumnConfig<T> {
   return createColumn(key, header, {
     ...options,
-    width: options.width ?? COLUMN_SIZE.sm,
+    width: options.width ?? TABLE_COLUMN_WIDTH.id,
     render: item => renderId(item),
   });
 }

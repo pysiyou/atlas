@@ -2,7 +2,7 @@
  * Circular selection indicator (payment method / multi-select lists).
  */
 import React from 'react';
-import { RADIUS } from '@/components/theme/recipes';
+import { RADIUS } from '@/theme/recipes';
 import { Icon } from '@/components/primitives/Icon';
 import { ICONS } from '@/config/icons';
 import { cn } from '@/utils';

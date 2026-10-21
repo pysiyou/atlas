@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AVATAR_TYPE, RADIUS } from '@/components/theme/recipes';
+import { AVATAR_TYPE, RADIUS } from '@/theme/recipes';
 import { cn, getInitials } from '@/utils';
 import { isEntityIdClassName } from '@/utils/constants';
 

@@ -11,7 +11,7 @@ import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
 import type { OrderPaymentView } from '../types';
 import { PaymentButton } from './PaymentButton';
 import { useInvalidatePayments } from '../api/payments';
-import { CARD_PRICE } from '@/components/theme/recipes';
+import { CARD_PRICE } from '@/theme/recipes';
 
 
 /**

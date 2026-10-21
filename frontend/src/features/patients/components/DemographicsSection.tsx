@@ -5,8 +5,8 @@ import type { FilterOption } from '@/components/overlays';
 import { GENDER_VALUES, GENDER_CONFIG, type Gender } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
 import { ICONS } from '@/config/icons';
-import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
-import { FIELD_ERROR, TONE } from '@/components/theme/recipes';
+import { FORM_FIELD_LABEL } from '@/theme/recipes';
+import { FIELD_ERROR, TONE } from '@/theme/recipes';
 import type { PatientFormSectionProps } from '../patientFormTypes';
 
 export const DemographicsSection: React.FC<

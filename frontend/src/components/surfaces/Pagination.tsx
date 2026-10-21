@@ -3,8 +3,8 @@ import React, { useMemo } from 'react';
 import { Icon } from '@/components/primitives/Icon';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { inputBase } from '@/components/inputs/inputStyles';
-import { CONTROL, PAGINATION_TYPE, RADIUS, TABLE_TYPE } from '@/components/theme/recipes';
+import { inputBase } from '@/theme/recipes';
+import { CONTROL, PAGINATION_TYPE, RADIUS, TABLE_TYPE } from '@/theme/recipes';
 
 interface PaginationProps {
   currentPage: number;

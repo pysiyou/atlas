@@ -5,7 +5,7 @@
 import type { ReactNode } from 'react';
 import { ModalBodySkeleton } from '@/components/loaders/ModalBodySkeleton';
 import { cn } from '@/utils';
-import { FILTER } from '@/components/theme/recipes';
+import { FILTER } from '@/theme/recipes';
 
 /** Default vertical rhythm for workflow / preview modal sections. */
 export const MODAL_WORKFLOW_BODY_STACK = 'space-y-space-3';

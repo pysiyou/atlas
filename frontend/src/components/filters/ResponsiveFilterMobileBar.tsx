@@ -5,7 +5,7 @@
 import React from 'react';
 import { DebouncedSearchInput } from '@/components/inputs';
 import { actionButtonPreset, Badge, Button } from '@/components/primitives';
-import { CONTROL } from '@/components/theme/recipes';
+import { CONTROL } from '@/theme/recipes';
 import { cn } from '@/utils';
 
 export interface ResponsiveFilterMobileBarProps {

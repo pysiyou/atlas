@@ -4,10 +4,10 @@
 import { lazy, Suspense } from 'react';
 import type { UserRole } from '@/types';
 import { ErrorAlert } from '@/components/loaders';
-import { WORKSPACE } from '@/components/theme/recipes';
+import { WORKSPACE } from '@/theme/recipes';
 import { errorAlertMessage } from '@/utils/feedback';
 import type { LabTabId } from '../constants/labConstants';
-import { LAB_WORKFLOW_QUEUE_SHELL } from '../utils/labStyles';
+import { LAB_WORKFLOW_QUEUE_SHELL } from '@/theme/recipes';
 import { tabAllowed } from './laboratoryPageAccess';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 

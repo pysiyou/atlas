@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { FILTER_TYPE } from '@/components/theme/recipes';
+import { FILTER_TYPE } from '@/theme/recipes';
 import { DateFilter } from '@/components/inputs';
 import { DebouncedSearchInput } from '@/components/inputs';
 import { MODULE_ICONS } from '@/config/icons';

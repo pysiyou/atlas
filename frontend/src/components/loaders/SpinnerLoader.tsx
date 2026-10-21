@@ -5,7 +5,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { RADIUS } from '@/components/theme/recipes';
+import { RADIUS } from '@/theme/recipes';
 import { cn } from '@/utils/cn';
 
 interface SizeConfig {

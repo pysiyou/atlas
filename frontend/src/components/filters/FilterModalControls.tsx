@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { RADIUS, TYPE } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/theme/recipes';
 import { Icon } from '@/components/primitives';
 import { uppercaseLabel, cn } from '@/utils';
 import { ICONS } from '@/config/icons';

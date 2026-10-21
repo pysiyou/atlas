@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import type { DetailFieldConfig } from '@/components/display/DetailFieldGroup';
 import type { OrderTest, Test } from '@/types';
 import { EntityId } from '@/components/display';
-import { INLINE_LINK } from '@/components/theme/recipes';
+import { INLINE_LINK } from '@/theme/recipes';
 import { formatCurrency } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import {

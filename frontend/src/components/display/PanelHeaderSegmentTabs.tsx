@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { CONTROL, RADIUS, TYPE } from '@/components/theme/recipes';
+import { CONTROL, RADIUS, TYPE } from '@/theme/recipes';
 import { cn } from '@/utils';
 
 export interface PanelHeaderSegmentTab {
