@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo, useState, useCallback, useEffect, useRef } from 'react';
-import { usePageFilters } from '@/hooks/usePageFilters';
+import { usePageFilters } from '@/hooks';
 import { useServerListChrome } from '@/hooks';
 import { useNavigate, useParams } from 'react-router-dom';
 import { uniqueSortedTestCodes, useTestsByCodes } from '@/features/catalog';

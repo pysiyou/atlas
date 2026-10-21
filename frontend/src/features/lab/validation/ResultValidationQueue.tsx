@@ -2,22 +2,21 @@
  * ResultValidationQueue - Result validation and supervisor exception review.
  */
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useAuthStore } from '@/app/authStore';
 import { createLabQueueSearchFilter, LabWorkflowQueueScaffold } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import {
   applyLabQueueFilters,
+  useLabQueueBarFilters,
+  useLabQueueFilterBarProps,
   useLabQueuePageFilters,
   useResultValidationQueueData,
 } from '../hooks';
 import { validationFilterConfig } from '../constants';
 import { DetailPageSkeleton } from '@/components/feedback/DetailPageSkeleton';
 import { ErrorAlert, ErrorBoundary } from '@/components/feedback';
-import { useDebouncedValue } from '@/hooks/useDebouncedValue';
-import { LAB_CONFIG } from '../constants';
-import { worklistServerFilters } from '../utils/labSearchAndLinks';
-import { toListLoadError } from '@/hooks';
+import { useClientListChrome } from '@/hooks';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import type { PriorityLevel, TestWithContext } from '@/types';
@@ -44,15 +43,7 @@ export const ResultValidationQueue: React.FC = () => {
   const canViewEscalations = hasRole(['administrator', 'lab-technician', 'lab-technician-plus']);
   const canResolveEscalation = hasRole(['administrator', 'lab-technician-plus']);
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
-  const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
-  const debouncedSearch = useDebouncedValue(searchQuery, LAB_CONFIG.SEARCH_DEBOUNCE_MS);
-  const serverFilters = worklistServerFilters({
-    search: debouncedSearch,
-    dateRange,
-    sampleTypeFilters,
-  });
+  const bar = useLabQueueBarFilters('validationReview');
   const {
     validationTests,
     escalations: escalatedTests,
@@ -64,7 +55,14 @@ export const ResultValidationQueue: React.FC = () => {
     pagination,
     goToPage,
     canResolveEscalation: canResolveFromProvider,
-  } = useResultValidationQueueData(serverFilters);
+  } = useResultValidationQueueData(bar.serverFilters);
+  const worklistChrome = useClientListChrome({
+    loadFailedKey: 'lab.worklist.loadFailed',
+    isLoading: dataLoading,
+    isError: worklistError,
+    error: worklistQueryError,
+    refetch: refetchWorklist,
+  });
   const allTests = validationTests;
 
   const {
@@ -98,24 +96,15 @@ export const ResultValidationQueue: React.FC = () => {
   const {
     filteredItems: filteredTests,
     filterState,
-    statusFilters: priorityFilters,
-    setStatusFilters: setPriorityFilters,
     urlFilters,
     clearUrlFilters,
     setUrlFilter,
   } = useLabQueuePageFilters({
     items: allTests,
     workflowType: 'validationReview',
-    searchQuery,
-    onSearchChange: setSearchQuery,
-    dateRange,
-    onDateRangeChange: setDateRange,
-    sampleTypeFilters,
-    onSampleTypeFiltersChange: setSampleTypeFilters,
-    skipSearchFilter: true,
-    skipDateFilter: true,
-    skipSampleTypeFilter: true,
+    bar,
   });
+  const filterBarProps = useLabQueueFilterBarProps(bar, { statusFilterKey: 'priority' });
 
   const filteredEscalatedTests = useMemo(
     () =>
@@ -166,15 +155,10 @@ export const ResultValidationQueue: React.FC = () => {
     hasNoWorklistData &&
     (dataLoading || (canViewEscalations && escalationLoading));
 
-  if (worklistError) {
+  if (worklistChrome.error) {
     return (
       <ErrorBoundary>
-        <ErrorAlert
-          error={toListLoadError('lab.worklist.loadFailed', worklistQueryError)!}
-          onRetry={() => {
-            void refetchWorklist();
-          }}
-        />
+        <ErrorAlert error={worklistChrome.error} onRetry={worklistChrome.onRetry} />
       </ErrorBoundary>
     );
   }
@@ -203,18 +187,7 @@ export const ResultValidationQueue: React.FC = () => {
               pagination={pagination}
               onPageChange={goToPage}
             >
-              <LabQueueFilters
-                config={validationFilterConfig}
-                searchQuery={searchQuery}
-                onSearchChange={setSearchQuery}
-                dateRange={dateRange}
-                onDateRangeChange={setDateRange}
-                sampleTypeFilters={sampleTypeFilters}
-                onSampleTypeFiltersChange={setSampleTypeFilters}
-                statusFilters={priorityFilters}
-                onStatusFiltersChange={setPriorityFilters}
-                statusFilterKey="priority"
-              />
+              <LabQueueFilters config={validationFilterConfig} {...filterBarProps} />
             </LabQueueFilterRow>
           }
         >

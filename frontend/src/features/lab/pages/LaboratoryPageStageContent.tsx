@@ -2,10 +2,10 @@
  * Lab page stage body: lazy-loads the active queue/board so inactive tabs stay out of the bundle.
  */
 import { lazy, Suspense } from 'react';
+import { useClientListChrome } from '@/hooks';
 import type { UserRole } from '@/types';
 import { ErrorAlert } from '@/components/feedback';
 import { WORKSPACE } from '@/theme/recipes';
-import { toListLoadError } from '@/hooks';
 import type { LabTabId } from '../constants/labConstants';
 import { WORKLIST_SHELL } from '@/theme/recipes';
 import { tabAllowed } from './laboratoryPageAccess';
@@ -51,6 +51,14 @@ export function LaboratoryPageStageContent({
   error,
   onRetry,
 }: LaboratoryPageStageContentProps) {
+  const chrome = useClientListChrome({
+    loadFailedKey: 'lab.page.loadFailed',
+    isLoading: false,
+    isError,
+    error,
+    refetch: onRetry,
+  });
+
   return (
     <div
       className={
@@ -59,12 +67,9 @@ export function LaboratoryPageStageContent({
           : WORKLIST_SHELL
       }
     >
-      {isError && (
+      {chrome.error && (
         <div className={`${WORKSPACE.contentInset} shrink-0 pb-0`}>
-          <ErrorAlert
-            error={toListLoadError('lab.page.loadFailed', error)!}
-            onRetry={onRetry}
-          />
+          <ErrorAlert error={chrome.error} onRetry={chrome.onRetry} />
         </div>
       )}
       <div

@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { ErrorAlert } from '@/components/feedback';
-import { toListLoadError } from '@/hooks';
+import { useClientListChrome } from '@/hooks';
 import { SPLIT_WORKSPACE_PANEL } from '@/theme/recipes';
 import { SPLIT_BOTTOM_PANEL, SPLIT_BOTTOM_ROW, SPLIT_WORKSPACE_PAGE, SPLIT_TABLE_WRAP } from '@/theme/recipes';
 import { useLabMonitorViewModel } from './useLabMonitorViewModel';
@@ -16,18 +16,22 @@ import { LabMonitorEventLogPanel } from '@/features/audit';
 
 export const LabMonitorBoard: React.FC = () => {
   const board = useLabMonitorViewModel();
+  const chrome = useClientListChrome({
+    loadFailedKey: 'lab.page.loadFailed',
+    isLoading: board.isLoading,
+    isError: board.isError,
+    error: board.error,
+    refetch: board.refetch,
+  });
 
-  if (board.isLoading) {
+  if (chrome.loading) {
     return <LabMonitorBoardSkeleton />;
   }
 
-  if (board.isError) {
+  if (chrome.error) {
     return (
       <div className={SPLIT_WORKSPACE_PANEL.page}>
-        <ErrorAlert
-          error={toListLoadError('lab.page.loadFailed', board.error)!}
-          onRetry={() => void board.refetch()}
-        />
+        <ErrorAlert error={chrome.error} onRetry={chrome.onRetry} />
       </div>
     );
   }

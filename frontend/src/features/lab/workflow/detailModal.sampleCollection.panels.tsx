@@ -1,13 +1,12 @@
 /**
- * Sample collection detail modal — content panels, detail grid, and footer.
+ * Sample collection detail modal — content panels and footer actions.
  */
 
 import Barcode from 'react-barcode';
-import { actionButtonPreset, Button, Icon } from '@/components/primitives';
+import { actionButtonPreset, Button } from '@/components/primitives';
 import { Panel } from '@/components/surfaces';
 import type { ContainerType, Order, RejectedSample, Sample, Test } from '@/types';
-import { text, RADIUS, SURFACE , FG } from '@/theme/recipes';
-import { ModalFooter } from './detailModalLayout';
+import { text, RADIUS, SURFACE, FG } from '@/theme/recipes';
 import { displayId, formatDateTime } from '@/utils';
 import { CollectionDetailGrid } from './detailModal.sampleCollection.grid';
 import { SampleCollectionRequirementsSection } from '../collection/SampleCollectionRequirementsSection';
@@ -15,7 +14,6 @@ import { formatRejectionReasons } from '../utils/labFormatters';
 import { QueueCardTestList } from './queueCardLayout';
 import { SampleCollectionPopover } from '../collection/SampleCollectionPopover';
 import { SampleRejectionPopover } from '../collection/SampleRejectionPopover';
-import { getSampleStatusIcon } from '@/config/icons';
 import { LAB_COPY } from '../constants/labConstants';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { isLabActionAllowed } from '../utils/queueDisplay';
@@ -144,7 +142,7 @@ export function SampleCollectionDetailContent({
 export function SampleCollectionDetailFooter({
   sample,
   isPending,
-  isRejected,
+  isRejected: _isRejected,
   isCollected,
   pendingSampleDisplay,
   patientName,
@@ -176,63 +174,41 @@ export function SampleCollectionDetailFooter({
     const isRecollection = sample.isRecollection === true;
     const collectAllowed = isLabActionAllowed(pendingSampleDisplay.allowedActions, 'collect');
     return (
-      <ModalFooter statusIcon={undefined} statusMessage="" statusClassName={FG.modalStatus}>
-        <SampleCollectionPopover
-          requirement={pendingSampleDisplay.requirement!}
-          patientName={patientName}
-          testNames={testNames}
-          isRecollection={isRecollection}
-          collectDisabled={!collectAllowed}
-          collectDisabledTitle={pendingSampleDisplay.denyMessage ?? undefined}
-          onConfirm={async (volume, notes, color, ct) => {
-            await Promise.resolve(onCollect(pendingSampleDisplay, volume, notes, color, ct));
-            onClose();
-          }}
-          onSubmittingChange={onPopoverSubmittingChange}
-          trigger={
-            <Button {...actionButtonPreset('collect')} size="md" disabled={!collectAllowed}>
-              {isRecollection ? 'Recollect Sample' : 'Collect Sample'}
-            </Button>
-          }
-        />
-      </ModalFooter>
+      <SampleCollectionPopover
+        requirement={pendingSampleDisplay.requirement!}
+        patientName={patientName}
+        testNames={testNames}
+        isRecollection={isRecollection}
+        collectDisabled={!collectAllowed}
+        collectDisabledTitle={pendingSampleDisplay.denyMessage ?? undefined}
+        onConfirm={async (volume, notes, color, ct) => {
+          await Promise.resolve(onCollect(pendingSampleDisplay, volume, notes, color, ct));
+          onClose();
+        }}
+        onSubmittingChange={onPopoverSubmittingChange}
+        trigger={
+          <Button {...actionButtonPreset('collect')} size="md" disabled={!collectAllowed}>
+            {isRecollection ? 'Recollect Sample' : 'Collect Sample'}
+          </Button>
+        }
+      />
     );
   }
 
   if (isCollected && sample.sampleId) {
     return (
-      <ModalFooter
-        statusIcon={
-          <Icon name={getSampleStatusIcon('collected')} className={`w-3.5 h-3.5 ${FG.disabled}`} />
+      <SampleRejectionPopover
+        sampleId={sample.sampleId.toString()}
+        testCodes={sample.testCodes ?? []}
+        sampleType={sample.sampleType}
+        patientName={patientName}
+        isRecollection={sample.isRecollection || false}
+        onSuccess={onClose}
+        trigger={
+          <Button {...actionButtonPreset('reject')} size="md">
+            {LAB_COPY.quality.reportSampleIssue}
+          </Button>
         }
-        statusMessage=""
-        statusClassName={FG.modalStatus}
-      >
-        <SampleRejectionPopover
-          sampleId={sample.sampleId.toString()}
-          testCodes={sample.testCodes ?? []}
-          sampleType={sample.sampleType}
-          patientName={patientName}
-          isRecollection={sample.isRecollection || false}
-          onSuccess={onClose}
-          trigger={
-            <Button {...actionButtonPreset('reject')} size="md">
-              {LAB_COPY.quality.reportSampleIssue}
-            </Button>
-          }
-        />
-      </ModalFooter>
-    );
-  }
-
-  if (isRejected) {
-    return (
-      <ModalFooter
-        statusIcon={
-          <Icon name={getSampleStatusIcon('rejected')} className={`w-3.5 h-3.5 ${FG.disabled}`} />
-        }
-        statusMessage=""
-        statusClassName={FG.modalStatus}
       />
     );
   }

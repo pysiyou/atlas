@@ -4,8 +4,12 @@
 import { useMemo } from 'react';
 import type { Order, OrderTest, Test } from '@/types';
 import { getLabQueueUrlForTest, hasTestResults, orderTestKey } from '../utils/labSearchAndLinks';
-import { buildTestDetailGridSections } from './detailModal.test.helpers';
-import type { resolveLinkedOrderTests } from './useTestDetailModel.resolvers';
+import {
+  buildOrderTestOverviewFields,
+  buildOrderTestWorkflowFields,
+} from '@/features/orders';
+import type { DetailGridSectionConfig } from './detailModalLayout';
+import type { resolveLinkedOrderTests } from './useTestDetailModel';
 import type { TestDetailInteraction } from '@/lib/context/modalTypes';
 import { useLabDraftStore } from '../state/labDraftStore';
 
@@ -69,4 +73,34 @@ export function useTestDetailModalDerived({
     resultsPanelPreset,
     onCommentsChange,
   };
+}
+
+function buildTestDetailGridSections(
+  orderTest: OrderTest,
+  linked: ReturnType<typeof resolveLinkedOrderTests>,
+  catalogTest: Test | undefined,
+  options: {
+    onOpenLinkedTest?: (linkedTest: OrderTest) => void;
+    omitWorkflowResultDuplicates: boolean;
+    onCatalogNavigate: () => void;
+  }
+): DetailGridSectionConfig[] {
+  return [
+    {
+      preset: 'panel.compact.standard',
+      title: 'Workflow',
+      fields: buildOrderTestWorkflowFields(orderTest, {
+        linked,
+        onOpenLinkedTest: options.onOpenLinkedTest,
+        omitResultDuplicates: options.omitWorkflowResultDuplicates,
+      }),
+    },
+    {
+      preset: 'panel.compact.standard',
+      title: 'Test overview',
+      fields: buildOrderTestOverviewFields(orderTest, catalogTest, {
+        onCatalogNavigate: options.onCatalogNavigate,
+      }),
+    },
+  ];
 }

@@ -148,38 +148,27 @@ export const DetailGrid: React.FC<DetailGridProps> = ({ children, sections }) =>
 };
 
 interface ModalFooterProps {
-  statusIcon?: ReactNode;
-  statusMessage: string;
+  statusMessage?: string;
   statusClassName?: string;
   children?: ReactNode;
 }
 
 export const ModalFooter: React.FC<ModalFooterProps> = ({
-  statusIcon,
-  statusMessage,
+  statusMessage = '',
   statusClassName = FG.captionMuted,
   children,
 }) => {
-  const hasStatus = Boolean(statusIcon || statusMessage);
+  const hasStatus = Boolean(statusMessage);
 
   return (
     <div
       className={`flex items-center w-full ${hasStatus ? 'justify-between' : 'justify-end'}`}
     >
-      {hasStatus &&
-        (statusIcon && statusMessage ? (
-          <div className={`${text({ role: 'body', intent: 'muted' })} flex items-center gap-space-1-5`}>
-            <div className="w-3.5 h-3.5 flex items-center justify-center">{statusIcon}</div>
-            <span>{statusMessage}</span>
-          </div>
-        ) : (
-          <div className={`flex items-center gap-space-1-5 ${text({ role: 'body' })} ${statusClassName}`}>
-            {statusIcon && (
-              <div className="w-3.5 h-3.5 flex items-center justify-center shrink-0">{statusIcon}</div>
-            )}
-            {statusMessage && <span>{statusMessage}</span>}
-          </div>
-        ))}
+      {hasStatus ? (
+        <div className={`${text({ role: 'body' })} ${statusClassName}`}>
+          <span>{statusMessage}</span>
+        </div>
+      ) : null}
       <div className="flex items-center gap-space-3 flex-nowrap">{children}</div>
     </div>
   );

@@ -2,13 +2,13 @@
  * SampleCollectionQueue - Main view for sample collection workflow
  */
 
-import React, { useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useMemo } from 'react';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import { useDebouncedValue } from '@/hooks/useDebouncedValue';
-import { decodeFiltersFromUrl } from '@/utils/filters';
-import { useLabEntitySearchSync, useLabQueuePageFilters, useLabQueueUrlSearch } from '../hooks';
-import { getLabQueueSearchFromUrlFilters } from '../utils/labSearchAndLinks';
+import {
+  useLabQueueBarFilters,
+  useLabQueueFilterBarProps,
+  useLabQueuePageFilters,
+} from '../hooks';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { LAB_CONFIG } from '../constants';
 import { useCollectSample } from '../api/samples';
@@ -18,15 +18,15 @@ import { SampleCollectionCard } from '../workflow';
 import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
-import { collectionFilterConfig, LAB_URL_FILTER_KEYS } from '../constants';
+import { collectionFilterConfig } from '../constants';
 import { mapCollectionWorklistToSampleDisplay } from '../utils/labQueue';
 import { EMPTY_COPY, emptySubtitle } from '@/components/display';
 import { ErrorAlert, ErrorBoundary } from '@/components/feedback';
 import { DetailPageSkeleton } from '@/components/feedback/DetailPageSkeleton';
 import { useAuthStore } from '@/app/authStore';
 import { useTestCatalog } from '@/features/catalog';
-import { worklistServerFilters } from '../utils/labSearchAndLinks';
-import { toListLoadError } from '@/hooks';
+import { useClientListChrome } from '@/hooks';
+
 export const SampleCollectionQueue: React.FC = () => {
   const { user: currentUser } = useAuthStore();
   const collectSampleMutation = useCollectSample();
@@ -34,29 +34,7 @@ export const SampleCollectionQueue: React.FC = () => {
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
 
   const { tests: catalogTests } = useTestCatalog();
-  const [searchParams] = useSearchParams();
-  const urlSearch = useLabQueueUrlSearch();
-  const [searchQuery, setSearchQuery] = useState(() =>
-    getLabQueueSearchFromUrlFilters(
-      decodeFiltersFromUrl(searchParams, LAB_URL_FILTER_KEYS),
-      urlSearch,
-      true
-    )
-  );
-
-  const debouncedSearch = useDebouncedValue(searchQuery, LAB_CONFIG.SEARCH_DEBOUNCE_MS);
-  const trimmedSearch = debouncedSearch.trim();
-  const isSampleLookup = trimmedSearch.length >= LAB_CONFIG.SAMPLE_LOOKUP_MIN_CHARS;
-  const isLookupBelowMin =
-    trimmedSearch.length > 0 && trimmedSearch.length < LAB_CONFIG.SAMPLE_LOOKUP_MIN_CHARS;
-
-  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
-  const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>([]);
-  const serverFilters = worklistServerFilters({
-    search: isSampleLookup ? trimmedSearch : undefined,
-    dateRange,
-    sampleTypeFilters,
-  });
+  const bar = useLabQueueBarFilters('collection');
   const {
     items: worklistItems,
     pagination,
@@ -65,40 +43,32 @@ export const SampleCollectionQueue: React.FC = () => {
     error: worklistError,
     refetch,
     goToPage,
-  } = useCollectionWorklist(serverFilters);
+  } = useCollectionWorklist(bar.serverFilters);
+  const worklistChrome = useClientListChrome({
+    loadFailedKey: 'lab.worklist.loadFailed',
+    isLoading,
+    isError,
+    error: worklistError,
+    refetch,
+  });
   const collectionDisplays = useMemo(
     () => worklistItems.map(mapCollectionWorklistToSampleDisplay),
-    [worklistItems]
+    [worklistItems],
   );
 
   const {
     filteredItems: filteredDisplaysRaw,
-    statusFilters,
-    setStatusFilters,
     urlFilters,
     clearUrlFilters,
     setUrlFilter,
+    isSampleLookup,
+    isLookupBelowMin,
   } = useLabQueuePageFilters({
     items: collectionDisplays,
     workflowType: 'collection',
-    searchQuery,
-    onSearchChange: setSearchQuery,
-    dateRange,
-    onDateRangeChange: setDateRange,
-    sampleTypeFilters,
-    onSampleTypeFiltersChange: setSampleTypeFilters,
-    skipSearchFilter: isSampleLookup,
-    skipDateFilter: true,
-    skipSampleTypeFilter: true,
-    collectionSampleLookup: isSampleLookup,
+    bar,
   });
-
-  useLabEntitySearchSync({
-    urlFilters,
-    urlSearch,
-    preferSample: true,
-    setSearchQuery,
-  });
+  const filterBarProps = useLabQueueFilterBarProps(bar);
 
   const filteredDisplays = filteredDisplaysRaw as SampleCollectionQueueItem[];
 
@@ -108,7 +78,7 @@ export const SampleCollectionQueue: React.FC = () => {
   });
 
   const hasNoItems = collectionDisplays.length === 0;
-  if (isLoading && hasNoItems) {
+  if (worklistChrome.loading && hasNoItems) {
     return (
       <ErrorBoundary>
         <DetailPageSkeleton variant="workflow-grid" />
@@ -116,15 +86,10 @@ export const SampleCollectionQueue: React.FC = () => {
     );
   }
 
-  if (isError) {
+  if (worklistChrome.error) {
     return (
       <ErrorBoundary>
-        <ErrorAlert
-          error={toListLoadError('lab.worklist.loadFailed', worklistError)!}
-          onRetry={() => {
-            void refetch();
-          }}
-        />
+        <ErrorAlert error={worklistChrome.error} onRetry={worklistChrome.onRetry} />
       </ErrorBoundary>
     );
   }
@@ -166,17 +131,7 @@ export const SampleCollectionQueue: React.FC = () => {
             pagination={pagination}
             onPageChange={goToPage}
           >
-            <LabQueueFilters
-              config={collectionFilterConfig}
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              dateRange={dateRange}
-              onDateRangeChange={setDateRange}
-              sampleTypeFilters={sampleTypeFilters}
-              onSampleTypeFiltersChange={setSampleTypeFilters}
-              statusFilters={statusFilters}
-              onStatusFiltersChange={setStatusFilters}
-            />
+            <LabQueueFilters config={collectionFilterConfig} {...filterBarProps} />
           </LabQueueFilterRow>
         }
       />

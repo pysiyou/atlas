@@ -17,7 +17,7 @@ import { TestWorkflowCardLeftColumn } from './queueCardLeftColumn';
 import {
   EscalationExceptionBadges,
   EscalationExceptionReviewBody,
-} from './escalation.helpers';
+} from './escalation.shared';
 
 export interface EscalationCardProps {
   test: TestWithContext;
