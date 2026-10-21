@@ -2,7 +2,7 @@
  * Event log row detail blocks (results, notes, debug payload).
  */
 import { useMemo } from 'react';
-import { text } from '@/theme/recipes';
+import {text, FG } from '@/theme/recipes';
 import { parseResultEntry, ResultValueAnnotations, statusMapFromFlags } from '@/features/lab';
 import { resolveParameterLabel, useParameterLabelMap } from '@/features/catalog';
 import { cn } from '@/utils';
@@ -12,11 +12,11 @@ import type { ResolvedEventLogItem } from './types';
 
 const DETAIL_STYLES = {
   row: `pl-space-4 mt-space-0-5 ${text({ role: 'body' })} leading-relaxed font-normal min-w-0 m-0`,
-  label: 'text-text-tertiary',
+  label: text({ role: 'label', intent: 'muted' }),
   contentClamp: 'line-clamp-2 break-words',
   results: 'inline min-w-0 line-clamp-2 break-words',
   line: 'inline whitespace-nowrap align-baseline',
-  lineLabel: 'text-text-tertiary lowercase',
+  lineLabel: `${text({ role: 'label', intent: 'muted' })} lowercase`,
 } as const;
 
 function EventLogResultsList({
@@ -92,7 +92,7 @@ export function EventLogDetailBox({ item }: { item: ResolvedEventLogItem }) {
       {hasDebug ? (
         <div className={DETAIL_STYLES.row}>
           <span className={DETAIL_STYLES.label}>{EVENT_LOG_COPY.debugTitle}: </span>
-          <pre className="mt-space-0-5 whitespace-pre-wrap break-all font-mono text-text-primary">
+          <pre className={`mt-space-0-5 whitespace-pre-wrap break-all font-mono ${FG.body}`}>
             {JSON.stringify(debugPayload, null, 2)}
           </pre>
         </div>

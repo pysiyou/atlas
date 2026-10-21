@@ -4,7 +4,7 @@ import { useAsyncAction } from '@/hooks/useAsyncAction';
 import type { AffiliationDuration } from '@/types';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import { formatDate } from '@/utils';
-import { text, FORM_FIELD_LABEL } from '@/theme/recipes';
+import { text, FORM_FIELD_LABEL , FG } from '@/theme/recipes';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { AffiliationPlanSelector } from './AffiliationPlanSelector';
 import { FIELD_ERROR, RADIUS, SHADOW, SURFACE, TONE } from '@/theme/recipes';
@@ -77,7 +77,7 @@ export const AffiliationSection: React.FC<
                 Expiry Date
               </span>
               <p
-                className={`font-normal ${text({ role: 'amount' })} ${isActive ? 'text-text-primary' : TONE.danger.fg}`}
+                className={`font-normal ${text({ role: 'amount' })} ${isActive ? FG.body : TONE.danger.fg}`}
               >
                 {formatDate(existingAffiliation.endDate)}
               </p>

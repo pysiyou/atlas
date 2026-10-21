@@ -16,7 +16,7 @@ import {
   type LabWorkflowModalContext,
   type LabAuditLine,
 } from '../components/LabWorkflowHeader';
-import { text } from '@/theme/recipes';
+import { text , FG } from '@/theme/recipes';
 import { LAB_COPY, labStageLabel, type LabWorkflowStage } from '../constants/labConstants';
 
 export interface QueueModalShellProps {
@@ -157,7 +157,7 @@ interface ModalFooterProps {
 export const ModalFooter: React.FC<ModalFooterProps> = ({
   statusIcon,
   statusMessage,
-  statusClassName = 'text-text-tertiary',
+  statusClassName = FG.captionMuted,
   children,
 }) => {
   const hasStatus = Boolean(statusIcon || statusMessage);

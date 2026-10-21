@@ -11,7 +11,7 @@ import { LabPriorityBadge } from '../components/LabDomainBadges';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import { cn, displayId } from '@/utils';
 import { getLabQueueUrl } from '@/features/lab';
-import { CONTROL, FEED_ACCENT, FEED_GROUPED, RADIUS, tableCell } from '@/theme/recipes';
+import {CONTROL, FEED_ACCENT, FEED_GROUPED, RADIUS, FG } from '@/theme/recipes';
 import { Text } from '@/components/layout';
 import { LAB_COPY } from '../constants/labConstants';
 import {
@@ -33,17 +33,13 @@ function FeedDetail({ detail }: { detail: AttentionDetail }) {
   switch (detail.type) {
     case 'patient':
       return (
-        <Text role="body" density="table" truncate className="font-normal">
+        <Text role="body" density="table" truncate className="font-normal capitalize">
           {detail.value}
         </Text>
       );
     case 'link':
     case 'testId':
-      return (
-        <EntityId variant="inline" className={tableCell({ tone: 'primary' })}>
-          {detail.value}
-        </EntityId>
-      );
+      return <EntityId variant="inline">{detail.value}</EntityId>;
     case 'queueStage':
       return (
         <Text role="body" intent="muted" density="table" truncate className="font-normal">
@@ -85,7 +81,7 @@ function AttentionDetailRow({ details }: { details: AttentionDetail[] }) {
           {idx > 0 ? (
             <span className={FEED_GROUPED.detailDivider} aria-hidden />
           ) : null}
-          <div className="min-w-0 max-w-full shrink">
+          <div className="min-w-0 max-w-full shrink-0">
             <FeedDetail detail={detail} />
           </div>
         </React.Fragment>
@@ -147,7 +143,7 @@ function AttentionFeedGroup({ type, items }: { type: AttentionType; items: LabAt
         <div className={FEED_GROUPED.groupDivider} />
         <span className={FEED_GROUPED.groupLabel}>
           {config.groupLabel}
-          <span className="ml-space-1.5 tabular-nums text-text-tertiary">({items.length})</span>
+          <span className={`ml-space-1.5 tabular-nums ${FG.captionMuted}`}>({items.length})</span>
         </span>
         <div className={FEED_GROUPED.groupDivider} />
       </div>

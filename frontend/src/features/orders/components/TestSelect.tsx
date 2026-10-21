@@ -17,7 +17,7 @@ import { indexTestsByCode } from '@/features/catalog/testLookup';
 import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
 import { cn, formatCurrency, formatTurnaroundTime, titleCaseWords } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { text, inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/theme/recipes';
+import {text, inputContainerBase, inputContainerError, FORM_CONTROL_LABEL, FG } from '@/theme/recipes';
 import { OrderSelectPopoverShell } from './OrderSelectPopoverShell';
 import { CONTROL, FIELD_ERROR, SPACING } from '@/theme/recipes';
 
@@ -119,7 +119,7 @@ const TestSearchTagInput: React.FC<{
         >
           Tests
         </label>
-        <span className={`${text({ role: 'amount' })} text-text-tertiary tabular-nums shrink-0`}>
+        <span className={`${text({ role: 'amount' })} ${FG.captionMuted} tabular-nums shrink-0`}>
           {selectedCount} {selectedCount === 1 ? 'test' : 'tests'}
         </span>
       </div>
@@ -134,7 +134,7 @@ const TestSearchTagInput: React.FC<{
         <div className="absolute inset-y-0 left-0 pl-space-3 flex items-center pointer-events-none">
           <Icon
             name={ICONS.dataFields.document}
-            className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors"
+            className={`w-4 h-4 ${FG.muted} group-hover:text-brand transition-colors`}
           />
         </div>
 
@@ -158,7 +158,7 @@ const TestSearchTagInput: React.FC<{
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => onValueChange(e.target.value)}
           onFocus={() => onValueChange(value)}
           placeholder={selectedTags.length === 0 ? 'Search by code or name…' : ''}
-          className={`flex-1 min-w-[120px] outline-none ${text({ role: 'body' })} placeholder:text-text-muted bg-transparent leading-normal`}
+          className={`flex-1 min-w-[120px] outline-none ${text({ role: 'body' })} placeholder:${FG.muted} bg-transparent leading-normal`}
           autoComplete="off"
         />
       </div>
@@ -213,7 +213,7 @@ const TestSelectPopover: React.FC<TestSelectPopoverProps> = ({
                   <TestSelectMetaLine code={code} test={test} />
                 </div>
                 <div className="flex shrink-0 items-center gap-layout-section">
-                  <span className={`${text({ role: 'amount' })} font-medium text-text-tertiary tabular-nums`}>
+                  <span className={`${text({ role: 'amount' })} font-medium ${FG.captionMuted} tabular-nums`}>
                     {formatCurrency(price)}
                   </span>
                   <CheckboxIndicator

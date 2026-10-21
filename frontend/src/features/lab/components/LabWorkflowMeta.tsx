@@ -8,6 +8,7 @@ import { getContainerIconColor } from '../utils';
 import type { ContainerType, ContainerTopColor } from '@/types';
 import { CONTAINER_COLOR_OPTIONS } from '@/types';
 import { getContainerIcon } from '@/config/icons';
+import { FG } from '@/theme/recipes';
 import { LabAuditLineView } from './LabWorkflowHeader';
 
 interface SampleContainerInfoProps {
@@ -31,7 +32,7 @@ export const SampleContainerInfo: React.FC<SampleContainerInfoProps> = ({
     <span className="flex items-center" title={`Container: ${containerType}, Color: ${colorName}`}>
       <Icon
         name={getContainerIcon(containerType)}
-        className={`${iconSize} ${containerColor ? getContainerIconColor(containerColor) : 'text-text-disabled'}`}
+        className={`${iconSize} ${containerColor ? getContainerIconColor(containerColor) : FG.disabled}`}
       />
     </span>
   );

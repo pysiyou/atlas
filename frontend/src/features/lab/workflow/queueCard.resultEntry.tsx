@@ -13,7 +13,7 @@ import { useLabWorkflowCardClickGuard, useOrderTestQueueState } from '../hooks';
 import { isLabActionAllowed } from '../utils/queueDisplay';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
-import { MOBILE_LIST_CARD } from '@/theme/recipes';
+import { FG, MOBILE_LIST_CARD } from '@/theme/recipes';
 import type { Test, TestWithContext } from '@/types';
 import { QueueCard, QueueCardMobile } from './queueCardLayout';
 import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';
@@ -145,7 +145,7 @@ function ResultEntryCardDesktop({
               {index > 0 ? ' · ' : null}
               <span
                 className={
-                  results[param.code]?.trim() ? 'text-text-primary' : 'text-text-tertiary'
+                  results[param.code]?.trim() ? FG.body : FG.captionMuted
                 }
               >
                 {param.name}
@@ -153,7 +153,7 @@ function ResultEntryCardDesktop({
             </span>
           ))}
           {remainingParams > 0 ? (
-            <span className="text-text-tertiary"> · +{remainingParams} more</span>
+            <span className={FG.captionMuted}> · +{remainingParams} more</span>
           ) : null}
         </p>
       }

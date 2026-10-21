@@ -10,7 +10,7 @@ import { feedbackTitle } from '@/utils/feedback';
 import type { Test, Patient } from '@/types';
 import { ParameterInput } from './ResultParameterInputs';
 import { getReferenceRangeDisplay, checkCriticalStatus } from './resultEntry';
-import { text, METRIC_TILE } from '@/theme/recipes';
+import { text, METRIC_TILE , FG } from '@/theme/recipes';
 import { resultTileStatusClass } from '../utils/labResult';
 import { FIELD_ERROR_CAPTION, RADIUS, SHADOW, TONE } from '@/theme/recipes';
 
@@ -132,7 +132,7 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
 
       <div className={METRIC_TILE.notesSection}>
         <label htmlFor={`notes-${resultKey}`} className={METRIC_TILE.notesLabel}>
-          Technician notes <span className="text-text-disabled">(optional)</span>
+          Technician notes <span className={FG.disabled}>(optional)</span>
         </label>
         <Textarea
           id={`notes-${resultKey}`}

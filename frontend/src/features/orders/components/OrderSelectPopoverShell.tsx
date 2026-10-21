@@ -1,12 +1,12 @@
 import React from 'react';
 import { EmptyState, PANEL_EMPTY_STATE } from '@/components/display';
-import { text, FORM_FIELD_LABEL } from '@/theme/recipes';
+import { FG, FORM_FIELD_LABEL, text } from '@/theme/recipes';
 import { OVERLAY, RADIUS } from '@/theme/recipes';
 import { DEFAULT_EMPTY_DESCRIPTION_SEARCH } from '@/utils/constants';
 
 
 const POPOVER_SHELL_CLASS = [
-  'absolute left-0 right-0 top-full z-50 mt-space-1 text-text-primary',
+  `absolute left-0 right-0 top-full z-50 mt-space-1 ${FG.popoverAnchor}`,
   'border border-border-default/80',
   RADIUS.menu,
   'overflow-hidden',

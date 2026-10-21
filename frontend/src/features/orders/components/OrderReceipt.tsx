@@ -72,23 +72,23 @@ function ReceiptHeader({
           </div>
           <div className="space-y-space-1-5">
             <div className={cn('flex items-center', DOCUMENT_TYPE.fieldRow)}>
-              <span className="text-text-tertiary w-28">Order Number:</span>
+              <span className={DOCUMENT_TYPE.fieldLabel}>Order Number:</span>
               <EntityId type="order" value={order.orderId} />
             </div>
             <div className={cn('flex items-center', DOCUMENT_TYPE.fieldRow)}>
-              <span className="text-text-tertiary w-28">Patient Number:</span>
+              <span className={DOCUMENT_TYPE.fieldLabel}>Patient Number:</span>
               <EntityId type="patient" value={order.patientId} />
             </div>
             <div className={cn('flex items-center', DOCUMENT_TYPE.fieldRow)}>
-              <span className="text-text-tertiary w-28">Order Date:</span>
-              <span className="text-text-secondary font-normal">
+              <span className={DOCUMENT_TYPE.fieldLabel}>Order Date:</span>
+              <span className={DOCUMENT_TYPE.fieldValueMuted}>
                 {formatDateTime(order.orderDate)}
               </span>
             </div>
             {paymentDate && (
               <div className={cn('flex items-center', DOCUMENT_TYPE.fieldRow)}>
-                <span className="text-text-tertiary w-28">Payment Date:</span>
-                <span className="text-text-secondary font-normal">
+                <span className={DOCUMENT_TYPE.fieldLabel}>Payment Date:</span>
+                <span className={DOCUMENT_TYPE.fieldValueMuted}>
                   {formatDateTime(paymentDate)}
                 </span>
               </div>
@@ -107,7 +107,7 @@ function ReceiptHeader({
               </span>
               {order.orderDate && (
                 <>
-                  <span className="text-text-disabled select-none" aria-hidden>
+                  <span className={DOCUMENT_TYPE.metaSeparator} aria-hidden>
                     •
                   </span>
                   <span className={cn(DOCUMENT_TYPE.metaPart, 'shrink-0 whitespace-nowrap')}>
@@ -132,7 +132,7 @@ function ReceiptHeader({
             <EntityId
               type="order"
               value={order.orderId}
-              variant="secondary"
+              variant="secondaryBlock"
               className={DOCUMENT_TYPE.compactEntityId}
             />
             {showPaymentStatusBadge && (
@@ -174,7 +174,7 @@ function ReceiptItemRow({ test, detailed }: { test: OrderTest; detailed: boolean
           </span>
         )}
       </span>
-      <span className="font-normal text-text-primary tabular-nums shrink-0">
+      <span className={`font-normal tabular-nums shrink-0 ${text({ role: 'body' })}`}>
         {formatCurrency(test.priceAtOrder)}
       </span>
     </li>

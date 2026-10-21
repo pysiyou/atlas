@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Avatar, Icon, RemovableTag, TagChip } from '@/components/primitives';
 import { EMPTY_COPY } from '@/components/display';
 import { cn, formatPhoneNumber } from '@/utils';
-import { text, inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/theme/recipes';
+import {text, inputContainerBase, inputContainerError, FORM_CONTROL_LABEL, FG } from '@/theme/recipes';
 import type { Patient } from '@/types';
 import { ICONS } from '@/config/icons';
 import { OrderSelectPopoverShell } from './OrderSelectPopoverShell';
@@ -91,7 +91,7 @@ const PatientSearchTagInput: React.FC<{
         <div className="absolute inset-y-0 left-0 pl-space-3 flex items-center pointer-events-none">
           <Icon
             name={ICONS.dataFields.user}
-            className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors"
+            className={`w-4 h-4 ${FG.muted} group-hover:text-brand transition-colors`}
           />
         </div>
 
@@ -119,7 +119,7 @@ const PatientSearchTagInput: React.FC<{
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => onValueChange(e.target.value)}
           onFocus={() => onValueChange(value)}
           placeholder={selectedPatient ? '' : 'Search by name, ID, or phone…'}
-          className={`flex-1 min-w-[140px] outline-none ${text({ role: 'body' })} placeholder:text-text-muted bg-transparent leading-normal`}
+          className={`flex-1 min-w-[140px] outline-none ${text({ role: 'body' })} placeholder:${FG.muted} bg-transparent leading-normal`}
           autoComplete="off"
           disabled={disabled}
         />
@@ -232,7 +232,7 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                         {contactLine ? (
                           <p className={`${text({ role: 'caption' })} truncate`}>{contactLine}</p>
                         ) : (
-                          <p className={`${text({ role: 'caption' })} text-text-muted truncate`}>No contact on file</p>
+                          <p className={`${text({ role: 'caption' })} ${FG.muted} truncate`}>No contact on file</p>
                         )}
                       </div>
                     </button>

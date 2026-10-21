@@ -9,7 +9,7 @@ import {
 } from '../utils/labResult';
 import { ReferenceIntervalCell } from './ReferenceIntervalCell';
 import { LAB_CONFIG } from '../constants';
-import { text, DATA_GRID, METRIC_TILE } from '@/theme/recipes';
+import {text, DATA_GRID, METRIC_TILE, FG } from '@/theme/recipes';
 import { resultTileStatusClass } from '../utils/labResult';
 import { Text } from '@/components/layout';
 import {
@@ -172,7 +172,7 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
           const label = resolveParameterLabel(key, parameterLabels);
           return (
             <div key={key} className={METRIC_TILE.inlineRowDense}>
-              <Text role="caption" className="text-text-secondary truncate" title={label}>
+              <Text role="caption" intent="muted" truncate title={label}>
                 {label}:
               </Text>
               <ResultValueAnnotations
@@ -201,7 +201,7 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
         const label = resolveParameterLabel(key, parameterLabels);
         return (
           <div key={key} className={METRIC_TILE.inlineRow}>
-            <Text role="caption" className="text-text-secondary truncate" title={label}>
+            <Text role="caption" className={`${FG.labelMuted} truncate`} title={label}>
               {label}:
             </Text>
             <ResultValueAnnotations

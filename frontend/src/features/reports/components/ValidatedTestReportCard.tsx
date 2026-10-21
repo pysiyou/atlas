@@ -53,7 +53,8 @@ export function ValidatedTestReportCard({
           <Avatar
             primaryText={order.patientName}
             primaryTextClassName="capitalize"
-            secondaryText={<EntityId type="order" value={order.orderId} />}
+            secondarySlot="entity"
+            secondaryText={<EntityId type="patient" value={order.patientId} variant="secondaryBlock" />}
             size="xs"
           />
         }
@@ -75,7 +76,10 @@ export function ValidatedTestReportCard({
       </div>
 
       <div className="flex justify-between items-center mt-auto pt-space-3">
-        <div className={TABLE_DATETIME_SECONDARY_CLASS}>{formatDateTime(order.orderDate)}</div>
+        <div className={TABLE_DATETIME_SECONDARY_CLASS}>
+          <EntityId type="order" value={order.orderId} variant="secondaryBlock" />
+          <span className="block mt-space-0-5">{formatDateTime(order.orderDate)}</span>
+        </div>
         <div
           className="flex items-center gap-space-1"
           onClick={e => e.stopPropagation()}

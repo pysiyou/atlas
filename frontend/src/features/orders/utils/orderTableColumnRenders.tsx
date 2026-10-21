@@ -11,6 +11,8 @@ import {
   renderPatientNameBlock,
   TABLE_PRIMARY_CELL_CLASS,
 } from '@/utils/tableColumnRenders';
+import { renderTableSecondaryEntityId } from '@/utils/presentationRenders';
+import { PRESENTATION_STACK_CLASS } from '@/theme/recipes';
 import { ROUTES } from '@/config';
 import type { OrderTest } from '@/types';
 import { TABLE_TYPE } from '@/theme/recipes';
@@ -30,17 +32,14 @@ function renderPatientNameWithId(
 ): ReactNode {
   return renderPatientNameBlock(
     fullName,
-    <EntityId
-      type="patient"
-      value={patientId}
-      variant="secondary"
-      className="truncate"
-      navigateToFiltered={
+    renderTableSecondaryEntityId({
+      type: 'patient',
+      value: patientId,
+      navigateToFiltered:
         enableNavigation
           ? { targetPage: ROUTES.ORDERS, filterKey: 'patientId' }
-          : undefined
-      }
-    />
+          : undefined,
+    }),
   );
 }
 
@@ -122,7 +121,7 @@ export function renderOrderTestsBlock(
   const { activeCount, countFirstSecondary } = preview;
 
   return (
-    <div className="min-w-0 font-normal">
+    <div className={PRESENTATION_STACK_CLASS}>
       <div className={TABLE_PRIMARY_CELL_CLASS}>
         {activeCount} test{activeCount !== 1 ? 's' : ''}
       </div>

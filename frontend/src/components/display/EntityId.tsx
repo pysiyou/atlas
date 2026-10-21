@@ -7,6 +7,7 @@ import {
   ENTITY_ID_CLICKABLE,
   ENTITY_ID_INLINE,
   ENTITY_ID_SECONDARY,
+  ENTITY_ID_SECONDARY_BLOCK,
   ENTITY_ID_HEADER_SECONDARY,
 } from '@/utils/constants';
 import { createEntityFilterNavigateHandler, type EntityNavigateTarget } from '@/utils/filters';
@@ -17,11 +18,13 @@ export type EntityIdVariant =
   | 'headerSecondary'
   | 'block'
   | 'inline'
-  | 'clickable';
+  | 'clickable'
+  | 'secondaryBlock';
 
 const VARIANT_CLASSES: Record<EntityIdVariant, string> = {
   default: ENTITY_ID,
   secondary: ENTITY_ID_SECONDARY,
+  secondaryBlock: ENTITY_ID_SECONDARY_BLOCK,
   headerSecondary: ENTITY_ID_HEADER_SECONDARY,
   block: ENTITY_ID_BLOCK,
   inline: ENTITY_ID_INLINE,
@@ -85,11 +88,20 @@ export function EntityId({
   const resolvedVariant =
     effectiveOnClick != null && variant === 'default' ? 'clickable' : variant;
 
+  const secondaryInteractive =
+    effectiveOnClick != null &&
+    (resolvedVariant === 'secondary' || resolvedVariant === 'secondaryBlock');
+
   const EffectiveComponent = (effectiveOnClick != null && Component === 'span' ? 'button' : Component) as ElementType;
 
   return (
     <EffectiveComponent
-      className={cn(VARIANT_CLASSES[resolvedVariant], 'font-normal', className)}
+      className={cn(
+        VARIANT_CLASSES[resolvedVariant],
+        secondaryInteractive && 'entity-id--clickable',
+        'font-normal',
+        className,
+      )}
       title={title}
       onClick={effectiveOnClick}
       {...rest}

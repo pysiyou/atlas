@@ -29,7 +29,8 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
           <Avatar
             primaryText={patient.fullName}
             primaryTextClassName=""
-            secondaryText={<EntityId type="patient" value={patient.id} />}
+            secondarySlot="entity"
+            secondaryText={<EntityId type="patient" value={patient.id} variant="secondaryBlock" />}
             size="xs"
           />
         }

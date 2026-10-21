@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { text, RADIUS } from '@/theme/recipes';
+import {text, RADIUS, FG } from '@/theme/recipes';
 import { Card } from '@/components/surfaces';
 
 export interface DashboardStat {
@@ -27,8 +27,8 @@ export const DashboardStatsGrid: React.FC<DashboardStatsGridProps> = ({ stats })
         <Card key={index} padding="lg" hover>
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <p className={`${text({ role: 'amount' })} text-text-tertiary mb-space-1`}>{stat.label}</p>
-              <p className="text-3xl font-normal text-text-primary">{stat.value}</p>
+              <p className={`${text({ role: 'amount' })} ${FG.captionMuted} mb-space-1`}>{stat.label}</p>
+              <p className={`text-3xl font-normal ${FG.body}`}>{stat.value}</p>
               {stat.today !== undefined && (
                 <p className={`${text({ role: 'body' })} text-success-fg mt-space-1`}>+{stat.today} today</p>
               )}

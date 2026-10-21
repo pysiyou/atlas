@@ -4,7 +4,7 @@
 import React, { useMemo } from 'react';
 import { Icon } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
-import { text, FIELD_ERROR, RADIUS, TONE } from '@/theme/recipes';
+import {text, FIELD_ERROR, RADIUS, TONE, FG } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { useParameterLabelMap } from '@/features/catalog';
 import {
@@ -48,7 +48,7 @@ function AnalyticalFlagsBlock({
           key={`${flag.kind}-${flag.code}-${index}`}
           className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] gap-x-space-2 items-baseline min-w-0"
         >
-          <span className={`${text({ role: 'label' })} text-text-secondary truncate`}>
+          <span className={`${text({ role: 'label' })} ${FG.labelMuted} truncate`}>
             {analyticalFlagLabel(flag, parameterLabels)}
           </span>
           <span className={`${text({ role: 'caption' })} ${TONE.warning.fg} leading-snug`}>
@@ -62,7 +62,7 @@ function AnalyticalFlagsBlock({
   if (compact) {
     return (
       <div className="pt-space-4 space-y-space-1-5">
-        <p className={`${text({ role: 'caption' })} font-medium text-text-tertiary uppercase tracking-wide`}>
+        <p className={`${text({ role: 'caption' })} font-medium ${FG.captionMuted} uppercase tracking-wide`}>
           Analytical flags
         </p>
         {flagGrid}
@@ -98,7 +98,7 @@ export const ResultContextNotes: React.FC<ResultContextNotesProps> = ({
       <div className={cn('space-y-space-2', className)}>
         {hasFlags && <AnalyticalFlagsBlock flags={flags!} testCode={testCode} compact />}
         {hasNotes && (
-          <p className={`${text({ role: 'caption' })} text-text-tertiary italic leading-snug`}>{technicianNotes}</p>
+          <p className={`${text({ role: 'caption' })} ${FG.captionMuted} italic leading-snug`}>{technicianNotes}</p>
         )}
       </div>
     );
@@ -109,7 +109,7 @@ export const ResultContextNotes: React.FC<ResultContextNotesProps> = ({
       {hasFlags && <AnalyticalFlagsBlock flags={flags!} testCode={testCode} />}
       {hasNotes && (
         <div className={`${RADIUS.surface} border border-border-subtle bg-surface-page/60 px-space-3 py-space-2-5`}>
-          <p className={`${text({ role: 'section-title' })} text-text-tertiary mb-space-1.5`}>
+          <p className={`${text({ role: 'section-title' })} ${FG.captionMuted} mb-space-1.5`}>
             Technician notes
           </p>
           <p className={`${text({ role: 'label' })} leading-snug whitespace-pre-wrap`}>

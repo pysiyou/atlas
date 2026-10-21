@@ -5,7 +5,7 @@ import type { DemographicRange } from '@/types/test';
 import { calculateAge } from '@/utils/string';
 import { PHYSIOLOGIC_LIMITS, type PhysiologicLimit } from '@/types/generated/physiologicLimits';
 import { PHYSIOLOGIC_LIMIT_ALIASES } from '@/types/generated/physiologicAliases';
-import { TONE, metricTile, metricTileStateFromResult } from '@/theme/recipes';
+import { FG, TONE, metricTile, metricTileStateFromResult } from '@/theme/recipes';
 
 export type { ResultStatus };
 export { PHYSIOLOGIC_LIMITS, type PhysiologicLimit };
@@ -287,7 +287,7 @@ export function resultTileStatusClass(status: ResultStatus, hasValue: boolean): 
 export function resultValueClass(status: ResultStatus): string {
   if (isCritical(status)) return TONE.danger.fg;
   if (status !== 'normal') return TONE.warning.fg;
-  return 'text-text-primary';
+  return FG.body;
 }
 
 export function resultStatusLabel(status: ResultStatus): string | null {

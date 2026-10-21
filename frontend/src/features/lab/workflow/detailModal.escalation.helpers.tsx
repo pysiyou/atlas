@@ -12,7 +12,7 @@ import { LabRelatedTestsPanel } from '../components/LabRelatedWorkflowPanel';
 import { LabEventLogPanel } from '@/features/audit';
 import type { TestWithContext } from '@/types';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
-import { text } from '@/theme/recipes';
+import { text , FG } from '@/theme/recipes';
 import { notify } from '@/utils/feedback';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
 import { EscalationResolutionActions, type EscalationResolveOptions } from '../validation/EscalationResolutionActions';
@@ -70,14 +70,14 @@ function EscalationSummaryPanel({
         <dl className={`mt-space-3 space-y-space-2 ${text({ role: 'amount' })}`}>
           {rejectionReason && (
             <div>
-              <dt className="text-text-tertiary">Rejection reason</dt>
-              <dd className="text-text-primary">{rejectionReason}</dd>
+              <dt className={text({ role: 'label', intent: 'muted' })}>Rejection reason</dt>
+              <dd className={text({ role: 'body' })}>{rejectionReason}</dd>
             </div>
           )}
           {rejectionNotes && (
             <div>
-              <dt className="text-text-tertiary">Notes</dt>
-              <dd className="text-text-primary whitespace-pre-wrap">{rejectionNotes}</dd>
+              <dt className={text({ role: 'label', intent: 'muted' })}>Notes</dt>
+              <dd className={`${text({ role: 'body' })} whitespace-pre-wrap`}>{rejectionNotes}</dd>
             </div>
           )}
         </dl>
@@ -199,7 +199,7 @@ export function EscalationResolutionFooter(props: EscalationResolutionFooterProp
   const { canResolveEscalation, resolving, ...actionProps } = props;
 
   return (
-    <ModalFooter statusMessage="" statusClassName="text-text-tertiary">
+    <ModalFooter statusMessage="" statusClassName={FG.modalStatus}>
       {!canResolveEscalation ? (
         <p className={text({ role: 'body', intent: 'muted' })}>You do not have permission to resolve escalations.</p>
       ) : (

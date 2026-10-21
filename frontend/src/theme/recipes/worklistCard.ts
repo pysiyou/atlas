@@ -40,8 +40,8 @@ export const WORKLIST_CARD_ALERT = {
   row: `flex min-w-0 w-full flex-col ${SPACING.gapHairline} ${text({ role: 'label' })} leading-snug`,
 } as const;
 
-/** Primary inline emphasis inside worklist identity rows */
-export const WORKLIST_EMPHASIZED_INLINE = 'text-text-primary' as const;
+/** Primary color emphasis inside label-scale identity rows (inherits size from container). */
+export const WORKLIST_EMPHASIZED_INLINE = 'text-text-primary';
 
 export const WORKLIST_FLAG_TITLE = `${text({ role: 'section-title' })} ${TONE.danger.fg}` as const;
 
@@ -77,7 +77,7 @@ export const WORKLIST_CARD_LIST_ITEM = {
 export const IDENTITY_INLINE = {
   container:
     `flex items-baseline gap-x-space-2 gap-y-0 ${text({ role: 'label' })} flex-wrap min-w-0 w-full leading-snug`,
-  primaryText: 'font-normal text-text-primary capitalize',
+  primaryText: 'font-normal capitalize text-text-primary',
   separator: LIST_MARKER.inlineSeparator,
   inlineDot: LIST_MARKER.inlineDot,
 } as const;
@@ -86,7 +86,7 @@ export const IDENTITY_STACK = {
   primaryLine: `flex items-baseline gap-x-space-2 gap-y-0 ${text({ role: 'label' })} flex-wrap min-w-0 w-full leading-snug`,
   secondaryLine: `flex items-baseline gap-x-space-2 gap-y-0 ${text({ role: 'label' })} flex-wrap min-w-0 w-full leading-snug`,
   secondaryText: 'font-normal text-text-secondary',
-  secondaryDate: `whitespace-nowrap tabular-nums ${text({ role: 'label' })} text-text-secondary`,
+  secondaryDate: `whitespace-nowrap tabular-nums ${text({ role: 'label', intent: 'muted' })}`,
 } as const;
 
 export const CARD_HEADER_GRID = {
@@ -110,7 +110,7 @@ export const MOBILE_LIST_CARD = {
   stack: 'flex flex-col min-h-0 min-w-0 w-full flex-1 gap-space-1-5',
   titleHead:
     'grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto] grid-rows-[auto_auto] gap-x-space-2 gap-y-space-0-5 items-start',
-  title: `m-0 col-start-1 row-start-1 ${text({ role: 'title-section' })} truncate leading-snug normal-case`,
+  title: `m-0 col-start-1 row-start-1 ${text({ role: 'title-panel' })} truncate leading-snug normal-case`,
   subline: `col-start-1 row-start-2 flex items-center gap-space-1-5 min-w-0 ${text({ role: 'label' })} leading-snug`,
   sublineSecondary: 'truncate capitalize font-normal text-text-secondary',
   metaLine: `${text({ role: 'label' })} leading-snug`,

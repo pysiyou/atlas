@@ -90,7 +90,7 @@ export function QueueCardPanel({ title, children, className }: QueueCardPanelPro
       <div className={WORKLIST_CARD_SPACING.sectionTitleMargin}>
         <span className={text({ role: 'section-title' })}>{title}</span>
       </div>
-      <div className={text({ role: 'body' })}>{children}</div>
+      <div className={`${text({ role: 'label' })} leading-snug`}>{children}</div>
     </div>
   );
 }
@@ -229,7 +229,9 @@ const WORKLIST_CARD_TEST_LIST_COLLAPSED_COUNT = WORKLIST_CARD_TEST_LIST_MAX_VISI
 
 const queueCardTestListToggleClass = cn(
   WORKLIST_CARD_LIST_ITEM.label,
-  'underline text-text-secondary hover:text-text-primary',
+  'underline',
+  text({ role: 'label', intent: 'muted' }),
+  'hover:opacity-90',
 );
 
 export function QueueCardTestList({ tests }: { tests: Array<{ name: string; code: string }> }) {
@@ -296,7 +298,7 @@ export function QueueCardProgressMeta({
 }) {
   return (
     <span
-      className={isComplete ? 'text-text-primary' : 'text-text-secondary'}
+      className={isComplete ? text({ role: 'body' }) : text({ role: 'label', intent: 'muted' })}
       title={`${count} of ${total} ${label}`}
     >
       {count}/{total} {label.toLowerCase()}

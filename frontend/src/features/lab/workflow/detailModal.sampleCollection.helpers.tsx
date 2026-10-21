@@ -6,7 +6,7 @@ import Barcode from 'react-barcode';
 import { actionButtonPreset, Button, Icon } from '@/components/primitives';
 import { Panel } from '@/components/surfaces';
 import type { ContainerType, Order, RejectedSample, Sample, Test } from '@/types';
-import { text, RADIUS, SURFACE } from '@/theme/recipes';
+import { text, RADIUS, SURFACE , FG } from '@/theme/recipes';
 import { ModalFooter } from './detailModalLayout';
 import { displayId, formatDateTime } from '@/utils';
 import { CollectionDetailGrid } from './detailModal.sampleCollection.grid';
@@ -89,20 +89,20 @@ export function SampleCollectionDetailContent({
           <div className={`space-y-space-2 ${text({ role: 'label' })}`}>
             {rejectedSample.rejectionReasons && rejectedSample.rejectionReasons.length > 0 && (
               <p>
-                <span className="text-text-tertiary">Reason: </span>
+                <span className={FG.captionMuted}>Reason: </span>
                 {formatRejectionReasons(rejectedSample.rejectionReasons)}
               </p>
             )}
             {rejectedSample.rejectionNotes && (
               <p>
-                <span className="text-text-tertiary">Notes: </span>
+                <span className={FG.captionMuted}>Notes: </span>
                 {rejectedSample.rejectionNotes}
               </p>
             )}
             <p>
-              <span className="text-text-tertiary">Rejected by </span>
+              <span className={FG.captionMuted}>Rejected by </span>
               {getUserName(rejectedSample.rejectedBy)}
-              <span className="text-text-tertiary"> on </span>
+              <span className={FG.captionMuted}> on </span>
               {formatDateTime(rejectedSample.rejectedAt)}
             </p>
             {rejectedSample.recollectionRequired && (
@@ -176,7 +176,7 @@ export function SampleCollectionDetailFooter({
     const isRecollection = sample.isRecollection === true;
     const collectAllowed = isLabActionAllowed(pendingSampleDisplay.allowedActions, 'collect');
     return (
-      <ModalFooter statusIcon={undefined} statusMessage="" statusClassName="text-text-tertiary">
+      <ModalFooter statusIcon={undefined} statusMessage="" statusClassName={FG.modalStatus}>
         <SampleCollectionPopover
           requirement={pendingSampleDisplay.requirement!}
           patientName={patientName}
@@ -203,10 +203,10 @@ export function SampleCollectionDetailFooter({
     return (
       <ModalFooter
         statusIcon={
-          <Icon name={getSampleStatusIcon('collected')} className="w-3.5 h-3.5 text-text-disabled" />
+          <Icon name={getSampleStatusIcon('collected')} className={`w-3.5 h-3.5 ${FG.disabled}`} />
         }
         statusMessage=""
-        statusClassName="text-text-tertiary"
+        statusClassName={FG.modalStatus}
       >
         <SampleRejectionPopover
           sampleId={sample.sampleId.toString()}
@@ -229,10 +229,10 @@ export function SampleCollectionDetailFooter({
     return (
       <ModalFooter
         statusIcon={
-          <Icon name={getSampleStatusIcon('rejected')} className="w-3.5 h-3.5 text-text-disabled" />
+          <Icon name={getSampleStatusIcon('rejected')} className={`w-3.5 h-3.5 ${FG.disabled}`} />
         }
         statusMessage=""
-        statusClassName="text-text-tertiary"
+        statusClassName={FG.modalStatus}
       />
     );
   }

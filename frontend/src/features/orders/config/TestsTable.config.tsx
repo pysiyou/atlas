@@ -14,7 +14,7 @@ import { CatalogCategoryBadge } from '@/features/catalog';
 import { OrderTestStatusBadge } from '../components/OrderDomainBadges';
 import { getOrderTestLineageRowClass } from '../utils/orderTestLineage';
 import type { OrderTest, TestSummary } from '@/types';
-import { text, BADGE, TABLE_TYPE, RADIUS } from '@/theme/recipes';
+import { text, BADGE, TABLE_TYPE, RADIUS, PRESENTATION_STACK_CLASS } from '@/theme/recipes';
 
 
 const SIMPLE_VIEWS = {
@@ -29,20 +29,15 @@ const DETAILED_VIEWS = {
   compact: SIMPLE_VIEWS.compact,
 } as const;
 
-/** Test code under the display name — secondary tone at table base size. */
-const TEST_CODE_TEXT = TABLE_TYPE.secondary;
-
 function renderOrderTestIdentity(test: OrderTest, testCatalog: TestSummary[]) {
   const name = getTestName(test.testCode, testCatalog);
 
   return (
-    <div className="min-w-0 flex flex-col gap-space-0-5">
+    <div className={PRESENTATION_STACK_CLASS}>
       <span className={cn(TABLE_TYPE.cell, 'block min-w-0 truncate')} title={name}>
         {name}
       </span>
-      <EntityId variant="secondary" className={cn(TEST_CODE_TEXT, 'truncate')}>
-        {test.testCode}
-      </EntityId>
+      <EntityId variant="secondaryBlock">{test.testCode}</EntityId>
     </div>
   );
 }
