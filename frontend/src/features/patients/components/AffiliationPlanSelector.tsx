@@ -5,7 +5,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { Button, Icon } from '@/components/primitives';
+import { Button, Icon, SelectableCard } from '@/components/primitives';
 import { Callout } from '@/components/display';
 import { SpinnerLoader } from '@/components/loaders';
 import { useAffiliationPricing } from '@/features/catalog';
@@ -187,17 +187,11 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
             const hasPrice = plan.price > 0;
 
             return (
-              <div
+              <SelectableCard
                 key={plan.duration}
-                onClick={() => handlePlanSelect(plan.duration)}
-                className={`
-                  group relative border-2 ${RADIUS.menu} p-space-5 cursor-pointer transition-all duration-200
-                  ${
-                    isSelected
-                      ? `border-brand bg-brand-muted ${SHADOW.subtle}`
-                      : `border-border-default hover:border-border-strong bg-surface hover:${SHADOW.subtle}`
-                  }
-                `}
+                selected={isSelected}
+                emphasis={plan.isBestValue ? 'featured' : 'default'}
+                onSelect={() => handlePlanSelect(plan.duration)}
               >
                 {/* Best Value Badge */}
                 {plan.isBestValue && (
@@ -271,7 +265,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                     )}
                   </div>
                 </div>
-              </div>
+              </SelectableCard>
             );
           })}
         </div>

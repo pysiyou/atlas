@@ -8,7 +8,7 @@ import { SpinnerLoader } from '@/components/loaders';
 import type { BadgeSize } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 import { ATTENTION_LABELS } from '@/types/generated/labBlockers';
-import { QUEUE_CARD_BADGE_SIZE } from '@/theme/recipes';
+import { WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
 
 interface RetestBadgeProps {
   retestNumber: number;
@@ -18,7 +18,7 @@ interface RetestBadgeProps {
 
 export const RetestBadge: React.FC<RetestBadgeProps> = ({
   retestNumber,
-  size = QUEUE_CARD_BADGE_SIZE,
+  size = WORKLIST_CARD_BADGE_SIZE,
   className = '',
 }) => (
   <Badge size={size} variant="warning" className={className}>
@@ -35,7 +35,7 @@ interface RecollectionAttemptBadgeProps {
 
 export const RecollectionAttemptBadge: React.FC<RecollectionAttemptBadgeProps> = ({
   attemptNumber,
-  size = QUEUE_CARD_BADGE_SIZE,
+  size = WORKLIST_CARD_BADGE_SIZE,
   className = '',
   showIcon = false,
 }) => (
@@ -54,7 +54,7 @@ interface FlagCountBadgeProps {
 
 export const FlagCountBadge: React.FC<FlagCountBadgeProps> = ({
   count,
-  size = QUEUE_CARD_BADGE_SIZE,
+  size = WORKLIST_CARD_BADGE_SIZE,
   className = '',
   showIcon = true,
 }) => {
@@ -75,7 +75,7 @@ interface ReviewRequiredBadgeProps {
 }
 
 export const ReviewRequiredBadge: React.FC<ReviewRequiredBadgeProps> = ({
-  size = QUEUE_CARD_BADGE_SIZE,
+  size = WORKLIST_CARD_BADGE_SIZE,
   className = '',
   showIcon = true,
 }) => (
@@ -122,7 +122,7 @@ interface SupervisorApprovalBadgeProps {
 
 /** Supervisor gate — recollection / authorization queues (not specimen blocked). */
 export const SupervisorApprovalBadge: React.FC<SupervisorApprovalBadgeProps> = ({
-  size = QUEUE_CARD_BADGE_SIZE,
+  size = WORKLIST_CARD_BADGE_SIZE,
   className = '',
 }) => (
   <AttentionReasonBadge

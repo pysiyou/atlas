@@ -84,7 +84,7 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
     case 'general':
       return (
         <div className="space-y-space-6">
-          <Panel preset="patient.form.identityContact">
+          <Panel preset="panel.page.form" title="Identity & Contact">
             <DemographicsSection
               formData={formData}
               errors={flatErrors}
@@ -92,7 +92,7 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
             />
             <AddressSection formData={formData} errors={flatErrors} onFieldChange={onFieldChange} />
           </Panel>
-          <Panel preset="patient.form.emergencyContact">
+          <Panel preset="panel.page.form" title="Emergency Contact">
             <EmergencyContactSection
               formData={formData}
               errors={flatErrors}
@@ -104,14 +104,18 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
 
     case 'medical':
       return (
-        <Panel preset="patient.form.medicalHistory">
+        <Panel preset="panel.page.form" title="History, Conditions & Lifestyle">
           <MedicalHistorySection formData={formData} onFieldChange={onFieldChange} />
         </Panel>
       );
 
     case 'vitals':
       return (
-        <Panel preset="patient.form.vitals">
+        <Panel
+          preset="panel.page.form"
+          title="Measurements"
+          meta="Fill any vitals you have. Hints show typical ranges."
+        >
           <VitalsSection
             vitalSigns={{
               temperature: formData.temperature,
@@ -130,7 +134,11 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
 
     case 'affiliation':
       return (
-        <Panel preset="patient.form.affiliation">
+        <Panel
+          preset="panel.page.form"
+          title="Select Your Plan"
+          meta="Choose a duration and pricing that works for you"
+        >
           <AffiliationSection
             formData={formData}
             errors={flatErrors}

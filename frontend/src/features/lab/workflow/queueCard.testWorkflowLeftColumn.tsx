@@ -11,7 +11,7 @@ import { LabAuditBlock } from '../components/LabWorkflowHeader.parts';
 import { LabCardMetaRow, QueueAgeMeta } from '../components/LabCardMetaRow';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
 import {
-  QUEUE_CARD_ALERT,
+  WORKLIST_CARD_ALERT,
   IDENTITY_INLINE,
   CARD_HEADER_GRID,
   IDENTITY_STACK,
@@ -217,7 +217,7 @@ export function TestWorkflowCardLeftColumn({
         sampleId={test.sampleId}
         testCode={test.testCode}
       />
-      <div className={QUEUE_CARD_ALERT.row}>
+      <div className={WORKLIST_CARD_ALERT.row}>
         <TestWorkflowOperationsRow
           variant={variant}
           queueSince={queueSince}

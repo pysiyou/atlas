@@ -11,7 +11,7 @@ import { displayId } from '@/utils';
 import { SPACING, WORKSPACE } from '@/theme/recipes';
 
 /** Estimated card height used until the virtualizer measures the real node. */
-const ESTIMATED_QUEUE_CARD_HEIGHT_PX = 160;
+const ESTIMATED_WORKLIST_CARD_HEIGHT_PX = 160;
 const QUEUE_OVERSCAN = 8;
 
 /** Filter row + scroll region shared by workflow queues. */
@@ -66,7 +66,7 @@ export function LabWorkflowQueueLayout<T>({
   const virtualizer = useVirtualizer({
     count: items.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => ESTIMATED_QUEUE_CARD_HEIGHT_PX,
+    estimateSize: () => ESTIMATED_WORKLIST_CARD_HEIGHT_PX,
     overscan: QUEUE_OVERSCAN,
     enabled: hasItems,
   });

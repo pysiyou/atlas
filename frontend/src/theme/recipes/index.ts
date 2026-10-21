@@ -1,13 +1,5 @@
 /**
  * Canonical design recipes — public barrel.
- *
- * ## Import convention
- * Import all recipe tokens from **`@/theme/recipes`** (or `@/theme`,
- * which re-exports this barrel). Do not import `@/theme/recipes/form`, etc.
- * from app or feature code — submodules exist for maintainability and are composed here.
- *
- * CSS variables live under `theme/tokens/`; composed Tailwind class stacks live in `recipes/*.ts`.
- * Tailwind scans this folder via `@source` in `src/index.css`.
  */
 export * from './type';
 export * from './tone';
@@ -23,15 +15,31 @@ export * from './misc';
 export * from './badge';
 export * from './form';
 export * from './markers';
-export * from './queueCard';
-export * from './meterTable';
+export * from './worklistCard';
+export * from './segmentedControl';
+export * from './workspaceSplit';
+export * from './meterKpi';
+export * from './feedGrouped';
 export {
   text,
   tableCell,
   labelButton,
   iconButton,
+  metricTile,
+  METRIC_TILE,
+  metricTileStateFromResult,
+  dataGrid,
+  DATA_GRID,
+  selectableCard,
+  SELECTABLE_CARD,
+  panelShell,
+  panelBodyClass,
   type TextRecipeProps,
   type TableCellRecipeProps,
   type LabelButtonRecipeProps,
   type IconButtonRecipeProps,
+  type MetricTileRecipeProps,
+  type DataGridRecipeProps,
+  type SelectableCardRecipeProps,
+  type PanelShellRecipeProps,
 } from './cva';

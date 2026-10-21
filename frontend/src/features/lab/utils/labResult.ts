@@ -5,7 +5,7 @@ import type { DemographicRange } from '@/types/test';
 import { calculateAge } from '@/utils/string';
 import { PHYSIOLOGIC_LIMITS, type PhysiologicLimit } from '@/types/generated/physiologicLimits';
 import { PHYSIOLOGIC_LIMIT_ALIASES } from '@/types/generated/physiologicAliases';
-import { RADIUS, SHADOW, TONE, TYPE } from '@/theme/recipes';
+import { TONE, metricTile, metricTileStateFromResult } from '@/theme/recipes';
 
 export type { ResultStatus };
 export { PHYSIOLOGIC_LIMITS, type PhysiologicLimit };
@@ -278,30 +278,10 @@ export function validatePhysiologicValue(
   return { isValid: true, limit };
 }
 
-export const RESULT_PANEL = {
-  grid: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-space-3',
-  tile:
-    `${RADIUS.surface} border px-space-3 py-space-2-5 flex flex-col gap-space-1-5 min-h-[4.5rem] transition-colors duration-150`,
-  tileEmpty: 'border-border-subtle bg-surface-page/40',
-  tileFilled: `border-border-default bg-surface ${SHADOW.subtle}`,
-  label: `${TYPE.caption} font-medium truncate`,
-  value: `${TYPE.pageTitle} font-medium tabular-nums`,
-  unit: `${TYPE.meta} font-normal ml-space-1`,
-  reference: `${TYPE.caption} leading-none font-normal truncate shrink-0 max-w-[50%]`,
-  referenceUnavailable: `${TYPE.caption} leading-none font-normal truncate shrink-0 max-w-[50%]`,
-  notesSection: 'mt-space-4 pt-space-4 border-t border-border-subtle space-y-space-3',
-  notesLabel: `${TYPE.label} font-normal`,
-} as const;
-
 export function resultTileStatusClass(status: ResultStatus, hasValue: boolean): string {
-  if (!hasValue) return RESULT_PANEL.tileEmpty;
-  if (isCritical(status)) {
-    return `${TONE.danger.well} ${SHADOW.subtle}`;
-  }
-  if (status !== 'normal') {
-    return `${TONE.warning.well} ${SHADOW.subtle}`;
-  }
-  return RESULT_PANEL.tileFilled;
+  return metricTile({
+    state: metricTileStateFromResult(status, hasValue, s => isCritical(s as ResultStatus)),
+  });
 }
 
 export function resultValueClass(status: ResultStatus): string {

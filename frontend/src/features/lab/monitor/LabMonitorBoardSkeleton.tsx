@@ -18,7 +18,7 @@ import {
 function TodayPanelSkeleton() {
   return (
     <Panel
-      preset="lab.monitor.today"
+      preset="panel.pageEmbed.flexColumnFill" title="Today"
       headerEnd={<Skeleton height={12} width={120} />}
     >
       <div className={KPI_PANEL.body}>
@@ -61,14 +61,14 @@ export const LabMonitorBoardSkeleton: React.FC = () => {
             <TodayPanelSkeleton />
           </div>
           <div className={SPLIT_BOTTOM_PANEL}>
-            <Panel preset="lab.monitor.attention" headerEnd={<Skeleton height={12} width={72} />}>
+            <Panel preset="panel.pageEmbed.standard" title="Attention queue" headerEnd={<Skeleton height={12} width={72} />}>
               <div className="flex min-h-48 flex-col gap-space-3">
                 <Skeleton height={120} className="w-full" />
               </div>
             </Panel>
           </div>
           <div className={SPLIT_BOTTOM_PANEL}>
-            <Panel preset="audit.eventLog.monitor" headerEnd={<Skeleton height={12} width={72} />}>
+            <Panel preset="panel.pageEmbed.auto.fill" title="Event log" headerEnd={<Skeleton height={12} width={72} />}>
               <div className="flex min-h-48 flex-col gap-space-3">
                 <Skeleton height={120} className="w-full" />
               </div>
@@ -76,7 +76,7 @@ export const LabMonitorBoardSkeleton: React.FC = () => {
           </div>
         </div>
         <div className={SPLIT_TABLE_WRAP}>
-          <Panel preset="lab.monitor.ordersTable">
+          <Panel preset="panel.pageEmbed.flushHeader">
             <div className="flex flex-col gap-space-2 p-space-3">
               {Array.from({ length: 6 }).map((_, index) => (
                 <Skeleton key={index} height={36} className="w-full" />

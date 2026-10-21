@@ -102,5 +102,5 @@
   --primitive-cyan-600: #56d4dd;
   --primitive-cyan-800: #a5f3fc;
 
-  /* Override --workflow-* here to recolor a lab stage for this theme only. */
+  /* Override --lane-* here to recolor pipeline lanes for this theme only. */
 }

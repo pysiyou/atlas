@@ -10,15 +10,15 @@ import { SkeletonInfoSection, SkeletonTableRow } from '@/components/loaders/Skel
 import type { DetailSkeletonSection } from '@/components/loaders/DetailPageSkeleton';
 
 export const PATIENT_DETAIL_SKELETON_SECTIONS: DetailSkeletonSection[] = [
-  { preset: 'patient.detail.generalInfo.stack', rows: 6, layout: 'grid' },
-  { preset: 'patient.detail.medicalHistory.stack', rows: 6, layout: 'grid' },
-  { preset: 'patient.detail.careSnapshot.span2', rows: 6, layout: 'column' },
+  { preset: 'panel.page.visible.shrink', title: 'General Info', rows: 6, layout: 'grid' },
+  { preset: 'panel.page.visible.shrink', title: 'Medical History', rows: 6, layout: 'grid' },
+  { preset: 'panel.page.visible.span2', title: 'Care Snapshot', rows: 6, layout: 'column' },
   {
-    preset: 'patient.detail.relatedOrders',
+    preset: 'panel.pageEmbed.visible', title: 'Related Orders',
     tableColumns: 5,
     tableRows: 4,
   },
-  { preset: 'patient.detail.reports', rows: 3, layout: 'column' },
+  { preset: 'panel.page.visible.flexColumn', title: 'Reports', rows: 3, layout: 'column' },
 ];
 
 /** Large-screen skeleton: three record panels over orders (2 cols) and reports (1 col). */
@@ -29,26 +29,26 @@ export function renderPatientDetailLargeSkeleton() {
       style={{ height: '100%', maxHeight: '100%' }}
     >
       <div className={cn(LAYOUT.detailGrid3, 'min-h-0')}>
-        <Panel preset="patient.detail.generalInfo.fill">
+        <Panel preset="panel.page.auto.fill" title="General Info">
           <SkeletonInfoSection rows={6} layout="column" />
         </Panel>
-        <Panel preset="patient.detail.medicalHistory.fill">
+        <Panel preset="panel.page.auto.fill" title="Medical History">
           <SkeletonInfoSection rows={6} layout="column" />
         </Panel>
-        <Panel preset="patient.detail.careSnapshot.fill">
+        <Panel preset="panel.page.auto.fill" title="Care Snapshot">
           <SkeletonInfoSection rows={6} layout="column" />
         </Panel>
       </div>
 
       <div className={cn(LAYOUT.detailGrid3, 'min-h-0')}>
-        <Panel preset="patient.detail.relatedOrders.span2Fill">
+        <Panel preset="panel.pageEmbed.span2Min" title="Related Orders">
           <div className="border-t border-border-default">
             {Array.from({ length: 4 }).map((_, index) => (
               <SkeletonTableRow key={index} columns={5} />
             ))}
           </div>
         </Panel>
-        <Panel preset="patient.detail.reports.fill">
+        <Panel preset="panel.page.detailMinH.flexColumn" title="Reports">
           <SkeletonInfoSection rows={3} layout="column" />
         </Panel>
       </div>

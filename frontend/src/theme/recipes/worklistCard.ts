@@ -1,8 +1,7 @@
 /**
- * Workflow queue cards, segment tabs, and mobile list card chrome.
+ * Dense worklist / queue list cards, identity rows, and mobile list chrome.
  */
 
-import { CONTROL } from './control';
 import { FIELD_ERROR } from './misc';
 import { LIST_MARKER } from './markers';
 import { PANEL } from './panel';
@@ -11,23 +10,13 @@ import { SURFACE } from './surface';
 import { TONE } from './tone';
 import { TYPE } from './type';
 
-/** Default badge density on queue cards (`xs` | `sm` | `md`). */
-export const QUEUE_CARD_BADGE_SIZE = 'xs' as const;
+/** Default badge density on worklist cards (`xs` | `sm` | `md`). */
+export const WORKLIST_CARD_BADGE_SIZE = 'xs' as const;
 
-export const WORKFLOW_QUEUE_SHELL =
+export const WORKLIST_SHELL =
   `${PANEL.raisedShadowSm} flex flex-1 flex-col min-w-0 min-h-0` as const;
 
-export const SEGMENT_TABS = {
-  rail: `bg-surface-hover p-space-0-5 ${RADIUS.field} flex items-center gap-space-0-5`,
-  buttonBase: `relative flex items-center gap-space-1-5 px-space-2-5 py-space-1 ${RADIUS.field} ${TYPE.meta} font-normal transition-all duration-200 cursor-pointer`,
-  buttonActive: `bg-surface ${TONE.brand.fg} ${CONTROL.segmentActive}`,
-  buttonInactive: 'text-text-tertiary hover:text-text-primary hover:bg-surface-hover',
-  iconActive: TONE.brand.fg,
-  iconInactive: 'text-text-disabled',
-  countBadgeMargin: 'ml-space-1',
-} as const;
-
-export const WORKFLOW_HEADER = {
+export const WORKLIST_HEADER = {
   stack: `flex flex-col ${SPACING.gapInline} min-w-0`,
   cardStack: `flex flex-col ${SPACING.gapHairline} min-w-0`,
   row: 'min-h-0 min-w-0 w-full leading-snug',
@@ -37,8 +26,8 @@ export const WORKFLOW_HEADER = {
 } as const;
 
 export const MODAL_DETAIL_LAYOUT = {
-  headerStack: WORKFLOW_HEADER.stack,
-  headerRow: WORKFLOW_HEADER.row,
+  headerStack: WORKLIST_HEADER.stack,
+  headerRow: WORKLIST_HEADER.row,
   sectionStack: SPACING.stackRelaxed,
 } as const;
 
@@ -54,11 +43,11 @@ export const MODAL_HEADER_TYPE = {
   sectionTitle: TYPE.panelTitle,
 } as const;
 
-export const QUEUE_CARD_ALERT = {
+export const WORKLIST_CARD_ALERT = {
   row: `flex min-w-0 w-full flex-col ${SPACING.gapHairline} ${TYPE.label} leading-snug`,
 } as const;
 
-export const QUEUE_CARD_TYPE = {
+export const WORKLIST_CARD_TYPE = {
   title: TYPE.detailTitle,
   sectionTitle: TYPE.sectionTitle,
   sectionContent: TYPE.value,
@@ -73,9 +62,9 @@ export const QUEUE_CARD_TYPE = {
   flagTitle: `${TYPE.sectionTitle} ${TONE.danger.fg}`,
 } as const;
 
-const QUEUE_CARD_PANEL_INSET = 'px-space-2 pb-space-2 pt-space-1';
+const WORKLIST_CARD_PANEL_INSET = 'px-space-2 pb-space-2 pt-space-1';
 
-export const QUEUE_CARD_SPACING = {
+export const WORKLIST_CARD_SPACING = {
   cardGap: 'gap-space-1',
   sectionTitleMargin: 'mb-space-1',
   flagsTitleMargin: 'mb-space-1',
@@ -88,18 +77,18 @@ export const QUEUE_CARD_SPACING = {
   actionGap: 'gap-space-2',
 } as const;
 
-export const QUEUE_CARD_SURFACE = {
+export const WORKLIST_CARD_SURFACE = {
   cardWrapper: 'cursor-pointer',
   cardBase: `${SHADOW.subtle} hover:bg-surface-hover transition-colors duration-200`,
-  contentSection: `${SURFACE.recessed} ${RADIUS.field} ${QUEUE_CARD_PANEL_INSET}`,
-  flagsSection: `${SURFACE.dangerWell} ${RADIUS.field} ${QUEUE_CARD_PANEL_INSET}`,
+  contentSection: `${SURFACE.recessed} ${RADIUS.field} ${WORKLIST_CARD_PANEL_INSET}`,
+  flagsSection: `${SURFACE.dangerWell} ${RADIUS.field} ${WORKLIST_CARD_PANEL_INSET}`,
 } as const;
 
-export const QUEUE_CARD_LIST_ITEM = {
-  row: `flex items-center ${QUEUE_CARD_TYPE.sectionContent}`,
+export const WORKLIST_CARD_LIST_ITEM = {
+  row: `flex items-center ${WORKLIST_CARD_TYPE.sectionContent}`,
   bullet: `${LIST_MARKER.dot} mr-space-2`,
   bulletDanger: `${LIST_MARKER.dotDanger} mr-space-2`,
-  label: `font-normal mr-space-1 ${QUEUE_CARD_TYPE.fieldValue}`,
+  label: `font-normal mr-space-1 ${WORKLIST_CARD_TYPE.fieldValue}`,
 } as const;
 
 export const IDENTITY_INLINE = {

@@ -69,23 +69,23 @@ export const CONTAINER_STYLES: Record<string, string> = {
   'container-black': 'bg-container-black-bg text-container-black-text',
 };
 
-/** Test catalog categories — paired with `--category-*` in semantic-light.css. */
+/** Catalog category slugs → chart series accent slots (`--accent-chart-*`). */
 export const CATEGORY_BADGE_TEXT: Record<string, string> = {
-  hematology: 'text-category-hematology',
-  biochemistry: 'text-category-biochemistry',
-  chemistry: 'text-category-chemistry',
-  microbiology: 'text-category-microbiology',
-  serology: 'text-category-serology',
-  urinalysis: 'text-category-urinalysis',
-  imaging: 'text-category-imaging',
-  immunology: 'text-category-immunology',
-  molecular: 'text-category-molecular',
-  toxicology: 'text-category-toxicology',
-  coagulation: 'text-category-coagulation',
+  hematology: 'text-accent-chart-1',
+  biochemistry: 'text-accent-chart-2',
+  chemistry: 'text-accent-chart-3',
+  microbiology: 'text-accent-chart-4',
+  serology: 'text-accent-chart-5',
+  urinalysis: 'text-accent-chart-6',
+  imaging: 'text-accent-chart-7',
+  immunology: 'text-accent-chart-8',
+  molecular: 'text-accent-chart-9',
+  toxicology: 'text-accent-chart-10',
+  coagulation: 'text-accent-chart-11',
 };
 
 export function getCategoryBadgeTextClass(slug: string): string {
-  return CATEGORY_BADGE_TEXT[slug.toLowerCase()] ?? 'text-category-default';
+  return CATEGORY_BADGE_TEXT[slug.toLowerCase()] ?? 'text-accent-chart-default';
 }
 
 export function isCategoryBadgeSlug(value: string): boolean {

@@ -341,13 +341,26 @@ export const chromeRestrictedSyntax = [
 export const panelPresetRestrictedSyntax = [
   {
     selector:
-      'JSXOpeningElement[name.name="Panel"] > JSXAttribute[name.name=/^(title|variant|scroll|spacing|hideHeader|className|bodyClassName|footerClassName)$/]',
+      'JSXOpeningElement[name.name="Panel"] > JSXAttribute[name.name=/^(variant|scroll|spacing|hideHeader|className|bodyClassName|footerClassName)$/]',
     message:
-      'Use a Panel preset from @/components/surfaces. Do not pass title, variant, className, or other chrome props.',
+      'Use a Panel preset from @/components/surfaces. Do not pass variant, className, or other chrome props (title is allowed).',
   },
 ]
 
 /** Raw hex colors in UI code — use tokens and @/theme/recipes. */
+export const domainTokenRestrictedSyntax = [
+  {
+    selector: 'Literal[value=/\\b(text|bg|border|fill)-(workflow|category)-/]',
+    message:
+      'Use lane-* or accent-chart-* semantic tokens (or LANE_VISUAL from lab config), not workflow-/category- utilities.',
+  },
+  {
+    selector: 'TemplateElement[value.raw=/\\b(text|bg|border|fill)-(workflow|category)-/]',
+    message:
+      'Use lane-* or accent-chart-* semantic tokens (or LANE_VISUAL from lab config), not workflow-/category- utilities.',
+  },
+]
+
 export const hexColorLiteralSyntax = [
   {
     selector: 'Literal[value=/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/]',
@@ -363,4 +376,5 @@ export const allRestrictedSyntax = [
   ...designTokenRestrictedSyntax,
   ...spacingRestrictedSyntax,
   ...chromeRestrictedSyntax,
+  ...domainTokenRestrictedSyntax,
 ]

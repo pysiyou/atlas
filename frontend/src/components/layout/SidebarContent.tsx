@@ -48,7 +48,7 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
       variants={sidebarVariants}
       animate={collapsed ? 'collapsed' : 'expanded'}
       initial={false}
-      className={cn(CHROME.aside, collapsed && 'chrome-collapsed')}
+      className={cn(CHROME.aside, collapsed && CHROME.collapsed)}
       data-collapsed={collapsed ? 'true' : 'false'}
       onClick={e => e.stopPropagation()}
     >

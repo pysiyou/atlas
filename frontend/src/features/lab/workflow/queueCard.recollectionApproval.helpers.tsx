@@ -16,12 +16,12 @@ import { SupervisorApprovalBadge } from '../components/LabResultStatusBadges';
 import { LAB_CONFIG } from '../constants';
 import type { RecollectionRequestSummary } from '@/types/lab-operations';
 import {
-  QUEUE_CARD_ALERT,
-  QUEUE_CARD_BADGE_SIZE,
+  WORKLIST_CARD_ALERT,
+  WORKLIST_CARD_BADGE_SIZE,
   IDENTITY_INLINE,
   CARD_HEADER_GRID,
   IDENTITY_STACK,
-  QUEUE_CARD_TYPE,
+  WORKLIST_CARD_TYPE,
 } from '@/theme/recipes';
 
 function InlineDot() {
@@ -72,7 +72,7 @@ export function RecollectionRequestCardLeftColumn({ request }: { request: Recoll
     content: (
       <>
         <span>Requested </span>
-        <span className={QUEUE_CARD_TYPE.emphasizedInline}>
+        <span className={WORKLIST_CARD_TYPE.emphasizedInline}>
           {formatDateTime(request.createdAt)}
         </span>
         <span> · {stageLabel}</span>
@@ -88,7 +88,7 @@ export function RecollectionRequestCardLeftColumn({ request }: { request: Recoll
           <div className={cn(IDENTITY_STACK.secondaryLine, 'min-w-0')}>{line2}</div>
         ) : null}
       </div>
-      <div className={QUEUE_CARD_ALERT.row}>
+      <div className={WORKLIST_CARD_ALERT.row}>
         <LabCardMetaRow>
           <QueueAgeMeta since={request.createdAt} />
           <span>
@@ -112,12 +112,12 @@ export function RecollectionRequestBadges({ request }: { request: RecollectionRe
 
   return (
     <>
-      <SupervisorApprovalBadge size={QUEUE_CARD_BADGE_SIZE} />
+      <SupervisorApprovalBadge size={WORKLIST_CARD_BADGE_SIZE} />
       {request.sampleType ? (
-        <SampleTypeBadge sampleType={request.sampleType} size={QUEUE_CARD_BADGE_SIZE} />
+        <SampleTypeBadge sampleType={request.sampleType} size={WORKLIST_CARD_BADGE_SIZE} />
       ) : null}
       {request.requiresSupervisorOverride ? (
-        <Badge variant="danger" size={QUEUE_CARD_BADGE_SIZE}>Limit override</Badge>
+        <Badge variant="danger" size={WORKLIST_CARD_BADGE_SIZE}>Limit override</Badge>
       ) : null}
       <AttemptIndicator
         attemptNumber={attemptUsed}
@@ -140,13 +140,13 @@ export function RecollectionReviewBody({
   return (
     <div className={`space-y-space-1 ${TYPE.value}`}>
       <div>
-        <span className={QUEUE_CARD_TYPE.fieldLabel}>Reason:</span>{' '}
-        <span className={QUEUE_CARD_TYPE.fieldValue}>{request.reason}</span>
+        <span className={WORKLIST_CARD_TYPE.fieldLabel}>Reason:</span>{' '}
+        <span className={WORKLIST_CARD_TYPE.fieldValue}>{request.reason}</span>
       </div>
       {request.notes ? (
         <div>
-          <span className={QUEUE_CARD_TYPE.fieldLabel}>Notes:</span>{' '}
-          <span className={QUEUE_CARD_TYPE.fieldValue}>{request.notes}</span>
+          <span className={WORKLIST_CARD_TYPE.fieldLabel}>Notes:</span>{' '}
+          <span className={WORKLIST_CARD_TYPE.fieldValue}>{request.notes}</span>
         </div>
       ) : null}
       <textarea

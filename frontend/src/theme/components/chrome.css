@@ -1,0 +1,71 @@
+/* App chrome — collapsed rail behavior (paired with CHROME.* recipe classes). */
+
+.chrome-clip {
+  transition:
+    opacity 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+    flex-basis 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+    width 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chrome-collapsed .chrome-clip {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  flex: 0 0 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chrome-collapsed .chrome-section-title {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chrome-nav-split {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  height: var(--chrome-nav-indicator);
+  padding-inline: 0.75rem;
+}
+
+.chrome-nav-split-line {
+  width: 100%;
+  height: 1px;
+  background-color: var(--border);
+}
+
+.chrome-collapsed .chrome-theme-well {
+  justify-content: center;
+  margin-inline: var(--chrome-nav-inset);
+  min-height: var(--chrome-nav-indicator);
+  padding: 0;
+  background: transparent;
+}
+
+.chrome-collapsed .chrome-theme-well > button:not([aria-pressed='true']) {
+  display: none !important;
+}
+
+.chrome-collapsed .chrome-theme-well > button[aria-pressed='true'] {
+  flex: none;
+  gap: 0;
+  width: var(--chrome-nav-indicator);
+  height: var(--chrome-nav-indicator);
+  padding: 0;
+}
+
+.chrome-collapsed .chrome-theme-well .chrome-clip {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  flex: 0 0 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  opacity: 0;
+  pointer-events: none;
+}

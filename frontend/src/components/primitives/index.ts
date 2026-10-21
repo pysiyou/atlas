@@ -9,6 +9,7 @@ export * from './Badge';
 export { getColorStyles, resolveColor } from './badgeStyles';
 export * from './Avatar';
 export * from './Button';
+export * from './SelectableCard';
 export { actionButtonPreset, type ActionButtonPreset } from './buttonPresets';
 export * from './Checkbox';
 export * from './CheckboxList';

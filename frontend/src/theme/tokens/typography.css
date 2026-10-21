@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    ATLAS DESIGN SYSTEM - TYPOGRAPHY TOKENS
-   Modular rem scale, semantic roles, legacy --font-size-* aliases.
+   Modular rem scale, semantic roles, --font-size-* bridge for @theme.
    @utility composites live in typography-utilities.css (imported from index.css).
    ═══════════════════════════════════════════════════════════════════════════ */
 
@@ -15,7 +15,7 @@
   --type-step-md: calc(var(--type-step-sm) * 1.286);
   --type-step-badge: calc(var(--type-base) * 0.917);
 
-  /* Legacy aliases (deprecated — prefer --type-step-* and type-* utilities) */
+  /* Tailwind @theme bridge (--type-step-* is the canonical scale) */
   --font-size-3xs: var(--type-step-3xs);
   --font-size-2xs: var(--type-step-2xs);
   --font-size-xxs: var(--type-step-2xs);

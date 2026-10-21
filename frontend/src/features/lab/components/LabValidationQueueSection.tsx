@@ -2,7 +2,7 @@
  * LabValidationQueueSection — section header + card grid matching LabWorkflowQueueLayout layout.
  */
 import React, { type ReactNode } from 'react';
-import { QUEUE_CARD_TYPE } from '@/theme/recipes';
+import { WORKLIST_CARD_TYPE } from '@/theme/recipes';
 
 interface LabValidationQueueSectionProps {
   title: string;
@@ -18,7 +18,7 @@ export const LabValidationQueueSection: React.FC<LabValidationQueueSectionProps>
   className = '',
 }) => (
   <section className={className}>
-    <h3 className={`${QUEUE_CARD_TYPE.sectionTitle} mb-space-4`}>
+    <h3 className={`${WORKLIST_CARD_TYPE.sectionTitle} mb-space-4`}>
       {title}
       {typeof count === 'number' ? ` (${count})` : ''}
     </h3>

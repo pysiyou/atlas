@@ -9,7 +9,7 @@ import { ResultCriticalValueBanner } from './ResultCriticalValueBanner';
 import { statusMapFromFlags, parseResultEntry, isCritical } from '../utils/labResult';
 import { ResultsParameterGrid } from '../components/ResultsParameterGrid';
 import { ResultContextNotes } from '../components/ResultContextNotes';
-import { RESULT_PANEL } from '../utils/labResult';
+import { METRIC_TILE } from '@/theme/recipes';
 import { TYPE } from '@/theme/recipes';
 import { resolveParameterLabel, useParameterLabelMap } from '@/features/catalog';
 import { LAB_CONFIG } from '../constants';
@@ -116,7 +116,7 @@ export function ResultValidationNotesSection({
 
   return (
     <div className="space-y-space-1">
-      <p className={RESULT_PANEL.notesLabel}>Validation notes</p>
+      <p className={METRIC_TILE.notesLabel}>Validation notes</p>
       <p className={`${TYPE.amount} whitespace-pre-wrap leading-snug`}>{comments}</p>
     </div>
   );
@@ -135,12 +135,13 @@ function validationNotesFooter(props: ValidationFormProps): React.ReactNode | un
 /** Lab panel with scrollable results and pinned validation notes footer. */
 export function ResultValidationPanel({
   preset,
+  title,
   ...formProps
-}: ValidationFormProps & { preset: PanelPresetId }) {
+}: ValidationFormProps & { preset: PanelPresetId; title?: string }) {
   const footer = validationNotesFooter(formProps);
 
   return (
-    <Panel preset={preset} footer={footer}>
+    <Panel preset={preset} title={title} footer={footer}>
       <ResultValidationResultsBody {...formProps} />
     </Panel>
   );

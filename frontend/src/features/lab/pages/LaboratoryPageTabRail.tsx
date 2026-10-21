@@ -3,7 +3,7 @@ import { Badge } from '@/components/primitives';
 import { CONTROL } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { getStageVisual, isLabWorkflowStageTab, type LabTabId } from '../constants/labConstants';
-import { SEGMENT_TABS } from '@/theme/recipes';
+import { SEGMENTED_CONTROL } from '@/theme/recipes';
 
 export interface LaboratoryPageTabDef {
   id: LabTabId;
@@ -24,7 +24,7 @@ export function LaboratoryPageTabRail({
   onTabChange,
 }: LaboratoryPageTabRailProps) {
   return (
-    <div className={SEGMENT_TABS.rail}>
+    <div className={SEGMENTED_CONTROL.rail}>
       {tabs.map(tab => {
         const isActive = activeTab === tab.id;
         const hasCount = typeof tab.count === 'number' && tab.count > 0;
@@ -34,12 +34,12 @@ export function LaboratoryPageTabRail({
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
             className={cn(
-              SEGMENT_TABS.buttonBase,
+              SEGMENTED_CONTROL.buttonBase,
               isActive
                 ? stageVisual
                   ? `bg-surface ${stageVisual.text} ${CONTROL.segmentActive}`
-                  : SEGMENT_TABS.buttonActive
-                : SEGMENT_TABS.buttonInactive,
+                  : SEGMENTED_CONTROL.buttonActive
+                : SEGMENTED_CONTROL.buttonInactive,
             )}
           >
             <div
@@ -48,8 +48,8 @@ export function LaboratoryPageTabRail({
                 isActive
                   ? stageVisual
                     ? stageVisual.text
-                    : SEGMENT_TABS.iconActive
-                  : SEGMENT_TABS.iconInactive,
+                    : SEGMENTED_CONTROL.iconActive
+                  : SEGMENTED_CONTROL.iconInactive,
               )}
             >
               {tab.icon}
@@ -59,7 +59,7 @@ export function LaboratoryPageTabRail({
               <Badge
                 variant={isActive ? 'primary' : 'default'}
                 size="xs"
-                className={SEGMENT_TABS.countBadgeMargin}
+                className={SEGMENTED_CONTROL.countBadgeMargin}
               >
                 {tab.count}
               </Badge>

@@ -1,28 +1,29 @@
 # Surfaces — Panel
 
-`Panel` is a closed section shell. Titles, variant, scroll, spacing, and layout roles live in [`panelPresets`](./panelPresets/index.ts). Call sites pass a `preset` plus optional slots.
+`Panel` is a closed section shell. Layout chrome (variant, scroll, spacing, shell roles) lives in [`panelPresets/layoutPresets.ts`](./panelPresets/layoutPresets.ts). Call sites pass a **layout-intent** `preset` plus `title` / `meta` / slots.
 
 ## Call-site API
 
 ```tsx
 <Panel
-  preset="patient.detail.generalInfo"
-  meta={count}           // dynamic only
-  headerEnd={actions}    // buttons, segment tabs
-  footer={notes}         // pinned chrome
+  preset="panel.page.visible"
+  title="General Info"
+  meta={count}
+  headerEnd={actions}
+  footer={notes}
 >
   {children}
 </Panel>
 ```
 
-Do not pass `title`, `variant`, `scroll`, `spacing`, `hideHeader`, `className`, or `bodyClassName`.
+Do not pass `variant`, `scroll`, `spacing`, `hideHeader`, `className`, or `bodyClassName`.
 
 ## When to add a preset
 
-Add a namespaced id in the matching domain file (`patient.ts`, `orders.ts`, `compactPanels.ts`, `shared.ts`) when a section has a stable title or chrome recipe.
+Add an entry in `layoutPresets.ts` when a **new layout role** is needed (e.g. another `panel.pageEmbed.*` combination). Section copy always comes from `title` / `meta` at the call site, not from the preset id.
 
-Use a **feature wrapper** (`EventLogPanel`, `LabAttentionPanel`, `ResultValidationPanel`) when the panel needs data fetching or computed `meta`. Wrappers still render `<Panel preset="…" />`.
+Use a **feature wrapper** (`EventLogPanel`, `LabAttentionPanel`, `ResultValidationPanel`) when the panel needs data fetching or computed `meta`. Wrappers still render `<Panel preset="panel.*" title="…" />`.
 
 ## Layout roles
 
-Breakpoint-specific geometry is a **different preset** of the same title (`*.stack`, `*.fill`, `*.span2`), not extra classes at the call site.
+Breakpoint-specific geometry is a **different preset** (`*.shrink`, `*.fill`, `*.span2`), not extra classes at the call site.

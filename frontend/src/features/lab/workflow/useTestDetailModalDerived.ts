@@ -51,9 +51,7 @@ export function useTestDetailModalDerived({
   const modalKey = isValidate ? orderTestKey(orderTestId) : `test-detail-${orderTestId}`;
   const comments = isValidate ? draftComments : (orderTest?.validationNotes ?? '');
   const commentKey = orderTestKey(orderTestId);
-  const resultsPanelPreset = isValidate
-    ? ('compact.modal.resultValidation' as const)
-    : ('compact.modal.recordedResults' as const);
+  const resultsPanelPreset = 'panel.compact.scrollAuto.maxH' as const;
 
   const onCommentsChange = (value: string) => {
     if (!isValidate) return;
