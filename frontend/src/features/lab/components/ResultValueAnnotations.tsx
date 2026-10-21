@@ -2,10 +2,9 @@
  * Value + unit + abnormal status text (shared by result grids and event log).
  */
 import { cn } from '@/utils';
-import { TYPE } from '@/theme/recipes';
+import { METRIC_TILE, TYPE } from '@/theme/recipes';
 import type { ResultStatus } from '@/types/enums';
 import {
-  RESULT_PANEL,
   resultStatusLabel,
   resultValueClass,
 } from '../utils/labResult';
@@ -28,7 +27,7 @@ export function ResultValueAnnotations({
 }) {
   const statusLabel = showStatus ? resultStatusLabel(status) : null;
   const valueTone = showStatus ? resultValueClass(status) : 'text-text-primary';
-  const valueType = dense ? TYPE.caption : tile ? RESULT_PANEL.value : TYPE.value;
+  const valueType = dense ? TYPE.caption : tile ? METRIC_TILE.value : TYPE.value;
 
   return (
     <span
@@ -43,7 +42,7 @@ export function ResultValueAnnotations({
       {(unit || statusLabel) && (
         <span className="inline-flex items-baseline gap-space-1 shrink-0">
           {unit && (
-            <span className={cn(RESULT_PANEL.unit, 'ml-0 text-text-tertiary', dense && TYPE.caption)}>
+            <span className={cn(METRIC_TILE.unit, 'ml-0 text-text-tertiary', dense && TYPE.caption)}>
               {unit}
             </span>
           )}

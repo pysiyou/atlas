@@ -164,45 +164,46 @@
   --color-chart-warning: var(--chart-warning);
 
   /* ═══════════════════════════════════════════════════════════════════
-     TEST CATEGORY (breakdowns / charts)
+     DATA VIZ — chart series slots
      ═══════════════════════════════════════════════════════════════════ */
-  --color-category-hematology: var(--category-hematology);
-  --color-category-biochemistry: var(--category-biochemistry);
-  --color-category-chemistry: var(--category-chemistry);
-  --color-category-microbiology: var(--category-microbiology);
-  --color-category-serology: var(--category-serology);
-  --color-category-urinalysis: var(--category-urinalysis);
-  --color-category-imaging: var(--category-imaging);
-  --color-category-immunology: var(--category-immunology);
-  --color-category-molecular: var(--category-molecular);
-  --color-category-toxicology: var(--category-toxicology);
-  --color-category-coagulation: var(--category-coagulation);
-  --color-category-default: var(--category-default);
+  --color-accent-chart-1: var(--accent-chart-1);
+  --color-accent-chart-2: var(--accent-chart-2);
+  --color-accent-chart-3: var(--accent-chart-3);
+  --color-accent-chart-4: var(--accent-chart-4);
+  --color-accent-chart-5: var(--accent-chart-5);
+  --color-accent-chart-6: var(--accent-chart-6);
+  --color-accent-chart-7: var(--accent-chart-7);
+  --color-accent-chart-8: var(--accent-chart-8);
+  --color-accent-chart-9: var(--accent-chart-9);
+  --color-accent-chart-10: var(--accent-chart-10);
+  --color-accent-chart-11: var(--accent-chart-11);
+  --color-accent-chart-12: var(--accent-chart-12);
+  --color-accent-chart-default: var(--accent-chart-default);
 
   /* ═══════════════════════════════════════════════════════════════════
-     LAB WORKFLOW LANES
+     LANE accents (pipeline / timeline)
      ═══════════════════════════════════════════════════════════════════ */
-  --color-workflow-collection-fg: var(--workflow-collection-fg);
-  --color-workflow-collection-bg: var(--workflow-collection-bg);
-  --color-workflow-collection-border: var(--workflow-collection-border);
-  --color-workflow-entry-fg: var(--workflow-entry-fg);
-  --color-workflow-entry-bg: var(--workflow-entry-bg);
-  --color-workflow-entry-border: var(--workflow-entry-border);
-  --color-workflow-validation-fg: var(--workflow-validation-fg);
-  --color-workflow-validation-bg: var(--workflow-validation-bg);
-  --color-workflow-validation-border: var(--workflow-validation-border);
-  --color-workflow-escalation-fg: var(--workflow-escalation-fg);
-  --color-workflow-escalation-bg: var(--workflow-escalation-bg);
-  --color-workflow-escalation-border: var(--workflow-escalation-border);
-  --color-workflow-quality-fg: var(--workflow-quality-fg);
-  --color-workflow-quality-bg: var(--workflow-quality-bg);
-  --color-workflow-quality-border: var(--workflow-quality-border);
-  --color-workflow-order-fg: var(--workflow-order-fg);
-  --color-workflow-order-bg: var(--workflow-order-bg);
-  --color-workflow-order-border: var(--workflow-order-border);
-  --color-workflow-composition-fg: var(--workflow-composition-fg);
-  --color-workflow-composition-bg: var(--workflow-composition-bg);
-  --color-workflow-composition-border: var(--workflow-composition-border);
+  --color-lane-1-fg: var(--lane-1-fg);
+  --color-lane-1-bg: var(--lane-1-bg);
+  --color-lane-1-border: var(--lane-1-border);
+  --color-lane-2-fg: var(--lane-2-fg);
+  --color-lane-2-bg: var(--lane-2-bg);
+  --color-lane-2-border: var(--lane-2-border);
+  --color-lane-3-fg: var(--lane-3-fg);
+  --color-lane-3-bg: var(--lane-3-bg);
+  --color-lane-3-border: var(--lane-3-border);
+  --color-lane-4-fg: var(--lane-4-fg);
+  --color-lane-4-bg: var(--lane-4-bg);
+  --color-lane-4-border: var(--lane-4-border);
+  --color-lane-5-fg: var(--lane-5-fg);
+  --color-lane-5-bg: var(--lane-5-bg);
+  --color-lane-5-border: var(--lane-5-border);
+  --color-lane-6-fg: var(--lane-6-fg);
+  --color-lane-6-bg: var(--lane-6-bg);
+  --color-lane-6-border: var(--lane-6-border);
+  --color-lane-7-fg: var(--lane-7-fg);
+  --color-lane-7-bg: var(--lane-7-bg);
+  --color-lane-7-border: var(--lane-7-border);
 
   /* Disable Tailwind's default neutral scale so app code cannot bypass tokens */
   --color-neutral-*: initial;
@@ -434,74 +435,3 @@ body {
   scrollbar-width: none;
 }
 
-/* Collapsed app rail — clip text without reflowing icon column or section bands. */
-.chrome-clip {
-  transition:
-    opacity 0.22s cubic-bezier(0.4, 0, 0.2, 1),
-    flex-basis 0.22s cubic-bezier(0.4, 0, 0.2, 1),
-    width 0.22s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.chrome-collapsed .chrome-clip {
-  width: 0 !important;
-  min-width: 0 !important;
-  max-width: 0 !important;
-  flex: 0 0 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  overflow: hidden !important;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.chrome-collapsed .chrome-section-title {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Line sits in the vertical center of a band equal to one nav tile. */
-.chrome-nav-split {
-  display: flex;
-  flex: 0 0 auto;
-  align-items: center;
-  height: var(--chrome-nav-indicator);
-  padding-inline: 0.75rem;
-}
-
-.chrome-nav-split-line {
-  width: 100%;
-  height: 1px;
-  background-color: var(--border);
-}
-
-.chrome-collapsed .chrome-theme-well {
-  justify-content: center;
-  margin-inline: var(--chrome-nav-inset);
-  min-height: var(--chrome-nav-indicator);
-  padding: 0;
-  background: transparent;
-}
-
-.chrome-collapsed .chrome-theme-well > button:not([aria-pressed='true']) {
-  display: none !important;
-}
-
-.chrome-collapsed .chrome-theme-well > button[aria-pressed='true'] {
-  flex: none;
-  gap: 0;
-  width: var(--chrome-nav-indicator);
-  height: var(--chrome-nav-indicator);
-  padding: 0;
-}
-
-.chrome-collapsed .chrome-theme-well .chrome-clip {
-  width: 0 !important;
-  min-width: 0 !important;
-  max-width: 0 !important;
-  flex: 0 0 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  overflow: hidden !important;
-  opacity: 0;
-  pointer-events: none;
-}

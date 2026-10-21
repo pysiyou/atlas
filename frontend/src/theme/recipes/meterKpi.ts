@@ -1,42 +1,11 @@
-/**
- * Split workspace layouts and KPI meter tables.
- */
+/** KPI meter tables inside split workspace panels. */
 
-import { CONTROL } from './control';
-import { PANEL_SHELL } from './panel';
-import { RADIUS, SPACING } from './spacing';
+import { RADIUS } from './spacing';
 import { TABLE_TYPE } from './table';
-import { TONE } from './tone';
 import { TYPE } from './type';
 
 const METER_GRID_COLS =
   'grid-cols-[minmax(8rem,1.25fr)_minmax(4.75rem,2.15fr)_auto]' as const;
-
-export const SPLIT_WORKSPACE_PANEL = {
-  ...PANEL_SHELL.page,
-  page: 'flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-surface-page',
-} as const;
-
-export const SPLIT_WORKSPACE_PAGE =
-  `flex flex-1 h-full min-h-0 min-w-0 flex-col overflow-y-auto lg:overflow-hidden ${SPACING.gapSection}` as const;
-
-export const SPLIT_BOTTOM_ROW =
-  `grid min-h-split-bottom-row shrink-0 grid-cols-1 ${SPACING.gapSection} lg:h-split-bottom-row lg:grid-cols-3 lg:items-stretch` as const;
-
-export const SPLIT_BOTTOM_PANEL =
-  'min-h-split-bottom-row overflow-hidden lg:min-h-0 lg:h-full' as const;
-
-export const SPLIT_TABLE_WRAP =
-  'flex min-h-split-table-wrap flex-1 flex-col lg:min-h-0' as const;
-
-export const SPLIT_ROW_INTERACTIVE = `cursor-pointer ${CONTROL.focusVisibleFlat}` as const;
-
-export const KPI_PANEL = {
-  body: 'flex min-h-0 flex-1 flex-col px-space-3 py-space-3',
-  main: 'flex min-h-0 flex-1 flex-col justify-center gap-space-3 overflow-y-auto',
-  stack: 'flex min-w-0 flex-col gap-space-3',
-  footer: 'mt-auto shrink-0 pt-space-3',
-} as const;
 
 const METER_RADIUS = RADIUS.inline;
 
@@ -70,16 +39,4 @@ export const METER_KPI = {
   tableTotalLabel: `${TABLE_TYPE.cell} text-text-primary`,
   tableTotalValue: `${TABLE_TYPE.cell} text-right tabular-nums text-text-primary`,
   footerCaption: `${TYPE.caption} mt-space-1.5 text-text-tertiary`,
-} as const;
-
-export const ATTENTION_ACCENT = {
-  problem: TONE.danger.fill,
-  neutral: TONE.warning.fill,
-} as const;
-
-export const ATTENTION_FEED = {
-  groupHeader: 'sticky top-0 z-[1] flex items-center gap-space-2 bg-transparent py-space-2',
-  groupDivider: 'flex-1 h-px bg-border-subtle',
-  groupLabel: `${TYPE.sectionTitle} tracking-widest`,
-  eventHeadline: `min-w-0 ${TABLE_TYPE.cell} font-normal text-text-primary`,
 } as const;

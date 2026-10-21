@@ -13,14 +13,14 @@ import { getLabQueueUrl } from '../constants/labConstants';
 import { usePendingCriticalValues } from './criticalValues';
 import { CriticalValueActions } from './CriticalValueActions';
 import { RADIUS, TONE, TYPE } from '@/theme/recipes';
-import { QUEUE_CARD_BADGE_SIZE } from '@/theme/recipes';
+import { WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
 
 export const PendingCriticalValuesPanel: React.FC = () => {
   const { criticalValues, isLoading, refetch } = usePendingCriticalValues();
 
   if (isLoading) {
     return (
-      <Panel preset="lab.monitor.criticalValues">
+      <Panel preset="panel.compact.standard" title="Critical Values">
         <p className={`${TYPE.meta} py-space-4`}>Loading critical values...</p>
       </Panel>
     );
@@ -32,9 +32,9 @@ export const PendingCriticalValuesPanel: React.FC = () => {
 
   return (
     <Panel
-      preset="lab.monitor.criticalValuesPending"
+      preset="panel.compact.standard" title="Critical Values Pending"
       headerEnd={
-        <Badge variant="danger" size={QUEUE_CARD_BADGE_SIZE}>
+        <Badge variant="danger" size={WORKLIST_CARD_BADGE_SIZE}>
           {criticalValues.length}
         </Badge>
       }

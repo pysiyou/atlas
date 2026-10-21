@@ -76,7 +76,7 @@ export const LabRelatedSamplesPanel: React.FC<LabRelatedSamplesPanelProps> = ({
   }
 
   return (
-    <Panel preset="compact.modal.relatedSamples">
+    <Panel preset="panel.compact.fullWidth" title="Related samples">
       <ul className={`space-y-space-2 ${TYPE.value}`}>
         {others.map(s => (
           <li

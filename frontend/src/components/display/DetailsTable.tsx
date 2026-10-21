@@ -16,6 +16,7 @@ export type { DetailTableRow };
 
 export interface DetailsTableProps {
   preset: PanelPresetId;
+  title?: string;
   meta?: string;
   rows: DetailTableRow[];
   filteredRows?: DetailTableRow[];
@@ -23,6 +24,7 @@ export interface DetailsTableProps {
 
 export const DetailsTable: React.FC<DetailsTableProps> = ({
   preset,
+  title,
   meta,
   rows,
   filteredRows: providedFilteredRows,
@@ -30,7 +32,7 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
   const filteredRows = providedFilteredRows ?? filterDetailRows(rows);
 
   return (
-    <Panel preset={preset} meta={meta}>
+    <Panel preset={preset} title={title} meta={meta}>
       <table className="w-full">
         <tbody>
           {filteredRows.map((row, idx) => (

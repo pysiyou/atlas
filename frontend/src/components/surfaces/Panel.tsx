@@ -25,6 +25,8 @@ function isCompactPanelVariant(variant: PanelVariant): boolean {
 
 export interface PanelProps {
   preset: PanelPresetId;
+  /** Section heading (required for visible headers; omit when preset hides the header). */
+  title?: string;
   /**
    * Optional caption on the **right** of the header (counts, hints, scope).
    * Prefer this over a second title; pair with `headerEnd` for actions.
@@ -39,6 +41,7 @@ export interface PanelProps {
 
 export function Panel({
   preset,
+  title,
   meta,
   headerStart,
   headerEnd,
@@ -56,10 +59,11 @@ export function Panel({
   const hasFooter = footer != null && footer !== false;
   const hideHeader = def.hideHeader === true;
 
+  const resolvedTitle = title ?? def.title;
   const titleNode =
-    def.headingSlot || def.title === ''
+    def.headingSlot || resolvedTitle === ''
       ? null
-      : <h3 className={tokens.title}>{def.title}</h3>;
+      : <h3 className={tokens.title}>{resolvedTitle}</h3>;
 
   const bodyScrollClass =
     scroll === 'default' ? tokens.scrollDefault : PANEL_SCROLL[scroll];

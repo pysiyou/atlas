@@ -76,7 +76,7 @@ export function EntryDetailMainPanel({
   if (readOnly && hasTestResults(test)) {
     return (
       <ResultValidationPanel
-        preset="compact.modal.recordedResults"
+        preset="panel.compact.scrollAuto.maxH" title="Recorded Results"
         results={test.results!}
         flags={test.flags}
         testCode={test.testCode}
@@ -91,7 +91,7 @@ export function EntryDetailMainPanel({
     );
   }
   return (
-    <Panel preset="compact.modal.resultEntry" headerEnd={progressIndicator}>
+    <Panel preset="panel.compact.standard" title="Result Entry" headerEnd={progressIndicator}>
       <ResultEntryForm
         testDef={resolvedTestDef}
         resultKey={resultKey}

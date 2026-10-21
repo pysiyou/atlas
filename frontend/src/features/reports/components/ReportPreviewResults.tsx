@@ -67,7 +67,7 @@ export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ repo
         return (
           <Panel
             key={`${test.testCode}-${orderTest?.id ?? index}`}
-            preset="report.preview.testResults"
+            preset="panel.compact.headingSlot"
             headerStart={
               <span className="flex min-w-0 items-baseline gap-space-2">
                 <span className="truncate">{test.testName}</span>

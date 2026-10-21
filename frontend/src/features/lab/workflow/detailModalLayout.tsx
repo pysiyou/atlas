@@ -100,6 +100,7 @@ export const QueueModalShell: React.FC<QueueModalShellProps> = ({
 
 export interface DetailGridSectionConfig {
   preset: PanelPresetId;
+  title?: string;
   fields: DetailFieldConfig[];
   headerEnd?: ReactNode;
 }
@@ -131,8 +132,9 @@ export const DetailGrid: React.FC<DetailGridProps> = ({ children, sections }) =>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-layout-section">
         {visibleSections.map(section => (
           <Panel
-            key={section.preset}
+            key={`${section.preset}-${section.title ?? ''}`}
             preset={section.preset}
+            title={section.title}
             headerEnd={section.headerEnd}
           >
             <DetailFieldGroup fields={section.fields} spacing="tight" resolveUserDisplay={getUserName} />

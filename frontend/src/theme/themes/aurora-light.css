@@ -154,18 +154,18 @@
   --chart-accent-muted: #7ec8a3;
   --chart-accent-light: #fdecdc;
 
-  --category-hematology: var(--chart-danger);
-  --category-biochemistry: var(--chart-warning);
-  --category-chemistry: var(--orange-fg-emphasis);
-  --category-microbiology: var(--teal-fg-emphasis);
-  --category-serology: var(--indigo-fg-emphasis);
-  --category-urinalysis: var(--cyan-fg-emphasis);
-  --category-imaging: var(--purple-fg-emphasis);
-  --category-immunology: var(--pink-fg-emphasis);
-  --category-molecular: var(--chart-accent);
-  --category-toxicology: var(--chart-success);
-  --category-coagulation: var(--danger-fg-emphasis);
-  --category-default: var(--chart-brand);
+  --accent-chart-1: var(--chart-danger);
+  --accent-chart-2: var(--chart-warning);
+  --accent-chart-3: var(--orange-fg-emphasis);
+  --accent-chart-4: var(--teal-fg-emphasis);
+  --accent-chart-5: var(--indigo-fg-emphasis);
+  --accent-chart-6: var(--cyan-fg-emphasis);
+  --accent-chart-7: var(--purple-fg-emphasis);
+  --accent-chart-8: var(--pink-fg-emphasis);
+  --accent-chart-9: var(--chart-accent);
+  --accent-chart-10: var(--chart-success);
+  --accent-chart-11: var(--danger-fg-emphasis);
+  --accent-chart-default: var(--chart-brand);
 
   /* ── Toast ── */
   --toast-bg: var(--primitive-neutral-0);
@@ -179,28 +179,28 @@
   --primitive-promo-input-focus: var(--primitive-brand-400);
   --primitive-promo-text-light: var(--primitive-brand-200);
 
-  /* ── Workflow lanes ── */
-  --workflow-collection-fg: #4a3fa8;
-  --workflow-collection-bg: color-mix(in srgb, #8b7cff 16%, var(--primitive-neutral-0));
-  --workflow-collection-border: color-mix(in srgb, #8b7cff 28%, transparent);
-  --workflow-entry-fg: #b07840;
-  --workflow-entry-bg: #fdecdc;
-  --workflow-entry-border: color-mix(in srgb, #f0b27a 32%, transparent);
-  --workflow-validation-fg: var(--primitive-success-700);
-  --workflow-validation-bg: var(--primitive-success-50);
-  --workflow-validation-border: color-mix(in srgb, #7ec8a3 28%, transparent);
-  --workflow-escalation-fg: var(--danger-fg-emphasis);
-  --workflow-escalation-bg: var(--danger-bg);
-  --workflow-escalation-border: var(--danger-stroke);
-  --workflow-quality-fg: var(--warning-fg-emphasis);
-  --workflow-quality-bg: var(--warning-bg);
-  --workflow-quality-border: var(--warning-stroke);
-  --workflow-order-fg: var(--text-secondary);
-  --workflow-order-bg: var(--surface-hover);
-  --workflow-order-border: var(--border);
-  --workflow-composition-fg: #4a3fa8;
-  --workflow-composition-bg: #e4deff;
-  --workflow-composition-border: color-mix(in srgb, #c7beff 35%, transparent);
+  /* ── Lane accents ── */
+  --lane-1-fg: #4a3fa8;
+  --lane-1-bg: color-mix(in srgb, #8b7cff 16%, var(--primitive-neutral-0));
+  --lane-1-border: color-mix(in srgb, #8b7cff 28%, transparent);
+  --lane-2-fg: #b07840;
+  --lane-2-bg: #fdecdc;
+  --lane-2-border: color-mix(in srgb, #f0b27a 32%, transparent);
+  --lane-3-fg: var(--primitive-success-700);
+  --lane-3-bg: var(--primitive-success-50);
+  --lane-3-border: color-mix(in srgb, #7ec8a3 28%, transparent);
+  --lane-4-fg: var(--danger-fg-emphasis);
+  --lane-4-bg: var(--danger-bg);
+  --lane-4-border: var(--danger-stroke);
+  --lane-5-fg: var(--warning-fg-emphasis);
+  --lane-5-bg: var(--warning-bg);
+  --lane-5-border: var(--warning-stroke);
+  --lane-6-fg: var(--text-secondary);
+  --lane-6-bg: var(--surface-hover);
+  --lane-6-border: var(--border);
+  --lane-7-fg: #4a3fa8;
+  --lane-7-bg: #e4deff;
+  --lane-7-border: color-mix(in srgb, #c7beff 35%, transparent);
 
   /* ── Semantic geometry (pill shells) ── */
   --radius-field: 1.25rem;

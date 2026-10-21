@@ -45,7 +45,7 @@ export function CollectionDetailGrid({
 
   if ((isCollected || isRejected) && collectedAt) {
     sections.push({
-      preset: 'compact.modal.collectionDetails',
+      preset: 'panel.compact.standard', title: 'Collection Details',
       fields: [
         { label: 'Collected', timestamp: collectedAt },
         { label: 'Collected By', value: collectedBy ? getUserName(collectedBy) : undefined },
@@ -62,7 +62,7 @@ export function CollectionDetailGrid({
   }
 
   sections.push({
-    preset: 'compact.modal.volumeTracking',
+    preset: 'panel.compact.standard', title: 'Volume Tracking',
     fields: [
       { label: 'Required', value: formatVolume(sample.requiredVolume) },
       {
@@ -83,7 +83,7 @@ export function CollectionDetailGrid({
 
   if (isPending && requirement) {
     sections.push({
-      preset: 'compact.modal.collectionRequirements',
+      preset: 'panel.compact.standard', title: 'Collection Requirements',
       fields: [
         {
           label: 'Priority',

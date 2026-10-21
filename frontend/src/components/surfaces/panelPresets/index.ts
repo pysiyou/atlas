@@ -1,11 +1,8 @@
 /**
- * Panel preset registry — titles and chrome live here, not at JSX call sites.
+ * Panel preset registry — layout-intent ids only.
  */
 
-import { auditPanelPresets, catalogPanelPresets, dashboardPanelPresets, paymentPanelPresets, reportPanelPresets } from './shared';
-import { compactPanelPresets } from './compactPanels';
-import { orderPanelPresets } from './orders';
-import { patientPanelPresets } from './patient';
+import { layoutPanelPresets } from './layoutPresets';
 import type { PanelPresetDefinition } from './types';
 
 export type {
@@ -18,20 +15,12 @@ export type {
 } from './types';
 
 export { PANEL_BODY_LAYOUT, PANEL_SCROLL, PANEL_SHELL_LAYOUT, PANEL_SPACING } from './layouts';
+export { layoutPanelPresets } from './layoutPresets';
 
-export const PANEL_PRESETS = {
-  ...patientPanelPresets,
-  ...orderPanelPresets,
-  ...compactPanelPresets,
-  ...dashboardPanelPresets,
-  ...auditPanelPresets,
-  ...paymentPanelPresets,
-  ...catalogPanelPresets,
-  ...reportPanelPresets,
-} as const satisfies Record<string, PanelPresetDefinition>;
+export const PANEL_PRESETS = layoutPanelPresets;
 
-export type PanelPresetId = keyof typeof PANEL_PRESETS;
+export type PanelPresetId = keyof typeof layoutPanelPresets;
 
 export function getPanelPreset(preset: PanelPresetId): PanelPresetDefinition {
-  return PANEL_PRESETS[preset];
+  return layoutPanelPresets[preset];
 }

@@ -177,7 +177,7 @@ type TestDetailModalBodyProps = {
   orderTest: OrderTest | undefined;
   isValidate: boolean;
   comments: string;
-  resultsPanelPreset: 'compact.modal.resultValidation' | 'compact.modal.recordedResults';
+  resultsPanelPreset: 'panel.compact.scrollAuto.maxH';
   onCommentsChange: (value: string) => void;
   onApprove: () => void;
   criticalRecord: CriticalValueRecord | undefined;
@@ -228,6 +228,7 @@ export function TestDetailModalBody({
       {hasResults && orderTest?.results ? (
         <ResultValidationPanel
           preset={resultsPanelPreset}
+          title={isValidate ? 'Result Validation' : 'Recorded Results'}
           results={orderTest.results}
           flags={orderTest.flags}
           testCode={orderTest.testCode}
@@ -240,7 +241,10 @@ export function TestDetailModalBody({
           enableApproveShortcut={isValidate}
         />
       ) : (
-        <Panel preset={resultsPanelPreset}>
+        <Panel
+          preset={resultsPanelPreset}
+          title={isValidate ? 'Result Validation' : 'Recorded Results'}
+        >
           <p className={TYPE.label}>
             {orderTest ? formatPipelinePendingMessage(orderTest) : 'Loading test details…'}
           </p>
@@ -248,7 +252,7 @@ export function TestDetailModalBody({
       )}
 
       {isValidate && criticalRecord ? (
-        <Panel preset="compact.modal.criticalValueNotification">
+        <Panel preset="panel.compact.standard" title="Critical Value Notification">
           <CriticalValueActions record={criticalRecord} onUpdated={onCriticalValueUpdated} />
         </Panel>
       ) : null}
@@ -289,7 +293,7 @@ export function buildTestDetailGridSections(
 ): DetailGridSectionConfig[] {
   return [
     {
-      preset: 'compact.modal.workflow',
+      preset: 'panel.compact.standard', title: 'Workflow',
       fields: buildOrderTestWorkflowFields(orderTest, {
         linked,
         onOpenLinkedTest: options.onOpenLinkedTest,
@@ -297,7 +301,7 @@ export function buildTestDetailGridSections(
       }),
     },
     {
-      preset: 'compact.modal.testOverview',
+      preset: 'panel.compact.standard', title: 'Test overview',
       fields: buildOrderTestOverviewFields(orderTest, catalogTest, {
         onCatalogNavigate: options.onCatalogNavigate,
       }),

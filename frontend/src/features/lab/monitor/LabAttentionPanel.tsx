@@ -11,7 +11,8 @@ import { LabPriorityBadge } from '../components/LabDomainBadges';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import { cn, displayId } from '@/utils';
 import { getLabQueueUrl } from '@/features/lab';
-import { CONTROL, RADIUS, TABLE_TYPE } from '@/theme/recipes';
+import { CONTROL, FEED_ACCENT, FEED_GROUPED, RADIUS, tableCell } from '@/theme/recipes';
+import { Text } from '@/components/layout';
 import { LAB_COPY } from '../constants/labConstants';
 import {
   ATTENTION_TYPE_ORDER,
@@ -21,10 +22,6 @@ import {
   type LabAttentionQueueItem,
 } from './monitorModel';
 import { formatLabAttentionQueueItem, type AttentionDetail } from './monitorAttentionFormat';
-import { ATTENTION_ACCENT, ATTENTION_FEED } from '@/theme/recipes';
-
-const PRIMARY_DETAIL_CLASS = `${TABLE_TYPE.cell} truncate font-normal`;
-const META_DETAIL_CLASS = `${TABLE_TYPE.meta} truncate font-normal`;
 
 const IDENTITY_DETAIL_TYPES = new Set<AttentionDetail['type']>(['patient', 'link', 'testId']);
 
@@ -35,28 +32,44 @@ function isIdentityDetail(detail: AttentionDetail): boolean {
 function FeedDetail({ detail }: { detail: AttentionDetail }) {
   switch (detail.type) {
     case 'patient':
-      return <span className={PRIMARY_DETAIL_CLASS}>{detail.value}</span>;
+      return (
+        <Text role="value" density="table" truncate className="font-normal">
+          {detail.value}
+        </Text>
+      );
     case 'link':
     case 'testId':
       return (
-        <EntityId variant="inline" className={PRIMARY_DETAIL_CLASS}>
+        <EntityId variant="inline" className={tableCell({ tone: 'primary' })}>
           {detail.value}
         </EntityId>
       );
     case 'queueStage':
-      return <span className={META_DETAIL_CLASS}>{detail.stageLabel}</span>;
+      return (
+        <Text role="meta" density="table" truncate className="font-normal">
+          {detail.stageLabel}
+        </Text>
+      );
     case 'queueCount':
       return (
-        <span className={`${META_DETAIL_CLASS} tabular-nums`}>
+        <Text role="meta" density="table" truncate className="font-normal tabular-nums">
           {detail.count} {detail.unit}
-        </span>
+        </Text>
       );
     case 'priority':
       return <LabPriorityBadge priority={detail.value} size="xs" />;
     case 'wait':
-      return <span className={`${META_DETAIL_CLASS} tabular-nums`}>{detail.value}</span>;
+      return (
+        <Text role="meta" density="table" truncate className="font-normal tabular-nums">
+          {detail.value}
+        </Text>
+      );
     default:
-      return <span className={META_DETAIL_CLASS}>{detail.value}</span>;
+      return (
+        <Text role="meta" density="table" truncate className="font-normal">
+          {detail.value}
+        </Text>
+      );
   }
 }
 
@@ -66,11 +79,11 @@ function AttentionDetailRow({ details }: { details: AttentionDetail[] }) {
   }
 
   return (
-    <div className="flex min-w-0 flex-wrap items-center gap-x-space-2 gap-y-space-1">
+    <div className={FEED_GROUPED.detailRow}>
       {details.map((detail, idx) => (
         <React.Fragment key={idx}>
           {idx > 0 ? (
-            <span className="h-3.5 w-px shrink-0 self-center bg-border-default" aria-hidden />
+            <span className={FEED_GROUPED.detailDivider} aria-hidden />
           ) : null}
           <div className="min-w-0 max-w-full shrink">
             <FeedDetail detail={detail} />
@@ -104,12 +117,12 @@ function AttentionFeedRow({ item }: { item: LabAttentionQueueItem }) {
         )}
       >
         <span
-          className={cn(`w-0.5 shrink-0 self-stretch ${RADIUS.pill}`, ATTENTION_ACCENT[tone])}
+          className={cn(`w-0.5 shrink-0 self-stretch ${RADIUS.pill}`, FEED_ACCENT[tone])}
           aria-hidden
         />
         <div className="min-w-0 flex-1 space-y-space-1.5">
           <div className="flex min-w-0 items-start justify-between gap-x-space-2 gap-y-space-1">
-            <span className={cn(ATTENTION_FEED.eventHeadline, 'min-w-0')}>{formatted.action}</span>
+            <span className={cn(FEED_GROUPED.eventHeadline, 'min-w-0')}>{formatted.action}</span>
             <Badge
               variant={resolveStatusBadgeColor(typeConfig.badgeVariant)}
               label={typeConfig.pillLabel}
@@ -130,13 +143,13 @@ function AttentionFeedGroup({ type, items }: { type: AttentionType; items: LabAt
 
   return (
     <section className="pb-space-3 last:pb-0">
-      <div className={ATTENTION_FEED.groupHeader}>
-        <div className={ATTENTION_FEED.groupDivider} />
-        <span className={ATTENTION_FEED.groupLabel}>
+      <div className={FEED_GROUPED.groupHeader}>
+        <div className={FEED_GROUPED.groupDivider} />
+        <span className={FEED_GROUPED.groupLabel}>
           {config.groupLabel}
           <span className="ml-space-1.5 tabular-nums text-text-tertiary">({items.length})</span>
         </span>
-        <div className={ATTENTION_FEED.groupDivider} />
+        <div className={FEED_GROUPED.groupDivider} />
       </div>
       <ul className="space-y-space-1">
         {items.map(item => (
@@ -198,7 +211,7 @@ export const LabAttentionPanel: React.FC<LabAttentionPanelProps> = ({ items, att
 
   return (
     <Panel
-      preset="lab.monitor.attention"
+      preset="panel.pageEmbed.standard" title="Attention queue"
       meta={
         items.length > 0
           ? capped

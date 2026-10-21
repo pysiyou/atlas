@@ -49,27 +49,27 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 }) => {
   return (
     <div className={LAYOUT.detailScroll}>
-      <Panel preset="patient.detail.generalInfo.stack">
+      <Panel preset="panel.page.visible.shrink" title="General Info">
         <GeneralInfoSection patient={patient} />
       </Panel>
 
-      <Panel preset="patient.detail.medicalHistory.stack">
+      <Panel preset="panel.page.visible.shrink" title="Medical History">
         <MedicalHistorySectionDisplay patient={patient} />
       </Panel>
 
-      <Panel preset="patient.detail.careSnapshot.stack">
+      <Panel preset="panel.page.visible.shrink" title="Care Snapshot">
         <CareSnapshotSection patient={patient} />
       </Panel>
 
       <Panel
-        preset="patient.detail.relatedOrders.stack"
+        preset="panel.pageEmbed.visible.shrink" title="Related Orders"
         meta={countMeta(orders.length)}
         headerEnd={<RelatedOrdersHeader onNewOrder={onNewOrder} />}
       >
         <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
       </Panel>
 
-      <Panel preset="patient.detail.reports.stack" meta={countMeta(getReportableOrders(orders).length)}>
+      <Panel preset="panel.page.visible.shrink.flexColumn" title="Reports" meta={countMeta(getReportableOrders(orders).length)}>
         <PatientReportsList orders={orders} />
       </Panel>
     </div>
@@ -89,27 +89,27 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 }) => {
   return (
     <div className={cn(LAYOUT.detailGrid2, 'w-full pb-layout-scroll-end')}>
-      <Panel preset="patient.detail.generalInfo">
+      <Panel preset="panel.page.visible" title="General Info">
         <GeneralInfoSection patient={patient} />
       </Panel>
 
-      <Panel preset="patient.detail.medicalHistory">
+      <Panel preset="panel.page.visible" title="Medical History">
         <MedicalHistorySectionDisplay patient={patient} />
       </Panel>
 
-      <Panel preset="patient.detail.careSnapshot.span2">
+      <Panel preset="panel.page.visible.span2" title="Care Snapshot">
         <CareSnapshotSection patient={patient} />
       </Panel>
 
       <Panel
-        preset="patient.detail.relatedOrders"
+        preset="panel.pageEmbed.visible" title="Related Orders"
         meta={countMeta(orders.length)}
         headerEnd={<RelatedOrdersHeader onNewOrder={onNewOrder} />}
       >
         <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
       </Panel>
 
-      <Panel preset="patient.detail.reports" meta={countMeta(getReportableOrders(orders).length)}>
+      <Panel preset="panel.page.visible.flexColumn" title="Reports" meta={countMeta(getReportableOrders(orders).length)}>
         <PatientReportsList orders={orders} />
       </Panel>
     </div>
@@ -132,29 +132,34 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
       style={{ height: '100%', maxHeight: '100%' }}
     >
       <div className={cn(LAYOUT.detailGrid3, 'min-h-0 h-full items-stretch')}>
-        <Panel preset="patient.detail.generalInfo.fill">
+        <Panel preset="panel.page.auto.fill" title="General Info">
           <GeneralInfoSection patient={patient} />
         </Panel>
 
-        <Panel preset="patient.detail.medicalHistory.fill">
+        <Panel preset="panel.page.auto.fill" title="Medical History">
           <MedicalHistorySectionDisplay patient={patient} />
         </Panel>
 
-        <Panel preset="patient.detail.careSnapshot.fill">
+        <Panel preset="panel.page.auto.fill" title="Care Snapshot">
           <CareSnapshotSection patient={patient} />
         </Panel>
       </div>
 
       <div className={cn(LAYOUT.detailGrid3, 'min-h-0 h-full items-stretch')}>
         <Panel
-          preset="patient.detail.relatedOrders.span2Fill"
+          preset="panel.pageEmbed.span2Min"
+          title="Related Orders"
           meta={countMeta(orders.length)}
           headerEnd={<RelatedOrdersHeader onNewOrder={onNewOrder} />}
         >
           <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
         </Panel>
 
-        <Panel preset="patient.detail.reports.fill" meta={countMeta(getReportableOrders(orders).length)}>
+        <Panel
+          preset="panel.page.detailMinH.flexColumn"
+          title="Reports"
+          meta={countMeta(getReportableOrders(orders).length)}
+        >
           <PatientReportsList orders={orders} />
         </Panel>
       </div>

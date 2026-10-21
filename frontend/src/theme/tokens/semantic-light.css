@@ -156,45 +156,46 @@
   --chart-warning: var(--primitive-warning-500);
 
   /* ═══════════════════════════════════════════════════════════════════
-     TEST CATEGORY (breakdowns / charts)
+     DATA VIZ — chart series (agnostic slots; domain maps in TS config)
      ═══════════════════════════════════════════════════════════════════ */
-  --category-hematology: var(--chart-danger);
-  --category-biochemistry: var(--chart-warning);
-  --category-chemistry: var(--orange-fg-emphasis);
-  --category-microbiology: var(--teal-fg-emphasis);
-  --category-serology: var(--indigo-fg-emphasis);
-  --category-urinalysis: var(--cyan-fg-emphasis);
-  --category-imaging: var(--purple-fg-emphasis);
-  --category-immunology: var(--pink-fg-emphasis);
-  --category-molecular: var(--chart-accent);
-  --category-toxicology: var(--chart-success);
-  --category-coagulation: var(--danger-fg-emphasis);
-  --category-default: var(--chart-brand);
+  --accent-chart-1: var(--chart-danger);
+  --accent-chart-2: var(--chart-warning);
+  --accent-chart-3: var(--orange-fg-emphasis);
+  --accent-chart-4: var(--teal-fg-emphasis);
+  --accent-chart-5: var(--indigo-fg-emphasis);
+  --accent-chart-6: var(--cyan-fg-emphasis);
+  --accent-chart-7: var(--purple-fg-emphasis);
+  --accent-chart-8: var(--pink-fg-emphasis);
+  --accent-chart-9: var(--chart-accent);
+  --accent-chart-10: var(--chart-success);
+  --accent-chart-11: var(--danger-fg-emphasis);
+  --accent-chart-12: var(--chart-brand);
+  --accent-chart-default: var(--accent-chart-12);
 
   /* ═══════════════════════════════════════════════════════════════════
-     LAB WORKFLOW LANES (override per theme to recolor a stage everywhere)
+     LANE accents (pipeline / timeline — override per theme)
      ═══════════════════════════════════════════════════════════════════ */
-  --workflow-collection-fg: var(--info-fg-emphasis);
-  --workflow-collection-bg: var(--info-bg);
-  --workflow-collection-border: var(--info-stroke);
-  --workflow-entry-fg: var(--warning-fg-emphasis);
-  --workflow-entry-bg: var(--warning-bg);
-  --workflow-entry-border: var(--warning-stroke);
-  --workflow-validation-fg: var(--success-fg-emphasis);
-  --workflow-validation-bg: var(--success-bg);
-  --workflow-validation-border: var(--success-stroke);
-  --workflow-escalation-fg: var(--danger-fg-emphasis);
-  --workflow-escalation-bg: var(--danger-bg);
-  --workflow-escalation-border: var(--danger-stroke);
-  --workflow-quality-fg: var(--warning-fg-emphasis);
-  --workflow-quality-bg: var(--warning-bg);
-  --workflow-quality-border: var(--warning-stroke);
-  --workflow-order-fg: var(--text-secondary);
-  --workflow-order-bg: var(--surface-hover);
-  --workflow-order-border: var(--border);
-  --workflow-composition-fg: var(--text-secondary);
-  --workflow-composition-bg: var(--surface-hover);
-  --workflow-composition-border: var(--border);
+  --lane-1-fg: var(--info-fg-emphasis);
+  --lane-1-bg: var(--info-bg);
+  --lane-1-border: var(--info-stroke);
+  --lane-2-fg: var(--warning-fg-emphasis);
+  --lane-2-bg: var(--warning-bg);
+  --lane-2-border: var(--warning-stroke);
+  --lane-3-fg: var(--success-fg-emphasis);
+  --lane-3-bg: var(--success-bg);
+  --lane-3-border: var(--success-stroke);
+  --lane-4-fg: var(--danger-fg-emphasis);
+  --lane-4-bg: var(--danger-bg);
+  --lane-4-border: var(--danger-stroke);
+  --lane-5-fg: var(--warning-fg-emphasis);
+  --lane-5-bg: var(--warning-bg);
+  --lane-5-border: var(--warning-stroke);
+  --lane-6-fg: var(--text-secondary);
+  --lane-6-bg: var(--surface-hover);
+  --lane-6-border: var(--border);
+  --lane-7-fg: var(--text-secondary);
+  --lane-7-bg: var(--surface-hover);
+  --lane-7-border: var(--border);
 
   /* ═══════════════════════════════════════════════════════════════════
      OVERLAY

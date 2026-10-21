@@ -8,7 +8,7 @@ import { LabIdentityRow, type LabIdentityContext } from './LabIdentityRow';
 import { LabAuditBlock } from './LabWorkflowHeader.parts';
 import type { LabAuditLine } from '../constants/labWorkflowAuditLines';
 import { cn } from '@/utils';
-import { QUEUE_CARD_ALERT, CARD_HEADER_GRID } from '@/theme/recipes';
+import { WORKLIST_CARD_ALERT, CARD_HEADER_GRID } from '@/theme/recipes';
 
 export interface LabWorkflowLeftColumnProps {
   context: LabIdentityContext;
@@ -26,7 +26,7 @@ export function LabWorkflowLeftColumn({
   return (
     <div className={cn(CARD_HEADER_GRID.leftColumn, className)}>
       <LabIdentityRow context={context} compact className="min-w-0" />
-      {alerts ? <div className={QUEUE_CARD_ALERT.row}>{alerts}</div> : null}
+      {alerts ? <div className={WORKLIST_CARD_ALERT.row}>{alerts}</div> : null}
       {auditLines.length > 0 ? (
         <LabAuditBlock lines={auditLines} compact tone="card" />
       ) : null}

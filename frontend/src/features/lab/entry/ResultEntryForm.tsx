@@ -10,7 +10,8 @@ import { feedbackTitle } from '@/utils/feedback';
 import type { Test, Patient } from '@/types';
 import { ParameterInput } from './ResultParameterInputs';
 import { getReferenceRangeDisplay, checkCriticalStatus } from './resultEntry';
-import { RESULT_PANEL, resultTileStatusClass } from '../utils/labResult';
+import { METRIC_TILE } from '@/theme/recipes';
+import { resultTileStatusClass } from '../utils/labResult';
 import { FIELD_ERROR_CAPTION, RADIUS, SHADOW, TONE, TYPE } from '@/theme/recipes';
 
 interface EntryFormProps {
@@ -58,7 +59,7 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
 
   return (
     <div className={cn(!isModal && cn('bg-surface-page p-panel border border-border-subtle', RADIUS.menu))}>
-      <div className={RESULT_PANEL.grid}>
+      <div className={METRIC_TILE.grid}>
         {testDef.parameters.map(param => {
           const value = results[param.code] ?? '';
           const hasValue = Boolean(value.trim());
@@ -73,7 +74,7 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
             <div
               key={param.code}
               className={cn(
-                RESULT_PANEL.tile,
+                METRIC_TILE.tile,
                 resultTileStatusClass(status, hasValue),
                 validationErrors[param.code] && 'border-danger-stroke ring-1 ring-danger-stroke/30',
               )}
@@ -81,13 +82,13 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
               <div className="flex items-baseline justify-between gap-space-2 min-w-0">
                 <label
                   htmlFor={`result-${resultKey}-${param.code}`}
-                  className={RESULT_PANEL.label}
+                  className={METRIC_TILE.label}
                 >
                   {param.name}
                 </label>
                 <span
                   className={cn(
-                    refRange === 'N/A' ? RESULT_PANEL.referenceUnavailable : RESULT_PANEL.reference,
+                    refRange === 'N/A' ? METRIC_TILE.referenceUnavailable : METRIC_TILE.reference,
                     isCritical && refRange !== 'N/A' && cn(TONE.danger.fg, 'font-medium'),
                   )}
                   title={`Reference: ${refRange}`}
@@ -129,8 +130,8 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
         })}
       </div>
 
-      <div className={RESULT_PANEL.notesSection}>
-        <label htmlFor={`notes-${resultKey}`} className={RESULT_PANEL.notesLabel}>
+      <div className={METRIC_TILE.notesSection}>
+        <label htmlFor={`notes-${resultKey}`} className={METRIC_TILE.notesLabel}>
           Technician notes <span className="text-text-disabled">(optional)</span>
         </label>
         <Textarea

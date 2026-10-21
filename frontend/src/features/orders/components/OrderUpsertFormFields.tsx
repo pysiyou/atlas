@@ -60,7 +60,7 @@ export const OrderUpsertFormFields: React.FC<OrderUpsertFormFieldsProps> = ({
   } = modalState;
 
   return (
-    <Panel preset="order.form.upsert">
+    <Panel preset="panel.page.formHiddenHeader">
       <Controller
         name="patientId"
         control={control}

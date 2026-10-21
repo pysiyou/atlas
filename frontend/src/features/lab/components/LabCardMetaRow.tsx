@@ -5,7 +5,7 @@
 import React, { type ReactNode } from 'react';
 import { cn } from '@/utils';
 import { EntityId } from '@/components/display';
-import { QUEUE_CARD_TYPE, MODAL_HEADER_TYPE } from '@/theme/recipes';
+import { WORKLIST_CARD_TYPE, MODAL_HEADER_TYPE } from '@/theme/recipes';
 import { getQueueAgeInfo } from '../utils/labQueue';
 import { TONE } from '@/theme/recipes';
 import type { Sample, TestWithContext } from '@/types';
@@ -30,7 +30,7 @@ export function LabCardMetaRow({
   return (
     <div
       className={cn(
-        QUEUE_CARD_TYPE.metadata,
+        WORKLIST_CARD_TYPE.metadata,
         'flex min-w-0 flex-wrap items-center gap-x-space-2 gap-y-space-0-5 leading-snug',
         className
       )}
@@ -38,7 +38,7 @@ export function LabCardMetaRow({
       {items.map((item, index) => (
         <React.Fragment key={index}>
           {index > 0 ? (
-            <span className={QUEUE_CARD_TYPE.separator} aria-hidden>•</span>
+            <span className={WORKLIST_CARD_TYPE.separator} aria-hidden>•</span>
           ) : null}
           <span className="min-w-0">{item}</span>
         </React.Fragment>
@@ -87,7 +87,7 @@ export function LabModalMetaRow({
       {items.map((item, index) => (
         <React.Fragment key={index}>
           {index > 0 ? (
-            <span className={QUEUE_CARD_TYPE.separator} aria-hidden>•</span>
+            <span className={WORKLIST_CARD_TYPE.separator} aria-hidden>•</span>
           ) : null}
           <span className="min-w-0">{item}</span>
         </React.Fragment>

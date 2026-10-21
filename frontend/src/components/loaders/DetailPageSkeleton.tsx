@@ -12,6 +12,7 @@ import { cn } from '@/utils';
 
 export interface DetailSkeletonSection {
   preset: PanelPresetId;
+  title?: string;
   rows?: number;
   layout?: 'grid' | 'column';
   tableColumns?: number;
@@ -24,7 +25,7 @@ export type DetailPageSkeletonVariant = 'responsive-detail' | 'balanced-grid' | 
 /** Fallback when responsive/balanced variants render without feature-specific sections. */
 // eslint-disable-next-line react-refresh/only-export-components -- shared with feature skeleton configs
 export const DEFAULT_DETAIL_SKELETON_SECTIONS: DetailSkeletonSection[] = [
-  { preset: 'catalog.detail.testOverview', rows: 6, layout: 'column' },
+  { preset: 'panel.pageEmbed.visible', title: 'Test Overview', rows: 6, layout: 'column' },
 ];
 
 export interface DetailPageSkeletonProps {
@@ -54,7 +55,11 @@ function renderSectionContent(section: DetailSkeletonSection) {
 }
 
 function SkeletonPanel({ section }: { section: DetailSkeletonSection }) {
-  return <Panel preset={section.preset}>{renderSectionContent(section)}</Panel>;
+  return (
+    <Panel preset={section.preset} title={section.title}>
+      {renderSectionContent(section)}
+    </Panel>
+  );
 }
 
 function ResponsiveDetailSkeleton({
@@ -120,7 +125,7 @@ function BalancedGridSkeleton({ sections }: { sections: DetailSkeletonSection[] 
       aria-busy="true"
     >
       {sections.map(section => (
-        <Panel key={section.preset} preset={section.preset}>
+        <Panel key={section.preset} preset={section.preset} title={section.title}>
           {renderSectionContent({ ...section, layout: 'column' })}
         </Panel>
       ))}

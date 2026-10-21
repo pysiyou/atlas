@@ -31,7 +31,7 @@ export const LabTodayPanel: React.FC<LabTodayPanelProps> = ({ todayPanel }) => {
 
   return (
     <Panel
-      preset="lab.monitor.today"
+      preset="panel.pageEmbed.flexColumnFill" title="Today"
       headerEnd={
         <TodayPanelHeaderMeta headerRange={headerRange} totalWorked={totalWorked} />
       }

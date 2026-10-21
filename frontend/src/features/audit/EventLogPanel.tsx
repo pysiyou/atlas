@@ -20,9 +20,9 @@ import type {
 export type EventLogPanelLayout = 'standalone' | 'embedded';
 
 const EVENT_LOG_PRESET: Record<'default' | 'compact' | 'monitor', PanelPresetId> = {
-  default: 'audit.eventLog',
-  compact: 'audit.eventLog.compact',
-  monitor: 'audit.eventLog.monitor',
+  default: 'panel.pageEmbed.auto',
+  compact: 'panel.compactEmbed.auto',
+  monitor: 'panel.pageEmbed.auto.fill',
 };
 
 function eventLogPreset(panelVariant: 'default' | 'compact' | 'monitor'): PanelPresetId {
@@ -181,6 +181,7 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
   return (
     <Panel
       preset={eventLogPreset(panelVariant)}
+      title="Event log"
       meta={panelMeta}
     >
       {filters}

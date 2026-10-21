@@ -12,12 +12,12 @@ import type { LabAuditLine } from '../constants/labWorkflowAuditLines';
 import { LabWorkflowLeftColumn } from '../components/LabWorkflowLeftColumn';
 import type { LabIdentityContext } from '../components/LabIdentityRow';
 import {
-  QUEUE_CARD_SURFACE,
+  WORKLIST_CARD_SURFACE,
   CARD_ACTIONS_ROW,
   CARD_HEADER_GRID,
-  QUEUE_CARD_LIST_ITEM,
-  QUEUE_CARD_SPACING,
-  QUEUE_CARD_TYPE,
+  WORKLIST_CARD_LIST_ITEM,
+  WORKLIST_CARD_SPACING,
+  WORKLIST_CARD_TYPE,
   MOBILE_LIST_CARD,
 } from '@/theme/recipes';
 
@@ -86,14 +86,14 @@ export interface QueueCardPanelProps {
 }
 
 export function QueueCardPanel({ title, children, className }: QueueCardPanelProps) {
-  const sectionClass = className ?? QUEUE_CARD_SURFACE.contentSection;
+  const sectionClass = className ?? WORKLIST_CARD_SURFACE.contentSection;
 
   return (
     <div className={sectionClass}>
-      <div className={QUEUE_CARD_SPACING.sectionTitleMargin}>
-        <span className={QUEUE_CARD_TYPE.sectionTitle}>{title}</span>
+      <div className={WORKLIST_CARD_SPACING.sectionTitleMargin}>
+        <span className={WORKLIST_CARD_TYPE.sectionTitle}>{title}</span>
       </div>
-      <div className={QUEUE_CARD_TYPE.sectionContent}>{children}</div>
+      <div className={WORKLIST_CARD_TYPE.sectionContent}>{children}</div>
     </div>
   );
 }
@@ -144,7 +144,7 @@ export function QueueCard({
   return (
     <div className={`cursor-pointer ${className}`} onClick={onClick}>
       <Card variant="interactive">
-        <div className={`flex flex-col ${QUEUE_CARD_SPACING.cardGap}`}>
+        <div className={`flex flex-col ${WORKLIST_CARD_SPACING.cardGap}`}>
           <QueueCardHeader
             context={context}
             leftColumn={leftColumn}
@@ -227,22 +227,22 @@ export function QueueCardMobile({
 }
 
 /** Max rows in "Required for" before collapsing the remainder behind a link. */
-const QUEUE_CARD_TEST_LIST_MAX_VISIBLE = 4;
-const QUEUE_CARD_TEST_LIST_COLLAPSED_COUNT = QUEUE_CARD_TEST_LIST_MAX_VISIBLE - 1;
+const WORKLIST_CARD_TEST_LIST_MAX_VISIBLE = 4;
+const WORKLIST_CARD_TEST_LIST_COLLAPSED_COUNT = WORKLIST_CARD_TEST_LIST_MAX_VISIBLE - 1;
 
 const queueCardTestListToggleClass = cn(
-  QUEUE_CARD_LIST_ITEM.label,
+  WORKLIST_CARD_LIST_ITEM.label,
   'underline text-text-secondary hover:text-text-primary',
 );
 
 export function QueueCardTestList({ tests }: { tests: Array<{ name: string; code: string }> }) {
   const [expanded, setExpanded] = useState(false);
-  const canTruncate = tests.length > QUEUE_CARD_TEST_LIST_MAX_VISIBLE;
+  const canTruncate = tests.length > WORKLIST_CARD_TEST_LIST_MAX_VISIBLE;
   const shouldCollapse = canTruncate && !expanded;
   const visibleTests = shouldCollapse
-    ? tests.slice(0, QUEUE_CARD_TEST_LIST_COLLAPSED_COUNT)
+    ? tests.slice(0, WORKLIST_CARD_TEST_LIST_COLLAPSED_COUNT)
     : tests;
-  const remainingCount = tests.length - QUEUE_CARD_TEST_LIST_COLLAPSED_COUNT;
+  const remainingCount = tests.length - WORKLIST_CARD_TEST_LIST_COLLAPSED_COUNT;
 
   const handleToggleClick = (e: React.MouseEvent, nextExpanded: boolean) => {
     e.stopPropagation();
@@ -250,17 +250,17 @@ export function QueueCardTestList({ tests }: { tests: Array<{ name: string; code
   };
 
   return (
-    <ul className={QUEUE_CARD_SPACING.listGap}>
+    <ul className={WORKLIST_CARD_SPACING.listGap}>
       {visibleTests.map((test, i) => (
-        <li key={test.code || i} className={QUEUE_CARD_LIST_ITEM.row}>
-          <span className={QUEUE_CARD_LIST_ITEM.bullet} />
-          <span className={QUEUE_CARD_LIST_ITEM.label}>{test.name}</span>
+        <li key={test.code || i} className={WORKLIST_CARD_LIST_ITEM.row}>
+          <span className={WORKLIST_CARD_LIST_ITEM.bullet} />
+          <span className={WORKLIST_CARD_LIST_ITEM.label}>{test.name}</span>
           <EntityId variant="inline">{test.code}</EntityId>
         </li>
       ))}
       {shouldCollapse ? (
-        <li className={QUEUE_CARD_LIST_ITEM.row}>
-          <span className={QUEUE_CARD_LIST_ITEM.bullet} />
+        <li className={WORKLIST_CARD_LIST_ITEM.row}>
+          <span className={WORKLIST_CARD_LIST_ITEM.bullet} />
           <button
             type="button"
             className={queueCardTestListToggleClass}
@@ -271,8 +271,8 @@ export function QueueCardTestList({ tests }: { tests: Array<{ name: string; code
         </li>
       ) : null}
       {canTruncate && expanded ? (
-        <li className={QUEUE_CARD_LIST_ITEM.row}>
-          <span className={QUEUE_CARD_LIST_ITEM.bullet} />
+        <li className={WORKLIST_CARD_LIST_ITEM.row}>
+          <span className={WORKLIST_CARD_LIST_ITEM.bullet} />
           <button
             type="button"
             className={queueCardTestListToggleClass}

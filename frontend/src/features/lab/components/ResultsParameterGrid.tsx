@@ -9,8 +9,9 @@ import {
 } from '../utils/labResult';
 import { ReferenceIntervalCell } from './ReferenceIntervalCell';
 import { LAB_CONFIG } from '../constants';
-import { TYPE } from '@/theme/recipes';
-import { RESULT_PANEL, resultTileStatusClass } from '../utils/labResult';
+import { DATA_GRID, METRIC_TILE, TYPE } from '@/theme/recipes';
+import { resultTileStatusClass } from '../utils/labResult';
+import { Text } from '@/components/layout';
 import {
   buildParameterLabelMap,
   catalogParametersFromTest,
@@ -77,28 +78,23 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
   }, [layout, variant, entries, catalogParameters, patient, flagStatusMap]);
 
   if (entries.length === 0) {
-    return <p className={TYPE.meta}>No result values recorded.</p>;
+    return <Text role="meta">No result values recorded.</Text>;
   }
 
   if (layout === 'validation' && variant === 'inline') {
-    const headerClass = `${TYPE.caption} text-text-tertiary uppercase tracking-wide font-normal text-left`;
-    const cellClass = 'py-space-0-5 pr-space-4 align-top text-left leading-tight last:pr-0';
-
     return (
-      <div className="overflow-x-auto min-w-0">
-        <table className="w-full min-w-[20rem] table-fixed border-collapse text-left">
+      <div className={DATA_GRID.scrollWrap}>
+        <table className={DATA_GRID.table}>
           <colgroup>
-            <col className="w-[40%]" />
-            <col className="w-[35%]" />
-            <col className="w-[25%]" />
+            {DATA_GRID.colGroup.validation.map(col => (
+              <col key={col} className={col} />
+            ))}
           </colgroup>
           <thead>
             <tr>
-              <th scope="col" className={`${headerClass} pb-space-1-5 ${cellClass}`}>Parameter</th>
-              <th scope="col" className={`${headerClass} pb-space-1-5 ${cellClass}`}>Result</th>
-              <th scope="col" className={`${headerClass} pb-space-1-5 ${cellClass}`}>
-                Reference interval
-              </th>
+              <th scope="col" className={DATA_GRID.headerCell}>Parameter</th>
+              <th scope="col" className={DATA_GRID.headerCell}>Result</th>
+              <th scope="col" className={DATA_GRID.headerCell}>Reference interval</th>
             </tr>
           </thead>
           <tbody>
@@ -117,10 +113,10 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
 
               return (
                 <tr key={key}>
-                  <td className={`${TYPE.label} text-text-secondary ${cellClass}`} title={label}>
-                    {label}
+                  <td className={DATA_GRID.labelCell} title={label}>
+                    <Text role="label" density="table" truncate title={label}>{label}</Text>
                   </td>
-                  <td className={cellClass}>
+                  <td className={DATA_GRID.bodyCell}>
                     <ResultValueAnnotations
                       resultValue={resultValue}
                       unit={unit}
@@ -128,7 +124,7 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
                       showStatus={showStatus}
                     />
                   </td>
-                  <td className={cellClass} title="Reference interval">
+                  <td className={DATA_GRID.bodyCell} title="Reference interval">
                     <ReferenceIntervalCell
                       lines={intervalLines}
                       valueColumnCh={referenceValueColumnCh}
@@ -145,7 +141,7 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
 
   if (variant === 'tiles') {
     return (
-      <div className={RESULT_PANEL.grid}>
+      <div className={METRIC_TILE.grid}>
         {entries.map(([key, rawValue]) => {
           const { resultValue, unit, status } = parseResultEntry(key, rawValue, flagStatusMap);
           const label = resolveParameterLabel(key, parameterLabels);
@@ -153,9 +149,9 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
           return (
             <div
               key={key}
-              className={`${RESULT_PANEL.tile} ${resultTileStatusClass(status, true)}`}
+              className={resultTileStatusClass(status, true)}
             >
-              <span className={RESULT_PANEL.label} title={label}>{label}</span>
+              <span className={METRIC_TILE.label} title={label}>{label}</span>
               <ResultValueAnnotations resultValue={resultValue} unit={unit} status={status} tile />
             </div>
           );
@@ -170,13 +166,15 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
     const remainingCount = entries.length - maxVisible;
 
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-space-4 gap-y-space-0-5">
+      <div className={METRIC_TILE.inlineDenseGrid}>
         {visibleEntries.map(([key, rawValue]) => {
           const { resultValue, unit, status } = parseResultEntry(key, rawValue, flagStatusMap);
           const label = resolveParameterLabel(key, parameterLabels);
           return (
-            <div key={key} className="flex flex-wrap items-baseline gap-x-space-1-5 min-w-0 text-left">
-              <span className={`${TYPE.caption} text-text-secondary truncate`} title={label}>{label}:</span>
+            <div key={key} className={METRIC_TILE.inlineRowDense}>
+              <Text role="caption" className="text-text-secondary truncate" title={label}>
+                {label}:
+              </Text>
               <ResultValueAnnotations
                 resultValue={resultValue}
                 unit={unit}
@@ -197,18 +195,15 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
   }
 
   return (
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,max-content))] gap-x-space-6 gap-y-space-1">
+    <div className={METRIC_TILE.inlineGrid}>
       {entries.map(([key, rawValue]) => {
         const { resultValue, unit, status } = parseResultEntry(key, rawValue, flagStatusMap);
         const label = resolveParameterLabel(key, parameterLabels);
         return (
-          <div
-            key={key}
-            className="flex flex-wrap items-baseline gap-x-space-2 min-w-0 text-left"
-          >
-            <span className={`${TYPE.caption} text-text-secondary truncate`} title={label}>
+          <div key={key} className={METRIC_TILE.inlineRow}>
+            <Text role="caption" className="text-text-secondary truncate" title={label}>
               {label}:
-            </span>
+            </Text>
             <ResultValueAnnotations
               resultValue={resultValue}
               unit={unit}

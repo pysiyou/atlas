@@ -13,7 +13,7 @@ import { CollectionOperationalMetaRow } from '../components/CollectionOperationa
 import { buildCollectionOperationalMetaItems } from '../utils/collectionOperationalMetaItems';
 import { buildSampleCollectionTimelineLines } from '../constants/labWorkflowAuditLines';
 import {
-  QUEUE_CARD_ALERT,
+  WORKLIST_CARD_ALERT,
   IDENTITY_INLINE,
   CARD_HEADER_GRID,
   IDENTITY_STACK,
@@ -178,7 +178,7 @@ export function SampleCollectionCardLeftColumn({
         referringPhysician={referringPhysician}
         orderDate={orderDate}
       />
-      <div className={QUEUE_CARD_ALERT.row}>
+      <div className={WORKLIST_CARD_ALERT.row}>
         <SampleCollectionOperationsRow
           sample={sample}
           isPending={isPending}

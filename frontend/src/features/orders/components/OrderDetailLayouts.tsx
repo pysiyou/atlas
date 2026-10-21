@@ -134,18 +134,25 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
   return (
     <>
       <div className={cn(LAYOUT.detailGrid3, fillHeight && 'min-h-0')}>
-        <Panel preset={fillHeight ? 'order.detail.information.fill' : 'order.detail.information'}>
+        <Panel
+          preset={fillHeight ? 'panel.page.auto.fill' : 'panel.page.visible'}
+          title="Order Information"
+        >
           <OrderInfoSection order={order} />
         </Panel>
 
         <Panel
-          preset={fillHeight ? 'order.detail.patient.fill' : 'order.detail.patient'}
+          preset={fillHeight ? 'panel.page.auto.fill' : 'panel.page.visible'}
+          title="Patient Information"
           headerEnd={patientHeaderEnd}
         >
           <PatientInfoSection patient={patient} onViewPatient={onViewPatient} />
         </Panel>
 
-        <Panel preset={fillHeight ? 'order.detail.activity.fill' : 'order.detail.activity'}>
+        <Panel
+          preset={fillHeight ? 'panel.pageEmbed.auto.fill.flexColumnMin' : 'panel.pageEmbed.visible'}
+          title="Order activity"
+        >
           <OrderEventLogPanel
             orderId={order.orderId}
             layout="embedded"
@@ -156,7 +163,8 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
 
       <div className={cn(LAYOUT.detailGrid3, fillHeight && 'min-h-0')}>
         <Panel
-          preset={fillHeight ? 'order.detail.tests.span2Fill' : 'order.detail.tests.span2'}
+          preset={fillHeight ? 'panel.pageEmbed.span2Fill' : 'panel.pageEmbed.span2'}
+          title="Tests"
           meta={testsHeaderMeta}
         >
           <TestsTable
@@ -168,7 +176,8 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
         </Panel>
 
         <Panel
-          preset={fillHeight ? 'order.detail.billing.fill' : 'order.detail.billing'}
+          preset={fillHeight ? 'panel.pageEmbed.auto.fill.flexColumn' : 'panel.pageEmbed.visible.flexColumn'}
+          title="Billing Summary"
           headerEnd={billingHeaderEnd}
         >
           <BillingSummarySection order={order} />
@@ -192,12 +201,12 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
 
   return (
     <div className={LAYOUT.detailScroll}>
-      <Panel preset="order.detail.information.stack">
+      <Panel preset="panel.page.visible.shrink" title="Order Information">
         <OrderInfoSection order={order} />
       </Panel>
 
       <Panel
-        preset="order.detail.patient.stack"
+        preset="panel.page.visible.shrink" title="Patient Information"
         headerEnd={
           patient ? (
             <IconButton onClick={onViewPatient} {...actionButtonPreset('view')} size="sm" title="View Patient" />
@@ -207,11 +216,11 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
         <PatientInfoSection patient={patient} onViewPatient={onViewPatient} />
       </Panel>
 
-      <Panel preset="order.detail.activity.stack">
+      <Panel preset="panel.pageEmbed.stackMinHeight" title="Order activity">
         <OrderEventLogPanel orderId={order.orderId} layout="embedded" />
       </Panel>
 
-      <Panel preset="order.detail.tests.stack" meta={testsHeaderMeta}>
+      <Panel preset="panel.pageEmbed.visible.shrink" title="Tests" meta={testsHeaderMeta}>
         <TestsTable
           tests={order.tests ?? []}
           order={order}
@@ -221,7 +230,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
       </Panel>
 
       <Panel
-        preset="order.detail.billing.stack"
+        preset="panel.pageEmbed.visible.shrink.flexColumn" title="Billing Summary"
         headerEnd={
           <BillingSummaryPanelActions order={order} onPaymentSuccess={onPaymentSuccess} />
         }
