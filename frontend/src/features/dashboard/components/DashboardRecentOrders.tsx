@@ -5,7 +5,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components/display';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import { Panel } from '@/components/surfaces';
 import { OrderStatusBadge } from '@/features/orders';
 import { ROUTES } from '@/config';

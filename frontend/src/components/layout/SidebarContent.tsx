@@ -6,7 +6,7 @@ import type { AuthUser } from '@/types';
 import type { MenuItem, SettingsItem } from './sidebarMenu';
 import { SidebarHeader } from './SidebarHeader';
 import { SidebarNav } from './SidebarNav';
-import { ThemeSwitch } from './ThemeSwitch';
+import { ThemeSwitch } from '@/components/inputs';
 import { SidebarProfile } from './SidebarProfile';
 import { SIDEBAR_MOTION } from './sidebarMotion';
 

@@ -21,7 +21,7 @@ import { useResultEntryWorkflow } from './useResultEntryWorkflow';
 import { useLabDraftStore } from '../state/labDraftStore';
 import { ResultEntryQueueItem } from './ResultEntryQueueCards';
 import { worklistServerFilters } from '../utils/labSearchAndLinks';
-import { errorAlertMessage } from '@/utils/feedback';
+import { toListLoadError } from '@/hooks/listPage';
 
 /** Stable empty map so unedited cards keep the same `results` identity. */
 const EMPTY_RESULT_VALUES: Record<string, string> = {};
@@ -126,7 +126,7 @@ export const ResultEntryQueue: React.FC = () => {
     return (
       <ErrorBoundary>
         <ErrorAlert
-          error={{ message: errorAlertMessage('lab.worklist.loadFailed', worklistQueryError) }}
+          error={toListLoadError('lab.worklist.loadFailed', worklistQueryError)!}
           onRetry={() => {
             void refetchWorklist();
           }}

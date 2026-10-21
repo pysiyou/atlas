@@ -1,53 +1,35 @@
 /**
- * CatalogFilters Component
- *
- * Provides comprehensive filtering controls for the test catalog using the new filter architecture.
- * Uses config-driven approach with FilterBar component.
- *
- * @module features/catalog
+ * CatalogFilters — FilterBar for the test catalog list.
  */
 
 import React, { useMemo } from 'react';
-import { FilterBar, useFilterBarBridge } from '@/components/filters';
+import type { FilterValues } from '@/components/filters/types';
+import { FilterBar } from '@/components/filters';
+import { useFilterBarBridge } from '@/hooks/filters';
 import { catalogFilterConfig } from '../constants/catalogConfig';
 import type { TestCategory } from '@/types';
 
 export interface CatalogFiltersProps {
-  searchQuery: string;
-  onSearchChange: (value: string) => void;
-  categoryFilters: TestCategory[];
-  onCategoryFiltersChange: (values: TestCategory[]) => void;
-  sampleTypeFilters: string[];
-  onSampleTypeFiltersChange: (values: string[]) => void;
-  priceRange: [number, number];
-  onPriceRangeChange: (range: [number, number]) => void;
+  filters: FilterValues;
+  setFilter: (key: string, value: unknown) => void;
 }
 
-export const CatalogFilters: React.FC<CatalogFiltersProps> = ({
-  searchQuery,
-  onSearchChange,
-  categoryFilters,
-  onCategoryFiltersChange,
-  sampleTypeFilters,
-  onSampleTypeFiltersChange,
-  priceRange,
-  onPriceRangeChange,
-}) => {
+export const CatalogFilters: React.FC<CatalogFiltersProps> = ({ filters, setFilter }) => {
   const value = useMemo(
     () => ({
-      search: searchQuery,
-      category: categoryFilters,
-      sampleType: sampleTypeFilters,
-      priceRange,
+      search: (filters.search as string) ?? '',
+      category: (filters.category as TestCategory[]) ?? [],
+      sampleType: (filters.sampleType as string[]) ?? [],
+      priceRange: filters.priceRange as [number, number],
     }),
-    [searchQuery, categoryFilters, sampleTypeFilters, priceRange]
+    [filters],
   );
 
   const { filterValues, handleFilterChange } = useFilterBarBridge(value, {
-    search: onSearchChange,
-    category: onCategoryFiltersChange,
-    sampleType: onSampleTypeFiltersChange,
-    priceRange: onPriceRangeChange,
+    search: v => setFilter('search', v),
+    category: v => setFilter('category', v),
+    sampleType: v => setFilter('sampleType', v),
+    priceRange: v => setFilter('priceRange', v),
   });
 
   return (

@@ -4,7 +4,7 @@
  */
 
 import type { ReactNode } from 'react';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 
 export interface ModalContextSubtitleProps {
   /** Patient name, test name, or other primary context for this modal. */

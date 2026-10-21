@@ -5,16 +5,16 @@
 
 import React, { useState } from 'react';
 import { FILTER_TYPE } from '@/theme/recipes';
-import { DateFilter } from '@/components/inputs';
+import { DatePicker } from '@/components/inputs';
 import { SearchTextInput } from '@/components/inputs';
 import { MODULE_ICONS } from '@/config/icons';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import {
   DatePresetChipSelect,
   ListFilterModal,
-  REPORT_FILTER_PLACEHOLDERS,
   ResponsiveFilterMobileBar,
 } from '@/components/filters';
+import { REPORT_FILTER_PLACEHOLDERS } from '@/config/filterPlaceholders';
 
 /**
  * Props interface for ReportFilters component
@@ -53,7 +53,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
         />
       </div>
       <div className="flex h-9 w-full items-center">
-        <DateFilter
+        <DatePicker
           value={dateRange}
           onChange={onDateRangeChange}
           placeholder={REPORT_FILTER_PLACEHOLDERS.dateRange}

@@ -16,7 +16,7 @@ import { ICONS } from '@/config/icons';
 import { useOrderUpsertModal } from '../hooks/useOrderUpsertModal';
 import { OrderUpsertFormFields } from './OrderUpsertFormFields';
 import { ErrorAlert } from '@/components/feedback';
-import { errorAlertMessage } from '@/utils/feedback';
+import { toListLoadError } from '@/hooks/listPage';
 import type { OrderUpsertModalOpenProps } from '@/lib/context/modalTypes';
 
 export type OrderUpsertModalProps = OrderUpsertModalOpenProps;
@@ -96,7 +96,7 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
       >
         {orderLoadFailed ? (
           <ErrorAlert
-            error={{ message: errorAlertMessage('orders.list.loadFailed', orderError) }}
+            error={toListLoadError('orders.list.loadFailed', orderError)!}
             onRetry={() => {
               void refetchOrder();
             }}

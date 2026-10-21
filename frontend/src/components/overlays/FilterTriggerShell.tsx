@@ -1,7 +1,7 @@
 /**
  * FilterTriggerShell - Shared trigger layout for filter dropdowns (Popover-based).
  * Single source of truth for: inputTrigger, left icon, content area, clear button + chevron.
- * Used by DateFilter, AgeFilter, PriceRangeControl, SingleSelectControl, MultiSelectFilter.
+ * Used by DatePicker, AgeFilter, PriceRangeControl, SingleSelectControl, MultiSelectFilter.
  */
 
 import React from 'react';

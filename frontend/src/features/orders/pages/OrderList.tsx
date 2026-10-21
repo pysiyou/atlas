@@ -13,7 +13,11 @@ import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { OrderFilters } from '../components/OrderFilters';
 import { createOrderTableConfig } from '../config/OrderTable.config';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
-import { errorAlertMessage } from '@/utils/feedback';
+import {
+  buildServerListPagination,
+  toListLoadError,
+  useFilterChangeWithPageReset,
+} from '@/hooks/listPage';
 import { inclusiveDateRangeBounds, toIsoDateParam } from '@/utils';
 import { usePageFilters } from '@/hooks/usePageFilters';
 import { ORDER_URL_FILTER_KEYS } from '../config/orderFilters.config';
@@ -67,24 +71,31 @@ export const OrderList: React.FC = () => {
     resetPage,
   } = usePaginatedOrders(serverFilters, 1, DEFAULT_LIST_PAGE_SIZE);
 
+  const { setFilterAndReset } = useFilterChangeWithPageReset(setFilter, resetPage);
+
   const handleStatusFiltersChange = useCallback(
     (next: OrderStatus[]) => {
-      setFilter('status', next);
-      resetPage();
+      setFilterAndReset('status', next);
     },
-    [setFilter, resetPage]
+    [setFilterAndReset],
   );
 
   const { getTestName } = useTestNameLookup();
 
   const loading = isLoading;
 
-  const error = isError
-    ? {
-        message: errorAlertMessage('orders.list.loadFailed', queryError),
-        operation: 'load' as const,
-      }
-    : null;
+  const error = isError ? toListLoadError('orders.list.loadFailed', queryError) : null;
+
+  const listPagination = useMemo(
+    () =>
+      buildServerListPagination({
+        page,
+        pagination,
+        goToPage,
+        pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
+      }),
+    [page, pagination, goToPage],
+  );
 
   const orderTableConfig = useMemo(
     () => createOrderTableConfig(navigate, () => '—', getTestName),
@@ -117,28 +128,15 @@ export const OrderList: React.FC = () => {
             />
             <OrderFilters
               searchQuery={searchQuery}
-              onSearchChange={value => {
-                setFilter('search', value);
-                resetPage();
-              }}
+              onSearchChange={value => setFilterAndReset('search', value)}
               dateRange={dateRange}
-              onDateRangeChange={value => {
-                setFilter('dateRange', value);
-                resetPage();
-              }}
+              onDateRangeChange={value => setFilterAndReset('dateRange', value)}
               statusFilters={statusFilters}
               onStatusFiltersChange={handleStatusFiltersChange}
             />
           </>
         }
-        pagination={{
-          mode: 'server',
-          currentPage: page,
-          pageSize: pagination.pageSize,
-          totalItems: pagination.total,
-          onPageChange: goToPage,
-          pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
-        }}
+        pagination={listPagination}
       />
     </div>
   );

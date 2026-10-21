@@ -4,7 +4,7 @@
 
 import type { MouseEvent, ReactNode } from 'react';
 import type { NavigateFunction } from 'react-router-dom';
-import { RecordId } from '@/features/shared/components/RecordId';
+import { RecordId } from '@/features/shared';
 import { formatCurrency } from '@/utils';
 import {
   renderDateTimeCell,

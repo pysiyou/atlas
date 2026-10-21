@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import type { OrderTest } from '@/types';
 import { displayId } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';

@@ -6,7 +6,7 @@ import type { FilterConfig } from '@/components/filters/types';
 import { MODULE_ICONS } from '@/config/icons';
 import { createFilterOptions } from '@/utils/filtering';
 import { PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG } from '@/types';
-import { PAYMENT_FILTER_PLACEHOLDERS } from '@/components/filters';
+import { PAYMENT_FILTER_PLACEHOLDERS } from '@/config/filterPlaceholders';
 
 const statusOptions = createFilterOptions(PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG);
 

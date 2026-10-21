@@ -6,7 +6,7 @@
 import React from 'react';
 import { actionButtonPreset, Icon, IconButton } from '@/components/primitives';
 import { EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components/display';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import { formatDateTime } from '@/utils';
 import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
 import type { Order } from '@/types';

@@ -5,7 +5,7 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { EmptyState, EMPTY_COPY, DENSE_EMPTY_STATE_TEXT } from '@/components/display';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import { Badge } from '@/components/primitives';
 import { Panel } from '@/components/surfaces';
 import { LabPriorityBadge } from '../components/LabDomainBadges';

@@ -6,7 +6,7 @@
 import { type ReactNode, useState } from 'react';
 import { cn } from '@/utils';
 import { Card } from '@/components/surfaces';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import { LabHeaderCompactContext } from '../components/LabWorkflowHeader';
 import type { LabAuditLine } from '../constants/labWorkflowAuditLines';
 import { LabWorkflowLeftColumn } from '../components/LabWorkflowLeftColumn';

@@ -3,7 +3,7 @@
  */
 
 import { Icon } from '@/components/primitives';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import { DetailGrid } from './detailModalLayout';
 import type { TestWithContext } from '@/types';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';

@@ -11,10 +11,10 @@ import { ICONS } from '@/config/icons';
 import { text, inputBase, inputError, FG } from '@/theme/recipes';
 import { FIELD_ERROR, FIELD_ERROR_CAPTION, RADIUS, TONE } from '@/theme/recipes';
 import type { PatientFormInput } from '../schemas/patientFormSchemas';
-import type { PatientFormSectionProps } from '../patientFormTypes';
 import { patientFieldError } from '../patientFormFieldError';
+import { usePatientFormSection } from '../hooks/usePatientFormSection';
 
-export interface VitalsSectionProps extends PatientFormSectionProps {
+export interface VitalsSectionProps {
   emptyKeysReadOnly?: ReadonlySet<string>;
 }
 
@@ -258,11 +258,8 @@ const VitalSignField: React.FC<VitalSignFieldProps> = ({
   );
 };
 
-export const VitalsSection: React.FC<VitalsSectionProps> = ({
-  control,
-  errors,
-  emptyKeysReadOnly,
-}) => {
+export const VitalsSection: React.FC<VitalsSectionProps> = ({ emptyKeysReadOnly }) => {
+  const { control, errors } = usePatientFormSection();
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-6">
       {VITALS_CONFIG.map(config => (

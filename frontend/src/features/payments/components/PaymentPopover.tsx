@@ -9,7 +9,7 @@ import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Popover } from '@/components/overlays';
 import { Button, Icon } from '@/components/primitives';
 import { Alert, FooterInfo } from '@/components/display';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import { PaymentStatusBadge } from './PaymentStatusBadge';
 import { PaymentMethodSelector } from './PaymentMethodSelector';
 import { PopoverFormChrome } from '@/components/overlays';

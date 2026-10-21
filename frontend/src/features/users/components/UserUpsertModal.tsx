@@ -2,21 +2,20 @@
  * Create or edit a user account (administrator).
  */
 import React, { useState } from 'react';
+import { FormProvider } from 'react-hook-form';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Alert, FooterInfo } from '@/components/display';
 import { FormDialogFooter, Modal, ModalPageShell } from '@/components/overlays';
 import { MODULE_ICONS } from '@/config/icons';
 import type { UserAdminRecord } from '../api/usersAdmin';
+import { useUserUpsertForm } from '../hooks/useUserUpsertForm';
 import { useUserUpsertSubmit } from '../hooks/useUserUpsertSubmit';
 import {
   canDisableUser,
   isLastActiveAdministrator,
   isUserActive,
 } from '../utils/userAccountGuards';
-import {
-  UserUpsertFormFields,
-  type UserUpsertFormState,
-} from './UserUpsertFormFields';
+import { UserUpsertFormFields } from './UserUpsertFormFields';
 
 const FORM_ID = 'user-upsert-form';
 
@@ -28,30 +27,6 @@ export interface UserUpsertModalProps {
   currentUserId: number | null;
 }
 
-const EMPTY_FORM: UserUpsertFormState = {
-  username: '',
-  name: '',
-  role: 'receptionist',
-  email: '',
-  phone: '',
-  password: '',
-};
-
-function formFromUser(user: UserAdminRecord | null): UserUpsertFormState {
-  if (!user) return EMPTY_FORM;
-  return {
-    username: user.username,
-    name: user.name,
-    role: user.role,
-    email: user.email ?? '',
-    phone: user.phone ?? '',
-    password: '',
-  };
-}
-
-/**
- * Disable or enable buttons shown in the edit footer (before save).
- */
 function AccountStatusActions({
   allowDisable,
   allowEnable,
@@ -97,10 +72,6 @@ function AccountStatusActions({
   return null;
 }
 
-/**
- * Modal form for creating and updating users, including role and disable/enable.
- * Remount from the parent with a key when the target user changes.
- */
 export const UserUpsertModal: React.FC<UserUpsertModalProps> = ({
   isOpen,
   onClose,
@@ -109,7 +80,7 @@ export const UserUpsertModal: React.FC<UserUpsertModalProps> = ({
   currentUserId,
 }) => {
   const isEdit = user != null;
-  const [form, setForm] = useState<UserUpsertFormState>(() => formFromUser(user));
+  const form = useUserUpsertForm(user);
   const [confirmingDisable, setConfirmingDisable] = useState(false);
   const { isSubmitting, setActive, handleSubmit } = useUserUpsertSubmit({
     user,
@@ -120,7 +91,8 @@ export const UserUpsertModal: React.FC<UserUpsertModalProps> = ({
   const lastActiveAdmin = isEdit && user ? isLastActiveAdministrator(user, users) : false;
   const allowDisable = isEdit && user ? canDisableUser(user, currentUserId, users) : false;
   const allowEnable = isEdit && user ? !isUserActive(user) : false;
-  const modalTitle = isEdit && user ? form.name.trim() || user.name : 'New user';
+  const draftName = form.watch('name')?.trim() ?? '';
+  const modalTitle = isEdit && user ? draftName || user.name : 'New user';
   const modalSubtitle = confirmingDisable
     ? 'Disable this account?'
     : isEdit
@@ -171,15 +143,15 @@ export const UserUpsertModal: React.FC<UserUpsertModalProps> = ({
             <form id={FORM_ID} className="hidden" onSubmit={handleSubmit} />
           </>
         ) : (
-          <UserUpsertFormFields
-            formId={FORM_ID}
-            isEdit={isEdit}
-            user={user}
-            form={form}
-            roleLocked={lastActiveAdmin}
-            onChange={patch => setForm(prev => ({ ...prev, ...patch }))}
-            onSubmit={handleSubmit}
-          />
+          <FormProvider {...form}>
+            <UserUpsertFormFields
+              formId={FORM_ID}
+              isEdit={isEdit}
+              user={user}
+              roleLocked={lastActiveAdmin}
+              onSubmit={handleSubmit}
+            />
+          </FormProvider>
         )}
       </ModalPageShell>
     </Modal>

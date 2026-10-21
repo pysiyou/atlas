@@ -8,10 +8,11 @@ import { createFilterOptions } from '@/utils/filtering';
 import { ICONS } from '@/config/icons';
 import { FORM_FIELD_LABEL } from '@/theme/recipes';
 import { FIELD_ERROR, TONE } from '@/theme/recipes';
-import type { PatientFormSectionProps } from '../patientFormTypes';
 import { patientFieldError } from '../patientFormFieldError';
+import { usePatientFormSection } from '../hooks/usePatientFormSection';
 
-export const DemographicsSection: React.FC<PatientFormSectionProps> = ({ control, errors }) => {
+export const DemographicsSection: React.FC = () => {
+  const { control, errors } = usePatientFormSection();
   const { field: fullName } = useController({ control, name: 'fullName' });
   const { field: dateOfBirth } = useController({ control, name: 'dateOfBirth' });
   const { field: gender } = useController({ control, name: 'gender' });

@@ -6,8 +6,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import { useFilterState } from '@/hooks/filters/useFilterState';
-import { useQuickFilters } from '@/hooks/filters/useQuickFilters';
+import { useFilterState, useQuickFilters } from '@/hooks/filters';
 import { FilterControl as FilterControlView } from './FilterControl';
 import { QuickFilters } from './QuickFilters';
 import { FilterModal } from './FilterModal';

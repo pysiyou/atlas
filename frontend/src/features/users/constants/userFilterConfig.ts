@@ -1,7 +1,7 @@
 /**
  * User directory filter options and placeholders.
  */
-import { SHARED_FILTER_PLACEHOLDERS } from '@/components/filters';
+import { SHARED_FILTER_PLACEHOLDERS } from '@/config/filterPlaceholders';
 import { USER_ROLE_CONFIG, USER_ROLE_VALUES, type UserRole } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
 

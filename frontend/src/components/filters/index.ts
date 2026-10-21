@@ -1,14 +1,7 @@
 /**
- * Filters — bar, modal, and control dispatch.
+ * Filters — bar, modal, and control dispatch (UI only).
+ * Placeholders: `@/config/filterPlaceholders`. Hooks: `@/hooks/filters`.
  */
-
-export {
-  ORDER_FILTER_PLACEHOLDERS,
-  PATIENT_FILTER_PLACEHOLDERS,
-  PAYMENT_FILTER_PLACEHOLDERS,
-  REPORT_FILTER_PLACEHOLDERS,
-  SHARED_FILTER_PLACEHOLDERS,
-} from '@/config/filterPlaceholders';
 
 export type {
   FilterControlType,
@@ -24,8 +17,6 @@ export type {
   FilterValues,
   ActiveFilterBadge,
 } from './types';
-
-export { useFilterState, useFilterBarBridge, useQuickFilters } from '@/hooks/filters';
 
 export { FilterBar, type FilterBarProps } from './FilterBar';
 export { FilterModal, type FilterModalProps } from './FilterModal';

@@ -1,6 +1,6 @@
 import { Avatar } from '@/components/primitives';
 import { ListCard } from '@/components/surfaces';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import { renderTableSecondaryRecordId } from '@/utils/presentationRenders';
 import { OrderStatusBadge } from '@/features/orders';
 import { PaymentMethodBadge, PaymentStatusBadge } from './PaymentStatusBadge';

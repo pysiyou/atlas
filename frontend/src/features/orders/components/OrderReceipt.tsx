@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import { PaymentMethodBadge, PaymentStatusBadge } from '@/features/payments';
 import { cn, displayId, formatCurrency, formatDateTime } from '@/utils';
 import { getActiveTests, getActiveTotal } from '../utils/orderCalculator';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import type { TableViewConfig, CardComponentProps } from '@/components/data-table';
 import {
   buildViews,

@@ -4,7 +4,7 @@
  */
 
 import type { ReactNode } from 'react';
-import { RecordId, type RecordIdProps } from '@/features/shared/components/RecordId';
+import { RecordId, type RecordIdProps } from '@/features/shared';
 import { Text } from '@/components/layout/Text';
 import { PRESENTATION_STACK_CLASS } from '@/theme/recipes';
 import { cn } from '@/utils/cn';

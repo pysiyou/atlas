@@ -1,5 +1,5 @@
 import { ListCard } from '@/components/surfaces';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import { CatalogCategoryBadge, CatalogSampleTypeBadge } from './CatalogStatusBadge';
 import type { CardComponentProps } from '@/components/data-table';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';

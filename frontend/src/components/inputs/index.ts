@@ -16,7 +16,6 @@ export {
 } from '@/theme/recipes';
 export * from './DateInput';
 export * from './DatePicker';
-export { DatePicker as DateFilter } from './DatePicker';
 export * from './TextInput';
 export { SearchTextInput, type SearchTextInputProps } from './TextInput';
 export * from './ChipSelectGroup';

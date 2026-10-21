@@ -2,7 +2,7 @@
  * Catalog test metadata badges (category, sample type, lifecycle status).
  */
 
-import { StatusValueBadge, type StatusValueBadgeProps } from '@/features/shared/components/StatusValueBadge';
+import { StatusValueBadge, type StatusValueBadgeProps } from '@/features/shared';
 
 export function CatalogCategoryBadge({
   category,

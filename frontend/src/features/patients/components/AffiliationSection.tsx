@@ -11,16 +11,16 @@ import { AffiliationPlanSelector } from './AffiliationPlanSelector';
 import { FIELD_ERROR, RADIUS, SHADOW, SURFACE, TONE } from '@/theme/recipes';
 import type { PatientAffiliationSectionProps } from '../patientFormTypes';
 import { patientFieldError } from '../patientFormFieldError';
+import { usePatientFormSection } from '../hooks/usePatientFormSection';
 
 export const AffiliationSection: React.FC<PatientAffiliationSectionProps> = ({
-  control,
-  errors,
   setValue,
   existingAffiliation,
   affiliationEnabled,
   onAffiliationEnabledChange,
   onRenew,
 }) => {
+  const { control, errors } = usePatientFormSection();
   const affiliation = useWatch({ control, name: 'affiliation' });
   const duration = affiliation?.duration ?? undefined;
 

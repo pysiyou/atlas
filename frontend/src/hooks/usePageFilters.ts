@@ -4,7 +4,7 @@
 
 import { useCallback, useEffect, useMemo } from 'react';
 import type { FilterConfig, FilterValues } from '@/components/filters/types';
-import { useFilterState } from '@/components/filters/useFilterState';
+import { useFilterState } from '@/hooks/filters';
 import { mergeUrlFiltersIntoValues, type UrlFilterKey } from '@/utils/filters';
 import { useUrlFilters } from './useUrlFilters';
 

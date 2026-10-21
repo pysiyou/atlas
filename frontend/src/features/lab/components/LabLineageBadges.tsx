@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { Badge, Icon } from '@/components/primitives';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import type { BadgeSize } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 import { WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';

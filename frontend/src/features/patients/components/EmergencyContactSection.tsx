@@ -7,10 +7,11 @@ import { RELATIONSHIP_VALUES, RELATIONSHIP_CONFIG, type Relationship } from '@/t
 import { ICONS } from '@/config/icons';
 import { FORM_FIELD_LABEL } from '@/theme/recipes';
 import { FIELD_ERROR, TONE } from '@/theme/recipes';
-import type { PatientFormSectionProps } from '../patientFormTypes';
 import { patientFieldError } from '../patientFormFieldError';
+import { usePatientFormSection } from '../hooks/usePatientFormSection';
 
-export const EmergencyContactSection: React.FC<PatientFormSectionProps> = ({ control, errors }) => {
+export const EmergencyContactSection: React.FC = () => {
+  const { control, errors } = usePatientFormSection();
   const { field: fullName } = useController({ control, name: 'emergencyContact.fullName' });
   const { field: relationship } = useController({ control, name: 'emergencyContact.relationship' });
   const { field: phone } = useController({ control, name: 'emergencyContact.phone' });
