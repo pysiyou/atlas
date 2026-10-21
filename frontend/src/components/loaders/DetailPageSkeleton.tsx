@@ -22,6 +22,7 @@ export interface DetailSkeletonSection {
 export type DetailPageSkeletonVariant = 'responsive-detail' | 'balanced-grid' | 'workflow-grid';
 
 /** Fallback when responsive/balanced variants render without feature-specific sections. */
+// eslint-disable-next-line react-refresh/only-export-components -- shared with feature skeleton configs
 export const DEFAULT_DETAIL_SKELETON_SECTIONS: DetailSkeletonSection[] = [
   { preset: 'catalog.detail.testOverview', rows: 6, layout: 'column' },
 ];

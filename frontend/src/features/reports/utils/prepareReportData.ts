@@ -5,7 +5,7 @@ import { RESULT_NOT_AVAILABLE } from '../types';
 import { companyConfig } from '@/config/company';
 import { isDateInInclusiveRange } from '@/utils/date';
 import { calculateAge } from '@/utils/string';
-import { INACTIVE_REPORTABLE_TEST_STATUSES } from '@/features/orders/utils/orderCalculator';
+import { INACTIVE_REPORTABLE_TEST_STATUSES } from '@/features/orders/constants/reportableTestStatus';
 
 interface SampleLookup {
   (sampleId: number): { status: string; collectedAt?: string; collectedBy?: string } | undefined;

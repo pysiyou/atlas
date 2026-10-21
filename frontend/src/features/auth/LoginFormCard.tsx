@@ -71,7 +71,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
               <Icon name={ICONS.ui.appLogo} className="w-6 h-6 text-auth-fg" />
             </div>
             <div>
-              <h1 className="font-display text-2xl text-auth-fg">{company.company.name}</h1>
+              <h1 className={AUTH_TYPE.mobileBrandTitle}>{company.company.name}</h1>
               <p className={AUTH_TYPE.companySubtitle}>
                 {company.company.subtitle}
               </p>

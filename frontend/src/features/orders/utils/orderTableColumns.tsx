@@ -5,9 +5,10 @@
 import type { ReactNode } from 'react';
 import type { OrderTest, PaymentStatus, PriorityLevel, OrderStatus } from '@/types';
 import type { StatusPresentation } from '@/types/labProjection';
-import { COLUMN_SIZE } from '@/components/data-table';
+import { COLUMN_SIZE, TABLE_COLUMN_WIDTH } from '@/components/data-table';
 import { createIdColumn, createBadgeColumn } from '@/components/data-table/columnHelpers';
 import type { ColumnConfig } from '@/components/data-table/types';
+import { BADGE } from '@/components/theme/recipes';
 import {
   OrderPriorityBadge,
   OrderStatusBadge,
@@ -132,7 +133,7 @@ export function createOrderSharedColumns<T>(
     orderDate: {
       key: 'orderDate',
       header: ORDER_TABLE_COLUMN_HEADERS.orderDate,
-      width: COLUMN_SIZE.md,
+      width: TABLE_COLUMN_WIDTH.datetime,
       sortable: true,
       accessor: item => accessors.getOrderDate(item),
       render: item => renderOrderDateCell(accessors.getOrderDate(item)),
@@ -143,7 +144,13 @@ export function createOrderSharedColumns<T>(
     columns.priority = createBadgeColumn<T>(
       'priority',
       ORDER_TABLE_COLUMN_HEADERS.priority,
-      item => <OrderPriorityBadge priority={accessors.getPriority!(item)} size="xs" className="border-none" />,
+      item => (
+        <OrderPriorityBadge
+          priority={accessors.getPriority!(item)}
+          size="xs"
+          className={BADGE.tableEmbed}
+        />
+      ),
       {
         sortable: true,
         width: COLUMN_SIZE.sm,

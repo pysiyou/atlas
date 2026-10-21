@@ -6,7 +6,11 @@ import type { MouseEvent, ReactNode } from 'react';
 import type { NavigateFunction } from 'react-router-dom';
 import { EntityId } from '@/components/display/EntityId';
 import { formatCurrency } from '@/utils';
-import { renderDateTimeCell, renderPatientNameBlock } from '@/utils/tableColumnRenders';
+import {
+  renderDateTimeCell,
+  renderPatientNameBlock,
+  TABLE_PRIMARY_CELL_CLASS,
+} from '@/utils/tableColumnRenders';
 import { ROUTES } from '@/config';
 import type { OrderTest } from '@/types';
 import { TABLE_TYPE } from '@/components/theme/recipes';
@@ -119,7 +123,7 @@ export function renderOrderTestsBlock(
 
   return (
     <div className="min-w-0 font-normal">
-      <div className="text-text-primary truncate font-normal">
+      <div className={TABLE_PRIMARY_CELL_CLASS}>
         {activeCount} test{activeCount !== 1 ? 's' : ''}
       </div>
       {countFirstSecondary ? (
@@ -144,9 +148,6 @@ export function renderOrderTotalPriceInline(totalPrice: number): ReactNode {
 }
 
 export function renderOrderDateCell(date: string | Date | null | undefined): ReactNode {
-  if (!date) {
-    return null;
-  }
   return renderDateTimeCell(date);
 }
 

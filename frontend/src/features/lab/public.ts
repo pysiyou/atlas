@@ -22,11 +22,16 @@ export { getLabTabPath, getLaneVisual, getStageVisual, getKpiStageVisual, isLabW
 export type { LabTabId, LabTimelineLane, LabWorkflowKpiStage, LabWorkflowStage } from './constants/labConstants';
 
 export { ResultsParameterGrid } from './components/ResultsParameterGrid';
+export { ResultValueAnnotations } from './components/ResultValueAnnotations';
 
 export { getLabQueueUrl, getLabQueueUrlForTest, getLabQueueUrlForSample, getLabQueueUrlForOrder, hasTestResults } from './utils/labSearchAndLinks';
 export { formatVolume } from './utils/labSample';
 export { formatRejectionCriteriaList } from './utils/catalogRejectionCriteria';
-export { parseResultEntry, statusMapFromFlags } from './utils/labResult';
+export {
+  getParameterReferenceIntervalLines,
+  parseResultEntry,
+  statusMapFromFlags,
+} from './utils/labResult';
 
 export { LaboratoryPage } from './pages/LaboratoryPage';
 

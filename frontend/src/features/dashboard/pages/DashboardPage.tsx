@@ -16,7 +16,8 @@ import { buildDashboardStats } from '../components/buildDashboardStats';
 import { DashboardOrdersInProgressBanner } from '../components/DashboardOrdersInProgressBanner';
 import { DashboardRecentOrders } from '../components/DashboardRecentOrders';
 import { SkeletonCard } from '@/components/loaders';
-import { TYPE, WORKSPACE } from '@/components/theme/recipes';
+import { PageHeader } from '@/components/layout';
+import { WORKSPACE } from '@/components/theme/recipes';
 
 function DashboardLoadingSkeleton() {
   return (
@@ -55,14 +56,11 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className={WORKSPACE.page}>
-      <div className="shrink-0 h-14 min-h-14 max-h-14 flex flex-col justify-center">
-        <h1 className={`${TYPE.pageTitle} font-bold truncate`}>
-          Welcome back, {currentUser?.name}!
-        </h1>
-        <p className={`${TYPE.amount} text-text-secondary truncate`}>
-          Here&apos;s what&apos;s happening today — {formatDate(new Date())}
-        </p>
-      </div>
+      <PageHeader
+        variant="bar"
+        title={`Welcome back, ${currentUser?.name}!`}
+        subtitle={`Here's what's happening today — ${formatDate(new Date())}`}
+      />
 
       <div className="flex-1 min-h-0 overflow-y-auto">
         <div className="space-y-space-6">

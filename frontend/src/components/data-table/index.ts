@@ -7,6 +7,7 @@ export {
   createColumn,
   createIdColumn,
   createBadgeColumn,
+  createDateTimeColumn,
   pickColumns,
   buildViews,
   resolvePaginationConfig,
@@ -26,6 +27,7 @@ export {
   TEXT_SIZE,
   TABLE_TEXT_SIZE,
 } from './constants';
+export { TABLE_COLUMN_WIDTH } from './columnWidthTokens';
 export type {
   TableProps,
   TableViewConfig,

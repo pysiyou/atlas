@@ -72,9 +72,12 @@ interface ModalProviderProps {
 export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
   const [stack, setStack] = useState<ModalStack>([]);
   const stackRef = useRef(stack);
-  stackRef.current = stack;
 
   const pendingOpenTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    stackRef.current = stack;
+  }, [stack]);
 
   const clearPendingOpen = useCallback(() => {
     if (pendingOpenTimerRef.current != null) {

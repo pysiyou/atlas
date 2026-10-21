@@ -10,7 +10,7 @@ import { buildViews, COLUMN_SIZE } from '@/components/data-table';
 import { formatCurrency } from '@/utils';
 import type { TestSummary } from '@/types';
 import { CatalogCard } from '../components/CatalogCard';
-import { TABLE_TYPE } from '@/components/theme/recipes';
+import { BADGE, TABLE_TYPE } from '@/components/theme/recipes';
 
 
 const CATALOG_VIEWS = {
@@ -40,7 +40,7 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
       accessor: (test: TestSummary) => test.name,
       render: (test: TestSummary) => (
         <div className="min-w-0 font-normal">
-          <div className="text-text-primary truncate font-normal">{test.name}</div>
+          <div className={`${TABLE_TYPE.cell} truncate font-normal`}>{test.name}</div>
           {test.synonyms && test.synonyms.length > 0 && (
             <div className={`${TABLE_TYPE.meta} truncate font-normal`}>
               {test.synonyms.slice(0, 2).join(', ')}
@@ -72,7 +72,9 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
       width: COLUMN_SIZE.lg,
       sortable: true,
       accessor: (test: TestSummary) => test.category,
-      render: (test: TestSummary) => <CatalogCategoryBadge category={test.category} size="xs" className="border-none" />,
+      render: (test: TestSummary) => (
+        <CatalogCategoryBadge category={test.category} size="xs" className={BADGE.tableEmbed} />
+      ),
     },
     sampleType: {
       key: 'sampleType',

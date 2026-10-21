@@ -3,6 +3,7 @@
  */
 
 import React from 'react';
+import { RADIUS } from '@/components/theme/recipes';
 import { Skeleton, SkeletonText } from './Skeleton';
 
 export interface ModalBodySkeletonProps {
@@ -16,7 +17,7 @@ export const ModalBodySkeleton: React.FC<ModalBodySkeletonProps> = ({
 }) => (
   <div className={`space-y-space-5 ${className}`.trim()} aria-busy="true" aria-label={ariaLabel}>
     <SkeletonText lines={2} />
-    <Skeleton height={120} className="w-full rounded-field" />
-    <Skeleton height={160} className="w-full rounded-field" />
+    <Skeleton height={120} className={`w-full ${RADIUS.field}`} />
+    <Skeleton height={160} className={`w-full ${RADIUS.field}`} />
   </div>
 );

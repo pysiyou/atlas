@@ -4,12 +4,12 @@
  */
 
 import type { OrderTest } from '@/types';
+import { INACTIVE_REPORTABLE_TEST_STATUSES } from '../constants/reportableTestStatus';
 
 /** Billing / queue: cancelled lines are inactive. */
 export const INACTIVE_BILLABLE_TEST_STATUSES = new Set(['removed', 'superseded', 'cancelled']);
 
-/** Reports: cancelled lines can still appear. Matches backend eligibility. */
-export const INACTIVE_REPORTABLE_TEST_STATUSES = new Set(['removed', 'superseded']);
+export { INACTIVE_REPORTABLE_TEST_STATUSES };
 
 export const isActiveTest = (test: OrderTest): boolean =>
   !INACTIVE_BILLABLE_TEST_STATUSES.has(test.status);

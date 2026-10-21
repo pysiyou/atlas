@@ -98,11 +98,14 @@ export const SampleCollectionQueue: React.FC = () => {
 
   useEffect(() => {
     const entitySearch = getLabQueueSearchFromUrlFilters(urlFilters, urlSearch, true);
+    // URL-driven search must follow filter hydration from useLabQueueFilters.
+    /* eslint-disable react-hooks/set-state-in-effect -- intentional URL → field sync */
     if (hasActiveEntityUrlFilters(urlFilters)) {
       setSearchQuery(entitySearch);
       return;
     }
     setSearchQuery(urlSearch);
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, [urlFilters, urlSearch]);
 
   const filteredDisplays = filteredDisplaysRaw as SampleCollectionQueueItem[];

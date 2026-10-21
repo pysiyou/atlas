@@ -1,7 +1,7 @@
 import React from 'react';
 import { EntityId } from '@/components/display';
 import type { TableViewConfig, CardComponentProps } from '@/components/data-table';
-import { buildViews, COLUMN_SIZE } from '@/components/data-table';
+import { buildViews, COLUMN_SIZE, TABLE_COLUMN_WIDTH } from '@/components/data-table';
 import { cn, formatCurrency } from '@/utils';
 import { renderDateTimeCell } from '@/utils/tableColumnRenders';
 import { getTestName, getTestProperty } from '@/features/catalog/testLookup';
@@ -9,7 +9,7 @@ import { CatalogCategoryBadge } from '@/features/catalog';
 import { OrderTestStatusBadge } from '../components/OrderDomainBadges';
 import { getOrderTestLineageRowClass } from '../utils/orderTestLineage';
 import type { OrderTest, TestSummary } from '@/types';
-import { TABLE_TYPE, RADIUS, TYPE } from '@/components/theme/recipes';
+import { BADGE, TABLE_TYPE, RADIUS, TYPE } from '@/components/theme/recipes';
 
 
 const SIMPLE_VIEWS = {
@@ -45,7 +45,7 @@ function renderOrderTestIdentity(test: OrderTest, testCatalog: TestSummary[]) {
 function renderTestCategoryBadge(test: OrderTest, testCatalog: TestSummary[]) {
   const category = getTestProperty(test.testCode, 'category', testCatalog);
   if (!category) return null;
-  return <CatalogCategoryBadge category={category} size="xs" className="border-none" />;
+  return <CatalogCategoryBadge category={category} size="xs" className={BADGE.tableEmbed} />;
 }
 
 function createTestTableCard(testCatalog: TestSummary[]): React.FC<CardComponentProps<OrderTest>> {
@@ -132,7 +132,7 @@ export function createTestsTableConfig(
     updatedAt: {
       key: 'updatedAt',
       header: 'Date',
-      width: COLUMN_SIZE.md,
+      width: TABLE_COLUMN_WIDTH.datetime,
       accessor: (test: OrderTest) => test.updatedAt ?? '',
       render: (test: OrderTest) => renderDateTimeCell(test.updatedAt),
     },

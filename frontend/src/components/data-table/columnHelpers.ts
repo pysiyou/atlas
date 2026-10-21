@@ -2,8 +2,26 @@
  * Column registry helpers and pagination normalization.
  */
 
-import type { ReactNode } from 'react';
+import { createElement, type ReactNode } from 'react';
+import { TABLE_TYPE } from '@/components/theme/recipes';
+import { formatDateTime } from '@/utils';
 import { COLUMN_SIZE } from './constants';
+import { TABLE_COLUMN_WIDTH } from './columnWidthTokens';
+
+const DATETIME_CELL_CLASS = `${TABLE_TYPE.datetime} truncate block font-normal`;
+
+function renderStandardDateTimeCell(
+  date: string | Date | null | undefined
+): ReactNode {
+  if (!date) {
+    return createElement('span', { className: `${TABLE_TYPE.meta} font-normal` }, '—');
+  }
+  return createElement(
+    'span',
+    { className: DATETIME_CELL_CLASS },
+    formatDateTime(date)
+  );
+}
 import type {
   ColumnConfig,
   ColumnSizePreset,
@@ -48,8 +66,34 @@ export function createBadgeColumn<T>(
 ): ColumnConfig<T> {
   return createColumn(key, header, {
     ...options,
-    width: options.width ?? COLUMN_SIZE.sm,
+    width: options.width ?? TABLE_COLUMN_WIDTH.badge,
     render: item => renderBadge(item),
+  });
+}
+
+/**
+ * Datetime column with standard width and {@link renderDateTimeCell} styling.
+ * Pass `getValue` for the raw sort/accessor value; optional custom `render` overrides display.
+ */
+export function createDateTimeColumn<T>(
+  key: string,
+  header: string,
+  getValue: (item: T) => string | Date | null | undefined,
+  options: Omit<CreateColumnOptions<T>, 'render' | 'accessor'> & {
+    accessor?: (item: T) => string | number;
+  } = {}
+): ColumnConfig<T> {
+  const { accessor, ...rest } = options;
+  return createColumn(key, header, {
+    ...rest,
+    width: rest.width ?? TABLE_COLUMN_WIDTH.datetime,
+    sortable: rest.sortable ?? true,
+    accessor: accessor ?? (item => {
+      const value = getValue(item);
+      if (value == null || value === '') return '';
+      return typeof value === 'string' ? value : value.toISOString();
+    }),
+    render: item => renderStandardDateTimeCell(getValue(item)),
   });
 }
 

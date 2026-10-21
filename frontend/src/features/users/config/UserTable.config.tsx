@@ -3,10 +3,14 @@
  */
 import { Badge } from '@/components/primitives/Badge';
 import type { TableViewConfig } from '@/components/data-table';
-import { buildViews, COLUMN_SIZE } from '@/components/data-table';
+import {
+  buildViews,
+  COLUMN_SIZE,
+  createDateTimeColumn,
+  TABLE_COLUMN_WIDTH,
+} from '@/components/data-table';
 import { TABLE_TYPE } from '@/components/theme/recipes';
 import { USER_ROLE_CONFIG, type UserRole } from '@/types';
-import { formatDateTime } from '@/utils';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import type { UserAdminRecord } from '../api/usersAdmin';
 import { UserCard } from '../components/UserCard';
@@ -17,10 +21,6 @@ const USER_VIEWS = {
   medium: ['name', 'username', 'role', 'status', 'lastLogin'],
   compact: ['name', 'role', 'status'],
 } as const;
-
-function formatUserTimestamp(value: string | null | undefined): string {
-  return formatDateTime(value) || '—';
-}
 
 /**
  * Build the user directory table config.
@@ -51,7 +51,7 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
     role: {
       key: 'role',
       header: 'Role',
-      width: COLUMN_SIZE.lg,
+      width: TABLE_COLUMN_WIDTH.badgeWide,
       sortable: true,
       accessor: (user: UserAdminRecord) => user.role,
       render: (user: UserAdminRecord) => {
@@ -66,7 +66,7 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
     status: {
       key: 'status',
       header: 'Status',
-      width: COLUMN_SIZE.sm,
+      width: TABLE_COLUMN_WIDTH.badge,
       sortable: true,
       accessor: (user: UserAdminRecord) => (isUserActive(user) ? 'active' : 'disabled'),
       render: (user: UserAdminRecord) => {
@@ -88,30 +88,12 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
         <div className={`${TABLE_TYPE.meta} truncate font-normal`}>{user.email ?? '—'}</div>
       ),
     },
-    lastLogin: {
-      key: 'lastLogin',
-      header: 'Last Login',
-      width: COLUMN_SIZE.md,
-      sortable: true,
-      accessor: (user: UserAdminRecord) => user.loggedInAt ?? '',
-      render: (user: UserAdminRecord) => (
-        <div className={`${TABLE_TYPE.datetime} truncate font-normal`}>
-          {formatUserTimestamp(user.loggedInAt)}
-        </div>
-      ),
-    },
-    created: {
-      key: 'created',
-      header: 'Created',
-      width: COLUMN_SIZE.md,
-      sortable: true,
-      accessor: (user: UserAdminRecord) => user.createdAt,
-      render: (user: UserAdminRecord) => (
-        <div className={`${TABLE_TYPE.datetime} truncate font-normal`}>
-          {formatUserTimestamp(user.createdAt)}
-        </div>
-      ),
-    },
+    lastLogin: createDateTimeColumn<UserAdminRecord>(
+      'lastLogin',
+      'Last Login',
+      user => user.loggedInAt
+    ),
+    created: createDateTimeColumn<UserAdminRecord>('created', 'Created', user => user.createdAt),
   };
 
   return {
