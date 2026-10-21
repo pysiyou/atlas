@@ -1,73 +1,37 @@
 /**
- * Lab queue filters: URL search, apply logic, filter state, page wiring, entity search sync.
+ * Lab queue filters: URL bar codec, client apply, and page wiring.
+ *
+ * Worklist tabs use a two-step pattern (avoids a worklist ↔ items cycle):
+ * 1. `useLabQueueBarFilters(workflowType)` → `serverFilters` for the worklist API
+ * 2. After items load → `useLabQueuePageFilters({ items, workflowType, bar })`
  */
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { usePageFilters } from '@/hooks/usePageFilters';
-import type { SampleStatus, TestStatus } from '@/types';
+import { useDebouncedValue } from '@/hooks/useDebouncedValue';
+import { usePageFilters } from '@/hooks';
+import type { PriorityLevel, SampleStatus, TestStatus } from '@/types';
 import { isDateInInclusiveRange } from '@/utils';
 import type { UrlFilters } from '@/utils/filters';
+import { LAB_CONFIG } from '../constants/labConstants';
 import { LAB_URL_FILTER_KEYS } from '../constants/labFilterConfigs';
 import { compareQueuePriority } from '../utils/labQueue';
+import {
+  decodeLabQueueBarFilters,
+  writeLabQueueBarFilters,
+  type LabQueueBarFilters,
+} from '../utils/labQueueUrlCodec';
 import {
   getLabQueueSearchFromUrlFilters,
   hasActiveRecordUrlFilters,
   resolveCollectionStatusFilters,
+  worklistServerFilters,
 } from '../utils/labSearchAndLinks';
 import {
   getLabQueueStageConfig,
   type LabQueueItemByStage,
   type LabQueueWorkflowType,
 } from '../utils/labQueueStageFilterConfig';
-
-/** Reads the `search` query param used for lab queue deep-links. */
-export function useLabQueueUrlSearch(): string {
-  const [searchParams] = useSearchParams();
-  return searchParams.get('search') ?? '';
-}
-
-export interface UseLabQueueFilterStateOptions<T, S> {
-  items: T[];
-  getOrderDate: (item: T) => string | undefined;
-  getSampleType: (item: T) => string | undefined;
-  getStatus: (item: T) => S | undefined;
-  searchFilterFn: (item: T, query: string) => boolean;
-  initialStatusFilters?: S[];
-  /** Pre-fill search from URL query param (e.g. cross-links from order detail). */
-  initialSearchQuery?: string;
-  /** Sort by priority (urgent first) then oldest queue timestamp. */
-  sortByQueuePriority?: boolean;
-  getPriority?: (item: T) => string | undefined;
-  getQueueSince?: (item: T) => string | undefined;
-  /** When set, search text is controlled by the parent (e.g. server-side sample lookup). */
-  searchQuery?: string;
-  onSearchChange?: (value: string) => void;
-  dateRange?: [Date, Date] | null;
-  onDateRangeChange?: (value: [Date, Date] | null) => void;
-  sampleTypeFilters?: string[];
-  onSampleTypeFiltersChange?: (value: string[]) => void;
-  /** Skip client-side search filtering when the server already applied the query. */
-  skipSearchFilter?: boolean;
-  /** Skip client-side date filtering when the server already applied the window. */
-  skipDateFilter?: boolean;
-  /** Skip client-side sample-type filtering when the server already applied it. */
-  skipSampleTypeFilter?: boolean;
-  /** When set, overrides `statusFilters` during apply (e.g. collection lookup vs queue). */
-  appliedStatusFilters?: S[];
-  /** Collection tab: historical sample search — show all statuses unless user filters. */
-  collectionSampleLookup?: boolean;
-  /** URL entity filters for targeting specific records */
-  urlFilters?: UrlFilters;
-  /** Get test/item ID for testId filtering */
-  getId?: (item: T) => number | undefined;
-  /** Get order ID for orderId filtering */
-  getOrderId?: (item: T) => number | undefined;
-  /** Get sample ID for sampleId filtering */
-  getSampleId?: (item: T) => number | undefined;
-  /** Collection tab: prefer sample display id in search when sampleId is in the URL */
-  preferSampleInSearch?: boolean;
-}
 
 export interface LabQueueFilterState<S> {
   searchQuery: string;
@@ -171,130 +135,245 @@ export function applyLabQueueFilters<T, S>({
   return out;
 }
 
-export function useLabQueueFilterState<T, S>({
-  items,
-  getOrderDate,
-  getSampleType,
-  getStatus,
-  searchFilterFn,
-  initialStatusFilters = [],
-  initialSearchQuery = '',
-  sortByQueuePriority = false,
-  getPriority,
-  getQueueSince,
-  searchQuery: controlledSearchQuery,
-  onSearchChange: controlledOnSearchChange,
-  dateRange: controlledDateRange,
-  onDateRangeChange: controlledOnDateRangeChange,
-  sampleTypeFilters: controlledSampleTypeFilters,
-  onSampleTypeFiltersChange: controlledOnSampleTypeFiltersChange,
-  skipSearchFilter = false,
-  skipDateFilter = false,
-  skipSampleTypeFilter = false,
-  appliedStatusFilters,
-  collectionSampleLookup = false,
-  urlFilters,
-  getId,
-  getOrderId,
-  getSampleId,
-  preferSampleInSearch = false,
-}: UseLabQueueFilterStateOptions<T, S>) {
-  const searchFromEntityFilter = useMemo(
-    () => getLabQueueSearchFromUrlFilters(urlFilters, initialSearchQuery, preferSampleInSearch),
-    [urlFilters, initialSearchQuery, preferSampleInSearch]
-  );
+type LabQueueClientStatus = SampleStatus | TestStatus | PriorityLevel;
 
-  const [internalSearchQuery, setInternalSearchQuery] = useState(searchFromEntityFilter);
-  const searchQuery = controlledSearchQuery ?? internalSearchQuery;
-  const setSearchQuery = controlledOnSearchChange ?? setInternalSearchQuery;
-  
-  useEffect(() => {
-    if (controlledSearchQuery !== undefined) return;
-    queueMicrotask(() => {
-      setInternalSearchQuery(searchFromEntityFilter);
-    });
-  }, [searchFromEntityFilter, controlledSearchQuery]);
+function useLabQueueFilteredItems<T extends LabQueueWorkflowType>(
+  items: LabQueueItemByStage<T>[],
+  bar: LabQueueBarState,
+  workflowType: T,
+): { filteredItems: LabQueueItemByStage<T>[]; filterState: LabQueueFilterState<LabQueueClientStatus> } {
+  const filterConfig = useMemo(() => getLabQueueStageConfig(workflowType), [workflowType]);
 
-  const [internalDateRange, setInternalDateRange] = useState<[Date, Date] | null>(null);
-  const dateRange = controlledDateRange !== undefined ? controlledDateRange : internalDateRange;
-  const setDateRange = controlledOnDateRangeChange ?? setInternalDateRange;
-  const [internalSampleTypeFilters, setInternalSampleTypeFilters] = useState<string[]>([]);
-  const sampleTypeFilters =
-    controlledSampleTypeFilters !== undefined ? controlledSampleTypeFilters : internalSampleTypeFilters;
-  const setSampleTypeFilters = controlledOnSampleTypeFiltersChange ?? setInternalSampleTypeFilters;
-  const [statusFilters, setStatusFilters] = useState<S[]>(initialStatusFilters);
-
-  const filterState = useMemo<LabQueueFilterState<S>>(
+  const filterState = useMemo<LabQueueFilterState<LabQueueClientStatus>>(
     () => ({
-      searchQuery,
-      dateRange,
-      sampleTypeFilters,
-      statusFilters,
+      searchQuery: bar.searchQuery,
+      dateRange: bar.dateRange,
+      sampleTypeFilters: bar.sampleTypeFilters,
+      statusFilters: bar.statusFilters as LabQueueClientStatus[],
     }),
-    [searchQuery, dateRange, sampleTypeFilters, statusFilters]
+    [bar],
   );
 
-  const filtersForApply = useMemo((): LabQueueFilterState<S> => {
-    // When entity URL filters are active, treat like sample lookup mode - clear default status filters
-    const hasEntityFilters = urlFilters && (urlFilters.testId || urlFilters.orderId || urlFilters.sampleId);
-    const isLookupMode = collectionSampleLookup || hasEntityFilters;
-    
-    const resolvedStatus: S[] = isLookupMode
-      ? (resolveCollectionStatusFilters(
-          true,
-          filterState.statusFilters as string[]
-        ) as S[])
-      : (appliedStatusFilters ?? filterState.statusFilters);
+  const filtersForApply = useMemo((): LabQueueFilterState<LabQueueClientStatus> => {
+    const hasEntityFilters =
+      bar.urlFilters &&
+      (bar.urlFilters.testId || bar.urlFilters.orderId || bar.urlFilters.sampleId);
+    const isLookupMode = bar.collectionSampleLookup || Boolean(hasEntityFilters);
+
+    const resolvedStatus: LabQueueClientStatus[] = isLookupMode
+      ? (resolveCollectionStatusFilters(true, filterState.statusFilters as string[]) as LabQueueClientStatus[])
+      : filterState.statusFilters;
+
     return {
       ...filterState,
       statusFilters: resolvedStatus,
     };
-  }, [filterState, appliedStatusFilters, collectionSampleLookup, urlFilters]);
+  }, [filterState, bar.collectionSampleLookup, bar.urlFilters]);
 
   const filteredItems = useMemo(
     () =>
-      applyLabQueueFilters({
+      applyLabQueueFilters<LabQueueItemByStage<T>, LabQueueClientStatus>({
         items,
         filters: filtersForApply,
-        getOrderDate,
-        getSampleType,
-        getStatus,
-        searchFilterFn,
-        sortByQueuePriority,
-        getPriority,
-        getQueueSince,
-        urlFilters,
-        getId,
-        getOrderId,
-        getSampleId,
+        getOrderDate: filterConfig.callbacks.getOrderDate as (item: LabQueueItemByStage<T>) => string | undefined,
+        getSampleType: filterConfig.callbacks.getSampleType as (item: LabQueueItemByStage<T>) => string | undefined,
+        getStatus: filterConfig.callbacks.getStatus as (item: LabQueueItemByStage<T>) => LabQueueClientStatus | undefined,
+        searchFilterFn: filterConfig.callbacks.searchFilterFn as (
+          item: LabQueueItemByStage<T>,
+          query: string,
+        ) => boolean,
+        sortByQueuePriority: filterConfig.sortByPriority,
+        getPriority: filterConfig.callbacks.getPriority as (item: LabQueueItemByStage<T>) => string | undefined,
+        getQueueSince: filterConfig.callbacks.getQueueSince as (item: LabQueueItemByStage<T>) => string | undefined,
+        urlFilters: bar.urlFilters,
+        getId: filterConfig.callbacks.getId as ((item: LabQueueItemByStage<T>) => number | undefined) | undefined,
+        getOrderId: filterConfig.callbacks.getOrderId as (item: LabQueueItemByStage<T>) => number | undefined,
+        getSampleId: filterConfig.callbacks.getSampleId as
+          | ((item: LabQueueItemByStage<T>) => number | undefined)
+          | undefined,
         applyStatusFilter: true,
-        skipSearchFilter,
-        skipDateFilter,
-        skipSampleTypeFilter,
+        skipSearchFilter: bar.skipSearchFilter,
+        skipDateFilter: bar.skipDateFilter,
+        skipSampleTypeFilter: bar.skipSampleTypeFilter,
       }),
-    [
-      items,
-      filtersForApply,
-      getOrderDate,
-      getSampleType,
-      getStatus,
-      searchFilterFn,
-      sortByQueuePriority,
-      getPriority,
-      getQueueSince,
-      skipSearchFilter,
-      skipDateFilter,
-      skipSampleTypeFilter,
-      urlFilters,
-      getId,
-      getOrderId,
-      getSampleId,
-    ]
+    [items, filtersForApply, filterConfig, bar],
   );
 
+  return { filteredItems, filterState };
+}
+
+function initialBarFiltersFromUrl(
+  searchParams: URLSearchParams,
+  workflowType: LabQueueWorkflowType,
+  urlFilters: UrlFilters,
+  defaultStatuses: readonly string[],
+): LabQueueBarFilters {
+  const decoded = decodeLabQueueBarFilters(searchParams, workflowType, defaultStatuses);
+  const searchQuery = hasActiveRecordUrlFilters(urlFilters)
+    ? getLabQueueSearchFromUrlFilters(
+        urlFilters,
+        decoded.searchQuery,
+        workflowType === 'collection',
+      )
+    : decoded.searchQuery;
+  return { ...decoded, searchQuery };
+}
+
+export interface LabQueueBarState {
+  searchQuery: string;
+  setSearchQuery: (value: string) => void;
+  dateRange: [Date, Date] | null;
+  setDateRange: (value: [Date, Date] | null) => void;
+  sampleTypeFilters: string[];
+  setSampleTypeFilters: (value: string[]) => void;
+  statusFilters: SampleStatus[] | TestStatus[] | PriorityLevel[];
+  setStatusFilters: (value: SampleStatus[] | TestStatus[] | PriorityLevel[]) => void;
+  urlFilters: UrlFilters;
+  clearUrlFilters: () => void;
+  setUrlFilter: (key: (typeof LAB_URL_FILTER_KEYS)[number], value: string | number | undefined) => void;
+  debouncedSearch: string;
+  trimmedSearch: string;
+  isSampleLookup: boolean;
+  isLookupBelowMin: boolean;
+  serverFilters: ReturnType<typeof worklistServerFilters>;
+  skipSearchFilter: boolean;
+  skipDateFilter: boolean;
+  skipSampleTypeFilter: boolean;
+  collectionSampleLookup: boolean;
+}
+
+/** Filter bar + URL state and worklist query params (no item list required). */
+export function useLabQueueBarFilters(workflowType: LabQueueWorkflowType): LabQueueBarState {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { urlFilters, clearUrlFilters, setUrlFilter } = usePageFilters({
+    urlFilterKeys: LAB_URL_FILTER_KEYS,
+  });
+
+  const filterConfig = useMemo(() => getLabQueueStageConfig(workflowType), [workflowType]);
+  const initialBarRef = useRef<LabQueueBarFilters | null>(null);
+  if (initialBarRef.current === null) {
+    initialBarRef.current = initialBarFiltersFromUrl(
+      searchParams,
+      workflowType,
+      urlFilters,
+      filterConfig.defaultStatuses,
+    );
+  }
+
+  const [searchQuery, setSearchQuery] = useState(() => initialBarRef.current!.searchQuery);
+  const [dateRange, setDateRange] = useState<[Date, Date] | null>(
+    () => initialBarRef.current!.dateRange,
+  );
+  const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>(
+    () => initialBarRef.current!.sampleTypeFilters,
+  );
+  const [statusFilters, setStatusFilters] = useState<
+    SampleStatus[] | TestStatus[] | PriorityLevel[]
+  >(() => [...initialBarRef.current!.statusFilters] as SampleStatus[] | TestStatus[] | PriorityLevel[]);
+
+  const debouncedSearch = useDebouncedValue(searchQuery, LAB_CONFIG.SEARCH_DEBOUNCE_MS);
+  const trimmedSearch = debouncedSearch.trim();
+  const isSampleLookup =
+    workflowType === 'collection' &&
+    trimmedSearch.length >= LAB_CONFIG.SAMPLE_LOOKUP_MIN_CHARS;
+  const isLookupBelowMin =
+    workflowType === 'collection' &&
+    trimmedSearch.length > 0 &&
+    trimmedSearch.length < LAB_CONFIG.SAMPLE_LOOKUP_MIN_CHARS;
+
+  const serverFilters = useMemo(
+    () =>
+      worklistServerFilters({
+        search:
+          workflowType === 'collection'
+            ? isSampleLookup
+              ? trimmedSearch
+              : undefined
+            : trimmedSearch || undefined,
+        dateRange,
+        sampleTypeFilters,
+      }),
+    [workflowType, isSampleLookup, trimmedSearch, dateRange, sampleTypeFilters],
+  );
+
+  const skipSearchFilter =
+    workflowType === 'collection' ? isSampleLookup : true;
+  const skipDateFilter = true;
+  const skipSampleTypeFilter = true;
+  const collectionSampleLookup = workflowType === 'collection' && isSampleLookup;
+
+  const skipUrlDecodeRef = useRef(false);
+  const persistSkipRef = useRef(true);
+
+  useEffect(() => {
+    if (skipUrlDecodeRef.current) {
+      skipUrlDecodeRef.current = false;
+      return;
+    }
+    const next = initialBarFiltersFromUrl(
+      searchParams,
+      workflowType,
+      urlFilters,
+      filterConfig.defaultStatuses,
+    );
+    /* eslint-disable react-hooks/set-state-in-effect -- URL back/forward and external edits */
+    setSearchQuery(next.searchQuery);
+    setDateRange(next.dateRange);
+    setSampleTypeFilters(next.sampleTypeFilters);
+    setStatusFilters(
+      [...next.statusFilters] as SampleStatus[] | TestStatus[] | PriorityLevel[],
+    );
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, [searchParams, urlFilters, workflowType, filterConfig.defaultStatuses]);
+
+  useEffect(() => {
+    const urlSearch = searchParams.get('search') ?? '';
+    const preferSample = workflowType === 'collection';
+    if (hasActiveRecordUrlFilters(urlFilters)) {
+      /* eslint-disable-next-line react-hooks/set-state-in-effect -- entity deep-link → search field */
+      setSearchQuery(getLabQueueSearchFromUrlFilters(urlFilters, urlSearch, preferSample));
+      return;
+    }
+    if (searchQuery !== debouncedSearch) {
+      return;
+    }
+    /* eslint-disable-next-line react-hooks/set-state-in-effect -- URL search param without entity filters */
+    setSearchQuery(urlSearch);
+  }, [urlFilters, searchParams, workflowType, debouncedSearch, searchQuery]);
+
+  useEffect(() => {
+    if (persistSkipRef.current) {
+      persistSkipRef.current = false;
+      return;
+    }
+    skipUrlDecodeRef.current = true;
+    setSearchParams(
+      prev => {
+        const params = new URLSearchParams(prev);
+        writeLabQueueBarFilters(
+          params,
+          {
+            searchQuery: debouncedSearch,
+            dateRange,
+            sampleTypeFilters,
+            statusFilters: statusFilters as string[],
+          },
+          workflowType,
+        );
+        return params;
+      },
+      { replace: true },
+    );
+  }, [
+    debouncedSearch,
+    dateRange,
+    sampleTypeFilters,
+    statusFilters,
+    workflowType,
+    setSearchParams,
+  ]);
+
   return {
-    filteredItems,
-    filterState,
     searchQuery,
     setSearchQuery,
     dateRange,
@@ -303,123 +382,63 @@ export function useLabQueueFilterState<T, S>({
     setSampleTypeFilters,
     statusFilters,
     setStatusFilters,
+    urlFilters,
+    clearUrlFilters,
+    setUrlFilter,
+    debouncedSearch,
+    trimmedSearch,
+    isSampleLookup,
+    isLookupBelowMin,
+    serverFilters,
+    skipSearchFilter,
+    skipDateFilter,
+    skipSampleTypeFilter,
+    collectionSampleLookup,
   };
 }
 
-/** Sync lab queue search field from URL entity filters and `search` query param. */
-export interface UseLabEntitySearchSyncOptions {
-  urlFilters: UrlFilters;
-  urlSearch: string;
-  preferSample: boolean;
-  setSearchQuery: (value: string) => void;
+export interface LabQueueFilterBarPropsOptions {
+  statusFilterKey?: 'status' | 'priority';
 }
 
-export function useLabEntitySearchSync({
-  urlFilters,
-  urlSearch,
-  preferSample,
-  setSearchQuery,
-}: UseLabEntitySearchSyncOptions): void {
-  useEffect(() => {
-    const entitySearch = getLabQueueSearchFromUrlFilters(urlFilters, urlSearch, preferSample);
-    /* eslint-disable react-hooks/set-state-in-effect -- URL → search field sync */
-    if (hasActiveRecordUrlFilters(urlFilters)) {
-      setSearchQuery(entitySearch);
-      return;
-    }
-    setSearchQuery(urlSearch);
-    /* eslint-enable react-hooks/set-state-in-effect */
-  }, [urlFilters, urlSearch, preferSample, setSearchQuery]);
+/** Props for {@link LabQueueFilters} from {@link useLabQueueBarFilters} state. */
+export function useLabQueueFilterBarProps(
+  bar: LabQueueBarState,
+  options?: LabQueueFilterBarPropsOptions,
+) {
+  const statusFilterKey = options?.statusFilterKey ?? 'status';
+  return useMemo(
+    () => ({
+      searchQuery: bar.searchQuery,
+      onSearchChange: bar.setSearchQuery,
+      dateRange: bar.dateRange,
+      onDateRangeChange: bar.setDateRange,
+      sampleTypeFilters: bar.sampleTypeFilters,
+      onSampleTypeFiltersChange: bar.setSampleTypeFilters,
+      statusFilters: bar.statusFilters,
+      onStatusFiltersChange: bar.setStatusFilters,
+      statusFilterKey,
+    }),
+    [bar, statusFilterKey],
+  );
 }
 
 export interface UseLabQueuePageFiltersOptions<T extends LabQueueWorkflowType> {
   items: LabQueueItemByStage<T>[];
   workflowType: T;
-  searchQuery?: string;
-  onSearchChange?: (value: string) => void;
-  dateRange?: [Date, Date] | null;
-  onDateRangeChange?: (value: [Date, Date] | null) => void;
-  sampleTypeFilters?: string[];
-  onSampleTypeFiltersChange?: (value: string[]) => void;
-  skipSearchFilter?: boolean;
-  skipDateFilter?: boolean;
-  skipSampleTypeFilter?: boolean;
-  appliedStatusFilters?: SampleStatus[] | TestStatus[];
-  collectionSampleLookup?: boolean;
+  bar: LabQueueBarState;
 }
 
 export function useLabQueuePageFilters<T extends LabQueueWorkflowType>({
   items,
   workflowType,
-  searchQuery,
-  onSearchChange,
-  dateRange,
-  onDateRangeChange,
-  sampleTypeFilters,
-  onSampleTypeFiltersChange,
-  skipSearchFilter,
-  skipDateFilter,
-  skipSampleTypeFilter,
-  appliedStatusFilters,
-  collectionSampleLookup,
+  bar,
 }: UseLabQueuePageFiltersOptions<T>) {
-  const urlSearch = useLabQueueUrlSearch();
-
-  const { urlFilters, clearUrlFilters, setUrlFilter } = usePageFilters({
-    urlFilterKeys: LAB_URL_FILTER_KEYS,
-  });
-
-  const filterConfig = useMemo(() => getLabQueueStageConfig(workflowType), [workflowType]);
-
-  const options = useMemo(
-    () => ({
-      items,
-      ...filterConfig.callbacks,
-      initialStatusFilters: filterConfig.defaultStatuses,
-      initialSearchQuery: urlSearch,
-      sortByQueuePriority: filterConfig.sortByPriority,
-      searchQuery,
-      onSearchChange,
-      dateRange,
-      onDateRangeChange,
-      sampleTypeFilters,
-      onSampleTypeFiltersChange,
-      skipSearchFilter,
-      skipDateFilter,
-      skipSampleTypeFilter,
-      appliedStatusFilters,
-      collectionSampleLookup,
-      urlFilters,
-      preferSampleInSearch: workflowType === 'collection',
-    }),
-    [
-      items,
-      filterConfig,
-      urlSearch,
-      searchQuery,
-      onSearchChange,
-      dateRange,
-      onDateRangeChange,
-      sampleTypeFilters,
-      onSampleTypeFiltersChange,
-      skipSearchFilter,
-      skipDateFilter,
-      skipSampleTypeFilter,
-      appliedStatusFilters,
-      collectionSampleLookup,
-      urlFilters,
-      workflowType,
-    ],
-  );
-
-  const result = useLabQueueFilterState(
-    options as UseLabQueueFilterStateOptions<LabQueueItemByStage<T>, SampleStatus | TestStatus>,
-  );
+  const { filteredItems, filterState } = useLabQueueFilteredItems(items, bar, workflowType);
 
   return {
-    ...result,
-    urlFilters,
-    clearUrlFilters,
-    setUrlFilter,
+    ...bar,
+    filteredItems,
+    filterState,
   };
 }

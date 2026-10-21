@@ -13,7 +13,7 @@ import { useEscalationResolution } from '../validation/useEscalationResolution';
 import {
   EscalationResolutionBody,
   EscalationResolutionFooter,
-} from './escalation.helpers';
+} from './escalation.shared';
 import { labModalHeaderContext } from './detailModalLayout';
 import { useOrderTestContext } from '../api/results';
 import { Modal, ModalPageShell } from '@/components/overlays';

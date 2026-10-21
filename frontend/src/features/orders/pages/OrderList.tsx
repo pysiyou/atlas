@@ -15,7 +15,7 @@ import { createOrderTableConfig } from '../config/OrderTable.config';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
 import { useServerListChrome } from '@/hooks';
 import { inclusiveDateRangeBounds, toIsoDateParam } from '@/utils';
-import { usePageFilters } from '@/hooks/usePageFilters';
+import { usePageFilters } from '@/hooks';
 import { ORDER_URL_FILTER_KEYS } from '../config/orderFilters.config';
 import type { Order, OrderStatus } from '@/types';
 import { UrlFilterChipBar } from '@/components/filters';

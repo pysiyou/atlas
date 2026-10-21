@@ -3,20 +3,23 @@
  */
 
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { CircularProgress } from '@/components/primitives';
+import { actionButtonPreset, Button, CircularProgress } from '@/components/primitives';
+import { Panel } from '@/components/surfaces';
+import { ResultEntryForm } from '../entry/ResultEntryForm';
+import { ResultValidationPanel } from '../validation/ResultValidationForm';
+import type { Test, TestWithContext } from '@/types';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
-import { QueueModalShell, labModalHeaderContext } from './detailModalLayout';
+import { ModalFooter, QueueModalShell, labModalHeaderContext } from './detailModalLayout';
 import { LabEventLogPanel } from '@/features/audit';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { TestWorkflowCardLeftColumn } from './queueCardLeftColumn';
 import { useTest } from '@/features/catalog';
 import { LabRelatedTestsPanel } from '../components/LabRelatedWorkflowPanel';
-import { EntryDetailMainPanel, EntryDetailModalFooter } from './detailModal.resultEntry.helpers';
 import { ResultEntryDetailGrid } from './detailModal.resultEntry.grid';
 import { useEnterResults, useOrderTestContext } from '../api/results';
 import { entryDraftLifecycleKey, useLabDraftStore } from '../state/labDraftStore';
 import { toRawResultPayload } from '../entry/resultEntry';
-import { orderTestKey } from '../utils/labSearchAndLinks';
+import { hasTestResults, orderTestKey } from '../utils/labSearchAndLinks';
 import { isLabActionAllowed } from '../utils/queueDisplay';
 import { errorAlertMessage, notify } from '@/utils/feedback';
 import { logger } from '@/utils/logger';
@@ -253,3 +256,103 @@ export const ResultEntryDetailModal: React.FC<ResultDetailModalProps> = ({
     </QueueModalShell>
   );
 };
+
+function EntryDetailModalFooter({
+  readOnly,
+  isSaving,
+  isComplete,
+  canEnter,
+  denyMessage,
+  onSave,
+}: {
+  readOnly: boolean;
+  isSaving: boolean;
+  isComplete: boolean;
+  canEnter: boolean;
+  denyMessage?: string | null;
+  onSave: () => void;
+}) {
+  if (readOnly) {
+    return null;
+  }
+  return (
+    <ModalFooter statusMessage={!canEnter && denyMessage ? denyMessage : ''}>
+      <Button
+        onClick={onSave}
+        {...actionButtonPreset('save')}
+        size="md"
+        layout="icon-text"
+        disabled={!isComplete || !canEnter}
+        title={!canEnter ? denyMessage ?? undefined : undefined}
+        isLoading={isSaving}
+      >
+        Save
+      </Button>
+    </ModalFooter>
+  );
+}
+
+function EntryDetailMainPanel({
+  readOnly,
+  test,
+  resolvedTestDef,
+  resultKey,
+  displayResults,
+  displayNotes,
+  progressIndicator,
+  isComplete,
+  canEnter,
+  onResultsChange,
+  onNotesChange,
+  onSave,
+}: {
+  readOnly: boolean;
+  test: TestWithContext;
+  resolvedTestDef: Test;
+  resultKey: string;
+  displayResults: Record<string, string>;
+  displayNotes: string;
+  progressIndicator: React.ReactNode;
+  isComplete: boolean;
+  canEnter: boolean;
+  onResultsChange: (key: string, paramCode: string, value: string) => void;
+  onNotesChange: (key: string, notes: string) => void;
+  onSave: () => void;
+}) {
+  if (readOnly && hasTestResults(test)) {
+    return (
+      <ResultValidationPanel
+        preset="panel.compact.scrollAuto.maxH" title="Recorded Results"
+        results={test.results!}
+        flags={test.flags}
+        testCode={test.testCode}
+        patient={test.patient}
+        technicianNotes={test.technicianNotes}
+        comments={test.validationNotes ?? ''}
+        onCommentsChange={() => undefined}
+        onApprove={() => undefined}
+        readOnly
+        enableApproveShortcut={false}
+      />
+    );
+  }
+  return (
+    <Panel preset="panel.compact.standard" title="Result Entry" headerEnd={progressIndicator}>
+      <ResultEntryForm
+        testDef={resolvedTestDef}
+        resultKey={resultKey}
+        results={displayResults}
+        technicianNotes={displayNotes}
+        patient={test.patient}
+        onResultsChange={onResultsChange}
+        onNotesChange={onNotesChange}
+        onSave={onSave}
+        isComplete={isComplete}
+        isModal={true}
+        readOnly={readOnly}
+        canEnter={canEnter}
+        denyMessage={test.denyMessage}
+      />
+    </Panel>
+  );
+}

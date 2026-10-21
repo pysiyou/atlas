@@ -6,7 +6,7 @@ import { Button } from '@/components/primitives';
 import { ErrorAlert, Skeleton } from '@/components/feedback';
 import { Panel, type PanelPresetId } from '@/components/surfaces/Panel';
 import { cn } from '@/utils';
-import { toListLoadError } from '@/hooks';
+import { useClientListChrome } from '@/hooks';
 import { EVENT_LOG_COPY } from './types';
 import { EventLogFeed } from './EventLogFeed';
 import { EventLogFilters } from './EventLogFilters';
@@ -96,6 +96,14 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
       enabled: !skipFetch,
     });
 
+  const { error: listError, onRetry } = useClientListChrome({
+    loadFailedKey: 'lab.page.loadFailed',
+    isLoading,
+    isError,
+    error,
+    refetch,
+  });
+
   const panelMeta = useMemo(() => {
     if (hideMeta || layout === 'embedded') return undefined;
     if (meta) return meta;
@@ -144,12 +152,9 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
         <Skeleton key={index} height={56} className="w-full" />
       ))}
     </div>
-  ) : isError ? (
+  ) : listError ? (
     <div className="p-space-3">
-      <ErrorAlert
-        error={toListLoadError('lab.page.loadFailed', error)!}
-        onRetry={refetch}
-      />
+      <ErrorAlert error={listError} onRetry={onRetry} />
     </div>
   ) : (
     <div className="flex min-h-0 flex-1 flex-col">

@@ -17,12 +17,12 @@ import {
   type EscalationResolveOptions,
 } from '../validation/EscalationResolutionActions';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
-import { text, FG, WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
+import { text, WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
 import type { TestWithContext } from '@/types';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { notify } from '@/utils/feedback';
-import { DetailGrid, ModalFooter } from './detailModalLayout';
+import { DetailGrid } from './detailModalLayout';
 
 function ticketString(value: unknown): string | undefined {
   return typeof value === 'string' && value.trim() !== '' ? value : undefined;
@@ -271,22 +271,22 @@ export interface EscalationResolutionFooterProps {
 export function EscalationResolutionFooter(props: EscalationResolutionFooterProps) {
   const { canResolveEscalation, resolving, ...actionProps } = props;
 
+  if (!canResolveEscalation) {
+    return (
+      <p className={`${text({ role: 'body', intent: 'muted' })} w-full text-right`}>
+        You do not have permission to resolve escalations.
+      </p>
+    );
+  }
+
   return (
-    <ModalFooter statusMessage="" statusClassName={FG.modalStatus}>
-      {!canResolveEscalation ? (
-        <p className={text({ role: 'body', intent: 'muted' })}>
-          You do not have permission to resolve escalations.
-        </p>
-      ) : (
-        <EscalationResolutionActions
-          {...actionProps}
-          orderTestId={props.orderTestId}
-          hasResults={props.hasResults ?? false}
-          allowForceValidate={props.allowForceValidate ?? true}
-          resolving={resolving}
-          onValidationError={id => notify.toast(id)}
-        />
-      )}
-    </ModalFooter>
+    <EscalationResolutionActions
+      {...actionProps}
+      orderTestId={props.orderTestId}
+      hasResults={props.hasResults ?? false}
+      allowForceValidate={props.allowForceValidate ?? true}
+      resolving={resolving}
+      onValidationError={id => notify.toast(id)}
+    />
   );
 }

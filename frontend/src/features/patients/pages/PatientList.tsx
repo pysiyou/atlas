@@ -5,7 +5,7 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePaginatedPatientContextList } from '../api/patients';
-import { usePageFilters } from '@/hooks/usePageFilters';
+import { usePageFilters } from '@/hooks';
 import { PATIENT_URL_FILTER_KEYS } from '../config/patientFilters.config';
 import { UrlFilterChipBar } from '@/components/filters';
 import { actionButtonPreset } from '@/components/primitives';

@@ -4,7 +4,7 @@
 
 import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { usePageFilters } from '@/hooks/usePageFilters';
+import { usePageFilters } from '@/hooks';
 import { ListView } from '@/components/surfaces';
 import { UrlFilterChipBar } from '@/components/filters';
 import { PaymentFilters } from '../components/PaymentFilters';

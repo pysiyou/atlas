@@ -3,6 +3,8 @@
  */
 
 import type { ContainerType, Order, Sample, Test } from '@/types';
+import { FooterInfo } from '@/components/display';
+import { MODULE_ICONS } from '@/config/icons';
 import { QueueModalShell, labModalHeaderContext } from './detailModalLayout';
 import { CollectionHeaderBadges } from '../components/LabWorkflowBadges';
 import { SampleCollectionCardLeftColumn } from './queueCardLeftColumn';
@@ -11,7 +13,7 @@ import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import {
   SampleCollectionDetailContent,
   SampleCollectionDetailFooter,
-} from './detailModal.sampleCollection.helpers';
+} from './detailModal.sampleCollection.panels';
 import { LabEventLogPanel } from '@/features/audit';
 import type { deriveCollectionModalFields } from './detailModal.sampleCollection.derive';
 
@@ -112,7 +114,10 @@ export function SampleCollectionDetailModalView({
     />
   );
 
-  const footerContent = (
+  const hasFooterActions =
+    (isPending && pendingSampleDisplay && onCollect) || (isCollected && sample.sampleId != null);
+
+  const footerContent = hasFooterActions ? (
     <SampleCollectionDetailFooter
       sample={sample}
       order={order}
@@ -127,7 +132,9 @@ export function SampleCollectionDetailModalView({
       onClose={onClose}
       onPopoverSubmittingChange={onPopoverSubmittingChange}
     />
-  );
+  ) : undefined;
+
+  const showFooter = !readOnly;
 
   return (
     <QueueModalShell
@@ -138,7 +145,12 @@ export function SampleCollectionDetailModalView({
       title={modalTitle}
       subtitle={modalSubtitle}
       headerLeftColumn={headerLeftColumn}
-      footer={readOnly ? undefined : footerContent}
+      footer={showFooter ? footerContent : undefined}
+      footerInfo={
+        showFooter && !hasFooterActions
+          ? <FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" size="md" />
+          : undefined
+      }
     >
       <SampleCollectionDetailContent
         sample={sample}

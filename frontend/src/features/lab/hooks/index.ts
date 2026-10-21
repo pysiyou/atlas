@@ -2,7 +2,16 @@
  * Lab Feature Hooks
  */
 
-export * from './labQueueFilters';
+export {
+  applyLabQueueFilters,
+  useLabQueueBarFilters,
+  useLabQueueFilterBarProps,
+  useLabQueuePageFilters,
+  type LabQueueBarState,
+  type LabQueueFilterBarPropsOptions,
+  type LabQueueFilterState,
+  type UseLabQueuePageFiltersOptions,
+} from './labQueueFilters';
 export type { TestWithContextResult } from '../types';
 export { useLabStageQueueCounts, getValidationTabCount } from '../api/labMonitor';
 export * from './useResultValidationQueueData';
