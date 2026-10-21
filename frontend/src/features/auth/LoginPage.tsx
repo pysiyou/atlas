@@ -36,7 +36,7 @@ export const LoginPage: React.FC = () => {
   const formContainerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="min-h-screen bg-auth-canvas flex items-center justify-center p-space-4 sm:p-space-6 lg:p-space-8 relative overflow-hidden">
+    <div className="min-h-screen bg-promo-canvas flex items-center justify-center p-space-4 sm:p-space-6 lg:p-space-8 relative overflow-hidden">
       <LoginBackground />
 
       {/* Main content container */}

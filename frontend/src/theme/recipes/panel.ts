@@ -10,10 +10,10 @@ export const PANEL_LAYOUT = {
   pageHeaderBetween:
     'shrink-0 h-panel-header min-h-panel-header max-h-panel-header px-panel-header-x border-b border-border-default flex items-center justify-between gap-space-3 overflow-hidden',
   pageBodyPadding: SPACING.pPanel,
-  labHeader:
-    `shrink-0 ${SPACING.pxLabPanelHeader} ${SPACING.pyLabPanelHeader} border-b border-border-default flex items-center gap-space-2`,
-  labHeaderBetween:
-    `shrink-0 ${SPACING.pxLabPanelHeader} ${SPACING.pyLabPanelHeader} border-b border-border-default flex items-center justify-between gap-space-2`,
+  compactHeader:
+    `shrink-0 ${SPACING.pxPanelDensityCompactHeader} ${SPACING.pyPanelDensityCompactHeader} border-b border-border-default flex items-center gap-space-2`,
+  compactHeaderBetween:
+    `shrink-0 ${SPACING.pxPanelDensityCompactHeader} ${SPACING.pyPanelDensityCompactHeader} border-b border-border-default flex items-center justify-between gap-space-2`,
 } as const;
 
 /** Shared panel header title — page, lab, and lab modal presets. */
@@ -36,16 +36,16 @@ const PAGE_PANEL_CHROME = {
   scrollDefault: 'overflow-hidden',
 } as const;
 
-const LAB_PANEL_CHROME = {
+const COMPACT_PANEL_CHROME = {
   shell: `w-full ${SURFACE.recessed} ${RADIUS.surface} overflow-hidden`,
-  header: PANEL_LAYOUT.labHeader,
-  headerBetween: PANEL_LAYOUT.labHeaderBetween,
+  header: PANEL_LAYOUT.compactHeader,
+  headerBetween: PANEL_LAYOUT.compactHeaderBetween,
   title: PANEL_TITLE,
   headerLead: `flex min-w-0 flex-1 items-center ${SPACING.gapInline} overflow-hidden`,
   headerAside: PANEL_HEADER_ASIDE,
   meta: PANEL_HEADER_META,
   headerActions: 'contents',
-  footer: `shrink-0 border-t border-border-subtle ${SPACING.pLabPanel}`,
+  footer: `shrink-0 border-t border-border-subtle ${SPACING.pPanelDensityCompact}`,
   scrollDefault: '',
 } as const;
 
@@ -76,13 +76,13 @@ export const PANEL_SHELL = {
     ...PAGE_PANEL_CHROME,
     body: 'flex-1 min-h-0',
   },
-  lab: {
-    ...LAB_PANEL_CHROME,
-    body: SPACING.pLabPanel,
+  compact: {
+    ...COMPACT_PANEL_CHROME,
+    body: SPACING.pPanelDensityCompact,
   },
-  /** Lab modal shell with flush body (scoped event log, full-bleed content). */
-  labEmbed: {
-    ...LAB_PANEL_CHROME,
+  /** Compact shell with flush body (scoped event log, full-bleed content). */
+  compactEmbed: {
+    ...COMPACT_PANEL_CHROME,
     body: 'min-w-0',
   },
 } as const;

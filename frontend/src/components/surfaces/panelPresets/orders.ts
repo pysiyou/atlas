@@ -110,7 +110,7 @@ export const orderPanelPresets = {
   },
   'order.modal.relatedTests': {
     title: 'Related tests',
-    variant: 'lab',
+    variant: 'compact',
     shellLayout: 'fullWidth',
   },
 } as const satisfies Record<string, PanelPresetDefinition>;

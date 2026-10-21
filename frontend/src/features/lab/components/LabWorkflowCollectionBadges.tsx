@@ -1,7 +1,7 @@
 import React from 'react';
 import type { BadgeSize } from '@/components/primitives';
 import type { ContainerType, ContainerTopColor, Sample, RejectedSample } from '@/types';
-import { LAB_CARD_BADGE_SIZE } from '@/theme/recipes';
+import { QUEUE_CARD_BADGE_SIZE } from '@/theme/recipes';
 import { buildCollectionOperationalMetaItems } from '../utils/collectionOperationalMetaItems';
 import {
   LabPriorityBadge,
@@ -32,7 +32,7 @@ export const CollectionHeaderBadges = React.memo(({
   isPending,
   isRejected,
   statusPresentation = null,
-  size = LAB_CARD_BADGE_SIZE,
+  size = QUEUE_CARD_BADGE_SIZE,
 }: CollectionHeaderBadgesProps) => {
   const compact = useLabHeaderCompact();
   const priority = sample.priority;

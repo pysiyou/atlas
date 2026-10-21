@@ -31,7 +31,7 @@
   --primitive-neutral-900: #3a2c27;
   --primitive-neutral-950: #2a201c;
 
-  --primitive-surface-report: #f7f1e8;
+  --primitive-surface-document: #f7f1e8;
 
   /* ── Success (sage) ── */
   --primitive-success-50: #e8f0d8;
@@ -169,10 +169,10 @@
   --toast-track: rgb(58 44 39 / 0.06);
 
   /* ── Auth accent (login panel) ── */
-  --primitive-auth-accent: var(--primitive-brand-600);
-  --primitive-auth-accent-medium: var(--primitive-brand-500);
-  --primitive-auth-input-focus: var(--primitive-brand-400);
-  --primitive-auth-text-light: var(--primitive-brand-200);
+  --primitive-promo-accent: var(--primitive-brand-600);
+  --primitive-promo-accent-medium: var(--primitive-brand-500);
+  --primitive-promo-input-focus: var(--primitive-brand-400);
+  --primitive-promo-text-light: var(--primitive-brand-200);
 
   /* ── Workflow lanes ── */
   --workflow-collection-fg: #4e5844;

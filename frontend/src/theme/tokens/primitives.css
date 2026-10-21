@@ -88,10 +88,10 @@
   --panel-header-height: var(--chrome-nav-indicator);
   --panel-header-padding-x: var(--space-4);
 
-  /** Lab modal panels (Panel variant `lab` — sample / result detail modals). */
-  --lab-panel-padding: var(--space-3);
-  --lab-panel-header-padding-x: var(--space-3);
-  --lab-panel-header-padding-y: var(--space-3);
+  /** Compact panel density (detail modals, dense workspaces). */
+  --panel-density-compact-padding: var(--space-3);
+  --panel-density-compact-header-padding-x: var(--space-3);
+  --panel-density-compact-header-padding-y: var(--space-3);
 
   /** Data table cell padding. */
   --table-cell-x-compact: var(--space-4);
@@ -121,13 +121,13 @@
   --icon-button-size-md: 2rem;
   --icon-button-size-lg: 2.5rem;
 
-  /** Lab command center / dashboard meter layouts. */
-  --dashboard-bottom-row-min-height: 18rem;
-  --dashboard-table-wrap-min-height: 20rem;
-  --dashboard-meter-track-height: 0.25rem;
-  --dashboard-meter-dot-size: 0.25rem;
-  --dashboard-meter-stage-chip-size: 0.5rem;
-  --dashboard-meter-grid-cols: minmax(8rem, 1.25fr) minmax(4.75rem, 2.15fr) auto;
+  /** Split workspace + meter table geometry. */
+  --split-bottom-row-min-height: 18rem;
+  --split-table-wrap-min-height: 20rem;
+  --meter-track-height: 0.25rem;
+  --meter-dot-size: 0.25rem;
+  --meter-stage-chip-size: 0.5rem;
+  --meter-grid-cols: minmax(8rem, 1.25fr) minmax(4.75rem, 2.15fr) auto;
 
   /* Type scale — see tokens/typography.css */
 
@@ -210,7 +210,7 @@
   --primitive-info-900: #0c4a6e;
   --primitive-info-950: #082f49;
 
-  --primitive-surface-report: #ecfdf5;
+  --primitive-surface-document: #ecfdf5;
 
   /* Extended badge palettes */
   --primitive-purple-100: #f3e8ff;
@@ -239,23 +239,23 @@
   --primitive-cyan-800: #155e75;
 
   /* Auth canvas (login panel on studio-light) */
-  --primitive-auth-canvas: #0f172a;
-  --primitive-auth-panel: #1e293b;
-  --primitive-auth-panel-hover: #273449;
-  --primitive-auth-border: #334155;
-  --primitive-auth-border-light: #475569;
-  --primitive-auth-border-hover: #64748b;
-  --primitive-auth-accent: #0d9488;
-  --primitive-auth-accent-medium: #14b8a6;
-  --primitive-auth-input-focus: #2dd4bf;
-  --primitive-auth-text: #f1f5f9;
-  --primitive-auth-text-secondary: #cbd5e1;
-  --primitive-auth-text-muted: #94a3b8;
-  --primitive-auth-text-light: #5eead4;
-  --primitive-auth-error-bg: #4c0519;
-  --primitive-auth-error-bg-light: #881337;
-  --primitive-auth-error-border: #be123c;
-  --primitive-auth-error-text: #fda4af;
+  --primitive-promo-canvas: #0f172a;
+  --primitive-promo-panel: #1e293b;
+  --primitive-promo-panel-hover: #273449;
+  --primitive-promo-border: #334155;
+  --primitive-promo-border-light: #475569;
+  --primitive-promo-border-hover: #64748b;
+  --primitive-promo-accent: #0d9488;
+  --primitive-promo-accent-medium: #14b8a6;
+  --primitive-promo-input-focus: #2dd4bf;
+  --primitive-promo-text: #f1f5f9;
+  --primitive-promo-text-secondary: #cbd5e1;
+  --primitive-promo-text-muted: #94a3b8;
+  --primitive-promo-text-light: #5eead4;
+  --primitive-promo-error-bg: #4c0519;
+  --primitive-promo-error-bg-light: #881337;
+  --primitive-promo-error-border: #be123c;
+  --primitive-promo-error-text: #fda4af;
 
   /* Sample tube caps — theme-invariant */
   --primitive-container-red: #e11d48;

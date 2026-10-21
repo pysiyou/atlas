@@ -11,7 +11,7 @@ import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
 import type { OrderPaymentView } from '../types';
 import { PaymentButton } from './PaymentButton';
 import { useInvalidatePayments } from '../api/payments';
-import { CARD_PRICE } from '@/theme/recipes';
+import { PRICE_DISPLAY } from '@/theme/recipes';
 
 
 /**
@@ -45,7 +45,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
             size="xs"
           />
         }
-        trailing={<div className={CARD_PRICE}>{formatCurrency(order.totalPrice)}</div>}
+        trailing={<div className={PRICE_DISPLAY}>{formatCurrency(order.totalPrice)}</div>}
       />
 
       {hasTests && (

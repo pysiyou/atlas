@@ -35,7 +35,7 @@ export const PRICE_RANGE_TYPE = {
   bound: `${TYPE.meta} text-text-disabled`,
 } as const;
 
-export const RECEIPT_TYPE = {
+export const DOCUMENT_TYPE = {
   metaPart: 'font-normal tabular-nums type-body',
   metaRow: `flex flex-wrap items-center gap-x-space-2 gap-y-space-0-5 min-w-0 ${TYPE.meta}`,
   detailedPatientName: `${TYPE.amount} text-text-secondary`,
@@ -53,11 +53,11 @@ export const RECEIPT_TYPE = {
   totalValueDetailed: `${TYPE.pageTitle} text-text-primary`,
 } as const;
 
-export const CARD_PRICE = `${TYPE.pageTitle} leading-none` as const;
+export const PRICE_DISPLAY = `${TYPE.pageTitle} leading-none` as const;
 
 export const FORM_TAB_TITLE = `${TYPE.value} font-normal` as const;
 
-export const REPORT_PREVIEW_TYPE = {
+export const PREVIEW_HEADER_TYPE = {
   companyName: `${TYPE.pageTitle} mb-space-3`,
   reportTitle: `${TYPE.detailTitle} mb-space-2`,
 } as const;

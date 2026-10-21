@@ -7,7 +7,7 @@ import { formatDateTime } from '@/utils';
 import { EntityId } from '@/components/display';
 import { companyConfig } from '@/config';
 import type { LabReportPayload } from '../types';
-import { FORM_TAB_TITLE, REPORT_PREVIEW_TYPE, TYPE } from '@/theme/recipes';
+import { FORM_TAB_TITLE, PREVIEW_HEADER_TYPE, TYPE } from '@/theme/recipes';
 
 
 interface ReportPreviewHeaderProps {
@@ -51,8 +51,8 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
 
   return (
     <div className="flex border-b border-border-default">
-      <div className="bg-surface-report p-space-6 shrink-0 space-y-space-2" style={{ width: '40%' }}>
-        <h2 className={REPORT_PREVIEW_TYPE.companyName}>{companyConfig.getName()}</h2>
+      <div className="bg-surface-document p-space-6 shrink-0 space-y-space-2" style={{ width: '40%' }}>
+        <h2 className={PREVIEW_HEADER_TYPE.companyName}>{companyConfig.getName()}</h2>
         {companyConfig.getConfig().company.subtitle && (
           <p className={`${TYPE.value} font-normal`}>
             {companyConfig.getConfig().company.subtitle}
@@ -74,7 +74,7 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
       </div>
 
       <div className="bg-surface p-panel flex-1">
-        <h1 className={REPORT_PREVIEW_TYPE.reportTitle}>
+        <h1 className={PREVIEW_HEADER_TYPE.reportTitle}>
           {reportData.testResults.length > 0 ? (
             <>
               {reportData.testResults.map(t => t.testName).join(', ')} Results ({' '}

@@ -52,8 +52,8 @@ export function useTestDetailModalDerived({
   const comments = isValidate ? draftComments : (orderTest?.validationNotes ?? '');
   const commentKey = orderTestKey(orderTestId);
   const resultsPanelPreset = isValidate
-    ? ('lab.modal.resultValidation' as const)
-    : ('lab.modal.recordedResults' as const);
+    ? ('compact.modal.resultValidation' as const)
+    : ('compact.modal.recordedResults' as const);
 
   const onCommentsChange = (value: string) => {
     if (!isValidate) return;

@@ -10,7 +10,7 @@ import { useUserLookup } from '@/lib/api/users';
 import { useLabWorkflowCardClickGuard } from '../hooks';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
-import { LAB_MOBILE_CARD } from '@/theme/recipes';
+import { MOBILE_LIST_CARD } from '@/theme/recipes';
 import type { TestWithContext } from '@/types';
 import { QueueCard, QueueCardMobile } from './queueCardLayout';
 import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';
@@ -93,13 +93,13 @@ function EscalationCardMobile({ test, handleCardClick, rejection, patientName }:
       padding="sm"
       hover
       className={cn(
-        LAB_MOBILE_CARD.surface,
+        MOBILE_LIST_CARD.surface,
         showAttemptIndicator && 'border-warning-stroke-emphasis'
       )}
       onClick={handleCardClick}
     >
       <QueueCardMobile leftColumn={leftColumn} badges={badges}>
-        <div className={cn(LAB_MOBILE_CARD.body, 'space-y-space-0-5')}>
+        <div className={cn(MOBILE_LIST_CARD.body, 'space-y-space-0-5')}>
           <EscalationExceptionReviewBody test={test} />
         </div>
       </QueueCardMobile>

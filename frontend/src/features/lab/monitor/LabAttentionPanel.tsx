@@ -4,7 +4,7 @@
 
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { EmptyState, EMPTY_COPY, DASHBOARD_EMPTY_STATE_TEXT, EntityId } from '@/components/display';
+import { EmptyState, EMPTY_COPY, DENSE_EMPTY_STATE_TEXT, EntityId } from '@/components/display';
 import { Badge } from '@/components/primitives';
 import { Panel } from '@/components/surfaces';
 import { LabPriorityBadge } from '../components/LabDomainBadges';
@@ -21,7 +21,7 @@ import {
   type LabAttentionQueueItem,
 } from './monitorModel';
 import { formatLabAttentionQueueItem, type AttentionDetail } from './monitorAttentionFormat';
-import { MONITOR_ATTENTION_ACCENT, MONITOR_FEED_STYLES } from '@/theme/recipes';
+import { ATTENTION_ACCENT, ATTENTION_FEED } from '@/theme/recipes';
 
 const PRIMARY_DETAIL_CLASS = `${TABLE_TYPE.cell} truncate font-normal`;
 const META_DETAIL_CLASS = `${TABLE_TYPE.meta} truncate font-normal`;
@@ -104,12 +104,12 @@ function AttentionFeedRow({ item }: { item: LabAttentionQueueItem }) {
         )}
       >
         <span
-          className={cn(`w-0.5 shrink-0 self-stretch ${RADIUS.pill}`, MONITOR_ATTENTION_ACCENT[tone])}
+          className={cn(`w-0.5 shrink-0 self-stretch ${RADIUS.pill}`, ATTENTION_ACCENT[tone])}
           aria-hidden
         />
         <div className="min-w-0 flex-1 space-y-space-1.5">
           <div className="flex min-w-0 items-start justify-between gap-x-space-2 gap-y-space-1">
-            <span className={cn(MONITOR_FEED_STYLES.eventHeadline, 'min-w-0')}>{formatted.action}</span>
+            <span className={cn(ATTENTION_FEED.eventHeadline, 'min-w-0')}>{formatted.action}</span>
             <Badge
               variant={resolveStatusBadgeColor(typeConfig.badgeVariant)}
               label={typeConfig.pillLabel}
@@ -130,13 +130,13 @@ function AttentionFeedGroup({ type, items }: { type: AttentionType; items: LabAt
 
   return (
     <section className="pb-space-3 last:pb-0">
-      <div className={MONITOR_FEED_STYLES.groupHeader}>
-        <div className={MONITOR_FEED_STYLES.groupDivider} />
-        <span className={MONITOR_FEED_STYLES.groupLabel}>
+      <div className={ATTENTION_FEED.groupHeader}>
+        <div className={ATTENTION_FEED.groupDivider} />
+        <span className={ATTENTION_FEED.groupLabel}>
           {config.groupLabel}
           <span className="ml-space-1.5 tabular-nums text-text-tertiary">({items.length})</span>
         </span>
-        <div className={MONITOR_FEED_STYLES.groupDivider} />
+        <div className={ATTENTION_FEED.groupDivider} />
       </div>
       <ul className="space-y-space-1">
         {items.map(item => (
@@ -168,7 +168,7 @@ function AttentionFeed({ items }: { items: LabAttentionQueueItem[] }) {
     return (
       <div className="flex h-full min-h-0 flex-col bg-surface">
         <EmptyState
-          {...DASHBOARD_EMPTY_STATE_TEXT}
+          {...DENSE_EMPTY_STATE_TEXT}
           title={EMPTY_COPY.pendingAttention.title}
           description={EMPTY_COPY.pendingAttention.description}
         />

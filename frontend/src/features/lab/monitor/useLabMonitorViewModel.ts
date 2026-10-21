@@ -9,7 +9,7 @@ import { labStageLabel } from '../constants/labConstants';
 import { ATTENTION_TYPE_CONFIG, type AttentionType } from './monitorModel';
 import type { LabAttentionQueueItem, LabBoardViewState, LabPipelineStage } from './monitorModel';
 
-const EMPTY_TODAY_PANEL: LabBoardViewState['todayPanel'] = {
+const EMPTY_KPI_PANEL: LabBoardViewState['todayPanel'] = {
   dayStartUtc: '',
   testsUpdatedToday: 0,
   testsWithCollection: 0,
@@ -21,7 +21,7 @@ const EMPTY_TODAY_PANEL: LabBoardViewState['todayPanel'] = {
 const EMPTY_BOARD: LabBoardViewState = {
   attentionItems: [],
   attentionTotal: 0,
-  todayPanel: EMPTY_TODAY_PANEL,
+  todayPanel: EMPTY_KPI_PANEL,
 };
 
 function isLabPipelineStage(value: string | null | undefined): value is LabPipelineStage {
@@ -65,7 +65,7 @@ function toBoardViewState(board: LabBoardResponse): LabBoardViewState {
           testsWithValidation: today.testsWithValidation,
           testsOffNormalPath: today.testsOffNormalPath,
         }
-      : EMPTY_TODAY_PANEL,
+      : EMPTY_KPI_PANEL,
   };
 }
 

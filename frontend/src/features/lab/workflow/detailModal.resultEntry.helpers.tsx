@@ -76,7 +76,7 @@ export function EntryDetailMainPanel({
   if (readOnly && hasTestResults(test)) {
     return (
       <ResultValidationPanel
-        preset="lab.modal.recordedResults"
+        preset="compact.modal.recordedResults"
         results={test.results!}
         flags={test.flags}
         testCode={test.testCode}
@@ -91,7 +91,7 @@ export function EntryDetailMainPanel({
     );
   }
   return (
-    <Panel preset="lab.modal.resultEntry" headerEnd={progressIndicator}>
+    <Panel preset="compact.modal.resultEntry" headerEnd={progressIndicator}>
       <ResultEntryForm
         testDef={resolvedTestDef}
         resultKey={resultKey}

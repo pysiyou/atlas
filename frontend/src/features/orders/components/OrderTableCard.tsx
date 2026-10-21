@@ -10,7 +10,7 @@ import { formatCurrency, formatDateTime } from '@/utils';
 import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
 import { getActiveTests } from '../utils/orderCalculator';
 import type { Order } from '@/types';
-import { CARD_PRICE } from '@/theme/recipes';
+import { CardFooter, Text } from '@/components/layout';
 
 
 type OrderTableCardProps = CardComponentProps<Order> & {
@@ -46,7 +46,9 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
             />
           )
         }
-        trailing={<div className={CARD_PRICE}>{formatCurrency(order.totalPrice)}</div>}
+        trailing={
+          <Text role="amount" className="leading-none">{formatCurrency(order.totalPrice)}</Text>
+        }
       />
 
       {hasTests && (
@@ -61,7 +63,7 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
         </div>
       )}
 
-      <div className="flex justify-between items-center mt-auto pt-space-3 gap-space-2">
+      <CardFooter align={hidePatientName ? 'end' : 'between'}>
         {hidePatientName ? (
           <div className="flex items-center gap-space-2 shrink-0 flex-wrap">
             {order.overallStatus && (
@@ -78,17 +80,17 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
             <div className={TABLE_DATETIME_SECONDARY_CLASS}>{formatDateTime(order.orderDate)}</div>
             <div className="flex items-center gap-space-2 shrink-0">
               {order.overallStatus && (
-              <OrderStatusBadge
-                status={order.overallStatus}
-                presentation={order.statusPresentation}
-                size="xs"
-              />
-            )}
+                <OrderStatusBadge
+                  status={order.overallStatus}
+                  presentation={order.statusPresentation}
+                  size="xs"
+                />
+              )}
               {order.paymentStatus && <PaymentStatusBadge status={order.paymentStatus} size="xs" />}
             </div>
           </>
         )}
-      </div>
+      </CardFooter>
     </MobileEntityCard>
   );
 }

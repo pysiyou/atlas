@@ -7,7 +7,7 @@ import { ErrorAlert } from '@/components/loaders';
 import { WORKSPACE } from '@/theme/recipes';
 import { errorAlertMessage } from '@/utils/feedback';
 import type { LabTabId } from '../constants/labConstants';
-import { LAB_WORKFLOW_QUEUE_SHELL } from '@/theme/recipes';
+import { WORKFLOW_QUEUE_SHELL } from '@/theme/recipes';
 import { tabAllowed } from './laboratoryPageAccess';
 import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 
@@ -56,7 +56,7 @@ export function LaboratoryPageStageContent({
       className={
         activeTab === 'monitor'
           ? 'flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden'
-          : LAB_WORKFLOW_QUEUE_SHELL
+          : WORKFLOW_QUEUE_SHELL
       }
     >
       {isError && (

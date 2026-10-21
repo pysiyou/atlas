@@ -3,7 +3,7 @@ import { Badge } from '@/components/primitives';
 import { CONTROL } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { getStageVisual, isLabWorkflowStageTab, type LabTabId } from '../constants/labConstants';
-import { LAB_PAGE_TABS } from '@/theme/recipes';
+import { SEGMENT_TABS } from '@/theme/recipes';
 
 export interface LaboratoryPageTabDef {
   id: LabTabId;
@@ -24,7 +24,7 @@ export function LaboratoryPageTabRail({
   onTabChange,
 }: LaboratoryPageTabRailProps) {
   return (
-    <div className={LAB_PAGE_TABS.rail}>
+    <div className={SEGMENT_TABS.rail}>
       {tabs.map(tab => {
         const isActive = activeTab === tab.id;
         const hasCount = typeof tab.count === 'number' && tab.count > 0;
@@ -34,12 +34,12 @@ export function LaboratoryPageTabRail({
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
             className={cn(
-              LAB_PAGE_TABS.buttonBase,
+              SEGMENT_TABS.buttonBase,
               isActive
                 ? stageVisual
                   ? `bg-surface ${stageVisual.text} ${CONTROL.segmentActive}`
-                  : LAB_PAGE_TABS.buttonActive
-                : LAB_PAGE_TABS.buttonInactive,
+                  : SEGMENT_TABS.buttonActive
+                : SEGMENT_TABS.buttonInactive,
             )}
           >
             <div
@@ -48,8 +48,8 @@ export function LaboratoryPageTabRail({
                 isActive
                   ? stageVisual
                     ? stageVisual.text
-                    : LAB_PAGE_TABS.iconActive
-                  : LAB_PAGE_TABS.iconInactive,
+                    : SEGMENT_TABS.iconActive
+                  : SEGMENT_TABS.iconInactive,
               )}
             >
               {tab.icon}
@@ -59,7 +59,7 @@ export function LaboratoryPageTabRail({
               <Badge
                 variant={isActive ? 'primary' : 'default'}
                 size="xs"
-                className={LAB_PAGE_TABS.countBadgeMargin}
+                className={SEGMENT_TABS.countBadgeMargin}
               >
                 {tab.count}
               </Badge>

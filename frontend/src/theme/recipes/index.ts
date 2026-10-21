@@ -3,7 +3,7 @@
  *
  * ## Import convention
  * Import all recipe tokens from **`@/theme/recipes`** (or `@/theme`,
- * which re-exports this barrel). Do not import `@/theme/recipes/form`, `/lab`, etc.
+ * which re-exports this barrel). Do not import `@/theme/recipes/form`, etc.
  * from app or feature code — submodules exist for maintainability and are composed here.
  *
  * CSS variables live under `theme/tokens/`; composed Tailwind class stacks live in `recipes/*.ts`.
@@ -18,9 +18,20 @@ export * from './panel';
 export * from './overlay';
 export * from './chrome';
 export * from './control';
-export * from './auth';
+export * from './promo';
 export * from './misc';
 export * from './badge';
 export * from './form';
-export * from './lab';
-export * from './dashboard';
+export * from './markers';
+export * from './queueCard';
+export * from './meterTable';
+export {
+  text,
+  tableCell,
+  labelButton,
+  iconButton,
+  type TextRecipeProps,
+  type TableCellRecipeProps,
+  type LabelButtonRecipeProps,
+  type IconButtonRecipeProps,
+} from './cva';

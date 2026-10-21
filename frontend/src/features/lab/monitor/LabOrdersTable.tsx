@@ -14,7 +14,7 @@ import type { PriorityLevel, TestStatus } from '@/types';
 import type { StatusPresentation } from '@/types/labProjection';
 import { cn } from '@/utils';
 import { getOrderTestLineageRowClass } from '@/features/orders';
-import { MONITOR_ROW_INTERACTIVE } from '@/theme/recipes';
+import { SPLIT_ROW_INTERACTIVE } from '@/theme/recipes';
 import { createLabOrdersTableConfig } from './LabOrdersTable.config';
 
 export interface LabOrderTableRow {
@@ -84,7 +84,7 @@ export const LabOrdersTable: React.FC = () => {
         getRowKey={row => row.id}
         onRowClick={row => navigate(row.href)}
         rowClassName={row =>
-          cn(MONITOR_ROW_INTERACTIVE, getOrderTestLineageRowClass({ status: row.status }))
+          cn(SPLIT_ROW_INTERACTIVE, getOrderTestLineageRowClass({ status: row.status }))
         }
         emptyMessage={EMPTY_COPY.dashboardWorklist.title}
         emptyDescription={EMPTY_COPY.dashboardWorklist.description}

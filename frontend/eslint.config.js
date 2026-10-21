@@ -7,6 +7,7 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 import {
   allRestrictedSyntax,
   designTokenRestrictedSyntax,
+  hexColorLiteralSyntax,
   panelPresetRestrictedSyntax,
   typeUtilityRestrictedSyntax,
 } from './eslint.restricted-syntax.mjs'
@@ -239,11 +240,18 @@ export default defineConfig([
     ignores: [
       'src/theme/recipes/**',
       'src/components/surfaces/Panel.tsx',
+      'src/components/loaders/SpinnerLoader.tsx',
       'src/features/auth/**/*.{ts,tsx}',
       'src/features/lab/collection/SampleCollectionLabelActions.tsx',
     ],
     rules: {
-      'no-restricted-syntax': ['error', ...allRestrictedSyntax, ...typeUtilityRestrictedSyntax, ...panelPresetRestrictedSyntax],
+      'no-restricted-syntax': [
+        'error',
+        ...allRestrictedSyntax,
+        ...typeUtilityRestrictedSyntax,
+        ...panelPresetRestrictedSyntax,
+        ...hexColorLiteralSyntax,
+      ],
     },
   },
 ])

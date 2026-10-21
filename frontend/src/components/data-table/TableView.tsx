@@ -6,7 +6,7 @@ import { type ReactNode, useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { EmptyState } from '@/components/display';
 import type { IconName } from '@/components/primitives';
-import { PANEL_EMPTY_STATE, DASHBOARD_EMPTY_STATE } from '@/components/display/emptyStatePresets';
+import { PANEL_EMPTY_STATE, DENSE_EMPTY_STATE } from '@/components/display/emptyStatePresets';
 import { DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';
 import type { ColumnConfig, SortConfig, TableVariant } from './types';
 import { PANEL } from '@/theme/recipes';
@@ -184,7 +184,7 @@ export function TableView<T>({
   }
 
   if (data.length === 0) {
-    const emptyPreset = emptyVariant === 'dense' ? DASHBOARD_EMPTY_STATE : PANEL_EMPTY_STATE;
+    const emptyPreset = emptyVariant === 'dense' ? DENSE_EMPTY_STATE : PANEL_EMPTY_STATE;
     const emptyMinHeight = resolveEmptyMinHeight(embedded, emptyVariant);
     const resolvedIcon = (emptyIcon as IconName | undefined) ?? emptyPreset.icon;
     const emptyContent =

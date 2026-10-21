@@ -2,7 +2,7 @@
  * Panel preset types — chrome is owned by the registry, not by call sites.
  */
 
-export type PanelVariant = 'page' | 'pageEmbed' | 'lab' | 'labEmbed';
+export type PanelVariant = 'page' | 'pageEmbed' | 'compact' | 'compactEmbed';
 export type PanelScroll = 'default' | 'auto' | 'visible';
 export type PanelSpacing = 'none' | 'compact' | 'normal' | 'relaxed';
 

@@ -12,13 +12,13 @@ import type { LabAuditLine } from '../constants/labWorkflowAuditLines';
 import { LabWorkflowLeftColumn } from '../components/LabWorkflowLeftColumn';
 import type { LabIdentityContext } from '../components/LabIdentityRow';
 import {
-  LAB_CARD_CONTAINERS,
-  LAB_CARD_FOOTER,
-  LAB_CARD_HEADER,
-  LAB_CARD_LIST_ITEMS,
-  LAB_CARD_SPACING,
-  LAB_CARD_TYPOGRAPHY,
-  LAB_MOBILE_CARD,
+  QUEUE_CARD_SURFACE,
+  CARD_ACTIONS_ROW,
+  CARD_HEADER_GRID,
+  QUEUE_CARD_LIST_ITEM,
+  QUEUE_CARD_SPACING,
+  QUEUE_CARD_TYPE,
+  MOBILE_LIST_CARD,
 } from '@/theme/recipes';
 
 export interface QueueCardHeaderProps {
@@ -45,7 +45,7 @@ export function QueueCardHeader({
   return (
     <div
       className={
-        showHeaderActions ? LAB_CARD_HEADER.shellWithActions : LAB_CARD_HEADER.shell
+        showHeaderActions ? CARD_HEADER_GRID.shellWithActions : CARD_HEADER_GRID.shell
       }
     >
       {leftColumn ?? (
@@ -59,8 +59,8 @@ export function QueueCardHeader({
         <LabHeaderCompactContext.Provider value={true}>
           <div
             className={cn(
-              LAB_CARD_HEADER.badgeColumn,
-              showHeaderActions && LAB_CARD_HEADER.badgeColumnBeforeActions,
+              CARD_HEADER_GRID.badgeColumn,
+              showHeaderActions && CARD_HEADER_GRID.badgeColumnBeforeActions,
             )}
           >
             {badges}
@@ -69,7 +69,7 @@ export function QueueCardHeader({
       ) : null}
       {showHeaderActions ? (
         <div
-          className={LAB_CARD_HEADER.actionColumn}
+          className={CARD_HEADER_GRID.actionColumn}
           onClick={e => e.stopPropagation()}
         >
           {headerActions}
@@ -86,14 +86,14 @@ export interface QueueCardPanelProps {
 }
 
 export function QueueCardPanel({ title, children, className }: QueueCardPanelProps) {
-  const sectionClass = className ?? LAB_CARD_CONTAINERS.contentSection;
+  const sectionClass = className ?? QUEUE_CARD_SURFACE.contentSection;
 
   return (
     <div className={sectionClass}>
-      <div className={LAB_CARD_SPACING.sectionTitleMargin}>
-        <span className={LAB_CARD_TYPOGRAPHY.sectionTitle}>{title}</span>
+      <div className={QUEUE_CARD_SPACING.sectionTitleMargin}>
+        <span className={QUEUE_CARD_TYPE.sectionTitle}>{title}</span>
       </div>
-      <div className={LAB_CARD_TYPOGRAPHY.sectionContent}>{children}</div>
+      <div className={QUEUE_CARD_TYPE.sectionContent}>{children}</div>
     </div>
   );
 }
@@ -143,8 +143,8 @@ export function QueueCard({
 
   return (
     <div className={`cursor-pointer ${className}`} onClick={onClick}>
-      <Card variant="lab">
-        <div className={`flex flex-col ${LAB_CARD_SPACING.cardGap}`}>
+      <Card variant="interactive">
+        <div className={`flex flex-col ${QUEUE_CARD_SPACING.cardGap}`}>
           <QueueCardHeader
             context={context}
             leftColumn={leftColumn}
@@ -162,7 +162,7 @@ export function QueueCard({
           {recollectionBanner}
 
           {footerActions ? (
-            <div className={LAB_CARD_FOOTER.actions} onClick={e => e.stopPropagation()}>
+            <div className={CARD_ACTIONS_ROW.actions} onClick={e => e.stopPropagation()}>
               {footerActions}
             </div>
           ) : null}
@@ -204,7 +204,7 @@ export function QueueCardMobile({
   const alertNode = alerts ?? meta;
 
   return (
-    <div className={cn(LAB_MOBILE_CARD.stack, className)}>
+    <div className={cn(MOBILE_LIST_CARD.stack, className)}>
       <QueueCardHeader
         context={context}
         leftColumn={leftColumn}
@@ -216,7 +216,7 @@ export function QueueCardMobile({
       {children}
       {footerActions ? (
         <div
-          className={cn(LAB_CARD_FOOTER.actions, 'mt-auto')}
+          className={cn(CARD_ACTIONS_ROW.actions, 'mt-auto')}
           onClick={e => e.stopPropagation()}
         >
           {footerActions}
@@ -231,7 +231,7 @@ const QUEUE_CARD_TEST_LIST_MAX_VISIBLE = 4;
 const QUEUE_CARD_TEST_LIST_COLLAPSED_COUNT = QUEUE_CARD_TEST_LIST_MAX_VISIBLE - 1;
 
 const queueCardTestListToggleClass = cn(
-  LAB_CARD_LIST_ITEMS.testName,
+  QUEUE_CARD_LIST_ITEM.label,
   'underline text-text-secondary hover:text-text-primary',
 );
 
@@ -250,17 +250,17 @@ export function QueueCardTestList({ tests }: { tests: Array<{ name: string; code
   };
 
   return (
-    <ul className={LAB_CARD_SPACING.listGap}>
+    <ul className={QUEUE_CARD_SPACING.listGap}>
       {visibleTests.map((test, i) => (
-        <li key={test.code || i} className={LAB_CARD_LIST_ITEMS.testItem}>
-          <span className={LAB_CARD_LIST_ITEMS.bullet} />
-          <span className={LAB_CARD_LIST_ITEMS.testName}>{test.name}</span>
+        <li key={test.code || i} className={QUEUE_CARD_LIST_ITEM.row}>
+          <span className={QUEUE_CARD_LIST_ITEM.bullet} />
+          <span className={QUEUE_CARD_LIST_ITEM.label}>{test.name}</span>
           <EntityId variant="inline">{test.code}</EntityId>
         </li>
       ))}
       {shouldCollapse ? (
-        <li className={LAB_CARD_LIST_ITEMS.testItem}>
-          <span className={LAB_CARD_LIST_ITEMS.bullet} />
+        <li className={QUEUE_CARD_LIST_ITEM.row}>
+          <span className={QUEUE_CARD_LIST_ITEM.bullet} />
           <button
             type="button"
             className={queueCardTestListToggleClass}
@@ -271,8 +271,8 @@ export function QueueCardTestList({ tests }: { tests: Array<{ name: string; code
         </li>
       ) : null}
       {canTruncate && expanded ? (
-        <li className={LAB_CARD_LIST_ITEMS.testItem}>
-          <span className={LAB_CARD_LIST_ITEMS.bullet} />
+        <li className={QUEUE_CARD_LIST_ITEM.row}>
+          <span className={QUEUE_CARD_LIST_ITEM.bullet} />
           <button
             type="button"
             className={queueCardTestListToggleClass}

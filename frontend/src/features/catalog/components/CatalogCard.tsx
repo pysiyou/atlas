@@ -4,7 +4,7 @@ import { CatalogCategoryBadge, CatalogSampleTypeBadge } from './CatalogStatusBad
 import type { CardComponentProps } from '@/components/data-table';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import type { TestSummary } from '@/types';
-import { BADGE, CARD_PRICE, TYPE } from '@/theme/recipes';
+import { BADGE, PRICE_DISPLAY, TYPE } from '@/theme/recipes';
 
 
 /**
@@ -28,7 +28,7 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<TestSumm
           </div>
         }
         trailing={
-          <div className={`${CARD_PRICE} leading-none`}>{formatCurrency(test.price)}</div>
+          <div className={`${PRICE_DISPLAY} leading-none`}>{formatCurrency(test.price)}</div>
         }
       />
 

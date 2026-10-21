@@ -8,7 +8,7 @@ import { cn } from '@/utils';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
 import type { RecollectionRequestSummary } from '@/types/lab-operations';
 import { useLabWorkflowCardClickGuard } from '../hooks';
-import { LAB_MOBILE_CARD } from '@/theme/recipes';
+import { MOBILE_LIST_CARD } from '@/theme/recipes';
 import { QueueCard, QueueCardMobile } from './queueCardLayout';
 import {
   RecollectionRequestActions,
@@ -108,7 +108,7 @@ function RecollectionRequestCardMobile({
       padding="sm"
       hover
       className={cn(
-        LAB_MOBILE_CARD.surface,
+        MOBILE_LIST_CARD.surface,
         request.requiresSupervisorOverride && 'border-warning-stroke-emphasis'
       )}
       onClick={onCardClick}
@@ -128,7 +128,7 @@ function RecollectionRequestCardMobile({
         }
         actionsPlacement="header"
       >
-        <div className={cn(LAB_MOBILE_CARD.body, 'space-y-space-0-5')}>
+        <div className={cn(MOBILE_LIST_CARD.body, 'space-y-space-0-5')}>
           <RecollectionReviewBody
             request={request}
             reviewNotes={reviewNotes}

@@ -30,7 +30,7 @@ export function ResultEntryDetailGrid({
     <DetailGrid
       sections={[
         {
-          preset: 'lab.modal.testParameters',
+          preset: 'compact.modal.testParameters',
           fields: [
             {
               label: 'Total Parameters',
@@ -55,7 +55,7 @@ export function ResultEntryDetailGrid({
           ],
         },
         {
-          preset: 'lab.modal.testInformation',
+          preset: 'compact.modal.testInformation',
           fields: [
             {
               label: 'Test ID',

@@ -3,7 +3,7 @@
  */
 
 import { createElement, type ReactNode } from 'react';
-import { TABLE_TYPE } from '@/theme/recipes';
+import { TABLE_TYPE, tableCell } from '@/theme/recipes';
 import { formatDateTime } from '@/utils';
 import { TABLE_COLUMN_WIDTH } from './columnWidthTokens';
 import type {
@@ -153,4 +153,11 @@ export function isPaginationEnabled(
     return pagination.mode !== 'none';
   }
   return true;
+}
+
+/** Composed table cell classes (layout, tone, padding) via CVA. */
+export function composedTableCell(
+  options: NonNullable<Parameters<typeof tableCell>[0]>
+): string {
+  return tableCell(options);
 }

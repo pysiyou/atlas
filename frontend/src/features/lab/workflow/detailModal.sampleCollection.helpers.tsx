@@ -78,14 +78,14 @@ export function SampleCollectionDetailContent({
           />
         </div>
       )}
-      <Panel preset="lab.modal.requiredFor">
+      <Panel preset="compact.modal.requiredFor">
         <QueueCardTestList
           tests={testNames.map((name, i) => ({ name, code: testCodes[i] || '' }))}
         />
       </Panel>
 
       {isRejected && rejectedSample && (
-        <Panel preset="lab.modal.rejectionDetails">
+        <Panel preset="compact.modal.rejectionDetails">
           <div className={`space-y-space-2 ${TYPE.label}`}>
             {rejectedSample.rejectionReasons && rejectedSample.rejectionReasons.length > 0 && (
               <p>
@@ -117,7 +117,7 @@ export function SampleCollectionDetailContent({
       )}
 
       {collectionNotes && (
-        <Panel preset="lab.modal.collectionNotes">
+        <Panel preset="compact.modal.collectionNotes">
           <div className={TYPE.amount}>{collectionNotes}</div>
         </Panel>
       )}

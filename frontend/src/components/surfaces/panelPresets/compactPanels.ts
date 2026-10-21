@@ -1,91 +1,91 @@
 import type { PanelPresetDefinition } from './types';
 
-const LAB: Pick<PanelPresetDefinition, 'variant'> = { variant: 'lab' };
+const COMPACT: Pick<PanelPresetDefinition, 'variant'> = { variant: 'compact' };
 
 const RESULTS_CHROME: Pick<PanelPresetDefinition, 'variant' | 'scroll' | 'bodyLayout' | 'maxHeightClass'> = {
-  variant: 'lab',
+  variant: 'compact',
   scroll: 'auto',
   bodyLayout: 'minH0',
   maxHeightClass: 'max-h-[min(32rem,65vh)]',
 };
 
-export const labPanelPresets = {
-  'lab.modal.requiredFor': {
+export const compactPanelPresets = {
+  'compact.modal.requiredFor': {
     title: 'Required for',
-    ...LAB,
+    ...COMPACT,
   },
-  'lab.modal.rejectionDetails': {
+  'compact.modal.rejectionDetails': {
     title: 'Rejection Details',
-    ...LAB,
+    ...COMPACT,
   },
-  'lab.modal.collectionNotes': {
+  'compact.modal.collectionNotes': {
     title: 'Collection Notes',
-    ...LAB,
+    ...COMPACT,
   },
-  'lab.modal.collectionRequirementsInstructions': {
+  'compact.modal.collectionRequirementsInstructions': {
     title: 'Collection Requirements & Instructions',
-    ...LAB,
+    ...COMPACT,
   },
-  'lab.modal.resultEntry': {
+  'compact.modal.resultEntry': {
     title: 'Result Entry',
-    ...LAB,
+    ...COMPACT,
   },
-  'lab.modal.resultValidation': {
+  'compact.modal.resultValidation': {
     title: 'Result Validation',
     ...RESULTS_CHROME,
   },
-  'lab.modal.recordedResults': {
+  'compact.modal.recordedResults': {
     title: 'Recorded Results',
     ...RESULTS_CHROME,
   },
-  'lab.modal.escalationSummary': {
+  'compact.modal.escalationSummary': {
     title: 'Escalation Summary',
-    ...LAB,
+    ...COMPACT,
   },
-  'lab.modal.criticalValueNotification': {
+  'compact.modal.criticalValueNotification': {
     title: 'Critical Value Notification',
-    ...LAB,
+    ...COMPACT,
   },
-  'lab.modal.relatedSamples': {
+  'compact.modal.relatedSamples': {
     title: 'Related samples',
-    variant: 'lab',
+    variant: 'compact',
     shellLayout: 'fullWidth',
   },
-  'lab.modal.testParameters': {
+  'compact.modal.testParameters': {
     title: 'Test Parameters',
-    ...LAB,
+    ...COMPACT,
   },
-  'lab.modal.testInformation': {
+  'compact.modal.testInformation': {
     title: 'Test Information',
-    ...LAB,
+    ...COMPACT,
   },
-  'lab.modal.collectionDetails': {
+  'compact.modal.collectionDetails': {
     title: 'Collection Details',
-    ...LAB,
+    ...COMPACT,
   },
-  'lab.modal.volumeTracking': {
+  'compact.modal.volumeTracking': {
     title: 'Volume Tracking',
-    ...LAB,
+    ...COMPACT,
   },
-  'lab.modal.collectionRequirements': {
+  'compact.modal.collectionRequirements': {
     title: 'Collection Requirements',
-    ...LAB,
+    ...COMPACT,
   },
-  'lab.modal.workflow': {
+  'compact.modal.workflow': {
     title: 'Workflow',
-    ...LAB,
+    ...COMPACT,
   },
-  'lab.modal.testOverview': {
+  'compact.modal.testOverview': {
     title: 'Test overview',
-    ...LAB,
+    ...COMPACT,
   },
-  'lab.modal.collectionInformation': {
+  'compact.modal.collectionInformation': {
     title: 'Collection Information',
-    ...LAB,
+    ...COMPACT,
   },
-  'lab.modal.resultEntryInformation': {
+  'compact.modal.resultEntryInformation': {
     title: 'Result Entry Information',
-    ...LAB,
+    ...COMPACT,
   },
   'lab.monitor.today': {
     title: 'Today',
@@ -105,10 +105,10 @@ export const labPanelPresets = {
   },
   'lab.monitor.criticalValues': {
     title: 'Critical Values',
-    ...LAB,
+    ...COMPACT,
   },
   'lab.monitor.criticalValuesPending': {
     title: 'Critical Values Pending',
-    ...LAB,
+    ...COMPACT,
   },
 } as const satisfies Record<string, PanelPresetDefinition>;

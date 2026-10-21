@@ -13,9 +13,9 @@ export const auditPanelPresets = {
     variant: 'pageEmbed',
     scroll: 'auto',
   },
-  'audit.eventLog.lab': {
+  'audit.eventLog.compact': {
     title: 'Event log',
-    variant: 'labEmbed',
+    variant: 'compactEmbed',
     scroll: 'auto',
   },
   'audit.eventLog.monitor': {
@@ -62,7 +62,7 @@ export const catalogPanelPresets = {
 export const reportPanelPresets = {
   'report.preview.testResults': {
     title: '',
-    variant: 'lab',
+    variant: 'compact',
     headingSlot: true,
   },
 } as const satisfies Record<string, PanelPresetDefinition>;

@@ -17,14 +17,14 @@ export const PANEL_EMPTY_STATE_TEXT = {
 /** Detail modals — same as panel text-only empty (no icon). */
 export const MODAL_EMPTY_STATE = PANEL_EMPTY_STATE_TEXT;
 
-/** Lab command center dashboard — smaller typography and padding. */
-export const DASHBOARD_EMPTY_STATE = {
+/** Dense tables / split workspace panels — smaller typography and padding. */
+export const DENSE_EMPTY_STATE = {
   icon: DEFAULT_EMPTY_ICON satisfies IconName,
   variant: 'dense' as const,
   fill: true,
 } as const;
 
-export const DASHBOARD_EMPTY_STATE_TEXT = {
+export const DENSE_EMPTY_STATE_TEXT = {
   variant: 'dense' as const,
   fill: true,
 } as const;

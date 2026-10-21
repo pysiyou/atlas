@@ -19,8 +19,8 @@ import {
 export type { PanelPresetId, PanelScroll, PanelSpacing, PanelVariant } from './panelPresets';
 export { getPanelPreset, PANEL_PRESETS } from './panelPresets';
 
-function isLabVariant(variant: PanelVariant): boolean {
-  return variant === 'lab' || variant === 'labEmbed';
+function isCompactPanelVariant(variant: PanelVariant): boolean {
+  return variant === 'compact' || variant === 'compactEmbed';
 }
 
 export interface PanelProps {
@@ -49,7 +49,7 @@ export function Panel({
   const def = getPanelPreset(preset);
   const tokens = PANEL_SHELL[def.variant];
   const scroll = def.scroll ?? 'default';
-  const resolvedSpacing = def.spacing ?? (isLabVariant(def.variant) ? 'normal' : 'none');
+  const resolvedSpacing = def.spacing ?? (isCompactPanelVariant(def.variant) ? 'normal' : 'none');
   const resolvedMeta = meta ?? def.meta;
   const hasHeaderAside = Boolean(resolvedMeta || headerEnd);
   const headerClass = hasHeaderAside ? tokens.headerBetween : tokens.header;
