@@ -6,7 +6,7 @@ import React from 'react';
 import { Alert } from '@/components/display';
 import { Icon } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
-import { FIELD_ERROR, TONE, TYPE } from '@/theme/recipes';
+import { text, FIELD_ERROR, TONE } from '@/theme/recipes';
 
 
 export interface CriticalValueBannerProps {
@@ -42,16 +42,16 @@ export const ResultCriticalValueBanner: React.FC<CriticalValueBannerProps> = ({
         </div>
         <div className="pl-space-6 space-y-space-1">
           {criticalParameters.map((param, index) => (
-            <div key={index} className={`flex items-baseline gap-space-2 ${TYPE.value}`}>
+            <div key={index} className={`flex items-baseline gap-space-2 ${text({ role: 'body' })}`}>
               <span className={`shrink-0 font-medium ${TONE.danger.fg}`}>{param.name}</span>
               <span className={`font-normal ${TONE.danger.fg}`}>
                 {param.value}
-                {param.unit && <span className={`ml-space-1 ${TYPE.caption}`}>{param.unit}</span>}
+                {param.unit && <span className={`ml-space-1 ${text({ role: 'caption' })}`}>{param.unit}</span>}
               </span>
             </div>
           ))}
         </div>
-        <p className={`${TYPE.caption} pl-space-6`}>
+        <p className={`${text({ role: 'caption' })} pl-space-6`}>
           Physician will be automatically notified upon approval
         </p>
       </div>

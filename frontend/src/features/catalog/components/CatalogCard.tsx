@@ -4,7 +4,7 @@ import { CatalogCategoryBadge, CatalogSampleTypeBadge } from './CatalogStatusBad
 import type { CardComponentProps } from '@/components/data-table';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import type { TestSummary } from '@/types';
-import { BADGE, PRICE_DISPLAY, TYPE } from '@/theme/recipes';
+import { text, BADGE, PRICE_DISPLAY } from '@/theme/recipes';
 
 
 /**
@@ -23,7 +23,7 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<TestSumm
       <MobileEntityCard.Header
         leading={
           <div className="flex flex-col min-w-0">
-            <div className={`${TYPE.amount} break-words`}>{test.name}</div>
+            <div className={`${text({ role: 'amount' })} break-words`}>{test.name}</div>
             <EntityId className="leading-none">{test.code}</EntityId>
           </div>
         }
@@ -35,7 +35,7 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<TestSumm
       <div className="grow">
         <div className="space-y-space-1">
           {test.synonyms && test.synonyms.length > 0 && (
-            <div className={`${TYPE.label} truncate`}>
+            <div className={`${text({ role: 'label' })} truncate`}>
               {test.synonyms.slice(0, 2).join(', ')}
               {test.synonyms.length > 2 && ` +${test.synonyms.length - 2} more`}
             </div>
@@ -45,7 +45,7 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<TestSumm
 
       {/* Bottom section: Turnaround time (left) + Category + Sample Type badges (right) */}
       <div className="flex justify-between items-center mt-auto pt-space-3">
-        <div className={TYPE.meta}>
+        <div className={text({ role: 'body', intent: 'muted' })}>
           TAT: {formatTurnaroundTime(test.turnaroundTime)}
         </div>
         <div className="flex items-center gap-space-2">

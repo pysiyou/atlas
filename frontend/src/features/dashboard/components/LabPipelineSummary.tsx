@@ -16,7 +16,7 @@ import {
   type LabWorkflowStage,
 } from '@/features/lab';
 import { useAuthStore } from '@/app/authStore';
-import { INLINE_LINK, RADIUS, TYPE } from '@/theme/recipes';
+import { text, INLINE_LINK, RADIUS } from '@/theme/recipes';
 
 
 const LAB_QUEUE_ITEMS: Array<{
@@ -41,7 +41,7 @@ export const LabPipelineSummary: React.FC = () => {
   return (
     <Card padding="md">
       <div className="flex items-center justify-between mb-space-4">
-        <h2 className={TYPE.amount}>Lab Pipeline</h2>
+        <h2 className={text({ role: 'amount' })}>Lab Pipeline</h2>
         <Link to={getLabTabPath('monitor')} className={INLINE_LINK}>
           Command Center
         </Link>
@@ -64,7 +64,7 @@ export const LabPipelineSummary: React.FC = () => {
                   name={item.icon as IconName}
                   className={`w-4 h-4 shrink-0 ${stageVisual.text}`}
                 />
-                <span className={`${TYPE.label} truncate`}>{LAB_TAB_LABELS[item.id]}</span>
+                <span className={`${text({ role: 'label' })} truncate`}>{LAB_TAB_LABELS[item.id]}</span>
               </div>
               {count > 0 && (
                 <Badge variant="primary" size="xs">

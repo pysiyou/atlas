@@ -4,7 +4,7 @@
 import React from 'react';
 import type { WorklistPagination } from '../api/worklists';
 import { Button } from '@/components/primitives';
-import { TYPE } from '@/theme/recipes';
+import { text } from '@/theme/recipes';
 
 interface LabWorklistPaginationNoticeProps {
   pagination: WorklistPagination | undefined;
@@ -24,7 +24,7 @@ export const LabWorklistPaginationNotice: React.FC<LabWorklistPaginationNoticePr
 
   return (
     <div
-      className={`shrink-0 flex flex-wrap items-center justify-between gap-space-2 px-space-4 py-space-2 ${TYPE.caption}`}
+      className={`shrink-0 flex flex-wrap items-center justify-between gap-space-2 px-space-4 py-space-2 ${text({ role: 'caption' })}`}
       role="status"
     >
       <span>

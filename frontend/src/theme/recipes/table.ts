@@ -1,27 +1,28 @@
 /** Data table typography, shell, and cell padding. */
 
+import { text } from './cva/text';
 import { SPACING } from './spacing';
 
-const TABLE_TEXT_SCALE = 'type-table-cell';
+const tableBody = text({ role: 'body', density: 'table' });
+const tableBodyMuted = text({ role: 'body', intent: 'muted', density: 'table' });
+const tableBodySecondary = text({ role: 'label', density: 'table' });
+const tableSectionTitle = text({ role: 'section-title', intent: 'muted' });
+const tableCaption = text({ role: 'caption', density: 'compact' });
 
 export const TABLE_TYPE = {
-  /** Type scale step for body cells — matches `--type-table-cell-size`. */
-  size: TABLE_TEXT_SCALE,
-  /** Column header label (DataTable `TableHeader` — apply on each column cell / label). */
-  columnTitle: 'type-table-header text-text-tertiary',
+  size: 'type-ui-sm',
+  columnTitle: tableSectionTitle,
   columnTitleActive: 'text-text-primary bg-surface-selected',
   columnTitleSortable: 'cursor-pointer hover:bg-surface-hover select-none',
-  cell: `${TABLE_TEXT_SCALE} text-text-primary`,
-  secondary: `${TABLE_TEXT_SCALE} text-text-secondary`,
-  meta: `${TABLE_TEXT_SCALE} text-text-tertiary`,
-  amount: `${TABLE_TEXT_SCALE} text-text-primary`,
-  /** Timestamps and calendar dates in DataTable cells (primary column content). */
-  datetime: `${TABLE_TEXT_SCALE} text-text-primary tabular-nums`,
-  /** Same formats as datetime, smaller type and tertiary color when the date is supporting text. */
-  datetimeSecondary: `type-caption text-text-tertiary tabular-nums`,
-  label: `${TABLE_TEXT_SCALE} text-text-secondary`,
-  caption: `${TABLE_TEXT_SCALE} text-text-tertiary`,
-  link: `${TABLE_TEXT_SCALE} text-brand underline cursor-pointer`,
+  cell: `${tableBody} tabular-nums`,
+  secondary: tableBodySecondary,
+  meta: tableBodyMuted,
+  amount: `${tableBody} tabular-nums`,
+  datetime: `${tableBody} tabular-nums`,
+  datetimeSecondary: `${tableCaption} tabular-nums`,
+  label: tableBodySecondary,
+  caption: tableBodyMuted,
+  link: `${tableBody} text-brand underline cursor-pointer`,
 } as const;
 
 export const TABLE_SHELL = {
@@ -36,7 +37,7 @@ export const TABLE_SHELL = {
   rowStripedOdd: 'bg-surface-hover/50',
 } as const;
 
-export const INLINE_LINK = `${TABLE_TYPE.link} hover:underline`
+export const INLINE_LINK = `${TABLE_TYPE.link} hover:underline`;
 
 export const PAGINATION_TYPE = {
   pageButtonBase: `${TABLE_TYPE.size} font-normal`,

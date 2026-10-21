@@ -1,12 +1,13 @@
 /** Filters, dialogs, menus, and floating shells. */
 
+import { text } from './cva/text';
 import { SPACING, RADIUS, SHADOW } from './spacing';
 import { SURFACE } from './surface';
 
 const filterBarRow = `[&>*]:min-w-0 [&>*]:flex-1`;
 
 export const FILTER_TYPE = {
-  sectionTitle: 'type-detail-title font-semibold text-text-primary mb-space-3',
+  sectionTitle: `${text({ role: 'title-section' })} font-semibold mb-space-3`,
 } as const;
 
 export const FILTER = {

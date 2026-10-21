@@ -1,7 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   ATLAS DESIGN SYSTEM - TYPOGRAPHY TOKENS
-   Modular rem scale, semantic roles, --font-size-* bridge for @theme.
-   @utility composites live in typography-utilities.css (imported from index.css).
+   ATLAS DESIGN SYSTEM - TYPOGRAPHY TOKENS (canonical only)
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
@@ -15,10 +13,8 @@
   --type-step-md: calc(var(--type-step-sm) * 1.286);
   --type-step-badge: calc(var(--type-base) * 0.917);
 
-  /* Tailwind @theme bridge (--type-step-* is the canonical scale) */
   --font-size-3xs: var(--type-step-3xs);
   --font-size-2xs: var(--type-step-2xs);
-  --font-size-xxs: var(--type-step-2xs);
   --font-size-badge: var(--type-step-badge);
   --font-size-xs: var(--type-step-xs);
   --font-size-sm: var(--type-step-sm);
@@ -31,13 +27,29 @@
   --type-leading-normal: 1.5;
   --type-leading-relaxed: 1.625;
 
+  --type-ui-sm-size: var(--type-step-xs);
+  --type-ui-sm-leading: var(--type-leading-snug);
+  --type-ui-sm-weight: var(--font-weight-normal);
+
+  --type-ui-md-size: var(--type-step-sm);
+  --type-ui-md-leading: var(--type-leading-snug);
+  --type-ui-md-weight: var(--font-weight-normal);
+
+  --type-heading-sm-size: var(--type-step-sm);
+  --type-heading-sm-leading: var(--type-leading-snug);
+  --type-heading-sm-weight: var(--font-weight-medium);
+
+  --type-heading-xs-size: var(--type-step-xs);
+  --type-heading-xs-leading: var(--type-leading-snug);
+  --type-heading-xs-weight: var(--font-weight-medium);
+
   --type-body-size: var(--type-step-xs);
   --type-body-leading: var(--type-leading-normal);
   --type-body-weight: var(--font-weight-normal);
 
-  --type-label-size: var(--type-step-xs);
-  --type-label-leading: var(--type-leading-snug);
-  --type-label-weight: var(--font-weight-normal);
+  --type-value-size: var(--type-step-xs);
+  --type-value-leading: var(--type-leading-relaxed);
+  --type-value-weight: var(--font-weight-normal);
 
   --type-caption-size: var(--type-step-2xs);
   --type-caption-leading: var(--type-leading-tight);
@@ -52,96 +64,13 @@
   --type-page-title-leading: var(--type-leading-tight);
   --type-page-title-weight: var(--font-weight-light);
 
-  --type-detail-title-size: var(--type-step-sm);
-  --type-detail-title-leading: var(--type-leading-snug);
-  --type-detail-title-weight: var(--font-weight-medium);
-
   --type-panel-title-size: var(--type-step-xs);
   --type-panel-title-leading: var(--type-leading-snug);
   --type-panel-title-weight: var(--font-weight-light);
 
-  --type-modal-title-size: var(--type-step-xs);
-  --type-modal-title-leading: var(--type-leading-snug);
-  --type-modal-title-weight: var(--font-weight-medium);
-
-  --type-amount-size: var(--type-step-sm);
-  --type-amount-leading: var(--type-leading-snug);
-  --type-amount-weight: var(--font-weight-normal);
-
-  --type-table-cell-size: var(--type-step-xs);
-  --type-table-cell-leading: var(--type-leading-snug);
-  --type-table-cell-weight: var(--font-weight-normal);
-
-  --type-table-header-size: var(--type-step-2xs);
-  --type-table-header-leading: var(--type-leading-tight);
-  --type-table-header-weight: var(--font-weight-normal);
-  --type-table-header-tracking: 0.06em;
-
   --type-badge-size: var(--type-step-badge);
   --type-badge-leading: var(--type-leading-none);
   --type-badge-weight: var(--font-weight-normal);
-
-  --type-detail-value-size: var(--type-step-xs);
-  --type-detail-value-leading: var(--type-leading-relaxed);
-  --type-detail-value-weight: var(--font-weight-normal);
-
-  --type-detail-label-size: var(--type-step-xs);
-  --type-detail-label-leading: var(--type-leading-snug);
-  --type-detail-label-weight: var(--font-weight-normal);
-
-  --type-detail-meta-size: var(--type-step-xs);
-  --type-detail-meta-leading: var(--type-leading-snug);
-  --type-detail-meta-weight: var(--font-weight-normal);
-
-  --type-detail-subtitle-size: var(--type-step-xs);
-  --type-detail-subtitle-leading: var(--type-leading-snug);
-  --type-detail-subtitle-weight: var(--font-weight-normal);
-
-  --type-detail-section-title-size: var(--type-step-xs);
-  --type-detail-section-title-leading: var(--type-leading-snug);
-  --type-detail-section-title-weight: var(--font-weight-medium);
-  --type-detail-section-title-tracking: 0.05em;
-
-  --type-button-sm-size: var(--type-step-xs);
-  --type-button-sm-leading: var(--type-leading-snug);
-  --type-button-sm-weight: var(--font-weight-normal);
-
-  --type-button-md-size: var(--type-step-sm);
-  --type-button-md-leading: var(--type-leading-snug);
-  --type-button-md-weight: var(--font-weight-normal);
-
-  --type-button-lg-size: var(--type-step-xs);
-  --type-button-lg-leading: var(--type-leading-snug);
-  --type-button-lg-weight: var(--font-weight-normal);
-
-  --type-chrome-section-title-size: var(--type-step-2xs);
-  --type-chrome-section-title-leading: var(--type-leading-none);
-  --type-chrome-section-title-weight: var(--font-weight-medium);
-  --type-chrome-section-title-tracking: 0.05em;
-
-  --type-chrome-nav-label-size: var(--type-step-sm);
-  --type-chrome-nav-label-leading: var(--type-leading-snug);
-  --type-chrome-nav-label-weight: var(--font-weight-medium);
-
-  --type-chrome-nav-tooltip-size: var(--type-step-xs);
-  --type-chrome-nav-tooltip-leading: var(--type-leading-snug);
-  --type-chrome-nav-tooltip-weight: var(--font-weight-medium);
-
-  --type-empty-title-size: var(--type-step-sm);
-  --type-empty-title-leading: var(--type-leading-snug);
-  --type-empty-title-weight: var(--font-weight-normal);
-
-  --type-empty-title-dense-size: var(--type-step-xs);
-  --type-empty-title-dense-leading: var(--type-leading-snug);
-  --type-empty-title-dense-weight: var(--font-weight-normal);
-
-  --type-empty-description-size: var(--type-step-sm);
-  --type-empty-description-leading: var(--type-leading-normal);
-  --type-empty-description-weight: var(--font-weight-normal);
-
-  --type-empty-description-dense-size: var(--type-step-xs);
-  --type-empty-description-dense-leading: var(--type-leading-snug);
-  --type-empty-description-dense-weight: var(--font-weight-normal);
 
   --type-micro-size: var(--type-step-3xs);
   --type-micro-leading: var(--type-leading-none);

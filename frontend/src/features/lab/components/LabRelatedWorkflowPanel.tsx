@@ -13,7 +13,7 @@ import type { OrderTest, Sample } from '@/types';
 import type { TestWithContext } from '@/types';
 import { displayId } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
-import { INLINE_LINK, TYPE } from '@/theme/recipes';
+import { text, INLINE_LINK } from '@/theme/recipes';
 
 type LabRelatedTestsPanelProps = {
   test: TestWithContext;
@@ -77,7 +77,7 @@ export const LabRelatedSamplesPanel: React.FC<LabRelatedSamplesPanelProps> = ({
 
   return (
     <Panel preset="panel.compact.fullWidth" title="Related samples">
-      <ul className={`space-y-space-2 ${TYPE.value}`}>
+      <ul className={`space-y-space-2 ${text({ role: 'body' })}`}>
         {others.map(s => (
           <li
             key={s.sampleId}
@@ -85,8 +85,8 @@ export const LabRelatedSamplesPanel: React.FC<LabRelatedSamplesPanelProps> = ({
           >
             <div className="flex flex-wrap items-baseline gap-x-space-2">
               <span className="font-medium">{displayId.sample(s.sampleId)}</span>
-              <span className={TYPE.meta}>{formatStatusBadgeLabel(s.status)}</span>
-              {s.isRecollection ? <span className={TYPE.meta}>Recollection</span> : null}
+              <span className={text({ role: 'body', intent: 'muted' })}>{formatStatusBadgeLabel(s.status)}</span>
+              {s.isRecollection ? <span className={text({ role: 'body', intent: 'muted' })}>Recollection</span> : null}
             </div>
             <button
               type="button"

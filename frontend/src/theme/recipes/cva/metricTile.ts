@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import { RADIUS, SHADOW } from '../spacing';
 import { TONE } from '../tone';
-import { TYPE } from '../type';
+import { text } from './text';
 
 export const metricTile = cva(
   `${RADIUS.surface} border px-space-3 py-space-2-5 flex flex-col gap-space-1-5 min-h-[4.5rem] transition-colors duration-150`,
@@ -30,13 +30,13 @@ export type MetricTileRecipeProps = VariantProps<typeof metricTile>;
 export const METRIC_TILE = {
   tile: metricTile({ state: 'filled' }),
   grid: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-space-3',
-  label: `${TYPE.caption} font-medium truncate`,
-  value: `${TYPE.pageTitle} font-medium tabular-nums`,
-  unit: `${TYPE.meta} font-normal ml-space-1`,
-  reference: `${TYPE.caption} leading-none font-normal truncate shrink-0 max-w-[50%]`,
-  referenceUnavailable: `${TYPE.caption} leading-none font-normal truncate shrink-0 max-w-[50%]`,
+  label: `${text({ role: 'caption' })} font-medium truncate`,
+  value: `${text({ role: 'title-page' })} font-medium tabular-nums`,
+  unit: `${text({ role: 'body', intent: 'muted' })} font-normal ml-space-1`,
+  reference: `${text({ role: 'caption' })} leading-none font-normal truncate shrink-0 max-w-[50%]`,
+  referenceUnavailable: `${text({ role: 'caption' })} leading-none font-normal truncate shrink-0 max-w-[50%]`,
   notesSection: 'mt-space-4 pt-space-4 border-t border-border-subtle space-y-space-3',
-  notesLabel: `${TYPE.label} font-normal`,
+  notesLabel: `${text({ role: 'label' })} font-normal`,
   inlineDenseGrid: 'grid grid-cols-2 sm:grid-cols-4 gap-x-space-4 gap-y-space-0-5',
   inlineGrid:
     'grid grid-cols-[repeat(auto-fit,minmax(140px,max-content))] gap-x-space-6 gap-y-space-1',

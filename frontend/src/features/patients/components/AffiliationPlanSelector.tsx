@@ -15,7 +15,8 @@ import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import type { AffiliationPlan } from '@/types/affiliation';
 import type { AffiliationDuration } from '@/types';
 import { ICONS } from '@/config/icons';
-import { RADIUS, SHADOW, TYPE } from '@/theme/recipes';
+import { Text } from '@/components/layout/Text';
+import { text, RADIUS, SHADOW } from '@/theme/recipes';
 
 
 export interface AffiliationPlanSelectorProps {
@@ -91,7 +92,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
     return (
       <div className="flex items-center justify-center py-space-8">
         <SpinnerLoader size="md" />
-        <span className={`ml-space-3 ${TYPE.amount} text-text-tertiary`}>Loading plans...</span>
+        <Text role="amount" intent="muted" className="ml-space-3">Loading plans...</Text>
       </div>
     );
   }
@@ -110,26 +111,24 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
         )}
         <div className="space-y-space-4">
           <div>
-            <h3 className={`${TYPE.detailTitle} mb-space-2`}>Lab Affiliation Benefits</h3>
-            <p className={`${TYPE.amount} text-text-tertiary leading-relaxed`}>
+            <Text as="h3" role="title-section" className="mb-space-2">Lab Affiliation Benefits</Text>
+            <Text as="p" role="amount" intent="muted" className="leading-relaxed">
               Choose a plan that fits your needs. All plans include priority services and discounted
               pricing for lab tests.
-            </p>
+            </Text>
           </div>
 
           {/* Included Features - icons follow theme (brand) */}
           <div className="space-y-space-3">
-            <h4 className={TYPE.sectionTitle}>What&apos;s Included</h4>
+            <Text as="h4" role="section-title">What&apos;s Included</Text>
             <div className="space-y-space-2-5">
               <div className="flex items-start gap-space-3">
                 <div className={`flex-shrink-0 w-4 h-4 ${RADIUS.pill} bg-brand flex items-center justify-center mt-space-0-5`}>
                   <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                 </div>
                 <div>
-                  <span className={TYPE.amount}>
-                    Priority Lab Services
-                  </span>
-                  <p className={`${TYPE.meta} mt-space-0-5`}>Faster processing and results</p>
+                  <Text role="amount">Priority Lab Services</Text>
+                  <Text as="p" role="caption" intent="muted" className="mt-space-0-5">Faster processing and results</Text>
                 </div>
               </div>
               <div className="flex items-start gap-space-3">
@@ -137,10 +136,8 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                   <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                 </div>
                 <div>
-                  <span className={TYPE.amount}>
-                    Discounted Test Pricing
-                  </span>
-                  <p className={`${TYPE.meta} mt-space-0-5`}>Save on all lab tests</p>
+                  <Text role="amount">Discounted Test Pricing</Text>
+                  <Text as="p" role="caption" intent="muted" className="mt-space-0-5">Save on all lab tests</Text>
                 </div>
               </div>
               <div className="flex items-start gap-space-3">
@@ -148,10 +145,10 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                   <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                 </div>
                 <div>
-                  <span className={TYPE.amount}>Assurance Number</span>
-                  <p className={`${TYPE.meta} mt-space-0-5`}>
+                  <Text role="amount">Assurance Number</Text>
+                  <Text as="p" role="caption" intent="muted" className="mt-space-0-5">
                     Auto-generated unique identifier
-                  </p>
+                  </Text>
                 </div>
               </div>
               <div className="flex items-start gap-space-3">
@@ -159,10 +156,8 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                   <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                 </div>
                 <div>
-                  <span className={TYPE.amount}>
-                    Extended Validity Period
-                  </span>
-                  <p className={`${TYPE.meta} mt-space-0-5`}>Long-term access to services</p>
+                  <Text role="amount">Extended Validity Period</Text>
+                  <Text as="p" role="caption" intent="muted" className="mt-space-0-5">Long-term access to services</Text>
                 </div>
               </div>
             </div>
@@ -170,11 +165,11 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
 
           {/* Additional Info */}
           <div className="pt-space-4 border-t border-border-default">
-            <p className={`${TYPE.meta} leading-relaxed`}>
+            <Text as="p" role="body" intent="muted" className="leading-relaxed">
               {hasExistingAffiliation
                 ? 'Your affiliation will be extended from the current end date when you renew or extend.'
                 : 'An assurance number will be automatically generated upon registration. All plans include full lab services access.'}
-            </p>
+            </Text>
           </div>
         </div>
       </div>
@@ -196,7 +191,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                 {/* Best Value Badge */}
                 {plan.isBestValue && (
                   <div className="absolute -top-space-2 -right-space-2">
-                    <div className={`bg-danger text-on-danger ${TYPE.caption} font-normal px-space-2 py-space-0-5 ${RADIUS.surface} transform rotate-3 ${SHADOW.subtle}`}>
+                    <div className={`bg-danger text-on-danger ${text({ role: 'caption' })} font-normal px-space-2 py-space-0-5 ${RADIUS.surface} transform rotate-3 ${SHADOW.subtle}`}>
                       Best Value
                     </div>
                   </div>
@@ -224,7 +219,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                   {/* Plan Details */}
                   <div className="flex-1 min-w-0">
                     <div className="mb-space-2">
-                      <h5 className={TYPE.amount}>{plan.label}</h5>
+                      <Text as="h5" role="title-section">{plan.label}</Text>
                     </div>
 
                     {/* Pricing */}
@@ -233,33 +228,33 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                         {plan.duration === 12 ? (
                           <>
                             <div className="flex items-baseline gap-space-2">
-                              <span className={`${TYPE.pageTitle} font-normal`}>
+                              <span className={`${text({ role: 'title-page' })} font-normal`}>
                                 {formatCurrency(plan.monthlyPrice)}
                               </span>
-                              <span className={`${TYPE.amount} text-text-tertiary font-normal`}>/month</span>
+                              <Text role="amount" intent="muted" className="font-normal">/month</Text>
                             </div>
-                            <div className={TYPE.meta}>
+                            <Text role="body" intent="muted">
                               {formatCurrency(plan.price)} per year
-                            </div>
+                            </Text>
                           </>
                         ) : (
                           <div className="flex items-baseline gap-space-2">
-                            <span className={`${TYPE.pageTitle} font-normal`}>
+                            <span className={`${text({ role: 'title-page' })} font-normal`}>
                               {formatCurrency(plan.price)}
                             </span>
-                            <span className={`${TYPE.amount} text-text-tertiary`}>
+                            <Text role="amount" intent="muted">
                               /{plan.duration === 6 ? '6 months' : '2 years'}
-                            </span>
+                            </Text>
                           </div>
                         )}
                       </div>
                     ) : (
                       <div className="space-y-space-1">
-                        <div className={`${TYPE.amount} text-text-tertiary`}>Price not available</div>
+                        <Text role="amount" intent="muted">Price not available</Text>
                         {isSelected && (
-                          <div className={`${TYPE.value} text-warning-fg`}>
+                          <Text role="body" className="text-warning-fg">
                             Pricing will be calculated during checkout
-                          </div>
+                          </Text>
                         )}
                       </div>
                     )}
@@ -284,7 +279,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
             >
               {getActionText()}
             </Button>
-            <p className={`${TYPE.meta} text-center mt-space-2`}>
+            <p className={`${text({ role: 'body', intent: 'muted' })} text-center mt-space-2`}>
               All subscription auto renews until canceled
             </p>
           </div>

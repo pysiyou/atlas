@@ -3,7 +3,7 @@
 import { cn, formatDateTime } from '@/utils';
 import { EntityId } from '@/components/display';
 import { useUserLookup } from '@/lib/api/users';
-import { WORKLIST_CARD_TYPE, WORKLIST_HEADER, MODAL_HEADER_TYPE } from '@/theme/recipes';
+import { text, WORKLIST_EMPHASIZED_INLINE, WORKLIST_HEADER } from '@/theme/recipes';
 import type { LabAuditLine } from '../constants/labWorkflowAuditLines';
 
 export function LabAuditLineView({
@@ -19,7 +19,7 @@ export function LabAuditLineView({
 }) {
   const { getUserName } = useUserLookup();
   const base = cn(
-    tone === 'modal' ? MODAL_HEADER_TYPE.auditLine : WORKLIST_HEADER.auditLine,
+    tone === 'modal' ? text({ role: 'label' }) : WORKLIST_HEADER.auditLine,
     className
   );
   const byUserClass = compact ? 'hidden md:inline' : undefined;
@@ -35,14 +35,14 @@ export function LabAuditLineView({
             <EntityId>{line.sampleId}</EntityId>
           )}{' '}
           collected{' '}
-          <span className={WORKLIST_CARD_TYPE.emphasizedInline}>
+          <span className={WORKLIST_EMPHASIZED_INLINE}>
             {formatDateTime(line.collectedAt)}
           </span>
           {line.collectedBy && (
             <span className={byUserClass}>
               {' '}
               by{' '}
-              <span className={WORKLIST_CARD_TYPE.emphasizedInline}>
+              <span className={WORKLIST_EMPHASIZED_INLINE}>
                 {getUserName(line.collectedBy)}
               </span>
             </span>
@@ -53,14 +53,14 @@ export function LabAuditLineView({
       return (
         <span className={base}>
           Collected{' '}
-          <span className={WORKLIST_CARD_TYPE.emphasizedInline}>
+          <span className={WORKLIST_EMPHASIZED_INLINE}>
             {formatDateTime(line.collectedAt)}
           </span>
           {line.collectedBy && (
             <span className={byUserClass}>
               {' '}
               by{' '}
-              <span className={WORKLIST_CARD_TYPE.emphasizedInline}>
+              <span className={WORKLIST_EMPHASIZED_INLINE}>
                 {getUserName(line.collectedBy)}
               </span>
             </span>
@@ -75,7 +75,7 @@ export function LabAuditLineView({
           {line.collectedAt ? (
             <>
               <span> — collected on </span>
-              <span className={WORKLIST_CARD_TYPE.emphasizedInline}>
+              <span className={WORKLIST_EMPHASIZED_INLINE}>
                 {formatDateTime(line.collectedAt)}
               </span>
             </>
@@ -100,14 +100,14 @@ export function LabAuditLineView({
       return (
         <span className={base}>
           Results entered{' '}
-          <span className={WORKLIST_CARD_TYPE.emphasizedInline}>
+          <span className={WORKLIST_EMPHASIZED_INLINE}>
             {formatDateTime(line.enteredAt)}
           </span>
           {line.enteredBy && (
             <span className={byUserClass}>
               {' '}
               by{' '}
-              <span className={WORKLIST_CARD_TYPE.emphasizedInline}>
+              <span className={WORKLIST_EMPHASIZED_INLINE}>
                 {getUserName(line.enteredBy)}
               </span>
             </span>

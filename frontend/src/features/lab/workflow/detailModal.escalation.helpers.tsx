@@ -12,7 +12,7 @@ import { LabRelatedTestsPanel } from '../components/LabRelatedWorkflowPanel';
 import { LabEventLogPanel } from '@/features/audit';
 import type { TestWithContext } from '@/types';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
-import { TYPE } from '@/theme/recipes';
+import { text } from '@/theme/recipes';
 import { notify } from '@/utils/feedback';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
 import { EscalationResolutionActions, type EscalationResolveOptions } from '../validation/EscalationResolutionActions';
@@ -62,12 +62,12 @@ function EscalationSummaryPanel({
 }) {
   return (
     <Panel preset="panel.compact.standard" title="Escalation Summary">
-      <p className={TYPE.label}>
+      <p className={text({ role: 'label' })}>
         This test was escalated before results were entered. Review the context below and choose
         an action.
       </p>
       {(rejectionReason || rejectionNotes) && (
-        <dl className={`mt-space-3 space-y-space-2 ${TYPE.amount}`}>
+        <dl className={`mt-space-3 space-y-space-2 ${text({ role: 'amount' })}`}>
           {rejectionReason && (
             <div>
               <dt className="text-text-tertiary">Rejection reason</dt>
@@ -201,7 +201,7 @@ export function EscalationResolutionFooter(props: EscalationResolutionFooterProp
   return (
     <ModalFooter statusMessage="" statusClassName="text-text-tertiary">
       {!canResolveEscalation ? (
-        <p className={TYPE.meta}>You do not have permission to resolve escalations.</p>
+        <p className={text({ role: 'body', intent: 'muted' })}>You do not have permission to resolve escalations.</p>
       ) : (
         <EscalationResolutionActions
           {...actionProps}

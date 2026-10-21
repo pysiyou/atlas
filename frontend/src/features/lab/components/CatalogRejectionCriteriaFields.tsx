@@ -5,8 +5,8 @@
 import React from 'react';
 import { Alert } from '@/components/display';
 import { cn } from '@/utils';
-import { inputBase, FORM_FIELD_LABEL } from '@/theme/recipes';
-import { TONE, TYPE } from '@/theme/recipes';
+import { text, inputBase, FORM_FIELD_LABEL } from '@/theme/recipes';
+import { TONE } from '@/theme/recipes';
 
 
 export interface CatalogRejectionFieldsProps {
@@ -37,13 +37,13 @@ export const CatalogRejectionCriteriaFields: React.FC<CatalogRejectionFieldsProp
   showNotes = true,
 }) => {
   if (showReason && criteriaLoading) {
-    return <p className={TYPE.meta}>Loading rejection criteria...</p>;
+    return <p className={text({ role: 'body', intent: 'muted' })}>Loading rejection criteria...</p>;
   }
 
   if (showReason && criteria.length === 0) {
     return (
       <Alert variant="danger" className="py-space-2">
-        <p className={TYPE.value}>No rejection criteria are defined for this test in the catalog.</p>
+        <p className={text({ role: 'body' })}>No rejection criteria are defined for this test in the catalog.</p>
       </Alert>
     );
   }

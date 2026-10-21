@@ -17,9 +17,9 @@ import { indexTestsByCode } from '@/features/catalog/testLookup';
 import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
 import { cn, formatCurrency, formatTurnaroundTime, titleCaseWords } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/theme/recipes';
+import { text, inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/theme/recipes';
 import { OrderSelectPopoverShell } from './OrderSelectPopoverShell';
-import { CONTROL, FIELD_ERROR, SPACING, TYPE } from '@/theme/recipes';
+import { CONTROL, FIELD_ERROR, SPACING } from '@/theme/recipes';
 
 
 const SELECTED_CHIP_CLASS =
@@ -51,7 +51,7 @@ function TestSelectMetaLine({ code, test }: { code: string; test: TestSummary })
   if (!hasCode && segments.length === 0) return null;
 
   return (
-    <p className={`${TYPE.caption} font-normal truncate uppercase min-w-0`}>
+    <p className={`${text({ role: 'caption' })} font-normal truncate uppercase min-w-0`}>
       {hasCode && <span className="truncate">{code}</span>}
       {hasCode && segments.length > 0 && <span> · </span>}
       {segments.map((segment, index) => (
@@ -75,11 +75,11 @@ function TestSelectedChip({
 }) {
   return (
     <div className="min-w-0 flex flex-col">
-      <span className={`${TYPE.value} font-normal truncate`}>{name}</span>
+      <span className={`${text({ role: 'body' })} font-normal truncate`}>{name}</span>
       {test ? (
         <TestSelectMetaLine code={code} test={test} />
       ) : (
-        <p className={`${TYPE.caption} font-normal truncate uppercase`}>{code}</p>
+        <p className={`${text({ role: 'caption' })} font-normal truncate uppercase`}>{code}</p>
       )}
     </div>
   );
@@ -119,7 +119,7 @@ const TestSearchTagInput: React.FC<{
         >
           Tests
         </label>
-        <span className={`${TYPE.amount} text-text-tertiary tabular-nums shrink-0`}>
+        <span className={`${text({ role: 'amount' })} text-text-tertiary tabular-nums shrink-0`}>
           {selectedCount} {selectedCount === 1 ? 'test' : 'tests'}
         </span>
       </div>
@@ -158,7 +158,7 @@ const TestSearchTagInput: React.FC<{
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => onValueChange(e.target.value)}
           onFocus={() => onValueChange(value)}
           placeholder={selectedTags.length === 0 ? 'Search by code or name…' : ''}
-          className={`flex-1 min-w-[120px] outline-none ${TYPE.value} placeholder:text-text-muted bg-transparent leading-normal`}
+          className={`flex-1 min-w-[120px] outline-none ${text({ role: 'body' })} placeholder:text-text-muted bg-transparent leading-normal`}
           autoComplete="off"
         />
       </div>
@@ -209,11 +209,11 @@ const TestSelectPopover: React.FC<TestSelectPopoverProps> = ({
                 )}
               >
                 <div className="min-w-0 flex-1">
-                  <p className={`${TYPE.value} font-normal truncate`}>{safeName}</p>
+                  <p className={`${text({ role: 'body' })} font-normal truncate`}>{safeName}</p>
                   <TestSelectMetaLine code={code} test={test} />
                 </div>
                 <div className="flex shrink-0 items-center gap-layout-section">
-                  <span className={`${TYPE.amount} font-medium text-text-tertiary tabular-nums`}>
+                  <span className={`${text({ role: 'amount' })} font-medium text-text-tertiary tabular-nums`}>
                     {formatCurrency(price)}
                   </span>
                   <CheckboxIndicator

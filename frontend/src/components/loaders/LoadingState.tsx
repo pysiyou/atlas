@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { SpinnerLoader } from './SpinnerLoader';
-import { RADIUS, TYPE } from '@/theme/recipes';
+import { text, RADIUS } from '@/theme/recipes';
 import { cn } from '@/utils/cn';
 
 const LOADER_GLOW: Record<'sm' | 'md' | 'lg', string> = {
@@ -60,7 +60,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
           <SpinnerLoader size={size} className="relative z-[1] text-brand" />
         </div>
         {message && (
-          <p className={`max-w-[18rem] ${TYPE.amount} font-medium tracking-tight text-text-secondary`}>
+          <p className={`max-w-[18rem] ${text({ role: 'amount' })} font-medium tracking-tight text-text-secondary`}>
             {message}
           </p>
         )}

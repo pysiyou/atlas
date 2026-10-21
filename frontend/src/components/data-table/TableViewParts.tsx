@@ -103,7 +103,7 @@ export function TableCell({ column, children, variant }: TableCellProps) {
       )}
       role="cell"
     >
-      <div className="min-w-0 flex-1 flex items-center justify-start">{children}</div>
+      <div className="min-w-0 flex-1 flex items-start justify-start">{children}</div>
     </div>
   );
 }

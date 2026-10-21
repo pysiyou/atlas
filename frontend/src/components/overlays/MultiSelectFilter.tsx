@@ -10,7 +10,7 @@ import { parseBadgeVariant } from '@/components/primitives/badgeStyles';
 import { Icon, type IconName } from '@/components/primitives/Icon';
 import { Popover } from './Popover';
 import { FilterTriggerShell } from './FilterTriggerShell';
-import { MENU_ITEM_TYPE, RADIUS, TYPE } from '@/theme/recipes';
+import { text, MENU_ITEM_TYPE, RADIUS } from '@/theme/recipes';
 
 export interface FilterOption {
   id: string;
@@ -118,7 +118,7 @@ function MultiSelectTriggerContent({
           'h-5 min-w-[20px] px-space-1.5',
           RADIUS.pill,
           'bg-brand-muted',
-          TYPE.caption,
+          text({ role: 'caption' }),
           'text-text-primary',
           'font-medium tabular-nums leading-none'
         )}
@@ -185,7 +185,7 @@ function MultiSelectOptionsPanel({
                   </div>
                 )}
               </div>
-              <span className={`${TYPE.value} font-normal`}>
+              <span className={`${text({ role: 'body' })} font-normal`}>
                 {allSelected ? 'Deselect all' : selectAllLabel}
               </span>
             </label>

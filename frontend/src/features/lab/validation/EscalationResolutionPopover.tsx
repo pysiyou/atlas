@@ -2,13 +2,10 @@ import type { ReactNode } from 'react';
 import { Button } from '@/components/primitives';
 import { Popover } from '@/components/overlays';
 import { cn, displayId } from '@/utils';
-import { inputBase } from '@/theme/recipes';
+import { text, inputBase } from '@/theme/recipes';
 import { PopoverFormChrome } from '@/components/overlays';
 import type { FeedbackId } from '@/config/feedbackCatalog';
 import type { CriticalReadBackPayload, EscalationResolutionAction } from '@/types/lab-operations';
-import { TYPE } from '@/theme/recipes';
-
-
 interface ResolutionPopoverProps {
   resolving: boolean;
   triggerLabel: string;
@@ -192,7 +189,7 @@ export function ForceValidateAction({
             value={readBackProviderContact}
             onChange={e => onReadBackProviderContactChange(e.target.value)}
           />
-          <label className={`flex items-center gap-space-2 ${TYPE.label}`}>
+          <label className={`flex items-center gap-space-2 ${text({ role: 'label' })}`}>
             <input
               type="checkbox"
               checked={readBackConfirmed}

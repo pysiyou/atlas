@@ -17,8 +17,8 @@ import type { SampleRequirement } from '../types';
 import { cn, formatArray } from '@/utils';
 import { getContainerIcon } from '@/config/icons';
 import { ICONS } from '@/config/icons';
-import { inputBase, inputError, FORM_FIELD_LABEL } from '@/theme/recipes';
-import { FIELD_ERROR_CAPTION, RADIUS, SHADOW, TONE, TYPE } from '@/theme/recipes';
+import { text, inputBase, inputError, FORM_FIELD_LABEL } from '@/theme/recipes';
+import { FIELD_ERROR_CAPTION, RADIUS, SHADOW, TONE } from '@/theme/recipes';
 import {
   getDefaultCollectionTopColor,
   getEffectiveContainerType,
@@ -157,7 +157,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
             Required Quantity <span className={TONE.danger.fg}>*</span>
           </label>
           {minimumVolume > 0 && (
-            <div className={cn(`${TYPE.caption} px-space-2 py-space-0-5 ${RADIUS.field} flex items-center gap-space-1`, TONE.warning.well, TONE.warning.fg)}>
+            <div className={cn(`${text({ role: 'caption' })} px-space-2 py-space-0-5 ${RADIUS.field} flex items-center gap-space-1`, TONE.warning.well, TONE.warning.fg)}>
               <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
               Min: {minimumVolume} mL
             </div>
@@ -178,7 +178,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
             className={cn(inputBase, 'pr-space-8', volume < minimumVolume && inputError)}
             placeholder="0.0"
           />
-          <span className={`absolute right-space-3 top-1/2 -translate-y-1/2 ${TYPE.meta} pointer-events-none select-none`}>
+          <span className={`absolute right-space-3 top-1/2 -translate-y-1/2 ${text({ role: 'body', intent: 'muted' })} pointer-events-none select-none`}>
             mL
           </span>
         </div>

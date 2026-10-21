@@ -8,10 +8,12 @@
 [data-theme='noir-studio'] {
   --text: var(--primitive-neutral-900);
   --text-tertiary: var(--primitive-neutral-600);
-  --text-secondary: var(--text-tertiary);
+  --text-secondary: var(--primitive-neutral-700);
   --text-muted: var(--primitive-neutral-500);
   --text-disabled: var(--primitive-neutral-400);
   --text-inverse: var(--primitive-neutral-0);
+  --text-on-tint: var(--primitive-container-on-light);
+  --text-on-tint-warm: var(--primitive-container-on-yellow);
 
   --surface-page: var(--primitive-neutral-50);
   --surface: var(--primitive-neutral-0);

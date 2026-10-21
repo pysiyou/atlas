@@ -2,7 +2,7 @@
  * Event log row detail blocks (results, notes, debug payload).
  */
 import { useMemo } from 'react';
-import { TYPE } from '@/theme/recipes';
+import { text } from '@/theme/recipes';
 import { parseResultEntry, ResultValueAnnotations, statusMapFromFlags } from '@/features/lab';
 import { resolveParameterLabel, useParameterLabelMap } from '@/features/catalog';
 import { cn } from '@/utils';
@@ -11,7 +11,7 @@ import { EVENT_LOG_COPY } from './types';
 import type { ResolvedEventLogItem } from './types';
 
 const DETAIL_STYLES = {
-  row: `pl-space-4 mt-space-0-5 ${TYPE.value} leading-relaxed font-normal min-w-0 m-0`,
+  row: `pl-space-4 mt-space-0-5 ${text({ role: 'body' })} leading-relaxed font-normal min-w-0 m-0`,
   label: 'text-text-tertiary',
   contentClamp: 'line-clamp-2 break-words',
   results: 'inline min-w-0 line-clamp-2 break-words',

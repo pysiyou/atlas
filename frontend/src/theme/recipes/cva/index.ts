@@ -1,4 +1,4 @@
-export { text, type TextRecipeProps } from './text';
+export { text, TEXT_LINK, type TextRecipeProps } from './text';
 export { tableCell, type TableCellRecipeProps } from './tableCell';
 export { labelButton, iconButton, type LabelButtonRecipeProps, type IconButtonRecipeProps } from './button';
 export { metricTile, METRIC_TILE, metricTileStateFromResult, type MetricTileRecipeProps } from './metricTile';

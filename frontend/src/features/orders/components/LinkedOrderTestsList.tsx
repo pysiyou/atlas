@@ -7,7 +7,7 @@ import { EntityId } from '@/components/display';
 import type { OrderTest } from '@/types';
 import { displayId } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
-import { INLINE_LINK, TYPE } from '@/theme/recipes';
+import { text, INLINE_LINK } from '@/theme/recipes';
 
 export type LinkedOrderTestsListProps = {
   tests: OrderTest[];
@@ -18,7 +18,7 @@ export const LinkedOrderTestsList: React.FC<LinkedOrderTestsListProps> = ({ test
   if (tests.length === 0) return null;
 
   return (
-    <ul className={`space-y-space-0-5 leading-snug ${TYPE.value}`}>
+    <ul className={`space-y-space-0-5 leading-snug ${text({ role: 'body' })}`}>
       {tests.map(test => (
         <li
           key={test.id ?? `${test.testCode}-${test.createdAt}`}
@@ -28,9 +28,9 @@ export const LinkedOrderTestsList: React.FC<LinkedOrderTestsListProps> = ({ test
             <span className="font-medium text-text-primary">{test.testName}</span>
             <EntityId variant="inline">{test.testCode}</EntityId>
             {test.id != null ? (
-              <span className={TYPE.meta}>{displayId.orderTest(test.id)}</span>
+              <span className={text({ role: 'body', intent: 'muted' })}>{displayId.orderTest(test.id)}</span>
             ) : null}
-            <span className={TYPE.meta}>{formatStatusBadgeLabel(test.status)}</span>
+            <span className={text({ role: 'body', intent: 'muted' })}>{formatStatusBadgeLabel(test.status)}</span>
           </div>
           <button type="button" className={`shrink-0 ${INLINE_LINK}`} onClick={() => onOpen(test)}>
             View

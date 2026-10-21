@@ -1,32 +1,43 @@
 /** Design-token ESLint selectors (type, surface, radius, palette). Spacing is separate. */
 
-/** Raw Tailwind scale classes — use TYPE / TABLE_TYPE / DETAIL_TYPE or type-* utilities. */
-/** Raw type-* utilities in app code — define stacks in theme/recipes instead. */
+/** Raw type-* utilities in app code — use Text / text() from @/theme/recipes. */
 export const typeUtilityRestrictedSyntax = [
   {
     selector:
-      'Literal[value=/\\btype-(body|label|caption|amount|micro|page-title|table-cell|detail-value|detail-label|button-sm|button-md|button-lg|chrome-|empty-|section-title|panel-title|modal-title|badge)\\b/]',
+      'Literal[value=/\\btype-(body|label|caption|amount|micro|page-title|ui-sm|ui-md|heading-sm|heading-xs|table-cell|detail-value|detail-label|table-header|button-sm|button-md|button-lg|chrome-|empty-|section-title|panel-title|modal-title|badge)\\b/]',
     message:
-      'Use recipe tokens from @/theme/recipes (TYPE, TABLE_TYPE, DOCUMENT_TYPE, etc.), not raw type-* utilities.',
+      'Use <Text role="…" /> or text({ role, intent }) from @/theme/recipes, not raw type-* utilities.',
   },
   {
     selector:
-      'TemplateElement[value.raw=/\\btype-(body|label|caption|amount|micro|page-title|table-cell|detail-value|detail-label|button-sm|button-md|button-lg|chrome-|empty-|section-title|panel-title|modal-title|badge)\\b/]',
+      'TemplateElement[value.raw=/\\btype-(body|label|caption|amount|micro|page-title|ui-sm|ui-md|heading-sm|heading-xs|table-cell|detail-value|detail-label|table-header|button-sm|button-md|button-lg|chrome-|empty-|section-title|panel-title|modal-title|badge)\\b/]',
     message:
-      'Use recipe tokens from @/theme/recipes (TYPE, TABLE_TYPE, DOCUMENT_TYPE, etc.), not raw type-* utilities.',
+      'Use <Text role="…" /> or text({ role, intent }) from @/theme/recipes, not raw type-* utilities.',
+  },
+  {
+    selector: 'MemberExpression[object.name="DETAIL_TYPE"]',
+    message: 'DETAIL_TYPE was removed — use text({ role }) or <Text role="…" />.',
+  },
+  {
+    selector: 'MemberExpression[object.name="WORKLIST_CARD_TYPE"]',
+    message: 'WORKLIST_CARD_TYPE was removed — use text({ role }) or <Text role="…" />.',
+  },
+  {
+    selector: 'MemberExpression[object.name="TYPE"]',
+    message: 'TYPE was removed — use text({ role, intent }) or <Text role="…" />.',
   },
 ]
 
 export const typeScaleRestrictedSyntax = [
   {
-    selector: 'Literal[value=/\\btext-(3xs|2xs|xxs|xs|sm|base|lg|xl|2xl)\\b/]',
+    selector: 'Literal[value=/\\btext-(3xs|2xs|xs|sm|base|lg|xl|2xl)\\b/]',
     message:
-      'Use semantic typography from @/theme/recipes (TYPE, TABLE_TYPE, DETAIL_TYPE, FIELD_ERROR), not raw text-* scale classes.',
+      'Use <Text role="…" /> or text({ role, intent }) from @/theme/recipes, not raw text-* scale classes.',
   },
   {
-    selector: 'TemplateElement[value.raw=/\\btext-(3xs|2xs|xxs|xs|sm|base|lg|xl|2xl)\\b/]',
+    selector: 'TemplateElement[value.raw=/\\btext-(3xs|2xs|xs|sm|base|lg|xl|2xl)\\b/]',
     message:
-      'Use semantic typography from @/theme/recipes (TYPE, TABLE_TYPE, DETAIL_TYPE, FIELD_ERROR), not raw text-* scale classes.',
+      'Use <Text role="…" /> or text({ role, intent }) from @/theme/recipes, not raw text-* scale classes.',
   },
   {
     selector: 'Literal[value=/text-text-primary truncate font-normal/]',

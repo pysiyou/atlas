@@ -10,8 +10,8 @@ import { Icon, type IconName } from '@/components/primitives';
 import type { VitalSigns } from '@/types/patient';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { inputBase, inputError } from '@/theme/recipes';
-import { FIELD_ERROR, FIELD_ERROR_CAPTION, RADIUS, TONE, TYPE } from '@/theme/recipes';
+import { text, inputBase, inputError } from '@/theme/recipes';
+import { FIELD_ERROR, FIELD_ERROR_CAPTION, RADIUS, TONE } from '@/theme/recipes';
 
 
 export interface VitalsSectionProps {
@@ -209,7 +209,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
             <div className="flex justify-between items-baseline mb-space-1 gap-space-2">
               <label
                 htmlFor={isNa ? undefined : `vital-${fieldName}`}
-                className={`${TYPE.value} truncate min-w-0 ${isNa ? 'text-text-tertiary cursor-default' : 'text-text-tertiary cursor-pointer'}`}
+                className={`${text({ role: 'body' })} truncate min-w-0 ${isNa ? 'text-text-tertiary cursor-default' : 'text-text-tertiary cursor-pointer'}`}
               >
                 {config.label}
               </label>
@@ -220,7 +220,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                     className={`w-3 h-3 ${TONE.danger.fg} shrink-0`}
                   />
                 )}
-                <span className={`${TYPE.caption} truncate`}>Ref: {refRange}</span>
+                <span className={`${text({ role: 'caption' })} truncate`}>Ref: {refRange}</span>
               </div>
             </div>
 
@@ -237,7 +237,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
 
               {isNa ? (
                 <div
-                  className={`w-full ${RADIUS.field} border border-border-default bg-surface-hover/30 px-space-3 py-space-1-5 ${TYPE.amount} text-text-tertiary pl-space-10 pr-space-12`}
+                  className={`w-full ${RADIUS.field} border border-border-default bg-surface-hover/30 px-space-3 py-space-1-5 ${text({ role: 'amount' })} text-text-tertiary pl-space-10 pr-space-12`}
                   aria-label={`${config.label} not provided`}
                 >
                   N/A
@@ -264,7 +264,7 @@ export const VitalsSection: React.FC<VitalsSectionProps> = ({
                     )}
                   />
                   <div className="absolute inset-y-0 right-0 pr-space-3 flex items-center pointer-events-none max-w-[40%]">
-                    <span className={`${TYPE.meta} select-none truncate`}>
+                    <span className={`${text({ role: 'body', intent: 'muted' })} select-none truncate`}>
                       {config.unit}
                     </span>
                   </div>

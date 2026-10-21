@@ -13,7 +13,7 @@ import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
 import type { ReportableOrder } from '../types';
 import { ReportPreviewButton } from './ReportPreviewButton';
 import { ReportPrintButton } from './ReportPrintButton';
-import { TYPE } from '@/theme/recipes';
+import { text } from '@/theme/recipes';
 import { getActiveOrderTests } from '../utils/prepareReportData';
 
 
@@ -57,12 +57,12 @@ export function ValidatedTestReportCard({
             size="xs"
           />
         }
-        trailing={<span className={`${TYPE.label} tabular-nums`}>{statusLabel}</span>}
+        trailing={<span className={`${text({ role: 'label' })} tabular-nums`}>{statusLabel}</span>}
       />
 
       <div className="grow space-y-space-2">
         <div>
-          <div className={TYPE.amount}>{testNames}</div>
+          <div className={text({ role: 'amount' })}>{testNames}</div>
           <EntityId variant="block">
             {(order.testCodes.length > 0
               ? order.testCodes

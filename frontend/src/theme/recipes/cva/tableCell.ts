@@ -7,9 +7,9 @@ export const tableCell = cva('min-w-0 overflow-hidden flex items-center', {
       end: 'justify-end text-right',
     },
     tone: {
-      primary: 'type-table-cell text-text-primary',
-      secondary: 'type-table-cell text-text-secondary',
-      meta: 'type-table-cell text-text-tertiary',
+      primary: 'type-ui-sm text-text-primary',
+      secondary: 'type-ui-sm text-text-secondary',
+      meta: 'type-ui-sm text-text-tertiary',
     },
     density: {
       compact: 'px-table-cell-x-compact py-table-cell-y-compact',

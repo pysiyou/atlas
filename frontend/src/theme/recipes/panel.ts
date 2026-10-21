@@ -1,6 +1,6 @@
 /** Panel shells and empty states. */
 
-import { TYPE } from './type';
+import { text } from './cva/text';
 import { SPACING, RADIUS, SHADOW } from './spacing';
 import { SURFACE } from './surface';
 
@@ -17,11 +17,11 @@ export const PANEL_LAYOUT = {
 } as const;
 
 /** Shared panel header title — page, lab, and lab modal presets. */
-const PANEL_TITLE = `m-0 min-w-0 truncate ${TYPE.panelTitle}`;
+const PANEL_TITLE = `m-0 min-w-0 truncate ${text({ role: 'title-panel' })}`;
 
 /** Right side of panel header — caption (meta) and actions share one cluster. */
 const PANEL_HEADER_ASIDE = `flex shrink-0 items-center justify-end ${SPACING.gapInline} min-h-0 max-w-[55%]`;
-const PANEL_HEADER_META = TYPE.caption;
+const PANEL_HEADER_META = text({ role: 'caption' });
 
 const PAGE_PANEL_CHROME = {
   shell: `h-full ${SURFACE.raised} ${RADIUS.field} ${SHADOW.subtle} overflow-hidden flex flex-col`,
@@ -58,11 +58,11 @@ export const EMPTY = {
   iconWrapCompact: `w-10 h-10 ${RADIUS.pill} bg-surface-hover flex items-center justify-center mb-space-3`,
   iconWrapDefault: `w-16 h-16 ${RADIUS.pill} bg-surface-hover flex items-center justify-center mb-space-4`,
   iconWrapDense: `w-8 h-8 ${RADIUS.pill} bg-surface-hover flex items-center justify-center mb-space-2`,
-  titleCompact: 'type-empty-title text-text-primary mb-space-1',
-  titleDefault: 'type-body text-text-primary mb-space-2',
-  titleDense: 'type-empty-title-dense text-text-primary mb-space-0-5',
-  description: 'type-empty-description text-text-tertiary mb-space-4 max-w-md',
-  descriptionDense: 'type-empty-description-dense text-text-tertiary mb-space-2 max-w-xs',
+  titleCompact: `${text({ role: 'amount' })} text-text-primary mb-space-1`,
+  titleDefault: `${text({ role: 'body' })} text-text-primary mb-space-2`,
+  titleDense: `${text({ role: 'body' })} text-text-primary mb-space-0-5`,
+  description: `${text({ role: 'amount' })} text-text-tertiary mb-space-4 max-w-md`,
+  descriptionDense: `${text({ role: 'body', intent: 'muted' })} mb-space-2 max-w-xs`,
   actionWrap: 'mt-space-2',
 } as const;
 

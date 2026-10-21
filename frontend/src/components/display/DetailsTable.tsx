@@ -7,7 +7,7 @@ import React from 'react';
 import { Panel, type PanelPresetId } from '@/components/surfaces';
 import { EmptyState } from './EmptyState';
 import { PANEL_EMPTY_STATE } from './emptyStatePresets';
-import { DETAIL_TYPE, TABLE_CELL } from '@/theme/recipes';
+import { TABLE_CELL, text } from '@/theme/recipes';
 import { DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';
 import { filterDetailRows, type DetailTableRow } from './detailsTableUtils';
 
@@ -41,10 +41,10 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
               className="border-b border-border-subtle last:border-b-0"
             >
               <td className={`${TABLE_CELL.default} align-top text-left w-2/5`}>
-                <span className={`block ${DETAIL_TYPE.sectionTitleCompact}`}>{row.label}</span>
+                <span className={`block ${text({ role: 'section-title' })}`}>{row.label}</span>
               </td>
               <td className={`${TABLE_CELL.default} align-top text-left w-3/5`}>
-                <div className={`break-words ${DETAIL_TYPE.value}`}>{row.value}</div>
+                <div className={`break-words ${text({ role: 'body' })}`}>{row.value}</div>
               </td>
             </tr>
           ))}

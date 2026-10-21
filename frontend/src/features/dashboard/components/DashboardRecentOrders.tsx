@@ -9,7 +9,7 @@ import { Panel } from '@/components/surfaces';
 import { OrderStatusBadge } from '@/features/orders';
 import { ROUTES } from '@/config';
 import type { Order } from '@/types';
-import { INLINE_LINK, RADIUS, TYPE } from '@/theme/recipes';
+import { text, INLINE_LINK, RADIUS } from '@/theme/recipes';
 
 
 export interface DashboardRecentOrdersProps {
@@ -36,10 +36,10 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
             className={`flex items-center justify-between p-panel border border-border-default ${RADIUS.surface} hover:bg-surface-page`}
           >
             <div>
-              <p className={TYPE.amount}>
+              <p className={text({ role: 'amount' })}>
                 {order.patientName || '—'}
               </p>
-              <p className={TYPE.meta}>
+              <p className={text({ role: 'body', intent: 'muted' })}>
                 <EntityId type="order" value={order.orderId} /> •{' '}
                 {order.testCount ?? order.tests?.length ?? 0} test(s)
               </p>

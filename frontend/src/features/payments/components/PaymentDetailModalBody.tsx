@@ -10,8 +10,8 @@ import { cn } from '@/utils';
 import type { Order } from '@/types';
 import { BillingSummarySection } from '@/features/orders';
 import { BillingEventLogPanel } from '@/features/audit';
-import { inputBase } from '@/theme/recipes';
-import { TONE, TYPE } from '@/theme/recipes';
+import { text, inputBase } from '@/theme/recipes';
+import { TONE } from '@/theme/recipes';
 import type { PaymentMethod, PaymentMethodOption } from '@/types/payments';
 import type { OrderPaymentView } from '../types';
 
@@ -53,7 +53,7 @@ export const PaymentDetailModalBody: React.FC<PaymentDetailModalBodyProps> = ({
       ) : orderDetailError ? (
         <div className="p-panel">
           <Alert variant="danger" className="py-space-3">
-            <p className={TYPE.amount}>
+            <p className={text({ role: 'amount' })}>
               Could not load order line items. Try closing and opening again.
             </p>
           </Alert>
@@ -69,7 +69,7 @@ export const PaymentDetailModalBody: React.FC<PaymentDetailModalBodyProps> = ({
 
     {!isPaid && (
       <div>
-        <label className={`block ${TYPE.amount} text-text-secondary mb-space-3`}>
+        <label className={`block ${text({ role: 'amount' })} text-text-secondary mb-space-3`}>
           Payment Method <span className={TONE.danger.fg}>*</span>
         </label>
         <PaymentMethodSelector
@@ -83,7 +83,7 @@ export const PaymentDetailModalBody: React.FC<PaymentDetailModalBodyProps> = ({
 
     {!isPaid && (
       <div>
-        <label className={`block ${TYPE.amount} text-text-secondary mb-space-2`}>Notes</label>
+        <label className={`block ${text({ role: 'amount' })} text-text-secondary mb-space-2`}>Notes</label>
         <textarea
           rows={3}
           placeholder="Add optional notes..."
@@ -97,7 +97,7 @@ export const PaymentDetailModalBody: React.FC<PaymentDetailModalBodyProps> = ({
 
     {error && (
       <Alert variant="danger" className="py-space-3">
-        <p className={TYPE.amount}>{error}</p>
+        <p className={text({ role: 'amount' })}>{error}</p>
       </Alert>
     )}
 

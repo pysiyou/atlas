@@ -4,9 +4,9 @@
 import React from 'react';
 import { Avatar, Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/loaders';
-import { FORM_FIELD_LABEL } from '@/theme/recipes';
+import { text, FORM_FIELD_LABEL } from '@/theme/recipes';
 import { OrderSelectPopoverShell } from '@/features/orders';
-import { CONTROL, TYPE } from '@/theme/recipes';
+import { CONTROL } from '@/theme/recipes';
 import { cn } from '@/utils';
 import type { AuditSearchPreviewResponse } from './api';
 import {
@@ -59,7 +59,7 @@ export const EventLogSearchPopover: React.FC<EventLogSearchPopoverProps> = ({
         <div
           className={cn(
             'px-space-4 py-space-2 border-b border-border-default/70 flex items-center justify-between gap-space-2',
-            TYPE.caption,
+            text({ role: 'caption' }),
             'text-text-muted'
           )}
         >
@@ -71,7 +71,7 @@ export const EventLogSearchPopover: React.FC<EventLogSearchPopoverProps> = ({
           {isFetching ? <SpinnerLoader size="xs" /> : null}
         </div>
       ) : isFetching ? (
-        <div className={`px-space-4 py-space-2 border-b border-border-default/70 ${TYPE.caption} text-text-muted flex items-center gap-space-2`}>
+        <div className={`px-space-4 py-space-2 border-b border-border-default/70 ${text({ role: 'caption' })} text-text-muted flex items-center gap-space-2`}>
           <SpinnerLoader size="xs" />
           {EVENT_LOG_COPY.searchPreviewEventCountLoading}
         </div>
@@ -97,14 +97,14 @@ export const EventLogSearchPopover: React.FC<EventLogSearchPopoverProps> = ({
                   <div className="min-w-0 flex-1">
                     <p
                       className={cn(
-                        `${TYPE.value} font-normal truncate`,
+                        `${text({ role: 'body' })} font-normal truncate`,
                         item.avatarName && 'capitalize'
                       )}
                     >
                       {item.primary}
                     </p>
                     {item.secondary ? (
-                      <p className={`${TYPE.caption} truncate text-text-muted`}>{item.secondary}</p>
+                      <p className={`${text({ role: 'caption' })} truncate text-text-muted`}>{item.secondary}</p>
                     ) : null}
                   </div>
                 </button>

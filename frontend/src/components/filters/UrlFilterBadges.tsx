@@ -7,7 +7,7 @@ import { Icon, Badge } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 import { displayId } from '@/utils';
 import type { UrlFilters } from '@/utils/filters';
-import { TYPE } from '@/theme/recipes';
+import { text } from '@/theme/recipes';
 
 export interface UrlFilterBadgesProps {
   urlFilters: UrlFilters;
@@ -29,7 +29,7 @@ export function UrlFilterBadges({ urlFilters, onClear, onClearSingle }: UrlFilte
 
   return (
     <div className="flex items-center gap-space-2 px-space-4 py-space-2 bg-surface-secondary border-b border-border-default">
-      <span className={`${TYPE.label} text-text-secondary`}>Filtered by:</span>
+      <span className={`${text({ role: 'label' })} text-text-secondary`}>Filtered by:</span>
       
       <div className="flex items-center gap-space-2 flex-wrap">
         {activeFilters.map(([key, value]) => {
@@ -65,7 +65,7 @@ export function UrlFilterBadges({ urlFilters, onClear, onClearSingle }: UrlFilte
 
       <button
         onClick={onClear}
-        className={`ml-auto ${TYPE.label} text-text-secondary hover:text-text-primary transition-colors`}
+        className={`ml-auto ${text({ role: 'label' })} text-text-secondary hover:text-text-primary transition-colors`}
         type="button"
       >
         Clear all filters

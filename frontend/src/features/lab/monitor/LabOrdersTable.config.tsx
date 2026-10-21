@@ -15,6 +15,8 @@ import {
   TABLE_COLUMN_WIDTH,
   type TableViewConfig,
 } from '@/components/data-table';
+import { StatusPresentationBadge } from '@/components/display/StatusPresentationBadge';
+import { Text } from '@/components/layout/Text';
 import { MobileEntityCard } from '@/components/surfaces';
 import type { CardComponentProps } from '@/components/data-table';
 import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
@@ -36,13 +38,22 @@ const VIEWS = {
 } as const;
 
 function renderMonitorStatus(row: LabOrderTableRow) {
+  const presentation = row.statusPresentation;
+  if (presentation) {
+    const secondary = presentation.secondary?.trim();
+    return (
+      <div className="flex min-w-0 flex-col items-start gap-space-0-5">
+        <StatusPresentationBadge presentation={presentation} size="xs" />
+        {secondary ? (
+          <Text as="div" role="caption" intent="muted" truncate className="max-w-full" title={secondary}>
+            {secondary}
+          </Text>
+        ) : null}
+      </div>
+    );
+  }
   return (
-    <OrderTestStatusBadge
-      status={row.status}
-      presentation={row.statusPresentation}
-      layout="compact"
-      size="xs"
-    />
+    <OrderTestStatusBadge status={row.status} presentation={null} layout="compact" size="xs" />
   );
 }
 

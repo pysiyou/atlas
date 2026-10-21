@@ -11,15 +11,12 @@ import { LabHeaderCompactContext } from '../components/LabWorkflowHeader';
 import type { LabAuditLine } from '../constants/labWorkflowAuditLines';
 import { LabWorkflowLeftColumn } from '../components/LabWorkflowLeftColumn';
 import type { LabIdentityContext } from '../components/LabIdentityRow';
-import {
-  WORKLIST_CARD_SURFACE,
+import { text, WORKLIST_CARD_SURFACE,
   CARD_ACTIONS_ROW,
   CARD_HEADER_GRID,
   WORKLIST_CARD_LIST_ITEM,
   WORKLIST_CARD_SPACING,
-  WORKLIST_CARD_TYPE,
-  MOBILE_LIST_CARD,
-} from '@/theme/recipes';
+  MOBILE_LIST_CARD, } from '@/theme/recipes';
 
 export interface QueueCardHeaderProps {
   context?: LabIdentityContext;
@@ -91,9 +88,9 @@ export function QueueCardPanel({ title, children, className }: QueueCardPanelPro
   return (
     <div className={sectionClass}>
       <div className={WORKLIST_CARD_SPACING.sectionTitleMargin}>
-        <span className={WORKLIST_CARD_TYPE.sectionTitle}>{title}</span>
+        <span className={text({ role: 'section-title' })}>{title}</span>
       </div>
-      <div className={WORKLIST_CARD_TYPE.sectionContent}>{children}</div>
+      <div className={text({ role: 'body' })}>{children}</div>
     </div>
   );
 }

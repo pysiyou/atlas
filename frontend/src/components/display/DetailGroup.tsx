@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { DETAIL_TYPE } from '@/theme/recipes';
+import { text } from '@/theme/recipes';
 import { cn } from '@/utils';
 
 export interface DetailGroupProps {
@@ -13,8 +13,8 @@ export interface DetailGroupProps {
   children: React.ReactNode;
 }
 
-/** Compact group title — same scale as DETAIL_TYPE.sectionTitleCompact; tertiary for legacy layouts. */
-export const DETAIL_GROUP_TITLE_COMPACT = `${DETAIL_TYPE.sectionTitleCompact} text-text-tertiary leading-none`;
+/** Compact group title for tertiary section labels. */
+export const DETAIL_GROUP_TITLE_COMPACT = `${text({ role: 'section-title', intent: 'muted' })} leading-none`;
 
 export const DETAIL_FIELDS_WRAP_GRID =
   'grid w-full grid-cols-[repeat(auto-fill,minmax(9.75rem,1fr))] items-start gap-x-layout-stack gap-y-layout-section content-start';
@@ -29,7 +29,7 @@ export const DetailGroup: React.FC<DetailGroupProps> = ({
 
   return (
     <section className={cn('flex flex-col', className)}>
-      <h4 className={cn(DETAIL_TYPE.sectionTitleCompact, 'shrink-0', titleClassName)}>{title}</h4>
+      <h4 className={cn(text({ role: 'section-title' }), 'shrink-0', titleClassName)}>{title}</h4>
       <div className="mt-space-2 min-h-0">
         <div className={DETAIL_FIELDS_WRAP_GRID}>
           {items.map((child, index) => {

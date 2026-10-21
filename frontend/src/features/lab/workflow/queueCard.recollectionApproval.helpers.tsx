@@ -3,7 +3,7 @@
  */
 
 import { type ReactNode } from 'react';
-import { RADIUS, TYPE } from '@/theme/recipes';
+import { text, RADIUS } from '@/theme/recipes';
 import { actionButtonPreset, Badge, Button } from '@/components/primitives';
 import { EntityId } from '@/components/display';
 import { cn, formatDateTime } from '@/utils';
@@ -21,7 +21,7 @@ import {
   IDENTITY_INLINE,
   CARD_HEADER_GRID,
   IDENTITY_STACK,
-  WORKLIST_CARD_TYPE,
+  WORKLIST_EMPHASIZED_INLINE,
 } from '@/theme/recipes';
 
 function InlineDot() {
@@ -72,7 +72,7 @@ export function RecollectionRequestCardLeftColumn({ request }: { request: Recoll
     content: (
       <>
         <span>Requested </span>
-        <span className={WORKLIST_CARD_TYPE.emphasizedInline}>
+        <span className={WORKLIST_EMPHASIZED_INLINE}>
           {formatDateTime(request.createdAt)}
         </span>
         <span> · {stageLabel}</span>
@@ -138,15 +138,15 @@ export function RecollectionReviewBody({
   onReviewNotesChange: (value: string) => void;
 }) {
   return (
-    <div className={`space-y-space-1 ${TYPE.value}`}>
+    <div className={`space-y-space-1 ${text({ role: 'body' })}`}>
       <div>
-        <span className={WORKLIST_CARD_TYPE.fieldLabel}>Reason:</span>{' '}
-        <span className={WORKLIST_CARD_TYPE.fieldValue}>{request.reason}</span>
+        <span className={text({ role: 'label' })}>Reason:</span>{' '}
+        <span className={text({ role: 'body' })}>{request.reason}</span>
       </div>
       {request.notes ? (
         <div>
-          <span className={WORKLIST_CARD_TYPE.fieldLabel}>Notes:</span>{' '}
-          <span className={WORKLIST_CARD_TYPE.fieldValue}>{request.notes}</span>
+          <span className={text({ role: 'label' })}>Notes:</span>{' '}
+          <span className={text({ role: 'body' })}>{request.notes}</span>
         </div>
       ) : null}
       <textarea
@@ -155,7 +155,7 @@ export function RecollectionReviewBody({
         onClick={e => e.stopPropagation()}
         placeholder="Review notes (optional)"
         rows={2}
-        className={`w-full ${RADIUS.field} border border-border-default bg-surface px-space-2 py-space-1 resize-none ${TYPE.value}`}
+        className={`w-full ${RADIUS.field} border border-border-default bg-surface px-space-2 py-space-1 resize-none ${text({ role: 'body' })}`}
       />
     </div>
   );

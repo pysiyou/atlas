@@ -12,7 +12,7 @@ import { cn, displayId } from '@/utils';
 import { getLabQueueUrl } from '../constants/labConstants';
 import { usePendingCriticalValues } from './criticalValues';
 import { CriticalValueActions } from './CriticalValueActions';
-import { RADIUS, TONE, TYPE } from '@/theme/recipes';
+import { text, RADIUS, TONE } from '@/theme/recipes';
 import { WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
 
 export const PendingCriticalValuesPanel: React.FC = () => {
@@ -21,7 +21,7 @@ export const PendingCriticalValuesPanel: React.FC = () => {
   if (isLoading) {
     return (
       <Panel preset="panel.compact.standard" title="Critical Values">
-        <p className={`${TYPE.meta} py-space-4`}>Loading critical values...</p>
+        <p className={`${text({ role: 'body', intent: 'muted' })} py-space-4`}>Loading critical values...</p>
       </Panel>
     );
   }
@@ -46,7 +46,7 @@ export const PendingCriticalValuesPanel: React.FC = () => {
             className={cn(RADIUS.surface, 'p-panel space-y-space-3', TONE.danger.well)}
           >
             <div className="flex items-center justify-between gap-space-2">
-              <div className={`flex items-center gap-space-2 ${TYPE.value}`}>
+              <div className={`flex items-center gap-space-2 ${text({ role: 'body' })}`}>
                 <Icon name={ICONS.actions.alertCircle} className={`w-4 h-4 ${TONE.danger.fg}`} />
                 <EntityId type="orderTest" value={record.id} />
                 {record.testName ?? record.testCode}
@@ -55,7 +55,7 @@ export const PendingCriticalValuesPanel: React.FC = () => {
                 to={getLabQueueUrl('validation', {
                   search: displayId.orderTest(record.id),
                 })}
-                className={`${TYPE.caption} ${TONE.brand.fg} hover:underline`}
+                className={`${text({ role: 'caption' })} ${TONE.brand.fg} hover:underline`}
               >
                 Open in Lab
               </Link>
