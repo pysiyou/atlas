@@ -1,6 +1,5 @@
 /**
- * Report preview results — one lab results panel per active test,
- * matching the Result Validation modal grid (parameter, result, reference interval).
+ * Report preview results — one compact panel per active test (standard header + label/value rows).
  */
 
 import React from 'react';
@@ -67,13 +66,9 @@ export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ repo
         return (
           <Panel
             key={`${test.testCode}-${orderTest?.id ?? index}`}
-            preset="panel.compact.headingSlot"
-            headerStart={
-              <span className="flex min-w-0 items-baseline gap-space-2">
-                <span className="truncate">{test.testName}</span>
-                <RecordId emphasis="mutedBlock">{test.testCode}</RecordId>
-              </span>
-            }
+            preset="panel.compact.standard"
+            title={test.testName}
+            headerEnd={<RecordId emphasis="mutedBlock">{test.testCode}</RecordId>}
             footer={
               validationNotes ? (
                 <ResultValidationNotesSection
@@ -91,6 +86,7 @@ export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ repo
               testCode={test.testCode}
               patient={patient}
               technicianNotes={test.technicianNotes}
+              resultsLayout="compact"
             />
           </Panel>
         );
