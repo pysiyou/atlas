@@ -3,6 +3,12 @@
  */
 
 import React, { useMemo, useState, useCallback, useEffect, useRef } from 'react';
+import { usePageFilters } from '@/hooks/usePageFilters';
+import {
+  buildServerListPagination,
+  toListLoadError,
+  useFilterChangeWithPageReset,
+} from '@/hooks/listPage';
 import { useNavigate, useParams } from 'react-router-dom';
 import { uniqueSortedTestCodes, useTestsByCodes } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users';
@@ -16,7 +22,7 @@ import { generateLabReport, downloadPDF, getDefaultTemplate } from '../utils/rep
 import type { ReportableOrder } from '../types';
 import { prepareReportData, downloadLabReport } from '../utils/prepareReportData';
 import { formatDate, inclusiveDateRangeBounds, toIsoDateParam } from '@/utils';
-import { notify, errorAlertMessage } from '@/utils/feedback';
+import { notify } from '@/utils/feedback';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
 
 /** Parse `/reports/:id` so a deep link can open preview without unmounting the list. */
@@ -32,8 +38,15 @@ export const ReportList: React.FC = () => {
   const deepLinkOrderId = parseReportOrderId(routeOrderId);
   const openedDeepLinkIdRef = useRef<number | null>(null);
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
+  const { filters, setFilter } = usePageFilters({
+    initialFilters: {
+      search: '',
+      dateRange: null as [Date, Date] | null,
+    },
+  });
+
+  const searchQuery = (filters.search as string) ?? '';
+  const dateRange = (filters.dateRange as [Date, Date] | null) ?? null;
 
   const serverFilters = useMemo(() => {
     const bounds = inclusiveDateRangeBounds(dateRange);
@@ -63,12 +76,20 @@ export const ReportList: React.FC = () => {
   const { tests } = useTestsByCodes(pageTestCodes);
   const { getUserName } = useUserLookup();
 
-  const error = isError
-    ? {
-        message: errorAlertMessage('reports.list.loadFailed', queryError),
-        operation: 'load' as const,
-      }
-    : null;
+  const { setFilterAndReset } = useFilterChangeWithPageReset(setFilter, resetPage);
+
+  const error = isError ? toListLoadError('reports.list.loadFailed', queryError) : null;
+
+  const listPagination = useMemo(
+    () =>
+      buildServerListPagination({
+        page,
+        pagination,
+        goToPage,
+        pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
+      }),
+    [page, pagination, goToPage],
+  );
 
   const { openModal } = useModal();
   const [generatingOrderId, setGeneratingOrderId] = useState<number | null>(null);
@@ -154,25 +175,12 @@ export const ReportList: React.FC = () => {
         filters={
           <ReportFilters
             searchQuery={searchQuery}
-            onSearchChange={value => {
-              setSearchQuery(value);
-              resetPage();
-            }}
+            onSearchChange={value => setFilterAndReset('search', value)}
             dateRange={dateRange}
-            onDateRangeChange={value => {
-              setDateRange(value);
-              resetPage();
-            }}
+            onDateRangeChange={value => setFilterAndReset('dateRange', value)}
           />
         }
-        pagination={{
-          mode: 'server',
-          currentPage: page,
-          pageSize: pagination.pageSize,
-          totalItems: pagination.total,
-          onPageChange: goToPage,
-          pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
-        }}
+        pagination={listPagination}
         defaultSort={{ key: 'orderDate', direction: 'desc' }}
       />
     </div>

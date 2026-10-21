@@ -29,7 +29,7 @@ import { DetailPageSkeleton } from '@/components/feedback/DetailPageSkeleton';
 import { useAuthStore } from '@/app/authStore';
 import { useTestCatalog } from '@/features/catalog';
 import { worklistServerFilters } from '../utils/labSearchAndLinks';
-import { errorAlertMessage } from '@/utils/feedback';
+import { toListLoadError } from '@/hooks/listPage';
 export const SampleCollectionQueue: React.FC = () => {
   const { user: currentUser } = useAuthStore();
   const collectSampleMutation = useCollectSample();
@@ -128,7 +128,7 @@ export const SampleCollectionQueue: React.FC = () => {
     return (
       <ErrorBoundary>
         <ErrorAlert
-          error={{ message: errorAlertMessage('lab.worklist.loadFailed', worklistError) }}
+          error={toListLoadError('lab.worklist.loadFailed', worklistError)!}
           onRetry={() => {
             void refetch();
           }}

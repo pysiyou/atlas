@@ -15,7 +15,11 @@ import { useTestNameLookup } from '@/features/catalog';
 import { usePaginatedOrders } from '@/features/orders';
 import { usePaymentsForOrderIds } from '../api/payments';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
-import { errorAlertMessage } from '@/utils/feedback';
+import {
+  buildServerListPagination,
+  toListLoadError,
+  useFilterChangeWithPageReset,
+} from '@/hooks/listPage';
 import { inclusiveDateRangeBounds, toIsoDateParam } from '@/utils';
 import type { Order, Payment, PaymentStatus } from '@/types';
 import type { OrderPaymentView } from '../types';
@@ -88,12 +92,20 @@ export const PaymentList: React.FC = () => {
   const { getTestName, isLoading: testsCatalogLoading } = useTestNameLookup();
   const isLoading = ordersLoading || paymentsLoading || testsCatalogLoading;
 
-  const error = ordersError
-    ? {
-        message: errorAlertMessage('payments.list.loadFailed', ordersErrorObj),
-        operation: 'load' as const,
-      }
-    : null;
+  const { setFilterAndReset } = useFilterChangeWithPageReset(setFilter, resetPage);
+
+  const error = ordersError ? toListLoadError('payments.list.loadFailed', ordersErrorObj) : null;
+
+  const listPagination = useMemo(
+    () =>
+      buildServerListPagination({
+        page,
+        pagination,
+        goToPage,
+        pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
+      }),
+    [page, pagination, goToPage],
+  );
 
   const orderPaymentViews = useMemo(
     () => buildOrderPaymentViews(orders, payments),
@@ -141,31 +153,15 @@ export const PaymentList: React.FC = () => {
               />
               <PaymentFilters
                 searchQuery={searchQuery}
-                onSearchChange={value => {
-                  setFilter('search', value);
-                  resetPage();
-                }}
+                onSearchChange={value => setFilterAndReset('search', value)}
                 dateRange={dateRange}
-                onDateRangeChange={value => {
-                  setFilter('dateRange', value);
-                  resetPage();
-                }}
+                onDateRangeChange={value => setFilterAndReset('dateRange', value)}
                 statusFilters={statusFilters}
-                onStatusFiltersChange={values => {
-                  setFilter('statusFilters', values);
-                  resetPage();
-                }}
+                onStatusFiltersChange={values => setFilterAndReset('statusFilters', values)}
               />
             </>
           }
-          pagination={{
-            mode: 'server',
-            currentPage: page,
-            pageSize: pagination.pageSize,
-            totalItems: pagination.total,
-            onPageChange: goToPage,
-            pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
-          }}
+          pagination={listPagination}
           defaultSort={{ key: 'paidDate', direction: 'desc' }}
         />
       </div>

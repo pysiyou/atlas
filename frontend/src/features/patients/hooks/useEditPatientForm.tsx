@@ -10,6 +10,12 @@ import type { Patient } from '@/types';
 import { patientCreateSchema, type PatientFormInput } from '../schemas/patientFormSchemas';
 import { useCreatePatient, useUpdatePatient } from '../api/patients';
 import { patientToFormInput } from '../utils/formTransformers';
+import { patientCreateDefaultValues } from '../utils/patientFormDefaults';
+import {
+  focusPatientFormField,
+  patientFormTabForFieldPath,
+  resolveFirstPatientFormErrorPath,
+} from '../patientFormNavigation';
 
 export interface UseEditPatientFormParams {
   patient?: Patient;
@@ -33,7 +39,7 @@ export function useEditPatientForm({ patient, mode, onClose }: UseEditPatientFor
     if (mode === 'edit' && patient) {
       return patientToFormInput(patient) as Partial<PatientFormInput>;
     }
-    return { vitalSigns: {} };
+    return patientCreateDefaultValues;
   }, [mode, patient]);
 
   const form = useForm<PatientFormInput>({
@@ -42,7 +48,7 @@ export function useEditPatientForm({ patient, mode, onClose }: UseEditPatientFor
     mode: 'onBlur',
   });
 
-  const { register, handleSubmit, control, formState: { errors }, reset, watch, setValue } = form;
+  const { handleSubmit, control, reset } = form;
   const formValues = useWatch({ control });
   const isPendingMutation = create.isPending || update.isPending;
 
@@ -62,18 +68,15 @@ export function useEditPatientForm({ patient, mode, onClose }: UseEditPatientFor
   };
 
   const handleFormSubmit = handleSubmit(
-    async data => { await onSubmit(data); },
+    async data => {
+      await onSubmit(data);
+    },
     validationErrors => {
-      const firstErrorPath = Object.keys(validationErrors)[0];
-      if (firstErrorPath) {
-        const fieldName = firstErrorPath.split('.')[0];
-        const element =
-          document.querySelector(`[name="${fieldName}"]`) ||
-          document.querySelector(`#${fieldName}`) ||
-          document.querySelector(`[id*="${fieldName}"]`);
-        element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }
+      const firstPath = resolveFirstPatientFormErrorPath(validationErrors);
+      if (!firstPath) return;
+      setActiveTab(patientFormTabForFieldPath(firstPath));
+      requestAnimationFrame(() => focusPatientFormField(firstPath));
+    },
   );
 
   const modalTitle = mode === 'edit' ? 'Edit Patient' : 'New Patient';
@@ -93,22 +96,15 @@ export function useEditPatientForm({ patient, mode, onClose }: UseEditPatientFor
     : (mode === 'edit' ? 'Save Changes' : 'Create Patient');
 
   return {
-    register,
+    form,
     handleSubmit: handleFormSubmit,
-    control,
-    errors,
     isSubmitting: isPendingMutation,
-    reset,
-    watch,
-    setValue,
     activeTab,
     setActiveTab,
     tabs: TABS,
     modalTitle,
     subtitle,
     submitLabel,
-    mode,
-    patient,
   };
 }
 

@@ -12,7 +12,7 @@ import {
   PRIORITY_LEVEL_CONFIG,
 } from '@/types';
 import { ICONS } from '@/config/icons';
-import { SHARED_FILTER_PLACEHOLDERS } from '@/components/filters';
+import { SHARED_FILTER_PLACEHOLDERS } from '@/config/filterPlaceholders';
 import { buildLabFilterConfig } from '../utils/buildLabFilterConfig';
 
 const COLLECTION_STATUS_OPTIONS: FilterOption[] = [

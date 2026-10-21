@@ -5,7 +5,7 @@
 import { type ReactNode } from 'react';
 import { text, RADIUS } from '@/theme/recipes';
 import { actionButtonPreset, Badge, Button } from '@/components/primitives';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import { cn, formatDateTime } from '@/utils';
 import { compactAuditLines } from '../constants/labWorkflowAuditLines';
 import { LabAuditBlock } from '../components/LabWorkflowHeader.parts';

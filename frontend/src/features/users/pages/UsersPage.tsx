@@ -7,29 +7,25 @@ import { actionButtonPreset, Button } from '@/components/primitives';
 import { ListView } from '@/components/surfaces';
 import { useAuthStore } from '@/app/authStore';
 import { ROUTES } from '@/config';
-import { errorAlertMessage } from '@/utils/feedback';
+import { toListLoadError } from '@/hooks/listPage';
+import { applyPageFilters, usePageFilters } from '@/hooks/usePageFilters';
 import { useUsersAdminList, type UserAdminRecord } from '../api/usersAdmin';
 import { UserFilters } from '../components/UserFilters';
 import { UserUpsertModal } from '../components/UserUpsertModal';
 import { createUserTableConfig } from '../config/UserTable.config';
-import { useUsersFilters } from '../hooks/useUsersFilters';
+import { filterUsers, usersListInitialFilters } from '../utils/filterUsers';
 import { isUserActive } from '../utils/userAccountGuards';
 
-/**
- * Administrator-only users page with searchable directory and account actions.
- */
 export const UsersPage: React.FC = () => {
   const { hasRole, user: currentUser } = useAuthStore();
   const { users, isLoading, isError, error, refetch } = useUsersAdminList();
-  const {
-    filteredUsers,
-    searchQuery,
-    setSearchQuery,
-    roleFilters,
-    setRoleFilters,
-    statusFilters,
-    setStatusFilters,
-  } = useUsersFilters({ users });
+  const { filters, setFilter } = usePageFilters({
+    initialFilters: usersListInitialFilters,
+  });
+  const filteredUsers = useMemo(
+    () => applyPageFilters(users, filters, filterUsers),
+    [users, filters],
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserAdminRecord | null>(null);
   const tableConfig = useMemo(() => createUserTableConfig(), []);
@@ -38,9 +34,7 @@ export const UsersPage: React.FC = () => {
     return <Navigate to={ROUTES.DASHBOARD} replace />;
   }
 
-  const listError = isError
-    ? { message: errorAlertMessage('users.list.loadFailed', error), operation: 'load' as const }
-    : null;
+  const listError = isError ? toListLoadError('users.list.loadFailed', error) : null;
 
   const openCreate = () => {
     setSelectedUser(null);
@@ -68,16 +62,7 @@ export const UsersPage: React.FC = () => {
             New user
           </Button>
         }
-        filters={
-          <UserFilters
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            roleFilters={roleFilters}
-            onRoleFiltersChange={setRoleFilters}
-            statusFilters={statusFilters}
-            onStatusFiltersChange={setStatusFilters}
-          />
-        }
+        filters={<UserFilters filters={filters} setFilter={setFilter} />}
         pagination={{ mode: 'client', pageSize: 20 }}
         defaultSort={{ key: 'name', direction: 'asc' }}
         rowClassName={user => (isUserActive(user) ? '' : 'opacity-60')}

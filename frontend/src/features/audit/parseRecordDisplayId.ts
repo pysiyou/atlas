@@ -1,42 +1,22 @@
 /**
  * Parse ORD/TST/SAM/PAT display tokens into numeric record ids for audit filters.
  */
-import { ID_PREFIXES } from '@/utils/id';
-
-function stripPrefix(raw: string, prefix: string): string {
-  const upper = raw.trim().toUpperCase();
-  if (upper.startsWith(prefix)) {
-    return upper.slice(prefix.length);
-  }
-  return upper;
-}
-
-function parsePaddedDigits(digits: string): number | null {
-  const trimmed = digits.trim();
-  if (!trimmed) return null;
-  const n = Number.parseInt(trimmed, 10);
-  if (!Number.isInteger(n) || n < 0) return null;
-  return n;
-}
+import { ID_PREFIXES, parseDisplayId } from '@/utils/id';
 
 export function parseOrderDisplayId(input: string): number | null {
-  const body = stripPrefix(input, ID_PREFIXES.order);
-  return parsePaddedDigits(body);
+  return parseDisplayId('order', input);
 }
 
 export function parseOrderTestDisplayId(input: string): number | null {
-  const body = stripPrefix(input, ID_PREFIXES.orderTest);
-  return parsePaddedDigits(body);
+  return parseDisplayId('orderTest', input);
 }
 
 export function parseSampleDisplayId(input: string): number | null {
-  const body = stripPrefix(input, ID_PREFIXES.sample);
-  return parsePaddedDigits(body);
+  return parseDisplayId('sample', input);
 }
 
 export function parsePatientDisplayId(input: string): number | null {
-  const body = stripPrefix(input, ID_PREFIXES.patient);
-  return parsePaddedDigits(body);
+  return parseDisplayId('patient', input);
 }
 
 export type ParsedRecordIdFilter =

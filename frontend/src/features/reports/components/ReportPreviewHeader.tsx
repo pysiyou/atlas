@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { formatDateTime } from '@/utils';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import { companyConfig } from '@/config';
 import type { LabReportPayload } from '../types';
 import {text, FORM_TAB_TITLE, PREVIEW_HEADER_TYPE, FG } from '@/theme/recipes';

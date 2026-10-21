@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { ErrorAlert } from '@/components/feedback';
-import { errorAlertMessage } from '@/utils/feedback';
+import { toListLoadError } from '@/hooks/listPage';
 import { SPLIT_WORKSPACE_PANEL } from '@/theme/recipes';
 import { SPLIT_BOTTOM_PANEL, SPLIT_BOTTOM_ROW, SPLIT_WORKSPACE_PAGE, SPLIT_TABLE_WRAP } from '@/theme/recipes';
 import { useLabMonitorViewModel } from './useLabMonitorViewModel';
@@ -25,9 +25,7 @@ export const LabMonitorBoard: React.FC = () => {
     return (
       <div className={SPLIT_WORKSPACE_PANEL.page}>
         <ErrorAlert
-          error={{
-            message: errorAlertMessage('lab.page.loadFailed', board.error),
-          }}
+          error={toListLoadError('lab.page.loadFailed', board.error)!}
           onRetry={() => void board.refetch()}
         />
       </div>

@@ -14,7 +14,11 @@ import { Button } from '@/components/primitives';
 import { PatientFilters } from '../components/PatientFilters';
 import { createPatientTableConfig } from '../config/PatientTable.config';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
-import { errorAlertMessage } from '@/utils/feedback';
+import {
+  buildServerListPagination,
+  toListLoadError,
+  useFilterChangeWithPageReset,
+} from '@/hooks/listPage';
 import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
 import type { PatientContext, Gender } from '@/types';
 import { EditPatientModal } from '../components/EditPatientModal';
@@ -69,17 +73,27 @@ export const PatientList: React.FC = () => {
     refetch,
   } = usePaginatedPatientContextList(serverFilters);
 
+  const { setFilterAndReset } = useFilterChangeWithPageReset(setFilter, resetPage);
+
   const handleSearchChange = useCallback(
     (query: string) => {
-      setFilter('search', query);
-      resetPage();
+      setFilterAndReset('search', query);
     },
-    [setFilter, resetPage]
+    [setFilterAndReset],
   );
 
-  const error = isError
-    ? { message: errorAlertMessage('patients.list.loadFailed', patientsError), operation: 'load' as const }
-    : null;
+  const error = isError ? toListLoadError('patients.list.loadFailed', patientsError) : null;
+
+  const listPagination = useMemo(
+    () =>
+      buildServerListPagination({
+        page,
+        pagination,
+        goToPage,
+        pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
+      }),
+    [page, pagination, goToPage],
+  );
 
   const patientTableConfig = useMemo(() => createPatientTableConfig(navigate), [navigate]);
 
@@ -112,26 +126,13 @@ export const PatientList: React.FC = () => {
                 searchQuery={searchQuery}
                 onSearchChange={handleSearchChange}
                 sexFilters={sexFilters}
-                onSexFiltersChange={values => {
-                  setFilter('sex', values);
-                  resetPage();
-                }}
+                onSexFiltersChange={values => setFilterAndReset('sex', values)}
                 ageRange={ageRange}
-                onAgeRangeChange={value => {
-                  setFilter('ageRange', value);
-                  resetPage();
-                }}
+                onAgeRangeChange={value => setFilterAndReset('ageRange', value)}
               />
             </>
           }
-          pagination={{
-            mode: 'server',
-            currentPage: page,
-            pageSize: pagination.pageSize,
-            totalItems: pagination.total,
-            onPageChange: goToPage,
-            pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
-          }}
+          pagination={listPagination}
           defaultSort={{ key: 'registrationDate', direction: 'desc' }}
         />
       </div>

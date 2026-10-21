@@ -6,7 +6,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Badge, Icon } from '@/components/primitives';
 import { Panel } from '@/components/surfaces';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import { ICONS } from '@/config/icons';
 import { cn, displayId } from '@/utils';
 import { getLabQueueUrl } from '../constants/labConstants';

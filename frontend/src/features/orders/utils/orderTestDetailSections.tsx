@@ -5,7 +5,7 @@
 import { Link } from 'react-router-dom';
 import type { DescriptionListItemConfig } from '@/components/display/DescriptionList';
 import type { OrderTest, Test } from '@/types';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import { INLINE_LINK } from '@/theme/recipes';
 import { formatCurrency } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';

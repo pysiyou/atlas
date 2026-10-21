@@ -1,9 +1,5 @@
 /**
- * CatalogList Component
- *
- * Displays a list of available tests in the catalog with filtering and search capabilities.
- * Uses TanStack Query hooks for efficient data fetching and caching.
- * Uses shared ListView component for consistent UX.
+ * CatalogList — test catalog with client-side filters and pagination.
  */
 
 import React, { useMemo } from 'react';
@@ -13,82 +9,50 @@ import { ListView } from '@/components/surfaces';
 import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components/data-table';
 import { CatalogFilters } from '../components/CatalogFilters';
 import { createCatalogTableConfig } from '../config/CatalogTable.config';
-import { useCatalogFilters } from '../hooks/useCatalogFilters';
-import { errorAlertMessage } from '@/utils/feedback';
+import {
+  catalogListInitialFilters,
+  filterCatalogTests,
+} from '../utils/filterCatalogTests';
+import { applyPageFilters, usePageFilters } from '@/hooks/usePageFilters';
+import { toListLoadError } from '@/hooks/listPage';
 import type { TestSummary } from '@/types';
 
-/**
- * CatalogList Component
- *
- * Features:
- * - Search by test name, code, and synonyms
- * - Filter by category and sample type
- * - Sortable columns
- * - Pagination
- * - Click to view test details
- */
 export const CatalogList: React.FC = () => {
   const navigate = useNavigate();
 
-  // Use test catalog query hook - data is cached and shared across components
   const { tests, isLoading, isError, error: queryError, refetch } = useTestCatalog();
 
-  // Format error for ErrorAlert component
-  const error = isError
-    ? {
-        message: errorAlertMessage('catalog.list.loadFailed', queryError),
-        operation: 'load' as const,
-      }
-    : null;
+  const { filters, setFilter } = usePageFilters({
+    initialFilters: catalogListInitialFilters,
+  });
 
-  // Use catalog filters hook
-  const {
-    filteredTests,
-    searchQuery,
-    setSearchQuery,
-    categoryFilters,
-    setCategoryFilters,
-    sampleTypeFilters,
-    setSampleTypeFilters,
-    priceRange,
-    setPriceRange,
-  } = useCatalogFilters({ tests });
+  const filteredTests = useMemo(
+    () => applyPageFilters(tests, filters, filterCatalogTests),
+    [tests, filters],
+  );
 
-  // Memoize table config to prevent recreation on every render
+  const error = isError ? toListLoadError('catalog.list.loadFailed', queryError) : null;
+
   const catalogTableConfig = useMemo(() => createCatalogTableConfig(navigate), [navigate]);
-
-  /**
-   * Handle error dismissal
-   */
-  const handleDismissError = () => {
-    // Error will be cleared on next successful fetch
-  };
 
   return (
     <div className="flex h-full min-h-0 flex-col">
       <ListView
-      items={filteredTests}
-      viewConfig={catalogTableConfig}
-      loading={isLoading}
-      error={error}
-      onRetry={refetch}
-      onDismissError={handleDismissError}
-      onRowClick={(test: TestSummary) => navigate(`/catalog/${test.code}`)}
-      title="Test Catalog"
-      filters={
-        <CatalogFilters
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          categoryFilters={categoryFilters}
-          onCategoryFiltersChange={setCategoryFilters}
-          sampleTypeFilters={sampleTypeFilters}
-          onSampleTypeFiltersChange={setSampleTypeFilters}
-          priceRange={priceRange}
-          onPriceRangeChange={setPriceRange}
-        />
-      }
-      pagination={{ mode: 'client', pageSize: 20, pageSizeOptions: DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL }}
-    />
+        items={filteredTests}
+        viewConfig={catalogTableConfig}
+        loading={isLoading}
+        error={error}
+        onRetry={refetch}
+        onDismissError={() => undefined}
+        onRowClick={(test: TestSummary) => navigate(`/catalog/${test.code}`)}
+        title="Test Catalog"
+        filters={<CatalogFilters filters={filters} setFilter={setFilter} />}
+        pagination={{
+          mode: 'client',
+          pageSize: 20,
+          pageSizeOptions: DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL,
+        }}
+      />
     </div>
   );
 };

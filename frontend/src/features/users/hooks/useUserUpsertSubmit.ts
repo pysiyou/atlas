@@ -1,15 +1,16 @@
 /**
  * Create/update/disable mutations for the user upsert modal.
  */
-import type { FormEvent } from 'react';
+import { useCallback } from 'react';
+import type { UseFormReturn } from 'react-hook-form';
 import { notify } from '@/utils/feedback';
 import type { UserAdminRecord } from '../api/usersAdmin';
 import { useCreateUser, useUpdateUser } from '../api/usersAdmin';
-import type { UserUpsertFormState } from '../components/UserUpsertFormFields';
+import type { UserUpsertFormInput } from '../schemas/userUpsertFormSchema';
 
 interface UseUserUpsertSubmitOptions {
   user: UserAdminRecord | null;
-  form: UserUpsertFormState;
+  form: UseFormReturn<UserUpsertFormInput>;
   confirmingDisable: boolean;
   onClose: () => void;
 }
@@ -28,81 +29,82 @@ export function useUserUpsertSubmit({
   const updateUser = useUpdateUser();
   const isSubmitting = createUser.isPending || updateUser.isPending;
 
-  /**
-   * Disable or re-enable the account without changing other profile fields.
-   */
-  const setActive = (isActive: boolean) => {
-    if (!user) return;
-    updateUser.mutate(
-      { userId: user.id, body: { isActive } },
-      {
-        onSuccess: () => {
-          notify.toast(isActive ? 'users.enable.success' : 'users.disable.success');
-          onClose();
-        },
-        onError: error =>
-          notify.apiError(isActive ? 'users.enable.error' : 'users.disable.error', error),
-      }
-    );
-  };
-
-  /**
-   * Persist profile fields (and role) for create or update.
-   */
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    if (confirmingDisable) {
-      setActive(false);
-      return;
-    }
-
-    const name = form.name.trim();
-    const username = form.username.trim();
-    if (!name || (!isEdit && !username)) return;
-
-    if (isEdit && user) {
+  const setActive = useCallback(
+    (isActive: boolean) => {
+      if (!user) return;
       updateUser.mutate(
+        { userId: user.id, body: { isActive } },
         {
-          userId: user.id,
-          body: {
-            name,
-            role: form.role,
-            email: form.email.trim() || null,
-            phone: form.phone.trim() || null,
-            password: form.password.trim() || undefined,
+          onSuccess: () => {
+            notify.toast(isActive ? 'users.enable.success' : 'users.disable.success');
+            onClose();
           },
+          onError: error =>
+            notify.apiError(isActive ? 'users.enable.error' : 'users.disable.error', error),
+        },
+      );
+    },
+    [user, updateUser, onClose],
+  );
+
+  const onValidSubmit = useCallback(
+    (values: UserUpsertFormInput) => {
+      if (confirmingDisable) {
+        setActive(false);
+        return;
+      }
+
+      const name = values.name.trim();
+      const username = values.username.trim();
+      if (!name || (!isEdit && !username)) return;
+
+      if (isEdit && user) {
+        updateUser.mutate(
+          {
+            userId: user.id,
+            body: {
+              name,
+              role: values.role,
+              email: values.email.trim() || null,
+              phone: values.phone.trim() || null,
+              password: values.password.trim() || undefined,
+            },
+          },
+          {
+            onSuccess: () => {
+              notify.toast('users.update.success');
+              onClose();
+            },
+            onError: error => notify.apiError('users.update.error', error),
+          },
+        );
+        return;
+      }
+
+      if (!values.password.trim()) return;
+
+      createUser.mutate(
+        {
+          username,
+          name,
+          role: values.role,
+          email: values.email.trim() || null,
+          phone: values.phone.trim() || null,
+          password: values.password,
         },
         {
           onSuccess: () => {
-            notify.toast('users.update.success');
+            notify.toast('users.create.success');
             onClose();
           },
-          onError: error => notify.apiError('users.update.error', error),
-        }
-      );
-      return;
-    }
-
-    if (!form.password.trim()) return;
-
-    createUser.mutate(
-      {
-        username,
-        name,
-        role: form.role,
-        email: form.email.trim() || null,
-        phone: form.phone.trim() || null,
-        password: form.password,
-      },
-      {
-        onSuccess: () => {
-          notify.toast('users.create.success');
-          onClose();
+          onError: error => notify.apiError('users.create.error', error),
         },
-        onError: error => notify.apiError('users.create.error', error),
-      }
-    );
-  };
+      );
+    },
+    [confirmingDisable, setActive, isEdit, user, updateUser, createUser, onClose],
+  );
+
+  const handleSubmit = form.handleSubmit(onValidSubmit);
 
   return { isSubmitting, setActive, handleSubmit };
 }

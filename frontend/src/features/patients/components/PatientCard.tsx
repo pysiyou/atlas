@@ -2,7 +2,7 @@ import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { actionButtonPreset, Avatar, IconButton } from '@/components/primitives';
 import { CardFooter, MetadataGrid, MetadataItem, Stack } from '@/components/layout';
 import { ListCard } from '@/components/surfaces';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import { PatientGenderBadge } from './PatientGenderBadge';
 import type { CardComponentProps } from '@/components/data-table';
 import { calculateAge, formatPhoneNumber } from '@/utils';

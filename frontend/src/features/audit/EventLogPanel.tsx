@@ -6,7 +6,7 @@ import { Button } from '@/components/primitives';
 import { ErrorAlert, Skeleton } from '@/components/feedback';
 import { Panel, type PanelPresetId } from '@/components/surfaces/Panel';
 import { cn } from '@/utils';
-import { errorAlertMessage } from '@/utils/feedback';
+import { toListLoadError } from '@/hooks/listPage';
 import { EVENT_LOG_COPY } from './types';
 import { EventLogFeed } from './EventLogFeed';
 import { EventLogFilters } from './EventLogFilters';
@@ -143,7 +143,7 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
   ) : isError ? (
     <div className="p-space-3">
       <ErrorAlert
-        error={{ message: errorAlertMessage('lab.page.loadFailed', error) }}
+        error={toListLoadError('lab.page.loadFailed', error)!}
         onRetry={refetch}
       />
     </div>

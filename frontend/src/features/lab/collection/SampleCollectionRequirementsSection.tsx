@@ -5,7 +5,7 @@
 import React, { useMemo } from 'react';
 import { RADIUS } from '@/theme/recipes';
 import { Callout } from '@/components/display';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import { Panel } from '@/components/surfaces';
 import { SegmentedControl } from '@/components/inputs/SegmentedControl';
 import { Text } from '@/components/layout/Text';

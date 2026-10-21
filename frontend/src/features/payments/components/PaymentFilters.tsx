@@ -3,7 +3,8 @@
  */
 
 import React, { useMemo } from 'react';
-import { FilterBar, useFilterBarBridge } from '@/components/filters';
+import { FilterBar } from '@/components/filters';
+import { useFilterBarBridge } from '@/hooks/filters';
 import { paymentFilterConfig } from '../config/paymentFilters.config';
 import type { PaymentStatus } from '@/types';
 

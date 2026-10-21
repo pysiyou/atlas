@@ -2,7 +2,7 @@
  * Patient demographic badge (gender maps via statusBadge misc colors).
  */
 
-import { StatusValueBadge, type StatusValueBadgeProps } from '@/features/shared/components/StatusValueBadge';
+import { StatusValueBadge, type StatusValueBadgeProps } from '@/features/shared';
 
 export function PatientGenderBadge({
   gender,

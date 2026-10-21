@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { Checkbox } from '@/components/primitives';
-import { DateFilter, SearchTextInput, Select } from '@/components/inputs';
+import { DatePicker, SearchTextInput, Select } from '@/components/inputs';
 import { MultiSelectFilter } from '@/components/overlays';
 import { RADIUS } from '@/theme/recipes';
 import { ICONS, MODULE_ICONS } from '@/config/icons';
@@ -94,7 +94,7 @@ function renderFieldControl(
     case 'dateRange':
       return (
         <div key={field} className="flex h-9 w-full items-center">
-          <DateFilter
+          <DatePicker
             value={props.dateRange}
             onChange={props.onDateRangeChange}
             placeholder={EVENT_LOG_FILTER_PLACEHOLDERS.dateRange}

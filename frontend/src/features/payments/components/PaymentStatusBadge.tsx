@@ -2,7 +2,7 @@
  * Payment-domain status and method chips.
  */
 
-import { StatusValueBadge, type StatusValueBadgeProps } from '@/features/shared/components/StatusValueBadge';
+import { StatusValueBadge, type StatusValueBadgeProps } from '@/features/shared';
 import type { PaymentMethod, PaymentStatus } from '@/types';
 
 export function PaymentStatusBadge({

@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import type { Order } from '@/types';
 import { OrderPriorityBadge, OrderStatusBadge } from './OrderDomainBadges';
 import { DescriptionColumns, DescriptionItem } from '@/components/display';

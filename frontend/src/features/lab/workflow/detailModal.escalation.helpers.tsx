@@ -3,7 +3,7 @@
  */
 
 import { Panel } from '@/components/surfaces';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import { DetailGrid, ModalFooter } from './detailModalLayout';
 import { ResultValidationPanel } from '../validation/ResultValidationForm';
 import { CriticalValueActions } from '../criticalValues/CriticalValueActions';

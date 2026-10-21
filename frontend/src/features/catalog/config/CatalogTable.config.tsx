@@ -3,7 +3,7 @@
  */
 
 import type { NavigateFunction } from 'react-router-dom';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import { CatalogCategoryBadge, CatalogSampleTypeBadge } from '../components/CatalogStatusBadge';
 import type { TableViewConfig } from '@/components/data-table';
 import { buildViews, TABLE_COLUMN_WIDTH } from '@/components/data-table';

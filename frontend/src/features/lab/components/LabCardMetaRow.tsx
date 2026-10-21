@@ -4,7 +4,7 @@
 
 import React, { type ReactNode } from 'react';
 import { cn } from '@/utils';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import { text, LIST_MARKER , FG } from '@/theme/recipes';
 import { getQueueAgeInfo } from '../utils/labQueue';
 import { TONE } from '@/theme/recipes';

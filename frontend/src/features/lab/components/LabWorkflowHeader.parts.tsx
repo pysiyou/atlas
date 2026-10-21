@@ -1,7 +1,7 @@
 /** Audit line rendering — shared by card alerts and modal headers. */
 
 import { cn, formatDateTime } from '@/utils';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import { useUserLookup } from '@/lib/api/users';
 import { text, WORKLIST_EMPHASIZED_INLINE, WORKLIST_HEADER } from '@/theme/recipes';
 import type { LabAuditLine } from '../constants/labWorkflowAuditLines';

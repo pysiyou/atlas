@@ -5,7 +5,7 @@ import { lazy, Suspense } from 'react';
 import type { UserRole } from '@/types';
 import { ErrorAlert } from '@/components/feedback';
 import { WORKSPACE } from '@/theme/recipes';
-import { errorAlertMessage } from '@/utils/feedback';
+import { toListLoadError } from '@/hooks/listPage';
 import type { LabTabId } from '../constants/labConstants';
 import { WORKLIST_SHELL } from '@/theme/recipes';
 import { tabAllowed } from './laboratoryPageAccess';
@@ -62,9 +62,7 @@ export function LaboratoryPageStageContent({
       {isError && (
         <div className={`${WORKSPACE.contentInset} shrink-0 pb-0`}>
           <ErrorAlert
-            error={{
-              message: errorAlertMessage('lab.page.loadFailed', error),
-            }}
+            error={toListLoadError('lab.page.loadFailed', error)!}
             onRetry={onRetry}
           />
         </div>

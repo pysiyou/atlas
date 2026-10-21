@@ -8,7 +8,6 @@ export * from './FormDialogFooter';
 export * from './PopoverFormChrome';
 export * from './FilterTriggerShell';
 export * from './MultiSelectFilter';
-export { MultiSelectFilter as SelectMenu } from './MultiSelectFilter';
 export * from './OverlaySearchInput';
 export * from './RangeSlider';
 export * from './Toast';

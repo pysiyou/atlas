@@ -17,7 +17,7 @@ import { ErrorAlert, ErrorBoundary } from '@/components/feedback';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { LAB_CONFIG } from '../constants';
 import { worklistServerFilters } from '../utils/labSearchAndLinks';
-import { errorAlertMessage } from '@/utils/feedback';
+import { toListLoadError } from '@/hooks/listPage';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import type { PriorityLevel, TestWithContext } from '@/types';
@@ -170,7 +170,7 @@ export const ResultValidationQueue: React.FC = () => {
     return (
       <ErrorBoundary>
         <ErrorAlert
-          error={{ message: errorAlertMessage('lab.worklist.loadFailed', worklistQueryError) }}
+          error={toListLoadError('lab.worklist.loadFailed', worklistQueryError)!}
           onRetry={() => {
             void refetchWorklist();
           }}

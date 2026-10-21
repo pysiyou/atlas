@@ -2,7 +2,7 @@
  * Lab queue / sample domain badges.
  */
 
-import { StatusValueBadge, type StatusValueBadgeProps } from '@/features/shared/components/StatusValueBadge';
+import { StatusValueBadge, type StatusValueBadgeProps } from '@/features/shared';
 
 type BadgeShellProps = Omit<StatusValueBadgeProps, 'value'>;
 

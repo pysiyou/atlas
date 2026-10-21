@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import { FormProvider } from 'react-hook-form';
 import type { Patient } from '@/types';
 import { FormDialogFooter, Modal, ModalPageShell } from '@/components/overlays';
 import { FooterInfo } from '@/components/display';
@@ -43,9 +44,8 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
   mode,
 }) => {
   const {
+    form,
     handleSubmit,
-    control,
-    errors,
     isSubmitting,
     activeTab,
     setActiveTab,
@@ -53,7 +53,6 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
     modalTitle,
     subtitle,
     submitLabel,
-    setValue,
   } = useEditPatientForm({ patient, mode, onClose });
 
   return (
@@ -76,16 +75,15 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
             />
           }
         >
-          <form id="patient-form" onSubmit={handleSubmit} className="max-w-full space-y-space-6">
-            <TabNavigation tabs={[...tabs]} activeTab={activeTab} onTabChange={setActiveTab} />
-            <PatientFormTabs
-              activeTab={activeTab}
-              control={control}
-              errors={errors}
-              setValue={setValue}
-              existingAffiliation={patient?.affiliation}
-            />
-          </form>
+          <FormProvider {...form}>
+            <form id="patient-form" onSubmit={handleSubmit} className="max-w-full space-y-space-6">
+              <TabNavigation tabs={[...tabs]} activeTab={activeTab} onTabChange={setActiveTab} />
+              <PatientFormTabs
+                activeTab={activeTab}
+                existingAffiliation={patient?.affiliation}
+              />
+            </form>
+          </FormProvider>
         </ModalPageShell>
       </Modal>
     </ErrorBoundary>

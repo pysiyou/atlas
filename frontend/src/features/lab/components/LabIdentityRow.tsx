@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import { InlineSegments, type InlineSegment } from '@/components/layout';
 import { formatDate } from '@/utils';
 

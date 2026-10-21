@@ -3,7 +3,7 @@
  */
 
 import type { ReactNode } from 'react';
-import { RecordId } from '@/features/shared/components/RecordId';
+import { RecordId } from '@/features/shared';
 import { calculateAge, formatDateTime } from '@/utils';
 import { renderPatientNameBlock, renderTableTwoLineCell } from '@/utils/tableColumnRenders';
 import { TABLE_TYPE } from '@/theme/recipes';

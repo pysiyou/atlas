@@ -3,7 +3,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import type { Control, FieldErrors, UseFormSetValue } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import type { PatientFormInput } from '../schemas/patientFormSchemas';
 import type { Patient } from '@/types';
 import { DemographicsSection } from './DemographicsSection';
@@ -16,19 +16,14 @@ import { Panel } from '@/components/surfaces';
 
 export interface PatientFormTabsProps {
   activeTab: string;
-  control: Control<PatientFormInput>;
-  errors: FieldErrors<PatientFormInput>;
-  setValue: UseFormSetValue<PatientFormInput>;
   existingAffiliation?: Patient['affiliation'];
 }
 
 export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
   activeTab,
-  control,
-  errors,
-  setValue,
   existingAffiliation,
 }) => {
+  const { setValue } = useFormContext<PatientFormInput>();
   const initialHasAffiliation = useMemo(() => !!existingAffiliation, [existingAffiliation]);
   const [affiliationEnabled, setAffiliationEnabled] = useState(initialHasAffiliation);
 
@@ -39,11 +34,11 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
       return (
         <div className="space-y-space-6">
           <Panel preset="panel.page.form" title="Identity & Contact">
-            <DemographicsSection control={control} errors={errors} />
-            <AddressSection control={control} errors={errors} />
+            <DemographicsSection />
+            <AddressSection />
           </Panel>
           <Panel preset="panel.page.form" title="Emergency Contact">
-            <EmergencyContactSection control={control} errors={errors} />
+            <EmergencyContactSection />
           </Panel>
         </div>
       );
@@ -51,7 +46,7 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
     case 'medical':
       return (
         <Panel preset="panel.page.form" title="History, Conditions & Lifestyle">
-          <MedicalHistorySection control={control} errors={errors} />
+          <MedicalHistorySection />
         </Panel>
       );
 
@@ -62,11 +57,7 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
           title="Measurements"
           meta="Fill any vitals you have. Hints show typical ranges."
         >
-          <VitalsSection
-            control={control}
-            errors={errors}
-            emptyKeysReadOnly={emptyVitalKeysReadOnly}
-          />
+          <VitalsSection emptyKeysReadOnly={emptyVitalKeysReadOnly} />
         </Panel>
       );
 
@@ -78,8 +69,6 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
           meta="Choose a duration and pricing that works for you"
         >
           <AffiliationSection
-            control={control}
-            errors={errors}
             setValue={setValue}
             existingAffiliation={existingAffiliation}
             affiliationEnabled={affiliationEnabled}

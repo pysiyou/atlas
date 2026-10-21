@@ -5,7 +5,7 @@
 import React, { useState } from 'react';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Alert } from '@/components/display';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import { formatDateTime } from '@/utils';
 import { useAuthStore } from '@/app/authStore';
 import { notify } from '@/utils/feedback';

@@ -2,7 +2,7 @@ import React from 'react';
 import { useController } from 'react-hook-form';
 import { Textarea, TagInput } from '@/components/inputs';
 import { Checkbox } from '@/components/primitives';
-import type { PatientFormSectionProps } from '../patientFormTypes';
+import { usePatientFormSection } from '../hooks/usePatientFormSection';
 
 function normalizeTagList(value: string[] | string | null | undefined): string[] {
   if (Array.isArray(value)) {
@@ -27,7 +27,8 @@ function familyHistoryDisplay(value: string[] | string | null | undefined): stri
   return '';
 }
 
-export const MedicalHistorySection: React.FC<PatientFormSectionProps> = ({ control }) => {
+export const MedicalHistorySection: React.FC = () => {
+  const { control } = usePatientFormSection();
   const { field: chronicConditions } = useController({
     control,
     name: 'medicalHistory.chronicConditions',

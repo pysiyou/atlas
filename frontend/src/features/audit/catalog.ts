@@ -159,20 +159,22 @@ function formatReasonLabel(raw: string): string {
   return raw.trim().replace(/_/g, ' ');
 }
 
-const REASON_LEAD_IN = '. ';
+function bracketInfoPart(text: string): EventLogHeadlinePart {
+  return { text, variant: 'info', icon: false };
+}
 
 export function appendClause(parts: EventLogHeadlinePart[], clause: string): EventLogHeadlinePart[] {
   if (!clause.trim()) return parts;
   const label = formatReasonLabel(clause);
-  return append(
-    parts,
-    { text: REASON_LEAD_IN },
-    {
-      text: `${EVENT_LOG_COPY.reasonInlinePrefix}${label}`,
-      variant: 'info',
-      icon: false,
-    }
-  );
+  return append(parts, bracketInfoPart(` [Reason: ${label}]`));
+}
+
+export function appendBracketReasonLiteral(
+  parts: EventLogHeadlinePart[],
+  label: string
+): EventLogHeadlinePart[] {
+  if (!label.trim()) return parts;
+  return append(parts, bracketInfoPart(` [Reason: ${label.trim()}]`));
 }
 
 export function appendOutcomeClause(
@@ -181,15 +183,15 @@ export function appendOutcomeClause(
 ): EventLogHeadlinePart[] {
   if (!outcome.trim()) return parts;
   const label = formatReasonLabel(outcome);
-  return append(
-    parts,
-    { text: REASON_LEAD_IN },
-    {
-      text: `${EVENT_LOG_COPY.outcomeInlinePrefix}${label}`,
-      variant: 'info',
-      icon: false,
-    }
-  );
+  return append(parts, bracketInfoPart(` [Outcome: ${label}]`));
+}
+
+export function appendFormatClause(
+  parts: EventLogHeadlinePart[],
+  format: string
+): EventLogHeadlinePart[] {
+  if (!format.trim()) return parts;
+  return append(parts, bracketInfoPart(` [Format: ${format.trim()}]`));
 }
 
 export function changeNew(record: EventLogRecord, field: string): string | undefined {
@@ -350,13 +352,13 @@ export function appendForOrderPhrase(
   return append(next, orderRecordPhrase(orderId));
 }
 
-export function appendUnderOrderPhrase(
+export function appendOnOrderPhrase(
   parts: EventLogHeadlinePart[],
   record: EventLogRecord
 ): EventLogHeadlinePart[] {
   const orderId = resolveOrderId(record);
   if (!orderId || includesDisplayId(parts, eventLogId.order(orderId))) return parts;
-  const next = appendText(parts, ' under ');
+  const next = appendText(parts, ' on order ');
   return append(next, orderRecordPhrase(orderId));
 }
 
@@ -373,58 +375,66 @@ export function targetOrderTestRef(
   return [orderTestRecordPhrase(id, 'Test ')];
 }
 
-export function testUnderOrderWithTrailing(
+function testNameRefOnly(
   record: EventLogRecord,
-  context: EventLogHeadlineContext,
-  trailing: string
+  context: EventLogHeadlineContext
 ): EventLogHeadlinePart[] {
-  let parts = append([], ...targetOrderTestRef(record, context));
-  parts = appendUnderOrderPhrase(parts, record);
-  return appendText(parts, trailing);
+  const codes = collectTestCodes(record);
+  if (codes.length > 0) {
+    return [testHighlightFromCodes(codes, context)];
+  }
+  const testId = resolveOrderTestId(record);
+  const id = testId ?? record.targetId;
+  return [mainPart(eventLogId.orderTest(id))];
 }
 
-export function retestUnderOrderWithTrailing(
+/** Appends `for test {name} on order {order}`. */
+export function appendForTestOnOrderPhrase(
+  parts: EventLogHeadlinePart[],
   record: EventLogRecord,
-  context: EventLogHeadlineContext,
-  trailing: string
+  context: EventLogHeadlineContext
 ): EventLogHeadlinePart[] {
-  let parts = appendText([], 'Retest for ');
-  parts = append(parts, ...targetOrderTestRef(record, context));
-  parts = appendUnderOrderPhrase(parts, record);
-  return appendText(parts, trailing);
+  let next = appendText(parts, 'for test ');
+  next = append(next, ...testNameRefOnly(record, context));
+  return appendOnOrderPhrase(next, record);
 }
 
-export function resultsForTestUnderOrderPhrase(
+function patientProfileRef(
   record: EventLogRecord,
-  context: EventLogHeadlineContext,
-  trailing: string
+  context: EventLogHeadlineContext
 ): EventLogHeadlinePart[] {
-  let parts = appendText([], 'Results for ');
-  parts = append(parts, ...targetOrderTestRef(record, context));
-  parts = appendUnderOrderPhrase(parts, record);
-  return appendText(parts, trailing);
+  const patientId = resolvePatientId(record) ?? record.targetId;
+  return [patientRecordPhrase(patientId, context, '')];
 }
 
-export function testCentricUnderOrderPhrase(
+function labResultsForTestOnOrderPhrase(
   record: EventLogRecord,
   context: EventLogHeadlineContext,
-  prefix: string,
-  trailing: string
+  leadIn: string
 ): EventLogHeadlinePart[] {
-  let parts = appendText([], prefix);
-  parts = append(parts, ...targetOrderTestRef(record, context));
-  parts = appendUnderOrderPhrase(parts, record);
-  return appendText(parts, trailing);
+  let parts = appendText([], leadIn);
+  return appendForTestOnOrderPhrase(parts, record, context);
+}
+
+export function appendTriggeredByClause(
+  parts: EventLogHeadlinePart[],
+  record: EventLogRecord,
+  context: EventLogHeadlineContext
+): EventLogHeadlinePart[] {
+  const trigger = testHighlightFromMetaKey(record, 'triggered_by', context);
+  if (!trigger) return parts;
+  let next = append(parts, bracketInfoPart(' [Triggered by: '));
+  next = append(next, trigger);
+  return append(next, bracketInfoPart(']'));
 }
 
 export function recollectionForSamplePhrase(
   record: EventLogRecord,
   verb: 'requested' | 'approved' | 'denied'
 ): EventLogHeadlinePart[] {
-  let parts = appendText([], 'Recollection for ');
-  parts = append(parts, targetSample(record));
-  parts = appendUnderOrderPhrase(parts, record);
-  return appendText(parts, ` ${verb}`);
+  let parts = appendText([], `Recollection ${verb} for `);
+  parts = append(parts, sampleRecordPhrase(record.targetId, 'sample '));
+  return appendOnOrderPhrase(parts, record);
 }
 
 
@@ -466,47 +476,47 @@ export const EVENT_HEADLINE_BUILDERS: Record<
   (record: EventLogRecord, context: EventLogHeadlineContext) => EventLogHeadlinePart[]
 > = {
   'patient.create': (r, c) => {
-    let parts = appendText([], 'New profile for ');
-    parts = append(parts, targetPatient(r, c));
+    let parts = appendText([], 'Patient profile ');
+    parts = append(parts, ...patientProfileRef(r, c));
     return appendText(parts, ' created');
   },
   'patient.update': (r, c) => {
-    let parts = appendText([], 'Details for ');
-    parts = append(parts, targetPatient(r, c));
+    let parts = appendText([], 'Patient profile ');
+    parts = append(parts, ...patientProfileRef(r, c));
     return appendText(parts, ' updated');
   },
   'patient.delete': (r, c) => {
-    let parts = appendText([], 'Profile for ');
-    parts = append(parts, targetPatient(r, c));
+    let parts = appendText([], 'Patient profile ');
+    parts = append(parts, ...patientProfileRef(r, c));
     return appendText(parts, ' archived');
   },
   'patient.view': (r, c) => {
-    const parts = append([], targetPatient(r, c, ''));
-    return appendText(parts, "'s profile viewed");
+    let parts = appendText([], 'Patient chart ');
+    parts = append(parts, ...patientProfileRef(r, c));
+    return appendText(parts, ' viewed');
   },
   'order.create': (r, c) => {
-    let parts = appendText([], 'New ');
-    parts = append(parts, targetOrder(r));
-    parts = appendText(parts, ' placed');
-    const patient = targetPatientFromContext(r, c);
-    if (patient) {
-      parts = appendText(parts, ' for ');
-      parts = append(parts, patient);
+    const orderId = resolveOrderId(r);
+    let parts = orderId ? append([], orderRecordPhrase(orderId, 'Order ')) : appendText([], 'Order ');
+    parts = appendText(parts, ' created');
+    const patientId = resolvePatientId(r);
+    if (patientId != null) {
+      parts = appendText(parts, ' for patient ');
+      parts = append(parts, patientRecordPhrase(patientId, c, ''));
     }
     return parts;
   },
   'order.update': r => {
-    let parts = appendText([], 'Details for ');
-    parts = append(parts, targetOrder(r));
+    const orderId = resolveOrderId(r);
+    let parts = orderId ? append([], orderRecordPhrase(orderId, 'Order ')) : appendText([], 'Order ');
     return appendText(parts, ' updated');
   },
   'order.delete': r => appendText(append([], targetOrder(r, 'Order ')), ' cancelled'),
   'order.status': r => {
     const statusLabel = formatOrderStatusLabel(changeNew(r, 'status'));
     const orderId = resolveOrderId(r);
-    let parts = appendText([], 'Status for ');
-    if (orderId) parts = append(parts, orderRecordPhrase(orderId));
-    parts = appendText(parts, ' updated to ');
+    let parts = orderId ? append([], orderRecordPhrase(orderId, 'Order ')) : appendText([], 'Order ');
+    parts = appendText(parts, ' status changed to ');
     return append(parts, mainPart(statusLabel));
   },
   'order.test.add': (r, c) => {
@@ -523,96 +533,83 @@ export const EVENT_HEADLINE_BUILDERS: Record<
     if (orderId) parts = append(parts, orderRecordPhrase(orderId));
     return parts;
   },
-  'order.test.cancel': (r, c) =>
-    appendClause(testUnderOrderWithTrailing(r, c, ' cancelled'), metaString(r, 'reason') ?? ''),
-  'order.test.retest': (r, c) =>
-    appendClause(retestUnderOrderWithTrailing(r, c, ' ordered'), metaString(r, 'reason') ?? ''),
+  'order.test.cancel': (r, c) => {
+    let parts = append([], ...targetOrderTestRef(r, c));
+    parts = appendText(parts, ' cancelled');
+    parts = appendOnOrderPhrase(parts, r);
+    return appendClause(parts, metaString(r, 'reason') ?? '');
+  },
+  'order.test.retest': (r, c) => {
+    let parts = appendText([], 'Retest ordered for test ');
+    parts = append(parts, ...testNameRefOnly(r, c));
+    parts = appendOnOrderPhrase(parts, r);
+    return appendClause(parts, metaString(r, 'reason') ?? '');
+  },
   'order.test.reflex': (r, c) => {
     let parts = appendText([], 'Reflex test ');
     parts = append(parts, testHighlightFromMetaKey(r, 'added_test_code', c) ?? mainPart('—'));
     parts = appendText(parts, ' added to ');
     const orderId = resolveOrderId(r);
     if (orderId) parts = append(parts, orderRecordPhrase(orderId));
-    parts = appendText(parts, ' (triggered by ');
-    const trigger = testHighlightFromMetaKey(r, 'triggered_by', c) ?? mainPart('test —');
-    parts = append(parts, trigger);
-    return appendText(parts, ')');
+    return appendTriggeredByClause(parts, r, c);
   },
   'laboratory.sample.create': (r, c) => {
-    let parts = appendText([], 'Label for ');
-    parts = append(parts, targetSample(r));
+    let parts = appendText([], 'Sample label ');
+    parts = append(parts, sampleRecordPhrase(r.targetId, ''));
     parts = appendText(parts, ' generated');
-    const codes = collectTestCodes(r);
-    if (codes.length > 0) {
-      parts = appendText(parts, ' for ');
-      parts = append(parts, highlightedTestListPart(codes, c));
-    }
-    return appendUnderOrderPhrase(parts, r);
+    return appendForTestOnOrderPhrase(parts, r, c);
   },
-  'laboratory.sample.collect': (r, c) => {
-    let parts = appendText(append([], targetSample(r, 'Sample ')), ' collected');
-    const codes = collectTestCodes(r);
-    if (codes.length > 0) {
-      parts = appendText(parts, ' for ');
-      parts = append(parts, highlightedTestListPart(codes, c));
-    }
-    return appendUnderOrderPhrase(parts, r);
+  'laboratory.sample.collect': r => {
+    let parts = append([], sampleRecordPhrase(r.targetId, 'Sample '));
+    parts = appendText(parts, ' collected');
+    return appendForOrderPhrase(parts, r);
   },
   'laboratory.sample.reject': r => {
-    let parts = append([], targetSample(r, 'Sample '));
-    const orderTestId = resolveOrderTestId(r);
-    if (orderTestId) {
-      parts = appendText(parts, ' belonging to ');
-      parts = append(parts, orderTestRecordPhrase(orderTestId));
-    }
-    parts = appendUnderOrderPhrase(parts, r);
+    let parts = append([], sampleRecordPhrase(r.targetId, 'Sample '));
     parts = appendText(parts, ' rejected');
+    parts = appendOnOrderPhrase(parts, r);
     return appendClause(parts, metaString(r, 'rejection_reason') ?? '');
   },
   'laboratory.sample.recollect_request': r => recollectionForSamplePhrase(r, 'requested'),
   'laboratory.sample.recollect_approve': r => recollectionForSamplePhrase(r, 'approved'),
   'laboratory.sample.recollect_deny': r =>
     appendClause(recollectionForSamplePhrase(r, 'denied'), metaString(r, 'reason') ?? ''),
-  'laboratory.analyzer.duplicate_ingest': (r, c) =>
-    testCentricUnderOrderPhrase(r, c, 'Duplicate analyzer ingest for ', ' ignored'),
-  'laboratory.analyzer.ingest_rejected': (r, c) =>
-    appendClause(
-      testCentricUnderOrderPhrase(r, c, 'Analyzer ingest rejected for ', ''),
-      metaString(r, 'reason') ?? ''
-    ),
-  'laboratory.result.enter': (r, c) => {
-    let parts = resultsForTestUnderOrderPhrase(r, c, ' entered');
-    if (metaString(r, 'source') === 'analyzer') {
-      const analyzerId = metaString(r, 'analyzer_id');
-      parts = appendText(parts, analyzerId ? ` from analyzer ${analyzerId}` : ' from analyzer');
-    }
-    return parts;
+  'laboratory.analyzer.duplicate_ingest': (r, c) => {
+    let parts = appendText([], 'Analyzer ingest ignored ');
+    parts = appendForTestOnOrderPhrase(parts, r, c);
+    return appendBracketReasonLiteral(parts, 'Duplicate');
   },
-  'laboratory.result.update': (r, c) => resultsForTestUnderOrderPhrase(r, c, ' updated'),
+  'laboratory.analyzer.ingest_rejected': (r, c) => {
+    let parts = appendText([], 'Analyzer ingest rejected ');
+    parts = appendForTestOnOrderPhrase(parts, r, c);
+    return appendClause(parts, metaString(r, 'reason') ?? '');
+  },
+  'laboratory.result.enter': (r, c) =>
+    labResultsForTestOnOrderPhrase(r, c, 'Results entered '),
+  'laboratory.result.update': (r, c) =>
+    labResultsForTestOnOrderPhrase(r, c, 'Results updated '),
   'laboratory.result.critical_detect': (r, c) =>
-    testCentricUnderOrderPhrase(r, c, 'Critical value for ', ' detected'),
+    labResultsForTestOnOrderPhrase(r, c, 'Critical value detected '),
   'laboratory.result.critical_notify': (r, c) =>
-    testCentricUnderOrderPhrase(r, c, 'Clinician notification for ', ' documented'),
+    labResultsForTestOnOrderPhrase(r, c, 'Clinician notified '),
   'laboratory.result.critical_acknowledge': (r, c) =>
-    testCentricUnderOrderPhrase(r, c, 'Critical value protocol for ', ' acknowledged'),
-  'laboratory.validation.approve': (r, c) => resultsForTestUnderOrderPhrase(r, c, ' validated'),
-  'laboratory.validation.reject': (r, c) =>
-    appendClause(
-      resultsForTestUnderOrderPhrase(r, c, ' returned for correction'),
-      metaString(r, 'reason') ?? ''
-    ),
-  'laboratory.escalation.trigger': (r, c) => {
-    let parts = testCentricUnderOrderPhrase(r, c, 'Escalation for ', ' opened');
-    if (metaString(r, 'reason_code')) {
-      parts = appendText(parts, ` (${metaString(r, 'reason_code')})`);
-    }
-    return parts;
+    labResultsForTestOnOrderPhrase(r, c, 'Critical value acknowledged '),
+  'laboratory.validation.approve': (r, c) =>
+    labResultsForTestOnOrderPhrase(r, c, 'Results validated '),
+  'laboratory.validation.reject': (r, c) => {
+    let parts = labResultsForTestOnOrderPhrase(r, c, 'Results returned for correction ');
+    return appendClause(parts, metaString(r, 'reason') ?? '');
   },
-  'laboratory.escalation.resolve': (r, c) =>
-    appendOutcomeClause(
-      testCentricUnderOrderPhrase(r, c, 'Escalation for ', ' resolved'),
-      metaString(r, 'resolution') ?? ''
-    ),
+  'laboratory.escalation.trigger': (r, c) => {
+    let parts = appendText([], 'Escalation triggered ');
+    parts = appendForTestOnOrderPhrase(parts, r, c);
+    return appendClause(parts, metaString(r, 'reason_code') ?? '');
+  },
+  'laboratory.escalation.resolve': (r, c) => {
+    let parts = appendText([], 'Escalation resolved ');
+    parts = appendForTestOnOrderPhrase(parts, r, c);
+    return appendOutcomeClause(parts, metaString(r, 'resolution') ?? '');
+  },
   'billing.payment.process': r => {
     const parts = appendText(append([], paymentRecordPhrase(r.targetId)), ' recorded');
     return appendForOrderPhrase(parts, r);
@@ -631,18 +628,18 @@ export const EVENT_HEADLINE_BUILDERS: Record<
     return appendForOrderPhrase(parts, r);
   },
   'reporting.generate': r => {
-    let parts = appendText([], 'Report for ');
-    parts = append(parts, targetOrder(r));
-    return appendText(parts, ' generated');
+    let parts = appendText([], 'Report generated ');
+    const orderId = resolveOrderId(r);
+    if (orderId) {
+      parts = appendText(parts, 'for ');
+      parts = append(parts, orderRecordPhrase(orderId));
+    }
+    return parts;
   },
   'reporting.download': (r, c) => {
-    let parts = appendText([], 'Report for ');
-    parts = append(parts, ...targetOrderTestRef(r, c));
-    parts = appendText(parts, ' downloaded');
-    if (metaString(r, 'format')) {
-      parts = appendText(parts, ` as ${metaString(r, 'format')}`);
-    }
-    return appendUnderOrderPhrase(parts, r);
+    let parts = appendText([], 'Report downloaded ');
+    parts = appendForTestOnOrderPhrase(parts, r, c);
+    return appendFormatClause(parts, metaString(r, 'format') ?? '');
   },
   'system.user.login': () => appendText([], 'signed in'),
   'system.user.logout': () => appendText([], 'signed out'),
@@ -757,44 +754,44 @@ const CATALOG_SEEDS: CatalogSeed[] = [
   {
     eventType: 'patient.create',
     domain: 'patient',
-    verbPhrase: 'new profile created for patient',
+    verbPhrase: 'patient profile created',
     domainLabel: 'Patient',
   },
   {
     eventType: 'patient.update',
     domain: 'patient',
-    verbPhrase: 'patient details updated for',
+    verbPhrase: 'patient profile updated',
     domainLabel: 'Patient',
   },
   {
     eventType: 'patient.delete',
     domain: 'patient',
-    verbPhrase: 'patient profile archived for',
+    verbPhrase: 'patient profile archived',
     domainLabel: 'Patient',
   },
   {
     eventType: 'patient.view',
     domain: 'patient',
-    verbPhrase: "patient profile viewed",
+    verbPhrase: 'patient chart viewed',
     domainLabel: 'Patient',
   },
   {
     eventType: 'order.create',
     domain: 'order',
-    verbPhrase: 'new order placed',
+    verbPhrase: 'order created',
     domainLabel: 'Order',
   },
   {
     eventType: 'order.update',
     domain: 'order',
-    verbPhrase: 'updated order',
+    verbPhrase: 'order updated',
     domainLabel: 'Order',
     headlineMetaKeys: ['field', 'value'],
   },
   {
     eventType: 'order.status',
     domain: 'order',
-    verbPhrase: 'order status updated for',
+    verbPhrase: 'order status changed',
     domainLabel: 'Order',
     headlineMetaKeys: ['trigger'],
   },

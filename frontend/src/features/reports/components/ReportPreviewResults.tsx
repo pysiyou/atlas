@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Panel } from '@/components/surfaces';
-import { RecordId } from '@/features/shared/components';
+import { RecordId } from '@/features/shared';
 import {
   ResultValidationNotesSection,
   ResultValidationResultsBody,
