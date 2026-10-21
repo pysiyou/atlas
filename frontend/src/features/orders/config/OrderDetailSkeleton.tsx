@@ -7,7 +7,7 @@ import { OrderProgressSkeleton } from './OrderProgressSkeleton';
 
 export const ORDER_DETAIL_SKELETON_SECTIONS: DetailSkeletonSection[] = [
   { preset: 'panel.page.visible.shrink', title: 'Order Information', rows: 6, layout: 'grid' },
-  { preset: 'panel.page.visible.shrink', title: 'Patient Information', rows: 4, layout: 'grid' },
+  { preset: 'panel.page.visible.shrink', title: 'Patient Information', rows: 8, layout: 'grid' },
   {
     preset: 'panel.pageEmbed.visible', title: 'Order activity',
     customContent: (
@@ -32,7 +32,7 @@ export function renderOrderDetailLargeSkeleton() {
           <SkeletonInfoSection rows={6} layout="column" />
         </Panel>
         <Panel preset="panel.page.auto.fill" title="Patient Information">
-          <SkeletonInfoSection rows={4} layout="column" />
+          <SkeletonInfoSection rows={8} layout="column" />
         </Panel>
         <Panel preset="panel.pageEmbed.auto.fill.flexColumnMin" title="Order activity">
           <div className={SPACING.pPanel}>

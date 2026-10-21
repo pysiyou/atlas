@@ -63,7 +63,6 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 
       <Panel
         preset="panel.pageEmbed.visible.shrink" title="Related Orders"
-        meta={countMeta(orders.length)}
         headerEnd={<RelatedOrdersHeader onNewOrder={onNewOrder} />}
       >
         <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
@@ -103,7 +102,6 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 
       <Panel
         preset="panel.pageEmbed.visible" title="Related Orders"
-        meta={countMeta(orders.length)}
         headerEnd={<RelatedOrdersHeader onNewOrder={onNewOrder} />}
       >
         <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
@@ -149,7 +147,6 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
         <Panel
           preset="panel.pageEmbed.span2Min"
           title="Related Orders"
-          meta={countMeta(orders.length)}
           headerEnd={<RelatedOrdersHeader onNewOrder={onNewOrder} />}
         >
           <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />

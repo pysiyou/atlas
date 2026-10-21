@@ -7,7 +7,10 @@ import { Textarea } from '@/components/inputs';
 import { Panel, type PanelPresetId } from '@/components/surfaces';
 import { ResultCriticalValueBanner } from './ResultCriticalValueBanner';
 import { statusMapFromFlags, parseResultEntry, isCritical } from '../utils/labResult';
-import { ResultsParameterGrid } from '../components/ResultsParameterGrid';
+import {
+  ResultsParameterGrid,
+  type ResultsGridLayout,
+} from '../components/ResultsParameterGrid';
 import { ResultContextNotes } from '../components/ResultContextNotes';
 import { text, METRIC_TILE } from '@/theme/recipes';
 import { resolveParameterLabel, useParameterLabelMap } from '@/features/catalog';
@@ -34,10 +37,13 @@ export function ResultValidationResultsBody({
   testCode,
   patient,
   technicianNotes,
+  resultsLayout = 'validation',
 }: Pick<
   ValidationFormProps,
   'results' | 'flags' | 'testCode' | 'patient' | 'technicianNotes'
->) {
+> & {
+  resultsLayout?: ResultsGridLayout;
+}) {
   const hasResults = results && Object.keys(results).length > 0;
   const parameterLabels = useParameterLabelMap(testCode);
   const flagStatusMap = useMemo(() => statusMapFromFlags(flags), [flags]);
@@ -72,7 +78,7 @@ export function ResultValidationResultsBody({
           testCode={testCode}
           patient={patient}
           variant="inline"
-          layout="validation"
+          layout={resultsLayout}
         />
       )}
 

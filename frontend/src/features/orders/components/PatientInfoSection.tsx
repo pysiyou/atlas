@@ -1,21 +1,15 @@
 /**
- * PatientInfoSection Component
- * Displays patient information in order context
+ * Patient context on order detail — same read-only blocks as the patient detail page.
  */
 
 import React from 'react';
-import {text, FG } from '@/theme/recipes';
+import { text, FG } from '@/theme/recipes';
 import { Icon } from '@/components/primitives';
-import { DescriptionItem } from '@/components/display';
-import { RecordId } from '@/features/shared/components';
-import { calculateAge } from '@/utils';
+import { ICONS } from '@/config/icons';
 import type { Patient } from '@/types';
-import { formatOrderDate } from '@/utils/date';
-import { ICONS, getDataFieldIcon } from '@/config/icons';
-
-import { formatAddress } from '@/features/patients';
-
-import { ORDER_DETAIL_INFO_FIELDS_LAYOUT } from './OrderInfoSection';
+import { GeneralInfoSection } from '@/features/patients/components/GeneralInfoSection';
+import { MedicalHistorySectionDisplay } from '@/features/patients/components/MedicalHistorySectionDisplay';
+import { CareSnapshotSection } from '@/features/patients/components/CareSnapshotSection';
 
 export interface PatientInfoSectionProps {
   patient: Patient | null;
@@ -26,8 +20,6 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
   patient,
   onViewPatient: _onViewPatient,
 }) => {
-  const containerClass = ORDER_DETAIL_INFO_FIELDS_LAYOUT;
-
   if (!patient) {
     return (
       <div className="flex items-center justify-center h-full min-h-50">
@@ -42,65 +34,11 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
     );
   }
 
-  const age =
-    patient.dateOfBirth != null && patient.dateOfBirth !== ''
-      ? calculateAge(patient.dateOfBirth)
-      : null;
-  const showAge = age != null && Number.isFinite(age);
-
   return (
-    <div className={containerClass}>
-      <DescriptionItem
-        icon={getDataFieldIcon('user')}
-        label="Patient ID"
-        value={<RecordId type="patient" value={patient.id} />}
-        orientation="vertical"
-      />
-      <DescriptionItem
-        icon={ICONS.dataFields.userHands}
-        label="Patient Name"
-        value={patient.fullName}
-        orientation="vertical"
-      />
-      <DescriptionItem
-        icon={ICONS.dataFields.gender}
-        label="Gender"
-        value={<span className="capitalize">{patient.gender}</span>}
-        orientation="vertical"
-      />
-      <DescriptionItem
-        icon={ICONS.dataFields.dateOfBirth}
-        label="Date of Birth"
-        value={
-          <span className="whitespace-nowrap truncate">
-            {formatOrderDate(patient.dateOfBirth, 'long')}
-            {showAge ? (
-              <span className={text({ role: 'body', intent: 'muted' })}> ({age} years old)</span>
-            ) : null}
-          </span>
-        }
-        orientation="vertical"
-      />
-      <DescriptionItem
-        icon={ICONS.dataFields.phone}
-        label="Phone"
-        value={patient.phone}
-        orientation="vertical"
-      />
-      {patient.email && (
-        <DescriptionItem
-          icon={ICONS.dataFields.email}
-          label="Email"
-          value={<span className="line-clamp-2 break-all">{patient.email}</span>}
-          orientation="vertical"
-        />
-      )}
-      <DescriptionItem
-        icon={ICONS.dataFields.address}
-        label="Address"
-        value={<span className="line-clamp-3 wrap-break-word">{formatAddress(patient.address)}</span>}
-        orientation="vertical"
-      />
+    <div className="flex min-h-0 h-full flex-col gap-layout-section">
+      <GeneralInfoSection patient={patient} />
+      <MedicalHistorySectionDisplay patient={patient} />
+      <CareSnapshotSection patient={patient} />
     </div>
   );
 };
