@@ -3,8 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { FilterBar } from '@/components/filters';
-import { useFilterBarBridge } from '@/hooks/filters';
+import { FeatureFilterBar } from '@/hooks';
 import { patientFilterConfig } from '../config/patientFilters.config';
 import type { Gender } from '@/types';
 
@@ -26,21 +25,19 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
   onSexFiltersChange,
 }) => {
   const value = useMemo(
-    () => ({
-      search: searchQuery,
-      sex: sexFilters,
-      ageRange,
-    }),
-    [searchQuery, sexFilters, ageRange]
+    () => ({ search: searchQuery, sex: sexFilters, ageRange }),
+    [searchQuery, sexFilters, ageRange],
   );
 
-  const { filterValues, handleFilterChange } = useFilterBarBridge(value, {
-    search: onSearchChange,
-    sex: onSexFiltersChange,
-    ageRange: onAgeRangeChange,
-  });
-
   return (
-    <FilterBar config={patientFilterConfig} value={filterValues} onChange={handleFilterChange} />
+    <FeatureFilterBar
+      config={patientFilterConfig}
+      value={value}
+      handlers={{
+        search: onSearchChange,
+        sex: onSexFiltersChange,
+        ageRange: onAgeRangeChange,
+      }}
+    />
   );
 };

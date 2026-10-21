@@ -1,5 +1,6 @@
 /**
  * Headless data-table hook — single owner for sort → paginate pipeline.
+ * Used by DataTable; ListView pages should not call this directly.
  */
 
 import { useMemo } from 'react';

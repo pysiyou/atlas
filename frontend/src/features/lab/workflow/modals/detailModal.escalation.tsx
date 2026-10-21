@@ -4,18 +4,18 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { QueueModalShell } from './detailModalLayout';
-import { TestHeaderBadges } from '../components/LabWorkflowBadges';
-import { TestWorkflowCardLeftColumn } from './queueCardLeftColumn';
-import { buildCriticalValueRecord } from '../criticalValues/criticalValues';
+import { QueueModalShell } from '../shared/detailModalLayout';
+import { TestHeaderBadges } from '../../components/LabWorkflowBadges';
+import { TestWorkflowCardLeftColumn } from '../shared/queueCardLeftColumn';
+import { buildCriticalValueRecord } from '../../criticalValues/criticalValues';
 import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
-import { useEscalationResolution } from '../validation/useEscalationResolution';
+import { useEscalationResolution } from '../../validation/useEscalationResolution';
 import {
   EscalationResolutionBody,
   EscalationResolutionFooter,
-} from './escalation.shared';
-import { labModalHeaderContext } from './detailModalLayout';
-import { useOrderTestContext } from '../api/results';
+} from '../shared/escalation.shared';
+import { labModalHeaderContext } from '../shared/detailModalLayout';
+import { useOrderTestContext } from '../../api/results';
 import { Modal, ModalPageShell } from '@/components/overlays';
 import type { EscalationResolutionModalProps } from '@/lib/context/modalTypes';
 

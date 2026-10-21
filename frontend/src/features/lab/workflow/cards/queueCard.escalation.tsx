@@ -7,17 +7,17 @@ import { useMemo, type FC } from 'react';
 import { Card } from '@/components/surfaces';
 import { cn } from '@/utils';
 import { useUserLookup } from '@/lib/api/users';
-import { useLabWorkflowCardClickGuard } from '../hooks';
-import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
-import { deriveRetestContext } from '../utils/deriveRetestContext';
+import { useLabWorkflowCardClickGuard } from '../../hooks';
+import { useLabWorkflowResponsiveCard } from '../../hooks/useLabWorkflowResponsiveCard';
+import { deriveRetestContext } from '../../utils/deriveRetestContext';
 import { MOBILE_LIST_CARD } from '@/theme/recipes';
 import type { TestWithContext } from '@/types';
-import { QueueCard, QueueCardMobile } from './queueCardLayout';
-import { TestWorkflowCardLeftColumn } from './queueCardLeftColumn';
+import { QueueCard, QueueCardMobile } from '../shared/queueCardLayout';
+import { TestWorkflowCardLeftColumn } from '../shared/queueCardLeftColumn';
 import {
   EscalationExceptionBadges,
   EscalationExceptionReviewBody,
-} from './escalation.shared';
+} from '../shared/escalation.shared';
 
 export interface EscalationCardProps {
   test: TestWithContext;

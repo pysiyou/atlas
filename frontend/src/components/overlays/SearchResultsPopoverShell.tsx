@@ -4,7 +4,6 @@ import { FG, FORM_FIELD_LABEL, text } from '@/theme/recipes';
 import { OVERLAY, RADIUS } from '@/theme/recipes';
 import { DEFAULT_EMPTY_DESCRIPTION_SEARCH } from '@/utils/constants';
 
-
 const POPOVER_SHELL_CLASS = [
   `absolute left-0 right-0 top-full z-50 mt-space-1 ${FG.popoverAnchor}`,
   'border border-border-default/80',
@@ -14,7 +13,7 @@ const POPOVER_SHELL_CLASS = [
   OVERLAY.anchoredRaised,
 ].join(' ');
 
-export interface OrderSelectPopoverShellProps {
+export interface SearchResultsPopoverShellProps {
   title: string;
   resultCount: number;
   emptyMessage: string;
@@ -23,8 +22,8 @@ export interface OrderSelectPopoverShellProps {
   children: React.ReactNode;
 }
 
-/** Shared results panel for patient and test search in order upsert. */
-export const OrderSelectPopoverShell: React.FC<OrderSelectPopoverShellProps> = ({
+/** Anchored results panel for combobox-style search fields. */
+export const SearchResultsPopoverShell: React.FC<SearchResultsPopoverShellProps> = ({
   title,
   resultCount,
   emptyMessage,

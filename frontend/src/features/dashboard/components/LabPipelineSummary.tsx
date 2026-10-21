@@ -14,7 +14,7 @@ import {
   getStageVisual,
   LAB_TAB_LABELS,
   type LabWorkflowStage,
-} from '@/features/lab';
+} from '@/features/lab/cross';
 import { useAuthStore } from '@/app/authStore';
 import { text, INLINE_LINK, RADIUS } from '@/theme/recipes';
 

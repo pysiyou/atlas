@@ -11,7 +11,7 @@ import { Panel } from '@/components/surfaces';
 import { LabPriorityBadge } from '../components/LabDomainBadges';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import { cn, displayId } from '@/utils';
-import { getLabQueueUrl } from '@/features/lab';
+import { getLabQueueUrl } from '../utils/labSearchAndLinks';
 import {CONTROL, FEED_ACCENT, FEED_GROUPED, RADIUS, FG } from '@/theme/recipes';
 import { Text } from '@/components/layout';
 import { LAB_COPY } from '../constants/labConstants';

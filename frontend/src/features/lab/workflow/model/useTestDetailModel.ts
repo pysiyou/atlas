@@ -10,7 +10,7 @@ import type { Order, OrderTest, Patient, Sample, Test, TestWithContext } from '@
 import {
   resolveTestDetailHeaderVariant,
   resolveTestDetailModalStage,
-} from './testDetailHeader';
+} from '../shared/testDetailHeader';
 
 export type TestDetailInteraction = 'view' | 'validate';
 

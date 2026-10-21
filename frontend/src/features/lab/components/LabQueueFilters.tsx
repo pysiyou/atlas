@@ -1,11 +1,10 @@
 /**
  * LabQueueFilters - Shared filter row for lab workflow tabs
- * Composes FilterBar with lab filter config; used by Entry, Collection, Validation, Escalation.
  */
 
 import React, { useMemo } from 'react';
-import { FilterBar, type FilterValues } from '@/components/filters';
 import type { FilterConfig } from '@/components/filters';
+import { FeatureFilterBar } from '@/hooks';
 
 export interface LabQueueFiltersProps<S = string[]> {
   config: FilterConfig;
@@ -17,7 +16,6 @@ export interface LabQueueFiltersProps<S = string[]> {
   onSampleTypeFiltersChange: (values: string[]) => void;
   statusFilters: S;
   onStatusFiltersChange: (values: S) => void;
-  /** Key for status filter in config - defaults to 'status', use 'priority' for validation */
   statusFilterKey?: 'status' | 'priority';
 }
 
@@ -33,25 +31,41 @@ export function LabQueueFilters<S = string[]>({
   onStatusFiltersChange,
   statusFilterKey = 'status',
 }: LabQueueFiltersProps<S>): React.ReactElement {
-  const filterValues = useMemo<FilterValues>(
+  const value = useMemo(
     () => ({
       searchQuery,
       dateRange,
       sampleType: sampleTypeFilters,
-      [statusFilterKey]: statusFilters,
+      ...(statusFilterKey === 'priority'
+        ? { priority: statusFilters }
+        : { status: statusFilters }),
     }),
-    [searchQuery, dateRange, sampleTypeFilters, statusFilters, statusFilterKey]
+    [searchQuery, dateRange, sampleTypeFilters, statusFilters, statusFilterKey],
   );
 
-  const handleFilterChange = (filters: FilterValues) => {
-    if (filters.searchQuery !== undefined) onSearchChange(filters.searchQuery as string);
-    if (filters.dateRange !== undefined)
-      onDateRangeChange(filters.dateRange as [Date, Date] | null);
-    if (filters.sampleType !== undefined) onSampleTypeFiltersChange(filters.sampleType as string[]);
-    // Support both 'status' and 'priority' keys
-    if (filters.status !== undefined) onStatusFiltersChange(filters.status as S);
-    if (filters.priority !== undefined) onStatusFiltersChange(filters.priority as S);
-  };
+  const handlers = useMemo(
+    () =>
+      statusFilterKey === 'priority'
+        ? {
+            searchQuery: onSearchChange,
+            dateRange: onDateRangeChange,
+            sampleType: onSampleTypeFiltersChange,
+            priority: onStatusFiltersChange,
+          }
+        : {
+            searchQuery: onSearchChange,
+            dateRange: onDateRangeChange,
+            sampleType: onSampleTypeFiltersChange,
+            status: onStatusFiltersChange,
+          },
+    [
+      statusFilterKey,
+      onSearchChange,
+      onDateRangeChange,
+      onSampleTypeFiltersChange,
+      onStatusFiltersChange,
+    ],
+  );
 
-  return <FilterBar config={config} value={filterValues} onChange={handleFilterChange} />;
+  return <FeatureFilterBar config={config} value={value} handlers={handlers} />;
 }

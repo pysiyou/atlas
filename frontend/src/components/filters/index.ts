@@ -25,6 +25,10 @@ export {
   ResponsiveFilterMobileBar,
   type ResponsiveFilterMobileBarProps,
 } from './ResponsiveFilterMobileBar';
+export {
+  ResponsiveFilterInsetBar,
+  type ResponsiveFilterInsetBarProps,
+} from './ResponsiveFilterInsetBar';
 export { QuickFilters, type QuickFiltersProps } from './QuickFilters';
 export {
   FilterControl,

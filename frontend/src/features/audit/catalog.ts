@@ -154,7 +154,19 @@ export function append(
 
 export function appendText(parts: EventLogHeadlinePart[], text: string): EventLogHeadlinePart[] {
   if (!text) return parts;
-  return append(parts, { text });
+  let nextText = text;
+  if (parts.length > 0) {
+    const lastText = parts[parts.length - 1].text;
+    if (
+      lastText.length > 0 &&
+      !/\s$/.test(lastText) &&
+      nextText.length > 0 &&
+      !/^\s/.test(nextText)
+    ) {
+      nextText = ` ${nextText}`;
+    }
+  }
+  return append(parts, { text: nextText });
 }
 
 function formatReasonLabel(raw: string): string {

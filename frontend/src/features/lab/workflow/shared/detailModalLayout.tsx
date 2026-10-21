@@ -15,9 +15,9 @@ import {
   LabModalHeader,
   type LabWorkflowModalContext,
   type LabAuditLine,
-} from '../components/LabWorkflowHeader';
+} from '../../components/LabWorkflowHeader';
 import { text , FG } from '@/theme/recipes';
-import { LAB_COPY, labStageLabel, type LabWorkflowStage } from '../constants/labConstants';
+import { LAB_COPY, labStageLabel, type LabWorkflowStage } from '../../constants/labConstants';
 
 export interface QueueModalShellProps {
   isOpen: boolean;
@@ -206,5 +206,5 @@ export function labModalHeaderContext({
 }
 
 /** Stage-specific detail field grids (shared {@link DetailGrid} shell). */
-export { CollectionDetailGrid } from './detailModal.sampleCollection.grid';
-export { ResultEntryDetailGrid } from './detailModal.resultEntry.grid';
+export { CollectionDetailGrid } from '../modals/detailModal.sampleCollection.grid';
+export { ResultEntryDetailGrid } from '../modals/detailModal.resultEntry.grid';

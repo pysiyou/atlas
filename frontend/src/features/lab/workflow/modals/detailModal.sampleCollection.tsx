@@ -5,7 +5,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query';
-import { sampleAPI, useCollectSample, useSampleWorkContext } from '../api/samples';
+import { sampleAPI, useCollectSample, useSampleWorkContext } from '../../api/samples';
 import type { ContainerType } from '@/types';
 import { uniqueSortedTestCodes, useTestCatalog, useTestsByCodes } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users';
@@ -17,11 +17,11 @@ import { deriveCollectionModalFields } from './detailModal.sampleCollection.deri
 import { Modal, ModalPageShell } from '@/components/overlays';
 import { ErrorAlert } from '@/components/feedback';
 import { SampleCollectionDetailModalView } from './detailModal.sampleCollection.view';
-import { findCollectionQueueItem } from '../utils/findCollectionQueueItem';
-import { useSubmitSampleCollection } from '../collection/useSubmitSampleCollection';
+import { findCollectionQueueItem } from '../../utils/findCollectionQueueItem';
+import { useSubmitSampleCollection } from '../../collection/useSubmitSampleCollection';
 import { useAuthStore } from '@/app/authStore';
 import type { SampleDetailModalProps } from '@/lib/context/modalTypes';
-import { mapCollectionWorklistToSampleDisplay } from '../utils/labQueue';
+import { mapCollectionWorklistToSampleDisplay } from '../../utils/labQueue';
 import { errorAlertMessage } from '@/utils/feedback';
 
 export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({

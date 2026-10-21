@@ -9,14 +9,14 @@ import type { ContainerType, Order, RejectedSample, Sample, Test } from '@/types
 import { text, RADIUS, SURFACE, FG } from '@/theme/recipes';
 import { displayId, formatDateTime } from '@/utils';
 import { CollectionDetailGrid } from './detailModal.sampleCollection.grid';
-import { SampleCollectionRequirementsSection } from '../collection/SampleCollectionRequirementsSection';
-import { formatRejectionReasons } from '../utils/labFormatters';
-import { QueueCardTestList } from './queueCardLayout';
-import { SampleCollectionPopover } from '../collection/SampleCollectionPopover';
-import { SampleRejectionPopover } from '../collection/SampleRejectionPopover';
-import { LAB_COPY } from '../constants/labConstants';
+import { SampleCollectionRequirementsSection } from '../../collection/SampleCollectionRequirementsSection';
+import { formatRejectionReasons } from '../../utils/labFormatters';
+import { QueueCardTestList } from '../shared/queueCardLayout';
+import { SampleCollectionPopover } from '../../collection/SampleCollectionPopover';
+import { SampleRejectionPopover } from '../../collection/SampleRejectionPopover';
+import { LAB_COPY } from '../../constants/labConstants';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
-import { isLabActionAllowed } from '../utils/queueDisplay';
+import { isLabActionAllowed } from '../../utils/queueDisplay';
 
 export function SampleCollectionDetailContent({
   sample,

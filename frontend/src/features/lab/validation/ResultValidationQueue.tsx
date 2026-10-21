@@ -4,35 +4,31 @@
 
 import React, { useMemo } from 'react';
 import { useAuthStore } from '@/app/authStore';
-import { createLabQueueSearchFilter, LabWorkflowQueueScaffold } from '../components/LabWorkflowQueueLayout';
+import { LabWorkflowQueueMultiSectionLayout } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import {
-  applyLabQueueFilters,
+  applyLabQueueFiltersWithProfile,
   useLabQueueBarFilters,
   useLabQueueFilterBarProps,
   useLabQueuePageFilters,
   useResultValidationQueueData,
 } from '../hooks';
+import {
+  VALIDATION_REVIEW_ESCALATION_PROFILE,
+  VALIDATION_REVIEW_RECOLLECTION_PROFILE,
+} from '../utils/labQueueSecondaryProfiles';
 import { validationFilterConfig } from '../constants';
 import { DetailPageSkeleton } from '@/components/feedback/DetailPageSkeleton';
 import { ErrorAlert, ErrorBoundary } from '@/components/feedback';
 import { useClientListChrome } from '@/hooks';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import type { PriorityLevel, TestWithContext } from '@/types';
-import type { RecollectionRequestSummary } from '@/types/lab-operations';
+import type { TestWithContext } from '@/types';
 import { useResultValidationWorkflow } from './useResultValidationWorkflow';
 import { orderTestKey } from '../utils/labSearchAndLinks';
 import { usePendingEscalation } from '../api/results';
 import { ResultValidationQueueView } from './ResultValidationQueueView';
 import { useResultValidationQueueActions } from './useResultValidationQueueActions';
-
-const filterTest = createLabQueueSearchFilter<TestWithContext>();
-const filterRecollectionRequest = createLabQueueSearchFilter<RecollectionRequestSummary>(item =>
-  [item.orderNumber, item.patientName, ...(item.testCodes ?? []), item.rejectedSampleId?.toString()].filter(
-    (value): value is string => Boolean(value),
-  ),
-);
 
 function getCommentKey(test: TestWithContext) {
   return orderTestKey(test.id!);
@@ -108,43 +104,24 @@ export const ResultValidationQueue: React.FC = () => {
 
   const filteredEscalatedTests = useMemo(
     () =>
-      applyLabQueueFilters({
-        items: escalatedTests,
-        filters: filterState,
-        getOrderDate: test => test.orderDate,
-        getSampleType: test => test.sampleType,
-        getStatus: test => test.priority as PriorityLevel,
-        searchFilterFn: filterTest,
-        sortByQueuePriority: true,
-        getPriority: test => test.priority,
-        getQueueSince: test => test.resultEnteredAt ?? test.orderDate,
-        urlFilters,
-        getId: test => test.id,
-        getOrderId: test => test.orderId,
-        getSampleId: test => test.sampleId,
-      }),
-    [escalatedTests, filterState, urlFilters],
+      applyLabQueueFiltersWithProfile(
+        escalatedTests,
+        filterState,
+        bar,
+        VALIDATION_REVIEW_ESCALATION_PROFILE,
+      ),
+    [escalatedTests, filterState, bar],
   );
 
   const filteredRecollectionRequests = useMemo(
     () =>
-      applyLabQueueFilters({
-        items: canResolveFromProvider ? recollectionRequests : [],
-        filters: filterState,
-        getOrderDate: request => request.createdAt,
-        getSampleType: request => request.sampleType,
-        getStatus: () => undefined,
-        searchFilterFn: filterRecollectionRequest,
-        sortByQueuePriority: true,
-        getPriority: () => undefined,
-        getQueueSince: request => request.createdAt,
-        applyStatusFilter: false,
-        urlFilters,
-        getId: request => request.orderTestId,
-        getOrderId: request => request.orderId,
-        getSampleId: request => request.rejectedSampleId,
-      }),
-    [recollectionRequests, filterState, canResolveFromProvider, urlFilters],
+      applyLabQueueFiltersWithProfile(
+        canResolveFromProvider ? recollectionRequests : [],
+        filterState,
+        bar,
+        VALIDATION_REVIEW_RECOLLECTION_PROFILE,
+      ),
+    [recollectionRequests, filterState, bar, canResolveFromProvider],
   );
 
   const hasNoWorklistData =
@@ -177,7 +154,7 @@ export const ResultValidationQueue: React.FC = () => {
 
   return (
     <ErrorBoundary>
-        <LabWorkflowQueueScaffold
+        <LabWorkflowQueueMultiSectionLayout
           aria-busy={dataLoading || undefined}
           filterRow={
             <LabQueueFilterRow
@@ -215,7 +192,7 @@ export const ResultValidationQueue: React.FC = () => {
               onReject={(test, result) => handleValidate(test.id!, test.orderId, false, result)}
               onOpenValidation={openValidationModal}
           />
-        </LabWorkflowQueueScaffold>
+        </LabWorkflowQueueMultiSectionLayout>
     </ErrorBoundary>
   );
 };

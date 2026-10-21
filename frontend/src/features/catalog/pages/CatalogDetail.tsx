@@ -14,7 +14,7 @@ import type { TableInput } from '@/components/display';
 import { DetailPageShell, PageHeader } from '@/components/layout';
 import { RecordId } from '@/features/shared';
 import { DetailPageSkeleton } from '@/components/feedback/DetailPageSkeleton';
-import { formatRejectionCriteriaList } from '@/features/lab';
+import { formatRejectionCriteriaList } from '@/features/lab/cross';
 import { CATALOG_DETAIL_SKELETON_SECTIONS } from '../config/CatalogDetailSkeleton';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import { formatDateTime } from '@/utils';

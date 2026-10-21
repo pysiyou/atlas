@@ -6,10 +6,12 @@
 import type { ComponentType } from 'react';
 import { ModalType } from '@/lib/context/ModalContext';
 import type { BaseModalProps, ModalType as ModalTypeName } from '@/lib/context/modalTypes';
-import { SampleCollectionDetailModal } from '@/features/lab/workflow/detailModal.sampleCollection';
-import { ResultEntryDetailModal } from '@/features/lab/workflow/detailModal.resultEntry';
-import { TestDetailModal } from '@/features/lab/workflow/detailModal.test';
-import { EscalationResolutionModal } from '@/features/lab/workflow/detailModal.escalation';
+import {
+  EscalationResolutionModal,
+  ResultEntryDetailModal,
+  SampleCollectionDetailModal,
+  TestDetailModal,
+} from '@/features/lab/workflow';
 import { OrderUpsertModal } from '@/features/orders/OrderUpsertModal';
 import { ReportPreviewModal } from '@/features/reports';
 

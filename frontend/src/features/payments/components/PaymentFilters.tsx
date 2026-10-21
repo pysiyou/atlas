@@ -3,8 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { FilterBar } from '@/components/filters';
-import { useFilterBarBridge } from '@/hooks/filters';
+import { FeatureFilterBar } from '@/hooks';
 import { paymentFilterConfig } from '../config/paymentFilters.config';
 import type { PaymentStatus } from '@/types';
 
@@ -26,21 +25,19 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
   onStatusFiltersChange,
 }) => {
   const value = useMemo(
-    () => ({
-      search: searchQuery,
-      statusFilters,
-      dateRange,
-    }),
-    [searchQuery, statusFilters, dateRange]
+    () => ({ search: searchQuery, statusFilters, dateRange }),
+    [searchQuery, statusFilters, dateRange],
   );
 
-  const { filterValues, handleFilterChange } = useFilterBarBridge(value, {
-    search: onSearchChange,
-    statusFilters: onStatusFiltersChange,
-    dateRange: onDateRangeChange,
-  });
-
   return (
-    <FilterBar config={paymentFilterConfig} value={filterValues} onChange={handleFilterChange} />
+    <FeatureFilterBar
+      config={paymentFilterConfig}
+      value={value}
+      handlers={{
+        search: onSearchChange,
+        statusFilters: onStatusFiltersChange,
+        dateRange: onDateRangeChange,
+      }}
+    />
   );
 };

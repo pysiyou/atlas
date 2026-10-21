@@ -4,8 +4,7 @@
 
 import React, { useMemo } from 'react';
 import type { FilterValues } from '@/components/filters/types';
-import { FilterBar } from '@/components/filters';
-import { useFilterBarBridge } from '@/hooks/filters';
+import { FeatureFilterBar } from '@/hooks';
 import { catalogFilterConfig } from '../constants/catalogConfig';
 import type { TestCategory } from '@/types';
 
@@ -25,14 +24,16 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({ filters, setFilt
     [filters],
   );
 
-  const { filterValues, handleFilterChange } = useFilterBarBridge(value, {
-    search: v => setFilter('search', v),
-    category: v => setFilter('category', v),
-    sampleType: v => setFilter('sampleType', v),
-    priceRange: v => setFilter('priceRange', v),
-  });
-
   return (
-    <FilterBar config={catalogFilterConfig} value={filterValues} onChange={handleFilterChange} />
+    <FeatureFilterBar
+      config={catalogFilterConfig}
+      value={value}
+      handlers={{
+        search: v => setFilter('search', v),
+        category: v => setFilter('category', v),
+        sampleType: v => setFilter('sampleType', v),
+        priceRange: v => setFilter('priceRange', v),
+      }}
+    />
   );
 };

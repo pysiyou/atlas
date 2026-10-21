@@ -8,7 +8,7 @@ import { useAuthStore } from '@/app/authStore';
 import { formatDate } from '@/utils';
 import { useDashboardSummary } from '../api/dashboard';
 import { LabPipelineSummary } from '../components/LabPipelineSummary';
-import { PendingCriticalValuesPanel } from '@/features/lab';
+import { PendingCriticalValuesPanel } from '@/features/lab/cross';
 import {
   DashboardStatsGrid,
 } from '../components/DashboardStatsGrid';

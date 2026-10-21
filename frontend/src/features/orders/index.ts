@@ -47,8 +47,6 @@ export {
 export { OrderReceipt } from './components/OrderReceipt';
 export type { OrderReceiptProps, OrderReceiptVariant } from './components/OrderReceipt';
 export { OrderTableCard } from './components/OrderTableCard';
-export { OrderSelectPopoverShell } from './components/OrderSelectPopoverShell';
-export type { OrderSelectPopoverShellProps } from './components/OrderSelectPopoverShell';
 export { LinkedOrderTestsList } from './components/LinkedOrderTestsList';
 export type { LinkedOrderTestsListProps } from './components/LinkedOrderTestsList';
 export {

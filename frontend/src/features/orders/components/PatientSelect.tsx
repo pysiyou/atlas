@@ -5,7 +5,7 @@ import { cn, formatPhoneNumber } from '@/utils';
 import {text, inputContainerBase, inputContainerError, FORM_CONTROL_LABEL, FG } from '@/theme/recipes';
 import type { Patient } from '@/types';
 import { ICONS } from '@/config/icons';
-import { OrderSelectPopoverShell } from './OrderSelectPopoverShell';
+import { SearchResultsPopoverShell } from '@/components/overlays/SearchResultsPopoverShell';
 import { CONTROL, FIELD_ERROR, SPACING } from '@/theme/recipes';
 
 
@@ -192,7 +192,7 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
 
       {/* "Popover" results shown directly under the input */}
       {!disabled && isPopoverOpen && hasSearch && (
-        <OrderSelectPopoverShell
+        <SearchResultsPopoverShell
           title="Matching patients"
           resultCount={visiblePatients.length}
           emptyMessage={EMPTY_COPY.matchingPatients.title}
@@ -238,7 +238,7 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
                     </button>
                   );
           })}
-        </OrderSelectPopoverShell>
+        </SearchResultsPopoverShell>
       )}
     </div>
   );

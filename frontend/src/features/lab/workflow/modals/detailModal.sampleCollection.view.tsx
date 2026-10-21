@@ -5,10 +5,10 @@
 import type { ContainerType, Order, Sample, Test } from '@/types';
 import { FooterInfo } from '@/components/display';
 import { MODULE_ICONS } from '@/config/icons';
-import { QueueModalShell, labModalHeaderContext } from './detailModalLayout';
-import { CollectionHeaderBadges } from '../components/LabWorkflowBadges';
-import { SampleCollectionCardLeftColumn } from './queueCardLeftColumn';
-import { LabRelatedSamplesPanel } from '../components/LabRelatedWorkflowPanel';
+import { QueueModalShell, labModalHeaderContext } from '../shared/detailModalLayout';
+import { CollectionHeaderBadges } from '../../components/LabWorkflowBadges';
+import { SampleCollectionCardLeftColumn } from '../shared/queueCardLeftColumn';
+import { LabRelatedSamplesPanel } from '../../components/LabRelatedWorkflowPanel';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import {
   SampleCollectionDetailContent,
