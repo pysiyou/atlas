@@ -18,7 +18,7 @@ import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
 import { cn, formatCurrency, formatTurnaroundTime, titleCaseWords } from '@/utils';
 import { ICONS } from '@/config/icons';
 import {text, inputContainerBase, inputContainerError, FORM_CONTROL_LABEL, FG } from '@/theme/recipes';
-import { OrderSelectPopoverShell } from './OrderSelectPopoverShell';
+import { SearchResultsPopoverShell } from '@/components/overlays/SearchResultsPopoverShell';
 import { CONTROL, FIELD_ERROR, SPACING } from '@/theme/recipes';
 
 
@@ -178,7 +178,7 @@ const TestSelectPopover: React.FC<TestSelectPopoverProps> = ({
   selectedSet,
   onToggleTest,
 }) => (
-  <OrderSelectPopoverShell
+  <SearchResultsPopoverShell
     title="Matching tests"
     resultCount={visibleTests.length}
     emptyMessage={EMPTY_COPY.matchingTests.title}
@@ -224,7 +224,7 @@ const TestSelectPopover: React.FC<TestSelectPopoverProps> = ({
               </button>
             );
     })}
-  </OrderSelectPopoverShell>
+  </SearchResultsPopoverShell>
 );
 
 export const TestSelect: React.FC<TestSelectorProps> = ({

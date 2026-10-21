@@ -9,10 +9,10 @@ import type { OrderTest } from '@/types';
 import type { TestDetailInteraction } from '@/lib/context/modalTypes';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import { invalidateLabWorkflowQueries, invalidateResultQueries } from '@/lib/query/invalidate';
-import { useValidateResults } from '../api/results';
-import { useLabDraftStore } from '../state/labDraftStore';
+import { useValidateResults } from '../../api/results';
+import { useLabDraftStore } from '../../state/labDraftStore';
 import { notify } from '@/utils/feedback';
-import { notifyQualityIssueSuccess } from '../validation/qualityIssueToastMessages';
+import { notifyQualityIssueSuccess } from '../../validation/qualityIssueToastMessages';
 import { isLikelyNetworkOrTimeout } from '@/utils/errors';
 import { logger } from '@/utils/logger';
 

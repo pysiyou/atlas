@@ -16,15 +16,15 @@ import type { TestDetailModalProps } from '@/lib/context/modalTypes';
 import type { Order, OrderTest, Patient, Test, TestWithContext } from '@/types';
 import { text } from '@/theme/recipes';
 import type { QualityIssueResult } from '@/types/lab-operations';
-import { buildCriticalValueRecord } from '../criticalValues/criticalValues';
-import type { CriticalValueRecord } from '../criticalValues/criticalValues';
-import { useSampleRejectionDisplay } from '../hooks/useSampleRejectionDisplay';
-import { ResultValidationPanel } from '../validation/ResultValidationForm';
-import { QualityIssuePopover } from '../components/QualityIssuePopover';
-import { CriticalValueActions } from '../criticalValues/CriticalValueActions';
-import { TestHeaderBadges } from '../components/LabWorkflowBadges';
-import { SampleRejectedBanner } from '../components/SampleRejectedBanner';
-import { useTestDetailModalActions } from './useTestDetailModalActions';
+import { buildCriticalValueRecord } from '../../criticalValues/criticalValues';
+import type { CriticalValueRecord } from '../../criticalValues/criticalValues';
+import { useSampleRejectionDisplay } from '../../hooks/useSampleRejectionDisplay';
+import { ResultValidationPanel } from '../../validation/ResultValidationForm';
+import { QualityIssuePopover } from '../../components/QualityIssuePopover';
+import { CriticalValueActions } from '../../criticalValues/CriticalValueActions';
+import { TestHeaderBadges } from '../../components/LabWorkflowBadges';
+import { SampleRejectedBanner } from '../../components/SampleRejectedBanner';
+import { useTestDetailModalActions } from '../model/useTestDetailModalActions';
 import {
   DetailGrid,
   ModalFooter,
@@ -32,17 +32,17 @@ import {
   labModalHeaderContext,
   type LabModalStage,
   type DetailGridSectionConfig,
-} from './detailModalLayout';
-import { TestWorkflowCardLeftColumn } from './queueCardLeftColumn';
-import { useTestDetailModel } from './useTestDetailModel';
-import { useTestDetailModalDerived } from './useTestDetailModalDerived';
+} from '../shared/detailModalLayout';
+import { TestWorkflowCardLeftColumn } from '../shared/queueCardLeftColumn';
+import { useTestDetailModel } from '../model/useTestDetailModel';
+import { useTestDetailModalDerived } from '../model/useTestDetailModalDerived';
 import {
   countFilledResults,
   resolveTestDetailQueueSince,
   type TestDetailHeaderVariant,
-} from './testDetailHeader';
+} from '../shared/testDetailHeader';
 import type { Sample } from '@/types';
-import { useOrderTestContext } from '../api/results';
+import { useOrderTestContext } from '../../api/results';
 import { Modal, ModalPageShell } from '@/components/overlays';
 
 const EMPTY_REJECTION_CONTEXT: TestWithContext = {
@@ -354,7 +354,7 @@ export function TestDetailModalFooter({
 }
 
 type TestDetailModalBodyProps = {
-  sampleRejection: ReturnType<typeof import('../hooks/useSampleRejectionDisplay').useSampleRejectionDisplay>;
+  sampleRejection: ReturnType<typeof import('../../hooks/useSampleRejectionDisplay').useSampleRejectionDisplay>;
   hasResults: boolean;
   orderTest: OrderTest | undefined;
   isValidate: boolean;

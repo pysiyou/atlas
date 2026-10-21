@@ -7,16 +7,16 @@ import { memo, useMemo, type FC } from 'react';
 import { actionButtonPreset, IconButton } from '@/components/primitives';
 import { Card } from '@/components/surfaces';
 import { cn } from '@/utils';
-import { TestHeaderBadges } from '../components/LabWorkflowBadges';
-import { LAB_CONFIG } from '../constants';
-import { useLabWorkflowCardClickGuard, useOrderTestQueueState } from '../hooks';
-import { isLabActionAllowed } from '../utils/queueDisplay';
-import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
-import { deriveRetestContext } from '../utils/deriveRetestContext';
+import { TestHeaderBadges } from '../../components/LabWorkflowBadges';
+import { LAB_CONFIG } from '../../constants';
+import { useLabWorkflowCardClickGuard, useOrderTestQueueState } from '../../hooks';
+import { isLabActionAllowed } from '../../utils/queueDisplay';
+import { useLabWorkflowResponsiveCard } from '../../hooks/useLabWorkflowResponsiveCard';
+import { deriveRetestContext } from '../../utils/deriveRetestContext';
 import { FG, MOBILE_LIST_CARD } from '@/theme/recipes';
 import type { Test, TestWithContext } from '@/types';
-import { QueueCard, QueueCardMobile } from './queueCardLayout';
-import { TestWorkflowCardLeftColumn } from './queueCardLeftColumn';
+import { QueueCard, QueueCardMobile } from '../shared/queueCardLayout';
+import { TestWorkflowCardLeftColumn } from '../shared/queueCardLeftColumn';
 
 export interface ResultEntryCardProps {
   test: TestWithContext;

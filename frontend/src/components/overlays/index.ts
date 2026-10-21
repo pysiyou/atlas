@@ -11,3 +11,4 @@ export * from './MultiSelectFilter';
 export * from './OverlaySearchInput';
 export * from './RangeSlider';
 export * from './Toast';
+export * from './SearchResultsPopoverShell';

@@ -9,13 +9,13 @@ import { type ContainerType, type Sample, type RejectedSample } from '@/types';
 import type { ContainerTopColor } from '@/types';
 import type { SampleCollectionQueueItem, SampleRequirement } from '@/types/lab-operations';
 import type { TestWithContext } from '@/types';
-import { buildTestQueueTimelineLines } from '../constants/labWorkflowAuditLines';
-import { LabAuditBlock } from '../components/LabWorkflowHeader.parts';
-import { LabCardMetaRow, QueueAgeMeta } from '../components/LabCardMetaRow';
-import { CollectionOperationalMetaRow } from '../components/CollectionOperationalMetaItems';
-import { buildCollectionOperationalMetaItems } from '../utils/collectionOperationalMetaItems';
-import { buildSampleCollectionTimelineLines } from '../constants/labWorkflowAuditLines';
-import { deriveRetestContext } from '../utils/deriveRetestContext';
+import { buildTestQueueTimelineLines } from '../../constants/labWorkflowAuditLines';
+import { LabAuditBlock } from '../../components/LabWorkflowHeader.parts';
+import { LabCardMetaRow, QueueAgeMeta } from '../../components/LabCardMetaRow';
+import { CollectionOperationalMetaRow } from '../../components/CollectionOperationalMetaItems';
+import { buildCollectionOperationalMetaItems } from '../../utils/collectionOperationalMetaItems';
+import { buildSampleCollectionTimelineLines } from '../../constants/labWorkflowAuditLines';
+import { deriveRetestContext } from '../../utils/deriveRetestContext';
 import {
   WORKLIST_CARD_ALERT,
   IDENTITY_INLINE,

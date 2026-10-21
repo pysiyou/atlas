@@ -14,6 +14,32 @@ import { SPACING, WORKSPACE } from '@/theme/recipes';
 const ESTIMATED_WORKLIST_CARD_HEIGHT_PX = 160;
 const QUEUE_OVERSCAN = 8;
 
+/**
+ * Multi-section queue tab (validation): shared filter row + scroll region.
+ * Single virtualized lists use {@link LabWorkflowQueueLayout} instead.
+ */
+export function LabWorkflowQueueMultiSectionLayout({
+  filterRow,
+  children,
+  scrollClassName = WORKSPACE.contentInset,
+  'aria-busy': ariaBusy,
+}: {
+  filterRow: ReactNode;
+  children: ReactNode;
+  scrollClassName?: string;
+  'aria-busy'?: boolean;
+}): React.ReactElement {
+  return (
+    <LabWorkflowQueueScaffold
+      filterRow={filterRow}
+      scrollClassName={scrollClassName}
+      aria-busy={ariaBusy}
+    >
+      {children}
+    </LabWorkflowQueueScaffold>
+  );
+}
+
 /** Filter row + scroll region shared by workflow queues. */
 export function LabWorkflowQueueScaffold({
   filterRow,

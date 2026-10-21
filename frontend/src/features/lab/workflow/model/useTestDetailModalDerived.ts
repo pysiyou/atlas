@@ -3,15 +3,15 @@
  */
 import { useMemo } from 'react';
 import type { Order, OrderTest, Test } from '@/types';
-import { getLabQueueUrlForTest, hasTestResults, orderTestKey } from '../utils/labSearchAndLinks';
+import { getLabQueueUrlForTest, hasTestResults, orderTestKey } from '../../utils/labSearchAndLinks';
 import {
   buildOrderTestOverviewFields,
   buildOrderTestWorkflowFields,
 } from '@/features/orders';
-import type { DetailGridSectionConfig } from './detailModalLayout';
+import type { DetailGridSectionConfig } from '../shared/detailModalLayout';
 import type { resolveLinkedOrderTests } from './useTestDetailModel';
 import type { TestDetailInteraction } from '@/lib/context/modalTypes';
-import { useLabDraftStore } from '../state/labDraftStore';
+import { useLabDraftStore } from '../../state/labDraftStore';
 
 export function useTestDetailModalDerived({
   order,

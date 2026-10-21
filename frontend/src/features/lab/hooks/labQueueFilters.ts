@@ -32,6 +32,7 @@ import {
   type LabQueueItemByStage,
   type LabQueueWorkflowType,
 } from '../utils/labQueueStageFilterConfig';
+import type { LabQueueSecondaryFilterProfile } from '../utils/labQueueSecondaryProfiles';
 
 export interface LabQueueFilterState<S> {
   searchQuery: string;
@@ -136,6 +137,35 @@ export function applyLabQueueFilters<T, S>({
 }
 
 type LabQueueClientStatus = SampleStatus | TestStatus | PriorityLevel;
+
+/** Apply the active bar + shared filterState to a secondary validation list (escalations, recollections). */
+export function applyLabQueueFiltersWithProfile<T, S extends LabQueueClientStatus>(
+  items: T[],
+  filterState: LabQueueFilterState<LabQueueClientStatus>,
+  bar: LabQueueBarState,
+  profile: LabQueueSecondaryFilterProfile<T, S>,
+): T[] {
+  const { callbacks, sortByPriority, applyStatusFilter = true } = profile;
+  return applyLabQueueFilters<T, S>({
+    items,
+    filters: filterState as LabQueueFilterState<S>,
+    getOrderDate: callbacks.getOrderDate,
+    getSampleType: callbacks.getSampleType,
+    getStatus: callbacks.getStatus,
+    searchFilterFn: callbacks.searchFilterFn,
+    sortByQueuePriority: sortByPriority,
+    getPriority: callbacks.getPriority,
+    getQueueSince: callbacks.getQueueSince,
+    urlFilters: bar.urlFilters,
+    getId: callbacks.getId,
+    getOrderId: callbacks.getOrderId,
+    getSampleId: callbacks.getSampleId,
+    applyStatusFilter,
+    skipSearchFilter: bar.skipSearchFilter,
+    skipDateFilter: bar.skipDateFilter,
+    skipSampleTypeFilter: bar.skipSampleTypeFilter,
+  });
+}
 
 function useLabQueueFilteredItems<T extends LabQueueWorkflowType>(
   items: LabQueueItemByStage<T>[],

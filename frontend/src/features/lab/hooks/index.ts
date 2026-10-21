@@ -3,7 +3,7 @@
  */
 
 export {
-  applyLabQueueFilters,
+  applyLabQueueFiltersWithProfile,
   useLabQueueBarFilters,
   useLabQueueFilterBarProps,
   useLabQueuePageFilters,
@@ -14,9 +14,12 @@ export {
 } from './labQueueFilters';
 export type { TestWithContextResult } from '../types';
 export { useLabStageQueueCounts, getValidationTabCount } from '../api/labMonitor';
-export * from './useResultValidationQueueData';
-export * from './useLabWorkflowCardClickGuard';
-export * from './useQualityIssuePopover';
-export * from './useSubmitQualityIssue';
-export * from './useOrderTestQueueState';
-export * from './useLabWorkflowResponsiveCard';
+export {
+  useResultValidationQueueData,
+  type ResultValidationQueueData,
+} from './useResultValidationQueueData';
+export { useLabWorkflowCardClickGuard } from './useLabWorkflowCardClickGuard';
+export { useQualityIssuePopover } from './useQualityIssuePopover';
+export { useSubmitQualityIssue } from './useSubmitQualityIssue';
+export { useOrderTestQueueState } from './useOrderTestQueueState';
+export { useLabWorkflowResponsiveCard } from './useLabWorkflowResponsiveCard';

@@ -16,7 +16,11 @@ export {
 } from '../workflow';
 export { PopoverFormChrome, RadioCard } from '@/components/overlays/PopoverFormChrome';
 export { QualityIssuePopover } from './QualityIssuePopover';
-export { LabWorkflowQueueLayout, createLabQueueSearchFilter } from './LabWorkflowQueueLayout';
+export {
+  LabWorkflowQueueLayout,
+  LabWorkflowQueueMultiSectionLayout,
+  createLabQueueSearchFilter,
+} from './LabWorkflowQueueLayout';
 export { LabValidationQueueSection } from './LabValidationQueueSection';
 export { LabQueueFilters } from './LabQueueFilters';
 export type { LabQueueFiltersProps } from './LabQueueFilters';

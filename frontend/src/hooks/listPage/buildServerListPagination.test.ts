@@ -20,4 +20,30 @@ describe('buildServerListPagination', () => {
       pageSizeOptions: [25],
     });
   });
+
+  it('handles empty total', () => {
+    const config = buildServerListPagination({
+      page: 1,
+      pagination: { pageSize: 20, total: 0 },
+      goToPage: () => undefined,
+    });
+    expect(config.mode).toBe('server');
+    if (config.mode === 'server') {
+      expect(config.totalItems).toBe(0);
+      expect(config.currentPage).toBe(1);
+    }
+  });
+
+  it('passes onPageSizeChange when provided', () => {
+    const onPageSizeChange = () => undefined;
+    const config = buildServerListPagination({
+      page: 1,
+      pagination: { pageSize: 50, total: 10 },
+      goToPage: () => undefined,
+      onPageSizeChange,
+    });
+    if (config.mode === 'server') {
+      expect(config.onPageSizeChange).toBe(onPageSizeChange);
+    }
+  });
 });

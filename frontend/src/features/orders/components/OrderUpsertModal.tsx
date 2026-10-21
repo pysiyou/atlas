@@ -16,7 +16,7 @@ import { ICONS } from '@/config/icons';
 import { useOrderUpsertModal } from '../hooks/useOrderUpsertModal';
 import { OrderUpsertFormFields } from './OrderUpsertFormFields';
 import { ErrorAlert } from '@/components/feedback';
-import { toListLoadError } from '@/hooks';
+import { useClientListChrome } from '@/hooks';
 import type { OrderUpsertModalOpenProps } from '@/lib/context/modalTypes';
 
 export type OrderUpsertModalProps = OrderUpsertModalOpenProps;
@@ -56,7 +56,13 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
   } = modalState;
 
   const waitingOnOrder = mode === 'edit' && isOrderLoading && !resolvedOrder;
-  const orderLoadFailed = mode === 'edit' && isOrderError && !resolvedOrder;
+  const orderChrome = useClientListChrome({
+    loadFailedKey: 'orders.list.loadFailed',
+    isLoading: false,
+    isError: mode === 'edit' && isOrderError && !resolvedOrder,
+    error: orderError,
+    refetch: refetchOrder,
+  });
 
   return (
     <Modal
@@ -94,13 +100,8 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
             />
         }
       >
-        {orderLoadFailed ? (
-          <ErrorAlert
-            error={toListLoadError('orders.list.loadFailed', orderError)!}
-            onRetry={() => {
-              void refetchOrder();
-            }}
-          />
+        {orderChrome.error ? (
+          <ErrorAlert error={orderChrome.error} onRetry={orderChrome.onRetry} />
         ) : (
           <form id="order-form" onSubmit={handleSubmit} className="max-w-full">
             <OrderUpsertFormFields

@@ -28,6 +28,20 @@ export { useEventLogPanelState } from './eventLogPanelState';
 export { fetchAuditEvents, normalizeAuditEvent } from './api';
 export { EventLogPage } from './EventLogPage';
 export { EventLogSearchField } from './eventLogSearch';
+export {
+  classifyEventLogSearchIntent,
+  buildEventLogSearchMatchGroups,
+  countEventLogSearchMatchItems,
+  type EventLogSearchIntent,
+  type EventLogSearchMatchGroup,
+} from './eventLogSearchIntent';
+export {
+  decodeEventLogUrlFilters,
+  writeEventLogUrlFilters,
+  EVENT_LOG_URL_FILTER_KEYS,
+  type DecodedEventLogUrlFilters,
+  type EventLogUrlFilterKey,
+} from './eventLogUrlCodec';
 export { EVENT_LOG_KIND_OPTIONS } from './eventLogFilterConfig';
 export {
   parseOrderDisplayId,

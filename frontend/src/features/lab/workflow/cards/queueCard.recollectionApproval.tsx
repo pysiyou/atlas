@@ -9,7 +9,7 @@ import { RecordId } from '@/features/shared';
 import { cn, formatDateTime } from '@/utils';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
 import type { RecollectionRequestSummary } from '@/types/lab-operations';
-import { useLabWorkflowCardClickGuard } from '../hooks';
+import { useLabWorkflowCardClickGuard } from '../../hooks';
 import {
   text,
   RADIUS,
@@ -21,14 +21,14 @@ import {
   IDENTITY_STACK,
   WORKLIST_EMPHASIZED_INLINE,
 } from '@/theme/recipes';
-import { compactAuditLines } from '../constants/labWorkflowAuditLines';
-import { LabAuditBlock } from '../components/LabWorkflowHeader.parts';
-import { LabCardMetaRow, QueueAgeMeta } from '../components/LabCardMetaRow';
-import { AttemptIndicator } from '../components/LabAttemptIndicators';
-import { SampleTypeBadge } from '../components/LabDomainBadges';
-import { SupervisorApprovalBadge } from '../components/LabResultStatusBadges';
-import { LAB_CONFIG } from '../constants';
-import { QueueCard, QueueCardMobile } from './queueCardLayout';
+import { compactAuditLines } from '../../constants/labWorkflowAuditLines';
+import { LabAuditBlock } from '../../components/LabWorkflowHeader.parts';
+import { LabCardMetaRow, QueueAgeMeta } from '../../components/LabCardMetaRow';
+import { AttemptIndicator } from '../../components/LabAttemptIndicators';
+import { SampleTypeBadge } from '../../components/LabDomainBadges';
+import { SupervisorApprovalBadge } from '../../components/LabResultStatusBadges';
+import { LAB_CONFIG } from '../../constants';
+import { QueueCard, QueueCardMobile } from '../shared/queueCardLayout';
 
 function InlineDot() {
   return <span className={IDENTITY_INLINE.separator}>{IDENTITY_INLINE.inlineDot}</span>;

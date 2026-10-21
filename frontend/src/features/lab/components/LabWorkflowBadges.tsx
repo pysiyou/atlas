@@ -16,7 +16,7 @@ import {
 import {
   LabPresentationCompactBadge,
   LabPresentationStack,
-} from '@/features/lab/components/LabPresentationBadge';
+} from './LabPresentationBadge';
 import { useLabHeaderCompact } from './LabWorkflowHeader';
 import {
   LabCardMetaRow,

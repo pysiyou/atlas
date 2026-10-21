@@ -16,7 +16,7 @@ import { MODULE_ICONS } from '@/config/icons';
 import { ReportPreviewResults } from './ReportPreviewResults';
 import { uniqueSortedTestCodes, useTestsByCodes } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users';
-import { createSampleLookupForOrder } from '@/features/lab';
+import { createSampleLookupForOrder } from '@/features/lab/cross';
 import { reportsAPI, useReportableOrder } from '../api/reports';
 import { generateLabReport, downloadPDF, getDefaultTemplate } from '../utils/reportPDF';
 import { downloadLabReport, prepareReportData } from '../utils/prepareReportData';

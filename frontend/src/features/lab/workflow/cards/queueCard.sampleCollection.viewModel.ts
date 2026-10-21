@@ -4,8 +4,8 @@
 
 import { CONTAINER_COLOR_OPTIONS, type Sample, type RejectedSample } from '@/types';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
-import { getEffectiveContainerType } from '../utils';
-import { isLabActionAllowed } from '../utils/queueDisplay';
+import { getEffectiveContainerType } from '../../utils';
+import { isLabActionAllowed } from '../../utils/queueDisplay';
 
 export function getSampleCollectionViewModel(display: SampleCollectionQueueItem, sample: Sample) {
   const { order } = display;

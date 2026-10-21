@@ -8,7 +8,7 @@ import { useServerListChrome } from '@/hooks';
 import { useNavigate, useParams } from 'react-router-dom';
 import { uniqueSortedTestCodes, useTestsByCodes } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users';
-import { createSampleLookupForOrder } from '@/features/lab';
+import { createSampleLookupForOrder } from '@/features/lab/cross';
 import { reportsAPI, toReportableOrder, usePaginatedReportableOrders } from '../api/reports';
 import { ListView } from '@/components/surfaces';
 import { createReportTableConfig } from '../config/ReportTable.config';

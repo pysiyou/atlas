@@ -15,10 +15,9 @@ import {
   TABLE_COLUMN_WIDTH,
   type TableViewConfig,
 } from '@/components/data-table';
-import { LabPresentationTableCell } from '@/features/lab/components/LabPresentationBadge';
+import { LabPresentationTableCell } from '../components/LabPresentationBadge';
 import { ListCard } from '@/components/surfaces';
 import type { CardComponentProps } from '@/components/data-table';
-import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
 import { OrderTestStatusBadge } from '@/features/orders';
 import { getOrderTestLineageRowClass } from '@/features/orders';
 import { cn } from '@/utils';
@@ -121,11 +120,7 @@ export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> 
     doctor: createColumn<LabOrderTableRow>('doctor', 'Doctor', {
       width: TABLE_COLUMN_WIDTH.supporting,
       accessor: row => row.doctorName ?? '',
-      render: row =>
-        renderTableTwoLineCell(
-          row.doctorName || '—',
-          row.department ? getCategoryLabel(row.department) : null,
-        ),
+      render: row => renderTableTwoLineCell(row.doctorName || '—'),
     }),
     priority: createBadgeColumn<LabOrderTableRow>(
       'priority',
@@ -135,14 +130,14 @@ export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> 
     ),
     department: createBadgeColumn<LabOrderTableRow>(
       'department',
-      'Department',
+      'Category',
       row =>
         row.department ? (
           <LabDepartmentBadge department={row.department} size="xs" className={BADGE.tableEmbed} />
         ) : (
           renderTableEmptyCell()
         ),
-      { accessor: row => row.department ?? '' },
+      { width: TABLE_COLUMN_WIDTH.category, accessor: row => row.department ?? '' },
     ),
     status: createBadgeColumn<LabOrderTableRow>(
       'status',

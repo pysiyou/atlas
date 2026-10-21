@@ -8,7 +8,7 @@ import { RecordId } from '@/features/shared';
 import {
   ResultValidationNotesSection,
   ResultValidationResultsBody,
-} from '@/features/lab';
+} from '@/features/lab/cross';
 import type { Gender } from '@/types';
 import { text, SPACING } from '@/theme/recipes';
 import type { LabReportPayload } from '../types';

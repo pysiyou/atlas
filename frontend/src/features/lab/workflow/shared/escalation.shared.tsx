@@ -5,18 +5,18 @@
 import { Panel } from '@/components/surfaces';
 import { RecordId } from '@/features/shared';
 import { LabEventLogPanel } from '@/features/audit';
-import { AttemptIndicator } from '../components/LabAttemptIndicators';
-import { TestHeaderBadges } from '../components/LabWorkflowBadges';
-import { SupervisorApprovalBadge } from '../components/LabResultStatusBadges';
-import { LabRelatedTestsPanel } from '../components/LabRelatedWorkflowPanel';
-import { CriticalValueActions } from '../criticalValues/CriticalValueActions';
-import type { CriticalValueRecord } from '../criticalValues/criticalValues';
-import { ResultValidationPanel } from '../validation/ResultValidationForm';
+import { AttemptIndicator } from '../../components/LabAttemptIndicators';
+import { TestHeaderBadges } from '../../components/LabWorkflowBadges';
+import { SupervisorApprovalBadge } from '../../components/LabResultStatusBadges';
+import { LabRelatedTestsPanel } from '../../components/LabRelatedWorkflowPanel';
+import { CriticalValueActions } from '../../criticalValues/CriticalValueActions';
+import type { CriticalValueRecord } from '../../criticalValues/criticalValues';
+import { ResultValidationPanel } from '../../validation/ResultValidationForm';
 import {
   EscalationResolutionActions,
   type EscalationResolveOptions,
-} from '../validation/EscalationResolutionActions';
-import { deriveRetestContext } from '../utils/deriveRetestContext';
+} from '../../validation/EscalationResolutionActions';
+import { deriveRetestContext } from '../../utils/deriveRetestContext';
 import { text, WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
 import type { TestWithContext } from '@/types';
 import type { EscalationResolutionAction } from '@/types/lab-operations';

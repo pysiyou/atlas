@@ -23,6 +23,13 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
+          // Lab workflow modals are registered globally; keep them out of the main feature chunk.
+          if (id.includes('/features/lab/workflow/modals/')) {
+            return 'lab-workflow-modals';
+          }
+          if (id.includes('/features/lab/workflow/')) {
+            return 'lab-workflow';
+          }
           if (id.includes('node_modules')) {
             if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
               return 'vendor';

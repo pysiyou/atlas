@@ -13,7 +13,7 @@ export {
   type QueueCardMobileProps,
   type QueueCardHeaderProps,
   type QueueCardPanelProps,
-} from './queueCardLayout';
+} from './shared/queueCardLayout';
 
 export {
   SampleCollectionCard,
@@ -22,12 +22,12 @@ export {
   type SampleCollectionCardProps,
   type SampleCollectionCardSharedData,
   type SampleCollectionCardLeftColumnProps,
-} from './queueCard.sampleCollection';
+} from './cards/queueCard.sampleCollection';
 
-export { ResultEntryCard, type ResultEntryCardProps } from './queueCard.resultEntry';
-export { ResultValidationCard, type ResultValidationCardProps } from './queueCard.resultValidation';
-export { EscalationCard, type EscalationCardProps } from './queueCard.escalation';
-export { SampleRecollectionRequestCard } from './queueCard.recollectionApproval';
+export { ResultEntryCard, type ResultEntryCardProps } from './cards/queueCard.resultEntry';
+export { ResultValidationCard, type ResultValidationCardProps } from './cards/queueCard.resultValidation';
+export { EscalationCard, type EscalationCardProps } from './cards/queueCard.escalation';
+export { SampleRecollectionRequestCard } from './cards/queueCard.recollectionApproval';
 
 export {
   QueueModalShell,
@@ -37,9 +37,9 @@ export {
   type LabModalStage,
   type QueueModalShellProps,
   type DetailGridSectionConfig,
-} from './detailModalLayout';
+} from './shared/detailModalLayout';
 
-export { SampleCollectionDetailModal } from './detailModal.sampleCollection';
-export { ResultEntryDetailModal } from './detailModal.resultEntry';
-export { TestDetailModal } from './detailModal.test';
-export { EscalationResolutionModal } from './detailModal.escalation';
+export { SampleCollectionDetailModal } from './modals/detailModal.sampleCollection';
+export { ResultEntryDetailModal } from './modals/detailModal.resultEntry';
+export { TestDetailModal } from './modals/detailModal.test';
+export { EscalationResolutionModal } from './modals/detailModal.escalation';

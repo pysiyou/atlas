@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "typecheck": "tsc -b --noEmit",
-    "test": "vitest run --passWithNoTests",
+    "test": "node scripts/check-duplicate-filenames.mjs && vitest run --passWithNoTests",
     "test:watch": "vitest --passWithNoTests",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

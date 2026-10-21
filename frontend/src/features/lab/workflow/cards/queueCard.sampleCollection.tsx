@@ -11,18 +11,18 @@ import { getTestNames } from '@/features/catalog/testLookup';
 import type { ContainerType, TestSummary } from '@/types';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { MOBILE_LIST_CARD } from '@/theme/recipes';
-import { CollectionHeaderBadges } from '../components/LabWorkflowBadges';
-import { SampleCollectionPopover } from '../collection/SampleCollectionPopover';
-import { SampleRejectionPopover } from '../collection/SampleRejectionPopover';
-import { useLabWorkflowCardClickGuard } from '../hooks';
-import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
-import { printSampleCollectionLabel } from '../utils';
-import { QueueCard, QueueCardMobile, QueueCardPanel, QueueCardTestList } from './queueCardLayout';
+import { CollectionHeaderBadges } from '../../components/LabWorkflowBadges';
+import { SampleCollectionPopover } from '../../collection/SampleCollectionPopover';
+import { SampleRejectionPopover } from '../../collection/SampleRejectionPopover';
+import { useLabWorkflowCardClickGuard } from '../../hooks';
+import { useLabWorkflowResponsiveCard } from '../../hooks/useLabWorkflowResponsiveCard';
+import { printSampleCollectionLabel } from '../../utils';
+import { QueueCard, QueueCardMobile, QueueCardPanel, QueueCardTestList } from '../shared/queueCardLayout';
 import {
   SampleCollectionCardLeftColumn,
   type SampleCollectionCardLeftColumnProps,
   type SampleCollectionCardSharedData,
-} from './queueCardLeftColumn';
+} from '../shared/queueCardLeftColumn';
 import { getSampleCollectionViewModel } from './queueCard.sampleCollection.viewModel';
 
 export type { SampleCollectionCardLeftColumnProps, SampleCollectionCardSharedData };

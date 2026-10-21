@@ -4,9 +4,9 @@
 
 import type { ContainerType, Sample } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_CONFIG } from '@/types';
-import { formatVolume } from '../utils';
+import { formatVolume } from '../../utils';
 import { TONE } from '@/theme/recipes';
-import { DetailGrid, type DetailGridSectionConfig } from './detailModalLayout';
+import { DetailGrid, type DetailGridSectionConfig } from '../shared/detailModalLayout';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 
 export function CollectionDetailGrid({

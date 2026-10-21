@@ -9,7 +9,7 @@ import {
   type ContainerType,
   type Sample,
 } from '@/types';
-import { formatVolume } from '@/features/lab';
+import { formatVolume } from '@/features/lab/cross';
 import { displayId } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 
