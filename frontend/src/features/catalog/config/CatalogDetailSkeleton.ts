@@ -1,4 +1,4 @@
-import type { DetailSkeletonSection } from '@/components/loaders/DetailPageSkeleton';
+import type { DetailSkeletonSection } from '@/components/feedback/DetailPageSkeleton';
 
 export const CATALOG_DETAIL_SKELETON_SECTIONS: DetailSkeletonSection[] = [
   { preset: 'panel.pageEmbed.visible', title: 'Test Overview', rows: 8 },

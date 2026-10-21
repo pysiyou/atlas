@@ -4,9 +4,9 @@
 
 import { Badge, type BadgeProps } from '@/components/primitives';
 import {
-  StatusPresentationCompactBadge,
-  StatusPresentationStack,
-} from '@/components/display/StatusPresentationBadge';
+  LabPresentationCompactBadge,
+  LabPresentationStack,
+} from '@/features/lab/components/LabPresentationBadge';
 import type { OrderStatus, OrderTest, PriorityLevel } from '@/types';
 import type { StatusPresentation } from '@/types/labProjection';
 import { formatStatusBadgeLabel, resolveStatusBadgeColor } from '@/utils/statusBadge';
@@ -28,14 +28,14 @@ export function OrderStatusBadge({
   if (presentation) {
     if (layout === 'compact') {
       return (
-        <StatusPresentationCompactBadge
+        <LabPresentationCompactBadge
           presentation={presentation}
           size={props.size}
           className={props.className}
         />
       );
     }
-    return <StatusPresentationStack presentation={presentation} size={props.size} />;
+    return <LabPresentationStack presentation={presentation} size={props.size} />;
   }
   return (
     <Badge
@@ -72,14 +72,14 @@ export function OrderTestStatusBadge({
   if (presentation) {
     if (layout === 'compact') {
       return (
-        <StatusPresentationCompactBadge
+        <LabPresentationCompactBadge
           presentation={presentation}
           size={props.size}
           className={props.className}
         />
       );
     }
-    return <StatusPresentationStack presentation={presentation} size={props.size} />;
+    return <LabPresentationStack presentation={presentation} size={props.size} />;
   }
   return (
     <Badge

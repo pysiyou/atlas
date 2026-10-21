@@ -6,7 +6,7 @@
 import React from 'react';
 import { useAuthStore } from '@/app/authStore';
 import { useTestCatalog } from '@/features/catalog';
-import { ErrorFallback } from '@/components/loaders';
+import { ErrorFallback } from '@/components/feedback';
 import { errorAlertMessage } from '@/utils/feedback';
 
 interface AuthenticatedPreloadProps {

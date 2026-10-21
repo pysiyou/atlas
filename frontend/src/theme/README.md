@@ -41,11 +41,11 @@ These sit above `text()` roles. Use shared helpers — do not invent new flex st
 |------|-----|----------------|
 | **identity.primary** | Human title (name, test) | `Text` `role="body"` `density="table"` in tables |
 | **identity.secondary.meta** | Age, email, counts, dates | `TABLE_TYPE.meta` or `Text` `intent="muted"` |
-| **identity.secondary.entity** | PAT/ORD/SAM/TST under a name | `renderTableSecondaryEntityId` / `EntityId` `variant="secondaryBlock"` |
-| **identity.primary.entity** | ID is the cell value | `EntityId` `block` / `clickable` |
-| **identity.inline** | Horizontal segments | `IdentityInline` + `IDENTITY_INLINE` |
-| **identity.stack** | Primary over secondary | `IdentityStack` / `PRESENTATION_STACK_CLASS` |
-| **status.table** | Badge + reason in tables | `StatusPresentationTableCell` |
+| **identity.secondary.entity** | PAT/ORD/SAM/TST under a name | `renderTableSecondaryRecordId` / `RecordId` `emphasis="mutedBlock"` |
+| **identity.primary.entity** | ID is the cell value | `RecordId` `emphasis="block"` / `emphasis="interactive"` |
+| **identity.inline** | Horizontal segments | `InlineSegments` + `IDENTITY_INLINE` |
+| **identity.stack** | Primary over secondary | `TextStack` / `PRESENTATION_STACK_CLASS` |
+| **status.table** | Badge + reason in tables | `LabPresentationTableCell` |
 
 **Entity tokens:** `--id-color` (brand) = primary ID columns; `--id-color-secondary` = entity sub-lines; body muted = non-ID meta.
 
@@ -65,5 +65,5 @@ These sit above `text()` roles. Use shared helpers — do not invent new flex st
 2. **Barrel imports** — `@/theme/recipes` from features.
 3. **No `TYPE`, `DETAIL_TYPE`, or raw legacy `type-*` utilities** in features.
 4. **No raw `text-text-*` in features** — use `Text` or recipe strings.
-5. **Sub-line entity IDs** — `secondaryBlock` or `renderTableSecondaryEntityId`, not bare `variant="secondary"` in tables.
+5. **Sub-line record IDs** — `emphasis="mutedBlock"` or `renderTableSecondaryRecordId`, not bare `emphasis="muted"` in tables.
 6. **PR checklist** — Orders, Payments, Patients, Lab monitor, one card + one modal; `npm run lint`; light + dark themes.

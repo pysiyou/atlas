@@ -2,7 +2,7 @@
  * Factory for lab workflow filter configs — deduplicates shared search/date/sample controls.
  */
 
-import type { FilterConfig, FilterControl } from '@/components/filters';
+import type { FilterConfig, FilterControlConfig } from '@/components/filters';
 import { SHARED_FILTER_PLACEHOLDERS } from '@/components/filters';
 import { ICONS, MODULE_ICONS } from '@/config/icons';
 import { LAB_CONFIG } from '../constants';
@@ -19,7 +19,7 @@ export interface BuildLabFilterConfigOptions {
   searchPlaceholder: string;
   searchHelpText: string;
   dateRangeHelpText: string;
-  extraControls: FilterControl[];
+  extraControls: FilterControlConfig[];
 }
 
 export function buildLabFilterConfig(options: BuildLabFilterConfigOptions): FilterConfig {

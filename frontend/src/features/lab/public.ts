@@ -67,7 +67,6 @@ export {
   EscalationResolutionModal,
   QueueModalShell,
   ModalFooter,
-  labModalSubtitle,
   labModalHeaderContext,
   type LabModalStage,
 } from './workflow';

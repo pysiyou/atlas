@@ -7,7 +7,7 @@ import React, { Suspense } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuthStore } from '@/app/authStore';
 import { AppShell } from '@/components/layout';
-import { ErrorBoundary, PageContentLoadingFallback, PageLoadingFallback } from '@/components/loaders';
+import { ErrorBoundary, PageContentLoadingFallback, PageLoadingFallback } from '@/components/feedback';
 import { ROUTES } from '@/config';
 
 export const ProtectedLayout: React.FC = () => {

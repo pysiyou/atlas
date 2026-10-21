@@ -14,9 +14,9 @@ import {
   SampleTypeBadge,
 } from './LabDomainBadges';
 import {
-  StatusPresentationCompactBadge,
-  StatusPresentationStack,
-} from '@/components/display/StatusPresentationBadge';
+  LabPresentationCompactBadge,
+  LabPresentationStack,
+} from '@/features/lab/components/LabPresentationBadge';
 import { useLabHeaderCompact } from './LabWorkflowHeader';
 import {
   LabCardMetaRow,
@@ -54,9 +54,9 @@ function TestStatusChip({
   const presentation = test.lab?.statusPresentation ?? null;
   if (presentation) {
     return compact ? (
-      <StatusPresentationCompactBadge presentation={presentation} size={size} />
+      <LabPresentationCompactBadge presentation={presentation} size={size} />
     ) : (
-      <StatusPresentationStack presentation={presentation} size={size} />
+      <LabPresentationStack presentation={presentation} size={size} />
     );
   }
   if (variant === 'escalation') {
@@ -145,6 +145,3 @@ export function TestCardAlerts(props: TestCardMetaProps) {
 export function TestModalMeta(props: TestCardMetaProps) {
   return <TestOperationalMeta {...props} MetaRow={LabModalMetaRow} />;
 }
-
-/** @deprecated Use TestModalMeta or TestCardAlerts. */
-export const TestCardMeta = TestModalMeta;

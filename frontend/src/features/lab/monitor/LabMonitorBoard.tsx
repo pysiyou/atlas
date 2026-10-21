@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { ErrorAlert } from '@/components/loaders';
+import { ErrorAlert } from '@/components/feedback';
 import { errorAlertMessage } from '@/utils/feedback';
 import { SPLIT_WORKSPACE_PANEL } from '@/theme/recipes';
 import { SPLIT_BOTTOM_PANEL, SPLIT_BOTTOM_ROW, SPLIT_WORKSPACE_PAGE, SPLIT_TABLE_WRAP } from '@/theme/recipes';

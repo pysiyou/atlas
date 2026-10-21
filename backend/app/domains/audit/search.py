@@ -1,4 +1,4 @@
-"""Unified audit event log search — entity display ids, numeric ids, names."""
+"""Unified audit event log search — record display ids, numeric ids, names."""
 from __future__ import annotations
 
 import re
@@ -13,10 +13,10 @@ from sqlalchemy import String, and_, cast, or_
 
 SearchIntentMode = Literal[
     "empty",
-    "entity_order",
-    "entity_test",
-    "entity_sample",
-    "entity_patient",
+    "record_order",
+    "record_test",
+    "record_sample",
+    "record_patient",
     "numeric",
     "text",
 ]
@@ -24,8 +24,8 @@ SearchIntentMode = Literal[
 TEXT_SEARCH_DIMENSIONS = ("patientName", "actorName", "username")
 
 
-def format_entity_display_id(prefix: str, entity_id: int) -> str:
-    return f"{prefix.upper()}{entity_id:04d}"
+def format_record_display_id(prefix: str, record_id: int) -> str:
+    return f"{prefix.upper()}{record_id:04d}"
 
 
 def classify_search_term(term: str) -> dict[str, Any]:
@@ -41,41 +41,41 @@ def classify_search_term(term: str) -> dict[str, Any]:
         test_id = parse_display_id_from_search(trimmed, "TST")
         if test_id is not None:
             return {
-                "mode": "entity_test",
+                "mode": "record_test",
                 "textTerm": None,
                 "dimensions": [],
                 "parsedIds": {"testId": test_id},
-                "displayToken": format_entity_display_id("TST", test_id),
+                "displayToken": format_record_display_id("TST", test_id),
             }
     if upper.startswith("ORD"):
         order_id = parse_display_id_from_search(trimmed, "ORD")
         if order_id is not None:
             return {
-                "mode": "entity_order",
+                "mode": "record_order",
                 "textTerm": None,
                 "dimensions": [],
                 "parsedIds": {"orderId": order_id},
-                "displayToken": format_entity_display_id("ORD", order_id),
+                "displayToken": format_record_display_id("ORD", order_id),
             }
     if upper.startswith("SAM"):
         sample_id = parse_display_id_from_search(trimmed, "SAM")
         if sample_id is not None:
             return {
-                "mode": "entity_sample",
+                "mode": "record_sample",
                 "textTerm": None,
                 "dimensions": [],
                 "parsedIds": {"sampleId": sample_id},
-                "displayToken": format_entity_display_id("SAM", sample_id),
+                "displayToken": format_record_display_id("SAM", sample_id),
             }
     if upper.startswith("PAT"):
         patient_id = parse_display_id_from_search(trimmed, "PAT")
         if patient_id is not None:
             return {
-                "mode": "entity_patient",
+                "mode": "record_patient",
                 "textTerm": None,
                 "dimensions": [],
                 "parsedIds": {"patientId": patient_id},
-                "displayToken": format_entity_display_id("PAT", patient_id),
+                "displayToken": format_record_display_id("PAT", patient_id),
             }
     if compact.isdigit():
         numeric = int(compact)
@@ -124,7 +124,7 @@ def access_event_types_to_hide(
     return frozenset(hidden)
 
 
-def _entity_id_clauses(term: str) -> list:
+def _record_id_clauses(term: str) -> list:
     compact = re.sub(r"[\s-]", "", term.strip())
     upper = compact.upper()
     clauses: list = []
@@ -189,14 +189,14 @@ def _entity_id_clauses(term: str) -> list:
 
 
 def apply_unified_search(query, term: str, *, scope: str = "stream"):
-    """Narrow query with OR match on entity ids, patient name, actor name, or username."""
+    """Narrow query with OR match on record ids, patient name, actor name, or username."""
     trimmed = term.strip()
     if not trimmed:
         return query
 
-    entity_clauses = _entity_id_clauses(trimmed)
-    if entity_clauses and scope != "system":
-        return query.filter(or_(*entity_clauses))
+    record_clauses = _record_id_clauses(trimmed)
+    if record_clauses and scope != "system":
+        return query.filter(or_(*record_clauses))
 
     pattern = f"%{trimmed}%"
     text_clauses = [

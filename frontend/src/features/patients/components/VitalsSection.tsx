@@ -1,40 +1,23 @@
 /**
- * VitalsSection Component
- *
- * Displays and allows editing of patient vital signs in a modern 3-column grid layout.
- * Includes normal range hints for each vital sign.
+ * VitalsSection — patient vital signs in a 3-column grid with range hints.
  */
 
 import React from 'react';
+import { useController, type Control } from 'react-hook-form';
 import { Icon, type IconName } from '@/components/primitives';
 import type { VitalSigns } from '@/types/patient';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { text, inputBase, inputError , FG } from '@/theme/recipes';
+import { text, inputBase, inputError, FG } from '@/theme/recipes';
 import { FIELD_ERROR, FIELD_ERROR_CAPTION, RADIUS, TONE } from '@/theme/recipes';
+import type { PatientFormInput } from '../schemas/patientFormSchemas';
+import type { PatientFormSectionProps } from '../patientFormTypes';
+import { patientFieldError } from '../patientFormFieldError';
 
-
-export interface VitalsSectionProps {
-  /** Current vital signs data */
-  vitalSigns: {
-    temperature?: string;
-    heartRate?: string;
-    systolicBP?: string;
-    diastolicBP?: string;
-    respiratoryRate?: string;
-    oxygenSaturation?: string;
-  };
-  /** Form errors */
-  errors?: Record<string, string>;
-  /** Callback when a field changes */
-  onFieldChange: (field: string, value: string) => void;
-  /** Keys that have no value from patient (partial vitals): show N/A and disable */
+export interface VitalsSectionProps extends PatientFormSectionProps {
   emptyKeysReadOnly?: ReadonlySet<string>;
 }
 
-/**
- * Vital sign configuration with normal ranges and validation
- */
 interface VitalConfig {
   key: keyof VitalSigns;
   label: string;
@@ -44,7 +27,6 @@ interface VitalConfig {
   max: number;
   step: number;
   normalRange: { min: number; max: number };
-  normalRangeText: string;
 }
 
 const VITALS_CONFIG: VitalConfig[] = [
@@ -57,7 +39,6 @@ const VITALS_CONFIG: VitalConfig[] = [
     max: 45.0,
     step: 0.1,
     normalRange: { min: 36.5, max: 37.3 },
-    normalRangeText: 'Normal: 36.5-37.3°C',
   },
   {
     key: 'heartRate',
@@ -68,7 +49,6 @@ const VITALS_CONFIG: VitalConfig[] = [
     max: 250,
     step: 1,
     normalRange: { min: 60, max: 100 },
-    normalRangeText: 'Normal: 60-100 BPM',
   },
   {
     key: 'systolicBP',
@@ -78,8 +58,7 @@ const VITALS_CONFIG: VitalConfig[] = [
     min: 50,
     max: 250,
     step: 1,
-    normalRange: { min: 0, max: 119.9 }, // Normal: <120
-    normalRangeText: 'Normal: <120 mmHg',
+    normalRange: { min: 0, max: 119.9 },
   },
   {
     key: 'diastolicBP',
@@ -89,8 +68,7 @@ const VITALS_CONFIG: VitalConfig[] = [
     min: 30,
     max: 150,
     step: 1,
-    normalRange: { min: 0, max: 79.9 }, // Normal: <80
-    normalRangeText: 'Normal: <80 mmHg',
+    normalRange: { min: 0, max: 79.9 },
   },
   {
     key: 'respiratoryRate',
@@ -101,7 +79,6 @@ const VITALS_CONFIG: VitalConfig[] = [
     max: 60,
     step: 1,
     normalRange: { min: 12, max: 20 },
-    normalRangeText: 'Normal: 12-20 /min',
   },
   {
     key: 'oxygenSaturation',
@@ -112,48 +89,29 @@ const VITALS_CONFIG: VitalConfig[] = [
     max: 100,
     step: 1,
     normalRange: { min: 95, max: 100 },
-    normalRangeText: 'Normal: 95-100%',
   },
 ];
 
-/**
- * Determine vital sign status based on value and normal range
- */
 const getVitalStatus = (
   value: number | undefined,
-  normalRange: { min: number; max: number }
+  normalRange: { min: number; max: number },
 ): 'normal' | 'borderline' | 'abnormal' | null => {
-  if (value === undefined || value === null || isNaN(value)) {
+  if (value === undefined || value === null || Number.isNaN(value)) {
     return null;
   }
-
   const { min, max } = normalRange;
-
-  // Check if within normal range
   if (value >= min && value <= max) {
     return 'normal';
   }
-
-  // Calculate how far outside normal range (percentage)
   let deviation = 0;
   if (value < min) {
     deviation = ((min - value) / min) * 100;
   } else {
     deviation = ((value - max) / max) * 100;
   }
-
-  // Borderline: within 20% of normal range
-  // Abnormal: more than 20% outside normal range
-  if (deviation <= 20) {
-    return 'borderline';
-  }
-
-  return 'abnormal';
+  return deviation <= 20 ? 'borderline' : 'abnormal';
 };
 
-/**
- * Get status colors for vital sign indicators
- */
 const getStatusColors = (status: 'normal' | 'borderline' | 'abnormal' | null) => {
   if (!status) {
     return {
@@ -161,7 +119,6 @@ const getStatusColors = (status: 'normal' | 'borderline' | 'abnormal' | null) =>
       text: FG.captionMuted,
     };
   }
-
   switch (status) {
     case 'normal':
       return {
@@ -181,106 +138,142 @@ const getStatusColors = (status: 'normal' | 'borderline' | 'abnormal' | null) =>
   }
 };
 
-/**
- * VitalsSection - Displays vital signs in a 3-column grid matching result entry form layout
- */
+type VitalFieldName = `vitalSigns.${keyof VitalSigns}`;
+
+interface VitalSignFieldProps {
+  control: Control<PatientFormInput>;
+  config: VitalConfig;
+  error?: string;
+  emptyKeysReadOnly?: ReadonlySet<string>;
+}
+
+const VitalSignField: React.FC<VitalSignFieldProps> = ({
+  control,
+  config,
+  error,
+  emptyKeysReadOnly,
+}) => {
+  const fieldName = config.key as keyof VitalSigns;
+  const name = `vitalSigns.${fieldName}` as VitalFieldName;
+  const { field } = useController({ control, name });
+
+  const displayValue =
+    field.value !== undefined && field.value !== null ? String(field.value) : '';
+  const numericValue =
+    field.value !== undefined && field.value !== null ? Number(field.value) : undefined;
+  const status = getVitalStatus(numericValue, config.normalRange);
+  const statusColors = getStatusColors(status);
+  const isAbnormal = status === 'abnormal';
+  const isNa = !displayValue && emptyKeysReadOnly?.has(fieldName);
+  const refRange = `${config.normalRange.min}-${config.normalRange.max}`;
+
+  return (
+    <div className="group">
+      <div className="flex justify-between items-baseline mb-space-1 gap-space-2">
+        <label
+          htmlFor={isNa ? undefined : `vital-${fieldName}`}
+          className={cn(
+            text({ role: 'body' }),
+            'truncate min-w-0',
+            FG.captionMuted,
+            isNa ? 'cursor-default' : 'cursor-pointer',
+          )}
+        >
+          {config.label}
+        </label>
+        <div className="flex items-center gap-space-1 min-w-0 shrink-0 max-w-[50%]">
+          {isAbnormal && !isNa && (
+            <Icon
+              name={ICONS.actions.dangerSquare}
+              className={`w-3 h-3 ${TONE.danger.fg} shrink-0`}
+            />
+          )}
+          <span className={`${text({ role: 'caption' })} truncate`}>Ref: {refRange}</span>
+        </div>
+      </div>
+
+      <div className="relative group">
+        <div className="absolute inset-y-0 left-0 pl-space-3 flex items-center pointer-events-none z-10">
+          <Icon
+            name={config.icon}
+            className={cn(
+              'w-4 h-4 shrink-0 transition-colors',
+              isNa ? `${FG.muted}/70` : `${FG.muted} group-hover:text-brand`,
+            )}
+          />
+        </div>
+
+        {isNa ? (
+          <div
+            className={cn(
+              'w-full',
+              RADIUS.field,
+              'border border-border-default bg-surface-hover/30 px-space-3 py-space-1-5',
+              text({ role: 'amount' }),
+              FG.captionMuted,
+              'pl-space-10 pr-space-12',
+            )}
+            aria-label={`${config.label} not provided`}
+          >
+            N/A
+          </div>
+        ) : (
+          <>
+            <input
+              id={`vital-${fieldName}`}
+              name={fieldName}
+              type="number"
+              value={displayValue}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const raw = e.target.value;
+                field.onChange(raw === '' ? undefined : parseFloat(raw));
+              }}
+              min={config.min}
+              max={config.max}
+              step={config.step}
+              placeholder="--"
+              className={cn(
+                inputBase,
+                'pl-space-10 pr-space-12 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0',
+                error && inputError,
+                status && statusColors.chrome,
+              )}
+            />
+            <div className="absolute inset-y-0 right-0 pr-space-3 flex items-center pointer-events-none max-w-[40%]">
+              <span className={`${text({ role: 'body', intent: 'muted' })} select-none truncate`}>
+                {config.unit}
+              </span>
+            </div>
+            {isAbnormal && (
+              <div className={`absolute -bottom-space-5 left-0 ${FIELD_ERROR_CAPTION} font-normal`}>
+                Abnormal value
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {error && <p className={`mt-space-1 ${FIELD_ERROR}`}>{error}</p>}
+    </div>
+  );
+};
+
 export const VitalsSection: React.FC<VitalsSectionProps> = ({
-  vitalSigns,
-  errors = {},
-  onFieldChange,
+  control,
+  errors,
   emptyKeysReadOnly,
 }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-6">
-      {VITALS_CONFIG.map(config => {
-        const fieldName = config.key;
-        const value = vitalSigns[fieldName] || '';
-        const error = errors[fieldName];
-        const numericValue = value ? parseFloat(value) : undefined;
-        const status = getVitalStatus(numericValue, config.normalRange);
-        const statusColors = getStatusColors(status);
-        const isAbnormal = status === 'abnormal';
-        const isNa = !value && emptyKeysReadOnly?.has(fieldName);
-
-        const refRange = `${config.normalRange.min}-${config.normalRange.max}`;
-
-        return (
-          <div key={config.key} className="group">
-            <div className="flex justify-between items-baseline mb-space-1 gap-space-2">
-              <label
-                htmlFor={isNa ? undefined : `vital-${fieldName}`}
-                className={`${text({ role: 'body' })} truncate min-w-0 ${isNa ? '${FG.captionMuted} cursor-default' : '${FG.captionMuted} cursor-pointer'}`}
-              >
-                {config.label}
-              </label>
-              <div className="flex items-center gap-space-1 min-w-0 shrink-0 max-w-[50%]">
-                {isAbnormal && !isNa && (
-                  <Icon
-                    name={ICONS.actions.dangerSquare}
-                    className={`w-3 h-3 ${TONE.danger.fg} shrink-0`}
-                  />
-                )}
-                <span className={`${text({ role: 'caption' })} truncate`}>Ref: {refRange}</span>
-              </div>
-            </div>
-
-            <div className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-space-3 flex items-center pointer-events-none z-10">
-                <Icon
-                  name={config.icon}
-                  className={cn(
-                    'w-4 h-4 shrink-0 transition-colors',
-                    isNa ? '${FG.muted}/70' : '${FG.muted} group-hover:text-brand'
-                  )}
-                />
-              </div>
-
-              {isNa ? (
-                <div
-                  className={`w-full ${RADIUS.field} border border-border-default bg-surface-hover/30 px-space-3 py-space-1-5 ${text({ role: 'amount' })} ${FG.captionMuted} pl-space-10 pr-space-12`}
-                  aria-label={`${config.label} not provided`}
-                >
-                  N/A
-                </div>
-              ) : (
-                <>
-                  <input
-                    id={`vital-${fieldName}`}
-                    name={fieldName}
-                    type="number"
-                    value={value}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      onFieldChange(fieldName, e.target.value)
-                    }
-                    min={config.min}
-                    max={config.max}
-                    step={config.step}
-                    placeholder="--"
-                    className={cn(
-                      inputBase,
-                      'pl-space-10 pr-space-12 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0',
-                      error && inputError,
-                      status && statusColors.chrome
-                    )}
-                  />
-                  <div className="absolute inset-y-0 right-0 pr-space-3 flex items-center pointer-events-none max-w-[40%]">
-                    <span className={`${text({ role: 'body', intent: 'muted' })} select-none truncate`}>
-                      {config.unit}
-                    </span>
-                  </div>
-                  {isAbnormal && (
-                    <div className={`absolute -bottom-space-5 left-0 ${FIELD_ERROR_CAPTION} font-normal`}>
-                      Abnormal value
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-
-            {error && <p className={`mt-space-1 ${FIELD_ERROR}`}>{error}</p>}
-          </div>
-        );
-      })}
+      {VITALS_CONFIG.map(config => (
+        <VitalSignField
+          key={config.key}
+          control={control}
+          config={config}
+          error={patientFieldError(errors, `vitalSigns.${config.key}`)}
+          emptyKeysReadOnly={emptyKeysReadOnly}
+        />
+      ))}
     </div>
   );
 };

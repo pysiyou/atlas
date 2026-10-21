@@ -2,19 +2,19 @@
  * Payment-domain status and method chips.
  */
 
-import { DomainStatusBadge, type DomainBadgeProps } from '@/components/display/DomainStatusBadge';
+import { StatusValueBadge, type StatusValueBadgeProps } from '@/features/shared/components/StatusValueBadge';
 import type { PaymentMethod, PaymentStatus } from '@/types';
 
 export function PaymentStatusBadge({
   status,
   ...props
-}: DomainBadgeProps & { status: PaymentStatus | string }) {
-  return <DomainStatusBadge value={status} {...props} />;
+}: Omit<StatusValueBadgeProps, 'value'> & { status: PaymentStatus | string }) {
+  return <StatusValueBadge value={status} {...props} />;
 }
 
 export function PaymentMethodBadge({
   method,
   ...props
-}: DomainBadgeProps & { method: PaymentMethod | string }) {
-  return <DomainStatusBadge value={method} {...props} />;
+}: Omit<StatusValueBadgeProps, 'value'> & { method: PaymentMethod | string }) {
+  return <StatusValueBadge value={method} {...props} />;
 }

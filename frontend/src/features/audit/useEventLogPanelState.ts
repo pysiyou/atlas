@@ -3,7 +3,7 @@
  */
 import { useMemo, useState } from 'react';
 import { buildEventLogQuery } from './buildEventLogQuery';
-import { parseEntityFilterDisplayId } from './parseEntityDisplayId';
+import { parseRecordFilterDisplayId } from './parseRecordDisplayId';
 import {
   DEFAULT_EVENT_LOG_USER_FILTERS as DEFAULT_FILTERS,
   type EventLogFilterField,
@@ -23,7 +23,7 @@ function isFieldLocked(field: EventLogFilterField, query: EventLogQuery): boolea
       return Boolean(query.kinds?.length);
     case 'dateRange':
       return query.hours != null || Boolean(query.createdFrom || query.createdTo);
-    case 'entityId':
+    case 'recordId':
       return (
         query.scope !== 'stream' ||
         query.orderId != null ||
@@ -53,12 +53,12 @@ export function useEventLogPanelState({
     ...DEFAULT_FILTERS,
     ...filterDefaults,
   }));
-  const usesEntityIdField = visibleFields.includes('entityId');
-  const [entityIdInput, setEntityIdInput] = useState('');
+  const usesRecordIdField = visibleFields.includes('recordId');
+  const [recordIdInput, setRecordIdInput] = useState('');
 
-  const parsedEntity = useMemo(
-    () => parseEntityFilterDisplayId(entityIdInput),
-    [entityIdInput]
+  const parsedRecord = useMemo(
+    () => parseRecordFilterDisplayId(recordIdInput),
+    [recordIdInput],
   );
 
   const effectiveUserFilters = useMemo((): EventLogUserFilters => {
@@ -69,19 +69,19 @@ export function useEventLogPanelState({
       sampleId: null,
       patientId: null,
     };
-    if (!usesEntityIdField) {
+    if (!usesRecordIdField) {
       return next;
     }
-    if (parsedEntity.kind === 'order') next.orderId = parsedEntity.orderId;
-    if (parsedEntity.kind === 'test') next.testId = parsedEntity.testId;
-    if (parsedEntity.kind === 'sample') next.sampleId = parsedEntity.sampleId;
-    if (parsedEntity.kind === 'patient') next.patientId = parsedEntity.patientId;
+    if (parsedRecord.kind === 'order') next.orderId = parsedRecord.orderId;
+    if (parsedRecord.kind === 'test') next.testId = parsedRecord.testId;
+    if (parsedRecord.kind === 'sample') next.sampleId = parsedRecord.sampleId;
+    if (parsedRecord.kind === 'patient') next.patientId = parsedRecord.patientId;
     return next;
-  }, [userFilters, usesEntityIdField, parsedEntity]);
+  }, [userFilters, usesRecordIdField, parsedRecord]);
 
   const mergedQuery = useMemo(
     () => buildEventLogQuery(query, effectiveUserFilters),
-    [query, effectiveUserFilters]
+    [query, effectiveUserFilters],
   );
 
   const lockedFields = useMemo(() => {
@@ -94,7 +94,7 @@ export function useEventLogPanelState({
     return locked;
   }, [query, visibleFields]);
 
-  const hasEntityFilter =
+  const hasRecordFilter =
     effectiveUserFilters.orderId != null ||
     effectiveUserFilters.testId != null ||
     effectiveUserFilters.sampleId != null ||
@@ -103,7 +103,7 @@ export function useEventLogPanelState({
   const activeFilterCount =
     (effectiveUserFilters.kinds.length > 0 ? 1 : 0) +
     (effectiveUserFilters.dateRange ? 1 : 0) +
-    (usesEntityIdField && hasEntityFilter ? 1 : 0) +
+    (usesRecordIdField && hasRecordFilter ? 1 : 0) +
     (effectiveUserFilters.includeAccess ? 1 : 0) +
     (effectiveUserFilters.actorRoles.length > 0 ? 1 : 0) +
     (effectiveUserFilters.actorSearch.trim().length > 0 ? 1 : 0) +
@@ -112,19 +112,19 @@ export function useEventLogPanelState({
 
   const resetUserFilters = () => {
     setUserFilters({ ...DEFAULT_FILTERS, ...filterDefaults });
-    setEntityIdInput('');
+    setRecordIdInput('');
   };
 
   return {
     userFilters,
     setUserFilters,
-    entityIdInput,
-    setEntityIdInput,
+    recordIdInput,
+    setRecordIdInput,
     mergedQuery,
     lockedFields,
     activeFilterCount,
     resetUserFilters,
-    entityIdInputInvalid:
-      usesEntityIdField && entityIdInput.trim().length > 0 && parsedEntity.kind === 'invalid',
+    recordIdInputInvalid:
+      usesRecordIdField && recordIdInput.trim().length > 0 && parsedRecord.kind === 'invalid',
   };
 }

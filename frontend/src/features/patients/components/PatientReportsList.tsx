@@ -5,7 +5,8 @@
 
 import React from 'react';
 import { actionButtonPreset, Icon, IconButton } from '@/components/primitives';
-import { EmptyState, EntityId, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components/display';
+import { EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import { formatDateTime } from '@/utils';
 import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
 import type { Order } from '@/types';
@@ -44,7 +45,7 @@ export const PatientReportsList: React.FC<PatientReportsListProps> = ({ orders }
             </div>
             <div className="min-w-0">
               <p className={`${text({ role: 'body' })} font-normal truncate`}>
-                Report_<EntityId type="order" value={order.orderId} />.pdf
+                Report_<RecordId type="order" value={order.orderId} />.pdf
               </p>
               <p className={`${TABLE_DATETIME_SECONDARY_CLASS} mt-space-0-5`}>
                 {formatDateTime(order.orderDate)} • 1.2 MB

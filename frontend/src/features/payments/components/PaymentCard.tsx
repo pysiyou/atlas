@@ -1,7 +1,7 @@
 import { Avatar } from '@/components/primitives';
-import { MobileEntityCard } from '@/components/surfaces';
-import { EntityId } from '@/components/display';
-import { renderTableSecondaryEntityId } from '@/utils/presentationRenders';
+import { ListCard } from '@/components/surfaces';
+import { RecordId } from '@/features/shared/components';
+import { renderTableSecondaryRecordId } from '@/utils/presentationRenders';
 import { OrderStatusBadge } from '@/features/orders';
 import { PaymentMethodBadge, PaymentStatusBadge } from './PaymentStatusBadge';
 import type { CardComponentProps } from '@/components/data-table';
@@ -36,14 +36,14 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
   const displayDate = item.paymentDate ?? order.orderDate;
 
   return (
-    <MobileEntityCard onClick={onClick}>
-      <MobileEntityCard.Header
+    <ListCard onPress={onClick}>
+      <ListCard.Header
         leading={
           <Avatar
             primaryText={order.patientName || 'N/A'}
             primaryTextClassName=""
             secondarySlot="entity"
-            secondaryText={renderTableSecondaryEntityId({
+            secondaryText={renderTableSecondaryRecordId({
               type: 'patient',
               value: order.patientId,
             })}
@@ -67,7 +67,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
 
       <div className="flex justify-between items-center mt-auto pt-space-3 gap-space-2">
         <div className={TABLE_DATETIME_SECONDARY_CLASS}>
-          <EntityId type="order" value={order.orderId} variant="secondaryBlock" />
+          <RecordId type="order" value={order.orderId} emphasis="mutedBlock" />
           <span className="block mt-space-0-5">{formatDateTime(displayDate)}</span>
         </div>
         <div className="flex items-center gap-space-2 shrink-0">
@@ -82,6 +82,6 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
           ) : null}
         </div>
       </div>
-    </MobileEntityCard>
+    </ListCard>
   );
 }

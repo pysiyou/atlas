@@ -6,9 +6,9 @@
 import React, { type ReactNode } from 'react';
 import { DialogFooter, Modal, ModalPageShell, MODAL_WORKFLOW_BODY_STACK } from '@/components/overlays';
 import { Panel, type PanelPresetId } from '@/components/surfaces';
-import { DetailFieldGroup, FooterInfo, ModalContextSubtitle } from '@/components/display';
+import { DescriptionList, FooterInfo, ModalContextSubtitle } from '@/components/display';
 import { MODULE_ICONS } from '@/config/icons';
-import type { DetailFieldConfig } from '@/components/display';
+import type { DescriptionListItemConfig } from '@/components/display';
 import { useUserLookup } from '@/lib/api/users';
 import {
   LabHeaderCompactContext,
@@ -101,7 +101,7 @@ export const QueueModalShell: React.FC<QueueModalShellProps> = ({
 export interface DetailGridSectionConfig {
   preset: PanelPresetId;
   title?: string;
-  fields: DetailFieldConfig[];
+  fields: DescriptionListItemConfig[];
   headerEnd?: ReactNode;
 }
 
@@ -137,7 +137,7 @@ export const DetailGrid: React.FC<DetailGridProps> = ({ children, sections }) =>
             title={section.title}
             headerEnd={section.headerEnd}
           >
-            <DetailFieldGroup fields={section.fields} spacing="tight" resolveUserDisplay={getUserName} />
+            <DescriptionList items={section.fields} spacing="tight" resolveUserDisplay={getUserName} />
           </Panel>
         ))}
       </div>
@@ -214,13 +214,4 @@ export function labModalHeaderContext({
       <ModalContextSubtitle label={contextLabel} orderId={orderId} badges={wrappedBadges} />
     ),
   };
-}
-
-/** @deprecated Use labModalHeaderContext — stage label now lives on the title line. */
-export function labModalSubtitle(stage: LabModalStage): React.ReactNode {
-  return (
-    <span className={`${text({ role: 'caption' })} uppercase tracking-widest font-light`}>
-      {labModalStageLabel(stage)}
-    </span>
-  );
 }

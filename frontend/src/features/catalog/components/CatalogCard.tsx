@@ -1,5 +1,5 @@
-import { MobileEntityCard } from '@/components/surfaces';
-import { EntityId } from '@/components/display';
+import { ListCard } from '@/components/surfaces';
+import { RecordId } from '@/features/shared/components';
 import { CatalogCategoryBadge, CatalogSampleTypeBadge } from './CatalogStatusBadge';
 import type { CardComponentProps } from '@/components/data-table';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
@@ -19,12 +19,12 @@ import { text, BADGE, PRICE_DISPLAY } from '@/theme/recipes';
  */
 export function CatalogCard({ item: test, onClick }: CardComponentProps<TestSummary>) {
   return (
-    <MobileEntityCard onClick={onClick}>
-      <MobileEntityCard.Header
+    <ListCard onPress={onClick}>
+      <ListCard.Header
         leading={
           <div className="flex flex-col min-w-0">
             <div className={`${text({ role: 'amount' })} break-words`}>{test.name}</div>
-            <EntityId className="leading-none">{test.code}</EntityId>
+            <RecordId className="leading-none">{test.code}</RecordId>
           </div>
         }
         trailing={
@@ -53,6 +53,6 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<TestSumm
           <CatalogSampleTypeBadge sampleType={test.sampleType} size="xs" />
         </div>
       </div>
-    </MobileEntityCard>
+    </ListCard>
   );
 }

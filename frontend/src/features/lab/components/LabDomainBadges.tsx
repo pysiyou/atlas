@@ -2,20 +2,22 @@
  * Lab queue / sample domain badges.
  */
 
-import { DomainStatusBadge, type DomainBadgeProps } from '@/components/display/DomainStatusBadge';
+import { StatusValueBadge, type StatusValueBadgeProps } from '@/features/shared/components/StatusValueBadge';
 
-export function SampleStatusBadge({ status, ...props }: DomainBadgeProps & { status: string }) {
-  return <DomainStatusBadge value={status} {...props} />;
+type BadgeShellProps = Omit<StatusValueBadgeProps, 'value'>;
+
+export function SampleStatusBadge({ status, ...props }: BadgeShellProps & { status: string }) {
+  return <StatusValueBadge value={status} {...props} />;
 }
 
-export function SampleTypeBadge({ sampleType, ...props }: DomainBadgeProps & { sampleType: string }) {
-  return <DomainStatusBadge value={sampleType} {...props} />;
+export function SampleTypeBadge({ sampleType, ...props }: BadgeShellProps & { sampleType: string }) {
+  return <StatusValueBadge value={sampleType} {...props} />;
 }
 
-export function LabPriorityBadge({ priority, ...props }: DomainBadgeProps & { priority: string }) {
-  return <DomainStatusBadge value={priority} {...props} />;
+export function LabPriorityBadge({ priority, ...props }: BadgeShellProps & { priority: string }) {
+  return <StatusValueBadge value={priority} {...props} />;
 }
 
-export function LabDepartmentBadge({ department, ...props }: DomainBadgeProps & { department: string }) {
-  return <DomainStatusBadge value={department} {...props} />;
+export function LabDepartmentBadge({ department, ...props }: BadgeShellProps & { department: string }) {
+  return <StatusValueBadge value={department} {...props} />;
 }

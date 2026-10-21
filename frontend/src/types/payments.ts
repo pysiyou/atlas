@@ -74,7 +74,6 @@ export interface InvoiceItem {
 export interface Invoice {
   // Identities
   invoiceId: number; // Primary ID, displayed as INV{id}
-  id?: number; // Alias for compatibility
   orderId: number;
   patientId: number;
   patientName?: string;

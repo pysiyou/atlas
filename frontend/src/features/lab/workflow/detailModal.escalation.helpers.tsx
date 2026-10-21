@@ -3,7 +3,7 @@
  */
 
 import { Panel } from '@/components/surfaces';
-import { EntityId } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import { DetailGrid, ModalFooter } from './detailModalLayout';
 import { ResultValidationPanel } from '../validation/ResultValidationForm';
 import { CriticalValueActions } from '../criticalValues/CriticalValueActions';
@@ -123,7 +123,7 @@ export function EscalationResolutionBody({
               {
                 label: 'Sample ID',
                 value: test.sampleId ? (
-                  <EntityId type="sample" value={test.sampleId} variant="block" className="text-right" />
+                  <RecordId type="sample" value={test.sampleId} emphasis="block" className="text-right" />
                 ) : undefined,
               },
               { label: 'Collected', timestamp: test.collectedAt, user: test.collectedBy },
@@ -140,19 +140,19 @@ export function EscalationResolutionBody({
               {
                 label: 'Test ID',
                 value: test.id != null ? (
-                  <EntityId type="orderTest" value={test.id} variant="block" className="text-right" />
+                  <RecordId type="orderTest" value={test.id} emphasis="block" className="text-right" />
                 ) : undefined,
               },
               {
                 label: 'Test Code',
                 value: test.testCode ? (
-                  <EntityId variant="block" className="text-right">{test.testCode}</EntityId>
+                  <RecordId emphasis="block" className="text-right">{test.testCode}</RecordId>
                 ) : undefined,
               },
               {
                 label: 'Order ID',
                 value: test.orderId ? (
-                  <EntityId type="order" value={test.orderId} variant="block" className="text-right" />
+                  <RecordId type="order" value={test.orderId} emphasis="block" className="text-right" />
                 ) : undefined,
               },
             ],

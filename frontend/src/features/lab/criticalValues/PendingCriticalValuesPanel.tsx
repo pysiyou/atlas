@@ -6,7 +6,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Badge, Icon } from '@/components/primitives';
 import { Panel } from '@/components/surfaces';
-import { EntityId } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import { ICONS } from '@/config/icons';
 import { cn, displayId } from '@/utils';
 import { getLabQueueUrl } from '../constants/labConstants';
@@ -48,7 +48,7 @@ export const PendingCriticalValuesPanel: React.FC = () => {
             <div className="flex items-center justify-between gap-space-2">
               <div className={`flex items-center gap-space-2 ${text({ role: 'body' })}`}>
                 <Icon name={ICONS.actions.alertCircle} className={`w-4 h-4 ${TONE.danger.fg}`} />
-                <EntityId type="orderTest" value={record.id} />
+                <RecordId type="orderTest" value={record.id} />
                 {record.testName ?? record.testCode}
               </div>
               <Link

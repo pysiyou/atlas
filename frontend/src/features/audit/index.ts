@@ -22,7 +22,7 @@ export {
   BillingEventLogPanel,
   type EventLogPanelLayout,
 } from './EventLogPanel';
-export { ALL_FILTER_FIELDS, GLOBAL_EVENT_LOG_FILTER_FIELDS } from './eventLogFilterFields';
+export { GLOBAL_EVENT_LOG_FILTER_FIELDS } from './eventLogFilterFields';
 export { useEventLog } from './useEventLog';
 export { useEventLogPanelState } from './useEventLogPanelState';
 export { fetchAuditEvents, normalizeAuditEvent } from './api';
@@ -31,7 +31,7 @@ export { EventLogSearchField } from './EventLogSearchField';
 export { EVENT_LOG_KIND_OPTIONS } from './eventLogKinds';
 export {
   parseOrderDisplayId,
-  parseOrderOrTestDisplayId,
   parseOrderTestDisplayId,
-  parseEntityFilterDisplayId,
-} from './parseEntityDisplayId';
+  parseRecordFilterDisplayId,
+  type ParsedRecordIdFilter,
+} from './parseRecordDisplayId';

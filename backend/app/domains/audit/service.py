@@ -34,7 +34,7 @@ from app.domains.audit.search import (
     access_event_types_to_hide,
     apply_unified_search,
     classify_search_term,
-    format_entity_display_id,
+    format_record_display_id,
 )
 from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient
@@ -486,7 +486,7 @@ class AuditEventQueryService:
                 AuditSearchPreviewPatient(
                     id=row.id,
                     fullName=row.fullName,
-                    displayId=format_entity_display_id("PAT", row.id),
+                    displayId=format_record_display_id("PAT", row.id),
                 )
                 for row in patient_rows
             ]

@@ -3,8 +3,8 @@
  */
 
 import React from 'react';
-import { EntityId } from '@/components/display';
-import { IdentityInline, type IdentitySegment } from '@/components/layout';
+import { RecordId } from '@/features/shared/components';
+import { InlineSegments, type InlineSegment } from '@/components/layout';
 import { formatDate } from '@/utils';
 
 export interface LabIdentityContext {
@@ -34,7 +34,7 @@ export const LabIdentityRow: React.FC<LabIdentityRowProps> = ({
   const hideMd = compact ? ('md' as const) : undefined;
   const hideLg = compact ? ('lg' as const) : undefined;
 
-  const segments: IdentitySegment[] = [];
+  const segments: InlineSegment[] = [];
 
   if (context.patientName) {
     segments.push({
@@ -59,14 +59,14 @@ export const LabIdentityRow: React.FC<LabIdentityRowProps> = ({
   segments.push({
     kind: 'node',
     key: 'ord',
-    node: <EntityId type="order" value={context.orderId} className={idClass} />,
+    node: <RecordId type="order" value={context.orderId} className={idClass} />,
   });
 
   if (context.orderTestId != null) {
     segments.push({
       kind: 'node',
       key: 'tst',
-      node: <EntityId type="orderTest" value={context.orderTestId} className={idClass} />,
+      node: <RecordId type="orderTest" value={context.orderTestId} className={idClass} />,
       hideBelow: hideMd,
     });
   }
@@ -74,7 +74,7 @@ export const LabIdentityRow: React.FC<LabIdentityRowProps> = ({
     segments.push({
       kind: 'node',
       key: 'sam',
-      node: <EntityId type="sample" value={context.sampleId} className={idClass} />,
+      node: <RecordId type="sample" value={context.sampleId} className={idClass} />,
       hideBelow: hideMd,
     });
   }
@@ -82,7 +82,7 @@ export const LabIdentityRow: React.FC<LabIdentityRowProps> = ({
     segments.push({
       kind: 'node',
       key: 'code',
-      node: <EntityId className={idClass}>{context.entityCode}</EntityId>,
+      node: <RecordId className={idClass}>{context.entityCode}</RecordId>,
       hideBelow: context.entityName ? hideLg : hideMd,
     });
   }
@@ -106,7 +106,7 @@ export const LabIdentityRow: React.FC<LabIdentityRowProps> = ({
   }
 
   return (
-    <IdentityInline
+    <InlineSegments
       className={className}
       nowrap={compact}
       segments={segments}

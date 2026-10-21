@@ -4,7 +4,7 @@
 import React from 'react';
 import { text } from '@/theme/recipes';
 import { Alert } from '@/components/display';
-import { SpinnerLoader } from '@/components/loaders';
+import { SpinnerLoader } from '@/components/feedback';
 import { CatalogRejectionCriteriaFields } from './CatalogRejectionCriteriaFields';
 import { useQualityIssueOptions } from '../api/qualityIssues';
 import type { QualityIssueOptions, QualityIssueTargetType, RemedyType } from '@/types/lab-operations';

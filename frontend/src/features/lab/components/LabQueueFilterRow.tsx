@@ -3,7 +3,7 @@
  */
 
 import type { ReactNode } from 'react';
-import { EntityUrlFilterBar } from '@/components/filters';
+import { UrlFilterChipBar } from '@/components/filters';
 import type { UrlFilterKey, UrlFilters } from '@/utils/filters';
 import type { WorklistPagination } from '../api/worklists';
 import { LabWorklistPaginationNotice } from './LabWorklistPaginationNotice';
@@ -33,7 +33,7 @@ export function LabQueueFilterRow<K extends UrlFilterKey = (typeof LAB_URL_FILTE
 }: LabQueueFilterRowProps<K>) {
   return (
     <>
-      <EntityUrlFilterBar
+      <UrlFilterChipBar
         urlFilters={urlFilters}
         urlFilterKeys={urlFilterKeys}
         onClear={onClearUrlFilters}

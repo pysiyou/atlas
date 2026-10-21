@@ -4,7 +4,8 @@
 
 import React, { useState } from 'react';
 import { actionButtonPreset, Button } from '@/components/primitives';
-import { Alert, EntityId } from '@/components/display';
+import { Alert } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import { formatDateTime } from '@/utils';
 import { useAuthStore } from '@/app/authStore';
 import { notify } from '@/utils/feedback';
@@ -78,10 +79,10 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
   return (
     <div className={compact ? 'space-y-space-2' : 'space-y-space-3'}>
       <div className={`flex flex-wrap items-center gap-space-2 ${text({ role: 'body' })}`}>
-        <EntityId type="orderTest" value={record.id} />
+        <RecordId type="orderTest" value={record.id} />
         <span className={TONE.danger.fg}>{record.testCode}</span>
         <span className={FG.labelMuted}>{record.patientName}</span>
-        <EntityId type="order" value={record.orderId} variant="secondaryBlock" />
+        <RecordId type="order" value={record.orderId} emphasis="mutedBlock" />
       </div>
 
       {record.flags && record.flags.length > 0 && (

@@ -7,8 +7,8 @@ import React from 'react';
 import type { Patient } from '@/types';
 import { FormDialogFooter, Modal, ModalPageShell } from '@/components/overlays';
 import { FooterInfo } from '@/components/display';
-import { PanelHeaderSegmentTabs } from '@/components/display/PanelHeaderSegmentTabs';
-import { ErrorBoundary } from '@/components/loaders';
+import { SegmentedControl } from '@/components/inputs/SegmentedControl';
+import { ErrorBoundary } from '@/components/feedback';
 import { MODULE_ICONS } from '@/config/icons';
 import { useEditPatientForm } from '../hooks/useEditPatientForm';
 import { PatientFormTabs } from './PatientFormTabs';
@@ -28,10 +28,10 @@ interface TabNavigationProps {
 
 const TabNavigation: React.FC<TabNavigationProps> = ({ tabs, activeTab, onTabChange }) => (
   <div className="flex items-center justify-start mb-space-6">
-    <PanelHeaderSegmentTabs
-      tabs={tabs.map(tab => ({ id: tab.id, label: tab.label }))}
+    <SegmentedControl
+      options={tabs.map(tab => ({ id: tab.id, label: tab.label }))}
       activeId={activeTab}
-      onTabChange={onTabChange}
+      onActiveIdChange={onTabChange}
     />
   </div>
 );
@@ -43,7 +43,6 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
   mode,
 }) => {
   const {
-    register,
     handleSubmit,
     control,
     errors,
@@ -54,7 +53,6 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
     modalTitle,
     subtitle,
     submitLabel,
-    watch,
     setValue,
   } = useEditPatientForm({ patient, mode, onClose });
 
@@ -82,13 +80,10 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
             <TabNavigation tabs={[...tabs]} activeTab={activeTab} onTabChange={setActiveTab} />
             <PatientFormTabs
               activeTab={activeTab}
-              register={register}
               control={control}
               errors={errors}
-              existingAffiliation={patient?.affiliation}
-              existingVitalSigns={patient?.vitalSigns}
-              watch={watch}
               setValue={setValue}
+              existingAffiliation={patient?.affiliation}
             />
           </form>
         </ModalPageShell>

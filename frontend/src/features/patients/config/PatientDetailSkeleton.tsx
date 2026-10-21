@@ -6,8 +6,8 @@
 import { Panel } from '@/components/surfaces';
 import { LAYOUT } from '@/theme/recipes';
 import { cn } from '@/utils';
-import { SkeletonInfoSection, SkeletonTableRow } from '@/components/loaders/Skeleton';
-import type { DetailSkeletonSection } from '@/components/loaders/DetailPageSkeleton';
+import { SkeletonInfoSection, SkeletonTableRow } from '@/components/feedback/Skeleton';
+import type { DetailSkeletonSection } from '@/components/feedback/DetailPageSkeleton';
 
 export const PATIENT_DETAIL_SKELETON_SECTIONS: DetailSkeletonSection[] = [
   { preset: 'panel.page.visible.shrink', title: 'General Info', rows: 6, layout: 'grid' },

@@ -4,7 +4,8 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { EmptyState, EMPTY_COPY, EntityId, PANEL_EMPTY_STATE } from '@/components/display';
+import { EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import { Panel } from '@/components/surfaces';
 import { OrderStatusBadge } from '@/features/orders';
 import { ROUTES } from '@/config';
@@ -40,7 +41,7 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
                 {order.patientName || '—'}
               </p>
               <p className={text({ role: 'body', intent: 'muted' })}>
-                <EntityId type="order" value={order.orderId} /> •{' '}
+                <RecordId type="order" value={order.orderId} /> •{' '}
                 {order.testCount ?? order.tests?.length ?? 0} test(s)
               </p>
             </div>

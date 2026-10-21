@@ -4,7 +4,7 @@
  */
 
 import type { ReactNode } from 'react';
-import { EntityId, type EntityIdProps } from '@/components/display/EntityId';
+import { RecordId, type RecordIdProps } from '@/features/shared/components/RecordId';
 import { Text } from '@/components/layout/Text';
 import { PRESENTATION_STACK_CLASS } from '@/theme/recipes';
 import { cn } from '@/utils/cn';
@@ -44,8 +44,8 @@ export function renderStackedIdentity(
 }
 
 /** PAT/ORD/SAM/TST sub-line under a primary label (left-aligned, secondary entity color). */
-export function renderTableSecondaryEntityId(
-  props: Omit<EntityIdProps, 'variant'>,
+export function renderTableSecondaryRecordId(
+  props: Omit<RecordIdProps, 'emphasis'>,
 ): ReactNode {
-  return <EntityId {...props} variant="secondaryBlock" />;
+  return <RecordId {...props} emphasis="mutedBlock" />;
 }

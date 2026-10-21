@@ -9,9 +9,9 @@ import {
   SampleTypeBadge,
 } from './LabDomainBadges';
 import {
-  StatusPresentationCompactBadge,
-  StatusPresentationStack,
-} from '@/components/display/StatusPresentationBadge';
+  LabPresentationCompactBadge,
+  LabPresentationStack,
+} from '@/features/lab/components/LabPresentationBadge';
 import { useLabHeaderCompact } from './LabWorkflowHeader';
 import type { StatusPresentation } from '@/types/labProjection';
 import { LabCardMetaRow, LabModalMetaRow } from './LabCardMetaRow';
@@ -44,9 +44,9 @@ export const CollectionHeaderBadges = React.memo(({
       <SampleTypeBadge sampleType={sample.sampleType} size={size} />
       {statusPresentation ? (
         compact ? (
-          <StatusPresentationCompactBadge presentation={statusPresentation} size={size} />
+          <LabPresentationCompactBadge presentation={statusPresentation} size={size} />
         ) : (
-          <StatusPresentationStack presentation={statusPresentation} size={size} />
+          <LabPresentationStack presentation={statusPresentation} size={size} />
         )
       ) : (
         <SampleStatusBadge

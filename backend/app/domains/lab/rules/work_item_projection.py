@@ -292,11 +292,6 @@ def attention_label_for_reason(reason: str | None) -> str | None:
     return _attention_label(reason)
 
 
-def blocked_label_for_reason(reason: str | None) -> str | None:
-    """Backward-compatible alias."""
-    return attention_label_for_reason(reason)
-
-
 def attention_reason_for_monitor_row(
     stage: MonitorAttentionStage,
     *,
@@ -325,16 +320,8 @@ def attention_reason_for_monitor_row(
     return attention
 
 
-def blocked_reason_for_monitor_row(
-    stage: MonitorAttentionStage,
-    **kwargs: Any,
-) -> str | None:
-    """Backward-compatible alias."""
-    return attention_reason_for_monitor_row(stage, **kwargs)
-
-
 def projection_to_worklist_fields(projection: LabWorkItemProjection) -> dict[str, Any]:
-    """Flatten projection for legacy worklist dict builders."""
+    """Flatten projection for worklist dict builders."""
     presentation = None
     if projection.statusPresentation is not None:
         presentation = projection.statusPresentation.model_dump()

@@ -6,7 +6,7 @@
 import React from 'react';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Alert } from '@/components/display';
-import { Skeleton } from '@/components/loaders';
+import { Skeleton } from '@/components/feedback';
 import { DialogHeader, DialogFooter } from '@/components/overlays';
 import { RadioCard } from '@/components/overlays';
 import { AttemptProgressBar } from './LabAttemptIndicators';

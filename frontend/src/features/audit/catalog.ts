@@ -210,44 +210,44 @@ export function formatOrderStatusLabel(raw: string | undefined): string {
 
 // --- headlinePhrasing.ts ---
 
-export function entityPhrase(label: string, idText: string): EventLogHeadlinePart {
+function recordPhrase(label: string, idText: string): EventLogHeadlinePart {
   return mainPart(`${label}${idText}`);
 }
 
-export function patientEntityPhrase(
+export function patientRecordPhrase(
   patientId: number,
   context: EventLogHeadlineContext,
   label = 'patient '
 ): EventLogHeadlinePart {
-  return entityPhrase(label, context.getPatientName(patientId));
+  return recordPhrase(label, context.getPatientName(patientId));
 }
 
-export function orderEntityPhrase(orderId: number, label = 'order '): EventLogHeadlinePart {
-  return entityPhrase(label, eventLogId.order(orderId));
+export function orderRecordPhrase(orderId: number, label = 'order '): EventLogHeadlinePart {
+  return recordPhrase(label, eventLogId.order(orderId));
 }
 
-export function sampleEntityPhrase(sampleId: number, label = 'sample '): EventLogHeadlinePart {
-  return entityPhrase(label, eventLogId.sample(sampleId));
+export function sampleRecordPhrase(sampleId: number, label = 'sample '): EventLogHeadlinePart {
+  return recordPhrase(label, eventLogId.sample(sampleId));
 }
 
-export function orderTestEntityPhrase(orderTestId: number, label = 'test '): EventLogHeadlinePart {
-  return entityPhrase(label, eventLogId.orderTest(orderTestId));
+export function orderTestRecordPhrase(orderTestId: number, label = 'test '): EventLogHeadlinePart {
+  return recordPhrase(label, eventLogId.orderTest(orderTestId));
 }
 
-export function paymentEntityPhrase(paymentId: number): EventLogHeadlinePart {
-  return entityPhrase('Payment ', eventLogId.payment(paymentId));
+export function paymentRecordPhrase(paymentId: number): EventLogHeadlinePart {
+  return recordPhrase('Payment ', eventLogId.payment(paymentId));
 }
 
-export function invoiceEntityPhrase(invoiceId: number): EventLogHeadlinePart {
-  return entityPhrase('Invoice ', eventLogId.invoice(invoiceId));
+export function invoiceRecordPhrase(invoiceId: number): EventLogHeadlinePart {
+  return recordPhrase('Invoice ', eventLogId.invoice(invoiceId));
 }
 
-export function insuranceClaimEntityPhrase(claimId: number): EventLogHeadlinePart {
-  return entityPhrase('Insurance claim ', withHashPrefix(String(claimId)));
+export function insuranceClaimRecordPhrase(claimId: number): EventLogHeadlinePart {
+  return recordPhrase('Insurance claim ', withHashPrefix(String(claimId)));
 }
 
-export function userAccountEntityPhrase(userId: number): EventLogHeadlinePart {
-  return entityPhrase('User account ', eventLogId.user(userId));
+export function userAccountRecordPhrase(userId: number): EventLogHeadlinePart {
+  return recordPhrase('User account ', eventLogId.user(userId));
 }
 
 export function highlightedTestListPart(
@@ -283,16 +283,16 @@ export function targetPatient(
   context: EventLogHeadlineContext,
   label = 'patient '
 ): EventLogHeadlinePart {
-  return patientEntityPhrase(record.targetId, context, label);
+  return patientRecordPhrase(record.targetId, context, label);
 }
 
 export function targetOrder(record: EventLogRecord, label = 'order '): EventLogHeadlinePart {
   const id = record.orderId ?? record.targetId;
-  return orderEntityPhrase(id, label);
+  return orderRecordPhrase(id, label);
 }
 
 export function targetSample(record: EventLogRecord, label = 'sample '): EventLogHeadlinePart {
-  return sampleEntityPhrase(record.targetId, label);
+  return sampleRecordPhrase(record.targetId, label);
 }
 
 function metaNumber(record: EventLogRecord, key: string): number | undefined {
@@ -329,7 +329,7 @@ export function targetPatientFromContext(
 ): EventLogHeadlinePart | null {
   const patientId = resolvePatientId(record);
   if (patientId == null) return null;
-  return patientEntityPhrase(patientId, context);
+  return patientRecordPhrase(patientId, context);
 }
 
 function partsText(parts: EventLogHeadlinePart[]): string {
@@ -347,7 +347,7 @@ export function appendForOrderPhrase(
   const orderId = resolveOrderId(record);
   if (!orderId || includesDisplayId(parts, eventLogId.order(orderId))) return parts;
   const next = appendText(parts, ' for ');
-  return append(next, orderEntityPhrase(orderId));
+  return append(next, orderRecordPhrase(orderId));
 }
 
 export function appendUnderOrderPhrase(
@@ -357,7 +357,7 @@ export function appendUnderOrderPhrase(
   const orderId = resolveOrderId(record);
   if (!orderId || includesDisplayId(parts, eventLogId.order(orderId))) return parts;
   const next = appendText(parts, ' under ');
-  return append(next, orderEntityPhrase(orderId));
+  return append(next, orderRecordPhrase(orderId));
 }
 
 export function targetOrderTestRef(
@@ -370,7 +370,7 @@ export function targetOrderTestRef(
   }
   const testId = resolveOrderTestId(record);
   const id = testId ?? record.targetId;
-  return [orderTestEntityPhrase(id, 'Test ')];
+  return [orderTestRecordPhrase(id, 'Test ')];
 }
 
 export function testUnderOrderWithTrailing(
@@ -505,7 +505,7 @@ export const EVENT_HEADLINE_BUILDERS: Record<
     const statusLabel = formatOrderStatusLabel(changeNew(r, 'status'));
     const orderId = resolveOrderId(r);
     let parts = appendText([], 'Status for ');
-    if (orderId) parts = append(parts, orderEntityPhrase(orderId));
+    if (orderId) parts = append(parts, orderRecordPhrase(orderId));
     parts = appendText(parts, ' updated to ');
     return append(parts, mainPart(statusLabel));
   },
@@ -513,14 +513,14 @@ export const EVENT_HEADLINE_BUILDERS: Record<
     let parts = append([], ...targetOrderTestRef(r, c));
     parts = appendText(parts, ' added to ');
     const orderId = resolveOrderId(r);
-    if (orderId) parts = append(parts, orderEntityPhrase(orderId));
+    if (orderId) parts = append(parts, orderRecordPhrase(orderId));
     return parts;
   },
   'order.test.remove': (r, c) => {
     let parts = append([], ...targetOrderTestRef(r, c));
     parts = appendText(parts, ' removed from ');
     const orderId = resolveOrderId(r);
-    if (orderId) parts = append(parts, orderEntityPhrase(orderId));
+    if (orderId) parts = append(parts, orderRecordPhrase(orderId));
     return parts;
   },
   'order.test.cancel': (r, c) =>
@@ -532,7 +532,7 @@ export const EVENT_HEADLINE_BUILDERS: Record<
     parts = append(parts, testHighlightFromMetaKey(r, 'added_test_code', c) ?? mainPart('—'));
     parts = appendText(parts, ' added to ');
     const orderId = resolveOrderId(r);
-    if (orderId) parts = append(parts, orderEntityPhrase(orderId));
+    if (orderId) parts = append(parts, orderRecordPhrase(orderId));
     parts = appendText(parts, ' (triggered by ');
     const trigger = testHighlightFromMetaKey(r, 'triggered_by', c) ?? mainPart('test —');
     parts = append(parts, trigger);
@@ -563,7 +563,7 @@ export const EVENT_HEADLINE_BUILDERS: Record<
     const orderTestId = resolveOrderTestId(r);
     if (orderTestId) {
       parts = appendText(parts, ' belonging to ');
-      parts = append(parts, orderTestEntityPhrase(orderTestId));
+      parts = append(parts, orderTestRecordPhrase(orderTestId));
     }
     parts = appendUnderOrderPhrase(parts, r);
     parts = appendText(parts, ' rejected');
@@ -614,20 +614,20 @@ export const EVENT_HEADLINE_BUILDERS: Record<
       metaString(r, 'resolution') ?? ''
     ),
   'billing.payment.process': r => {
-    const parts = appendText(append([], paymentEntityPhrase(r.targetId)), ' recorded');
+    const parts = appendText(append([], paymentRecordPhrase(r.targetId)), ' recorded');
     return appendForOrderPhrase(parts, r);
   },
   'billing.invoice.generate': r => {
-    const parts = appendText(append([], invoiceEntityPhrase(r.targetId)), ' generated');
+    const parts = appendText(append([], invoiceRecordPhrase(r.targetId)), ' generated');
     return appendForOrderPhrase(parts, r);
   },
   'billing.invoice.void': r => {
-    let parts = appendText(append([], invoiceEntityPhrase(r.targetId)), ' voided');
+    let parts = appendText(append([], invoiceRecordPhrase(r.targetId)), ' voided');
     parts = appendForOrderPhrase(parts, r);
     return appendClause(parts, metaString(r, 'reason') ?? '');
   },
   'billing.insurance.submit': r => {
-    const parts = appendText(append([], insuranceClaimEntityPhrase(r.targetId)), ' submitted');
+    const parts = appendText(append([], insuranceClaimRecordPhrase(r.targetId)), ' submitted');
     return appendForOrderPhrase(parts, r);
   },
   'reporting.generate': r => {
@@ -647,9 +647,9 @@ export const EVENT_HEADLINE_BUILDERS: Record<
   'system.user.login': () => appendText([], 'signed in'),
   'system.user.logout': () => appendText([], 'signed out'),
   'system.user.create': r =>
-    appendText(append([], userAccountEntityPhrase(r.targetId)), ' created'),
+    appendText(append([], userAccountRecordPhrase(r.targetId)), ' created'),
   'system.user.update': r =>
-    appendText(append([], userAccountEntityPhrase(r.targetId)), ' updated'),
+    appendText(append([], userAccountRecordPhrase(r.targetId)), ' updated'),
   'system.catalog.create': (r, c) => {
     const highlight = testHighlightFromMetaKey(r, 'test_code', c);
     const parts: EventLogHeadlinePart[] = highlight
@@ -685,7 +685,7 @@ export function buildFallbackHeadline(
     case 'order_test':
       return append(parts, ...targetOrderTestRef(record, context));
     case 'user':
-      return append(parts, userAccountEntityPhrase(record.targetId));
+      return append(parts, userAccountRecordPhrase(record.targetId));
     case 'test_catalog': {
       const catalogHighlight = testHighlightFromMetaKey(record, 'test_code', context);
       return append(

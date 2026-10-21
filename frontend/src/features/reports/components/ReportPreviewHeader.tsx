@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { formatDateTime } from '@/utils';
-import { EntityId } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import { companyConfig } from '@/config';
 import type { LabReportPayload } from '../types';
 import {text, FORM_TAB_TITLE, PREVIEW_HEADER_TYPE, FG } from '@/theme/recipes';
@@ -78,7 +78,7 @@ export const ReportPreviewHeader: React.FC<ReportPreviewHeaderProps> = ({
           {reportData.testResults.length > 0 ? (
             <>
               {reportData.testResults.map(t => t.testName).join(', ')} Results ({' '}
-              <EntityId>{reportData.testResults.map(t => t.testCode).join(', ')}</EntityId>{' '}
+              <RecordId>{reportData.testResults.map(t => t.testCode).join(', ')}</RecordId>{' '}
               )
             </>
           ) : (

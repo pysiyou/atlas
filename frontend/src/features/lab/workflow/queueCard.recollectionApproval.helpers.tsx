@@ -5,7 +5,7 @@
 import { type ReactNode } from 'react';
 import { text, RADIUS } from '@/theme/recipes';
 import { actionButtonPreset, Badge, Button } from '@/components/primitives';
-import { EntityId } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import { cn, formatDateTime } from '@/utils';
 import { compactAuditLines } from '../constants/labWorkflowAuditLines';
 import { LabAuditBlock } from '../components/LabWorkflowHeader.parts';
@@ -51,19 +51,19 @@ export function RecollectionRequestCardLeftColumn({ request }: { request: Recoll
   );
   line1.push(<InlineDot key="dot-sam" />);
   line1.push(
-    <EntityId key="sam" type="sample" value={request.rejectedSampleId} className="whitespace-nowrap" />
+    <RecordId key="sam" type="sample" value={request.rejectedSampleId} className="whitespace-nowrap" />
   );
 
   const line2: ReactNode[] = [];
   line2.push(
-    <EntityId key="ord" type="order" value={request.orderId} variant="headerSecondary" className="whitespace-nowrap" />
+    <RecordId key="ord" type="order" value={request.orderId} emphasis="headerMuted" className="whitespace-nowrap" />
   );
   if (testCodesLabel) {
     line2.push(<InlineDot key="dot-code" />);
     line2.push(
-      <EntityId key="code" variant="headerSecondary" className="whitespace-nowrap">
+      <RecordId key="code" emphasis="headerMuted" className="whitespace-nowrap">
         {testCodesLabel}
-      </EntityId>
+      </RecordId>
     );
   }
 

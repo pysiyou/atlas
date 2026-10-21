@@ -6,11 +6,11 @@
 import React, { useMemo, useState } from 'react';
 import { Panel } from '@/components/surfaces';
 import { useUserLookup } from '@/lib/api/users';
-import { OrderTestDetailFieldGrid } from '../utils/orderTestDetailFieldColumns';
-import { splitDetailFieldsIntoTwoColumns } from '../utils/orderTestDetailFieldLayout';
+import { OrderTestDescriptionItemGrid } from '../utils/orderTestDescriptionColumns';
+import { splitDescriptionItemsIntoTwoColumns } from '../utils/orderTestDescriptionLayout';
 import type { Sample, Test } from '@/types';
 import { buildSampleFields } from '../utils/buildSampleFields';
-import { PanelHeaderSegmentTabs } from '@/components/display/PanelHeaderSegmentTabs';
+import { SegmentedControl } from '@/components/inputs/SegmentedControl';
 import { text, INLINE_LINK_BUTTON } from '@/theme/recipes';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { displayId } from '@/utils';
@@ -76,10 +76,10 @@ export const OrderTestSampleTabs: React.FC<OrderTestSampleTabsProps> = ({
   const headerEnd =
     samples.length > 1
       ? (
-          <PanelHeaderSegmentTabs
-            tabs={segmentTabs}
+          <SegmentedControl
+            options={segmentTabs}
             activeId={resolvedActiveTabId}
-            onTabChange={setActiveTabId}
+            onActiveIdChange={setActiveTabId}
           />
         )
       : undefined;
@@ -98,8 +98,8 @@ export const OrderTestSampleTabs: React.FC<OrderTestSampleTabsProps> = ({
 
   return (
     <Panel preset="panel.compact.standard" title="Collection Requirements & Instructions" headerEnd={headerEnd}>
-      <OrderTestDetailFieldGrid
-        columns={splitDetailFieldsIntoTwoColumns(buildSampleFields(activeSample))}
+      <OrderTestDescriptionItemGrid
+        columns={splitDescriptionItemsIntoTwoColumns(buildSampleFields(activeSample))}
         resolveUserDisplay={getUserName}
       />
       <button

@@ -1,8 +1,8 @@
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { actionButtonPreset, Avatar, IconButton } from '@/components/primitives';
 import { CardFooter, MetadataGrid, MetadataItem, Stack } from '@/components/layout';
-import { MobileEntityCard } from '@/components/surfaces';
-import { EntityId } from '@/components/display';
+import { ListCard } from '@/components/surfaces';
+import { RecordId } from '@/features/shared/components';
 import { PatientGenderBadge } from './PatientGenderBadge';
 import type { CardComponentProps } from '@/components/data-table';
 import { calculateAge, formatPhoneNumber } from '@/utils';
@@ -23,14 +23,14 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
   };
 
   return (
-    <MobileEntityCard onClick={onClick}>
-      <MobileEntityCard.Header
+    <ListCard onPress={onClick}>
+      <ListCard.Header
         leading={
           <Avatar
             primaryText={patient.fullName}
             primaryTextClassName=""
             secondarySlot="entity"
-            secondaryText={<EntityId type="patient" value={patient.id} variant="secondaryBlock" />}
+            secondaryText={<RecordId type="patient" value={patient.id} emphasis="mutedBlock" />}
             size="xs"
           />
         }
@@ -48,6 +48,6 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
       <CardFooter align="end">
         <IconButton {...actionButtonPreset('add')} size="sm" title="Add Order" onClick={handleAddOrder} />
       </CardFooter>
-    </MobileEntityCard>
+    </ListCard>
   );
 }

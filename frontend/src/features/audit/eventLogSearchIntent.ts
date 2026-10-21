@@ -1,15 +1,15 @@
 /**
  * Client-side mirror of backend classify_search_term — keep in sync with audit/search.py.
  */
-import { parseEntityFilterDisplayId } from './parseEntityDisplayId';
+import { parseRecordFilterDisplayId } from './parseRecordDisplayId';
 import { formatDisplayId } from '@/utils/id';
 
 export type EventLogSearchIntentMode =
   | 'empty'
-  | 'entity_order'
-  | 'entity_test'
-  | 'entity_sample'
-  | 'entity_patient'
+  | 'record_order'
+  | 'record_test'
+  | 'record_sample'
+  | 'record_patient'
   | 'numeric'
   | 'text';
 
@@ -57,10 +57,10 @@ export function classifyEventLogSearchIntent(term: string): EventLogSearchIntent
     };
   }
 
-  const parsed = parseEntityFilterDisplayId(trimmed);
+  const parsed = parseRecordFilterDisplayId(trimmed);
   if (parsed.kind === 'test') {
     return {
-      mode: 'entity_test',
+      mode: 'record_test',
       textTerm: null,
       dimensions: [],
       parsedIds: { testId: parsed.testId },
@@ -69,7 +69,7 @@ export function classifyEventLogSearchIntent(term: string): EventLogSearchIntent
   }
   if (parsed.kind === 'order') {
     return {
-      mode: 'entity_order',
+      mode: 'record_order',
       textTerm: null,
       dimensions: [],
       parsedIds: { orderId: parsed.orderId },
@@ -78,7 +78,7 @@ export function classifyEventLogSearchIntent(term: string): EventLogSearchIntent
   }
   if (parsed.kind === 'sample') {
     return {
-      mode: 'entity_sample',
+      mode: 'record_sample',
       textTerm: null,
       dimensions: [],
       parsedIds: { sampleId: parsed.sampleId },
@@ -87,7 +87,7 @@ export function classifyEventLogSearchIntent(term: string): EventLogSearchIntent
   }
   if (parsed.kind === 'patient') {
     return {
-      mode: 'entity_patient',
+      mode: 'record_patient',
       textTerm: null,
       dimensions: [],
       parsedIds: { patientId: parsed.patientId },

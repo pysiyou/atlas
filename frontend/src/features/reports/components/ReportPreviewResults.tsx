@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { Panel } from '@/components/surfaces';
-import { EntityId } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import {
   ResultValidationNotesSection,
   ResultValidationResultsBody,
@@ -71,7 +71,7 @@ export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ repo
             headerStart={
               <span className="flex min-w-0 items-baseline gap-space-2">
                 <span className="truncate">{test.testName}</span>
-                <EntityId variant="secondaryBlock">{test.testCode}</EntityId>
+                <RecordId emphasis="mutedBlock">{test.testCode}</RecordId>
               </span>
             }
             footer={

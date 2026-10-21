@@ -18,7 +18,7 @@ export type { PaymentStatus } from '@/types/enums';
 export type { ResultStatus } from '@/types/enums';
 export type { ValidationDecision } from '@/types/enums';
 
-// Re-export the VALUES arrays for backwards compatibility
+// Re-export enum value arrays
 export { ORDER_STATUS_VALUES } from '@/types/enums';
 export { PAYMENT_STATUS_VALUES } from '@/types/enums';
 

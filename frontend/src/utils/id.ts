@@ -36,7 +36,7 @@ export const displayId = {
   audit: (id: number | null | undefined) => formatDisplayId('audit', id),
 };
 
-function stripEntityPrefix(raw: string, prefix: string): string {
+function stripDisplayIdPrefix(raw: string, prefix: string): string {
   const upper = raw.trim().toUpperCase();
   if (upper.startsWith(prefix)) {
     return upper.slice(prefix.length);
@@ -44,7 +44,7 @@ function stripEntityPrefix(raw: string, prefix: string): string {
   return upper;
 }
 
-function parsePaddedEntityDigits(digits: string): number | null {
+function parsePaddedDisplayDigits(digits: string): number | null {
   const trimmed = digits.trim();
   if (!trimmed) return null;
   const n = Number.parseInt(trimmed, 10);
@@ -53,9 +53,9 @@ function parsePaddedEntityDigits(digits: string): number | null {
 }
 
 /** Parse ORD/TST/PAT-style display tokens (prefix optional) into a numeric id. */
-export function parseEntityDisplayId(entityType: EntityType, input: string): number | null {
+export function parseDisplayId(entityType: EntityType, input: string): number | null {
   const prefix = ID_PREFIXES[entityType];
-  const body = stripEntityPrefix(input, prefix);
-  return parsePaddedEntityDigits(body);
+  const body = stripDisplayIdPrefix(input, prefix);
+  return parsePaddedDisplayDigits(body);
 }
 

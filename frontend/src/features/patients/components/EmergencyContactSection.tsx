@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useController } from 'react-hook-form';
 import { Input } from '@/components/inputs';
 import { MultiSelectFilter } from '@/components/overlays';
 import type { FilterOption } from '@/components/overlays';
@@ -7,40 +8,37 @@ import { ICONS } from '@/config/icons';
 import { FORM_FIELD_LABEL } from '@/theme/recipes';
 import { FIELD_ERROR, TONE } from '@/theme/recipes';
 import type { PatientFormSectionProps } from '../patientFormTypes';
+import { patientFieldError } from '../patientFormFieldError';
 
-export const EmergencyContactSection: React.FC<
-  Pick<PatientFormSectionProps, 'formData' | 'errors' | 'onFieldChange'>
-> = ({ formData, errors, onFieldChange }) => {
-  // Convert relationship options to FilterOption format with badge variants
-  // Use relationship values directly as Badge variants (defined in Badge component)
+export const EmergencyContactSection: React.FC<PatientFormSectionProps> = ({ control, errors }) => {
+  const { field: fullName } = useController({ control, name: 'emergencyContact.fullName' });
+  const { field: relationship } = useController({ control, name: 'emergencyContact.relationship' });
+  const { field: phone } = useController({ control, name: 'emergencyContact.phone' });
+  const { field: email } = useController({ control, name: 'emergencyContact.email' });
+
   const relationshipOptions: FilterOption[] = useMemo(
     () =>
       RELATIONSHIP_VALUES.map(value => ({
         id: value,
         label: RELATIONSHIP_CONFIG[value].label,
-        color: value, // Use relationship value as Badge variant
+        color: value,
       })),
-    []
+    [],
   );
 
-  // Convert single value to array for MultiSelectFilter (single-select mode)
   const selectedRelationship = useMemo(
-    () => (formData.emergencyContactRelationship ? [formData.emergencyContactRelationship] : []),
-    [formData.emergencyContactRelationship]
+    () => (relationship.value ? [relationship.value] : []),
+    [relationship.value],
   );
 
-  // Handle relationship change (single-select: only allow one selection)
   const handleRelationshipChange = (selectedIds: string[]) => {
     if (selectedIds.length === 0) {
-      // Clear button clicked: actually clear the selection (show placeholder)
-      onFieldChange('emergencyContactRelationship', undefined);
-    } else {
-      // Use the most recently selected item (last in array)
-      // Type guard to ensure valid Relationship value
-      const lastId = selectedIds[selectedIds.length - 1];
-      if (RELATIONSHIP_VALUES.includes(lastId as Relationship)) {
-        onFieldChange('emergencyContactRelationship', lastId as Relationship);
-      }
+      relationship.onChange(undefined);
+      return;
+    }
+    const lastId = selectedIds[selectedIds.length - 1];
+    if (RELATIONSHIP_VALUES.includes(lastId as Relationship)) {
+      relationship.onChange(lastId as Relationship);
     }
   };
 
@@ -51,11 +49,9 @@ export const EmergencyContactSection: React.FC<
           inferIcon
           label="Contact Full Name"
           name="emergencyContactFullName"
-          value={formData.emergencyContactFullName}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            onFieldChange('emergencyContactFullName', e.target.value)
-          }
-          error={errors.emergencyContactFullName}
+          value={fullName.value ?? ''}
+          onChange={fullName.onChange}
+          error={patientFieldError(errors, 'emergencyContact.fullName')}
           required
           placeholder="Jane Doe"
         />
@@ -74,8 +70,10 @@ export const EmergencyContactSection: React.FC<
             icon={ICONS.ui.link}
             className="w-full"
           />
-          {errors.emergencyContactRelationship && (
-            <p className={`mt-space-1 ${FIELD_ERROR}`}>{errors.emergencyContactRelationship}</p>
+          {patientFieldError(errors, 'emergencyContact.relationship') && (
+            <p className={`mt-space-1 ${FIELD_ERROR}`}>
+              {patientFieldError(errors, 'emergencyContact.relationship')}
+            </p>
           )}
         </div>
         <Input
@@ -83,11 +81,9 @@ export const EmergencyContactSection: React.FC<
           label="Contact Phone"
           name="emergencyContactPhone"
           type="tel"
-          value={formData.emergencyContactPhone}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            onFieldChange('emergencyContactPhone', e.target.value)
-          }
-          error={errors.emergencyContactPhone}
+          value={phone.value ?? ''}
+          onChange={phone.onChange}
+          error={patientFieldError(errors, 'emergencyContact.phone')}
           required
           placeholder="(555) 987-6543"
         />
@@ -96,11 +92,9 @@ export const EmergencyContactSection: React.FC<
           label="Contact Email"
           name="emergencyContactEmail"
           type="email"
-          value={formData.emergencyContactEmail}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            onFieldChange('emergencyContactEmail', e.target.value)
-          }
-          error={errors.emergencyContactEmail}
+          value={email.value ?? ''}
+          onChange={email.onChange}
+          error={patientFieldError(errors, 'emergencyContact.email')}
           placeholder="contact@email.com"
         />
       </div>

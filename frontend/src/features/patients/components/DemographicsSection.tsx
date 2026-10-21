@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useController } from 'react-hook-form';
 import { Input, DateInput } from '@/components/inputs';
 import { MultiSelectFilter } from '@/components/overlays';
 import type { FilterOption } from '@/components/overlays';
@@ -8,35 +9,32 @@ import { ICONS } from '@/config/icons';
 import { FORM_FIELD_LABEL } from '@/theme/recipes';
 import { FIELD_ERROR, TONE } from '@/theme/recipes';
 import type { PatientFormSectionProps } from '../patientFormTypes';
+import { patientFieldError } from '../patientFormFieldError';
 
-export const DemographicsSection: React.FC<
-  Pick<PatientFormSectionProps, 'formData' | 'errors' | 'onFieldChange'>
-> = ({ formData, errors, onFieldChange }) => {
-  // Convert gender options to FilterOption format
+export const DemographicsSection: React.FC<PatientFormSectionProps> = ({ control, errors }) => {
+  const { field: fullName } = useController({ control, name: 'fullName' });
+  const { field: dateOfBirth } = useController({ control, name: 'dateOfBirth' });
+  const { field: gender } = useController({ control, name: 'gender' });
+  const { field: phone } = useController({ control, name: 'phone' });
+  const { field: email } = useController({ control, name: 'email' });
+  const { field: height } = useController({ control, name: 'height' });
+  const { field: weight } = useController({ control, name: 'weight' });
+
   const genderOptions: FilterOption[] = useMemo(
     () => createFilterOptions(GENDER_VALUES, GENDER_CONFIG),
-    []
+    [],
   );
 
-  // Convert single value to array for MultiSelectFilter (single-select mode)
-  const selectedGender = useMemo(
-    () => (formData.gender ? [formData.gender] : []),
-    [formData.gender]
-  );
+  const selectedGender = useMemo(() => (gender.value ? [gender.value] : []), [gender.value]);
 
-  // Handle gender change (single-select: only allow one selection)
   const handleGenderChange = (selectedIds: string[]) => {
     if (selectedIds.length === 0) {
-      // Clear button clicked: actually clear the selection (show placeholder)
-      onFieldChange('gender', undefined);
-    } else {
-      // Use the most recently selected item (last in array)
-      // Type guard to ensure valid Gender value
-      const lastId = selectedIds[selectedIds.length - 1];
-      const validGenders: Gender[] = ['male', 'female'];
-      if (validGenders.includes(lastId as Gender)) {
-        onFieldChange('gender', lastId as Gender);
-      }
+      gender.onChange(undefined);
+      return;
+    }
+    const lastId = selectedIds[selectedIds.length - 1];
+    if (lastId === 'male' || lastId === 'female') {
+      gender.onChange(lastId as Gender);
     }
   };
 
@@ -48,11 +46,9 @@ export const DemographicsSection: React.FC<
             inferIcon
             label="Full Name"
             name="fullName"
-            value={formData.fullName}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onFieldChange('fullName', e.target.value)
-            }
-            error={errors.fullName}
+            value={fullName.value ?? ''}
+            onChange={fullName.onChange}
+            error={patientFieldError(errors, 'fullName')}
             required
             placeholder="John Doe"
           />
@@ -60,9 +56,9 @@ export const DemographicsSection: React.FC<
         <DateInput
           label="Date of Birth"
           name="dateOfBirth"
-          value={formData.dateOfBirth}
-          onChange={(value: string) => onFieldChange('dateOfBirth', value)}
-          error={errors.dateOfBirth}
+          value={dateOfBirth.value ?? ''}
+          onChange={dateOfBirth.onChange}
+          error={patientFieldError(errors, 'dateOfBirth')}
           required
           placeholder="Select date of birth"
           maxDate={new Date()}
@@ -82,18 +78,18 @@ export const DemographicsSection: React.FC<
             icon={ICONS.dataFields.userHands}
             className="w-full"
           />
-          {errors.gender && <p className={`mt-space-1 ${FIELD_ERROR}`}>{errors.gender}</p>}
+          {patientFieldError(errors, 'gender') && (
+            <p className={`mt-space-1 ${FIELD_ERROR}`}>{patientFieldError(errors, 'gender')}</p>
+          )}
         </div>
         <Input
           inferIcon
           label="Phone Number"
           name="phone"
           type="tel"
-          value={formData.phone}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            onFieldChange('phone', e.target.value)
-          }
-          error={errors.phone}
+          value={phone.value ?? ''}
+          onChange={phone.onChange}
+          error={patientFieldError(errors, 'phone')}
           required
           placeholder="(555) 123-4567"
         />
@@ -102,11 +98,9 @@ export const DemographicsSection: React.FC<
           label="Email Address"
           name="email"
           type="email"
-          value={formData.email}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            onFieldChange('email', e.target.value)
-          }
-          error={errors.email}
+          value={email.value ?? ''}
+          onChange={email.onChange}
+          error={patientFieldError(errors, 'email')}
           placeholder="patient@email.com"
         />
         <Input
@@ -117,11 +111,12 @@ export const DemographicsSection: React.FC<
           step="0.1"
           min="30"
           max="250"
-          value={formData.height}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            onFieldChange('height', e.target.value)
-          }
-          error={errors.height}
+          value={height.value != null ? String(height.value) : ''}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            const raw = e.target.value;
+            height.onChange(raw ? parseFloat(raw) : undefined);
+          }}
+          error={patientFieldError(errors, 'height')}
           placeholder="175.5"
         />
         <Input
@@ -132,11 +127,12 @@ export const DemographicsSection: React.FC<
           step="0.1"
           min="1"
           max="500"
-          value={formData.weight}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            onFieldChange('weight', e.target.value)
-          }
-          error={errors.weight}
+          value={weight.value != null ? String(weight.value) : ''}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            const raw = e.target.value;
+            weight.onChange(raw ? parseFloat(raw) : undefined);
+          }}
+          error={patientFieldError(errors, 'weight')}
           placeholder="70.5"
         />
       </div>

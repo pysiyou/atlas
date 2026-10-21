@@ -8,6 +8,6 @@ export * from './overlays';
 export * from './display';
 export * from './surfaces';
 export * from './data-table';
-export * from './loaders';
+export * from './feedback';
 export * from './layout';
 export * from './filters';

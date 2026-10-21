@@ -5,7 +5,7 @@
 // Import type from enum (Single Source of Truth)
 export type { UserRole } from '@/types/enums';
 
-// Re-export values for backwards compatibility
+// Re-export enum values and role config
 export {
   USER_ROLE_VALUES,
   USER_ROLE_CONFIG,

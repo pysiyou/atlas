@@ -12,8 +12,8 @@ import {
   useResultValidationQueueData,
 } from '../hooks';
 import { validationFilterConfig } from '../constants';
-import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
-import { ErrorAlert, ErrorBoundary } from '@/components/loaders';
+import { DetailPageSkeleton } from '@/components/feedback/DetailPageSkeleton';
+import { ErrorAlert, ErrorBoundary } from '@/components/feedback';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { LAB_CONFIG } from '../constants';
 import { worklistServerFilters } from '../utils/labSearchAndLinks';

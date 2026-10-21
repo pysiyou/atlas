@@ -168,11 +168,6 @@ ATTENTION_TYPE_BY_REASON: dict[str, str] = {
 ${pyAttention}
 }
 
-# Backward-compatible aliases
-BLOCKED_REASON_KEYS = ATTENTION_REASON_KEYS
-BLOCKED_LABELS = ATTENTION_LABELS
-BLOCKED_ATTENTION_TYPE = ATTENTION_TYPE_BY_REASON
-
 ALLOWED_ACTION_KEYS: tuple[str, ...] = (
 ${(data.allowedActionKeys ?? []).map(k => `    ${JSON.stringify(k)},`).join('\n')}
 )
@@ -227,22 +222,13 @@ export function reasonBlocksProgress(reason: string | null | undefined): boolean
 
 export type LabAttentionReason = ${tsUnion || 'string'};
 
-/** @deprecated Use LabAttentionReason */
-export type OrderTestBlockReason = LabAttentionReason;
-
 export const ATTENTION_LABELS: Record<LabAttentionReason, string> = {
 ${tsLabels}
 };
 
-/** @deprecated Use ATTENTION_LABELS */
-export const BLOCKED_LABELS = ATTENTION_LABELS;
-
 export const ATTENTION_ATTENTION_TYPE: Partial<Record<LabAttentionReason, string>> = {
 ${tsAttention}
 };
-
-/** @deprecated Use ATTENTION_ATTENTION_TYPE */
-export const BLOCKED_ATTENTION_TYPE = ATTENTION_ATTENTION_TYPE;
 
 export const ALLOWED_ACTION_KEYS = ${JSON.stringify(data.allowedActionKeys ?? [])} as const;
 

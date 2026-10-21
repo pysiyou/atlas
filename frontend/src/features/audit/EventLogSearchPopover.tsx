@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { Avatar, Icon } from '@/components/primitives';
-import { SpinnerLoader } from '@/components/loaders';
+import { SpinnerLoader } from '@/components/feedback';
 import { text, FORM_FIELD_LABEL , FG } from '@/theme/recipes';
 import { OrderSelectPopoverShell } from '@/features/orders';
 import { CONTROL } from '@/theme/recipes';

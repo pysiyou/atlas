@@ -7,10 +7,10 @@ import { DataTable, type TableViewConfig } from '@/components/data-table';
 import { DEFAULT_PAGE_SIZE_OPTIONS } from '@/components/data-table';
 import { EmptyState, PANEL_EMPTY_STATE } from '@/components/display';
 import { PageHeader } from '@/components/layout';
-import { ErrorAlert } from '@/components/loaders/ErrorAlert';
-import { emptyTitle } from '@/components/display/emptyStateCopy';
+import { ErrorAlert } from '@/components/feedback/ErrorAlert';
+import { emptyTitle } from '@/config/emptyStateCopy';
 import { DEFAULT_EMPTY_DESCRIPTION_SEARCH } from '@/utils/constants';
-import type { ListViewPaginationConfig, PaginationConfig, SortConfig } from '@/utils/table';
+import type { ListViewPaginationConfig, PaginationConfig, SortConfig } from '@/components/data-table';
 import { PANEL, WORKSPACE } from '@/theme/recipes';
 
 type TableDataItem = Record<string, unknown> | object;

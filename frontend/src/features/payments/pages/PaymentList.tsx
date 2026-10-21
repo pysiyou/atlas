@@ -6,7 +6,7 @@ import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePageFilters } from '@/hooks/usePageFilters';
 import { ListView } from '@/components/surfaces';
-import { EntityUrlFilterBar } from '@/components/filters';
+import { UrlFilterChipBar } from '@/components/filters';
 import { PaymentFilters } from '../components/PaymentFilters';
 import { PAYMENT_URL_FILTER_KEYS } from '../config/paymentFilters.config';
 import { createPaymentTableConfig } from '../config/PaymentTable.config';
@@ -133,7 +133,7 @@ export const PaymentList: React.FC = () => {
           title="Payments"
           filters={
             <>
-              <EntityUrlFilterBar
+              <UrlFilterChipBar
                 urlFilters={urlFilters}
                 urlFilterKeys={PAYMENT_URL_FILTER_KEYS}
                 onClear={clearUrlFilters}

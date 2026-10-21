@@ -5,11 +5,11 @@
 
 import React from 'react';
 import type { Patient } from '@/types';
-import { DetailField } from '@/components/display/DetailField';
+import { DescriptionItem } from '@/components/display';
 import { calculateAge } from '@/utils';
 import { formatPatientDetailDate, formatAddress, formatRelationship } from '../utils/patientFormatters';
 import { ICONS } from '@/config/icons';
-import { DetailFieldsColumnFlow } from '@/components/display';
+import { DescriptionColumns } from '@/components/display';
 
 export interface GeneralInfoSectionProps {
   patient: Patient;
@@ -26,70 +26,70 @@ export const GeneralInfoSection: React.FC<GeneralInfoSectionProps> = ({ patient 
 
   return (
     <div className="flex min-h-0 h-full flex-col">
-      <DetailFieldsColumnFlow>
-        <DetailField
+      <DescriptionColumns>
+        <DescriptionItem
           icon={ICONS.dataFields.gender}
           label="Gender"
           value={<span className="capitalize">{patient.gender || 'N/A'}</span>}
           orientation="vertical"
         />
-        <DetailField
+        <DescriptionItem
           icon={ICONS.dataFields.birthday}
           label="Birthday"
           value={formatPatientDetailDate(patient.dateOfBirth, 'long')}
           orientation="vertical"
         />
-        <DetailField
+        <DescriptionItem
           icon={ICONS.dataFields.age}
           label="Age"
           value={ageLabel}
           orientation="vertical"
         />
-        <DetailField
+        <DescriptionItem
           icon={ICONS.dataFields.phone}
           label="Phone Number"
           value={patient.phone || 'N/A'}
           orientation="vertical"
         />
-        <DetailField
+        <DescriptionItem
           icon={ICONS.dataFields.email}
           label="Email"
           value={patient.email || 'N/A'}
           orientation="vertical"
         />
-        <DetailField
+        <DescriptionItem
           icon={ICONS.dataFields.address}
           label="Address"
           value={formatAddress(patient.address)}
           orientation="vertical"
         />
-        <DetailField
+        <DescriptionItem
           icon={ICONS.ui.usersGroup}
           label="Emergency Contact"
           value={contact?.fullName || 'N/A'}
           orientation="vertical"
         />
-        <DetailField
+        <DescriptionItem
           icon={ICONS.ui.link}
           label="Emergency Relationship"
           value={formatRelationship(contact?.relationship)}
           orientation="vertical"
         />
-        <DetailField
+        <DescriptionItem
           icon={ICONS.dataFields.phone}
           label="Emergency Phone"
           value={contact?.phone || 'N/A'}
           orientation="vertical"
         />
         {contact?.email ? (
-          <DetailField
+          <DescriptionItem
             icon={ICONS.dataFields.email}
             label="Emergency Email"
             value={contact.email}
             orientation="vertical"
           />
         ) : null}
-      </DetailFieldsColumnFlow>
+      </DescriptionColumns>
     </div>
   );
 };

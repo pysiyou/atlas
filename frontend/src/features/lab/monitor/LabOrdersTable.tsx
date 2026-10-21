@@ -3,7 +3,7 @@
  */
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { EMPTY_COPY } from '@/components/display/emptyStateCopy';
+import { EMPTY_COPY } from '@/config/emptyStateCopy';
 import { DataTable } from '@/components/data-table';
 import { Panel } from '@/components/surfaces/Panel';
 import type { DashboardWorklistItem } from '../api/worklists';

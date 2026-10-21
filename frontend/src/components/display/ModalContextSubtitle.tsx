@@ -4,7 +4,7 @@
  */
 
 import type { ReactNode } from 'react';
-import { EntityId } from './EntityId';
+import { RecordId } from '@/features/shared/components';
 
 export interface ModalContextSubtitleProps {
   /** Patient name, test name, or other primary context for this modal. */
@@ -28,13 +28,13 @@ export function ModalContextSubtitle({ label, orderId, patientId, badges }: Moda
       {showOrderId ? (
         <>
           <span className="shrink-0 text-text-tertiary" aria-hidden="true">-</span>
-          <EntityId type="order" value={orderId} className="shrink-0" />
+          <RecordId type="order" value={orderId} className="shrink-0" />
         </>
       ) : null}
       {showPatientId ? (
         <>
           <span className="shrink-0 text-text-tertiary" aria-hidden="true">-</span>
-          <EntityId type="patient" value={patientId} className="shrink-0" />
+          <RecordId type="patient" value={patientId} className="shrink-0" />
         </>
       ) : null}
       {showBadges ? (

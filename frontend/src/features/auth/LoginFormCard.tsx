@@ -5,7 +5,7 @@
 
 import React, { useRef, useEffect } from 'react';
 import { Icon } from '@/components/primitives';
-import { SpinnerLoader } from '@/components/loaders';
+import { SpinnerLoader } from '@/components/feedback';
 import { ICONS } from '@/config/icons';
 import { companyConfig } from '@/config';
 import { PROMO_CONTROL, PROMO_SHADOW, PROMO_TYPE, RADIUS } from '@/theme/recipes';

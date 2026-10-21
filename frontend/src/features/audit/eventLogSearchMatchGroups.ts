@@ -8,7 +8,7 @@ import type { AuditSearchPreviewResponse } from './api';
 import { classifyEventLogSearchIntent, type EventLogSearchIntent } from './eventLogSearchIntent';
 import { EVENT_LOG_COPY } from './types';
 
-export type EventLogSearchMatchCategoryId = 'entityIds' | 'patients' | 'users';
+export type EventLogSearchMatchCategoryId = 'recordIds' | 'patients' | 'users';
 
 export interface EventLogSearchMatchItem {
   key: string;
@@ -25,8 +25,8 @@ export interface EventLogSearchMatchGroup {
   items: EventLogSearchMatchItem[];
 }
 
-function buildEntityIdItems(intent: EventLogSearchIntent): EventLogSearchMatchItem[] {
-  if (intent.mode === 'entity_order' && intent.displayToken) {
+function buildRecordIdItems(intent: EventLogSearchIntent): EventLogSearchMatchItem[] {
+  if (intent.mode === 'record_order' && intent.displayToken) {
     return [
       {
         key: 'order',
@@ -37,7 +37,7 @@ function buildEntityIdItems(intent: EventLogSearchIntent): EventLogSearchMatchIt
       },
     ];
   }
-  if (intent.mode === 'entity_test' && intent.displayToken) {
+  if (intent.mode === 'record_test' && intent.displayToken) {
     return [
       {
         key: 'test',
@@ -48,7 +48,7 @@ function buildEntityIdItems(intent: EventLogSearchIntent): EventLogSearchMatchIt
       },
     ];
   }
-  if (intent.mode === 'entity_sample' && intent.displayToken) {
+  if (intent.mode === 'record_sample' && intent.displayToken) {
     return [
       {
         key: 'sample',
@@ -59,7 +59,7 @@ function buildEntityIdItems(intent: EventLogSearchIntent): EventLogSearchMatchIt
       },
     ];
   }
-  if (intent.mode === 'entity_patient' && intent.displayToken) {
+  if (intent.mode === 'record_patient' && intent.displayToken) {
     return [
       {
         key: 'patient',
@@ -126,12 +126,12 @@ export function buildEventLogSearchMatchGroups(
   const intent = classifyEventLogSearchIntent(draft);
   const groups: EventLogSearchMatchGroup[] = [];
 
-  const entityItems = buildEntityIdItems(intent);
-  if (entityItems.length > 0) {
+  const recordItems = buildRecordIdItems(intent);
+  if (recordItems.length > 0) {
     groups.push({
-      id: 'entityIds',
-      label: EVENT_LOG_COPY.searchPreviewEntityIds,
-      items: entityItems,
+      id: 'recordIds',
+      label: EVENT_LOG_COPY.searchPreviewRecordIds,
+      items: recordItems,
     });
   }
 

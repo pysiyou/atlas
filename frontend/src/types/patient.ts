@@ -12,7 +12,7 @@ export type { Gender } from '@/types/enums';
 export type { AffiliationDuration } from '@/types/enums';
 export type { Relationship } from '@/types/enums';
 
-// Re-export the VALUES arrays for backwards compatibility
+// Re-export enum value arrays
 export { GENDER_VALUES } from '@/types/enums';
 export { AFFILIATION_DURATION_VALUES } from '@/types/enums';
 export { RELATIONSHIP_VALUES } from '@/types/enums';

@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { DebouncedSearchInput } from '@/components/inputs';
+import { SearchTextInput } from '@/components/inputs';
 import { actionButtonPreset, Badge, Button } from '@/components/primitives';
 import { CONTROL } from '@/theme/recipes';
 import { cn } from '@/utils';
@@ -30,7 +30,7 @@ export const ResponsiveFilterMobileBar: React.FC<ResponsiveFilterMobileBarProps>
     <div className="px-space-3 py-space-2 w-full">
       <div className="grid grid-cols-[1fr_auto] gap-space-2 items-center w-full">
         <div className={cn('flex', searchRowHeight, 'w-full items-center')}>
-          <DebouncedSearchInput
+          <SearchTextInput
             value={searchQuery}
             onChange={onSearchChange}
             placeholder={searchPlaceholder}

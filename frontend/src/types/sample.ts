@@ -14,7 +14,7 @@ export type { SampleStatus } from '@/types/enums';
 export type { ContainerType, ContainerTopColor } from '@/types/enums';
 export type { RejectionReason } from '@/types/enums';
 
-// Re-export the VALUES arrays for backwards compatibility
+// Re-export enum value arrays
 export { SAMPLE_TYPE_VALUES } from '@/types/enums';
 export { SAMPLE_STATUS_VALUES } from '@/types/enums';
 export { CONTAINER_TYPE_VALUES, CONTAINER_COLOR_VALUES } from '@/types/enums';

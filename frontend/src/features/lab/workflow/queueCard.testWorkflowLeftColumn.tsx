@@ -4,7 +4,7 @@
 
 import { type ReactNode } from 'react';
 import { cn } from '@/utils';
-import { EntityId } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import type { TestWithContext } from '@/types';
 import { buildTestQueueTimelineLines } from '../constants/labWorkflowAuditLines';
 import { LabAuditBlock } from '../components/LabWorkflowHeader.parts';
@@ -83,7 +83,7 @@ function TestWorkflowIdentityLines({
   if (orderTestId != null) {
     if (line1.length > 0) line1.push(<InlineDot key="dot-tst" />);
     line1.push(
-      <EntityId key="tst" type="orderTest" value={orderTestId} className={idClass} />
+      <RecordId key="tst" type="orderTest" value={orderTestId} className={idClass} />
     );
   }
 
@@ -101,18 +101,18 @@ function TestWorkflowIdentityLines({
   if (orderId) {
     if (line2.length > 0) line2.push(<InlineDot key="dot-ord" />);
     line2.push(
-      <EntityId key="ord" type="order" value={orderId} variant="headerSecondary" className={idClass} />
+      <RecordId key="ord" type="order" value={orderId} emphasis="headerMuted" className={idClass} />
     );
   }
   if (sampleId != null) {
     if (line2.length > 0) line2.push(<InlineDot key="dot-sam" />);
     line2.push(
-      <EntityId key="sam" type="sample" value={sampleId} variant="headerSecondary" className={idClass} />
+      <RecordId key="sam" type="sample" value={sampleId} emphasis="headerMuted" className={idClass} />
     );
   }
   if (testCode) {
     if (line2.length > 0) line2.push(<InlineDot key="dot-code" />);
-    line2.push(<EntityId key="code" variant="headerSecondary" className={idClass}>{testCode}</EntityId>);
+    line2.push(<RecordId key="code" emphasis="headerMuted" className={idClass}>{testCode}</RecordId>);
   }
 
   return (

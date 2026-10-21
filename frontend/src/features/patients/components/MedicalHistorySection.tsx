@@ -1,77 +1,97 @@
 import React from 'react';
+import { useController } from 'react-hook-form';
 import { Textarea, TagInput } from '@/components/inputs';
 import { Checkbox } from '@/components/primitives';
 import type { PatientFormSectionProps } from '../patientFormTypes';
 
-export const MedicalHistorySection: React.FC<
-  Pick<PatientFormSectionProps, 'formData' | 'onFieldChange'>
-> = ({ formData, onFieldChange }) => {
-  // Convert semicolon-separated strings to arrays for TagInput
-  const chronicConditionsArray = formData.chronicConditions
-    ? formData.chronicConditions
-        .split(';')
-        .map(s => s.trim())
-        .filter(s => s.length > 0)
-    : [];
-  const currentMedicationsArray = formData.currentMedications
-    ? formData.currentMedications
-        .split(';')
-        .map(s => s.trim())
-        .filter(s => s.length > 0)
-    : [];
-  const allergiesArray = formData.allergies
-    ? formData.allergies
-        .split(';')
-        .map(s => s.trim())
-        .filter(s => s.length > 0)
-    : [];
-  const previousSurgeriesArray = formData.previousSurgeries
-    ? formData.previousSurgeries
-        .split(';')
-        .map(s => s.trim())
-        .filter(s => s.length > 0)
-    : [];
+function normalizeTagList(value: string[] | string | null | undefined): string[] {
+  if (Array.isArray(value)) {
+    return value;
+  }
+  if (typeof value === 'string' && value.trim()) {
+    return value
+      .split(';')
+      .map(s => s.trim())
+      .filter(Boolean);
+  }
+  return [];
+}
 
-  // Convert arrays back to semicolon-separated strings
-  const handleTagsChange = (field: string, tags: string[]) => {
-    onFieldChange(field, tags.join('; '));
-  };
+function familyHistoryDisplay(value: string[] | string | null | undefined): string {
+  if (typeof value === 'string') {
+    return value;
+  }
+  if (Array.isArray(value)) {
+    return value.join('; ');
+  }
+  return '';
+}
+
+export const MedicalHistorySection: React.FC<PatientFormSectionProps> = ({ control }) => {
+  const { field: chronicConditions } = useController({
+    control,
+    name: 'medicalHistory.chronicConditions',
+  });
+  const { field: currentMedications } = useController({
+    control,
+    name: 'medicalHistory.currentMedications',
+  });
+  const { field: allergies } = useController({
+    control,
+    name: 'medicalHistory.allergies',
+  });
+  const { field: previousSurgeries } = useController({
+    control,
+    name: 'medicalHistory.previousSurgeries',
+  });
+  const { field: familyHistory } = useController({
+    control,
+    name: 'medicalHistory.familyHistory',
+  });
+  const { field: smoking } = useController({
+    control,
+    name: 'medicalHistory.lifestyle.smoking',
+  });
+  const { field: alcohol } = useController({
+    control,
+    name: 'medicalHistory.lifestyle.alcohol',
+  });
 
   return (
     <div className="space-y-space-6">
       <TagInput
         label="Chronic Conditions"
-        tags={chronicConditionsArray}
-        onChange={tags => handleTagsChange('chronicConditions', tags)}
+        tags={normalizeTagList(chronicConditions.value)}
+        onChange={chronicConditions.onChange}
         placeholder="Type condition and press Enter"
         helperText="Enter chronic medical conditions"
       />
       <TagInput
         label="Current Medications"
-        tags={currentMedicationsArray}
-        onChange={tags => handleTagsChange('currentMedications', tags)}
+        tags={normalizeTagList(currentMedications.value)}
+        onChange={currentMedications.onChange}
         placeholder="Type medication and press Enter"
         helperText="Include dosage if known"
       />
       <TagInput
         label="Known Allergies"
-        tags={allergiesArray}
-        onChange={tags => handleTagsChange('allergies', tags)}
+        tags={normalizeTagList(allergies.value)}
+        onChange={allergies.onChange}
         placeholder="Type allergy and press Enter"
         helperText="Include drug and non-drug allergies"
       />
       <TagInput
         label="Previous Surgeries"
-        tags={previousSurgeriesArray}
-        onChange={tags => handleTagsChange('previousSurgeries', tags)}
+        tags={normalizeTagList(previousSurgeries.value)}
+        onChange={previousSurgeries.onChange}
         placeholder="Type surgery and press Enter"
       />
       <Textarea
         label="Family Medical History"
         name="familyHistory"
-        value={formData.familyHistory}
+        value={familyHistoryDisplay(familyHistory.value)}
         onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-          onFieldChange('familyHistory', e.target.value)
+          familyHistory.onChange(e.target.value)
         }
         placeholder="Notable family medical history"
         rows={3}
@@ -80,15 +100,15 @@ export const MedicalHistorySection: React.FC<
         <Checkbox
           id="smoking"
           name="smoking"
-          checked={formData.smoking}
-          onChange={v => onFieldChange('smoking', v)}
+          checked={smoking.value ?? false}
+          onChange={smoking.onChange}
           label="Smoking"
         />
         <Checkbox
           id="alcohol"
           name="alcohol"
-          checked={formData.alcohol}
-          onChange={v => onFieldChange('alcohol', v)}
+          checked={alcohol.value ?? false}
+          onChange={alcohol.onChange}
           label="Alcohol Use"
         />
       </div>

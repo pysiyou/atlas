@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { usePaginatedPatientContextList } from '../api/patients';
 import { usePageFilters } from '@/hooks/usePageFilters';
 import { PATIENT_URL_FILTER_KEYS } from '../config/patientFilters.config';
-import { EntityUrlFilterBar } from '@/components/filters';
+import { UrlFilterChipBar } from '@/components/filters';
 import { actionButtonPreset } from '@/components/primitives';
 import { ListView } from '@/components/surfaces';
 import { Button } from '@/components/primitives';
@@ -102,7 +102,7 @@ export const PatientList: React.FC = () => {
           }
           filters={
             <>
-              <EntityUrlFilterBar
+              <UrlFilterChipBar
                 urlFilters={urlFilters}
                 urlFilterKeys={PATIENT_URL_FILTER_KEYS}
                 onClear={clearUrlFilters}

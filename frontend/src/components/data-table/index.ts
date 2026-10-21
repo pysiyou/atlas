@@ -1,52 +1,8 @@
 /**
- * data-table/index.ts — Generic table component and column utilities.
+ * Data table module — orchestrator, views, and column configuration.
  */
 
 export { DataTable, CardGridView } from './DataTable';
-export {
-  createColumn,
-  createIdColumn,
-  createBadgeColumn,
-  createDateTimeColumn,
-  pickColumns,
-  buildViews,
-  resolvePaginationConfig,
-  isPaginationEnabled,
-} from './columnHelpers';
-export {
-  DEFAULT_LOADING_ROWS,
-  SHOW_ALL_PAGE_SIZE,
-  DEFAULT_PAGE_SIZE,
-  DEFAULT_PAGE_SIZE_OPTIONS,
-  DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL,
-  SIZE_PRESETS,
-  COLUMN_SIZE,
-  ROW_HEIGHTS,
-  CELL_PADDING,
-  HEADER_PADDING,
-  TEXT_SIZE,
-  TABLE_TEXT_SIZE,
-} from './constants';
-export { TABLE_COLUMN_WIDTH } from './columnWidthTokens';
-export type {
-  TableProps,
-  TableViewConfig,
-  CardComponentProps,
-  ColumnConfig,
-  ColumnWidth,
-  ColumnSizePreset,
-  ColumnViewPreset,
-  ColumnAlign,
-  CreateColumnOptions,
-  SortConfig,
-  PaginationConfig,
-  TableVariant,
-  Breakpoint,
-  ListViewPaginationConfig,
-  DataTableMode,
-  TableHeaderProps,
-  TableBodyProps,
-  TableCellProps,
-  TableSkeletonProps,
-  StickyPosition,
-} from './types';
+export { TableView } from './TableView';
+export * from './columnConfig';
+export type * from './types';

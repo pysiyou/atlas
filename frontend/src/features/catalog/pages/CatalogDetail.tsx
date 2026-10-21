@@ -12,8 +12,8 @@ import { useBreakpoint } from '@/hooks/useBreakpoint';
 import { BalancedColumnsLayout } from '@/components/display';
 import type { TableInput } from '@/components/display';
 import { DetailPageShell, PageHeader } from '@/components/layout';
-import { EntityId } from '@/components/display';
-import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
+import { RecordId } from '@/features/shared/components';
+import { DetailPageSkeleton } from '@/components/feedback/DetailPageSkeleton';
 import { formatRejectionCriteriaList } from '@/features/lab';
 import { CATALOG_DETAIL_SKELETON_SECTIONS } from '../config/CatalogDetailSkeleton';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
@@ -92,7 +92,7 @@ export const CatalogDetail: React.FC = () => {
       key: 'overview',
       preset: 'panel.pageEmbed.visible', title: 'Test Overview',
       rows: [
-        { label: 'Test Code', value: <EntityId>{test.code}</EntityId> },
+        { label: 'Test Code', value: <RecordId>{test.code}</RecordId> },
         { label: 'Test Name', value: test.name },
         { label: 'Category', value: capitalize(test.category) },
         { label: 'Turnaround Time', value: formatTurnaroundTime(test.turnaroundTime) },

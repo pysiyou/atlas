@@ -9,7 +9,7 @@ import { type ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuthStore } from '@/app/authStore';
 import { ROUTES } from '@/config';
-import { PageLoadingFallback } from '@/components/loaders';
+import { PageLoadingFallback } from '@/components/feedback';
 
 interface Props {
   children: ReactNode;

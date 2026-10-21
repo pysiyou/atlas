@@ -4,7 +4,7 @@
 
 import type { MouseEvent } from 'react';
 import type { NavigateFunction } from 'react-router-dom';
-import { EntityId } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import type { TableViewConfig } from '@/components/data-table';
 import { buildViews, TABLE_COLUMN_WIDTH } from '@/components/data-table';
 import { ORDER_TABLE_COLUMN_HEADERS, renderOrderPatientName } from '@/features/orders';
@@ -56,10 +56,10 @@ export const createReportTableConfig = (
       sortable: true,
       accessor: (order: ReportableOrder) => order.orderId,
       render: (order: ReportableOrder) => (
-        <EntityId
+        <RecordId
           type="order"
           value={order.orderId}
-          variant="clickable"
+          emphasis="interactive"
           as="button"
           onClick={(e: MouseEvent<HTMLElement>) => {
             e.stopPropagation();
@@ -89,7 +89,7 @@ export const createReportTableConfig = (
           <div className={PRESENTATION_STACK_CLASS}>
             <div className={`${TABLE_TYPE.cell} truncate font-normal`}>{summary.names}</div>
             {summary.codes ? (
-              <EntityId variant="secondaryBlock">{summary.codes}</EntityId>
+              <RecordId emphasis="mutedBlock">{summary.codes}</RecordId>
             ) : null}
           </div>
         );

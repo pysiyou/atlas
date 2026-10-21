@@ -21,7 +21,7 @@ import { isLabActionAllowed } from '../utils/queueDisplay';
 import { errorAlertMessage, notify } from '@/utils/feedback';
 import { logger } from '@/utils/logger';
 import { Modal, ModalPageShell } from '@/components/overlays';
-import { ErrorAlert } from '@/components/loaders';
+import { ErrorAlert } from '@/components/feedback';
 import type { ResultDetailModalProps } from '@/lib/context/modalTypes';
 
 function scalarResultValue(value: unknown): string {

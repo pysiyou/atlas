@@ -4,9 +4,10 @@
 
 import React, { useMemo } from 'react';
 import { RADIUS } from '@/theme/recipes';
-import { Callout, EntityId } from '@/components/display';
+import { Callout } from '@/components/display';
+import { RecordId } from '@/features/shared/components';
 import { Panel } from '@/components/surfaces';
-import { PanelHeaderSegmentTabs } from '@/components/display/PanelHeaderSegmentTabs';
+import { SegmentedControl } from '@/components/inputs/SegmentedControl';
 import { Text } from '@/components/layout/Text';
 import { formatArray } from '@/utils';
 import { formatRejectionCriteriaList } from '../utils/catalogRejectionCriteria';
@@ -39,7 +40,7 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
     () =>
       testDetails.map((test, index) => ({
         id: `${test.code}-${index}`,
-        label: <EntityId>{test.code}</EntityId>,
+        label: <RecordId>{test.code}</RecordId>,
       })),
     [testDetails]
   );
@@ -56,10 +57,10 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
       preset="panel.compact.standard" title="Collection Requirements & Instructions"
       headerEnd={
         testDetails.length > 1 ? (
-          <PanelHeaderSegmentTabs
-            tabs={segmentTabs}
+          <SegmentedControl
+            options={segmentTabs}
             activeId={activeSegmentId}
-            onTabChange={id => {
+            onActiveIdChange={id => {
               const index = segmentTabs.findIndex(tab => tab.id === id);
               const test = testDetails[index];
               if (test) setActiveTestCode(test.code);

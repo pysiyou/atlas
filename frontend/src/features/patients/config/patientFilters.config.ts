@@ -33,12 +33,12 @@ export const patientFilterConfig: FilterConfig = {
         key: 'ageRange',
         type: 'ageRange',
         label: 'Age Range',
-        min: AGE_RANGE_MIN,
-        max: AGE_RANGE_MAX,
+        minValue: AGE_RANGE_MIN,
+        maxValue: AGE_RANGE_MAX,
       },
     ],
   },
 };
 
-/** Entity filter keys that sync to URL for cross-page navigation. */
+/** Record filter keys that sync to URL for cross-page navigation. */
 export const PATIENT_URL_FILTER_KEYS = ['patientId'] as const;

@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { Checkbox } from '@/components/primitives';
-import { DateFilter, DebouncedSearchInput, Select } from '@/components/inputs';
+import { DateFilter, SearchTextInput, Select } from '@/components/inputs';
 import { MultiSelectFilter } from '@/components/overlays';
 import { RADIUS } from '@/theme/recipes';
 import { ICONS, MODULE_ICONS } from '@/config/icons';
@@ -33,7 +33,7 @@ const VERBOSITY_OPTIONS: { value: EventLogVerbosity; label: string }[] = [
 export const EVENT_LOG_FILTER_PLACEHOLDERS = {
   dateRange: 'Filter by date range',
   kind: 'Event domain',
-  entityId: 'ORD… / TST… / SAM… / PAT…',
+  recordId: 'ORD… / TST… / SAM… / PAT…',
   includeAccess: 'Include views & downloads',
   verbosity: 'Detail level',
   actorRole: 'Actor role',
@@ -48,9 +48,9 @@ export interface EventLogFiltersInlineControlsProps {
   onKindsChange: (values: EventLogKind[]) => void;
   dateRange: [Date, Date] | null;
   onDateRangeChange: (range: [Date, Date] | null) => void;
-  entityIdInput?: string;
-  onEntityIdInputChange?: (value: string) => void;
-  entityIdInputInvalid?: boolean;
+  recordIdInput?: string;
+  onRecordIdInputChange?: (value: string) => void;
+  recordIdInputInvalid?: boolean;
   includeAccess: boolean;
   onIncludeAccessChange: (value: boolean) => void;
   verbosity: EventLogVerbosity;
@@ -77,17 +77,17 @@ function renderFieldControl(
           <EventLogSearchField value={props.search} onChange={props.onSearchChange} />
         </div>
       );
-    case 'entityId':
-      if (!props.onEntityIdInputChange) return null;
+    case 'recordId':
+      if (!props.onRecordIdInputChange) return null;
       return (
         <div
           key={field}
-          className={`flex h-9 w-full flex-col justify-center${props.entityIdInputInvalid ? ` ${RADIUS.field} ring-1 ring-status-danger` : ''}`}
+          className={`flex h-9 w-full flex-col justify-center${props.recordIdInputInvalid ? ` ${RADIUS.field} ring-1 ring-status-danger` : ''}`}
         >
-          <DebouncedSearchInput
-            value={props.entityIdInput ?? ''}
-            onChange={props.onEntityIdInputChange}
-            placeholder={EVENT_LOG_FILTER_PLACEHOLDERS.entityId}
+          <SearchTextInput
+            value={props.recordIdInput ?? ''}
+            onChange={props.onRecordIdInputChange}
+            placeholder={EVENT_LOG_FILTER_PLACEHOLDERS.recordId}
           />
         </div>
       );
@@ -120,7 +120,7 @@ function renderFieldControl(
     case 'actorSearch':
       return (
         <div key={field} className="flex h-9 w-full flex-col justify-center">
-          <DebouncedSearchInput
+          <SearchTextInput
             value={props.actorSearch}
             onChange={props.onActorSearchChange}
             placeholder={EVENT_LOG_FILTER_PLACEHOLDERS.actorSearch}

@@ -1,9 +1,9 @@
 /**
- * Event log panel — fetch by named scope and optional kind / date / entity filters.
+ * Event log panel — fetch by named scope and optional kind / date / record filters.
  */
 import React, { useMemo } from 'react';
 import { Button } from '@/components/primitives';
-import { ErrorAlert, Skeleton } from '@/components/loaders';
+import { ErrorAlert, Skeleton } from '@/components/feedback';
 import { Panel, type PanelPresetId } from '@/components/surfaces/Panel';
 import { cn } from '@/utils';
 import { errorAlertMessage } from '@/utils/feedback';
@@ -85,7 +85,7 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
     visibleFields,
   });
 
-  const skipFetch = panelState.entityIdInputInvalid;
+  const skipFetch = panelState.recordIdInputInvalid;
 
   const { resolved, isLoading, isError, error, refetch, hasMore, isFetchingMore, loadMore } =
     useEventLog(panelState.mergedQuery, {
@@ -108,9 +108,9 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
       onDateRangeChange={dateRange =>
         panelState.setUserFilters(prev => ({ ...prev, dateRange }))
       }
-      entityIdInput={panelState.entityIdInput}
-      onEntityIdInputChange={panelState.setEntityIdInput}
-      entityIdInputInvalid={panelState.entityIdInputInvalid}
+      recordIdInput={panelState.recordIdInput}
+      onRecordIdInputChange={panelState.setRecordIdInput}
+      recordIdInputInvalid={panelState.recordIdInputInvalid}
       includeAccess={panelState.userFilters.includeAccess}
       onIncludeAccessChange={includeAccess =>
         panelState.setUserFilters(prev => ({ ...prev, includeAccess }))

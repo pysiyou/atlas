@@ -4,7 +4,7 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
-import type { UseAsyncActionOptions, LoadingStatus } from '@/components/loaders';
+import type { UseAsyncActionOptions, LoadingStatus } from '@/components/feedback';
 
 export interface UseAsyncActionReturn<T extends unknown[]> {
   execute: (...args: T) => Promise<void>;

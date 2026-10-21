@@ -6,7 +6,7 @@ import type { EventLogQuery, EventLogUserFilters } from './types';
 
 /**
  * Apply user filters onto a fixed panel query.
- * On a stream panel, an entity id upgrades the scope (order / lab / patient).
+ * On a stream panel, a record id filter upgrades the scope (order / lab / patient).
  */
 export function buildEventLogQuery(
   fixed: EventLogQuery,

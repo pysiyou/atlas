@@ -56,11 +56,6 @@ ATTENTION_TYPE_BY_REASON: dict[str, str] = {
     "recollection_approval": "supervisor_recollection_request",
 }
 
-# Backward-compatible aliases
-BLOCKED_REASON_KEYS = ATTENTION_REASON_KEYS
-BLOCKED_LABELS = ATTENTION_LABELS
-BLOCKED_ATTENTION_TYPE = ATTENTION_TYPE_BY_REASON
-
 ALLOWED_ACTION_KEYS: tuple[str, ...] = (
     "collect",
     "enterResults",

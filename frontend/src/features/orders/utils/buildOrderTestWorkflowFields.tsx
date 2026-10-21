@@ -2,7 +2,7 @@
  * Workflow panel fields for the order test detail modal.
  */
 
-import type { DetailFieldConfig } from '@/components/display/DetailFieldGroup';
+import type { DescriptionListItemConfig } from '@/components/display/DescriptionList';
 import type { OrderTest } from '@/types';
 import { Button } from '@/components/primitives';
 import { displayId } from '@/utils';
@@ -16,7 +16,7 @@ export interface OrderTestWorkflowFieldOptions {
   omitResultDuplicates?: boolean;
 }
 
-function appendSupersededNote(fields: DetailFieldConfig[], orderTest: OrderTest): void {
+function appendSupersededNote(fields: DescriptionListItemConfig[], orderTest: OrderTest): void {
   if (orderTest.status !== 'superseded') {
     return;
   }
@@ -27,7 +27,7 @@ function appendSupersededNote(fields: DetailFieldConfig[], orderTest: OrderTest)
 }
 
 function appendLineageFields(
-  fields: DetailFieldConfig[],
+  fields: DescriptionListItemConfig[],
   orderTest: OrderTest,
   linked?: LinkedOrderTests,
   onOpenLinkedTest?: (test: OrderTest) => void
@@ -82,7 +82,7 @@ function appendLineageFields(
   }
 }
 
-function appendLabPipelineFields(fields: DetailFieldConfig[], orderTest: OrderTest): void {
+function appendLabPipelineFields(fields: DescriptionListItemConfig[], orderTest: OrderTest): void {
   const lab = orderTest.lab;
   if (lab?.pipelineStage) {
     fields.push({
@@ -105,7 +105,7 @@ function appendLabPipelineFields(fields: DetailFieldConfig[], orderTest: OrderTe
 }
 
 function appendResultAuditFields(
-  fields: DetailFieldConfig[],
+  fields: DescriptionListItemConfig[],
   orderTest: OrderTest,
   omitResultDuplicates: boolean
 ): void {
@@ -134,7 +134,7 @@ function appendResultAuditFields(
   }
 }
 
-function appendReflexFields(fields: DetailFieldConfig[], orderTest: OrderTest): void {
+function appendReflexFields(fields: DescriptionListItemConfig[], orderTest: OrderTest): void {
   if (!orderTest.isReflexTest) {
     return;
   }
@@ -147,7 +147,7 @@ function appendReflexFields(fields: DetailFieldConfig[], orderTest: OrderTest): 
   }
 }
 
-function appendCriticalValueFields(fields: DetailFieldConfig[], orderTest: OrderTest): void {
+function appendCriticalValueFields(fields: DescriptionListItemConfig[], orderTest: OrderTest): void {
   if (orderTest.hasCriticalValues) {
     fields.push({ label: 'Critical values', value: 'Present' });
   }
@@ -171,8 +171,8 @@ function appendCriticalValueFields(fields: DetailFieldConfig[], orderTest: Order
 export function buildOrderTestWorkflowFields(
   orderTest: OrderTest,
   options?: OrderTestWorkflowFieldOptions
-): DetailFieldConfig[] {
-  const fields: DetailFieldConfig[] = [];
+): DescriptionListItemConfig[] {
+  const fields: DescriptionListItemConfig[] = [];
   const linked = options?.linked;
   const onOpenLinkedTest = options?.onOpenLinkedTest;
   const omitResultDuplicates = options?.omitResultDuplicates ?? false;
