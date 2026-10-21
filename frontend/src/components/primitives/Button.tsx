@@ -5,7 +5,7 @@
 
 import React, { forwardRef, memo, type ButtonHTMLAttributes } from 'react';
 import { SpinnerLoader } from '@/components/loaders/SpinnerLoader';
-import { BUTTON_TYPE, CONTROL, RADIUS } from '@/components/theme/recipes';
+import { BUTTON_TYPE, CONTROL, ICON_SIZE, RADIUS } from '@/theme/recipes';
 import { cn } from '@/utils/cn';
 import { Icon, type IconName } from './Icon';
 
@@ -46,21 +46,21 @@ const labelButtonSize: Record<ButtonSize, string> = {
 };
 
 const labelIconSize: Record<ButtonSize, string> = {
-  sm: 'w-3.5 h-3.5',
-  md: 'w-4 h-4',
-  lg: 'w-5 h-5',
+  sm: ICON_SIZE.labelIcon.sm,
+  md: ICON_SIZE.labelIcon.md,
+  lg: ICON_SIZE.labelIcon.lg,
 };
 
 const iconButtonBox: Record<ButtonSize, string> = {
-  sm: 'size-7',
-  md: 'size-8',
-  lg: 'size-10',
+  sm: ICON_SIZE.button.sm,
+  md: ICON_SIZE.button.md,
+  lg: ICON_SIZE.button.lg,
 };
 
 const iconButtonIconSize: Record<ButtonSize, string> = {
-  sm: 'w-3 h-3',
-  md: 'w-3.5 h-3.5',
-  lg: 'w-4 h-4',
+  sm: ICON_SIZE.xs,
+  md: ICON_SIZE.sm,
+  lg: ICON_SIZE.md,
 };
 
 const iconButtonShape: Record<IconButtonShape, string> = {

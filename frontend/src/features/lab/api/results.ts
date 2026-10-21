@@ -14,7 +14,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { invalidatePendingEscalationQueries, invalidateResultQueries } from '@/lib/query/invalidate';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { useAuthStore } from '@/app/authStore';
-import { feedbackTitle } from '@/utils/feedback/copy';
+import { feedbackTitle } from '@/utils/feedback';
 import { LAB_PATHS } from '../constants/labConstants';
 
 interface ResultEntryRequest {

@@ -6,7 +6,7 @@ import Barcode from 'react-barcode';
 import { actionButtonPreset, Button, Icon } from '@/components/primitives';
 import { Panel } from '@/components/surfaces';
 import type { ContainerType, Order, RejectedSample, Sample, Test } from '@/types';
-import { RADIUS, SURFACE, TYPE } from '@/components/theme/recipes';
+import { RADIUS, SURFACE, TYPE } from '@/theme/recipes';
 import { ModalFooter } from './detailModalLayout';
 import { displayId, formatDateTime } from '@/utils';
 import { CollectionDetailGrid } from './detailModal.sampleCollection.grid';

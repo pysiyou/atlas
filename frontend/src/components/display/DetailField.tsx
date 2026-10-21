@@ -1,7 +1,7 @@
 import React from 'react';
 import { Badge, type BadgeVariant } from '@/components/primitives';
 import { Icon, type IconName } from '@/components/primitives/Icon';
-import { DETAIL_TYPE } from '@/components/theme/recipes';
+import { DETAIL_TYPE } from '@/theme/recipes';
 import { DETAIL_LABEL, DETAIL_VALUE } from '@/utils/constants';
 import { formatDateTime } from '@/utils';
 

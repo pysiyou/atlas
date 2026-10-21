@@ -8,7 +8,7 @@ import { cn } from '@/utils';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
 import type { RecollectionRequestSummary } from '@/types/lab-operations';
 import { useLabWorkflowCardClickGuard } from '../hooks';
-import { LAB_MOBILE_CARD } from '../utils/labStyles';
+import { LAB_MOBILE_CARD } from '@/theme/recipes';
 import { QueueCard, QueueCardMobile } from './queueCardLayout';
 import {
   RecollectionRequestActions,

@@ -8,8 +8,8 @@
 import React, { useState, type KeyboardEvent, type ChangeEvent } from 'react';
 import { RemovableTag } from '@/components/primitives';
 import { cn } from '@/utils';
-import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from './inputStyles';
-import { CONTROL, FIELD_ERROR, TONE, TYPE } from '@/components/theme/recipes';
+import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/theme/recipes';
+import { CONTROL, FIELD_ERROR, TONE, TYPE } from '@/theme/recipes';
 
 
 export interface TagInputProps {

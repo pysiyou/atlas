@@ -10,8 +10,8 @@ import { cn } from '@/utils';
 import type { Order } from '@/types';
 import { BillingSummarySection } from '@/features/orders';
 import { BillingEventLogPanel } from '@/features/audit';
-import { inputBase } from '@/components/inputs/inputStyles';
-import { TONE, TYPE } from '@/components/theme/recipes';
+import { inputBase } from '@/theme/recipes';
+import { TONE, TYPE } from '@/theme/recipes';
 import type { PaymentMethod, PaymentMethodOption } from '@/types/payments';
 import type { OrderPaymentView } from '../types';
 

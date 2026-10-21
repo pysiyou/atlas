@@ -6,7 +6,7 @@ import React from 'react';
 import { Card } from '@/components/surfaces';
 import { Icon } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
-import { TYPE } from '@/components/theme/recipes';
+import { TYPE } from '@/theme/recipes';
 
 
 export interface DashboardOrdersInProgressBannerProps {

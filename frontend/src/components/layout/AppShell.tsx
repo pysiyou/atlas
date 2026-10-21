@@ -12,7 +12,7 @@ import { useBreakpoint, isBreakpointAtLeast } from '@/hooks/useBreakpoint';
 import { AppChromeMountContext } from './appChromeMount';
 import { Sidebar } from './Sidebar';
 import { Icon } from '@/components/primitives/Icon';
-import { CHROME, RADIUS, SHADOW, SURFACE, WORKSPACE } from '@/components/theme/recipes';
+import { CHROME, RADIUS, SHADOW, SURFACE, WORKSPACE } from '@/theme/recipes';
 import { cn } from '@/utils';
 
 export interface AppShellProps {

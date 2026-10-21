@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { CONTROL, PRICE_RANGE_TYPE, RADIUS } from '@/components/theme/recipes';
+import { CONTROL, PRICE_RANGE_TYPE, RADIUS } from '@/theme/recipes';
 
 export interface PriceRangeSliderPanelProps {
   localValue: [number, number];

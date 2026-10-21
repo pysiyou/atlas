@@ -14,7 +14,7 @@ import type { PriorityLevel, TestStatus } from '@/types';
 import type { StatusPresentation } from '@/types/labProjection';
 import { cn } from '@/utils';
 import { getOrderTestLineageRowClass } from '@/features/orders';
-import { MONITOR_ROW_INTERACTIVE } from './monitorStyles';
+import { MONITOR_ROW_INTERACTIVE } from '@/theme/recipes';
 import { createLabOrdersTableConfig } from './LabOrdersTable.config';
 
 export interface LabOrderTableRow {

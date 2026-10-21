@@ -5,8 +5,8 @@
 import React from 'react';
 import { ErrorAlert } from '@/components/loaders';
 import { errorAlertMessage } from '@/utils/feedback';
-import { MONITOR_PANEL } from './monitorStyles';
-import { MONITOR_BOTTOM_PANEL, MONITOR_BOTTOM_ROW, MONITOR_PAGE, MONITOR_TABLE_WRAP } from './monitorStyles';
+import { MONITOR_PANEL } from '@/theme/recipes';
+import { MONITOR_BOTTOM_PANEL, MONITOR_BOTTOM_ROW, MONITOR_PAGE, MONITOR_TABLE_WRAP } from '@/theme/recipes';
 import { useLabMonitorViewModel } from './useLabMonitorViewModel';
 import { LabMonitorBoardSkeleton } from './LabMonitorBoardSkeleton';
 import { LabOrdersTable } from './LabOrdersTable';

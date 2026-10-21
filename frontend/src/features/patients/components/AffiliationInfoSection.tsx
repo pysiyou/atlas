@@ -9,7 +9,7 @@ import { DetailField } from '@/components/display';
 import { formatDate } from '@/utils';
 import type { Affiliation } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';
-import { TONE, TYPE } from '@/components/theme/recipes';
+import { TONE, TYPE } from '@/theme/recipes';
 
 interface AffiliationInfoProps {
   affiliation: Affiliation;

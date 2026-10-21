@@ -11,7 +11,7 @@ import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
 import type { Order } from '@/types';
 import { getReportableOrders } from '../utils/patientFormatters';
 import { ICONS } from '@/config/icons';
-import { TONE, TYPE } from '@/components/theme/recipes';
+import { TONE, TYPE } from '@/theme/recipes';
 
 
 export interface PatientReportsListProps {

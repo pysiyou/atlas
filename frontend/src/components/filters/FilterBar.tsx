@@ -12,8 +12,8 @@ import { FilterFactory } from './FilterFactory';
 import { QuickFilters } from './QuickFilters';
 import { FilterModal } from './FilterModal';
 import { actionButtonPreset, Button, Badge } from '@/components/primitives';
-import { CONTROL, FILTER } from '@/components/theme/recipes';
-import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
+import { CONTROL, FILTER } from '@/theme/recipes';
+import { FORM_FIELD_LABEL } from '@/theme/recipes';
 import type { FilterConfig, FilterValues, ActiveFilterBadge, FilterControl } from './types';
 
 const filterStyles = {

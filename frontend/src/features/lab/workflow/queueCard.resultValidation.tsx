@@ -17,7 +17,7 @@ import { isLabActionAllowed } from '../utils/queueDisplay';
 import { useSampleRejectionDisplay } from '../hooks/useSampleRejectionDisplay';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
-import { LAB_MOBILE_CARD } from '../utils/labStyles';
+import { LAB_MOBILE_CARD } from '@/theme/recipes';
 import type { TestWithContext } from '@/types';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import { QueueCard, QueueCardMobile } from './queueCardLayout';

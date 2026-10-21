@@ -17,7 +17,7 @@ import { DashboardOrdersInProgressBanner } from '../components/DashboardOrdersIn
 import { DashboardRecentOrders } from '../components/DashboardRecentOrders';
 import { SkeletonCard } from '@/components/loaders';
 import { PageHeader } from '@/components/layout';
-import { WORKSPACE } from '@/components/theme/recipes';
+import { WORKSPACE } from '@/theme/recipes';
 
 function DashboardLoadingSkeleton() {
   return (

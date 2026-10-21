@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { LAYOUT } from '@/components/theme/recipes';
+import { LAYOUT } from '@/theme/recipes';
 import type { PanelPresetId } from '@/components/surfaces';
 import { DetailsTable, type DetailTableRow } from '@/components/display/DetailsTable';
 import { cn } from '@/utils';

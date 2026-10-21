@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { Icon } from './Icon';
-import { RADIUS, TYPE } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 

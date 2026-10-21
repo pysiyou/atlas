@@ -5,4 +5,4 @@
  */
 
 export * from './theme';
-export * from './recipes';
+export * from './recipes/index';

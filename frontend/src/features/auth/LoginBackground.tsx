@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { RADIUS } from '@/components/theme/recipes';
+import { RADIUS } from '@/theme/recipes';
 
 interface FloatingIconConfig {
   icon: string;

@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { SPACING } from '@/components/theme/recipes';
+import { SPACING } from '@/theme/recipes';
 import { cn } from '@/utils';
 
 export interface DetailFieldsColumnFlowProps {

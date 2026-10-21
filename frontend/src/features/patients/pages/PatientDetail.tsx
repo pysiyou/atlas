@@ -18,7 +18,7 @@ import {
   PATIENT_DETAIL_SKELETON_SECTIONS,
   renderPatientDetailLargeSkeleton,
 } from '../config/PatientDetailSkeleton';
-import { feedbackTitle } from '@/utils/feedback/copy';
+import { feedbackTitle } from '@/utils/feedback';
 
 export const PatientDetail: React.FC = () => {
   const navigate = useNavigate();

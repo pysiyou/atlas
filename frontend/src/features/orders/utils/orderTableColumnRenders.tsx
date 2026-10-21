@@ -13,7 +13,7 @@ import {
 } from '@/utils/tableColumnRenders';
 import { ROUTES } from '@/config';
 import type { OrderTest } from '@/types';
-import { TABLE_TYPE } from '@/components/theme/recipes';
+import { TABLE_TYPE } from '@/theme/recipes';
 import {
   buildOrderTestsBlockPreview,
   type OrderTestsBlockLayout,

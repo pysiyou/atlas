@@ -7,7 +7,7 @@ import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import { useBreakpoint } from '@/hooks/useBreakpoint';
 import { Panel, type PanelPresetId } from '@/components/surfaces';
 import { Skeleton, SkeletonCard, SkeletonInfoSection, SkeletonTableRow } from './Skeleton';
-import { LAYOUT, RADIUS, SPACING } from '@/components/theme/recipes';
+import { LAYOUT, RADIUS, SPACING } from '@/theme/recipes';
 import { cn } from '@/utils';
 
 export interface DetailSkeletonSection {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { TYPE } from '@/components/theme/recipes';
+import { TYPE } from '@/theme/recipes';
 import { Popover } from '@/components/overlays';
 import { FooterInfo } from '@/components/display';
 import type { Affiliation } from '@/types';

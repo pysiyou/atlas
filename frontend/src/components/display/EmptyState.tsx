@@ -1,5 +1,5 @@
 import React from 'react';
-import { EMPTY } from '@/components/theme/recipes';
+import { EMPTY } from '@/theme/recipes';
 import { Icon, type IconName } from '@/components/primitives/Icon';
 import { cn } from '@/utils';
 

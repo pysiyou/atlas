@@ -5,7 +5,7 @@
  */
 
 import { LAB_CONFIG } from './labConstants';
-import { feedbackTitle } from '@/utils/feedback/copy';
+import { feedbackTitle } from '@/utils/feedback';
 import type { QualityIssueOptions, RemedyType } from '@/types/lab-operations';
 
 export const QUALITY_ISSUE_POPOVER_LAYOUT = {

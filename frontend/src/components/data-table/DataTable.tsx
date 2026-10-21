@@ -10,7 +10,7 @@ import { DEFAULT_LOADING_ROWS } from './constants';
 import type { TableProps } from './types';
 import { CardGridView } from './CardGridView';
 import { TableView } from './TableView';
-import { PANEL } from '@/components/theme/recipes';
+import { PANEL } from '@/theme/recipes';
 
 export function DataTable<T = Record<string, unknown>>({
   data,

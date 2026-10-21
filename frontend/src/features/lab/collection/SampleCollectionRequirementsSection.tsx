@@ -3,13 +3,13 @@
  */
 
 import React, { useMemo } from 'react';
-import { RADIUS, TYPE } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/theme/recipes';
 import { Callout, EntityId } from '@/components/display';
 import { Panel } from '@/components/surfaces';
 import { PanelHeaderSegmentTabs } from '@/components/display/PanelHeaderSegmentTabs';
 import { formatArray } from '@/utils';
 import { formatRejectionCriteriaList } from '../utils/catalogRejectionCriteria';
-import { LAB_CARD_TYPOGRAPHY } from '../utils/labStyles';
+import { LAB_CARD_TYPOGRAPHY } from '@/theme/recipes';
 
 /** Test detail for requirements display */
 export interface TestDetail {

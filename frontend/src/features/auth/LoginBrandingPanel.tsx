@@ -7,7 +7,7 @@ import React from 'react';
 import { Icon } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 import { companyConfig } from '@/config';
-import { AUTH_SHADOW, AUTH_TYPE, RADIUS } from '@/components/theme/recipes';
+import { AUTH_SHADOW, AUTH_TYPE, RADIUS } from '@/theme/recipes';
 
 interface LoginBrandingPanelProps {
   isVisible: boolean;

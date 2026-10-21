@@ -7,7 +7,7 @@ import { formatDateTime } from '@/utils';
 import { EntityId } from '@/components/display';
 import { companyConfig } from '@/config';
 import type { LabReportPayload } from '../types';
-import { FORM_TAB_TITLE, REPORT_PREVIEW_TYPE, TYPE } from '@/components/theme/recipes';
+import { FORM_TAB_TITLE, REPORT_PREVIEW_TYPE, TYPE } from '@/theme/recipes';
 
 
 interface ReportPreviewHeaderProps {

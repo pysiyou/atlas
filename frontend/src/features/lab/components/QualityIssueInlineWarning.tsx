@@ -2,7 +2,7 @@
  * Single-line quality-issue warning — warning icon + text only (no alert surface).
  */
 import { Icon } from '@/components/primitives';
-import { TONE, TYPE } from '@/components/theme/recipes';
+import { TONE, TYPE } from '@/theme/recipes';
 
 export function QualityIssueInlineWarning({ message }: { message: string }) {
   const text = message.trim();

@@ -5,13 +5,13 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './app/App';
-import { initializeTheme, preloadThemePair } from '@/components/theme/theme';
+import { initializeTheme, preloadThemePair } from '@/theme/theme';
 import { companyConfig } from '@/config';
-import '@/components/theme/tokens/primitives.css';
-import '@/components/theme/tokens/typography.css';
-import '@/components/theme/tokens/semantic-light.css';
-import '@/components/theme/tokens/semantic-dark.css';
-import '@/components/theme/components.css';
+import '@/theme/tokens/primitives.css';
+import '@/theme/tokens/typography.css';
+import '@/theme/tokens/semantic-light.css';
+import '@/theme/tokens/semantic-dark.css';
+import '@/theme/components/index.css';
 import './index.css';
 
 const rootElement = document.getElementById('root');

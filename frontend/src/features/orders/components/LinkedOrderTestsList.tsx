@@ -7,7 +7,7 @@ import { EntityId } from '@/components/display';
 import type { OrderTest } from '@/types';
 import { displayId } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
-import { INLINE_LINK, TYPE } from '@/components/theme/recipes';
+import { INLINE_LINK, TYPE } from '@/theme/recipes';
 
 export type LinkedOrderTestsListProps = {
   tests: OrderTest[];

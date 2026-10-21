@@ -14,8 +14,8 @@ import { PaymentMethodSelector } from './PaymentMethodSelector';
 import { PopoverFormChrome } from '@/components/overlays';
 import { cn, formatCurrency } from '@/utils';
 import { OrderReceipt } from '@/features/orders';
-import { inputBase, FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
-import { TONE, TYPE } from '@/components/theme/recipes';
+import { inputBase, FORM_FIELD_LABEL } from '@/theme/recipes';
+import { TONE, TYPE } from '@/theme/recipes';
 import type { Order } from '@/types';
 import {
   getEnabledPaymentMethods,
@@ -23,8 +23,7 @@ import {
   type PaymentMethod,
 } from '@/types/payments';
 import { useCreatePayment, useOrderRemainingBalance } from '../api/payments';
-import { getFeedback, notify } from '@/utils/feedback';
-import { feedbackTitle } from '@/utils/feedback/copy';
+import { feedbackTitle, getFeedback, notify } from '@/utils/feedback';
 import { ICONS, MODULE_ICONS } from '@/config/icons';
 import { getPaymentErrorMessage } from '@/utils/errors';
 

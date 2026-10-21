@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { DETAIL_TYPE } from '@/components/theme/recipes';
+import { DETAIL_TYPE } from '@/theme/recipes';
 import { cn } from '@/utils';
 
 export interface DetailGroupProps {

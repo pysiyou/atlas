@@ -2,7 +2,7 @@
  * Unified quality issue form — used at collection (sample reject).
  */
 import React from 'react';
-import { TYPE } from '@/components/theme/recipes';
+import { TYPE } from '@/theme/recipes';
 import { Alert } from '@/components/display';
 import { SpinnerLoader } from '@/components/loaders';
 import { CatalogRejectionCriteriaFields } from './CatalogRejectionCriteriaFields';

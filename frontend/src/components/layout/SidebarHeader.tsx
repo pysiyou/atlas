@@ -1,7 +1,7 @@
 import { companyConfig } from '@/config';
 import { actionButtonPreset, Icon, IconButton } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
-import { CHROME, RADIUS, TYPE } from '@/components/theme/recipes';
+import { CHROME, RADIUS, TYPE } from '@/theme/recipes';
 import { cn } from '@/utils';
 
 export interface SidebarHeaderProps {

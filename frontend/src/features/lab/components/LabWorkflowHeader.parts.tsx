@@ -3,7 +3,7 @@
 import { cn, formatDateTime } from '@/utils';
 import { EntityId } from '@/components/display';
 import { useUserLookup } from '@/lib/api/users';
-import { LAB_CARD_TYPOGRAPHY, LAB_HEADER, LAB_MODAL_TYPOGRAPHY } from '../utils/labStyles';
+import { LAB_CARD_TYPOGRAPHY, LAB_HEADER, LAB_MODAL_TYPOGRAPHY } from '@/theme/recipes';
 import type { LabAuditLine } from '../constants/labWorkflowAuditLines';
 
 export function LabAuditLineView({

@@ -2,7 +2,7 @@
  * Single milestone row — pipeline chip, stair activity meter, and share column.
  */
 import React from 'react';
-import { TODAY_KPI } from './monitorStyles';
+import { TODAY_KPI } from '@/theme/recipes';
 import {
   formatTodayRowAriaLabel,
   formatTodayRowTitle,

@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { Badge } from '@/components/primitives';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { OVERLAY, RADIUS, TONE, TYPE } from '@/components/theme/recipes';
+import { OVERLAY, RADIUS, TONE, TYPE } from '@/theme/recipes';
 
 
 interface AttemptIndicatorProps {

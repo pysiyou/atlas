@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
-import { CHROME } from '@/components/theme/recipes';
+import { CHROME } from '@/theme/recipes';
 import { cn } from '@/utils';
 import type { MenuItem, SettingsItem } from './sidebarMenu';
 

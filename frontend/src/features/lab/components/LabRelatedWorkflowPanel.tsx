@@ -13,7 +13,7 @@ import type { OrderTest, Sample } from '@/types';
 import type { TestWithContext } from '@/types';
 import { displayId } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
-import { INLINE_LINK, TYPE } from '@/components/theme/recipes';
+import { INLINE_LINK, TYPE } from '@/theme/recipes';
 
 type LabRelatedTestsPanelProps = {
   test: TestWithContext;

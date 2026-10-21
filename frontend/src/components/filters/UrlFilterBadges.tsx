@@ -7,7 +7,7 @@ import { Icon, Badge } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 import { displayId } from '@/utils';
 import type { UrlFilters } from '@/utils/filters';
-import { TYPE } from '@/components/theme/recipes';
+import { TYPE } from '@/theme/recipes';
 
 export interface UrlFilterBadgesProps {
   urlFilters: UrlFilters;

@@ -4,7 +4,7 @@ import { CatalogCategoryBadge, CatalogSampleTypeBadge } from './CatalogStatusBad
 import type { CardComponentProps } from '@/components/data-table';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import type { TestSummary } from '@/types';
-import { BADGE, CARD_PRICE, TYPE } from '@/components/theme/recipes';
+import { BADGE, CARD_PRICE, TYPE } from '@/theme/recipes';
 
 
 /**

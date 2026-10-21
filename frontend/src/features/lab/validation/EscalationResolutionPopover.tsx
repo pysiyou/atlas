@@ -2,11 +2,11 @@ import type { ReactNode } from 'react';
 import { Button } from '@/components/primitives';
 import { Popover } from '@/components/overlays';
 import { cn, displayId } from '@/utils';
-import { inputBase } from '@/components/inputs/inputStyles';
+import { inputBase } from '@/theme/recipes';
 import { PopoverFormChrome } from '@/components/overlays';
 import type { FeedbackId } from '@/config/feedbackCatalog';
 import type { CriticalReadBackPayload, EscalationResolutionAction } from '@/types/lab-operations';
-import { TYPE } from '@/components/theme/recipes';
+import { TYPE } from '@/theme/recipes';
 
 
 interface ResolutionPopoverProps {

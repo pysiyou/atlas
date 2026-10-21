@@ -11,7 +11,7 @@ import {
   ResultValidationResultsBody,
 } from '@/features/lab';
 import type { Gender } from '@/types';
-import { SPACING, TYPE } from '@/components/theme/recipes';
+import { SPACING, TYPE } from '@/theme/recipes';
 import type { LabReportPayload } from '../types';
 import { getActiveOrderTests } from '../utils/prepareReportData';
 

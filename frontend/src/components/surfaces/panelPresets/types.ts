@@ -36,7 +36,7 @@ export interface PanelPresetDefinition {
   hideHeader?: boolean;
   /** Header start slot supplies the heading (e.g. per-test report preview). */
   headingSlot?: boolean;
-  /** Static helper line. Call-site `meta` overrides this. */
+  /** Static header caption (right side). Call-site `meta` overrides this. */
   meta?: string;
   shellLayout?: PanelShellLayout;
   bodyLayout?: PanelBodyLayout;

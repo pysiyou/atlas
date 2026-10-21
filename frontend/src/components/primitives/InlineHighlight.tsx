@@ -1,10 +1,10 @@
 /**
  * Inline highlight for body copy (event log, notes). Multi-line via `box-decoration-clone`.
- * Styles: `INLINE_HIGHLIGHT` in `@/components/theme/recipes`.
+ * Styles: `INLINE_HIGHLIGHT` in `@/theme/recipes`.
  */
 import React from 'react';
 import { cn } from '@/utils';
-import { INLINE_HIGHLIGHT } from '@/components/theme/recipes';
+import { INLINE_HIGHLIGHT } from '@/theme/recipes';
 import { resolveColor } from './badgeStyles';
 import type { BadgeColor, BadgeVariant } from './badgeTypes';
 import { Icon, type IconName } from './Icon';

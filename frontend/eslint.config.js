@@ -176,6 +176,15 @@ export default defineConfig([
             group: ['@/features/*/utils/*TableColumnRenders*'],
             message: 'Do not import feature table renders from shared components.',
           },
+          {
+            group: ['@/components/inputs/inputStyles', '@/components/inputs/inputStyles.ts'],
+            message: 'Import form chrome from @/theme/recipes.',
+          },
+          {
+            group: ['@/theme/recipes/*'],
+            message:
+              'Import design recipes from @/theme/recipes (barrel only), not recipe subpaths.',
+          },
         ],
       }],
     },
@@ -187,7 +196,7 @@ export default defineConfig([
     },
   },
   {
-    files: ['src/components/theme/recipes.ts'],
+    files: ['src/theme/recipes/**/*.ts'],
     rules: {
       'max-lines': 'off',
       'no-restricted-syntax': ['error', {
@@ -198,36 +207,28 @@ export default defineConfig([
         message: 'Use type-* utilities or recipes TYPE/TABLE_TYPE, not arbitrary px font sizes.',
       }, {
         selector: 'Literal[value=/rounded-\\[/]',
-        message: 'Use RADIUS from @/components/theme/recipes, not arbitrary rounded-[Npx].',
+        message: 'Use RADIUS from @/theme/recipes, not arbitrary rounded-[Npx].',
       }, {
         selector: 'TemplateElement[value.raw=/rounded-\\[/]',
-        message: 'Use RADIUS from @/components/theme/recipes, not arbitrary rounded-[Npx].',
+        message: 'Use RADIUS from @/theme/recipes, not arbitrary rounded-[Npx].',
       }, {
         selector: 'Literal[value=/h-\\[34px\\]/]',
-        message: 'Use CONTROL.height from @/components/theme/recipes.',
+        message: 'Use CONTROL.height from @/theme/recipes.',
       }, {
         selector: 'TemplateElement[value.raw=/h-\\[34px\\]/]',
-        message: 'Use CONTROL.height from @/components/theme/recipes.',
+        message: 'Use CONTROL.height from @/theme/recipes.',
       }],
     },
   },
   {
     files: [
-      'src/components/inputs/inputStyles.ts',
       'src/components/surfaces/Panel.tsx',
       'src/components/data-table/constants.ts',
       'src/components/display/DetailField.tsx',
       'src/components/display/DetailGroup.tsx',
       'src/components/display/DetailsTable.tsx',
       'src/features/**/config/*Table.config.tsx',
-      'src/features/lab/utils/labStyles.ts',
       'src/features/lab/utils/labResult.ts',
-      'src/features/lab/monitor/monitorStyles.ts',
-      'src/features/lab/collection/**/*.{ts,tsx}',
-      'src/features/lab/entry/**/*.{ts,tsx}',
-      'src/features/lab/validation/**/*.{ts,tsx}',
-      'src/features/lab/components/**/*.{ts,tsx}',
-      'src/features/lab/pages/**/*.{ts,tsx}',
     ],
     rules: {
       'no-restricted-syntax': ['error', ...designTokenRestrictedSyntax],
@@ -236,7 +237,7 @@ export default defineConfig([
   {
     files: ['src/components/**/*.{ts,tsx}', 'src/features/**/*.{ts,tsx}'],
     ignores: [
-      'src/components/theme/recipes.ts',
+      'src/theme/recipes/**',
       'src/components/surfaces/Panel.tsx',
       'src/features/auth/**/*.{ts,tsx}',
       'src/features/lab/collection/SampleCollectionLabelActions.tsx',

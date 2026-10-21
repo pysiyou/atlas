@@ -9,9 +9,9 @@ import {
 } from '../components/LabDomainBadges';
 import {
   buildViews,
-  COLUMN_SIZE,
   createBadgeColumn,
   createColumn,
+  createDateTimeColumn,
   TABLE_COLUMN_WIDTH,
   type TableViewConfig,
 } from '@/components/data-table';
@@ -27,7 +27,7 @@ import {
   renderTableTwoLineCell,
 } from '@/utils/tableColumnRenders';
 import type { LabOrderTableRow } from './LabOrdersTable';
-import { BADGE } from '@/components/theme/recipes';
+import { BADGE } from '@/theme/recipes';
 
 const VIEWS = {
   full: ['test', 'patient', 'sampleType', 'doctor', 'priority', 'department', 'status', 'date'],
@@ -90,13 +90,13 @@ function LabOrderTableCard({ item, onClick }: CardComponentProps<LabOrderTableRo
 export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> {
   const columnMap = {
     test: createColumn<LabOrderTableRow>('test', 'Test', {
-      width: COLUMN_SIZE['2xl'],
+      width: TABLE_COLUMN_WIDTH.primary,
       sortable: true,
       accessor: row => `${row.testName} ${row.testCode}`,
       render: row => renderTableTwoLineCell(row.testName, row.testCode),
     }),
     patient: createColumn<LabOrderTableRow>('patient', 'Patient', {
-      width: COLUMN_SIZE.lg,
+      width: TABLE_COLUMN_WIDTH.supporting,
       sortable: true,
       accessor: row => row.patientName,
       render: row =>
@@ -111,10 +111,10 @@ export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> 
         ) : (
           renderTableEmptyCell()
         ),
-      { accessor: row => row.sampleType, width: COLUMN_SIZE.md, sortable: true },
+      { accessor: row => row.sampleType, sortable: true },
     ),
     doctor: createColumn<LabOrderTableRow>('doctor', 'Doctor', {
-      width: COLUMN_SIZE.lg,
+      width: TABLE_COLUMN_WIDTH.supporting,
       accessor: row => row.doctorName ?? '',
       render: row =>
         renderTableTwoLineCell(
@@ -137,20 +137,20 @@ export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> 
         ) : (
           renderTableEmptyCell()
         ),
-      { accessor: row => row.department ?? '', width: COLUMN_SIZE.md },
+      { accessor: row => row.department ?? '' },
     ),
     status: createBadgeColumn<LabOrderTableRow>(
       'status',
       'Status',
       row => renderMonitorStatus(row),
-      { accessor: row => monitorStatusAccessor(row), width: COLUMN_SIZE.md },
+      { accessor: row => monitorStatusAccessor(row), width: TABLE_COLUMN_WIDTH.badgeWide },
     ),
-    date: createColumn<LabOrderTableRow>('date', 'Date', {
-      width: TABLE_COLUMN_WIDTH.datetime,
-      sortable: true,
-      accessor: row => row.date,
-      render: row => renderDateTimeCell(row.date),
-    }),
+    date: createDateTimeColumn<LabOrderTableRow>(
+      'date',
+      'Date',
+      row => row.date,
+      { accessor: row => row.date },
+    ),
   };
 
   return {

@@ -11,7 +11,7 @@ import { DialogHeader, DialogFooter } from './DialogChrome';
 import { MODULE_ICONS } from '@/config/icons';
 import { ICONS } from '@/config/icons';
 import { cn } from '@/utils';
-import { MENU_ITEM, RADIUS, TONE, TYPE } from '@/components/theme/recipes';
+import { MENU_ITEM, RADIUS, TONE, TYPE } from '@/theme/recipes';
 
 export interface PopoverFormChromeProps {
   title: string;

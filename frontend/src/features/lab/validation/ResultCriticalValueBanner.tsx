@@ -6,7 +6,7 @@ import React from 'react';
 import { Alert } from '@/components/display';
 import { Icon } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
-import { FIELD_ERROR, TONE, TYPE } from '@/components/theme/recipes';
+import { FIELD_ERROR, TONE, TYPE } from '@/theme/recipes';
 
 
 export interface CriticalValueBannerProps {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { CHROME } from '@/components/theme/recipes';
+import { CHROME } from '@/theme/recipes';
 import { cn } from '@/utils';
 import type { AuthUser } from '@/types';
 import type { MenuItem, SettingsItem } from './sidebarMenu';

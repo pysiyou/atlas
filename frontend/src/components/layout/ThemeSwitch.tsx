@@ -1,8 +1,8 @@
 import { Icon } from '@/components/primitives';
-import { useActiveThemeMode, setThemeMode } from '@/components/theme';
-import type { ThemeMode } from '@/components/theme';
+import { useActiveThemeMode, setThemeMode } from '@/theme';
+import type { ThemeMode } from '@/theme';
 import type { IconName } from '@/components/primitives/Icon';
-import { CHROME, CONTROL, RADIUS, THEME_SWITCH_TYPE } from '@/components/theme/recipes';
+import { CHROME, CONTROL, RADIUS, THEME_SWITCH_TYPE } from '@/theme/recipes';
 import { cn } from '@/utils';
 
 const MODES: ThemeMode[] = ['light', 'dark'];

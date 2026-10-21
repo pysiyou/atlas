@@ -10,7 +10,7 @@ import { statusMapFromFlags, parseResultEntry, isCritical } from '../utils/labRe
 import { ResultsParameterGrid } from '../components/ResultsParameterGrid';
 import { ResultContextNotes } from '../components/ResultContextNotes';
 import { RESULT_PANEL } from '../utils/labResult';
-import { TYPE } from '@/components/theme/recipes';
+import { TYPE } from '@/theme/recipes';
 import { resolveParameterLabel, useParameterLabelMap } from '@/features/catalog';
 import { LAB_CONFIG } from '../constants';
 import type { Gender, Patient } from '@/types';

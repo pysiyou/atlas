@@ -4,7 +4,7 @@
 /* eslint-disable react-refresh/only-export-components -- Panel + preset re-exports */
 
 import React from 'react';
-import { PANEL_SHELL } from '@/components/theme/recipes';
+import { PANEL_SHELL } from '@/theme/recipes';
 import { cn } from '@/utils';
 import {
   getPanelPreset,
@@ -25,7 +25,10 @@ function isLabVariant(variant: PanelVariant): boolean {
 
 export interface PanelProps {
   preset: PanelPresetId;
-  /** Dynamic counts or status. Overrides the preset's static meta when set. */
+  /**
+   * Optional caption on the **right** of the header (counts, hints, scope).
+   * Prefer this over a second title; pair with `headerEnd` for actions.
+   */
   meta?: string;
   headerStart?: React.ReactNode;
   headerEnd?: React.ReactNode;
@@ -48,8 +51,8 @@ export function Panel({
   const scroll = def.scroll ?? 'default';
   const resolvedSpacing = def.spacing ?? (isLabVariant(def.variant) ? 'normal' : 'none');
   const resolvedMeta = meta ?? def.meta;
-  const useBetweenLayout = Boolean(resolvedMeta || headerEnd);
-  const headerClass = useBetweenLayout ? tokens.headerBetween : tokens.header;
+  const hasHeaderAside = Boolean(resolvedMeta || headerEnd);
+  const headerClass = hasHeaderAside ? tokens.headerBetween : tokens.header;
   const hasFooter = footer != null && footer !== false;
   const hideHeader = def.hideHeader === true;
 
@@ -73,14 +76,24 @@ export function Panel({
     >
       {!hideHeader && (
         <div className={headerClass}>
-          {def.headingSlot && headerStart != null ? (
-            <div className={tokens.title}>{headerStart}</div>
-          ) : (
-            headerStart
-          )}
-          {titleNode}
-          {resolvedMeta && <span className={tokens.meta}>{resolvedMeta}</span>}
-          {headerEnd != null && <div className={tokens.headerActions}>{headerEnd}</div>}
+          <div className={tokens.headerLead}>
+            {def.headingSlot && headerStart != null ? (
+              <div className={tokens.title}>{headerStart}</div>
+            ) : (
+              headerStart
+            )}
+            {titleNode}
+          </div>
+          {hasHeaderAside ? (
+            <div className={tokens.headerAside}>
+              {resolvedMeta ? (
+                <span className={cn(tokens.meta, 'min-w-0 text-right')}>{resolvedMeta}</span>
+              ) : null}
+              {headerEnd != null ? (
+                <div className={tokens.headerActions}>{headerEnd}</div>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       )}
       <div

@@ -12,8 +12,8 @@ import { cn, displayId } from '@/utils';
 import { getLabQueueUrl } from '../constants/labConstants';
 import { usePendingCriticalValues } from './criticalValues';
 import { CriticalValueActions } from './CriticalValueActions';
-import { RADIUS, TONE, TYPE } from '@/components/theme/recipes';
-import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
+import { RADIUS, TONE, TYPE } from '@/theme/recipes';
+import { LAB_CARD_BADGE_SIZE } from '@/theme/recipes';
 
 export const PendingCriticalValuesPanel: React.FC = () => {
   const { criticalValues, isLoading, refetch } = usePendingCriticalValues();

@@ -9,7 +9,7 @@ import { DetailPageSkeleton } from '@/components/loaders/DetailPageSkeleton';
 import { ErrorAlert } from '@/components/loaders/ErrorAlert';
 import { EmptyState } from '@/components/display';
 import { ICONS } from '@/config/icons';
-import { WORKSPACE } from '@/components/theme/recipes';
+import { WORKSPACE } from '@/theme/recipes';
 import { useAppChromeMount } from './appChromeMount';
 import { cn } from '@/utils';
 

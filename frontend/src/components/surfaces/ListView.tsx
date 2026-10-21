@@ -11,7 +11,7 @@ import { ErrorAlert } from '@/components/loaders/ErrorAlert';
 import { emptyTitle } from '@/components/display/emptyStateCopy';
 import { DEFAULT_EMPTY_DESCRIPTION_SEARCH } from '@/utils/constants';
 import type { ListViewPaginationConfig, PaginationConfig, SortConfig } from '@/utils/table';
-import { PANEL, WORKSPACE } from '@/components/theme/recipes';
+import { PANEL, WORKSPACE } from '@/theme/recipes';
 
 type TableDataItem = Record<string, unknown> | object;
 

@@ -3,7 +3,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { RADIUS, SURFACE } from '@/components/theme/recipes';
+import { RADIUS, SURFACE } from '@/theme/recipes';
 import { cn } from '@/utils';
 
 export interface MobileEntityCardProps {

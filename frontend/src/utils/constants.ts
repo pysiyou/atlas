@@ -4,7 +4,7 @@
  */
 
 import { EMPTY_COPY, emptySubtitle, emptyTitle } from '@/components/display/emptyStateCopy';
-import { DETAIL_TYPE, TYPE, TABLE_TYPE } from '@/components/theme/recipes';
+import { DETAIL_TYPE, TYPE, TABLE_TYPE } from '@/theme/recipes';
 
 // ---------------------------------------------------------------------------
 // Pagination & Display Limits

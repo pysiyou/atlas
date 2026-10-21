@@ -14,7 +14,7 @@ import type {
   TableSkeletonProps,
   TableVariant,
 } from './types';
-import { TABLE_SHELL, TABLE_TYPE } from '@/components/theme/recipes';
+import { TABLE_SHELL, TABLE_TYPE } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { CELL_PADDING, HEADER_PADDING, ROW_HEIGHTS } from './constants';
 

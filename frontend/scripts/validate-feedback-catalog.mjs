@@ -17,7 +17,7 @@ const VARIANTS = new Set(['success', 'error', 'warning', 'info', 'danger']);
 const APP_TOAST_BAR_ALLOWLIST = new Set([
   'app/AppToastBar.tsx',
   'app/App.tsx',
-  'utils/feedback/notify.ts',
+  'utils/feedback.ts',
 ]);
 
 function fail(message) {

@@ -2,7 +2,7 @@
  * Closed layout roles for Panel presets — replaces call-site className / bodyClassName.
  */
 
-import { SPACING } from '@/components/theme/recipes';
+import { SPACING } from '@/theme/recipes';
 import type { PanelBodyLayout, PanelShellLayout, PanelSpacing } from './types';
 
 export const PANEL_SHELL_LAYOUT: Record<PanelShellLayout, string> = {

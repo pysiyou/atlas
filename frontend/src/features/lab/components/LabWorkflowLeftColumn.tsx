@@ -8,7 +8,7 @@ import { LabIdentityRow, type LabIdentityContext } from './LabIdentityRow';
 import { LabAuditBlock } from './LabWorkflowHeader.parts';
 import type { LabAuditLine } from '../constants/labWorkflowAuditLines';
 import { cn } from '@/utils';
-import { LAB_CARD_ALERT, LAB_CARD_HEADER } from '../utils/labStyles';
+import { LAB_CARD_ALERT, LAB_CARD_HEADER } from '@/theme/recipes';
 
 export interface LabWorkflowLeftColumnProps {
   context: LabIdentityContext;

@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { SpinnerLoader } from './SpinnerLoader';
-import { RADIUS, TYPE } from '@/components/theme/recipes';
+import { RADIUS, TYPE } from '@/theme/recipes';
 import { cn } from '@/utils/cn';
 
 const LOADER_GLOW: Record<'sm' | 'md' | 'lg', string> = {

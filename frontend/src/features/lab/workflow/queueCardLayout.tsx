@@ -19,7 +19,7 @@ import {
   LAB_CARD_SPACING,
   LAB_CARD_TYPOGRAPHY,
   LAB_MOBILE_CARD,
-} from '../utils/labStyles';
+} from '@/theme/recipes';
 
 export interface QueueCardHeaderProps {
   context?: LabIdentityContext;

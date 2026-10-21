@@ -6,7 +6,7 @@ import type { MouseEvent } from 'react';
 import type { NavigateFunction } from 'react-router-dom';
 import { EntityId } from '@/components/display';
 import type { TableViewConfig } from '@/components/data-table';
-import { buildViews, COLUMN_SIZE, TABLE_COLUMN_WIDTH } from '@/components/data-table';
+import { buildViews, TABLE_COLUMN_WIDTH } from '@/components/data-table';
 import { ORDER_TABLE_COLUMN_HEADERS, renderOrderPatientName } from '@/features/orders';
 import { renderDateTimeCell } from '@/utils/tableColumnRenders';
 import type { ReportableOrder } from '../types';
@@ -14,7 +14,7 @@ import { ReportPreviewButton } from '../components/ReportPreviewButton';
 import { ReportPrintButton } from '../components/ReportPrintButton';
 import { ValidatedTestReportCard } from '../components/ValidatedTestReportCard';
 import { getActiveOrderTests } from '../utils/prepareReportData';
-import { TABLE_TYPE } from '@/components/theme/recipes';
+import { TABLE_TYPE } from '@/theme/recipes';
 
 const REPORT_VIEWS = {
   full: ['orderId', 'patientName', 'tests', 'orderDate', 'status', 'action'],
@@ -52,7 +52,7 @@ export const createReportTableConfig = (
     orderId: {
       key: 'orderId',
       header: ORDER_TABLE_COLUMN_HEADERS.orderId,
-      width: COLUMN_SIZE.sm,
+      width: TABLE_COLUMN_WIDTH.id,
       sortable: true,
       accessor: (order: ReportableOrder) => order.orderId,
       render: (order: ReportableOrder) => (
@@ -71,7 +71,7 @@ export const createReportTableConfig = (
     patientName: {
       key: 'patientName',
       header: 'Patient',
-      width: COLUMN_SIZE.xl,
+      width: TABLE_COLUMN_WIDTH.patientName,
       sortable: true,
       accessor: (order: ReportableOrder) => order.patientName,
       render: (order: ReportableOrder) =>
@@ -80,7 +80,7 @@ export const createReportTableConfig = (
     tests: {
       key: 'tests',
       header: 'Tests',
-      width: COLUMN_SIZE.fill,
+      width: TABLE_COLUMN_WIDTH.flex,
       sortable: true,
       accessor: (order: ReportableOrder) => testsSummary(order).names,
       render: (order: ReportableOrder) => {
@@ -106,7 +106,7 @@ export const createReportTableConfig = (
     status: {
       key: 'status',
       header: 'Status',
-      width: COLUMN_SIZE.xs,
+      width: TABLE_COLUMN_WIDTH.compact,
       sortable: true,
       accessor: (order: ReportableOrder) => order.validatedTestCount,
       render: (order: ReportableOrder) => (

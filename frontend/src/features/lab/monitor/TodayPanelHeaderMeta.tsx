@@ -2,7 +2,7 @@
  * Header meta for the Today panel — compact UTC day label.
  */
 import React from 'react';
-import { TODAY_KPI } from './monitorStyles';
+import { TODAY_KPI } from '@/theme/recipes';
 
 export interface TodayPanelHeaderMetaProps {
   headerRange: string;

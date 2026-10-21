@@ -10,7 +10,7 @@ import { useUserLookup } from '@/lib/api/users';
 import { useLabWorkflowCardClickGuard } from '../hooks';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
-import { LAB_MOBILE_CARD } from '../utils/labStyles';
+import { LAB_MOBILE_CARD } from '@/theme/recipes';
 import type { TestWithContext } from '@/types';
 import { QueueCard, QueueCardMobile } from './queueCardLayout';
 import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';

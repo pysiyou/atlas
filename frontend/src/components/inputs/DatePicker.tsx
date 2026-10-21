@@ -18,7 +18,7 @@ import {
 import { FilterTriggerShell, Popover } from '@/components/overlays';
 import { FilterChip, Icon } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
-import { CALENDAR_TYPE, RADIUS, TYPE } from '@/components/theme/recipes';
+import { CALENDAR_TYPE, RADIUS, TYPE } from '@/theme/recipes';
 import { cn } from '@/utils';
 import {
   isDateDisabledForPicker,

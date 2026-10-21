@@ -2,7 +2,7 @@
  * Event log filter row — kind, date, entity id, include-access.
  */
 import React from 'react';
-import { FILTER_TYPE } from '@/components/theme/recipes';
+import { FILTER_TYPE } from '@/theme/recipes';
 import { Checkbox } from '@/components/primitives';
 import { DebouncedSearchInput } from '@/components/inputs';
 import { EventLogSearchField } from './EventLogSearchField';

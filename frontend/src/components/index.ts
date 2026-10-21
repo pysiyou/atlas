@@ -10,5 +10,4 @@ export * from './surfaces';
 export * from './data-table';
 export * from './loaders';
 export * from './layout';
-export * from './theme';
 export * from './filters';

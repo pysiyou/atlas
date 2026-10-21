@@ -6,7 +6,7 @@
 import { memo, type ReactNode } from 'react';
 import type { BadgeSize } from '@/components/primitives';
 import type { TestWithContext } from '@/types';
-import { LAB_CARD_BADGE_SIZE } from '../utils/labStyles';
+import { LAB_CARD_BADGE_SIZE } from '@/theme/recipes';
 import { OrderTestStatusBadge } from '@/features/orders';
 import {
   LabPriorityBadge,

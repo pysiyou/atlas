@@ -2,7 +2,7 @@
  * Value + unit + abnormal status text (shared by result grids and event log).
  */
 import { cn } from '@/utils';
-import { TYPE } from '@/components/theme/recipes';
+import { TYPE } from '@/theme/recipes';
 import type { ResultStatus } from '@/types/enums';
 import {
   RESULT_PANEL,

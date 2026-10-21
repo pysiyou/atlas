@@ -34,7 +34,7 @@ import {
 } from '@floating-ui/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils';
-import { OVERLAY } from '@/components/theme/recipes';
+import { OVERLAY } from '@/theme/recipes';
 
 /**
  * Placement options for the popover

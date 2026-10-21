@@ -5,7 +5,7 @@
 import { actionButtonPreset, Button, Icon } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 
-import { ERROR_SURFACE_TYPE, RADIUS, SHADOW, TONE } from '@/components/theme/recipes';
+import { ERROR_SURFACE_TYPE, RADIUS, SHADOW, TONE } from '@/theme/recipes';
 
 export interface ErrorFallbackProps {
   error: Error | null;

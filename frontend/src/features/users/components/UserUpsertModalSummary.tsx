@@ -5,7 +5,7 @@ import React from 'react';
 import { Avatar, Badge } from '@/components/primitives';
 import { Callout } from '@/components/display';
 import { MODULE_ICONS } from '@/config/icons';
-import { ERROR_SURFACE_TYPE, RADIUS, TYPE } from '@/components/theme/recipes';
+import { ERROR_SURFACE_TYPE, RADIUS, TYPE } from '@/theme/recipes';
 import { USER_ROLE_CONFIG, type UserRole } from '@/types';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import type { UserAdminRecord } from '../api/usersAdmin';

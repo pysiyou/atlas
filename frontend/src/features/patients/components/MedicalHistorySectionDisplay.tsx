@@ -8,7 +8,7 @@ import type { Patient } from '@/types';
 import { DetailField } from '@/components/display/DetailField';
 import { formatList, formatFamilyHistory, formatLifestyle } from '../utils/patientFormatters';
 import { ICONS } from '@/config/icons';
-import { TONE } from '@/components/theme/recipes';
+import { TONE } from '@/theme/recipes';
 import { DetailFieldsColumnFlow } from '@/components/display';
 
 export interface MedicalHistorySectionDisplayProps {

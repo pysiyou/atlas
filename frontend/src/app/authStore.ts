@@ -2,9 +2,12 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { AuthUser, UserRole } from '@/types';
 import { authAPI, bindAuthClientHandlers } from '@/lib/api/auth';
-import { notify } from '@/utils/feedback';
-import { feedbackTitle } from '@/utils/feedback/copy';
-import { clearSessionExpired, markSessionExpired } from '@/utils/feedback/sessionExpiry';
+import {
+  clearSessionExpired,
+  feedbackTitle,
+  markSessionExpired,
+  notify,
+} from '@/utils/feedback';
 import { getQueryClient } from '@/lib/query/client';
 import { clearPersistedQueryCache } from '@/lib/query/persistor';
 import { clearAllLabDrafts } from '@/features/lab/state/labDraftStore';

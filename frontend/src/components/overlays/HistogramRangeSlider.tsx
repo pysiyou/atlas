@@ -4,7 +4,7 @@
  */
 
 import React, { useCallback, useMemo } from 'react';
-import { RANGE_SLIDER, RADIUS, TYPE } from '@/components/theme/recipes';
+import { RANGE_SLIDER, RADIUS, TYPE } from '@/theme/recipes';
 import { cn } from '@/utils';
 
 const SLIDER_THUMB_CLASS = cn(

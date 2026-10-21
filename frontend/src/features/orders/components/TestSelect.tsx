@@ -17,9 +17,9 @@ import { indexTestsByCode } from '@/features/catalog/testLookup';
 import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
 import { cn, formatCurrency, formatTurnaroundTime, titleCaseWords } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/components/inputs/inputStyles';
+import { inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/theme/recipes';
 import { OrderSelectPopoverShell } from './OrderSelectPopoverShell';
-import { CONTROL, FIELD_ERROR, SPACING, TYPE } from '@/components/theme/recipes';
+import { CONTROL, FIELD_ERROR, SPACING, TYPE } from '@/theme/recipes';
 
 
 const SELECTED_CHIP_CLASS =

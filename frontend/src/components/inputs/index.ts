@@ -5,7 +5,21 @@
 
 // FormField contains Input, Textarea, Select
 export * from './FormField';
-export * from './inputStyles';
+export {
+  FORM_CONTROL_LABEL,
+  FORM_FIELD_LABEL,
+  filterTriggerText,
+  inputBase,
+  inputClearButton,
+  inputContainerBase,
+  inputContainerError,
+  inputError,
+  inputInner,
+  inputText,
+  inputTrigger,
+  inputTriggerOpen,
+  inputWrapper,
+} from '@/theme/recipes';
 export * from './DateInput';
 export * from './DatePicker';
 export { DatePicker as DateFilter } from './DatePicker';

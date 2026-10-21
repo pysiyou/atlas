@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { RADIUS, SHADOW, SURFACE } from '@/components/theme/recipes';
+import { RADIUS, SHADOW, SURFACE } from '@/theme/recipes';
 
 interface SkeletonProps {
   /** Width of the skeleton (CSS value) */

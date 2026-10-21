@@ -6,9 +6,9 @@ import { AttemptIndicator } from '../components/LabAttemptIndicators';
 import { TestHeaderBadges } from '../components/LabWorkflowBadges';
 import { SupervisorApprovalBadge } from '../components/LabResultStatusBadges';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
-import { LAB_CARD_BADGE_SIZE, LAB_CARD_TYPOGRAPHY } from '../utils/labStyles';
+import { LAB_CARD_BADGE_SIZE, LAB_CARD_TYPOGRAPHY } from '@/theme/recipes';
 import type { TestWithContext } from '@/types';
-import { TYPE } from '@/components/theme/recipes';
+import { TYPE } from '@/theme/recipes';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 
 function ticketString(value: unknown): string | undefined {

@@ -16,7 +16,7 @@ import {
   type LabWorkflowStage,
 } from '@/features/lab';
 import { useAuthStore } from '@/app/authStore';
-import { INLINE_LINK, RADIUS, TYPE } from '@/components/theme/recipes';
+import { INLINE_LINK, RADIUS, TYPE } from '@/theme/recipes';
 
 
 const LAB_QUEUE_ITEMS: Array<{

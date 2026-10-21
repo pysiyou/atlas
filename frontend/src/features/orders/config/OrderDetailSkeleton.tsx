@@ -1,5 +1,5 @@
 import { Panel } from '@/components/surfaces';
-import { LAYOUT, SPACING } from '@/components/theme/recipes';
+import { LAYOUT, SPACING } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { SkeletonInfoSection, SkeletonTableRow } from '@/components/loaders/Skeleton';
 import type { DetailSkeletonSection } from '@/components/loaders/DetailPageSkeleton';

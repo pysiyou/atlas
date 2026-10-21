@@ -6,7 +6,7 @@ import { Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/loaders';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
-import { inputClearButton, inputInner, inputText, inputWrapper } from '@/components/inputs/inputStyles';
+import { inputClearButton, inputInner, inputText, inputWrapper } from '@/theme/recipes';
 import { EVENT_LOG_COPY } from './types';
 import { EVENT_LOG_FILTER_PLACEHOLDERS } from './EventLogFiltersInlineControls';
 import { buildEventLogSearchMatchGroups } from './eventLogSearchMatchGroups';

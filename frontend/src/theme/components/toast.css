@@ -1,0 +1,50 @@
+/* Toaster host — never intercept clicks outside the toast card */
+
+.app-toaster,
+[data-rht-toaster] {
+  pointer-events: none !important;
+}
+
+.app-toaster > *,
+[data-rht-toaster] > * {
+  pointer-events: none !important;
+}
+
+.app-toaster > * > *,
+[data-rht-toaster] > * > * {
+  pointer-events: auto;
+}
+
+.toast-card {
+  --toast-variant-accent: var(--toast-info);
+  color: var(--toast-fg);
+  border: 1px solid var(--toast-border);
+  box-shadow: var(--toast-shadow);
+  background:
+    linear-gradient(
+      152deg,
+      color-mix(in srgb, var(--toast-variant-accent) var(--toast-accent-mix), transparent) 0%,
+      transparent 52%
+    ),
+    var(--toast-bg);
+}
+
+.toast-card--success {
+  --toast-variant-accent: var(--toast-success);
+}
+
+.toast-card--error {
+  --toast-variant-accent: var(--toast-danger);
+}
+
+.toast-card--warning {
+  --toast-variant-accent: var(--toast-warning);
+}
+
+.toast-card--info {
+  --toast-variant-accent: var(--toast-info);
+}
+
+.toast-card--loading {
+  --toast-variant-accent: var(--toast-fg-muted);
+}

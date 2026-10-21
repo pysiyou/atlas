@@ -4,10 +4,10 @@ import { useAsyncAction } from '@/hooks/useAsyncAction';
 import type { AffiliationDuration } from '@/types';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import { formatDate } from '@/utils';
-import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
+import { FORM_FIELD_LABEL } from '@/theme/recipes';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { AffiliationPlanSelector } from './AffiliationPlanSelector';
-import { FIELD_ERROR, RADIUS, SHADOW, SURFACE, TONE, TYPE } from '@/components/theme/recipes';
+import { FIELD_ERROR, RADIUS, SHADOW, SURFACE, TONE, TYPE } from '@/theme/recipes';
 import type { PatientFormSectionProps } from '../patientFormTypes';
 
 export const AffiliationSection: React.FC<

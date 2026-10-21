@@ -2,7 +2,7 @@
  * Data table layout constants and defaults.
  */
 
-import { TABLE_CELL, TABLE_TYPE } from '@/components/theme/recipes';
+import { TABLE_CELL, TABLE_TYPE } from '@/theme/recipes';
 import type { ColumnSizePreset, ColumnWidth, TableVariant } from './types';
 
 /** Canonical pixel layout for every table column width token. */

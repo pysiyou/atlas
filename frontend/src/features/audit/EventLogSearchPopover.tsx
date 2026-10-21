@@ -4,9 +4,9 @@
 import React from 'react';
 import { Avatar, Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/loaders';
-import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
+import { FORM_FIELD_LABEL } from '@/theme/recipes';
 import { OrderSelectPopoverShell } from '@/features/orders';
-import { CONTROL, TYPE } from '@/components/theme/recipes';
+import { CONTROL, TYPE } from '@/theme/recipes';
 import { cn } from '@/utils';
 import type { AuditSearchPreviewResponse } from './api';
 import {

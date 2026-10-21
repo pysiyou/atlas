@@ -2,7 +2,7 @@
  * Badge color maps, labels, and appearance helpers.
  */
 
-import { TONE } from '@/components/theme/recipes';
+import { TONE } from '@/theme/recipes';
 import type { BadgeColor, BadgeVariant } from './badgeTypes';
 
 export type { BadgeColor, BadgeVariant } from './badgeTypes';

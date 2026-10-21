@@ -5,11 +5,11 @@ import { Badge } from '@/components/primitives/Badge';
 import type { TableViewConfig } from '@/components/data-table';
 import {
   buildViews,
-  COLUMN_SIZE,
+  createBadgeColumn,
   createDateTimeColumn,
   TABLE_COLUMN_WIDTH,
 } from '@/components/data-table';
-import { TABLE_TYPE } from '@/components/theme/recipes';
+import { TABLE_TYPE } from '@/theme/recipes';
 import { USER_ROLE_CONFIG, type UserRole } from '@/types';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import type { UserAdminRecord } from '../api/usersAdmin';
@@ -22,15 +22,12 @@ const USER_VIEWS = {
   compact: ['name', 'role', 'status'],
 } as const;
 
-/**
- * Build the user directory table config.
- */
 export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
   const columnMap = {
     name: {
       key: 'name',
       header: 'Name',
-      width: COLUMN_SIZE.fill,
+      width: TABLE_COLUMN_WIDTH.flex,
       sortable: true,
       truncate: true,
       accessor: (user: UserAdminRecord) => user.name,
@@ -41,20 +38,17 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
     username: {
       key: 'username',
       header: 'Username',
-      width: COLUMN_SIZE.md,
+      width: TABLE_COLUMN_WIDTH.username,
       sortable: true,
       accessor: (user: UserAdminRecord) => user.username,
       render: (user: UserAdminRecord) => (
         <div className={`${TABLE_TYPE.secondary} truncate font-normal`}>{user.username}</div>
       ),
     },
-    role: {
-      key: 'role',
-      header: 'Role',
-      width: TABLE_COLUMN_WIDTH.badgeWide,
-      sortable: true,
-      accessor: (user: UserAdminRecord) => user.role,
-      render: (user: UserAdminRecord) => {
+    role: createBadgeColumn<UserAdminRecord>(
+      'role',
+      'Role',
+      user => {
         const role = user.role as UserRole;
         return (
           <Badge variant={resolveStatusBadgeColor(role)} size="xs">
@@ -62,14 +56,16 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
           </Badge>
         );
       },
-    },
-    status: {
-      key: 'status',
-      header: 'Status',
-      width: TABLE_COLUMN_WIDTH.badge,
-      sortable: true,
-      accessor: (user: UserAdminRecord) => (isUserActive(user) ? 'active' : 'disabled'),
-      render: (user: UserAdminRecord) => {
+      {
+        sortable: true,
+        width: TABLE_COLUMN_WIDTH.badgeWide,
+        accessor: user => user.role,
+      }
+    ),
+    status: createBadgeColumn<UserAdminRecord>(
+      'status',
+      'Status',
+      user => {
         const active = isUserActive(user);
         return (
           <Badge variant={active ? 'success' : 'neutral'} size="xs">
@@ -77,11 +73,15 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
           </Badge>
         );
       },
-    },
+      {
+        sortable: true,
+        accessor: user => (isUserActive(user) ? 'active' : 'disabled'),
+      }
+    ),
     email: {
       key: 'email',
       header: 'Email',
-      width: COLUMN_SIZE.lg,
+      width: TABLE_COLUMN_WIDTH.email,
       sortable: true,
       accessor: (user: UserAdminRecord) => user.email ?? '',
       render: (user: UserAdminRecord) => (

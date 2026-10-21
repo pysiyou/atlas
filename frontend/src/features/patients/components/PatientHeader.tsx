@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { CONTROL, RADIUS } from '@/components/theme/recipes';
+import { CONTROL, RADIUS } from '@/theme/recipes';
 import { actionButtonPreset, Button, Avatar, Icon, IconButton } from '@/components/primitives';
 import { PageHeader } from '@/components/layout';
 import type { Patient } from '@/types/patient';

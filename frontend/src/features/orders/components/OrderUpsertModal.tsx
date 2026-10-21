@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { TYPE } from '@/components/theme/recipes';
+import { TYPE } from '@/theme/recipes';
 import { FormDialogFooter, Modal, ModalPageShell } from '@/components/overlays';
 import { FooterInfo } from '@/components/display';
 import { Icon } from '@/components/primitives';

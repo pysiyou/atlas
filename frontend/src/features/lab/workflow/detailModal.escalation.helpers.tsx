@@ -12,7 +12,7 @@ import { LabRelatedTestsPanel } from '../components/LabRelatedWorkflowPanel';
 import { LabEventLogPanel } from '@/features/audit';
 import type { TestWithContext } from '@/types';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
-import { TYPE } from '@/components/theme/recipes';
+import { TYPE } from '@/theme/recipes';
 import { notify } from '@/utils/feedback';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
 import { EscalationResolutionActions, type EscalationResolveOptions } from '../validation/EscalationResolutionActions';

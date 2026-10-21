@@ -10,7 +10,7 @@ import { parseBadgeVariant } from '@/components/primitives/badgeStyles';
 import { Icon, type IconName } from '@/components/primitives/Icon';
 import { Popover } from './Popover';
 import { FilterTriggerShell } from './FilterTriggerShell';
-import { MENU_ITEM_TYPE, RADIUS, TYPE } from '@/components/theme/recipes';
+import { MENU_ITEM_TYPE, RADIUS, TYPE } from '@/theme/recipes';
 
 export interface FilterOption {
   id: string;

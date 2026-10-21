@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { Icon, type IconName } from '@/components/primitives/Icon';
-import { RADIUS, TONE, TYPE } from '@/components/theme/recipes';
+import { RADIUS, TONE, TYPE } from '@/theme/recipes';
 
 export type CalloutVariant = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 

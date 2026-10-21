@@ -1,7 +1,7 @@
 import React from 'react';
 import { EmptyState, PANEL_EMPTY_STATE } from '@/components/display';
-import { FORM_FIELD_LABEL } from '@/components/inputs/inputStyles';
-import { OVERLAY, RADIUS, TYPE } from '@/components/theme/recipes';
+import { FORM_FIELD_LABEL } from '@/theme/recipes';
+import { OVERLAY, RADIUS, TYPE } from '@/theme/recipes';
 import { DEFAULT_EMPTY_DESCRIPTION_SEARCH } from '@/utils/constants';
 
 

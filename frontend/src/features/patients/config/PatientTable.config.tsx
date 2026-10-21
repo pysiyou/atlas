@@ -1,12 +1,14 @@
 import type { NavigateFunction } from 'react-router-dom';
 import { PatientGenderBadge } from '../components/PatientGenderBadge';
 import type { TableViewConfig } from '@/components/data-table';
-import { buildViews, COLUMN_SIZE, TABLE_COLUMN_WIDTH } from '@/components/data-table';
 import {
-  renderContactBlock,
-  renderDateCell,
-  renderDateTimeCell,
-} from '@/utils/tableColumnRenders';
+  buildViews,
+  createBadgeColumn,
+  createDateTimeColumn,
+  createIdColumn,
+  TABLE_COLUMN_WIDTH,
+} from '@/components/data-table';
+import { renderContactBlock, renderDateCell } from '@/utils/tableColumnRenders';
 import {
   renderPatientId,
   renderPatientNameWithAge,
@@ -15,8 +17,7 @@ import {
 import type { PatientContext } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { PatientCard } from '../components/PatientCard';
-import { TABLE_TYPE } from '@/components/theme/recipes';
-
+import { TABLE_TYPE } from '@/theme/recipes';
 
 const PATIENT_VIEWS = {
   full: ['id', 'fullName', 'contact', 'gender', 'orders', 'registrationDate', 'affiliation'],
@@ -28,18 +29,19 @@ export const createPatientTableConfig = (
   _navigate: NavigateFunction
 ): TableViewConfig<PatientContext> => {
   const columnMap = {
-    id: {
-      key: 'id',
-      header: 'Patient ID',
-      width: COLUMN_SIZE.sm,
-      sortable: true,
-      accessor: (patient: PatientContext) => patient.id,
-      render: (patient: PatientContext) => renderPatientId(patient.id),
-    },
+    id: createIdColumn<PatientContext>(
+      'id',
+      'Patient ID',
+      patient => renderPatientId(patient.id),
+      {
+        sortable: true,
+        accessor: patient => patient.id,
+      }
+    ),
     fullName: {
       key: 'fullName',
       header: 'Name',
-      width: COLUMN_SIZE.fill,
+      width: TABLE_COLUMN_WIDTH.flex,
       sortable: true,
       accessor: (patient: PatientContext) => patient.fullName,
       render: (patient: PatientContext) =>
@@ -48,21 +50,22 @@ export const createPatientTableConfig = (
     contact: {
       key: 'contact',
       header: 'Contact',
-      width: COLUMN_SIZE.fill,
+      width: TABLE_COLUMN_WIDTH.flex,
       render: (patient: PatientContext) => renderContactBlock(patient.phone, patient.email),
     },
-    gender: {
-      key: 'gender',
-      header: 'Gender',
-      width: COLUMN_SIZE.sm,
-      sortable: true,
-      accessor: (patient: PatientContext) => patient.gender,
-      render: (patient: PatientContext) => <PatientGenderBadge gender={patient.gender} size="xs" />,
-    },
+    gender: createBadgeColumn<PatientContext>(
+      'gender',
+      'Gender',
+      patient => <PatientGenderBadge gender={patient.gender} size="xs" />,
+      {
+        sortable: true,
+        accessor: patient => patient.gender,
+      }
+    ),
     orders: {
       key: 'orders',
       header: 'Orders',
-      width: COLUMN_SIZE.lg,
+      width: TABLE_COLUMN_WIDTH.supporting,
       sortable: true,
       accessor: (patient: PatientContext) => patient.lastOrderDate ?? '',
       render: (patient: PatientContext) =>
@@ -71,7 +74,7 @@ export const createPatientTableConfig = (
     affiliation: {
       key: 'affiliation',
       header: 'Affiliation',
-      width: COLUMN_SIZE.lg,
+      width: TABLE_COLUMN_WIDTH.supporting,
       sortable: true,
       accessor: (patient: PatientContext) => patient.affiliation?.endDate ?? '',
       render: (patient: PatientContext) => {
@@ -93,14 +96,11 @@ export const createPatientTableConfig = (
         );
       },
     },
-    registrationDate: {
-      key: 'registrationDate',
-      header: 'Registered',
-      width: TABLE_COLUMN_WIDTH.datetime,
-      sortable: true,
-      accessor: (patient: PatientContext) => patient.registrationDate,
-      render: (patient: PatientContext) => renderDateTimeCell(patient.registrationDate),
-    },
+    registrationDate: createDateTimeColumn<PatientContext>(
+      'registrationDate',
+      'Registered',
+      patient => patient.registrationDate
+    ),
   };
 
   return {

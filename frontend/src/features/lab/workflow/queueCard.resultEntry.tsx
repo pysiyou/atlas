@@ -13,7 +13,7 @@ import { useLabWorkflowCardClickGuard, useOrderTestQueueState } from '../hooks';
 import { isLabActionAllowed } from '../utils/queueDisplay';
 import { useLabWorkflowResponsiveCard } from '../hooks/useLabWorkflowResponsiveCard';
 import { deriveRetestContext } from '../utils/deriveRetestContext';
-import { LAB_MOBILE_CARD } from '../utils/labStyles';
+import { LAB_MOBILE_CARD } from '@/theme/recipes';
 import type { Test, TestWithContext } from '@/types';
 import { QueueCard, QueueCardMobile } from './queueCardLayout';
 import { TestWorkflowCardLeftColumn } from './queueCard.testWorkflowLeftColumn';

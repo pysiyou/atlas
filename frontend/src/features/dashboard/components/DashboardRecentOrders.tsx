@@ -9,7 +9,7 @@ import { Panel } from '@/components/surfaces';
 import { OrderStatusBadge } from '@/features/orders';
 import { ROUTES } from '@/config';
 import type { Order } from '@/types';
-import { INLINE_LINK, RADIUS, TYPE } from '@/components/theme/recipes';
+import { INLINE_LINK, RADIUS, TYPE } from '@/theme/recipes';
 
 
 export interface DashboardRecentOrdersProps {

@@ -5,7 +5,7 @@
 import React, { type ReactNode } from 'react';
 import { cn, formatDate } from '@/utils';
 import { EntityId } from '@/components/display';
-import { LAB_CARD_CONTEXT } from '../utils/labStyles';
+import { LAB_CARD_CONTEXT } from '@/theme/recipes';
 
 export interface LabIdentityContext {
   patientName?: string;

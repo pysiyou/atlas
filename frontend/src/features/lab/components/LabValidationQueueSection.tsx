@@ -2,7 +2,7 @@
  * LabValidationQueueSection — section header + card grid matching LabWorkflowQueueLayout layout.
  */
 import React, { type ReactNode } from 'react';
-import { LAB_CARD_TYPOGRAPHY } from '../utils/labStyles';
+import { LAB_CARD_TYPOGRAPHY } from '@/theme/recipes';
 
 interface LabValidationQueueSectionProps {
   title: string;

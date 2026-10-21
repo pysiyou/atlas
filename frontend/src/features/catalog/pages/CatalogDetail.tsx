@@ -19,8 +19,8 @@ import { CATALOG_DETAIL_SKELETON_SECTIONS } from '../config/CatalogDetailSkeleto
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import { formatDateTime } from '@/utils';
 import { formatArrayWithFallback, formatBoolean, capitalize } from '@/utils';
-import { SPACING } from '@/components/theme/recipes';
-import { feedbackTitle } from '@/utils/feedback/copy';
+import { SPACING } from '@/theme/recipes';
+import { feedbackTitle } from '@/utils/feedback';
 
 /**
  * CatalogDetail Component

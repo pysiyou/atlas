@@ -16,7 +16,7 @@ import {
   type LabWorkflowModalContext,
   type LabAuditLine,
 } from '../components/LabWorkflowHeader';
-import { DETAIL_TYPE, TYPE } from '@/components/theme/recipes';
+import { DETAIL_TYPE, TYPE } from '@/theme/recipes';
 import { LAB_COPY, labStageLabel, type LabWorkflowStage } from '../constants/labConstants';
 
 export interface QueueModalShellProps {
