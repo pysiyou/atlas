@@ -87,7 +87,7 @@ class OrderCreate(BaseModel):
         ..., min_length=1, description="At least one test required"
     )
     priority: PriorityLevel = PriorityLevel.LOW
-    referringPhysician: str | None = Field(None, max_length=200)
+    referentDoctor: str | None = Field(None, max_length=200)
     clinicalNotes: str | None = Field(None, max_length=2000)
     specialInstructions: list[str] | None = None
     patientPrepInstructions: str | None = Field(None, max_length=1000)
@@ -104,7 +104,7 @@ class OrderCreate(BaseModel):
 
 class OrderUpdate(BaseModel):
     priority: PriorityLevel | None = None
-    referringPhysician: str | None = None
+    referentDoctor: str | None = None
     clinicalNotes: str | None = None
     specialInstructions: list[str] | None = None
     tests: list[OrderTestCreate] | None = None  # Optional list of tests to update (add/remove)
@@ -124,7 +124,7 @@ class OrderSummaryResponse(BaseModel):
     overallStatus: OrderStatus
     statusPresentation: StatusPresentation | None = None
     priority: PriorityLevel
-    referringPhysician: str | None = None
+    referentDoctor: str | None = None
     clinicalNotes: str | None = None
     specialInstructions: list[str] | None = None
     patientPrepInstructions: str | None = None
@@ -147,7 +147,7 @@ class OrderResponse(BaseModel):
     overallStatus: OrderStatus
     statusPresentation: StatusPresentation | None = None
     priority: PriorityLevel
-    referringPhysician: str | None = None
+    referentDoctor: str | None = None
     clinicalNotes: str | None = None
     specialInstructions: list[str] | None = None
     patientPrepInstructions: str | None = None

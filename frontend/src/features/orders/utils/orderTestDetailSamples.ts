@@ -79,7 +79,7 @@ export function buildTestContextForLabMeta(
     isRetest: orderTest.isRetest,
     retestOfTestId: orderTest.retestOfTestId,
     retestNumber: orderTest.retestNumber,
-    referringPhysician: order.referringPhysician,
+    referentDoctor: order.referentDoctor,
     orderDate: order.orderDate,
     lab: orderTest.lab,
     denyReason: orderTest.lab?.denyReason ?? null,
