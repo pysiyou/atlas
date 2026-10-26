@@ -29,14 +29,14 @@ function TodayPanelSkeleton() {
                 <Skeleton height={12} width="40%" />
                 <Skeleton height={12} width={32} className="ml-auto" />
                 <Skeleton height={12} width={32} className="ml-auto" />
-                <Skeleton height={12} width="50%" />
+                <Skeleton height={12} width={32} className="ml-auto" />
               </div>
               {Array.from({ length: 3 }).map((_, index) => (
                 <div key={index} className={METER_KPI.tableRowStage}>
                   <Skeleton height={12} width="72%" />
                   <Skeleton height={12} width={40} className="ml-auto" />
                   <Skeleton height={12} width={40} className="ml-auto" />
-                  <Skeleton height={4} className="w-full" />
+                  <Skeleton height={12} width={40} className="ml-auto" />
                 </div>
               ))}
             </div>

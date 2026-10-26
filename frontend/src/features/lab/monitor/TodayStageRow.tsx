@@ -1,5 +1,5 @@
 /**
- * Pipeline stage row — in-queue vs today's activity with a simple share bar.
+ * Pipeline stage row — in-queue vs today's activity (counts and % of monitor view).
  */
 import React from 'react';
 import { METER_KPI } from '@/theme/recipes';
@@ -43,12 +43,10 @@ export const TodayStageRow: React.FC<TodayStageRowProps> = ({ segment, totalTest
         <span className={METER_KPI.tableCount}> · {segment.touchedToday.toLocaleString()}</span>
       </span>
 
-      <div className={METER_KPI.tableRowMeterTrack} role="cell" aria-hidden>
-        <div
-          className={cn(METER_KPI.tableRowMeterFill, segment.barClass)}
-          style={{ width: `${segment.atStagePercent}%` }}
-        />
-      </div>
+      <span className={METER_KPI.tableMetricCell} role="cell">
+        <span className={METER_KPI.tablePercent}>{segment.atStagePercent}%</span>
+        <span className={METER_KPI.tableCount}> / {segment.touchedTodayPercent}%</span>
+      </span>
     </div>
   );
 };

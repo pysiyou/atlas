@@ -61,7 +61,7 @@ export const LabTodayPanel: React.FC<LabTodayPanelProps> = ({ todayPanel }) => {
                     <span className={METER_KPI.tableHeadCellMetric} role="columnheader">
                       {LAB_COPY.dashboardToday.columnToday}
                     </span>
-                    <span className={METER_KPI.tableHeadCell} role="columnheader">
+                    <span className={METER_KPI.tableHeadCellMetric} role="columnheader">
                       {LAB_COPY.dashboardToday.columnMix}
                     </span>
                   </div>
