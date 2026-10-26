@@ -16,6 +16,7 @@ export function ResultValueAnnotations({
   dense = false,
   tile = false,
   showStatus = true,
+  truncate = false,
 }: {
   resultValue: string;
   unit: string;
@@ -24,25 +25,36 @@ export function ResultValueAnnotations({
   tile?: boolean;
   /** Queue cards: value (+ unit) only; status chips in validation detail. */
   showStatus?: boolean;
+  /** Ellipsis overflow with `title` set to the full value line. */
+  truncate?: boolean;
 }) {
   const statusLabel = showStatus ? resultStatusLabel(status) : null;
   const valueTone = showStatus ? resultValueClass(status) : FG.body;
   const valueType = dense ? text({ role: 'caption' }) : tile ? METRIC_TILE.value : text({ role: 'body' });
+  const fullLine = [resultValue, unit, statusLabel].filter(Boolean).join(' ');
 
   return (
     <span
       className={cn(
-        'inline-flex items-baseline flex-wrap gap-x-space-1 gap-y-0 justify-start min-w-0',
+        truncate
+          ? 'flex min-w-0 max-w-full items-baseline gap-x-space-1 overflow-hidden'
+          : 'inline-flex min-w-0 flex-wrap items-baseline justify-start gap-x-space-1 gap-y-0',
         valueType,
         'font-normal tabular-nums',
         valueTone
       )}
+      title={truncate ? fullLine : undefined}
     >
-      <span>{resultValue}</span>
+      <span className={cn(truncate && 'min-w-0 truncate')}>{resultValue}</span>
       {(unit || statusLabel) && (
         <span className="inline-flex items-baseline gap-space-1 shrink-0">
           {unit && (
-            <span className={cn(METRIC_TILE.unit, 'ml-0 ${FG.captionMuted}', dense && text({ role: 'caption' }))}>
+            <span
+              className={cn(
+                tile ? METRIC_TILE.unit : text({ role: 'caption', intent: 'muted' }),
+                'ml-space-1 font-normal tabular-nums'
+              )}
+            >
               {unit}
             </span>
           )}

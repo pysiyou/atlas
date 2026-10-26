@@ -9,7 +9,7 @@ import {
 } from '../utils/labResult';
 import { ReferenceIntervalCell } from './ReferenceIntervalCell';
 import { LAB_CONFIG } from '../constants';
-import {text, DATA_GRID, METRIC_TILE, FG } from '@/theme/recipes';
+import { text, DATA_GRID, METRIC_TILE } from '@/theme/recipes';
 import { resultTileStatusClass } from '../utils/labResult';
 import { Text } from '@/components/layout';
 import {
@@ -22,7 +22,17 @@ import { ResultValueAnnotations } from './ResultValueAnnotations';
 import type { Gender, Patient } from '@/types';
 
 export type ResultsGridVariant = 'inline' | 'tiles';
-export type ResultsGridLayout = 'compact' | 'validation';
+export type ResultsGridLayout = 'grid' | 'table';
+
+const COMPACT_RESULT_COLUMNS = 3;
+
+function splitEntriesIntoColumns<T>(entries: T[], columnCount: number): T[][] {
+  const columns: T[][] = Array.from({ length: columnCount }, () => []);
+  entries.forEach((entry, index) => {
+    columns[index % columnCount].push(entry);
+  });
+  return columns;
+}
 
 interface ResultsParameterGridProps {
   results: Record<string, unknown>;
@@ -30,9 +40,9 @@ interface ResultsParameterGridProps {
   testCode?: string;
   patient?: Patient | { gender?: Gender; age?: number; dateOfBirth?: string };
   variant?: ResultsGridVariant;
-  /** Validation: label, value, reference interval columns. */
+  /** `table`: parameter / result / reference interval; `grid`: multi-column label/value pairs. */
   layout?: ResultsGridLayout;
-  /** Card-style 4-column cap (validation card mobile). */
+  /** Truncate grid after N parameters (validation queue mobile cards). */
   dense?: boolean;
 }
 
@@ -42,7 +52,7 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
   testCode,
   patient,
   variant = 'inline',
-  layout = 'compact',
+  layout = 'table',
   dense = false,
 }) => {
   const flagStatusMap = useMemo(() => statusMapFromFlags(flags), [flags]);
@@ -52,14 +62,14 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
     [catalogTest]
   );
   const catalogParameters = useMemo(
-    () => (layout === 'validation' ? catalogParametersFromTest(catalogTest) : {}),
+    () => (layout === 'table' ? catalogParametersFromTest(catalogTest) : {}),
     [layout, catalogTest]
   );
   const entries = Object.entries(results ?? {});
-  const showStatus = layout === 'validation';
+  const showStatus = layout === 'table';
 
   const referenceValueColumnCh = useMemo(() => {
-    if (layout !== 'validation' || variant !== 'inline') {
+    if (layout !== 'table' || variant !== 'inline') {
       return 4;
     }
     let maxLen = 0;
@@ -81,12 +91,12 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
     return <Text role="body" intent="muted">No result values recorded.</Text>;
   }
 
-  if (layout === 'validation' && variant === 'inline') {
+  if (layout === 'table' && variant === 'inline') {
     return (
       <div className={DATA_GRID.scrollWrap}>
         <table className={DATA_GRID.table}>
           <colgroup>
-            {DATA_GRID.colGroup.validation.map(col => (
+            {DATA_GRID.colGroup.table.map(col => (
               <col key={col} className={col} />
             ))}
           </colgroup>
@@ -160,59 +170,48 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
     );
   }
 
-  if (dense) {
-    const maxVisible = LAB_CONFIG.COMPACT_RESULT_GRID_LIMIT;
-    const visibleEntries = entries.slice(0, maxVisible);
-    const remainingCount = entries.length - maxVisible;
-
-    return (
-      <div className={METRIC_TILE.inlineDenseGrid}>
-        {visibleEntries.map(([key, rawValue]) => {
-          const { resultValue, unit, status } = parseResultEntry(key, rawValue, flagStatusMap);
-          const label = resolveParameterLabel(key, parameterLabels);
-          return (
-            <div key={key} className={METRIC_TILE.inlineRowDense}>
-              <Text role="caption" intent="muted" truncate title={label}>
-                {label}:
-              </Text>
-              <ResultValueAnnotations
-                resultValue={resultValue}
-                unit={unit}
-                status={status}
-                dense
-                showStatus={showStatus}
-              />
-            </div>
-          );
-        })}
-        {remainingCount > 0 && (
-          <div className={`${text({ role: 'caption' })} col-span-full pt-space-0-5`}>
-            +{remainingCount} more
-          </div>
-        )}
-      </div>
-    );
-  }
+  const maxVisible = dense ? LAB_CONFIG.COMPACT_RESULT_GRID_LIMIT : entries.length;
+  const visibleEntries = entries.slice(0, maxVisible);
+  const remainingCount = entries.length - maxVisible;
+  const compactColumns = splitEntriesIntoColumns(visibleEntries, COMPACT_RESULT_COLUMNS);
 
   return (
-    <div className={METRIC_TILE.inlineGrid}>
-      {entries.map(([key, rawValue]) => {
-        const { resultValue, unit, status } = parseResultEntry(key, rawValue, flagStatusMap);
-        const label = resolveParameterLabel(key, parameterLabels);
-        return (
-          <div key={key} className={METRIC_TILE.inlineRow}>
-            <Text role="caption" className={`${FG.labelMuted} truncate`} title={label}>
-              {label}:
-            </Text>
-            <ResultValueAnnotations
-              resultValue={resultValue}
-              unit={unit}
-              status={status}
-              showStatus={showStatus}
-            />
-          </div>
-        );
-      })}
+    <div className={METRIC_TILE.inlineDenseGrid}>
+      {compactColumns.map((columnEntries, columnIndex) => (
+        <div key={columnIndex} className={`${METRIC_TILE.inlineDenseColumnGrid} min-w-0`}>
+            {columnEntries.flatMap(([key, rawValue]) => {
+              const { resultValue, unit, status } = parseResultEntry(key, rawValue, flagStatusMap);
+              const label = resolveParameterLabel(key, parameterLabels);
+              const labelWithColon = `${label}:`;
+
+              return [
+                <Text
+                  key={`${key}-label`}
+                  role="label"
+                  intent="default"
+                  className="block min-w-0 max-w-full text-left font-medium leading-snug"
+                  truncate
+                  title={labelWithColon}
+                >
+                  {labelWithColon}
+                </Text>,
+                <div key={`${key}-value`} className={METRIC_TILE.inlineDenseValue}>
+                  <ResultValueAnnotations
+                    resultValue={resultValue}
+                    unit={unit}
+                    status={status}
+                    dense={dense}
+                    showStatus={showStatus}
+                    truncate
+                  />
+                </div>,
+              ];
+            })}
+        </div>
+      ))}
+      {remainingCount > 0 && (
+        <p className={`${text({ role: 'caption' })} col-span-full`}>+{remainingCount} more</p>
+      )}
     </div>
   );
 };

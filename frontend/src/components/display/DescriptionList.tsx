@@ -46,6 +46,7 @@ export function DescriptionItem({
   variant = 'default',
   orientation = 'horizontal',
   icon,
+  span,
   timestamp,
   userDisplay,
   badge,
@@ -78,7 +79,13 @@ export function DescriptionItem({
 
   if (orientation === 'vertical') {
     return (
-      <div className={`flex items-start gap-space-3 min-w-0 w-full ${className}`}>
+      <div
+        className={cn(
+          'flex items-start gap-space-3 min-w-0 w-full',
+          span === 'full' && 'col-span-full',
+          className
+        )}
+      >
         {icon && <Icon name={icon} className="mt-space-0-5 w-4 h-4 shrink-0 text-text-disabled" />}
         <div className="min-w-0 flex-1">
           <Text role="label">{label}</Text>

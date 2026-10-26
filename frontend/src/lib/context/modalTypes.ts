@@ -2,6 +2,8 @@
  * Serializable modal frames. Context never stores functions, drafts, or entity blobs.
  */
 
+import type { ReportPreviewResultsLayout } from '@/features/reports/types';
+
 export const ModalType = {
   SAMPLE_DETAIL: 'SAMPLE_DETAIL',
   RESULT_DETAIL: 'RESULT_DETAIL',
@@ -33,7 +35,11 @@ export type ModalFrame =
       orderId?: number;
       mode?: 'create' | 'edit';
     }
-  | { type: typeof ModalType.REPORT_PREVIEW; orderId: number };
+  | {
+      type: typeof ModalType.REPORT_PREVIEW;
+      orderId: number;
+      layout?: ReportPreviewResultsLayout;
+    };
 
 export type ModalStack = ModalFrame[];
 
@@ -73,6 +79,7 @@ export type OrderUpsertModalOpenProps = BaseModalProps & {
 
 export type ReportPreviewModalProps = BaseModalProps & {
   orderId: number;
+  layout?: ReportPreviewResultsLayout;
 };
 
 /**

@@ -89,3 +89,6 @@ export interface ReportTemplate {
   footerText: string;
   includeSignature: boolean;
 }
+
+/** Report preview — same as lab `ResultsGridLayout` (`table` | `grid`). */
+export type { ResultsGridLayout as ReportPreviewResultsLayout } from '@/features/lab/components/ResultsParameterGrid';
