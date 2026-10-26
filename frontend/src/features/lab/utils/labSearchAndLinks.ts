@@ -1,9 +1,9 @@
 /** Lab search keys, result presence, collection lookup filters, and queue deep-links. */
 import type { TestWithContext, OrderTest } from '@/types';
-import { displayId, buildFilteredUrl, inclusiveDateRangeBounds, toIsoDateParam, ID_PREFIXES, parseDisplayId } from '@/utils';
+import { displayId, inclusiveDateRangeBounds, toIsoDateParam, ID_PREFIXES, parseDisplayId } from '@/utils';
 import type { TestStatus } from '@/types/enums';
 import type { UrlFilters } from '@/utils/filters';
-import { getLabQueueUrl, getLabTabForTestStatus, getLabTabPath, type LabTabId } from '../constants/labConstants';
+import { getLabQueueUrl, getLabTabForTestStatus, type LabTabId } from '../constants/labConstants';
 
 export interface LabQueueSearchableIds {
   orderTestId?: number | null;
@@ -153,54 +153,40 @@ export function resolveCollectionStatusFilters<T extends string>(
 }
 
 /**
- * Returns a lab queue URL for an order test with proper filter support.
- * Uses URL filters (testId, orderId, sampleId) for direct navigation to the test in the queue.
+ * Lab queue URL for an order test: correct workflow tab + TST display id in `search`.
  */
 export function getLabQueueUrlForTest(
   test: Pick<OrderTest, 'id' | 'status' | 'testCode'> & {
     sampleId?: number | null;
     lab?: { pipelineStage?: string | null } | null;
   },
-  orderId: number
+  _orderId: number
 ): string | null {
   const tab = getLabTabForTestStatus(test.status as TestStatus, test.lab?.pipelineStage);
   if (!tab) return null;
 
-  if (tab === 'collection') {
-    const filters: Record<string, string> = { orderId: String(orderId) };
-    if (test.sampleId) {
-      filters.sampleId = String(test.sampleId);
-    } else if (test.id) {
-      filters.testId = String(test.id);
-    }
-    return buildFilteredUrl(getLabTabPath(tab), filters);
+  if (test.id != null) {
+    return getLabQueueUrl(tab, { search: displayId.orderTest(test.id) });
   }
 
-  // Entry / validation: target the order test row
-  if (test.id) {
-    return buildFilteredUrl(getLabTabPath(tab), {
-      testId: String(test.id),
-      orderId: String(orderId),
-    });
-  }
-
-  // Fallback to search-based URL (for tests without IDs)
-  const searchTerms = [displayId.order(orderId), test.testCode].filter(Boolean);
+  const searchTerms = [displayId.order(_orderId), test.testCode].filter(Boolean);
   return getLabQueueUrl(tab, { search: searchTerms.join(' ') });
 }
 
-/**
- * Build URL to lab queue filtered by sample ID.
- */
+/** Lab queue URL with sample id in the search bar (SAM####). */
 export function getLabQueueUrlForSample(sampleId: number | string, tab: LabTabId = 'collection'): string {
-  return buildFilteredUrl(getLabTabPath(tab), { sampleId: String(sampleId) });
+  const id = Number(sampleId);
+  return getLabQueueUrl(tab, {
+    search: Number.isFinite(id) ? displayId.sample(id) : String(sampleId),
+  });
 }
 
-/**
- * Build URL to lab queue filtered by order ID.
- */
+/** Lab queue URL with order id in the search bar (ORD####). */
 export function getLabQueueUrlForOrder(orderId: number | string, tab: LabTabId = 'collection'): string {
-  return buildFilteredUrl(getLabTabPath(tab), { orderId: String(orderId) });
+  const id = Number(orderId);
+  return getLabQueueUrl(tab, {
+    search: Number.isFinite(id) ? displayId.order(id) : String(orderId),
+  });
 }
 
 export { getLabTabForTestStatus, getLabQueueUrl, type LabTabId };

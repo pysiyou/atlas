@@ -9,24 +9,17 @@
 import { useState, useMemo, useEffect, useLayoutEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
-import { usePageFilters } from '@/hooks';
 import type { PriorityLevel, SampleStatus, TestStatus } from '@/types';
 import { isDateInInclusiveRange } from '@/utils';
-import type { UrlFilters } from '@/utils/filters';
 import { LAB_CONFIG } from '../constants/labConstants';
-import { LAB_URL_FILTER_KEYS } from '../constants/labFilterConfigs';
 import { compareQueuePriority } from '../utils/labQueue';
 import {
   decodeLabQueueBarFilters,
+  migrateLegacyLabEntitySearchParams,
   writeLabQueueBarFilters,
   type LabQueueBarFilters,
 } from '../utils/labQueueUrlCodec';
-import {
-  getLabQueueSearchFromUrlFilters,
-  hasActiveRecordUrlFilters,
-  resolveCollectionStatusFilters,
-  worklistServerFilters,
-} from '../utils/labSearchAndLinks';
+import { resolveCollectionStatusFilters, worklistServerFilters } from '../utils/labSearchAndLinks';
 import {
   getLabQueueStageConfig,
   type LabQueueItemByStage,
@@ -65,10 +58,6 @@ export function applyLabQueueFilters<T, S>({
   skipSearchFilter = false,
   skipDateFilter = false,
   skipSampleTypeFilter = false,
-  urlFilters,
-  getId,
-  getOrderId,
-  getSampleId,
 }: {
   items: T[];
   filters: LabQueueFilterState<S>;
@@ -84,32 +73,9 @@ export function applyLabQueueFilters<T, S>({
   skipSearchFilter?: boolean;
   skipDateFilter?: boolean;
   skipSampleTypeFilter?: boolean;
-  /** URL entity filters for targeting specific records */
-  urlFilters?: UrlFilters;
-  /** Get test/item ID for testId filtering */
-  getId?: (item: T) => number | undefined;
-  /** Get order ID for orderId filtering */
-  getOrderId?: (item: T) => number | undefined;
-  /** Get sample ID for sampleId filtering */
-  getSampleId?: (item: T) => number | undefined;
 }): T[] {
   let out = items;
 
-  // Apply entity URL filters first - these are targeting filters that narrow to specific records
-  if (urlFilters) {
-    if (urlFilters.testId && getId) {
-      const targetId = Number(urlFilters.testId);
-      out = out.filter(item => getId(item) === targetId);
-    }
-    if (urlFilters.orderId && getOrderId) {
-      const targetOrderId = Number(urlFilters.orderId);
-      out = out.filter(item => getOrderId(item) === targetOrderId);
-    }
-    if (urlFilters.sampleId && getSampleId) {
-      const targetSampleId = Number(urlFilters.sampleId);
-      out = out.filter(item => getSampleId(item) === targetSampleId);
-    }
-  }
   if (!skipDateFilter) {
     out = applyDateRange(out, filters.dateRange, getOrderDate);
   }
@@ -156,10 +122,6 @@ export function applyLabQueueFiltersWithProfile<T, S extends LabQueueClientStatu
     sortByQueuePriority: sortByPriority,
     getPriority: callbacks.getPriority,
     getQueueSince: callbacks.getQueueSince,
-    urlFilters: bar.urlFilters,
-    getId: callbacks.getId,
-    getOrderId: callbacks.getOrderId,
-    getSampleId: callbacks.getSampleId,
     applyStatusFilter,
     skipSearchFilter: bar.skipSearchFilter,
     skipDateFilter: bar.skipDateFilter,
@@ -185,12 +147,7 @@ function useLabQueueFilteredItems<T extends LabQueueWorkflowType>(
   );
 
   const filtersForApply = useMemo((): LabQueueFilterState<LabQueueClientStatus> => {
-    const hasEntityFilters =
-      bar.urlFilters &&
-      (bar.urlFilters.testId || bar.urlFilters.orderId || bar.urlFilters.sampleId);
-    const isLookupMode = bar.collectionSampleLookup || Boolean(hasEntityFilters);
-
-    const resolvedStatus: LabQueueClientStatus[] = isLookupMode
+    const resolvedStatus: LabQueueClientStatus[] = bar.collectionSampleLookup
       ? (resolveCollectionStatusFilters(true, filterState.statusFilters as string[]) as LabQueueClientStatus[])
       : filterState.statusFilters;
 
@@ -198,7 +155,7 @@ function useLabQueueFilteredItems<T extends LabQueueWorkflowType>(
       ...filterState,
       statusFilters: resolvedStatus,
     };
-  }, [filterState, bar.collectionSampleLookup, bar.urlFilters]);
+  }, [filterState, bar.collectionSampleLookup]);
 
   const filteredItems = useMemo(
     () =>
@@ -215,12 +172,6 @@ function useLabQueueFilteredItems<T extends LabQueueWorkflowType>(
         sortByQueuePriority: filterConfig.sortByPriority,
         getPriority: filterConfig.callbacks.getPriority as (item: LabQueueItemByStage<T>) => string | undefined,
         getQueueSince: filterConfig.callbacks.getQueueSince as (item: LabQueueItemByStage<T>) => string | undefined,
-        urlFilters: bar.urlFilters,
-        getId: filterConfig.callbacks.getId as ((item: LabQueueItemByStage<T>) => number | undefined) | undefined,
-        getOrderId: filterConfig.callbacks.getOrderId as (item: LabQueueItemByStage<T>) => number | undefined,
-        getSampleId: filterConfig.callbacks.getSampleId as
-          | ((item: LabQueueItemByStage<T>) => number | undefined)
-          | undefined,
         applyStatusFilter: true,
         skipSearchFilter: bar.skipSearchFilter,
         skipDateFilter: bar.skipDateFilter,
@@ -232,21 +183,12 @@ function useLabQueueFilteredItems<T extends LabQueueWorkflowType>(
   return { filteredItems, filterState };
 }
 
-function initialBarFiltersFromUrl(
+function barFiltersFromUrl(
   searchParams: URLSearchParams,
   workflowType: LabQueueWorkflowType,
-  urlFilters: UrlFilters,
   defaultStatuses: readonly string[],
 ): LabQueueBarFilters {
-  const decoded = decodeLabQueueBarFilters(searchParams, workflowType, defaultStatuses);
-  const searchQuery = hasActiveRecordUrlFilters(urlFilters)
-    ? getLabQueueSearchFromUrlFilters(
-        urlFilters,
-        decoded.searchQuery,
-        workflowType === 'collection',
-      )
-    : decoded.searchQuery;
-  return { ...decoded, searchQuery };
+  return decodeLabQueueBarFilters(searchParams, workflowType, defaultStatuses);
 }
 
 export interface LabQueueBarState {
@@ -258,9 +200,6 @@ export interface LabQueueBarState {
   setSampleTypeFilters: (value: string[]) => void;
   statusFilters: SampleStatus[] | TestStatus[] | PriorityLevel[];
   setStatusFilters: (value: SampleStatus[] | TestStatus[] | PriorityLevel[]) => void;
-  urlFilters: UrlFilters;
-  clearUrlFilters: () => void;
-  setUrlFilter: (key: (typeof LAB_URL_FILTER_KEYS)[number], value: string | number | undefined) => void;
   debouncedSearch: string;
   trimmedSearch: string;
   isSampleLookup: boolean;
@@ -275,19 +214,13 @@ export interface LabQueueBarState {
 /** Filter bar + URL state and worklist query params (no item list required). */
 export function useLabQueueBarFilters(workflowType: LabQueueWorkflowType): LabQueueBarState {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { urlFilters, clearUrlFilters, setUrlFilter } = usePageFilters({
-    urlFilterKeys: LAB_URL_FILTER_KEYS,
-  });
 
   const filterConfig = useMemo(() => getLabQueueStageConfig(workflowType), [workflowType]);
   const initialBarRef = useRef<LabQueueBarFilters | null>(null);
   if (initialBarRef.current === null) {
-    initialBarRef.current = initialBarFiltersFromUrl(
-      searchParams,
-      workflowType,
-      urlFilters,
-      filterConfig.defaultStatuses,
-    );
+    const params = new URLSearchParams(searchParams);
+    migrateLegacyLabEntitySearchParams(params);
+    initialBarRef.current = barFiltersFromUrl(params, workflowType, filterConfig.defaultStatuses);
   }
 
   const [searchQuery, setSearchQuery] = useState(() => initialBarRef.current!.searchQuery);
@@ -334,19 +267,30 @@ export function useLabQueueBarFilters(workflowType: LabQueueWorkflowType): LabQu
 
   const skipUrlDecodeRef = useRef(false);
   const persistSkipRef = useRef(true);
-  const entityFiltersKey = `${urlFilters.sampleId ?? ''}|${urlFilters.orderId ?? ''}|${urlFilters.testId ?? ''}`;
+  const legacyMigrateRef = useRef(false);
+
+  useLayoutEffect(() => {
+    if (legacyMigrateRef.current) return;
+    legacyMigrateRef.current = true;
+    setSearchParams(
+      prev => {
+        const params = new URLSearchParams(prev);
+        if (!migrateLegacyLabEntitySearchParams(params)) {
+          return prev;
+        }
+        skipUrlDecodeRef.current = true;
+        return params;
+      },
+      { replace: true },
+    );
+  }, [setSearchParams]);
 
   useEffect(() => {
     if (skipUrlDecodeRef.current) {
       skipUrlDecodeRef.current = false;
       return;
     }
-    const next = initialBarFiltersFromUrl(
-      searchParams,
-      workflowType,
-      urlFilters,
-      filterConfig.defaultStatuses,
-    );
+    const next = barFiltersFromUrl(searchParams, workflowType, filterConfig.defaultStatuses);
     const searchInSyncWithUrl = searchQuery === debouncedSearch;
     /* eslint-disable react-hooks/set-state-in-effect -- URL back/forward and external edits */
     if (searchInSyncWithUrl) {
@@ -358,29 +302,7 @@ export function useLabQueueBarFilters(workflowType: LabQueueWorkflowType): LabQu
       [...next.statusFilters] as SampleStatus[] | TestStatus[] | PriorityLevel[],
     );
     /* eslint-enable react-hooks/set-state-in-effect */
-  }, [
-    searchParams,
-    entityFiltersKey,
-    workflowType,
-    filterConfig.defaultStatuses,
-    debouncedSearch,
-    searchQuery,
-    urlFilters,
-  ]);
-
-  useEffect(() => {
-    if (!hasActiveRecordUrlFilters(urlFilters)) {
-      return;
-    }
-    const urlSearch = searchParams.get('search') ?? '';
-    const preferSample = workflowType === 'collection';
-    const displaySearch = getLabQueueSearchFromUrlFilters(urlFilters, urlSearch, preferSample);
-    if (searchQuery === displaySearch) {
-      return;
-    }
-    /* eslint-disable-next-line react-hooks/set-state-in-effect -- entity deep-link → search field */
-    setSearchQuery(displaySearch);
-  }, [entityFiltersKey, searchParams, workflowType, urlFilters, searchQuery]);
+  }, [searchParams, workflowType, filterConfig.defaultStatuses, debouncedSearch, searchQuery]);
 
   useLayoutEffect(() => {
     if (persistSkipRef.current) {
@@ -423,9 +345,6 @@ export function useLabQueueBarFilters(workflowType: LabQueueWorkflowType): LabQu
     setSampleTypeFilters,
     statusFilters,
     setStatusFilters,
-    urlFilters,
-    clearUrlFilters,
-    setUrlFilter,
     debouncedSearch,
     trimmedSearch,
     isSampleLookup,

@@ -76,8 +76,7 @@ export const ResultEntryQueue: React.FC = () => {
     useLabDraftStore.getState().retainEntryDrafts(ids);
   }, [allTests]);
 
-  const { filteredItems: filteredTests, urlFilters, clearUrlFilters, setUrlFilter } =
-    useLabQueuePageFilters({
+  const { filteredItems: filteredTests } = useLabQueuePageFilters({
       items: allTests,
       workflowType: 'entry',
       bar,
@@ -156,13 +155,7 @@ export const ResultEntryQueue: React.FC = () => {
         emptyTitle={EMPTY_COPY.pendingResults.title}
         emptyDescription={EMPTY_COPY.pendingResults.description}
         filterRow={
-          <LabQueueFilterRow
-            urlFilters={urlFilters}
-            onClearUrlFilters={clearUrlFilters}
-            onClearUrlFilter={key => setUrlFilter(key, undefined)}
-            pagination={pagination}
-            onPageChange={goToPage}
-          >
+          <LabQueueFilterRow pagination={pagination} onPageChange={goToPage}>
             <LabQueueFilters config={entryFilterConfig} {...filterBarProps} />
           </LabQueueFilterRow>
         }

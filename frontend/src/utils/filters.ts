@@ -5,6 +5,7 @@
 import type { NavigateFunction } from 'react-router-dom';
 import type { FilterValues } from '@/components/filters/types';
 import { ROUTES } from '@/config';
+import { displayId } from '@/utils/id';
 
 /** Lab URL segments under {@link ROUTES.LABORATORY} (aligned with `LAB_TAB_IDS` in lab constants). */
 type LabTabId = 'collection' | 'entry' | 'validation' | 'monitor';
@@ -166,8 +167,10 @@ export function navigateToLabWithSample(
 ): void {
   const id = normalizeUrlFilterValue(sampleId);
   if (!id) return;
-  const path = buildFilteredUrl(getLabTabPath(tab), { sampleId: id });
-  navigate(path);
+  const n = Number(id);
+  const search = Number.isFinite(n) ? displayId.sample(n) : id;
+  const params = new URLSearchParams({ search });
+  navigate(`${getLabTabPath(tab)}?${params.toString()}`);
 }
 
 export function navigateToLabWithOrder(
@@ -177,8 +180,10 @@ export function navigateToLabWithOrder(
 ): void {
   const id = normalizeUrlFilterValue(orderId);
   if (!id) return;
-  const path = buildFilteredUrl(getLabTabPath(tab), { orderId: id });
-  navigate(path);
+  const n = Number(id);
+  const search = Number.isFinite(n) ? displayId.order(n) : id;
+  const params = new URLSearchParams({ search });
+  navigate(`${getLabTabPath(tab)}?${params.toString()}`);
 }
 
 export function navigateToPatientsWithPatient(

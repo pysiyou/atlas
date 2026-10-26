@@ -58,9 +58,6 @@ export const SampleCollectionQueue: React.FC = () => {
 
   const {
     filteredItems: filteredDisplaysRaw,
-    urlFilters,
-    clearUrlFilters,
-    setUrlFilter,
     isSampleLookup,
     isLookupBelowMin,
   } = useLabQueuePageFilters({
@@ -124,13 +121,7 @@ export const SampleCollectionQueue: React.FC = () => {
               : EMPTY_COPY.pendingCollections.description
         }
         filterRow={
-          <LabQueueFilterRow
-            urlFilters={urlFilters}
-            onClearUrlFilters={clearUrlFilters}
-            onClearUrlFilter={key => setUrlFilter(key, undefined)}
-            pagination={pagination}
-            onPageChange={goToPage}
-          >
+          <LabQueueFilterRow pagination={pagination} onPageChange={goToPage}>
             <LabQueueFilters config={collectionFilterConfig} {...filterBarProps} />
           </LabQueueFilterRow>
         }
