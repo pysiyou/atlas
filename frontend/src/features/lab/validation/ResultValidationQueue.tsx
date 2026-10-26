@@ -89,13 +89,7 @@ export const ResultValidationQueue: React.FC = () => {
     refetchEscalation,
   });
 
-  const {
-    filteredItems: filteredTests,
-    filterState,
-    urlFilters,
-    clearUrlFilters,
-    setUrlFilter,
-  } = useLabQueuePageFilters({
+  const { filteredItems: filteredTests, filterState } = useLabQueuePageFilters({
     items: allTests,
     workflowType: 'validationReview',
     bar,
@@ -157,13 +151,7 @@ export const ResultValidationQueue: React.FC = () => {
         <LabWorkflowQueueMultiSectionLayout
           aria-busy={dataLoading || undefined}
           filterRow={
-            <LabQueueFilterRow
-              urlFilters={urlFilters}
-              onClearUrlFilters={clearUrlFilters}
-              onClearUrlFilter={key => setUrlFilter(key, undefined)}
-              pagination={pagination}
-              onPageChange={goToPage}
-            >
+            <LabQueueFilterRow pagination={pagination} onPageChange={goToPage}>
               <LabQueueFilters config={validationFilterConfig} {...filterBarProps} />
             </LabQueueFilterRow>
           }

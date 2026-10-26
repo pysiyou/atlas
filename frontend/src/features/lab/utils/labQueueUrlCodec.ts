@@ -4,7 +4,12 @@
 
 import { parseISO, isValid, startOfDay, endOfDay } from 'date-fns';
 import { toIsoDateParam } from '@/utils';
+import type { UrlFilters } from '@/utils/filters';
+import { getLabQueueSearchFromUrlFilters } from './labSearchAndLinks';
 import type { LabQueueWorkflowType } from './labQueueStageFilterConfig';
+
+/** Legacy lab deep-link query keys (migrated into `search`). */
+export const LAB_LEGACY_ENTITY_URL_KEYS = ['testId', 'orderId', 'sampleId'] as const;
 
 /** Query keys owned by the lab queue filter bar (not entity deep-links). */
 export const LAB_QUEUE_BAR_URL_KEYS = [
@@ -107,4 +112,40 @@ export function writeLabQueueBarFilters(
   if (filters.statusFilters.length > 0) {
     params.set(statusKey, filters.statusFilters.join(','));
   }
+}
+
+/**
+ * Moves legacy `testId` / `orderId` / `sampleId` params into `search` and removes them.
+ * Does not overwrite an existing non-empty `search` param.
+ */
+export function migrateLegacyLabEntitySearchParams(params: URLSearchParams): boolean {
+  const hasLegacy = LAB_LEGACY_ENTITY_URL_KEYS.some(key => params.has(key));
+  if (!hasLegacy) return false;
+
+  const urlFilters: UrlFilters = {};
+  for (const key of LAB_LEGACY_ENTITY_URL_KEYS) {
+    const raw = params.get(key);
+    if (raw?.trim()) {
+      urlFilters[key] = raw.trim();
+    }
+  }
+
+  let changed = false;
+  const existingSearch = params.get('search')?.trim();
+  if (!existingSearch) {
+    const search = getLabQueueSearchFromUrlFilters(urlFilters, '', false);
+    if (search) {
+      params.set('search', search);
+      changed = true;
+    }
+  }
+
+  for (const key of LAB_LEGACY_ENTITY_URL_KEYS) {
+    if (params.has(key)) {
+      params.delete(key);
+      changed = true;
+    }
+  }
+
+  return changed;
 }
