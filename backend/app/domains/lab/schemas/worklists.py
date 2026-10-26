@@ -230,15 +230,23 @@ class BoardAttentionItem(BaseModel):
     attentionType: str
 
 
+class LabTodayStageSnapshot(BaseModel):
+    """Per pipeline stage: current queue depth, today's activity, and share of monitor universe."""
+
+    stage: Literal["collection", "entry", "validation"]
+    atStage: int
+    atStagePercent: int
+    touchedToday: int
+    touchedTodayPercent: int
+
+
 class LabTodayPanelSnapshot(BaseModel):
-    """UTC day KPIs: tests updated today, with milestone events that occurred today."""
+    """Lab monitor today panel — stage queue vs today's milestones (% of totalTests)."""
 
     dayStartUtc: datetime
+    totalTests: int
     testsUpdatedToday: int
-    testsWithCollection: int
-    testsWithResultEntry: int
-    testsWithValidation: int
-    testsOffNormalPath: int
+    stages: list[LabTodayStageSnapshot]
 
 
 class LabBoardSummaryResponse(BaseModel):

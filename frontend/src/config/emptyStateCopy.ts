@@ -39,8 +39,8 @@ export const EMPTY_COPY = {
   dashboardTodayKpi: {
     title: emptyTitle('lab activity for today'),
     description: emptySubtitle(
-      'throughput metrics',
-      'tests are updated or specimens are collected today (UTC)',
+      'stage metrics',
+      'tests are in the monitor view (running or updated today)',
     ),
   },
   pendingAttention: {

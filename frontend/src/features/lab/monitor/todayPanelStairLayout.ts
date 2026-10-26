@@ -1,75 +1,36 @@
 /**
- * Today panel stair-track layout — milestone percentages and shared pipeline offsets.
+ * Today panel — per-stage queue depth, today's activity, and share of monitor universe.
  */
-import type { LabTodayPanelSnapshot } from './monitorModel';
+import type { LabTodayPanelSnapshot, LabTodayStageSnapshot } from './monitorModel';
 import {
   LAB_COPY,
   getKpiStageVisual,
-  type LabWorkflowKpiStage,
+  type LabWorkflowStage,
 } from '../constants/labConstants';
 
-export type TodayMilestoneKey = keyof Pick<
-  LabTodayPanelSnapshot,
-  'testsWithCollection' | 'testsWithResultEntry' | 'testsWithValidation' | 'testsOffNormalPath'
->;
+export type TodayPipelineStage = LabTodayStageSnapshot['stage'];
 
-export interface TodayMilestoneRowConfig {
-  key: TodayMilestoneKey;
+export interface TodayStageRowConfig {
+  stage: TodayPipelineStage;
   tableLabel: string;
-  stage: LabWorkflowKpiStage;
 }
 
-export const MILESTONE_ROWS: readonly TodayMilestoneRowConfig[] = [
-  {
-    key: 'testsWithCollection',
-    tableLabel: LAB_COPY.dashboardToday.withCollection,
-    stage: 'collection',
-  },
-  {
-    key: 'testsWithResultEntry',
-    tableLabel: LAB_COPY.dashboardToday.withEntry,
-    stage: 'entry',
-  },
-  {
-    key: 'testsWithValidation',
-    tableLabel: LAB_COPY.dashboardToday.withValidation,
-    stage: 'validation',
-  },
-  {
-    key: 'testsOffNormalPath',
-    tableLabel: LAB_COPY.dashboardToday.withQualityRework,
-    stage: 'sentBack',
-  },
+export const STAGE_ROWS: readonly TodayStageRowConfig[] = [
+  { stage: 'collection', tableLabel: LAB_COPY.dashboardToday.stageCollection },
+  { stage: 'entry', tableLabel: LAB_COPY.dashboardToday.stageEntry },
+  { stage: 'validation', tableLabel: LAB_COPY.dashboardToday.stageValidation },
 ] as const;
 
-/** Horizontal reserve per table row on the shared stair track (~size-1 dot). */
-export const STAIR_ROW_STEP_PERCENT = 2;
-
-export interface TodayStairSegment {
-  key: TodayMilestoneKey;
+export interface TodayStageSegment {
+  stage: TodayPipelineStage;
   tableLabel: string;
-  stage: LabWorkflowKpiStage;
-  count: number;
-  percentOfWorked: number;
-  stairOffset: number;
-  stairWidth: number;
+  atStage: number;
+  atStagePercent: number;
+  touchedToday: number;
+  touchedTodayPercent: number;
   barClass: string;
   textClass: string;
   iconWellClass: string;
-}
-
-export interface TodayPanelLeadMilestone {
-  tableLabel: string;
-  count: number;
-  textClass: string;
-}
-
-export interface TodayPanelInsights {
-  leadMilestone: TodayPanelLeadMilestone | null;
-  reworkRate: number;
-  milestoneEventTotal: number;
-  showReworkHint: boolean;
-  showHighChurnHint: boolean;
 }
 
 export function meterPercent(count: number, total: number): number {
@@ -79,46 +40,33 @@ export function meterPercent(count: number, total: number): number {
   return Math.min(100, Math.round((count / total) * 100));
 }
 
-/** Activity column bar width — same scale as the share column (% of tests worked today). */
-export function stairTrackConsumed(percentOfWorked: number): number {
-  if (percentOfWorked <= 0) {
-    return 0;
-  }
-  return percentOfWorked;
-}
-
-export function stairMarkOffset(stairOffset: number): number {
-  return Math.min(stairOffset, 100 - STAIR_ROW_STEP_PERCENT);
-}
-
-export function buildTodayStairSegments(snapshot: LabTodayPanelSnapshot): TodayStairSegment[] {
-  const totalWorked = snapshot.testsUpdatedToday;
-  let stairOffset = 0;
-
-  return MILESTONE_ROWS.map((row) => {
-    const count = snapshot[row.key];
-    const visual = getKpiStageVisual(row.stage);
-    const percentOfWorked = meterPercent(count, totalWorked);
-    const stairWidth = stairTrackConsumed(percentOfWorked);
-    let markOffset: number;
-
-    if (stairWidth > 0) {
-      // Start at the previous row's end when it fits; otherwise shift left so width matches share %.
-      markOffset = Math.min(stairOffset, 100 - stairWidth);
-      stairOffset = markOffset + stairWidth;
-    } else {
-      markOffset = stairMarkOffset(stairOffset);
-      stairOffset = Math.min(100, stairOffset + STAIR_ROW_STEP_PERCENT);
+function stageSnapshotByKey(
+  snapshot: LabTodayPanelSnapshot,
+  stage: TodayPipelineStage,
+): LabTodayStageSnapshot {
+  const row = snapshot.stages.find(s => s.stage === stage);
+  return (
+    row ?? {
+      stage,
+      atStage: 0,
+      atStagePercent: 0,
+      touchedToday: 0,
+      touchedTodayPercent: 0,
     }
+  );
+}
 
+export function buildTodayStageSegments(snapshot: LabTodayPanelSnapshot): TodayStageSegment[] {
+  return STAGE_ROWS.map(row => {
+    const metrics = stageSnapshotByKey(snapshot, row.stage);
+    const visual = getKpiStageVisual(row.stage as LabWorkflowStage);
     return {
-      key: row.key,
-      tableLabel: row.tableLabel,
       stage: row.stage,
-      count,
-      percentOfWorked,
-      stairOffset: markOffset,
-      stairWidth,
+      tableLabel: row.tableLabel,
+      atStage: metrics.atStage,
+      atStagePercent: metrics.atStagePercent,
+      touchedToday: metrics.touchedToday,
+      touchedTodayPercent: metrics.touchedTodayPercent,
       barClass: visual.bar,
       textClass: visual.text,
       iconWellClass: visual.iconWell,
@@ -126,58 +74,14 @@ export function buildTodayStairSegments(snapshot: LabTodayPanelSnapshot): TodayS
   });
 }
 
-export function deriveTodayInsights(snapshot: LabTodayPanelSnapshot): TodayPanelInsights {
-  const totalWorked = snapshot.testsUpdatedToday;
-  const milestoneEventTotal =
-    snapshot.testsWithCollection +
-    snapshot.testsWithResultEntry +
-    snapshot.testsWithValidation +
-    snapshot.testsOffNormalPath;
-
-  const reworkRate = meterPercent(snapshot.testsOffNormalPath, totalWorked);
-
-  let leadMilestone: TodayPanelLeadMilestone | null = null;
-  if (totalWorked > 0) {
-    let bestCount = -1;
-    for (const row of MILESTONE_ROWS) {
-      const count = snapshot[row.key];
-      if (count > bestCount) {
-        bestCount = count;
-        const visual = getKpiStageVisual(row.stage);
-        leadMilestone = {
-          tableLabel: row.tableLabel,
-          count,
-          textClass: visual.text,
-        };
-      }
-    }
-    if (bestCount <= 0) {
-      leadMilestone = null;
-    }
-  }
-
-  return {
-    leadMilestone,
-    reworkRate,
-    milestoneEventTotal,
-    showReworkHint: totalWorked > 0 && reworkRate >= 10,
-    showHighChurnHint: totalWorked > 0 && milestoneEventTotal > totalWorked * 1.25,
-  };
+export function sumAtStage(snapshot: LabTodayPanelSnapshot): number {
+  return snapshot.stages.reduce((sum, row) => sum + row.atStage, 0);
 }
 
-export function formatTodayRowTitle(
-  tableLabel: string,
-  count: number,
-  totalWorked: number,
-  percentOfWorked: number,
-): string {
-  return `${tableLabel}: ${count.toLocaleString()} of ${totalWorked.toLocaleString()} tests worked today (${percentOfWorked}%). ${LAB_COPY.dashboardToday.rowTitleOverlapNote}`;
+export function formatTodayStageRowTitle(segment: TodayStageSegment, totalTests: number): string {
+  return `${segment.tableLabel}: ${segment.atStage.toLocaleString()} in queue (${segment.atStagePercent}% of ${totalTests.toLocaleString()} tests), ${segment.touchedToday.toLocaleString()} touched today (${segment.touchedTodayPercent}%).`;
 }
 
-export function formatTodayRowAriaLabel(
-  tableLabel: string,
-  count: number,
-  percentOfWorked: number,
-): string {
-  return `${tableLabel}, ${percentOfWorked} percent, ${count.toLocaleString()} tests`;
+export function formatTodayStageRowAria(segment: TodayStageSegment): string {
+  return `${segment.tableLabel}, ${segment.atStage.toLocaleString()} in queue, ${segment.atStagePercent} percent, ${segment.touchedToday.toLocaleString()} today, ${segment.touchedTodayPercent} percent`;
 }

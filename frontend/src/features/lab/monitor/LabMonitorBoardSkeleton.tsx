@@ -24,24 +24,26 @@ function TodayPanelSkeleton() {
       <div className={KPI_PANEL.body}>
         <div className={KPI_PANEL.main}>
           <div className={KPI_PANEL.stack}>
-            <div className={`${METER_KPI.table} flex flex-col`}>
-              <div className={METER_KPI.tableHeadRow}>
+            <div className={`${METER_KPI.tableStage} flex flex-col`}>
+              <div className={METER_KPI.tableHeadRowStage}>
                 <Skeleton height={12} width="40%" />
-                <Skeleton height={12} width="50%" />
                 <Skeleton height={12} width={32} className="ml-auto" />
+                <Skeleton height={12} width={32} className="ml-auto" />
+                <Skeleton height={12} width="50%" />
               </div>
-              {Array.from({ length: 4 }).map((_, index) => (
-                <div key={index} className={METER_KPI.tableRow}>
+              {Array.from({ length: 3 }).map((_, index) => (
+                <div key={index} className={METER_KPI.tableRowStage}>
                   <Skeleton height={12} width="72%" />
+                  <Skeleton height={12} width={40} className="ml-auto" />
+                  <Skeleton height={12} width={40} className="ml-auto" />
                   <Skeleton height={4} className="w-full" />
-                  <Skeleton height={12} width={48} />
                 </div>
               ))}
             </div>
           </div>
         </div>
         <div className={KPI_PANEL.footer}>
-          <div className={METER_KPI.tableTotal}>
+          <div className={METER_KPI.tableTotalStage}>
             <Skeleton height={12} width={40} />
             <span aria-hidden />
             <Skeleton height={12} width={56} className="ml-auto" />
