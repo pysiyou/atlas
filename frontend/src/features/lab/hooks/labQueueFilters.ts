@@ -6,7 +6,7 @@
  * 2. After items load → `useLabQueuePageFilters({ items, workflowType, bar })`
  */
 
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect, useLayoutEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { usePageFilters } from '@/hooks';
@@ -334,6 +334,7 @@ export function useLabQueueBarFilters(workflowType: LabQueueWorkflowType): LabQu
 
   const skipUrlDecodeRef = useRef(false);
   const persistSkipRef = useRef(true);
+  const entityFiltersKey = `${urlFilters.sampleId ?? ''}|${urlFilters.orderId ?? ''}|${urlFilters.testId ?? ''}`;
 
   useEffect(() => {
     if (skipUrlDecodeRef.current) {
@@ -346,32 +347,42 @@ export function useLabQueueBarFilters(workflowType: LabQueueWorkflowType): LabQu
       urlFilters,
       filterConfig.defaultStatuses,
     );
+    const searchInSyncWithUrl = searchQuery === debouncedSearch;
     /* eslint-disable react-hooks/set-state-in-effect -- URL back/forward and external edits */
-    setSearchQuery(next.searchQuery);
+    if (searchInSyncWithUrl) {
+      setSearchQuery(next.searchQuery);
+    }
     setDateRange(next.dateRange);
     setSampleTypeFilters(next.sampleTypeFilters);
     setStatusFilters(
       [...next.statusFilters] as SampleStatus[] | TestStatus[] | PriorityLevel[],
     );
     /* eslint-enable react-hooks/set-state-in-effect */
-  }, [searchParams, urlFilters, workflowType, filterConfig.defaultStatuses]);
+  }, [
+    searchParams,
+    entityFiltersKey,
+    workflowType,
+    filterConfig.defaultStatuses,
+    debouncedSearch,
+    searchQuery,
+    urlFilters,
+  ]);
 
   useEffect(() => {
+    if (!hasActiveRecordUrlFilters(urlFilters)) {
+      return;
+    }
     const urlSearch = searchParams.get('search') ?? '';
     const preferSample = workflowType === 'collection';
-    if (hasActiveRecordUrlFilters(urlFilters)) {
-      /* eslint-disable-next-line react-hooks/set-state-in-effect -- entity deep-link → search field */
-      setSearchQuery(getLabQueueSearchFromUrlFilters(urlFilters, urlSearch, preferSample));
+    const displaySearch = getLabQueueSearchFromUrlFilters(urlFilters, urlSearch, preferSample);
+    if (searchQuery === displaySearch) {
       return;
     }
-    if (searchQuery !== debouncedSearch) {
-      return;
-    }
-    /* eslint-disable-next-line react-hooks/set-state-in-effect -- URL search param without entity filters */
-    setSearchQuery(urlSearch);
-  }, [urlFilters, searchParams, workflowType, debouncedSearch, searchQuery]);
+    /* eslint-disable-next-line react-hooks/set-state-in-effect -- entity deep-link → search field */
+    setSearchQuery(displaySearch);
+  }, [entityFiltersKey, searchParams, workflowType, urlFilters, searchQuery]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (persistSkipRef.current) {
       persistSkipRef.current = false;
       return;

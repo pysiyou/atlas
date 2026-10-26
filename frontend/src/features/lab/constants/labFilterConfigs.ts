@@ -25,9 +25,9 @@ const COLLECTION_STATUS_OPTIONS: FilterOption[] = [
 export const LAB_URL_FILTER_KEYS = ['sampleId', 'orderId', 'testId'] as const satisfies readonly UrlFilterKey[];
 
 export const collectionFilterConfig = buildLabFilterConfig({
-  searchPlaceholder: 'Sample ID (SAM0042) or patient name, min 3 characters...',
+  searchPlaceholder: 'Sample, order, or test ID (SAM/ORD/TST) — min 3 chars for lookup...',
   searchHelpText:
-    'Use the label/barcode ID (SAM####), numeric sample ID, or patient name. Historical search starts after 3 characters.',
+    'Search by sample ID (SAM####), order ID (ORD####), test ID (TST####), numeric IDs, or patient name. Lookup runs after 3 characters.',
   dateRangeHelpText: 'Filter samples by collection or order date range.',
   extraControls: [
     {
@@ -49,8 +49,9 @@ const entryStatusOptions = createFilterOptions(ENTRY_STATUS_VALUES, {
 } as Record<(typeof ENTRY_STATUS_VALUES)[number], { label: string }>);
 
 export const entryFilterConfig = buildLabFilterConfig({
-  searchPlaceholder: 'Search tests by order ID, patient, or test name...',
-  searchHelpText: 'Search by order ID, patient name, or test name.',
+  searchPlaceholder: 'Sample, order, or test ID (SAM/ORD/TST) or patient...',
+  searchHelpText:
+    'Search by sample ID (SAM####), order ID (ORD####), test ID (TST####), patient name, or test name.',
   dateRangeHelpText: 'Filter by order or result date range.',
   extraControls: [
     {
@@ -74,8 +75,9 @@ const priorityOptions = createFilterOptions(PRIORITY_LEVEL_VALUES, {
 } as Record<PriorityLevel, { label: string }>);
 
 export const validationFilterConfig = buildLabFilterConfig({
-  searchPlaceholder: 'Search tests by order ID, patient, or test name...',
-  searchHelpText: 'Search by order ID, patient name, or test name.',
+  searchPlaceholder: 'Sample, order, or test ID (SAM/ORD/TST) or patient...',
+  searchHelpText:
+    'Search by sample ID (SAM####), order ID (ORD####), test ID (TST####), patient name, or test name.',
   dateRangeHelpText: 'Filter by order or validation date range.',
   extraControls: [
     {

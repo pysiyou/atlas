@@ -39,7 +39,7 @@ from app.shared.contracts.enums import (
     TestStatus,
 )
 from app.shared.contracts.lab_blockers import ATTENTION_LABELS
-from sqlalchemy import String, desc, func, or_
+from sqlalchemy import String, and_, cast, desc, exists, func, or_
 from sqlalchemy.orm import Session
 
 COLLECTION_SAMPLE_LOOKUP_MIN_LEN = 3
@@ -72,9 +72,52 @@ def _collection_search_filter(search_term: str):
     sample_id = parse_display_id_from_search(term, "SAM")
     if sample_id is not None:
         predicates.append(Sample.sampleId == sample_id)
+    order_id = parse_display_id_from_search(term, "ORD")
+    if order_id is not None:
+        predicates.append(Order.orderId == order_id)
+    test_id = parse_display_id_from_search(term, "TST")
+    if test_id is not None:
+        predicates.append(
+            exists().where(
+                and_(
+                    OrderTest.id == test_id,
+                    OrderTest.orderId == Order.orderId,
+                )
+            )
+        )
     compact = re.sub(r"[\s-]", "", term)
     if compact.isdigit():
         predicates.append(Sample.sampleId.cast(String).ilike(f"%{compact}%"))
+        predicates.append(cast(Order.orderId, String).ilike(f"%{compact}%"))
+    return or_(*predicates)
+
+
+def _order_test_worklist_search_filter(search_term: str):
+    """Match patient/test text plus SAM/ORD/TST display ids and numeric id fragments."""
+    term = search_term.strip()
+    predicates = [
+        Patient.fullName.ilike(f"%{term}%"),
+        CatalogTest.name.ilike(f"%{term}%"),
+        OrderTest.testCode.ilike(f"%{term}%"),
+    ]
+    order_id = parse_display_id_from_search(term, "ORD")
+    if order_id is not None:
+        predicates.append(Order.orderId == order_id)
+    test_id = parse_display_id_from_search(term, "TST")
+    if test_id is not None:
+        predicates.append(OrderTest.id == test_id)
+    sample_id = parse_display_id_from_search(term, "SAM")
+    if sample_id is not None:
+        predicates.append(OrderTest.sampleId == sample_id)
+    compact = re.sub(r"[\s-]", "", term)
+    if compact.isdigit():
+        predicates.extend(
+            [
+                cast(Order.orderId, String).ilike(f"%{compact}%"),
+                cast(OrderTest.id, String).ilike(f"%{compact}%"),
+                cast(OrderTest.sampleId, String).ilike(f"%{compact}%"),
+            ]
+        )
     return or_(*predicates)
 
 
@@ -533,16 +576,7 @@ class LabWorklistService:
         )
         search_term = search.strip() if search else ""
         if search_term:
-            term = f"%{search_term}%"
-            query = query.filter(
-                or_(
-                    Patient.fullName.ilike(term),
-                    Order.orderId.cast(String).ilike(term),
-                    CatalogTest.name.ilike(term),
-                    OrderTest.testCode.ilike(term),
-                    Sample.sampleId.cast(String).ilike(term),
-                )
-            )
+            query = query.filter(_order_test_worklist_search_filter(search_term))
         total = query.count()
         start = (page - 1) * page_size
         since_col = func.coalesce(Sample.collectedAt, Order.orderDate)
@@ -620,13 +654,9 @@ class LabWorklistService:
             date_to=date_to,
             sample_types=sample_types,
         )
-        if search:
-            term = f"%{search.strip()}%"
-            query = query.filter(
-                (Patient.fullName.ilike(term))
-                | (Order.orderId.cast(str).ilike(term))
-                | (CatalogTest.name.ilike(term))
-            )
+        search_term = search.strip() if search else ""
+        if search_term:
+            query = query.filter(_order_test_worklist_search_filter(search_term))
         total = query.count()
         start = (page - 1) * page_size
         since_col = func.coalesce(OrderTest.resultEnteredAt, Order.orderDate)

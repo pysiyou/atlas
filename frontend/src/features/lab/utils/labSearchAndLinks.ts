@@ -1,9 +1,95 @@
 /** Lab search keys, result presence, collection lookup filters, and queue deep-links. */
 import type { TestWithContext, OrderTest } from '@/types';
-import { displayId, buildFilteredUrl, inclusiveDateRangeBounds, toIsoDateParam } from '@/utils';
+import { displayId, buildFilteredUrl, inclusiveDateRangeBounds, toIsoDateParam, ID_PREFIXES, parseDisplayId } from '@/utils';
 import type { TestStatus } from '@/types/enums';
 import type { UrlFilters } from '@/utils/filters';
 import { getLabQueueUrl, getLabTabForTestStatus, getLabTabPath, type LabTabId } from '../constants/labConstants';
+
+export interface LabQueueSearchableIds {
+  orderTestId?: number | null;
+  orderId?: number | null;
+  sampleId?: number | null;
+}
+
+type LabQueueSearchIntent =
+  | { kind: 'empty' }
+  | { kind: 'test'; testId: number }
+  | { kind: 'order'; orderId: number }
+  | { kind: 'sample'; sampleId: number }
+  | { kind: 'numeric'; value: number }
+  | { kind: 'text'; term: string };
+
+function parseLabQueueSearchIntent(query: string): LabQueueSearchIntent {
+  const trimmed = query.trim();
+  if (!trimmed) return { kind: 'empty' };
+
+  const compact = trimmed.replace(/[\s-]/g, '');
+  const upper = compact.toUpperCase();
+
+  if (upper.startsWith(ID_PREFIXES.orderTest)) {
+    const testId = parseDisplayId('orderTest', trimmed);
+    if (testId != null) return { kind: 'test', testId };
+  }
+  if (upper.startsWith(ID_PREFIXES.order)) {
+    const orderId = parseDisplayId('order', trimmed);
+    if (orderId != null) return { kind: 'order', orderId };
+  }
+  if (upper.startsWith(ID_PREFIXES.sample)) {
+    const sampleId = parseDisplayId('sample', trimmed);
+    if (sampleId != null) return { kind: 'sample', sampleId };
+  }
+  if (/^\d+$/.test(compact)) {
+    return { kind: 'numeric', value: Number(compact) };
+  }
+  return { kind: 'text', term: trimmed };
+}
+
+/** Build searchable tokens for substring fallback (display ids + raw numbers). */
+export function labQueueSearchTextFields(
+  ids: LabQueueSearchableIds,
+  extra: string[] = [],
+): string[] {
+  const fields = [
+    ids.orderTestId != null ? displayId.orderTest(ids.orderTestId) : '',
+    ids.orderId != null ? displayId.order(ids.orderId) : '',
+    ids.sampleId != null ? displayId.sample(ids.sampleId) : '',
+    ids.orderTestId != null ? String(ids.orderTestId) : '',
+    ids.orderId != null ? String(ids.orderId) : '',
+    ids.sampleId != null ? String(ids.sampleId) : '',
+    ...extra,
+  ].filter(Boolean);
+  return fields;
+}
+
+/** Client-side lab queue search: SAM/ORD/TST display ids, numeric ids, or free text. */
+export function matchLabQueueSearchQuery(
+  ids: LabQueueSearchableIds,
+  textFields: string[],
+  query: string,
+): boolean {
+  const intent = parseLabQueueSearchIntent(query);
+  if (intent.kind === 'empty') return true;
+  if (intent.kind === 'test') {
+    return ids.orderTestId != null && ids.orderTestId === intent.testId;
+  }
+  if (intent.kind === 'order') {
+    return ids.orderId != null && ids.orderId === intent.orderId;
+  }
+  if (intent.kind === 'sample') {
+    return ids.sampleId != null && ids.sampleId === intent.sampleId;
+  }
+  if (intent.kind === 'numeric') {
+    const n = intent.value;
+    return (
+      ids.orderTestId === n ||
+      ids.orderId === n ||
+      ids.sampleId === n ||
+      textFields.some(field => field.includes(String(n)))
+    );
+  }
+  const lower = intent.term.toLowerCase();
+  return textFields.some(field => field.toLowerCase().includes(lower));
+}
 
 export function hasActiveRecordUrlFilters(urlFilters?: UrlFilters): boolean {
   if (!urlFilters) return false;
