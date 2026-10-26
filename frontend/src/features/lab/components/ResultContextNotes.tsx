@@ -39,17 +39,23 @@ function AnalyticalFlagsBlock({
   const flagGrid = (
     <div
       className={cn(
-        'grid gap-x-space-6 gap-y-space-2 min-w-0',
-        compact ? 'grid-cols-2' : 'grid-cols-1 sm:grid-cols-2'
+        'min-w-0',
+        compact
+          ? 'flex flex-wrap items-baseline gap-x-space-4 gap-y-space-1-5'
+          : 'grid gap-x-space-6 gap-y-space-2 grid-cols-1 sm:grid-cols-2'
       )}
     >
       {rows.map((flag, index) => (
         <div
           key={`${flag.kind}-${flag.code}-${index}`}
-          className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] gap-x-space-2 items-baseline min-w-0"
+          className={
+            compact
+              ? 'flex min-w-0 items-baseline gap-x-space-1-5'
+              : 'grid min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] items-baseline gap-x-space-2'
+          }
         >
-          <span className={`${text({ role: 'label' })} ${FG.labelMuted} truncate`}>
-            {analyticalFlagLabel(flag, parameterLabels)}
+          <span className={`${text({ role: 'label' })} ${FG.labelMuted} shrink-0`}>
+            {analyticalFlagLabel(flag, parameterLabels)}:
           </span>
           <span className={`${text({ role: 'caption' })} ${TONE.warning.fg} leading-snug`}>
             {analyticalFlagDetail(flag)}

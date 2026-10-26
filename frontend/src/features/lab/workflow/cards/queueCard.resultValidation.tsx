@@ -160,7 +160,7 @@ function ResultValidationCardDesktop({
             flags={test.flags}
             testCode={test.testCode}
             variant="inline"
-            layout="compact"
+            layout="grid"
           />
         </>
       }
@@ -240,7 +240,7 @@ function ResultValidationCardMobile({
           flags={test.flags}
           testCode={test.testCode}
           variant="inline"
-          layout="compact"
+          layout="grid"
           dense
         />
       </QueueCardMobile>

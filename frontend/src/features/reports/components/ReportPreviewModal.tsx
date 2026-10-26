@@ -29,6 +29,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
   onClose,
   isActive = true,
   orderId,
+  layout = 'table',
 }) => {
   const { getUserName } = useUserLookup();
   const { reportableOrder, isLoading, isError } = useReportableOrder(isOpen ? orderId : null);
@@ -143,7 +144,9 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
           />
         }
       >
-        {reportData ? <ReportPreviewResults reportData={reportData} /> : null}
+        {reportData ? (
+          <ReportPreviewResults reportData={reportData} layout={layout} />
+        ) : null}
       </ModalPageShell>
     </Modal>
   );

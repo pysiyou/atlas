@@ -1,5 +1,5 @@
 /**
- * Report preview results — one compact panel per active test (standard header + label/value rows).
+ * Report preview results — one panel per active test; `layout` selects table vs grid.
  */
 
 import React from 'react';
@@ -11,18 +11,17 @@ import {
 } from '@/features/lab/cross';
 import type { Gender } from '@/types';
 import { text, SPACING } from '@/theme/recipes';
-import type { LabReportPayload } from '../types';
+import type { LabReportPayload, ReportPreviewResultsLayout } from '../types';
 import { getActiveOrderTests } from '../utils/prepareReportData';
 
 interface ReportPreviewResultsProps {
   reportData: LabReportPayload;
+  /** `table` = parameter / result / reference interval; `grid` = three-column label/value pairs. */
+  layout?: ReportPreviewResultsLayout;
 }
 
 type ReportTestResult = LabReportPayload['testResults'][number];
 
-/**
- * Converts report parameter rows into the OrderTest.results record the validation grid expects.
- */
 function parametersToResultsRecord(
   parameters: ReportTestResult['parameters']
 ): Record<string, unknown> {
@@ -49,10 +48,12 @@ function reportPatient(
   return { gender, age: reportData.patientAge };
 }
 
-export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ reportData }) => {
+export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({
+  reportData,
+  layout = 'table',
+}) => {
   const patient = reportPatient(reportData);
   const orderTests = getActiveOrderTests(reportData.order);
-
   if (reportData.testResults.length === 0) {
     return <p className={text({ role: 'body', intent: 'muted' })}>No active tests on this order.</p>;
   }
@@ -86,7 +87,7 @@ export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({ repo
               testCode={test.testCode}
               patient={patient}
               technicianNotes={test.technicianNotes}
-              resultsLayout="compact"
+              layout={layout}
             />
           </Panel>
         );

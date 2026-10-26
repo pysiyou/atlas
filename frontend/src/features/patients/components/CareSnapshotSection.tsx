@@ -44,7 +44,7 @@ function hasNumber(value: number | null | undefined): value is number {
   return typeof value === 'number' && Number.isFinite(value);
 }
 
-export const CareSnapshotSection: React.FC<CareSnapshotSectionProps> = ({ patient }) => {
+export function renderCareSnapshotDescriptionItems(patient: Patient): React.ReactElement[] {
   const allergies = patient.medicalHistory?.allergies ?? [];
   const hasAllergies = allergies.length > 0;
   const affiliation = patient.affiliation;
@@ -58,137 +58,167 @@ export const CareSnapshotSection: React.FC<CareSnapshotSectionProps> = ({ patien
   const bloodPressure = formatBloodPressure(vitals?.systolicBP, vitals?.diastolicBP);
   const hasVitals = hasRecordedVitals(vitals);
 
+  const items: React.ReactElement[] = [
+    <DescriptionItem
+      key="snapshot-allergies"
+      icon={ICONS.medicalHistory.allergy}
+      label="Allergies"
+      value={
+        <span className={cn(hasAllergies && TONE.danger.fg, 'block')}>
+          {formatList(allergies, 'None')}
+        </span>
+      }
+      orientation="vertical"
+    />,
+  ];
+
+  if (affiliation) {
+    items.push(
+      <DescriptionItem
+        key="coverage"
+        icon={ICONS.ui.shieldCheck}
+        label="Coverage"
+        value={
+          <Badge variant={coverageActive ? 'success' : 'danger'} size="xs">
+            {coverageActive ? 'Active' : 'Expired'}
+          </Badge>
+        }
+        orientation="vertical"
+      />,
+      <DescriptionItem
+        key="assurance"
+        icon={ICONS.dataFields.document}
+        label="Assurance"
+        value={affiliation.assuranceNumber || 'N/A'}
+        orientation="vertical"
+      />,
+      <DescriptionItem
+        key="coverage-period"
+        icon={ICONS.dataFields.date}
+        label="Coverage period"
+        value={formatCoveragePeriod(affiliation.startDate, affiliation.endDate, coverageActive)}
+        orientation="vertical"
+      />
+    );
+  } else {
+    items.push(
+      <DescriptionItem
+        key="coverage-none"
+        icon={ICONS.ui.shield}
+        label="Coverage"
+        value="No affiliation"
+        orientation="vertical"
+      />
+    );
+  }
+
+  items.push(
+    <DescriptionItem
+      key="height"
+      icon={ICONS.dataFields.height}
+      label="Height"
+      value={formatMeasurement(patient.height, 'cm')}
+      orientation="vertical"
+    />,
+    <DescriptionItem
+      key="weight"
+      icon={ICONS.dataFields.weight}
+      label="Weight"
+      value={formatMeasurement(patient.weight, 'kg')}
+      orientation="vertical"
+    />,
+    <DescriptionItem
+      key="bmi"
+      icon={ICONS.dataFields.health}
+      label="BMI"
+      value={
+        bmi ? (
+          <span className={bodyMassTone(bmi.category)}>
+            {bmi.value.toFixed(1)} · {bmi.category}
+          </span>
+        ) : (
+          'N/A'
+        )
+      }
+      orientation="vertical"
+    />
+  );
+
+  if (hasVitals) {
+    if (hasNumber(temperature)) {
+      items.push(
+        <DescriptionItem
+          key="temperature"
+          icon={ICONS.dataFields.thermometer}
+          label="Temperature"
+          value={`${temperature} °C`}
+          orientation="vertical"
+        />
+      );
+    }
+    if (hasNumber(heartRate)) {
+      items.push(
+        <DescriptionItem
+          key="heart-rate"
+          icon={ICONS.dataFields.heartPulse}
+          label="Heart Rate"
+          value={`${heartRate} bpm`}
+          orientation="vertical"
+        />
+      );
+    }
+    if (bloodPressure) {
+      items.push(
+        <DescriptionItem
+          key="blood-pressure"
+          icon={ICONS.dataFields.heartPulse}
+          label="Blood Pressure"
+          value={bloodPressure}
+          orientation="vertical"
+        />
+      );
+    }
+    if (hasNumber(respiratoryRate)) {
+      items.push(
+        <DescriptionItem
+          key="respiratory-rate"
+          icon={ICONS.dataFields.pulse}
+          label="Respiratory Rate"
+          value={`${respiratoryRate} /min`}
+          orientation="vertical"
+        />
+      );
+    }
+    if (hasNumber(oxygenSaturation)) {
+      items.push(
+        <DescriptionItem
+          key="oxygen"
+          icon={ICONS.dataFields.blood}
+          label="O₂ Saturation"
+          value={`${oxygenSaturation}%`}
+          orientation="vertical"
+        />
+      );
+    }
+  } else {
+    items.push(
+      <DescriptionItem
+        key="vitals-none"
+        icon={ICONS.dataFields.stethoscope}
+        label="Vitals"
+        value="Not recorded"
+        orientation="vertical"
+      />
+    );
+  }
+
+  return items;
+}
+
+export const CareSnapshotSection: React.FC<CareSnapshotSectionProps> = ({ patient }) => {
   return (
     <div className="flex min-h-0 h-full flex-col">
-      <DescriptionColumns>
-        <DescriptionItem
-          icon={ICONS.medicalHistory.allergy}
-          label="Allergies"
-          value={
-            <span className={cn(hasAllergies && TONE.danger.fg, 'block')}>
-              {formatList(allergies, 'None')}
-            </span>
-          }
-          orientation="vertical"
-        />
-
-        {affiliation ? (
-          <>
-            <DescriptionItem
-              icon={ICONS.ui.shieldCheck}
-              label="Coverage"
-              value={
-                <Badge variant={coverageActive ? 'success' : 'danger'} size="xs">
-                  {coverageActive ? 'Active' : 'Expired'}
-                </Badge>
-              }
-              orientation="vertical"
-            />
-            <DescriptionItem
-              icon={ICONS.dataFields.document}
-              label="Assurance"
-              value={affiliation.assuranceNumber || 'N/A'}
-              orientation="vertical"
-            />
-            <DescriptionItem
-              icon={ICONS.dataFields.date}
-              label="Coverage period"
-              value={formatCoveragePeriod(
-                affiliation.startDate,
-                affiliation.endDate,
-                coverageActive
-              )}
-              orientation="vertical"
-            />
-          </>
-        ) : (
-          <DescriptionItem
-            icon={ICONS.ui.shield}
-            label="Coverage"
-            value="No affiliation"
-            orientation="vertical"
-          />
-        )}
-
-        <DescriptionItem
-          icon={ICONS.dataFields.height}
-          label="Height"
-          value={formatMeasurement(patient.height, 'cm')}
-          orientation="vertical"
-        />
-        <DescriptionItem
-          icon={ICONS.dataFields.weight}
-          label="Weight"
-          value={formatMeasurement(patient.weight, 'kg')}
-          orientation="vertical"
-        />
-        <DescriptionItem
-          icon={ICONS.dataFields.health}
-          label="BMI"
-          value={
-            bmi ? (
-              <span className={bodyMassTone(bmi.category)}>
-                {bmi.value.toFixed(1)} · {bmi.category}
-              </span>
-            ) : (
-              'N/A'
-            )
-          }
-          orientation="vertical"
-        />
-
-        {hasVitals ? (
-          <>
-            {hasNumber(temperature) && (
-              <DescriptionItem
-                icon={ICONS.dataFields.thermometer}
-                label="Temperature"
-                value={`${temperature} °C`}
-                orientation="vertical"
-              />
-            )}
-            {hasNumber(heartRate) && (
-              <DescriptionItem
-                icon={ICONS.dataFields.heartPulse}
-                label="Heart Rate"
-                value={`${heartRate} bpm`}
-                orientation="vertical"
-              />
-            )}
-            {bloodPressure && (
-              <DescriptionItem
-                icon={ICONS.dataFields.heartPulse}
-                label="Blood Pressure"
-                value={bloodPressure}
-                orientation="vertical"
-              />
-            )}
-            {hasNumber(respiratoryRate) && (
-              <DescriptionItem
-                icon={ICONS.dataFields.pulse}
-                label="Respiratory Rate"
-                value={`${respiratoryRate} /min`}
-                orientation="vertical"
-              />
-            )}
-            {hasNumber(oxygenSaturation) && (
-              <DescriptionItem
-                icon={ICONS.dataFields.blood}
-                label="O₂ Saturation"
-                value={`${oxygenSaturation}%`}
-                orientation="vertical"
-              />
-            )}
-          </>
-        ) : (
-          <DescriptionItem
-            icon={ICONS.dataFields.stethoscope}
-            label="Vitals"
-            value="Not recorded"
-            orientation="vertical"
-          />
-        )}
-      </DescriptionColumns>
+      <DescriptionColumns>{renderCareSnapshotDescriptionItems(patient)}</DescriptionColumns>
     </div>
   );
 };

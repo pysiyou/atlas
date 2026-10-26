@@ -37,12 +37,12 @@ export function ResultValidationResultsBody({
   testCode,
   patient,
   technicianNotes,
-  resultsLayout = 'validation',
+  layout = 'table',
 }: Pick<
   ValidationFormProps,
   'results' | 'flags' | 'testCode' | 'patient' | 'technicianNotes'
 > & {
-  resultsLayout?: ResultsGridLayout;
+  layout?: ResultsGridLayout;
 }) {
   const hasResults = results && Object.keys(results).length > 0;
   const parameterLabels = useParameterLabelMap(testCode);
@@ -78,7 +78,7 @@ export function ResultValidationResultsBody({
           testCode={testCode}
           patient={patient}
           variant="inline"
-          layout={resultsLayout}
+          layout={layout}
         />
       )}
 
