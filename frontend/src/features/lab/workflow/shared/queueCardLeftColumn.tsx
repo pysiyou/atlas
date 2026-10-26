@@ -51,7 +51,7 @@ function TestWorkflowIdentityLines({
   patientName,
   testName,
   orderTestId,
-  referringPhysician,
+  referentDoctor,
   orderId,
   sampleId,
   testCode,
@@ -59,7 +59,7 @@ function TestWorkflowIdentityLines({
   patientName: string;
   testName: string;
   orderTestId?: number;
-  referringPhysician?: string;
+  referentDoctor?: string;
   orderId: number;
   sampleId?: number;
   testCode: string;
@@ -94,13 +94,13 @@ function TestWorkflowIdentityLines({
   }
 
   const line2: ReactNode[] = [];
-  if (referringPhysician) {
+  if (referentDoctor) {
     line2.push(
       <span
         key="phys"
         className={cn(IDENTITY_STACK.secondaryText, 'min-w-0 truncate')}
       >
-        {referringPhysician}
+        {referentDoctor}
       </span>
     );
   }
@@ -218,7 +218,7 @@ export function TestWorkflowCardLeftColumn({
         patientName={patientName}
         testName={test.testName}
         orderTestId={test.id}
-        referringPhysician={test.referringPhysician}
+        referentDoctor={test.referentDoctor}
         orderId={test.orderId}
         sampleId={test.sampleId}
         testCode={test.testCode}
@@ -248,7 +248,7 @@ export function TestWorkflowCardLeftColumn({
 export interface SampleCollectionCardLeftColumnProps {
   patientName: string;
   orderId: number;
-  referringPhysician?: string;
+  referentDoctor?: string;
   orderDate?: string;
   sample: Sample;
   isPending: boolean;
@@ -287,13 +287,13 @@ function SampleCollectionIdentityLines({
   patientName,
   sampleId,
   orderId,
-  referringPhysician,
+  referentDoctor,
   orderDate,
 }: {
   patientName: string;
   sampleId: number;
   orderId: number;
-  referringPhysician?: string;
+  referentDoctor?: string;
   orderDate?: string;
 }) {
   const idClass = 'whitespace-nowrap';
@@ -310,10 +310,10 @@ function SampleCollectionIdentityLines({
   line1.push(<RecordId key="sam" type="sample" value={sampleId} className={idClass} />);
 
   const line2: ReactNode[] = [];
-  if (referringPhysician) {
+  if (referentDoctor) {
     line2.push(
       <span key="phys" className={cn(IDENTITY_STACK.secondaryText, 'min-w-0 truncate')}>
-        {referringPhysician}
+        {referentDoctor}
       </span>
     );
   }
@@ -366,7 +366,7 @@ function SampleCollectionOperationsRow(
 export function SampleCollectionCardLeftColumn({
   patientName,
   orderId,
-  referringPhysician,
+  referentDoctor,
   orderDate,
   sample,
   isPending,
@@ -397,7 +397,7 @@ export function SampleCollectionCardLeftColumn({
         patientName={patientName}
         sampleId={sample.sampleId}
         orderId={orderId}
-        referringPhysician={referringPhysician}
+        referentDoctor={referentDoctor}
         orderDate={orderDate}
       />
       <div className={WORKLIST_CARD_ALERT.row}>

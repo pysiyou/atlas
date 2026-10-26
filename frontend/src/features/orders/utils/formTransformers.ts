@@ -32,7 +32,7 @@ export function orderToFormInput(order?: Partial<Order>): Partial<OrderFormInput
 
   return {
     patientId: order.patientId,
-    referringPhysician: order.referringPhysician || '',
+    referentDoctor: order.referentDoctor || '',
     priority: order.priority || 'low',
     clinicalNotes: order.clinicalNotes || '',
     testCodes: getActiveOrderTestCodes(order.tests ?? []),
@@ -52,8 +52,8 @@ export function formInputToPayload(
   const includePatientId = options?.includePatientId ?? true;
 
   if (includePatientId && formData.patientId !== undefined) payload.patientId = formData.patientId;
-  if (formData.referringPhysician !== undefined)
-    payload.referringPhysician = formData.referringPhysician;
+  if (formData.referentDoctor !== undefined)
+    payload.referentDoctor = formData.referentDoctor;
   if (formData.priority !== undefined) payload.priority = formData.priority;
   if (formData.clinicalNotes !== undefined) payload.clinicalNotes = formData.clinicalNotes;
 

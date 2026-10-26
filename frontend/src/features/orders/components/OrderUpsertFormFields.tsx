@@ -110,12 +110,12 @@ export const OrderUpsertFormFields: React.FC<OrderUpsertFormFieldsProps> = ({
       />
 
       <Controller
-        name="referringPhysician"
+        name="referentDoctor"
         control={control}
-        rules={{ required: 'Referring physician is required' }}
+        rules={{ required: 'Referent doctor is required' }}
         render={({ field, fieldState }) => (
           <Input
-            label="Referring physician"
+            label="Referent doctor"
             name={field.name}
             icon={ICONS.dataFields.stethoscope}
             value={field.value || ''}

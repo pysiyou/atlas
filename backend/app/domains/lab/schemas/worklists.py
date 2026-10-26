@@ -55,7 +55,7 @@ class CollectionWorklistItem(BaseModel):
     collectedAt: datetime | None = None
     collectedBy: str | None = None
     collectedVolume: float | None = None
-    referringPhysician: str | None = None
+    referentDoctor: str | None = None
     testName: str | None = None
     testCategory: str | None = None
     queueAgeBand: Literal["fresh", "onTrack", "warning", "critical"] | None = None
@@ -80,7 +80,7 @@ class EntryWorklistItem(BaseModel):
     isRetest: bool
     retestOfTestId: int | None = None
     retestNumber: int = 0
-    referringPhysician: str | None = None
+    referentDoctor: str | None = None
     testCategory: str | None = None
     pipelineStage: Literal["collection", "entry", "validation", "escalation", "completed", "cancelled"] | None = None
     attentionReason: str | None = None
@@ -108,7 +108,7 @@ class DashboardWorklistItem(BaseModel):
     stage: Literal["collection", "entry", "validation"]
     activityAt: datetime
     orderDate: datetime
-    referringPhysician: str | None = None
+    referentDoctor: str | None = None
     testCategory: str | None = None
     attentionReason: str | None = None
     attentionLabel: str | None = None
@@ -131,7 +131,7 @@ class DashboardBlockedWorklistItem(BaseModel):
     attentionReason: Literal["recollection_approval"]
     attentionLabel: str
     waitingHours: float
-    referringPhysician: str | None = None
+    referentDoctor: str | None = None
     testCategory: str | None = None
     sampleType: str | None = None
     recollectionRequestId: int
@@ -152,7 +152,7 @@ class ValidationWorklistItem(BaseModel):
     results: TestResultsDict | None = None
     flags: list[str] | None = None
     enteredBy: str | None = None
-    referringPhysician: str | None = None
+    referentDoctor: str | None = None
     isRetest: bool = False
     retestOfTestId: int | None = None
     retestNumber: int = 0

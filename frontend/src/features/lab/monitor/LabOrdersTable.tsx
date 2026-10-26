@@ -23,7 +23,7 @@ export interface LabOrderTableRow {
   testName: string;
   patientName: string;
   patientId: number;
-  doctorName: string | null;
+  referentDoctor: string | null;
   department: string | null;
   sampleType: string;
   priority: PriorityLevel;
@@ -42,7 +42,7 @@ function mapWorkTodayRow(item: DashboardWorklistItem): LabOrderTableRow {
     testName: item.testName,
     patientName: item.patientName,
     patientId: item.patientId,
-    doctorName: item.referringPhysician ?? null,
+    referentDoctor: item.referentDoctor ?? null,
     department: item.testCategory ?? null,
     sampleType: item.sampleType,
     priority: item.priority,

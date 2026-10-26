@@ -34,7 +34,7 @@ class Order(Base):
     specialInstructions = Column("special_instructions", JSON, nullable=True)  # Array of strings
     patientPrepInstructions = Column("patient_prep_instructions", String, nullable=True)
     clinicalNotes = Column("clinical_notes", String, nullable=True)
-    referringPhysician = Column("referring_physician", String, nullable=True)
+    referentDoctor = Column("referent_doctor", String, nullable=True)
     priority = Column(contract_enum(PriorityLevel), nullable=False, default=PriorityLevel.LOW)
 
     # Metadata

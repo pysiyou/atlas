@@ -39,7 +39,7 @@ export const ICONS = {
     orderDate: 'calendar' as IconName,
     time: 'clock' as IconName,
     hourglass: 'hourglass' as IconName,
-    referringPhysician: 'stethoscope' as IconName,
+    referentDoctor: 'stethoscope' as IconName,
     clinicalNotes: 'pen' as IconName,
     medicalKit: 'medical-kit' as IconName,
     health: 'health' as IconName,

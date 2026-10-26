@@ -7,7 +7,7 @@ from pathlib import Path
 from app.domains.catalog.models.affiliation_pricing import AffiliationPricing
 from app.domains.catalog.models.catalog_test import CatalogTest
 from app.domains.users.models import User
-from app.platform.database import Base, SessionLocal, engine, ensure_list_indexes
+from app.platform.database import Base, SessionLocal, engine
 from app.platform.security import get_password_hash
 from app.platform.utils.common import infer_criterion_domain
 from app.shared.contracts.enums import AffiliationDuration, UserRole
@@ -149,7 +149,6 @@ def init_db() -> None:
     print("Initializing database...")
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
-    ensure_list_indexes()
     print("Tables created")
 
     db = SessionLocal()

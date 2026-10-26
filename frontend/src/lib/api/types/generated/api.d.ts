@@ -1492,8 +1492,8 @@ export interface components {
             collectedBy?: string | null;
             /** Collectedvolume */
             collectedVolume?: number | null;
-            /** Referringphysician */
-            referringPhysician?: string | null;
+            /** Referentdoctor */
+            referentDoctor?: string | null;
             /** Testname */
             testName?: string | null;
             /** Testcategory */
@@ -1973,8 +1973,8 @@ export interface components {
             tests: components["schemas"]["OrderTestCreate"][];
             /** @default low */
             priority: components["schemas"]["PriorityLevel"];
-            /** Referringphysician */
-            referringPhysician?: string | null;
+            /** Referentdoctor */
+            referentDoctor?: string | null;
             /** Clinicalnotes */
             clinicalNotes?: string | null;
             /** Specialinstructions */
@@ -2006,8 +2006,8 @@ export interface components {
             overallStatus: components["schemas"]["OrderStatus"];
             statusPresentation?: components["schemas"]["StatusPresentation"] | null;
             priority: components["schemas"]["PriorityLevel"];
-            /** Referringphysician */
-            referringPhysician?: string | null;
+            /** Referentdoctor */
+            referentDoctor?: string | null;
             /** Clinicalnotes */
             clinicalNotes?: string | null;
             /** Specialinstructions */
@@ -2075,8 +2075,8 @@ export interface components {
             overallStatus: components["schemas"]["OrderStatus"];
             statusPresentation?: components["schemas"]["StatusPresentation"] | null;
             priority: components["schemas"]["PriorityLevel"];
-            /** Referringphysician */
-            referringPhysician?: string | null;
+            /** Referentdoctor */
+            referentDoctor?: string | null;
             /** Clinicalnotes */
             clinicalNotes?: string | null;
             /** Specialinstructions */
@@ -2130,8 +2130,8 @@ export interface components {
             overallStatus: components["schemas"]["OrderStatus"];
             statusPresentation?: components["schemas"]["StatusPresentation"] | null;
             priority: components["schemas"]["PriorityLevel"];
-            /** Referringphysician */
-            referringPhysician?: string | null;
+            /** Referentdoctor */
+            referentDoctor?: string | null;
             /** Clinicalnotes */
             clinicalNotes?: string | null;
             /** Specialinstructions */
@@ -2234,8 +2234,8 @@ export interface components {
         /** OrderUpdate */
         OrderUpdate: {
             priority?: components["schemas"]["PriorityLevel"] | null;
-            /** Referringphysician */
-            referringPhysician?: string | null;
+            /** Referentdoctor */
+            referentDoctor?: string | null;
             /** Clinicalnotes */
             clinicalNotes?: string | null;
             /** Specialinstructions */
@@ -2578,8 +2578,8 @@ export interface components {
             retestNumber: number;
             /** Priority */
             priority: string;
-            /** Referringphysician */
-            referringPhysician?: string | null;
+            /** Referentdoctor */
+            referentDoctor?: string | null;
             /** Collectedat */
             collectedAt?: string | null;
             /** Collectedby */

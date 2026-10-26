@@ -73,9 +73,9 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order }) => 
             orientation="vertical"
           />
           <DescriptionItem
-            icon={getDataFieldIcon('referringPhysician')}
-            label="Referring physician"
-            value={order.referringPhysician || 'N/A'}
+            icon={getDataFieldIcon('referentDoctor')}
+            label="Referent doctor"
+            value={order.referentDoctor || 'N/A'}
             orientation="vertical"
           />
           {testsDisplay != null ? (

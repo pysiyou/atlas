@@ -62,7 +62,7 @@ export const orderSchema = z.object({
   paymentStatus: z.enum(PAYMENT_STATUS_VALUES),
   overallStatus: z.enum(['ordered', 'running', 'completed', 'cancelled']), // Backend returns overallStatus, not orderStatus
   priority: z.enum(['low', 'medium', 'high', 'urgent']),
-  referringPhysician: z.string().nullable().optional(), // Backend allows null
+  referentDoctor: z.string().nullable().optional(), // Backend allows null
   clinicalNotes: z.string().nullable().optional(), // Backend allows null
   specialInstructions: z.array(z.string()).nullable().optional(), // Backend optional
   patientPrepInstructions: z.string().nullable().optional(), // Backend optional
@@ -77,7 +77,7 @@ export type OrderTest = z.infer<typeof orderTestSchema>;
 // Form schema for CREATE (all required fields enforced)
 export const orderCreateSchema = z.object({
   patientId: positiveIntSchema,
-  referringPhysician: z.string().min(1),
+  referentDoctor: z.string().min(1),
   priority: z.enum(['low', 'medium', 'high', 'urgent']),
   clinicalNotes: z.string().optional(),
   testCodes: z.array(z.string()).min(1, 'At least one test is required'),

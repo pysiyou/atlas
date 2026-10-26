@@ -32,7 +32,7 @@ import type { LabOrderTableRow } from './LabOrdersTable';
 import { BADGE } from '@/theme/recipes';
 
 const VIEWS = {
-  full: ['test', 'patient', 'sampleType', 'doctor', 'priority', 'department', 'status', 'date'],
+  full: ['test', 'patient', 'sampleType', 'referentDoctor', 'priority', 'department', 'status', 'date'],
   medium: ['test', 'patient', 'sampleType', 'priority', 'status', 'date'],
   compact: ['test', 'patient', 'status'],
 } as const;
@@ -117,10 +117,10 @@ export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> 
         ),
       { accessor: row => row.sampleType, sortable: true },
     ),
-    doctor: createColumn<LabOrderTableRow>('doctor', 'Doctor', {
+    referentDoctor: createColumn<LabOrderTableRow>('referentDoctor', 'Referent doctor', {
       width: TABLE_COLUMN_WIDTH.supporting,
-      accessor: row => row.doctorName ?? '',
-      render: row => renderTableTwoLineCell(row.doctorName || '—'),
+      accessor: row => row.referentDoctor ?? '',
+      render: row => renderTableTwoLineCell(row.referentDoctor || '—'),
     }),
     priority: createBadgeColumn<LabOrderTableRow>(
       'priority',

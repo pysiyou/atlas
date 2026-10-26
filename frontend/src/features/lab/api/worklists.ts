@@ -65,7 +65,7 @@ export interface CollectionWorklistItem {
   collectedAt?: string | null;
   collectedBy?: string | null;
   collectedVolume?: number | null;
-  referringPhysician?: string | null;
+  referentDoctor?: string | null;
   testName?: string | null;
   testCategory?: string | null;
 }
@@ -88,7 +88,7 @@ export interface EntryWorklistItem {
   isRetest: boolean;
   retestOfTestId?: number | null;
   retestNumber?: number;
-  referringPhysician?: string | null;
+  referentDoctor?: string | null;
   testCategory?: string | null;
   pipelineStage?: 'collection' | 'entry' | 'validation' | 'escalation' | 'completed' | 'cancelled' | null;
   attentionReason?: string | null;
@@ -112,7 +112,7 @@ export interface DashboardWorklistItem {
   stage: 'collection' | 'entry' | 'validation';
   activityAt: string;
   orderDate: string;
-  referringPhysician?: string | null;
+  referentDoctor?: string | null;
   testCategory?: string | null;
   attentionReason?: string | null;
   attentionLabel?: string | null;
@@ -134,7 +134,7 @@ export interface ValidationWorklistItem {
   results?: Record<string, unknown> | null;
   flags?: string[] | null;
   enteredBy?: string | null;
-  referringPhysician?: string | null;
+  referentDoctor?: string | null;
   isRetest?: boolean;
   retestOfTestId?: number | null;
   retestNumber?: number;

@@ -163,7 +163,7 @@ class ResultQueryService:
             retestOfTestId=t.retestOfTestId,
             retestNumber=t.retestNumber or 0,
             priority=order.priority.value if order and order.priority else "low",
-            referringPhysician=order.referringPhysician if order else None,
+            referentDoctor=order.referentDoctor if order else None,
             collectedAt=sample.collectedAt if sample else None,
             collectedBy=sample.collectedBy if sample else None,
             sampleIsRecollection=sample.isRecollection if sample else False,

@@ -15,7 +15,7 @@ export interface LabIdentityContext {
   sampleId?: number;
   entityCode?: string;
   entityName?: string;
-  referringPhysician?: string;
+  referentDoctor?: string;
   patientDob?: string;
 }
 
@@ -94,11 +94,11 @@ export const LabIdentityRow: React.FC<LabIdentityRowProps> = ({
       hideBelow: hideLg,
     });
   }
-  if (context.referringPhysician) {
+  if (context.referentDoctor) {
     segments.push({
       kind: 'text',
       key: 'phys',
-      text: context.referringPhysician,
+      text: context.referentDoctor,
       emphasis: 'primary',
       truncate: true,
       hideBelow: hideLg,
