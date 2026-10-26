@@ -1,5 +1,5 @@
 /**
- * Lab dashboard table — order tests updated today (UTC), newest first.
+ * Lab monitor table — union of tests updated today (UTC) and still-running pipeline tests.
  */
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -89,7 +89,7 @@ export const LabOrdersTable: React.FC = () => {
         emptyMessage={EMPTY_COPY.dashboardWorklist.title}
         emptyDescription={EMPTY_COPY.dashboardWorklist.description}
         emptyVariant="dense"
-        ariaLabel="Today's laboratory work"
+        ariaLabel="Lab monitor worklist"
       />
     </Panel>
   );

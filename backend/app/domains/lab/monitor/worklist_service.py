@@ -39,7 +39,7 @@ from app.shared.contracts.enums import (
     TestStatus,
 )
 from app.shared.contracts.lab_blockers import ATTENTION_LABELS
-from sqlalchemy import String, and_, cast, desc, exists, func, or_
+from sqlalchemy import String, and_, case, cast, desc, exists, func, or_
 from sqlalchemy.orm import Session
 
 COLLECTION_SAMPLE_LOOKUP_MIN_LEN = 3
@@ -726,6 +726,25 @@ class LabWorklistService:
             return ts.replace(tzinfo=UTC)
         return ts
 
+    @staticmethod
+    def _dashboard_running_predicate():
+        """Order tests still in the lab pipeline (non-terminal lifecycle)."""
+        return ~OrderTest.status.in_(
+            (
+                TestStatus.CANCELLED,
+                TestStatus.REMOVED,
+                TestStatus.SUPERSEDED,
+                TestStatus.VALIDATED,
+            )
+        )
+
+    @staticmethod
+    def _dashboard_monitor_rows_predicate(today_start: datetime):
+        """Union of tests updated today (UTC) and tests still running in the pipeline."""
+        worked_today = OrderTest.updatedAt >= today_start
+        still_running = LabWorklistService._dashboard_running_predicate()
+        return or_(worked_today, still_running)
+
     def list_dashboard_work_today(
         self,
         *,
@@ -733,7 +752,7 @@ class LabWorklistService:
         page: int = 1,
         page_size: int = 50,
     ) -> dict[str, Any]:
-        """Today's dashboard rows: order tests whose row was updated today (UTC)."""
+        """Lab monitor table rows: union of tests updated today (UTC) and still-running pipeline tests."""
         _ = user_id  # reserved for future per-user scoping
         from app.domains.lab.quality.recollection_snapshot import (
             recollection_blocked_order_test_ids,
@@ -741,6 +760,9 @@ class LabWorklistService:
 
         today_start = self._utc_today_start()
         recollection_blocked = recollection_blocked_order_test_ids(self.db)
+        running = self._dashboard_running_predicate()
+        stale_running = and_(running, OrderTest.updatedAt < today_start)
+        stale_running_rank = case((stale_running, 1), else_=0)
 
         base_query = (
             self.db.query(OrderTest, Order, Patient, CatalogTest, Sample)
@@ -748,11 +770,16 @@ class LabWorklistService:
             .join(Patient, Order.patientId == Patient.id)
             .join(CatalogTest, OrderTest.testCode == CatalogTest.code)
             .outerjoin(Sample, Sample.sampleId == OrderTest.sampleId)
-            .filter(OrderTest.updatedAt >= today_start)
+            .filter(self._dashboard_monitor_rows_predicate(today_start))
         )
         total = base_query.count()
         start = (page - 1) * page_size
-        rows = base_query.order_by(OrderTest.updatedAt.desc()).offset(start).limit(page_size).all()
+        rows = (
+            base_query.order_by(desc(stale_running_rank), OrderTest.updatedAt.desc())
+            .offset(start)
+            .limit(page_size)
+            .all()
+        )
 
         escalated_ids = [
             ot.id
