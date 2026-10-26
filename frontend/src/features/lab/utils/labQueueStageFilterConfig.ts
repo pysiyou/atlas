@@ -3,7 +3,7 @@
  */
 
 import { createLabQueueSearchFilter } from '../components/LabWorkflowQueueLayout';
-import { displayId } from '@/utils';
+import { labQueueSearchTextFields, matchLabQueueSearchQuery } from './labSearchAndLinks';
 import type { SampleCollectionQueueItem } from '../types';
 import type { TestWithContextResult } from '../types';
 import { PRIORITY_LEVEL_VALUES, type PriorityLevel } from '@/types';
@@ -47,15 +47,16 @@ const COLLECTION_FILTER_CONFIG: LabQueueStageFilterConfig<SampleCollectionQueueI
     getOrderId: d => d.order?.orderId,
     getSampleId: d => d.sample?.sampleId,
     searchFilterFn: (item, query) => {
-      const lowerQuery = query.toLowerCase();
-      const fields = [
-        item.patient?.fullName || '',
-        item.sample?.sampleId != null ? displayId.sample(item.sample.sampleId) : '',
-        item.sample?.sampleId != null ? String(item.sample.sampleId) : '',
-        item.order ? displayId.order(item.order.orderId) : undefined,
-        ...(item.requirement?.testCodes || []),
-      ].filter(Boolean) as string[];
-      return fields.some(field => field.toLowerCase().includes(lowerQuery));
+      const sampleId = item.sample?.sampleId;
+      const orderId = item.order?.orderId;
+      const textFields = labQueueSearchTextFields(
+        { sampleId, orderId },
+        [
+          item.patient?.fullName || '',
+          ...(item.requirement?.testCodes || []),
+        ].filter(Boolean) as string[],
+      );
+      return matchLabQueueSearchQuery({ sampleId, orderId }, textFields, query);
     },
   },
   defaultStatuses: ['pending'],

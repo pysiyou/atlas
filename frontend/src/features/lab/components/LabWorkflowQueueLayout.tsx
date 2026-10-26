@@ -7,7 +7,7 @@
 import React, { type ReactNode, useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { EmptyState, PANEL_EMPTY_STATE } from '@/components/display';
-import { displayId } from '@/utils';
+import { labQueueSearchTextFields, matchLabQueueSearchQuery } from '../utils/labSearchAndLinks';
 import { SPACING, WORKSPACE } from '@/theme/recipes';
 
 /** Estimated card height used until the virtualizer measures the real node. */
@@ -153,21 +153,17 @@ export function createLabQueueSearchFilter<
   },
 >(extraFields?: (item: T) => string[]): (item: T, query: string) => boolean {
   return (item: T, query: string): boolean => {
-    const lowerQuery = query.toLowerCase();
     const orderTestId =
-      item.id != null && Number.isFinite(Number(item.id)) ? displayId.orderTest(Number(item.id)) : undefined;
-    const baseFields = [
-      orderTestId,
-      item.orderId?.toString(),
-      item.patientName,
-      item.testName,
-      item.testCode,
-      item.sampleId?.toString(),
-    ].filter(Boolean) as string[];
-
+      item.id != null && Number.isFinite(Number(item.id)) ? Number(item.id) : undefined;
+    const orderId =
+      item.orderId != null && Number.isFinite(Number(item.orderId)) ? Number(item.orderId) : undefined;
+    const sampleId =
+      item.sampleId != null && Number.isFinite(Number(item.sampleId)) ? Number(item.sampleId) : undefined;
     const extra = extraFields ? extraFields(item) : [];
-    const allFields = [...baseFields, ...extra];
-
-    return allFields.some(field => field.toLowerCase().includes(lowerQuery));
+    const textFields = labQueueSearchTextFields(
+      { orderTestId, orderId, sampleId },
+      [item.patientName, item.testName, item.testCode, ...extra].filter(Boolean) as string[],
+    );
+    return matchLabQueueSearchQuery({ orderTestId, orderId, sampleId }, textFields, query);
   };
 }
