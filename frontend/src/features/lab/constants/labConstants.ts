@@ -50,11 +50,11 @@ export const LAB_COPY = {
     footerInPipeline: 'In pipeline now',
     summaryAria: "Today's pipeline stage summary",
     footnote:
-      'Percentages use all tests in the monitor view (running plus updated today). Mix bar shows in-queue share per stage.',
+      'Percentages use all tests in the monitor view (running plus updated today).',
     columnStage: 'Stage',
     columnInQueue: 'In queue',
     columnToday: 'Today',
-    columnMix: 'Mix',
+    columnMix: 'Queue / today',
     stageCollection: 'Collection',
     stageEntry: 'Result entry',
     stageValidation: 'Validation',

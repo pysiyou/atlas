@@ -8,7 +8,7 @@ const METER_GRID_COLS =
   'grid-cols-[minmax(8rem,1.25fr)_minmax(4.75rem,2.15fr)_auto]' as const;
 
 const METER_GRID_COLS_STAGE =
-  'grid-cols-[minmax(6.75rem,1.1fr)_minmax(4.5rem,auto)_minmax(4.5rem,auto)_minmax(3.25rem,1.25fr)]' as const;
+  'grid-cols-[minmax(6.75rem,1.1fr)_minmax(4.5rem,auto)_minmax(4.5rem,auto)_minmax(4.75rem,auto)]' as const;
 
 const METER_RADIUS = RADIUS.inline;
 
@@ -35,8 +35,6 @@ export const METER_KPI = {
   pipelineRailCell: 'relative flex w-2 shrink-0 items-center justify-center self-stretch',
   stageChip: `relative z-[1] size-meter-stage shrink-0 ${RADIUS.inline}`,
   tableLabel: `${TABLE_TYPE.cell} min-w-0 flex-1 truncate self-center ${text({ role: 'label', intent: 'muted' })}`,
-  tableRowMeterTrack: `relative h-meter-track w-full min-w-0 overflow-hidden bg-border-subtle ${METER_RADIUS}`,
-  tableRowMeterFill: `absolute inset-y-0 left-0 h-full ${METER_RADIUS} transition-[width] duration-300 ease-out`,
   tableValue: `${TABLE_TYPE.cell} text-right tabular-nums`,
   tablePercent: 'text-text-primary',
   tableCount: 'text-text-tertiary',

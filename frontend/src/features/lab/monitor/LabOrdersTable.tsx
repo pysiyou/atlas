@@ -1,14 +1,13 @@
 /**
  * Lab monitor table — union of tests updated today (UTC) and still-running pipeline tests.
  */
-import React, { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useCallback, useMemo } from 'react';
 import { EMPTY_COPY } from '@/config/emptyStateCopy';
 import { DataTable } from '@/components/data-table';
 import { Panel } from '@/components/surfaces/Panel';
 import type { DashboardWorklistItem } from '../api/worklists';
 import { useDashboardWorklistToday } from '../api/worklists';
-import { getLabQueueUrlForTest } from '../utils/labSearchAndLinks';
+import { ModalType, useModal } from '@/lib/context/ModalContext';
 import type { LabPipelineStage } from './monitorModel';
 import type { PriorityLevel, TestStatus } from '@/types';
 import type { StatusPresentation } from '@/types/labProjection';
@@ -31,7 +30,7 @@ export interface LabOrderTableRow {
   status: TestStatus;
   date: string;
   orderId: number;
-  href: string;
+  orderTestId: number;
   statusPresentation?: StatusPresentation | null;
 }
 
@@ -50,16 +49,7 @@ function mapWorkTodayRow(item: DashboardWorklistItem): LabOrderTableRow {
     status: item.status,
     date: item.activityAt,
     orderId: item.orderId,
-    href:
-      getLabQueueUrlForTest(
-        {
-          id: item.orderTestId,
-          status: item.status,
-          testCode: item.testCode,
-          sampleId: null,
-        },
-        item.orderId
-      ) ?? '',
+    orderTestId: item.orderTestId,
     statusPresentation: item.statusPresentation ?? null,
   };
 }
@@ -67,10 +57,21 @@ function mapWorkTodayRow(item: DashboardWorklistItem): LabOrderTableRow {
 const viewConfig = createLabOrdersTableConfig();
 
 export const LabOrdersTable: React.FC = () => {
-  const navigate = useNavigate();
+  const { openModal } = useModal();
   const workToday = useDashboardWorklistToday({ pageSize: 200 });
 
   const rows = useMemo(() => workToday.items.map(mapWorkTodayRow), [workToday.items]);
+
+  const handleRowClick = useCallback(
+    (row: LabOrderTableRow) => {
+      openModal({
+        type: ModalType.TEST_DETAIL,
+        orderTestId: row.orderTestId,
+        interaction: 'view',
+      });
+    },
+    [openModal],
+  );
 
   return (
     <Panel preset="panel.pageEmbed.flushHeader">
@@ -82,7 +83,7 @@ export const LabOrdersTable: React.FC = () => {
         loading={workToday.isLoading}
         pagination={{ mode: 'none' }}
         getRowKey={row => row.id}
-        onRowClick={row => navigate(row.href)}
+        onRowClick={handleRowClick}
         rowClassName={row =>
           cn(SPLIT_ROW_INTERACTIVE, getOrderTestLineageRowClass({ status: row.status }))
         }
