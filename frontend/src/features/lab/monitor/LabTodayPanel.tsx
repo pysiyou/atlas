@@ -1,5 +1,5 @@
 /**
- * Lab dashboard Today panel — milestone mix among tests worked today (UTC).
+ * Lab dashboard Today panel — per-stage queue vs today's activity (% of monitor universe).
  */
 import React, { useMemo } from 'react';
 import { EmptyState, EMPTY_COPY, DENSE_EMPTY_STATE_TEXT } from '@/components/display';
@@ -8,10 +8,8 @@ import type { LabTodayPanelSnapshot } from './monitorModel';
 import { METER_KPI, KPI_PANEL } from '@/theme/recipes';
 import { LAB_COPY } from '../constants/labConstants';
 import { formatDate } from '@/utils';
-import {
-  buildTodayStairSegments,
-} from './todayPanelStairLayout';
-import { TodayMilestoneRow } from './TodayMilestoneRow';
+import { buildTodayStageSegments, sumAtStage } from './todayPanelStairLayout';
+import { TodayStageRow } from './TodayStageRow';
 import { TodayPanelHeaderMeta } from './TodayPanelHeaderMeta';
 
 export interface LabTodayPanelProps {
@@ -24,20 +22,25 @@ export const LabTodayPanel: React.FC<LabTodayPanelProps> = ({ todayPanel }) => {
     [todayPanel.dayStartUtc],
   );
 
-  const totalWorked = todayPanel.testsUpdatedToday;
+  const totalTests = todayPanel.totalTests;
   const headerRange = dayLabel ? `UTC · ${dayLabel}` : 'UTC · Today';
-
-  const segments = useMemo(() => buildTodayStairSegments(todayPanel), [todayPanel]);
+  const segments = useMemo(() => buildTodayStageSegments(todayPanel), [todayPanel]);
+  const inPipelineNow = useMemo(() => sumAtStage(todayPanel), [todayPanel]);
 
   return (
     <Panel
-      preset="panel.pageEmbed.flexColumnFill" title="Today"
+      preset="panel.pageEmbed.flexColumnFill"
+      title="Today"
       headerEnd={
-        <TodayPanelHeaderMeta headerRange={headerRange} totalWorked={totalWorked} />
+        <TodayPanelHeaderMeta
+          headerRange={headerRange}
+          totalTests={totalTests}
+          testsUpdatedToday={todayPanel.testsUpdatedToday}
+        />
       }
     >
       <div className={KPI_PANEL.body}>
-        {totalWorked === 0 ? (
+        {totalTests === 0 ? (
           <EmptyState
             {...DENSE_EMPTY_STATE_TEXT}
             title={EMPTY_COPY.dashboardTodayKpi.title}
@@ -47,42 +50,53 @@ export const LabTodayPanel: React.FC<LabTodayPanelProps> = ({ todayPanel }) => {
           <>
             <div className={KPI_PANEL.main} aria-label={LAB_COPY.dashboardToday.summaryAria}>
               <div className={KPI_PANEL.stack}>
-                <div className={METER_KPI.table} role="table">
-                  <div className={METER_KPI.tableHeadRow} role="row">
+                <div className={METER_KPI.tableStage} role="table">
+                  <div className={METER_KPI.tableHeadRowStage} role="row">
                     <span className={METER_KPI.tableHeadCell} role="columnheader">
-                      {LAB_COPY.dashboardToday.columnMilestone}
+                      {LAB_COPY.dashboardToday.columnStage}
+                    </span>
+                    <span className={METER_KPI.tableHeadCellMetric} role="columnheader">
+                      {LAB_COPY.dashboardToday.columnInQueue}
+                    </span>
+                    <span className={METER_KPI.tableHeadCellMetric} role="columnheader">
+                      {LAB_COPY.dashboardToday.columnToday}
                     </span>
                     <span className={METER_KPI.tableHeadCell} role="columnheader">
-                      {LAB_COPY.dashboardToday.columnActivity}
-                    </span>
-                    <span className={METER_KPI.tableHeadCellRight} role="columnheader">
-                      {LAB_COPY.dashboardToday.columnShare}
+                      {LAB_COPY.dashboardToday.columnMix}
                     </span>
                   </div>
                   <div className={METER_KPI.tableBody} role="rowgroup">
-                    {segments.map((segment, index) => (
-                      <TodayMilestoneRow
-                        key={segment.key}
+                    {segments.map(segment => (
+                      <TodayStageRow
+                        key={segment.stage}
                         segment={segment}
-                        totalWorked={totalWorked}
-                        isLast={index === segments.length - 1}
+                        totalTests={totalTests}
                       />
                     ))}
                   </div>
                 </div>
+                <p className={METER_KPI.footerCaption}>{LAB_COPY.dashboardToday.footnote}</p>
               </div>
             </div>
 
             <div className={KPI_PANEL.footer}>
-              <div className={METER_KPI.tableTotal} role="row">
-                <span className={METER_KPI.tableTotalLabel}>{LAB_COPY.dashboardToday.total}</span>
-                <span aria-hidden />
-                <span className={METER_KPI.tableTotalValue}>
-                  100%
-                  <span className={METER_KPI.tableCount}>
-                    {' '}
-                    · {totalWorked.toLocaleString()}
+              <div className={METER_KPI.tableTotalStage} role="row">
+                <span className={METER_KPI.tableTotalLabel}>{LAB_COPY.dashboardToday.footerInPipeline}</span>
+                <span className={METER_KPI.tableMetricCell}>
+                  <span className={METER_KPI.tablePercent}>
+                    {totalTests > 0 ? Math.min(100, Math.round((inPipelineNow / totalTests) * 100)) : 0}%
                   </span>
+                  <span className={METER_KPI.tableCount}> · {inPipelineNow.toLocaleString()}</span>
+                </span>
+                <span className={METER_KPI.tableMetricCell}>
+                  <span className={METER_KPI.tablePercent}>
+                    {todayPanel.testsUpdatedToday.toLocaleString()}
+                  </span>
+                  <span className={METER_KPI.tableCount}> {LAB_COPY.dashboardToday.testsWorked}</span>
+                </span>
+                <span className={METER_KPI.tableTotalValue}>
+                  {totalTests.toLocaleString()}
+                  <span className={METER_KPI.tableCount}> {LAB_COPY.dashboardToday.footerUniverse}</span>
                 </span>
               </div>
             </div>

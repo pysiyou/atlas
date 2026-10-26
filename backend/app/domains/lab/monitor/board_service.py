@@ -6,12 +6,12 @@ from typing import Any
 
 from app.domains.catalog.models.catalog_test import CatalogTest
 from app.domains.lab.models.escalation import EscalationTicket
-from app.domains.lab.models.quality_issue import QualityIssue
 from app.domains.lab.models.recollection_request import RecollectionRequest
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.monitor.tat import (
     assemble_board,
 )
+from app.domains.lab.schemas.worklists import LabTodayStageSnapshot
 from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient
 from app.shared.contracts.enums import (
@@ -139,50 +139,94 @@ class LabBoardService:
         snapshot.update({"todayPanel": self._today_panel_snapshot(), "_rows_loaded": rows_loaded})
         return snapshot
 
-    def _today_panel_snapshot(self) -> dict[str, Any]:
-        """UTC day KPIs among order tests updated today — milestone *events* today only."""
-        today_start = self._utc_today_start()
-        worked_today_filter = OrderTest.updatedAt >= today_start
+    @staticmethod
+    def _terminal_test_statuses() -> tuple[TestStatus, ...]:
+        return (
+            TestStatus.CANCELLED,
+            TestStatus.REMOVED,
+            TestStatus.SUPERSEDED,
+            TestStatus.VALIDATED,
+        )
 
+    @staticmethod
+    def _running_tests_predicate():
+        return ~OrderTest.status.in_(LabBoardService._terminal_test_statuses())
+
+    @staticmethod
+    def _monitor_universe_predicate(today_start: datetime):
+        """Same universe as the lab monitor worklist: updated today or still running."""
+        worked_today = OrderTest.updatedAt >= today_start
+        still_running = LabBoardService._running_tests_predicate()
+        return or_(worked_today, still_running)
+
+    @staticmethod
+    def _at_collection_predicate():
+        return OrderTest.status == TestStatus.PENDING
+
+    @staticmethod
+    def _at_entry_predicate():
+        return OrderTest.status == TestStatus.SAMPLE_COLLECTED
+
+    @staticmethod
+    def _at_validation_predicate():
+        return and_(
+            LabBoardService._running_tests_predicate(),
+            ~OrderTest.status.in_((TestStatus.PENDING, TestStatus.SAMPLE_COLLECTED)),
+        )
+
+    @staticmethod
+    def _stage_percent(count: int, total: int) -> int:
+        if total <= 0:
+            return 0
+        return min(100, round((count / total) * 100))
+
+    def _today_panel_snapshot(self) -> dict[str, Any]:
+        """Per-stage queue depth, today's milestone counts, and % of monitor universe."""
+        today_start = self._utc_today_start()
+        universe = self._monitor_universe_predicate(today_start)
+        running = self._running_tests_predicate()
+
+        total_tests = self.db.query(func.count(OrderTest.id)).filter(universe).scalar() or 0
         tests_updated_today = (
-            self.db.query(func.count(OrderTest.id)).filter(worked_today_filter).scalar() or 0
-        )
-        tests_with_collection = (
             self.db.query(func.count(OrderTest.id))
-            .filter(worked_today_filter)
-            .filter(self._collection_today_predicate(today_start))
+            .filter(OrderTest.updatedAt >= today_start)
             .scalar()
             or 0
         )
-        tests_with_result_entry = (
-            self.db.query(func.count(OrderTest.id))
-            .filter(worked_today_filter)
-            .filter(self._result_entry_today_predicate(today_start))
-            .scalar()
-            or 0
+
+        stage_specs: tuple[tuple[str, Any, Any], ...] = (
+            ("collection", and_(running, self._at_collection_predicate()), self._collection_today_predicate(today_start)),
+            ("entry", and_(running, self._at_entry_predicate()), self._result_entry_today_predicate(today_start)),
+            ("validation", self._at_validation_predicate(), self._validation_today_predicate(today_start)),
         )
-        tests_with_validation = (
-            self.db.query(func.count(OrderTest.id))
-            .filter(worked_today_filter)
-            .filter(self._validation_today_predicate(today_start))
-            .scalar()
-            or 0
-        )
-        tests_off_normal_path = (
-            self.db.query(func.count(OrderTest.id))
-            .filter(worked_today_filter)
-            .filter(self._off_normal_path_today_predicate(today_start))
-            .scalar()
-            or 0
-        )
+
+        stages: list[LabTodayStageSnapshot] = []
+        for stage_key, at_stage_filter, touched_today_filter in stage_specs:
+            at_stage = (
+                self.db.query(func.count(OrderTest.id)).filter(at_stage_filter).scalar() or 0
+            )
+            touched_today = (
+                self.db.query(func.count(OrderTest.id))
+                .filter(universe)
+                .filter(touched_today_filter)
+                .scalar()
+                or 0
+            )
+            stages.append(
+                LabTodayStageSnapshot(
+                    stage=stage_key,
+                    atStage=at_stage,
+                    atStagePercent=self._stage_percent(at_stage, total_tests),
+                    touchedToday=touched_today,
+                    touchedTodayPercent=self._stage_percent(touched_today, total_tests),
+                )
+            )
 
         return {
             "dayStartUtc": today_start,
+            "totalTests": total_tests,
             "testsUpdatedToday": tests_updated_today,
-            "testsWithCollection": tests_with_collection,
-            "testsWithResultEntry": tests_with_result_entry,
-            "testsWithValidation": tests_with_validation,
-            "testsOffNormalPath": tests_off_normal_path,
+            "stages": stages,
         }
 
     def _collection_today_predicate(self, today_start: datetime):
@@ -207,54 +251,6 @@ class LabBoardService:
         return and_(
             OrderTest.resultValidatedAt.isnot(None),
             OrderTest.resultValidatedAt >= today_start,
-        )
-
-    def _off_normal_path_today_predicate(self, today_start: datetime):
-        """Quality/rework events recorded today (not lifetime exception state)."""
-        quality_test_ids = (
-            self.db.query(QualityIssue.orderTestId)
-            .filter(QualityIssue.orderTestId.isnot(None))
-            .filter(QualityIssue.createdAt >= today_start)
-            .distinct()
-        )
-        quality_sample_ids = (
-            self.db.query(QualityIssue.sampleId)
-            .filter(QualityIssue.sampleId.isnot(None))
-            .filter(QualityIssue.createdAt >= today_start)
-            .distinct()
-        )
-        rejected_sample_ids = (
-            self.db.query(Sample.sampleId)
-            .filter(Sample.status == SampleStatus.REJECTED)
-            .filter(Sample.rejectedAt.isnot(None))
-            .filter(Sample.rejectedAt >= today_start)
-            .distinct()
-        )
-        terminal_status_today = and_(
-            OrderTest.status.in_(
-                (
-                    TestStatus.CANCELLED,
-                    TestStatus.REMOVED,
-                    TestStatus.SUPERSEDED,
-                    TestStatus.ESCALATED,
-                )
-            ),
-            OrderTest.updatedAt >= today_start,
-        )
-        rework_created_today = and_(
-            or_(
-                OrderTest.isRetest.is_(True),
-                OrderTest.retestOrderTestId.isnot(None),
-                OrderTest.retestNumber > 0,
-            ),
-            OrderTest.createdAt >= today_start,
-        )
-        return or_(
-            terminal_status_today,
-            OrderTest.sampleId.in_(rejected_sample_ids),
-            rework_created_today,
-            OrderTest.id.in_(quality_test_ids),
-            OrderTest.sampleId.in_(quality_sample_ids),
         )
 
     def _utc_today_start(self) -> datetime:

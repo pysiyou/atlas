@@ -177,15 +177,22 @@ export interface LabAttentionQueueItem {
   attentionType: AttentionType;
 }
 
-/** Today panel — UTC day throughput KPIs. */
+/** Per pipeline stage metrics for the Today panel. */
+export interface LabTodayStageSnapshot {
+  stage: 'collection' | 'entry' | 'validation';
+  atStage: number;
+  atStagePercent: number;
+  touchedToday: number;
+  touchedTodayPercent: number;
+}
+
+/** Today panel — stage queue vs today's milestones (% of monitor universe). */
 export interface LabTodayPanelSnapshot {
   dayStartUtc: string;
-  /** Order tests with activity today (UTC). Milestone counts are events today only. */
+  /** Denominator for stage percentages (monitor worklist universe). */
+  totalTests: number;
   testsUpdatedToday: number;
-  testsWithCollection: number;
-  testsWithResultEntry: number;
-  testsWithValidation: number;
-  testsOffNormalPath: number;
+  stages: LabTodayStageSnapshot[];
 }
 
 /** UI state for the lab dashboard board (subset of `/lab/board`). */

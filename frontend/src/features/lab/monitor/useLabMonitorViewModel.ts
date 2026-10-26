@@ -11,11 +11,9 @@ import type { LabAttentionQueueItem, LabBoardViewState, LabPipelineStage } from 
 
 const EMPTY_KPI_PANEL: LabBoardViewState['todayPanel'] = {
   dayStartUtc: '',
+  totalTests: 0,
   testsUpdatedToday: 0,
-  testsWithCollection: 0,
-  testsWithResultEntry: 0,
-  testsWithValidation: 0,
-  testsOffNormalPath: 0,
+  stages: [],
 };
 
 const EMPTY_BOARD: LabBoardViewState = {
@@ -59,11 +57,9 @@ function toBoardViewState(board: LabBoardResponse): LabBoardViewState {
     todayPanel: today
       ? {
           dayStartUtc: today.dayStartUtc,
+          totalTests: today.totalTests,
           testsUpdatedToday: today.testsUpdatedToday,
-          testsWithCollection: today.testsWithCollection,
-          testsWithResultEntry: today.testsWithResultEntry,
-          testsWithValidation: today.testsWithValidation,
-          testsOffNormalPath: today.testsOffNormalPath,
+          stages: today.stages ?? [],
         }
       : EMPTY_KPI_PANEL,
   };

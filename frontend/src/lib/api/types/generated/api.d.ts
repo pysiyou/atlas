@@ -1826,7 +1826,7 @@ export interface components {
         };
         /**
          * LabTodayPanelSnapshot
-         * @description UTC day KPIs: tests updated today, with milestone events that occurred today.
+         * @description Lab monitor today panel — stage queue vs today's milestones (% of totalTests).
          */
         LabTodayPanelSnapshot: {
             /**
@@ -1834,16 +1834,31 @@ export interface components {
              * Format: date-time
              */
             dayStartUtc: string;
+            /** Totaltests */
+            totalTests: number;
             /** Testsupdatedtoday */
             testsUpdatedToday: number;
-            /** Testswithcollection */
-            testsWithCollection: number;
-            /** Testswithresultentry */
-            testsWithResultEntry: number;
-            /** Testswithvalidation */
-            testsWithValidation: number;
-            /** Testsoffnormalpath */
-            testsOffNormalPath: number;
+            /** Stages */
+            stages: components["schemas"]["LabTodayStageSnapshot"][];
+        };
+        /**
+         * LabTodayStageSnapshot
+         * @description Per pipeline stage: current queue depth, today's activity, and share of monitor universe.
+         */
+        LabTodayStageSnapshot: {
+            /**
+             * Stage
+             * @enum {string}
+             */
+            stage: "collection" | "entry" | "validation";
+            /** Atstage */
+            atStage: number;
+            /** Atstagepercent */
+            atStagePercent: number;
+            /** Touchedtoday */
+            touchedToday: number;
+            /** Touchedtodaypercent */
+            touchedTodayPercent: number;
         };
         /** LabWorkItemProjection */
         LabWorkItemProjection: {
