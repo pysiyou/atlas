@@ -17,7 +17,6 @@ export {
   MOBILE_LIST_CARD,
   MODAL_DETAIL_LAYOUT,
   MODAL_HEADER_LAYOUT,
-  SEGMENTED_CONTROL,
   WORKLIST_SHELL,
 } from '@/theme/recipes';
 

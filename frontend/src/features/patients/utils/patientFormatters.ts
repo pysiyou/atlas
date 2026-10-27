@@ -3,12 +3,29 @@
  * Pure formatting functions for patient data display
  */
 
-import type { Patient, Order, Relationship } from '@/types';
-import { RELATIONSHIP_CONFIG, RELATIONSHIP_VALUES } from '@/types';
+import type { Patient, Order, Relationship, Gender } from '@/types';
+import { GENDER_CONFIG, RELATIONSHIP_CONFIG, RELATIONSHIP_VALUES } from '@/types';
 import { formatArrayWithFallback } from '@/utils/array';
 import { calculateAge, formatPhoneNumber } from '@/utils';
 import { formatDetailDate as formatDetailDateUtil, formatOrderDate } from '@/utils/date';
 import { INACTIVE_REPORTABLE_TEST_STATUSES } from '@/features/orders/constants/reportableTestStatus';
+
+/** Compact sex + age for tables (e.g. lab worklists): "Male · 42 y". */
+export function formatPatientSexAgeLine(
+  gender?: Gender | string | null,
+  dateOfBirth?: string | null,
+): string | null {
+  const parts: string[] = [];
+  if (gender) {
+    const label = GENDER_CONFIG[gender as Gender]?.label;
+    parts.push(label ?? String(gender));
+  }
+  const age = dateOfBirth ? calculateAge(dateOfBirth) : null;
+  if (age != null && Number.isFinite(age)) {
+    parts.push(`${age} y`);
+  }
+  return parts.length > 0 ? parts.join(' · ') : null;
+}
 
 export const formatPatientDetailDate = (
   date: string | Date | undefined | null,

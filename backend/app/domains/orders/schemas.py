@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 from app.domains.billing.schemas import InvoiceResponse
 from app.domains.patients.schemas import PatientResponse
 from app.domains.payments.schemas import PaymentResponse
-from app.shared.contracts.enums import OrderStatus, PaymentStatus, PriorityLevel, TestStatus
+from app.shared.contracts.enums import Gender, OrderStatus, PaymentStatus, PriorityLevel, TestStatus
 from app.shared.schemas.status_presentation import StatusPresentation
 from pydantic import BaseModel, Field, field_validator
 
@@ -116,6 +116,8 @@ class OrderSummaryResponse(BaseModel):
     orderId: int
     patientId: int
     patientName: str
+    patientDob: str | None = None
+    patientGender: Gender | None = None
     orderDate: datetime
     testCount: int = 0
     testCodes: list[str] = Field(default_factory=list)
@@ -145,6 +147,8 @@ class OrderResponse(BaseModel):
     orderId: int
     patientId: int
     patientName: str  # From relationship
+    patientDob: str | None = None
+    patientGender: Gender | None = None
     orderDate: datetime
     tests: list[OrderTestResponse]
     totalPrice: float

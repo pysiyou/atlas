@@ -9,14 +9,7 @@ import type { BadgeColor } from '@/components/primitives/badgeTypes';
 export type LabWorkflowStage = 'collection' | 'entry' | 'validation';
 export type LabWorkflowKpiStage = LabWorkflowStage | 'sentBack';
 export type LabStageLabelVariant = 'short' | 'nav' | 'full';
-export type LabTimelineLane =
-  | 'sample'
-  | 'results'
-  | 'validation'
-  | 'escalation'
-  | 'quality'
-  | 'order'
-  | 'composition';
+export type LabTimelineLane = 'sample' | 'results' | 'validation' | 'quality';
 
 export const LAB_COPY = {
   entity: { sample: 'Sample', sampleType: 'Sample type', samples: 'samples' },
@@ -59,15 +52,6 @@ export const LAB_COPY = {
     stageEntry: 'Result entry',
     stageValidation: 'Validation',
   },
-  timeline: {
-    sample: 'Sample',
-    results: 'Results',
-    validation: 'Validation',
-    escalation: 'Escalation',
-    quality: 'Quality',
-    order: 'Order',
-    composition: 'Composition',
-  },
 } as const;
 
 export function labStageLabel(
@@ -82,10 +66,6 @@ export function labStageLabel(
     case 'validation':
       return LAB_COPY.workflow.validation;
   }
-}
-
-export function timelineLaneLabel(lane: LabTimelineLane): string {
-  return LAB_COPY.timeline[lane];
 }
 
 export const LAB_STAGE_SHORT_ROWS = [
@@ -220,33 +200,12 @@ const LANE_VISUAL: Record<LabTimelineLane, LabLaneVisual> = {
     iconWell: 'bg-lane-3-bg text-lane-3-fg',
     badgeVariant: 'success',
   },
-  escalation: {
-    fill: 'fill-lane-4-fg',
-    bar: 'bg-lane-4-fg',
-    text: 'text-lane-4-fg',
-    iconWell: 'bg-lane-4-bg text-lane-4-fg',
-    badgeVariant: 'danger',
-  },
   quality: {
     fill: 'fill-lane-5-fg',
     bar: 'bg-lane-5-fg',
     text: 'text-lane-5-fg',
     iconWell: 'bg-lane-5-bg text-lane-5-fg',
     badgeVariant: 'warning',
-  },
-  order: {
-    fill: 'fill-lane-6-fg',
-    bar: 'bg-lane-6-fg',
-    text: 'text-lane-6-fg',
-    iconWell: 'bg-lane-6-bg text-lane-6-fg',
-    badgeVariant: 'neutral',
-  },
-  composition: {
-    fill: 'fill-lane-7-fg',
-    bar: 'bg-lane-7-fg',
-    text: 'text-lane-7-fg',
-    iconWell: 'bg-lane-7-bg text-lane-7-fg',
-    badgeVariant: 'neutral',
   },
 };
 
@@ -263,7 +222,7 @@ const KPI_STAGE_LANE: Record<LabWorkflowKpiStage, LabTimelineLane> = {
   sentBack: 'quality',
 };
 
-export function getLaneVisual(lane: LabTimelineLane): LabLaneVisual {
+function getLaneVisual(lane: LabTimelineLane): LabLaneVisual {
   return LANE_VISUAL[lane];
 }
 
@@ -273,10 +232,6 @@ export function getStageVisual(stage: LabWorkflowStage): LabLaneVisual {
 
 export function getKpiStageVisual(stage: LabWorkflowKpiStage): LabLaneVisual {
   return getLaneVisual(KPI_STAGE_LANE[stage]);
-}
-
-export function isLabWorkflowStageTab(tab: LabTabId): tab is LabWorkflowStage {
-  return tab === 'collection' || tab === 'entry' || tab === 'validation';
 }
 
 /** Canonical lab API paths (relative to API v1 prefix). */

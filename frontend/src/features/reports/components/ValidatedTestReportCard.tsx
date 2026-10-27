@@ -14,7 +14,11 @@ import type { ReportableOrder } from '../types';
 import { ReportPreviewButton } from './ReportPreviewButton';
 import { ReportPrintButton } from './ReportPrintButton';
 import { text } from '@/theme/recipes';
-import { getActiveOrderTests } from '../utils/prepareReportData';
+import {
+  formatReportOrderTestsPreview,
+  getReportOrderTestLabels,
+} from '../utils/reportOrderTestLabels';
+import { renderTruncatedListPreview } from '@/utils/truncatedListPreviewRender';
 
 
 interface ValidatedTestReportCardProps extends CardComponentProps<ReportableOrder> {
@@ -38,12 +42,11 @@ export function ValidatedTestReportCard({
   onPrint,
   generatingOrderId,
 }: ValidatedTestReportCardProps) {
-  const testNames =
-    order.testNames.length > 0
-      ? order.testNames.join(', ')
-      : order.order
-        ? getActiveOrderTests(order.order).map(test => test.testName).join(', ')
-        : `${order.activeTestCount} test(s)`;
+  const testsPreview = formatReportOrderTestsPreview(order);
+  const { nameLabels, codeLabels } = getReportOrderTestLabels(order);
+  const namesNode =
+    nameLabels.length > 0 ? renderTruncatedListPreview(nameLabels) : testsPreview.names;
+  const codesNode = codeLabels.length > 0 ? renderTruncatedListPreview(codeLabels) : null;
   const statusLabel = `${order.validatedTestCount}/${order.activeTestCount}`;
 
   return (
@@ -63,15 +66,20 @@ export function ValidatedTestReportCard({
 
       <div className="grow space-y-space-2">
         <div>
-          <div className={text({ role: 'amount' })}>{testNames}</div>
-          <RecordId emphasis="block">
-            {(order.testCodes.length > 0
-              ? order.testCodes
-              : order.order
-                ? getActiveOrderTests(order.order).map(test => test.testCode)
-                : []
-            ).join(', ')}
-          </RecordId>
+          <div
+            className={text({ role: 'amount' })}
+            title={testsPreview.fullNames !== testsPreview.names ? testsPreview.fullNames : undefined}
+          >
+            {namesNode}
+          </div>
+          {codesNode ? (
+            <RecordId
+              emphasis="block"
+              title={testsPreview.fullCodes !== testsPreview.codes ? testsPreview.fullCodes : undefined}
+            >
+              {codesNode}
+            </RecordId>
+          ) : null}
         </div>
       </div>
 

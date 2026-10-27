@@ -820,6 +820,8 @@ class LabWorklistService:
                     "orderId": order.orderId,
                     "patientId": patient.id,
                     "patientName": patient.fullName,
+                    "patientDob": patient.dateOfBirth,
+                    "patientGender": patient.gender,
                     "testCode": order_test.testCode,
                     "testName": test.name,
                     "sampleType": test.sampleType or "",

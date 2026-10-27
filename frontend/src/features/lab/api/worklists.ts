@@ -5,6 +5,7 @@ import { apiClient } from '@/lib/api/client';
 import type {
   ContainerTopColor,
   ContainerType,
+  Gender,
   PaymentStatus,
   PriorityLevel,
   SampleStatus,
@@ -114,6 +115,8 @@ export interface DashboardWorklistItem {
   orderId: number;
   patientId: number;
   patientName: string;
+  patientDob: string;
+  patientGender: Gender;
   testCode: string;
   testName: string;
   sampleType: string;

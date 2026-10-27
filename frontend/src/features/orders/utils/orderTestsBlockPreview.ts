@@ -3,6 +3,7 @@
  */
 
 import type { OrderTest } from '@/types';
+import { formatTruncatedListPreview } from '@/utils/array';
 
 export type OrderTestsBlockLayout = 'countFirst' | 'namesFirst';
 
@@ -12,6 +13,7 @@ export interface OrderTestsBlockPreviewInput {
   testCodes?: string[];
   getTestName?: (testCode: string) => string;
   layout?: OrderTestsBlockLayout;
+  /** When true, list every test name (e.g. order detail, not tables). */
   showAllNames?: boolean;
 }
 
@@ -45,21 +47,7 @@ function buildNamesFirstPreview(labels: string[], activeCount: number, showAllNa
   if (showAllNames) {
     return labels.join(', ');
   }
-  if (labels.length === 1) {
-    return labels[0];
-  }
-  if (labels.length === 2) {
-    return labels.join(', ');
-  }
-  return `${labels.slice(0, 2).join(', ')}, +${labels.length - 2} more`;
-}
-
-function buildCountFirstSecondary(labels: string[]): string {
-  const firstName = labels[0];
-  if (firstName && labels.length > 1) {
-    return `${firstName}, +${labels.length - 1}`;
-  }
-  return firstName ?? '';
+  return formatTruncatedListPreview(labels);
 }
 
 export function buildOrderTestsBlockPreview(
@@ -73,6 +61,6 @@ export function buildOrderTestsBlockPreview(
     activeCount,
     labels,
     namesFirstPreview: buildNamesFirstPreview(labels, activeCount, showAllNames),
-    countFirstSecondary: buildCountFirstSecondary(labels),
+    countFirstSecondary: showAllNames ? labels.join(', ') : formatTruncatedListPreview(labels),
   };
 }

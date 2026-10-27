@@ -32,8 +32,9 @@ export const createOrderTableConfig = (
   const shared = createOrderSharedColumns<Order>(
     {
       getOrderId: order => order.orderId,
-      getPatientId: order => order.patientId,
       getPatientName: order => order.patientName || getPatientNameFn(order.patientId),
+      getPatientGender: order => order.patientGender,
+      getPatientDob: order => order.patientDob,
       getTests: order => getActiveTests(order.tests ?? []),
       getTestCount: order => order.testCount ?? order.tests?.length,
       getTestCodes: order => order.testCodes,

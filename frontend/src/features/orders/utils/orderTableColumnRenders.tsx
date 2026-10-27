@@ -1,5 +1,5 @@
 /**
- * Order-domain table cell render helpers with filter navigation support.
+ * Order-domain table cell render helpers.
  */
 
 import type { MouseEvent, ReactNode } from 'react';
@@ -11,10 +11,10 @@ import {
   renderPatientNameBlock,
   TABLE_PRIMARY_CELL_CLASS,
 } from '@/utils/tableColumnRenders';
-import { renderTableSecondaryRecordId } from '@/utils/presentationRenders';
 import { PRESENTATION_STACK_CLASS } from '@/theme/recipes';
-import { ROUTES } from '@/config';
-import type { OrderTest } from '@/types';
+import type { Gender, OrderTest } from '@/types';
+import { renderPatientSexAgeSecondary } from '@/features/patients/utils/patientTableColumnRenders';
+import { renderTruncatedListPreview } from '@/utils/truncatedListPreviewRender';
 import { TABLE_TYPE } from '@/theme/recipes';
 import {
   buildOrderTestsBlockPreview,
@@ -25,36 +25,19 @@ export function renderOrderId(orderId: string | number, clickable = false): Reac
   return <RecordId type="order" value={orderId} emphasis={clickable ? 'interactive' : 'block'} />;
 }
 
-function renderPatientNameWithId(
-  fullName: string,
-  patientId: string | number,
-  enableNavigation = false
+export interface OrderPatientDemographics {
+  gender?: Gender | string | null;
+  dateOfBirth?: string | null;
+}
+
+export function renderOrderPatientName(
+  patientName: string,
+  demographics?: OrderPatientDemographics,
 ): ReactNode {
   return renderPatientNameBlock(
-    fullName,
-    renderTableSecondaryRecordId({
-      type: 'patient',
-      value: patientId,
-      navigateToFiltered:
-        enableNavigation
-          ? { targetPage: ROUTES.ORDERS, filterKey: 'patientId' }
-          : undefined,
-    }),
+    patientName,
+    renderPatientSexAgeSecondary(demographics?.gender, demographics?.dateOfBirth),
   );
-}
-
-export function renderOrderPatientName(patientName: string, patientId: string | number): ReactNode {
-  return renderPatientNameWithId(patientName, patientId, false);
-}
-
-/**
- * Renders patient name with clickable ID that navigates to orders filtered by patient.
- */
-export function renderOrderPatientNameNavigable(
-  patientName: string,
-  patientId: string | number
-): ReactNode {
-  return renderPatientNameWithId(patientName, patientId, true);
 }
 
 /**
@@ -106,27 +89,36 @@ export function renderOrderTestsBlock(
 
     const showAllNames = resolved.showAllNames ?? false;
 
+    const namesContent =
+      showAllNames || preview.labels.length === 0
+        ? preview.namesFirstPreview
+        : renderTruncatedListPreview(preview.labels);
+
     return (
       <div className="min-w-0 w-full font-normal text-left">
         <div
           className={`${TABLE_TYPE.cell} wrap-break-word font-normal text-left${showAllNames ? '' : ' line-clamp-2'}`}
           title={!showAllNames && preview.labels.length > 0 ? preview.labels.join(', ') : undefined}
         >
-          {preview.namesFirstPreview}
+          {namesContent}
         </div>
       </div>
     );
   }
 
-  const { activeCount, countFirstSecondary } = preview;
+  const { activeCount, labels } = preview;
+  const secondaryContent =
+    resolved.showAllNames || labels.length === 0
+      ? preview.countFirstSecondary
+      : renderTruncatedListPreview(labels);
 
   return (
     <div className={PRESENTATION_STACK_CLASS}>
       <div className={TABLE_PRIMARY_CELL_CLASS}>
         {activeCount} test{activeCount !== 1 ? 's' : ''}
       </div>
-      {countFirstSecondary ? (
-        <div className={`${TABLE_TYPE.meta} truncate font-normal`}>{countFirstSecondary}</div>
+      {secondaryContent ? (
+        <div className={`${TABLE_TYPE.meta} truncate font-normal`}>{secondaryContent}</div>
       ) : null}
     </div>
   );

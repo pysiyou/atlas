@@ -37,8 +37,9 @@ export const createPaymentTableConfig = (
   const shared = createOrderSharedColumns<OrderPaymentView>(
     {
       getOrderId: item => item.order.orderId,
-      getPatientId: item => item.order.patientId,
       getPatientName: item => item.order.patientName || getPatientNameFn(item.order.patientId),
+      getPatientGender: item => item.order.patientGender,
+      getPatientDob: item => item.order.patientDob,
       getTests: item => getActiveTests(item.order.tests ?? []),
       getTestCount: item => item.order.testCount ?? item.order.tests?.length,
       getTestCodes: item => item.order.testCodes,

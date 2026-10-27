@@ -3,7 +3,7 @@
  */
 
 // Import types from enums for local use
-import type { TestStatus as TestStatusType } from '@/types/enums';
+import type { Gender, TestStatus as TestStatusType } from '@/types/enums';
 import type { OrderStatus as OrderStatusType } from '@/types/enums';
 import type { PriorityLevel as PriorityLevelType } from '@/types/enums';
 import type { PaymentStatus as PaymentStatusType } from '@/types/enums';
@@ -112,6 +112,8 @@ export interface Order {
   orderId: number; // Integer ID, displayed as ORD{id}
   patientId: number; // Links to Patient
   patientName: string; // From API relationship
+  patientDob?: string;
+  patientGender?: Gender;
   orderDate: string;
 
   // Tests (omitted on summary list responses — use testCount / testCodes)

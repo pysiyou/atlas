@@ -7,6 +7,7 @@ from app.domains.orders.schemas import TestResultsDict
 from app.shared.contracts.enums import (
     ContainerTopColor,
     ContainerType,
+    Gender,
     PaymentStatus,
     PriorityLevel,
     SampleStatus,
@@ -110,6 +111,8 @@ class DashboardWorklistItem(BaseModel):
     orderId: int
     patientId: int
     patientName: str
+    patientDob: str
+    patientGender: Gender
     testCode: str
     testName: str
     sampleType: str

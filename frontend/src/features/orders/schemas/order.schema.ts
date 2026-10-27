@@ -4,7 +4,7 @@ import {
   nullableApiDatetimeSchema,
   positiveIntSchema,
 } from '@/types/schemas/common.schema';
-import { PAYMENT_STATUS_VALUES } from '@/types/enums';
+import { GENDER_VALUES, PAYMENT_STATUS_VALUES } from '@/types/enums';
 import type { TestStatus } from '@/types';
 
 const apiTestStatusSchema = z.enum([
@@ -56,6 +56,8 @@ export const orderSchema = z.object({
   orderId: positiveIntSchema, // Backend returns orderId, not id
   patientId: positiveIntSchema,
   patientName: z.string(), // From backend relationship
+  patientDob: dateStringSchema.optional(),
+  patientGender: z.enum(GENDER_VALUES).optional(),
   orderDate: dateStringSchema,
   tests: z.array(orderTestSchema).min(1, 'At least one test is required'),
   totalPrice: z.number().min(0),
