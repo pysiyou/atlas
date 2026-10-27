@@ -57,7 +57,6 @@ interface CollectionPopoverContentProps {
   isSubmitting?: boolean;
 }
 
-// eslint-disable-next-line max-lines-per-function -- form sections (quantity, container type, color, notes) kept in one component for cohesion
 const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
   requirement,
   patientName,

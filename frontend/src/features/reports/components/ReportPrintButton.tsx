@@ -4,6 +4,7 @@
 import React from 'react';
 import { actionButtonPreset, IconButton } from '@/components/primitives';
 import type { ReportableOrder } from '../types';
+import { canPrintReport } from '../utils/reportEligibility';
 
 interface ReportPrintButtonProps {
   order: ReportableOrder;
@@ -18,13 +19,17 @@ export const ReportPrintButton: React.FC<ReportPrintButtonProps> = ({
   size = 'sm',
   disabled = false,
 }) => {
+  const printable = canPrintReport(order);
+  const isDisabled = disabled || !printable;
+
   return (
     <IconButton
       {...actionButtonPreset('print')}
+      variant="primary"
       size={size}
       onClick={() => onPrint(order)}
-      title="Print report"
-      disabled={disabled}
+      title={printable ? 'Print report' : 'Print available when order is completed'}
+      disabled={isDisabled}
     />
   );
 };

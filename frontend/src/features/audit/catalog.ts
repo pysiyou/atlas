@@ -426,7 +426,7 @@ function labResultsForTestOnOrderPhrase(
   context: EventLogHeadlineContext,
   leadIn: string
 ): EventLogHeadlinePart[] {
-  let parts = appendText([], leadIn);
+  const parts = appendText([], leadIn);
   return appendForTestOnOrderPhrase(parts, record, context);
 }
 
@@ -522,7 +522,7 @@ export const EVENT_HEADLINE_BUILDERS: Record<
   },
   'order.update': r => {
     const orderId = resolveOrderId(r);
-    let parts = orderId ? append([], orderRecordPhrase(orderId, 'Order ')) : appendText([], 'Order ');
+    const parts = orderId ? append([], orderRecordPhrase(orderId, 'Order ')) : appendText([], 'Order ');
     return appendText(parts, ' updated');
   },
   'order.delete': r => appendText(append([], targetOrder(r, 'Order ')), ' cancelled'),
@@ -611,7 +611,7 @@ export const EVENT_HEADLINE_BUILDERS: Record<
   'laboratory.validation.approve': (r, c) =>
     labResultsForTestOnOrderPhrase(r, c, 'Results validated '),
   'laboratory.validation.reject': (r, c) => {
-    let parts = labResultsForTestOnOrderPhrase(r, c, 'Results returned for correction ');
+    const parts = labResultsForTestOnOrderPhrase(r, c, 'Results returned for correction ');
     return appendClause(parts, metaString(r, 'reason') ?? '');
   },
   'laboratory.escalation.trigger': (r, c) => {

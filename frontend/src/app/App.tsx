@@ -37,7 +37,7 @@ function lazyNamed(
 }
 
 /** Login is code-split so its decorative SVGs stay off the authenticated bundle. */
-const LoginPage = lazyNamed(() => import('@/features/auth/LoginPage'), 'LoginPage');
+const LoginPage = lazyNamed(() => import('@/features/auth'), 'LoginPage');
 const Dashboard = lazyNamed(
   () => import('@/features/dashboard'),
   'DashboardPage'

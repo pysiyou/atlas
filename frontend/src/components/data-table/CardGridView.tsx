@@ -44,6 +44,7 @@ export function CardGridView<T>({
   scrollRef,
 }: CardGridViewProps<T>) {
   const virtualize = Boolean(scrollRef) && data.length > 0;
+  // eslint-disable-next-line react-hooks/incompatible-library -- @tanstack/react-virtual
   const virtualizer = useVirtualizer({
     count: data.length,
     getScrollElement: () => scrollRef?.current ?? null,

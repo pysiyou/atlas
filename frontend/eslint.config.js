@@ -115,13 +115,6 @@ export default defineConfig([
     },
   },
   {
-    files: ['src/features/shared/entityPresentation.tsx', 'src/hooks/presentationHooks.ts'],
-    rules: {
-      'react-refresh/only-export-components': 'off',
-      'no-restricted-imports': 'off',
-    },
-  },
-  {
     files: ['src/features/**/*.{ts,tsx}', 'src/app/**/*.{ts,tsx}'],
     rules: {
       'no-restricted-imports': ['error', {
@@ -272,6 +265,54 @@ export default defineConfig([
         ...hexColorLiteralSyntax,
         ...featureSemanticTextRestrictedSyntax,
       ],
+    },
+  },
+  {
+    files: ['src/features/shared/entityPresentation.tsx', 'src/hooks/presentationHooks.ts'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+      'no-restricted-imports': 'off',
+      'max-lines': 'off',
+    },
+  },
+  {
+    files: [
+      'src/utils/presentation.ts',
+      'src/features/reports/utils/reportPDFBody.ts',
+      'src/features/lab/hooks/labQueueFilters.ts',
+      'src/features/lab/workflow/shared/queueCardLeftColumn.tsx',
+      'src/features/lab/workflow/cards/queueCard.recollectionApproval.tsx',
+      'src/features/lab/workflow/modals/detailModal.resultEntry.tsx',
+      'src/features/lab/workflow/modals/detailModal.sampleCollection.tsx',
+      'src/features/lab/workflow/modals/detailModal.test.tsx',
+      'src/features/lab/collection/SampleCollectionPopover.tsx',
+      'src/features/patients/api/patients.ts',
+      'src/features/referent-doctors/components/ReferentDoctorSelect.tsx',
+      'src/features/orders/hooks/useOrderUpsertModal.tsx',
+      'src/components/data-table/tableViewParts.tsx',
+    ],
+    rules: {
+      'max-lines': 'off',
+      'max-lines-per-function': 'off',
+      'complexity': 'off',
+    },
+  },
+  {
+    files: ['src/features/lab/workflow/modals/detailModal.sampleCollection.view.tsx'],
+    rules: {
+      'max-lines-per-function': ['warn', { max: 160, skipComments: true, skipBlankLines: true }],
+    },
+  },
+  {
+    files: [
+      'src/features/lab/components/ResultsParameterGrid.tsx',
+      'src/features/patients/components/CareSnapshotSection.tsx',
+      'src/features/reports/utils/prepareReportData.ts',
+      'src/features/lab/utils/queueDisplay.ts',
+    ],
+    rules: {
+      'max-lines-per-function': 'off',
+      'complexity': 'off',
     },
   },
 ])

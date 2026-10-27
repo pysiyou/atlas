@@ -216,23 +216,27 @@ export function useLabQueueBarFilters(workflowType: LabQueueWorkflowType): LabQu
   const [searchParams, setSearchParams] = useSearchParams();
 
   const filterConfig = useMemo(() => getLabQueueStageConfig(workflowType), [workflowType]);
-  const initialBarRef = useRef<LabQueueBarFilters | null>(null);
-  if (initialBarRef.current === null) {
+
+  const readBarFiltersFromUrl = (): LabQueueBarFilters => {
     const params = new URLSearchParams(searchParams);
     migrateLegacyLabEntitySearchParams(params);
-    initialBarRef.current = barFiltersFromUrl(params, workflowType, filterConfig.defaultStatuses);
-  }
+    return barFiltersFromUrl(params, workflowType, filterConfig.defaultStatuses);
+  };
 
-  const [searchQuery, setSearchQuery] = useState(() => initialBarRef.current!.searchQuery);
+  const [searchQuery, setSearchQuery] = useState(() => readBarFiltersFromUrl().searchQuery);
   const [dateRange, setDateRange] = useState<[Date, Date] | null>(
-    () => initialBarRef.current!.dateRange,
+    () => readBarFiltersFromUrl().dateRange,
   );
   const [sampleTypeFilters, setSampleTypeFilters] = useState<string[]>(
-    () => initialBarRef.current!.sampleTypeFilters,
+    () => readBarFiltersFromUrl().sampleTypeFilters,
   );
   const [statusFilters, setStatusFilters] = useState<
     SampleStatus[] | TestStatus[] | PriorityLevel[]
-  >(() => [...initialBarRef.current!.statusFilters] as SampleStatus[] | TestStatus[] | PriorityLevel[]);
+  >(
+    () =>
+      [...readBarFiltersFromUrl().statusFilters] as
+        SampleStatus[] | TestStatus[] | PriorityLevel[],
+  );
 
   const debouncedSearch = useDebouncedValue(searchQuery, LAB_CONFIG.SEARCH_DEBOUNCE_MS);
   const trimmedSearch = debouncedSearch.trim();

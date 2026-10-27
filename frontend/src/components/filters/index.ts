@@ -32,10 +32,10 @@ export {
 export { QuickFilters, type QuickFiltersProps } from './QuickFilters';
 export {
   FilterControl,
-  renderFilterControl,
   type FilterControlProps,
   type FilterControlSurface,
 } from './FilterControl';
+export { renderFilterControl } from './filterControlRender';
 export { UrlFilterChipBar, type UrlFilterChipBarProps } from './UrlFilterChipBar';
 export { DatePresetChipSelect, type DatePresetChipSelectProps } from './DatePresetChipSelect';
 export { ListFilterModal, type ListFilterModalProps } from './ListFilterModal';

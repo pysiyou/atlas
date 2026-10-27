@@ -1,27 +1,30 @@
+/* eslint-disable react-refresh/only-export-components -- util render helpers, not a component module */
 /**
  * Generic table column render helpers (no entity routing or domain ids).
  */
 
 import type { ReactNode } from 'react';
 import { Text } from '@/components/layout/Text';
-import { cn, formatDate, formatDateTime, formatPhoneNumber } from '@/utils';
+import { cn, formatDate, formatPhoneNumber } from '@/utils';
+import {
+  renderDateTimeCell,
+  type TableDateTone,
+  TABLE_DATETIME_CELL_CLASS,
+  TABLE_DATETIME_SECONDARY_CLASS,
+} from '@/components/data-table/datetimeColumnRender';
 import { PRESENTATION_STACK_CLASS, TABLE_TYPE } from '@/theme/recipes';
 import { renderStackedIdentity } from '@/utils/presentationRenders';
 
-/** Primary datetime/date in a dedicated table column. */
-export const TABLE_DATETIME_CELL_CLASS = `${TABLE_TYPE.datetime} truncate block font-normal`;
-
-/** Datetime/date shown as supporting text (caption scale, tertiary color). */
-export const TABLE_DATETIME_SECONDARY_CLASS = `${TABLE_TYPE.datetimeSecondary} truncate block font-normal`;
+export {
+  TABLE_DATETIME_CELL_CLASS,
+  TABLE_DATETIME_SECONDARY_CLASS,
+} from '@/components/data-table/datetimeColumnRender';
 
 /** Primary table body line — prefer over raw text-text-primary in column renders. */
 export const TABLE_PRIMARY_CELL_CLASS = `${TABLE_TYPE.cell} truncate font-normal`;
 
-export type TableDateTone = 'primary' | 'secondary';
-
-function tableDateClassName(tone: TableDateTone): string {
-  return tone === 'secondary' ? TABLE_DATETIME_SECONDARY_CLASS : TABLE_DATETIME_CELL_CLASS;
-}
+export type { TableDateTone };
+export { renderDateTimeCell };
 
 export function renderPatientNameBlock(fullName: string, secondary?: ReactNode): ReactNode {
   return renderStackedIdentity(fullName, secondary, { density: 'table' });
@@ -70,6 +73,10 @@ export function renderTableEmptyCell(label = '—'): ReactNode {
   );
 }
 
+function tableDateClassName(tone: TableDateTone): string {
+  return tone === 'secondary' ? TABLE_DATETIME_SECONDARY_CLASS : TABLE_DATETIME_CELL_CLASS;
+}
+
 export function renderDateCell(
   date: string | Date | null | undefined,
   emptyLabel = '—',
@@ -81,13 +88,3 @@ export function renderDateCell(
   return <span className={tableDateClassName(tone)}>{formatDate(date)}</span>;
 }
 
-export function renderDateTimeCell(
-  date: string | Date | null | undefined,
-  emptyLabel = '—',
-  tone: TableDateTone = 'primary'
-): ReactNode {
-  if (!date) {
-    return <Text role="body" intent="muted" className="font-normal">{emptyLabel}</Text>;
-  }
-  return <span className={tableDateClassName(tone)}>{formatDateTime(date)}</span>;
-}

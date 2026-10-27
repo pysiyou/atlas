@@ -6,7 +6,6 @@ import {
   type Dispatch,
   type SetStateAction,
   useCallback,
-  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -261,11 +260,7 @@ export function useEventLogUrlPageFilters({
 
   const decoded = useMemo(() => decodeEventLogUrlFilters(searchParams), [searchParams]);
 
-  const [recordIdInput, setRecordIdInput] = useState(decoded.recordIdInput);
-
-  useEffect(() => {
-    setRecordIdInput(decoded.recordIdInput);
-  }, [decoded.recordIdInput]);
+  const recordIdInput = decoded.recordIdInput;
 
   const userFilters = useMemo(
     () => ({
@@ -299,7 +294,6 @@ export function useEventLogUrlPageFilters({
 
   const setRecordIdInputAndUrl = useCallback(
     (value: string) => {
-      setRecordIdInput(value);
       persist(userFilters, value);
     },
     [persist, userFilters],
@@ -318,7 +312,6 @@ export function useEventLogUrlPageFilters({
 
   const resetUserFilters = useCallback(() => {
     const defaults = defaultEventLogUserFilters(filterDefaults);
-    setRecordIdInput('');
     persist(defaults, '');
   }, [filterDefaults, persist]);
 

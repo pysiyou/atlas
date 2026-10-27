@@ -1,10 +1,10 @@
 /**
  * Second line of modal chrome — primary context label, order id, optional badges.
- * Matches Report Preview modal typography (tertiary amount scale via DialogHeader wrapper).
  */
 
 import type { ReactNode } from 'react';
-import { RecordId } from '@/features/shared';
+import { CodeText } from '@/components/display/CodeText';
+import { displayId } from '@/utils';
 
 export interface ModalContextSubtitleProps {
   /** Patient name, test name, or other primary context for this modal. */
@@ -12,6 +12,14 @@ export interface ModalContextSubtitleProps {
   orderId?: number | string | null;
   patientId?: number | string | null;
   badges?: ReactNode;
+}
+
+function formatRecordId(
+  type: 'order' | 'patient',
+  id: number | string
+): string {
+  const numeric = typeof id === 'string' ? Number(id) : id;
+  return displayId[type](numeric);
 }
 
 export function ModalContextSubtitle({ label, orderId, patientId, badges }: ModalContextSubtitleProps) {
@@ -28,13 +36,13 @@ export function ModalContextSubtitle({ label, orderId, patientId, badges }: Moda
       {showOrderId ? (
         <>
           <span className="shrink-0 text-text-tertiary" aria-hidden="true">-</span>
-          <RecordId type="order" value={orderId} className="shrink-0" />
+          <CodeText className="shrink-0">{formatRecordId('order', orderId)}</CodeText>
         </>
       ) : null}
       {showPatientId ? (
         <>
           <span className="shrink-0 text-text-tertiary" aria-hidden="true">-</span>
-          <RecordId type="patient" value={patientId} className="shrink-0" />
+          <CodeText className="shrink-0">{formatRecordId('patient', patientId)}</CodeText>
         </>
       ) : null}
       {showBadges ? (

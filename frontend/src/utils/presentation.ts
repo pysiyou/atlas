@@ -27,7 +27,7 @@ import {
 import { companyConfig } from '@/config';
 import { displayId, formatCurrency, formatDateTime } from '@/utils';
 import { formatTruncatedListPreview } from '@/utils/array';
-import { formatStatusBadgeLabel, resolveStatusBadgeColor } from '@/utils/statusBadge';
+import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 
 
 export {

@@ -2,7 +2,8 @@
  * Lab Reports Types
  */
 
-import type { Order } from '@/types';
+import type { Order, OrderStatus } from '@/types';
+import type { StatusPresentation } from '@/types/labProjection';
 
 /**
  * ReportableOrder - One lab report row for a non-cancelled order with active tests.
@@ -10,6 +11,8 @@ import type { Order } from '@/types';
 export interface ReportableOrder {
   orderId: number;
   orderDate: string;
+  overallStatus: OrderStatus;
+  statusPresentation: StatusPresentation;
   patientId: number;
   patientName: string;
   patientAge?: number;

@@ -9,7 +9,7 @@ import { FILTER_TYPE } from '@/theme/recipes';
 import { QuickFilters } from './QuickFilters';
 import { FilterModalFooter } from './FilterModalFooter';
 import type { FilterConfig, ActiveFilterBadge, FilterValues } from './types';
-import { renderFilterControl } from './FilterControl';
+import { renderFilterControl } from './filterControlRender';
 
 export interface FilterModalProps {
   isOpen: boolean;

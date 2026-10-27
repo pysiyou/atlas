@@ -1,7 +1,8 @@
 """Report generation API schemas."""
 from datetime import datetime
 
-from app.shared.contracts.enums import Gender
+from app.shared.contracts.enums import Gender, OrderStatus
+from app.shared.schemas.status_presentation import StatusPresentation
 from pydantic import BaseModel, Field
 
 
@@ -10,6 +11,8 @@ class ReportableOrderItem(BaseModel):
 
     orderId: int
     orderDate: datetime
+    overallStatus: OrderStatus
+    statusPresentation: StatusPresentation
     patientId: int
     patientName: str
     patientDob: str | None = None

@@ -5,12 +5,14 @@ import React from 'react';
 import { MODULE_ICONS } from '@/config/icons';
 import { ResponsiveFilterInsetBar } from '@/components/filters/ResponsiveFilterInsetBar';
 import {
-  buildEventLogFilterModalExtras,
-  buildEventLogFilterModalSections,
   EventLogFiltersInlineControls,
   type EventLogFiltersInlineControlsProps,
 } from './eventLogFilterControls';
 import type { EventLogFilterField } from './types';
+import {
+  buildEventLogFilterModalExtras,
+  buildEventLogFilterModalSections,
+} from './eventLogFilterModalBuilders';
 
 export interface EventLogFiltersProps extends EventLogFiltersInlineControlsProps {
   activeFilterCount: number;

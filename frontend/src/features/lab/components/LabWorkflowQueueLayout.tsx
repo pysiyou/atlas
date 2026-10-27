@@ -89,6 +89,7 @@ export function LabWorkflowQueueLayout<T>({
 }: LabWorkflowQueueLayoutProps<T>): React.ReactElement {
   const hasItems = items.length > 0;
   const parentRef = useRef<HTMLDivElement>(null);
+  // eslint-disable-next-line react-hooks/incompatible-library -- @tanstack/react-virtual
   const virtualizer = useVirtualizer({
     count: items.length,
     getScrollElement: () => parentRef.current,

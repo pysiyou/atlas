@@ -4,7 +4,7 @@
 
 import { type ReactNode } from 'react';
 import { tableCell } from '@/theme/recipes';
-import { renderDateTimeCell } from '@/utils/tableColumnRenders';
+import { renderDateTimeCell } from '@/components/data-table/datetimeColumnRender';
 import { TABLE_COLUMN_WIDTH } from './columnWidthTokens';
 import type {
   ColumnConfig,

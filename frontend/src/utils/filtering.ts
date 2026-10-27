@@ -1,7 +1,4 @@
-/**
- * Filtering Utilities — pure functions and types only.
- * React hook useClientListFilter lives in @/hooks/useClientListFilter.
- */
+/** Filtering utilities — pure functions and shared sort/filter types. */
 
 // ---------------------------------------------------------------------------
 // Types
@@ -18,28 +15,6 @@ export interface FilterOption {
   id: string;
   label: string;
   color?: string;
-}
-
-export interface UseClientListFilterOptions<T, S extends string = string> {
-  searchFields?: (item: T) => string[];
-  defaultSort?: SortConfig<T>;
-  statusField?: keyof T;
-  initialStatusFilters?: S[];
-}
-
-export interface UseClientListFilterReturn<T, S extends string = string> {
-  filteredItems: T[];
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
-  statusFilters: S[];
-  setStatusFilters: (filters: S[]) => void;
-  toggleStatusFilter: (status: S) => void;
-  sortConfig: SortConfig<T> | null;
-  setSort: (field: keyof T, direction?: SortDirection) => void;
-  toggleSort: (field: keyof T) => void;
-  isEmpty: boolean;
-  hasActiveSearch: boolean;
-  clearFilters: () => void;
 }
 
 // ---------------------------------------------------------------------------

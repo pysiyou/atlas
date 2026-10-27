@@ -106,16 +106,6 @@ export interface TableHeaderProps<T> {
   sticky?: boolean;
 }
 
-export interface TableBodyProps<T> {
-  data: T[];
-  visibleColumns: ColumnConfig<T>[];
-  variant: TableVariant;
-  striped?: boolean;
-  onRowClick?: (item: T, index: number) => void;
-  rowClassName?: (item: T, index: number) => string;
-  getRowKey?: (item: T, index: number) => string | number;
-}
-
 export interface TableCellProps {
   column: ColumnConfig<unknown>;
   children: ReactNode;

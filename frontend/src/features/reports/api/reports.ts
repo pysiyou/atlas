@@ -3,7 +3,8 @@
  */
 import { apiClient } from '@/lib/api/client';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
-import type { Order } from '@/types';
+import type { Order, OrderStatus } from '@/types';
+import type { StatusPresentation } from '@/types/labProjection';
 import type { PaginatedResponse } from '@/types/pagination';
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
@@ -15,6 +16,8 @@ import { calculateAge } from '@/utils';
 export interface ReportableOrderItem {
   orderId: number;
   orderDate: string;
+  overallStatus: OrderStatus;
+  statusPresentation: StatusPresentation;
   patientId: number;
   patientName: string;
   patientDob?: string | null;
@@ -46,6 +49,8 @@ export function toReportableOrder(item: ReportableOrderItem): ReportableOrder {
   return {
     orderId: item.orderId,
     orderDate: item.orderDate,
+    overallStatus: item.overallStatus,
+    statusPresentation: item.statusPresentation,
     patientId: item.patientId,
     patientName: item.patientName,
     patientAge: age,

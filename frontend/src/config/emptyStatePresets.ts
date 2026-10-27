@@ -8,15 +8,6 @@ export const PANEL_EMPTY_STATE = {
   fill: true,
 } as const;
 
-/** Command center side panels (Today, Attention, Activity) — title + description only. */
-export const PANEL_EMPTY_STATE_TEXT = {
-  variant: 'compact' as const,
-  fill: true,
-} as const;
-
-/** Detail modals — same as panel text-only empty (no icon). */
-export const MODAL_EMPTY_STATE = PANEL_EMPTY_STATE_TEXT;
-
 /** Dense tables / split workspace panels — smaller typography and padding. */
 export const DENSE_EMPTY_STATE = {
   icon: DEFAULT_EMPTY_ICON satisfies IconName,

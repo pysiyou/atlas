@@ -5,19 +5,20 @@
 import type { NavigateFunction } from 'react-router-dom';
 import type { TableViewConfig } from '@/components/data-table';
 import { buildViews, TABLE_COLUMN_WIDTH } from '@/components/data-table';
-import { ORDER_TABLE_COLUMN_HEADERS, renderOrderPatientName } from '@/features/orders';
+import {
+  ORDER_TABLE_COLUMN_HEADERS,
+  OrderStatusBadge,
+  renderOrderPatientName,
+} from '@/features/orders';
 import { renderDateTimeCell } from '@/utils/tableColumnRenders';
 import {
   formatReportOrderTestsPreview,
-  formatReportValidationStatus,
   renderNavigableOrderId,
   renderReportableOrderTestsCell,
 } from '@/utils/presentation';
 import type { ReportableOrder } from '../types';
-import { ReportPreviewButton } from '../components/ReportPreviewButton';
 import { ReportPrintButton } from '../components/ReportPrintButton';
 import { ValidatedTestReportCard } from '../components/ValidatedTestReportCard';
-import { TABLE_TYPE } from '@/theme/recipes';
 
 const REPORT_VIEWS = {
   full: ['orderId', 'patientName', 'tests', 'orderDate', 'status', 'action'],
@@ -27,7 +28,6 @@ const REPORT_VIEWS = {
 
 export const createReportTableConfig = (
   navigate: NavigateFunction,
-  onPreview: (order: ReportableOrder) => void,
   onPrint: (order: ReportableOrder) => void,
   generatingOrderId: number | null
 ): TableViewConfig<ReportableOrder> => {
@@ -70,26 +70,28 @@ export const createReportTableConfig = (
     },
     status: {
       key: 'status',
-      header: 'Status',
-      width: TABLE_COLUMN_WIDTH.compact,
+      header: ORDER_TABLE_COLUMN_HEADERS.overallStatus,
+      width: TABLE_COLUMN_WIDTH.badgeWide,
       sortable: true,
-      accessor: (order: ReportableOrder) => order.validatedTestCount,
+      accessor: (order: ReportableOrder) => order.overallStatus,
       render: (order: ReportableOrder) => (
-        <span className={`${TABLE_TYPE.cell} tabular-nums font-normal`}>
-          {formatReportValidationStatus(order.validatedTestCount, order.activeTestCount)}
-        </span>
+        <OrderStatusBadge
+          status={order.overallStatus}
+          presentation={order.statusPresentation}
+          layout="compact"
+          size="xs"
+        />
       ),
     },
     action: {
       key: 'action',
       header: 'Action',
-      width: TABLE_COLUMN_WIDTH.actionDual,
+      width: TABLE_COLUMN_WIDTH.action,
       render: (order: ReportableOrder) => (
         <div
           className="flex items-center justify-start gap-space-1 font-normal"
           onClick={e => e.stopPropagation()}
         >
-          <ReportPreviewButton order={order} onPreview={onPreview} />
           <ReportPrintButton
             order={order}
             onPrint={onPrint}
@@ -103,7 +105,6 @@ export const createReportTableConfig = (
   const CardComponent = (props: { item: ReportableOrder; index: number; onClick?: () => void }) => (
     <ValidatedTestReportCard
       {...props}
-      onPreview={onPreview}
       onPrint={onPrint}
       generatingOrderId={generatingOrderId}
     />

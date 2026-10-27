@@ -17,6 +17,7 @@ import { ModalType, useModal } from '@/lib/context/ModalContext';
 import { generateLabReport, downloadPDF, getDefaultTemplate } from '../utils/reportPDF';
 import type { ReportableOrder } from '../types';
 import { prepareReportData, downloadLabReport } from '../utils/prepareReportData';
+import { canPrintReport } from '../utils/reportEligibility';
 import { formatDate, inclusiveDateRangeBounds, toIsoDateParam } from '@/utils';
 import { notify } from '@/utils/feedback';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
@@ -123,12 +124,18 @@ export const ReportList: React.FC = () => {
 
   const handlePrint = useCallback(
     async (reportableOrder: ReportableOrder) => {
+      if (!canPrintReport(reportableOrder)) {
+        return;
+      }
       try {
         setGeneratingOrderId(reportableOrder.orderId);
         const hydrated =
           reportableOrder.order != null
             ? reportableOrder
             : toReportableOrder(await reportsAPI.getReportableOrder(reportableOrder.orderId));
+        if (!canPrintReport(hydrated)) {
+          return;
+        }
         const reportData = await buildReportData(hydrated);
         await reportsAPI.recordOrderReportDownload(hydrated.orderId);
         await downloadLabReport(
@@ -151,8 +158,8 @@ export const ReportList: React.FC = () => {
   );
 
   const reportTableConfig = useMemo(
-    () => createReportTableConfig(navigate, handlePreview, handlePrint, generatingOrderId),
-    [navigate, handlePreview, handlePrint, generatingOrderId]
+    () => createReportTableConfig(navigate, handlePrint, generatingOrderId),
+    [navigate, handlePrint, generatingOrderId]
   );
 
   return (

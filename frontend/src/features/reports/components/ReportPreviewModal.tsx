@@ -23,6 +23,7 @@ import { downloadLabReport, prepareReportData } from '../utils/prepareReportData
 import type { LabReportPayload } from '../types';
 import { formatDate } from '@/utils';
 import { notify } from '@/utils/feedback';
+import { canPrintReport } from '../utils/reportEligibility';
 
 export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
   isOpen,
@@ -82,7 +83,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
   }, [isOpen, reportableOrder, orderTestCodes.length, catalogLoading, tests, getUserName]);
 
   const handleGenerate = useCallback(async () => {
-    if (!reportableOrder || !reportData) return;
+    if (!reportableOrder || !reportData || !canPrintReport(reportableOrder)) return;
     setIsGenerating(true);
     try {
       await reportsAPI.recordOrderReportDownload(reportableOrder.orderId);
@@ -105,6 +106,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
   }, [reportableOrder, reportData, tests, onClose]);
 
   const waiting = isLoading || isBuilding || catalogLoading || !reportData;
+  const printEnabled = reportableOrder != null && canPrintReport(reportableOrder);
 
   return (
     <Modal
@@ -132,11 +134,15 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
             end={
               <Button
                 {...actionButtonPreset('download')}
+                variant="primary"
                 size="md"
                 layout="icon-text"
                 onClick={() => void handleGenerate()}
-                disabled={isGenerating || waiting || isError}
+                disabled={isGenerating || waiting || isError || !printEnabled}
                 isLoading={isGenerating}
+                title={
+                  printEnabled ? undefined : 'Download available when order is completed'
+                }
               >
                 {isGenerating ? 'Generating...' : 'Download PDF'}
               </Button>

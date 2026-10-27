@@ -121,40 +121,49 @@ export function useOrderUpsertModal({
   );
   const selectedPatient = selectedPatientById ?? initialPatient ?? null;
 
-  const [selectedReferentDoctor, setSelectedReferentDoctor] = useState<ReferentDoctor | null>(
-    null
-  );
-
-  useEffect(() => {
-    if (order?.referentDoctorId && order.referentDoctorName) {
-      setSelectedReferentDoctor({
-        referentDoctorId: order.referentDoctorId,
-        fullName: order.referentDoctorName,
-        email: order.referentDoctorEmail,
-        phone: order.referentDoctorPhone,
-        hospitalName: order.referentDoctorHospital,
-        username: order.referentDoctorUsername,
-        isActive: true,
-        createdAt: order.updatedAt,
-        updatedAt: order.updatedAt,
-      });
-    } else if (!order) {
-      setSelectedReferentDoctor(null);
+  const orderReferentDoctor = useMemo((): ReferentDoctor | null => {
+    if (!order?.referentDoctorId || !order.referentDoctorName) {
+      return null;
     }
+    return {
+      referentDoctorId: order.referentDoctorId,
+      fullName: order.referentDoctorName,
+      email: order.referentDoctorEmail,
+      phone: order.referentDoctorPhone,
+      hospitalName: order.referentDoctorHospital,
+      username: order.referentDoctorUsername,
+      isActive: true,
+      createdAt: order.updatedAt,
+      updatedAt: order.updatedAt,
+    };
   }, [order]);
+
+  const [referentDoctorOverride, setReferentDoctorOverride] = useState<
+    { orderId?: number; doctor: ReferentDoctor | null } | undefined
+  >(undefined);
+
+  const selectedReferentDoctor = useMemo(() => {
+    if (
+      referentDoctorOverride &&
+      referentDoctorOverride.orderId === order?.orderId
+    ) {
+      return referentDoctorOverride.doctor;
+    }
+    return orderReferentDoctor;
+  }, [referentDoctorOverride, order?.orderId, orderReferentDoctor]);
 
   const onSelectReferentDoctor = useCallback(
     (doctor: ReferentDoctor) => {
-      setSelectedReferentDoctor(doctor);
+      setReferentDoctorOverride({ orderId: order?.orderId, doctor });
       setValue('referentDoctorId', doctor.referentDoctorId, { shouldValidate: true });
     },
-    [setValue]
+    [order?.orderId, setValue]
   );
 
   const onClearReferentDoctor = useCallback(() => {
-    setSelectedReferentDoctor(null);
+    setReferentDoctorOverride({ orderId: order?.orderId, doctor: null });
     setValue('referentDoctorId', null, { shouldValidate: true });
-  }, [setValue]);
+  }, [order?.orderId, setValue]);
 
   const { tests, byCode } = useTestCatalog();
   const { results: filteredTests } = useTestSearch(testSearch);

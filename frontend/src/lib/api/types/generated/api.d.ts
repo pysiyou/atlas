@@ -2581,6 +2581,8 @@ export interface components {
              * Format: date-time
              */
             orderDate: string;
+            overallStatus: components["schemas"]["OrderStatus"];
+            statusPresentation: components["schemas"]["StatusPresentation"];
             /** Patientid */
             patientId: number;
             /** Patientname */
@@ -3064,6 +3066,8 @@ export interface components {
              * Format: date-time
              */
             orderDate: string;
+            overallStatus: components["schemas"]["OrderStatus"];
+            statusPresentation: components["schemas"]["StatusPresentation"];
             /** Patientid */
             patientId: number;
             /** Patientname */

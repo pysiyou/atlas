@@ -11,6 +11,7 @@ from app.domains.reports.eligibility import (
     active_order_tests,
     is_reportable_order,
 )
+from app.domains.lab.rules.status_presentation import resolve_order_presentation
 from app.domains.reports.schemas import ReportableOrderItem
 from app.shared.contracts.enums import OrderStatus, TestStatus
 from app.shared.schemas.pagination import create_paginated_response, skip_to_page
@@ -38,6 +39,8 @@ class ReportService:
         return ReportableOrderItem(
             orderId=order.orderId,
             orderDate=order.orderDate,
+            overallStatus=order.overallStatus,
+            statusPresentation=resolve_order_presentation(order.overallStatus),
             patientId=patient.id,
             patientName=patient.fullName,
             patientDob=patient.dateOfBirth,

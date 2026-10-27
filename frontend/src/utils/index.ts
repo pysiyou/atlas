@@ -29,7 +29,7 @@ export * from './errors';
 // UI/style constants
 export * from './constants';
 
-// Filtering (pure functions + types; hooks are in @/hooks/useClientListFilter)
+// Filtering (pure functions + types)
 export * from './filtering';
 export * from './formatDuration';
 

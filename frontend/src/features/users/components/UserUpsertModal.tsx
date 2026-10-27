@@ -16,6 +16,7 @@ import {
   isUserActive,
 } from '../utils/userAccountGuards';
 import { UserUpsertFormFields } from './UserUpsertFormFields';
+import { UserUpsertModalSummary } from './UserUpsertModalSummary';
 
 const FORM_ID = 'user-upsert-form';
 
@@ -144,13 +145,20 @@ export const UserUpsertModal: React.FC<UserUpsertModalProps> = ({
           </>
         ) : (
           <FormProvider {...form}>
-            <UserUpsertFormFields
+            <div className="flex flex-col gap-space-6">
+              <UserUpsertModalSummary
+                isEdit={isEdit}
+                user={user}
+                displayName={draftName || user?.name || ''}
+              />
+              <UserUpsertFormFields
               formId={FORM_ID}
               isEdit={isEdit}
               user={user}
               roleLocked={lastActiveAdmin}
               onSubmit={handleSubmit}
-            />
+              />
+            </div>
           </FormProvider>
         )}
       </ModalPageShell>

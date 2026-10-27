@@ -62,6 +62,11 @@ export {
 } from './components/LabDomainBadges';
 
 export {
+  LabPresentationCompactBadge,
+  LabPresentationStack,
+} from './components/LabPresentationBadge';
+
+export {
   ResultValidationForm,
   ResultValidationPanel,
   ResultValidationResultsBody,

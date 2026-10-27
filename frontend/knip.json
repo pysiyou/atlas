@@ -1,9 +1,14 @@
 {
   "$schema": "https://unpkg.com/knip@4/schema.json",
-  "entry": ["src/main.tsx", "src/app/App.tsx", "vite.config.ts"],
+  "entry": [
+    "src/main.tsx",
+    "src/app/App.tsx",
+    "vite.config.ts",
+    "src/**/*.test.ts"
+  ],
   "project": ["src/**/*.{ts,tsx}"],
   "ignoreDependencies": ["tailwindcss"],
-  "ignore": ["dist/**"],
+  "ignore": ["dist/**", "src/lib/empty-html2canvas.ts"],
   "rules": {
     "exports": "warn",
     "files": "warn",

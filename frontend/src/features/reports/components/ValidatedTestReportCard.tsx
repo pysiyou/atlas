@@ -7,7 +7,7 @@ import { ListCard } from '@/components/surfaces';
 import { RecordId } from '@/features/shared';
 import type { CardComponentProps } from '@/components/data-table';
 import type { ReportableOrder } from '../types';
-import { ReportPreviewButton } from './ReportPreviewButton';
+import { OrderStatusBadge } from '@/features/orders';
 import { ReportPrintButton } from './ReportPrintButton';
 import { text } from '@/theme/recipes';
 import {
@@ -18,7 +18,6 @@ import {
 import { renderTruncatedListPreview } from '@/utils/truncatedListPreviewRender';
 
 interface ValidatedTestReportCardProps extends CardComponentProps<ReportableOrder> {
-  onPreview: (order: ReportableOrder) => void;
   onPrint: (order: ReportableOrder) => void;
   generatingOrderId: number | null;
 }
@@ -26,12 +25,10 @@ interface ValidatedTestReportCardProps extends CardComponentProps<ReportableOrde
 export function ValidatedTestReportCard({
   item: order,
   onClick,
-  onPreview,
   onPrint,
   generatingOrderId,
 }: ValidatedTestReportCardProps) {
-  const { testsPreview, nameLabels, codeLabels, validationStatus } =
-    useReportableOrderPresentation(order);
+  const { testsPreview, nameLabels, codeLabels } = useReportableOrderPresentation(order);
 
   const namesNode =
     nameLabels.length > 0 ? renderTruncatedListPreview(nameLabels) : testsPreview.names;
@@ -47,7 +44,14 @@ export function ValidatedTestReportCard({
             secondaryValue={order.patientId}
           />
         }
-        trailing={<span className={`${text({ role: 'label' })} tabular-nums`}>{validationStatus}</span>}
+        trailing={
+          <OrderStatusBadge
+            status={order.overallStatus}
+            presentation={order.statusPresentation}
+            layout="compact"
+            size="xs"
+          />
+        }
       />
 
       <div className="grow space-y-space-2">
@@ -75,7 +79,6 @@ export function ValidatedTestReportCard({
           <span className="block mt-space-0-5">{renderCardDateTimeSecondary(order.orderDate)}</span>
         </div>
         <div className="flex items-center gap-space-1" onClick={e => e.stopPropagation()}>
-          <ReportPreviewButton order={order} onPreview={onPreview} size="sm" />
           <ReportPrintButton
             order={order}
             onPrint={onPrint}
