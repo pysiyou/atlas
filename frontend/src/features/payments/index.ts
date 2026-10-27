@@ -5,6 +5,7 @@
 export {
   paymentAPI,
   usePaymentsList,
+  usePaginatedPaymentOrders,
   usePaymentsForOrderIds,
   usePayment,
   usePaymentsByOrder,

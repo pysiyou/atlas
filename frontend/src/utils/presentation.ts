@@ -277,6 +277,8 @@ export interface OrderTestsPresentationInput {
   activeTests: Pick<OrderTest, 'testCode' | 'testName'>[];
   fallbackCount?: number;
   testCodes?: string[];
+  /** When aligned with testCodes, used before catalog lookup. */
+  testNames?: string[];
   getTestName?: (testCode: string) => string;
   layout?: OrderTestsBlockLayout;
   showAllNames?: boolean;
@@ -317,11 +319,15 @@ function resolveActiveCount(input: OrderTestsPresentationInput): number {
 }
 
 function resolveNameLabels(input: OrderTestsPresentationInput): string[] {
-  const { activeTests, testCodes, getTestName } = input;
+  const { activeTests, testCodes, testNames, getTestName } = input;
   if (activeTests.length > 0) {
     return activeTests.map(t => t.testName || t.testCode);
   }
-  return (testCodes ?? []).map(code => getTestName?.(code) || code);
+  const codes = testCodes ?? [];
+  if (testNames && testNames.length === codes.length && testNames.length > 0) {
+    return testNames;
+  }
+  return codes.map(code => getTestName?.(code) || code);
 }
 
 function resolveCodeLabels(input: OrderTestsPresentationInput): string[] {

@@ -1,5 +1,5 @@
 /**
- * PaymentList — server-paginated orders joined with cached payments.
+ * PaymentList — server-paginated orders with latestPayment embed (single request).
  */
 
 import React, { useMemo, useState, useCallback } from 'react';
@@ -12,25 +12,12 @@ import { PAYMENT_URL_FILTER_KEYS } from '../config/paymentFilters.config';
 import { createPaymentTableConfig } from '../config/PaymentTable.config';
 import { PaymentDetailModal } from '../components/PaymentDetailModal';
 import { useTestNameLookup } from '@/features/catalog';
-import { usePaginatedOrders } from '@/features/orders';
-import { usePaymentsForOrderIds } from '../api/payments';
+import { usePaginatedPaymentOrders } from '../api/payments';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
 import { useServerListChrome } from '@/hooks';
 import { inclusiveDateRangeBounds, toIsoDateParam } from '@/utils';
-import type { Order, Payment, PaymentStatus } from '@/types';
+import type { PaymentStatus } from '@/types';
 import type { OrderPaymentView } from '../types';
-
-function buildOrderPaymentViews(orders: Order[], payments: Payment[]): OrderPaymentView[] {
-  const paymentByOrder = new Map(payments.map(p => [p.orderId, p]));
-  return orders.map(order => {
-    const payment = paymentByOrder.get(order.orderId);
-    return {
-      order,
-      paymentMethod: payment?.paymentMethod,
-      paymentDate: payment?.paidAt,
-    };
-  });
-}
 
 export const PaymentList: React.FC = () => {
   const navigate = useNavigate();
@@ -72,7 +59,7 @@ export const PaymentList: React.FC = () => {
   }, [urlFilters.patientId, urlFilters.orderId, statusFilters, searchQuery, dateRange]);
 
   const {
-    orders,
+    orderPaymentViews,
     pagination,
     page,
     goToPage,
@@ -81,12 +68,9 @@ export const PaymentList: React.FC = () => {
     isError: ordersError,
     error: ordersErrorObj,
     refetch,
-  } = usePaginatedOrders(serverFilters, 1, DEFAULT_LIST_PAGE_SIZE);
+  } = usePaginatedPaymentOrders(serverFilters, 1, DEFAULT_LIST_PAGE_SIZE);
 
-  const orderIds = useMemo(() => orders.map(order => order.orderId), [orders]);
-  const { payments, isLoading: paymentsLoading } = usePaymentsForOrderIds(orderIds);
-  const { getTestName, isLoading: testsCatalogLoading } = useTestNameLookup();
-  const isLoading = ordersLoading || paymentsLoading || testsCatalogLoading;
+  const { getTestName } = useTestNameLookup();
 
   const { loading, error, listPagination, setFilterAndReset, onRetry } = useServerListChrome({
     setFilter,
@@ -100,13 +84,7 @@ export const PaymentList: React.FC = () => {
     pagination,
     goToPage,
     pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
-    loading: isLoading,
   });
-
-  const orderPaymentViews = useMemo(
-    () => buildOrderPaymentViews(orders, payments),
-    [orders, payments]
-  );
 
   const handlePaymentSuccess = useCallback(() => {
     refetch();

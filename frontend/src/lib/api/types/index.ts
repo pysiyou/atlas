@@ -6,6 +6,9 @@ export type { paths, components, operations } from './generated';
 export type {
   ApiPaymentResponse,
   ApiOrderResponse,
+  ApiOrderSummaryResponse,
+  ApiLatestPaymentSnippet,
+  ApiReportableOrderItem,
   ApiSampleResponse,
   ApiTestResponse,
   ApiTestSummaryResponse,

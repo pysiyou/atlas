@@ -33,6 +33,8 @@ export type ValueType = 'NUMERIC' | 'SELECT' | 'TEXT';
 export interface DemographicRange {
   low?: number;
   high?: number;
+  /** Qualitative / interpretive reference (e.g. Negative, Clear). */
+  text?: string;
 }
 
 /**

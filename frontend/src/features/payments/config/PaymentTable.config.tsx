@@ -45,6 +45,7 @@ export const createPaymentTableConfig = (
       getTests: item => getActiveTests(item.order.tests ?? []),
       getTestCount: item => item.order.testCount ?? item.order.tests?.length,
       getTestCodes: item => item.order.testCodes,
+      getTestNames: item => item.order.testNames,
       getTotalPrice: item => item.order.totalPrice,
       getPaymentStatus: item => item.order.paymentStatus,
       getOrderDate: item => item.order.orderDate,

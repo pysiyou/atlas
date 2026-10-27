@@ -8,8 +8,19 @@ import type { ApiPaymentResponse } from '@/lib/api/types';
 import type { Payment, PaymentMethod } from '@/types';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
+import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
-import { invalidateOrderQueries, useInvalidateQueryKey, invalidatePaymentDetailQueries } from '@/lib/query/invalidate';
+import {
+  invalidateOrderQueries,
+  useInvalidateQueryKey,
+  invalidatePaymentDetailQueries,
+  patchOrderSummaryInPaginatedCaches,
+} from '@/lib/query/invalidate';
+import {
+  usePaginatedOrders,
+  type OrdersFilters,
+} from '@/features/orders/api/orders';
+import { buildOrderPaymentViewsFromOrders } from '../utils/orderPaymentViews';
 
 export interface PaymentCreate {
   orderId: number | string;
@@ -96,6 +107,31 @@ export function usePaymentsList(filters?: PaymentsFilters) {
     isError: query.isError,
     error: query.error,
     refetch: query.refetch,
+  };
+}
+
+/**
+ * Server-paginated orders with `latestPayment` embed — single request for the payments list.
+ */
+export function usePaginatedPaymentOrders(
+  filters?: OrdersFilters,
+  initialPage = 1,
+  pageSize = DEFAULT_LIST_PAGE_SIZE
+) {
+  const mergedFilters = useMemo(
+    () => ({ ...filters, include: 'latestPayment' as const }),
+    [filters]
+  );
+  const paginated = usePaginatedOrders(mergedFilters, initialPage, pageSize);
+
+  const orderPaymentViews = useMemo(
+    () => buildOrderPaymentViewsFromOrders(paginated.orders),
+    [paginated.orders]
+  );
+
+  return {
+    ...paginated,
+    orderPaymentViews,
   };
 }
 
@@ -216,10 +252,24 @@ export function useCreatePayment() {
       const validated = paymentCreateSchema.parse(data);
       return paymentAPI.create(validated);
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (payment, variables) => {
       const orderIdStr =
         typeof variables.orderId === 'string' ? variables.orderId : String(variables.orderId);
-      return invalidateOrderQueries(queryClient, { orderId: orderIdStr, payments: true });
+      const orderIdNum = Number(orderIdStr);
+      if (Number.isFinite(orderIdNum)) {
+        patchOrderSummaryInPaginatedCaches(queryClient, orderIdNum, {
+          latestPayment: {
+            paymentId: payment.paymentId,
+            paymentMethod: payment.paymentMethod,
+            paidAt: payment.paidAt,
+          },
+        });
+      }
+      return invalidateOrderQueries(queryClient, {
+        orderId: orderIdStr,
+        payments: true,
+        listsOnly: true,
+      });
     },
   });
 }

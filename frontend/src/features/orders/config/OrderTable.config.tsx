@@ -38,6 +38,7 @@ export const createOrderTableConfig = (
       getTests: order => getActiveTests(order.tests ?? []),
       getTestCount: order => order.testCount ?? order.tests?.length,
       getTestCodes: order => order.testCodes,
+      getTestNames: order => order.testNames,
       getTotalPrice: order => order.totalPrice,
       getPaymentStatus: order => order.paymentStatus,
       getOrderDate: order => order.orderDate,

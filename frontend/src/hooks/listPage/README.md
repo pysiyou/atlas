@@ -2,6 +2,8 @@
 
 Shared wiring for feature list pages that render [`ListView`](../../components/surfaces/ListView.tsx).
 
+See also [data flow architecture](../../../docs/architecture/data-flow.md) for API embed patterns (`orderSummary`, `latestPayment`, reportable orders).
+
 ## Server-paginated lists
 
 Examples: orders, patients, payments, reports.

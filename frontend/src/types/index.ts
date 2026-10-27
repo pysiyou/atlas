@@ -20,6 +20,7 @@ export type {
   OrderTest,
   TestResult,
   ResultRejectionType,
+  LatestPaymentSnippet,
 } from './order';
 export { getOrderTests, getOrderTestCount } from './order';
 export type {

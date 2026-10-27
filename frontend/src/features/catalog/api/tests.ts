@@ -59,7 +59,9 @@ function mapResultItemsToParameters(resultItems?: ResultItem[]): TestParameter[]
         item.reference_range.adult_male ||
         item.reference_range.adult_female;
       if (range) {
-        if (range.low !== undefined && range.high !== undefined) {
+        if (range.text?.trim()) {
+          referenceRange = range.text.trim();
+        } else if (range.low !== undefined && range.high !== undefined) {
           referenceRange = `${range.low} - ${range.high}`;
         } else if (range.low !== undefined) {
           referenceRange = `> ${range.low}`;

@@ -32,6 +32,7 @@ export interface OrderColumnAccessors<T> {
   getTests: (item: T) => OrderTest[];
   getTestCount?: (item: T) => number | undefined;
   getTestCodes?: (item: T) => string[] | undefined;
+  getTestNames?: (item: T) => string[] | undefined;
   getTotalPrice: (item: T) => number;
   getPaymentStatus: (item: T) => PaymentStatus;
   getOrderDate: (item: T) => string;
@@ -113,9 +114,11 @@ export function createOrderSharedColumns<T>(
         const tests = accessors.getTests(item);
         const count = accessors.getTestCount?.(item);
         const testCodes = accessors.getTestCodes?.(item);
+        const testNames = accessors.getTestNames?.(item);
         return renderOrderTestsBlock(tests, {
           fallbackCount: count != null && tests.length === 0 ? count : undefined,
           testCodes: tests.length === 0 ? testCodes : undefined,
+          testNames: tests.length === 0 ? testNames : undefined,
           getTestName,
           layout: 'namesFirst',
         });

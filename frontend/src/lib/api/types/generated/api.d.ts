@@ -2172,6 +2172,9 @@ export interface components {
             testCount: number;
             /** Testcodes */
             testCodes?: string[];
+            /** Testnames */
+            testNames?: string[];
+            latestPayment?: components["schemas"]["LatestPaymentSnippet"] | null;
             /** Totalprice */
             totalPrice: number;
             paymentStatus: components["schemas"]["PaymentStatus"];
@@ -2208,6 +2211,16 @@ export interface components {
              * Format: date-time
              */
             updatedAt: string;
+        };
+        /**
+         * LatestPaymentSnippet
+         * @description Most recent payment on an order (list embed).
+         */
+        LatestPaymentSnippet: {
+            paymentId: number;
+            paymentMethod: components["schemas"]["PaymentMethod"];
+            /** Format: date-time */
+            paidAt: string;
         };
         /**
          * OrderTestCreate
@@ -4222,6 +4235,8 @@ export interface operations {
                 paginated?: boolean;
                 /** @description Return lightweight order rows without nested tests */
                 summary?: boolean;
+                /** @description Comma-separated embeds for list rows, e.g. latestPayment */
+                include?: string | null;
                 /** @description Number of records to skip */
                 skip?: number;
                 /** @description Max records to return */

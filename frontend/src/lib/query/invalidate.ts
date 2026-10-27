@@ -17,12 +17,16 @@
 
 import type { QueryClient, QueryKey } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
+import type { Order } from '@/types';
+import type { PaginatedResponse } from '@/types/pagination';
 import { queryKeys } from './keys';
 
 export interface InvalidateOrderOptions {
   orderId?: string | number;
   samples?: boolean;
   payments?: boolean;
+  /** Invalidate list/paginated order queries only (not the full `orders` prefix). */
+  listsOnly?: boolean;
 }
 
 function settleInvalidations(tasks: Array<Promise<unknown>>): Promise<void> {
@@ -46,17 +50,46 @@ export function invalidateWorklistQueries(client: QueryClient): Promise<void> {
   ]);
 }
 
+/**
+ * Merges fields onto a matching row in cached paginated order responses.
+ */
+export function patchOrderSummaryInPaginatedCaches(
+  client: QueryClient,
+  orderId: number,
+  patch: Partial<Order>
+): void {
+  const queries = client.getQueriesData<PaginatedResponse<Order>>({
+    queryKey: [...queryKeys.orders.all, 'paginated'],
+  });
+  for (const [key, page] of queries) {
+    if (!page?.data?.length) continue;
+    let changed = false;
+    const data = page.data.map(row => {
+      if (row.orderId !== orderId) return row;
+      changed = true;
+      return { ...row, ...patch };
+    });
+    if (changed) {
+      client.setQueryData(key, { ...page, data });
+    }
+  }
+}
+
 export function invalidateOrderQueries(
   client: QueryClient,
   options: InvalidateOrderOptions = {}
 ): Promise<void> {
-  const { orderId, samples = true, payments = false } = options;
+  const { orderId, samples = true, payments = false, listsOnly = false } = options;
   const orderIdStr = orderId !== undefined ? String(orderId) : undefined;
 
-  const tasks: Array<Promise<unknown>> = [
-    client.invalidateQueries({ queryKey: queryKeys.orders.all }),
-    invalidateAuditEventQueries(client),
-  ];
+  const orderListTasks: Array<Promise<unknown>> = listsOnly
+    ? [
+        client.invalidateQueries({ queryKey: queryKeys.orders.lists() }),
+        client.invalidateQueries({ queryKey: [...queryKeys.orders.all, 'paginated'] }),
+      ]
+    : [client.invalidateQueries({ queryKey: queryKeys.orders.all })];
+
+  const tasks: Array<Promise<unknown>> = [...orderListTasks, invalidateAuditEventQueries(client)];
   if (orderIdStr) {
     tasks.push(client.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) }));
   }
@@ -115,6 +148,8 @@ export function invalidateResultQueries(
   ];
   if (orderIdStr) {
     tasks.push(client.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) }));
+    tasks.push(client.invalidateQueries({ queryKey: queryKeys.orders.lists() }));
+    tasks.push(client.invalidateQueries({ queryKey: [...queryKeys.orders.all, 'paginated'] }));
   } else {
     tasks.push(client.invalidateQueries({ queryKey: queryKeys.orders.all }));
   }
@@ -168,7 +203,8 @@ export function invalidateRecollectionQueries(client: QueryClient): Promise<void
 export function invalidateCollectionQueries(client: QueryClient): Promise<void> {
   return settleInvalidations([
     client.invalidateQueries({ queryKey: queryKeys.samples.all }),
-    client.invalidateQueries({ queryKey: queryKeys.orders.all }),
+    client.invalidateQueries({ queryKey: queryKeys.orders.lists() }),
+    client.invalidateQueries({ queryKey: [...queryKeys.orders.all, 'paginated'] }),
     invalidateWorklistQueries(client),
     invalidateAuditEventQueries(client),
   ]);

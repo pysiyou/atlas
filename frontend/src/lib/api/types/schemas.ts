@@ -7,6 +7,9 @@ type Schemas = components['schemas'];
 
 export type ApiPaymentResponse = Schemas['PaymentResponse'];
 export type ApiOrderResponse = Schemas['OrderResponse'];
+export type ApiOrderSummaryResponse = Schemas['OrderSummaryResponse'];
+export type ApiLatestPaymentSnippet = Schemas['LatestPaymentSnippet'];
+export type ApiReportableOrderItem = Schemas['ReportableOrderItem'];
 export type ApiSampleResponse = Schemas['SampleResponse'];
 export type ApiTestResponse = Schemas['TestResponse'];
 export type ApiTestSummaryResponse = Schemas['TestSummaryResponse'];

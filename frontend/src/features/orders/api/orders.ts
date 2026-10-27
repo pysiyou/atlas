@@ -3,7 +3,9 @@
  * Order API service — pure HTTP, no React.
  */
 import { apiClient } from '@/lib/api/client';
+import { withPaginatedParams } from '@/lib/api/pagination';
 import { WORKFLOW_QUERY_LIMIT, DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
+import type { ApiOrderSummaryResponse } from '@/lib/api/types';
 import type { Order, OrderStatus, PaymentMethod, PaymentStatus, Patient, Invoice } from '@/types';
 import { serializeQueryList } from '@/utils/filtering';
 import { getOrderTestCount, getOrderTests } from '@/types';
@@ -55,6 +57,8 @@ export interface OrdersFilter {
   dateTo?: string;
   page?: number;
   pageSize?: number;
+  /** List embeds, e.g. latestPayment */
+  include?: string;
 }
 
 export const orderAPI = {
@@ -72,7 +76,14 @@ export const orderAPI = {
   },
 
   async getPaginated(filters?: OrdersFilter & { summary?: boolean }): Promise<PaginatedResponse<Order>> {
-    const params: Record<string, string> = { paginated: 'true', sort: 'updatedAt', summary: 'true' };
+    const page = filters?.page ?? 1;
+    const pageSize = filters?.pageSize ?? DEFAULT_LIST_PAGE_SIZE;
+    const params: Record<string, string> = {
+      paginated: 'true',
+      sort: 'updatedAt',
+      summary: 'true',
+      ...withPaginatedParams({}, page, pageSize),
+    };
 
     if (filters?.patientId) params.patientId = filters.patientId;
     if (filters?.orderId) params.orderId = String(filters.orderId);
@@ -85,10 +96,9 @@ export const orderAPI = {
     if (filters?.search) params.search = filters.search;
     if (filters?.dateFrom) params.dateFrom = filters.dateFrom;
     if (filters?.dateTo) params.dateTo = filters.dateTo;
-    if (filters?.page) params.skip = String((filters.page - 1) * (filters.pageSize || DEFAULT_LIST_PAGE_SIZE));
-    if (filters?.pageSize) params.limit = String(filters.pageSize);
+    if (filters?.include) params.include = filters.include;
 
-    return apiClient.get<PaginatedResponse<Order>>('/orders', params);
+    return apiClient.get<PaginatedResponse<ApiOrderSummaryResponse & Order>>('/orders', params);
   },
 
   async getById(
@@ -155,6 +165,7 @@ export interface OrdersFilters {
   search?: string;
   dateFrom?: string;
   dateTo?: string;
+  include?: string;
 }
 
 /**
@@ -191,8 +202,7 @@ export function useOrdersForPatientIds(patientIds: number[]) {
 }
 
 /**
- * Hook to fetch and cache workflow-scoped orders (client-side filtering applied from filters).
- * For large datasets (hundreds/thousands of orders), prefer usePaginatedOrders to avoid over-fetching.
+ * @deprecated Prefer `usePaginatedOrders` or `useOrdersByPatient`. Loads up to WORKFLOW_QUERY_LIMIT rows.
  */
 export interface LabQueryRefetchOptions {
   refetchInterval?: number;
@@ -211,7 +221,6 @@ export function useOrdersList(filters?: OrdersFilters, refetchOptions?: LabQuery
       : {}),
   });
 
-  // Apply client-side filters for instant filtering on cached data
   const filteredOrders = useMemo(() => {
     let orders = query.data ?? [];
 
@@ -295,19 +304,16 @@ export function useOrdersByPatient(patientId: string | undefined) {
   };
 }
 
-/**
- * Hook to get orders by status using cached data
- */
+/** Server-filtered orders for one status (first page). */
 export function useOrdersByStatus(status: OrderStatus | undefined) {
-  const { orders, isLoading } = useOrdersList();
-
-  const filteredOrders = useMemo(() => {
-    if (!status) return orders;
-    return orders.filter(o => o.overallStatus === status);
-  }, [orders, status]);
+  const filters = useMemo(
+    () => (status ? { status: [status] as OrderStatus[] } : undefined),
+    [status]
+  );
+  const { orders, isLoading } = usePaginatedOrders(filters, 1, DEFAULT_LIST_PAGE_SIZE);
 
   return {
-    orders: filteredOrders,
+    orders: status ? orders : [],
     isLoading,
   };
 }
@@ -408,34 +414,20 @@ export function useOrderStats() {
   const enabled = useAuthQueryEnabled();
 
   const query = useQuery({
-    queryKey: queryKeys.orders.list(),
-    queryFn: () => orderAPI.getAll(),
+    queryKey: ['dashboard', 'summary'],
+    queryFn: async () => {
+      const { dashboardAPI } = await import('@/features/dashboard/api/dashboard');
+      return dashboardAPI.getSummary();
+    },
     enabled,
     ...cacheConfig.dynamic,
-    // SELECT PATTERN: Compute statistics from orders
-    // Only re-renders when the stats actually change
-    select: (orders: Order[]) => {
-      const byStatus: Record<string, number> = {};
-      const byPaymentStatus: Record<string, number> = {};
-
-      orders.forEach(order => {
-        // Count by status
-        const status = order.overallStatus;
-        byStatus[status] = (byStatus[status] || 0) + 1;
-
-        // Count by payment status
-        const paymentStatus = order.paymentStatus;
-        byPaymentStatus[paymentStatus] = (byPaymentStatus[paymentStatus] || 0) + 1;
-      });
-
-      return {
-        total: orders.length,
-        byStatus,
-        byPaymentStatus,
-        unpaidCount: byPaymentStatus['unpaid'] || 0,
-        inProgressCount: byStatus['running'] || 0,
-      };
-    },
+    select: summary => ({
+      total: summary.totalOrders,
+      byStatus: {} as Record<string, number>,
+      byPaymentStatus: {} as Record<string, number>,
+      unpaidCount: 0,
+      inProgressCount: summary.pendingOrders,
+    }),
   });
 
   return {
@@ -509,30 +501,23 @@ export function useOrderSummary(orderId: string | undefined) {
  */
 export function useRecentOrders(limit = 10) {
   const enabled = useAuthQueryEnabled();
-  const sevenDaysAgo = useMemo(() => {
-    const date = new Date();
-    date.setDate(date.getDate() - 7);
-    return date;
-  }, []);
 
   const query = useQuery({
-    queryKey: queryKeys.orders.list(),
-    queryFn: () => orderAPI.getAll(),
+    queryKey: ['dashboard', 'summary', 'recent', limit],
+    queryFn: async () => {
+      const { dashboardAPI } = await import('@/features/dashboard/api/dashboard');
+      return dashboardAPI.getSummary();
+    },
     enabled,
     ...cacheConfig.dynamic,
-    // SELECT PATTERN: Filter to recent orders and limit
-    select: (orders: Order[]) =>
-      orders
-        .filter(order => new Date(order.orderDate) >= sevenDaysAgo)
-        .sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime())
-        .slice(0, limit)
-        .map(order => ({
-          orderId: order.orderId,
-          patientName: order.patientName,
-          orderDate: order.orderDate,
-          status: order.overallStatus,
-          testCount: getOrderTestCount(order),
-        })),
+    select: summary =>
+      summary.recentOrders.slice(0, limit).map(order => ({
+        orderId: order.orderId,
+        patientName: order.patientName,
+        orderDate: order.orderDate,
+        status: order.overallStatus,
+        testCount: getOrderTestCount(order),
+      })),
   });
 
   return {

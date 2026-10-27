@@ -3,45 +3,59 @@
  * Provides utility functions for order operations (search, lookup, cache invalidation)
  */
 
-import { useQueryClient } from '@tanstack/react-query';
-import { useMemo } from 'react';
-import { useEntityLookup, parseNumericKey } from '@/hooks/useEntityLookup';
-import { queryKeys } from '@/lib/query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useDebouncedValue } from '@/hooks/useDebouncedValue';
+import { parseNumericKey } from '@/hooks/useEntityLookup';
+import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
+import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { useInvalidateQueryKey, invalidateOrderDetailQuery } from '@/lib/query/invalidate';
-import { useOrdersList } from '../api/orders';
+import { orderAPI } from '../api/orders';
+import type { Order } from '@/types';
 
 /**
- * Hook to search orders by order ID
+ * Server-side order search (paginated, debounced).
  */
 export function useOrderSearch(searchQuery: string) {
-  const { orders, isLoading } = useOrdersList();
+  const debounced = useDebouncedValue(searchQuery.trim(), 300);
+  const enabled = useAuthQueryEnabled(debounced.length > 0);
 
-  const results = useMemo(() => {
-    if (!searchQuery.trim()) return orders;
-    const query = searchQuery.toLowerCase();
-    return orders.filter(order => order.orderId.toString().toLowerCase().includes(query));
-  }, [orders, searchQuery]);
+  const query = useQuery({
+    queryKey: queryKeys.orders.paginated({
+      search: debounced,
+      page: 1,
+      pageSize: DEFAULT_LIST_PAGE_SIZE,
+    }),
+    queryFn: () =>
+      orderAPI.getPaginated({
+        search: debounced,
+        page: 1,
+        pageSize: DEFAULT_LIST_PAGE_SIZE,
+      }),
+    enabled,
+    ...cacheConfig.dynamic,
+  });
 
   return {
-    results,
-    isSearching: isLoading,
+    results: debounced.length > 0 ? (query.data?.data ?? []) : [],
+    isSearching: query.isLoading,
   };
 }
 
 /**
- * Hook to get order lookup function
- * Returns functions to resolve order IDs to orders
+ * Resolves orders from the query cache (detail queries) by id.
  */
 export function useOrderLookup() {
-  const { orders, isLoading } = useOrdersList();
-  const { get: getOrder } = useEntityLookup(orders, o => o.orderId, {
-    isLoading,
-    normalizeKey: parseNumericKey,
-  });
+  const queryClient = useQueryClient();
+
+  const getOrder = (orderId: number | string): Order | undefined => {
+    const key = parseNumericKey(orderId);
+    if (key == null) return undefined;
+    return queryClient.getQueryData<Order>(queryKeys.orders.byId(String(key)));
+  };
 
   return {
     getOrder,
-    isLoading,
+    isLoading: false,
   };
 }
 

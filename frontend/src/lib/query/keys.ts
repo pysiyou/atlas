@@ -121,6 +121,7 @@ export const queryKeys = {
         search?: string;
         dateFrom?: string;
         dateTo?: string;
+        include?: string;
       } & PaginationParams
     ) => [...queryKeys.orders.all, 'paginated', params] as const,
     details: () => [...queryKeys.orders.all, 'detail'] as const,

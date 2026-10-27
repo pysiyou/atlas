@@ -3,8 +3,9 @@
  */
 import { apiClient } from '@/lib/api/client';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
-import type { Order, OrderStatus } from '@/types';
-import type { StatusPresentation } from '@/types/labProjection';
+import { withPaginatedParams } from '@/lib/api/pagination';
+import type { ApiReportableOrderItem } from '@/lib/api/types';
+import type { Order } from '@/types';
 import type { PaginatedResponse } from '@/types/pagination';
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
@@ -13,24 +14,10 @@ import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import type { ReportableOrder } from '../types';
 import { calculateAge } from '@/utils';
 
-export interface ReportableOrderItem {
-  orderId: number;
-  orderDate: string;
-  overallStatus: OrderStatus;
-  statusPresentation: StatusPresentation;
-  patientId: number;
-  patientName: string;
-  patientDob?: string | null;
-  patientGender?: string | null;
-  patientEmail?: string | null;
-  patientPhone?: string | null;
-  activeTestCount: number;
-  validatedTestCount: number;
-  testCodes?: string[];
-  testNames?: string[];
+export type ReportableOrderItem = ApiReportableOrderItem & {
   /** Nested order is hydrated only on GET /reports/orders/{id}. */
   order?: Order | null;
-}
+};
 
 export interface ReportableOrdersFilters {
   search?: string;
@@ -50,7 +37,10 @@ export function toReportableOrder(item: ReportableOrderItem): ReportableOrder {
     orderId: item.orderId,
     orderDate: item.orderDate,
     overallStatus: item.overallStatus,
-    statusPresentation: item.statusPresentation,
+    statusPresentation: item.statusPresentation ?? {
+      primary: item.overallStatus,
+      variant: 'gray',
+    },
     patientId: item.patientId,
     patientName: item.patientName,
     patientAge: age,
@@ -90,8 +80,7 @@ export const reportsAPI = {
   ): Promise<PaginatedResponse<ReportableOrderItem>> {
     const pageSize = filters?.pageSize || DEFAULT_LIST_PAGE_SIZE;
     const params: Record<string, string> = {
-      skip: String(((filters?.page ?? 1) - 1) * pageSize),
-      limit: String(pageSize),
+      ...withPaginatedParams({}, filters?.page ?? 1, pageSize),
     };
     if (filters?.search) params.search = filters.search;
     if (filters?.dateFrom) params.dateFrom = filters.dateFrom;

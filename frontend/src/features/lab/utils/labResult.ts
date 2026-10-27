@@ -160,6 +160,7 @@ export function normalizeReferenceRangeDisplay(value: string): string {
 
 function formatDemographicRangeSegment(range?: DemographicRange): string {
   if (!range) return '';
+  if (range.text?.trim()) return range.text.trim();
   if (range.low !== undefined && range.high !== undefined) {
     return formatRangeBounds(range.low, range.high);
   }

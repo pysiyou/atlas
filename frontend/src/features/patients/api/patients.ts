@@ -2,6 +2,7 @@
  * Patient API service — pure HTTP, no React.
  */
 import { apiClient } from '@/lib/api/client';
+import { withPaginatedParams } from '@/lib/api/pagination';
 import { WORKFLOW_QUERY_LIMIT, DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
 import type { Gender, Patient, PatientContext } from '@/types';
 import { serializeQueryList } from '@/utils/filtering';
@@ -56,8 +57,10 @@ export const patientAPI = {
     if (affiliationParam) params.affiliationStatus = affiliationParam;
     if (filters?.ageMin != null) params.ageMin = String(filters.ageMin);
     if (filters?.ageMax != null) params.ageMax = String(filters.ageMax);
-    if (filters?.page) params.skip = String((filters.page - 1) * (filters.pageSize || DEFAULT_LIST_PAGE_SIZE));
-    if (filters?.pageSize) params.limit = String(filters.pageSize);
+    Object.assign(
+      params,
+      withPaginatedParams({}, filters?.page ?? 1, filters?.pageSize ?? DEFAULT_LIST_PAGE_SIZE)
+    );
     if (filters?.includeOrderSummary) params.include = 'orderSummary';
 
     return apiClient.get<PaginatedResponse<PatientWithOrderSummary>>('/patients', params);

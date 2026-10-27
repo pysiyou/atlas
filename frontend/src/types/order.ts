@@ -107,6 +107,12 @@ export function getOrderTestCount(order: Pick<Order, 'tests' | 'testCount'>): nu
   return order.testCount ?? order.tests?.length ?? 0;
 }
 
+export interface LatestPaymentSnippet {
+  paymentId: number;
+  paymentMethod: string;
+  paidAt: string;
+}
+
 export interface Order {
   // Identity
   orderId: number; // Integer ID, displayed as ORD{id}
@@ -120,6 +126,8 @@ export interface Order {
   tests?: OrderTest[];
   testCount?: number;
   testCodes?: string[];
+  testNames?: string[];
+  latestPayment?: LatestPaymentSnippet | null;
 
   // Pricing (snapshot at order time)
   totalPrice: number;

@@ -374,6 +374,7 @@ export type { OrderTestsBlockLayout };
 export interface RenderOrderTestsBlockOptions {
   fallbackCount?: number;
   testCodes?: string[];
+  testNames?: string[];
   getTestName?: (testCode: string) => string;
   layout?: OrderTestsBlockLayout;
   showAllNames?: boolean;
