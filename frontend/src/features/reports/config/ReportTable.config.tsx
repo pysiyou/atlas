@@ -13,7 +13,11 @@ import type { ReportableOrder } from '../types';
 import { ReportPreviewButton } from '../components/ReportPreviewButton';
 import { ReportPrintButton } from '../components/ReportPrintButton';
 import { ValidatedTestReportCard } from '../components/ValidatedTestReportCard';
-import { getActiveOrderTests } from '../utils/prepareReportData';
+import {
+  formatReportOrderTestsPreview,
+  getReportOrderTestLabels,
+} from '../utils/reportOrderTestLabels';
+import { renderTruncatedListPreview } from '@/utils/truncatedListPreviewRender';
 import { PRESENTATION_STACK_CLASS, TABLE_TYPE } from '@/theme/recipes';
 
 const REPORT_VIEWS = {
@@ -21,22 +25,6 @@ const REPORT_VIEWS = {
   medium: ['orderId', 'patientName', 'tests', 'status', 'action'],
   compact: ['patientName', 'tests', 'status', 'action'],
 } as const;
-
-function testsSummary(order: ReportableOrder): { names: string; codes: string } {
-  const names =
-    order.testNames.length > 0
-      ? order.testNames.join(', ')
-      : order.order
-        ? getActiveOrderTests(order.order).map(test => test.testName).join(', ')
-        : `${order.activeTestCount} test(s)`;
-  const codes =
-    order.testCodes.length > 0
-      ? order.testCodes.join(', ')
-      : order.order
-        ? getActiveOrderTests(order.order).map(test => test.testCode).join(', ')
-        : '';
-  return { names, codes };
-}
 
 function validationStatusLabel(order: ReportableOrder): string {
   return `${order.validatedTestCount}/${order.activeTestCount}`;
@@ -75,21 +63,41 @@ export const createReportTableConfig = (
       sortable: true,
       accessor: (order: ReportableOrder) => order.patientName,
       render: (order: ReportableOrder) =>
-        renderOrderPatientName(order.patientName, order.patientId),
+        renderOrderPatientName(order.patientName, {
+          gender: order.patientGender,
+          dateOfBirth: order.patientDob,
+        }),
     },
     tests: {
       key: 'tests',
       header: 'Tests',
       width: TABLE_COLUMN_WIDTH.flex,
       sortable: true,
-      accessor: (order: ReportableOrder) => testsSummary(order).names,
+      accessor: (order: ReportableOrder) => formatReportOrderTestsPreview(order).names,
       render: (order: ReportableOrder) => {
-        const summary = testsSummary(order);
+        const summary = formatReportOrderTestsPreview(order);
+        const { nameLabels, codeLabels } = getReportOrderTestLabels(order);
+        const namesNode =
+          nameLabels.length > 0
+            ? renderTruncatedListPreview(nameLabels)
+            : summary.names;
+        const codesNode =
+          codeLabels.length > 0 ? renderTruncatedListPreview(codeLabels) : null;
         return (
           <div className={PRESENTATION_STACK_CLASS}>
-            <div className={`${TABLE_TYPE.cell} truncate font-normal`}>{summary.names}</div>
-            {summary.codes ? (
-              <RecordId emphasis="mutedBlock">{summary.codes}</RecordId>
+            <div
+              className={`${TABLE_TYPE.cell} truncate font-normal`}
+              title={summary.fullNames !== summary.names ? summary.fullNames : undefined}
+            >
+              {namesNode}
+            </div>
+            {codesNode ? (
+              <RecordId
+                emphasis="mutedBlock"
+                title={summary.fullCodes !== summary.codes ? summary.fullCodes : undefined}
+              >
+                {codesNode}
+              </RecordId>
             ) : null}
           </div>
         );

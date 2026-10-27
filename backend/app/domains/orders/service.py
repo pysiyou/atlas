@@ -175,11 +175,14 @@ def _active_test_codes_by_order_id(db, order_ids: list[int]) -> dict[int, list[s
 def _order_to_summary(order: Order, test_count: int, test_codes: list[str] | None = None) -> dict:
     from app.domains.lab.rules.status_presentation import resolve_order_presentation
 
-    patient_name = order.patient.fullName if order.patient else "Unknown"
+    patient = order.patient
+    patient_name = patient.fullName if patient else "Unknown"
     return OrderSummaryResponse(
         orderId=order.orderId,
         patientId=order.patientId,
         patientName=patient_name,
+        patientDob=patient.dateOfBirth if patient else None,
+        patientGender=patient.gender if patient else None,
         orderDate=order.orderDate,
         testCount=test_count,
         testCodes=test_codes or [],

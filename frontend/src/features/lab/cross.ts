@@ -19,14 +19,12 @@ export {
 
 export {
   getLabTabPath,
-  getLaneVisual,
   getStageVisual,
   getKpiStageVisual,
-  isLabWorkflowStageTab,
   LAB_TAB_LABELS,
   LAB_CONFIG,
 } from './constants/labConstants';
-export type { LabTabId, LabTimelineLane, LabWorkflowKpiStage, LabWorkflowStage } from './constants/labConstants';
+export type { LabTabId, LabWorkflowKpiStage, LabWorkflowStage } from './constants/labConstants';
 
 export { ResultsParameterGrid } from './components/ResultsParameterGrid';
 export { ResultValueAnnotations } from './components/ResultValueAnnotations';

@@ -4,7 +4,6 @@ import { EmptyState } from '@/components/display/EmptyState';
 import { InlineHighlight } from '@/components/primitives/InlineHighlight';
 import { text, RADIUS } from '@/theme/recipes';
 import { MODULE_ICONS } from '@/config/icons';
-import { getLaneVisual, type LabTimelineLane } from '@/features/lab/cross';
 import { parseAppDate } from '@/utils/date';
 import { cn } from '@/utils';
 import { text as detailText, FG } from '@/theme/recipes';
@@ -14,8 +13,6 @@ import { collectTestCodes } from './catalog';
 import { EVENT_LOG_COPY } from './types';
 import type {
   EventLogDayGroup,
-  EventLogDomain,
-  EventLogLaboratorySubdomain,
   ResolvedEventLogItem,
 } from './types';
 
@@ -126,6 +123,7 @@ const EVENT_LOG_STYLES = {
     'event-log-spine-stem-bottom pointer-events-none absolute bottom-0 left-1/2 w-px -translate-x-1/2 bg-border-default top-[calc(0.625rem+0.125rem+0.25rem)]',
   spineDotSlot: 'relative z-[1] flex h-5 w-full shrink-0 items-center justify-center',
   spineDot: `size-1 shrink-0 ${RADIUS.pill} ring-1 ring-surface`,
+  spineDotDefault: 'bg-brand',
   spineDotMuted: 'bg-text-tertiary',
   content: 'event-log-content min-w-0 flex-1 pb-space-2',
   headline: `${text({ role: 'body' })} ${EVENT_LOG_HEADLINE_LINE_CLASS} mb-0`,
@@ -178,51 +176,12 @@ function groupEventLogByDay(items: ResolvedEventLogItem[]): EventLogDayGroup[] {
   return Array.from(map.values()).sort((a, b) => b.dayKey.localeCompare(a.dayKey));
 }
 
-function laneForDomain(
-  domain: EventLogDomain,
-  laboratorySubdomain?: EventLogLaboratorySubdomain
-): LabTimelineLane {
-  if (domain === 'laboratory' && laboratorySubdomain) {
-    switch (laboratorySubdomain) {
-      case 'sample':
-        return 'sample';
-      case 'result':
-        return 'results';
-      case 'validation':
-        return 'validation';
-      case 'escalation':
-        return 'escalation';
-      case 'analyzer':
-        return 'results';
-      case 'quality':
-        return 'validation';
-    }
-  }
-  switch (domain) {
-    case 'patient':
-      return 'composition';
-    case 'order':
-      return 'order';
-    case 'billing':
-      return 'composition';
-    case 'reporting':
-      return 'composition';
-    case 'system':
-      return 'order';
-    case 'laboratory':
-      return 'results';
-  }
-}
-
 function EventLogSpineNode({ item }: { item: ResolvedEventLogItem }) {
-  const lane = laneForDomain(item.domain, item.laboratorySubdomain);
-  const visual = getLaneVisual(lane);
-
   return (
     <div
       className={cn(
         EVENT_LOG_STYLES.spineDot,
-        item.isSystemActor ? EVENT_LOG_STYLES.spineDotMuted : visual.bar
+        item.isSystemActor ? EVENT_LOG_STYLES.spineDotMuted : EVENT_LOG_STYLES.spineDotDefault
       )}
       aria-hidden
     />

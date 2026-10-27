@@ -1,7 +1,7 @@
 import { Avatar } from '@/components/primitives';
 import { ListCard } from '@/components/surfaces';
 import { RecordId } from '@/features/shared';
-import { renderTableSecondaryRecordId } from '@/utils/presentationRenders';
+import { formatPatientSexAgeLine } from '@/features/patients/utils/patientFormatters';
 import type { CardComponentProps } from '@/components/data-table';
 import { OrderStatusBadge } from './OrderDomainBadges';
 import { StatusValueBadge } from '@/features/shared';
@@ -42,11 +42,7 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
             <Avatar
               primaryText={order.patientName || 'N/A'}
               primaryTextClassName=""
-              secondarySlot="entity"
-              secondaryText={renderTableSecondaryRecordId({
-                type: 'patient',
-                value: order.patientId,
-              })}
+              secondaryText={formatPatientSexAgeLine(order.patientGender, order.patientDob)}
               size="xs"
             />
           )

@@ -2,7 +2,7 @@
 Order and OrderTest Models - All fields use camelCase
 """
 from app.platform.database import Base, contract_enum
-from app.shared.contracts.enums import OrderStatus, PaymentStatus, PriorityLevel, TestStatus
+from app.shared.contracts.enums import Gender, OrderStatus, PaymentStatus, PriorityLevel, TestStatus
 from sqlalchemy import JSON, Boolean, Column, DateTime, Float, ForeignKey, Index, Integer, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -67,6 +67,14 @@ class Order(Base):
     def patientName(self) -> str:
         """Get patient full name from relationship"""
         return self.patient.fullName if self.patient else "Unknown"
+
+    @property
+    def patientDob(self) -> str | None:
+        return self.patient.dateOfBirth if self.patient else None
+
+    @property
+    def patientGender(self) -> Gender | None:
+        return self.patient.gender if self.patient else None
 
     @property
     def referentDoctorName(self) -> str | None:

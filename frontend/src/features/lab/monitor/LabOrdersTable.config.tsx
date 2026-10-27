@@ -27,7 +27,8 @@ import {
   renderTableEmptyCell,
   renderTableTwoLineCell,
 } from '@/utils/tableColumnRenders';
-import { renderTableSecondaryRecordId } from '@/utils/presentationRenders';
+import { renderPatientSexAgeSecondary } from '@/features/patients/utils/patientTableColumnRenders';
+import { formatPatientSexAgeLine } from '@/features/patients/utils/patientFormatters';
 import type { LabOrderTableRow } from './LabOrdersTable';
 import { BADGE } from '@/theme/recipes';
 
@@ -68,7 +69,7 @@ function LabOrderTableCard({ item, onClick }: CardComponentProps<LabOrderTableRo
             {renderTableTwoLineCell(item.testName, item.testCode)}
             {renderPatientNameBlock(
               item.patientName,
-              renderTableSecondaryRecordId({ type: 'patient', value: item.patientId }),
+              renderPatientSexAgeSecondary(item.patientGender, item.patientDob),
             )}
           </div>
         }
@@ -99,11 +100,14 @@ export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> 
     patient: createColumn<LabOrderTableRow>('patient', 'Patient', {
       width: TABLE_COLUMN_WIDTH.supporting,
       sortable: true,
-      accessor: row => row.patientName,
+      accessor: row =>
+        [row.patientName, formatPatientSexAgeLine(row.patientGender, row.patientDob)]
+          .filter(Boolean)
+          .join(' '),
       render: row =>
         renderPatientNameBlock(
           row.patientName,
-          renderTableSecondaryRecordId({ type: 'patient', value: row.patientId }),
+          renderPatientSexAgeSecondary(row.patientGender, row.patientDob),
         ),
     }),
     sampleType: createBadgeColumn<LabOrderTableRow>(
@@ -119,8 +123,13 @@ export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> 
     ),
     referentDoctor: createColumn<LabOrderTableRow>('referentDoctor', 'Referent doctor', {
       width: TABLE_COLUMN_WIDTH.supporting,
-      accessor: row => row.referentDoctorName ?? '',
-      render: row => renderTableTwoLineCell(row.referentDoctorName || '—'),
+      accessor: row =>
+        [row.referentDoctorName, row.referentDoctorHospital].filter(Boolean).join(' ') || '',
+      render: row =>
+        renderTableTwoLineCell(
+          row.referentDoctorName || '—',
+          row.referentDoctorHospital?.trim() || null,
+        ),
     }),
     priority: createBadgeColumn<LabOrderTableRow>(
       'priority',

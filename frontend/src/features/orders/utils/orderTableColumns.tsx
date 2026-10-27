@@ -15,18 +15,20 @@ import {
 } from '../components/OrderDomainBadges';
 import { StatusValueBadge } from '@/features/shared';
 import { ORDER_TABLE_COLUMN_HEADERS } from '../constants/orderTableColumns';
+import { formatPatientSexAgeLine } from '@/features/patients/utils/patientFormatters';
+import type { Gender } from '@/types';
 import {
   renderOrderDateCell,
   renderOrderPatientName,
-  renderOrderPatientNameNavigable,
   renderOrderTestsBlock,
   renderOrderTotalPrice,
 } from './orderTableColumnRenders';
 
 export interface OrderColumnAccessors<T> {
   getOrderId: (item: T) => number | string;
-  getPatientId: (item: T) => number | string;
   getPatientName: (item: T) => string;
+  getPatientGender?: (item: T) => Gender | string | null | undefined;
+  getPatientDob?: (item: T) => string | null | undefined;
   getTests: (item: T) => OrderTest[];
   getTestCount?: (item: T) => number | undefined;
   getTestCodes?: (item: T) => string[] | undefined;
@@ -47,8 +49,6 @@ export interface OrderColumnRenderers<T> {
 export interface OrderSharedColumnOptions {
   testsSortable?: boolean;
   getTestName?: (testCode: string) => string;
-  /** When true, patient names link to filtered order view. */
-  enablePatientNavigation?: boolean;
 }
 
 export type OrderSharedColumnKey =
@@ -66,7 +66,7 @@ export function createOrderSharedColumns<T>(
   renderers: OrderColumnRenderers<T>,
   options: OrderSharedColumnOptions = {}
 ): Record<OrderSharedColumnKey, ColumnConfig<T>> {
-  const { testsSortable = false, getTestName, enablePatientNavigation = true } = options;
+  const { testsSortable = false, getTestName } = options;
 
   const columns: Partial<Record<OrderSharedColumnKey, ColumnConfig<T>>> = {
     orderId: createIdColumn<T>(
@@ -83,11 +83,23 @@ export function createOrderSharedColumns<T>(
       header: ORDER_TABLE_COLUMN_HEADERS.patientName,
       width: TABLE_COLUMN_WIDTH.flex,
       sortable: true,
-      accessor: item => accessors.getPatientName(item),
-      render: item =>
-        enablePatientNavigation
-          ? renderOrderPatientNameNavigable(accessors.getPatientName(item), accessors.getPatientId(item))
-          : renderOrderPatientName(accessors.getPatientName(item), accessors.getPatientId(item)),
+      accessor: item =>
+        [
+          accessors.getPatientName(item),
+          formatPatientSexAgeLine(
+            accessors.getPatientGender?.(item),
+            accessors.getPatientDob?.(item),
+          ),
+        ]
+          .filter(Boolean)
+          .join(' '),
+      render: item => {
+        const demographics = {
+          gender: accessors.getPatientGender?.(item),
+          dateOfBirth: accessors.getPatientDob?.(item),
+        };
+        return renderOrderPatientName(accessors.getPatientName(item), demographics);
+      },
     },
     tests: {
       key: 'tests',

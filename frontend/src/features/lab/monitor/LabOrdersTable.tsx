@@ -9,7 +9,7 @@ import type { DashboardWorklistItem } from '../api/worklists';
 import { useDashboardWorklistToday } from '../api/worklists';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
 import type { LabPipelineStage } from './monitorModel';
-import type { PriorityLevel, TestStatus } from '@/types';
+import type { Gender, PriorityLevel, TestStatus } from '@/types';
 import type { StatusPresentation } from '@/types/labProjection';
 import { cn } from '@/utils';
 import { getOrderTestLineageRowClass } from '@/features/orders';
@@ -23,7 +23,10 @@ export interface LabOrderTableRow {
   testName: string;
   patientName: string;
   patientId: number;
+  patientDob: string;
+  patientGender: Gender;
   referentDoctorName: string | null;
+  referentDoctorHospital: string | null;
   department: string | null;
   sampleType: string;
   priority: PriorityLevel;
@@ -42,7 +45,10 @@ function mapWorkTodayRow(item: DashboardWorklistItem): LabOrderTableRow {
     testName: item.testName,
     patientName: item.patientName,
     patientId: item.patientId,
+    patientDob: item.patientDob,
+    patientGender: item.patientGender,
     referentDoctorName: item.referentDoctorName ?? null,
+    referentDoctorHospital: item.referentDoctorHospital ?? null,
     department: item.testCategory ?? null,
     sampleType: item.sampleType,
     priority: item.priority,
