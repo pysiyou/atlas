@@ -12,7 +12,14 @@ if TYPE_CHECKING:
 from app.domains.billing.schemas import InvoiceResponse
 from app.domains.patients.schemas import PatientResponse
 from app.domains.payments.schemas import PaymentResponse
-from app.shared.contracts.enums import Gender, OrderStatus, PaymentStatus, PriorityLevel, TestStatus
+from app.shared.contracts.enums import (
+    Gender,
+    OrderStatus,
+    PaymentMethod,
+    PaymentStatus,
+    PriorityLevel,
+    TestStatus,
+)
 from app.shared.schemas.status_presentation import StatusPresentation
 from pydantic import BaseModel, Field, field_validator
 
@@ -110,6 +117,14 @@ class OrderUpdate(BaseModel):
     tests: list[OrderTestCreate] | None = None  # Optional list of tests to update (add/remove)
 
 
+class LatestPaymentSnippet(BaseModel):
+    """Most recent payment on an order (list embed)."""
+
+    paymentId: int
+    paymentMethod: PaymentMethod
+    paidAt: datetime
+
+
 class OrderSummaryResponse(BaseModel):
     """Lightweight order projection for lists, dashboards, and aggregates."""
 
@@ -121,6 +136,8 @@ class OrderSummaryResponse(BaseModel):
     orderDate: datetime
     testCount: int = 0
     testCodes: list[str] = Field(default_factory=list)
+    testNames: list[str] = Field(default_factory=list)
+    latestPayment: LatestPaymentSnippet | None = None
     totalPrice: float
     paymentStatus: PaymentStatus
     overallStatus: OrderStatus

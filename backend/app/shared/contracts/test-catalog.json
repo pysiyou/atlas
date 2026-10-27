@@ -474,7 +474,12 @@
           "unit": "",
           "citations": [
             "SRC002"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Normal mature morphology; no blasts, atypical lymphocytes, or parasites"
+            }
+          }
         },
         {
           "item_code": "PARASITES_SEEN",
@@ -491,7 +496,12 @@
           "citations": [
             "SRC007",
             "SRC015"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "None seen"
+            }
+          }
         }
       ],
       "sources": [
@@ -771,7 +781,12 @@
           ],
           "citations": [
             "SRC018"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Patient-specific (A, B, AB, or O)"
+            }
+          }
         },
         {
           "item_code": "RH_STATUS",
@@ -784,7 +799,12 @@
           ],
           "citations": [
             "SRC018"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Patient-specific (RhD positive or negative)"
+            }
+          }
         }
       ],
       "sources": [
@@ -6452,7 +6472,12 @@
           ],
           "citations": [
             "SRC002"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Pale yellow to yellow"
+            }
+          }
         },
         {
           "item_code": "UA_CLARITY",
@@ -6467,7 +6492,12 @@
           ],
           "citations": [
             "SRC002"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Clear"
+            }
+          }
         },
         {
           "item_code": "UA_GRAVITY",
@@ -6516,7 +6546,12 @@
           ],
           "citations": [
             "SRC002"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
         },
         {
           "item_code": "UA_GLUCOSE",
@@ -6532,7 +6567,12 @@
           ],
           "citations": [
             "SRC002"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
         },
         {
           "item_code": "UA_BLOOD",
@@ -6548,7 +6588,12 @@
           ],
           "citations": [
             "SRC002"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
         },
         {
           "item_code": "UA_LEUK",
@@ -6564,7 +6609,12 @@
           ],
           "citations": [
             "SRC002"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
         },
         {
           "item_code": "UA_NITRITE",
@@ -6577,7 +6627,12 @@
           ],
           "citations": [
             "SRC002"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
         },
         {
           "item_code": "UA_WBC",
@@ -6625,7 +6680,12 @@
           ],
           "citations": [
             "SRC002"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "None or rare"
+            }
+          }
         }
       ],
       "sources": [
@@ -6751,7 +6811,12 @@
           ],
           "citations": [
             "SRC002"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative (non-pregnant)"
+            }
+          }
         }
       ],
       "sources": [
@@ -7293,7 +7358,12 @@
           ],
           "citations": [
             "SRC008"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
         }
       ],
       "sources": [
@@ -7422,7 +7492,12 @@
           ],
           "citations": [
             "SRC008"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative (confirmed)"
+            }
+          }
         }
       ],
       "sources": [
@@ -7680,7 +7755,12 @@
           ],
           "citations": [
             "SRC008"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
         }
       ],
       "sources": [
@@ -7805,7 +7885,12 @@
           ],
           "citations": [
             "SRC008"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
         }
       ],
       "sources": [
@@ -7929,7 +8014,12 @@
           ],
           "citations": [
             "SRC008"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative (non-immune); ≥10 mIU/mL positive indicates immunity"
+            }
+          }
         }
       ],
       "sources": [
@@ -8054,7 +8144,12 @@
           ],
           "citations": [
             "SRC008"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
         }
       ],
       "sources": [
@@ -8182,7 +8277,12 @@
           ],
           "citations": [
             "SRC017"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Nonreactive"
+            }
+          }
         }
       ],
       "sources": [
@@ -8308,7 +8408,12 @@
           ],
           "citations": [
             "SRC017"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
         }
       ],
       "sources": [
@@ -8434,7 +8539,12 @@
           ],
           "citations": [
             "SRC021"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
         }
       ],
       "sources": [
@@ -8559,7 +8669,12 @@
           ],
           "citations": [
             "SRC022"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative (no prior exposure); positive indicates past exposure"
+            }
+          }
         },
         {
           "item_code": "TOXO_IGM",
@@ -8572,7 +8687,12 @@
           ],
           "citations": [
             "SRC022"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
         }
       ],
       "sources": [
@@ -8697,7 +8817,12 @@
           ],
           "citations": [
             "SRC023"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative (no prior exposure); positive indicates past exposure"
+            }
+          }
         },
         {
           "item_code": "CMV_IGM",
@@ -8710,7 +8835,12 @@
           ],
           "citations": [
             "SRC023"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
         }
       ],
       "sources": [
@@ -8835,7 +8965,12 @@
           ],
           "citations": [
             "SRC023"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
         },
         {
           "item_code": "EBV_VCA_IGG",
@@ -8848,7 +8983,12 @@
           ],
           "citations": [
             "SRC023"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative (no prior exposure); positive indicates past exposure"
+            }
+          }
         },
         {
           "item_code": "EBV_EBNA",
@@ -8861,7 +9001,12 @@
           ],
           "citations": [
             "SRC023"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Positive indicates remote/past EBV infection"
+            }
+          }
         }
       ],
       "sources": [
@@ -8986,7 +9131,12 @@
           ],
           "citations": [
             "SRC024"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Positive/Immune (≥10 IU/mL or per assay cut-off)"
+            }
+          }
         }
       ],
       "sources": [
@@ -9116,7 +9266,12 @@
           "citations": [
             "SRC007",
             "SRC015"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
         }
       ],
       "sources": [
@@ -9241,7 +9396,12 @@
           "citations": [
             "SRC007",
             "SRC015"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "No malaria parasites seen"
+            }
+          }
         }
       ],
       "sources": [
@@ -9371,7 +9531,12 @@
           ],
           "citations": [
             "SRC014"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
         },
         {
           "item_code": "HB_PHENOTYPE",
@@ -9388,7 +9553,12 @@
           ],
           "citations": [
             "SRC014"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "AA (normal adult hemoglobin pattern)"
+            }
+          }
         }
       ],
       "sources": [
@@ -9523,7 +9693,12 @@
           ],
           "citations": [
             "SRC014"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Normal G6PD activity"
+            }
+          }
         }
       ],
       "sources": [
@@ -9649,7 +9824,12 @@
           "unit": "",
           "citations": [
             "SRC025"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "No ova or parasites seen"
+            }
+          }
         }
       ],
       "sources": [
@@ -9787,7 +9967,12 @@
           "citations": [
             "SRC010",
             "SRC005"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative (no acid-fast bacilli seen)"
+            }
+          }
         }
       ],
       "sources": [
@@ -9924,7 +10109,12 @@
           ],
           "citations": [
             "SRC010"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Not Detected"
+            }
+          }
         }
       ],
       "sources": [
@@ -10053,7 +10243,13 @@
           "decimals_suggested": 0,
           "citations": [
             "SRC002"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "low": 0,
+              "high": 10000
+            }
+          }
         },
         {
           "item_code": "URINE_ORGANISM",
@@ -10062,7 +10258,12 @@
           "unit": "",
           "citations": [
             "SRC002"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "No uropathogen isolated (or consistent with contamination)"
+            }
+          }
         }
       ],
       "microbiology": {
@@ -10214,7 +10415,12 @@
           "unit": "",
           "citations": [
             "SRC002"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "No enteric pathogen isolated"
+            }
+          }
         }
       ],
       "microbiology": {
@@ -10371,7 +10577,12 @@
           ],
           "citations": [
             "SRC002"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "No growth (NO_GROWTH)"
+            }
+          }
         }
       ],
       "microbiology": {
@@ -10528,7 +10739,12 @@
           ],
           "citations": [
             "SRC016"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
         }
       ],
       "sources": [
@@ -10655,7 +10871,12 @@
           ],
           "citations": [
             "SRC016"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
         }
       ],
       "sources": [
@@ -10780,7 +11001,12 @@
           ],
           "citations": [
             "SRC019"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
         },
         {
           "item_code": "DENGUE_IGG",
@@ -10793,7 +11019,12 @@
           ],
           "citations": [
             "SRC019"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative (no prior exposure); positive may indicate past infection"
+            }
+          }
         }
       ],
       "sources": [
@@ -10918,7 +11149,12 @@
           ],
           "citations": [
             "SRC019"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
         }
       ],
       "sources": [
@@ -11048,7 +11284,12 @@
           ],
           "citations": [
             "SRC018"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Compatible"
+            }
+          }
         }
       ],
       "sources": [
@@ -11708,7 +11949,12 @@
           "unit": "",
           "citations": [
             "SRC014"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Hb A predominant; no pathologic variant peaks"
+            }
+          }
         }
       ],
       "sources": [
@@ -11833,7 +12079,12 @@
           "unit": "",
           "citations": [
             "SRC002"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Albumin predominant; no monoclonal spike"
+            }
+          }
         }
       ],
       "sources": [
@@ -11959,7 +12210,13 @@
           "decimals_suggested": 0,
           "citations": [
             "SRC002"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "low": 0,
+              "high": 10000
+            }
+          }
         }
       ],
       "sources": [
@@ -12092,7 +12349,12 @@
           ],
           "citations": [
             "SRC019"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
         },
         {
           "item_code": "YF_IGG",
@@ -12105,7 +12367,12 @@
           ],
           "citations": [
             "SRC019"
-          ]
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative (no prior exposure/vaccination); positive after vaccination or infection"
+            }
+          }
         }
       ],
       "sources": [

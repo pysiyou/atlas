@@ -17,6 +17,7 @@ from app.domains.lab.rules.order_test_lab_loader import (
 )
 from app.domains.orders.models import Order, OrderTest
 from app.domains.orders.schemas import (
+    LatestPaymentSnippet,
     OrderCreate,
     OrderDetailResponse,
     OrderReportResponse,
@@ -24,12 +25,12 @@ from app.domains.orders.schemas import (
     OrderSummaryResponse,
     OrderUpdate,
 )
+from app.domains.orders.search import order_search_filter
 from app.domains.patients.models import Patient
-from app.domains.referent_doctors.service import ReferentDoctorService
 from app.domains.patients.schemas import PatientResponse
 from app.domains.payments.schemas import PaymentCreate, PaymentResponse
 from app.domains.payments.service import PaymentService, enrich_payment
-from app.domains.orders.search import order_search_filter
+from app.domains.referent_doctors.service import ReferentDoctorService
 from app.platform.cache import invalidate_lab_board_summary_cache
 from app.platform.utils.common import get_or_404
 from app.shared.contracts.enums import (
@@ -156,6 +157,34 @@ _INACTIVE_TEST_STATUSES = (
 )
 
 
+def _catalog_test_names_by_code(db, codes: list[str]) -> dict[str, str]:
+    if not codes:
+        return {}
+    unique = list(dict.fromkeys(codes))
+    rows = db.query(CatalogTest.code, CatalogTest.name).filter(CatalogTest.code.in_(unique)).all()
+    return {code: name for code, name in rows}
+
+
+def _test_names_for_codes(codes: list[str], names_by_code: dict[str, str]) -> list[str]:
+    return [names_by_code.get(code, code) for code in codes]
+
+
+def _latest_payments_by_order_id(db, order_ids: list[int]) -> dict[int, Payment]:
+    if not order_ids:
+        return {}
+    payments = (
+        db.query(Payment)
+        .filter(Payment.orderId.in_(order_ids))
+        .order_by(Payment.orderId, Payment.paidAt.desc())
+        .all()
+    )
+    latest: dict[int, Payment] = {}
+    for payment in payments:
+        if payment.orderId not in latest:
+            latest[payment.orderId] = payment
+    return latest
+
+
 def _active_test_codes_by_order_id(db, order_ids: list[int]) -> dict[int, list[str]]:
     if not order_ids:
         return {}
@@ -172,11 +201,18 @@ def _active_test_codes_by_order_id(db, order_ids: list[int]) -> dict[int, list[s
     return codes_by_order
 
 
-def _order_to_summary(order: Order, test_count: int, test_codes: list[str] | None = None) -> dict:
+def _order_to_summary(
+    order: Order,
+    test_count: int,
+    test_codes: list[str] | None = None,
+    test_names: list[str] | None = None,
+    latest_payment: LatestPaymentSnippet | None = None,
+) -> dict:
     from app.domains.lab.rules.status_presentation import resolve_order_presentation
 
     patient = order.patient
     patient_name = patient.fullName if patient else "Unknown"
+    codes = test_codes or []
     return OrderSummaryResponse(
         orderId=order.orderId,
         patientId=order.patientId,
@@ -185,7 +221,9 @@ def _order_to_summary(order: Order, test_count: int, test_codes: list[str] | Non
         patientGender=patient.gender if patient else None,
         orderDate=order.orderDate,
         testCount=test_count,
-        testCodes=test_codes or [],
+        testCodes=codes,
+        testNames=test_names if test_names is not None else [],
+        latestPayment=latest_payment,
         totalPrice=float(order.totalPrice or 0),
         paymentStatus=order.paymentStatus,
         overallStatus=order.overallStatus,
@@ -281,7 +319,10 @@ class OrderService:
         search: str | None = None,
         date_from: date | None = None,
         date_to: date | None = None,
+        include: str | None = None,
     ):
+        includes = _parse_include(include)
+        include_latest_payment = "latestpayment" in includes
         query = self.db.query(Order)
         if search:
             query = query.outerjoin(Patient, Order.patientId == Patient.id)
@@ -337,6 +378,8 @@ class OrderService:
                 order_ids = [order.orderId for order in orders]
                 test_counts: dict[int, int] = {}
                 test_codes_by_order: dict[int, list[str]] = {}
+                names_by_code: dict[str, str] = {}
+                latest_payments: dict[int, Payment] = {}
                 if order_ids:
                     rows = (
                         self.db.query(OrderTest.orderId, func.count(OrderTest.id))
@@ -347,14 +390,42 @@ class OrderService:
                     )
                     test_counts = {order_id: count for order_id, count in rows}
                     test_codes_by_order = _active_test_codes_by_order_id(self.db, order_ids)
-                serialized = [
-                    _order_to_summary(
-                        order,
-                        test_counts.get(order.orderId, 0),
-                        test_codes_by_order.get(order.orderId, []),
+                    all_codes = list(
+                        dict.fromkeys(
+                            code
+                            for codes in test_codes_by_order.values()
+                            for code in codes
+                        )
                     )
-                    for order in orders
-                ]
+                    names_by_code = _catalog_test_names_by_code(self.db, all_codes)
+                    latest_payments = (
+                        _latest_payments_by_order_id(self.db, order_ids)
+                        if include_latest_payment
+                        else {}
+                    )
+                serialized = []
+                for order in orders:
+                    codes = test_codes_by_order.get(order.orderId, [])
+                    names = _test_names_for_codes(codes, names_by_code)
+                    payment_row = latest_payments.get(order.orderId)
+                    latest_snippet = (
+                        LatestPaymentSnippet(
+                            paymentId=payment_row.paymentId,
+                            paymentMethod=payment_row.paymentMethod,
+                            paidAt=payment_row.paidAt,
+                        )
+                        if payment_row
+                        else None
+                    )
+                    serialized.append(
+                        _order_to_summary(
+                            order,
+                            test_counts.get(order.orderId, 0),
+                            codes,
+                            names,
+                            latest_snippet,
+                        )
+                    )
             else:
                 blocked = recollection_blocked_order_test_ids(self.db)
                 projections_by_order = lab_projections_for_orders(

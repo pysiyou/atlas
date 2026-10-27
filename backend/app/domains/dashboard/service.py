@@ -4,7 +4,12 @@ from datetime import UTC, datetime
 from app.domains.billing.models import Payment
 from app.domains.dashboard.schemas import DashboardSummaryResponse
 from app.domains.orders.models import Order, OrderTest
-from app.domains.orders.service import _order_to_summary
+from app.domains.orders.service import (
+    _active_test_codes_by_order_id,
+    _catalog_test_names_by_code,
+    _order_to_summary,
+    _test_names_for_codes,
+)
 from app.domains.patients.models import Patient
 from app.shared.contracts.enums import OrderStatus
 from sqlalchemy import func
@@ -67,9 +72,22 @@ class DashboardService:
             )
             test_counts = {order_id: count for order_id, count in rows}
 
-        recent_orders = [
-            _order_to_summary(order, test_counts.get(order.orderId, 0)) for order in recent
-        ]
+        test_codes_by_order = _active_test_codes_by_order_id(self.db, recent_ids)
+        all_codes = list(
+            dict.fromkeys(code for codes in test_codes_by_order.values() for code in codes)
+        )
+        names_by_code = _catalog_test_names_by_code(self.db, all_codes)
+        recent_orders = []
+        for order in recent:
+            codes = test_codes_by_order.get(order.orderId, [])
+            recent_orders.append(
+                _order_to_summary(
+                    order,
+                    test_counts.get(order.orderId, 0),
+                    codes,
+                    _test_names_for_codes(codes, names_by_code),
+                )
+            )
 
         return DashboardSummaryResponse(
             totalPatients=total_patients,

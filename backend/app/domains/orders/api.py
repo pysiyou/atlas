@@ -49,6 +49,9 @@ def get_orders(
     sort: Literal["createdAt", "updatedAt"] = Query("updatedAt"),
     paginated: bool = Query(True, description="Return a page envelope with total count"),
     summary: bool = Query(True, description="Return lightweight order rows without nested tests"),
+    include: str | None = Query(
+        None, description="Comma-separated embeds for list rows, e.g. latestPayment"
+    ),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -66,6 +69,7 @@ def get_orders(
         search=search,
         date_from=dateFrom,
         date_to=dateTo,
+        include=include,
     )
 
 

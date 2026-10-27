@@ -1,8 +1,11 @@
 """Dev database bootstrap: drop/create tables and seed reference data. No migrations."""
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
+
+import app.domains.registry  # noqa: F401 — register all ORM models before queries / create_all
 
 from app.domains.catalog.models.affiliation_pricing import AffiliationPricing
 from app.domains.catalog.models.catalog_test import CatalogTest
@@ -211,6 +214,22 @@ def seed_tests(db) -> None:
     print(f"  processed {created} tests")
 
 
+def reseed_catalog() -> None:
+    """Reload test catalog JSON into Postgres without dropping other tables."""
+    from app.platform.cache import invalidate_tests_cache
+
+    db = SessionLocal()
+    try:
+        seed_tests(db)
+    except Exception:
+        db.rollback()
+        raise
+    finally:
+        db.close()
+    invalidate_tests_cache()
+    print("Catalog re-seeded (cache invalidated).")
+
+
 def init_db() -> None:
     print("Initializing database...")
     Base.metadata.drop_all(bind=engine)
@@ -233,4 +252,14 @@ def init_db() -> None:
 
 
 if __name__ == "__main__":
-    init_db()
+    parser = argparse.ArgumentParser(description="Atlas database bootstrap utilities")
+    parser.add_argument(
+        "--catalog-only",
+        action="store_true",
+        help="Upsert tests from test-catalog.json only (keeps patients, orders, users, etc.)",
+    )
+    args = parser.parse_args()
+    if args.catalog_only:
+        reseed_catalog()
+    else:
+        init_db()
