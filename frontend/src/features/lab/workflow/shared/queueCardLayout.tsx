@@ -11,12 +11,16 @@ import { LabHeaderCompactContext } from '../../components/LabWorkflowHeader';
 import type { LabAuditLine } from '../../constants/labWorkflowAuditLines';
 import { LabWorkflowLeftColumn } from '../../components/LabWorkflowLeftColumn';
 import type { LabIdentityContext } from '../../components/LabIdentityRow';
-import { text, WORKLIST_CARD_SURFACE,
+import {
+  text,
+  WORKLIST_CARD_SURFACE,
   CARD_ACTIONS_ROW,
   CARD_HEADER_GRID,
   WORKLIST_CARD_LIST_ITEM,
   WORKLIST_CARD_SPACING,
-  MOBILE_LIST_CARD, } from '@/theme/recipes';
+  MOBILE_LIST_CARD,
+  INTERACTIVE,
+} from '@/theme/recipes';
 
 export interface QueueCardHeaderProps {
   context?: LabIdentityContext;
@@ -66,7 +70,7 @@ export function QueueCardHeader({
       ) : null}
       {showHeaderActions ? (
         <div
-          className={CARD_HEADER_GRID.actionColumn}
+          className={cn(CARD_HEADER_GRID.actionColumn, INTERACTIVE.actionIsland)}
           onClick={e => e.stopPropagation()}
         >
           {headerActions}
@@ -159,7 +163,10 @@ export function QueueCard({
           {recollectionBanner}
 
           {footerActions ? (
-            <div className={CARD_ACTIONS_ROW.actions} onClick={e => e.stopPropagation()}>
+            <div
+              className={cn(CARD_ACTIONS_ROW.actions, INTERACTIVE.actionIsland)}
+              onClick={e => e.stopPropagation()}
+            >
               {footerActions}
             </div>
           ) : null}
@@ -213,7 +220,7 @@ export function QueueCardMobile({
       {children}
       {footerActions ? (
         <div
-          className={cn(CARD_ACTIONS_ROW.actions, 'mt-auto')}
+          className={cn(CARD_ACTIONS_ROW.actions, 'mt-auto', INTERACTIVE.actionIsland)}
           onClick={e => e.stopPropagation()}
         >
           {footerActions}

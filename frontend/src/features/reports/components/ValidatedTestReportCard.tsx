@@ -15,6 +15,7 @@ import {
   renderCardDateTimeSecondary,
   useReportableOrderPresentation,
 } from '@/utils/presentation';
+import { cn } from '@/utils';
 import { renderTruncatedListPreview } from '@/utils/truncatedListPreviewRender';
 
 interface ValidatedTestReportCardProps extends CardComponentProps<ReportableOrder> {

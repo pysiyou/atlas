@@ -15,6 +15,8 @@ import { PaymentCard } from '../components/PaymentCard';
 import type { OrderPaymentView } from '../types';
 import { PAYMENT_LIST_WIDTH_OVERRIDES } from '@/features/orders/constants/orderTableWidthOverrides';
 import { TABLE_COLUMN_WIDTH } from '@/components/data-table';
+import { INTERACTIVE } from '@/theme/recipes';
+import { cn } from '@/utils';
 
 function getPaymentSortDate(item: OrderPaymentView): string {
   return item.paymentDate ?? item.order.orderDate;
@@ -82,7 +84,10 @@ export const createPaymentTableConfig = (
       header: 'Action',
       width: TABLE_COLUMN_WIDTH.action,
       render: (item: OrderPaymentView) => (
-        <div className="flex items-center justify-start font-normal" onClick={e => e.stopPropagation()}>
+        <div
+          className={cn('flex items-center justify-start font-normal', INTERACTIVE.actionIsland)}
+          onClick={e => e.stopPropagation()}
+        >
           <PaymentButton order={item.order} onPaymentSuccess={onPaymentSuccess} />
         </div>
       ),

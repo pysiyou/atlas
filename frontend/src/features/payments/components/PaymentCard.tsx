@@ -12,7 +12,7 @@ import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
 import type { OrderPaymentView } from '../types';
 import { PaymentButton } from './PaymentButton';
 import { useInvalidatePayments } from '../api/payments';
-import { PRICE_DISPLAY } from '@/theme/recipes';
+import { INTERACTIVE, PRICE_DISPLAY } from '@/theme/recipes';
 
 
 /**
@@ -76,7 +76,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
           {item.paymentMethod && order.paymentStatus !== 'unpaid' ? (
             <StatusValueBadge value={item.paymentMethod} size="xs" />
           ) : order.paymentStatus === 'unpaid' ? (
-            <div onClick={e => e.stopPropagation()}>
+            <div className={INTERACTIVE.actionIsland} onClick={e => e.stopPropagation()}>
               <PaymentButton order={order} size="sm" onPaymentSuccess={handlePaymentSuccess} />
             </div>
           ) : null}

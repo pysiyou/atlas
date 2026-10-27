@@ -40,13 +40,12 @@ export const Card: React.FC<CardProps> = ({
   hover = false,
   onClick,
 }) => {
-  const isInteractive = Boolean(onClick) || hover;
-
   const classes = cn(
     cardSurfaceClass,
     PADDING_CLASSES[padding],
     BOX_VARIANT_CLASSES[variant],
-    isInteractive && 'cursor-pointer',
+    hover && BOX_VARIANT_CLASSES.interactive,
+    onClick != null && 'cursor-pointer',
     className,
   );
 
