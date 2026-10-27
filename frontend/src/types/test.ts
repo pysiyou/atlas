@@ -207,7 +207,12 @@ export interface TestWithContext {
   enteredBy?: string;
   resultValidatedAt?: string;
   validatedBy?: string;
-  referentDoctor?: string;
+  referentDoctorId?: number | null;
+  referentDoctorName?: string | null;
+  referentDoctorEmail?: string | null;
+  referentDoctorPhone?: string | null;
+  referentDoctorHospital?: string | null;
+  referentDoctorUsername?: string | null;
   patient?: Patient; // Full patient object if needed
   results?: Record<string, TestResult>;
   flags?: string[];

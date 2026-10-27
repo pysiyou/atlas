@@ -34,7 +34,13 @@ class Order(Base):
     specialInstructions = Column("special_instructions", JSON, nullable=True)  # Array of strings
     patientPrepInstructions = Column("patient_prep_instructions", String, nullable=True)
     clinicalNotes = Column("clinical_notes", String, nullable=True)
-    referentDoctor = Column("referent_doctor", String, nullable=True)
+    referentDoctorId = Column(
+        "referent_doctor_id",
+        Integer,
+        ForeignKey("referent_doctors.referent_doctor_id"),
+        nullable=True,
+        index=True,
+    )
     priority = Column(contract_enum(PriorityLevel), nullable=False, default=PriorityLevel.LOW)
 
     # Metadata
@@ -46,6 +52,7 @@ class Order(Base):
 
     # Relationships
     patient = relationship("Patient", foreign_keys=[patientId])
+    referentDoctor = relationship("ReferentDoctor", back_populates="orders")
     tests = relationship("OrderTest", back_populates="order", cascade="all, delete-orphan")
     payments = relationship("Payment", back_populates="order", lazy="select")
 
@@ -60,6 +67,28 @@ class Order(Base):
     def patientName(self) -> str:
         """Get patient full name from relationship"""
         return self.patient.fullName if self.patient else "Unknown"
+
+    @property
+    def referentDoctorName(self) -> str | None:
+        if self.referentDoctor:
+            return self.referentDoctor.fullName
+        return None
+
+    @property
+    def referentDoctorEmail(self) -> str | None:
+        return self.referentDoctor.email if self.referentDoctor else None
+
+    @property
+    def referentDoctorPhone(self) -> str | None:
+        return self.referentDoctor.phone if self.referentDoctor else None
+
+    @property
+    def referentDoctorHospital(self) -> str | None:
+        return self.referentDoctor.hospitalName if self.referentDoctor else None
+
+    @property
+    def referentDoctorUsername(self) -> str | None:
+        return self.referentDoctor.username if self.referentDoctor else None
 
 
 class OrderTest(Base):

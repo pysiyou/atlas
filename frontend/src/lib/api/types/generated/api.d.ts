@@ -359,6 +359,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/referent-doctors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Referent Doctors */
+        get: operations["list_referent_doctors_api_v1_referent_doctors_get"];
+        put?: never;
+        /** Create Referent Doctor */
+        post: operations["create_referent_doctor_api_v1_referent_doctors_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/users/lookup": {
         parameters: {
             query?: never;
@@ -1492,8 +1510,18 @@ export interface components {
             collectedBy?: string | null;
             /** Collectedvolume */
             collectedVolume?: number | null;
-            /** Referentdoctor */
-            referentDoctor?: string | null;
+            /** Referentdoctorid */
+            referentDoctorId?: number | null;
+            /** Referentdoctorname */
+            referentDoctorName?: string | null;
+            /** Referentdoctoremail */
+            referentDoctorEmail?: string | null;
+            /** Referentdoctorphone */
+            referentDoctorPhone?: string | null;
+            /** Referentdoctorhospital */
+            referentDoctorHospital?: string | null;
+            /** Referentdoctorusername */
+            referentDoctorUsername?: string | null;
             /** Testname */
             testName?: string | null;
             /** Testcategory */
@@ -1973,8 +2001,8 @@ export interface components {
             tests: components["schemas"]["OrderTestCreate"][];
             /** @default low */
             priority: components["schemas"]["PriorityLevel"];
-            /** Referentdoctor */
-            referentDoctor?: string | null;
+            /** Referentdoctorid */
+            referentDoctorId?: number | null;
             /** Clinicalnotes */
             clinicalNotes?: string | null;
             /** Specialinstructions */
@@ -2006,8 +2034,18 @@ export interface components {
             overallStatus: components["schemas"]["OrderStatus"];
             statusPresentation?: components["schemas"]["StatusPresentation"] | null;
             priority: components["schemas"]["PriorityLevel"];
-            /** Referentdoctor */
-            referentDoctor?: string | null;
+            /** Referentdoctorid */
+            referentDoctorId?: number | null;
+            /** Referentdoctorname */
+            referentDoctorName?: string | null;
+            /** Referentdoctoremail */
+            referentDoctorEmail?: string | null;
+            /** Referentdoctorphone */
+            referentDoctorPhone?: string | null;
+            /** Referentdoctorhospital */
+            referentDoctorHospital?: string | null;
+            /** Referentdoctorusername */
+            referentDoctorUsername?: string | null;
             /** Clinicalnotes */
             clinicalNotes?: string | null;
             /** Specialinstructions */
@@ -2075,8 +2113,18 @@ export interface components {
             overallStatus: components["schemas"]["OrderStatus"];
             statusPresentation?: components["schemas"]["StatusPresentation"] | null;
             priority: components["schemas"]["PriorityLevel"];
-            /** Referentdoctor */
-            referentDoctor?: string | null;
+            /** Referentdoctorid */
+            referentDoctorId?: number | null;
+            /** Referentdoctorname */
+            referentDoctorName?: string | null;
+            /** Referentdoctoremail */
+            referentDoctorEmail?: string | null;
+            /** Referentdoctorphone */
+            referentDoctorPhone?: string | null;
+            /** Referentdoctorhospital */
+            referentDoctorHospital?: string | null;
+            /** Referentdoctorusername */
+            referentDoctorUsername?: string | null;
             /** Clinicalnotes */
             clinicalNotes?: string | null;
             /** Specialinstructions */
@@ -2130,8 +2178,18 @@ export interface components {
             overallStatus: components["schemas"]["OrderStatus"];
             statusPresentation?: components["schemas"]["StatusPresentation"] | null;
             priority: components["schemas"]["PriorityLevel"];
-            /** Referentdoctor */
-            referentDoctor?: string | null;
+            /** Referentdoctorid */
+            referentDoctorId?: number | null;
+            /** Referentdoctorname */
+            referentDoctorName?: string | null;
+            /** Referentdoctoremail */
+            referentDoctorEmail?: string | null;
+            /** Referentdoctorphone */
+            referentDoctorPhone?: string | null;
+            /** Referentdoctorhospital */
+            referentDoctorHospital?: string | null;
+            /** Referentdoctorusername */
+            referentDoctorUsername?: string | null;
             /** Clinicalnotes */
             clinicalNotes?: string | null;
             /** Specialinstructions */
@@ -2234,8 +2292,8 @@ export interface components {
         /** OrderUpdate */
         OrderUpdate: {
             priority?: components["schemas"]["PriorityLevel"] | null;
-            /** Referentdoctor */
-            referentDoctor?: string | null;
+            /** Referentdoctorid */
+            referentDoctorId?: number | null;
             /** Clinicalnotes */
             clinicalNotes?: string | null;
             /** Specialinstructions */
@@ -2578,8 +2636,18 @@ export interface components {
             retestNumber: number;
             /** Priority */
             priority: string;
-            /** Referentdoctor */
-            referentDoctor?: string | null;
+            /** Referentdoctorid */
+            referentDoctorId?: number | null;
+            /** Referentdoctorname */
+            referentDoctorName?: string | null;
+            /** Referentdoctoremail */
+            referentDoctorEmail?: string | null;
+            /** Referentdoctorphone */
+            referentDoctorPhone?: string | null;
+            /** Referentdoctorhospital */
+            referentDoctorHospital?: string | null;
+            /** Referentdoctorusername */
+            referentDoctorUsername?: string | null;
             /** Collectedat */
             collectedAt?: string | null;
             /** Collectedby */
@@ -2885,6 +2953,46 @@ export interface components {
         RecollectionReviewRequest: {
             /** Reviewnotes */
             reviewNotes?: string | null;
+        };
+        /** ReferentDoctorCreate */
+        ReferentDoctorCreate: {
+            /** Fullname */
+            fullName: string;
+            /** Username */
+            username?: string | null;
+            /** Email */
+            email?: string | null;
+            /** Phone */
+            phone?: string | null;
+            /** Hospitalname */
+            hospitalName?: string | null;
+        };
+        /** ReferentDoctorResponse */
+        ReferentDoctorResponse: {
+            /** Referentdoctorid */
+            referentDoctorId: number;
+            /** Fullname */
+            fullName: string;
+            /** Username */
+            username?: string | null;
+            /** Email */
+            email?: string | null;
+            /** Phone */
+            phone?: string | null;
+            /** Hospitalname */
+            hospitalName?: string | null;
+            /** Isactive */
+            isActive: boolean;
+            /**
+             * Createdat
+             * Format: date-time
+             */
+            createdAt: string;
+            /**
+             * Updatedat
+             * Format: date-time
+             */
+            updatedAt: string;
         };
         /**
          * RefreshRequest
@@ -4325,6 +4433,71 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["OrderReportResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_referent_doctors_api_v1_referent_doctors_get: {
+        parameters: {
+            query?: {
+                q?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReferentDoctorResponse"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_referent_doctor_api_v1_referent_doctors_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReferentDoctorCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReferentDoctorResponse"];
                 };
             };
             /** @description Validation Error */

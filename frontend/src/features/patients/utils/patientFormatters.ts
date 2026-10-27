@@ -6,6 +6,7 @@
 import type { Patient, Order, Relationship } from '@/types';
 import { RELATIONSHIP_CONFIG, RELATIONSHIP_VALUES } from '@/types';
 import { formatArrayWithFallback } from '@/utils/array';
+import { calculateAge, formatPhoneNumber } from '@/utils';
 import { formatDetailDate as formatDetailDateUtil, formatOrderDate } from '@/utils/date';
 import { INACTIVE_REPORTABLE_TEST_STATUSES } from '@/features/orders/constants/reportableTestStatus';
 
@@ -17,6 +18,22 @@ export const formatPatientDetailDate = (
     return formatDetailDateUtil(date);
   }
   return formatOrderDate(date, 'short');
+};
+
+/** Birthday line with age, e.g. "January 1, 1990 (42 years old)". */
+export const formatBirthdayWithAge = (
+  dateOfBirth: string | Date | undefined | null,
+  dateFormat: 'long' | 'short' = 'long'
+): string => {
+  if (!dateOfBirth) {
+    return 'N/A';
+  }
+  const formatted = formatPatientDetailDate(dateOfBirth, dateFormat);
+  const age = calculateAge(dateOfBirth);
+  if (age == null || !Number.isFinite(age)) {
+    return formatted;
+  }
+  return `${formatted} (${age} years old)`;
 };
 
 /**
@@ -121,6 +138,33 @@ export function formatRelationship(relationship: string | null | undefined): str
     return RELATIONSHIP_CONFIG[relationship as Relationship].label;
   }
   return relationship;
+}
+
+/** Emergency contact on one line: Name (relationship, phone[, email]). */
+export function formatEmergencyContactDisplay(
+  contact: Patient['emergencyContact'] | null | undefined
+): string {
+  const name = contact?.fullName?.trim();
+  if (!name) return 'N/A';
+
+  const detailParts: string[] = [];
+  const relationship = formatRelationship(contact?.relationship);
+  if (relationship !== 'N/A') {
+    detailParts.push(relationship);
+  }
+  const phone = contact?.phone?.trim();
+  if (phone) {
+    detailParts.push(formatPhoneNumber(phone));
+  }
+  const email = contact?.email?.trim();
+  if (email) {
+    detailParts.push(email);
+  }
+
+  if (detailParts.length === 0) {
+    return name;
+  }
+  return `${name} (${detailParts.join(', ')})`;
 }
 
 /**

@@ -119,8 +119,8 @@ export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> 
     ),
     referentDoctor: createColumn<LabOrderTableRow>('referentDoctor', 'Referent doctor', {
       width: TABLE_COLUMN_WIDTH.supporting,
-      accessor: row => row.referentDoctor ?? '',
-      render: row => renderTableTwoLineCell(row.referentDoctor || '—'),
+      accessor: row => row.referentDoctorName ?? '',
+      render: row => renderTableTwoLineCell(row.referentDoctorName || '—'),
     }),
     priority: createBadgeColumn<LabOrderTableRow>(
       'priority',

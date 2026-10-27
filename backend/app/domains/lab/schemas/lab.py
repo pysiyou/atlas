@@ -109,7 +109,12 @@ class PendingEscalationItemResponse(BaseModel):
     retestOfTestId: int | None = None
     retestNumber: int = 0
     priority: str
-    referentDoctor: str | None = None
+    referentDoctorId: int | None = None
+    referentDoctorName: str | None = None
+    referentDoctorEmail: str | None = None
+    referentDoctorPhone: str | None = None
+    referentDoctorHospital: str | None = None
+    referentDoctorUsername: str | None = None
     collectedAt: datetime | None = None
     collectedBy: str | None = None
     sampleIsRecollection: bool = False

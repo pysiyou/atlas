@@ -28,6 +28,7 @@ from app.domains.lab.rules.work_item_projection import (
     projection_to_worklist_fields,
 )
 from app.domains.orders.models import Order, OrderTest
+from app.domains.referent_doctors.display import referent_doctor_projection
 from app.domains.patients.models import Patient
 from app.platform.cache import CacheKeys, cache_get, cache_set
 from app.platform.utils.common import parse_display_id_from_search
@@ -329,7 +330,7 @@ class LabWorklistService:
                     "paymentStatus": order.paymentStatus,
                     "orderDate": order.orderDate,
                     "testCodes": codes,
-                    "referentDoctor": order.referentDoctor,
+                    **referent_doctor_projection(order),
                     "testName": test_name,
                     "testCategory": test_category,
                     "isRecollection": bool(sample.isRecollection),
@@ -421,7 +422,7 @@ class LabWorklistService:
             "paymentStatus": order.paymentStatus,
             "orderDate": order.orderDate,
             "testCodes": codes,
-            "referentDoctor": order.referentDoctor,
+            **referent_doctor_projection(order),
             "testName": test_name,
             "testCategory": test_category,
             "isRecollection": bool(sample.isRecollection),
@@ -525,7 +526,7 @@ class LabWorklistService:
                     "attentionReason": "recollection_approval",
                     "attentionLabel": attention_label,
                     "waitingHours": round(hours, 2),
-                    "referentDoctor": order.referentDoctor,
+                    **referent_doctor_projection(order),
                     "testCategory": test.category,
                     "sampleType": order_test.sampleType or "",
                     "recollectionRequestId": request.id,
@@ -613,7 +614,7 @@ class LabWorklistService:
                     "isRetest": bool(ot.isRetest),
                     "retestOfTestId": ot.retestOfTestId,
                     "retestNumber": ot.retestNumber or 0,
-                    "referentDoctor": order.referentDoctor,
+                    **referent_doctor_projection(order),
                     "testCategory": test.category,
                     **work_item_fields,
                     "queueAgeBand": None,
@@ -699,7 +700,7 @@ class LabWorklistService:
                     "results": ot.results,
                     "flags": ot.flags,
                     "enteredBy": ot.enteredBy,
-                    "referentDoctor": order.referentDoctor,
+                    **referent_doctor_projection(order),
                     "isRetest": bool(ot.isRetest),
                     "retestOfTestId": ot.retestOfTestId,
                     "retestNumber": ot.retestNumber or 0,
@@ -827,7 +828,7 @@ class LabWorklistService:
                     "stage": self._dashboard_stage(order_test),
                     "activityAt": updated_at,
                     "orderDate": order.orderDate,
-                    "referentDoctor": order.referentDoctor,
+                    **referent_doctor_projection(order),
                     "testCategory": test.category,
                     **work_item_fields,
                     "_sort_updated": updated_at,

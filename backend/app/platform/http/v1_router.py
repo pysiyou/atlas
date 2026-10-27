@@ -9,6 +9,7 @@ from app.domains.lab.api.router import router as lab_router
 from app.domains.orders.api import router as orders_router
 from app.domains.patients.api import router as patients_router
 from app.domains.payments.api import router as payments_router
+from app.domains.referent_doctors.api import router as referent_doctors_router
 from app.domains.reports.api import router as reports_router
 from app.domains.users.api import router as users_router
 from fastapi import APIRouter
@@ -21,6 +22,7 @@ def build_v1_router() -> APIRouter:
     root.include_router(patients_router, tags=["patients"])
     root.include_router(tests_router, tags=["tests"])
     root.include_router(orders_router, tags=["orders"])
+    root.include_router(referent_doctors_router, tags=["referent-doctors"])
     root.include_router(users_router, tags=["users"])
     root.include_router(payments_router, tags=["payments"])
     root.include_router(affiliations_router, tags=["affiliations"])

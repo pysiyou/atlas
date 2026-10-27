@@ -21,6 +21,7 @@ from sqlalchemy.orm import Session, joinedload, selectinload
 def _order_load_options():
     return (
         joinedload(Order.patient),
+        joinedload(Order.referentDoctor),
         selectinload(Order.tests).joinedload(OrderTest.test),
     )
 

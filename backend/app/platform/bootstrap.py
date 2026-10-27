@@ -6,6 +6,7 @@ from pathlib import Path
 
 from app.domains.catalog.models.affiliation_pricing import AffiliationPricing
 from app.domains.catalog.models.catalog_test import CatalogTest
+from app.domains.referent_doctors.models import ReferentDoctor
 from app.domains.users.models import User
 from app.platform.database import Base, SessionLocal, engine
 from app.platform.security import get_password_hash
@@ -13,6 +14,44 @@ from app.platform.utils.common import infer_criterion_domain
 from app.shared.contracts.enums import AffiliationDuration, UserRole
 
 CATALOG_PATH = Path(__file__).resolve().parents[1] / "shared" / "contracts" / "test-catalog.json"
+
+SEED_REFERENT_DOCTORS = (
+    {
+        "fullName": "Dr. Jaures Nolack",
+        "username": "j.nolack",
+        "email": "j.nolack@central-hospital.local",
+        "phone": "+237670000001",
+        "hospitalName": "Central Hospital Yaoundé",
+    },
+    {
+        "fullName": "Prof. Aminata Diallo",
+        "username": "a.diallo",
+        "email": "a.diallo@university-clinic.local",
+        "phone": "+237670000002",
+        "hospitalName": "University Teaching Hospital",
+    },
+    {
+        "fullName": "Dr. Chikezie Okafor",
+        "username": "c.okafor",
+        "email": "c.okafor@riverside-med.local",
+        "phone": "+237670000003",
+        "hospitalName": "Riverside Medical Center",
+    },
+    {
+        "fullName": "Pharm. Kwame Mensah",
+        "username": "k.mensah",
+        "email": "k.mensah@community-pharm.local",
+        "phone": "+237670000004",
+        "hospitalName": "Community Pharmacy Douala",
+    },
+    {
+        "fullName": "Dr. Sandrine Mba",
+        "username": "s.mba",
+        "email": "s.mba@st-marys.local",
+        "phone": "+237670000005",
+        "hospitalName": "St. Mary's Clinic",
+    },
+)
 
 SEED_USERS = [
     {
@@ -59,6 +98,33 @@ def _normalize_rejection_criteria(raw_items: list) -> list[dict]:
             reason = str(item).strip()
             normalized.append({"reason": reason, "domain": infer_criterion_domain(reason)})
     return normalized
+
+
+def seed_referent_doctors(db) -> None:
+    print("Seeding referent doctors...")
+    created = 0
+    for entry in SEED_REFERENT_DOCTORS:
+        full_name = entry["fullName"]
+        existing = (
+            db.query(ReferentDoctor)
+            .filter(ReferentDoctor.fullName == full_name)
+            .first()
+        )
+        if existing:
+            continue
+        db.add(
+            ReferentDoctor(
+                fullName=full_name,
+                username=entry.get("username"),
+                email=entry.get("email"),
+                phone=entry.get("phone"),
+                hospitalName=entry.get("hospitalName"),
+                isActive=True,
+            )
+        )
+        created += 1
+    db.commit()
+    print(f"  created {created} referent doctors")
 
 
 def seed_users(db) -> None:
@@ -154,6 +220,7 @@ def init_db() -> None:
     db = SessionLocal()
     try:
         seed_users(db)
+        seed_referent_doctors(db)
         seed_affiliation_pricing(db)
         seed_tests(db)
         print("Database initialization complete")

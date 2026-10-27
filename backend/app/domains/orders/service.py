@@ -25,6 +25,7 @@ from app.domains.orders.schemas import (
     OrderUpdate,
 )
 from app.domains.patients.models import Patient
+from app.domains.referent_doctors.service import ReferentDoctorService
 from app.domains.patients.schemas import PatientResponse
 from app.domains.payments.schemas import PaymentCreate, PaymentResponse
 from app.domains.payments.service import PaymentService, enrich_payment
@@ -187,7 +188,12 @@ def _order_to_summary(order: Order, test_count: int, test_codes: list[str] | Non
         overallStatus=order.overallStatus,
         statusPresentation=resolve_order_presentation(order.overallStatus),
         priority=order.priority,
-        referentDoctor=order.referentDoctor,
+        referentDoctorId=order.referentDoctorId,
+        referentDoctorName=order.referentDoctorName,
+        referentDoctorEmail=order.referentDoctorEmail,
+        referentDoctorPhone=order.referentDoctorPhone,
+        referentDoctorHospital=order.referentDoctorHospital,
+        referentDoctorUsername=order.referentDoctorUsername,
         clinicalNotes=order.clinicalNotes,
         specialInstructions=order.specialInstructions,
         patientPrepInstructions=order.patientPrepInstructions,
@@ -197,10 +203,26 @@ def _order_to_summary(order: Order, test_count: int, test_codes: list[str] | Non
     ).model_dump(mode="json")
 
 
+def _order_load_options():
+    return (
+        joinedload(Order.patient),
+        joinedload(Order.referentDoctor),
+    )
+
+
 class OrderService:
     def __init__(self, db: Session):
         self.db = db
         self.emitter = AuditEmitter(db)
+
+    def _resolve_referent_doctor_id(self, referent_doctor_id: int | None) -> None:
+        if referent_doctor_id is None:
+            return
+        if ReferentDoctorService(self.db).get_by_id(referent_doctor_id) is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Referent doctor {referent_doctor_id} not found",
+            )
 
     def _order_response_with_lab(
         self,
@@ -297,10 +319,11 @@ class OrderService:
             end = datetime.combine(date_to, time.max, tzinfo=UTC)
             query = query.filter(Order.orderDate <= end)
         if summary:
-            query = query.options(joinedload(Order.patient))
+            query = query.options(*_order_load_options())
         else:
             query = query.options(
                 joinedload(Order.patient),
+                joinedload(Order.referentDoctor),
                 selectinload(Order.tests).joinedload(OrderTest.test),
             )
         total = query.count() if paginated else 0
@@ -355,6 +378,7 @@ class OrderService:
         includes = _parse_include(include)
         options = [
             joinedload(Order.patient),
+            joinedload(Order.referentDoctor),
             selectinload(Order.tests).joinedload(OrderTest.test),
         ]
         if "payments" in includes:
@@ -441,6 +465,8 @@ class OrderService:
             total_price += test.price
             test_entries.append((test.code, test.price))
 
+        self._resolve_referent_doctor_id(order_data.referentDoctorId)
+
         order = Order(
             patientId=order_data.patientId,
             orderDate=datetime.now(UTC),
@@ -448,7 +474,7 @@ class OrderService:
             paymentStatus=PaymentStatus.UNPAID,
             overallStatus=OrderStatus.ORDERED,
             priority=order_data.priority,
-            referentDoctor=order_data.referentDoctor,
+            referentDoctorId=order_data.referentDoctorId,
             clinicalNotes=order_data.clinicalNotes,
             specialInstructions=order_data.specialInstructions,
             patientPrepInstructions=order_data.patientPrepInstructions,
@@ -486,6 +512,7 @@ class OrderService:
             .filter(Order.orderId == order_id)
             .options(
                 joinedload(Order.patient),
+                joinedload(Order.referentDoctor),
                 selectinload(Order.tests).joinedload(OrderTest.test),
             )
             .first()
@@ -505,6 +532,8 @@ class OrderService:
             )
         update_data = order_data.model_dump(exclude_unset=True)
         tests_to_update = update_data.pop("tests", None)
+        if "referentDoctorId" in update_data:
+            self._resolve_referent_doctor_id(update_data["referentDoctorId"])
 
         if tests_to_update is not None:
             existing_test_codes = {ot.testCode for ot in order.tests}

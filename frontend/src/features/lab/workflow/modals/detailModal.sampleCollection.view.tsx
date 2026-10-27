@@ -96,7 +96,7 @@ export function SampleCollectionDetailModalView({
     <SampleCollectionCardLeftColumn
       patientName={patientName}
       orderId={sample.orderId}
-      referentDoctor={order?.referentDoctor}
+      referentDoctorName={order?.referentDoctorName ?? undefined}
       orderDate={order?.orderDate}
       sample={sample}
       isPending={isPending}

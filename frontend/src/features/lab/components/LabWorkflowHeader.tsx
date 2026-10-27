@@ -25,7 +25,7 @@ export interface LabWorkflowModalContext {
   orderTestId?: number;
   entityCode?: string;
   entityName?: string;
-  referentDoctor?: string;
+  referentDoctorName?: string;
   patientDob?: string;
   sampleId?: number;
 }
@@ -55,7 +55,7 @@ function parseModalIdentity(contextInfo: LabWorkflowModalContext): LabIdentityCo
     sampleId: contextInfo.sampleId,
     entityCode: contextInfo.entityCode,
     entityName: contextInfo.entityName,
-    referentDoctor: contextInfo.referentDoctor,
+    referentDoctorName: contextInfo.referentDoctorName,
     patientDob: contextInfo.patientDob,
   };
 }

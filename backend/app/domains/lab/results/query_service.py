@@ -34,6 +34,7 @@ class ResultQueryService:
             .filter(OrderTest.status == TestStatus.ESCALATED)
             .options(
                 joinedload(OrderTest.order).joinedload(Order.patient),
+                joinedload(OrderTest.order).joinedload(Order.referentDoctor),
                 joinedload(OrderTest.order).selectinload(Order.tests),
                 joinedload(OrderTest.test),
             )
@@ -90,6 +91,7 @@ class ResultQueryService:
             .filter(OrderTest.id == order_test_id)
             .options(
                 joinedload(OrderTest.order).joinedload(Order.patient),
+                joinedload(OrderTest.order).joinedload(Order.referentDoctor),
                 joinedload(OrderTest.order).selectinload(Order.tests),
                 joinedload(OrderTest.test),
             )
@@ -163,7 +165,12 @@ class ResultQueryService:
             retestOfTestId=t.retestOfTestId,
             retestNumber=t.retestNumber or 0,
             priority=order.priority.value if order and order.priority else "low",
-            referentDoctor=order.referentDoctor if order else None,
+            referentDoctorId=order.referentDoctorId if order else None,
+            referentDoctorName=order.referentDoctorName if order else None,
+            referentDoctorEmail=order.referentDoctorEmail if order else None,
+            referentDoctorPhone=order.referentDoctorPhone if order else None,
+            referentDoctorHospital=order.referentDoctorHospital if order else None,
+            referentDoctorUsername=order.referentDoctorUsername if order else None,
             collectedAt=sample.collectedAt if sample else None,
             collectedBy=sample.collectedBy if sample else None,
             sampleIsRecollection=sample.isRecollection if sample else False,
