@@ -3,9 +3,14 @@
  */
 /* eslint-disable react-refresh/only-export-components -- Panel + preset re-exports */
 
-import React from 'react';
+import React, { type ReactNode } from 'react';
 import { PANEL_SHELL } from '@/theme/recipes';
 import { cn } from '@/utils';
+import {
+  PanelHeaderAsidePlaceholder,
+  PanelLoadingBody,
+  type PanelLoadingShape,
+} from './panelLoading';
 import {
   getPanelPreset,
   PANEL_BODY_LAYOUT,
@@ -34,9 +39,19 @@ export interface PanelProps {
   meta?: string;
   headerStart?: React.ReactNode;
   headerEnd?: React.ReactNode;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   footer?: React.ReactNode;
   testId?: string;
+  /** When true, render a sized body placeholder instead of children. */
+  loading?: boolean;
+  loadingShape?: PanelLoadingShape;
+  loadingRows?: number;
+  loadingTableColumns?: number;
+  loadingTableRows?: number;
+  loadingFieldLayout?: 'grid' | 'column';
+  loadingContent?: ReactNode;
+  /** Reserve header aside width with a skeleton (e.g. actions/links). */
+  loadingHeaderAside?: boolean;
 }
 
 export function Panel({
@@ -48,13 +63,22 @@ export function Panel({
   children,
   footer,
   testId,
+  loading = false,
+  loadingShape,
+  loadingRows,
+  loadingTableColumns,
+  loadingTableRows,
+  loadingFieldLayout,
+  loadingContent,
+  loadingHeaderAside = false,
 }: PanelProps) {
   const def = getPanelPreset(preset);
   const tokens = PANEL_SHELL[def.variant];
   const scroll = def.scroll ?? 'default';
   const resolvedSpacing = def.spacing ?? (isCompactPanelVariant(def.variant) ? 'normal' : 'none');
   const resolvedMeta = meta ?? def.meta;
-  const hasHeaderAside = Boolean(resolvedMeta || headerEnd);
+  const showHeaderAsideSkeleton = loading && loadingHeaderAside;
+  const hasHeaderAside = Boolean(resolvedMeta || headerEnd || showHeaderAsideSkeleton);
   const headerClass = hasHeaderAside ? tokens.headerBetween : tokens.header;
   const hasFooter = footer != null && footer !== false;
   const hideHeader = def.hideHeader === true;
@@ -74,9 +98,10 @@ export function Panel({
         tokens.shell,
         PANEL_SHELL_LAYOUT[def.shellLayout ?? 'default'],
         def.maxHeightClass,
-        hasFooter && 'flex flex-col min-h-0',
+        hasFooter && !loading && 'flex flex-col min-h-0',
       )}
       data-testid={testId}
+      aria-busy={loading || undefined}
     >
       {!hideHeader && (
         <div className={headerClass}>
@@ -93,7 +118,11 @@ export function Panel({
               {resolvedMeta ? (
                 <span className={cn(tokens.meta, 'min-w-0 text-right')}>{resolvedMeta}</span>
               ) : null}
-              {headerEnd != null ? (
+              {showHeaderAsideSkeleton ? (
+                <div className={tokens.headerActions}>
+                  <PanelHeaderAsidePlaceholder />
+                </div>
+              ) : headerEnd != null ? (
                 <div className={tokens.headerActions}>{headerEnd}</div>
               ) : null}
             </div>
@@ -109,9 +138,20 @@ export function Panel({
           PANEL_BODY_LAYOUT[def.bodyLayout ?? 'default'],
         )}
       >
-        {children}
+        {loading ? (
+          <PanelLoadingBody
+            shape={loadingShape}
+            rows={loadingRows}
+            tableColumns={loadingTableColumns}
+            tableRows={loadingTableRows}
+            fieldLayout={loadingFieldLayout}
+            content={loadingContent}
+          />
+        ) : (
+          children
+        )}
       </div>
-      {hasFooter ? <div className={tokens.footer}>{footer}</div> : null}
+      {hasFooter && !loading ? <div className={tokens.footer}>{footer}</div> : null}
     </section>
   );
 }

@@ -53,6 +53,7 @@ export function useLabMonitorSummaryQuery() {
   return {
     summary: query.data,
     isLoading: query.isLoading,
+    isPending: query.isPending,
     isError: query.isError,
     error: query.error,
     refetch: query.refetch,
@@ -97,9 +98,10 @@ const EMPTY_COUNTS: LabPipelineCounts = {
 };
 
 export function useLabStageQueueCounts() {
-  const { summary, isError, error, refetch } = useLabMonitorSummaryQuery();
+  const { summary, isPending, isError, error, refetch } = useLabMonitorSummaryQuery();
   return {
     counts: summary?.counts ?? EMPTY_COUNTS,
+    isPending,
     isError,
     error,
     refetch,

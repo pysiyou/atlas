@@ -4,7 +4,6 @@
 import React from 'react';
 import { Panel } from '@/components/surfaces';
 import { Alert } from '@/components/display';
-import { SkeletonText } from '@/components/feedback';
 import { PaymentMethodSelector } from './PaymentMethodSelector';
 import { cn } from '@/utils';
 import type { Order } from '@/types';
@@ -45,12 +44,14 @@ export const PaymentDetailModalBody: React.FC<PaymentDetailModalBodyProps> = ({
   paymentMethods,
 }) => (
   <div className="space-y-space-6 p-space-6">
-    <Panel preset="panel.pageEmbed.modalShrink.flexColumn" title="Billing Summary">
-      {orderDetailLoading ? (
-        <div className="p-panel">
-          <SkeletonText lines={6} />
-        </div>
-      ) : orderDetailError ? (
+    <Panel
+      preset="panel.pageEmbed.modalShrink.flexColumn"
+      title="Billing Summary"
+      loading={orderDetailLoading}
+      loadingShape="fields"
+      loadingRows={6}
+    >
+      {orderDetailError ? (
         <div className="p-panel">
           <Alert variant="danger" className="py-space-3">
             <p className={text({ role: 'amount' })}>

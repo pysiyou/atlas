@@ -18,7 +18,6 @@ import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { entryFilterConfig } from '../constants';
 import { EMPTY_COPY } from '@/components/display';
 import { ErrorAlert, ErrorBoundary } from '@/components/feedback';
-import { DetailPageSkeleton } from '@/components/feedback/DetailPageSkeleton';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { useResultEntryWorkflow } from './useResultEntryWorkflow';
 import { useLabDraftStore } from '../state/labDraftStore';
@@ -101,13 +100,7 @@ export const ResultEntryQueue: React.FC = () => {
   const hasNoItems = allTests.length === 0;
   const waitingOnCatalog =
     uniqueCodes.length > 0 && catalogLoading && fullByCode.size === 0;
-  if ((worklistChrome.loading && hasNoItems) || waitingOnCatalog) {
-    return (
-      <ErrorBoundary>
-        <DetailPageSkeleton variant="workflow-grid" />
-      </ErrorBoundary>
-    );
-  }
+  const queueLoading = (worklistChrome.loading && hasNoItems) || waitingOnCatalog;
 
   if (worklistChrome.error) {
     return (
@@ -120,6 +113,7 @@ export const ResultEntryQueue: React.FC = () => {
   return (
     <ErrorBoundary>
       <LabWorkflowQueueLayout
+        loading={queueLoading}
         items={filteredTests}
         renderCard={(test, idx) => {
           const testItem = test as TestWithContextResult;

@@ -5,7 +5,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Badge, Icon } from '@/components/primitives';
-import { Panel } from '@/components/surfaces';
+import { Panel, criticalValuesPanelLoadingContent } from '@/components/surfaces';
 import { RecordId } from '@/features/shared';
 import { ICONS } from '@/config/icons';
 import { cn, displayId } from '@/utils';
@@ -15,29 +15,34 @@ import { CriticalValueActions } from './CriticalValueActions';
 import { text, RADIUS, TONE } from '@/theme/recipes';
 import { WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
 
-export const PendingCriticalValuesPanel: React.FC = () => {
+export interface PendingCriticalValuesPanelProps {
+  loading?: boolean;
+}
+
+export const PendingCriticalValuesPanel: React.FC<PendingCriticalValuesPanelProps> = ({
+  loading: loadingProp,
+}) => {
   const { criticalValues, isLoading, refetch } = usePendingCriticalValues();
+  const loading = loadingProp ?? isLoading;
 
-  if (isLoading) {
-    return (
-      <Panel preset="panel.compact.standard" title="Critical Values">
-        <p className={`${text({ role: 'body', intent: 'muted' })} py-space-4`}>Loading critical values...</p>
-      </Panel>
-    );
-  }
-
-  if (criticalValues.length === 0) {
+  if (!loading && criticalValues.length === 0) {
     return null;
   }
 
   return (
     <Panel
-      preset="panel.compact.standard" title="Critical Values Pending"
+      preset="panel.compact.standard"
+      title={loading ? 'Critical Values' : 'Critical Values Pending'}
+      loading={loading}
+      loadingContent={criticalValuesPanelLoadingContent()}
       headerEnd={
-        <Badge variant="danger" size={WORKLIST_CARD_BADGE_SIZE}>
-          {criticalValues.length}
-        </Badge>
+        loading ? undefined : (
+          <Badge variant="danger" size={WORKLIST_CARD_BADGE_SIZE}>
+            {criticalValues.length}
+          </Badge>
+        )
       }
+      loadingHeaderAside={!loading}
     >
       <div className="space-y-space-4">
         {criticalValues.map(record => (

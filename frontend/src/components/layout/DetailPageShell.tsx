@@ -2,10 +2,11 @@
  * DetailPageShell - Standard wrapper for detail pages.
  * When AppShell chrome is active, headers portal to the top row; the in-flow header slot uses
  * `contents` so flex gap does not reserve space under the chrome (same as list pages).
+ *
+ * Pass `loading` to child panels/cards/tables — this shell does not replace the page body.
  */
 
 import React, { type ReactNode } from 'react';
-import { DetailPageSkeleton } from '@/components/feedback/DetailPageSkeleton';
 import { ErrorAlert } from '@/components/feedback/ErrorAlert';
 import { EmptyState } from '@/components/display';
 import { ICONS } from '@/config/icons';
@@ -22,12 +23,10 @@ export interface DetailPageShellError {
 export interface DetailPageShellProps {
   /** Header node (e.g. PageHeader or feature header wrapping it) */
   header: ReactNode;
-  /** Main content (rendered in scrollable area when not loading/error/notFound) */
+  /** Main content — use `loading` on Panel/Card/DataTable children while data loads */
   children: ReactNode;
-  /** When true, show loading skeleton in the scroll area instead of content */
+  /** Marks the scroll region as busy (sections should use their own placeholders). */
   loading?: boolean;
-  /** Optional skeleton when loading; defaults to a generic detail layout */
-  loadingSkeleton?: ReactNode;
   /** When set, show ErrorAlert above content (or instead of content if no children yet) */
   error?: DetailPageShellError | null;
   /** Retry handler for error state */
@@ -47,7 +46,6 @@ export const DetailPageShell: React.FC<DetailPageShellProps> = ({
   header,
   children,
   loading = false,
-  loadingSkeleton,
   error = null,
   onRetry,
   onDismissError,
@@ -58,19 +56,6 @@ export const DetailPageShell: React.FC<DetailPageShellProps> = ({
 }) => {
   const headerInChrome = useAppChromeMount() != null;
   const headerSlotClass = headerInChrome ? 'contents' : 'shrink-0';
-
-  if (loading) {
-    const skeleton =
-      loadingSkeleton ?? <DetailPageSkeleton variant="responsive-detail" aria-label="Loading" />;
-    return (
-      <div className={cn(WORKSPACE.page, className)}>
-        <div className={headerSlotClass}>{header}</div>
-        <div className="flex-1 min-h-0 overflow-auto" aria-busy="true">
-          {skeleton}
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className={cn(WORKSPACE.page, className)}>
@@ -88,7 +73,9 @@ export const DetailPageShell: React.FC<DetailPageShellProps> = ({
           />
         </div>
       ) : (
-        <div className="flex-1 min-h-0 overflow-auto">{children}</div>
+        <div className="flex-1 min-h-0 overflow-auto" aria-busy={loading || undefined}>
+          {children}
+        </div>
       )}
     </div>
   );

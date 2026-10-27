@@ -19,11 +19,6 @@ import {
   MediumScreenLayout,
   LargeScreenLayout,
 } from '../components/OrderDetailLayouts';
-import { DetailPageSkeleton } from '@/components/feedback/DetailPageSkeleton';
-import {
-  ORDER_DETAIL_SKELETON_SECTIONS,
-  renderOrderDetailLargeSkeleton,
-} from '../config/OrderDetailSkeleton';
 
 export const OrderDetail: React.FC = () => {
   const navigate = useNavigate();
@@ -33,6 +28,7 @@ export const OrderDetail: React.FC = () => {
 
   const { order, patient: patientData, invoices, isLoading: orderLoading } = useOrder(id);
   const patient = patientData ?? null;
+  const pageLoading = orderLoading && order == null;
   const invoice: Invoice | null = invoices[0]
     ? {
         invoiceId: invoices[0].invoiceId,
@@ -71,10 +67,11 @@ export const OrderDetail: React.FC = () => {
   };
 
   const renderContent = () => {
-    if (order == null || patient === undefined) return null;
+    if (!pageLoading && (order == null || patient === undefined)) return null;
     const layoutProps = {
+      loading: pageLoading,
       order,
-      patient,
+      patient: pageLoading ? null : patient,
       invoice,
       activeTests,
       supersededCount,
@@ -103,15 +100,8 @@ export const OrderDetail: React.FC = () => {
   return (
     <DetailPageShell
       header={header}
-      loading={orderLoading}
-      loadingSkeleton={
-        <DetailPageSkeleton
-          sections={ORDER_DETAIL_SKELETON_SECTIONS}
-          renderLargeLayout={renderOrderDetailLargeSkeleton}
-          aria-label="Loading order"
-        />
-      }
-      notFound={!order}
+      loading={pageLoading}
+      notFound={!orderLoading && !order}
       notFoundTitle="Order Not Found"
       notFoundDescription="The order could not be found."
     >

@@ -5,6 +5,7 @@
 import React, { type ReactNode } from 'react';
 import { RADIUS, SHADOW, SURFACE } from '@/theme/recipes';
 import { cn } from '@/utils';
+import { CardLoadingBody, type CardLoadingVariant } from './cardLoading';
 
 export type CardVariant = 'default' | 'interactive' | 'metric';
 
@@ -22,12 +23,15 @@ const PADDING_CLASSES = {
 } as const;
 
 export interface CardProps {
-  children: ReactNode;
+  children?: ReactNode;
   className?: string;
   padding?: keyof typeof PADDING_CLASSES;
   variant?: CardVariant;
   hover?: boolean;
   onClick?: (e: React.MouseEvent) => void;
+  loading?: boolean;
+  loadingVariant?: CardLoadingVariant;
+  loadingContent?: ReactNode;
 }
 
 const cardSurfaceClass = cn(SURFACE.raised, RADIUS.surface, 'duration-200');
@@ -39,7 +43,15 @@ export const Card: React.FC<CardProps> = ({
   variant = 'default',
   hover = false,
   onClick,
+  loading = false,
+  loadingVariant = 'default',
+  loadingContent,
 }) => {
+  const body = loading ? (
+    <CardLoadingBody variant={loadingVariant} content={loadingContent} />
+  ) : (
+    children
+  );
   const classes = cn(
     cardSurfaceClass,
     PADDING_CLASSES[padding],
@@ -49,13 +61,17 @@ export const Card: React.FC<CardProps> = ({
     className,
   );
 
-  if (onClick) {
+  if (onClick && !loading) {
     return (
       <button type="button" className={cn(classes, 'text-left w-full')} onClick={onClick}>
-        {children}
+        {body}
       </button>
     );
   }
 
-  return <div className={classes}>{children}</div>;
+  return (
+    <div className={classes} aria-busy={loading || undefined}>
+      {body}
+    </div>
+  );
 };

@@ -200,21 +200,34 @@ function AttentionFeed({ items }: { items: LabAttentionQueueItem[] }) {
 export interface LabAttentionPanelProps {
   items: LabAttentionQueueItem[];
   attentionTotal: number;
+  loading?: boolean;
 }
 
-export const LabAttentionPanel: React.FC<LabAttentionPanelProps> = ({ items, attentionTotal }) => {
+const ATTENTION_LOADING_LIST_ROWS = 4;
+
+export const LabAttentionPanel: React.FC<LabAttentionPanelProps> = ({
+  items,
+  attentionTotal,
+  loading = false,
+}) => {
   const shownTests = items.reduce((sum, item) => sum + item.workItemCount, 0);
   const capped = attentionTotal > shownTests;
 
   return (
     <Panel
-      preset="panel.pageEmbed.standard" title="Attention queue"
+      preset="panel.pageEmbed.standard"
+      title="Attention queue"
+      loading={loading}
+      loadingShape="list"
+      loadingRows={ATTENTION_LOADING_LIST_ROWS}
       meta={
-        items.length > 0
-          ? capped
-            ? `Prioritized view · ${shownTests} of ${attentionTotal} tests`
-            : `${items.length} accessions · ${attentionTotal} tests`
-          : LAB_COPY.attention.panelMetaEmpty
+        loading
+          ? undefined
+          : items.length > 0
+            ? capped
+              ? `Prioritized view · ${shownTests} of ${attentionTotal} tests`
+              : `${items.length} accessions · ${attentionTotal} tests`
+            : LAB_COPY.attention.panelMetaEmpty
       }
     >
       <AttentionFeed items={items} />

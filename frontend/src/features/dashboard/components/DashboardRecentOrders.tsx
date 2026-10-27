@@ -12,20 +12,31 @@ import { ROUTES } from '@/config';
 import type { Order } from '@/types';
 import { text, INLINE_LINK, RADIUS } from '@/theme/recipes';
 
+const RECENT_ORDER_ROW_CLASS = `flex items-center justify-between p-panel border border-border-default ${RADIUS.surface}`;
+const RECENT_ORDER_PLACEHOLDER_ROWS = 5;
 
 export interface DashboardRecentOrdersProps {
   orders: Order[];
+  loading?: boolean;
 }
 
 export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
   orders,
+  loading = false,
 }) => (
   <Panel
-    preset="panel.page.standard" title="Recent Orders"
+    preset="panel.page.standard"
+    title="Recent Orders"
+    loading={loading}
+    loadingShape="list"
+    loadingRows={RECENT_ORDER_PLACEHOLDER_ROWS}
+    loadingHeaderAside
     headerEnd={
-      <Link to={ROUTES.ORDERS} className={INLINE_LINK}>
-        View all
-      </Link>
+      loading ? undefined : (
+        <Link to={ROUTES.ORDERS} className={INLINE_LINK}>
+          View all
+        </Link>
+      )
     }
   >
     <div className="space-y-space-3">
@@ -34,7 +45,7 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
           <Link
             key={order.orderId}
             to={`${ROUTES.ORDERS}/${order.orderId}`}
-            className={`flex items-center justify-between p-panel border border-border-default ${RADIUS.surface} hover:bg-surface-page`}
+            className={`${RECENT_ORDER_ROW_CLASS} hover:bg-surface-page`}
           >
             <div>
               <p className={text({ role: 'amount' })}>

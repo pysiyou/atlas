@@ -17,6 +17,7 @@ export interface TestsTableProps {
   order: Order;
   patient?: Patient | null;
   variant?: 'simple' | 'detailed';
+  loading?: boolean;
 }
 
 const EMPTY_MESSAGE = (
@@ -30,6 +31,7 @@ const EMPTY_MESSAGE = (
 export const TestsTable: React.FC<TestsTableProps> = ({
   tests,
   variant = 'simple',
+  loading = false,
 }) => {
   const { openModal } = useModal();
   const { tests: testCatalog = [] } = useTestCatalog();
@@ -56,6 +58,7 @@ export const TestsTable: React.FC<TestsTableProps> = ({
     <DataTable<OrderTest>
       data={visibleTests}
       viewConfig={viewConfig}
+      loading={loading}
       striped
       getRowKey={(t, i) => t.id ?? i}
       rowClassName={test => getOrderTestLineageRowClass(test)}

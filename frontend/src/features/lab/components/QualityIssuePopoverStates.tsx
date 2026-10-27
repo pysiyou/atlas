@@ -6,8 +6,7 @@
 import React from 'react';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Alert } from '@/components/display';
-import { Skeleton } from '@/components/feedback';
-import { DialogHeader, DialogFooter } from '@/components/overlays';
+import { QualityIssuePopoverLoadingView as QualityIssuePopoverLoadingViewPreset } from '@/components/surfaces';
 import { RadioCard } from '@/components/overlays';
 import { AttemptProgressBar } from './LabAttemptIndicators';
 import type { ResultRejectionType } from '@/types';
@@ -16,50 +15,9 @@ import { getFeedback } from '@/utils/feedback';
 import { QUALITY_ISSUE_POPOVER_LAYOUT, QUALITY_ISSUE_POPOVER_COPY } from '../constants/qualityIssuePopoverCopy';
 import { LAB_CONFIG } from '../constants';
 import { text, FORM_FIELD_LABEL } from '@/theme/recipes';
-import { RADIUS } from '@/theme/recipes';
-
-
-/** Skeleton that mirrors PopoverFormChrome layout (header, body, footer) to avoid layout shift when options load. */
+/** Re-export preset so feature imports stay stable. */
 export const QualityIssuePopoverLoadingView: React.FC = () => (
-  <div
-    className={cn(
-      QUALITY_ISSUE_POPOVER_LAYOUT.widthClass,
-      'flex max-h-[600px] min-w-0 flex-col overflow-hidden',
-    )}
-    aria-busy="true"
-    aria-label={QUALITY_ISSUE_POPOVER_COPY.loading.message}
-  >
-    <DialogHeader
-      size="popover"
-      title={<Skeleton height={20} width="60%" className={`${RADIUS.surface}`} />}
-      subtitle={<Skeleton height={12} width="40%" className={`${RADIUS.surface}`} />}
-      actions={<Skeleton width={32} height={32} className={`${RADIUS.surface} shrink-0`} />}
-    />
-    <div className="p-panel space-y-space-4 overflow-y-auto flex-1">
-      <div className="space-y-space-1-5">
-        <Skeleton height={14} width="100%" className={`${RADIUS.surface}`} />
-        <Skeleton height={12} width="85%" className={`${RADIUS.surface}`} />
-      </div>
-      <div className="space-y-space-2">
-        <Skeleton height={12} width="30%" className={`${RADIUS.surface}`} />
-        <Skeleton height={52} width="100%" className={`${RADIUS.surface}`} />
-      </div>
-      <div>
-        <Skeleton height={12} width="35%" className={`${RADIUS.surface} mb-space-1`} />
-        <Skeleton height={60} width="100%" className={`${RADIUS.surface}`} />
-      </div>
-    </div>
-    <DialogFooter
-      density="popover"
-      start={<Skeleton height={12} width="50%" className={`${RADIUS.surface}`} />}
-      end={
-        <>
-          <Skeleton height={32} width={70} className={`${RADIUS.surface}`} />
-          <Skeleton height={32} width={70} className={`${RADIUS.surface}`} />
-        </>
-      }
-    />
-  </div>
+  <QualityIssuePopoverLoadingViewPreset />
 );
 
 export interface QualityIssuePopoverErrorViewProps {

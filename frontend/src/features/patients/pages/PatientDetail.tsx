@@ -13,11 +13,6 @@ import { DetailPageShell, PageHeader } from '@/components/layout';
 import { EditPatientModal } from '../components/EditPatientModal';
 import { PatientHeader } from '../components/PatientHeader';
 import { SmallScreenLayout, MediumScreenLayout, LargeScreenLayout } from '../components/PatientDetailLayouts';
-import { DetailPageSkeleton } from '@/components/feedback/DetailPageSkeleton';
-import {
-  PATIENT_DETAIL_SKELETON_SECTIONS,
-  renderPatientDetailLargeSkeleton,
-} from '../config/PatientDetailSkeleton';
 import { feedbackTitle } from '@/utils/feedback';
 
 export const PatientDetail: React.FC = () => {
@@ -29,6 +24,7 @@ export const PatientDetail: React.FC = () => {
 
   const { patient, isLoading: patientLoading } = usePatient(id);
   const { orders: patientOrders, isLoading: ordersLoading } = useOrdersByPatient(id);
+  const pageLoading = (patientLoading && patient == null) || (ordersLoading && patientOrders.length === 0 && patient != null);
 
   const handleEdit = () => setIsEditModalOpen(true);
   const handleCloseEdit = () => setIsEditModalOpen(false);
@@ -37,9 +33,10 @@ export const PatientDetail: React.FC = () => {
   const handleOrderClick = (orderId: string) => navigate(`/orders/${orderId}`);
 
   const renderContent = () => {
-    if (!patient) return null;
+    if (!pageLoading && !patient) return null;
     const layoutProps = {
-      patient,
+      loading: pageLoading,
+      patient: patient ?? undefined,
       orders: patientOrders,
       onOrderClick: handleOrderClick,
       onNewOrder: handleNewOrder,
@@ -64,15 +61,8 @@ export const PatientDetail: React.FC = () => {
     <>
       <DetailPageShell
         header={header}
-        loading={patientLoading || ordersLoading}
-        loadingSkeleton={
-          <DetailPageSkeleton
-            sections={PATIENT_DETAIL_SKELETON_SECTIONS}
-            renderLargeLayout={renderPatientDetailLargeSkeleton}
-            aria-label="Loading patient"
-          />
-        }
-        notFound={!patient}
+        loading={pageLoading}
+        notFound={!patientLoading && !patient}
         notFoundTitle={feedbackTitle('patient.detail.notFoundTitle')}
         notFoundDescription={feedbackTitle('patient.detail.notFoundDescription')}
       >

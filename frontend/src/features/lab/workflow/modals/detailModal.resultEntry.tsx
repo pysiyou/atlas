@@ -123,7 +123,7 @@ export const ResultEntryDetailModal: React.FC<ResultDetailModalProps> = ({
   if (isOpen && ((isLoading && !test) || waitingOnCatalog)) {
     return (
       <Modal isOpen={isOpen} onClose={onClose} title="Result entry" size="3xl" isActive={isActive}>
-        <ModalPageShell loading />
+        <ModalPageShell loading loadingVariant="workflow" />
       </Modal>
     );
   }

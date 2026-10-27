@@ -9,33 +9,17 @@ import { formatDate } from '@/utils';
 import { useDashboardSummary } from '../api/dashboard';
 import { LabPipelineSummary } from '../components/LabPipelineSummary';
 import { PendingCriticalValuesPanel } from '@/features/lab/cross';
-import {
-  DashboardStatsGrid,
-} from '../components/DashboardStatsGrid';
+import { DashboardStatsGrid } from '../components/DashboardStatsGrid';
 import { buildDashboardStats } from '../components/buildDashboardStats';
 import { DashboardOrdersInProgressBanner } from '../components/DashboardOrdersInProgressBanner';
 import { DashboardRecentOrders } from '../components/DashboardRecentOrders';
-import { SkeletonCard } from '@/components/feedback';
 import { PageHeader } from '@/components/layout';
 import { WORKSPACE } from '@/theme/recipes';
-
-function DashboardLoadingSkeleton() {
-  return (
-    <div className="space-y-space-6" aria-busy="true" aria-label="Loading dashboard">
-      <div className="grid grid-cols-1 gap-space-6 md:grid-cols-2 lg:grid-cols-4">
-        {Array.from({ length: 4 }).map((_, index) => (
-          <SkeletonCard key={index} />
-        ))}
-      </div>
-      <SkeletonCard />
-    </div>
-  );
-}
 
 export const Dashboard: React.FC = () => {
   const { user: currentUser, hasRole } = useAuthStore();
   const { summary, isLoading } = useDashboardSummary();
-  const showInitialLoad = isLoading && summary == null;
+  const loading = isLoading && summary == null;
 
   const isLabRole = hasRole(['administrator', 'lab-technician', 'lab-technician-plus']);
   const isReceptionRole = hasRole(['administrator', 'receptionist']);
@@ -53,6 +37,7 @@ export const Dashboard: React.FC = () => {
 
   const recentOrders = summary?.recentOrders ?? [];
   const pendingOrders = summary?.pendingOrders ?? 0;
+  const skeletonStatCount = (isReceptionRole ? 3 : 0) + (isLabRole ? 1 : 0);
 
   return (
     <div className={WORKSPACE.page}>
@@ -64,23 +49,21 @@ export const Dashboard: React.FC = () => {
 
       <div className="flex-1 min-h-0 overflow-y-auto">
         <div className="space-y-space-6">
-          {showInitialLoad ? (
-            <DashboardLoadingSkeleton />
-          ) : (
-            <>
-          <DashboardStatsGrid stats={stats} />
+          <DashboardStatsGrid
+            stats={stats}
+            loading={loading}
+            skeletonStatCount={skeletonStatCount}
+          />
 
-          {isLabRole && <LabPipelineSummary />}
+          {isLabRole && <LabPipelineSummary loading={loading} />}
           {isLabRole && <PendingCriticalValuesPanel />}
 
-          {pendingOrders > 0 && isReceptionRole && (
-            <DashboardOrdersInProgressBanner pendingOrders={pendingOrders} />
+          {isReceptionRole && (
+            <DashboardOrdersInProgressBanner pendingOrders={pendingOrders} loading={loading} />
           )}
 
           {isReceptionRole && (
-            <DashboardRecentOrders orders={recentOrders} />
-          )}
-            </>
+            <DashboardRecentOrders orders={recentOrders} loading={loading} />
           )}
         </div>
       </div>

@@ -13,9 +13,8 @@ import { BalancedColumnsLayout } from '@/components/display';
 import type { TableInput } from '@/components/display';
 import { DetailPageShell, PageHeader } from '@/components/layout';
 import { RecordId } from '@/features/shared';
-import { DetailPageSkeleton } from '@/components/feedback/DetailPageSkeleton';
+import { Panel } from '@/components/surfaces';
 import { formatRejectionCriteriaList } from '@/features/lab/cross';
-import { CATALOG_DETAIL_SKELETON_SECTIONS } from '../config/CatalogDetailSkeleton';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import { formatDateTime } from '@/utils';
 import { formatArrayWithFallback, formatBoolean, capitalize } from '@/utils';
@@ -49,21 +48,25 @@ export const CatalogDetail: React.FC = () => {
     return 3;
   };
 
-  // Loading: shell + skeleton
   if (isLoading) {
+    const columnCount = getColumnCount();
     return (
-      <DetailPageShell
-        header={<PageHeader title="Test" />}
-        loading
-        loadingSkeleton={
-          <DetailPageSkeleton
-            variant="balanced-grid"
-            sections={CATALOG_DETAIL_SKELETON_SECTIONS}
-            aria-label="Loading test details"
-          />
-        }
-      >
-        {null}
+      <DetailPageShell header={<PageHeader title="Test" />} loading>
+        <div
+          className="grid gap-layout-section"
+          style={{ gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))` }}
+        >
+          {Array.from({ length: columnCount * 2 }).map((_, index) => (
+            <Panel
+              key={index}
+              preset="panel.pageEmbed.visible"
+              title="Loading"
+              loading
+              loadingShape="fields"
+              loadingRows={5}
+            />
+          ))}
+        </div>
       </DetailPageShell>
     );
   }

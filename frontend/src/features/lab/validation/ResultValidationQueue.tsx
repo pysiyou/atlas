@@ -18,7 +18,8 @@ import {
   VALIDATION_REVIEW_RECOLLECTION_PROFILE,
 } from '../utils/labQueueSecondaryProfiles';
 import { validationFilterConfig } from '../constants';
-import { DetailPageSkeleton } from '@/components/feedback/DetailPageSkeleton';
+import { Card } from '@/components/surfaces';
+import { SPACING } from '@/theme/recipes';
 import { ErrorAlert, ErrorBoundary } from '@/components/feedback';
 import { useClientListChrome } from '@/hooks';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
@@ -134,14 +135,6 @@ export const ResultValidationQueue: React.FC = () => {
     );
   }
 
-  if (waitingOnInitialLoad) {
-    return (
-      <ErrorBoundary>
-        <DetailPageSkeleton variant="workflow-grid" />
-      </ErrorBoundary>
-    );
-  }
-
   const hasRecollection = canResolveEscalation && filteredRecollectionRequests.length > 0;
   const hasEscalated = canViewEscalations && filteredEscalatedTests.length > 0;
   const hasValidation = filteredTests.length > 0;
@@ -149,13 +142,20 @@ export const ResultValidationQueue: React.FC = () => {
   return (
     <ErrorBoundary>
         <LabWorkflowQueueMultiSectionLayout
-          aria-busy={dataLoading || undefined}
+          aria-busy={dataLoading || waitingOnInitialLoad || undefined}
           filterRow={
             <LabQueueFilterRow pagination={pagination} onPageChange={goToPage}>
               <LabQueueFilters config={validationFilterConfig} {...filterBarProps} />
             </LabQueueFilterRow>
           }
         >
+          {waitingOnInitialLoad ? (
+            <div className={`flex flex-col ${SPACING.gapSection}`}>
+              {Array.from({ length: 5 }).map((_, index) => (
+                <Card key={index} padding="md" loading className="min-h-[140px]" />
+              ))}
+            </div>
+          ) : (
           <ResultValidationQueueView
               isEmpty={!hasRecollection && !hasEscalated && !hasValidation}
               hasRecollection={hasRecollection}
@@ -180,6 +180,7 @@ export const ResultValidationQueue: React.FC = () => {
               onReject={(test, result) => handleValidate(test.id!, test.orderId, false, result)}
               onOpenValidation={openValidationModal}
           />
+          )}
         </LabWorkflowQueueMultiSectionLayout>
     </ErrorBoundary>
   );

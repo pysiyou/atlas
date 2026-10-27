@@ -129,7 +129,7 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({
   if (isOpen && isContextLoading && !fetchedTest && !ready) {
     return (
       <Modal isOpen={isOpen} onClose={onClose} title="Test" size="3xl" isActive={isActive}>
-        <ModalPageShell loading />
+        <ModalPageShell loading loadingVariant="workflow" />
       </Modal>
     );
   }

@@ -12,31 +12,54 @@ import { buildTodayStageSegments, sumAtStage } from './todayPanelStairLayout';
 import { TodayStageRow } from './TodayStageRow';
 import { TodayPanelHeaderMeta } from './TodayPanelHeaderMeta';
 
+const EMPTY_TODAY_PANEL: LabTodayPanelSnapshot = {
+  dayStartUtc: '',
+  totalTests: 0,
+  testsUpdatedToday: 0,
+  stages: [],
+};
+
+const TODAY_LOADING_TABLE_ROWS = 3;
+const TODAY_LOADING_TABLE_COLUMNS = 4;
+
 export interface LabTodayPanelProps {
-  todayPanel: LabTodayPanelSnapshot;
+  todayPanel?: LabTodayPanelSnapshot;
+  loading?: boolean;
 }
 
-export const LabTodayPanel: React.FC<LabTodayPanelProps> = ({ todayPanel }) => {
+export const LabTodayPanel: React.FC<LabTodayPanelProps> = ({
+  todayPanel,
+  loading = false,
+}) => {
+  const snapshot = todayPanel ?? EMPTY_TODAY_PANEL;
+
   const dayLabel = useMemo(
-    () => (todayPanel.dayStartUtc ? formatDate(todayPanel.dayStartUtc) : null),
-    [todayPanel.dayStartUtc],
+    () => (snapshot.dayStartUtc ? formatDate(snapshot.dayStartUtc) : null),
+    [snapshot.dayStartUtc],
   );
 
-  const totalTests = todayPanel.totalTests;
+  const totalTests = snapshot.totalTests;
   const headerRange = dayLabel ? `UTC · ${dayLabel}` : 'UTC · Today';
-  const segments = useMemo(() => buildTodayStageSegments(todayPanel), [todayPanel]);
-  const inPipelineNow = useMemo(() => sumAtStage(todayPanel), [todayPanel]);
+  const segments = useMemo(() => buildTodayStageSegments(snapshot), [snapshot]);
+  const inPipelineNow = useMemo(() => sumAtStage(snapshot), [snapshot]);
 
   return (
     <Panel
       preset="panel.pageEmbed.flexColumnFill"
       title="Today"
+      loading={loading}
+      loadingShape="table"
+      loadingTableRows={TODAY_LOADING_TABLE_ROWS}
+      loadingTableColumns={TODAY_LOADING_TABLE_COLUMNS}
+      loadingHeaderAside
       headerEnd={
-        <TodayPanelHeaderMeta
-          headerRange={headerRange}
-          totalTests={totalTests}
-          testsUpdatedToday={todayPanel.testsUpdatedToday}
-        />
+        loading ? undefined : (
+          <TodayPanelHeaderMeta
+            headerRange={headerRange}
+            totalTests={totalTests}
+            testsUpdatedToday={snapshot.testsUpdatedToday}
+          />
+        )
       }
     >
       <div className={KPI_PANEL.body}>
@@ -90,7 +113,7 @@ export const LabTodayPanel: React.FC<LabTodayPanelProps> = ({ todayPanel }) => {
                 </span>
                 <span className={METER_KPI.tableMetricCell}>
                   <span className={METER_KPI.tablePercent}>
-                    {todayPanel.testsUpdatedToday.toLocaleString()}
+                    {snapshot.testsUpdatedToday.toLocaleString()}
                   </span>
                   <span className={METER_KPI.tableCount}> {LAB_COPY.dashboardToday.testsWorked}</span>
                 </span>

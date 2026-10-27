@@ -8,23 +8,30 @@ import { Icon } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 import { text } from '@/theme/recipes';
 
-
 export interface DashboardOrdersInProgressBannerProps {
   pendingOrders: number;
+  loading?: boolean;
 }
 
 export const DashboardOrdersInProgressBanner: React.FC<DashboardOrdersInProgressBannerProps> = ({
   pendingOrders,
-}) => (
-  <Card padding="md">
-    <div className="flex items-center gap-space-3">
-      <Icon name={ICONS.dataFields.trendingUp} className="w-6 h-6 text-warning-fg" />
-      <div>
-        <p className={text({ role: 'amount' })}>Orders In Progress</p>
-        <p className={text({ role: 'label' })}>
-          {pendingOrders} order{pendingOrders !== 1 ? 's' : ''} awaiting completion
-        </p>
+  loading = false,
+}) => {
+  if (!loading && pendingOrders <= 0) {
+    return null;
+  }
+
+  return (
+    <Card padding="md" loading={loading} loadingVariant="banner">
+      <div className="flex items-center gap-space-3">
+        <Icon name={ICONS.dataFields.trendingUp} className="w-6 h-6 text-warning-fg" />
+        <div>
+          <p className={text({ role: 'amount' })}>Orders In Progress</p>
+          <p className={text({ role: 'label' })}>
+            {pendingOrders} order{pendingOrders !== 1 ? 's' : ''} awaiting completion
+          </p>
+        </div>
       </div>
-    </div>
-  </Card>
-);
+    </Card>
+  );
+};

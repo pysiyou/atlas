@@ -3,7 +3,8 @@
  */
 import React, { useMemo } from 'react';
 import { Button } from '@/components/primitives';
-import { ErrorAlert, Skeleton } from '@/components/feedback';
+import { ErrorAlert } from '@/components/feedback';
+import { PanelLoadingBody } from '@/components/surfaces/panelLoading';
 import { Panel, type PanelPresetId } from '@/components/surfaces/Panel';
 import { cn } from '@/utils';
 import { useClientListChrome } from '@/hooks';
@@ -41,6 +42,8 @@ export interface EventLogPanelProps {
   hideMeta?: boolean;
   /** When set (e.g. global event log page), skips local filter state in favor of URL-synced state. */
   filterPanelState?: EventLogPanelFilterState;
+  /** Parent-controlled loading (e.g. monitor board shell). */
+  loading?: boolean;
 }
 
 function metaForQuery(query: EventLogQuery, hasUserFilters: boolean): string {
@@ -78,6 +81,7 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
   meta,
   hideMeta = false,
   filterPanelState,
+  loading: loadingProp,
 }) => {
   const visibleFields = filterUi?.fields ?? [];
   const showFilters = visibleFields.length > 0;
@@ -146,12 +150,11 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
     />
   ) : null;
 
-  const body = isLoading ? (
-    <div className="flex flex-col gap-space-3 p-space-4" aria-busy="true">
-      {Array.from({ length: 4 }).map((_, index) => (
-        <Skeleton key={index} height={56} className="w-full" />
-      ))}
-    </div>
+  const showLoading = loadingProp ?? isLoading;
+  const loadingBody = <PanelLoadingBody shape="list" rows={4} />;
+
+  const body = showLoading ? (
+    loadingBody
   ) : listError ? (
     <div className="p-space-3">
       <ErrorAlert error={listError} onRetry={onRetry} />
@@ -192,6 +195,9 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
       preset={eventLogPreset(panelVariant)}
       title="Event log"
       meta={panelMeta}
+      loading={showLoading}
+      loadingShape="list"
+      loadingRows={4}
     >
       {filters}
       {body}
@@ -254,11 +260,12 @@ export const PatientEventLogPanel: React.FC<{
   />
 );
 
-export const LabMonitorEventLogPanel: React.FC = () => (
+export const LabMonitorEventLogPanel: React.FC<{ loading?: boolean }> = ({ loading }) => (
   <EventLogPanel
     query={{ scope: 'stream', hours: 24, kinds: ['laboratory'], limit: 500 }}
     filterUi={{ fields: [] }}
     panelVariant="monitor"
+    loading={loading}
   />
 );
 

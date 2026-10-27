@@ -73,7 +73,7 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   if (isOpen && isLoading && !test) {
     return (
       <Modal isOpen={isOpen} onClose={onClose} title="Escalation" size="3xl" isActive={isActive}>
-        <ModalPageShell loading />
+        <ModalPageShell loading loadingVariant="workflow" />
       </Modal>
     );
   }

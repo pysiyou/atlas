@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Card } from '@/components/surfaces';
+import { Card, labPipelineCardLoadingContent } from '@/components/surfaces';
 import { Badge, Icon, type IconName } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
 import {
@@ -18,7 +18,6 @@ import {
 import { useAuthStore } from '@/app/authStore';
 import { text, INLINE_LINK, RADIUS } from '@/theme/recipes';
 
-
 const LAB_QUEUE_ITEMS: Array<{
   id: LabWorkflowStage;
   icon: string;
@@ -29,17 +28,26 @@ const LAB_QUEUE_ITEMS: Array<{
   { id: 'validation', icon: ICONS.ui.shieldCheck, countKey: 'validation' },
 ];
 
-export const LabPipelineSummary: React.FC = () => {
+export interface LabPipelineSummaryProps {
+  loading?: boolean;
+}
+
+export const LabPipelineSummary: React.FC<LabPipelineSummaryProps> = ({ loading: loadingProp }) => {
   const { hasRole } = useAuthStore();
   const canViewLab = hasRole(['administrator', 'lab-technician', 'lab-technician-plus']);
-  const { counts } = useLabStageQueueCounts();
+  const { counts, isPending } = useLabStageQueueCounts();
+  const loading = loadingProp ?? isPending;
 
   if (!canViewLab) {
     return null;
   }
 
   return (
-    <Card padding="md">
+    <Card
+      padding="md"
+      loading={loading}
+      loadingContent={labPipelineCardLoadingContent()}
+    >
       <div className="flex items-center justify-between mb-space-4">
         <h2 className={text({ role: 'amount' })}>Lab Pipeline</h2>
         <Link to={getLabTabPath('monitor')} className={INLINE_LINK}>

@@ -7,6 +7,7 @@
 import React, { type ReactNode, useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { EmptyState, PANEL_EMPTY_STATE } from '@/components/display';
+import { Card } from '@/components/surfaces';
 import { labQueueSearchTextFields, matchLabQueueSearchQuery } from '../utils/labSearchAndLinks';
 import { SPACING, WORKSPACE } from '@/theme/recipes';
 
@@ -77,6 +78,9 @@ interface LabWorkflowQueueLayoutProps<T> {
   emptyDescription: string;
   /** Filter row (e.g. LabQueueFilters). Parent filters items before passing here. */
   filterRow: ReactNode;
+  /** Parent-controlled initial load (shows card-sized placeholders). */
+  loading?: boolean;
+  loadingCardCount?: number;
 }
 
 export function LabWorkflowQueueLayout<T>({
@@ -86,6 +90,8 @@ export function LabWorkflowQueueLayout<T>({
   emptyTitle,
   emptyDescription,
   filterRow,
+  loading = false,
+  loadingCardCount = 5,
 }: LabWorkflowQueueLayoutProps<T>): React.ReactElement {
   const hasItems = items.length > 0;
   const parentRef = useRef<HTMLDivElement>(null);
@@ -103,12 +109,19 @@ export function LabWorkflowQueueLayout<T>({
       filterRow={filterRow}
       scrollRef={parentRef}
       scrollClassName={
-        hasItems
+        loading || hasItems
           ? `${WORKSPACE.contentInset}`
           : `${WORKSPACE.contentInset} flex flex-col`
       }
+      aria-busy={loading}
     >
-      {hasItems ? (
+      {loading ? (
+        <div className={`flex flex-col ${SPACING.gapSection}`}>
+          {Array.from({ length: loadingCardCount }).map((_, index) => (
+            <Card key={index} padding="md" loading className="min-h-[140px]" />
+          ))}
+        </div>
+      ) : hasItems ? (
         <div
           className={`relative w-full ${SPACING.gapSection}`}
           style={{ height: virtualizer.getTotalSize() }}

@@ -22,7 +22,6 @@ import { collectionFilterConfig } from '../constants';
 import { mapCollectionWorklistToSampleDisplay } from '../utils/labQueue';
 import { EMPTY_COPY, emptySubtitle } from '@/components/display';
 import { ErrorAlert, ErrorBoundary } from '@/components/feedback';
-import { DetailPageSkeleton } from '@/components/feedback/DetailPageSkeleton';
 import { useAuthStore } from '@/app/authStore';
 import { useTestCatalog } from '@/features/catalog';
 import { useClientListChrome } from '@/hooks';
@@ -74,15 +73,6 @@ export const SampleCollectionQueue: React.FC = () => {
     collectSampleMutation,
   });
 
-  const hasNoItems = collectionDisplays.length === 0;
-  if (worklistChrome.loading && hasNoItems) {
-    return (
-      <ErrorBoundary>
-        <DetailPageSkeleton variant="workflow-grid" />
-      </ErrorBoundary>
-    );
-  }
-
   if (worklistChrome.error) {
     return (
       <ErrorBoundary>
@@ -94,6 +84,7 @@ export const SampleCollectionQueue: React.FC = () => {
   return (
     <ErrorBoundary>
       <LabWorkflowQueueLayout
+        loading={worklistChrome.loading && collectionDisplays.length === 0}
         items={filteredDisplays}
         renderCard={display => (
           <SampleCollectionCard

@@ -22,7 +22,8 @@ import { BillingSummarySection } from './BillingSummarySection';
 import { OrderEventLogPanel } from '@/features/audit';
 
 interface LayoutProps {
-  order: Order;
+  loading?: boolean;
+  order?: Order;
   patient: Patient | null;
   invoice: Invoice | null;
   activeTests: OrderTest[];
@@ -109,6 +110,7 @@ interface OrderDetailPanelsProps extends LayoutProps {
  * Shared panel set: top row (Order, Patient, Progress) + bottom row (Tests, Billing).
  */
 const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
+  loading = false,
   order,
   patient,
   activeTests,
@@ -119,17 +121,22 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
   testsVariant,
   fillHeight,
 }) => {
-  const testsHeaderMeta = getTestsHeaderMeta(
-    order.tests?.length ?? activeTests.length,
-    supersededCount,
-    removedCount
-  );
-  const patientHeaderEnd = patient ? (
-    <IconButton onClick={onViewPatient} {...actionButtonPreset('view')} size="sm" title="View Patient" />
-  ) : undefined;
-  const billingHeaderEnd = (
-    <BillingSummaryPanelActions order={order} onPaymentSuccess={onPaymentSuccess} />
-  );
+  const testsHeaderMeta =
+    order != null
+      ? getTestsHeaderMeta(
+          order.tests?.length ?? activeTests.length,
+          supersededCount,
+          removedCount
+        )
+      : undefined;
+  const patientHeaderEnd =
+    !loading && patient ? (
+      <IconButton onClick={onViewPatient} {...actionButtonPreset('view')} size="sm" title="View Patient" />
+    ) : undefined;
+  const billingHeaderEnd =
+    !loading && order ? (
+      <BillingSummaryPanelActions order={order} onPaymentSuccess={onPaymentSuccess} />
+    ) : undefined;
 
   return (
     <>
@@ -137,13 +144,20 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
         <Panel
           preset={fillHeight ? 'panel.page.auto.fill' : 'panel.page.visible'}
           title="Order Information"
+          loading={loading}
+          loadingShape="fields"
+          loadingRows={6}
         >
-          <OrderInfoSection order={order} />
+          {order ? <OrderInfoSection order={order} /> : null}
         </Panel>
 
         <Panel
           preset={fillHeight ? 'panel.page.auto.fill' : 'panel.page.visible'}
           title="Patient Information"
+          loading={loading}
+          loadingShape="fields"
+          loadingRows={6}
+          loadingHeaderAside={!loading && Boolean(patientHeaderEnd)}
           headerEnd={patientHeaderEnd}
         >
           <PatientInfoSection patient={patient} onViewPatient={onViewPatient} />
@@ -152,12 +166,17 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
         <Panel
           preset={fillHeight ? 'panel.pageEmbed.auto.fill.flexColumnMin' : 'panel.pageEmbed.visible'}
           title="Order activity"
+          loading={loading}
+          loadingShape="list"
+          loadingRows={4}
         >
-          <OrderEventLogPanel
-            orderId={order.orderId}
-            layout="embedded"
-            className={fillHeight ? 'min-h-0 flex-1' : undefined}
-          />
+          {order ? (
+            <OrderEventLogPanel
+              orderId={order.orderId}
+              layout="embedded"
+              className={fillHeight ? 'min-h-0 flex-1' : undefined}
+            />
+          ) : null}
         </Panel>
       </div>
 
@@ -166,21 +185,31 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
           preset={fillHeight ? 'panel.pageEmbed.span2Fill' : 'panel.pageEmbed.span2'}
           title="Tests"
           meta={testsHeaderMeta}
+          loading={loading}
+          loadingShape="table"
+          loadingTableColumns={5}
+          loadingTableRows={5}
         >
-          <TestsTable
-            tests={order.tests ?? []}
-            order={order}
-            patient={patient}
-            variant={testsVariant}
-          />
+          {order ? (
+            <TestsTable
+              tests={order.tests ?? []}
+              order={order}
+              patient={patient}
+              variant={testsVariant}
+            />
+          ) : null}
         </Panel>
 
         <Panel
           preset={fillHeight ? 'panel.pageEmbed.auto.fill.flexColumn' : 'panel.pageEmbed.visible.flexColumn'}
           title="Billing Summary"
+          loading={loading}
+          loadingShape="fields"
+          loadingRows={4}
+          loadingHeaderAside={!loading && Boolean(billingHeaderEnd)}
           headerEnd={billingHeaderEnd}
         >
-          <BillingSummarySection order={order} />
+          {order ? <BillingSummarySection order={order} /> : null}
         </Panel>
       </div>
     </>
@@ -191,51 +220,96 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
  * SmallScreenLayout - Single column stack for small screens.
  */
 export const SmallScreenLayout: React.FC<LayoutProps> = props => {
-  const { order, patient, activeTests, supersededCount, removedCount, onViewPatient, onPaymentSuccess } =
-    props;
-  const testsHeaderMeta = getTestsHeaderMeta(
-    order.tests?.length ?? activeTests.length,
+  const {
+    loading = false,
+    order,
+    patient,
+    activeTests,
     supersededCount,
-    removedCount
-  );
+    removedCount,
+    onViewPatient,
+    onPaymentSuccess,
+  } = props;
+  const testsHeaderMeta =
+    order != null
+      ? getTestsHeaderMeta(
+          order.tests?.length ?? activeTests.length,
+          supersededCount,
+          removedCount
+        )
+      : undefined;
+  const patientHeaderEnd =
+    !loading && patient ? (
+      <IconButton onClick={onViewPatient} {...actionButtonPreset('view')} size="sm" title="View Patient" />
+    ) : undefined;
+  const billingHeaderEnd =
+    !loading && order ? (
+      <BillingSummaryPanelActions order={order} onPaymentSuccess={onPaymentSuccess} />
+    ) : undefined;
 
   return (
     <div className={LAYOUT.detailScroll}>
-      <Panel preset="panel.page.visible.shrink" title="Order Information">
-        <OrderInfoSection order={order} />
+      <Panel
+        preset="panel.page.visible.shrink"
+        title="Order Information"
+        loading={loading}
+        loadingShape="fields"
+        loadingRows={6}
+      >
+        {order ? <OrderInfoSection order={order} /> : null}
       </Panel>
 
       <Panel
-        preset="panel.page.visible.shrink" title="Patient Information"
-        headerEnd={
-          patient ? (
-            <IconButton onClick={onViewPatient} {...actionButtonPreset('view')} size="sm" title="View Patient" />
-          ) : undefined
-        }
+        preset="panel.page.visible.shrink"
+        title="Patient Information"
+        loading={loading}
+        loadingShape="fields"
+        loadingRows={6}
+        loadingHeaderAside={!loading && Boolean(patientHeaderEnd)}
+        headerEnd={patientHeaderEnd}
       >
         <PatientInfoSection patient={patient} onViewPatient={onViewPatient} />
       </Panel>
 
-      <Panel preset="panel.pageEmbed.stackMinHeight" title="Order activity">
-        <OrderEventLogPanel orderId={order.orderId} layout="embedded" />
-      </Panel>
-
-      <Panel preset="panel.pageEmbed.visible.shrink" title="Tests" meta={testsHeaderMeta}>
-        <TestsTable
-          tests={order.tests ?? []}
-          order={order}
-          patient={patient}
-          variant="simple"
-        />
+      <Panel
+        preset="panel.pageEmbed.stackMinHeight"
+        title="Order activity"
+        loading={loading}
+        loadingShape="list"
+        loadingRows={4}
+      >
+        {order ? <OrderEventLogPanel orderId={order.orderId} layout="embedded" /> : null}
       </Panel>
 
       <Panel
-        preset="panel.pageEmbed.visible.shrink.flexColumn" title="Billing Summary"
-        headerEnd={
-          <BillingSummaryPanelActions order={order} onPaymentSuccess={onPaymentSuccess} />
-        }
+        preset="panel.pageEmbed.visible.shrink"
+        title="Tests"
+        meta={testsHeaderMeta}
+        loading={loading}
+        loadingShape="table"
+        loadingTableColumns={5}
+        loadingTableRows={5}
       >
-        <BillingSummarySection order={order} />
+        {order ? (
+          <TestsTable
+            tests={order.tests ?? []}
+            order={order}
+            patient={patient}
+            variant="simple"
+          />
+        ) : null}
+      </Panel>
+
+      <Panel
+        preset="panel.pageEmbed.visible.shrink.flexColumn"
+        title="Billing Summary"
+        loading={loading}
+        loadingShape="fields"
+        loadingRows={4}
+        loadingHeaderAside={!loading && Boolean(billingHeaderEnd)}
+        headerEnd={billingHeaderEnd}
+      >
+        {order ? <BillingSummarySection order={order} /> : null}
       </Panel>
     </div>
   );

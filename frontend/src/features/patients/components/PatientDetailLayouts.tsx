@@ -20,7 +20,8 @@ import { PatientReportsList } from './PatientReportsList';
 import { getReportableOrders } from '../utils/patientFormatters';
 
 interface LayoutProps {
-  patient: Patient;
+  loading?: boolean;
+  patient?: Patient;
   orders: Order[];
   onOrderClick: (orderId: string) => void;
   onNewOrder: () => void;
@@ -42,6 +43,7 @@ function RelatedOrdersHeader({ onNewOrder }: { onNewOrder: () => void }) {
  * Record panels first, then orders, then reports directly underneath.
  */
 export const SmallScreenLayout: React.FC<LayoutProps> = ({
+  loading = false,
   patient,
   orders,
   onOrderClick,
@@ -49,26 +51,57 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 }) => {
   return (
     <div className={LAYOUT.detailScroll}>
-      <Panel preset="panel.page.visible.shrink" title="General Info">
-        <GeneralInfoSection patient={patient} />
-      </Panel>
-
-      <Panel preset="panel.page.visible.shrink" title="Medical History">
-        <MedicalHistorySectionDisplay patient={patient} />
-      </Panel>
-
-      <Panel preset="panel.page.visible.shrink" title="Care Snapshot">
-        <CareSnapshotSection patient={patient} />
+      <Panel
+        preset="panel.page.visible.shrink"
+        title="General Info"
+        loading={loading}
+        loadingShape="fields"
+        loadingRows={6}
+      >
+        {patient ? <GeneralInfoSection patient={patient} /> : null}
       </Panel>
 
       <Panel
-        preset="panel.pageEmbed.visible.shrink" title="Related Orders"
-        headerEnd={<RelatedOrdersHeader onNewOrder={onNewOrder} />}
+        preset="panel.page.visible.shrink"
+        title="Medical History"
+        loading={loading}
+        loadingShape="fields"
+        loadingRows={6}
       >
-        <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
+        {patient ? <MedicalHistorySectionDisplay patient={patient} /> : null}
       </Panel>
 
-      <Panel preset="panel.page.visible.shrink.flexColumn" title="Reports" meta={countMeta(getReportableOrders(orders).length)}>
+      <Panel
+        preset="panel.page.visible.shrink"
+        title="Care Snapshot"
+        loading={loading}
+        loadingShape="fields"
+        loadingRows={4}
+      >
+        {patient ? <CareSnapshotSection patient={patient} /> : null}
+      </Panel>
+
+      <Panel
+        preset="panel.pageEmbed.visible.shrink"
+        title="Related Orders"
+        loading={loading}
+        loadingShape="table"
+        loadingTableColumns={5}
+        loadingTableRows={4}
+        loadingHeaderAside={!loading}
+        headerEnd={loading ? undefined : <RelatedOrdersHeader onNewOrder={onNewOrder} />}
+      >
+        <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} loading={loading} />
+      </Panel>
+
+      <Panel
+        preset="panel.page.visible.shrink.flexColumn"
+        title="Reports"
+        meta={loading ? undefined : countMeta(getReportableOrders(orders).length)}
+        loading={loading}
+        loadingShape="list"
+        loadingRows={3}
+      >
         <PatientReportsList orders={orders} />
       </Panel>
     </div>
@@ -81,6 +114,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
  * and reports sit beside related orders.
  */
 export const MediumScreenLayout: React.FC<LayoutProps> = ({
+  loading = false,
   patient,
   orders,
   onOrderClick,
@@ -88,26 +122,39 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 }) => {
   return (
     <div className={cn(LAYOUT.detailGrid2, 'w-full pb-layout-scroll-end')}>
-      <Panel preset="panel.page.visible" title="General Info">
-        <GeneralInfoSection patient={patient} />
+      <Panel preset="panel.page.visible" title="General Info" loading={loading} loadingShape="fields" loadingRows={6}>
+        {patient ? <GeneralInfoSection patient={patient} /> : null}
       </Panel>
 
-      <Panel preset="panel.page.visible" title="Medical History">
-        <MedicalHistorySectionDisplay patient={patient} />
+      <Panel preset="panel.page.visible" title="Medical History" loading={loading} loadingShape="fields" loadingRows={6}>
+        {patient ? <MedicalHistorySectionDisplay patient={patient} /> : null}
       </Panel>
 
-      <Panel preset="panel.page.visible.span2" title="Care Snapshot">
-        <CareSnapshotSection patient={patient} />
+      <Panel preset="panel.page.visible.span2" title="Care Snapshot" loading={loading} loadingShape="fields" loadingRows={4}>
+        {patient ? <CareSnapshotSection patient={patient} /> : null}
       </Panel>
 
       <Panel
-        preset="panel.pageEmbed.visible" title="Related Orders"
-        headerEnd={<RelatedOrdersHeader onNewOrder={onNewOrder} />}
+        preset="panel.pageEmbed.visible"
+        title="Related Orders"
+        loading={loading}
+        loadingShape="table"
+        loadingTableColumns={5}
+        loadingTableRows={4}
+        loadingHeaderAside={!loading}
+        headerEnd={loading ? undefined : <RelatedOrdersHeader onNewOrder={onNewOrder} />}
       >
-        <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
+        <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} loading={loading} />
       </Panel>
 
-      <Panel preset="panel.page.visible.flexColumn" title="Reports" meta={countMeta(getReportableOrders(orders).length)}>
+      <Panel
+        preset="panel.page.visible.flexColumn"
+        title="Reports"
+        meta={loading ? undefined : countMeta(getReportableOrders(orders).length)}
+        loading={loading}
+        loadingShape="list"
+        loadingRows={3}
+      >
         <PatientReportsList orders={orders} />
       </Panel>
     </div>
@@ -119,6 +166,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
  * Orders take two columns so the table keeps its columns; reports use the remaining column.
  */
 export const LargeScreenLayout: React.FC<LayoutProps> = ({
+  loading = false,
   patient,
   orders,
   onOrderClick,
@@ -130,16 +178,16 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
       style={{ height: '100%', maxHeight: '100%' }}
     >
       <div className={cn(LAYOUT.detailGrid3, 'min-h-0 h-full items-stretch')}>
-        <Panel preset="panel.page.auto.fill" title="General Info">
-          <GeneralInfoSection patient={patient} />
+        <Panel preset="panel.page.auto.fill" title="General Info" loading={loading} loadingShape="fields" loadingRows={6}>
+          {patient ? <GeneralInfoSection patient={patient} /> : null}
         </Panel>
 
-        <Panel preset="panel.page.auto.fill" title="Medical History">
-          <MedicalHistorySectionDisplay patient={patient} />
+        <Panel preset="panel.page.auto.fill" title="Medical History" loading={loading} loadingShape="fields" loadingRows={6}>
+          {patient ? <MedicalHistorySectionDisplay patient={patient} /> : null}
         </Panel>
 
-        <Panel preset="panel.page.auto.fill" title="Care Snapshot">
-          <CareSnapshotSection patient={patient} />
+        <Panel preset="panel.page.auto.fill" title="Care Snapshot" loading={loading} loadingShape="fields" loadingRows={4}>
+          {patient ? <CareSnapshotSection patient={patient} /> : null}
         </Panel>
       </div>
 
@@ -147,15 +195,23 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
         <Panel
           preset="panel.pageEmbed.span2Min"
           title="Related Orders"
-          headerEnd={<RelatedOrdersHeader onNewOrder={onNewOrder} />}
+          loading={loading}
+          loadingShape="table"
+          loadingTableColumns={5}
+          loadingTableRows={5}
+          loadingHeaderAside={!loading}
+          headerEnd={loading ? undefined : <RelatedOrdersHeader onNewOrder={onNewOrder} />}
         >
-          <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
+          <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} loading={loading} />
         </Panel>
 
         <Panel
           preset="panel.page.detailMinH.flexColumn"
           title="Reports"
-          meta={countMeta(getReportableOrders(orders).length)}
+          meta={loading ? undefined : countMeta(getReportableOrders(orders).length)}
+          loading={loading}
+          loadingShape="list"
+          loadingRows={3}
         >
           <PatientReportsList orders={orders} />
         </Panel>

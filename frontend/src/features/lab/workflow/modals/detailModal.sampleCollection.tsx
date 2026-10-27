@@ -121,7 +121,7 @@ export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({
     if (isOpen && sampleId && isFetchingSample) {
       return (
         <Modal isOpen={isOpen} onClose={onClose} title="Sample" size="3xl" isActive={isActive}>
-          <ModalPageShell loading />
+          <ModalPageShell loading loadingVariant="workflow" />
         </Modal>
       );
     }
@@ -137,7 +137,7 @@ export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({
   ) {
     return (
       <Modal isOpen={isOpen} onClose={onClose} title="Sample" size="3xl" isActive={isActive}>
-        <ModalPageShell loading />
+        <ModalPageShell loading loadingVariant="workflow" />
       </Modal>
     );
   }

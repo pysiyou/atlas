@@ -104,6 +104,21 @@ jobs:
       - name: Bootstrap database
         run: poetry run python -m app.platform.bootstrap
 
+      - name: Export OpenAPI spec
+        run: |
+          poetry run python -c "import json; from app.main import app; open('../contracts/openapi.json','w').write(json.dumps(app.openapi()))"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Verify OpenAPI TypeScript types match backend
+        run: |
+          npm ci
+          npx openapi-typescript ../contracts/openapi.json -o src/lib/api/types/generated/api.d.ts
+          cd .. && git diff --exit-code contracts/openapi.json frontend/src/lib/api/types/generated/api.d.ts
+        working-directory: frontend
+
       - name: API health smoke test
         run: |
           poetry run uvicorn app.main:app --host 127.0.0.1 --port 8000 &

@@ -13,6 +13,7 @@ import { createPatientRelatedOrdersTableConfig } from '../config/PatientOrdersTa
 export interface PatientOrdersTableProps {
   orders: Order[];
   onOrderClick: (orderId: string) => void;
+  loading?: boolean;
 }
 
 const EMPTY_MESSAGE = (
@@ -23,7 +24,11 @@ const EMPTY_MESSAGE = (
   />
 );
 
-export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({ orders, onOrderClick }) => {
+export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({
+  orders,
+  onOrderClick,
+  loading = false,
+}) => {
   const { getTestName } = useTestNameLookup();
 
   const viewConfig = useMemo(
@@ -35,6 +40,7 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({ orders, 
     <DataTable<Order>
       data={orders}
       viewConfig={viewConfig}
+      loading={loading}
       striped
       onRowClick={order => onOrderClick(String(order.orderId))}
       getRowKey={order => order.orderId}

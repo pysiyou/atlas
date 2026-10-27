@@ -3,9 +3,9 @@
  */
 
 import type { ReactNode } from 'react';
-import { ModalBodySkeleton } from '@/components/feedback/ModalBodySkeleton';
 import { cn } from '@/utils';
 import { FILTER } from '@/theme/recipes';
+import { ModalLoadingBody, type ModalLoadingVariant } from './modalLoading';
 
 /** Default vertical rhythm for workflow / preview modal sections. */
 export const MODAL_WORKFLOW_BODY_STACK = 'space-y-space-3';
@@ -31,8 +31,9 @@ export type ModalPageTone = keyof typeof MODAL_PAGE_TONE;
 
 export interface ModalPageShellProps {
   children?: ReactNode;
-  /** When true, show a compact body skeleton and hide the footer. */
+  /** When true, show a sized modal placeholder and hide the footer. */
   loading?: boolean;
+  loadingVariant?: ModalLoadingVariant;
   /** Sticky footer (DialogFooter, FilterModalFooter, FormDialogFooter, etc.). */
   footer?: ReactNode;
   tone?: ModalPageTone;
@@ -46,6 +47,7 @@ export interface ModalPageShellProps {
 export function ModalPageShell({
   children,
   loading = false,
+  loadingVariant = 'default',
   footer,
   tone = 'page',
   bodyPadding = 'default',
@@ -53,12 +55,14 @@ export function ModalPageShell({
   beforeBody,
 }: ModalPageShellProps) {
   const paddingClass = MODAL_PAGE_BODY_PADDING[bodyPadding];
+  const resolvedLoadingVariant =
+    loadingVariant === 'default' && bodyPadding === 'order' ? 'form' : loadingVariant;
 
   return (
     <div className={cn('flex h-full min-h-0 flex-col', MODAL_PAGE_TONE[tone])}>
       <div className={cn('min-h-0 flex-1 overflow-y-auto', paddingClass, bodyClassName)}>
         {beforeBody}
-        {loading ? <ModalBodySkeleton /> : children}
+        {loading ? <ModalLoadingBody variant={resolvedLoadingVariant} /> : children}
       </div>
       {loading ? null : footer}
     </div>

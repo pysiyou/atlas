@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Panel } from '@/components/surfaces';
+import { Panel, reportPreviewPanelLoadingContent } from '@/components/surfaces';
 import { RecordId } from '@/features/shared';
 import {
   ResultValidationNotesSection,
@@ -14,10 +14,11 @@ import { text, SPACING } from '@/theme/recipes';
 import type { LabReportPayload, ReportPreviewResultsLayout } from '../types';
 import { getActiveOrderTests } from '@/utils/presentation';
 
+const PLACEHOLDER_PANEL_COUNT = 2;
 interface ReportPreviewResultsProps {
-  reportData: LabReportPayload;
-  /** `table` = parameter / result / reference interval; `grid` = three-column label/value pairs. */
+  reportData?: LabReportPayload | null;
   layout?: ReportPreviewResultsLayout;
+  loading?: boolean;
 }
 
 type ReportTestResult = LabReportPayload['testResults'][number];
@@ -51,7 +52,25 @@ function reportPatient(
 export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({
   reportData,
   layout = 'table',
+  loading = false,
 }) => {
+  if (loading || reportData == null) {
+    return (
+      <div className={SPACING.stackRelaxed} aria-busy="true" aria-label="Loading report preview">
+        {Array.from({ length: PLACEHOLDER_PANEL_COUNT }).map((_, index) => (
+          <Panel
+            key={index}
+            preset="panel.compact.standard"
+            title=""
+            loading
+            loadingHeaderAside
+            loadingContent={reportPreviewPanelLoadingContent(layout)}
+          />
+        ))}
+      </div>
+    );
+  }
+
   const patient = reportPatient(reportData);
   const orderTests = getActiveOrderTests(reportData.order);
   if (reportData.testResults.length === 0) {

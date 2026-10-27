@@ -5,11 +5,12 @@ import { lazy, Suspense } from 'react';
 import { useClientListChrome } from '@/hooks';
 import type { UserRole } from '@/types';
 import { ErrorAlert } from '@/components/feedback';
-import { WORKSPACE } from '@/theme/recipes';
+import { Card } from '@/components/surfaces';
+import { WORKSPACE, SPACING } from '@/theme/recipes';
 import type { LabTabId } from '../constants/labConstants';
 import { WORKLIST_SHELL } from '@/theme/recipes';
 import { tabAllowed } from './laboratoryPageAccess';
-import { DetailPageSkeleton } from '@/components/feedback/DetailPageSkeleton';
+import { LabMonitorBoard } from '../monitor/LabMonitorBoard';
 
 const SampleCollectionQueue = lazy(() =>
   import('../collection/SampleCollectionQueue').then(module => ({
@@ -26,11 +27,6 @@ const ResultValidationQueue = lazy(() =>
     default: module.ResultValidationQueue,
   }))
 );
-const LabMonitorBoard = lazy(() =>
-  import('../monitor/LabMonitorBoard').then(module => ({
-    default: module.LabMonitorBoard,
-  }))
-);
 
 export interface LaboratoryPageStageContentProps {
   activeTab: LabTabId;
@@ -41,7 +37,16 @@ export interface LaboratoryPageStageContentProps {
 }
 
 function StageFallback({ isMonitor }: { isMonitor: boolean }) {
-  return <DetailPageSkeleton variant={isMonitor ? 'responsive-detail' : 'workflow-grid'} />;
+  if (isMonitor) {
+    return <LabMonitorBoard loading />;
+  }
+  return (
+    <div className={`${WORKSPACE.contentInset} flex flex-col ${SPACING.gapSection}`}>
+      {Array.from({ length: 5 }).map((_, index) => (
+        <Card key={index} padding="md" loading className="min-h-[140px]" />
+      ))}
+    </div>
+  );
 }
 
 export function LaboratoryPageStageContent({
