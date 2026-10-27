@@ -148,6 +148,7 @@ export function TableDataRow<T>({
     <div
       role="row"
       aria-rowindex={ariaRowIndex}
+      data-clickable={isClickable ? 'true' : undefined}
       className={cn(tableRow.base, isClickable && tableRow.clickable, stripeClass, customRowClass)}
       style={{ gridTemplateColumns, height: `${ROW_HEIGHTS[variant]}px` }}
       onClick={() => onRowClick?.(item, index)}

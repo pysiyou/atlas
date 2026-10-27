@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { CONTROL, RADIUS } from '@/theme/recipes';
+import { CONTROL, INTERACTIVE, RADIUS } from '@/theme/recipes';
 import { actionButtonPreset, Button, Avatar, Icon, IconButton } from '@/components/primitives';
 import { PageHeader } from '@/components/layout';
 import type { Patient } from '@/types/patient';
@@ -33,13 +33,14 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
           affiliation={patient.affiliation}
           trigger={
             <button
-              className={`${CONTROL.focusBrandSoft} ${RADIUS.field} flex items-center justify-center`}
+              type="button"
+              className={`${CONTROL.focusBrandSoft} ${RADIUS.field} flex items-center justify-center ${INTERACTIVE.clickable}`}
               aria-label="View affiliation details"
               title="View affiliation details"
             >
               <Icon
                 name={ICONS.ui.verified}
-                className="w-5 h-5 text-brand opacity-70 hover:opacity-100 cursor-pointer"
+                className="w-5 h-5 text-brand opacity-70 hover:opacity-100"
               />
             </button>
           }

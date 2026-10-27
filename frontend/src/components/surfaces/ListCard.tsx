@@ -3,7 +3,7 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { RADIUS, SURFACE } from '@/theme/recipes';
+import { INTERACTIVE, RADIUS, SURFACE } from '@/theme/recipes';
 import { cn } from '@/utils';
 
 export interface ListCardProps {
@@ -12,12 +12,16 @@ export interface ListCardProps {
   className?: string;
 }
 
-export const LIST_CARD_CLASS =
-  `${SURFACE.raised} ${RADIUS.surface} p-space-3 duration-200 cursor-pointer flex flex-col h-full`;
+const LIST_CARD_BASE = `${SURFACE.raised} ${RADIUS.surface} p-space-3 duration-200 flex flex-col h-full`;
+
+export const LIST_CARD_CLASS = `${LIST_CARD_BASE} ${INTERACTIVE.clickable}`;
 
 function ListCardRoot({ children, onPress, className }: ListCardProps) {
   return (
-    <div onClick={onPress} className={cn(LIST_CARD_CLASS, className)}>
+    <div
+      onClick={onPress}
+      className={cn(LIST_CARD_BASE, onPress != null && INTERACTIVE.clickable, className)}
+    >
       {children}
     </div>
   );

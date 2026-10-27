@@ -40,7 +40,7 @@ export const TABLE_SHELL = {
 export const INLINE_LINK = `${TABLE_TYPE.link} hover:opacity-90`;
 
 /** Reset `<button>` chrome for inline text links (e.g. “View”). */
-export const INLINE_LINK_BUTTON = `${INLINE_LINK} inline-flex shrink-0 border-0 bg-transparent p-0 m-0 font-normal`;
+export const INLINE_LINK_BUTTON = `${INLINE_LINK} inline-flex shrink-0 cursor-pointer border-0 bg-transparent p-0 m-0 font-normal`;
 
 export const PAGINATION_TYPE = {
   pageButtonBase: `${TABLE_TYPE.size} font-normal`,

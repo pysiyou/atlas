@@ -5,6 +5,7 @@
 import type { NavigateFunction } from 'react-router-dom';
 import type { TableViewConfig } from '@/components/data-table';
 import { buildViews, TABLE_COLUMN_WIDTH } from '@/components/data-table';
+import { cn } from '@/utils';
 import {
   ORDER_TABLE_COLUMN_HEADERS,
   OrderStatusBadge,
@@ -19,6 +20,7 @@ import {
 import type { ReportableOrder } from '../types';
 import { ReportPrintButton } from '../components/ReportPrintButton';
 import { ValidatedTestReportCard } from '../components/ValidatedTestReportCard';
+import { INTERACTIVE } from '@/theme/recipes';
 
 const REPORT_VIEWS = {
   full: ['orderId', 'patientName', 'tests', 'orderDate', 'status', 'action'],
@@ -89,7 +91,10 @@ export const createReportTableConfig = (
       width: TABLE_COLUMN_WIDTH.action,
       render: (order: ReportableOrder) => (
         <div
-          className="flex items-center justify-start gap-space-1 font-normal"
+          className={cn(
+            'flex items-center justify-start gap-space-1 font-normal',
+            INTERACTIVE.actionIsland
+          )}
           onClick={e => e.stopPropagation()}
         >
           <ReportPrintButton

@@ -1,4 +1,4 @@
-/* Interactive elements — consistent pointer / disabled cursors app-wide */
+/* Interactive elements — consistent pointer / disabled / text cursors app-wide */
 
 :where(
   button:not(:disabled),
@@ -28,11 +28,36 @@
   cursor: pointer;
 }
 
-[data-theme='github'] input,
-[data-theme='github'] textarea,
-[data-theme='github'] select,
-[data-theme='noir-studio'] input,
-[data-theme='noir-studio'] textarea,
-[data-theme='noir-studio'] select {
+/* Text fields — avoid I-beam on buttons styled as inputs */
+:where(
+  input:not([type='button']):not([type='submit']):not([type='reset']):not([type='checkbox']):not(
+      [type='radio']
+    ):not([type='file']):not([type='range']):not([type='hidden']):not(:disabled),
+  textarea:not(:disabled)
+) {
+  cursor: text;
+}
+
+/* Data table & list shells implemented as div[role=row] */
+:where([role='row'][data-clickable='true']) {
+  cursor: pointer;
+}
+
+/* Sortable column headers (class may also set pointer; this covers aria-sort) */
+:where([role='columnheader'][aria-sort]) {
+  cursor: pointer;
+}
+
+/* Popover / modal bodies — not a single press target */
+:where([data-popover-content]) {
+  cursor: default;
+}
+
+:where([data-theme='github']) input,
+:where([data-theme='github']) textarea,
+:where([data-theme='github']) select,
+:where([data-theme='noir-studio']) input,
+:where([data-theme='noir-studio']) textarea,
+:where([data-theme='noir-studio']) select {
   color: var(--text);
 }

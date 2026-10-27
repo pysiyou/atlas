@@ -34,7 +34,7 @@ import {
 } from '@floating-ui/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils';
-import { OVERLAY } from '@/theme/recipes';
+import { INTERACTIVE, OVERLAY } from '@/theme/recipes';
 
 /**
  * Placement options for the popover
@@ -220,7 +220,11 @@ export const Popover: React.FC<PopoverProps> = ({
 
   return (
     <>
-      <div ref={refs.setReference} {...getReferenceProps()} className="w-full">
+      <div
+        ref={refs.setReference}
+        {...getReferenceProps()}
+        className={cn('w-full', INTERACTIVE.clickable)}
+      >
         {typeof trigger === 'function' ? trigger({ isOpen }) : trigger}
       </div>
 

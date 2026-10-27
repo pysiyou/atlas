@@ -10,6 +10,7 @@ export * from './panel';
 export * from './overlay';
 export * from './chrome';
 export * from './control';
+export * from './interactive';
 export * from './promo';
 export * from './misc';
 export * from './badge';

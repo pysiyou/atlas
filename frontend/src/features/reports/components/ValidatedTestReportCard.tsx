@@ -9,7 +9,7 @@ import type { CardComponentProps } from '@/components/data-table';
 import type { ReportableOrder } from '../types';
 import { OrderStatusBadge } from '@/features/orders';
 import { ReportPrintButton } from './ReportPrintButton';
-import { text } from '@/theme/recipes';
+import { INTERACTIVE, text } from '@/theme/recipes';
 import {
   EntityStack,
   renderCardDateTimeSecondary,
@@ -78,7 +78,10 @@ export function ValidatedTestReportCard({
           <RecordId type="order" value={order.orderId} emphasis="mutedBlock" />
           <span className="block mt-space-0-5">{renderCardDateTimeSecondary(order.orderDate)}</span>
         </div>
-        <div className="flex items-center gap-space-1" onClick={e => e.stopPropagation()}>
+        <div
+          className={cn('flex items-center gap-space-1', INTERACTIVE.actionIsland)}
+          onClick={e => e.stopPropagation()}
+        >
           <ReportPrintButton
             order={order}
             onPrint={onPrint}
