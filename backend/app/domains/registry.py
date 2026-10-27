@@ -12,6 +12,7 @@ from app.domains.lab.models.recollection_request import RecollectionRequest
 from app.domains.lab.models.sample import Sample
 from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient
+from app.domains.referent_doctors.models import ReferentDoctor
 from app.domains.users.models import User
 
 __all__ = [
@@ -30,4 +31,5 @@ __all__ = [
     "RecollectionRequest",
     "AffiliationPricing",
     "AnalyzerIngestDedup",
+    "ReferentDoctor",
 ]

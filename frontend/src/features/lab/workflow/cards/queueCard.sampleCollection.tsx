@@ -59,7 +59,7 @@ function SampleCollectionCardLeftColumnFromVm({
     <SampleCollectionCardLeftColumn
       patientName={patientName}
       orderId={vm.order.orderId}
-      referentDoctor={vm.order.referentDoctor}
+      referentDoctorName={vm.order.referentDoctorName ?? undefined}
       orderDate={vm.order.orderDate}
       sample={sample}
       isPending={vm.isPending}

@@ -1,12 +1,13 @@
 import { Controller, type Control } from 'react-hook-form';
 import type { Patient, PriorityLevel } from '@/types';
-import { Input, Textarea } from '@/components/inputs';
+import { Textarea } from '@/components/inputs';
 import { MultiSelectFilter } from '@/components/overlays';
 import { Panel } from '@/components/surfaces';
 import { ICONS } from '@/config/icons';
 import type { OrderFormInput } from '../schemas/order.schema';
 import { PatientSelect } from './PatientSelect';
 import { TestSelect } from './TestSelect';
+import { ReferentDoctorSelect } from '@/features/referent-doctors';
 import { OrderPaymentSection } from './OrderPaymentSection';
 import { FIELD_ERROR } from '@/theme/recipes';
 import type { useOrderUpsertModal } from '../hooks/useOrderUpsertModal';
@@ -32,6 +33,9 @@ interface OrderUpsertFormFieldsProps {
     | 'isProcessingPayment'
     | 'paymentError'
     | 'setPaymentError'
+    | 'selectedReferentDoctor'
+    | 'onSelectReferentDoctor'
+    | 'onClearReferentDoctor'
   >;
 }
 
@@ -57,6 +61,9 @@ export const OrderUpsertFormFields: React.FC<OrderUpsertFormFieldsProps> = ({
     isProcessingPayment,
     paymentError,
     setPaymentError,
+    selectedReferentDoctor,
+    onSelectReferentDoctor,
+    onClearReferentDoctor,
   } = modalState;
 
   return (
@@ -109,22 +116,12 @@ export const OrderUpsertFormFields: React.FC<OrderUpsertFormFieldsProps> = ({
         )}
       />
 
-      <Controller
-        name="referentDoctor"
+      <ReferentDoctorSelect
         control={control}
-        rules={{ required: 'Referent doctor is required' }}
-        render={({ field, fieldState }) => (
-          <Input
-            label="Referent doctor"
-            name={field.name}
-            icon={ICONS.dataFields.stethoscope}
-            value={field.value || ''}
-            onChange={field.onChange}
-            onBlur={field.onBlur}
-            placeholder="e.g. Dr. Smith"
-            error={fieldState.error?.message}
-          />
-        )}
+        selectedDoctor={selectedReferentDoctor}
+        onSelectDoctor={onSelectReferentDoctor}
+        onClearSelection={onClearReferentDoctor}
+        disabled={isSubmitting}
       />
 
       <Controller

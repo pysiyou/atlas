@@ -77,6 +77,11 @@ export const queryKeys = {
     search: (query: string) => [...queryKeys.patients.all, 'search', query] as const,
   },
 
+  referentDoctors: {
+    all: ['referentDoctors'] as const,
+    search: (query: string) => [...queryKeys.referentDoctors.all, 'search', query] as const,
+  },
+
   /**
    * Audit event log (append-only backend trail)
    */

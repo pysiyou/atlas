@@ -132,7 +132,12 @@ export interface Order {
   specialInstructions?: string[];
   patientPrepInstructions?: string;
   clinicalNotes?: string;
-  referentDoctor?: string;
+  referentDoctorId?: number | null;
+  referentDoctorName?: string | null;
+  referentDoctorEmail?: string | null;
+  referentDoctorPhone?: string | null;
+  referentDoctorHospital?: string | null;
+  referentDoctorUsername?: string | null;
   priority: PriorityLevel;
 
   // Delivery tracking (optional - for detailed timeline)

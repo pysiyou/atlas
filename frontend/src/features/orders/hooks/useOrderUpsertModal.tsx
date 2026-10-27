@@ -13,6 +13,7 @@ import { getFeedback } from '@/utils/feedback';
 import { useOrderForm } from './useOrderForm';
 import { useTestCatalog, useTestSearch } from '@/features/catalog';
 import { usePatient, usePatientSearch } from '@/features/patients';
+import type { ReferentDoctor } from '@/features/referent-doctors';
 import { useCreatePayment } from '@/features/payments';
 import { useOrder } from '../api/orders';
 
@@ -120,6 +121,41 @@ export function useOrderUpsertModal({
   );
   const selectedPatient = selectedPatientById ?? initialPatient ?? null;
 
+  const [selectedReferentDoctor, setSelectedReferentDoctor] = useState<ReferentDoctor | null>(
+    null
+  );
+
+  useEffect(() => {
+    if (order?.referentDoctorId && order.referentDoctorName) {
+      setSelectedReferentDoctor({
+        referentDoctorId: order.referentDoctorId,
+        fullName: order.referentDoctorName,
+        email: order.referentDoctorEmail,
+        phone: order.referentDoctorPhone,
+        hospitalName: order.referentDoctorHospital,
+        username: order.referentDoctorUsername,
+        isActive: true,
+        createdAt: order.updatedAt,
+        updatedAt: order.updatedAt,
+      });
+    } else if (!order) {
+      setSelectedReferentDoctor(null);
+    }
+  }, [order]);
+
+  const onSelectReferentDoctor = useCallback(
+    (doctor: ReferentDoctor) => {
+      setSelectedReferentDoctor(doctor);
+      setValue('referentDoctorId', doctor.referentDoctorId, { shouldValidate: true });
+    },
+    [setValue]
+  );
+
+  const onClearReferentDoctor = useCallback(() => {
+    setSelectedReferentDoctor(null);
+    setValue('referentDoctorId', null, { shouldValidate: true });
+  }, [setValue]);
+
   const { tests, byCode } = useTestCatalog();
   const { results: filteredTests } = useTestSearch(testSearch);
 
@@ -178,6 +214,9 @@ export function useOrderUpsertModal({
     setValue,
     isSubmitting,
     selectedPatient,
+    selectedReferentDoctor,
+    onSelectReferentDoctor,
+    onClearReferentDoctor,
     patientSearch,
     setPatientSearch,
     filteredPatients,

@@ -136,7 +136,7 @@ function resolveCollectedAt(reportData: LabReportPayload): string | undefined {
 }
 
 function resolveReferrer(reportData: LabReportPayload): string {
-  return reportData.order.referentDoctor?.trim() ?? '';
+  return reportData.order.referentDoctorName?.trim() ?? '';
 }
 
 function resolvePatientEmail(reportData: LabReportPayload): string {

@@ -6,8 +6,11 @@
 import React from 'react';
 import type { Patient } from '@/types';
 import { DescriptionItem } from '@/components/display';
-import { calculateAge } from '@/utils';
-import { formatPatientDetailDate, formatAddress, formatRelationship } from '../utils/patientFormatters';
+import {
+  formatBirthdayWithAge,
+  formatAddress,
+  formatEmergencyContactDisplay,
+} from '../utils/patientFormatters';
 import { ICONS } from '@/config/icons';
 import { DescriptionColumns } from '@/components/display';
 
@@ -17,9 +20,6 @@ export interface GeneralInfoSectionProps {
 
 /** Core identity and contact fields (order detail top section). */
 export function renderPatientBasicInfoDescriptionItems(patient: Patient): React.ReactElement[] {
-  const age = patient.dateOfBirth ? calculateAge(patient.dateOfBirth) : null;
-  const ageLabel = age == null || !Number.isFinite(age) ? 'N/A' : `${age} years`;
-
   return [
     <DescriptionItem
       key="gender"
@@ -32,14 +32,7 @@ export function renderPatientBasicInfoDescriptionItems(patient: Patient): React.
       key="birthday"
       icon={ICONS.dataFields.birthday}
       label="Birthday"
-      value={formatPatientDetailDate(patient.dateOfBirth, 'long')}
-      orientation="vertical"
-    />,
-    <DescriptionItem
-      key="age"
-      icon={ICONS.dataFields.age}
-      label="Age"
-      value={ageLabel}
+      value={formatBirthdayWithAge(patient.dateOfBirth)}
       orientation="vertical"
     />,
     <DescriptionItem
@@ -67,44 +60,15 @@ export function renderPatientBasicInfoDescriptionItems(patient: Patient): React.
 }
 
 export function renderPatientEmergencyContactDescriptionItems(patient: Patient): React.ReactElement[] {
-  const contact = patient.emergencyContact;
-  const items: React.ReactElement[] = [
+  return [
     <DescriptionItem
       key="emergency-contact"
       icon={ICONS.ui.usersGroup}
       label="Emergency Contact"
-      value={contact?.fullName || 'N/A'}
-      orientation="vertical"
-    />,
-    <DescriptionItem
-      key="emergency-relationship"
-      icon={ICONS.ui.link}
-      label="Emergency Relationship"
-      value={formatRelationship(contact?.relationship)}
-      orientation="vertical"
-    />,
-    <DescriptionItem
-      key="emergency-phone"
-      icon={ICONS.dataFields.phone}
-      label="Emergency Phone"
-      value={contact?.phone || 'N/A'}
+      value={formatEmergencyContactDisplay(patient.emergencyContact)}
       orientation="vertical"
     />,
   ];
-
-  if (contact?.email) {
-    items.push(
-      <DescriptionItem
-        key="emergency-email"
-        icon={ICONS.dataFields.email}
-        label="Emergency Email"
-        value={contact.email}
-        orientation="vertical"
-      />
-    );
-  }
-
-  return items;
 }
 
 /** Description fields for general patient identity and contact (shared with order detail). */

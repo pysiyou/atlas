@@ -24,6 +24,13 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order }) => 
   const createdById = order.createdBy?.trim() || null;
   const createdByName = createdById ? getUserName(createdById) : null;
   const activeTests = useMemo(() => getActiveTests(order.tests ?? []), [order.tests]);
+  const referentDoctorDisplay = useMemo(() => {
+    const name = order.referentDoctorName?.trim();
+    const hospital = order.referentDoctorHospital?.trim();
+    if (!name) return 'N/A';
+    return hospital ? `${name} (${hospital})` : name;
+  }, [order.referentDoctorName, order.referentDoctorHospital]);
+
   const testsDisplay = useMemo(() => {
     const count = order.testCount ?? order.tests?.length;
     const testCodes = order.testCodes;
@@ -75,7 +82,7 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order }) => 
           <DescriptionItem
             icon={getDataFieldIcon('referentDoctor')}
             label="Referent doctor"
-            value={order.referentDoctor || 'N/A'}
+            value={referentDoctorDisplay}
             orientation="vertical"
           />
           {testsDisplay != null ? (

@@ -65,7 +65,12 @@ export interface CollectionWorklistItem {
   collectedAt?: string | null;
   collectedBy?: string | null;
   collectedVolume?: number | null;
-  referentDoctor?: string | null;
+  referentDoctorId?: number | null;
+  referentDoctorName?: string | null;
+  referentDoctorEmail?: string | null;
+  referentDoctorPhone?: string | null;
+  referentDoctorHospital?: string | null;
+  referentDoctorUsername?: string | null;
   testName?: string | null;
   testCategory?: string | null;
 }
@@ -88,7 +93,12 @@ export interface EntryWorklistItem {
   isRetest: boolean;
   retestOfTestId?: number | null;
   retestNumber?: number;
-  referentDoctor?: string | null;
+  referentDoctorId?: number | null;
+  referentDoctorName?: string | null;
+  referentDoctorEmail?: string | null;
+  referentDoctorPhone?: string | null;
+  referentDoctorHospital?: string | null;
+  referentDoctorUsername?: string | null;
   testCategory?: string | null;
   pipelineStage?: 'collection' | 'entry' | 'validation' | 'escalation' | 'completed' | 'cancelled' | null;
   attentionReason?: string | null;
@@ -112,7 +122,12 @@ export interface DashboardWorklistItem {
   stage: 'collection' | 'entry' | 'validation';
   activityAt: string;
   orderDate: string;
-  referentDoctor?: string | null;
+  referentDoctorId?: number | null;
+  referentDoctorName?: string | null;
+  referentDoctorEmail?: string | null;
+  referentDoctorPhone?: string | null;
+  referentDoctorHospital?: string | null;
+  referentDoctorUsername?: string | null;
   testCategory?: string | null;
   attentionReason?: string | null;
   attentionLabel?: string | null;
@@ -134,7 +149,12 @@ export interface ValidationWorklistItem {
   results?: Record<string, unknown> | null;
   flags?: string[] | null;
   enteredBy?: string | null;
-  referentDoctor?: string | null;
+  referentDoctorId?: number | null;
+  referentDoctorName?: string | null;
+  referentDoctorEmail?: string | null;
+  referentDoctorPhone?: string | null;
+  referentDoctorHospital?: string | null;
+  referentDoctorUsername?: string | null;
   isRetest?: boolean;
   retestOfTestId?: number | null;
   retestNumber?: number;
