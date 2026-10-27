@@ -4,6 +4,7 @@ import { StatusValueBadge } from '@/features/shared';
 import type { CardComponentProps } from '@/components/data-table';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import type { TestSummary } from '@/types';
+import { formatSynonymsPreview } from '@/utils/presentation';
 import { text, BADGE, PRICE_DISPLAY } from '@/theme/recipes';
 
 
@@ -34,12 +35,11 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<TestSumm
 
       <div className="grow">
         <div className="space-y-space-1">
-          {test.synonyms && test.synonyms.length > 0 && (
+          {formatSynonymsPreview(test.synonyms) ? (
             <div className={`${text({ role: 'label' })} truncate`}>
-              {test.synonyms.slice(0, 2).join(', ')}
-              {test.synonyms.length > 2 && ` +${test.synonyms.length - 2} more`}
+              {formatSynonymsPreview(test.synonyms)}
             </div>
-          )}
+          ) : null}
         </div>
       </div>
 

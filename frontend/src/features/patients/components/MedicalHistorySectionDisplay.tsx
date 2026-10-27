@@ -2,6 +2,7 @@
  * MedicalHistorySectionDisplay
  * Read-only medical history in a two-column vertical flow.
  */
+/* eslint-disable react-refresh/only-export-components -- description builders exported for order detail */
 
 import React from 'react';
 import type { Patient } from '@/types';

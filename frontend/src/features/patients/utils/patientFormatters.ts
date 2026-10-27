@@ -10,7 +10,7 @@ import { calculateAge, formatPhoneNumber } from '@/utils';
 import { formatDetailDate as formatDetailDateUtil, formatOrderDate } from '@/utils/date';
 import { INACTIVE_REPORTABLE_TEST_STATUSES } from '@/features/orders/constants/reportableTestStatus';
 
-/** Compact sex + age for tables (e.g. lab worklists): "Male · 42 y". */
+/** Compact sex + age for tables (e.g. lab worklists): "Male · 42 years". */
 export function formatPatientSexAgeLine(
   gender?: Gender | string | null,
   dateOfBirth?: string | null,
@@ -22,7 +22,7 @@ export function formatPatientSexAgeLine(
   }
   const age = dateOfBirth ? calculateAge(dateOfBirth) : null;
   if (age != null && Number.isFinite(age)) {
-    parts.push(`${age} y`);
+    parts.push(age === 1 ? '1 year' : `${age} years`);
   }
   return parts.length > 0 ? parts.join(' · ') : null;
 }

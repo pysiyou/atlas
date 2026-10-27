@@ -4,7 +4,7 @@
 
 import type { ContainerType, Sample } from '@/types';
 import { CONTAINER_COLOR_OPTIONS, CONTAINER_CONFIG } from '@/types';
-import { formatVolume } from '../../utils';
+import { formatVolumeMl } from '@/utils/presentation';
 import { TONE } from '@/theme/recipes';
 import { DetailGrid, type DetailGridSectionConfig } from '../shared/detailModalLayout';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
@@ -64,17 +64,17 @@ export function CollectionDetailGrid({
   sections.push({
     preset: 'panel.compact.standard', title: 'Volume Tracking',
     fields: [
-      { label: 'Required', value: formatVolume(sample.requiredVolume) },
+      { label: 'Required', value: formatVolumeMl(sample.requiredVolume) },
       {
         label: 'Collected',
-        value: collectedVolume !== undefined ? formatVolume(collectedVolume) : undefined,
+        value: collectedVolume !== undefined ? formatVolumeMl(collectedVolume) : undefined,
       },
       {
         label: 'Remaining',
         value:
           remainingVolume !== undefined ? (
             <span className={remainingVolume < sample.requiredVolume * 0.2 ? TONE.danger.fg : ''}>
-              {formatVolume(remainingVolume)}
+              {formatVolumeMl(remainingVolume)}
             </span>
           ) : undefined,
       },

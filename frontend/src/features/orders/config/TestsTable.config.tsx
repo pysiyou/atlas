@@ -1,5 +1,4 @@
 import React from 'react';
-import { RecordId } from '@/features/shared';
 import type { TableViewConfig, CardComponentProps } from '@/components/data-table';
 import {
   buildViews,
@@ -14,7 +13,8 @@ import { StatusValueBadge } from '@/features/shared';
 import { OrderTestStatusBadge } from '../components/OrderDomainBadges';
 import { getOrderTestLineageRowClass } from '../utils/orderTestLineage';
 import type { OrderTest, TestSummary } from '@/types';
-import { text, BADGE, TABLE_TYPE, RADIUS, PRESENTATION_STACK_CLASS } from '@/theme/recipes';
+import { text, BADGE, TABLE_TYPE, RADIUS } from '@/theme/recipes';
+import { renderNavigableSampleId, renderOrderTestIdentity } from '@/utils/presentation';
 
 
 const SIMPLE_VIEWS = {
@@ -28,19 +28,6 @@ const DETAILED_VIEWS = {
   medium: ['test', 'category', 'status', 'sampleId', 'updatedAt'],
   compact: SIMPLE_VIEWS.compact,
 } as const;
-
-function renderOrderTestIdentity(test: OrderTest, testCatalog: TestSummary[]) {
-  const name = getTestName(test.testCode, testCatalog);
-
-  return (
-    <div className={PRESENTATION_STACK_CLASS}>
-      <span className={cn(TABLE_TYPE.cell, 'block min-w-0 truncate')} title={name}>
-        {name}
-      </span>
-      <RecordId emphasis="mutedBlock">{test.testCode}</RecordId>
-    </div>
-  );
-}
 
 function renderTestCategoryBadge(test: OrderTest, testCatalog: TestSummary[]) {
   const category = getTestProperty(test.testCode, 'category', testCatalog);
@@ -126,7 +113,7 @@ export function createTestsTableConfig(
       'Sample',
       test =>
         test.sampleId ? (
-          <RecordId type="sample" value={test.sampleId} />
+          renderNavigableSampleId(test.sampleId)
         ) : (
           <span className={TABLE_TYPE.meta}>—</span>
         ),

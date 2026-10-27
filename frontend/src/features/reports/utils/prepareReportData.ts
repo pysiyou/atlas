@@ -1,11 +1,11 @@
 import type jsPDF from 'jspdf';
-import type { Order, OrderTest, Patient, Test, TestParameter, TestResult } from '@/types';
+import type { OrderTest, Patient, Test, TestParameter, TestResult } from '@/types';
 import type { LabReportPayload, ReportableOrder } from '../types';
 import { RESULT_NOT_AVAILABLE } from '../types';
 import { companyConfig } from '@/config/company';
 import { isDateInInclusiveRange } from '@/utils/date';
 import { calculateAge } from '@/utils/string';
-import { INACTIVE_REPORTABLE_TEST_STATUSES } from '@/features/orders/constants/reportableTestStatus';
+import { getActiveOrderTests } from '@/utils/presentation';
 
 interface SampleLookup {
   (sampleId: number): { status: string; collectedAt?: string; collectedBy?: string } | undefined;
@@ -20,15 +20,6 @@ interface PrepareReportDataOptions {
 }
 
 export type LabReportParameter = LabReportPayload['testResults'][number]['parameters'][number];
-
-/**
- * Active order tests exclude removed and superseded lines.
- */
-export function getActiveOrderTests(order: Order): OrderTest[] {
-  return (order.tests ?? [])
-    .filter(test => !INACTIVE_REPORTABLE_TEST_STATUSES.has(test.status))
-    .sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
-}
 
 /**
  * Filters reportable orders by inclusive order-date range.

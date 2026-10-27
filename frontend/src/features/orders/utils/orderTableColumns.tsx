@@ -15,14 +15,14 @@ import {
 } from '../components/OrderDomainBadges';
 import { StatusValueBadge } from '@/features/shared';
 import { ORDER_TABLE_COLUMN_HEADERS } from '../constants/orderTableColumns';
-import { formatPatientSexAgeLine } from '@/features/patients/utils/patientFormatters';
+import { formatPatientSexAgeLine } from '@/utils/presentation';
 import type { Gender } from '@/types';
 import {
   renderOrderDateCell,
   renderOrderPatientName,
   renderOrderTestsBlock,
   renderOrderTotalPrice,
-} from './orderTableColumnRenders';
+} from '@/utils/presentation';
 
 export interface OrderColumnAccessors<T> {
   getOrderId: (item: T) => number | string;

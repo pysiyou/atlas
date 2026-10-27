@@ -9,7 +9,7 @@ import { useUserLookup } from '@/lib/api/users';
 import { OrderTestDescriptionItemGrid } from '../utils/orderTestDescriptionColumns';
 import { splitDescriptionItemsIntoTwoColumns } from '../utils/orderTestDescriptionLayout';
 import type { Sample, Test } from '@/types';
-import { buildSampleFields } from '../utils/buildSampleFields';
+import { buildSampleCollectionDescriptionItems } from '@/utils/presentation';
 import { SegmentedControl } from '@/components/inputs/SegmentedControl';
 import { text, INLINE_LINK_BUTTON } from '@/theme/recipes';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
@@ -100,7 +100,9 @@ export const OrderTestSampleTabs: React.FC<OrderTestSampleTabsProps> = ({
   return (
     <Panel preset="panel.compact.standard" title="Collection Requirements & Instructions" headerEnd={headerEnd}>
       <OrderTestDescriptionItemGrid
-        columns={splitDescriptionItemsIntoTwoColumns(buildSampleFields(activeSample))}
+        columns={splitDescriptionItemsIntoTwoColumns(
+          buildSampleCollectionDescriptionItems(activeSample)
+        )}
         resolveUserDisplay={getUserName}
       />
       <button

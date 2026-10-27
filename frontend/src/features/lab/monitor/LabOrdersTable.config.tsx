@@ -15,20 +15,21 @@ import {
   TABLE_COLUMN_WIDTH,
   type TableViewConfig,
 } from '@/components/data-table';
-import { LabPresentationTableCell } from '../components/LabPresentationBadge';
 import { ListCard } from '@/components/surfaces';
 import type { CardComponentProps } from '@/components/data-table';
-import { OrderTestStatusBadge } from '@/features/orders';
 import { getOrderTestLineageRowClass } from '@/features/orders';
 import { cn } from '@/utils';
 import {
   renderDateTimeCell,
-  renderPatientNameBlock,
   renderTableEmptyCell,
   renderTableTwoLineCell,
 } from '@/utils/tableColumnRenders';
-import { renderPatientSexAgeSecondary } from '@/features/patients/utils/patientTableColumnRenders';
-import { formatPatientSexAgeLine } from '@/features/patients/utils/patientFormatters';
+import {
+  formatPatientSexAgeLine,
+  renderPatientNameCell,
+  renderTestNameCodeStack,
+  StatusPresentationBadge,
+} from '@/utils/presentation';
 import type { LabOrderTableRow } from './LabOrdersTable';
 import { BADGE } from '@/theme/recipes';
 
@@ -39,12 +40,13 @@ const VIEWS = {
 } as const;
 
 function renderMonitorStatus(row: LabOrderTableRow) {
-  const presentation = row.statusPresentation;
-  if (presentation) {
-    return <LabPresentationTableCell presentation={presentation} size="xs" />;
-  }
   return (
-    <OrderTestStatusBadge status={row.status} presentation={null} layout="compact" size="xs" />
+    <StatusPresentationBadge
+      status={row.status}
+      presentation={row.statusPresentation}
+      layout="compact"
+      size="xs"
+    />
   );
 }
 
@@ -66,11 +68,8 @@ function LabOrderTableCard({ item, onClick }: CardComponentProps<LabOrderTableRo
       <ListCard.Header
         leading={
           <div className="min-w-0 space-y-space-1">
-            {renderTableTwoLineCell(item.testName, item.testCode)}
-            {renderPatientNameBlock(
-              item.patientName,
-              renderPatientSexAgeSecondary(item.patientGender, item.patientDob),
-            )}
+            {renderTestNameCodeStack(item.testName, item.testCode)}
+            {renderPatientNameCell(item.patientName, item.patientGender, item.patientDob)}
           </div>
         }
         trailing={<LabPriorityBadge priority={item.priority} size="xs" />}
@@ -95,7 +94,7 @@ export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> 
       width: TABLE_COLUMN_WIDTH.primary,
       sortable: true,
       accessor: row => `${row.testName} ${row.testCode}`,
-      render: row => renderTableTwoLineCell(row.testName, row.testCode),
+      render: row => renderTestNameCodeStack(row.testName, row.testCode),
     }),
     patient: createColumn<LabOrderTableRow>('patient', 'Patient', {
       width: TABLE_COLUMN_WIDTH.supporting,
@@ -105,10 +104,7 @@ export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> 
           .filter(Boolean)
           .join(' '),
       render: row =>
-        renderPatientNameBlock(
-          row.patientName,
-          renderPatientSexAgeSecondary(row.patientGender, row.patientDob),
-        ),
+        renderPatientNameCell(row.patientName, row.patientGender, row.patientDob),
     }),
     sampleType: createBadgeColumn<LabOrderTableRow>(
       'sampleType',

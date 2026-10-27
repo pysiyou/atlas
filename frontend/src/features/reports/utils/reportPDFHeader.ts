@@ -3,10 +3,9 @@
  * Each row: fixed-width label + bold value.
  */
 
-import { format, isValid, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 import type jsPDF from 'jspdf';
-import { companyConfig } from '@/config';
-import { displayId } from '@/utils';
+import { buildReportHeaderViewModel, type ReportHeaderSource } from '@/utils/presentation';
 import type { LabReportPayload } from '../types';
 
 const FONT = 'courier';
@@ -58,118 +57,34 @@ type OrderWithPatientContact = LabReportPayload['order'] & {
   patientEmail?: string;
 };
 
+function labPayloadToHeaderSource(reportData: LabReportPayload): ReportHeaderSource {
+  const order = reportData.order as OrderWithPatientContact;
+  return {
+    patientId: reportData.patientId,
+    patientName: reportData.patientName,
+    patientDob: reportData.patientDob,
+    patientAge: reportData.patientAge,
+    patientGender: reportData.patientGender,
+    patientEmail: reportData.patientEmail,
+    order: {
+      orderId: order.orderId,
+      orderDate: order.orderDate,
+      createdAt: order.createdAt,
+      referentDoctorName: order.referentDoctorName,
+      scheduledCollectionTime: order.scheduledCollectionTime,
+      patientEmail: order.patientEmail,
+    },
+    timestamps: reportData.timestamps,
+    sampleCollection: reportData.sampleCollection,
+  };
+}
+
 function formatLabel(label: string, widthChars: number): string {
   return `${label.padEnd(widthChars, ' ')} :`;
 }
 
-function parseReportInstant(dateString?: string | null): Date | null {
-  if (!dateString) return null;
-  try {
-    const parsed = parseISO(dateString);
-    return isValid(parsed) ? parsed : null;
-  } catch {
-    return null;
-  }
-}
-
-function formatReportDate(dateString?: string | null): string {
-  const parsed = parseReportInstant(dateString);
-  return parsed ? format(parsed, 'dd/MM/yyyy') : '';
-}
-
-function formatReportClock(dateString?: string | null): string {
-  const parsed = parseReportInstant(dateString);
-  return parsed ? format(parsed, 'HH:mm') : '';
-}
-
-/** `on: dd/MM/yyyy at: HH:mm` */
-function formatOnAt(dateString?: string | null): string {
-  const datePart = formatReportDate(dateString);
-  const timePart = formatReportClock(dateString);
-  if (datePart && timePart) return `on: ${datePart} at: ${timePart}`;
-  if (datePart) return `on: ${datePart}`;
-  if (timePart) return `at: ${timePart}`;
-  return '';
-}
-
-/** `dd/MM/yyyy at: HH:mm` */
-function formatAtDateTime(dateString?: string | null): string {
-  const datePart = formatReportDate(dateString);
-  const timePart = formatReportClock(dateString);
-  if (datePart && timePart) return `${datePart} at: ${timePart}`;
-  return datePart || timePart;
-}
-
 function formatAtFromDate(date: Date): string {
   return `${format(date, 'dd/MM/yyyy')} at: ${format(date, 'HH:mm')}`;
-}
-
-function genderLetter(gender?: string): string {
-  if (!gender) return '';
-  const normalized = gender.toLowerCase();
-  if (normalized === 'male' || normalized === 'm') return 'M';
-  if (normalized === 'female' || normalized === 'f') return 'F';
-  return gender.charAt(0).toUpperCase();
-}
-
-function resolveBranchName(): string {
-  const city = companyConfig.getContact().address.city?.trim();
-  if (city) return city;
-  return companyConfig.getName();
-}
-
-function resolveRegisteredAt(reportData: LabReportPayload): string | undefined {
-  return (
-    reportData.timestamps?.registeredAt ??
-    reportData.order.orderDate ??
-    reportData.order.createdAt
-  );
-}
-
-function resolveCollectedAt(reportData: LabReportPayload): string | undefined {
-  return (
-    reportData.timestamps?.collectedAt ??
-    reportData.sampleCollection?.collectedAt ??
-    reportData.timestamps?.acceptedAt ??
-    reportData.order.scheduledCollectionTime
-  );
-}
-
-function resolveReferrer(reportData: LabReportPayload): string {
-  return reportData.order.referentDoctorName?.trim() ?? '';
-}
-
-function resolvePatientEmail(reportData: LabReportPayload): string {
-  const order = reportData.order as OrderWithPatientContact;
-  return reportData.patientEmail?.trim() || order.patientEmail?.trim() || '';
-}
-
-function formatPatientNameAndCode(reportData: LabReportPayload): string {
-  const code = displayId.patient(reportData.patientId);
-  return `${reportData.patientName}(Internal: ${code})`;
-}
-
-function formatBirthdayValue(reportData: LabReportPayload): string {
-  const dobPart = reportData.patientDob
-    ? formatReportDate(reportData.patientDob)
-    : '';
-  const age = reportData.patientAge;
-  if (dobPart && age !== undefined) {
-    const ageLabel = age === 1 ? '1 year old' : `${age} years old`;
-    return `${dobPart} (${ageLabel})`;
-  }
-  if (dobPart) return dobPart;
-  if (age !== undefined) {
-    const ageLabel = age === 1 ? '1 year old' : `${age} years old`;
-    return `(${ageLabel})`;
-  }
-  return '';
-}
-
-function formatOrderValue(reportData: LabReportPayload): string {
-  const orderId = displayId.order(reportData.order.orderId);
-  const when = formatOnAt(resolveRegisteredAt(reportData));
-  return when ? `${orderId} ${when}` : orderId;
 }
 
 function measureValueStart(doc: jsPDF, labelChars: number): number {
@@ -257,22 +172,21 @@ function drawHeaderField(
 }
 
 function buildLeftColumnRows(reportData: LabReportPayload): HeaderFieldRow[] {
-  const collectedAt = resolveCollectedAt(reportData);
-  const samplingValue = formatAtDateTime(collectedAt);
+  const vm = buildReportHeaderViewModel(labPayloadToHeaderSource(reportData));
 
   return [
     {
       label: LEFT_LABELS.branch,
-      value: resolveBranchName(),
+      value: vm.branchName,
       highlightValue: true,
     },
     {
       label: LEFT_LABELS.order,
-      value: formatOrderValue(reportData),
+      value: vm.orderDisplay,
     },
     {
       label: LEFT_LABELS.sampling,
-      value: samplingValue,
+      value: vm.samplingDisplay,
     },
     {
       label: LEFT_LABELS.printingDate,
@@ -280,28 +194,30 @@ function buildLeftColumnRows(reportData: LabReportPayload): HeaderFieldRow[] {
     },
     {
       label: LEFT_LABELS.referentDoctor,
-      value: resolveReferrer(reportData),
+      value: vm.referentDoctor,
     },
   ];
 }
 
 function buildRightColumnRows(reportData: LabReportPayload): HeaderFieldRow[] {
+  const vm = buildReportHeaderViewModel(labPayloadToHeaderSource(reportData));
+
   return [
     {
       label: RIGHT_LABELS.patient,
-      value: formatPatientNameAndCode(reportData),
+      value: vm.patientDisplay,
     },
     {
       label: RIGHT_LABELS.birthday,
-      value: formatBirthdayValue(reportData),
+      value: vm.birthdayDisplay,
     },
     {
       label: RIGHT_LABELS.sex,
-      value: genderLetter(reportData.patientGender),
+      value: vm.sexDisplay,
     },
     {
       label: RIGHT_LABELS.email,
-      value: resolvePatientEmail(reportData),
+      value: vm.emailDisplay,
     },
   ];
 }

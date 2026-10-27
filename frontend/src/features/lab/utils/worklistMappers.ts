@@ -1,3 +1,7 @@
+/**
+ * Maps flat worklist DTOs to legacy Sample/Order shapes for workflow actions.
+ * For display-only UI, prefer `@/utils/presentation` via `worklistPresentation.ts`.
+ */
 import type { SampleRequirement } from './labSample';
 import type { Order, Patient, Sample, SampleType, TestWithContext } from '@/types';
 import type { SampleCollectionQueueItem } from '../types';

@@ -84,13 +84,14 @@ export {
 export {
   renderOrderId,
   renderNavigableOrderId,
+  renderNavigableSampleId,
   renderOrderPatientName,
   renderOrderTestsBlock,
   renderOrderTotalPrice,
   renderOrderTotalPriceInline,
   renderOrderDateCell,
   type RenderOrderTestsBlockOptions,
-} from './utils/orderTableColumnRenders';
+} from '@/utils/presentation';
 
 export { Orders as OrdersPage } from './pages/OrdersPage';
 export { OrderList } from './pages/OrderList';

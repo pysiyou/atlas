@@ -2,18 +2,19 @@
  * Order-domain status chips — color/label from @/utils/statusBadge.
  */
 
-import { Badge, type BadgeProps } from '@/components/primitives';
-import {
-  LabPresentationCompactBadge,
-  LabPresentationStack,
-} from '@/features/lab/components/LabPresentationBadge';
+import type { BadgeProps } from '@/components/primitives';
 import type { OrderStatus, OrderTest, PriorityLevel } from '@/types';
 import type { StatusPresentation } from '@/types/labProjection';
+import { Badge } from '@/components/primitives';
 import { formatStatusBadgeLabel, resolveStatusBadgeColor } from '@/utils/statusBadge';
+import {
+  StatusPresentationBadge,
+  type StatusPresentationLayout,
+} from '@/utils/presentation';
 
 type DomainBadgeProps = Omit<BadgeProps, 'variant' | 'label' | 'children'>;
 
-export type StatusPresentationLayout = 'stack' | 'compact';
+export type { StatusPresentationLayout };
 
 export function OrderStatusBadge({
   status,
@@ -25,22 +26,11 @@ export function OrderStatusBadge({
   presentation?: StatusPresentation | null;
   layout?: StatusPresentationLayout;
 }) {
-  if (presentation) {
-    if (layout === 'compact') {
-      return (
-        <LabPresentationCompactBadge
-          presentation={presentation}
-          size={props.size}
-          className={props.className}
-        />
-      );
-    }
-    return <LabPresentationStack presentation={presentation} size={props.size} />;
-  }
   return (
-    <Badge
-      variant={resolveStatusBadgeColor(status)}
-      label={formatStatusBadgeLabel(status)}
+    <StatusPresentationBadge
+      status={status}
+      presentation={presentation}
+      layout={layout}
       {...props}
     />
   );
@@ -69,22 +59,11 @@ export function OrderTestStatusBadge({
   presentation?: StatusPresentation | null;
   layout?: StatusPresentationLayout;
 }) {
-  if (presentation) {
-    if (layout === 'compact') {
-      return (
-        <LabPresentationCompactBadge
-          presentation={presentation}
-          size={props.size}
-          className={props.className}
-        />
-      );
-    }
-    return <LabPresentationStack presentation={presentation} size={props.size} />;
-  }
   return (
-    <Badge
-      variant={resolveStatusBadgeColor(status)}
-      label={formatStatusBadgeLabel(status)}
+    <StatusPresentationBadge
+      status={status}
+      presentation={presentation}
+      layout={layout}
       {...props}
     />
   );

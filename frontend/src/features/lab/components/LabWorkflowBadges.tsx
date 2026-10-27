@@ -7,16 +7,12 @@ import { memo, type ReactNode } from 'react';
 import type { BadgeSize } from '@/components/primitives';
 import type { TestWithContext } from '@/types';
 import { WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
-import { OrderTestStatusBadge } from '@/features/orders';
 import {
   LabPriorityBadge,
   SampleStatusBadge,
   SampleTypeBadge,
 } from './LabDomainBadges';
-import {
-  LabPresentationCompactBadge,
-  LabPresentationStack,
-} from './LabPresentationBadge';
+import { StatusPresentationBadge } from '@/utils/presentation';
 import { useLabHeaderCompact } from './LabWorkflowHeader';
 import {
   LabCardMetaRow,
@@ -51,19 +47,18 @@ function TestStatusChip({
   variant: 'entry' | 'validation' | 'escalation';
 }) {
   const compact = useLabHeaderCompact();
-  const presentation = test.lab?.statusPresentation ?? null;
-  if (presentation) {
-    return compact ? (
-      <LabPresentationCompactBadge presentation={presentation} size={size} />
-    ) : (
-      <LabPresentationStack presentation={presentation} size={size} />
-    );
-  }
-  if (variant === 'escalation') {
+  if (variant === 'escalation' && !test.lab?.statusPresentation) {
     return <SampleStatusBadge status="escalated" size={size} />;
   }
-  if (test.status) {
-    return <OrderTestStatusBadge status={test.status} size={size} />;
+  if (test.status || test.lab?.statusPresentation) {
+    return (
+      <StatusPresentationBadge
+        status={test.status ?? 'pending'}
+        presentation={test.lab?.statusPresentation}
+        layout={compact ? 'compact' : 'stack'}
+        size={size}
+      />
+    );
   }
   return null;
 }

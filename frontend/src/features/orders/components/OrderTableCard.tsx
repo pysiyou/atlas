@@ -1,14 +1,16 @@
 import { Avatar } from '@/components/primitives';
 import { ListCard } from '@/components/surfaces';
 import { RecordId } from '@/features/shared';
-import { formatPatientSexAgeLine } from '@/features/patients/utils/patientFormatters';
 import type { CardComponentProps } from '@/components/data-table';
 import { OrderStatusBadge } from './OrderDomainBadges';
 import { StatusValueBadge } from '@/features/shared';
-import { renderOrderTestsBlock } from '@/features/orders';
 import { useTestNameLookup } from '@/features/catalog';
-import { formatCurrency, formatDateTime } from '@/utils';
-import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
+import { formatCurrency } from '@/utils';
+import {
+  formatPatientSexAgeLine,
+  renderCardDateTimeSecondary,
+  renderOrderTestsBlock,
+} from '@/utils/presentation';
 import { getActiveTests } from '../utils/orderCalculator';
 import type { Order } from '@/types';
 import { CardFooter, Text } from '@/components/layout';
@@ -35,7 +37,7 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
             <div className="min-w-0">
               <RecordId type="order" value={order.orderId} emphasis="block" />
               {order.orderDate ? (
-                <p className={`${TABLE_DATETIME_SECONDARY_CLASS} mt-space-0-5`}>{formatDateTime(order.orderDate)}</p>
+                <p className="mt-space-0-5">{renderCardDateTimeSecondary(order.orderDate)}</p>
               ) : null}
             </div>
           ) : (
@@ -78,9 +80,9 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
           </div>
         ) : (
           <>
-            <div className={TABLE_DATETIME_SECONDARY_CLASS}>
+            <div>
               <RecordId type="order" value={order.orderId} emphasis="mutedBlock" />
-              <span className="block mt-space-0-5">{formatDateTime(order.orderDate)}</span>
+              <span className="block mt-space-0-5">{renderCardDateTimeSecondary(order.orderDate)}</span>
             </div>
             <div className="flex items-center gap-space-2 shrink-0">
               {order.overallStatus && (

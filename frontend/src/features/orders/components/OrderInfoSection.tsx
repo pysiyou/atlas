@@ -12,7 +12,7 @@ import { getDataFieldIcon, getPriorityIcon, getOrderStatusIcon } from '@/config/
 import { useUserLookup } from '@/lib/api/users';
 import { useTestNameLookup } from '@/features/catalog';
 import { getActiveTests } from '../utils/orderCalculator';
-import { renderOrderTestsBlock } from '../utils/orderTableColumnRenders';
+import { renderOrderTestsBlock } from '@/utils/presentation';
 
 export interface OrderInfoSectionProps {
   order: Order;

@@ -10,7 +10,8 @@ import { buildViews, TABLE_COLUMN_WIDTH } from '@/components/data-table';
 import { formatCurrency } from '@/utils';
 import type { TestSummary } from '@/types';
 import { CatalogCard } from '../components/CatalogCard';
-import {BADGE, TABLE_TYPE, FG } from '@/theme/recipes';
+import { formatSynonymsPreview } from '@/utils/presentation';
+import { BADGE, TABLE_TYPE, FG } from '@/theme/recipes';
 
 
 const CATALOG_VIEWS = {
@@ -41,12 +42,11 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
       render: (test: TestSummary) => (
         <div className="min-w-0 font-normal">
           <div className={`${TABLE_TYPE.cell} truncate font-normal`}>{test.name}</div>
-          {test.synonyms && test.synonyms.length > 0 && (
+          {formatSynonymsPreview(test.synonyms) ? (
             <div className={`${TABLE_TYPE.meta} truncate font-normal`}>
-              {test.synonyms.slice(0, 2).join(', ')}
-              {test.synonyms.length > 2 && ` +${test.synonyms.length - 2} more`}
+              {formatSynonymsPreview(test.synonyms)}
             </div>
-          )}
+          ) : null}
         </div>
       ),
     },

@@ -2,9 +2,9 @@
  * Column registry helpers and pagination normalization.
  */
 
-import { createElement, type ReactNode } from 'react';
-import { TABLE_TYPE, tableCell } from '@/theme/recipes';
-import { formatDateTime } from '@/utils';
+import { type ReactNode } from 'react';
+import { tableCell } from '@/theme/recipes';
+import { renderDateTimeCell } from '@/utils/tableColumnRenders';
 import { TABLE_COLUMN_WIDTH } from './columnWidthTokens';
 import type {
   ColumnConfig,
@@ -16,21 +16,6 @@ import type {
   PaginationConfig,
   TableViewConfig,
 } from './types';
-
-const DATETIME_CELL_CLASS = `${TABLE_TYPE.datetime} truncate block font-normal`;
-
-function renderStandardDateTimeCell(
-  date: string | Date | null | undefined
-): ReactNode {
-  if (!date) {
-    return createElement('span', { className: `${TABLE_TYPE.meta} font-normal` }, '—');
-  }
-  return createElement(
-    'span',
-    { className: DATETIME_CELL_CLASS },
-    formatDateTime(date)
-  );
-}
 
 export type ColumnWidthOverride = ColumnWidth | ColumnSizePreset | string | number;
 
@@ -92,7 +77,7 @@ export function createDateTimeColumn<T>(
       if (value == null || value === '') return '';
       return typeof value === 'string' ? value : value.toISOString();
     }),
-    render: item => renderStandardDateTimeCell(getValue(item)),
+    render: item => renderDateTimeCell(getValue(item)),
   });
 }
 

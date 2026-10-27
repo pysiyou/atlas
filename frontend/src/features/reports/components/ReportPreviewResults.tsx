@@ -12,7 +12,7 @@ import {
 import type { Gender } from '@/types';
 import { text, SPACING } from '@/theme/recipes';
 import type { LabReportPayload, ReportPreviewResultsLayout } from '../types';
-import { getActiveOrderTests } from '../utils/prepareReportData';
+import { getActiveOrderTests } from '@/utils/presentation';
 
 interface ReportPreviewResultsProps {
   reportData: LabReportPayload;

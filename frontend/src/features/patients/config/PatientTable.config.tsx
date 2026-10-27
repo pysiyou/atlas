@@ -13,7 +13,7 @@ import {
   renderPatientId,
   renderPatientNameWithAge,
   renderPatientOrdersSummary,
-} from '../utils/patientTableColumnRenders';
+} from '@/utils/presentation';
 import type { PatientContext } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { PatientCard } from '../components/PatientCard';

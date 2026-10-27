@@ -15,7 +15,7 @@ import {
   SampleCollectionDetailFooter,
 } from './detailModal.sampleCollection.panels';
 import { LabEventLogPanel } from '@/features/audit';
-import type { deriveCollectionModalFields } from './detailModal.sampleCollection.derive';
+import type { deriveCollectionModalFields } from '@/utils/presentation';
 
 type CollectionFields = ReturnType<typeof deriveCollectionModalFields>;
 

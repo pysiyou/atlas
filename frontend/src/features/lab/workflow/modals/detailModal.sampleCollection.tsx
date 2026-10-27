@@ -13,7 +13,7 @@ import { useOrder } from '@/features/orders';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
 import { getTestNames } from '@/features/catalog/testLookup';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
-import { deriveCollectionModalFields } from './detailModal.sampleCollection.derive';
+import { deriveCollectionModalFields } from '@/utils/presentation';
 import { Modal, ModalPageShell } from '@/components/overlays';
 import { ErrorAlert } from '@/components/feedback';
 import { SampleCollectionDetailModalView } from './detailModal.sampleCollection.view';

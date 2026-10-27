@@ -21,8 +21,19 @@ export { PatientGenderBadge } from './components/PatientGenderBadge';
 export {
   renderPatientId,
   renderPatientNameWithAge,
-} from './utils/patientTableColumnRenders';
-export { formatAddress } from './utils/patientFormatters';
+  renderPatientOrdersSummary,
+  renderPatientSexAgeSecondary,
+} from '@/utils/presentation';
+export {
+  formatAddress,
+  formatPatientSexAgeLine,
+  formatBirthdayWithAge,
+  formatEmergencyContactDisplay,
+  formatPatientDetailDate,
+} from './utils/patientFormatters';
+export { renderGeneralInfoDescriptionItems } from './components/GeneralInfoSection';
+export { renderCareSnapshotDescriptionItems } from './components/CareSnapshotSection';
+export { renderMedicalHistoryDescriptionItems } from './components/MedicalHistorySectionDisplay';
 
 export { Patients as PatientsPage } from './pages/PatientsPage';
 export { PatientList } from './pages/PatientList';

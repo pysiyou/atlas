@@ -46,6 +46,7 @@
       "@/lib/*": ["./src/lib/*"],
       "@/config": ["./src/config"],
       "@/config/*": ["./src/config/*"],
+      "@/utils/presentation": ["./src/utils/presentation.ts"],
       "@/components/filters": ["./src/components/filters"],
       "@/components/filters/*": ["./src/components/filters/*"],
     }

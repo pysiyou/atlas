@@ -2,6 +2,7 @@
  * CareSnapshotSection
  * High-signal facts in a two-column vertical flow.
  */
+/* eslint-disable react-refresh/only-export-components -- description builders exported for order detail */
 
 import React from 'react';
 import { Badge } from '@/components/primitives';

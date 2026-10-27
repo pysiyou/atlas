@@ -91,4 +91,4 @@ export interface ReportTemplate {
 }
 
 /** Report preview — same as lab `ResultsGridLayout` (`table` | `grid`). */
-export type { ResultsGridLayout as ReportPreviewResultsLayout } from '@/features/lab/components/ResultsParameterGrid';
+export type { ResultsGridLayout as ReportPreviewResultsLayout } from '@/features/lab';

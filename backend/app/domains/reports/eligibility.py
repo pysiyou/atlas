@@ -4,7 +4,10 @@ from typing import Protocol
 
 from app.shared.contracts.enums import OrderStatus, TestStatus
 
-INACTIVE_TEST_STATUSES = frozenset({TestStatus.SUPERSEDED, TestStatus.REMOVED})
+# Align with order list aggregates (orders/service.py _INACTIVE_TEST_STATUSES).
+INACTIVE_TEST_STATUSES = frozenset(
+    {TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED}
+)
 
 
 class _OrderTestLike(Protocol):

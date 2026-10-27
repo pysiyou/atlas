@@ -5,7 +5,8 @@ import { ListCard } from '@/components/surfaces';
 import { RecordId } from '@/features/shared';
 import { PatientGenderBadge } from './PatientGenderBadge';
 import type { CardComponentProps } from '@/components/data-table';
-import { calculateAge, formatPhoneNumber } from '@/utils';
+import { formatPhoneNumber } from '@/utils';
+import { formatPatientSexAgeLine } from '@/utils/presentation';
 import type { Patient } from '@/types';
 
 /**
@@ -39,7 +40,9 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
 
       <Stack gap="inline" className="grow pt-space-1">
         <MetadataGrid columns={2}>
-          <MetadataItem>{`${calculateAge(patient.dateOfBirth)} years old`}</MetadataItem>
+          <MetadataItem>
+            {formatPatientSexAgeLine(patient.gender, patient.dateOfBirth) ?? '—'}
+          </MetadataItem>
           <MetadataItem>{formatPhoneNumber(patient.phone)}</MetadataItem>
           {patient.email ? <MetadataItem>{patient.email}</MetadataItem> : null}
         </MetadataGrid>

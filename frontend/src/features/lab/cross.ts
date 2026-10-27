@@ -27,6 +27,7 @@ export {
 export type { LabTabId, LabWorkflowKpiStage, LabWorkflowStage } from './constants/labConstants';
 
 export { ResultsParameterGrid } from './components/ResultsParameterGrid';
+export type { ResultsGridLayout } from './components/ResultsParameterGrid';
 export { ResultValueAnnotations } from './components/ResultValueAnnotations';
 
 export {
