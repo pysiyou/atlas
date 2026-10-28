@@ -6,7 +6,7 @@
 
 import { toast } from '@/app/AppToastBar';
 import type { ToastAction } from '@/components/overlays/Toast';
-import { FEEDBACK_CATALOG, type FeedbackEntry, type FeedbackId } from '@/utils/feedbackCatalog';
+import { FEEDBACK_CATALOG, type FeedbackEntry, type FeedbackId } from '@/types/generated/feedbackCatalog';
 import { isApiError } from '@/lib/api/errors';
 import { getErrorMessage } from '@/utils/errors';
 

@@ -17,9 +17,9 @@ import { generateFeedbackContract } from './lib/feedback-contract.mjs';
 import { generateLabContract } from './lib/lab-contract.mjs';
 import { CONTRACTS, ROOT } from './lib/read-contract.mjs';
 import { generateTestCatalogMeta } from './lib/test-catalog-meta.mjs';
-import { validateEnumsContract } from './lib/validate-enums.mjs';
+import { validateAllContracts } from './lib/validate-contracts.mjs';
 
-validateEnumsContract();
+validateAllContracts();
 generateLabContract();
 generateEnums();
 generateContainerCatalog();
@@ -27,7 +27,11 @@ generateFeedbackContract();
 generateAuditEvents();
 generateTestCatalogMeta();
 verifyAuditCatalogCoverage();
-generateOpenApiTypes();
+if (process.env.ATLAS_CODEGEN_SKIP_OPENAPI !== '1') {
+  generateOpenApiTypes();
+} else {
+  console.log('skip OpenAPI types (ATLAS_CODEGEN_SKIP_OPENAPI=1)');
+}
 console.log('codegen complete');
 
 function exportOpenApiSpec() {

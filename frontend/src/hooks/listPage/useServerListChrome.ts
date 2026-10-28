@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { FeedbackId } from '@/utils/feedbackCatalog';
+import type { FeedbackId } from '@/types/generated/feedbackCatalog';
 import { buildServerListPagination } from './buildServerListPagination';
 import { toListLoadError, type ListLoadError } from './toListLoadError';
 import { useFilterChangeWithPageReset } from './useFilterChangeWithPageReset';

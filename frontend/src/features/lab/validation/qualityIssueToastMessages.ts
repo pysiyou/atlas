@@ -1,7 +1,7 @@
 /**
  * Toast copy for quality issue outcomes — backed by feedback catalog.
  */
-import type { FeedbackId } from '@/utils/feedbackCatalog';
+import type { FeedbackId } from '@/types/generated/feedbackCatalog';
 import { notify } from '@/utils/feedback';
 import type { QualityIssueResult } from '@/types/lab-operations';
 

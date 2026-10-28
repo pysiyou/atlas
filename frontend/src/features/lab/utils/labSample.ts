@@ -2,7 +2,7 @@
 import type { SampleType, ContainerTopColor, OrderTest, Test } from '@/types';
 import type { ContainerCatalogId } from '@/types';
 import { COLLECTION_TOP_COLOR_PRESETS } from '@/types';
-import type { FeedbackId } from '@/utils/feedbackCatalog';
+import type { FeedbackId } from '@/types/generated/feedbackCatalog';
 import { feedbackTitle, notify } from '@/utils/feedback';
 import { printCollectionLabel } from '../collection/SampleCollectionLabelActions';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';

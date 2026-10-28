@@ -1,4 +1,4 @@
-import type { FeedbackId } from '@/utils/feedbackCatalog';
+import type { FeedbackId } from '@/types/generated/feedbackCatalog';
 import { errorAlertMessage } from '@/utils/feedback';
 
 export interface ListLoadError {

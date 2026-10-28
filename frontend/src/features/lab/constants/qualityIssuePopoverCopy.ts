@@ -1,7 +1,7 @@
 /** Quality-issue popover copy, layout, and remedy destination options. */
 /**
  * QualityIssuePopover — layout constants and catalog-backed copy.
- * User-visible strings live in contracts/feedback.json (via `@/utils/feedbackCatalog`).
+ * User-visible strings live in contracts/feedback.json (codegen → `@/types/generated/feedbackCatalog`).
  */
 
 import { LAB_CONFIG } from './labConstants';

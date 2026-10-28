@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
-import type { FeedbackId } from '@/utils/feedbackCatalog';
+import type { FeedbackId } from '@/types/generated/feedbackCatalog';
 import { displayId } from '@/utils';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
 import {
