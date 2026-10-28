@@ -7,48 +7,6 @@ import { ROOT, writeFile } from './read-contract.mjs';
 
 const CATALOG_PATH = path.join(ROOT, 'backend/app/shared/contracts/test-catalog.json');
 
-/** Legacy physiologic-limits.json keys → catalog item_code (when codes differ). */
-const LEGACY_KEY_TO_ITEM_CODE = {
-  Sodium: 'NA',
-  Na: 'NA',
-  Potassium: 'K',
-  Chloride: 'CL',
-  Cl: 'CL',
-  Calcium: 'CA_TOTAL',
-  Ca: 'CA_TOTAL',
-  Magnesium: 'MG',
-  Mg: 'MG',
-  Phosphorus: 'PHOS',
-  P: 'PHOS',
-  Glucose: 'GLU_RANDOM',
-  GLU: 'GLU_RANDOM',
-  Creatinine: 'CREAT',
-  Cr: 'CREAT',
-  eGFR: 'EGFR_VALUE',
-  Bilirubin: 'BILI_TOTAL',
-  TBil: 'BILI_TOTAL',
-  DBil: 'BILI_DIRECT',
-  Albumin: 'ALB',
-  Protein: 'TOTAL_PROTEIN',
-  Hemoglobin: 'HGB',
-  Hgb: 'HGB',
-  Hematocrit: 'HCT',
-  Hct: 'HCT',
-  Platelets: 'PLAT',
-  PLT: 'PLAT',
-  TotalCholesterol: 'CHOL_TOTAL',
-  Cholesterol: 'CHOL_TOTAL',
-  Triglycerides: 'TG',
-  Troponin: 'TROPONIN_I',
-  TnI: 'TROPONIN_I',
-  PT: 'PT_SEC',
-  PTT: 'APTT',
-  aPTT: 'APTT',
-  UrineSpecificGravity: 'UA_GRAVITY',
-  SG: 'UA_GRAVITY',
-  pH: 'UA_pH',
-};
-
 export function loadTestCatalog() {
   if (!fs.existsSync(CATALOG_PATH)) {
     return null;
@@ -142,4 +100,4 @@ ${tsEntries}
   writeFile('frontend/src/types/generated/physiologicLimits.ts', ts);
 }
 
-export { CATALOG_PATH, LEGACY_KEY_TO_ITEM_CODE };
+export { CATALOG_PATH };
