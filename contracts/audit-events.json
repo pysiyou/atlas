@@ -1,0 +1,424 @@
+{
+  "$schema": "./audit-events.schema.json",
+  "events": [
+    {
+      "member": "PATIENT_CREATE",
+      "wire": "patient.create",
+      "domain": "patient",
+      "domainLabel": "Patient",
+      "verbPhrase": "patient profile created"
+    },
+    {
+      "member": "PATIENT_UPDATE",
+      "wire": "patient.update",
+      "domain": "patient",
+      "domainLabel": "Patient",
+      "verbPhrase": "patient profile updated"
+    },
+    {
+      "member": "PATIENT_DELETE",
+      "wire": "patient.delete",
+      "domain": "patient",
+      "domainLabel": "Patient",
+      "verbPhrase": "patient profile archived"
+    },
+    {
+      "member": "PATIENT_VIEW",
+      "wire": "patient.view",
+      "domain": "patient",
+      "domainLabel": "Patient",
+      "verbPhrase": "patient chart viewed"
+    },
+    {
+      "member": "ORDER_CREATE",
+      "wire": "order.create",
+      "domain": "order",
+      "domainLabel": "Order",
+      "verbPhrase": "order created"
+    },
+    {
+      "member": "ORDER_UPDATE",
+      "wire": "order.update",
+      "domain": "order",
+      "domainLabel": "Order",
+      "verbPhrase": "order updated",
+      "headlineMetaKeys": [
+        "field",
+        "value"
+      ]
+    },
+    {
+      "member": "ORDER_STATUS",
+      "wire": "order.status",
+      "domain": "order",
+      "domainLabel": "Order",
+      "verbPhrase": "order status changed",
+      "headlineMetaKeys": [
+        "trigger"
+      ]
+    },
+    {
+      "member": "ORDER_DELETE",
+      "wire": "order.delete",
+      "domain": "order",
+      "domainLabel": "Order",
+      "verbPhrase": "cancelled order"
+    },
+    {
+      "member": "ORDER_TEST_ADD",
+      "wire": "order.test.add",
+      "domain": "order",
+      "domainLabel": "Order",
+      "verbPhrase": "added test to order",
+      "headlineMetaKeys": [
+        "test_code"
+      ]
+    },
+    {
+      "member": "ORDER_TEST_REMOVE",
+      "wire": "order.test.remove",
+      "domain": "order",
+      "domainLabel": "Order",
+      "verbPhrase": "removed test from order",
+      "headlineMetaKeys": [
+        "test_code"
+      ]
+    },
+    {
+      "member": "ORDER_TEST_CANCEL",
+      "wire": "order.test.cancel",
+      "domain": "order",
+      "domainLabel": "Order",
+      "verbPhrase": "cancelled test on order",
+      "headlineMetaKeys": [
+        "test_code",
+        "reason"
+      ]
+    },
+    {
+      "member": "ORDER_TEST_RETEST",
+      "wire": "order.test.retest",
+      "domain": "order",
+      "domainLabel": "Order",
+      "verbPhrase": "requested retest for",
+      "headlineMetaKeys": [
+        "test_code",
+        "reason"
+      ]
+    },
+    {
+      "member": "ORDER_TEST_REFLEX",
+      "wire": "order.test.reflex",
+      "domain": "order",
+      "domainLabel": "Order",
+      "verbPhrase": "added reflex test",
+      "headlineMetaKeys": [
+        "added_test_code",
+        "triggered_by"
+      ]
+    },
+    {
+      "member": "LABORATORY_SAMPLE_CREATE",
+      "wire": "laboratory.sample.create",
+      "domain": "laboratory",
+      "laboratorySubdomain": "sample",
+      "domainLabel": "Sample",
+      "verbPhrase": "sample label generated for",
+      "headlineMetaKeys": [
+        "test_codes"
+      ],
+      "treatAsSystemActor": true
+    },
+    {
+      "member": "LABORATORY_SAMPLE_COLLECT",
+      "wire": "laboratory.sample.collect",
+      "domain": "laboratory",
+      "laboratorySubdomain": "sample",
+      "domainLabel": "Sample",
+      "verbPhrase": "sample collected for",
+      "headlineMetaKeys": [
+        "test_codes"
+      ]
+    },
+    {
+      "member": "LABORATORY_SAMPLE_REJECT",
+      "wire": "laboratory.sample.reject",
+      "domain": "laboratory",
+      "laboratorySubdomain": "sample",
+      "domainLabel": "Sample",
+      "verbPhrase": "sample rejected for",
+      "headlineMetaKeys": [
+        "rejection_reason"
+      ]
+    },
+    {
+      "member": "LABORATORY_SAMPLE_RECOLLECT_REQUEST",
+      "wire": "laboratory.sample.recollect_request",
+      "domain": "laboratory",
+      "laboratorySubdomain": "sample",
+      "domainLabel": "Sample",
+      "verbPhrase": "sample recollection requested for",
+      "headlineMetaKeys": [
+        "stage"
+      ]
+    },
+    {
+      "member": "LABORATORY_SAMPLE_RECOLLECT_APPROVE",
+      "wire": "laboratory.sample.recollect_approve",
+      "domain": "laboratory",
+      "laboratorySubdomain": "sample",
+      "domainLabel": "Sample",
+      "verbPhrase": "sample recollection approved for"
+    },
+    {
+      "member": "LABORATORY_SAMPLE_RECOLLECT_DENY",
+      "wire": "laboratory.sample.recollect_deny",
+      "domain": "laboratory",
+      "laboratorySubdomain": "sample",
+      "domainLabel": "Sample",
+      "verbPhrase": "sample recollection denied for",
+      "headlineMetaKeys": [
+        "reason"
+      ]
+    },
+    {
+      "member": "LABORATORY_ANALYZER_DUPLICATE_INGEST",
+      "wire": "laboratory.analyzer.duplicate_ingest",
+      "domain": "laboratory",
+      "laboratorySubdomain": "analyzer",
+      "domainLabel": "Analyzer",
+      "verbPhrase": "duplicate analyzer ingest for",
+      "headlineMetaKeys": [
+        "test_code",
+        "idempotency_key"
+      ],
+      "treatAsSystemActor": true
+    },
+    {
+      "member": "LABORATORY_ANALYZER_INGEST_REJECTED",
+      "wire": "laboratory.analyzer.ingest_rejected",
+      "domain": "laboratory",
+      "laboratorySubdomain": "analyzer",
+      "domainLabel": "Analyzer",
+      "verbPhrase": "analyzer ingest rejected for",
+      "headlineMetaKeys": [
+        "test_code",
+        "reason"
+      ],
+      "treatAsSystemActor": true
+    },
+    {
+      "member": "LABORATORY_RESULT_ENTER",
+      "wire": "laboratory.result.enter",
+      "domain": "laboratory",
+      "laboratorySubdomain": "result",
+      "domainLabel": "Results",
+      "verbPhrase": "entered results for",
+      "headlineMetaKeys": [
+        "test_code",
+        "source",
+        "analyzer_id"
+      ]
+    },
+    {
+      "member": "LABORATORY_RESULT_UPDATE",
+      "wire": "laboratory.result.update",
+      "domain": "laboratory",
+      "laboratorySubdomain": "result",
+      "domainLabel": "Results",
+      "verbPhrase": "updated results for",
+      "headlineMetaKeys": [
+        "test_code"
+      ]
+    },
+    {
+      "member": "LABORATORY_RESULT_CRITICAL_DETECT",
+      "wire": "laboratory.result.critical_detect",
+      "domain": "laboratory",
+      "laboratorySubdomain": "result",
+      "domainLabel": "Results",
+      "verbPhrase": "critical value detected for",
+      "headlineMetaKeys": [
+        "test_code"
+      ]
+    },
+    {
+      "member": "LABORATORY_RESULT_CRITICAL_NOTIFY",
+      "wire": "laboratory.result.critical_notify",
+      "domain": "laboratory",
+      "laboratorySubdomain": "result",
+      "domainLabel": "Results",
+      "verbPhrase": "clinician notification documented for",
+      "headlineMetaKeys": [
+        "test_code"
+      ]
+    },
+    {
+      "member": "LABORATORY_RESULT_CRITICAL_ACKNOWLEDGE",
+      "wire": "laboratory.result.critical_acknowledge",
+      "domain": "laboratory",
+      "laboratorySubdomain": "result",
+      "domainLabel": "Results",
+      "verbPhrase": "critical value protocol acknowledged for",
+      "headlineMetaKeys": [
+        "test_code"
+      ]
+    },
+    {
+      "member": "LABORATORY_VALIDATION_APPROVE",
+      "wire": "laboratory.validation.approve",
+      "domain": "laboratory",
+      "laboratorySubdomain": "validation",
+      "domainLabel": "Validation",
+      "verbPhrase": "validated",
+      "headlineMetaKeys": [
+        "test_code"
+      ]
+    },
+    {
+      "member": "LABORATORY_VALIDATION_REJECT",
+      "wire": "laboratory.validation.reject",
+      "domain": "laboratory",
+      "laboratorySubdomain": "validation",
+      "domainLabel": "Validation",
+      "verbPhrase": "sent back for correction on",
+      "headlineMetaKeys": [
+        "reason",
+        "test_code"
+      ]
+    },
+    {
+      "member": "LABORATORY_ESCALATION_TRIGGER",
+      "wire": "laboratory.escalation.trigger",
+      "domain": "laboratory",
+      "laboratorySubdomain": "escalation",
+      "domainLabel": "Escalation",
+      "verbPhrase": "escalated",
+      "headlineMetaKeys": [
+        "reason_code",
+        "test_code"
+      ]
+    },
+    {
+      "member": "LABORATORY_ESCALATION_RESOLVE",
+      "wire": "laboratory.escalation.resolve",
+      "domain": "laboratory",
+      "laboratorySubdomain": "escalation",
+      "domainLabel": "Escalation",
+      "verbPhrase": "escalation resolved for",
+      "headlineMetaKeys": [
+        "resolution",
+        "test_code"
+      ]
+    },
+    {
+      "member": "BILLING_PAYMENT_PROCESS",
+      "wire": "billing.payment.process",
+      "domain": "billing",
+      "domainLabel": "Billing",
+      "verbPhrase": "payment recorded for",
+      "headlineMetaKeys": [
+        "amount",
+        "payment_method"
+      ]
+    },
+    {
+      "member": "BILLING_INVOICE_GENERATE",
+      "wire": "billing.invoice.generate",
+      "domain": "billing",
+      "domainLabel": "Billing",
+      "verbPhrase": "invoice generated for",
+      "trailingActor": "never"
+    },
+    {
+      "member": "BILLING_INVOICE_VOID",
+      "wire": "billing.invoice.void",
+      "domain": "billing",
+      "domainLabel": "Billing",
+      "verbPhrase": "voided invoice for order",
+      "headlineMetaKeys": [
+        "reason"
+      ]
+    },
+    {
+      "member": "BILLING_INSURANCE_SUBMIT",
+      "wire": "billing.insurance.submit",
+      "domain": "billing",
+      "domainLabel": "Billing",
+      "verbPhrase": "submitted insurance claim for order",
+      "headlineMetaKeys": [
+        "payer",
+        "claim_number"
+      ]
+    },
+    {
+      "member": "REPORTING_GENERATE",
+      "wire": "reporting.generate",
+      "domain": "reporting",
+      "domainLabel": "Reporting",
+      "verbPhrase": "report generated for order"
+    },
+    {
+      "member": "REPORTING_DOWNLOAD",
+      "wire": "reporting.download",
+      "domain": "reporting",
+      "domainLabel": "Reporting",
+      "verbPhrase": "report downloaded for order",
+      "headlineMetaKeys": [
+        "format"
+      ]
+    },
+    {
+      "member": "SYSTEM_USER_LOGIN",
+      "wire": "system.user.login",
+      "domain": "system",
+      "domainLabel": "System",
+      "verbPhrase": "signed in",
+      "leadingActor": true,
+      "trailingActor": "never"
+    },
+    {
+      "member": "SYSTEM_USER_LOGOUT",
+      "wire": "system.user.logout",
+      "domain": "system",
+      "domainLabel": "System",
+      "verbPhrase": "signed out",
+      "leadingActor": true,
+      "trailingActor": "never"
+    },
+    {
+      "member": "SYSTEM_USER_CREATE",
+      "wire": "system.user.create",
+      "domain": "system",
+      "domainLabel": "System",
+      "verbPhrase": "created user account"
+    },
+    {
+      "member": "SYSTEM_USER_UPDATE",
+      "wire": "system.user.update",
+      "domain": "system",
+      "domainLabel": "System",
+      "verbPhrase": "updated user account"
+    },
+    {
+      "member": "SYSTEM_CATALOG_CREATE",
+      "wire": "system.catalog.create",
+      "domain": "system",
+      "domainLabel": "Catalog",
+      "verbPhrase": "catalog test created",
+      "headlineMetaKeys": [
+        "test_code"
+      ]
+    },
+    {
+      "member": "SYSTEM_CATALOG_UPDATE",
+      "wire": "system.catalog.update",
+      "domain": "system",
+      "domainLabel": "Catalog",
+      "verbPhrase": "catalog test updated",
+      "headlineMetaKeys": [
+        "test_code"
+      ]
+    }
+  ]
+}

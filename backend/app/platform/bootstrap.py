@@ -6,7 +6,6 @@ import json
 from pathlib import Path
 
 import app.domains.registry  # noqa: F401 — register all ORM models before queries / create_all
-
 from app.domains.catalog.models.affiliation_pricing import AffiliationPricing
 from app.domains.catalog.models.catalog_test import CatalogTest
 from app.domains.referent_doctors.models import ReferentDoctor
@@ -16,7 +15,7 @@ from app.platform.security import get_password_hash
 from app.platform.utils.common import infer_criterion_domain
 from app.shared.contracts.enums import AffiliationDuration, UserRole
 
-CATALOG_PATH = Path(__file__).resolve().parents[1] / "shared" / "contracts" / "test-catalog.json"
+CATALOG_PATH = Path(__file__).resolve().parents[2].parent / "contracts" / "test-catalog.json"
 
 SEED_REFERENT_DOCTORS = (
     {
@@ -108,11 +107,7 @@ def seed_referent_doctors(db) -> None:
     created = 0
     for entry in SEED_REFERENT_DOCTORS:
         full_name = entry["fullName"]
-        existing = (
-            db.query(ReferentDoctor)
-            .filter(ReferentDoctor.fullName == full_name)
-            .first()
-        )
+        existing = db.query(ReferentDoctor).filter(ReferentDoctor.fullName == full_name).first()
         if existing:
             continue
         db.add(

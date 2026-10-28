@@ -3,7 +3,12 @@ import logging
 
 from app.domains.audit.service import AuditEmitter
 from app.domains.catalog.models.catalog_test import CatalogTest
-from app.domains.catalog.schemas.test import TestCreate, TestResponse, TestSummaryResponse, TestUpdate
+from app.domains.catalog.schemas.test import (
+    TestCreate,
+    TestResponse,
+    TestSummaryResponse,
+    TestUpdate,
+)
 from app.platform.cache import (
     CacheKeys,
     cache_delete,

@@ -28,9 +28,7 @@ def lab_projections_for_orders(
     Returns ``{orderId: {orderTestId: projection}}``. Pass ``blocked`` when the
     caller already loaded pending recollection ids so the snapshot is not re-scanned.
     """
-    result: dict[int, dict[int, LabWorkItemProjection]] = {
-        order.orderId: {} for order in orders
-    }
+    result: dict[int, dict[int, LabWorkItemProjection]] = {order.orderId: {} for order in orders}
     all_tests: list[tuple[Order, OrderTest]] = []
     for order in orders:
         for order_test in list(order.tests or []):

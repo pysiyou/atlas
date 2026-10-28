@@ -1,5 +1,5 @@
 """Read models for result entry and escalation queues."""
-from sqlalchemy.orm import Session, joinedload, selectinload
+from sqlalchemy.orm import Session, joinedload
 
 
 class ResultQueryService:
@@ -71,9 +71,7 @@ class ResultQueryService:
         for t in tests:
             item = self._enrich_order_test(t, samples_by_id, tickets_by_test)
             order = t.order
-            projection = (
-                projections_by_order.get(order.orderId, {}).get(t.id) if order else None
-            )
+            projection = projections_by_order.get(order.orderId, {}).get(t.id) if order else None
             items.append(self._with_lab_projection(item, projection))
         return items
 

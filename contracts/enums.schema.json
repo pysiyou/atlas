@@ -26,7 +26,8 @@
             "isDerived": { "type": "boolean" },
             "collectionSource": { "type": "string" },
             "enabled": { "type": "boolean" },
-            "iconKey": { "type": "string" }
+            "iconKey": { "type": "string" },
+            "badgeVariant": { "type": "string" }
           },
           "additionalProperties": false
         }

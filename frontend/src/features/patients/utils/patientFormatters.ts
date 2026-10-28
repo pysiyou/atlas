@@ -8,7 +8,7 @@ import { GENDER_CONFIG, RELATIONSHIP_CONFIG, RELATIONSHIP_VALUES } from '@/types
 import { formatArrayWithFallback } from '@/utils/array';
 import { calculateAge, formatPhoneNumber } from '@/utils';
 import { formatDetailDate as formatDetailDateUtil, formatOrderDate } from '@/utils/date';
-import { INACTIVE_REPORTABLE_TEST_STATUSES } from '@/features/orders/constants/reportableTestStatus';
+import { INACTIVE_REPORTABLE_TEST_STATUSES } from '@/types/generated/labContract';
 
 /** Compact sex + age for tables (e.g. lab worklists): "Male · 42 years old". */
 export function formatPatientSexAgeLine(

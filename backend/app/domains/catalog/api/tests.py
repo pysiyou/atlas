@@ -1,6 +1,11 @@
 """Test Catalog API Routes"""
 
-from app.domains.catalog.schemas.test import TestCreate, TestResponse, TestSummaryResponse, TestUpdate
+from app.domains.catalog.schemas.test import (
+    TestCreate,
+    TestResponse,
+    TestSummaryResponse,
+    TestUpdate,
+)
 from app.domains.catalog.test_catalog_service import BY_CODES_MAX, TestCatalogService
 from app.domains.users.models import User
 from app.platform.database import get_db

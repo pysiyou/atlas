@@ -4,10 +4,13 @@
  */
 
 import type { OrderTest } from '@/types';
-import { INACTIVE_REPORTABLE_TEST_STATUSES } from '../constants/reportableTestStatus';
+import {
+  INACTIVE_REPORTABLE_TEST_STATUSES,
+  INACTIVE_TEST_STATUSES_FOR_ROLLUP,
+} from '@/types/generated/labContract';
 
-/** Billing / queue: cancelled lines are inactive. */
-export const INACTIVE_BILLABLE_TEST_STATUSES = new Set(['removed', 'superseded', 'cancelled']);
+/** Billing / queue: aligns with contracts/lab.json reporting.inactiveTestStatusesForRollup. */
+export const INACTIVE_BILLABLE_TEST_STATUSES = new Set<string>(INACTIVE_TEST_STATUSES_FOR_ROLLUP);
 
 export { INACTIVE_REPORTABLE_TEST_STATUSES };
 

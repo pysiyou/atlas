@@ -3,11 +3,9 @@ from collections.abc import Iterable
 from typing import Protocol
 
 from app.shared.contracts.enums import OrderStatus, TestStatus
+from app.shared.contracts.lab_contract import INACTIVE_TEST_STATUSES_FOR_ROLLUP
 
-# Align with order list aggregates (orders/service.py _INACTIVE_TEST_STATUSES).
-INACTIVE_TEST_STATUSES = frozenset(
-    {TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED}
-)
+INACTIVE_TEST_STATUSES = INACTIVE_TEST_STATUSES_FOR_ROLLUP
 
 
 class _OrderTestLike(Protocol):
@@ -21,8 +19,8 @@ class _OrderLike(Protocol):
 
 
 def is_active_test(status: TestStatus) -> bool:
-    """Active tests exclude removed and superseded lines (same as order status rollup)."""
-    return status not in INACTIVE_TEST_STATUSES
+    """Active tests exclude removed, superseded, and cancelled lines (order rollups)."""
+    return status.value not in INACTIVE_TEST_STATUSES
 
 
 def active_order_tests(order: _OrderLike) -> list[_OrderTestLike]:

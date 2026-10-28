@@ -195,16 +195,26 @@ class LabBoardService:
         )
 
         stage_specs: tuple[tuple[str, Any, Any], ...] = (
-            ("collection", and_(running, self._at_collection_predicate()), self._collection_today_predicate(today_start)),
-            ("entry", and_(running, self._at_entry_predicate()), self._result_entry_today_predicate(today_start)),
-            ("validation", self._at_validation_predicate(), self._validation_today_predicate(today_start)),
+            (
+                "collection",
+                and_(running, self._at_collection_predicate()),
+                self._collection_today_predicate(today_start),
+            ),
+            (
+                "entry",
+                and_(running, self._at_entry_predicate()),
+                self._result_entry_today_predicate(today_start),
+            ),
+            (
+                "validation",
+                self._at_validation_predicate(),
+                self._validation_today_predicate(today_start),
+            ),
         )
 
         stages: list[LabTodayStageSnapshot] = []
         for stage_key, at_stage_filter, touched_today_filter in stage_specs:
-            at_stage = (
-                self.db.query(func.count(OrderTest.id)).filter(at_stage_filter).scalar() or 0
-            )
+            at_stage = self.db.query(func.count(OrderTest.id)).filter(at_stage_filter).scalar() or 0
             touched_today = (
                 self.db.query(func.count(OrderTest.id))
                 .filter(universe)

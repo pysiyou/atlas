@@ -198,6 +198,12 @@ export default defineConfig([
     },
   },
   {
+    files: ['src/types/generated/**'],
+    rules: {
+      'max-lines': 'off',
+    },
+  },
+  {
     files: ['src/theme/recipes/**/*.ts'],
     rules: {
       'max-lines': 'off',
@@ -265,6 +271,12 @@ export default defineConfig([
         ...hexColorLiteralSyntax,
         ...featureSemanticTextRestrictedSyntax,
       ],
+    },
+  },
+  {
+    files: ['src/components/surfaces/loadingPresets.tsx'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
     },
   },
   {

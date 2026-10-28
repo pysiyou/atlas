@@ -37,6 +37,7 @@ const ENUM_MODULE_MAP = {
     'EscalationResolutionAction',
   ],
   billing: ['ClaimStatus'],
+  presentation: ['PresentationPrimary'],
 };
 
 function enumConstPrefix(enumName) {
@@ -91,6 +92,7 @@ function configFieldType(entries, enumName) {
     if (entry.collectionSource !== undefined) merged.collectionSource = true;
     if (entry.enabled !== undefined) merged.enabled = true;
     if (entry.iconKey !== undefined) merged.iconKey = true;
+    if (entry.badgeVariant !== undefined) merged.badgeVariant = true;
   }
   const parts = ['label: string'];
   if (merged.description) parts.push('description: string');
@@ -102,6 +104,7 @@ function configFieldType(entries, enumName) {
   }
   if (merged.enabled) parts.push('enabled: boolean');
   if (merged.iconKey) parts.push('iconKey: string');
+  if (merged.badgeVariant) parts.push('badgeVariant: string');
   return `{ ${parts.join('; ')} }`;
 }
 
@@ -116,6 +119,7 @@ function configObjectLiteral(entry) {
   }
   if (entry.enabled !== undefined) fields.push(`enabled: ${entry.enabled}`);
   if (entry.iconKey !== undefined) fields.push(`iconKey: ${JSON.stringify(entry.iconKey)}`);
+  if (entry.badgeVariant !== undefined) fields.push(`badgeVariant: ${JSON.stringify(entry.badgeVariant)}`);
   return `{ ${fields.join(', ')} }`;
 }
 
@@ -148,6 +152,21 @@ export const ${prefix}_FILTER_OPTIONS = [
   { value: 'all' as const, label: ${JSON.stringify(def.filterAllLabel)} },
   ...${optionsName},
 ];
+`;
+  }
+
+  if (enumName === 'PresentationPrimary') {
+    extra += `
+export const PRESENTATION_BADGE_VARIANTS = Object.fromEntries(
+  PRESENTATION_PRIMARY_VALUES.map(value => [value, PRESENTATION_PRIMARY_CONFIG[value].badgeVariant])
+) as Record<PresentationPrimary, string>;
+
+export const PRESENTATION_DISPLAY_LABELS = Object.fromEntries(
+  PRESENTATION_PRIMARY_VALUES.map(value => [value, PRESENTATION_PRIMARY_CONFIG[value].label])
+) as Record<PresentationPrimary, string>;
+
+export type CanonicalPresentationPrimary = PresentationPrimary;
+export const CANONICAL_PRIMARY_VALUES = PRESENTATION_PRIMARY_VALUES;
 `;
   }
 
@@ -244,6 +263,33 @@ import enum
 
 ${blocks.join('\n\n')}
 `;
-  writeFile('backend/app/shared/contracts/enums.py', py);
+  const pyFull = py + (enums.PresentationPrimary ? presentationPyExtra(enums.PresentationPrimary) : '');
+  writeFile('backend/app/shared/contracts/enums.py', pyFull);
   generateFrontendEnums(enums);
+}
+
+function presentationPyExtra(presentation) {
+  const badgeLines = iterEnumMembers(presentation)
+    .map(([, m]) => `    ${JSON.stringify(m.wire)}: ${JSON.stringify(m.badgeVariant ?? 'neutral')},`)
+    .join('\n');
+  const labelLines = iterEnumMembers(presentation)
+    .map(([, m]) => `    ${JSON.stringify(m.wire)}: ${JSON.stringify(m.label)},`)
+    .join('\n');
+  const valueLines = enumWireValues(presentation)
+    .map(v => `    ${JSON.stringify(v)},`)
+    .join('\n');
+  return `
+
+PRESENTATION_PRIMARY_VALUES: tuple[str, ...] = (
+${valueLines}
+)
+
+PRESENTATION_PRIMARY_BADGE_VARIANTS: dict[str, str] = {
+${badgeLines}
+}
+
+PRESENTATION_PRIMARY_DISPLAY_LABELS: dict[str, str] = {
+${labelLines}
+}
+`;
 }

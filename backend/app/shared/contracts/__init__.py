@@ -1,5 +1,5 @@
 """Generated data and static constants."""
-from app.shared.contracts.lab_constants import (
+from app.shared.contracts.lab_contract import (
     MAX_RECOLLECTION_ATTEMPTS,
     MAX_RETEST_ATTEMPTS,
     QUEUE_AGE_CRITICAL_HOURS,

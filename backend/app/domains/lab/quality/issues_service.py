@@ -30,7 +30,7 @@ from app.shared.contracts.enums import (
     SampleStatus,
     TestStatus,
 )
-from app.shared.contracts.lab_constants import MAX_RETEST_ATTEMPTS
+from app.shared.contracts.lab_contract import MAX_RETEST_ATTEMPTS
 from sqlalchemy.orm import Session
 
 _SAMPLE_RESET_STATUSES = {

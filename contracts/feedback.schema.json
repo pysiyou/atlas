@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://atlas.local/contracts/feedback.schema.json",
+  "title": "Atlas user feedback catalog",
+  "type": "object",
+  "required": ["entries"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "entries": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["channel", "variant", "title"],
+        "properties": {
+          "channel": {
+            "enum": ["toast", "alert", "errorAlert", "inline"]
+          },
+          "variant": {
+            "enum": ["success", "error", "warning", "info", "danger"]
+          },
+          "title": { "type": "string", "minLength": 1 },
+          "subtitle": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

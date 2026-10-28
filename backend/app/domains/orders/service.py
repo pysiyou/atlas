@@ -40,6 +40,7 @@ from app.shared.contracts.enums import (
     SampleStatus,
     TestStatus,
 )
+from app.shared.contracts.lab_contract import INACTIVE_TEST_STATUSES_FOR_ROLLUP
 from app.shared.schemas.pagination import create_paginated_response, skip_to_page
 from fastapi import HTTPException, status
 from sqlalchemy import func
@@ -150,11 +151,7 @@ def _parse_include(include: str | None) -> set[str]:
     return {part.strip().lower() for part in include.split(",") if part.strip()}
 
 
-_INACTIVE_TEST_STATUSES = (
-    TestStatus.REMOVED,
-    TestStatus.SUPERSEDED,
-    TestStatus.CANCELLED,
-)
+_INACTIVE_TEST_STATUSES = tuple(TestStatus(w) for w in INACTIVE_TEST_STATUSES_FOR_ROLLUP)
 
 
 def _catalog_test_names_by_code(db, codes: list[str]) -> dict[str, str]:
@@ -351,7 +348,9 @@ class OrderService:
         if payment_methods:
             query = query.filter(
                 Order.orderId.in_(
-                    self.db.query(Payment.orderId).filter(Payment.paymentMethod.in_(payment_methods))
+                    self.db.query(Payment.orderId).filter(
+                        Payment.paymentMethod.in_(payment_methods)
+                    )
                 )
             )
         if search:
@@ -392,9 +391,7 @@ class OrderService:
                     test_codes_by_order = _active_test_codes_by_order_id(self.db, order_ids)
                     all_codes = list(
                         dict.fromkeys(
-                            code
-                            for codes in test_codes_by_order.values()
-                            for code in codes
+                            code for codes in test_codes_by_order.values() for code in codes
                         )
                     )
                     names_by_code = _catalog_test_names_by_code(self.db, all_codes)
@@ -428,9 +425,7 @@ class OrderService:
                     )
             else:
                 blocked = recollection_blocked_order_test_ids(self.db)
-                projections_by_order = lab_projections_for_orders(
-                    self.db, orders, blocked=blocked
-                )
+                projections_by_order = lab_projections_for_orders(self.db, orders, blocked=blocked)
                 serialized = [
                     self._order_response_with_lab(
                         order,

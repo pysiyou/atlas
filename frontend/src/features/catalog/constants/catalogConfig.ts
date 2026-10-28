@@ -10,45 +10,21 @@ import { SAMPLE_TYPE_VALUES, SAMPLE_TYPE_CONFIG } from '@/types';
 import { PRICE_RANGE } from '@/utils/constants';
 import { ICONS, MODULE_ICONS } from '@/config/icons';
 
-/**
- * Test category configuration for filter display
- */
-export const TEST_CATEGORY_CONFIG: Record<string, { label: string; color: string }> = {
-  hematology: { label: 'Hematology', color: 'hematology' },
-  biochemistry: { label: 'Biochemistry', color: 'biochemistry' },
-  chemistry: { label: 'Chemistry', color: 'chemistry' },
-  microbiology: { label: 'Microbiology', color: 'microbiology' },
-  serology: { label: 'Serology', color: 'serology' },
-  urinalysis: { label: 'Urinalysis', color: 'urinalysis' },
-  imaging: { label: 'Imaging', color: 'imaging' },
-  immunology: { label: 'Immunology', color: 'immunology' },
-  molecular: { label: 'Molecular', color: 'molecular' },
-  toxicology: { label: 'Toxicology', color: 'toxicology' },
-  coagulation: { label: 'Coagulation', color: 'coagulation' },
-};
+import {
+  TEST_CATEGORY_CONFIG as GENERATED_TEST_CATEGORY_CONFIG,
+  TEST_CATEGORY_VALUES as GENERATED_TEST_CATEGORY_VALUES,
+  getGeneratedCategoryLabel,
+} from '@/types/generated/catalogCategories';
+
+export const TEST_CATEGORY_CONFIG: Record<string, { label: string; color: string }> =
+  GENERATED_TEST_CATEGORY_CONFIG;
 
 /** Human-readable label for a test category slug. */
 export function getCategoryLabel(category: string): string {
-  return (
-    TEST_CATEGORY_CONFIG[category]?.label ??
-    category.replace(/-/g, ' ').replace(/\b\w/g, char => char.toUpperCase())
-  );
+  return getGeneratedCategoryLabel(category);
 }
 
-/**
- * Available test category values for filtering
- */
-const TEST_CATEGORY_VALUES: TestCategory[] = [
-  'hematology',
-  'biochemistry',
-  'microbiology',
-  'serology',
-  'urinalysis',
-  'immunology',
-  'molecular',
-  'toxicology',
-  'coagulation',
-];
+const TEST_CATEGORY_VALUES = [...GENERATED_TEST_CATEGORY_VALUES] as TestCategory[];
 
 /**
  * Transform category values into filter option format

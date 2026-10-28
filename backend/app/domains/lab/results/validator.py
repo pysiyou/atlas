@@ -55,7 +55,11 @@ class ResultValidatorService:
             return errors
 
         physiologic = item_def.get("physiologic_range") if item_def else None
-        if physiologic and physiologic.get("min") is not None and physiologic.get("max") is not None:
+        if (
+            physiologic
+            and physiologic.get("min") is not None
+            and physiologic.get("max") is not None
+        ):
             pmin = physiologic["min"]
             pmax = physiologic["max"]
             if numeric_value < pmin:

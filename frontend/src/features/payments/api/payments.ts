@@ -16,10 +16,7 @@ import {
   invalidatePaymentDetailQueries,
   patchOrderSummaryInPaginatedCaches,
 } from '@/lib/query/invalidate';
-import {
-  usePaginatedOrders,
-  type OrdersFilters,
-} from '@/features/orders/api/orders';
+import { usePaginatedOrders, type OrdersFilters } from '@/features/orders';
 import { buildOrderPaymentViewsFromOrders } from '../utils/orderPaymentViews';
 
 export interface PaymentCreate {

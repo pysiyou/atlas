@@ -219,7 +219,9 @@ class OrderReportResponse(BaseModel):
 def _rebuild_order_test_lab_schema() -> None:
     from app.domains.lab.rules.work_item_projection import LabWorkItemProjection
 
-    OrderTestResponse.model_rebuild(_types_namespace={"LabWorkItemProjection": LabWorkItemProjection})
+    OrderTestResponse.model_rebuild(
+        _types_namespace={"LabWorkItemProjection": LabWorkItemProjection}
+    )
 
 
 _rebuild_order_test_lab_schema()

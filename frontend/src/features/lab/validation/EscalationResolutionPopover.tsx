@@ -4,7 +4,7 @@ import { Popover } from '@/components/overlays';
 import { cn, displayId } from '@/utils';
 import { text, inputBase } from '@/theme/recipes';
 import { PopoverFormChrome } from '@/components/overlays';
-import type { FeedbackId } from '@/config/feedbackCatalog';
+import type { FeedbackId } from '@/utils/feedbackCatalog';
 import type { CriticalReadBackPayload, EscalationResolutionAction } from '@/types/lab-operations';
 interface ResolutionPopoverProps {
   resolving: boolean;

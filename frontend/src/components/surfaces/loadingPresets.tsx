@@ -2,20 +2,24 @@
  * Reusable loading bodies for Panel/Card — feature components import these as `loadingContent`.
  */
 
-import type { ReportPreviewResultsLayout } from '@/features/reports/types';
 import { Skeleton } from '@/components/feedback';
 import { DialogFooter, DialogHeader } from '@/components/overlays';
 import { cn } from '@/utils';
-import { QUALITY_ISSUE_POPOVER_LAYOUT, QUALITY_ISSUE_POPOVER_COPY } from '@/features/lab/constants/qualityIssuePopoverCopy';
+import { feedbackTitle } from '@/utils/feedback';
 import { RADIUS, SPACING } from '@/theme/recipes';
 
+/** Matches lab ResultsGridLayout / report preview layout. */
+export type ReportPreviewResultsLayout = 'grid' | 'table';
+
 const REPORT_TABLE_ROWS = 4;
+
+const QUALITY_ISSUE_POPOVER_WIDTH_CLASS = 'w-90 md:w-96';
 
 export function reportPreviewPanelLoadingContent(layout: ReportPreviewResultsLayout = 'table') {
   return (
     <div className="space-y-space-2-5">
       {layout === 'table' ? (
-        <div className="space-y-0 border border-border-default rounded-md overflow-hidden">
+        <div className={`space-y-0 border border-border-default ${RADIUS.surface} overflow-hidden`}>
           <div className="flex gap-space-3 px-space-3 py-space-2 border-b border-border-default bg-surface-hover/30">
             <Skeleton height={12} width="28%" />
             <Skeleton height={12} width="22%" />
@@ -125,11 +129,11 @@ export function QualityIssuePopoverLoadingView() {
   return (
     <div
       className={cn(
-        QUALITY_ISSUE_POPOVER_LAYOUT.widthClass,
+        QUALITY_ISSUE_POPOVER_WIDTH_CLASS,
         'flex max-h-[600px] min-w-0 flex-col overflow-hidden',
       )}
       aria-busy="true"
-      aria-label={QUALITY_ISSUE_POPOVER_COPY.loading.message}
+      aria-label={feedbackTitle('lab.qualityIssue.dialog.loading')}
     >
       <DialogHeader
         size="popover"

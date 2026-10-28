@@ -176,3 +176,51 @@ class EscalationResolutionAction(str, enum.Enum):
     AUTHORIZE_RECOLLECT = "authorize_recollect"
     APPLY_AMENDMENT = "apply_amendment"
     CANCEL_TEST = "cancel_test"
+
+class PresentationPrimary(str, enum.Enum):
+    PENDING = "pending"
+    BLOCKED = "blocked"
+    IN_PROGRESS = "in_progress"
+    COMPLETED = "completed"
+    CANCELLED = "cancelled"
+    SUPERSEDED = "superseded"
+    REMOVED = "removed"
+    ESCALATED = "escalated"
+    REJECTED = "rejected"
+
+
+PRESENTATION_PRIMARY_VALUES: tuple[str, ...] = (
+    "pending",
+    "blocked",
+    "in_progress",
+    "completed",
+    "cancelled",
+    "superseded",
+    "removed",
+    "escalated",
+    "rejected",
+)
+
+PRESENTATION_PRIMARY_BADGE_VARIANTS: dict[str, str] = {
+    "pending": "neutral",
+    "blocked": "warning",
+    "in_progress": "info",
+    "completed": "success",
+    "cancelled": "danger",
+    "superseded": "neutral",
+    "removed": "neutral",
+    "escalated": "danger",
+    "rejected": "danger",
+}
+
+PRESENTATION_PRIMARY_DISPLAY_LABELS: dict[str, str] = {
+    "pending": "PENDING",
+    "blocked": "BLOCKED",
+    "in_progress": "RUNNING",
+    "completed": "COMPLETED",
+    "cancelled": "CANCELLED",
+    "superseded": "SUPERSEDED",
+    "removed": "REMOVED",
+    "escalated": "ESCALATED",
+    "rejected": "REJECTED",
+}

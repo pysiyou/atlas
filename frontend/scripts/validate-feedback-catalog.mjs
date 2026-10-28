@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 /**
- * Validate feedbackCatalog.ts: FeedbackId union matches FEEDBACK_CATALOG keys,
- * each entry has title + valid channel/variant, and AppToastBar imports stay allowlisted.
+ * Validate contracts/feedback.json and generated feedbackCatalog.ts re-export.
  */
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const SRC = join(ROOT, 'src');
-const CATALOG_PATH = join(SRC, 'config/feedbackCatalog.ts');
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '../..');
+const SRC = join(ROOT, 'frontend/src');
+const JSON_PATH = join(ROOT, 'contracts/feedback.json');
+const GENERATED_PATH = join(SRC, 'types/generated/feedbackCatalog.ts');
 
 const CHANNELS = new Set(['toast', 'alert', 'errorAlert', 'inline']);
 const VARIANTS = new Set(['success', 'error', 'warning', 'info', 'danger']);
@@ -23,40 +23,6 @@ const APP_TOAST_BAR_ALLOWLIST = new Set([
 function fail(message) {
   console.error(`validate-feedback-catalog: ${message}`);
   process.exitCode = 1;
-}
-
-function extractQuotedIds(block) {
-  return [...block.matchAll(/'([^']+)'/g)].map(match => match[1]);
-}
-
-function parseCatalog(source) {
-  const idMatch = source.match(/export type FeedbackId =\s*([\s\S]*?);/);
-  if (!idMatch) {
-    fail('Could not find `export type FeedbackId`.');
-    return { ids: [], entries: [] };
-  }
-  const ids = extractQuotedIds(idMatch[1]);
-
-  const catalogMatch = source.match(/export const FEEDBACK_CATALOG[^=]*=\s*\{([\s\S]*)\}\s*;/);
-  if (!catalogMatch) {
-    fail('Could not find `export const FEEDBACK_CATALOG`.');
-    return { ids, entries: [] };
-  }
-
-  const entryRegex =
-    /'([^']+)':\s*\{\s*channel:\s*'([^']+)',\s*variant:\s*'([^']+)',\s*title:\s*'((?:\\'|[^'])*)'/g;
-  const entries = [];
-  let match;
-  while ((match = entryRegex.exec(catalogMatch[1])) !== null) {
-    entries.push({
-      id: match[1],
-      channel: match[2],
-      variant: match[3],
-      title: match[4],
-    });
-  }
-
-  return { ids, entries };
 }
 
 function walk(dir, files = []) {
@@ -84,47 +50,35 @@ function checkImportBoundary() {
   }
 }
 
-const source = readFileSync(CATALOG_PATH, 'utf8');
-const { ids, entries } = parseCatalog(source);
+const data = JSON.parse(readFileSync(JSON_PATH, 'utf8'));
+const entries = data.entries ?? {};
+const ids = Object.keys(entries).sort();
 
-if (ids.length === 0) {
-  fail('FeedbackId union is empty.');
+const generated = readFileSync(GENERATED_PATH, 'utf8');
+const idUnionMatch = generated.match(/export type FeedbackId =\s*([\s\S]*?);/);
+if (!idUnionMatch) {
+  fail('Generated feedbackCatalog.ts missing FeedbackId union.');
 }
 
-const idSet = new Set(ids);
-const keySet = new Set(entries.map(entry => entry.id));
+const generatedIds = [...idUnionMatch[1].matchAll(/['"]([^'"]+)['"]/g)].map(m => m[1]);
 
 for (const id of ids) {
-  if (!keySet.has(id)) fail(`FeedbackId '${id}' is missing from FEEDBACK_CATALOG.`);
-}
-
-for (const entry of entries) {
-  if (!idSet.has(entry.id)) fail(`FEEDBACK_CATALOG key '${entry.id}' is not in FeedbackId.`);
-  if (!entry.title.trim()) fail(`FEEDBACK_CATALOG['${entry.id}'] is missing title.`);
+  const entry = entries[id];
+  if (!entry.title?.trim()) fail(`feedback.json['${id}'] is missing title.`);
   if (!CHANNELS.has(entry.channel)) {
-    fail(`FEEDBACK_CATALOG['${entry.id}'] has invalid channel '${entry.channel}'.`);
+    fail(`feedback.json['${id}'] has invalid channel '${entry.channel}'.`);
   }
   if (!VARIANTS.has(entry.variant)) {
-    fail(`FEEDBACK_CATALOG['${entry.id}'] has invalid variant '${entry.variant}'.`);
+    fail(`feedback.json['${id}'] has invalid variant '${entry.variant}'.`);
   }
 }
 
-if (ids.length !== keySet.size) {
-  fail(`FeedbackId count (${ids.length}) !== catalog keys (${keySet.size}).`);
+if (ids.length !== generatedIds.length) {
+  fail(`feedback.json keys (${ids.length}) !== generated FeedbackId count (${generatedIds.length}).`);
 }
 
-const titles = new Map();
-for (const entry of entries) {
-  const existing = titles.get(entry.title) ?? [];
-  existing.push(entry.id);
-  titles.set(entry.title, existing);
-}
-for (const [title, titleIds] of titles) {
-  if (titleIds.length > 1) {
-    console.warn(
-      `validate-feedback-catalog: duplicate title ${JSON.stringify(title)} used by ${titleIds.join(', ')}`
-    );
-  }
+for (const id of ids) {
+  if (!generatedIds.includes(id)) fail(`Generated FeedbackId missing '${id}'.`);
 }
 
 checkImportBoundary();

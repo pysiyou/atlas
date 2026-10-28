@@ -5,4 +5,10 @@
 export * from './api';
 export * from './routes';
 export * from './company';
-export * from './feedbackCatalog';
+export {
+  FEEDBACK_CATALOG,
+  type FeedbackChannel,
+  type FeedbackEntry,
+  type FeedbackId,
+  type FeedbackVariant,
+} from '@/types/generated/feedbackCatalog';

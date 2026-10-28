@@ -17,7 +17,7 @@ from app.domains.lab.rules.work_item_projection import (
     attention_reason_for_monitor_row,
 )
 from app.shared.contracts.enums import PriorityLevel
-from app.shared.contracts.lab_constants import QUEUE_AGE_CRITICAL_HOURS, QUEUE_AGE_WARNING_HOURS
+from app.shared.contracts.lab_contract import QUEUE_AGE_CRITICAL_HOURS, QUEUE_AGE_WARNING_HOURS
 
 TatBucket = Literal["fresh", "onTrack", "warning", "critical"]
 TatStatus = Literal["fresh", "warning", "critical"]

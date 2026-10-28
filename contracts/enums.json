@@ -667,5 +667,55 @@
         "label": "Cancel test"
       }
     }
+  },
+  "PresentationPrimary": {
+    "type": "string",
+    "members": {
+      "PENDING": {
+        "wire": "pending",
+        "label": "PENDING",
+        "badgeVariant": "neutral"
+      },
+      "BLOCKED": {
+        "wire": "blocked",
+        "label": "BLOCKED",
+        "badgeVariant": "warning"
+      },
+      "IN_PROGRESS": {
+        "wire": "in_progress",
+        "label": "RUNNING",
+        "badgeVariant": "info"
+      },
+      "COMPLETED": {
+        "wire": "completed",
+        "label": "COMPLETED",
+        "badgeVariant": "success"
+      },
+      "CANCELLED": {
+        "wire": "cancelled",
+        "label": "CANCELLED",
+        "badgeVariant": "danger"
+      },
+      "SUPERSEDED": {
+        "wire": "superseded",
+        "label": "SUPERSEDED",
+        "badgeVariant": "neutral"
+      },
+      "REMOVED": {
+        "wire": "removed",
+        "label": "REMOVED",
+        "badgeVariant": "neutral"
+      },
+      "ESCALATED": {
+        "wire": "escalated",
+        "label": "ESCALATED",
+        "badgeVariant": "danger"
+      },
+      "REJECTED": {
+        "wire": "rejected",
+        "label": "REJECTED",
+        "badgeVariant": "danger"
+      }
+    }
   }
 }

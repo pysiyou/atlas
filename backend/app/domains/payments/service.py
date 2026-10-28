@@ -8,7 +8,7 @@ from app.domains.payments.schemas import PaymentCreate
 from app.platform.cache import invalidate_lab_board_summary_cache
 from app.shared.contracts.enums import PaymentStatus
 from fastapi import HTTPException, status
-from sqlalchemy.orm import Session, joinedload, selectinload
+from sqlalchemy.orm import Session, joinedload
 
 
 def enrich_payment(payment: Payment, order: Order | None) -> dict:

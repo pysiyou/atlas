@@ -153,7 +153,9 @@ class PatientService:
             query = query.filter(Patient.dateOfBirth <= _years_ago_iso(age_min))
         if age_max is not None:
             query = query.filter(Patient.dateOfBirth > _years_ago_iso(age_max + 1))
-        statuses = {status for status in (affiliation_statuses or []) if status in {"active", "inactive"}}
+        statuses = {
+            status for status in (affiliation_statuses or []) if status in {"active", "inactive"}
+        }
         if statuses and statuses != {"active", "inactive"}:
             today = datetime.now(UTC).date().isoformat()
             end_date = Patient.affiliation.op("->>")("endDate")

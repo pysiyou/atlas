@@ -1,0 +1,114 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://atlas.local/contracts/lab.schema.json",
+  "title": "Atlas lab policy contract",
+  "type": "object",
+  "required": ["limits", "blockers", "presentation", "reporting", "priority"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "limits": {
+      "type": "object",
+      "required": [
+        "MAX_RETEST_ATTEMPTS",
+        "MAX_RECOLLECTION_ATTEMPTS",
+        "QUEUE_AGE_WARNING_HOURS",
+        "QUEUE_AGE_CRITICAL_HOURS"
+      ],
+      "additionalProperties": { "type": "number" }
+    },
+    "blockers": {
+      "type": "object",
+      "required": ["reasons"],
+      "properties": {
+        "allowedActionKeys": { "type": "array", "items": { "type": "string" } },
+        "pipelineStages": { "type": "array", "items": { "type": "string" } },
+        "reasons": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["label", "attentionType"],
+            "properties": {
+              "label": { "type": "string" },
+              "attentionType": { "type": "string" },
+              "blocksProgress": { "type": "boolean" }
+            }
+          }
+        },
+        "attentionTypeSort": {
+          "type": "object",
+          "additionalProperties": { "type": "integer" }
+        },
+        "supervisorAttentionTypes": { "type": "array", "items": { "type": "string" } },
+        "priorityAttentionTypes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "presentation": {
+      "type": "object",
+      "required": ["terminalTestStatuses", "statusToPrimary", "blockedOverlay"],
+      "properties": {
+        "terminalTestStatuses": { "type": "array", "items": { "type": "string" } },
+        "statusToPrimary": {
+          "type": "object",
+          "required": ["order", "test", "sample"],
+          "properties": {
+            "order": { "type": "object", "additionalProperties": { "type": "string" } },
+            "test": { "type": "object", "additionalProperties": { "type": "string" } },
+            "sample": { "type": "object", "additionalProperties": { "type": "string" } }
+          }
+        },
+        "blockedOverlay": {
+          "type": "object",
+          "properties": {
+            "test": {
+              "type": "object",
+              "properties": {
+                "excludeStatusesRef": { "const": "terminalTestStatuses" },
+                "whenReasonBlocksProgress": { "type": "boolean" }
+              }
+            },
+            "sample": {
+              "type": "object",
+              "properties": {
+                "whenStatus": { "type": "string" },
+                "whenReasonBlocksProgress": { "type": "boolean" }
+              }
+            }
+          }
+        },
+        "secondaryRules": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "whenStatus": { "type": "string" },
+              "fromAttentionLabel": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "reporting": {
+      "type": "object",
+      "required": ["inactiveTestStatusesForReports", "inactiveTestStatusesForRollup"],
+      "properties": {
+        "inactiveTestStatusesForReports": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "inactiveTestStatusesForRollup": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "priority": {
+      "type": "object",
+      "required": ["rank", "weight"],
+      "properties": {
+        "rank": { "type": "object", "additionalProperties": { "type": "integer" } },
+        "weight": { "type": "object", "additionalProperties": { "type": "integer" } }
+      }
+    }
+  },
+  "additionalProperties": false
+}

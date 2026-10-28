@@ -2,6 +2,7 @@
 from datetime import UTC, date, datetime, time
 
 from app.domains.audit.service import AuditEmitter
+from app.domains.lab.rules.status_presentation import resolve_order_presentation
 from app.domains.orders.models import Order, OrderTest
 from app.domains.orders.schemas import OrderResponse
 from app.domains.orders.search import reportable_order_search_filter
@@ -11,7 +12,6 @@ from app.domains.reports.eligibility import (
     active_order_tests,
     is_reportable_order,
 )
-from app.domains.lab.rules.status_presentation import resolve_order_presentation
 from app.domains.reports.schemas import ReportableOrderItem
 from app.shared.contracts.enums import OrderStatus, TestStatus
 from app.shared.schemas.pagination import create_paginated_response, skip_to_page
@@ -51,7 +51,9 @@ class ReportService:
             validatedTestCount=validated_count,
             testCodes=[test.testCode for test in active_tests],
             testNames=[test.testName for test in active_tests],
-            order=OrderResponse.model_validate(order).model_dump(mode="json") if include_order else None,
+            order=OrderResponse.model_validate(order).model_dump(mode="json")
+            if include_order
+            else None,
         )
 
     def _reportable_query(self):

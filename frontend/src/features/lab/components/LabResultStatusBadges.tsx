@@ -7,7 +7,7 @@ import { Badge, Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/feedback';
 import type { BadgeSize } from '@/components/primitives';
 import { ICONS } from '@/config/icons';
-import { ATTENTION_LABELS } from '@/types/generated/labBlockers';
+import { ATTENTION_LABELS } from '@/types/generated/labContract';
 import { WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
 
 interface RetestBadgeProps {

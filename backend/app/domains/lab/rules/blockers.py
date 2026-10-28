@@ -5,22 +5,26 @@ from __future__ import annotations
 from typing import Any
 
 from app.domains.lab.rules.eligibility import attention_reason_for_work_item
-from app.shared.contracts.enums import (
-    PriorityLevel,
-)
-from app.shared.contracts.lab_blockers import (
+from app.shared.contracts.enums import PriorityLevel
+from app.shared.contracts.lab_contract import (
     ATTENTION_LABELS,
 )
-from app.shared.contracts.lab_blockers import (
-    ATTENTION_TYPE_BY_REASON as _GENERATED_ATTENTION,
+from app.shared.contracts.lab_contract import (
+    ATTENTION_TYPE_BY_REASON as _GENERATED_ATTENTION_TYPE_BY_REASON,
 )
-from app.shared.contracts.lab_blockers import (
-    ATTENTION_TYPE_SORT as _GENERATED_ATTENTION_SORT,
+from app.shared.contracts.lab_contract import (
+    ATTENTION_TYPE_SORT as _GENERATED_ATTENTION_TYPE_SORT,
 )
-from app.shared.contracts.lab_blockers import (
+from app.shared.contracts.lab_contract import (
     PRIORITY_ATTENTION_TYPES as _GENERATED_PRIORITY_ATTENTION,
 )
-from app.shared.contracts.lab_blockers import (
+from app.shared.contracts.lab_contract import (
+    PRIORITY_RANK as _GENERATED_PRIORITY_RANK,
+)
+from app.shared.contracts.lab_contract import (
+    PRIORITY_WEIGHT as _GENERATED_PRIORITY_WEIGHT,
+)
+from app.shared.contracts.lab_contract import (
     SUPERVISOR_ATTENTION_TYPES as _GENERATED_SUPERVISOR_ATTENTION,
 )
 from sqlalchemy import case
@@ -36,10 +40,12 @@ __all__ = [
     "attention_type_for",
     "priority_rank",
     "priority_sort_key",
+    "PRIORITY_RANK",
+    "PRIORITY_WEIGHT",
 ]
 
-ATTENTION_TYPE_BY_REASON = dict(_GENERATED_ATTENTION)
-ATTENTION_TYPE_SORT = dict(_GENERATED_ATTENTION_SORT)
+ATTENTION_TYPE_BY_REASON = dict(_GENERATED_ATTENTION_TYPE_BY_REASON)
+ATTENTION_TYPE_SORT = dict(_GENERATED_ATTENTION_TYPE_SORT)
 SUPERVISOR_ATTENTION_TYPES = set(_GENERATED_SUPERVISOR_ATTENTION)
 PRIORITY_ATTENTION_TYPES = set(_GENERATED_PRIORITY_ATTENTION)
 
@@ -74,33 +80,25 @@ def attention_type_for(
     return "queue_overdue_warning"
 
 
-# ── Priority ranking (worklist sort + attention merge) ─────────────────
+def _priority_rank_map() -> dict[Any, int]:
+    rank = dict(_GENERATED_PRIORITY_RANK)
+    rank.update(
+        {
+            PriorityLevel.URGENT: rank.get(PriorityLevel.URGENT.value, 99),
+            PriorityLevel.HIGH: rank.get(PriorityLevel.HIGH.value, 99),
+            PriorityLevel.MEDIUM: rank.get(PriorityLevel.MEDIUM.value, 99),
+            PriorityLevel.LOW: rank.get(PriorityLevel.LOW.value, 99),
+            PriorityLevel.URGENT.value: rank.get(PriorityLevel.URGENT.value, 99),
+            PriorityLevel.HIGH.value: rank.get(PriorityLevel.HIGH.value, 99),
+            PriorityLevel.MEDIUM.value: rank.get(PriorityLevel.MEDIUM.value, 99),
+            PriorityLevel.LOW.value: rank.get(PriorityLevel.LOW.value, 99),
+        }
+    )
+    return rank
 
-PRIORITY_RANK: dict[Any, int] = {
-    PriorityLevel.URGENT: 0,
-    PriorityLevel.HIGH: 1,
-    PriorityLevel.MEDIUM: 2,
-    PriorityLevel.LOW: 3,
-    PriorityLevel.URGENT.value: 0,
-    PriorityLevel.HIGH.value: 1,
-    PriorityLevel.MEDIUM.value: 2,
-    PriorityLevel.LOW.value: 3,
-    "urgent": 0,
-    "high": 1,
-    "medium": 2,
-    "low": 3,
-}
 
-PRIORITY_WEIGHT: dict[str, int] = {
-    PriorityLevel.URGENT.value: 4,
-    PriorityLevel.HIGH.value: 3,
-    PriorityLevel.MEDIUM.value: 2,
-    PriorityLevel.LOW.value: 1,
-    "urgent": 4,
-    "high": 3,
-    "medium": 2,
-    "low": 1,
-}
+PRIORITY_RANK = _priority_rank_map()
+PRIORITY_WEIGHT = dict(_GENERATED_PRIORITY_WEIGHT)
 
 
 def priority_rank(priority: Any) -> int:

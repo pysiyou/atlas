@@ -18,7 +18,7 @@ from app.shared.contracts.enums import (
     SampleStatus,
     TestStatus,
 )
-from app.shared.contracts.lab_blockers import ATTENTION_LABELS, reason_blocks_progress
+from app.shared.contracts.lab_contract import ATTENTION_LABELS, reason_blocks_progress
 
 
 class WorklistAllowedActions(TypedDict):
@@ -168,9 +168,7 @@ def action_flags_for_collection(
     return actions, None
 
 
-def action_flags_for_entry(
-    *, order_test: OrderTest
-) -> tuple[WorklistAllowedActions, str | None]:
+def action_flags_for_entry(*, order_test: OrderTest) -> tuple[WorklistAllowedActions, str | None]:
     """Entry worklist actions — retest rows use the same rules as primary tests once collected."""
     actions = _empty_actions()
     can_enter, _ = TestStateMachine.can_enter_results(order_test.status)

@@ -16,7 +16,7 @@ import {
   type RejectedSample,
   type Sample,
 } from '@/types';
-import { INACTIVE_REPORTABLE_TEST_STATUSES } from '@/features/orders/constants/reportableTestStatus';
+import { INACTIVE_REPORTABLE_TEST_STATUSES } from '@/types/generated/labContract';
 import {
   formatBirthdayWithAge,
   formatAddress,

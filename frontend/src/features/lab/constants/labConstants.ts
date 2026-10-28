@@ -1,6 +1,6 @@
 /** Lab copy, config, routing, visuals, and API path constants. */
 import type { IconName } from '@/components/primitives';
-import { GENERATED_LAB_CONSTANTS } from '@/types/generated/labConstants';
+import { GENERATED_LAB_CONSTANTS } from '@/types/generated/labContract';
 import { ROUTES } from '@/config';
 import { ICONS } from '@/config/icons';
 import type { TestStatus } from '@/types/enums';

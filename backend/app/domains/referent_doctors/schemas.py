@@ -1,7 +1,6 @@
 """Pydantic schemas for referent doctors."""
-from datetime import datetime
-
 import re
+from datetime import datetime
 
 from pydantic import BaseModel, Field, field_validator
 

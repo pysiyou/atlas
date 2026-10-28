@@ -1,7 +1,7 @@
 """
 Audit event log — persist rows, query for the API, and emit domain events.
 
-Dot-notation types match ``EventType`` in ``domains.audit.schemas``. Rows store target
+Dot-notation types match ``EventType`` in ``app.shared.contracts.audit_events`` (from contracts/audit-events.json). Rows store target
 (entity type + id), optional context (orderId, patientId, testId), metadata
 (e.g. ``test_code`` vs ``test_codes``), and actor snapshot (user or system).
 """
@@ -269,18 +269,14 @@ class AuditEventQueryService:
 
         if test_id is not None:
             order_test_ids.append(test_id)
-            row = (
-                self.db.query(OrderTest.sampleId).filter(OrderTest.id == test_id).first()
-            )
+            row = self.db.query(OrderTest.sampleId).filter(OrderTest.id == test_id).first()
             if row is not None and row.sampleId is not None:
                 sample_ids.append(int(row.sampleId))
             return list(dict.fromkeys(order_test_ids)), list(dict.fromkeys(sample_ids))
 
         if sample_id is not None:
             sample_ids.append(sample_id)
-            linked = (
-                self.db.query(OrderTest.id).filter(OrderTest.sampleId == sample_id).all()
-            )
+            linked = self.db.query(OrderTest.id).filter(OrderTest.sampleId == sample_id).all()
             order_test_ids.extend(int(row.id) for row in linked)
 
         return list(dict.fromkeys(order_test_ids)), list(dict.fromkeys(sample_ids))
@@ -307,9 +303,7 @@ class AuditEventQueryService:
             )
 
         if scope == "lab":
-            order_test_ids, sample_ids = self._lab_scope_ids(
-                test_id=test_id, sample_id=sample_id
-            )
+            order_test_ids, sample_ids = self._lab_scope_ids(test_id=test_id, sample_id=sample_id)
             clauses = []
             if order_test_ids:
                 clauses.append(
@@ -419,9 +413,7 @@ class AuditEventQueryService:
                 pattern = f"%{term}%"
                 name_match = AuditEvent.actorSnapshot["name"].astext.ilike(pattern)
                 query = query.outerjoin(User, User.id == AuditEvent.actorId)
-                query = query.filter(
-                    or_(name_match, User.username.ilike(pattern))
-                )
+                query = query.filter(or_(name_match, User.username.ilike(pattern)))
 
         if search:
             query = apply_unified_search(query, search, scope=scope)

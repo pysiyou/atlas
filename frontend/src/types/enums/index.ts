@@ -8,6 +8,7 @@ export * from './generated/container-enums';
 export * from './generated/gender';
 export * from './generated/lab-quality';
 export * from './generated/order';
+export * from './generated/presentation';
 export * from './generated/rejection';
 export * from './generated/relationship';
 export * from './generated/result';

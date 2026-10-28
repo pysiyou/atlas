@@ -1,11 +1,10 @@
 """Referent doctor directory service."""
-from sqlalchemy import func, or_
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
-
 from app.domains.referent_doctors.models import ReferentDoctor
 from app.domains.referent_doctors.schemas import ReferentDoctorCreate, ReferentDoctorResponse
 from fastapi import HTTPException, status
+from sqlalchemy import func, or_
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
 
 
 def normalize_full_name(full_name: str) -> str:
@@ -29,9 +28,7 @@ class ReferentDoctorService:
                     ReferentDoctor.username.ilike(term),
                 )
             )
-        rows = (
-            query.order_by(ReferentDoctor.fullName.asc()).limit(min(limit, 100)).all()
-        )
+        rows = query.order_by(ReferentDoctor.fullName.asc()).limit(min(limit, 100)).all()
         return [ReferentDoctorResponse.model_validate(row) for row in rows]
 
     def get_by_id(self, referent_doctor_id: int) -> ReferentDoctor | None:

@@ -4,7 +4,7 @@ Unified lab work-item projection for worklists, orders, and monitor.
 Semantics:
 - denyReason: primary reason the row's main action is disabled (fix this to proceed).
 - attentionReason: contextual reason for badges/monitor (may block progress).
-- attentionLabel / denyMessage: human copy from contracts/lab-blockers.json.
+- attentionLabel / denyMessage: human copy from contracts/lab.json blockers.
 """
 
 from __future__ import annotations
@@ -29,15 +29,13 @@ from app.domains.lab.rules.status_presentation import (
 from app.domains.lab.schemas.allowed_actions import LabWorklistAllowedActions
 from app.domains.orders.models import Order, OrderTest
 from app.shared.contracts.enums import TestStatus
-from app.shared.contracts.lab_blockers import ATTENTION_LABELS, reason_blocks_progress
+from app.shared.contracts.lab_contract import ATTENTION_LABELS, reason_blocks_progress
 from app.shared.schemas.status_presentation import StatusPresentation
 from pydantic import BaseModel, Field
 
 MonitorAttentionStage = Literal["collection", "entry", "validation", "escalation"]
 
-PipelineStage = Literal[
-    "collection", "entry", "validation", "escalation", "completed", "cancelled"
-]
+PipelineStage = Literal["collection", "entry", "validation", "escalation", "completed", "cancelled"]
 
 
 class EscalationActionFlags(BaseModel):

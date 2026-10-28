@@ -39,13 +39,15 @@ class UserService:
 
     def _count_active_administrators(self) -> int:
         return (
-            self.db.query(User)
-            .filter(User.role == UserRole.ADMIN, User.isActive.is_(True))
-            .count()
+            self.db.query(User).filter(User.role == UserRole.ADMIN, User.isActive.is_(True)).count()
         )
 
     def _is_last_active_administrator(self, user: User) -> bool:
-        return user.role == UserRole.ADMIN and bool(user.isActive) and self._count_active_administrators() <= 1
+        return (
+            user.role == UserRole.ADMIN
+            and bool(user.isActive)
+            and self._count_active_administrators() <= 1
+        )
 
     def _assert_account_lifecycle_guards(
         self,

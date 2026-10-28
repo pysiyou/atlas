@@ -1,7 +1,16 @@
 """
-Lab attention reason vocabulary — GENERATED from contracts/lab-blockers.json. DO NOT EDIT.
+Laboratory policy contract — GENERATED from contracts/lab.json. DO NOT EDIT.
 """
 from __future__ import annotations
+
+# ── Limits ──────────────────────────────────────────────────────────────
+
+MAX_RETEST_ATTEMPTS = 2
+MAX_RECOLLECTION_ATTEMPTS = 2
+QUEUE_AGE_WARNING_HOURS = 4
+QUEUE_AGE_CRITICAL_HOURS = 8
+
+# ── Blockers ────────────────────────────────────────────────────────────
 
 ATTENTION_REASON_KEYS: frozenset[str] = frozenset(
     {
@@ -104,3 +113,76 @@ PRIORITY_ATTENTION_TYPES: frozenset[str] = frozenset(
         "priority_high",
     }
 )
+
+# ── Presentation maps ───────────────────────────────────────────────────
+
+TERMINAL_TEST_STATUSES: frozenset[str] = frozenset(
+    {
+        "validated",
+        "cancelled",
+        "superseded",
+        "removed",
+    }
+)
+
+ORDER_STATUS_TO_PRIMARY: dict[str, str] = {
+    "ordered": "pending",
+    "running": "in_progress",
+    "completed": "completed",
+    "cancelled": "cancelled",
+}
+
+TEST_STATUS_TO_PRIMARY: dict[str, str] = {
+    "pending": "pending",
+    "sample-collected": "in_progress",
+    "resulted": "in_progress",
+    "validated": "completed",
+    "cancelled": "cancelled",
+    "escalated": "escalated",
+    "superseded": "superseded",
+    "removed": "removed",
+}
+
+SAMPLE_STATUS_TO_PRIMARY: dict[str, str] = {
+    "pending": "pending",
+    "collected": "in_progress",
+    "rejected": "rejected",
+}
+
+BLOCKED_OVERLAY_TEST_EXCLUDE_TERMINAL: bool = True
+BLOCKED_OVERLAY_SAMPLE_WHEN_STATUS: str = "pending"
+
+TEST_ESCALATED_SECONDARY_FROM_ATTENTION: bool = True
+
+# ── Reporting inactive test statuses ────────────────────────────────────
+
+INACTIVE_TEST_STATUSES_FOR_REPORTS: frozenset[str] = frozenset(
+    {
+        "removed",
+        "superseded",
+    }
+)
+
+INACTIVE_TEST_STATUSES_FOR_ROLLUP: frozenset[str] = frozenset(
+    {
+        "removed",
+        "superseded",
+        "cancelled",
+    }
+)
+
+# ── Priority sort helpers ───────────────────────────────────────────────
+
+PRIORITY_RANK: dict[str, int] = {
+    "urgent": 0,
+    "high": 1,
+    "medium": 2,
+    "low": 3,
+}
+
+PRIORITY_WEIGHT: dict[str, int] = {
+    "urgent": 4,
+    "high": 3,
+    "medium": 2,
+    "low": 1,
+}

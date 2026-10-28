@@ -2,11 +2,10 @@
 
 from datetime import datetime
 
+from app.domains.lab.schemas.allowed_actions import LabWorklistAllowedActions
 from app.shared.contracts.enums import Gender, OrderStatus, PaymentStatus, PriorityLevel
 from app.shared.schemas.status_presentation import StatusPresentation
 from pydantic import BaseModel, Field
-
-from app.domains.lab.schemas.allowed_actions import LabWorklistAllowedActions
 
 
 class PatientListSnippet(BaseModel):

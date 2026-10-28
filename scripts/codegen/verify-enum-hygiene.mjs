@@ -66,6 +66,36 @@ for (const file of walk(FRONTEND)) {
   }
 }
 
+const legacyContractFiles = [
+  'contracts/lab-constants.json',
+  'contracts/lab-blockers.json',
+  'contracts/status-presentation.json',
+  'frontend/src/config/feedbackCatalog.ts',
+  'frontend/src/types/generated/labConstants.ts',
+  'frontend/src/types/generated/labBlockers.ts',
+  'frontend/src/types/generated/statusPresentation.ts',
+  'backend/app/shared/contracts/lab_constants.py',
+  'backend/app/shared/contracts/lab_blockers.py',
+  'backend/app/shared/contracts/status_presentation_contract.py',
+  'backend/app/shared/contracts/test-catalog.json',
+];
+
+for (const rel of legacyContractFiles) {
+  if (fs.existsSync(path.join(ROOT, rel))) {
+    fail(`Legacy contract artifact still present: ${rel}`);
+  }
+}
+
+const labContractTs = read('frontend/src/types/generated/labContract.ts');
+if (!labContractTs.includes('GENERATED from contracts/lab.json')) {
+  fail('labContract.ts must be generated from contracts/lab.json');
+}
+
+const feedbackTs = read('frontend/src/types/generated/feedbackCatalog.ts');
+if (!feedbackTs.includes('GENERATED from contracts/feedback.json')) {
+  fail('feedbackCatalog.ts must be generated from contracts/feedback.json');
+}
+
 if (failed) {
   process.exit(1);
 }

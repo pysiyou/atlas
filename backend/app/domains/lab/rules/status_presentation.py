@@ -3,17 +3,23 @@ Map stored entity status + lab attention reasons to canonical presentation for U
 """
 from __future__ import annotations
 
-from app.shared.contracts.enums import OrderStatus, SampleStatus, TestStatus
-from app.shared.contracts.lab_blockers import ATTENTION_LABELS, reason_blocks_progress
-from app.shared.contracts.status_presentation_contract import (
-    BADGE_VARIANTS,
+from app.shared.contracts.enums import (
+    PRESENTATION_PRIMARY_BADGE_VARIANTS,
+    PresentationPrimary,
+)
+from app.shared.contracts.lab_contract import (
+    ATTENTION_LABELS,
+    ORDER_STATUS_TO_PRIMARY,
+    SAMPLE_STATUS_TO_PRIMARY,
     TERMINAL_TEST_STATUSES,
+    TEST_STATUS_TO_PRIMARY,
+    reason_blocks_progress,
 )
 from app.shared.schemas.status_presentation import StatusPresentation
 
 
 def _variant(primary: str) -> str:
-    return BADGE_VARIANTS.get(primary, "neutral")
+    return PRESENTATION_PRIMARY_BADGE_VARIANTS.get(primary, "neutral")
 
 
 def _label_for_reason(reason: str | None) -> str | None:
@@ -22,37 +28,19 @@ def _label_for_reason(reason: str | None) -> str | None:
     return ATTENTION_LABELS.get(reason)
 
 
-def _test_status_value(status: TestStatus | str) -> str:
+def _test_status_value(status) -> str:
     if hasattr(status, "value"):
         return status.value
     return str(status)
 
 
-def _test_lifecycle_primary(status: str) -> str:
-    if status == TestStatus.PENDING.value:
-        return "pending"
-    if status in (TestStatus.SAMPLE_COLLECTED.value, TestStatus.RESULTED.value):
-        return "in_progress"
-    if status == TestStatus.VALIDATED.value:
-        return "completed"
-    if status == TestStatus.CANCELLED.value:
-        return "cancelled"
-    if status == TestStatus.ESCALATED.value:
-        return "escalated"
-    if status == TestStatus.SUPERSEDED.value:
-        return "superseded"
-    if status == TestStatus.REMOVED.value:
-        return "removed"
-    return "pending"
-
-
-def _presentation_blocks_progress(attention_reason: str | None) -> bool:
-    return reason_blocks_progress(attention_reason)
+def _primary_for_status(status_str: str, mapping: dict[str, str]) -> str:
+    return mapping.get(status_str, PresentationPrimary.PENDING.value)
 
 
 def resolve_test_presentation(
     *,
-    status: TestStatus | str,
+    status,
     attention_reason: str | None = None,
     attention_label: str | None = None,
 ) -> StatusPresentation:
@@ -63,17 +51,18 @@ def resolve_test_presentation(
     if (
         status_str not in TERMINAL_TEST_STATUSES
         and attention_reason
-        and _presentation_blocks_progress(attention_reason)
+        and reason_blocks_progress(attention_reason)
     ):
+        blocked = PresentationPrimary.BLOCKED.value
         return StatusPresentation(
-            primary="blocked",
+            primary=blocked,
             secondary=secondary_label,
-            variant=_variant("blocked"),
+            variant=_variant(blocked),
         )
 
-    primary = _test_lifecycle_primary(status_str)
+    primary = _primary_for_status(status_str, TEST_STATUS_TO_PRIMARY)
     secondary: str | None = None
-    if status_str == TestStatus.ESCALATED.value and secondary_label:
+    if status_str == "escalated" and secondary_label:
         secondary = secondary_label
 
     return StatusPresentation(primary=primary, secondary=secondary, variant=_variant(primary))
@@ -81,7 +70,7 @@ def resolve_test_presentation(
 
 def resolve_sample_presentation(
     *,
-    status: SampleStatus | str,
+    status,
     attention_reason: str | None = None,
     attention_label: str | None = None,
     rejection_secondary: str | None = None,
@@ -90,45 +79,22 @@ def resolve_sample_presentation(
     status_str = status.value if hasattr(status, "value") else str(status)
     secondary_label = attention_label or _label_for_reason(attention_reason)
 
-    if (
-        status_str == SampleStatus.PENDING.value
-        and attention_reason
-        and _presentation_blocks_progress(attention_reason)
-    ):
+    if status_str == "pending" and attention_reason and reason_blocks_progress(attention_reason):
+        blocked = PresentationPrimary.BLOCKED.value
         return StatusPresentation(
-            primary="blocked",
+            primary=blocked,
             secondary=secondary_label,
-            variant=_variant("blocked"),
+            variant=_variant(blocked),
         )
 
-    if status_str == SampleStatus.PENDING.value:
-        return StatusPresentation(primary="pending", secondary=None, variant=_variant("pending"))
-    if status_str == SampleStatus.COLLECTED.value:
-        return StatusPresentation(
-            primary="in_progress", secondary=None, variant=_variant("in_progress")
-        )
-    if status_str == SampleStatus.REJECTED.value:
-        return StatusPresentation(
-            primary="rejected",
-            secondary=rejection_secondary,
-            variant=_variant("rejected"),
-        )
+    primary = _primary_for_status(status_str, SAMPLE_STATUS_TO_PRIMARY)
+    secondary = rejection_secondary if primary == PresentationPrimary.REJECTED.value else None
 
-    return StatusPresentation(primary="pending", secondary=None, variant=_variant("pending"))
+    return StatusPresentation(primary=primary, secondary=secondary, variant=_variant(primary))
 
 
-def resolve_order_presentation(overall_status: OrderStatus | str) -> StatusPresentation:
+def resolve_order_presentation(overall_status) -> StatusPresentation:
     """Presentation for order rollup status."""
     status_str = overall_status.value if hasattr(overall_status, "value") else str(overall_status)
-    if status_str == OrderStatus.ORDERED.value:
-        primary = "pending"
-    elif status_str == OrderStatus.RUNNING.value:
-        primary = "in_progress"
-    elif status_str == OrderStatus.COMPLETED.value:
-        primary = "completed"
-    elif status_str == OrderStatus.CANCELLED.value:
-        primary = "cancelled"
-    else:
-        primary = "pending"
-
+    primary = _primary_for_status(status_str, ORDER_STATUS_TO_PRIMARY)
     return StatusPresentation(primary=primary, secondary=None, variant=_variant(primary))

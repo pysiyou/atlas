@@ -17,8 +17,8 @@ from app.domains.lab.monitor.board import (
     LabBoardService,
     age_bucket,
 )
-from app.domains.lab.rules.blockers import priority_rank, priority_sort_key
 from app.domains.lab.quality.recollection_snapshot import recollection_blocked_order_test_ids
+from app.domains.lab.rules.blockers import priority_rank, priority_sort_key
 from app.domains.lab.rules.work_item_projection import (
     LabWorkItemContext,
     project_collection_sample,
@@ -28,8 +28,8 @@ from app.domains.lab.rules.work_item_projection import (
     projection_to_worklist_fields,
 )
 from app.domains.orders.models import Order, OrderTest
-from app.domains.referent_doctors.display import referent_doctor_projection
 from app.domains.patients.models import Patient
+from app.domains.referent_doctors.display import referent_doctor_projection
 from app.platform.cache import CacheKeys, cache_get, cache_set
 from app.platform.utils.common import parse_display_id_from_search
 from app.shared.contracts.enums import (
@@ -39,7 +39,7 @@ from app.shared.contracts.enums import (
     SampleStatus,
     TestStatus,
 )
-from app.shared.contracts.lab_blockers import ATTENTION_LABELS
+from app.shared.contracts.lab_contract import ATTENTION_LABELS
 from sqlalchemy import String, and_, case, cast, desc, exists, func, or_
 from sqlalchemy.orm import Session
 

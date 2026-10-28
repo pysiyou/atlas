@@ -56,7 +56,9 @@ class ResultCommandHandler:
     ) -> dict[str, Any]:
         """Persist value + catalog unit/reference/status so clients do not own flags."""
         flags_by_code = {flag.item_code: flag for flag in flags}
-        items_by_code = {item.get("item_code"): item for item in result_items if item.get("item_code")}
+        items_by_code = {
+            item.get("item_code"): item for item in result_items if item.get("item_code")
+        }
         shaped: dict[str, Any] = {}
         for code, raw in results.items():
             item = items_by_code.get(code) or {}

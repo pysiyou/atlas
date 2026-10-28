@@ -13,7 +13,7 @@ import type {
   RecollectionRequestStatus,
   RemedyType,
 } from '@/types/enums';
-import { GENERATED_LAB_CONSTANTS } from '@/types/generated/labConstants';
+import { GENERATED_LAB_CONSTANTS } from '@/types/generated/labContract';
 
 export type {
   EscalationReasonCode,

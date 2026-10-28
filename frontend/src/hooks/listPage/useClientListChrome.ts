@@ -1,4 +1,4 @@
-import type { FeedbackId } from '@/config/feedbackCatalog';
+import type { FeedbackId } from '@/utils/feedbackCatalog';
 import { toListLoadError, type ListLoadError } from './toListLoadError';
 
 export interface UseClientListChromeOptions {

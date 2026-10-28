@@ -1,6 +1,13 @@
 /**
- * Lab attention reason vocabulary — GENERATED from contracts/lab-blockers.json. DO NOT EDIT.
+ * Laboratory policy contract — GENERATED from contracts/lab.json. DO NOT EDIT.
  */
+export const GENERATED_LAB_CONSTANTS = {
+  MAX_RETEST_ATTEMPTS: 2,
+  MAX_RECOLLECTION_ATTEMPTS: 2,
+  QUEUE_AGE_WARNING_HOURS: 4,
+  QUEUE_AGE_CRITICAL_HOURS: 8,
+} as const;
+
 export const ATTENTION_REASON_KEYS = [
   "payment_unpaid",
   "sample_rejected",
@@ -64,3 +71,50 @@ export const ATTENTION_TYPE_SORT: Record<string, number> = {
 export const SUPERVISOR_ATTENTION_TYPES = ["escalation_critical","escalation_amendment","escalation_retry_limit","escalation_recollection_limit","supervisor_approval","supervisor_recollection_request"] as const;
 
 export const PRIORITY_ATTENTION_TYPES = ["priority_urgent","priority_high"] as const;
+
+export const TERMINAL_TEST_STATUSES = ["validated","cancelled","superseded","removed"] as const;
+
+export const ORDER_STATUS_TO_PRIMARY: Record<string, string> = {
+  "ordered": "pending",
+  "running": "in_progress",
+  "completed": "completed",
+  "cancelled": "cancelled"
+};
+
+export const TEST_STATUS_TO_PRIMARY: Record<string, string> = {
+  "pending": "pending",
+  "sample-collected": "in_progress",
+  "resulted": "in_progress",
+  "validated": "completed",
+  "cancelled": "cancelled",
+  "escalated": "escalated",
+  "superseded": "superseded",
+  "removed": "removed"
+};
+
+export const SAMPLE_STATUS_TO_PRIMARY: Record<string, string> = {
+  "pending": "pending",
+  "collected": "in_progress",
+  "rejected": "rejected"
+};
+
+export const INACTIVE_TEST_STATUSES_FOR_REPORTS = ["removed","superseded"] as const;
+
+export const INACTIVE_TEST_STATUSES_FOR_ROLLUP = ["removed","superseded","cancelled"] as const;
+
+/** Report lines excluded from PDF/list eligibility (subset of rollup inactive). */
+export const INACTIVE_REPORTABLE_TEST_STATUSES = new Set<string>(INACTIVE_TEST_STATUSES_FOR_REPORTS);
+
+export const PRIORITY_RANK: Record<string, number> = {
+  "urgent": 0,
+  "high": 1,
+  "medium": 2,
+  "low": 3
+};
+
+export const PRIORITY_WEIGHT: Record<string, number> = {
+  "urgent": 4,
+  "high": 3,
+  "medium": 2,
+  "low": 1
+};

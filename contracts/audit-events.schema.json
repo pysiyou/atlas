@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://atlas.local/contracts/audit-events.schema.json",
+  "title": "Atlas audit event taxonomy",
+  "type": "object",
+  "required": ["events"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "events": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["member", "wire", "domain", "domainLabel", "verbPhrase"],
+        "properties": {
+          "member": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]*$"
+          },
+          "wire": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_.]*$"
+          },
+          "domain": { "type": "string" },
+          "laboratorySubdomain": { "type": "string" },
+          "domainLabel": { "type": "string" },
+          "verbPhrase": { "type": "string" },
+          "headlineMetaKeys": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "leadingActor": { "type": "boolean" },
+          "trailingActor": { "enum": ["human", "never"] },
+          "treatAsSystemActor": { "type": "boolean" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
