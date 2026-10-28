@@ -2,7 +2,7 @@
  * Sample collection queue card — derived view-model from queue item + sample.
  */
 
-import { CONTAINER_COLOR_OPTIONS, type Sample, type RejectedSample } from '@/types';
+import { CONTAINER_TOP_COLOR_OPTIONS, type Sample, type RejectedSample } from '@/types';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { getEffectiveContainerType } from '../../utils';
 import { isLabActionAllowed } from '../../utils/queueDisplay';
@@ -27,7 +27,7 @@ export function getSampleCollectionViewModel(display: SampleCollectionQueueItem,
     rejectedSample: isRejected ? (sample as RejectedSample) : null,
     containerColor,
     colorName: containerColor
-      ? CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerColor)?.label || 'N/A'
+      ? CONTAINER_TOP_COLOR_OPTIONS.find(opt => opt.value === containerColor)?.label || 'N/A'
       : 'N/A',
     effectiveContainerType: getEffectiveContainerType(
       hasContainerInfo && 'actualContainerType' in sample ? sample.actualContainerType : undefined,

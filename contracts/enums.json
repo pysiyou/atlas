@@ -1,253 +1,671 @@
 {
+  "$schema": "./enums.schema.json",
   "Gender": {
     "type": "string",
-    "values": {
-      "MALE": "male",
-      "FEMALE": "female"
-    }
+    "members": {
+      "MALE": {
+        "wire": "male",
+        "label": "Male",
+        "icon": "♂"
+      },
+      "FEMALE": {
+        "wire": "female",
+        "label": "Female",
+        "icon": "♀"
+      }
+    },
+    "filterAllLabel": "All Genders"
   },
   "AffiliationDuration": {
     "type": "int",
-    "values": {
-      "SIX_MONTHS": 6,
-      "TWELVE_MONTHS": 12,
-      "TWENTY_FOUR_MONTHS": 24
+    "members": {
+      "SIX_MONTHS": {
+        "wire": 6,
+        "label": "6 Months"
+      },
+      "TWELVE_MONTHS": {
+        "wire": 12,
+        "label": "1 Year"
+      },
+      "TWENTY_FOUR_MONTHS": {
+        "wire": 24,
+        "label": "2 Years"
+      }
     }
   },
   "Relationship": {
     "type": "string",
-    "values": {
-      "SPOUSE": "spouse",
-      "PARENT": "parent",
-      "SIBLING": "sibling",
-      "CHILD": "child",
-      "FRIEND": "friend",
-      "OTHER": "other"
-    }
+    "members": {
+      "SPOUSE": {
+        "wire": "spouse",
+        "label": "Spouse"
+      },
+      "PARENT": {
+        "wire": "parent",
+        "label": "Parent"
+      },
+      "SIBLING": {
+        "wire": "sibling",
+        "label": "Sibling"
+      },
+      "CHILD": {
+        "wire": "child",
+        "label": "Child"
+      },
+      "FRIEND": {
+        "wire": "friend",
+        "label": "Friend"
+      },
+      "OTHER": {
+        "wire": "other",
+        "label": "Other"
+      }
+    },
+    "filterAllLabel": "All Relationships"
   },
   "UserRole": {
     "type": "string",
-    "values": {
-      "ADMIN": "administrator",
-      "RECEPTIONIST": "receptionist",
-      "LAB_TECH": "lab-technician",
-      "LAB_TECH_PLUS": "lab-technician-plus"
+    "members": {
+      "ADMIN": {
+        "wire": "administrator",
+        "label": "Administrator",
+        "description": "Full system access"
+      },
+      "RECEPTIONIST": {
+        "wire": "receptionist",
+        "label": "Receptionist",
+        "description": "Front desk and patient registration"
+      },
+      "LAB_TECH": {
+        "wire": "lab-technician",
+        "label": "Lab Technician",
+        "description": "Sample collection and processing"
+      },
+      "LAB_TECH_PLUS": {
+        "wire": "lab-technician-plus",
+        "label": "Lab Tech Plus",
+        "description": "Extended lab access including result validation"
+      }
     }
   },
   "SampleType": {
     "type": "string",
-    "values": {
-      "BLOOD": "blood",
-      "URINE": "urine",
-      "STOOL": "stool",
-      "SALIVA": "saliva",
-      "SWAB": "swab",
-      "TISSUE": "tissue",
-      "SPUTUM": "sputum",
-      "CSF": "csf",
-      "PLEURAL_FLUID": "pleural_fluid",
-      "SERUM": "serum",
-      "PLASMA": "plasma",
-      "OTHER": "other"
-    }
+    "members": {
+      "BLOOD": {
+        "wire": "blood",
+        "label": "Blood",
+        "isDerived": false
+      },
+      "URINE": {
+        "wire": "urine",
+        "label": "Urine",
+        "isDerived": false
+      },
+      "STOOL": {
+        "wire": "stool",
+        "label": "Stool",
+        "isDerived": false
+      },
+      "SALIVA": {
+        "wire": "saliva",
+        "label": "Saliva",
+        "isDerived": false
+      },
+      "SWAB": {
+        "wire": "swab",
+        "label": "Swab",
+        "isDerived": false
+      },
+      "TISSUE": {
+        "wire": "tissue",
+        "label": "Tissue",
+        "isDerived": false
+      },
+      "SPUTUM": {
+        "wire": "sputum",
+        "label": "Sputum",
+        "isDerived": false
+      },
+      "CSF": {
+        "wire": "csf",
+        "label": "CSF",
+        "isDerived": false
+      },
+      "PLEURAL_FLUID": {
+        "wire": "pleural_fluid",
+        "label": "Pleural Fluid",
+        "isDerived": false
+      },
+      "SERUM": {
+        "wire": "serum",
+        "label": "Serum",
+        "isDerived": true,
+        "collectionSource": "blood"
+      },
+      "PLASMA": {
+        "wire": "plasma",
+        "label": "Plasma",
+        "isDerived": true,
+        "collectionSource": "blood"
+      },
+      "OTHER": {
+        "wire": "other",
+        "label": "Other",
+        "isDerived": false
+      }
+    },
+    "filterAllLabel": "All Sample Types"
   },
   "SampleStatus": {
     "type": "string",
-    "values": {
-      "PENDING": "pending",
-      "COLLECTED": "collected",
-      "REJECTED": "rejected"
-    }
+    "members": {
+      "PENDING": {
+        "wire": "pending",
+        "label": "Pending"
+      },
+      "COLLECTED": {
+        "wire": "collected",
+        "label": "Collected"
+      },
+      "REJECTED": {
+        "wire": "rejected",
+        "label": "Rejected"
+      }
+    },
+    "filterAllLabel": "All Status"
   },
   "ContainerType": {
     "type": "string",
-    "values": {
-      "TUBE": "tube",
-      "CUP": "cup"
+    "members": {
+      "TUBE": {
+        "wire": "tube",
+        "label": "Tube"
+      },
+      "CUP": {
+        "wire": "cup",
+        "label": "Cup"
+      }
     }
   },
   "ContainerTopColor": {
     "type": "string",
-    "values": {
-      "RED": "red",
-      "PURPLE": "purple",
-      "BLUE": "blue",
-      "GREEN": "green",
-      "GRAY": "gray",
-      "YELLOW": "yellow",
-      "LIGHT_BLUE": "light-blue",
-      "PINK": "pink",
-      "WHITE": "white",
-      "BLACK": "black",
-      "ORANGE": "orange",
-      "CLEAR": "clear"
+    "members": {
+      "RED": {
+        "wire": "red",
+        "label": "Red"
+      },
+      "PURPLE": {
+        "wire": "purple",
+        "label": "Purple"
+      },
+      "BLUE": {
+        "wire": "blue",
+        "label": "Blue"
+      },
+      "GREEN": {
+        "wire": "green",
+        "label": "Green"
+      },
+      "GRAY": {
+        "wire": "gray",
+        "label": "Gray"
+      },
+      "YELLOW": {
+        "wire": "yellow",
+        "label": "Yellow"
+      },
+      "LIGHT_BLUE": {
+        "wire": "light-blue",
+        "label": "Light Blue"
+      },
+      "PINK": {
+        "wire": "pink",
+        "label": "Pink"
+      },
+      "WHITE": {
+        "wire": "white",
+        "label": "White"
+      },
+      "BLACK": {
+        "wire": "black",
+        "label": "Black"
+      },
+      "ORANGE": {
+        "wire": "orange",
+        "label": "Orange"
+      },
+      "CLEAR": {
+        "wire": "clear",
+        "label": "Clear"
+      }
     }
   },
   "RejectionReason": {
     "type": "string",
-    "values": {
-      "HEMOLYZED": "hemolyzed",
-      "CLOTTED": "clotted",
-      "QNS": "qns",
-      "WRONG_CONTAINER": "wrong_container",
-      "LABELING_ERROR": "labeling_error",
-      "TRANSPORT_DELAY": "transport_delay",
-      "CONTAMINATED": "contaminated",
-      "LIPEMIC": "lipemic",
-      "ICTERIC": "icteric",
-      "OTHER": "other"
+    "members": {
+      "HEMOLYZED": {
+        "wire": "hemolyzed",
+        "label": "Hemolyzed",
+        "description": "Red blood cell breakdown detected"
+      },
+      "CLOTTED": {
+        "wire": "clotted",
+        "label": "Clotted",
+        "description": "Sample clotted when anticoagulant was required"
+      },
+      "QNS": {
+        "wire": "qns",
+        "label": "Quantity Not Sufficient (QNS)",
+        "description": "Insufficient volume for testing"
+      },
+      "WRONG_CONTAINER": {
+        "wire": "wrong_container",
+        "label": "Wrong Container",
+        "description": "Collected in incorrect tube type"
+      },
+      "LABELING_ERROR": {
+        "wire": "labeling_error",
+        "label": "Labeling Error",
+        "description": "Missing or incorrect patient identification"
+      },
+      "TRANSPORT_DELAY": {
+        "wire": "transport_delay",
+        "label": "Transport Delay",
+        "description": "Exceeded acceptable transport time"
+      },
+      "CONTAMINATED": {
+        "wire": "contaminated",
+        "label": "Contaminated",
+        "description": "Visible contamination present"
+      },
+      "LIPEMIC": {
+        "wire": "lipemic",
+        "label": "Lipemic",
+        "description": "Lipemia detected (fatty/milky appearance)"
+      },
+      "ICTERIC": {
+        "wire": "icteric",
+        "label": "Icteric",
+        "description": "Icterus detected (yellowish discoloration)"
+      },
+      "OTHER": {
+        "wire": "other",
+        "label": "Other",
+        "description": "Other reason (specify in notes)"
+      }
     }
   },
   "TestStatus": {
     "type": "string",
-    "values": {
-      "PENDING": "pending",
-      "SAMPLE_COLLECTED": "sample-collected",
-      "RESULTED": "resulted",
-      "VALIDATED": "validated",
-      "CANCELLED": "cancelled",
-      "ESCALATED": "escalated",
-      "SUPERSEDED": "superseded",
-      "REMOVED": "removed"
-    }
+    "members": {
+      "PENDING": {
+        "wire": "pending",
+        "label": "Pending"
+      },
+      "SAMPLE_COLLECTED": {
+        "wire": "sample-collected",
+        "label": "Sample Collected"
+      },
+      "RESULTED": {
+        "wire": "resulted",
+        "label": "Resulted"
+      },
+      "VALIDATED": {
+        "wire": "validated",
+        "label": "Validated"
+      },
+      "CANCELLED": {
+        "wire": "cancelled",
+        "label": "Cancelled"
+      },
+      "ESCALATED": {
+        "wire": "escalated",
+        "label": "Escalated"
+      },
+      "SUPERSEDED": {
+        "wire": "superseded",
+        "label": "Superseded"
+      },
+      "REMOVED": {
+        "wire": "removed",
+        "label": "Removed"
+      }
+    },
+    "filterAllLabel": "All Status"
   },
   "QualityStage": {
     "type": "string",
-    "values": {
-      "COLLECTION": "collection",
-      "VALIDATION": "validation"
+    "members": {
+      "COLLECTION": {
+        "wire": "collection",
+        "label": "Collection"
+      },
+      "VALIDATION": {
+        "wire": "validation",
+        "label": "Validation"
+      }
     }
   },
   "QualityDomain": {
     "type": "string",
-    "values": {
-      "SPECIMEN": "specimen",
-      "ANALYTICAL": "analytical",
-      "CLINICAL": "clinical"
+    "members": {
+      "SPECIMEN": {
+        "wire": "specimen",
+        "label": "Specimen"
+      },
+      "ANALYTICAL": {
+        "wire": "analytical",
+        "label": "Analytical"
+      },
+      "CLINICAL": {
+        "wire": "clinical",
+        "label": "Clinical"
+      }
     }
   },
   "RemedyType": {
     "type": "string",
-    "values": {
-      "RETRY_SAME_SAMPLE": "retry_same_sample",
-      "RECOLLECT": "recollect",
-      "REQUEST_RECOLLECTION": "request_recollection",
-      "ESCALATE": "escalate",
-      "CANCEL": "cancel"
+    "members": {
+      "RETRY_SAME_SAMPLE": {
+        "wire": "retry_same_sample",
+        "label": "Retry same sample"
+      },
+      "RECOLLECT": {
+        "wire": "recollect",
+        "label": "Recollect"
+      },
+      "REQUEST_RECOLLECTION": {
+        "wire": "request_recollection",
+        "label": "Request recollection"
+      },
+      "ESCALATE": {
+        "wire": "escalate",
+        "label": "Escalate"
+      },
+      "CANCEL": {
+        "wire": "cancel",
+        "label": "Cancel"
+      }
     }
   },
   "RecollectionRequestStatus": {
     "type": "string",
-    "values": {
-      "PENDING_APPROVAL": "pending-approval",
-      "APPROVED": "approved",
-      "DENIED": "denied",
-      "FULFILLED": "fulfilled",
-      "CANCELLED": "cancelled"
+    "members": {
+      "PENDING_APPROVAL": {
+        "wire": "pending-approval",
+        "label": "Pending approval"
+      },
+      "APPROVED": {
+        "wire": "approved",
+        "label": "Approved"
+      },
+      "DENIED": {
+        "wire": "denied",
+        "label": "Denied"
+      },
+      "FULFILLED": {
+        "wire": "fulfilled",
+        "label": "Fulfilled"
+      },
+      "CANCELLED": {
+        "wire": "cancelled",
+        "label": "Cancelled"
+      }
     }
   },
   "OrderStatus": {
     "type": "string",
-    "values": {
-      "ORDERED": "ordered",
-      "RUNNING": "running",
-      "COMPLETED": "completed",
-      "CANCELLED": "cancelled"
-    }
+    "members": {
+      "ORDERED": {
+        "wire": "ordered",
+        "label": "Ordered"
+      },
+      "RUNNING": {
+        "wire": "running",
+        "label": "Running"
+      },
+      "COMPLETED": {
+        "wire": "completed",
+        "label": "Completed"
+      },
+      "CANCELLED": {
+        "wire": "cancelled",
+        "label": "Cancelled"
+      }
+    },
+    "filterAllLabel": "All Status"
   },
   "PriorityLevel": {
     "type": "string",
-    "values": {
-      "LOW": "low",
-      "MEDIUM": "medium",
-      "HIGH": "high",
-      "URGENT": "urgent"
-    }
+    "members": {
+      "LOW": {
+        "wire": "low",
+        "label": "Low",
+        "turnaroundHours": 48
+      },
+      "MEDIUM": {
+        "wire": "medium",
+        "label": "Medium",
+        "turnaroundHours": 24
+      },
+      "HIGH": {
+        "wire": "high",
+        "label": "High",
+        "turnaroundHours": 4
+      },
+      "URGENT": {
+        "wire": "urgent",
+        "label": "Urgent",
+        "turnaroundHours": 1
+      }
+    },
+    "filterAllLabel": "All Priorities"
   },
   "PaymentStatus": {
     "type": "string",
-    "values": {
-      "UNPAID": "unpaid",
-      "PAID": "paid"
-    }
+    "members": {
+      "UNPAID": {
+        "wire": "unpaid",
+        "label": "Unpaid"
+      },
+      "PAID": {
+        "wire": "paid",
+        "label": "Paid"
+      }
+    },
+    "filterAllLabel": "All Status"
   },
   "PaymentMethod": {
     "type": "string",
-    "values": {
-      "CASH": "cash",
-      "CREDIT_CARD": "credit-card",
-      "DEBIT_CARD": "debit-card",
-      "INSURANCE": "insurance",
-      "BANK_TRANSFER": "bank-transfer",
-      "MOBILE": "mobile"
+    "members": {
+      "CASH": {
+        "wire": "cash",
+        "label": "Cash",
+        "enabled": true,
+        "iconKey": "dataFields.cash"
+      },
+      "CREDIT_CARD": {
+        "wire": "credit-card",
+        "label": "Credit Card",
+        "enabled": false,
+        "iconKey": "dataFields.creditCard"
+      },
+      "DEBIT_CARD": {
+        "wire": "debit-card",
+        "label": "Debit Card",
+        "enabled": false,
+        "iconKey": "dataFields.creditCard"
+      },
+      "INSURANCE": {
+        "wire": "insurance",
+        "label": "Insurance",
+        "enabled": false,
+        "iconKey": "ui.shield"
+      },
+      "BANK_TRANSFER": {
+        "wire": "bank-transfer",
+        "label": "Bank Transfer",
+        "enabled": false,
+        "iconKey": "dataFields.wallet"
+      },
+      "MOBILE": {
+        "wire": "mobile",
+        "label": "Mobile",
+        "enabled": true,
+        "iconKey": "ui.smartphone"
+      }
     }
   },
   "ClaimStatus": {
     "type": "string",
-    "values": {
-      "SUBMITTED": "submitted",
-      "PROCESSING": "processing",
-      "APPROVED": "approved",
-      "DENIED": "denied",
-      "PAID": "paid"
+    "members": {
+      "SUBMITTED": {
+        "wire": "submitted",
+        "label": "Submitted"
+      },
+      "PROCESSING": {
+        "wire": "processing",
+        "label": "Processing"
+      },
+      "APPROVED": {
+        "wire": "approved",
+        "label": "Approved"
+      },
+      "DENIED": {
+        "wire": "denied",
+        "label": "Denied"
+      },
+      "PAID": {
+        "wire": "paid",
+        "label": "Paid"
+      }
     }
   },
   "ResultStatus": {
     "type": "string",
-    "values": {
-      "NORMAL": "normal",
-      "HIGH": "high",
-      "LOW": "low",
-      "CRITICAL": "critical",
-      "CRITICAL_HIGH": "critical-high",
-      "CRITICAL_LOW": "critical-low"
+    "members": {
+      "NORMAL": {
+        "wire": "normal",
+        "label": "Normal"
+      },
+      "HIGH": {
+        "wire": "high",
+        "label": "High"
+      },
+      "LOW": {
+        "wire": "low",
+        "label": "Low"
+      },
+      "CRITICAL": {
+        "wire": "critical",
+        "label": "Critical"
+      },
+      "CRITICAL_HIGH": {
+        "wire": "critical-high",
+        "label": "Critical High"
+      },
+      "CRITICAL_LOW": {
+        "wire": "critical-low",
+        "label": "Critical Low"
+      }
     }
   },
   "ValidationDecision": {
     "type": "string",
-    "values": {
-      "APPROVED": "approved",
-      "REJECTED": "rejected"
+    "members": {
+      "APPROVED": {
+        "wire": "approved",
+        "label": "Approved"
+      },
+      "REJECTED": {
+        "wire": "rejected",
+        "label": "Rejected"
+      }
     }
   },
   "QualityIssueTargetType": {
     "type": "string",
-    "values": {
-      "SAMPLE": "sample",
-      "TEST": "test"
+    "members": {
+      "SAMPLE": {
+        "wire": "sample",
+        "label": "Sample"
+      },
+      "TEST": {
+        "wire": "test",
+        "label": "Test"
+      }
     }
   },
   "EscalationReasonCode": {
     "type": "string",
-    "values": {
-      "CRIT_VAL": "CRIT-VAL",
-      "REJ_SAMP": "REJ-SAMP",
-      "LIMIT_HIT": "LIMIT-HIT",
-      "AMEND_RES": "AMEND-RES"
+    "members": {
+      "CRIT_VAL": {
+        "wire": "CRIT-VAL",
+        "label": "Critical value"
+      },
+      "REJ_SAMP": {
+        "wire": "REJ-SAMP",
+        "label": "Rejected sample"
+      },
+      "LIMIT_HIT": {
+        "wire": "LIMIT-HIT",
+        "label": "Limit hit"
+      },
+      "AMEND_RES": {
+        "wire": "AMEND-RES",
+        "label": "Amend result"
+      }
     }
   },
   "EscalationTicketStatus": {
     "type": "string",
-    "values": {
-      "OPEN": "OPEN",
-      "RESOLVED": "RESOLVED"
+    "members": {
+      "OPEN": {
+        "wire": "OPEN",
+        "label": "Open"
+      },
+      "RESOLVED": {
+        "wire": "RESOLVED",
+        "label": "Resolved"
+      }
     }
   },
   "EscalationSeverity": {
     "type": "string",
-    "values": {
-      "CRITICAL": "CRITICAL",
-      "STANDARD": "STANDARD"
+    "members": {
+      "CRITICAL": {
+        "wire": "CRITICAL",
+        "label": "Critical"
+      },
+      "STANDARD": {
+        "wire": "STANDARD",
+        "label": "Standard"
+      }
     }
   },
   "EscalationResolutionAction": {
     "type": "string",
-    "values": {
-      "FORCE_VALIDATE": "force_validate",
-      "AUTHORIZE_RETEST": "authorize_retest",
-      "AUTHORIZE_RECOLLECT": "authorize_recollect",
-      "APPLY_AMENDMENT": "apply_amendment",
-      "CANCEL_TEST": "cancel_test"
+    "members": {
+      "FORCE_VALIDATE": {
+        "wire": "force_validate",
+        "label": "Force validate"
+      },
+      "AUTHORIZE_RETEST": {
+        "wire": "authorize_retest",
+        "label": "Authorize retest"
+      },
+      "AUTHORIZE_RECOLLECT": {
+        "wire": "authorize_recollect",
+        "label": "Authorize recollect"
+      },
+      "APPLY_AMENDMENT": {
+        "wire": "apply_amendment",
+        "label": "Apply amendment"
+      },
+      "CANCEL_TEST": {
+        "wire": "cancel_test",
+        "label": "Cancel test"
+      }
     }
   }
 }

@@ -3,61 +3,54 @@
  */
 
 import { ICONS } from '@/config/icons';
+import {
+  PAYMENT_METHOD_CONFIG,
+  PAYMENT_METHOD_VALUES,
+  type PaymentMethod,
+} from '@/types/enums';
 
-export type PaymentMethod =
-  | 'cash'
-  | 'credit-card'
-  | 'debit-card'
-  | 'insurance'
-  | 'bank-transfer'
-  | 'mobile';
+export type { PaymentMethod };
 
 /**
  * Payment method option configuration for UI components
- * Single source of truth for all payment method selections
  */
 export interface PaymentMethodOption {
-  /** Payment method value */
   value: PaymentMethod;
-  /** Display label */
   label: string;
-  /** Icon name for visual representation */
   icon: string;
-  /** Whether this method is currently enabled */
   enabled: boolean;
 }
 
-/**
- * All available payment methods with their configuration
- * Single source of truth - update this array to change payment options across the app
- *
- * To enable/disable a payment method, change the `enabled` flag.
- */
-export const PAYMENT_METHOD_OPTIONS: PaymentMethodOption[] = [
-  { value: 'cash', label: 'Cash', icon: ICONS.dataFields.cash, enabled: true },
-  { value: 'mobile', label: 'Mobile', icon: ICONS.ui.smartphone, enabled: true },
-  { value: 'credit-card', label: 'Credit Card', icon: ICONS.dataFields.creditCard, enabled: false },
-  { value: 'debit-card', label: 'Debit Card', icon: ICONS.dataFields.creditCard, enabled: false },
-  { value: 'insurance', label: 'Insurance', icon: ICONS.ui.shield, enabled: false },
-  { value: 'bank-transfer', label: 'Bank Transfer', icon: ICONS.dataFields.wallet, enabled: false },
-];
+/** Resolve icon key from PaymentMethod.members.*.iconKey in contracts/enums.json. */
+function iconFromKey(iconKey: string): string {
+  const [group, key] = iconKey.split('.');
+  const section = ICONS[group as keyof typeof ICONS] as Record<string, string> | undefined;
+  if (!section?.[key]) {
+    throw new Error(`Unknown payment method iconKey: ${iconKey}`);
+  }
+  return section[key];
+}
 
-/**
- * Returns only the enabled payment methods for use in UI selection
- */
+/** Payment methods for UI — labels/enabled from enum contract; icons resolved here. */
+export const PAYMENT_METHOD_OPTIONS: PaymentMethodOption[] = PAYMENT_METHOD_VALUES.map(value => {
+  const cfg = PAYMENT_METHOD_CONFIG[value];
+  return {
+    value,
+    label: cfg.label,
+    icon: iconFromKey(cfg.iconKey),
+    enabled: cfg.enabled,
+  };
+});
+
 export const getEnabledPaymentMethods = (): PaymentMethodOption[] => {
   return PAYMENT_METHOD_OPTIONS.filter(method => method.enabled);
 };
 
-/**
- * Default payment method (first enabled method)
- */
 export const getDefaultPaymentMethod = (): PaymentMethod => {
   const enabledMethods = getEnabledPaymentMethods();
   return enabledMethods.length > 0 ? enabledMethods[0].value : 'cash';
 };
 
-/** Label map for filter controls — derived from PAYMENT_METHOD_OPTIONS. */
 export const PAYMENT_METHOD_FILTER_CONFIG: Record<PaymentMethod, { label: string }> =
   Object.fromEntries(
     PAYMENT_METHOD_OPTIONS.map(method => [method.value, { label: method.label }])
@@ -72,16 +65,11 @@ export interface InvoiceItem {
 }
 
 export interface Invoice {
-  // Identities
-  invoiceId: number; // Primary ID, displayed as INV{id}
+  invoiceId: number;
   orderId: number;
   patientId: number;
   patientName?: string;
-
-  // Status
   status: 'unpaid' | 'paid';
-
-  // Financials
   items: InvoiceItem[];
   subtotal: number;
   discount: number;
@@ -89,23 +77,20 @@ export interface Invoice {
   total: number;
   amountPaid: number;
   amountDue: number;
-
-  // Dates
   createdAt: string;
   dueDate?: string;
 }
 
 export interface Payment {
-  paymentId: number; // Integer ID, displayed as PAY{id}
+  paymentId: number;
   orderId: number;
   invoiceId: number | null;
   amount: number;
   paymentMethod: PaymentMethod;
   paidAt: string;
-  createdBy: string; // Logged-in user id when payment was recorded
+  createdBy: string;
   receiptGenerated: boolean;
   notes?: string;
-  // Computed fields from relationships
   orderTotalPrice?: number;
   numberOfTests?: number;
   patientName?: string;

@@ -7,7 +7,8 @@ import {
   dateStringSchema,
   postalCodeSchema,
 } from '@/types/schemas/common.schema';
-import { AFFILIATION_DURATION_VALUES, RELATIONSHIP_VALUES } from '@/types/enums';
+import { AFFILIATION_DURATION_VALUES, GENDER_VALUES, RELATIONSHIP_VALUES } from '@/types/enums';
+import { zEnumFromValues } from '@/types/schemas/enumFromValues';
 
 export const addressSchema = z.object({
   street: z.string().min(1, 'Street is required'),
@@ -55,7 +56,7 @@ export type AffiliationFormInput = z.infer<typeof affiliationFormSchema>;
 
 export const emergencyContactSchema = z.object({
   fullName: nameSchema,
-  relationship: z.enum(RELATIONSHIP_VALUES),
+  relationship: zEnumFromValues(RELATIONSHIP_VALUES),
   phone: phoneSchema,
   email: emailSchema,
 });
@@ -142,7 +143,7 @@ export const patientSchema = z.object({
   id: z.number().int().positive(),
   fullName: nameSchema,
   dateOfBirth: dateStringSchema,
-  gender: z.enum(['male', 'female']),
+  gender: zEnumFromValues(GENDER_VALUES),
   phone: patientReadPhoneSchema,
   email: emailSchema.nullable(), // Backend can return null
   height: z.number().min(30).max(250).nullable().optional(), // Backend can return null

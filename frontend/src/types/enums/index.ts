@@ -2,8 +2,11 @@
  * Consolidated Enums — re-exports generated enum modules.
  */
 export * from './generated/affiliation';
-export * from './generated/container';
+export * from './generated/billing';
+export * from './generated/container-catalog';
+export * from './generated/container-enums';
 export * from './generated/gender';
+export * from './generated/lab-quality';
 export * from './generated/order';
 export * from './generated/rejection';
 export * from './generated/relationship';

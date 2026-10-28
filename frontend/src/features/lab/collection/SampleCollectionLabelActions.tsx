@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax -- isolated print document uses typography token keys and utility class names in HTML/CSS strings */
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
-import { CONTAINER_COLOR_OPTIONS, isCollectedSample } from '@/types';
+import { CONTAINER_TOP_COLOR_OPTIONS, isCollectedSample } from '@/types';
 import { displayId } from '@/utils';
 import { feedbackTitle } from '@/utils/feedback';
 import { text, RADIUS } from '@/theme/recipes';
@@ -96,7 +96,7 @@ export const generatePrintLabelHTML = (display: SampleCollectionQueueItem, patie
         : 'tube';
 
   const colorName =
-    CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerTopColor)?.label || 'N/A';
+    CONTAINER_TOP_COLOR_OPTIONS.find(opt => opt.value === containerTopColor)?.label || 'N/A';
 
   const currentDate = new Date();
   const formattedDate = currentDate.toLocaleDateString();

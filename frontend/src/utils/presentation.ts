@@ -7,8 +7,8 @@ import type { ReactNode } from 'react';
 import { format, isValid, parseISO } from 'date-fns';
 import type { DescriptionListItemConfig } from '@/components/display/DescriptionList';
 import {
-  CONTAINER_COLOR_OPTIONS,
-  CONTAINER_CONFIG,
+  CONTAINER_TOP_COLOR_OPTIONS,
+  CONTAINER_TYPE_CONFIG,
   type ContainerType,
   type Gender,
   type Order,
@@ -205,7 +205,7 @@ function readContainerFields(sample: Sample, isCollected: boolean, isRejected: b
   const hasContainerInfo = (isCollected || isRejected) && 'actualContainerColor' in sample;
   const containerColor = hasContainerInfo ? sample.actualContainerColor : undefined;
   const colorName = containerColor
-    ? CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerColor)?.label ?? 'N/A'
+    ? CONTAINER_TOP_COLOR_OPTIONS.find(opt => opt.value === containerColor)?.label ?? 'N/A'
     : undefined;
   const containerType =
     hasContainerInfo && 'actualContainerType' in sample
@@ -643,7 +643,7 @@ function appendPendingContainerDescriptors(
     id: 'containers',
     label: 'Containers',
     value: sample.requiredContainerTypes
-      .map(t => CONTAINER_CONFIG[t]?.label ?? t)
+      .map(t => CONTAINER_TYPE_CONFIG[t]?.label ?? t)
       .join(', '),
   });
 }
@@ -680,7 +680,7 @@ function appendCollectionDescriptors(
 
   if (vm.containerType) {
     const containerLabel =
-      CONTAINER_CONFIG[vm.containerType as ContainerType]?.label ?? vm.containerType;
+      CONTAINER_TYPE_CONFIG[vm.effectiveContainerType]?.label ?? vm.effectiveContainerType;
     const containerText =
       vm.containerColor && vm.colorName
         ? `${containerLabel} · ${vm.colorName} top`

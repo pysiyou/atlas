@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://atlas.local/contracts/enums.schema.json",
+  "title": "Atlas domain enums",
+  "type": "object",
+  "additionalProperties": {
+    "type": "object",
+    "required": ["type", "members"],
+    "properties": {
+      "type": { "enum": ["string", "int"] },
+      "filterAllLabel": { "type": "string" },
+      "members": {
+        "type": "object",
+        "minProperties": 1,
+        "additionalProperties": {
+          "type": "object",
+          "required": ["wire", "label"],
+          "properties": {
+            "wire": {
+              "oneOf": [{ "type": "string" }, { "type": "integer" }]
+            },
+            "label": { "type": "string" },
+            "description": { "type": "string" },
+            "icon": { "type": "string" },
+            "turnaroundHours": { "type": "number" },
+            "isDerived": { "type": "boolean" },
+            "collectionSource": { "type": "string" },
+            "enabled": { "type": "boolean" },
+            "iconKey": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "additionalProperties": false
+  },
+  "properties": {
+    "$schema": { "type": "string" }
+  }
+}

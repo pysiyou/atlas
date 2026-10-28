@@ -1,4 +1,4 @@
-/** GENERATED — source: contracts/enums.json. DO NOT EDIT BY HAND. */
+/** GENERATED from contracts/enums.json. DO NOT EDIT. */
 export const RELATIONSHIP_VALUES = ["spouse", "parent", "sibling", "child", "friend", "other"] as const;
 
 export type Relationship = (typeof RELATIONSHIP_VALUES)[number];
@@ -18,6 +18,7 @@ export const RELATIONSHIP_OPTIONS = RELATIONSHIP_VALUES.map(value => ({
 }));
 
 export const RELATIONSHIP_FILTER_OPTIONS = [
-  { value: 'all' as const, label: 'All Relationships' },
+  { value: 'all' as const, label: "All Relationships" },
   ...RELATIONSHIP_OPTIONS,
 ];
+

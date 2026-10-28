@@ -51,8 +51,16 @@ jobs:
         run: npm ci
         working-directory: scripts/codegen
 
+      - name: Validate enums contract
+        run: npm run validate
+        working-directory: scripts/codegen
+
       - name: Run codegen
         run: npm run codegen
+        working-directory: scripts/codegen
+
+      - name: Verify enum hygiene
+        run: node verify-enum-hygiene.mjs
         working-directory: scripts/codegen
 
       - name: Check generated files are up to date

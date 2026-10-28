@@ -1,4 +1,4 @@
-/** GENERATED — source: contracts/enums.json. DO NOT EDIT BY HAND. */
+/** GENERATED from contracts/enums.json. DO NOT EDIT. */
 export const AFFILIATION_DURATION_VALUES = [6, 12, 24] as const;
 
 export type AffiliationDuration = (typeof AFFILIATION_DURATION_VALUES)[number];
@@ -13,3 +13,4 @@ export const AFFILIATION_DURATION_OPTIONS = AFFILIATION_DURATION_VALUES.map(valu
   value,
   label: AFFILIATION_DURATION_CONFIG[value].label,
 }));
+

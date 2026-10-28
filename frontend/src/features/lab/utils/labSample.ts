@@ -1,6 +1,7 @@
 /** Sample definitions, collection helpers, container inference, and label printing. */
-import type { SampleType, ContainerType, ContainerTopColor, OrderTest, Test } from '@/types';
-import { COLLECTION_TOP_COLOR_VALUES } from '@/types';
+import type { SampleType, ContainerTopColor, OrderTest, Test } from '@/types';
+import type { ContainerCatalogId } from '@/types';
+import { COLLECTION_TOP_COLOR_PRESETS } from '@/types';
 import type { FeedbackId } from '@/config/feedbackCatalog';
 import { feedbackTitle, notify } from '@/utils/feedback';
 import { printCollectionLabel } from '../collection/SampleCollectionLabelActions';
@@ -11,8 +12,8 @@ export interface SampleDefinition {
   sampleType: SampleType;
   code: string;
   label: string;
-  defaultContainer: ContainerType;
-  defaultTopColor: ContainerTopColor;
+  defaultContainer: ContainerCatalogId;
+  defaultTopColor: ContainerCatalogId;
   defaultVolume: number;
   collectionNotes?: string;
   collectionSource?: string;
@@ -141,8 +142,8 @@ export function formatVolume(volumeInMl: number): string {
   return `${volumeInMl.toFixed(1)}mL`;
 }
 
-/** Theme-token icon color per tube/cup (see getContainerIconColor; generated CONTAINER_CONFIG.textClass is unused). */
-const CONTAINER_ICON_COLOR: Record<ContainerTopColor, string> = {
+/** Theme-token icon color per catalog preset (popover / labels). */
+const CONTAINER_ICON_COLOR: Record<ContainerCatalogId, string> = {
   'red-top': 'text-container-red-bg',
   'lavender-top': 'text-container-purple-bg',
   'green-top': 'text-container-green-bg',
@@ -167,8 +168,8 @@ const CONTAINER_ICON_COLOR: Record<ContainerTopColor, string> = {
   other: FG.muted,
 };
 
-export function getContainerIconColor(containerTopColor: ContainerTopColor): string {
-  return CONTAINER_ICON_COLOR[containerTopColor] ?? FG.disabled;
+export function getContainerIconColor(containerTopColor: ContainerCatalogId | ContainerTopColor): string {
+  return CONTAINER_ICON_COLOR[containerTopColor as ContainerCatalogId] ?? FG.disabled;
 }
 
 /** Blood-derived samples use a tube; all other sample types default to a cup in collection UI. */
@@ -187,7 +188,7 @@ export const getEffectiveContainerType = (
   return isBloodDerivedSampleType(sampleType) ? 'tube' : 'cup';
 };
 
-export type CollectionPopoverTopColor = (typeof COLLECTION_TOP_COLOR_VALUES)[number];
+export type CollectionPopoverTopColor = (typeof COLLECTION_TOP_COLOR_PRESETS)[number];
 
 /** Popover swatch backgrounds — subset of collection top colors (Tailwind safelist). */
 const COLLECTION_TOP_COLOR_BG: Record<

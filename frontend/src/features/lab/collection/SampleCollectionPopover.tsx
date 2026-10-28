@@ -12,7 +12,7 @@ import { FooterInfo } from '@/components/display';
 import { SelectionCheck } from '@/components/inputs';
 import { MODULE_ICONS } from '@/config/icons';
 import type { ContainerType } from '@/types';
-import { COLLECTION_TOP_COLOR_VALUES, CONTAINER_CONFIG } from '@/types';
+import { COLLECTION_TOP_COLOR_PRESETS, CONTAINER_CATALOG_CONFIG } from '@/types';
 import type { SampleRequirement } from '../types';
 import { cn, formatArray } from '@/utils';
 import { getContainerIcon } from '@/config/icons';
@@ -219,9 +219,9 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
           Top Color <span className={TONE.danger.fg}>*</span>
         </label>
         <div className="flex flex-wrap gap-space-3">
-          {COLLECTION_TOP_COLOR_VALUES.map(value => {
+          {COLLECTION_TOP_COLOR_PRESETS.map(value => {
             const isSelected = selectedColor === value;
-            const config = CONTAINER_CONFIG[value];
+            const config = CONTAINER_CATALOG_CONFIG[value];
             const bgClass = getCollectionTopColorBg(value);
             return (
               <button

@@ -1931,6 +1931,20 @@ export interface components {
             reject: boolean;
         };
         /**
+         * LatestPaymentSnippet
+         * @description Most recent payment on an order (list embed).
+         */
+        LatestPaymentSnippet: {
+            /** Paymentid */
+            paymentId: number;
+            paymentMethod: components["schemas"]["PaymentMethod"];
+            /**
+             * Paidat
+             * Format: date-time
+             */
+            paidAt: string;
+        };
+        /**
          * Lifestyle
          * @description Patient lifestyle information.
          */
@@ -2021,6 +2035,9 @@ export interface components {
             patientId: number;
             /** Patientname */
             patientName: string;
+            /** Patientdob */
+            patientDob?: string | null;
+            patientGender?: components["schemas"]["Gender"] | null;
             /**
              * Orderdate
              * Format: date-time
@@ -2100,6 +2117,9 @@ export interface components {
             patientId: number;
             /** Patientname */
             patientName: string;
+            /** Patientdob */
+            patientDob?: string | null;
+            patientGender?: components["schemas"]["Gender"] | null;
             /**
              * Orderdate
              * Format: date-time
@@ -2160,6 +2180,9 @@ export interface components {
             patientId: number;
             /** Patientname */
             patientName: string;
+            /** Patientdob */
+            patientDob?: string | null;
+            patientGender?: components["schemas"]["Gender"] | null;
             /**
              * Orderdate
              * Format: date-time
@@ -2211,16 +2234,6 @@ export interface components {
              * Format: date-time
              */
             updatedAt: string;
-        };
-        /**
-         * LatestPaymentSnippet
-         * @description Most recent payment on an order (list embed).
-         */
-        LatestPaymentSnippet: {
-            paymentId: number;
-            paymentMethod: components["schemas"]["PaymentMethod"];
-            /** Format: date-time */
-            paidAt: string;
         };
         /**
          * OrderTestCreate
@@ -2594,8 +2607,6 @@ export interface components {
              * Format: date-time
              */
             orderDate: string;
-            overallStatus: components["schemas"]["OrderStatus"];
-            statusPresentation: components["schemas"]["StatusPresentation"];
             /** Patientid */
             patientId: number;
             /** Patientname */

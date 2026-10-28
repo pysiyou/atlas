@@ -1,25 +1,18 @@
 #!/usr/bin/env node
 /**
  * Atlas cross-stack codegen — generates Python and TypeScript from contracts/.
+ *
+ * Domain enum sources: contracts/enums.json (members: wire + presentation), container-catalog.json (collection UI).
+ * Not generated from contracts: audit EventType, worklist Literals, openapi.json (FastAPI export),
+ * backend test-catalog.json.
  */
 import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
-const CONTRACTS = path.join(ROOT, 'contracts');
-
-function readJson(name) {
-  return JSON.parse(fs.readFileSync(path.join(CONTRACTS, name), 'utf8'));
-}
-
-function writeFile(relPath, content) {
-  const full = path.join(ROOT, relPath);
-  fs.mkdirSync(path.dirname(full), { recursive: true });
-  fs.writeFileSync(full, content);
-  console.log('wrote', relPath);
-}
+import { generateContainerCatalog } from './lib/container-catalog.mjs';
+import { generateEnums } from './lib/domain-enums.mjs';
+import { CONTRACTS, readJson, ROOT, writeFile } from './lib/read-contract.mjs';
 
 function generateLabConstants() {
   const data = readJson('lab-constants.json');
@@ -323,99 +316,6 @@ export const TERMINAL_TEST_STATUSES = ${JSON.stringify(terminalTest)} as const;
   writeFile('frontend/src/types/generated/statusPresentation.ts', ts);
 }
 
-function generateEnums() {
-  const jsonPath = path.join(CONTRACTS, 'enums.json');
-  if (!fs.existsSync(jsonPath)) {
-    console.log('skip enums (contracts/enums.json not found)');
-    return;
-  }
-  const enums = readJson('enums.json');
-  const blocks = Object.entries(enums).map(([name, def]) => {
-    const base = def.type === 'int' ? 'int, enum.Enum' : 'str, enum.Enum';
-    const entries = Object.entries(def.values)
-      .map(([k, v]) => `    ${k} = ${typeof v === 'string' ? JSON.stringify(v) : v}`)
-      .join('\n');
-    return `class ${name}(${base}):\n${entries}`;
-  });
-  const py = `"""
-Enum types — GENERATED from contracts/enums.json. DO NOT EDIT.
-"""
-import enum
-
-
-${blocks.join('\n\n')}
-`;
-  writeFile('backend/app/shared/contracts/enums.py', py);
-  generateFrontendEnums(enums);
-}
-
-const FRONTEND_ENUM_UI = {
-  Relationship: {
-    spouse: 'Spouse',
-    parent: 'Parent',
-    sibling: 'Sibling',
-    child: 'Child',
-    friend: 'Friend',
-    other: 'Other',
-  },
-  AffiliationDuration: {
-    6: '6 Months',
-    12: '1 Year',
-    24: '2 Years',
-  },
-};
-
-function generateFrontendEnums(enums) {
-  for (const [name, def] of Object.entries(enums)) {
-    if (!FRONTEND_ENUM_UI[name]) continue;
-
-    const values = Object.values(def.values);
-    const constName =
-      name === 'AffiliationDuration' ? 'AFFILIATION_DURATION' : name.replace(/([a-z])([A-Z])/g, '$1_$2').toUpperCase();
-    const valuesName = `${constName}_VALUES`;
-    const configName = `${constName}_CONFIG`;
-    const optionsName = `${constName}_OPTIONS`;
-    const typeName = name === 'AffiliationDuration' ? 'AffiliationDuration' : name;
-    const fileStem = name === 'AffiliationDuration' ? 'affiliation' : name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-
-    const valuesLiteral = values.map(v => (typeof v === 'string' ? JSON.stringify(v) : v)).join(', ');
-    const configEntries = values
-      .map(v => {
-        const key = typeof v === 'string' ? v : v;
-        const label = FRONTEND_ENUM_UI[name][key];
-        const keyLiteral = typeof v === 'string' ? `${v}` : v;
-        return `  ${JSON.stringify(keyLiteral)}: { label: ${JSON.stringify(label)} }`;
-      })
-      .join(',\n');
-
-    const filterBlock =
-      name === 'Relationship'
-        ? `
-export const RELATIONSHIP_FILTER_OPTIONS = [
-  { value: 'all' as const, label: 'All Relationships' },
-  ...${optionsName},
-];
-`
-        : '';
-
-    const ts = `/** GENERATED — source: contracts/enums.json. DO NOT EDIT BY HAND. */
-export const ${valuesName} = [${valuesLiteral}] as const;
-
-export type ${typeName} = (typeof ${valuesName})[number];
-
-export const ${configName}: Record<${typeName}, { label: string }> = {
-${configEntries},
-};
-
-export const ${optionsName} = ${valuesName}.map(value => ({
-  value,
-  label: ${configName}[value].label,
-}));
-${filterBlock}`;
-    writeFile(`frontend/src/types/enums/generated/${fileStem}.ts`, ts);
-  }
-}
-
 generateLabConstants();
 if (fs.existsSync(path.join(CONTRACTS, 'lab-blockers.json'))) {
   generateLabBlockers();
@@ -430,6 +330,7 @@ if (fs.existsSync(path.join(CONTRACTS, 'physiologic-aliases.json'))) {
   generatePhysiologicAliases();
 }
 generateEnums();
+generateContainerCatalog();
 verifyAuditCatalogCoverage();
 generateOpenApiTypes();
 console.log('codegen complete');

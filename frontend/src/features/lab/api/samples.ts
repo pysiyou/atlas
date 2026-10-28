@@ -4,6 +4,10 @@
 import { apiClient } from '@/lib/api/client';
 import { WORKFLOW_QUERY_LIMIT } from '@/lib/api/constants';
 import type { Sample, SampleStatus, ContainerType, ContainerTopColor } from '@/types';
+import {
+  CONTAINER_TOP_COLOR_VALUES,
+  FRONTEND_TO_BACKEND_COLOR,
+} from '@/types';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { useEntityLookup, parseNumericKey } from '@/hooks/useEntityLookup';
@@ -12,47 +16,13 @@ import { invalidateCollectionQueries } from '@/lib/query/invalidate';
 import { LAB_PATHS } from '../constants/labConstants';
 import type { CollectionWorklistItem } from './worklists';
 
-const BACKEND_COLOR_VALUES = [
-  'red',
-  'purple',
-  'blue',
-  'green',
-  'gray',
-  'yellow',
-  'light-blue',
-  'pink',
-  'white',
-  'black',
-  'orange',
-  'clear',
-] as const;
-
-const FRONTEND_TO_BACKEND_COLOR: Record<string, (typeof BACKEND_COLOR_VALUES)[number]> = {
-  'red-top': 'red',
-  'lavender-top': 'purple',
-  'green-top': 'green',
-  'blue-top': 'blue',
-  'royal-blue-top': 'blue',
-  'yellow-top': 'yellow',
-  'gray-top': 'gray',
-  'light-blue-top': 'light-blue',
-  'pink-top': 'pink',
-  'black-top': 'black',
-  'orange-top': 'orange',
-  'white-top': 'white',
-  'clear-top': 'clear',
-  'gold-top': 'yellow',
-  'tiger-top': 'orange',
-  'tan-top': 'orange',
-};
-
 function toBackendContainerColor(
   frontendColor: ContainerTopColor | string
-): (typeof BACKEND_COLOR_VALUES)[number] {
+): (typeof CONTAINER_TOP_COLOR_VALUES)[number] {
   const mapped = FRONTEND_TO_BACKEND_COLOR[frontendColor];
   if (mapped) return mapped;
-  if (BACKEND_COLOR_VALUES.includes(frontendColor as (typeof BACKEND_COLOR_VALUES)[number]))
-    return frontendColor as (typeof BACKEND_COLOR_VALUES)[number];
+  if (CONTAINER_TOP_COLOR_VALUES.includes(frontendColor as (typeof CONTAINER_TOP_COLOR_VALUES)[number]))
+    return frontendColor as (typeof CONTAINER_TOP_COLOR_VALUES)[number];
   return 'red';
 }
 

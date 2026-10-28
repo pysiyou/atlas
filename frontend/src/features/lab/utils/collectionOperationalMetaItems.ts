@@ -3,7 +3,7 @@
  */
 
 import type { ContainerType, ContainerTopColor, RejectedSample, Sample } from '@/types';
-import { CONTAINER_CONFIG } from '@/types';
+import { CONTAINER_TYPE_CONFIG } from '@/types';
 import { LAB_CONFIG } from '../constants';
 import { formatVolume, getCollectionRequirements } from './labSample';
 
@@ -70,7 +70,7 @@ function appendContainerMetaItem(
   if (!hasContainer || !effectiveContainerType) {
     return;
   }
-  const label = CONTAINER_CONFIG[effectiveContainerType]?.label ?? effectiveContainerType;
+  const label = CONTAINER_TYPE_CONFIG[effectiveContainerType]?.label ?? effectiveContainerType;
   const capSuffix =
     colorName && colorName !== 'N/A' ? ` · ${colorName} cap` : '';
   items.push({ type: 'text', text: `${label}${capSuffix}` });

@@ -4,7 +4,26 @@
 
 import type { Order, Patient, Sample } from '@/types';
 import type { ContainerTopColor, ContainerType, SampleType } from '@/types';
+import type {
+  EscalationResolutionAction,
+  PriorityLevel,
+  QualityDomain,
+  QualityIssueTargetType,
+  QualityStage,
+  RecollectionRequestStatus,
+  RemedyType,
+} from '@/types/enums';
 import { GENERATED_LAB_CONSTANTS } from '@/types/generated/labConstants';
+
+export type {
+  EscalationReasonCode,
+  EscalationResolutionAction,
+  QualityDomain,
+  QualityIssueTargetType,
+  QualityStage,
+  RecollectionRequestStatus,
+  RemedyType,
+} from '@/types/enums';
 
 /** Collection requirement for a sample (shared with modal payloads and lab queue). */
 export interface SampleCollectionRequirement {
@@ -14,7 +33,7 @@ export interface SampleCollectionRequirement {
   totalVolume: number;
   containerTypes: ContainerType[];
   containerTopColors: ContainerTopColor[];
-  priority: 'low' | 'medium' | 'high' | 'urgent';
+  priority: PriorityLevel;
   orderId: number;
 }
 
@@ -41,34 +60,6 @@ export interface SampleCollectionQueueItem {
 
 /** Alias used across lab collection code. */
 export type SampleRequirement = SampleCollectionRequirement;
-
-export type QualityIssueTargetType = 'sample' | 'test';
-
-export type QualityStage = 'collection' | 'validation' | 'entry';
-
-export type QualityDomain = 'specimen' | 'analytical' | 'clinical';
-
-export type RemedyType =
-  | 'retry_same_sample'
-  | 'request_recollection'
-  | 'escalate'
-  | 'cancel';
-
-export type RecollectionRequestStatus =
-  | 'pending-approval'
-  | 'approved'
-  | 'denied'
-  | 'fulfilled'
-  | 'cancelled';
-
-export type EscalationResolutionAction =
-  | 'force_validate'
-  | 'authorize_retest'
-  | 'authorize_recollect'
-  | 'apply_amendment'
-  | 'cancel_test';
-
-export type EscalationReasonCode = 'CRIT-VAL' | 'REJ-SAMP' | 'LIMIT-HIT' | 'AMEND-RES';
 
 export interface QualityIssueTarget {
   type: QualityIssueTargetType;

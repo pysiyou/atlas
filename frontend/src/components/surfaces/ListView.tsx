@@ -2,7 +2,6 @@
  * ListView — page shell for data tables.
  *
  * List pages should use `useServerListChrome` or `useClientListChrome` for loading/error/retry.
- * See `frontend/src/hooks/listPage/README.md`.
  */
 
 import { type ReactNode } from 'react';

@@ -5,18 +5,16 @@ import {
   positiveIntSchema,
 } from '@/types/schemas/common.schema';
 import { GENDER_VALUES, PAYMENT_STATUS_VALUES } from '@/types/enums';
+import {
+  ORDER_STATUS_VALUES,
+  PRIORITY_LEVEL_VALUES,
+  TEST_STATUS_VALUES,
+  PAYMENT_METHOD_VALUES,
+} from '@/types/enums';
+import { zEnumFromValues } from '@/types/schemas/enumFromValues';
 import type { TestStatus } from '@/types';
 
-const apiTestStatusSchema = z.enum([
-  'pending',
-  'sample-collected',
-  'resulted',
-  'validated',
-  'cancelled',
-  'escalated',
-  'superseded',
-  'removed',
-]);
+const apiTestStatusSchema = zEnumFromValues(TEST_STATUS_VALUES);
 const normalizedStatusSchema = apiTestStatusSchema.transform((s): TestStatus => s as TestStatus);
 
 export const orderTestSchema = z.object({
@@ -57,13 +55,13 @@ export const orderSchema = z.object({
   patientId: positiveIntSchema,
   patientName: z.string(), // From backend relationship
   patientDob: dateStringSchema.optional(),
-  patientGender: z.enum(GENDER_VALUES).optional(),
+  patientGender: zEnumFromValues(GENDER_VALUES).optional(),
   orderDate: dateStringSchema,
   tests: z.array(orderTestSchema).min(1, 'At least one test is required'),
   totalPrice: z.number().min(0),
-  paymentStatus: z.enum(PAYMENT_STATUS_VALUES),
-  overallStatus: z.enum(['ordered', 'running', 'completed', 'cancelled']), // Backend returns overallStatus, not orderStatus
-  priority: z.enum(['low', 'medium', 'high', 'urgent']),
+  paymentStatus: zEnumFromValues(PAYMENT_STATUS_VALUES),
+  overallStatus: zEnumFromValues(ORDER_STATUS_VALUES),
+  priority: zEnumFromValues(PRIORITY_LEVEL_VALUES),
   referentDoctorId: z.number().int().positive().nullable().optional(),
   referentDoctorName: z.string().nullable().optional(),
   referentDoctorEmail: z.string().nullable().optional(),
@@ -85,12 +83,10 @@ export type OrderTest = z.infer<typeof orderTestSchema>;
 export const orderCreateSchema = z.object({
   patientId: positiveIntSchema,
   referentDoctorId: z.number().int().positive().nullable().optional(),
-  priority: z.enum(['low', 'medium', 'high', 'urgent']),
+  priority: zEnumFromValues(PRIORITY_LEVEL_VALUES),
   clinicalNotes: z.string().optional(),
   testCodes: z.array(z.string()).min(1, 'At least one test is required'),
-  paymentMethod: z
-    .enum(['cash', 'credit-card', 'debit-card', 'insurance', 'bank-transfer', 'mobile'])
-    .optional(),
+  paymentMethod: zEnumFromValues(PAYMENT_METHOD_VALUES).optional(),
 });
 
 // Form schema for UPDATE (all fields optional for partial updates)

@@ -3,7 +3,7 @@
  */
 
 import type { ContainerType, Sample } from '@/types';
-import { CONTAINER_COLOR_OPTIONS, CONTAINER_CONFIG } from '@/types';
+import { CONTAINER_TOP_COLOR_OPTIONS, CONTAINER_TYPE_CONFIG } from '@/types';
 import { formatVolumeMl } from '@/utils/presentation';
 import { TONE } from '@/theme/recipes';
 import { DetailGrid, type DetailGridSectionConfig } from '../shared/detailModalLayout';
@@ -53,7 +53,7 @@ export function CollectionDetailGrid({
           label: 'Container',
           value: (() => {
             const containerLabel =
-              CONTAINER_CONFIG[effectiveContainerType]?.label ?? effectiveContainerType;
+              CONTAINER_TYPE_CONFIG[effectiveContainerType]?.label ?? effectiveContainerType;
             return containerColor ? `${containerLabel} · ${colorName} top` : containerLabel;
           })(),
         },
@@ -94,7 +94,7 @@ export function CollectionDetailGrid({
           value:
             requirement.containerTypes.length > 0
               ? requirement.containerTypes
-                  .map(type => CONTAINER_CONFIG[type]?.label || type)
+                  .map(type => CONTAINER_TYPE_CONFIG[type]?.label || type)
                   .join(', ')
               : undefined,
         },
@@ -105,7 +105,7 @@ export function CollectionDetailGrid({
               ? requirement.containerTopColors
                   .map(
                     color =>
-                      `${CONTAINER_COLOR_OPTIONS.find(opt => opt.value === color)?.label || color} top`
+                      `${CONTAINER_TOP_COLOR_OPTIONS.find(opt => opt.value === color)?.label || color} top`
                   )
                   .join(', ')
               : undefined,

@@ -1,0 +1,183 @@
+{
+  "order": [
+    "red-top",
+    "lavender-top",
+    "green-top",
+    "blue-top",
+    "yellow-top",
+    "gray-top",
+    "light-blue-top",
+    "pink-top",
+    "black-top",
+    "orange-top",
+    "royal-blue-top",
+    "white-top",
+    "tan-top",
+    "urine-cup",
+    "stool-container",
+    "swab-tube",
+    "gold-top",
+    "tiger-top",
+    "clear-top",
+    "cup",
+    "tube",
+    "other"
+  ],
+  "filterAllLabel": "All Containers",
+  "collectionTopColorPresets": [
+    "red-top",
+    "yellow-top",
+    "green-top",
+    "black-top",
+    "blue-top"
+  ],
+  "frontendToBackendColor": {
+    "red-top": "red",
+    "lavender-top": "purple",
+    "green-top": "green",
+    "blue-top": "blue",
+    "royal-blue-top": "blue",
+    "yellow-top": "yellow",
+    "gray-top": "gray",
+    "light-blue-top": "light-blue",
+    "pink-top": "pink",
+    "black-top": "black",
+    "orange-top": "orange",
+    "white-top": "white",
+    "clear-top": "clear",
+    "gold-top": "yellow",
+    "tiger-top": "orange",
+    "tan-top": "orange"
+  },
+  "entries": {
+    "red-top": {
+      "label": "Red Top",
+      "additive": "None",
+      "commonUses": "Serum chemistry, serology, immunology",
+      "textClass": "text-container-red-text"
+    },
+    "lavender-top": {
+      "label": "Lavender Top",
+      "additive": "EDTA",
+      "commonUses": "CBC, blood typing",
+      "textClass": "text-container-purple-text"
+    },
+    "green-top": {
+      "label": "Green Top",
+      "additive": "Heparin",
+      "commonUses": "Plasma chemistry",
+      "textClass": "text-container-green-text"
+    },
+    "blue-top": {
+      "label": "Blue Top",
+      "additive": "Sodium citrate",
+      "commonUses": "Coagulation tests",
+      "textClass": "text-container-blue-text"
+    },
+    "yellow-top": {
+      "label": "Yellow Top",
+      "additive": "ACD",
+      "commonUses": "Blood bank, HLA typing",
+      "textClass": "text-container-yellow-text"
+    },
+    "gray-top": {
+      "label": "Gray Top",
+      "additive": "Sodium fluoride",
+      "commonUses": "Glucose, lactate",
+      "textClass": "text-container-gray-text"
+    },
+    "light-blue-top": {
+      "label": "Light Blue Top",
+      "additive": "Sodium citrate",
+      "commonUses": "Coagulation",
+      "textClass": "text-cyan-fg-emphasis"
+    },
+    "pink-top": {
+      "label": "Pink Top",
+      "additive": "EDTA",
+      "commonUses": "Blood bank",
+      "textClass": "text-pink-fg-emphasis"
+    },
+    "black-top": {
+      "label": "Black Top",
+      "additive": "Sodium citrate",
+      "commonUses": "ESR",
+      "textClass": "text-container-black-text"
+    },
+    "orange-top": {
+      "label": "Orange Top",
+      "additive": "Thrombin",
+      "commonUses": "STAT serum chemistry",
+      "textClass": "text-orange-fg-emphasis"
+    },
+    "royal-blue-top": {
+      "label": "Royal Blue Top",
+      "additive": "None / EDTA / Heparin",
+      "commonUses": "Trace elements, toxicology",
+      "textClass": "text-indigo-fg-emphasis"
+    },
+    "white-top": {
+      "label": "White Top",
+      "additive": "EDTA with gel",
+      "commonUses": "Molecular diagnostics",
+      "textClass": "text-text-muted"
+    },
+    "tan-top": {
+      "label": "Tan Top",
+      "additive": "EDTA",
+      "commonUses": "Lead testing",
+      "textClass": "text-orange-fg-emphasis"
+    },
+    "urine-cup": {
+      "label": "Urine Cup",
+      "commonUses": "Urinalysis",
+      "textClass": "text-container-yellow-text"
+    },
+    "stool-container": {
+      "label": "Stool Container",
+      "commonUses": "Stool analysis",
+      "textClass": "text-orange-fg-emphasis"
+    },
+    "swab-tube": {
+      "label": "Swab Tube",
+      "commonUses": "Microbiology cultures",
+      "textClass": "text-teal-fg-emphasis"
+    },
+    "gold-top": {
+      "label": "Gold Top",
+      "additive": "Clot activator",
+      "commonUses": "Serum separator",
+      "textClass": "text-container-yellow-text"
+    },
+    "tiger-top": {
+      "label": "Tiger Top",
+      "additive": "Clot activator",
+      "commonUses": "Serum separator",
+      "textClass": "text-orange-fg-emphasis"
+    },
+    "clear-top": {
+      "label": "Clear Top",
+      "additive": "None",
+      "commonUses": "Discard tube",
+      "textClass": "text-text-disabled"
+    },
+    "cup": {
+      "label": "Cup",
+      "additive": "None",
+      "commonUses": "Urine, stool",
+      "textClass": "text-orange-fg-emphasis"
+    },
+    "tube": {
+      "label": "Tube",
+      "additive": "Various",
+      "commonUses": "General collection",
+      "textClass": "text-text-muted"
+    },
+    "other": {
+      "label": "Other",
+      "additive": "Various",
+      "commonUses": "Miscellaneous",
+      "textClass": "text-text-muted"
+    }
+  }
+}

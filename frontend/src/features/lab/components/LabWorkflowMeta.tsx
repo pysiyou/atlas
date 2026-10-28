@@ -6,7 +6,7 @@ import React from 'react';
 import { Icon } from '@/components/primitives';
 import { getContainerIconColor } from '../utils';
 import type { ContainerType, ContainerTopColor } from '@/types';
-import { CONTAINER_COLOR_OPTIONS } from '@/types';
+import { CONTAINER_TOP_COLOR_OPTIONS } from '@/types';
 import { getContainerIcon } from '@/config/icons';
 import { FG } from '@/theme/recipes';
 import { LabAuditLineView } from './LabWorkflowHeader';
@@ -23,7 +23,7 @@ export const SampleContainerInfo: React.FC<SampleContainerInfoProps> = ({
   size = 'sm',
 }) => {
   const colorName = containerColor
-    ? CONTAINER_COLOR_OPTIONS.find(opt => opt.value === containerColor)?.label || 'N/A'
+    ? CONTAINER_TOP_COLOR_OPTIONS.find(opt => opt.value === containerColor)?.label || 'N/A'
     : 'N/A';
 
   const iconSize = size === 'sm' ? 'w-6 h-6' : 'w-7 h-7';

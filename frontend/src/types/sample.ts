@@ -17,7 +17,16 @@ export type { RejectionReason } from '@/types/enums';
 // Re-export enum value arrays
 export { SAMPLE_TYPE_VALUES } from '@/types/enums';
 export { SAMPLE_STATUS_VALUES } from '@/types/enums';
-export { CONTAINER_TYPE_VALUES, CONTAINER_COLOR_VALUES } from '@/types/enums';
+export {
+  CONTAINER_TYPE_VALUES,
+  CONTAINER_TOP_COLOR_VALUES,
+} from '@/types/enums';
+export type { ContainerCatalogId } from '@/types/enums';
+export {
+  COLLECTION_TOP_COLOR_PRESETS,
+  CONTAINER_CATALOG_CONFIG,
+  CONTAINER_CATALOG_OPTIONS,
+} from '@/types/enums';
 export { REJECTION_REASON_VALUES } from '@/types/enums';
 
 // Local type aliases for use in this file
