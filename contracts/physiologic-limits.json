@@ -1,4 +1,7 @@
 {
+  "aliases": {
+    "PLAT": "PLT"
+  },
   "pH": {
     "min": 6.5,
     "max": 8,

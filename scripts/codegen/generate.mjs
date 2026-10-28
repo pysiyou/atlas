@@ -2,9 +2,9 @@
 /**
  * Atlas cross-stack codegen — generates Python and TypeScript from contracts/.
  *
- * Domain enum sources: contracts/enums.json (members: wire + presentation), container-catalog.json (collection UI).
- * Not generated from contracts: audit EventType, worklist Literals, openapi.json (FastAPI export),
- * backend test-catalog.json.
+ * Human-edited contracts: enums.json, enums.schema.json, container-catalog.json,
+ * lab-constants.json, lab-blockers.json, status-presentation.json, physiologic-limits.json.
+ * Generated into contracts/: openapi.json (FastAPI export for openapi-typescript).
  */
 import { execSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -40,7 +40,11 @@ ${tsBody}
 }
 
 function generatePhysiologicLimits() {
-  const limits = readJson('physiologic-limits.json');
+  const data = readJson('physiologic-limits.json');
+  const aliases = data.aliases ?? {};
+  const limits = { ...data };
+  delete limits.aliases;
+
   const pyEntries = Object.entries(limits)
     .map(([key, v]) => {
       const parts = [`'min': ${v.min}`, `'max': ${v.max}`];
@@ -82,34 +86,31 @@ ${tsEntries}
 `;
   writeFile('backend/app/shared/contracts/physiologic_limits.py', py);
   writeFile('frontend/src/types/generated/physiologicLimits.ts', ts);
-}
 
-function generatePhysiologicAliases() {
-  const aliases = readJson('physiologic-aliases.json');
-  const pyEntries = Object.entries(aliases)
+  const aliasPyEntries = Object.entries(aliases)
     .map(([from, to]) => `    ${JSON.stringify(from)}: ${JSON.stringify(to)}`)
     .join(',\n');
-  const tsEntries = Object.entries(aliases)
+  const aliasTsEntries = Object.entries(aliases)
     .map(([from, to]) => `  ${JSON.stringify(from)}: ${JSON.stringify(to)}`)
     .join(',\n');
-  const py = `"""
-Physiologic limit aliases — GENERATED from contracts/physiologic-aliases.json. DO NOT EDIT.
+  const aliasPy = `"""
+Physiologic limit aliases — GENERATED from contracts/physiologic-limits.json (aliases). DO NOT EDIT.
 """
 from typing import Dict
 
 PHYSIOLOGIC_LIMIT_ALIASES: Dict[str, str] = {
-${pyEntries}
+${aliasPyEntries}
 }
 `;
-  const ts = `/**
- * Physiologic limit aliases — GENERATED from contracts/physiologic-aliases.json. DO NOT EDIT.
+  const aliasTs = `/**
+ * Physiologic limit aliases — GENERATED from contracts/physiologic-limits.json (aliases). DO NOT EDIT.
  */
 export const PHYSIOLOGIC_LIMIT_ALIASES: Record<string, string> = {
-${tsEntries}
+${aliasTsEntries}
 };
 `;
-  writeFile('backend/app/shared/contracts/physiologic_aliases.py', py);
-  writeFile('frontend/src/types/generated/physiologicAliases.ts', ts);
+  writeFile('backend/app/shared/contracts/physiologic_aliases.py', aliasPy);
+  writeFile('frontend/src/types/generated/physiologicAliases.ts', aliasTs);
 }
 
 function generateLabBlockers() {
@@ -327,9 +328,6 @@ if (fs.existsSync(path.join(CONTRACTS, 'status-presentation.json'))) {
 }
 if (fs.existsSync(path.join(CONTRACTS, 'physiologic-limits.json'))) {
   generatePhysiologicLimits();
-}
-if (fs.existsSync(path.join(CONTRACTS, 'physiologic-aliases.json'))) {
-  generatePhysiologicAliases();
 }
 generateEnums();
 generateContainerCatalog();

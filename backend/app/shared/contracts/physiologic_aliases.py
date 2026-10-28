@@ -1,5 +1,5 @@
 """
-Physiologic limit aliases — GENERATED from contracts/physiologic-aliases.json. DO NOT EDIT.
+Physiologic limit aliases — GENERATED from contracts/physiologic-limits.json (aliases). DO NOT EDIT.
 """
 from typing import Dict
 
