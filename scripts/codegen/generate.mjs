@@ -13,6 +13,7 @@ import { fileURLToPath } from 'node:url';
 import { generateContainerCatalog } from './lib/container-catalog.mjs';
 import { generateEnums } from './lib/domain-enums.mjs';
 import { CONTRACTS, readJson, ROOT, writeFile } from './lib/read-contract.mjs';
+import { validateEnumsContract } from './lib/validate-enums.mjs';
 
 function generateLabConstants() {
   const data = readJson('lab-constants.json');
@@ -316,6 +317,7 @@ export const TERMINAL_TEST_STATUSES = ${JSON.stringify(terminalTest)} as const;
   writeFile('frontend/src/types/generated/statusPresentation.ts', ts);
 }
 
+validateEnumsContract();
 generateLabConstants();
 if (fs.existsSync(path.join(CONTRACTS, 'lab-blockers.json'))) {
   generateLabBlockers();

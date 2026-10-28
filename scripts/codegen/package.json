@@ -4,8 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "validate": "node validate-enums.mjs",
-    "codegen": "node validate-enums.mjs && node generate.mjs"
+    "codegen": "node generate.mjs"
   },
   "dependencies": {
     "ajv": "^8.20.0",

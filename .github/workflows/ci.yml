@@ -51,10 +51,6 @@ jobs:
         run: npm ci
         working-directory: scripts/codegen
 
-      - name: Validate enums contract
-        run: npm run validate
-        working-directory: scripts/codegen
-
       - name: Run codegen
         run: npm run codegen
         working-directory: scripts/codegen
