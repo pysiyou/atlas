@@ -841,6 +841,119 @@ class LabWorklistService:
             item.pop("_sort_updated", None)
         return _worklist_result(items, total, page, page_size, rows_loaded=len(rows))
 
+    def list_all_order_tests(
+        self,
+        *,
+        page: int = 1,
+        page_size: int = 50,
+        search: str | None = None,
+        priorities: list[PriorityLevel] | None = None,
+        statuses: list[TestStatus] | None = None,
+        date_from: date | None = None,
+        date_to: date | None = None,
+        sample_types: list[str] | None = None,
+    ) -> dict[str, Any]:
+        """All order tests, newest activity first (OrderTest.updatedAt)."""
+        from app.domains.lab.quality.recollection_snapshot import (
+            recollection_blocked_order_test_ids,
+        )
+
+        recollection_blocked = recollection_blocked_order_test_ids(self.db)
+        query = (
+            self.db.query(OrderTest, Order, Patient, CatalogTest, Sample)
+            .join(Order, OrderTest.orderId == Order.orderId)
+            .join(Patient, Order.patientId == Patient.id)
+            .join(CatalogTest, OrderTest.testCode == CatalogTest.code)
+            .outerjoin(Sample, Sample.sampleId == OrderTest.sampleId)
+            .filter(
+                OrderTest.status.notin_(
+                    (
+                        TestStatus.SUPERSEDED,
+                        TestStatus.REMOVED,
+                    )
+                )
+            )
+        )
+        if priorities:
+            query = query.filter(Order.priority.in_(priorities))
+        if statuses:
+            query = query.filter(OrderTest.status.in_(statuses))
+        if date_from:
+            start = datetime.combine(date_from, time.min, tzinfo=UTC)
+            query = query.filter(OrderTest.updatedAt >= start)
+        if date_to:
+            end = datetime.combine(date_to, time.max, tzinfo=UTC)
+            query = query.filter(OrderTest.updatedAt <= end)
+        if sample_types:
+            query = query.filter(CatalogTest.sampleType.in_(sample_types))
+        search_term = search.strip() if search else ""
+        if search_term:
+            query = query.filter(_order_test_worklist_search_filter(search_term))
+
+        total = query.count()
+        start = (page - 1) * page_size
+        rows = (
+            query.order_by(OrderTest.updatedAt.desc())
+            .offset(start)
+            .limit(page_size)
+            .all()
+        )
+
+        escalated_ids = [
+            ot.id
+            for ot, _order, _patient, _test, _sample in rows
+            if ot.status == TestStatus.ESCALATED
+        ]
+        tickets_by_test: dict[int, EscalationTicket] = {}
+        if escalated_ids:
+            for ticket in (
+                self.db.query(EscalationTicket)
+                .filter(
+                    EscalationTicket.orderTestId.in_(escalated_ids),
+                    EscalationTicket.status == EscalationTicketStatus.OPEN,
+                )
+                .all()
+            ):
+                tickets_by_test[ticket.orderTestId] = ticket
+
+        items: list[dict[str, Any]] = []
+        for order_test, order, patient, test, sample in rows:
+            updated_at = self._normalize_ts(order_test.updatedAt) or datetime.now(UTC)
+            ticket = tickets_by_test.get(order_test.id)
+            escalation_code = ticket.reasonCode.value if ticket and ticket.reasonCode else None
+            projection = project_order_test_pipeline(
+                LabWorkItemContext(
+                    order=order,
+                    order_test=order_test,
+                    sample=sample,
+                    escalation_reason_code=escalation_code,
+                    recollection_approval_pending=order_test.id in recollection_blocked,
+                )
+            )
+            work_item_fields = projection_to_worklist_fields(projection)
+            items.append(
+                {
+                    "orderTestId": order_test.id,
+                    "orderId": order.orderId,
+                    "patientId": patient.id,
+                    "patientName": patient.fullName,
+                    "patientDob": patient.dateOfBirth,
+                    "patientGender": patient.gender,
+                    "testCode": order_test.testCode,
+                    "testName": test.name,
+                    "sampleType": test.sampleType or "",
+                    "priority": order.priority,
+                    "status": order_test.status,
+                    "stage": self._dashboard_stage(order_test),
+                    "activityAt": updated_at,
+                    "orderDate": order.orderDate,
+                    **referent_doctor_projection(order),
+                    "testCategory": test.category,
+                    **work_item_fields,
+                }
+            )
+        return _worklist_result(items, total, page, page_size, rows_loaded=len(rows))
+
     def get_board(
         self,
         include_supervisor: bool = True,

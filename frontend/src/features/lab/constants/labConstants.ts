@@ -21,6 +21,8 @@ export const LAB_COPY = {
     validation: 'Validation',
     monitorNav: 'Monitor',
     monitorPageTitle: 'Lab monitor',
+    allTestsPageTitle: 'All tests',
+    allTestsPageSubtitle: 'Every order test, sorted by last modified',
     escalation: 'Escalation',
     sentBack: 'Sent back',
     sentBackShort: 'Rework',
@@ -257,6 +259,7 @@ export const LAB_PATHS = {
     validation: '/lab/worklists/validation',
     dashboardToday: '/lab/worklists/dashboard-today',
     dashboardBlocked: '/lab/worklists/dashboard-blocked',
+    allTests: '/lab/worklists/all-tests',
   },
   board: { full: '/lab/board', summary: '/lab/board/summary' },
   criticalValues: {

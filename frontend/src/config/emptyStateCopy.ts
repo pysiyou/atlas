@@ -29,6 +29,10 @@ export const EMPTY_COPY = {
     title: 'No active tests',
     description: emptySubtitle('tests', 'they enter the pipeline'),
   },
+  allTestsWorklist: {
+    title: emptyTitle('tests match these filters'),
+    description: emptySubtitle('order tests', 'they are ordered or match your search'),
+  },
   dashboardWorklist: {
     title: emptyTitle("tests in today's view"),
     description: emptySubtitle(

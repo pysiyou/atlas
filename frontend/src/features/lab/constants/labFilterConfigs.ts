@@ -9,6 +9,7 @@ import {
   TEST_STATUS_CONFIG,
   PRIORITY_LEVEL_VALUES,
   PRIORITY_LEVEL_CONFIG,
+  TEST_STATUS_VALUES,
 } from '@/types';
 import { ICONS } from '@/config/icons';
 import { SHARED_FILTER_PLACEHOLDERS } from '@/config/filterPlaceholders';
@@ -85,6 +86,37 @@ export const validationFilterConfig = buildLabFilterConfig({
       icon: ICONS.priority,
       placeholder: 'All priorities',
       helpText: 'Filter by priority level: Low, Medium, High, or Urgent.',
+    },
+  ],
+});
+
+const allTestsStatusOptions = createFilterOptions(TEST_STATUS_VALUES, TEST_STATUS_CONFIG);
+
+export const allTestsFilterConfig = buildLabFilterConfig({
+  searchPlaceholder: 'Sample, order, or test ID (SAM/ORD/TST), patient, or test name...',
+  searchHelpText:
+    'Search by sample ID (SAM####), order ID (ORD####), test ID (TST####), patient name, test name, or test code.',
+  dateRangeHelpText: 'Filter by last modified date (UTC).',
+  extraControls: [
+    {
+      type: 'multiSelect',
+      key: 'status',
+      label: 'Status',
+      options: allTestsStatusOptions,
+      selectAllLabel: 'All statuses',
+      icon: ICONS.testStatus,
+      placeholder: SHARED_FILTER_PLACEHOLDERS.status,
+      helpText: 'Filter by test lifecycle status.',
+    },
+    {
+      type: 'multiSelect',
+      key: 'priority',
+      label: 'Priority',
+      options: priorityOptions,
+      selectAllLabel: 'All priorities',
+      icon: ICONS.priority,
+      placeholder: 'All priorities',
+      helpText: 'Filter by order priority.',
     },
   ],
 });

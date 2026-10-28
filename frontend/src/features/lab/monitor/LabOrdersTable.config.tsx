@@ -30,7 +30,7 @@ import {
   renderTestNameCodeStack,
   StatusPresentationBadge,
 } from '@/utils/presentation';
-import type { LabOrderTableRow } from './LabOrdersTable';
+import type { LabOrderTableRow } from './LabOrdersTable.types';
 import { BADGE } from '@/theme/recipes';
 
 const VIEWS = {
@@ -88,7 +88,15 @@ function LabOrderTableCard({ item, onClick }: CardComponentProps<LabOrderTableRo
   );
 }
 
-export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> {
+export interface LabOrdersTableConfigOptions {
+  /** Column header for the activity timestamp (default: Date). */
+  dateColumnLabel?: string;
+}
+
+export function createLabOrdersTableConfig(
+  options: LabOrdersTableConfigOptions = {},
+): TableViewConfig<LabOrderTableRow> {
+  const dateLabel = options.dateColumnLabel ?? 'Date';
   const columnMap = {
     test: createColumn<LabOrderTableRow>('test', 'Test', {
       width: TABLE_COLUMN_WIDTH.primary,
@@ -152,7 +160,7 @@ export function createLabOrdersTableConfig(): TableViewConfig<LabOrderTableRow> 
     ),
     date: createDateTimeColumn<LabOrderTableRow>(
       'date',
-      'Date',
+      dateLabel,
       row => row.date,
       { accessor: row => row.date },
     ),

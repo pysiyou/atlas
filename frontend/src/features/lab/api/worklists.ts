@@ -183,6 +183,8 @@ interface WorklistParams {
   dateFrom?: string;
   dateTo?: string;
   sampleType?: string;
+  status?: string;
+  priority?: string;
 }
 
 function buildParams(params?: WorklistParams): Record<string, string> {
@@ -193,6 +195,8 @@ function buildParams(params?: WorklistParams): Record<string, string> {
   if (params?.dateFrom) q.dateFrom = params.dateFrom;
   if (params?.dateTo) q.dateTo = params.dateTo;
   if (params?.sampleType) q.sampleType = params.sampleType;
+  if (params?.status) q.status = params.status;
+  if (params?.priority) q.priority = params.priority;
   return q;
 }
 
@@ -224,6 +228,13 @@ export const worklistsAPI = {
       buildParams(params)
     );
   },
+
+  getAllTests(params?: WorklistParams) {
+    return apiClient.get<{ items: DashboardWorklistItem[]; pagination: WorklistPagination }>(
+      LAB_PATHS.worklists.allTests,
+      buildParams(params)
+    );
+  },
 };
 
 /**
@@ -237,6 +248,8 @@ interface WorklistHookParams {
   dateFrom?: string;
   dateTo?: string;
   sampleType?: string;
+  status?: string;
+  priority?: string;
 }
 
 type WorklistQueryKeyFn = (params?: WorklistHookParams) => readonly unknown[];
@@ -254,6 +267,8 @@ function createWorklistQueryHook<TItem>(
       dateFrom: params?.dateFrom ?? null,
       dateTo: params?.dateTo ?? null,
       sampleType: params?.sampleType ?? null,
+      status: params?.status ?? null,
+      priority: params?.priority ?? null,
       pageSize,
     });
 
@@ -309,4 +324,9 @@ export const useValidationWorklist = createWorklistQueryHook(
 export const useDashboardWorklistToday = createWorklistQueryHook(
   queryKeys.worklists.dashboardToday,
   worklistsAPI.getDashboardToday,
+);
+
+export const useAllTestsWorklist = createWorklistQueryHook(
+  queryKeys.worklists.allTests,
+  worklistsAPI.getAllTests,
 );

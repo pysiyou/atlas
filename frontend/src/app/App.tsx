@@ -46,6 +46,7 @@ const Patients = lazyNamed(() => import('@/features/patients'), 'PatientsPage');
 const Orders = lazyNamed(() => import('@/features/orders'), 'OrdersPage');
 const Catalog = lazyNamed(() => import('@/features/catalog'), 'CatalogPage');
 const Laboratory = lazyNamed(() => import('@/features/lab'), 'LaboratoryPage');
+const LabAllTests = lazyNamed(() => import('@/features/lab'), 'LabAllTestsPage');
 const Payments = lazyNamed(() => import('@/features/payments'), 'PaymentListPage');
 const Reports = lazyNamed(() => import('@/features/reports'), 'ReportsPage');
 const EventLog = lazyNamed(() => import('@/features/audit'), 'EventLogPage');
@@ -62,6 +63,7 @@ const PROTECTED_ROUTES: ProtectedRouteConfig[] = [
   { path: `${ROUTES.CATALOG}/*`, element: Catalog },
   { path: ROUTES.LABORATORY, element: Laboratory },
   { path: `${ROUTES.LABORATORY}/:tab`, element: Laboratory },
+  { path: ROUTES.LAB_ALL_TESTS, element: LabAllTests },
   { path: ROUTES.PAYMENTS, element: Payments },
   { path: `${ROUTES.REPORTS}/*`, element: Reports },
   { path: ROUTES.EVENT_LOG, element: EventLog },

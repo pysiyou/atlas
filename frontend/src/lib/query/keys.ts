@@ -254,6 +254,18 @@ export const queryKeys = {
     ) => [...queryKeys.worklists.all, 'validation', params] as const,
     dashboardToday: (params?: { page?: number; pageSize?: number; search?: string }) =>
       [...queryKeys.worklists.all, 'dashboard-today', params] as const,
+    allTests: (
+      params?: {
+        page?: number;
+        pageSize?: number;
+        search?: string;
+        dateFrom?: string;
+        dateTo?: string;
+        sampleType?: string;
+        status?: string;
+        priority?: string;
+      },
+    ) => [...queryKeys.worklists.all, 'all-tests', params] as const,
   },
 } as const;
 

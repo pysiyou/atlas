@@ -20,7 +20,7 @@ from app.domains.users.models import User
 from app.platform.database import get_db
 from app.platform.http.dependencies import require_lab_tech, require_sample_collector
 from app.platform.utils.common import parse_csv_values
-from app.shared.contracts.enums import PriorityLevel, UserRole
+from app.shared.contracts.enums import PriorityLevel, TestStatus, UserRole
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
@@ -142,6 +142,46 @@ def get_dashboard_worklist_today(
             user_id=current_user.id,
             page=page,
             page_size=pageSize,
+        )
+        metrics["rows_loaded"] = result.get("rows_loaded")
+        metrics["rows_returned"] = len(result["items"])
+    items = [DashboardWorklistItem(**item) for item in result["items"]]
+    return _worklist_response(items, result["pagination"])
+
+
+@router.get("/worklists/all-tests")
+def get_all_tests_worklist(
+    page: int = Query(1, ge=1),
+    pageSize: int = Query(50, ge=1, le=200),
+    search: str | None = None,
+    status: str | None = Query(None, description="Comma-separated test statuses"),
+    priority: str | None = Query(None, description="Comma-separated priority levels"),
+    dateFrom: date | None = Query(None, description="Last modified on or after (UTC date)"),
+    dateTo: date | None = Query(None, description="Last modified on or before (UTC date)"),
+    sampleType: str | None = Query(None, description="Comma-separated sample types"),
+    db: Session = Depends(get_db),
+    _user: User = Depends(require_lab_tech),
+):
+    status_wires = parse_csv_values(status) or None
+    statuses: list[TestStatus] | None = None
+    if status_wires:
+        statuses = [TestStatus(w) for w in status_wires]
+
+    priority_wires = parse_csv_values(priority) or None
+    priorities: list[PriorityLevel] | None = None
+    if priority_wires:
+        priorities = [PriorityLevel(w) for w in priority_wires]
+
+    with log_lab_read("lab.worklists.all_tests", page=page, page_size=pageSize) as metrics:
+        result = LabWorklistService(db).list_all_order_tests(
+            page=page,
+            page_size=pageSize,
+            search=search,
+            priorities=priorities,
+            statuses=statuses,
+            date_from=dateFrom,
+            date_to=dateTo,
+            sample_types=parse_csv_values(sampleType) or None,
         )
         metrics["rows_loaded"] = result.get("rows_loaded")
         metrics["rows_returned"] = len(result["items"])

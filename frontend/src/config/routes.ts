@@ -9,6 +9,7 @@ export const ROUTES = {
   PATIENTS: '/patients',
   ORDERS: '/orders',
   LABORATORY: '/laboratory',
+  LAB_ALL_TESTS: '/lab/tests',
   PAYMENTS: '/payments',
   REPORTS: '/reports',
   CATALOG: '/catalog',

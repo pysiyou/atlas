@@ -185,6 +185,7 @@ export const MODULE_ICONS = {
   patients: 'users-group' as IconName,
   orders: 'document' as IconName,
   laboratory: 'flask' as IconName,
+  labTests: 'checklist' as IconName,
   payments: 'wallet' as IconName,
   reports: 'document-medicine' as IconName,
   catalog: 'book' as IconName,
