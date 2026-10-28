@@ -183,6 +183,8 @@ export interface TestParameter {
   catalogReferenceRange?: CatalogReferenceRange; // Full demographic ranges
   allowedValues?: string[]; // For SELECT type
   decimalsSuggested?: number; // Suggested decimal precision
+  /** From catalog result_items.physiologic_range (blocking entry validation). */
+  physiologicRange?: { min: number; max: number };
 }
 
 /**

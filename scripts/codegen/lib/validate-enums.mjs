@@ -7,11 +7,6 @@ import Ajv from 'ajv';
 import { CONTRACTS, readJson } from './read-contract.mjs';
 
 export function validateEnumsContract() {
-  if (fs.existsSync(path.join(CONTRACTS, 'enums-ui.json'))) {
-    console.error('contracts/enums-ui.json must be removed — UI belongs in enums.json');
-    process.exit(1);
-  }
-
   const schemaPath = path.join(CONTRACTS, 'enums.schema.json');
   if (!fs.existsSync(schemaPath)) {
     return;

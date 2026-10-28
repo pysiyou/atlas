@@ -84,6 +84,7 @@ function mapResultItemsToParameters(resultItems?: ResultItem[]): TestParameter[]
       allowedValues: item.allowed_values,
       decimalsSuggested: item.decimals_suggested,
       decimalPlaces: item.decimals_suggested,
+      physiologicRange: item.physiologic_range,
     };
   });
 }

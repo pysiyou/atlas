@@ -39,19 +39,12 @@ function fail(msg) {
   failed = true;
 }
 
-if (fs.existsSync(path.join(CONTRACTS, 'enums-ui.json'))) {
-  fail('Remove contracts/enums-ui.json — UI is merged into enums.json');
-}
-
 const orderTs = read('frontend/src/types/enums/generated/order.ts');
 if (orderTs.includes('export const PAYMENT_METHOD_OPTIONS')) {
   fail('order.ts must not export PAYMENT_METHOD_OPTIONS (use types/payments.ts)');
 }
 if (!orderTs.includes('GENERATED from contracts/enums.json')) {
-  fail('Generated enum TS must reference contracts/enums.json only');
-}
-if (orderTs.includes('enums-ui.json')) {
-  fail('Generated enum TS must not reference enums-ui.json');
+  fail('Generated enum TS must reference contracts/enums.json');
 }
 
 const catalogTs = read('frontend/src/types/enums/generated/container-catalog.ts');

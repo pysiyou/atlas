@@ -4,7 +4,7 @@
  *
  * Human-edited contracts: enums.json, enums.schema.json, container-catalog.json,
  * lab-constants.json, lab-blockers.json, status-presentation.json.
- * Physiologic limits: test-catalog.json result_items.physiologic_range.
+ * Physiologic limits: test-catalog.json result_items.physiologic_range (no separate contract).
  * Generated into contracts/: openapi.json (FastAPI export for openapi-typescript).
  */
 import { execSync } from 'node:child_process';
@@ -14,7 +14,6 @@ import { fileURLToPath } from 'node:url';
 import { generateContainerCatalog } from './lib/container-catalog.mjs';
 import { generateEnums } from './lib/domain-enums.mjs';
 import { CONTRACTS, readJson, ROOT, writeFile } from './lib/read-contract.mjs';
-import { generatePhysiologicLimitsFromCatalog } from './lib/test-catalog-physiologic.mjs';
 import { validateEnumsContract } from './lib/validate-enums.mjs';
 
 function generateLabConstants() {
@@ -254,7 +253,6 @@ if (fs.existsSync(path.join(CONTRACTS, 'lab-blockers.json'))) {
 if (fs.existsSync(path.join(CONTRACTS, 'status-presentation.json'))) {
   generateStatusPresentation();
 }
-generatePhysiologicLimitsFromCatalog();
 generateEnums();
 generateContainerCatalog();
 verifyAuditCatalogCoverage();

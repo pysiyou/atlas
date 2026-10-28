@@ -10,7 +10,7 @@ import { inputTrigger, inputTriggerOpen, inputBase, inputError } from '@/theme/r
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 import type { TestParameter } from '@/types';
-import { validatePhysiologicValue, getPhysiologicLimit } from '../utils';
+import { validatePhysiologicValue } from '../utils';
 import { titleCaseWords } from '@/utils/string';
 import { RadioCard } from '@/components/overlays';
 
@@ -107,16 +107,16 @@ export const ParameterInput: React.FC<{
     param.valueType ||
     (param.type === 'numeric' ? 'NUMERIC' : param.type === 'select' ? 'SELECT' : 'TEXT');
   const normalizedValue = value ?? '';
-  const limit = valueType === 'NUMERIC' ? getPhysiologicLimit(param.code) : undefined;
+  const limit = valueType === 'NUMERIC' ? param.physiologicRange : undefined;
 
   const handleBlur = useCallback(() => {
     if (valueType !== 'NUMERIC' || !normalizedValue) {
       onValidationChange?.(undefined);
       return;
     }
-    const result = validatePhysiologicValue(param.code, normalizedValue);
+    const result = validatePhysiologicValue(normalizedValue, param.physiologicRange);
     onValidationChange?.(result.error);
-  }, [param.code, normalizedValue, valueType, onValidationChange]);
+  }, [normalizedValue, valueType, onValidationChange, param.physiologicRange]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>

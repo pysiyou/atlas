@@ -8,12 +8,6 @@ function wireLookupKey(wire) {
 
 /** @param {Record<string, unknown>} def */
 export function assertMembersShape(def, enumName) {
-  if (def.values !== undefined || def.ui !== undefined) {
-    console.error(
-      `enums.json: ${enumName} uses legacy values/ui — migrate to members (wire + label per const)`,
-    );
-    process.exit(1);
-  }
   if (!def.members || typeof def.members !== 'object') {
     console.error(`enums.json: ${enumName} missing members`);
     process.exit(1);

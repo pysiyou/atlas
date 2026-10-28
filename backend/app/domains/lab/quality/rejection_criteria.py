@@ -54,10 +54,7 @@ class RejectionCriteriaService:
         test = self._get_test(test_code)
         if not test:
             return []
-        raw = test.validationRejectionCriteria
-        if not raw:
-            # Legacy fallback: merged list stored only in rejectionCriteria
-            raw = test.rejectionCriteria or []
+        raw = test.validationRejectionCriteria or []
         return [self._normalize_criterion(item) for item in raw]
 
     def _items_for_context(

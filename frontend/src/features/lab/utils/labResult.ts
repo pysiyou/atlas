@@ -3,11 +3,14 @@ import type { ResultStatus } from '@/types/enums';
 import type { CatalogReferenceRange, CriticalRange, TestParameter, Patient, Gender } from '@/types';
 import type { DemographicRange } from '@/types/test';
 import { calculateAge } from '@/utils/string';
-import { PHYSIOLOGIC_LIMITS, type PhysiologicLimit } from '@/types/generated/physiologicLimits';
 import { FG, TONE, metricTile, metricTileStateFromResult } from '@/theme/recipes';
 
 export type { ResultStatus };
-export { PHYSIOLOGIC_LIMITS, type PhysiologicLimit };
+
+export interface PhysiologicLimit {
+  min: number;
+  max: number;
+}
 
 const ABNORMAL_STATUSES: ResultStatus[] = [
   'high',
@@ -225,21 +228,6 @@ export function formatReferenceRange(
   return 'N/A';
 }
 
-export function getPhysiologicLimit(itemCode: string): PhysiologicLimit | undefined {
-  if (PHYSIOLOGIC_LIMITS[itemCode]) return PHYSIOLOGIC_LIMITS[itemCode];
-  const upperCode = itemCode.toUpperCase();
-  for (const [key, limit] of Object.entries(PHYSIOLOGIC_LIMITS)) {
-    if (key.toUpperCase() === upperCode) return limit;
-  }
-  const resolvedLower = itemCode.toLowerCase();
-  for (const [key, limit] of Object.entries(PHYSIOLOGIC_LIMITS)) {
-    if (key.length < 3) continue;
-    const keyLower = key.toLowerCase();
-    if (keyLower.includes(resolvedLower) || resolvedLower.includes(keyLower)) return limit;
-  }
-  return undefined;
-}
-
 export interface ValidationResult {
   isValid: boolean;
   error?: string;
@@ -247,10 +235,9 @@ export interface ValidationResult {
 }
 
 export function validatePhysiologicValue(
-  itemCode: string,
-  value: string | number
+  value: string | number,
+  limit: PhysiologicLimit | undefined
 ): ValidationResult {
-  const limit = getPhysiologicLimit(itemCode);
   if (!limit) return { isValid: true };
 
   let numValue: number;

@@ -33,7 +33,6 @@ line-length = 100
 src = ["app"]
 extend-exclude = [
     "app/shared/contracts/lab_constants.py",
-    "app/shared/contracts/physiologic_limits.py",
     "app/shared/contracts/enums.py",
     "app/shared/contracts/lab_blockers.py",
 ]
