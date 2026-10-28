@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://atlas.local/contracts/test-catalog.schema.json",
+  "title": "Atlas test catalog",
+  "type": "object",
+  "required": ["tests"],
+  "properties": {
+    "tests": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/testEntry" }
+    }
+  },
+  "$defs": {
+    "rejectionReasonId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "minLength": 1
+    },
+    "testEntry": {
+      "type": "object",
+      "required": ["test_code"],
+      "properties": {
+        "test_code": { "type": "string" },
+        "sample": {
+          "type": "object",
+          "properties": {
+            "rejection_criteria": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/rejectionReasonId" }
+            }
+          },
+          "additionalProperties": true
+        },
+        "validation_rejection_criteria": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/rejectionReasonId" }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

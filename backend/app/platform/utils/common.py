@@ -4,7 +4,10 @@ Database helper utilities for common operations.
 import re
 from typing import Any, TypeVar
 
-from app.shared.contracts.enums import RejectionReason
+from app.shared.contracts.rejection_reasons import (
+    is_specimen_rejection_registry_value,
+    rejection_reason_domain,
+)
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
@@ -105,50 +108,11 @@ def parse_numeric_result_value(value: Any) -> float | None:
     return None
 
 
-"""
-Detect specimen vs analytical rejection criteria from catalog strings or slug enums.
-"""
-
-# Slug enums used internally for routing.
-SPECIMEN_CRITERIA = frozenset(
-    {
-        RejectionReason.HEMOLYZED.value,
-        RejectionReason.CLOTTED.value,
-        RejectionReason.QNS.value,
-        RejectionReason.WRONG_CONTAINER.value,
-        RejectionReason.LABELING_ERROR.value,
-        RejectionReason.TRANSPORT_DELAY.value,
-        RejectionReason.CONTAMINATED.value,
-        RejectionReason.LIPEMIC.value,
-        RejectionReason.ICTERIC.value,
-    }
-)
-
-# Catalog rejection strings map to specimen slugs via keyword matching (fallback only).
-_SPECIMEN_KEYWORDS: dict[str, tuple[str, ...]] = {
-    RejectionReason.HEMOLYZED.value: ("hemolyz",),
-    RejectionReason.CLOTTED.value: ("clot",),
-    RejectionReason.QNS.value: ("qns", "insufficient quantity"),
-    RejectionReason.WRONG_CONTAINER.value: ("wrong container", "incorrect container", "wrong tube"),
-    RejectionReason.LABELING_ERROR.value: ("unlabeled", "mislabeled", "label"),
-    RejectionReason.TRANSPORT_DELAY.value: ("transport delay", "transport"),
-    RejectionReason.CONTAMINATED.value: ("contaminat",),
-    RejectionReason.LIPEMIC.value: ("lipemic", "lipemia"),
-    RejectionReason.ICTERIC.value: ("icteric",),
-}
-
-
 def infer_criterion_domain(reason: str) -> str:
-    """Return specimen or analytical for a catalog string or slug."""
-    return "specimen" if is_specimen_rejection_reason(reason) else "analytical"
+    """Return specimen or analytical for a catalog label, id, or legacy enum wire."""
+    return rejection_reason_domain(reason) or "analytical"
 
 
 def is_specimen_rejection_reason(reason: str) -> bool:
-    """Return True when a catalog string or slug indicates a specimen problem."""
-    if reason in SPECIMEN_CRITERIA:
-        return True
-
-    lower = reason.lower()
-    return any(
-        any(keyword in lower for keyword in keywords) for keywords in _SPECIMEN_KEYWORDS.values()
-    )
+    """Return True when value indicates a specimen problem per the rejection registry."""
+    return is_specimen_rejection_registry_value(reason)

@@ -9,8 +9,12 @@ from dataclasses import dataclass
 from typing import Any, Literal
 
 from app.domains.catalog.models.catalog_test import CatalogTest
-from app.platform.utils.common import infer_criterion_domain
 from app.platform.utils.exceptions import LabOperationError
+from app.shared.contracts.rejection_reasons import (
+    REJECTION_REASON_BY_ID,
+    REJECTION_REASON_DOMAIN_BY_ID,
+    rejection_reason_domain,
+)
 from sqlalchemy.orm import Session
 
 QualityContext = Literal["sample", "validation"]
@@ -33,13 +37,22 @@ class RejectionCriteriaService:
     @staticmethod
     def _normalize_criterion(raw: Any) -> RejectionCriterion:
         if isinstance(raw, dict):
+            reason_id = str(raw.get("reasonId") or "").strip()
+            if reason_id:
+                return RejectionCriterion(
+                    reason=REJECTION_REASON_BY_ID[reason_id],
+                    domain=REJECTION_REASON_DOMAIN_BY_ID[reason_id],
+                )
             reason = str(raw.get("reason") or raw.get("label") or "").strip()
-            domain = str(raw.get("domain") or infer_criterion_domain(reason)).lower()
+            domain = str(raw.get("domain") or "").lower()
             if domain not in {"specimen", "analytical"}:
-                domain = infer_criterion_domain(reason)
+                domain = rejection_reason_domain(reason) or "analytical"
             return RejectionCriterion(reason=reason, domain=domain)
         reason = str(raw).strip()
-        return RejectionCriterion(reason=reason, domain=infer_criterion_domain(reason))
+        return RejectionCriterion(
+            reason=reason,
+            domain=rejection_reason_domain(reason) or "analytical",
+        )
 
     def _get_test(self, test_code: str) -> CatalogTest | None:
         return self.db.query(CatalogTest).filter(CatalogTest.code == test_code).first()

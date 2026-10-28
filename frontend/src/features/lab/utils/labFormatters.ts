@@ -4,13 +4,14 @@
  */
 
 import type { RejectedSample, Sample } from '@/types';
+import { resolveRejectionReasonLabel } from '@/types/generated/rejectionReasonRegistry';
 
 /**
  * Format rejection reasons for display
  */
 export const formatRejectionReasons = (reasons: string[] | undefined): string | null => {
   if (!reasons || reasons.length === 0) return null;
-  return reasons.map(r => r.replace(/_/g, ' ')).join(', ');
+  return reasons.map(r => resolveRejectionReasonLabel(r)).join(', ');
 };
 
 /** Backend may expose a single rejectionReason string instead of rejectionReasons[]. */
@@ -24,6 +25,6 @@ export const getSampleRejectionReasonLabel = (sample: Sample): string | null => 
   const fromList = formatRejectionReasons((sample as RejectedSample).rejectionReasons);
   if (fromList) return fromList;
   const singular = (sample as SampleWithOptionalRejectionReason).rejectionReason;
-  if (singular?.trim()) return singular.replace(/_/g, ' ');
+  if (singular?.trim()) return resolveRejectionReasonLabel(singular);
   return null;
 };

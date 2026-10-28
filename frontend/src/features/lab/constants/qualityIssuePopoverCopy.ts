@@ -2,11 +2,19 @@
 /**
  * QualityIssuePopover — layout constants and catalog-backed copy.
  * User-visible strings live in contracts/feedback.json (codegen → `@/types/generated/feedbackCatalog`).
+ * Remedy allow-list order and presentation ids live in contracts/lab.json → labContract.
  */
 
 import { LAB_CONFIG } from './labConstants';
 import { feedbackTitle } from '@/utils/feedback';
 import type { QualityIssueOptions, RemedyType } from '@/types/lab-operations';
+import {
+  REMEDY_PRESENTATION,
+  SAMPLE_UNFINISHED_REMEDY_WIRES,
+  VALIDATION_REMEDY_WIRES,
+  type RemedyPresentationContext,
+  type RemedyPresentationFields,
+} from '@/types/generated/labContract';
 
 export const QUALITY_ISSUE_POPOVER_LAYOUT = {
   /** Width class for loading/error/content containers */
@@ -122,74 +130,65 @@ export interface RemedyOption {
   hint?: string;
 }
 
-const VALIDATION_REMEDY_META: Record<
-  Extract<RemedyType, 'retry_same_sample' | 'request_recollection' | 'cancel'>,
-  { label: string; description: string }
-> = {
-  retry_same_sample: {
-    label: QUALITY_ISSUE_POPOVER_COPY.actions.retestLabel,
-    description: QUALITY_ISSUE_POPOVER_COPY.actions.retestDescription,
-  },
-  request_recollection: {
-    label: QUALITY_ISSUE_POPOVER_COPY.actions.newSampleLabel,
-    description: QUALITY_ISSUE_POPOVER_COPY.actions.newSampleDescription,
-  },
-  cancel: {
-    label: QUALITY_ISSUE_POPOVER_COPY.actions.cancelLabel,
-    description: QUALITY_ISSUE_POPOVER_COPY.actions.cancelDescription,
-  },
-};
+function presentationFor(
+  remedy: string,
+  context: RemedyPresentationContext
+): RemedyPresentationFields | undefined {
+  return REMEDY_PRESENTATION[remedy]?.[context];
+}
 
-const SAMPLE_REMEDY_META: Record<
-  Extract<RemedyType, 'request_recollection' | 'cancel'>,
-  { label: string; description: string }
-> = {
-  request_recollection: {
-    label: QUALITY_ISSUE_POPOVER_COPY.collection.actions.recollectLabel,
-    description: QUALITY_ISSUE_POPOVER_COPY.collection.actions.recollectDescription,
-  },
-  cancel: {
-    label: QUALITY_ISSUE_POPOVER_COPY.collection.actions.cancelUnfinishedLabel,
-    description: QUALITY_ISSUE_POPOVER_COPY.collection.actions.cancelUnfinishedDescription,
-  },
-};
+function buildRemedyOptions(
+  displayOrder: readonly string[],
+  context: RemedyPresentationContext,
+  allowed: RemedyType[] | undefined,
+  options?: { retestRemaining?: number }
+): RemedyOption[] {
+  const allowedSet = new Set(allowed ?? displayOrder);
+  const result: RemedyOption[] = [];
+
+  for (const wire of displayOrder) {
+    if (!allowedSet.has(wire as RemedyType)) {
+      continue;
+    }
+    const pres = presentationFor(wire, context);
+    if (!pres) {
+      continue;
+    }
+    let hint: string | undefined;
+    let description = feedbackTitle(pres.descriptionFeedbackId);
+    if (
+      wire === 'retry_same_sample' &&
+      context === 'validation' &&
+      options?.retestRemaining != null &&
+      options.retestRemaining <= 0
+    ) {
+      if (pres.supervisorHintFeedbackId) {
+        hint = feedbackTitle(pres.supervisorHintFeedbackId);
+      }
+      if (pres.limitDescriptionFeedbackId) {
+        description = feedbackTitle(pres.limitDescriptionFeedbackId);
+      }
+    }
+    result.push({
+      value: wire as RemedyType,
+      label: feedbackTitle(pres.labelFeedbackId),
+      description,
+      ...(hint ? { hint } : {}),
+    });
+  }
+
+  return result;
+}
 
 export function buildValidationRemedyOptions(
   allowed: RemedyType[] | undefined,
   context?: { retestRemaining?: number }
 ): RemedyOption[] {
-  const order: RemedyType[] = ['retry_same_sample', 'request_recollection', 'cancel'];
-  const allowedSet = new Set(allowed ?? order);
-
-  return order
-    .filter(value => allowedSet.has(value) && value in VALIDATION_REMEDY_META)
-    .map(value => {
-      const meta = VALIDATION_REMEDY_META[value as keyof typeof VALIDATION_REMEDY_META];
-      let hint: string | undefined;
-      let description = meta.description;
-
-      if (
-        value === 'retry_same_sample' &&
-        context?.retestRemaining != null &&
-        context.retestRemaining <= 0
-      ) {
-        hint = QUALITY_ISSUE_POPOVER_COPY.actions.retestSupervisorHint;
-        description = QUALITY_ISSUE_POPOVER_COPY.actions.retestLimitDescription;
-      }
-
-      return { value, label: meta.label, description, hint };
-    });
+  return buildRemedyOptions(VALIDATION_REMEDY_WIRES, 'validation', allowed, context);
 }
 
 export function buildSampleRemedyOptions(allowed: RemedyType[] | undefined): RemedyOption[] {
-  const order: RemedyType[] = ['request_recollection', 'cancel'];
-  const allowedSet = new Set(allowed ?? order);
-  return order
-    .filter(value => allowedSet.has(value) && value in SAMPLE_REMEDY_META)
-    .map(value => {
-      const meta = SAMPLE_REMEDY_META[value as keyof typeof SAMPLE_REMEDY_META];
-      return { value, label: meta.label, description: meta.description };
-    });
+  return buildRemedyOptions(SAMPLE_UNFINISHED_REMEDY_WIRES, 'sample', allowed);
 }
 
 export function resolveSuggestedRemedy(
@@ -199,4 +198,3 @@ export function resolveSuggestedRemedy(
   if (!suggested) return '';
   return options.some(option => option.value === suggested) ? suggested : '';
 }
-

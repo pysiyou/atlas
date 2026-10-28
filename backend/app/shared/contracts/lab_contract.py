@@ -186,3 +186,16 @@ PRIORITY_WEIGHT: dict[str, int] = {
     "medium": 2,
     "low": 1,
 }
+
+# ── Quality workflow (remedy policy) ───────────────────────────────────
+
+VALIDATION_REMEDIES: tuple[str, ...] = (
+    "retry_same_sample",
+    "request_recollection",
+    "cancel",
+)
+
+SAMPLE_UNFINISHED_REMEDIES: tuple[str, ...] = (
+    "request_recollection",
+    "cancel",
+)

@@ -11,6 +11,8 @@ const PAIRS = [
   ['lab.json', 'lab.schema.json'],
   ['feedback.json', 'feedback.schema.json'],
   ['audit-events.json', 'audit-events.schema.json'],
+  ['rejection-reasons.json', 'rejection-reasons.schema.json'],
+  ['test-catalog.json', 'test-catalog.schema.json'],
 ];
 
 function validatePair(dataFile, schemaFile) {

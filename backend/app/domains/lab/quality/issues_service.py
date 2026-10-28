@@ -31,6 +31,10 @@ from app.shared.contracts.enums import (
     TestStatus,
 )
 from app.shared.contracts.lab_contract import MAX_RETEST_ATTEMPTS
+from app.shared.contracts.lab_contract import (
+    SAMPLE_UNFINISHED_REMEDIES as SAMPLE_UNFINISHED_REMEDY_WIRES,
+)
+from app.shared.contracts.lab_contract import VALIDATION_REMEDIES as VALIDATION_REMEDY_WIRES
 from sqlalchemy.orm import Session
 
 _SAMPLE_RESET_STATUSES = {
@@ -39,18 +43,16 @@ _SAMPLE_RESET_STATUSES = {
 }
 
 
-# Remedies a validator may choose explicitly (no auto-routing).
-_VALIDATION_REMEDIES: list[RemedyType] = [
-    RemedyType.RETRY_SAME_SAMPLE,
-    RemedyType.REQUEST_RECOLLECTION,
-    RemedyType.CANCEL,
-]
+def _remedy_types(wires: tuple[str, ...]) -> list[RemedyType]:
+    return [RemedyType(w) for w in wires]
 
-# Remedies for unfinished work when rejecting a collected sample.
-_SAMPLE_UNFINISHED_REMEDIES: list[RemedyType] = [
-    RemedyType.REQUEST_RECOLLECTION,
-    RemedyType.CANCEL,
-]
+
+def validation_remedy_types() -> list[RemedyType]:
+    return _remedy_types(VALIDATION_REMEDY_WIRES)
+
+
+def sample_unfinished_remedy_types() -> list[RemedyType]:
+    return _remedy_types(SAMPLE_UNFINISHED_REMEDY_WIRES)
 
 
 class QualityIssueService:
@@ -356,7 +358,7 @@ class QualityIssueService:
             1 for t in linked if t.status == TestStatus.PENDING and t.sampleId == sample_id
         )
 
-        allowed = list(_SAMPLE_UNFINISHED_REMEDIES) if unfinished > 0 else []
+        allowed = sample_unfinished_remedy_types() if unfinished > 0 else []
         suggested = RemedyType.REQUEST_RECOLLECTION if unfinished > 0 else None
 
         parts: list[str] = []
@@ -427,16 +429,16 @@ class QualityIssueService:
         # Soft suggestion only — validator always picks the destination.
         if sample_rejected:
             suggested = RemedyType.REQUEST_RECOLLECTION
-            allowed = [r for r in _VALIDATION_REMEDIES if r != RemedyType.RETRY_SAME_SAMPLE]
+            allowed = [r for r in validation_remedy_types() if r != RemedyType.RETRY_SAME_SAMPLE]
         elif has_specimen and not has_analytical and order_test.sampleId:
             suggested = RemedyType.REQUEST_RECOLLECTION
-            allowed = list(_VALIDATION_REMEDIES)
+            allowed = validation_remedy_types()
         elif has_analytical and not has_specimen:
             suggested = RemedyType.RETRY_SAME_SAMPLE
-            allowed = list(_VALIDATION_REMEDIES)
+            allowed = validation_remedy_types()
         else:
             suggested = RemedyType.RETRY_SAME_SAMPLE
-            allowed = list(_VALIDATION_REMEDIES)
+            allowed = validation_remedy_types()
 
         message_parts = [
             "Choose where to send this test after rejection. The system will not decide automatically.",
@@ -504,10 +506,10 @@ class QualityIssueService:
         if unfinished > 0:
             if remedy is None:
                 remedy = RemedyType.REQUEST_RECOLLECTION
-            if remedy not in _SAMPLE_UNFINISHED_REMEDIES:
+            if remedy not in sample_unfinished_remedy_types():
                 raise LabOperationError(
                     f"Invalid remedy for sample rejection: {remedy}. "
-                    f"Allowed: {[r.value for r in _SAMPLE_UNFINISHED_REMEDIES]}",
+                    f"Allowed: {[r.value for r in sample_unfinished_remedy_types()]}",
                     status_code=400,
                 )
         else:
@@ -581,10 +583,10 @@ class QualityIssueService:
                 "Choose: retry_same_sample, request_recollection, or cancel.",
                 status_code=400,
             )
-        if preferred_remedy not in _VALIDATION_REMEDIES:
+        if preferred_remedy not in validation_remedy_types():
             raise LabOperationError(
                 f"Invalid preferredRemedy '{preferred_remedy.value}'. "
-                f"Allowed: {[r.value for r in _VALIDATION_REMEDIES]}",
+                f"Allowed: {[r.value for r in validation_remedy_types()]}",
                 status_code=400,
             )
 

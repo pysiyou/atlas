@@ -1,0 +1,170 @@
+{
+  "$schema": "./rejection-reasons.schema.json",
+  "reasons": [
+    {
+      "id": "aberrant_clotting_curve_repeat_run",
+      "label": "Aberrant clotting curve — repeat run",
+      "domain": "analytical"
+    },
+    {
+      "id": "ambiguous_identification_repeat_workup",
+      "label": "Ambiguous identification — repeat workup",
+      "domain": "analytical"
+    },
+    {
+      "id": "analyzer_flag_repeat_run_on_same_sample",
+      "label": "Analyzer flag — repeat run on same sample",
+      "domain": "analytical"
+    },
+    {
+      "id": "critical_value_repeat_for_verification",
+      "label": "Critical value — repeat for verification",
+      "domain": "analytical"
+    },
+    {
+      "id": "delta_check_failure_repeat_run",
+      "label": "Delta check failure — repeat run",
+      "domain": "analytical"
+    },
+    {
+      "id": "equivocal_result_repeat_run",
+      "label": "Equivocal result — repeat run",
+      "domain": "analytical"
+    },
+    {
+      "id": "fasting_requirements_not_met",
+      "label": "Fasting requirements not met",
+      "domain": "analytical"
+    },
+    {
+      "id": "indeterminate_result_repeat_run",
+      "label": "Indeterminate result — repeat run",
+      "domain": "analytical"
+    },
+    {
+      "id": "instrument_error_repeat_run",
+      "label": "Instrument error — repeat run",
+      "domain": "analytical"
+    },
+    {
+      "id": "insufficient_growth_repeat_incubation",
+      "label": "Insufficient growth — repeat incubation",
+      "domain": "analytical"
+    },
+    {
+      "id": "invalid_coagulation_control_repeat_run",
+      "label": "Invalid coagulation control — repeat run",
+      "domain": "analytical"
+    },
+    {
+      "id": "invalid_device_expired_cartridge",
+      "label": "Invalid device / expired cartridge",
+      "domain": "analytical"
+    },
+    {
+      "id": "invalid_or_expired_reagent_repeat_run",
+      "label": "Invalid or expired reagent — repeat run",
+      "domain": "analytical"
+    },
+    {
+      "id": "leaked_or_broken_container",
+      "label": "Leaked or broken container",
+      "domain": "analytical"
+    },
+    {
+      "id": "not_protected_from_light",
+      "label": "Not protected from light",
+      "domain": "analytical"
+    },
+    {
+      "id": "overfilled_tube",
+      "label": "Overfilled tube",
+      "domain": "analytical"
+    },
+    {
+      "id": "platelet_clumps_aggregation_flags_repeat_count",
+      "label": "Platelet clumps / aggregation flags — repeat count",
+      "domain": "analytical"
+    },
+    {
+      "id": "procedural_error_during_analysis",
+      "label": "Procedural error during analysis",
+      "domain": "analytical"
+    },
+    {
+      "id": "qc_control_failure",
+      "label": "QC / control failure",
+      "domain": "analytical"
+    },
+    {
+      "id": "clotted",
+      "label": "Clotted sample",
+      "domain": "specimen",
+      "legacyEnumWire": "clotted"
+    },
+    {
+      "id": "contaminated",
+      "label": "Contaminated sample",
+      "domain": "specimen",
+      "legacyEnumWire": "contaminated"
+    },
+    {
+      "id": "hemolyzed_mild",
+      "label": "Hemolyzed - Mild",
+      "domain": "specimen"
+    },
+    {
+      "id": "hemolyzed_moderate",
+      "label": "Hemolyzed - Moderate",
+      "domain": "specimen"
+    },
+    {
+      "id": "hemolyzed_severe",
+      "label": "Hemolyzed - Severe",
+      "domain": "specimen",
+      "legacyEnumWire": "hemolyzed"
+    },
+    {
+      "id": "icteric",
+      "label": "Icteric sample",
+      "domain": "specimen",
+      "legacyEnumWire": "icteric"
+    },
+    {
+      "id": "wrong_container",
+      "label": "Incorrect container / wrong tube",
+      "domain": "specimen",
+      "legacyEnumWire": "wrong_container"
+    },
+    {
+      "id": "qns",
+      "label": "Insufficient quantity (QNS)",
+      "domain": "specimen",
+      "legacyEnumWire": "qns"
+    },
+    {
+      "id": "lipemic",
+      "label": "Lipemic sample",
+      "domain": "specimen",
+      "legacyEnumWire": "lipemic"
+    },
+    {
+      "id": "labeling_error_mismatch",
+      "label": "Mislabeled / Patient ID mismatch",
+      "domain": "specimen",
+      "legacyEnumWire": "labeling_error"
+    },
+    {
+      "id": "transport_delay",
+      "label": "Transport time exceeded",
+      "domain": "specimen",
+      "legacyEnumWire": "transport_delay"
+    },
+    {
+      "id": "labeling_error_unlabeled",
+      "label": "Unlabeled sample",
+      "domain": "specimen",
+      "legacyEnumWire": "labeling_error"
+    }
+  ]
+}

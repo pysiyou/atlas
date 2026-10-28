@@ -12,8 +12,11 @@ from app.domains.referent_doctors.models import ReferentDoctor
 from app.domains.users.models import User
 from app.platform.database import Base, SessionLocal, engine
 from app.platform.security import get_password_hash
-from app.platform.utils.common import infer_criterion_domain
 from app.shared.contracts.enums import AffiliationDuration, UserRole
+from app.shared.contracts.rejection_reasons import (
+    REJECTION_REASON_BY_ID,
+    REJECTION_REASON_DOMAIN_BY_ID,
+)
 
 CATALOG_PATH = Path(__file__).resolve().parents[2].parent / "contracts" / "test-catalog.json"
 
@@ -90,15 +93,22 @@ SEED_USERS = [
 def _normalize_rejection_criteria(raw_items: list) -> list[dict]:
     normalized: list[dict] = []
     for item in raw_items or []:
-        if isinstance(item, dict):
-            reason = str(item.get("reason") or item.get("label") or "").strip()
-            domain = str(item.get("domain") or infer_criterion_domain(reason)).lower()
-            if domain not in {"specimen", "analytical"}:
-                domain = infer_criterion_domain(reason)
-            normalized.append({"reason": reason, "domain": domain})
+        if isinstance(item, str):
+            reason_id = item.strip()
+        elif isinstance(item, dict):
+            reason_id = str(item.get("reasonId") or "").strip()
         else:
-            reason = str(item).strip()
-            normalized.append({"reason": reason, "domain": infer_criterion_domain(reason)})
+            raise ValueError(f"Catalog rejection criterion must be a reason id string, got {item!r}")
+        if not reason_id:
+            raise ValueError(f"Catalog rejection criterion missing reason id: {item!r}")
+        if reason_id not in REJECTION_REASON_BY_ID:
+            raise ValueError(f"Unknown rejection reasonId in catalog: {reason_id!r}")
+        normalized.append(
+            {
+                "reason": REJECTION_REASON_BY_ID[reason_id],
+                "domain": REJECTION_REASON_DOMAIN_BY_ID[reason_id],
+            }
+        )
     return normalized
 
 

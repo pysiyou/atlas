@@ -4,22 +4,20 @@
 
 import type { InlineHighlightProps } from '@/components/primitives/InlineHighlight';
 import type { UserRole } from '@/types';
+import type {
+  EventLogDomain,
+  EventLogKind,
+  EventLogLaboratorySubdomain,
+  StoredEventScope,
+} from '@/types/generated/auditEventTaxonomy';
 
-export type EventLogDomain =
-  | 'patient'
-  | 'order'
-  | 'laboratory'
-  | 'billing'
-  | 'reporting'
-  | 'system';
-
-export type EventLogLaboratorySubdomain =
-  | 'sample'
-  | 'result'
-  | 'validation'
-  | 'escalation'
-  | 'analyzer'
-  | 'quality';
+export type {
+  EventLogDomain,
+  EventLogKind,
+  EventLogLaboratoryKindKey,
+  EventLogLaboratorySubdomain,
+  StoredEventScope,
+} from '@/types/generated/auditEventTaxonomy';
 
 export interface EventLogActorSnapshot {
   userId: number | 'system';
@@ -93,22 +91,8 @@ export interface EventLogDayGroup {
 /** Containment lens for fetching events. Not stored on the row. */
 export type EventLogScopeName = 'order' | 'lab' | 'patient' | 'system' | 'stream';
 
-/** Optional kind filter — six eventType roots plus laboratory subcategory keys. */
-export type EventLogLaboratoryKindKey =
-  | 'laboratory:sample'
-  | 'laboratory:result'
-  | 'laboratory:validation'
-  | 'laboratory:escalation'
-  | 'laboratory:quality'
-  | 'laboratory:analyzer';
-
-export type EventLogKind = EventLogDomain | EventLogLaboratoryKindKey;
-
 /** Feed verbosity ladder (not a stored column). */
 export type EventLogVerbosity = 'summary' | 'detailed' | 'debug';
-
-/** Stored event_scope column values. Distinct from the query `scope` lens. */
-export type StoredEventScope = 'order' | 'lab' | 'patient' | 'system';
 
 /** Server query for audit events — fixed constraints and/or merged user filters. */
 export interface EventLogQuery {

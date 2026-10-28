@@ -16,6 +16,7 @@ import { generateEnums } from './lib/domain-enums.mjs';
 import { generateFeedbackContract } from './lib/feedback-contract.mjs';
 import { generateLabContract } from './lib/lab-contract.mjs';
 import { CONTRACTS, ROOT } from './lib/read-contract.mjs';
+import { generateRejectionReasons } from './lib/rejection-reasons.mjs';
 import { generateTestCatalogMeta } from './lib/test-catalog-meta.mjs';
 import { validateAllContracts } from './lib/validate-contracts.mjs';
 
@@ -25,6 +26,7 @@ generateEnums();
 generateContainerCatalog();
 generateFeedbackContract();
 generateAuditEvents();
+generateRejectionReasons();
 generateTestCatalogMeta();
 verifyAuditCatalogCoverage();
 if (process.env.ATLAS_CODEGEN_SKIP_OPENAPI !== '1') {

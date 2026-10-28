@@ -6,6 +6,85 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { CONTRACTS, readJson, writeFile } from './read-contract.mjs';
 
+function remedyWiresFromEnums() {
+  const enums = readJson('enums.json');
+  const members = enums.RemedyType?.members ?? {};
+  return new Set(Object.values(members).map(m => m.wire));
+}
+
+function feedbackIdsFromContract() {
+  const feedback = readJson('feedback.json');
+  return new Set(Object.keys(feedback.entries ?? feedback));
+}
+
+function collectFeedbackIdsFromObj(obj, out = new Set()) {
+  if (obj == null || typeof obj !== 'object') return out;
+  for (const [k, v] of Object.entries(obj)) {
+    if (k.endsWith('FeedbackId') && typeof v === 'string') out.add(v);
+    else if (typeof v === 'object') collectFeedbackIdsFromObj(v, out);
+  }
+  return out;
+}
+
+function assertDisplayOrderMatchesAllowed(label, allowed, displayOrder) {
+  const allowedSet = new Set(allowed);
+  const orderSet = new Set(displayOrder);
+  if (allowedSet.size !== orderSet.size || [...allowedSet].some(w => !orderSet.has(w))) {
+    console.error(`${label}: displayOrder must be a permutation of allowedRemedies`);
+    process.exit(1);
+  }
+}
+
+function validateQualityWorkflow(qw, remedyWires, feedbackIds) {
+  if (!qw) {
+    console.error('lab.json missing qualityWorkflow');
+    process.exit(1);
+  }
+  for (const ctx of ['validation', 'sampleUnfinished']) {
+    const block = qw[ctx];
+    for (const wire of block.allowedRemedies) {
+      if (!remedyWires.has(wire)) {
+        console.error(`qualityWorkflow.${ctx} unknown remedy wire:`, wire);
+        process.exit(1);
+      }
+    }
+    assertDisplayOrderMatchesAllowed(`qualityWorkflow.${ctx}`, block.allowedRemedies, block.displayOrder);
+  }
+
+  const validationAllowed = new Set(qw.validation.allowedRemedies);
+  for (const [remedy, contexts] of Object.entries(qw.remedyPresentation ?? {})) {
+    if (!remedyWires.has(remedy)) {
+      console.error('remedyPresentation unknown remedy:', remedy);
+      process.exit(1);
+    }
+    if (contexts.validation && !validationAllowed.has(remedy)) {
+      console.error('remedyPresentation.validation requires remedy in validation.allowedRemedies:', remedy);
+      process.exit(1);
+    }
+    for (const id of collectFeedbackIdsFromObj(contexts)) {
+      if (!feedbackIds.has(id)) {
+        console.error('remedyPresentation missing feedback id:', id);
+        process.exit(1);
+      }
+    }
+  }
+
+  if (!feedbackIds.has(qw.defaultSuccessToast)) {
+    console.error('defaultSuccessToast missing from feedback.json:', qw.defaultSuccessToast);
+    process.exit(1);
+  }
+  for (const rule of qw.successToasts ?? []) {
+    if (!remedyWires.has(rule.remedy)) {
+      console.error('successToasts unknown remedy:', rule.remedy);
+      process.exit(1);
+    }
+    if (!feedbackIds.has(rule.feedbackId)) {
+      console.error('successToasts missing feedback id:', rule.feedbackId);
+      process.exit(1);
+    }
+  }
+}
+
 function validateLab(data) {
   const schemaPath = path.join(CONTRACTS, 'lab.schema.json');
   if (!fs.existsSync(schemaPath)) return;
@@ -32,6 +111,11 @@ export function generateLabContract() {
   }
   const data = readJson('lab.json');
   validateLab(data);
+  const remedyWires = remedyWiresFromEnums();
+  const feedbackIds = feedbackIdsFromContract();
+  validateQualityWorkflow(data.qualityWorkflow, remedyWires, feedbackIds);
+
+  const qw = data.qualityWorkflow;
 
   const limits = data.limits ?? {};
   const blockers = data.blockers ?? {};
@@ -163,6 +247,16 @@ ${dictPy(priority.rank ?? {})}
 PRIORITY_WEIGHT: dict[str, int] = {
 ${dictPy(priority.weight ?? {})}
 }
+
+# ── Quality workflow (remedy policy) ───────────────────────────────────
+
+VALIDATION_REMEDIES: tuple[str, ...] = (
+${(qw.validation.displayOrder ?? []).map(w => `    ${JSON.stringify(w)},`).join('\n')}
+)
+
+SAMPLE_UNFINISHED_REMEDIES: tuple[str, ...] = (
+${(qw.sampleUnfinished.displayOrder ?? []).map(w => `    ${JSON.stringify(w)},`).join('\n')}
+)
 `;
 
   writeFile('backend/app/shared/contracts/lab_contract.py', py);
@@ -173,6 +267,8 @@ ${dictPy(priority.weight ?? {})}
   const ts = `/**
  * Laboratory policy contract — GENERATED from contracts/lab.json. DO NOT EDIT.
  */
+import type { FeedbackId } from '@/types/generated/feedbackCatalog';
+
 export const GENERATED_LAB_CONSTANTS = {
 ${Object.entries(limits)
   .map(([k, v]) => `  ${k}: ${JSON.stringify(v)},`)
@@ -242,6 +338,44 @@ export const INACTIVE_REPORTABLE_TEST_STATUSES = new Set<string>(INACTIVE_TEST_S
 export const PRIORITY_RANK: Record<string, number> = ${JSON.stringify(priority.rank ?? {}, null, 2)};
 
 export const PRIORITY_WEIGHT: Record<string, number> = ${JSON.stringify(priority.weight ?? {}, null, 2)};
+
+// ── Quality workflow (remedy policy) ───────────────────────────────────
+
+export const VALIDATION_REMEDY_WIRES = ${JSON.stringify(qw.validation.displayOrder ?? [])} as const;
+
+export const SAMPLE_UNFINISHED_REMEDY_WIRES = ${JSON.stringify(qw.sampleUnfinished.displayOrder ?? [])} as const;
+
+export type QualityIssueSuccessToastWhen = {
+  escalationRequired?: boolean;
+  hasRecollectionRequestId?: boolean;
+};
+
+export type QualityIssueSuccessToastRule = {
+  remedy: string;
+  feedbackId: FeedbackId;
+  when: QualityIssueSuccessToastWhen;
+};
+
+export const QUALITY_ISSUE_SUCCESS_TOAST_RULES: QualityIssueSuccessToastRule[] = ${JSON.stringify(qw.successToasts ?? [], null, 2)};
+
+export const DEFAULT_QUALITY_ISSUE_SUCCESS_TOAST = ${JSON.stringify(qw.defaultSuccessToast)} as FeedbackId;
+
+export type RemedyPresentationContext = 'validation' | 'sample';
+
+export type RemedyPresentationFields = {
+  labelFeedbackId: FeedbackId;
+  descriptionFeedbackId: FeedbackId;
+  limitDescriptionFeedbackId?: FeedbackId;
+  supervisorHintFeedbackId?: FeedbackId;
+};
+
+export const REMEDY_PRESENTATION: Record<
+  string,
+  Partial<Record<RemedyPresentationContext, RemedyPresentationFields>>
+> = ${JSON.stringify(qw.remedyPresentation ?? {}, null, 2)} as Record<
+  string,
+  Partial<Record<RemedyPresentationContext, RemedyPresentationFields>>
+>;
 `;
 
   writeFile('frontend/src/types/generated/labContract.ts', ts);

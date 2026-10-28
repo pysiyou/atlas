@@ -68,6 +68,9 @@ export interface ReferenceRange {
   criticalHigh?: number; // Above this is critical
 }
 
+/** Registry reason id (contracts/test-catalog.json rejection_criteria entries). */
+export type RejectionReasonId = string;
+
 /**
  * Sample requirements from catalog
  */
@@ -77,7 +80,7 @@ export interface SampleRequirements {
   minimum_volume_ml: number;
   fasting_required: boolean;
   collection_notes?: string;
-  rejection_criteria?: string[];
+  rejection_criteria?: RejectionReasonId[];
 }
 
 /**
@@ -110,7 +113,7 @@ export interface TestCatalogEntry {
   method_common?: string;
   turnaround_time_hours: number;
   sample: SampleRequirements;
-  validation_rejection_criteria?: Array<string | { reason: string; domain?: string }>;
+  validation_rejection_criteria?: RejectionReasonId[];
   result_items: ResultItem[];
   sources?: string[];
   confidence?: 'HIGH' | 'MEDIUM' | 'LOW';
@@ -159,8 +162,10 @@ export interface Test extends TestSummary {
   methodology?: string;
   containerDescription?: string;
   collectionNotes?: string;
-  rejectionCriteria?: Array<string | { reason: string; domain?: string; label?: string }>;
-  validationRejectionCriteria?: Array<string | { reason: string; domain?: string; label?: string }>;
+  rejectionCriteria?: Array<string | { reason: string; domain?: string; label?: string; reasonId?: string }>;
+  validationRejectionCriteria?: Array<
+    string | { reason: string; domain?: string; label?: string; reasonId?: string }
+  >;
   confidence?: 'HIGH' | 'MEDIUM' | 'LOW';
   notes?: string;
 }

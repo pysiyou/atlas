@@ -420,5 +420,85 @@
         "test_code"
       ]
     }
-  ]
+  ],
+  "query": {
+    "domainKinds": [
+      {
+        "id": "patient",
+        "label": "Patient",
+        "eventTypePrefix": "patient."
+      },
+      {
+        "id": "order",
+        "label": "Order",
+        "eventTypePrefix": "order."
+      },
+      {
+        "id": "laboratory",
+        "label": "Laboratory",
+        "eventTypePrefix": "laboratory."
+      },
+      {
+        "id": "billing",
+        "label": "Billing",
+        "eventTypePrefix": "billing."
+      },
+      {
+        "id": "reporting",
+        "label": "Reporting",
+        "eventTypePrefix": "reporting."
+      },
+      {
+        "id": "system",
+        "label": "System",
+        "eventTypePrefix": "system."
+      }
+    ],
+    "laboratorySubkinds": [
+      {
+        "id": "laboratory:sample",
+        "subdomain": "sample",
+        "label": "Laboratory · Sample",
+        "eventTypePrefix": "laboratory.sample."
+      },
+      {
+        "id": "laboratory:result",
+        "subdomain": "result",
+        "label": "Laboratory · Results",
+        "eventTypePrefix": "laboratory.result."
+      },
+      {
+        "id": "laboratory:validation",
+        "subdomain": "validation",
+        "label": "Laboratory · Validation",
+        "eventTypePrefix": "laboratory.validation."
+      },
+      {
+        "id": "laboratory:escalation",
+        "subdomain": "escalation",
+        "label": "Laboratory · Escalation",
+        "eventTypePrefix": "laboratory.escalation."
+      },
+      {
+        "id": "laboratory:quality",
+        "subdomain": "quality",
+        "label": "Laboratory · Quality",
+        "eventTypePrefix": "laboratory.quality."
+      },
+      {
+        "id": "laboratory:analyzer",
+        "subdomain": "analyzer",
+        "label": "Laboratory · Analyzer",
+        "eventTypePrefix": "laboratory.analyzer."
+      }
+    ],
+    "accessEventTypes": ["patient.view", "reporting.download"],
+    "storedEventScopes": ["order", "lab", "patient", "system"],
+    "storedScopeByEventPrefix": [
+      { "prefix": "patient.", "scope": "patient" },
+      { "prefix": "system.", "scope": "system" },
+      { "prefix": "laboratory.", "scope": "lab" }
+    ],
+    "defaultStoredEventScope": "order"
+  }
 }

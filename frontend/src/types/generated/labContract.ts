@@ -1,6 +1,8 @@
 /**
  * Laboratory policy contract — GENERATED from contracts/lab.json. DO NOT EDIT.
  */
+import type { FeedbackId } from '@/types/generated/feedbackCatalog';
+
 export const GENERATED_LAB_CONSTANTS = {
   MAX_RETEST_ATTEMPTS: 2,
   MAX_RECOLLECTION_ATTEMPTS: 2,
@@ -118,3 +120,112 @@ export const PRIORITY_WEIGHT: Record<string, number> = {
   "medium": 2,
   "low": 1
 };
+
+// ── Quality workflow (remedy policy) ───────────────────────────────────
+
+export const VALIDATION_REMEDY_WIRES = ["retry_same_sample","request_recollection","cancel"] as const;
+
+export const SAMPLE_UNFINISHED_REMEDY_WIRES = ["request_recollection","cancel"] as const;
+
+export type QualityIssueSuccessToastWhen = {
+  escalationRequired?: boolean;
+  hasRecollectionRequestId?: boolean;
+};
+
+export type QualityIssueSuccessToastRule = {
+  remedy: string;
+  feedbackId: FeedbackId;
+  when: QualityIssueSuccessToastWhen;
+};
+
+export const QUALITY_ISSUE_SUCCESS_TOAST_RULES: QualityIssueSuccessToastRule[] = [
+  {
+    "remedy": "escalate",
+    "feedbackId": "lab.qualityIssue.escalate.limitHit",
+    "when": {
+      "escalationRequired": true
+    }
+  },
+  {
+    "remedy": "escalate",
+    "feedbackId": "lab.qualityIssue.escalate",
+    "when": {}
+  },
+  {
+    "remedy": "retry_same_sample",
+    "feedbackId": "lab.qualityIssue.retest.limitHit",
+    "when": {
+      "escalationRequired": true
+    }
+  },
+  {
+    "remedy": "retry_same_sample",
+    "feedbackId": "lab.qualityIssue.retest",
+    "when": {}
+  },
+  {
+    "remedy": "request_recollection",
+    "feedbackId": "lab.qualityIssue.recollection.requested",
+    "when": {
+      "hasRecollectionRequestId": true
+    }
+  },
+  {
+    "remedy": "request_recollection",
+    "feedbackId": "lab.qualityIssue.specimenRejected",
+    "when": {}
+  },
+  {
+    "remedy": "cancel",
+    "feedbackId": "lab.qualityIssue.cancelled",
+    "when": {}
+  }
+];
+
+export const DEFAULT_QUALITY_ISSUE_SUCCESS_TOAST = "lab.qualityIssue.reported" as FeedbackId;
+
+export type RemedyPresentationContext = 'validation' | 'sample';
+
+export type RemedyPresentationFields = {
+  labelFeedbackId: FeedbackId;
+  descriptionFeedbackId: FeedbackId;
+  limitDescriptionFeedbackId?: FeedbackId;
+  supervisorHintFeedbackId?: FeedbackId;
+};
+
+export const REMEDY_PRESENTATION: Record<
+  string,
+  Partial<Record<RemedyPresentationContext, RemedyPresentationFields>>
+> = {
+  "retry_same_sample": {
+    "validation": {
+      "labelFeedbackId": "lab.qualityIssue.dialog.actions.retest",
+      "descriptionFeedbackId": "lab.qualityIssue.dialog.actions.retestDescription",
+      "limitDescriptionFeedbackId": "lab.qualityIssue.dialog.actions.retestLimit",
+      "supervisorHintFeedbackId": "lab.qualityIssue.dialog.actions.retestHint"
+    }
+  },
+  "request_recollection": {
+    "validation": {
+      "labelFeedbackId": "lab.qualityIssue.dialog.actions.recollect",
+      "descriptionFeedbackId": "lab.qualityIssue.dialog.actions.recollectDescription"
+    },
+    "sample": {
+      "labelFeedbackId": "lab.qualityIssue.collection.actions.recollect",
+      "descriptionFeedbackId": "lab.qualityIssue.collection.actions.recollectDescription"
+    }
+  },
+  "cancel": {
+    "validation": {
+      "labelFeedbackId": "lab.qualityIssue.dialog.actions.cancel",
+      "descriptionFeedbackId": "lab.qualityIssue.dialog.actions.cancelDescription"
+    },
+    "sample": {
+      "labelFeedbackId": "lab.qualityIssue.collection.actions.cancelUnfinished",
+      "descriptionFeedbackId": "lab.qualityIssue.collection.actions.cancelUnfinishedDescription"
+    }
+  }
+} as Record<
+  string,
+  Partial<Record<RemedyPresentationContext, RemedyPresentationFields>>
+>;

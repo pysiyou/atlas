@@ -3,7 +3,7 @@
   "$id": "https://atlas.local/contracts/audit-events.schema.json",
   "title": "Atlas audit event taxonomy",
   "type": "object",
-  "required": ["events"],
+  "required": ["events", "query"],
   "properties": {
     "$schema": { "type": "string" },
     "events": {
@@ -35,6 +35,73 @@
         },
         "additionalProperties": false
       }
+    },
+    "query": {
+      "type": "object",
+      "required": [
+        "domainKinds",
+        "laboratorySubkinds",
+        "accessEventTypes",
+        "storedEventScopes",
+        "storedScopeByEventPrefix",
+        "defaultStoredEventScope"
+      ],
+      "properties": {
+        "domainKinds": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "label", "eventTypePrefix"],
+            "properties": {
+              "id": { "type": "string" },
+              "label": { "type": "string" },
+              "eventTypePrefix": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "laboratorySubkinds": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "subdomain", "label", "eventTypePrefix"],
+            "properties": {
+              "id": { "type": "string" },
+              "subdomain": { "type": "string" },
+              "label": { "type": "string" },
+              "eventTypePrefix": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "accessEventTypes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "storedEventScopes": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "storedScopeByEventPrefix": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["prefix", "scope"],
+            "properties": {
+              "prefix": { "type": "string" },
+              "scope": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "defaultStoredEventScope": {
+          "type": "string",
+          "description": "Stored event_scope when no storedScopeByEventPrefix rule matches (e.g. order, billing, reporting)."
+        }
+      },
+      "additionalProperties": false
     }
   },
   "additionalProperties": false

@@ -90,10 +90,76 @@ const labContractTs = read('frontend/src/types/generated/labContract.ts');
 if (!labContractTs.includes('GENERATED from contracts/lab.json')) {
   fail('labContract.ts must be generated from contracts/lab.json');
 }
+if (!labContractTs.includes('VALIDATION_REMEDY_WIRES')) {
+  fail('labContract.ts must export qualityWorkflow VALIDATION_REMEDY_WIRES');
+}
 
 const feedbackTs = read('frontend/src/types/generated/feedbackCatalog.ts');
 if (!feedbackTs.includes('GENERATED from contracts/feedback.json')) {
   fail('feedbackCatalog.ts must be generated from contracts/feedback.json');
+}
+
+const auditTaxonomyTs = read('frontend/src/types/generated/auditEventTaxonomy.ts');
+if (!auditTaxonomyTs.includes('GENERATED from contracts/audit-events.json')) {
+  fail('auditEventTaxonomy.ts must be generated from contracts/audit-events.json');
+}
+
+const eventLogFilterConfig = read('frontend/src/features/audit/eventLogFilterConfig.ts');
+if (eventLogFilterConfig.includes("{ id: 'patient'")) {
+  fail('eventLogFilterConfig.ts must re-export EVENT_LOG_KIND_OPTIONS from generated auditEventTaxonomy');
+}
+
+const kindsPy = read('backend/app/domains/audit/kinds.py');
+if (kindsPy.includes('_LABORATORY_SUBKIND_PREFIXES = {')) {
+  fail('kinds.py must import LABORATORY_SUBKIND_PREFIXES from audit_taxonomy, not inline literals');
+}
+
+const auditTaxonomyPy = read('backend/app/shared/contracts/audit_taxonomy.py');
+if (!auditTaxonomyPy.includes('GENERATED from contracts/audit-events.json')) {
+  fail('audit_taxonomy.py must be generated from contracts/audit-events.json');
+}
+
+const issuesService = read('backend/app/domains/lab/quality/issues_service.py');
+if (issuesService.includes('_VALIDATION_REMEDIES:') || issuesService.includes('_SAMPLE_UNFINISHED_REMEDIES:')) {
+  fail('issues_service.py must use lab_contract VALIDATION_REMEDIES / SAMPLE_UNFINISHED_REMEDIES, not inline lists');
+}
+
+const qualityToast = read('frontend/src/features/lab/validation/qualityIssueToastMessages.ts');
+if (qualityToast.includes("case 'retry_same_sample'")) {
+  fail('qualityIssueToastMessages.ts must resolve toasts from labContract QUALITY_ISSUE_SUCCESS_TOAST_RULES');
+}
+
+const qualityPopover = read('frontend/src/features/lab/constants/qualityIssuePopoverCopy.ts');
+if (qualityPopover.includes('VALIDATION_REMEDY_META:')) {
+  fail('qualityIssuePopoverCopy.ts must use REMEDY_PRESENTATION from labContract');
+}
+
+const labContractPy = read('backend/app/shared/contracts/lab_contract.py');
+if (!labContractPy.includes('VALIDATION_REMEDIES:')) {
+  fail('lab_contract.py must export VALIDATION_REMEDIES from qualityWorkflow');
+}
+
+const commonPy = read('backend/app/platform/utils/common.py');
+if (commonPy.includes('_SPECIMEN_KEYWORDS')) {
+  fail('common.py must not define _SPECIMEN_KEYWORDS — use rejection_reasons registry');
+}
+
+const catalogJson = read('contracts/test-catalog.json');
+if (catalogJson.includes('"reason":')) {
+  fail('test-catalog.json must not contain legacy "reason" fields — use reason id strings in rejection criteria');
+}
+if (catalogJson.includes('"reasonId":')) {
+  fail('test-catalog.json rejection criteria must be string arrays, not { reasonId } objects');
+}
+
+const rejectionRegistryTs = read('frontend/src/types/generated/rejectionReasonRegistry.ts');
+if (!rejectionRegistryTs.includes('GENERATED from contracts/rejection-reasons.json')) {
+  fail('rejectionReasonRegistry.ts must be generated from contracts/rejection-reasons.json');
+}
+
+const rejectionReasonsPy = read('backend/app/shared/contracts/rejection_reasons.py');
+if (!rejectionReasonsPy.includes('GENERATED from contracts/rejection-reasons.json')) {
+  fail('rejection_reasons.py must be generated from contracts/rejection-reasons.json');
 }
 
 if (failed) {

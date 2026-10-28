@@ -1,7 +1,10 @@
 /**
  * Event log filter field lists, kind options, and UI placeholders.
  */
-import type { EventLogFilterField, EventLogKind } from './types';
+import type { EventLogFilterField } from './types';
+import type { EventLogKind } from '@/types/generated/auditEventTaxonomy';
+
+export { EVENT_LOG_KIND_OPTIONS } from '@/types/generated/auditEventTaxonomy';
 
 export const GLOBAL_EVENT_LOG_FILTER_FIELDS: EventLogFilterField[] = [
   'search',
@@ -25,21 +28,6 @@ export interface EventLogKindOption {
   id: EventLogKind;
   label: string;
 }
-
-export const EVENT_LOG_KIND_OPTIONS: EventLogKindOption[] = [
-  { id: 'patient', label: 'Patient' },
-  { id: 'order', label: 'Order' },
-  { id: 'laboratory', label: 'Laboratory' },
-  { id: 'laboratory:sample', label: 'Laboratory · Sample' },
-  { id: 'laboratory:result', label: 'Laboratory · Results' },
-  { id: 'laboratory:validation', label: 'Laboratory · Validation' },
-  { id: 'laboratory:escalation', label: 'Laboratory · Escalation' },
-  { id: 'laboratory:quality', label: 'Laboratory · Quality' },
-  { id: 'laboratory:analyzer', label: 'Laboratory · Analyzer' },
-  { id: 'billing', label: 'Billing' },
-  { id: 'reporting', label: 'Reporting' },
-  { id: 'system', label: 'System' },
-];
 
 export const EVENT_LOG_FILTER_PLACEHOLDERS = {
   dateRange: 'Filter by date range',

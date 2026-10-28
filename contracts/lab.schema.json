@@ -3,7 +3,7 @@
   "$id": "https://atlas.local/contracts/lab.schema.json",
   "title": "Atlas lab policy contract",
   "type": "object",
-  "required": ["limits", "blockers", "presentation", "reporting", "priority"],
+  "required": ["limits", "blockers", "presentation", "reporting", "priority", "qualityWorkflow"],
   "properties": {
     "$schema": { "type": "string" },
     "limits": {
@@ -108,6 +108,76 @@
         "rank": { "type": "object", "additionalProperties": { "type": "integer" } },
         "weight": { "type": "object", "additionalProperties": { "type": "integer" } }
       }
+    },
+    "qualityWorkflow": {
+      "type": "object",
+      "required": [
+        "validation",
+        "sampleUnfinished",
+        "successToasts",
+        "defaultSuccessToast",
+        "remedyPresentation"
+      ],
+      "properties": {
+        "validation": { "$ref": "#/$defs/remedyContextPolicy" },
+        "sampleUnfinished": { "$ref": "#/$defs/remedyContextPolicy" },
+        "successToasts": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/successToastRule" }
+        },
+        "defaultSuccessToast": { "type": "string" },
+        "remedyPresentation": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "validation": { "$ref": "#/$defs/remedyPresentationFields" },
+              "sample": { "$ref": "#/$defs/remedyPresentationFields" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "remedyContextPolicy": {
+      "type": "object",
+      "required": ["allowedRemedies", "displayOrder"],
+      "properties": {
+        "allowedRemedies": { "type": "array", "items": { "type": "string" } },
+        "displayOrder": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "successToastRule": {
+      "type": "object",
+      "required": ["remedy", "feedbackId", "when"],
+      "properties": {
+        "remedy": { "type": "string" },
+        "feedbackId": { "type": "string" },
+        "when": {
+          "type": "object",
+          "properties": {
+            "escalationRequired": { "type": "boolean" },
+            "hasRecollectionRequestId": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "remedyPresentationFields": {
+      "type": "object",
+      "required": ["labelFeedbackId", "descriptionFeedbackId"],
+      "properties": {
+        "labelFeedbackId": { "type": "string" },
+        "descriptionFeedbackId": { "type": "string" },
+        "limitDescriptionFeedbackId": { "type": "string" },
+        "supervisorHintFeedbackId": { "type": "string" }
+      },
+      "additionalProperties": false
     }
   },
   "additionalProperties": false
