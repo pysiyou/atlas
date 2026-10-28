@@ -4,7 +4,6 @@ import type { CatalogReferenceRange, CriticalRange, TestParameter, Patient, Gend
 import type { DemographicRange } from '@/types/test';
 import { calculateAge } from '@/utils/string';
 import { PHYSIOLOGIC_LIMITS, type PhysiologicLimit } from '@/types/generated/physiologicLimits';
-import { PHYSIOLOGIC_LIMIT_ALIASES } from '@/types/generated/physiologicAliases';
 import { FG, TONE, metricTile, metricTileStateFromResult } from '@/theme/recipes';
 
 export type { ResultStatus };
@@ -227,14 +226,12 @@ export function formatReferenceRange(
 }
 
 export function getPhysiologicLimit(itemCode: string): PhysiologicLimit | undefined {
-  const resolvedCode = PHYSIOLOGIC_LIMIT_ALIASES[itemCode] ?? itemCode;
-
-  if (PHYSIOLOGIC_LIMITS[resolvedCode]) return PHYSIOLOGIC_LIMITS[resolvedCode];
-  const upperCode = resolvedCode.toUpperCase();
+  if (PHYSIOLOGIC_LIMITS[itemCode]) return PHYSIOLOGIC_LIMITS[itemCode];
+  const upperCode = itemCode.toUpperCase();
   for (const [key, limit] of Object.entries(PHYSIOLOGIC_LIMITS)) {
     if (key.toUpperCase() === upperCode) return limit;
   }
-  const resolvedLower = resolvedCode.toLowerCase();
+  const resolvedLower = itemCode.toLowerCase();
   for (const [key, limit] of Object.entries(PHYSIOLOGIC_LIMITS)) {
     if (key.length < 3) continue;
     const keyLower = key.toLowerCase();

@@ -8,7 +8,6 @@ from dataclasses import dataclass
 from typing import Any
 
 from app.platform.utils.common import parse_numeric_result_value
-from app.shared.contracts.physiologic_aliases import PHYSIOLOGIC_LIMIT_ALIASES
 from app.shared.contracts.physiologic_limits import PHYSIOLOGIC_LIMITS
 
 
@@ -140,25 +139,20 @@ class ResultValidatorService:
 
     def _get_physiologic_limit(self, item_code: str) -> dict[str, float] | None:
         """Get physiologic limit for an item code, checking various naming conventions."""
-        resolved_code = PHYSIOLOGIC_LIMIT_ALIASES.get(item_code, item_code)
+        if item_code in self.physiologic_limits:
+            return self.physiologic_limits[item_code]
 
-        # Direct match
-        if resolved_code in self.physiologic_limits:
-            return self.physiologic_limits[resolved_code]
-
-        # Case-insensitive exact match
-        resolved_upper = resolved_code.upper()
+        item_upper = item_code.upper()
         for key, limit in self.physiologic_limits.items():
-            if key.upper() == resolved_upper:
+            if key.upper() == item_upper:
                 return limit
 
-        # Partial match for longer keys only (avoid "P" matching "PLAT")
-        resolved_lower = resolved_code.lower()
+        item_lower = item_code.lower()
         for key, limit in self.physiologic_limits.items():
             if len(key) < 3:
                 continue
             key_lower = key.lower()
-            if key_lower in resolved_lower or resolved_lower in key_lower:
+            if key_lower in item_lower or item_lower in key_lower:
                 return limit
 
         return None

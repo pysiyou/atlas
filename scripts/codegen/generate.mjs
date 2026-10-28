@@ -40,10 +40,7 @@ ${tsBody}
 }
 
 function generatePhysiologicLimits() {
-  const data = readJson('physiologic-limits.json');
-  const aliases = data.aliases ?? {};
-  const limits = { ...data };
-  delete limits.aliases;
+  const limits = readJson('physiologic-limits.json');
 
   const pyEntries = Object.entries(limits)
     .map(([key, v]) => {
@@ -86,31 +83,6 @@ ${tsEntries}
 `;
   writeFile('backend/app/shared/contracts/physiologic_limits.py', py);
   writeFile('frontend/src/types/generated/physiologicLimits.ts', ts);
-
-  const aliasPyEntries = Object.entries(aliases)
-    .map(([from, to]) => `    ${JSON.stringify(from)}: ${JSON.stringify(to)}`)
-    .join(',\n');
-  const aliasTsEntries = Object.entries(aliases)
-    .map(([from, to]) => `  ${JSON.stringify(from)}: ${JSON.stringify(to)}`)
-    .join(',\n');
-  const aliasPy = `"""
-Physiologic limit aliases — GENERATED from contracts/physiologic-limits.json (aliases). DO NOT EDIT.
-"""
-from typing import Dict
-
-PHYSIOLOGIC_LIMIT_ALIASES: Dict[str, str] = {
-${aliasPyEntries}
-}
-`;
-  const aliasTs = `/**
- * Physiologic limit aliases — GENERATED from contracts/physiologic-limits.json (aliases). DO NOT EDIT.
- */
-export const PHYSIOLOGIC_LIMIT_ALIASES: Record<string, string> = {
-${aliasTsEntries}
-};
-`;
-  writeFile('backend/app/shared/contracts/physiologic_aliases.py', aliasPy);
-  writeFile('frontend/src/types/generated/physiologicAliases.ts', aliasTs);
 }
 
 function generateLabBlockers() {
