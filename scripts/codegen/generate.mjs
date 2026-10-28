@@ -3,7 +3,8 @@
  * Atlas cross-stack codegen — generates Python and TypeScript from contracts/.
  *
  * Human-edited contracts: enums.json, enums.schema.json, container-catalog.json,
- * lab-constants.json, lab-blockers.json, status-presentation.json, physiologic-limits.json.
+ * lab-constants.json, lab-blockers.json, status-presentation.json.
+ * Physiologic limits: test-catalog.json result_items.physiologic_range.
  * Generated into contracts/: openapi.json (FastAPI export for openapi-typescript).
  */
 import { execSync } from 'node:child_process';
@@ -13,6 +14,7 @@ import { fileURLToPath } from 'node:url';
 import { generateContainerCatalog } from './lib/container-catalog.mjs';
 import { generateEnums } from './lib/domain-enums.mjs';
 import { CONTRACTS, readJson, ROOT, writeFile } from './lib/read-contract.mjs';
+import { generatePhysiologicLimitsFromCatalog } from './lib/test-catalog-physiologic.mjs';
 import { validateEnumsContract } from './lib/validate-enums.mjs';
 
 function generateLabConstants() {
@@ -37,52 +39,6 @@ ${tsBody}
 `;
   writeFile('backend/app/shared/contracts/lab_constants.py', py);
   writeFile('frontend/src/types/generated/labConstants.ts', ts);
-}
-
-function generatePhysiologicLimits() {
-  const limits = readJson('physiologic-limits.json');
-
-  const pyEntries = Object.entries(limits)
-    .map(([key, v]) => {
-      const parts = [`'min': ${v.min}`, `'max': ${v.max}`];
-      if (v.unit) parts.push(`'unit': '${v.unit}'`);
-      if (v.description) parts.push(`'description': '${v.description.replace(/'/g, "\\'")}'`);
-      return `    '${key}': {${parts.join(', ')}}`;
-    })
-    .join(',\n');
-  const py = `"""
-Physiologic Limits — GENERATED from contracts/physiologic-limits.json. DO NOT EDIT.
-"""
-from typing import Dict, Any
-
-PHYSIOLOGIC_LIMITS: Dict[str, Dict[str, Any]] = {
-${pyEntries}
-}
-`;
-  const tsEntries = Object.entries(limits)
-    .map(([key, v]) => {
-      const fields = [`min: ${v.min}`, `max: ${v.max}`];
-      if (v.unit) fields.push(`unit: '${v.unit}'`);
-      if (v.description) fields.push(`description: '${v.description.replace(/'/g, "\\'")}'`);
-      return `  ${JSON.stringify(key)}: { ${fields.join(', ')} }`;
-    })
-    .join(',\n');
-  const ts = `/**
- * Physiologic limits — GENERATED from contracts/physiologic-limits.json. DO NOT EDIT.
- */
-export interface PhysiologicLimit {
-  min: number;
-  max: number;
-  unit?: string;
-  description?: string;
-}
-
-export const PHYSIOLOGIC_LIMITS: Record<string, PhysiologicLimit> = {
-${tsEntries}
-};
-`;
-  writeFile('backend/app/shared/contracts/physiologic_limits.py', py);
-  writeFile('frontend/src/types/generated/physiologicLimits.ts', ts);
 }
 
 function generateLabBlockers() {
@@ -298,9 +254,7 @@ if (fs.existsSync(path.join(CONTRACTS, 'lab-blockers.json'))) {
 if (fs.existsSync(path.join(CONTRACTS, 'status-presentation.json'))) {
   generateStatusPresentation();
 }
-if (fs.existsSync(path.join(CONTRACTS, 'physiologic-limits.json'))) {
-  generatePhysiologicLimits();
-}
+generatePhysiologicLimitsFromCatalog();
 generateEnums();
 generateContainerCatalog();
 verifyAuditCatalogCoverage();

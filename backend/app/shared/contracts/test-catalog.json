@@ -78,7 +78,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0.1,
+            "max": 500
+          }
         },
         {
           "item_code": "RBC",
@@ -103,7 +107,11 @@
           "citations": [
             "SRC002",
             "SRC013"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0.5,
+            "max": 12
+          }
         },
         {
           "item_code": "HGB",
@@ -128,7 +136,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 1,
+            "max": 30
+          }
         },
         {
           "item_code": "HCT",
@@ -152,7 +164,11 @@
           },
           "citations": [
             "SRC002"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 5,
+            "max": 80
+          }
         },
         {
           "item_code": "MCV",
@@ -168,7 +184,11 @@
           },
           "citations": [
             "SRC002"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 30,
+            "max": 200
+          }
         },
         {
           "item_code": "PLAT",
@@ -188,7 +208,11 @@
           },
           "citations": [
             "SRC002"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 1,
+            "max": 2000
+          }
         }
       ],
       "sources": [
@@ -943,7 +967,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 5,
+            "max": 2000
+          }
         }
       ],
       "sources": [
@@ -1082,7 +1110,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 5,
+            "max": 2000
+          }
         }
       ],
       "sources": [
@@ -1360,7 +1392,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0.1,
+            "max": 50
+          }
         }
       ],
       "sources": [
@@ -1499,7 +1535,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 300
+          }
         }
       ],
       "sources": [
@@ -1633,7 +1673,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 200
+          }
         }
       ],
       "sources": [
@@ -1772,7 +1816,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 90,
+            "max": 200
+          }
         }
       ],
       "sources": [
@@ -1912,7 +1960,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 1,
+            "max": 12
+          }
         }
       ],
       "sources": [
@@ -2051,7 +2103,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 60,
+            "max": 150
+          }
         }
       ],
       "sources": [
@@ -2186,7 +2242,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 1,
+            "max": 60
+          }
         }
       ],
       "sources": [
@@ -2324,7 +2384,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 2,
+            "max": 20
+          }
         }
       ],
       "sources": [
@@ -2458,7 +2522,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0.3,
+            "max": 10
+          }
         }
       ],
       "sources": [
@@ -2592,7 +2660,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0.5,
+            "max": 20
+          }
         }
       ],
       "sources": [
@@ -2734,7 +2806,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 10000
+          }
         }
       ],
       "sources": [
@@ -2876,7 +2952,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 10000
+          }
         }
       ],
       "sources": [
@@ -3014,7 +3094,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 5000
+          }
         }
       ],
       "sources": [
@@ -3291,7 +3375,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 100
+          }
         }
       ],
       "sources": [
@@ -3429,7 +3517,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 50
+          }
         }
       ],
       "sources": [
@@ -3566,7 +3658,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0.5,
+            "max": 10
+          }
         }
       ],
       "sources": [
@@ -3700,7 +3796,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 1,
+            "max": 20
+          }
         }
       ],
       "sources": [
@@ -3835,7 +3935,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 20,
+            "max": 1000
+          }
         }
       ],
       "sources": [
@@ -3973,7 +4077,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 5,
+            "max": 200
+          }
         }
       ],
       "sources": [
@@ -4107,7 +4215,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 5,
+            "max": 500
+          }
         }
       ],
       "sources": [
@@ -4242,7 +4354,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 10,
+            "max": 10000
+          }
         }
       ],
       "sources": [
@@ -4790,7 +4906,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 1000
+          }
         }
       ],
       "sources": [
@@ -5872,7 +5992,11 @@
           },
           "citations": [
             "SRC002"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 5,
+            "max": 200
+          }
         },
         {
           "item_code": "INR",
@@ -5893,7 +6017,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0.5,
+            "max": 20
+          }
         }
       ],
       "sources": [
@@ -6040,7 +6168,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 10,
+            "max": 250
+          }
         }
       ],
       "sources": [
@@ -6513,7 +6645,11 @@
           },
           "citations": [
             "SRC002"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 1,
+            "max": 1.06
+          }
         },
         {
           "item_code": "UA_pH",
@@ -6529,7 +6665,11 @@
           },
           "citations": [
             "SRC002"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 6.5,
+            "max": 8
+          }
         },
         {
           "item_code": "UA_PROTEIN",
@@ -7088,7 +7228,11 @@
             "SRC002",
             "SRC003",
             "SRC009"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 500
+          }
         }
       ],
       "sources": [
@@ -7224,7 +7368,11 @@
             "SRC002",
             "SRC003",
             "SRC009"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 20
+          }
         }
       ],
       "sources": [

@@ -91,6 +91,8 @@ export interface ResultItem {
   decimals_suggested?: number;
   reference_range?: CatalogReferenceRange; // Optional - some tests (qualitative, text) don't have ranges
   critical_range?: CriticalRange;
+  /** Absolute min/max for impossible values (blocking validation). */
+  physiologic_range?: { min: number; max: number };
   allowed_values?: string[]; // For SELECT type
   citations?: string[];
 }
