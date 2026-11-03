@@ -5,7 +5,6 @@
 
 import React from 'react';
 import { actionButtonPreset, Button } from '@/components/primitives';
-import { Alert } from '@/components/display';
 import { QualityIssuePopoverLoadingView as QualityIssuePopoverLoadingViewPreset } from '@/components/surfaces';
 import { RadioCard } from '@/components/overlays';
 import { AttemptProgressBar } from './LabAttemptIndicators';
@@ -21,23 +20,21 @@ export const QualityIssuePopoverLoadingView: React.FC = () => (
 );
 
 export interface QualityIssuePopoverErrorViewProps {
-  error: string;
   onRetry: () => void;
   onCancel: () => void;
 }
 
 export const QualityIssuePopoverErrorView: React.FC<QualityIssuePopoverErrorViewProps> = ({
-  error,
   onRetry,
   onCancel,
 }) => (
   <div
     className={cn(QUALITY_ISSUE_POPOVER_LAYOUT.widthClass, 'flex flex-col gap-layout-section p-panel min-w-0')}
   >
-    <Alert variant="danger" className="py-space-2">
-      <p className={text({ role: 'body' })}>{getFeedback('lab.qualityIssue.options.loadFailed').title}</p>
-      <p className={`${text({ role: 'caption' })} mt-space-1`}>{error}</p>
-    </Alert>
+    <p className={text({ role: 'body' })}>{getFeedback('lab.qualityIssue.options.loadFailed').title}</p>
+    <p className={`${text({ role: 'caption' })} text-text-secondary`}>
+      Check the notification for details, or try again.
+    </p>
     <div className="flex justify-end gap-space-2">
       <Button {...actionButtonPreset('cancel')} size="sm" layout="text" onClick={onCancel}>
         {QUALITY_ISSUE_POPOVER_COPY.error.cancel}

@@ -17,7 +17,7 @@ import { LabQueueFilters } from '../components/LabQueueFilters';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { entryFilterConfig } from '../constants';
 import { EMPTY_COPY } from '@/components/display';
-import { ErrorAlert, ErrorBoundary } from '@/components/feedback';
+import { ErrorBoundary } from '@/components/feedback';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { useResultEntryWorkflow } from './useResultEntryWorkflow';
 import { useLabDraftStore } from '../state/labDraftStore';
@@ -101,14 +101,6 @@ export const ResultEntryQueue: React.FC = () => {
   const waitingOnCatalog =
     uniqueCodes.length > 0 && catalogLoading && fullByCode.size === 0;
   const queueLoading = (worklistChrome.loading && hasNoItems) || waitingOnCatalog;
-
-  if (worklistChrome.error) {
-    return (
-      <ErrorBoundary>
-        <ErrorAlert error={worklistChrome.error} onRetry={worklistChrome.onRetry} />
-      </ErrorBoundary>
-    );
-  }
 
   return (
     <ErrorBoundary>

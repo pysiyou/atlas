@@ -146,6 +146,7 @@ const QualityIssuePopoverContent: React.FC<QualityIssuePopoverContentProps> = ({
     isLoading,
     isRejecting,
     error,
+    optionsLoadFailed,
     options,
     formCopy,
     handleConfirm,
@@ -163,8 +164,8 @@ const QualityIssuePopoverContent: React.FC<QualityIssuePopoverContentProps> = ({
   });
 
   if (isLoading) return <QualityIssuePopoverLoadingView />;
-  if (error && !options) {
-    return <QualityIssuePopoverErrorView error={error} onRetry={handleRetry} onCancel={onCancel} />;
+  if (optionsLoadFailed) {
+    return <QualityIssuePopoverErrorView onRetry={handleRetry} onCancel={onCancel} />;
   }
 
   return (

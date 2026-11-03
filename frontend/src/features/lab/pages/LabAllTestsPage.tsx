@@ -73,7 +73,7 @@ export const LabAllTestsPage: React.FC = () => {
     goToPage(1);
   }, [goToPage]);
 
-  const { loading, error, listPagination, setFilterAndReset, onRetry } = useServerListChrome({
+  const { loading, listPagination, setFilterAndReset } = useServerListChrome({
     setFilter,
     resetPage,
     loadFailedKey: 'lab.worklist.loadFailed',
@@ -133,9 +133,6 @@ export const LabAllTestsPage: React.FC = () => {
         items={rows}
         viewConfig={viewConfig}
         loading={loading}
-        error={error}
-        onRetry={onRetry}
-        onDismissError={() => undefined}
         onRowClick={handleRowClick}
         title={LAB_COPY.workflow.allTestsPageTitle}
         subtitle={LAB_COPY.workflow.allTestsPageSubtitle}

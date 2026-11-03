@@ -21,7 +21,7 @@ import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { collectionFilterConfig } from '../constants';
 import { mapCollectionWorklistToSampleDisplay } from '../utils/labQueue';
 import { EMPTY_COPY, emptySubtitle } from '@/components/display';
-import { ErrorAlert, ErrorBoundary } from '@/components/feedback';
+import { ErrorBoundary } from '@/components/feedback';
 import { useAuthStore } from '@/app/authStore';
 import { useTestCatalog } from '@/features/catalog';
 import { useClientListChrome } from '@/hooks';
@@ -72,14 +72,6 @@ export const SampleCollectionQueue: React.FC = () => {
     isAuthenticated: !!currentUser,
     collectSampleMutation,
   });
-
-  if (worklistChrome.error) {
-    return (
-      <ErrorBoundary>
-        <ErrorAlert error={worklistChrome.error} onRetry={worklistChrome.onRetry} />
-      </ErrorBoundary>
-    );
-  }
 
   return (
     <ErrorBoundary>

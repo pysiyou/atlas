@@ -1,7 +1,7 @@
 /**
  * ListView — page shell for data tables.
  *
- * List pages should use `useServerListChrome` or `useClientListChrome` for loading/error/retry.
+ * List pages should use `useServerListChrome` or `useClientListChrome` for loading and load-error toasts.
  */
 
 import { type ReactNode } from 'react';
@@ -9,7 +9,6 @@ import { DataTable, type TableViewConfig } from '@/components/data-table';
 import { DEFAULT_PAGE_SIZE_OPTIONS } from '@/components/data-table';
 import { EmptyState, PANEL_EMPTY_STATE } from '@/components/display';
 import { PageHeader } from '@/components/layout';
-import { ErrorAlert } from '@/components/feedback/ErrorAlert';
 import { emptyTitle } from '@/config/emptyStateCopy';
 import { DEFAULT_EMPTY_DESCRIPTION_SEARCH } from '@/utils/constants';
 import type { ListViewPaginationConfig, PaginationConfig, SortConfig } from '@/components/data-table';
@@ -20,7 +19,6 @@ type TableDataItem = Record<string, unknown> | object;
 export interface ListViewProps<T extends TableDataItem = TableDataItem> {
   items: T[];
   loading?: boolean;
-  error?: { message: string; operation?: string } | null;
   viewConfig: TableViewConfig<T>;
   onRowClick?: (item: T, index?: number) => void;
   title?: string;
@@ -28,8 +26,6 @@ export interface ListViewProps<T extends TableDataItem = TableDataItem> {
   headerActions?: ReactNode;
   filters?: ReactNode;
   emptyState?: ReactNode;
-  onRetry?: () => void;
-  onDismissError?: () => void;
   /** Use {@link ListViewPaginationConfig} (`mode: 'client' | 'server' | 'none'`). */
   pagination?: PaginationConfig | ListViewPaginationConfig;
   pageSize?: number;
@@ -66,7 +62,6 @@ function normalizePagination(
 export function ListView<T extends TableDataItem = TableDataItem>({
   items,
   loading = false,
-  error = null,
   viewConfig,
   onRowClick,
   title,
@@ -74,8 +69,6 @@ export function ListView<T extends TableDataItem = TableDataItem>({
   headerActions,
   filters,
   emptyState,
-  onRetry,
-  onDismissError,
   pagination,
   pageSize = 20,
   pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
@@ -92,14 +85,6 @@ export function ListView<T extends TableDataItem = TableDataItem>({
     <div className={`${WORKSPACE.page} ${className}`.trim()}>
       {(title != null || headerActions != null) && (
         <PageHeader variant="bar" title={title ?? ''} subtitle={subtitle} actions={headerActions} />
-      )}
-      {error && (
-        <ErrorAlert
-          error={error}
-          onDismiss={onDismissError}
-          onRetry={onRetry}
-          className="shrink-0"
-        />
       )}
       <div className={`${PANEL.raisedShadowSm} flex flex-col flex-1 min-h-0 overflow-hidden`}>
         {filters}

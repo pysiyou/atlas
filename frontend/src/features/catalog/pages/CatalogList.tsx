@@ -30,7 +30,7 @@ export const CatalogList: React.FC = () => {
     [tests, filters],
   );
 
-  const { loading, error, onRetry } = useClientListChrome({
+  const { loading } = useClientListChrome({
     loadFailedKey: 'catalog.list.loadFailed',
     isLoading,
     isError,
@@ -46,9 +46,6 @@ export const CatalogList: React.FC = () => {
         items={filteredTests}
         viewConfig={catalogTableConfig}
         loading={loading}
-        error={error}
-        onRetry={onRetry}
-        onDismissError={() => undefined}
         onRowClick={(test: TestSummary) => navigate(`/catalog/${test.code}`)}
         title="Test Catalog"
         filters={<CatalogFilters filters={filters} setFilter={setFilter} />}

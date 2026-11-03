@@ -4,7 +4,6 @@
 import { lazy, Suspense } from 'react';
 import { useClientListChrome } from '@/hooks';
 import type { UserRole } from '@/types';
-import { ErrorAlert } from '@/components/feedback';
 import { Card } from '@/components/surfaces';
 import { WORKSPACE, SPACING } from '@/theme/recipes';
 import type { LabTabId } from '../constants/labConstants';
@@ -56,7 +55,7 @@ export function LaboratoryPageStageContent({
   error,
   onRetry,
 }: LaboratoryPageStageContentProps) {
-  const chrome = useClientListChrome({
+  useClientListChrome({
     loadFailedKey: 'lab.page.loadFailed',
     isLoading: false,
     isError,
@@ -72,11 +71,6 @@ export function LaboratoryPageStageContent({
           : WORKLIST_SHELL
       }
     >
-      {chrome.error && (
-        <div className={`${WORKSPACE.contentInset} shrink-0 pb-0`}>
-          <ErrorAlert error={chrome.error} onRetry={chrome.onRetry} />
-        </div>
-      )}
       <div
         className={`flex-1 flex flex-col min-h-0 overflow-hidden ${
           activeTab === 'monitor' ? '' : 'bg-surface-page'

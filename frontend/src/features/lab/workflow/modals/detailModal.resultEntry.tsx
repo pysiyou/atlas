@@ -9,6 +9,7 @@ import { ResultEntryForm } from '../../entry/ResultEntryForm';
 import { ResultValidationPanel } from '../../validation/ResultValidationForm';
 import type { Test, TestWithContext } from '@/types';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
+import { useListLoadErrorToast } from '@/hooks/listPage/useListLoadErrorToast';
 import { ModalFooter, QueueModalShell, labModalHeaderContext } from '../shared/detailModalLayout';
 import { LabEventLogPanel } from '@/features/audit';
 import { TestHeaderBadges } from '../../components/LabWorkflowBadges';
@@ -21,10 +22,9 @@ import { entryDraftLifecycleKey, useLabDraftStore } from '../../state/labDraftSt
 import { toRawResultPayload } from '../../entry/resultEntry';
 import { hasTestResults, orderTestKey } from '../../utils/labSearchAndLinks';
 import { isLabActionAllowed } from '../../utils/queueDisplay';
-import { errorAlertMessage, notify } from '@/utils/feedback';
+import { notify } from '@/utils/feedback';
 import { logger } from '@/utils/logger';
 import { Modal, ModalPageShell } from '@/components/overlays';
-import { ErrorAlert } from '@/components/feedback';
 import type { ResultDetailModalProps } from '@/lib/context/modalTypes';
 
 function scalarResultValue(value: unknown): string {
@@ -82,6 +82,19 @@ export const ResultEntryDetailModal: React.FC<ResultDetailModalProps> = ({
 
   const displayNotes = readOnly ? (test?.technicianNotes ?? '') : (draft?.technicianNotes ?? '');
 
+  const contextLoadFailed = isOpen && (isError || catalogError);
+  const contextError = error ?? catalogQueryError;
+  const retryContextLoad = useCallback(() => {
+    void refetch();
+  }, [refetch]);
+
+  useListLoadErrorToast(
+    'lab.entry.context.loadFailed',
+    contextLoadFailed,
+    contextError,
+    retryContextLoad
+  );
+
   const saveAction = useAsyncAction(
     useCallback(
       async (_signal: AbortSignal) => {
@@ -128,21 +141,15 @@ export const ResultEntryDetailModal: React.FC<ResultDetailModalProps> = ({
     );
   }
 
-  if (isOpen && (isError || catalogError)) {
+  if (isOpen && contextLoadFailed) {
     return (
       <Modal isOpen={isOpen} onClose={onClose} title="Result entry" size="3xl" isActive={isActive}>
         <ModalPageShell>
-          <ErrorAlert
-            error={{
-              message: errorAlertMessage(
-                'lab.entry.context.loadFailed',
-                error ?? catalogQueryError
-              ),
-            }}
-            onRetry={() => {
-              void refetch();
-            }}
-          />
+          <div className="flex justify-center p-panel">
+            <Button {...actionButtonPreset('retry')} size="sm" onClick={retryContextLoad}>
+              Retry
+            </Button>
+          </div>
         </ModalPageShell>
       </Modal>
     );

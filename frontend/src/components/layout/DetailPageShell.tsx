@@ -4,21 +4,15 @@
  * `contents` so flex gap does not reserve space under the chrome (same as list pages).
  *
  * Pass `loading` to child panels/cards/tables — this shell does not replace the page body.
+ * Load failures should use `notify.show` (see list chrome hooks), not inline alerts here.
  */
 
 import React, { type ReactNode } from 'react';
-import { ErrorAlert } from '@/components/feedback/ErrorAlert';
 import { EmptyState } from '@/components/display';
 import { IconKeys } from '@/config/icons';
 import { WORKSPACE } from '@/theme/recipes';
 import { useAppChromeMount } from './appChromeMount';
 import { cn } from '@/utils';
-
-export interface DetailPageShellError {
-  message: string;
-  code?: string;
-  operation?: string;
-}
 
 export interface DetailPageShellProps {
   /** Header node (e.g. PageHeader or feature header wrapping it) */
@@ -27,12 +21,6 @@ export interface DetailPageShellProps {
   children: ReactNode;
   /** Marks the scroll region as busy (sections should use their own placeholders). */
   loading?: boolean;
-  /** When set, show ErrorAlert above content (or instead of content if no children yet) */
-  error?: DetailPageShellError | null;
-  /** Retry handler for error state */
-  onRetry?: () => void;
-  /** Dismiss handler for error state */
-  onDismissError?: () => void;
   /** When true, show EmptyState instead of content */
   notFound?: boolean;
   /** Title for not-found EmptyState */
@@ -46,9 +34,6 @@ export const DetailPageShell: React.FC<DetailPageShellProps> = ({
   header,
   children,
   loading = false,
-  error = null,
-  onRetry,
-  onDismissError,
   notFound = false,
   notFoundTitle = 'Not Found',
   notFoundDescription,
@@ -60,11 +45,7 @@ export const DetailPageShell: React.FC<DetailPageShellProps> = ({
   return (
     <div className={cn(WORKSPACE.page, className)}>
       <div className={headerSlotClass}>{header}</div>
-      {error != null ? (
-        <div className="flex-1 min-h-0">
-          <ErrorAlert error={error} onRetry={onRetry} onDismiss={onDismissError} />
-        </div>
-      ) : notFound ? (
+      {notFound ? (
         <div className="flex-1 flex items-center justify-center min-h-0">
           <EmptyState
             icon={IconKeys.actions.alertCircle}

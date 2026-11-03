@@ -1,5 +1,5 @@
 import type { FeedbackId } from '@/types/generated/feedbackCatalog';
-import { toListLoadError, type ListLoadError } from './toListLoadError';
+import { useListLoadErrorToast } from './useListLoadErrorToast';
 
 export interface UseClientListChromeOptions {
   loadFailedKey: FeedbackId;
@@ -11,7 +11,6 @@ export interface UseClientListChromeOptions {
 
 export interface UseClientListChromeReturn {
   loading: boolean;
-  error: ListLoadError | null;
   onRetry: () => void;
 }
 
@@ -23,11 +22,10 @@ export function useClientListChrome({
   error: queryError,
   refetch,
 }: UseClientListChromeOptions): UseClientListChromeReturn {
-  const error = isError ? toListLoadError(loadFailedKey, queryError) : null;
+  useListLoadErrorToast(loadFailedKey, isError, queryError, refetch);
 
   return {
     loading: isLoading,
-    error,
     onRetry: refetch,
   };
 }

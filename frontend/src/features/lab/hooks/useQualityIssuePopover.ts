@@ -10,7 +10,8 @@ import {
   getValidationFormCopy,
 } from '../constants/qualityIssuePopoverCopy';
 import { displayId } from '@/utils';
-import { errorAlertMessage, inlineFeedbackMessage } from '@/utils/feedback';
+import { inlineFeedbackMessage } from '@/utils/feedback';
+import { useListLoadErrorToast } from '@/hooks/listPage/useListLoadErrorToast';
 import {
   buildValidationRemedyOptions,
   resolveSuggestedRemedy,
@@ -54,6 +55,16 @@ export function useQualityIssuePopover({
     'test',
     orderTestId
   );
+
+  useListLoadErrorToast(
+    'lab.qualityIssue.options.loadFailed',
+    fetchError != null,
+    fetchError,
+    () => {
+      void refetch();
+    }
+  );
+
   const [submitError, setSubmitError] = useState<string | null>(null);
   const { reportIssue, isSubmitting: isRejecting } = useSubmitQualityIssue({
     onSuccess: onConfirm,
@@ -134,7 +145,8 @@ export function useQualityIssuePopover({
     isConfirmDisabled,
     isLoading,
     isRejecting,
-    error: submitError ?? (fetchError ? errorAlertMessage('lab.qualityIssue.options.loadFailed', fetchError) : null),
+    error: submitError,
+    optionsLoadFailed: fetchError != null && !options,
     options,
     formCopy,
     handleConfirm,

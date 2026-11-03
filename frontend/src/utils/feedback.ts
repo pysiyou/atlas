@@ -1,7 +1,10 @@
 /**
  * Catalogued user feedback: copy, toasts, API error mapping, session-expiry latch.
  *
- * Feature code should import from `@/utils/feedback` — not from `@/app/AppToastBar`.
+ * Transient UI feedback: use {@link notify.show} (or {@link notify.apiError} for failures).
+ * Inline form copy: use {@link inlineFeedbackMessage} for catalog `inline` entries.
+ *
+ * Do not import from `@/app/AppToastBar` in feature code.
  */
 
 import { toast } from '@/app/AppToastBar';
@@ -107,12 +110,70 @@ export type ToastOverrides = {
   actions?: ToastAction[];
 };
 
+/** Options for {@link notify.show} — catalog-driven transient feedback. */
+export type NotifyShowOptions = ToastOverrides & {
+  /** When set, subtitle is merged from API / thrown error detail. */
+  error?: unknown;
+  /** Adds a Retry action chip (typical for load failures). */
+  onRetry?: () => void;
+};
+
+function isTransientFeedbackChannel(channel: FeedbackEntry['channel']): boolean {
+  return channel === 'toast' || channel === 'alert' || channel === 'errorAlert';
+}
+
 function buildToastPayload(entry: FeedbackEntry, overrides?: ToastOverrides) {
   return {
     title: overrides?.title ?? entry.title,
     subtitle: overrides?.subtitle ?? entry.subtitle,
     actions: overrides?.actions,
   };
+}
+
+function mergeNotifyActions(
+  overrides: ToastOverrides | undefined,
+  onRetry: (() => void) | undefined
+): ToastAction[] | undefined {
+  const fromOverrides = overrides?.actions ?? [];
+  const retryAction: ToastAction[] =
+    onRetry != null ? [{ label: 'Retry', onClick: onRetry }] : [];
+  const merged = [...fromOverrides, ...retryAction];
+  return merged.length > 0 ? merged : undefined;
+}
+
+function dispatchFromCatalog(id: FeedbackId, options?: NotifyShowOptions): void {
+  const entry = getFeedback(id);
+
+  if (entry.channel === 'inline') {
+    if (import.meta.env.DEV) {
+      console.warn(
+        `[notify.show] "${id}" is channel "inline"; use inlineFeedbackMessage instead.`
+      );
+    }
+    return;
+  }
+
+  if (!isTransientFeedbackChannel(entry.channel)) {
+    return;
+  }
+
+  let title = options?.title ?? entry.title;
+  let subtitle = options?.subtitle ?? entry.subtitle;
+
+  if (options?.error != null) {
+    if (shouldSuppressApiErrorToast(options.error)) return;
+    const resolved = resolveFeedbackForApiError(options.error, id);
+    title = options?.title ?? resolved.title;
+    subtitle = options?.subtitle ?? resolved.subtitle;
+  }
+
+  const payload = buildToastPayload(entry, {
+    title,
+    subtitle,
+    actions: mergeNotifyActions(options, options?.onRetry),
+  });
+
+  dispatchToast(entry.variant, payload);
 }
 
 function dispatchToast(
@@ -138,25 +199,24 @@ function dispatchToast(
   }
 }
 
+/**
+ * Catalog-driven transient feedback. Prefer `show` over `toast` / direct toast imports.
+ */
 export const notify = {
+  /** Canonical API: respects catalog channel; toasts for toast | alert | errorAlert. */
+  show(id: FeedbackId, options?: NotifyShowOptions) {
+    dispatchFromCatalog(id, options);
+  },
+
+  /** @deprecated Alias for {@link notify.show} without error/retry options. */
   toast(id: FeedbackId, overrides?: ToastOverrides) {
-    dispatchToast(getFeedback(id).variant, buildToastPayload(getFeedback(id), overrides));
+    notify.show(id, overrides);
   },
 
   apiError(id: FeedbackId, error: unknown, fallbackSubtitle?: string) {
-    if (shouldSuppressApiErrorToast(error)) return;
-    const payload = resolveFeedbackForApiError(error, id);
-    toast.error({
-      title: payload.title,
-      subtitle: fallbackSubtitle ?? payload.subtitle,
-    });
+    notify.show(id, { error, subtitle: fallbackSubtitle });
   },
 };
-
-/** Fallback title for ErrorAlert / list shells when the query error has no message. */
-export function errorAlertMessage(id: FeedbackId, error: unknown): string {
-  return getErrorMessage(error, getFeedback(id).title);
-}
 
 /** Inline banner / field error from catalog (optional API detail appended). */
 export function inlineFeedbackMessage(id: FeedbackId, error?: unknown): string {

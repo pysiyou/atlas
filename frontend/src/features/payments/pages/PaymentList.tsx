@@ -72,7 +72,7 @@ export const PaymentList: React.FC = () => {
 
   const { getTestName } = useTestNameLookup();
 
-  const { loading, error, listPagination, setFilterAndReset, onRetry } = useServerListChrome({
+  const { loading, listPagination, setFilterAndReset } = useServerListChrome({
     setFilter,
     resetPage,
     loadFailedKey: 'payments.list.loadFailed',
@@ -112,9 +112,6 @@ export const PaymentList: React.FC = () => {
           items={orderPaymentViews}
           viewConfig={paymentTableConfig}
           loading={loading}
-          error={error}
-          onRetry={onRetry}
-          onDismissError={() => undefined}
           onRowClick={handleRowClick}
           title="Payments"
           filters={

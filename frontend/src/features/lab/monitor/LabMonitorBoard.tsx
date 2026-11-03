@@ -3,7 +3,6 @@
  */
 
 import React from 'react';
-import { ErrorAlert } from '@/components/feedback';
 import { useClientListChrome } from '@/hooks';
 import { SPLIT_WORKSPACE_PANEL } from '@/theme/recipes';
 import { SPLIT_BOTTOM_PANEL, SPLIT_BOTTOM_ROW, SPLIT_WORKSPACE_PAGE, SPLIT_TABLE_WRAP } from '@/theme/recipes';
@@ -27,14 +26,6 @@ export const LabMonitorBoard: React.FC<LabMonitorBoardProps> = ({ loading: loadi
     refetch: board.refetch,
   });
   const loading = loadingProp ?? chrome.loading;
-
-  if (!loading && chrome.error) {
-    return (
-      <div className={SPLIT_WORKSPACE_PANEL.page}>
-        <ErrorAlert error={chrome.error} onRetry={chrome.onRetry} />
-      </div>
-    );
-  }
 
   return (
     <div className={SPLIT_WORKSPACE_PANEL.page}>

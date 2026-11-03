@@ -15,7 +15,6 @@ export {
 } from './listPage';
 export type {
   BuildServerListPaginationParams,
-  ListLoadError,
   UseServerListChromeOptions,
   UseServerListChromeReturn,
   UseClientListChromeOptions,

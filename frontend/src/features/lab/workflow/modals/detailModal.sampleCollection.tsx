@@ -14,15 +14,15 @@ import { ModalType, useModal } from '@/lib/context/ModalContext';
 import { getTestNames } from '@/features/catalog/testLookup';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { deriveCollectionModalFields } from '@/utils/presentation';
+import { actionButtonPreset, Button } from '@/components/primitives';
 import { Modal, ModalPageShell } from '@/components/overlays';
-import { ErrorAlert } from '@/components/feedback';
+import { useListLoadErrorToast } from '@/hooks/listPage/useListLoadErrorToast';
 import { SampleCollectionDetailModalView } from './detailModal.sampleCollection.view';
 import { findCollectionQueueItem } from '../../utils/findCollectionQueueItem';
 import { useSubmitSampleCollection } from '../../collection/useSubmitSampleCollection';
 import { useAuthStore } from '@/app/authStore';
 import type { SampleDetailModalProps } from '@/lib/context/modalTypes';
 import { mapCollectionWorklistToSampleDisplay } from '../../utils/labQueue';
-import { errorAlertMessage } from '@/utils/feedback';
 
 export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({
   isOpen,
@@ -117,6 +117,23 @@ export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({
     [handleCollect]
   );
 
+  const workContextLoadFailed =
+    Boolean(sample) &&
+    isOpen &&
+    sample!.status === 'pending' &&
+    needsWorkContext &&
+    workContextError &&
+    !pendingSampleDisplay;
+
+  useListLoadErrorToast(
+    'lab.collection.workContext.loadFailed',
+    workContextLoadFailed,
+    workContextQueryError,
+    () => {
+      void refetchWorkContext();
+    }
+  );
+
   if (!sample) {
     if (isOpen && sampleId && isFetchingSample) {
       return (
@@ -142,27 +159,21 @@ export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({
     );
   }
 
-  if (
-    isOpen &&
-    sample.status === 'pending' &&
-    needsWorkContext &&
-    workContextError &&
-    !pendingSampleDisplay
-  ) {
+  if (workContextLoadFailed) {
     return (
       <Modal isOpen={isOpen} onClose={onClose} title="Sample" size="3xl" isActive={isActive}>
         <ModalPageShell>
-          <ErrorAlert
-            error={{
-              message: errorAlertMessage(
-                'lab.collection.workContext.loadFailed',
-                workContextQueryError
-              ),
-            }}
-            onRetry={() => {
-              void refetchWorkContext();
-            }}
-          />
+          <div className="flex justify-center p-panel">
+            <Button
+              {...actionButtonPreset('retry')}
+              size="sm"
+              onClick={() => {
+                void refetchWorkContext();
+              }}
+            >
+              Retry
+            </Button>
+          </div>
         </ModalPageShell>
       </Modal>
     );

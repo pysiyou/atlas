@@ -28,7 +28,7 @@ export const UsersPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserAdminRecord | null>(null);
   const tableConfig = useMemo(() => createUserTableConfig(), []);
-  const { loading, error: listError, onRetry } = useClientListChrome({
+  const { loading } = useClientListChrome({
     loadFailedKey: 'users.list.loadFailed',
     isLoading,
     isError,
@@ -56,9 +56,6 @@ export const UsersPage: React.FC = () => {
         items={filteredUsers}
         viewConfig={tableConfig}
         loading={loading}
-        error={listError}
-        onRetry={onRetry}
-        onDismissError={() => undefined}
         onRowClick={openEdit}
         title="User management"
         headerActions={

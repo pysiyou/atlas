@@ -106,7 +106,7 @@
       "subtitle": "The insurance claim has been recorded for this invoice."
     },
     "billing.claim.submit.error": {
-      "channel": "alert",
+      "channel": "toast",
       "variant": "danger",
       "title": "Failed to submit claim"
     },
@@ -416,7 +416,7 @@
       "subtitle": "The selected work item(s) were cancelled."
     },
     "lab.qualityIssue.options.loadFailed": {
-      "channel": "alert",
+      "channel": "toast",
       "variant": "danger",
       "title": "Failed to load options"
     },
@@ -445,37 +445,37 @@
       "subtitle": "Provide a clinical reason to cancel this test."
     },
     "orders.list.loadFailed": {
-      "channel": "errorAlert",
+      "channel": "toast",
       "variant": "danger",
       "title": "Failed to load orders"
     },
     "patients.list.loadFailed": {
-      "channel": "errorAlert",
+      "channel": "toast",
       "variant": "danger",
       "title": "Failed to load patients"
     },
     "catalog.list.loadFailed": {
-      "channel": "errorAlert",
+      "channel": "toast",
       "variant": "danger",
       "title": "Failed to load test catalog"
     },
     "catalog.bootstrap.loadFailed": {
-      "channel": "errorAlert",
+      "channel": "toast",
       "variant": "danger",
       "title": "Failed to load tests"
     },
     "reports.list.loadFailed": {
-      "channel": "errorAlert",
+      "channel": "toast",
       "variant": "danger",
       "title": "Failed to load reports"
     },
     "payments.list.loadFailed": {
-      "channel": "errorAlert",
+      "channel": "toast",
       "variant": "danger",
       "title": "Failed to load data"
     },
     "users.list.loadFailed": {
-      "channel": "errorAlert",
+      "channel": "toast",
       "variant": "danger",
       "title": "Failed to load users"
     },
@@ -530,27 +530,27 @@
       "title": "Cannot disable the last active administrator"
     },
     "lab.page.loadFailed": {
-      "channel": "errorAlert",
+      "channel": "toast",
       "variant": "danger",
       "title": "Failed to load laboratory data"
     },
     "lab.worklist.loadFailed": {
-      "channel": "errorAlert",
+      "channel": "toast",
       "variant": "danger",
       "title": "Failed to load the lab worklist"
     },
     "lab.entry.context.loadFailed": {
-      "channel": "errorAlert",
+      "channel": "toast",
       "variant": "danger",
       "title": "Failed to load this test for result entry"
     },
     "lab.collection.workContext.loadFailed": {
-      "channel": "errorAlert",
+      "channel": "toast",
       "variant": "danger",
       "title": "Failed to load sample collection eligibility"
     },
     "billing.claims.loadFailed": {
-      "channel": "errorAlert",
+      "channel": "toast",
       "variant": "danger",
       "title": "Failed to load insurance claims"
     },

@@ -73,7 +73,7 @@ export const ReportList: React.FC = () => {
   const { tests } = useTestsByCodes(pageTestCodes);
   const { getUserName } = useUserLookup();
 
-  const { loading, error, listPagination, setFilterAndReset, onRetry } = useServerListChrome({
+  const { loading, listPagination, setFilterAndReset } = useServerListChrome({
     setFilter,
     resetPage,
     loadFailedKey: 'reports.list.loadFailed',
@@ -168,9 +168,6 @@ export const ReportList: React.FC = () => {
         items={reportableOrders}
         viewConfig={reportTableConfig}
         loading={loading}
-        error={error}
-        onRetry={onRetry}
-        onDismissError={() => {}}
         onRowClick={handlePreview}
         title="Reports"
         subtitle={`${pagination.total} report(s) available`}

@@ -105,7 +105,7 @@ const App: React.FC = () => {
             <AppRoutes />
             <ModalRenderer />
             <Toaster
-              position="bottom-right"
+              position="top-right"
               containerClassName="app-toaster"
               toastOptions={{
                 duration: TOAST_DEFAULT_DURATION_MS,

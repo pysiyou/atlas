@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import type { FeedbackId } from '@/types/generated/feedbackCatalog';
 import { buildServerListPagination } from './buildServerListPagination';
-import { toListLoadError, type ListLoadError } from './toListLoadError';
 import { useFilterChangeWithPageReset } from './useFilterChangeWithPageReset';
+import { useListLoadErrorToast } from './useListLoadErrorToast';
 import type { ListViewPaginationConfig } from '@/components/data-table';
 
 export interface UseServerListChromeOptions {
@@ -24,7 +24,6 @@ export interface UseServerListChromeOptions {
 
 export interface UseServerListChromeReturn {
   loading: boolean;
-  error: ListLoadError | null;
   listPagination: ListViewPaginationConfig;
   setFilterAndReset: (key: string, value: unknown) => void;
   onRetry: () => void;
@@ -50,7 +49,7 @@ export function useServerListChrome({
 
   const loading = loadingOverride ?? isLoading;
 
-  const error = isError ? toListLoadError(loadFailedKey, queryError) : null;
+  useListLoadErrorToast(loadFailedKey, isError, queryError, refetch);
 
   const listPagination = useMemo(
     () =>
@@ -66,7 +65,6 @@ export function useServerListChrome({
 
   return {
     loading,
-    error,
     listPagination,
     setFilterAndReset,
     onRetry: refetch,

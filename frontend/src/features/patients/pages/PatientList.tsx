@@ -69,7 +69,7 @@ export const PatientList: React.FC = () => {
     refetch,
   } = usePaginatedPatientContextList(serverFilters);
 
-  const { loading, error, listPagination, setFilterAndReset, onRetry } = useServerListChrome({
+  const { loading, listPagination, setFilterAndReset } = useServerListChrome({
     setFilter,
     resetPage,
     loadFailedKey: 'patients.list.loadFailed',
@@ -99,9 +99,6 @@ export const PatientList: React.FC = () => {
           items={patients}
           viewConfig={patientTableConfig}
           loading={loading}
-          error={error}
-          onRetry={onRetry}
-          onDismissError={() => undefined}
           onRowClick={(patient: PatientContext) => navigate(`/patients/${patient.id}`)}
           title="Patients"
           headerActions={

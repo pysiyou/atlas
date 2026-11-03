@@ -67,7 +67,7 @@ export const OrderList: React.FC = () => {
     resetPage,
   } = usePaginatedOrders(serverFilters, 1, DEFAULT_LIST_PAGE_SIZE);
 
-  const { loading, error, listPagination, setFilterAndReset, onRetry } = useServerListChrome({
+  const { loading, listPagination, setFilterAndReset } = useServerListChrome({
     setFilter,
     resetPage,
     loadFailedKey: 'orders.list.loadFailed',
@@ -101,9 +101,6 @@ export const OrderList: React.FC = () => {
         items={orders}
         viewConfig={orderTableConfig}
         loading={loading}
-        error={error}
-        onRetry={onRetry}
-        onDismissError={() => undefined}
         onRowClick={(order: Order) => navigate(`/orders/${order.orderId}`)}
         title="Orders"
         headerActions={

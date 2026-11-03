@@ -3,6 +3,8 @@
 .app-toaster,
 [data-rht-toaster] {
   pointer-events: none !important;
+  padding-top: max(var(--space-4, 1rem), env(safe-area-inset-top, 0px));
+  padding-right: max(var(--space-4, 1rem), env(safe-area-inset-right, 0px));
 }
 
 .app-toaster > *,

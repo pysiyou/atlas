@@ -20,7 +20,7 @@ import {
 import { validationFilterConfig } from '../constants';
 import { Card } from '@/components/surfaces';
 import { SPACING } from '@/theme/recipes';
-import { ErrorAlert, ErrorBoundary } from '@/components/feedback';
+import { ErrorBoundary } from '@/components/feedback';
 import { useClientListChrome } from '@/hooks';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
@@ -53,7 +53,7 @@ export const ResultValidationQueue: React.FC = () => {
     goToPage,
     canResolveEscalation: canResolveFromProvider,
   } = useResultValidationQueueData(bar.serverFilters);
-  const worklistChrome = useClientListChrome({
+  useClientListChrome({
     loadFailedKey: 'lab.worklist.loadFailed',
     isLoading: dataLoading,
     isError: worklistError,
@@ -126,14 +126,6 @@ export const ResultValidationQueue: React.FC = () => {
   const waitingOnInitialLoad =
     hasNoWorklistData &&
     (dataLoading || (canViewEscalations && escalationLoading));
-
-  if (worklistChrome.error) {
-    return (
-      <ErrorBoundary>
-        <ErrorAlert error={worklistChrome.error} onRetry={worklistChrome.onRetry} />
-      </ErrorBoundary>
-    );
-  }
 
   const hasRecollection = canResolveEscalation && filteredRecollectionRequests.length > 0;
   const hasEscalated = canViewEscalations && filteredEscalatedTests.length > 0;

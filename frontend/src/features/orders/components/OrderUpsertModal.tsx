@@ -9,12 +9,11 @@ import React from 'react';
 import { text } from '@/theme/recipes';
 import { FormDialogFooter, Modal, ModalPageShell } from '@/components/overlays';
 import { FooterInfo } from '@/components/display';
-import { Icon } from '@/components/primitives';
+import { Icon, actionButtonPreset, Button } from '@/components/primitives';
 import { IconKeys } from '@/config/icons';
 import { formatCurrency } from '@/utils';
 import { useOrderUpsertModal } from '../hooks/useOrderUpsertModal';
 import { OrderUpsertFormFields } from './OrderUpsertFormFields';
-import { ErrorAlert } from '@/components/feedback';
 import { useClientListChrome } from '@/hooks';
 import type { OrderUpsertModalOpenProps } from '@/lib/context/modalTypes';
 
@@ -55,7 +54,8 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
   } = modalState;
 
   const waitingOnOrder = mode === 'edit' && isOrderLoading && !resolvedOrder;
-  const orderChrome = useClientListChrome({
+  const orderLoadFailed = mode === 'edit' && isOrderError && !resolvedOrder && !isOrderLoading;
+  useClientListChrome({
     loadFailedKey: 'orders.list.loadFailed',
     isLoading: false,
     isError: mode === 'edit' && isOrderError && !resolvedOrder,
@@ -99,8 +99,12 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
             />
         }
       >
-        {orderChrome.error ? (
-          <ErrorAlert error={orderChrome.error} onRetry={orderChrome.onRetry} />
+        {orderLoadFailed ? (
+          <div className="flex justify-center p-panel">
+            <Button {...actionButtonPreset('retry')} size="sm" onClick={() => void refetchOrder()}>
+              Retry
+            </Button>
+          </div>
         ) : (
           <form id="order-form" onSubmit={handleSubmit} className="max-w-full">
             <OrderUpsertFormFields

@@ -3,7 +3,6 @@
  */
 import React, { useMemo } from 'react';
 import { Button } from '@/components/primitives';
-import { ErrorAlert } from '@/components/feedback';
 import { PanelLoadingBody } from '@/components/surfaces/panelLoading';
 import { Panel, type PanelPresetId } from '@/components/surfaces/Panel';
 import { cn } from '@/utils';
@@ -100,7 +99,7 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
       enabled: !skipFetch,
     });
 
-  const { error: listError, onRetry } = useClientListChrome({
+  useClientListChrome({
     loadFailedKey: 'lab.page.loadFailed',
     isLoading,
     isError,
@@ -155,10 +154,6 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
 
   const body = showLoading ? (
     loadingBody
-  ) : listError ? (
-    <div className="p-space-3">
-      <ErrorAlert error={listError} onRetry={onRetry} />
-    </div>
   ) : (
     <div className="flex min-h-0 flex-1 flex-col">
       <EventLogFeed items={resolved} />
