@@ -13,10 +13,11 @@ export const BADGE = {
     sm: `px-space-2 py-space-1 ${BADGE_TYPE} ${SPACING.gapCompact}`,
     md: `px-space-3 py-space-1-5 ${BADGE_TYPE} ${SPACING.gapInline}`,
   },
+  /** Glyph-only icons inside badges (no SVG backdrop rects). */
   icon: {
-    xs: `${ICON_SIZE.sm}`,
-    sm: `${ICON_SIZE.sm}`,
-    md: `${ICON_SIZE.md}`,
+    xs: `${ICON_SIZE.sm} shrink-0 text-current [&>svg>rect]:hidden`,
+    sm: `${ICON_SIZE.sm} shrink-0 text-current [&>svg>rect]:hidden`,
+    md: `${ICON_SIZE.md} shrink-0 text-current [&>svg>rect]:hidden`,
   },
   filterChip: {
     xs: `px-space-3 py-space-1 ${BADGE_TYPE} ${SPACING.gapCompact}`,

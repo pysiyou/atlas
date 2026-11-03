@@ -7,7 +7,7 @@ import React from 'react';
 import { Icon } from '@/components/primitives';
 import { IconKeys } from '@/config/icons';
 import { companyConfig } from '@/config';
-import { PROMO_SHADOW, PROMO_TYPE, RADIUS } from '@/theme/recipes';
+import { PROMO_TYPE, RADIUS } from '@/theme/recipes';
 
 interface LoginBrandingPanelProps {
   isVisible: boolean;
@@ -30,16 +30,7 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
       {/* Logo and brand name */}
       <div className="space-y-space-6">
         <div className="flex items-center gap-space-5">
-          {/* Logo container with matte finish */}
-          <div className="relative">
-            <div
-              className={`absolute inset-0 ${RADIUS.menu} bg-promo-accent-medium blur-xl opacity-30`}
-              style={{ animation: 'pulse-ring 3s ease-in-out infinite' }}
-            />
-            <div className={`relative w-16 h-16 bg-promo-accent ${RADIUS.menu} flex items-center justify-center ${PROMO_SHADOW.accent} transform hover:scale-105 transition-transform duration-300`}>
-              <Icon iconKey={IconKeys.ui.appLogo} className="w-9 h-9" />
-            </div>
-          </div>
+          <Icon iconKey={IconKeys.ui.appLogo} className="w-16 h-16 text-promo-fg shrink-0" />
           <div>
             <h1 className="font-display text-5xl text-promo-fg tracking-tight">
               {company.company.name}

@@ -57,7 +57,7 @@ const PRESETS: Record<
   home: { variant: 'primary', iconKey: IconKeys.actions.home, layout: 'icon-text' },
   expand: { variant: 'secondary', iconKey: IconKeys.actions.chevronDown, layout: 'icon-text' },
   collapse: { variant: 'secondary', iconKey: IconKeys.actions.chevronLeft, layout: 'icon-text' },
-  sidebarClose: { variant: 'ghost', iconKey: IconKeys.actions.doubleArrowLeft },
+  sidebarClose: { variant: 'ghost', iconKey: IconKeys.actions.arrowLeft },
   menu: { variant: 'primary', iconKey: IconKeys.actions.menuDots, layout: 'icon-text' },
   delete: { variant: 'danger', iconKey: IconKeys.actions.delete, layout: 'icon-text' },
   reject: { variant: 'danger', iconKey: IconKeys.actions.dislike, layout: 'icon-text' },

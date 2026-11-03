@@ -8,7 +8,9 @@ import { SpinnerLoader } from '@/components/feedback';
 import type { BadgeSize } from '@/components/primitives';
 import { IconKeys } from '@/config/icons';
 import { ATTENTION_LABELS } from '@/types/generated/labContract';
-import { WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
+import { BADGE, WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
+
+const badgeIconClass = BADGE.icon.xs;
 
 interface RetestBadgeProps {
   retestNumber: number;
@@ -62,7 +64,7 @@ export const FlagCountBadge: React.FC<FlagCountBadgeProps> = ({
 
   return (
     <Badge size={size} variant="danger" className={`flex items-center gap-space-1-5 ${className}`}>
-      {showIcon && <Icon iconKey={IconKeys.actions.warning} className="w-3 h-3 shrink-0 text-current" />}
+      {showIcon && <Icon iconKey={IconKeys.actions.warning} className={badgeIconClass} />}
       {count} flag{count !== 1 ? 's' : ''}
     </Badge>
   );
@@ -80,7 +82,7 @@ export const ReviewRequiredBadge: React.FC<ReviewRequiredBadgeProps> = ({
   showIcon = true,
 }) => (
   <Badge size={size} variant="danger" className={`flex items-center gap-space-1 ${className}`}>
-    {showIcon && <Icon iconKey={IconKeys.actions.warning} className="w-3 h-3" />}
+    {showIcon && <Icon iconKey={IconKeys.actions.warning} className={badgeIconClass} />}
     Review Required
   </Badge>
 );
@@ -106,7 +108,7 @@ export const AttentionReasonBadge: React.FC<AttentionReasonBadgeProps> = ({
     className={`${showIcon ? 'flex items-center gap-space-1' : ''} ${className}`}
   >
     {showIcon ? (
-      <Icon iconKey={IconKeys.actions.alertCircle} className="w-3 h-3 shrink-0" />
+      <Icon iconKey={IconKeys.actions.alertCircle} className={badgeIconClass} />
     ) : null}
     {label}
   </Badge>

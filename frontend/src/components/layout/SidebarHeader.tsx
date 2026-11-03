@@ -12,7 +12,7 @@ export interface SidebarHeaderProps {
 
 function BrandMark({ className }: { className?: string }) {
   return (
-    <div className={cn(CHROME.navIndicator, 'bg-brand-muted text-brand', className)}>
+    <div className={cn(CHROME.navIcon, 'text-brand', className)}>
       <Icon iconKey={IconKeys.ui.appLogo} className="size-[1.125rem]" />
     </div>
   );
@@ -74,7 +74,7 @@ export function SidebarHeader({
           icon={
             <Icon
               iconKey={
-                onMobileClose ? IconKeys.actions.close : IconKeys.actions.doubleArrowLeft
+                onMobileClose ? IconKeys.actions.close : IconKeys.actions.arrowLeft
               }
               className="size-4"
             />

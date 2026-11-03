@@ -67,9 +67,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
 
           {/* Mobile logo */}
           <div className="flex lg:hidden items-center gap-space-3 mb-space-8">
-            <div className={`w-11 h-11 bg-promo-accent ${RADIUS.field} flex items-center justify-center ${PROMO_SHADOW.logo}`}>
-              <Icon iconKey={IconKeys.ui.appLogo} className="w-6 h-6 text-promo-fg" />
-            </div>
+            <Icon iconKey={IconKeys.ui.appLogo} className="w-11 h-11 text-promo-fg shrink-0" />
             <div>
               <h1 className={PROMO_TYPE.mobileBrandTitle}>{company.company.name}</h1>
               <p className={PROMO_TYPE.companySubtitle}>
