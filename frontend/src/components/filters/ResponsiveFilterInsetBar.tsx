@@ -5,7 +5,7 @@ import { FilterModalFooter } from '@/components/filters/FilterModalFooter';
 import { FILTER } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import type { IconName } from '@/components/primitives';
+import type { IconKey } from '@/config/icons';
 
 export interface ResponsiveFilterInsetBarProps {
   activeFilterCount: number;
@@ -13,7 +13,7 @@ export interface ResponsiveFilterInsetBarProps {
   modalExtras?: ReactNode;
   modalTitle: string;
   onReset: () => void;
-  modalFooterIcon: IconName;
+  modalFooterIcon: IconKey;
   modalFooterLabel: string;
   /** Extra sections rendered inside the mobile filter modal (date, kind, etc.). */
   modalSections?: ReactNode;

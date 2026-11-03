@@ -1,6 +1,6 @@
 import { companyConfig } from '@/config';
 import { actionButtonPreset, Icon, IconButton } from '@/components/primitives';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { text, CHROME, RADIUS } from '@/theme/recipes';
 import { cn } from '@/utils';
 
@@ -13,7 +13,7 @@ export interface SidebarHeaderProps {
 function BrandMark({ className }: { className?: string }) {
   return (
     <div className={cn(CHROME.navIndicator, 'bg-brand-muted text-brand', className)}>
-      <Icon name={ICONS.ui.appLogo} className="size-[1.125rem]" />
+      <Icon iconKey={IconKeys.ui.appLogo} className="size-[1.125rem]" />
     </div>
   );
 }
@@ -73,7 +73,9 @@ export function SidebarHeader({
           shape="square"
           icon={
             <Icon
-              name={onMobileClose ? ICONS.actions.close : ICONS.actions.doubleArrowLeft}
+              iconKey={
+                onMobileClose ? IconKeys.actions.close : IconKeys.actions.doubleArrowLeft
+              }
               className="size-4"
             />
           }

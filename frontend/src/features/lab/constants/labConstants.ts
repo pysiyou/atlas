@@ -1,8 +1,8 @@
 /** Lab copy, config, routing, visuals, and API path constants. */
-import type { IconName } from '@/components/primitives';
+import type { IconKey } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { GENERATED_LAB_CONSTANTS } from '@/types/generated/labContract';
 import { ROUTES } from '@/config';
-import { ICONS } from '@/config/icons';
 import type { TestStatus } from '@/types/enums';
 import type { BadgeColor } from '@/components/primitives/badgeTypes';
 
@@ -106,17 +106,25 @@ export const LAB_TAB_LABELS: Record<LabTabId, string> = {
   monitor: LAB_COPY.workflow.monitorNav,
 };
 
-export const LAB_WORKFLOW_KPI_ICONS: Record<LabWorkflowKpiStage, IconName> = {
-  collection: ICONS.dataFields.flask,
-  entry: ICONS.dataFields.notebook,
-  validation: ICONS.ui.shieldCheck,
-  sentBack: ICONS.actions.refresh,
+export const LAB_WORKFLOW_KPI_ICONS: Record<LabWorkflowKpiStage, IconKey> = {
+  collection: IconKeys.modules.laboratory,
+  entry: IconKeys.actions.edit,
+  validation: IconKeys.ui.shieldCheck,
+  sentBack: IconKeys.actions.refresh,
 };
 
-export const LAB_WORKFLOW_TAB_ICONS: Record<LabWorkflowStage, IconName> = {
+export const LAB_WORKFLOW_TAB_ICONS: Record<LabWorkflowStage, IconKey> = {
   collection: LAB_WORKFLOW_KPI_ICONS.collection,
   entry: LAB_WORKFLOW_KPI_ICONS.entry,
   validation: LAB_WORKFLOW_KPI_ICONS.validation,
+};
+
+/** Tab rail icons (includes monitor — same as sidebar Dashboard). */
+export const LAB_TAB_ICONS: Record<LabTabId, IconKey> = {
+  collection: LAB_WORKFLOW_TAB_ICONS.collection,
+  entry: LAB_WORKFLOW_TAB_ICONS.entry,
+  validation: LAB_WORKFLOW_TAB_ICONS.validation,
+  monitor: IconKeys.modules.dashboard,
 };
 
 export const DEFAULT_LAB_TAB: LabTabId = 'monitor';

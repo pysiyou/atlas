@@ -8,20 +8,18 @@ import { text } from '@/theme/recipes';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Popover, PopoverFormChrome } from '@/components/overlays';
 import { Alert, FooterInfo } from '@/components/display';
-import { MODULE_ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { useQualityIssuePopover } from '../hooks/useQualityIssuePopover';
 import type { QualityIssueResult, RemedyType } from '@/types/lab-operations';
 import {
   QUALITY_ISSUE_POPOVER_LAYOUT,
   QUALITY_ISSUE_POPOVER_COPY,
-  type ValidationFormCopy,
-} from '../constants/qualityIssuePopoverCopy';
+  type ValidationFormCopy } from '../constants/qualityIssuePopoverCopy';
 import { CatalogRejectionCriteriaFields } from './CatalogRejectionCriteriaFields';
 import { QualityIssuePopoverLoadingView, QualityIssuePopoverErrorView } from './QualityIssuePopoverStates';
 import {
   QualityIssueRemedyPicker,
-  type RemedyOption,
-} from './QualityIssueRemedyPicker';
+  type RemedyOption } from './QualityIssueRemedyPicker';
 import { QualityIssueInlineWarning } from './QualityIssueInlineWarning';
 
 /** Re-export views for consumers that render them directly */
@@ -179,7 +177,7 @@ const QualityIssuePopoverContent: React.FC<QualityIssuePopoverContentProps> = ({
       confirmVariant="danger"
       isSubmitting={isRejecting}
       disabled={isConfirmDisabled}
-      footerInfo={<FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" />}
+      footerInfo={<FooterInfo icon={IconKeys.modules.laboratory} label="Laboratory" />}
     >
       <QualityIssuePopoverFormBody
         state={{

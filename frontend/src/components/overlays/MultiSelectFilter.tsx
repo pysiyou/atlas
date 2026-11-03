@@ -4,12 +4,14 @@
 
 import React, { useCallback, useMemo } from 'react';
 import { cn, uppercaseLabel } from '@/utils';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { Badge } from '@/components/primitives';
 import { parseBadgeVariant } from '@/components/primitives/badgeStyles';
-import { Icon, type IconName } from '@/components/primitives/Icon';
+import { Icon } from '@/components/primitives/Icon';
+import type { IconKey } from '@/config/icons';
 import { Popover } from './Popover';
 import { FilterTriggerShell } from './FilterTriggerShell';
+import { filterTriggerIcon } from '@/components/filters/filterControlIcons';
 import { text, MENU_ITEM_TYPE, RADIUS } from '@/theme/recipes';
 
 export interface FilterOption {
@@ -28,7 +30,7 @@ export interface MultiSelectFilterProps {
   showSelectAll?: boolean;
   selectAllLabel?: string;
   className?: string;
-  icon?: IconName;
+  icon?: IconKey;
   singleSelect?: boolean;
 }
 
@@ -65,11 +67,11 @@ function MultiSelectListItem({
               isSelected ? 'bg-brand' : 'bg-transparent border-2 border-border-default'
             )}
           >
-            {isSelected && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
+            {isSelected && <Icon iconKey={IconKeys.actions.check} className="w-3 h-3 text-on-brand" />}
           </div>
         ) : isSelected ? (
           <div className={`w-4 h-4 ${RADIUS.menuItem} border-2 border-brand bg-brand flex items-center justify-center transition-all duration-150`}>
-            <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
+            <Icon iconKey={IconKeys.actions.check} className="w-3 h-3 text-on-brand" />
           </div>
         ) : (
           <div className={`w-4 h-4 ${RADIUS.menuItem} border-2 border-border-default bg-surface transition-all duration-150`} />
@@ -177,7 +179,7 @@ function MultiSelectOptionsPanel({
                 />
                 {allSelected ? (
                   <div className={`w-4 h-4 ${RADIUS.menuItem} border-2 border-brand bg-brand flex items-center justify-center transition-all duration-150`}>
-                    <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
+                    <Icon iconKey={IconKeys.actions.check} className="w-3 h-3 text-on-brand" />
                   </div>
                 ) : (
                   <div className={`w-4 h-4 ${RADIUS.menuItem} border-2 border-border-default bg-surface transition-all duration-150`} />
@@ -203,7 +205,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
   showSelectAll = true,
   selectAllLabel = 'Select all',
   className = '',
-  icon: _icon,
+  icon,
   singleSelect = false,
 }) => {
   const allSelected = useMemo(
@@ -256,6 +258,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
       trigger={({ isOpen }: { isOpen: boolean }) => (
         <FilterTriggerShell
           isOpen={isOpen}
+          leftIcon={icon ? filterTriggerIcon(icon) : undefined}
           showClear={selectedIds.length > 0}
           onClear={e => {
             e.preventDefault();

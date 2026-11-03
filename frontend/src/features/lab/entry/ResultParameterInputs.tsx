@@ -8,7 +8,7 @@ import { Icon } from '@/components/primitives';
 import { text, CONTROL, RADIUS , FG } from '@/theme/recipes';
 import { inputTrigger, inputTriggerOpen, inputBase, inputError } from '@/theme/recipes';
 import { cn } from '@/utils';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import type { TestParameter } from '@/types';
 import { validatePhysiologicValue } from '../utils';
 import { titleCaseWords } from '@/utils/string';
@@ -50,8 +50,7 @@ const SelectParameterInput: React.FC<{
               <span className={FG.disabled}>-- Select --</span>
             )}
           </div>
-          <Icon
-            name={ICONS.actions.chevronDown}
+          <Icon iconKey={IconKeys.actions.chevronDown}
             className={cn(
               'w-4 h-4 ${FG.disabled} transition-transform flex-shrink-0',
               isOpen && 'rotate-180'
@@ -62,8 +61,7 @@ const SelectParameterInput: React.FC<{
               onClick={handleClear}
               className={`p-space-0-5 -mr-space-1 hover:bg-surface-hover ${RADIUS.field} transition-colors flex items-center justify-center cursor-pointer flex-shrink-0`}
             >
-              <Icon
-                name={ICONS.actions.close}
+              <Icon iconKey={IconKeys.actions.close}
                 className={`w-4 h-4 ${FG.disabled} hover:${FG.captionMuted}`}
               />
             </button>

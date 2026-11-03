@@ -8,8 +8,7 @@ import { actionButtonPreset, Button } from '@/components/primitives';
 import { FooterInfo } from '@/components/display/FooterInfo';
 import { Icon } from '@/components/primitives/Icon';
 import { DialogHeader, DialogFooter } from './DialogChrome';
-import { MODULE_ICONS } from '@/config/icons';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { cn } from '@/utils';
 import { text, MENU_ITEM, RADIUS, TONE } from '@/theme/recipes';
 
@@ -52,7 +51,7 @@ export const PopoverFormChrome: React.FC<PopoverFormChromeProps> = ({
     <div className="p-panel space-y-space-4 overflow-y-auto flex-1">{children}</div>
     <DialogFooter
       density="popover"
-      start={footerInfo ?? <FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" />}
+      start={footerInfo ?? <FooterInfo icon={IconKeys.modules.laboratory} label="Laboratory" />}
       end={
         <>
           <Button
@@ -169,7 +168,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
           ${selected ? 'bg-brand' : 'bg-transparent border-2 border-border-strong'}
         `}
       >
-        {selected && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
+        {selected && <Icon iconKey={IconKeys.actions.check} className="w-3 h-3 text-on-brand" />}
       </div>
     </div>
   );

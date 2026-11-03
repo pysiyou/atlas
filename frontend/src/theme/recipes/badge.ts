@@ -41,13 +41,6 @@ export const INLINE_HIGHLIGHT = {
     cyan: 'bg-inline-highlight-neutral',
     muted: 'bg-inline-highlight-neutral',
   },
-  /** Status icons (same as Alert / Callout); no icon when variant is unmapped (e.g. primary). */
-  defaultIcon: {
-    warning: 'warning',
-    info: 'info-circle',
-    danger: 'alert-circle',
-    success: 'check-circle',
-  },
   icon: {
     sm: 'me-[0.35em] inline-block h-[0.85em] w-[0.85em] min-h-2.5 min-w-2.5 shrink-0 align-[-0.1em] text-current',
     md: 'me-[0.4em] inline-block h-[0.9em] w-[0.9em] min-h-3 min-w-3 shrink-0 align-[-0.1em] text-current',

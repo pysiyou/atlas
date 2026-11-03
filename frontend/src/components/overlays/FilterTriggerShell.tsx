@@ -8,12 +8,11 @@ import React from 'react';
 import { Icon } from '@/components/primitives/Icon';
 import { inputTrigger, inputTriggerOpen, filterTriggerText, inputClearButton } from '@/theme/recipes';
 import { cn } from '@/utils';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 
 /** Leading icon for filter dropdown triggers (search). */
 export const filterInputIcon = (
-  <Icon
-    name={ICONS.actions.search}
+  <Icon iconKey={IconKeys.actions.search}
     className="w-4 h-4 text-text-muted group-hover:text-brand shrink-0 transition-colors"
   />
 );
@@ -21,7 +20,7 @@ export const filterInputIcon = (
 export interface FilterTriggerShellProps {
   /** Whether the popover is open (for border/chevron state) */
   isOpen: boolean;
-  /** Left-side icon node (e.g. <Icon name={...} />). Optional; when absent a spacer preserves layout. */
+  /** Left-side icon node (e.g. `<Icon iconKey={...} />`). Optional; when absent a spacer preserves layout. */
   leftIcon?: React.ReactNode;
   /** Middle content (trigger label / value summary) */
   children: React.ReactNode;
@@ -58,16 +57,14 @@ export const FilterTriggerShell: React.FC<FilterTriggerShellProps> = ({
           className={cn(inputClearButton, 'hover:bg-surface-hover')}
           aria-label="Clear"
         >
-          <Icon
-            name={ICONS.actions.close}
+          <Icon iconKey={IconKeys.actions.close}
             className="w-4 h-4 text-text-muted hover:text-text-tertiary"
           />
         </button>
       ) : (
         <div className="w-5 h-5" aria-hidden />
       )}
-      <Icon
-        name={ICONS.actions.chevronDown}
+      <Icon iconKey={IconKeys.actions.chevronDown}
         className={cn('w-4 h-4 text-text-muted transition-transform', isOpen && 'rotate-180')}
       />
     </div>

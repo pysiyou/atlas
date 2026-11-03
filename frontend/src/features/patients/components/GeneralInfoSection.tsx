@@ -10,9 +10,8 @@ import { DescriptionItem } from '@/components/display';
 import {
   formatBirthdayWithAge,
   formatAddress,
-  formatEmergencyContactDisplay,
-} from '../utils/patientFormatters';
-import { ICONS } from '@/config/icons';
+  formatEmergencyContactDisplay } from '../utils/patientFormatters';
+import { IconKeys } from '@/config/icons';
 import { DescriptionColumns } from '@/components/display';
 
 export interface GeneralInfoSectionProps {
@@ -24,35 +23,35 @@ export function renderPatientBasicInfoDescriptionItems(patient: Patient): React.
   return [
     <DescriptionItem
       key="gender"
-      icon={ICONS.dataFields.gender}
+      icon={IconKeys.dataFields.gender}
       label="Gender"
       value={<span className="capitalize">{patient.gender || 'N/A'}</span>}
       orientation="vertical"
     />,
     <DescriptionItem
       key="birthday"
-      icon={ICONS.dataFields.birthday}
+      icon={IconKeys.dataFields.birthday}
       label="Birthday"
       value={formatBirthdayWithAge(patient.dateOfBirth)}
       orientation="vertical"
     />,
     <DescriptionItem
       key="phone"
-      icon={ICONS.dataFields.phone}
+      icon={IconKeys.dataFields.phone}
       label="Phone Number"
       value={patient.phone || 'N/A'}
       orientation="vertical"
     />,
     <DescriptionItem
       key="email"
-      icon={ICONS.dataFields.email}
+      icon={IconKeys.dataFields.email}
       label="Email"
       value={patient.email || 'N/A'}
       orientation="vertical"
     />,
     <DescriptionItem
       key="address"
-      icon={ICONS.dataFields.address}
+      icon={IconKeys.dataFields.address}
       label="Address"
       value={formatAddress(patient.address)}
       orientation="vertical"
@@ -64,7 +63,7 @@ export function renderPatientEmergencyContactDescriptionItems(patient: Patient):
   return [
     <DescriptionItem
       key="emergency-contact"
-      icon={ICONS.ui.link}
+      icon={IconKeys.ui.link}
       label="Emergency Contact"
       value={formatEmergencyContactDisplay(patient.emergencyContact)}
       orientation="vertical"
@@ -82,7 +81,7 @@ export function renderGeneralInfoDescriptionItems(patient: Patient): React.React
 
 /**
  * Displays who the patient is and how to reach them.
- * Body measurements live on the care snapshot, next to vitals and BMI.
+ * Body measurements live on the care snapshot with BMI.
  */
 export const GeneralInfoSection: React.FC<GeneralInfoSectionProps> = ({ patient }) => {
   return (

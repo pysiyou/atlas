@@ -13,13 +13,12 @@ const GENERAL_PREFIXES = [
   'emergencyContact',
 ] as const;
 
-export type PatientFormTabId = 'general' | 'medical' | 'vitals' | 'affiliation';
+export type PatientFormTabId = 'general' | 'medical' | 'affiliation';
 
 /** Map a react-hook-form field path to the patient form tab that owns it. */
 export function patientFormTabForFieldPath(path: string): PatientFormTabId {
   const root = path.split('.')[0];
   if (root === 'medicalHistory') return 'medical';
-  if (root === 'vitalSigns') return 'vitals';
   if (root === 'affiliation') return 'affiliation';
   if ((GENERAL_PREFIXES as readonly string[]).includes(root)) return 'general';
   return 'general';
@@ -58,14 +57,8 @@ export function resolveFirstPatientFormErrorPath(
 /** Focus or scroll to the control for a patient form field path. */
 export function focusPatientFormField(path: string): void {
   const root = path.split('.')[0];
-  const vitalKey = path.startsWith('vitalSigns.') ? path.split('.')[1] : undefined;
 
-  const selectors = [
-    vitalKey ? `#vital-${vitalKey}` : null,
-    `[name="${path}"]`,
-    `[name="${root}"]`,
-    `#${root}`,
-  ].filter(Boolean) as string[];
+  const selectors = [`[name="${path}"]`, `[name="${root}"]`, `#${root}`].filter(Boolean) as string[];
 
   for (const selector of selectors) {
     const element = document.querySelector(selector);

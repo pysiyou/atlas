@@ -7,16 +7,14 @@ import { SearchTextInput, Select } from '@/components/inputs';
 import { DatePicker } from '@/components/inputs/DatePicker';
 import { MultiSelectFilter } from '@/components/overlays/MultiSelectFilter';
 import { RADIUS } from '@/theme/recipes';
-import { MODULE_ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import {
   EVENT_LOG_FILTER_FIELD_ORDER,
   EVENT_LOG_FILTER_PLACEHOLDERS,
-  EVENT_LOG_KIND_OPTIONS,
-} from './eventLogFilterConfig';
+  EVENT_LOG_KIND_OPTIONS } from './eventLogFilterConfig';
 import { EventLogSearchField } from './eventLogSearch';
 import type { UserRole } from '@/types';
 import { USER_ROLE_OPTIONS } from '@/types';
-import { ICONS } from '@/config/icons';
 import { EVENT_LOG_COPY, type EventLogFilterField, type EventLogKind, type EventLogVerbosity } from './types';
 
 const kindFilterOptions = EVENT_LOG_KIND_OPTIONS.map(opt => ({
@@ -106,7 +104,7 @@ function renderFieldControl(
             onChange={values => props.onActorRolesChange(values as UserRole[])}
             placeholder={EVENT_LOG_FILTER_PLACEHOLDERS.actorRole}
             selectAllLabel="All roles"
-            icon={ICONS.dataFields.userHands}
+            icon={IconKeys.dataFields.userHands}
             className="w-full"
           />
         </div>
@@ -131,7 +129,7 @@ function renderFieldControl(
             onChange={values => props.onKindsChange(values as EventLogKind[])}
             placeholder={EVENT_LOG_FILTER_PLACEHOLDERS.kind}
             selectAllLabel="All domains"
-            icon={MODULE_ICONS.eventLog}
+            icon={IconKeys.modules.eventLog}
             className="w-full"
           />
         </div>

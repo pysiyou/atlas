@@ -75,6 +75,6 @@ export const PAYMENT_METHOD_CONFIG: Record<PaymentMethod, { label: string; enabl
   "debit-card": { label: "Debit Card", enabled: false, iconKey: "dataFields.creditCard" },
   "insurance": { label: "Insurance", enabled: false, iconKey: "ui.shield" },
   "bank-transfer": { label: "Bank Transfer", enabled: false, iconKey: "dataFields.wallet" },
-  "mobile": { label: "Mobile", enabled: true, iconKey: "ui.smartphone" },
+  "mobile": { label: "Mobile", enabled: true, iconKey: "dataFields.phone" },
 };
 

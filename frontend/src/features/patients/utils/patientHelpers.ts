@@ -43,17 +43,6 @@ function getFamilyHistoryValue(familyHistory: string | string[] | undefined): st
   return familyHistory;
 }
 
-function getVitalsValue(vitalSigns: PatientFormInput['vitalSigns']): unknown {
-  return (
-    vitalSigns?.temperature ||
-    vitalSigns?.heartRate ||
-    vitalSigns?.systolicBP ||
-    vitalSigns?.diastolicBP ||
-    vitalSigns?.respiratoryRate ||
-    vitalSigns?.oxygenSaturation
-  );
-}
-
 function buildPatientFormParameters(formData: Partial<PatientFormInput>): unknown[] {
   return [
     formData.fullName,
@@ -75,7 +64,6 @@ function buildPatientFormParameters(formData: Partial<PatientFormInput>): unknow
     formData.medicalHistory?.allergies?.join(' '),
     formData.medicalHistory?.previousSurgeries?.join(' '),
     getFamilyHistoryValue(formData.medicalHistory?.familyHistory),
-    getVitalsValue(formData.vitalSigns),
   ];
 }
 

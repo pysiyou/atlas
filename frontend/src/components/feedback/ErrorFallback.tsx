@@ -3,7 +3,7 @@
  */
 
 import { actionButtonPreset, Button, Icon } from '@/components/primitives';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 
 import { ERROR_SURFACE_TYPE, RADIUS, SHADOW, TONE } from '@/theme/recipes';
 
@@ -22,7 +22,7 @@ export const ErrorFallback: React.FC<ErrorFallbackProps> = ({
     <div className={`max-w-md w-full bg-surface ${RADIUS.menu} ${SHADOW.overlay} p-space-6`}>
       <div className="flex items-center justify-start gap-space-3">
         <div className={`flex shrink-0 items-center justify-center w-12 h-12 ${RADIUS.pill}`}>
-          <Icon name={ICONS.actions.alertCircle} className={`w-6 h-6 ${TONE.danger.fg}`} />
+          <Icon iconKey={IconKeys.actions.alertCircle} className={`w-6 h-6 ${TONE.danger.fg}`} />
         </div>
         <h2 className={ERROR_SURFACE_TYPE.title}>Something went wrong</h2>
       </div>

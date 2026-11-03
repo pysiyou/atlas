@@ -26,7 +26,6 @@ export interface UseEditPatientFormParams {
 const TABS = [
   { id: 'general', label: 'General Info' },
   { id: 'medical', label: 'Medical Background' },
-  { id: 'vitals', label: 'Vitals & Stats' },
   { id: 'affiliation', label: 'Affiliation' },
 ] as const;
 

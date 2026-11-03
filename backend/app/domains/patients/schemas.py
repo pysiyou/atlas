@@ -36,19 +36,6 @@ class EmergencyContactResponse(BaseModel):
     email: str | None = Field(None, max_length=254)
 
 
-class VitalSigns(BaseModel):
-    """Current patient vital signs (2026 Reference Standards)."""
-
-    temperature: float | None = Field(
-        None, description="In Celsius. Normal: 36.5-37.3", ge=30.0, le=45.0
-    )
-    heartRate: int | None = Field(None, description="BPM. Normal: 60-100", ge=30, le=250)
-    systolicBP: int | None = Field(None, description="mmHg. Normal: <120", ge=50, le=250)
-    diastolicBP: int | None = Field(None, description="mmHg. Normal: <80", ge=30, le=150)
-    respiratoryRate: int | None = Field(None, description="Breaths/min. Normal: 12-20", ge=4, le=60)
-    oxygenSaturation: int | None = Field(None, description="SpO2 %. Normal: 95-100", ge=50, le=100)
-
-
 class Lifestyle(BaseModel):
     """Patient lifestyle information."""
 
@@ -112,7 +99,6 @@ class PatientBase(BaseModel):
     emergencyContact: EmergencyContact
     medicalHistory: MedicalHistory | None = None
     affiliation: Affiliation | None = None
-    vitalSigns: VitalSigns | None = None
 
     @field_validator("phone")
     @classmethod
@@ -225,7 +211,6 @@ class PatientUpdate(BaseModel):
     emergencyContact: EmergencyContact | None = None
     medicalHistory: MedicalHistory | None = None
     affiliation: Affiliation | AffiliationInput | None = None
-    vitalSigns: VitalSigns | None = None
 
     @model_validator(mode="before")
     @classmethod

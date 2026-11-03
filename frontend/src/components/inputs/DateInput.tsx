@@ -8,19 +8,18 @@ import { format, isSameMonth, isSameDay, endOfMonth, setYear, isBefore, isAfter 
 import { Popover } from '@/components/overlays';
 import { Icon } from '@/components/primitives';
 import { cn } from '@/utils';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { text, inputTrigger,
   inputTriggerOpen,
   inputError,
   inputClearButton,
-  FORM_CONTROL_LABEL, } from '@/theme/recipes';
+  FORM_CONTROL_LABEL } from '@/theme/recipes';
 import { CALENDAR_TYPE, FIELD_ERROR, RADIUS, TONE } from '@/theme/recipes';
 import {
   generateCalendarDays,
   generateCalendarMonths,
   generateCalendarYears,
-  WEEKDAY_LABELS,
-} from '@/utils/date';
+  WEEKDAY_LABELS } from '@/utils/date';
 
 type DateInputCalendarView = 'days' | 'months' | 'years';
 
@@ -64,7 +63,7 @@ function DateInputHeader({
         onClick={onPrevClick}
         className={`p-space-1 hover:bg-surface-hover ${RADIUS.field} text-text-tertiary cursor-pointer flex items-center justify-center`}
       >
-        <Icon name={ICONS.actions.chevronLeft} className="w-4 h-4" />
+        <Icon iconKey={IconKeys.actions.chevronLeft} className="w-4 h-4" />
       </button>
       <button
         type="button"
@@ -78,7 +77,7 @@ function DateInputHeader({
         onClick={onNextClick}
         className={`p-space-1 hover:bg-surface-hover ${RADIUS.field} text-text-tertiary cursor-pointer flex items-center justify-center`}
       >
-        <Icon name={ICONS.actions.chevronRight} className="w-4 h-4" />
+        <Icon iconKey={IconKeys.actions.chevronRight} className="w-4 h-4" />
       </button>
     </div>
   );
@@ -277,8 +276,7 @@ export const DateInput: React.FC<DateInputProps> = ({
               disabled && 'bg-surface-hover cursor-not-allowed'
             )}
           >
-            <Icon
-              name={ICONS.dataFields.date}
+            <Icon iconKey={IconKeys.dataFields.date}
               className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors shrink-0"
             />
             <div className={`flex-1 min-w-0 ${text({ role: 'body' })} truncate`}>
@@ -288,8 +286,7 @@ export const DateInput: React.FC<DateInputProps> = ({
                 <span className="text-text-muted">{placeholder}</span>
               )}
             </div>
-            <Icon
-              name={ICONS.actions.chevronDown}
+            <Icon iconKey={IconKeys.actions.chevronDown}
               className={cn('w-4 h-4 text-text-disabled transition-transform shrink-0', isOpen && 'rotate-180')}
             />
             {dateValue && !disabled && (
@@ -298,7 +295,7 @@ export const DateInput: React.FC<DateInputProps> = ({
                 className={cn(inputClearButton, '-mr-space-1 hover:bg-surface-hover')}
                 type="button"
               >
-                <Icon name={ICONS.actions.close} className="w-3.5 h-3.5 text-text-disabled hover:text-text-tertiary" />
+                <Icon iconKey={IconKeys.actions.close} className="w-3.5 h-3.5 text-text-disabled hover:text-text-tertiary" />
               </button>
             )}
           </div>

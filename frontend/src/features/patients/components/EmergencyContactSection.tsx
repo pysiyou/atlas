@@ -4,7 +4,7 @@ import { Input } from '@/components/inputs';
 import { MultiSelectFilter } from '@/components/overlays';
 import type { FilterOption } from '@/components/overlays';
 import { RELATIONSHIP_VALUES, RELATIONSHIP_CONFIG, type Relationship } from '@/types';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { FORM_FIELD_LABEL } from '@/theme/recipes';
 import { FIELD_ERROR, TONE } from '@/theme/recipes';
 import { patientFieldError } from '../patientFormFieldError';
@@ -68,7 +68,7 @@ export const EmergencyContactSection: React.FC = () => {
             placeholder="Select relationship"
             showSelectAll={false}
             singleSelect={true}
-            icon={ICONS.ui.link}
+            icon={IconKeys.ui.link}
             className="w-full"
           />
           {patientFieldError(errors, 'emergencyContact.relationship') && (

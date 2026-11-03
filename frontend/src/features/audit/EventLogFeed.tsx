@@ -3,7 +3,7 @@ import { format, isSameDay, startOfDay } from 'date-fns';
 import { EmptyState } from '@/components/display/EmptyState';
 import { InlineHighlight } from '@/components/primitives/InlineHighlight';
 import { text, RADIUS } from '@/theme/recipes';
-import { MODULE_ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { parseAppDate } from '@/utils/date';
 import { cn } from '@/utils';
 import { text as detailText, FG } from '@/theme/recipes';
@@ -13,8 +13,7 @@ import { collectTestCodes } from './catalog';
 import { EVENT_LOG_COPY } from './types';
 import type {
   EventLogDayGroup,
-  ResolvedEventLogItem,
-} from './types';
+  ResolvedEventLogItem } from './types';
 
 const EVENT_LOG_HEADLINE_LINE_CLASS = 'leading-5';
 
@@ -281,7 +280,7 @@ export const EventLogFeed: React.FC<EventLogFeedProps> = ({
       <EmptyState
         variant="dense"
         fill
-        icon={MODULE_ICONS.eventLog}
+        icon={IconKeys.modules.eventLog}
         title={emptyTitle}
         description={emptyDescription}
         className={className}

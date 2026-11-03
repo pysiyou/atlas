@@ -4,7 +4,7 @@
 
 import React, { type ReactNode } from 'react';
 import { ROUTES } from '@/config';
-import { MODULE_ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { Icon } from '@/components/primitives';
 import { ICON_SIZE } from '@/theme/recipes';
 import type { UserRole } from '@/types';
@@ -30,32 +30,32 @@ export interface SettingsPopoverLink {
 export type SettingsItem = SettingsPopoverLink;
 
 export const menuItems: MenuItem[] = [
-  { path: ROUTES.DASHBOARD, label: 'Dashboard', icon: React.createElement(Icon, { name: MODULE_ICONS.dashboard, className: navIconClass }), roles: [] },
-  { path: ROUTES.PATIENTS, label: 'Patients', icon: React.createElement(Icon, { name: MODULE_ICONS.patients, className: navIconClass }), roles: [] },
-  { path: ROUTES.ORDERS, label: 'Orders', icon: React.createElement(Icon, { name: MODULE_ICONS.orders, className: navIconClass }), roles: [] },
-  { path: ROUTES.LABORATORY, label: 'Laboratory', icon: React.createElement(Icon, { name: MODULE_ICONS.laboratory, className: navIconClass }), roles: [] },
-  { path: ROUTES.LAB_ALL_TESTS, label: 'All tests', icon: React.createElement(Icon, { name: MODULE_ICONS.labTests, className: navIconClass }), roles: [] },
-  { path: ROUTES.PAYMENTS, label: 'Payments', icon: React.createElement(Icon, { name: MODULE_ICONS.payments, className: navIconClass }), roles: [] },
-  { path: ROUTES.REPORTS, label: 'Reports', icon: React.createElement(Icon, { name: MODULE_ICONS.reports, className: navIconClass }), roles: [] },
-  { path: ROUTES.CATALOG, label: 'Catalog', icon: React.createElement(Icon, { name: MODULE_ICONS.catalog, className: navIconClass }), roles: [] },
-  { path: ROUTES.EVENT_LOG, label: 'Event log', icon: React.createElement(Icon, { name: MODULE_ICONS.eventLog, className: navIconClass }), roles: [] },
+  { path: ROUTES.DASHBOARD, label: 'Dashboard', icon: React.createElement(Icon, { iconKey: IconKeys.modules.dashboard, className: navIconClass }), roles: [] },
+  { path: ROUTES.PATIENTS, label: 'Patients', icon: React.createElement(Icon, { iconKey: IconKeys.modules.patients, className: navIconClass }), roles: [] },
+  { path: ROUTES.ORDERS, label: 'Orders', icon: React.createElement(Icon, { iconKey: IconKeys.modules.orders, className: navIconClass }), roles: [] },
+  { path: ROUTES.LABORATORY, label: 'Laboratory', icon: React.createElement(Icon, { iconKey: IconKeys.modules.laboratory, className: navIconClass }), roles: [] },
+  { path: ROUTES.LAB_ALL_TESTS, label: 'All tests', icon: React.createElement(Icon, { iconKey: IconKeys.modules.labTests, className: navIconClass }), roles: [] },
+  { path: ROUTES.PAYMENTS, label: 'Payments', icon: React.createElement(Icon, { iconKey: IconKeys.modules.payments, className: navIconClass }), roles: [] },
+  { path: ROUTES.REPORTS, label: 'Reports', icon: React.createElement(Icon, { iconKey: IconKeys.modules.reports, className: navIconClass }), roles: [] },
+  { path: ROUTES.CATALOG, label: 'Catalog', icon: React.createElement(Icon, { iconKey: IconKeys.modules.catalog, className: navIconClass }), roles: [] },
+  { path: ROUTES.EVENT_LOG, label: 'Event log', icon: React.createElement(Icon, { iconKey: IconKeys.modules.eventLog, className: navIconClass }), roles: [] },
 ];
 
 export const settingsPopoverTrigger = {
   label: 'Settings',
-  icon: React.createElement(Icon, { name: 'setting', className: navIconClass }),
+  icon: React.createElement(Icon, { iconKey: IconKeys.ui.setting, className: navIconClass }),
 } as const;
 
 export const settingsPopoverLinks: SettingsPopoverLink[] = [
   {
     label: 'User management',
-    icon: React.createElement(Icon, { name: MODULE_ICONS.users, className: navIconClass }),
+    icon: React.createElement(Icon, { iconKey: IconKeys.modules.users, className: navIconClass }),
     path: ROUTES.USERS,
     roles: ['administrator'],
   },
   {
     label: 'Notification & alerts',
-    icon: React.createElement(Icon, { name: 'bell', className: navIconClass }),
+    icon: React.createElement(Icon, { iconKey: IconKeys.ui.bell, className: navIconClass }),
     disabled: true,
   },
 ];

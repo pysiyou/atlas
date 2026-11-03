@@ -11,7 +11,7 @@ import { formatDateTime } from '@/utils';
 import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
 import type { Order } from '@/types';
 import { getReportableOrders } from '../utils/patientFormatters';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { text, TONE } from '@/theme/recipes';
 
 
@@ -41,7 +41,7 @@ export const PatientReportsList: React.FC<PatientReportsListProps> = ({ orders }
         >
           <div className="flex items-center gap-space-3 overflow-hidden">
             <div className="w-8 h-8 flex items-center justify-center">
-              <Icon name={ICONS.dataFields.pdf} className={`w-full h-full ${TONE.danger.fg}`} />
+              <Icon iconKey={IconKeys.dataFields.pdf} className={`w-full h-full ${TONE.danger.fg}`} />
             </div>
             <div className="min-w-0">
               <p className={`${text({ role: 'body' })} font-normal truncate`}>

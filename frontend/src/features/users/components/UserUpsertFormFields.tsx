@@ -7,7 +7,7 @@ import { Input } from '@/components/inputs';
 import { MultiSelectFilter } from '@/components/overlays';
 import { text, FORM_FIELD_LABEL } from '@/theme/recipes';
 import { TONE } from '@/theme/recipes';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import type { UserRole } from '@/types';
 import { formatDateTime } from '@/utils';
 import type { UserAdminRecord } from '../api/usersAdmin';
@@ -80,7 +80,7 @@ export const UserUpsertFormFields: React.FC<UserUpsertFormFieldsProps> = ({
           placeholder="Select role"
           showSelectAll={false}
           singleSelect
-          icon={ICONS.ui.usersGroup}
+          icon={IconKeys.ui.usersGroup}
           className="w-full"
         />
       </div>

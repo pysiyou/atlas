@@ -7,123 +7,23 @@
  * paths (public/icons/*.svg) are loaded; never use user-supplied or remote URLs.
  *
  * Usage:
- *   <Icon name="check" className="w-4 h-4" />
- *   <Icon name="check" className="w-4 h-4" />
+ *   <Icon iconKey={IconKeys.actions.check} className="w-4 h-4" />
  *
  * NOTE: Use Tailwind className for sizing (e.g. "w-4 h-4"). Do NOT pass a number
  *       `size` prop — dynamic class names like `w-${n}` are purged by Tailwind.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { resolveIconKey, type IconKey } from '@/config/icons';
 import { logger } from '@/utils/logger';
 
-/**
- * Available icon names - add new icons here as SVG files are added to public/icons/
- */
-export type IconName =
-  | 'activity'
-  | 'app-logo'
-  | 'alert-circle'
-  | 'check'
-  | 'check-circle'
-  | 'info-circle'
-  | 'printer'
-  | 'user'
-  | 'calendar'
-  | 'search'
-  | 'plus'
-  | 'add-circle'
-  | 'edit'
-  | 'eye'
-  | 'arrow-left'
-  | 'arrow-right'
-  | 'arrow-bottom'
-  | 'arrow-up'
-  | 'phone'
-  | 'sms'
-  | 'trending-up'
-  | 'download'
-  | 'filter'
-  | 'log-out'
-  | 'lab-tube'
-  | 'lab-cup'
-  | 'location'
-  | 'medicine'
-  | 'health'
-  | 'users-group'
-  | 'pdf'
-  | 'document'
-  | 'verified'
-  | 'user-hands'
-  | 'cash'
-  | 'hourglass'
-  | 'wallet'
-  | 'checklist'
-  | 'notebook'
-  | 'shield-check'
-  | 'sample-collection'
-  | 'loading'
-  | 'refresh'
-  | 'receipt'
-  | 'stethoscope'
-  | 'clock'
-  | 'hashtag'
-  | 'bill'
-  | 'trash'
-  | 'medical-kit'
-  | 'document-medicine'
-  | 'lock'
-  | 'smartphone'
-  | 'dna-landing-page'
-  | 'atom-landing-page'
-  | 'beaker-landing-page'
-  | 'bond-molecule-landing-page'
-  | 'drops-droplet-landing-page'
-  | 'microscope-landing-page'
-  | 'flask-chemical-landing-page'
-  | 'flask-education-landing-page'
-  | 'medicines-medicine-landing-page'
-  | 'syringe-landing-page'
-  | 'test-tube-landing-page'
-  | 'thermometer-landing-page'
-  | 'vial-landing-page'
-  | 'flask'
-  | 'flask-bold'
-  | 'dashboard'
-  | 'warning'
-  | 'close'
-  | 'menu-dots'
-  | 'save'
-  | 'book'
-  | 'category'
-  | 'ruler'
-  | 'weight'
-  | 'city'
-  | 'link'
-  | 'thermometer'
-  | 'heart-pulse'
-  | 'pulse'
-  | 'blood'
-  | 'double-arrow-left'
-  | 'double-arrow-right'
-  | 'sun'
-  | 'moon'
-  | 'home'
-  | 'setting'
-  | 'bell'
-  | 'user-cog'
-  | 'like'
-  | 'dislike'
-  | 'menu'
-  | 'database';
-
 export interface IconProps {
-  /** Name of the icon to display (must match SVG filename without .svg extension) */
-  name: IconName;
+  /** Semantic icon key from @/config/icons. */
+  iconKey: IconKey;
   /** Additional CSS classes to apply (use Tailwind for sizing: "w-4 h-4") */
   className?: string;
-  /** Fallback icon name if primary icon fails to load */
-  fallback?: IconName;
+  /** Fallback key if primary icon fails to load */
+  fallbackIconKey?: IconKey;
 }
 
 // ---------------------------------------------------------------------------
@@ -133,27 +33,30 @@ export interface IconProps {
 // ---------------------------------------------------------------------------
 const _svgCache = new Map<string, Promise<string>>();
 
-function fetchSvg(name: string): Promise<string> {
-  if (!_svgCache.has(name)) {
-    const promise = fetch(`/icons/${name}.svg`).then(r => {
-      if (!r.ok) throw new Error(`Failed to load SVG "${name}": ${r.statusText}`);
+function fetchSvg(asset: string): Promise<string> {
+  if (!_svgCache.has(asset)) {
+    const promise = fetch(`/icons/${asset}.svg`).then(r => {
+      if (!r.ok) throw new Error(`Failed to load SVG "${asset}": ${r.statusText}`);
       return r.text();
     });
-    _svgCache.set(name, promise);
+    _svgCache.set(asset, promise);
   }
-  return _svgCache.get(name)!;
+  return _svgCache.get(asset)!;
 }
 
-async function loadIcon(name: string, fallback?: string): Promise<string | null> {
+async function loadSvgAsset(asset: string, fallbackAsset?: string): Promise<string | null> {
   try {
-    return await fetchSvg(name);
+    return await fetchSvg(asset);
   } catch (err) {
-    logger.error(`Failed to load icon: ${name}`, err instanceof Error ? err : undefined);
-    if (fallback && fallback !== name) {
+    logger.error(`Failed to load icon: ${asset}`, err instanceof Error ? err : undefined);
+    if (fallbackAsset && fallbackAsset !== asset) {
       try {
-        return await fetchSvg(fallback);
+        return await fetchSvg(fallbackAsset);
       } catch (fbErr) {
-        logger.error(`Failed to load fallback icon: ${fallback}`, fbErr instanceof Error ? fbErr : undefined);
+        logger.error(
+          `Failed to load fallback icon: ${fallbackAsset}`,
+          fbErr instanceof Error ? fbErr : undefined
+        );
       }
     }
     return null;
@@ -163,23 +66,34 @@ async function loadIcon(name: string, fallback?: string): Promise<string | null>
 /**
  * Icon Component
  *
- * Renders SVG icons loaded from /icons/{name}.svg.
+ * Renders SVG icons loaded from /icons/{asset}.svg.
  * A module-level cache ensures each unique icon is fetched once regardless
  * of how many <Icon> instances are mounted on the page.
  *
  * A stable invisible placeholder is rendered while the SVG is loading
  * so the surrounding layout does not shift.
  */
-export const Icon: React.FC<IconProps> = ({ name, className = '', fallback }) => {
+export const Icon: React.FC<IconProps> = ({
+  iconKey,
+  className = '',
+  fallbackIconKey,
+}) => {
+  const asset = useMemo(() => resolveIconKey(iconKey), [iconKey]);
+  const fallbackAsset = useMemo(
+    () => (fallbackIconKey ? resolveIconKey(fallbackIconKey) : undefined),
+    [fallbackIconKey]
+  );
   const [svgContent, setSvgContent] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    loadIcon(name, fallback).then(content => {
+    loadSvgAsset(asset, fallbackAsset).then(content => {
       if (!cancelled) setSvgContent(content);
     });
-    return () => { cancelled = true; };
-  }, [name, fallback]);
+    return () => {
+      cancelled = true;
+    };
+  }, [asset, fallbackAsset]);
 
   // Same classes applied whether loading or loaded — prevents layout shift.
   const spanClass = `inline-block text-current ${className} [&>svg]:w-full [&>svg]:h-full [&>svg]:shrink-0`;

@@ -10,7 +10,7 @@ import { PageHeader } from '@/components/layout';
 import type { Patient } from '@/types/patient';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { AffiliationPopover } from './AffiliationPopover';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 
 export interface PatientHeaderProps {
   patient: Patient;
@@ -38,8 +38,7 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
               aria-label="View affiliation details"
               title="View affiliation details"
             >
-              <Icon
-                name={ICONS.ui.verified}
+              <Icon iconKey={IconKeys.ui.verified}
                 className="w-5 h-5 text-brand opacity-70 hover:opacity-100"
               />
             </button>

@@ -3,15 +3,14 @@
  */
 
 import type { FilterConfig } from '@/components/filters/types';
-import { MODULE_ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import {
   USER_ACCOUNT_STATUS_OPTIONS,
   USER_FILTER_PLACEHOLDERS,
-  userRoleFilterOptions,
-} from './userFilterConfig';
+  userRoleFilterOptions } from './userFilterConfig';
 
 export const userFilterConfig: FilterConfig = {
-  footerIcon: MODULE_ICONS.users,
+  footerIcon: IconKeys.modules.users,
   footerLabel: 'Users',
   primaryFilters: {
     title: 'User Filters',
@@ -33,6 +32,7 @@ export const userFilterConfig: FilterConfig = {
         type: 'multiSelect',
         label: 'Status',
         options: [...USER_ACCOUNT_STATUS_OPTIONS],
+        icon: IconKeys.domain.orderStatus,
       },
     ],
   },

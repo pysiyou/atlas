@@ -27,5 +27,4 @@ export const patientCreateDefaultValues = {
       alcohol: false,
     },
   },
-  vitalSigns: {},
 } as unknown as Partial<PatientFormInput>;

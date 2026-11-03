@@ -5,7 +5,7 @@
 import React from 'react';
 import { Alert } from '@/components/display';
 import { Icon } from '@/components/primitives';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { text, FIELD_ERROR, TONE } from '@/theme/recipes';
 
 
@@ -35,7 +35,7 @@ export const ResultCriticalValueBanner: React.FC<CriticalValueBannerProps> = ({
     <Alert variant="danger" className={className}>
       <div className="space-y-space-2">
         <div className="flex items-center gap-space-2">
-          <Icon name={ICONS.actions.alertCircle} className="w-4 h-4" />
+          <Icon iconKey={IconKeys.actions.alertCircle} className="w-4 h-4" />
           <h4 className={`${FIELD_ERROR}`}>
             Contains Critical Values
           </h4>

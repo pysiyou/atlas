@@ -77,6 +77,13 @@ export default defineConfig([
 
       // Import boundaries — prefer feature barrels for cross-feature access
       'no-restricted-imports': ['error', {
+        paths: [
+          {
+            name: '@/config/icons',
+            importNames: ['ICONS'],
+            message: 'Use IconKeys (and parseIconKey for enum strings) from @/config/icons — ICONS was removed.',
+          },
+        ],
         patterns: [
           {
             group: [
@@ -108,7 +115,7 @@ export default defineConfig([
           {
             group: ['@/utils'],
             importNames: ['ICONS'],
-            message: 'Import ICONS from @/config/icons instead of @/utils.',
+            message: 'ICONS was removed from @/utils. Use IconKeys from @/config/icons.',
           },
         ],
       }],
@@ -155,7 +162,7 @@ export default defineConfig([
           {
             group: ['@/utils'],
             importNames: ['ICONS'],
-            message: 'Import ICONS from @/config/icons instead of @/utils.',
+            message: 'ICONS was removed from @/utils. Use IconKeys from @/config/icons.',
           },
         ],
       }],

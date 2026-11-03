@@ -9,9 +9,8 @@ import {
   TEST_STATUS_CONFIG,
   PRIORITY_LEVEL_VALUES,
   PRIORITY_LEVEL_CONFIG,
-  TEST_STATUS_VALUES,
-} from '@/types';
-import { ICONS } from '@/config/icons';
+  TEST_STATUS_VALUES } from '@/types';
+import { IconKeys } from '@/config/icons';
 import { SHARED_FILTER_PLACEHOLDERS } from '@/config/filterPlaceholders';
 import { buildLabFilterConfig } from '../utils/buildLabFilterConfig';
 
@@ -33,7 +32,7 @@ export const collectionFilterConfig = buildLabFilterConfig({
       label: 'Status',
       options: COLLECTION_STATUS_OPTIONS,
       selectAllLabel: 'All statuses',
-      icon: ICONS.sampleStatus,
+      icon: IconKeys.domain.sampleStatus,
       placeholder: SHARED_FILTER_PLACEHOLDERS.status,
       helpText: 'Filter by collection status: Pending, Collected, or Rejected.',
     },
@@ -57,7 +56,7 @@ export const entryFilterConfig = buildLabFilterConfig({
       label: 'Status',
       options: entryStatusOptions,
       selectAllLabel: 'All statuses',
-      icon: ICONS.testStatus,
+      icon: IconKeys.domain.testStatus,
       placeholder: SHARED_FILTER_PLACEHOLDERS.status,
       helpText: 'Filter by test status: Sample Collected.',
     },
@@ -83,7 +82,7 @@ export const validationFilterConfig = buildLabFilterConfig({
       label: 'Priority',
       options: priorityOptions,
       selectAllLabel: 'All priorities',
-      icon: ICONS.priority,
+      icon: IconKeys.domain.priority,
       placeholder: 'All priorities',
       helpText: 'Filter by priority level: Low, Medium, High, or Urgent.',
     },
@@ -104,7 +103,7 @@ export const allTestsFilterConfig = buildLabFilterConfig({
       label: 'Status',
       options: allTestsStatusOptions,
       selectAllLabel: 'All statuses',
-      icon: ICONS.testStatus,
+      icon: IconKeys.domain.testStatus,
       placeholder: SHARED_FILTER_PLACEHOLDERS.status,
       helpText: 'Filter by test lifecycle status.',
     },
@@ -114,7 +113,7 @@ export const allTestsFilterConfig = buildLabFilterConfig({
       label: 'Priority',
       options: priorityOptions,
       selectAllLabel: 'All priorities',
-      icon: ICONS.priority,
+      icon: IconKeys.domain.priority,
       placeholder: 'All priorities',
       helpText: 'Filter by order priority.',
     },

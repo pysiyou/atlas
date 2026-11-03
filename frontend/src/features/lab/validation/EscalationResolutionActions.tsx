@@ -1,13 +1,12 @@
 import React from 'react';
 import { Icon } from '@/components/primitives';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import type { FeedbackId } from '@/types/generated/feedbackCatalog';
 import { displayId } from '@/utils';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
 import {
   ForceValidateAction,
-  ResolutionPopover,
-} from './EscalationResolutionPopover';
+  ResolutionPopover } from './EscalationResolutionPopover';
 
 export interface EscalationResolveOptions {
   readBack?: import('@/types/lab-operations').CriticalReadBackPayload;
@@ -135,7 +134,7 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
           resolving={resolving}
           triggerLabel="Authorize Re-test"
           triggerVariant="secondary"
-          triggerIcon={<Icon name={ICONS.actions.loading} />}
+          triggerIcon={<Icon iconKey={IconKeys.actions.loading} />}
           title="Authorize Re-test"
           subtitle={popoverSubtitle(orderTestId, 'Reason (recommended)')}
           textareaId="escalation-authorize-retest-reason"
@@ -158,7 +157,7 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
           resolving={resolving}
           triggerLabel="Authorize Re-collect"
           triggerVariant="secondary"
-          triggerIcon={<Icon name={ICONS.dataFields.sampleCollection} />}
+          triggerIcon={<Icon iconKey={IconKeys.dataFields.sampleCollection} />}
           title="Authorize Re-collect"
           subtitle={popoverSubtitle(orderTestId, 'Reason (required)')}
           textareaId="escalation-authorize-recollect-reason"

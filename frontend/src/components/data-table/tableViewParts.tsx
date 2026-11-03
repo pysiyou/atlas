@@ -2,7 +2,7 @@
 import type { ReactNode } from 'react';
 import { Icon } from '@/components/primitives';
 import { Skeleton } from '@/components/feedback';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import type {
   ColumnConfig,
   TableCellProps,
@@ -66,7 +66,11 @@ export function TableHeader<T>({
             <span>{column.header}</span>
             {isActiveSort && (
               <Icon
-                name={sort.direction === 'asc' ? ICONS.actions.arrowUp : ICONS.actions.arrowDown}
+                iconKey={
+                  sort.direction === 'asc'
+                    ? IconKeys.actions.arrowUp
+                    : IconKeys.actions.arrowDown
+                }
                 className="w-3.5 h-3.5"
               />
             )}

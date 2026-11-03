@@ -7,7 +7,8 @@ import React, { forwardRef, memo, type ButtonHTMLAttributes } from 'react';
 import { SpinnerLoader } from '@/components/feedback/SpinnerLoader';
 import { ICON_SIZE, iconButton as iconButtonRecipe, labelButton as labelButtonRecipe } from '@/theme/recipes';
 import { cn } from '@/utils/cn';
-import { Icon, type IconName } from './Icon';
+import { Icon } from './Icon';
+import type { IconKey } from '@/config/icons';
 
 export type BaseVariant =
   | 'primary'
@@ -61,10 +62,10 @@ function iconButtonClasses(
 function resolveLayout(
   layout: ButtonLayout | undefined,
   icon: React.ReactNode | undefined,
-  iconName: IconName | undefined
+  iconKey: IconKey | undefined
 ): ButtonLayout {
   if (layout) return layout;
-  if (icon != null || iconName != null) return 'icon-text';
+  if (icon != null || iconKey != null) return 'icon-text';
   return 'text';
 }
 
@@ -73,7 +74,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: ButtonSize;
   layout?: ButtonLayout;
   icon?: React.ReactNode;
-  iconName?: IconName;
+  iconKey?: IconKey;
   iconPosition?: 'left' | 'right';
   fullWidth?: boolean;
   isLoading?: boolean;
@@ -86,7 +87,7 @@ export const Button: React.FC<ButtonProps> = ({
   size = 'md',
   layout,
   icon,
-  iconName,
+  iconKey,
   iconPosition = 'left',
   fullWidth = false,
   isLoading = false,
@@ -95,8 +96,8 @@ export const Button: React.FC<ButtonProps> = ({
   disabled,
   ...props
 }) => {
-  const withIcon = resolveLayout(layout, icon, iconName) === 'icon-text';
-  const shouldRenderIcon = withIcon && (icon != null || iconName != null);
+  const withIcon = resolveLayout(layout, icon, iconKey) === 'icon-text';
+  const shouldRenderIcon = withIcon && (icon != null || iconKey != null);
   const iconClass = labelIconSize[size];
 
   const renderIcon = (): React.ReactNode => {
@@ -107,7 +108,7 @@ export const Button: React.FC<ButtonProps> = ({
       });
     }
     if (icon) return icon;
-    if (iconName) return <Icon name={iconName} className={iconClass} />;
+    if (iconKey) return <Icon iconKey={iconKey} className={iconClass} />;
     return null;
   };
 
@@ -157,7 +158,7 @@ export const Button: React.FC<ButtonProps> = ({
 
 interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
   icon?: React.ReactNode;
-  iconName?: IconName;
+  iconKey?: IconKey;
   variant?: IconButtonVariant;
   size?: IconButtonSize;
   shape?: IconButtonShape;
@@ -165,7 +166,7 @@ interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 
 
 export const IconButton = memo(
   forwardRef<HTMLButtonElement, IconButtonProps>(
-    ({ icon, iconName, variant = 'ghost', size = 'md', shape = 'circle', className, disabled, ...props }, ref) => {
+    ({ icon, iconKey, variant = 'ghost', size = 'md', shape = 'circle', className, disabled, ...props }, ref) => {
       const iconClass = iconButtonIconSize[size];
 
       let content: React.ReactNode = null;
@@ -175,8 +176,8 @@ export const IconButton = memo(
         });
       } else if (icon) {
         content = icon;
-      } else if (iconName) {
-        content = <Icon name={iconName} className={iconClass} />;
+      } else if (iconKey) {
+        content = <Icon iconKey={iconKey} className={iconClass} />;
       }
 
       return (

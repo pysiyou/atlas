@@ -4,7 +4,7 @@
 import React from 'react';
 import { Avatar, Badge } from '@/components/primitives';
 import { Callout } from '@/components/display';
-import { MODULE_ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { text, ERROR_SURFACE_TYPE, RADIUS , FG } from '@/theme/recipes';
 import { USER_ROLE_CONFIG, type UserRole } from '@/types';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
@@ -49,7 +49,7 @@ export const UserUpsertModalSummary: React.FC<UserUpsertModalSummaryProps> = ({
 }) => {
   if (!isEdit || !user) {
     return (
-      <Callout variant="neutral" icon={MODULE_ICONS.users} title="Provision account">
+      <Callout variant="neutral" icon={IconKeys.modules.users} title="Provision account">
         Pick a unique <span className={`font-mono ${FG.body}`}>username</span> (login handle) and
         role. Password is set here once; you can reset or disable the account later from this panel.
       </Callout>

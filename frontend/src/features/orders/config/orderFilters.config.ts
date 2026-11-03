@@ -3,7 +3,7 @@
  */
 
 import type { FilterConfig } from '@/components/filters/types';
-import { MODULE_ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { createFilterOptions } from '@/utils/filtering';
 import { ORDER_STATUS_VALUES, ORDER_STATUS_CONFIG } from '@/types';
 import { ORDER_FILTER_PLACEHOLDERS } from '@/config/filterPlaceholders';
@@ -11,7 +11,7 @@ import { ORDER_FILTER_PLACEHOLDERS } from '@/config/filterPlaceholders';
 const orderStatusOptions = createFilterOptions(ORDER_STATUS_VALUES, ORDER_STATUS_CONFIG);
 
 export const orderFilterConfig: FilterConfig = {
-  footerIcon: MODULE_ICONS.orders,
+  footerIcon: IconKeys.modules.orders,
   footerLabel: 'Orders',
   primaryFilters: {
     title: 'Order Filters',
@@ -26,12 +26,14 @@ export const orderFilterConfig: FilterConfig = {
         key: 'dateRange',
         type: 'dateRange',
         label: 'Order Date Range',
+        icon: IconKeys.dataFields.date,
       },
       {
         key: 'status',
         type: 'multiSelect',
         label: 'Order Status',
         options: orderStatusOptions,
+        icon: IconKeys.domain.orderStatus,
       },
     ],
   },

@@ -8,13 +8,12 @@ import { SHARED_FILTER_PLACEHOLDERS } from '@/config/filterPlaceholders';
 import type { TestCategory } from '@/types';
 import { SAMPLE_TYPE_VALUES, SAMPLE_TYPE_CONFIG } from '@/types';
 import { PRICE_RANGE } from '@/utils/constants';
-import { ICONS, MODULE_ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 
 import {
   TEST_CATEGORY_CONFIG as GENERATED_TEST_CATEGORY_CONFIG,
   TEST_CATEGORY_VALUES as GENERATED_TEST_CATEGORY_VALUES,
-  getGeneratedCategoryLabel,
-} from '@/types/generated/catalogCategories';
+  getGeneratedCategoryLabel } from '@/types/generated/catalogCategories';
 
 export const TEST_CATEGORY_CONFIG: Record<string, { label: string; color: string }> =
   GENERATED_TEST_CATEGORY_CONFIG;
@@ -45,7 +44,7 @@ const sampleTypeFilterOptions = SAMPLE_TYPE_VALUES.map(sampleType => ({
  * Catalog filter configuration
  */
 export const catalogFilterConfig: FilterConfig = {
-  footerIcon: MODULE_ICONS.catalog,
+  footerIcon: IconKeys.modules.catalog,
   footerLabel: 'Catalog',
   quickFilters: [],
   primaryFilters: {
@@ -66,7 +65,7 @@ export const catalogFilterConfig: FilterConfig = {
         label: 'Test Category',
         options: categoryFilterOptions,
         selectAllLabel: 'All categories',
-        icon: ICONS.ui.category,
+        icon: IconKeys.ui.category,
         placeholder: SHARED_FILTER_PLACEHOLDERS.testCategory,
         helpText: 'Filter by test category (e.g. Hematology, Biochemistry).',
       },
@@ -76,7 +75,7 @@ export const catalogFilterConfig: FilterConfig = {
         label: 'Sample Type',
         options: sampleTypeFilterOptions,
         selectAllLabel: 'All sample types',
-        icon: ICONS.dataFields.sampleCollection,
+        icon: IconKeys.dataFields.sampleCollection,
         placeholder: SHARED_FILTER_PLACEHOLDERS.sampleType,
         helpText: 'Filter by required sample type for the test.',
       },
@@ -88,7 +87,7 @@ export const catalogFilterConfig: FilterConfig = {
         minValue: PRICE_RANGE.MIN,
         maxValue: PRICE_RANGE.MAX,
         currencySymbol: '',
-        icon: ICONS.dataFields.wallet,
+        icon: IconKeys.dataFields.cash,
         helpText: 'Filter tests by price range (min–max).',
       },
     ],

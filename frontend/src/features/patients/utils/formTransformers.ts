@@ -58,17 +58,6 @@ export function patientToFormInput(patient?: Partial<PatientType>): Partial<Pati
           lifestyle: patient.medicalHistory.lifestyle,
         }
       : undefined,
-    vitalSigns: patient.vitalSigns
-      ? {
-          // Convert null to undefined for form schema compatibility
-          temperature: patient.vitalSigns.temperature ?? undefined,
-          heartRate: patient.vitalSigns.heartRate ?? undefined,
-          systolicBP: patient.vitalSigns.systolicBP ?? undefined,
-          diastolicBP: patient.vitalSigns.diastolicBP ?? undefined,
-          respiratoryRate: patient.vitalSigns.respiratoryRate ?? undefined,
-          oxygenSaturation: patient.vitalSigns.oxygenSaturation ?? undefined,
-        }
-      : undefined,
   };
 }
 
@@ -127,30 +116,6 @@ export function formInputToPayload(
     }
 
     payload.medicalHistory = medicalHistory;
-  }
-
-  // Vital signs: send partial updates (backend accepts optional fields)
-  if (formData.vitalSigns !== undefined && formData.vitalSigns !== null) {
-    // Filter out undefined/null values - only send provided vitals
-    const vs = formData.vitalSigns;
-    const vitalSigns: Record<string, number> = {};
-
-    if (vs.temperature !== undefined && vs.temperature !== null)
-      vitalSigns.temperature = vs.temperature;
-    if (vs.heartRate !== undefined && vs.heartRate !== null) vitalSigns.heartRate = vs.heartRate;
-    if (vs.systolicBP !== undefined && vs.systolicBP !== null)
-      vitalSigns.systolicBP = vs.systolicBP;
-    if (vs.diastolicBP !== undefined && vs.diastolicBP !== null)
-      vitalSigns.diastolicBP = vs.diastolicBP;
-    if (vs.respiratoryRate !== undefined && vs.respiratoryRate !== null)
-      vitalSigns.respiratoryRate = vs.respiratoryRate;
-    if (vs.oxygenSaturation !== undefined && vs.oxygenSaturation !== null)
-      vitalSigns.oxygenSaturation = vs.oxygenSaturation;
-
-    // Only include vitalSigns if at least one field has a value
-    if (Object.keys(vitalSigns).length > 0) {
-      payload.vitalSigns = vitalSigns;
-    }
   }
 
   return payload;

@@ -5,13 +5,14 @@
 import React from 'react';
 import { FooterInfo } from '@/components/display';
 import { DialogFooter } from '@/components/overlays';
-import { Button, type IconName } from '@/components/primitives';
+import { Button } from '@/components/primitives';
+import type { IconKey } from '@/config/icons';
 
 export interface FilterModalFooterProps {
   onReset: () => void;
   onApply: () => void;
   /** Module icon shown in the footer */
-  icon: IconName;
+  icon: IconKey;
   /** Screen-reader label for the footer icon */
   label?: string;
 }

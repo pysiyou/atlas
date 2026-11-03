@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 
 import { Icon } from '@/components/primitives/Icon';
 import { cn } from '@/utils';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { inputBase } from '@/theme/recipes';
 import { CONTROL, PAGINATION_TYPE, RADIUS, TABLE_TYPE } from '@/theme/recipes';
 
@@ -101,7 +101,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           className={navButtonClass}
           aria-label="Previous page"
         >
-          <Icon name={ICONS.actions.chevronLeft} className="h-3.5 w-3.5" />
+          <Icon iconKey={IconKeys.actions.chevronLeft} className="h-3.5 w-3.5" />
         </button>
 
         <div className="mx-space-0-5 flex max-w-full items-center gap-space-0-5 overflow-x-auto">
@@ -133,7 +133,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           className={navButtonClass}
           aria-label="Next page"
         >
-          <Icon name={ICONS.actions.chevronRight} className="h-3.5 w-3.5" />
+          <Icon iconKey={IconKeys.actions.chevronRight} className="h-3.5 w-3.5" />
         </button>
       </div>
     </div>

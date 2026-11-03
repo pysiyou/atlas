@@ -1,8 +1,8 @@
 /**
  * Event log search intent classification and match-group builders (pure).
  */
-import type { IconName } from '@/components/primitives';
-import { ICONS } from '@/config/icons';
+import type { IconKey } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { formatDisplayId } from '@/utils/id';
 import type { AuditSearchPreviewResponse } from './api';
 import { parseRecordFilterDisplayId } from './eventLogPanelState';
@@ -115,7 +115,7 @@ export interface EventLogSearchMatchItem {
   primary: string;
   secondary?: string;
   applyValue: string;
-  icon?: IconName;
+  icon?: IconKey;
   avatarName?: string;
 }
 
@@ -130,7 +130,7 @@ function buildRecordIdItems(intent: EventLogSearchIntent): EventLogSearchMatchIt
     return [
       {
         key: 'order',
-        icon: ICONS.dataFields.document,
+        icon: IconKeys.dataFields.document,
         primary: `${EVENT_LOG_COPY.searchIntentOrder} ${intent.displayToken}`,
         secondary: intent.displayToken,
         applyValue: intent.displayToken,
@@ -141,7 +141,7 @@ function buildRecordIdItems(intent: EventLogSearchIntent): EventLogSearchMatchIt
     return [
       {
         key: 'test',
-        icon: ICONS.dataFields.testId,
+        icon: IconKeys.dataFields.testId,
         primary: `${EVENT_LOG_COPY.searchIntentTest} ${intent.displayToken}`,
         secondary: intent.displayToken,
         applyValue: intent.displayToken,
@@ -152,7 +152,7 @@ function buildRecordIdItems(intent: EventLogSearchIntent): EventLogSearchMatchIt
     return [
       {
         key: 'sample',
-        icon: ICONS.dataFields.sampleId,
+        icon: IconKeys.dataFields.sampleId,
         primary: `${EVENT_LOG_COPY.searchIntentSample} ${intent.displayToken}`,
         secondary: intent.displayToken,
         applyValue: intent.displayToken,
@@ -163,7 +163,7 @@ function buildRecordIdItems(intent: EventLogSearchIntent): EventLogSearchMatchIt
     return [
       {
         key: 'patient',
-        icon: ICONS.dataFields.patientId,
+        icon: IconKeys.dataFields.patientId,
         primary: `${EVENT_LOG_COPY.searchIntentPatient} ${intent.displayToken}`,
         secondary: intent.displayToken,
         applyValue: intent.displayToken,
@@ -180,35 +180,35 @@ function buildRecordIdItems(intent: EventLogSearchIntent): EventLogSearchMatchIt
     return [
       {
         key: 'numeric-order',
-        icon: ICONS.dataFields.orderId,
+        icon: IconKeys.dataFields.orderId,
         primary: `${EVENT_LOG_COPY.searchIntentOrder} ${orderId}`,
         secondary: orderId,
         applyValue: orderId,
       },
       {
         key: 'numeric-patient',
-        icon: ICONS.dataFields.patientId,
+        icon: IconKeys.dataFields.patientId,
         primary: `${EVENT_LOG_COPY.searchIntentPatient} ${patientId}`,
         secondary: patientId,
         applyValue: patientId,
       },
       {
         key: 'numeric-test',
-        icon: ICONS.dataFields.testId,
+        icon: IconKeys.dataFields.testId,
         primary: `${EVENT_LOG_COPY.searchIntentTest} ${testId}`,
         secondary: testId,
         applyValue: testId,
       },
       {
         key: 'numeric-sample',
-        icon: ICONS.dataFields.sampleId,
+        icon: IconKeys.dataFields.sampleId,
         primary: `${EVENT_LOG_COPY.searchIntentSample} ${sampleId}`,
         secondary: sampleId,
         applyValue: sampleId,
       },
       {
         key: 'numeric-target',
-        icon: ICONS.dataFields.orderId,
+        icon: IconKeys.dataFields.orderId,
         primary: `${EVENT_LOG_COPY.searchIntentNumericTarget} ${term}`,
         secondary: term,
         applyValue: term,
@@ -255,7 +255,7 @@ export function buildEventLogSearchMatchGroups(
         label: EVENT_LOG_COPY.searchPreviewUsers,
         items: preview.users.map(user => ({
           key: `user-${user.id}`,
-          icon: ICONS.dataFields.user,
+          icon: IconKeys.dataFields.user,
           primary: user.name,
           secondary: `@${user.username}`,
           applyValue: user.username,

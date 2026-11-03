@@ -5,46 +5,47 @@
  */
 
 import React, { type InputHTMLAttributes } from 'react';
-import { Icon, type IconName } from '@/components/primitives/Icon';
-import { ICONS } from '@/config/icons';
+import { Icon } from '@/components/primitives/Icon';
+import { IconKeys } from '@/config/icons';
+import type { IconKey } from '@/config/icons';
 import { text, inputBase, inputError, FORM_CONTROL_LABEL } from '@/theme/recipes';
 import { FIELD_ERROR, SPACING, TONE } from '@/theme/recipes';
 
 type FormFieldKind = 'input' | 'textarea' | 'select';
 
-function getDefaultIconForInput(name: string, type: string): IconName | undefined {
-  if (type === 'email' || name.includes('email')) return 'sms';
-  if (type === 'tel' || name.includes('phone')) return 'phone';
-  if (name.includes('emergencyContactFullName')) return 'link';
-  if (name.includes('height')) return 'ruler';
-  if (name.includes('weight')) return 'weight';
-  if (name.includes('name')) return 'user';
-  if (name.includes('address') || name.includes('street')) return 'location';
-  if (name.includes('city')) return 'city';
-  if (name.includes('postal') || name.includes('zip')) return 'location';
+function getDefaultIconForInput(name: string, type: string): IconKey | undefined {
+  if (type === 'email' || name.includes('email')) return IconKeys.dataFields.email;
+  if (type === 'tel' || name.includes('phone')) return IconKeys.dataFields.phone;
+  if (name.includes('emergencyContactFullName')) return IconKeys.ui.link;
+  if (name.includes('height')) return IconKeys.dataFields.height;
+  if (name.includes('weight')) return IconKeys.dataFields.weight;
+  if (name.includes('name')) return IconKeys.dataFields.user;
+  if (name.includes('address') || name.includes('street')) return IconKeys.dataFields.address;
+  if (name.includes('city')) return IconKeys.ui.city;
+  if (name.includes('postal') || name.includes('zip')) return IconKeys.dataFields.location;
   return undefined;
 }
 
-function getDefaultIconForTextarea(name: string): IconName {
-  if (name.includes('note') || name.includes('comment')) return ICONS.actions.edit;
-  if (name.includes('history') || name.includes('medical')) return ICONS.dataFields.medicalKit;
-  return ICONS.dataFields.document;
+function getDefaultIconForTextarea(name: string): IconKey {
+  if (name.includes('note') || name.includes('comment')) return IconKeys.actions.edit;
+  if (name.includes('history') || name.includes('medical')) return IconKeys.dataFields.medicalKit;
+  return IconKeys.dataFields.document;
 }
 
-function getDefaultIconForSelect(name: string): IconName {
-  if (name.includes('gender')) return ICONS.dataFields.userHands;
-  if (name.includes('relationship')) return ICONS.ui.link;
-  if (name.includes('duration') || name.includes('affiliation')) return ICONS.dataFields.time;
-  return ICONS.actions.infoCircle;
+function getDefaultIconForSelect(name: string): IconKey {
+  if (name.includes('gender')) return IconKeys.dataFields.userHands;
+  if (name.includes('relationship')) return IconKeys.ui.link;
+  if (name.includes('duration') || name.includes('affiliation')) return IconKeys.dataFields.time;
+  return IconKeys.actions.infoCircle;
 }
 
 function getDefaultIconForField(
   kind: FormFieldKind,
-  explicitIcon: IconName | undefined,
+  explicitIcon: IconKey | undefined,
   inferIcon: boolean,
   type?: string,
   name?: string
-): IconName | undefined {
+): IconKey | undefined {
   if (explicitIcon !== undefined) return explicitIcon;
   if (!inferIcon) return undefined;
 
@@ -107,7 +108,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   helperText?: string;
-  icon?: IconName;
+  icon?: IconKey;
   /** When true, pick a default icon from the input `name` / `type`. */
   inferIcon?: boolean;
 }
@@ -138,7 +139,7 @@ export const Input: React.FC<InputProps> = ({
         {displayIcon && (
           <div className="absolute inset-y-0 left-0 pl-space-3 flex items-center pointer-events-none">
             <Icon
-              name={displayIcon}
+              iconKey={displayIcon}
               className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors"
             />
           </div>
@@ -157,7 +158,7 @@ interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
   label?: string;
   error?: string;
   helperText?: string;
-  icon?: IconName;
+  icon?: IconKey;
   inferIcon?: boolean;
 }
 
@@ -186,7 +187,7 @@ export const Textarea: React.FC<TextareaProps> = ({
         {displayIcon && (
           <div className="absolute top-space-2-5 left-space-3 pointer-events-none">
             <Icon
-              name={displayIcon}
+              iconKey={displayIcon}
               className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors"
             />
           </div>
@@ -207,7 +208,7 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   error?: string;
   helperText?: string;
   options: readonly { value: string; label: string }[] | { value: string; label: string }[];
-  icon?: IconName;
+  icon?: IconKey;
   inferIcon?: boolean;
 }
 
@@ -237,7 +238,7 @@ export const Select: React.FC<SelectProps> = ({
         {displayIcon && (
           <div className="absolute inset-y-0 left-0 pl-space-3 flex items-center pointer-events-none">
             <Icon
-              name={displayIcon}
+              iconKey={displayIcon}
               className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors"
             />
           </div>

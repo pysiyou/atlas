@@ -5,7 +5,7 @@
 import React, { useMemo } from 'react';
 import { text, FG } from '@/theme/recipes';
 import { Icon } from '@/components/primitives';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import type { Patient } from '@/types';
 import { DETAIL_SECTION_GENERAL_INFO_GRID } from '@/components/display';
 import { renderGeneralInfoDescriptionItems } from '@/features/patients';
@@ -28,8 +28,7 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
     return (
       <div className="flex items-center justify-center min-h-50">
         <div className="text-center">
-          <Icon
-            name={ICONS.dataFields.user}
+          <Icon iconKey={IconKeys.dataFields.user}
             className={`w-12 h-12 ${FG.disabled} mx-auto mb-space-2`}
           />
           <p className={text({ role: 'amount', intent: 'muted' })}>Patient Not Found</p>

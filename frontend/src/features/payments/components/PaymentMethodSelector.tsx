@@ -4,8 +4,7 @@
 
 import React from 'react';
 import { Icon } from '@/components/primitives/Icon';
-import type { IconName } from '@/components/primitives/Icon';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import type { PaymentMethodOption, PaymentMethod } from '@/types/payments';
 import {text, RADIUS, FG } from '@/theme/recipes';
 
@@ -36,7 +35,7 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
             ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
           `}
         >
-          <Icon name={method.icon as IconName} className={`w-7 h-7 shrink-0 ${FG.disabled}`} />
+          <Icon iconKey={method.iconKey} className={`w-7 h-7 shrink-0 ${FG.disabled}`} />
           <span className={`flex-1 font-normal text-left ${text({ role: 'label' })}`}>
             {method.label.toUpperCase()}
           </span>
@@ -46,7 +45,7 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
               ${isSelected ? 'bg-brand' : 'bg-transparent border-2 border-border-strong'}
             `}
           >
-            {isSelected && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
+            {isSelected && <Icon iconKey={IconKeys.actions.check} className="w-3 h-3 text-on-brand" />}
           </div>
         </button>
       );

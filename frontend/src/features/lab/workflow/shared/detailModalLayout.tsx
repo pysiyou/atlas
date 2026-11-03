@@ -7,15 +7,14 @@ import React, { type ReactNode } from 'react';
 import { DialogFooter, Modal, ModalPageShell, MODAL_WORKFLOW_BODY_STACK } from '@/components/overlays';
 import { Panel, type PanelPresetId } from '@/components/surfaces';
 import { DescriptionList, FooterInfo, ModalContextSubtitle } from '@/components/display';
-import { MODULE_ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import type { DescriptionListItemConfig } from '@/components/display';
 import { useUserLookup } from '@/lib/api/users';
 import {
   LabHeaderCompactContext,
   LabModalHeader,
   type LabWorkflowModalContext,
-  type LabAuditLine,
-} from '../../components/LabWorkflowHeader';
+  type LabAuditLine } from '../../components/LabWorkflowHeader';
 import { text , FG } from '@/theme/recipes';
 import { LAB_COPY, labStageLabel, type LabWorkflowStage } from '../../constants/labConstants';
 
@@ -83,7 +82,7 @@ export const QueueModalShell: React.FC<QueueModalShellProps> = ({
                 <DialogFooter
                   start={
                     footerInfo || (
-                      <FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" size="md" />
+                      <FooterInfo icon={IconKeys.modules.laboratory} label="Laboratory" size="md" />
                     )
                   }
                   end={footer}

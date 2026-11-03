@@ -5,7 +5,7 @@ import { MultiSelectFilter } from '@/components/overlays';
 import type { FilterOption } from '@/components/overlays';
 import { GENDER_VALUES, GENDER_CONFIG, type Gender } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { FORM_FIELD_LABEL } from '@/theme/recipes';
 import { FIELD_ERROR, TONE } from '@/theme/recipes';
 import { patientFieldError } from '../patientFormFieldError';
@@ -76,7 +76,7 @@ export const DemographicsSection: React.FC = () => {
             placeholder="Select gender"
             showSelectAll={false}
             singleSelect={true}
-            icon={ICONS.dataFields.userHands}
+            icon={IconKeys.dataFields.userHands}
             className="w-full"
           />
           {patientFieldError(errors, 'gender') && (

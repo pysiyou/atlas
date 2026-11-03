@@ -9,7 +9,7 @@
 import React, { type ReactNode } from 'react';
 import { ErrorAlert } from '@/components/feedback/ErrorAlert';
 import { EmptyState } from '@/components/display';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { WORKSPACE } from '@/theme/recipes';
 import { useAppChromeMount } from './appChromeMount';
 import { cn } from '@/utils';
@@ -67,7 +67,7 @@ export const DetailPageShell: React.FC<DetailPageShellProps> = ({
       ) : notFound ? (
         <div className="flex-1 flex items-center justify-center min-h-0">
           <EmptyState
-            icon={ICONS.actions.alertCircle}
+            icon={IconKeys.actions.alertCircle}
             title={notFoundTitle}
             description={notFoundDescription}
           />

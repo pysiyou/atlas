@@ -5,7 +5,9 @@
 /* eslint-disable react-refresh/only-export-components -- single module: Toast + variant tokens */
 
 import React, { type HTMLAttributes, type ReactNode } from 'react';
-import { Icon, type IconName } from '@/components/primitives/Icon';
+import { Icon } from '@/components/primitives/Icon';
+import { IconKeys } from '@/config/icons';
+import { TOAST_ICON_KEYS } from '@/config/icons';
 import { RADIUS, TOAST_TYPE } from '@/theme/recipes';
 import { cn } from '@/utils';
 
@@ -72,14 +74,6 @@ function getToastIconClasses(variant: ToastVariant): string {
   return TOAST_ICON_CLASS[variant];
 }
 
-export const TOAST_ICON_NAME: Record<ToastVariant, IconName | null> = {
-  success: 'check-circle',
-  error: 'alert-circle',
-  info: 'info-circle',
-  warning: 'warning',
-  loading: null,
-};
-
 function ToastIcon({
   variant,
   customIcon,
@@ -111,10 +105,10 @@ function ToastIcon({
     );
   }
 
-  const iconName = TOAST_ICON_NAME[variant];
-  if (!iconName) return null;
+  const iconKey = TOAST_ICON_KEYS[variant];
+  if (!iconKey) return null;
 
-  return <Icon name={iconName} className={cn('mt-space-0-5 shrink-0 w-5 h-5', accentClass)} />;
+  return <Icon iconKey={iconKey} className={cn('mt-space-0-5 shrink-0 w-5 h-5', accentClass)} />;
 }
 
 function ActionChip({ action }: { action: ToastAction }) {
@@ -167,7 +161,7 @@ export const Toast: React.FC<BaseToastProps> = React.memo(
               onDismiss();
             }}
           >
-            <Icon name="close" className="w-4 h-4 pointer-events-none" />
+            <Icon iconKey={IconKeys.actions.close} className="w-4 h-4 pointer-events-none" />
           </button>
         ) : null}
       </div>

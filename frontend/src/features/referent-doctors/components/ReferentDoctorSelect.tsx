@@ -12,16 +12,14 @@ import {
   FG,
   CONTROL,
   FIELD_ERROR,
-  SPACING,
-} from '@/theme/recipes';
-import { ICONS } from '@/config/icons';
+  SPACING } from '@/theme/recipes';
+import { IconKeys } from '@/config/icons';
 import { SearchResultsPopoverShell } from '@/components/overlays/SearchResultsPopoverShell';
 import type { OrderFormInput } from '@/features/orders/schemas/order.schema';
 import {
   type ReferentDoctor,
   useCreateReferentDoctor,
-  useReferentDoctorSearch,
-} from '../api/referentDoctors';
+  useReferentDoctorSearch } from '../api/referentDoctors';
 
 function formatDoctorMetaLine(doctor: ReferentDoctor): string {
   return [
@@ -132,8 +130,7 @@ export const ReferentDoctorSelect: React.FC<ReferentDoctorSelectProps> = ({
             )}
           >
             <div className="absolute inset-y-0 left-0 pl-space-3 flex items-center pointer-events-none">
-              <Icon
-                name={ICONS.dataFields.stethoscope}
+              <Icon iconKey={IconKeys.dataFields.referentDoctor}
                 className={`w-4 h-4 ${FG.muted} group-hover:text-brand transition-colors`}
               />
             </div>
@@ -200,7 +197,7 @@ export const ReferentDoctorSelect: React.FC<ReferentDoctorSelectProps> = ({
               <Input
                 label="Username"
                 name="referentDoctorUsername"
-                icon={ICONS.dataFields.user}
+                icon={IconKeys.dataFields.user}
                 value={newUsername}
                 onChange={e => setNewUsername(e.target.value)}
                 placeholder="e.g. j.smith"
@@ -208,7 +205,7 @@ export const ReferentDoctorSelect: React.FC<ReferentDoctorSelectProps> = ({
               <Input
                 label="Hospital"
                 name="referentDoctorHospital"
-                icon={ICONS.dataFields.mapPin}
+                icon={IconKeys.dataFields.mapPin}
                 value={newHospital}
                 onChange={e => setNewHospital(e.target.value)}
                 placeholder="Facility name"
@@ -216,7 +213,7 @@ export const ReferentDoctorSelect: React.FC<ReferentDoctorSelectProps> = ({
               <Input
                 label="Phone"
                 name="referentDoctorPhone"
-                icon={ICONS.dataFields.phone}
+                icon={IconKeys.dataFields.phone}
                 value={newPhone}
                 onChange={e => setNewPhone(e.target.value)}
                 placeholder="Contact number"
@@ -224,7 +221,7 @@ export const ReferentDoctorSelect: React.FC<ReferentDoctorSelectProps> = ({
               <Input
                 label="Email"
                 name="referentDoctorEmail"
-                icon={ICONS.dataFields.email}
+                icon={IconKeys.dataFields.email}
                 value={newEmail}
                 onChange={e => setNewEmail(e.target.value)}
                 placeholder="email@hospital.org"

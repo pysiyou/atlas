@@ -4,7 +4,8 @@
 
 import React from 'react';
 import { Badge, type BadgeVariant } from '@/components/primitives';
-import { Icon, type IconName } from '@/components/primitives/Icon';
+import { Icon } from '@/components/primitives/Icon';
+import type { IconKey } from '@/config/icons';
 import { Text } from '@/components/layout/Text';
 import { SPACING, text } from '@/theme/recipes';
 import { formatDateTime } from '@/utils';
@@ -30,7 +31,7 @@ export interface DescriptionItemProps {
   valueClassName?: string;
   variant?: DescriptionItemVariant;
   orientation?: 'horizontal' | 'vertical';
-  icon?: IconName;
+  icon?: IconKey;
   span?: 'full';
   timestamp?: string;
   userDisplay?: string;
@@ -86,7 +87,7 @@ export function DescriptionItem({
           className
         )}
       >
-        {icon && <Icon name={icon} className="mt-space-0-5 w-4 h-4 shrink-0 text-text-disabled" />}
+        {icon && <Icon iconKey={icon} className="mt-space-0-5 w-4 h-4 shrink-0 text-text-disabled" />}
         <div className="min-w-0 flex-1">
           <Text role="label">{label}</Text>
           <div className={`mt-space-0-5 text-left break-words whitespace-normal ${text({ role: 'body' })}`}>
@@ -109,7 +110,7 @@ export function DescriptionItem({
   return (
     <div className={`flex items-start justify-between gap-layout-section ${className}`}>
       <div className="flex items-start gap-space-2 min-w-0 shrink-0">
-        {icon && <Icon name={icon} className="mt-space-0-5 w-4 h-4 text-text-tertiary flex-shrink-0" />}
+        {icon && <Icon iconKey={icon} className="mt-space-0-5 w-4 h-4 text-text-tertiary flex-shrink-0" />}
         <span className={`font-normal whitespace-nowrap ${labelClassName}`}>{label}</span>
       </div>
       <div className={`text-right min-w-0 flex-1 break-words whitespace-normal ${valueClassName}`}>

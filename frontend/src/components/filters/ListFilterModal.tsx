@@ -4,7 +4,7 @@
 
 import React, { type ReactNode } from 'react';
 import { Modal, ModalPageShell, OverlaySearchInput } from '@/components/overlays';
-import type { IconName } from '@/components/primitives';
+import type { IconKey } from '@/config/icons';
 import { FilterModalFooter } from './FilterModalFooter';
 
 export interface ListFilterModalProps {
@@ -14,7 +14,7 @@ export interface ListFilterModalProps {
   onSearchChange: (value: string) => void;
   searchPlaceholder: string;
   onReset: () => void;
-  footerIcon: IconName;
+  footerIcon: IconKey;
   footerLabel?: string;
   children: ReactNode;
 }

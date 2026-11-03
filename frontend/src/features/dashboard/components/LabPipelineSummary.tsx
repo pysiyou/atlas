@@ -5,8 +5,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, labPipelineCardLoadingContent } from '@/components/surfaces';
-import { Badge, Icon, type IconName } from '@/components/primitives';
-import { ICONS } from '@/config/icons';
+import { Badge, Icon } from '@/components/primitives';
+import type { IconKey } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import {
   useLabStageQueueCounts,
   getValidationTabCount,
@@ -20,12 +21,12 @@ import { text, INLINE_LINK, RADIUS } from '@/theme/recipes';
 
 const LAB_QUEUE_ITEMS: Array<{
   id: LabWorkflowStage;
-  icon: string;
+  icon: IconKey;
   countKey: keyof ReturnType<typeof useLabStageQueueCounts>['counts'];
 }> = [
-  { id: 'collection', icon: ICONS.dataFields.flask, countKey: 'collection' },
-  { id: 'entry', icon: ICONS.dataFields.notebook, countKey: 'entry' },
-  { id: 'validation', icon: ICONS.ui.shieldCheck, countKey: 'validation' },
+  { id: 'collection', icon: IconKeys.modules.laboratory, countKey: 'collection' },
+  { id: 'entry', icon: IconKeys.actions.edit, countKey: 'entry' },
+  { id: 'validation', icon: IconKeys.ui.shieldCheck, countKey: 'validation' },
 ];
 
 export interface LabPipelineSummaryProps {
@@ -68,10 +69,7 @@ export const LabPipelineSummary: React.FC<LabPipelineSummaryProps> = ({ loading:
               className={`flex items-center justify-between p-space-3 ${RADIUS.field} border border-border-default hover:bg-surface-page transition-colors`}
             >
               <div className="flex items-center gap-space-2 min-w-0">
-                <Icon
-                  name={item.icon as IconName}
-                  className={`w-4 h-4 shrink-0 ${stageVisual.text}`}
-                />
+                <Icon iconKey={item.icon} className={`w-4 h-4 shrink-0 ${stageVisual.text}`} />
                 <span className={`${text({ role: 'label' })} truncate`}>{LAB_TAB_LABELS[item.id]}</span>
               </div>
               {count > 0 && (

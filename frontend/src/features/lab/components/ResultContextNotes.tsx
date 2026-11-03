@@ -3,15 +3,14 @@
  */
 import React, { useMemo } from 'react';
 import { Icon } from '@/components/primitives';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import {text, FIELD_ERROR, RADIUS, TONE, FG } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { useParameterLabelMap } from '@/features/catalog';
 import {
   analyticalFlagDetail,
   analyticalFlagLabel,
-  parseAnalyticalFlags,
-} from '../utils/analyticalFlags';
+  parseAnalyticalFlags } from '../utils/analyticalFlags';
 
 interface ResultContextNotesProps {
   flags?: string[];
@@ -79,7 +78,7 @@ function AnalyticalFlagsBlock({
   return (
     <div className={cn(TONE.warning.well, RADIUS.surface, 'px-space-3 py-space-2-5')}>
       <p className={`${text({ role: 'section-title' })} text-warning-fg mb-space-1.5 flex items-center gap-space-1`}>
-        <Icon name={ICONS.actions.alertCircle} className="w-3.5 h-3.5" />
+        <Icon iconKey={IconKeys.actions.alertCircle} className="w-3.5 h-3.5" />
         Analytical flags
       </p>
       <div className={FIELD_ERROR}>{flagGrid}</div>

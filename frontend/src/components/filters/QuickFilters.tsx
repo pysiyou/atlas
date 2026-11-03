@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { FilterChip, type IconName } from '@/components/primitives';
+import { FilterChip } from '@/components/primitives';
 import { cn } from '@/utils';
 import type { QuickFilterPreset } from './types';
 
@@ -32,7 +32,7 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
           key={preset.id}
           size="xs"
           active={activePresetId === preset.id}
-          icon={preset.icon as IconName | undefined}
+          icon={preset.icon}
           onClick={() => onPresetClick(preset.id)}
         >
           {preset.label}

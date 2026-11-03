@@ -776,6 +776,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/lab/worklists/all-tests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get All Tests Worklist */
+        get: operations["get_all_tests_worklist_api_v1_lab_worklists_all_tests_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/lab/board": {
         parameters: {
             query?: never;
@@ -2445,7 +2462,6 @@ export interface components {
             medicalHistory?: components["schemas"]["MedicalHistory"] | null;
             /** Affiliation */
             affiliation?: components["schemas"]["Affiliation"] | components["schemas"]["AffiliationInput"] | null;
-            vitalSigns?: components["schemas"]["VitalSigns"] | null;
         };
         /**
          * PatientOrderSummary
@@ -2495,7 +2511,6 @@ export interface components {
             emergencyContact: components["schemas"]["EmergencyContactResponse"];
             medicalHistory?: components["schemas"]["MedicalHistory"] | null;
             affiliation?: components["schemas"]["Affiliation"] | null;
-            vitalSigns?: components["schemas"]["VitalSigns"] | null;
             /** Id */
             id: number;
             /**
@@ -2542,7 +2557,6 @@ export interface components {
             medicalHistory?: components["schemas"]["MedicalHistory"] | null;
             /** Affiliation */
             affiliation?: components["schemas"]["Affiliation"] | components["schemas"]["AffiliationInput"] | null;
-            vitalSigns?: components["schemas"]["VitalSigns"] | null;
         };
         /** PaymentCreate */
         PaymentCreate: {
@@ -3566,42 +3580,6 @@ export interface components {
             msg: string;
             /** Error Type */
             type: string;
-        };
-        /**
-         * VitalSigns
-         * @description Current patient vital signs (2026 Reference Standards).
-         */
-        VitalSigns: {
-            /**
-             * Temperature
-             * @description In Celsius. Normal: 36.5-37.3
-             */
-            temperature?: number | null;
-            /**
-             * Heartrate
-             * @description BPM. Normal: 60-100
-             */
-            heartRate?: number | null;
-            /**
-             * Systolicbp
-             * @description mmHg. Normal: <120
-             */
-            systolicBP?: number | null;
-            /**
-             * Diastolicbp
-             * @description mmHg. Normal: <80
-             */
-            diastolicBP?: number | null;
-            /**
-             * Respiratoryrate
-             * @description Breaths/min. Normal: 12-20
-             */
-            respiratoryRate?: number | null;
-            /**
-             * Oxygensaturation
-             * @description SpO2 %. Normal: 95-100
-             */
-            oxygenSaturation?: number | null;
         };
     };
     responses: never;
@@ -5389,6 +5367,49 @@ export interface operations {
             query?: {
                 page?: number;
                 pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_all_tests_worklist_api_v1_lab_worklists_all_tests_get: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                search?: string | null;
+                /** @description Comma-separated test statuses */
+                status?: string | null;
+                /** @description Comma-separated priority levels */
+                priority?: string | null;
+                /** @description Last modified on or after (UTC date) */
+                dateFrom?: string | null;
+                /** @description Last modified on or before (UTC date) */
+                dateTo?: string | null;
+                /** @description Comma-separated sample types */
+                sampleType?: string | null;
             };
             header?: never;
             path?: never;

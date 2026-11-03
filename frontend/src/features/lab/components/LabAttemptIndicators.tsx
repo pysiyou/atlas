@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 import { Badge } from '@/components/primitives';
 import { cn } from '@/utils';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { text, OVERLAY, RADIUS, TONE , FG } from '@/theme/recipes';
 
 
@@ -50,7 +50,7 @@ export const AttemptIndicator: React.FC<AttemptIndicatorProps> = ({
         variant={isNearLimit ? 'warning' : 'neutral'}
         size="xs"
         uppercase={false}
-        icon={ICONS.actions.alertCircle}
+        icon={IconKeys.actions.alertCircle}
         className="cursor-help"
       >
         {attemptNumber}/{maxAttempts}

@@ -4,7 +4,7 @@
 
 import type { ContainerType, Order, Sample, Test } from '@/types';
 import { FooterInfo } from '@/components/display';
-import { MODULE_ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { QueueModalShell, labModalHeaderContext } from '../shared/detailModalLayout';
 import { CollectionHeaderBadges } from '../../components/LabWorkflowBadges';
 import { SampleCollectionCardLeftColumn } from '../shared/queueCardLeftColumn';
@@ -12,8 +12,7 @@ import { LabRelatedSamplesPanel } from '../../components/LabRelatedWorkflowPanel
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import {
   SampleCollectionDetailContent,
-  SampleCollectionDetailFooter,
-} from './detailModal.sampleCollection.panels';
+  SampleCollectionDetailFooter } from './detailModal.sampleCollection.panels';
 import { LabEventLogPanel } from '@/features/audit';
 import type { deriveCollectionModalFields } from '@/utils/presentation';
 
@@ -148,7 +147,7 @@ export function SampleCollectionDetailModalView({
       footer={showFooter ? footerContent : undefined}
       footerInfo={
         showFooter && !hasFooterActions
-          ? <FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" size="md" />
+          ? <FooterInfo icon={IconKeys.modules.laboratory} label="Laboratory" size="md" />
           : undefined
       }
     >

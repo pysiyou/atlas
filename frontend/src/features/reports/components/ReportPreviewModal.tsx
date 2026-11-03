@@ -9,10 +9,9 @@ import {
   DialogFooter,
   Modal,
   ModalPageShell,
-  MODAL_WORKFLOW_BODY_STACK,
-} from '@/components/overlays';
+  MODAL_WORKFLOW_BODY_STACK } from '@/components/overlays';
 import { FooterInfo, ModalContextSubtitle } from '@/components/display';
-import { MODULE_ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { ReportPreviewResults } from './ReportPreviewResults';
 import { uniqueSortedTestCodes, useTestsByCodes } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users';
@@ -129,7 +128,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
         bodyClassName={MODAL_WORKFLOW_BODY_STACK}
         footer={
           <DialogFooter
-            start={<FooterInfo icon={MODULE_ICONS.reports} label="Reports" size="md" />}
+            start={<FooterInfo icon={IconKeys.modules.reports} label="Reports" size="md" />}
             end={
               <Button
                 {...actionButtonPreset('download')}

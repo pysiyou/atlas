@@ -42,8 +42,10 @@ export const DEFAULT_EMPTY_DESCRIPTION_FILTERS = emptySubtitle(
   'results',
   'your filters match records',
 );
-export const DEFAULT_EMPTY_ICON = 'database' as const;
-export const EMPTY_ICON_SEARCH = 'search' as const;
+import { IconKeys } from '@/config/icons';
+
+export const DEFAULT_EMPTY_ICON = IconKeys.ui.database;
+export const EMPTY_ICON_SEARCH = IconKeys.actions.search;
 export const DEFAULT_EMPTY_TITLE_NO_MATCHES = emptyTitle('matching results');
 
 // ---------------------------------------------------------------------------

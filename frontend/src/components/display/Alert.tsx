@@ -3,7 +3,10 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { Icon, type IconName } from '@/components/primitives/Icon';
+import { Icon } from '@/components/primitives/Icon';
+import { IconKeys } from '@/config/icons';
+import { FEEDBACK_ICON_KEYS } from '@/config/icons';
+import type { IconKey } from '@/config/icons';
 import { getColorStyles, type BadgeColor } from '@/components/primitives';
 import { useBadgeAppearance, type BadgeAppearance } from '@/theme/theme';
 import { ALERT_SURFACE_TYPE, RADIUS, SHADOW } from '@/theme/recipes';
@@ -26,11 +29,11 @@ const VARIANT_COLOR: Record<NonNullable<AlertProps['variant']>, BadgeColor> = {
   danger: 'danger',
 };
 
-const ALERT_ICON_NAME: Record<NonNullable<AlertProps['variant']>, IconName> = {
-  info: 'info-circle',
-  success: 'check-circle',
-  warning: 'warning',
-  danger: 'alert-circle',
+const ALERT_ICON_KEY: Record<NonNullable<AlertProps['variant']>, IconKey> = {
+  info: FEEDBACK_ICON_KEYS.info,
+  success: FEEDBACK_ICON_KEYS.success,
+  warning: FEEDBACK_ICON_KEYS.warning,
+  danger: FEEDBACK_ICON_KEYS.danger,
 };
 
 function getAlertShellClasses(
@@ -101,7 +104,7 @@ export const Alert: React.FC<AlertProps> = ({
       )}
       role="alert"
     >
-      <Icon name={ALERT_ICON_NAME[variant]} className={cn('mt-space-0-5 shrink-0 w-5 h-5', iconClass)} />
+      <Icon iconKey={ALERT_ICON_KEY[variant]} className={cn('mt-space-0-5 shrink-0 w-5 h-5', iconClass)} />
       <div className="min-w-0 flex-1">{body}</div>
       {onClose ? (
         <button
@@ -110,7 +113,7 @@ export const Alert: React.FC<AlertProps> = ({
           className={`shrink-0 self-start -mr-space-1 -mt-space-0-5 flex h-7 w-7 items-center justify-center ${RADIUS.surface} border-0 bg-transparent p-0 text-text-tertiary hover:text-text-secondary cursor-pointer`}
           aria-label="Close alert"
         >
-          <Icon name="close" className="w-4 h-4 pointer-events-none" />
+          <Icon iconKey={IconKeys.actions.close} className="w-4 h-4 pointer-events-none" />
         </button>
       ) : null}
     </div>

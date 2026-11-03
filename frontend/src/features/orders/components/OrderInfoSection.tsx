@@ -8,7 +8,12 @@ import type { Order } from '@/types';
 import { OrderPriorityBadge, OrderStatusBadge } from './OrderDomainBadges';
 import { DescriptionItem, DETAIL_SECTION_GENERAL_INFO_GRID } from '@/components/display';
 import { formatDateTime } from '@/utils/date';
-import { getDataFieldIcon, getPriorityIcon, getOrderStatusIcon } from '@/config/icons';
+import {
+  getDataFieldIcon,
+  getPriorityIcon,
+  getOrderStatusIcon,
+  IconKeys,
+} from '@/config/icons';
 import { useUserLookup } from '@/lib/api/users';
 import { useTestNameLookup } from '@/features/catalog';
 import { getActiveTests } from '../utils/orderCalculator';
@@ -87,7 +92,7 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order }) => 
           />
           {testsDisplay != null ? (
             <DescriptionItem
-              icon={getDataFieldIcon('medicalKit')}
+              icon={IconKeys.modules.labTests}
               label="Tests"
               orientation="vertical"
               span="full"

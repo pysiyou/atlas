@@ -10,20 +10,18 @@ import { actionButtonPreset, Button, Icon } from '@/components/primitives';
 import { Popover, PopoverFormChrome, RadioCard } from '@/components/overlays';
 import { FooterInfo } from '@/components/display';
 import { SelectionCheck } from '@/components/inputs';
-import { MODULE_ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import type { ContainerType } from '@/types';
 import { COLLECTION_TOP_COLOR_PRESETS, CONTAINER_CATALOG_CONFIG } from '@/types';
 import type { SampleRequirement } from '../types';
 import { cn, formatArray } from '@/utils';
 import { getContainerIcon } from '@/config/icons';
-import { ICONS } from '@/config/icons';
 import {text, inputBase, inputError, FORM_FIELD_LABEL, FG } from '@/theme/recipes';
 import { FIELD_ERROR_CAPTION, RADIUS, SHADOW, TONE } from '@/theme/recipes';
 import {
   getDefaultCollectionTopColor,
   getEffectiveContainerType,
-  getCollectionTopColorBg,
-} from '../utils';
+  getCollectionTopColorBg } from '../utils';
 
 /** Container type choices for collection: tube or cup only */
 const COLLECTION_CONTAINER_OPTIONS: { value: ContainerType; label: string }[] = [
@@ -147,7 +145,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       confirmVariant="primary"
       disabled={!isValid}
       isSubmitting={isSubmitting}
-      footerInfo={<FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" />}
+      footerInfo={<FooterInfo icon={IconKeys.modules.laboratory} label="Laboratory" />}
     >
       {/* Required quantity (volume) */}
       <div>
@@ -157,7 +155,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
           </label>
           {minimumVolume > 0 && (
             <div className={cn(`${text({ role: 'caption' })} px-space-2 py-space-0-5 ${RADIUS.field} flex items-center gap-space-1`, TONE.warning.well, TONE.warning.fg)}>
-              <Icon name={ICONS.actions.alertCircle} className="w-3 h-3" />
+              <Icon iconKey={IconKeys.actions.alertCircle} className="w-3 h-3" />
               Min: {minimumVolume} mL
             </div>
           )}
@@ -202,8 +200,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
               selected={selectedContainerType === option.value}
               align="center"
               leading={
-                <Icon
-                  name={getContainerIcon(option.value)}
+                <Icon iconKey={getContainerIcon(option.value)}
                   className={`w-7 h-7 ${FG.disabled}`}
                 />
               }

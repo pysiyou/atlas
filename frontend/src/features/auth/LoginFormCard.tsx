@@ -6,7 +6,7 @@
 import React, { useRef, useEffect } from 'react';
 import { Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/feedback';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { companyConfig } from '@/config';
 import { PROMO_CONTROL, PROMO_SHADOW, PROMO_TYPE, RADIUS } from '@/theme/recipes';
 
@@ -68,7 +68,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
           {/* Mobile logo */}
           <div className="flex lg:hidden items-center gap-space-3 mb-space-8">
             <div className={`w-11 h-11 bg-promo-accent ${RADIUS.field} flex items-center justify-center ${PROMO_SHADOW.logo}`}>
-              <Icon name={ICONS.ui.appLogo} className="w-6 h-6 text-promo-fg" />
+              <Icon iconKey={IconKeys.ui.appLogo} className="w-6 h-6 text-promo-fg" />
             </div>
             <div>
               <h1 className={PROMO_TYPE.mobileBrandTitle}>{company.company.name}</h1>
@@ -91,7 +91,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
             <div className={`mb-space-6 p-panel bg-promo-error border border-promo-error-stroke ${RADIUS.menu} animate-[shake_0.5s_ease-in-out]`}>
               <div className="flex items-center gap-space-3">
                 <div className={`w-8 h-8 ${RADIUS.menu} bg-promo-error-muted flex items-center justify-center flex-shrink-0`}>
-                  <Icon name={ICONS.actions.alertCircle} className="h-4 w-4 text-promo-error-fg" />
+                  <Icon iconKey={IconKeys.actions.alertCircle} className="h-4 w-4 text-promo-error-fg" />
                 </div>
                 <p className={PROMO_TYPE.formError}>{error}</p>
               </div>
@@ -110,8 +110,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
               </label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-space-4 flex items-center pointer-events-none z-10">
-                  <Icon
-                    name={ICONS.dataFields.user}
+                  <Icon iconKey={IconKeys.dataFields.user}
                     className="h-5 w-5 text-promo-fg-subtle group-focus-within:text-promo-fg-light transition-colors duration-200"
                   />
                 </div>
@@ -141,8 +140,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
               </label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-space-4 flex items-center pointer-events-none z-10">
-                  <Icon
-                    name={ICONS.ui.lock}
+                  <Icon iconKey={IconKeys.ui.lock}
                     className="h-5 w-5 text-promo-fg-subtle group-focus-within:text-promo-fg-light transition-colors duration-200"
                   />
                 </div>
@@ -164,7 +162,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
                   className="absolute inset-y-0 right-0 pr-space-4 flex items-center text-promo-fg-subtle hover:text-promo-fg-light transition-colors duration-200 z-10 cursor-pointer"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
-                  <Icon name={ICONS.actions.view} className="h-5 w-5" />
+                  <Icon iconKey={IconKeys.actions.view} className="h-5 w-5" />
                 </button>
               </div>
             </div>

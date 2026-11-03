@@ -35,10 +35,6 @@ export interface EmergencyContact {
   email?: string;
 }
 
-import type { VitalSigns } from '@/features/patients/schemas/patientFormSchemas';
-
-export type { VitalSigns };
-
 export interface Address {
   street: string;
   city: string;
@@ -71,7 +67,6 @@ export interface Patient {
   affiliation?: Affiliation;
   emergencyContact: EmergencyContact;
   medicalHistory: MedicalHistory;
-  vitalSigns?: VitalSigns;
   registrationDate: string;
   createdBy: string; // Backend returns string user ID
   createdAt: string;

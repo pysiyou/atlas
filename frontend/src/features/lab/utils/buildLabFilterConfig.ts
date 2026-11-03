@@ -4,7 +4,7 @@
 
 import type { FilterConfig, FilterControlConfig } from '@/components/filters';
 import { SHARED_FILTER_PLACEHOLDERS } from '@/config/filterPlaceholders';
-import { ICONS, MODULE_ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { LAB_CONFIG } from '../constants';
 import { SAMPLE_TYPE_VALUES, SAMPLE_TYPE_CONFIG } from '@/types';
 import type { FilterOption } from '@/utils/filtering';
@@ -24,7 +24,7 @@ export interface BuildLabFilterConfigOptions {
 
 export function buildLabFilterConfig(options: BuildLabFilterConfigOptions): FilterConfig {
   return {
-    footerIcon: MODULE_ICONS.laboratory,
+    footerIcon: IconKeys.modules.laboratory,
     footerLabel: 'Laboratory',
     quickFilters: [],
     primaryFilters: {
@@ -44,7 +44,7 @@ export function buildLabFilterConfig(options: BuildLabFilterConfigOptions): Filt
           key: 'dateRange',
           label: 'Date Range',
           placeholder: SHARED_FILTER_PLACEHOLDERS.dateRange,
-          icon: ICONS.dataFields.date,
+          icon: IconKeys.dataFields.date,
           helpText: options.dateRangeHelpText,
         },
         {
@@ -53,7 +53,7 @@ export function buildLabFilterConfig(options: BuildLabFilterConfigOptions): Filt
           label: 'Sample Type',
           options: LAB_SAMPLE_TYPE_OPTIONS,
           selectAllLabel: 'All sample types',
-          icon: ICONS.dataFields.sampleCollection,
+          icon: IconKeys.dataFields.sampleCollection,
           placeholder: SHARED_FILTER_PLACEHOLDERS.sampleType,
           helpText: 'Filter by sample type (e.g. blood, urine, swab).',
         },

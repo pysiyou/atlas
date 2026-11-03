@@ -1,15 +1,15 @@
-import { Icon } from '@/components/primitives';
+import { Icon, IconKeys } from '@/components/primitives';
 import { useActiveThemeMode, setThemeMode } from '@/theme';
 import type { ThemeMode } from '@/theme';
-import type { IconName } from '@/components/primitives/Icon';
+import type { IconKey } from '@/config/icons';
 import { CHROME, CONTROL, RADIUS, THEME_SWITCH_TYPE } from '@/theme/recipes';
 import { cn } from '@/utils';
 
 const MODES: ThemeMode[] = ['light', 'dark'];
 
-const MODE_CONFIG: Record<ThemeMode, { icon: IconName; label: string }> = {
-  light: { icon: 'sun', label: 'Light' },
-  dark: { icon: 'moon', label: 'Dark' },
+const MODE_CONFIG: Record<ThemeMode, { icon: IconKey; label: string }> = {
+  light: { icon: IconKeys.theme.light, label: 'Light' },
+  dark: { icon: IconKeys.theme.dark, label: 'Dark' },
 };
 
 function nextMode(current: ThemeMode): ThemeMode {
@@ -62,7 +62,7 @@ export function ThemeSwitch({ isCollapsed = false }: ThemeSwitchProps) {
               )}
             >
               <Icon
-                name={config.icon}
+                iconKey={config.icon}
                 className={cn(
                   'flex size-3.5 shrink-0 items-center justify-center leading-none',
                   isActive ? 'text-brand' : 'text-text-disabled',

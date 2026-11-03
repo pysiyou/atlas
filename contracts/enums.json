@@ -512,7 +512,7 @@
         "wire": "mobile",
         "label": "Mobile",
         "enabled": true,
-        "iconKey": "ui.smartphone"
+        "iconKey": "dataFields.phone"
       }
     }
   },

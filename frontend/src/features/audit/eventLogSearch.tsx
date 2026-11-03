@@ -6,7 +6,7 @@ import { Avatar, Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/feedback';
 import { SearchResultsPopoverShell } from '@/components/overlays/SearchResultsPopoverShell';
 import { filterInputIcon } from '@/components/overlays/FilterTriggerShell';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { useEventLogSearchPreview } from './eventLogSearchPreview';
 import { cn } from '@/utils';
 import { text, FORM_FIELD_LABEL, FG, CONTROL, inputClearButton, inputInner, inputText, inputWrapper } from '@/theme/recipes';
@@ -16,8 +16,7 @@ import { EVENT_LOG_COPY } from './types';
 import {
   buildEventLogSearchMatchGroups,
   countEventLogSearchMatchItems,
-  type EventLogSearchMatchGroup,
-} from './eventLogSearchIntent';
+  type EventLogSearchMatchGroup } from './eventLogSearchIntent';
 
 /**
  * Categorized match list for global event log search (order-upsert popover chrome).
@@ -99,7 +98,7 @@ const EventLogSearchPopover: React.FC<EventLogSearchPopoverProps> = ({
                   {item.avatarName ? (
                     <Avatar primaryText={item.avatarName} size="xs" avatarOnly className="shrink-0" />
                   ) : item.icon ? (
-                    <Icon name={item.icon} className={`w-4 h-4 shrink-0 ${FG.muted}`} />
+                    <Icon iconKey={item.icon} className={`w-4 h-4 shrink-0 ${FG.muted}`} />
                   ) : null}
                   <div className="min-w-0 flex-1">
                     <p
@@ -240,7 +239,7 @@ export const EventLogSearchField: React.FC<EventLogSearchFieldProps> = ({
               className={cn(inputClearButton, 'hover:bg-surface-page')}
               aria-label="Clear search"
             >
-              <Icon name={ICONS.actions.close} className={`w-4 h-4 ${FG.captionMuted}`} />
+              <Icon iconKey={IconKeys.actions.close} className={`w-4 h-4 ${FG.captionMuted}`} />
             </button>
           )}
         </div>

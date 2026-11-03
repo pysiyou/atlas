@@ -5,7 +5,7 @@
 import { type ReactNode, useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { EmptyState } from '@/components/display';
-import type { IconName } from '@/components/primitives';
+import type { IconKey } from '@/config/icons';
 import { PANEL_EMPTY_STATE, DENSE_EMPTY_STATE } from '@/config/emptyStatePresets';
 import { DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';
 import type { ColumnConfig, SortConfig, TableVariant } from './types';
@@ -39,7 +39,7 @@ export interface TableViewProps<T> {
   loadingRows?: number;
   emptyMessage?: ReactNode;
   emptyDescription?: string;
-  emptyIcon?: string;
+  emptyIcon?: IconKey;
   emptyVariant?: 'compact' | 'dense';
   caption?: string;
   ariaLabel?: string;
@@ -49,11 +49,11 @@ export interface TableViewProps<T> {
 function buildTableEmptyContent(
   emptyMessage: ReactNode | undefined,
   emptyDescription: string | undefined,
-  emptyIcon: string | undefined,
+  emptyIcon: IconKey | undefined,
   emptyVariant: 'compact' | 'dense',
 ): ReactNode {
   const emptyPreset = emptyVariant === 'dense' ? DENSE_EMPTY_STATE : PANEL_EMPTY_STATE;
-  const resolvedIcon = (emptyIcon as IconName | undefined) ?? emptyPreset.icon;
+  const resolvedIcon = emptyIcon ?? emptyPreset.icon;
   if (typeof emptyMessage === 'string') {
     return (
       <EmptyState

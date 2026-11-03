@@ -10,9 +10,8 @@ import { text } from '@/theme/recipes';
 import { FormDialogFooter, Modal, ModalPageShell } from '@/components/overlays';
 import { FooterInfo } from '@/components/display';
 import { Icon } from '@/components/primitives';
-import { MODULE_ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { formatCurrency } from '@/utils';
-import { ICONS } from '@/config/icons';
 import { useOrderUpsertModal } from '../hooks/useOrderUpsertModal';
 import { OrderUpsertFormFields } from './OrderUpsertFormFields';
 import { ErrorAlert } from '@/components/feedback';
@@ -85,12 +84,12 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
               submitVariant={paymentMethod && mode === 'create' ? 'primary' : 'save'}
               submitIcon={
                 paymentMethod && mode === 'create' && !isSubmitting && !isProcessingPayment ? (
-                  <Icon name={ICONS.dataFields.wallet} />
+                  <Icon iconKey={IconKeys.dataFields.wallet} />
                 ) : undefined
               }
               footerInfo={
                 mode === 'edit' && resolvedOrder ? (
-                  <FooterInfo icon={MODULE_ICONS.orders} label="Orders" size="md" />
+                  <FooterInfo icon={IconKeys.modules.orders} label="Orders" size="md" />
                 ) : (
                   <div className={`${text({ role: 'body' })} text-brand`}>
                     Total: {formatCurrency(totalPrice)}

@@ -1,4 +1,4 @@
-/** Patient form Zod schemas (address, affiliation, emergency contact, vitals, patient). */
+/** Patient form Zod schemas (address, affiliation, emergency contact, patient). */
 import { z } from 'zod';
 import {
   nameSchema,
@@ -63,57 +63,6 @@ export const emergencyContactSchema = z.object({
 
 export type EmergencyContact = z.infer<typeof emergencyContactSchema>;
 
-
-/** Response vital signs schema - all fields optional/nullable (backend returns partial data) */
-export const vitalSignsSchema = z
-  .object({
-    temperature: z.number().min(30).max(45).nullable().optional(),
-    heartRate: z.number().int().min(30).max(250).nullable().optional(),
-    systolicBP: z.number().int().min(50).max(250).nullable().optional(),
-    diastolicBP: z.number().int().min(30).max(150).nullable().optional(),
-    respiratoryRate: z.number().int().min(4).max(60).nullable().optional(),
-    oxygenSaturation: z.number().min(50).max(100).nullable().optional(),
-  })
-  .refine(
-    data => {
-      // If both BP values are provided, systolic must be greater than diastolic
-      if (
-        data.systolicBP !== undefined &&
-        data.systolicBP !== null &&
-        data.diastolicBP !== undefined &&
-        data.diastolicBP !== null
-      ) {
-        return data.systolicBP > data.diastolicBP;
-      }
-      return true;
-    },
-    { message: 'Systolic must be greater than diastolic', path: ['systolicBP'] }
-  );
-
-/** Form vital signs schema - all fields optional (partial submission allowed) */
-export const vitalSignsFormSchema = z
-  .object({
-    temperature: z.number().min(30).max(45).optional(),
-    heartRate: z.number().int().min(30).max(250).optional(),
-    systolicBP: z.number().int().min(50).max(250).optional(),
-    diastolicBP: z.number().int().min(30).max(150).optional(),
-    respiratoryRate: z.number().int().min(4).max(60).optional(),
-    oxygenSaturation: z.number().min(50).max(100).optional(),
-  })
-  .refine(
-    data => {
-      // If both BP values are provided, systolic must be greater than diastolic
-      if (data.systolicBP !== undefined && data.diastolicBP !== undefined) {
-        return data.systolicBP > data.diastolicBP;
-      }
-      return true;
-    },
-    { message: 'Systolic must be greater than diastolic', path: ['systolicBP'] }
-  );
-
-export type VitalSigns = z.infer<typeof vitalSignsSchema>;
-export type VitalSignsFormInput = z.infer<typeof vitalSignsFormSchema>;
-
 /** Backend PatientResponse allows legacy phones shorter than the write minimum. */
 const patientReadPhoneSchema = z
   .string()
@@ -152,7 +101,6 @@ export const patientSchema = z.object({
   affiliation: affiliationSchema.nullable().optional(), // Backend can return null
   emergencyContact: emergencyContactReadSchema,
   medicalHistory: medicalHistorySchema.nullable().optional(), // Backend can return null
-  vitalSigns: vitalSignsSchema.nullable().optional(), // Backend can return null
   registrationDate: dateStringSchema,
   createdBy: z.string(), // Backend returns string user ID
   createdAt: dateStringSchema,
@@ -177,7 +125,6 @@ export const patientCreateSchema = patientSchema
     phone: phoneSchema,
     emergencyContact: emergencyContactSchema,
     affiliation: affiliationFormSchema.nullish(),
-    vitalSigns: vitalSignsFormSchema.nullish(),
   });
 
 // Form schema for UPDATE (all fields optional for partial updates)

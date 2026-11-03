@@ -4,7 +4,7 @@
 
 import { Icon } from '@/components/primitives';
 import { formatCurrency } from '@/utils';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import type { DashboardStat } from './DashboardStatsGrid';
 
 export function buildDashboardStats({
@@ -33,7 +33,7 @@ export function buildDashboardStats({
             label: 'Total Patients',
             value: patientsCount,
             today: todayPatients,
-            icon: <Icon name={ICONS.ui.usersGroup} className="w-8 h-8 text-brand" />,
+            icon: <Icon iconKey={IconKeys.ui.usersGroup} className="w-8 h-8 text-brand" />,
             color: 'bg-brand-muted',
           },
           {
@@ -41,14 +41,14 @@ export function buildDashboardStats({
             value: ordersCount,
             today: todayOrders,
             icon: (
-              <Icon name={ICONS.dataFields.document} className="w-8 h-8 text-pink-fg-emphasis" />
+              <Icon iconKey={IconKeys.dataFields.document} className="w-8 h-8 text-pink-fg-emphasis" />
             ),
             color: 'bg-pink-bg-emphasis',
           },
           {
             label: 'Revenue Today',
             value: formatCurrency(todayRevenue),
-            icon: <Icon name={ICONS.dataFields.dollarSign} className="w-8 h-8 text-warning-fg" />,
+            icon: <Icon iconKey={IconKeys.dataFields.dollarSign} className="w-8 h-8 text-warning-fg" />,
             color: 'bg-warning-bg',
           },
         ]
@@ -58,7 +58,7 @@ export function buildDashboardStats({
           {
             label: 'Active Orders',
             value: pendingOrders,
-            icon: <Icon name={ICONS.dataFields.trendingUp} className="w-8 h-8 text-brand" />,
+            icon: <Icon iconKey={IconKeys.dataFields.trendingUp} className="w-8 h-8 text-brand" />,
             color: 'bg-brand-muted',
           },
         ]

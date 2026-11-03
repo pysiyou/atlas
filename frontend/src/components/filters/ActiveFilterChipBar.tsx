@@ -4,7 +4,7 @@
 
 import type React from 'react';
 import { Icon, Badge } from '@/components/primitives';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { text } from '@/theme/recipes';
 
 export interface ActiveFilterItem {
@@ -41,7 +41,7 @@ export function ActiveFilterChipBar({
                 aria-label="Remove filter"
                 type="button"
               >
-                <Icon name={ICONS.actions.close} className="w-3 h-3" />
+                <Icon iconKey={IconKeys.actions.close} className="w-3 h-3" />
               </button>
             ) : null}
           </Badge>

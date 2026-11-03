@@ -4,7 +4,7 @@
 import React from 'react';
 import { RADIUS } from '@/theme/recipes';
 import { Icon } from '@/components/primitives/Icon';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { cn } from '@/utils';
 
 export interface SelectionCheckProps {
@@ -21,6 +21,6 @@ export const SelectionCheck: React.FC<SelectionCheckProps> = ({ isSelected, clas
     )}
     aria-hidden
   >
-    {isSelected && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
+    {isSelected && <Icon iconKey={IconKeys.actions.check} className="w-3 h-3 text-on-brand" />}
   </div>
 );

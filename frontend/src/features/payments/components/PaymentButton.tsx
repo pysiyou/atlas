@@ -8,7 +8,7 @@ import React from 'react';
 import { Icon } from '@/components/primitives';
 import { PaymentPopover } from './PaymentPopover';
 import type { Order } from '@/types';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import {BADGE, FG } from '@/theme/recipes';
 
 interface PaymentButtonProps {
@@ -37,8 +37,7 @@ export const PaymentButton: React.FC<PaymentButtonProps> = ({
   if (isPaid) {
     return (
       <div className="flex items-center justify-start">
-        <Icon
-          name={ICONS.actions.checkCircle}
+        <Icon iconKey={IconKeys.actions.checkCircle}
           className={`${BADGE.icon.sm} ${FG.disabled}`}
         />
       </div>

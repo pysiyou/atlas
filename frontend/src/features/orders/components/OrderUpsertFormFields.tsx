@@ -3,7 +3,7 @@ import type { Patient, PriorityLevel } from '@/types';
 import { Textarea } from '@/components/inputs';
 import { MultiSelectFilter } from '@/components/overlays';
 import { Panel } from '@/components/surfaces';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import type { OrderFormInput } from '../schemas/order.schema';
 import { PatientSelect } from './PatientSelect';
 import { TestSelect } from './TestSelect';
@@ -145,7 +145,7 @@ export const OrderUpsertFormFields: React.FC<OrderUpsertFormFieldsProps> = ({
                 showSelectAll={false}
                 singleSelect={true}
                 className="w-full"
-                icon={ICONS.actions.warning}
+                icon={IconKeys.domain.priority}
               />
               {fieldState.error && (
                 <p className={`mt-space-1-5 ${FIELD_ERROR}`}>{fieldState.error.message}</p>
@@ -166,7 +166,7 @@ export const OrderUpsertFormFields: React.FC<OrderUpsertFormFieldsProps> = ({
             onBlur={field.onBlur}
             placeholder="Clinical indication or reason for testing..."
             helperText="Include relevant symptoms, diagnosis, or reason for testing"
-            icon={ICONS.dataFields.clinicalNotes}
+            icon={IconKeys.dataFields.clinicalNotes}
             error={fieldState.error?.message}
           />
         )}

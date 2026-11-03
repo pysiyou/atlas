@@ -7,7 +7,7 @@ import React from 'react';
 import { actionButtonPreset, Button, Icon, IconButton } from '@/components/primitives';
 import { PageHeader } from '@/components/layout';
 import type { Order, Invoice } from '@/types';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 
 export interface OrderHeaderProps {
   order: Order;
@@ -57,7 +57,7 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
               {...actionButtonPreset('view')}
               size="sm"
               title="Edit Order"
-              icon={<Icon name={ICONS.actions.edit} className="w-4 h-4" />}
+              icon={<Icon iconKey={IconKeys.actions.edit} className="w-4 h-4" />}
               onClick={onEdit}
             />
           )}
@@ -74,7 +74,7 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
               variant="primary"
               size="sm"
               title="View Invoice"
-              icon={<Icon name={ICONS.dataFields.bill} className="w-4 h-4" />}
+              icon={<Icon iconKey={IconKeys.dataFields.bill} className="w-4 h-4" />}
               onClick={onViewInvoice}
             />
           )}

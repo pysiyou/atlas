@@ -7,6 +7,7 @@ import { ChipSelectGroup } from '@/components/inputs/ChipSelectGroup';
 import { MultiSelectFilter } from '@/components/overlays/MultiSelectFilter';
 import { RangeSlider } from '@/components/overlays/RangeSlider';
 import type { FilterControl, NumberRangeFilterControl } from './types';
+import { filterControlLeftIcon, resolveFilterControlIcon } from './filterControlIcons';
 import { RangeFilterField } from './RangeFilterField';
 import { ModalRadioList, resolveNumberRange } from './filterControlShared';
 import type { FilterControlProps, FilterControlSurface } from './FilterControl';
@@ -107,6 +108,7 @@ function renderDateRangeFilter(
       onChange={onChange}
       placeholder={dateControl.placeholder || 'Filter by date range'}
       className={className}
+      iconKey={resolveFilterControlIcon(dateControl)}
     />
   );
 }
@@ -151,6 +153,7 @@ function renderNumberRangeFilter(
       distribution={nr.distribution}
       formatValue={nr.formatValue}
       className={className}
+      icon={filterControlLeftIcon(control)}
     />
   );
 }
@@ -182,7 +185,7 @@ function renderMultiSelectFilter(
       placeholder={multi.placeholder}
       selectAllLabel={multi.selectAllLabel}
       className={className}
-      icon={multi.icon as import('@/components/primitives').IconName | undefined}
+      icon={resolveFilterControlIcon(multi)}
     />
   );
 }
@@ -214,7 +217,7 @@ function renderSingleSelectFilter(
       placeholder={single.placeholder}
       className={className}
       singleSelect
-      icon={single.icon as import('@/components/primitives').IconName | undefined}
+      icon={resolveFilterControlIcon(single)}
     />
   );
 }

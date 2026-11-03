@@ -8,7 +8,7 @@ import React from 'react';
 import type { Patient } from '@/types';
 import { DescriptionItem } from '@/components/display';
 import { formatList, formatFamilyHistory, formatLifestyle } from '../utils/patientFormatters';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { TONE } from '@/theme/recipes';
 import { DescriptionColumns } from '@/components/display';
 
@@ -24,7 +24,7 @@ export function renderMedicalHistoryDescriptionItems(patient: Patient): React.Re
   return [
     <DescriptionItem
       key="allergies"
-      icon={ICONS.medicalHistory.allergy}
+      icon={IconKeys.medicalHistory.allergy}
       label="Allergies"
       value={
         <span className={hasAllergies ? TONE.danger.fg : undefined}>{formatList(allergies)}</span>
@@ -33,35 +33,35 @@ export function renderMedicalHistoryDescriptionItems(patient: Patient): React.Re
     />,
     <DescriptionItem
       key="chronic"
-      icon={ICONS.medicalHistory.chronicCondition}
+      icon={IconKeys.medicalHistory.chronicCondition}
       label="Chronic Disease"
       value={formatList(history?.chronicConditions)}
       orientation="vertical"
     />,
     <DescriptionItem
       key="medications"
-      icon={ICONS.medicalHistory.medication}
+      icon={IconKeys.medicalHistory.medication}
       label="Current Medications"
       value={formatList(history?.currentMedications)}
       orientation="vertical"
     />,
     <DescriptionItem
       key="surgery"
-      icon={ICONS.medicalHistory.surgery}
+      icon={IconKeys.medicalHistory.surgery}
       label="Surgery"
       value={formatList(history?.previousSurgeries)}
       orientation="vertical"
     />,
     <DescriptionItem
       key="family"
-      icon={ICONS.medicalHistory.familyHistory}
+      icon={IconKeys.medicalHistory.familyHistory}
       label="Family Disease"
       value={formatFamilyHistory(history?.familyHistory)}
       orientation="vertical"
     />,
     <DescriptionItem
       key="lifestyle"
-      icon={ICONS.dataFields.health}
+      icon={IconKeys.medicalHistory.lifestyle}
       label="Lifestyle"
       value={formatLifestyle(history?.lifestyle)}
       orientation="vertical"

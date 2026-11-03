@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { FILTER_TYPE } from '@/theme/recipes';
 import { DatePicker } from '@/components/inputs';
 import { SearchTextInput } from '@/components/inputs';
-import { MODULE_ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import {
   DatePresetChipSelect,
@@ -81,7 +81,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
           onSearchChange={onSearchChange}
           searchPlaceholder={REPORT_FILTER_PLACEHOLDERS.search}
           onReset={() => onDateRangeChange(null)}
-          footerIcon={MODULE_ICONS.reports}
+          footerIcon={IconKeys.modules.reports}
           footerLabel="Reports"
         >
           <div className="w-full">

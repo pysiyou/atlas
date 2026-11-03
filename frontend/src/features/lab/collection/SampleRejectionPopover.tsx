@@ -7,14 +7,13 @@ import { actionButtonPreset, Button } from '@/components/primitives';
 import { Popover } from '@/components/overlays';
 import { FooterInfo } from '@/components/display';
 import { PopoverFormChrome } from '@/components/overlays';
-import { MODULE_ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { displayId } from '@/utils';
 import { QualityIssueForm } from '../components/QualityIssueForm';
 import { useSubmitQualityIssue } from '../hooks/useSubmitQualityIssue';
 import {
   buildSampleRemedyOptions,
-  resolveSuggestedRemedy,
-} from '../constants/qualityIssuePopoverCopy';
+  resolveSuggestedRemedy } from '../constants/qualityIssuePopoverCopy';
 import type { QualityIssueOptions } from '@/types/lab-operations';
 import { LAB_COPY } from '../constants/labConstants';
 import type { RemedyType } from '@/types/lab-operations';
@@ -123,7 +122,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
       confirmVariant="danger"
       isSubmitting={isSubmitting}
       disabled={!canSubmit}
-      footerInfo={<FooterInfo icon={MODULE_ICONS.laboratory} label="Laboratory" />}
+      footerInfo={<FooterInfo icon={IconKeys.modules.laboratory} label="Laboratory" />}
     >
       {numericSampleId ? (
         <QualityIssueForm

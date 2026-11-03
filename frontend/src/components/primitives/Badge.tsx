@@ -5,8 +5,9 @@
 import React from 'react';
 import { cn } from '@/utils';
 import { useBadgeAppearance } from '@/theme/theme';
-import { ICONS } from '@/config/icons';
-import { Icon, type IconName } from './Icon';
+import { IconKeys } from '@/config/icons';
+import type { IconKey } from '@/config/icons';
+import { Icon } from './Icon';
 import { BADGE, CONTROL, RADIUS } from '@/theme/recipes';
 import {
   CONTAINER_STYLES,
@@ -44,7 +45,7 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: BadgeVariant;
   size?: BadgeSize;
   pulse?: boolean;
-  icon?: IconName | React.ReactNode;
+  icon?: IconKey | React.ReactNode;
   dot?: boolean;
   uppercase?: boolean;
   /** Explicit label; when omitted, uses `children` only. */
@@ -78,7 +79,7 @@ export const Badge: React.FC<BadgeProps> = ({
     ? null
     : React.isValidElement(icon)
       ? icon
-      : <Icon name={icon as IconName} className={ICON_SIZES[size]} />;
+      : <Icon iconKey={icon as IconKey} className={ICON_SIZES[size]} />;
   const showDot = dot && !isContainer && !isCategory && dotClassName;
 
   return (
@@ -166,7 +167,7 @@ export const RemovableTag: React.FC<RemovableTagProps> = ({
         className={`-mr-space-0-5 ml-space-0-5 flex shrink-0 cursor-pointer items-center justify-center ${RADIUS.pill} p-space-0-5 transition-colors ${CONTROL.focusSubtle}`}
         aria-label={removeAriaLabel}
       >
-        <Icon name={ICONS.actions.close} className={cn('h-3 w-3', chip.remove)} />
+        <Icon iconKey={IconKeys.actions.close} className={cn('h-3 w-3', chip.remove)} />
       </button>
     </div>
   );
@@ -174,7 +175,7 @@ export const RemovableTag: React.FC<RemovableTagProps> = ({
 
 export interface FilterChipProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   active?: boolean;
-  icon?: IconName;
+  icon?: IconKey;
   size?: keyof typeof FILTER_CHIP_SIZE;
 }
 
@@ -199,7 +200,7 @@ export const FilterChip: React.FC<FilterChipProps> = ({
     )}
     {...props}
   >
-    {icon ? <Icon name={icon} className="h-3 w-3 shrink-0" /> : null}
+    {icon ? <Icon iconKey={icon} className="h-3 w-3 shrink-0" /> : null}
     <span>{children}</span>
   </button>
 );

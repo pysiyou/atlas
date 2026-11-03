@@ -3,6 +3,7 @@
  */
 
 import type { ReactNode } from 'react';
+import type { IconKey } from '@/config/icons';
 
 export type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
@@ -90,7 +91,7 @@ export interface TableProps<T> {
   /** Subtitle when emptyMessage is a string */
   emptyDescription?: string;
   /** Passed to EmptyState when set */
-  emptyIcon?: string;
+  emptyIcon?: IconKey;
   /** EmptyState sizing when emptyMessage is a string */
   emptyVariant?: 'compact' | 'dense';
   caption?: string;

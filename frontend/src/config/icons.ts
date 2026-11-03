@@ -1,197 +1,344 @@
 /**
- * Icon Configuration
- * Single source of truth for all icon names used in the application.
- * Icons reference the IconName type from @/components/ui.
+ * Icon registry — single source of truth for semantic icon keys and SVG assets.
+ * Components render icons via `<Icon iconKey={IconKeys.actions.close} />`.
  */
 
-import type { IconName } from '@/components/primitives';
 import type { ContainerType } from '@/types';
 
-export const ICONS = {
-  priority: 'warning' as IconName,
-  orderStatus: 'info-circle' as IconName,
-  sampleStatus: 'info-circle' as IconName,
-  testStatus: 'info-circle' as IconName,
-  paymentStatus: 'info-circle' as IconName,
-  sampleType: 'lab-tube' as IconName,
+/** Every SVG slug under public/icons/ (filename without .svg). */
+export const ICON_ASSETS = [
+  'activity',
+  'add-circle',
+  'alert-circle',
+  'app-logo',
+  'arrow-bottom',
+  'arrow-left',
+  'arrow-right',
+  'arrow-up',
+  'atom-landing-page',
+  'beaker-landing-page',
+  'bill',
+  'bond-molecule-landing-page',
+  'book',
+  'calendar',
+  'cash',
+  'category',
+  'check',
+  'check-circle',
+  'city',
+  'clock',
+  'close',
+  'dashboard',
+  'database',
+  'dislike',
+  'dna-landing-page',
+  'document',
+  'double-arrow-left',
+  'download',
+  'drops-droplet-landing-page',
+  'edit',
+  'eye',
+  'finger-print',
+  'flask-bold',
+  'flask-chemical-landing-page',
+  'flask-education-landing-page',
+  'health',
+  'home',
+  'info',
+  'kg',
+  'lab-cup',
+  'lab-tube',
+  'like',
+  'link',
+  'loading',
+  'location',
+  'lock',
+  'log-out',
+  'medical-kit',
+  'medicine',
+  'medicines-medicine-landing-page',
+  'menu',
+  'menu-dots',
+  'microscope-landing-page',
+  'moon',
+  'note',
+  'notification',
+  'pdf',
+  'phone',
+  'printer',
+  'priority',
+  'receipt',
+  'refresh',
+  'ruler',
+  'save',
+  'search',
+  'security',
+  'setting',
+  'sms',
+  'stop',
+  'sun',
+  'syringe-landing-page',
+  'test-tube-landing-page',
+  'trash',
+  'trending-up',
+  'user',
+  'verified',
+  'vial-landing-page',
+  'wallet',
+  'warning',
+] as const;
 
+export type IconAsset = (typeof ICON_ASSETS)[number];
+
+/** Nested semantic key → SVG asset slug. */
+const REGISTRY = {
+  domain: {
+    priority: 'priority',
+    orderStatus: 'info',
+    sampleStatus: 'info',
+    testStatus: 'info',
+    paymentStatus: 'info',
+  },
   container: {
-    tube: 'lab-tube' as IconName,
-    cup: 'lab-cup' as IconName,
+    tube: 'lab-tube',
+    cup: 'lab-cup',
   },
-
   dataFields: {
-    orderId: 'hashtag' as IconName,
-    patientId: 'hashtag' as IconName,
-    sampleId: 'hashtag' as IconName,
-    testId: 'hashtag' as IconName,
-    user: 'user' as IconName,
-    userHands: 'user-hands' as IconName,
-    age: 'user-hands' as IconName,
-    gender: 'user-hands' as IconName,
-    dateOfBirth: 'calendar' as IconName,
-    birthday: 'calendar' as IconName,
-    phone: 'phone' as IconName,
-    email: 'sms' as IconName,
-    sms: 'sms' as IconName,
-    address: 'location' as IconName,
-    mapPin: 'location' as IconName,
-    location: 'location' as IconName,
-    date: 'calendar' as IconName,
-    orderDate: 'calendar' as IconName,
-    time: 'clock' as IconName,
-    hourglass: 'hourglass' as IconName,
-    referentDoctor: 'stethoscope' as IconName,
-    clinicalNotes: 'edit' as IconName,
-    medicalKit: 'medical-kit' as IconName,
-    health: 'health' as IconName,
-    medicine: 'medicine' as IconName,
-    stethoscope: 'stethoscope' as IconName,
-    height: 'ruler' as IconName,
-    weight: 'weight' as IconName,
-    temperature: 'thermometer' as IconName,
-    thermometer: 'thermometer' as IconName,
-    pulse: 'pulse' as IconName,
-    heartPulse: 'heart-pulse' as IconName,
-    blood: 'blood' as IconName,
-    document: 'document' as IconName,
-    documentMedicine: 'document' as IconName,
-    pdf: 'pdf' as IconName,
-    fileText: 'document' as IconName,
-    wallet: 'wallet' as IconName,
-    bill: 'bill' as IconName,
-    receipt: 'receipt' as IconName,
-    dollarSign: 'cash' as IconName,
-    cash: 'cash' as IconName,
-    creditCard: 'wallet' as IconName,
-    trendingUp: 'trending-up' as IconName,
-    flask: 'flask' as IconName,
-    sampleCollection: 'sample-collection' as IconName,
-    notebook: 'notebook' as IconName,
-    checklist: 'checklist' as IconName,
-    clock: 'clock' as IconName,
+    orderId: 'finger-print',
+    patientId: 'finger-print',
+    sampleId: 'finger-print',
+    testId: 'finger-print',
+    user: 'user',
+    userHands: 'user',
+    gender: 'user',
+    birthday: 'calendar',
+    phone: 'phone',
+    email: 'sms',
+    address: 'location',
+    mapPin: 'location',
+    location: 'location',
+    date: 'calendar',
+    orderDate: 'calendar',
+    time: 'clock',
+    referentDoctor: 'user',
+    clinicalNotes: 'edit',
+    medicalKit: 'medical-kit',
+    height: 'ruler',
+    weight: 'kg',
+    bmi: 'health',
+    document: 'document',
+    pdf: 'pdf',
+    wallet: 'wallet',
+    bill: 'bill',
+    dollarSign: 'cash',
+    cash: 'cash',
+    creditCard: 'wallet',
+    trendingUp: 'trending-up',
+    sampleCollection: 'flask-bold',
   },
-
   actions: {
-    home: 'home' as IconName,
-    view: 'eye' as IconName,
-    eye: 'eye' as IconName,
-    edit: 'edit' as IconName,
-    save: 'save' as IconName,
-    add: 'add-circle' as IconName,
-    plus: 'add-circle' as IconName,
-    addCircle: 'add-circle' as IconName,
-    remove: 'trash' as IconName,
-    trash: 'trash' as IconName,
-    delete: 'trash' as IconName,
-    chevronLeft: 'arrow-left' as IconName,
-    chevronRight: 'arrow-right' as IconName,
-    chevronDown: 'arrow-bottom' as IconName,
-    chevronUp: 'arrow-up' as IconName,
-    arrowLeft: 'arrow-left' as IconName,
-    arrowRight: 'arrow-right' as IconName,
-    arrowUp: 'arrow-up' as IconName,
-    arrowDown: 'arrow-bottom' as IconName,
-    check: 'check' as IconName,
-    checkCircle: 'check-circle' as IconName,
-    like: 'like' as IconName,
-    dislike: 'dislike' as IconName,
-    close: 'close' as IconName,
-    warning: 'warning' as IconName,
-    alertCircle: 'alert-circle' as IconName,
-    alertTriangle: 'warning' as IconName,
-    infoCircle: 'info-circle' as IconName,
-    dangerSquare: 'warning' as IconName,
-    loading: 'loading' as IconName,
-    spinner: 'loading' as IconName,
-    refresh: 'refresh' as IconName,
-    search: 'search' as IconName,
-    filter: 'search' as IconName,
-    filterSearch: 'search' as IconName,
-    download: 'download' as IconName,
-    printer: 'printer' as IconName,
-    menuDots: 'menu-dots' as IconName,
-    logout: 'log-out' as IconName,
-    doubleArrowLeft: 'double-arrow-left' as IconName,
-    doubleArrowRight: 'double-arrow-right' as IconName,
+    home: 'home',
+    view: 'eye',
+    edit: 'edit',
+    save: 'save',
+    add: 'add-circle',
+    delete: 'trash',
+    chevronLeft: 'arrow-left',
+    chevronRight: 'arrow-right',
+    chevronDown: 'arrow-bottom',
+    arrowLeft: 'arrow-left',
+    arrowUp: 'arrow-up',
+    arrowDown: 'arrow-bottom',
+    check: 'check',
+    checkCircle: 'check-circle',
+    like: 'like',
+    dislike: 'dislike',
+    close: 'close',
+    warning: 'warning',
+    alertCircle: 'alert-circle',
+    infoCircle: 'info',
+    loading: 'loading',
+    refresh: 'refresh',
+    search: 'search',
+    filter: 'search',
+    download: 'download',
+    printer: 'printer',
+    menuDots: 'menu-dots',
+    menu: 'menu',
+    logout: 'log-out',
+    doubleArrowLeft: 'double-arrow-left',
   },
-
-  status: {
-    checkCircle: 'check-circle' as IconName,
-    warning: 'warning' as IconName,
-    alertCircle: 'alert-circle' as IconName,
-  },
-
-  lab: {
-    sampleTube: 'lab-tube' as IconName,
-    flask: 'flask' as IconName,
-  },
-
   ui: {
-    dashboard: 'dashboard' as IconName,
-    category: 'category' as IconName,
-    book: 'book' as IconName,
-    appLogo: 'app-logo' as IconName,
-    shield: 'shield-check' as IconName,
-    shieldCheck: 'shield-check' as IconName,
-    lock: 'lock' as IconName,
-    verified: 'verified' as IconName,
-    usersGroup: 'users-group' as IconName,
-    link: 'link' as IconName,
-    city: 'city' as IconName,
-    smartphone: 'smartphone' as IconName,
+    category: 'category',
+    appLogo: 'app-logo',
+    shield: 'security',
+    shieldCheck: 'security',
+    lock: 'lock',
+    verified: 'verified',
+    usersGroup: 'user',
+    link: 'link',
+    city: 'city',
+    setting: 'setting',
+    bell: 'notification',
+    notification: 'notification',
+    database: 'database',
   },
-
   medicalHistory: {
-    chronicCondition: 'info-circle' as IconName,
-    medication: 'medicine' as IconName,
-    surgery: 'health' as IconName,
-    familyHistory: 'users-group' as IconName,
-    allergy: 'alert-circle' as IconName,
+    chronicCondition: 'info',
+    medication: 'medicine',
+    surgery: 'medicine',
+    familyHistory: 'user',
+    allergy: 'stop',
+    lifestyle: 'health',
   },
-
   landing: {
-    dna: 'dna-landing-page' as IconName,
-    atom: 'atom-landing-page' as IconName,
-    beaker: 'beaker-landing-page' as IconName,
-    bondMolecule: 'bond-molecule-landing-page' as IconName,
-    dropsDroplet: 'drops-droplet-landing-page' as IconName,
-    microscope: 'microscope-landing-page' as IconName,
-    flaskChemical: 'flask-chemical-landing-page' as IconName,
-    flaskEducation: 'flask-education-landing-page' as IconName,
-    medicines: 'medicines-medicine-landing-page' as IconName,
-    syringe: 'syringe-landing-page' as IconName,
-    testTube: 'test-tube-landing-page' as IconName,
-    thermometer: 'thermometer-landing-page' as IconName,
-    vial: 'vial-landing-page' as IconName,
+    dna: 'dna-landing-page',
+    atom: 'atom-landing-page',
+    beaker: 'beaker-landing-page',
+    bondMolecule: 'bond-molecule-landing-page',
+    dropsDroplet: 'drops-droplet-landing-page',
+    microscope: 'microscope-landing-page',
+    flaskChemical: 'flask-chemical-landing-page',
+    flaskEducation: 'flask-education-landing-page',
+    medicines: 'medicines-medicine-landing-page',
+    syringe: 'syringe-landing-page',
+    testTube: 'test-tube-landing-page',
+    vial: 'vial-landing-page',
   },
-} as const;
+  modules: {
+    dashboard: 'dashboard',
+    patients: 'user',
+    orders: 'receipt',
+    laboratory: 'flask-bold',
+    labTests: 'note',
+    payments: 'wallet',
+    reports: 'document',
+    catalog: 'book',
+    eventLog: 'activity',
+    users: 'user',
+  },
+  feedback: {
+    success: 'check-circle',
+    info: 'info',
+    warning: 'warning',
+    danger: 'alert-circle',
+    error: 'alert-circle',
+  },
+  theme: {
+    light: 'sun',
+    dark: 'moon',
+  },
+} as const satisfies Record<string, Record<string, IconAsset>>;
 
-export const getContainerIcon = (type: ContainerType | string): IconName => {
+type RegistryIconKey<R extends Record<string, Record<string, IconAsset>>> = {
+  [C in keyof R]: R[C] extends Record<string, IconAsset>
+    ? `${C & string}.${keyof R[C] & string}`
+    : never;
+}[keyof R];
+
+export type IconKey = RegistryIconKey<typeof REGISTRY>;
+
+function buildAssetByKey(
+  registry: typeof REGISTRY
+): Record<IconKey, IconAsset> {
+  const map = {} as Record<string, IconAsset>;
+  for (const [category, entries] of Object.entries(registry)) {
+    for (const [leaf, asset] of Object.entries(entries)) {
+      map[`${category}.${leaf}`] = asset as IconAsset;
+    }
+  }
+  return map as Record<IconKey, IconAsset>;
+}
+
+export const ICON_ASSET_BY_KEY = buildAssetByKey(REGISTRY);
+
+function buildIconKeys(registry: typeof REGISTRY): {
+  [C in keyof typeof REGISTRY]: {
+    [K in keyof (typeof REGISTRY)[C]]: `${C & string}.${K & string}`;
+  };
+} {
+  const keys = {} as Record<string, Record<string, string>>;
+  for (const [category, entries] of Object.entries(registry)) {
+    keys[category] = {};
+    for (const leaf of Object.keys(entries)) {
+      keys[category][leaf] = `${category}.${leaf}`;
+    }
+  }
+  return keys as {
+    [C in keyof typeof REGISTRY]: {
+      [K in keyof (typeof REGISTRY)[C]]: `${C & string}.${K & string}`;
+    };
+  };
+}
+
+/** Typed semantic keys for `<Icon iconKey={...} />`. */
+export const IconKeys = buildIconKeys(REGISTRY);
+
+/** Resolve a semantic key to its SVG asset slug. */
+export function resolveIconKey(key: IconKey): IconAsset {
+  const asset = ICON_ASSET_BY_KEY[key];
+  if (!asset) {
+    throw new Error(`Unknown icon key: ${key}`);
+  }
+  return asset;
+}
+
+/** Validate a dot-path key from enum contracts (e.g. payment method iconKey). */
+export function parseIconKey(key: string): IconKey {
+  resolveIconKey(key as IconKey);
+  return key as IconKey;
+}
+
+export const getContainerIcon = (type: ContainerType | string): IconKey => {
   const lowerType = type.toLowerCase();
-  const isCup = lowerType === 'cup' || lowerType.includes('cup') || lowerType.includes('stool');
-  return isCup ? ICONS.container.cup : ICONS.container.tube;
+  const isCup =
+    lowerType === 'cup' ||
+    lowerType.includes('cup') ||
+    lowerType.includes('stool');
+  return isCup ? IconKeys.container.cup : IconKeys.container.tube;
 };
 
-export const getPriorityIcon = (_priority?: string): IconName => ICONS.priority;
-export const getOrderStatusIcon = (_status?: string): IconName => ICONS.orderStatus;
-export const getSampleStatusIcon = (_status?: string): IconName => ICONS.sampleStatus;
-export const getDataFieldIcon = (field: string): IconName => {
-  const fieldKey = field as keyof typeof ICONS.dataFields;
-  return ICONS.dataFields[fieldKey] || ICONS.dataFields.user;
+export const getPriorityIcon = (_priority?: string): IconKey =>
+  IconKeys.domain.priority;
+
+export const getOrderStatusIcon = (_status?: string): IconKey =>
+  IconKeys.domain.orderStatus;
+
+export const getDataFieldIcon = (field: string): IconKey => {
+  const fieldKey = field as keyof typeof REGISTRY.dataFields;
+  if (fieldKey in REGISTRY.dataFields) {
+    return IconKeys.dataFields[fieldKey];
+  }
+  return IconKeys.dataFields.user;
 };
 
-/** Sidebar module icons — shared by navigation and modal/popover footers */
-export const MODULE_ICONS = {
-  dashboard: 'dashboard' as IconName,
-  patients: 'profile' as IconName,
-  orders: 'receipt' as IconName,
-  laboratory: 'flask-bold' as IconName,
-  labTests: 'note' as IconName,
-  payments: 'wallet' as IconName,
-  reports: 'document' as IconName,
-  catalog: 'book' as IconName,
-  eventLog: 'activity' as IconName,
-  users: 'user-cog' as IconName,
+/** Alert / callout variant → icon key */
+export const FEEDBACK_ICON_KEYS = {
+  info: IconKeys.feedback.info,
+  success: IconKeys.feedback.success,
+  warning: IconKeys.feedback.warning,
+  danger: IconKeys.feedback.danger,
+  error: IconKeys.feedback.error,
 } as const;
 
+/** Toast variant → icon key (loading uses spinner UI, not an icon). */
+export const TOAST_ICON_KEYS: Record<
+  'success' | 'error' | 'info' | 'warning' | 'loading',
+  IconKey | null
+> = {
+  success: IconKeys.feedback.success,
+  error: IconKeys.feedback.error,
+  info: IconKeys.feedback.info,
+  warning: IconKeys.feedback.warning,
+  loading: null,
+};
+
+/** Inline highlight badge color → icon key */
+export const INLINE_HIGHLIGHT_ICON_KEYS: Partial<
+  Record<'warning' | 'info' | 'danger' | 'success', IconKey>
+> = {
+  warning: IconKeys.feedback.warning,
+  info: IconKeys.feedback.info,
+  danger: IconKeys.feedback.danger,
+  success: IconKeys.feedback.success,
+};

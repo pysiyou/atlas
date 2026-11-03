@@ -15,12 +15,11 @@ import { useCreatePayment, useOrderRemainingBalance } from '../api/payments';
 import {
   getEnabledPaymentMethods,
   getDefaultPaymentMethod,
-  type PaymentMethod,
-} from '@/types/payments';
+  type PaymentMethod } from '@/types/payments';
 import { getPaymentErrorMessage } from '@/utils/errors';
 import { feedbackTitle, getFeedback } from '@/utils/feedback';
 import type { OrderPaymentView } from '../types';
-import { ICONS, MODULE_ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 
 interface PaymentDetailModalProps {
   /** Whether the modal is open */
@@ -44,7 +43,7 @@ const PaymentDetailFooter: React.FC<{
   onPay: () => void;
 }> = ({ isPaid, submitting, paymentsLoading, remainingAmount, onPay }) => (
   <DialogFooter
-    start={<FooterInfo icon={MODULE_ICONS.payments} label="Payments" size="md" />}
+    start={<FooterInfo icon={IconKeys.modules.payments} label="Payments" size="md" />}
     end={
       !isPaid ? (
         <Button
@@ -54,7 +53,7 @@ const PaymentDetailFooter: React.FC<{
           onClick={onPay}
           disabled={submitting || paymentsLoading || remainingAmount <= 0}
           isLoading={submitting}
-          icon={<Icon name={ICONS.dataFields.wallet} />}
+          icon={<Icon iconKey={IconKeys.dataFields.wallet} />}
         >
           {`Pay ${formatCurrency(remainingAmount)}`}
         </Button>

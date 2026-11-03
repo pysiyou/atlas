@@ -2,7 +2,7 @@
 import { text, RADIUS } from '@/theme/recipes';
 import { Icon } from '@/components/primitives';
 import type { NumberRangeFilterControl } from './types';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { uppercaseLabel, cn } from '@/utils';
 
 export function resolveNumberRange(control: NumberRangeFilterControl) {
@@ -62,7 +62,7 @@ export function ModalRadioList({
                     : 'bg-transparent border-2 border-border-strong group-hover:border-brand'
                 )}
               >
-                {isSelected && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
+                {isSelected && <Icon iconKey={IconKeys.actions.check} className="w-3 h-3 text-on-brand" />}
               </div>
             </div>
             <span

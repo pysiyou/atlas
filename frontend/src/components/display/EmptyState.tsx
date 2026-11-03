@@ -1,6 +1,7 @@
 import React from 'react';
 import { EMPTY } from '@/theme/recipes';
-import { Icon, type IconName } from '@/components/primitives/Icon';
+import { Icon } from '@/components/primitives/Icon';
+import type { IconKey } from '@/config/icons';
 import { cn } from '@/utils';
 
 /**
@@ -9,7 +10,7 @@ import { cn } from '@/utils';
  */
 interface EmptyStateProps {
   /** When omitted, only title and description are shown */
-  icon?: IconName;
+  icon?: IconKey;
   /** Primary heading (optional when iconOnly) */
   title?: string;
   /** Secondary line under the title */
@@ -77,7 +78,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
     >
       {icon != null && (
         <div className={styles.iconWrap}>
-          <Icon name={icon} className={styles.icon} aria-hidden={iconOnly ? true : undefined} />
+          <Icon iconKey={icon} className={styles.icon} aria-hidden={iconOnly ? true : undefined} />
         </div>
       )}
       {!iconOnly && title != null && title !== '' && <p className={styles.title}>{title}</p>}

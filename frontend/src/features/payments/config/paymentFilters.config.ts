@@ -3,7 +3,7 @@
  */
 
 import type { FilterConfig } from '@/components/filters/types';
-import { MODULE_ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { createFilterOptions } from '@/utils/filtering';
 import { PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG } from '@/types';
 import { PAYMENT_FILTER_PLACEHOLDERS } from '@/config/filterPlaceholders';
@@ -11,7 +11,7 @@ import { PAYMENT_FILTER_PLACEHOLDERS } from '@/config/filterPlaceholders';
 const statusOptions = createFilterOptions(PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG);
 
 export const paymentFilterConfig: FilterConfig = {
-  footerIcon: MODULE_ICONS.payments,
+  footerIcon: IconKeys.modules.payments,
   footerLabel: 'Payments',
   primaryFilters: {
     title: 'Payment Filters',
@@ -26,12 +26,14 @@ export const paymentFilterConfig: FilterConfig = {
         key: 'dateRange',
         type: 'dateRange',
         label: 'Payment Date Range',
+        icon: IconKeys.dataFields.date,
       },
       {
         key: 'statusFilters',
         type: 'multiSelect',
         label: 'Payment Status',
         options: statusOptions,
+        icon: IconKeys.domain.paymentStatus,
       },
     ],
   },

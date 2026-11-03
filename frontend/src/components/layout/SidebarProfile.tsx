@@ -1,7 +1,7 @@
 import { Avatar } from '@/components/primitives/Avatar';
 import { Icon } from '@/components/primitives/Icon';
 import { Popover, type PopoverPlacement } from '@/components/overlays/Popover';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { cn } from '@/utils';
 import { formatStatus } from '@/utils/string';
 import type { AuthUser } from '@/types';
@@ -73,7 +73,7 @@ export function SidebarProfile({ currentUser, isCollapsed, onLogout }: SidebarPr
                 onLogout();
               }}
             >
-              <Icon name={ICONS.actions.logout} className="size-4 shrink-0" />
+              <Icon iconKey={IconKeys.actions.logout} className="size-4 shrink-0" />
               Log out
             </button>
           </div>

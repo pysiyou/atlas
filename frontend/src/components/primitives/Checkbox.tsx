@@ -7,7 +7,7 @@ import React from 'react';
 import { Icon } from './Icon';
 import { text, RADIUS } from '@/theme/recipes';
 import { cn } from '@/utils';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 
 export interface CheckboxIndicatorProps {
   checked: boolean;
@@ -24,7 +24,7 @@ export const CheckboxIndicator: React.FC<CheckboxIndicatorProps> = ({ checked, c
     )}
     aria-hidden
   >
-    {checked && <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />}
+    {checked && <Icon iconKey={IconKeys.actions.check} className="w-3 h-3 text-on-brand" />}
   </div>
 );
 

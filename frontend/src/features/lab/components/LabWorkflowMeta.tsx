@@ -30,8 +30,7 @@ export const SampleContainerInfo: React.FC<SampleContainerInfoProps> = ({
 
   return (
     <span className="flex items-center" title={`Container: ${containerType}, Color: ${colorName}`}>
-      <Icon
-        name={getContainerIcon(containerType)}
+      <Icon iconKey={getContainerIcon(containerType)}
         className={`${iconSize} ${containerColor ? getContainerIconColor(containerColor) : FG.disabled}`}
       />
     </span>

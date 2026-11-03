@@ -7,7 +7,9 @@ import { cn } from '@/utils';
 import { INLINE_HIGHLIGHT } from '@/theme/recipes';
 import { resolveColor } from './badgeStyles';
 import type { BadgeColor, BadgeVariant } from './badgeTypes';
-import { Icon, type IconName } from './Icon';
+import { INLINE_HIGHLIGHT_ICON_KEYS } from '@/config/icons';
+import type { IconKey } from '@/config/icons';
+import { Icon } from './Icon';
 
 export type InlineHighlightVariant = BadgeVariant;
 
@@ -23,16 +25,16 @@ function markerClasses(variant: InlineHighlightVariant): string {
   return cn(INLINE_HIGHLIGHT.root, wash);
 }
 
-function defaultIconForVariant(variant: InlineHighlightVariant): IconName | undefined {
+function defaultIconKeyForVariant(variant: InlineHighlightVariant): IconKey | undefined {
   const color = resolveColor(String(variant)) as BadgeColor;
-  return INLINE_HIGHLIGHT.defaultIcon[color as keyof typeof INLINE_HIGHLIGHT.defaultIcon];
+  return INLINE_HIGHLIGHT_ICON_KEYS[color as keyof typeof INLINE_HIGHLIGHT_ICON_KEYS];
 }
 
 export interface InlineHighlightProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: InlineHighlightVariant;
   size?: InlineHighlightSize;
   decoration?: InlineHighlightDecoration;
-  icon?: IconName | React.ReactNode | false;
+  icon?: IconKey | React.ReactNode | false;
   label?: React.ReactNode;
   children?: React.ReactNode;
 }
@@ -50,7 +52,7 @@ export const InlineHighlight: React.FC<InlineHighlightProps> = ({
   const content = label ?? children;
 
   const resolvedIcon =
-    icon === false ? null : icon === undefined ? defaultIconForVariant(variant) : icon;
+    icon === false ? null : icon === undefined ? defaultIconKeyForVariant(variant) : icon;
 
   const iconElement =
     resolvedIcon == null
@@ -59,7 +61,7 @@ export const InlineHighlight: React.FC<InlineHighlightProps> = ({
         ? resolvedIcon
         : (
             <Icon
-              name={resolvedIcon as IconName}
+              iconKey={resolvedIcon as IconKey}
               className={INLINE_HIGHLIGHT.icon[size]}
               aria-hidden
             />

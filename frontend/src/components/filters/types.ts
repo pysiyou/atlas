@@ -3,7 +3,7 @@
  */
 
 import type { FilterOption } from '@/utils/filtering';
-import type { IconName } from '@/components/primitives';
+import type { IconKey } from '@/config/icons';
 
 export type FilterControlType =
   | 'text'
@@ -21,7 +21,7 @@ export interface BaseFilterControl {
   type: FilterControlType;
   required?: boolean;
   placeholder?: string;
-  icon?: string;
+  icon?: IconKey;
   helpText?: string;
 }
 
@@ -70,7 +70,7 @@ export interface QuickFilterPreset {
   id: string;
   label: string;
   preset: Record<string, unknown>;
-  icon?: string;
+  icon?: IconKey;
 }
 
 export interface FilterSection {
@@ -81,7 +81,7 @@ export interface FilterSection {
 }
 
 export interface FilterConfig {
-  footerIcon: IconName;
+  footerIcon: IconKey;
   footerLabel?: string;
   quickFilters?: QuickFilterPreset[];
   primaryFilters: FilterSection;

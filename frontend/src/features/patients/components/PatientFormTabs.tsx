@@ -11,7 +11,6 @@ import { AddressSection } from './AddressSection';
 import { EmergencyContactSection } from './EmergencyContactSection';
 import { AffiliationSection } from './AffiliationSection';
 import { MedicalHistorySection } from './MedicalHistorySection';
-import { VitalsSection } from './VitalsSection';
 import { Panel } from '@/components/surfaces';
 
 export interface PatientFormTabsProps {
@@ -26,8 +25,6 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
   const { setValue } = useFormContext<PatientFormInput>();
   const initialHasAffiliation = useMemo(() => !!existingAffiliation, [existingAffiliation]);
   const [affiliationEnabled, setAffiliationEnabled] = useState(initialHasAffiliation);
-
-  const emptyVitalKeysReadOnly = useMemo(() => new Set<string>(), []);
 
   switch (activeTab) {
     case 'general':
@@ -47,17 +44,6 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
       return (
         <Panel preset="panel.page.form" title="History, Conditions & Lifestyle">
           <MedicalHistorySection />
-        </Panel>
-      );
-
-    case 'vitals':
-      return (
-        <Panel
-          preset="panel.page.form"
-          title="Measurements"
-          meta="Fill any vitals you have. Hints show typical ranges."
-        >
-          <VitalsSection emptyKeysReadOnly={emptyVitalKeysReadOnly} />
         </Panel>
       );
 

@@ -6,11 +6,12 @@
  */
 
 import React from 'react';
-import { Icon, type IconName } from '@/components/primitives/Icon';
+import { Icon } from '@/components/primitives/Icon';
+import type { IconKey } from '@/config/icons';
 
 interface FooterInfoProps {
-  /** Icon name to display */
-  icon: IconName;
+  /** Semantic icon key from @/config/icons */
+  icon: IconKey;
   /** Screen-reader label (not shown visually) */
   label?: string;
   /** Icon size — md for modals, sm for popovers (default) */
@@ -24,6 +25,6 @@ const ICON_SIZE_CLASSES = {
 
 export const FooterInfo: React.FC<FooterInfoProps> = ({ icon, label, size = 'sm' }) => (
   <div className="flex items-center shrink-0" aria-label={label} role={label ? 'img' : undefined}>
-    <Icon name={icon} className={`${ICON_SIZE_CLASSES[size]} text-text-muted`} />
+    <Icon iconKey={icon} className={`${ICON_SIZE_CLASSES[size]} text-text-muted`} />
   </div>
 );

@@ -13,11 +13,11 @@ import {
   endOfMonth,
   setYear,
   startOfDay,
-  endOfDay,
-} from 'date-fns';
+  endOfDay } from 'date-fns';
 import { FilterTriggerShell, Popover } from '@/components/overlays';
 import { FilterChip, Icon } from '@/components/primitives';
-import { ICONS } from '@/config/icons';
+import { IconKeys, type IconKey } from '@/config/icons';
+import { filterTriggerIcon } from '@/components/filters/filterControlIcons';
 import { text, CALENDAR_TYPE, RADIUS } from '@/theme/recipes';
 import { cn } from '@/utils';
 import {
@@ -31,8 +31,7 @@ import {
   generateCalendarYears,
   WEEKDAY_LABELS,
   DATE_PRESETS,
-  type DatePreset,
-} from '@/utils/date';
+  type DatePreset } from '@/utils/date';
 
 export type CalendarView = 'days' | 'months' | 'years';
 
@@ -44,6 +43,8 @@ export interface DatePickerProps {
   onChange: (value: [Date, Date] | null) => void;
   placeholder?: string;
   className?: string;
+  /** Leading trigger icon; defaults to calendar. */
+  iconKey?: IconKey;
 }
 
 function DatePickerHeader({
@@ -76,7 +77,7 @@ function DatePickerHeader({
         disabled={isPrevDisabled}
         className={`p-space-1 hover:bg-surface-hover ${RADIUS.field} text-text-tertiary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center`}
       >
-        <Icon name={ICONS.actions.chevronLeft} className="w-4 h-4" />
+        <Icon iconKey={IconKeys.actions.chevronLeft} className="w-4 h-4" />
       </button>
       <button
         onClick={onTitleClick}
@@ -92,7 +93,7 @@ function DatePickerHeader({
         disabled={isNextDisabled}
         className={`p-space-1 hover:bg-surface-hover ${RADIUS.field} text-text-tertiary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center`}
       >
-        <Icon name={ICONS.actions.chevronRight} className="w-4 h-4" />
+        <Icon iconKey={IconKeys.actions.chevronRight} className="w-4 h-4" />
       </button>
     </div>
   );
@@ -338,6 +339,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   onChange,
   placeholder = 'Filter by date range',
   className,
+  iconKey = IconKeys.dataFields.date,
 }) => {
   const [currentMonth, setCurrentMonth] = useState<Date>(value?.[0] || new Date());
   const [view, setView] = useState<CalendarView>('days');
@@ -429,6 +431,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         return (
           <FilterTriggerShell
             isOpen={isOpen}
+            leftIcon={filterTriggerIcon(iconKey)}
             showClear={!!value}
             onClear={handleClear}
             className={className}

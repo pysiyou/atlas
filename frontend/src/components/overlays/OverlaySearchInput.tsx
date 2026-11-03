@@ -6,7 +6,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Icon } from '@/components/primitives';
 import { cn } from '@/utils';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { filterInputIcon } from '@/components/overlays/FilterTriggerShell';
 import { inputContainerBase, inputInner, inputText, inputClearButton } from '@/theme/recipes';
 
@@ -51,7 +51,7 @@ export const OverlaySearchInput: React.FC<OverlaySearchInputProps> = ({
       />
       {localValue && (
         <button onClick={handleClear} className={cn(inputClearButton, 'hover:bg-surface-hover')}>
-          <Icon name={ICONS.actions.close} className="w-4 h-4 text-text-tertiary" />
+          <Icon iconKey={IconKeys.actions.close} className="w-4 h-4 text-text-tertiary" />
         </button>
       )}
     </div>

@@ -3,7 +3,7 @@
  */
 
 import type { FilterConfig } from '@/components/filters/types';
-import { MODULE_ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { createFilterOptions } from '@/utils/filtering';
 import { GENDER_VALUES, GENDER_CONFIG } from '@/types';
 import { PATIENT_FILTER_PLACEHOLDERS } from '@/config/filterPlaceholders';
@@ -12,7 +12,7 @@ import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
 const genderOptions = createFilterOptions(GENDER_VALUES, GENDER_CONFIG);
 
 export const patientFilterConfig: FilterConfig = {
-  footerIcon: MODULE_ICONS.patients,
+  footerIcon: IconKeys.modules.patients,
   footerLabel: 'Patients',
   primaryFilters: {
     title: 'Patient Filters',
@@ -28,6 +28,7 @@ export const patientFilterConfig: FilterConfig = {
         type: 'multiSelect',
         label: 'Sex',
         options: genderOptions,
+        icon: IconKeys.dataFields.gender,
       },
       {
         key: 'ageRange',

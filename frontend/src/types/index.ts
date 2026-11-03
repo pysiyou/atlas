@@ -12,7 +12,6 @@ export type {
   Address,
   EmergencyContact,
   MedicalHistory,
-  VitalSigns,
   Affiliation,
 } from './patient';
 export type {

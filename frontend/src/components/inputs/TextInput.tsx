@@ -6,7 +6,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/feedback/SpinnerLoader';
 import { cn } from '@/utils';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { filterInputIcon } from '@/components/overlays/FilterTriggerShell';
 import { inputWrapper, inputInner, inputText, inputClearButton, inputContainerError } from '@/theme/recipes';
 
@@ -98,7 +98,7 @@ export const TextInput: React.FC<TextInputProps> = ({
             aria-label="Clear"
             type="button"
           >
-            <Icon name={ICONS.actions.close} className="h-4 w-4 text-text-tertiary" />
+            <Icon iconKey={IconKeys.actions.close} className="h-4 w-4 text-text-tertiary" />
           </button>
         )}
       </div>

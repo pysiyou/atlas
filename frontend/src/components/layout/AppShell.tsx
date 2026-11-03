@@ -12,6 +12,7 @@ import { useBreakpoint, isBreakpointAtLeast } from '@/hooks/useBreakpoint';
 import { AppChromeMountContext } from './appChromeMount';
 import { Sidebar } from './Sidebar';
 import { Icon } from '@/components/primitives/Icon';
+import { IconKeys } from '@/config/icons';
 import { CHROME, RADIUS, SHADOW, SURFACE, WORKSPACE } from '@/theme/recipes';
 import { cn } from '@/utils';
 
@@ -72,7 +73,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
                     )}
                     aria-label="Open navigation menu"
                   >
-                    <Icon name="menu" className="size-5" />
+                    <Icon iconKey={IconKeys.actions.menu} className="size-5" />
                   </button>
                 </div>
               )}

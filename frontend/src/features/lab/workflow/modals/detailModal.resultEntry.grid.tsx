@@ -7,7 +7,7 @@ import { RecordId } from '@/features/shared';
 import { DetailGrid } from '../shared/detailModalLayout';
 import type { TestWithContext } from '@/types';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { FG } from '@/theme/recipes';
 
 export function ResultEntryDetailGrid({
@@ -85,7 +85,7 @@ export function ResultEntryDetailGrid({
               label: 'Turnaround Time',
               value: showTurnaroundTime ? (
                 <span className="flex items-center gap-space-1">
-                  <Icon name={ICONS.dataFields.time} className="w-3.5 h-3.5" />
+                  <Icon iconKey={IconKeys.dataFields.time} className="w-3.5 h-3.5" />
                   {turnaroundTime}h
                 </span>
               ) : undefined,

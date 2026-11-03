@@ -14,7 +14,7 @@ import { getFeedback } from '@/utils/feedback';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import type { AffiliationPlan } from '@/types/affiliation';
 import type { AffiliationDuration } from '@/types';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { Text } from '@/components/layout/Text';
 import { text, RADIUS, SHADOW } from '@/theme/recipes';
 
@@ -124,7 +124,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
             <div className="space-y-space-2-5">
               <div className="flex items-start gap-space-3">
                 <div className={`flex-shrink-0 w-4 h-4 ${RADIUS.pill} bg-brand flex items-center justify-center mt-space-0-5`}>
-                  <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
+                  <Icon iconKey={IconKeys.actions.check} className="w-3 h-3 text-on-brand" />
                 </div>
                 <div>
                   <Text role="amount">Priority Lab Services</Text>
@@ -133,7 +133,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
               </div>
               <div className="flex items-start gap-space-3">
                 <div className={`flex-shrink-0 w-4 h-4 ${RADIUS.pill} bg-brand flex items-center justify-center mt-space-0-5`}>
-                  <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
+                  <Icon iconKey={IconKeys.actions.check} className="w-3 h-3 text-on-brand" />
                 </div>
                 <div>
                   <Text role="amount">Discounted Test Pricing</Text>
@@ -142,7 +142,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
               </div>
               <div className="flex items-start gap-space-3">
                 <div className={`flex-shrink-0 w-4 h-4 ${RADIUS.pill} bg-brand flex items-center justify-center mt-space-0-5`}>
-                  <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
+                  <Icon iconKey={IconKeys.actions.check} className="w-3 h-3 text-on-brand" />
                 </div>
                 <div>
                   <Text role="amount">Assurance Number</Text>
@@ -153,7 +153,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
               </div>
               <div className="flex items-start gap-space-3">
                 <div className={`flex-shrink-0 w-4 h-4 ${RADIUS.pill} bg-brand flex items-center justify-center mt-space-0-5`}>
-                  <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
+                  <Icon iconKey={IconKeys.actions.check} className="w-3 h-3 text-on-brand" />
                 </div>
                 <div>
                   <Text role="amount">Extended Validity Period</Text>
@@ -211,7 +211,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
                       `}
                     >
                       {isSelected && (
-                        <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
+                        <Icon iconKey={IconKeys.actions.check} className="w-3 h-3 text-on-brand" />
                       )}
                     </div>
                   </div>

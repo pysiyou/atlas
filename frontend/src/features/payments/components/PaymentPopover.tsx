@@ -21,11 +21,10 @@ import type { Order } from '@/types';
 import {
   getEnabledPaymentMethods,
   getDefaultPaymentMethod,
-  type PaymentMethod,
-} from '@/types/payments';
+  type PaymentMethod } from '@/types/payments';
 import { useCreatePayment, useOrderRemainingBalance } from '../api/payments';
 import { feedbackTitle, getFeedback, notify } from '@/utils/feedback';
-import { ICONS, MODULE_ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { getPaymentErrorMessage } from '@/utils/errors';
 
 interface PaymentPopoverProps {
@@ -120,7 +119,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
       confirmVariant="primary"
       isSubmitting={submitting}
       disabled={!isValid}
-      footerInfo={<FooterInfo icon={MODULE_ICONS.payments} label="Payments" />}
+      footerInfo={<FooterInfo icon={IconKeys.modules.payments} label="Payments" />}
     >
       <OrderReceipt order={order} variant="compact" />
 
@@ -268,7 +267,7 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
       size={size}
       layout="icon-text"
       variant="primary"
-      icon={<Icon name={ICONS.dataFields.wallet} className="text-on-brand" />}
+      icon={<Icon iconKey={IconKeys.dataFields.wallet} className="text-on-brand" />}
     >
       PAY
     </Button>

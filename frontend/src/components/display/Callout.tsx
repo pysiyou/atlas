@@ -6,7 +6,9 @@
  */
 
 import React from 'react';
-import { Icon, type IconName } from '@/components/primitives/Icon';
+import { Icon } from '@/components/primitives/Icon';
+import { FEEDBACK_ICON_KEYS } from '@/config/icons';
+import type { IconKey } from '@/config/icons';
 import { text, RADIUS, TONE } from '@/theme/recipes';
 
 export type CalloutVariant = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
@@ -33,17 +35,17 @@ const CALLOUT_STYLES: Record<
   danger: calloutChrome('danger'),
 };
 
-const DEFAULT_CALLOUT_ICONS: Partial<Record<CalloutVariant, IconName>> = {
-  danger: 'alert-circle',
-  warning: 'warning',
-  success: 'check-circle',
-  info: 'info-circle',
+const DEFAULT_CALLOUT_ICON_KEYS: Partial<Record<CalloutVariant, IconKey>> = {
+  danger: FEEDBACK_ICON_KEYS.danger,
+  warning: FEEDBACK_ICON_KEYS.warning,
+  success: FEEDBACK_ICON_KEYS.success,
+  info: FEEDBACK_ICON_KEYS.info,
 };
 
 export interface CalloutProps {
   variant?: CalloutVariant;
   title: string;
-  icon?: IconName;
+  icon?: IconKey;
   children?: React.ReactNode;
   items?: string[];
   className?: string;
@@ -58,15 +60,15 @@ export const Callout: React.FC<CalloutProps> = ({
   className = '',
 }) => {
   const styles = CALLOUT_STYLES[variant];
-  const iconName = icon ?? DEFAULT_CALLOUT_ICONS[variant];
+  const iconKey = icon ?? DEFAULT_CALLOUT_ICON_KEYS[variant];
 
   return (
     <div
       className={`flex items-start gap-space-2 p-space-2 ${RADIUS.field} ${styles.container} ${className}`}
       role={variant === 'danger' || variant === 'warning' ? 'alert' : undefined}
     >
-      {iconName ? (
-        <Icon name={iconName} className={`w-4 h-4 mt-space-0-5 shrink-0 ${styles.body}`} />
+      {iconKey ? (
+        <Icon iconKey={iconKey} className={`w-4 h-4 mt-space-0-5 shrink-0 ${styles.body}`} />
       ) : (
         <span className={`w-1.5 h-1.5 ${RADIUS.pill} mt-space-1-5 shrink-0 ${styles.dot}`} />
       )}

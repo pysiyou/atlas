@@ -37,11 +37,6 @@ class Patient(Base):
     # Affiliation (JSON, optional)
     affiliation = Column(JSON, nullable=True)  # {assuranceNumber, startDate, endDate, duration}
 
-    # Vital Signs (JSON, optional)
-    vitalSigns = Column(
-        "vital_signs", JSON, nullable=True
-    )  # {temperature, heartRate, systolicBP, diastolicBP, respiratoryRate, oxygenSaturation}
-
     # Metadata
     registrationDate = Column("registration_date", DateTime(timezone=True), nullable=False)
     createdBy = Column("created_by", String, nullable=False)

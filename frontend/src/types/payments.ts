@@ -2,7 +2,7 @@
  * Billing and Financial Management Types
  */
 
-import { ICONS } from '@/config/icons';
+import { parseIconKey, type IconKey } from '@/config/icons';
 import {
   PAYMENT_METHOD_CONFIG,
   PAYMENT_METHOD_VALUES,
@@ -17,18 +17,8 @@ export type { PaymentMethod };
 export interface PaymentMethodOption {
   value: PaymentMethod;
   label: string;
-  icon: string;
+  iconKey: IconKey;
   enabled: boolean;
-}
-
-/** Resolve icon key from PaymentMethod.members.*.iconKey in contracts/enums.json. */
-function iconFromKey(iconKey: string): string {
-  const [group, key] = iconKey.split('.');
-  const section = ICONS[group as keyof typeof ICONS] as Record<string, string> | undefined;
-  if (!section?.[key]) {
-    throw new Error(`Unknown payment method iconKey: ${iconKey}`);
-  }
-  return section[key];
 }
 
 /** Payment methods for UI — labels/enabled from enum contract; icons resolved here. */
@@ -37,7 +27,7 @@ export const PAYMENT_METHOD_OPTIONS: PaymentMethodOption[] = PAYMENT_METHOD_VALU
   return {
     value,
     label: cfg.label,
-    icon: iconFromKey(cfg.iconKey),
+    iconKey: parseIconKey(cfg.iconKey),
     enabled: cfg.enabled,
   };
 });

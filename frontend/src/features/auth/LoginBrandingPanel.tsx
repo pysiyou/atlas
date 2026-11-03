@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { Icon } from '@/components/primitives';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { companyConfig } from '@/config';
 import { PROMO_SHADOW, PROMO_TYPE, RADIUS } from '@/theme/recipes';
 
@@ -37,7 +37,7 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
               style={{ animation: 'pulse-ring 3s ease-in-out infinite' }}
             />
             <div className={`relative w-16 h-16 bg-promo-accent ${RADIUS.menu} flex items-center justify-center ${PROMO_SHADOW.accent} transform hover:scale-105 transition-transform duration-300`}>
-              <Icon name={ICONS.ui.appLogo} className="w-9 h-9" />
+              <Icon iconKey={IconKeys.ui.appLogo} className="w-9 h-9" />
             </div>
           </div>
           <div>
@@ -68,7 +68,7 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
           >
             {/* Feature icon */}
             <div className={`w-10 h-10 ${RADIUS.menu} bg-promo-card-icon border border-promo-card-icon-border flex items-center justify-center flex-shrink-0 group-hover:bg-promo-card-icon-hover transition-colors duration-300`}>
-              <Icon name={ICONS.actions.checkCircle} className="w-5 h-5 text-promo-fg-light" />
+              <Icon iconKey={IconKeys.actions.checkCircle} className="w-5 h-5 text-promo-fg-light" />
             </div>
             <div>
               <h3 className={PROMO_TYPE.featureTitle}>
@@ -91,7 +91,7 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
                 key={i}
                 className={`w-8 h-8 ${RADIUS.pill} bg-promo-badge border-2 border-promo-badge-border flex items-center justify-center`}
               >
-                <Icon name={ICONS.dataFields.user} className="w-4 h-4 text-promo-badge-icon" />
+                <Icon iconKey={IconKeys.dataFields.user} className="w-4 h-4 text-promo-badge-icon" />
               </div>
             ))}
           </div>

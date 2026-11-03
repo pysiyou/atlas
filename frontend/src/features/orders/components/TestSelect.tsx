@@ -16,7 +16,7 @@ import type { TestSummary } from '@/types';
 import { indexTestsByCode } from '@/features/catalog/testLookup';
 import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
 import { cn, formatCurrency, formatTurnaroundTime, titleCaseWords } from '@/utils';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import {text, inputContainerBase, inputContainerError, FORM_CONTROL_LABEL, FG } from '@/theme/recipes';
 import { SearchResultsPopoverShell } from '@/components/overlays/SearchResultsPopoverShell';
 import { CONTROL, FIELD_ERROR, SPACING } from '@/theme/recipes';
@@ -132,8 +132,7 @@ const TestSearchTagInput: React.FC<{
         )}
       >
         <div className="absolute inset-y-0 left-0 pl-space-3 flex items-center pointer-events-none">
-          <Icon
-            name={ICONS.dataFields.document}
+          <Icon iconKey={IconKeys.dataFields.document}
             className={`w-4 h-4 ${FG.muted} group-hover:text-brand transition-colors`}
           />
         </div>

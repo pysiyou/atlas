@@ -6,15 +6,14 @@ import { FormProvider } from 'react-hook-form';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Alert, FooterInfo } from '@/components/display';
 import { FormDialogFooter, Modal, ModalPageShell } from '@/components/overlays';
-import { MODULE_ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import type { UserAdminRecord } from '../api/usersAdmin';
 import { useUserUpsertForm } from '../hooks/useUserUpsertForm';
 import { useUserUpsertSubmit } from '../hooks/useUserUpsertSubmit';
 import {
   canDisableUser,
   isLastActiveAdministrator,
-  isUserActive,
-} from '../utils/userAccountGuards';
+  isUserActive } from '../utils/userAccountGuards';
 import { UserUpsertFormFields } from './UserUpsertFormFields';
 import { UserUpsertModalSummary } from './UserUpsertModalSummary';
 
@@ -130,7 +129,7 @@ export const UserUpsertModal: React.FC<UserUpsertModalProps> = ({
                 />
               )
             }
-            footerInfo={<FooterInfo icon={MODULE_ICONS.users} label="Users" size="md" />}
+            footerInfo={<FooterInfo icon={IconKeys.modules.users} label="Users" size="md" />}
           />
         }
       >

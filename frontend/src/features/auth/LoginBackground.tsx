@@ -4,10 +4,12 @@
  */
 
 import React from 'react';
+import { Icon } from '@/components/primitives';
+import { IconKeys, type IconKey } from '@/config/icons';
 import { RADIUS } from '@/theme/recipes';
 
 interface FloatingIconConfig {
-  icon: string;
+  iconKey: IconKey;
   left: string;
   top: string;
   size: number;
@@ -19,7 +21,7 @@ interface FloatingIconConfig {
 
 const FLOATING_ICONS_CONFIG: FloatingIconConfig[] = [
   {
-    icon: 'microscope-landing-page',
+    iconKey: IconKeys.landing.microscope,
     left: '5%',
     top: '8%',
     size: 120,
@@ -29,7 +31,7 @@ const FLOATING_ICONS_CONFIG: FloatingIconConfig[] = [
     opacity: 0.22,
   },
   {
-    icon: 'atom-landing-page',
+    iconKey: IconKeys.landing.atom,
     left: '50%',
     top: '5%',
     size: 110,
@@ -39,7 +41,7 @@ const FLOATING_ICONS_CONFIG: FloatingIconConfig[] = [
     opacity: 0.2,
   },
   {
-    icon: 'dna-landing-page',
+    iconKey: IconKeys.landing.dna,
     left: '92%',
     top: '12%',
     size: 115,
@@ -49,7 +51,7 @@ const FLOATING_ICONS_CONFIG: FloatingIconConfig[] = [
     opacity: 0.21,
   },
   {
-    icon: 'beaker-landing-page',
+    iconKey: IconKeys.landing.beaker,
     left: '3%',
     top: '35%',
     size: 100,
@@ -59,7 +61,7 @@ const FLOATING_ICONS_CONFIG: FloatingIconConfig[] = [
     opacity: 0.18,
   },
   {
-    icon: 'thermometer-landing-page',
+    iconKey: IconKeys.modules.laboratory,
     left: '88%',
     top: '32%',
     size: 105,
@@ -69,7 +71,7 @@ const FLOATING_ICONS_CONFIG: FloatingIconConfig[] = [
     opacity: 0.19,
   },
   {
-    icon: 'drops-droplet-landing-page',
+    iconKey: IconKeys.landing.dropsDroplet,
     left: '8%',
     top: '58%',
     size: 95,
@@ -79,7 +81,7 @@ const FLOATING_ICONS_CONFIG: FloatingIconConfig[] = [
     opacity: 0.2,
   },
   {
-    icon: 'bond-molecule-landing-page',
+    iconKey: IconKeys.landing.bondMolecule,
     left: '90%',
     top: '55%',
     size: 110,
@@ -89,7 +91,7 @@ const FLOATING_ICONS_CONFIG: FloatingIconConfig[] = [
     opacity: 0.18,
   },
   {
-    icon: 'test-tube-landing-page',
+    iconKey: IconKeys.landing.testTube,
     left: '4%',
     top: '82%',
     size: 105,
@@ -99,7 +101,7 @@ const FLOATING_ICONS_CONFIG: FloatingIconConfig[] = [
     opacity: 0.19,
   },
   {
-    icon: 'flask-chemical-landing-page',
+    iconKey: IconKeys.landing.flaskChemical,
     left: '30%',
     top: '88%',
     size: 100,
@@ -109,7 +111,7 @@ const FLOATING_ICONS_CONFIG: FloatingIconConfig[] = [
     opacity: 0.17,
   },
   {
-    icon: 'vial-landing-page',
+    iconKey: IconKeys.landing.vial,
     left: '60%',
     top: '85%',
     size: 95,
@@ -119,7 +121,7 @@ const FLOATING_ICONS_CONFIG: FloatingIconConfig[] = [
     opacity: 0.2,
   },
   {
-    icon: 'syringe-landing-page',
+    iconKey: IconKeys.landing.syringe,
     left: '92%',
     top: '80%',
     size: 90,
@@ -129,7 +131,7 @@ const FLOATING_ICONS_CONFIG: FloatingIconConfig[] = [
     opacity: 0.18,
   },
   {
-    icon: 'flask-education-landing-page',
+    iconKey: IconKeys.landing.flaskEducation,
     left: '18%',
     top: '18%',
     size: 85,
@@ -139,7 +141,7 @@ const FLOATING_ICONS_CONFIG: FloatingIconConfig[] = [
     opacity: 0.16,
   },
   {
-    icon: 'medicines-medicine-landing-page',
+    iconKey: IconKeys.landing.medicines,
     left: '78%',
     top: '70%',
     size: 95,
@@ -151,7 +153,7 @@ const FLOATING_ICONS_CONFIG: FloatingIconConfig[] = [
 ];
 
 const FloatingIcon: React.FC<FloatingIconConfig> = ({
-  icon,
+  iconKey,
   left,
   top,
   size,
@@ -174,14 +176,10 @@ const FloatingIcon: React.FC<FloatingIconConfig> = ({
       filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))',
     }}
   >
-    <img
-      src={`/icons/${icon}.svg`}
-      alt=""
-      className="w-full h-full object-contain"
-      style={{
-        filter: 'brightness(0.8) saturate(0.7)',
-      }}
-      aria-hidden="true"
+    <Icon
+      iconKey={iconKey}
+      className="w-full h-full object-contain brightness-[0.8] saturate-[0.7]"
+      aria-hidden
     />
   </div>
 );
@@ -270,7 +268,7 @@ export const LoginBackground: React.FC = () => {
 
       {/* Floating SVG icons */}
       {FLOATING_ICONS_CONFIG.map((config, index) => (
-        <FloatingIcon key={`${config.icon}-${index}`} {...config} />
+        <FloatingIcon key={`${config.iconKey}-${index}`} {...config} />
       ))}
     </>
   );

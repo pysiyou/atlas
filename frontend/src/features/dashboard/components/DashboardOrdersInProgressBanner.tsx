@@ -5,7 +5,7 @@
 import React from 'react';
 import { Card } from '@/components/surfaces';
 import { Icon } from '@/components/primitives';
-import { ICONS } from '@/config/icons';
+import { IconKeys } from '@/config/icons';
 import { text } from '@/theme/recipes';
 
 export interface DashboardOrdersInProgressBannerProps {
@@ -24,7 +24,7 @@ export const DashboardOrdersInProgressBanner: React.FC<DashboardOrdersInProgress
   return (
     <Card padding="md" loading={loading} loadingVariant="banner">
       <div className="flex items-center gap-space-3">
-        <Icon name={ICONS.dataFields.trendingUp} className="w-6 h-6 text-warning-fg" />
+        <Icon iconKey={IconKeys.dataFields.trendingUp} className="w-6 h-6 text-warning-fg" />
         <div>
           <p className={text({ role: 'amount' })}>Orders In Progress</p>
           <p className={text({ role: 'label' })}>
