@@ -1,7 +1,8 @@
 import { text } from '@/theme/recipes';
-import { CheckboxList, Icon } from '@/components/primitives';
+import { CheckboxList } from '@/components/primitives';
 import { DatePicker } from '@/components/inputs/DatePicker';
 import { TextInput } from '@/components/inputs/TextInput';
+import { filterInputIcon } from '@/components/overlays/FilterTriggerShell';
 import { ChipSelectGroup } from '@/components/inputs/ChipSelectGroup';
 import { MultiSelectFilter } from '@/components/overlays/MultiSelectFilter';
 import { RangeSlider } from '@/components/overlays/RangeSlider';
@@ -10,7 +11,6 @@ import { RangeFilterField } from './RangeFilterField';
 import { ModalRadioList, resolveNumberRange } from './filterControlShared';
 import type { FilterControlProps, FilterControlSurface } from './FilterControl';
 import type { ReactNode } from 'react';
-import { ICONS } from '@/config/icons';
 import {
   DATE_PRESETS,
   getActivePresetId,
@@ -63,6 +63,7 @@ function renderTextFilter(
         onChange={v => onChange(v)}
         placeholder={textControl.placeholder}
         debounceMs={0}
+        leading={filterInputIcon}
       />
     );
   }
@@ -73,12 +74,7 @@ function renderTextFilter(
       placeholder={textControl.placeholder || `Search ${textControl.label.toLowerCase()}...`}
       debounceMs={textControl.debounceMs ?? 300}
       className={className}
-      leading={
-        <Icon
-          name={ICONS.actions.search}
-          className="w-3.5 h-3.5 shrink-0 text-text-muted group-hover:text-brand transition-colors"
-        />
-      }
+      leading={filterInputIcon}
     />
   );
 }

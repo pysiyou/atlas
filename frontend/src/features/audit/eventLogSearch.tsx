@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 
 import { Avatar, Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/feedback';
 import { SearchResultsPopoverShell } from '@/components/overlays/SearchResultsPopoverShell';
+import { filterInputIcon } from '@/components/overlays/FilterTriggerShell';
 import { ICONS } from '@/config/icons';
 import { useEventLogSearchPreview } from './eventLogSearchPreview';
 import { cn } from '@/utils';
@@ -211,10 +212,7 @@ export const EventLogSearchField: React.FC<EventLogSearchFieldProps> = ({
   return (
     <div ref={containerRef} className="relative w-full">
       <div className={cn(inputWrapper, 'group')}>
-        <Icon
-          name={ICONS.actions.search}
-          className={`w-3.5 h-3.5 shrink-0 ${FG.muted} group-hover:text-brand transition-colors`}
-        />
+        {filterInputIcon}
         <input
           type="search"
           role="combobox"
@@ -242,7 +240,7 @@ export const EventLogSearchField: React.FC<EventLogSearchFieldProps> = ({
               className={cn(inputClearButton, 'hover:bg-surface-page')}
               aria-label="Clear search"
             >
-              <Icon name={ICONS.actions.closeCircle} className={`w-4 h-4 ${FG.captionMuted}`} />
+              <Icon name={ICONS.actions.close} className={`w-4 h-4 ${FG.captionMuted}`} />
             </button>
           )}
         </div>

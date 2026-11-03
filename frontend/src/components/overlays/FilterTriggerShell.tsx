@@ -10,6 +10,14 @@ import { inputTrigger, inputTriggerOpen, filterTriggerText, inputClearButton } f
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
 
+/** Leading icon for filter dropdown triggers (search). */
+export const filterInputIcon = (
+  <Icon
+    name={ICONS.actions.search}
+    className="w-4 h-4 text-text-muted group-hover:text-brand shrink-0 transition-colors"
+  />
+);
+
 export interface FilterTriggerShellProps {
   /** Whether the popover is open (for border/chevron state) */
   isOpen: boolean;
@@ -39,7 +47,7 @@ export const FilterTriggerShell: React.FC<FilterTriggerShellProps> = ({
   <div
     className={cn(inputTrigger, 'justify-between w-full', isOpen && inputTriggerOpen, className)}
   >
-    {leftIcon ?? <div className="w-4 h-4 shrink-0" aria-hidden />}
+    {leftIcon ?? filterInputIcon}
     <div className={cn('flex-1 min-w-0 truncate', filterTriggerText)}>{children}</div>
     <div className="flex items-center gap-space-1 shrink-0">
       {showClear ? (
@@ -51,7 +59,7 @@ export const FilterTriggerShell: React.FC<FilterTriggerShellProps> = ({
           aria-label="Clear"
         >
           <Icon
-            name={ICONS.actions.closeCircle}
+            name={ICONS.actions.close}
             className="w-4 h-4 text-text-muted hover:text-text-tertiary"
           />
         </button>

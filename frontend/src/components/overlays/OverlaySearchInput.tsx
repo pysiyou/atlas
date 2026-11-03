@@ -7,6 +7,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Icon } from '@/components/primitives';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
+import { filterInputIcon } from '@/components/overlays/FilterTriggerShell';
 import { inputContainerBase, inputInner, inputText, inputClearButton } from '@/theme/recipes';
 
 export interface OverlaySearchInputProps {
@@ -39,7 +40,8 @@ export const OverlaySearchInput: React.FC<OverlaySearchInputProps> = ({
   }, [onChange]);
 
   return (
-    <div className={cn(inputContainerBase, 'flex items-center h-10 px-space-4')}>
+    <div className={cn(inputContainerBase, 'flex items-center h-10 px-space-4 gap-space-2')}>
+      {filterInputIcon}
       <input
         type="text"
         placeholder={placeholder}
@@ -49,7 +51,7 @@ export const OverlaySearchInput: React.FC<OverlaySearchInputProps> = ({
       />
       {localValue && (
         <button onClick={handleClear} className={cn(inputClearButton, 'hover:bg-surface-hover')}>
-          <Icon name={ICONS.actions.closeCircle} className="w-4 h-4 text-text-tertiary" />
+          <Icon name={ICONS.actions.close} className="w-4 h-4 text-text-tertiary" />
         </button>
       )}
     </div>

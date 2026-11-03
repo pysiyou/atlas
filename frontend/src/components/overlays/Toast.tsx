@@ -167,7 +167,7 @@ export const Toast: React.FC<BaseToastProps> = React.memo(
               onDismiss();
             }}
           >
-            <Icon name="cross" className="w-4 h-4 pointer-events-none" />
+            <Icon name="close" className="w-4 h-4 pointer-events-none" />
           </button>
         ) : null}
       </div>

@@ -63,7 +63,7 @@ const SelectParameterInput: React.FC<{
               className={`p-space-0-5 -mr-space-1 hover:bg-surface-hover ${RADIUS.field} transition-colors flex items-center justify-center cursor-pointer flex-shrink-0`}
             >
               <Icon
-                name={ICONS.actions.closeCircle}
+                name={ICONS.actions.close}
                 className={`w-4 h-4 ${FG.disabled} hover:${FG.captionMuted}`}
               />
             </button>

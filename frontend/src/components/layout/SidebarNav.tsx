@@ -2,11 +2,14 @@ import type { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import { CHROME } from '@/theme/recipes';
 import { cn } from '@/utils';
-import type { MenuItem, SettingsItem } from './sidebarMenu';
+import type { MenuItem, SettingsPopoverLink } from './sidebarMenu';
+import { settingsPopoverTrigger } from '@/config/sidebarMenu';
+import { SidebarSettingsMenu } from './SidebarSettingsMenu';
 
 export interface SidebarNavProps {
   menuItems: MenuItem[];
-  settingsItems: SettingsItem[];
+  settingsPopoverLinks: SettingsPopoverLink[];
+  isCollapsed?: boolean;
   onNavigate?: () => void;
 }
 
@@ -58,8 +61,14 @@ function NavRowBody({
 const navRowReset =
   'appearance-none bg-transparent p-0 m-0 border-0 text-left no-underline';
 
-export function SidebarNav({ menuItems, settingsItems, onNavigate }: SidebarNavProps) {
+export function SidebarNav({
+  menuItems,
+  settingsPopoverLinks,
+  isCollapsed = false,
+  onNavigate,
+}: SidebarNavProps) {
   const handleNavClick = () => onNavigate?.();
+  const showSettings = settingsPopoverLinks.length > 0;
 
   return (
     <div className={CHROME.navScroll}>
@@ -79,36 +88,20 @@ export function SidebarNav({ menuItems, settingsItems, onNavigate }: SidebarNavP
         ))}
       </nav>
 
-      {settingsItems.length > 0 && (
+      {showSettings && (
         <>
           <div className={CHROME.footerDivider} aria-hidden="true">
             <div className={CHROME.footerDividerRule} />
           </div>
           <SectionTitle>Settings</SectionTitle>
           <div className={CHROME.navList} role="group" aria-label="Settings">
-            {settingsItems.map((item, index) =>
-              item.path ? (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  onClick={handleNavClick}
-                  className={cn(CHROME.navItem, navRowReset)}
-                >
-                  {({ isActive }) => (
-                    <NavRowBody icon={item.icon} label={item.label} isActive={isActive} />
-                  )}
-                </NavLink>
-              ) : (
-                <button
-                  key={index}
-                  type="button"
-                  disabled
-                  className={cn(CHROME.navItem, navRowReset, 'cursor-not-allowed')}
-                >
-                  <NavRowBody icon={item.icon} label={item.label} interactive={false} />
-                </button>
-              )
-            )}
+            <SidebarSettingsMenu
+              isCollapsed={isCollapsed}
+              triggerIcon={settingsPopoverTrigger.icon}
+              triggerLabel={settingsPopoverTrigger.label}
+              items={settingsPopoverLinks}
+              onNavigate={handleNavClick}
+            />
           </div>
         </>
       )}

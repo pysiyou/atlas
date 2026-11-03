@@ -49,8 +49,8 @@ const PRESETS: Record<
   add: { variant: 'primary', iconName: ICONS.actions.add, layout: 'icon-text' },
   create: { variant: 'primary', iconName: ICONS.actions.add, layout: 'icon-text' },
   edit: { variant: 'primary', iconName: ICONS.actions.edit, layout: 'icon-text' },
-  cancel: { variant: 'outline', iconName: ICONS.actions.cross, layout: 'icon-text' },
-  close: { variant: 'danger', iconName: ICONS.actions.cross },
+  cancel: { variant: 'outline', iconName: ICONS.actions.close, layout: 'icon-text' },
+  close: { variant: 'danger', iconName: ICONS.actions.close },
   back: { variant: 'outline', iconName: ICONS.actions.arrowLeft, layout: 'icon-text' },
   previous: { variant: 'outline', iconName: ICONS.actions.chevronLeft, layout: 'icon-text' },
   next: { variant: 'primary', iconName: ICONS.actions.chevronRight, layout: 'icon-text' },
@@ -69,7 +69,7 @@ const PRESETS: Record<
   filter: { variant: 'primary', iconName: ICONS.actions.filter, layout: 'icon-text' },
   search: { variant: 'primary', iconName: ICONS.actions.search, layout: 'icon-text' },
   logout: { variant: 'danger', iconName: ICONS.actions.logout, layout: 'icon-text' },
-  remove: { variant: 'danger', iconName: ICONS.actions.cross, layout: 'icon-text' },
+  remove: { variant: 'danger', iconName: ICONS.actions.close, layout: 'icon-text' },
 };
 
 export function actionButtonPreset(

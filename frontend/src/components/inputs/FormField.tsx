@@ -13,19 +13,20 @@ import { FIELD_ERROR, SPACING, TONE } from '@/theme/recipes';
 type FormFieldKind = 'input' | 'textarea' | 'select';
 
 function getDefaultIconForInput(name: string, type: string): IconName | undefined {
-  if (type === 'email' || name.includes('email')) return 'mail';
+  if (type === 'email' || name.includes('email')) return 'sms';
   if (type === 'tel' || name.includes('phone')) return 'phone';
+  if (name.includes('emergencyContactFullName')) return 'link';
   if (name.includes('height')) return 'ruler';
   if (name.includes('weight')) return 'weight';
   if (name.includes('name')) return 'user';
-  if (name.includes('address') || name.includes('street')) return 'map';
+  if (name.includes('address') || name.includes('street')) return 'location';
   if (name.includes('city')) return 'city';
-  if (name.includes('postal') || name.includes('zip')) return 'mail';
+  if (name.includes('postal') || name.includes('zip')) return 'location';
   return undefined;
 }
 
 function getDefaultIconForTextarea(name: string): IconName {
-  if (name.includes('note') || name.includes('comment')) return ICONS.actions.pen;
+  if (name.includes('note') || name.includes('comment')) return ICONS.actions.edit;
   if (name.includes('history') || name.includes('medical')) return ICONS.dataFields.medicalKit;
   return ICONS.dataFields.document;
 }

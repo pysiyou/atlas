@@ -298,7 +298,7 @@ export const DateInput: React.FC<DateInputProps> = ({
                 className={cn(inputClearButton, '-mr-space-1 hover:bg-surface-hover')}
                 type="button"
               >
-                <Icon name={ICONS.actions.closeCircle} className="w-3.5 h-3.5 text-text-disabled hover:text-text-tertiary" />
+                <Icon name={ICONS.actions.close} className="w-3.5 h-3.5 text-text-disabled hover:text-text-tertiary" />
               </button>
             )}
           </div>

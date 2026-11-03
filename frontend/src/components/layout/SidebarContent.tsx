@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { CHROME } from '@/theme/recipes';
 import { cn } from '@/utils';
 import type { AuthUser } from '@/types';
-import type { MenuItem, SettingsItem } from './sidebarMenu';
+import type { MenuItem, SettingsPopoverLink } from './sidebarMenu';
 import { SidebarHeader } from './SidebarHeader';
 import { SidebarNav } from './SidebarNav';
 import { ThemeSwitch } from '@/components/inputs';
@@ -15,7 +15,7 @@ export interface SidebarContentProps {
   isMobile: boolean;
   onMobileClose?: () => void;
   menuItems: MenuItem[];
-  settingsItems: SettingsItem[];
+  settingsPopoverLinks: SettingsPopoverLink[];
   currentUser: AuthUser | null | undefined;
   onLogout: () => void;
   onToggleCollapse: () => void;
@@ -26,7 +26,7 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
   isMobile,
   onMobileClose,
   menuItems,
-  settingsItems: settingsItemsProp,
+  settingsPopoverLinks: settingsPopoverLinksProp,
   currentUser,
   onLogout,
   onToggleCollapse,
@@ -59,7 +59,8 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
       />
       <SidebarNav
         menuItems={menuItems}
-        settingsItems={settingsItemsProp}
+        settingsPopoverLinks={settingsPopoverLinksProp}
+        isCollapsed={collapsed}
         onNavigate={isMobile ? onMobileClose : undefined}
       />
       <div className={CHROME.footerDivider} aria-hidden="true">

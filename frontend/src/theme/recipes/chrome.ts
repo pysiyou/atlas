@@ -33,18 +33,18 @@ export const CHROME = {
     'flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto py-chrome-nav-menu-gutter hide-scrollbar',
   navList: `flex flex-col ${SPACING.gapCompact}`,
   navItem:
-    'group/nav relative flex min-h-chrome-nav-indicator w-full items-stretch text-left cursor-pointer',
+    'chrome-nav-row group/nav relative flex min-h-chrome-nav-indicator w-full items-stretch text-left cursor-pointer',
   navHit:
-    `flex min-h-chrome-nav-indicator w-full min-w-0 flex-1 items-center overflow-hidden ${RADIUS.field} text-text-secondary transition-colors duration-200 ease-out`,
+    `flex min-h-chrome-nav-indicator w-full min-w-0 flex-1 items-center overflow-x-hidden overflow-y-visible ${RADIUS.field} text-text-secondary transition-colors duration-200 ease-out`,
   navHitHover: 'group-hover/nav:bg-surface-hover',
   navIconActive: 'text-brand group-hover/nav:text-brand',
   navIconHover: 'group-hover/nav:text-text-primary',
   navLabelActive: 'text-brand group-hover/nav:text-brand',
   navLabelHover: 'group-hover/nav:text-text-primary',
   navIconColumn:
-    'chrome-rail-slot flex w-chrome-rail shrink-0 items-center justify-center',
+    'chrome-rail-slot flex w-chrome-rail shrink-0 items-center justify-center overflow-visible',
   navIcon:
-    'flex size-chrome-nav-indicator shrink-0 items-center justify-center',
+    'flex size-chrome-nav-indicator shrink-0 items-center justify-center overflow-visible',
   navIndicator:
     `flex size-chrome-nav-indicator shrink-0 items-center justify-center ${RADIUS.field} transition-colors duration-200 ease-out`,
   navIndicatorActive: `bg-brand text-on-brand ${SHADOW.subtle}`,

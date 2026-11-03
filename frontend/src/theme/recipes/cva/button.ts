@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-import { BUTTON_TYPE, ICON_SIZE } from '../type';
+import { BUTTON_TYPE } from '../type';
 import { CONTROL } from '../control';
 import { RADIUS } from '../spacing';
 
@@ -37,24 +37,29 @@ export const labelButton = cva(buttonChrome, {
   },
 });
 
-export const iconButton = cva(buttonChrome, {
+const iconButtonChrome =
+  `inline-flex shrink-0 items-center justify-center p-0 m-0 leading-none font-normal whitespace-nowrap cursor-pointer transition-colors duration-200 ${CONTROL.focusVisible} disabled:opacity-50 disabled:cursor-not-allowed`;
+
+/** Icon-only controls: no fill/border chrome — icon color carries intent. */
+const iconButtonIntent = {
+  primary: 'bg-transparent text-brand hover:text-brand-hover focus-visible:ring-brand',
+  secondary:
+    'bg-transparent text-text-secondary hover:text-text-primary focus-visible:ring-text-muted',
+  danger: 'bg-transparent text-danger hover:text-danger-hover focus-visible:ring-danger',
+  success: 'bg-transparent text-success hover:text-success-hover focus-visible:ring-success',
+  warning: 'bg-transparent text-warning hover:text-warning-hover focus-visible:ring-warning',
+  outline: 'bg-transparent text-text-secondary hover:text-text-primary focus-visible:ring-text-muted',
+  ghost: 'bg-transparent text-text-muted hover:text-text-primary focus-visible:ring-text-muted',
+} as const;
+
+export const iconButton = cva(iconButtonChrome, {
   variants: {
-    intent: {
-      primary: 'bg-brand text-on-brand hover:bg-brand-hover focus-visible:ring-brand',
-      secondary:
-        'bg-surface-hover text-text-primary hover:bg-border-subtle focus-visible:ring-text-muted',
-      danger: 'bg-danger text-on-danger hover:bg-danger-hover focus-visible:ring-danger',
-      success: 'bg-success text-on-success hover:bg-success-hover focus-visible:ring-success',
-      warning: 'bg-warning text-on-warning hover:bg-warning-hover focus-visible:ring-warning',
-      outline:
-        'border-2 border-border-strong bg-transparent text-text-secondary hover:bg-surface-hover focus-visible:ring-text-muted',
-      ghost:
-        'bg-transparent text-text-secondary hover:bg-surface-hover focus-visible:ring-text-muted',
-    },
+    intent: iconButtonIntent,
+    /** Size is applied to the icon glyph in `IconButton`, not the `<button>` box. */
     size: {
-      sm: ICON_SIZE.button.sm,
-      md: ICON_SIZE.button.md,
-      lg: ICON_SIZE.button.lg,
+      sm: '',
+      md: '',
+      lg: '',
     },
     shape: {
       circle: RADIUS.buttonCircle,
@@ -62,7 +67,7 @@ export const iconButton = cva(buttonChrome, {
     },
   },
   defaultVariants: {
-    intent: 'primary',
+    intent: 'ghost',
     size: 'md',
     shape: 'circle',
   },

@@ -7,6 +7,7 @@ import { Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/feedback/SpinnerLoader';
 import { cn } from '@/utils';
 import { ICONS } from '@/config/icons';
+import { filterInputIcon } from '@/components/overlays/FilterTriggerShell';
 import { inputWrapper, inputInner, inputText, inputClearButton, inputContainerError } from '@/theme/recipes';
 
 export interface TextInputProps {
@@ -97,7 +98,7 @@ export const TextInput: React.FC<TextInputProps> = ({
             aria-label="Clear"
             type="button"
           >
-            <Icon name={ICONS.actions.closeCircle} className="h-4 w-4 text-text-tertiary" />
+            <Icon name={ICONS.actions.close} className="h-4 w-4 text-text-tertiary" />
           </button>
         )}
       </div>
@@ -111,14 +112,5 @@ export type SearchTextInputProps = Omit<TextInputProps, 'leading'> & {
 };
 
 export const SearchTextInput: React.FC<SearchTextInputProps> = props => (
-  <TextInput
-    {...props}
-    debounceMs={props.debounceMs ?? 300}
-    leading={
-      <Icon
-        name={ICONS.actions.search}
-        className="w-3.5 h-3.5 shrink-0 text-text-muted group-hover:text-brand transition-colors"
-      />
-    }
-  />
+  <TextInput {...props} debounceMs={props.debounceMs ?? 300} leading={filterInputIcon} />
 );

@@ -166,7 +166,7 @@ export const RemovableTag: React.FC<RemovableTagProps> = ({
         className={`-mr-space-0-5 ml-space-0-5 flex shrink-0 cursor-pointer items-center justify-center ${RADIUS.pill} p-space-0-5 transition-colors ${CONTROL.focusSubtle}`}
         aria-label={removeAriaLabel}
       >
-        <Icon name={ICONS.actions.closeCircle} className={cn('h-3 w-3', chip.remove)} />
+        <Icon name={ICONS.actions.close} className={cn('h-3 w-3', chip.remove)} />
       </button>
     </div>
   );

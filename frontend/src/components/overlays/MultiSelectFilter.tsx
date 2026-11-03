@@ -177,12 +177,10 @@ function MultiSelectOptionsPanel({
                 />
                 {allSelected ? (
                   <div className={`w-4 h-4 ${RADIUS.menuItem} border-2 border-brand bg-brand flex items-center justify-center transition-all duration-150`}>
-                    <Icon name={ICONS.actions.cross} className="w-3 h-3 text-on-brand" />
-                  </div>
-                ) : (
-                  <div className={`w-4 h-4 ${RADIUS.menuItem} border-2 border-brand bg-brand flex items-center justify-center transition-all duration-150`}>
                     <Icon name={ICONS.actions.check} className="w-3 h-3 text-on-brand" />
                   </div>
+                ) : (
+                  <div className={`w-4 h-4 ${RADIUS.menuItem} border-2 border-border-default bg-surface transition-all duration-150`} />
                 )}
               </div>
               <span className={`${text({ role: 'body' })} font-normal`}>
@@ -205,7 +203,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
   showSelectAll = true,
   selectAllLabel = 'Select all',
   className = '',
-  icon,
+  icon: _icon,
   singleSelect = false,
 }) => {
   const allSelected = useMemo(
@@ -258,14 +256,6 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
       trigger={({ isOpen }: { isOpen: boolean }) => (
         <FilterTriggerShell
           isOpen={isOpen}
-          leftIcon={
-            icon ? (
-              <Icon
-                name={icon}
-                className="w-4 h-4 text-text-muted group-hover:text-brand shrink-0 transition-colors"
-              />
-            ) : undefined
-          }
           showClear={selectedIds.length > 0}
           onClear={e => {
             e.preventDefault();

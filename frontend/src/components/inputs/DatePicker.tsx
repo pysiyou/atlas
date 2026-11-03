@@ -429,12 +429,6 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         return (
           <FilterTriggerShell
             isOpen={isOpen}
-            leftIcon={
-              <Icon
-                name={ICONS.dataFields.date}
-                className="w-4 h-4 text-text-muted group-hover:text-brand transition-colors shrink-0"
-              />
-            }
             showClear={!!value}
             onClear={handleClear}
             className={className}

@@ -11,15 +11,21 @@ export const ICON_SIZE = {
   sm: 'size-icon-sm',
   md: 'size-icon-md',
   lg: 'size-icon-lg',
-  button: {
-    sm: 'size-icon-button-sm',
-    md: 'size-icon-button-md',
-    lg: 'size-icon-button-lg',
+  xl: 'size-icon-xl',
+  /** Sidebar nav menu — `w-5 h-5` glyph in chrome nav indicator slot. */
+  sidebarNav: {
+    icon: 'size-icon-lg',
+    slot: 'size-chrome-nav-indicator',
   },
   labelIcon: {
     sm: 'size-icon-sm',
     md: 'size-icon-md',
     lg: 'size-icon-lg',
+  },
+  iconButtonIcon: {
+    sm: 'size-icon-xl',
+    md: 'size-[1.75rem]',
+    lg: 'size-[2rem]',
   },
 } as const;
 

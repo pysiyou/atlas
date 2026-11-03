@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { CONTROL, INTERACTIVE, RADIUS } from '@/theme/recipes';
-import { actionButtonPreset, Button, Avatar, Icon, IconButton } from '@/components/primitives';
+import { actionButtonPreset, Avatar, Icon, IconButton } from '@/components/primitives';
 import { PageHeader } from '@/components/layout';
 import type { Patient } from '@/types/patient';
 import { isAffiliationActive } from '../utils/patientHelpers';
@@ -50,23 +50,10 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
   );
   const actions = (
     <div
-      className={`flex items-center gap-space-2 ${!isLarge ? 'w-full sm:w-auto sm:justify-end justify-end' : ''}`}
+      className={`flex items-center gap-space-1 ${!isLarge ? 'w-full sm:w-auto sm:justify-end justify-end' : ''}`}
     >
-      {isLarge ? (
-        <>
-          <Button {...actionButtonPreset('edit')} size="sm" onClick={onEdit}>
-            Edit
-          </Button>
-          <Button {...actionButtonPreset('add')} size="sm" onClick={onNewOrder}>
-            New Order
-          </Button>
-        </>
-      ) : (
-        <>
-          <IconButton {...actionButtonPreset('edit')} size="sm" title="Edit Patient" onClick={onEdit} />
-          <IconButton {...actionButtonPreset('add')} size="sm" title="New Order" onClick={onNewOrder} />
-        </>
-      )}
+      <IconButton {...actionButtonPreset('edit')} size="lg" title="Edit Patient" onClick={onEdit} />
+      <IconButton {...actionButtonPreset('add')} size="lg" title="New Order" onClick={onNewOrder} />
     </div>
   );
   return <PageHeader title={patient.fullName} avatar={avatar} actions={actions} />;

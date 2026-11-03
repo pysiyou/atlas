@@ -32,9 +32,9 @@ const labelIconSize: Record<ButtonSize, string> = {
 };
 
 const iconButtonIconSize: Record<ButtonSize, string> = {
-  sm: ICON_SIZE.xs,
-  md: ICON_SIZE.sm,
-  lg: ICON_SIZE.md,
+  sm: ICON_SIZE.iconButtonIcon.sm,
+  md: ICON_SIZE.iconButtonIcon.md,
+  lg: ICON_SIZE.iconButtonIcon.lg,
 };
 
 function labelButtonClasses(
@@ -165,7 +165,7 @@ interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 
 
 export const IconButton = memo(
   forwardRef<HTMLButtonElement, IconButtonProps>(
-    ({ icon, iconName, variant = 'primary', size = 'md', shape = 'circle', className, disabled, ...props }, ref) => {
+    ({ icon, iconName, variant = 'ghost', size = 'md', shape = 'circle', className, disabled, ...props }, ref) => {
       const iconClass = iconButtonIconSize[size];
 
       let content: React.ReactNode = null;

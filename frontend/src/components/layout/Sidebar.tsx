@@ -47,7 +47,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
       isMobile={isMobile}
       onMobileClose={onMobileClose}
       menuItems={filteredMenuItems}
-      settingsItems={filteredSettingsItems}
+      settingsPopoverLinks={filteredSettingsItems}
       currentUser={currentUser}
       onLogout={logout}
       onToggleCollapse={() => setIsCollapsed(prev => !prev)}

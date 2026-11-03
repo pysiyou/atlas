@@ -117,9 +117,10 @@
   --icon-size-sm: 0.875rem;
   --icon-size-md: 1rem;
   --icon-size-lg: 1.25rem;
-  --icon-button-size-sm: 1.75rem;
-  --icon-button-size-md: 2rem;
-  --icon-button-size-lg: 2.5rem;
+  --icon-size-xl: 1.5rem;
+  --icon-button-size-sm: var(--chrome-nav-indicator);
+  --icon-button-size-md: 3rem;
+  --icon-button-size-lg: 3.25rem;
 
   /** Split workspace + meter table geometry. */
   --split-bottom-row-min-height: 18rem;

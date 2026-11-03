@@ -64,7 +64,7 @@ export function renderPatientEmergencyContactDescriptionItems(patient: Patient):
   return [
     <DescriptionItem
       key="emergency-contact"
-      icon={ICONS.ui.usersGroup}
+      icon={ICONS.ui.link}
       label="Emergency Contact"
       value={formatEmergencyContactDisplay(patient.emergencyContact)}
       orientation="vertical"

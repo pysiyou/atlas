@@ -69,3 +69,8 @@
   opacity: 0;
   pointer-events: none;
 }
+
+/* Icons stay fully visible on the collapsed rail (labels still clip via .chrome-clip). */
+.chrome-collapsed .chrome-nav-row {
+  overflow: visible;
+}
