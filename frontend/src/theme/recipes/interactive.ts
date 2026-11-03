@@ -1,6 +1,6 @@
 /**
  * Cursor tokens for clickable vs. static surfaces.
- * Pair with theme/components/interactive.css for native controls.
+ * Pair with theme/components.css for native control cursors.
  */
 
 export const INTERACTIVE = {

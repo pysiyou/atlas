@@ -42,7 +42,6 @@ export const ICON_ASSETS = [
   'flask-chemical-landing-page',
   'flask-education-landing-page',
   'health',
-  'home',
   'info',
   'kg',
   'lab-cup',
@@ -136,7 +135,6 @@ const REGISTRY = {
     sampleCollection: 'flask-bold',
   },
   actions: {
-    home: 'home',
     view: 'eye',
     edit: 'edit',
     save: 'save',

@@ -30,7 +30,6 @@ export type ActionButtonPreset =
   | 'back'
   | 'logout'
   | 'remove'
-  | 'home'
   | 'confirm'
   | 'expand'
   | 'collapse'
@@ -54,7 +53,6 @@ const PRESETS: Record<
   back: { variant: 'outline', iconKey: IconKeys.actions.arrowLeft, layout: 'icon-text' },
   previous: { variant: 'outline', iconKey: IconKeys.actions.chevronLeft, layout: 'icon-text' },
   next: { variant: 'primary', iconKey: IconKeys.actions.chevronRight, layout: 'icon-text' },
-  home: { variant: 'primary', iconKey: IconKeys.actions.home, layout: 'icon-text' },
   expand: { variant: 'secondary', iconKey: IconKeys.actions.chevronDown, layout: 'icon-text' },
   collapse: { variant: 'secondary', iconKey: IconKeys.actions.chevronLeft, layout: 'icon-text' },
   sidebarClose: { variant: 'ghost', iconKey: IconKeys.actions.arrowLeft },

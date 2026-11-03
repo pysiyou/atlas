@@ -4,11 +4,10 @@
  * Transient UI feedback: use {@link notify.show} (or {@link notify.apiError} for failures).
  * Inline form copy: use {@link inlineFeedbackMessage} for catalog `inline` entries.
  *
- * Do not import from `@/app/AppToastBar` in feature code.
+ * Feature code: use {@link notify.show} for transient feedback (not direct `toast` import).
  */
 
-import { toast } from '@/app/AppToastBar';
-import type { ToastAction } from '@/components/overlays/Toast';
+import { toast, type ToastAction } from '@/components/feedback/notices';
 import { FEEDBACK_CATALOG, type FeedbackEntry, type FeedbackId } from '@/types/generated/feedbackCatalog';
 import { isApiError } from '@/lib/api/errors';
 import { getErrorMessage } from '@/utils/errors';
@@ -118,26 +117,11 @@ export type NotifyShowOptions = ToastOverrides & {
   onRetry?: () => void;
 };
 
-function isTransientFeedbackChannel(channel: FeedbackEntry['channel']): boolean {
-  return channel === 'toast' || channel === 'alert' || channel === 'errorAlert';
-}
-
-function buildToastPayload(entry: FeedbackEntry, overrides?: ToastOverrides) {
-  return {
-    title: overrides?.title ?? entry.title,
-    subtitle: overrides?.subtitle ?? entry.subtitle,
-    actions: overrides?.actions,
-  };
-}
-
 function mergeNotifyActions(
   overrides: ToastOverrides | undefined,
   onRetry: (() => void) | undefined
 ): ToastAction[] | undefined {
-  const fromOverrides = overrides?.actions ?? [];
-  const retryAction: ToastAction[] =
-    onRetry != null ? [{ label: 'Retry', onClick: onRetry }] : [];
-  const merged = [...fromOverrides, ...retryAction];
+  const merged = [...(overrides?.actions ?? []), ...(onRetry ? [{ label: 'Retry', onClick: onRetry }] : [])];
   return merged.length > 0 ? merged : undefined;
 }
 
@@ -146,14 +130,8 @@ function dispatchFromCatalog(id: FeedbackId, options?: NotifyShowOptions): void 
 
   if (entry.channel === 'inline') {
     if (import.meta.env.DEV) {
-      console.warn(
-        `[notify.show] "${id}" is channel "inline"; use inlineFeedbackMessage instead.`
-      );
+      console.warn(`[notify.show] "${id}" is channel "inline"; use inlineFeedbackMessage instead.`);
     }
-    return;
-  }
-
-  if (!isTransientFeedbackChannel(entry.channel)) {
     return;
   }
 
@@ -167,36 +145,24 @@ function dispatchFromCatalog(id: FeedbackId, options?: NotifyShowOptions): void 
     subtitle = options?.subtitle ?? resolved.subtitle;
   }
 
-  const payload = buildToastPayload(entry, {
+  const payload = {
     title,
     subtitle,
     actions: mergeNotifyActions(options, options?.onRetry),
-  });
+  };
 
-  dispatchToast(entry.variant, payload);
-}
+  const send =
+    entry.variant === 'success'
+      ? toast.success
+      : entry.variant === 'warning'
+        ? toast.warning
+        : entry.variant === 'info'
+          ? toast.info
+          : entry.variant === 'error' || entry.variant === 'danger'
+            ? toast.error
+            : toast;
 
-function dispatchToast(
-  variant: FeedbackEntry['variant'],
-  payload: ReturnType<typeof buildToastPayload>
-) {
-  switch (variant) {
-    case 'success':
-      toast.success(payload);
-      break;
-    case 'error':
-    case 'danger':
-      toast.error(payload);
-      break;
-    case 'warning':
-      toast.warning(payload);
-      break;
-    case 'info':
-      toast.info(payload);
-      break;
-    default:
-      toast(payload);
-  }
+  send(payload);
 }
 
 /**

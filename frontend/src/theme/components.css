@@ -1,0 +1,278 @@
+/**
+ * App-level component styles (chrome, entity IDs, cursors, toasts, theme transition).
+ * Imported from main.tsx after semantic tokens.
+ */
+
+/* --- App chrome (collapsed rail; paired with CHROME.* recipe classes) --- */
+
+.chrome-clip {
+  transition:
+    opacity 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+    flex-basis 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+    width 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chrome-collapsed .chrome-clip {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  flex: 0 0 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chrome-collapsed .chrome-section-title {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chrome-nav-split {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  height: var(--chrome-nav-indicator);
+  padding-inline: 0.75rem;
+}
+
+.chrome-nav-split-line {
+  width: 100%;
+  height: 1px;
+  background-color: var(--border);
+}
+
+.chrome-collapsed .chrome-theme-well {
+  justify-content: center;
+  margin-inline: var(--chrome-nav-inset);
+  min-height: var(--chrome-nav-indicator);
+  padding: 0;
+  background: transparent;
+}
+
+.chrome-collapsed .chrome-theme-well > button:not([aria-pressed='true']) {
+  display: none !important;
+}
+
+.chrome-collapsed .chrome-theme-well > button[aria-pressed='true'] {
+  flex: none;
+  gap: 0;
+  width: var(--chrome-nav-indicator);
+  height: var(--chrome-nav-indicator);
+  padding: 0;
+}
+
+.chrome-collapsed .chrome-theme-well .chrome-clip {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  flex: 0 0 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chrome-collapsed .chrome-nav-row {
+  overflow: visible;
+}
+
+/* --- Entity IDs (PAT/ORD/SAM/TST codes, catalog codes) --- */
+
+.entity-id {
+  font-family: var(--id-font-family);
+  font-size: var(--id-font-size);
+  font-weight: var(--id-font-weight);
+  color: var(--id-color);
+  letter-spacing: var(--id-letter-spacing);
+}
+
+.entity-id--secondary {
+  font-size: var(--id-font-size-secondary);
+  color: var(--id-color-secondary);
+  font-weight: var(--font-weight-normal);
+}
+
+.entity-id--header-secondary {
+  font-size: var(--id-font-size);
+  font-weight: var(--id-font-weight);
+  color: var(--id-color-secondary);
+  letter-spacing: var(--id-letter-spacing);
+}
+
+.entity-id--clickable {
+  cursor: pointer;
+}
+
+.entity-id--clickable:hover {
+  text-decoration: underline;
+}
+
+button.entity-id,
+a.entity-id {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font: inherit;
+}
+
+:is(h1, h2, h3, h4) .entity-id {
+  font-family: var(--id-font-family);
+  font-size: var(--id-font-size);
+  font-weight: var(--id-font-weight);
+  color: var(--id-color);
+  letter-spacing: var(--id-letter-spacing);
+}
+
+:is(button, a).entity-id:not(.entity-id--secondary):not(.entity-id--header-secondary) {
+  font-family: var(--id-font-family);
+  font-size: var(--id-font-size);
+  font-weight: var(--id-font-weight);
+  color: var(--id-color);
+  letter-spacing: var(--id-letter-spacing);
+}
+
+:is(button, a).entity-id.entity-id--secondary,
+:is(button, a).entity-id.entity-id--header-secondary {
+  font-size: var(--id-font-size-secondary);
+  color: var(--id-color-secondary);
+  font-weight: var(--font-weight-normal);
+  letter-spacing: var(--id-letter-spacing);
+}
+
+:is(button, a).entity-id.entity-id--header-secondary {
+  font-size: var(--id-font-size);
+  font-weight: var(--id-font-weight);
+}
+
+/* --- Interactive elements (pointer / disabled / text cursors) --- */
+
+:where(
+  button:not(:disabled),
+  a[href],
+  [role='button']:not([aria-disabled='true']),
+  [role='menuitem']:not([aria-disabled='true']),
+  [role='tab']:not([aria-disabled='true']),
+  [role='checkbox']:not([aria-disabled='true']),
+  [role='radio']:not([aria-disabled='true']),
+  [role='option']:not([aria-disabled='true']),
+  label[for],
+  select:not(:disabled),
+  summary
+) {
+  cursor: pointer;
+}
+
+:where(
+  button:disabled,
+  select:disabled,
+  [aria-disabled='true']
+) {
+  cursor: not-allowed;
+}
+
+:where(input[type='checkbox']:not(:disabled), input[type='radio']:not(:disabled)) {
+  cursor: pointer;
+}
+
+:where(
+  input:not([type='button']):not([type='submit']):not([type='reset']):not([type='checkbox']):not(
+      [type='radio']
+    ):not([type='file']):not([type='range']):not([type='hidden']):not(:disabled),
+  textarea:not(:disabled)
+) {
+  cursor: text;
+}
+
+:where([role='row'][data-clickable='true']) {
+  cursor: pointer;
+}
+
+:where([role='columnheader'][aria-sort]) {
+  cursor: pointer;
+}
+
+:where([data-popover-content]) {
+  cursor: default;
+}
+
+:where([data-theme='github']) input,
+:where([data-theme='github']) textarea,
+:where([data-theme='github']) select,
+:where([data-theme='noir-studio']) input,
+:where([data-theme='noir-studio']) textarea,
+:where([data-theme='noir-studio']) select {
+  color: var(--text);
+}
+
+/* --- Toasts (react-hot-toast host + toast-card variants) --- */
+
+.app-toaster,
+[data-rht-toaster] {
+  pointer-events: none !important;
+  padding-top: max(var(--space-4, 1rem), env(safe-area-inset-top, 0px));
+  padding-right: max(var(--space-4, 1rem), env(safe-area-inset-right, 0px));
+}
+
+.app-toaster > *,
+[data-rht-toaster] > * {
+  pointer-events: none !important;
+}
+
+.app-toaster > * > *,
+[data-rht-toaster] > * > * {
+  pointer-events: auto;
+}
+
+.toast-card {
+  --toast-variant-accent: var(--toast-info);
+  color: var(--toast-fg);
+  border: 1px solid var(--toast-border);
+  box-shadow: var(--toast-shadow);
+  background:
+    linear-gradient(
+      152deg,
+      color-mix(in srgb, var(--toast-variant-accent) var(--toast-accent-mix), transparent) 0%,
+      transparent 52%
+    ),
+    var(--toast-bg);
+}
+
+.toast-card--success {
+  --toast-variant-accent: var(--toast-success);
+}
+
+.toast-card--error {
+  --toast-variant-accent: var(--toast-danger);
+}
+
+.toast-card--warning {
+  --toast-variant-accent: var(--toast-warning);
+}
+
+.toast-card--info {
+  --toast-variant-accent: var(--toast-info);
+}
+
+.toast-card--loading {
+  --toast-variant-accent: var(--toast-fg-muted);
+}
+
+/* --- Theme switch transition --- */
+
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition:
+    background-color 0.4s ease-out,
+    color 0.4s ease-out,
+    border-color 0.4s ease-out,
+    fill 0.4s ease-out,
+    stroke 0.4s ease-out,
+    box-shadow 0.4s ease-out !important;
+}

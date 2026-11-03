@@ -10,5 +10,16 @@ export * from './FilterTriggerShell';
 export * from './MultiSelectFilter';
 export * from './OverlaySearchInput';
 export * from './RangeSlider';
-export * from './Toast';
+export {
+  AppToastBar,
+  DEFAULT_TOAST_TITLES,
+  Toast,
+  TOAST_DEFAULT_DURATION_MS,
+  toast,
+  type AppToastBarProps,
+  type BaseToastProps,
+  type ToastAction,
+  type ToastProps,
+  type ToastVariant,
+} from '@/components/feedback/notices';
 export * from './SearchResultsPopoverShell';

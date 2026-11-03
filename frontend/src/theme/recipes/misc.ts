@@ -15,11 +15,6 @@ export const ERROR_SURFACE_TYPE = {
   operation: `${text({ role: 'amount' })} opacity-80 mt-space-1`,
 } as const;
 
-export const ALERT_SURFACE_TYPE = {
-  title: `m-0 ${text({ role: 'amount' })} font-semibold leading-snug`,
-  body: `mt-space-1 mb-0 ${text({ role: 'amount' })} leading-snug`,
-} as const;
-
 export const FILTER_SECTION_TYPE = {
   heading: `${text({ role: 'body' })} font-semibold text-text-tertiary uppercase tracking-wide`,
   countBadge: `${text({ role: 'caption' })} font-normal`,

@@ -14,10 +14,13 @@ const GENERATED_PATH = join(SRC, 'types/generated/feedbackCatalog.ts');
 const CHANNELS = new Set(['toast', 'alert', 'errorAlert', 'inline']);
 const VARIANTS = new Set(['success', 'error', 'warning', 'info', 'danger']);
 
-const APP_TOAST_BAR_ALLOWLIST = new Set([
-  'app/AppToastBar.tsx',
+const TOAST_MODULE_ALLOWLIST = new Set([
   'app/App.tsx',
   'utils/feedback.ts',
+  'components/feedback/notices.tsx',
+  'components/feedback/ErrorBoundary.tsx',
+  'components/overlays/index.ts',
+  'components/display/index.ts',
 ]);
 
 function fail(message) {
@@ -39,13 +42,13 @@ function walk(dir, files = []) {
 }
 
 function checkImportBoundary() {
-  const importPattern = /from\s+['"]@\/app\/AppToastBar['"]/;
+  const importPattern = /from\s+['"]@\/components\/feedback\/notices['"]/;
   for (const file of walk(SRC)) {
     const rel = relative(SRC, file).replaceAll('\\', '/');
     const text = readFileSync(file, 'utf8');
     if (!importPattern.test(text)) continue;
-    if (!APP_TOAST_BAR_ALLOWLIST.has(rel)) {
-      fail(`Disallowed AppToastBar import in ${rel}. Use @/utils/feedback instead.`);
+    if (!TOAST_MODULE_ALLOWLIST.has(rel)) {
+      fail(`Disallowed notices import in ${rel}. Use @/utils/feedback for toasts.`);
     }
   }
 }

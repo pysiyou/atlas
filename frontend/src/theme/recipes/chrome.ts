@@ -9,7 +9,7 @@ export const CHROME_SIDEBAR_EXPANDED_VAR = 'var(--chrome-sidebar-expanded)' as c
 
 export const CHROME_HEADER_BAND_VAR = 'var(--chrome-header-band)' as const;
 
-/** Applied to sidebar aside when the rail is collapsed (see theme/components/chrome.css). */
+/** Applied to sidebar aside when the rail is collapsed (see theme/components.css). */
 export const CHROME_COLLAPSED_CLASS = 'chrome-collapsed' as const;
 
 export const CHROME = {

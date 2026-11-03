@@ -10,8 +10,7 @@ import { Toaster } from 'react-hot-toast';
 
 import { AppProviders } from '@/app/AppProviders';
 import { ErrorBoundary, PageLoadingFallback } from '@/components/feedback';
-import { AppToastBar } from '@/app/AppToastBar';
-import { TOAST_DEFAULT_DURATION_MS } from '@/components/overlays/Toast';
+import { AppToastBar, TOAST_DEFAULT_DURATION_MS } from '@/components/feedback/notices';
 import { InitialDataPreload } from '@/app/InitialDataPreload';
 import { ProtectedLayout } from '@/app/ProtectedLayout';
 import { PublicRoute } from '@/app/PublicRoute';

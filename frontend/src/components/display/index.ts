@@ -1,4 +1,4 @@
-export * from './Alert';
+export { Alert, type AlertProps } from '@/components/feedback/notices';
 export * from './Callout';
 export * from './BalancedColumnsLayout';
 export * from './BadgeStack';

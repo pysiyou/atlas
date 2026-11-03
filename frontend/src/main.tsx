@@ -11,7 +11,7 @@ import '@/theme/tokens/primitives.css';
 import '@/theme/tokens/typography.css';
 import '@/theme/tokens/semantic-light.css';
 import '@/theme/tokens/semantic-dark.css';
-import '@/theme/components/index.css';
+import '@/theme/components.css';
 import './index.css';
 
 const rootElement = document.getElementById('root');
