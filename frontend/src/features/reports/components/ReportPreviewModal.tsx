@@ -9,7 +9,8 @@ import {
   DialogFooter,
   Modal,
   ModalPageShell,
-  MODAL_WORKFLOW_BODY_STACK } from '@/components/overlays';
+  MODAL_WORKFLOW_BODY_STACK,
+} from '@/components/overlays';
 import { FooterInfo, ModalContextSubtitle } from '@/components/display';
 import { IconKeys } from '@/config/icons';
 import { ReportPreviewResults } from './ReportPreviewResults';
@@ -133,7 +134,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
               <Button
                 {...actionButtonPreset('download')}
                 variant="primary"
-                size="md"
+                size="sm"
                 layout="icon-text"
                 onClick={() => void handleGenerate()}
                 disabled={isGenerating || waiting || isError || !printEnabled}

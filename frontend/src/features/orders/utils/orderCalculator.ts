@@ -34,6 +34,3 @@ export const getBillableTotal = (tests: OrderTest[]): number =>
     (sum, t) => sum + (typeof t.priceAtOrder === 'number' ? t.priceAtOrder : 0),
     0
   );
-
-/** @deprecated Prefer getBillableTotal for receipts and payment UI. */
-export const getActiveTotal = (tests: OrderTest[]): number => getBillableTotal(tests);

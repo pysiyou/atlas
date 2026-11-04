@@ -60,9 +60,6 @@ export const settingsPopoverLinks: SettingsPopoverLink[] = [
   },
 ];
 
-/** @deprecated Use settingsPopoverLinks */
-export const settingsItems = settingsPopoverLinks;
-
 export function getFilteredMenuItems(): MenuItem[] {
   return menuItems;
 }

@@ -1,9 +1,8 @@
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Icon } from '@/components/primitives/Icon';
 import { Popover, type PopoverPlacement } from '@/components/overlays/Popover';
 import { cn } from '@/utils';
-import { text, CHROME, CONTROL, MENU_ITEM_TYPE, RADIUS } from '@/theme/recipes';
+import { CHROME, CONTROL, MENU_ITEM_TYPE, RADIUS } from '@/theme/recipes';
 import type { SettingsPopoverLink } from '@/config/sidebarMenu';
 
 export interface SidebarSettingsMenuProps {

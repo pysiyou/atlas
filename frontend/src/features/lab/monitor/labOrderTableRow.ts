@@ -2,7 +2,7 @@
  * Map worklist API rows to lab monitor table rows.
  */
 import type { DashboardWorklistItem } from '../api/worklists';
-import type { LabOrderTableRow } from './LabOrdersTable';
+import type { LabOrderTableRow } from './LabOrdersTable.types';
 
 export function mapDashboardWorklistRow(item: DashboardWorklistItem): LabOrderTableRow {
   return {

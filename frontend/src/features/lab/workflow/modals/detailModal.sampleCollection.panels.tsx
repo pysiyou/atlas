@@ -187,7 +187,7 @@ export function SampleCollectionDetailFooter({
         }}
         onSubmittingChange={onPopoverSubmittingChange}
         trigger={
-          <Button {...actionButtonPreset('collect')} size="md" disabled={!collectAllowed}>
+          <Button {...actionButtonPreset('collect')} size="sm" disabled={!collectAllowed}>
             {isRecollection ? 'Recollect Sample' : 'Collect Sample'}
           </Button>
         }
@@ -205,7 +205,7 @@ export function SampleCollectionDetailFooter({
         isRecollection={sample.isRecollection || false}
         onSuccess={onClose}
         trigger={
-          <Button {...actionButtonPreset('reject')} size="md">
+          <Button {...actionButtonPreset('reject')} size="sm">
             {LAB_COPY.quality.reportSampleIssue}
           </Button>
         }

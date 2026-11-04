@@ -3,9 +3,9 @@
  * Used by lab workflow popovers, payment popover, and similar flows.
  */
 
-import React, { type ReactNode } from 'react';
-import { actionButtonPreset, Button } from '@/components/primitives';
+import type { FC, ReactNode } from 'react';
 import { FooterInfo } from '@/components/display/FooterInfo';
+import { actionButtonPreset, Button } from '@/components/primitives';
 import { Icon } from '@/components/primitives/Icon';
 import { DialogHeader, DialogFooter } from './DialogChrome';
 import { IconKeys } from '@/config/icons';
@@ -26,7 +26,7 @@ export interface PopoverFormChromeProps {
   children: ReactNode;
 }
 
-export const PopoverFormChrome: React.FC<PopoverFormChromeProps> = ({
+export const PopoverFormChrome: FC<PopoverFormChromeProps> = ({
   title,
   subtitle,
   onCancel,
@@ -92,7 +92,7 @@ export interface RadioCardProps {
   disabledReason?: string;
 }
 
-export const RadioCard: React.FC<RadioCardProps> = ({
+export const RadioCard: FC<RadioCardProps> = ({
   selected,
   onClick,
   label,

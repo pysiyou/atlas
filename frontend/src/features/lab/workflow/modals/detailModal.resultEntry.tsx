@@ -287,7 +287,7 @@ function EntryDetailModalFooter({
       <Button
         onClick={onSave}
         {...actionButtonPreset('save')}
-        size="md"
+        size="sm"
         layout="icon-text"
         disabled={!isComplete || !canEnter}
         title={!canEnter ? denyMessage ?? undefined : undefined}

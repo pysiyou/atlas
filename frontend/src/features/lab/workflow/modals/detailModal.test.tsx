@@ -301,14 +301,14 @@ export function TestDetailModalFooter({
 
   if (isValidate) {
     return (
-      <div className="flex items-center gap-space-3 flex-nowrap justify-end w-full">
+      <div className="flex items-center gap-space-2 flex-nowrap justify-end w-full">
         <QualityIssuePopover
           orderTestId={orderTestId}
           testCode={labContext?.testCode ?? orderTest?.testCode ?? ''}
           testName={labContext?.testName ?? orderTest?.testName ?? testDisplayName}
           patientName={patientName}
           trigger={
-            <Button {...actionButtonPreset('reject')} size="md" layout="icon-text">
+            <Button {...actionButtonPreset('reject')} size="sm" layout="icon-text">
               Reject
             </Button>
           }
@@ -319,7 +319,7 @@ export function TestDetailModalFooter({
         <Button
           onClick={onApprove}
           {...actionButtonPreset('approve')}
-          size="md"
+          size="sm"
           layout="icon-text"
           isLoading={isApproving}
           disabled={!hasResults}
@@ -340,7 +340,7 @@ export function TestDetailModalFooter({
     <ModalFooter statusMessage={orderTest?.lab?.denyMessage ?? ''}>
       <Button
         variant="primary"
-        size="md"
+        size="sm"
         layout="icon-text"
         onClick={() => {
           onClose();

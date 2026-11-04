@@ -27,10 +27,10 @@ export const FilterModalFooter: React.FC<FilterModalFooterProps> = ({
     start={<FooterInfo icon={icon} label={label} size="md" />}
     end={
       <>
-        <Button variant="outline" size="md" layout="text" onClick={onReset}>
+        <Button variant="outline" size="sm" layout="text" onClick={onReset}>
           Reset
         </Button>
-        <Button variant="primary" size="md" layout="text" onClick={onApply}>
+        <Button variant="primary" size="sm" layout="text" onClick={onApply}>
           Filter
         </Button>
       </>

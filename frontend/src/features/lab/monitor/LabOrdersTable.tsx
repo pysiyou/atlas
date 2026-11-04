@@ -5,7 +5,6 @@ import React, { useCallback, useMemo } from 'react';
 import { EMPTY_COPY } from '@/config/emptyStateCopy';
 import { DataTable } from '@/components/data-table';
 import { Panel } from '@/components/surfaces/Panel';
-import type { DashboardWorklistItem } from '../api/worklists';
 import { useDashboardWorklistToday } from '../api/worklists';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
 import { cn } from '@/utils';

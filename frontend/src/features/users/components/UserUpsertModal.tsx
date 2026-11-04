@@ -45,7 +45,7 @@ function AccountStatusActions({
       <Button
         type="button"
         {...actionButtonPreset('delete')}
-        size="md"
+        size="sm"
         layout="icon-text"
         onClick={onAskDisable}
         disabled={isSubmitting}
@@ -59,7 +59,7 @@ function AccountStatusActions({
       <Button
         type="button"
         {...actionButtonPreset('approve')}
-        size="md"
+        size="sm"
         layout="icon-text"
         onClick={onEnable}
         disabled={isSubmitting}

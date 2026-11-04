@@ -1,10 +1,13 @@
 import React from 'react';
 import type { FeedbackId } from '@/types/generated/feedbackCatalog';
+import { Button } from '@/components/primitives';
 import { displayId } from '@/utils';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
 import {
   ForceValidateAction,
-  ResolutionPopover } from './EscalationResolutionPopover';
+  ResolutionPopover,
+  RetestAction,
+} from './EscalationResolutionPopover';
 
 export interface EscalationResolveOptions {
   readBack?: import('@/types/lab-operations').CriticalReadBackPayload;
@@ -55,9 +58,9 @@ function visibleActions(
 ) {
   const limitEscalation = isLimitEscalation(reasonCode);
   return {
-    showRetest:
+    allowRetestSameSample:
       limitEscalation || (hasResults && (!reasonCode || reasonCode === 'LIMIT-HIT')),
-    showRecollect: limitEscalation || !reasonCode || reasonCode === 'LIMIT-HIT',
+    allowRecollect: limitEscalation || !reasonCode || reasonCode === 'LIMIT-HIT',
     showApplyAmendment: reasonCode === 'AMEND-RES' && hasResults,
     showForceValidate:
       allowForceValidate &&
@@ -90,95 +93,11 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
   onValidationError,
   hasResults = false,
 }) => {
-  const { showRetest, showRecollect, showApplyAmendment, showForceValidate } = visibleActions(
-    reasonCode,
-    hasResults,
-    allowForceValidate,
-  );
+  const { allowRetestSameSample, allowRecollect, showApplyAmendment, showForceValidate } =
+    visibleActions(reasonCode, hasResults, allowForceValidate);
 
   return (
-    <div className="flex items-center gap-space-2 flex-nowrap">
-      {showForceValidate && (
-        <ForceValidateAction
-          orderTestId={orderTestId}
-          resolving={resolving}
-          requiresReadBack={requiresReadBack}
-          validationNotesForceValidate={validationNotesForceValidate}
-          onValidationNotesForceValidateChange={onValidationNotesForceValidateChange}
-          readBackProviderName={readBackProviderName}
-          onReadBackProviderNameChange={onReadBackProviderNameChange}
-          readBackProviderContact={readBackProviderContact}
-          onReadBackProviderContactChange={onReadBackProviderContactChange}
-          readBackConfirmed={readBackConfirmed}
-          onReadBackConfirmedChange={onReadBackConfirmedChange}
-          resolveAsync={resolveAsync}
-          onValidationError={onValidationError}
-        />
-      )}
-
-      {showApplyAmendment && (
-        <ResolutionPopover
-          resolving={resolving}
-          triggerLabel="Apply Amendment"
-          triggerVariant="primary"
-          title="Apply Amendment"
-          subtitle={popoverSubtitle(orderTestId, 'Validation notes (optional)')}
-          textareaId="escalation-apply-amendment-notes"
-          placeholder="e.g. Supervisor approved corrected values"
-          value={validationNotesForceValidate}
-          onChange={onValidationNotesForceValidateChange}
-          confirmLabel="Apply & Validate"
-          confirmVariant="success"
-          onConfirm={() => resolveAsync('apply_amendment', validationNotesForceValidate)}
-        />
-      )}
-
-      {showRetest && (
-        <ResolutionPopover
-          resolving={resolving}
-          triggerLabel="Authorize Re-test"
-          triggerVariant="warning"
-          title="Authorize Re-test"
-          subtitle={popoverSubtitle(orderTestId, 'Reason (recommended)')}
-          textareaId="escalation-authorize-retest-reason"
-          placeholder="e.g. One more run with senior tech"
-          value={reasonAuthorizeRetest}
-          onChange={onReasonAuthorizeRetestChange}
-          confirmLabel="Confirm"
-          confirmVariant="success"
-          onConfirm={() =>
-            resolveAsync(
-              'authorize_retest',
-              reasonAuthorizeRetest || 'Authorized re-test (escalation resolution)',
-            )
-          }
-        />
-      )}
-
-      {showRecollect && (
-        <ResolutionPopover
-          resolving={resolving}
-          triggerLabel="Authorize Re-collect"
-          triggerVariant="secondary"
-          title="Authorize Re-collect"
-          subtitle={popoverSubtitle(orderTestId, 'Reason (required)')}
-          textareaId="escalation-authorize-recollect-reason"
-          placeholder="e.g. Sample compromised; new collection required"
-          value={reasonAuthorizeRecollect}
-          onChange={onReasonAuthorizeRecollectChange}
-          confirmLabel="Confirm"
-          confirmVariant="success"
-          disabled={!reasonAuthorizeRecollect.trim()}
-          onConfirm={async () => {
-            if (!reasonAuthorizeRecollect.trim()) {
-              onValidationError('lab.escalation.recollect.reasonRequired');
-              return false;
-            }
-            await resolveAsync('authorize_recollect', reasonAuthorizeRecollect.trim());
-          }}
-        />
-      )}
-
+    <div className="flex items-center gap-space-2 flex-nowrap justify-end w-full">
       <ResolutionPopover
         resolving={resolving}
         triggerLabel="Cancel Test"
@@ -199,6 +118,56 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
           }
           await resolveAsync('cancel_test', reasonFinalReject.trim());
         }}
+      />
+
+      {showApplyAmendment ? (
+        <ResolutionPopover
+          resolving={resolving}
+          triggerLabel="Force Validate"
+          triggerVariant="success"
+          title="Force Validate"
+          subtitle={popoverSubtitle(orderTestId, 'Validation notes (optional)')}
+          textareaId="escalation-apply-amendment-notes"
+          placeholder="e.g. Supervisor approved corrected values"
+          value={validationNotesForceValidate}
+          onChange={onValidationNotesForceValidateChange}
+          confirmLabel="Force Validate"
+          confirmVariant="success"
+          onConfirm={() => resolveAsync('apply_amendment', validationNotesForceValidate)}
+        />
+      ) : showForceValidate ? (
+        <ForceValidateAction
+          orderTestId={orderTestId}
+          resolving={resolving}
+          requiresReadBack={requiresReadBack}
+          validationNotesForceValidate={validationNotesForceValidate}
+          onValidationNotesForceValidateChange={onValidationNotesForceValidateChange}
+          readBackProviderName={readBackProviderName}
+          onReadBackProviderNameChange={onReadBackProviderNameChange}
+          readBackProviderContact={readBackProviderContact}
+          onReadBackProviderContactChange={onReadBackProviderContactChange}
+          readBackConfirmed={readBackConfirmed}
+          onReadBackConfirmedChange={onReadBackConfirmedChange}
+          resolveAsync={resolveAsync}
+          onValidationError={onValidationError}
+        />
+      ) : (
+        <Button variant="success" size="sm" layout="text" disabled>
+          Force Validate
+        </Button>
+      )}
+
+      <RetestAction
+        orderTestId={orderTestId}
+        resolving={resolving}
+        allowSameSample={allowRetestSameSample}
+        allowRecollect={allowRecollect}
+        reasonSameSample={reasonAuthorizeRetest}
+        onReasonSameSampleChange={onReasonAuthorizeRetestChange}
+        reasonRecollect={reasonAuthorizeRecollect}
+        onReasonRecollectChange={onReasonAuthorizeRecollectChange}
+        resolveAsync={resolveAsync}
+        onValidationError={onValidationError}
       />
     </div>
   );

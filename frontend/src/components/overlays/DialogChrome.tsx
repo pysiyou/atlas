@@ -166,7 +166,7 @@ export function DialogFooter({
         <div
           className={cn(
             'flex items-center shrink-0',
-            density === 'popover' ? 'gap-space-2' : 'gap-space-3',
+            'gap-space-2',
           )}
         >
           {end}

@@ -7,11 +7,10 @@ import { withPaginatedParams } from '@/lib/api/pagination';
 import { WORKFLOW_QUERY_LIMIT, DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
 import type { ApiOrderSummaryResponse } from '@/lib/api/types';
 import type { Order, OrderStatus, PaymentMethod, PaymentStatus, Patient, Invoice } from '@/types';
-import { serializeQueryList } from '@/utils/filtering';
-import { getOrderTestCount, getOrderTests } from '@/types';
 import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
-import { useQuery, keepPreviousData, useMutation, useQueryClient, useQueries } from '@tanstack/react-query';
-import { useMemo, useCallback } from 'react';
+import { serializeQueryList } from '@/utils/filtering';
+import { useQuery, keepPreviousData, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
 import { useResettablePage } from '@/hooks/useResettablePage';
 import { usePaginatedPageSize } from '@/hooks/usePaginatedPageSize';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
@@ -63,19 +62,6 @@ export interface OrdersFilter {
 }
 
 export const orderAPI = {
-  /** Workflow-scoped order fetch (not a full-table scan). */
-  async getAll(options?: { signal?: AbortSignal; summary?: boolean }): Promise<Order[]> {
-    const params: Record<string, string> = {
-      limit: String(WORKFLOW_QUERY_LIMIT),
-      sort: 'updatedAt',
-      paginated: 'false',
-    };
-    if (options?.summary !== false) {
-      params.summary = 'true';
-    }
-    return apiClient.get<Order[]>('/orders', params, { signal: options?.signal });
-  },
-
   async getPaginated(filters?: OrdersFilter & { summary?: boolean }): Promise<PaginatedResponse<Order>> {
     const page = filters?.page ?? 1;
     const pageSize = filters?.pageSize ?? DEFAULT_LIST_PAGE_SIZE;
@@ -178,81 +164,6 @@ export interface PaginationOptions {
 }
 
 /**
- * Fetch orders for a set of patient IDs (paginated list enrichment).
- */
-export function useOrdersForPatientIds(patientIds: number[]) {
-  const authEnabled = useAuthQueryEnabled();
-
-  const queries = useQueries({
-    queries: patientIds.map(patientId => ({
-      queryKey: queryKeys.orders.byPatient(String(patientId)),
-      queryFn: () => orderAPI.getByPatientId(String(patientId)),
-      enabled: authEnabled && patientId > 0,
-      ...cacheConfig.dynamic,
-    })),
-  });
-
-  const orders = useMemo(
-    () => queries.flatMap(query => query.data ?? []),
-    [queries]
-  );
-
-  const isLoading = queries.some(query => query.isLoading);
-
-  return { orders, isLoading };
-}
-
-/**
- * @deprecated Prefer `usePaginatedOrders` or `useOrdersByPatient`. Loads up to WORKFLOW_QUERY_LIMIT rows.
- */
-export interface LabQueryRefetchOptions {
-  refetchInterval?: number;
-}
-
-export function useOrdersList(filters?: OrdersFilters, refetchOptions?: LabQueryRefetchOptions) {
-  const enabled = useAuthQueryEnabled();
-
-  const query = useQuery({
-    queryKey: queryKeys.orders.list(filters),
-    queryFn: ({ signal }) => orderAPI.getAll({ signal }),
-    enabled,
-    ...cacheConfig.dynamic,
-    ...(refetchOptions?.refetchInterval != null
-      ? { refetchInterval: refetchOptions.refetchInterval }
-      : {}),
-  });
-
-  const filteredOrders = useMemo(() => {
-    let orders = query.data ?? [];
-
-    if (filters?.patientId) {
-      const numericPatientId =
-        typeof filters.patientId === 'string' ? parseInt(filters.patientId, 10) : filters.patientId;
-      orders = orders.filter(o => o.patientId === numericPatientId);
-    }
-    if (filters?.status?.length) {
-      orders = orders.filter(o => filters.status!.includes(o.overallStatus));
-    }
-    if (filters?.paymentStatus?.length) {
-      orders = orders.filter(o => filters.paymentStatus!.includes(o.paymentStatus));
-    }
-
-    return orders;
-  }, [query.data, filters]);
-
-  return {
-    orders: filteredOrders,
-    allOrders: query.data ?? [],
-    isLoading: query.isLoading,
-    isPending: query.isPending,
-    isFetching: query.isFetching,
-    isError: query.isError,
-    error: query.error,
-    refetch: query.refetch,
-  };
-}
-
-/**
  * Hook to fetch a single order by ID
  */
 export function useOrder(
@@ -302,20 +213,6 @@ export function useOrdersByPatient(patientId: string | undefined) {
   return {
     orders: query.data ?? [],
     isLoading: query.isLoading,
-  };
-}
-
-/** Server-filtered orders for one status (first page). */
-export function useOrdersByStatus(status: OrderStatus | undefined) {
-  const filters = useMemo(
-    () => (status ? { status: [status] as OrderStatus[] } : undefined),
-    [status]
-  );
-  const { orders, isLoading } = usePaginatedOrders(filters, 1, DEFAULT_LIST_PAGE_SIZE);
-
-  return {
-    orders: status ? orders : [],
-    isLoading,
   };
 }
 
@@ -403,140 +300,6 @@ export function usePaginatedOrders(filters?: OrdersFilters, initialPage = 1, ini
     nextPage,
     prevPage,
     setPageSize,
-  };
-}
-
-/**
- * Hook that uses select to return order summary statistics.
- * Uses the same cached data as useOrdersList but derives summary stats.
- * Re-renders only when the summary changes, not on every order change.
- *
- * This demonstrates the TanStack Query select pattern for computing
- * derived data efficiently.
- *
- * @returns Order statistics { total, byStatus, byPaymentStatus }
- *
- * @example
- * ```tsx
- * const { stats, isLoading } = useOrderStats();
- * // stats.total = 150
- * // stats.byStatus['running'] = 45
- * ```
- */
-export function useOrderStats() {
-  const enabled = useAuthQueryEnabled();
-
-  const query = useQuery({
-    queryKey: ['dashboard', 'summary'],
-    queryFn: async () => {
-      const { dashboardAPI } = await import('@/features/dashboard/api/dashboard');
-      return dashboardAPI.getSummary();
-    },
-    enabled,
-    ...cacheConfig.dynamic,
-    select: summary => ({
-      total: summary.totalOrders,
-      byStatus: {} as Record<string, number>,
-      byPaymentStatus: {} as Record<string, number>,
-      unpaidCount: 0,
-      inProgressCount: summary.pendingOrders,
-    }),
-  });
-
-  return {
-    stats: query.data ?? {
-      total: 0,
-      byStatus: {},
-      byPaymentStatus: {},
-      unpaidCount: 0,
-      inProgressCount: 0,
-    },
-    isLoading: query.isLoading,
-    isError: query.isError,
-  };
-}
-
-/**
- * Hook that uses select to return a specific order's summary.
- * Extracts just the fields needed for display, avoiding re-renders
- * when other order fields change.
- *
- * @param orderId - The order ID
- * @returns Order summary or null if not found
- *
- * @example
- * ```tsx
- * const summary = useOrderSummary('123');
- * // summary = { orderId: 123, totalTests: 5, pendingTests: 2, totalAmount: 1500 }
- * ```
- */
-export function useOrderSummary(orderId: string | undefined) {
-  const enabled = useAuthQueryEnabled(Boolean(orderId));
-
-  const query = useQuery({
-    queryKey: queryKeys.orders.byId(orderId ?? ''),
-    queryFn: async () => {
-      const data = await orderAPI.getById(orderId!);
-      if (!data) throw new Error('Order not found');
-      return data;
-    },
-    enabled,
-    ...cacheConfig.dynamic,
-    // SELECT PATTERN: Extract only summary fields
-    select: (order: Order) => ({
-      orderId: order.orderId,
-      patientName: order.patientName,
-      totalTests: getOrderTestCount(order),
-      pendingTests: getOrderTests(order).filter(t =>
-        ['pending', 'sample-collected', 'resulted', 'escalated'].includes(t.status)
-      ).length,
-      completedTests: getOrderTests(order).filter(t => t.status === 'validated').length,
-      totalAmount: order.totalPrice,
-      isPaid: order.paymentStatus === 'paid',
-      status: order.overallStatus,
-    }),
-  });
-
-  return query.data ?? null;
-}
-
-/**
- * Hook that uses select to return recent orders (last 7 days).
- * Filters and transforms the cached order list.
- *
- * @param limit - Maximum number of orders to return (default: 10)
- * @returns Recent orders array
- *
- * @example
- * ```tsx
- * const { recentOrders, isLoading } = useRecentOrders(5);
- * ```
- */
-export function useRecentOrders(limit = 10) {
-  const enabled = useAuthQueryEnabled();
-
-  const query = useQuery({
-    queryKey: ['dashboard', 'summary', 'recent', limit],
-    queryFn: async () => {
-      const { dashboardAPI } = await import('@/features/dashboard/api/dashboard');
-      return dashboardAPI.getSummary();
-    },
-    enabled,
-    ...cacheConfig.dynamic,
-    select: summary =>
-      summary.recentOrders.slice(0, limit).map(order => ({
-        orderId: order.orderId,
-        patientName: order.patientName,
-        orderDate: order.orderDate,
-        status: order.overallStatus,
-        testCount: getOrderTestCount(order),
-      })),
-  });
-
-  return {
-    recentOrders: query.data ?? [],
-    isLoading: query.isLoading,
-    isError: query.isError,
   };
 }
 

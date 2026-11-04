@@ -168,7 +168,7 @@ export const ModalFooter: React.FC<ModalFooterProps> = ({
           <span>{statusMessage}</span>
         </div>
       ) : null}
-      <div className="flex items-center gap-space-3 flex-nowrap">{children}</div>
+      <div className="flex items-center gap-space-2 flex-nowrap">{children}</div>
     </div>
   );
 };

@@ -850,22 +850,22 @@
     "lab.qualityIssue.dialog.actions.retest": {
       "channel": "inline",
       "variant": "info",
-      "title": "Re-test same sample"
+      "title": "Retest on same sample"
     },
     "lab.qualityIssue.dialog.actions.retestDescription": {
       "channel": "inline",
       "variant": "info",
-      "title": "Supersede this result and create a new entry on the same tube."
+      "title": "Run the test again on the specimen already collected."
     },
     "lab.qualityIssue.dialog.actions.recollect": {
       "channel": "inline",
       "variant": "info",
-      "title": "Recollect (new draw)"
+      "title": "Retest on recollection"
     },
     "lab.qualityIssue.dialog.actions.recollectDescription": {
       "channel": "inline",
       "variant": "info",
-      "title": "Reject the sample and create a new pending tube for collection when attempts remain."
+      "title": "Authorize a new sample collection and linked retest."
     },
     "lab.qualityIssue.dialog.actions.cancel": {
       "channel": "inline",

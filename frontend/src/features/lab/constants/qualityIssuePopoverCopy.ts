@@ -87,6 +87,18 @@ export const QUALITY_ISSUE_POPOVER_COPY = {
   },
 };
 
+/** Shared retest path labels (validation remedy picker + escalation retest popover). */
+export const RETEST_PATH_RADIO_COPY = {
+  sameSample: {
+    label: feedbackTitle('lab.qualityIssue.dialog.actions.retest'),
+    description: feedbackTitle('lab.qualityIssue.dialog.actions.retestDescription'),
+  },
+  recollection: {
+    label: feedbackTitle('lab.qualityIssue.dialog.actions.recollect'),
+    description: feedbackTitle('lab.qualityIssue.dialog.actions.recollectDescription'),
+  },
+} as const;
+
 export interface ValidationFormCopy {
   /** Shown only for true warnings (e.g. re-test limit); single-line icon + text */
   alert: { message: string } | null;

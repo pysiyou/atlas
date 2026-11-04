@@ -47,7 +47,7 @@ export const FormDialogFooter: React.FC<FormDialogFooterProps> = ({
             <Button
               type="submit"
               {...submitPreset}
-              size="md"
+              size="sm"
               layout="icon-text"
               form={formId}
               isLoading={isSubmitting}

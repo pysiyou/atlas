@@ -48,7 +48,7 @@ const PaymentDetailFooter: React.FC<{
       !isPaid ? (
         <Button
           variant="primary"
-          size="md"
+          size="sm"
           layout="icon-text"
           onClick={onPay}
           disabled={submitting || paymentsLoading || remainingAmount <= 0}

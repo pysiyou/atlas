@@ -4,15 +4,9 @@
 
 export {
   orderAPI,
-  useOrdersList,
   useOrder,
   useOrdersByPatient,
-  useOrdersByStatus,
   usePaginatedOrders,
-  useOrdersForPatientIds,
-  useOrderStats,
-  useOrderSummary,
-  useRecentOrders,
   useCreateOrder,
   useUpdateOrder,
   useDeleteOrder,
