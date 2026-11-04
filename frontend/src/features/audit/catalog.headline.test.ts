@@ -1,9 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { buildEventLogHeadline, type EventLogHeadlineContext } from './catalog';
+import {
+  buildEventLogHeadline,
+  type EventLogHeadlineContext,
+  validationRejectTrailingAction,
+} from './catalog';
 import type { EventLogRecord } from './types';
 
 const labContext: EventLogHeadlineContext = {
-  getTestName: () => 'Glucose (Fasting)',
+  getTestName: code => (code === 'HCG' ? 'Pregnancy Test (Urine hCG)' : 'Glucose (Fasting)'),
   getPatientName: (id: number) => `patient-${id}`,
 };
 
@@ -81,19 +85,47 @@ describe('lab audit headlines', () => {
     ]);
   });
 
-  it('validation reject on order_test uses order-test template', () => {
+  it('validation reject states rejected with remedy and catalog reason label', () => {
     const record = baseRecord({
       eventType: 'laboratory.validation.reject',
       targetType: 'order_test',
       targetId: 501,
       testId: 501,
-      metadata: { test_code: 'GLU', reason: 'delta_check' },
+      metadata: {
+        test_code: 'HCG',
+        reason: 'lipemic',
+        remedy: 'request_recollection',
+      },
     });
     const text = headlineText(record);
     expect(text).toContain(
-      'Results for test Glucose (Fasting) on order #ord0073 returned for correction'
+      'Results for test Pregnancy Test (Urine hCG) on order #ord0073 rejected with recollection requested'
     );
-    expect(text).toContain('Reason: delta check');
+    expect(text).toContain('Reason: Lipemic sample');
+    expect(text).not.toContain('returned for correction');
+  });
+
+  it('validation reject retest on same sample remedy', () => {
+    const record = baseRecord({
+      eventType: 'laboratory.validation.reject',
+      targetType: 'order_test',
+      targetId: 501,
+      testId: 501,
+      metadata: { test_code: 'GLU', reason: 'delta_check_failure_repeat_run', remedy: 'retry_same_sample' },
+    });
+    expect(headlineText(record)).toContain('rejected for retest on same sample');
+    expect(validationRejectTrailingAction(record)).toBe('rejected for retest on same sample');
+  });
+
+  it('validation reject escalation remedy', () => {
+    const record = baseRecord({
+      eventType: 'laboratory.validation.reject',
+      targetType: 'order_test',
+      targetId: 501,
+      testId: 501,
+      metadata: { test_code: 'GLU', reason: 'qc_control_failure', remedy: 'escalate' },
+    });
+    expect(headlineText(record)).toContain('rejected and escalated');
   });
 
   it('validation reject on sample uses sample template', () => {
@@ -101,11 +133,11 @@ describe('lab audit headlines', () => {
       eventType: 'laboratory.validation.reject',
       targetType: 'sample',
       targetId: 167,
-      metadata: { reason: 'specimen_issue' },
+      metadata: { reason: 'lipemic', remedy: 'request_recollection' },
     });
     const text = headlineText(record);
-    expect(text).toContain('Sample #sam0167 returned for correction for order #ord0073');
+    expect(text).toContain('Sample #sam0167 rejected with recollection requested for order #ord0073');
     expect(text).not.toContain('Results for test');
-    expect(text).toContain('Reason: specimen issue');
+    expect(text).toContain('Reason: Lipemic sample');
   });
 });

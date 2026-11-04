@@ -11,6 +11,7 @@ import {
 import { formatRelativeDateTime } from '@/utils/date';
 import { displayId } from '@/utils/id';
 import { ORDER_STATUS_CONFIG, type OrderStatus } from '@/types/enums/generated/order';
+import { resolveRejectionReasonLabel } from '@/types/generated/rejectionReasonRegistry';
 import { EVENT_LOG_COPY } from './types';
 import type {
   EventLogDomain,
@@ -482,6 +483,46 @@ export function appendForTestOnOrderPhrase(
   return appendOnOrderPhrase(next, record);
 }
 
+/** Trailing action for validation reject headlines from quality-issue `remedy` metadata. */
+export function validationRejectTrailingAction(record: EventLogRecord): string {
+  const remedy = metaString(record, 'remedy');
+  switch (remedy) {
+    case 'retry_same_sample':
+      return 'rejected for retest on same sample';
+    case 'request_recollection':
+    case 'recollect':
+      return 'rejected with recollection requested';
+    case 'escalate':
+      return 'rejected and escalated';
+    case 'cancel':
+      return 'rejected and cancelled';
+    default:
+      return 'rejected';
+  }
+}
+
+function appendValidationRejectReason(
+  parts: EventLogHeadlinePart[],
+  record: EventLogRecord
+): EventLogHeadlinePart[] {
+  const raw = metaString(record, 'reason');
+  if (!raw) return parts;
+  const label = resolveRejectionReasonLabel(raw);
+  return appendInfoHighlight(parts, `Reason: ${label}`);
+}
+
+function buildValidationRejectHeadline(
+  record: EventLogRecord,
+  context: EventLogHeadlineContext
+): EventLogHeadlinePart[] {
+  const action = validationRejectTrailingAction(record);
+  const parts =
+    record.targetType === 'sample'
+      ? buildLabSampleHeadline(record, action)
+      : buildLabOrderTestHeadline(record, context, 'Results', action);
+  return appendValidationRejectReason(parts, record);
+}
+
 function patientProfileRef(
   record: EventLogRecord,
   context: EventLogHeadlineContext
@@ -651,14 +692,7 @@ export const EVENT_HEADLINE_BUILDERS: Record<
     buildLabOrderTestHeadline(r, c, 'Critical value protocol', 'acknowledged'),
   'laboratory.validation.approve': (r, c) =>
     buildLabOrderTestHeadline(r, c, 'Results', 'validated'),
-  'laboratory.validation.reject': (r, c) => {
-    if (r.targetType === 'sample') {
-      const parts = buildLabSampleHeadline(r, 'returned for correction');
-      return appendClause(parts, metaString(r, 'reason') ?? '');
-    }
-    const parts = buildLabOrderTestHeadline(r, c, 'Results', 'returned for correction');
-    return appendClause(parts, metaString(r, 'reason') ?? '');
-  },
+  'laboratory.validation.reject': (r, c) => buildValidationRejectHeadline(r, c),
   'laboratory.escalation.trigger': (r, c) => {
     const parts = buildLabOrderTestHeadline(r, c, 'Escalation', 'triggered');
     return appendClause(parts, metaString(r, 'reason_code') ?? '');

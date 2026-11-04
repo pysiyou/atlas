@@ -281,10 +281,11 @@
       "domain": "laboratory",
       "laboratorySubdomain": "validation",
       "domainLabel": "Validation",
-      "verbPhrase": "sent back for correction on",
+      "verbPhrase": "validation rejected for",
       "headlineMetaKeys": [
         "reason",
-        "test_code"
+        "test_code",
+        "remedy"
       ]
     },
     {
