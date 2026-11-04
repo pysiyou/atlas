@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import type { FeedbackId } from '@/types/generated/feedbackCatalog';
-import { notify } from '@/utils/feedback';
+import { notify } from '@/feedback';
 
 /**
  * Shows a catalog toast when a list/query load fails; dedupes repeated renders for the same error.
@@ -20,6 +20,6 @@ export function useListLoadErrorToast(
     }
     if (lastNotifiedRef.current === queryError) return;
     lastNotifiedRef.current = queryError;
-    notify.show(loadFailedKey, { error: queryError, onRetry: refetch });
+    notify.show(loadFailedKey, { error: queryError });
   }, [isError, queryError, loadFailedKey, refetch]);
 }

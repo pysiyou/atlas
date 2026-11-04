@@ -17,7 +17,7 @@ import {
   getDefaultPaymentMethod,
   type PaymentMethod } from '@/types/payments';
 import { getPaymentErrorMessage } from '@/utils/errors';
-import { feedbackTitle, getFeedback } from '@/utils/feedback';
+import { feedbackTitle, getFeedback } from '@/feedback';
 import type { OrderPaymentView } from '../types';
 import { IconKeys } from '@/config/icons';
 

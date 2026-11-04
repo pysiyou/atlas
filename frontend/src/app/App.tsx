@@ -6,11 +6,10 @@
 
 import React, { lazy, Suspense, type ComponentType, type LazyExoticComponent } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
 
 import { AppProviders } from '@/app/AppProviders';
-import { ErrorBoundary, PageLoadingFallback } from '@/components/feedback';
-import { AppToastBar, TOAST_DEFAULT_DURATION_MS } from '@/components/feedback/notices';
+import { ToastHost, ErrorBoundary, TOAST_DEFAULT_DURATION_MS } from '@/feedback';
+import { PageLoadingFallback } from '@/components/feedback';
 import { InitialDataPreload } from '@/app/InitialDataPreload';
 import { ProtectedLayout } from '@/app/ProtectedLayout';
 import { PublicRoute } from '@/app/PublicRoute';
@@ -103,16 +102,7 @@ const App: React.FC = () => {
           <InitialDataPreload>
             <AppRoutes />
             <ModalRenderer />
-            <Toaster
-              position="top-right"
-              containerClassName="app-toaster"
-              toastOptions={{
-                duration: TOAST_DEFAULT_DURATION_MS,
-                removeDelay: 0,
-              }}
-            >
-              {t => <AppToastBar toast={t} />}
-            </Toaster>
+            <ToastHost toastOptions={{ duration: TOAST_DEFAULT_DURATION_MS, removeDelay: 0 }} />
           </InitialDataPreload>
         </AppProviders>
       </Router>

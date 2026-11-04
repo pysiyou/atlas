@@ -19,7 +19,7 @@ import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import { formatDateTime } from '@/utils';
 import { formatArrayWithFallback, formatBoolean, capitalize } from '@/utils';
 import { SPACING } from '@/theme/recipes';
-import { feedbackTitle } from '@/utils/feedback';
+import { feedbackTitle } from '@/feedback';
 
 /**
  * CatalogDetail Component

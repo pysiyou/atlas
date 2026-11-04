@@ -6,7 +6,7 @@
  */
 
 import { LAB_CONFIG } from './labConstants';
-import { feedbackTitle } from '@/utils/feedback';
+import { feedbackTitle } from '@/feedback';
 import type { QualityIssueOptions, RemedyType } from '@/types/lab-operations';
 import {
   REMEDY_PRESENTATION,

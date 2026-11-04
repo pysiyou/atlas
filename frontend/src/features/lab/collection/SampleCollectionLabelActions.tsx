@@ -2,7 +2,7 @@
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { CONTAINER_TOP_COLOR_OPTIONS, isCollectedSample } from '@/types';
 import { displayId } from '@/utils';
-import { feedbackTitle } from '@/utils/feedback';
+import { feedbackTitle } from '@/feedback';
 import { text, RADIUS } from '@/theme/recipes';
 
 

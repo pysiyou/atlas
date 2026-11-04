@@ -5,7 +5,7 @@
 import { Skeleton } from '@/components/feedback';
 import { DialogFooter, DialogHeader } from '@/components/overlays';
 import { cn } from '@/utils';
-import { feedbackTitle } from '@/utils/feedback';
+import { feedbackTitle } from '@/feedback';
 import { RADIUS, SPACING } from '@/theme/recipes';
 
 /** Matches lab ResultsGridLayout / report preview layout. */

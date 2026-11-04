@@ -4,7 +4,7 @@
  */
 import type { TestParameter, Patient, TestWithContext, Test } from '@/types';
 import { formatReferenceRange, isCriticalValue } from '../utils';
-import { notify } from '@/utils/feedback';
+import { notify } from '@/feedback';
 
 export const getReferenceRangeDisplay = (param: TestParameter, patient?: Patient): string => {
   if (param.catalogReferenceRange) {
@@ -36,9 +36,7 @@ export function toRawResultPayload(
 
     if ((param.valueType === 'SELECT' || param.type === 'select') && param.allowedValues) {
       if (!param.allowedValues.includes(value)) {
-        notify.toast('lab.entry.selectInvalid', {
-          title: `${param.name}: Invalid value. Must be one of: ${param.allowedValues.join(', ')}`,
-        });
+        notify.show('lab.entry.selectInvalid');
         return null;
       }
     }

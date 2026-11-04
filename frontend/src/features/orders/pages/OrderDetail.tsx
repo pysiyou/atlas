@@ -8,9 +8,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import { useOrder } from '../api/orders';
 import { getBillableTests } from '../utils/orderCalculator';
-import { notify } from '@/utils/feedback';
+import { notify } from '@/feedback';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { formatCurrency, displayId } from '@/utils';
 import type { Invoice } from '@/types';
 import { DetailPageShell, PageHeader } from '@/components/layout';
 import { OrderHeader } from '../components/OrderHeader';
@@ -56,9 +55,7 @@ export const OrderDetail: React.FC = () => {
   const handleViewPatient = () => navigate(`/patients/${order?.patientId}`);
   const handleViewInvoice = () => {
     if (!invoice) return;
-    notify.toast('order.invoice.preview', {
-      subtitle: `${displayId.invoice(invoice.invoiceId)} — ${formatCurrency(invoice.total)} (${invoice.status})`,
-    });
+    notify.show('order.invoice.preview');
   };
   const handleEdit = () => {
     if (order?.overallStatus === 'ordered') {

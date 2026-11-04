@@ -22,7 +22,7 @@ import { entryDraftLifecycleKey, useLabDraftStore } from '../../state/labDraftSt
 import { toRawResultPayload } from '../../entry/resultEntry';
 import { hasTestResults, orderTestKey } from '../../utils/labSearchAndLinks';
 import { isLabActionAllowed } from '../../utils/queueDisplay';
-import { notify } from '@/utils/feedback';
+import { notify } from '@/feedback';
 import { logger } from '@/utils/logger';
 import { Modal, ModalPageShell } from '@/components/overlays';
 import type { ResultDetailModalProps } from '@/lib/context/modalTypes';
@@ -108,7 +108,7 @@ export const ResultEntryDetailModal: React.FC<ResultDetailModalProps> = ({
             results: rawResults,
             technicianNotes: displayNotes || undefined,
           });
-          notify.toast('lab.entry.save.success');
+          notify.show('lab.entry.save.success');
           clearEntryDraft(orderTestId);
           onClose();
         } catch (error) {

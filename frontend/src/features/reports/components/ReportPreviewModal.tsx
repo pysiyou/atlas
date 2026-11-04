@@ -21,7 +21,7 @@ import { generateLabReport, downloadPDF, getDefaultTemplate } from '../utils/rep
 import { downloadLabReport, prepareReportData } from '../utils/prepareReportData';
 import type { LabReportPayload } from '../types';
 import { formatDate } from '@/utils';
-import { notify } from '@/utils/feedback';
+import { notify } from '@/feedback';
 import { canPrintReport } from '../utils/reportEligibility';
 
 export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
@@ -94,7 +94,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
         downloadPDF,
         formatDate
       );
-      notify.toast('report.download.success');
+      notify.show('report.download.success');
       onClose();
     } catch (error) {
       console.error('Error generating report:', error);

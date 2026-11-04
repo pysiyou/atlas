@@ -5,7 +5,7 @@
 
 import { FEEDBACK_CATALOG, type FeedbackId } from '@/types/generated/feedbackCatalog';
 
-/** Local catalog titles — avoids importing `@/utils/feedback` (feedback imports getErrorMessage here). */
+/** Local catalog titles — avoids importing `@/feedback` (feedback imports getErrorMessage here). */
 const feedbackTitle = (id: FeedbackId): string => FEEDBACK_CATALOG[id].title;
 
 export function getLoginErrorMessage(

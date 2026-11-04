@@ -16,7 +16,7 @@ import { useResettablePage } from '@/hooks/useResettablePage';
 import { usePaginatedPageSize } from '@/hooks/usePaginatedPageSize';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { invalidateOrderQueries } from '@/lib/query/invalidate';
-import { notify } from '@/utils/feedback';
+import { notify } from '@/feedback';
 import { orderCreateSchema, orderUpdateSchema, orderSchema } from '@/features/orders/schemas/order.schema';
 import { formInputToPayload } from '../utils/formTransformers';
 
@@ -560,7 +560,7 @@ export function useCreateOrder() {
     },
     onSuccess: async () => {
       await invalidateOrderQueries(queryClient, { samples: true });
-      notify.toast('order.create.success');
+      notify.show('order.create.success');
     },
     onError: error => {
       notify.apiError('order.create.error', error);
@@ -606,7 +606,7 @@ export function useUpdateOrder() {
       notify.apiError('order.update.error', error);
     },
     onSuccess: () => {
-      notify.toast('order.update.success');
+      notify.show('order.update.success');
     },
     onSettled: (_, __, variables) => {
       const orderIdStr = variables.orderId.toString();
@@ -628,7 +628,7 @@ export function useDeleteOrder() {
     },
     onSuccess: async () => {
       await invalidateOrderQueries(queryClient, { samples: true });
-      notify.toast('order.delete.success');
+      notify.show('order.delete.success');
     },
     onError: error => {
       notify.apiError('order.delete.error', error);
@@ -659,7 +659,7 @@ export function useUpdatePaymentStatus() {
       const orderIdStr =
         typeof variables.orderId === 'string' ? variables.orderId : variables.orderId.toString();
       await invalidateOrderQueries(queryClient, { orderId: orderIdStr, payments: true });
-      notify.toast('order.paymentStatus.success');
+      notify.show('order.paymentStatus.success');
     },
   });
 }

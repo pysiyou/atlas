@@ -9,7 +9,7 @@ import { formatCurrency } from '@/utils';
 import { ModalContextSubtitle } from '@/components/display';
 import { createFilterOptions } from '@/utils/filtering';
 import { getErrorMessage } from '@/utils/errors';
-import { getFeedback } from '@/utils/feedback';
+import { getFeedback } from '@/feedback';
 import { useOrderForm } from './useOrderForm';
 import { useTestCatalog, useTestSearch } from '@/features/catalog';
 import { usePatient, usePatientSearch } from '@/features/patients';

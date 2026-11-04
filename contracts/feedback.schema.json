@@ -14,7 +14,7 @@
         "required": ["channel", "variant", "title"],
         "properties": {
           "channel": {
-            "enum": ["toast", "alert", "errorAlert", "inline"]
+            "enum": ["toast", "inline"]
           },
           "variant": {
             "enum": ["success", "error", "warning", "info", "danger"]
@@ -32,7 +32,7 @@
           {
             "if": {
               "properties": {
-                "channel": { "enum": ["toast", "alert", "errorAlert"] }
+                "channel": { "const": "toast" }
               },
               "required": ["channel"]
             },

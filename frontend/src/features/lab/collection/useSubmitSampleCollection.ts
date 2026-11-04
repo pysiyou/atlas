@@ -6,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { logger } from '@/utils/logger';
 import { getErrorDetails, isLikelyNetworkOrTimeout } from '@/utils/errors';
 import { invalidateCollectionQueries } from '@/lib/query/invalidate';
-import { notify } from '@/utils/feedback';
+import { notify } from '@/feedback';
 import type { ContainerType, ContainerTopColor } from '@/types';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import type { UseMutationResult } from '@tanstack/react-query';
@@ -36,19 +36,19 @@ export function useSubmitSampleCollection({
     selectedContainerType?: ContainerType
   ) => {
     if (!isAuthenticated) {
-      notify.toast('lab.collection.authRequired');
+      notify.show('lab.collection.authRequired');
       return;
     }
     if (!display.sample || !display.requirement) {
-      notify.toast('lab.collection.invalidSample');
+      notify.show('lab.collection.invalidSample');
       return;
     }
     if (!selectedColor) {
-      notify.toast('lab.collection.colorRequired');
+      notify.show('lab.collection.colorRequired');
       return;
     }
     if (!selectedContainerType) {
-      notify.toast('lab.collection.containerRequired');
+      notify.show('lab.collection.containerRequired');
       return;
     }
 
@@ -60,15 +60,12 @@ export function useSubmitSampleCollection({
         actualContainerColor: selectedColor as ContainerTopColor,
         collectionNotes: notes,
       });
-      const sampleLabel = (display.sample.sampleType ?? 'sample').toString().toUpperCase();
-      notify.toast('lab.collection.success', {
-        title: `${sampleLabel} sample collected`,
-      });
+      notify.show('lab.collection.success');
     } catch (error) {
       logger.error('Error collecting sample', getErrorDetails(error));
       await invalidateCollectionQueries(queryClient);
       if (isLikelyNetworkOrTimeout(error)) {
-        notify.toast('lab.collection.networkAmbiguous');
+        notify.show('lab.collection.networkAmbiguous');
       } else {
         notify.apiError('lab.collection.error', error);
       }

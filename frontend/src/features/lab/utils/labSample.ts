@@ -3,7 +3,7 @@ import type { SampleType, ContainerTopColor, OrderTest, Test } from '@/types';
 import type { ContainerCatalogId } from '@/types';
 import { COLLECTION_TOP_COLOR_PRESETS } from '@/types';
 import type { FeedbackId } from '@/types/generated/feedbackCatalog';
-import { feedbackTitle, notify } from '@/utils/feedback';
+import { feedbackTitle, notify } from '@/feedback';
 import { printCollectionLabel } from '../collection/SampleCollectionLabelActions';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { FG } from '@/theme/recipes';
@@ -248,12 +248,12 @@ export const printSampleCollectionLabel = (
     if (error instanceof Error) {
       const catalogId = PRINT_LABEL_ERRORS[error.message];
       if (catalogId) {
-        notify.toast(catalogId);
+        notify.show(catalogId);
         return;
       }
-      notify.toast('lab.collection.printLabel.error', { title: error.message });
+      notify.show('lab.collection.printLabel.error');
     } else {
-      notify.toast('lab.collection.printLabel.genericError');
+      notify.show('lab.collection.printLabel.genericError');
     }
   }
 };

@@ -21,7 +21,7 @@ import { text, WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
 import type { TestWithContext } from '@/types';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
-import { notify } from '@/utils/feedback';
+import { notify } from '@/feedback';
 import { DetailGrid } from './detailModalLayout';
 
 function ticketString(value: unknown): string | undefined {
@@ -286,7 +286,7 @@ export function EscalationResolutionFooter(props: EscalationResolutionFooterProp
       hasResults={props.hasResults ?? false}
       allowForceValidate={props.allowForceValidate ?? true}
       resolving={resolving}
-      onValidationError={id => notify.toast(id)}
+      onValidationError={id => notify.show(id)}
     />
   );
 }

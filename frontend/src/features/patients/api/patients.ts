@@ -15,7 +15,7 @@ import { useEntityLookup, parseNumericKey } from '@/hooks/useEntityLookup';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { invalidatePatientQueries } from '@/lib/query/invalidate';
-import { notify } from '@/utils/feedback';
+import { notify } from '@/feedback';
 import { patientSchema, patientCreateSchema, patientUpdateSchema } from '../schemas/patientFormSchemas';
 import { formInputToPayload } from '../utils/formTransformers';
 
@@ -436,7 +436,7 @@ export function useCreatePatient() {
     onSuccess: () => {
       invalidatePatientQueries(queryClient);
       queryClient.refetchQueries({ queryKey: queryKeys.patients.list() });
-      notify.toast('patient.create.success');
+      notify.show('patient.create.success');
     },
     onError: error => {
       notify.apiError('patient.create.error', error);
@@ -459,7 +459,7 @@ export function useUpdatePatient() {
     },
     onSuccess: (_, { id }) => {
       invalidatePatientQueries(queryClient, { patientId: id });
-      notify.toast('patient.update.success');
+      notify.show('patient.update.success');
     },
     onError: error => {
       notify.apiError('patient.update.error', error);

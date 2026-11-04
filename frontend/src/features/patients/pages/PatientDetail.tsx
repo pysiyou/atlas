@@ -13,7 +13,7 @@ import { DetailPageShell, PageHeader } from '@/components/layout';
 import { EditPatientModal } from '../components/EditPatientModal';
 import { PatientHeader } from '../components/PatientHeader';
 import { SmallScreenLayout, MediumScreenLayout, LargeScreenLayout } from '../components/PatientDetailLayouts';
-import { feedbackTitle } from '@/utils/feedback';
+import { feedbackTitle } from '@/feedback';
 
 export const PatientDetail: React.FC = () => {
   const navigate = useNavigate();

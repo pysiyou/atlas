@@ -50,7 +50,7 @@ export function generateFeedbackContract() {
   const ts = `/**
  * User feedback catalog — GENERATED from contracts/feedback.json. DO NOT EDIT.
  */
-export type FeedbackChannel = 'toast' | 'alert' | 'errorAlert' | 'inline';
+export type FeedbackChannel = 'toast' | 'inline';
 export type FeedbackVariant = 'success' | 'error' | 'warning' | 'info' | 'danger';
 
 export type FeedbackId =

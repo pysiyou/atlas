@@ -10,6 +10,7 @@
 import React, { type ReactNode, useState, useEffect, useCallback } from 'react';
 import { useBreakpoint, isBreakpointAtLeast } from '@/hooks/useBreakpoint';
 import { AppChromeMountContext } from './appChromeMount';
+import { useToastMountRef } from '@/feedback';
 import { Sidebar } from './Sidebar';
 import { Icon } from '@/components/primitives/Icon';
 import { IconKeys } from '@/config/icons';
@@ -25,6 +26,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
   const isMobile = !isBreakpointAtLeast(breakpoint, 'lg');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [chromeMountNode, setChromeMountNode] = useState<HTMLDivElement | null>(null);
+  const toastMountRef = useToastMountRef();
   const chromeMountRef = useCallback((node: HTMLDivElement | null) => {
     setChromeMountNode(node);
   }, []);
@@ -59,7 +61,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
 
         <div className="flex flex-1 flex-col min-w-0 min-h-0">
           <div className={CHROME.topHeaderShell}>
-            <div className={CHROME.topHeaderRow}>
+            <div className={cn(CHROME.topHeaderRow, 'relative')}>
               {isMobile && (
                 <div className={`${CHROME.navIconColumn} shrink-0 self-center`}>
                   <button
@@ -80,6 +82,11 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
               <div
                 ref={chromeMountRef}
                 className="flex h-chrome-header-band min-h-chrome-header-band flex-1 min-w-0 items-center"
+              />
+              <div
+                ref={toastMountRef}
+                className="pointer-events-none absolute right-0 top-full z-[55] flex w-max max-w-[min(100vw-2rem,20rem)] flex-col items-end gap-space-2 pt-space-1"
+                aria-live="polite"
               />
             </div>
           </div>

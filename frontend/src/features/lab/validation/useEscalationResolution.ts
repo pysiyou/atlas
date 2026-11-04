@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { notify } from '@/utils/feedback';
+import { notify } from '@/feedback';
 import { useAuthStore } from '@/app/authStore';
 import { useResolveEscalation } from '../api/results';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
@@ -41,7 +41,7 @@ export function useEscalationResolution({
       options?: EscalationResolveOptions,
     ): Promise<void> => {
       if (!canResolveEscalation) {
-        notify.toast('lab.escalation.permissionDenied');
+        notify.show('lab.escalation.permissionDenied');
         return Promise.resolve();
       }
       if (resolving) return Promise.resolve();
@@ -67,9 +67,7 @@ export function useEscalationResolution({
           onSuccess: async () => {
             await onResolved();
             onClose();
-            notify.toast('lab.escalation.resolve.success', {
-              title: messages[action] ?? 'Operation completed.',
-            });
+            notify.show('lab.escalation.resolve.success');
             onResetForm();
           },
           onError: err => {

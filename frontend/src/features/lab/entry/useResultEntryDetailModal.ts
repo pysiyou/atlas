@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { notify } from '@/utils/feedback';
+import { notify } from '@/feedback';
 import type { TestWithContext } from '@/types';
 import { isLabActionAllowed } from '../utils/queueDisplay';
 
@@ -14,7 +14,7 @@ export function useResultEntryDetailModal() {
   return useCallback(
     (test: TestWithContext) => {
       if (test.id == null) {
-        notify.toast('lab.entry.modalUnavailable');
+        notify.show('lab.entry.modalUnavailable');
         return;
       }
       if (!isLabActionAllowed(test.allowedActions, 'enterResults')) {

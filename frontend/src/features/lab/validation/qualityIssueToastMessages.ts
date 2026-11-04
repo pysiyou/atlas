@@ -1,53 +1,50 @@
 /**
- * Toast copy for quality issue outcomes — backed by feedback catalog + lab contract rules.
+ * Toast copy for quality issue outcomes — maps API {@link QualityIssueResult} to catalog ids.
  */
 import type { FeedbackId } from '@/types/generated/feedbackCatalog';
-import {
-  DEFAULT_QUALITY_ISSUE_SUCCESS_TOAST,
-  QUALITY_ISSUE_SUCCESS_TOAST_RULES,
-  type QualityIssueSuccessToastWhen,
-} from '@/types/generated/labContract';
-import { notify } from '@/utils/feedback';
+import { DEFAULT_QUALITY_ISSUE_SUCCESS_TOAST } from '@/types/generated/labContract';
+import { notify } from '@/feedback';
 import type { QualityIssueResult } from '@/types/lab-operations';
 
-function matchesToastWhen(when: QualityIssueSuccessToastWhen, result: QualityIssueResult): boolean {
-  if (when.escalationRequired === true && !result.escalationRequired) {
-    return false;
-  }
-  if (when.escalationRequired === false && result.escalationRequired) {
-    return false;
-  }
-  return true;
-}
-
-export function resolveQualityIssueSuccessToast(
-  result?: QualityIssueResult | null
-): { id: FeedbackId; overrides?: { subtitle?: string } } {
+/**
+ * Pick catalog toast id from remedy outcome (recollection vs reject-only, retest vs escalate).
+ */
+export function resolveQualityIssueSuccessToast(result?: QualityIssueResult | null): FeedbackId {
   if (!result) {
-    return { id: DEFAULT_QUALITY_ISSUE_SUCCESS_TOAST };
+    return DEFAULT_QUALITY_ISSUE_SUCCESS_TOAST;
   }
 
-  for (const rule of QUALITY_ISSUE_SUCCESS_TOAST_RULES) {
-    if (rule.remedy !== result.remedy) {
-      continue;
-    }
-    if (!matchesToastWhen(rule.when, result)) {
-      continue;
-    }
-    return {
-      id: rule.feedbackId,
-      overrides: result.message ? { subtitle: result.message } : undefined,
-    };
+  const { remedy, escalationRequired, createdSampleId, message } = result;
+  const msg = (message ?? '').toLowerCase();
+
+  if (remedy === 'request_recollection') {
+    return createdSampleId != null
+      ? 'lab.qualityIssue.recollection.requested'
+      : 'lab.qualityIssue.specimenRejected';
   }
 
-  return {
-    id: DEFAULT_QUALITY_ISSUE_SUCCESS_TOAST,
-    overrides: result.message ? { subtitle: result.message } : undefined,
-  };
+  if (remedy === 'retry_same_sample') {
+    return escalationRequired ? 'lab.qualityIssue.retest.limitHit' : 'lab.qualityIssue.retest';
+  }
+
+  if (remedy === 'escalate') {
+    if (escalationRequired && (msg.includes('re-test') || msg.includes('retest'))) {
+      return 'lab.qualityIssue.retest.limitHit';
+    }
+    if (escalationRequired) {
+      return 'lab.qualityIssue.escalate.limitHit';
+    }
+    return 'lab.qualityIssue.escalate';
+  }
+
+  if (remedy === 'cancel') {
+    return 'lab.qualityIssue.cancelled';
+  }
+
+  return DEFAULT_QUALITY_ISSUE_SUCCESS_TOAST;
 }
 
 /** Show success toast for a quality-issue / rejection outcome. */
 export function notifyQualityIssueSuccess(result?: QualityIssueResult | null): void {
-  const { id, overrides } = resolveQualityIssueSuccessToast(result);
-  notify.toast(id, overrides);
+  notify.show(resolveQualityIssueSuccessToast(result));
 }

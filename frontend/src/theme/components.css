@@ -211,21 +211,14 @@ a.entity-id {
 
 /* --- Toasts (react-hot-toast host + toast-card variants) --- */
 
-.app-toaster,
+.toast-host,
 [data-rht-toaster] {
   pointer-events: none !important;
-  padding-top: max(var(--space-4, 1rem), env(safe-area-inset-top, 0px));
-  padding-right: max(var(--space-4, 1rem), env(safe-area-inset-right, 0px));
 }
 
-.app-toaster > *,
-[data-rht-toaster] > * {
-  pointer-events: none !important;
-}
-
-.app-toaster > * > *,
-[data-rht-toaster] > * > * {
-  pointer-events: auto;
+.toast-host .toast-card,
+[data-rht-toaster] .toast-card {
+  pointer-events: auto !important;
 }
 
 .toast-card {

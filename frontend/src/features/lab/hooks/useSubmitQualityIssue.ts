@@ -2,8 +2,9 @@
  * Shared quality issue handler for collection and validation.
  */
 import { useCallback } from 'react';
+import { flushSync } from 'react-dom';
 import { logger } from '@/utils/logger';
-import { notify } from '@/utils/feedback';
+import { notify } from '@/feedback';
 import { useReportQualityIssue } from '../api/qualityIssues';
 import type {
   QualityIssueResult,
@@ -35,8 +36,10 @@ export function useSubmitQualityIssue(options?: UseSubmitQualityIssueOptions) {
           notes: notes?.trim() || undefined,
           preferredRemedy,
         });
+        flushSync(() => {
+          onSuccess?.(result);
+        });
         notifyQualityIssueSuccess(result);
-        onSuccess?.(result);
         return result;
       } catch (error) {
         logger.error('Failed to report quality issue', error instanceof Error ? error : undefined);

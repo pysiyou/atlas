@@ -6,7 +6,7 @@
       "variant": "error",
       "title": "Session expired",
       "subtitle": "Please log in again.",
-      "brief": "expired"
+      "brief": "Session expired"
     },
     "order.create.success": {
       "channel": "toast",
@@ -158,35 +158,35 @@
       "variant": "error",
       "title": "Invalid sample data",
       "subtitle": "The sample or requirement data is missing or invalid. Refresh the page and try again.",
-      "brief": "failed"
+      "brief": "invalid"
     },
     "lab.collection.colorRequired": {
       "channel": "toast",
       "variant": "error",
       "title": "Container color is required",
       "subtitle": "Select the container cap color before confirming the collection.",
-      "brief": "failed"
+      "brief": "required"
     },
     "lab.collection.containerRequired": {
       "channel": "toast",
       "variant": "error",
       "title": "Container type is required",
       "subtitle": "Select the container type (e.g. cup or tube) before confirming the collection.",
-      "brief": "failed"
+      "brief": "required"
     },
     "lab.collection.popover.colorRequired": {
       "channel": "toast",
       "variant": "error",
       "title": "Please select the top color",
       "subtitle": "Select the container cap color used for this sample.",
-      "brief": "failed"
+      "brief": "required"
     },
     "lab.collection.popover.containerRequired": {
       "channel": "toast",
       "variant": "error",
       "title": "Please select the container type",
       "subtitle": "Select tube or cup used for this sample.",
-      "brief": "failed"
+      "brief": "required"
     },
     "lab.collection.success": {
       "channel": "toast",
@@ -277,7 +277,7 @@
       "variant": "error",
       "title": "Invalid selection value",
       "subtitle": "Choose a valid option from the list before saving.",
-      "brief": "failed"
+      "brief": "invalid"
     },
     "lab.validation.approve.success": {
       "channel": "toast",
@@ -312,7 +312,7 @@
       "variant": "error",
       "title": "You do not have permission to resolve escalations.",
       "subtitle": "Ask a supervisor or administrator to complete this action.",
-      "brief": "failed"
+      "brief": "denied"
     },
     "lab.escalation.resolve.success": {
       "channel": "toast",
@@ -367,7 +367,7 @@
       "variant": "error",
       "title": "Recipient required",
       "subtitle": "Enter who was notified.",
-      "brief": "failed"
+      "brief": "required"
     },
     "lab.critical.notify.success": {
       "channel": "toast",
@@ -386,7 +386,7 @@
       "variant": "error",
       "title": "Read-back required",
       "subtitle": "Confirm provider read-back before acknowledging.",
-      "brief": "failed"
+      "brief": "required"
     },
     "lab.critical.ack.success": {
       "channel": "toast",
@@ -426,21 +426,21 @@
       "variant": "success",
       "title": "Re-test requested",
       "subtitle": "A new result entry has been created using the same sample.",
-      "brief": "retested"
+      "brief": "Retest scheduled"
     },
     "lab.qualityIssue.retest.limitHit": {
       "channel": "toast",
       "variant": "success",
       "title": "Escalated for re-test approval",
       "subtitle": "Re-test limit reached. The test is on Validation awaiting supervisor approval.",
-      "brief": "escalated"
+      "brief": "Retest escalated"
     },
     "lab.qualityIssue.recollection.requested": {
       "channel": "toast",
       "variant": "success",
       "title": "Recollection scheduled",
       "subtitle": "A new pending sample was created for collection.",
-      "brief": "recollected"
+      "brief": "Recollection scheduled"
     },
     "lab.qualityIssue.specimenRejected": {
       "channel": "toast",
@@ -467,28 +467,28 @@
       "variant": "error",
       "title": "Provider read-back required",
       "subtitle": "Enter provider name and contact for critical value release.",
-      "brief": "failed"
+      "brief": "required"
     },
     "lab.escalation.readBack.confirmRequired": {
       "channel": "toast",
       "variant": "error",
       "title": "Read-back confirmation required",
       "subtitle": "Confirm provider read-back before force-validating critical results.",
-      "brief": "failed"
+      "brief": "required"
     },
     "lab.escalation.recollect.reasonRequired": {
       "channel": "toast",
       "variant": "error",
       "title": "Reason required",
       "subtitle": "Provide a clinical reason to authorize re-collection.",
-      "brief": "failed"
+      "brief": "required"
     },
     "lab.escalation.cancel.reasonRequired": {
       "channel": "toast",
       "variant": "error",
       "title": "Reason required",
       "subtitle": "Provide a clinical reason to cancel this test.",
-      "brief": "failed"
+      "brief": "required"
     },
     "orders.list.loadFailed": {
       "channel": "toast",
@@ -584,13 +584,13 @@
       "channel": "toast",
       "variant": "error",
       "title": "You cannot disable your own account",
-      "brief": "failed"
+      "brief": "blocked"
     },
     "users.disable.lastAdmin": {
       "channel": "toast",
       "variant": "error",
       "title": "Cannot disable the last active administrator",
-      "brief": "failed"
+      "brief": "blocked"
     },
     "lab.page.loadFailed": {
       "channel": "toast",

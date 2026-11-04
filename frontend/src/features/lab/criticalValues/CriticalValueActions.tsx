@@ -8,7 +8,7 @@ import { Alert } from '@/components/display';
 import { RecordId } from '@/features/shared';
 import { formatDateTime } from '@/utils';
 import { useAuthStore } from '@/app/authStore';
-import { notify } from '@/utils/feedback';
+import { notify } from '@/feedback';
 import {
   useAcknowledgeCriticalValue,
   useNotifyCriticalValue,
@@ -37,7 +37,7 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
 
   const handleNotify = async () => {
     if (!notifiedTo.trim()) {
-      notify.toast('lab.critical.recipientRequired');
+      notify.show('lab.critical.recipientRequired');
       return;
     }
     try {
@@ -49,7 +49,7 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
           notes: notes.trim() || undefined,
         },
       });
-      notify.toast('lab.critical.notify.success', { subtitle: record.testCode });
+      notify.show('lab.critical.notify.success');
       onUpdated?.();
     } catch (error) {
       notify.apiError('lab.critical.notify.error', error);
@@ -58,7 +58,7 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
 
   const handleAcknowledge = async () => {
     if (!user?.name) {
-      notify.toast('lab.critical.profileMissing');
+      notify.show('lab.critical.profileMissing');
       return;
     }
     try {
@@ -69,7 +69,7 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
           notes: notes.trim() || undefined,
         },
       });
-      notify.toast('lab.critical.ack.success', { subtitle: record.testCode });
+      notify.show('lab.critical.ack.success');
       onUpdated?.();
     } catch (error) {
       notify.apiError('lab.critical.ack.error', error);

@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/app/authStore';
 import { ROUTES } from '@/config';
 
-import { getFeedback } from '@/utils/feedback';
+import { getFeedback } from '@/feedback';
 import { getLoginErrorMessage } from '@/utils/errors';
 export const useLoginForm = () => {
   const navigate = useNavigate();

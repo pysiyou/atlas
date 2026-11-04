@@ -7,7 +7,7 @@ import {
   feedbackTitle,
   markSessionExpired,
   notify,
-} from '@/utils/feedback';
+} from '@/feedback';
 import { getQueryClient } from '@/lib/query/client';
 import { clearPersistedQueryCache } from '@/lib/query/persistor';
 import { clearAllLabDrafts } from '@/features/lab/state/labDraftStore';
@@ -92,7 +92,7 @@ export const useAuthStore = create<AuthState>()(
             return access_token;
           } catch {
             markSessionExpired();
-            notify.toast('session.expired');
+            notify.show('session.expired');
             getQueryClient().clear();
             clearPersistedQueryCache();
             clearAllLabDrafts();

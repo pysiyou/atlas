@@ -10,7 +10,7 @@ import { Callout } from '@/components/display';
 import { SpinnerLoader } from '@/components/feedback';
 import { useAffiliationPricing } from '@/features/catalog';
 import { formatCurrency } from '@/utils';
-import { getFeedback } from '@/utils/feedback';
+import { getFeedback } from '@/feedback';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import type { AffiliationPlan } from '@/types/affiliation';
 import type { AffiliationDuration } from '@/types';

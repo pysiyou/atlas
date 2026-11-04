@@ -6,7 +6,7 @@
 
 import { useCallback } from 'react';
 import { useEnterResults } from '../api/results';
-import { notify } from '@/utils/feedback';
+import { notify } from '@/feedback';
 import { logger } from '@/utils/logger';
 import { toRawResultPayload, findTestById } from './resultEntry';
 import { isLabActionAllowed } from '../utils/queueDisplay';
@@ -85,13 +85,13 @@ export function useResultEntryWorkflow({
 
       const testResults = finalResults || entryDrafts[orderTestId]?.results;
       if (!testResults || Object.keys(testResults).length === 0) {
-        notify.toast('lab.entry.noResults');
+        notify.show('lab.entry.noResults');
         return;
       }
 
       const testItem = findTestById(saveAllTests, orderTestId);
       if (!testItem) {
-        notify.toast('lab.entry.testNotFound');
+        notify.show('lab.entry.testNotFound');
         return;
       }
 
@@ -101,7 +101,7 @@ export function useResultEntryWorkflow({
 
       const testDef = saveFullByCode.get(testItem.testCode);
       if (!testDef?.parameters) {
-        notify.toast('lab.entry.parametersMissing');
+        notify.show('lab.entry.parametersMissing');
         return;
       }
 
@@ -115,7 +115,7 @@ export function useResultEntryWorkflow({
           results: rawResults,
           technicianNotes: finalNotes || entryDrafts[orderTestId]?.technicianNotes || undefined,
         });
-        notify.toast('lab.entry.save.success');
+        notify.show('lab.entry.save.success');
         clearEntryDraft(orderTestId);
       } catch (error) {
         logger.error('Error saving results', error instanceof Error ? error : undefined);

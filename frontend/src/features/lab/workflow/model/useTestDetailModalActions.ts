@@ -11,8 +11,7 @@ import type { QualityIssueResult } from '@/types/lab-operations';
 import { invalidateLabWorkflowQueries, invalidateResultQueries } from '@/lib/query/invalidate';
 import { useValidateResults } from '../../api/results';
 import { useLabDraftStore } from '../../state/labDraftStore';
-import { notify } from '@/utils/feedback';
-import { notifyQualityIssueSuccess } from '../../validation/qualityIssueToastMessages';
+import { notify } from '@/feedback';
 import { isLikelyNetworkOrTimeout } from '@/utils/errors';
 import { logger } from '@/utils/logger';
 
@@ -43,13 +42,13 @@ export function useTestDetailModalActions({
           orderTestId,
           validationNotes: getValidationComments(orderTestId) || undefined,
         });
-        notify.toast('lab.validation.approve.success');
         clearValidationComments(orderTestId);
         onClose();
+        notify.show('lab.validation.approve.success');
       } catch (error) {
         logger.error('Error validating results', error instanceof Error ? error : undefined);
         if (isLikelyNetworkOrTimeout(error)) {
-          notify.toast('lab.validation.approve.networkAmbiguous');
+          notify.show('lab.validation.approve.networkAmbiguous');
         } else {
           notify.apiError('lab.validation.approve.error', error);
         }
@@ -71,16 +70,17 @@ export function useTestDetailModalActions({
   });
 
   const handleReject = useCallback(
-    async (result: QualityIssueResult) => {
+    (_result: QualityIssueResult) => {
+      // Toast is already shown by useSubmitQualityIssue; close the modal first so the
+      // full-screen scrim does not sit under the toast and swallow sidebar / route clicks.
+      clearValidationComments(orderTestId);
+      onClose();
       const orderIdStr = orderId == null ? undefined : String(orderId);
-      await invalidateResultQueries(queryClient, {
+      void invalidateResultQueries(queryClient, {
         orderId: orderIdStr,
         samples: true,
         pendingEscalation: true,
       });
-      notifyQualityIssueSuccess(result);
-      clearValidationComments(orderTestId);
-      onClose();
     },
     [orderId, queryClient, clearValidationComments, orderTestId, onClose]
   );

@@ -3,7 +3,7 @@
  */
 import { useCallback } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
-import { notify } from '@/utils/feedback';
+import { notify } from '@/feedback';
 import type { UserAdminRecord } from '../api/usersAdmin';
 import { useCreateUser, useUpdateUser } from '../api/usersAdmin';
 import type { UserUpsertFormInput } from '../schemas/userUpsertFormSchema';
@@ -36,7 +36,7 @@ export function useUserUpsertSubmit({
         { userId: user.id, body: { isActive } },
         {
           onSuccess: () => {
-            notify.toast(isActive ? 'users.enable.success' : 'users.disable.success');
+            notify.show(isActive ? 'users.enable.success' : 'users.disable.success');
             onClose();
           },
           onError: error =>
@@ -72,7 +72,7 @@ export function useUserUpsertSubmit({
           },
           {
             onSuccess: () => {
-              notify.toast('users.update.success');
+              notify.show('users.update.success');
               onClose();
             },
             onError: error => notify.apiError('users.update.error', error),
@@ -94,7 +94,7 @@ export function useUserUpsertSubmit({
         },
         {
           onSuccess: () => {
-            notify.toast('users.create.success');
+            notify.show('users.create.success');
             onClose();
           },
           onError: error => notify.apiError('users.create.error', error),

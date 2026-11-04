@@ -5,7 +5,7 @@
  */
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { notify } from '@/utils/feedback';
+import { notify } from '@/feedback';
 import { actionButtonPreset, Button, Icon } from '@/components/primitives';
 import { Popover, PopoverFormChrome, RadioCard } from '@/components/overlays';
 import { FooterInfo } from '@/components/display';
@@ -86,11 +86,11 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
 
   const handleSubmit = useCallback(async () => {
     if (!selectedColor) {
-      notify.toast('lab.collection.popover.colorRequired');
+      notify.show('lab.collection.popover.colorRequired');
       return;
     }
     if (!selectedContainerType) {
-      notify.toast('lab.collection.popover.containerRequired');
+      notify.show('lab.collection.popover.containerRequired');
       return;
     }
     if (volume < minimumVolume) {

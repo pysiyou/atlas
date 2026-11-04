@@ -6,6 +6,7 @@
 import React, { type ReactNode } from 'react';
 import { QueryProvider } from '@/lib/query';
 import { ModalProvider } from '@/lib/context/ModalContext';
+import { ToastProvider } from '@/feedback';
 
 interface AppProvidersProps {
   children: ReactNode;
@@ -18,7 +19,7 @@ function composeProviders(
     providers.reduceRight((acc, Provider) => <Provider>{acc}</Provider>, children);
 }
 
-const featureProviders = [ModalProvider];
+const featureProviders = [ToastProvider, ModalProvider];
 const ComposedProviders = composeProviders(featureProviders);
 
 export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => (

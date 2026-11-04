@@ -11,16 +11,14 @@ const SRC = join(ROOT, 'frontend/src');
 const JSON_PATH = join(ROOT, 'contracts/feedback.json');
 const GENERATED_PATH = join(SRC, 'types/generated/feedbackCatalog.ts');
 
-const CHANNELS = new Set(['toast', 'alert', 'errorAlert', 'inline']);
+const CHANNELS = new Set(['toast', 'inline']);
 const VARIANTS = new Set(['success', 'error', 'warning', 'info', 'danger']);
 
-const TOAST_MODULE_ALLOWLIST = new Set([
+const TOAST_HOST_ALLOWLIST = new Set([
   'app/App.tsx',
-  'utils/feedback.ts',
-  'components/feedback/notices.tsx',
-  'components/feedback/ErrorBoundary.tsx',
-  'components/overlays/index.ts',
-  'components/display/index.ts',
+  'feedback/index.ts',
+  'feedback/ui.tsx',
+  'feedback/ErrorBoundary.tsx',
 ]);
 
 function fail(message) {
@@ -42,13 +40,27 @@ function walk(dir, files = []) {
 }
 
 function checkImportBoundary() {
-  const importPattern = /from\s+['"]@\/components\/feedback\/notices['"]/;
+  const patterns = [
+    /from\s+['"]@\/components\/feedback\/notices['"]/,
+    /from\s+['"]@\/utils\/feedback['"]/,
+  ];
+  for (const file of walk(SRC)) {
+    const rel = relative(SRC, file).replaceAll('\\', '/');
+    if (rel.startsWith('feedback/')) continue;
+    const text = readFileSync(file, 'utf8');
+    for (const importPattern of patterns) {
+      if (!importPattern.test(text)) continue;
+      fail(`Disallowed legacy feedback import in ${rel}. Use @/feedback.`);
+    }
+  }
+
+  const showToastPattern = /\bshowToast\s*\(/;
   for (const file of walk(SRC)) {
     const rel = relative(SRC, file).replaceAll('\\', '/');
     const text = readFileSync(file, 'utf8');
-    if (!importPattern.test(text)) continue;
-    if (!TOAST_MODULE_ALLOWLIST.has(rel)) {
-      fail(`Disallowed notices import in ${rel}. Use @/utils/feedback for toasts.`);
+    if (!showToastPattern.test(text)) continue;
+    if (!TOAST_HOST_ALLOWLIST.has(rel)) {
+      fail(`showToast is internal to feedback module; disallowed in ${rel}. Use notify.show.`);
     }
   }
 }
@@ -74,8 +86,8 @@ for (const id of ids) {
   if (!VARIANTS.has(entry.variant)) {
     fail(`feedback.json['${id}'] has invalid variant '${entry.variant}'.`);
   }
-  if (['toast', 'alert', 'errorAlert'].includes(entry.channel) && !entry.brief?.trim()) {
-    fail(`feedback.json['${id}'] is missing brief (required for toast channels).`);
+  if (entry.channel === 'toast' && !entry.brief?.trim()) {
+    fail(`feedback.json['${id}'] is missing brief (required for toast channel).`);
   }
 }
 

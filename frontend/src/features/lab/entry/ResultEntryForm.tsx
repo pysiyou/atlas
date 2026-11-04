@@ -6,7 +6,7 @@ import React, { useCallback, useState } from 'react';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Textarea } from '@/components/inputs';
 import { cn } from '@/utils';
-import { feedbackTitle } from '@/utils/feedback';
+import { feedbackTitle } from '@/feedback';
 import type { Test, Patient } from '@/types';
 import { ParameterInput } from './ResultParameterInputs';
 import { getReferenceRangeDisplay, checkCriticalStatus } from './resultEntry';

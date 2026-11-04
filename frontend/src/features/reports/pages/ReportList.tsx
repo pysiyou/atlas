@@ -19,7 +19,7 @@ import type { ReportableOrder } from '../types';
 import { prepareReportData, downloadLabReport } from '../utils/prepareReportData';
 import { canPrintReport } from '../utils/reportEligibility';
 import { formatDate, inclusiveDateRangeBounds, toIsoDateParam } from '@/utils';
-import { notify } from '@/utils/feedback';
+import { notify } from '@/feedback';
 import { LIST_PAGE_SIZE_OPTIONS } from '@/lib/api/constants';
 
 /** Parse `/reports/:id` so a deep link can open preview without unmounting the list. */
@@ -148,7 +148,7 @@ export const ReportList: React.FC = () => {
           downloadPDF,
           formatDate
         );
-        notify.toast('report.download.success');
+        notify.show('report.download.success');
       } catch (error) {
         console.error('Error generating report:', error);
         notify.apiError('report.download.error', error);

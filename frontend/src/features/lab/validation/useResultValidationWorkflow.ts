@@ -10,7 +10,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { invalidateResultQueries } from '@/lib/query/invalidate';
 import { useValidateResults } from '../api/results';
 import { notifyQualityIssueSuccess } from './qualityIssueToastMessages';
-import { notify } from '@/utils/feedback';
+import { notify } from '@/feedback';
 import { logger } from '@/utils/logger';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { isLikelyNetworkOrTimeout } from '@/utils/errors';
@@ -86,12 +86,12 @@ export function useResultValidationWorkflow(queueLoading: boolean): ResultValida
             orderTestId,
             validationNotes: useLabDraftStore.getState().getValidationComments(orderTestId) || undefined,
           });
-          notify.toast('lab.validation.approve.success');
+          notify.show('lab.validation.approve.success');
           clearValidationComments(orderTestId);
         } catch (error) {
           logger.error('Error validating results', error instanceof Error ? error : undefined);
           if (isLikelyNetworkOrTimeout(error)) {
-            notify.toast('lab.validation.approve.networkAmbiguous');
+            notify.show('lab.validation.approve.networkAmbiguous');
           } else {
             notify.apiError('lab.validation.approve.error', error);
           }
@@ -118,7 +118,7 @@ export function useResultValidationWorkflow(queueLoading: boolean): ResultValida
   const openValidationModal = useCallback(
     (test: TestWithContext) => {
       if (test.id == null) {
-        notify.toast('lab.validation.testUnavailable');
+        notify.show('lab.validation.testUnavailable');
         return;
       }
       openModal({

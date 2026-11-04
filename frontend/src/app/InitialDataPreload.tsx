@@ -6,8 +6,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useAuthStore } from '@/app/authStore';
 import { useTestCatalog } from '@/features/catalog';
-import { ErrorFallback } from '@/components/feedback';
-import { getFeedback, notify } from '@/utils/feedback';
+import { ErrorFallback, getFeedback, notify } from '@/feedback';
 import { getErrorMessage } from '@/utils/errors';
 
 interface AuthenticatedPreloadProps {
@@ -31,12 +30,7 @@ const AuthenticatedPreload: React.FC<AuthenticatedPreloadProps> = ({ children })
     }
     if (lastNotifiedError.current === testsQuery.error) return;
     lastNotifiedError.current = testsQuery.error;
-    notify.show('catalog.bootstrap.loadFailed', {
-      error: testsQuery.error,
-      onRetry: () => {
-        void handleRetry();
-      },
-    });
+    notify.show('catalog.bootstrap.loadFailed', { error: testsQuery.error });
   }, [catalogUnavailable, testsQuery.error]);
 
   if (catalogUnavailable) {

@@ -23,7 +23,7 @@ import {
   getDefaultPaymentMethod,
   type PaymentMethod } from '@/types/payments';
 import { useCreatePayment, useOrderRemainingBalance } from '../api/payments';
-import { feedbackTitle, getFeedback, notify } from '@/utils/feedback';
+import { feedbackTitle, getFeedback, notify } from '@/feedback';
 import { IconKeys } from '@/config/icons';
 import { getPaymentErrorMessage } from '@/utils/errors';
 
@@ -229,7 +229,7 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
       setError(null);
       createPaymentMutation(paymentData, {
         onSuccess: () => {
-          notify.toast('payment.record.success');
+          notify.show('payment.record.success');
           onSuccess?.();
           closeRef.current?.();
         },
