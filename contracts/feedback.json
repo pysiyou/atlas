@@ -834,7 +834,7 @@
     "lab.qualityIssue.collection.recollect.warningBody": {
       "channel": "inline",
       "variant": "warning",
-      "title": "Decide what happens to unfinished tests. Resulted tests stay in Validation with a Sample rejected signal. Validated results stay released."
+      "title": "Decide what happens to unfinished tests. Unvalidated resulted tests will be cleared and reset or cancelled per your remedy. Validated results stay released."
     },
     "lab.qualityIssue.collection.reasonLabel": {
       "channel": "inline",
@@ -849,7 +849,7 @@
     "lab.qualityIssue.collection.escalate.warningBody": {
       "channel": "inline",
       "variant": "warning",
-      "title": "Resulted tests will stay in Validation for the validator. Validated results will remain released."
+      "title": "Unvalidated resulted tests will be cleared when the tube is rejected. Validated results will remain released."
     },
     "lab.qualityIssue.collection.actions.followUp": {
       "channel": "inline",

@@ -1,5 +1,5 @@
 import type { NavigateFunction } from 'react-router-dom';
-import { getActiveTests } from '@/features/orders';
+import { getBillableTests } from '@/features/orders';
 import { StatusValueBadge } from '@/features/shared';
 import type { TableViewConfig } from '@/components/data-table';
 import { buildViews } from '@/components/data-table';
@@ -23,7 +23,7 @@ function getPaymentSortDate(item: OrderPaymentView): string {
 }
 
 function getTestsSortValue(item: OrderPaymentView): string {
-  const active = getActiveTests(item.order.tests ?? []);
+  const active = getBillableTests(item.order.tests ?? []);
   if (active.length > 0) {
     return active.map(t => t.testCode).join('/');
   }
@@ -42,7 +42,7 @@ export const createPaymentTableConfig = (
       getPatientName: item => item.order.patientName || getPatientNameFn(item.order.patientId),
       getPatientGender: item => item.order.patientGender,
       getPatientDob: item => item.order.patientDob,
-      getTests: item => getActiveTests(item.order.tests ?? []),
+      getTests: item => getBillableTests(item.order.tests ?? []),
       getTestCount: item => item.order.testCount ?? item.order.tests?.length,
       getTestCodes: item => item.order.testCodes,
       getTestNames: item => item.order.testNames,

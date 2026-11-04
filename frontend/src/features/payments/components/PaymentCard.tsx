@@ -5,7 +5,7 @@ import { renderTableSecondaryRecordId } from '@/utils/presentationRenders';
 import { OrderStatusBadge } from '@/features/orders';
 import { StatusValueBadge } from '@/features/shared';
 import type { CardComponentProps } from '@/components/data-table';
-import { getActiveTests, renderOrderTestsBlock } from '@/features/orders';
+import { getBillableTests, renderOrderTestsBlock } from '@/features/orders';
 import { useTestNameLookup } from '@/features/catalog';
 import { formatCurrency, formatDateTime } from '@/utils';
 import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
@@ -27,7 +27,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
     invalidateAll();
   };
 
-  const activeTests = getActiveTests(order.tests ?? []);
+  const activeTests = getBillableTests(order.tests ?? []);
   const hasTests =
     activeTests.length > 0 ||
     (order.testCodes?.length ?? 0) > 0 ||

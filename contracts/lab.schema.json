@@ -89,13 +89,21 @@
     },
     "reporting": {
       "type": "object",
-      "required": ["inactiveTestStatusesForReports", "inactiveTestStatusesForRollup"],
+      "required": [
+        "inactiveTestStatusesForReports",
+        "inactiveTestStatusesForRollup",
+        "inactiveTestStatusesForBilling"
+      ],
       "properties": {
         "inactiveTestStatusesForReports": {
           "type": "array",
           "items": { "type": "string" }
         },
         "inactiveTestStatusesForRollup": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "inactiveTestStatusesForBilling": {
           "type": "array",
           "items": { "type": "string" }
         }

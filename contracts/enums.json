@@ -428,6 +428,10 @@
         "wire": "completed",
         "label": "Completed"
       },
+      "PARTIAL_RESULTS": {
+        "wire": "partial-results",
+        "label": "Partial results"
+      },
       "CANCELLED": {
         "wire": "cancelled",
         "label": "Cancelled"
@@ -684,6 +688,11 @@
       "IN_PROGRESS": {
         "wire": "in_progress",
         "label": "RUNNING",
+        "badgeVariant": "info"
+      },
+      "PARTIAL_RESULTS": {
+        "wire": "partial_results",
+        "label": "PARTIAL",
         "badgeVariant": "info"
       },
       "COMPLETED": {

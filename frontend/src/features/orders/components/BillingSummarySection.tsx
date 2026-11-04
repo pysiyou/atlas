@@ -7,7 +7,7 @@ import React from 'react';
 import type { Order } from '@/types';
 import { cn } from '@/utils';
 import { usePaymentsByOrder } from '@/features/payments';
-import { getActiveTotal } from '../utils/orderCalculator';
+import { getBillableTotal } from '../utils/orderCalculator';
 import { OrderReceipt, ReceiptTotal } from './OrderReceipt';
 
 export interface BillingSummarySectionProps {
@@ -23,7 +23,7 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
   fillHeight = true,
   paymentMethod: paymentMethodProp,
 }) => {
-  const activeTotal = getActiveTotal(order.tests ?? []);
+  const billableTotal = getBillableTotal(order.tests ?? []);
   const { payments } = usePaymentsByOrder(String(order.orderId));
   const paymentMethod =
     paymentMethodProp ??
@@ -40,7 +40,7 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
         paymentMethod={paymentMethod}
       />
       <div className="mt-auto shrink-0">
-        <ReceiptTotal total={activeTotal} variant="panel" pad="px-space-4" />
+        <ReceiptTotal total={billableTotal} variant="panel" pad="px-space-4" />
       </div>
     </div>
   );

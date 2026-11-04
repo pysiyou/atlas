@@ -16,7 +16,7 @@ import {
 } from '@/config/icons';
 import { useUserLookup } from '@/lib/api/users';
 import { useTestNameLookup } from '@/features/catalog';
-import { getActiveTests } from '../utils/orderCalculator';
+import { getBillableTests } from '../utils/orderCalculator';
 import { renderOrderTestsBlock } from '@/utils/presentation';
 
 export interface OrderInfoSectionProps {
@@ -28,7 +28,7 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order }) => 
   const { getTestName } = useTestNameLookup();
   const createdById = order.createdBy?.trim() || null;
   const createdByName = createdById ? getUserName(createdById) : null;
-  const activeTests = useMemo(() => getActiveTests(order.tests ?? []), [order.tests]);
+  const activeTests = useMemo(() => getBillableTests(order.tests ?? []), [order.tests]);
   const referentDoctorDisplay = useMemo(() => {
     const name = order.referentDoctorName?.trim();
     const hospital = order.referentDoctorHospital?.trim();

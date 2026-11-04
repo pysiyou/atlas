@@ -238,6 +238,12 @@ ${(reporting.inactiveTestStatusesForRollup ?? []).map(s => `        ${JSON.strin
     }
 )
 
+INACTIVE_TEST_STATUSES_FOR_BILLING: frozenset[str] = frozenset(
+    {
+${(reporting.inactiveTestStatusesForBilling ?? []).map(s => `        ${JSON.stringify(s)},`).join('\n')}
+    }
+)
+
 # ── Priority sort helpers ───────────────────────────────────────────────
 
 PRIORITY_RANK: dict[str, int] = {
@@ -332,8 +338,15 @@ export const INACTIVE_TEST_STATUSES_FOR_ROLLUP = ${JSON.stringify(
     reporting.inactiveTestStatusesForRollup ?? [],
   )} as const;
 
+export const INACTIVE_TEST_STATUSES_FOR_BILLING = ${JSON.stringify(
+    reporting.inactiveTestStatusesForBilling ?? [],
+  )} as const;
+
 /** Report lines excluded from PDF/list eligibility (subset of rollup inactive). */
 export const INACTIVE_REPORTABLE_TEST_STATUSES = new Set<string>(INACTIVE_TEST_STATUSES_FOR_REPORTS);
+
+/** Order lines excluded from billing/receipt totals (lab cancel does not remove lines). */
+export const INACTIVE_BILLING_TEST_STATUSES = new Set<string>(INACTIVE_TEST_STATUSES_FOR_BILLING);
 
 export const PRIORITY_RANK: Record<string, number> = ${JSON.stringify(priority.rank ?? {}, null, 2)};
 

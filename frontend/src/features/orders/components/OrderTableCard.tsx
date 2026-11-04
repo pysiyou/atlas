@@ -11,7 +11,7 @@ import {
   renderCardDateTimeSecondary,
   renderOrderTestsBlock,
 } from '@/utils/presentation';
-import { getActiveTests } from '../utils/orderCalculator';
+import { getBillableTests } from '../utils/orderCalculator';
 import type { Order } from '@/types';
 import { CardFooter, Text } from '@/components/layout';
 
@@ -23,7 +23,7 @@ type OrderTableCardProps = CardComponentProps<Order> & {
 
 export function OrderTableCard({ item: order, onClick, hidePatientName = false }: OrderTableCardProps) {
   const { getTestName } = useTestNameLookup();
-  const activeTests = getActiveTests(order.tests ?? []);
+  const activeTests = getBillableTests(order.tests ?? []);
   const hasTests =
     activeTests.length > 0 ||
     (order.testCodes?.length ?? 0) > 0 ||

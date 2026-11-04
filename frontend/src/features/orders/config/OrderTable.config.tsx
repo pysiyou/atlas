@@ -9,7 +9,7 @@ import {
   createOrderSharedColumns,
   renderOrderId,
 } from '@/features/orders';
-import { getActiveTests } from '../utils/orderCalculator';
+import { getBillableTests } from '../utils/orderCalculator';
 import type { Order } from '@/types';
 import { OrderTableCard } from '../components/OrderTableCard';
 import {
@@ -35,7 +35,7 @@ export const createOrderTableConfig = (
       getPatientName: order => order.patientName || getPatientNameFn(order.patientId),
       getPatientGender: order => order.patientGender,
       getPatientDob: order => order.patientDob,
-      getTests: order => getActiveTests(order.tests ?? []),
+      getTests: order => getBillableTests(order.tests ?? []),
       getTestCount: order => order.testCount ?? order.tests?.length,
       getTestCodes: order => order.testCodes,
       getTestNames: order => order.testNames,

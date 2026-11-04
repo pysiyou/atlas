@@ -6,7 +6,7 @@ import React from 'react';
 import { RecordId } from '@/features/shared';
 import { StatusValueBadge } from '@/features/shared';
 import { cn, displayId, formatCurrency, formatDateTime } from '@/utils';
-import { getActiveTests, getActiveTotal } from '../utils/orderCalculator';
+import { getBillableTests, getBillableTotal } from '../utils/orderCalculator';
 import type { Order, OrderTest } from '@/types';
 import { RADIUS, DOCUMENT_TYPE, text } from '@/theme/recipes';
 
@@ -266,8 +266,8 @@ export const OrderReceipt: React.FC<OrderReceiptProps> = ({
   showPaymentStatusBadge = true,
   expandItems = false,
 }) => {
-  const activeTests = getActiveTests(order.tests ?? []);
-  const activeTotal = getActiveTotal(order.tests ?? []);
+  const billableTests = getBillableTests(order.tests ?? []);
+  const billableTotal = getBillableTotal(order.tests ?? []);
   const pad = variant === 'detailed' ? 'px-table-cell-x-default' : variant === 'compact' ? 'px-space-3' : 'px-space-4';
 
   return (
@@ -280,8 +280,8 @@ export const OrderReceipt: React.FC<OrderReceiptProps> = ({
         pad={pad}
         showPaymentStatusBadge={showPaymentStatusBadge}
       />
-      <ReceiptItems tests={activeTests} variant={variant} pad={pad} expandItems={expandItems} />
-      {showTotal && <ReceiptTotal total={activeTotal} variant={variant} pad={pad} />}
+      <ReceiptItems tests={billableTests} variant={variant} pad={pad} expandItems={expandItems} />
+      {showTotal && <ReceiptTotal total={billableTotal} variant={variant} pad={pad} />}
     </div>
   );
 };

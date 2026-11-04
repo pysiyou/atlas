@@ -7,7 +7,7 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import { useOrder } from '../api/orders';
-import { getActiveTests } from '../utils/orderCalculator';
+import { getBillableTests } from '../utils/orderCalculator';
 import { notify } from '@/utils/feedback';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { formatCurrency, displayId } from '@/utils';
@@ -49,7 +49,7 @@ export const OrderDetail: React.FC = () => {
     : null;
 
   const orderTests = order?.tests ?? [];
-  const activeTests = order != null ? getActiveTests(orderTests) : [];
+  const activeTests = order != null ? getBillableTests(orderTests) : [];
   const removedCount = order != null ? orderTests.filter(t => t.status === 'removed').length : 0;
   const supersededCount = order != null ? orderTests.filter(t => t.status === 'superseded').length : 0;
 

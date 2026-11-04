@@ -79,6 +79,7 @@ export const TERMINAL_TEST_STATUSES = ["validated","cancelled","superseded","rem
 export const ORDER_STATUS_TO_PRIMARY: Record<string, string> = {
   "ordered": "pending",
   "running": "in_progress",
+  "partial-results": "partial_results",
   "completed": "completed",
   "cancelled": "cancelled"
 };
@@ -104,8 +105,13 @@ export const INACTIVE_TEST_STATUSES_FOR_REPORTS = ["removed","superseded"] as co
 
 export const INACTIVE_TEST_STATUSES_FOR_ROLLUP = ["removed","superseded","cancelled"] as const;
 
+export const INACTIVE_TEST_STATUSES_FOR_BILLING = ["removed","superseded"] as const;
+
 /** Report lines excluded from PDF/list eligibility (subset of rollup inactive). */
 export const INACTIVE_REPORTABLE_TEST_STATUSES = new Set<string>(INACTIVE_TEST_STATUSES_FOR_REPORTS);
+
+/** Order lines excluded from billing/receipt totals (lab cancel does not remove lines). */
+export const INACTIVE_BILLING_TEST_STATUSES = new Set<string>(INACTIVE_TEST_STATUSES_FOR_BILLING);
 
 export const PRIORITY_RANK: Record<string, number> = {
   "urgent": 0,

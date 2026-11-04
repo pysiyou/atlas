@@ -113,6 +113,7 @@ class OrderStatus(str, enum.Enum):
     ORDERED = "ordered"
     RUNNING = "running"
     COMPLETED = "completed"
+    PARTIAL_RESULTS = "partial-results"
     CANCELLED = "cancelled"
 
 class PriorityLevel(str, enum.Enum):
@@ -181,6 +182,7 @@ class PresentationPrimary(str, enum.Enum):
     PENDING = "pending"
     BLOCKED = "blocked"
     IN_PROGRESS = "in_progress"
+    PARTIAL_RESULTS = "partial_results"
     COMPLETED = "completed"
     CANCELLED = "cancelled"
     SUPERSEDED = "superseded"
@@ -193,6 +195,7 @@ PRESENTATION_PRIMARY_VALUES: tuple[str, ...] = (
     "pending",
     "blocked",
     "in_progress",
+    "partial_results",
     "completed",
     "cancelled",
     "superseded",
@@ -205,6 +208,7 @@ PRESENTATION_PRIMARY_BADGE_VARIANTS: dict[str, str] = {
     "pending": "neutral",
     "blocked": "warning",
     "in_progress": "info",
+    "partial_results": "info",
     "completed": "success",
     "cancelled": "danger",
     "superseded": "neutral",
@@ -217,6 +221,7 @@ PRESENTATION_PRIMARY_DISPLAY_LABELS: dict[str, str] = {
     "pending": "PENDING",
     "blocked": "BLOCKED",
     "in_progress": "RUNNING",
+    "partial_results": "PARTIAL",
     "completed": "COMPLETED",
     "cancelled": "CANCELLED",
     "superseded": "SUPERSEDED",

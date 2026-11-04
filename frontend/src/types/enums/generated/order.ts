@@ -1,5 +1,5 @@
 /** GENERATED from contracts/enums.json. DO NOT EDIT. */
-export const ORDER_STATUS_VALUES = ["ordered", "running", "completed", "cancelled"] as const;
+export const ORDER_STATUS_VALUES = ["ordered", "running", "completed", "partial-results", "cancelled"] as const;
 
 export type OrderStatus = (typeof ORDER_STATUS_VALUES)[number];
 
@@ -7,6 +7,7 @@ export const ORDER_STATUS_CONFIG: Record<OrderStatus, { label: string }> = {
   "ordered": { label: "Ordered" },
   "running": { label: "Running" },
   "completed": { label: "Completed" },
+  "partial-results": { label: "Partial results" },
   "cancelled": { label: "Cancelled" },
 };
 

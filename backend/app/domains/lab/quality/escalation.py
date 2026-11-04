@@ -310,6 +310,7 @@ class EscalationOperations:
                 SampleRejectionContext(
                     stage=QualityStage.VALIDATION, order_test_id=original_test.id
                 ),
+                resulted_outcome="reset_pending",
             )
 
         new_sample = self._svc.quality._create_recollection_sample(

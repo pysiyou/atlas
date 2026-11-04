@@ -128,6 +128,7 @@ TERMINAL_TEST_STATUSES: frozenset[str] = frozenset(
 ORDER_STATUS_TO_PRIMARY: dict[str, str] = {
     "ordered": "pending",
     "running": "in_progress",
+    "partial-results": "partial_results",
     "completed": "completed",
     "cancelled": "cancelled",
 }
@@ -168,6 +169,13 @@ INACTIVE_TEST_STATUSES_FOR_ROLLUP: frozenset[str] = frozenset(
         "removed",
         "superseded",
         "cancelled",
+    }
+)
+
+INACTIVE_TEST_STATUSES_FOR_BILLING: frozenset[str] = frozenset(
+    {
+        "removed",
+        "superseded",
     }
 )
 

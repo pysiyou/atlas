@@ -40,7 +40,7 @@ from app.shared.contracts.enums import (
     SampleStatus,
     TestStatus,
 )
-from app.shared.contracts.lab_contract import INACTIVE_TEST_STATUSES_FOR_ROLLUP
+from app.shared.contracts.lab_contract import INACTIVE_TEST_STATUSES_FOR_BILLING
 from app.shared.schemas.pagination import create_paginated_response, skip_to_page
 from fastapi import HTTPException, status
 from sqlalchemy import func
@@ -89,10 +89,21 @@ def _calculate_order_status(order: Order, samples: list[Sample]) -> OrderStatus:
         return order.overallStatus
 
     samples_by_id = {s.sampleId: s for s in samples}
-    all_terminal = all(
-        t.status in {TestStatus.VALIDATED, TestStatus.CANCELLED} for t in active_tests
-    )
-    if all_terminal:
+    statuses = [t.status for t in active_tests]
+    n = len(active_tests)
+
+    if all(s == TestStatus.CANCELLED for s in statuses):
+        return OrderStatus.CANCELLED
+
+    validated_count = sum(1 for s in statuses if s == TestStatus.VALIDATED)
+    cancelled_count = sum(1 for s in statuses if s == TestStatus.CANCELLED)
+    if validated_count > 0 and (validated_count + cancelled_count) < n:
+        return OrderStatus.PARTIAL_RESULTS
+
+    if all(s == TestStatus.VALIDATED for s in statuses):
+        return OrderStatus.COMPLETED
+
+    if all(s in {TestStatus.VALIDATED, TestStatus.CANCELLED} for s in statuses):
         return OrderStatus.COMPLETED
 
     if any(_test_has_started(t, samples_by_id) for t in active_tests):
@@ -151,7 +162,7 @@ def _parse_include(include: str | None) -> set[str]:
     return {part.strip().lower() for part in include.split(",") if part.strip()}
 
 
-_INACTIVE_TEST_STATUSES = tuple(TestStatus(w) for w in INACTIVE_TEST_STATUSES_FOR_ROLLUP)
+_INACTIVE_BILLING_STATUSES = tuple(TestStatus(w) for w in INACTIVE_TEST_STATUSES_FOR_BILLING)
 
 
 def _catalog_test_names_by_code(db, codes: list[str]) -> dict[str, str]:
@@ -188,7 +199,7 @@ def _active_test_codes_by_order_id(db, order_ids: list[int]) -> dict[int, list[s
     rows = (
         db.query(OrderTest.orderId, OrderTest.testCode)
         .filter(OrderTest.orderId.in_(order_ids))
-        .filter(OrderTest.status.notin_(_INACTIVE_TEST_STATUSES))
+        .filter(OrderTest.status.notin_(_INACTIVE_BILLING_STATUSES))
         .order_by(OrderTest.orderId, OrderTest.id)
         .all()
     )
@@ -383,7 +394,7 @@ class OrderService:
                     rows = (
                         self.db.query(OrderTest.orderId, func.count(OrderTest.id))
                         .filter(OrderTest.orderId.in_(order_ids))
-                        .filter(OrderTest.status.notin_(_INACTIVE_TEST_STATUSES))
+                        .filter(OrderTest.status.notin_(_INACTIVE_BILLING_STATUSES))
                         .group_by(OrderTest.orderId)
                         .all()
                     )

@@ -88,6 +88,7 @@
       "order": {
         "ordered": "pending",
         "running": "in_progress",
+        "partial-results": "partial_results",
         "completed": "completed",
         "cancelled": "cancelled"
       },
@@ -126,7 +127,8 @@
   },
   "reporting": {
     "inactiveTestStatusesForReports": ["removed", "superseded"],
-    "inactiveTestStatusesForRollup": ["removed", "superseded", "cancelled"]
+    "inactiveTestStatusesForRollup": ["removed", "superseded", "cancelled"],
+    "inactiveTestStatusesForBilling": ["removed", "superseded"]
   },
   "priority": {
     "rank": {

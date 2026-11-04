@@ -1,5 +1,5 @@
 /** GENERATED from contracts/enums.json. DO NOT EDIT. */
-export const PRESENTATION_PRIMARY_VALUES = ["pending", "blocked", "in_progress", "completed", "cancelled", "superseded", "removed", "escalated", "rejected"] as const;
+export const PRESENTATION_PRIMARY_VALUES = ["pending", "blocked", "in_progress", "partial_results", "completed", "cancelled", "superseded", "removed", "escalated", "rejected"] as const;
 
 export type PresentationPrimary = (typeof PRESENTATION_PRIMARY_VALUES)[number];
 
@@ -7,6 +7,7 @@ export const PRESENTATION_PRIMARY_CONFIG: Record<PresentationPrimary, { label: s
   "pending": { label: "PENDING", badgeVariant: "neutral" },
   "blocked": { label: "BLOCKED", badgeVariant: "warning" },
   "in_progress": { label: "RUNNING", badgeVariant: "info" },
+  "partial_results": { label: "PARTIAL", badgeVariant: "info" },
   "completed": { label: "COMPLETED", badgeVariant: "success" },
   "cancelled": { label: "CANCELLED", badgeVariant: "danger" },
   "superseded": { label: "SUPERSEDED", badgeVariant: "neutral" },

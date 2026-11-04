@@ -6,7 +6,7 @@ One entry point for specimen and analytical quality problems at collection or va
 from __future__ import annotations
 
 from datetime import UTC, datetime
-from typing import Any
+from typing import Any, Literal
 
 from app.domains.audit.service import AuditEmitter
 from app.domains.lab.models.quality_issue import QualityIssue
@@ -41,6 +41,8 @@ _SAMPLE_RESET_STATUSES = {
     TestStatus.PENDING,
     TestStatus.SAMPLE_COLLECTED,
 }
+
+ResultedRejectionOutcome = Literal["reset_pending", "cancel"]
 
 
 def _remedy_types(wires: tuple[str, ...]) -> list[RemedyType]:
@@ -274,6 +276,21 @@ class QualityIssueService:
         order_test.status = TestStatus.PENDING
         self._clear_test_results(order_test)
 
+    def _suspend_resulted_for_sample_rejection(
+        self,
+        order_test: OrderTest,
+        outcome: ResultedRejectionOutcome,
+    ) -> None:
+        if order_test.status != TestStatus.RESULTED:
+            return
+        self._clear_test_results(order_test)
+        if outcome == "reset_pending":
+            TestStateMachine.validate_transition(order_test.status, TestStatus.PENDING)
+            order_test.status = TestStatus.PENDING
+        else:
+            TestStateMachine.validate_transition(order_test.status, TestStatus.CANCELLED)
+            order_test.status = TestStatus.CANCELLED
+
     def _reject_sample_record(
         self,
         sample: Sample,
@@ -284,10 +301,12 @@ class QualityIssueService:
         *,
         skip_test_ids: set[int] | None = None,
         reset_unfinished: bool = True,
+        resulted_outcome: ResultedRejectionOutcome = "cancel",
     ) -> None:
         """
         Mark sample rejected. Optionally reset unfinished linked tests to pending.
-        Resulted and validated linked tests are never mutated here.
+        Resulted tests are cleared and reset or cancelled per resulted_outcome.
+        Validated linked tests are never mutated.
         """
         can_reject, reject_reason = SampleStateMachine.can_reject(sample.status)
         if not can_reject:
@@ -328,9 +347,13 @@ class QualityIssueService:
         for order_test in linked:
             if order_test.id in skip:
                 continue
+            if order_test.status == TestStatus.VALIDATED:
+                continue
+            if order_test.status == TestStatus.RESULTED:
+                self._suspend_resulted_for_sample_rejection(order_test, resulted_outcome)
+                continue
             if order_test.status in _SAMPLE_RESET_STATUSES:
                 self._reset_test_for_sample_rejection(order_test)
-            # Resulted / validated: leave unchanged for validator / release integrity.
 
     # ── public API ───────────────────────────────────────────────────────
 
@@ -368,7 +391,7 @@ class QualityIssueService:
             )
         if resulted > 0:
             parts.append(
-                f"{resulted} resulted test(s) stay in Validation with a Sample rejected signal."
+                f"{resulted} unvalidated resulted test(s) will be cleared when the tube is rejected."
             )
         if validated > 0:
             parts.append(
@@ -517,8 +540,19 @@ class QualityIssueService:
             remedy = RemedyType.REQUEST_RECOLLECTION
 
         rejection_ctx = SampleRejectionContext(stage=QualityStage.COLLECTION)
+        if unfinished > 0 and remedy == RemedyType.REQUEST_RECOLLECTION:
+            resulted_outcome: ResultedRejectionOutcome = "reset_pending"
+        else:
+            resulted_outcome = "cancel"
+
         self._reject_sample_record(
-            sample, user_id, reason, notes, rejection_ctx, reset_unfinished=True
+            sample,
+            user_id,
+            reason,
+            notes,
+            rejection_ctx,
+            reset_unfinished=True,
+            resulted_outcome=resulted_outcome,
         )
 
         if unfinished > 0 and remedy == RemedyType.REQUEST_RECOLLECTION:
@@ -541,7 +575,10 @@ class QualityIssueService:
         if unfinished > 0 and remedy == RemedyType.CANCEL:
             parts.append("Unfinished tests were reset to await collection.")
         if (options.resultedTestsCount or 0) > 0:
-            parts.append("Resulted tests remain in Validation for validator decision.")
+            if resulted_outcome == "reset_pending":
+                parts.append("Unvalidated resulted tests were cleared and reset to pending.")
+            else:
+                parts.append("Unvalidated resulted tests were cleared and cancelled.")
         if (options.validatedTestsCount or 0) > 0:
             parts.append("Validated results were left unchanged.")
 
@@ -783,6 +820,7 @@ class QualityIssueService:
                     order_test_id=order_test.id,
                 ),
                 skip_test_ids={order_test.id},
+                resulted_outcome="reset_pending",
             )
         elif sample.status != SampleStatus.REJECTED:
             can_reject, reject_reason = SampleStateMachine.can_reject(sample.status)
