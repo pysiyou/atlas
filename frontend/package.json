@@ -12,6 +12,7 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,json,css}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,json,css}\"",
     "validate:feedback": "node scripts/validate-feedback-catalog.mjs",
+    "test": "vitest run",
     "knip": "npx knip --tsConfig tsconfig.app.json",
     "knip:production": "npx knip --production --tsConfig tsconfig.app.json",
     "codegen": "npm run codegen --prefix ../scripts/codegen",
@@ -55,7 +56,8 @@
     "tailwindcss": "^4.1.18",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
-    "vite": "npm:rolldown-vite@7.2.5"
+    "vite": "npm:rolldown-vite@7.2.5",
+    "vitest": "^3.2.4"
   },
   "overrides": {
     "vite": "npm:rolldown-vite@7.2.5"

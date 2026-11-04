@@ -183,10 +183,22 @@ function bracketInfoPart(text: string): EventLogHeadlinePart {
   return { text, variant: 'info', icon: false };
 }
 
+function applyInfoVariant(part: EventLogHeadlinePart): EventLogHeadlinePart {
+  return { ...part, variant: 'info', icon: false };
+}
+
+/** Space before an info highlight; label text must not include leading whitespace. */
+function appendInfoHighlight(parts: EventLogHeadlinePart[], label: string): EventLogHeadlinePart[] {
+  const trimmed = label.trim();
+  if (!trimmed) return parts;
+  const next = parts.length > 0 ? appendText(parts, ' ') : parts;
+  return append(next, applyInfoVariant({ text: trimmed }));
+}
+
 export function appendClause(parts: EventLogHeadlinePart[], clause: string): EventLogHeadlinePart[] {
   if (!clause.trim()) return parts;
   const label = formatReasonLabel(clause);
-  return append(parts, bracketInfoPart(` [Reason: ${label}]`));
+  return appendInfoHighlight(parts, `Reason: ${label}`);
 }
 
 export function appendBracketReasonLiteral(
@@ -194,7 +206,7 @@ export function appendBracketReasonLiteral(
   label: string
 ): EventLogHeadlinePart[] {
   if (!label.trim()) return parts;
-  return append(parts, bracketInfoPart(` [Reason: ${label.trim()}]`));
+  return appendInfoHighlight(parts, `Reason: ${label.trim()}`);
 }
 
 export function appendOutcomeClause(
@@ -203,7 +215,7 @@ export function appendOutcomeClause(
 ): EventLogHeadlinePart[] {
   if (!outcome.trim()) return parts;
   const label = formatReasonLabel(outcome);
-  return append(parts, bracketInfoPart(` [Outcome: ${label}]`));
+  return appendInfoHighlight(parts, `Outcome: ${label}`);
 }
 
 export function appendFormatClause(
@@ -211,7 +223,7 @@ export function appendFormatClause(
   format: string
 ): EventLogHeadlinePart[] {
   if (!format.trim()) return parts;
-  return append(parts, bracketInfoPart(` [Format: ${format.trim()}]`));
+  return append(parts, bracketInfoPart(` Format: ${format.trim()}`));
 }
 
 export function changeNew(record: EventLogRecord, field: string): string | undefined {
@@ -339,6 +351,45 @@ export function resolveOrderTestId(record: EventLogRecord): number | undefined {
   return metaNumber(record, 'order_test_id');
 }
 
+/** Sample id for lab headlines: sample target or metadata from quality / validation flows. */
+export function resolveSampleId(record: EventLogRecord): number | undefined {
+  if (record.targetType === 'sample' && record.targetId > 0) return record.targetId;
+  return metaNumber(record, 'sample_id') ?? metaNumber(record, 'sampleId');
+}
+
+/** `Sample #… {action} for order #…` (connectors and action text are muted). */
+export function buildLabSampleHeadline(
+  record: EventLogRecord,
+  action: string,
+  afterOrder?: (parts: EventLogHeadlinePart[]) => EventLogHeadlinePart[]
+): EventLogHeadlinePart[] {
+  const sampleId = resolveSampleId(record);
+  if (sampleId == null) {
+    let parts = appendText([], action.trim());
+    parts = appendForOrderPhrase(parts, record);
+    return afterOrder ? afterOrder(parts) : parts;
+  }
+  let parts = append([], sampleRecordPhrase(sampleId, 'Sample '));
+  parts = appendText(parts, ` ${action.trim()}`);
+  parts = appendForOrderPhrase(parts, record);
+  return afterOrder ? afterOrder(parts) : parts;
+}
+
+/** `{lead} for test {name} on order #… {trailingAction}` (test name and order id are primary). */
+export function buildLabOrderTestHeadline(
+  record: EventLogRecord,
+  context: EventLogHeadlineContext,
+  lead: string,
+  trailingAction: string,
+  afterOrder?: (parts: EventLogHeadlinePart[]) => EventLogHeadlinePart[]
+): EventLogHeadlinePart[] {
+  let parts = appendText([], `${lead} `);
+  parts = appendForTestNameRef(parts, record, context);
+  parts = appendOnOrderPhrase(parts, record);
+  parts = appendText(parts, ` ${trailingAction.trim()}`);
+  return afterOrder ? afterOrder(parts) : parts;
+}
+
 function resolvePatientId(record: EventLogRecord): number | undefined {
   if (record.targetType === 'patient' && record.targetId > 0) return record.targetId;
   if (record.patientId != null && record.patientId > 0) return record.patientId;
@@ -378,7 +429,7 @@ export function appendOnOrderPhrase(
 ): EventLogHeadlinePart[] {
   const orderId = resolveOrderId(record);
   if (!orderId || includesDisplayId(parts, eventLogId.order(orderId))) return parts;
-  const next = appendText(parts, ' on order ');
+  const next = appendText(parts, ' on ');
   return append(next, orderRecordPhrase(orderId));
 }
 
@@ -408,14 +459,26 @@ function testNameRefOnly(
   return [mainPart(eventLogId.orderTest(id))];
 }
 
+/** Appends muted `for`, primary `test`, a gap, then the test name highlight. */
+function appendForTestNameRef(
+  parts: EventLogHeadlinePart[],
+  record: EventLogRecord,
+  context: EventLogHeadlineContext,
+  forLeadIn = 'for '
+): EventLogHeadlinePart[] {
+  let next = appendText(parts, forLeadIn);
+  next = append(next, mainPart('test'));
+  next = appendText(next, ' ');
+  return append(next, ...testNameRefOnly(record, context));
+}
+
 /** Appends `for test {name} on order {order}`. */
 export function appendForTestOnOrderPhrase(
   parts: EventLogHeadlinePart[],
   record: EventLogRecord,
   context: EventLogHeadlineContext
 ): EventLogHeadlinePart[] {
-  let next = appendText(parts, 'for test ');
-  next = append(next, ...testNameRefOnly(record, context));
+  const next = appendForTestNameRef(parts, record, context);
   return appendOnOrderPhrase(next, record);
 }
 
@@ -427,15 +490,6 @@ function patientProfileRef(
   return [patientRecordPhrase(patientId, context, '')];
 }
 
-function labResultsForTestOnOrderPhrase(
-  record: EventLogRecord,
-  context: EventLogHeadlineContext,
-  leadIn: string
-): EventLogHeadlinePart[] {
-  const parts = appendText([], leadIn);
-  return appendForTestOnOrderPhrase(parts, record, context);
-}
-
 export function appendTriggeredByClause(
   parts: EventLogHeadlinePart[],
   record: EventLogRecord,
@@ -443,20 +497,10 @@ export function appendTriggeredByClause(
 ): EventLogHeadlinePart[] {
   const trigger = testHighlightFromMetaKey(record, 'triggered_by', context);
   if (!trigger) return parts;
-  let next = append(parts, bracketInfoPart(' [Triggered by: '));
-  next = append(next, trigger);
-  return append(next, bracketInfoPart(']'));
+  let next = appendText(parts, ' Triggered by:');
+  next = appendText(next, ' ');
+  return append(next, trigger);
 }
-
-export function recollectionForSamplePhrase(
-  record: EventLogRecord,
-  verb: 'requested' | 'approved' | 'denied'
-): EventLogHeadlinePart[] {
-  let parts = appendText([], `Recollection ${verb} for `);
-  parts = append(parts, sampleRecordPhrase(record.targetId, 'sample '));
-  return appendOnOrderPhrase(parts, record);
-}
-
 
 // --- headlineActors.ts ---
 
@@ -560,8 +604,8 @@ export const EVENT_HEADLINE_BUILDERS: Record<
     return appendClause(parts, metaString(r, 'reason') ?? '');
   },
   'order.test.retest': (r, c) => {
-    let parts = appendText([], 'Retest ordered for test ');
-    parts = append(parts, ...testNameRefOnly(r, c));
+    let parts = appendText([], 'Retest ordered ');
+    parts = appendForTestNameRef(parts, r, c);
     parts = appendOnOrderPhrase(parts, r);
     return appendClause(parts, metaString(r, 'reason') ?? '');
   },
@@ -573,61 +617,54 @@ export const EVENT_HEADLINE_BUILDERS: Record<
     if (orderId) parts = append(parts, orderRecordPhrase(orderId));
     return appendTriggeredByClause(parts, r, c);
   },
-  'laboratory.sample.create': (r, c) => {
-    let parts = appendText([], 'Sample label ');
-    parts = append(parts, sampleRecordPhrase(r.targetId, ''));
-    parts = appendText(parts, ' generated');
-    return appendForTestOnOrderPhrase(parts, r, c);
-  },
-  'laboratory.sample.collect': r => {
-    let parts = append([], sampleRecordPhrase(r.targetId, 'Sample '));
-    parts = appendText(parts, ' collected');
-    return appendForOrderPhrase(parts, r);
-  },
+  'laboratory.sample.create': r => buildLabSampleHeadline(r, 'label generated'),
+  'laboratory.sample.collect': r => buildLabSampleHeadline(r, 'collected'),
   'laboratory.sample.reject': r => {
-    let parts = append([], sampleRecordPhrase(r.targetId, 'Sample '));
-    parts = appendText(parts, ' rejected');
-    parts = appendOnOrderPhrase(parts, r);
+    const parts = buildLabSampleHeadline(r, 'rejected');
     return appendClause(parts, metaString(r, 'rejection_reason') ?? '');
   },
-  'laboratory.sample.recollect_request': r => recollectionForSamplePhrase(r, 'requested'),
-  'laboratory.sample.recollect_approve': r => recollectionForSamplePhrase(r, 'approved'),
-  'laboratory.sample.recollect_deny': r =>
-    appendClause(recollectionForSamplePhrase(r, 'denied'), metaString(r, 'reason') ?? ''),
+  'laboratory.sample.recollect_request': r =>
+    buildLabSampleHeadline(r, 'recollection requested'),
+  'laboratory.sample.recollect_approve': r =>
+    buildLabSampleHeadline(r, 'recollection approved'),
+  'laboratory.sample.recollect_deny': r => {
+    const parts = buildLabSampleHeadline(r, 'recollection denied');
+    return appendClause(parts, metaString(r, 'reason') ?? '');
+  },
   'laboratory.analyzer.duplicate_ingest': (r, c) => {
-    let parts = appendText([], 'Analyzer ingest ignored ');
-    parts = appendForTestOnOrderPhrase(parts, r, c);
+    const parts = buildLabOrderTestHeadline(r, c, 'Analyzer ingest', 'ignored');
     return appendBracketReasonLiteral(parts, 'Duplicate');
   },
   'laboratory.analyzer.ingest_rejected': (r, c) => {
-    let parts = appendText([], 'Analyzer ingest rejected ');
-    parts = appendForTestOnOrderPhrase(parts, r, c);
+    const parts = buildLabOrderTestHeadline(r, c, 'Analyzer ingest', 'rejected');
     return appendClause(parts, metaString(r, 'reason') ?? '');
   },
   'laboratory.result.enter': (r, c) =>
-    labResultsForTestOnOrderPhrase(r, c, 'Results entered '),
+    buildLabOrderTestHeadline(r, c, 'Results', 'recorded'),
   'laboratory.result.update': (r, c) =>
-    labResultsForTestOnOrderPhrase(r, c, 'Results updated '),
+    buildLabOrderTestHeadline(r, c, 'Results', 'updated'),
   'laboratory.result.critical_detect': (r, c) =>
-    labResultsForTestOnOrderPhrase(r, c, 'Critical value detected '),
+    buildLabOrderTestHeadline(r, c, 'Critical value', 'detected'),
   'laboratory.result.critical_notify': (r, c) =>
-    labResultsForTestOnOrderPhrase(r, c, 'Clinician notified '),
+    buildLabOrderTestHeadline(r, c, 'Clinician notification', 'documented'),
   'laboratory.result.critical_acknowledge': (r, c) =>
-    labResultsForTestOnOrderPhrase(r, c, 'Critical value acknowledged '),
+    buildLabOrderTestHeadline(r, c, 'Critical value protocol', 'acknowledged'),
   'laboratory.validation.approve': (r, c) =>
-    labResultsForTestOnOrderPhrase(r, c, 'Results validated '),
+    buildLabOrderTestHeadline(r, c, 'Results', 'validated'),
   'laboratory.validation.reject': (r, c) => {
-    const parts = labResultsForTestOnOrderPhrase(r, c, 'Results returned for correction ');
+    if (r.targetType === 'sample') {
+      const parts = buildLabSampleHeadline(r, 'returned for correction');
+      return appendClause(parts, metaString(r, 'reason') ?? '');
+    }
+    const parts = buildLabOrderTestHeadline(r, c, 'Results', 'returned for correction');
     return appendClause(parts, metaString(r, 'reason') ?? '');
   },
   'laboratory.escalation.trigger': (r, c) => {
-    let parts = appendText([], 'Escalation triggered ');
-    parts = appendForTestOnOrderPhrase(parts, r, c);
+    const parts = buildLabOrderTestHeadline(r, c, 'Escalation', 'triggered');
     return appendClause(parts, metaString(r, 'reason_code') ?? '');
   },
   'laboratory.escalation.resolve': (r, c) => {
-    let parts = appendText([], 'Escalation resolved ');
-    parts = appendForTestOnOrderPhrase(parts, r, c);
+    const parts = buildLabOrderTestHeadline(r, c, 'Escalation', 'resolved');
     return appendOutcomeClause(parts, metaString(r, 'resolution') ?? '');
   },
   'billing.payment.process': r => {
