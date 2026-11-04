@@ -6,7 +6,7 @@ import { EMPTY_COPY } from '@/config/emptyStateCopy';
 import { ListView } from '@/components/surfaces';
 import { EmptyState } from '@/components/display';
 import { PANEL_EMPTY_STATE } from '@/components/display';
-import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
+import { LIST_PAGE_SIZE_OPTIONS } from '@/lib/api/constants';
 import { FeatureFilterBar, usePageFilters, useServerListChrome } from '@/hooks';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
@@ -64,9 +64,9 @@ export const LabAllTestsPage: React.FC = () => {
     refetch,
     page,
     goToPage,
+    setPageSize,
   } = useAllTestsWorklist({
     ...serverFilters,
-    pageSize: WORKLIST_PAGE_SIZE,
   });
 
   const resetPage = useCallback(() => {
@@ -84,7 +84,8 @@ export const LabAllTestsPage: React.FC = () => {
     page,
     pagination: pagination ?? { pageSize: WORKLIST_PAGE_SIZE, total: 0 },
     goToPage,
-    pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE, WORKLIST_PAGE_SIZE],
+    onPageSizeChange: setPageSize,
+    pageSizeOptions: [...LIST_PAGE_SIZE_OPTIONS],
   });
 
   const rows = useMemo(() => items.map(mapDashboardWorklistRow), [items]);

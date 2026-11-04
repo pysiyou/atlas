@@ -10,6 +10,7 @@ import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 import { useResettablePage } from '@/hooks/useResettablePage';
+import { usePaginatedPageSize } from '@/hooks/usePaginatedPageSize';
 import { useEntityLookup, parseNumericKey } from '@/hooks/useEntityLookup';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
@@ -145,11 +146,12 @@ export function usePatientsList() {
 export function usePaginatedPatients(
   filters?: PatientsFilter,
   initialPage = 1,
-  pageSize = DEFAULT_LIST_PAGE_SIZE
+  initialPageSize = DEFAULT_LIST_PAGE_SIZE
 ) {
   const enabled = useAuthQueryEnabled();
   const filterSnapshot = JSON.stringify(filters ?? null);
   const [page, setPage] = useResettablePage(initialPage, filterSnapshot);
+  const { pageSize, setPageSize: setPageSizeState } = usePaginatedPageSize(initialPageSize);
 
   const query = useQuery({
     queryKey: queryKeys.patients.paginated({
@@ -188,16 +190,26 @@ export function usePaginatedPatients(
     }
   }, [query.data?.pagination.hasPrev, setPage]);
 
+  const setPageSize = useCallback(
+    (size: number) => {
+      setPageSizeState(size);
+      setPage(1);
+    },
+    [setPageSizeState, setPage]
+  );
+
+  const pagination = query.data?.pagination ?? {
+    page: 1,
+    pageSize,
+    total: 0,
+    totalPages: 0,
+    hasNext: false,
+    hasPrev: false,
+  };
+
   return {
     patients: query.data?.data ?? [],
-    pagination: query.data?.pagination ?? {
-      page: 1,
-      pageSize,
-      total: 0,
-      totalPages: 0,
-      hasNext: false,
-      hasPrev: false,
-    },
+    pagination: { ...pagination, page, pageSize },
     isLoading: query.isLoading,
     isPending: query.isPending,
     isFetching: query.isFetching,
@@ -210,6 +222,7 @@ export function usePaginatedPatients(
     resetPage,
     nextPage,
     prevPage,
+    setPageSize,
   };
 }
 

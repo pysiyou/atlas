@@ -1,7 +1,9 @@
 /** Data table typography, shell, and cell padding. */
 
 import { text } from './cva/text';
-import { SPACING } from './spacing';
+import { CONTROL } from './control';
+import { RADIUS, SPACING } from './spacing';
+import { SURFACE } from './surface';
 
 const tableBody = text({ role: 'body', density: 'table' });
 const tableBodyMuted = text({ role: 'body', intent: 'muted', density: 'table' });
@@ -45,7 +47,9 @@ export const INLINE_LINK_BUTTON = `${INLINE_LINK} inline-flex shrink-0 cursor-po
 export const PAGINATION_TYPE = {
   pageButtonBase: `${TABLE_TYPE.size} font-normal`,
   ellipsis: `${TABLE_TYPE.meta}`,
-  selectCompact: `${TABLE_TYPE.size} leading-5`,
+  selectCompact: `${TABLE_TYPE.size} font-normal tabular-nums`,
+  /** Native `<select>` in table footer — avoid `inputBase` (body line-height clips in short boxes). */
+  selectField: `h-7 min-h-7 w-[2.75rem] shrink-0 border border-border-default ${SURFACE.raised} ${RADIUS.field} transition-colors duration-200 ${CONTROL.hoverBorder} ${CONTROL.focus}`,
 } as const;
 
 export const TABLE_CELL = {

@@ -10,6 +10,7 @@ import type { PaginatedResponse } from '@/types/pagination';
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { useResettablePage } from '@/hooks/useResettablePage';
+import { usePaginatedPageSize } from '@/hooks/usePaginatedPageSize';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import type { ReportableOrder } from '../types';
 import { calculateAge } from '@/utils';
@@ -110,11 +111,12 @@ const EMPTY_PAGINATION = {
 export function usePaginatedReportableOrders(
   filters?: ReportableOrdersFilters,
   initialPage = 1,
-  pageSize = DEFAULT_LIST_PAGE_SIZE
+  initialPageSize = DEFAULT_LIST_PAGE_SIZE
 ) {
   const enabled = useAuthQueryEnabled();
   const filterSnapshot = JSON.stringify(filters ?? null);
   const [page, setPage] = useResettablePage(initialPage, filterSnapshot);
+  const { pageSize, setPageSize: setPageSizeState } = usePaginatedPageSize(initialPageSize);
 
   const query = useQuery({
     queryKey: queryKeys.reports.paginated({
@@ -141,9 +143,19 @@ export function usePaginatedReportableOrders(
     setPage(1);
   }, [setPage]);
 
+  const setPageSize = useCallback(
+    (size: number) => {
+      setPageSizeState(size);
+      setPage(1);
+    },
+    [setPageSizeState, setPage]
+  );
+
+  const pagination = query.data?.pagination ?? { ...EMPTY_PAGINATION, pageSize, page };
+
   return {
     reportableOrders: (query.data?.data ?? []).map(toReportableOrder),
-    pagination: query.data?.pagination ?? { ...EMPTY_PAGINATION, pageSize, page },
+    pagination: { ...pagination, page, pageSize },
     isLoading: query.isLoading,
     isPending: query.isPending,
     isFetching: query.isFetching,
@@ -154,6 +166,7 @@ export function usePaginatedReportableOrders(
     page,
     goToPage,
     resetPage,
+    setPageSize,
   };
 }
 

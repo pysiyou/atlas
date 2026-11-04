@@ -20,7 +20,7 @@ import { prepareReportData, downloadLabReport } from '../utils/prepareReportData
 import { canPrintReport } from '../utils/reportEligibility';
 import { formatDate, inclusiveDateRangeBounds, toIsoDateParam } from '@/utils';
 import { notify } from '@/utils/feedback';
-import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
+import { LIST_PAGE_SIZE_OPTIONS } from '@/lib/api/constants';
 
 /** Parse `/reports/:id` so a deep link can open preview without unmounting the list. */
 function parseReportOrderId(id: string | undefined): number | null {
@@ -64,6 +64,7 @@ export const ReportList: React.FC = () => {
     page,
     goToPage,
     resetPage,
+    setPageSize,
   } = usePaginatedReportableOrders(serverFilters);
 
   const pageTestCodes = useMemo(
@@ -84,7 +85,8 @@ export const ReportList: React.FC = () => {
     page,
     pagination,
     goToPage,
-    pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
+    onPageSizeChange: setPageSize,
+    pageSizeOptions: [...LIST_PAGE_SIZE_OPTIONS],
   });
 
   const { openModal } = useModal();

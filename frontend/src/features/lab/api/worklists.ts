@@ -15,6 +15,7 @@ import type { StatusPresentation } from '@/types/labProjection';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
+import { usePaginatedPageSize } from '@/hooks/usePaginatedPageSize';
 import { LAB_PATHS } from '../constants/labConstants';
 
 /** Default server page size for lab queues (backend max is 200). */
@@ -260,7 +261,8 @@ function createWorklistQueryHook<TItem>(
 ) {
   return function useWorklistQuery(params?: WorklistHookParams) {
     const enabled = useAuthQueryEnabled();
-    const pageSize = params?.pageSize ?? WORKLIST_PAGE_SIZE;
+    const initialPageSize = params?.pageSize ?? WORKLIST_PAGE_SIZE;
+    const { pageSize, setPageSize: setPageSizeState } = usePaginatedPageSize(initialPageSize);
     const [page, setPage] = useState(params?.page ?? 1);
     const filterSnapshot = JSON.stringify({
       search: params?.search ?? null,
@@ -269,12 +271,19 @@ function createWorklistQueryHook<TItem>(
       sampleType: params?.sampleType ?? null,
       status: params?.status ?? null,
       priority: params?.priority ?? null,
-      pageSize,
     });
 
     useEffect(() => {
       setPage(1);
     }, [filterSnapshot]);
+
+    const setPageSize = useCallback(
+      (size: number) => {
+        setPageSizeState(size);
+        setPage(1);
+      },
+      [setPageSizeState]
+    );
 
     const queryParams: WorklistHookParams = {
       ...params,
@@ -293,15 +302,20 @@ function createWorklistQueryHook<TItem>(
       setPage(nextPage);
     }, []);
 
+    const pagination = query.data?.pagination;
+
     return {
       items: query.data?.items ?? [],
-      pagination: query.data?.pagination,
+      pagination: pagination
+        ? { ...pagination, page, pageSize, total: pagination.total }
+        : { page, pageSize, total: 0, totalPages: 0, hasNext: false, hasPrev: false },
       isLoading: query.isLoading,
       isError: query.isError,
       error: query.error,
       refetch: query.refetch,
       page,
       goToPage,
+      setPageSize,
     };
   };
 }

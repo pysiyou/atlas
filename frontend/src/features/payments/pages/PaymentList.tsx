@@ -13,7 +13,7 @@ import { createPaymentTableConfig } from '../config/PaymentTable.config';
 import { PaymentDetailModal } from '../components/PaymentDetailModal';
 import { useTestNameLookup } from '@/features/catalog';
 import { usePaginatedPaymentOrders } from '../api/payments';
-import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
+import { DEFAULT_LIST_PAGE_SIZE, LIST_PAGE_SIZE_OPTIONS } from '@/lib/api/constants';
 import { useServerListChrome } from '@/hooks';
 import { inclusiveDateRangeBounds, toIsoDateParam } from '@/utils';
 import type { PaymentStatus } from '@/types';
@@ -68,6 +68,7 @@ export const PaymentList: React.FC = () => {
     isError: ordersError,
     error: ordersErrorObj,
     refetch,
+    setPageSize,
   } = usePaginatedPaymentOrders(serverFilters, 1, DEFAULT_LIST_PAGE_SIZE);
 
   const { getTestName } = useTestNameLookup();
@@ -83,7 +84,8 @@ export const PaymentList: React.FC = () => {
     page,
     pagination,
     goToPage,
-    pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
+    onPageSizeChange: setPageSize,
+    pageSizeOptions: [...LIST_PAGE_SIZE_OPTIONS],
   });
 
   const handlePaymentSuccess = useCallback(() => {

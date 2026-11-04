@@ -13,7 +13,7 @@ import { ListView } from '@/components/surfaces';
 import { Button } from '@/components/primitives';
 import { PatientFilters } from '../components/PatientFilters';
 import { createPatientTableConfig } from '../config/PatientTable.config';
-import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
+import { LIST_PAGE_SIZE_OPTIONS } from '@/lib/api/constants';
 import { useServerListChrome } from '@/hooks';
 import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
 import type { PatientContext, Gender } from '@/types';
@@ -67,6 +67,7 @@ export const PatientList: React.FC = () => {
     isError,
     error: patientsError,
     refetch,
+    setPageSize,
   } = usePaginatedPatientContextList(serverFilters);
 
   const { loading, listPagination, setFilterAndReset } = useServerListChrome({
@@ -80,7 +81,8 @@ export const PatientList: React.FC = () => {
     page,
     pagination,
     goToPage,
-    pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
+    onPageSizeChange: setPageSize,
+    pageSizeOptions: [...LIST_PAGE_SIZE_OPTIONS],
   });
 
   const handleSearchChange = useCallback(

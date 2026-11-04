@@ -12,7 +12,7 @@ import { Button } from '@/components/primitives';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { OrderFilters } from '../components/OrderFilters';
 import { createOrderTableConfig } from '../config/OrderTable.config';
-import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
+import { DEFAULT_LIST_PAGE_SIZE, LIST_PAGE_SIZE_OPTIONS } from '@/lib/api/constants';
 import { useServerListChrome } from '@/hooks';
 import { inclusiveDateRangeBounds, toIsoDateParam } from '@/utils';
 import { usePageFilters } from '@/hooks';
@@ -65,6 +65,7 @@ export const OrderList: React.FC = () => {
     page,
     goToPage,
     resetPage,
+    setPageSize,
   } = usePaginatedOrders(serverFilters, 1, DEFAULT_LIST_PAGE_SIZE);
 
   const { loading, listPagination, setFilterAndReset } = useServerListChrome({
@@ -78,7 +79,8 @@ export const OrderList: React.FC = () => {
     page,
     pagination,
     goToPage,
-    pageSizeOptions: [DEFAULT_LIST_PAGE_SIZE],
+    onPageSizeChange: setPageSize,
+    pageSizeOptions: [...LIST_PAGE_SIZE_OPTIONS],
   });
 
   const handleStatusFiltersChange = useCallback(

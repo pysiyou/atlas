@@ -13,6 +13,7 @@ import type { PaginatedResponse, PaginationMeta } from '@/types/pagination';
 import { useQuery, keepPreviousData, useMutation, useQueryClient, useQueries } from '@tanstack/react-query';
 import { useMemo, useCallback } from 'react';
 import { useResettablePage } from '@/hooks/useResettablePage';
+import { usePaginatedPageSize } from '@/hooks/usePaginatedPageSize';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { invalidateOrderQueries } from '@/lib/query/invalidate';
 import { notify } from '@/utils/feedback';
@@ -324,10 +325,11 @@ export function useOrdersByStatus(status: OrderStatus | undefined) {
  * Use this for large datasets where client-side filtering is not practical.
  * Keeps previous data visible while fetching new page.
  */
-export function usePaginatedOrders(filters?: OrdersFilters, initialPage = 1, pageSize = DEFAULT_LIST_PAGE_SIZE) {
+export function usePaginatedOrders(filters?: OrdersFilters, initialPage = 1, initialPageSize = DEFAULT_LIST_PAGE_SIZE) {
   const enabled = useAuthQueryEnabled();
   const filterSnapshot = JSON.stringify(filters ?? null);
   const [page, setPage] = useResettablePage(initialPage, filterSnapshot);
+  const { pageSize, setPageSize: setPageSizeState } = usePaginatedPageSize(initialPageSize);
 
   const query = useQuery({
     queryKey: queryKeys.orders.paginated({
@@ -367,16 +369,26 @@ export function usePaginatedOrders(filters?: OrdersFilters, initialPage = 1, pag
     }
   }, [query.data?.pagination.hasPrev, setPage]);
 
+  const setPageSize = useCallback(
+    (size: number) => {
+      setPageSizeState(size);
+      setPage(1);
+    },
+    [setPageSizeState, setPage]
+  );
+
+  const pagination = query.data?.pagination ?? {
+    page: 1,
+    pageSize,
+    total: 0,
+    totalPages: 0,
+    hasNext: false,
+    hasPrev: false,
+  };
+
   return {
     orders: query.data?.data ?? [],
-    pagination: query.data?.pagination ?? {
-      page: 1,
-      pageSize,
-      total: 0,
-      totalPages: 0,
-      hasNext: false,
-      hasPrev: false,
-    },
+    pagination: { ...pagination, page, pageSize },
     isLoading: query.isLoading,
     isPending: query.isPending,
     isFetching: query.isFetching,
@@ -390,6 +402,7 @@ export function usePaginatedOrders(filters?: OrdersFilters, initialPage = 1, pag
     resetPage,
     nextPage,
     prevPage,
+    setPageSize,
   };
 }
 
