@@ -10,7 +10,6 @@ import type {
   QualityDomain,
   QualityIssueTargetType,
   QualityStage,
-  RecollectionRequestStatus,
   RemedyType,
 } from '@/types/enums';
 import { GENERATED_LAB_CONSTANTS } from '@/types/generated/labContract';
@@ -21,7 +20,6 @@ export type {
   QualityDomain,
   QualityIssueTargetType,
   QualityStage,
-  RecollectionRequestStatus,
   RemedyType,
 } from '@/types/enums';
 
@@ -112,45 +110,7 @@ export interface QualityIssueResult {
   orderTestId?: number;
   createdTestId?: number;
   createdSampleId?: number;
-  recollectionRequestId?: number;
   escalationRequired: boolean;
-}
-
-export interface RecollectionRequestSummary {
-  id: number;
-  orderId: number;
-  qualityIssueId?: number;
-  rejectedSampleId: number;
-  orderTestId?: number;
-  stage: QualityStage;
-  status: RecollectionRequestStatus;
-  reason: string;
-  notes?: string;
-  testCodes: string[];
-  affectedOrderTestIds: number[];
-  recollectionAttemptsUsed: number;
-  recollectionAttemptsRemaining: number;
-  requiresSupervisorOverride: boolean;
-  requestedByUserId: string;
-  reviewedByUserId?: string;
-  reviewNotes?: string;
-  reviewedAt?: string;
-  createdSampleId?: number;
-  createdTestId?: number;
-  createdAt: string;
-  patientId?: number;
-  patientName?: string;
-  orderNumber?: string;
-  sampleType?: string;
-}
-
-export interface RecollectionRequestResult {
-  success: boolean;
-  message: string;
-  requestId: number;
-  status: RecollectionRequestStatus;
-  createdSampleId?: number;
-  createdTestId?: number;
 }
 
 export interface QualityIssueRecord {

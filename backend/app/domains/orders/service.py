@@ -10,7 +10,6 @@ from app.domains.billing.service import BillingService
 from app.domains.catalog.models.catalog_test import CatalogTest
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.public import generate_samples_for_order
-from app.domains.lab.quality.recollection_snapshot import recollection_blocked_order_test_ids
 from app.domains.lab.rules.order_test_lab_loader import (
     lab_projections_for_order,
     lab_projections_for_orders,
@@ -277,7 +276,6 @@ class OrderService:
         self,
         order: Order,
         projections: dict[int, object] | None = None,
-        blocked: set[int] | None = None,
     ) -> OrderResponse:
         from app.domains.lab.rules.status_presentation import resolve_order_presentation
 
@@ -285,7 +283,7 @@ class OrderService:
         resolved = (
             projections
             if projections is not None
-            else lab_projections_for_order(self.db, order, blocked=blocked)
+            else lab_projections_for_order(self.db, order)
         )
         enriched_tests = [
             test.model_copy(update={"lab": resolved.get(test.id)}) for test in base.tests
@@ -435,8 +433,7 @@ class OrderService:
                         )
                     )
             else:
-                blocked = recollection_blocked_order_test_ids(self.db)
-                projections_by_order = lab_projections_for_orders(self.db, orders, blocked=blocked)
+                projections_by_order = lab_projections_for_orders(self.db, orders)
                 serialized = [
                     self._order_response_with_lab(
                         order,

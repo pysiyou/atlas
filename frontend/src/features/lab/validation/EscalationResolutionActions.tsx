@@ -1,6 +1,4 @@
 import React from 'react';
-import { Icon } from '@/components/primitives';
-import { IconKeys } from '@/config/icons';
 import type { FeedbackId } from '@/types/generated/feedbackCatalog';
 import { displayId } from '@/utils';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
@@ -46,19 +44,25 @@ function popoverSubtitle(orderTestId?: number, hint?: string): string {
   return [label, hint].filter(Boolean).join(' · ');
 }
 
+function isLimitEscalation(reasonCode: string | undefined): boolean {
+  return reasonCode === 'LIMIT-HIT' || reasonCode === 'REJ-SAMP';
+}
+
 function visibleActions(
   reasonCode: string | undefined,
   hasResults: boolean,
   allowForceValidate: boolean,
 ) {
+  const limitEscalation = isLimitEscalation(reasonCode);
   return {
-    showRetest: hasResults && (!reasonCode || reasonCode === 'LIMIT-HIT'),
-    showRecollect: !reasonCode || reasonCode === 'LIMIT-HIT',
+    showRetest:
+      limitEscalation || (hasResults && (!reasonCode || reasonCode === 'LIMIT-HIT')),
+    showRecollect: limitEscalation || !reasonCode || reasonCode === 'LIMIT-HIT',
     showApplyAmendment: reasonCode === 'AMEND-RES' && hasResults,
     showForceValidate:
       allowForceValidate &&
       hasResults &&
-      (reasonCode === 'CRIT-VAL' || reasonCode === 'LIMIT-HIT' || !reasonCode),
+      (limitEscalation || reasonCode === 'CRIT-VAL' || reasonCode === 'LIMIT-HIT' || !reasonCode),
   };
 }
 
@@ -116,7 +120,7 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
         <ResolutionPopover
           resolving={resolving}
           triggerLabel="Apply Amendment"
-          triggerVariant="success"
+          triggerVariant="primary"
           title="Apply Amendment"
           subtitle={popoverSubtitle(orderTestId, 'Validation notes (optional)')}
           textareaId="escalation-apply-amendment-notes"
@@ -133,8 +137,7 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
         <ResolutionPopover
           resolving={resolving}
           triggerLabel="Authorize Re-test"
-          triggerVariant="secondary"
-          triggerIcon={<Icon iconKey={IconKeys.actions.loading} />}
+          triggerVariant="warning"
           title="Authorize Re-test"
           subtitle={popoverSubtitle(orderTestId, 'Reason (recommended)')}
           textareaId="escalation-authorize-retest-reason"
@@ -157,7 +160,6 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
           resolving={resolving}
           triggerLabel="Authorize Re-collect"
           triggerVariant="secondary"
-          triggerIcon={<Icon iconKey={IconKeys.dataFields.sampleCollection} />}
           title="Authorize Re-collect"
           subtitle={popoverSubtitle(orderTestId, 'Reason (required)')}
           textareaId="escalation-authorize-recollect-reason"

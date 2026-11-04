@@ -102,13 +102,6 @@ class RemedyType(str, enum.Enum):
     ESCALATE = "escalate"
     CANCEL = "cancel"
 
-class RecollectionRequestStatus(str, enum.Enum):
-    PENDING_APPROVAL = "pending-approval"
-    APPROVED = "approved"
-    DENIED = "denied"
-    FULFILLED = "fulfilled"
-    CANCELLED = "cancelled"
-
 class OrderStatus(str, enum.Enum):
     ORDERED = "ordered"
     RUNNING = "running"

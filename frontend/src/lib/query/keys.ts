@@ -175,11 +175,6 @@ export const queryKeys = {
       [...queryKeys.results.all, 'order-test', orderTestId] as const,
   },
 
-  recollectionRequests: {
-    all: ['recollection-requests'] as const,
-    pending: () => [...queryKeys.recollectionRequests.all, 'pending'] as const,
-  },
-
   /**
    * Critical value notifications
    */

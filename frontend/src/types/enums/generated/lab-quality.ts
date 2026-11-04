@@ -45,23 +45,6 @@ export const REMEDY_TYPE_OPTIONS = REMEDY_TYPE_VALUES.map(value => ({
   label: REMEDY_TYPE_CONFIG[value].label,
 }));
 
-export const RECOLLECTION_REQUEST_STATUS_VALUES = ["pending-approval", "approved", "denied", "fulfilled", "cancelled"] as const;
-
-export type RecollectionRequestStatus = (typeof RECOLLECTION_REQUEST_STATUS_VALUES)[number];
-
-export const RECOLLECTION_REQUEST_STATUS_CONFIG: Record<RecollectionRequestStatus, { label: string }> = {
-  "pending-approval": { label: "Pending approval" },
-  "approved": { label: "Approved" },
-  "denied": { label: "Denied" },
-  "fulfilled": { label: "Fulfilled" },
-  "cancelled": { label: "Cancelled" },
-};
-
-export const RECOLLECTION_REQUEST_STATUS_OPTIONS = RECOLLECTION_REQUEST_STATUS_VALUES.map(value => ({
-  value,
-  label: RECOLLECTION_REQUEST_STATUS_CONFIG[value].label,
-}));
-
 export const QUALITY_ISSUE_TARGET_TYPE_VALUES = ["sample", "test"] as const;
 
 export type QualityIssueTargetType = (typeof QUALITY_ISSUE_TARGET_TYPE_VALUES)[number];

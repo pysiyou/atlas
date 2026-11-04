@@ -5,10 +5,21 @@
  * Inline form copy: use {@link inlineFeedbackMessage} for catalog `inline` entries.
  *
  * Feature code: use {@link notify.show} for transient feedback (not direct `toast` import).
+ * Alert toasts use catalog {@link FeedbackEntry.brief} and outcome styling from {@link toastOutcomeVariant}.
  */
 
-import { toast, type ToastAction } from '@/components/feedback/notices';
-import { FEEDBACK_CATALOG, type FeedbackEntry, type FeedbackId } from '@/types/generated/feedbackCatalog';
+import {
+  toast,
+  TOAST_ALERT_MESSAGE,
+  type ToastAction,
+  type ToastVariant,
+} from '@/components/feedback/notices';
+import {
+  FEEDBACK_CATALOG,
+  type FeedbackEntry,
+  type FeedbackId,
+  type FeedbackVariant,
+} from '@/types/generated/feedbackCatalog';
 import { isApiError } from '@/lib/api/errors';
 import { getErrorMessage } from '@/utils/errors';
 
@@ -103,6 +114,35 @@ export function resolveFeedbackForApiError(
 // Toasts and inline messages
 // ---------------------------------------------------------------------------
 
+/** Visual toast tone from catalog variant (operation outcome, not clinical nature). */
+export function toastOutcomeVariant(catalogVariant: FeedbackVariant): ToastVariant {
+  switch (catalogVariant) {
+    case 'success':
+    case 'info':
+      return 'success';
+    case 'warning':
+      return 'warning';
+    case 'error':
+    case 'danger':
+      return 'error';
+    default:
+      return 'error';
+  }
+}
+
+/** Short toast label from catalog `brief` (e.g. collected, validated, rejected, failed). */
+export function resolveToastBrief(entry: FeedbackEntry, options?: ToastOverrides): string {
+  const brief = entry.brief?.trim();
+  if (brief) return brief;
+
+  const titleOverride = options?.title?.trim();
+  if (titleOverride && /^[a-zA-Z]+$/.test(titleOverride) && titleOverride.length <= 16) {
+    return titleOverride.toLowerCase();
+  }
+
+  return TOAST_ALERT_MESSAGE;
+}
+
 export type ToastOverrides = {
   title?: string;
   subtitle?: string;
@@ -113,17 +153,9 @@ export type ToastOverrides = {
 export type NotifyShowOptions = ToastOverrides & {
   /** When set, subtitle is merged from API / thrown error detail. */
   error?: unknown;
-  /** Adds a Retry action chip (typical for load failures). */
+  /** @deprecated Retry is not shown on the single alert toast. */
   onRetry?: () => void;
 };
-
-function mergeNotifyActions(
-  overrides: ToastOverrides | undefined,
-  onRetry: (() => void) | undefined
-): ToastAction[] | undefined {
-  const merged = [...(overrides?.actions ?? []), ...(onRetry ? [{ label: 'Retry', onClick: onRetry }] : [])];
-  return merged.length > 0 ? merged : undefined;
-}
 
 function dispatchFromCatalog(id: FeedbackId, options?: NotifyShowOptions): void {
   const entry = getFeedback(id);
@@ -135,34 +167,15 @@ function dispatchFromCatalog(id: FeedbackId, options?: NotifyShowOptions): void 
     return;
   }
 
-  let title = options?.title ?? entry.title;
-  let subtitle = options?.subtitle ?? entry.subtitle;
+  let outcomeVariant = entry.variant;
 
   if (options?.error != null) {
     if (shouldSuppressApiErrorToast(options.error)) return;
-    const resolved = resolveFeedbackForApiError(options.error, id);
-    title = options?.title ?? resolved.title;
-    subtitle = options?.subtitle ?? resolved.subtitle;
+    outcomeVariant = 'error';
   }
 
-  const payload = {
-    title,
-    subtitle,
-    actions: mergeNotifyActions(options, options?.onRetry),
-  };
-
-  const send =
-    entry.variant === 'success'
-      ? toast.success
-      : entry.variant === 'warning'
-        ? toast.warning
-        : entry.variant === 'info'
-          ? toast.info
-          : entry.variant === 'error' || entry.variant === 'danger'
-            ? toast.error
-            : toast;
-
-  send(payload);
+  const message = resolveToastBrief(entry, options);
+  toast.alert({ message, variant: toastOutcomeVariant(outcomeVariant) });
 }
 
 /**

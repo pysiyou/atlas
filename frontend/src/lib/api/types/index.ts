@@ -20,8 +20,6 @@ export type {
   ApiQualityIssueOptions,
   ApiQualityIssueResult,
   ApiQualityIssueResponse,
-  ApiRecollectionRequestSummary,
-  ApiRecollectionRequestResult,
   ApiCriticalValueResponse,
   ApiEscalationResolveResponse,
 } from './schemas';

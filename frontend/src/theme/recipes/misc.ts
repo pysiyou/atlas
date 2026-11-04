@@ -73,4 +73,5 @@ export const TOAST_TYPE = {
   action: `${text({ role: 'amount' })} text-toast-fg`,
   title: `${text({ role: 'amount' })} font-semibold leading-snug text-toast-fg`,
   subtitle: `${text({ role: 'amount' })} leading-snug text-toast-fg-muted`,
+  compact: `${text({ role: 'caption' })} font-medium leading-none text-toast-fg`,
 } as const;

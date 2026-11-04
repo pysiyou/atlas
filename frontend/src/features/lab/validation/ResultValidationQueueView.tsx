@@ -2,27 +2,20 @@ import { EscalationCard, ResultValidationCard } from '../workflow';
 import { LabValidationQueueSection } from '../components/LabValidationQueueSection';
 import { EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components/display';
 import type { TestWithContext } from '@/types';
-import type { RecollectionRequestSummary, QualityIssueResult } from '@/types/lab-operations';
-import { SampleRecollectionRequestCard } from '../workflow';
+import type { QualityIssueResult } from '@/types/lab-operations';
 
 interface ResultValidationQueueViewProps {
   isEmpty: boolean;
-  hasRecollection: boolean;
   hasEscalated: boolean;
   hasValidation: boolean;
   canResolveEscalation: boolean;
   isMobile: boolean;
-  recollectionRequests: RecollectionRequestSummary[];
   escalatedTests: TestWithContext[];
   validationTests: Array<TestWithContext & { hasCriticalValues?: boolean }>;
   comments: Record<string, string>;
   pendingValidateKey: string | null;
-  isApprovingRecollection: boolean;
-  isDenyingRecollection: boolean;
   isValidatePending: boolean;
   getCommentKey: (test: TestWithContext) => string;
-  onApproveRecollection: (requestId: number, reviewNotes?: string) => Promise<void>;
-  onDenyRecollection: (requestId: number, reviewNotes?: string) => Promise<void>;
   onOpenEscalation: (test: TestWithContext) => void;
   onCommentsChange: (key: string, value: string) => void;
   onApprove: (testId: number, orderId: number) => void;
@@ -32,22 +25,16 @@ interface ResultValidationQueueViewProps {
 
 export function ResultValidationQueueView({
   isEmpty,
-  hasRecollection,
   hasEscalated,
   hasValidation,
   canResolveEscalation,
   isMobile,
-  recollectionRequests,
   escalatedTests,
   validationTests,
   comments,
   pendingValidateKey,
-  isApprovingRecollection,
-  isDenyingRecollection,
   isValidatePending,
   getCommentKey,
-  onApproveRecollection,
-  onDenyRecollection,
   onOpenEscalation,
   onCommentsChange,
   onApprove,
@@ -66,22 +53,6 @@ export function ResultValidationQueueView({
 
   return (
     <div className="space-y-space-8">
-      {hasRecollection && (
-        <LabValidationQueueSection title="Recollection requests" count={recollectionRequests.length}>
-          {recollectionRequests.map(request => (
-            <SampleRecollectionRequestCard
-              key={`recollection-${request.id}`}
-              request={request}
-              onApprove={onApproveRecollection}
-              onDeny={onDenyRecollection}
-              isApproving={isApprovingRecollection}
-              isDenying={isDenyingRecollection}
-              isMobile={isMobile}
-            />
-          ))}
-        </LabValidationQueueSection>
-      )}
-
       {hasEscalated && (
         <LabValidationQueueSection
           title={

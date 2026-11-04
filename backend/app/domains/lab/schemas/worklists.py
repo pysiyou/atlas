@@ -137,33 +137,6 @@ class DashboardWorklistItem(BaseModel):
     statusPresentation: StatusPresentation | None = None
 
 
-class DashboardBlockedWorklistItem(BaseModel):
-    """Order tests hidden from stage queues while recollection awaits supervisor approval."""
-
-    orderTestId: int
-    orderId: int
-    patientId: int
-    patientName: str
-    testCode: str
-    testName: str
-    priority: PriorityLevel
-    status: TestStatus
-    stage: Literal["collection", "entry", "validation"]
-    orderDate: datetime
-    attentionReason: Literal["recollection_approval"]
-    attentionLabel: str
-    waitingHours: float
-    referentDoctorId: int | None = None
-    referentDoctorName: str | None = None
-    referentDoctorEmail: str | None = None
-    referentDoctorPhone: str | None = None
-    referentDoctorHospital: str | None = None
-    referentDoctorUsername: str | None = None
-    testCategory: str | None = None
-    sampleType: str | None = None
-    recollectionRequestId: int
-
-
 class ValidationWorklistItem(BaseModel):
     orderTestId: int
     orderId: int

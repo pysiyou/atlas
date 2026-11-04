@@ -63,7 +63,6 @@ class LabWorkItemContext:
     sample: Sample | None = None
     linked_order_tests: list[OrderTest] = field(default_factory=list)
     escalation_reason_code: str | None = None
-    recollection_approval_pending: bool = False
 
 
 def _attention_label(reason: str | None) -> str | None:
@@ -136,9 +135,6 @@ def project_collection_sample(ctx: LabWorkItemContext) -> LabWorkItemProjection:
         status=TestStatus.PENDING.value,
         payment_status=_payment_status(order),
     )
-    if ctx.recollection_approval_pending:
-        raw_attention = raw_attention or "recollection_approval"
-
     allowed, deny_reason = action_flags_for_collection(
         sample=sample,
         order=order,
@@ -180,9 +176,6 @@ def project_order_test_entry(ctx: LabWorkItemContext) -> LabWorkItemProjection:
         sample_status=_sample_status_value(ctx.sample),
         escalation_reason_code=ctx.escalation_reason_code,
     )
-    if ctx.recollection_approval_pending:
-        raw_attention = raw_attention or "recollection_approval"
-
     allowed, deny_reason = action_flags_for_entry(order_test=order_test)
     enter_allowed = bool(allowed.get("enterResults"))
     effective_deny = effective_deny_reason(
@@ -216,9 +209,6 @@ def project_order_test_validation(ctx: LabWorkItemContext) -> LabWorkItemProject
         sample_status=_sample_status_value(ctx.sample),
         escalation_reason_code=ctx.escalation_reason_code,
     )
-    if ctx.recollection_approval_pending:
-        raw_attention = raw_attention or "recollection_approval"
-
     allowed, deny_reason = action_flags_for_validation(order_test=order_test)
     validate_allowed = bool(allowed.get("validate"))
     effective_deny = effective_deny_reason(

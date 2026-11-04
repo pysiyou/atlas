@@ -256,7 +256,6 @@ def assemble_board(
     entry_rows: list[dict[str, Any]],
     validation_rows: list[dict[str, Any]],
     escalation_rows: list[dict[str, Any]],
-    recollection_rows: list[dict[str, Any]],
     now: datetime | None = None,
 ) -> dict[str, Any]:
     """Build the full board payload from lightweight stage rows (no 10k worklist materialization)."""
@@ -403,36 +402,7 @@ def assemble_board(
             )
         )
 
-    for row in recollection_rows:
-        since = row.get("created_at")
-        hours = hours_since(since, current)
-        priority = _priority_value(row.get("priority"))
-        affected = row.get("affected_order_test_ids") or []
-        order_test_id = row.get("order_test_id")
-        order_test_ids = (
-            [int(v) for v in affected]
-            if affected
-            else ([order_test_id] if order_test_id is not None else [])
-        )
-        blockers["recollectionWaiting"] += 1
-        candidates.append(
-            _attention_candidate(
-                stage="validation",
-                order_id=row["order_id"],
-                patient_name=row.get("patient_name") or "Unknown patient",
-                priority=priority,
-                waiting_hours=hours,
-                attention_reason="recollection_approval",
-                since=since,
-                order_test_ids=order_test_ids,
-                attention_type="supervisor_recollection_request",
-                work_item_count=len(order_test_ids) or 1,
-            )
-        )
-
-    blockers["total"] = (
-        blockers["paymentUnpaid"] + blockers["retestPending"] + blockers["recollectionWaiting"]
-    )
+    blockers["total"] = blockers["paymentUnpaid"] + blockers["retestPending"] + blockers["recollectionWaiting"]
     attention_items, attention_total = finalize_attention_items(candidates)
     finalized_age = {
         "collection": _finalize_queue_age(queue_age["collection"]),
@@ -444,7 +414,7 @@ def assemble_board(
         "collection": len(collection_rows),
         "entry": len(entry_rows),
         "validation": len(validation_rows),
-        "supervisor": len(escalation_rows) + len(recollection_rows),
+        "supervisor": len(escalation_rows),
     }
     total_active = counts["collection"] + counts["entry"] + counts["validation"]
 

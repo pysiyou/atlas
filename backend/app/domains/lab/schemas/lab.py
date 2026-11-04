@@ -211,46 +211,4 @@ class QualityIssueResult(BaseModel):
     orderTestId: int | None = None
     createdTestId: int | None = None
     createdSampleId: int | None = None
-    recollectionRequestId: int | None = None
     escalationRequired: bool = False
-
-
-class RecollectionRequestSummary(BaseModel):
-    id: int
-    orderId: int
-    qualityIssueId: int | None = None
-    rejectedSampleId: int
-    orderTestId: int | None = None
-    stage: str
-    status: str
-    reason: str
-    notes: str | None = None
-    testCodes: list[str]
-    affectedOrderTestIds: list[int]
-    recollectionAttemptsUsed: int
-    recollectionAttemptsRemaining: int
-    requiresSupervisorOverride: bool
-    requestedByUserId: str
-    reviewedByUserId: str | None = None
-    reviewNotes: str | None = None
-    reviewedAt: str | None = None
-    createdSampleId: int | None = None
-    createdTestId: int | None = None
-    createdAt: str
-    patientId: int | None = None
-    patientName: str | None = None
-    orderNumber: str | None = None
-    sampleType: str | None = None
-
-
-class RecollectionRequestResult(BaseModel):
-    success: bool
-    message: str
-    requestId: int
-    status: str
-    createdSampleId: int | None = None
-    createdTestId: int | None = None
-
-
-class RecollectionReviewRequest(BaseModel):
-    reviewNotes: str | None = Field(None, max_length=1000)

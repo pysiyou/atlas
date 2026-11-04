@@ -5,116 +5,136 @@
       "channel": "toast",
       "variant": "error",
       "title": "Session expired",
-      "subtitle": "Please log in again."
+      "subtitle": "Please log in again.",
+      "brief": "expired"
     },
     "order.create.success": {
       "channel": "toast",
       "variant": "success",
       "title": "Order created",
-      "subtitle": "The order has been saved and is ready for collection."
+      "subtitle": "The order has been saved and is ready for collection.",
+      "brief": "created"
     },
     "order.create.error": {
       "channel": "toast",
       "variant": "error",
-      "title": "Failed to create order"
+      "title": "Failed to create order",
+      "brief": "failed"
     },
     "order.update.success": {
       "channel": "toast",
       "variant": "success",
       "title": "Order updated",
-      "subtitle": "The order has been saved with the latest changes."
+      "subtitle": "The order has been saved with the latest changes.",
+      "brief": "updated"
     },
     "order.update.error": {
       "channel": "toast",
       "variant": "error",
       "title": "Failed to update order",
-      "subtitle": "The order could not be updated. Please try again."
+      "subtitle": "The order could not be updated. Please try again.",
+      "brief": "failed"
     },
     "order.delete.success": {
       "channel": "toast",
       "variant": "success",
       "title": "Order deleted",
-      "subtitle": "The order has been removed."
+      "subtitle": "The order has been removed.",
+      "brief": "deleted"
     },
     "order.delete.error": {
       "channel": "toast",
       "variant": "error",
       "title": "Failed to delete order",
-      "subtitle": "The order could not be deleted. Please try again."
+      "subtitle": "The order could not be deleted. Please try again.",
+      "brief": "failed"
     },
     "order.paymentStatus.success": {
       "channel": "toast",
       "variant": "success",
       "title": "Payment status updated",
-      "subtitle": "The order payment record has been saved."
+      "subtitle": "The order payment record has been saved.",
+      "brief": "updated"
     },
     "order.invoice.preview": {
       "channel": "toast",
       "variant": "info",
-      "title": "Invoice"
+      "title": "Invoice",
+      "brief": "invoice"
     },
     "patient.create.success": {
       "channel": "toast",
       "variant": "success",
       "title": "Patient created",
-      "subtitle": "The patient record has been saved."
+      "subtitle": "The patient record has been saved.",
+      "brief": "created"
     },
     "patient.create.error": {
       "channel": "toast",
       "variant": "error",
-      "title": "Failed to create patient"
+      "title": "Failed to create patient",
+      "brief": "failed"
     },
     "patient.update.success": {
       "channel": "toast",
       "variant": "success",
       "title": "Patient updated",
-      "subtitle": "The patient record has been saved."
+      "subtitle": "The patient record has been saved.",
+      "brief": "updated"
     },
     "patient.update.error": {
       "channel": "toast",
       "variant": "error",
-      "title": "Failed to update patient"
+      "title": "Failed to update patient",
+      "brief": "failed"
     },
     "report.download.success": {
       "channel": "toast",
       "variant": "success",
       "title": "Report downloaded successfully",
-      "subtitle": "The report has been generated and the download should start shortly. Check your downloads folder."
+      "subtitle": "The report has been generated and the download should start shortly. Check your downloads folder.",
+      "brief": "downloaded"
     },
     "report.download.error": {
       "channel": "toast",
       "variant": "error",
       "title": "Failed to generate report",
-      "subtitle": "The report could not be generated. Please try again or contact support if the issue persists."
+      "subtitle": "The report could not be generated. Please try again or contact support if the issue persists.",
+      "brief": "failed"
     },
     "report.generate.success": {
       "channel": "toast",
       "variant": "success",
       "title": "Report generated",
-      "subtitle": "The report is ready to view or download."
+      "subtitle": "The report is ready to view or download.",
+      "brief": "generated"
     },
     "report.generate.error": {
       "channel": "toast",
       "variant": "error",
       "title": "Failed to generate report",
-      "subtitle": "Please try again or contact support if the issue persists."
+      "subtitle": "Please try again or contact support if the issue persists.",
+      "brief": "failed"
     },
     "billing.claim.submit.success": {
       "channel": "toast",
       "variant": "success",
       "title": "Claim submitted",
-      "subtitle": "The insurance claim has been recorded for this invoice."
+      "subtitle": "The insurance claim has been recorded for this invoice.",
+      "brief": "submitted"
     },
     "billing.claim.submit.error": {
       "channel": "toast",
       "variant": "danger",
-      "title": "Failed to submit claim"
+      "title": "Failed to submit claim",
+      "brief": "failed"
     },
     "payment.record.success": {
       "channel": "toast",
       "variant": "success",
       "title": "Payment recorded",
-      "subtitle": "The order payment status has been updated."
+      "subtitle": "The order payment status has been updated.",
+      "brief": "recorded"
     },
     "payment.process.error": {
       "channel": "inline",
@@ -130,429 +150,477 @@
       "channel": "toast",
       "variant": "error",
       "title": "You must be logged in to collect samples",
-      "subtitle": "Please sign in to record sample collections, then try again."
+      "subtitle": "Please sign in to record sample collections, then try again.",
+      "brief": "failed"
     },
     "lab.collection.invalidSample": {
       "channel": "toast",
       "variant": "error",
       "title": "Invalid sample data",
-      "subtitle": "The sample or requirement data is missing or invalid. Refresh the page and try again."
+      "subtitle": "The sample or requirement data is missing or invalid. Refresh the page and try again.",
+      "brief": "failed"
     },
     "lab.collection.colorRequired": {
       "channel": "toast",
       "variant": "error",
       "title": "Container color is required",
-      "subtitle": "Select the container cap color before confirming the collection."
+      "subtitle": "Select the container cap color before confirming the collection.",
+      "brief": "failed"
     },
     "lab.collection.containerRequired": {
       "channel": "toast",
       "variant": "error",
       "title": "Container type is required",
-      "subtitle": "Select the container type (e.g. cup or tube) before confirming the collection."
+      "subtitle": "Select the container type (e.g. cup or tube) before confirming the collection.",
+      "brief": "failed"
     },
     "lab.collection.popover.colorRequired": {
       "channel": "toast",
       "variant": "error",
       "title": "Please select the top color",
-      "subtitle": "Select the container cap color used for this sample."
+      "subtitle": "Select the container cap color used for this sample.",
+      "brief": "failed"
     },
     "lab.collection.popover.containerRequired": {
       "channel": "toast",
       "variant": "error",
       "title": "Please select the container type",
-      "subtitle": "Select tube or cup used for this sample."
+      "subtitle": "Select tube or cup used for this sample.",
+      "brief": "failed"
     },
     "lab.collection.success": {
       "channel": "toast",
       "variant": "success",
       "title": "Sample collected",
-      "subtitle": "The sample has been recorded and the order has been updated. You can continue with the next sample."
+      "subtitle": "The sample has been recorded and the order has been updated. You can continue with the next sample.",
+      "brief": "collected"
     },
     "lab.collection.refreshWarning": {
       "channel": "toast",
       "variant": "warning",
       "title": "Collection saved",
-      "subtitle": "The sample was collected, but the list could not be refreshed. Reload the page to see the latest status."
+      "subtitle": "The sample was collected, but the list could not be refreshed. Reload the page to see the latest status.",
+      "brief": "collected"
     },
     "lab.collection.networkAmbiguous": {
       "channel": "toast",
       "variant": "warning",
       "title": "Action may have completed",
-      "subtitle": "The request did not complete. Please refresh the page to see the latest status."
+      "subtitle": "The request did not complete. Please refresh the page to see the latest status.",
+      "brief": "pending"
     },
     "lab.collection.error": {
       "channel": "toast",
       "variant": "error",
       "title": "Failed to collect sample",
-      "subtitle": "The collection could not be saved. Check your connection and try again."
+      "subtitle": "The collection could not be saved. Check your connection and try again.",
+      "brief": "failed"
     },
     "lab.collection.printLabel.error": {
       "channel": "toast",
       "variant": "error",
       "title": "Failed to print label",
-      "subtitle": "The label could not be printed. Check your printer and try again."
+      "subtitle": "The label could not be printed. Check your printer and try again.",
+      "brief": "failed"
     },
     "lab.collection.printLabel.genericError": {
       "channel": "toast",
       "variant": "error",
       "title": "Failed to print label",
-      "subtitle": "Ensure the printer is connected and the sample data is valid."
+      "subtitle": "Ensure the printer is connected and the sample data is valid.",
+      "brief": "failed"
     },
     "lab.entry.noResults": {
       "channel": "toast",
       "variant": "error",
       "title": "No results to save",
-      "subtitle": "There are no results entered for this test. Enter values in the required fields before saving."
+      "subtitle": "There are no results entered for this test. Enter values in the required fields before saving.",
+      "brief": "failed"
     },
     "lab.entry.testNotFound": {
       "channel": "toast",
       "variant": "error",
       "title": "Test not found in current list",
-      "subtitle": "This test could not be found in the current order. The list may have been updated—refresh and try again."
+      "subtitle": "This test could not be found in the current order. The list may have been updated—refresh and try again.",
+      "brief": "failed"
     },
     "lab.entry.parametersMissing": {
       "channel": "toast",
       "variant": "error",
       "title": "Test parameters not found",
-      "subtitle": "The test configuration could not be loaded. Refresh the page or contact support."
+      "subtitle": "The test configuration could not be loaded. Refresh the page or contact support.",
+      "brief": "failed"
     },
     "lab.entry.save.success": {
       "channel": "toast",
       "variant": "success",
       "title": "Results saved successfully",
-      "subtitle": "The results have been saved and the order has been updated. You can continue with other tests."
+      "subtitle": "The results have been saved and the order has been updated. You can continue with other tests.",
+      "brief": "resulted"
     },
     "lab.entry.save.error": {
       "channel": "toast",
       "variant": "error",
       "title": "Failed to save results",
-      "subtitle": "The results could not be saved. Check your connection and try again."
+      "subtitle": "The results could not be saved. Check your connection and try again.",
+      "brief": "failed"
     },
     "lab.entry.modalUnavailable": {
       "channel": "toast",
       "variant": "error",
       "title": "Unable to open result entry",
-      "subtitle": "Refresh the page and try again."
+      "subtitle": "Refresh the page and try again.",
+      "brief": "failed"
     },
     "lab.entry.selectInvalid": {
       "channel": "toast",
       "variant": "error",
       "title": "Invalid selection value",
-      "subtitle": "Choose a valid option from the list before saving."
+      "subtitle": "Choose a valid option from the list before saving.",
+      "brief": "failed"
     },
     "lab.validation.approve.success": {
       "channel": "toast",
       "variant": "success",
       "title": "Results approved",
-      "subtitle": "These results have been approved and are now final. The order status has been updated."
+      "subtitle": "These results have been approved and are now final. The order status has been updated.",
+      "brief": "validated"
     },
     "lab.validation.approve.networkAmbiguous": {
       "channel": "toast",
       "variant": "warning",
       "title": "Action may have completed",
-      "subtitle": "The request did not complete. Please refresh the page to see the latest status."
+      "subtitle": "The request did not complete. Please refresh the page to see the latest status.",
+      "brief": "pending"
     },
     "lab.validation.approve.error": {
       "channel": "toast",
       "variant": "error",
       "title": "Failed to validate results",
-      "subtitle": "The validation request failed. Please try again or contact support if the issue persists."
+      "subtitle": "The validation request failed. Please try again or contact support if the issue persists.",
+      "brief": "failed"
     },
     "lab.validation.testUnavailable": {
       "channel": "toast",
       "variant": "error",
       "title": "Test record unavailable",
-      "subtitle": "Refresh the page and try again."
-    },
-    "lab.recollection.approve.success": {
-      "channel": "toast",
-      "variant": "success",
-      "title": "Recollection approved",
-      "subtitle": "A pending collection tube is now available in Sample Collection."
-    },
-    "lab.recollection.approve.error": {
-      "channel": "toast",
-      "variant": "error",
-      "title": "Failed to approve recollection",
-      "subtitle": "Please try again."
-    },
-    "lab.recollection.deny.success": {
-      "channel": "toast",
-      "variant": "success",
-      "title": "Recollection denied",
-      "subtitle": "Affected tests have been cancelled."
-    },
-    "lab.recollection.deny.error": {
-      "channel": "toast",
-      "variant": "error",
-      "title": "Failed to deny recollection",
-      "subtitle": "Please try again."
+      "subtitle": "Refresh the page and try again.",
+      "brief": "failed"
     },
     "lab.escalation.permissionDenied": {
       "channel": "toast",
       "variant": "error",
       "title": "You do not have permission to resolve escalations.",
-      "subtitle": "Ask a supervisor or administrator to complete this action."
+      "subtitle": "Ask a supervisor or administrator to complete this action.",
+      "brief": "failed"
     },
     "lab.escalation.resolve.success": {
       "channel": "toast",
       "variant": "success",
       "title": "Escalation resolved",
-      "subtitle": "The escalation has been resolved and the test status updated."
+      "subtitle": "The escalation has been resolved and the test status updated.",
+      "brief": "resolved"
     },
     "lab.escalation.resolve.error": {
       "channel": "toast",
       "variant": "error",
       "title": "Failed to resolve escalation",
-      "subtitle": "Check the details and try again."
+      "subtitle": "Check the details and try again.",
+      "brief": "failed"
     },
     "lab.qualityIssue.report.error": {
       "channel": "toast",
       "variant": "error",
       "title": "Failed to report quality issue",
-      "subtitle": "Check the details and try again."
+      "subtitle": "Check the details and try again.",
+      "brief": "failed"
     },
     "lab.history.sampleNotFound": {
       "channel": "toast",
       "variant": "error",
       "title": "Sample not found",
-      "subtitle": "It may have been removed."
+      "subtitle": "It may have been removed.",
+      "brief": "failed"
     },
     "lab.history.testNotFound": {
       "channel": "toast",
       "variant": "error",
       "title": "Test not found",
-      "subtitle": "This test is no longer in the current workflow list."
+      "subtitle": "This test is no longer in the current workflow list.",
+      "brief": "failed"
     },
     "lab.history.testLoadFailed": {
       "channel": "toast",
       "variant": "error",
-      "title": "Test record not found"
+      "title": "Test record not found",
+      "brief": "failed"
     },
     "lab.critical.profileMissing": {
       "channel": "toast",
       "variant": "error",
       "title": "Cannot acknowledge",
-      "subtitle": "Your user profile is missing a name. Sign in again and retry."
+      "subtitle": "Your user profile is missing a name. Sign in again and retry.",
+      "brief": "failed"
     },
     "lab.critical.recipientRequired": {
       "channel": "toast",
       "variant": "error",
       "title": "Recipient required",
-      "subtitle": "Enter who was notified."
+      "subtitle": "Enter who was notified.",
+      "brief": "failed"
     },
     "lab.critical.notify.success": {
       "channel": "toast",
       "variant": "success",
-      "title": "Notification recorded"
+      "title": "Notification recorded",
+      "brief": "notified"
     },
     "lab.critical.notify.error": {
       "channel": "toast",
       "variant": "error",
-      "title": "Failed to record notification"
+      "title": "Failed to record notification",
+      "brief": "failed"
     },
     "lab.critical.readBackRequired": {
       "channel": "toast",
       "variant": "error",
       "title": "Read-back required",
-      "subtitle": "Confirm provider read-back before acknowledging."
+      "subtitle": "Confirm provider read-back before acknowledging.",
+      "brief": "failed"
     },
     "lab.critical.ack.success": {
       "channel": "toast",
       "variant": "success",
-      "title": "Critical value acknowledged"
+      "title": "Critical value acknowledged",
+      "brief": "acknowledged"
     },
     "lab.critical.ack.error": {
       "channel": "toast",
       "variant": "error",
-      "title": "Failed to acknowledge critical value"
+      "title": "Failed to acknowledge critical value",
+      "brief": "failed"
     },
     "lab.qualityIssue.reported": {
       "channel": "toast",
       "variant": "success",
       "title": "Quality issue reported",
-      "subtitle": "The issue has been recorded and the workflow updated."
+      "subtitle": "The issue has been recorded and the workflow updated.",
+      "brief": "reported"
     },
     "lab.qualityIssue.escalate": {
       "channel": "toast",
       "variant": "success",
       "title": "Escalated to supervisor",
-      "subtitle": "This test has been sent to the escalation queue for supervisor review."
+      "subtitle": "This test has been sent to the escalation queue for supervisor review.",
+      "brief": "escalated"
     },
     "lab.qualityIssue.escalate.limitHit": {
       "channel": "toast",
       "variant": "success",
       "title": "Escalated to supervisor",
-      "subtitle": "Re-test limit reached. A supervisor must approve before another run — find it under Awaiting supervisor approval on Validation."
+      "subtitle": "Re-test limit reached. A supervisor must approve before another run — find it under Awaiting supervisor approval on Validation.",
+      "brief": "escalated"
     },
     "lab.qualityIssue.retest": {
       "channel": "toast",
       "variant": "success",
       "title": "Re-test requested",
-      "subtitle": "A new result entry has been created using the same sample."
+      "subtitle": "A new result entry has been created using the same sample.",
+      "brief": "retested"
     },
     "lab.qualityIssue.retest.limitHit": {
       "channel": "toast",
       "variant": "success",
       "title": "Escalated for re-test approval",
-      "subtitle": "Re-test limit reached. The test is on Validation awaiting supervisor approval."
+      "subtitle": "Re-test limit reached. The test is on Validation awaiting supervisor approval.",
+      "brief": "escalated"
     },
     "lab.qualityIssue.recollection.requested": {
       "channel": "toast",
       "variant": "success",
-      "title": "Recollection request submitted",
-      "subtitle": "A supervisor will review before the patient is contacted."
+      "title": "Recollection scheduled",
+      "subtitle": "A new pending sample was created for collection.",
+      "brief": "recollected"
     },
     "lab.qualityIssue.specimenRejected": {
       "channel": "toast",
       "variant": "success",
       "title": "Sample rejected",
-      "subtitle": "Linked resulted tests remain in Validation for validator decision."
+      "subtitle": "Linked resulted tests remain in Validation for validator decision.",
+      "brief": "rejected"
     },
     "lab.qualityIssue.cancelled": {
       "channel": "toast",
       "variant": "success",
       "title": "Cancelled",
-      "subtitle": "The selected work item(s) were cancelled."
+      "subtitle": "The selected work item(s) were cancelled.",
+      "brief": "cancelled"
     },
     "lab.qualityIssue.options.loadFailed": {
       "channel": "toast",
       "variant": "danger",
-      "title": "Failed to load options"
+      "title": "Failed to load options",
+      "brief": "failed"
     },
     "lab.escalation.readBack.providerRequired": {
       "channel": "toast",
       "variant": "error",
       "title": "Provider read-back required",
-      "subtitle": "Enter provider name and contact for critical value release."
+      "subtitle": "Enter provider name and contact for critical value release.",
+      "brief": "failed"
     },
     "lab.escalation.readBack.confirmRequired": {
       "channel": "toast",
       "variant": "error",
       "title": "Read-back confirmation required",
-      "subtitle": "Confirm provider read-back before force-validating critical results."
+      "subtitle": "Confirm provider read-back before force-validating critical results.",
+      "brief": "failed"
     },
     "lab.escalation.recollect.reasonRequired": {
       "channel": "toast",
       "variant": "error",
       "title": "Reason required",
-      "subtitle": "Provide a clinical reason to authorize re-collection."
+      "subtitle": "Provide a clinical reason to authorize re-collection.",
+      "brief": "failed"
     },
     "lab.escalation.cancel.reasonRequired": {
       "channel": "toast",
       "variant": "error",
       "title": "Reason required",
-      "subtitle": "Provide a clinical reason to cancel this test."
+      "subtitle": "Provide a clinical reason to cancel this test.",
+      "brief": "failed"
     },
     "orders.list.loadFailed": {
       "channel": "toast",
       "variant": "danger",
-      "title": "Failed to load orders"
+      "title": "Failed to load orders",
+      "brief": "failed"
     },
     "patients.list.loadFailed": {
       "channel": "toast",
       "variant": "danger",
-      "title": "Failed to load patients"
+      "title": "Failed to load patients",
+      "brief": "failed"
     },
     "catalog.list.loadFailed": {
       "channel": "toast",
       "variant": "danger",
-      "title": "Failed to load test catalog"
+      "title": "Failed to load test catalog",
+      "brief": "failed"
     },
     "catalog.bootstrap.loadFailed": {
       "channel": "toast",
       "variant": "danger",
-      "title": "Failed to load tests"
+      "title": "Failed to load tests",
+      "brief": "failed"
     },
     "reports.list.loadFailed": {
       "channel": "toast",
       "variant": "danger",
-      "title": "Failed to load reports"
+      "title": "Failed to load reports",
+      "brief": "failed"
     },
     "payments.list.loadFailed": {
       "channel": "toast",
       "variant": "danger",
-      "title": "Failed to load data"
+      "title": "Failed to load data",
+      "brief": "failed"
     },
     "users.list.loadFailed": {
       "channel": "toast",
       "variant": "danger",
-      "title": "Failed to load users"
+      "title": "Failed to load users",
+      "brief": "failed"
     },
     "users.create.success": {
       "channel": "toast",
       "variant": "success",
-      "title": "User created"
+      "title": "User created",
+      "brief": "created"
     },
     "users.create.error": {
       "channel": "toast",
       "variant": "error",
-      "title": "Failed to create user"
+      "title": "Failed to create user",
+      "brief": "failed"
     },
     "users.update.success": {
       "channel": "toast",
       "variant": "success",
-      "title": "User updated"
+      "title": "User updated",
+      "brief": "updated"
     },
     "users.update.error": {
       "channel": "toast",
       "variant": "error",
-      "title": "Failed to update user"
+      "title": "Failed to update user",
+      "brief": "failed"
     },
     "users.disable.success": {
       "channel": "toast",
       "variant": "success",
-      "title": "User disabled"
+      "title": "User disabled",
+      "brief": "disabled"
     },
     "users.disable.error": {
       "channel": "toast",
       "variant": "error",
-      "title": "Failed to disable user"
+      "title": "Failed to disable user",
+      "brief": "failed"
     },
     "users.enable.success": {
       "channel": "toast",
       "variant": "success",
-      "title": "User enabled"
+      "title": "User enabled",
+      "brief": "enabled"
     },
     "users.enable.error": {
       "channel": "toast",
       "variant": "error",
-      "title": "Failed to enable user"
+      "title": "Failed to enable user",
+      "brief": "failed"
     },
     "users.disable.self": {
       "channel": "toast",
       "variant": "error",
-      "title": "You cannot disable your own account"
+      "title": "You cannot disable your own account",
+      "brief": "failed"
     },
     "users.disable.lastAdmin": {
       "channel": "toast",
       "variant": "error",
-      "title": "Cannot disable the last active administrator"
+      "title": "Cannot disable the last active administrator",
+      "brief": "failed"
     },
     "lab.page.loadFailed": {
       "channel": "toast",
       "variant": "danger",
-      "title": "Failed to load laboratory data"
+      "title": "Failed to load laboratory data",
+      "brief": "failed"
     },
     "lab.worklist.loadFailed": {
       "channel": "toast",
       "variant": "danger",
-      "title": "Failed to load the lab worklist"
+      "title": "Failed to load the lab worklist",
+      "brief": "failed"
     },
     "lab.entry.context.loadFailed": {
       "channel": "toast",
       "variant": "danger",
-      "title": "Failed to load this test for result entry"
+      "title": "Failed to load this test for result entry",
+      "brief": "failed"
     },
     "lab.collection.workContext.loadFailed": {
       "channel": "toast",
       "variant": "danger",
-      "title": "Failed to load sample collection eligibility"
+      "title": "Failed to load sample collection eligibility",
+      "brief": "failed"
     },
     "billing.claims.loadFailed": {
       "channel": "toast",
       "variant": "danger",
-      "title": "Failed to load insurance claims"
+      "title": "Failed to load insurance claims",
+      "brief": "failed"
     },
     "patients.affiliation.pricingLoadFailed": {
       "channel": "inline",
@@ -612,7 +680,8 @@
     "api.sessionExpired": {
       "channel": "toast",
       "variant": "error",
-      "title": "Session expired. Please log in again."
+      "title": "Session expired. Please log in again.",
+      "brief": "failed"
     },
     "api.permissionDenied": {
       "channel": "inline",
@@ -648,13 +717,15 @@
       "channel": "toast",
       "variant": "error",
       "title": "Cannot print label for uncollected sample",
-      "subtitle": "Collect the sample before printing a label."
+      "subtitle": "Collect the sample before printing a label.",
+      "brief": "failed"
     },
     "lab.collection.printLabel.popupBlocked": {
       "channel": "toast",
       "variant": "error",
       "title": "Please allow popups to print labels",
-      "subtitle": "Enable popups for this site in your browser settings, then try again."
+      "subtitle": "Enable popups for this site in your browser settings, then try again.",
+      "brief": "failed"
     },
     "lab.entry.fieldInvalid": {
       "channel": "inline",
@@ -789,12 +860,12 @@
     "lab.qualityIssue.dialog.actions.recollect": {
       "channel": "inline",
       "variant": "info",
-      "title": "Request recollection"
+      "title": "Recollect (new draw)"
     },
     "lab.qualityIssue.dialog.actions.recollectDescription": {
       "channel": "inline",
       "variant": "info",
-      "title": "Reject the sample and submit a recollection request — supervisor must approve before the patient is redrawn."
+      "title": "Reject the sample and create a new pending tube for collection when attempts remain."
     },
     "lab.qualityIssue.dialog.actions.cancel": {
       "channel": "inline",
@@ -859,12 +930,12 @@
     "lab.qualityIssue.collection.actions.recollect": {
       "channel": "inline",
       "variant": "info",
-      "title": "Request recollection"
+      "title": "Recollect (new draw)"
     },
     "lab.qualityIssue.collection.actions.recollectDescription": {
       "channel": "inline",
       "variant": "info",
-      "title": "Supervisor must approve before the patient is contacted for a new sample."
+      "title": "Reject this tube and create a new pending sample for collection when attempts remain."
     },
     "lab.qualityIssue.collection.actions.cancelUnfinished": {
       "channel": "inline",

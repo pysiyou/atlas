@@ -13,10 +13,8 @@ export type AttentionType =
   | 'escalation_retry_limit'
   | 'escalation_recollection_limit'
   | 'supervisor_approval'
-  | 'supervisor_recollection_request'
   | 'payment_blocked'
   | 'sample_rejected'
-  | 'recollection_waiting'
   | 'retest_in_progress'
   | 'priority_urgent'
   | 'priority_high'
@@ -69,13 +67,6 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
     badgeVariant: 'escalated',
     sortOrder: 45,
   },
-  supervisor_recollection_request: {
-    id: 'supervisor_recollection_request',
-    groupLabel: 'Recollection authorization',
-    pillLabel: 'Authorization',
-    badgeVariant: 'escalated',
-    sortOrder: 48,
-  },
   payment_blocked: {
     id: 'payment_blocked',
     groupLabel: 'Financial hold',
@@ -89,13 +80,6 @@ export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> =
     pillLabel: 'Rejected',
     badgeVariant: 'cancelled',
     sortOrder: 60,
-  },
-  recollection_waiting: {
-    id: 'recollection_waiting',
-    groupLabel: 'Awaiting recollection',
-    pillLabel: LAB_COPY.attention.recollection,
-    badgeVariant: 'warning',
-    sortOrder: 70,
   },
   retest_in_progress: {
     id: 'retest_in_progress',

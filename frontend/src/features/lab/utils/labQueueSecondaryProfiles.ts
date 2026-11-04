@@ -1,10 +1,9 @@
 /**
- * Client filter profiles for secondary lists on the validation review tab (escalations, recollections).
+ * Client filter profiles for secondary lists on the validation review tab (escalations).
  */
 
 import { createLabQueueSearchFilter } from '../components/LabWorkflowQueueLayout';
 import type { PriorityLevel, TestWithContext } from '@/types';
-import type { RecollectionRequestSummary } from '@/types/lab-operations';
 import type { LabQueueStageFilterConfig } from './labQueueStageFilterConfig';
 
 export type LabQueueSecondaryFilterProfile<T, S> = Pick<
@@ -13,12 +12,6 @@ export type LabQueueSecondaryFilterProfile<T, S> = Pick<
 > & {
   applyStatusFilter?: boolean;
 };
-
-const filterRecollectionRequest = createLabQueueSearchFilter<RecollectionRequestSummary>(item =>
-  [item.orderNumber, item.patientName, ...(item.testCodes ?? []), item.rejectedSampleId?.toString()].filter(
-    (value): value is string => Boolean(value),
-  ),
-);
 
 export const VALIDATION_REVIEW_ESCALATION_PROFILE: LabQueueSecondaryFilterProfile<
   TestWithContext,
@@ -37,23 +30,4 @@ export const VALIDATION_REVIEW_ESCALATION_PROFILE: LabQueueSecondaryFilterProfil
   },
   sortByPriority: true,
   applyStatusFilter: true,
-};
-
-export const VALIDATION_REVIEW_RECOLLECTION_PROFILE: LabQueueSecondaryFilterProfile<
-  RecollectionRequestSummary,
-  PriorityLevel
-> = {
-  callbacks: {
-    getOrderDate: request => request.createdAt,
-    getSampleType: request => request.sampleType,
-    getStatus: () => undefined,
-    getPriority: () => undefined,
-    getQueueSince: request => request.createdAt,
-    getId: request => request.orderTestId,
-    getOrderId: request => request.orderId,
-    getSampleId: request => request.rejectedSampleId,
-    searchFilterFn: filterRecollectionRequest,
-  },
-  sortByPriority: true,
-  applyStatusFilter: false,
 };

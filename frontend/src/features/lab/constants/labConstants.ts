@@ -266,7 +266,6 @@ export const LAB_PATHS = {
     entry: '/lab/worklists/entry',
     validation: '/lab/worklists/validation',
     dashboardToday: '/lab/worklists/dashboard-today',
-    dashboardBlocked: '/lab/worklists/dashboard-blocked',
     allTests: '/lab/worklists/all-tests',
   },
   board: { full: '/lab/board', summary: '/lab/board/summary' },
@@ -278,11 +277,6 @@ export const LAB_PATHS = {
     forOrder: (orderId: number) => `/lab/orders/${orderId}/critical-values`,
   },
   qualityIssues: { list: '/lab/quality-issues', options: '/lab/quality-issues/options' },
-  recollectionRequests: {
-    pending: '/lab/recollection-requests/pending',
-    approve: (requestId: number) => `/lab/recollection-requests/${requestId}/approve`,
-    deny: (requestId: number) => `/lab/recollection-requests/${requestId}/deny`,
-  },
   analyzer: {
     hl7: '/lab/analyzer/hl7',
     json: '/lab/analyzer/json',

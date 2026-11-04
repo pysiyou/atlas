@@ -8,7 +8,6 @@
  * - Results: entry/validate/escalation → invalidateResultQueries
  * - Critical values: notify/acknowledge → invalidateCriticalValueQueries
  * - Quality issues: report → invalidateQualityIssueQueries
- * - Recollection: approve/deny → invalidateRecollectionQueries
  * - Collection: collect sample → invalidateCollectionQueries
  * - Lab monitor board → invalidateLabMonitorQueries
  * - Full lab workflow (validation modals) → invalidateLabWorkflowQueries
@@ -186,15 +185,6 @@ export function invalidateQualityIssueQueries(client: QueryClient): Promise<void
     client.invalidateQueries({ queryKey: queryKeys.samples.all }),
     client.invalidateQueries({ queryKey: queryKeys.orders.all }),
     client.invalidateQueries({ queryKey: queryKeys.qualityIssues.all }),
-    client.invalidateQueries({ queryKey: queryKeys.recollectionRequests.all }),
-    invalidateWorklistQueries(client),
-    invalidateAuditEventQueries(client),
-  ]);
-}
-
-export function invalidateRecollectionQueries(client: QueryClient): Promise<void> {
-  return settleInvalidations([
-    client.invalidateQueries({ queryKey: queryKeys.recollectionRequests.all }),
     invalidateWorklistQueries(client),
     invalidateAuditEventQueries(client),
   ]);
@@ -213,7 +203,6 @@ export function invalidateLabMonitorQueriesFull(client: QueryClient): Promise<vo
   return settleInvalidations([
     invalidateLabMonitorQueries(client),
     client.invalidateQueries({ queryKey: queryKeys.results.pendingEscalation() }),
-    client.invalidateQueries({ queryKey: queryKeys.recollectionRequests.all }),
     invalidateWorklistQueries(client),
   ]);
 }

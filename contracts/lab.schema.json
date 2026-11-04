@@ -168,8 +168,7 @@
         "when": {
           "type": "object",
           "properties": {
-            "escalationRequired": { "type": "boolean" },
-            "hasRecollectionRequestId": { "type": "boolean" }
+            "escalationRequired": { "type": "boolean" }
           },
           "additionalProperties": false
         }

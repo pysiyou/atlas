@@ -90,5 +90,4 @@ class CollectionCommandHandler:
             after_state,
             metadata={"test_codes": sample.testCodes},
         )
-        self._svc.recollection.mark_fulfilled_when_sample_collected(sample_id)
         return sample

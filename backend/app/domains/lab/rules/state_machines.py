@@ -75,6 +75,7 @@ class TestStateMachine:
 
     Quality issue paths:
     - SAMPLE_COLLECTED -> PENDING (specimen rejection reset)
+    - PENDING -> ESCALATED (recollection limit at collection)
     - RESULTED -> PENDING (specimen rejection — clear unvalidated results)
     - RESULTED -> SUPERSEDED (retest/recollection)
 
@@ -86,6 +87,7 @@ class TestStateMachine:
             TestStatus.SAMPLE_COLLECTED,
             TestStatus.REMOVED,
             TestStatus.CANCELLED,
+            TestStatus.ESCALATED,
         },
         TestStatus.SAMPLE_COLLECTED: {
             TestStatus.RESULTED,

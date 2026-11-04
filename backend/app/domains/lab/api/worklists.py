@@ -7,7 +7,6 @@ from app.domains.lab.monitor.observability import log_lab_read
 from app.domains.lab.monitor.worklist_service import LabWorklistService
 from app.domains.lab.schemas.worklists import (
     CollectionWorklistItem,
-    DashboardBlockedWorklistItem,
     DashboardWorklistItem,
     EntryWorklistItem,
     LabBoardResponse,
@@ -87,18 +86,6 @@ def get_entry_worklist(
         metrics["rows_loaded"] = result.get("rows_loaded")
         metrics["rows_returned"] = len(result["items"])
     items = [EntryWorklistItem(**item) for item in result["items"]]
-    return _worklist_response(items, result["pagination"])
-
-
-@router.get("/worklists/dashboard-blocked")
-def get_dashboard_blocked_worklist(
-    page: int = Query(1, ge=1),
-    pageSize: int = Query(50, ge=1, le=200),
-    db: Session = Depends(get_db),
-    _user: User = Depends(require_lab_tech),
-):
-    result = LabWorklistService(db).list_dashboard_blocked(page=page, page_size=pageSize)
-    items = [DashboardBlockedWorklistItem(**item) for item in result["items"]]
     return _worklist_response(items, result["pagination"])
 
 

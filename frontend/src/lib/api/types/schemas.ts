@@ -21,7 +21,5 @@ export type ApiMessageResponse = Schemas['MessageResponse'];
 export type ApiQualityIssueOptions = Schemas['QualityIssueOptions'];
 export type ApiQualityIssueResult = Schemas['QualityIssueResult'];
 export type ApiQualityIssueResponse = Schemas['QualityIssueResponse'];
-export type ApiRecollectionRequestSummary = Schemas['RecollectionRequestSummary'];
-export type ApiRecollectionRequestResult = Schemas['RecollectionRequestResult'];
 export type ApiCriticalValueResponse = Schemas['CriticalValueResponse'];
 export type ApiEscalationResolveResponse = Schemas['EscalationResolveResponse'];

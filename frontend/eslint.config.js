@@ -300,7 +300,6 @@ export default defineConfig([
       'src/features/reports/utils/reportPDFBody.ts',
       'src/features/lab/hooks/labQueueFilters.ts',
       'src/features/lab/workflow/shared/queueCardLeftColumn.tsx',
-      'src/features/lab/workflow/cards/queueCard.recollectionApproval.tsx',
       'src/features/lab/workflow/modals/detailModal.resultEntry.tsx',
       'src/features/lab/workflow/modals/detailModal.sampleCollection.tsx',
       'src/features/lab/workflow/modals/detailModal.test.tsx',

@@ -29,7 +29,6 @@ const ENUM_MODULE_MAP = {
     'QualityStage',
     'QualityDomain',
     'RemedyType',
-    'RecollectionRequestStatus',
     'QualityIssueTargetType',
     'EscalationReasonCode',
     'EscalationTicketStatus',

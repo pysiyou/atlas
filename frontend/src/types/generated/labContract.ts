@@ -18,16 +18,15 @@ export const ATTENTION_REASON_KEYS = [
   "retry_limit",
   "recollection_limit",
   "supervisor_review",
-  "recollection_approval",
 ] as const;
 
-export const BLOCKS_PROGRESS_REASONS = new Set<string>(["payment_unpaid", "sample_rejected", "critical_value", "amendment_pending", "retry_limit", "recollection_limit", "supervisor_review", "recollection_approval"]);
+export const BLOCKS_PROGRESS_REASONS = new Set<string>(["payment_unpaid", "sample_rejected", "critical_value", "amendment_pending", "retry_limit", "recollection_limit", "supervisor_review"]);
 
 export function reasonBlocksProgress(reason: string | null | undefined): boolean {
   return reason != null && BLOCKS_PROGRESS_REASONS.has(reason);
 }
 
-export type LabAttentionReason = "payment_unpaid" | "sample_rejected" | "critical_value" | "amendment_pending" | "retry_limit" | "recollection_limit" | "supervisor_review" | "recollection_approval";
+export type LabAttentionReason = "payment_unpaid" | "sample_rejected" | "critical_value" | "amendment_pending" | "retry_limit" | "recollection_limit" | "supervisor_review";
 
 export const ATTENTION_LABELS: Record<LabAttentionReason, string> = {
   "payment_unpaid": "Payment required",
@@ -37,7 +36,6 @@ export const ATTENTION_LABELS: Record<LabAttentionReason, string> = {
   "retry_limit": "Re-test limit reached",
   "recollection_limit": "Recollection limit reached",
   "supervisor_review": "Supervisor approval required",
-  "recollection_approval": "Recollection awaiting supervisor approval",
 };
 
 export const ATTENTION_ATTENTION_TYPE: Partial<Record<LabAttentionReason, string>> = {
@@ -48,7 +46,6 @@ export const ATTENTION_ATTENTION_TYPE: Partial<Record<LabAttentionReason, string
   "retry_limit": "escalation_retry_limit",
   "recollection_limit": "escalation_recollection_limit",
   "supervisor_review": "supervisor_approval",
-  "recollection_approval": "supervisor_recollection_request",
 };
 
 export const ALLOWED_ACTION_KEYS = ["collect","enterResults","validate","reject"] as const;
@@ -61,7 +58,6 @@ export const ATTENTION_TYPE_SORT: Record<string, number> = {
   "escalation_retry_limit": 30,
   "escalation_recollection_limit": 40,
   "supervisor_approval": 45,
-  "supervisor_recollection_request": 48,
   "payment_blocked": 50,
   "sample_rejected": 60,
   "priority_urgent": 82,
@@ -70,7 +66,7 @@ export const ATTENTION_TYPE_SORT: Record<string, number> = {
   "queue_overdue_warning": 100
 };
 
-export const SUPERVISOR_ATTENTION_TYPES = ["escalation_critical","escalation_amendment","escalation_retry_limit","escalation_recollection_limit","supervisor_approval","supervisor_recollection_request"] as const;
+export const SUPERVISOR_ATTENTION_TYPES = ["escalation_critical","escalation_amendment","escalation_retry_limit","escalation_recollection_limit","supervisor_approval"] as const;
 
 export const PRIORITY_ATTENTION_TYPES = ["priority_urgent","priority_high"] as const;
 
@@ -135,7 +131,6 @@ export const SAMPLE_UNFINISHED_REMEDY_WIRES = ["request_recollection","cancel"] 
 
 export type QualityIssueSuccessToastWhen = {
   escalationRequired?: boolean;
-  hasRecollectionRequestId?: boolean;
 };
 
 export type QualityIssueSuccessToastRule = {
@@ -173,7 +168,7 @@ export const QUALITY_ISSUE_SUCCESS_TOAST_RULES: QualityIssueSuccessToastRule[] =
     "remedy": "request_recollection",
     "feedbackId": "lab.qualityIssue.recollection.requested",
     "when": {
-      "hasRecollectionRequestId": true
+      "escalationRequired": false
     }
   },
   {

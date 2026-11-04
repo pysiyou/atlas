@@ -13,10 +13,7 @@ import {
   useLabQueuePageFilters,
   useResultValidationQueueData,
 } from '../hooks';
-import {
-  VALIDATION_REVIEW_ESCALATION_PROFILE,
-  VALIDATION_REVIEW_RECOLLECTION_PROFILE,
-} from '../utils/labQueueSecondaryProfiles';
+import { VALIDATION_REVIEW_ESCALATION_PROFILE } from '../utils/labQueueSecondaryProfiles';
 import { validationFilterConfig } from '../constants';
 import { Card } from '@/components/surfaces';
 import { SPACING } from '@/theme/recipes';
@@ -44,14 +41,12 @@ export const ResultValidationQueue: React.FC = () => {
   const {
     validationTests,
     escalations: escalatedTests,
-    recollections: recollectionRequests,
     isLoading: dataLoading,
     isError: worklistError,
     error: worklistQueryError,
     refetch: refetchWorklist,
     pagination,
     goToPage,
-    canResolveEscalation: canResolveFromProvider,
   } = useResultValidationQueueData(bar.serverFilters);
   useClientListChrome({
     loadFailedKey: 'lab.worklist.loadFailed',
@@ -78,13 +73,7 @@ export const ResultValidationQueue: React.FC = () => {
     validateMutation,
   } = useResultValidationWorkflow(dataLoading);
 
-  const {
-    handleApproveRecollection,
-    handleDenyRecollection,
-    openEscalationModal,
-    isApprovingRecollection,
-    isDenyingRecollection,
-  } = useResultValidationQueueActions({
+  const { openEscalationModal } = useResultValidationQueueActions({
     canResolveEscalation,
     invalidatePendingEscalation,
     refetchEscalation,
@@ -108,72 +97,50 @@ export const ResultValidationQueue: React.FC = () => {
     [escalatedTests, filterState, bar],
   );
 
-  const filteredRecollectionRequests = useMemo(
-    () =>
-      applyLabQueueFiltersWithProfile(
-        canResolveFromProvider ? recollectionRequests : [],
-        filterState,
-        bar,
-        VALIDATION_REVIEW_RECOLLECTION_PROFILE,
-      ),
-    [recollectionRequests, filterState, bar, canResolveFromProvider],
-  );
-
-  const hasNoWorklistData =
-    validationTests.length === 0 &&
-    escalatedTests.length === 0 &&
-    recollectionRequests.length === 0;
+  const hasNoWorklistData = validationTests.length === 0 && escalatedTests.length === 0;
   const waitingOnInitialLoad =
-    hasNoWorklistData &&
-    (dataLoading || (canViewEscalations && escalationLoading));
+    hasNoWorklistData && (dataLoading || (canViewEscalations && escalationLoading));
 
-  const hasRecollection = canResolveEscalation && filteredRecollectionRequests.length > 0;
   const hasEscalated = canViewEscalations && filteredEscalatedTests.length > 0;
   const hasValidation = filteredTests.length > 0;
 
   return (
     <ErrorBoundary>
-        <LabWorkflowQueueMultiSectionLayout
-          aria-busy={dataLoading || waitingOnInitialLoad || undefined}
-          filterRow={
-            <LabQueueFilterRow pagination={pagination} onPageChange={goToPage}>
-              <LabQueueFilters config={validationFilterConfig} {...filterBarProps} />
-            </LabQueueFilterRow>
-          }
-        >
-          {waitingOnInitialLoad ? (
-            <div className={`flex flex-col ${SPACING.gapSection}`}>
-              {Array.from({ length: 5 }).map((_, index) => (
-                <Card key={index} padding="md" loading className="min-h-[140px]" />
-              ))}
-            </div>
-          ) : (
+      <LabWorkflowQueueMultiSectionLayout
+        aria-busy={dataLoading || waitingOnInitialLoad || undefined}
+        filterRow={
+          <LabQueueFilterRow pagination={pagination} onPageChange={goToPage}>
+            <LabQueueFilters config={validationFilterConfig} {...filterBarProps} />
+          </LabQueueFilterRow>
+        }
+      >
+        {waitingOnInitialLoad ? (
+          <div className={`flex flex-col ${SPACING.gapSection}`}>
+            {Array.from({ length: 5 }).map((_, index) => (
+              <Card key={index} padding="md" loading className="min-h-[140px]" />
+            ))}
+          </div>
+        ) : (
           <ResultValidationQueueView
-              isEmpty={!hasRecollection && !hasEscalated && !hasValidation}
-              hasRecollection={hasRecollection}
-              hasEscalated={hasEscalated}
-              hasValidation={hasValidation}
-              canResolveEscalation={canResolveEscalation}
-              isMobile={isMobile}
-              recollectionRequests={filteredRecollectionRequests}
-              escalatedTests={filteredEscalatedTests}
-              validationTests={filteredTests}
-              comments={comments}
-              pendingValidateKey={pendingValidateKey}
-              isApprovingRecollection={isApprovingRecollection}
-              isDenyingRecollection={isDenyingRecollection}
-              isValidatePending={validateMutation.isPending}
-              getCommentKey={getCommentKey}
-              onApproveRecollection={handleApproveRecollection}
-              onDenyRecollection={handleDenyRecollection}
-              onOpenEscalation={openEscalationModal}
-              onCommentsChange={handleCommentsChange}
-              onApprove={(testId, orderId) => handleValidate(testId, orderId, true)}
-              onReject={(test, result) => handleValidate(test.id!, test.orderId, false, result)}
-              onOpenValidation={openValidationModal}
+            isEmpty={!hasEscalated && !hasValidation}
+            hasEscalated={hasEscalated}
+            hasValidation={hasValidation}
+            canResolveEscalation={canResolveEscalation}
+            isMobile={isMobile}
+            escalatedTests={filteredEscalatedTests}
+            validationTests={filteredTests}
+            comments={comments}
+            pendingValidateKey={pendingValidateKey}
+            isValidatePending={validateMutation.isPending}
+            getCommentKey={getCommentKey}
+            onOpenEscalation={openEscalationModal}
+            onCommentsChange={handleCommentsChange}
+            onApprove={(testId, orderId) => handleValidate(testId, orderId, true)}
+            onReject={(test, result) => handleValidate(test.id!, test.orderId, false, result)}
+            onOpenValidation={openValidationModal}
           />
-          )}
-        </LabWorkflowQueueMultiSectionLayout>
+        )}
+      </LabWorkflowQueueMultiSectionLayout>
     </ErrorBoundary>
   );
 };

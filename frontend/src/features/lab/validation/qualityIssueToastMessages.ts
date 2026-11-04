@@ -14,7 +14,7 @@ function matchesToastWhen(when: QualityIssueSuccessToastWhen, result: QualityIss
   if (when.escalationRequired === true && !result.escalationRequired) {
     return false;
   }
-  if (when.hasRecollectionRequestId === true && !result.recollectionRequestId) {
+  if (when.escalationRequired === false && result.escalationRequired) {
     return false;
   }
   return true;

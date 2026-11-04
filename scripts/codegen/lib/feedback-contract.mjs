@@ -42,6 +42,7 @@ export function generateFeedbackContract() {
         `title: ${JSON.stringify(e.title)}`,
       ];
       if (e.subtitle) fields.push(`subtitle: ${JSON.stringify(e.subtitle)}`);
+      if (e.brief) fields.push(`brief: ${JSON.stringify(e.brief)}`);
       return `  ${JSON.stringify(id)}: { ${fields.join(', ')} }`;
     })
     .join(',\n');
@@ -60,6 +61,7 @@ export interface FeedbackEntry {
   variant: FeedbackVariant;
   title: string;
   subtitle?: string;
+  brief?: string;
 }
 
 export const FEEDBACK_CATALOG: Record<FeedbackId, FeedbackEntry> = {

@@ -8,7 +8,6 @@ from app.domains.catalog.models.catalog_test import CatalogTest
 from app.domains.lab.models.analyzer_ingest_dedup import AnalyzerIngestDedup
 from app.domains.lab.models.escalation import EscalationTicket
 from app.domains.lab.models.quality_issue import QualityIssue
-from app.domains.lab.models.recollection_request import RecollectionRequest
 from app.domains.lab.models.sample import Sample
 from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient
@@ -28,7 +27,6 @@ __all__ = [
     "AuditEvent",
     "EscalationTicket",
     "QualityIssue",
-    "RecollectionRequest",
     "AffiliationPricing",
     "AnalyzerIngestDedup",
     "ReferentDoctor",

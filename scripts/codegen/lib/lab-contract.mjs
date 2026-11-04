@@ -360,7 +360,6 @@ export const SAMPLE_UNFINISHED_REMEDY_WIRES = ${JSON.stringify(qw.sampleUnfinish
 
 export type QualityIssueSuccessToastWhen = {
   escalationRequired?: boolean;
-  hasRecollectionRequestId?: boolean;
 };
 
 export type QualityIssueSuccessToastRule = {

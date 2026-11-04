@@ -63,13 +63,13 @@ class QualityIssueService:
         db: Session,
         escalation: EscalationEngine,
         emitter: AuditEmitter,
-        recollection_requests: Any | None = None,
+        recollection_execution: Any | None = None,
     ):
         self.db = db
         self.escalation = escalation
         self.emitter = emitter
         self.collection = SampleCollectionService(db)
-        self.recollection_requests = recollection_requests
+        self.recollection_execution = recollection_execution
 
     # ── helpers ──────────────────────────────────────────────────────────
 
@@ -721,7 +721,7 @@ class QualityIssueService:
                 QualityDomain.ANALYTICAL,
                 message=(
                     f"Re-test limit reached ({MAX_RETEST_ATTEMPTS}). "
-                    "Escalated to supervisor for approval."
+                    "Escalated to supervisor — force validate, authorize re-test, authorize re-collect, or cancel."
                 ),
             )
 
@@ -750,6 +750,52 @@ class QualityIssueService:
             createdTestId=new_test.id,
         )
 
+    def _pick_test_for_recollection_escalation(self, sample: Sample) -> OrderTest | None:
+        linked = self._linked_tests(
+            sample,
+            exclude=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED],
+        )
+        for status in (TestStatus.RESULTED, TestStatus.SAMPLE_COLLECTED, TestStatus.PENDING):
+            for order_test in linked:
+                if order_test.status == status:
+                    return order_test
+        return None
+
+    def _escalate_recollection_limit(
+        self,
+        *,
+        order_test: OrderTest,
+        user_id: int,
+        reason: str,
+        notes: str | None,
+        quality_issue_id: int,
+    ) -> QualityIssueResult:
+        from app.shared.contracts.lab_contract import MAX_RECOLLECTION_ATTEMPTS
+
+        prior_status = order_test.status
+        self.escalation.escalate_test(
+            order_test,
+            EscalationReasonCode.REJ_SAMP,
+            user_id,
+            metadata={"rejectionReason": reason, "rejectionNotes": notes},
+            sample_id=order_test.sampleId,
+            from_status=prior_status,
+        )
+        return QualityIssueResult(
+            success=True,
+            remedy=RemedyType.ESCALATE,
+            message=(
+                f"Maximum collection attempts ({MAX_RECOLLECTION_ATTEMPTS}) reached. "
+                "Escalated to supervisor — force validate, authorize re-test, authorize re-collect, or cancel."
+            ),
+            qualityIssueId=quality_issue_id,
+            orderId=order_test.orderId,
+            testCode=order_test.testCode,
+            orderTestId=order_test.id,
+            sampleId=order_test.sampleId,
+            escalationRequired=True,
+        )
+
     def _request_recollection_from_collection(
         self,
         sample: Sample,
@@ -757,15 +803,9 @@ class QualityIssueService:
         reason: str,
         notes: str | None,
     ) -> QualityIssueResult:
-        if not self.recollection_requests:
+        if not self.recollection_execution:
             raise LabOperationError("Recollection request service not configured", status_code=500)
 
-        affected = self._linked_tests(
-            sample,
-            exclude=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED],
-        )
-        # Recollection request tracks unfinished work only; resulted stay in Review.
-        unfinished = [t for t in affected if t.status in _SAMPLE_RESET_STATUSES]
         issue = self._record_issue(
             order_id=sample.orderId,
             stage=QualityStage.COLLECTION,
@@ -776,22 +816,39 @@ class QualityIssueService:
             user_id=user_id,
             sample_id=sample.sampleId,
         )
-        request = self.recollection_requests.create_from_collection(
-            sample=sample,
+
+        if not self.collection.can_request_recollection(sample):
+            target = self._pick_test_for_recollection_escalation(sample)
+            if not target:
+                raise LabOperationError(
+                    "Recollection limit reached but no test could be escalated.",
+                    status_code=400,
+                )
+            return self._escalate_recollection_limit(
+                order_test=target,
+                user_id=user_id,
+                reason=reason,
+                notes=notes,
+                quality_issue_id=issue.id,
+            )
+
+        executed = self.recollection_execution.execute_recollection(
+            rejected_sample=sample,
             user_id=user_id,
             reason=reason,
-            notes=notes,
-            quality_issue_id=issue.id,
-            affected_tests=unfinished,
+            stage=QualityStage.COLLECTION,
+            order_test_id=None,
+            supervisor_authorized=False,
         )
         return QualityIssueResult(
             success=True,
             remedy=RemedyType.REQUEST_RECOLLECTION,
-            message="Recollection request submitted for supervisor approval.",
+            message="Pending sample created for collection.",
             qualityIssueId=issue.id,
             orderId=sample.orderId,
             sampleId=sample.sampleId,
-            recollectionRequestId=request.id,
+            createdSampleId=executed.created_sample_id,
+            createdTestId=executed.created_test_id,
         )
 
     def _request_recollection_from_validation(
@@ -803,12 +860,32 @@ class QualityIssueService:
     ) -> QualityIssueResult:
         if not order_test.sampleId:
             raise LabOperationError("No sample linked to this test", status_code=400)
-        if not self.recollection_requests:
+        if not self.recollection_execution:
             raise LabOperationError("Recollection request service not configured", status_code=500)
 
         sample = self._get_sample(order_test.sampleId)
 
-        # Reject tube if still collected; if already rejected, continue (validator chose recollect).
+        if not self.collection.can_request_recollection(sample):
+            issue = self._record_issue(
+                order_id=order_test.orderId,
+                stage=QualityStage.VALIDATION,
+                domain=QualityDomain.SPECIMEN,
+                reason=reason,
+                notes=notes,
+                remedy=RemedyType.REQUEST_RECOLLECTION,
+                user_id=user_id,
+                order_test_id=order_test.id,
+                sample_id=sample.sampleId,
+                test_code=order_test.testCode,
+            )
+            return self._escalate_recollection_limit(
+                order_test=order_test,
+                user_id=user_id,
+                reason=reason,
+                notes=notes,
+                quality_issue_id=issue.id,
+            )
+
         if sample.status == SampleStatus.COLLECTED:
             self._reject_sample_record(
                 sample,
@@ -833,10 +910,6 @@ class QualityIssueService:
         TestStateMachine.validate_transition(order_test.status, TestStatus.SUPERSEDED)
         order_test.status = TestStatus.SUPERSEDED
 
-        affected = self._linked_tests(
-            sample,
-            exclude=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED],
-        )
         issue = self._record_issue(
             order_id=order_test.orderId,
             stage=QualityStage.VALIDATION,
@@ -849,24 +922,24 @@ class QualityIssueService:
             sample_id=sample.sampleId,
             test_code=order_test.testCode,
         )
-        request = self.recollection_requests.create_from_validation(
-            sample=sample,
-            order_test=order_test,
+        executed = self.recollection_execution.execute_recollection(
+            rejected_sample=sample,
             user_id=user_id,
             reason=reason,
-            notes=notes,
-            quality_issue_id=issue.id,
-            affected_tests=affected,
+            stage=QualityStage.VALIDATION,
+            order_test_id=order_test.id,
+            supervisor_authorized=False,
         )
         return QualityIssueResult(
             success=True,
             remedy=RemedyType.REQUEST_RECOLLECTION,
-            message="Recollection request submitted for supervisor approval.",
+            message="Pending sample created for collection.",
             qualityIssueId=issue.id,
             orderId=order_test.orderId,
             testCode=order_test.testCode,
             orderTestId=order_test.id,
-            recollectionRequestId=request.id,
+            createdSampleId=executed.created_sample_id,
+            createdTestId=executed.created_test_id,
         )
 
     def _escalate_test_issue(

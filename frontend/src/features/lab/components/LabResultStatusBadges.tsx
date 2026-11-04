@@ -125,7 +125,7 @@ export const SupervisorApprovalBadge: React.FC<SupervisorApprovalBadgeProps> = (
   className = '',
 }) => (
   <AttentionReasonBadge
-    label={ATTENTION_LABELS.recollection_approval}
+    label={ATTENTION_LABELS.supervisor_review}
     size={size}
     variant="danger"
     className={className}

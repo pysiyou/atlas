@@ -6,7 +6,6 @@ from collections import defaultdict
 
 from app.domains.lab.models.escalation import EscalationTicket
 from app.domains.lab.models.sample import Sample
-from app.domains.lab.quality.recollection_snapshot import recollection_blocked_order_test_ids
 from app.domains.lab.rules.work_item_projection import (
     LabWorkItemContext,
     LabWorkItemProjection,
@@ -20,13 +19,11 @@ from sqlalchemy.orm import Session
 def lab_projections_for_orders(
     db: Session,
     orders: list[Order],
-    blocked: set[int] | None = None,
 ) -> dict[int, dict[int, LabWorkItemProjection]]:
     """
-    Project every test on a page of orders in one sample/escalation/blocked pass.
+    Project every test on a page of orders in one sample/escalation pass.
 
-    Returns ``{orderId: {orderTestId: projection}}``. Pass ``blocked`` when the
-    caller already loaded pending recollection ids so the snapshot is not re-scanned.
+    Returns ``{orderId: {orderTestId: projection}}``.
     """
     result: dict[int, dict[int, LabWorkItemProjection]] = {order.orderId: {} for order in orders}
     all_tests: list[tuple[Order, OrderTest]] = []
@@ -65,10 +62,6 @@ def lab_projections_for_orders(
                 code.value if code is not None and hasattr(code, "value") else None
             )
 
-    recollection_blocked = (
-        blocked if blocked is not None else recollection_blocked_order_test_ids(db)
-    )
-
     for order, order_test in all_tests:
         sample = samples_by_id.get(order_test.sampleId) if order_test.sampleId else None
         ctx = LabWorkItemContext(
@@ -77,7 +70,6 @@ def lab_projections_for_orders(
             sample=sample,
             linked_order_tests=list(linked_by_sample.get(order_test.sampleId or -1, [])),
             escalation_reason_code=escalation_code_by_test.get(order_test.id),
-            recollection_approval_pending=order_test.id in recollection_blocked,
         )
         result[order.orderId][order_test.id] = project_order_test_pipeline(ctx)
 
@@ -87,7 +79,6 @@ def lab_projections_for_orders(
 def lab_projections_for_order(
     db: Session,
     order: Order,
-    blocked: set[int] | None = None,
 ) -> dict[int, LabWorkItemProjection]:
-    """Project one order's tests; optional ``blocked`` avoids a second recollection scan."""
-    return lab_projections_for_orders(db, [order], blocked=blocked).get(order.orderId, {})
+    """Project one order's tests."""
+    return lab_projections_for_orders(db, [order]).get(order.orderId, {})

@@ -173,6 +173,29 @@ class EscalationEngine:
 """Lab workflow escalationoperations operations."""
 
 
+_LIMIT_ESCALATION_REASONS = frozenset(
+    {
+        EscalationReasonCode.LIMIT_HIT,
+        EscalationReasonCode.REJ_SAMP,
+    }
+)
+
+
+def _assert_escalation_action_allowed(
+    ticket: EscalationTicket,
+    action: EscalationResolutionAction,
+) -> None:
+    """Limit-hit escalations: supervisor may re-test, re-collect (unlimited), or cancel only."""
+    if ticket.reasonCode not in _LIMIT_ESCALATION_REASONS:
+        return
+    if action == EscalationResolutionAction.APPLY_AMENDMENT:
+        raise LabOperationError(
+            "Repeat or recollection limit escalations cannot apply amendments. "
+            "Use force validate, authorize re-test, authorize re-collect, or cancel.",
+            status_code=422,
+        )
+
+
 class EscalationOperations:
     def __init__(self, svc):
         self._svc = svc
@@ -189,6 +212,13 @@ class EscalationOperations:
         order_test = self._svc._get_order_test(
             order_test_id, status=TestStatus.ESCALATED, for_update=True
         )
+        ticket = self._svc.escalation.get_open_ticket(order_test_id)
+        if not ticket:
+            raise LabOperationError(
+                "No open escalation ticket found for this test",
+                status_code=404,
+            )
+        _assert_escalation_action_allowed(ticket, action)
         if action == EscalationResolutionAction.FORCE_VALIDATE:
             return self._resolve_force_validate(
                 order_test, user_id, validation_notes, read_back_payload
@@ -251,9 +281,12 @@ class EscalationOperations:
             user_id,
             reason,
             None,
-            retest_number=0,
             technician_note_prefix="Authorized re-test (escalation)",
         )
+        if original_test.sampleId:
+            sample = self._svc._get_sample(original_test.sampleId)
+            if sample.status != SampleStatus.COLLECTED:
+                new_test.status = TestStatus.PENDING
 
         self._svc.escalation.resolve_ticket(
             original_test.id,
@@ -301,6 +334,9 @@ class EscalationOperations:
         TestStateMachine.validate_transition(TestStatus.ESCALATED, TestStatus.SUPERSEDED)
         original_test.status = TestStatus.SUPERSEDED
 
+        new_sample_id: int
+        new_test_id: int | None
+
         if sample.status == SampleStatus.COLLECTED:
             self._svc.quality._reject_sample_record(
                 sample,
@@ -312,36 +348,47 @@ class EscalationOperations:
                 ),
                 resulted_outcome="reset_pending",
             )
-
-        new_sample = self._svc.quality._create_recollection_sample(
-            sample, user_id, reason, supervisor_authorized=True
-        )
-        self._svc.quality._reattach_tests_to_recollection(sample, new_sample)
-
-        codes = list(new_sample.testCodes or [])
-        if test_code not in codes:
-            codes.append(test_code)
-            new_sample.testCodes = codes
-            flag_modified(new_sample, "testCodes")
-
-        new_test = OrderTest(
-            orderId=order_id,
-            testCode=test_code,
-            status=TestStatus.PENDING,
-            priceAtOrder=original_test.priceAtOrder,
-            sampleId=new_sample.sampleId,
-            isRetest=True,
-            retestOfTestId=original_test.id,
-            retestNumber=0,
-            technicianNotes=f"Authorized re-collect: {reason}",
-            flags=original_test.flags,
-            isReflexTest=original_test.isReflexTest,
-            triggeredBy=original_test.triggeredBy,
-            reflexRule=original_test.reflexRule,
-        )
-        self._svc.db.add(new_test)
-        self._svc.db.flush()
-        original_test.retestOrderTestId = new_test.id
+            new_sample = self._svc.quality._create_recollection_sample(
+                sample, user_id, reason, supervisor_authorized=True
+            )
+            self._svc.quality._reattach_tests_to_recollection(sample, new_sample)
+            codes = list(new_sample.testCodes or [])
+            if test_code not in codes:
+                codes.append(test_code)
+                new_sample.testCodes = codes
+                flag_modified(new_sample, "testCodes")
+            new_test = OrderTest(
+                orderId=order_id,
+                testCode=test_code,
+                status=TestStatus.PENDING,
+                priceAtOrder=original_test.priceAtOrder,
+                sampleId=new_sample.sampleId,
+                isRetest=True,
+                retestOfTestId=original_test.id,
+                retestNumber=(original_test.retestNumber or 0) + 1,
+                technicianNotes=f"Authorized re-collect: {reason}",
+                flags=original_test.flags,
+                isReflexTest=original_test.isReflexTest,
+                triggeredBy=original_test.triggeredBy,
+                reflexRule=original_test.reflexRule,
+            )
+            self._svc.db.add(new_test)
+            self._svc.db.flush()
+            original_test.retestOrderTestId = new_test.id
+            new_sample_id = new_sample.sampleId
+            new_test_id = new_test.id
+        else:
+            executed = self._svc.recollection.execute_recollection(
+                rejected_sample=sample,
+                user_id=user_id,
+                reason=reason,
+                stage=QualityStage.VALIDATION,
+                order_test_id=original_test.id,
+                supervisor_authorized=True,
+                validate_work_exists=False,
+            )
+            new_sample_id = executed.created_sample_id
+            new_test_id = executed.created_test_id
 
         self._svc.escalation.resolve_ticket(
             original_test.id,
@@ -361,17 +408,17 @@ class EscalationOperations:
             order_test_id=original_test.id,
             sample_id=sample.sampleId,
             test_code=test_code,
-            created_test_id=new_test.id,
-            created_sample_id=new_sample.sampleId,
+            created_test_id=new_test_id,
+            created_sample_id=new_sample_id,
         )
 
         return EscalationResolveResult(
             success=True,
             action=EscalationResolutionAction.AUTHORIZE_RECOLLECT,
-            message=f"Re-collect authorized. New sample ID: {new_sample.sampleId}",
+            message=f"Re-collect authorized. New sample ID: {new_sample_id}",
             escalatedTestId=original_test.id,
-            newTestId=new_test.id,
-            newSampleId=new_sample.sampleId,
+            newTestId=new_test_id,
+            newSampleId=new_sample_id,
         )
 
     def _resolve_apply_amendment(

@@ -725,23 +725,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/lab/worklists/dashboard-blocked": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Dashboard Blocked Worklist */
-        get: operations["get_dashboard_blocked_worklist_api_v1_lab_worklists_dashboard_blocked_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/lab/worklists/validation": {
         parameters: {
             query?: never;
@@ -992,57 +975,6 @@ export interface paths {
         put?: never;
         /** Report Quality Issue */
         post: operations["report_quality_issue_api_v1_lab_quality_issues_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/lab/recollection-requests/pending": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List Pending Recollection Requests */
-        get: operations["list_pending_recollection_requests_api_v1_lab_recollection_requests_pending_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/lab/recollection-requests/{requestId}/approve": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Approve Recollection Request */
-        post: operations["approve_recollection_request_api_v1_lab_recollection_requests__requestId__approve_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/lab/recollection-requests/{requestId}/deny": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Deny Recollection Request */
-        post: operations["deny_recollection_request_api_v1_lab_recollection_requests__requestId__deny_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2886,8 +2818,6 @@ export interface components {
             createdTestId?: number | null;
             /** Createdsampleid */
             createdSampleId?: number | null;
-            /** Recollectionrequestid */
-            recollectionRequestId?: number | null;
             /**
              * Escalationrequired
              * @default false
@@ -2920,79 +2850,6 @@ export interface components {
             warningCount: number;
             /** Criticalcount */
             criticalCount: number;
-        };
-        /** RecollectionRequestResult */
-        RecollectionRequestResult: {
-            /** Success */
-            success: boolean;
-            /** Message */
-            message: string;
-            /** Requestid */
-            requestId: number;
-            /** Status */
-            status: string;
-            /** Createdsampleid */
-            createdSampleId?: number | null;
-            /** Createdtestid */
-            createdTestId?: number | null;
-        };
-        /** RecollectionRequestSummary */
-        RecollectionRequestSummary: {
-            /** Id */
-            id: number;
-            /** Orderid */
-            orderId: number;
-            /** Qualityissueid */
-            qualityIssueId?: number | null;
-            /** Rejectedsampleid */
-            rejectedSampleId: number;
-            /** Ordertestid */
-            orderTestId?: number | null;
-            /** Stage */
-            stage: string;
-            /** Status */
-            status: string;
-            /** Reason */
-            reason: string;
-            /** Notes */
-            notes?: string | null;
-            /** Testcodes */
-            testCodes: string[];
-            /** Affectedordertestids */
-            affectedOrderTestIds: number[];
-            /** Recollectionattemptsused */
-            recollectionAttemptsUsed: number;
-            /** Recollectionattemptsremaining */
-            recollectionAttemptsRemaining: number;
-            /** Requiressupervisoroverride */
-            requiresSupervisorOverride: boolean;
-            /** Requestedbyuserid */
-            requestedByUserId: string;
-            /** Reviewedbyuserid */
-            reviewedByUserId?: string | null;
-            /** Reviewnotes */
-            reviewNotes?: string | null;
-            /** Reviewedat */
-            reviewedAt?: string | null;
-            /** Createdsampleid */
-            createdSampleId?: number | null;
-            /** Createdtestid */
-            createdTestId?: number | null;
-            /** Createdat */
-            createdAt: string;
-            /** Patientid */
-            patientId?: number | null;
-            /** Patientname */
-            patientName?: string | null;
-            /** Ordernumber */
-            orderNumber?: string | null;
-            /** Sampletype */
-            sampleType?: string | null;
-        };
-        /** RecollectionReviewRequest */
-        RecollectionReviewRequest: {
-            /** Reviewnotes */
-            reviewNotes?: string | null;
         };
         /** ReferentDoctorCreate */
         ReferentDoctorCreate: {
@@ -5292,38 +5149,6 @@ export interface operations {
             };
         };
     };
-    get_dashboard_blocked_worklist_api_v1_lab_worklists_dashboard_blocked_get: {
-        parameters: {
-            query?: {
-                page?: number;
-                pageSize?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     get_validation_worklist_api_v1_lab_worklists_validation_get: {
         parameters: {
             query?: {
@@ -5828,96 +5653,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["QualityIssueResult"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_pending_recollection_requests_api_v1_lab_recollection_requests_pending_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RecollectionRequestSummary"][];
-                };
-            };
-        };
-    };
-    approve_recollection_request_api_v1_lab_recollection_requests__requestId__approve_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                requestId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RecollectionReviewRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RecollectionRequestResult"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    deny_recollection_request_api_v1_lab_recollection_requests__requestId__deny_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                requestId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RecollectionReviewRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RecollectionRequestResult"];
                 };
             };
             /** @description Validation Error */

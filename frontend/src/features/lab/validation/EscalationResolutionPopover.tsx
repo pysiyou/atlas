@@ -9,7 +9,7 @@ import type { CriticalReadBackPayload, EscalationResolutionAction } from '@/type
 interface ResolutionPopoverProps {
   resolving: boolean;
   triggerLabel: string;
-  triggerVariant: 'success' | 'secondary' | 'danger';
+  triggerVariant: 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
   triggerIcon?: ReactNode;
   title: string;
   subtitle: string;
@@ -50,7 +50,7 @@ export function ResolutionPopover({
         <Button
           variant={triggerVariant}
           size="md"
-          layout="icon-text"
+          layout={triggerIcon ? 'icon-text' : 'text'}
           icon={triggerIcon}
           disabled={resolving}
           isLoading={resolving}

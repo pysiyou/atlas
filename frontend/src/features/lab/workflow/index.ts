@@ -27,7 +27,6 @@ export {
 export { ResultEntryCard, type ResultEntryCardProps } from './cards/queueCard.resultEntry';
 export { ResultValidationCard, type ResultValidationCardProps } from './cards/queueCard.resultValidation';
 export { EscalationCard, type EscalationCardProps } from './cards/queueCard.escalation';
-export { SampleRecollectionRequestCard } from './cards/queueCard.recollectionApproval';
 
 export {
   QueueModalShell,

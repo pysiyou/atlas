@@ -19,7 +19,6 @@ export {
   invalidateResultQueries,
   invalidateCriticalValueQueries,
   invalidateQualityIssueQueries,
-  invalidateRecollectionQueries,
   invalidateCollectionQueries,
   invalidateLabMonitorQueries,
   invalidateLabMonitorQueriesFull,

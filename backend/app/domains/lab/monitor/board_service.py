@@ -6,7 +6,6 @@ from typing import Any
 
 from app.domains.catalog.models.catalog_test import CatalogTest
 from app.domains.lab.models.escalation import EscalationTicket
-from app.domains.lab.models.recollection_request import RecollectionRequest
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.monitor.tat import (
     assemble_board,
@@ -16,7 +15,6 @@ from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient
 from app.shared.contracts.enums import (
     EscalationTicketStatus,
-    RecollectionRequestStatus,
     SampleStatus,
     TestStatus,
 )
@@ -70,7 +68,7 @@ class LabBoardService:
         )
         supervisor = 0
         if include_supervisor:
-            supervisor = len(self._escalation_rows()) + len(self._recollection_rows())
+            supervisor = len(self._escalation_rows())
         counts = {
             "collection": collection_count,
             "entry": entry_count,
@@ -121,20 +119,17 @@ class LabBoardService:
         entry_rows = self._entry_rows()
         validation_rows = self._validation_rows()
         escalation_rows = self._escalation_rows() if include_supervisor else []
-        recollection_rows = self._recollection_rows() if include_supervisor else []
         rows_loaded = (
             len(collection_rows)
             + len(entry_rows)
             + len(validation_rows)
             + len(escalation_rows)
-            + len(recollection_rows)
         )
         snapshot = assemble_board(
             collection_rows,
             entry_rows,
             validation_rows,
             escalation_rows,
-            recollection_rows,
         )
         snapshot.update({"todayPanel": self._today_panel_snapshot(), "_rows_loaded": rows_loaded})
         return snapshot
@@ -272,13 +267,6 @@ class LabBoardService:
             (TestStatus.CANCELLED, TestStatus.REMOVED, TestStatus.SUPERSEDED)
         )
 
-    def _recollection_blocked_order_test_ids(self) -> set[int]:
-        from app.domains.lab.quality.recollection_snapshot import (
-            recollection_blocked_order_test_ids,
-        )
-
-        return recollection_blocked_order_test_ids(self.db)
-
     def _collection_rows(self) -> list[dict[str, Any]]:
         rows = (
             self.db.query(Sample, Order, Patient)
@@ -398,24 +386,3 @@ class LabBoardService:
                 }
             )
         return result
-
-    def _recollection_rows(self) -> list[dict[str, Any]]:
-        rows = (
-            self.db.query(RecollectionRequest, Order, Patient)
-            .join(Order, RecollectionRequest.orderId == Order.orderId)
-            .join(Patient, Order.patientId == Patient.id)
-            .filter(RecollectionRequest.status == RecollectionRequestStatus.PENDING_APPROVAL)
-            .all()
-        )
-        return [
-            {
-                "id": request.id,
-                "order_id": order.orderId,
-                "created_at": request.createdAt,
-                "patient_name": patient.fullName,
-                "affected_order_test_ids": request.affectedOrderTestIds or [],
-                "order_test_id": request.orderTestId,
-                "priority": order.priority,
-            }
-            for request, order, patient in rows
-        ]

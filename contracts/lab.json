@@ -51,11 +51,6 @@
         "label": "Supervisor approval required",
         "attentionType": "supervisor_approval",
         "blocksProgress": true
-      },
-      "recollection_approval": {
-        "label": "Recollection awaiting supervisor approval",
-        "attentionType": "supervisor_recollection_request",
-        "blocksProgress": true
       }
     },
     "attentionTypeSort": {
@@ -64,7 +59,6 @@
       "escalation_retry_limit": 30,
       "escalation_recollection_limit": 40,
       "supervisor_approval": 45,
-      "supervisor_recollection_request": 48,
       "payment_blocked": 50,
       "sample_rejected": 60,
       "priority_urgent": 82,
@@ -77,8 +71,7 @@
       "escalation_amendment",
       "escalation_retry_limit",
       "escalation_recollection_limit",
-      "supervisor_approval",
-      "supervisor_recollection_request"
+      "supervisor_approval"
     ],
     "priorityAttentionTypes": ["priority_urgent", "priority_high"]
   },
@@ -177,7 +170,7 @@
       {
         "remedy": "request_recollection",
         "feedbackId": "lab.qualityIssue.recollection.requested",
-        "when": { "hasRecollectionRequestId": true }
+        "when": { "escalationRequired": false }
       },
       {
         "remedy": "request_recollection",

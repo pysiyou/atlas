@@ -16,7 +16,7 @@ from app.domains.lab.quality.escalation import (
     EscalationResolveResult,
 )
 from app.domains.lab.quality.issues_service import QualityIssueService
-from app.domains.lab.quality.recollection_requests import RecollectionRequestService
+from app.domains.lab.quality.recollection_execution import RecollectionExecutionService
 from app.domains.lab.results import FlagCalculatorService, ResultValidatorService
 from app.domains.lab.rules.eligibility import assert_can_collect
 from app.domains.lab.schemas.critical_values import AcknowledgeRequest, NotifyRequest
@@ -42,12 +42,12 @@ class LabOperationsService:
         self.db = db
         self.emitter = AuditEmitter(db)
         self.escalation = EscalationEngine(db, self.emitter)
-        self.recollection = RecollectionRequestService(db, quality_service=None)
+        self.recollection = RecollectionExecutionService(db, quality_service=None)
         self.quality = QualityIssueService(
             db,
             self.escalation,
             self.emitter,
-            recollection_requests=self.recollection,
+            recollection_execution=self.recollection,
         )
         self.recollection.quality = self.quality
         self.result_validator = ResultValidatorService()
@@ -289,30 +289,6 @@ class LabOperationsService:
             order_id = ot.orderId if ot else None
         return self.run_lab_mutation(
             lambda: self.quality.report_issue(**kwargs),
-            order_id=order_id,
-        )
-
-    def approve_recollection_request(self, request_id: int, user_id: int, review_notes: str | None):
-        from app.domains.lab.models.recollection_request import RecollectionRequest
-
-        req = (
-            self.db.query(RecollectionRequest).filter(RecollectionRequest.id == request_id).first()
-        )
-        order_id = req.orderId if req else None
-        return self.run_lab_mutation(
-            lambda: self.recollection.approve(request_id, user_id, review_notes),
-            order_id=order_id,
-        )
-
-    def deny_recollection_request(self, request_id: int, user_id: int, review_notes: str | None):
-        from app.domains.lab.models.recollection_request import RecollectionRequest
-
-        req = (
-            self.db.query(RecollectionRequest).filter(RecollectionRequest.id == request_id).first()
-        )
-        order_id = req.orderId if req else None
-        return self.run_lab_mutation(
-            lambda: self.recollection.deny(request_id, user_id, review_notes),
             order_id=order_id,
         )
 

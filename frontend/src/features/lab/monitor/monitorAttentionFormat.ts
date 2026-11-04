@@ -118,11 +118,6 @@ const ATTENTION_HANDLERS: Record<AttentionType, AttentionHandler> = {
     details: baseDetails(item, 'supervisor_approval', [ESCALATION_DETAIL]),
   }),
 
-  supervisor_recollection_request: item => ({
-    action: `${LAB_COPY.attention.recollection} request — pending authorization`,
-    details: baseDetails(item, 'supervisor_recollection_request', [ESCALATION_DETAIL]),
-  }),
-
   payment_blocked: item => ({
     action: 'Accession on hold — payment required before collection',
     details: baseDetails(item, 'payment_blocked'),
@@ -131,11 +126,6 @@ const ATTENTION_HANDLERS: Record<AttentionType, AttentionHandler> = {
   sample_rejected: item => ({
     action: 'Pre-analytical rejection — sample cannot proceed',
     details: baseDetails(item, 'sample_rejected'),
-  }),
-
-  recollection_waiting: item => ({
-    action: `${LAB_COPY.attention.recollection} required before analysis`,
-    details: baseDetails(item, 'recollection_waiting'),
   }),
 
   retest_in_progress: item => ({

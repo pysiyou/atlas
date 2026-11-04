@@ -1,6 +1,6 @@
 /**
- * Toasts, inline alerts, and full-page error fallback — one surface (toast-card) and shared controls.
- * Catalog-driven toasts: import `toast` only from `@/utils/feedback` in feature code.
+ * Transient feedback (single alert toast), inline alerts, and full-page error fallback.
+ * Catalog-driven toasts: use {@link notify.show} from `@/utils/feedback` in feature code.
  */
 /* eslint-disable react-refresh/only-export-components */
 
@@ -24,17 +24,12 @@ export type ToastAction = NoticeAction;
 export type ToastVariant = 'success' | 'error' | 'info' | 'warning' | 'loading';
 export type AlertVariant = 'info' | 'success' | 'warning' | 'danger';
 
+/** Copy shown for every transient toast notification. */
+export const TOAST_ALERT_MESSAGE = 'Something went wrong';
+
 export const TOAST_DEFAULT_DURATION_MS = 4000;
 
-export const DEFAULT_TOAST_TITLES: Record<ToastVariant, string> = {
-  success: 'Success',
-  error: 'Error',
-  info: 'Informational',
-  warning: 'Warning',
-  loading: 'Loading',
-};
-
-const SURFACE: Record<ToastVariant, string> = {
+const INLINE_SURFACE: Record<ToastVariant, string> = {
   success: 'toast-card toast-card--success',
   error: 'toast-card toast-card--error',
   info: 'toast-card toast-card--info',
@@ -55,7 +50,7 @@ function toVisualVariant(variant: AlertVariant | ToastVariant): ToastVariant {
 }
 
 export function noticeSurfaceClass(variant: ToastVariant): string {
-  return SURFACE[variant];
+  return INLINE_SURFACE[variant];
 }
 
 export function noticeIconClass(variant: ToastVariant): string {
@@ -63,7 +58,7 @@ export function noticeIconClass(variant: ToastVariant): string {
 }
 
 // ---------------------------------------------------------------------------
-// Shared pieces
+// Shared pieces (inline alerts + error fallback)
 // ---------------------------------------------------------------------------
 
 function NoticeIcon({
@@ -109,13 +104,13 @@ function NoticeDismissButton({ onClick, ariaLabel = 'Dismiss' }: { onClick: () =
     <button
       type="button"
       aria-label={ariaLabel}
-      className={`shrink-0 self-start -mr-space-1 -mt-space-0-5 flex h-7 w-7 items-center justify-center ${RADIUS.surface} border-0 bg-transparent p-0 text-toast-close hover:text-toast-fg-muted cursor-pointer`}
+      className={`shrink-0 -mr-space-0-5 flex h-5 w-5 items-center justify-center ${RADIUS.surface} border-0 bg-transparent p-0 text-toast-close hover:text-toast-fg-muted cursor-pointer`}
       onClick={e => {
         e.stopPropagation();
         onClick();
       }}
     >
-      <Icon iconKey={IconKeys.actions.close} className="w-4 h-4 pointer-events-none" />
+      <Icon iconKey={IconKeys.actions.close} className="w-3 h-3 pointer-events-none" />
     </button>
   );
 }
@@ -144,13 +139,9 @@ export function NoticeActionChip({
   );
 }
 
-// ---------------------------------------------------------------------------
-// Notice card (toast + inline alert)
-// ---------------------------------------------------------------------------
-
 interface NoticeCardProps {
   variant: ToastVariant;
-  layout: 'toast' | 'inline';
+  layout: 'inline';
   title?: string;
   subtitle?: string;
   body?: ReactNode;
@@ -165,7 +156,6 @@ interface NoticeCardProps {
 
 function NoticeCard({
   variant,
-  layout,
   title,
   subtitle,
   body,
@@ -177,21 +167,15 @@ function NoticeCard({
   className,
   ariaProps,
 }: NoticeCardProps) {
-  const role =
-    variant === 'error' || variant === 'warning' ? 'alert' : layout === 'toast' ? 'status' : 'alert';
-
   return (
     <div
       className={cn(
-        `flex items-start gap-space-3 ${RADIUS.notice} p-panel font-sans`,
-        layout === 'toast'
-          ? 'w-[380px] max-w-[calc(100vw-2rem)] pointer-events-auto'
-          : 'w-full',
+        `flex items-start gap-space-3 w-full ${RADIUS.notice} p-panel font-sans`,
         noticeSurfaceClass(variant),
         className
       )}
       {...ariaProps}
-      role={role}
+      role={variant === 'error' || variant === 'warning' ? 'alert' : 'alert'}
     >
       <NoticeIcon variant={variant} customIcon={customIcon} className={iconClassName} />
       <div className="min-w-0 flex-1">
@@ -213,39 +197,8 @@ function NoticeCard({
 }
 
 // ---------------------------------------------------------------------------
-// Toast & Alert
+// Inline alert (forms, banners — not transient toast)
 // ---------------------------------------------------------------------------
-
-export interface ToastProps {
-  title: string;
-  subtitle?: string;
-  actions?: NoticeAction[];
-  onDismiss?: () => void;
-  customIcon?: ReactNode;
-  className?: string;
-  ariaProps?: HTMLAttributes<HTMLDivElement>;
-}
-
-export interface BaseToastProps extends ToastProps {
-  variant: ToastVariant;
-}
-
-export const Toast = React.memo<BaseToastProps>(
-  ({ variant, title, subtitle, actions, onDismiss, customIcon, className, ariaProps }) => (
-    <NoticeCard
-      variant={variant}
-      layout="toast"
-      title={title}
-      subtitle={subtitle}
-      actions={actions}
-      onDismiss={onDismiss}
-      customIcon={customIcon}
-      className={className}
-      ariaProps={ariaProps}
-    />
-  )
-);
-Toast.displayName = 'Toast';
 
 export interface AlertProps {
   children?: ReactNode;
@@ -280,6 +233,45 @@ export const Alert: React.FC<AlertProps> = ({
 );
 
 // ---------------------------------------------------------------------------
+// Transient alert toast (single message)
+// ---------------------------------------------------------------------------
+
+export interface ToastAlertProps {
+  message?: string;
+  variant?: ToastVariant;
+  onDismiss?: () => void;
+  ariaProps?: HTMLAttributes<HTMLDivElement>;
+}
+
+export const ToastAlert = React.memo<ToastAlertProps>(({ message, variant = 'success', onDismiss, ariaProps }) => {
+  const copy = message?.trim() || TOAST_ALERT_MESSAGE;
+  const visual: ToastVariant = variant === 'info' ? 'info' : variant;
+  const iconKey = TOAST_ICON_KEYS[visual === 'loading' ? 'loading' : visual];
+  const role = visual === 'error' || visual === 'warning' ? 'alert' : 'status';
+
+  return (
+    <div
+      className={cn(
+        `flex items-center gap-space-2 py-space-1 px-space-2-5 font-sans ${RADIUS.notice}`,
+        'w-max max-w-[min(100vw-2rem,20rem)] pointer-events-auto',
+        noticeSurfaceClass(visual)
+      )}
+      {...ariaProps}
+      role={role}
+    >
+      {visual === 'loading' ? (
+        <NoticeIcon variant="loading" className="mt-0 h-3.5 w-3.5" />
+      ) : iconKey ? (
+        <Icon iconKey={iconKey} className={cn('h-3.5 w-3.5 shrink-0', noticeIconClass(visual))} />
+      ) : null}
+      <p className={cn('m-0 min-w-0 flex-1 truncate', TOAST_TYPE.compact)}>{copy}</p>
+      {onDismiss ? <NoticeDismissButton onClick={onDismiss} /> : null}
+    </div>
+  );
+});
+ToastAlert.displayName = 'ToastAlert';
+
+// ---------------------------------------------------------------------------
 // Full-page error fallback
 // ---------------------------------------------------------------------------
 
@@ -290,6 +282,19 @@ const FALLBACK_TYPE = {
 } as const;
 
 const FALLBACK_ACTION = cn(text({ role: 'body' }), 'mt-0 px-space-3 py-space-1');
+
+function formatErrorDetail(error: Error): string {
+  const msg: unknown = error.message;
+  if (typeof msg === 'string') return msg;
+  if (msg != null && typeof msg === 'object') {
+    try {
+      return JSON.stringify(msg);
+    } catch {
+      return 'Unknown error';
+    }
+  }
+  return String(error);
+}
 
 export interface ErrorFallbackProps {
   error: Error | null;
@@ -313,7 +318,7 @@ export const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error, onRetry, ho
           {errorIconKey ? (
             <Icon iconKey={errorIconKey} className={cn('h-7 w-7 shrink-0', noticeIconClass('error'))} />
           ) : null}
-          <p className={`m-0 min-w-0 ${FALLBACK_TYPE.title}`}>Something went wrong</p>
+          <p className={`m-0 min-w-0 ${FALLBACK_TYPE.title}`}>{TOAST_ALERT_MESSAGE}</p>
         </div>
         <p className={`mt-space-3 mb-0 ${FALLBACK_TYPE.subtitle}`}>
           We&apos;re sorry, but something unexpected happened. Please try refreshing the page.
@@ -323,7 +328,7 @@ export const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error, onRetry, ho
             className={`mt-space-5 p-space-4 ${RADIUS.field} border border-toast-border bg-toast-footer-bg overflow-auto max-h-52 ${FALLBACK_TYPE.detail}`}
           >
             <p className="mb-space-1 font-normal text-toast-fg">Error details</p>
-            <p>{error.message}</p>
+            <p>{formatErrorDetail(error)}</p>
             {import.meta.env.DEV && error.stack ? (
               <pre className={`mt-space-2 whitespace-pre-wrap font-mono text-[0.8125rem] ${FALLBACK_TYPE.detail}`}>
                 {error.stack}
@@ -344,20 +349,17 @@ export const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error, onRetry, ho
 };
 
 // ---------------------------------------------------------------------------
-// react-hot-toast adapter
+// react-hot-toast adapter — alert() only
 // ---------------------------------------------------------------------------
 
-interface ToastMessageObject {
-  title?: string;
-  subtitle?: string;
-  actions?: NoticeAction[];
-  variant?: 'info' | 'warning';
+export interface ToastAlertPayload {
+  message?: string;
+  variant?: ToastVariant;
 }
 
-type ToastMessage = Parameters<typeof toastLib>[0] | ToastMessageObject;
+type ToastAlertInput = string | ToastAlertPayload;
 
 const AUTO_DISMISS = { duration: TOAST_DEFAULT_DURATION_MS } as const;
-const PERSIST = { duration: Infinity } as const;
 
 function dismissThen<A extends unknown[], R extends string>(fn: (...args: A) => R): (...args: A) => R {
   return ((...args: A) => {
@@ -366,75 +368,60 @@ function dismissThen<A extends unknown[], R extends string>(fn: (...args: A) => 
   }) as (...args: A) => R;
 }
 
-function isToastMessageObject(value: unknown): value is ToastMessageObject {
-  if (typeof value !== 'object' || value === null) return false;
-  const record = value as Record<string, unknown>;
-  return (
-    typeof record.title === 'string' ||
-    typeof record.subtitle === 'string' ||
-    Array.isArray(record.actions) ||
-    record.variant === 'info' ||
-    record.variant === 'warning'
-  );
-}
-
-function asVariantMessage(msg: ToastMessage, variant: 'info' | 'warning'): ToastMessageObject {
-  if (typeof msg === 'string') return { title: msg, variant };
-  if (isToastMessageObject(msg)) return { ...msg, variant };
-  return { title: String(msg), variant };
-}
-
-export const toast = Object.assign(
-  dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib>[1]) =>
-    toastLib(msg as Parameters<typeof toastLib>[0], { ...AUTO_DISMISS, ...opts })
-  ),
-  {
-    success: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib.success>[1]) =>
-      toastLib.success(msg as Parameters<typeof toastLib.success>[0], { ...AUTO_DISMISS, ...opts })
-    ),
-    error: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib.error>[1]) =>
-      toastLib.error(msg as Parameters<typeof toastLib.error>[0], { ...PERSIST, ...opts })
-    ),
-    warning: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib>[1]) =>
-      toastLib(asVariantMessage(msg, 'warning') as Parameters<typeof toastLib>[0], { ...PERSIST, ...opts })
-    ),
-    info: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib>[1]) =>
-      toastLib(asVariantMessage(msg, 'info') as Parameters<typeof toastLib>[0], { ...AUTO_DISMISS, ...opts })
-    ),
-    loading: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib.loading>[1]) =>
-      toastLib.loading(msg as Parameters<typeof toastLib.loading>[0], { ...PERSIST, ...opts })
-    ),
-    custom: dismissThen((msg: ToastMessage, opts?: Parameters<typeof toastLib.custom>[1]) =>
-      toastLib.custom(msg as Parameters<typeof toastLib.custom>[0], { ...AUTO_DISMISS, ...opts })
-    ),
-    dismiss: toastLib.dismiss,
-    promise: toastLib.promise,
-    remove: toastLib.remove,
+function resolveAlert(input?: ToastAlertInput): { message: string; variant: ToastVariant } {
+  if (input == null) {
+    return { message: TOAST_ALERT_MESSAGE, variant: 'error' };
   }
-);
-
-if (import.meta.env.DEV) {
-  (globalThis as { __atlasToast?: typeof toast }).__atlasToast = toast;
+  if (typeof input === 'string') {
+    return { message: input.trim() || TOAST_ALERT_MESSAGE, variant: 'success' };
+  }
+  return {
+    message: input.message?.trim() || TOAST_ALERT_MESSAGE,
+    variant: input.variant ?? 'success',
+  };
 }
 
-function hostVariant(hostToast: HotToast, raw: unknown): ToastVariant {
-  if (isToastMessageObject(raw) && raw.variant === 'info') return 'info';
-  if (isToastMessageObject(raw) && raw.variant === 'warning') return 'warning';
+function hostOutcomeVariant(hostToast: HotToast): ToastVariant {
+  const className = hostToast.className ?? '';
+  const match = className.match(/toast-outcome-(success|error|warning|info|loading)/);
+  if (match) return match[1] as ToastVariant;
   if (hostToast.type === 'success') return 'success';
   if (hostToast.type === 'error') return 'error';
   if (hostToast.type === 'loading') return 'loading';
   return 'success';
 }
 
-function hostContent(raw: unknown, variant: ToastVariant) {
-  if (isToastMessageObject(raw)) {
-    return {
-      title: raw.title?.trim() || DEFAULT_TOAST_TITLES[variant],
-      subtitle: raw.subtitle,
-      actions: raw.actions,
+export const toast = {
+  alert: dismissThen((input?: ToastAlertInput, opts?: Parameters<typeof toastLib>[1]) => {
+    const { message, variant } = resolveAlert(input);
+    const toastOpts = {
+      ...AUTO_DISMISS,
+      ...opts,
+      className: cn(`toast-outcome-${variant}`, opts?.className),
     };
+    if (variant === 'error') return toastLib.error(message, toastOpts);
+    if (variant === 'success') return toastLib.success(message, toastOpts);
+    return toastLib(message, toastOpts);
+  }),
+  dismiss: toastLib.dismiss,
+  remove: toastLib.remove,
+};
+
+if (import.meta.env.DEV) {
+  (globalThis as { __atlasToast?: typeof toast }).__atlasToast = toast;
+}
+
+function hostAlertMessage(raw: unknown): string {
+  if (typeof raw === 'string') {
+    return raw.trim() || TOAST_ALERT_MESSAGE;
   }
-  return { title: String(raw ?? DEFAULT_TOAST_TITLES[variant]) };
+  if (typeof raw === 'object' && raw !== null && typeof (raw as ToastAlertPayload).message === 'string') {
+    return (raw as ToastAlertPayload).message?.trim() || TOAST_ALERT_MESSAGE;
+  }
+  if (raw != null && typeof raw !== 'object') {
+    return String(raw);
+  }
+  return TOAST_ALERT_MESSAGE;
 }
 
 export interface AppToastBarProps {
@@ -443,21 +430,23 @@ export interface AppToastBarProps {
 
 export const AppToastBar = React.memo<AppToastBarProps>(({ toast: hostToast }) => {
   const raw = resolveValue(hostToast.message, hostToast);
-  const variant = hostVariant(hostToast, raw);
-  const content = hostContent(raw, variant);
   const onDismiss = React.useCallback(() => {
     toastLib.dismiss(hostToast.id, hostToast.toasterId);
   }, [hostToast.id, hostToast.toasterId]);
 
+  const message =
+    typeof raw === 'string'
+      ? raw.trim() || TOAST_ALERT_MESSAGE
+      : typeof raw === 'object' && raw !== null && typeof (raw as ToastAlertPayload).message === 'string'
+        ? (raw as ToastAlertPayload).message?.trim() || TOAST_ALERT_MESSAGE
+        : hostAlertMessage(raw);
+
   return (
-    <Toast
-      variant={variant}
-      title={content.title}
-      subtitle={content.subtitle}
-      actions={content.actions}
-      customIcon={hostToast.icon}
-      ariaProps={hostToast.ariaProps}
+    <ToastAlert
+      message={message}
+      variant={hostOutcomeVariant(hostToast)}
       onDismiss={onDismiss}
+      ariaProps={hostToast.ariaProps}
     />
   );
 });

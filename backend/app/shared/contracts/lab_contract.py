@@ -21,7 +21,6 @@ ATTENTION_REASON_KEYS: frozenset[str] = frozenset(
         "retry_limit",
         "recollection_limit",
         "supervisor_review",
-        "recollection_approval",
     }
 )
 
@@ -34,7 +33,6 @@ BLOCKS_PROGRESS_REASONS: frozenset[str] = frozenset(
         "retry_limit",
         "recollection_limit",
         "supervisor_review",
-        "recollection_approval",
     }
 )
 
@@ -51,7 +49,6 @@ ATTENTION_LABELS: dict[str, str] = {
     "retry_limit": "Re-test limit reached",
     "recollection_limit": "Recollection limit reached",
     "supervisor_review": "Supervisor approval required",
-    "recollection_approval": "Recollection awaiting supervisor approval",
 }
 
 ATTENTION_TYPE_BY_REASON: dict[str, str] = {
@@ -62,7 +59,6 @@ ATTENTION_TYPE_BY_REASON: dict[str, str] = {
     "retry_limit": "escalation_retry_limit",
     "recollection_limit": "escalation_recollection_limit",
     "supervisor_review": "supervisor_approval",
-    "recollection_approval": "supervisor_recollection_request",
 }
 
 ALLOWED_ACTION_KEYS: tuple[str, ...] = (
@@ -87,7 +83,6 @@ ATTENTION_TYPE_SORT: dict[str, int] = {
     "escalation_retry_limit": 30,
     "escalation_recollection_limit": 40,
     "supervisor_approval": 45,
-    "supervisor_recollection_request": 48,
     "payment_blocked": 50,
     "sample_rejected": 60,
     "priority_urgent": 82,
@@ -103,7 +98,6 @@ SUPERVISOR_ATTENTION_TYPES: frozenset[str] = frozenset(
         "escalation_retry_limit",
         "escalation_recollection_limit",
         "supervisor_approval",
-        "supervisor_recollection_request",
     }
 )
 

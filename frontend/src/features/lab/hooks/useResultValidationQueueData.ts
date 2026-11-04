@@ -6,14 +6,11 @@ import { useMemo } from 'react';
 import { useValidationWorklist, type WorklistPagination } from '../api/worklists';
 import { mapValidationWorklistToOrderTestContext } from '../utils/labQueue';
 import { usePendingEscalation } from '../api/results';
-import { usePendingRecollectionRequests } from '../api/recollectionRequests';
 import type { TestWithContext } from '@/types';
-import type { RecollectionRequestSummary } from '@/types/lab-operations';
 
 export interface ResultValidationQueueData {
   validationTests: TestWithContext[];
   escalations: TestWithContext[];
-  recollections: RecollectionRequestSummary[];
   isLoading: boolean;
   isError: boolean;
   error: unknown;
@@ -42,7 +39,6 @@ export function useResultValidationQueueData(params?: {
     goToPage,
   } = useValidationWorklist(params);
   const { escalatedTests = [] } = usePendingEscalation();
-  const { requests: recollectionRequests = [] } = usePendingRecollectionRequests();
 
   const validationTests = useMemo(
     () => worklistItems.map(mapValidationWorklistToOrderTestContext),
@@ -52,7 +48,6 @@ export function useResultValidationQueueData(params?: {
   return {
     validationTests,
     escalations: escalatedTests,
-    recollections: recollectionRequests,
     isLoading: worklistLoading,
     isError: worklistError,
     error: worklistErr ?? null,

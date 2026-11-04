@@ -74,6 +74,9 @@ for (const id of ids) {
   if (!VARIANTS.has(entry.variant)) {
     fail(`feedback.json['${id}'] has invalid variant '${entry.variant}'.`);
   }
+  if (['toast', 'alert', 'errorAlert'].includes(entry.channel) && !entry.brief?.trim()) {
+    fail(`feedback.json['${id}'] is missing brief (required for toast channels).`);
+  }
 }
 
 if (ids.length !== generatedIds.length) {

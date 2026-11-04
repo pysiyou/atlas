@@ -11,13 +11,11 @@ from typing import Any
 
 from app.domains.catalog.models.catalog_test import CatalogTest
 from app.domains.lab.models.escalation import EscalationTicket
-from app.domains.lab.models.recollection_request import RecollectionRequest
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.monitor.board import (
     LabBoardService,
     age_bucket,
 )
-from app.domains.lab.quality.recollection_snapshot import recollection_blocked_order_test_ids
 from app.domains.lab.rules.blockers import priority_rank, priority_sort_key
 from app.domains.lab.rules.work_item_projection import (
     LabWorkItemContext,
@@ -35,11 +33,9 @@ from app.platform.utils.common import parse_display_id_from_search
 from app.shared.contracts.enums import (
     EscalationTicketStatus,
     PriorityLevel,
-    RecollectionRequestStatus,
     SampleStatus,
     TestStatus,
 )
-from app.shared.contracts.lab_contract import ATTENTION_LABELS
 from sqlalchemy import String, and_, case, cast, desc, exists, func, or_
 from sqlalchemy.orm import Session
 
@@ -389,14 +385,11 @@ class LabWorklistService:
         )
         if codes:
             linked_tests = [ot for ot in linked_tests if ot.testCode in codes]
-        blocked = recollection_blocked_order_test_ids(self.db)
-        recollection_pending = any(ot.id in blocked for ot in linked_tests)
         projection = project_collection_sample(
             LabWorkItemContext(
                 order=order,
                 sample=sample,
                 linked_order_tests=linked_tests,
-                recollection_approval_pending=recollection_pending,
             )
         )
         work_item_fields = projection_to_worklist_fields(projection)
@@ -458,93 +451,6 @@ class LabWorklistService:
         if order_test.status == TestStatus.SAMPLE_COLLECTED:
             return "entry"
         return "validation"
-
-    def list_dashboard_blocked(
-        self,
-        *,
-        page: int = 1,
-        page_size: int = 50,
-    ) -> dict[str, Any]:
-        """Tests blocked on pending recollection approval (not surfaced by stage worklists)."""
-        request_query = self.db.query(RecollectionRequest).filter(
-            RecollectionRequest.status == RecollectionRequestStatus.PENDING_APPROVAL
-        )
-        total_requests = request_query.count()
-        if total_requests == 0:
-            return {"items": [], "pagination": _paginate(0, page, page_size)}
-        requests = (
-            request_query.order_by(RecollectionRequest.createdAt.asc())
-            .offset((page - 1) * page_size)
-            .limit(page_size)
-            .all()
-        )
-
-        request_by_test_id: dict[int, RecollectionRequest] = {}
-        for request in requests:
-            for test_id in request.affectedOrderTestIds or []:
-                if isinstance(test_id, int):
-                    request_by_test_id.setdefault(test_id, request)
-            if request.orderTestId is not None:
-                request_by_test_id.setdefault(request.orderTestId, request)
-
-        test_ids = list(request_by_test_id.keys())
-        if not test_ids:
-            return {"items": [], "pagination": _paginate(total_requests, page, page_size)}
-
-        rows = (
-            self.db.query(OrderTest, Order, Patient, CatalogTest, Sample)
-            .join(Order, OrderTest.orderId == Order.orderId)
-            .join(Patient, Order.patientId == Patient.id)
-            .join(CatalogTest, OrderTest.testCode == CatalogTest.code)
-            .outerjoin(Sample, Sample.sampleId == OrderTest.sampleId)
-            .filter(OrderTest.id.in_(test_ids))
-            .all()
-        )
-
-        attention_label = ATTENTION_LABELS["recollection_approval"]
-        items: list[dict[str, Any]] = []
-        for order_test, order, patient, test, sample in rows:
-            if self._order_test_in_active_worklist(order_test, sample):
-                continue
-            request = request_by_test_id.get(order_test.id)
-            if not request:
-                continue
-            since = request.createdAt or order.orderDate
-            hours = _worklist_hours_since(since)
-            items.append(
-                {
-                    "orderTestId": order_test.id,
-                    "orderId": order.orderId,
-                    "patientId": patient.id,
-                    "patientName": patient.fullName,
-                    "testCode": order_test.testCode,
-                    "testName": test.name,
-                    "priority": order.priority,
-                    "status": order_test.status,
-                    "stage": self._pipeline_stage_for_test(order_test),
-                    "orderDate": order.orderDate,
-                    "attentionReason": "recollection_approval",
-                    "attentionLabel": attention_label,
-                    "waitingHours": round(hours, 2),
-                    **referent_doctor_projection(order),
-                    "testCategory": test.category,
-                    "sampleType": order_test.sampleType or "",
-                    "recollectionRequestId": request.id,
-                    "_sort_priority": priority_rank(order.priority),
-                    "_sort_since": since,
-                }
-            )
-
-        items.sort(
-            key=lambda x: (
-                x["_sort_priority"],
-                x["_sort_since"] or datetime.min.replace(tzinfo=UTC),
-            )
-        )
-        for item in items:
-            item.pop("_sort_priority", None)
-            item.pop("_sort_since", None)
-        return {"items": items, "pagination": _paginate(total_requests, page, page_size)}
 
     def list_entry(
         self,
@@ -755,12 +661,7 @@ class LabWorklistService:
     ) -> dict[str, Any]:
         """Lab monitor table rows: union of tests updated today (UTC) and still-running pipeline tests."""
         _ = user_id  # reserved for future per-user scoping
-        from app.domains.lab.quality.recollection_snapshot import (
-            recollection_blocked_order_test_ids,
-        )
-
         today_start = self._utc_today_start()
-        recollection_blocked = recollection_blocked_order_test_ids(self.db)
         running = self._dashboard_running_predicate()
         stale_running = and_(running, OrderTest.updatedAt < today_start)
         stale_running_rank = case((stale_running, 1), else_=0)
@@ -810,7 +711,6 @@ class LabWorklistService:
                     order_test=order_test,
                     sample=sample,
                     escalation_reason_code=escalation_code,
-                    recollection_approval_pending=order_test.id in recollection_blocked,
                 )
             )
             work_item_fields = projection_to_worklist_fields(projection)
@@ -854,11 +754,6 @@ class LabWorklistService:
         sample_types: list[str] | None = None,
     ) -> dict[str, Any]:
         """All order tests, newest activity first (OrderTest.updatedAt)."""
-        from app.domains.lab.quality.recollection_snapshot import (
-            recollection_blocked_order_test_ids,
-        )
-
-        recollection_blocked = recollection_blocked_order_test_ids(self.db)
         query = (
             self.db.query(OrderTest, Order, Patient, CatalogTest, Sample)
             .join(Order, OrderTest.orderId == Order.orderId)
@@ -927,7 +822,6 @@ class LabWorklistService:
                     order_test=order_test,
                     sample=sample,
                     escalation_reason_code=escalation_code,
-                    recollection_approval_pending=order_test.id in recollection_blocked,
                 )
             )
             work_item_fields = projection_to_worklist_fields(projection)

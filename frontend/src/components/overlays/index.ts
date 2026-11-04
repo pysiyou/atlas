@@ -12,14 +12,13 @@ export * from './OverlaySearchInput';
 export * from './RangeSlider';
 export {
   AppToastBar,
-  DEFAULT_TOAST_TITLES,
-  Toast,
+  TOAST_ALERT_MESSAGE,
   TOAST_DEFAULT_DURATION_MS,
+  ToastAlert,
   toast,
   type AppToastBarProps,
-  type BaseToastProps,
   type ToastAction,
-  type ToastProps,
+  type ToastAlertProps,
   type ToastVariant,
 } from '@/components/feedback/notices';
 export * from './SearchResultsPopoverShell';

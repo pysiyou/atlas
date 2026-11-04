@@ -388,31 +388,6 @@
       }
     }
   },
-  "RecollectionRequestStatus": {
-    "type": "string",
-    "members": {
-      "PENDING_APPROVAL": {
-        "wire": "pending-approval",
-        "label": "Pending approval"
-      },
-      "APPROVED": {
-        "wire": "approved",
-        "label": "Approved"
-      },
-      "DENIED": {
-        "wire": "denied",
-        "label": "Denied"
-      },
-      "FULFILLED": {
-        "wire": "fulfilled",
-        "label": "Fulfilled"
-      },
-      "CANCELLED": {
-        "wire": "cancelled",
-        "label": "Cancelled"
-      }
-    }
-  },
   "OrderStatus": {
     "type": "string",
     "members": {

@@ -96,7 +96,7 @@ class SampleCollectionService:
         Idempotent when a pending recollection already exists for the source sample.
 
         Automatic quality-issue flows enforce MAX_RECOLLECTION_ATTEMPTS. Supervisor escalation
-        resolution (authorize_recollect) may pass supervisor_authorized=True to allow one more tube.
+        resolution (authorize_recollect) passes supervisor_authorized=True to bypass the cap.
         """
         if source_sample.recollectionSampleId:
             existing = (
