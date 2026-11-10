@@ -4,15 +4,15 @@ from __future__ import annotations
 
 from collections import defaultdict
 
-from app.domains.lab.models.escalation import EscalationTicket
 from app.domains.lab.models.sample import Sample
+from app.domains.lab.quality.escalation_queries import open_escalation_reason_codes_by_order_test_id
 from app.domains.lab.rules.work_item_projection import (
     LabWorkItemContext,
     LabWorkItemProjection,
     project_order_test_pipeline,
 )
 from app.domains.orders.models import Order, OrderTest
-from app.shared.contracts.enums import EscalationTicketStatus, TestStatus
+from app.shared.contracts.enums import TestStatus
 from sqlalchemy.orm import Session
 
 
@@ -47,20 +47,7 @@ def lab_projections_for_orders(
     escalated_ids = [
         order_test.id for _, order_test in all_tests if order_test.status == TestStatus.ESCALATED
     ]
-    escalation_code_by_test: dict[int, str | None] = {}
-    if escalated_ids:
-        for ticket in (
-            db.query(EscalationTicket)
-            .filter(
-                EscalationTicket.orderTestId.in_(escalated_ids),
-                EscalationTicket.status == EscalationTicketStatus.OPEN,
-            )
-            .all()
-        ):
-            code = ticket.reasonCode
-            escalation_code_by_test[ticket.orderTestId] = (
-                code.value if code is not None and hasattr(code, "value") else None
-            )
+    escalation_code_by_test = open_escalation_reason_codes_by_order_test_id(db, escalated_ids)
 
     for order, order_test in all_tests:
         sample = samples_by_id.get(order_test.sampleId) if order_test.sampleId else None

@@ -18,6 +18,10 @@ from app.shared.contracts.enums import (
     SampleStatus,
     TestStatus,
 )
+from app.domains.lab.rules.test_status_sets import (
+    COLLECTION_TRANSITION_SKIP_STATUSES,
+    COLLECTION_WORKLIST_LINKED_EXCLUDE,
+)
 from app.shared.contracts.lab_contract import ATTENTION_LABELS, reason_blocks_progress
 
 
@@ -73,15 +77,15 @@ def attention_reason_for_work_item(
     return None
 
 
+def active_linked_tests_for_collection(order_tests: list[OrderTest]) -> list[OrderTest]:
+    """Linked tests that should transition when a sample is collected."""
+    return [ot for ot in order_tests if ot.status not in COLLECTION_WORKLIST_LINKED_EXCLUDE]
+
+
 def _tests_must_transition_on_collect(order_tests: list[OrderTest]) -> tuple[bool, str | None]:
     """Ensure every active linked test can move to SAMPLE_COLLECTED (or is already past that)."""
-    skip_statuses = {
-        TestStatus.SUPERSEDED,
-        TestStatus.REMOVED,
-        TestStatus.VALIDATED,
-    }
     for order_test in order_tests:
-        if order_test.status in skip_statuses:
+        if order_test.status in COLLECTION_TRANSITION_SKIP_STATUSES:
             continue
         if order_test.status == TestStatus.CANCELLED:
             return (

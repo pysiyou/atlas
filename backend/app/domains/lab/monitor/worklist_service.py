@@ -10,8 +10,16 @@ from datetime import UTC, date, datetime, time
 from typing import Any
 
 from app.domains.catalog.models.catalog_test import CatalogTest
-from app.domains.lab.models.escalation import EscalationTicket
 from app.domains.lab.models.sample import Sample
+from app.domains.lab.monitor.catalog_tat import CatalogTatResolver
+from app.domains.lab.monitor.predicates import (
+    inactive_lineage_filter,
+    monitor_universe_predicate,
+    running_tests_predicate,
+)
+from app.domains.lab.quality.escalation_queries import load_open_tickets_by_order_test_id
+from app.domains.lab.rules.test_status_sets import COLLECTION_WORKLIST_LINKED_EXCLUDE
+from app.domains.lab.specimen.lookup import linked_order_tests_by_sample_ids
 from app.domains.lab.monitor.board import (
     LabBoardService,
     age_bucket,
@@ -30,12 +38,7 @@ from app.domains.patients.models import Patient
 from app.domains.referent_doctors.display import referent_doctor_projection
 from app.platform.cache import CacheKeys, cache_get, cache_set
 from app.platform.utils.common import parse_display_id_from_search
-from app.shared.contracts.enums import (
-    EscalationTicketStatus,
-    PriorityLevel,
-    SampleStatus,
-    TestStatus,
-)
+from app.shared.contracts.enums import PriorityLevel, SampleStatus, TestStatus
 from sqlalchemy import String, and_, case, cast, desc, exists, func, or_
 from sqlalchemy.orm import Session
 
@@ -158,25 +161,11 @@ def _worklist_result(
 class LabWorklistService:
     def __init__(self, db: Session):
         self.db = db
-        self._tat_cache: dict[str, int] = {}
+        self._tat = CatalogTatResolver(db)
         self._catalog_cache: dict[str, tuple[str | None, str | None]] = {}
 
-    def _get_turnaround(self, test_code: str) -> int:
-        if test_code in self._tat_cache:
-            return self._tat_cache[test_code]
-        row = (
-            self.db.query(CatalogTest.turnaroundTimeHours)
-            .filter(CatalogTest.code == test_code)
-            .first()
-        )
-        hours = row[0] if row else 24
-        self._tat_cache[test_code] = hours
-        return hours
-
     def _max_tat_for_codes(self, codes: list[str]) -> int:
-        if not codes:
-            return 24
-        return max(self._get_turnaround(c) for c in codes)
+        return self._tat.max_hours_for_codes(codes)
 
     def _catalog_meta(self, code: str | None) -> tuple[str | None, str | None]:
         if not code:
@@ -206,6 +195,167 @@ class LabWorklistService:
         if names:
             return ", ".join(names), category
         return "Sample collection", category
+
+    @staticmethod
+    def _linked_tests_for_collection_row(
+        sample: Sample,
+        order: Order,
+        linked_by_sample: dict[int, list[OrderTest]],
+    ) -> list[OrderTest]:
+        codes = sample.testCodes or []
+        return [
+            ot
+            for ot in linked_by_sample.get(sample.sampleId, [])
+            if ot.orderId == order.orderId and ot.testCode in codes
+        ]
+
+    def _original_sample_collected_at(
+        self, sample: Sample, parents: dict[int, Sample] | None = None
+    ) -> datetime | None:
+        if not sample.originalSampleId:
+            return None
+        if parents is not None:
+            parent = parents.get(sample.originalSampleId)
+        else:
+            parent = (
+                self.db.query(Sample).filter(Sample.sampleId == sample.originalSampleId).first()
+            )
+        return parent.collectedAt if parent else None
+
+    def _build_collection_worklist_item(
+        self,
+        *,
+        sample: Sample,
+        order: Order,
+        patient: Patient,
+        linked_tests: list[OrderTest],
+        parents: dict[int, Sample] | None = None,
+        include_queue_metrics: bool = True,
+    ) -> dict[str, Any]:
+        codes = sample.testCodes or []
+        projection = project_collection_sample(
+            LabWorkItemContext(
+                order=order,
+                sample=sample,
+                linked_order_tests=linked_tests,
+            )
+        )
+        work_item_fields = projection_to_worklist_fields(projection)
+        test_name, test_category = self._collection_test_display(codes)
+        since = order.orderDate
+        hours = _worklist_hours_since(since)
+        tat = self._max_tat_for_codes(codes)
+        item: dict[str, Any] = {
+            "sampleId": sample.sampleId,
+            "orderId": order.orderId,
+            "patientId": patient.id,
+            "patientName": patient.fullName,
+            "sampleType": sample.sampleType.value if sample.sampleType else "",
+            "status": sample.status,
+            "priority": sample.priority,
+            "paymentStatus": order.paymentStatus,
+            "orderDate": order.orderDate,
+            "testCodes": codes,
+            **referent_doctor_projection(order),
+            "testName": test_name,
+            "testCategory": test_category,
+            "isRecollection": bool(sample.isRecollection),
+            "originalSampleId": sample.originalSampleId,
+            "originalSampleCollectedAt": self._original_sample_collected_at(sample, parents),
+            "recollectionReason": sample.recollectionReason,
+            "recollectionAttempt": sample.recollectionAttempt or 1,
+            **work_item_fields,
+            "waitingHours": round(hours, 2),
+            "turnaroundHours": tat,
+            "actualContainerType": sample.actualContainerType,
+            "actualContainerColor": sample.actualContainerColor,
+            "collectedAt": sample.collectedAt,
+            "collectedBy": sample.collectedBy,
+            "collectedVolume": sample.collectedVolume,
+        }
+        if include_queue_metrics:
+            item["queueAgeBand"] = age_bucket(hours, tat)
+            item["priorityRank"] = priority_rank(sample.priority)
+        return item
+
+    def _escalation_code(self, tickets_by_test: dict, order_test_id: int) -> str | None:
+        ticket = tickets_by_test.get(order_test_id)
+        if not ticket or not ticket.reasonCode:
+            return None
+        return ticket.reasonCode.value
+
+    def _build_pipeline_dashboard_item(
+        self,
+        *,
+        order_test: OrderTest,
+        order: Order,
+        patient: Patient,
+        test: CatalogTest,
+        sample: Sample | None,
+        escalation_code: str | None,
+    ) -> dict[str, Any]:
+        updated_at = self._normalize_ts(order_test.updatedAt) or datetime.now(UTC)
+        projection = project_order_test_pipeline(
+            LabWorkItemContext(
+                order=order,
+                order_test=order_test,
+                sample=sample,
+                escalation_reason_code=escalation_code,
+            )
+        )
+        work_item_fields = projection_to_worklist_fields(projection)
+        return {
+            "orderTestId": order_test.id,
+            "orderId": order.orderId,
+            "patientId": patient.id,
+            "patientName": patient.fullName,
+            "patientDob": patient.dateOfBirth,
+            "patientGender": patient.gender,
+            "testCode": order_test.testCode,
+            "testName": test.name,
+            "sampleType": test.sampleType or "",
+            "priority": order.priority,
+            "status": order_test.status,
+            "stage": self._dashboard_stage(order_test),
+            "activityAt": updated_at,
+            "orderDate": order.orderDate,
+            **referent_doctor_projection(order),
+            "testCategory": test.category,
+            **work_item_fields,
+        }
+
+    def _order_test_worklist_query(
+        self,
+        *,
+        extra_filters: tuple,
+        priority: PriorityLevel | None,
+        date_from: date | None,
+        date_to: date | None,
+        sample_types: list[str] | None,
+        search: str | None,
+    ):
+        query = (
+            self.db.query(OrderTest, Order, Patient, CatalogTest, Sample)
+            .join(Order, OrderTest.orderId == Order.orderId)
+            .join(Patient, Order.patientId == Patient.id)
+            .join(CatalogTest, OrderTest.testCode == CatalogTest.code)
+            .outerjoin(Sample, Sample.sampleId == OrderTest.sampleId)
+            .filter(*extra_filters)
+        )
+        if priority:
+            query = query.filter(Order.priority == priority)
+        query = _apply_worklist_window_filters(
+            query,
+            order_date_col=Order.orderDate,
+            sample_type_col=CatalogTest.sampleType,
+            date_from=date_from,
+            date_to=date_to,
+            sample_types=sample_types,
+        )
+        search_term = search.strip() if search else ""
+        if search_term:
+            query = query.filter(_order_test_worklist_search_filter(search_term))
+        return query, search_term
 
     def list_collection(
         self,
@@ -265,86 +415,24 @@ class LabWorklistService:
         for sample, _order, _patient in rows:
             all_codes.extend(sample.testCodes or [])
         if all_codes:
-            for code in set(all_codes):
-                self._get_turnaround(code)
+            self._tat.warmup(all_codes)
         sample_ids = [sample.sampleId for sample, _order, _patient in rows]
-        linked_by_sample: dict[int, list[OrderTest]] = {sid: [] for sid in sample_ids}
-        if sample_ids:
-            linked_rows = (
-                self.db.query(OrderTest)
-                .filter(
-                    OrderTest.sampleId.in_(sample_ids),
-                    OrderTest.status.notin_(
-                        [
-                            TestStatus.SUPERSEDED,
-                            TestStatus.REMOVED,
-                            TestStatus.VALIDATED,
-                            TestStatus.CANCELLED,
-                        ]
-                    ),
-                )
-                .all()
-            )
-            for ot in linked_rows:
-                if ot.sampleId is not None:
-                    linked_by_sample.setdefault(ot.sampleId, []).append(ot)
+        linked_by_sample = linked_order_tests_by_sample_ids(
+            self.db,
+            sample_ids,
+            exclude_statuses=COLLECTION_WORKLIST_LINKED_EXCLUDE,
+        )
         items = []
         for sample, order, patient in rows:
-            since = order.orderDate
-            hours = _worklist_hours_since(since)
-            codes = sample.testCodes or []
-            tat = self._max_tat_for_codes(codes)
-            test_name, test_category = self._collection_test_display(codes)
-            linked_tests = [
-                ot
-                for ot in linked_by_sample.get(sample.sampleId, [])
-                if ot.orderId == order.orderId and ot.testCode in (codes or [])
-            ]
-            projection = project_collection_sample(
-                LabWorkItemContext(
-                    order=order,
-                    sample=sample,
-                    linked_order_tests=linked_tests,
-                )
-            )
-            work_item_fields = projection_to_worklist_fields(projection)
-            tat_band = age_bucket(hours, tat)
-            original_sample_collected_at = None
-            if sample.originalSampleId:
-                parent = parents.get(sample.originalSampleId)
-                if parent:
-                    original_sample_collected_at = parent.collectedAt
+            linked_tests = self._linked_tests_for_collection_row(sample, order, linked_by_sample)
             items.append(
-                {
-                    "sampleId": sample.sampleId,
-                    "orderId": order.orderId,
-                    "patientId": patient.id,
-                    "patientName": patient.fullName,
-                    "sampleType": sample.sampleType.value if sample.sampleType else "",
-                    "status": sample.status,
-                    "priority": sample.priority,
-                    "paymentStatus": order.paymentStatus,
-                    "orderDate": order.orderDate,
-                    "testCodes": codes,
-                    **referent_doctor_projection(order),
-                    "testName": test_name,
-                    "testCategory": test_category,
-                    "isRecollection": bool(sample.isRecollection),
-                    "originalSampleId": sample.originalSampleId,
-                    "originalSampleCollectedAt": original_sample_collected_at,
-                    "recollectionReason": sample.recollectionReason,
-                    "recollectionAttempt": sample.recollectionAttempt or 1,
-                    **work_item_fields,
-                    "waitingHours": round(hours, 2),
-                    "turnaroundHours": tat,
-                    "queueAgeBand": tat_band,
-                    "priorityRank": priority_rank(sample.priority),
-                    "actualContainerType": sample.actualContainerType,
-                    "actualContainerColor": sample.actualContainerColor,
-                    "collectedAt": sample.collectedAt,
-                    "collectedBy": sample.collectedBy,
-                    "collectedVolume": sample.collectedVolume,
-                }
+                self._build_collection_worklist_item(
+                    sample=sample,
+                    order=order,
+                    patient=patient,
+                    linked_tests=linked_tests,
+                    parents=parents,
+                )
             )
         return _worklist_result(items, total, page, page_size, rows_loaded=len(rows))
 
@@ -366,72 +454,21 @@ class LabWorklistService:
                 detail=f"Sample {sample_id} not found",
             )
         sample, order, patient = row
-        codes = sample.testCodes or []
-        linked_tests = (
-            self.db.query(OrderTest)
-            .filter(
-                OrderTest.sampleId == sample.sampleId,
-                OrderTest.orderId == order.orderId,
-                OrderTest.status.notin_(
-                    [
-                        TestStatus.SUPERSEDED,
-                        TestStatus.REMOVED,
-                        TestStatus.VALIDATED,
-                        TestStatus.CANCELLED,
-                    ]
-                ),
-            )
-            .all()
+        if sample.testCodes:
+            self._tat.warmup(sample.testCodes)
+        linked_by_sample = linked_order_tests_by_sample_ids(
+            self.db,
+            [sample.sampleId],
+            exclude_statuses=COLLECTION_WORKLIST_LINKED_EXCLUDE,
         )
-        if codes:
-            linked_tests = [ot for ot in linked_tests if ot.testCode in codes]
-        projection = project_collection_sample(
-            LabWorkItemContext(
-                order=order,
-                sample=sample,
-                linked_order_tests=linked_tests,
-            )
+        linked_tests = self._linked_tests_for_collection_row(sample, order, linked_by_sample)
+        return self._build_collection_worklist_item(
+            sample=sample,
+            order=order,
+            patient=patient,
+            linked_tests=linked_tests,
+            include_queue_metrics=False,
         )
-        work_item_fields = projection_to_worklist_fields(projection)
-        original_sample_collected_at = None
-        if sample.originalSampleId:
-            parent = (
-                self.db.query(Sample).filter(Sample.sampleId == sample.originalSampleId).first()
-            )
-            if parent:
-                original_sample_collected_at = parent.collectedAt
-        test_name, test_category = self._collection_test_display(codes)
-        since = order.orderDate
-        hours = _worklist_hours_since(since)
-        tat = self._max_tat_for_codes(codes)
-        return {
-            "sampleId": sample.sampleId,
-            "orderId": order.orderId,
-            "patientId": patient.id,
-            "patientName": patient.fullName,
-            "sampleType": sample.sampleType.value if sample.sampleType else "",
-            "status": sample.status,
-            "priority": sample.priority,
-            "paymentStatus": order.paymentStatus,
-            "orderDate": order.orderDate,
-            "testCodes": codes,
-            **referent_doctor_projection(order),
-            "testName": test_name,
-            "testCategory": test_category,
-            "isRecollection": bool(sample.isRecollection),
-            "originalSampleId": sample.originalSampleId,
-            "originalSampleCollectedAt": original_sample_collected_at,
-            "recollectionReason": sample.recollectionReason,
-            "recollectionAttempt": sample.recollectionAttempt or 1,
-            **work_item_fields,
-            "waitingHours": round(hours, 2),
-            "turnaroundHours": tat,
-            "actualContainerType": sample.actualContainerType,
-            "actualContainerColor": sample.actualContainerColor,
-            "collectedAt": sample.collectedAt,
-            "collectedBy": sample.collectedBy,
-            "collectedVolume": sample.collectedVolume,
-        }
 
     def _order_test_in_active_worklist(self, order_test: OrderTest, sample: Sample | None) -> bool:
         """True when the test already appears on collection, entry, or validation worklists."""
@@ -463,27 +500,14 @@ class LabWorklistService:
         date_to: date | None = None,
         sample_types: list[str] | None = None,
     ) -> dict[str, Any]:
-        query = (
-            self.db.query(OrderTest, Order, Patient, CatalogTest, Sample)
-            .join(Order, OrderTest.orderId == Order.orderId)
-            .join(Patient, Order.patientId == Patient.id)
-            .join(CatalogTest, OrderTest.testCode == CatalogTest.code)
-            .outerjoin(Sample, Sample.sampleId == OrderTest.sampleId)
-            .filter(OrderTest.status == TestStatus.SAMPLE_COLLECTED)
-        )
-        if priority:
-            query = query.filter(Order.priority == priority)
-        query = _apply_worklist_window_filters(
-            query,
-            order_date_col=Order.orderDate,
-            sample_type_col=CatalogTest.sampleType,
+        query, _search_term = self._order_test_worklist_query(
+            extra_filters=(OrderTest.status == TestStatus.SAMPLE_COLLECTED,),
+            priority=priority,
             date_from=date_from,
             date_to=date_to,
             sample_types=sample_types,
+            search=search,
         )
-        search_term = search.strip() if search else ""
-        if search_term:
-            query = query.filter(_order_test_worklist_search_filter(search_term))
         total = query.count()
         start = (page - 1) * page_size
         since_col = func.coalesce(Sample.collectedAt, Order.orderDate)
@@ -540,30 +564,17 @@ class LabWorklistService:
         date_to: date | None = None,
         sample_types: list[str] | None = None,
     ) -> dict[str, Any]:
-        query = (
-            self.db.query(OrderTest, Order, Patient, CatalogTest, Sample)
-            .join(Order, OrderTest.orderId == Order.orderId)
-            .join(Patient, Order.patientId == Patient.id)
-            .join(CatalogTest, OrderTest.testCode == CatalogTest.code)
-            .outerjoin(Sample, OrderTest.sampleId == Sample.sampleId)
-            .filter(
+        query, _search_term = self._order_test_worklist_query(
+            extra_filters=(
                 OrderTest.status == TestStatus.RESULTED,
                 OrderTest.resultValidatedAt.is_(None),
-            )
-        )
-        if priority:
-            query = query.filter(Order.priority == priority)
-        query = _apply_worklist_window_filters(
-            query,
-            order_date_col=Order.orderDate,
-            sample_type_col=CatalogTest.sampleType,
+            ),
+            priority=priority,
             date_from=date_from,
             date_to=date_to,
             sample_types=sample_types,
+            search=search,
         )
-        search_term = search.strip() if search else ""
-        if search_term:
-            query = query.filter(_order_test_worklist_search_filter(search_term))
         total = query.count()
         start = (page - 1) * page_size
         since_col = func.coalesce(OrderTest.resultEnteredAt, Order.orderDate)
@@ -636,21 +647,12 @@ class LabWorklistService:
     @staticmethod
     def _dashboard_running_predicate():
         """Order tests still in the lab pipeline (non-terminal lifecycle)."""
-        return ~OrderTest.status.in_(
-            (
-                TestStatus.CANCELLED,
-                TestStatus.REMOVED,
-                TestStatus.SUPERSEDED,
-                TestStatus.VALIDATED,
-            )
-        )
+        return running_tests_predicate()
 
     @staticmethod
     def _dashboard_monitor_rows_predicate(today_start: datetime):
         """Union of tests updated today (UTC) and tests still running in the pipeline."""
-        worked_today = OrderTest.updatedAt >= today_start
-        still_running = LabWorklistService._dashboard_running_predicate()
-        return or_(worked_today, still_running)
+        return monitor_universe_predicate(today_start)
 
     def list_dashboard_work_today(
         self,
@@ -688,54 +690,21 @@ class LabWorklistService:
             for ot, _order, _patient, _test, _sample in rows
             if ot.status == TestStatus.ESCALATED
         ]
-        tickets_by_test: dict[int, EscalationTicket] = {}
-        if escalated_ids:
-            for ticket in (
-                self.db.query(EscalationTicket)
-                .filter(
-                    EscalationTicket.orderTestId.in_(escalated_ids),
-                    EscalationTicket.status == EscalationTicketStatus.OPEN,
-                )
-                .all()
-            ):
-                tickets_by_test[ticket.orderTestId] = ticket
+        tickets_by_test = load_open_tickets_by_order_test_id(self.db, escalated_ids)
 
         items: list[dict[str, Any]] = []
         for order_test, order, patient, test, sample in rows:
             updated_at = self._normalize_ts(order_test.updatedAt) or datetime.now(UTC)
-            ticket = tickets_by_test.get(order_test.id)
-            escalation_code = ticket.reasonCode.value if ticket and ticket.reasonCode else None
-            projection = project_order_test_pipeline(
-                LabWorkItemContext(
-                    order=order,
-                    order_test=order_test,
-                    sample=sample,
-                    escalation_reason_code=escalation_code,
-                )
+            item = self._build_pipeline_dashboard_item(
+                order_test=order_test,
+                order=order,
+                patient=patient,
+                test=test,
+                sample=sample,
+                escalation_code=self._escalation_code(tickets_by_test, order_test.id),
             )
-            work_item_fields = projection_to_worklist_fields(projection)
-            items.append(
-                {
-                    "orderTestId": order_test.id,
-                    "orderId": order.orderId,
-                    "patientId": patient.id,
-                    "patientName": patient.fullName,
-                    "patientDob": patient.dateOfBirth,
-                    "patientGender": patient.gender,
-                    "testCode": order_test.testCode,
-                    "testName": test.name,
-                    "sampleType": test.sampleType or "",
-                    "priority": order.priority,
-                    "status": order_test.status,
-                    "stage": self._dashboard_stage(order_test),
-                    "activityAt": updated_at,
-                    "orderDate": order.orderDate,
-                    **referent_doctor_projection(order),
-                    "testCategory": test.category,
-                    **work_item_fields,
-                    "_sort_updated": updated_at,
-                }
-            )
+            item["_sort_updated"] = updated_at
+            items.append(item)
 
         for item in items:
             item.pop("_sort_updated", None)
@@ -760,14 +729,7 @@ class LabWorklistService:
             .join(Patient, Order.patientId == Patient.id)
             .join(CatalogTest, OrderTest.testCode == CatalogTest.code)
             .outerjoin(Sample, Sample.sampleId == OrderTest.sampleId)
-            .filter(
-                OrderTest.status.notin_(
-                    (
-                        TestStatus.SUPERSEDED,
-                        TestStatus.REMOVED,
-                    )
-                )
-            )
+            .filter(inactive_lineage_filter())
         )
         if priorities:
             query = query.filter(Order.priority.in_(priorities))
@@ -799,52 +761,19 @@ class LabWorklistService:
             for ot, _order, _patient, _test, _sample in rows
             if ot.status == TestStatus.ESCALATED
         ]
-        tickets_by_test: dict[int, EscalationTicket] = {}
-        if escalated_ids:
-            for ticket in (
-                self.db.query(EscalationTicket)
-                .filter(
-                    EscalationTicket.orderTestId.in_(escalated_ids),
-                    EscalationTicket.status == EscalationTicketStatus.OPEN,
-                )
-                .all()
-            ):
-                tickets_by_test[ticket.orderTestId] = ticket
+        tickets_by_test = load_open_tickets_by_order_test_id(self.db, escalated_ids)
 
         items: list[dict[str, Any]] = []
         for order_test, order, patient, test, sample in rows:
-            updated_at = self._normalize_ts(order_test.updatedAt) or datetime.now(UTC)
-            ticket = tickets_by_test.get(order_test.id)
-            escalation_code = ticket.reasonCode.value if ticket and ticket.reasonCode else None
-            projection = project_order_test_pipeline(
-                LabWorkItemContext(
-                    order=order,
-                    order_test=order_test,
-                    sample=sample,
-                    escalation_reason_code=escalation_code,
-                )
-            )
-            work_item_fields = projection_to_worklist_fields(projection)
             items.append(
-                {
-                    "orderTestId": order_test.id,
-                    "orderId": order.orderId,
-                    "patientId": patient.id,
-                    "patientName": patient.fullName,
-                    "patientDob": patient.dateOfBirth,
-                    "patientGender": patient.gender,
-                    "testCode": order_test.testCode,
-                    "testName": test.name,
-                    "sampleType": test.sampleType or "",
-                    "priority": order.priority,
-                    "status": order_test.status,
-                    "stage": self._dashboard_stage(order_test),
-                    "activityAt": updated_at,
-                    "orderDate": order.orderDate,
-                    **referent_doctor_projection(order),
-                    "testCategory": test.category,
-                    **work_item_fields,
-                }
+                self._build_pipeline_dashboard_item(
+                    order_test=order_test,
+                    order=order,
+                    patient=patient,
+                    test=test,
+                    sample=sample,
+                    escalation_code=self._escalation_code(tickets_by_test, order_test.id),
+                )
             )
         return _worklist_result(items, total, page, page_size, rows_loaded=len(rows))
 

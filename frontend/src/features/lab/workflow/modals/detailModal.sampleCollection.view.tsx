@@ -13,7 +13,7 @@ import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import {
   SampleCollectionDetailContent,
   SampleCollectionDetailFooter } from './detailModal.sampleCollection.panels';
-import { LabEventLogPanel } from '@/features/audit';
+import { LazyLabEventLogPanel } from '@/features/audit/LazyLabEventLogPanel';
 import type { deriveCollectionModalFields } from '@/utils/presentation';
 
 type CollectionFields = ReturnType<typeof deriveCollectionModalFields>;
@@ -173,7 +173,7 @@ export function SampleCollectionDetailModalView({
         showBarcode={(isCollected || isRejected) && sample.sampleId != null}
       />
       <LabRelatedSamplesPanel sample={sample} isOpen={isOpen} onOpenSample={openSampleDetail} />
-      {sample.sampleId != null && <LabEventLogPanel sampleId={Number(sample.sampleId)} />}
+      {sample.sampleId != null && <LazyLabEventLogPanel sampleId={Number(sample.sampleId)} />}
     </QueueModalShell>
   );
 }

@@ -11,7 +11,7 @@ import type { Test, TestWithContext } from '@/types';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { useListLoadErrorToast } from '@/hooks/listPage/useListLoadErrorToast';
 import { ModalFooter, QueueModalShell, labModalHeaderContext } from '../shared/detailModalLayout';
-import { LabEventLogPanel } from '@/features/audit';
+import { LazyLabEventLogPanel } from '@/features/audit/LazyLabEventLogPanel';
 import { TestHeaderBadges } from '../../components/LabWorkflowBadges';
 import { TestWorkflowCardLeftColumn } from '../shared/queueCardLeftColumn';
 import { useTest } from '@/features/catalog';
@@ -259,7 +259,7 @@ export const ResultEntryDetailModal: React.FC<ResultDetailModalProps> = ({
         showTurnaroundTime={showTurnaroundTime}
         turnaroundTime={turnaroundTime}
       />
-      {test.id != null && <LabEventLogPanel testId={test.id} />}
+      {test.id != null && <LazyLabEventLogPanel testId={test.id} />}
     </QueueModalShell>
   );
 };

@@ -11,6 +11,7 @@ from app.domains.lab.specimen.collection_service import (
     _normalize_sample_type,
     _sample_type_matches,
 )
+from app.domains.lab.rules.test_status_sets import INACTIVE_LINEAGE_STATUSES
 from app.domains.orders.models import Order, OrderTest
 from app.shared.contracts.enums import PriorityLevel, SampleStatus, TestStatus
 from sqlalchemy.orm import Session
@@ -38,7 +39,7 @@ def generate_samples_for_order(
         db.query(OrderTest)
         .filter(
             OrderTest.orderId == orderId,
-            OrderTest.status.notin_([TestStatus.SUPERSEDED, TestStatus.REMOVED]),
+            OrderTest.status.notin_(INACTIVE_LINEAGE_STATUSES),
         )
         .all()
     )

@@ -157,3 +157,15 @@ export const {
   MAX_RETEST_ATTEMPTS,
   MAX_RECOLLECTION_ATTEMPTS,
 } = GENERATED_LAB_CONSTANTS;
+
+export type {
+  CollectionWorklistItem,
+  DashboardWorklistItem,
+  EntryWorklistItem,
+  LabPipelineStage,
+  ValidationWorklistItem,
+  WorklistActionGateFields,
+  WorklistAttentionFields,
+  WorklistPagination,
+  WorklistReferentDoctorFields,
+} from '@/types/labWorklist';

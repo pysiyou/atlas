@@ -4,10 +4,7 @@
  */
 import React, { useCallback, useState } from 'react';
 import { actionButtonPreset, Button } from '@/components/primitives';
-import { Popover } from '@/components/overlays';
-import { FooterInfo } from '@/components/display';
-import { PopoverFormChrome } from '@/components/overlays';
-import { IconKeys } from '@/config/icons';
+import { LabAnchoredPopover, LabFormPopoverChrome } from '../components/LabActionPopover';
 import { displayId } from '@/utils';
 import { QualityIssueForm } from '../components/QualityIssueForm';
 import { useSubmitQualityIssue } from '../hooks/useSubmitQualityIssue';
@@ -113,7 +110,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
     .join(' · ');
 
   return (
-    <PopoverFormChrome
+    <LabFormPopoverChrome
       title={LAB_COPY.quality.reportSampleIssue}
       subtitle={subtitle}
       onCancel={onCancel}
@@ -122,7 +119,6 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
       confirmVariant="danger"
       isSubmitting={isSubmitting}
       disabled={!canSubmit}
-      footerInfo={<FooterInfo icon={IconKeys.modules.laboratory} label="Laboratory" />}
     >
       {numericSampleId ? (
         <QualityIssueForm
@@ -139,7 +135,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
           onOptionsLoaded={setOptions}
         />
       ) : null}
-    </PopoverFormChrome>
+    </LabFormPopoverChrome>
   );
 };
 
@@ -163,10 +159,7 @@ export const SampleRejectionPopover: React.FC<CollectionRejectionPopoverProps> =
   trigger,
 }) => {
   return (
-    <Popover
-      placement="bottom-end"
-      offsetValue={8}
-      preventClose={false}
+    <LabAnchoredPopover
       trigger={
         trigger ?? (
           <Button {...actionButtonPreset('reject')} size="sm" title={LAB_COPY.quality.reportSampleIssue}>
@@ -176,21 +169,19 @@ export const SampleRejectionPopover: React.FC<CollectionRejectionPopoverProps> =
       }
     >
       {({ close }) => (
-        <div data-popover-content onClick={e => e.stopPropagation()}>
-          <CollectionRejectionPopoverContent
-            sampleId={sampleId}
-            testCodes={testCodes}
-            sampleType={sampleType}
-            patientName={patientName}
-            isRecollection={isRecollection}
-            onCancel={close}
-            onSuccess={() => {
-              onSuccess?.();
-              close();
-            }}
-          />
-        </div>
+        <CollectionRejectionPopoverContent
+          sampleId={sampleId}
+          testCodes={testCodes}
+          sampleType={sampleType}
+          patientName={patientName}
+          isRecollection={isRecollection}
+          onCancel={close}
+          onSuccess={() => {
+            onSuccess?.();
+            close();
+          }}
+        />
       )}
-    </Popover>
+    </LabAnchoredPopover>
   );
 };

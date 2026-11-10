@@ -23,11 +23,11 @@ class ResultQueryService:
         )
 
     def get_pending_escalation(self) -> list:
-        from app.domains.lab.models.escalation import EscalationTicket
         from app.domains.lab.models.sample import Sample
+        from app.domains.lab.quality.escalation_queries import load_open_tickets_by_order_test_id
         from app.domains.lab.rules.order_test_lab_loader import lab_projections_for_orders
         from app.domains.orders.models import Order, OrderTest
-        from app.shared.contracts.enums import EscalationTicketStatus, TestStatus
+        from app.shared.contracts.enums import TestStatus
 
         tests = (
             self.db.query(OrderTest)
@@ -47,17 +47,7 @@ class ResultQueryService:
                 samples_by_id[s.sampleId] = s
 
         test_ids = [t.id for t in tests]
-        tickets_by_test: dict[int, EscalationTicket] = {}
-        if test_ids:
-            for ticket in (
-                self.db.query(EscalationTicket)
-                .filter(
-                    EscalationTicket.orderTestId.in_(test_ids),
-                    EscalationTicket.status == EscalationTicketStatus.OPEN,
-                )
-                .all()
-            ):
-                tickets_by_test[ticket.orderTestId] = ticket
+        tickets_by_test = load_open_tickets_by_order_test_id(self.db, test_ids)
 
         unique_orders: list = []
         seen_order_ids: set[int] = set()

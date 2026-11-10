@@ -57,13 +57,9 @@ class LabOperationsService:
         self._escalation_ops = EscalationOperations(self)
 
     def _get_sample(self, sample_id: int, for_update: bool = False) -> Sample:
-        query = self.db.query(Sample).filter(Sample.sampleId == sample_id)
-        if for_update:
-            query = query.with_for_update()
-        sample = query.first()
-        if not sample:
-            raise LabOperationError(f"Sample {sample_id} not found", status_code=404)
-        return sample
+        from app.domains.lab.specimen.lookup import get_sample_or_error
+
+        return get_sample_or_error(self.db, sample_id, for_update=for_update)
 
     def _get_order_test(
         self,
@@ -180,14 +176,11 @@ class LabOperationsService:
         *,
         exclude_statuses: list[TestStatus] | None = None,
     ) -> list[OrderTest]:
-        query = self.db.query(OrderTest).filter(
-            OrderTest.orderId == sample.orderId,
-            OrderTest.testCode.in_(sample.testCodes),
-            OrderTest.sampleId == sample.sampleId,
+        from app.domains.lab.specimen.lookup import linked_order_tests_for_sample
+
+        return linked_order_tests_for_sample(
+            self.db, sample, exclude_statuses=exclude_statuses
         )
-        if exclude_statuses:
-            query = query.filter(OrderTest.status.notin_(exclude_statuses))
-        return query.all()
 
     def _invalidate_lab_monitor_cache(self) -> None:
         invalidate_lab_board_summary_cache()

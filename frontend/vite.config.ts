@@ -18,12 +18,26 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          // Lab workflow modals are registered globally; keep them out of the main feature chunk.
+          if (id.includes('/features/audit/laboratoryResolve')) {
+            return 'audit-catalog-lab';
+          }
+          if (id.includes('/features/audit/catalog.ts')) {
+            return 'audit-catalog';
+          }
+          if (id.includes('/features/audit/LazyLabEventLogPanel')) {
+            return 'audit-embed';
+          }
           if (id.includes('/features/lab/workflow/modals/')) {
             return 'lab-workflow-modals';
           }
+          if (id.includes('/features/lab/monitor/LabMonitorBoard')) {
+            return 'lab-monitor-board';
+          }
           if (id.includes('/features/lab/workflow/')) {
             return 'lab-workflow';
+          }
+          if (id.includes('/app/modals/modalRegistry') || id.includes('/app/modals/ModalRenderer')) {
+            return 'modal-shell';
           }
           if (id.includes('node_modules')) {
             if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {

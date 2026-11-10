@@ -4,7 +4,7 @@
 
 import { Panel } from '@/components/surfaces';
 import { RecordId } from '@/features/shared';
-import { LabEventLogPanel } from '@/features/audit';
+import { LazyLabEventLogPanel } from '@/features/audit/LazyLabEventLogPanel';
 import { AttemptIndicator } from '../../components/LabAttemptIndicators';
 import { TestHeaderBadges } from '../../components/LabWorkflowBadges';
 import { SupervisorApprovalBadge } from '../../components/LabResultStatusBadges';
@@ -234,7 +234,7 @@ export function EscalationResolutionBody({
           },
         ]}
       />
-      {test.id != null && <LabEventLogPanel testId={test.id} />}
+      {test.id != null && <LazyLabEventLogPanel testId={test.id} />}
     </>
   );
 }

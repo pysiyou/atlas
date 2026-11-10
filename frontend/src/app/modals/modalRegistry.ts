@@ -1,59 +1,54 @@
 /**
- * Modal Registry — components keyed by ModalType.
- * Eager imports keep a single Modal instance per open (no Suspense shell swap).
+ * Modal Registry — lazy loaders keyed by ModalType (components load on first open).
  */
 
 import type { ComponentType } from 'react';
 import { ModalType } from '@/lib/context/ModalContext';
 import type { BaseModalProps, ModalType as ModalTypeName } from '@/lib/context/modalTypes';
-import {
-  EscalationResolutionModal,
-  ResultEntryDetailModal,
-  SampleCollectionDetailModal,
-  TestDetailModal,
-} from '@/features/lab/workflow';
-import { OrderUpsertModal } from '@/features/orders/OrderUpsertModal';
-import { ReportPreviewModal } from '@/features/reports';
 
 export type { BaseModalProps } from '@/lib/context/modalTypes';
 
 /** Renderer spreads the matching frame payload; registry does not encode each variant. */
-type RegisteredModalComponent = ComponentType<BaseModalProps & Record<string, unknown>>;
+export type RegisteredModalComponent = ComponentType<BaseModalProps & Record<string, unknown>>;
 
-export interface ModalRegistryEntry {
-  component: RegisteredModalComponent;
+export type ModalLoader = () => Promise<{ default: RegisteredModalComponent }>;
+
+const MODAL_LOADERS: Partial<Record<ModalTypeName, ModalLoader>> = {
+  [ModalType.SAMPLE_DETAIL]: () =>
+    import('@/features/lab/workflow/modals/detailModal.sampleCollection').then(m => ({
+      default: m.SampleCollectionDetailModal as unknown as RegisteredModalComponent,
+    })),
+  [ModalType.RESULT_DETAIL]: () =>
+    import('@/features/lab/workflow/modals/detailModal.resultEntry').then(m => ({
+      default: m.ResultEntryDetailModal as unknown as RegisteredModalComponent,
+    })),
+  [ModalType.TEST_DETAIL]: () =>
+    import('@/features/lab/workflow/modals/detailModal.test').then(m => ({
+      default: m.TestDetailModal as unknown as RegisteredModalComponent,
+    })),
+  [ModalType.ESCALATION_RESOLUTION_DETAIL]: () =>
+    import('@/features/lab/workflow/modals/detailModal.escalation').then(m => ({
+      default: m.EscalationResolutionModal as unknown as RegisteredModalComponent,
+    })),
+  [ModalType.NEW_ORDER]: () =>
+    import('@/features/orders/OrderUpsertModal').then(m => ({
+      default: m.OrderUpsertModal as unknown as RegisteredModalComponent,
+    })),
+  [ModalType.REPORT_PREVIEW]: () =>
+    import('@/features/reports').then(m => ({
+      default: m.ReportPreviewModal as unknown as RegisteredModalComponent,
+    })),
+};
+
+export function getModalLoader(type: ModalTypeName): ModalLoader | undefined {
+  return MODAL_LOADERS[type];
 }
 
-const registry: Partial<Record<ModalTypeName, ModalRegistryEntry>> = {};
-
-function registerModal(type: ModalTypeName, component: RegisteredModalComponent): void {
-  registry[type] = { component };
+export function isModalTypeRegistered(type: ModalTypeName): boolean {
+  return type in MODAL_LOADERS;
 }
 
-export function getRegisteredModal(type: ModalTypeName): ModalRegistryEntry | undefined {
-  return registry[type];
-}
-
-registerModal(
-  ModalType.SAMPLE_DETAIL,
-  SampleCollectionDetailModal as unknown as RegisteredModalComponent
-);
-registerModal(
-  ModalType.RESULT_DETAIL,
-  ResultEntryDetailModal as unknown as RegisteredModalComponent
-);
-registerModal(ModalType.TEST_DETAIL, TestDetailModal as unknown as RegisteredModalComponent);
-registerModal(
-  ModalType.ESCALATION_RESOLUTION_DETAIL,
-  EscalationResolutionModal as unknown as RegisteredModalComponent
-);
-registerModal(ModalType.NEW_ORDER, OrderUpsertModal as unknown as RegisteredModalComponent);
-registerModal(
-  ModalType.REPORT_PREVIEW,
-  ReportPreviewModal as unknown as RegisteredModalComponent
-);
-
-/** Side-effect import hook so registration runs on module load. */
+/** Side-effect hook so registration module is loaded with ModalRenderer. */
 export function initializeModalRegistry(): void {
-  // Registration happens on module load
+  /* loaders registered at module init */
 }

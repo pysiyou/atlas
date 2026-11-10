@@ -2,13 +2,126 @@
  * Renders the current modal frame (at most one visible at a time).
  */
 
-import React, { createElement, useEffect } from 'react';
+import React, { createElement, useEffect, useState } from 'react';
+import { Modal } from '@/components/overlays/Modal';
+import { ModalLoadingBody } from '@/components/overlays/modalLoading';
 import { useModal, useModalStack } from '@/lib/context/ModalContext';
-import { modalFrameKey, modalFramePayload } from '@/lib/context/modalTypes';
-import { getRegisteredModal, initializeModalRegistry } from './modalRegistry';
+import { modalFrameKey, modalFramePayload, type ModalFrame } from '@/lib/context/modalTypes';
+import {
+  getModalLoader,
+  initializeModalRegistry,
+  isModalTypeRegistered,
+  type RegisteredModalComponent,
+} from './modalRegistry';
 import { logger } from '@/utils/logger';
 
 initializeModalRegistry();
+
+const modalComponentCache = new Map<string, RegisteredModalComponent>();
+
+function modalLoadingTitle(frame: ModalFrame): string {
+  switch (frame.type) {
+    case 'SAMPLE_DETAIL':
+      return 'Sample collection';
+    case 'RESULT_DETAIL':
+      return 'Result entry';
+    case 'TEST_DETAIL':
+      return 'Test';
+    case 'ESCALATION_RESOLUTION_DETAIL':
+      return 'Escalation';
+    case 'NEW_ORDER':
+      return 'Order';
+    case 'REPORT_PREVIEW':
+      return 'Report';
+    default:
+      return 'Loading';
+  }
+}
+
+interface LazyRegisteredModalProps {
+  frame: ModalFrame;
+  isOpen: boolean;
+  onClose: () => void;
+  isActive: boolean;
+}
+
+const LazyRegisteredModal: React.FC<LazyRegisteredModalProps> = ({
+  frame,
+  isOpen,
+  onClose,
+  isActive,
+}) => {
+  const [Component, setComponent] = useState<RegisteredModalComponent | null>(() =>
+    modalComponentCache.get(frame.type) ?? null
+  );
+  const [loadFailed, setLoadFailed] = useState(false);
+
+  useEffect(() => {
+    if (modalComponentCache.has(frame.type)) {
+      setComponent(modalComponentCache.get(frame.type)!);
+      setLoadFailed(false);
+      return;
+    }
+    const loader = getModalLoader(frame.type);
+    if (!loader) {
+      setLoadFailed(true);
+      return;
+    }
+    let cancelled = false;
+    void loader()
+      .then(({ default: loaded }) => {
+        if (cancelled) return;
+        modalComponentCache.set(frame.type, loaded);
+        setComponent(() => loaded);
+        setLoadFailed(false);
+      })
+      .catch(err => {
+        if (cancelled) return;
+        logger.error('Failed to load modal component', err);
+        setLoadFailed(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [frame.type]);
+
+  const sharedProps = {
+    isOpen,
+    onClose,
+    isActive,
+    ...modalFramePayload(frame),
+  };
+
+  if (loadFailed) {
+    return (
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        title="Unable to open"
+        size="3xl"
+        isActive={isActive}
+      >
+        <p className="text-sm text-content-muted">This dialog failed to load. Please try again.</p>
+      </Modal>
+    );
+  }
+
+  if (!Component) {
+    return (
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        title={modalLoadingTitle(frame)}
+        size="3xl"
+        isActive={isActive}
+      >
+        <ModalLoadingBody variant="workflow" />
+      </Modal>
+    );
+  }
+
+  return createElement(Component, sharedProps);
+};
 
 /**
  * ModalRenderer Component
@@ -20,7 +133,7 @@ export const ModalRenderer: React.FC = () => {
   const stack = useModalStack();
   const { closeModal } = useModal();
 
-  const unknownType = stack.find(frame => !getRegisteredModal(frame.type))?.type;
+  const unknownType = stack.find(frame => !isModalTypeRegistered(frame.type))?.type;
 
   useEffect(() => {
     if (!unknownType) return;
@@ -30,18 +143,15 @@ export const ModalRenderer: React.FC = () => {
 
   return (
     <>
-      {stack.map(frame => {
-        const entry = getRegisteredModal(frame.type);
-        if (!entry) return null;
-        const frameKey = modalFrameKey(frame);
-        return createElement(entry.component, {
-          key: frameKey,
-          isOpen: true,
-          onClose: closeModal,
-          isActive: true,
-          ...modalFramePayload(frame),
-        });
-      })}
+      {stack.map(frame => (
+        <LazyRegisteredModal
+          key={modalFrameKey(frame)}
+          frame={frame}
+          isOpen
+          onClose={closeModal}
+          isActive
+        />
+      ))}
     </>
   );
 };

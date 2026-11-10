@@ -6,9 +6,9 @@
 import React, { useState } from 'react';
 import { text } from '@/theme/recipes';
 import { actionButtonPreset, Button } from '@/components/primitives';
-import { Popover, PopoverFormChrome } from '@/components/overlays';
-import { Alert, FooterInfo } from '@/components/display';
-import { IconKeys } from '@/config/icons';
+import { Popover } from '@/components/overlays';
+import { Alert } from '@/components/display';
+import { LabFormPopoverChrome } from './LabActionPopover';
 import { useQualityIssuePopover } from '../hooks/useQualityIssuePopover';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import {
@@ -152,7 +152,7 @@ const QualityIssuePopoverContent: React.FC<QualityIssuePopoverContentProps> = ({
   }
 
   return (
-    <PopoverFormChrome
+    <LabFormPopoverChrome
       title={copy.title}
       subtitle={subtitle || undefined}
       onCancel={onCancel}
@@ -161,7 +161,6 @@ const QualityIssuePopoverContent: React.FC<QualityIssuePopoverContentProps> = ({
       confirmVariant="danger"
       isSubmitting={isRejecting}
       disabled={isConfirmDisabled}
-      footerInfo={<FooterInfo icon={IconKeys.modules.laboratory} label="Laboratory" />}
     >
       <QualityIssuePopoverFormBody
         state={{
@@ -178,7 +177,7 @@ const QualityIssuePopoverContent: React.FC<QualityIssuePopoverContentProps> = ({
           onNotesChange: setRejectionNotes,
         }}
       />
-    </PopoverFormChrome>
+    </LabFormPopoverChrome>
   );
 };
 

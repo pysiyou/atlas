@@ -2,6 +2,7 @@
  * Attention item formatting — dedicated copy per attention type (not workflow stage).
  */
 
+import { ATTENTION_LABELS } from '@/types/generated/labContract';
 import { displayId } from '@/utils';
 import { LAB_CONFIG, LAB_COPY, labStageLabel } from '../constants/labConstants';
 import type { LabAttentionQueueItem } from './monitorModel';
@@ -94,27 +95,27 @@ const ESCALATION_DETAIL: AttentionDetail = { type: 'text', value: 'Clinical esca
 
 const ATTENTION_HANDLERS: Record<AttentionType, AttentionHandler> = {
   escalation_critical: item => ({
-    action: `${LAB_COPY.attention.criticalValue} — pathologist review required`,
+    action: ATTENTION_LABELS.critical_value,
     details: baseDetails(item, 'escalation_critical', [ESCALATION_DETAIL]),
   }),
 
   escalation_amendment: item => ({
-    action: 'Amended result — pending pathologist release',
+    action: ATTENTION_LABELS.amendment_pending,
     details: baseDetails(item, 'escalation_amendment', [ESCALATION_DETAIL]),
   }),
 
   escalation_retry_limit: item => ({
-    action: 'Repeat analysis limit — pathologist authorization required',
+    action: ATTENTION_LABELS.retry_limit,
     details: baseDetails(item, 'escalation_retry_limit', [ESCALATION_DETAIL]),
   }),
 
   escalation_recollection_limit: item => ({
-    action: `${LAB_COPY.attention.recollection} limit — pathologist authorization required`,
+    action: ATTENTION_LABELS.recollection_limit,
     details: baseDetails(item, 'escalation_recollection_limit', [ESCALATION_DETAIL]),
   }),
 
   supervisor_approval: item => ({
-    action: 'Awaiting pathologist release',
+    action: ATTENTION_LABELS.supervisor_review,
     details: baseDetails(item, 'supervisor_approval', [ESCALATION_DETAIL]),
   }),
 

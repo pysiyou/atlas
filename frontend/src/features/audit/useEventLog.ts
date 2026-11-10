@@ -10,6 +10,7 @@ import { queryKeys } from '@/lib/query';
 import { eventLogQueryKeyParams } from './buildEventLogQuery';
 import { fetchAuditEvents, type AuditEventQueryParams } from './api';
 import { resolveEventLogItems, type ResolveEventLogOptions } from './catalog';
+import { resolveLabEventLogItems } from './laboratoryResolve';
 import type { EventLogQuery, EventLogRecord } from './types';
 
 function queryToApiParams(query: EventLogQuery): AuditEventQueryParams {
@@ -109,10 +110,12 @@ export function useEventLog(query: EventLogQuery, options?: UseEventLogOptions) 
     [queryResult.data, olderPages]
   );
 
-  const resolved = useMemo(
-    () => resolveEventLogItems(events, resolveOptions),
-    [events, resolveOptions]
-  );
+  const resolved = useMemo(() => {
+    if (query.scope === 'lab') {
+      return resolveLabEventLogItems(events, resolveOptions);
+    }
+    return resolveEventLogItems(events, resolveOptions);
+  }, [events, resolveOptions, query.scope]);
 
   const loadMore = useCallback(async () => {
     if (!hasMore || isFetchingMore || events.length === 0) return;

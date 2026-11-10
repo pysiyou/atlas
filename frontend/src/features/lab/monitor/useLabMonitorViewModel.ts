@@ -65,13 +65,15 @@ function toBoardViewState(board: LabBoardResponse): LabBoardViewState {
   };
 }
 
-export function useLabMonitorViewModel(): LabBoardViewState & {
+export function useLabMonitorViewModel(options?: { enabled?: boolean }): LabBoardViewState & {
   isLoading: boolean;
   isError: boolean;
   error: unknown;
   refetch: () => Promise<unknown>;
 } {
-  const { board, isLoading, isError, error, refetch } = useLabMonitorBoardQuery({ enabled: true });
+  const { board, isLoading, isError, error, refetch } = useLabMonitorBoardQuery({
+    enabled: options?.enabled ?? true,
+  });
   const data = useMemo(() => (board ? toBoardViewState(board) : EMPTY_BOARD), [board]);
 
   return {

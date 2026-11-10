@@ -1,7 +1,8 @@
 """Lab worklist and monitor board routes."""
 
+from collections.abc import Callable
 from datetime import date
-from typing import Literal
+from typing import Any, Literal, TypeVar
 
 from app.domains.lab.monitor.observability import log_lab_read
 from app.domains.lab.monitor.worklist_service import LabWorklistService
@@ -33,6 +34,55 @@ def _worklist_response(items: list, pagination: dict) -> WorklistResponse:
     )
 
 
+TItem = TypeVar("TItem")
+
+
+def _paginated_filterable_worklist(
+    *,
+    log_name: str,
+    page: int,
+    page_size: int,
+    list_fn: Callable[..., dict[str, Any]],
+    item_model: type[TItem],
+    search: str | None,
+    priority: PriorityLevel | None,
+    date_from: date | None,
+    date_to: date | None,
+    sample_type: str | None,
+) -> WorklistResponse:
+    with log_lab_read(log_name, page=page, page_size=page_size) as metrics:
+        result = list_fn(
+            page=page,
+            page_size=page_size,
+            search=search,
+            priority=priority,
+            date_from=date_from,
+            date_to=date_to,
+            sample_types=parse_csv_values(sample_type) or None,
+        )
+        metrics["rows_loaded"] = result.get("rows_loaded")
+        metrics["rows_returned"] = len(result["items"])
+    items = [item_model(**item) for item in result["items"]]
+    return _worklist_response(items, result["pagination"])
+
+
+def _stage_worklist_kwargs(
+    *,
+    search: str | None,
+    priority: PriorityLevel | None,
+    date_from: date | None,
+    date_to: date | None,
+    sample_type: str | None,
+) -> dict[str, Any]:
+    return {
+        "search": search,
+        "priority": priority,
+        "date_from": date_from,
+        "date_to": date_to,
+        "sample_type": sample_type,
+    }
+
+
 @router.get("/worklists/collection")
 def get_collection_worklist(
     page: int = Query(1, ge=1),
@@ -45,20 +95,21 @@ def get_collection_worklist(
     db: Session = Depends(get_db),
     _user: User = Depends(require_sample_collector),
 ):
-    with log_lab_read("lab.worklists.collection", page=page, page_size=pageSize) as metrics:
-        result = LabWorklistService(db).list_collection(
-            page=page,
-            page_size=pageSize,
+    service = LabWorklistService(db)
+    return _paginated_filterable_worklist(
+        log_name="lab.worklists.collection",
+        page=page,
+        page_size=pageSize,
+        list_fn=service.list_collection,
+        item_model=CollectionWorklistItem,
+        **_stage_worklist_kwargs(
             search=search,
             priority=priority,
             date_from=dateFrom,
             date_to=dateTo,
-            sample_types=parse_csv_values(sampleType) or None,
-        )
-        metrics["rows_loaded"] = result.get("rows_loaded")
-        metrics["rows_returned"] = len(result["items"])
-    items = [CollectionWorklistItem(**item) for item in result["items"]]
-    return _worklist_response(items, result["pagination"])
+            sample_type=sampleType,
+        ),
+    )
 
 
 @router.get("/worklists/entry")
@@ -73,20 +124,21 @@ def get_entry_worklist(
     db: Session = Depends(get_db),
     _user: User = Depends(require_lab_tech),
 ):
-    with log_lab_read("lab.worklists.entry", page=page, page_size=pageSize) as metrics:
-        result = LabWorklistService(db).list_entry(
-            page=page,
-            page_size=pageSize,
+    service = LabWorklistService(db)
+    return _paginated_filterable_worklist(
+        log_name="lab.worklists.entry",
+        page=page,
+        page_size=pageSize,
+        list_fn=service.list_entry,
+        item_model=EntryWorklistItem,
+        **_stage_worklist_kwargs(
             search=search,
             priority=priority,
             date_from=dateFrom,
             date_to=dateTo,
-            sample_types=parse_csv_values(sampleType) or None,
-        )
-        metrics["rows_loaded"] = result.get("rows_loaded")
-        metrics["rows_returned"] = len(result["items"])
-    items = [EntryWorklistItem(**item) for item in result["items"]]
-    return _worklist_response(items, result["pagination"])
+            sample_type=sampleType,
+        ),
+    )
 
 
 @router.get("/worklists/validation")
@@ -101,20 +153,21 @@ def get_validation_worklist(
     db: Session = Depends(get_db),
     _user: User = Depends(require_lab_tech),
 ):
-    with log_lab_read("lab.worklists.validation", page=page, page_size=pageSize) as metrics:
-        result = LabWorklistService(db).list_validation(
-            page=page,
-            page_size=pageSize,
+    service = LabWorklistService(db)
+    return _paginated_filterable_worklist(
+        log_name="lab.worklists.validation",
+        page=page,
+        page_size=pageSize,
+        list_fn=service.list_validation,
+        item_model=ValidationWorklistItem,
+        **_stage_worklist_kwargs(
             search=search,
             priority=priority,
             date_from=dateFrom,
             date_to=dateTo,
-            sample_types=parse_csv_values(sampleType) or None,
-        )
-        metrics["rows_loaded"] = result.get("rows_loaded")
-        metrics["rows_returned"] = len(result["items"])
-    items = [ValidationWorklistItem(**item) for item in result["items"]]
-    return _worklist_response(items, result["pagination"])
+            sample_type=sampleType,
+        ),
+    )
 
 
 @router.get("/worklists/dashboard-today")

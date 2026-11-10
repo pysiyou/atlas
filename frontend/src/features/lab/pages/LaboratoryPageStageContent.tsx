@@ -9,7 +9,6 @@ import { WORKSPACE, SPACING } from '@/theme/recipes';
 import type { LabTabId } from '../constants/labConstants';
 import { WORKLIST_SHELL } from '@/theme/recipes';
 import { tabAllowed } from './laboratoryPageAccess';
-import { LabMonitorBoard } from '../monitor/LabMonitorBoard';
 
 const SampleCollectionQueue = lazy(() =>
   import('../collection/SampleCollectionQueue').then(module => ({
@@ -26,6 +25,11 @@ const ResultValidationQueue = lazy(() =>
     default: module.ResultValidationQueue,
   }))
 );
+const LabMonitorBoard = lazy(() =>
+  import('../monitor/LabMonitorBoard').then(module => ({
+    default: module.LabMonitorBoard,
+  }))
+);
 
 export interface LaboratoryPageStageContentProps {
   activeTab: LabTabId;
@@ -36,12 +40,12 @@ export interface LaboratoryPageStageContentProps {
 }
 
 function StageFallback({ isMonitor }: { isMonitor: boolean }) {
-  if (isMonitor) {
-    return <LabMonitorBoard loading />;
-  }
+  const rowCount = isMonitor ? 3 : 5;
   return (
-    <div className={`${WORKSPACE.contentInset} flex flex-col ${SPACING.gapSection}`}>
-      {Array.from({ length: 5 }).map((_, index) => (
+    <div
+      className={`${isMonitor ? 'flex-1 flex flex-col min-h-0 p-space-4' : WORKSPACE.contentInset} flex flex-col ${SPACING.gapSection}`}
+    >
+      {Array.from({ length: rowCount }).map((_, index) => (
         <Card key={index} padding="md" loading className="min-h-[140px]" />
       ))}
     </div>
@@ -86,7 +90,7 @@ export function LaboratoryPageStageContent({
           )}
           {activeTab === 'monitor' && tabAllowed('monitor', hasRole) && (
             <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-              <LabMonitorBoard />
+              <LabMonitorBoard monitorActive />
             </div>
           )}
         </Suspense>

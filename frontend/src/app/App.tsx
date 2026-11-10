@@ -43,8 +43,8 @@ const Dashboard = lazyNamed(
 const Patients = lazyNamed(() => import('@/features/patients'), 'PatientsPage');
 const Orders = lazyNamed(() => import('@/features/orders'), 'OrdersPage');
 const Catalog = lazyNamed(() => import('@/features/catalog'), 'CatalogPage');
-const Laboratory = lazyNamed(() => import('@/features/lab'), 'LaboratoryPage');
-const LabAllTests = lazyNamed(() => import('@/features/lab'), 'LabAllTestsPage');
+const Laboratory = lazyNamed(() => import('@/features/lab/routes'), 'LaboratoryPage');
+const LabAllTests = lazyNamed(() => import('@/features/lab/routes'), 'LabAllTestsPage');
 const Payments = lazyNamed(() => import('@/features/payments'), 'PaymentListPage');
 const Reports = lazyNamed(() => import('@/features/reports'), 'ReportsPage');
 const EventLog = lazyNamed(() => import('@/features/audit'), 'EventLogPage');

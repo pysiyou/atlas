@@ -5,19 +5,20 @@ from datetime import UTC, datetime
 from typing import Any
 
 from app.domains.catalog.models.catalog_test import CatalogTest
-from app.domains.lab.models.escalation import EscalationTicket
 from app.domains.lab.models.sample import Sample
+from app.domains.lab.monitor.catalog_tat import CatalogTatResolver
+from app.domains.lab.monitor.predicates import (
+    TERMINAL_PIPELINE_TEST_STATUSES,
+    monitor_universe_predicate,
+    running_tests_predicate,
+)
 from app.domains.lab.monitor.tat import (
     assemble_board,
 )
 from app.domains.lab.schemas.worklists import LabTodayStageSnapshot
 from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient
-from app.shared.contracts.enums import (
-    EscalationTicketStatus,
-    SampleStatus,
-    TestStatus,
-)
+from app.shared.contracts.enums import SampleStatus, TestStatus
 from sqlalchemy import and_, func, or_
 from sqlalchemy.orm import Session
 
@@ -27,24 +28,10 @@ class LabBoardService:
 
     def __init__(self, db: Session):
         self.db = db
-        self._tat_cache: dict[str, int] = {}
-
-    def _get_turnaround(self, test_code: str) -> int:
-        if test_code in self._tat_cache:
-            return self._tat_cache[test_code]
-        row = (
-            self.db.query(CatalogTest.turnaroundTimeHours)
-            .filter(CatalogTest.code == test_code)
-            .first()
-        )
-        hours = row[0] if row else 24
-        self._tat_cache[test_code] = hours
-        return hours
+        self._tat = CatalogTatResolver(db)
 
     def _max_tat_for_codes(self, codes: list[str] | None) -> int:
-        if not codes:
-            return 24
-        return max(self._get_turnaround(code) for code in codes)
+        return self._tat.max_hours_for_codes(codes)
 
     def compute_board_summary(self, include_supervisor: bool = True) -> dict[str, Any]:
         """SQL-backed counts for tab badges — avoids loading full queue rows."""
@@ -136,23 +123,16 @@ class LabBoardService:
 
     @staticmethod
     def _terminal_test_statuses() -> tuple[TestStatus, ...]:
-        return (
-            TestStatus.CANCELLED,
-            TestStatus.REMOVED,
-            TestStatus.SUPERSEDED,
-            TestStatus.VALIDATED,
-        )
+        return TERMINAL_PIPELINE_TEST_STATUSES
 
     @staticmethod
     def _running_tests_predicate():
-        return ~OrderTest.status.in_(LabBoardService._terminal_test_statuses())
+        return running_tests_predicate()
 
     @staticmethod
     def _monitor_universe_predicate(today_start: datetime):
         """Same universe as the lab monitor worklist: updated today or still running."""
-        worked_today = OrderTest.updatedAt >= today_start
-        still_running = LabBoardService._running_tests_predicate()
-        return or_(worked_today, still_running)
+        return monitor_universe_predicate(today_start)
 
     @staticmethod
     def _at_collection_predicate():
@@ -355,18 +335,10 @@ class LabBoardService:
             .filter(OrderTest.status == TestStatus.ESCALATED)
             .all()
         )
+        from app.domains.lab.quality.escalation_queries import load_open_tickets_by_order_test_id
+
         test_ids = [ot.id for ot, _order, _patient, _test in rows]
-        tickets_by_test: dict[int, EscalationTicket] = {}
-        if test_ids:
-            for ticket in (
-                self.db.query(EscalationTicket)
-                .filter(
-                    EscalationTicket.orderTestId.in_(test_ids),
-                    EscalationTicket.status == EscalationTicketStatus.OPEN,
-                )
-                .all()
-            ):
-                tickets_by_test[ticket.orderTestId] = ticket
+        tickets_by_test = load_open_tickets_by_order_test_id(self.db, test_ids)
         result: list[dict[str, Any]] = []
         for ot, order, patient, test in rows:
             ticket = tickets_by_test.get(ot.id)

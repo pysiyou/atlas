@@ -6,7 +6,7 @@ import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Panel } from '@/components/surfaces';
-import { LabEventLogPanel } from '@/features/audit';
+import { LazyLabEventLogPanel } from '@/features/audit/LazyLabEventLogPanel';
 import {
   formatPipelinePendingMessage,
   OrderTestSampleTabs,
@@ -458,7 +458,7 @@ export function TestDetailModalBody({
         </>
       ) : null}
 
-      {orderTestId != null ? <LabEventLogPanel testId={orderTestId} /> : null}
+      {orderTestId != null ? <LazyLabEventLogPanel testId={orderTestId} /> : null}
     </>
   );
 }

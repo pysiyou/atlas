@@ -581,6 +581,60 @@ export function appendTrailingActor(
 
 // --- catalogBuilders.ts ---
 
+/** Laboratory wires — also used by embedded lab timeline (see laboratoryResolve). */
+export const LABORATORY_HEADLINE_BUILDERS: Record<
+  string,
+  (record: EventLogRecord, context: EventLogHeadlineContext) => EventLogHeadlinePart[]
+> = {
+  'laboratory.sample.create': r => buildLabSampleHeadline(r, 'label generated'),
+  'laboratory.sample.collect': r => buildLabSampleHeadline(r, 'collected'),
+  'laboratory.sample.reject': r => {
+    const parts = buildLabSampleHeadline(r, 'rejected');
+    return appendClause(parts, metaString(r, 'rejection_reason') ?? '');
+  },
+  'laboratory.sample.recollect_request': r =>
+    buildLabSampleHeadline(r, 'recollection requested'),
+  'laboratory.sample.recollect_approve': r =>
+    buildLabSampleHeadline(r, 'recollection approved'),
+  'laboratory.sample.recollect_deny': r => {
+    const parts = buildLabSampleHeadline(r, 'recollection denied');
+    return appendClause(parts, metaString(r, 'reason') ?? '');
+  },
+  'laboratory.analyzer.duplicate_ingest': (r, c) => {
+    const parts = buildLabOrderTestHeadline(r, c, 'Analyzer ingest', 'ignored');
+    return appendBracketReasonLiteral(parts, 'Duplicate');
+  },
+  'laboratory.analyzer.ingest_rejected': (r, c) => {
+    const parts = buildLabOrderTestHeadline(r, c, 'Analyzer ingest', 'rejected');
+    return appendClause(parts, metaString(r, 'reason') ?? '');
+  },
+  'laboratory.result.enter': (r, c) =>
+    buildLabOrderTestHeadline(r, c, 'Results', 'recorded'),
+  'laboratory.result.update': (r, c) =>
+    buildLabOrderTestHeadline(r, c, 'Results', 'updated'),
+  'laboratory.result.critical_detect': (r, c) =>
+    buildLabOrderTestHeadline(r, c, 'Critical value', 'detected'),
+  'laboratory.result.critical_notify': (r, c) =>
+    buildLabOrderTestHeadline(r, c, 'Clinician notification', 'documented'),
+  'laboratory.result.critical_acknowledge': (r, c) =>
+    buildLabOrderTestHeadline(r, c, 'Critical value protocol', 'acknowledged'),
+  'laboratory.validation.approve': (r, c) =>
+    buildLabOrderTestHeadline(r, c, 'Results', 'validated'),
+  'laboratory.validation.reject': (r, c) => buildValidationRejectHeadline(r, c),
+  'laboratory.escalation.trigger': (r, c) => {
+    const parts = buildLabOrderTestHeadline(r, c, 'Escalation', 'triggered');
+    return appendClause(parts, metaString(r, 'reason_code') ?? '');
+  },
+  'laboratory.escalation.resolve': (r, c) => {
+    const parts = buildLabOrderTestHeadline(r, c, 'Escalation', escalationResolveTrailingAction(r));
+    const reasonCode = metaString(r, 'reason_code');
+    if (reasonCode) {
+      return appendInfoHighlight(parts, `Exception: ${formatReasonLabel(reasonCode)}`);
+    }
+    return parts;
+  },
+};
+
 export const EVENT_HEADLINE_BUILDERS: Record<
   string,
   (record: EventLogRecord, context: EventLogHeadlineContext) => EventLogHeadlinePart[]
@@ -663,53 +717,7 @@ export const EVENT_HEADLINE_BUILDERS: Record<
     if (orderId) parts = append(parts, orderRecordPhrase(orderId));
     return appendTriggeredByClause(parts, r, c);
   },
-  'laboratory.sample.create': r => buildLabSampleHeadline(r, 'label generated'),
-  'laboratory.sample.collect': r => buildLabSampleHeadline(r, 'collected'),
-  'laboratory.sample.reject': r => {
-    const parts = buildLabSampleHeadline(r, 'rejected');
-    return appendClause(parts, metaString(r, 'rejection_reason') ?? '');
-  },
-  'laboratory.sample.recollect_request': r =>
-    buildLabSampleHeadline(r, 'recollection requested'),
-  'laboratory.sample.recollect_approve': r =>
-    buildLabSampleHeadline(r, 'recollection approved'),
-  'laboratory.sample.recollect_deny': r => {
-    const parts = buildLabSampleHeadline(r, 'recollection denied');
-    return appendClause(parts, metaString(r, 'reason') ?? '');
-  },
-  'laboratory.analyzer.duplicate_ingest': (r, c) => {
-    const parts = buildLabOrderTestHeadline(r, c, 'Analyzer ingest', 'ignored');
-    return appendBracketReasonLiteral(parts, 'Duplicate');
-  },
-  'laboratory.analyzer.ingest_rejected': (r, c) => {
-    const parts = buildLabOrderTestHeadline(r, c, 'Analyzer ingest', 'rejected');
-    return appendClause(parts, metaString(r, 'reason') ?? '');
-  },
-  'laboratory.result.enter': (r, c) =>
-    buildLabOrderTestHeadline(r, c, 'Results', 'recorded'),
-  'laboratory.result.update': (r, c) =>
-    buildLabOrderTestHeadline(r, c, 'Results', 'updated'),
-  'laboratory.result.critical_detect': (r, c) =>
-    buildLabOrderTestHeadline(r, c, 'Critical value', 'detected'),
-  'laboratory.result.critical_notify': (r, c) =>
-    buildLabOrderTestHeadline(r, c, 'Clinician notification', 'documented'),
-  'laboratory.result.critical_acknowledge': (r, c) =>
-    buildLabOrderTestHeadline(r, c, 'Critical value protocol', 'acknowledged'),
-  'laboratory.validation.approve': (r, c) =>
-    buildLabOrderTestHeadline(r, c, 'Results', 'validated'),
-  'laboratory.validation.reject': (r, c) => buildValidationRejectHeadline(r, c),
-  'laboratory.escalation.trigger': (r, c) => {
-    const parts = buildLabOrderTestHeadline(r, c, 'Escalation', 'triggered');
-    return appendClause(parts, metaString(r, 'reason_code') ?? '');
-  },
-  'laboratory.escalation.resolve': (r, c) => {
-    const parts = buildLabOrderTestHeadline(r, c, 'Escalation', escalationResolveTrailingAction(r));
-    const reasonCode = metaString(r, 'reason_code');
-    if (reasonCode) {
-      return appendInfoHighlight(parts, `Exception: ${formatReasonLabel(reasonCode)}`);
-    }
-    return parts;
-  },
+  ...LABORATORY_HEADLINE_BUILDERS,
   'billing.payment.process': r => {
     const parts = appendText(append([], paymentRecordPhrase(r.targetId)), ' recorded');
     return appendForOrderPhrase(parts, r);

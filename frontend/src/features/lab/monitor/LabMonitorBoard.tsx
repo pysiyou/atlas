@@ -14,10 +14,15 @@ import { LabMonitorEventLogPanel } from '@/features/audit';
 
 export interface LabMonitorBoardProps {
   loading?: boolean;
+  /** When false, skips full board fetch/poll (inactive monitor tab). */
+  monitorActive?: boolean;
 }
 
-export const LabMonitorBoard: React.FC<LabMonitorBoardProps> = ({ loading: loadingProp }) => {
-  const board = useLabMonitorViewModel();
+export const LabMonitorBoard: React.FC<LabMonitorBoardProps> = ({
+  loading: loadingProp,
+  monitorActive = true,
+}) => {
+  const board = useLabMonitorViewModel({ enabled: monitorActive });
   const chrome = useClientListChrome({
     loadFailedKey: 'lab.page.loadFailed',
     isLoading: board.isLoading,
