@@ -9,9 +9,9 @@ import {
   useLabQueueFilterBarProps,
   useLabQueuePageFilters,
 } from '../hooks';
-import type { TestWithContextResult } from '../types';
 import { useEntryWorklist } from '../api/worklists';
-import { mapEntryWorklistToOrderTestContext } from '../utils/labQueue';
+import { worklistItemToEntryRow } from '../utils/labQueue';
+import type { EntryQueueRow } from '../types/entryQueue';
 import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
@@ -49,13 +49,10 @@ export const ResultEntryQueue: React.FC = () => {
     refetch: refetchWorklist,
   });
 
-  const allTests = useMemo(
-    () => worklistItems.map(mapEntryWorklistToOrderTestContext) as TestWithContextResult[],
-    [worklistItems],
-  );
+  const entryRows = useMemo(() => worklistItems.map(worklistItemToEntryRow), [worklistItems]);
   const uniqueCodes = useMemo(
-    () => uniqueSortedTestCodes(allTests.map(test => test.testCode)),
-    [allTests],
+    () => uniqueSortedTestCodes(entryRows.map(row => row.testCode)),
+    [entryRows],
   );
   const { byCode: fullByCode, isLoading: catalogLoading } = useTestsByCodes(uniqueCodes);
 
@@ -66,58 +63,59 @@ export const ResultEntryQueue: React.FC = () => {
     areAllParametersFilled,
     handleSaveResults,
     openTestModal,
-  } = useResultEntryWorkflow({ allTests, fullByCode });
+  } = useResultEntryWorkflow({ entryRows, fullByCode });
 
   useEffect(() => {
-    const ids = allTests
-      .map(test => test.id)
-      .filter((id): id is number => typeof id === 'number');
+    const ids = entryRows.map(row => row.orderTestId);
     useLabDraftStore.getState().retainEntryDrafts(ids);
-  }, [allTests]);
+  }, [entryRows]);
 
-  const { filteredItems: filteredTests } = useLabQueuePageFilters({
-      items: allTests,
-      workflowType: 'entry',
-      bar,
-    });
+  const { filteredItems: filteredRows } = useLabQueuePageFilters({
+    items: entryRows,
+    workflowType: 'entry',
+    bar,
+  });
   const filterBarProps = useLabQueueFilterBarProps(bar);
 
-  const handleSaveTest = useCallback(
-    (test: TestWithContextResult) => {
-      if (test.id == null) return;
-      void handleSaveResults(test.id, test.orderId, allTests, fullByCode);
+  const handleSaveRow = useCallback(
+    (row: EntryQueueRow) => {
+      void handleSaveResults(row.orderTestId, row.orderId, entryRows, fullByCode);
     },
-    [handleSaveResults, allTests, fullByCode],
+    [handleSaveResults, entryRows, fullByCode],
   );
 
-  const handleOpenTest = useCallback(
-    (test: TestWithContextResult) => {
-      openTestModal(test);
+  const handleOpenRow = useCallback(
+    (row: EntryQueueRow) => {
+      openTestModal(row);
     },
     [openTestModal],
   );
 
-  const hasNoItems = allTests.length === 0;
-  const waitingOnCatalog =
-    uniqueCodes.length > 0 && catalogLoading && fullByCode.size === 0;
-  const queueLoading = (worklistChrome.loading && hasNoItems) || waitingOnCatalog;
+  const hasNoItems = entryRows.length === 0;
+  const catalogReadyForVisible =
+    uniqueCodes.length === 0 ||
+    (!catalogLoading &&
+      filteredRows.every(row => fullByCode.get(row.testCode)?.parameters != null));
+  const queueLoading =
+    (worklistChrome.loading && hasNoItems) ||
+    (filteredRows.length > 0 && !catalogReadyForVisible);
 
   return (
     <ErrorBoundary>
       <LabWorkflowQueueLayout
         loading={queueLoading}
-        items={filteredTests}
-        renderCard={(test, idx) => {
-          const testItem = test as TestWithContextResult;
-          if (testItem.id == null) return null;
-          const testDef = fullByCode.get(testItem.testCode);
+        loadingPlaceholder="entry"
+        items={filteredRows}
+        renderCard={(row, idx) => {
+          const entryRow = row as EntryQueueRow;
+          const testDef = fullByCode.get(entryRow.testCode);
           const isComplete = testDef?.parameters
-            ? areAllParametersFilled(testItem.id, testDef.parameters.length)
+            ? areAllParametersFilled(entryRow.orderTestId, testDef.parameters.length)
             : false;
-          const draft = entryDrafts[testItem.id];
+          const draft = entryDrafts[entryRow.orderTestId];
           return (
             <ResultEntryQueueItem
-              test={testItem}
+              row={entryRow}
               idx={idx}
               testDef={testDef}
               results={draft?.results ?? EMPTY_RESULT_VALUES}
@@ -125,19 +123,15 @@ export const ResultEntryQueue: React.FC = () => {
               isComplete={isComplete}
               isMobile={isMobile}
               onResultsChange={(_key, paramCode, value) =>
-                handleResultChange(testItem.id!, paramCode, value)
+                handleResultChange(entryRow.orderTestId, paramCode, value)
               }
-              onNotesChange={(_key, notes) => handleNotesChange(testItem.id!, notes)}
-              onSaveTest={handleSaveTest}
-              onOpenTest={handleOpenTest}
+              onNotesChange={(_key, notes) => handleNotesChange(entryRow.orderTestId, notes)}
+              onSaveRow={handleSaveRow}
+              onOpenRow={handleOpenRow}
             />
           );
         }}
-        getItemKey={(test, idx) =>
-          (test as TestWithContextResult).id != null
-            ? `entry-${(test as TestWithContextResult).id}-${idx}`
-            : `entry-${idx}`
-        }
+        getItemKey={(row, idx) => `entry-${(row as EntryQueueRow).orderTestId}-${idx}`}
         emptyTitle={EMPTY_COPY.pendingResults.title}
         emptyDescription={EMPTY_COPY.pendingResults.description}
         filterRow={

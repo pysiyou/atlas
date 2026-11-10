@@ -7,7 +7,7 @@
 import React, { type ReactNode, useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { EmptyState, PANEL_EMPTY_STATE } from '@/components/display';
-import { Card } from '@/components/surfaces';
+import { LabQueueCardPlaceholder, type LabQueuePlaceholderVariant } from './labQueuePlaceholders';
 import { labQueueSearchTextFields, matchLabQueueSearchQuery } from '../utils/labSearchAndLinks';
 import { SPACING, WORKSPACE } from '@/theme/recipes';
 
@@ -81,6 +81,8 @@ interface LabWorkflowQueueLayoutProps<T> {
   /** Parent-controlled initial load (shows card-sized placeholders). */
   loading?: boolean;
   loadingCardCount?: number;
+  /** Skeleton layout while loading — one shape per workflow queue. */
+  loadingPlaceholder?: LabQueuePlaceholderVariant;
 }
 
 export function LabWorkflowQueueLayout<T>({
@@ -92,6 +94,7 @@ export function LabWorkflowQueueLayout<T>({
   filterRow,
   loading = false,
   loadingCardCount = 5,
+  loadingPlaceholder = 'default',
 }: LabWorkflowQueueLayoutProps<T>): React.ReactElement {
   const hasItems = items.length > 0;
   const parentRef = useRef<HTMLDivElement>(null);
@@ -118,7 +121,7 @@ export function LabWorkflowQueueLayout<T>({
       {loading ? (
         <div className={`flex flex-col ${SPACING.gapSection}`}>
           {Array.from({ length: loadingCardCount }).map((_, index) => (
-            <Card key={index} padding="md" loading className="min-h-[140px]" />
+            <LabQueueCardPlaceholder key={index} variant={loadingPlaceholder} />
           ))}
         </div>
       ) : hasItems ? (

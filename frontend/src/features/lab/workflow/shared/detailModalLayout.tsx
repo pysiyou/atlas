@@ -41,7 +41,7 @@ export const QueueModalShell: React.FC<QueueModalShellProps> = ({
   onClose,
   title,
   subtitle,
-  modalKey,
+  modalKey: _modalKey,
   headerMeta,
   contextInfo,
   headerAudit,
@@ -54,7 +54,6 @@ export const QueueModalShell: React.FC<QueueModalShellProps> = ({
 }) => {
   return (
     <Modal
-      key={modalKey}
       isOpen={isOpen}
       onClose={onClose}
       title={title}

@@ -6,6 +6,7 @@ from app.domains.lab.schemas.critical_values import (
     CriticalValueResponse,
     NotifyRequest,
 )
+from app.domains.lab.deps import get_lab_operations_service
 from app.domains.lab.workflow.service import LabOperationsService
 from app.domains.users.models import User
 from app.platform.database import get_db
@@ -37,20 +38,20 @@ def get_all_critical_values(
 def notify_critical_value(
     test_id: int,
     request: NotifyRequest,
-    db: Session = Depends(get_db),
+    service: LabOperationsService = Depends(get_lab_operations_service),
     current_user: User = Depends(require_lab_tech),
 ):
-    return LabOperationsService(db).notify_critical_value(test_id, request, current_user.id)
+    return service.notify_critical_value(test_id, request, current_user.id)
 
 
 @router.post("/critical-values/{test_id}/acknowledge")
 def acknowledge_critical_value(
     test_id: int,
     request: AcknowledgeRequest,
-    db: Session = Depends(get_db),
+    service: LabOperationsService = Depends(get_lab_operations_service),
     current_user: User = Depends(require_lab_tech),
 ):
-    return LabOperationsService(db).acknowledge_critical_value(test_id, request, current_user.id)
+    return service.acknowledge_critical_value(test_id, request, current_user.id)
 
 
 @router.get("/orders/{order_id}/critical-values")

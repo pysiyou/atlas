@@ -5,12 +5,11 @@
  * - Orders: create/update/delete/payment → invalidateOrderQueries
  *   (also invalidates worklists when samples !== false)
  * - Patients: create/update/delete → invalidatePatientQueries
- * - Results: entry/validate/escalation → invalidateResultQueries
- * - Critical values: notify/acknowledge → invalidateCriticalValueQueries
- * - Quality issues: report → invalidateQualityIssueQueries
+ * - Lab result mutations (entry/validate/escalate/reject/critical UI) → invalidateAfterLabMutation
+ * - Critical values (legacy direct) → invalidateCriticalValueQueries
+ * - Quality issues (legacy direct) → invalidateQualityIssueQueries
  * - Collection: collect sample → invalidateCollectionQueries
  * - Lab monitor board → invalidateLabMonitorQueries
- * - Full lab workflow (validation modals) → invalidateLabWorkflowQueries
  * - Worklists + lab tab counts: queue changes → invalidateWorklistQueries (also refreshes board)
  */
 
@@ -207,12 +206,80 @@ export function invalidateLabMonitorQueriesFull(client: QueryClient): Promise<vo
   ]);
 }
 
+export type LabMutationInvalidationKind =
+  | 'enterResults'
+  | 'validateResults'
+  | 'resolveEscalation'
+  | 'qualityIssue'
+  | 'criticalValue'
+  | 'workflowSurface';
+
+export interface InvalidateAfterLabMutationOptions {
+  kind: LabMutationInvalidationKind;
+  orderId?: string | number;
+  orderTestId?: number;
+}
+
+/** Single entry point for lab workflow mutations — encodes worklist/monitor/order refresh matrix. */
+export function invalidateAfterLabMutation(
+  client: QueryClient,
+  options: InvalidateAfterLabMutationOptions
+): Promise<void> {
+  const { kind, orderId, orderTestId } = options;
+
+  switch (kind) {
+    case 'enterResults':
+    case 'validateResults':
+      return invalidateResultQueries(client, {
+        orderId,
+        orderTestId,
+        samples: false,
+      });
+    case 'resolveEscalation':
+      return invalidateResultQueries(client, {
+        orderId,
+        orderTestId,
+        samples: true,
+        pendingEscalation: true,
+      });
+    case 'qualityIssue':
+      if (orderId != null || orderTestId != null) {
+        return settleInvalidations([
+          invalidateQualityIssueQueries(client),
+          invalidateResultQueries(client, {
+            orderId,
+            orderTestId,
+            samples: true,
+            pendingEscalation: true,
+          }),
+        ]);
+      }
+      return invalidateQualityIssueQueries(client);
+    case 'criticalValue':
+      return settleInvalidations([
+        invalidateCriticalValueQueries(client, { orderId }),
+        invalidateWorklistQueries(client),
+        invalidateLabMonitorQueries(client),
+      ]);
+    case 'workflowSurface':
+      return settleInvalidations([
+        invalidateOrderQueries(client, { orderId, samples: true, payments: false }),
+        invalidateLabMonitorQueriesFull(client),
+      ]);
+    default: {
+      const _exhaustive: never = kind;
+      return Promise.resolve(_exhaustive);
+    }
+  }
+}
+
 export interface InvalidateLabWorkflowOptions {
   orderId?: string | number;
   criticalValues?: boolean;
   pendingEscalation?: boolean;
 }
 
+/** @deprecated Prefer invalidateAfterLabMutation from lab feature code. */
 export function invalidateLabWorkflowQueries(
   client: QueryClient,
   options: InvalidateLabWorkflowOptions = {}

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
-import type { TestWithContext } from '@/types';
+import type { PendingEscalationItem } from '../api/results';
 
 interface UseResultValidationQueueActionsParams {
   canResolveEscalation: boolean;
@@ -14,12 +14,12 @@ export function useResultValidationQueueActions({
   const { openModal } = useModal();
 
   const openEscalationModal = useCallback(
-    (test: TestWithContext) => {
-      if (test.id == null) return;
+    (item: PendingEscalationItem) => {
       openModal({
         type: ModalType.ESCALATION_RESOLUTION_DETAIL,
-        orderTestId: test.id,
+        orderTestId: item.id,
         readOnly: !canResolveEscalation,
+        escalationSnapshot: item,
       });
     },
     [openModal, canResolveEscalation],

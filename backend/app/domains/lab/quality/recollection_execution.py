@@ -40,7 +40,7 @@ class RecollectionExecutionService:
         if validate_work_exists:
             pending_tests_to_reattach = [
                 test
-                for test in self.quality._linked_tests(
+                for test in self.quality.linked_tests(
                     rejected_sample,
                     exclude=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED],
                 )
@@ -58,13 +58,13 @@ class RecollectionExecutionService:
                     status_code=400,
                 )
 
-        new_sample = self.quality._create_recollection_sample(
+        new_sample = self.quality.create_recollection_sample(
             rejected_sample,
             user_id,
             reason,
             supervisor_authorized=supervisor_authorized,
         )
-        self.quality._reattach_tests_to_recollection(rejected_sample, new_sample)
+        self.quality.reattach_tests_to_recollection(rejected_sample, new_sample)
 
         created_test_id: int | None = None
         if order_test_id and stage == QualityStage.VALIDATION:

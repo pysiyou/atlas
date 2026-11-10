@@ -4,12 +4,12 @@
 
 import { memo, useCallback } from 'react';
 import type { Test } from '@/types';
-import type { TestWithContextResult } from '../types';
+import type { EntryQueueRow } from '../types/entryQueue';
 import { ResultEntryCard } from '../workflow';
 import { orderTestKey } from '../utils/labSearchAndLinks';
 
 export interface ResultEntryQueueItemProps {
-  test: TestWithContextResult;
+  row: EntryQueueRow;
   idx: number;
   testDef: Test | undefined;
   results: Record<string, string>;
@@ -18,13 +18,13 @@ export interface ResultEntryQueueItemProps {
   isMobile: boolean;
   onResultsChange: (resultKey: string, paramCode: string, value: string) => void;
   onNotesChange: (resultKey: string, notes: string) => void;
-  onSaveTest: (test: TestWithContextResult) => void;
-  onOpenTest: (test: TestWithContextResult) => void;
+  onSaveRow: (row: EntryQueueRow) => void;
+  onOpenRow: (row: EntryQueueRow) => void;
 }
 
 export const ResultEntryQueueItem = memo(
   ({
-    test,
+    row,
     idx,
     testDef,
     results,
@@ -33,17 +33,17 @@ export const ResultEntryQueueItem = memo(
     isMobile,
     onResultsChange,
     onNotesChange,
-    onSaveTest,
-    onOpenTest,
+    onSaveRow,
+    onOpenRow,
   }: ResultEntryQueueItemProps) => {
-    const resultKey = orderTestKey(test.id!);
-    const handleSave = useCallback(() => onSaveTest(test), [onSaveTest, test]);
-    const handleClick = useCallback(() => onOpenTest(test), [onOpenTest, test]);
+    const resultKey = orderTestKey(row.orderTestId);
+    const handleSave = useCallback(() => onSaveRow(row), [onSaveRow, row]);
+    const handleClick = useCallback(() => onOpenRow(row), [onOpenRow, row]);
 
     return (
       <ResultEntryCard
-        key={`entry-${test.id}-${idx}`}
-        test={test}
+        key={`entry-${row.orderTestId}-${idx}`}
+        row={row}
         testDef={testDef}
         resultKey={resultKey}
         results={results}

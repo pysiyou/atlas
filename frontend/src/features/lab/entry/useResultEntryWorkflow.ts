@@ -8,14 +8,15 @@ import { useCallback } from 'react';
 import { useEnterResults } from '../api/results';
 import { notify } from '@/feedback';
 import { logger } from '@/utils/logger';
-import { toRawResultPayload, findTestById } from './resultEntry';
+import { toRawResultPayload } from './resultEntry';
 import { isLabActionAllowed } from '../utils/queueDisplay';
 import { useResultEntryDetailModal } from './useResultEntryDetailModal';
 import { useLabDraftStore } from '../state/labDraftStore';
-import type { TestWithContext, Test } from '@/types';
+import type { Test } from '@/types';
+import { findEntryRowById, type EntryQueueRow } from '../types/entryQueue';
 
 export interface UseEntryWorkflowOptions {
-  allTests: TestWithContext[];
+  entryRows: EntryQueueRow[];
   /** Full catalog documents keyed by code — summaries do not include parameters. */
   fullByCode: Map<string, Test>;
 }
@@ -29,16 +30,16 @@ export interface EntryWorkflow {
   handleSaveResults: (
     orderTestId: number,
     orderId: number | string,
-    allTests: TestWithContext[],
-    fullByCode: Map<string, Test>,
+    rows?: EntryQueueRow[],
+    fullByCode?: Map<string, Test>,
     finalResults?: Record<string, string>,
     finalNotes?: string
   ) => Promise<void>;
-  openTestModal: (test: TestWithContext) => void;
+  openTestModal: (row: EntryQueueRow) => void;
 }
 
 export function useResultEntryWorkflow({
-  allTests,
+  entryRows,
   fullByCode,
 }: UseEntryWorkflowOptions): EntryWorkflow {
   const entryDrafts = useLabDraftStore(s => s.entry);
@@ -74,7 +75,7 @@ export function useResultEntryWorkflow({
     async (
       orderTestId: number,
       orderId: number | string,
-      saveAllTests: TestWithContext[] = allTests,
+      saveRows: EntryQueueRow[] = entryRows,
       saveFullByCode: Map<string, Test> = fullByCode,
       finalResults?: Record<string, string>,
       finalNotes?: string
@@ -89,17 +90,17 @@ export function useResultEntryWorkflow({
         return;
       }
 
-      const testItem = findTestById(saveAllTests, orderTestId);
-      if (!testItem) {
+      const row = findEntryRowById(saveRows, orderTestId);
+      if (!row) {
         notify.show('lab.entry.testNotFound');
         return;
       }
 
-      if (!isLabActionAllowed(testItem.allowedActions, 'enterResults')) {
+      if (!isLabActionAllowed(row.allowedActions, 'enterResults')) {
         return;
       }
 
-      const testDef = saveFullByCode.get(testItem.testCode);
+      const testDef = saveFullByCode.get(row.testCode);
       if (!testDef?.parameters) {
         notify.show('lab.entry.parametersMissing');
         return;
@@ -123,7 +124,7 @@ export function useResultEntryWorkflow({
         throw error;
       }
     },
-    [allTests, fullByCode, entryDrafts, enterMutation, clearEntryDraft]
+    [entryRows, fullByCode, entryDrafts, enterMutation, clearEntryDraft]
   );
 
   const openTestModal = useResultEntryDetailModal();

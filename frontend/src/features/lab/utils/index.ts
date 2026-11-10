@@ -21,7 +21,7 @@ export {
 } from '@/theme/recipes';
 
 export { formatRejectionReasons, getSampleRejectionReasonLabel } from './labFormatters';
-export { deriveRetestContext, type TestRetestContext } from './deriveRetestContext';
+export { deriveRetestContextFromRow, type TestRetestContext } from './deriveRetestContext';
 export { buildLabFilterConfig, type BuildLabFilterConfigOptions } from './buildLabFilterConfig';
 export { formatRejectionCriteriaList } from './catalogRejectionCriteria';
 export {
@@ -75,16 +75,16 @@ export {
   type OrderTestQueueState,
 } from './queueDisplay';
 export {
-  mapCollectionWorklistToSampleDisplay,
-  mapEntryWorklistToOrderTestContext,
-  mapValidationWorklistToOrderTestContext,
+  worklistItemToQueueRow,
+  worklistItemToEntryRow,
+  worklistItemToValidationRow,
 } from './worklistMappers';
 export {
   hasActiveRecordUrlFilters,
   getLabQueueSearchFromUrlFilters,
   orderTestKey,
   worklistServerFilters,
-  hasTestResults,
+  hasResultsOnWorkItem,
   resolveCollectionStatusFilters,
   getLabQueueUrlForTest,
   getLabQueueUrlForSample,

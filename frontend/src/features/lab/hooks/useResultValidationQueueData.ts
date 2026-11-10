@@ -4,13 +4,13 @@
 import { useAuthStore } from '@/app/authStore';
 import { useMemo } from 'react';
 import { useValidationWorklist, type WorklistPagination } from '../api/worklists';
-import { mapValidationWorklistToOrderTestContext } from '../utils/labQueue';
-import { usePendingEscalation } from '../api/results';
-import type { TestWithContext } from '@/types';
+import { worklistItemToValidationRow } from '../utils/labQueue';
+import { usePendingEscalation, type PendingEscalationItem } from '../api/results';
+import type { ValidationQueueRow } from '../types/validationQueue';
 
 export interface ResultValidationQueueData {
-  validationTests: TestWithContext[];
-  escalations: TestWithContext[];
+  validationRows: ValidationQueueRow[];
+  escalations: PendingEscalationItem[];
   isLoading: boolean;
   isError: boolean;
   error: unknown;
@@ -38,16 +38,16 @@ export function useResultValidationQueueData(params?: {
     pagination,
     goToPage,
   } = useValidationWorklist(params);
-  const { escalatedTests = [] } = usePendingEscalation();
+  const { escalatedItems = [] } = usePendingEscalation();
 
-  const validationTests = useMemo(
-    () => worklistItems.map(mapValidationWorklistToOrderTestContext),
+  const validationRows = useMemo(
+    () => worklistItems.map(worklistItemToValidationRow),
     [worklistItems]
   );
 
   return {
-    validationTests,
-    escalations: escalatedTests,
+    validationRows,
+    escalations: escalatedItems,
     isLoading: worklistLoading,
     isError: worklistError,
     error: worklistErr ?? null,

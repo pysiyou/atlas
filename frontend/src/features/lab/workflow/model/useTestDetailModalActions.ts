@@ -8,7 +8,7 @@ import { ModalType, useModal } from '@/lib/context/ModalContext';
 import type { OrderTest } from '@/types';
 import type { TestDetailInteraction } from '@/lib/context/modalTypes';
 import type { QualityIssueResult } from '@/types/lab-operations';
-import { invalidateLabWorkflowQueries, invalidateResultQueries } from '@/lib/query/invalidate';
+import { invalidateAfterLabMutation } from '@/lib/query/invalidate';
 import { useValidateResults } from '../../api/results';
 import { useLabDraftStore } from '../../state/labDraftStore';
 import { notify } from '@/feedback';
@@ -76,17 +76,17 @@ export function useTestDetailModalActions({
       clearValidationComments(orderTestId);
       onClose();
       const orderIdStr = orderId == null ? undefined : String(orderId);
-      void invalidateResultQueries(queryClient, {
+      void invalidateAfterLabMutation(queryClient, {
+        kind: 'qualityIssue',
         orderId: orderIdStr,
-        samples: true,
-        pendingEscalation: true,
+        orderTestId,
       });
     },
     [orderId, queryClient, clearValidationComments, orderTestId, onClose]
   );
 
   const handleCriticalValueUpdated = useCallback(() => {
-    invalidateLabWorkflowQueries(queryClient, { criticalValues: true });
+    invalidateAfterLabMutation(queryClient, { kind: 'criticalValue', orderId });
   }, [queryClient]);
 
   const openLinkedTest = useCallback(

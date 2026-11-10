@@ -5,14 +5,9 @@
  */
 
 export type {
+  CollectionQueueRow,
   SampleCollectionQueueItem,
   SampleCollectionRequirement,
 } from '@/types/lab-operations';
 
 export type SampleRequirement = import('@/types/lab-operations').SampleCollectionRequirement;
-
-import type { TestWithContext } from '@/types';
-
-export type { TestWithContext };
-
-export type TestWithContextResult = TestWithContext & { hasCriticalValues?: boolean };

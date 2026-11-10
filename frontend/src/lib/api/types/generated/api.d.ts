@@ -1480,6 +1480,12 @@ export interface components {
             /** Priorityrank */
             priorityRank?: number | null;
         };
+        /** CollectionWorklistResponse */
+        CollectionWorklistResponse: {
+            /** Items */
+            items: components["schemas"]["CollectionWorklistItem"][];
+            pagination: components["schemas"]["WorklistPagination"];
+        };
         /**
          * ContainerTopColor
          * @enum {string}
@@ -1551,6 +1557,71 @@ export interface components {
             recentOrders: components["schemas"]["OrderSummaryResponse"][];
         };
         /**
+         * DashboardWorklistItem
+         * @description In-pipeline order tests plus rows updated today (any status).
+         */
+        DashboardWorklistItem: {
+            /** Ordertestid */
+            orderTestId: number;
+            /** Orderid */
+            orderId: number;
+            /** Patientid */
+            patientId: number;
+            /** Patientname */
+            patientName: string;
+            /** Patientdob */
+            patientDob: string;
+            patientGender: components["schemas"]["Gender"];
+            /** Testcode */
+            testCode: string;
+            /** Testname */
+            testName: string;
+            /** Sampletype */
+            sampleType: string;
+            priority: components["schemas"]["PriorityLevel"];
+            status: components["schemas"]["TestStatus"];
+            /**
+             * Stage
+             * @enum {string}
+             */
+            stage: "collection" | "entry" | "validation";
+            /**
+             * Activityat
+             * Format: date-time
+             */
+            activityAt: string;
+            /**
+             * Orderdate
+             * Format: date-time
+             */
+            orderDate: string;
+            /** Referentdoctorid */
+            referentDoctorId?: number | null;
+            /** Referentdoctorname */
+            referentDoctorName?: string | null;
+            /** Referentdoctoremail */
+            referentDoctorEmail?: string | null;
+            /** Referentdoctorphone */
+            referentDoctorPhone?: string | null;
+            /** Referentdoctorhospital */
+            referentDoctorHospital?: string | null;
+            /** Referentdoctorusername */
+            referentDoctorUsername?: string | null;
+            /** Testcategory */
+            testCategory?: string | null;
+            /** Attentionreason */
+            attentionReason?: string | null;
+            /** Attentionlabel */
+            attentionLabel?: string | null;
+            statusPresentation?: components["schemas"]["StatusPresentation"] | null;
+        };
+        /** DashboardWorklistResponse */
+        DashboardWorklistResponse: {
+            /** Items */
+            items: components["schemas"]["DashboardWorklistItem"][];
+            pagination: components["schemas"]["WorklistPagination"];
+        };
+        /**
          * EmergencyContact
          * @description Emergency contact information.
          */
@@ -1575,6 +1646,91 @@ export interface components {
             phone: string;
             /** Email */
             email?: string | null;
+        };
+        /** EntryWorklistItem */
+        EntryWorklistItem: {
+            /** Ordertestid */
+            orderTestId: number;
+            /** Orderid */
+            orderId: number;
+            /** Patientid */
+            patientId: number;
+            /** Patientname */
+            patientName: string;
+            /** Testcode */
+            testCode: string;
+            /** Testname */
+            testName: string;
+            /** Sampleid */
+            sampleId: number | null;
+            /** Sampletype */
+            sampleType: string;
+            priority: components["schemas"]["PriorityLevel"];
+            status: components["schemas"]["TestStatus"];
+            /** Collectedat */
+            collectedAt: string | null;
+            /**
+             * Orderdate
+             * Format: date-time
+             */
+            orderDate: string;
+            /** Waitinghours */
+            waitingHours: number;
+            /** Turnaroundhours */
+            turnaroundHours: number;
+            /** Isretest */
+            isRetest: boolean;
+            /** Retestoftestid */
+            retestOfTestId?: number | null;
+            /**
+             * Retestnumber
+             * @default 0
+             */
+            retestNumber: number;
+            /** Referentdoctorid */
+            referentDoctorId?: number | null;
+            /** Referentdoctorname */
+            referentDoctorName?: string | null;
+            /** Referentdoctoremail */
+            referentDoctorEmail?: string | null;
+            /** Referentdoctorphone */
+            referentDoctorPhone?: string | null;
+            /** Referentdoctorhospital */
+            referentDoctorHospital?: string | null;
+            /** Referentdoctorusername */
+            referentDoctorUsername?: string | null;
+            /** Testcategory */
+            testCategory?: string | null;
+            /** Pipelinestage */
+            pipelineStage?: ("collection" | "entry" | "validation" | "escalation" | "completed" | "cancelled") | null;
+            /** Attentionreason */
+            attentionReason?: string | null;
+            /** Attentionlabel */
+            attentionLabel?: string | null;
+            /**
+             * @default {
+             *       "collect": false,
+             *       "enterResults": false,
+             *       "validate": false,
+             *       "reject": false
+             *     }
+             */
+            allowedActions: components["schemas"]["LabWorklistAllowedActions"];
+            /** Denyreason */
+            denyReason?: string | null;
+            /** Denymessage */
+            denyMessage?: string | null;
+            statusPresentation?: components["schemas"]["StatusPresentation"] | null;
+            /** Queueageband */
+            queueAgeBand?: ("fresh" | "onTrack" | "warning" | "critical") | null;
+            /** Priorityrank */
+            priorityRank?: number | null;
+        };
+        /** EntryWorklistResponse */
+        EntryWorklistResponse: {
+            /** Items */
+            items: components["schemas"]["EntryWorklistItem"][];
+            pagination: components["schemas"]["WorklistPagination"];
         };
         /** EscalationActionFlags */
         EscalationActionFlags: {
@@ -3438,6 +3594,122 @@ export interface components {
             /** Error Type */
             type: string;
         };
+        /** ValidationWorklistItem */
+        ValidationWorklistItem: {
+            /** Ordertestid */
+            orderTestId: number;
+            /** Orderid */
+            orderId: number;
+            /** Patientid */
+            patientId: number;
+            /** Patientname */
+            patientName: string;
+            /** Testcode */
+            testCode: string;
+            /** Testname */
+            testName: string;
+            /** Sampletype */
+            sampleType: string;
+            priority: components["schemas"]["PriorityLevel"];
+            status: components["schemas"]["TestStatus"];
+            /** Sampleid */
+            sampleId?: number | null;
+            sampleStatus?: components["schemas"]["SampleStatus"] | null;
+            /** Results */
+            results?: {
+                [key: string]: components["schemas"]["TestResultValue"] | {
+                    [key: string]: unknown;
+                } | string | number | null;
+            } | null;
+            /** Flags */
+            flags?: string[] | null;
+            /** Enteredby */
+            enteredBy?: string | null;
+            /** Referentdoctorid */
+            referentDoctorId?: number | null;
+            /** Referentdoctorname */
+            referentDoctorName?: string | null;
+            /** Referentdoctoremail */
+            referentDoctorEmail?: string | null;
+            /** Referentdoctorphone */
+            referentDoctorPhone?: string | null;
+            /** Referentdoctorhospital */
+            referentDoctorHospital?: string | null;
+            /** Referentdoctorusername */
+            referentDoctorUsername?: string | null;
+            /**
+             * Isretest
+             * @default false
+             */
+            isRetest: boolean;
+            /** Retestoftestid */
+            retestOfTestId?: number | null;
+            /**
+             * Retestnumber
+             * @default 0
+             */
+            retestNumber: number;
+            /** Resultenteredat */
+            resultEnteredAt: string | null;
+            /**
+             * Orderdate
+             * Format: date-time
+             */
+            orderDate: string;
+            /** Waitinghours */
+            waitingHours: number;
+            /** Turnaroundhours */
+            turnaroundHours: number;
+            /** Hascriticalvalues */
+            hasCriticalValues: boolean;
+            /** Testcategory */
+            testCategory?: string | null;
+            /** Pipelinestage */
+            pipelineStage?: ("collection" | "entry" | "validation" | "escalation" | "completed" | "cancelled") | null;
+            /** Attentionreason */
+            attentionReason?: string | null;
+            /** Attentionlabel */
+            attentionLabel?: string | null;
+            /**
+             * @default {
+             *       "collect": false,
+             *       "enterResults": false,
+             *       "validate": false,
+             *       "reject": false
+             *     }
+             */
+            allowedActions: components["schemas"]["LabWorklistAllowedActions"];
+            /** Denyreason */
+            denyReason?: string | null;
+            /** Denymessage */
+            denyMessage?: string | null;
+            statusPresentation?: components["schemas"]["StatusPresentation"] | null;
+            /** Queueageband */
+            queueAgeBand?: ("fresh" | "onTrack" | "warning" | "critical") | null;
+            /** Priorityrank */
+            priorityRank?: number | null;
+        };
+        /** ValidationWorklistResponse */
+        ValidationWorklistResponse: {
+            /** Items */
+            items: components["schemas"]["ValidationWorklistItem"][];
+            pagination: components["schemas"]["WorklistPagination"];
+        };
+        /** WorklistPagination */
+        WorklistPagination: {
+            /** Page */
+            page: number;
+            /** Pagesize */
+            pageSize: number;
+            /** Total */
+            total: number;
+            /** Totalpages */
+            totalPages: number;
+            /** Hasnext */
+            hasNext: boolean;
+            /** Hasprev */
+            hasPrev: boolean;
+        };
     };
     responses: never;
     parameters: never;
@@ -5097,7 +5369,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["CollectionWorklistResponse"];
                 };
             };
             /** @description Validation Error */
@@ -5135,7 +5407,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["EntryWorklistResponse"];
                 };
             };
             /** @description Validation Error */
@@ -5173,7 +5445,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["ValidationWorklistResponse"];
                 };
             };
             /** @description Validation Error */
@@ -5205,7 +5477,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["DashboardWorklistResponse"];
                 };
             };
             /** @description Validation Error */

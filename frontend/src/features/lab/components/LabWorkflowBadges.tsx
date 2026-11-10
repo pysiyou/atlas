@@ -5,7 +5,6 @@
 
 import { memo, type ReactNode } from 'react';
 import type { BadgeSize } from '@/components/primitives';
-import type { TestWithContext } from '@/types';
 import { WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
 import {
   LabPriorityBadge,
@@ -20,6 +19,7 @@ import {
   QueueAgeMeta,
   TestRejectionTailMeta,
 } from './LabCardMetaRow';
+import type { LabOrderTestQueueRow } from '../types/labQueueChrome';
 
 export {
   CollectionHeaderBadges,
@@ -30,7 +30,7 @@ export {
 } from './LabWorkflowCollectionBadges';
 
 export interface TestHeaderBadgesProps {
-  test: TestWithContext;
+  row: LabOrderTestQueueRow;
   variant?: 'entry' | 'validation' | 'escalation';
   size?: BadgeSize;
   showStatus?: boolean;
@@ -38,23 +38,24 @@ export interface TestHeaderBadgesProps {
 }
 
 function TestStatusChip({
-  test,
+  row,
   size,
   variant,
 }: {
-  test: TestWithContext;
+  row: LabOrderTestQueueRow;
   size: BadgeSize;
   variant: 'entry' | 'validation' | 'escalation';
 }) {
   const compact = useLabHeaderCompact();
-  if (variant === 'escalation' && !test.lab?.statusPresentation) {
+  const presentation = row.statusPresentation ?? row.lab?.statusPresentation;
+  if (variant === 'escalation' && !presentation) {
     return <SampleStatusBadge status="escalated" size={size} />;
   }
-  if (test.status || test.lab?.statusPresentation) {
+  if (row.status || presentation) {
     return (
       <StatusPresentationBadge
-        status={test.status ?? 'pending'}
-        presentation={test.lab?.statusPresentation}
+        status={row.status ?? 'pending'}
+        presentation={presentation}
         layout={compact ? 'compact' : 'stack'}
         size={size}
       />
@@ -64,20 +65,20 @@ function TestStatusChip({
 }
 
 function TestHeaderBadgesView({
-  test,
+  row,
   variant = 'entry',
   size = WORKLIST_CARD_BADGE_SIZE,
   showStatus = false,
   trailing,
 }: TestHeaderBadgesProps) {
-  const showPriority = test.priority === 'urgent' || test.priority === 'high';
+  const showPriority = row.priority === 'urgent' || row.priority === 'high';
 
   if (variant === 'escalation') {
     return (
       <>
-        <TestStatusChip test={test} size={size} variant="escalation" />
-        {showPriority && test.priority ? <LabPriorityBadge priority={test.priority} size={size} /> : null}
-        {test.sampleType ? <SampleTypeBadge sampleType={test.sampleType} size={size} /> : null}
+        <TestStatusChip row={row} size={size} variant="escalation" />
+        {showPriority && row.priority ? <LabPriorityBadge priority={row.priority} size={size} /> : null}
+        {row.sampleType ? <SampleTypeBadge sampleType={row.sampleType} size={size} /> : null}
         {trailing}
       </>
     );
@@ -85,9 +86,9 @@ function TestHeaderBadgesView({
 
   return (
     <>
-      {showPriority && test.priority ? <LabPriorityBadge priority={test.priority} size={size} /> : null}
-      {test.sampleType ? <SampleTypeBadge sampleType={test.sampleType} size={size} /> : null}
-      {showStatus ? <TestStatusChip test={test} size={size} variant={variant} /> : null}
+      {showPriority && row.priority ? <LabPriorityBadge priority={row.priority} size={size} /> : null}
+      {row.sampleType ? <SampleTypeBadge sampleType={row.sampleType} size={size} /> : null}
+      {showStatus ? <TestStatusChip row={row} size={size} variant={variant} /> : null}
       {trailing}
     </>
   );
@@ -97,7 +98,7 @@ export const TestHeaderBadges = memo(TestHeaderBadgesView);
 TestHeaderBadges.displayName = 'TestHeaderBadges';
 
 export interface TestCardMetaProps {
-  test: TestWithContext;
+  row: LabOrderTestQueueRow;
   variant?: 'entry' | 'validation' | 'escalation';
   queueSince?: string;
   emphasizeCritical?: boolean;
@@ -106,7 +107,7 @@ export interface TestCardMetaProps {
 }
 
 function TestOperationalMeta({
-  test,
+  row,
   variant = 'entry',
   queueSince,
   emphasizeCritical = false,
@@ -118,7 +119,7 @@ function TestOperationalMeta({
     <>
       <MetaRow>
         {queueSince ? <QueueAgeMeta since={queueSince} /> : null}
-        {variant === 'validation' && emphasizeCritical && test.hasCriticalValues ? (
+        {variant === 'validation' && emphasizeCritical && row.hasCriticalValues ? (
           <span className="text-danger-fg font-normal">Critical values</span>
         ) : null}
         {variant === 'validation' && flagCount != null && flagCount > 0 ? (
@@ -126,7 +127,7 @@ function TestOperationalMeta({
         ) : null}
         {variant === 'escalation' && reasonCode ? <span>Reason: {reasonCode}</span> : null}
       </MetaRow>
-      <TestRejectionTailMeta test={test} />
+      <TestRejectionTailMeta row={row} />
     </>
   );
 }

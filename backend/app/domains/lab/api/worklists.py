@@ -4,6 +4,7 @@ from collections.abc import Callable
 from datetime import date
 from typing import Any, Literal, TypeVar
 
+from app.domains.lab.deps import get_lab_worklist_service
 from app.domains.lab.monitor.observability import log_lab_read
 from app.domains.lab.monitor.worklist_service import LabWorklistService
 from app.domains.lab.schemas.worklists import (
@@ -17,12 +18,10 @@ from app.domains.lab.schemas.worklists import (
     WorklistResponse,
 )
 from app.domains.users.models import User
-from app.platform.database import get_db
 from app.platform.http.dependencies import require_lab_tech, require_sample_collector
 from app.platform.utils.common import parse_csv_values
 from app.shared.contracts.enums import PriorityLevel, TestStatus, UserRole
 from fastapi import APIRouter, Depends, Query
-from sqlalchemy.orm import Session
 
 router = APIRouter()
 
@@ -92,10 +91,9 @@ def get_collection_worklist(
     dateFrom: date | None = Query(None),
     dateTo: date | None = Query(None),
     sampleType: str | None = Query(None, description="Comma-separated sample types"),
-    db: Session = Depends(get_db),
+    service: LabWorklistService = Depends(get_lab_worklist_service),
     _user: User = Depends(require_sample_collector),
 ):
-    service = LabWorklistService(db)
     return _paginated_filterable_worklist(
         log_name="lab.worklists.collection",
         page=page,
@@ -121,10 +119,9 @@ def get_entry_worklist(
     dateFrom: date | None = Query(None),
     dateTo: date | None = Query(None),
     sampleType: str | None = Query(None, description="Comma-separated sample types"),
-    db: Session = Depends(get_db),
+    service: LabWorklistService = Depends(get_lab_worklist_service),
     _user: User = Depends(require_lab_tech),
 ):
-    service = LabWorklistService(db)
     return _paginated_filterable_worklist(
         log_name="lab.worklists.entry",
         page=page,
@@ -150,10 +147,9 @@ def get_validation_worklist(
     dateFrom: date | None = Query(None),
     dateTo: date | None = Query(None),
     sampleType: str | None = Query(None, description="Comma-separated sample types"),
-    db: Session = Depends(get_db),
+    service: LabWorklistService = Depends(get_lab_worklist_service),
     _user: User = Depends(require_lab_tech),
 ):
-    service = LabWorklistService(db)
     return _paginated_filterable_worklist(
         log_name="lab.worklists.validation",
         page=page,
@@ -174,11 +170,11 @@ def get_validation_worklist(
 def get_dashboard_worklist_today(
     page: int = Query(1, ge=1),
     pageSize: int = Query(50, ge=1, le=200),
-    db: Session = Depends(get_db),
+    service: LabWorklistService = Depends(get_lab_worklist_service),
     current_user: User = Depends(require_lab_tech),
 ):
     with log_lab_read("lab.worklists.dashboard_today", page=page, page_size=pageSize) as metrics:
-        result = LabWorklistService(db).list_dashboard_work_today(
+        result = service.list_dashboard_work_today(
             user_id=current_user.id,
             page=page,
             page_size=pageSize,
@@ -199,7 +195,7 @@ def get_all_tests_worklist(
     dateFrom: date | None = Query(None, description="Last modified on or after (UTC date)"),
     dateTo: date | None = Query(None, description="Last modified on or before (UTC date)"),
     sampleType: str | None = Query(None, description="Comma-separated sample types"),
-    db: Session = Depends(get_db),
+    service: LabWorklistService = Depends(get_lab_worklist_service),
     _user: User = Depends(require_lab_tech),
 ):
     status_wires = parse_csv_values(status) or None
@@ -213,7 +209,7 @@ def get_all_tests_worklist(
         priorities = [PriorityLevel(w) for w in priority_wires]
 
     with log_lab_read("lab.worklists.all_tests", page=page, page_size=pageSize) as metrics:
-        result = LabWorklistService(db).list_all_order_tests(
+        result = service.list_all_order_tests(
             page=page,
             page_size=pageSize,
             search=search,
@@ -232,7 +228,7 @@ def get_all_tests_worklist(
 @router.get("/board", response_model=LabBoardResponse)
 def get_lab_board(
     detail: Literal["summary", "full"] = Query("full"),
-    db: Session = Depends(get_db),
+    service: LabWorklistService = Depends(get_lab_worklist_service),
     current_user: User = Depends(require_lab_tech),
 ):
     include_supervisor = current_user.role in (UserRole.ADMIN, UserRole.LAB_TECH_PLUS)
@@ -241,7 +237,6 @@ def get_lab_board(
         include_supervisor=include_supervisor,
         detail=detail,
     ) as metrics:
-        service = LabWorklistService(db)
         payload = service.get_board(
             include_supervisor=include_supervisor,
             detail=detail,
@@ -256,7 +251,7 @@ def get_lab_board(
 
 @router.get("/board/summary", response_model=LabBoardSummaryResponse)
 def get_lab_board_summary(
-    db: Session = Depends(get_db),
+    service: LabWorklistService = Depends(get_lab_worklist_service),
     current_user: User = Depends(require_sample_collector),
 ):
     include_supervisor = current_user.role in (UserRole.ADMIN, UserRole.LAB_TECH_PLUS)
@@ -265,7 +260,7 @@ def get_lab_board_summary(
         include_supervisor=include_supervisor,
         detail="summary",
     ) as metrics:
-        payload = LabWorklistService(db).get_board(
+        payload = service.get_board(
             include_supervisor=include_supervisor,
             detail="summary",
         )

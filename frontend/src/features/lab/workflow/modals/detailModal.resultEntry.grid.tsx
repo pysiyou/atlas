@@ -5,13 +5,13 @@
 import { Icon } from '@/components/primitives';
 import { RecordId } from '@/features/shared';
 import { DetailGrid } from '../shared/detailModalLayout';
-import type { TestWithContext } from '@/types';
+import type { LabModalWorkItem } from '../../types/labQueueChrome';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { IconKeys } from '@/config/icons';
 import { FG } from '@/theme/recipes';
 
 export function ResultEntryDetailGrid({
-  test,
+  workItem,
   totalParams,
   filledCount,
   isComplete,
@@ -19,7 +19,7 @@ export function ResultEntryDetailGrid({
   showTurnaroundTime,
   turnaroundTime,
 }: {
-  test: TestWithContext;
+  workItem: LabModalWorkItem;
   totalParams: number;
   filledCount: number;
   isComplete: boolean;
@@ -60,25 +60,34 @@ export function ResultEntryDetailGrid({
           fields: [
             {
               label: 'Test ID',
-              value:
-                test.id != null ? (
-                  <RecordId type="orderTest" value={test.id} emphasis="block" className="text-right" />
-                ) : undefined,
+              value: (
+                <RecordId
+                  type="orderTest"
+                  value={workItem.orderTestId}
+                  emphasis="block"
+                  className="text-right"
+                />
+              ),
             },
             {
               label: 'Test Code',
-              value: test.testCode ? (
-                <RecordId emphasis="block" className="text-right">{test.testCode}</RecordId>
+              value: workItem.testCode ? (
+                <RecordId emphasis="block" className="text-right">{workItem.testCode}</RecordId>
               ) : undefined,
             },
             {
               label: 'Sample Type',
-              value: test.sampleType ? formatStatusBadgeLabel(test.sampleType) : undefined,
+              value: workItem.sampleType ? formatStatusBadgeLabel(workItem.sampleType) : undefined,
             },
             {
               label: 'Sample ID',
-              value: test.sampleId ? (
-                <RecordId type="sample" value={test.sampleId} emphasis="block" className="text-right" />
+              value: workItem.sampleId ? (
+                <RecordId
+                  type="sample"
+                  value={workItem.sampleId}
+                  emphasis="block"
+                  className="text-right"
+                />
               ) : undefined,
             },
             {

@@ -3,7 +3,8 @@
  */
 
 import { createLabQueueSearchFilter } from '../components/LabWorkflowQueueLayout';
-import type { PriorityLevel, TestWithContext } from '@/types';
+import type { PriorityLevel } from '@/types';
+import type { PendingEscalationItem } from '../api/results';
 import type { LabQueueStageFilterConfig } from './labQueueStageFilterConfig';
 
 export type LabQueueSecondaryFilterProfile<T, S> = Pick<
@@ -14,19 +15,25 @@ export type LabQueueSecondaryFilterProfile<T, S> = Pick<
 };
 
 export const VALIDATION_REVIEW_ESCALATION_PROFILE: LabQueueSecondaryFilterProfile<
-  TestWithContext,
+  PendingEscalationItem,
   PriorityLevel
 > = {
   callbacks: {
     getId: t => t.id,
     getOrderId: t => t.orderId,
-    getSampleId: t => t.sampleId,
+    getSampleId: t => t.sampleId ?? undefined,
     getOrderDate: t => t.orderDate,
     getSampleType: t => t.sampleType,
     getStatus: t => t.priority as PriorityLevel,
     getPriority: t => t.priority,
     getQueueSince: t => t.resultEnteredAt ?? t.orderDate,
-    searchFilterFn: createLabQueueSearchFilter<TestWithContext>(),
+    searchFilterFn: (item, query) => {
+      const searchable = {
+        ...item,
+        sampleId: item.sampleId ?? undefined,
+      };
+      return createLabQueueSearchFilter<typeof searchable>()(searchable, query);
+    },
   },
   sortByPriority: true,
   applyStatusFilter: true,

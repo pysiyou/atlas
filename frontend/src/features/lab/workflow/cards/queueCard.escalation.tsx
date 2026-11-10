@@ -9,9 +9,13 @@ import { cn } from '@/utils';
 import { useUserLookup } from '@/lib/api/users';
 import { useLabWorkflowCardClickGuard } from '../../hooks';
 import { useLabWorkflowResponsiveCard } from '../../hooks/useLabWorkflowResponsiveCard';
-import { deriveRetestContext } from '../../utils/deriveRetestContext';
 import { MOBILE_LIST_CARD } from '@/theme/recipes';
-import type { TestWithContext } from '@/types';
+import type { PendingEscalationItem } from '../../api/results';
+import {
+  labModalWorkItemFromDto,
+  retestContextFromRow,
+  type LabOrderTestQueueRow,
+} from '../../types/labQueueChrome';
 import { QueueCard, QueueCardMobile } from '../shared/queueCardLayout';
 import { TestWorkflowCardLeftColumn } from '../shared/queueCardLeftColumn';
 import {
@@ -20,57 +24,65 @@ import {
 } from '../shared/escalation.shared';
 
 export interface EscalationCardProps {
-  test: TestWithContext;
+  item: PendingEscalationItem;
   onClick: () => void;
   isMobile?: boolean;
 }
 
 export interface EscalationCardSharedData {
-  test: TestWithContext;
+  item: PendingEscalationItem;
+  chromeRow: LabOrderTestQueueRow;
   handleCardClick: (e?: React.MouseEvent) => void;
   getUserName: (userId: string) => string;
-  rejection: ReturnType<typeof deriveRetestContext>;
+  rejection: ReturnType<typeof retestContextFromRow>;
   patientName: string;
 }
 
 export function useEscalationCardData(props: EscalationCardProps): EscalationCardSharedData {
-  const { test, onClick } = props;
+  const { item, onClick } = props;
   const { getUserName } = useUserLookup();
   const handleCardClick = useLabWorkflowCardClickGuard(onClick);
-  const rejection = useMemo(() => deriveRetestContext(test), [test]);
+  const chromeRow = useMemo(() => labModalWorkItemFromDto(item), [item]);
+  const rejection = useMemo(() => retestContextFromRow(chromeRow), [chromeRow]);
 
   return {
-    test,
+    item,
+    chromeRow,
     handleCardClick,
     getUserName: (userId: string) => getUserName(userId),
     rejection,
-    patientName: test.patientName || '—',
+    patientName: item.patientName || '—',
   };
 }
 
-function useEscalationCardHeader(test: TestWithContext, patientName: string) {
+function useEscalationCardHeader(chromeRow: LabOrderTestQueueRow, patientName: string) {
   const leftColumn = useMemo(
     () => (
       <TestWorkflowCardLeftColumn
-        test={test}
+        row={chromeRow}
         patientName={patientName}
         variant="escalation"
-        queueSince={test.resultEnteredAt ?? test.orderDate}
-        reasonCode={test.reasonCode}
+        queueSince={chromeRow.resultEnteredAt ?? chromeRow.orderDate}
+        reasonCode={chromeRow.reasonCode ?? undefined}
         includeResultEntered
       />
     ),
-    [test, patientName]
+    [chromeRow, patientName]
   );
 
-  const badges = <EscalationExceptionBadges test={test} />;
+  const badges = <EscalationExceptionBadges row={chromeRow} />;
 
   return { leftColumn, badges };
 }
 
-function EscalationCardDesktop({ test, handleCardClick, rejection, patientName }: EscalationCardSharedData) {
+function EscalationCardDesktop({
+  chromeRow,
+  handleCardClick,
+  rejection,
+  patientName,
+}: EscalationCardSharedData) {
   const { showAttemptIndicator } = rejection;
-  const { leftColumn, badges } = useEscalationCardHeader(test, patientName);
+  const { leftColumn, badges } = useEscalationCardHeader(chromeRow, patientName);
 
   return (
     <QueueCard
@@ -79,14 +91,19 @@ function EscalationCardDesktop({ test, handleCardClick, rejection, patientName }
       leftColumn={leftColumn}
       badges={badges}
       contentTitle="Supervisor exception"
-      content={<EscalationExceptionReviewBody test={test} />}
+      content={<EscalationExceptionReviewBody row={chromeRow} />}
     />
   );
 }
 
-function EscalationCardMobile({ test, handleCardClick, rejection, patientName }: EscalationCardSharedData) {
+function EscalationCardMobile({
+  chromeRow,
+  handleCardClick,
+  rejection,
+  patientName,
+}: EscalationCardSharedData) {
   const { showAttemptIndicator } = rejection;
-  const { leftColumn, badges } = useEscalationCardHeader(test, patientName);
+  const { leftColumn, badges } = useEscalationCardHeader(chromeRow, patientName);
 
   return (
     <Card
@@ -100,7 +117,7 @@ function EscalationCardMobile({ test, handleCardClick, rejection, patientName }:
     >
       <QueueCardMobile leftColumn={leftColumn} badges={badges}>
         <div className={cn(MOBILE_LIST_CARD.body, 'space-y-space-0-5')}>
-          <EscalationExceptionReviewBody test={test} />
+          <EscalationExceptionReviewBody row={chromeRow} />
         </div>
       </QueueCardMobile>
     </Card>

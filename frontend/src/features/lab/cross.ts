@@ -6,7 +6,6 @@ export type {
   SampleCollectionQueueItem,
   SampleCollectionRequirement,
   SampleRequirement,
-  TestWithContext,
 } from './types';
 
 export { sampleAPI, useSampleLookup, createSampleLookupForOrder } from './api/samples';
@@ -35,7 +34,7 @@ export {
   getLabQueueUrlForTest,
   getLabQueueUrlForSample,
   getLabQueueUrlForOrder,
-  hasTestResults,
+  hasResultsOnWorkItem,
 } from './utils/labSearchAndLinks';
 export { formatVolume } from './utils/labSample';
 export { formatRejectionCriteriaList } from './utils/catalogRejectionCriteria';

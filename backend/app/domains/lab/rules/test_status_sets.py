@@ -39,3 +39,9 @@ COLLECTION_TRANSITION_SKIP_STATUSES: frozenset[TestStatus] = frozenset(
         TestStatus.VALIDATED,
     }
 )
+
+# Monitor board: hide inactive lineage plus cancelled tests.
+BOARD_EXCLUDED_TEST_STATUSES: tuple[TestStatus, ...] = (
+    *INACTIVE_LINEAGE_STATUSES,
+    *INACTIVE_ROLLUP_EXTRA_STATUSES,
+)

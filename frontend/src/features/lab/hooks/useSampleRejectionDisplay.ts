@@ -1,26 +1,26 @@
 /**
  * Whether to show rejected-sample banner for a resulted validation work item.
- * Uses fields already on TestWithContext instead of fetching the full samples list.
  */
 
 import { useMemo } from 'react';
-import type { TestWithContext } from '@/types';
+import type { LabOrderTestQueueRow } from '../types/labQueueChrome';
 
-export function useSampleRejectionDisplay(test: TestWithContext) {
+export function useSampleRejectionDisplay(row: LabOrderTestQueueRow) {
   return useMemo(() => {
-    if (!test.sampleId || test.status !== 'resulted') {
-      return { showBanner: false, sampleId: test.sampleId, sampleRejectionReason: undefined };
+    const sampleId = row.sampleId ?? undefined;
+    if (!sampleId || row.status !== 'resulted') {
+      return { showBanner: false, sampleId, sampleRejectionReason: undefined };
     }
 
-    const isRejected = test.sampleStatus === 'rejected';
+    const isRejected = row.sampleStatus === 'rejected';
     if (!isRejected) {
-      return { showBanner: false, sampleId: test.sampleId, sampleRejectionReason: undefined };
+      return { showBanner: false, sampleId, sampleRejectionReason: undefined };
     }
 
     return {
       showBanner: true,
-      sampleId: test.sampleId,
-      sampleRejectionReason: test.sampleRecollectionReason,
+      sampleId,
+      sampleRejectionReason: row.sampleRecollectionReason ?? undefined,
     };
-  }, [test.sampleId, test.sampleStatus, test.sampleRecollectionReason, test.status]);
+  }, [row.sampleId, row.sampleStatus, row.sampleRecollectionReason, row.status]);
 }

@@ -16,15 +16,19 @@ import { useLabWorkflowCardClickGuard } from '../../hooks';
 import { isLabActionAllowed } from '../../utils/queueDisplay';
 import { useSampleRejectionDisplay } from '../../hooks/useSampleRejectionDisplay';
 import { useLabWorkflowResponsiveCard } from '../../hooks/useLabWorkflowResponsiveCard';
-import { deriveRetestContext } from '../../utils/deriveRetestContext';
-import { MOBILE_LIST_CARD } from '@/theme/recipes';
-import type { TestWithContext } from '@/types';
+import type { ValidationQueueRow } from '../../types/validationQueue';
+import {
+  labModalWorkItemFromDto,
+  retestContextFromRow,
+  type LabOrderTestQueueRow,
+} from '../../types/labQueueChrome';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import { QueueCard, QueueCardMobile } from '../shared/queueCardLayout';
 import { TestWorkflowCardLeftColumn } from '../shared/queueCardLeftColumn';
+import { MOBILE_LIST_CARD } from '@/theme/recipes';
 
 export interface ResultValidationCardProps {
-  test: TestWithContext;
+  row: ValidationQueueRow;
   commentKey: string;
   comments: string;
   onCommentsChange: (commentKey: string, value: string) => void;
@@ -36,7 +40,8 @@ export interface ResultValidationCardProps {
 }
 
 export interface ResultValidationCardSharedData {
-  test: TestWithContext;
+  row: ValidationQueueRow;
+  chromeRow: LabOrderTestQueueRow;
   patientName: string;
   onApprove: () => void;
   onReject: ResultValidationCardProps['onReject'];
@@ -44,7 +49,7 @@ export interface ResultValidationCardSharedData {
   handleCardClick: () => void;
   getUserName: (id: string) => string;
   sampleRejection: ReturnType<typeof useSampleRejectionDisplay>;
-  rejection: ReturnType<typeof deriveRetestContext>;
+  rejection: ReturnType<typeof retestContextFromRow>;
   canValidate: boolean;
   canReject: boolean;
 }
@@ -52,19 +57,21 @@ export interface ResultValidationCardSharedData {
 export function useResultValidationCardData(
   props: ResultValidationCardProps
 ): ResultValidationCardSharedData | null {
-  const { test, onApprove, onReject, onClick, isApproving = false } = props;
+  const { row, onApprove, onReject, onClick, isApproving = false } = props;
   const { getUserName } = useUserLookup();
   const handleCardClick = useLabWorkflowCardClickGuard(onClick);
-  const canValidate = isLabActionAllowed(test.allowedActions, 'validate');
-  const canReject = isLabActionAllowed(test.allowedActions, 'reject');
-  const rejection = useMemo(() => deriveRetestContext(test), [test]);
-  const sampleRejection = useSampleRejectionDisplay(test);
+  const chromeRow = useMemo(() => labModalWorkItemFromDto(row), [row]);
+  const canValidate = isLabActionAllowed(row.allowedActions, 'validate');
+  const canReject = isLabActionAllowed(row.allowedActions, 'reject');
+  const rejection = useMemo(() => retestContextFromRow(chromeRow), [chromeRow]);
+  const sampleRejection = useSampleRejectionDisplay(chromeRow);
 
-  if (!test.results) return null;
+  if (!row.results) return null;
 
   return {
-    test,
-    patientName: test.patientName || '—',
+    row,
+    chromeRow,
+    patientName: row.patientName || '—',
     onApprove,
     onReject,
     isApproving,
@@ -77,31 +84,32 @@ export function useResultValidationCardData(
   };
 }
 
-function useResultValidationCardHeader(test: TestWithContext, patientName: string) {
-  const flagCount = test.flags?.length ?? 0;
+function useResultValidationCardHeader(chromeRow: LabOrderTestQueueRow, patientName: string) {
+  const flagCount = chromeRow.flags?.length ?? 0;
 
   const leftColumn = useMemo(
     () => (
       <TestWorkflowCardLeftColumn
-        test={test}
+        row={chromeRow}
         patientName={patientName}
         variant="validation"
-        queueSince={test.resultEnteredAt}
+        queueSince={chromeRow.resultEnteredAt ?? undefined}
         emphasizeCritical
         flagCount={flagCount}
         includeResultEntered
       />
     ),
-    [test, patientName, flagCount]
+    [chromeRow, patientName, flagCount]
   );
 
-  const badges = <TestHeaderBadges test={test} variant="validation" showStatus />;
+  const badges = <TestHeaderBadges row={chromeRow} variant="validation" showStatus />;
 
   return { leftColumn, badges };
 }
 
 function ResultValidationCardDesktop({
-  test,
+  row,
+  chromeRow,
   onApprove,
   onReject,
   isApproving,
@@ -113,7 +121,7 @@ function ResultValidationCardDesktop({
   patientName,
 }: ResultValidationCardSharedData) {
   const { showAttemptIndicator } = rejection;
-  const { leftColumn, badges } = useResultValidationCardHeader(test, patientName);
+  const { leftColumn, badges } = useResultValidationCardHeader(chromeRow, patientName);
   const { showBanner: isSampleRejected, sampleId, sampleRejectionReason } = sampleRejection;
 
   return (
@@ -126,10 +134,10 @@ function ResultValidationCardDesktop({
       actions={
         <div className="flex items-center gap-space-2">
           <QualityIssuePopover
-            orderTestId={test.id!}
-            testCode={test.testCode}
-            testName={test.testName}
-            patientName={test.patientName}
+            orderTestId={row.orderTestId}
+            testCode={row.testCode}
+            testName={row.testName}
+            patientName={row.patientName}
             onReject={onReject}
             disabled={!canReject}
           />
@@ -156,9 +164,9 @@ function ResultValidationCardDesktop({
             </div>
           )}
           <ResultsParameterGrid
-            results={test.results!}
-            flags={test.flags}
-            testCode={test.testCode}
+            results={row.results!}
+            flags={row.flags ?? undefined}
+            testCode={row.testCode}
             variant="inline"
             layout="grid"
           />
@@ -170,7 +178,8 @@ function ResultValidationCardDesktop({
 }
 
 function ResultValidationCardMobile({
-  test,
+  row,
+  chromeRow,
   patientName,
   onApprove,
   onReject,
@@ -182,7 +191,7 @@ function ResultValidationCardMobile({
   canReject,
 }: ResultValidationCardSharedData) {
   const { showAttemptIndicator } = rejection;
-  const { leftColumn } = useResultValidationCardHeader(test, patientName);
+  const { leftColumn } = useResultValidationCardHeader(chromeRow, patientName);
   const { showBanner: isSampleRejected, sampleId, sampleRejectionReason } = sampleRejection;
 
   return (
@@ -207,14 +216,14 @@ function ResultValidationCardMobile({
 
       <QueueCardMobile
         leftColumn={leftColumn}
-        badges={<TestHeaderBadges test={test} variant="validation" size="xs" showStatus />}
+        badges={<TestHeaderBadges row={chromeRow} variant="validation" size="xs" showStatus />}
         actionsPlacement="header"
         actions={
           <>
             <QualityIssuePopover
-              orderTestId={test.id!}
-              testCode={test.testCode}
-              testName={test.testName}
+              orderTestId={row.orderTestId}
+              testCode={row.testCode}
+              testName={row.testName}
               patientName={patientName}
               onReject={onReject}
               disabled={!canReject}
@@ -236,9 +245,9 @@ function ResultValidationCardMobile({
         }
       >
         <ResultsParameterGrid
-          results={test.results!}
-          flags={test.flags}
-          testCode={test.testCode}
+          results={row.results!}
+          flags={row.flags ?? undefined}
+          testCode={row.testCode}
           variant="inline"
           layout="grid"
           dense

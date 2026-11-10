@@ -5,6 +5,10 @@ import type { FeedbackId } from '@/types/generated/feedbackCatalog';
 import { DEFAULT_QUALITY_ISSUE_SUCCESS_TOAST } from '@/types/generated/labContract';
 import { notify } from '@/feedback';
 import type { QualityIssueResult } from '@/types/lab-operations';
+import { VALIDATION_REMEDY_WIRES } from '@/types/generated/labContract';
+
+const RETRY_SAME_SAMPLE_WIRE = VALIDATION_REMEDY_WIRES[0];
+const REQUEST_RECOLLECTION_WIRE = VALIDATION_REMEDY_WIRES[1];
 
 /**
  * Pick catalog toast id from remedy outcome (recollection vs reject-only, retest vs escalate).
@@ -17,17 +21,17 @@ export function resolveQualityIssueSuccessToast(result?: QualityIssueResult | nu
   const { remedy, escalationRequired, createdSampleId, message } = result;
   const msg = (message ?? '').toLowerCase();
 
-  if (remedy === 'request_recollection') {
+  if (remedy === REQUEST_RECOLLECTION_WIRE) {
     return createdSampleId != null
       ? 'lab.qualityIssue.recollection.requested'
       : 'lab.qualityIssue.specimenRejected';
   }
 
-  if (remedy === 'retry_same_sample') {
+  if (remedy === RETRY_SAME_SAMPLE_WIRE) {
     return escalationRequired ? 'lab.qualityIssue.retest.limitHit' : 'lab.qualityIssue.retest';
   }
 
-  if (remedy === 'escalate') {
+  if (remedy === 'escalate' /* RemedyType.ESCALATE wire */) {
     if (escalationRequired && (msg.includes('re-test') || msg.includes('retest'))) {
       return 'lab.qualityIssue.retest.limitHit';
     }

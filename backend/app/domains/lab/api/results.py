@@ -9,6 +9,7 @@ from app.domains.lab.schemas.lab import (
     ResultEntryRequest,
     ResultValidationRequest,
 )
+from app.domains.lab.deps import get_lab_operations_service
 from app.domains.lab.workflow.service import LabOperationsService
 from app.domains.users.models import User
 from app.platform.database import get_db
@@ -43,10 +44,10 @@ def get_order_test_context(
 def enter_results(
     orderTestId: int,
     result_data: ResultEntryRequest,
-    db: Session = Depends(get_db),
+    service: LabOperationsService = Depends(get_lab_operations_service),
     current_user: User = Depends(require_lab_tech),
 ):
-    return LabOperationsService(db).enter_results(
+    return service.enter_results(
         order_test_id=orderTestId,
         user_id=current_user.id,
         results=result_data.results,
@@ -58,10 +59,9 @@ def enter_results(
 def validate_results(
     orderTestId: int,
     validation_data: ResultValidationRequest,
-    db: Session = Depends(get_db),
+    service: LabOperationsService = Depends(get_lab_operations_service),
     current_user: User = Depends(require_lab_tech),
 ):
-    service = LabOperationsService(db)
     if validation_data.decision == ValidationDecision.REJECTED:
         return service.reject_results(
             order_test_id=orderTestId,
@@ -81,10 +81,10 @@ def validate_results(
 def request_amendment(
     orderTestId: int,
     amendment_data: AmendmentRequest,
-    db: Session = Depends(get_db),
+    service: LabOperationsService = Depends(get_lab_operations_service),
     current_user: User = Depends(require_lab_tech),
 ):
-    return LabOperationsService(db).request_amendment(
+    return service.request_amendment(
         order_test_id=orderTestId,
         user_id=current_user.id,
         amendment_reason=amendment_data.amendmentReason,
@@ -100,11 +100,11 @@ def request_amendment(
 def resolve_escalation(
     orderTestId: int,
     body: EscalationResolveRequest,
-    db: Session = Depends(get_db),
+    service: LabOperationsService = Depends(get_lab_operations_service),
     current_user: User = Depends(require_escalation_resolver),
 ):
     read_back = body.readBack.model_dump(mode="json") if body.readBack else None
-    result = LabOperationsService(db).resolve_escalation(
+    result = service.resolve_escalation(
         order_test_id=orderTestId,
         user_id=current_user.id,
         action=EscalationResolutionAction(body.action),

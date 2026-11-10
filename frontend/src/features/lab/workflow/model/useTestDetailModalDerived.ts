@@ -1,9 +1,9 @@
 /**
  * Derived presentation state for TestDetailModal.
  */
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import type { Order, OrderTest, Test } from '@/types';
-import { getLabQueueUrlForTest, hasTestResults, orderTestKey } from '../../utils/labSearchAndLinks';
+import { getLabQueueUrlForTest, hasResultsOnWorkItem, orderTestKey } from '../../utils/labSearchAndLinks';
 import {
   buildOrderTestOverviewFields,
   buildOrderTestWorkflowFields,
@@ -11,7 +11,11 @@ import {
 import type { DetailGridSectionConfig } from '../shared/detailModalLayout';
 import type { resolveLinkedOrderTests } from './useTestDetailModel';
 import type { TestDetailInteraction } from '@/lib/context/modalTypes';
-import { useLabDraftStore } from '../../state/labDraftStore';
+import type { LabModalWorkItem } from '../../types/labQueueChrome';
+import {
+  useLabDraftStore,
+  validationDraftLifecycleKey,
+} from '../../state/labDraftStore';
 
 export function useTestDetailModalDerived({
   order,
@@ -20,7 +24,7 @@ export function useTestDetailModalDerived({
   catalogTest,
   openLinkedTest,
   onClose,
-  labContext,
+  detailWorkItem,
   interaction,
   orderTestId,
 }: {
@@ -30,14 +34,28 @@ export function useTestDetailModalDerived({
   catalogTest: Test | undefined;
   openLinkedTest: (linkedTest: OrderTest) => void;
   onClose: () => void;
-  labContext: import('@/types').TestWithContext | undefined;
+  detailWorkItem: LabModalWorkItem | undefined;
   interaction: TestDetailInteraction;
   orderTestId: number;
 }) {
   const isValidate = interaction === 'validate';
-  const hasResults = labContext ? hasTestResults(labContext) : false;
-  const draftComments = useLabDraftStore(s => s.validationComments[orderTestId] ?? '');
+  const hasResults =
+    detailWorkItem != null
+      ? hasResultsOnWorkItem(detailWorkItem)
+      : Boolean(orderTest?.results && Object.keys(orderTest.results).length > 0);
+  const draftComments = useLabDraftStore(
+    s => s.validationDrafts[orderTestId]?.text ?? ''
+  );
   const setValidationComments = useLabDraftStore(s => s.setValidationComments);
+  const seedValidationDraft = useLabDraftStore(s => s.seedValidationDraft);
+
+  useEffect(() => {
+    if (!isValidate || !orderTest) return;
+    seedValidationDraft(orderTestId, {
+      text: orderTest.validationNotes ?? '',
+      lifecycleKey: validationDraftLifecycleKey(orderTest.status, orderTest.resultEnteredAt),
+    });
+  }, [isValidate, orderTest, orderTestId, seedValidationDraft]);
 
   const detailGridSections = useMemo(() => {
     if (!orderTest) return undefined;

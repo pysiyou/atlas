@@ -12,7 +12,6 @@ export {
   type LabQueueFilterState,
   type UseLabQueuePageFiltersOptions,
 } from './labQueueFilters';
-export type { TestWithContextResult } from '../types';
 export { useLabStageQueueCounts, getValidationTabCount } from '../api/labMonitor';
 export {
   useResultValidationQueueData,
@@ -21,5 +20,5 @@ export {
 export { useLabWorkflowCardClickGuard } from './useLabWorkflowCardClickGuard';
 export { useQualityIssuePopover } from './useQualityIssuePopover';
 export { useSubmitQualityIssue } from './useSubmitQualityIssue';
-export { useOrderTestQueueState } from './useOrderTestQueueState';
+export { useLabQueueRowState } from './useLabQueueRowState';
 export { useLabWorkflowResponsiveCard } from './useLabWorkflowResponsiveCard';

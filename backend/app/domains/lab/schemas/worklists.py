@@ -185,6 +185,26 @@ class WorklistResponse(BaseModel):
     pagination: WorklistPagination
 
 
+class CollectionWorklistResponse(BaseModel):
+    items: list[CollectionWorklistItem]
+    pagination: WorklistPagination
+
+
+class EntryWorklistResponse(BaseModel):
+    items: list[EntryWorklistItem]
+    pagination: WorklistPagination
+
+
+class ValidationWorklistResponse(BaseModel):
+    items: list[ValidationWorklistItem]
+    pagination: WorklistPagination
+
+
+class DashboardWorklistResponse(BaseModel):
+    items: list[DashboardWorklistItem]
+    pagination: WorklistPagination
+
+
 class QueueAgeStats(BaseModel):
     oldestHours: float | None
     averageHours: float | None

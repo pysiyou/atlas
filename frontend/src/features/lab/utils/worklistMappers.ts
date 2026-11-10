@@ -3,15 +3,16 @@
  * For display-only UI, use `@/utils/presentation` (`buildWorklistRowPresentation`, `useWorklistItemPresentation`).
  */
 import type { SampleRequirement } from './labSample';
-import type { Order, Patient, Sample, SampleType, TestWithContext } from '@/types';
-import type { SampleCollectionQueueItem } from '../types';
+import type { Sample, SampleType } from '@/types';
+import type { CollectionQueueRow } from '../types/collectionQueue';
 import type {
   CollectionWorklistItem,
   EntryWorklistItem,
   ValidationWorklistItem,
 } from '../api/worklists';
 
-export function mapCollectionWorklistToSampleDisplay(item: CollectionWorklistItem): SampleCollectionQueueItem {
+/** Map a collection worklist API row to a queue card/modal row (no synthetic Order/Patient). */
+export function worklistItemToQueueRow(item: CollectionWorklistItem): CollectionQueueRow {
   const isCollectedLike = item.status === 'collected' || item.status === 'rejected';
   const sample = {
     sampleId: item.sampleId,
@@ -43,43 +44,6 @@ export function mapCollectionWorklistToSampleDisplay(item: CollectionWorklistIte
       : {}),
   } as Sample;
 
-  const order = {
-    orderId: item.orderId,
-    patientId: item.patientId,
-    patientName: item.patientName,
-    orderDate: item.orderDate,
-    totalPrice: 0,
-    paymentStatus: item.paymentStatus,
-    overallStatus: 'ordered',
-    priority: item.priority,
-    tests: [],
-    referentDoctorId: item.referentDoctorId ?? undefined,
-    referentDoctorName: item.referentDoctorName ?? undefined,
-    referentDoctorEmail: item.referentDoctorEmail ?? undefined,
-    referentDoctorPhone: item.referentDoctorPhone ?? undefined,
-    referentDoctorHospital: item.referentDoctorHospital ?? undefined,
-    referentDoctorUsername: item.referentDoctorUsername ?? undefined,
-    createdBy: '',
-    createdAt: item.orderDate,
-    updatedAt: item.orderDate,
-  } as Order;
-
-  const patient = {
-    id: item.patientId,
-    fullName: item.patientName,
-    dateOfBirth: '',
-    gender: 'male',
-    phone: '',
-    address: '',
-    emergencyContact: { name: '', phone: '' },
-    medicalHistory: [],
-    registrationDate: item.orderDate,
-    createdBy: '',
-    updatedBy: '',
-    createdAt: item.orderDate,
-    updatedAt: item.orderDate,
-  } as unknown as Patient;
-
   const requirement: SampleRequirement = {
     sampleType: item.sampleType as SampleType,
     testCodes: item.testCodes,
@@ -92,97 +56,31 @@ export function mapCollectionWorklistToSampleDisplay(item: CollectionWorklistIte
 
   return {
     sample,
-    order,
-    patient,
+    patientId: item.patientId,
+    patientName: item.patientName,
+    orderId: item.orderId,
+    orderDate: item.orderDate,
+    paymentStatus: item.paymentStatus,
     priority: item.priority,
     requirement,
     allowedActions: item.allowedActions,
     denyReason: item.denyReason ?? null,
     denyMessage: item.denyMessage ?? null,
     statusPresentation: item.statusPresentation ?? null,
+    referentDoctorId: item.referentDoctorId ?? null,
+    referentDoctorName: item.referentDoctorName ?? null,
+    referentDoctorEmail: item.referentDoctorEmail ?? null,
+    referentDoctorPhone: item.referentDoctorPhone ?? null,
+    referentDoctorHospital: item.referentDoctorHospital ?? null,
+    referentDoctorUsername: item.referentDoctorUsername ?? null,
   };
 }
 
-export function mapEntryWorklistToOrderTestContext(item: EntryWorklistItem): TestWithContext {
-  return {
-    id: item.orderTestId,
-    orderId: item.orderId,
-    patientId: item.patientId,
-    testCode: item.testCode,
-    testName: item.testName,
-    status: item.status,
-    sampleId: item.sampleId ?? undefined,
-    sampleType: item.sampleType,
-    priority: item.priority,
-    patientName: item.patientName,
-    orderDate: item.orderDate,
-    collectedAt: item.collectedAt ?? undefined,
-    isRetest: item.isRetest,
-    retestOfTestId: item.retestOfTestId ?? undefined,
-    retestNumber: item.retestNumber,
-    allowedActions: item.allowedActions,
-    denyReason: item.denyReason ?? null,
-    denyMessage: item.denyMessage ?? null,
-    referentDoctorId: item.referentDoctorId ?? undefined,
-    referentDoctorName: item.referentDoctorName ?? undefined,
-    referentDoctorEmail: item.referentDoctorEmail ?? undefined,
-    referentDoctorPhone: item.referentDoctorPhone ?? undefined,
-    referentDoctorHospital: item.referentDoctorHospital ?? undefined,
-    referentDoctorUsername: item.referentDoctorUsername ?? undefined,
-    lab: {
-      pipelineStage: item.pipelineStage ?? undefined,
-      attentionReason: item.attentionReason ?? null,
-      attentionLabel: item.attentionLabel ?? null,
-      statusPresentation: item.statusPresentation ?? null,
-      denyReason: item.denyReason ?? null,
-      denyMessage: item.denyMessage ?? null,
-      allowedActions: item.allowedActions,
-    },
-  } as TestWithContext;
+export function worklistItemToEntryRow(item: EntryWorklistItem): EntryWorklistItem {
+  return item;
 }
 
-export function mapValidationWorklistToOrderTestContext(
-  item: ValidationWorklistItem
-): TestWithContext {
-  return {
-    id: item.orderTestId,
-    orderId: item.orderId,
-    patientId: item.patientId,
-    testCode: item.testCode,
-    testName: item.testName,
-    status: item.status,
-    sampleType: item.sampleType,
-    priority: item.priority,
-    patientName: item.patientName,
-    orderDate: item.orderDate,
-    resultEnteredAt: item.resultEnteredAt ?? undefined,
-    hasCriticalValues: item.hasCriticalValues,
-    sampleId: item.sampleId ?? undefined,
-    sampleStatus: item.sampleStatus ?? undefined,
-    results: item.results ?? undefined,
-    flags: item.flags ?? undefined,
-    enteredBy: item.enteredBy ?? undefined,
-    referentDoctorId: item.referentDoctorId ?? undefined,
-    referentDoctorName: item.referentDoctorName ?? undefined,
-    referentDoctorEmail: item.referentDoctorEmail ?? undefined,
-    referentDoctorPhone: item.referentDoctorPhone ?? undefined,
-    referentDoctorHospital: item.referentDoctorHospital ?? undefined,
-    referentDoctorUsername: item.referentDoctorUsername ?? undefined,
-    isRetest: item.isRetest,
-    retestOfTestId: item.retestOfTestId ?? undefined,
-    retestNumber: item.retestNumber,
-    allowedActions: item.allowedActions,
-    denyReason: item.denyReason ?? null,
-    denyMessage: item.denyMessage ?? null,
-    lab: {
-      pipelineStage: item.pipelineStage ?? undefined,
-      attentionReason: item.attentionReason ?? null,
-      attentionLabel: item.attentionLabel ?? null,
-      statusPresentation: item.statusPresentation ?? null,
-      denyReason: item.denyReason ?? null,
-      denyMessage: item.denyMessage ?? null,
-      allowedActions: item.allowedActions,
-    },
-  } as TestWithContext;
+export function worklistItemToValidationRow(item: ValidationWorklistItem): ValidationWorklistItem {
+  return item;
 }
 

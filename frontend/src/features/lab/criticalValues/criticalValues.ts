@@ -8,7 +8,7 @@ import type { ApiCriticalValueResponse } from '@/lib/api/types';
 import { useAuthStore } from '@/app/authStore';
 import { queryKeys } from '@/lib/query';
 import { invalidateCriticalValueQueries } from '@/lib/query/invalidate';
-import type { TestWithContext } from '@/types';
+import type { LabModalWorkItem } from '../types/labQueueChrome';
 import { LAB_PATHS } from '../constants/labConstants';
 
 export interface CriticalValueRecord {
@@ -98,34 +98,26 @@ export function useAcknowledgeCriticalValue() {
   });
 }
 
-export type TestWithCriticalFields = TestWithContext & {
-  id?: number;
-  criticalNotificationSent?: boolean;
-  criticalNotifiedAt?: string;
-  criticalNotifiedTo?: string;
-  criticalAcknowledgedAt?: string;
-};
-
 export function buildCriticalValueRecord(
-  test: TestWithCriticalFields
+  workItem: LabModalWorkItem
 ): CriticalValueRecord | null {
-  if (!test.hasCriticalValues || test.id == null) {
+  if (!workItem.hasCriticalValues) {
     return null;
   }
 
   return {
-    id: test.id,
-    orderId: test.orderId,
-    testCode: test.testCode,
-    testName: test.testName,
-    patientId: test.patientId,
-    patientName: test.patientName,
-    flags: test.flags,
-    criticalNotificationSent: test.criticalNotificationSent ?? false,
-    criticalNotifiedAt: test.criticalNotifiedAt,
-    criticalNotifiedTo: test.criticalNotifiedTo,
-    criticalAcknowledgedAt: test.criticalAcknowledgedAt,
-    resultEnteredAt: test.resultEnteredAt,
-    status: test.status,
+    id: workItem.orderTestId,
+    orderId: workItem.orderId,
+    testCode: workItem.testCode,
+    testName: workItem.testName,
+    patientId: workItem.patientId ?? 0,
+    patientName: workItem.patientName,
+    flags: workItem.flags ?? undefined,
+    criticalNotificationSent: workItem.criticalNotificationSent ?? false,
+    criticalNotifiedAt: workItem.criticalNotifiedAt ?? undefined,
+    criticalNotifiedTo: workItem.criticalNotifiedTo ?? undefined,
+    criticalAcknowledgedAt: workItem.criticalAcknowledgedAt ?? undefined,
+    resultEnteredAt: workItem.resultEnteredAt ?? undefined,
+    status: workItem.status,
   };
 }

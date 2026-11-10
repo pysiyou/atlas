@@ -72,7 +72,7 @@ function snapshotPrintThemeCss(): string {
  * Generates HTML content for printing a sample label
  */
 export const generatePrintLabelHTML = (display: SampleCollectionQueueItem, patientName: string): string => {
-  const { sample, order } = display;
+  const { sample } = display;
 
   if (!sample || !isCollectedSample(sample)) {
     throw new Error(feedbackTitle('lab.collection.printLabel.uncollected'));
@@ -80,7 +80,7 @@ export const generatePrintLabelHTML = (display: SampleCollectionQueueItem, patie
 
   const sampleId = sample.sampleId;
   const sampleIdDisplay = displayId.sample(sampleId);
-  const patientIdDisplay = displayId.patient(order.patientId);
+  const patientIdDisplay = displayId.patient(display.patientId);
   const sampleType = sample.sampleType || 'unknown';
   const containerTopColor = sample.actualContainerColor;
   /**

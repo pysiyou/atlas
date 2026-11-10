@@ -19,6 +19,7 @@ import { CONTRACTS, ROOT } from './lib/read-contract.mjs';
 import { generateRejectionReasons } from './lib/rejection-reasons.mjs';
 import { generateTestCatalogMeta } from './lib/test-catalog-meta.mjs';
 import { validateAllContracts } from './lib/validate-contracts.mjs';
+import { verifyWorklistTypes } from './verify-worklist-types.mjs';
 
 validateAllContracts();
 generateLabContract();
@@ -34,6 +35,7 @@ if (process.env.ATLAS_CODEGEN_SKIP_OPENAPI !== '1') {
 } else {
   console.log('skip OpenAPI types (ATLAS_CODEGEN_SKIP_OPENAPI=1)');
 }
+verifyWorklistTypes();
 console.log('codegen complete');
 
 function exportOpenApiSpec() {

@@ -17,6 +17,7 @@ export {
   invalidateOrderQueries,
   invalidatePatientQueries,
   invalidateResultQueries,
+  invalidateAfterLabMutation,
   invalidateCriticalValueQueries,
   invalidateQualityIssueQueries,
   invalidateCollectionQueries,
@@ -24,6 +25,7 @@ export {
   invalidateLabMonitorQueriesFull,
   invalidateLabWorkflowQueries,
   invalidateWorklistQueries,
+  invalidatePendingEscalationQueries,
   invalidateAuditEventQueries,
   invalidateSampleDetailQueries,
   useInvalidateQueryKey,
@@ -34,6 +36,8 @@ export type {
   InvalidateResultOptions,
   InvalidateCriticalValueOptions,
   InvalidateLabWorkflowOptions,
+  LabMutationInvalidationKind,
+  InvalidateAfterLabMutationOptions,
 } from './invalidate';
 export { QueryProvider } from './QueryProvider';
 export { useAuthQueryEnabled } from './useAuthQueryEnabled';

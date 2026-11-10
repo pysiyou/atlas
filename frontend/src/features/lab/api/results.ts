@@ -3,7 +3,10 @@
  */
 import { apiClient } from '@/lib/api/client';
 import type { ApiEscalationResolveResponse } from '@/lib/api/types';
-import type { ValidationDecision, TestWithContext } from '@/types';
+import type { components } from '@/lib/api/types/generated/api';
+import type { ValidationDecision } from '@/types';
+
+export type PendingEscalationItem = components['schemas']['PendingEscalationItemResponse'];
 import type {
   EscalationResolveRequest,
   EscalationResolveResult,
@@ -11,7 +14,10 @@ import type {
   RemedyType,
 } from '@/types/lab-operations';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { invalidatePendingEscalationQueries, invalidateResultQueries } from '@/lib/query/invalidate';
+import {
+  invalidateAfterLabMutation,
+  invalidatePendingEscalationQueries,
+} from '@/lib/query/invalidate';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { useAuthStore } from '@/app/authStore';
 import { feedbackTitle } from '@/feedback';
@@ -30,12 +36,12 @@ interface ResultValidationRequest {
 }
 
 export const resultAPI = {
-  async getPendingEscalation(): Promise<TestWithContext[]> {
-    return apiClient.get<TestWithContext[]>(LAB_PATHS.results.pendingEscalation);
+  async getPendingEscalation(): Promise<PendingEscalationItem[]> {
+    return apiClient.get<PendingEscalationItem[]>(LAB_PATHS.results.pendingEscalation);
   },
 
-  async getOrderTestContext(orderTestId: number): Promise<TestWithContext> {
-    return apiClient.get<TestWithContext>(LAB_PATHS.results.orderTest(orderTestId));
+  async getOrderTestContext(orderTestId: number): Promise<PendingEscalationItem> {
+    return apiClient.get<PendingEscalationItem>(LAB_PATHS.results.orderTest(orderTestId));
   },
 
   async resolveEscalation(
@@ -89,7 +95,7 @@ export function useOrderTestContext(orderTestId: number | undefined, enabled = t
   });
 
   return {
-    test: query.data,
+    item: query.data,
     isLoading: query.isLoading,
     isError: query.isError,
     error: query.error,
@@ -126,10 +132,10 @@ export function useEnterResults() {
             ? variables.orderId.toString()
             : variables.orderId
           : undefined;
-      await invalidateResultQueries(queryClient, {
+      await invalidateAfterLabMutation(queryClient, {
+        kind: 'enterResults',
         orderId: orderIdStr,
         orderTestId: variables.orderTestId,
-        samples: false,
       });
     },
   });
@@ -165,10 +171,10 @@ export function useValidateResults() {
             ? variables.orderId.toString()
             : variables.orderId
           : undefined;
-      await invalidateResultQueries(queryClient, {
+      await invalidateAfterLabMutation(queryClient, {
+        kind: 'validateResults',
         orderId: orderIdStr,
         orderTestId: variables.orderTestId,
-        samples: false,
       });
     },
   });
@@ -214,11 +220,10 @@ export function useResolveEscalation() {
             ? variables.orderId.toString()
             : variables.orderId
           : undefined;
-      await invalidateResultQueries(queryClient, {
+      await invalidateAfterLabMutation(queryClient, {
+        kind: 'resolveEscalation',
         orderId: orderIdStr,
         orderTestId: variables.orderTestId,
-        samples: true,
-        pendingEscalation: true,
       });
     },
   });
@@ -246,8 +251,10 @@ export function usePendingEscalation(refetchOptions?: LabQueryRefetchOptions) {
     invalidatePendingEscalationQueries(queryClient);
   };
 
+  const escalatedItems = query.data ?? [];
+
   return {
-    escalatedTests: (query.data ?? []) as TestWithContext[],
+    escalatedItems,
     canViewEscalations,
     canResolveEscalation,
     isLoading: query.isLoading,

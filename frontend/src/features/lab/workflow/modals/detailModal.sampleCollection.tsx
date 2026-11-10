@@ -16,13 +16,15 @@ import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { deriveCollectionModalFields } from '@/utils/presentation';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Modal, ModalPageShell } from '@/components/overlays';
+import { QueueModalShell } from '../shared/detailModalLayout';
+import { LabModalPlaceholder } from '../shared/labModalPlaceholders';
 import { useListLoadErrorToast } from '@/hooks/listPage/useListLoadErrorToast';
 import { SampleCollectionDetailModalView } from './detailModal.sampleCollection.view';
 import { findCollectionQueueItem } from '../../utils/findCollectionQueueItem';
 import { useSubmitSampleCollection } from '../../collection/useSubmitSampleCollection';
 import { useAuthStore } from '@/app/authStore';
 import type { SampleDetailModalProps } from '@/lib/context/modalTypes';
-import { mapCollectionWorklistToSampleDisplay } from '../../utils/labQueue';
+import { worklistItemToQueueRow } from '../../utils/labQueue';
 
 export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({
   isOpen,
@@ -62,12 +64,25 @@ export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({
     error: workContextQueryError,
     refetch: refetchWorkContext,
   } = useSampleWorkContext(needsWorkContext ? sampleId : undefined, needsWorkContext);
-  const workContextDisplay = workContext
-    ? mapCollectionWorklistToSampleDisplay(workContext)
-    : undefined;
-  const orderId = cachedDisplay?.order || workContextDisplay?.order ? undefined : sample?.orderId;
-  const { order: fetchedOrder } = useOrder(orderId != null ? String(orderId) : undefined);
-  const order = cachedDisplay?.order || workContextDisplay?.order || fetchedOrder;
+  const workContextDisplay = workContext ? worklistItemToQueueRow(workContext) : undefined;
+  const displayRow = cachedDisplay ?? workContextDisplay;
+  const resolvedOrderId = displayRow?.orderId ?? sample?.orderId;
+  const shouldFetchOrder =
+    resolvedOrderId != null && !displayRow?.orderDate && !displayRow?.referentDoctorName;
+  const { order: fetchedOrder } = useOrder(
+    shouldFetchOrder ? String(resolvedOrderId) : undefined
+  );
+  const order = useMemo(() => {
+    if (fetchedOrder) return fetchedOrder;
+    if (!displayRow) return undefined;
+    return {
+      orderId: displayRow.orderId,
+      orderDate: displayRow.orderDate,
+      referentDoctorName: displayRow.referentDoctorName ?? undefined,
+      paymentStatus: displayRow.paymentStatus,
+      priority: displayRow.priority,
+    } as import('@/types').Order;
+  }, [fetchedOrder, displayRow]);
 
   const pendingSampleDisplay = useMemo(() => {
     if (!sample || sample.status !== 'pending') return cachedDisplay ?? workContextDisplay;
@@ -137,9 +152,15 @@ export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({
   if (!sample) {
     if (isOpen && sampleId && isFetchingSample) {
       return (
-        <Modal isOpen={isOpen} onClose={onClose} title="Sample" size="3xl" isActive={isActive}>
-          <ModalPageShell loading loadingVariant="workflow" />
-        </Modal>
+        <QueueModalShell
+          isOpen={isOpen}
+          onClose={onClose}
+          isActive={isActive}
+          title="Sample"
+          subtitle=""
+        >
+          <LabModalPlaceholder variant="sampleCollection" />
+        </QueueModalShell>
       );
     }
     return null;
@@ -153,9 +174,15 @@ export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({
     !pendingSampleDisplay
   ) {
     return (
-      <Modal isOpen={isOpen} onClose={onClose} title="Sample" size="3xl" isActive={isActive}>
-        <ModalPageShell loading loadingVariant="workflow" />
-      </Modal>
+      <QueueModalShell
+        isOpen={isOpen}
+        onClose={onClose}
+        isActive={isActive}
+        title="Sample"
+        subtitle=""
+      >
+        <LabModalPlaceholder variant="sampleCollection" />
+      </QueueModalShell>
     );
   }
 
@@ -182,7 +209,7 @@ export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({
   const fields = deriveCollectionModalFields(
     sample,
     order,
-    pendingSampleDisplay?.patient?.fullName
+    pendingSampleDisplay?.patientName
   );
   const testNames = sample.testCodes ? getTestNames(sample.testCodes, tests) : [];
 

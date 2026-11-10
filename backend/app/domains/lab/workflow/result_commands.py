@@ -279,7 +279,7 @@ class ResultCommandHandler:
         preferred_remedy: RemedyType | None = None,
     ):
         """Reject resulted test via validate endpoint (delegates to quality workflow)."""
-        return self._svc.quality._report_test_issue(
+        return self._svc.quality.report_test_validation_issue(
             order_test_id=order_test_id,
             user_id=user_id,
             reason=rejection_reason,

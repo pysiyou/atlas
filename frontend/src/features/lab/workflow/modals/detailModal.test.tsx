@@ -13,10 +13,11 @@ import {
   TestRelatedTestsPanel,
 } from '@/features/orders';
 import type { TestDetailModalProps } from '@/lib/context/modalTypes';
-import type { Order, OrderTest, Patient, Test, TestWithContext } from '@/types';
+import type { Order, OrderTest, Patient, Test } from '@/types';
 import { text } from '@/theme/recipes';
 import type { QualityIssueResult } from '@/types/lab-operations';
 import { buildCriticalValueRecord } from '../../criticalValues/criticalValues';
+import type { LabModalWorkItem } from '../../types/labQueueChrome';
 import type { CriticalValueRecord } from '../../criticalValues/criticalValues';
 import { useSampleRejectionDisplay } from '../../hooks/useSampleRejectionDisplay';
 import { ResultValidationPanel } from '../../validation/ResultValidationForm';
@@ -42,12 +43,11 @@ import {
   type TestDetailHeaderVariant,
 } from '../shared/testDetailHeader';
 import type { Sample } from '@/types';
-import { useOrderTestContext } from '../../api/results';
-import { Modal, ModalPageShell } from '@/components/overlays';
+import { LabModalPlaceholder } from '../shared/labModalPlaceholders';
 
-const EMPTY_REJECTION_CONTEXT: TestWithContext = {
+const EMPTY_QUEUE_ROW: LabModalWorkItem = {
+  orderTestId: 0,
   orderId: 0,
-  patientId: 0,
   patientName: '',
   testName: '',
   testCode: '',
@@ -61,19 +61,19 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({
   isActive = true,
   orderTestId,
   interaction = 'view',
+  worklistRow,
 }) => {
-  const { test: fetchedTest, isLoading: isContextLoading } = useOrderTestContext(orderTestId, isOpen);
-
   const model = useTestDetailModel({
     isOpen,
     orderTestId,
-    test: fetchedTest,
+    worklistRow,
   });
 
   const {
     order,
     orderTest,
-    labContext,
+    queueWorkItem,
+    detailWorkItem,
     catalogTest,
     testDisplayName,
     relatedSamples,
@@ -83,13 +83,18 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({
     patientName,
     patient,
     ready,
+    isOrderLoading,
+    isCatalogLoading,
+    orderTestSnapshot,
   } = model;
 
-  const sampleRejection = useSampleRejectionDisplay(labContext ?? fetchedTest ?? EMPTY_REJECTION_CONTEXT);
+  const displayWorkItem = detailWorkItem ?? queueWorkItem;
+
+  const sampleRejection = useSampleRejectionDisplay(displayWorkItem ?? EMPTY_QUEUE_ROW);
   const criticalRecord = useMemo(() => {
-    if (!labContext) return undefined;
-    return buildCriticalValueRecord(labContext) ?? undefined;
-  }, [labContext]);
+    if (!detailWorkItem) return undefined;
+    return buildCriticalValueRecord(detailWorkItem) ?? undefined;
+  }, [detailWorkItem]);
 
   const {
     handleApprove,
@@ -101,7 +106,7 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({
   } = useTestDetailModalActions({
     interaction,
     orderTestId,
-    orderId: order?.orderId ?? fetchedTest?.orderId,
+    orderId: order?.orderId ?? orderTestSnapshot?.orderId,
     onClose,
   });
 
@@ -121,37 +126,34 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({
     catalogTest,
     openLinkedTest,
     onClose,
-    labContext,
+    detailWorkItem,
     interaction,
     orderTestId,
   });
 
-  if (isOpen && isContextLoading && !fetchedTest && !ready) {
-    return (
-      <Modal isOpen={isOpen} onClose={onClose} title="Test" size="3xl" isActive={isActive}>
-        <ModalPageShell loading loadingVariant="workflow" />
-      </Modal>
-    );
-  }
+  const headerBadges = displayWorkItem ? (
+    <TestDetailModalHeaderBadges row={displayWorkItem} headerVariant={headerVariant} />
+  ) : null;
 
-  const headerBadges = labContext
-    ? <TestDetailModalHeaderBadges labContext={labContext} headerVariant={headerVariant} />
-    : null;
+  const testCode = orderTest?.testCode ?? displayWorkItem?.testCode ?? '';
+  const needsCatalog = Boolean(testCode);
+  const catalogReady = !needsCatalog || (!isCatalogLoading && catalogTest !== undefined);
+  const contentReady =
+    ready && !isOrderLoading && catalogReady && Boolean(order && orderTest && displayWorkItem);
 
-  const modalHeader =
-    ready && order
-      ? labModalHeaderContext({
-          stage: modalStage,
-          contextLabel: testDisplayName,
-          orderId: order.orderId,
-          badges: headerBadges ?? undefined,
-        })
-      : { title: testDisplayName, subtitle: null };
+  const modalHeader = contentReady
+    ? labModalHeaderContext({
+        stage: modalStage,
+        contextLabel: testDisplayName,
+        orderId: order!.orderId,
+        badges: headerBadges ?? undefined,
+      })
+    : { title: 'Test', subtitle: null };
 
   const headerLeftColumn =
-    ready && labContext && order && orderTest ? (
+    contentReady && order && orderTest && displayWorkItem ? (
       <TestDetailHeaderColumn
-        labContext={labContext}
+        row={displayWorkItem}
         patientName={patientName}
         headerVariant={headerVariant}
         modalStage={modalStage}
@@ -162,6 +164,8 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({
       />
     ) : null;
 
+  const placeholderVariant = isValidate ? 'testDetailValidate' : 'testDetailView';
+
   return (
     <QueueModalShell
       isOpen={isOpen}
@@ -171,51 +175,57 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({
       subtitle={modalHeader.subtitle ?? ''}
       modalKey={modalKey}
       disableClose={isApproving}
-      headerLeftColumn={headerLeftColumn}
+      headerLeftColumn={headerLeftColumn ?? undefined}
       footer={
-        <TestDetailModalFooter
-          isValidate={isValidate}
-          orderTestId={orderTestId}
-          labContext={labContext}
-          orderTest={orderTest}
-          testDisplayName={testDisplayName}
-          patientName={patientName}
-          hasResults={hasResults}
-          isApproving={isApproving}
-          onClose={onClose}
-          onApprove={handleApprove}
-          onReject={handleReject}
-          labUrl={labUrl}
-        />
+        contentReady ? (
+          <TestDetailModalFooter
+            isValidate={isValidate}
+            orderTestId={orderTestId}
+            displayWorkItem={displayWorkItem}
+            orderTest={orderTest}
+            testDisplayName={testDisplayName}
+            patientName={patientName}
+            hasResults={hasResults}
+            isApproving={isApproving}
+            onClose={onClose}
+            onApprove={handleApprove}
+            onReject={handleReject}
+            labUrl={labUrl}
+          />
+        ) : undefined
       }
     >
-      <TestDetailModalBody
-        sampleRejection={sampleRejection}
-        hasResults={hasResults}
-        orderTest={orderTest}
-        isValidate={isValidate}
-        comments={comments}
-        resultsPanelPreset={resultsPanelPreset}
-        onCommentsChange={onCommentsChange}
-        onApprove={handleApprove}
-        criticalRecord={criticalRecord}
-        onCriticalValueUpdated={handleCriticalValueUpdated}
-        ready={ready}
-        order={order}
-        catalogTest={catalogTest}
-        relatedSamples={relatedSamples}
-        detailGridSections={detailGridSections}
-        onViewFullSample={handleViewFullSample}
-        onOpenLinkedTest={openLinkedTest}
-        orderTestId={orderTest?.id}
-        patient={patient ?? undefined}
-      />
+      {contentReady ? (
+        <TestDetailModalBody
+          sampleRejection={sampleRejection}
+          hasResults={hasResults}
+          orderTest={orderTest}
+          isValidate={isValidate}
+          comments={comments}
+          resultsPanelPreset={resultsPanelPreset}
+          onCommentsChange={onCommentsChange}
+          onApprove={handleApprove}
+          criticalRecord={criticalRecord}
+          onCriticalValueUpdated={handleCriticalValueUpdated}
+          ready={ready}
+          order={order}
+          catalogTest={catalogTest}
+          relatedSamples={relatedSamples}
+          detailGridSections={detailGridSections}
+          onViewFullSample={handleViewFullSample}
+          onOpenLinkedTest={openLinkedTest}
+          orderTestId={orderTest?.id}
+          patient={patient ?? undefined}
+        />
+      ) : (
+        <LabModalPlaceholder variant={placeholderVariant} />
+      )}
     </QueueModalShell>
   );
 };
 
 export function TestDetailHeaderColumn({
-  labContext,
+  row,
   patientName,
   headerVariant,
   modalStage,
@@ -224,7 +234,7 @@ export function TestDetailHeaderColumn({
   catalogParameterCount,
   turnaroundHours,
 }: {
-  labContext: TestWithContext;
+  row: LabModalWorkItem;
   patientName: string;
   headerVariant: TestDetailHeaderVariant;
   modalStage: LabModalStage;
@@ -233,20 +243,20 @@ export function TestDetailHeaderColumn({
   catalogParameterCount: number;
   turnaroundHours?: number;
 }) {
-  const queueSince = resolveTestDetailQueueSince(modalStage, order, orderTest, labContext);
+  const queueSince = resolveTestDetailQueueSince(modalStage, order, orderTest, row);
   const flagCount = orderTest.flags?.length ?? 0;
   const filledCount = countFilledResults(orderTest.results);
   const includeResultEntered = Boolean(orderTest.resultEnteredAt || orderTest.results);
 
   return (
     <TestWorkflowCardLeftColumn
-      test={labContext}
+      row={row}
       patientName={patientName}
       variant={headerVariant}
       queueSince={queueSince}
       emphasizeCritical={headerVariant === 'validation'}
       flagCount={headerVariant === 'validation' ? flagCount : undefined}
-      reasonCode={headerVariant === 'escalation' ? labContext.reasonCode : undefined}
+      reasonCode={headerVariant === 'escalation' ? row.reasonCode ?? undefined : undefined}
       filledCount={headerVariant === 'entry' ? filledCount : undefined}
       parameterCount={
         headerVariant === 'entry' && catalogParameterCount > 0 ? catalogParameterCount : undefined
@@ -259,19 +269,19 @@ export function TestDetailHeaderColumn({
 }
 
 export function TestDetailModalHeaderBadges({
-  labContext,
+  row,
   headerVariant,
 }: {
-  labContext: TestWithContext;
+  row: LabModalWorkItem;
   headerVariant: TestDetailHeaderVariant;
 }) {
-  return <TestHeaderBadges test={labContext} variant={headerVariant} showStatus />;
+  return <TestHeaderBadges row={row} variant={headerVariant} showStatus />;
 }
 
 type TestDetailModalFooterProps = {
   isValidate: boolean;
   orderTestId: number;
-  labContext: TestWithContext | undefined;
+  displayWorkItem: LabModalWorkItem | undefined;
   orderTest: OrderTest | undefined;
   testDisplayName: string;
   patientName: string;
@@ -286,7 +296,7 @@ type TestDetailModalFooterProps = {
 export function TestDetailModalFooter({
   isValidate,
   orderTestId,
-  labContext,
+  displayWorkItem,
   orderTest,
   testDisplayName,
   patientName,
@@ -304,8 +314,8 @@ export function TestDetailModalFooter({
       <div className="flex items-center gap-space-2 flex-nowrap justify-end w-full">
         <QualityIssuePopover
           orderTestId={orderTestId}
-          testCode={labContext?.testCode ?? orderTest?.testCode ?? ''}
-          testName={labContext?.testName ?? orderTest?.testName ?? testDisplayName}
+          testCode={displayWorkItem?.testCode ?? orderTest?.testCode ?? ''}
+          testName={displayWorkItem?.testName ?? orderTest?.testName ?? testDisplayName}
           patientName={patientName}
           trigger={
             <Button {...actionButtonPreset('reject')} size="sm" layout="icon-text">

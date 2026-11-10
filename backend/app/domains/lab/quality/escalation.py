@@ -276,7 +276,7 @@ class EscalationOperations:
         test_code = original_test.testCode
         TestStateMachine.validate_transition(TestStatus.ESCALATED, TestStatus.SUPERSEDED)
 
-        new_test = self._svc.quality._create_retest(
+        new_test = self._svc.quality.create_retest(
             original_test,
             user_id,
             reason,
@@ -295,7 +295,7 @@ class EscalationOperations:
             notes=reason,
         )
 
-        self._svc.quality._record_issue(
+        self._svc.quality.record_issue(
             order_id=order_id,
             stage=QualityStage.VALIDATION,
             domain=QualityDomain.ANALYTICAL,
@@ -338,7 +338,7 @@ class EscalationOperations:
         new_test_id: int | None
 
         if sample.status == SampleStatus.COLLECTED:
-            self._svc.quality._reject_sample_record(
+            self._svc.quality.reject_sample_record(
                 sample,
                 user_id,
                 reason,
@@ -348,10 +348,10 @@ class EscalationOperations:
                 ),
                 resulted_outcome="reset_pending",
             )
-            new_sample = self._svc.quality._create_recollection_sample(
+            new_sample = self._svc.quality.create_recollection_sample(
                 sample, user_id, reason, supervisor_authorized=True
             )
-            self._svc.quality._reattach_tests_to_recollection(sample, new_sample)
+            self._svc.quality.reattach_tests_to_recollection(sample, new_sample)
             codes = list(new_sample.testCodes or [])
             if test_code not in codes:
                 codes.append(test_code)
@@ -397,7 +397,7 @@ class EscalationOperations:
             notes=reason,
         )
 
-        self._svc.quality._record_issue(
+        self._svc.quality.record_issue(
             order_id=order_id,
             stage=QualityStage.VALIDATION,
             domain=QualityDomain.SPECIMEN,
@@ -517,7 +517,7 @@ class EscalationOperations:
             notes=reason,
         )
 
-        self._svc.quality._record_issue(
+        self._svc.quality.record_issue(
             order_id=order_id,
             stage=QualityStage.VALIDATION,
             domain=QualityDomain.CLINICAL,

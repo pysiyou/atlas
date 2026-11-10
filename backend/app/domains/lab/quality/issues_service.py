@@ -1,60 +1,36 @@
 """
 Unified quality issue handling for lab workflow.
 
-One entry point for specimen and analytical quality problems at collection or validation.
+Thin façade: option previews, report commands, and shared remedy helpers.
+Command modules (`sample_issue_commands`, `test_issue_commands`) and escalation
+use public accessors on this service (`get_sample`, `linked_tests`, `record_issue`,
+`remedy`, `db`, etc.) rather than private methods.
 """
 from __future__ import annotations
 
-from datetime import UTC, datetime
-from typing import Any, Literal
+from typing import Any
 
 from app.domains.audit.service import AuditEmitter
 from app.domains.lab.models.quality_issue import QualityIssue
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.quality.escalation import EscalationEngine
-from app.domains.lab.quality.rejection_criteria import RejectionCriteriaService
-from app.domains.lab.rules.state_machines import SampleStateMachine, TestStateMachine
+from app.domains.lab.quality.issue_options import sample_options, test_options
+from app.domains.lab.quality.issue_remedy_types import ResultedRejectionOutcome
+from app.domains.lab.quality.remedy_support import QualityRemedySupport
+from app.domains.lab.quality.sample_issue_commands import SampleIssueCommands
+from app.domains.lab.quality.test_issue_commands import TestIssueCommands
 from app.domains.lab.schemas.lab import QualityIssueOptions, QualityIssueResult
 from app.domains.lab.specimen import SampleCollectionService
 from app.domains.lab.specimen.rejection_context import SampleRejectionContext
 from app.domains.orders.models import OrderTest
-from app.platform.utils.common import is_specimen_rejection_reason
-from app.platform.utils.exceptions import LabOperationError
 from app.shared.contracts.enums import (
-    EscalationReasonCode,
-    PriorityLevel,
     QualityDomain,
     QualityIssueTargetType,
     QualityStage,
     RemedyType,
-    SampleStatus,
     TestStatus,
 )
-from app.shared.contracts.lab_contract import MAX_RETEST_ATTEMPTS
-from app.shared.contracts.lab_contract import (
-    SAMPLE_UNFINISHED_REMEDIES as SAMPLE_UNFINISHED_REMEDY_WIRES,
-)
-from app.shared.contracts.lab_contract import VALIDATION_REMEDIES as VALIDATION_REMEDY_WIRES
 from sqlalchemy.orm import Session
-
-_SAMPLE_RESET_STATUSES = {
-    TestStatus.PENDING,
-    TestStatus.SAMPLE_COLLECTED,
-}
-
-ResultedRejectionOutcome = Literal["reset_pending", "cancel"]
-
-
-def _remedy_types(wires: tuple[str, ...]) -> list[RemedyType]:
-    return [RemedyType(w) for w in wires]
-
-
-def validation_remedy_types() -> list[RemedyType]:
-    return _remedy_types(VALIDATION_REMEDY_WIRES)
-
-
-def sample_unfinished_remedy_types() -> list[RemedyType]:
-    return _remedy_types(SAMPLE_UNFINISHED_REMEDY_WIRES)
 
 
 class QualityIssueService:
@@ -70,57 +46,27 @@ class QualityIssueService:
         self.emitter = emitter
         self.collection = SampleCollectionService(db)
         self.recollection_execution = recollection_execution
+        self.remedy = QualityRemedySupport(self)
+        self._sample_cmds = SampleIssueCommands(self)
+        self._test_cmds = TestIssueCommands(self)
 
-    # ── helpers ──────────────────────────────────────────────────────────
+    # ── lookups (public for commands / escalation) ─────────────────────────
 
-    def _get_sample(self, sample_id: int, *, for_update: bool = False) -> Sample:
+    def get_sample(self, sample_id: int, *, for_update: bool = False) -> Sample:
         from app.domains.lab.specimen.lookup import get_sample_or_error
 
         return get_sample_or_error(self.db, sample_id, for_update=for_update)
 
-    def _linked_tests(
+    def linked_tests(
         self, sample: Sample, *, exclude: list[TestStatus] | None = None
     ) -> list[OrderTest]:
         from app.domains.lab.specimen.lookup import linked_order_tests_for_sample
 
         return linked_order_tests_for_sample(self.db, sample, exclude_statuses=exclude)
 
-    def _chain_root_test(self, test: OrderTest) -> OrderTest:
-        current = test
-        while current.retestOfTestId:
-            parent = self.db.query(OrderTest).filter(OrderTest.id == current.retestOfTestId).first()
-            if not parent:
-                break
-            current = parent
-        return current
+    # ── remedy delegation (public for escalation) ──────────────────────────
 
-    def _collect_chain_test_ids(self, order_test: OrderTest) -> set[int]:
-        """All order-test row IDs in the retest chain (root through active successor)."""
-        root = self._chain_root_test(order_test)
-        chain_ids: set[int] = {root.id}
-        current = root
-        while current.retestOrderTestId:
-            child = (
-                self.db.query(OrderTest).filter(OrderTest.id == current.retestOrderTestId).first()
-            )
-            if not child:
-                break
-            chain_ids.add(child.id)
-            current = child
-        return chain_ids
-
-    def _count_retests_in_chain(self, order_test: OrderTest) -> int:
-        chain_ids = self._collect_chain_test_ids(order_test)
-        return (
-            self.db.query(QualityIssue)
-            .filter(
-                QualityIssue.orderTestId.in_(chain_ids),
-                QualityIssue.remedy == RemedyType.RETRY_SAME_SAMPLE,
-            )
-            .count()
-        )
-
-    def _record_issue(
+    def record_issue(
         self,
         *,
         order_id: int,
@@ -137,54 +83,23 @@ class QualityIssueService:
         created_sample_id: int | None = None,
         omit_remedy_from_validation_audit: bool = False,
     ) -> QualityIssue:
-        issue = QualityIssue(
-            orderId=order_id,
-            orderTestId=order_test_id,
-            sampleId=sample_id,
-            testCode=test_code,
+        return self.remedy.record_issue(
+            order_id=order_id,
             stage=stage,
             domain=domain,
             reason=reason,
             notes=notes,
             remedy=remedy,
-            createdTestId=created_test_id,
-            createdSampleId=created_sample_id,
-            createdBy=str(user_id),
-            createdAt=datetime.now(UTC),
+            user_id=user_id,
+            order_test_id=order_test_id,
+            sample_id=sample_id,
+            test_code=test_code,
+            created_test_id=created_test_id,
+            created_sample_id=created_sample_id,
+            omit_remedy_from_validation_audit=omit_remedy_from_validation_audit,
         )
-        self.db.add(issue)
-        self.db.flush()
-        if stage == QualityStage.VALIDATION:
-            validation_meta: dict[str, Any] = {
-                "quality_issue_id": issue.id,
-                "stage": stage.value,
-                "domain": domain.value,
-                "reason": reason,
-                "test_code": test_code,
-                **({"sample_id": sample_id} if sample_id is not None else {}),
-                **({"notes": notes} if notes else {}),
-            }
-            if not omit_remedy_from_validation_audit:
-                validation_meta["remedy"] = remedy.value
-            self.emitter.validation_rejected(
-                order_id=order_id,
-                order_test_id=order_test_id,
-                sample_id=sample_id,
-                user_id=user_id,
-                metadata=validation_meta,
-            )
-            if created_test_id is not None and order_test_id is not None:
-                self.emitter.order_test_retest(
-                    order_id=order_id,
-                    original_test_id=order_test_id,
-                    new_test_id=created_test_id,
-                    test_code=test_code or "",
-                    user_id=user_id,
-                    reason=reason,
-                )
-        return issue
 
-    def _create_retest(
+    def create_retest(
         self,
         order_test: OrderTest,
         user_id: int,
@@ -194,98 +109,16 @@ class QualityIssueService:
         retest_number: int | None = None,
         technician_note_prefix: str = "Re-test",
     ) -> OrderTest:
-        current_retest = order_test.retestNumber or 0
-        next_retest = retest_number if retest_number is not None else current_retest + 1
-
-        new_test = OrderTest(
-            orderId=order_test.orderId,
-            testCode=order_test.testCode,
-            status=TestStatus.SAMPLE_COLLECTED,
-            priceAtOrder=order_test.priceAtOrder,
-            sampleId=order_test.sampleId,
-            isRetest=True,
-            retestOfTestId=order_test.id,
-            retestNumber=next_retest,
-            technicianNotes=f"{technician_note_prefix} #{next_retest}: {reason}"
-            + (f" — {notes}" if notes else ""),
-            flags=order_test.flags,
-            isReflexTest=order_test.isReflexTest,
-            triggeredBy=order_test.triggeredBy,
-            reflexRule=order_test.reflexRule,
-        )
-        self.db.add(new_test)
-        self.db.flush()
-
-        order_test.retestOrderTestId = new_test.id
-        TestStateMachine.validate_transition(order_test.status, TestStatus.SUPERSEDED)
-        order_test.status = TestStatus.SUPERSEDED
-        return new_test
-
-    def _create_recollection_sample(
-        self,
-        rejected_sample: Sample,
-        user_id: int,
-        reason: str,
-        *,
-        test_codes: list[str] | None = None,
-        priority: PriorityLevel | None = None,
-        supervisor_authorized: bool = False,
-    ) -> Sample:
-        return self.collection.request_recollection(
-            rejected_sample,
+        return self.remedy.create_retest(
+            order_test,
             user_id,
             reason,
-            test_codes=test_codes,
-            priority=priority,
-            supervisor_authorized=supervisor_authorized,
+            notes,
+            retest_number=retest_number,
+            technician_note_prefix=technician_note_prefix,
         )
 
-    def _clear_test_results(self, order_test: OrderTest) -> None:
-        order_test.results = None
-        order_test.resultEnteredAt = None
-        order_test.enteredBy = None
-        order_test.technicianNotes = None
-        order_test.resultValidatedAt = None
-        order_test.validatedBy = None
-        order_test.validationNotes = None
-        order_test.flags = None
-        order_test.hasCriticalValues = False
-
-    def _reattach_tests_to_recollection(self, rejected_sample: Sample, new_sample: Sample) -> None:
-        for test in self._linked_tests(
-            rejected_sample,
-            exclude=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED],
-        ):
-            if test.status != TestStatus.PENDING:
-                continue
-            if test.sampleId != rejected_sample.sampleId:
-                continue
-            test.sampleId = new_sample.sampleId
-            self._clear_test_results(test)
-
-    def _reset_test_for_sample_rejection(self, order_test: OrderTest) -> None:
-        if order_test.status not in _SAMPLE_RESET_STATUSES:
-            return
-        TestStateMachine.validate_transition(order_test.status, TestStatus.PENDING)
-        order_test.status = TestStatus.PENDING
-        self._clear_test_results(order_test)
-
-    def _suspend_resulted_for_sample_rejection(
-        self,
-        order_test: OrderTest,
-        outcome: ResultedRejectionOutcome,
-    ) -> None:
-        if order_test.status != TestStatus.RESULTED:
-            return
-        self._clear_test_results(order_test)
-        if outcome == "reset_pending":
-            TestStateMachine.validate_transition(order_test.status, TestStatus.PENDING)
-            order_test.status = TestStatus.PENDING
-        else:
-            TestStateMachine.validate_transition(order_test.status, TestStatus.CANCELLED)
-            order_test.status = TestStatus.CANCELLED
-
-    def _reject_sample_record(
+    def reject_sample_record(
         self,
         sample: Sample,
         user_id: int,
@@ -297,57 +130,38 @@ class QualityIssueService:
         reset_unfinished: bool = True,
         resulted_outcome: ResultedRejectionOutcome = "cancel",
     ) -> None:
-        """
-        Mark sample rejected. Optionally reset unfinished linked tests to pending.
-        Resulted tests are cleared and reset or cancelled per resulted_outcome.
-        Validated linked tests are never mutated.
-        """
-        can_reject, reject_reason = SampleStateMachine.can_reject(sample.status)
-        if not can_reject:
-            raise LabOperationError(reject_reason, status_code=400)
-
-        old_status = sample.status.value if sample.status else None
-        sample.status = SampleStatus.REJECTED
-        sample.rejectedAt = datetime.now(UTC)
-        sample.rejectedBy = str(user_id)
-        sample.rejectionReason = reason
-        sample.rejectionNotes = notes
-        sample.recollectionRequired = True
-        sample.updatedBy = str(user_id)
-
-        audit_meta: dict[str, Any] = {"rejection_stage": context.stage.value}
-        if notes:
-            audit_meta["notes"] = notes
-        if context.order_test_id is not None:
-            audit_meta["order_test_id"] = context.order_test_id
-        if context.quality_issue_id is not None:
-            audit_meta["quality_issue_id"] = context.quality_issue_id
-        self.emitter.sample_rejected(
-            sample.sampleId,
-            sample.orderId,
+        return self.remedy.reject_sample_record(
+            sample,
             user_id,
             reason,
-            metadata=audit_meta,
-            old_status=old_status,
+            notes,
+            context,
+            skip_test_ids=skip_test_ids,
+            reset_unfinished=reset_unfinished,
+            resulted_outcome=resulted_outcome,
         )
 
-        if not reset_unfinished:
-            return
-
-        skip = skip_test_ids or set()
-        linked = self._linked_tests(
-            sample, exclude=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED]
+    def create_recollection_sample(
+        self,
+        rejected_sample: Sample,
+        user_id: int,
+        reason: str,
+        *,
+        test_codes: list[str] | None = None,
+        priority: Any | None = None,
+        supervisor_authorized: bool = False,
+    ) -> Sample:
+        return self.remedy.create_recollection_sample(
+            rejected_sample,
+            user_id,
+            reason,
+            test_codes=test_codes,
+            priority=priority,
+            supervisor_authorized=supervisor_authorized,
         )
-        for order_test in linked:
-            if order_test.id in skip:
-                continue
-            if order_test.status == TestStatus.VALIDATED:
-                continue
-            if order_test.status == TestStatus.RESULTED:
-                self._suspend_resulted_for_sample_rejection(order_test, resulted_outcome)
-                continue
-            if order_test.status in _SAMPLE_RESET_STATUSES:
-                self._reset_test_for_sample_rejection(order_test)
+
+    def reattach_tests_to_recollection(self, rejected_sample: Sample, new_sample: Sample) -> None:
+        self.remedy.reattach_tests_to_recollection(rejected_sample, new_sample)
 
     # ── public API ───────────────────────────────────────────────────────
 
@@ -357,133 +171,8 @@ class QualityIssueService:
         target_id: int,
     ) -> QualityIssueOptions:
         if target_type == QualityIssueTargetType.SAMPLE:
-            return self._sample_options(target_id)
-        return self._test_options(target_id)
-
-    def _sample_options(self, sample_id: int) -> QualityIssueOptions:
-        sample = self._get_sample(sample_id)
-        recollection_used = self.collection.attempts_used(sample)
-        recollection_remaining = self.collection.attempts_remaining_after(sample)
-
-        linked = self._linked_tests(
-            sample, exclude=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED]
-        )
-        resulted = sum(1 for t in linked if t.status == TestStatus.RESULTED)
-        validated = sum(1 for t in linked if t.status == TestStatus.VALIDATED)
-        unfinished = sum(1 for t in linked if t.status in _SAMPLE_RESET_STATUSES)
-        awaiting_recollection = sum(
-            1 for t in linked if t.status == TestStatus.PENDING and t.sampleId == sample_id
-        )
-
-        allowed = sample_unfinished_remedy_types() if unfinished > 0 else []
-        suggested = RemedyType.REQUEST_RECOLLECTION if unfinished > 0 else None
-
-        parts: list[str] = []
-        if unfinished > 0:
-            parts.append(
-                f"{unfinished} unfinished test(s) — request recollection or reject tube only."
-            )
-        if resulted > 0:
-            parts.append(
-                f"{resulted} unvalidated resulted test(s) will be cleared when the tube is rejected."
-            )
-        if validated > 0:
-            parts.append(
-                f"{validated} validated/released result(s) stay unchanged — amend separately if needed."
-            )
-        if not parts:
-            parts.append("This sample will be marked rejected.")
-        criteria = RejectionCriteriaService(self.db).get_specimen_criteria_for_tests(
-            sample.testCodes
-        )
-
-        return QualityIssueOptions(
-            targetType=QualityIssueTargetType.SAMPLE,
-            targetId=sample_id,
-            orderId=sample.orderId,
-            sampleId=sample_id,
-            stage=QualityStage.COLLECTION,
-            allowedCriteria=criteria,
-            allowedRemedies=allowed,
-            suggestedRemedy=suggested,
-            recollectionAttemptsUsed=recollection_used,
-            recollectionAttemptsRemaining=recollection_remaining,
-            willEscalate=False,
-            previewRemedy=suggested,
-            previewMessage=" ".join(parts),
-            resultedTestsCount=resulted,
-            validatedTestsCount=validated,
-            unfinishedTestsCount=unfinished,
-            awaitingRecollectionTestsCount=awaiting_recollection,
-        )
-
-    def _test_options(self, order_test_id: int) -> QualityIssueOptions:
-        order_test = self.db.query(OrderTest).filter(OrderTest.id == order_test_id).first()
-        if not order_test:
-            raise LabOperationError(f"Test {order_test_id} not found", status_code=404)
-        if order_test.status != TestStatus.RESULTED:
-            raise LabOperationError(
-                "Only resulted tests can be reported at validation", status_code=400
-            )
-
-        retest_used = self._count_retests_in_chain(order_test)
-        retest_remaining = max(0, MAX_RETEST_ATTEMPTS - retest_used - 1)
-        at_retest_limit = retest_remaining == 0
-
-        sample_rejected = False
-        if order_test.sampleId:
-            sample = self._get_sample(order_test.sampleId)
-            sample_rejected = sample.status == SampleStatus.REJECTED
-
-        criteria_service = RejectionCriteriaService(self.db)
-        criteria = criteria_service.get_validation_criteria_for_test(order_test.testCode)
-        criteria_items = criteria_service.get_validation_criteria_items_for_test(
-            order_test.testCode
-        )
-        has_specimen = any(item.domain == "specimen" for item in criteria_items)
-        has_analytical = any(item.domain == "analytical" for item in criteria_items)
-
-        # Soft suggestion only — validator always picks the destination.
-        if sample_rejected:
-            suggested = RemedyType.REQUEST_RECOLLECTION
-            allowed = [r for r in validation_remedy_types() if r != RemedyType.RETRY_SAME_SAMPLE]
-        elif has_specimen and not has_analytical and order_test.sampleId:
-            suggested = RemedyType.REQUEST_RECOLLECTION
-            allowed = validation_remedy_types()
-        elif has_analytical and not has_specimen:
-            suggested = RemedyType.RETRY_SAME_SAMPLE
-            allowed = validation_remedy_types()
-        else:
-            suggested = RemedyType.RETRY_SAME_SAMPLE
-            allowed = validation_remedy_types()
-
-        message_parts = [
-            "Rejecting sends this test to a supervisor to approve retest, recollection, or cancellation.",
-        ]
-        if sample_rejected:
-            message_parts.append(
-                "Linked sample is already rejected — supervisor may authorize recollection."
-            )
-
-        return QualityIssueOptions(
-            targetType=QualityIssueTargetType.TEST,
-            targetId=order_test_id,
-            orderId=order_test.orderId,
-            testCode=order_test.testCode,
-            sampleId=order_test.sampleId,
-            stage=QualityStage.VALIDATION,
-            allowedCriteria=criteria,
-            allowedRemedies=allowed,
-            suggestedRemedy=suggested,
-            retestAttemptsUsed=retest_used,
-            retestAttemptsRemaining=retest_remaining,
-            willEscalate=True,
-            previewRemedy=suggested,
-            previewMessage=" ".join(message_parts),
-            hasSpecimenCriteria=has_specimen,
-            hasAnalyticalCriteria=has_analytical,
-            sampleRejected=sample_rejected,
-        )
+            return sample_options(self, target_id)
+        return test_options(self, target_id)
 
     def report_issue(
         self,
@@ -495,517 +184,24 @@ class QualityIssueService:
         preferred_remedy: RemedyType | None = None,
     ) -> QualityIssueResult:
         if target_type == QualityIssueTargetType.SAMPLE:
-            return self._report_sample_issue(target_id, user_id, reason, notes, preferred_remedy)
-        return self._report_test_issue(target_id, user_id, reason, notes, preferred_remedy)
-
-    def _report_sample_issue(
-        self,
-        sample_id: int,
-        user_id: int,
-        reason: str,
-        notes: str | None,
-        preferred_remedy: RemedyType | None,
-    ) -> QualityIssueResult:
-        sample = self._get_sample(sample_id, for_update=True)
-        RejectionCriteriaService(self.db).validate_for_tests(
-            sample.testCodes, reason, context="sample"
-        )
-        options = self._sample_options(sample_id)
-        unfinished = options.unfinishedTestsCount or 0
-
-        # When unfinished work exists, operator chooses recollection request vs reject-only.
-        remedy = preferred_remedy
-        if unfinished > 0:
-            if remedy is None:
-                remedy = RemedyType.REQUEST_RECOLLECTION
-            if remedy not in sample_unfinished_remedy_types():
-                raise LabOperationError(
-                    f"Invalid remedy for sample rejection: {remedy}. "
-                    f"Allowed: {[r.value for r in sample_unfinished_remedy_types()]}",
-                    status_code=400,
-                )
-        else:
-            # No unfinished work — reject tube only; resulted/validated stay for review.
-            remedy = RemedyType.REQUEST_RECOLLECTION
-
-        rejection_ctx = SampleRejectionContext(stage=QualityStage.COLLECTION)
-        if unfinished > 0 and remedy == RemedyType.REQUEST_RECOLLECTION:
-            resulted_outcome: ResultedRejectionOutcome = "reset_pending"
-        else:
-            resulted_outcome = "cancel"
-
-        self._reject_sample_record(
-            sample,
-            user_id,
-            reason,
-            notes,
-            rejection_ctx,
-            reset_unfinished=True,
-            resulted_outcome=resulted_outcome,
+            return self._sample_cmds.report_sample_issue(
+                target_id, user_id, reason, notes, preferred_remedy
+            )
+        return self._test_cmds.report_test_issue(
+            target_id, user_id, reason, notes, preferred_remedy
         )
 
-        if unfinished > 0 and remedy == RemedyType.REQUEST_RECOLLECTION:
-            return self._request_recollection_from_collection(sample, user_id, reason, notes)
-
-        recorded_remedy = (
-            RemedyType.CANCEL if unfinished > 0 and remedy == RemedyType.CANCEL else remedy
-        )
-        issue = self._record_issue(
-            order_id=sample.orderId,
-            stage=QualityStage.COLLECTION,
-            domain=QualityDomain.SPECIMEN,
-            reason=reason,
-            notes=notes,
-            remedy=recorded_remedy,
-            user_id=user_id,
-            sample_id=sample_id,
-        )
-        parts = ["Sample rejected."]
-        if unfinished > 0 and remedy == RemedyType.CANCEL:
-            parts.append("Unfinished tests were reset to await collection.")
-        if (options.resultedTestsCount or 0) > 0:
-            if resulted_outcome == "reset_pending":
-                parts.append("Unvalidated resulted tests were cleared and reset to pending.")
-            else:
-                parts.append("Unvalidated resulted tests were cleared and cancelled.")
-        if (options.validatedTestsCount or 0) > 0:
-            parts.append("Validated results were left unchanged.")
-
-        return QualityIssueResult(
-            success=True,
-            remedy=recorded_remedy,
-            message=" ".join(parts),
-            qualityIssueId=issue.id,
-            orderId=sample.orderId,
-            sampleId=sample_id,
-            escalationRequired=False,
-        )
-
-    def _report_test_issue(
+    def report_test_validation_issue(
         self,
         order_test_id: int,
         user_id: int,
         reason: str,
         notes: str | None,
-        preferred_remedy: RemedyType | None,
+        preferred_remedy: RemedyType | None = None,
     ) -> QualityIssueResult:
-        order_test = (
-            self.db.query(OrderTest).filter(OrderTest.id == order_test_id).with_for_update().first()
-        )
-        if not order_test:
-            raise LabOperationError(f"Test {order_test_id} not found", status_code=404)
-        if order_test.status != TestStatus.RESULTED:
-            raise LabOperationError(
-                "Only resulted tests can be reported at validation", status_code=400
-            )
-
-        RejectionCriteriaService(self.db).validate_for_test(
-            order_test.testCode, reason, context="validation"
-        )
-
-        if preferred_remedy is not None:
-            if preferred_remedy not in validation_remedy_types():
-                raise LabOperationError(
-                    f"Invalid preferredRemedy '{preferred_remedy.value}'. "
-                    "Validation rejection no longer accepts a remedy; supervisor approves on escalation.",
-                    status_code=400,
-                )
-            raise LabOperationError(
-                "preferredRemedy is not used for validation rejection. "
-                "Reject with a reason only; retest, recollection, or cancel is chosen at escalation approval.",
-                status_code=400,
-            )
-
-        criteria_service = RejectionCriteriaService(self.db)
-        matched = criteria_service.get_criterion_for_reason(
-            [order_test.testCode], reason, context="validation"
-        )
-        is_specimen = (
-            matched.domain == "specimen" if matched else is_specimen_rejection_reason(reason)
-        )
-        domain = QualityDomain.SPECIMEN if is_specimen else QualityDomain.ANALYTICAL
-
-        return self._reject_validation_pending_supervisor(
-            order_test, user_id, reason, notes, domain
-        )
-
-    def _reject_validation_pending_supervisor(
-        self,
-        order_test: OrderTest,
-        user_id: int,
-        reason: str,
-        notes: str | None,
-        domain: QualityDomain,
-    ) -> QualityIssueResult:
-        """Reject resulted results at validation; supervisor chooses remedy on escalation."""
-        validation_note = (notes or "").strip()
-        order_test.validationNotes = (
-            f"{validation_note} [Validation rejected: {reason}]".strip()
-            if validation_note
-            else f"Validation rejected: {reason}"
-        )
-
-        self.escalation.escalate_test(
-            order_test,
-            EscalationReasonCode.VAL_REJ,
-            user_id,
-            metadata={
-                "rejectionReason": reason,
-                "rejectionNotes": notes,
-                "validationDomain": domain.value,
-            },
-            from_status=TestStatus.RESULTED,
-        )
-
-        issue = self._record_issue(
-            order_id=order_test.orderId,
-            stage=QualityStage.VALIDATION,
-            domain=domain,
-            reason=reason,
-            notes=notes,
-            remedy=RemedyType.ESCALATE,
-            user_id=user_id,
-            order_test_id=order_test.id,
-            sample_id=order_test.sampleId,
-            test_code=order_test.testCode,
-            omit_remedy_from_validation_audit=True,
-        )
-        return QualityIssueResult(
-            success=True,
-            remedy=RemedyType.ESCALATE,
-            message=(
-                "Results rejected at validation. "
-                "A supervisor will approve retest, recollection, or cancellation."
-            ),
-            qualityIssueId=issue.id,
-            orderId=order_test.orderId,
-            testCode=order_test.testCode,
-            orderTestId=order_test.id,
-            sampleId=order_test.sampleId,
-            escalationRequired=True,
-        )
-
-    def _cancel_test_issue(
-        self,
-        order_test: OrderTest,
-        user_id: int,
-        reason: str,
-        notes: str | None,
-        domain: QualityDomain,
-    ) -> QualityIssueResult:
-        """Cancel a resulted test at validation — explicit validator destination."""
-        TestStateMachine.validate_transition(order_test.status, TestStatus.CANCELLED)
-        order_test.status = TestStatus.CANCELLED
-        order_test.validationNotes = notes or f"Cancelled at validation: {reason}"
-
-        self.emitter.order_test_cancelled(
-            order_test.orderId,
-            order_test.id,
-            order_test.testCode,
-            user_id,
-            reason=reason,
-        )
-
-        issue = self._record_issue(
-            order_id=order_test.orderId,
-            stage=QualityStage.VALIDATION,
-            domain=domain,
-            reason=reason,
-            notes=notes,
-            remedy=RemedyType.CANCEL,
-            user_id=user_id,
-            order_test_id=order_test.id,
-            sample_id=order_test.sampleId,
-            test_code=order_test.testCode,
-        )
-        return QualityIssueResult(
-            success=True,
-            remedy=RemedyType.CANCEL,
-            message="Test cancelled.",
-            qualityIssueId=issue.id,
-            orderId=order_test.orderId,
-            testCode=order_test.testCode,
-            orderTestId=order_test.id,
-            sampleId=order_test.sampleId,
-        )
-
-    def _retry_test_issue(
-        self,
-        order_test: OrderTest,
-        user_id: int,
-        reason: str,
-        notes: str | None,
-    ) -> QualityIssueResult:
-        retest_used = self._count_retests_in_chain(order_test)
-        retest_remaining = max(0, MAX_RETEST_ATTEMPTS - retest_used - 1)
-        if retest_remaining <= 0:
-            return self._escalate_test_issue(
-                order_test,
-                user_id,
-                reason,
-                notes,
-                QualityDomain.ANALYTICAL,
-                message=(
-                    f"Re-test limit reached ({MAX_RETEST_ATTEMPTS}). "
-                    "Escalated to supervisor — force validate, authorize re-test, authorize re-collect, or cancel."
-                ),
-            )
-
-        new_test = self._create_retest(order_test, user_id, reason, notes)
-        issue = self._record_issue(
-            order_id=order_test.orderId,
-            stage=QualityStage.VALIDATION,
-            domain=QualityDomain.ANALYTICAL,
-            reason=reason,
-            notes=notes,
-            remedy=RemedyType.RETRY_SAME_SAMPLE,
-            user_id=user_id,
-            order_test_id=order_test.id,
-            sample_id=order_test.sampleId,
-            test_code=order_test.testCode,
-            created_test_id=new_test.id,
-        )
-        return QualityIssueResult(
-            success=True,
-            remedy=RemedyType.RETRY_SAME_SAMPLE,
-            message="Re-test scheduled on the same sample.",
-            qualityIssueId=issue.id,
-            orderId=order_test.orderId,
-            testCode=order_test.testCode,
-            orderTestId=order_test.id,
-            createdTestId=new_test.id,
-        )
-
-    def _pick_test_for_recollection_escalation(self, sample: Sample) -> OrderTest | None:
-        linked = self._linked_tests(
-            sample,
-            exclude=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED],
-        )
-        for status in (TestStatus.RESULTED, TestStatus.SAMPLE_COLLECTED, TestStatus.PENDING):
-            for order_test in linked:
-                if order_test.status == status:
-                    return order_test
-        return None
-
-    def _escalate_recollection_limit(
-        self,
-        *,
-        order_test: OrderTest,
-        user_id: int,
-        reason: str,
-        notes: str | None,
-        quality_issue_id: int,
-    ) -> QualityIssueResult:
-        from app.shared.contracts.lab_contract import MAX_RECOLLECTION_ATTEMPTS
-
-        prior_status = order_test.status
-        self.escalation.escalate_test(
-            order_test,
-            EscalationReasonCode.REJ_SAMP,
-            user_id,
-            metadata={"rejectionReason": reason, "rejectionNotes": notes},
-            sample_id=order_test.sampleId,
-            from_status=prior_status,
-        )
-        return QualityIssueResult(
-            success=True,
-            remedy=RemedyType.ESCALATE,
-            message=(
-                f"Maximum collection attempts ({MAX_RECOLLECTION_ATTEMPTS}) reached. "
-                "Escalated to supervisor — force validate, authorize re-test, authorize re-collect, or cancel."
-            ),
-            qualityIssueId=quality_issue_id,
-            orderId=order_test.orderId,
-            testCode=order_test.testCode,
-            orderTestId=order_test.id,
-            sampleId=order_test.sampleId,
-            escalationRequired=True,
-        )
-
-    def _request_recollection_from_collection(
-        self,
-        sample: Sample,
-        user_id: int,
-        reason: str,
-        notes: str | None,
-    ) -> QualityIssueResult:
-        if not self.recollection_execution:
-            raise LabOperationError("Recollection request service not configured", status_code=500)
-
-        issue = self._record_issue(
-            order_id=sample.orderId,
-            stage=QualityStage.COLLECTION,
-            domain=QualityDomain.SPECIMEN,
-            reason=reason,
-            notes=notes,
-            remedy=RemedyType.REQUEST_RECOLLECTION,
-            user_id=user_id,
-            sample_id=sample.sampleId,
-        )
-
-        if not self.collection.can_request_recollection(sample):
-            target = self._pick_test_for_recollection_escalation(sample)
-            if not target:
-                raise LabOperationError(
-                    "Recollection limit reached but no test could be escalated.",
-                    status_code=400,
-                )
-            return self._escalate_recollection_limit(
-                order_test=target,
-                user_id=user_id,
-                reason=reason,
-                notes=notes,
-                quality_issue_id=issue.id,
-            )
-
-        executed = self.recollection_execution.execute_recollection(
-            rejected_sample=sample,
-            user_id=user_id,
-            reason=reason,
-            stage=QualityStage.COLLECTION,
-            order_test_id=None,
-            supervisor_authorized=False,
-        )
-        return QualityIssueResult(
-            success=True,
-            remedy=RemedyType.REQUEST_RECOLLECTION,
-            message="Pending sample created for collection.",
-            qualityIssueId=issue.id,
-            orderId=sample.orderId,
-            sampleId=sample.sampleId,
-            createdSampleId=executed.created_sample_id,
-            createdTestId=executed.created_test_id,
-        )
-
-    def _request_recollection_from_validation(
-        self,
-        order_test: OrderTest,
-        user_id: int,
-        reason: str,
-        notes: str | None,
-    ) -> QualityIssueResult:
-        if not order_test.sampleId:
-            raise LabOperationError("No sample linked to this test", status_code=400)
-        if not self.recollection_execution:
-            raise LabOperationError("Recollection request service not configured", status_code=500)
-
-        sample = self._get_sample(order_test.sampleId)
-
-        if not self.collection.can_request_recollection(sample):
-            issue = self._record_issue(
-                order_id=order_test.orderId,
-                stage=QualityStage.VALIDATION,
-                domain=QualityDomain.SPECIMEN,
-                reason=reason,
-                notes=notes,
-                remedy=RemedyType.REQUEST_RECOLLECTION,
-                user_id=user_id,
-                order_test_id=order_test.id,
-                sample_id=sample.sampleId,
-                test_code=order_test.testCode,
-            )
-            return self._escalate_recollection_limit(
-                order_test=order_test,
-                user_id=user_id,
-                reason=reason,
-                notes=notes,
-                quality_issue_id=issue.id,
-            )
-
-        if sample.status == SampleStatus.COLLECTED:
-            self._reject_sample_record(
-                sample,
-                user_id,
-                reason,
-                notes,
-                SampleRejectionContext(
-                    stage=QualityStage.VALIDATION,
-                    order_test_id=order_test.id,
-                ),
-                skip_test_ids={order_test.id},
-                resulted_outcome="reset_pending",
-            )
-        elif sample.status != SampleStatus.REJECTED:
-            can_reject, reject_reason = SampleStateMachine.can_reject(sample.status)
-            raise LabOperationError(
-                reject_reason
-                or f"Cannot request recollection for sample status '{sample.status.value}'",
-                status_code=400,
-            )
-
-        TestStateMachine.validate_transition(order_test.status, TestStatus.SUPERSEDED)
-        order_test.status = TestStatus.SUPERSEDED
-
-        issue = self._record_issue(
-            order_id=order_test.orderId,
-            stage=QualityStage.VALIDATION,
-            domain=QualityDomain.SPECIMEN,
-            reason=reason,
-            notes=notes,
-            remedy=RemedyType.REQUEST_RECOLLECTION,
-            user_id=user_id,
-            order_test_id=order_test.id,
-            sample_id=sample.sampleId,
-            test_code=order_test.testCode,
-        )
-        executed = self.recollection_execution.execute_recollection(
-            rejected_sample=sample,
-            user_id=user_id,
-            reason=reason,
-            stage=QualityStage.VALIDATION,
-            order_test_id=order_test.id,
-            supervisor_authorized=False,
-        )
-        return QualityIssueResult(
-            success=True,
-            remedy=RemedyType.REQUEST_RECOLLECTION,
-            message="Pending sample created for collection.",
-            qualityIssueId=issue.id,
-            orderId=order_test.orderId,
-            testCode=order_test.testCode,
-            orderTestId=order_test.id,
-            createdSampleId=executed.created_sample_id,
-            createdTestId=executed.created_test_id,
-        )
-
-    def _escalate_test_issue(
-        self,
-        order_test: OrderTest,
-        user_id: int,
-        reason: str,
-        notes: str | None,
-        domain: QualityDomain,
-        message: str | None = None,
-    ) -> QualityIssueResult:
-        TestStateMachine.validate_transition(order_test.status, TestStatus.ESCALATED)
-        self.escalation.escalate_test(
-            order_test,
-            EscalationReasonCode.LIMIT_HIT,
-            user_id,
-            metadata={"rejectionReason": reason, "rejectionNotes": notes},
-            from_status=TestStatus.RESULTED,
-        )
-        issue = self._record_issue(
-            order_id=order_test.orderId,
-            stage=QualityStage.VALIDATION,
-            domain=domain,
-            reason=reason,
-            notes=notes,
-            remedy=RemedyType.ESCALATE,
-            user_id=user_id,
-            order_test_id=order_test.id,
-            sample_id=order_test.sampleId,
-            test_code=order_test.testCode,
-        )
-        return QualityIssueResult(
-            success=True,
-            remedy=RemedyType.ESCALATE,
-            message=message or "Escalated to supervisor for approval.",
-            qualityIssueId=issue.id,
-            orderId=order_test.orderId,
-            testCode=order_test.testCode,
-            orderTestId=order_test.id,
-            escalationRequired=True,
+        """Entry for validation rejection from workflow modules (e.g. result_commands)."""
+        return self._test_cmds.report_test_validation_issue(
+            order_test_id, user_id, reason, notes, preferred_remedy
         )
 
     def get_issues_for_order(self, order_id: int) -> list[QualityIssue]:

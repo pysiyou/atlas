@@ -11,7 +11,7 @@ import type {
 } from '@/types/lab-operations';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query';
-import { invalidateResultQueries, invalidateQualityIssueQueries } from '@/lib/query/invalidate';
+import { invalidateAfterLabMutation } from '@/lib/query/invalidate';
 import { LAB_PATHS } from '../constants/labConstants';
 
 export const qualityIssuesAPI = {
@@ -48,11 +48,12 @@ export function useReportQualityIssue() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (body: ReportQualityIssueRequest) => qualityIssuesAPI.reportIssue(body),
-    onSuccess: async () => {
-      await Promise.all([
-        invalidateQualityIssueQueries(queryClient),
-        invalidateResultQueries(queryClient),
-      ]);
+    onSuccess: async (result) => {
+      await invalidateAfterLabMutation(queryClient, {
+        kind: 'qualityIssue',
+        orderId: result.orderId,
+        orderTestId: result.orderTestId,
+      });
     },
   });
 }

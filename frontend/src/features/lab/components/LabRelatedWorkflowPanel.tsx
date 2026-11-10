@@ -9,24 +9,33 @@ import { sampleAPI } from '../api/samples';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { useOrder, getSampleRecollectionChain, TestRelatedTestsPanel } from '@/features/orders';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
-import type { OrderTest, Sample } from '@/types';
-import type { TestWithContext } from '@/types';
+import type { Order, OrderTest, Sample } from '@/types';
 import { displayId } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { text, INLINE_LINK_BUTTON } from '@/theme/recipes';
 
 type LabRelatedTestsPanelProps = {
-  test: TestWithContext;
+  orderId: number;
+  orderTestId: number;
   isOpen: boolean;
+  /** When the parent modal already loaded the order, skip a duplicate fetch. */
+  order?: Order;
 };
 
-export const LabRelatedTestsPanel: React.FC<LabRelatedTestsPanelProps> = ({ test, isOpen }) => {
+export const LabRelatedTestsPanel: React.FC<LabRelatedTestsPanelProps> = ({
+  orderId,
+  orderTestId,
+  isOpen,
+  order: orderProp,
+}) => {
   const { openModal } = useModal();
-  const { order } = useOrder(isOpen && test.orderId > 0 ? String(test.orderId) : undefined);
+  const shouldFetchOrder = isOpen && orderId > 0 && orderProp?.orderId !== orderId;
+  const { order: fetchedOrder } = useOrder(shouldFetchOrder ? String(orderId) : undefined);
+  const order = orderProp?.orderId === orderId ? orderProp : fetchedOrder;
 
   const orderTest = useMemo(
-    () => (order?.tests && test.id != null ? order.tests.find(t => t.id === test.id) : undefined),
-    [order, test.id]
+    () => (order?.tests ? order.tests.find(t => t.id === orderTestId) : undefined),
+    [order, orderTestId]
   );
 
   const openOrderTest = (row: OrderTest) => {

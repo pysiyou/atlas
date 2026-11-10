@@ -4,6 +4,11 @@ from app.domains.lab.models.sample import Sample
 from app.domains.lab.monitor.worklist_service import LabWorklistService
 from app.domains.lab.schemas.sample import SampleCollectRequest, SampleResponse
 from app.domains.lab.schemas.worklists import CollectionWorklistItem
+from app.domains.lab.deps import (
+    get_lab_operations_service,
+    get_lab_worklist_service,
+    get_specimen_query_service,
+)
 from app.domains.lab.specimen import SpecimenQueryService
 from app.domains.lab.workflow.service import LabOperationsService
 from app.domains.users.models import User
@@ -39,39 +44,40 @@ def get_samples(
     orderId: int | None = None,
     sampleStatus: SampleStatus | None = None,
     paginated: bool = Query(False),
-    db: Session = Depends(get_db),
+    specimen: SpecimenQueryService = Depends(get_specimen_query_service),
     current_user: User = Depends(get_current_user),
 ):
-    return SpecimenQueryService(db).list_samples(
+    return specimen.list_samples(
         pagination["skip"], pagination["limit"], orderId, sampleStatus, paginated
     )
 
 
 @router.get("/samples/pending", response_model=list[SampleResponse])
 def get_pending_samples(
-    db: Session = Depends(get_db),
+    specimen: SpecimenQueryService = Depends(get_specimen_query_service),
     current_user: User = Depends(get_current_user),
 ):
-    return SpecimenQueryService(db).list_pending()
+    return specimen.list_pending()
 
 
 @router.get("/samples/{sampleId}/work-context", response_model=CollectionWorklistItem)
 def get_sample_work_context(
     sampleId: int,
-    db: Session = Depends(get_db),
+    worklist: LabWorklistService = Depends(get_lab_worklist_service),
     current_user: User = Depends(get_current_user),
 ):
     """Collection eligibility and display fields for a sample deep-link or modal."""
-    return LabWorklistService(db).get_sample_work_context(sampleId)
+    return worklist.get_sample_work_context(sampleId)
 
 
 @router.get("/samples/{sampleId}", response_model=SampleResponse)
 def get_sample(
     sampleId: int,
     db: Session = Depends(get_db),
+    specimen: SpecimenQueryService = Depends(get_specimen_query_service),
     current_user: User = Depends(get_current_user),
 ):
-    sample = SpecimenQueryService(db).get_by_id(sampleId)
+    sample = specimen.get_by_id(sampleId)
     return _sample_response(db, sample)
 
 
@@ -79,10 +85,10 @@ def get_sample(
 def collect_sample(
     sampleId: int,
     collect_data: SampleCollectRequest,
-    db: Session = Depends(get_db),
+    service: LabOperationsService = Depends(get_lab_operations_service),
     current_user: User = Depends(require_sample_collector),
 ):
-    return LabOperationsService(db).collect_sample(
+    return service.collect_sample(
         sample_id=sampleId,
         user_id=current_user.id,
         collected_volume=collect_data.collectedVolume,

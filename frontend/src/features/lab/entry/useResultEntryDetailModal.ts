@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { notify } from '@/feedback';
-import type { TestWithContext } from '@/types';
+import type { EntryQueueRow } from '../types/entryQueue';
 import { isLabActionAllowed } from '../utils/queueDisplay';
 
 /**
@@ -12,15 +11,15 @@ export function useResultEntryDetailModal() {
   const { openModal } = useModal();
 
   return useCallback(
-    (test: TestWithContext) => {
-      if (test.id == null) {
-        notify.show('lab.entry.modalUnavailable');
+    (row: EntryQueueRow) => {
+      if (!isLabActionAllowed(row.allowedActions, 'enterResults')) {
         return;
       }
-      if (!isLabActionAllowed(test.allowedActions, 'enterResults')) {
-        return;
-      }
-      openModal({ type: ModalType.RESULT_DETAIL, orderTestId: test.id });
+      openModal({
+        type: ModalType.RESULT_DETAIL,
+        orderTestId: row.orderTestId,
+        worklistRow: row,
+      });
     },
     [openModal]
   );

@@ -8,8 +8,9 @@ import { RecordId } from '@/features/shared';
 import { text, LIST_MARKER , FG } from '@/theme/recipes';
 import { getQueueAgeInfo } from '../utils/labQueue';
 import { TONE } from '@/theme/recipes';
-import type { Sample, TestWithContext } from '@/types';
-import { deriveRetestContext } from '../utils/deriveRetestContext';
+import type { Sample } from '@/types';
+import type { LabOrderTestQueueRow } from '../types/labQueueChrome';
+import { deriveRetestContextFromRow } from '../utils/deriveRetestContext';
 import { LAB_CONFIG } from '../constants';
 import { displayId } from '@/utils';
 
@@ -96,14 +97,14 @@ export function LabModalMetaRow({
   );
 }
 
-export function TestRejectionTailMeta({ test }: { test: TestWithContext }) {
-  const ctx = deriveRetestContext(test);
+export function TestRejectionTailMeta({ row }: { row: LabOrderTestQueueRow }) {
+  const ctx = deriveRetestContextFromRow(row);
 
-  if (ctx.showRetestBadge && test.retestOfTestId != null) {
+  if (ctx.showRetestBadge && row.retestOfTestId != null) {
     return (
       <LabCardMetaRow>
         <span>
-          Re-test of <RecordId type="orderTest" value={test.retestOfTestId} emphasis="inline" />
+          Re-test of <RecordId type="orderTest" value={row.retestOfTestId} emphasis="inline" />
         </span>
         {ctx.showAttemptInMeta ? (
           <span className={ctx.attemptNumber >= ctx.attemptMax - 1 ? TONE.warning.fg : undefined}>
@@ -113,12 +114,12 @@ export function TestRejectionTailMeta({ test }: { test: TestWithContext }) {
       </LabCardMetaRow>
     );
   }
-  if (ctx.showRecollectionLink && test.sampleOriginalSampleId != null) {
+  if (ctx.showRecollectionLink && row.sampleOriginalSampleId != null) {
     return (
       <LabCardMetaRow>
         <span>
           Recollection of{' '}
-          <RecordId type="sample" value={test.sampleOriginalSampleId} emphasis="inline" />
+          <RecordId type="sample" value={row.sampleOriginalSampleId} emphasis="inline" />
         </span>
         {ctx.showAttemptInMeta ? (
           <span className={ctx.attemptNumber >= ctx.attemptMax - 1 ? TONE.warning.fg : undefined}>

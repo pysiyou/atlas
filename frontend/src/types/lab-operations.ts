@@ -2,7 +2,7 @@
  * Quality issue and lab operation types — aligned with backend contracts.
  */
 
-import type { Order, Patient, Sample } from '@/types';
+import type { PaymentStatus, Sample } from '@/types';
 import type { ContainerTopColor, ContainerType, SampleType } from '@/types';
 import type {
   EscalationResolutionAction,
@@ -35,26 +35,37 @@ export interface SampleCollectionRequirement {
   orderId: number;
 }
 
-/** Server-driven gates from lab worklist API. */
-export interface LabWorklistAllowedActions {
-  collect: boolean;
-  enterResults: boolean;
-  validate: boolean;
-  reject: boolean;
-}
+import type { LabWorklistAllowedActions } from '@/types/labWorklistApi';
 
-/** Sample collection queue row — used by modals and lab collection workflow. */
-export interface SampleCollectionQueueItem {
-  sample?: Sample;
-  order: Order;
-  patient: Patient;
-  priority: string;
-  requirement?: SampleCollectionRequirement;
+/** Server-driven gates from lab worklist API (OpenAPI). */
+export type { LabWorklistAllowedActions } from '@/types/labWorklistApi';
+
+/**
+ * Collection queue row mapped from `CollectionWorklistItem` (worklist-native fields only).
+ */
+export interface CollectionQueueRow {
+  sample: Sample;
+  patientId: number;
+  patientName: string;
+  orderId: number;
+  orderDate: string;
+  paymentStatus: PaymentStatus;
+  priority: PriorityLevel;
+  requirement: SampleCollectionRequirement;
   allowedActions?: LabWorklistAllowedActions;
   denyReason?: string | null;
   denyMessage?: string | null;
   statusPresentation?: import('@/types/labProjection').StatusPresentation | null;
+  referentDoctorId?: number | null;
+  referentDoctorName?: string | null;
+  referentDoctorEmail?: string | null;
+  referentDoctorPhone?: string | null;
+  referentDoctorHospital?: string | null;
+  referentDoctorUsername?: string | null;
 }
+
+/** Alias kept for existing lab collection imports. */
+export type SampleCollectionQueueItem = CollectionQueueRow;
 
 /** Alias used across lab collection code. */
 export type SampleRequirement = SampleCollectionRequirement;

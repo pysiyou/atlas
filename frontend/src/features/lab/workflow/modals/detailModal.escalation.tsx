@@ -8,16 +8,20 @@ import { QueueModalShell } from '../shared/detailModalLayout';
 import { TestHeaderBadges } from '../../components/LabWorkflowBadges';
 import { TestWorkflowCardLeftColumn } from '../shared/queueCardLeftColumn';
 import { buildCriticalValueRecord } from '../../criticalValues/criticalValues';
-import { invalidateLabWorkflowQueries } from '@/lib/query/invalidate';
+import {
+  invalidateAfterLabMutation,
+  invalidatePendingEscalationQueries,
+} from '@/lib/query/invalidate';
 import { useEscalationResolution } from '../../validation/useEscalationResolution';
 import {
   EscalationResolutionBody,
   EscalationResolutionFooter,
 } from '../shared/escalation.shared';
 import { labModalHeaderContext } from '../shared/detailModalLayout';
-import { useOrderTestContext } from '../../api/results';
-import { Modal, ModalPageShell } from '@/components/overlays';
+import { hasResultsOnWorkItem } from '../../utils/labSearchAndLinks';
+import { LabModalPlaceholder } from '../shared/labModalPlaceholders';
 import type { EscalationResolutionModalProps } from '@/lib/context/modalTypes';
+import { useLabModalWorkItemModel } from '../model/useLabModalWorkItemModel';
 
 function ticketString(value: unknown): string | undefined {
   return typeof value === 'string' ? value : undefined;
@@ -29,8 +33,22 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   isActive = true,
   orderTestId,
   readOnly = false,
+  escalationSnapshot,
 }) => {
-  const { test, isLoading } = useOrderTestContext(orderTestId, isOpen);
+  const {
+    order,
+    displayWorkItem,
+    patientName,
+    orderTestSnapshot,
+    isContextLoading,
+    isOrderLoading,
+    ready,
+  } = useLabModalWorkItemModel({
+    isOpen,
+    orderTestId,
+    escalationSnapshot,
+  });
+
   const [validationNotesForceValidate, setValidationNotesForceValidate] = useState('');
   const [reasonAuthorizeRetest, setReasonAuthorizeRetest] = useState('');
   const [reasonAuthorizeRecollect, setReasonAuthorizeRecollect] = useState('');
@@ -41,15 +59,18 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   const queryClient = useQueryClient();
 
   const criticalRecord = useMemo(
-    () => (test ? buildCriticalValueRecord(test) : undefined),
-    [test]
+    () => (displayWorkItem ? buildCriticalValueRecord(displayWorkItem) : undefined),
+    [displayWorkItem]
   );
+
   const handleCriticalValueUpdated = useCallback(() => {
-    invalidateLabWorkflowQueries(queryClient, {
-      criticalValues: true,
-      pendingEscalation: true,
+    const orderId = order?.orderId ?? displayWorkItem?.orderId ?? orderTestSnapshot?.orderId;
+    void invalidateAfterLabMutation(queryClient, {
+      kind: 'criticalValue',
+      orderId,
     });
-  }, [queryClient]);
+    void invalidatePendingEscalationQueries(queryClient);
+  }, [queryClient, order?.orderId, displayWorkItem?.orderId, orderTestSnapshot?.orderId]);
 
   const resetForm = useCallback(() => {
     setValidationNotesForceValidate('');
@@ -64,41 +85,50 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
   const { canResolveEscalation, resolving, resolveAsync } = useEscalationResolution({
     orderTestId,
     onResolved: async () => {
-      await invalidateLabWorkflowQueries(queryClient, { pendingEscalation: true });
+      await invalidatePendingEscalationQueries(queryClient);
     },
     onClose,
     onResetForm: resetForm,
   });
 
-  if (isOpen && isLoading && !test) {
-    return (
-      <Modal isOpen={isOpen} onClose={onClose} title="Escalation" size="3xl" isActive={isActive}>
-        <ModalPageShell loading loadingVariant="workflow" />
-      </Modal>
-    );
+  const awaitingOpen = isOpen && (isContextLoading || isOrderLoading) && !ready;
+  if (!isOpen) {
+    return null;
+  }
+  if (!displayWorkItem && !awaitingOpen) {
+    return null;
   }
 
-  if (!test || test.id == null) return null;
+  const contentReady = readOnly
+    ? Boolean(displayWorkItem && !isContextLoading)
+    : Boolean(ready && displayWorkItem && !isOrderLoading);
+  const chromeRow = displayWorkItem;
+  const hasResults = chromeRow ? hasResultsOnWorkItem(chromeRow) : false;
+  const headerBadges =
+    contentReady && chromeRow ? (
+      <TestHeaderBadges row={chromeRow} variant="escalation" showStatus />
+    ) : null;
+  const { title: modalTitle, subtitle: modalSubtitle } =
+    contentReady && chromeRow
+      ? labModalHeaderContext({
+          stage: 'escalation',
+          contextLabel: chromeRow.testName,
+          orderId: chromeRow.orderId,
+          badges: headerBadges ?? undefined,
+        })
+      : { title: 'Escalation', subtitle: '' };
 
-  const hasResults = Boolean(test.results && Object.keys(test.results).length > 0);
-  const patientName = test.patientName || '—';
-  const headerBadges = <TestHeaderBadges test={test} variant="escalation" showStatus />;
-  const { title: modalTitle, subtitle: modalSubtitle } = labModalHeaderContext({
-    stage: 'escalation',
-    contextLabel: test.testName,
-    orderId: test.orderId,
-    badges: headerBadges,
-  });
-  const headerLeftColumn = (
-    <TestWorkflowCardLeftColumn
-      test={test}
-      patientName={patientName}
-      variant="escalation"
-      reasonCode={test.reasonCode}
-      includeResultEntered
-      tone="modal"
-    />
-  );
+  const headerLeftColumn =
+    contentReady && chromeRow ? (
+      <TestWorkflowCardLeftColumn
+        row={chromeRow}
+        patientName={patientName || chromeRow.patientName || '—'}
+        variant="escalation"
+        reasonCode={chromeRow.reasonCode ?? undefined}
+        includeResultEntered
+        tone="modal"
+      />
+    ) : undefined;
 
   return (
     <QueueModalShell
@@ -107,18 +137,18 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
       isActive={isActive}
       title={modalTitle}
       subtitle={modalSubtitle}
-      modalKey={readOnly ? `historical-${test.id}` : `escalation-${test.id}`}
+      modalKey={readOnly ? `historical-escalation-${orderTestId}` : `escalation-${orderTestId}`}
       headerLeftColumn={headerLeftColumn}
       disableClose={resolving}
       footer={
-        readOnly ? undefined : (
+        contentReady && chromeRow && !readOnly ? (
           <EscalationResolutionFooter
-            orderTestId={test.id}
+            orderTestId={chromeRow.orderTestId}
             canResolveEscalation={canResolveEscalation}
             resolving={resolving}
-            reasonCode={test.reasonCode}
+            reasonCode={chromeRow.reasonCode ?? undefined}
             hasResults={hasResults}
-            requiresReadBack={test.reasonCode === 'CRIT-VAL'}
+            requiresReadBack={chromeRow.reasonCode === 'CRIT-VAL'}
             validationNotesForceValidate={validationNotesForceValidate}
             onValidationNotesForceValidateChange={setValidationNotesForceValidate}
             readBackProviderName={readBackProviderName}
@@ -133,22 +163,27 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
             onReasonAuthorizeRecollectChange={setReasonAuthorizeRecollect}
             reasonFinalReject={reasonFinalReject}
             onReasonFinalRejectChange={setReasonFinalReject}
-            allowForceValidate={test.allowForceValidate !== false}
+            allowForceValidate={chromeRow.allowForceValidate !== false}
             resolveAsync={resolveAsync}
           />
-        )
+        ) : undefined
       }
     >
-      <EscalationResolutionBody
-        test={test}
-        isOpen={isOpen}
-        readOnly={readOnly}
-        hasResults={hasResults}
-        rejectionReason={ticketString(test.ticketMetadata?.rejectionReason)}
-        rejectionNotes={ticketString(test.ticketMetadata?.rejectionNotes)}
-        criticalRecord={criticalRecord ?? null}
-        onCriticalValueUpdated={handleCriticalValueUpdated}
-      />
+      {contentReady && chromeRow ? (
+        <EscalationResolutionBody
+          workItem={chromeRow}
+          isOpen={isOpen}
+          readOnly={readOnly}
+          hasResults={hasResults}
+          order={order}
+          rejectionReason={ticketString(chromeRow.ticketMetadata?.rejectionReason)}
+          rejectionNotes={ticketString(chromeRow.ticketMetadata?.rejectionNotes)}
+          criticalRecord={criticalRecord ?? null}
+          onCriticalValueUpdated={handleCriticalValueUpdated}
+        />
+      ) : (
+        <LabModalPlaceholder variant="escalation" />
+      )}
     </QueueModalShell>
   );
 };

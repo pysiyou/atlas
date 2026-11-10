@@ -39,7 +39,7 @@ export { RecollectionOfBadge } from './LabLineageBadges';
 export { RetestOfBadge } from './LabLineageBadges';
 export {
   LabRejectionTailBadges,
-  LabRejectionTailBadgesFromTest,
+  LabRejectionTailBadgesFromWorkItem,
   LabRejectionTailBadgesFromSample,
 } from './LabRejectionTailBadges';
 export { printSampleCollectionLabel } from '../utils/labSample';

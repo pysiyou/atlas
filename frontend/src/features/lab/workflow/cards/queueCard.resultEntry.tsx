@@ -9,17 +9,22 @@ import { Card } from '@/components/surfaces';
 import { cn } from '@/utils';
 import { TestHeaderBadges } from '../../components/LabWorkflowBadges';
 import { LAB_CONFIG } from '../../constants';
-import { useLabWorkflowCardClickGuard, useOrderTestQueueState } from '../../hooks';
+import { useLabWorkflowCardClickGuard, useLabQueueRowState } from '../../hooks';
 import { isLabActionAllowed } from '../../utils/queueDisplay';
 import { useLabWorkflowResponsiveCard } from '../../hooks/useLabWorkflowResponsiveCard';
-import { deriveRetestContext } from '../../utils/deriveRetestContext';
 import { FG, MOBILE_LIST_CARD } from '@/theme/recipes';
-import type { Test, TestWithContext } from '@/types';
+import type { Test } from '@/types';
+import { type EntryQueueRow } from '../../types/entryQueue';
+import {
+  labModalWorkItemFromDto,
+  retestContextFromRow,
+  type LabOrderTestQueueRow,
+} from '../../types/labQueueChrome';
 import { QueueCard, QueueCardMobile } from '../shared/queueCardLayout';
 import { TestWorkflowCardLeftColumn } from '../shared/queueCardLeftColumn';
 
 export interface ResultEntryCardProps {
-  test: TestWithContext;
+  row: EntryQueueRow;
   testDef: Test | undefined;
   resultKey: string;
   results: Record<string, string>;
@@ -33,7 +38,8 @@ export interface ResultEntryCardProps {
 }
 
 export interface ResultEntryCardSharedData {
-  test: TestWithContext;
+  row: EntryQueueRow;
+  chromeRow: LabOrderTestQueueRow;
   testDef: Test;
   results: Record<string, string>;
   isComplete: boolean;
@@ -41,31 +47,33 @@ export interface ResultEntryCardSharedData {
   parameterCount: number;
   filledCount: number;
   handleCardClick: (e?: React.MouseEvent) => void;
-  workItem: ReturnType<typeof useOrderTestQueueState>;
-  rejection: ReturnType<typeof deriveRetestContext>;
+  workItem: ReturnType<typeof useLabQueueRowState>;
+  rejection: ReturnType<typeof retestContextFromRow>;
   canEnter: boolean;
   denyTooltipLabel: string | undefined;
 }
 
 export function useResultEntryCardData(props: ResultEntryCardProps): ResultEntryCardSharedData | null {
-  const { test, testDef, results, isComplete, onClick } = props;
-  const workItem = useOrderTestQueueState(test);
-  const rejection = useMemo(() => deriveRetestContext(test), [test]);
-  const canEnter = isLabActionAllowed(test.allowedActions, 'enterResults');
+  const { row, testDef, results, isComplete, onClick } = props;
+  const chromeRow = useMemo(() => labModalWorkItemFromDto(row), [row]);
+  const workItem = useLabQueueRowState(row);
+  const rejection = useMemo(() => retestContextFromRow(chromeRow), [chromeRow]);
+  const canEnter = isLabActionAllowed(row.allowedActions, 'enterResults');
   const denyTooltipLabel =
-    test.denyMessage ?? (!canEnter ? workItem.label : undefined);
+    row.denyMessage ?? (!canEnter ? workItem.label : undefined);
   const handleCardClick = useLabWorkflowCardClickGuard(() => {
     if (canEnter) onClick();
   });
 
   if (!testDef?.parameters) return null;
 
-  const patientName = test.patientName || '—';
+  const patientName = row.patientName || '—';
   const parameterCount = testDef.parameters.length;
   const filledCount = Object.values(results).filter(v => v?.trim()).length;
 
   return {
-    test,
+    row,
+    chromeRow,
     testDef,
     results,
     isComplete,
@@ -81,7 +89,7 @@ export function useResultEntryCardData(props: ResultEntryCardProps): ResultEntry
 }
 
 function useResultEntryCardHeader(
-  test: TestWithContext,
+  chromeRow: LabOrderTestQueueRow,
   patientName: string,
   testDef: Test,
   filledCount: number,
@@ -90,25 +98,25 @@ function useResultEntryCardHeader(
   const leftColumn = useMemo(
     () => (
       <TestWorkflowCardLeftColumn
-        test={test}
+        row={chromeRow}
         patientName={patientName}
         variant="entry"
-        queueSince={test.collectedAt}
+        queueSince={chromeRow.collectedAt ?? undefined}
         filledCount={filledCount}
         parameterCount={parameterCount}
         turnaroundHours={testDef.turnaroundTime}
       />
     ),
-    [test, patientName, testDef.turnaroundTime, filledCount, parameterCount]
+    [chromeRow, patientName, testDef.turnaroundTime, filledCount, parameterCount]
   );
 
-  const badges = <TestHeaderBadges test={test} variant="entry" showStatus />;
+  const badges = <TestHeaderBadges row={chromeRow} variant="entry" showStatus />;
 
   return { leftColumn, badges };
 }
 
 function ResultEntryCardDesktop({
-  test,
+  chromeRow,
   testDef,
   results,
   parameterCount,
@@ -120,7 +128,7 @@ function ResultEntryCardDesktop({
 }: ResultEntryCardSharedData) {
   const { showAttemptIndicator } = rejection;
   const { leftColumn, badges } = useResultEntryCardHeader(
-    test,
+    chromeRow,
     patientName,
     testDef,
     filledCount,
@@ -163,7 +171,7 @@ function ResultEntryCardDesktop({
 }
 
 function ResultEntryCardMobile({
-  test,
+  chromeRow,
   testDef,
   patientName,
   filledCount,
@@ -175,7 +183,7 @@ function ResultEntryCardMobile({
 }: ResultEntryCardSharedData) {
   const { showAttemptIndicator } = rejection;
   const { leftColumn } = useResultEntryCardHeader(
-    test,
+    chromeRow,
     patientName,
     testDef,
     filledCount,
@@ -195,7 +203,7 @@ function ResultEntryCardMobile({
     >
       <QueueCardMobile
         leftColumn={leftColumn}
-        badges={<TestHeaderBadges test={test} variant="entry" size="xs" showStatus />}
+        badges={<TestHeaderBadges row={chromeRow} variant="entry" size="xs" showStatus />}
         actionsPlacement="header"
         actions={
           <IconButton

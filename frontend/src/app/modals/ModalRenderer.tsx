@@ -58,7 +58,9 @@ const LazyRegisteredModal: React.FC<LazyRegisteredModalProps> = ({
 
   useEffect(() => {
     if (modalComponentCache.has(frame.type)) {
-      setComponent(modalComponentCache.get(frame.type)!);
+      const cached = modalComponentCache.get(frame.type)!;
+      // Must not pass a function component directly — React treats it as a state updater.
+      setComponent(() => cached);
       setLoadFailed(false);
       return;
     }

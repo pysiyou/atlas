@@ -8,7 +8,6 @@ import { getEffectiveContainerType } from '../../utils';
 import { isLabActionAllowed } from '../../utils/queueDisplay';
 
 export function getSampleCollectionViewModel(display: SampleCollectionQueueItem, sample: Sample) {
-  const { order } = display;
   const isPending = sample.status === 'pending';
   const isCollected = sample.status === 'collected';
   const isRejected = sample.status === 'rejected';
@@ -17,7 +16,9 @@ export function getSampleCollectionViewModel(display: SampleCollectionQueueItem,
   const containerColor = hasContainerInfo ? sample.actualContainerColor : undefined;
 
   return {
-    order,
+    orderId: display.orderId,
+    orderDate: display.orderDate,
+    referentDoctorName: display.referentDoctorName ?? undefined,
     isPending,
     isCollected,
     isRejected,

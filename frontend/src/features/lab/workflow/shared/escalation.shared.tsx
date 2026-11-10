@@ -16,9 +16,13 @@ import {
   EscalationResolutionActions,
   type EscalationResolveOptions,
 } from '../../validation/EscalationResolutionActions';
-import { deriveRetestContext } from '../../utils/deriveRetestContext';
+import {
+  retestContextFromRow,
+  type LabModalWorkItem,
+  type LabOrderTestQueueRow,
+} from '../../types/labQueueChrome';
 import { text, WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
-import type { TestWithContext } from '@/types';
+import type { Order } from '@/types';
 import type { EscalationResolutionAction } from '@/types/lab-operations';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { notify } from '@/feedback';
@@ -28,13 +32,13 @@ function ticketString(value: unknown): string | undefined {
   return typeof value === 'string' && value.trim() !== '' ? value : undefined;
 }
 
-export function EscalationExceptionBadges({ test }: { test: TestWithContext }) {
-  const rejection = deriveRetestContext(test);
+export function EscalationExceptionBadges({ row }: { row: LabOrderTestQueueRow }) {
+  const rejection = retestContextFromRow(row);
 
   return (
     <>
       <SupervisorApprovalBadge size={WORKLIST_CARD_BADGE_SIZE} />
-      <TestHeaderBadges test={test} variant="escalation" showStatus />
+      <TestHeaderBadges row={row} variant="escalation" showStatus />
       {rejection.showAttemptIndicator ? (
         <AttemptIndicator
           attemptNumber={rejection.attemptNumber}
@@ -46,11 +50,11 @@ export function EscalationExceptionBadges({ test }: { test: TestWithContext }) {
   );
 }
 
-export function EscalationExceptionReviewBody({ test }: { test: TestWithContext }) {
-  const rejectionReason = ticketString(test.ticketMetadata?.rejectionReason);
-  const rejectionNotes = ticketString(test.ticketMetadata?.rejectionNotes);
-  const denyMessage = test.denyMessage ?? test.lab?.denyMessage ?? undefined;
-  const reasonCode = test.reasonCode ? formatStatusBadgeLabel(test.reasonCode) : undefined;
+export function EscalationExceptionReviewBody({ row }: { row: LabOrderTestQueueRow }) {
+  const rejectionReason = ticketString(row.ticketMetadata?.rejectionReason);
+  const rejectionNotes = ticketString(row.ticketMetadata?.rejectionNotes);
+  const denyMessage = row.denyMessage ?? row.lab?.denyMessage ?? undefined;
+  const reasonCode = row.reasonCode ? formatStatusBadgeLabel(row.reasonCode) : undefined;
 
   const hasContent = Boolean(reasonCode || denyMessage || rejectionReason || rejectionNotes);
   if (!hasContent) {
@@ -90,10 +94,11 @@ export function EscalationExceptionReviewBody({ test }: { test: TestWithContext 
 }
 
 export interface EscalationResolutionBodyProps {
-  test: TestWithContext;
+  workItem: LabModalWorkItem;
   isOpen: boolean;
   readOnly: boolean;
   hasResults: boolean;
+  order?: Order;
   rejectionReason?: string;
   rejectionNotes?: string;
   criticalRecord: CriticalValueRecord | null;
@@ -101,22 +106,21 @@ export interface EscalationResolutionBodyProps {
 }
 
 function EscalationResultsPanel({
-  test,
+  workItem,
   readOnly,
 }: {
-  test: TestWithContext;
+  workItem: LabModalWorkItem;
   readOnly: boolean;
 }) {
   return (
     <ResultValidationPanel
       preset="panel.compact.scrollAuto.maxH"
       title={readOnly ? 'Recorded Results' : 'Result Validation'}
-      results={test.results!}
-      flags={test.flags}
-      testCode={test.testCode}
-      patient={test.patient}
-      technicianNotes={test.technicianNotes}
-      comments={test.validationNotes ?? ''}
+      results={workItem.results ?? {}}
+      flags={workItem.flags ?? undefined}
+      testCode={workItem.testCode}
+      technicianNotes={workItem.technicianNotes ?? undefined}
+      comments={workItem.validationNotes ?? ''}
       onCommentsChange={() => {}}
       onApprove={() => {}}
       readOnly={readOnly}
@@ -159,10 +163,11 @@ function EscalationSummaryPanel({
 }
 
 export function EscalationResolutionBody({
-  test,
+  workItem,
   isOpen,
   readOnly,
   hasResults,
+  order,
   rejectionReason,
   rejectionNotes,
   criticalRecord,
@@ -171,7 +176,7 @@ export function EscalationResolutionBody({
   return (
     <>
       {hasResults ? (
-        <EscalationResultsPanel test={test} readOnly={readOnly} />
+        <EscalationResultsPanel workItem={workItem} readOnly={readOnly} />
       ) : (
         <EscalationSummaryPanel
           rejectionReason={rejectionReason}
@@ -185,7 +190,12 @@ export function EscalationResolutionBody({
         </Panel>
       )}
 
-      <LabRelatedTestsPanel test={test} isOpen={isOpen} />
+      <LabRelatedTestsPanel
+        orderId={workItem.orderId}
+        orderTestId={workItem.orderTestId}
+        isOpen={isOpen}
+        order={order}
+      />
 
       <DetailGrid
         sections={[
@@ -195,14 +205,23 @@ export function EscalationResolutionBody({
             fields: [
               {
                 label: 'Sample ID',
-                value: test.sampleId ? (
-                  <RecordId type="sample" value={test.sampleId} emphasis="block" className="text-right" />
+                value: workItem.sampleId ? (
+                  <RecordId
+                    type="sample"
+                    value={workItem.sampleId}
+                    emphasis="block"
+                    className="text-right"
+                  />
                 ) : undefined,
               },
-              { label: 'Collected', timestamp: test.collectedAt, user: test.collectedBy },
+              {
+                label: 'Collected',
+                timestamp: workItem.collectedAt ?? undefined,
+                user: workItem.collectedBy ?? undefined,
+              },
               {
                 label: 'Sample Type',
-                value: test.sampleType ? formatStatusBadgeLabel(test.sampleType) : undefined,
+                value: workItem.sampleType ? formatStatusBadgeLabel(workItem.sampleType) : undefined,
               },
             ],
           },
@@ -210,31 +229,41 @@ export function EscalationResolutionBody({
             preset: 'panel.compact.standard',
             title: 'Result Entry Information',
             fields: [
-              { label: 'Entered', timestamp: test.resultEnteredAt, user: test.enteredBy },
+              {
+                label: 'Entered',
+                timestamp: workItem.resultEnteredAt ?? undefined,
+                user: workItem.enteredBy ?? undefined,
+              },
               {
                 label: 'Test ID',
-                value:
-                  test.id != null ? (
-                    <RecordId type="orderTest" value={test.id} emphasis="block" className="text-right" />
-                  ) : undefined,
+                value: (
+                  <RecordId
+                    type="orderTest"
+                    value={workItem.orderTestId}
+                    emphasis="block"
+                    className="text-right"
+                  />
+                ),
               },
               {
                 label: 'Test Code',
-                value: test.testCode ? (
-                  <RecordId emphasis="block" className="text-right">{test.testCode}</RecordId>
+                value: workItem.testCode ? (
+                  <RecordId emphasis="block" className="text-right">
+                    {workItem.testCode}
+                  </RecordId>
                 ) : undefined,
               },
               {
                 label: 'Order ID',
-                value: test.orderId ? (
-                  <RecordId type="order" value={test.orderId} emphasis="block" className="text-right" />
-                ) : undefined,
+                value: (
+                  <RecordId type="order" value={workItem.orderId} emphasis="block" className="text-right" />
+                ),
               },
             ],
           },
         ]}
       />
-      {test.id != null && <LazyLabEventLogPanel testId={test.id} />}
+      <LazyLabEventLogPanel testId={workItem.orderTestId} />
     </>
   );
 }

@@ -1,5 +1,6 @@
 /** Lab search keys, result presence, collection lookup filters, and queue deep-links. */
-import type { TestWithContext, OrderTest } from '@/types';
+import type { OrderTest } from '@/types';
+import type { LabModalWorkItem } from '../types/labQueueChrome';
 import { displayId, inclusiveDateRangeBounds, toIsoDateParam, ID_PREFIXES, parseDisplayId } from '@/utils';
 import type { TestStatus } from '@/types/enums';
 import type { UrlFilters } from '@/utils/filters';
@@ -136,9 +137,11 @@ export function worklistServerFilters(options: {
   };
 }
 
-/** True when the order test row has persisted result values on file. */
-export function hasTestResults(test: TestWithContext): boolean {
-  return Boolean(test.results && Object.keys(test.results).length > 0);
+/** True when the work item has persisted result values on file. */
+export function hasResultsOnWorkItem(
+  workItem: Pick<LabModalWorkItem, 'results'>
+): boolean {
+  return Boolean(workItem.results && Object.keys(workItem.results).length > 0);
 }
 
 export function resolveCollectionStatusFilters<T extends string>(

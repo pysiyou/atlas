@@ -2,7 +2,7 @@
 /**
  * Entry form helper utilities for parameter display and validation.
  */
-import type { TestParameter, Patient, TestWithContext, Test } from '@/types';
+import type { TestParameter, Patient, Test } from '@/types';
 import { formatReferenceRange, isCriticalValue } from '../utils';
 import { notify } from '@/feedback';
 
@@ -50,12 +50,5 @@ export function toRawResultPayload(
   }
 
   return payload;
-}
-
-export function findTestById(
-  allTests: TestWithContext[],
-  orderTestId: number
-): TestWithContext | undefined {
-  return allTests.find(t => t.id === orderTestId);
 }
 

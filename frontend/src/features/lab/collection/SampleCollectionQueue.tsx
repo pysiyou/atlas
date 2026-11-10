@@ -9,7 +9,7 @@ import {
   useLabQueueFilterBarProps,
   useLabQueuePageFilters,
 } from '../hooks';
-import type { SampleCollectionQueueItem } from '@/types/lab-operations';
+import type { CollectionQueueRow } from '@/types/lab-operations';
 import { LAB_CONFIG } from '../constants';
 import { useCollectSample } from '../api/samples';
 import { useCollectionWorklist } from '../api/worklists';
@@ -19,7 +19,7 @@ import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { collectionFilterConfig } from '../constants';
-import { mapCollectionWorklistToSampleDisplay } from '../utils/labQueue';
+import { worklistItemToQueueRow } from '../utils/labQueue';
 import { EMPTY_COPY, emptySubtitle } from '@/components/display';
 import { ErrorBoundary } from '@/components/feedback';
 import { useAuthStore } from '@/app/authStore';
@@ -51,7 +51,7 @@ export const SampleCollectionQueue: React.FC = () => {
     refetch,
   });
   const collectionDisplays = useMemo(
-    () => worklistItems.map(mapCollectionWorklistToSampleDisplay),
+    () => worklistItems.map(worklistItemToQueueRow),
     [worklistItems],
   );
 
@@ -66,7 +66,7 @@ export const SampleCollectionQueue: React.FC = () => {
   });
   const filterBarProps = useLabQueueFilterBarProps(bar);
 
-  const filteredDisplays = filteredDisplaysRaw as SampleCollectionQueueItem[];
+  const filteredDisplays = filteredDisplaysRaw as CollectionQueueRow[];
 
   const { handleCollect } = useSubmitSampleCollection({
     isAuthenticated: !!currentUser,
@@ -77,18 +77,19 @@ export const SampleCollectionQueue: React.FC = () => {
     <ErrorBoundary>
       <LabWorkflowQueueLayout
         loading={worklistChrome.loading && collectionDisplays.length === 0}
+        loadingPlaceholder="collection"
         items={filteredDisplays}
         renderCard={display => (
           <SampleCollectionCard
-            display={display as SampleCollectionQueueItem}
+            display={display}
             onCollect={handleCollect}
             isCollecting={collectSampleMutation.isPending}
             isMobile={isMobile}
             tests={catalogTests}
           />
         )}
-        getItemKey={(display: SampleCollectionQueueItem, idx: number) =>
-          `${display.order.orderId}-${display.sample?.sampleType || 'unknown'}-${display.sample?.sampleId || idx}-${idx}`
+        getItemKey={(display: CollectionQueueRow, idx: number) =>
+          `${display.orderId}-${display.sample?.sampleType || 'unknown'}-${display.sample?.sampleId || idx}-${idx}`
         }
         emptyTitle={
           isSampleLookup ? EMPTY_COPY.matchingSamples.title : EMPTY_COPY.pendingCollections.title

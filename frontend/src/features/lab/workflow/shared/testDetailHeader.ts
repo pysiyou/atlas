@@ -4,7 +4,8 @@
 
 import type { LabModalStage } from './detailModalLayout';
 import type { LabWorkItemProjection } from '@/types/labProjection';
-import type { Order, OrderTest, TestWithContext } from '@/types';
+import type { Order, OrderTest } from '@/types';
+import type { LabModalWorkItem } from '../../types/labQueueChrome';
 
 export type TestDetailHeaderVariant = 'entry' | 'validation' | 'escalation';
 
@@ -28,12 +29,12 @@ export function resolveTestDetailQueueSince(
   stage: LabModalStage,
   order: Order,
   orderTest: OrderTest,
-  labContext: TestWithContext
+  workItem: Pick<LabModalWorkItem, 'collectedAt' | 'resultEnteredAt'>
 ): string | undefined {
   if (stage === 'validation' || stage === 'escalation') {
-    return orderTest.resultEnteredAt ?? labContext.collectedAt ?? order.orderDate;
+    return orderTest.resultEnteredAt ?? workItem.collectedAt ?? order.orderDate;
   }
-  return labContext.collectedAt ?? order.orderDate;
+  return workItem.collectedAt ?? order.orderDate;
 }
 
 export function countFilledResults(results: OrderTest['results']): number {

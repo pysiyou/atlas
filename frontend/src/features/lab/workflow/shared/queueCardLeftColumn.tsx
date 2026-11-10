@@ -8,14 +8,14 @@ import { RecordId } from '@/features/shared';
 import { type ContainerType, type Sample, type RejectedSample } from '@/types';
 import type { ContainerTopColor } from '@/types';
 import type { SampleCollectionQueueItem, SampleRequirement } from '@/types/lab-operations';
-import type { TestWithContext } from '@/types';
 import { buildTestQueueTimelineLines } from '../../constants/labWorkflowAuditLines';
+import type { LabOrderTestQueueRow } from '../../types/labQueueChrome';
+import { retestContextFromRow } from '../../types/labQueueChrome';
 import { LabAuditBlock } from '../../components/LabWorkflowHeader.parts';
 import { LabCardMetaRow, QueueAgeMeta } from '../../components/LabCardMetaRow';
 import { CollectionOperationalMetaRow } from '../../components/CollectionOperationalMetaItems';
 import { buildCollectionOperationalMetaItems } from '../../utils/collectionOperationalMetaItems';
 import { buildSampleCollectionTimelineLines } from '../../constants/labWorkflowAuditLines';
-import { deriveRetestContext } from '../../utils/deriveRetestContext';
 import {
   WORKLIST_CARD_ALERT,
   IDENTITY_INLINE,
@@ -32,7 +32,7 @@ function InlineDot() {
 export type TestWorkflowCardVariant = 'entry' | 'validation' | 'escalation';
 
 export interface TestWorkflowCardLeftColumnProps {
-  test: TestWithContext;
+  row: LabOrderTestQueueRow;
   patientName: string;
   variant: TestWorkflowCardVariant;
   queueSince?: string;
@@ -185,7 +185,7 @@ function TestWorkflowOperationsRow({
 }
 
 export function TestWorkflowCardLeftColumn({
-  test,
+  row,
   patientName,
   variant,
   queueSince,
@@ -199,15 +199,15 @@ export function TestWorkflowCardLeftColumn({
   tone = 'card',
   className,
 }: TestWorkflowCardLeftColumnProps) {
-  const rejection = deriveRetestContext(test);
+  const rejection = retestContextFromRow(row);
   const timelineLines = buildTestQueueTimelineLines(
     {
-      collectedAt: test.collectedAt,
-      collectedBy: test.collectedBy,
-      resultEnteredAt: test.resultEnteredAt,
-      enteredBy: test.enteredBy,
-      retestOfTestId: test.retestOfTestId,
-      sampleOriginalSampleId: test.sampleOriginalSampleId,
+      collectedAt: row.collectedAt ?? undefined,
+      collectedBy: row.collectedBy ?? undefined,
+      resultEnteredAt: row.resultEnteredAt ?? undefined,
+      enteredBy: row.enteredBy ?? undefined,
+      retestOfTestId: row.retestOfTestId,
+      sampleOriginalSampleId: row.sampleOriginalSampleId,
     },
     { includeResultEntered }
   );
@@ -216,18 +216,18 @@ export function TestWorkflowCardLeftColumn({
     <div className={cn(CARD_HEADER_GRID.leftColumn, className)}>
       <TestWorkflowIdentityLines
         patientName={patientName}
-        testName={test.testName}
-        orderTestId={test.id}
-        referentDoctorName={test.referentDoctorName ?? undefined}
-        orderId={test.orderId}
-        sampleId={test.sampleId}
-        testCode={test.testCode}
+        testName={row.testName}
+        orderTestId={row.orderTestId}
+        referentDoctorName={row.referentDoctorName ?? undefined}
+        orderId={row.orderId}
+        sampleId={row.sampleId ?? undefined}
+        testCode={row.testCode}
       />
       <div className={WORKLIST_CARD_ALERT.row}>
         <TestWorkflowOperationsRow
           variant={variant}
           queueSince={queueSince}
-          emphasizeCritical={emphasizeCritical && test.hasCriticalValues}
+          emphasizeCritical={emphasizeCritical && !!row.hasCriticalValues}
           flagCount={flagCount}
           reasonCode={reasonCode}
           filledCount={filledCount}

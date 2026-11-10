@@ -58,9 +58,9 @@ function SampleCollectionCardLeftColumnFromVm({
   return (
     <SampleCollectionCardLeftColumn
       patientName={patientName}
-      orderId={vm.order.orderId}
-      referentDoctorName={vm.order.referentDoctorName ?? undefined}
-      orderDate={vm.order.orderDate}
+      orderId={vm.orderId}
+      referentDoctorName={vm.referentDoctorName}
+      orderDate={vm.orderDate}
       sample={sample}
       isPending={vm.isPending}
       isCollected={vm.isCollected}
@@ -255,7 +255,7 @@ export function useSampleCollectionCardData(
 
   if (!sample || !requirement) return null;
 
-  const patientName = display.patient?.fullName || display.order.patientName || '—';
+  const patientName = display.patientName || '—';
   const testNames = requirement.testCodes ? getTestNames(requirement.testCodes, tests) : [];
 
   return {

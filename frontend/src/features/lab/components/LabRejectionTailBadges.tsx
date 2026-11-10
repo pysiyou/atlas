@@ -5,11 +5,12 @@
 
 import React from 'react';
 import type { BadgeSize } from '@/components/primitives';
-import type { Sample, TestWithContext } from '@/types';
+import type { Sample } from '@/types';
 import { AttemptIndicator } from './LabAttemptIndicators';
 import { RecollectionOfBadge } from './LabLineageBadges';
 import { RetestOfBadge } from './LabLineageBadges';
-import { deriveRetestContext } from '../utils/deriveRetestContext';
+import { deriveRetestContextFromRow } from '../utils/deriveRetestContext';
+import type { LabOrderTestQueueRow } from '../types/labQueueChrome';
 import { LAB_CONFIG } from '../constants';
 
 export interface LabRejectionTailBadgesProps {
@@ -62,20 +63,20 @@ export const LabRejectionTailBadges: React.FC<LabRejectionTailBadgesProps> = ({
   );
 };
 
-export const LabRejectionTailBadgesFromTest: React.FC<{
-  test: TestWithContext;
+export const LabRejectionTailBadgesFromWorkItem: React.FC<{
+  row: LabOrderTestQueueRow;
   previousReason?: string;
   size?: BadgeSize;
-}> = ({ test, previousReason, size }) => {
-  const ctx = deriveRetestContext(test);
+}> = ({ row, previousReason, size }) => {
+  const ctx = deriveRetestContextFromRow(row);
   if (!ctx.showAttemptIndicator && !ctx.showRetestBadge && !ctx.showRecollectionLink) {
     return null;
   }
 
   return (
     <LabRejectionTailBadges
-      retestOfTestId={test.retestOfTestId}
-      originalSampleId={test.sampleOriginalSampleId}
+      retestOfTestId={row.retestOfTestId}
+      originalSampleId={row.sampleOriginalSampleId}
       showRetestLink={ctx.showRetestBadge}
       showRecollectionLink={ctx.showRecollectionLink}
       attemptNumber={ctx.attemptNumber}

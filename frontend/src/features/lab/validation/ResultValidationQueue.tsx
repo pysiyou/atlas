@@ -2,7 +2,7 @@
  * ResultValidationQueue - Result validation and supervisor exception review.
  */
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useAuthStore } from '@/app/authStore';
 import { LabWorkflowQueueMultiSectionLayout } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
@@ -15,21 +15,22 @@ import {
 } from '../hooks';
 import { VALIDATION_REVIEW_ESCALATION_PROFILE } from '../utils/labQueueSecondaryProfiles';
 import { validationFilterConfig } from '../constants';
-import { Card } from '@/components/surfaces';
+import { LabQueueCardPlaceholder } from '../components/labQueuePlaceholders';
 import { SPACING } from '@/theme/recipes';
 import { ErrorBoundary } from '@/components/feedback';
 import { useClientListChrome } from '@/hooks';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import type { TestWithContext } from '@/types';
+import type { ValidationQueueRow } from '../types/validationQueue';
 import { useResultValidationWorkflow } from './useResultValidationWorkflow';
+import { useLabDraftStore } from '../state/labDraftStore';
 import { orderTestKey } from '../utils/labSearchAndLinks';
 import { usePendingEscalation } from '../api/results';
 import { ResultValidationQueueView } from './ResultValidationQueueView';
 import { useResultValidationQueueActions } from './useResultValidationQueueActions';
 
-function getCommentKey(test: TestWithContext) {
-  return orderTestKey(test.id!);
+function getCommentKey(row: ValidationQueueRow) {
+  return orderTestKey(row.orderTestId);
 }
 
 export const ResultValidationQueue: React.FC = () => {
@@ -39,8 +40,8 @@ export const ResultValidationQueue: React.FC = () => {
 
   const bar = useLabQueueBarFilters('validationReview');
   const {
-    validationTests,
-    escalations: escalatedTests,
+    validationRows,
+    escalations,
     isLoading: dataLoading,
     isError: worklistError,
     error: worklistQueryError,
@@ -55,8 +56,6 @@ export const ResultValidationQueue: React.FC = () => {
     error: worklistQueryError,
     refetch: refetchWorklist,
   });
-  const allTests = validationTests;
-
   const {
     isLoading: escalationLoading,
     refetch: refetchEscalation,
@@ -73,36 +72,45 @@ export const ResultValidationQueue: React.FC = () => {
     validateMutation,
   } = useResultValidationWorkflow(dataLoading);
 
+  useEffect(() => {
+    const validationIds = validationRows.map(row => row.orderTestId);
+    const escalationIds = escalations
+      .map(item => item.id)
+      .filter((id): id is number => id != null);
+    const keepIds = [...validationIds, ...escalationIds];
+    useLabDraftStore.getState().retainValidationDrafts(keepIds);
+  }, [validationRows, escalations]);
+
   const { openEscalationModal } = useResultValidationQueueActions({
     canResolveEscalation,
     invalidatePendingEscalation,
     refetchEscalation,
   });
 
-  const { filteredItems: filteredTests, filterState } = useLabQueuePageFilters({
-    items: allTests,
-    workflowType: 'validationReview',
+  const { filteredItems: filteredValidationRows, filterState } = useLabQueuePageFilters({
+    items: validationRows,
+    workflowType: 'validation',
     bar,
   });
   const filterBarProps = useLabQueueFilterBarProps(bar, { statusFilterKey: 'priority' });
 
-  const filteredEscalatedTests = useMemo(
+  const filteredEscalations = useMemo(
     () =>
       applyLabQueueFiltersWithProfile(
-        escalatedTests,
+        escalations,
         filterState,
         bar,
         VALIDATION_REVIEW_ESCALATION_PROFILE,
       ),
-    [escalatedTests, filterState, bar],
+    [escalations, filterState, bar],
   );
 
-  const hasNoWorklistData = validationTests.length === 0 && escalatedTests.length === 0;
+  const hasNoWorklistData = validationRows.length === 0 && escalations.length === 0;
   const waitingOnInitialLoad =
     hasNoWorklistData && (dataLoading || (canViewEscalations && escalationLoading));
 
-  const hasEscalated = canViewEscalations && filteredEscalatedTests.length > 0;
-  const hasValidation = filteredTests.length > 0;
+  const hasEscalated = canViewEscalations && filteredEscalations.length > 0;
+  const hasValidation = filteredValidationRows.length > 0;
 
   return (
     <ErrorBoundary>
@@ -117,7 +125,10 @@ export const ResultValidationQueue: React.FC = () => {
         {waitingOnInitialLoad ? (
           <div className={`flex flex-col ${SPACING.gapSection}`}>
             {Array.from({ length: 5 }).map((_, index) => (
-              <Card key={index} padding="md" loading className="min-h-[140px]" />
+              <LabQueueCardPlaceholder
+                key={index}
+                variant={index < 2 ? 'escalation' : 'validation'}
+              />
             ))}
           </div>
         ) : (
@@ -127,8 +138,8 @@ export const ResultValidationQueue: React.FC = () => {
             hasValidation={hasValidation}
             canResolveEscalation={canResolveEscalation}
             isMobile={isMobile}
-            escalatedTests={filteredEscalatedTests}
-            validationTests={filteredTests}
+            escalations={filteredEscalations}
+            validationRows={filteredValidationRows as ValidationQueueRow[]}
             comments={comments}
             pendingValidateKey={pendingValidateKey}
             isValidatePending={validateMutation.isPending}
@@ -136,7 +147,7 @@ export const ResultValidationQueue: React.FC = () => {
             onOpenEscalation={openEscalationModal}
             onCommentsChange={handleCommentsChange}
             onApprove={(testId, orderId) => handleValidate(testId, orderId, true)}
-            onReject={(test, result) => handleValidate(test.id!, test.orderId, false, result)}
+            onReject={(row, result) => handleValidate(row.orderTestId, row.orderId, false, result)}
             onOpenValidation={openValidationModal}
           />
         )}

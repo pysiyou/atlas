@@ -3,6 +3,8 @@
  */
 
 import type { ReportPreviewResultsLayout } from '@/features/reports/types';
+import type { EntryWorklistItem, ValidationWorklistItem } from '@/types/labWorklist';
+import type { PendingEscalationItem } from '@/features/lab/api/results';
 
 export const ModalType = {
   SAMPLE_DETAIL: 'SAMPLE_DETAIL',
@@ -22,12 +24,23 @@ export type TestDetailInteraction = 'view' | 'validate';
 
 export type ModalFrame =
   | { type: typeof ModalType.SAMPLE_DETAIL; sampleId: string; readOnly?: boolean }
-  | { type: typeof ModalType.RESULT_DETAIL; orderTestId: number; readOnly?: boolean }
-  | { type: typeof ModalType.TEST_DETAIL; orderTestId: number; interaction: TestDetailInteraction }
+  | {
+      type: typeof ModalType.RESULT_DETAIL;
+      orderTestId: number;
+      readOnly?: boolean;
+      worklistRow?: EntryWorklistItem;
+    }
+  | {
+      type: typeof ModalType.TEST_DETAIL;
+      orderTestId: number;
+      interaction: TestDetailInteraction;
+      worklistRow?: ValidationWorklistItem;
+    }
   | {
       type: typeof ModalType.ESCALATION_RESOLUTION_DETAIL;
       orderTestId: number;
       readOnly?: boolean;
+      escalationSnapshot?: PendingEscalationItem;
     }
   | {
       type: typeof ModalType.NEW_ORDER;
@@ -59,16 +72,19 @@ export type SampleDetailModalProps = BaseModalProps & {
 export type ResultDetailModalProps = BaseModalProps & {
   orderTestId: number;
   readOnly?: boolean;
+  worklistRow?: EntryWorklistItem;
 };
 
 export type TestDetailModalProps = BaseModalProps & {
   orderTestId: number;
   interaction: TestDetailInteraction;
+  worklistRow?: ValidationWorklistItem;
 };
 
 export type EscalationResolutionModalProps = BaseModalProps & {
   orderTestId: number;
   readOnly?: boolean;
+  escalationSnapshot?: PendingEscalationItem;
 };
 
 export type OrderUpsertModalOpenProps = BaseModalProps & {

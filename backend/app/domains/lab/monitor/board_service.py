@@ -243,9 +243,9 @@ class LabBoardService:
         return datetime.combine(today, datetime.min.time()).replace(tzinfo=UTC)
 
     def _active_order_test_filter(self):
-        return ~OrderTest.status.in_(
-            (TestStatus.CANCELLED, TestStatus.REMOVED, TestStatus.SUPERSEDED)
-        )
+        from app.domains.lab.rules.test_status_sets import BOARD_EXCLUDED_TEST_STATUSES
+
+        return ~OrderTest.status.in_(BOARD_EXCLUDED_TEST_STATUSES)
 
     def _collection_rows(self) -> list[dict[str, Any]]:
         rows = (

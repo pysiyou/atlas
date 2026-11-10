@@ -1,7 +1,8 @@
 import { EscalationCard, ResultValidationCard } from '../workflow';
 import { LabValidationQueueSection } from '../components/LabValidationQueueSection';
 import { EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components/display';
-import type { TestWithContext } from '@/types';
+import type { PendingEscalationItem } from '../api/results';
+import type { ValidationQueueRow } from '../types/validationQueue';
 import type { QualityIssueResult } from '@/types/lab-operations';
 
 interface ResultValidationQueueViewProps {
@@ -10,17 +11,17 @@ interface ResultValidationQueueViewProps {
   hasValidation: boolean;
   canResolveEscalation: boolean;
   isMobile: boolean;
-  escalatedTests: TestWithContext[];
-  validationTests: Array<TestWithContext & { hasCriticalValues?: boolean }>;
+  escalations: PendingEscalationItem[];
+  validationRows: ValidationQueueRow[];
   comments: Record<string, string>;
   pendingValidateKey: string | null;
   isValidatePending: boolean;
-  getCommentKey: (test: TestWithContext) => string;
-  onOpenEscalation: (test: TestWithContext) => void;
+  getCommentKey: (row: ValidationQueueRow) => string;
+  onOpenEscalation: (item: PendingEscalationItem) => void;
   onCommentsChange: (key: string, value: string) => void;
-  onApprove: (testId: number, orderId: number) => void;
-  onReject: (test: TestWithContext, result: QualityIssueResult) => void;
-  onOpenValidation: (test: TestWithContext) => void;
+  onApprove: (orderTestId: number, orderId: number) => void;
+  onReject: (row: ValidationQueueRow, result: QualityIssueResult) => void;
+  onOpenValidation: (row: ValidationQueueRow) => void;
 }
 
 export function ResultValidationQueueView({
@@ -29,8 +30,8 @@ export function ResultValidationQueueView({
   hasValidation,
   canResolveEscalation,
   isMobile,
-  escalatedTests,
-  validationTests,
+  escalations,
+  validationRows,
   comments,
   pendingValidateKey,
   isValidatePending,
@@ -58,13 +59,13 @@ export function ResultValidationQueueView({
           title={
             canResolveEscalation ? 'Supervisor exceptions' : 'Awaiting supervisor approval'
           }
-          count={escalatedTests.length}
+          count={escalations.length}
         >
-          {escalatedTests.map((test, idx) => (
+          {escalations.map((item, idx) => (
             <EscalationCard
-              key={`escalated-${test.id}-${idx}`}
-              test={test}
-              onClick={() => onOpenEscalation(test)}
+              key={`escalated-${item.id}-${idx}`}
+              item={item}
+              onClick={() => onOpenEscalation(item)}
               isMobile={isMobile}
             />
           ))}
@@ -72,21 +73,20 @@ export function ResultValidationQueueView({
       )}
 
       {hasValidation && (
-        <LabValidationQueueSection title="Pending validation" count={validationTests.length}>
-          {validationTests.map((test, idx) => {
-            if (test.id == null) return null;
-            const commentKey = getCommentKey(test);
+        <LabValidationQueueSection title="Pending validation" count={validationRows.length}>
+          {validationRows.map((row, idx) => {
+            const commentKey = getCommentKey(row);
             return (
               <ResultValidationCard
-                key={`validation-${test.id}-${idx}`}
-                test={test}
+                key={`validation-${row.orderTestId}-${idx}`}
+                row={row}
                 commentKey={commentKey}
-                comments={comments[commentKey] || ''}
+                comments={comments[commentKey] ?? ''}
                 onCommentsChange={onCommentsChange}
-                onApprove={() => onApprove(test.id!, test.orderId)}
-                onReject={result => onReject(test, result)}
-                onClick={() => onOpenValidation(test)}
-                isApproving={isValidatePending && pendingValidateKey === commentKey}
+                onApprove={() => onApprove(row.orderTestId, row.orderId)}
+                onReject={result => onReject(row, result)}
+                onClick={() => onOpenValidation(row)}
+                isApproving={pendingValidateKey === commentKey && isValidatePending}
                 isMobile={isMobile}
               />
             );

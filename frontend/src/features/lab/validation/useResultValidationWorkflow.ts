@@ -7,7 +7,7 @@
 
 import { useCallback, useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { invalidateResultQueries } from '@/lib/query/invalidate';
+import { invalidateAfterLabMutation } from '@/lib/query/invalidate';
 import { useValidateResults } from '../api/results';
 import { notifyQualityIssueSuccess } from './qualityIssueToastMessages';
 import { notify } from '@/feedback';
@@ -16,7 +16,7 @@ import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { isLikelyNetworkOrTimeout } from '@/utils/errors';
 import { orderTestKey } from '../utils/labSearchAndLinks';
 import { useLabDraftStore } from '../state/labDraftStore';
-import type { TestWithContext } from '@/types';
+import type { ValidationQueueRow } from '../types/validationQueue';
 import type { QualityIssueResult } from '@/types/lab-operations';
 
 export interface ResultValidationWorkflowController {
@@ -29,7 +29,7 @@ export interface ResultValidationWorkflowController {
     approve: boolean,
     rejectionResult?: QualityIssueResult
   ) => Promise<void>;
-  openValidationModal: (test: TestWithContext) => void;
+  openValidationModal: (row: ValidationQueueRow) => void;
   validateMutation: ReturnType<typeof useValidateResults>;
 }
 
@@ -41,7 +41,7 @@ function commentKeyToOrderTestId(commentKey: string): number {
 export function useResultValidationWorkflow(queueLoading: boolean): ResultValidationWorkflowController {
   const queryClient = useQueryClient();
   const { openModal } = useModal();
-  const validationComments = useLabDraftStore(s => s.validationComments);
+  const validationDrafts = useLabDraftStore(s => s.validationDrafts);
   const setValidationComments = useLabDraftStore(s => s.setValidationComments);
   const clearValidationComments = useLabDraftStore(s => s.clearValidationComments);
   const [pendingValidateKey, setPendingValidateKey] = useState<string | null>(null);
@@ -50,11 +50,11 @@ export function useResultValidationWorkflow(queueLoading: boolean): ResultValida
 
   const comments = useMemo(() => {
     const mapped: Record<string, string> = {};
-    for (const [id, text] of Object.entries(validationComments)) {
-      mapped[orderTestKey(Number(id))] = text;
+    for (const [id, draft] of Object.entries(validationDrafts)) {
+      mapped[orderTestKey(Number(id))] = draft.text;
     }
     return mapped;
-  }, [validationComments]);
+  }, [validationDrafts]);
 
   const handleCommentsChange = useCallback(
     (commentKey: string, value: string) => {
@@ -103,10 +103,10 @@ export function useResultValidationWorkflow(queueLoading: boolean): ResultValida
       }
 
       if (rejectionResult) {
-        await invalidateResultQueries(queryClient, {
+        await invalidateAfterLabMutation(queryClient, {
+          kind: 'qualityIssue',
           orderId: orderIdStr,
-          samples: true,
-          pendingEscalation: true,
+          orderTestId,
         });
       }
       notifyQualityIssueSuccess(rejectionResult);
@@ -116,15 +116,12 @@ export function useResultValidationWorkflow(queueLoading: boolean): ResultValida
   );
 
   const openValidationModal = useCallback(
-    (test: TestWithContext) => {
-      if (test.id == null) {
-        notify.show('lab.validation.testUnavailable');
-        return;
-      }
+    (row: ValidationQueueRow) => {
       openModal({
         type: ModalType.TEST_DETAIL,
-        orderTestId: test.id,
+        orderTestId: row.orderTestId,
         interaction: 'validate',
+        worklistRow: row,
       });
     },
     [openModal]

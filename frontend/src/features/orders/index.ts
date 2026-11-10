@@ -16,10 +16,7 @@ export type { OrdersFilter, OrdersFilters, PaginationOptions } from './api/order
 
 export { useOrderSearch, useOrderLookup, useInvalidateOrders } from './hooks/useOrderDisplayHelpers';
 export { useOrderTestDetailSamples } from './hooks/useOrderTestDetailSamples';
-export {
-  buildTestContextForLabMeta,
-  getRelatedSamplesForOrderTest,
-} from './utils/orderTestDetailSamples';
+export { getRelatedSamplesForOrderTest } from './utils/orderTestDetailSamples';
 
 export { OrderUpsertModal } from './components/OrderUpsertModal';
 export type { OrderUpsertModalProps } from './components/OrderUpsertModal';

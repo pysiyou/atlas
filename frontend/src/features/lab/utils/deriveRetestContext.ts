@@ -1,18 +1,16 @@
 /**
- * Derives retest / recollection display state from a TestWithContext.
+ * Retest / recollection display state for queue cards and modals.
  */
 import { LAB_CONFIG } from '../constants';
-import type { TestWithContext } from '@/types';
+import type { LabOrderTestQueueRow } from '../types/labQueueChrome';
 
 export interface TestRetestContext {
   isRetest: boolean;
   retestNumber: number;
   isSampleRecollection: boolean;
   sampleRecollectionAttempt: number;
-  /** Matches collection cards: show Attempt N/M in the operational meta row */
   showAttemptInMeta: boolean;
   showAttemptIndicator: boolean;
-  /** 1-based UI slot (original run = 1, first re-test = 2, …) — same scale as recollectionAttempt */
   attemptNumber: number;
   attemptMax: number;
   attemptType: 'retest' | 'recollection';
@@ -21,16 +19,23 @@ export interface TestRetestContext {
   showRecollectionLink: boolean;
 }
 
-export function deriveRetestContext(test: TestWithContext): TestRetestContext {
-  const isRetest = test.isRetest === true;
-  const retestNumber = test.retestNumber ?? 0;
-  const isSampleRecollection = test.sampleIsRecollection === true;
-  const sampleRecollectionAttempt = test.sampleRecollectionAttempt ?? 1;
+export function deriveRetestContextFromRow(row: Pick<
+  LabOrderTestQueueRow,
+  | 'isRetest'
+  | 'retestNumber'
+  | 'retestOfTestId'
+  | 'sampleIsRecollection'
+  | 'sampleRecollectionAttempt'
+  | 'sampleOriginalSampleId'
+>): TestRetestContext {
+  const isRetest = row.isRetest === true;
+  const retestNumber = row.retestNumber ?? 0;
+  const isSampleRecollection = row.sampleIsRecollection === true;
+  const sampleRecollectionAttempt = row.sampleRecollectionAttempt ?? 1;
 
   const attemptNumber = isRetest ? retestNumber + 1 : sampleRecollectionAttempt;
   const showAttemptInMeta =
-    attemptNumber > 1 &&
-    (isRetest || (isSampleRecollection && !isRetest));
+    attemptNumber > 1 && (isRetest || (isSampleRecollection && !isRetest));
   const showAttemptIndicator = showAttemptInMeta;
   const attemptMax = isRetest
     ? LAB_CONFIG.MAX_RETEST_ATTEMPTS
@@ -47,9 +52,9 @@ export function deriveRetestContext(test: TestWithContext): TestRetestContext {
     attemptNumber,
     attemptMax,
     attemptType,
-    showRetestBadge: isRetest && !!test.retestOfTestId,
+    showRetestBadge: isRetest && !!row.retestOfTestId,
     showRecollectionBadge: isSampleRecollection && !isRetest,
     showRecollectionLink:
-      isSampleRecollection && !isRetest && test.sampleOriginalSampleId != null,
+      isSampleRecollection && !isRetest && row.sampleOriginalSampleId != null,
   };
 }
