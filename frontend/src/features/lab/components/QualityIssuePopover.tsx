@@ -1,6 +1,6 @@
 /**
  * QualityIssuePopover - Popover for reporting quality issues on test results.
- * Validator chooses reason + destination (retest / recollect / cancel).
+ * Validator chooses rejection reason only; supervisor approves remedy on escalation.
  */
 
 import React, { useState } from 'react';
@@ -10,16 +10,13 @@ import { Popover, PopoverFormChrome } from '@/components/overlays';
 import { Alert, FooterInfo } from '@/components/display';
 import { IconKeys } from '@/config/icons';
 import { useQualityIssuePopover } from '../hooks/useQualityIssuePopover';
-import type { QualityIssueResult, RemedyType } from '@/types/lab-operations';
+import type { QualityIssueResult } from '@/types/lab-operations';
 import {
   QUALITY_ISSUE_POPOVER_LAYOUT,
   QUALITY_ISSUE_POPOVER_COPY,
   type ValidationFormCopy } from '../constants/qualityIssuePopoverCopy';
 import { CatalogRejectionCriteriaFields } from './CatalogRejectionCriteriaFields';
 import { QualityIssuePopoverLoadingView, QualityIssuePopoverErrorView } from './QualityIssuePopoverStates';
-import {
-  QualityIssueRemedyPicker,
-  type RemedyOption } from './QualityIssueRemedyPicker';
 import { QualityIssueInlineWarning } from './QualityIssueInlineWarning';
 
 /** Re-export views for consumers that render them directly */
@@ -34,15 +31,12 @@ export interface QualityIssuePopoverState {
   rejectionNotes: string;
   allowedCriteria: string[];
   criteriaLoading: boolean;
-  preferredRemedy: RemedyType | '';
-  remedyOptions: RemedyOption[];
 }
 
 /** Grouped actions for form body. */
 export interface QualityIssueFormActions {
   onReasonChange: (value: string) => void;
   onNotesChange: (value: string) => void;
-  onRemedyChange: (value: RemedyType) => void;
 }
 
 interface QualityIssuePopoverFormBodyProps {
@@ -61,10 +55,8 @@ export const QualityIssuePopoverFormBody: React.FC<QualityIssuePopoverFormBodyPr
     rejectionNotes,
     allowedCriteria,
     criteriaLoading,
-    preferredRemedy,
-    remedyOptions,
   } = state;
-  const { onReasonChange, onNotesChange, onRemedyChange } = actions;
+  const { onReasonChange, onNotesChange } = actions;
   const copy =
     formCopy ?? {
       alert: null,
@@ -93,12 +85,6 @@ export const QualityIssuePopoverFormBody: React.FC<QualityIssuePopoverFormBodyPr
         onNotesChange={onNotesChange}
         reasonLabel={copy.reasonLabel}
         showNotes={false}
-      />
-
-      <QualityIssueRemedyPicker
-        options={remedyOptions}
-        value={preferredRemedy}
-        onChange={onRemedyChange}
       />
 
       <CatalogRejectionCriteriaFields
@@ -139,9 +125,6 @@ const QualityIssuePopoverContent: React.FC<QualityIssuePopoverContentProps> = ({
     setRejectionReason,
     rejectionNotes,
     setRejectionNotes,
-    preferredRemedy,
-    setPreferredRemedy,
-    remedyOptions,
     isConfirmDisabled,
     isLoading,
     isRejecting,
@@ -183,19 +166,16 @@ const QualityIssuePopoverContent: React.FC<QualityIssuePopoverContentProps> = ({
       <QualityIssuePopoverFormBody
         state={{
           error,
-          escalationRequired: formCopy?.escalationRequired ?? false,
+          escalationRequired: true,
           formCopy,
           rejectionReason,
           rejectionNotes,
           allowedCriteria: options?.allowedCriteria ?? [],
           criteriaLoading: isLoading,
-          preferredRemedy,
-          remedyOptions,
         }}
         actions={{
           onReasonChange: setRejectionReason,
           onNotesChange: setRejectionNotes,
-          onRemedyChange: setPreferredRemedy,
         }}
       />
     </PopoverFormChrome>

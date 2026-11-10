@@ -51,21 +51,33 @@ function isLimitEscalation(reasonCode: string | undefined): boolean {
   return reasonCode === 'LIMIT-HIT' || reasonCode === 'REJ-SAMP';
 }
 
+function isValidationRejectEscalation(reasonCode: string | undefined): boolean {
+  return reasonCode === 'VAL-REJ';
+}
+
 function visibleActions(
   reasonCode: string | undefined,
   hasResults: boolean,
   allowForceValidate: boolean,
 ) {
   const limitEscalation = isLimitEscalation(reasonCode);
+  const validationReject = isValidationRejectEscalation(reasonCode);
   return {
     allowRetestSameSample:
-      limitEscalation || (hasResults && (!reasonCode || reasonCode === 'LIMIT-HIT')),
-    allowRecollect: limitEscalation || !reasonCode || reasonCode === 'LIMIT-HIT',
+      limitEscalation ||
+      validationReject ||
+      (hasResults && (!reasonCode || reasonCode === 'LIMIT-HIT')),
+    allowRecollect:
+      limitEscalation || validationReject || !reasonCode || reasonCode === 'LIMIT-HIT',
     showApplyAmendment: reasonCode === 'AMEND-RES' && hasResults,
     showForceValidate:
       allowForceValidate &&
       hasResults &&
-      (limitEscalation || reasonCode === 'CRIT-VAL' || reasonCode === 'LIMIT-HIT' || !reasonCode),
+      (limitEscalation ||
+        validationReject ||
+        reasonCode === 'CRIT-VAL' ||
+        reasonCode === 'LIMIT-HIT' ||
+        !reasonCode),
   };
 }
 

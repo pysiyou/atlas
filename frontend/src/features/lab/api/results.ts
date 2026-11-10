@@ -64,7 +64,7 @@ export const resultAPI = {
     orderTestId: number;
     data: Omit<ResultValidationRequest, 'decision'> & {
       rejectionReason: string;
-      preferredRemedy: RemedyType;
+      preferredRemedy?: RemedyType;
     };
   }): Promise<QualityIssueResult> {
     return apiClient.post<QualityIssueResult>(

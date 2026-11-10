@@ -284,8 +284,7 @@
       "verbPhrase": "validation rejected for",
       "headlineMetaKeys": [
         "reason",
-        "test_code",
-        "remedy"
+        "test_code"
       ]
     },
     {

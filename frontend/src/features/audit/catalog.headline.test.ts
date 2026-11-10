@@ -85,7 +85,7 @@ describe('lab audit headlines', () => {
     ]);
   });
 
-  it('validation reject states rejected with remedy and catalog reason label', () => {
+  it('validation reject is simple rejected with catalog reason label', () => {
     const record = baseRecord({
       eventType: 'laboratory.validation.reject',
       targetType: 'order_test',
@@ -94,38 +94,28 @@ describe('lab audit headlines', () => {
       metadata: {
         test_code: 'HCG',
         reason: 'lipemic',
-        remedy: 'request_recollection',
       },
     });
     const text = headlineText(record);
     expect(text).toContain(
-      'Results for test Pregnancy Test (Urine hCG) on order #ord0073 rejected with recollection requested'
+      'Results for test Pregnancy Test (Urine hCG) on order #ord0073 rejected'
     );
     expect(text).toContain('Reason: Lipemic sample');
-    expect(text).not.toContain('returned for correction');
+    expect(text).not.toContain('recollection');
+    expect(validationRejectTrailingAction(record)).toBe('rejected');
   });
 
-  it('validation reject retest on same sample remedy', () => {
+  it('escalation resolve shows approved remedy', () => {
     const record = baseRecord({
-      eventType: 'laboratory.validation.reject',
+      eventType: 'laboratory.escalation.resolve',
       targetType: 'order_test',
       targetId: 501,
       testId: 501,
-      metadata: { test_code: 'GLU', reason: 'delta_check_failure_repeat_run', remedy: 'retry_same_sample' },
+      metadata: { test_code: 'GLU', resolution: 'authorize_recollect', reason_code: 'VAL-REJ' },
     });
-    expect(headlineText(record)).toContain('rejected for retest on same sample');
-    expect(validationRejectTrailingAction(record)).toBe('rejected for retest on same sample');
-  });
-
-  it('validation reject escalation remedy', () => {
-    const record = baseRecord({
-      eventType: 'laboratory.validation.reject',
-      targetType: 'order_test',
-      targetId: 501,
-      testId: 501,
-      metadata: { test_code: 'GLU', reason: 'qc_control_failure', remedy: 'escalate' },
-    });
-    expect(headlineText(record)).toContain('rejected and escalated');
+    const text = headlineText(record);
+    expect(text).toContain('approved recollection');
+    expect(text).toContain('Exception: VAL-REJ');
   });
 
   it('validation reject on sample uses sample template', () => {
@@ -133,10 +123,10 @@ describe('lab audit headlines', () => {
       eventType: 'laboratory.validation.reject',
       targetType: 'sample',
       targetId: 167,
-      metadata: { reason: 'lipemic', remedy: 'request_recollection' },
+      metadata: { reason: 'lipemic' },
     });
     const text = headlineText(record);
-    expect(text).toContain('Sample #sam0167 rejected with recollection requested for order #ord0073');
+    expect(text).toContain('Sample #sam0167 rejected for order #ord0073');
     expect(text).not.toContain('Results for test');
     expect(text).toContain('Reason: Lipemic sample');
   });

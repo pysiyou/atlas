@@ -92,10 +92,9 @@ export function useQualityIssuePopover({
   const allowedCriteria = options?.allowedCriteria ?? [];
   const hasReason = rejectionReason.length > 0;
   const hasCriteria = allowedCriteria.length > 0;
-  const hasDestination = effectivePreferredRemedy !== '';
   const isConfirmDisabled = useMemo(
-    () => !hasCriteria || !hasReason || !hasDestination,
-    [hasCriteria, hasReason, hasDestination]
+    () => !hasCriteria || !hasReason,
+    [hasCriteria, hasReason]
   );
 
   const formCopy = useMemo(
@@ -108,15 +107,14 @@ export function useQualityIssuePopover({
   }, [isRejecting, onSubmittingChange]);
 
   const handleConfirm = async () => {
-    if (!rejectionReason || !effectivePreferredRemedy) return;
+    if (!rejectionReason) return;
     setSubmitError(null);
     try {
       await reportIssue(
         'test',
         orderTestId,
         rejectionReason,
-        rejectionNotes.trim() || undefined,
-        effectivePreferredRemedy
+        rejectionNotes.trim() || undefined
       );
     } catch (err) {
       setSubmitError(inlineFeedbackMessage('lab.qualityIssue.reject.error', err));

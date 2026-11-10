@@ -144,6 +144,7 @@ class QualityIssueService:
         test_code: str | None = None,
         created_test_id: int | None = None,
         created_sample_id: int | None = None,
+        omit_remedy_from_validation_audit: bool = False,
     ) -> QualityIssue:
         issue = QualityIssue(
             orderId=order_id,
@@ -163,21 +164,23 @@ class QualityIssueService:
         self.db.add(issue)
         self.db.flush()
         if stage == QualityStage.VALIDATION:
+            validation_meta: dict[str, Any] = {
+                "quality_issue_id": issue.id,
+                "stage": stage.value,
+                "domain": domain.value,
+                "reason": reason,
+                "test_code": test_code,
+                **({"sample_id": sample_id} if sample_id is not None else {}),
+                **({"notes": notes} if notes else {}),
+            }
+            if not omit_remedy_from_validation_audit:
+                validation_meta["remedy"] = remedy.value
             self.emitter.validation_rejected(
                 order_id=order_id,
                 order_test_id=order_test_id,
                 sample_id=sample_id,
                 user_id=user_id,
-                metadata={
-                    "quality_issue_id": issue.id,
-                    "stage": stage.value,
-                    "domain": domain.value,
-                    "remedy": remedy.value,
-                    "reason": reason,
-                    "test_code": test_code,
-                    **({"sample_id": sample_id} if sample_id is not None else {}),
-                    **({"notes": notes} if notes else {}),
-                },
+                metadata=validation_meta,
             )
             if created_test_id is not None and order_test_id is not None:
                 self.emitter.order_test_retest(
@@ -464,16 +467,11 @@ class QualityIssueService:
             allowed = validation_remedy_types()
 
         message_parts = [
-            "Choose where to send this test after rejection. The system will not decide automatically.",
+            "Rejecting sends this test to a supervisor to approve retest, recollection, or cancellation.",
         ]
         if sample_rejected:
             message_parts.append(
-                "Linked sample is already rejected — re-test on the same sample is unavailable."
-            )
-        if at_retest_limit:
-            message_parts.append(
-                f"Re-test limit reached ({MAX_RETEST_ATTEMPTS}). "
-                "Choosing re-test will escalate to a supervisor for approval."
+                "Linked sample is already rejected — supervisor may authorize recollection."
             )
 
         return QualityIssueOptions(
@@ -488,7 +486,7 @@ class QualityIssueService:
             suggestedRemedy=suggested,
             retestAttemptsUsed=retest_used,
             retestAttemptsRemaining=retest_remaining,
-            willEscalate=at_retest_limit,
+            willEscalate=True,
             previewRemedy=suggested,
             previewMessage=" ".join(message_parts),
             hasSpecimenCriteria=has_specimen,
@@ -614,16 +612,16 @@ class QualityIssueService:
             order_test.testCode, reason, context="validation"
         )
 
-        if preferred_remedy is None:
+        if preferred_remedy is not None:
+            if preferred_remedy not in validation_remedy_types():
+                raise LabOperationError(
+                    f"Invalid preferredRemedy '{preferred_remedy.value}'. "
+                    "Validation rejection no longer accepts a remedy; supervisor approves on escalation.",
+                    status_code=400,
+                )
             raise LabOperationError(
-                "preferredRemedy is required for validation rejection. "
-                "Choose: retry_same_sample, request_recollection, or cancel.",
-                status_code=400,
-            )
-        if preferred_remedy not in validation_remedy_types():
-            raise LabOperationError(
-                f"Invalid preferredRemedy '{preferred_remedy.value}'. "
-                f"Allowed: {[r.value for r in validation_remedy_types()]}",
+                "preferredRemedy is not used for validation rejection. "
+                "Reject with a reason only; retest, recollection, or cancel is chosen at escalation approval.",
                 status_code=400,
             )
 
@@ -636,27 +634,64 @@ class QualityIssueService:
         )
         domain = QualityDomain.SPECIMEN if is_specimen else QualityDomain.ANALYTICAL
 
-        if preferred_remedy == RemedyType.RETRY_SAME_SAMPLE:
-            if order_test.sampleId:
-                sample = self._get_sample(order_test.sampleId)
-                if sample.status == SampleStatus.REJECTED:
-                    raise LabOperationError(
-                        "Cannot re-test on a rejected sample. Request recollection or cancel.",
-                        status_code=400,
-                    )
-            return self._retry_test_issue(order_test, user_id, reason, notes)
-        if preferred_remedy == RemedyType.REQUEST_RECOLLECTION:
-            if not order_test.sampleId:
-                raise LabOperationError(
-                    "Cannot request recollection — no sample linked to this test",
-                    status_code=400,
-                )
-            return self._request_recollection_from_validation(order_test, user_id, reason, notes)
-        if preferred_remedy == RemedyType.CANCEL:
-            return self._cancel_test_issue(order_test, user_id, reason, notes, domain)
-        raise LabOperationError(
-            f"Unsupported preferredRemedy '{preferred_remedy.value}'.",
-            status_code=400,
+        return self._reject_validation_pending_supervisor(
+            order_test, user_id, reason, notes, domain
+        )
+
+    def _reject_validation_pending_supervisor(
+        self,
+        order_test: OrderTest,
+        user_id: int,
+        reason: str,
+        notes: str | None,
+        domain: QualityDomain,
+    ) -> QualityIssueResult:
+        """Reject resulted results at validation; supervisor chooses remedy on escalation."""
+        validation_note = (notes or "").strip()
+        order_test.validationNotes = (
+            f"{validation_note} [Validation rejected: {reason}]".strip()
+            if validation_note
+            else f"Validation rejected: {reason}"
+        )
+
+        self.escalation.escalate_test(
+            order_test,
+            EscalationReasonCode.VAL_REJ,
+            user_id,
+            metadata={
+                "rejectionReason": reason,
+                "rejectionNotes": notes,
+                "validationDomain": domain.value,
+            },
+            from_status=TestStatus.RESULTED,
+        )
+
+        issue = self._record_issue(
+            order_id=order_test.orderId,
+            stage=QualityStage.VALIDATION,
+            domain=domain,
+            reason=reason,
+            notes=notes,
+            remedy=RemedyType.ESCALATE,
+            user_id=user_id,
+            order_test_id=order_test.id,
+            sample_id=order_test.sampleId,
+            test_code=order_test.testCode,
+            omit_remedy_from_validation_audit=True,
+        )
+        return QualityIssueResult(
+            success=True,
+            remedy=RemedyType.ESCALATE,
+            message=(
+                "Results rejected at validation. "
+                "A supervisor will approve retest, recollection, or cancellation."
+            ),
+            qualityIssueId=issue.id,
+            orderId=order_test.orderId,
+            testCode=order_test.testCode,
+            orderTestId=order_test.id,
+            sampleId=order_test.sampleId,
+            escalationRequired=True,
         )
 
     def _cancel_test_issue(

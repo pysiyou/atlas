@@ -593,6 +593,10 @@
       "AMEND_RES": {
         "wire": "AMEND-RES",
         "label": "Amend result"
+      },
+      "VAL_REJ": {
+        "wire": "VAL-REJ",
+        "label": "Validation rejected"
       }
     }
   },

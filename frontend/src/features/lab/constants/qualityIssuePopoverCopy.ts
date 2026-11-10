@@ -108,26 +108,20 @@ export interface ValidationFormCopy {
   escalationRequired: boolean;
 }
 
-/** Dialog copy for validation rejection — destination is always operator-chosen. */
+/** Dialog copy for validation rejection — supervisor approves remedy on escalation. */
 export function getValidationFormCopy(options: QualityIssueOptions): ValidationFormCopy {
-  if (options.willEscalate) {
-    const escalation = QUALITY_ISSUE_POPOVER_COPY.escalation;
-    return {
-      alert: { message: escalation.warningTitle },
-      confirmLabel: escalation.confirmLabel,
-      reasonLabel: escalation.reasonLabel,
-      notesLabel: escalation.notesLabel,
-      escalationRequired: true,
-    };
-  }
-
+  const escalation = QUALITY_ISSUE_POPOVER_COPY.escalation;
   const reject = QUALITY_ISSUE_POPOVER_COPY.reject;
+  const alertMessage =
+    options.willEscalate
+      ? escalation.warningTitle
+      : 'Rejecting sends this test to a supervisor to approve retest, recollection, or cancellation.';
   return {
-    alert: null,
+    alert: { message: alertMessage },
     confirmLabel: reject.confirmLabel,
     reasonLabel: reject.reasonLabel,
     notesLabel: reject.notesLabel,
-    escalationRequired: false,
+    escalationRequired: true,
   };
 }
 

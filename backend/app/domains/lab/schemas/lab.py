@@ -26,12 +26,10 @@ class ResultValidationRequest(BaseModel):
     preferredRemedy: RemedyType | None = None
 
     @model_validator(mode="after")
-    def reject_requires_reason_and_remedy(self):
+    def reject_requires_reason(self):
         if self.decision == ValidationDecision.REJECTED:
             if not (self.rejectionReason or "").strip():
                 raise ValueError("rejectionReason is required when decision is rejected")
-            if self.preferredRemedy is None:
-                raise ValueError("preferredRemedy is required when decision is rejected")
         return self
 
 

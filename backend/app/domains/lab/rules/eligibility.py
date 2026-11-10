@@ -65,6 +65,8 @@ def attention_reason_for_work_item(
             return "retry_limit"
         if escalation_reason_code == EscalationReasonCode.REJ_SAMP.value:
             return "recollection_limit"
+        if escalation_reason_code == EscalationReasonCode.VAL_REJ.value:
+            return "validation_rejected"
         return "supervisor_review"
     if sample_status == SampleStatus.REJECTED.value:
         return "sample_rejected"

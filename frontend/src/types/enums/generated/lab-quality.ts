@@ -59,7 +59,7 @@ export const QUALITY_ISSUE_TARGET_TYPE_OPTIONS = QUALITY_ISSUE_TARGET_TYPE_VALUE
   label: QUALITY_ISSUE_TARGET_TYPE_CONFIG[value].label,
 }));
 
-export const ESCALATION_REASON_CODE_VALUES = ["CRIT-VAL", "REJ-SAMP", "LIMIT-HIT", "AMEND-RES"] as const;
+export const ESCALATION_REASON_CODE_VALUES = ["CRIT-VAL", "REJ-SAMP", "LIMIT-HIT", "AMEND-RES", "VAL-REJ"] as const;
 
 export type EscalationReasonCode = (typeof ESCALATION_REASON_CODE_VALUES)[number];
 
@@ -68,6 +68,7 @@ export const ESCALATION_REASON_CODE_CONFIG: Record<EscalationReasonCode, { label
   "REJ-SAMP": { label: "Rejected sample" },
   "LIMIT-HIT": { label: "Limit hit" },
   "AMEND-RES": { label: "Amend result" },
+  "VAL-REJ": { label: "Validation rejected" },
 };
 
 export const ESCALATION_REASON_CODE_OPTIONS = ESCALATION_REASON_CODE_VALUES.map(value => ({

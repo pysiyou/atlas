@@ -483,21 +483,26 @@ export function appendForTestOnOrderPhrase(
   return appendOnOrderPhrase(next, record);
 }
 
-/** Trailing action for validation reject headlines from quality-issue `remedy` metadata. */
-export function validationRejectTrailingAction(record: EventLogRecord): string {
-  const remedy = metaString(record, 'remedy');
-  switch (remedy) {
-    case 'retry_same_sample':
-      return 'rejected for retest on same sample';
-    case 'request_recollection':
-    case 'recollect':
-      return 'rejected with recollection requested';
-    case 'escalate':
-      return 'rejected and escalated';
-    case 'cancel':
-      return 'rejected and cancelled';
+/** Validation reject — remedy is chosen later at escalation approval. */
+export function validationRejectTrailingAction(_record: EventLogRecord): string {
+  return 'rejected';
+}
+
+function escalationResolveTrailingAction(record: EventLogRecord): string {
+  const resolution = metaString(record, 'resolution');
+  switch (resolution) {
+    case 'authorize_retest':
+      return 'approved retest on same sample';
+    case 'authorize_recollect':
+      return 'approved recollection';
+    case 'cancel_test':
+      return 'approved cancellation';
+    case 'force_validate':
+      return 'force validated';
+    case 'apply_amendment':
+      return 'amendment applied';
     default:
-      return 'rejected';
+      return 'resolved';
   }
 }
 
@@ -698,8 +703,12 @@ export const EVENT_HEADLINE_BUILDERS: Record<
     return appendClause(parts, metaString(r, 'reason_code') ?? '');
   },
   'laboratory.escalation.resolve': (r, c) => {
-    const parts = buildLabOrderTestHeadline(r, c, 'Escalation', 'resolved');
-    return appendOutcomeClause(parts, metaString(r, 'resolution') ?? '');
+    const parts = buildLabOrderTestHeadline(r, c, 'Escalation', escalationResolveTrailingAction(r));
+    const reasonCode = metaString(r, 'reason_code');
+    if (reasonCode) {
+      return appendInfoHighlight(parts, `Exception: ${formatReasonLabel(reasonCode)}`);
+    }
+    return parts;
   },
   'billing.payment.process': r => {
     const parts = appendText(append([], paymentRecordPhrase(r.targetId)), ' recorded');

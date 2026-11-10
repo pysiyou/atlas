@@ -155,6 +155,7 @@ class EscalationReasonCode(str, enum.Enum):
     REJ_SAMP = "REJ-SAMP"
     LIMIT_HIT = "LIMIT-HIT"
     AMEND_RES = "AMEND-RES"
+    VAL_REJ = "VAL-REJ"
 
 class EscalationTicketStatus(str, enum.Enum):
     OPEN = "OPEN"
