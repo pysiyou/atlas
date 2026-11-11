@@ -21,7 +21,6 @@ export const PatientDetail: React.FC = () => {
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
   const { isSmall, isMedium, isLarge } = useResponsiveLayout();
   const { openModal } = useModal();
-
   const { patient, isLoading: patientLoading } = usePatient(id);
   const { orders: patientOrders, isLoading: ordersLoading } = useOrdersByPatient(id);
   const pageLoading = (patientLoading && patient == null) || (ordersLoading && patientOrders.length === 0 && patient != null);
@@ -51,7 +50,6 @@ export const PatientDetail: React.FC = () => {
       patient={patient}
       isLarge={isLarge}
       onEdit={handleEdit}
-      onNewOrder={handleNewOrder}
     />
   ) : (
     <PageHeader title="Patient" />

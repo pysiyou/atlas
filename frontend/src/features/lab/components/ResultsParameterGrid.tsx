@@ -24,23 +24,13 @@ import type { Gender, Patient } from '@/types';
 export type ResultsGridVariant = 'inline' | 'tiles';
 export type ResultsGridLayout = 'grid' | 'table';
 
-const COMPACT_RESULT_COLUMNS = 3;
-
-function splitEntriesIntoColumns<T>(entries: T[], columnCount: number): T[][] {
-  const columns: T[][] = Array.from({ length: columnCount }, () => []);
-  entries.forEach((entry, index) => {
-    columns[index % columnCount].push(entry);
-  });
-  return columns;
-}
-
 interface ResultsParameterGridProps {
   results: Record<string, unknown>;
   flags?: string[];
   testCode?: string;
   patient?: Patient | { gender?: Gender; age?: number; dateOfBirth?: string };
   variant?: ResultsGridVariant;
-  /** `table`: parameter / result / reference interval; `grid`: multi-column label/value pairs. */
+  /** `table`: parameter / result / reference interval; `grid`: wrapped label/value list. */
   layout?: ResultsGridLayout;
   /** Truncate grid after N parameters (validation queue mobile cards). */
   dense?: boolean;
@@ -173,44 +163,42 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
   const maxVisible = dense ? LAB_CONFIG.COMPACT_RESULT_GRID_LIMIT : entries.length;
   const visibleEntries = entries.slice(0, maxVisible);
   const remainingCount = entries.length - maxVisible;
-  const compactColumns = splitEntriesIntoColumns(visibleEntries, COMPACT_RESULT_COLUMNS);
 
   return (
-    <div className={METRIC_TILE.inlineDenseGrid}>
-      {compactColumns.map((columnEntries, columnIndex) => (
-        <div key={columnIndex} className={`${METRIC_TILE.inlineDenseColumnGrid} min-w-0`}>
-            {columnEntries.flatMap(([key, rawValue]) => {
-              const { resultValue, unit, status } = parseResultEntry(key, rawValue, flagStatusMap);
-              const label = resolveParameterLabel(key, parameterLabels);
-              const labelWithColon = `${label}:`;
+    <div className={dense ? METRIC_TILE.inlineResultListDense : METRIC_TILE.inlineResultList}>
+      {visibleEntries.map(([key, rawValue]) => {
+        const { resultValue, unit, status } = parseResultEntry(key, rawValue, flagStatusMap);
+        const label = resolveParameterLabel(key, parameterLabels);
+        const labelWithColon = `${label}:`;
 
-              return [
-                <Text
-                  key={`${key}-label`}
-                  role="label"
-                  intent="default"
-                  className="block min-w-0 max-w-full text-left font-medium leading-snug"
-                  truncate
-                  title={labelWithColon}
-                >
-                  {labelWithColon}
-                </Text>,
-                <div key={`${key}-value`} className={METRIC_TILE.inlineDenseValue}>
-                  <ResultValueAnnotations
-                    resultValue={resultValue}
-                    unit={unit}
-                    status={status}
-                    dense={dense}
-                    showStatus={showStatus}
-                    truncate
-                  />
-                </div>,
-              ];
-            })}
-        </div>
-      ))}
+        return (
+          <div
+            key={key}
+            className={dense ? METRIC_TILE.inlineRowDense : METRIC_TILE.inlineRow}
+          >
+            <Text
+              role="label"
+              intent="default"
+              className="shrink-0 font-medium leading-snug"
+              title={labelWithColon}
+            >
+              {labelWithColon}
+            </Text>
+            <div className={METRIC_TILE.inlineDenseValue}>
+              <ResultValueAnnotations
+                resultValue={resultValue}
+                unit={unit}
+                status={status}
+                dense={dense}
+                showStatus={showStatus}
+                truncate
+              />
+            </div>
+          </div>
+        );
+      })}
       {remainingCount > 0 && (
-        <p className={`${text({ role: 'caption' })} col-span-full`}>+{remainingCount} more</p>
+        <p className={text({ role: 'caption' })}>+{remainingCount} more</p>
       )}
     </div>
   );

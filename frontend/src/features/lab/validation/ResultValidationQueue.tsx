@@ -8,12 +8,16 @@ import { LabWorkflowQueueMultiSectionLayout } from '../components/LabWorkflowQue
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import {
   applyLabQueueFiltersWithProfile,
+  type LabQueueFilterState,
   useLabQueueBarFilters,
   useLabQueueFilterBarProps,
-  useLabQueuePageFilters,
   useResultValidationQueueData,
 } from '../hooks';
-import { VALIDATION_REVIEW_ESCALATION_PROFILE } from '../utils/labQueueSecondaryProfiles';
+import {
+  VALIDATION_REVIEW_ESCALATION_PROFILE,
+  VALIDATION_REVIEW_WORKLIST_PROFILE,
+} from '../utils/labQueueSecondaryProfiles';
+import type { PriorityLevel, SampleStatus, TestStatus } from '@/types';
 import { validationFilterConfig } from '../constants';
 import { FieldsPlaceholder, FIELDS_PLACEHOLDER_TABLE_INSET } from '@/components/surfaces/FieldsPlaceholder';
 import { ErrorBoundary } from '@/components/feedback';
@@ -86,12 +90,28 @@ export const ResultValidationQueue: React.FC = () => {
     refetchEscalation,
   });
 
-  const { filteredItems: filteredValidationRows, filterState } = useLabQueuePageFilters({
-    items: validationRows,
-    workflowType: 'validation',
-    bar,
-  });
   const filterBarProps = useLabQueueFilterBarProps(bar, { statusFilterKey: 'priority' });
+
+  const filterState = useMemo<LabQueueFilterState<PriorityLevel | SampleStatus | TestStatus>>(
+    () => ({
+      searchQuery: bar.searchQuery,
+      dateRange: bar.dateRange,
+      sampleTypeFilters: bar.sampleTypeFilters,
+      statusFilters: bar.statusFilters,
+    }),
+    [bar],
+  );
+
+  const filteredValidationRows = useMemo(
+    () =>
+      applyLabQueueFiltersWithProfile(
+        validationRows,
+        filterState,
+        bar,
+        VALIDATION_REVIEW_WORKLIST_PROFILE,
+      ),
+    [validationRows, filterState, bar],
+  );
 
   const filteredEscalations = useMemo(
     () =>
@@ -133,7 +153,7 @@ export const ResultValidationQueue: React.FC = () => {
             canResolveEscalation={canResolveEscalation}
             isMobile={isMobile}
             escalations={filteredEscalations}
-            validationRows={filteredValidationRows as ValidationQueueRow[]}
+            validationRows={filteredValidationRows}
             comments={comments}
             pendingValidateKey={pendingValidateKey}
             isValidatePending={validateMutation.isPending}

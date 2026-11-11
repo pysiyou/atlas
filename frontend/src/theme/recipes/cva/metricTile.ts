@@ -37,11 +37,10 @@ export const METRIC_TILE = {
   referenceUnavailable: `${text({ role: 'caption' })} leading-none font-normal truncate shrink-0 max-w-[50%]`,
   notesSection: 'mt-space-4 pt-space-4 border-t border-border-subtle space-y-space-3',
   notesLabel: `${text({ role: 'label' })} font-normal`,
-  /** Compact results: three columns; gap between columns is on the outer grid. */
-  inlineDenseGrid: 'grid w-full grid-cols-3 gap-x-space-0-5 items-start',
-  inlineDenseColumnGrid:
-    'grid w-full grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-x-space-0-5 gap-y-space-2 items-baseline',
-  inlineDenseValue: 'min-w-0 max-w-full overflow-hidden text-left leading-snug',
+  /** Validation card results: wrapped `label: value` pairs with wide horizontal spacing. */
+  inlineResultList: 'flex w-full flex-wrap items-baseline gap-x-space-6 gap-y-space-2',
+  inlineResultListDense: 'flex w-full flex-wrap items-baseline gap-x-space-4 gap-y-space-1-5',
+  inlineDenseValue: 'min-w-0 overflow-hidden text-left leading-snug',
   inlineRow: 'flex flex-wrap items-baseline gap-x-space-2 min-w-0 text-left',
   inlineRowDense: 'flex flex-wrap items-baseline gap-x-space-1-5 min-w-0 text-left',
 } as const;

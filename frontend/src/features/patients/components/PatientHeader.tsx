@@ -16,14 +16,12 @@ export interface PatientHeaderProps {
   patient: Patient;
   isLarge: boolean;
   onEdit: () => void;
-  onNewOrder: () => void;
 }
 
 export const PatientHeader: React.FC<PatientHeaderProps> = ({
   patient,
   isLarge,
   onEdit,
-  onNewOrder,
 }) => {
   const avatar = (
     <div className="flex items-center gap-space-2">
@@ -52,7 +50,6 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
       className={`flex items-center gap-space-1 ${!isLarge ? 'w-full sm:w-auto sm:justify-end justify-end' : ''}`}
     >
       <IconButton {...actionButtonPreset('edit')} size="lg" title="Edit Patient" onClick={onEdit} />
-      <IconButton {...actionButtonPreset('add')} size="lg" title="New Order" onClick={onNewOrder} />
     </div>
   );
   return <PageHeader title={patient.fullName} avatar={avatar} actions={actions} />;

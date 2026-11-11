@@ -122,5 +122,6 @@ export {
 } from './labQueueStageFilterConfig';
 export {
   VALIDATION_REVIEW_ESCALATION_PROFILE,
+  VALIDATION_REVIEW_WORKLIST_PROFILE,
   type LabQueueSecondaryFilterProfile,
 } from './labQueueSecondaryProfiles';

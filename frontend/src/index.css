@@ -425,8 +425,16 @@ body {
   transform: rotateY(180deg);
 }
 
-/* Scrollbar hiding utility — used by Popover, MultiSelectFilter, etc. */
-/* Applied via className="hide-scrollbar" — do NOT inject this via JS per component. */
+/* Hide scrollbars app-wide — wheel, trackpad, touch, and keyboard scroll still work. */
+* {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* Explicit utility — same as global rules; keep for documented opt-in (Popover, sidebar nav). */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
