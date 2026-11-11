@@ -18,7 +18,7 @@ import {
   renderReportableOrderTestsCell,
 } from '@/utils/presentation';
 import type { ReportableOrder } from '../types';
-import { ReportPrintButton } from '../components/ReportPrintButton';
+import { ReportRowActionsMenu } from '../components/ReportRowActionsMenu';
 import { ValidatedTestReportCard } from '../components/ValidatedTestReportCard';
 import { INTERACTIVE } from '@/theme/recipes';
 
@@ -97,7 +97,7 @@ export const createReportTableConfig = (
           )}
           onClick={e => e.stopPropagation()}
         >
-          <ReportPrintButton
+          <ReportRowActionsMenu
             order={order}
             onPrint={onPrint}
             disabled={generatingOrderId === order.orderId}

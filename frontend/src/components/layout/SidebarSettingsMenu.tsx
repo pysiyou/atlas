@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Popover, type PopoverPlacement } from '@/components/overlays/Popover';
 import { cn } from '@/utils';
-import { CHROME, CONTROL, MENU_ITEM_TYPE, RADIUS } from '@/theme/recipes';
+import { CHROME, CONTROL, MENU_ITEM_TYPE, RADIUS, text } from '@/theme/recipes';
 import type { SettingsPopoverLink } from '@/config/sidebarMenu';
 
 export interface SidebarSettingsMenuProps {
@@ -42,43 +42,51 @@ export function SidebarSettingsMenu({
       )}
     >
       {({ close }) => (
-        <div className="p-space-1-5" role="menu" aria-label={triggerLabel}>
-          {items.map(item => {
-            const rowClass = cn(
-              `flex w-full items-center gap-space-2-5 px-space-2-5 py-space-2 text-left ${MENU_ITEM_TYPE}`,
-              RADIUS.menuItem,
-              item.disabled
-                ? 'cursor-not-allowed text-text-muted opacity-60'
-                : cn('cursor-pointer text-text-primary hover:bg-surface-hover', CONTROL.focusVisible),
-            );
-            const iconNode = item.icon ?? null;
-
-            if (item.disabled || !item.path) {
-              return (
-                <div key={item.label} role="menuitem" aria-disabled="true" className={rowClass}>
-                  {iconNode ? <span className="flex size-5 shrink-0 items-center justify-center">{iconNode}</span> : null}
-                  <span className="truncate">{item.label}</span>
-                </div>
+        <div className="flex flex-col">
+          <div className="flex items-center gap-space-3 border-b border-border-default bg-surface-page px-space-3 py-space-3">
+            <p className={`${text({ role: 'title-section' })} min-w-0 flex-1 truncate`}>{triggerLabel}</p>
+          </div>
+          <div className="p-space-1-5" role="menu" aria-label={triggerLabel}>
+            {items.map(item => {
+              const rowClass = cn(
+                `flex w-full items-center gap-space-2-5 px-space-2-5 py-space-2 text-left ${MENU_ITEM_TYPE}`,
+                RADIUS.menuItem,
+                item.disabled
+                  ? 'cursor-not-allowed text-text-muted opacity-60'
+                  : cn(
+                      'cursor-pointer text-text-primary hover:bg-surface-hover transition-colors duration-150',
+                      CONTROL.focusVisible,
+                    ),
               );
-            }
+              const iconNode = item.icon ?? null;
 
-            return (
-              <button
-                key={item.path}
-                type="button"
-                role="menuitem"
-                className={rowClass}
-                onClick={() => {
-                  close();
-                  navigate(item.path!);
-                  onNavigate?.();
-                }}
-              >
-                {iconNode ? <span className="flex size-5 shrink-0 items-center justify-center">{iconNode}</span> : null}
-                <span className="truncate">{item.label}</span>
-              </button>
-            );
-          })}
+              if (item.disabled || !item.path) {
+                return (
+                  <div key={item.label} role="menuitem" aria-disabled="true" className={rowClass}>
+                    {iconNode ? <span className="flex size-4 shrink-0 items-center justify-center">{iconNode}</span> : null}
+                    <span className="truncate">{item.label}</span>
+                  </div>
+                );
+              }
+
+              return (
+                <button
+                  key={item.path}
+                  type="button"
+                  role="menuitem"
+                  className={rowClass}
+                  onClick={() => {
+                    close();
+                    navigate(item.path!);
+                    onNavigate?.();
+                  }}
+                >
+                  {iconNode ? <span className="flex size-4 shrink-0 items-center justify-center">{iconNode}</span> : null}
+                  <span className="truncate">{item.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       )}
     </Popover>

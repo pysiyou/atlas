@@ -8,7 +8,7 @@ import { RecordId } from '@/features/shared';
 import type { CardComponentProps } from '@/components/data-table';
 import type { ReportableOrder } from '../types';
 import { OrderStatusBadge } from '@/features/orders';
-import { ReportPrintButton } from './ReportPrintButton';
+import { ReportRowActionsMenu } from './ReportRowActionsMenu';
 import { INTERACTIVE, text } from '@/theme/recipes';
 import {
   EntityStack,
@@ -83,7 +83,7 @@ export function ValidatedTestReportCard({
           className={cn('flex items-center gap-space-1', INTERACTIVE.actionIsland)}
           onClick={e => e.stopPropagation()}
         >
-          <ReportPrintButton
+          <ReportRowActionsMenu
             order={order}
             onPrint={onPrint}
             size="sm"

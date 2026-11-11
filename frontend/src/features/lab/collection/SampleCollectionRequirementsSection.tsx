@@ -3,8 +3,9 @@
  */
 
 import React, { useMemo } from 'react';
-import { RADIUS } from '@/theme/recipes';
-import { Callout } from '@/components/display';
+import { RADIUS, TONE } from '@/theme/recipes';
+import { Icon } from '@/components/primitives/Icon';
+import { FEEDBACK_ICON_KEYS } from '@/config/icons';
 import { RecordId } from '@/features/shared';
 import { Panel } from '@/components/surfaces';
 import { SegmentedControl } from '@/components/inputs/SegmentedControl';
@@ -72,9 +73,18 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
     >
       <div className="space-y-space-3 pt-space-2 animate-in fade-in duration-200">
         {activeTest.fastingRequired && (
-          <Callout variant="warning" title="Fasting Required">
-            Patient must fast before sample collection. Verify fasting status before proceeding.
-          </Callout>
+          <div className="flex items-center gap-space-2 flex-wrap">
+            <Icon
+              iconKey={FEEDBACK_ICON_KEYS.warning}
+              className={`w-4 h-4 shrink-0 ${TONE.warning.fg}`}
+            />
+            <Text role="label" className={`font-medium shrink-0 underline ${TONE.warning.fg}`}>
+              Fasting Required:
+            </Text>
+            <Text role="body" className={TONE.warning.fg}>
+              Patient must fast before sample collection. Verify fasting status before proceeding.
+            </Text>
+          </div>
         )}
 
         {activeTest.containerDescription && (
