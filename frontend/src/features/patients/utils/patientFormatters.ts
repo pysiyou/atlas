@@ -10,7 +10,7 @@ import { calculateAge, formatPhoneNumber } from '@/utils';
 import { formatDetailDate as formatDetailDateUtil, formatOrderDate } from '@/utils/date';
 import { INACTIVE_REPORTABLE_TEST_STATUSES } from '@/types/generated/labContract';
 
-export { formatPatientSexAgeLine } from '@/utils/presentation/patient';
+export { formatPatientSexAgeLine } from '@/utils/presentation';
 
 export const formatPatientDetailDate = (
   date: string | Date | undefined | null,

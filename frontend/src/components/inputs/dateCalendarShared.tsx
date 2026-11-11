@@ -1,19 +1,58 @@
 /**
- * Prev / title / next chrome shared by DateInput and DatePicker calendars.
+ * Shared calendar view, month cursor, and header for DateInput and DatePicker.
  */
+/* eslint-disable react-refresh/only-export-components -- hook + header share one module */
 
+import { useState } from 'react';
 import { format } from 'date-fns';
 import { Icon } from '@/components/primitives';
 import { IconKeys } from '@/config/icons';
 import { text, RADIUS } from '@/theme/recipes';
 import { generateCalendarYears } from '@/utils/date';
-import type { CalendarView } from './calendarTypes';
+
+export type CalendarView = 'days' | 'months' | 'years';
+
+/**
+ * Month cursor and days/months/years view for calendar popovers.
+ *
+ * @param initialMonth - Month shown when the popover opens
+ */
+export function useCalendarMonth(initialMonth: Date) {
+  const [currentMonth, setCurrentMonth] = useState<Date>(initialMonth);
+  const [view, setView] = useState<CalendarView>('days');
+
+  const navigatePrevious = () => {
+    if (view === 'days') {
+      setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
+    } else if (view === 'months') {
+      setCurrentMonth(new Date(currentMonth.getFullYear() - 1, currentMonth.getMonth(), 1));
+    } else {
+      setCurrentMonth(new Date(currentMonth.getFullYear() - 10, currentMonth.getMonth(), 1));
+    }
+  };
+
+  const navigateNext = () => {
+    if (view === 'days') {
+      setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
+    } else if (view === 'months') {
+      setCurrentMonth(new Date(currentMonth.getFullYear() + 1, currentMonth.getMonth(), 1));
+    } else {
+      setCurrentMonth(new Date(currentMonth.getFullYear() + 10, currentMonth.getMonth(), 1));
+    }
+  };
+
+  return {
+    currentMonth,
+    setCurrentMonth,
+    view,
+    setView,
+    navigatePrevious,
+    navigateNext,
+  };
+}
 
 /**
  * Prev / title / next chrome shared by DateInput and DatePicker calendars.
- *
- * @param currentMonth - Month the title represents
- * @param view - Days, months, or years grid
  */
 export function CalendarHeader({
   currentMonth,

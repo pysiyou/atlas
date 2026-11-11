@@ -7,7 +7,7 @@ export type {
   SampleCollectionRequirement,
   SampleRequirement,
 } from './types';
-export type { PendingEscalationItem } from './types/modal';
+export type { PendingEscalationItem } from './api/results';
 
 export { sampleAPI, useSampleLookup, createSampleLookupForOrder } from './api/samples';
 

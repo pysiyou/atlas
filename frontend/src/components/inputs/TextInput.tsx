@@ -7,7 +7,7 @@ import { Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/feedback/SpinnerLoader';
 import { cn } from '@/utils';
 import { IconKeys } from '@/config/icons';
-import { filterInputIcon } from '@/components/overlays/filterTriggerIcons';
+import { filterInputIcon } from '@/components/filters/filterControlIcons';
 import { inputWrapper, inputInner, inputText, inputClearButton, inputContainerError } from '@/theme/recipes';
 
 export interface TextInputProps {

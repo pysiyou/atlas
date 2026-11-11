@@ -2,7 +2,7 @@ import { text } from '@/theme/recipes';
 import { CheckboxList } from '@/components/primitives';
 import { DatePicker } from '@/components/inputs/DatePicker';
 import { TextInput } from '@/components/inputs/TextInput';
-import { filterInputIcon } from '@/components/overlays/filterTriggerIcons';
+import { filterInputIcon } from './filterControlIcons';
 import { ChipSelectGroup } from '@/components/inputs/ChipSelectGroup';
 import { MultiSelectFilter } from '@/components/overlays/MultiSelectFilter';
 import { RangeSlider } from '@/components/overlays/RangeSlider';

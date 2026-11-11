@@ -4,8 +4,7 @@ Lab is organized on **two axes**. Keep both; do not import sideways across stage
 
 ## Stage folders (queue entry + stage-specific actions)
 
-Each stage folder has an `index.ts` listing the queue entry and primary hooks.
-Cards and modals stay in `workflow/` (see the table in each stage index).
+Cards and modals stay in `workflow/` (see the table below).
 
 | Stage | Queue | Primary hooks |
 |-------|-------|----------------|

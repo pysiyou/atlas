@@ -20,9 +20,7 @@ import { IconKeys, type IconKey } from '@/config/icons';
 import { filterTriggerIcon } from '@/components/filters/filterControlIcons';
 import { CALENDAR_TYPE, RADIUS } from '@/theme/recipes';
 import { cn } from '@/utils';
-import { CalendarHeader } from './calendar/CalendarHeader';
-import { useCalendarMonth } from './calendar/useCalendarMonth';
-import type { CalendarView } from './calendar/calendarTypes';
+import { CalendarHeader, useCalendarMonth, type CalendarView } from './dateCalendarShared';
 import {
   isDateDisabledForPicker,
   isSelectedDateForPicker,

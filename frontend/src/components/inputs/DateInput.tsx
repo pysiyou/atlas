@@ -14,9 +14,7 @@ import { text, inputTrigger,
   inputClearButton,
   FORM_CONTROL_LABEL } from '@/theme/recipes';
 import { CALENDAR_TYPE, FIELD_ERROR, RADIUS, TONE } from '@/theme/recipes';
-import { CalendarHeader } from './calendar/CalendarHeader';
-import { useCalendarMonth } from './calendar/useCalendarMonth';
-import type { CalendarView } from './calendar/calendarTypes';
+import { CalendarHeader, useCalendarMonth, type CalendarView } from './dateCalendarShared';
 import {
   generateCalendarDays,
   generateCalendarMonths,

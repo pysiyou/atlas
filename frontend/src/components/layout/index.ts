@@ -2,7 +2,6 @@ export * from './AppShell';
 export * from './PageHeader';
 export * from './DetailPageShell';
 export * from './DetailPageLoadingGrid';
-export * from './detailPageLoadingPresets';
 export * from './LabMonitorLoadingGrid';
 export {
   getFilteredMenuItems,

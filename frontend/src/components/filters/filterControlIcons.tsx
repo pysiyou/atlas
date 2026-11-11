@@ -13,6 +13,11 @@ export function filterTriggerIcon(iconKey: IconKey): React.ReactNode {
   return <Icon iconKey={iconKey} className={triggerIconClass} />;
 }
 
+/** Leading search icon for filter dropdown triggers. */
+export const filterInputIcon = (
+  <Icon iconKey={IconKeys.actions.search} className={triggerIconClass} />
+);
+
 /** Resolve leading icon for a filter control (explicit config icon or key/type defaults). */
 export function resolveFilterControlIcon(control: FilterControl): IconKey | undefined {
   if (control.icon) return control.icon;

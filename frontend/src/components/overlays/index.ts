@@ -7,7 +7,7 @@ export * from './DialogChrome';
 export * from './FormDialogFooter';
 export * from './PopoverFormChrome';
 export * from './FilterTriggerShell';
-export { filterInputIcon } from './filterTriggerIcons';
+export { filterInputIcon } from '@/components/filters/filterControlIcons';
 export * from './MultiSelectFilter';
 export * from './OverlaySearchInput';
 export * from './RangeSlider';

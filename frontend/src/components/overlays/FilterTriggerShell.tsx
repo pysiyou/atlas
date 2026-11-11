@@ -9,7 +9,7 @@ import { Icon } from '@/components/primitives/Icon';
 import { inputTrigger, inputTriggerOpen, filterTriggerText, inputClearButton } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { IconKeys } from '@/config/icons';
-import { filterInputIcon } from './filterTriggerIcons';
+import { filterInputIcon } from '@/components/filters/filterControlIcons';
 
 export interface FilterTriggerShellProps {
   /** Whether the popover is open (for border/chevron state) */

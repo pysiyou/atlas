@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 
 import { Avatar, Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/feedback';
 import { SearchResultsPopoverShell } from '@/components/overlays/SearchResultsPopoverShell';
-import { filterInputIcon } from '@/components/overlays/filterTriggerIcons';
+import { filterInputIcon } from '@/components/filters/filterControlIcons';
 import { IconKeys } from '@/config/icons';
 import { useEventLogSearchPreview } from './eventLogSearchPreview';
 import { cn } from '@/utils';
