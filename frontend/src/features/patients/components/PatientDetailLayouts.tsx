@@ -55,8 +55,6 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         preset="panel.page.visible.shrink"
         title="General Info"
         loading={loading}
-        loadingShape="fields"
-        loadingRows={6}
       >
         {patient ? <GeneralInfoSection patient={patient} /> : null}
       </Panel>
@@ -65,8 +63,6 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         preset="panel.page.visible.shrink"
         title="Medical History"
         loading={loading}
-        loadingShape="fields"
-        loadingRows={6}
       >
         {patient ? <MedicalHistorySectionDisplay patient={patient} /> : null}
       </Panel>
@@ -75,8 +71,6 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         preset="panel.page.visible.shrink"
         title="Care Snapshot"
         loading={loading}
-        loadingShape="fields"
-        loadingRows={4}
       >
         {patient ? <CareSnapshotSection patient={patient} /> : null}
       </Panel>
@@ -85,8 +79,6 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         preset="panel.pageEmbed.visible.shrink"
         title="Related Orders"
         loading={loading}
-        loadingShape="fields"
-        loadingRows={6}
         loadingHeaderAside={!loading}
         headerEnd={loading ? undefined : <RelatedOrdersHeader onNewOrder={onNewOrder} />}
       >
@@ -98,8 +90,6 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         title="Reports"
         meta={loading ? undefined : countMeta(getReportableOrders(orders).length)}
         loading={loading}
-        loadingShape="fields"
-        loadingRows={6}
       >
         <PatientReportsList orders={orders} />
       </Panel>
@@ -121,15 +111,15 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 }) => {
   return (
     <div className={cn(LAYOUT.detailGrid2, 'w-full pb-layout-scroll-end')}>
-      <Panel preset="panel.page.visible" title="General Info" loading={loading} loadingShape="fields" loadingRows={6}>
+      <Panel preset="panel.page.visible" title="General Info" loading={loading}>
         {patient ? <GeneralInfoSection patient={patient} /> : null}
       </Panel>
 
-      <Panel preset="panel.page.visible" title="Medical History" loading={loading} loadingShape="fields" loadingRows={6}>
+      <Panel preset="panel.page.visible" title="Medical History" loading={loading}>
         {patient ? <MedicalHistorySectionDisplay patient={patient} /> : null}
       </Panel>
 
-      <Panel preset="panel.page.visible.span2" title="Care Snapshot" loading={loading} loadingShape="fields" loadingRows={4}>
+      <Panel preset="panel.page.visible.span2" title="Care Snapshot" loading={loading}>
         {patient ? <CareSnapshotSection patient={patient} /> : null}
       </Panel>
 
@@ -137,8 +127,6 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
         preset="panel.pageEmbed.visible"
         title="Related Orders"
         loading={loading}
-        loadingShape="fields"
-        loadingRows={6}
         loadingHeaderAside={!loading}
         headerEnd={loading ? undefined : <RelatedOrdersHeader onNewOrder={onNewOrder} />}
       >
@@ -150,8 +138,6 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
         title="Reports"
         meta={loading ? undefined : countMeta(getReportableOrders(orders).length)}
         loading={loading}
-        loadingShape="fields"
-        loadingRows={6}
       >
         <PatientReportsList orders={orders} />
       </Panel>
@@ -173,15 +159,15 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
   return (
     <div className={LAYOUT.detailGridRowsSplit}>
       <div className={cn(LAYOUT.detailGrid3, 'min-h-0 h-full items-stretch')}>
-        <Panel preset="panel.page.auto.fill" title="General Info" loading={loading} loadingShape="fields" loadingRows={6}>
+        <Panel preset="panel.page.auto.fill" title="General Info" loading={loading}>
           {patient ? <GeneralInfoSection patient={patient} /> : null}
         </Panel>
 
-        <Panel preset="panel.page.auto.fill" title="Medical History" loading={loading} loadingShape="fields" loadingRows={6}>
+        <Panel preset="panel.page.auto.fill" title="Medical History" loading={loading}>
           {patient ? <MedicalHistorySectionDisplay patient={patient} /> : null}
         </Panel>
 
-        <Panel preset="panel.page.auto.fill" title="Care Snapshot" loading={loading} loadingShape="fields" loadingRows={4}>
+        <Panel preset="panel.page.auto.fill" title="Care Snapshot" loading={loading}>
           {patient ? <CareSnapshotSection patient={patient} /> : null}
         </Panel>
       </div>
@@ -191,8 +177,6 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
           preset="panel.pageEmbed.span2Min"
           title="Related Orders"
           loading={loading}
-          loadingShape="fields"
-          loadingRows={6}
           loadingHeaderAside={!loading}
           headerEnd={loading ? undefined : <RelatedOrdersHeader onNewOrder={onNewOrder} />}
         >
@@ -204,8 +188,6 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
           title="Reports"
           meta={loading ? undefined : countMeta(getReportableOrders(orders).length)}
           loading={loading}
-          loadingShape="fields"
-          loadingRows={6}
         >
           <PatientReportsList orders={orders} />
         </Panel>

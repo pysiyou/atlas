@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Card, labPipelineCardLoadingContent } from '@/components/surfaces';
+import { Card } from '@/components/surfaces';
 import { Badge, Icon } from '@/components/primitives';
 import type { IconKey } from '@/config/icons';
 import { IconKeys } from '@/config/icons';
@@ -47,7 +47,6 @@ export const LabPipelineSummary: React.FC<LabPipelineSummaryProps> = ({ loading:
     <Card
       padding="md"
       loading={loading}
-      loadingContent={labPipelineCardLoadingContent()}
     >
       <div className="flex items-center justify-between mb-space-4">
         <h2 className={text({ role: 'amount' })}>Lab Pipeline</h2>

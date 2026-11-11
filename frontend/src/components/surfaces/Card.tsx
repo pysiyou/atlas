@@ -5,7 +5,7 @@
 import React, { type ReactNode } from 'react';
 import { RADIUS, SHADOW, SURFACE } from '@/theme/recipes';
 import { cn } from '@/utils';
-import { CardLoadingBody, type CardLoadingVariant } from './cardLoading';
+import { FieldsPlaceholder } from './FieldsPlaceholder';
 
 export type CardVariant = 'default' | 'interactive' | 'metric';
 
@@ -30,8 +30,6 @@ export interface CardProps {
   hover?: boolean;
   onClick?: (e: React.MouseEvent) => void;
   loading?: boolean;
-  loadingVariant?: CardLoadingVariant;
-  loadingContent?: ReactNode;
 }
 
 const cardSurfaceClass = cn(SURFACE.raised, RADIUS.surface, 'duration-200');
@@ -44,11 +42,12 @@ export const Card: React.FC<CardProps> = ({
   hover = false,
   onClick,
   loading = false,
-  loadingVariant = 'default',
-  loadingContent,
 }) => {
+  /** Same pair pattern as Panel; min-height gives auto-sized cards a measurable host. */
   const body = loading ? (
-    <CardLoadingBody variant={loadingVariant} content={loadingContent} />
+    <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
+      <FieldsPlaceholder />
+    </div>
   ) : (
     children
   );
@@ -58,6 +57,7 @@ export const Card: React.FC<CardProps> = ({
     BOX_VARIANT_CLASSES[variant],
     hover && BOX_VARIANT_CLASSES.interactive,
     onClick != null && 'cursor-pointer',
+    loading && 'flex min-h-[8rem] flex-col',
     className,
   );
 

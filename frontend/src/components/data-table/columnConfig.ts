@@ -15,7 +15,6 @@ export {
 } from './columnHelpers';
 export { TABLE_COLUMN_WIDTH } from './columnWidthTokens';
 export {
-  DEFAULT_LOADING_ROWS,
   SHOW_ALL_PAGE_SIZE,
   DEFAULT_PAGE_SIZE,
   DEFAULT_PAGE_SIZE_OPTIONS,

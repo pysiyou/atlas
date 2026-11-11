@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Panel, reportPreviewPanelLoadingContent } from '@/components/surfaces';
+import { Panel } from '@/components/surfaces';
 import { RecordId } from '@/features/shared';
 import {
   ResultValidationNotesSection,
@@ -64,7 +64,6 @@ export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({
             title=""
             loading
             loadingHeaderAside
-            loadingContent={reportPreviewPanelLoadingContent(layout)}
           />
         ))}
       </div>

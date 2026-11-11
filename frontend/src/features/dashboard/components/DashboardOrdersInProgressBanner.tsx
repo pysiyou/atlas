@@ -22,7 +22,7 @@ export const DashboardOrdersInProgressBanner: React.FC<DashboardOrdersInProgress
   }
 
   return (
-    <Card padding="md" loading={loading} loadingVariant="banner">
+    <Card padding="md" loading={loading}>
       <div className="flex items-center gap-space-3">
         <Icon iconKey={IconKeys.dataFields.trendingUp} className="w-6 h-6 text-warning-fg" />
         <div>

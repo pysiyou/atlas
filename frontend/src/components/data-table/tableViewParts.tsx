@@ -177,7 +177,7 @@ export function TableSkeleton<T = unknown>({ columns }: TableSkeletonProps<T>) {
   return (
     <div
       role="row"
-      className={cn(TABLE_SHELL.row, 'h-full min-h-[12rem] flex-1 items-stretch')}
+      className={cn(TABLE_SHELL.row, 'h-full min-h-0 flex-1 items-stretch')}
       style={{ gridTemplateColumns }}
     >
       <div

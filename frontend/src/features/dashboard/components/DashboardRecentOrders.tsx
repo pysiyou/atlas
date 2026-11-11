@@ -13,7 +13,6 @@ import type { Order } from '@/types';
 import { text, INLINE_LINK, RADIUS } from '@/theme/recipes';
 
 const RECENT_ORDER_ROW_CLASS = `flex items-center justify-between p-panel border border-border-default ${RADIUS.surface}`;
-const RECENT_ORDER_PLACEHOLDER_ROWS = 5;
 
 export interface DashboardRecentOrdersProps {
   orders: Order[];
@@ -28,8 +27,6 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
     preset="panel.page.standard"
     title="Recent Orders"
     loading={loading}
-    loadingShape="list"
-    loadingRows={RECENT_ORDER_PLACEHOLDER_ROWS}
     loadingHeaderAside
     headerEnd={
       loading ? undefined : (

@@ -17,7 +17,7 @@ export interface LazyLabEventLogPanelProps {
 export const LazyLabEventLogPanel: React.FC<LazyLabEventLogPanelProps> = props => (
   <Suspense
     fallback={
-      <Panel preset="panel.compactEmbed.auto" title="Activity" loading loadingShape="list" loadingRows={4} />
+      <Panel preset="panel.compactEmbed.auto" title="Activity" loading />
     }
   >
     <LabEventLogPanelLazy {...props} />

@@ -46,8 +46,6 @@ export const LabTodayPanel: React.FC<LabTodayPanelProps> = ({
       preset="panel.pageEmbed.flexColumnFill"
       title="Today"
       loading={loading}
-      loadingShape="fields"
-      loadingRows={6}
       loadingHeaderAside={loading}
       headerEnd={
         loading ? undefined : (

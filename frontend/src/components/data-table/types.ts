@@ -86,7 +86,6 @@ export interface TableProps<T> {
   rowClassName?: (item: T, index: number) => string;
   getRowKey?: (item: T, index: number) => string | number;
   loading?: boolean;
-  loadingRows?: number;
   emptyMessage?: ReactNode;
   /** Subtitle when emptyMessage is a string */
   emptyDescription?: string;

@@ -13,10 +13,10 @@ export function ModalLoadingBody({ variant = 'default' }: { variant?: ModalLoadi
     return (
       <div className={MODAL_WORKFLOW_BODY_STACK} aria-busy="true" aria-label="Loading">
         <div className={`grid grid-cols-1 md:grid-cols-2 ${LAYOUT.balancedColumns}`}>
-          <Panel preset="panel.pageEmbed.visible" title="Details" loading loadingShape="fields" loadingRows={5} />
-          <Panel preset="panel.pageEmbed.visible" title="Details" loading loadingShape="fields" loadingRows={5} />
+          <Panel preset="panel.pageEmbed.visible" title="Details" loading />
+          <Panel preset="panel.pageEmbed.visible" title="Details" loading />
         </div>
-        <Panel preset="panel.compact.standard" title="Activity" loading loadingShape="list" loadingRows={4} />
+        <Panel preset="panel.compact.standard" title="Activity" loading />
       </div>
     );
   }
@@ -24,17 +24,17 @@ export function ModalLoadingBody({ variant = 'default' }: { variant?: ModalLoadi
   if (variant === 'form') {
     return (
       <div className="space-y-space-6 max-w-full" aria-busy="true" aria-label="Loading form">
-        <Panel preset="panel.pageEmbed.visible" title="Patient" loading loadingShape="fields" loadingRows={3} />
-        <Panel preset="panel.pageEmbed.visible" title="Tests" loading loadingShape="table" loadingTableColumns={4} loadingTableRows={3} />
-        <Panel preset="panel.pageEmbed.visible" title="Order details" loading loadingShape="fields" loadingRows={4} />
+        <Panel preset="panel.pageEmbed.visible" title="Patient" loading />
+        <Panel preset="panel.pageEmbed.visible" title="Tests" loading />
+        <Panel preset="panel.pageEmbed.visible" title="Order details" loading />
       </div>
     );
   }
 
   return (
     <div className="space-y-space-5" aria-busy="true" aria-label="Loading">
-      <Panel preset="panel.pageEmbed.visible" title="Loading" loading loadingShape="fields" loadingRows={4} />
-      <Panel preset="panel.pageEmbed.visible" loading loadingShape="block" />
+      <Panel preset="panel.pageEmbed.visible" title="Loading" loading />
+      <Panel preset="panel.pageEmbed.visible" loading />
     </div>
   );
 }

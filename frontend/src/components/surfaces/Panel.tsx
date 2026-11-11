@@ -3,14 +3,11 @@
  */
 /* eslint-disable react-refresh/only-export-components -- Panel + preset re-exports */
 
-import React, { type ReactNode } from 'react';
+import React from 'react';
 import { PANEL_LAYOUT, PANEL_SHELL, SPACING } from '@/theme/recipes';
 import { cn } from '@/utils';
-import {
-  PanelHeaderAsidePlaceholder,
-  PanelLoadingBody,
-  type PanelLoadingShape,
-} from './panelLoading';
+import { FieldsPlaceholder } from './FieldsPlaceholder';
+import { PanelHeaderAsidePlaceholder } from './panelLoading';
 import {
   getPanelPreset,
   PANEL_BODY_LAYOUT,
@@ -29,8 +26,7 @@ function isCompactPanelVariant(variant: PanelVariant): boolean {
 }
 
 /**
- * Embed variants flush the body for tables. While loading, restore the same inset
- * the matching non-embed shell uses so field placeholders do not touch the border.
+ * Embed variants flush the body for tables; restore page padding while the placeholder is shown.
  */
 function embedLoadingBodyPadding(variant: PanelVariant): string | false {
   if (variant === 'pageEmbed') return PANEL_LAYOUT.pageBodyPadding;
@@ -52,15 +48,8 @@ export interface PanelProps {
   children?: React.ReactNode;
   footer?: React.ReactNode;
   testId?: string;
-  /** When true, render a sized body placeholder instead of children. */
+  /** When true, render FieldsPlaceholder instead of children. */
   loading?: boolean;
-  loadingShape?: PanelLoadingShape;
-  loadingRows?: number;
-  loadingTableColumns?: number;
-  loadingTableRows?: number;
-  loadingTableHeaders?: string[];
-  loadingFieldLayout?: 'grid' | 'column';
-  loadingContent?: ReactNode;
   /** Reserve header aside width with a skeleton (e.g. actions/links). */
   loadingHeaderAside?: boolean;
 }
@@ -75,13 +64,6 @@ export function Panel({
   footer,
   testId,
   loading = false,
-  loadingShape,
-  loadingRows,
-  loadingTableColumns,
-  loadingTableRows,
-  loadingTableHeaders,
-  loadingFieldLayout,
-  loadingContent,
   loadingHeaderAside = false,
 }: PanelProps) {
   const def = getPanelPreset(preset);
@@ -148,22 +130,12 @@ export function Panel({
           bodyScrollClass,
           PANEL_SPACING[resolvedSpacing],
           PANEL_BODY_LAYOUT[def.bodyLayout ?? 'default'],
-          loading &&
-            loadingShape !== 'table' &&
-            embedLoadingBodyPadding(def.variant),
+          loading && embedLoadingBodyPadding(def.variant),
         )}
       >
         {loading ? (
           <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
-            <PanelLoadingBody
-              shape={loadingShape}
-              rows={loadingRows}
-              tableColumns={loadingTableColumns}
-              tableRows={loadingTableRows}
-              tableHeaders={loadingTableHeaders}
-              fieldLayout={loadingFieldLayout}
-              content={loadingContent}
-            />
+            <FieldsPlaceholder />
           </div>
         ) : (
           children

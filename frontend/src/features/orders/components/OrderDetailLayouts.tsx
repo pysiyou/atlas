@@ -145,8 +145,6 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
           preset={fillHeight ? 'panel.page.auto.fill' : 'panel.page.visible'}
           title="Order Information"
           loading={loading}
-          loadingShape="fields"
-          loadingRows={6}
         >
           {order ? <OrderInfoSection order={order} /> : null}
         </Panel>
@@ -155,8 +153,6 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
           preset={fillHeight ? 'panel.page.auto.fill' : 'panel.page.visible'}
           title="Patient Information"
           loading={loading}
-          loadingShape="fields"
-          loadingRows={6}
           loadingHeaderAside={!loading && Boolean(patientHeaderEnd)}
           headerEnd={patientHeaderEnd}
         >
@@ -167,8 +163,6 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
           preset={fillHeight ? 'panel.pageEmbed.auto.fill.flexColumnMin' : 'panel.pageEmbed.visible'}
           title="Order activity"
           loading={loading}
-          loadingShape="fields"
-          loadingRows={6}
         >
           {order ? (
             <OrderEventLogPanel
@@ -186,8 +180,6 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
           title="Tests"
           meta={testsHeaderMeta}
           loading={loading}
-          loadingShape="fields"
-          loadingRows={6}
         >
           {order ? (
             <TestsTable
@@ -203,8 +195,6 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
           preset={fillHeight ? 'panel.pageEmbed.auto.fill.flexColumn' : 'panel.pageEmbed.visible.flexColumn'}
           title="Billing Summary"
           loading={loading}
-          loadingShape="fields"
-          loadingRows={6}
           loadingHeaderAside={!loading && Boolean(billingHeaderEnd)}
           headerEnd={billingHeaderEnd}
         >
@@ -252,8 +242,6 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
         preset="panel.page.visible.shrink"
         title="Order Information"
         loading={loading}
-        loadingShape="fields"
-        loadingRows={6}
       >
         {order ? <OrderInfoSection order={order} /> : null}
       </Panel>
@@ -262,8 +250,6 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
         preset="panel.page.visible.shrink"
         title="Patient Information"
         loading={loading}
-        loadingShape="fields"
-        loadingRows={6}
         loadingHeaderAside={!loading && Boolean(patientHeaderEnd)}
         headerEnd={patientHeaderEnd}
       >
@@ -274,8 +260,6 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
         preset="panel.pageEmbed.stackMinHeight"
         title="Order activity"
         loading={loading}
-        loadingShape="fields"
-        loadingRows={6}
       >
         {order ? <OrderEventLogPanel orderId={order.orderId} layout="embedded" /> : null}
       </Panel>
@@ -285,8 +269,6 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
         title="Tests"
         meta={testsHeaderMeta}
         loading={loading}
-        loadingShape="fields"
-        loadingRows={6}
       >
         {order ? (
           <TestsTable
@@ -302,8 +284,6 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
         preset="panel.pageEmbed.visible.shrink.flexColumn"
         title="Billing Summary"
         loading={loading}
-        loadingShape="fields"
-        loadingRows={6}
         loadingHeaderAside={!loading && Boolean(billingHeaderEnd)}
         headerEnd={billingHeaderEnd}
       >

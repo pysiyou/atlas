@@ -6,7 +6,6 @@ import { useMemo, useRef } from 'react';
 import { useBreakpoint, isBreakpointAtMost, type Breakpoint } from '@/hooks/useBreakpoint';
 import { useDataTable } from '@/hooks/useDataTable';
 import { Pagination } from '@/components/surfaces';
-import { DEFAULT_LOADING_ROWS } from './constants';
 import type { TableProps } from './types';
 import { CardGridView } from './CardGridView';
 import { TableView } from './TableView';
@@ -31,7 +30,6 @@ export function DataTable<T = Record<string, unknown>>({
   rowClassName,
   getRowKey,
   loading = false,
-  loadingRows = DEFAULT_LOADING_ROWS,
   emptyMessage,
   emptyDescription,
   emptyIcon,
@@ -110,7 +108,6 @@ export function DataTable<T = Record<string, unknown>>({
             variant={variant}
             embedded={true}
             loading={showInitialLoad}
-            loadingRows={loadingRows}
             emptyMessage={emptyMessage}
             emptyDescription={emptyDescription}
             emptyIcon={emptyIcon}
@@ -157,7 +154,6 @@ export function DataTable<T = Record<string, unknown>>({
         rowClassName={rowClassName}
         getRowKey={getRowKey}
         loading={loading}
-        loadingRows={loadingRows}
         emptyMessage={emptyMessage}
         emptyDescription={emptyDescription}
         emptyIcon={emptyIcon}

@@ -32,7 +32,7 @@ export const DashboardStatsGrid: React.FC<DashboardStatsGridProps> = ({
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-6">
       {loading
         ? Array.from({ length: count }).map((_, index) => (
-            <Card key={index} padding="lg" hover loading loadingVariant="metric" />
+            <Card key={index} padding="lg" hover loading />
           ))
         : stats.map((stat, index) => (
             <Card key={index} padding="lg" hover>

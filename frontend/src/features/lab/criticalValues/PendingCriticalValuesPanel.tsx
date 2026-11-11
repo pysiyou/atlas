@@ -5,7 +5,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Badge, Icon } from '@/components/primitives';
-import { Panel, criticalValuesPanelLoadingContent } from '@/components/surfaces';
+import { Panel } from '@/components/surfaces';
 import { RecordId } from '@/features/shared';
 import { IconKeys } from '@/config/icons';
 import { cn, displayId } from '@/utils';
@@ -34,7 +34,7 @@ export const PendingCriticalValuesPanel: React.FC<PendingCriticalValuesPanelProp
       preset="panel.compact.standard"
       title={loading ? 'Critical Values' : 'Critical Values Pending'}
       loading={loading}
-      loadingContent={criticalValuesPanelLoadingContent()}
+      loadingHeaderAside
       headerEnd={
         loading ? undefined : (
           <Badge variant="danger" size={WORKLIST_CARD_BADGE_SIZE}>
@@ -42,7 +42,6 @@ export const PendingCriticalValuesPanel: React.FC<PendingCriticalValuesPanelProp
           </Badge>
         )
       }
-      loadingHeaderAside={!loading}
     >
       <div className="space-y-space-4">
         {criticalValues.map(record => (

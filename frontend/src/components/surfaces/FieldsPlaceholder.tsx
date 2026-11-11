@@ -1,39 +1,34 @@
 /**
- * One body placeholder for panels and tables: a short line, then a full-width line of the same height.
- * All pairs are painted in one pass after the container height is known.
+ * Container body placeholder — short line (1/3) then a full-width line of the same height.
+ * Fills the host in one pass. Only panels, tables, cards, and modal shells should render this.
  */
 
 import { useLayoutEffect, useRef, useState } from 'react';
 import { Skeleton } from '@/components/feedback/Skeleton';
 
-export const FIELDS_PLACEHOLDER_ROWS = 6;
-
 /** Padding when the placeholder fills a table or list body under a real header. */
-export const FIELDS_PLACEHOLDER_TABLE_INSET = 'min-h-[12rem] px-table-cell-x-default py-space-4';
+export const FIELDS_PLACEHOLDER_TABLE_INSET = 'px-table-cell-x-default py-space-4';
 
 const LINE_HEIGHT_PX = 12;
-/** Matches `gap-space-1` between the short and full line. */
 const PAIR_INNER_GAP_PX = 4;
 const PAIR_HEIGHT_PX = LINE_HEIGHT_PX * 2 + PAIR_INNER_GAP_PX;
 const FILL_MAX = 48;
 
 export interface FieldsPlaceholderProps {
-  /** Max pairs. Omit to fill the container (tables). */
-  rows?: number;
   className?: string;
 }
 
-function countPairs(availablePx: number, stackGapPx: number, max: number): number {
+/** How many complete short+full pairs fit in `availablePx` (never a partial last pair). */
+function countPairs(availablePx: number, stackGapPx: number): number {
   if (availablePx <= 0) return 0;
   const fit = Math.floor((availablePx + stackGapPx) / (PAIR_HEIGHT_PX + stackGapPx));
-  return Math.max(1, Math.min(max, fit));
+  return Math.max(1, Math.min(FILL_MAX, fit));
 }
 
 /**
- * Short line (1/3 width) + full-width line, repeated to the available height.
+ * Short line + full-width line, repeated to the available height.
  */
-export function FieldsPlaceholder({ rows, className = '' }: FieldsPlaceholderProps) {
-  const max = rows != null && Number.isInteger(rows) && rows > 0 ? rows : FILL_MAX;
+export function FieldsPlaceholder({ className = '' }: FieldsPlaceholderProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const [count, setCount] = useState(0);
 
@@ -46,7 +41,7 @@ export function FieldsPlaceholder({ rows, className = '' }: FieldsPlaceholderPro
       const styles = getComputedStyle(root);
       const gap = parseFloat(styles.rowGap) || 0;
       const pad = (parseFloat(styles.paddingTop) || 0) + (parseFloat(styles.paddingBottom) || 0);
-      const next = countPairs(root.clientHeight - pad, gap, max);
+      const next = countPairs(root.clientHeight - pad, gap);
       if (next < 1) return;
       setCount(current => (current === next ? current : next));
     };
@@ -55,7 +50,7 @@ export function FieldsPlaceholder({ rows, className = '' }: FieldsPlaceholderPro
     const observer = new ResizeObserver(update);
     observer.observe(root);
     return () => observer.disconnect();
-  }, [max]);
+  }, []);
 
   return (
     <div

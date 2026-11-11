@@ -1,41 +1,12 @@
 /**
- * Results table skeleton — real column headers, one body fill until values are ready.
+ * Results table loading chrome — real column titles plus FieldsPlaceholder in the body.
  */
 
-import { FieldsPlaceholder, FIELDS_PLACEHOLDER_TABLE_INSET } from '@/components/surfaces/FieldsPlaceholder';
-import { DATA_GRID } from '@/theme/recipes';
+import { TableLoadingPlaceholder } from '@/components/data-table/TableLoadingPlaceholder';
 
 export const LAB_RESULTS_TABLE_HEADERS = ['Parameter', 'Result', 'Reference interval'] as const;
 
+/** Thin wrapper: lab result column titles + the shared table body placeholder. */
 export function LabResultsTableSkeleton() {
-  return (
-    <div className={DATA_GRID.scrollWrap} aria-busy="true">
-      <table className={DATA_GRID.table}>
-        <colgroup>
-          {DATA_GRID.colGroup.table.map(col => (
-            <col key={col} className={col} />
-          ))}
-        </colgroup>
-        <thead>
-          <tr>
-            {LAB_RESULTS_TABLE_HEADERS.map(label => (
-              <th key={label} scope="col" className={DATA_GRID.headerCell}>
-                {label}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td
-              colSpan={LAB_RESULTS_TABLE_HEADERS.length}
-              className={`${DATA_GRID.bodyCell} p-0`}
-            >
-              <FieldsPlaceholder className={FIELDS_PLACEHOLDER_TABLE_INSET} />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  );
+  return <TableLoadingPlaceholder headers={LAB_RESULTS_TABLE_HEADERS} />;
 }

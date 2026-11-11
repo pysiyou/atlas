@@ -1,5 +1,5 @@
 /**
- * Reusable loading bodies for Panel/Card — feature components import these as `loadingContent`.
+ * Dialog/popover form loading chrome (not a list/panel body skeleton).
  */
 
 import { Skeleton } from '@/components/feedback';
@@ -8,82 +8,7 @@ import { cn } from '@/utils';
 import { feedbackTitle } from '@/feedback';
 import { RADIUS } from '@/theme/recipes';
 
-/** Matches lab ResultsGridLayout / report preview layout. */
-export type ReportPreviewResultsLayout = 'grid' | 'table';
-
-const REPORT_TABLE_ROWS = 4;
-
 const QUALITY_ISSUE_POPOVER_WIDTH_CLASS = 'w-90 md:w-96';
-
-export function reportPreviewPanelLoadingContent(layout: ReportPreviewResultsLayout = 'table') {
-  return (
-    <div className="space-y-space-2-5">
-      {layout === 'table' ? (
-        <div className={`space-y-0 border border-border-default ${RADIUS.surface} overflow-hidden`}>
-          <div className="flex gap-space-3 px-space-3 py-space-2 border-b border-border-default bg-surface-hover/30">
-            <Skeleton height={12} width="28%" />
-            <Skeleton height={12} width="22%" />
-            <Skeleton height={12} width="34%" />
-          </div>
-          <Skeleton className="w-full rounded-none" height={REPORT_TABLE_ROWS * 40} />
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-space-3">
-          {Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className="space-y-space-1">
-              <Skeleton height={10} width="70%" />
-              <Skeleton height={14} width="55%" />
-            </div>
-          ))}
-        </div>
-      )}
-      <Skeleton height={12} width="40%" />
-    </div>
-  );
-}
-
-export function criticalValuesPanelLoadingContent() {
-  return (
-    <div className={`${RADIUS.surface} p-panel space-y-space-3 border border-border-default`}>
-      <div className="flex items-center justify-between gap-space-2">
-        <div className="flex items-center gap-space-2 flex-1 min-w-0">
-          <Skeleton className="h-4 w-4 shrink-0" />
-          <Skeleton height={14} width="48%" />
-        </div>
-        <Skeleton height={14} width={72} />
-      </div>
-      <div className="flex gap-space-2">
-        <Skeleton height={32} width={96} className={RADIUS.field} />
-        <Skeleton height={32} width={88} className={RADIUS.field} />
-      </div>
-    </div>
-  );
-}
-
-export function labPipelineCardLoadingContent() {
-  return (
-    <>
-      <div className="flex items-center justify-between mb-space-4">
-        <Skeleton height={16} width={120} />
-        <Skeleton height={14} width={108} />
-      </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-space-3">
-        {Array.from({ length: 3 }).map((_, index) => (
-          <div
-            key={index}
-            className={`flex items-center justify-between p-space-3 ${RADIUS.field} border border-border-default`}
-          >
-            <div className="flex items-center gap-space-2 min-w-0 flex-1">
-              <Skeleton className="h-4 w-4 shrink-0" />
-              <Skeleton height={14} width="72%" />
-            </div>
-            <Skeleton className="h-5 w-8 shrink-0" />
-          </div>
-        ))}
-      </div>
-    </>
-  );
-}
 
 /** Popover form chrome (quality issue, etc.). */
 export function popoverFormLoadingContent() {

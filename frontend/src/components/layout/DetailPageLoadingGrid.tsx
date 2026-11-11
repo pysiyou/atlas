@@ -25,8 +25,6 @@ export function DetailPageLoadingGrid({
             preset="panel.page.auto.fill"
             title={title}
             loading
-            loadingShape="fields"
-            loadingRows={6}
           />
         ))}
       </div>
@@ -35,15 +33,11 @@ export function DetailPageLoadingGrid({
           preset="panel.pageEmbed.span2Min"
           title={bottomLeftTitle}
           loading
-          loadingShape="fields"
-          loadingRows={6}
         />
         <Panel
           preset="panel.page.detailMinH.flexColumn"
           title={bottomRightTitle}
           loading
-          loadingShape="fields"
-          loadingRows={6}
         />
       </div>
     </div>

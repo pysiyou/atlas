@@ -48,8 +48,6 @@ export const PaymentDetailModalBody: React.FC<PaymentDetailModalBodyProps> = ({
       preset="panel.pageEmbed.modalShrink.flexColumn"
       title="Billing Summary"
       loading={orderDetailLoading}
-      loadingShape="fields"
-      loadingRows={6}
     >
       {orderDetailError ? (
         <div className="p-panel">

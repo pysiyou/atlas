@@ -50,7 +50,6 @@ export const HEADER_PADDING: Record<TableVariant, string> = {
   comfortable: TABLE_CELL.comfortable,
 };
 
-export const DEFAULT_LOADING_ROWS = 5;
 export const SHOW_ALL_PAGE_SIZE = -1;
 export const DEFAULT_PAGE_SIZE = 10;
 export const DEFAULT_PAGE_SIZE_OPTIONS = [10, 25, 50, 100];

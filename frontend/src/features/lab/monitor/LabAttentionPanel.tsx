@@ -217,8 +217,6 @@ export const LabAttentionPanel: React.FC<LabAttentionPanelProps> = ({
       preset="panel.pageEmbed.standard"
       title="Attention queue"
       loading={loading}
-      loadingShape="fields"
-      loadingRows={6}
       meta={
         loading
           ? undefined

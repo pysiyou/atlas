@@ -10,7 +10,7 @@ import { PANEL_EMPTY_STATE, DENSE_EMPTY_STATE } from '@/config/emptyStatePresets
 import { DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';
 import { cn } from '@/utils';
 import type { ColumnConfig, SortConfig, TableVariant } from './types';
-import { DEFAULT_LOADING_ROWS, ROW_HEIGHTS } from './constants';
+import { ROW_HEIGHTS } from './constants';
 import { useGridTemplateColumns } from '@/hooks/useTable';
 import {
   TableDataRow,
@@ -37,7 +37,6 @@ export interface TableViewProps<T> {
   rowClassName?: (item: T, index: number) => string;
   getRowKey?: (item: T, index: number) => string | number;
   loading?: boolean;
-  loadingRows?: number;
   emptyMessage?: ReactNode;
   emptyDescription?: string;
   emptyIcon?: IconKey;
@@ -95,7 +94,6 @@ export function TableView<T>({
   rowClassName,
   getRowKey,
   loading = false,
-  loadingRows: _loadingRows = DEFAULT_LOADING_ROWS,
   emptyMessage,
   emptyDescription,
   emptyIcon,

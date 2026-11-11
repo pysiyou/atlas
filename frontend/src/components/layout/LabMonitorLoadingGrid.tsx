@@ -41,8 +41,6 @@ export function LabMonitorLoadingGrid() {
                 preset="panel.pageEmbed.flexColumnFill"
                 title={title}
                 loading
-                loadingShape="fields"
-                loadingRows={6}
               />
             </div>
           ))}

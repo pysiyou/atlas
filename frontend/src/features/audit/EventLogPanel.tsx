@@ -190,7 +190,6 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
       title="Event log"
       meta={loadingProp ? undefined : panelMeta}
       loading={loadingProp === true}
-      loadingShape="fields"
     >
       {filters}
       {body}

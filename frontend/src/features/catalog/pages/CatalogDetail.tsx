@@ -62,8 +62,6 @@ export const CatalogDetail: React.FC = () => {
               preset="panel.pageEmbed.visible"
               title="Loading"
               loading
-              loadingShape="fields"
-              loadingRows={5}
             />
           ))}
         </div>
