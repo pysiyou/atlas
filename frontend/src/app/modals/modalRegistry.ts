@@ -23,7 +23,7 @@ const MODAL_LOADERS: Partial<Record<ModalTypeName, ModalLoader>> = {
       default: m.ResultEntryDetailModal as unknown as RegisteredModalComponent,
     })),
   [ModalType.TEST_DETAIL]: () =>
-    import('@/features/lab/workflow/modals/detailModal.test').then(m => ({
+    import('@/features/lab/workflow/modals/detailModal.testDetail').then(m => ({
       default: m.TestDetailModal as unknown as RegisteredModalComponent,
     })),
   [ModalType.ESCALATION_RESOLUTION_DETAIL]: () =>

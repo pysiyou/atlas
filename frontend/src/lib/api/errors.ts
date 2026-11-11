@@ -1,6 +1,7 @@
 /**
- * API error parsing and type guards.
+ * HTTP/API error parsing and `ApiError` type guards.
  * Aligns with backend ErrorResponse: { error_code, message, details? }.
+ * App-layer message classification (login, generic fallbacks): `@/utils/errors`.
  */
 import { logger } from '@/utils/logger';
 import type { ApiError, ApiErrorDetail } from '@/types/schemas/error.schema';

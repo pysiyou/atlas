@@ -22,7 +22,7 @@ import {
   renderOrderPatientName,
   renderOrderTestsBlock,
   renderOrderTotalPrice,
-} from '@/utils/presentation';
+} from '@/features/shared/entityPresentation';
 
 export interface OrderColumnAccessors<T> {
   getOrderId: (item: T) => number | string;

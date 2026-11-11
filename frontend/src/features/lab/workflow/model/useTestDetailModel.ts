@@ -18,7 +18,7 @@ import {
 
 export type TestDetailInteraction = 'view' | 'validate';
 
-export interface UseTestDetailModelInput extends UseLabModalWorkItemModelInput {}
+export type UseTestDetailModelInput = UseLabModalWorkItemModelInput;
 
 export interface UseTestDetailModelResult {
   isOrderLoading: boolean;

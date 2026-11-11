@@ -1,5 +1,6 @@
 /**
  * URL-synced entity filters: encode/decode and cross-page navigation.
+ * Pure option/sort helpers: `@/utils/filtering`. Default values: `@/utils/filterDefaultValues`.
  */
 
 import type { NavigateFunction } from 'react-router-dom';

@@ -5,7 +5,7 @@
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useAuthStore } from '@/app/authStore';
-import { getFilteredMenuItems, getFilteredSettingsItems } from './sidebarMenu';
+import { getFilteredMenuItems, getFilteredSettingsItems } from '@/config/sidebarMenu';
 import { SidebarContent } from './SidebarContent';
 
 interface SidebarProps {

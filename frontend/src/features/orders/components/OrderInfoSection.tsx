@@ -1,5 +1,5 @@
 /**
- * OrderInfoSection — order metadata in a two-column row grid (Tests spans full width last).
+ * OrderInfoSection — order metadata in a two-column row grid (Created by spans full width last).
  */
 
 import React, { useMemo } from 'react';
@@ -17,7 +17,7 @@ import {
 import { useUserLookup } from '@/lib/api/users';
 import { useTestNameLookup } from '@/features/catalog';
 import { getBillableTests } from '../utils/orderCalculator';
-import { renderOrderTestsBlock } from '@/utils/presentation';
+import { renderOrderTestsBlock } from '@/features/shared/entityPresentation';
 
 export interface OrderInfoSectionProps {
   order: Order;
@@ -78,27 +78,27 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order }) => 
             value={<OrderStatusBadge status={order.overallStatus} size="xs" />}
             orientation="vertical"
           />
-          <DescriptionItem
-            icon={getDataFieldIcon('user')}
-            label="Created by"
-            value={createdByName ?? 'N/A'}
-            orientation="vertical"
-          />
+          {testsDisplay != null ? (
+            <DescriptionItem
+              icon={IconKeys.modules.labTests}
+              label="Tests"
+              orientation="vertical"
+              value={testsDisplay}
+            />
+          ) : null}
           <DescriptionItem
             icon={getDataFieldIcon('referentDoctor')}
             label="Referent doctor"
             value={referentDoctorDisplay}
             orientation="vertical"
           />
-          {testsDisplay != null ? (
-            <DescriptionItem
-              icon={IconKeys.modules.labTests}
-              label="Tests"
-              orientation="vertical"
-              span="full"
-              value={testsDisplay}
-            />
-          ) : null}
+          <DescriptionItem
+            icon={getDataFieldIcon('user')}
+            label="Created by"
+            value={createdByName ?? 'N/A'}
+            orientation="vertical"
+            span="full"
+          />
           {order.clinicalNotes ? (
             <DescriptionItem
               icon={getDataFieldIcon('clinicalNotes')}

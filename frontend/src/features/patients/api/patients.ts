@@ -1,5 +1,6 @@
 /**
- * Patient API service — pure HTTP, no React.
+ * Patient HTTP + query/mutation hooks.
+ * Convention: `*API` objects are pure fetch; `use*` hooks wrap TanStack Query (same file).
  */
 import { apiClient } from '@/lib/api/client';
 import { withPaginatedParams } from '@/lib/api/pagination';

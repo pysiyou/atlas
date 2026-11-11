@@ -14,7 +14,7 @@ import { OrderTestStatusBadge } from '../components/OrderDomainBadges';
 import { getOrderTestLineageRowClass } from '../utils/orderTestLineage';
 import type { OrderTest, TestSummary } from '@/types';
 import { text, BADGE, TABLE_TYPE, RADIUS } from '@/theme/recipes';
-import { renderNavigableSampleId, renderOrderTestIdentity } from '@/utils/presentation';
+import { renderNavigableSampleId, renderOrderTestIdentity } from '@/features/shared/entityPresentation';
 
 
 const SIMPLE_VIEWS = {

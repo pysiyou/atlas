@@ -1,7 +1,6 @@
 export { usePageFilters, applyPageFilters } from './usePageFilters';
 export type { UsePageFiltersOptions, UsePageFiltersReturn } from './usePageFilters';
 
-export { FeatureFilterBar, type FeatureFilterBarProps } from './filters/useFeatureFilterBar';
 export type { FeatureFilterBarConfig } from './filters/featureFilterBarTypes';
 
 export { useUrlFilters, isUrlFilterKey } from './useUrlFilters';

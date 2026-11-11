@@ -16,7 +16,7 @@ import { useLabWorkflowCardClickGuard } from '../../hooks';
 import { isLabActionAllowed } from '../../utils/queueDisplay';
 import { useSampleRejectionDisplay } from '../../hooks/useSampleRejectionDisplay';
 import { useLabWorkflowResponsiveCard } from '../../hooks/useLabWorkflowResponsiveCard';
-import type { ValidationQueueRow } from '../../types/validationQueue';
+import type { ValidationQueueRow } from '../../types/queues';
 import {
   labModalWorkItemFromDto,
   retestContextFromRow,

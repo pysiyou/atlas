@@ -16,7 +16,7 @@ import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { isLikelyNetworkOrTimeout } from '@/utils/errors';
 import { orderTestKey } from '../utils/labSearchAndLinks';
 import { useLabDraftStore } from '../state/labDraftStore';
-import type { ValidationQueueRow } from '../types/validationQueue';
+import type { ValidationQueueRow } from '../types/queues';
 import type { QualityIssueResult } from '@/types/lab-operations';
 
 export interface ResultValidationWorkflowController {

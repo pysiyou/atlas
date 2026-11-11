@@ -24,7 +24,7 @@ import { findCollectionQueueItem } from '../../utils/findCollectionQueueItem';
 import { useSubmitSampleCollection } from '../../collection/useSubmitSampleCollection';
 import { useAuthStore } from '@/app/authStore';
 import type { SampleDetailModalProps } from '@/lib/context/modalTypes';
-import { worklistItemToQueueRow } from '../../utils/labQueue';
+import { worklistItemToQueueRow } from '../../utils/worklistMappers';
 
 export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({
   isOpen,

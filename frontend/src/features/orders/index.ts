@@ -1,5 +1,6 @@
 /**
- * Orders Feature — public API
+ * Orders feature public API for routing and cross-feature consumers.
+ * Overlay chrome (`FormDialogFooter`) lives in `@/components/overlays`.
  */
 
 export {
@@ -52,8 +53,6 @@ export {
 export type { LinkedOrderTests } from './utils/orderTestLineage';
 export { BillingSummarySection } from './components/BillingSummarySection';
 export type { BillingSummarySectionProps } from './components/BillingSummarySection';
-export { FormDialogFooter } from '@/components/overlays/FormDialogFooter';
-export type { FormDialogFooterProps } from '@/components/overlays/FormDialogFooter';
 
 export * from './utils/orderTimelineUtils';
 export * from './utils/orderCalculator';
@@ -82,7 +81,7 @@ export {
   renderOrderTotalPriceInline,
   renderOrderDateCell,
   type RenderOrderTestsBlockOptions,
-} from '@/utils/presentation';
+} from '@/features/shared/entityPresentation';
 
 export { Orders as OrdersPage } from './pages/OrdersPage';
 export { OrderList } from './pages/OrderList';

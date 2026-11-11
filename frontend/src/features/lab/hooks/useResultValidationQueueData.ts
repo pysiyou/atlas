@@ -4,9 +4,9 @@
 import { useAuthStore } from '@/app/authStore';
 import { useMemo } from 'react';
 import { useValidationWorklist, type WorklistPagination } from '../api/worklists';
-import { worklistItemToValidationRow } from '../utils/labQueue';
+import { worklistItemToValidationRow } from '../utils/worklistMappers';
 import { usePendingEscalation, type PendingEscalationItem } from '../api/results';
-import type { ValidationQueueRow } from '../types/validationQueue';
+import type { ValidationQueueRow } from '../types/queues';
 
 export interface ResultValidationQueueData {
   validationRows: ValidationQueueRow[];

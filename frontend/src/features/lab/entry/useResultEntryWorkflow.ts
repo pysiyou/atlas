@@ -13,7 +13,7 @@ import { isLabActionAllowed } from '../utils/queueDisplay';
 import { useResultEntryDetailModal } from './useResultEntryDetailModal';
 import { useLabDraftStore } from '../state/labDraftStore';
 import type { Test } from '@/types';
-import { findEntryRowById, type EntryQueueRow } from '../types/entryQueue';
+import { findEntryRowById, type EntryQueueRow } from '../types/queues';
 
 export interface UseEntryWorkflowOptions {
   entryRows: EntryQueueRow[];

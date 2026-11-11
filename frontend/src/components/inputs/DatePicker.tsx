@@ -15,11 +15,14 @@ import {
   startOfDay,
   endOfDay } from 'date-fns';
 import { FilterTriggerShell, Popover } from '@/components/overlays';
-import { FilterChip, Icon } from '@/components/primitives';
+import { FilterChip } from '@/components/primitives';
 import { IconKeys, type IconKey } from '@/config/icons';
 import { filterTriggerIcon } from '@/components/filters/filterControlIcons';
-import { text, CALENDAR_TYPE, RADIUS } from '@/theme/recipes';
+import { CALENDAR_TYPE, RADIUS } from '@/theme/recipes';
 import { cn } from '@/utils';
+import { CalendarHeader } from './calendar/CalendarHeader';
+import { useCalendarMonth } from './calendar/useCalendarMonth';
+import type { CalendarView } from './calendar/calendarTypes';
 import {
   isDateDisabledForPicker,
   isSelectedDateForPicker,
@@ -33,7 +36,7 @@ import {
   DATE_PRESETS,
   type DatePreset } from '@/utils/date';
 
-export type CalendarView = 'days' | 'months' | 'years';
+export type { CalendarView };
 
 const MIN_DATE = new Date(1900, 0, 1);
 const MAX_DATE = new Date(2100, 11, 31);
@@ -45,58 +48,6 @@ export interface DatePickerProps {
   className?: string;
   /** Leading trigger icon; defaults to calendar. */
   iconKey?: IconKey;
-}
-
-function DatePickerHeader({
-  currentMonth,
-  view,
-  onPrevClick,
-  onNextClick,
-  onTitleClick,
-  isPrevDisabled,
-  isNextDisabled,
-}: {
-  currentMonth: Date;
-  view: CalendarView;
-  onPrevClick: () => void;
-  onNextClick: () => void;
-  onTitleClick: () => void;
-  isPrevDisabled: boolean;
-  isNextDisabled: boolean;
-}) {
-  const getTitle = (): string => {
-    if (view === 'days') return format(currentMonth, 'MMMM yyyy');
-    if (view === 'months') return format(currentMonth, 'yyyy');
-    const years = generateCalendarYears(currentMonth);
-    return `${format(years[0], 'yyyy')} - ${format(years[years.length - 1], 'yyyy')}`;
-  };
-  return (
-    <div className="flex items-center justify-between mb-space-3">
-      <button
-        onClick={onPrevClick}
-        disabled={isPrevDisabled}
-        className={`p-space-1 hover:bg-surface-hover ${RADIUS.field} text-text-tertiary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center`}
-      >
-        <Icon iconKey={IconKeys.actions.chevronLeft} className="w-4 h-4" />
-      </button>
-      <button
-        onClick={onTitleClick}
-        className={cn(
-          `${text({ role: 'amount' })} text-text-secondary hover:bg-surface-page px-space-2 py-space-1 ${RADIUS.field} transition-colors cursor-pointer`,
-          view === 'years' && 'pointer-events-none hover:bg-transparent cursor-default'
-        )}
-      >
-        {getTitle()}
-      </button>
-      <button
-        onClick={onNextClick}
-        disabled={isNextDisabled}
-        className={`p-space-1 hover:bg-surface-hover ${RADIUS.field} text-text-tertiary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center`}
-      >
-        <Icon iconKey={IconKeys.actions.chevronRight} className="w-4 h-4" />
-      </button>
-    </div>
-  );
 }
 
 function DatePickerCalendarGrid({
@@ -281,7 +232,7 @@ function DatePickerPopoverBody({
 }) {
   return (
     <div className="p-space-3">
-      <DatePickerHeader
+      <CalendarHeader
         currentMonth={currentMonth}
         view={view}
         onPrevClick={navigatePrevious}
@@ -289,8 +240,6 @@ function DatePickerPopoverBody({
         onTitleClick={() =>
           setView(view === 'days' ? 'months' : view === 'months' ? 'years' : 'days')
         }
-        isPrevDisabled={false}
-        isNextDisabled={false}
       />
       <DatePickerCalendarGrid
         currentMonth={currentMonth}
@@ -341,8 +290,14 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   className,
   iconKey = IconKeys.dataFields.date,
 }) => {
-  const [currentMonth, setCurrentMonth] = useState<Date>(value?.[0] || new Date());
-  const [view, setView] = useState<CalendarView>('days');
+  const {
+    currentMonth,
+    setCurrentMonth,
+    view,
+    setView,
+    navigatePrevious,
+    navigateNext,
+  } = useCalendarMonth(value?.[0] || new Date());
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const valueSnapshotRef = useRef<[Date, Date] | null>(value);
 
@@ -373,19 +328,6 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     },
     [isPopoverOpen, syncTempRangeFromValue, value]
   );
-
-  const navigatePrevious = () => {
-    if (view === 'days') setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
-    else if (view === 'months')
-      setCurrentMonth(new Date(currentMonth.getFullYear() - 1, currentMonth.getMonth(), 1));
-    else setCurrentMonth(new Date(currentMonth.getFullYear() - 10, currentMonth.getMonth(), 1));
-  };
-  const navigateNext = () => {
-    if (view === 'days') setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
-    else if (view === 'months')
-      setCurrentMonth(new Date(currentMonth.getFullYear() + 1, currentMonth.getMonth(), 1));
-    else setCurrentMonth(new Date(currentMonth.getFullYear() + 10, currentMonth.getMonth(), 1));
-  };
 
   const handleDateClick = (date: Date) => {
     const normalizedDate = startOfDay(date);

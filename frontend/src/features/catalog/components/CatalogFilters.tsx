@@ -4,7 +4,7 @@
 
 import React, { useMemo } from 'react';
 import type { FilterValues } from '@/components/filters/types';
-import { FeatureFilterBar } from '@/hooks';
+import { FeatureFilterBar } from '@/components/filters';
 import { catalogFilterConfig } from '../constants/catalogConfig';
 import type { TestCategory } from '@/types';
 

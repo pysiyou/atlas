@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/primitives';
 import { Popover } from '@/components/overlays';
 import { cn, displayId } from '@/utils';
@@ -7,96 +7,11 @@ import { PopoverFormChrome, RadioCard } from '@/components/overlays';
 import type { FeedbackId } from '@/types/generated/feedbackCatalog';
 import type { CriticalReadBackPayload, EscalationResolutionAction } from '@/types/lab-operations';
 import { RETEST_PATH_RADIO_COPY } from '../constants/qualityIssuePopoverCopy';
+import { ResolutionPopover } from './escalationResolutionPopover.chrome';
+
+export { ResolutionPopover } from './escalationResolutionPopover.chrome';
 
 type RetestPath = 'same_sample' | 'recollect';
-interface ResolutionPopoverProps {
-  resolving: boolean;
-  triggerLabel: string;
-  triggerVariant: 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
-  triggerIcon?: ReactNode;
-  title: string;
-  subtitle: string;
-  textareaId: string;
-  placeholder: string;
-  value: string;
-  onChange: (value: string) => void;
-  confirmLabel: string;
-  confirmVariant: 'success' | 'danger';
-  disabled?: boolean;
-  onConfirm: () => Promise<void | boolean>;
-  children?: React.ReactNode;
-}
-
-export function ResolutionPopover({
-  resolving,
-  triggerLabel,
-  triggerVariant,
-  triggerIcon,
-  title,
-  subtitle,
-  textareaId,
-  placeholder,
-  value,
-  onChange,
-  confirmLabel,
-  confirmVariant,
-  disabled,
-  onConfirm,
-  children,
-}: ResolutionPopoverProps) {
-  return (
-    <Popover
-      placement="top-end"
-      offsetValue={8}
-      preventClose={resolving}
-      trigger={
-        <Button
-          variant={triggerVariant}
-          size="sm"
-          layout={triggerIcon ? 'icon-text' : 'text'}
-          icon={triggerIcon}
-          disabled={resolving}
-          isLoading={resolving}
-        >
-          {triggerLabel}
-        </Button>
-      }
-    >
-      {({ close }) => (
-        <div data-popover-content onClick={e => e.stopPropagation()}>
-          <PopoverFormChrome
-            title={title}
-            subtitle={subtitle}
-            onCancel={close}
-            onConfirm={async () => {
-              const shouldClose = await onConfirm();
-              if (shouldClose !== false) close();
-            }}
-            confirmLabel={confirmLabel}
-            confirmVariant={confirmVariant}
-            isSubmitting={resolving}
-            disabled={disabled}
-          >
-            {children}
-            <div>
-              <label className="sr-only" htmlFor={textareaId}>
-                {subtitle}
-              </label>
-              <textarea
-                id={textareaId}
-                className={cn(inputBase, 'min-h-[80px] resize-none')}
-                placeholder={placeholder}
-                value={value}
-                onChange={e => onChange(e.target.value)}
-                maxLength={1000}
-              />
-            </div>
-          </PopoverFormChrome>
-        </div>
-      )}
-    </Popover>
-  );
-}
 
 function popoverSubtitle(orderTestId?: number, hint?: string): string {
   const label = orderTestId != null ? displayId.orderTest(orderTestId) : undefined;

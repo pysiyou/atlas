@@ -10,7 +10,7 @@ import { formatStatusBadgeLabel, resolveStatusBadgeColor } from '@/utils/statusB
 import {
   StatusPresentationBadge,
   type StatusPresentationLayout,
-} from '@/utils/presentation';
+} from '@/features/shared/entityPresentation';
 
 type DomainBadgeProps = Omit<BadgeProps, 'variant' | 'label' | 'children'>;
 

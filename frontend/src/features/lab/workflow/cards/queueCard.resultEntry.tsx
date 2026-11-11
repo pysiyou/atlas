@@ -14,7 +14,7 @@ import { isLabActionAllowed } from '../../utils/queueDisplay';
 import { useLabWorkflowResponsiveCard } from '../../hooks/useLabWorkflowResponsiveCard';
 import { FG, MOBILE_LIST_CARD } from '@/theme/recipes';
 import type { Test } from '@/types';
-import { type EntryQueueRow } from '../../types/entryQueue';
+import { type EntryQueueRow } from '../../types/queues';
 import {
   labModalWorkItemFromDto,
   retestContextFromRow,

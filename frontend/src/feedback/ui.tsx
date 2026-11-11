@@ -1,7 +1,6 @@
 /**
  * Inline feedback surfaces (alerts, error fallback).
  */
-/* eslint-disable react-refresh/only-export-components */
 
 import React, { type HTMLAttributes, type ReactNode } from 'react';
 import { Icon } from '@/components/primitives/Icon';

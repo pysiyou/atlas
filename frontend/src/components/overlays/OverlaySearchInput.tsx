@@ -7,7 +7,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Icon } from '@/components/primitives';
 import { cn } from '@/utils';
 import { IconKeys } from '@/config/icons';
-import { filterInputIcon } from '@/components/overlays/FilterTriggerShell';
+import { filterInputIcon } from '@/components/overlays/filterTriggerIcons';
 import { inputContainerBase, inputInner, inputText, inputClearButton } from '@/theme/recipes';
 
 export interface OverlaySearchInputProps {

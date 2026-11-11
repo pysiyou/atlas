@@ -1,6 +1,7 @@
 /**
  * Catalog toasts: deferred dispatch, chrome portal host (no viewport overlay).
  */
+/* eslint-disable react-refresh/only-export-components -- host UI + showToast dispatcher */
 import React, { useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import toastLib, { resolveValue, useToaster, type DefaultToastOptions, type Toast as HotToast } from 'react-hot-toast';

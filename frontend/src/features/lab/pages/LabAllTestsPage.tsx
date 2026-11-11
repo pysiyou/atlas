@@ -7,7 +7,8 @@ import { ListView } from '@/components/surfaces';
 import { EmptyState } from '@/components/display';
 import { PANEL_EMPTY_STATE } from '@/components/display';
 import { LIST_PAGE_SIZE_OPTIONS } from '@/lib/api/constants';
-import { FeatureFilterBar, usePageFilters, useServerListChrome } from '@/hooks';
+import { FeatureFilterBar } from '@/components/filters';
+import { usePageFilters, useServerListChrome } from '@/hooks';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
 import type { PriorityLevel, TestStatus } from '@/types';
@@ -21,6 +22,10 @@ import { useAllTestsWorklist, WORKLIST_PAGE_SIZE } from '../api/worklists';
 import { createLabOrdersTableConfig } from '../monitor/LabOrdersTable.config';
 import { mapDashboardWorklistRow } from '../monitor/labOrderTableRow';
 import type { LabOrderTableRow } from '../monitor/LabOrdersTable.types';
+
+const EMPTY_SAMPLE_TYPES: string[] = [];
+const EMPTY_STATUSES: TestStatus[] = [];
+const EMPTY_PRIORITIES: PriorityLevel[] = [];
 
 export const LabAllTestsPage: React.FC = () => {
   const { openModal } = useModal();
@@ -37,9 +42,9 @@ export const LabAllTestsPage: React.FC = () => {
 
   const searchQuery = (filters.searchQuery as string) ?? '';
   const dateRange = (filters.dateRange as [Date, Date] | null) ?? null;
-  const sampleTypeFilters = (filters.sampleType as string[]) ?? [];
-  const statusFilters = (filters.status as TestStatus[]) ?? [];
-  const priorityFilters = (filters.priority as PriorityLevel[]) ?? [];
+  const sampleTypeFilters = (filters.sampleType as string[]) ?? EMPTY_SAMPLE_TYPES;
+  const statusFilters = (filters.status as TestStatus[]) ?? EMPTY_STATUSES;
+  const priorityFilters = (filters.priority as PriorityLevel[]) ?? EMPTY_PRIORITIES;
 
   const debouncedSearch = useDebouncedValue(searchQuery, LAB_CONFIG.SEARCH_DEBOUNCE_MS);
 

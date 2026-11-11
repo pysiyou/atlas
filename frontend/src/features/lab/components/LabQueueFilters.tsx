@@ -4,7 +4,7 @@
 
 import React, { useMemo } from 'react';
 import type { FilterConfig } from '@/components/filters';
-import { FeatureFilterBar } from '@/hooks';
+import { FeatureFilterBar } from '@/components/filters';
 
 export interface LabQueueFiltersProps<S = string[]> {
   config: FilterConfig;

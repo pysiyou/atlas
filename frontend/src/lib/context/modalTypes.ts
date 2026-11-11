@@ -4,7 +4,7 @@
 
 import type { ReportPreviewResultsLayout } from '@/features/reports/types';
 import type { EntryWorklistItem, ValidationWorklistItem } from '@/types/labWorklist';
-import type { PendingEscalationItem } from '@/features/lab/api/results';
+import type { PendingEscalationItem } from '@/features/lab/cross';
 
 export const ModalType = {
   SAMPLE_DETAIL: 'SAMPLE_DETAIL',

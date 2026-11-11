@@ -1,8 +1,7 @@
 /**
- * Unified test detail modal — full order-test context at any pipeline stage (view or validate).
+ * Test-detail modal chrome: header column, badges, footer, and body.
  */
 
-import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Panel } from '@/components/surfaces';
@@ -12,11 +11,9 @@ import {
   OrderTestSampleTabs,
   TestRelatedTestsPanel,
 } from '@/features/orders';
-import type { TestDetailModalProps } from '@/lib/context/modalTypes';
-import type { Order, OrderTest, Patient, Test } from '@/types';
+import type { Order, OrderTest, Patient, Sample, Test } from '@/types';
 import { text } from '@/theme/recipes';
 import type { QualityIssueResult } from '@/types/lab-operations';
-import { buildCriticalValueRecord } from '../../criticalValues/criticalValues';
 import type { LabModalWorkItem } from '../../types/labQueueChrome';
 import type { CriticalValueRecord } from '../../criticalValues/criticalValues';
 import { useSampleRejectionDisplay } from '../../hooks/useSampleRejectionDisplay';
@@ -25,205 +22,20 @@ import { QualityIssuePopover } from '../../components/QualityIssuePopover';
 import { CriticalValueActions } from '../../criticalValues/CriticalValueActions';
 import { TestHeaderBadges } from '../../components/LabWorkflowBadges';
 import { SampleRejectedBanner } from '../../components/SampleRejectedBanner';
-import { useTestDetailModalActions } from '../model/useTestDetailModalActions';
 import {
   DetailGrid,
   ModalFooter,
-  QueueModalShell,
-  labModalHeaderContext,
   type LabModalStage,
   type DetailGridSectionConfig,
 } from '../shared/detailModalLayout';
 import { TestWorkflowCardLeftColumn } from '../shared/queueCardLeftColumn';
-import { useTestDetailModel } from '../model/useTestDetailModel';
-import { useTestDetailModalDerived } from '../model/useTestDetailModalDerived';
 import {
   countFilledResults,
   resolveTestDetailQueueSince,
   type TestDetailHeaderVariant,
 } from '../shared/testDetailHeader';
-import type { Sample } from '@/types';
-import { LabModalPlaceholder } from '../shared/labModalPlaceholders';
 
-const EMPTY_QUEUE_ROW: LabModalWorkItem = {
-  orderTestId: 0,
-  orderId: 0,
-  patientName: '',
-  testName: '',
-  testCode: '',
-  priority: 'routine',
-  status: 'pending',
-};
-
-export const TestDetailModal: React.FC<TestDetailModalProps> = ({
-  isOpen,
-  onClose,
-  isActive = true,
-  orderTestId,
-  interaction = 'view',
-  worklistRow,
-}) => {
-  const model = useTestDetailModel({
-    isOpen,
-    orderTestId,
-    worklistRow,
-  });
-
-  const {
-    order,
-    orderTest,
-    queueWorkItem,
-    detailWorkItem,
-    catalogTest,
-    testDisplayName,
-    relatedSamples,
-    linked,
-    modalStage,
-    headerVariant,
-    patientName,
-    patient,
-    ready,
-    isOrderLoading,
-    isCatalogLoading,
-    orderTestSnapshot,
-  } = model;
-
-  const displayWorkItem = detailWorkItem ?? queueWorkItem;
-
-  const sampleRejection = useSampleRejectionDisplay(displayWorkItem ?? EMPTY_QUEUE_ROW);
-  const criticalRecord = useMemo(() => {
-    if (!detailWorkItem) return undefined;
-    return buildCriticalValueRecord(detailWorkItem) ?? undefined;
-  }, [detailWorkItem]);
-
-  const {
-    handleApprove,
-    isApproving,
-    handleReject,
-    handleCriticalValueUpdated,
-    openLinkedTest,
-    handleViewFullSample,
-  } = useTestDetailModalActions({
-    interaction,
-    orderTestId,
-    orderId: order?.orderId ?? orderTestSnapshot?.orderId,
-    onClose,
-  });
-
-  const {
-    isValidate,
-    hasResults,
-    detailGridSections,
-    labUrl,
-    modalKey,
-    comments,
-    resultsPanelPreset,
-    onCommentsChange,
-  } = useTestDetailModalDerived({
-    order,
-    orderTest,
-    linked,
-    catalogTest,
-    openLinkedTest,
-    onClose,
-    detailWorkItem,
-    interaction,
-    orderTestId,
-  });
-
-  const headerBadges = displayWorkItem ? (
-    <TestDetailModalHeaderBadges row={displayWorkItem} headerVariant={headerVariant} />
-  ) : null;
-
-  const testCode = orderTest?.testCode ?? displayWorkItem?.testCode ?? '';
-  const needsCatalog = Boolean(testCode);
-  const catalogReady = !needsCatalog || (!isCatalogLoading && catalogTest !== undefined);
-  const contentReady =
-    ready && !isOrderLoading && catalogReady && Boolean(order && orderTest && displayWorkItem);
-
-  const modalHeader = contentReady
-    ? labModalHeaderContext({
-        stage: modalStage,
-        contextLabel: testDisplayName,
-        orderId: order!.orderId,
-        badges: headerBadges ?? undefined,
-      })
-    : { title: 'Test', subtitle: null };
-
-  const headerLeftColumn =
-    contentReady && order && orderTest && displayWorkItem ? (
-      <TestDetailHeaderColumn
-        row={displayWorkItem}
-        patientName={patientName}
-        headerVariant={headerVariant}
-        modalStage={modalStage}
-        order={order}
-        orderTest={orderTest}
-        catalogParameterCount={catalogTest?.parameters?.length ?? 0}
-        turnaroundHours={catalogTest?.turnaroundTime}
-      />
-    ) : null;
-
-  const placeholderVariant = isValidate ? 'testDetailValidate' : 'testDetailView';
-
-  return (
-    <QueueModalShell
-      isOpen={isOpen}
-      onClose={onClose}
-      isActive={isActive}
-      title={modalHeader.title}
-      subtitle={modalHeader.subtitle ?? ''}
-      modalKey={modalKey}
-      disableClose={isApproving}
-      headerLeftColumn={headerLeftColumn ?? undefined}
-      footer={
-        contentReady ? (
-          <TestDetailModalFooter
-            isValidate={isValidate}
-            orderTestId={orderTestId}
-            displayWorkItem={displayWorkItem}
-            orderTest={orderTest}
-            testDisplayName={testDisplayName}
-            patientName={patientName}
-            hasResults={hasResults}
-            isApproving={isApproving}
-            onClose={onClose}
-            onApprove={handleApprove}
-            onReject={handleReject}
-            labUrl={labUrl}
-          />
-        ) : undefined
-      }
-    >
-      {contentReady ? (
-        <TestDetailModalBody
-          sampleRejection={sampleRejection}
-          hasResults={hasResults}
-          orderTest={orderTest}
-          isValidate={isValidate}
-          comments={comments}
-          resultsPanelPreset={resultsPanelPreset}
-          onCommentsChange={onCommentsChange}
-          onApprove={handleApprove}
-          criticalRecord={criticalRecord}
-          onCriticalValueUpdated={handleCriticalValueUpdated}
-          ready={ready}
-          order={order}
-          catalogTest={catalogTest}
-          relatedSamples={relatedSamples}
-          detailGridSections={detailGridSections}
-          onViewFullSample={handleViewFullSample}
-          onOpenLinkedTest={openLinkedTest}
-          orderTestId={orderTest?.id}
-          patient={patient ?? undefined}
-        />
-      ) : (
-        <LabModalPlaceholder variant={placeholderVariant} />
-      )}
-    </QueueModalShell>
-  );
-};
-
+/** Left-column identity chrome for the test-detail modal header. */
 export function TestDetailHeaderColumn({
   row,
   patientName,
@@ -268,6 +80,7 @@ export function TestDetailHeaderColumn({
   );
 }
 
+/** Status badges in the test-detail modal header. */
 export function TestDetailModalHeaderBadges({
   row,
   headerVariant,
@@ -293,6 +106,7 @@ type TestDetailModalFooterProps = {
   labUrl: string | undefined;
 };
 
+/** Approve/reject or "open in lab" footer for the test-detail modal. */
 export function TestDetailModalFooter({
   isValidate,
   orderTestId,
@@ -364,7 +178,7 @@ export function TestDetailModalFooter({
 }
 
 type TestDetailModalBodyProps = {
-  sampleRejection: ReturnType<typeof import('../../hooks/useSampleRejectionDisplay').useSampleRejectionDisplay>;
+  sampleRejection: ReturnType<typeof useSampleRejectionDisplay>;
   hasResults: boolean;
   orderTest: OrderTest | undefined;
   isValidate: boolean;
@@ -385,6 +199,7 @@ type TestDetailModalBodyProps = {
   patient?: Patient;
 };
 
+/** Results, critical-value, sample, and related-test body of the test-detail modal. */
 export function TestDetailModalBody({
   sampleRejection,
   hasResults,

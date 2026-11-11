@@ -5,7 +5,7 @@
 import { createLabQueueSearchFilter } from '../components/LabWorkflowQueueLayout';
 import type { PriorityLevel } from '@/types';
 import type { PendingEscalationItem } from '../api/results';
-import type { ValidationQueueRow } from '../types/validationQueue';
+import type { ValidationQueueRow } from '../types/queues';
 import type { LabQueueStageFilterConfig } from './labQueueStageFilterConfig';
 
 export type LabQueueSecondaryFilterProfile<T, S> = Pick<

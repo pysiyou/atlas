@@ -87,7 +87,7 @@ export function useTestDetailModalActions({
 
   const handleCriticalValueUpdated = useCallback(() => {
     invalidateAfterLabMutation(queryClient, { kind: 'criticalValue', orderId });
-  }, [queryClient]);
+  }, [orderId, queryClient]);
 
   const openLinkedTest = useCallback(
     (linkedTest: OrderTest) => {

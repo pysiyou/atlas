@@ -4,7 +4,10 @@
 
 import React, { useEffect, useMemo } from 'react';
 import { useAuthStore } from '@/app/authStore';
-import { LabWorkflowQueueMultiSectionLayout } from '../components/LabWorkflowQueueLayout';
+import {
+  LabWorkflowQueueMultiSectionLayout,
+  QueueListPlaceholder,
+} from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import {
   applyLabQueueFiltersWithProfile,
@@ -19,12 +22,11 @@ import {
 } from '../utils/labQueueSecondaryProfiles';
 import type { PriorityLevel, SampleStatus, TestStatus } from '@/types';
 import { validationFilterConfig } from '../constants';
-import { FieldsPlaceholder, FIELDS_PLACEHOLDER_TABLE_INSET } from '@/components/surfaces/FieldsPlaceholder';
-import { ErrorBoundary } from '@/components/feedback';
+import { ErrorBoundary } from '@/feedback';
 import { useClientListChrome } from '@/hooks';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import type { ValidationQueueRow } from '../types/validationQueue';
+import type { ValidationQueueRow } from '../types/queues';
 import { useResultValidationWorkflow } from './useResultValidationWorkflow';
 import { useLabDraftStore } from '../state/labDraftStore';
 import { orderTestKey } from '../utils/labSearchAndLinks';
@@ -142,9 +144,7 @@ export const ResultValidationQueue: React.FC = () => {
         }
       >
         {waitingOnInitialLoad ? (
-          <div className="flex-1 min-h-0">
-            <FieldsPlaceholder className={FIELDS_PLACEHOLDER_TABLE_INSET} />
-          </div>
+          <QueueListPlaceholder />
         ) : (
           <ResultValidationQueueView
             isEmpty={!hasEscalated && !hasValidation}

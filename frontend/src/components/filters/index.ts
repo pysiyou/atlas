@@ -19,6 +19,7 @@ export type {
 } from './types';
 
 export { FilterBar, type FilterBarProps } from './FilterBar';
+export { FeatureFilterBar, type FeatureFilterBarProps } from './FeatureFilterBar';
 export { FilterModal, type FilterModalProps } from './FilterModal';
 export { FilterModalFooter, type FilterModalFooterProps } from './FilterModalFooter';
 export {

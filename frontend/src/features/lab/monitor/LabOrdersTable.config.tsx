@@ -24,12 +24,12 @@ import {
   renderTableEmptyCell,
   renderTableTwoLineCell,
 } from '@/utils/tableColumnRenders';
+import { formatPatientSexAgeLine } from '@/utils/presentation';
 import {
-  formatPatientSexAgeLine,
   renderPatientNameCell,
   renderTestNameCodeStack,
   StatusPresentationBadge,
-} from '@/utils/presentation';
+} from '@/features/shared/entityPresentation';
 import type { LabOrderTableRow } from './LabOrdersTable.types';
 import { BADGE } from '@/theme/recipes';
 

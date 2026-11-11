@@ -1,6 +1,6 @@
 /**
- * Error Handling Utilities
- * Consistent error message extraction and classification.
+ * App-layer error message extraction and classification (`getErrorMessage`, login errors).
+ * HTTP/API error parsing and `ApiError` guards: `@/lib/api/errors`.
  */
 
 import { FEEDBACK_CATALOG, type FeedbackId } from '@/types/generated/feedbackCatalog';

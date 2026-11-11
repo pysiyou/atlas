@@ -1,5 +1,6 @@
 /**
- * Results API service — pure HTTP, no React.
+ * Results HTTP + query/mutation hooks.
+ * Convention: `*API` objects are pure fetch; `use*` hooks wrap TanStack Query (same file).
  */
 import { apiClient } from '@/lib/api/client';
 import type { ApiEscalationResolveResponse } from '@/lib/api/types';

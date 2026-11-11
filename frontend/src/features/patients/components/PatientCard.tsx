@@ -6,7 +6,7 @@ import { RecordId } from '@/features/shared';
 import { PatientGenderBadge } from './PatientGenderBadge';
 import type { CardComponentProps } from '@/components/data-table';
 import { formatPhoneNumber } from '@/utils';
-import { formatPatientSexAgeLine } from '@/utils/presentation';
+import { formatPatientSexAgeLine } from '../utils/patientFormatters';
 import type { Patient } from '@/types';
 
 /**

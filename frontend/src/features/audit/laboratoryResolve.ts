@@ -1,5 +1,6 @@
 /**
- * Lab-scoped event log resolution — loads a smaller catalog slice for embedded panels.
+ * Lab-scoped event log resolution for embedded lab timelines.
+ * Headline builders live in `@/features/audit/catalog`.
  */
 import type { EventLogRecord, ResolvedEventLogItem } from './types';
 import type { ResolveEventLogOptions } from './catalog';

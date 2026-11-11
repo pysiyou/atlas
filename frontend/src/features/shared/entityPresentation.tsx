@@ -1,5 +1,6 @@
 /**
- * Cross-feature table/card entity renders. Pure formatters and view-models: @/utils/presentation.
+ * Cross-feature table/card entity renders (React).
+ * Pure formatters and view-models: `@/utils/presentation`.
  */
 
 import type { MouseEvent, ReactNode } from 'react';
@@ -8,7 +9,7 @@ import { Badge, type BadgeProps } from '@/components/primitives';
 import { Avatar } from '@/components/primitives';
 import { RecordId } from '@/features/shared';
 import { getTestName } from '@/features/catalog/testLookup';
-import { LabPresentationCompactBadge, LabPresentationStack } from '@/features/lab';
+import { LabPresentationCompactBadge, LabPresentationStack } from '@/features/lab/cross';
 import type { Gender, OrderTest, TestSummary } from '@/types';
 import type { StatusPresentation } from '@/types/labProjection';
 import { PRESENTATION_STACK_CLASS, TABLE_TYPE } from '@/theme/recipes';
@@ -24,8 +25,8 @@ import { renderTruncatedListPreview } from '@/utils/truncatedListPreviewRender';
 import { formatStatusBadgeLabel, resolveStatusBadgeColor } from '@/utils/statusBadge';
 import {
   buildOrderContextPresentation,
-  formatPatientSexAgeLine,
   formatPatientOrdersCountLabel,
+  formatPatientSexAgeLine,
   formatTestCountLabel,
   resolveOrderTestsPresentation,
   type OrderTestsBlockLayout,

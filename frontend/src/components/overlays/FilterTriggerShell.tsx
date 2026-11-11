@@ -9,13 +9,7 @@ import { Icon } from '@/components/primitives/Icon';
 import { inputTrigger, inputTriggerOpen, filterTriggerText, inputClearButton } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { IconKeys } from '@/config/icons';
-
-/** Leading icon for filter dropdown triggers (search). */
-export const filterInputIcon = (
-  <Icon iconKey={IconKeys.actions.search}
-    className="w-4 h-4 text-text-muted group-hover:text-brand shrink-0 transition-colors"
-  />
-);
+import { filterInputIcon } from './filterTriggerIcons';
 
 export interface FilterTriggerShellProps {
   /** Whether the popover is open (for border/chevron state) */

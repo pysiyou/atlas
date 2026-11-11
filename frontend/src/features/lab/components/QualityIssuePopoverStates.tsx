@@ -32,7 +32,7 @@ export const QualityIssuePopoverErrorView: React.FC<QualityIssuePopoverErrorView
     className={cn(QUALITY_ISSUE_POPOVER_LAYOUT.widthClass, 'flex flex-col gap-layout-section p-panel min-w-0')}
   >
     <p className={text({ role: 'body' })}>{getFeedback('lab.qualityIssue.options.loadFailed').title}</p>
-    <p className={`${text({ role: 'caption' })} text-text-secondary`}>
+    <p className={text({ role: 'caption', intent: 'muted' })}>
       Check the notification for details, or try again.
     </p>
     <div className="flex justify-end gap-space-2">

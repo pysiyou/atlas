@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { FeatureFilterBar } from '@/hooks';
+import { FeatureFilterBar } from '@/components/filters';
 import { patientFilterConfig } from '../config/patientFilters.config';
 import type { Gender } from '@/types';
 

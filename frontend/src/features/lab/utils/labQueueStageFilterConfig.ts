@@ -4,8 +4,7 @@
 
 import { createLabQueueSearchFilter } from '../components/LabWorkflowQueueLayout';
 import { labQueueSearchTextFields, matchLabQueueSearchQuery } from './labSearchAndLinks';
-import type { EntryQueueRow } from '../types/entryQueue';
-import type { ValidationQueueRow } from '../types/validationQueue';
+import type { EntryQueueRow, ValidationQueueRow } from '../types/queues';
 import type { SampleCollectionQueueItem } from '../types';
 import type { PendingEscalationItem } from '../api/results';
 import type { EntryWorklistItem, ValidationWorklistItem } from '@/types/labWorklist';

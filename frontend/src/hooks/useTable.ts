@@ -1,6 +1,7 @@
 /**
- * Table hooks: pagination, sort, column width.
- * Extracted from components for max-depth-1 structure.
+ * Table primitives: pagination, sort, column width.
+ * Full sort→paginate pipeline for DataTable: `@/hooks/useDataTable`.
+ * Do not add feature-specific table state hooks; compose these instead.
  */
 
 import { useState, useMemo, useCallback, type CSSProperties } from 'react';

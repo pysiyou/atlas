@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { notify } from '@/feedback';
 import { useAuthStore } from '@/app/authStore';
 import { useResolveEscalation } from '../api/results';
@@ -22,17 +22,6 @@ export function useEscalationResolution({
   const canResolveEscalation = hasRole(['administrator', 'lab-technician-plus']);
   const resolveEscalation = useResolveEscalation();
   const resolving = resolveEscalation.isPending;
-
-  const messages: Record<EscalationResolutionAction, string> = useMemo(
-    () => ({
-      force_validate: 'Results force-validated.',
-      authorize_retest: 'Authorized re-test created.',
-      authorize_recollect: 'Re-collect authorized; new sample and test created.',
-      apply_amendment: 'Amendment applied and test validated.',
-      cancel_test: 'Test cancelled.',
-    }),
-    [],
-  );
 
   const resolveAsync = useCallback(
     (
@@ -84,7 +73,6 @@ export function useEscalationResolution({
       resolving,
       resolveEscalation,
       canResolveEscalation,
-      messages,
       onResetForm,
     ],
   );

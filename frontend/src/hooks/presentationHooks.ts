@@ -1,5 +1,5 @@
 /**
- * Screen-level presentation hooks. Import via @/utils/presentation (not this path directly).
+ * Screen-level presentation hooks. Import from `@/hooks/presentationHooks`.
  */
 
 import { useMemo } from 'react';

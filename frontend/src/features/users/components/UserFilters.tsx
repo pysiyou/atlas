@@ -4,10 +4,12 @@
 
 import React, { useMemo } from 'react';
 import type { FilterValues } from '@/components/filters/types';
-import { FeatureFilterBar } from '@/hooks';
+import { FeatureFilterBar } from '@/components/filters';
 import type { UserRole } from '@/types';
-import { userFilterConfig } from '../constants/userFilterBar.config';
-import type { UserAccountStatusFilter } from '../constants/userFilterConfig';
+import {
+  userFilterConfig,
+  type UserAccountStatusFilter,
+} from '../constants/userFilterConfig';
 
 export interface UserFiltersProps {
   filters: FilterValues;

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
-import type { EntryQueueRow } from '../types/entryQueue';
+import type { EntryQueueRow } from '../types/queues';
 import { isLabActionAllowed } from '../utils/queueDisplay';
 
 /**

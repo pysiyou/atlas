@@ -110,7 +110,7 @@ export default defineConfig([
               '@/features/lab/constants',
               '@/features/lab/constants/**',
             ],
-            message: 'Use @/features/lab barrel from outside lab; use relative imports inside features/lab.',
+            message: 'Use @/features/lab/cross or @/features/lab/routes from outside lab; use relative imports inside features/lab.',
           },
           {
             group: ['@/utils'],
@@ -157,7 +157,7 @@ export default defineConfig([
               '@/features/lab/constants',
               '@/features/lab/constants/**',
             ],
-            message: 'Use @/features/lab barrel from outside lab; use relative imports inside features/lab.',
+            message: 'Use @/features/lab/cross or @/features/lab/routes from outside lab; use relative imports inside features/lab.',
           },
           {
             group: ['@/utils'],

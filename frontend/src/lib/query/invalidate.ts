@@ -1,5 +1,6 @@
 /**
- * Shared cache invalidation helpers.
+ * Shared cache invalidation helpers, grouped by domain in this module:
+ * audit → lab monitor/worklists → orders → patients → lab mutations → payments.
  *
  * Invalidation matrix:
  * - Orders: create/update/delete/payment → invalidateOrderQueries

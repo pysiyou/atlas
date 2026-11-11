@@ -8,10 +8,10 @@ import type { UserRole } from '@/types';
 import type { LabTabId } from '../constants/labConstants';
 import { WORKLIST_SHELL } from '@/theme/recipes';
 import { tabAllowed } from './laboratoryPageAccess';
-import { SampleCollectionQueue } from '../collection/SampleCollectionQueue';
-import { ResultEntryQueue } from '../entry/ResultEntryQueue';
-import { ResultValidationQueue } from '../validation/ResultValidationQueue';
-import { LabMonitorBoard } from '../monitor/LabMonitorBoard';
+import { SampleCollectionQueue } from '../collection';
+import { ResultEntryQueue } from '../entry';
+import { ResultValidationQueue } from '../validation';
+import { LabMonitorBoard } from '../monitor';
 
 export interface LaboratoryPageStageContentProps {
   activeTab: LabTabId;

@@ -5,11 +5,11 @@
 
 import React from 'react';
 import { useLocation } from 'react-router-dom';
+import { DetailPageLoadingGrid } from '@/components/layout/DetailPageLoadingGrid';
 import {
-  DetailPageLoadingGrid,
   ORDER_DETAIL_LOADING_GRID,
   PATIENT_DETAIL_LOADING_GRID,
-} from '@/components/layout/DetailPageLoadingGrid';
+} from '@/components/layout/detailPageLoadingPresets';
 import { LabMonitorLoadingGrid } from '@/components/layout/LabMonitorLoadingGrid';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { TableLoadingPlaceholder } from '@/components/data-table/TableLoadingPlaceholder';

@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { FeatureFilterBar } from '@/hooks';
+import { FeatureFilterBar } from '@/components/filters';
 import { paymentFilterConfig } from '../config/paymentFilters.config';
 import type { PaymentStatus } from '@/types';
 

@@ -1,24 +1,7 @@
 /**
  * Lab feature utils — explicit exports (no export *).
+ * Worklist/theme class tokens: import from `@/theme/recipes`.
  */
-
-export {
-  WORKLIST_CARD_ALERT,
-  WORKLIST_CARD_BADGE_SIZE,
-  WORKLIST_CARD_SURFACE,
-  IDENTITY_INLINE,
-  CARD_ACTIONS_ROW,
-  CARD_HEADER_GRID,
-  WORKLIST_CARD_LIST_ITEM,
-  IDENTITY_STACK,
-  WORKLIST_CARD_SPACING,
-  WORKLIST_EMPHASIZED_INLINE,
-  WORKLIST_HEADER,
-  MOBILE_LIST_CARD,
-  MODAL_DETAIL_LAYOUT,
-  MODAL_HEADER_LAYOUT,
-  WORKLIST_SHELL,
-} from '@/theme/recipes';
 
 export { formatRejectionReasons, getSampleRejectionReasonLabel } from './labFormatters';
 export { deriveRetestContextFromRow, type TestRetestContext } from './deriveRetestContext';

@@ -19,6 +19,7 @@ export { QualityIssuePopover } from './QualityIssuePopover';
 export {
   LabWorkflowQueueLayout,
   LabWorkflowQueueMultiSectionLayout,
+  QueueListPlaceholder,
   createLabQueueSearchFilter,
 } from './LabWorkflowQueueLayout';
 export { LabValidationQueueSection } from './LabValidationQueueSection';

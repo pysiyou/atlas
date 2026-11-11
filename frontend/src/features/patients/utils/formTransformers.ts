@@ -65,7 +65,6 @@ export function patientToFormInput(patient?: Partial<PatientType>): Partial<Pati
  * Transform form input to API payload
  * Simplified - let schema validation and backend handle most transformations
  */
-// eslint-disable-next-line complexity
 export function formInputToPayload(
   formData: Partial<PatientFormInput>,
   _existingPatient?: Partial<PatientType>

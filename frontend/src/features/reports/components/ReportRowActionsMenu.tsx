@@ -61,9 +61,10 @@ export const ReportRowActionsMenu: React.FC<ReportRowActionsMenuProps> = ({
                 `flex w-full items-center gap-space-2-5 px-space-2-5 py-space-2 text-left ${MENU_ITEM_TYPE}`,
                 RADIUS.menuItem,
                 printDisabled
-                  ? 'cursor-not-allowed text-text-muted opacity-60'
+                  ? cn('cursor-not-allowed opacity-60', text({ role: 'body', intent: 'muted' }))
                   : cn(
-                      'cursor-pointer text-text-primary hover:bg-surface-hover transition-colors duration-150',
+                      'cursor-pointer hover:bg-surface-hover transition-colors duration-150',
+                      text({ role: 'body' }),
                       CONTROL.focusVisible,
                     ),
               )}

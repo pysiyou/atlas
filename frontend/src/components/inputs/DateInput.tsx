@@ -1,9 +1,8 @@
 /**
  * DateInput — single date picker with calendar popover.
  */
-/* eslint-disable max-lines -- single module: trigger + calendar views */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { format, isSameMonth, isSameDay, endOfMonth, setYear, isBefore, isAfter } from 'date-fns';
 import { Popover } from '@/components/overlays';
 import { Icon } from '@/components/primitives';
@@ -15,13 +14,14 @@ import { text, inputTrigger,
   inputClearButton,
   FORM_CONTROL_LABEL } from '@/theme/recipes';
 import { CALENDAR_TYPE, FIELD_ERROR, RADIUS, TONE } from '@/theme/recipes';
+import { CalendarHeader } from './calendar/CalendarHeader';
+import { useCalendarMonth } from './calendar/useCalendarMonth';
+import type { CalendarView } from './calendar/calendarTypes';
 import {
   generateCalendarDays,
   generateCalendarMonths,
   generateCalendarYears,
   WEEKDAY_LABELS } from '@/utils/date';
-
-type DateInputCalendarView = 'days' | 'months' | 'years';
 
 export interface DateInputProps {
   label?: string;
@@ -37,52 +37,6 @@ export interface DateInputProps {
   maxDate?: Date;
 }
 
-function DateInputHeader({
-  currentMonth,
-  view,
-  onPrevClick,
-  onNextClick,
-  onTitleClick,
-}: {
-  currentMonth: Date;
-  view: DateInputCalendarView;
-  onPrevClick: () => void;
-  onNextClick: () => void;
-  onTitleClick: () => void;
-}) {
-  const getTitle = (): string => {
-    if (view === 'days') return format(currentMonth, 'MMMM yyyy');
-    if (view === 'months') return format(currentMonth, 'yyyy');
-    const years = generateCalendarYears(currentMonth);
-    return `${format(years[0], 'yyyy')} - ${format(years[years.length - 1], 'yyyy')}`;
-  };
-  return (
-    <div className="flex items-center justify-between mb-space-3">
-      <button
-        type="button"
-        onClick={onPrevClick}
-        className={`p-space-1 hover:bg-surface-hover ${RADIUS.field} text-text-tertiary cursor-pointer flex items-center justify-center`}
-      >
-        <Icon iconKey={IconKeys.actions.chevronLeft} className="w-4 h-4" />
-      </button>
-      <button
-        type="button"
-        onClick={onTitleClick}
-        className={`${text({ role: 'amount' })} text-text-secondary hover:bg-surface-page px-space-2 py-space-1 ${RADIUS.field} transition-colors cursor-pointer`}
-      >
-        {getTitle()}
-      </button>
-      <button
-        type="button"
-        onClick={onNextClick}
-        className={`p-space-1 hover:bg-surface-hover ${RADIUS.field} text-text-tertiary cursor-pointer flex items-center justify-center`}
-      >
-        <Icon iconKey={IconKeys.actions.chevronRight} className="w-4 h-4" />
-      </button>
-    </div>
-  );
-}
-
 function DateInputCalendarGrid({
   currentMonth,
   setCurrentMonth,
@@ -96,8 +50,8 @@ function DateInputCalendarGrid({
 }: {
   currentMonth: Date;
   setCurrentMonth: (date: Date) => void;
-  view: DateInputCalendarView;
-  setView: (view: DateInputCalendarView) => void;
+  view: CalendarView;
+  setView: (view: CalendarView) => void;
   minDate: Date;
   maxDate: Date;
   isDateDisabled: (date: Date) => boolean;
@@ -220,21 +174,16 @@ export const DateInput: React.FC<DateInputProps> = ({
 }) => {
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
   const dateValue = value ? new Date(value) : null;
-  const [currentMonth, setCurrentMonth] = useState<Date>(dateValue || new Date());
-  const [view, setView] = useState<DateInputCalendarView>('days');
+  const {
+    currentMonth,
+    setCurrentMonth,
+    view,
+    setView,
+    navigatePrevious,
+    navigateNext,
+  } = useCalendarMonth(dateValue || new Date());
   const defaultMinDate = minDate || new Date(1900, 0, 1);
   const defaultMaxDate = maxDate || new Date(2100, 11, 31);
-
-  const navigatePrevious = () => {
-    if (view === 'days') setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
-    else if (view === 'months') setCurrentMonth(new Date(currentMonth.getFullYear() - 1, currentMonth.getMonth(), 1));
-    else setCurrentMonth(new Date(currentMonth.getFullYear() - 10, currentMonth.getMonth(), 1));
-  };
-  const navigateNext = () => {
-    if (view === 'days') setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
-    else if (view === 'months') setCurrentMonth(new Date(currentMonth.getFullYear() + 1, currentMonth.getMonth(), 1));
-    else setCurrentMonth(new Date(currentMonth.getFullYear() + 10, currentMonth.getMonth(), 1));
-  };
 
   const handleDateClick = (date: Date) => onChange(format(date, 'yyyy-MM-dd'));
 
@@ -304,7 +253,7 @@ export const DateInput: React.FC<DateInputProps> = ({
       >
         {() => (
           <div className="p-space-3">
-            <DateInputHeader
+            <CalendarHeader
               currentMonth={currentMonth}
               view={view}
               onPrevClick={navigatePrevious}

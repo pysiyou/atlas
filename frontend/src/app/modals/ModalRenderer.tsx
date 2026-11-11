@@ -5,6 +5,7 @@
 import React, { createElement, useEffect, useState } from 'react';
 import { Modal } from '@/components/overlays/Modal';
 import { ModalLoadingBody } from '@/components/overlays/modalLoading';
+import { Text } from '@/components/layout/Text';
 import { useModal, useModalStack } from '@/lib/context/ModalContext';
 import { modalFrameKey, modalFramePayload, type ModalFrame } from '@/lib/context/modalTypes';
 import {
@@ -51,41 +52,35 @@ const LazyRegisteredModal: React.FC<LazyRegisteredModalProps> = ({
   onClose,
   isActive,
 }) => {
-  const [Component, setComponent] = useState<RegisteredModalComponent | null>(() =>
-    modalComponentCache.get(frame.type) ?? null
-  );
-  const [loadFailed, setLoadFailed] = useState(false);
+  const cached = modalComponentCache.get(frame.type) ?? null;
+  const loader = getModalLoader(frame.type);
+  const [asyncLoad, setAsyncLoad] = useState<{
+    type: string;
+    component: RegisteredModalComponent | null;
+    failed: boolean;
+  }>({ type: frame.type, component: cached, failed: false });
 
   useEffect(() => {
-    if (modalComponentCache.has(frame.type)) {
-      const cached = modalComponentCache.get(frame.type)!;
-      // Must not pass a function component directly — React treats it as a state updater.
-      setComponent(() => cached);
-      setLoadFailed(false);
-      return;
-    }
-    const loader = getModalLoader(frame.type);
-    if (!loader) {
-      setLoadFailed(true);
-      return;
-    }
+    if (cached || !loader) return;
     let cancelled = false;
     void loader()
       .then(({ default: loaded }) => {
         if (cancelled) return;
         modalComponentCache.set(frame.type, loaded);
-        setComponent(() => loaded);
-        setLoadFailed(false);
+        setAsyncLoad({ type: frame.type, component: loaded, failed: false });
       })
       .catch(err => {
         if (cancelled) return;
         logger.error('Failed to load modal component', err);
-        setLoadFailed(true);
+        setAsyncLoad({ type: frame.type, component: null, failed: true });
       });
     return () => {
       cancelled = true;
     };
-  }, [frame.type]);
+  }, [cached, frame.type, loader]);
+
+  const Component = cached ?? (asyncLoad.type === frame.type ? asyncLoad.component : null);
+  const loadFailed = !cached && (!loader || (asyncLoad.type === frame.type && asyncLoad.failed));
 
   const sharedProps = {
     isOpen,
@@ -103,7 +98,7 @@ const LazyRegisteredModal: React.FC<LazyRegisteredModalProps> = ({
         size="3xl"
         isActive={isActive}
       >
-        <p className="text-sm text-content-muted">This dialog failed to load. Please try again.</p>
+        <Text role="body" intent="muted">This dialog failed to load. Please try again.</Text>
       </Modal>
     );
   }

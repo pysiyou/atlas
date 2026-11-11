@@ -6,11 +6,11 @@ import { OrderStatusBadge } from './OrderDomainBadges';
 import { StatusValueBadge } from '@/features/shared';
 import { useTestNameLookup } from '@/features/catalog';
 import { formatCurrency } from '@/utils';
+import { formatPatientSexAgeLine } from '@/utils/presentation';
 import {
-  formatPatientSexAgeLine,
   renderCardDateTimeSecondary,
   renderOrderTestsBlock,
-} from '@/utils/presentation';
+} from '@/features/shared/entityPresentation';
 import { getBillableTests } from '../utils/orderCalculator';
 import type { Order } from '@/types';
 import { CardFooter, Text } from '@/components/layout';

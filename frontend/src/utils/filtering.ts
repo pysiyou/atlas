@@ -1,4 +1,7 @@
-/** Filtering utilities — pure functions and shared sort/filter types. */
+/**
+ * Pure option/sort helpers and shared filter option types.
+ * URL encode/decode and navigation: `@/utils/filters`.
+ */
 
 // ---------------------------------------------------------------------------
 // Types

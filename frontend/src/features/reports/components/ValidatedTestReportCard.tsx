@@ -10,11 +10,8 @@ import type { ReportableOrder } from '../types';
 import { OrderStatusBadge } from '@/features/orders';
 import { ReportRowActionsMenu } from './ReportRowActionsMenu';
 import { INTERACTIVE, text } from '@/theme/recipes';
-import {
-  EntityStack,
-  renderCardDateTimeSecondary,
-  useReportableOrderPresentation,
-} from '@/utils/presentation';
+import { EntityStack, renderCardDateTimeSecondary } from '@/features/shared/entityPresentation';
+import { useReportableOrderPresentation } from '@/hooks/presentationHooks';
 import { cn } from '@/utils';
 import { renderTruncatedListPreview } from '@/utils/truncatedListPreviewRender';
 

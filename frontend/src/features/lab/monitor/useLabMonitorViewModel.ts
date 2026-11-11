@@ -4,7 +4,7 @@
 
 import { useMemo } from 'react';
 import { useLabMonitorBoardQuery, type LabBoardResponse } from '../api/labMonitor';
-import type { LabAttentionReason } from '../utils/labQueue';
+import type { LabAttentionReason } from '../utils/queueDisplay';
 import { labStageLabel } from '../constants/labConstants';
 import { ATTENTION_TYPE_CONFIG, type AttentionType } from './monitorModel';
 import type { LabAttentionQueueItem, LabBoardViewState, LabPipelineStage } from './monitorModel';

@@ -13,7 +13,7 @@ import {
   renderPatientId,
   renderPatientNameWithAge,
   renderPatientOrdersSummary,
-} from '@/utils/presentation';
+} from '@/features/shared/entityPresentation';
 import type { PatientContext } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { PatientCard } from '../components/PatientCard';

@@ -9,7 +9,7 @@ import type { Patient } from '@/types';
 import { FormDialogFooter, Modal, ModalPageShell } from '@/components/overlays';
 import { FooterInfo } from '@/components/display';
 import { SegmentedControl } from '@/components/inputs/SegmentedControl';
-import { ErrorBoundary } from '@/components/feedback';
+import { ErrorBoundary } from '@/feedback';
 import { IconKeys } from '@/config/icons';
 import { useEditPatientForm } from '../hooks/useEditPatientForm';
 import { PatientFormTabs } from './PatientFormTabs';

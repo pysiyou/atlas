@@ -16,6 +16,18 @@ const ESTIMATED_WORKLIST_CARD_HEIGHT_PX = 160;
 const QUEUE_OVERSCAN = 8;
 
 /**
+ * Loading body for card queues (not tables).
+ * Table chrome: `TableLoadingPlaceholder`.
+ */
+export function QueueListPlaceholder(): React.ReactElement {
+  return (
+    <div className="flex-1 min-h-0">
+      <FieldsPlaceholder className={FIELDS_PLACEHOLDER_TABLE_INSET} />
+    </div>
+  );
+}
+
+/**
  * Multi-section queue tab (validation): shared filter row + scroll region.
  * Single virtualized lists use {@link LabWorkflowQueueLayout} instead.
  */
@@ -114,9 +126,7 @@ export function LabWorkflowQueueLayout<T>({
       aria-busy={loading}
     >
       {loading ? (
-        <div className="flex-1 min-h-0">
-          <FieldsPlaceholder className={FIELDS_PLACEHOLDER_TABLE_INSET} />
-        </div>
+        <QueueListPlaceholder />
       ) : hasItems ? (
         <div
           className={`relative w-full ${SPACING.gapSection}`}

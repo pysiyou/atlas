@@ -4,7 +4,7 @@
 
 import { memo, useCallback } from 'react';
 import type { Test } from '@/types';
-import type { EntryQueueRow } from '../types/entryQueue';
+import type { EntryQueueRow } from '../types/queues';
 import { ResultEntryCard } from '../workflow';
 import { orderTestKey } from '../utils/labSearchAndLinks';
 

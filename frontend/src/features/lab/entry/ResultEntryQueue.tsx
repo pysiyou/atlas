@@ -10,14 +10,14 @@ import {
   useLabQueuePageFilters,
 } from '../hooks';
 import { useEntryWorklist } from '../api/worklists';
-import { worklistItemToEntryRow } from '../utils/labQueue';
-import type { EntryQueueRow } from '../types/entryQueue';
+import { worklistItemToEntryRow } from '../utils/worklistMappers';
+import type { EntryQueueRow } from '../types/queues';
 import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { entryFilterConfig } from '../constants';
 import { EMPTY_COPY } from '@/components/display';
-import { ErrorBoundary } from '@/components/feedback';
+import { ErrorBoundary } from '@/feedback';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { useResultEntryWorkflow } from './useResultEntryWorkflow';
 import { useLabDraftStore } from '../state/labDraftStore';

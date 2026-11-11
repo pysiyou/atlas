@@ -6,7 +6,7 @@ import React, { type ReactNode } from 'react';
 import { cn } from '@/utils';
 import { RecordId } from '@/features/shared';
 import { text, LIST_MARKER , FG } from '@/theme/recipes';
-import { getQueueAgeInfo } from '../utils/labQueue';
+import { getQueueAgeInfo } from '../utils/queueDisplay';
 import { TONE } from '@/theme/recipes';
 import type { Sample } from '@/types';
 import type { LabOrderTestQueueRow } from '../types/labQueueChrome';

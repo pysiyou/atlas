@@ -1,5 +1,7 @@
 /**
- * Lab workflow UI — queue list cards and detail modals.
+ * Lab workflow UI — queue list cards and detail modals (shells).
+ * Stage queues and business actions live in collection/entry/validation.
+ * See ARCHITECTURE.md in the lab feature root.
  */
 
 export {
@@ -40,5 +42,5 @@ export {
 
 export { SampleCollectionDetailModal } from './modals/detailModal.sampleCollection';
 export { ResultEntryDetailModal } from './modals/detailModal.resultEntry';
-export { TestDetailModal } from './modals/detailModal.test';
+export { TestDetailModal } from './modals/detailModal.testDetail';
 export { EscalationResolutionModal } from './modals/detailModal.escalation';

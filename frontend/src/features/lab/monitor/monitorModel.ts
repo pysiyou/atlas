@@ -1,6 +1,6 @@
 /** Command center board types and attention-queue categories. */
 import { LAB_CONFIG, LAB_COPY } from '../constants/labConstants';
-import type { LabAttentionReason } from '../utils/labQueue';
+import type { LabAttentionReason } from '../utils/queueDisplay';
 import type { PriorityLevel } from '@/types';
 
 /** Accent severity for attention feed rows */

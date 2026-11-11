@@ -1,5 +1,6 @@
 /**
- * Users API service — lookup for display names across the app.
+ * App-wide user lookup for display names.
+ * Admin directory CRUD lives in `@/features/users/api/usersAdmin`.
  */
 import { apiClient } from '@/lib/api/client';
 import type { ApiUserLookupResponse } from '@/lib/api/types';

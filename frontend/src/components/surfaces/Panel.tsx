@@ -54,6 +54,106 @@ export interface PanelProps {
   loadingHeaderAside?: boolean;
 }
 
+function PanelHeader({
+  hideHeader,
+  headerClass,
+  tokens,
+  headingSlot,
+  headerStart,
+  titleNode,
+  hasHeaderAside,
+  resolvedMeta,
+  showHeaderAsideSkeleton,
+  headerEnd,
+}: {
+  hideHeader: boolean;
+  headerClass: string;
+  tokens: (typeof PANEL_SHELL)[PanelVariant];
+  headingSlot: boolean;
+  headerStart?: React.ReactNode;
+  titleNode: React.ReactNode;
+  hasHeaderAside: boolean;
+  resolvedMeta?: string;
+  showHeaderAsideSkeleton: boolean;
+  headerEnd?: React.ReactNode;
+}) {
+  if (hideHeader) return null;
+  return (
+    <div className={headerClass}>
+      <div className={tokens.headerLead}>
+        {headingSlot && headerStart != null ? (
+          <div className={tokens.title}>{headerStart}</div>
+        ) : (
+          headerStart
+        )}
+        {titleNode}
+      </div>
+      {hasHeaderAside ? (
+        <div className={tokens.headerAside}>
+          {resolvedMeta ? (
+            <span className={cn(tokens.meta, 'min-w-0 text-right')}>{resolvedMeta}</span>
+          ) : null}
+          {showHeaderAsideSkeleton ? (
+            <div className={tokens.headerActions}>
+              <PanelHeaderAsidePlaceholder />
+            </div>
+          ) : headerEnd != null ? (
+            <div className={tokens.headerActions}>{headerEnd}</div>
+          ) : null}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function resolvePanelChrome(
+  preset: PanelPresetId,
+  title: string | undefined,
+  meta: string | undefined,
+  headerEnd: React.ReactNode,
+  footer: React.ReactNode,
+  loading: boolean,
+  loadingHeaderAside: boolean,
+) {
+  const def = getPanelPreset(preset);
+  const tokens = PANEL_SHELL[def.variant];
+  const scroll = def.scroll ?? 'default';
+  const resolvedSpacing = def.spacing ?? (isCompactPanelVariant(def.variant) ? 'normal' : 'none');
+  const resolvedMeta = meta ?? def.meta;
+  const showHeaderAsideSkeleton = loading && loadingHeaderAside;
+  const hasHeaderAside = Boolean(resolvedMeta || headerEnd || showHeaderAsideSkeleton);
+  const hasFooter = footer != null && footer !== false;
+  const headingSlot = def.headingSlot === true;
+  const resolvedTitle = title ?? def.title;
+  const titleNode =
+    headingSlot || resolvedTitle === ''
+      ? null
+      : <h3 className={tokens.title}>{resolvedTitle}</h3>;
+  const bodyScrollClass =
+    scroll === 'default' ? tokens.scrollDefault : PANEL_SCROLL[scroll];
+
+  return {
+    def,
+    tokens,
+    resolvedMeta,
+    showHeaderAsideSkeleton,
+    hasHeaderAside,
+    headerClass: hasHeaderAside ? tokens.headerBetween : tokens.header,
+    hasFooter,
+    hideHeader: def.hideHeader === true,
+    headingSlot,
+    titleNode,
+    bodyClassName: cn(
+      tokens.body,
+      hasFooter && 'flex-1 min-h-0',
+      bodyScrollClass,
+      PANEL_SPACING[resolvedSpacing],
+      PANEL_BODY_LAYOUT[def.bodyLayout ?? 'default'],
+      loading && embedLoadingBodyPadding(def.variant),
+    ),
+  };
+}
+
 export function Panel({
   preset,
   title,
@@ -66,73 +166,40 @@ export function Panel({
   loading = false,
   loadingHeaderAside = false,
 }: PanelProps) {
-  const def = getPanelPreset(preset);
-  const tokens = PANEL_SHELL[def.variant];
-  const scroll = def.scroll ?? 'default';
-  const resolvedSpacing = def.spacing ?? (isCompactPanelVariant(def.variant) ? 'normal' : 'none');
-  const resolvedMeta = meta ?? def.meta;
-  const showHeaderAsideSkeleton = loading && loadingHeaderAside;
-  const hasHeaderAside = Boolean(resolvedMeta || headerEnd || showHeaderAsideSkeleton);
-  const headerClass = hasHeaderAside ? tokens.headerBetween : tokens.header;
-  const hasFooter = footer != null && footer !== false;
-  const hideHeader = def.hideHeader === true;
-
-  const resolvedTitle = title ?? def.title;
-  const titleNode =
-    def.headingSlot || resolvedTitle === ''
-      ? null
-      : <h3 className={tokens.title}>{resolvedTitle}</h3>;
-
-  const bodyScrollClass =
-    scroll === 'default' ? tokens.scrollDefault : PANEL_SCROLL[scroll];
+  const chrome = resolvePanelChrome(
+    preset,
+    title,
+    meta,
+    headerEnd,
+    footer,
+    loading,
+    loadingHeaderAside,
+  );
 
   return (
     <section
       className={cn(
-        tokens.shell,
-        PANEL_SHELL_LAYOUT[def.shellLayout ?? 'default'],
-        def.maxHeightClass,
-        hasFooter && !loading && 'flex flex-col min-h-0',
+        chrome.tokens.shell,
+        PANEL_SHELL_LAYOUT[chrome.def.shellLayout ?? 'default'],
+        chrome.def.maxHeightClass,
+        chrome.hasFooter && !loading && 'flex flex-col min-h-0',
       )}
       data-testid={testId}
       aria-busy={loading || undefined}
     >
-      {!hideHeader && (
-        <div className={headerClass}>
-          <div className={tokens.headerLead}>
-            {def.headingSlot && headerStart != null ? (
-              <div className={tokens.title}>{headerStart}</div>
-            ) : (
-              headerStart
-            )}
-            {titleNode}
-          </div>
-          {hasHeaderAside ? (
-            <div className={tokens.headerAside}>
-              {resolvedMeta ? (
-                <span className={cn(tokens.meta, 'min-w-0 text-right')}>{resolvedMeta}</span>
-              ) : null}
-              {showHeaderAsideSkeleton ? (
-                <div className={tokens.headerActions}>
-                  <PanelHeaderAsidePlaceholder />
-                </div>
-              ) : headerEnd != null ? (
-                <div className={tokens.headerActions}>{headerEnd}</div>
-              ) : null}
-            </div>
-          ) : null}
-        </div>
-      )}
-      <div
-        className={cn(
-          tokens.body,
-          hasFooter && 'flex-1 min-h-0',
-          bodyScrollClass,
-          PANEL_SPACING[resolvedSpacing],
-          PANEL_BODY_LAYOUT[def.bodyLayout ?? 'default'],
-          loading && embedLoadingBodyPadding(def.variant),
-        )}
-      >
+      <PanelHeader
+        hideHeader={chrome.hideHeader}
+        headerClass={chrome.headerClass}
+        tokens={chrome.tokens}
+        headingSlot={chrome.headingSlot}
+        headerStart={headerStart}
+        titleNode={chrome.titleNode}
+        hasHeaderAside={chrome.hasHeaderAside}
+        resolvedMeta={chrome.resolvedMeta}
+        showHeaderAsideSkeleton={chrome.showHeaderAsideSkeleton}
+        headerEnd={headerEnd}
+      />
+      <div className={chrome.bodyClassName}>
         {loading ? (
           <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
             <FieldsPlaceholder />
@@ -141,7 +208,7 @@ export function Panel({
           children
         )}
       </div>
-      {hasFooter && !loading ? <div className={tokens.footer}>{footer}</div> : null}
+      {chrome.hasFooter && !loading ? <div className={chrome.tokens.footer}>{footer}</div> : null}
     </section>
   );
 }

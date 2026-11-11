@@ -3,9 +3,7 @@
  */
 import type { LabWorklistAllowedActions } from '@/types/lab-operations';
 import type { StatusPresentation } from '@/types/labProjection';
-import type { EntryQueueRow } from './entryQueue';
-import type { ValidationQueueRow } from './validationQueue';
-import type { EscalationQueueItem } from './escalationQueue';
+import type { EntryQueueRow, ValidationQueueRow, EscalationQueueItem } from './queues';
 import { copyWorklistLabProjection } from '../utils/worklistRowContext';
 import {
   deriveOrderTestQueueState,

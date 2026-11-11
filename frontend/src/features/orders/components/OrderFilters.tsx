@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { FeatureFilterBar } from '@/hooks';
+import { FeatureFilterBar } from '@/components/filters';
 import { orderFilterConfig } from '../config/orderFilters.config';
 import type { OrderStatus } from '@/types';
 

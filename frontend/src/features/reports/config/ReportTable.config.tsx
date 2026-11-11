@@ -12,11 +12,11 @@ import {
   renderOrderPatientName,
 } from '@/features/orders';
 import { renderDateTimeCell } from '@/utils/tableColumnRenders';
+import { formatReportOrderTestsPreview } from '@/utils/presentation';
 import {
-  formatReportOrderTestsPreview,
   renderNavigableOrderId,
   renderReportableOrderTestsCell,
-} from '@/utils/presentation';
+} from '@/features/shared/entityPresentation';
 import type { ReportableOrder } from '../types';
 import { ReportRowActionsMenu } from '../components/ReportRowActionsMenu';
 import { ValidatedTestReportCard } from '../components/ValidatedTestReportCard';
