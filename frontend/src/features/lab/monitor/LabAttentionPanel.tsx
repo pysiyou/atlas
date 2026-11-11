@@ -200,10 +200,9 @@ function AttentionFeed({ items }: { items: LabAttentionQueueItem[] }) {
 export interface LabAttentionPanelProps {
   items: LabAttentionQueueItem[];
   attentionTotal: number;
+  /** Field-line placeholder until the board snapshot is ready. */
   loading?: boolean;
 }
-
-const ATTENTION_LOADING_LIST_ROWS = 4;
 
 export const LabAttentionPanel: React.FC<LabAttentionPanelProps> = ({
   items,
@@ -218,8 +217,8 @@ export const LabAttentionPanel: React.FC<LabAttentionPanelProps> = ({
       preset="panel.pageEmbed.standard"
       title="Attention queue"
       loading={loading}
-      loadingShape="list"
-      loadingRows={ATTENTION_LOADING_LIST_ROWS}
+      loadingShape="fields"
+      loadingRows={6}
       meta={
         loading
           ? undefined

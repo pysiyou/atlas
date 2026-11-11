@@ -54,7 +54,10 @@ export const DetailPageShell: React.FC<DetailPageShellProps> = ({
           />
         </div>
       ) : (
-        <div className="flex-1 min-h-0 overflow-auto" aria-busy={loading || undefined}>
+        <div
+          className="flex flex-1 min-h-0 flex-col overflow-hidden"
+          aria-busy={loading || undefined}
+        >
           {children}
         </div>
       )}

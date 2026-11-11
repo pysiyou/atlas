@@ -167,8 +167,8 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
           preset={fillHeight ? 'panel.pageEmbed.auto.fill.flexColumnMin' : 'panel.pageEmbed.visible'}
           title="Order activity"
           loading={loading}
-          loadingShape="list"
-          loadingRows={4}
+          loadingShape="fields"
+          loadingRows={6}
         >
           {order ? (
             <OrderEventLogPanel
@@ -186,9 +186,8 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
           title="Tests"
           meta={testsHeaderMeta}
           loading={loading}
-          loadingShape="table"
-          loadingTableColumns={5}
-          loadingTableRows={5}
+          loadingShape="fields"
+          loadingRows={6}
         >
           {order ? (
             <TestsTable
@@ -205,7 +204,7 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
           title="Billing Summary"
           loading={loading}
           loadingShape="fields"
-          loadingRows={4}
+          loadingRows={6}
           loadingHeaderAside={!loading && Boolean(billingHeaderEnd)}
           headerEnd={billingHeaderEnd}
         >
@@ -275,8 +274,8 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
         preset="panel.pageEmbed.stackMinHeight"
         title="Order activity"
         loading={loading}
-        loadingShape="list"
-        loadingRows={4}
+        loadingShape="fields"
+        loadingRows={6}
       >
         {order ? <OrderEventLogPanel orderId={order.orderId} layout="embedded" /> : null}
       </Panel>
@@ -286,9 +285,8 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
         title="Tests"
         meta={testsHeaderMeta}
         loading={loading}
-        loadingShape="table"
-        loadingTableColumns={5}
-        loadingTableRows={5}
+        loadingShape="fields"
+        loadingRows={6}
       >
         {order ? (
           <TestsTable
@@ -305,7 +303,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
         title="Billing Summary"
         loading={loading}
         loadingShape="fields"
-        loadingRows={4}
+        loadingRows={6}
         loadingHeaderAside={!loading && Boolean(billingHeaderEnd)}
         headerEnd={billingHeaderEnd}
       >

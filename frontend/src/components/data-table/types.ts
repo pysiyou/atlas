@@ -116,8 +116,6 @@ export interface TableCellProps {
 
 export interface TableSkeletonProps<T = unknown> {
   columns: ColumnConfig<T>[];
-  rows: number;
-  variant: TableVariant;
 }
 
 export interface CardComponentProps<T> {

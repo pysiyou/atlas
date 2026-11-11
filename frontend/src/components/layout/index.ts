@@ -1,6 +1,8 @@
 export * from './AppShell';
 export * from './PageHeader';
 export * from './DetailPageShell';
+export * from './DetailPageLoadingGrid';
+export * from './LabMonitorLoadingGrid';
 export * from './sidebarMenu';
 export * from './Sidebar';
 export { Stack, type StackGap, type StackProps } from './Stack';

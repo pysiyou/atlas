@@ -5,6 +5,7 @@
 import { Panel } from '@/components/surfaces';
 import { LAYOUT } from '@/theme/recipes';
 import { MODAL_WORKFLOW_BODY_STACK } from '@/components/overlays/ModalPageShell';
+import { LabResultsTableSkeleton } from '../../components/LabResultsTableSkeleton';
 
 export type LabModalPlaceholderVariant =
   | 'testDetailView'
@@ -14,11 +15,11 @@ export type LabModalPlaceholderVariant =
   | 'sampleCollection';
 
 const PLACEHOLDER_ARIA_LABEL: Record<LabModalPlaceholderVariant, string> = {
-  testDetailView: 'Loading test details',
-  testDetailValidate: 'Loading validation review',
-  resultEntry: 'Loading result entry',
-  escalation: 'Loading escalation review',
-  sampleCollection: 'Loading sample collection',
+  testDetailView: 'Test details',
+  testDetailValidate: 'Validation review',
+  resultEntry: 'Result entry',
+  escalation: 'Escalation review',
+  sampleCollection: 'Sample collection',
 };
 
 export function LabModalPlaceholder({ variant }: { variant: LabModalPlaceholderVariant }) {
@@ -53,14 +54,9 @@ export function LabModalPlaceholder({ variant }: { variant: LabModalPlaceholderV
   if (variant === 'escalation') {
     return (
       <div className={stackClass} aria-busy="true" aria-label={PLACEHOLDER_ARIA_LABEL[variant]}>
-        <Panel
-          preset="panel.compact.scrollAuto.maxH"
-          title="Recorded Results"
-          loading
-          loadingShape="table"
-          loadingTableColumns={4}
-          loadingTableRows={4}
-        />
+        <Panel preset="panel.compact.scrollAuto.maxH" title="Recorded Results">
+          <LabResultsTableSkeleton />
+        </Panel>
         <Panel
           preset="panel.compact.standard"
           title="Resolution"
@@ -103,14 +99,9 @@ export function LabModalPlaceholder({ variant }: { variant: LabModalPlaceholderV
   const resultsTitle = variant === 'testDetailValidate' ? 'Result Validation' : 'Recorded Results';
   return (
     <div className={stackClass} aria-busy="true" aria-label={PLACEHOLDER_ARIA_LABEL[variant]}>
-      <Panel
-        preset="panel.compact.scrollAuto.maxH"
-        title={resultsTitle}
-        loading
-        loadingShape="table"
-        loadingTableColumns={4}
-        loadingTableRows={variant === 'testDetailValidate' ? 5 : 3}
-      />
+      <Panel preset="panel.compact.scrollAuto.maxH" title={resultsTitle}>
+        <LabResultsTableSkeleton />
+      </Panel>
       {variant === 'testDetailValidate' ? (
         <Panel
           preset="panel.compact.standard"

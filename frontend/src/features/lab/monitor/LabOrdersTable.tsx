@@ -16,21 +16,12 @@ import type { LabOrderTableRow } from './LabOrdersTable.types';
 
 const viewConfig = createLabOrdersTableConfig();
 
-const WORKLIST_LOADING_TABLE_ROWS = 8;
-const WORKLIST_LOADING_TABLE_COLUMNS = 6;
-
-export interface LabOrdersTableProps {
-  /** Board snapshot loading — keeps worklist panel in sync with top row. */
-  loading?: boolean;
-}
-
-export const LabOrdersTable: React.FC<LabOrdersTableProps> = ({ loading: boardLoading = false }) => {
+export const LabOrdersTable: React.FC = () => {
   const { openModal } = useModal();
   const workToday = useDashboardWorklistToday({ pageSize: 200 });
 
   const rows = useMemo(() => workToday.items.map(mapDashboardWorklistRow), [workToday.items]);
-  const worklistInitialLoad = workToday.isLoading && rows.length === 0;
-  const panelLoading = boardLoading || worklistInitialLoad;
+  const tableReady = !workToday.isLoading || rows.length > 0;
 
   const handleRowClick = useCallback(
     (row: LabOrderTableRow) => {
@@ -44,19 +35,13 @@ export const LabOrdersTable: React.FC<LabOrdersTableProps> = ({ loading: boardLo
   );
 
   return (
-    <Panel
-      preset="panel.pageEmbed.flushHeader"
-      loading={panelLoading}
-      loadingShape="table"
-      loadingTableRows={WORKLIST_LOADING_TABLE_ROWS}
-      loadingTableColumns={WORKLIST_LOADING_TABLE_COLUMNS}
-    >
+    <Panel preset="panel.pageEmbed.flushHeader">
       <DataTable<LabOrderTableRow>
         data={rows}
         viewConfig={viewConfig}
         embedded
         stickyHeader
-        loading={worklistInitialLoad && !boardLoading}
+        loading={!tableReady}
         pagination={{ mode: 'none' }}
         getRowKey={row => row.id}
         onRowClick={handleRowClick}

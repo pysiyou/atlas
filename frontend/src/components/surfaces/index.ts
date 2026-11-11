@@ -4,4 +4,5 @@ export * from './ListView';
 export * from './Pagination';
 export * from './Panel';
 export * from './panelLoading';
+export * from './FieldsPlaceholder';
 export * from './loadingPresets';

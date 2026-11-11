@@ -85,13 +85,12 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         preset="panel.pageEmbed.visible.shrink"
         title="Related Orders"
         loading={loading}
-        loadingShape="table"
-        loadingTableColumns={5}
-        loadingTableRows={4}
+        loadingShape="fields"
+        loadingRows={6}
         loadingHeaderAside={!loading}
         headerEnd={loading ? undefined : <RelatedOrdersHeader onNewOrder={onNewOrder} />}
       >
-        <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} loading={loading} />
+        <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
       </Panel>
 
       <Panel
@@ -99,8 +98,8 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
         title="Reports"
         meta={loading ? undefined : countMeta(getReportableOrders(orders).length)}
         loading={loading}
-        loadingShape="list"
-        loadingRows={3}
+        loadingShape="fields"
+        loadingRows={6}
       >
         <PatientReportsList orders={orders} />
       </Panel>
@@ -138,13 +137,12 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
         preset="panel.pageEmbed.visible"
         title="Related Orders"
         loading={loading}
-        loadingShape="table"
-        loadingTableColumns={5}
-        loadingTableRows={4}
+        loadingShape="fields"
+        loadingRows={6}
         loadingHeaderAside={!loading}
         headerEnd={loading ? undefined : <RelatedOrdersHeader onNewOrder={onNewOrder} />}
       >
-        <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} loading={loading} />
+        <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
       </Panel>
 
       <Panel
@@ -152,8 +150,8 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
         title="Reports"
         meta={loading ? undefined : countMeta(getReportableOrders(orders).length)}
         loading={loading}
-        loadingShape="list"
-        loadingRows={3}
+        loadingShape="fields"
+        loadingRows={6}
       >
         <PatientReportsList orders={orders} />
       </Panel>
@@ -173,10 +171,7 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
   onNewOrder,
 }) => {
   return (
-    <div
-      className="flex-1 grid grid-rows-[minmax(0,1fr)_minmax(0,1fr)] gap-layout-section min-h-0 h-full overflow-hidden"
-      style={{ height: '100%', maxHeight: '100%' }}
-    >
+    <div className={LAYOUT.detailGridRowsSplit}>
       <div className={cn(LAYOUT.detailGrid3, 'min-h-0 h-full items-stretch')}>
         <Panel preset="panel.page.auto.fill" title="General Info" loading={loading} loadingShape="fields" loadingRows={6}>
           {patient ? <GeneralInfoSection patient={patient} /> : null}
@@ -196,13 +191,12 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
           preset="panel.pageEmbed.span2Min"
           title="Related Orders"
           loading={loading}
-          loadingShape="table"
-          loadingTableColumns={5}
-          loadingTableRows={5}
+          loadingShape="fields"
+          loadingRows={6}
           loadingHeaderAside={!loading}
           headerEnd={loading ? undefined : <RelatedOrdersHeader onNewOrder={onNewOrder} />}
         >
-          <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} loading={loading} />
+          <PatientOrdersTable orders={orders} onOrderClick={onOrderClick} />
         </Panel>
 
         <Panel
@@ -210,8 +204,8 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
           title="Reports"
           meta={loading ? undefined : countMeta(getReportableOrders(orders).length)}
           loading={loading}
-          loadingShape="list"
-          loadingRows={3}
+          loadingShape="fields"
+          loadingRows={6}
         >
           <PatientReportsList orders={orders} />
         </Panel>

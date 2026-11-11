@@ -1,80 +1,76 @@
 /**
- * Default Panel body placeholders — sized to match common panel content shapes.
+ * Default Panel body placeholders. Body copy is always FieldsPlaceholder.
  */
 
 import type { ReactNode } from 'react';
-import { Skeleton, SkeletonInfoSection, SkeletonTableRow } from '@/components/feedback';
-import { RADIUS } from '@/theme/recipes';
+import { Skeleton } from '@/components/feedback';
+import { DATA_GRID, RADIUS } from '@/theme/recipes';
+import { FieldsPlaceholder, FIELDS_PLACEHOLDER_ROWS } from './FieldsPlaceholder';
 
 export type PanelLoadingShape = 'fields' | 'list' | 'table' | 'block';
 
 export interface PanelLoadingOptions {
   shape?: PanelLoadingShape;
-  /** Field rows (`fields`) or list rows (`list`). */
+  /** Max placeholder pairs. Omit to fill the body. */
   rows?: number;
   tableColumns?: number;
   tableRows?: number;
+  /** When set, render a real `<thead>` and FieldsPlaceholder in the body. */
+  tableHeaders?: string[];
   fieldLayout?: 'grid' | 'column';
-  /** Custom body when shape-specific defaults are not enough. */
   content?: ReactNode;
-}
-
-const DEFAULT_FIELD_ROWS = 4;
-const DEFAULT_LIST_ROWS = 5;
-const DEFAULT_TABLE_COLUMNS = 5;
-const DEFAULT_TABLE_ROWS = 4;
-
-function PanelListRowPlaceholder({ className = '' }: { className?: string }) {
-  return (
-    <div
-      className={`flex items-center justify-between gap-space-3 p-panel border border-border-default ${RADIUS.surface} ${className}`.trim()}
-      aria-hidden
-    >
-      <div className="flex-1 min-w-0 space-y-space-1">
-        <Skeleton height={16} width="42%" />
-        <Skeleton height={14} width="58%" />
-      </div>
-      <Skeleton height={22} width={72} className={RADIUS.field} />
-    </div>
-  );
 }
 
 export function PanelLoadingBody({
   shape = 'fields',
   rows,
-  tableColumns = DEFAULT_TABLE_COLUMNS,
-  tableRows = DEFAULT_TABLE_ROWS,
-  fieldLayout = 'column',
+  tableHeaders,
   content,
 }: PanelLoadingOptions) {
   if (content != null) return content;
 
-  if (shape === 'list') {
-    const count = rows ?? DEFAULT_LIST_ROWS;
+  if (shape === 'table' && tableHeaders?.length) {
+    const columnCount = tableHeaders.length;
+    const useLabResultsColGroup = columnCount === 3;
     return (
-      <div className="space-y-space-3">
-        {Array.from({ length: count }).map((_, index) => (
-          <PanelListRowPlaceholder key={index} />
-        ))}
+      <div className={useLabResultsColGroup ? DATA_GRID.scrollWrap : undefined}>
+        <table className={useLabResultsColGroup ? DATA_GRID.table : 'w-full table-fixed border-collapse'}>
+          {useLabResultsColGroup ? (
+            <colgroup>
+              {DATA_GRID.colGroup.table.map(col => (
+                <col key={col} className={col} />
+              ))}
+            </colgroup>
+          ) : null}
+          <thead>
+            <tr>
+              {tableHeaders.map(label => (
+                <th
+                  key={label}
+                  scope="col"
+                  className={useLabResultsColGroup ? DATA_GRID.headerCell : `text-left ${RADIUS.surface} pb-space-1-5`}
+                >
+                  {label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td
+                colSpan={columnCount}
+                className={useLabResultsColGroup ? `${DATA_GRID.bodyCell} p-0` : 'p-0 align-top'}
+              >
+                <FieldsPlaceholder />
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     );
   }
 
-  if (shape === 'table') {
-    return (
-      <div className="border-t border-border-default">
-        {Array.from({ length: tableRows }).map((_, index) => (
-          <SkeletonTableRow key={index} columns={tableColumns} />
-        ))}
-      </div>
-    );
-  }
-
-  if (shape === 'block') {
-    return <Skeleton height={120} className="w-full" />;
-  }
-
-  return <SkeletonInfoSection rows={rows ?? DEFAULT_FIELD_ROWS} layout={fieldLayout} />;
+  return <FieldsPlaceholder rows={shape === 'fields' ? (rows ?? FIELDS_PLACEHOLDER_ROWS) : rows} />;
 }
 
 export function PanelHeaderAsidePlaceholder({ width = 56 }: { width?: number }) {

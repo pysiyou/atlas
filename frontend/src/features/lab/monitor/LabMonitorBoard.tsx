@@ -13,45 +13,44 @@ import { LabAttentionPanel } from './LabAttentionPanel';
 import { LabMonitorEventLogPanel } from '@/features/audit';
 
 export interface LabMonitorBoardProps {
-  loading?: boolean;
   /** When false, skips full board fetch/poll (inactive monitor tab). */
   monitorActive?: boolean;
 }
 
 export const LabMonitorBoard: React.FC<LabMonitorBoardProps> = ({
-  loading: loadingProp,
   monitorActive = true,
 }) => {
   const board = useLabMonitorViewModel({ enabled: monitorActive });
-  const chrome = useClientListChrome({
+  useClientListChrome({
     loadFailedKey: 'lab.page.loadFailed',
     isLoading: board.isLoading,
     isError: board.isError,
     error: board.error,
     refetch: board.refetch,
   });
-  const loading = loadingProp ?? chrome.loading;
+
+  const boardLoading = board.isLoading;
 
   return (
     <div className={SPLIT_WORKSPACE_PANEL.page}>
       <div className={SPLIT_WORKSPACE_PAGE}>
         <div className={SPLIT_BOTTOM_ROW}>
           <div className={SPLIT_BOTTOM_PANEL}>
-            <LabTodayPanel todayPanel={board.todayPanel} loading={loading} />
+            <LabTodayPanel todayPanel={board.todayPanel} loading={boardLoading} />
           </div>
           <div className={SPLIT_BOTTOM_PANEL}>
             <LabAttentionPanel
               items={board.attentionItems}
               attentionTotal={board.attentionTotal}
-              loading={loading}
+              loading={boardLoading}
             />
           </div>
           <div className={SPLIT_BOTTOM_PANEL}>
-            <LabMonitorEventLogPanel loading={loading} />
+            <LabMonitorEventLogPanel loading={boardLoading} />
           </div>
         </div>
         <div className={SPLIT_TABLE_WRAP}>
-          <LabOrdersTable loading={loading} />
+          <LabOrdersTable />
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@
 /* eslint-disable react-refresh/only-export-components -- Panel + preset re-exports */
 
 import React, { type ReactNode } from 'react';
-import { PANEL_SHELL } from '@/theme/recipes';
+import { PANEL_LAYOUT, PANEL_SHELL, SPACING } from '@/theme/recipes';
 import { cn } from '@/utils';
 import {
   PanelHeaderAsidePlaceholder,
@@ -28,6 +28,16 @@ function isCompactPanelVariant(variant: PanelVariant): boolean {
   return variant === 'compact' || variant === 'compactEmbed';
 }
 
+/**
+ * Embed variants flush the body for tables. While loading, restore the same inset
+ * the matching non-embed shell uses so field placeholders do not touch the border.
+ */
+function embedLoadingBodyPadding(variant: PanelVariant): string | false {
+  if (variant === 'pageEmbed') return PANEL_LAYOUT.pageBodyPadding;
+  if (variant === 'compactEmbed') return SPACING.pPanelDensityCompact;
+  return false;
+}
+
 export interface PanelProps {
   preset: PanelPresetId;
   /** Section heading (required for visible headers; omit when preset hides the header). */
@@ -48,6 +58,7 @@ export interface PanelProps {
   loadingRows?: number;
   loadingTableColumns?: number;
   loadingTableRows?: number;
+  loadingTableHeaders?: string[];
   loadingFieldLayout?: 'grid' | 'column';
   loadingContent?: ReactNode;
   /** Reserve header aside width with a skeleton (e.g. actions/links). */
@@ -68,6 +79,7 @@ export function Panel({
   loadingRows,
   loadingTableColumns,
   loadingTableRows,
+  loadingTableHeaders,
   loadingFieldLayout,
   loadingContent,
   loadingHeaderAside = false,
@@ -136,17 +148,23 @@ export function Panel({
           bodyScrollClass,
           PANEL_SPACING[resolvedSpacing],
           PANEL_BODY_LAYOUT[def.bodyLayout ?? 'default'],
+          loading &&
+            loadingShape !== 'table' &&
+            embedLoadingBodyPadding(def.variant),
         )}
       >
         {loading ? (
-          <PanelLoadingBody
-            shape={loadingShape}
-            rows={loadingRows}
-            tableColumns={loadingTableColumns}
-            tableRows={loadingTableRows}
-            fieldLayout={loadingFieldLayout}
-            content={loadingContent}
-          />
+          <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
+            <PanelLoadingBody
+              shape={loadingShape}
+              rows={loadingRows}
+              tableColumns={loadingTableColumns}
+              tableRows={loadingTableRows}
+              tableHeaders={loadingTableHeaders}
+              fieldLayout={loadingFieldLayout}
+              content={loadingContent}
+            />
+          </div>
         ) : (
           children
         )}

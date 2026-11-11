@@ -19,11 +19,9 @@ const EMPTY_TODAY_PANEL: LabTodayPanelSnapshot = {
   stages: [],
 };
 
-const TODAY_LOADING_TABLE_ROWS = 3;
-const TODAY_LOADING_TABLE_COLUMNS = 4;
-
 export interface LabTodayPanelProps {
   todayPanel?: LabTodayPanelSnapshot;
+  /** Field-line placeholder until the board snapshot is ready. */
   loading?: boolean;
 }
 
@@ -48,10 +46,9 @@ export const LabTodayPanel: React.FC<LabTodayPanelProps> = ({
       preset="panel.pageEmbed.flexColumnFill"
       title="Today"
       loading={loading}
-      loadingShape="table"
-      loadingTableRows={TODAY_LOADING_TABLE_ROWS}
-      loadingTableColumns={TODAY_LOADING_TABLE_COLUMNS}
-      loadingHeaderAside
+      loadingShape="fields"
+      loadingRows={6}
+      loadingHeaderAside={loading}
       headerEnd={
         loading ? undefined : (
           <TodayPanelHeaderMeta

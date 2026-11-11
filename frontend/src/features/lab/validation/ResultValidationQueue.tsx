@@ -15,8 +15,7 @@ import {
 } from '../hooks';
 import { VALIDATION_REVIEW_ESCALATION_PROFILE } from '../utils/labQueueSecondaryProfiles';
 import { validationFilterConfig } from '../constants';
-import { LabQueueCardPlaceholder } from '../components/labQueuePlaceholders';
-import { SPACING } from '@/theme/recipes';
+import { FieldsPlaceholder, FIELDS_PLACEHOLDER_TABLE_INSET } from '@/components/surfaces/FieldsPlaceholder';
 import { ErrorBoundary } from '@/components/feedback';
 import { useClientListChrome } from '@/hooks';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
@@ -123,13 +122,8 @@ export const ResultValidationQueue: React.FC = () => {
         }
       >
         {waitingOnInitialLoad ? (
-          <div className={`flex flex-col ${SPACING.gapSection}`}>
-            {Array.from({ length: 5 }).map((_, index) => (
-              <LabQueueCardPlaceholder
-                key={index}
-                variant={index < 2 ? 'escalation' : 'validation'}
-              />
-            ))}
+          <div className="flex-1 min-h-0">
+            <FieldsPlaceholder className={FIELDS_PLACEHOLDER_TABLE_INSET} />
           </div>
         ) : (
           <ResultValidationQueueView

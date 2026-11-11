@@ -6,7 +6,7 @@ import { Skeleton } from '@/components/feedback';
 import { DialogFooter, DialogHeader } from '@/components/overlays';
 import { cn } from '@/utils';
 import { feedbackTitle } from '@/feedback';
-import { RADIUS, SPACING } from '@/theme/recipes';
+import { RADIUS } from '@/theme/recipes';
 
 /** Matches lab ResultsGridLayout / report preview layout. */
 export type ReportPreviewResultsLayout = 'grid' | 'table';
@@ -25,16 +25,7 @@ export function reportPreviewPanelLoadingContent(layout: ReportPreviewResultsLay
             <Skeleton height={12} width="22%" />
             <Skeleton height={12} width="34%" />
           </div>
-          {Array.from({ length: REPORT_TABLE_ROWS }).map((_, rowIndex) => (
-            <div
-              key={rowIndex}
-              className="flex gap-space-3 px-space-3 py-space-2-5 border-b border-border-default last:border-b-0"
-            >
-              <Skeleton height={14} width="30%" />
-              <Skeleton height={14} width="18%" />
-              <Skeleton height={14} width="42%" />
-            </div>
-          ))}
+          <Skeleton className="w-full rounded-none" height={REPORT_TABLE_ROWS * 40} />
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-space-3">
@@ -110,16 +101,6 @@ export function popoverFormLoadingContent() {
         <Skeleton height={12} width="35%" className={`${RADIUS.field} mb-space-1`} />
         <Skeleton height={60} width="100%" className={RADIUS.field} />
       </div>
-    </div>
-  );
-}
-
-export function eventLogFeedLoadingContent(rows = 4) {
-  return (
-    <div className={`flex flex-col gap-space-3 p-space-4 ${SPACING.stackRelaxed}`}>
-      {Array.from({ length: rows }).map((_, index) => (
-        <Skeleton key={index} height={56} className="w-full" />
-      ))}
     </div>
   );
 }

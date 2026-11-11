@@ -8,15 +8,16 @@ import { EmptyState } from '@/components/display';
 import type { IconKey } from '@/config/icons';
 import { PANEL_EMPTY_STATE, DENSE_EMPTY_STATE } from '@/config/emptyStatePresets';
 import { DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';
+import { cn } from '@/utils';
 import type { ColumnConfig, SortConfig, TableVariant } from './types';
 import { DEFAULT_LOADING_ROWS, ROW_HEIGHTS } from './constants';
 import { useGridTemplateColumns } from '@/hooks/useTable';
 import {
   TableDataRow,
   TableHeader,
+  TableSkeleton,
   TABLE_ROW_OVERSCAN,
   TableViewEmpty,
-  TableViewLoading,
   resolveEmptyMinHeight,
   resolveTableContainerClasses,
 } from './tableViewParts';
@@ -94,7 +95,7 @@ export function TableView<T>({
   rowClassName,
   getRowKey,
   loading = false,
-  loadingRows = DEFAULT_LOADING_ROWS,
+  loadingRows: _loadingRows = DEFAULT_LOADING_ROWS,
   emptyMessage,
   emptyDescription,
   emptyIcon,
@@ -121,22 +122,7 @@ export function TableView<T>({
 
   const showSkeleton = loading && !hasRows;
 
-  if (showSkeleton) {
-    return (
-      <TableViewLoading
-        containerClasses={containerClasses}
-        caption={caption}
-        ariaLabel={ariaLabel}
-        maxHeight={maxHeight}
-        showHeader={showHeader}
-        columns={columns}
-        variant={variant}
-        loadingRows={loadingRows}
-      />
-    );
-  }
-
-  if (data.length === 0) {
+  if (!showSkeleton && data.length === 0) {
     return (
       <TableViewEmpty
         containerClasses={containerClasses}
@@ -175,10 +161,16 @@ export function TableView<T>({
       ) : null}
       <div
         ref={scrollParentRef}
-        className="flex-1 min-h-0 overflow-auto"
+        className={cn(
+          'flex-1 min-h-0',
+          showSkeleton ? 'overflow-hidden flex flex-col' : 'overflow-auto',
+        )}
         style={maxHeight ? { maxHeight } : undefined}
         role="rowgroup"
       >
+        {showSkeleton ? (
+          <TableSkeleton columns={columns} />
+        ) : (
         <div className="relative w-full" style={{ height: virtualizer.getTotalSize() }}>
           {virtualizer.getVirtualItems().map(virtualRow => {
             const item = data[virtualRow.index];
@@ -208,6 +200,7 @@ export function TableView<T>({
             );
           })}
         </div>
+        )}
       </div>
     </div>
   );

@@ -7,7 +7,7 @@
 import React, { type ReactNode, useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { EmptyState, PANEL_EMPTY_STATE } from '@/components/display';
-import { LabQueueCardPlaceholder, type LabQueuePlaceholderVariant } from './labQueuePlaceholders';
+import { FieldsPlaceholder, FIELDS_PLACEHOLDER_TABLE_INSET } from '@/components/surfaces/FieldsPlaceholder';
 import { labQueueSearchTextFields, matchLabQueueSearchQuery } from '../utils/labSearchAndLinks';
 import { SPACING, WORKSPACE } from '@/theme/recipes';
 
@@ -78,11 +78,8 @@ interface LabWorkflowQueueLayoutProps<T> {
   emptyDescription: string;
   /** Filter row (e.g. LabQueueFilters). Parent filters items before passing here. */
   filterRow: ReactNode;
-  /** Parent-controlled initial load (shows card-sized placeholders). */
+  /** Parent-controlled initial load (one fill until items are ready). */
   loading?: boolean;
-  loadingCardCount?: number;
-  /** Skeleton layout while loading — one shape per workflow queue. */
-  loadingPlaceholder?: LabQueuePlaceholderVariant;
 }
 
 export function LabWorkflowQueueLayout<T>({
@@ -93,8 +90,6 @@ export function LabWorkflowQueueLayout<T>({
   emptyDescription,
   filterRow,
   loading = false,
-  loadingCardCount = 5,
-  loadingPlaceholder = 'default',
 }: LabWorkflowQueueLayoutProps<T>): React.ReactElement {
   const hasItems = items.length > 0;
   const parentRef = useRef<HTMLDivElement>(null);
@@ -112,17 +107,15 @@ export function LabWorkflowQueueLayout<T>({
       filterRow={filterRow}
       scrollRef={parentRef}
       scrollClassName={
-        loading || hasItems
-          ? `${WORKSPACE.contentInset}`
-          : `${WORKSPACE.contentInset} flex flex-col`
+        loading || !hasItems
+          ? `${WORKSPACE.contentInset} flex flex-col`
+          : `${WORKSPACE.contentInset}`
       }
       aria-busy={loading}
     >
       {loading ? (
-        <div className={`flex flex-col ${SPACING.gapSection}`}>
-          {Array.from({ length: loadingCardCount }).map((_, index) => (
-            <LabQueueCardPlaceholder key={index} variant={loadingPlaceholder} />
-          ))}
+        <div className="flex-1 min-h-0">
+          <FieldsPlaceholder className={FIELDS_PLACEHOLDER_TABLE_INSET} />
         </div>
       ) : hasItems ? (
         <div

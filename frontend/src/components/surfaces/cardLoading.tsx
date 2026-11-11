@@ -3,7 +3,8 @@
  */
 
 import type { ReactNode } from 'react';
-import { Skeleton, SkeletonText } from '@/components/feedback';
+import { Skeleton } from '@/components/feedback';
+import { FieldsPlaceholder } from './FieldsPlaceholder';
 import { RADIUS } from '@/theme/recipes';
 
 export type CardLoadingVariant = 'default' | 'metric' | 'banner';
@@ -43,10 +44,5 @@ export function CardLoadingBody({ variant = 'default', content }: CardLoadingOpt
     );
   }
 
-  return (
-    <div className="space-y-space-2">
-      <Skeleton height={20} width="40%" />
-      <SkeletonText lines={3} />
-    </div>
-  );
+  return <FieldsPlaceholder rows={3} />;
 }

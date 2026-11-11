@@ -104,7 +104,6 @@ export const ResultEntryQueue: React.FC = () => {
     <ErrorBoundary>
       <LabWorkflowQueueLayout
         loading={queueLoading}
-        loadingPlaceholder="entry"
         items={filteredRows}
         renderCard={(row, idx) => {
           const entryRow = row as EntryQueueRow;

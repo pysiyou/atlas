@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components -- table building blocks */
 import type { ReactNode } from 'react';
 import { Icon } from '@/components/primitives';
-import { Skeleton } from '@/components/feedback';
+import { FieldsPlaceholder, FIELDS_PLACEHOLDER_TABLE_INSET } from '@/components/surfaces/FieldsPlaceholder';
 import { IconKeys } from '@/config/icons';
 import type {
   ColumnConfig,
@@ -172,37 +172,22 @@ export function TableDataRow<T>({
   );
 }
 
-export function TableSkeleton<T = unknown>({ columns, rows, variant }: TableSkeletonProps<T>) {
+export function TableSkeleton<T = unknown>({ columns }: TableSkeletonProps<T>) {
   const gridTemplateColumns = useGridTemplateColumns(columns);
   return (
-    <>
-      {Array.from({ length: rows }).map((_, rowIndex) => (
-        <div
-          key={rowIndex}
-          className={TABLE_SHELL.row}
-          style={{ gridTemplateColumns, height: `${ROW_HEIGHTS[variant]}px` }}
-        >
-          {columns.map(column => {
-            const skeletonWidth = rowIndex % 3 === 0 ? '90%' : rowIndex % 3 === 1 ? '75%' : '85%';
-            return (
-              <div
-                key={column.key}
-                className={cn(
-                  composedTableCell({
-                    density: TABLE_CELL_DENSITY[variant],
-                    tone: 'primary',
-                    align: 'start',
-                  }),
-                  'min-w-0'
-                )}
-              >
-                <Skeleton height={16} width={skeletonWidth} />
-              </div>
-            );
-          })}
-        </div>
-      ))}
-    </>
+    <div
+      role="row"
+      className={cn(TABLE_SHELL.row, 'h-full min-h-[12rem] flex-1 items-stretch')}
+      style={{ gridTemplateColumns }}
+    >
+      <div
+        role="cell"
+        className={cn(TABLE_SHELL.bodyCell, 'h-full min-h-0 p-0')}
+        style={{ gridColumn: `1 / span ${Math.max(columns.length, 1)}` }}
+      >
+        <FieldsPlaceholder className={FIELDS_PLACEHOLDER_TABLE_INSET} />
+      </div>
+    </div>
   );
 }
 
@@ -215,63 +200,6 @@ export function resolveTableContainerClasses(embedded: boolean): string {
 export function resolveEmptyMinHeight(embedded: boolean, emptyVariant: 'compact' | 'dense'): string {
   if (embedded) return 'min-h-0';
   return emptyVariant === 'dense' ? 'min-h-[9rem]' : 'min-h-[12rem]';
-}
-
-/**
- * Visually hidden table name. A real `<caption>` is invalid inside `div role="table"`.
- */
-function TableAccessibleName({ caption }: { caption?: string }) {
-  if (!caption) return null;
-  return <span className="sr-only">{caption}</span>;
-}
-
-export function TableViewLoading<T>({
-  containerClasses,
-  caption,
-  ariaLabel,
-  maxHeight,
-  showHeader,
-  columns,
-  variant,
-  loadingRows,
-}: {
-  containerClasses: string;
-  caption?: string;
-  ariaLabel?: string;
-  maxHeight?: string;
-  showHeader: boolean;
-  columns: ColumnConfig<T>[];
-  variant: TableVariant;
-  loadingRows: number;
-}) {
-  return (
-    <div
-      className={containerClasses}
-      role="table"
-      aria-busy="true"
-      aria-label={ariaLabel ?? caption ?? 'Loading'}
-    >
-      <TableAccessibleName caption={caption} />
-      {showHeader && (
-        <div className="shrink-0" role="rowgroup">
-          <TableHeader
-            columns={columns}
-            visibleColumns={columns}
-            sort={null}
-            onSort={() => {}}
-            variant={variant}
-          />
-        </div>
-      )}
-      <div
-        className="flex-1 min-h-0 overflow-auto"
-        style={maxHeight ? { maxHeight } : undefined}
-        role="rowgroup"
-      >
-        <TableSkeleton columns={columns} rows={loadingRows} variant={variant} />
-      </div>
-    </div>
-  );
 }
 
 export function TableViewEmpty({

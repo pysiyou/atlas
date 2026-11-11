@@ -1,35 +1,17 @@
 /**
- * Lab page stage body: lazy-loads the active queue/board so inactive tabs stay out of the bundle.
+ * Lab page stage body: the active queue/board. Chrome (filters, table headers) is local;
+ * one body fill stays up until that tab’s data is ready.
  */
-import { lazy, Suspense } from 'react';
+
 import { useClientListChrome } from '@/hooks';
 import type { UserRole } from '@/types';
-import { Card } from '@/components/surfaces';
-import { WORKSPACE, SPACING } from '@/theme/recipes';
 import type { LabTabId } from '../constants/labConstants';
 import { WORKLIST_SHELL } from '@/theme/recipes';
 import { tabAllowed } from './laboratoryPageAccess';
-
-const SampleCollectionQueue = lazy(() =>
-  import('../collection/SampleCollectionQueue').then(module => ({
-    default: module.SampleCollectionQueue,
-  }))
-);
-const ResultEntryQueue = lazy(() =>
-  import('../entry/ResultEntryQueue').then(module => ({
-    default: module.ResultEntryQueue,
-  }))
-);
-const ResultValidationQueue = lazy(() =>
-  import('../validation/ResultValidationQueue').then(module => ({
-    default: module.ResultValidationQueue,
-  }))
-);
-const LabMonitorBoard = lazy(() =>
-  import('../monitor/LabMonitorBoard').then(module => ({
-    default: module.LabMonitorBoard,
-  }))
-);
+import { SampleCollectionQueue } from '../collection/SampleCollectionQueue';
+import { ResultEntryQueue } from '../entry/ResultEntryQueue';
+import { ResultValidationQueue } from '../validation/ResultValidationQueue';
+import { LabMonitorBoard } from '../monitor/LabMonitorBoard';
 
 export interface LaboratoryPageStageContentProps {
   activeTab: LabTabId;
@@ -37,19 +19,6 @@ export interface LaboratoryPageStageContentProps {
   isError: boolean;
   error: unknown;
   onRetry: () => void;
-}
-
-function StageFallback({ isMonitor }: { isMonitor: boolean }) {
-  const rowCount = isMonitor ? 3 : 5;
-  return (
-    <div
-      className={`${isMonitor ? 'flex-1 flex flex-col min-h-0 p-space-4' : WORKSPACE.contentInset} flex flex-col ${SPACING.gapSection}`}
-    >
-      {Array.from({ length: rowCount }).map((_, index) => (
-        <Card key={index} padding="md" loading className="min-h-[140px]" />
-      ))}
-    </div>
-  );
 }
 
 export function LaboratoryPageStageContent({
@@ -80,20 +49,18 @@ export function LaboratoryPageStageContent({
           activeTab === 'monitor' ? '' : 'bg-surface-page'
         }`}
       >
-        <Suspense fallback={<StageFallback isMonitor={activeTab === 'monitor'} />}>
-          {activeTab === 'collection' && tabAllowed('collection', hasRole) && (
-            <SampleCollectionQueue />
-          )}
-          {activeTab === 'entry' && tabAllowed('entry', hasRole) && <ResultEntryQueue />}
-          {activeTab === 'validation' && tabAllowed('validation', hasRole) && (
-            <ResultValidationQueue />
-          )}
-          {activeTab === 'monitor' && tabAllowed('monitor', hasRole) && (
-            <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-              <LabMonitorBoard monitorActive />
-            </div>
-          )}
-        </Suspense>
+        {activeTab === 'collection' && tabAllowed('collection', hasRole) && (
+          <SampleCollectionQueue />
+        )}
+        {activeTab === 'entry' && tabAllowed('entry', hasRole) && <ResultEntryQueue />}
+        {activeTab === 'validation' && tabAllowed('validation', hasRole) && (
+          <ResultValidationQueue />
+        )}
+        {activeTab === 'monitor' && tabAllowed('monitor', hasRole) && (
+          <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+            <LabMonitorBoard monitorActive />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,9 +1,9 @@
 /**
  * Event log panel — fetch by named scope and optional kind / date / record filters.
+ * Placeholders belong on the wrapping Panel/table/modal, not on this feed.
  */
 import React, { useMemo } from 'react';
 import { Button } from '@/components/primitives';
-import { PanelLoadingBody } from '@/components/surfaces/panelLoading';
 import { Panel, type PanelPresetId } from '@/components/surfaces/Panel';
 import { cn } from '@/utils';
 import { useClientListChrome } from '@/hooks';
@@ -41,7 +41,7 @@ export interface EventLogPanelProps {
   hideMeta?: boolean;
   /** When set (e.g. global event log page), skips local filter state in favor of URL-synced state. */
   filterPanelState?: EventLogPanelFilterState;
-  /** Parent-controlled loading (e.g. monitor board shell). */
+  /** Parent Panel loading (container chrome only — never a feed skeleton). */
   loading?: boolean;
 }
 
@@ -149,30 +149,29 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
     />
   ) : null;
 
-  const showLoading = loadingProp ?? isLoading;
-  const loadingBody = <PanelLoadingBody shape="list" rows={4} />;
-
-  const body = showLoading ? (
-    loadingBody
-  ) : (
+  const body = (
     <div className="flex min-h-0 flex-1 flex-col">
-      <EventLogFeed items={resolved} />
-      {hasMore ? (
-        <div className="flex justify-center px-space-3 pb-space-3">
-          <Button
-            type="button"
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              void loadMore();
-            }}
-            isLoading={isFetchingMore}
-            disabled={isFetchingMore}
-          >
-            {EVENT_LOG_COPY.loadMore}
-          </Button>
-        </div>
-      ) : null}
+      {isLoading && resolved.length === 0 ? null : (
+        <>
+          <EventLogFeed items={resolved} />
+          {hasMore ? (
+            <div className="flex justify-center px-space-3 pb-space-3">
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  void loadMore();
+                }}
+                isLoading={isFetchingMore}
+                disabled={isFetchingMore}
+              >
+                {EVENT_LOG_COPY.loadMore}
+              </Button>
+            </div>
+          ) : null}
+        </>
+      )}
     </div>
   );
 
@@ -189,10 +188,9 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
     <Panel
       preset={eventLogPreset(panelVariant)}
       title="Event log"
-      meta={panelMeta}
-      loading={showLoading}
-      loadingShape="list"
-      loadingRows={4}
+      meta={loadingProp ? undefined : panelMeta}
+      loading={loadingProp === true}
+      loadingShape="fields"
     >
       {filters}
       {body}
@@ -255,7 +253,10 @@ export const PatientEventLogPanel: React.FC<{
   />
 );
 
-export const LabMonitorEventLogPanel: React.FC<{ loading?: boolean }> = ({ loading }) => (
+export const LabMonitorEventLogPanel: React.FC<{
+  /** Parent board Panel loading — not the event feed. */
+  loading?: boolean;
+}> = ({ loading }) => (
   <EventLogPanel
     query={{ scope: 'stream', hours: 24, kinds: ['laboratory'], limit: 500 }}
     filterUi={{ fields: [] }}

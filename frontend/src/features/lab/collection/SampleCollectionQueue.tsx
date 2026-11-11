@@ -77,7 +77,6 @@ export const SampleCollectionQueue: React.FC = () => {
     <ErrorBoundary>
       <LabWorkflowQueueLayout
         loading={worklistChrome.loading && collectionDisplays.length === 0}
-        loadingPlaceholder="collection"
         items={filteredDisplays}
         renderCard={display => (
           <SampleCollectionCard
