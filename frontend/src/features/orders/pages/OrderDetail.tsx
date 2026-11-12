@@ -34,7 +34,7 @@ export const OrderDetail: React.FC = () => {
         orderId: invoices[0].orderId,
         patientId: invoices[0].patientId,
         patientName: invoices[0].patientName,
-        status: invoices[0].paymentStatus === 'paid' ? 'paid' : 'unpaid',
+        status: invoices[0].paymentStatus,
         items: invoices[0].items,
         subtotal: invoices[0].subtotal,
         discount: invoices[0].discount,

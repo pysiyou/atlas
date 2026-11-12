@@ -3,7 +3,7 @@ Pydantic schemas for Payment
 """
 from datetime import datetime
 
-from app.shared.contracts.enums import PaymentMethod
+from app.shared.contracts.enums import PaymentMethod, PaymentStatus
 from pydantic import BaseModel, Field
 
 
@@ -29,6 +29,7 @@ class PaymentResponse(BaseModel):
     orderTotalPrice: float | None = None
     numberOfTests: int | None = None
     patientName: str | None = None
+    orderPaymentStatus: PaymentStatus | None = None
 
     class Config:
         from_attributes = True

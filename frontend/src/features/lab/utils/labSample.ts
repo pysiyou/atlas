@@ -4,8 +4,12 @@ import type { ContainerCatalogId } from '@/types';
 import { COLLECTION_TOP_COLOR_PRESETS } from '@/types';
 import type { FeedbackId } from '@/types/generated/feedbackCatalog';
 import { feedbackTitle, notify } from '@/feedback';
-import { printCollectionLabel } from '../collection/SampleCollectionLabelActions';
+import {
+  printCollectionLabel,
+  type SampleLabelPrintInput,
+} from '../collection/SampleCollectionLabelActions';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
+import type { Sample } from '@/types';
 import { FG } from '@/theme/recipes';
 
 export interface SampleDefinition {
@@ -238,12 +242,9 @@ const PRINT_LABEL_ERRORS: Record<string, FeedbackId> = {
   [feedbackTitle('lab.collection.printLabel.genericError')]: 'lab.collection.printLabel.genericError',
 };
 
-export const printSampleCollectionLabel = (
-  display: SampleCollectionQueueItem,
-  patientName: string
-): void => {
+export function printSampleLabel(input: SampleLabelPrintInput): void {
   try {
-    printCollectionLabel(display, patientName);
+    printCollectionLabel(input);
   } catch (error) {
     if (error instanceof Error) {
       const catalogId = PRINT_LABEL_ERRORS[error.message];
@@ -256,5 +257,17 @@ export const printSampleCollectionLabel = (
       notify.show('lab.collection.printLabel.genericError');
     }
   }
+}
+
+export const printSampleCollectionLabel = (
+  display: SampleCollectionQueueItem,
+  patientName: string
+): void => {
+  const sample = display.sample as Sample | undefined;
+  if (!sample) {
+    notify.show('lab.collection.printLabel.genericError');
+    return;
+  }
+  printSampleLabel({ patientName, sample });
 };
 

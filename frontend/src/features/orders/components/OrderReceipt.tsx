@@ -9,6 +9,9 @@ import { cn, displayId, formatCurrency, formatDateTime } from '@/utils';
 import { getBillableTests, getBillableTotal } from '../utils/orderCalculator';
 import type { Order, OrderTest } from '@/types';
 import { RADIUS, DOCUMENT_TYPE, text } from '@/theme/recipes';
+import { ReceiptTotal } from './OrderReceiptTotal';
+
+export { ReceiptTotal } from './OrderReceiptTotal';
 
 export type OrderReceiptVariant = 'panel' | 'compact' | 'detailed';
 
@@ -23,6 +26,10 @@ export interface OrderReceiptProps {
   showPaymentStatusBadge?: boolean;
   /** Panel: grow item list with content instead of internal scroll (e.g. payment modal). */
   expandItems?: boolean;
+  /** Recorded payments total; shown under the order total when greater than zero. */
+  amountPaid?: number;
+  /** Remaining balance; shown under the order total when greater than zero. */
+  remainingAmount?: number;
 }
 
 function receiptShellClass(variant: OrderReceiptVariant): string {
@@ -120,9 +127,7 @@ function ReceiptHeader({
           {showPaymentStatusBadge && (
             <div className="flex items-center gap-space-1-5 shrink-0">
               <StatusValueBadge value={order.paymentStatus} size="xs" />
-              {paymentMethod && order.paymentStatus !== 'unpaid' && (
-                <StatusValueBadge value={paymentMethod} size="xs" />
-              )}
+              {paymentMethod && <StatusValueBadge value={paymentMethod} size="xs" />}
             </div>
           )}
         </div>
@@ -223,40 +228,6 @@ function ReceiptItems({
   );
 }
 
-export function ReceiptTotal({
-  total,
-  variant,
-  pad,
-}: {
-  total: number;
-  variant: OrderReceiptVariant;
-  pad: string;
-}) {
-  const isDetailed = variant === 'detailed';
-  const isCompact = variant === 'compact';
-
-  return (
-    <>
-      <div className="border-t border-dashed border-border-strong shrink-0" />
-      <div
-        className={cn(
-          pad,
-          isDetailed || !isCompact ? 'py-space-4' : 'py-space-2-5',
-          'flex justify-between items-center shrink-0',
-          isDetailed && 'bg-surface-page',
-        )}
-      >
-        <span className={isDetailed ? DOCUMENT_TYPE.totalLabelDetailed : DOCUMENT_TYPE.totalLabelCompact}>
-          Total
-        </span>
-        <span className={cn('font-normal tabular-nums', isDetailed ? DOCUMENT_TYPE.totalValueDetailed : DOCUMENT_TYPE.totalValueCompact)}>
-          {formatCurrency(total)}
-        </span>
-      </div>
-    </>
-  );
-}
-
 export const OrderReceipt: React.FC<OrderReceiptProps> = ({
   order,
   variant = 'panel',
@@ -265,6 +236,8 @@ export const OrderReceipt: React.FC<OrderReceiptProps> = ({
   showTotal = true,
   showPaymentStatusBadge = true,
   expandItems = false,
+  amountPaid,
+  remainingAmount,
 }) => {
   const billableTests = getBillableTests(order.tests ?? []);
   const billableTotal = getBillableTotal(order.tests ?? []);
@@ -281,7 +254,15 @@ export const OrderReceipt: React.FC<OrderReceiptProps> = ({
         showPaymentStatusBadge={showPaymentStatusBadge}
       />
       <ReceiptItems tests={billableTests} variant={variant} pad={pad} expandItems={expandItems} />
-      {showTotal && <ReceiptTotal total={billableTotal} variant={variant} pad={pad} />}
+      {showTotal && (
+        <ReceiptTotal
+          total={billableTotal}
+          variant={variant}
+          pad={pad}
+          amountPaid={amountPaid}
+          remainingAmount={remainingAmount}
+        />
+      )}
     </div>
   );
 };

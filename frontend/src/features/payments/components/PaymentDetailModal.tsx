@@ -12,6 +12,7 @@ import { PaymentDetailModalBody } from './PaymentDetailModalBody';
 import { formatCurrency } from '@/utils';
 import { useOrder } from '@/features/orders';
 import { useCreatePayment, useOrderRemainingBalance } from '../api/payments';
+import { isFullyPaid, roundMoney } from '../utils/paymentStatus';
 import {
   getEnabledPaymentMethods,
   getDefaultPaymentMethod,
@@ -40,27 +41,33 @@ const PaymentDetailFooter: React.FC<{
   submitting: boolean;
   paymentsLoading: boolean;
   remainingAmount: number;
+  amount: number;
   onPay: () => void;
-}> = ({ isPaid, submitting, paymentsLoading, remainingAmount, onPay }) => (
-  <DialogFooter
-    start={<FooterInfo icon={IconKeys.modules.payments} label="Payments" size="md" />}
-    end={
-      !isPaid ? (
-        <Button
-          variant="primary"
-          size="sm"
-          layout="icon-text"
-          onClick={onPay}
-          disabled={submitting || paymentsLoading || remainingAmount <= 0}
-          isLoading={submitting}
-          icon={<Icon iconKey={IconKeys.dataFields.wallet} />}
-        >
-          {`Pay ${formatCurrency(remainingAmount)}`}
-        </Button>
-      ) : null
-    }
-  />
-);
+}> = ({ isPaid, submitting, paymentsLoading, remainingAmount, amount, onPay }) => {
+  const chargeAmount = roundMoney(amount);
+  const remaining = roundMoney(remainingAmount);
+  const canPay = !submitting && !paymentsLoading && chargeAmount > 0 && chargeAmount <= remaining;
+  return (
+    <DialogFooter
+      start={<FooterInfo icon={IconKeys.modules.payments} label="Payments" size="md" />}
+      end={
+        !isPaid ? (
+          <Button
+            variant="primary"
+            size="sm"
+            layout="icon-text"
+            onClick={onPay}
+            disabled={!canPay}
+            isLoading={submitting}
+            icon={<Icon iconKey={IconKeys.dataFields.wallet} />}
+          >
+            {chargeAmount > 0 ? `Pay ${formatCurrency(chargeAmount)}` : 'Pay'}
+          </Button>
+        ) : null
+      }
+    />
+  );
+};
 
 export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
   isOpen,
@@ -73,6 +80,7 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(getDefaultPaymentMethod());
   const [notes, setNotes] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
+  const [amount, setAmount] = useState(0);
 
   const sourceOrder = view?.order;
   const orderIdForFetch =
@@ -95,23 +103,38 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
     }
   }, [isOpen, sourceOrder?.orderId]);
 
+  React.useEffect(() => {
+    setAmount(remainingAmount);
+  }, [remainingAmount, sourceOrder?.orderId]);
+
+  const remaining = roundMoney(remainingAmount);
+  const chargeAmount = roundMoney(amount);
+
   // Check if order is already paid
   const isPaid =
-    sourceOrder?.paymentStatus === 'paid' || (!paymentsLoading && remainingAmount <= 0);
+    isFullyPaid(sourceOrder?.paymentStatus) || (!paymentsLoading && remaining <= 0);
 
   const handlePayment = useCallback(() => {
     if (!sourceOrder || isPaid || paymentsLoading) return;
 
     setError(null);
 
-    if (remainingAmount <= 0) {
+    if (remaining <= 0) {
       setError(feedbackTitle('payment.orderAmount.invalid'));
+      return;
+    }
+    if (chargeAmount <= 0) {
+      setError(feedbackTitle('payment.amount.mustBePositive'));
+      return;
+    }
+    if (chargeAmount > remaining) {
+      setError(feedbackTitle('payment.amount.exceedsRemaining'));
       return;
     }
 
     const paymentData = {
       orderId: sourceOrder.orderId,
-      amount: remainingAmount,
+      amount: chargeAmount,
       paymentMethod,
       notes: notes.trim() || undefined,
     };
@@ -130,7 +153,8 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
     sourceOrder,
     isPaid,
     paymentsLoading,
-    remainingAmount,
+    remaining,
+    chargeAmount,
     paymentMethod,
     notes,
     createPaymentMutation,
@@ -164,7 +188,8 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
               isPaid={isPaid}
               submitting={submitting}
               paymentsLoading={paymentsLoading}
-              remainingAmount={remainingAmount}
+              remainingAmount={remaining}
+              amount={chargeAmount}
               onPay={handlePayment}
             />
           }
@@ -180,6 +205,9 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
             onPaymentMethodChange={setPaymentMethod}
             notes={notes}
             onNotesChange={setNotes}
+            amount={chargeAmount}
+            remainingAmount={remaining}
+            onAmountChange={setAmount}
             error={error}
             paymentMethods={PAYMENT_METHODS}
           />

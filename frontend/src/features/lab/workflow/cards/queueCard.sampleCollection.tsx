@@ -129,15 +129,17 @@ export function SampleCollectionCardDesktop({
                 onCollect(display, volume, notes, color, containerType)
               }
             />
-          ) : vm.isCollected && sample.sampleId ? (
+          ) : sample.sampleId ? (
             <>
-              <SampleRejectionPopover
-                sampleId={sample.sampleId.toString()}
-                testCodes={sample.testCodes ?? []}
-                sampleType={sample.sampleType}
-                patientName={patientName}
-                isRecollection={vm.isRecollection}
-              />
+              {vm.isCollected ? (
+                <SampleRejectionPopover
+                  sampleId={sample.sampleId.toString()}
+                  testCodes={sample.testCodes ?? []}
+                  sampleType={sample.sampleType}
+                  patientName={patientName}
+                  isRecollection={vm.isRecollection}
+                />
+              ) : null}
               <IconButton
                 onClick={() => printSampleCollectionLabel(display, patientName)}
                 {...actionButtonPreset('print')}

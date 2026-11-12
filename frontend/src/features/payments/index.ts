@@ -4,6 +4,7 @@
 
 export {
   paymentAPI,
+  remainingPaymentAmount,
   usePaymentsList,
   usePaginatedPaymentOrders,
   usePaymentsForOrderIds,
@@ -12,6 +13,7 @@ export {
   useCreatePayment,
   useInvalidatePayments,
 } from './api/payments';
+export { hasRecordedPayment, isFullyPaid } from './utils/paymentStatus';
 export type {
   PaymentCreate,
   PaymentFilters,

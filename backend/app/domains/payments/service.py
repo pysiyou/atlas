@@ -5,8 +5,8 @@ from app.domains.audit.service import AuditEmitter
 from app.domains.billing.models import Invoice, Payment
 from app.domains.orders.models import Order
 from app.domains.payments.schemas import PaymentCreate
+from app.domains.payments.status import derive_payment_status, money, remaining_balance
 from app.platform.cache import invalidate_lab_board_summary_cache
-from app.shared.contracts.enums import PaymentStatus
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session, joinedload
 
@@ -26,6 +26,7 @@ def enrich_payment(payment: Payment, order: Order | None) -> dict:
         "orderTotalPrice": order.totalPrice if order else None,
         "numberOfTests": len(order.tests) if order else 0,
         "patientName": order.patientName if order else None,
+        "orderPaymentStatus": order.paymentStatus if order else None,
     }
 
 
@@ -90,7 +91,8 @@ class PaymentService:
             )
         _ = order.patient
         _ = order.tests
-        if payment_data.amount <= 0:
+        amount = money(payment_data.amount)
+        if amount <= 0:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Payment amount must be greater than zero",
@@ -101,25 +103,25 @@ class PaymentService:
             .with_for_update()
             .all()
         )
-        total_paid = sum(p.amount for p in existing_payments)
-        remaining = order.totalPrice - total_paid
+        total_paid = money(sum(p.amount for p in existing_payments))
+        remaining = remaining_balance(order.totalPrice, total_paid)
         if remaining <= 0:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail="Order is already fully paid",
             )
-        if payment_data.amount > remaining:
+        if amount > remaining:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=(
-                    f"Payment amount (${payment_data.amount:.2f}) exceeds "
+                    f"Payment amount (${amount:.2f}) exceeds "
                     f"remaining balance (${remaining:.2f})"
                 ),
             )
         payment = Payment(
             orderId=payment_data.orderId,
             invoiceId=None,
-            amount=payment_data.amount,
+            amount=amount,
             paymentMethod=payment_data.paymentMethod,
             paidAt=datetime.now(UTC),
             createdBy=str(user_id),
@@ -128,19 +130,14 @@ class PaymentService:
         )
         self.db.add(payment)
         self.db.flush()
-        new_total_paid = total_paid + payment_data.amount
-        if new_total_paid >= order.totalPrice:
-            order.paymentStatus = PaymentStatus.PAID
-        else:
-            order.paymentStatus = PaymentStatus.UNPAID
+        new_total_paid = money(total_paid + amount)
+        order.paymentStatus = derive_payment_status(new_total_paid, order.totalPrice)
 
         invoices = self.db.query(Invoice).filter(Invoice.orderId == order.orderId).all()
         for invoice in invoices:
             invoice.amountPaid = new_total_paid
-            invoice.amountDue = max(0.0, (invoice.total or 0.0) - new_total_paid)
-            invoice.paymentStatus = (
-                PaymentStatus.PAID if invoice.amountDue <= 0 else PaymentStatus.UNPAID
-            )
+            invoice.amountDue = remaining_balance(invoice.total or 0.0, new_total_paid)
+            invoice.paymentStatus = derive_payment_status(new_total_paid, invoice.total or 0.0)
             if payment.invoiceId is None:
                 payment.invoiceId = invoice.invoiceId
 

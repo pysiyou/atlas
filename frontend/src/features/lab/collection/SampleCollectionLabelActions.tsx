@@ -1,208 +1,199 @@
-/* eslint-disable no-restricted-syntax -- isolated print document uses typography token keys and utility class names in HTML/CSS strings */
-import type { SampleCollectionQueueItem } from '@/types/lab-operations';
-import { CONTAINER_TOP_COLOR_OPTIONS, isCollectedSample } from '@/types';
+/* eslint-disable no-restricted-syntax -- isolated print document HTML/CSS strings */
+import type { Sample } from '@/types';
+import { SAMPLE_TYPE_CONFIG, type SampleType } from '@/types/enums';
 import { displayId } from '@/utils';
+import { formatDateTime } from '@/utils/date';
 import { feedbackTitle } from '@/feedback';
-import { text, RADIUS } from '@/theme/recipes';
 
+/** Narrow tube label (≈35 × 16 mm). */
+const LABEL_PAGE_WIDTH_IN = '1.38in';
+const LABEL_PAGE_HEIGHT_IN = '0.63in';
 
-const PRINT_TOKEN_KEYS = [
-  '--brand',
-  '--text',
-  '--text-tertiary',
-  '--surface',
-  '--surface-hover',
-  '--border-strong',
-  '--font-sans',
-  '--id-font-weight',
-  '--id-font-size',
-  '--id-font-size-secondary',
-  '--id-letter-spacing',
-  '--type-caption-size',
-  '--type-caption-leading',
-  '--type-caption-weight',
-  '--type-ui-md-size',
-  '--type-ui-md-leading',
-  '--type-ui-md-weight',
-] as const;
+export type SampleLabelPrintInput = {
+  patientName: string;
+  sample: Sample;
+  /** Collection or label event time; defaults from sample when omitted. */
+  eventAt?: string | null;
+};
 
-/**
- * Snapshot live theme tokens so the print window (Tailwind CDN, no app CSS) still matches.
- */
-function snapshotPrintThemeCss(): string {
-  if (typeof document === 'undefined') return '';
-  const styles = getComputedStyle(document.documentElement);
-  const decls = PRINT_TOKEN_KEYS.map(key => `${key}: ${styles.getPropertyValue(key).trim() || 'inherit'};`).join(
-    '\n            ',
-  );
-  return `
-            :root {
-            ${decls}
-            }
-            .entity-id {
-              font-family: var(--font-sans), sans-serif;
-              font-size: var(--id-font-size);
-              font-weight: var(--id-font-weight);
-              color: var(--brand);
-              letter-spacing: var(--id-letter-spacing);
-            }
-            .entity-id--secondary {
-              font-size: var(--id-font-size-secondary);
-              color: var(--text-tertiary);
-            }
-            .bg-surface { background-color: var(--surface); }
-            .bg-surface-hover { background-color: var(--surface-hover); }
-            .label-print-primary { color: var(--text); }
-            .label-print-muted { color: var(--text-tertiary); }
-            .border-border-strong { border-color: var(--border-strong); }
-            .type-caption {
-              font-size: var(--type-caption-size);
-              line-height: var(--type-caption-leading);
-              font-weight: var(--type-caption-weight);
-            }
-            .type-ui-md {
-              font-size: var(--type-ui-md-size);
-              line-height: var(--type-ui-md-leading);
-              font-weight: var(--type-ui-md-weight);
-            }
-`;
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
-/**
- * Generates HTML content for printing a sample label
- */
-export const generatePrintLabelHTML = (display: SampleCollectionQueueItem, patientName: string): string => {
-  const { sample } = display;
+function escapeJsString(value: string): string {
+  return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+}
 
-  if (!sample || !isCollectedSample(sample)) {
+function sampleTypeLabel(sampleType: string): string {
+  const key = sampleType as SampleType;
+  return SAMPLE_TYPE_CONFIG[key]?.label ?? sampleType;
+}
+
+function resolveLabelDateTime(sample: Sample, eventAt?: string | null): string {
+  const raw =
+    eventAt ??
+    ((sample.status === 'collected' || sample.status === 'rejected') && 'collectedAt' in sample
+      ? sample.collectedAt
+      : undefined) ??
+    sample.createdAt;
+  return formatDateTime(raw) || new Date().toLocaleString();
+}
+
+function assertSampleLabelPrintable(
+  sample: Sample | null | undefined
+): asserts sample is Sample & { sampleId: number } {
+  if (sample?.sampleId == null) {
     throw new Error(feedbackTitle('lab.collection.printLabel.uncollected'));
   }
+}
 
-  const sampleId = sample.sampleId;
-  const sampleIdDisplay = displayId.sample(sampleId);
-  const patientIdDisplay = displayId.patient(display.patientId);
-  const sampleType = sample.sampleType || 'unknown';
-  const containerTopColor = sample.actualContainerColor;
-  /**
-   * Worklist payloads and older collected rows can omit actualContainerType.
-   * Fall back by sample type so label HTML never calls toUpperCase on undefined.
-   */
-  const actualContainerType = sample.actualContainerType;
-  const containerType =
-    actualContainerType === 'cup' || actualContainerType === 'tube'
-      ? actualContainerType
-      : sampleType === 'urine' || sampleType === 'stool'
-        ? 'cup'
-        : 'tube';
+const TUBE_LABEL_PRINT_CSS = `
+  * {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  @page {
+    size: ${LABEL_PAGE_WIDTH_IN} ${LABEL_PAGE_HEIGHT_IN};
+    margin: 0.03in;
+  }
+  @media print {
+    html, body {
+      width: ${LABEL_PAGE_WIDTH_IN};
+      height: ${LABEL_PAGE_HEIGHT_IN};
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+  }
+  body {
+    margin: 0;
+    padding: 0.02in 0.04in;
+    background: #ffffff;
+    color: #000000;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .label {
+    width: 100%;
+    max-width: 1.28in;
+    color: #000000;
+    text-align: center;
+    line-height: 1.1;
+  }
+  .label-name {
+    font-size: 6.5pt;
+    font-weight: 700;
+    color: #000000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    margin: 0 0 0.5pt;
+  }
+  .label-row {
+    font-size: 5pt;
+    font-weight: 600;
+    color: #000000;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .label-id {
+    font-size: 6pt;
+    font-weight: 700;
+    color: #000000;
+    letter-spacing: 0.03em;
+    margin: 0.5pt 0;
+  }
+  .label-barcode {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+    line-height: 0;
+  }
+  .label-barcode svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    color: #000000;
+  }
+  @media screen {
+    body {
+      min-height: 120px;
+      padding: 12px;
+    }
+    .label {
+      border: 1px dashed #000000;
+      padding: 4px;
+    }
+  }
+`;
 
-  const colorName =
-    CONTAINER_TOP_COLOR_OPTIONS.find(opt => opt.value === containerTopColor)?.label || 'N/A';
+/**
+ * Generates compact all-black HTML for a small tube label.
+ */
+export const generatePrintLabelHTML = ({ patientName, sample, eventAt }: SampleLabelPrintInput): string => {
+  assertSampleLabelPrintable(sample);
 
-  const currentDate = new Date();
-  const formattedDate = currentDate.toLocaleDateString();
-  const formattedTime = currentDate.toLocaleTimeString();
-  const themeCss = snapshotPrintThemeCss();
+  const sampleIdDisplay = displayId.sample(sample.sampleId);
+  const sampleType = sampleTypeLabel(sample.sampleType || 'other');
+  const dateTime = resolveLabelDateTime(sample, eventAt);
+
+  const safePatient = escapeHtml(patientName.trim() || 'Unknown');
+  const safeType = escapeHtml(sampleType);
+  const safeDateTime = escapeHtml(dateTime);
+  const safeSampleId = escapeHtml(sampleIdDisplay);
+  const barcodeValue = escapeJsString(sampleIdDisplay);
 
   return `
     <!DOCTYPE html>
-    <html>
+    <html lang="en">
       <head>
-        <title>Label - ${sampleIdDisplay}</title>
-        <script src="https://cdn.tailwindcss.com"></script>
+        <meta charset="utf-8" />
+        <title>Label - ${safeSampleId}</title>
         <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
-        <style>
-          ${themeCss}
-          @media print {
-            @page {
-              size: 4in 2in;
-              margin: 0.125in;
-            }
-            * {
-              -webkit-print-color-adjust: exact;
-              print-color-adjust: exact;
-            }
-            body {
-              margin: 0;
-              padding: 0;
-            }
-            .label-wrapper {
-              height: 100%;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            }
-            .no-print {
-              display: none;
-            }
-          }
-          @media screen {
-            body {
-              padding: 20px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              min-height: 100vh;
-            }
-          }
-        </style>
+        <style>${TUBE_LABEL_PRINT_CSS}</style>
       </head>
-      <body class="bg-surface m-0 p-0">
-        <div class="label-wrapper">
-          <div class="w-full max-w-[3.75in] flex flex-col items-center justify-center gap-space-1-5 p-space-2 border border-dashed border-border-strong print:border-none print:max-w-full print:p-0">
-            <!-- Patient Name -->
-            <div class="type-ui-md font-normal text-center label-print-primary leading-snug w-full">
-              ${patientName}
-            </div>
-
-            <!-- Patient ID and Sample Type -->
-            <div class="type-caption text-center leading-tight">
-              <span class="entity-id entity-id--secondary">${patientIdDisplay}</span>
-              <span class="label-print-muted"> | ${sampleType.toUpperCase()}</span>
-            </div>
-
-            <!-- Container Info -->
-            <div class="w-full type-caption font-normal text-center label-print-primary bg-surface-hover ${RADIUS.field} px-space-2 py-space-1 print:py-space-0-5">
-              ${containerType.toUpperCase()}: ${colorName.toUpperCase()}
-            </div>
-
-            <!-- Barcode -->
-            <div class="flex justify-center items-center w-full py-space-0-5">
-              <svg id="barcode" class="max-w-full h-auto"></svg>
-            </div>
-
-            <!-- Sample ID -->
-            <div class="text-center leading-tight">
-              <span class="entity-id">${sampleIdDisplay}</span>
-            </div>
-
-            <!-- Date and Time -->
-            <div class="${text({ role: 'caption' })} text-center leading-tight">
-              ${formattedDate} ${formattedTime}
-            </div>
+      <body>
+        <div class="label">
+          <div class="label-name" title="${safePatient}">${safePatient}</div>
+          <div class="label-row">${safeType} · ${safeDateTime}</div>
+          <div class="label-id">${safeSampleId}</div>
+          <div class="label-barcode">
+            <svg id="barcode" aria-label="Sample barcode"></svg>
           </div>
         </div>
-
         <script>
           (function() {
             try {
-              JsBarcode("#barcode", "${sampleIdDisplay}", {
+              JsBarcode("#barcode", "${barcodeValue}", {
                 format: "CODE128",
-                width: 1.2,
-                height: 35,
+                width: 0.75,
+                height: 14,
                 displayValue: false,
-                margin: 2
+                margin: 0,
+                lineColor: "#000000",
+                background: "#ffffff"
               });
-
-              // Auto-print after barcode is rendered
               window.onload = function() {
-                setTimeout(function() {
-                  window.print();
-                }, 500);
+                setTimeout(function() { window.print(); }, 400);
               };
             } catch (e) {
-              // Fallback: fixed string only (no user input). innerHTML is safe; do not substitute user content here.
               const el = document.getElementById('barcode');
-              if (el) el.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="red" font-size="10">Barcode Error</text>';
+              if (el) {
+                el.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#000000" font-size="6">Barcode error</text>';
+              }
             }
           })();
         </script>
@@ -212,13 +203,12 @@ export const generatePrintLabelHTML = (display: SampleCollectionQueueItem, patie
 };
 
 /**
- * Opens a print window with the sample label
- * Note: patientName should be looked up before calling this function
+ * Opens a print window with the sample label.
  */
-export const printCollectionLabel = (display: SampleCollectionQueueItem, patientName: string): void => {
+export const printCollectionLabel = (input: SampleLabelPrintInput): void => {
   try {
-    const htmlContent = generatePrintLabelHTML(display, patientName);
-    const printWindow = window.open('', '', 'width=400,height=250');
+    const htmlContent = generatePrintLabelHTML(input);
+    const printWindow = window.open('', '', 'width=220,height=100');
 
     if (!printWindow) {
       throw new Error(feedbackTitle('lab.collection.printLabel.popupBlocked'));

@@ -637,6 +637,11 @@
       "variant": "danger",
       "title": "Amount must be greater than 0"
     },
+    "payment.amount.exceedsRemaining": {
+      "channel": "inline",
+      "variant": "danger",
+      "title": "Amount exceeds remaining balance"
+    },
     "payment.orderAmount.invalid": {
       "channel": "inline",
       "variant": "danger",
@@ -716,8 +721,8 @@
     "lab.collection.printLabel.uncollected": {
       "channel": "toast",
       "variant": "error",
-      "title": "Cannot print label for uncollected sample",
-      "subtitle": "Collect the sample before printing a label.",
+      "title": "Cannot print sample label",
+      "subtitle": "A sample ID is required before a label can be printed.",
       "brief": "failed"
     },
     "lab.collection.printLabel.popupBlocked": {

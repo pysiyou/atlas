@@ -10,7 +10,7 @@ import { cn } from '@/utils';
 import { TestHeaderBadges } from '../../components/LabWorkflowBadges';
 import { LAB_CONFIG } from '../../constants';
 import { useLabWorkflowCardClickGuard, useLabQueueRowState } from '../../hooks';
-import { isLabActionAllowed } from '../../utils/queueDisplay';
+import { isLabActionAllowed, labDisabledActionTooltip } from '../../utils/queueDisplay';
 import { useLabWorkflowResponsiveCard } from '../../hooks/useLabWorkflowResponsiveCard';
 import { FG, MOBILE_LIST_CARD } from '@/theme/recipes';
 import type { Test } from '@/types';
@@ -59,8 +59,9 @@ export function useResultEntryCardData(props: ResultEntryCardProps): ResultEntry
   const workItem = useLabQueueRowState(row);
   const rejection = useMemo(() => retestContextFromRow(chromeRow), [chromeRow]);
   const canEnter = isLabActionAllowed(row.allowedActions, 'enterResults');
-  const denyTooltipLabel =
-    row.denyMessage ?? (!canEnter ? workItem.label : undefined);
+  const denyTooltipLabel = !canEnter
+    ? labDisabledActionTooltip({ denyMessage: row.denyMessage, fallbackLabel: workItem.label }, row)
+    : undefined;
   const handleCardClick = useLabWorkflowCardClickGuard(() => {
     if (canEnter) onClick();
   });

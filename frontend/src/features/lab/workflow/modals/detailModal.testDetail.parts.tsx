@@ -34,6 +34,7 @@ import {
   resolveTestDetailQueueSince,
   type TestDetailHeaderVariant,
 } from '../shared/testDetailHeader';
+import { labModalFooterDenyMessage } from '../../utils/queueDisplay';
 
 /** Left-column identity chrome for the test-detail modal header. */
 export function TestDetailHeaderColumn({
@@ -154,14 +155,14 @@ export function TestDetailModalFooter({
     );
   }
 
+  const footerStatus = labModalFooterDenyMessage(orderTest?.lab, displayWorkItem);
+
   if (!labUrl) {
-    return (
-      <ModalFooter statusMessage={orderTest?.lab?.denyMessage ?? ''} />
-    );
+    return <ModalFooter statusMessage={footerStatus} />;
   }
 
   return (
-    <ModalFooter statusMessage={orderTest?.lab?.denyMessage ?? ''}>
+    <ModalFooter statusMessage={footerStatus}>
       <Button
         variant="primary"
         size="sm"

@@ -10,6 +10,10 @@ from app.domains.lab.rules.state_machines import (
     StateTransitionError,
     TestStateMachine,
 )
+from app.domains.lab.rules.test_status_sets import (
+    COLLECTION_TRANSITION_SKIP_STATUSES,
+    COLLECTION_WORKLIST_LINKED_EXCLUDE,
+)
 from app.domains.orders.models import Order, OrderTest
 from app.platform.utils.exceptions import LabOperationError
 from app.shared.contracts.enums import (
@@ -17,10 +21,6 @@ from app.shared.contracts.enums import (
     PaymentStatus,
     SampleStatus,
     TestStatus,
-)
-from app.domains.lab.rules.test_status_sets import (
-    COLLECTION_TRANSITION_SKIP_STATUSES,
-    COLLECTION_WORKLIST_LINKED_EXCLUDE,
 )
 from app.shared.contracts.lab_contract import ATTENTION_LABELS, reason_blocks_progress
 
@@ -55,7 +55,8 @@ def attention_reason_for_work_item(
     escalation_reason_code: str | None = None,
 ) -> str | None:
     """Canonical attention-reason key for a pipeline work item (not lineage)."""
-    if payment_status == PaymentStatus.UNPAID.value and status in (
+    outstanding = {PaymentStatus.UNPAID.value, PaymentStatus.PARTIAL.value}
+    if payment_status in outstanding and status in (
         TestStatus.PENDING.value,
         "pending",
     ):

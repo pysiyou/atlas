@@ -11,6 +11,7 @@ import { formatCurrency, formatDateTime } from '@/utils';
 import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
 import type { OrderPaymentView } from '../types';
 import { PaymentButton } from './PaymentButton';
+import { hasRecordedPayment, isFullyPaid } from '../utils/paymentStatus';
 import { useInvalidatePayments } from '../api/payments';
 import { INTERACTIVE, PRICE_DISPLAY } from '@/theme/recipes';
 
@@ -73,9 +74,10 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
         <div className="flex items-center gap-space-2 shrink-0">
           {order.overallStatus && <OrderStatusBadge status={order.overallStatus} size="xs" />}
           <StatusValueBadge value={order.paymentStatus} size="xs" />
-          {item.paymentMethod && order.paymentStatus !== 'unpaid' ? (
+          {item.paymentMethod && hasRecordedPayment(order.paymentStatus) ? (
             <StatusValueBadge value={item.paymentMethod} size="xs" />
-          ) : order.paymentStatus === 'unpaid' ? (
+          ) : null}
+          {!isFullyPaid(order.paymentStatus) ? (
             <div className={INTERACTIVE.actionIsland} onClick={e => e.stopPropagation()}>
               <PaymentButton order={order} size="sm" onPaymentSuccess={handlePaymentSuccess} />
             </div>

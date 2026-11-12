@@ -43,6 +43,6 @@ export {
   LabRejectionTailBadgesFromWorkItem,
   LabRejectionTailBadgesFromSample,
 } from './LabRejectionTailBadges';
-export { printSampleCollectionLabel } from '../utils/labSample';
+export { printSampleCollectionLabel, printSampleLabel } from '../utils/labSample';
 export { getEffectiveContainerType } from '../utils/labSample';
 export { formatRejectionReasons } from '../utils/labFormatters';

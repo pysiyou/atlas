@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { dateStringSchema, positiveIntSchema } from '@/types/schemas/common.schema';
 import { zEnumFromValues } from '@/types/schemas/enumFromValues';
-import { PAYMENT_METHOD_VALUES, type PaymentMethod } from '@/types/enums';
+import { PAYMENT_METHOD_VALUES, PAYMENT_STATUS_VALUES, type PaymentMethod } from '@/types/enums';
 
 export type { PaymentMethod };
 
@@ -20,6 +20,7 @@ export const paymentSchema = z.object({
   orderTotalPrice: z.number().min(0).optional(),
   numberOfTests: z.number().int().min(0).optional(),
   patientName: z.string().optional(),
+  orderPaymentStatus: zEnumFromValues(PAYMENT_STATUS_VALUES).optional().nullable(),
 });
 
 export const paymentCreateSchema = z.object({

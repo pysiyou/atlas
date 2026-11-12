@@ -117,6 +117,7 @@ class PriorityLevel(str, enum.Enum):
 
 class PaymentStatus(str, enum.Enum):
     UNPAID = "unpaid"
+    PARTIAL = "partial"
     PAID = "paid"
 
 class PaymentMethod(str, enum.Enum):

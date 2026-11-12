@@ -34,6 +34,7 @@ export const paymentResponseSchema = z.object({
   orderTotalPrice: z.number().optional(),
   numberOfTests: z.number().optional(),
   patientName: z.string().optional(),
+  orderPaymentStatus: z.string().optional().nullable(),
 });
 
 export const operationResponseSchema = z.object({

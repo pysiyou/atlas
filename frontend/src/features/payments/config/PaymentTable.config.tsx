@@ -13,6 +13,7 @@ import {
 import { PaymentButton } from '../components/PaymentButton';
 import { PaymentCard } from '../components/PaymentCard';
 import type { OrderPaymentView } from '../types';
+import { hasRecordedPayment } from '../utils/paymentStatus';
 import { PAYMENT_LIST_WIDTH_OVERRIDES } from '@/features/orders/constants/orderTableWidthOverrides';
 import { TABLE_COLUMN_WIDTH } from '@/components/data-table';
 import { INTERACTIVE } from '@/theme/recipes';
@@ -68,7 +69,7 @@ export const createPaymentTableConfig = (
       sortable: true,
       accessor: (item: OrderPaymentView) => item.paymentMethod ?? '',
       render: (item: OrderPaymentView) => {
-        if (!item.paymentMethod || item.order.paymentStatus === 'unpaid') return null;
+        if (!item.paymentMethod || !hasRecordedPayment(item.order.paymentStatus)) return null;
         return <StatusValueBadge value={item.paymentMethod} size="xs" />;
       },
     },

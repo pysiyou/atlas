@@ -16,7 +16,32 @@ import { SampleCollectionPopover } from '../../collection/SampleCollectionPopove
 import { SampleRejectionPopover } from '../../collection/SampleRejectionPopover';
 import { LAB_COPY } from '../../constants/labConstants';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
-import { isLabActionAllowed } from '../../utils/queueDisplay';
+import { isLabActionAllowed, labDisabledActionTooltip } from '../../utils/queueDisplay';
+import { printSampleLabel } from '../../utils/labSample';
+
+function SampleLabelPrintButton({
+  sample,
+  patientName,
+  eventAt,
+}: {
+  sample: Sample;
+  patientName: string;
+  eventAt?: string;
+}) {
+  if (sample.sampleId == null) {
+    return null;
+  }
+  return (
+    <Button
+      {...actionButtonPreset('print')}
+      size="sm"
+      layout="icon-text"
+      onClick={() => printSampleLabel({ patientName, sample, eventAt })}
+    >
+      Print label
+    </Button>
+  );
+}
 
 export function SampleCollectionDetailContent({
   sample,
@@ -150,6 +175,7 @@ export function SampleCollectionDetailFooter({
   onCollect,
   onClose,
   onPopoverSubmittingChange,
+  collectedAt,
 }: {
   sample: Sample;
   order: Order | undefined;
@@ -160,6 +186,7 @@ export function SampleCollectionDetailFooter({
   pendingSampleDisplay: SampleCollectionQueueItem | undefined;
   patientName: string;
   testNames: string[];
+  collectedAt?: string;
   onCollect?: (
     display: SampleCollectionQueueItem,
     volume: number,
@@ -174,42 +201,59 @@ export function SampleCollectionDetailFooter({
     const isRecollection = sample.isRecollection === true;
     const collectAllowed = isLabActionAllowed(pendingSampleDisplay.allowedActions, 'collect');
     return (
-      <SampleCollectionPopover
-        requirement={pendingSampleDisplay.requirement!}
-        patientName={patientName}
-        testNames={testNames}
-        isRecollection={isRecollection}
-        collectDisabled={!collectAllowed}
-        collectDisabledTitle={pendingSampleDisplay.denyMessage ?? undefined}
-        onConfirm={async (volume, notes, color, ct) => {
-          await Promise.resolve(onCollect(pendingSampleDisplay, volume, notes, color, ct));
-          onClose();
-        }}
-        onSubmittingChange={onPopoverSubmittingChange}
-        trigger={
-          <Button {...actionButtonPreset('collect')} size="sm" disabled={!collectAllowed}>
-            {isRecollection ? 'Recollect Sample' : 'Collect Sample'}
-          </Button>
-        }
-      />
+      <div className="flex items-center gap-space-2 flex-nowrap justify-end w-full">
+        <SampleLabelPrintButton sample={sample} patientName={patientName} eventAt={collectedAt} />
+        <SampleCollectionPopover
+          requirement={pendingSampleDisplay.requirement!}
+          patientName={patientName}
+          testNames={testNames}
+          isRecollection={isRecollection}
+          collectDisabled={!collectAllowed}
+          collectDisabledTitle={labDisabledActionTooltip(
+            { denyMessage: pendingSampleDisplay.denyMessage },
+            pendingSampleDisplay
+          )}
+          onConfirm={async (volume, notes, color, ct) => {
+            await Promise.resolve(onCollect(pendingSampleDisplay, volume, notes, color, ct));
+            onClose();
+          }}
+          onSubmittingChange={onPopoverSubmittingChange}
+          trigger={
+            <Button {...actionButtonPreset('collect')} size="sm" disabled={!collectAllowed}>
+              {isRecollection ? 'Recollect Sample' : 'Collect Sample'}
+            </Button>
+          }
+        />
+      </div>
     );
   }
 
   if (isCollected && sample.sampleId) {
     return (
-      <SampleRejectionPopover
-        sampleId={sample.sampleId.toString()}
-        testCodes={sample.testCodes ?? []}
-        sampleType={sample.sampleType}
-        patientName={patientName}
-        isRecollection={sample.isRecollection || false}
-        onSuccess={onClose}
-        trigger={
-          <Button {...actionButtonPreset('reject')} size="sm">
-            {LAB_COPY.quality.reportSampleIssue}
-          </Button>
-        }
-      />
+      <div className="flex items-center gap-space-2 flex-nowrap justify-end w-full">
+        <SampleLabelPrintButton sample={sample} patientName={patientName} eventAt={collectedAt} />
+        <SampleRejectionPopover
+          sampleId={sample.sampleId.toString()}
+          testCodes={sample.testCodes ?? []}
+          sampleType={sample.sampleType}
+          patientName={patientName}
+          isRecollection={sample.isRecollection || false}
+          onSuccess={onClose}
+          trigger={
+            <Button {...actionButtonPreset('reject')} size="sm">
+              {LAB_COPY.quality.reportSampleIssue}
+            </Button>
+          }
+        />
+      </div>
+    );
+  }
+
+  if (sample.sampleId != null) {
+    return (
+      <div className="flex justify-end w-full">
+        <SampleLabelPrintButton sample={sample} patientName={patientName} eventAt={collectedAt} />
+      </div>
     );
   }
 

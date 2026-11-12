@@ -5,7 +5,7 @@
 import { CONTAINER_TOP_COLOR_OPTIONS, type Sample, type RejectedSample } from '@/types';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { getEffectiveContainerType } from '../../utils';
-import { isLabActionAllowed } from '../../utils/queueDisplay';
+import { isLabActionAllowed, labDisabledActionTooltip } from '../../utils/queueDisplay';
 
 export function getSampleCollectionViewModel(display: SampleCollectionQueueItem, sample: Sample) {
   const isPending = sample.status === 'pending';
@@ -24,7 +24,7 @@ export function getSampleCollectionViewModel(display: SampleCollectionQueueItem,
     isRejected,
     isRecollection: sample.isRecollection === true,
     collectAllowed: isLabActionAllowed(display.allowedActions, 'collect'),
-    collectDisabledTitle: display.denyMessage ?? undefined,
+    collectDisabledTitle: labDisabledActionTooltip({ denyMessage: display.denyMessage }, display),
     rejectedSample: isRejected ? (sample as RejectedSample) : null,
     containerColor,
     colorName: containerColor

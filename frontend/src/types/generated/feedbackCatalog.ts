@@ -141,6 +141,7 @@ export type FeedbackId =
   | "patients.affiliation.pricingLoadFailed"
   | "patients.list.loadFailed"
   | "payment.alreadyPaid"
+  | "payment.amount.exceedsRemaining"
   | "payment.amount.mustBePositive"
   | "payment.orderAmount.invalid"
   | "payment.process.error"
@@ -209,7 +210,7 @@ export const FEEDBACK_CATALOG: Record<FeedbackId, FeedbackEntry> = {
   "lab.collection.printLabel.error": { channel: "toast", variant: "error", title: "Failed to print label", subtitle: "The label could not be printed. Check your printer and try again.", brief: "failed" },
   "lab.collection.printLabel.genericError": { channel: "toast", variant: "error", title: "Failed to print label", subtitle: "Ensure the printer is connected and the sample data is valid.", brief: "failed" },
   "lab.collection.printLabel.popupBlocked": { channel: "toast", variant: "error", title: "Please allow popups to print labels", subtitle: "Enable popups for this site in your browser settings, then try again.", brief: "failed" },
-  "lab.collection.printLabel.uncollected": { channel: "toast", variant: "error", title: "Cannot print label for uncollected sample", subtitle: "Collect the sample before printing a label.", brief: "failed" },
+  "lab.collection.printLabel.uncollected": { channel: "toast", variant: "error", title: "Cannot print sample label", subtitle: "A sample ID is required before a label can be printed.", brief: "failed" },
   "lab.collection.refreshWarning": { channel: "toast", variant: "warning", title: "Collection saved", subtitle: "The sample was collected, but the list could not be refreshed. Reload the page to see the latest status.", brief: "collected" },
   "lab.collection.success": { channel: "toast", variant: "success", title: "Sample collected", subtitle: "The sample has been recorded and the order has been updated. You can continue with the next sample.", brief: "collected" },
   "lab.collection.workContext.loadFailed": { channel: "toast", variant: "danger", title: "Failed to load sample collection eligibility", brief: "failed" },
@@ -309,6 +310,7 @@ export const FEEDBACK_CATALOG: Record<FeedbackId, FeedbackEntry> = {
   "patients.affiliation.pricingLoadFailed": { channel: "inline", variant: "danger", title: "Failed to load pricing. Please try again." },
   "patients.list.loadFailed": { channel: "toast", variant: "danger", title: "Failed to load patients", brief: "failed" },
   "payment.alreadyPaid": { channel: "inline", variant: "danger", title: "This order is already paid. Refresh the page to see the latest status." },
+  "payment.amount.exceedsRemaining": { channel: "inline", variant: "danger", title: "Amount exceeds remaining balance" },
   "payment.amount.mustBePositive": { channel: "inline", variant: "danger", title: "Amount must be greater than 0" },
   "payment.orderAmount.invalid": { channel: "inline", variant: "danger", title: "Invalid order amount" },
   "payment.process.error": { channel: "inline", variant: "danger", title: "Failed to process payment" },

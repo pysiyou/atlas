@@ -10,6 +10,7 @@ import { PaymentPopover } from './PaymentPopover';
 import type { Order } from '@/types';
 import { IconKeys } from '@/config/icons';
 import {BADGE, FG } from '@/theme/recipes';
+import { isFullyPaid } from '../utils/paymentStatus';
 
 interface PaymentButtonProps {
   /** Order to display payment action for */
@@ -31,7 +32,7 @@ export const PaymentButton: React.FC<PaymentButtonProps> = ({
   onPaymentSuccess,
   size = 'sm',
 }) => {
-  const isPaid = order.paymentStatus === 'paid';
+  const isPaid = isFullyPaid(order.paymentStatus);
 
   // Show check-circle icon for paid orders
   if (isPaid) {

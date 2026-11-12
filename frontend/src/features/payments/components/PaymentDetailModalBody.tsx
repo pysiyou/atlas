@@ -5,6 +5,7 @@ import React from 'react';
 import { Panel } from '@/components/surfaces';
 import { Alert } from '@/components/display';
 import { PaymentMethodSelector } from './PaymentMethodSelector';
+import { PaymentAmountInput } from './PaymentAmountInput';
 import { cn } from '@/utils';
 import type { Order } from '@/types';
 import { BillingSummarySection } from '@/features/orders';
@@ -25,6 +26,9 @@ export interface PaymentDetailModalBodyProps {
   onPaymentMethodChange: (method: PaymentMethod) => void;
   notes: string;
   onNotesChange: (notes: string) => void;
+  amount: number;
+  remainingAmount: number;
+  onAmountChange: (amount: number) => void;
   error: string | null;
   paymentMethods: PaymentMethodOption[];
 }
@@ -40,6 +44,9 @@ export const PaymentDetailModalBody: React.FC<PaymentDetailModalBodyProps> = ({
   onPaymentMethodChange,
   notes,
   onNotesChange,
+  amount,
+  remainingAmount,
+  onAmountChange,
   error,
   paymentMethods,
 }) => (
@@ -65,6 +72,15 @@ export const PaymentDetailModalBody: React.FC<PaymentDetailModalBodyProps> = ({
         />
       ) : null}
     </Panel>
+
+    {!isPaid && (
+      <PaymentAmountInput
+        remainingAmount={remainingAmount}
+        value={amount}
+        onChange={onAmountChange}
+        disabled={submitting}
+      />
+    )}
 
     {!isPaid && (
       <div>

@@ -7,6 +7,7 @@ import {
   PAYMENT_METHOD_CONFIG,
   PAYMENT_METHOD_VALUES,
   type PaymentMethod,
+  type PaymentStatus,
 } from '@/types/enums';
 
 export type { PaymentMethod };
@@ -59,7 +60,7 @@ export interface Invoice {
   orderId: number;
   patientId: number;
   patientName?: string;
-  status: 'unpaid' | 'paid';
+  status: PaymentStatus;
   items: InvoiceItem[];
   subtotal: number;
   discount: number;
@@ -84,4 +85,5 @@ export interface Payment {
   orderTotalPrice?: number;
   numberOfTests?: number;
   patientName?: string;
+  orderPaymentStatus?: PaymentStatus;
 }

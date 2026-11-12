@@ -12,6 +12,8 @@ import { Alert, FooterInfo } from '@/components/display';
 import { RecordId } from '@/features/shared';
 import { StatusValueBadge } from '@/features/shared';
 import { PaymentMethodSelector } from './PaymentMethodSelector';
+import { PaymentAmountInput } from './PaymentAmountInput';
+import { isFullyPaid, roundMoney } from '../utils/paymentStatus';
 import { PopoverFormChrome } from '@/components/overlays';
 import { cn, formatCurrency } from '@/utils';
 import { OrderReceipt } from '@/features/orders';
@@ -75,20 +77,27 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
 }) => {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(getDefaultPaymentMethod());
   const [notes, setNotes] = useState<string>('');
+  const [amount, setAmount] = useState(remainingAmount);
 
-  const amount = remainingAmount;
-  const isValid = !paymentsLoading && amount > 0;
+  useEffect(() => {
+    setAmount(remainingAmount);
+  }, [remainingAmount]);
+
+  const remaining = roundMoney(remainingAmount);
+  const chargeAmount = roundMoney(amount);
+  const isValid = !paymentsLoading && chargeAmount > 0 && chargeAmount <= remaining;
+  const amountPaid = roundMoney(Math.max(0, (order.totalPrice ?? 0) - remaining));
 
   const handleSubmit = useCallback(() => {
-    if (amount <= 0) return;
+    if (chargeAmount <= 0 || chargeAmount > remaining) return;
 
     onSubmit({
       orderId: order.orderId,
-      amount,
+      amount: chargeAmount,
       paymentMethod,
       notes: notes.trim() || undefined,
     });
-  }, [amount, paymentMethod, notes, order.orderId, onSubmit]);
+  }, [chargeAmount, remaining, paymentMethod, notes, order.orderId, onSubmit]);
 
   // Keyboard shortcuts for submit (Enter) and cancel (Escape)
   useEffect(() => {
@@ -115,13 +124,25 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
       }
       onCancel={onCancel}
       onConfirm={handleSubmit}
-      confirmLabel={amount > 0 ? `Pay ${formatCurrency(amount)}` : 'Fully Paid'}
+      confirmLabel={chargeAmount > 0 ? `Pay ${formatCurrency(chargeAmount)}` : 'Fully Paid'}
       confirmVariant="primary"
       isSubmitting={submitting}
       disabled={!isValid}
       footerInfo={<FooterInfo icon={IconKeys.modules.payments} label="Payments" />}
     >
-      <OrderReceipt order={order} variant="compact" />
+      <OrderReceipt
+        order={order}
+        variant="compact"
+        amountPaid={amountPaid}
+        remainingAmount={remaining}
+      />
+
+      <PaymentAmountInput
+        remainingAmount={remaining}
+        value={chargeAmount}
+        onChange={setAmount}
+        disabled={paymentsLoading || submitting}
+      />
 
       {/* Payment Method Selection */}
       <div>
@@ -226,6 +247,10 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
         setError(feedbackTitle('payment.amount.mustBePositive'));
         return;
       }
+      if (roundMoney(paymentData.amount) > roundMoney(remainingAmount)) {
+        setError(feedbackTitle('payment.amount.exceedsRemaining'));
+        return;
+      }
       setError(null);
       createPaymentMutation(paymentData, {
         onSuccess: () => {
@@ -238,7 +263,7 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
         },
       });
     },
-    [createPaymentMutation, onSuccess]
+    [createPaymentMutation, onSuccess, remainingAmount]
   );
 
   const renderContent = useCallback(
@@ -257,7 +282,8 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
     [order, remainingAmount, paymentsLoading, submitting, error, handleSubmit]
   );
 
-  const isPaid = order.paymentStatus === 'paid' || (!paymentsLoading && remainingAmount <= 0);
+  const isPaid =
+    isFullyPaid(order.paymentStatus) || (!paymentsLoading && remainingAmount <= 0);
   if (isPaid && trigger == null) {
     return <StatusValueBadge value="paid" size="xs" />;
   }

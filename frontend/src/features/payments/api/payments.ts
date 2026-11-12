@@ -231,6 +231,7 @@ export function useCreatePayment() {
             paymentMethod: payment.paymentMethod,
             paidAt: payment.paidAt,
           },
+          ...(payment.orderPaymentStatus ? { paymentStatus: payment.orderPaymentStatus } : {}),
         });
       }
       return invalidateOrderQueries(queryClient, {

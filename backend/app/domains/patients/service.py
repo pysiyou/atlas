@@ -89,7 +89,9 @@ def _attach_order_summaries(db: Session, patients_data: list[dict]) -> list[dict
             Order.patientId,
             func.count(Order.orderId).label("order_count"),
             func.max(Order.orderDate).label("last_order_date"),
-            func.bool_or(Order.paymentStatus == PaymentStatus.UNPAID).label("has_unpaid"),
+            func.bool_or(
+                Order.paymentStatus.in_([PaymentStatus.UNPAID, PaymentStatus.PARTIAL])
+            ).label("has_unpaid"),
         )
         .filter(Order.patientId.in_(patient_ids))
         .group_by(Order.patientId)

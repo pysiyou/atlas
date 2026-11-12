@@ -204,7 +204,7 @@ class OrderDetailResponse(OrderResponse):
 class OrderPaymentUpdate(BaseModel):
     """Body for PATCH /orders/{orderId}/payment"""
 
-    paymentStatus: PaymentStatus = Field(..., description="paid | unpaid")
+    paymentStatus: PaymentStatus = Field(..., description="unpaid | partial | paid")
     amountPaid: float | None = Field(None, ge=0)
 
 

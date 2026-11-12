@@ -26,12 +26,13 @@ export const ORDER_STATUS_TIMELINE = ORDER_STATUS_VALUES.map(status => ({
   label: ORDER_STATUS_CONFIG[status].label,
 }));
 
-export const PAYMENT_STATUS_VALUES = ["unpaid", "paid"] as const;
+export const PAYMENT_STATUS_VALUES = ["unpaid", "partial", "paid"] as const;
 
 export type PaymentStatus = (typeof PAYMENT_STATUS_VALUES)[number];
 
 export const PAYMENT_STATUS_CONFIG: Record<PaymentStatus, { label: string }> = {
   "unpaid": { label: "Unpaid" },
+  "partial": { label: "Partial" },
   "paid": { label: "Paid" },
 };
 

@@ -25,7 +25,11 @@ import { entryDraftLifecycleKey, useLabDraftStore } from '../../state/labDraftSt
 import { toRawResultPayload } from '../../entry/resultEntry';
 import { resultsFromOrderTest } from '../../entry/orderTestResults';
 import { hasResultsOnWorkItem, orderTestKey } from '../../utils/labSearchAndLinks';
-import { isLabActionAllowed } from '../../utils/queueDisplay';
+import {
+  isLabActionAllowed,
+  labDisabledActionTooltip,
+  labModalFooterDenyMessage,
+} from '../../utils/queueDisplay';
 import { notify } from '@/feedback';
 import { logger } from '@/utils/logger';
 import { Modal, ModalPageShell } from '@/components/overlays';
@@ -313,7 +317,25 @@ export const ResultEntryDetailModal: React.FC<ResultDetailModalProps> = ({
             isSaving={isSaving}
             isComplete={isComplete}
             canEnter={canEnter}
-            denyMessage={denyMessage}
+            footerDenyStatus={
+              !canEnter
+                ? labModalFooterDenyMessage(
+                    orderTest?.lab,
+                    displayWorkItem,
+                    orderTestSnapshot
+                  )
+                : ''
+            }
+            saveDisabledTitle={
+              !canEnter
+                ? labDisabledActionTooltip(
+                    { denyMessage },
+                    orderTest?.lab,
+                    displayWorkItem,
+                    orderTestSnapshot
+                  )
+                : undefined
+            }
             onSave={handleSave}
           />
         ) : undefined
@@ -366,28 +388,30 @@ function EntryDetailModalFooter({
   isSaving,
   isComplete,
   canEnter,
-  denyMessage,
+  footerDenyStatus,
+  saveDisabledTitle,
   onSave,
 }: {
   readOnly: boolean;
   isSaving: boolean;
   isComplete: boolean;
   canEnter: boolean;
-  denyMessage?: string | null;
+  footerDenyStatus: string;
+  saveDisabledTitle?: string;
   onSave: () => void;
 }) {
   if (readOnly) {
     return null;
   }
   return (
-    <ModalFooter statusMessage={!canEnter && denyMessage ? denyMessage : ''}>
+    <ModalFooter statusMessage={footerDenyStatus}>
       <Button
         onClick={onSave}
         {...actionButtonPreset('save')}
         size="sm"
         layout="icon-text"
         disabled={!isComplete || !canEnter}
-        title={!canEnter ? denyMessage ?? undefined : undefined}
+        title={saveDisabledTitle}
         isLoading={isSaving}
       >
         Save

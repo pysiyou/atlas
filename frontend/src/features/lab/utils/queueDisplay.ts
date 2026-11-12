@@ -205,6 +205,61 @@ export function deriveOrderTestQueueState(
   return { stage, attentionReason: null, label: stageLabel(stage) };
 }
 
+export type LabDenyCopySource = {
+  denyReason?: string | null;
+  denyMessage?: string | null;
+  attentionReason?: string | null;
+};
+
+export function mergeLabDenyCopySources(
+  ...sources: Array<LabDenyCopySource | null | undefined>
+): LabDenyCopySource {
+  const merged: LabDenyCopySource = {};
+  for (const source of sources) {
+    if (!source) continue;
+    merged.denyReason ??= source.denyReason ?? undefined;
+    merged.attentionReason ??= source.attentionReason ?? undefined;
+    merged.denyMessage ??= source.denyMessage ?? undefined;
+  }
+  return merged;
+}
+
+/** Unpaid orders already show payment badges and workflow attention — omit duplicate copy. */
+export function isPaymentUnpaidLabBlock(...sources: Array<LabDenyCopySource | null | undefined>): boolean {
+  const { denyReason, attentionReason, denyMessage } = mergeLabDenyCopySources(...sources);
+  if (denyReason === 'payment_unpaid' || attentionReason === 'payment_unpaid') {
+    return true;
+  }
+  return denyMessage === ATTENTION_LABELS.payment_unpaid;
+}
+
+/** Status line for lab modal footers (left side of footer actions). */
+export function labModalFooterDenyMessage(...sources: Array<LabDenyCopySource | null | undefined>): string {
+  if (isPaymentUnpaidLabBlock(...sources)) {
+    return '';
+  }
+  return mergeLabDenyCopySources(...sources).denyMessage?.trim() ?? '';
+}
+
+/** Hover title when a lab action is disabled; skips redundant payment messaging. */
+export function labDisabledActionTooltip(
+  options: { denyMessage?: string | null; fallbackLabel?: string | null },
+  ...sources: Array<LabDenyCopySource | null | undefined>
+): string | undefined {
+  if (isPaymentUnpaidLabBlock(...sources)) {
+    return undefined;
+  }
+  const message = options.denyMessage?.trim();
+  if (message) {
+    return message;
+  }
+  const fallback = options.fallbackLabel?.trim();
+  if (fallback && fallback !== ATTENTION_LABELS.payment_unpaid) {
+    return fallback;
+  }
+  return fallback || undefined;
+}
+
 function stageLabel(stage: OrderTestQueueStage): string {
   switch (stage) {
     case 'awaiting_collection':

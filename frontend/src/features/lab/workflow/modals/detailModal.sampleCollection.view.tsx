@@ -114,7 +114,9 @@ export function SampleCollectionDetailModalView({
   );
 
   const hasFooterActions =
-    (isPending && pendingSampleDisplay && onCollect) || (isCollected && sample.sampleId != null);
+    (isPending && pendingSampleDisplay && onCollect) ||
+    (isCollected && sample.sampleId != null) ||
+    sample.sampleId != null;
 
   const footerContent = hasFooterActions ? (
     <SampleCollectionDetailFooter
@@ -130,6 +132,7 @@ export function SampleCollectionDetailModalView({
       onCollect={onCollect}
       onClose={onClose}
       onPopoverSubmittingChange={onPopoverSubmittingChange}
+      collectedAt={collectedAt}
     />
   ) : undefined;
 
@@ -170,7 +173,7 @@ export function SampleCollectionDetailModalView({
         containerColor={containerColor}
         colorName={colorName}
         requirement={requirement}
-        showBarcode={(isCollected || isRejected) && sample.sampleId != null}
+        showBarcode={sample.sampleId != null}
       />
       <LabRelatedSamplesPanel sample={sample} isOpen={isOpen} onOpenSample={openSampleDetail} />
       {sample.sampleId != null && <LazyLabEventLogPanel sampleId={Number(sample.sampleId)} />}

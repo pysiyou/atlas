@@ -11,6 +11,8 @@ import { cn } from '@/utils';
 import {
   PaymentDetailModal,
   PaymentPopover,
+  hasRecordedPayment,
+  isFullyPaid,
   usePaymentsByOrder,
   type OrderPaymentView,
 } from '@/features/payments';
@@ -44,7 +46,7 @@ function BillingSummaryPanelActions({
 }) {
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const { payments } = usePaymentsByOrder(String(order.orderId));
-  const isPaid = order.paymentStatus === 'paid';
+  const isPaid = isFullyPaid(order.paymentStatus);
 
   const paymentView: OrderPaymentView = useMemo(() => {
     const latestPayment = payments[0];
@@ -52,7 +54,7 @@ function BillingSummaryPanelActions({
       order,
       paymentMethod:
         latestPayment?.paymentMethod ??
-        (order.paymentStatus !== 'unpaid' ? order.paymentMethod : undefined),
+        (hasRecordedPayment(order.paymentStatus) ? order.paymentMethod : undefined),
       paymentDate: latestPayment?.paidAt,
     };
   }, [order, payments]);

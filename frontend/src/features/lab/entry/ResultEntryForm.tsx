@@ -12,6 +12,7 @@ import { ParameterInput } from './ResultParameterInputs';
 import { getReferenceRangeDisplay, checkCriticalStatus } from './resultEntry';
 import { text, METRIC_TILE , FG } from '@/theme/recipes';
 import { resultTileStatusClass } from '../utils/labResult';
+import { labDisabledActionTooltip, labModalFooterDenyMessage } from '../utils/queueDisplay';
 import { FIELD_ERROR_CAPTION, RADIUS, SHADOW, TONE } from '@/theme/recipes';
 
 interface EntryFormProps {
@@ -54,6 +55,8 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
   const hasValidationErrors = Object.values(validationErrors).some(error => !!error);
   const entryLocked = readOnly || !canEnter;
   const canSubmit = isComplete && !hasValidationErrors && canEnter;
+  const footerDenyStatus = labModalFooterDenyMessage({ denyMessage });
+  const saveDisabledTitle = labDisabledActionTooltip({ denyMessage });
 
   if (!testDef?.parameters) return null;
 
@@ -151,13 +154,13 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
               {feedbackTitle('lab.entry.fixValidationBeforeSubmit')}
             </span>
           )}
-          {!canEnter && !hasValidationErrors && denyMessage && (
-            <span className={FIELD_ERROR_CAPTION}>{denyMessage}</span>
+          {!canEnter && !hasValidationErrors && footerDenyStatus && (
+            <span className={FIELD_ERROR_CAPTION}>{footerDenyStatus}</span>
           )}
           <Button
             onClick={onSave}
             disabled={!canSubmit}
-            title={!canEnter ? denyMessage ?? undefined : undefined}
+            title={!canEnter ? saveDisabledTitle : undefined}
             {...actionButtonPreset('submit')}
             size="sm"
             layout="icon-text"

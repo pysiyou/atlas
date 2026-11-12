@@ -6,7 +6,7 @@
 import React from 'react';
 import type { Order } from '@/types';
 import { cn } from '@/utils';
-import { usePaymentsByOrder } from '@/features/payments';
+import { hasRecordedPayment, remainingPaymentAmount, usePaymentsByOrder } from '@/features/payments';
 import { getBillableTotal } from '../utils/orderCalculator';
 import { OrderReceipt, ReceiptTotal } from './OrderReceipt';
 
@@ -25,10 +25,12 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
 }) => {
   const billableTotal = getBillableTotal(order.tests ?? []);
   const { payments } = usePaymentsByOrder(String(order.orderId));
+  const remainingAmount = remainingPaymentAmount(order.totalPrice, payments);
+  const amountPaid = Math.max(0, order.totalPrice - remainingAmount);
   const paymentMethod =
     paymentMethodProp ??
     order.paymentMethod ??
-    (order.paymentStatus !== 'unpaid' ? payments[0]?.paymentMethod : undefined);
+    (hasRecordedPayment(order.paymentStatus) ? payments[0]?.paymentMethod : undefined);
 
   return (
     <div className={cn('flex flex-col min-h-0', fillHeight && 'h-full')}>
@@ -40,7 +42,13 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
         paymentMethod={paymentMethod}
       />
       <div className="mt-auto shrink-0">
-        <ReceiptTotal total={billableTotal} variant="panel" pad="px-space-4" />
+        <ReceiptTotal
+          total={billableTotal}
+          variant="panel"
+          pad="px-space-4"
+          amountPaid={amountPaid}
+          remainingAmount={remainingAmount}
+        />
       </div>
     </div>
   );

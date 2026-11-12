@@ -30,6 +30,7 @@ from app.domains.patients.models import Patient
 from app.domains.patients.schemas import PatientResponse
 from app.domains.payments.schemas import PaymentCreate, PaymentResponse
 from app.domains.payments.service import PaymentService, enrich_payment
+from app.domains.payments.status import derive_payment_status, money
 from app.domains.referent_doctors.service import ReferentDoctorService
 from app.platform.cache import invalidate_lab_board_summary_cache
 from app.platform.utils.common import get_or_404
@@ -706,6 +707,8 @@ class OrderService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Order {order_id} not found",
             )
+        # Client paymentStatus is ignored: status always follows the payment ledger.
+        _ = payment_status
         if amount_paid is not None and amount_paid > 0:
             # Single emit path: PaymentService.create_payment writes billing.payment.process.
             PaymentService(self.db).create_payment(
@@ -718,16 +721,15 @@ class OrderService:
                 user_id,
             )
             order = self._order_with_relations(order_id)
-            if order.paymentStatus != payment_status:
-                order.paymentStatus = payment_status
-                order.updatedAt = datetime.now(UTC)
-                self.db.commit()
-                order = self._order_with_relations(order_id)
             return self._order_response_with_lab(order)
 
-        order.paymentStatus = payment_status
-        order.updatedAt = datetime.now(UTC)
-        self.db.commit()
+        payments = self.db.query(Payment).filter(Payment.orderId == order_id).all()
+        total_paid = money(sum(p.amount for p in payments))
+        derived = derive_payment_status(total_paid, order.totalPrice)
+        if order.paymentStatus != derived:
+            order.paymentStatus = derived
+            order.updatedAt = datetime.now(UTC)
+            self.db.commit()
         self.db.refresh(order)
         order = self._order_with_relations(order.orderId)
         return self._order_response_with_lab(order)
