@@ -5,9 +5,9 @@ import { displayId } from '@/utils';
 import { formatDateTime } from '@/utils/date';
 import { feedbackTitle } from '@/feedback';
 
-/** Narrow tube label (≈35 × 16 mm). */
-const LABEL_PAGE_WIDTH_IN = '1.38in';
-const LABEL_PAGE_HEIGHT_IN = '0.63in';
+/** Small tube label — landscape strip (~36 × 18 mm). */
+const LABEL_PAGE_WIDTH_IN = '1.42in';
+const LABEL_PAGE_HEIGHT_IN = '0.71in';
 
 export type SampleLabelPrintInput = {
   patientName: string;
@@ -60,7 +60,7 @@ const TUBE_LABEL_PRINT_CSS = `
   }
   @page {
     size: ${LABEL_PAGE_WIDTH_IN} ${LABEL_PAGE_HEIGHT_IN};
-    margin: 0.03in;
+    margin: 0.025in;
   }
   @media print {
     html, body {
@@ -73,69 +73,121 @@ const TUBE_LABEL_PRINT_CSS = `
   }
   body {
     margin: 0;
-    padding: 0.02in 0.04in;
+    padding: 0;
     background: #ffffff;
     color: #000000;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
   }
   .label {
     width: 100%;
-    max-width: 1.28in;
+    height: 100%;
+    max-width: 1.34in;
     color: #000000;
-    text-align: center;
-    line-height: 1.1;
+    display: flex;
+    flex-direction: column;
+    padding: 2pt 3pt 1pt;
+    gap: 0;
   }
-  .label-name {
-    font-size: 6.5pt;
-    font-weight: 700;
-    color: #000000;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-    margin: 0 0 0.5pt;
-  }
-  .label-row {
-    font-size: 5pt;
-    font-weight: 600;
-    color: #000000;
+  .label-patient {
     margin: 0;
+    padding: 0 0 2pt;
+    border-bottom: 0.4pt solid #000000;
+    font-size: 7pt;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: 0.01em;
+    text-align: left;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+  .label-meta {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    column-gap: 4pt;
+    row-gap: 0.5pt;
+    padding: 2pt 0;
+    border-bottom: 0.4pt solid #000000;
+    align-items: baseline;
   }
   .label-id {
-    font-size: 6pt;
+    grid-column: 1;
+    grid-row: 1;
+    font-size: 7pt;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+    text-align: left;
+  }
+  .label-type {
+    grid-column: 2;
+    grid-row: 1;
+    font-size: 5.5pt;
     font-weight: 700;
-    color: #000000;
-    letter-spacing: 0.03em;
-    margin: 0.5pt 0;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .label-when {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin: 0;
+    font-size: 5pt;
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .label-scan {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-top: 1.5pt;
+    min-height: 0;
   }
   .label-barcode {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
     width: 100%;
-    margin: 0;
     line-height: 0;
   }
   .label-barcode svg {
     display: block;
-    max-width: 100%;
+    width: 100%;
+    max-width: 1.3in;
     height: auto;
+  }
+  .label-barcode-caption {
+    margin: 0.5pt 0 0;
+    font-size: 4.5pt;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-align: center;
     color: #000000;
   }
   @media screen {
     body {
-      min-height: 120px;
-      padding: 12px;
+      min-height: 140px;
+      padding: 16px;
+      align-items: center;
     }
     .label {
-      border: 1px dashed #000000;
-      padding: 4px;
+      max-width: 1.42in;
+      min-height: 0.71in;
+      border: 0.75pt dashed #000000;
+      border-radius: 2pt;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
     }
   }
 `;
@@ -151,7 +203,7 @@ export const generatePrintLabelHTML = ({ patientName, sample, eventAt }: SampleL
   const dateTime = resolveLabelDateTime(sample, eventAt);
 
   const safePatient = escapeHtml(patientName.trim() || 'Unknown');
-  const safeType = escapeHtml(sampleType);
+  const safeType = escapeHtml(sampleType.toUpperCase());
   const safeDateTime = escapeHtml(dateTime);
   const safeSampleId = escapeHtml(sampleIdDisplay);
   const barcodeValue = escapeJsString(sampleIdDisplay);
@@ -166,21 +218,29 @@ export const generatePrintLabelHTML = ({ patientName, sample, eventAt }: SampleL
         <style>${TUBE_LABEL_PRINT_CSS}</style>
       </head>
       <body>
-        <div class="label">
-          <div class="label-name" title="${safePatient}">${safePatient}</div>
-          <div class="label-row">${safeType} · ${safeDateTime}</div>
-          <div class="label-id">${safeSampleId}</div>
-          <div class="label-barcode">
-            <svg id="barcode" aria-label="Sample barcode"></svg>
-          </div>
-        </div>
+        <article class="label">
+          <header class="label-patient" title="${safePatient}">${safePatient}</header>
+
+          <section class="label-meta" aria-label="Specimen details">
+            <span class="label-id">${safeSampleId}</span>
+            <span class="label-type">${safeType}</span>
+            <p class="label-when">${safeDateTime}</p>
+          </section>
+
+          <footer class="label-scan">
+            <div class="label-barcode">
+              <svg id="barcode" role="img" aria-label="Barcode ${safeSampleId}"></svg>
+            </div>
+            <p class="label-barcode-caption">${safeSampleId}</p>
+          </footer>
+        </article>
         <script>
           (function() {
             try {
               JsBarcode("#barcode", "${barcodeValue}", {
                 format: "CODE128",
-                width: 0.75,
-                height: 14,
+                width: 0.9,
+                height: 15,
                 displayValue: false,
                 margin: 0,
                 lineColor: "#000000",
@@ -208,7 +268,7 @@ export const generatePrintLabelHTML = ({ patientName, sample, eventAt }: SampleL
 export const printCollectionLabel = (input: SampleLabelPrintInput): void => {
   try {
     const htmlContent = generatePrintLabelHTML(input);
-    const printWindow = window.open('', '', 'width=220,height=100');
+    const printWindow = window.open('', '', 'width=260,height=130');
 
     if (!printWindow) {
       throw new Error(feedbackTitle('lab.collection.printLabel.popupBlocked'));
