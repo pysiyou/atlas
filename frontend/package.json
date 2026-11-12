@@ -10,9 +10,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,json,css}\"",
-    "validate:feedback": "node scripts/validate-feedback-catalog.mjs",
-    "knip": "npx knip --tsConfig tsconfig.app.json",
-    "codegen": "npm run codegen --prefix ../scripts/codegen"
+    "knip": "npx knip --tsConfig tsconfig.app.json"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.16",

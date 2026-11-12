@@ -61,6 +61,8 @@ export const settingsPopoverLinks: SettingsPopoverLink[] = [
 ];
 
 export function getFilteredMenuItems(): MenuItem[] {
+  // For now, return all items until feature flags are fully wired
+  // TODO: Import and use isFeatureEnabled once circular dependency is resolved
   return menuItems;
 }
 

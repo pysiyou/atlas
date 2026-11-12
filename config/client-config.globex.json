@@ -1,0 +1,78 @@
+{
+  "$schema": "./client-config.schema.json",
+  "company": {
+    "name": "Globex Testing",
+    "displayName": "Globex Testing Center",
+    "fullName": "Globex Clinical Testing Center Inc.",
+    "subtitle": "Precision Diagnostic Services",
+    "tagline": "Reliable | Professional | Fast",
+    "version": "1.0",
+    "copyright": "© 2026 Globex Testing Center. All rights reserved.",
+    "contact": {
+      "address": {
+        "street": "456 Science Avenue",
+        "city": "Boston",
+        "state": "Massachusetts",
+        "zipCode": "02101",
+        "country": "United States",
+        "fullAddress": "456 Science Avenue, Boston, MA 02101, United States"
+      },
+      "phone": ["+1-617-555-9876"],
+      "email": "contact@globextesting.com",
+      "website": "www.globextesting.com"
+    }
+  },
+  "branding": {
+    "logoPath": "/icons/here.svg",
+    "primaryColor": "#059669",
+    "secondaryColor": "#10b981",
+    "defaultTheme": "playful-light"
+  },
+  "terminology": {
+    "patient": "Client",
+    "patients": "Clients",
+    "patientId": "Client ID",
+    "order": "Request",
+    "orders": "Requests",
+    "orderId": "Request ID",
+    "test": "Analysis",
+    "tests": "Analyses",
+    "sample": "Specimen",
+    "samples": "Specimens",
+    "sampleId": "Specimen ID",
+    "laboratory": "Testing Center",
+    "lab": "Testing",
+    "report": "Result",
+    "reports": "Results",
+    "referentDoctor": "Referring Physician",
+    "catalog": "Test Menu",
+    "payment": "Billing",
+    "payments": "Billing"
+  },
+  "features": {
+    "dashboard": true,
+    "patients": true,
+    "orders": true,
+    "payments": true,
+    "reports": true,
+    "catalog": true,
+    "laboratory": true,
+    "labCollection": true,
+    "labEntry": true,
+    "labValidation": true,
+    "labMonitor": true,
+    "audit": false,
+    "users": true
+  },
+  "workflows": {
+    "requirePaymentBeforeCollection": false,
+    "requireDoctorApproval": true,
+    "requireDualValidation": false,
+    "requireEmergencyContact": false
+  },
+  "reports": {
+    "headerText": "Globex Testing Center - Test Results",
+    "footerText": "This document contains confidential client information. Unauthorized disclosure is prohibited.",
+    "includeSignature": true
+  }
+}

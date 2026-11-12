@@ -1,0 +1,11 @@
+{
+  "$schema": "./client-config.schema.json",
+  "company": {
+    "name": "My Lab",
+    "displayName": "My Clinical Laboratory"
+  },
+  "branding": {
+    "logoPath": "/icons/here.svg",
+    "primaryColor": "#0284c7"
+  }
+}

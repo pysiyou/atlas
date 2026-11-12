@@ -7,6 +7,7 @@ import React, { type ReactNode } from 'react';
 import { QueryProvider } from '@/lib/query';
 import { ModalProvider } from '@/lib/context/ModalContext';
 import { ToastProvider } from '@/feedback';
+import { ConfigLoader } from './ConfigLoader';
 
 interface AppProvidersProps {
   children: ReactNode;
@@ -24,7 +25,9 @@ const ComposedProviders = composeProviders(featureProviders);
 
 export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => (
   <QueryProvider>
-    <ComposedProviders>{children}</ComposedProviders>
+    <ComposedProviders>
+      <ConfigLoader>{children}</ConfigLoader>
+    </ComposedProviders>
   </QueryProvider>
 );
 
