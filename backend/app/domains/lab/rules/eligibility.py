@@ -110,7 +110,11 @@ def _tests_must_transition_on_collect(order_tests: list[OrderTest]) -> tuple[boo
 
 
 def assert_can_collect(sample: Sample, order: Order, order_tests: list[OrderTest]) -> None:
-    if order.paymentStatus != PaymentStatus.PAID:
+    # Check payment requirement based on workflow configuration
+    from app.platform.client_config import client_config
+    
+    require_payment = client_config.workflows.get("requirePaymentBeforeCollection", True)
+    if require_payment and order.paymentStatus != PaymentStatus.PAID:
         raise LabOperationError(
             "Sample collection requires payment. Mark the order as paid before collecting.",
             status_code=402,

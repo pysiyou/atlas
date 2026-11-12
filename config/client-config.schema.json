@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Atlas Client Configuration",
+  "description": "White-label configuration for Atlas LIS deployments",
+  "type": "object",
+  "required": ["company", "branding"],
+  "properties": {
+    "company": {
+      "type": "object",
+      "required": ["name", "displayName"],
+      "properties": {
+        "name": { "type": "string" },
+        "displayName": { "type": "string" },
+        "fullName": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "tagline": { "type": "string" },
+        "contact": {
+          "type": "object",
+          "properties": {
+            "address": { "type": "object" },
+            "phone": { "type": "array", "items": { "type": "string" } },
+            "email": { "type": "string" },
+            "website": { "type": "string" }
+          }
+        }
+      }
+    },
+    "branding": {
+      "type": "object",
+      "required": ["logoPath", "primaryColor"],
+      "properties": {
+        "logoPath": { "type": "string" },
+        "primaryColor": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+        "secondaryColor": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+        "defaultTheme": { "type": "string" }
+      }
+    },
+    "terminology": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "features": {
+      "type": "object",
+      "additionalProperties": { "type": "boolean" }
+    },
+    "workflows": {
+      "type": "object",
+      "additionalProperties": { "type": "boolean" }
+    }
+  }
+}

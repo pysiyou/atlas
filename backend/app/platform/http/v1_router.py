@@ -4,6 +4,7 @@ from app.domains.auth.api import router as auth_router
 from app.domains.billing.api import router as billing_router
 from app.domains.catalog.api.affiliations import router as affiliations_router
 from app.domains.catalog.api.tests import router as tests_router
+from app.domains.config.api import router as config_router
 from app.domains.dashboard.api import router as dashboard_router
 from app.domains.lab.api.router import router as lab_router
 from app.domains.orders.api import router as orders_router
@@ -17,6 +18,7 @@ from fastapi import APIRouter
 
 def build_v1_router() -> APIRouter:
     root = APIRouter()
+    root.include_router(config_router, tags=["config"])
     root.include_router(auth_router)
     root.include_router(audit_router)
     root.include_router(patients_router, tags=["patients"])
