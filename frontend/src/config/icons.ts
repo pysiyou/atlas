@@ -169,7 +169,6 @@ const REGISTRY = {
     category: 'category',
     appLogo: 'here',
     shield: 'security',
-    shieldCheck: 'security',
     lock: 'lock',
     verified: 'verified',
     usersGroup: 'user',

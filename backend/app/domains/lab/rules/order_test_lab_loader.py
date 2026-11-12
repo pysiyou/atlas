@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections import defaultdict
 
 from app.domains.lab.models.sample import Sample
-from app.domains.lab.quality.escalation_queries import open_escalation_reason_codes_by_order_test_id
+from app.domains.lab.quality.escalation import open_escalation_reason_codes_by_order_test_id
 from app.domains.lab.rules.work_item_projection import (
     LabWorkItemContext,
     LabWorkItemProjection,

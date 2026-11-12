@@ -53,7 +53,7 @@ export function renderCareSnapshotDescriptionItems(patient: Patient): React.Reac
     items.push(
       <DescriptionItem
         key="coverage"
-        icon={IconKeys.ui.shieldCheck}
+        icon={IconKeys.ui.verified}
         label="Coverage"
         value={
           <Badge variant={coverageActive ? 'success' : 'danger'} size="xs">

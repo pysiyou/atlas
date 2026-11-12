@@ -1,7 +1,6 @@
 /**
  * Lab workflow UI — queue list cards and detail modals (shells).
  * Stage queues and business actions live in collection/entry/validation.
- * See ARCHITECTURE.md in the lab feature root.
  */
 
 export {

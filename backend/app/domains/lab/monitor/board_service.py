@@ -6,20 +6,17 @@ from typing import Any
 
 from app.domains.catalog.models.catalog_test import CatalogTest
 from app.domains.lab.models.sample import Sample
-from app.domains.lab.monitor.catalog_tat import CatalogTatResolver
 from app.domains.lab.monitor.predicates import (
     TERMINAL_PIPELINE_TEST_STATUSES,
     monitor_universe_predicate,
     running_tests_predicate,
 )
-from app.domains.lab.monitor.tat import (
-    assemble_board,
-)
+from app.domains.lab.monitor.tat import CatalogTatResolver, assemble_board
 from app.domains.lab.schemas.worklists import LabTodayStageSnapshot
 from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient
 from app.shared.contracts.enums import SampleStatus, TestStatus
-from sqlalchemy import and_, func, or_
+from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
 
 
@@ -107,10 +104,7 @@ class LabBoardService:
         validation_rows = self._validation_rows()
         escalation_rows = self._escalation_rows() if include_supervisor else []
         rows_loaded = (
-            len(collection_rows)
-            + len(entry_rows)
-            + len(validation_rows)
-            + len(escalation_rows)
+            len(collection_rows) + len(entry_rows) + len(validation_rows) + len(escalation_rows)
         )
         snapshot = assemble_board(
             collection_rows,
@@ -335,7 +329,7 @@ class LabBoardService:
             .filter(OrderTest.status == TestStatus.ESCALATED)
             .all()
         )
-        from app.domains.lab.quality.escalation_queries import load_open_tickets_by_order_test_id
+        from app.domains.lab.quality.escalation import load_open_tickets_by_order_test_id
 
         test_ids = [ot.id for ot, _order, _patient, _test in rows]
         tickets_by_test = load_open_tickets_by_order_test_id(self.db, test_ids)

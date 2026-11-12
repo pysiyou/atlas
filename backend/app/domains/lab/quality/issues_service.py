@@ -15,13 +15,15 @@ from app.domains.lab.models.quality_issue import QualityIssue
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.quality.escalation import EscalationEngine
 from app.domains.lab.quality.issue_options import sample_options, test_options
-from app.domains.lab.quality.issue_remedy_types import ResultedRejectionOutcome
-from app.domains.lab.quality.remedy_support import QualityRemedySupport
+from app.domains.lab.quality.remedy_support import (
+    QualityRemedySupport,
+    ResultedRejectionOutcome,
+    SampleRejectionContext,
+)
 from app.domains.lab.quality.sample_issue_commands import SampleIssueCommands
 from app.domains.lab.quality.test_issue_commands import TestIssueCommands
 from app.domains.lab.schemas.lab import QualityIssueOptions, QualityIssueResult
 from app.domains.lab.specimen import SampleCollectionService
-from app.domains.lab.specimen.rejection_context import SampleRejectionContext
 from app.domains.orders.models import OrderTest
 from app.shared.contracts.enums import (
     QualityDomain,

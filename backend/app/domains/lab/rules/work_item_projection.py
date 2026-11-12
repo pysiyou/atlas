@@ -26,7 +26,6 @@ from app.domains.lab.rules.status_presentation import (
     resolve_sample_presentation,
     resolve_test_presentation,
 )
-from app.domains.lab.schemas.allowed_actions import LabWorklistAllowedActions
 from app.domains.orders.models import Order, OrderTest
 from app.shared.contracts.enums import TestStatus
 from app.shared.contracts.lab_contract import ATTENTION_LABELS, reason_blocks_progress
@@ -36,6 +35,17 @@ from pydantic import BaseModel, Field
 MonitorAttentionStage = Literal["collection", "entry", "validation", "escalation"]
 
 PipelineStage = Literal["collection", "entry", "validation", "escalation", "completed", "cancelled"]
+
+
+class LabWorklistAllowedActions(BaseModel):
+    """Shared allowed-action flags for lab worklists and order test projections."""
+
+    model_config = {"populate_by_name": True}
+
+    collect: bool = False
+    enterResults: bool = False
+    can_validate: bool = Field(default=False, alias="validate")
+    reject: bool = False
 
 
 class EscalationActionFlags(BaseModel):

@@ -6,7 +6,6 @@ from typing import TYPE_CHECKING
 
 from app.domains.lab.quality.rejection_criteria import RejectionCriteriaService
 from app.domains.lab.schemas.lab import QualityIssueResult
-from app.domains.lab.specimen.rejection_context import SampleRejectionContext
 from app.domains.orders.models import OrderTest
 from app.platform.utils.exceptions import LabOperationError
 from app.shared.contracts.enums import (
@@ -18,7 +17,11 @@ from app.shared.contracts.enums import (
 )
 
 from .issue_options import sample_options
-from .issue_remedy_types import ResultedRejectionOutcome, sample_unfinished_remedy_types
+from .remedy_support import (
+    ResultedRejectionOutcome,
+    SampleRejectionContext,
+    sample_unfinished_remedy_types,
+)
 
 if TYPE_CHECKING:
     from .issues_service import QualityIssueService

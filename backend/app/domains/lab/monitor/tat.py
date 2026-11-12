@@ -1,9 +1,11 @@
 """TAT metrics and board assembly helpers (pure functions)."""
 from __future__ import annotations
 
+from collections.abc import Iterable
 from datetime import UTC, datetime
 from typing import Any, Literal
 
+from app.domains.catalog.models.catalog_test import CatalogTest
 from app.domains.lab.rules.blockers import (
     ATTENTION_TYPE_SORT,
     PRIORITY_ATTENTION_TYPES,
@@ -18,6 +20,7 @@ from app.domains.lab.rules.work_item_projection import (
 )
 from app.shared.contracts.enums import PriorityLevel
 from app.shared.contracts.lab_contract import QUEUE_AGE_CRITICAL_HOURS, QUEUE_AGE_WARNING_HOURS
+from sqlalchemy.orm import Session
 
 TatBucket = Literal["fresh", "onTrack", "warning", "critical"]
 TatStatus = Literal["fresh", "warning", "critical"]
@@ -402,7 +405,9 @@ def assemble_board(
             )
         )
 
-    blockers["total"] = blockers["paymentUnpaid"] + blockers["retestPending"] + blockers["recollectionWaiting"]
+    blockers["total"] = (
+        blockers["paymentUnpaid"] + blockers["retestPending"] + blockers["recollectionWaiting"]
+    )
     attention_items, attention_total = finalize_attention_items(candidates)
     finalized_age = {
         "collection": _finalize_queue_age(queue_age["collection"]),
@@ -436,3 +441,43 @@ def _enum_value(value: Any) -> str | None:
     if value is None:
         return None
     return value.value if hasattr(value, "value") else str(value)
+
+
+class CatalogTatResolver:
+    """Resolve catalog TAT hours with optional batch warm-up."""
+
+    DEFAULT_HOURS = 24
+
+    def __init__(self, db: Session):
+        self.db = db
+        self._cache: dict[str, int] = {}
+
+    def warmup(self, test_codes: Iterable[str]) -> None:
+        missing = [code for code in set(test_codes) if code not in self._cache]
+        if not missing:
+            return
+        rows = (
+            self.db.query(CatalogTest.code, CatalogTest.turnaroundTimeHours)
+            .filter(CatalogTest.code.in_(missing))
+            .all()
+        )
+        found = {code: hours for code, hours in rows}
+        for code in missing:
+            self._cache[code] = found.get(code) or self.DEFAULT_HOURS
+
+    def hours_for_code(self, test_code: str) -> int:
+        if test_code in self._cache:
+            return self._cache[test_code]
+        row = (
+            self.db.query(CatalogTest.turnaroundTimeHours)
+            .filter(CatalogTest.code == test_code)
+            .first()
+        )
+        hours = row[0] if row else self.DEFAULT_HOURS
+        self._cache[test_code] = hours
+        return hours
+
+    def max_hours_for_codes(self, codes: list[str] | None) -> int:
+        if not codes:
+            return self.DEFAULT_HOURS
+        return max(self.hours_for_code(code) for code in codes)

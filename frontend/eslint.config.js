@@ -302,7 +302,7 @@ export default defineConfig([
       'src/features/lab/workflow/shared/queueCardLeftColumn.tsx',
       'src/features/lab/workflow/modals/detailModal.resultEntry.tsx',
       'src/features/lab/workflow/modals/detailModal.sampleCollection.tsx',
-      'src/features/lab/workflow/modals/detailModal.test.tsx',
+      'src/features/lab/workflow/modals/detailModal.testDetail.tsx',
       'src/features/lab/collection/SampleCollectionPopover.tsx',
       'src/features/patients/api/patients.ts',
       'src/features/referent-doctors/components/ReferentDoctorSelect.tsx',

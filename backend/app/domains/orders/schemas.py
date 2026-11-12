@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
-    from app.domains.lab.rules.work_item_projection import LabWorkItemProjection
+    from app.domains.lab.public import LabWorkItemProjection
 
 from app.domains.billing.schemas import InvoiceResponse
 from app.domains.patients.schemas import PatientResponse
@@ -217,7 +217,7 @@ class OrderReportResponse(BaseModel):
 
 
 def _rebuild_order_test_lab_schema() -> None:
-    from app.domains.lab.rules.work_item_projection import LabWorkItemProjection
+    from app.domains.lab.public import LabWorkItemProjection
 
     OrderTestResponse.model_rebuild(
         _types_namespace={"LabWorkItemProjection": LabWorkItemProjection}

@@ -23,6 +23,7 @@ export {
   getKpiStageVisual,
   LAB_TAB_LABELS,
   LAB_CONFIG,
+  LAB_WORKFLOW_KPI_ICONS,
 } from './constants/labConstants';
 export type { LabTabId, LabWorkflowKpiStage, LabWorkflowStage } from './constants/labConstants';
 

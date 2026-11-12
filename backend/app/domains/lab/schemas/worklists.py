@@ -2,7 +2,7 @@
 from datetime import datetime
 from typing import Literal
 
-from app.domains.lab.schemas.allowed_actions import LabWorklistAllowedActions
+from app.domains.lab.rules.work_item_projection import LabWorklistAllowedActions
 from app.domains.orders.schemas import TestResultsDict
 from app.shared.contracts.enums import (
     ContainerTopColor,

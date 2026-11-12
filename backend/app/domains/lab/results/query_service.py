@@ -24,7 +24,7 @@ class ResultQueryService:
 
     def get_pending_escalation(self) -> list:
         from app.domains.lab.models.sample import Sample
-        from app.domains.lab.quality.escalation_queries import load_open_tickets_by_order_test_id
+        from app.domains.lab.quality.escalation import load_open_tickets_by_order_test_id
         from app.domains.lab.rules.order_test_lab_loader import lab_projections_for_orders
         from app.domains.orders.models import Order, OrderTest
         from app.shared.contracts.enums import TestStatus

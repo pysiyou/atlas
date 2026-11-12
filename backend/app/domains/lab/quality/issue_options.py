@@ -4,11 +4,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from app.domains.lab.models.quality_issue import QualityIssue
 from app.domains.lab.quality.rejection_criteria import RejectionCriteriaService
 from app.domains.lab.schemas.lab import QualityIssueOptions
-from app.platform.utils.common import is_specimen_rejection_reason
-from app.platform.utils.exceptions import LabOperationError
 from app.domains.orders.models import OrderTest
+from app.platform.utils.exceptions import LabOperationError
 from app.shared.contracts.enums import (
     QualityIssueTargetType,
     QualityStage,
@@ -17,12 +17,54 @@ from app.shared.contracts.enums import (
     TestStatus,
 )
 from app.shared.contracts.lab_contract import MAX_RETEST_ATTEMPTS
+from sqlalchemy.orm import Session
 
-from .issue_chain import count_retests_in_chain
-from .issue_remedy_types import SAMPLE_RESET_STATUSES, sample_unfinished_remedy_types, validation_remedy_types
+from .remedy_support import (
+    SAMPLE_RESET_STATUSES,
+    sample_unfinished_remedy_types,
+    validation_remedy_types,
+)
 
 if TYPE_CHECKING:
     from .issues_service import QualityIssueService
+
+
+def chain_root_test(db: Session, test: OrderTest) -> OrderTest:
+    """Walk retestOfTestId links to the root order-test row in the chain."""
+    current = test
+    while current.retestOfTestId:
+        parent = db.query(OrderTest).filter(OrderTest.id == current.retestOfTestId).first()
+        if not parent:
+            break
+        current = parent
+    return current
+
+
+def collect_chain_test_ids(db: Session, order_test: OrderTest) -> set[int]:
+    """All order-test row IDs in the retest chain (root through active successor)."""
+    root = chain_root_test(db, order_test)
+    chain_ids: set[int] = {root.id}
+    current = root
+    while current.retestOrderTestId:
+        child = db.query(OrderTest).filter(OrderTest.id == current.retestOrderTestId).first()
+        if not child:
+            break
+        chain_ids.add(child.id)
+        current = child
+    return chain_ids
+
+
+def count_retests_in_chain(db: Session, order_test: OrderTest) -> int:
+    """Count prior RETRY_SAME_SAMPLE quality issues across the retest chain."""
+    chain_ids = collect_chain_test_ids(db, order_test)
+    return (
+        db.query(QualityIssue)
+        .filter(
+            QualityIssue.orderTestId.in_(chain_ids),
+            QualityIssue.remedy == RemedyType.RETRY_SAME_SAMPLE,
+        )
+        .count()
+    )
 
 
 def sample_options(svc: QualityIssueService, sample_id: int) -> QualityIssueOptions:
@@ -45,9 +87,7 @@ def sample_options(svc: QualityIssueService, sample_id: int) -> QualityIssueOpti
 
     parts: list[str] = []
     if unfinished > 0:
-        parts.append(
-            f"{unfinished} unfinished test(s) — request recollection or reject tube only."
-        )
+        parts.append(f"{unfinished} unfinished test(s) — request recollection or reject tube only.")
     if resulted > 0:
         parts.append(
             f"{resulted} unvalidated resulted test(s) will be cleared when the tube is rejected."

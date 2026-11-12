@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING
 from app.domains.lab.quality.rejection_criteria import RejectionCriteriaService
 from app.domains.lab.rules.state_machines import SampleStateMachine, TestStateMachine
 from app.domains.lab.schemas.lab import QualityIssueResult
-from app.domains.lab.specimen.rejection_context import SampleRejectionContext
 from app.domains.orders.models import OrderTest
 from app.platform.utils.common import is_specimen_rejection_reason
 from app.platform.utils.exceptions import LabOperationError
@@ -21,8 +20,8 @@ from app.shared.contracts.enums import (
 )
 from app.shared.contracts.lab_contract import MAX_RETEST_ATTEMPTS
 
-from .issue_chain import count_retests_in_chain
-from .issue_remedy_types import validation_remedy_types
+from .issue_options import count_retests_in_chain
+from .remedy_support import SampleRejectionContext, validation_remedy_types
 
 if TYPE_CHECKING:
     from .issues_service import QualityIssueService

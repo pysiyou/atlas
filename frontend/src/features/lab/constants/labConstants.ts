@@ -109,7 +109,7 @@ export const LAB_TAB_LABELS: Record<LabTabId, string> = {
 export const LAB_WORKFLOW_KPI_ICONS: Record<LabWorkflowKpiStage, IconKey> = {
   collection: IconKeys.modules.laboratory,
   entry: IconKeys.actions.edit,
-  validation: IconKeys.ui.shieldCheck,
+  validation: IconKeys.actions.checkCircle,
   sentBack: IconKeys.actions.refresh,
 };
 

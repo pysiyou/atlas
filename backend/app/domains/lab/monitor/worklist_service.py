@@ -11,20 +11,16 @@ from typing import Any
 
 from app.domains.catalog.models.catalog_test import CatalogTest
 from app.domains.lab.models.sample import Sample
-from app.domains.lab.monitor.catalog_tat import CatalogTatResolver
+from app.domains.lab.monitor.board_service import LabBoardService
 from app.domains.lab.monitor.predicates import (
     inactive_lineage_filter,
     monitor_universe_predicate,
     running_tests_predicate,
 )
-from app.domains.lab.quality.escalation_queries import load_open_tickets_by_order_test_id
-from app.domains.lab.rules.test_status_sets import COLLECTION_WORKLIST_LINKED_EXCLUDE
-from app.domains.lab.specimen.lookup import linked_order_tests_by_sample_ids
-from app.domains.lab.monitor.board import (
-    LabBoardService,
-    age_bucket,
-)
+from app.domains.lab.monitor.tat import CatalogTatResolver, age_bucket
+from app.domains.lab.quality.escalation import load_open_tickets_by_order_test_id
 from app.domains.lab.rules.blockers import priority_rank, priority_sort_key
+from app.domains.lab.rules.test_status_sets import COLLECTION_WORKLIST_LINKED_EXCLUDE
 from app.domains.lab.rules.work_item_projection import (
     LabWorkItemContext,
     project_collection_sample,
@@ -33,6 +29,7 @@ from app.domains.lab.rules.work_item_projection import (
     project_order_test_validation,
     projection_to_worklist_fields,
 )
+from app.domains.lab.specimen.lookup import linked_order_tests_by_sample_ids
 from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient
 from app.domains.referent_doctors.display import referent_doctor_projection
@@ -749,12 +746,7 @@ class LabWorklistService:
 
         total = query.count()
         start = (page - 1) * page_size
-        rows = (
-            query.order_by(OrderTest.updatedAt.desc())
-            .offset(start)
-            .limit(page_size)
-            .all()
-        )
+        rows = query.order_by(OrderTest.updatedAt.desc()).offset(start).limit(page_size).all()
 
         escalated_ids = [
             ot.id

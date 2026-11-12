@@ -9,10 +9,11 @@ from app.domains.billing.schemas import InvoiceResponse
 from app.domains.billing.service import BillingService
 from app.domains.catalog.models.catalog_test import CatalogTest
 from app.domains.lab.models.sample import Sample
-from app.domains.lab.public import generate_samples_for_order
-from app.domains.lab.rules.order_test_lab_loader import (
+from app.domains.lab.public import (
+    generate_samples_for_order,
     lab_projections_for_order,
     lab_projections_for_orders,
+    resolve_order_presentation,
 )
 from app.domains.orders.models import Order, OrderTest
 from app.domains.orders.schemas import (
@@ -215,8 +216,6 @@ def _order_to_summary(
     test_names: list[str] | None = None,
     latest_payment: LatestPaymentSnippet | None = None,
 ) -> dict:
-    from app.domains.lab.rules.status_presentation import resolve_order_presentation
-
     patient = order.patient
     patient_name = patient.fullName if patient else "Unknown"
     codes = test_codes or []
@@ -277,13 +276,9 @@ class OrderService:
         order: Order,
         projections: dict[int, object] | None = None,
     ) -> OrderResponse:
-        from app.domains.lab.rules.status_presentation import resolve_order_presentation
-
         base = OrderResponse.model_validate(order)
         resolved = (
-            projections
-            if projections is not None
-            else lab_projections_for_order(self.db, order)
+            projections if projections is not None else lab_projections_for_order(self.db, order)
         )
         enriched_tests = [
             test.model_copy(update={"lab": resolved.get(test.id)}) for test in base.tests

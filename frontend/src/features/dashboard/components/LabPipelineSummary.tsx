@@ -6,14 +6,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card } from '@/components/surfaces';
 import { Badge, Icon } from '@/components/primitives';
-import type { IconKey } from '@/config/icons';
-import { IconKeys } from '@/config/icons';
 import {
   useLabStageQueueCounts,
   getValidationTabCount,
   getLabTabPath,
   getStageVisual,
   LAB_TAB_LABELS,
+  LAB_WORKFLOW_KPI_ICONS,
   type LabWorkflowStage,
 } from '@/features/lab/cross';
 import { useAuthStore } from '@/app/authStore';
@@ -21,12 +20,11 @@ import { text, INLINE_LINK, RADIUS } from '@/theme/recipes';
 
 const LAB_QUEUE_ITEMS: Array<{
   id: LabWorkflowStage;
-  icon: IconKey;
   countKey: keyof ReturnType<typeof useLabStageQueueCounts>['counts'];
 }> = [
-  { id: 'collection', icon: IconKeys.modules.laboratory, countKey: 'collection' },
-  { id: 'entry', icon: IconKeys.actions.edit, countKey: 'entry' },
-  { id: 'validation', icon: IconKeys.ui.shieldCheck, countKey: 'validation' },
+  { id: 'collection', countKey: 'collection' },
+  { id: 'entry', countKey: 'entry' },
+  { id: 'validation', countKey: 'validation' },
 ];
 
 export interface LabPipelineSummaryProps {
@@ -68,7 +66,10 @@ export const LabPipelineSummary: React.FC<LabPipelineSummaryProps> = ({ loading:
               className={`flex items-center justify-between p-space-3 ${RADIUS.field} border border-border-default hover:bg-surface-page transition-colors`}
             >
               <div className="flex items-center gap-space-2 min-w-0">
-                <Icon iconKey={item.icon} className={`w-4 h-4 shrink-0 ${stageVisual.text}`} />
+                <Icon
+                  iconKey={LAB_WORKFLOW_KPI_ICONS[item.id]}
+                  className={`w-4 h-4 shrink-0 ${stageVisual.text}`}
+                />
                 <span className={`${text({ role: 'label' })} truncate`}>{LAB_TAB_LABELS[item.id]}</span>
               </div>
               {count > 0 && (

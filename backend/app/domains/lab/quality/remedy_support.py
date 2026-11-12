@@ -2,24 +2,56 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from datetime import UTC, datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 from app.domains.lab.models.quality_issue import QualityIssue
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.rules.state_machines import SampleStateMachine, TestStateMachine
-from app.domains.lab.specimen.rejection_context import SampleRejectionContext
 from app.domains.orders.models import OrderTest
 from app.platform.utils.exceptions import LabOperationError
 from app.shared.contracts.enums import (
     PriorityLevel,
     QualityDomain,
     QualityStage,
+    RemedyType,
     SampleStatus,
     TestStatus,
 )
+from app.shared.contracts.lab_contract import (
+    SAMPLE_UNFINISHED_REMEDIES as SAMPLE_UNFINISHED_REMEDY_WIRES,
+)
+from app.shared.contracts.lab_contract import VALIDATION_REMEDIES as VALIDATION_REMEDY_WIRES
 
-from .issue_remedy_types import SAMPLE_RESET_STATUSES, ResultedRejectionOutcome
+ResultedRejectionOutcome = Literal["reset_pending", "cancel"]
+
+SAMPLE_RESET_STATUSES = {
+    TestStatus.PENDING,
+    TestStatus.SAMPLE_COLLECTED,
+}
+
+
+def _remedy_types(wires: tuple[str, ...]) -> list[RemedyType]:
+    return [RemedyType(w) for w in wires]
+
+
+def validation_remedy_types() -> list[RemedyType]:
+    return _remedy_types(VALIDATION_REMEDY_WIRES)
+
+
+def sample_unfinished_remedy_types() -> list[RemedyType]:
+    return _remedy_types(SAMPLE_UNFINISHED_REMEDY_WIRES)
+
+
+@dataclass(frozen=True)
+class SampleRejectionContext:
+    """Context for physical sample rejection (audit)."""
+
+    stage: QualityStage
+    order_test_id: int | None = None
+    quality_issue_id: int | None = None
+
 
 if TYPE_CHECKING:
     from .issues_service import QualityIssueService

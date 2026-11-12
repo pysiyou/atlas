@@ -2,7 +2,7 @@
 from datetime import UTC, date, datetime, time
 
 from app.domains.audit.service import AuditEmitter
-from app.domains.lab.rules.status_presentation import resolve_order_presentation
+from app.domains.lab.public import resolve_order_presentation
 from app.domains.orders.models import Order, OrderTest
 from app.domains.orders.schemas import OrderResponse
 from app.domains.orders.search import reportable_order_search_filter

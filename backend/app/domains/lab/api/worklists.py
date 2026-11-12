@@ -1,11 +1,13 @@
 """Lab worklist and monitor board routes."""
 
-from collections.abc import Callable
+import logging
+import time
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
 from datetime import date
 from typing import Any, Literal, TypeVar
 
 from app.domains.lab.deps import get_lab_worklist_service
-from app.domains.lab.monitor.observability import log_lab_read
 from app.domains.lab.monitor.worklist_service import LabWorklistService
 from app.domains.lab.schemas.worklists import (
     CollectionWorklistItem,
@@ -24,6 +26,44 @@ from app.shared.contracts.enums import PriorityLevel, TestStatus, UserRole
 from fastapi import APIRouter, Depends, Query
 
 router = APIRouter()
+
+logger = logging.getLogger(__name__)
+
+
+@contextmanager
+def log_lab_read(
+    endpoint: str,
+    *,
+    page: int | None = None,
+    page_size: int | None = None,
+    include_supervisor: bool | None = None,
+    detail: str | None = None,
+) -> Iterator[dict[str, Any]]:
+    """Context manager that records duration_ms, rows_loaded, rows_returned on exit."""
+    metrics: dict[str, Any] = {
+        "rows_loaded": None,
+        "rows_returned": None,
+    }
+    started = time.perf_counter()
+    try:
+        yield metrics
+    finally:
+        duration_ms = round((time.perf_counter() - started) * 1000, 2)
+        extra = {
+            "endpoint": endpoint,
+            "duration_ms": duration_ms,
+            "rows_loaded": metrics.get("rows_loaded"),
+            "rows_returned": metrics.get("rows_returned"),
+        }
+        if page is not None:
+            extra["page"] = page
+        if page_size is not None:
+            extra["page_size"] = page_size
+        if include_supervisor is not None:
+            extra["include_supervisor"] = include_supervisor
+        if detail is not None:
+            extra["detail"] = detail
+        logger.info("lab_read %s", extra)
 
 
 def _worklist_response(items: list, pagination: dict) -> WorklistResponse:

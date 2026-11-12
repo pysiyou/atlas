@@ -4,7 +4,10 @@ Transaction policy: every user-facing lab mutation runs through run_lab_mutation
 domain code mutates the shared Session only (no commit); rollup via apply_order_status_rollup;
 one db.commit(); then board cache invalidation once.
 """
+from __future__ import annotations
+
 from collections.abc import Callable
+from datetime import UTC, datetime
 from typing import Any, TypeVar
 
 from app.domains.audit.service import AuditEmitter
@@ -18,9 +21,9 @@ from app.domains.lab.quality.escalation import (
 from app.domains.lab.quality.issues_service import QualityIssueService
 from app.domains.lab.quality.recollection_execution import RecollectionExecutionService
 from app.domains.lab.results import FlagCalculatorService, ResultValidatorService
-from app.domains.lab.rules.eligibility import assert_can_collect
+from app.domains.lab.rules.eligibility import active_linked_tests_for_collection, assert_can_collect
+from app.domains.lab.rules.state_machines import TestStateMachine
 from app.domains.lab.schemas.critical_values import AcknowledgeRequest, NotifyRequest
-from app.domains.lab.workflow.collection_commands import CollectionCommandHandler
 from app.domains.lab.workflow.result_commands import ResultCommandHandler
 from app.domains.orders.models import Order, OrderTest
 from app.domains.orders.service import apply_order_status_rollup
@@ -33,6 +36,74 @@ from sqlalchemy.orm import Session
 T = TypeVar("T")
 
 __all__ = ["LabOperationsService", "LabOperationError", "EscalationResolveResult"]
+
+
+class CollectionCommandHandler:
+    """Sample collection mutation used by LabOperationsService."""
+
+    def __init__(self, svc: LabOperationsService):
+        self._svc = svc
+
+    @property
+    def db(self):
+        return self._svc.db
+
+    def collect_sample(
+        self,
+        sample_id: int,
+        user_id: int,
+        collected_volume: float,
+        container_type: str,
+        container_color: str,
+        collection_notes: str | None = None,
+    ) -> Sample:
+        sample = self._svc._get_sample(sample_id, for_update=True)
+        order = self.db.query(Order).filter(Order.orderId == sample.orderId).first()
+        if not order:
+            raise LabOperationError(f"Order {sample.orderId} not found", status_code=404)
+        order_tests_all = self._svc._linked_order_tests(sample)
+        assert_can_collect(sample, order, order_tests_all)
+        order_tests = active_linked_tests_for_collection(order_tests_all)
+        before_state = self._svc._serialize_sample_state(sample)
+
+        sample.status = SampleStatus.COLLECTED
+        sample.collectedAt = datetime.now(UTC)
+        sample.collectedBy = str(user_id)
+        sample.collectedVolume = collected_volume
+        sample.actualContainerType = container_type
+        sample.actualContainerColor = container_color
+        sample.collectionNotes = collection_notes
+        sample.remainingVolume = collected_volume
+        sample.updatedBy = str(user_id)
+
+        for order_test in order_tests:
+            if TestStateMachine.can_transition(order_test.status, TestStatus.SAMPLE_COLLECTED):
+                order_test.status = TestStatus.SAMPLE_COLLECTED
+                order_test.sampleId = sample_id
+            elif order_test.status not in (
+                TestStatus.SAMPLE_COLLECTED,
+                TestStatus.RESULTED,
+                TestStatus.ESCALATED,
+            ):
+                status_val = (
+                    order_test.status.value if order_test.status else str(order_test.status)
+                )
+                raise LabOperationError(
+                    f"Test {order_test.testCode} cannot be marked collected (status {status_val})",
+                    status_code=400,
+                    error_code="INVALID_TRANSITION",
+                )
+
+        after_state = self._svc._serialize_sample_state(sample)
+        self._svc.emitter.sample_collected(
+            sample_id,
+            sample.orderId,
+            user_id,
+            before_state,
+            after_state,
+            metadata={"test_codes": sample.testCodes},
+        )
+        return sample
 
 
 class LabOperationsService:
@@ -178,9 +249,7 @@ class LabOperationsService:
     ) -> list[OrderTest]:
         from app.domains.lab.specimen.lookup import linked_order_tests_for_sample
 
-        return linked_order_tests_for_sample(
-            self.db, sample, exclude_statuses=exclude_statuses
-        )
+        return linked_order_tests_for_sample(self.db, sample, exclude_statuses=exclude_statuses)
 
     def _invalidate_lab_monitor_cache(self) -> None:
         invalidate_lab_board_summary_cache()
