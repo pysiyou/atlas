@@ -26,7 +26,7 @@ class UserService:
 
     def list_lookup(self) -> list[User]:
         """Return every user, including disabled accounts, so historical names still resolve."""
-        return self.db.query(User).all()
+        return self.list_all()
 
     def get_by_id(self, user_id: int) -> User:
         user = self.db.query(User).filter(User.id == user_id).first()

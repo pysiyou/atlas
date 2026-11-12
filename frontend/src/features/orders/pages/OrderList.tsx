@@ -14,7 +14,7 @@ import { OrderFilters } from '../components/OrderFilters';
 import { createOrderTableConfig } from '../config/OrderTable.config';
 import { DEFAULT_LIST_PAGE_SIZE, LIST_PAGE_SIZE_OPTIONS } from '@/lib/api/constants';
 import { useServerListChrome } from '@/hooks';
-import { inclusiveDateRangeBounds, toIsoDateParam } from '@/utils';
+import { dateSearchServerParams } from '@/utils';
 import { usePageFilters } from '@/hooks';
 import { ORDER_URL_FILTER_KEYS } from '../config/orderFilters.config';
 import type { Order, OrderStatus } from '@/types';
@@ -44,14 +44,11 @@ export const OrderList: React.FC = () => {
   const statusFilters = useMemo(() => (filters.status as OrderStatus[]) ?? [], [filters.status]);
 
   const serverFilters = useMemo(() => {
-    const bounds = inclusiveDateRangeBounds(dateRange);
     return {
       patientId: urlFilters.patientId ?? undefined,
       orderId: urlFilters.orderId ? Number(urlFilters.orderId) : undefined,
       status: statusFilters.length > 0 ? statusFilters : undefined,
-      search: searchQuery.trim() || undefined,
-      dateFrom: bounds ? toIsoDateParam(bounds.start) : undefined,
-      dateTo: bounds ? toIsoDateParam(bounds.end) : undefined,
+      ...dateSearchServerParams(searchQuery, dateRange),
     };
   }, [urlFilters.patientId, urlFilters.orderId, statusFilters, searchQuery, dateRange]);
 

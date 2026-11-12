@@ -262,6 +262,14 @@ export const queryKeys = {
       },
     ) => [...queryKeys.worklists.all, 'all-tests', params] as const,
   },
+
+  /**
+   * Dashboard aggregate queries
+   */
+  dashboard: {
+    all: ['dashboard'] as const,
+    summary: () => [...queryKeys.dashboard.all, 'summary'] as const,
+  },
 } as const;
 
 /**

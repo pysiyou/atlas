@@ -1,3 +1,5 @@
+export { useAnchoredPopoverDismiss } from './useAnchoredPopoverDismiss';
+
 export { usePageFilters, applyPageFilters } from './usePageFilters';
 export type { UsePageFiltersOptions, UsePageFiltersReturn } from './usePageFilters';
 

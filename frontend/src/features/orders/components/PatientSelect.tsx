@@ -1,16 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Avatar, Icon, RemovableTag, TagChip } from '@/components/primitives';
+import React, { useRef, useState } from 'react';
+import { Avatar, RemovableTag, TagChip } from '@/components/primitives';
 import { EMPTY_COPY } from '@/components/display';
 import { cn, formatPhoneNumber } from '@/utils';
-import {text, inputContainerBase, inputContainerError, FORM_CONTROL_LABEL, FG } from '@/theme/recipes';
+import { text, FG } from '@/theme/recipes';
 import type { Patient } from '@/types';
 import { IconKeys } from '@/config/icons';
 import { SearchResultsPopoverShell } from '@/components/overlays/SearchResultsPopoverShell';
-import { CONTROL, FIELD_ERROR, SPACING } from '@/theme/recipes';
-
-
-const SELECTED_CHIP_CLASS =
-  'max-w-[min(100%,20rem)] items-start gap-space-2 py-space-1-5 px-space-2 bg-surface-page border-border-default/80 shadow-none';
+import {
+  SearchTagInputChrome,
+  SELECTED_SEARCH_CHIP_CLASS,
+} from '@/components/overlays/SearchTagInputChrome';
+import { CONTROL } from '@/theme/recipes';
+import { useAnchoredPopoverDismiss } from '@/hooks';
 
 function formatPatientContactLine(patient: Patient): string {
   return [
@@ -70,63 +71,43 @@ const PatientSearchTagInput: React.FC<{
   error?: string;
   disabled?: boolean;
 }> = ({ selectedPatient, value, onValueChange, onClearSelection, error, disabled = false }) => (
-  <div className="w-full">
-      <div className="flex justify-between items-baseline mb-space-1 gap-space-2">
-        <label
-          htmlFor="order-patient-search"
-          className={FORM_CONTROL_LABEL}
+  <SearchTagInputChrome
+    label="Patient"
+    htmlFor="order-patient-search"
+    iconKey={IconKeys.dataFields.user}
+    error={error}
+    disabled={disabled}
+  >
+    {selectedPatient &&
+      (disabled ? (
+        <TagChip size="xs" className={SELECTED_SEARCH_CHIP_CLASS}>
+          <PatientSelectedChip patient={selectedPatient} />
+        </TagChip>
+      ) : (
+        <RemovableTag
+          size="xs"
+          onRemove={onClearSelection}
+          removeAriaLabel="Clear selected patient"
+          className={SELECTED_SEARCH_CHIP_CLASS}
         >
-          Patient
-        </label>
-      </div>
+          <PatientSelectedChip patient={selectedPatient} />
+        </RemovableTag>
+      ))}
 
-      <div
-        className={cn(
-          inputContainerBase,
-          `group relative ${SPACING.plSpace10} pr-space-3 py-space-2-5 flex flex-wrap gap-space-2 items-center ${CONTROL.heightMultiline}`,
-          disabled && 'cursor-not-allowed',
-          error && inputContainerError
-        )}
-      >
-        <div className="absolute inset-y-0 left-0 pl-space-3 flex items-center pointer-events-none">
-          <Icon iconKey={IconKeys.dataFields.user}
-            className={`w-4 h-4 ${FG.muted} group-hover:text-brand transition-colors`}
-          />
-        </div>
-
-        {selectedPatient &&
-          (disabled ? (
-            <TagChip size="xs" className={SELECTED_CHIP_CLASS}>
-              <PatientSelectedChip patient={selectedPatient} />
-            </TagChip>
-          ) : (
-            <RemovableTag
-              size="xs"
-              onRemove={onClearSelection}
-              removeAriaLabel="Clear selected patient"
-              className={SELECTED_CHIP_CLASS}
-            >
-              <PatientSelectedChip patient={selectedPatient} />
-            </RemovableTag>
-          ))}
-
-        <input
-          id="order-patient-search"
-          name="patientSearch"
-          type="text"
-          value={value}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onValueChange(e.target.value)}
-          onFocus={() => onValueChange(value)}
-          placeholder={selectedPatient ? '' : 'Search by name, ID, or phone…'}
-          className={`flex-1 min-w-[140px] outline-none ${text({ role: 'body' })} placeholder:${FG.muted} bg-transparent leading-normal`}
-          autoComplete="off"
-          disabled={disabled}
-        />
-      </div>
-
-      {error && <p className={`mt-space-1-5 ${FIELD_ERROR}`}>{error}</p>}
-    </div>
-  );
+    <input
+      id="order-patient-search"
+      name="patientSearch"
+      type="text"
+      value={value}
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) => onValueChange(e.target.value)}
+      onFocus={() => onValueChange(value)}
+      placeholder={selectedPatient ? '' : 'Search by name, ID, or phone…'}
+      className={`flex-1 min-w-[140px] outline-none ${text({ role: 'body' })} placeholder:${FG.muted} bg-transparent leading-normal`}
+      autoComplete="off"
+      disabled={disabled}
+    />
+  </SearchTagInputChrome>
+);
 
 export const PatientSelect: React.FC<PatientSelectorProps> = ({
   selectedPatient,
@@ -140,32 +121,10 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  useAnchoredPopoverDismiss(containerRef, setIsPopoverOpen);
 
   const hasSearch = patientSearch.trim().length > 0;
   const visiblePatients = hasSearch ? filteredPatients : [];
-
-  // Close popover on outside click and Escape.
-  useEffect(() => {
-    const handlePointerDown = (e: MouseEvent | TouchEvent) => {
-      const target = e.target as Node | null;
-      const container = containerRef.current;
-      if (!container || !target) return;
-      if (!container.contains(target)) setIsPopoverOpen(false);
-    };
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsPopoverOpen(false);
-    };
-
-    document.addEventListener('mousedown', handlePointerDown);
-    document.addEventListener('touchstart', handlePointerDown, { passive: true });
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('mousedown', handlePointerDown);
-      document.removeEventListener('touchstart', handlePointerDown);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, []);
 
   return (
     <div ref={containerRef} className="relative">

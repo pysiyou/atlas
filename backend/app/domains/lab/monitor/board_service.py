@@ -4,17 +4,16 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Any
 
-from app.domains.catalog.models.catalog_test import CatalogTest
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.monitor.predicates import (
     TERMINAL_PIPELINE_TEST_STATUSES,
     monitor_universe_predicate,
     running_tests_predicate,
 )
+from app.domains.lab.monitor.queries import collection_base_query, order_test_stage_query
 from app.domains.lab.monitor.tat import CatalogTatResolver, assemble_board
 from app.domains.lab.schemas.worklists import LabTodayStageSnapshot
-from app.domains.orders.models import Order, OrderTest
-from app.domains.patients.models import Patient
+from app.domains.orders.models import OrderTest
 from app.shared.contracts.enums import SampleStatus, TestStatus
 from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
@@ -243,9 +242,7 @@ class LabBoardService:
 
     def _collection_rows(self) -> list[dict[str, Any]]:
         rows = (
-            self.db.query(Sample, Order, Patient)
-            .join(Order, Sample.orderId == Order.orderId)
-            .join(Patient, Order.patientId == Patient.id)
+            collection_base_query(self.db)
             .filter(Sample.status == SampleStatus.PENDING)
             .all()
         )
@@ -266,11 +263,7 @@ class LabBoardService:
 
     def _entry_rows(self) -> list[dict[str, Any]]:
         rows = (
-            self.db.query(OrderTest, Order, Patient, CatalogTest, Sample)
-            .join(Order, OrderTest.orderId == Order.orderId)
-            .join(Patient, Order.patientId == Patient.id)
-            .join(CatalogTest, OrderTest.testCode == CatalogTest.code)
-            .outerjoin(Sample, Sample.sampleId == OrderTest.sampleId)
+            order_test_stage_query(self.db)
             .filter(OrderTest.status == TestStatus.SAMPLE_COLLECTED)
             .all()
         )
@@ -292,11 +285,7 @@ class LabBoardService:
 
     def _validation_rows(self) -> list[dict[str, Any]]:
         rows = (
-            self.db.query(OrderTest, Order, Patient, CatalogTest, Sample)
-            .join(Order, OrderTest.orderId == Order.orderId)
-            .join(Patient, Order.patientId == Patient.id)
-            .join(CatalogTest, OrderTest.testCode == CatalogTest.code)
-            .outerjoin(Sample, Sample.sampleId == OrderTest.sampleId)
+            order_test_stage_query(self.db)
             .filter(
                 OrderTest.status == TestStatus.RESULTED,
                 OrderTest.resultValidatedAt.is_(None),
@@ -322,10 +311,7 @@ class LabBoardService:
 
     def _escalation_rows(self) -> list[dict[str, Any]]:
         rows = (
-            self.db.query(OrderTest, Order, Patient, CatalogTest)
-            .join(Order, OrderTest.orderId == Order.orderId)
-            .join(Patient, Order.patientId == Patient.id)
-            .join(CatalogTest, OrderTest.testCode == CatalogTest.code)
+            order_test_stage_query(self.db, include_sample=False)
             .filter(OrderTest.status == TestStatus.ESCALATED)
             .all()
         )

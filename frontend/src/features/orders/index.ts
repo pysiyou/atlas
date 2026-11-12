@@ -54,7 +54,6 @@ export type { LinkedOrderTests } from './utils/orderTestLineage';
 export { BillingSummarySection } from './components/BillingSummarySection';
 export type { BillingSummarySectionProps } from './components/BillingSummarySection';
 
-export * from './utils/orderTimelineUtils';
 export * from './utils/orderCalculator';
 export { formInputToPayload, orderToFormInput } from './utils/formTransformers';
 export {

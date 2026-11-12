@@ -9,11 +9,7 @@ import { text, ERROR_SURFACE_TYPE, RADIUS , FG } from '@/theme/recipes';
 import { USER_ROLE_CONFIG, type UserRole } from '@/types';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import type { UserAdminRecord } from '../api/usersAdmin';
-import { formatDateTime } from '@/utils';
-
-function formatUserTimestamp(value: string | null | undefined): string {
-  return formatDateTime(value) || 'Never';
-}
+import { formatUserTimestamp } from '../utils/formatUserTimestamp';
 import { isUserActive } from '../utils/userAccountGuards';
 
 export interface UserUpsertModalSummaryProps {

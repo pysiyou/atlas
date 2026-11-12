@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { format, isSameMonth, isSameDay, endOfMonth, setYear, isBefore, isAfter } from 'date-fns';
+import { format } from 'date-fns';
 import { Popover } from '@/components/overlays';
 import { Icon } from '@/components/primitives';
 import { cn } from '@/utils';
@@ -13,13 +13,8 @@ import { text, inputTrigger,
   inputError,
   inputClearButton,
   FORM_CONTROL_LABEL } from '@/theme/recipes';
-import { CALENDAR_TYPE, FIELD_ERROR, RADIUS, TONE } from '@/theme/recipes';
-import { CalendarHeader, useCalendarMonth, type CalendarView } from './dateCalendarShared';
-import {
-  generateCalendarDays,
-  generateCalendarMonths,
-  generateCalendarYears,
-  WEEKDAY_LABELS } from '@/utils/date';
+import { FIELD_ERROR, TONE } from '@/theme/recipes';
+import { CalendarGrid, CalendarHeader, useCalendarMonth } from './dateCalendarShared';
 
 export interface DateInputProps {
   label?: string;
@@ -33,128 +28,6 @@ export interface DateInputProps {
   disabled?: boolean;
   minDate?: Date;
   maxDate?: Date;
-}
-
-function DateInputCalendarGrid({
-  currentMonth,
-  setCurrentMonth,
-  view,
-  setView,
-  minDate,
-  maxDate,
-  isDateDisabled,
-  handleDateClick,
-  isSelected,
-}: {
-  currentMonth: Date;
-  setCurrentMonth: (date: Date) => void;
-  view: CalendarView;
-  setView: (view: CalendarView) => void;
-  minDate: Date;
-  maxDate: Date;
-  isDateDisabled: (date: Date) => boolean;
-  handleDateClick: (date: Date) => void;
-  isSelected: (date: Date) => boolean;
-}) {
-  if (view === 'days') {
-    return (
-      <>
-        <div className="grid grid-cols-7 gap-space-1 mb-space-1">
-          {WEEKDAY_LABELS.map(day => (
-            <div key={day} className={CALENDAR_TYPE.weekday}>
-              {day}
-            </div>
-          ))}
-        </div>
-        <div className="grid grid-cols-7 gap-space-1">
-          {generateCalendarDays(currentMonth).map(day => {
-            const currentMonthMatch = isSameMonth(day, currentMonth);
-            const selected = isSelected(day);
-            const isToday = isSameDay(day, new Date());
-            const disabled = isDateDisabled(day);
-            return (
-              <button
-                key={day.toISOString()}
-                type="button"
-                onClick={() => handleDateClick(day)}
-                disabled={disabled}
-                className={cn(
-                  `h-8 w-8 ${CALENDAR_TYPE.day} ${RADIUS.pill} flex items-center justify-center transition-colors cursor-pointer`,
-                  disabled && 'opacity-30 cursor-not-allowed',
-                  !currentMonthMatch && 'text-text-disabled',
-                  currentMonthMatch && !selected && !disabled && 'text-text-secondary hover:bg-surface-hover',
-                  isToday && !selected && !disabled && 'font-normal text-brand bg-brand-muted',
-                  selected && 'bg-brand text-on-brand hover:bg-brand-hover z-10'
-                )}
-              >
-                {format(day, 'd')}
-              </button>
-            );
-          })}
-        </div>
-      </>
-    );
-  }
-
-  if (view === 'months') {
-    return (
-      <div className="grid grid-cols-3 gap-space-2">
-        {generateCalendarMonths(currentMonth).map(month => {
-          const endOfM = endOfMonth(month);
-          const disabled = isBefore(endOfM, minDate) || isAfter(month, maxDate);
-          return (
-            <button
-              key={month.toISOString()}
-              type="button"
-              onClick={() => {
-                if (!disabled) {
-                  setCurrentMonth(month);
-                  setView('days');
-                }
-              }}
-              disabled={disabled}
-              className={cn(
-                `h-10 ${CALENDAR_TYPE.month} ${RADIUS.field} flex items-center justify-center transition-colors cursor-pointer`,
-                disabled && 'opacity-30 cursor-not-allowed',
-                !disabled && 'hover:bg-surface-hover text-text-secondary'
-              )}
-            >
-              {format(month, 'MMM')}
-            </button>
-          );
-        })}
-      </div>
-    );
-  }
-
-  return (
-    <div className="grid grid-cols-3 gap-space-2">
-      {generateCalendarYears(currentMonth).map(year => {
-        const y = year.getFullYear();
-        const disabled = y < minDate.getFullYear() || y > maxDate.getFullYear();
-        return (
-          <button
-            key={year.toISOString()}
-            type="button"
-            onClick={() => {
-              if (!disabled) {
-                setCurrentMonth(setYear(currentMonth, y));
-                setView('months');
-              }
-            }}
-            disabled={disabled}
-            className={cn(
-              `h-10 ${CALENDAR_TYPE.month} ${RADIUS.field} flex items-center justify-center transition-colors cursor-pointer`,
-              disabled && 'opacity-30 cursor-not-allowed',
-              !disabled && 'hover:bg-surface-hover text-text-secondary'
-            )}
-          >
-            {format(year, 'yyyy')}
-          </button>
-        );
-      })}
-    </div>
-  );
 }
 
 export const DateInput: React.FC<DateInputProps> = ({
@@ -258,7 +131,7 @@ export const DateInput: React.FC<DateInputProps> = ({
               onNextClick={navigateNext}
               onTitleClick={cycleView}
             />
-            <DateInputCalendarGrid
+            <CalendarGrid
               currentMonth={currentMonth}
               setCurrentMonth={setCurrentMonth}
               view={view}

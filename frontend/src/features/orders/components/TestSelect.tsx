@@ -9,21 +9,22 @@
  * - Each list row shows test details and a square checkbox on the right (multi-select).
  * - The popover stays open while selecting; outside click or Escape closes it.
  */
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { EMPTY_COPY } from '@/components/display';
-import { Icon, RemovableTag, CheckboxIndicator } from '@/components/primitives';
+import { RemovableTag, CheckboxIndicator } from '@/components/primitives';
 import type { TestSummary } from '@/types';
 import { indexTestsByCode } from '@/features/catalog/testLookup';
 import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
 import { cn, formatCurrency, formatTurnaroundTime, titleCaseWords } from '@/utils';
 import { IconKeys } from '@/config/icons';
-import {text, inputContainerBase, inputContainerError, FORM_CONTROL_LABEL, FG } from '@/theme/recipes';
+import { text, FG } from '@/theme/recipes';
 import { SearchResultsPopoverShell } from '@/components/overlays/SearchResultsPopoverShell';
-import { CONTROL, FIELD_ERROR, SPACING } from '@/theme/recipes';
-
-
-const SELECTED_CHIP_CLASS =
-  'max-w-[min(100%,20rem)] items-start gap-space-2 py-space-1-5 px-space-2 bg-surface-page border-border-default/80 shadow-none';
+import {
+  SearchTagInputChrome,
+  SELECTED_SEARCH_CHIP_CLASS,
+} from '@/components/overlays/SearchTagInputChrome';
+import { CONTROL } from '@/theme/recipes';
+import { useAnchoredPopoverDismiss } from '@/hooks';
 
 function TestSelectMetaLine({ code, test }: { code: string; test: TestSummary }) {
   const segments: Array<{ id: string; label: string }> = [];
@@ -111,60 +112,42 @@ const TestSearchTagInput: React.FC<{
   onRemoveTag: (code: string) => void;
   error?: string;
 }> = ({ selectedTags, selectedCount, value, onValueChange, onRemoveTag, error }) => (
-  <div className="w-full">
-      <div className="flex justify-between items-baseline mb-space-1 gap-space-2">
-        <label
-          htmlFor="order-test-search"
-          className={FORM_CONTROL_LABEL}
-        >
-          Tests
-        </label>
-        <span className={`${text({ role: 'amount' })} ${FG.captionMuted} tabular-nums shrink-0`}>
-          {selectedCount} {selectedCount === 1 ? 'test' : 'tests'}
-        </span>
-      </div>
-
-      <div
-        className={cn(
-          inputContainerBase,
-          `group relative ${SPACING.plSpace10} pr-space-3 py-space-2-5 flex flex-wrap gap-space-2 items-center ${CONTROL.heightMultiline}`,
-          error && inputContainerError
-        )}
+  <SearchTagInputChrome
+    label="Tests"
+    htmlFor="order-test-search"
+    iconKey={IconKeys.dataFields.document}
+    error={error}
+    labelTrailing={
+      <span className={`${text({ role: 'amount' })} ${FG.captionMuted} tabular-nums shrink-0`}>
+        {selectedCount} {selectedCount === 1 ? 'test' : 'tests'}
+      </span>
+    }
+  >
+    {selectedTags.map(({ code, name, test }, idx) => (
+      <RemovableTag
+        key={`${code}-${idx}`}
+        size="xs"
+        onRemove={() => onRemoveTag(code)}
+        removeAriaLabel={`Remove ${code}`}
+        className={SELECTED_SEARCH_CHIP_CLASS}
       >
-        <div className="absolute inset-y-0 left-0 pl-space-3 flex items-center pointer-events-none">
-          <Icon iconKey={IconKeys.dataFields.document}
-            className={`w-4 h-4 ${FG.muted} group-hover:text-brand transition-colors`}
-          />
-        </div>
+        <TestSelectedChip code={code} name={name} test={test} />
+      </RemovableTag>
+    ))}
 
-        {selectedTags.map(({ code, name, test }, idx) => (
-          <RemovableTag
-            key={`${code}-${idx}`}
-            size="xs"
-            onRemove={() => onRemoveTag(code)}
-            removeAriaLabel={`Remove ${code}`}
-            className={SELECTED_CHIP_CLASS}
-          >
-            <TestSelectedChip code={code} name={name} test={test} />
-          </RemovableTag>
-        ))}
-
-        <input
-          id="order-test-search"
-          name="testSearch"
-          type="text"
-          value={value}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onValueChange(e.target.value)}
-          onFocus={() => onValueChange(value)}
-          placeholder={selectedTags.length === 0 ? 'Search by code or name…' : ''}
-          className={`flex-1 min-w-[120px] outline-none ${text({ role: 'body' })} placeholder:${FG.muted} bg-transparent leading-normal`}
-          autoComplete="off"
-        />
-      </div>
-
-      {error && <p className={`mt-space-1-5 ${FIELD_ERROR}`}>{error}</p>}
-    </div>
-  );
+    <input
+      id="order-test-search"
+      name="testSearch"
+      type="text"
+      value={value}
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) => onValueChange(e.target.value)}
+      onFocus={() => onValueChange(value)}
+      placeholder={selectedTags.length === 0 ? 'Search by code or name…' : ''}
+      className={`flex-1 min-w-[120px] outline-none ${text({ role: 'body' })} placeholder:${FG.muted} bg-transparent leading-normal`}
+      autoComplete="off"
+    />
+  </SearchTagInputChrome>
+);
 
 interface TestSelectPopoverProps {
   visibleTests: TestSummary[];
@@ -237,6 +220,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  useAnchoredPopoverDismiss(containerRef, setIsPopoverOpen);
 
   /**
    * Defensive: normalize selected tests to a set for fast membership checks.
@@ -255,29 +239,6 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
     () => (hasSearch ? filteredTests : []),
     [hasSearch, filteredTests]
   );
-
-  // Close popover on outside click and Escape.
-  useEffect(() => {
-    const handlePointerDown = (e: MouseEvent | TouchEvent) => {
-      const target = e.target as Node | null;
-      const container = containerRef.current;
-      if (!container || !target) return;
-      if (!container.contains(target)) setIsPopoverOpen(false);
-    };
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsPopoverOpen(false);
-    };
-
-    document.addEventListener('mousedown', handlePointerDown);
-    document.addEventListener('touchstart', handlePointerDown, { passive: true });
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('mousedown', handlePointerDown);
-      document.removeEventListener('touchstart', handlePointerDown);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, []);
 
   // Build tags with test details (code and name) for display inside the input.
   // Matches patient tag styling but without avatar.

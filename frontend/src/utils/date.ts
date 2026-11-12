@@ -202,6 +202,24 @@ export function toIsoDateParam(date: Date): string {
   return format(date, 'yyyy-MM-dd');
 }
 
+/**
+ * Search + inclusive date-range query params shared by server-paginated list pages.
+ *
+ * @param searchQuery - Raw search box value
+ * @param dateRange - Inclusive start/end, or null when unset
+ */
+export function dateSearchServerParams(
+  searchQuery: string,
+  dateRange: [Date, Date] | null
+): { search?: string; dateFrom?: string; dateTo?: string } {
+  const bounds = inclusiveDateRangeBounds(dateRange);
+  return {
+    search: searchQuery.trim() || undefined,
+    dateFrom: bounds ? toIsoDateParam(bounds.start) : undefined,
+    dateTo: bounds ? toIsoDateParam(bounds.end) : undefined,
+  };
+}
+
 export function getActivePresetId(dateRange: [Date, Date] | null): DatePreset | null {
   if (!dateRange) return null;
   for (const preset of DATE_PRESETS) {

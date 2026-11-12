@@ -12,3 +12,4 @@ export * from './MultiSelectFilter';
 export * from './OverlaySearchInput';
 export * from './RangeSlider';
 export * from './SearchResultsPopoverShell';
+export * from './SearchTagInputChrome';

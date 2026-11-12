@@ -72,30 +72,6 @@ export function useUsersList() {
 }
 
 /**
- * Hook to create a map of users for quick lookups.
- * Transforms the users array into a Map keyed by user ID.
- *
- * @returns Map of user ID to UserDisplayInfo
- */
-export function useUsersMap(): Map<string, UserDisplayInfo> {
-  const { users } = useUsersList();
-
-  return useMemo(() => {
-    const map = new Map<string, UserDisplayInfo>();
-    users.forEach(user => {
-      // Ensure ID is always stored as string for consistent lookups
-      const idKey = String(user.id);
-      map.set(idKey, {
-        id: String(user.id), // Convert to string for consistency
-        name: user.name,
-        username: user.username,
-      });
-    });
-    return map;
-  }, [users]);
-}
-
-/**
  * Hook to get user name by ID with fallback.
  * Returns a lookup function that resolves user IDs to display names.
  *

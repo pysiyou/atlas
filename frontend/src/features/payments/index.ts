@@ -9,7 +9,6 @@ export {
   usePaymentsForOrderIds,
   usePayment,
   usePaymentsByOrder,
-  usePaymentMethodByOrder,
   useCreatePayment,
   useInvalidatePayments,
 } from './api/payments';

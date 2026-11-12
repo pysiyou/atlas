@@ -204,35 +204,6 @@ export function useOrderRemainingBalance(orderId: string | undefined, totalPrice
   };
 }
 
-export function usePaymentMethodByOrder() {
-  const { payments, isLoading } = usePaymentsList({ limit: WORKFLOW_QUERY_LIMIT });
-
-  const paymentMethodMap = useMemo(() => {
-    const map = new Map<number, PaymentMethod>();
-    const sortedPayments = [...payments].sort(
-      (a, b) => new Date(b.paidAt).getTime() - new Date(a.paidAt).getTime()
-    );
-
-    for (const payment of sortedPayments) {
-      if (!map.has(payment.orderId)) {
-        map.set(payment.orderId, payment.paymentMethod);
-      }
-    }
-
-    return map;
-  }, [payments]);
-
-  return {
-    paymentMethodMap,
-    isLoading,
-    getPaymentMethod: (orderId: number | string) => {
-      const numericId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
-      if (isNaN(numericId)) return undefined;
-      return paymentMethodMap.get(numericId);
-    },
-  };
-}
-
 export interface CreatePaymentData {
   orderId: string | number;
   amount: number;

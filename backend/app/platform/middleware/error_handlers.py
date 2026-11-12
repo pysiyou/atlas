@@ -8,13 +8,7 @@ These handlers ensure that:
 """
 import logging
 
-from app.platform.utils.exceptions import (
-    AuthorizationException,
-    BusinessRuleException,
-    LabOperationError,
-    NotFoundException,
-    ValidationException,
-)
+from app.platform.utils.exceptions import LabOperationError
 from app.shared.schemas.error import ErrorDetail, ErrorResponse
 from fastapi import HTTPException, Request
 from fastapi.exceptions import RequestValidationError
@@ -29,42 +23,6 @@ async def lab_operation_error_handler(request: Request, exc: LabOperationError) 
     return JSONResponse(
         status_code=exc.status_code,
         content=ErrorResponse(error_code=exc.error_code, message=exc.message).model_dump(),
-    )
-
-
-async def not_found_error_handler(request: Request, exc: NotFoundException) -> JSONResponse:
-    """Handle NotFoundException exceptions."""
-    return JSONResponse(
-        status_code=404,
-        content=ErrorResponse(error_code="NOT_FOUND", message=str(exc)).model_dump(),
-    )
-
-
-async def validation_exception_handler(request: Request, exc: ValidationException) -> JSONResponse:
-    """Handle ValidationException exceptions."""
-    return JSONResponse(
-        status_code=400,
-        content=ErrorResponse(error_code="VALIDATION_ERROR", message=str(exc)).model_dump(),
-    )
-
-
-async def authorization_exception_handler(
-    request: Request, exc: AuthorizationException
-) -> JSONResponse:
-    """Handle AuthorizationException exceptions."""
-    return JSONResponse(
-        status_code=403,
-        content=ErrorResponse(error_code="FORBIDDEN", message=str(exc)).model_dump(),
-    )
-
-
-async def business_rule_exception_handler(
-    request: Request, exc: BusinessRuleException
-) -> JSONResponse:
-    """Handle BusinessRuleException exceptions."""
-    return JSONResponse(
-        status_code=400,
-        content=ErrorResponse(error_code="BUSINESS_RULE_VIOLATION", message=str(exc)).model_dump(),
     )
 
 
@@ -143,10 +101,6 @@ def register_exception_handlers(app):
 
     # Custom exceptions
     app.add_exception_handler(LabOperationError, lab_operation_error_handler)
-    app.add_exception_handler(NotFoundException, not_found_error_handler)
-    app.add_exception_handler(ValidationException, validation_exception_handler)
-    app.add_exception_handler(AuthorizationException, authorization_exception_handler)
-    app.add_exception_handler(BusinessRuleException, business_rule_exception_handler)
 
     # Framework exceptions
     app.add_exception_handler(RequestValidationError, request_validation_error_handler)

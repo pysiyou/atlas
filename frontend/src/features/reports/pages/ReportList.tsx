@@ -18,7 +18,7 @@ import { generateLabReport, downloadPDF, getDefaultTemplate } from '../utils/rep
 import type { ReportableOrder } from '../types';
 import { prepareReportData, downloadLabReport } from '../utils/prepareReportData';
 import { canPrintReport } from '../utils/reportEligibility';
-import { formatDate, inclusiveDateRangeBounds, toIsoDateParam } from '@/utils';
+import { dateSearchServerParams, formatDate } from '@/utils';
 import { notify } from '@/feedback';
 import { LIST_PAGE_SIZE_OPTIONS } from '@/lib/api/constants';
 
@@ -45,14 +45,10 @@ export const ReportList: React.FC = () => {
   const searchQuery = (filters.search as string) ?? '';
   const dateRange = (filters.dateRange as [Date, Date] | null) ?? null;
 
-  const serverFilters = useMemo(() => {
-    const bounds = inclusiveDateRangeBounds(dateRange);
-    return {
-      search: searchQuery.trim() || undefined,
-      dateFrom: bounds ? toIsoDateParam(bounds.start) : undefined,
-      dateTo: bounds ? toIsoDateParam(bounds.end) : undefined,
-    };
-  }, [searchQuery, dateRange]);
+  const serverFilters = useMemo(
+    () => dateSearchServerParams(searchQuery, dateRange),
+    [searchQuery, dateRange]
+  );
 
   const {
     reportableOrders,

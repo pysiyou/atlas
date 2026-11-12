@@ -16,26 +16,19 @@ export type { QueryKeys } from './keys';
 export {
   invalidateOrderQueries,
   invalidatePatientQueries,
-  invalidateResultQueries,
   invalidateAfterLabMutation,
   invalidateCriticalValueQueries,
-  invalidateQualityIssueQueries,
   invalidateCollectionQueries,
   invalidateLabMonitorQueries,
-  invalidateLabMonitorQueriesFull,
-  invalidateLabWorkflowQueries,
   invalidateWorklistQueries,
   invalidatePendingEscalationQueries,
   invalidateAuditEventQueries,
-  invalidateSampleDetailQueries,
   useInvalidateQueryKey,
 } from './invalidate';
 export type {
   InvalidateOrderOptions,
   InvalidatePatientOptions,
-  InvalidateResultOptions,
   InvalidateCriticalValueOptions,
-  InvalidateLabWorkflowOptions,
   LabMutationInvalidationKind,
   InvalidateAfterLabMutationOptions,
 } from './invalidate';

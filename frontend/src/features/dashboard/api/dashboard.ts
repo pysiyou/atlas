@@ -5,7 +5,7 @@ import { apiClient } from '@/lib/api/client';
 import type { Order } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/app/authStore';
-import { cacheConfig } from '@/lib/query';
+import { cacheConfig, queryKeys } from '@/lib/query';
 
 export interface DashboardSummary {
   totalPatients: number;
@@ -26,7 +26,7 @@ export const dashboardAPI = {
 export function useDashboardSummary() {
   const { isAuthenticated, isLoading: isRestoring } = useAuthStore();
   const query = useQuery({
-    queryKey: ['dashboard', 'summary'],
+    queryKey: queryKeys.dashboard.summary(),
     queryFn: () => dashboardAPI.getSummary(),
     enabled: isAuthenticated && !isRestoring,
     ...cacheConfig.dynamic,

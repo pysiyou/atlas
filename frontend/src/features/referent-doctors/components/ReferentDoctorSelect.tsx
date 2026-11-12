@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Controller, type Control } from 'react-hook-form';
 import { Icon, RemovableTag, TagChip } from '@/components/primitives';
 import { Input } from '@/components/inputs';
@@ -16,6 +16,7 @@ import {
 import { IconKeys } from '@/config/icons';
 import { SearchResultsPopoverShell } from '@/components/overlays/SearchResultsPopoverShell';
 import type { OrderFormInput } from '@/features/orders/schemas/order.schema';
+import { useAnchoredPopoverDismiss } from '@/hooks';
 import {
   type ReferentDoctor,
   useCreateReferentDoctor,
@@ -54,6 +55,7 @@ export const ReferentDoctorSelect: React.FC<ReferentDoctorSelectProps> = ({
   const [newHospital, setNewHospital] = useState('');
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  useAnchoredPopoverDismiss(containerRef, setIsPopoverOpen);
   const { results, isLoading } = useReferentDoctorSearch(search);
   const createDoctor = useCreateReferentDoctor();
 
@@ -64,26 +66,6 @@ export const ReferentDoctorSelect: React.FC<ReferentDoctorSelectProps> = ({
 
   const visibleResults =
     trimmedSearch.length > 0 ? results : isPopoverOpen ? results : [];
-
-  useEffect(() => {
-    const handlePointerDown = (e: MouseEvent | TouchEvent) => {
-      const target = e.target as Node | null;
-      const container = containerRef.current;
-      if (!container || !target) return;
-      if (!container.contains(target)) setIsPopoverOpen(false);
-    };
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsPopoverOpen(false);
-    };
-    document.addEventListener('mousedown', handlePointerDown);
-    document.addEventListener('touchstart', handlePointerDown, { passive: true });
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('mousedown', handlePointerDown);
-      document.removeEventListener('touchstart', handlePointerDown);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, []);
 
   const resetNewDoctorFields = () => {
     setNewUsername('');

@@ -152,6 +152,13 @@ class LabOperationsService:
             )
         return order_test
 
+    def _order_id_for_order_test(self, order_test_id: int | None) -> int | None:
+        """Resolve order_id without raising so missing tests skip cache targeting."""
+        if not order_test_id:
+            return None
+        ot = self.db.query(OrderTest).filter(OrderTest.id == order_test_id).first()
+        return ot.orderId if ot else None
+
     def _assert_order_paid_for_collection(self, order_id: int) -> None:
         order = self.db.query(Order).filter(Order.orderId == order_id).first()
         if not order:
@@ -264,30 +271,22 @@ class LabOperationsService:
         )
 
     def enter_results(self, **kwargs) -> OrderTest:
-        order_test_id = kwargs.get("order_test_id")
-        order_id = None
-        if order_test_id:
-            ot = self.db.query(OrderTest).filter(OrderTest.id == order_test_id).first()
-            order_id = ot.orderId if ot else None
         return self.run_lab_mutation(
             lambda: self._results.enter_results(**kwargs),
-            order_id=order_id,
+            order_id=self._order_id_for_order_test(kwargs.get("order_test_id")),
         )
 
     def validate_results(self, **kwargs) -> OrderTest:
         from app.domains.orders.service import OrderService
         from app.shared.contracts.enums import OrderStatus
 
-        order_test_id = kwargs.get("order_test_id")
-
         def _mutate() -> OrderTest:
             return self._results.validate_results(**kwargs)
 
-        order_id = None
-        if order_test_id:
-            ot = self.db.query(OrderTest).filter(OrderTest.id == order_test_id).first()
-            order_id = ot.orderId if ot else None
-        order_test = self.run_lab_mutation(_mutate, order_id=order_id)
+        order_test = self.run_lab_mutation(
+            _mutate,
+            order_id=self._order_id_for_order_test(kwargs.get("order_test_id")),
+        )
         order = self.db.query(Order).filter(Order.orderId == order_test.orderId).first()
         if order and order.overallStatus == OrderStatus.COMPLETED:
             import logging
@@ -305,36 +304,21 @@ class LabOperationsService:
         return order_test
 
     def reject_results(self, **kwargs):
-        order_test_id = kwargs.get("order_test_id")
-        order_id = None
-        if order_test_id:
-            ot = self.db.query(OrderTest).filter(OrderTest.id == order_test_id).first()
-            order_id = ot.orderId if ot else None
         return self.run_lab_mutation(
             lambda: self._results.reject_results(**kwargs),
-            order_id=order_id,
+            order_id=self._order_id_for_order_test(kwargs.get("order_test_id")),
         )
 
     def request_amendment(self, **kwargs) -> OrderTest:
-        order_test_id = kwargs.get("order_test_id")
-        order_id = None
-        if order_test_id:
-            ot = self.db.query(OrderTest).filter(OrderTest.id == order_test_id).first()
-            order_id = ot.orderId if ot else None
         return self.run_lab_mutation(
             lambda: self._results.request_amendment(**kwargs),
-            order_id=order_id,
+            order_id=self._order_id_for_order_test(kwargs.get("order_test_id")),
         )
 
     def resolve_escalation(self, **kwargs) -> EscalationResolveResult:
-        order_test_id = kwargs.get("order_test_id")
-        order_id = None
-        if order_test_id:
-            ot = self.db.query(OrderTest).filter(OrderTest.id == order_test_id).first()
-            order_id = ot.orderId if ot else None
         return self.run_lab_mutation(
             lambda: self._escalation_ops.resolve_escalation(**kwargs),
-            order_id=order_id,
+            order_id=self._order_id_for_order_test(kwargs.get("order_test_id")),
         )
 
     def report_quality_issue(self, **kwargs):
@@ -342,32 +326,26 @@ class LabOperationsService:
 
         target_id = kwargs.get("target_id")
         target_type = kwargs.get("target_type")
-        order_id = None
         if target_type == QualityIssueTargetType.SAMPLE:
             sample = self.db.query(Sample).filter(Sample.sampleId == target_id).first()
             order_id = sample.orderId if sample else None
-        elif target_id:
-            ot = self.db.query(OrderTest).filter(OrderTest.id == target_id).first()
-            order_id = ot.orderId if ot else None
+        else:
+            order_id = self._order_id_for_order_test(target_id)
         return self.run_lab_mutation(
             lambda: self.quality.report_issue(**kwargs),
             order_id=order_id,
         )
 
     def notify_critical_value(self, test_id: int, request: NotifyRequest, user_id: int) -> dict:
-        ot = self.db.query(OrderTest).filter(OrderTest.id == test_id).first()
-        order_id = ot.orderId if ot else None
         return self.run_lab_mutation(
             lambda: CriticalNotificationService(self.db).notify(test_id, request, user_id),
-            order_id=order_id,
+            order_id=self._order_id_for_order_test(test_id),
         )
 
     def acknowledge_critical_value(
         self, test_id: int, request: AcknowledgeRequest, user_id: int
     ) -> dict:
-        ot = self.db.query(OrderTest).filter(OrderTest.id == test_id).first()
-        order_id = ot.orderId if ot else None
         return self.run_lab_mutation(
             lambda: CriticalNotificationService(self.db).acknowledge(test_id, request, user_id),
-            order_id=order_id,
+            order_id=self._order_id_for_order_test(test_id),
         )

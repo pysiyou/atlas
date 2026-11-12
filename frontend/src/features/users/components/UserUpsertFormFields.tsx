@@ -9,10 +9,10 @@ import { text, FORM_FIELD_LABEL } from '@/theme/recipes';
 import { TONE } from '@/theme/recipes';
 import { IconKeys } from '@/config/icons';
 import type { UserRole } from '@/types';
-import { formatDateTime } from '@/utils';
 import type { UserAdminRecord } from '../api/usersAdmin';
 import { userRoleFilterOptions } from '../constants/userFilterConfig';
 import type { UserUpsertFormInput } from '../schemas/userUpsertFormSchema';
+import { formatUserTimestamp } from '../utils/formatUserTimestamp';
 
 export interface UserUpsertFormFieldsProps {
   formId: string;
@@ -20,10 +20,6 @@ export interface UserUpsertFormFieldsProps {
   user: UserAdminRecord | null;
   roleLocked: boolean;
   onSubmit: (event: React.FormEvent) => void;
-}
-
-function formatAccountTimestamp(value: string | null | undefined): string {
-  return formatDateTime(value) || 'Never';
 }
 
 export const UserUpsertFormFields: React.FC<UserUpsertFormFieldsProps> = ({
@@ -118,13 +114,13 @@ export const UserUpsertFormFields: React.FC<UserUpsertFormFieldsProps> = ({
             label="Created"
             name="createdAt"
             disabled
-            value={formatAccountTimestamp(user.createdAt)}
+            value={formatUserTimestamp(user.createdAt)}
           />
           <Input
             label="Last login"
             name="loggedInAt"
             disabled
-            value={formatAccountTimestamp(user.loggedInAt)}
+            value={formatUserTimestamp(user.loggedInAt)}
           />
         </>
       ) : null}

@@ -17,7 +17,8 @@ from app.domains.lab.monitor.predicates import (
     monitor_universe_predicate,
     running_tests_predicate,
 )
-from app.domains.lab.monitor.tat import CatalogTatResolver, age_bucket
+from app.domains.lab.monitor.queries import collection_base_query, order_test_stage_query
+from app.domains.lab.monitor.tat import CatalogTatResolver, age_bucket, hours_since
 from app.domains.lab.quality.escalation import load_open_tickets_by_order_test_id
 from app.domains.lab.rules.blockers import priority_rank, priority_sort_key
 from app.domains.lab.rules.test_status_sets import COLLECTION_WORKLIST_LINKED_EXCLUDE
@@ -116,15 +117,6 @@ def _order_test_worklist_search_filter(search_term: str):
             ]
         )
     return or_(*predicates)
-
-
-def _worklist_hours_since(ts: datetime | None) -> float:
-    if not ts:
-        return 0.0
-    now = datetime.now(UTC)
-    if ts.tzinfo is None:
-        ts = ts.replace(tzinfo=UTC)
-    return max(0.0, (now - ts).total_seconds() / 3600.0)
 
 
 def _paginate(total: int, page: int, page_size: int) -> dict[str, Any]:
@@ -240,7 +232,7 @@ class LabWorklistService:
         work_item_fields = projection_to_worklist_fields(projection)
         test_name, test_category = self._collection_test_display(codes)
         since = order.orderDate
-        hours = _worklist_hours_since(since)
+        hours = hours_since(since)
         tat = self._max_tat_for_codes(codes)
         item: dict[str, Any] = {
             "sampleId": sample.sampleId,
@@ -331,14 +323,7 @@ class LabWorklistService:
         sample_types: list[str] | None,
         search: str | None,
     ):
-        query = (
-            self.db.query(OrderTest, Order, Patient, CatalogTest, Sample)
-            .join(Order, OrderTest.orderId == Order.orderId)
-            .join(Patient, Order.patientId == Patient.id)
-            .join(CatalogTest, OrderTest.testCode == CatalogTest.code)
-            .outerjoin(Sample, Sample.sampleId == OrderTest.sampleId)
-            .filter(*extra_filters)
-        )
+        query = order_test_stage_query(self.db).filter(*extra_filters)
         if priority:
             query = query.filter(Order.priority == priority)
         query = _apply_worklist_window_filters(
@@ -368,11 +353,7 @@ class LabWorklistService:
         search_term = search.strip() if search else ""
         if len(search_term) < COLLECTION_SAMPLE_LOOKUP_MIN_LEN:
             search_term = ""
-        query = (
-            self.db.query(Sample, Order, Patient)
-            .join(Order, Sample.orderId == Order.orderId)
-            .join(Patient, Order.patientId == Patient.id)
-        )
+        query = collection_base_query(self.db)
         if search_term:
             query = query.filter(_collection_search_filter(search_term))
         else:
@@ -439,9 +420,7 @@ class LabWorklistService:
         from fastapi import status as http_status
 
         row = (
-            self.db.query(Sample, Order, Patient)
-            .join(Order, Sample.orderId == Order.orderId)
-            .join(Patient, Order.patientId == Patient.id)
+            collection_base_query(self.db)
             .filter(Sample.sampleId == sample_id)
             .first()
         )
@@ -517,7 +496,7 @@ class LabWorklistService:
         items = []
         for ot, order, patient, test, sample in rows:
             since = sample.collectedAt if sample and sample.collectedAt else order.orderDate
-            hours = _worklist_hours_since(since)
+            hours = hours_since(since)
             projection = project_order_test_entry(
                 LabWorkItemContext(order=order, order_test=ot, sample=sample)
             )
@@ -584,7 +563,7 @@ class LabWorklistService:
         items = []
         for ot, order, patient, test, sample in rows:
             since = ot.resultEnteredAt or order.orderDate
-            hours = _worklist_hours_since(since)
+            hours = hours_since(since)
             tat_band = (
                 age_bucket(hours, test.turnaroundTimeHours) if test.turnaroundTimeHours else None
             )
@@ -665,13 +644,8 @@ class LabWorklistService:
         stale_running = and_(running, OrderTest.updatedAt < today_start)
         stale_running_rank = case((stale_running, 1), else_=0)
 
-        base_query = (
-            self.db.query(OrderTest, Order, Patient, CatalogTest, Sample)
-            .join(Order, OrderTest.orderId == Order.orderId)
-            .join(Patient, Order.patientId == Patient.id)
-            .join(CatalogTest, OrderTest.testCode == CatalogTest.code)
-            .outerjoin(Sample, Sample.sampleId == OrderTest.sampleId)
-            .filter(self._dashboard_monitor_rows_predicate(today_start))
+        base_query = order_test_stage_query(self.db).filter(
+            self._dashboard_monitor_rows_predicate(today_start)
         )
         total = base_query.count()
         start = (page - 1) * page_size
@@ -720,14 +694,7 @@ class LabWorklistService:
         sample_types: list[str] | None = None,
     ) -> dict[str, Any]:
         """All order tests, newest activity first (OrderTest.updatedAt)."""
-        query = (
-            self.db.query(OrderTest, Order, Patient, CatalogTest, Sample)
-            .join(Order, OrderTest.orderId == Order.orderId)
-            .join(Patient, Order.patientId == Patient.id)
-            .join(CatalogTest, OrderTest.testCode == CatalogTest.code)
-            .outerjoin(Sample, Sample.sampleId == OrderTest.sampleId)
-            .filter(inactive_lineage_filter())
-        )
+        query = order_test_stage_query(self.db).filter(inactive_lineage_filter())
         if priorities:
             query = query.filter(Order.priority.in_(priorities))
         if statuses:
