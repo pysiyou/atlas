@@ -1,0 +1,70 @@
+{
+  "$schema": "./client-config.schema.json",
+  "company": {
+    "name": "Atlas Lab",
+    "displayName": "Atlas Lab",
+    "fullName": "Atlas Clinical Laboratories",
+    "subtitle": "Laboratory Information System",
+    "tagline": "Excellence in Diagnostic Testing",
+    "version": "2.0",
+    "copyright": "© 2026 Atlas Clinical Labs. All rights reserved.",
+    "contact": {
+      "address": {
+        "street": "123 Medical Plaza",
+        "city": "San Francisco",
+        "state": "California",
+        "zipCode": "94102",
+        "country": "United States",
+        "fullAddress": "123 Medical Plaza, San Francisco, CA 94102"
+      },
+      "phone": ["+1-555-1234"],
+      "email": "info@atlaslabs.com",
+      "website": "www.atlaslabs.com"
+    }
+  },
+  "branding": {
+    "logoPath": "/icons/here.svg",
+    "primaryColor": "#0284c7",
+    "secondaryColor": "#38bdf8",
+    "defaultTheme": "studio-light"
+  },
+  "terminology": {
+    "patient": "Patient",
+    "patients": "Patients",
+    "order": "Order",
+    "orders": "Orders",
+    "test": "Test",
+    "tests": "Tests",
+    "sample": "Sample",
+    "samples": "Samples",
+    "laboratory": "Laboratory",
+    "report": "Report",
+    "reports": "Reports"
+  },
+  "features": {
+    "dashboard": true,
+    "patients": true,
+    "orders": true,
+    "payments": true,
+    "reports": true,
+    "catalog": true,
+    "laboratory": true,
+    "labCollection": true,
+    "labEntry": true,
+    "labValidation": true,
+    "labMonitor": true,
+    "audit": true,
+    "users": true
+  },
+  "workflows": {
+    "requirePaymentBeforeCollection": true,
+    "requireDoctorApproval": false,
+    "requireDualValidation": false,
+    "requireEmergencyContact": true
+  },
+  "reports": {
+    "headerText": "Atlas Clinical Laboratories - Laboratory Report",
+    "footerText": "This report contains confidential patient information. Handle according to applicable privacy laws.",
+    "includeSignature": true
+  }
+}
