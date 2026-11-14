@@ -7,6 +7,7 @@
   ],
   "project": ["src/**/*.{ts,tsx}"],
   "ignoreDependencies": ["tailwindcss"],
+  "ignoreBinaries": ["python"],
   "ignore": ["dist/**", "src/lib/empty-html2canvas.ts"],
   "rules": {
     "exports": "warn",

@@ -15,12 +15,10 @@ import {
 } from '../utils/filterCatalogTests';
 import { applyPageFilters, useClientListChrome, usePageFilters } from '@/hooks';
 import type { TestSummary } from '@/types';
-import { getModuleListTitles } from '@/config/pageCopy';
-import { useClientConfig } from '@/config/ClientConfigContext';
+import { useModuleListTitles } from '@/config/useModuleListTitles';
 
 export const CatalogList: React.FC = () => {
-  const { status: configStatus } = useClientConfig();
-  const listTitles = useMemo(() => getModuleListTitles(), [configStatus]);
+  const listTitles = useModuleListTitles();
   const navigate = useNavigate();
 
   const { tests, isLoading, isError, error: queryError, refetch } = useTestCatalog();

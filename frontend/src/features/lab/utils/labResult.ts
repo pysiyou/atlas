@@ -1,7 +1,7 @@
 /** Result flags, reference ranges, physiologic limits, and result tile styles. */
-import type { ResultStatus } from '@/types/contracts/enums';
+import type { ResultStatus } from '@/types/generated/enums';
 import type { CatalogReferenceRange, CriticalRange, TestParameter, Patient, Gender } from '@/types';
-import type { DemographicRange } from '@/types/domain/test';
+import type { DemographicRange } from '@/types';
 import { calculateAge } from '@/utils/string';
 import { FG, TONE, metricTile, metricTileStateFromResult } from '@/theme/recipes';
 

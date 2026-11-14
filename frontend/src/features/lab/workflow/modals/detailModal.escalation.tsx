@@ -26,7 +26,7 @@ import type { LabModalWorkItem } from '../../types/labQueueChrome';
 import type { Order } from '@/types';
 import type { CriticalValueRecord } from '../../criticalValues/criticalValues';
 import type { EscalationResolveOptions } from '../../validation/EscalationResolutionActions';
-import type { EscalationResolutionAction } from '@/types/domain/labOperations';
+import type { EscalationResolutionAction } from '@/types';
 
 function ticketString(value: unknown): string | undefined {
   return typeof value === 'string' ? value : undefined;

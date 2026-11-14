@@ -4,7 +4,7 @@
  */
 
 import type { RejectedSample, Sample } from '@/types';
-import { resolveRejectionReasonLabel } from '@/types/contracts/rejectionReasonRegistry';
+import { resolveRejectionReasonLabel } from '@/types/generated/policies';
 
 /**
  * Format rejection reasons for display

@@ -68,8 +68,6 @@ export async function loadClientConfig(): Promise<ClientConfig> {
       ? '/api/v1/config' 
       : `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/v1/config`;
     
-    console.log(`Loading config from: ${configUrl} (dev: ${isDev})`);
-    
     const response = await fetch(configUrl);
     if (!response.ok) {
       console.error(`Failed to load config: ${response.status} ${response.statusText}`);
@@ -85,7 +83,6 @@ export async function loadClientConfig(): Promise<ClientConfig> {
     }
     
     cachedConfig = await response.json();
-    console.log('Successfully loaded client config:', cachedConfig?.company?.displayName);
     return cachedConfig!;
   } catch (error) {
     console.error('Failed to load client config:', error);

@@ -2,13 +2,13 @@
 import type { SampleType, ContainerTopColor, OrderTest, Test } from '@/types';
 import type { ContainerCatalogId } from '@/types';
 import { COLLECTION_TOP_COLOR_PRESETS } from '@/types';
-import type { FeedbackId } from '@/types/contracts/feedbackCatalog';
+import type { FeedbackId } from '@/types/generated/feedback';
 import { feedbackTitle, notify } from '@/feedback';
 import {
   printCollectionLabel,
   type SampleLabelPrintInput,
 } from '../collection/SampleCollectionLabelActions';
-import type { SampleCollectionQueueItem } from '@/types/domain/labOperations';
+import type { SampleCollectionQueueItem } from '@/types';
 import type { Sample } from '@/types';
 import { FG } from '@/theme/recipes';
 
@@ -104,7 +104,7 @@ export function getSampleDefinition(sampleType: SampleType): SampleDefinition {
   return SAMPLE_DEFINITIONS[sampleType] || SAMPLE_DEFINITIONS.other;
 }
 
-export type { SampleCollectionRequirement as SampleRequirement } from '@/types/domain/labOperations';
+export type { SampleRequirement } from '@/types';
 
 export function getCollectionRequirements(sampleType: SampleType): {
   collectionType: SampleType;

@@ -6,11 +6,8 @@ import { flushSync } from 'react-dom';
 import { logger } from '@/utils/logger';
 import { notify } from '@/feedback';
 import { useReportQualityIssue } from '../api/qualityIssues';
-import type {
-  QualityIssueResult,
-  QualityIssueTargetType,
-  RemedyType,
-} from '@/types/domain/labOperations';
+import type { QualityIssueResult } from '@/types';
+import type { QualityIssueTargetType, RemedyType } from '@/types';
 import { notifyQualityIssueSuccess } from '../validation/qualityIssueToastMessages';
 
 interface UseSubmitQualityIssueOptions {

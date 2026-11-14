@@ -8,7 +8,7 @@ import {
   INACTIVE_BILLING_TEST_STATUSES,
   INACTIVE_REPORTABLE_TEST_STATUSES,
   INACTIVE_TEST_STATUSES_FOR_ROLLUP,
-} from '@/types/contracts/labContract';
+} from '@/types/generated/policies';
 
 /** Lab rollup / progress: excludes cancelled lines from active work counts. */
 export const INACTIVE_ROLLUP_TEST_STATUSES = new Set<string>(INACTIVE_TEST_STATUSES_FOR_ROLLUP);

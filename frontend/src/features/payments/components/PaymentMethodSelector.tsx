@@ -5,7 +5,8 @@
 import React from 'react';
 import { Icon } from '@/components/primitives/Icon';
 import { IconKeys } from '@/config/icons';
-import type { PaymentMethodOption, PaymentMethod } from '@/types/domain/payments';
+import type { PaymentMethod } from '@/types';
+import type { PaymentMethodOption } from '@/features/payments/constants/paymentMethods';
 import {text, RADIUS, FG } from '@/theme/recipes';
 
 export interface PaymentMethodSelectorProps {

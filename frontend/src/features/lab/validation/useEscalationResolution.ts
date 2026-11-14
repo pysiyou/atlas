@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { notify } from '@/feedback';
 import { useAuthStore } from '@/app/authStore';
 import { useResolveEscalation } from '../api/results';
-import type { EscalationResolutionAction } from '@/types/domain/labOperations';
+import type { EscalationResolutionAction } from '@/types';
 import type { EscalationResolveOptions } from './EscalationResolutionActions';
 
 interface UseEscalationResolutionOptions {

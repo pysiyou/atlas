@@ -12,8 +12,8 @@ import type {
   EscalationResolveRequest,
   EscalationResolveResult,
   QualityIssueResult,
-  RemedyType,
-} from '@/types/domain/labOperations';
+} from '@/types';
+import type { RemedyType } from '@/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   invalidateAfterLabMutation,

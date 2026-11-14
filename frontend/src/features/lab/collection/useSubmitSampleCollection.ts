@@ -8,7 +8,7 @@ import { getErrorDetails, isLikelyNetworkOrTimeout } from '@/utils/errors';
 import { invalidateCollectionQueries } from '@/lib/query/invalidate';
 import { notify } from '@/feedback';
 import type { ContainerType, ContainerTopColor } from '@/types';
-import type { SampleCollectionQueueItem } from '@/types/domain/labOperations';
+import type { SampleCollectionQueueItem } from '@/types';
 import type { UseMutationResult } from '@tanstack/react-query';
 
 interface CollectSampleParams {

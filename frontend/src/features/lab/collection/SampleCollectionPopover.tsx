@@ -13,7 +13,7 @@ import { SelectionCheck } from '@/components/inputs';
 import { IconKeys } from '@/config/icons';
 import type { ContainerType } from '@/types';
 import { COLLECTION_TOP_COLOR_PRESETS, CONTAINER_CATALOG_CONFIG } from '@/types';
-import type { SampleRequirement } from '@/types/domain/labOperations';
+import type { SampleRequirement } from '@/types';
 import { cn, formatArray } from '@/utils';
 import { getContainerIcon } from '@/config/icons';
 import {text, inputBase, inputError, FORM_FIELD_LABEL, FG } from '@/theme/recipes';

@@ -3,8 +3,8 @@
  */
 /* eslint-disable max-lines -- shared phrasing + lab headline helpers */
 import { displayId } from '@/utils/id';
-import { ORDER_STATUS_CONFIG, type OrderStatus } from '@/types/contracts/enums/order';
-import { resolveRejectionReasonLabel } from '@/types/contracts/rejectionReasonRegistry';
+import { ORDER_STATUS_CONFIG, type OrderStatus } from '@/types/generated/enums';
+import { resolveRejectionReasonLabel } from '@/types/generated/policies';
 import { EVENT_LOG_COPY } from './types';
 import type {
   EventLogDomain,

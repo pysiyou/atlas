@@ -2,7 +2,7 @@
  * Attention item formatting — dedicated copy per attention type (not workflow stage).
  */
 
-import { ATTENTION_LABELS } from '@/types/contracts/labContract';
+import { ATTENTION_LABELS } from '@/types/generated/policies';
 import { displayId } from '@/utils';
 import { LAB_CONFIG, getLabCopy, labStageLabel } from '../constants/labConstants';
 import type { LabAttentionQueueItem } from './monitorModel';

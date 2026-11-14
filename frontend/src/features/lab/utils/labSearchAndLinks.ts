@@ -2,7 +2,7 @@
 import type { OrderTest } from '@/types';
 import type { LabModalWorkItem } from '../types/labQueueChrome';
 import { displayId, inclusiveDateRangeBounds, toIsoDateParam, ID_PREFIXES, parseDisplayId } from '@/utils';
-import type { TestStatus } from '@/types/contracts/enums';
+import type { TestStatus } from '@/types/generated/enums';
 import type { UrlFilters } from '@/utils/filters';
 import { getLabQueueUrl, getLabTabForTestStatus, type LabTabId } from '../constants/labConstants';
 

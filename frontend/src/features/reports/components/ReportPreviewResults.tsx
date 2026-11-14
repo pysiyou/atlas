@@ -11,7 +11,7 @@ import {
 } from '@/features/lab/cross';
 import type { Gender } from '@/types';
 import { text, SPACING } from '@/theme/recipes';
-import type { LabReportPayload, ReportPreviewResultsLayout } from '@/types/domain/report';
+import type { LabReportPayload, ReportPreviewResultsLayout } from '@/types';
 import { getActiveOrderTests } from '@/utils/presentation';
 
 const PLACEHOLDER_PANEL_COUNT = 2;

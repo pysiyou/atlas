@@ -10,7 +10,7 @@ import type {
   EventLogKind,
   EventLogLaboratorySubdomain,
   StoredEventScope,
-} from '@/types/contracts/auditEventTaxonomy';
+} from '@/types/generated/audit';
 
 export type {
   EventLogDomain,
@@ -18,7 +18,7 @@ export type {
   EventLogLaboratoryKindKey,
   EventLogLaboratorySubdomain,
   StoredEventScope,
-} from '@/types/contracts/auditEventTaxonomy';
+} from '@/types/generated/audit';
 
 export interface EventLogActorSnapshot {
   userId: number | 'system';

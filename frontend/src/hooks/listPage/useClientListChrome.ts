@@ -1,4 +1,4 @@
-import type { FeedbackId } from '@/types/contracts/feedbackCatalog';
+import type { FeedbackId } from '@/types/generated/feedback';
 import { useListLoadErrorToast } from './useListLoadErrorToast';
 
 export interface UseClientListChromeOptions {

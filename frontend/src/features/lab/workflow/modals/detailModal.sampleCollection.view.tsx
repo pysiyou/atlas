@@ -9,7 +9,7 @@ import { QueueModalShell, labModalHeaderContext } from '../shared/detailModalLay
 import { CollectionHeaderBadges } from '../../components/LabWorkflowBadges';
 import { SampleCollectionCardLeftColumn } from '../shared/queueCardLeftColumn';
 import { LabRelatedSamplesPanel } from '../../components/LabRelatedWorkflowPanel';
-import type { SampleCollectionQueueItem } from '@/types/domain/labOperations';
+import type { SampleCollectionQueueItem } from '@/types';
 import {
   SampleCollectionDetailContent,
   SampleCollectionDetailFooter } from './detailModal.sampleCollection.panels';

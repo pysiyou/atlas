@@ -22,7 +22,7 @@ import {
 } from '../utils/labQueueSecondaryProfiles';
 import type { PriorityLevel, SampleStatus, TestStatus } from '@/types';
 import { getValidationFilterConfig } from '../constants';
-import { useClientConfig } from '@/config/ClientConfigContext';
+import { useClientConfig } from '@/config/clientConfigHooks';
 import { ErrorBoundary } from '@/feedback';
 import { useClientListChrome } from '@/hooks';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
@@ -40,11 +40,8 @@ function getCommentKey(row: ValidationQueueRow) {
 }
 
 export const ResultValidationQueue: React.FC = () => {
-  const { status: configStatus } = useClientConfig();
-  const validationFilterConfig = useMemo(
-    () => getValidationFilterConfig(),
-    [configStatus],
-  );
+  useClientConfig();
+  const validationFilterConfig = getValidationFilterConfig();
   const { hasRole } = useAuthStore();
   const canViewEscalations = hasRole(['administrator', 'lab-technician', 'lab-technician-plus']);
   const canResolveEscalation = hasRole(['administrator', 'lab-technician-plus']);

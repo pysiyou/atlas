@@ -6,7 +6,7 @@
 import { ListCard } from '@/components/surfaces';
 import { RecordId } from '@/features/shared';
 import type { CardComponentProps } from '@/components/data-table';
-import type { ReportableOrder } from '@/types/domain/report';
+import type { ReportableOrder } from '@/types';
 import { OrderStatusBadge } from '@/features/orders';
 import { ReportRowActionsMenu } from './ReportRowActionsMenu';
 import { INTERACTIVE, text } from '@/theme/recipes';

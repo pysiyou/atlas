@@ -6,9 +6,9 @@ import type { ApiQualityIssueOptions, ApiQualityIssueResult } from '@/lib/api/ty
 import type {
   QualityIssueOptions,
   QualityIssueResult,
-  QualityIssueTargetType,
   ReportQualityIssueRequest,
-} from '@/types/domain/labOperations';
+} from '@/types';
+import type { QualityIssueTargetType } from '@/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query';
 import { invalidateAfterLabMutation } from '@/lib/query/invalidate';

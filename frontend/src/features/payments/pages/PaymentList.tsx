@@ -18,12 +18,10 @@ import { useServerListChrome } from '@/hooks';
 import { dateSearchServerParams } from '@/utils';
 import type { PaymentStatus } from '@/types';
 import type { OrderPaymentView } from '../types';
-import { getModuleListTitles } from '@/config/pageCopy';
-import { useClientConfig } from '@/config/ClientConfigContext';
+import { useModuleListTitles } from '@/config/useModuleListTitles';
 
 export const PaymentList: React.FC = () => {
-  const { status: configStatus } = useClientConfig();
-  const listTitles = useMemo(() => getModuleListTitles(), [configStatus]);
+  const listTitles = useModuleListTitles();
   const navigate = useNavigate();
   const [selectedOrder, setSelectedOrder] = useState<OrderPaymentView | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);

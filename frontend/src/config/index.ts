@@ -19,7 +19,8 @@ export {
   applyBranding,
   type ClientConfig,
 } from './clientConfig';
-export { useClientConfig, useClientConfigReady, ClientConfigProvider } from './ClientConfigContext';
+export { useClientConfig, useClientConfigReady } from './clientConfigHooks';
+export { ClientConfigProvider } from './ClientConfigProvider';
 export { getModuleListTitles } from './pageCopy';
 export { useModuleListTitles } from './useModuleListTitles';
 export {

@@ -1,8 +1,13 @@
 /**
- * Central type exports
+ * Type layers:
+ * - This barrel: contract enums + entity/model types
+ * - `@/types/generated/*` — generated catalogs (feedback, policies, audit, enums)
+ * - `./domain/*` — hand-written entities and view models (import via `@/types`)
+ * - `@/types/zod` — shared Zod schemas
+ * - `@/lib/api/types` — OpenAPI DTOs
  */
 
-export * from './contracts/enums';
+export * from './generated/enums';
 
 export type {
   Patient,
@@ -11,24 +16,26 @@ export type {
   EmergencyContact,
   MedicalHistory,
   Affiliation,
-} from './domain/patient';
+  AffiliationPlan,
+  AffiliationPricing,
+} from './domain/entities';
 export type {
   Order,
   OrderTest,
   TestResult,
   ResultRejectionType,
   LatestPaymentSnippet,
-} from './domain/order';
-export { getOrderTests, getOrderTestCount } from './domain/order';
+} from './domain/entities';
+export { getOrderTests, getOrderTestCount } from './domain/entities';
 export type {
   Sample,
   PendingSample,
   CollectedSample,
   RejectedSample,
-} from './domain/sample';
-export { isCollectedSample, isRejectedSample } from './domain/sample';
-export type { User, AuthUser } from './domain/user';
-export type { PaginatedResponse, PaginationMeta } from './domain/pagination';
+} from './domain/entities';
+export { isCollectedSample, isRejectedSample } from './domain/entities';
+export type { User, AuthUser } from './domain/entities';
+export type { PaginatedResponse, PaginationMeta } from './domain/models';
 export type {
   Test,
   TestSummary,
@@ -36,11 +43,11 @@ export type {
   TestParameter,
   CatalogReferenceRange,
   CriticalRange,
+  DemographicRange,
   ResultItem,
   TestWithContext,
-} from './domain/test';
-export type { Payment, PaymentMethod, Invoice } from './domain/payments';
-export type { AffiliationPlan, AffiliationPricing } from './domain/affiliation';
+} from './domain/entities';
+export type { Payment, PaymentMethod, Invoice } from './domain/entities';
 export type {
   SampleCollectionQueueItem,
   SampleCollectionRequirement,
@@ -52,28 +59,13 @@ export type {
   ReportQualityIssueRequest,
   EscalationResolveRequest,
   EscalationResolveResult,
+  CriticalReadBackPayload,
   SampleRequirement,
-} from './domain/labOperations';
-export type { ApiError, ApiErrorDetail } from './validation';
-export {
-  zEnumFromValues,
-  phoneSchema,
-  emailSchema,
-  postalCodeSchema,
-  dateStringSchema,
-  nullableApiDatetimeSchema,
-  dateSchema,
-  positiveIntSchema,
-  percentageSchema,
-  nonEmptyString,
-  nameSchema,
-  apiErrorSchema,
-  apiErrorDetailSchema,
-} from './validation';
+} from './domain/models';
 export type {
   ReportableOrder,
   LabReportPayload,
   ReportTemplate,
   ReportPreviewResultsLayout,
-} from './domain/report';
-export { RESULT_NOT_AVAILABLE } from './domain/report';
+} from './domain/models';
+export { RESULT_NOT_AVAILABLE } from './domain/models';

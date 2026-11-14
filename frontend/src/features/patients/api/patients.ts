@@ -7,7 +7,7 @@ import { withPaginatedParams } from '@/lib/api/pagination';
 import { WORKFLOW_QUERY_LIMIT, DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
 import type { Gender, Patient, PatientContext } from '@/types';
 import { serializeQueryList } from '@/utils/filtering';
-import type { PaginatedResponse, PaginationMeta } from '@/types/domain/pagination';
+import type { PaginatedResponse, PaginationMeta } from '@/types';
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 import { useResettablePage } from '@/hooks/useResettablePage';

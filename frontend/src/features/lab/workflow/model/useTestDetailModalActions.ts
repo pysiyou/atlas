@@ -7,7 +7,7 @@ import { useAsyncAction } from '@/hooks/useAsyncAction';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
 import type { OrderTest } from '@/types';
 import type { TestDetailInteraction } from '@/lib/context/modalTypes';
-import type { QualityIssueResult } from '@/types/domain/labOperations';
+import type { QualityIssueResult } from '@/types';
 import { invalidateAfterLabMutation } from '@/lib/query/invalidate';
 import { useValidateResults } from '../../api/results';
 import { useLabDraftStore } from '../../state/labDraftStore';

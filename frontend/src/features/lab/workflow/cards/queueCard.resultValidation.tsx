@@ -22,7 +22,7 @@ import {
   retestContextFromRow,
   type LabOrderTestQueueRow,
 } from '../../types/labQueueChrome';
-import type { QualityIssueResult } from '@/types/domain/labOperations';
+import type { QualityIssueResult } from '@/types';
 import { QueueCard, QueueCardMobile } from '../shared/queueCardLayout';
 import { TestWorkflowCardLeftColumn } from '../shared/queueCardLeftColumn';
 import { MOBILE_LIST_CARD } from '@/theme/recipes';

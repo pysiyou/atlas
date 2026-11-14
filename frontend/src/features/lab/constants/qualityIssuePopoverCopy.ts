@@ -1,20 +1,21 @@
 /** Quality-issue popover copy, layout, and remedy destination options. */
 /**
  * QualityIssuePopover — layout constants and catalog-backed copy.
- * User-visible strings live in contracts/feedback.json (codegen → `@/types/contracts/feedbackCatalog`).
- * Remedy allow-list order and presentation ids live in contracts/lab.json → labContract.
+ * User-visible strings live in contracts/feedback.json (codegen → `@/types/generated/feedback`).
+ * Remedy allow-list order and presentation ids live in contracts/lab.json → policies.
  */
 
 import { LAB_CONFIG } from './labConstants';
 import { feedbackTitle } from '@/feedback';
-import type { QualityIssueOptions, RemedyType } from '@/types/domain/labOperations';
+import type { QualityIssueOptions } from '@/types';
+import type { RemedyType } from '@/types';
 import {
   REMEDY_PRESENTATION,
   SAMPLE_UNFINISHED_REMEDY_WIRES,
   VALIDATION_REMEDY_WIRES,
   type RemedyPresentationContext,
   type RemedyPresentationFields,
-} from '@/types/contracts/labContract';
+} from '@/types/generated/policies';
 
 export const QUALITY_ISSUE_POPOVER_LAYOUT = {
   /** Width class for loading/error/content containers */

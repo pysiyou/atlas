@@ -7,7 +7,7 @@ import React from 'react';
 import { CONTROL, INTERACTIVE, RADIUS } from '@/theme/recipes';
 import { actionButtonPreset, Avatar, Icon, IconButton } from '@/components/primitives';
 import { PageHeader } from '@/components/layout';
-import type { Patient } from '@/types/domain/patient';
+import type { Patient } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { AffiliationPopover } from './AffiliationPopover';
 import { IconKeys } from '@/config/icons';

@@ -9,7 +9,7 @@ import { Card } from '@/components/surfaces';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { getTestNames } from '@/features/catalog/testLookup';
 import type { ContainerType, TestSummary } from '@/types';
-import type { SampleCollectionQueueItem } from '@/types/domain/labOperations';
+import type { SampleCollectionQueueItem } from '@/types';
 import { MOBILE_LIST_CARD } from '@/theme/recipes';
 import { CollectionHeaderBadges } from '../../components/LabWorkflowBadges';
 import { SampleCollectionPopover } from '../../collection/SampleCollectionPopover';

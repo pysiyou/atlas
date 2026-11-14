@@ -13,10 +13,11 @@ import { formatCurrency } from '@/utils';
 import { useOrder } from '@/features/orders';
 import { useCreatePayment, useOrderRemainingBalance } from '../api/payments';
 import { isFullyPaid, roundMoney } from '../utils/paymentStatus';
+import type { PaymentMethod } from '@/types';
 import {
   getEnabledPaymentMethods,
   getDefaultPaymentMethod,
-  type PaymentMethod } from '@/types/domain/payments';
+} from '@/features/payments/constants/paymentMethods';
 import { getPaymentErrorMessage } from '@/utils/errors';
 import { feedbackTitle, getFeedback } from '@/feedback';
 import type { OrderPaymentView } from '../types';

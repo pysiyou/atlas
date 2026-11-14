@@ -1,7 +1,7 @@
 /**
  * Patient Constants (non-enum values only)
  *
- * For enum values (Gender, AffiliationDuration), import from '@/types' or '@/types/contracts/enums'
+ * For enum values (Gender, AffiliationDuration), import from '@/types' or '@/types/generated/enums'
  */
 
 export const AGE_RANGE_DEFAULTS: [number, number] = [0, 150];

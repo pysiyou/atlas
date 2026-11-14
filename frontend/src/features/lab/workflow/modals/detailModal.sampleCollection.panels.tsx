@@ -15,7 +15,7 @@ import { QueueCardTestList } from '../shared/queueCardLayout';
 import { SampleCollectionPopover } from '../../collection/SampleCollectionPopover';
 import { SampleRejectionPopover } from '../../collection/SampleRejectionPopover';
 import { getLabCopy } from '../../constants/labConstants';
-import type { SampleCollectionQueueItem } from '@/types/domain/labOperations';
+import type { SampleCollectionQueueItem } from '@/types';
 import { isLabActionAllowed, labDisabledActionTooltip } from '../../utils/queueDisplay';
 import { printSampleLabel } from '../../utils/labSample';
 

@@ -87,6 +87,22 @@ export default defineConfig([
         patterns: [
           {
             group: [
+              '@/types/domain/entities',
+              '@/types/domain/models',
+              '@/types/contracts/**',
+              '@/types/contracts/*',
+              '@/types/entities/**',
+              '@/types/entities/*',
+              '@/types/models/**',
+              '@/types/models/*',
+              '@/types/validation',
+              '@/types/validation/**',
+              '@/types/schemas/**',
+            ],
+            message: 'Use @/types for entities/models, @/types/generated/* for catalogs, @/types/zod for Zod.',
+          },
+          {
+            group: [
               '@/features/*/components/*',
               '@/features/*/hooks/*',
               '@/features/*/api/*',
@@ -132,6 +148,22 @@ export default defineConfig([
           },
         ],
         patterns: [
+          {
+            group: [
+              '@/types/domain/entities',
+              '@/types/domain/models',
+              '@/types/contracts/**',
+              '@/types/contracts/*',
+              '@/types/entities/**',
+              '@/types/entities/*',
+              '@/types/models/**',
+              '@/types/models/*',
+              '@/types/validation',
+              '@/types/validation/**',
+              '@/types/schemas/**',
+            ],
+            message: 'Use @/types for entities/models, @/types/generated/* for catalogs, @/types/zod for Zod.',
+          },
           {
             group: [
               '@/features/*/components/*',
@@ -199,13 +231,13 @@ export default defineConfig([
     },
   },
   {
-    files: ['src/types/contracts/enums/**'],
+    files: ['src/types/generated/enums.ts'],
     rules: {
       'no-restricted-syntax': 'off',
     },
   },
   {
-    files: ['src/types/contracts/**'],
+    files: ['src/types/generated/**', 'src/types/domain/**'],
     rules: {
       'max-lines': 'off',
     },

@@ -3,7 +3,7 @@ import { LabValidationQueueSection } from '../components/LabValidationQueueSecti
 import { EmptyState, getEmptyCopy, PANEL_EMPTY_STATE } from '@/components/display';
 import type { PendingEscalationItem } from '../api/results';
 import type { ValidationQueueRow } from '../types/queues';
-import type { QualityIssueResult } from '@/types/domain/labOperations';
+import type { QualityIssueResult } from '@/types';
 
 interface ResultValidationQueueViewProps {
   isEmpty: boolean;

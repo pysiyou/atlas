@@ -8,7 +8,7 @@ import { withPaginatedParams } from '@/lib/api/pagination';
 import { WORKFLOW_QUERY_LIMIT, DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
 import type { ApiOrderSummaryResponse } from '@/lib/api/types';
 import type { Order, OrderStatus, PaymentMethod, PaymentStatus, Patient, Invoice } from '@/types';
-import type { PaginatedResponse, PaginationMeta } from '@/types/domain/pagination';
+import type { PaginatedResponse, PaginationMeta } from '@/types';
 import { serializeQueryList } from '@/utils/filtering';
 import { useQuery, keepPreviousData, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';

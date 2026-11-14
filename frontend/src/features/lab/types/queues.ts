@@ -2,7 +2,7 @@
  * Lab queue row types — OpenAPI worklist DTOs and thin helpers.
  */
 
-import type { CollectionQueueRow, SampleCollectionQueueItem } from '@/types/domain/labOperations';
+import type { CollectionQueueRow, SampleCollectionQueueItem } from '@/types';
 import type { EntryWorklistItem, ValidationWorklistItem } from '@/lib/api/types';
 import type { PendingEscalationItem } from '../api/results';
 

@@ -10,7 +10,7 @@ import { Popover } from '@/components/overlays';
 import { Alert } from '@/components/display';
 import { LabFormPopoverChrome } from './LabActionPopover';
 import { useQualityIssuePopover } from '../hooks/useQualityIssuePopover';
-import type { QualityIssueResult } from '@/types/domain/labOperations';
+import type { QualityIssueResult } from '@/types';
 import {
   QUALITY_ISSUE_POPOVER_LAYOUT,
   QUALITY_ISSUE_POPOVER_COPY,

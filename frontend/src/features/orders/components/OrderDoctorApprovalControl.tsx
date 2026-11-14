@@ -10,6 +10,7 @@ import { queryKeys } from '@/lib/query';
 import { orderAPI } from '../api/orders';
 import type { Order } from '@/types';
 import { formatDateTime } from '@/utils/date';
+import { Text } from '@/components/layout/Text';
 
 export interface OrderDoctorApprovalControlProps {
   order: Order;
@@ -40,10 +41,10 @@ export const OrderDoctorApprovalControl: React.FC<OrderDoctorApprovalControlProp
 
   if (approved) {
     return (
-      <p className="text-sm text-text-secondary">
+      <Text as="p" role="body" intent="muted">
         Approved for collection
         {approvedAt ? ` · ${formatDateTime(approvedAt)}` : ''}
-      </p>
+      </Text>
     );
   }
 

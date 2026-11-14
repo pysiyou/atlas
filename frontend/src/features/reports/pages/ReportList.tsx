@@ -15,14 +15,13 @@ import { createReportTableConfig } from '../config/ReportTable.config';
 import { ReportFilters } from '../components/ReportFilters';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
 import { generateLabReport, downloadPDF, getDefaultTemplate } from '../utils/reportPDF';
-import type { ReportableOrder } from '@/types/domain/report';
+import type { ReportableOrder } from '@/types';
 import { prepareReportData, downloadLabReport } from '../utils/prepareReportData';
 import { canPrintReport } from '../utils/reportEligibility';
 import { dateSearchServerParams, formatDate } from '@/utils';
 import { notify } from '@/feedback';
 import { LIST_PAGE_SIZE_OPTIONS } from '@/lib/api/constants';
-import { getModuleListTitles } from '@/config/pageCopy';
-import { useClientConfig } from '@/config/ClientConfigContext';
+import { useModuleListTitles } from '@/config/useModuleListTitles';
 
 /** Parse `/reports/:id` so a deep link can open preview without unmounting the list. */
 function parseReportOrderId(id: string | undefined): number | null {
@@ -32,8 +31,7 @@ function parseReportOrderId(id: string | undefined): number | null {
 }
 
 export const ReportList: React.FC = () => {
-  const { status: configStatus } = useClientConfig();
-  const listTitles = useMemo(() => getModuleListTitles(), [configStatus]);
+  const listTitles = useModuleListTitles();
   const navigate = useNavigate();
   const { id: routeOrderId } = useParams<{ id?: string }>();
   const deepLinkOrderId = parseReportOrderId(routeOrderId);

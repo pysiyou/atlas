@@ -9,7 +9,7 @@ import {
   useLabQueueFilterBarProps,
   useLabQueuePageFilters,
 } from '../hooks';
-import type { CollectionQueueRow } from '@/types/domain/labOperations';
+import type { CollectionQueueRow } from '@/types';
 import { LAB_CONFIG } from '../constants';
 import { useCollectSample } from '../api/samples';
 import { useCollectionWorklist } from '../api/worklists';
@@ -19,7 +19,7 @@ import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { getCollectionFilterConfig } from '../constants';
-import { useClientConfig } from '@/config/ClientConfigContext';
+import { useClientConfig } from '@/config/clientConfigHooks';
 import { worklistItemToQueueRow } from '../utils/worklistMappers';
 import { getEmptyCopy, emptySubtitle } from '@/components/display';
 import { ErrorBoundary } from '@/feedback';
@@ -28,11 +28,8 @@ import { useTestCatalog } from '@/features/catalog';
 import { useClientListChrome } from '@/hooks';
 
 export const SampleCollectionQueue: React.FC = () => {
-  const { status: configStatus } = useClientConfig();
-  const collectionFilterConfig = useMemo(
-    () => getCollectionFilterConfig(),
-    [configStatus],
-  );
+  useClientConfig();
+  const collectionFilterConfig = getCollectionFilterConfig();
   const { user: currentUser } = useAuthStore();
   const collectSampleMutation = useCollectSample();
   const breakpoint = useBreakpoint();

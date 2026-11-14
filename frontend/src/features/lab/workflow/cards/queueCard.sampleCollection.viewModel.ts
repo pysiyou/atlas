@@ -3,7 +3,7 @@
  */
 
 import { CONTAINER_TOP_COLOR_OPTIONS, type Sample, type RejectedSample } from '@/types';
-import type { SampleCollectionQueueItem } from '@/types/domain/labOperations';
+import type { SampleCollectionQueueItem } from '@/types';
 import { getEffectiveContainerType } from '../../utils';
 import { isLabActionAllowed, labDisabledActionTooltip } from '../../utils/queueDisplay';
 

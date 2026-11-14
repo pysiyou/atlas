@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { dateStringSchema, positiveIntSchema } from '@/types/validation';
-import { zEnumFromValues } from '@/types/validation';
-import { PAYMENT_METHOD_VALUES, PAYMENT_STATUS_VALUES, type PaymentMethod } from '@/types/contracts/enums';
+import { dateStringSchema, positiveIntSchema } from '@/types/zod';
+import { zEnumFromValues } from '@/types/zod';
+import { PAYMENT_METHOD_VALUES, PAYMENT_STATUS_VALUES, type PaymentMethod } from '@/types/generated/enums';
 
 export type { PaymentMethod };
 

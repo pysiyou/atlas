@@ -4,8 +4,9 @@ import { Popover } from '@/components/overlays';
 import { cn, displayId } from '@/utils';
 import { text, inputBase } from '@/theme/recipes';
 import { PopoverFormChrome, RadioCard } from '@/components/overlays';
-import type { FeedbackId } from '@/types/contracts/feedbackCatalog';
-import type { CriticalReadBackPayload, EscalationResolutionAction } from '@/types/domain/labOperations';
+import type { FeedbackId } from '@/types/generated/feedback';
+import type { CriticalReadBackPayload } from '@/types';
+import type { EscalationResolutionAction } from '@/types';
 import { RETEST_PATH_RADIO_COPY } from '../constants/qualityIssuePopoverCopy';
 import { ResolutionPopover } from './escalationResolutionPopover.chrome';
 

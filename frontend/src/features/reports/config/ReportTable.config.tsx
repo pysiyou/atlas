@@ -14,7 +14,7 @@ import {
   renderNavigableOrderId,
   renderReportableOrderTestsCell,
 } from '@/features/shared/entityPresentation';
-import type { ReportableOrder } from '@/types/domain/report';
+import type { ReportableOrder } from '@/types';
 import { ReportRowActionsMenu } from '../components/ReportRowActionsMenu';
 import { ValidatedTestReportCard } from '../components/ValidatedTestReportCard';
 import { INTERACTIVE } from '@/theme/recipes';

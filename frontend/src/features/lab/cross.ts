@@ -6,7 +6,7 @@ export type {
   SampleCollectionQueueItem,
   SampleCollectionRequirement,
   SampleRequirement,
-} from '@/types/domain/labOperations';
+} from '@/types';
 export type { PendingEscalationItem } from './api/results';
 
 export { sampleAPI, useSampleLookup, createSampleLookupForOrder } from './api/samples';

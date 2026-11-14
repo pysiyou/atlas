@@ -8,7 +8,7 @@ import {
   PRESENTATION_BADGE_VARIANTS,
   PRESENTATION_DISPLAY_LABELS,
   type CanonicalPresentationPrimary,
-} from '@/types/contracts/enums/presentation';
+} from '@/types/generated/enums';
 import type { StatusPresentation } from '@/lib/api/types';
 import { Text } from '@/components/layout/Text';
 import { PRESENTATION_STACK_CLASS } from '@/theme/recipes';

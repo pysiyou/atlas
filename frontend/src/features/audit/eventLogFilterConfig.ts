@@ -2,9 +2,9 @@
  * Event log filter field lists, kind options, and UI placeholders.
  */
 import type { EventLogFilterField } from './types';
-import type { EventLogKind } from '@/types/contracts/auditEventTaxonomy';
+import type { EventLogKind } from '@/types/generated/audit';
 
-export { EVENT_LOG_KIND_OPTIONS } from '@/types/contracts/auditEventTaxonomy';
+export { EVENT_LOG_KIND_OPTIONS } from '@/types/generated/audit';
 
 export const GLOBAL_EVENT_LOG_FILTER_FIELDS: EventLogFilterField[] = [
   'search',

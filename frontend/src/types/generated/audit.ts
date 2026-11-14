@@ -1,6 +1,38 @@
-/**
- * Audit event definitions — GENERATED from contracts/audit-events.json. DO NOT EDIT.
- */
+/** GENERATED audit bundle — from contracts/audit-events.json. DO NOT EDIT. */
+
+// --- audit-taxonomy.ts ---
+export type EventLogDomain = "patient" | "order" | "laboratory" | "billing" | "reporting" | "system";
+
+export type EventLogLaboratoryKindKey = "laboratory:sample" | "laboratory:result" | "laboratory:validation" | "laboratory:escalation" | "laboratory:quality" | "laboratory:analyzer";
+
+export type EventLogKind = EventLogDomain | EventLogLaboratoryKindKey;
+
+export type StoredEventScope = "order" | "lab" | "patient" | "system";
+
+export type EventLogLaboratorySubdomain = (typeof LABORATORY_SUBDOMAIN_VALUES)[number];
+
+export const LABORATORY_SUBDOMAIN_VALUES = ["sample","result","validation","escalation","quality","analyzer"] as const;
+
+export const EVENT_LOG_KIND_OPTIONS: { id: EventLogKind; label: string }[] = [
+  { id: "patient", label: "Patient" },
+  { id: "order", label: "Order" },
+  { id: "laboratory", label: "Laboratory" },
+  { id: "billing", label: "Billing" },
+  { id: "reporting", label: "Reporting" },
+  { id: "system", label: "System" },
+  { id: "laboratory:sample", label: "Laboratory · Sample" },
+  { id: "laboratory:result", label: "Laboratory · Results" },
+  { id: "laboratory:validation", label: "Laboratory · Validation" },
+  { id: "laboratory:escalation", label: "Laboratory · Escalation" },
+  { id: "laboratory:quality", label: "Laboratory · Quality" },
+  { id: "laboratory:analyzer", label: "Laboratory · Analyzer" },
+];
+
+export const ACCESS_EVENT_TYPES = ["patient.view","reporting.download"] as const;
+
+export const DEFAULT_STORED_EVENT_SCOPE = "order" as const;
+
+// --- audit-definitions.ts ---
 export type AuditEventWire = "patient.create" | "patient.update" | "patient.delete" | "patient.view" | "order.create" | "order.update" | "order.status" | "order.delete" | "order.test.add" | "order.test.remove" | "order.test.cancel" | "order.test.retest" | "order.test.reflex" | "laboratory.sample.create" | "laboratory.sample.collect" | "laboratory.sample.reject" | "laboratory.sample.recollect_request" | "laboratory.sample.recollect_approve" | "laboratory.sample.recollect_deny" | "laboratory.analyzer.duplicate_ingest" | "laboratory.analyzer.ingest_rejected" | "laboratory.result.enter" | "laboratory.result.update" | "laboratory.result.critical_detect" | "laboratory.result.critical_notify" | "laboratory.result.critical_acknowledge" | "laboratory.validation.approve" | "laboratory.validation.reject" | "laboratory.escalation.trigger" | "laboratory.escalation.resolve" | "billing.payment.process" | "billing.invoice.generate" | "billing.invoice.void" | "billing.insurance.submit" | "reporting.generate" | "reporting.download" | "system.user.login" | "system.user.logout" | "system.user.create" | "system.user.update" | "system.catalog.create" | "system.catalog.update";
 
 export type TrailingActorPolicy = 'human' | 'never';

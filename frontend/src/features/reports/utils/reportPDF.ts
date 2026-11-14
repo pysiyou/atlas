@@ -2,7 +2,7 @@
 import type jsPDF from 'jspdf';
 import { companyConfig } from '@/config';
 import type { Test } from '@/types';
-import type { LabReportPayload, ReportTemplate } from '@/types/domain/report';
+import type { LabReportPayload, ReportTemplate } from '@/types';
 import { drawLabReportBody } from './reportPDFBody';
 import { drawLabReportHeader, drawLabReportPageFooter } from './reportPDFHeader';
 

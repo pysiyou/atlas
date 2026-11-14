@@ -18,15 +18,10 @@ import {
   MediumScreenLayout,
   LargeScreenLayout,
 } from '../components/OrderDetailLayouts';
-import { getModuleListTitles } from '@/config/pageCopy';
-import { useClientConfig } from '@/config/ClientConfigContext';
+import { useModuleListTitles } from '@/config/useModuleListTitles';
 
 export const OrderDetail: React.FC = () => {
-  const { status: configStatus } = useClientConfig();
-  const orderLabel = React.useMemo(
-    () => getModuleListTitles().orderDetail,
-    [configStatus],
-  );
+  const orderLabel = useModuleListTitles().orderDetail;
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { isSmall, isMedium, isLarge } = useResponsiveLayout();

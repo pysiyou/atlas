@@ -2,7 +2,7 @@
  * Serializable modal frames. Context never stores functions, drafts, or entity blobs.
  */
 
-import type { ReportPreviewResultsLayout } from '@/types/domain/report';
+import type { ReportPreviewResultsLayout } from '@/types';
 import type { EntryWorklistItem, ValidationWorklistItem } from '@/lib/api/types';
 import type { PendingEscalationItem } from '@/features/lab/cross';
 

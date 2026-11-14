@@ -4,7 +4,7 @@
 import { apiClient } from '@/lib/api/client';
 import { expectArray } from '@/lib/api/errors';
 import { REFERENCE_DATA_LIMIT } from '@/lib/api/constants';
-import type { AffiliationPricing } from '@/types/domain/affiliation';
+import type { AffiliationPricing } from '@/types';
 import type { AffiliationDuration } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import { queryKeys, cacheConfig } from '@/lib/query';

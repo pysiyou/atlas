@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Generate frontend/src/types/contracts/feedbackCatalog.ts from contracts/feedback.json.
+ * Generate frontend/src/types/generated/feedback.ts from contracts/feedback.json.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 const feedbackPath = path.join(root, 'contracts', 'feedback.json');
-const outPath = path.join(root, 'frontend', 'src', 'types', 'contracts', 'feedbackCatalog.ts');
+const outPath = path.join(root, 'frontend', 'src', 'types', 'generated', 'feedback.ts');
 
 const data = JSON.parse(fs.readFileSync(feedbackPath, 'utf-8'));
 const entries = data.entries;

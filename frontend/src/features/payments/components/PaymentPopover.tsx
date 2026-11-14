@@ -20,10 +20,11 @@ import { OrderReceipt } from '@/features/orders';
 import { text, inputBase, FORM_FIELD_LABEL } from '@/theme/recipes';
 import { TONE } from '@/theme/recipes';
 import type { Order } from '@/types';
+import type { PaymentMethod } from '@/types';
 import {
   getEnabledPaymentMethods,
   getDefaultPaymentMethod,
-  type PaymentMethod } from '@/types/domain/payments';
+} from '@/features/payments/constants/paymentMethods';
 import { useCreatePayment, useOrderRemainingBalance } from '../api/payments';
 import { feedbackTitle, getFeedback, notify } from '@/feedback';
 import { IconKeys } from '@/config/icons';

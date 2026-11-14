@@ -13,7 +13,7 @@ import {
 } from '@/features/orders';
 import type { Order, OrderTest, Patient, Sample, Test } from '@/types';
 import { text } from '@/theme/recipes';
-import type { QualityIssueResult } from '@/types/domain/labOperations';
+import type { QualityIssueResult } from '@/types';
 import type { LabModalWorkItem } from '../../types/labQueueChrome';
 import type { CriticalValueRecord } from '../../criticalValues/criticalValues';
 import { useSampleRejectionDisplay } from '../../hooks/useSampleRejectionDisplay';

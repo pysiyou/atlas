@@ -5,7 +5,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import { loadClientConfig, applyBranding, type ClientConfig } from '@/config/clientConfig';
-import { ClientConfigProvider } from '@/config/ClientConfigContext';
+import { ClientConfigProvider } from '@/config/ClientConfigProvider';
 import { setThemeMode, type ThemeName } from '@/theme/theme';
 
 type ConfigStatus = 'loading' | 'ready' | 'error';
@@ -37,7 +37,9 @@ export const ConfigLoader: React.FC<ConfigLoaderProps> = ({ children }) => {
             
             // Only apply if no theme is already stored (first visit)
             if (!localStorage.getItem('atlas-theme')) {
-              console.log(`Applying default theme from config: ${themeName} (${mode})`);
+              if (import.meta.env.DEV) {
+                console.warn(`Applying default theme from config: ${themeName} (${mode})`);
+              }
               setThemeMode(mode);
             }
           } else {

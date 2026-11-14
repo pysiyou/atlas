@@ -6,13 +6,13 @@ import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
 import { withPaginatedParams } from '@/lib/api/pagination';
 import type { ApiReportableOrderItem } from '@/lib/api/types';
 import type { Order } from '@/types';
-import type { PaginatedResponse } from '@/types/domain/pagination';
+import type { PaginatedResponse } from '@/types';
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { useResettablePage } from '@/hooks/useResettablePage';
 import { usePaginatedPageSize } from '@/hooks/usePaginatedPageSize';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
-import type { ReportableOrder } from '@/types/domain/report';
+import type { ReportableOrder } from '@/types';
 import { calculateAge } from '@/utils';
 
 export type ReportableOrderItem = ApiReportableOrderItem & {

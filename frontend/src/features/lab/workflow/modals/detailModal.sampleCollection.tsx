@@ -12,7 +12,7 @@ import { useUserLookup } from '@/lib/api/users';
 import { useOrder } from '@/features/orders';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
 import { getTestNames } from '@/features/catalog/testLookup';
-import type { SampleCollectionQueueItem } from '@/types/domain/labOperations';
+import type { SampleCollectionQueueItem } from '@/types';
 import { deriveCollectionModalFields } from '@/utils/presentation';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Modal, ModalPageShell } from '@/components/overlays';

@@ -2,7 +2,7 @@
  * Whether a reportable order is eligible for PDF download/print.
  */
 import type { OrderStatus } from '@/types';
-import type { ReportableOrder } from '@/types/domain/report';
+import type { ReportableOrder } from '@/types';
 
 /** Resolve rollup status from list rows or hydrated detail payloads. */
 export function getReportableOrderOverallStatus(

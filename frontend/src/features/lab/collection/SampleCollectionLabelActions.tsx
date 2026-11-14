@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax -- isolated print document HTML/CSS strings */
 import type { Sample } from '@/types';
-import { SAMPLE_TYPE_CONFIG, type SampleType } from '@/types/contracts/enums';
+import { SAMPLE_TYPE_CONFIG, type SampleType } from '@/types/generated/enums';
 import { displayId } from '@/utils';
 import { formatDateTime } from '@/utils/date';
 import { feedbackTitle } from '@/feedback';

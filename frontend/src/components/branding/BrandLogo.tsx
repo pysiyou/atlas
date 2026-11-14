@@ -11,9 +11,19 @@
  */
 
 import React from 'react';
-import { useClientConfig } from '@/config/ClientConfigContext';
+import { useClientConfig } from '@/config/clientConfigHooks';
 import { Icon } from '@/components/primitives/Icon';
 import { parseIconKey, type IconKey } from '@/config/icons';
+
+function logoPathToIconKey(logoPath: string): IconKey | null {
+  if (!logoPath.startsWith('/icons/')) return null;
+  const iconName = logoPath.replace('/icons/', '').replace('.svg', '');
+  try {
+    return parseIconKey(iconName) as IconKey;
+  } catch {
+    return null;
+  }
+}
 
 export interface BrandLogoProps {
   /** Additional CSS classes for sizing and styling */
@@ -39,22 +49,9 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({ className = '', alt }) => 
   const logoPath = config.branding.logoPath;
   const logoAlt = alt || config.company.displayName;
   
-  // Check if logoPath matches icon registry format (starts with /icons/)
-  if (logoPath.startsWith('/icons/')) {
-    try {
-      // Extract the icon name from path (e.g., /icons/here.svg -> here)
-      const iconName = logoPath.replace('/icons/', '').replace('.svg', '');
-      
-      // Try to parse as IconKey
-      const iconKey = parseIconKey(iconName) as IconKey;
-      
-      if (iconKey) {
-        return <Icon iconKey={iconKey} className={className} />;
-      }
-    } catch (error) {
-      // If parsing fails, fall through to img tag
-      console.warn('Failed to parse logo path as IconKey, using img tag:', error);
-    }
+  const iconKey = logoPathToIconKey(logoPath);
+  if (iconKey) {
+    return <Icon iconKey={iconKey} className={className} />;
   }
   
   // Fallback to img tag for external paths or non-registry icons
