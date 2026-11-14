@@ -87,19 +87,10 @@ export default defineConfig([
         patterns: [
           {
             group: [
-              '@/types/domain/entities',
-              '@/types/domain/models',
+              '@/types/domain/**',
               '@/types/contracts/**',
-              '@/types/contracts/*',
-              '@/types/entities/**',
-              '@/types/entities/*',
-              '@/types/models/**',
-              '@/types/models/*',
-              '@/types/validation',
-              '@/types/validation/**',
-              '@/types/schemas/**',
             ],
-            message: 'Use @/types for entities/models, @/types/generated/* for catalogs, @/types/zod for Zod.',
+            message: 'See types/index.ts (Import rules). Use @/types, @/types/generated/*, or @/types/zod.',
           },
           {
             group: [
@@ -150,19 +141,10 @@ export default defineConfig([
         patterns: [
           {
             group: [
-              '@/types/domain/entities',
-              '@/types/domain/models',
+              '@/types/domain/**',
               '@/types/contracts/**',
-              '@/types/contracts/*',
-              '@/types/entities/**',
-              '@/types/entities/*',
-              '@/types/models/**',
-              '@/types/models/*',
-              '@/types/validation',
-              '@/types/validation/**',
-              '@/types/schemas/**',
             ],
-            message: 'Use @/types for entities/models, @/types/generated/* for catalogs, @/types/zod for Zod.',
+            message: 'See types/index.ts (Import rules). Use @/types, @/types/generated/*, or @/types/zod.',
           },
           {
             group: [

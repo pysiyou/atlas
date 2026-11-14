@@ -7,8 +7,8 @@
  *   (also invalidates worklists when samples !== false)
  * - Patients: create/update/delete → invalidatePatientQueries
  * - Lab result mutations (entry/validate/escalate/reject/critical UI) → invalidateAfterLabMutation
- * - Critical values (legacy direct) → invalidateCriticalValueQueries
- * - Quality issues (legacy direct) → invalidateQualityIssueQueries
+ * - Critical values → invalidateCriticalValueQueries
+ * - Quality issues → invalidateQualityIssueQueries
  * - Collection: collect sample → invalidateCollectionQueries
  * - Lab monitor board → invalidateLabMonitorQueries
  * - Worklists + lab tab counts: queue changes → invalidateWorklistQueries (also refreshes board)
@@ -272,31 +272,6 @@ export function invalidateAfterLabMutation(
       return Promise.resolve(_exhaustive);
     }
   }
-}
-
-export interface InvalidateLabWorkflowOptions {
-  orderId?: string | number;
-  criticalValues?: boolean;
-  pendingEscalation?: boolean;
-}
-
-/** @deprecated Prefer invalidateAfterLabMutation from lab feature code. */
-export function invalidateLabWorkflowQueries(
-  client: QueryClient,
-  options: InvalidateLabWorkflowOptions = {}
-): Promise<void> {
-  const { orderId, criticalValues = false, pendingEscalation = false } = options;
-  const tasks: Array<Promise<unknown>> = [
-    invalidateOrderQueries(client, { orderId, samples: true, payments: false }),
-    invalidateLabMonitorQueriesFull(client),
-  ];
-  if (criticalValues) {
-    tasks.push(client.invalidateQueries({ queryKey: queryKeys.criticalValues.all }));
-  }
-  if (pendingEscalation) {
-    tasks.push(client.invalidateQueries({ queryKey: queryKeys.results.pendingEscalation() }));
-  }
-  return settleInvalidations(tasks);
 }
 
 export function invalidateSampleDetailQueries(

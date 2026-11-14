@@ -1,6 +1,8 @@
-/** GENERATED enum bundle — from contracts/*.json. DO NOT EDIT. */
+/** GENERATED — DO NOT EDIT. Source: contracts/enums.json */
 
-// --- affiliation ---
+// =============================================================================
+// affiliation
+// =============================================================================
 export const AFFILIATION_DURATION_VALUES = [6, 12, 24] as const;
 
 export type AffiliationDuration = (typeof AFFILIATION_DURATION_VALUES)[number];
@@ -16,7 +18,9 @@ export const AFFILIATION_DURATION_OPTIONS = AFFILIATION_DURATION_VALUES.map(valu
   label: AFFILIATION_DURATION_CONFIG[value].label,
 }));
 
-// --- billing ---
+// =============================================================================
+// billing
+// =============================================================================
 export const CLAIM_STATUS_VALUES = ["submitted", "processing", "approved", "denied", "paid"] as const;
 
 export type ClaimStatus = (typeof CLAIM_STATUS_VALUES)[number];
@@ -34,7 +38,9 @@ export const CLAIM_STATUS_OPTIONS = CLAIM_STATUS_VALUES.map(value => ({
   label: CLAIM_STATUS_CONFIG[value].label,
 }));
 
-// --- container-enums ---
+// =============================================================================
+// container-enums
+// =============================================================================
 export const CONTAINER_TYPE_VALUES = ["tube", "cup"] as const;
 
 export type ContainerType = (typeof CONTAINER_TYPE_VALUES)[number];
@@ -73,7 +79,9 @@ export const CONTAINER_TOP_COLOR_OPTIONS = CONTAINER_TOP_COLOR_VALUES.map(value 
   label: CONTAINER_TOP_COLOR_CONFIG[value].label,
 }));
 
-// --- container-catalog ---
+// =============================================================================
+// container-catalog
+// =============================================================================
 export const CONTAINER_CATALOG_VALUES = ["red-top","lavender-top","green-top","blue-top","yellow-top","gray-top","light-blue-top","pink-top","black-top","orange-top","royal-blue-top","white-top","tan-top","urine-cup","stool-container","swab-tube","gold-top","tiger-top","clear-top","cup","tube","other"] as const;
 
 export type ContainerCatalogId = (typeof CONTAINER_CATALOG_VALUES)[number];
@@ -143,7 +151,9 @@ export const FRONTEND_TO_BACKEND_COLOR: Record<string, ContainerTopColor> = {
   "tan-top": "orange",
 };
 
-// --- gender ---
+// =============================================================================
+// gender
+// =============================================================================
 export const GENDER_VALUES = ["male", "female"] as const;
 
 export type Gender = (typeof GENDER_VALUES)[number];
@@ -163,7 +173,9 @@ export const GENDER_FILTER_OPTIONS = [
   ...GENDER_OPTIONS,
 ];
 
-// --- lab-quality ---
+// =============================================================================
+// lab-quality
+// =============================================================================
 export const QUALITY_STAGE_VALUES = ["collection", "validation"] as const;
 
 export type QualityStage = (typeof QUALITY_STAGE_VALUES)[number];
@@ -286,7 +298,9 @@ export const ESCALATION_RESOLUTION_ACTION_OPTIONS = ESCALATION_RESOLUTION_ACTION
   label: ESCALATION_RESOLUTION_ACTION_CONFIG[value].label,
 }));
 
-// --- order ---
+// =============================================================================
+// order
+// =============================================================================
 export const ORDER_STATUS_VALUES = ["ordered", "running", "completed", "partial-results", "cancelled"] as const;
 
 export type OrderStatus = (typeof ORDER_STATUS_VALUES)[number];
@@ -368,7 +382,9 @@ export const PAYMENT_METHOD_CONFIG: Record<PaymentMethod, { label: string; enabl
   "mobile": { label: "Mobile", enabled: true, iconKey: "dataFields.phone" },
 };
 
-// --- presentation ---
+// =============================================================================
+// presentation
+// =============================================================================
 export const PRESENTATION_PRIMARY_VALUES = ["pending", "blocked", "in_progress", "partial_results", "completed", "cancelled", "superseded", "removed", "escalated", "rejected"] as const;
 
 export type PresentationPrimary = (typeof PRESENTATION_PRIMARY_VALUES)[number];
@@ -402,7 +418,9 @@ export const PRESENTATION_DISPLAY_LABELS = Object.fromEntries(
 export type CanonicalPresentationPrimary = PresentationPrimary;
 export const CANONICAL_PRIMARY_VALUES = PRESENTATION_PRIMARY_VALUES;
 
-// --- rejection ---
+// =============================================================================
+// rejection
+// =============================================================================
 export const REJECTION_REASON_VALUES = ["hemolyzed", "clotted", "qns", "wrong_container", "labeling_error", "transport_delay", "contaminated", "lipemic", "icteric", "other"] as const;
 
 export type RejectionReason = (typeof REJECTION_REASON_VALUES)[number];
@@ -425,7 +443,9 @@ export const REJECTION_REASON_OPTIONS = REJECTION_REASON_VALUES.map(value => ({
   label: REJECTION_REASON_CONFIG[value].label,
 }));
 
-// --- relationship ---
+// =============================================================================
+// relationship
+// =============================================================================
 export const RELATIONSHIP_VALUES = ["spouse", "parent", "sibling", "child", "friend", "other"] as const;
 
 export type Relationship = (typeof RELATIONSHIP_VALUES)[number];
@@ -449,7 +469,9 @@ export const RELATIONSHIP_FILTER_OPTIONS = [
   ...RELATIONSHIP_OPTIONS,
 ];
 
-// --- result ---
+// =============================================================================
+// result
+// =============================================================================
 export const RESULT_STATUS_VALUES = ["normal", "high", "low", "critical", "critical-high", "critical-low"] as const;
 
 export type ResultStatus = (typeof RESULT_STATUS_VALUES)[number];
@@ -468,7 +490,9 @@ export const RESULT_STATUS_OPTIONS = RESULT_STATUS_VALUES.map(value => ({
   label: RESULT_STATUS_CONFIG[value].label,
 }));
 
-// --- sample ---
+// =============================================================================
+// sample
+// =============================================================================
 export const SAMPLE_STATUS_VALUES = ["pending", "collected", "rejected"] as const;
 
 export type SampleStatus = (typeof SAMPLE_STATUS_VALUES)[number];
@@ -526,7 +550,9 @@ export const DERIVED_SAMPLE_TYPES = SAMPLE_TYPE_VALUES.filter(
   type => SAMPLE_TYPE_CONFIG[type].isDerived
 );
 
-// --- test ---
+// =============================================================================
+// test
+// =============================================================================
 export const TEST_STATUS_VALUES = ["pending", "sample-collected", "resulted", "validated", "cancelled", "escalated", "superseded", "removed"] as const;
 
 export type TestStatus = (typeof TEST_STATUS_VALUES)[number];
@@ -552,7 +578,9 @@ export const TEST_STATUS_FILTER_OPTIONS = [
   ...TEST_STATUS_OPTIONS,
 ];
 
-// --- user ---
+// =============================================================================
+// user
+// =============================================================================
 export const USER_ROLE_VALUES = ["administrator", "receptionist", "lab-technician", "lab-technician-plus"] as const;
 
 export type UserRole = (typeof USER_ROLE_VALUES)[number];
@@ -571,7 +599,9 @@ export const USER_ROLE_OPTIONS = USER_ROLE_VALUES.map(value => ({
 
 export const ALL_ROLES = [...USER_ROLE_VALUES] as UserRole[];
 
-// --- validation ---
+// =============================================================================
+// validation
+// =============================================================================
 export const VALIDATION_DECISION_VALUES = ["approved", "rejected"] as const;
 
 export type ValidationDecision = (typeof VALIDATION_DECISION_VALUES)[number];

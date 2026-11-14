@@ -40,7 +40,7 @@ const typeUnion = ids.map(id => `  | ${JSON.stringify(id)}`).join('\n');
 const catalogBody = ids.map(formatEntry).join('\n');
 
 const output = `/**
- * User feedback catalog — GENERATED from contracts/feedback.json. DO NOT EDIT.
+ * GENERATED — DO NOT EDIT. Regenerate: npm run codegen:feedback (contracts/feedback.json)
  */
 export type FeedbackChannel = 'toast' | 'inline';
 export type FeedbackVariant = 'success' | 'error' | 'warning' | 'info' | 'danger';

@@ -1,14 +1,37 @@
 /**
- * Type layers:
- * - This barrel: contract enums + entity/model types
- * - `@/types/generated/*` — generated catalogs (feedback, policies, audit, enums)
- * - `./domain/*` — hand-written entities and view models (import via `@/types`)
- * - `@/types/zod` — shared Zod schemas
- * - `@/lib/api/types` — OpenAPI DTOs
+ * Atlas frontend types — style spec and public barrel.
+ *
+ * ## Layers (import rules)
+ * - `@/types` — app entities, view models, and contract enums (this barrel).
+ * - `@/types/generated/{enums,feedback,policies,audit}` — generated catalogs (do not import
+ *   policies/feedback/audit from `@/types` unless added here intentionally).
+ * - `@/types/zod` — shared Zod schemas and API error shapes.
+ * - `@/lib/api/types` — OpenAPI wire DTOs (never copy into `domain/`).
+ *
+ * ## Naming
+ * - Interfaces / type aliases: PascalCase (`Patient`, `Sample`).
+ * - Contract enums: `Thing`, `THING_VALUES`, `THING_CONFIG`, `THING_OPTIONS`.
+ * - Constants: SCREAMING_SNAKE. Type guards: `isThing`. Helpers: `getThing`, `getThingCount`.
+ * - App fields: camelCase. Catalog JSON wire types: snake_case fields only inside
+ *   types marked “Wire shape (catalog JSON)” in `domain/entities.ts`.
+ * - Prefer generated enum types (e.g. `PriorityLevel`) over string unions on entities.
+ *
+ * ## Domain files
+ * - `domain/entities.ts` — sections: patient → order → sample → user → catalog → payments.
+ * - `domain/models.ts` — sections: lab-workflow → report → pagination.
+ * - Section delimiters and export order: see those files (must match this barrel).
+ *
+ * ## Generated
+ * - `npm run codegen` — OpenAPI types and `generated/feedback.ts`.
+ * - `generated/{enums,policies,audit}.ts` — keep in sync with `contracts/*.json` (no frontend bundler).
+ * - Do not hand-edit generated files except via contract/codegen workflows.
  */
 
 export * from './generated/enums';
 
+// =============================================================================
+// patient
+// =============================================================================
 export type {
   Patient,
   PatientContext,
@@ -19,6 +42,10 @@ export type {
   AffiliationPlan,
   AffiliationPricing,
 } from './domain/entities';
+
+// =============================================================================
+// order
+// =============================================================================
 export type {
   Order,
   OrderTest,
@@ -27,6 +54,10 @@ export type {
   LatestPaymentSnippet,
 } from './domain/entities';
 export { getOrderTests, getOrderTestCount } from './domain/entities';
+
+// =============================================================================
+// sample
+// =============================================================================
 export type {
   Sample,
   PendingSample,
@@ -34,8 +65,15 @@ export type {
   RejectedSample,
 } from './domain/entities';
 export { isCollectedSample, isRejectedSample } from './domain/entities';
+
+// =============================================================================
+// user
+// =============================================================================
 export type { User, AuthUser } from './domain/entities';
-export type { PaginatedResponse, PaginationMeta } from './domain/models';
+
+// =============================================================================
+// catalog
+// =============================================================================
 export type {
   Test,
   TestSummary,
@@ -47,7 +85,15 @@ export type {
   ResultItem,
   TestWithContext,
 } from './domain/entities';
+
+// =============================================================================
+// payments
+// =============================================================================
 export type { Payment, PaymentMethod, Invoice } from './domain/entities';
+
+// =============================================================================
+// lab-workflow
+// =============================================================================
 export type {
   SampleCollectionQueueItem,
   SampleCollectionRequirement,
@@ -62,6 +108,10 @@ export type {
   CriticalReadBackPayload,
   SampleRequirement,
 } from './domain/models';
+
+// =============================================================================
+// report
+// =============================================================================
 export type {
   ReportableOrder,
   LabReportPayload,
@@ -69,3 +119,8 @@ export type {
   ReportPreviewResultsLayout,
 } from './domain/models';
 export { RESULT_NOT_AVAILABLE } from './domain/models';
+
+// =============================================================================
+// pagination
+// =============================================================================
+export type { PaginatedResponse, PaginationMeta } from './domain/models';

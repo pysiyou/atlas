@@ -1,5 +1,6 @@
 /**
  * Composed view models (lab queues, reports, pagination).
+ * Style spec: see `types/index.ts` (sections: lab-workflow → report → pagination).
  */
 import type {
   PaymentStatus,
@@ -17,8 +18,10 @@ import type {
 import type { Sample, Order } from './entities';
 import type { LabWorklistAllowedActions, StatusPresentation } from '@/lib/api/types';
 
-
-// --- lab-workflow ---
+// =============================================================================
+// lab-workflow
+// =============================================================================
+/** Lab queue rows, quality issues, and escalation payloads (not OpenAPI worklist DTOs). */
 
 /** Collection requirement for a sample (shared with modal payloads and lab queue). */
 export interface SampleCollectionRequirement {
@@ -54,17 +57,19 @@ export interface CollectionQueueRow {
   referentDoctorUsername?: string | null;
 }
 
-/** Alias kept for existing lab collection imports. */
+/** Alias for collection queue rows. */
 export type SampleCollectionQueueItem = CollectionQueueRow;
 
-/** Alias used across lab collection code. */
+/** Alias for collection requirements. */
 export type SampleRequirement = SampleCollectionRequirement;
 
+/** Target entity for a quality issue report. */
 export interface QualityIssueTarget {
   type: QualityIssueTargetType;
   id: number;
 }
 
+/** Server-provided options when reporting a quality issue. */
 export interface QualityIssueOptions {
   targetType: QualityIssueTargetType;
   targetId: number;
@@ -93,6 +98,7 @@ export interface QualityIssueOptions {
   sampleRejected?: boolean;
 }
 
+/** Request body when reporting a quality issue. */
 export interface ReportQualityIssueRequest {
   target: QualityIssueTarget;
   reason: string;
@@ -100,6 +106,7 @@ export interface ReportQualityIssueRequest {
   preferredRemedy?: RemedyType;
 }
 
+/** Result returned after reporting a quality issue. */
 export interface QualityIssueResult {
   success: boolean;
   remedy: RemedyType;
@@ -114,6 +121,7 @@ export interface QualityIssueResult {
   escalationRequired: boolean;
 }
 
+/** Persisted quality issue record. */
 export interface QualityIssueRecord {
   id: number;
   orderId: number;
@@ -131,6 +139,7 @@ export interface QualityIssueRecord {
   createdAt: string;
 }
 
+/** Critical value read-back documentation for escalation resolve. */
 export interface CriticalReadBackPayload {
   providerName: string;
   providerContact: string;
@@ -138,6 +147,7 @@ export interface CriticalReadBackPayload {
   readBackConfirmed: boolean;
 }
 
+/** Request to resolve a pending escalation. */
 export interface EscalationResolveRequest {
   action: EscalationResolutionAction;
   validationNotes?: string;
@@ -145,6 +155,7 @@ export interface EscalationResolveRequest {
   readBack?: CriticalReadBackPayload;
 }
 
+/** Result of escalation resolution. */
 export interface EscalationResolveResult {
   success: boolean;
   action: EscalationResolutionAction;
@@ -154,11 +165,12 @@ export interface EscalationResolveResult {
   newSampleId?: number;
 }
 
-// --- report ---
+// =============================================================================
+// report
+// =============================================================================
+/** Report list rows and printable lab report payloads. */
 
-/**
- * ReportableOrder - One lab report row for a non-cancelled order with active tests.
- */
+/** One reportable order row for the reports module. */
 export interface ReportableOrder {
   orderId: number;
   orderDate: string;
@@ -184,9 +196,7 @@ export interface ReportableOrder {
 /** Placeholder shown when a catalog investigation has no result yet. */
 export const RESULT_NOT_AVAILABLE = 'Not available';
 
-/**
- * LabReportPayload - Data structure for lab report preview and printable export.
- */
+/** Data structure for lab report preview and PDF export. */
 export interface LabReportPayload {
   order: Order;
   patientId: number;
@@ -236,6 +246,7 @@ export interface LabReportPayload {
   }>;
 }
 
+/** Client branding options for generated PDFs. */
 export interface ReportTemplate {
   name: string;
   logo?: string;
@@ -244,10 +255,15 @@ export interface ReportTemplate {
   includeSignature: boolean;
 }
 
-/** Report preview layout — same values as lab `ResultsGridLayout`. */
+/** Report preview results layout — matches lab results grid modes. */
 export type ReportPreviewResultsLayout = 'table' | 'grid';
 
-// --- pagination ---
+// =============================================================================
+// pagination
+// =============================================================================
+/** Shared pagination metadata for list API responses. */
+
+/** Page metadata returned with paginated API lists. */
 export interface PaginationMeta {
   page: number;
   pageSize: number;
@@ -257,6 +273,7 @@ export interface PaginationMeta {
   hasPrev: boolean;
 }
 
+/** Standard paginated list response envelope. */
 export interface PaginatedResponse<T> {
   data: T[];
   pagination: PaginationMeta;

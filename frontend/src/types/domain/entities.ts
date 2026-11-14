@@ -1,5 +1,6 @@
 /**
  * Domain entities (hand-written).
+ * Style spec: see `types/index.ts` (sections: patient → order → sample → user → catalog → payments).
  */
 import type {
   Gender,
@@ -19,16 +20,11 @@ import type {
   UserRole,
 } from '../generated/enums';
 
-export {
-  USER_ROLE_VALUES,
-  USER_ROLE_CONFIG,
-  USER_ROLE_OPTIONS,
-  ALL_ROLES,
-} from '../generated/enums';
-export type { UserRole, PaymentMethod };
+// =============================================================================
+// patient
+// =============================================================================
+/** Patient registration, affiliation, and enriched list context. */
 
-
-// --- patient ---
 /** Affiliation pricing from catalog API. */
 export interface AffiliationPricing {
   duration: AffiliationDuration;
@@ -121,7 +117,11 @@ export interface PatientContext extends Patient {
   hasUnpaidOrders: boolean;
 }
 
-// --- order ---
+
+// =============================================================================
+// order
+// =============================================================================
+/** Orders, order tests, results, and batch collection grouping. */
 
 /**
  * Type for result rejection during validation (legacy labels for display only).
@@ -288,9 +288,11 @@ export interface BatchCollectionGroup {
   status: 'not-started' | 'in-progress' | 'completed';
 }
 
-// --- sample ---
-// Sample Types - Physical sample entity
 
+// =============================================================================
+// sample
+// =============================================================================
+/** Physical sample entity (pending, collected, rejected). */
 
 interface BaseSample {
   sampleId: number;
@@ -298,7 +300,7 @@ interface BaseSample {
   sampleType: SampleType;
   testCodes: string[];
   requiredVolume: number;
-  priority: 'low' | 'medium' | 'high' | 'urgent';
+  priority: PriorityLevel;
   requiredContainerTypes: ContainerType[];
   requiredContainerColors: ContainerTopColor[];
   isRecollection?: boolean;
@@ -355,7 +357,11 @@ export function isRejectedSample(sample: Sample): sample is RejectedSample {
   return sample.status === 'rejected';
 }
 
-// --- user ---
+
+// =============================================================================
+// user
+// =============================================================================
+/** Staff users and authenticated session shape. */
 export interface User {
   id: number;
   username: string;
@@ -378,7 +384,11 @@ export interface AuthUser {
   email?: string;
 }
 
-// --- catalog ---
+
+// =============================================================================
+// catalog
+// =============================================================================
+/** Test catalog: app models (camelCase) and wire shapes (catalog JSON). */
 /**
  * Test category types - expanded to match catalog categories
  */
@@ -444,6 +454,7 @@ export interface ReferenceRange {
 /** Registry reason id (contracts/test-catalog.json rejection_criteria entries). */
 export type RejectionReasonId = string;
 
+/** Wire shape (catalog JSON) — snake_case field names. */
 /**
  * Sample requirements from catalog
  */
@@ -473,9 +484,7 @@ export interface ResultItem {
   citations?: string[];
 }
 
-/**
- * Test catalog entry structure (matches JSON)
- */
+/** Wire shape (catalog JSON) — full catalog document. */
 export interface TestCatalogEntry {
   test_code: string;
   display_name: string;
@@ -657,7 +666,14 @@ export interface TestWithContext {
   [key: string]: unknown;
 }
 
-// --- payments ---
+
+// =============================================================================
+// payments
+// =============================================================================
+/** Invoices and payment records. */
+
+export type { PaymentMethod } from '../generated/enums';
+
 export interface InvoiceItem {
   testCode: string;
   testName: string;

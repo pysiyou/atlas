@@ -1,6 +1,8 @@
-/** GENERATED policy bundle — lab, rejection reasons, catalog categories. DO NOT EDIT. */
+/** GENERATED — DO NOT EDIT. Source: contracts/lab.json, rejection-reasons.json, test-catalog.json */
 
-// --- lab-policy.ts ---
+// =============================================================================
+// lab-policy
+// =============================================================================
 import type { FeedbackId } from './feedback';
 
 export const GENERATED_LAB_CONSTANTS = {
@@ -231,7 +233,9 @@ export const REMEDY_PRESENTATION: Record<
   Partial<Record<RemedyPresentationContext, RemedyPresentationFields>>
 >;
 
-// --- rejection-reasons.ts ---
+// =============================================================================
+// rejection-reasons
+// =============================================================================
 export const REJECTION_REASON_BY_ID: Readonly<Record<string, string>> = {
   "aberrant_clotting_curve_repeat_run": "Aberrant clotting curve — repeat run",
   "ambiguous_identification_repeat_workup": "Ambiguous identification — repeat workup",
@@ -351,7 +355,9 @@ export function rejectionReasonDomain(value: string): 'specimen' | 'analytical' 
   return undefined;
 }
 
-// --- catalog-categories.ts ---
+// =============================================================================
+// catalog-categories
+// =============================================================================
 export const TEST_CATEGORY_VALUES = ["biochemistry","coagulation","hematology","microbiology","serology","urinalysis"] as const;
 
 export type GeneratedTestCategory = (typeof TEST_CATEGORY_VALUES)[number];

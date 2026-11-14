@@ -1,6 +1,8 @@
-/** GENERATED audit bundle — from contracts/audit-events.json. DO NOT EDIT. */
+/** GENERATED — DO NOT EDIT. Source: contracts/audit-events.json */
 
-// --- audit-taxonomy.ts ---
+// =============================================================================
+// taxonomy
+// =============================================================================
 export type EventLogDomain = "patient" | "order" | "laboratory" | "billing" | "reporting" | "system";
 
 export type EventLogLaboratoryKindKey = "laboratory:sample" | "laboratory:result" | "laboratory:validation" | "laboratory:escalation" | "laboratory:quality" | "laboratory:analyzer";
@@ -32,7 +34,9 @@ export const ACCESS_EVENT_TYPES = ["patient.view","reporting.download"] as const
 
 export const DEFAULT_STORED_EVENT_SCOPE = "order" as const;
 
-// --- audit-definitions.ts ---
+// =============================================================================
+// definitions
+// =============================================================================
 export type AuditEventWire = "patient.create" | "patient.update" | "patient.delete" | "patient.view" | "order.create" | "order.update" | "order.status" | "order.delete" | "order.test.add" | "order.test.remove" | "order.test.cancel" | "order.test.retest" | "order.test.reflex" | "laboratory.sample.create" | "laboratory.sample.collect" | "laboratory.sample.reject" | "laboratory.sample.recollect_request" | "laboratory.sample.recollect_approve" | "laboratory.sample.recollect_deny" | "laboratory.analyzer.duplicate_ingest" | "laboratory.analyzer.ingest_rejected" | "laboratory.result.enter" | "laboratory.result.update" | "laboratory.result.critical_detect" | "laboratory.result.critical_notify" | "laboratory.result.critical_acknowledge" | "laboratory.validation.approve" | "laboratory.validation.reject" | "laboratory.escalation.trigger" | "laboratory.escalation.resolve" | "billing.payment.process" | "billing.invoice.generate" | "billing.invoice.void" | "billing.insurance.submit" | "reporting.generate" | "reporting.download" | "system.user.login" | "system.user.logout" | "system.user.create" | "system.user.update" | "system.catalog.create" | "system.catalog.update";
 
 export type TrailingActorPolicy = 'human' | 'never';

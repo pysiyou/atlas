@@ -32,8 +32,7 @@ export interface paths {
          * Get Client Config
          * @description Get client-specific configuration.
          *
-         *     This endpoint is public (no auth required) so the frontend
-         *     can load branding/config before user logs in.
+         *     Public (no auth) so the frontend can load branding before login.
          */
         get: operations["get_client_config_api_v1_config_get"];
         put?: never;
@@ -53,10 +52,7 @@ export interface paths {
         };
         /**
          * Validate Config
-         * @description Validate the current configuration file.
-         *
-         *     Checks if the config file exists, is valid JSON, and matches the schema.
-         *     Returns validation errors and warnings.
+         * @description Validate `client-config.json` with the same Pydantic model used at startup.
          */
         get: operations["validate_config_api_v1_config_validate_get"];
         put?: never;
@@ -1555,7 +1551,7 @@ export interface components {
         };
         /**
          * ConfigValidationResult
-         * @description Result of config validation
+         * @description Result of config validation.
          */
         ConfigValidationResult: {
             /** Valid */

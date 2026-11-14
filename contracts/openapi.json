@@ -27,7 +27,7 @@
           "config"
         ],
         "summary": "Get Client Config",
-        "description": "Get client-specific configuration.\n\nThis endpoint is public (no auth required) so the frontend\ncan load branding/config before user logs in.",
+        "description": "Get client-specific configuration.\n\nPublic (no auth) so the frontend can load branding before login.",
         "operationId": "get_client_config_api_v1_config_get",
         "responses": {
           "200": {
@@ -47,7 +47,7 @@
           "config"
         ],
         "summary": "Validate Config",
-        "description": "Validate the current configuration file.\n\nChecks if the config file exists, is valid JSON, and matches the schema.\nReturns validation errors and warnings.",
+        "description": "Validate `client-config.json` with the same Pydantic model used at startup.",
         "operationId": "validate_config_api_v1_config_validate_get",
         "responses": {
           "200": {
@@ -6437,7 +6437,7 @@
           "valid"
         ],
         "title": "ConfigValidationResult",
-        "description": "Result of config validation"
+        "description": "Result of config validation."
       },
       "ContainerTopColor": {
         "type": "string",
