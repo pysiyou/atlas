@@ -5,7 +5,9 @@
 
 import React from 'react';
 import { actionButtonPreset, Icon, IconButton } from '@/components/primitives';
-import { EmptyState, getEmptyCopy, PANEL_EMPTY_STATE } from '@/components/display';
+import { EmptyState } from '@/components/display';
+import { getEmptyCopy, PANEL_EMPTY_STATE } from '@/config';
+
 import { RecordId } from '@/features/shared';
 import { formatDateTime } from '@/utils';
 import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';

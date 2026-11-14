@@ -1,6 +1,6 @@
 /**
  * Filters — bar, modal, and control dispatch (UI only).
- * Placeholders: `@/config/filterPlaceholders`. Hooks: `@/hooks/filters`.
+ * Placeholders: `@/config`. Hooks: `@/hooks/filters`.
  */
 
 export type {

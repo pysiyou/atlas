@@ -1,9 +1,8 @@
 /**
- * Icon registry — single source of truth for semantic icon keys and SVG assets.
- * Components render icons via `<Icon iconKey={IconKeys.actions.close} />`.
+ * Icon registry — semantic keys and SVG asset slugs.
+ * Import via `@/config/icons` only (not from `@/config` barrel).
+ * Style spec: see `config/index.ts`.
  */
-/* eslint-disable max-lines -- semantic key catalog + asset slug list */
-
 import type { ContainerType } from '@/types';
 
 /** Every SVG slug under public/icons/ (filename without .svg). */

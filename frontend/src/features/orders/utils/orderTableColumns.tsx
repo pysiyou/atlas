@@ -14,7 +14,7 @@ import {
   OrderStatusBadge,
 } from '../components/OrderDomainBadges';
 import { StatusValueBadge } from '@/features/shared';
-import { getOrderTableColumnHeaders } from '@/config/pageCopy';
+import { getOrderTableColumnHeaders } from '@/config';
 import { formatPatientSexAgeLine } from '@/utils/presentation';
 import type { Gender } from '@/types';
 import {

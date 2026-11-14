@@ -7,7 +7,7 @@ import React, { type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { text, CHROME, PAGE_HEADER, RADIUS, SURFACE } from '@/theme/recipes';
 import { cn } from '@/utils';
-import { useAppChromeMount } from './appChromeMount';
+import { useAppChromeMount } from '@/config';
 
 export type PageHeaderVariant = 'detail' | 'bar';
 export type PageHeaderPlacement = 'inline' | 'chrome';

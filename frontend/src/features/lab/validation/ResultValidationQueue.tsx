@@ -22,7 +22,7 @@ import {
 } from '../utils/labQueueSecondaryProfiles';
 import type { PriorityLevel, SampleStatus, TestStatus } from '@/types';
 import { getValidationFilterConfig } from '../constants';
-import { useClientConfig } from '@/config/clientConfigHooks';
+import { useClientConfig } from '@/config';
 import { ErrorBoundary } from '@/feedback';
 import { useClientListChrome } from '@/hooks';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';

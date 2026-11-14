@@ -1,15 +1,46 @@
 /**
- * Sidebar menu config and helpers — shared constants/functions so Sidebar.tsx can be component-only for Fast Refresh.
+ * App chrome: sidebar menu and portal mount (React allowed).
+ * Style spec: see config/index.ts.
  */
-
-import React, { type ReactNode } from 'react';
-import { ROUTES } from '@/config';
-import { IconKeys } from '@/config/icons';
+import React, { type ReactNode, createContext, useContext } from 'react';
+import { IconKeys } from '../icons';
 import { Icon } from '@/components/primitives';
 import { ICON_SIZE } from '@/theme/recipes';
-import { getClientConfig, t } from '@/config/clientConfig';
+import { ROUTES } from '../static/routes';
+import { getClientConfig, t } from './client';
 import type { UserRole } from '@/types';
 
+
+// =============================================================================
+// app-chrome-mount
+// =============================================================================
+export const AppChromeMountContext = createContext<HTMLElement | null>(null);
+
+export function useAppChromeMount(): HTMLElement | null {
+  return useContext(AppChromeMountContext);
+}
+
+
+// =============================================================================
+// sidebar-motion
+// =============================================================================
+export const SIDEBAR_MOTION = {
+  width: {
+    type: 'spring' as const,
+    stiffness: 420,
+    damping: 36,
+    mass: 0.85,
+  },
+  label: {
+    duration: 0.22,
+    ease: [0.4, 0, 0.2, 1] as const,
+  },
+} as const;
+
+
+// =============================================================================
+// sidebar-menu
+// =============================================================================
 const navIconClass = ICON_SIZE.sidebarNav.icon;
 
 export interface MenuItem {

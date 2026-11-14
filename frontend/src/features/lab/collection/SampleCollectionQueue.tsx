@@ -19,9 +19,10 @@ import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { getCollectionFilterConfig } from '../constants';
-import { useClientConfig } from '@/config/clientConfigHooks';
+import { useClientConfig } from '@/config';
 import { worklistItemToQueueRow } from '../utils/worklistMappers';
-import { getEmptyCopy, emptySubtitle } from '@/components/display';
+import { getEmptyCopy, emptySubtitle } from '@/config';
+
 import { ErrorBoundary } from '@/feedback';
 import { useAuthStore } from '@/app/authStore';
 import { useTestCatalog } from '@/features/catalog';

@@ -6,6 +6,7 @@ import React, { useMemo, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ModalContextSubtitle } from '@/components/display';
+
 import type { Patient } from '@/types';
 import { patientCreateSchema, type PatientFormInput } from '../schemas/patientFormSchemas';
 import { useCreatePatient, useUpdatePatient } from '../api/patients';
@@ -16,7 +17,7 @@ import {
   patientFormTabForFieldPath,
   resolveFirstPatientFormErrorPath,
 } from '../patientFormNavigation';
-import { getModuleListTitles } from '@/config/pageCopy';
+import { getModuleListTitles } from '@/config';
 
 export interface UseEditPatientFormParams {
   patient?: Patient;

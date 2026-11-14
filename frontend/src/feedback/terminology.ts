@@ -6,7 +6,7 @@ import {
   type FeedbackEntry,
   type FeedbackId,
 } from '@/types/generated/feedback';
-import { getFeedbackTerminologyContext, interpolate } from '@/config/clientConfig';
+import { getFeedbackTerminologyContext, interpolate } from '@/config';
 
 export function applyFeedbackTerminology(entry: FeedbackEntry): FeedbackEntry {
   const terminologyContext = getFeedbackTerminologyContext();

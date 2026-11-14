@@ -4,8 +4,8 @@
  * Loads white-label configuration at app startup and provides it via context
  */
 import React, { useEffect, useState } from 'react';
-import { loadClientConfig, applyBranding, type ClientConfig } from '@/config/clientConfig';
-import { ClientConfigProvider } from '@/config/ClientConfigProvider';
+import { loadClientConfig, applyBranding, type ClientConfig } from '@/config';
+import { ClientConfigProvider } from '@/config';
 import { setThemeMode, type ThemeName } from '@/theme/theme';
 
 type ConfigStatus = 'loading' | 'ready' | 'error';

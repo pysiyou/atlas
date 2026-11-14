@@ -1,6 +1,6 @@
 /**
- * API Configuration
- * Centralized configuration for API client
+ * API client wiring (env-based).
+ * Style spec: see `config/index.ts`.
  */
 
 export const API_CONFIG = {

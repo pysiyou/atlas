@@ -11,7 +11,7 @@
  */
 
 import React from 'react';
-import { useClientConfig } from '@/config/clientConfigHooks';
+import { useClientConfig } from '@/config';
 import { Icon } from '@/components/primitives/Icon';
 import { parseIconKey, type IconKey } from '@/config/icons';
 

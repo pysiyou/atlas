@@ -1,5 +1,97 @@
-import type { PanelPresetDefinition } from './panelLayoutTypes';
+/**
+ * Panel layout preset registry.
+ * Style spec: see config/index.ts.
+ */
+import { SPACING } from '@/theme/recipes';
 
+
+// =============================================================================
+// types
+// =============================================================================
+export type PanelVariant = 'page' | 'pageEmbed' | 'compact' | 'compactEmbed';
+export type PanelScroll = 'default' | 'auto' | 'visible';
+export type PanelSpacing = 'none' | 'compact' | 'normal' | 'relaxed';
+
+export type PanelShellLayout =
+  | 'default'
+  | 'detailShrink'
+  | 'detailFill'
+  | 'detailMinH'
+  | 'gridSpan2'
+  | 'gridSpan2Min'
+  | 'gridSpan2Fill'
+  | 'stackMinHeight'
+  | 'fullWidth'
+  | 'modalShrink';
+
+export type PanelBodyLayout =
+  | 'default'
+  | 'formStack'
+  | 'flexColumn'
+  | 'flexColumnMin'
+  | 'flexColumnFill'
+  | 'embedFlexFill'
+  | 'minH0';
+
+export interface PanelPresetDefinition {
+  /** Static header copy. Empty when `headingSlot` or `hideHeader` is set. */
+  title: string;
+  variant: PanelVariant;
+  scroll?: PanelScroll;
+  spacing?: PanelSpacing;
+  hideHeader?: boolean;
+  /** Header start slot supplies the heading (e.g. per-test report preview). */
+  headingSlot?: boolean;
+  /** Static header caption (right side). Call-site `meta` overrides this. */
+  meta?: string;
+  shellLayout?: PanelShellLayout;
+  bodyLayout?: PanelBodyLayout;
+  maxHeightClass?: string;
+}
+
+
+// =============================================================================
+// tokens
+// =============================================================================
+export const PANEL_SHELL_LAYOUT: Record<PanelShellLayout, string> = {
+  default: '',
+  detailShrink: 'shrink-0',
+  detailFill: 'h-full min-h-0',
+  detailMinH: 'min-h-0',
+  gridSpan2: 'col-span-2',
+  gridSpan2Min: 'col-span-2 min-h-0',
+  gridSpan2Fill: 'col-span-2 h-full min-h-0',
+  stackMinHeight: 'shrink-0 min-h-48',
+  fullWidth: 'w-full',
+  modalShrink: 'h-auto shrink-0',
+};
+
+export const PANEL_BODY_LAYOUT: Record<PanelBodyLayout, string> = {
+  default: '',
+  formStack: 'space-y-space-6',
+  flexColumn: 'flex flex-col',
+  flexColumnMin: 'flex flex-col min-h-0',
+  flexColumnFill: 'flex min-h-0 flex-1 flex-col overflow-hidden',
+  embedFlexFill: 'flex min-h-0 flex-1 flex-col',
+  minH0: 'min-h-0',
+};
+
+export const PANEL_SPACING: Record<PanelSpacing, string> = {
+  none: '',
+  compact: SPACING.stackCompact,
+  normal: SPACING.stackNormal,
+  relaxed: SPACING.stackRelaxed,
+};
+
+export const PANEL_SCROLL = {
+  auto: 'overflow-y-auto',
+  visible: 'overflow-visible',
+} as const;
+
+
+// =============================================================================
+// presets
+// =============================================================================
 const PAGE_VISIBLE: PanelPresetDefinition = {
   title: '',
   variant: 'page',
@@ -168,3 +260,16 @@ export const layoutPanelPresets = {
     scroll: 'auto',
   },
 } as const satisfies Record<string, PanelPresetDefinition>;
+
+
+// =============================================================================
+// registry
+// =============================================================================
+export const PANEL_PRESETS = layoutPanelPresets;
+
+export type PanelPresetId = keyof typeof layoutPanelPresets;
+
+export function getPanelPreset(preset: PanelPresetId): PanelPresetDefinition {
+  return layoutPanelPresets[preset];
+}
+

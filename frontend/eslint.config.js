@@ -94,6 +94,31 @@ export default defineConfig([
           },
           {
             group: [
+              '@/config/domain/**',
+              '@/config/static/**',
+              '@/config/api',
+              '@/config/routes',
+              '@/config/clientConfig',
+              '@/config/clientConfigHooks',
+              '@/config/clientConfigContext',
+              '@/config/company',
+              '@/config/pageCopy',
+              '@/config/filterPlaceholders',
+              '@/config/emptyStateCopy',
+              '@/config/emptyStatePresets',
+              '@/config/useModuleListTitles',
+              '@/config/sidebarMenu',
+              '@/config/sidebarMotion',
+              '@/config/appChromeMount',
+              '@/config/panelLayouts',
+              '@/config/panelLayoutTypes',
+              '@/config/panelLayoutTokens',
+              '@/config/panelLayoutPresets',
+            ],
+            message: 'See config/index.ts (Import rules). Use @/config or @/config/icons.',
+          },
+          {
+            group: [
               '@/features/*/components/*',
               '@/features/*/hooks/*',
               '@/features/*/api/*',
@@ -145,6 +170,31 @@ export default defineConfig([
               '@/types/contracts/**',
             ],
             message: 'See types/index.ts (Import rules). Use @/types, @/types/generated/*, or @/types/zod.',
+          },
+          {
+            group: [
+              '@/config/domain/**',
+              '@/config/static/**',
+              '@/config/api',
+              '@/config/routes',
+              '@/config/clientConfig',
+              '@/config/clientConfigHooks',
+              '@/config/clientConfigContext',
+              '@/config/company',
+              '@/config/pageCopy',
+              '@/config/filterPlaceholders',
+              '@/config/emptyStateCopy',
+              '@/config/emptyStatePresets',
+              '@/config/useModuleListTitles',
+              '@/config/sidebarMenu',
+              '@/config/sidebarMotion',
+              '@/config/appChromeMount',
+              '@/config/panelLayouts',
+              '@/config/panelLayoutTypes',
+              '@/config/panelLayoutTokens',
+              '@/config/panelLayoutPresets',
+            ],
+            message: 'See config/index.ts (Import rules). Use @/config or @/config/icons.',
           },
           {
             group: [
@@ -222,6 +272,18 @@ export default defineConfig([
     files: ['src/types/generated/**', 'src/types/domain/**'],
     rules: {
       'max-lines': 'off',
+    },
+  },
+  {
+    files: ['src/config/domain/**', 'src/config/icons.ts'],
+    rules: {
+      'max-lines': 'off',
+    },
+  },
+  {
+    files: ['src/config/**'],
+    rules: {
+      'no-restricted-imports': 'off',
     },
   },
   {

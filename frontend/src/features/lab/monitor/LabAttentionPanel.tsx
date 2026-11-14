@@ -4,7 +4,9 @@
 
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { EmptyState, getEmptyCopy, DENSE_EMPTY_STATE_TEXT } from '@/components/display';
+import { EmptyState } from '@/components/display';
+import { getEmptyCopy, DENSE_EMPTY_STATE_TEXT } from '@/config';
+
 import { RecordId } from '@/features/shared';
 import { Badge } from '@/components/primitives';
 import { Panel } from '@/components/surfaces';

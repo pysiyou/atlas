@@ -1,9 +1,9 @@
 import React, { type ReactNode } from 'react';
-import type { ClientConfig } from './clientConfig';
 import {
   ClientConfigContext,
+  type ClientConfig,
   type ConfigStatus,
-} from './clientConfigContext';
+} from './domain/client';
 
 interface ClientConfigProviderProps {
   children: ReactNode;

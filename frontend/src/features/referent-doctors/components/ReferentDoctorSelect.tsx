@@ -2,7 +2,8 @@ import React, { useRef, useState } from 'react';
 import { Controller, type Control } from 'react-hook-form';
 import { Icon, RemovableTag, TagChip } from '@/components/primitives';
 import { Input } from '@/components/inputs';
-import { getEmptyCopy } from '@/components/display';
+import { getEmptyCopy } from '@/config';
+
 import { cn, formatPhoneNumber } from '@/utils';
 import {
   text,

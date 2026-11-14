@@ -3,11 +3,12 @@
  * Shared pagination sizes, display limits, empty-state copy, and typography aliases.
  */
 
-import { getEmptyCopy, emptySubtitle, emptyTitle } from '@/config/emptyStateCopy';
+import { getEmptyCopy, emptySubtitle, emptyTitle } from '@/config';
+import { IconKeys } from '@/config/icons';
 
-// ---------------------------------------------------------------------------
-// Pagination & Display Limits
-// ---------------------------------------------------------------------------
+// =============================================================================
+// pagination-limits
+// =============================================================================
 
 export const PAGINATION_SIZES = [10, 20, 50, 100] as const;
 export const DEFAULT_PAGE_SIZE = 20;
@@ -28,9 +29,9 @@ export const AGE_RANGE = {
   MAX: 120,
 } as const;
 
-// ---------------------------------------------------------------------------
-// Empty State
-// ---------------------------------------------------------------------------
+// =============================================================================
+// empty-state-aliases
+// =============================================================================
 
 export const DEFAULT_EMPTY_TITLE = getEmptyCopy().data.title;
 export const DEFAULT_EMPTY_DESCRIPTION = getEmptyCopy().data.description;
@@ -42,15 +43,14 @@ export const DEFAULT_EMPTY_DESCRIPTION_FILTERS = emptySubtitle(
   'results',
   'your filters match records',
 );
-import { IconKeys } from '@/config/icons';
 
 export const DEFAULT_EMPTY_ICON = IconKeys.ui.database;
 export const EMPTY_ICON_SEARCH = IconKeys.actions.search;
 export const DEFAULT_EMPTY_TITLE_NO_MATCHES = emptyTitle('matching results');
 
-// ---------------------------------------------------------------------------
-// Entity ID typography (see theme.css --id-* tokens and .entity-id class)
-// ---------------------------------------------------------------------------
+// =============================================================================
+// entity-id-typography
+// =============================================================================
 
 /** Base entity ID style (patient, order, sample, test, catalog code, etc.). */
 export const ENTITY_ID = 'entity-id';

@@ -8,7 +8,5 @@ export * from './DetailGroup';
 export * from './DetailsTable';
 export * from './detailsTableUtils';
 export * from './EmptyState';
-export { getEmptyCopy, emptySubtitle, emptyTitle } from '@/config/emptyStateCopy';
-export * from '@/config/emptyStatePresets';
 export * from './ModalContextSubtitle';
 export * from './FooterInfo';

@@ -7,10 +7,12 @@
 import React from 'react';
 import type { Patient } from '@/types';
 import { DescriptionItem } from '@/components/display';
+
 import { formatList, formatFamilyHistory, formatLifestyle } from '../utils/patientFormatters';
 import { IconKeys } from '@/config/icons';
 import { TONE } from '@/theme/recipes';
 import { DescriptionColumns } from '@/components/display';
+
 
 export interface MedicalHistorySectionDisplayProps {
   patient: Patient;

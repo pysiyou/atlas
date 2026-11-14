@@ -4,6 +4,7 @@
 import type { FC, ReactNode } from 'react';
 import { Popover, PopoverFormChrome, type PopoverFormChromeProps } from '@/components/overlays';
 import { FooterInfo } from '@/components/display';
+
 import { IconKeys } from '@/config/icons';
 import { LAB_CONFIG } from '../constants/labConstants';
 

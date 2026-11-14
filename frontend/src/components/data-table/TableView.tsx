@@ -5,8 +5,9 @@
 import { type ReactNode, useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { EmptyState } from '@/components/display';
+
 import type { IconKey } from '@/config/icons';
-import { PANEL_EMPTY_STATE, DENSE_EMPTY_STATE } from '@/config/emptyStatePresets';
+import { PANEL_EMPTY_STATE, DENSE_EMPTY_STATE } from '@/config';
 import { DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';
 import { cn } from '@/utils';
 import type { ColumnConfig, SortConfig, TableVariant } from './types';

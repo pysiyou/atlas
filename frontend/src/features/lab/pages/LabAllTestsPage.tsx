@@ -2,10 +2,12 @@
  * All order tests — server-paginated registry sorted by last modified.
  */
 import React, { useCallback, useMemo } from 'react';
-import { getEmptyCopy } from '@/config/emptyStateCopy';
+import { getEmptyCopy } from '@/config';
 import { ListView } from '@/components/surfaces';
 import { EmptyState } from '@/components/display';
-import { PANEL_EMPTY_STATE } from '@/components/display';
+
+import { PANEL_EMPTY_STATE } from '@/config';
+
 import { LIST_PAGE_SIZE_OPTIONS } from '@/lib/api/constants';
 import { FeatureFilterBar } from '@/components/filters';
 import { usePageFilters, useServerListChrome } from '@/hooks';
@@ -18,7 +20,7 @@ import { cn } from '@/utils';
 import { SPLIT_ROW_INTERACTIVE } from '@/theme/recipes';
 import { LAB_CONFIG, getLabCopy } from '../constants/labConstants';
 import { getAllTestsFilterConfig } from '../constants/labFilterConfigs';
-import { useClientConfig } from '@/config/clientConfigHooks';
+import { useClientConfig } from '@/config';
 import { useAllTestsWorklist, WORKLIST_PAGE_SIZE } from '../api/worklists';
 import { createLabOrdersTableConfig } from '../monitor/LabOrdersTable.config';
 import { mapDashboardWorklistRow } from '../monitor/labOrderTableRow';

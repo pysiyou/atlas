@@ -7,9 +7,11 @@
 import { type ReactNode } from 'react';
 import { DataTable, type TableViewConfig } from '@/components/data-table';
 import { DEFAULT_PAGE_SIZE_OPTIONS } from '@/components/data-table';
-import { EmptyState, PANEL_EMPTY_STATE } from '@/components/display';
+import { EmptyState } from '@/components/display';
+import { PANEL_EMPTY_STATE } from '@/config';
+
 import { PageHeader } from '@/components/layout';
-import { emptyTitle } from '@/config/emptyStateCopy';
+import { emptyTitle } from '@/config';
 import { DEFAULT_EMPTY_DESCRIPTION_SEARCH } from '@/utils/constants';
 import type { ListViewPaginationConfig, PaginationConfig, SortConfig } from '@/components/data-table';
 import { PANEL, WORKSPACE } from '@/theme/recipes';

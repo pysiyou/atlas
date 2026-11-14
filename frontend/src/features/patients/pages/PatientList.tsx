@@ -18,7 +18,7 @@ import { useServerListChrome } from '@/hooks';
 import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
 import type { PatientContext, Gender } from '@/types';
 import { EditPatientModal } from '../components/EditPatientModal';
-import { useModuleListTitles } from '@/config/useModuleListTitles';
+import { useModuleListTitles } from '@/config';
 
 export const PatientList: React.FC = () => {
   const listTitles = useModuleListTitles();

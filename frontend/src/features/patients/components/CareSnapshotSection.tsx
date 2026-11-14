@@ -7,6 +7,7 @@
 import React from 'react';
 import { Badge } from '@/components/primitives';
 import { DescriptionItem } from '@/components/display';
+
 import { TONE } from '@/theme/recipes';
 import type { Patient } from '@/types';
 import { cn, formatDate } from '@/utils';
@@ -17,6 +18,7 @@ import {
   formatList,
   formatMeasurement } from '../utils/patientFormatters';
 import { DescriptionColumns } from '@/components/display';
+
 
 export interface CareSnapshotSectionProps {
   patient: Patient;

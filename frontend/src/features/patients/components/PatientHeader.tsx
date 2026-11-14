@@ -11,7 +11,7 @@ import type { Patient } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { AffiliationPopover } from './AffiliationPopover';
 import { IconKeys } from '@/config/icons';
-import { getModuleListTitles } from '@/config/pageCopy';
+import { getModuleListTitles } from '@/config';
 
 export interface PatientHeaderProps {
   patient: Patient;

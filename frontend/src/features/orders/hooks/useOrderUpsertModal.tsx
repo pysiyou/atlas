@@ -7,6 +7,7 @@ import type { Order, PaymentMethod } from '@/types';
 import { PRIORITY_LEVEL_VALUES, PRIORITY_LEVEL_CONFIG } from '@/types';
 import { formatCurrency } from '@/utils';
 import { ModalContextSubtitle } from '@/components/display';
+
 import { createFilterOptions } from '@/utils/filtering';
 import { getErrorMessage } from '@/utils/errors';
 import { getFeedback } from '@/feedback';
@@ -16,7 +17,7 @@ import { usePatient, usePatientSearch } from '@/features/patients';
 import type { ReferentDoctor } from '@/features/referent-doctors';
 import { useCreatePayment } from '@/features/payments';
 import { useOrder } from '../api/orders';
-import { getModuleListTitles } from '@/config/pageCopy';
+import { getModuleListTitles } from '@/config';
 
 export interface UseOrderUpsertModalParams {
   isOpen: boolean;

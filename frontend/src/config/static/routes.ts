@@ -1,5 +1,6 @@
 /**
- * Application Routes Configuration
+ * Application route paths.
+ * Style spec: see `config/index.ts`.
  */
 
 export const ROUTES = {

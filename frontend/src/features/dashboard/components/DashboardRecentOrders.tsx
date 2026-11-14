@@ -4,7 +4,9 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { EmptyState, getEmptyCopy, PANEL_EMPTY_STATE } from '@/components/display';
+import { EmptyState } from '@/components/display';
+import { getEmptyCopy, PANEL_EMPTY_STATE } from '@/config';
+
 import { RecordId } from '@/features/shared';
 import { Panel } from '@/components/surfaces';
 import { OrderStatusBadge } from '@/features/orders';

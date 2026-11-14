@@ -7,6 +7,7 @@
 import React, { useMemo } from 'react';
 import { Button, Icon, SelectableCard } from '@/components/primitives';
 import { Callout } from '@/components/display';
+
 import { SpinnerLoader } from '@/components/feedback';
 import { useAffiliationPricing } from '@/features/catalog';
 import { formatCurrency } from '@/utils';

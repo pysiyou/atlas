@@ -7,6 +7,7 @@ import { RecordId } from '@/features/shared';
 import type { Order } from '@/types';
 import { OrderPriorityBadge, OrderStatusBadge } from './OrderDomainBadges';
 import { DescriptionItem, DETAIL_SECTION_GENERAL_INFO_GRID } from '@/components/display';
+
 import { formatDateTime } from '@/utils/date';
 import {
   getDataFieldIcon,

@@ -21,7 +21,7 @@ import { canPrintReport } from '../utils/reportEligibility';
 import { dateSearchServerParams, formatDate } from '@/utils';
 import { notify } from '@/feedback';
 import { LIST_PAGE_SIZE_OPTIONS } from '@/lib/api/constants';
-import { useModuleListTitles } from '@/config/useModuleListTitles';
+import { useModuleListTitles } from '@/config';
 
 /** Parse `/reports/:id` so a deep link can open preview without unmounting the list. */
 function parseReportOrderId(id: string | undefined): number | null {

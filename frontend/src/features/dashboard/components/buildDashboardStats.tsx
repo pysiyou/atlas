@@ -6,7 +6,7 @@ import { Icon } from '@/components/primitives';
 import { formatCurrency } from '@/utils';
 import { IconKeys } from '@/config/icons';
 import type { DashboardStat } from './DashboardStatsGrid';
-import { tCap } from '@/config/clientConfig';
+import { tCap } from '@/config';
 
 export function buildDashboardStats({
   isReceptionRole,

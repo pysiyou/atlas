@@ -6,7 +6,9 @@
 
 import React, { type ReactNode, useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { EmptyState, PANEL_EMPTY_STATE } from '@/components/display';
+import { EmptyState } from '@/components/display';
+import { PANEL_EMPTY_STATE } from '@/config';
+
 import { FieldsPlaceholder, FIELDS_PLACEHOLDER_TABLE_INSET } from '@/components/surfaces/FieldsPlaceholder';
 import { labQueueSearchTextFields, matchLabQueueSearchQuery } from '../utils/labSearchAndLinks';
 import { SPACING, WORKSPACE } from '@/theme/recipes';

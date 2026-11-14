@@ -1,7 +1,6 @@
 /**
  * Panel — titled section shell. Chrome and titles come from panel presets.
  */
-/* eslint-disable react-refresh/only-export-components -- Panel + preset re-exports */
 
 import React from 'react';
 import { PANEL_LAYOUT, PANEL_SHELL, SPACING } from '@/theme/recipes';
@@ -16,10 +15,7 @@ import {
   PANEL_SPACING,
   type PanelPresetId,
   type PanelVariant,
-} from '@/config/panelLayouts';
-
-export type { PanelPresetId, PanelScroll, PanelSpacing, PanelVariant } from '@/config/panelLayouts';
-export { getPanelPreset, PANEL_PRESETS } from '@/config/panelLayouts';
+} from '@/config';
 
 function isCompactPanelVariant(variant: PanelVariant): boolean {
   return variant === 'compact' || variant === 'compactEmbed';

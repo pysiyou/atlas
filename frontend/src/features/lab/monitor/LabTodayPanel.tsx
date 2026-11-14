@@ -2,7 +2,9 @@
  * Lab dashboard Today panel — per-stage queue vs today's activity (% of monitor universe).
  */
 import React, { useMemo } from 'react';
-import { EmptyState, getEmptyCopy, DENSE_EMPTY_STATE_TEXT } from '@/components/display';
+import { EmptyState } from '@/components/display';
+import { getEmptyCopy, DENSE_EMPTY_STATE_TEXT } from '@/config';
+
 import { Panel } from '@/components/surfaces/Panel';
 import type { LabTodayPanelSnapshot } from './monitorModel';
 import { METER_KPI, KPI_PANEL } from '@/theme/recipes';

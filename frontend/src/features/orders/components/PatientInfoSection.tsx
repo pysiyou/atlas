@@ -8,6 +8,7 @@ import { Icon } from '@/components/primitives';
 import { IconKeys } from '@/config/icons';
 import type { Patient } from '@/types';
 import { DETAIL_SECTION_GENERAL_INFO_GRID } from '@/components/display';
+
 import { renderGeneralInfoDescriptionItems } from '@/features/patients';
 
 export interface PatientInfoSectionProps {

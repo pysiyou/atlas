@@ -7,12 +7,14 @@
 import React from 'react';
 import type { Patient } from '@/types';
 import { DescriptionItem } from '@/components/display';
+
 import {
   formatBirthdayWithAge,
   formatAddress,
   formatEmergencyContactDisplay } from '../utils/patientFormatters';
 import { IconKeys } from '@/config/icons';
 import { DescriptionColumns } from '@/components/display';
+
 
 export interface GeneralInfoSectionProps {
   patient: Patient;

@@ -2,8 +2,8 @@ import type { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import { CHROME } from '@/theme/recipes';
 import { cn } from '@/utils';
-import type { MenuItem, SettingsPopoverLink } from '@/config/sidebarMenu';
-import { settingsPopoverTrigger } from '@/config/sidebarMenu';
+import type { MenuItem, SettingsPopoverLink } from '@/config';
+import { settingsPopoverTrigger } from '@/config';
 import { SidebarSettingsMenu } from './SidebarSettingsMenu';
 
 export interface SidebarNavProps {

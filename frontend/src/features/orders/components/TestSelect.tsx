@@ -10,7 +10,8 @@
  * - The popover stays open while selecting; outside click or Escape closes it.
  */
 import React, { useMemo, useRef, useState } from 'react';
-import { getEmptyCopy } from '@/components/display';
+import { getEmptyCopy } from '@/config';
+
 import { RemovableTag, CheckboxIndicator } from '@/components/primitives';
 import type { TestSummary } from '@/types';
 import { indexTestsByCode } from '@/features/catalog/testLookup';

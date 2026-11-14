@@ -2,6 +2,7 @@ import React from 'react';
 import { text } from '@/theme/recipes';
 import { Popover } from '@/components/overlays';
 import { FooterInfo } from '@/components/display';
+
 import type { Affiliation } from '@/types';
 import { AffiliationInfo } from './AffiliationInfoSection';
 import { IconKeys } from '@/config/icons';

@@ -6,7 +6,7 @@ import type { FilterConfig } from '@/components/filters/types';
 import { IconKeys } from '@/config/icons';
 import { createFilterOptions } from '@/utils/filtering';
 import { ORDER_STATUS_VALUES, ORDER_STATUS_CONFIG } from '@/types';
-import { getOrderFilterPlaceholders } from '@/config/filterPlaceholders';
+import { getOrderFilterPlaceholders } from '@/config';
 
 const ORDER_FILTER_PLACEHOLDERS = getOrderFilterPlaceholders();
 

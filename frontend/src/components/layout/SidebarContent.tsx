@@ -3,12 +3,12 @@ import { motion } from 'framer-motion';
 import { CHROME } from '@/theme/recipes';
 import { cn } from '@/utils';
 import type { AuthUser } from '@/types';
-import type { MenuItem, SettingsPopoverLink } from '@/config/sidebarMenu';
+import type { MenuItem, SettingsPopoverLink } from '@/config';
 import { SidebarHeader } from './SidebarHeader';
 import { SidebarNav } from './SidebarNav';
 import { ThemeSwitch } from '@/components/inputs';
 import { SidebarProfile } from './SidebarProfile';
-import { SIDEBAR_MOTION } from '@/config/sidebarMotion';
+import { SIDEBAR_MOTION } from '@/config';
 
 export interface SidebarContentProps {
   isCollapsed: boolean;

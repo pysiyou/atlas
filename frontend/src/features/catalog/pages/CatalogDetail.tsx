@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import { useTest } from '../api/tests';
 import { useBreakpoint } from '@/hooks/useBreakpoint';
 import { BalancedColumnsLayout } from '@/components/display';
+
 import type { TableInput } from '@/components/display';
 import { DetailPageShell, PageHeader } from '@/components/layout';
 import { Panel } from '@/components/surfaces';
@@ -19,7 +20,7 @@ import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import { formatDateTime } from '@/utils';
 import { formatArrayWithFallback, formatBoolean, capitalize } from '@/utils';
 import type { Test } from '@/types';
-import { getModuleListTitles } from '@/config/pageCopy';
+import { getModuleListTitles } from '@/config';
 
 /** Column count for the catalog detail grid. */
 function catalogDetailColumnCount(breakpoint: string): number {

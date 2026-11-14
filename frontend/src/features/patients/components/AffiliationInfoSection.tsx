@@ -6,6 +6,7 @@
 import React from 'react';
 import { Badge } from '@/components/primitives';
 import { DescriptionItem } from '@/components/display';
+
 import { formatDate } from '@/utils';
 import type { Affiliation } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';

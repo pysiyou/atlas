@@ -5,7 +5,7 @@ import { GENERATED_LAB_CONSTANTS } from '@/types/generated/policies';
 import { ROUTES } from '@/config';
 import type { TestStatus } from '@/types/generated/enums';
 import type { BadgeColor } from '@/components/primitives/badgeTypes';
-import { t, tCap } from '@/config/clientConfig';
+import { t, tCap } from '@/config';
 
 export type LabWorkflowStage = 'collection' | 'entry' | 'validation';
 export type LabWorkflowKpiStage = LabWorkflowStage | 'sentBack';

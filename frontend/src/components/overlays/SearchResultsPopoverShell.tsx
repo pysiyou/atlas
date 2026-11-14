@@ -1,5 +1,7 @@
 import React from 'react';
-import { EmptyState, PANEL_EMPTY_STATE } from '@/components/display';
+import { EmptyState } from '@/components/display';
+import { PANEL_EMPTY_STATE } from '@/config';
+
 import { FG, FORM_FIELD_LABEL, text } from '@/theme/recipes';
 import { OVERLAY, RADIUS } from '@/theme/recipes';
 import { DEFAULT_EMPTY_DESCRIPTION_SEARCH } from '@/utils/constants';

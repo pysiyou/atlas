@@ -4,7 +4,8 @@
 
 import React, { useMemo } from 'react';
 import { Textarea } from '@/components/inputs';
-import { Panel, type PanelPresetId } from '@/components/surfaces';
+import { Panel } from '@/components/surfaces';
+import type { PanelPresetId } from '@/config';
 import { ResultCriticalValueBanner } from './ResultCriticalValueBanner';
 import { statusMapFromFlags, parseResultEntry, isCritical } from '../utils/labResult';
 import {

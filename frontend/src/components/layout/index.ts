@@ -3,13 +3,6 @@ export * from './PageHeader';
 export * from './DetailPageShell';
 export * from './DetailPageLoadingGrid';
 export * from './LabMonitorLoadingGrid';
-export {
-  getFilteredMenuItems,
-  getFilteredSettingsItems,
-  settingsPopoverTrigger,
-  type MenuItem,
-  type SettingsPopoverLink,
-} from '@/config/sidebarMenu';
 export * from './Sidebar';
 export { Stack, type StackGap, type StackProps } from './Stack';
 export { Text, type TextProps } from './Text';

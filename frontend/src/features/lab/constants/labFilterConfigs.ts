@@ -12,7 +12,7 @@ import {
   TEST_STATUS_VALUES,
 } from '@/types';
 import { IconKeys } from '@/config/icons';
-import { getSharedFilterPlaceholders, getLabQueueFilterPlaceholders } from '@/config/filterPlaceholders';
+import { getSharedFilterPlaceholders, getLabQueueFilterPlaceholders } from '@/config';
 import { buildLabFilterConfig } from '../utils/buildLabFilterConfig';
 
 const COLLECTION_STATUS_OPTIONS: FilterOption[] = [

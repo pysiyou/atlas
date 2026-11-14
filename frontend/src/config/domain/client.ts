@@ -1,0 +1,662 @@
+/**
+ * Client config load/cache, terminology, company facade, and React context.
+ * Style spec: see `config/index.ts`.
+ */
+import { createContext, useContext } from 'react';
+
+
+// =============================================================================
+// wire-types
+// =============================================================================
+export interface ClientConfig {
+  company: {
+    name: string;
+    displayName: string;
+    fullName?: string;
+    subtitle?: string;
+    tagline?: string;
+    version?: string;
+    copyright?: string;
+    contact?: {
+      address?: {
+        street?: string;
+        city?: string;
+        state?: string;
+        zipCode?: string;
+        country?: string;
+        fullAddress?: string;
+      };
+      phone?: string[];
+      email?: string;
+      website?: string;
+    };
+  };
+  branding: {
+    logoPath: string;
+    primaryColor: string;
+    secondaryColor?: string;
+    defaultTheme?: string;
+    faviconPath?: string;
+  };
+  terminology?: Record<string, string>;
+  features?: Record<string, boolean>;
+  workflows?: Record<string, boolean>;
+  reports?: {
+    headerText?: string;
+    footerText?: string;
+    includeSignature?: boolean;
+  };
+  marketing?: {
+    features?: string[];
+    description?: string;
+  };
+}
+
+
+// =============================================================================
+// load-cache
+// =============================================================================
+let cachedConfig: ClientConfig | null = null;
+
+/**
+ * Load configuration from API
+ * Uses relative /api/v1/config in dev (via Vite proxy) or API_CONFIG.baseURL in production
+ */
+export async function loadClientConfig(): Promise<ClientConfig> {
+  if (cachedConfig) {
+    return cachedConfig;
+  }
+
+  try {
+    // In development, use relative URL to leverage Vite proxy
+    // In production, use the full baseURL from API_CONFIG
+    const isDev = import.meta.env.DEV;
+    const configUrl = isDev 
+      ? '/api/v1/config' 
+      : `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/v1/config`;
+    
+    const response = await fetch(configUrl);
+    if (!response.ok) {
+      console.error(`Failed to load config: ${response.status} ${response.statusText}`);
+      throw new Error(`Config API returned ${response.status}`);
+    }
+    
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      console.error('Config API did not return JSON:', contentType);
+      const text = await response.text();
+      console.error('Response body:', text.substring(0, 200));
+      throw new Error('Config API returned non-JSON response');
+    }
+    
+    cachedConfig = await response.json();
+    return cachedConfig!;
+  } catch (error) {
+    console.error('Failed to load client config:', error);
+    console.warn('Using default configuration as fallback');
+    
+    // Return default config
+    const defaultConfig: ClientConfig = {
+      company: {
+        name: 'Atlas Lab',
+        displayName: 'Atlas Lab',
+      },
+      branding: {
+        logoPath: '/icons/here.svg',
+        primaryColor: '#0284c7',
+      },
+      terminology: {},
+      features: {},
+      workflows: {},
+    };
+    
+    cachedConfig = defaultConfig;
+    return defaultConfig;
+  }
+}
+
+/**
+ * Get cached config (must call loadClientConfig first)
+ */
+export function getClientConfig(): ClientConfig | null {
+  return cachedConfig;
+}
+
+/**
+ * Get terminology override or fallback to default
+ * @param key - The terminology key (e.g., 'patient', 'patients', 'order')
+ * @param fallback - Optional fallback if key not found
+ * @returns The configured terminology or fallback
+ * 
+ * @example
+ * t('patient', 'Patient') // Returns configured term or 'Patient'
+ * t('patients') // Returns configured term or 'patients'
+ */
+
+
+// =============================================================================
+// terminology
+// =============================================================================
+export function t(key: string, fallback?: string): string {
+  const config = getClientConfig();
+  if (config?.terminology?.[key]) {
+    return config.terminology[key];
+  }
+  return fallback || key;
+}
+
+/**
+ * Get terminology with first letter capitalized
+ * @param key - The terminology key
+ * @param fallback - Optional fallback if key not found
+ * @returns The configured terminology with first letter uppercase
+ * 
+ * @example
+ * tCap('patient', 'patient') // Returns 'Patient' or 'Client' (capitalized)
+ */
+export function tCap(key: string, fallback?: string): string {
+  const term = t(key, fallback);
+  return term.charAt(0).toUpperCase() + term.slice(1);
+}
+
+/**
+ * Get terminology in all uppercase
+ * @param key - The terminology key
+ * @param fallback - Optional fallback if key not found
+ * @returns The configured terminology in uppercase
+ * 
+ * @example
+ * tUpper('patient', 'patient') // Returns 'PATIENT' or 'CLIENT'
+ */
+export function tUpper(key: string, fallback?: string): string {
+  return t(key, fallback).toUpperCase();
+}
+
+/**
+ * Get terminology in all lowercase
+ * @param key - The terminology key
+ * @param fallback - Optional fallback if key not found
+ * @returns The configured terminology in lowercase
+ * 
+ * @example
+ * tLower('Patient', 'Patient') // Returns 'patient' or 'client'
+ */
+export function tLower(key: string, fallback?: string): string {
+  return t(key, fallback).toLowerCase();
+}
+
+/**
+ * Interpolate entity names in a string using configured terminology
+ * Replaces {{key}} placeholders with configured terms
+ * 
+ * @param template - String with {{key}} placeholders
+ * @param context - Optional additional context for replacements
+ * @returns String with terminology applied
+ * 
+ * @example
+ * interpolate('The {{patient}} has {{count}} {{orders}}', { count: '3' })
+ * // Returns: 'The Client has 3 Requests' (if configured)
+ */
+export function interpolate(template: string, context: Record<string, string> = {}): string {
+  const config = getClientConfig();
+  let result = template;
+  
+  // Replace terminology placeholders
+  const terminologyPattern = /\{\{(\w+)\}\}/g;
+  result = result.replace(terminologyPattern, (_match, key) => {
+    // First check context
+    if (context[key] !== undefined) {
+      return context[key];
+    }
+    // Then check terminology config
+    if (config?.terminology?.[key]) {
+      return config.terminology[key];
+    }
+    // {{patientCap}} → capitalize configured "patient" term
+    if (key.endsWith('Cap')) {
+      const baseKey = key.slice(0, -3);
+      return tCap(baseKey, baseKey);
+    }
+    // Return key without braces as fallback
+    return key;
+  });
+  
+  return result;
+}
+
+/** Common {{patient}} / {{orderCap}} placeholders for feedback and copy templates */
+export function getFeedbackTerminologyContext(): Record<string, string> {
+  return {
+    patient: tLower('patient', 'patient'),
+    patientCap: tCap('patient', 'Patient'),
+    patients: tLower('patients', 'patients'),
+    patientsCap: tCap('patients', 'Patients'),
+    order: tLower('order', 'order'),
+    orderCap: tCap('order', 'Order'),
+    orders: tLower('orders', 'orders'),
+    ordersCap: tCap('orders', 'Orders'),
+    test: tLower('test', 'test'),
+    testCap: tCap('test', 'Test'),
+    tests: tLower('tests', 'tests'),
+    testsCap: tCap('tests', 'Tests'),
+    sample: tLower('sample', 'sample'),
+    sampleCap: tCap('sample', 'Sample'),
+    report: tLower('report', 'report'),
+    reportCap: tCap('report', 'Report'),
+    reports: tLower('reports', 'reports'),
+    reportsCap: tCap('reports', 'Reports'),
+    samples: tLower('samples', 'samples'),
+    samplesCap: tCap('samples', 'Samples'),
+  };
+}
+
+// =============================================================================
+// features-workflows
+// =============================================================================
+/** Check if a feature is enabled */
+export function isFeatureEnabled(feature: string): boolean {
+  const config = getClientConfig();
+  return config?.features?.[feature] !== false;
+}
+
+/**
+ * Check if a workflow flag is enabled (defaults to false when unset).
+ */
+export function isWorkflowEnabled(workflow: string): boolean {
+  const config = getClientConfig();
+  return config?.workflows?.[workflow] === true;
+}
+
+// =============================================================================
+// branding
+// =============================================================================
+/** Helper to generate color shades from a base color */
+function generateColorShades(hexColor: string): { base: string; hover: string; muted: string } {
+  // Simple approximation: darken for hover, lighten for muted
+  const hex = hexColor.replace('#', '');
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  
+  // Hover: darken by 10%
+  const hoverR = Math.max(0, Math.floor(r * 0.9));
+  const hoverG = Math.max(0, Math.floor(g * 0.9));
+  const hoverB = Math.max(0, Math.floor(b * 0.9));
+  const hover = `#${hoverR.toString(16).padStart(2, '0')}${hoverG.toString(16).padStart(2, '0')}${hoverB.toString(16).padStart(2, '0')}`;
+  
+  // Muted: lighten by adding 30% towards white
+  const mutedR = Math.min(255, Math.floor(r + (255 - r) * 0.3));
+  const mutedG = Math.min(255, Math.floor(g + (255 - g) * 0.3));
+  const mutedB = Math.min(255, Math.floor(b + (255 - b) * 0.3));
+  const muted = `#${mutedR.toString(16).padStart(2, '0')}${mutedG.toString(16).padStart(2, '0')}${mutedB.toString(16).padStart(2, '0')}`;
+  
+  return { base: hexColor, hover, muted };
+}
+
+/**
+ * Apply branding colors and metadata to the page
+ */
+export function applyBranding(config: ClientConfig) {
+  const root = document.documentElement;
+  
+  // Apply primary brand color with shades
+  if (config.branding.primaryColor) {
+    const shades = generateColorShades(config.branding.primaryColor);
+    root.style.setProperty('--brand', shades.base);
+    root.style.setProperty('--brand-hover', shades.hover);
+    root.style.setProperty('--brand-muted', shades.muted);
+  }
+  
+  // Apply secondary color if provided
+  if (config.branding.secondaryColor) {
+    root.style.setProperty('--color-secondary', config.branding.secondaryColor);
+  }
+  
+  // Update document title
+  if (config.company.displayName) {
+    document.title = config.company.displayName;
+  }
+  
+  // Update favicon if custom path provided
+  if (config.branding.faviconPath && config.branding.faviconPath !== config.branding.logoPath) {
+    const favicon = document.querySelector("link[rel='icon']") as HTMLLinkElement;
+    if (favicon) {
+      favicon.href = config.branding.faviconPath;
+    } else {
+      // Create favicon link if it doesn't exist
+      const newFavicon = document.createElement('link');
+      newFavicon.rel = 'icon';
+      newFavicon.href = config.branding.faviconPath;
+      document.head.appendChild(newFavicon);
+    }
+  }
+}
+
+
+// =============================================================================
+// company-facade
+// =============================================================================
+/**
+ * Company configuration type definitions for UI and PDF consumers.
+ */
+export interface CompanyAddress {
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+  fullAddress?: string;
+}
+
+export interface CompanyContact {
+  address: CompanyAddress;
+  phone: string | string[];
+  email: string;
+  website: string;
+}
+
+export interface CompanyBranding {
+  logoPath: string;
+  primaryColor: string;
+  secondaryColor: string;
+  /** Character index at which to split displayName for two-tone header (e.g. 3 for "FIN" + "TRACKR"). Omit for single-style name. */
+  appNamePart2Start?: number;
+}
+
+export interface CompanyFeature {
+  title: string;
+  description: string;
+}
+
+export interface CompanyReports {
+  headerText: string;
+  footerText: string;
+  includeSignature: boolean;
+}
+
+export interface TrustIndicator {
+  text: string;
+  count: string;
+  audience: string;
+}
+
+export interface CompanyMarketing {
+  trustIndicator: TrustIndicator;
+}
+
+export interface CompanyData {
+  company: {
+    name: string;
+    subtitle: string;
+    fullName: string;
+    displayName: string;
+    tagline: string;
+    version: string;
+    copyright: string;
+  };
+  branding: CompanyBranding;
+  contact: CompanyContact;
+  features: CompanyFeature[];
+  reports: CompanyReports;
+  marketing: CompanyMarketing;
+}
+
+/**
+ * Default values when config is not yet loaded or fields are missing
+ */
+const DEFAULT_VALUES = {
+  name: 'Atlas Lab',
+  displayName: 'Atlas Lab',
+  fullName: 'Atlas Clinical Laboratories',
+  subtitle: 'Laboratory Information System',
+  tagline: 'Excellence in Diagnostic Testing',
+  version: '2.0',
+  copyright: '© 2026 Atlas Clinical Labs. All rights reserved.',
+  logoPath: '/icons/here.svg',
+  primaryColor: '#0284c7',
+  secondaryColor: '#38bdf8',
+  headerText: 'Laboratory Report',
+  footerText: 'This report contains confidential patient information.',
+  includeSignature: true,
+};
+
+/**
+ * Company configuration facade
+ * Reads from API-loaded ClientConfig instead of bundled JSON
+ */
+class CompanyConfig {
+  /**
+   * Get full company configuration for forms and reports
+   */
+  getConfig(): CompanyData {
+    const config = getClientConfig();
+    
+    if (!config) {
+      console.warn('Client config not loaded yet, returning defaults');
+    }
+    
+    return {
+      company: {
+        name: config?.company.name || DEFAULT_VALUES.name,
+        subtitle: config?.company.subtitle || DEFAULT_VALUES.subtitle,
+        fullName: config?.company.fullName || DEFAULT_VALUES.fullName,
+        displayName: config?.company.displayName || DEFAULT_VALUES.displayName,
+        tagline: config?.company.tagline || DEFAULT_VALUES.tagline,
+        version: config?.company.version || DEFAULT_VALUES.version,
+        copyright: config?.company.copyright || DEFAULT_VALUES.copyright,
+      },
+      branding: {
+        logoPath: config?.branding.logoPath || DEFAULT_VALUES.logoPath,
+        primaryColor: config?.branding.primaryColor || DEFAULT_VALUES.primaryColor,
+        secondaryColor: config?.branding.secondaryColor || DEFAULT_VALUES.secondaryColor,
+      },
+      contact: this._getContact(config),
+      features: this._getFeatures(config),
+      reports: this._getReports(config),
+      marketing: this._getMarketing(config),
+    };
+  }
+
+  /**
+   * Get company name
+   */
+  getName(): string {
+    const config = getClientConfig();
+    return config?.company.name || DEFAULT_VALUES.name;
+  }
+
+  /**
+   * Get full company name
+   */
+  getFullName(): string {
+    const config = getClientConfig();
+    return config?.company.fullName || DEFAULT_VALUES.fullName;
+  }
+
+  /**
+   * Get display name
+   */
+  getDisplayName(): string {
+    const config = getClientConfig();
+    return config?.company.displayName || DEFAULT_VALUES.displayName;
+  }
+
+  /**
+   * Get company tagline
+   */
+  getTagline(): string {
+    const config = getClientConfig();
+    return config?.company.tagline || DEFAULT_VALUES.tagline;
+  }
+
+  /**
+   * Get app version
+   */
+  getVersion(): string {
+    const config = getClientConfig();
+    return config?.company.version || DEFAULT_VALUES.version;
+  }
+
+  /**
+   * Get copyright text
+   */
+  getCopyright(): string {
+    const config = getClientConfig();
+    return config?.company.copyright || DEFAULT_VALUES.copyright;
+  }
+
+  /**
+   * Get branding configuration
+   */
+  getBranding(): CompanyBranding {
+    const config = getClientConfig();
+    return {
+      logoPath: config?.branding.logoPath || DEFAULT_VALUES.logoPath,
+      primaryColor: config?.branding.primaryColor || DEFAULT_VALUES.primaryColor,
+      secondaryColor: config?.branding.secondaryColor || DEFAULT_VALUES.secondaryColor,
+    };
+  }
+
+  /**
+   * Get contact information
+   */
+  getContact(): CompanyContact {
+    const config = getClientConfig();
+    return this._getContact(config);
+  }
+
+  /**
+   * Get feature list (for login marketing)
+   */
+  getFeatures(): CompanyFeature[] {
+    const config = getClientConfig();
+    return this._getFeatures(config);
+  }
+
+  /**
+   * Get report configuration
+   */
+  getReports(): CompanyReports {
+    const config = getClientConfig();
+    return this._getReports(config);
+  }
+
+  /**
+   * Get marketing data
+   */
+  getMarketing(): CompanyMarketing {
+    const config = getClientConfig();
+    return this._getMarketing(config);
+  }
+
+  // Private helpers to shape API config for UI consumers
+  
+  private _getContact(config: ReturnType<typeof getClientConfig>): CompanyContact {
+    const address = config?.company.contact?.address;
+    return {
+      address: {
+        street: address?.street || '',
+        city: address?.city || '',
+        state: address?.state || '',
+        zipCode: address?.zipCode || '',
+        country: address?.country || '',
+        fullAddress: address?.fullAddress || '',
+      },
+      phone: config?.company.contact?.phone || [],
+      email: config?.company.contact?.email || '',
+      website: config?.company.contact?.website || '',
+    };
+  }
+
+  private _getFeatures(config: ReturnType<typeof getClientConfig>): CompanyFeature[] {
+    // If marketing.features exists, convert string array to CompanyFeature format
+    if (config?.marketing?.features) {
+      return config.marketing.features.map(feature => ({
+        title: feature,
+        description: '',
+      }));
+    }
+    
+    // Return default features
+    return [
+      {
+        title: 'Intelligent Patient Management',
+        description: 'Unified records, appointments, and complete medical history at your fingertips',
+      },
+      {
+        title: 'Streamlined Lab Workflows',
+        description: 'From sample collection to result delivery — optimized every step of the way',
+      },
+      {
+        title: 'Real-time Quality Control',
+        description: 'Instant validation, automated alerts, and comprehensive audit trails',
+      },
+    ];
+  }
+
+  private _getReports(config: ReturnType<typeof getClientConfig>): CompanyReports {
+    return {
+      headerText: config?.reports?.headerText || DEFAULT_VALUES.headerText,
+      footerText: config?.reports?.footerText || DEFAULT_VALUES.footerText,
+      includeSignature: config?.reports?.includeSignature ?? DEFAULT_VALUES.includeSignature,
+    };
+  }
+
+  private _getMarketing(config: ReturnType<typeof getClientConfig>): CompanyMarketing {
+    const trust = (
+      config?.marketing as { trustIndicator?: TrustIndicator } | undefined
+    )?.trustIndicator;
+
+    return {
+      trustIndicator: {
+        text: trust?.text ?? 'Trusted by',
+        count: trust?.count ?? '500+',
+        audience: trust?.audience ?? 'healthcare professionals',
+      },
+    };
+  }
+}
+
+/**
+ * Singleton instance of company configuration facade
+ */
+export const companyConfig = new CompanyConfig();
+
+
+// =============================================================================
+// react-context
+// =============================================================================
+export type ConfigStatus = 'loading' | 'ready' | 'error';
+
+export interface ClientConfigContextValue {
+  config: ClientConfig | null;
+  status: ConfigStatus;
+  error?: Error;
+}
+
+export const ClientConfigContext = createContext<ClientConfigContextValue | undefined>(
+  undefined,
+);
+
+
+// =============================================================================
+// react-hooks
+// =============================================================================
+export function useClientConfig() {
+  const context = useContext(ClientConfigContext);
+  if (context === undefined) {
+    throw new Error('useClientConfig must be used within ClientConfigProvider');
+  }
+  return context;
+}
+
+export function useClientConfigReady(): ClientConfig {
+  const { config, status, error } = useClientConfig();
+  if (status === 'loading') {
+    throw new Promise(() => {});
+  }
+  if (status === 'error' || !config) {
+    throw error || new Error('Configuration failed to load');
+  }
+  return config;
+}

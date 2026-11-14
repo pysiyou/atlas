@@ -9,7 +9,7 @@ import {
 } from '@/types/zod';
 import { AFFILIATION_DURATION_VALUES, GENDER_VALUES, RELATIONSHIP_VALUES } from '@/types/generated/enums';
 import { zEnumFromValues } from '@/types/zod';
-import { getClientConfig } from '@/config/clientConfig';
+import { getClientConfig } from '@/config';
 
 export const addressSchema = z.object({
   street: z.string().min(1, 'Street is required'),

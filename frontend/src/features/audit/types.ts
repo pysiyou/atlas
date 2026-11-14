@@ -3,7 +3,7 @@
  */
 
 import type { InlineHighlightProps } from '@/components/primitives/InlineHighlight';
-import { tCap, tLower } from '@/config/clientConfig';
+import { tCap, tLower } from '@/config';
 import type { UserRole } from '@/types';
 import type {
   EventLogDomain,

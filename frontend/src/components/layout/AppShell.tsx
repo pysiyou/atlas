@@ -9,7 +9,7 @@
 
 import React, { type ReactNode, useState, useEffect, useCallback } from 'react';
 import { useBreakpoint, isBreakpointAtLeast } from '@/hooks/useBreakpoint';
-import { AppChromeMountContext } from './appChromeMount';
+import { AppChromeMountContext } from '@/config';
 import { useToastMountRef } from '@/feedback';
 import { Sidebar } from './Sidebar';
 import { Icon } from '@/components/primitives/Icon';

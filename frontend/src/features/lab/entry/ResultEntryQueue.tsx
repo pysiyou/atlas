@@ -16,8 +16,9 @@ import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { getEntryFilterConfig } from '../constants';
-import { useClientConfig } from '@/config/clientConfigHooks';
-import { getEmptyCopy } from '@/components/display';
+import { useClientConfig } from '@/config';
+import { getEmptyCopy } from '@/config';
+
 import { ErrorBoundary } from '@/feedback';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { useResultEntryWorkflow } from './useResultEntryWorkflow';

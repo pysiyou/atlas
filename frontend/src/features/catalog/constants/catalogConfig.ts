@@ -4,7 +4,7 @@
  */
 
 import type { FilterConfig } from '@/components/filters';
-import { getSharedFilterPlaceholders } from '@/config/filterPlaceholders';
+import { getSharedFilterPlaceholders } from '@/config';
 
 const SHARED_FILTER_PLACEHOLDERS = getSharedFilterPlaceholders();
 import type { TestCategory } from '@/types';

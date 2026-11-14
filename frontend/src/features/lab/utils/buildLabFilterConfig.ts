@@ -3,8 +3,8 @@
  */
 
 import type { FilterConfig, FilterControlConfig } from '@/components/filters';
-import { getSharedFilterPlaceholders } from '@/config/filterPlaceholders';
-import { tCap } from '@/config/clientConfig';
+import { getSharedFilterPlaceholders } from '@/config';
+import { tCap } from '@/config';
 import { IconKeys } from '@/config/icons';
 import { LAB_CONFIG } from '../constants';
 import { SAMPLE_TYPE_VALUES, SAMPLE_TYPE_CONFIG } from '@/types';

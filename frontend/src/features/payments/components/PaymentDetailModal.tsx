@@ -7,6 +7,7 @@ import React, { useState, useCallback } from 'react';
 import { Icon, Button } from '@/components/primitives';
 import { DialogFooter, Modal, ModalPageShell } from '@/components/overlays';
 import { FooterInfo, ModalContextSubtitle } from '@/components/display';
+
 import { ErrorBoundary } from '@/feedback';
 import { PaymentDetailModalBody } from './PaymentDetailModalBody';
 import { formatCurrency } from '@/utils';

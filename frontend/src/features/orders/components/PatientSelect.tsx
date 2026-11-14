@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Avatar, RemovableTag, TagChip } from '@/components/primitives';
-import { getEmptyCopy } from '@/components/display';
+import { getEmptyCopy } from '@/config';
+
 import { cn, formatPhoneNumber } from '@/utils';
 import { text, FG } from '@/theme/recipes';
 import type { Patient } from '@/types';
@@ -12,7 +13,7 @@ import {
 } from '@/components/overlays/SearchTagInputChrome';
 import { CONTROL } from '@/theme/recipes';
 import { useAnchoredPopoverDismiss } from '@/hooks';
-import { tLower } from '@/config/clientConfig';
+import { tLower } from '@/config';
 
 function formatPatientContactLine(patient: Patient): string {
   return [

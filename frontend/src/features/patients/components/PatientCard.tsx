@@ -8,7 +8,7 @@ import type { CardComponentProps } from '@/components/data-table';
 import { formatPhoneNumber } from '@/utils';
 import { formatPatientSexAgeLine } from '../utils/patientFormatters';
 import type { Patient } from '@/types';
-import { getModuleListTitles } from '@/config/pageCopy';
+import { getModuleListTitles } from '@/config';
 
 /**
  * PatientCard Component

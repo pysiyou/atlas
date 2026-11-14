@@ -5,7 +5,7 @@
 import React, { useMemo } from 'react';
 import { FeatureFilterBar } from '@/components/filters';
 import { getPatientFilterConfig } from '../config/patientFilters.config';
-import { useClientConfig } from '@/config/clientConfigHooks';
+import { useClientConfig } from '@/config';
 import type { Gender } from '@/types';
 
 export interface PatientFiltersProps {

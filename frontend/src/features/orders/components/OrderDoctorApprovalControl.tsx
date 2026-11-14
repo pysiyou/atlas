@@ -5,7 +5,7 @@
 import React, { useCallback, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/primitives';
-import { isWorkflowEnabled } from '@/config/clientConfig';
+import { isWorkflowEnabled } from '@/config';
 import { queryKeys } from '@/lib/query';
 import { orderAPI } from '../api/orders';
 import type { Order } from '@/types';

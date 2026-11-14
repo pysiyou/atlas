@@ -2,7 +2,7 @@ import type jsPDF from 'jspdf';
 import type { OrderTest, Patient, Test, TestParameter, TestResult } from '@/types';
 import type { LabReportPayload, ReportableOrder } from '@/types';
 import { RESULT_NOT_AVAILABLE } from '@/types';
-import { companyConfig } from '@/config/company';
+import { companyConfig } from '@/config';
 import { isDateInInclusiveRange } from '@/utils/date';
 import { calculateAge } from '@/utils/string';
 import { getActiveOrderTests } from '@/utils/presentation';

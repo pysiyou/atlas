@@ -14,7 +14,7 @@ import {
   ListFilterModal,
   ResponsiveFilterMobileBar,
 } from '@/components/filters';
-import { getReportFilterPlaceholders } from '@/config/filterPlaceholders';
+import { getReportFilterPlaceholders } from '@/config';
 
 const REPORT_FILTER_PLACEHOLDERS = getReportFilterPlaceholders();
 
