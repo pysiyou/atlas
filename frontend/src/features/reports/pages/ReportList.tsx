@@ -21,6 +21,8 @@ import { canPrintReport } from '../utils/reportEligibility';
 import { dateSearchServerParams, formatDate } from '@/utils';
 import { notify } from '@/feedback';
 import { LIST_PAGE_SIZE_OPTIONS } from '@/lib/api/constants';
+import { getModuleListTitles } from '@/config/pageCopy';
+import { useClientConfig } from '@/config/ClientConfigContext';
 
 /** Parse `/reports/:id` so a deep link can open preview without unmounting the list. */
 function parseReportOrderId(id: string | undefined): number | null {
@@ -30,6 +32,8 @@ function parseReportOrderId(id: string | undefined): number | null {
 }
 
 export const ReportList: React.FC = () => {
+  const { status: configStatus } = useClientConfig();
+  const listTitles = useMemo(() => getModuleListTitles(), [configStatus]);
   const navigate = useNavigate();
   const { id: routeOrderId } = useParams<{ id?: string }>();
   const deepLinkOrderId = parseReportOrderId(routeOrderId);
@@ -167,8 +171,8 @@ export const ReportList: React.FC = () => {
         viewConfig={reportTableConfig}
         loading={loading}
         onRowClick={handlePreview}
-        title="Reports"
-        subtitle={`${pagination.total} report(s) available`}
+        title={listTitles.reports}
+        subtitle={listTitles.reportsSubtitle(pagination.total)}
         filters={
           <ReportFilters
             searchQuery={searchQuery}

@@ -22,6 +22,7 @@ import { PatientInfoSection } from './PatientInfoSection';
 import { TestsTable } from './TestsTable';
 import { BillingSummarySection } from './BillingSummarySection';
 import { OrderEventLogPanel } from '@/features/audit';
+import { useModuleListTitles } from '@/config/useModuleListTitles';
 
 interface LayoutProps {
   loading?: boolean;
@@ -123,6 +124,7 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
   testsVariant,
   fillHeight,
 }) => {
+  const titles = useModuleListTitles();
   const testsHeaderMeta =
     order != null
       ? getTestsHeaderMeta(
@@ -133,7 +135,12 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
       : undefined;
   const patientHeaderEnd =
     !loading && patient ? (
-      <IconButton onClick={onViewPatient} {...actionButtonPreset('view')} size="sm" title="View Patient" />
+      <IconButton
+        onClick={onViewPatient}
+        {...actionButtonPreset('view')}
+        size="sm"
+        title={titles.viewPatient}
+      />
     ) : undefined;
   const billingHeaderEnd =
     !loading && order ? (
@@ -145,7 +152,7 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
       <div className={cn(LAYOUT.detailGrid3, fillHeight && 'min-h-0')}>
         <Panel
           preset={fillHeight ? 'panel.page.auto.fill' : 'panel.page.visible'}
-          title="Order Information"
+          title={titles.orderInformation}
           loading={loading}
         >
           {order ? <OrderInfoSection order={order} /> : null}
@@ -153,7 +160,7 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
 
         <Panel
           preset={fillHeight ? 'panel.page.auto.fill' : 'panel.page.visible'}
-          title="Patient Information"
+          title={titles.patientInformation}
           loading={loading}
           loadingHeaderAside={!loading && Boolean(patientHeaderEnd)}
           headerEnd={patientHeaderEnd}
@@ -163,7 +170,7 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
 
         <Panel
           preset={fillHeight ? 'panel.pageEmbed.auto.fill.flexColumnMin' : 'panel.pageEmbed.visible'}
-          title="Order activity"
+          title={titles.orderActivity}
           loading={loading}
         >
           {order ? (
@@ -179,7 +186,7 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
       <div className={cn(LAYOUT.detailGrid3, fillHeight && 'min-h-0')}>
         <Panel
           preset={fillHeight ? 'panel.pageEmbed.span2Fill' : 'panel.pageEmbed.span2'}
-          title="Tests"
+          title={titles.testsPanel}
           meta={testsHeaderMeta}
           loading={loading}
         >
@@ -211,6 +218,7 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
  * SmallScreenLayout - Single column stack for small screens.
  */
 export const SmallScreenLayout: React.FC<LayoutProps> = props => {
+  const titles = useModuleListTitles();
   const {
     loading = false,
     order,
@@ -231,7 +239,12 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
       : undefined;
   const patientHeaderEnd =
     !loading && patient ? (
-      <IconButton onClick={onViewPatient} {...actionButtonPreset('view')} size="sm" title="View Patient" />
+      <IconButton
+        onClick={onViewPatient}
+        {...actionButtonPreset('view')}
+        size="sm"
+        title={titles.viewPatient}
+      />
     ) : undefined;
   const billingHeaderEnd =
     !loading && order ? (
@@ -242,7 +255,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
     <div className={LAYOUT.detailScroll}>
       <Panel
         preset="panel.page.visible.shrink"
-        title="Order Information"
+        title={titles.orderInformation}
         loading={loading}
       >
         {order ? <OrderInfoSection order={order} /> : null}
@@ -250,7 +263,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
 
       <Panel
         preset="panel.page.visible.shrink"
-        title="Patient Information"
+        title={titles.patientInformation}
         loading={loading}
         loadingHeaderAside={!loading && Boolean(patientHeaderEnd)}
         headerEnd={patientHeaderEnd}
@@ -260,7 +273,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
 
       <Panel
         preset="panel.pageEmbed.stackMinHeight"
-        title="Order activity"
+        title={titles.orderActivity}
         loading={loading}
       >
         {order ? <OrderEventLogPanel orderId={order.orderId} layout="embedded" /> : null}
@@ -268,7 +281,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
 
       <Panel
         preset="panel.pageEmbed.visible.shrink"
-        title="Tests"
+        title={titles.testsPanel}
         meta={testsHeaderMeta}
         loading={loading}
       >

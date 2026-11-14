@@ -15,7 +15,8 @@ import type { EntryQueueRow } from '../types/queues';
 import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
-import { entryFilterConfig } from '../constants';
+import { getEntryFilterConfig } from '../constants';
+import { useClientConfig } from '@/config/ClientConfigContext';
 import { getEmptyCopy } from '@/components/display';
 import { ErrorBoundary } from '@/feedback';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
@@ -28,6 +29,11 @@ import { useClientListChrome } from '@/hooks';
 const EMPTY_RESULT_VALUES: Record<string, string> = {};
 
 export const ResultEntryQueue: React.FC = () => {
+  const { status: configStatus } = useClientConfig();
+  const entryFilterConfig = useMemo(
+    () => getEntryFilterConfig(),
+    [configStatus],
+  );
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
 

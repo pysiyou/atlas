@@ -1,7 +1,6 @@
 /**
  * Order receipt total row plus optional paid / remaining breakdown.
  */
-import React from 'react';
 import { cn, formatCurrency } from '@/utils';
 import { DOCUMENT_TYPE, text } from '@/theme/recipes';
 import type { OrderReceiptVariant } from './OrderReceipt';

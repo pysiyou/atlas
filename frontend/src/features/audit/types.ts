@@ -3,6 +3,7 @@
  */
 
 import type { InlineHighlightProps } from '@/components/primitives/InlineHighlight';
+import { tCap, tLower } from '@/config/clientConfig';
 import type { UserRole } from '@/types';
 import type {
   EventLogDomain,
@@ -168,42 +169,56 @@ export const DEFAULT_EVENT_LOG_USER_FILTERS: EventLogUserFilters = {
   patientId: null,
 };
 
-/** User-facing copy for event log surfaces. */
-export const EVENT_LOG_COPY = {
-  panelTitle: 'Event log',
-  panelMetaOrder: 'Most recent actions on this order first',
-  panelMetaLab: 'Most recent laboratory actions for this item first',
-  panelMetaPatient: 'Most recent actions on this patient first',
-  panelMetaRecord: 'Most recent actions for this item first',
-  panelMetaCommandCenter: 'Last 24 hours · most recent activity first',
-  panelMetaMonitor: 'Last 24 hours · most recent activity first',
-  panelMetaAll: 'Most recent events · newest first · load more for older rows',
-  emptyTitle: 'No events yet',
-  emptyDescription: 'Actions and status changes will appear here as they occur.',
-  narrativeDefaultLabel: 'Notes',
-  reasonInlinePrefix: 'Reason: ',
-  outcomeInlinePrefix: 'Outcome: ',
-  commentLabel: 'Comment',
-  resultTitle: 'Results',
-  debugTitle: 'Debug',
-  loadMore: 'Load older events',
-  searchPreviewTitle: 'Search matches',
-  searchPreviewRecordIds: 'Record IDs',
-  searchPreviewPatients: 'Patients',
-  searchPreviewUsers: 'Users',
-  searchPreviewEventCount: 'events match',
-  searchPreviewEventCountLoading: 'Counting events…',
-  searchPreviewNoSuggestions: 'No matches for this query',
-  searchIntentOrder: 'Order',
-  searchIntentTest: 'Test',
-  searchIntentSample: 'Sample',
-  searchIntentPatient: 'Patient',
-  searchIntentNumericTarget: 'Target id',
-  verbositySummary: 'Summary',
-  verbosityDetailed: 'Detailed',
-  verbosityDebug: 'Debug',
-  showMore: 'Show more',
-  showLess: 'Show less',
-  systemActorName: 'Atlas',
-  transitionArrow: '→',
-} as const;
+/** User-facing copy for event log surfaces (terminology-aware). */
+export function getEventLogCopy() {
+  const patient = tLower('patient', 'patient');
+  const order = tLower('order', 'order');
+  return {
+    panelTitle: 'Event log',
+    panelMetaOrder: `Most recent actions on this ${order} first`,
+    panelMetaLab: 'Most recent laboratory actions for this item first',
+    panelMetaPatient: `Most recent actions on this ${patient} first`,
+    panelMetaRecord: 'Most recent actions for this item first',
+    panelMetaCommandCenter: 'Last 24 hours · most recent activity first',
+    panelMetaMonitor: 'Last 24 hours · most recent activity first',
+    panelMetaAll: 'Most recent events · newest first · load more for older rows',
+    emptyTitle: 'No events yet',
+    emptyDescription: 'Actions and status changes will appear here as they occur.',
+    narrativeDefaultLabel: 'Notes',
+    reasonInlinePrefix: 'Reason: ',
+    outcomeInlinePrefix: 'Outcome: ',
+    commentLabel: 'Comment',
+    resultTitle: 'Results',
+    debugTitle: 'Debug',
+    loadMore: 'Load older events',
+    searchPreviewTitle: 'Search matches',
+    searchPreviewRecordIds: 'Record IDs',
+    searchPreviewPatients: tCap('patients', 'Patients'),
+    searchPreviewUsers: 'Users',
+    searchPreviewEventCount: 'events match',
+    searchPreviewEventCountLoading: 'Counting events…',
+    searchPreviewNoSuggestions: 'No matches for this query',
+    searchIntentOrder: tCap('order', 'Order'),
+    searchIntentTest: tCap('test', 'Test'),
+    searchIntentSample: tCap('sample', 'Sample'),
+    searchIntentPatient: tCap('patient', 'Patient'),
+    searchIntentNumericTarget: 'Target id',
+    verbositySummary: 'Summary',
+    verbosityDetailed: 'Detailed',
+    verbosityDebug: 'Debug',
+    showMore: 'Show more',
+    showLess: 'Show less',
+    systemActorName: 'Atlas',
+    transitionArrow: '→',
+  } as const;
+}
+
+/** Backward-compatible accessor; resolves copy when properties are read. */
+export const EVENT_LOG_COPY: ReturnType<typeof getEventLogCopy> = new Proxy(
+  {} as ReturnType<typeof getEventLogCopy>,
+  {
+    get(_target, prop: string) {
+      return getEventLogCopy()[prop as keyof ReturnType<typeof getEventLogCopy>];
+    },
+  },
+);

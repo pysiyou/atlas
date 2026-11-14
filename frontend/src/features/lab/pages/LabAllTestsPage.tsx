@@ -17,7 +17,8 @@ import { getOrderTestLineageRowClass } from '@/features/orders';
 import { cn } from '@/utils';
 import { SPLIT_ROW_INTERACTIVE } from '@/theme/recipes';
 import { LAB_CONFIG, getLabCopy } from '../constants/labConstants';
-import { allTestsFilterConfig } from '../constants/labFilterConfigs';
+import { getAllTestsFilterConfig } from '../constants/labFilterConfigs';
+import { useClientConfig } from '@/config/ClientConfigContext';
 import { useAllTestsWorklist, WORKLIST_PAGE_SIZE } from '../api/worklists';
 import { createLabOrdersTableConfig } from '../monitor/LabOrdersTable.config';
 import { mapDashboardWorklistRow } from '../monitor/labOrderTableRow';
@@ -28,6 +29,11 @@ const EMPTY_STATUSES: TestStatus[] = [];
 const EMPTY_PRIORITIES: PriorityLevel[] = [];
 
 export const LabAllTestsPage: React.FC = () => {
+  const { status: configStatus } = useClientConfig();
+  const allTestsFilterConfig = useMemo(
+    () => getAllTestsFilterConfig(),
+    [configStatus],
+  );
   const { openModal } = useModal();
 
   const { filters, setFilter } = usePageFilters({

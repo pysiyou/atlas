@@ -14,8 +14,15 @@ import { EditPatientModal } from '../components/EditPatientModal';
 import { PatientHeader } from '../components/PatientHeader';
 import { SmallScreenLayout, MediumScreenLayout, LargeScreenLayout } from '../components/PatientDetailLayouts';
 import { feedbackTitle } from '@/feedback';
+import { getModuleListTitles } from '@/config/pageCopy';
+import { useClientConfig } from '@/config/ClientConfigContext';
 
 export const PatientDetail: React.FC = () => {
+  const { status: configStatus } = useClientConfig();
+  const patientLabel = React.useMemo(
+    () => getModuleListTitles().patientDetail,
+    [configStatus],
+  );
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
@@ -52,7 +59,7 @@ export const PatientDetail: React.FC = () => {
       onEdit={handleEdit}
     />
   ) : (
-    <PageHeader title="Patient" />
+    <PageHeader title={patientLabel} />
   );
 
   return (

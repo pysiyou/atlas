@@ -18,7 +18,8 @@ import { SampleCollectionCard } from '../workflow';
 import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
-import { collectionFilterConfig } from '../constants';
+import { getCollectionFilterConfig } from '../constants';
+import { useClientConfig } from '@/config/ClientConfigContext';
 import { worklistItemToQueueRow } from '../utils/worklistMappers';
 import { getEmptyCopy, emptySubtitle } from '@/components/display';
 import { ErrorBoundary } from '@/feedback';
@@ -27,6 +28,11 @@ import { useTestCatalog } from '@/features/catalog';
 import { useClientListChrome } from '@/hooks';
 
 export const SampleCollectionQueue: React.FC = () => {
+  const { status: configStatus } = useClientConfig();
+  const collectionFilterConfig = useMemo(
+    () => getCollectionFilterConfig(),
+    [configStatus],
+  );
   const { user: currentUser } = useAuthStore();
   const collectSampleMutation = useCollectSample();
   const breakpoint = useBreakpoint();

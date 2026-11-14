@@ -18,8 +18,12 @@ import { useServerListChrome } from '@/hooks';
 import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
 import type { PatientContext, Gender } from '@/types';
 import { EditPatientModal } from '../components/EditPatientModal';
+import { getModuleListTitles } from '@/config/pageCopy';
+import { useClientConfig } from '@/config/ClientConfigContext';
 
 export const PatientList: React.FC = () => {
+  const { status: configStatus } = useClientConfig();
+  const listTitles = useMemo(() => getModuleListTitles(), [configStatus]);
   const navigate = useNavigate();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
@@ -102,10 +106,10 @@ export const PatientList: React.FC = () => {
           viewConfig={patientTableConfig}
           loading={loading}
           onRowClick={(patient: PatientContext) => navigate(`/patients/${patient.id}`)}
-          title="Patients"
+          title={listTitles.patients}
           headerActions={
             <Button {...actionButtonPreset('add')} size="sm" onClick={() => setIsCreateModalOpen(true)}>
-              New Patient
+              {listTitles.newPatient}
             </Button>
           }
           filters={

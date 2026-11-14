@@ -3,7 +3,7 @@
  * Use these so search, date, status, etc. have consistent text and order per page.
  */
 
-import { tLower } from './clientConfig';
+import { tCap, tLower } from './clientConfig';
 
 /** Get placeholders for Orders page filters with terminology */
 export function getOrderFilterPlaceholders() {
@@ -57,5 +57,38 @@ export function getSharedFilterPlaceholders() {
     status: 'Select status',
     testCategory: `Select ${tLower('test', 'test')} category`,
     paymentMethod: 'Select payment method',
+  };
+}
+
+/** Lab queue search placeholders with terminology */
+export function getLabQueueFilterPlaceholders() {
+  const patient = tLower('patient', 'patient');
+  const test = tLower('test', 'test');
+  const sample = tLower('sample', 'sample');
+  const order = tLower('order', 'order');
+
+  const idHint = `${sample} ID (SAM####), ${order} ID (ORD####), ${test} ID (TST####)`;
+
+  return {
+    collection: {
+      searchPlaceholder: `${tCap('sample', 'Sample')}, ${order}, or ${test} ID (SAM/ORD/TST) — min 3 chars for lookup...`,
+      searchHelpText: `Search by ${idHint}, numeric IDs, or ${patient} name. Lookup runs after 3 characters.`,
+      dateRangeHelpText: `Filter ${tLower('samples', 'samples')} by collection or ${order} date range.`,
+    },
+    entry: {
+      searchPlaceholder: `${tCap('sample', 'Sample')}, ${order}, or ${test} ID (SAM/ORD/TST) or ${patient}...`,
+      searchHelpText: `Search by ${idHint}, ${patient} name, or ${test} name.`,
+      dateRangeHelpText: `Filter by ${order} or result date range.`,
+    },
+    validation: {
+      searchPlaceholder: `${tCap('sample', 'Sample')}, ${order}, or ${test} ID (SAM/ORD/TST) or ${patient}...`,
+      searchHelpText: `Search by ${idHint}, ${patient} name, or ${test} name.`,
+      dateRangeHelpText: `Filter by ${order} or validation date range.`,
+    },
+    allTests: {
+      searchPlaceholder: `${tCap('sample', 'Sample')}, ${order}, or ${test} ID (SAM/ORD/TST), ${patient}, or ${test} name...`,
+      searchHelpText: `Search by ${idHint}, ${patient} name, ${test} name, or ${test} code.`,
+      dateRangeHelpText: 'Filter by last modified date (UTC).',
+    },
   };
 }

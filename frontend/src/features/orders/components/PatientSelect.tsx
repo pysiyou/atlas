@@ -12,6 +12,7 @@ import {
 } from '@/components/overlays/SearchTagInputChrome';
 import { CONTROL } from '@/theme/recipes';
 import { useAnchoredPopoverDismiss } from '@/hooks';
+import { tLower } from '@/config/clientConfig';
 
 function formatPatientContactLine(patient: Patient): string {
   return [
@@ -101,7 +102,11 @@ const PatientSearchTagInput: React.FC<{
       value={value}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => onValueChange(e.target.value)}
       onFocus={() => onValueChange(value)}
-      placeholder={selectedPatient ? '' : 'Search by name, ID, or phone…'}
+      placeholder={
+        selectedPatient
+          ? ''
+          : `Search ${tLower('patient', 'patient')} by name, ID, or phone…`
+      }
       className={`flex-1 min-w-[140px] outline-none ${text({ role: 'body' })} placeholder:${FG.muted} bg-transparent leading-normal`}
       autoComplete="off"
       disabled={disabled}
@@ -151,7 +156,7 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
       {/* "Popover" results shown directly under the input */}
       {!disabled && isPopoverOpen && hasSearch && (
         <SearchResultsPopoverShell
-          title="Matching patients"
+          title={`Matching ${tLower('patients', 'patients')}`}
           resultCount={visiblePatients.length}
           emptyMessage={getEmptyCopy().matchingPatients.title}
           emptyDescription={getEmptyCopy().matchingPatients.description}

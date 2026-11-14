@@ -11,6 +11,7 @@ import type { Patient } from '@/types/patient';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { AffiliationPopover } from './AffiliationPopover';
 import { IconKeys } from '@/config/icons';
+import { getModuleListTitles } from '@/config/pageCopy';
 
 export interface PatientHeaderProps {
   patient: Patient;
@@ -49,7 +50,12 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
     <div
       className={`flex items-center gap-space-1 ${!isLarge ? 'w-full sm:w-auto sm:justify-end justify-end' : ''}`}
     >
-      <IconButton {...actionButtonPreset('edit')} size="lg" title="Edit Patient" onClick={onEdit} />
+      <IconButton
+        {...actionButtonPreset('edit')}
+        size="lg"
+        title={getModuleListTitles().editPatient}
+        onClick={onEdit}
+      />
     </div>
   );
   return <PageHeader title={patient.fullName} avatar={avatar} actions={actions} />;

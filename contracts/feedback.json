@@ -11,42 +11,42 @@
     "order.create.success": {
       "channel": "toast",
       "variant": "success",
-      "title": "Order created",
-      "subtitle": "The order has been saved and is ready for collection.",
+      "title": "{{orderCap}} created",
+      "subtitle": "The {{order}} has been saved and is ready for collection.",
       "brief": "created"
     },
     "order.create.error": {
       "channel": "toast",
       "variant": "error",
-      "title": "Failed to create order",
+      "title": "Failed to create {{order}}",
       "brief": "failed"
     },
     "order.update.success": {
       "channel": "toast",
       "variant": "success",
-      "title": "Order updated",
-      "subtitle": "The order has been saved with the latest changes.",
+      "title": "{{orderCap}} updated",
+      "subtitle": "The {{order}} has been saved with the latest changes.",
       "brief": "updated"
     },
     "order.update.error": {
       "channel": "toast",
       "variant": "error",
-      "title": "Failed to update order",
-      "subtitle": "The order could not be updated. Please try again.",
+      "title": "Failed to update {{order}}",
+      "subtitle": "The {{order}} could not be updated. Please try again.",
       "brief": "failed"
     },
     "order.delete.success": {
       "channel": "toast",
       "variant": "success",
-      "title": "Order deleted",
-      "subtitle": "The order has been removed.",
+      "title": "{{orderCap}} deleted",
+      "subtitle": "The {{order}} has been removed.",
       "brief": "deleted"
     },
     "order.delete.error": {
       "channel": "toast",
       "variant": "error",
-      "title": "Failed to delete order",
-      "subtitle": "The order could not be deleted. Please try again.",
+      "title": "Failed to delete {{order}}",
+      "subtitle": "The {{order}} could not be deleted. Please try again.",
       "brief": "failed"
     },
     "order.paymentStatus.success": {
@@ -65,27 +65,27 @@
     "patient.create.success": {
       "channel": "toast",
       "variant": "success",
-      "title": "Patient created",
-      "subtitle": "The patient record has been saved.",
+      "title": "{{patientCap}} created",
+      "subtitle": "The {{patient}} record has been saved.",
       "brief": "created"
     },
     "patient.create.error": {
       "channel": "toast",
       "variant": "error",
-      "title": "Failed to create patient",
+      "title": "Failed to create {{patient}}",
       "brief": "failed"
     },
     "patient.update.success": {
       "channel": "toast",
       "variant": "success",
-      "title": "Patient updated",
-      "subtitle": "The patient record has been saved.",
+      "title": "{{patientCap}} updated",
+      "subtitle": "The {{patient}} record has been saved.",
       "brief": "updated"
     },
     "patient.update.error": {
       "channel": "toast",
       "variant": "error",
-      "title": "Failed to update patient",
+      "title": "Failed to update {{patient}}",
       "brief": "failed"
     },
     "report.download.success": {
@@ -493,13 +493,13 @@
     "orders.list.loadFailed": {
       "channel": "toast",
       "variant": "danger",
-      "title": "Failed to load orders",
+      "title": "Failed to load {{orders}}",
       "brief": "failed"
     },
     "patients.list.loadFailed": {
       "channel": "toast",
       "variant": "danger",
-      "title": "Failed to load patients",
+      "title": "Failed to load {{patients}}",
       "brief": "failed"
     },
     "catalog.list.loadFailed": {
@@ -755,12 +755,12 @@
     "patient.detail.notFoundTitle": {
       "channel": "inline",
       "variant": "danger",
-      "title": "Patient Not Found"
+      "title": "{{patientCap}} Not Found"
     },
     "patient.detail.notFoundDescription": {
       "channel": "inline",
       "variant": "danger",
-      "title": "The patient could not be found."
+      "title": "The {{patient}} could not be found."
     },
     "api.validationError": {
       "channel": "inline",

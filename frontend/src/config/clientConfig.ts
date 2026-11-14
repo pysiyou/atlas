@@ -203,11 +203,40 @@ export function interpolate(template: string, context: Record<string, string> = 
     if (config?.terminology?.[key]) {
       return config.terminology[key];
     }
+    // {{patientCap}} → capitalize configured "patient" term
+    if (key.endsWith('Cap')) {
+      const baseKey = key.slice(0, -3);
+      return tCap(baseKey, baseKey);
+    }
     // Return key without braces as fallback
     return key;
   });
   
   return result;
+}
+
+/** Common {{patient}} / {{orderCap}} placeholders for feedback and copy templates */
+export function getFeedbackTerminologyContext(): Record<string, string> {
+  return {
+    patient: tLower('patient', 'patient'),
+    patientCap: tCap('patient', 'Patient'),
+    patients: tLower('patients', 'patients'),
+    patientsCap: tCap('patients', 'Patients'),
+    order: tLower('order', 'order'),
+    orderCap: tCap('order', 'Order'),
+    orders: tLower('orders', 'orders'),
+    ordersCap: tCap('orders', 'Orders'),
+    test: tLower('test', 'test'),
+    testCap: tCap('test', 'Test'),
+    tests: tLower('tests', 'tests'),
+    testsCap: tCap('tests', 'Tests'),
+    sample: tLower('sample', 'sample'),
+    sampleCap: tCap('sample', 'Sample'),
+    report: tLower('report', 'report'),
+    reportCap: tCap('report', 'Report'),
+    reports: tLower('reports', 'reports'),
+    reportsCap: tCap('reports', 'Reports'),
+  };
 }
 
 /**

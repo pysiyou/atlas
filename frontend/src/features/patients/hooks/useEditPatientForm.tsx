@@ -16,6 +16,7 @@ import {
   patientFormTabForFieldPath,
   resolveFirstPatientFormErrorPath,
 } from '../patientFormNavigation';
+import { getModuleListTitles } from '@/config/pageCopy';
 
 export interface UseEditPatientFormParams {
   patient?: Patient;
@@ -78,7 +79,8 @@ export function useEditPatientForm({ patient, mode, onClose }: UseEditPatientFor
     },
   );
 
-  const modalTitle = mode === 'edit' ? 'Edit Patient' : 'New Patient';
+  const titles = getModuleListTitles();
+  const modalTitle = mode === 'edit' ? titles.editPatient : titles.newPatientModal;
   const subtitle = useMemo((): React.ReactNode => {
     const draftName = formValues?.fullName?.trim() ?? '';
     if (mode === 'edit' && patient) {

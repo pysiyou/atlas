@@ -19,6 +19,7 @@ import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import { formatDateTime } from '@/utils';
 import { formatArrayWithFallback, formatBoolean, capitalize } from '@/utils';
 import type { Test } from '@/types';
+import { getModuleListTitles } from '@/config/pageCopy';
 
 /** Column count for the catalog detail grid. */
 function catalogDetailColumnCount(breakpoint: string): number {
@@ -151,10 +152,11 @@ export const CatalogDetail: React.FC = () => {
   const breakpoint = useBreakpoint();
   const columnCount = catalogDetailColumnCount(breakpoint);
   const { test, isLoading, isError } = useTest(testCode);
+  const testLabel = getModuleListTitles().testDetail;
 
   if (isLoading) {
     return (
-      <DetailPageShell header={<PageHeader title="Test" />} loading>
+      <DetailPageShell header={<PageHeader title={testLabel} />} loading>
         <div
           className="grid gap-layout-section"
           style={{ gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))` }}
@@ -175,7 +177,7 @@ export const CatalogDetail: React.FC = () => {
   if (isError || !test) {
     return (
       <DetailPageShell
-        header={<PageHeader title="Test" />}
+        header={<PageHeader title={testLabel} />}
         notFound
         notFoundTitle={feedbackTitle('catalog.detail.notFoundTitle')}
         notFoundDescription={

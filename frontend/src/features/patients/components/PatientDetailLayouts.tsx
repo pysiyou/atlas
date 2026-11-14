@@ -18,6 +18,8 @@ import { CareSnapshotSection } from './CareSnapshotSection';
 import { PatientOrdersTable } from './PatientOrdersTable';
 import { PatientReportsList } from './PatientReportsList';
 import { getReportableOrders } from '../utils/patientFormatters';
+import { useModuleListTitles } from '@/config/useModuleListTitles';
+import { tCap } from '@/config/clientConfig';
 
 interface LayoutProps {
   loading?: boolean;
@@ -33,8 +35,14 @@ function countMeta(count: number): string {
 }
 
 function RelatedOrdersHeader({ onNewOrder }: { onNewOrder: () => void }) {
+  const titles = useModuleListTitles();
   return (
-    <IconButton onClick={onNewOrder} {...actionButtonPreset('add')} size="sm" title="New Order" />
+    <IconButton
+      onClick={onNewOrder}
+      {...actionButtonPreset('add')}
+      size="sm"
+      title={titles.newOrder}
+    />
   );
 }
 
@@ -49,6 +57,8 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
   onOrderClick,
   onNewOrder,
 }) => {
+  const titles = useModuleListTitles();
+  const reportsTitle = tCap('reports', 'Reports');
   return (
     <div className={LAYOUT.detailScroll}>
       <Panel
@@ -77,7 +87,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 
       <Panel
         preset="panel.pageEmbed.visible.shrink"
-        title="Related Orders"
+        title={titles.relatedOrders}
         loading={loading}
         loadingHeaderAside={!loading}
         headerEnd={loading ? undefined : <RelatedOrdersHeader onNewOrder={onNewOrder} />}
@@ -87,7 +97,7 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
 
       <Panel
         preset="panel.page.visible.shrink.flexColumn"
-        title="Reports"
+        title={reportsTitle}
         meta={loading ? undefined : countMeta(getReportableOrders(orders).length)}
         loading={loading}
       >
@@ -109,6 +119,8 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
   onOrderClick,
   onNewOrder,
 }) => {
+  const titles = useModuleListTitles();
+  const reportsTitle = tCap('reports', 'Reports');
   return (
     <div className={cn(LAYOUT.detailGrid2, 'w-full pb-layout-scroll-end')}>
       <Panel preset="panel.page.visible" title="General Info" loading={loading}>
@@ -125,7 +137,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 
       <Panel
         preset="panel.pageEmbed.visible"
-        title="Related Orders"
+        title={titles.relatedOrders}
         loading={loading}
         loadingHeaderAside={!loading}
         headerEnd={loading ? undefined : <RelatedOrdersHeader onNewOrder={onNewOrder} />}
@@ -135,7 +147,7 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
 
       <Panel
         preset="panel.page.visible.flexColumn"
-        title="Reports"
+        title={reportsTitle}
         meta={loading ? undefined : countMeta(getReportableOrders(orders).length)}
         loading={loading}
       >
@@ -156,6 +168,8 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
   onOrderClick,
   onNewOrder,
 }) => {
+  const titles = useModuleListTitles();
+  const reportsTitle = tCap('reports', 'Reports');
   return (
     <div className={LAYOUT.detailGridRowsSplit}>
       <div className={cn(LAYOUT.detailGrid3, 'min-h-0 h-full items-stretch')}>
@@ -175,7 +189,7 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
       <div className={cn(LAYOUT.detailGrid3, 'min-h-0 h-full items-stretch')}>
         <Panel
           preset="panel.pageEmbed.span2Min"
-          title="Related Orders"
+          title={titles.relatedOrders}
           loading={loading}
           loadingHeaderAside={!loading}
           headerEnd={loading ? undefined : <RelatedOrdersHeader onNewOrder={onNewOrder} />}
@@ -185,7 +199,7 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
 
         <Panel
           preset="panel.page.detailMinH.flexColumn"
-          title="Reports"
+          title={reportsTitle}
           meta={loading ? undefined : countMeta(getReportableOrders(orders).length)}
           loading={loading}
         >

@@ -19,8 +19,12 @@ import { usePageFilters } from '@/hooks';
 import { ORDER_URL_FILTER_KEYS } from '../config/orderFilters.config';
 import type { Order, OrderStatus } from '@/types';
 import { UrlFilterChipBar } from '@/components/filters';
+import { getModuleListTitles } from '@/config/pageCopy';
+import { useClientConfig } from '@/config/ClientConfigContext';
 
 export const OrderList: React.FC = () => {
+  const { status: configStatus } = useClientConfig();
+  const listTitles = useMemo(() => getModuleListTitles(), [configStatus]);
   const navigate = useNavigate();
   const { openModal } = useModal();
 
@@ -101,10 +105,10 @@ export const OrderList: React.FC = () => {
         viewConfig={orderTableConfig}
         loading={loading}
         onRowClick={(order: Order) => navigate(`/orders/${order.orderId}`)}
-        title="Orders"
+        title={listTitles.orders}
         headerActions={
           <Button {...actionButtonPreset('add')} size="sm" onClick={() => openModal({ type: ModalType.NEW_ORDER })}>
-            New Order
+            {listTitles.newOrder}
           </Button>
         }
         filters={

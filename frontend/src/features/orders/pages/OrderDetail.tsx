@@ -18,8 +18,15 @@ import {
   MediumScreenLayout,
   LargeScreenLayout,
 } from '../components/OrderDetailLayouts';
+import { getModuleListTitles } from '@/config/pageCopy';
+import { useClientConfig } from '@/config/ClientConfigContext';
 
 export const OrderDetail: React.FC = () => {
+  const { status: configStatus } = useClientConfig();
+  const orderLabel = React.useMemo(
+    () => getModuleListTitles().orderDetail,
+    [configStatus],
+  );
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { isSmall, isMedium, isLarge } = useResponsiveLayout();
@@ -91,7 +98,7 @@ export const OrderDetail: React.FC = () => {
         onEdit={order.overallStatus === 'ordered' ? handleEdit : undefined}
       />
     ) : (
-      <PageHeader title="Order" />
+      <PageHeader title={orderLabel} />
     );
 
   return (
