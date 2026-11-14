@@ -7,7 +7,7 @@ import {
   type FeedbackEntry,
   type FeedbackId,
   type FeedbackVariant,
-} from '@/types/generated/feedbackCatalog';
+} from '@/types/contracts/feedbackCatalog';
 import { isApiError } from '@/lib/api/errors';
 import { getErrorMessage } from '@/utils/errors';
 import { applyFeedbackTerminology, resolveFeedbackTitle } from './terminology';
@@ -15,7 +15,7 @@ import { showToast } from './toast';
 import { TOAST_ALERT_MESSAGE } from './ui';
 import type { ToastVariant } from './ui';
 
-export type { FeedbackId, FeedbackEntry, FeedbackVariant } from '@/types/generated/feedbackCatalog';
+export type { FeedbackId, FeedbackEntry, FeedbackVariant } from '@/types/contracts/feedbackCatalog';
 
 export function getFeedback(id: FeedbackId): FeedbackEntry {
   return applyFeedbackTerminology(FEEDBACK_CATALOG[id]);

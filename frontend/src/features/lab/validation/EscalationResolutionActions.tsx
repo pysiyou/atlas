@@ -1,8 +1,8 @@
 import React from 'react';
-import type { FeedbackId } from '@/types/generated/feedbackCatalog';
+import type { FeedbackId } from '@/types/contracts/feedbackCatalog';
 import { Button } from '@/components/primitives';
 import { displayId } from '@/utils';
-import type { EscalationResolutionAction } from '@/types/lab-operations';
+import type { EscalationResolutionAction } from '@/types/domain/labOperations';
 import {
   ForceValidateAction,
   ResolutionPopover,
@@ -10,7 +10,7 @@ import {
 } from './EscalationResolutionPopover';
 
 export interface EscalationResolveOptions {
-  readBack?: import('@/types/lab-operations').CriticalReadBackPayload;
+  readBack?: import('@/types/domain/labOperations').CriticalReadBackPayload;
 }
 
 interface EscalationResolutionActionsProps {

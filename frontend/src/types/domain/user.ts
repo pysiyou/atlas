@@ -2,19 +2,14 @@
  * User and Authentication Types
  */
 
-// Import type from enum (Single Source of Truth)
-export type { UserRole } from '@/types/enums';
-
-// Re-export enum values and role config
+import type { UserRole } from '../contracts/enums/user';
 export {
   USER_ROLE_VALUES,
   USER_ROLE_CONFIG,
   USER_ROLE_OPTIONS,
   ALL_ROLES,
-} from '@/types/enums';
-
-// Import for local use
-import type { UserRole } from '@/types/enums';
+} from '../contracts/enums/user';
+export type { UserRole };
 
 export interface User {
   id: number;
@@ -24,13 +19,16 @@ export interface User {
   role: UserRole;
   email?: string;
   phone?: string;
+  active: boolean;
   createdAt: string;
+  updatedAt: string;
 }
 
+/** Authenticated session user (subset of User) */
 export interface AuthUser {
   id: number;
   username: string;
   name: string;
   role: UserRole;
-  loggedInAt: string;
+  email?: string;
 }

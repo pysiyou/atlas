@@ -3,15 +3,15 @@ import {
   dateStringSchema,
   nullableApiDatetimeSchema,
   positiveIntSchema,
-} from '@/types/schemas/common.schema';
-import { GENDER_VALUES, PAYMENT_STATUS_VALUES } from '@/types/enums';
+} from '@/types/validation';
+import { GENDER_VALUES, PAYMENT_STATUS_VALUES } from '@/types/contracts/enums';
 import {
   ORDER_STATUS_VALUES,
   PRIORITY_LEVEL_VALUES,
   TEST_STATUS_VALUES,
   PAYMENT_METHOD_VALUES,
-} from '@/types/enums';
-import { zEnumFromValues } from '@/types/schemas/enumFromValues';
+} from '@/types/contracts/enums';
+import { zEnumFromValues } from '@/types/validation';
 import type { TestStatus } from '@/types';
 
 const apiTestStatusSchema = zEnumFromValues(TEST_STATUS_VALUES);

@@ -4,7 +4,7 @@
 
 import type { QueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query';
-import type { CollectionQueueRow } from '@/types/lab-operations';
+import type { CollectionQueueRow } from '@/types/domain/labOperations';
 import type { CollectionWorklistItem } from '../api/worklists';
 import { worklistItemToQueueRow } from './worklistMappers';
 

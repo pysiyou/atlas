@@ -3,7 +3,7 @@
  */
 
 import { useMemo } from 'react';
-import type { ReportableOrder } from '@/features/reports/types';
+import type { ReportableOrder } from '@/types/domain/report';
 import type { Order, OrderTest } from '@/types';
 import {
   buildOrderContextPresentation,

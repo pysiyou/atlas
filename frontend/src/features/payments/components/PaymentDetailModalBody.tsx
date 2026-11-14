@@ -12,7 +12,7 @@ import { BillingSummarySection } from '@/features/orders';
 import { BillingEventLogPanel } from '@/features/audit';
 import {text, inputBase, FG } from '@/theme/recipes';
 import { TONE } from '@/theme/recipes';
-import type { PaymentMethod, PaymentMethodOption } from '@/types/payments';
+import type { PaymentMethod, PaymentMethodOption } from '@/types/domain/payments';
 import type { OrderPaymentView } from '../types';
 
 export interface PaymentDetailModalBodyProps {

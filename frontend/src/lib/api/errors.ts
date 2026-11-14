@@ -4,7 +4,7 @@
  * App-layer message classification (login, generic fallbacks): `@/utils/errors`.
  */
 import { logger } from '@/utils/logger';
-import type { ApiError, ApiErrorDetail } from '@/types/schemas/error.schema';
+import type { ApiError, ApiErrorDetail } from '@/types/validation';
 
 export type { ApiError };
 

@@ -13,7 +13,7 @@ import {
   LabPresentationStack,
 } from './LabPresentationBadge';
 import { useLabHeaderCompact } from './LabWorkflowHeader';
-import type { StatusPresentation } from '@/types/labProjection';
+import type { StatusPresentation } from '@/lib/api/types';
 import { LabCardMetaRow, LabModalMetaRow } from './LabCardMetaRow';
 import { CollectionOperationalMetaRow } from './CollectionOperationalMetaItems';
 

@@ -4,7 +4,7 @@
 
 import type { BadgeProps } from '@/components/primitives';
 import type { OrderStatus, OrderTest, PriorityLevel } from '@/types';
-import type { StatusPresentation } from '@/types/labProjection';
+import type { StatusPresentation } from '@/lib/api/types';
 import { Badge } from '@/components/primitives';
 import { formatStatusBadgeLabel, resolveStatusBadgeColor } from '@/utils/statusBadge';
 import {

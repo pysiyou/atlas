@@ -13,7 +13,7 @@ import type {
   EscalationResolveResult,
   QualityIssueResult,
   RemedyType,
-} from '@/types/lab-operations';
+} from '@/types/domain/labOperations';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   invalidateAfterLabMutation,

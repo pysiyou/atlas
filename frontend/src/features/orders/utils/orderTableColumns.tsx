@@ -4,7 +4,7 @@
 
 import type { ReactNode } from 'react';
 import type { OrderTest, PaymentStatus, PriorityLevel, OrderStatus } from '@/types';
-import type { StatusPresentation } from '@/types/labProjection';
+import type { StatusPresentation } from '@/lib/api/types';
 import { TABLE_COLUMN_WIDTH } from '@/components/data-table';
 import { createIdColumn, createBadgeColumn } from '@/components/data-table/columnHelpers';
 import type { ColumnConfig } from '@/components/data-table/types';

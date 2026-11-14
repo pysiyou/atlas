@@ -15,7 +15,7 @@ import { createReportTableConfig } from '../config/ReportTable.config';
 import { ReportFilters } from '../components/ReportFilters';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
 import { generateLabReport, downloadPDF, getDefaultTemplate } from '../utils/reportPDF';
-import type { ReportableOrder } from '../types';
+import type { ReportableOrder } from '@/types/domain/report';
 import { prepareReportData, downloadLabReport } from '../utils/prepareReportData';
 import { canPrintReport } from '../utils/reportEligibility';
 import { dateSearchServerParams, formatDate } from '@/utils';

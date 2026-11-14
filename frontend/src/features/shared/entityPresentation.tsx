@@ -11,7 +11,7 @@ import { RecordId } from '@/features/shared';
 import { getTestName } from '@/features/catalog/testLookup';
 import { LabPresentationCompactBadge, LabPresentationStack } from '@/features/lab/cross';
 import type { Gender, OrderTest, TestSummary } from '@/types';
-import type { StatusPresentation } from '@/types/labProjection';
+import type { StatusPresentation } from '@/lib/api/types';
 import { PRESENTATION_STACK_CLASS, TABLE_TYPE } from '@/theme/recipes';
 import { cn, formatCurrency, formatDateTime, type EntityType } from '@/utils';
 import {

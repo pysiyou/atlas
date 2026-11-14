@@ -1,9 +1,10 @@
 /**
- * Lab Reports Types
+ * Lab report view models (cross-feature).
  */
 
-import type { Order, OrderStatus } from '@/types';
-import type { StatusPresentation } from '@/types/labProjection';
+import type { Order } from './order';
+import type { OrderStatus } from '../contracts/enums/order';
+import type { StatusPresentation } from '@/lib/api/types';
 
 /**
  * ReportableOrder - One lab report row for a non-cancelled order with active tests.

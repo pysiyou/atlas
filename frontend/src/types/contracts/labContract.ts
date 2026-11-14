@@ -1,7 +1,7 @@
 /**
  * Laboratory policy contract — GENERATED from contracts/lab.json. DO NOT EDIT.
  */
-import type { FeedbackId } from '@/types/generated/feedbackCatalog';
+import type { FeedbackId } from './feedbackCatalog';
 
 export const GENERATED_LAB_CONSTANTS = {
   MAX_RETEST_ATTEMPTS: 2,

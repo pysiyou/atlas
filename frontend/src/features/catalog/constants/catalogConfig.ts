@@ -15,7 +15,7 @@ import { IconKeys } from '@/config/icons';
 import {
   TEST_CATEGORY_CONFIG as GENERATED_TEST_CATEGORY_CONFIG,
   TEST_CATEGORY_VALUES as GENERATED_TEST_CATEGORY_VALUES,
-  getGeneratedCategoryLabel } from '@/types/generated/catalogCategories';
+  getGeneratedCategoryLabel } from '@/types/contracts/catalogCategories';
 
 export const TEST_CATEGORY_CONFIG: Record<string, { label: string; color: string }> =
   GENERATED_TEST_CATEGORY_CONFIG;

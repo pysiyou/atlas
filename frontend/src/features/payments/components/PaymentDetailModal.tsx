@@ -16,7 +16,7 @@ import { isFullyPaid, roundMoney } from '../utils/paymentStatus';
 import {
   getEnabledPaymentMethods,
   getDefaultPaymentMethod,
-  type PaymentMethod } from '@/types/payments';
+  type PaymentMethod } from '@/types/domain/payments';
 import { getPaymentErrorMessage } from '@/utils/errors';
 import { feedbackTitle, getFeedback } from '@/feedback';
 import type { OrderPaymentView } from '../types';

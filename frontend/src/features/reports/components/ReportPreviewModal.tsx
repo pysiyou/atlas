@@ -20,7 +20,7 @@ import { createSampleLookupForOrder } from '@/features/lab/cross';
 import { reportsAPI, useReportableOrder } from '../api/reports';
 import { generateLabReport, downloadPDF, getDefaultTemplate } from '../utils/reportPDF';
 import { downloadLabReport, prepareReportData } from '../utils/prepareReportData';
-import type { LabReportPayload } from '../types';
+import type { LabReportPayload } from '@/types/domain/report';
 import { formatDate } from '@/utils';
 import { notify } from '@/feedback';
 import { canPrintReport } from '../utils/reportEligibility';

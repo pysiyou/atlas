@@ -8,7 +8,7 @@ import {
   AUDIT_EVENT_WIRES,
   type AuditEventDefinition,
   type AuditEventWire,
-} from '@/types/generated/auditEventDefinitions';
+} from '@/types/contracts/auditEventDefinitions';
 import { formatRelativeDateTime } from '@/utils/date';
 import { EVENT_LOG_COPY } from './types';
 import type {

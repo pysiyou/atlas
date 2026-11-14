@@ -22,6 +22,18 @@ export type {
   ApiQualityIssueResponse,
   ApiCriticalValueResponse,
   ApiEscalationResolveResponse,
+  CollectionWorklistItem,
+  DashboardWorklistItem,
+  EntryWorklistItem,
+  LabPipelineStage,
+  LabWorkItemProjection,
+  LabWorklistAllowedActions,
+  StatusPresentation,
+  ValidationWorklistItem,
+  WorklistActionGateFields,
+  WorklistAttentionFields,
+  WorklistPagination,
+  WorklistReferentDoctorFields,
 } from './schemas';
 
 export type MessageResponse = import('./schemas').ApiMessageResponse;

@@ -7,7 +7,7 @@ import { Alert } from '@/components/display';
 import { SpinnerLoader } from '@/components/feedback';
 import { CatalogRejectionCriteriaFields } from './CatalogRejectionCriteriaFields';
 import { useQualityIssueOptions } from '../api/qualityIssues';
-import type { QualityIssueOptions, QualityIssueTargetType, RemedyType } from '@/types/lab-operations';
+import type { QualityIssueOptions, QualityIssueTargetType, RemedyType } from '@/types/domain/labOperations';
 import { QUALITY_ISSUE_POPOVER_COPY } from '../constants/qualityIssuePopoverCopy';
 import { QualityIssueInlineWarning } from './QualityIssueInlineWarning';
 import { getLabCopy } from '../constants/labConstants';

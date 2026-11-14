@@ -8,7 +8,7 @@ import type {
   QualityIssueResult,
   QualityIssueTargetType,
   ReportQualityIssueRequest,
-} from '@/types/lab-operations';
+} from '@/types/domain/labOperations';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query';
 import { invalidateAfterLabMutation } from '@/lib/query/invalidate';

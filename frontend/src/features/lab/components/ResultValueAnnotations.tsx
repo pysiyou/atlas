@@ -3,7 +3,7 @@
  */
 import { cn } from '@/utils';
 import { text, METRIC_TILE , FG } from '@/theme/recipes';
-import type { ResultStatus } from '@/types/enums';
+import type { ResultStatus } from '@/types/contracts/enums';
 import {
   resultStatusLabel,
   resultValueClass,

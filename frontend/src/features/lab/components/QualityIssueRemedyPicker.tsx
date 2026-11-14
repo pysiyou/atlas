@@ -2,7 +2,7 @@
  * QualityIssueRemedyPicker — explicit destination for validation / sample rejection.
  */
 import React from 'react';
-import type { RemedyType } from '@/types/lab-operations';
+import type { RemedyType } from '@/types/domain/labOperations';
 import { RadioCard } from '@/components/overlays';
 import { QUALITY_ISSUE_POPOVER_COPY, type RemedyOption } from '../constants/qualityIssuePopoverCopy';
 import { FORM_FIELD_LABEL } from '@/theme/recipes';

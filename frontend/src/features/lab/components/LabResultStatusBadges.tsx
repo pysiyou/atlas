@@ -7,7 +7,7 @@ import { Badge, Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/feedback';
 import type { BadgeSize } from '@/components/primitives';
 import { IconKeys } from '@/config/icons';
-import { ATTENTION_LABELS } from '@/types/generated/labContract';
+import { ATTENTION_LABELS } from '@/types/contracts/labContract';
 import { BADGE, WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
 
 const badgeIconClass = BADGE.icon.xs;

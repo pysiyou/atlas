@@ -5,9 +5,9 @@
 import { createLabQueueSearchFilter } from '../components/LabWorkflowQueueLayout';
 import { labQueueSearchTextFields, matchLabQueueSearchQuery } from './labSearchAndLinks';
 import type { EntryQueueRow, ValidationQueueRow } from '../types/queues';
-import type { SampleCollectionQueueItem } from '../types';
+import type { SampleCollectionQueueItem } from '@/types/domain/labOperations';
 import type { PendingEscalationItem } from '../api/results';
-import type { EntryWorklistItem, ValidationWorklistItem } from '@/types/labWorklist';
+import type { EntryWorklistItem, ValidationWorklistItem } from '@/lib/api/types';
 import { PRIORITY_LEVEL_VALUES, type PriorityLevel } from '@/types';
 import type { SampleStatus, TestStatus } from '@/types';
 

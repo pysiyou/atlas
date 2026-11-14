@@ -199,13 +199,13 @@ export default defineConfig([
     },
   },
   {
-    files: ['src/types/enums/generated/**'],
+    files: ['src/types/contracts/enums/**'],
     rules: {
       'no-restricted-syntax': 'off',
     },
   },
   {
-    files: ['src/types/generated/**'],
+    files: ['src/types/contracts/**'],
     rules: {
       'max-lines': 'off',
     },

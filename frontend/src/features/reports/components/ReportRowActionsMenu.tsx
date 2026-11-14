@@ -7,7 +7,7 @@ import { actionButtonPreset, Icon, IconButton } from '@/components/primitives';
 import { IconKeys } from '@/config/icons';
 import { cn } from '@/utils';
 import { CONTROL, MENU_ITEM_TYPE, RADIUS, text } from '@/theme/recipes';
-import type { ReportableOrder } from '../types';
+import type { ReportableOrder } from '@/types/domain/report';
 import { canPrintReport } from '../utils/reportEligibility';
 
 export interface ReportRowActionsMenuProps {

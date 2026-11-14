@@ -5,7 +5,7 @@ import {
   FEEDBACK_CATALOG,
   type FeedbackEntry,
   type FeedbackId,
-} from '@/types/generated/feedbackCatalog';
+} from '@/types/contracts/feedbackCatalog';
 import { getFeedbackTerminologyContext, interpolate } from '@/config/clientConfig';
 
 export function applyFeedbackTerminology(entry: FeedbackEntry): FeedbackEntry {

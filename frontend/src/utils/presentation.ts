@@ -4,7 +4,7 @@
  * Name collision (do not merge):
  * - `@/utils/presentation` — this module
  * - `@/theme/recipes/presentation` — CSS recipes
- * - `@/types/enums/generated/presentation` — generated enum
+ * - `@/types/contracts/enums/presentation` — generated enum
  *
  * React table/card renders: `@/features/shared/entityPresentation`.
  * Screen hooks: `@/hooks/presentationHooks`.
@@ -24,7 +24,7 @@ import {
   type RejectedSample,
   type Sample,
 } from '@/types';
-import { INACTIVE_REPORTABLE_TEST_STATUSES } from '@/types/generated/labContract';
+import { INACTIVE_REPORTABLE_TEST_STATUSES } from '@/types/contracts/labContract';
 import { formatTruncatedListPreview } from '@/utils/array';
 import { formatCurrency } from '@/utils/currency';
 import { formatDateTime } from '@/utils/date';

@@ -8,8 +8,8 @@ import {
   PRESENTATION_BADGE_VARIANTS,
   PRESENTATION_DISPLAY_LABELS,
   type CanonicalPresentationPrimary,
-} from '@/types/enums/generated/presentation';
-import type { StatusPresentation } from '@/types/labProjection';
+} from '@/types/contracts/enums/presentation';
+import type { StatusPresentation } from '@/lib/api/types';
 import { Text } from '@/components/layout/Text';
 import { PRESENTATION_STACK_CLASS } from '@/theme/recipes';
 import { Badge } from '@/components/primitives';

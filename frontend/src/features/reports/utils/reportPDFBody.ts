@@ -6,8 +6,8 @@ import type jsPDF from 'jspdf';
 import type { Gender, Test, TestParameter } from '@/types';
 import { catalogParametersByCode } from '@/features/catalog/testLookup';
 import { getParameterReferenceIntervalLines } from '@/features/lab/cross';
-import type { LabReportPayload } from '../types';
-import { RESULT_NOT_AVAILABLE } from '../types';
+import type { LabReportPayload } from '@/types/domain/report';
+import { RESULT_NOT_AVAILABLE } from '@/types/domain/report';
 
 const FONT = 'courier';
 const TITLE_SIZE = 7;

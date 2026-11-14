@@ -3,7 +3,7 @@
  */
 
 import type { LabModalStage } from './detailModalLayout';
-import type { LabWorkItemProjection } from '@/types/labProjection';
+import type { LabWorkItemProjection } from '@/lib/api/types';
 import type { Order, OrderTest } from '@/types';
 import type { LabModalWorkItem } from '../../types/labQueueChrome';
 

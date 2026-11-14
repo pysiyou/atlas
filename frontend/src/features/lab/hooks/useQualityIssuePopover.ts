@@ -2,7 +2,7 @@
  * useQualityIssuePopover — quality issue popover state for result validation.
  */
 import { useState, useMemo, useEffect } from 'react';
-import type { QualityIssueResult, RemedyType } from '@/types/lab-operations';
+import type { QualityIssueResult, RemedyType } from '@/types/domain/labOperations';
 import { useQualityIssueOptions } from '../api/qualityIssues';
 import { useSubmitQualityIssue } from './useSubmitQualityIssue';
 import {

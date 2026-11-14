@@ -8,7 +8,7 @@ import { RELATIONSHIP_CONFIG, RELATIONSHIP_VALUES } from '@/types';
 import { formatArrayWithFallback } from '@/utils/array';
 import { calculateAge, formatPhoneNumber } from '@/utils';
 import { formatDetailDate as formatDetailDateUtil, formatOrderDate } from '@/utils/date';
-import { INACTIVE_REPORTABLE_TEST_STATUSES } from '@/types/generated/labContract';
+import { INACTIVE_REPORTABLE_TEST_STATUSES } from '@/types/contracts/labContract';
 
 export { formatPatientSexAgeLine } from '@/utils/presentation';
 

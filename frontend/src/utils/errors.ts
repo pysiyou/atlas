@@ -3,7 +3,7 @@
  * HTTP/API error parsing and `ApiError` guards: `@/lib/api/errors`.
  */
 
-import type { FeedbackId } from '@/types/generated/feedbackCatalog';
+import type { FeedbackId } from '@/types/contracts/feedbackCatalog';
 import { resolveFeedbackTitle } from '@/feedback/terminology';
 
 const feedbackTitle = (id: FeedbackId): string => resolveFeedbackTitle(id);

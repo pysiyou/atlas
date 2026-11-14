@@ -2,27 +2,14 @@
  * Order and Test Request Types
  */
 
-// Import types from enums for local use
-import type { Gender, TestStatus as TestStatusType } from '@/types/enums';
-import type { OrderStatus as OrderStatusType } from '@/types/enums';
-import type { PriorityLevel as PriorityLevelType } from '@/types/enums';
-import type { PaymentStatus as PaymentStatusType } from '@/types/enums';
-import type { ResultStatus as ResultStatusType } from '@/types/enums';
-import type { ValidationDecision as ValidationDecisionType } from '@/types/enums';
+import type { Gender } from '../contracts/enums/gender';
+import type { TestStatus as TestStatusType } from '../contracts/enums/test';
+import type { OrderStatus as OrderStatusType } from '../contracts/enums/order';
+import type { PriorityLevel as PriorityLevelType } from '../contracts/enums/order';
+import type { PaymentStatus as PaymentStatusType } from '../contracts/enums/order';
+import type { ResultStatus as ResultStatusType } from '../contracts/enums/result';
+import type { ValidationDecision as ValidationDecisionType } from '../contracts/enums/validation';
 
-// Re-export types (Single Source of Truth)
-export type { TestStatus } from '@/types/enums';
-export type { OrderStatus } from '@/types/enums';
-export type { PriorityLevel } from '@/types/enums';
-export type { PaymentStatus } from '@/types/enums';
-export type { ResultStatus } from '@/types/enums';
-export type { ValidationDecision } from '@/types/enums';
-
-// Re-export enum value arrays
-export { ORDER_STATUS_VALUES } from '@/types/enums';
-export { PAYMENT_STATUS_VALUES } from '@/types/enums';
-
-// Local type aliases for use in this file
 type PriorityLevel = PriorityLevelType;
 type ResultStatus = ResultStatusType;
 type ValidationDecision = ValidationDecisionType;
@@ -92,7 +79,7 @@ export interface OrderTest {
   criticalAcknowledgedAt?: string;
 
   /** Server lab projection when order is loaded with lab enrichment. */
-  lab?: import('@/types/labProjection').LabWorkItemProjection | null;
+  lab?: import('@/lib/api/types').LabWorkItemProjection | null;
 
   // Metadata
   createdAt: string;
@@ -133,7 +120,7 @@ export interface Order {
   totalPrice: number;
   paymentStatus: PaymentStatusType;
   overallStatus: OrderStatusType;
-  statusPresentation?: import('@/types/labProjection').StatusPresentation | null;
+  statusPresentation?: import('@/lib/api/types').StatusPresentation | null;
 
   // Scheduling
   scheduledCollectionTime?: string;

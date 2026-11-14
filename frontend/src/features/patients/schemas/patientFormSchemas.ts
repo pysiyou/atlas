@@ -6,9 +6,9 @@ import {
   emailSchema,
   dateStringSchema,
   postalCodeSchema,
-} from '@/types/schemas/common.schema';
-import { AFFILIATION_DURATION_VALUES, GENDER_VALUES, RELATIONSHIP_VALUES } from '@/types/enums';
-import { zEnumFromValues } from '@/types/schemas/enumFromValues';
+} from '@/types/validation';
+import { AFFILIATION_DURATION_VALUES, GENDER_VALUES, RELATIONSHIP_VALUES } from '@/types/contracts/enums';
+import { zEnumFromValues } from '@/types/validation';
 import { getClientConfig } from '@/config/clientConfig';
 
 export const addressSchema = z.object({

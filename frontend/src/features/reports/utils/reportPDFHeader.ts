@@ -6,7 +6,7 @@
 import { format } from 'date-fns';
 import type jsPDF from 'jspdf';
 import { buildReportHeaderViewModel, type ReportHeaderSource } from '@/utils/presentation';
-import type { LabReportPayload } from '../types';
+import type { LabReportPayload } from '@/types/domain/report';
 
 const FONT = 'courier';
 /** Same 7pt as the result table in reportPDFBody. */

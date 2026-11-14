@@ -1,11 +1,11 @@
 /**
  * Toast copy for quality issue outcomes — maps API {@link QualityIssueResult} to catalog ids.
  */
-import type { FeedbackId } from '@/types/generated/feedbackCatalog';
-import { DEFAULT_QUALITY_ISSUE_SUCCESS_TOAST } from '@/types/generated/labContract';
+import type { FeedbackId } from '@/types/contracts/feedbackCatalog';
+import { DEFAULT_QUALITY_ISSUE_SUCCESS_TOAST } from '@/types/contracts/labContract';
 import { notify } from '@/feedback';
-import type { QualityIssueResult } from '@/types/lab-operations';
-import { VALIDATION_REMEDY_WIRES } from '@/types/generated/labContract';
+import type { QualityIssueResult } from '@/types/domain/labOperations';
+import { VALIDATION_REMEDY_WIRES } from '@/types/contracts/labContract';
 
 const RETRY_SAME_SAMPLE_WIRE = VALIDATION_REMEDY_WIRES[0];
 const REQUEST_RECOLLECTION_WIRE = VALIDATION_REMEDY_WIRES[1];

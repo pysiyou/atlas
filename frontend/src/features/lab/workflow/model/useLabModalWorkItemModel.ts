@@ -5,7 +5,7 @@
 import { useMemo } from 'react';
 import { useOrder, useOrderTestDetailSamples } from '@/features/orders';
 import type { Order, OrderTest, Patient, Sample } from '@/types';
-import type { EntryWorklistItem, ValidationWorklistItem } from '@/types/labWorklist';
+import type { EntryWorklistItem, ValidationWorklistItem } from '@/lib/api/types';
 import { useOrderTestContext, type PendingEscalationItem } from '../../api/results';
 import {
   labModalWorkItemFromDto,

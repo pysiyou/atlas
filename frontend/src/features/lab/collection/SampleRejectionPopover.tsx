@@ -11,9 +11,9 @@ import { useSubmitQualityIssue } from '../hooks/useSubmitQualityIssue';
 import {
   buildSampleRemedyOptions,
   resolveSuggestedRemedy } from '../constants/qualityIssuePopoverCopy';
-import type { QualityIssueOptions } from '@/types/lab-operations';
+import type { QualityIssueOptions } from '@/types/domain/labOperations';
 import { getLabCopy } from '../constants/labConstants';
-import type { RemedyType } from '@/types/lab-operations';
+import type { RemedyType } from '@/types/domain/labOperations';
 
 function parseNumericSampleId(sampleId: string): number | undefined {
   return typeof sampleId === 'string' && /^\d+$/.test(sampleId)

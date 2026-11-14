@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import type { FeedbackId } from '@/types/generated/feedbackCatalog';
+import type { FeedbackId } from '@/types/contracts/feedbackCatalog';
 import { notify } from '@/feedback';
 
 /**

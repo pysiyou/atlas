@@ -7,7 +7,7 @@ import { cn, formatDate } from '@/utils';
 import { RecordId } from '@/features/shared';
 import { type ContainerType, type Sample, type RejectedSample } from '@/types';
 import type { ContainerTopColor } from '@/types';
-import type { SampleCollectionQueueItem, SampleRequirement } from '@/types/lab-operations';
+import type { SampleCollectionQueueItem, SampleRequirement } from '@/types/domain/labOperations';
 import { buildTestQueueTimelineLines } from '../../constants/labWorkflowAuditLines';
 import type { LabOrderTestQueueRow } from '../../types/labQueueChrome';
 import { retestContextFromRow } from '../../types/labQueueChrome';

@@ -23,7 +23,7 @@ import type { Order } from '@/types';
 import {
   getEnabledPaymentMethods,
   getDefaultPaymentMethod,
-  type PaymentMethod } from '@/types/payments';
+  type PaymentMethod } from '@/types/domain/payments';
 import { useCreatePayment, useOrderRemainingBalance } from '../api/payments';
 import { feedbackTitle, getFeedback, notify } from '@/feedback';
 import { IconKeys } from '@/config/icons';

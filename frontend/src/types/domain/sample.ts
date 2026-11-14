@@ -1,35 +1,25 @@
 // Sample Types - Physical sample entity
 
-// Import types from enums for local use
-import type { SampleType as SampleTypeEnum } from '@/types/enums';
+import type { SampleType as SampleTypeEnum } from '../contracts/enums/sample';
 import type {
   ContainerType as ContainerTypeEnum,
   ContainerTopColor as ContainerTopColorEnum,
-} from '@/types/enums';
-import type { RejectionReason as RejectionReasonEnum } from '@/types/enums';
+} from '../contracts/enums/container-enums';
+import type { RejectionReason as RejectionReasonEnum } from '../contracts/enums/rejection';
 
-// Re-export types (Single Source of Truth)
-export type { SampleType } from '@/types/enums';
-export type { SampleStatus } from '@/types/enums';
-export type { ContainerType, ContainerTopColor } from '@/types/enums';
-export type { RejectionReason } from '@/types/enums';
-
-// Re-export enum value arrays
-export { SAMPLE_TYPE_VALUES } from '@/types/enums';
-export { SAMPLE_STATUS_VALUES } from '@/types/enums';
-export {
-  CONTAINER_TYPE_VALUES,
-  CONTAINER_TOP_COLOR_VALUES,
-} from '@/types/enums';
-export type { ContainerCatalogId } from '@/types/enums';
+export type { SampleType, SampleStatus } from '../contracts/enums/sample';
+export type { ContainerType, ContainerTopColor } from '../contracts/enums/container-enums';
+export type { RejectionReason } from '../contracts/enums/rejection';
+export { SAMPLE_TYPE_VALUES, SAMPLE_STATUS_VALUES } from '../contracts/enums/sample';
+export { CONTAINER_TYPE_VALUES, CONTAINER_TOP_COLOR_VALUES } from '../contracts/enums/container-enums';
 export {
   COLLECTION_TOP_COLOR_PRESETS,
   CONTAINER_CATALOG_CONFIG,
   CONTAINER_CATALOG_OPTIONS,
-} from '@/types/enums';
-export { REJECTION_REASON_VALUES } from '@/types/enums';
+} from '../contracts/enums/container-catalog';
+export type { ContainerCatalogId } from '../contracts/enums/container-catalog';
+export { REJECTION_REASON_VALUES } from '../contracts/enums/rejection';
 
-// Local type aliases for use in this file
 type SampleType = SampleTypeEnum;
 type ContainerType = ContainerTypeEnum;
 type ContainerTopColor = ContainerTopColorEnum;

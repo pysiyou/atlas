@@ -279,7 +279,7 @@ export interface TestWithContext {
   denyReason?: string | null;
   denyMessage?: string | null;
   allowForceValidate?: boolean;
-  lab?: import('@/types/labProjection').LabWorkItemProjection | null;
+  lab?: import('@/lib/api/types').LabWorkItemProjection | null;
 
   [key: string]: unknown;
 }

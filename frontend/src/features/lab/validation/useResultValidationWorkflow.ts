@@ -17,7 +17,7 @@ import { isLikelyNetworkOrTimeout } from '@/utils/errors';
 import { orderTestKey } from '../utils/labSearchAndLinks';
 import { useLabDraftStore } from '../state/labDraftStore';
 import type { ValidationQueueRow } from '../types/queues';
-import type { QualityIssueResult } from '@/types/lab-operations';
+import type { QualityIssueResult } from '@/types/domain/labOperations';
 
 export interface ResultValidationWorkflowController {
   comments: Record<string, string>;

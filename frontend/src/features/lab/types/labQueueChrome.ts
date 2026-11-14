@@ -1,8 +1,8 @@
 /**
  * DTO-native chrome for lab order-test queue rows (entry, validation, escalation).
  */
-import type { LabWorklistAllowedActions } from '@/types/lab-operations';
-import type { StatusPresentation } from '@/types/labProjection';
+import type { LabWorklistAllowedActions } from '@/types/domain/labOperations';
+import type { StatusPresentation } from '@/lib/api/types';
 import type { EntryQueueRow, ValidationQueueRow, EscalationQueueItem } from './queues';
 import { copyWorklistLabProjection } from '../utils/worklistRowContext';
 import {

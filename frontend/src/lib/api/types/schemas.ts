@@ -23,3 +23,35 @@ export type ApiQualityIssueResult = Schemas['QualityIssueResult'];
 export type ApiQualityIssueResponse = Schemas['QualityIssueResponse'];
 export type ApiCriticalValueResponse = Schemas['CriticalValueResponse'];
 export type ApiEscalationResolveResponse = Schemas['EscalationResolveResponse'];
+
+// Lab worklists and projections (OpenAPI)
+export type CollectionWorklistItem = Schemas['CollectionWorklistItem'];
+export type EntryWorklistItem = Schemas['EntryWorklistItem'];
+export type ValidationWorklistItem = Schemas['ValidationWorklistItem'];
+export type DashboardWorklistItem = Schemas['DashboardWorklistItem'];
+export type WorklistPagination = Schemas['WorklistPagination'];
+export type LabWorklistAllowedActions = Schemas['LabWorklistAllowedActions'];
+export type StatusPresentation = Schemas['StatusPresentation'];
+export type LabWorkItemProjection = Schemas['LabWorkItemProjection'];
+
+export type LabPipelineStage = NonNullable<CollectionWorklistItem['pipelineStage']>;
+
+export type WorklistReferentDoctorFields = Pick<
+  CollectionWorklistItem,
+  | 'referentDoctorId'
+  | 'referentDoctorName'
+  | 'referentDoctorEmail'
+  | 'referentDoctorPhone'
+  | 'referentDoctorHospital'
+  | 'referentDoctorUsername'
+>;
+
+export type WorklistAttentionFields = Pick<
+  CollectionWorklistItem,
+  'attentionReason' | 'attentionLabel'
+>;
+
+export type WorklistActionGateFields = Pick<
+  CollectionWorklistItem,
+  'pipelineStage' | 'allowedActions' | 'denyReason' | 'denyMessage' | 'statusPresentation'
+>;

@@ -1,7 +1,7 @@
 /**
  * Union of catalog-defined rejection criteria for one or more tests.
  */
-import { resolveRejectionReasonLabel } from '@/types/generated/rejectionReasonRegistry';
+import { resolveRejectionReasonLabel } from '@/types/contracts/rejectionReasonRegistry';
 
 function criterionLabel(item: string | { reason?: string; label?: string; reasonId?: string }): string {
   if (typeof item === 'string') return resolveRejectionReasonLabel(item);

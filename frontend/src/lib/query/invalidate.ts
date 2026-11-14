@@ -17,7 +17,7 @@
 import type { QueryClient, QueryKey } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import type { Order } from '@/types';
-import type { PaginatedResponse } from '@/types/pagination';
+import type { PaginatedResponse } from '@/types/domain/pagination';
 import { queryKeys } from './keys';
 
 export interface InvalidateOrderOptions {

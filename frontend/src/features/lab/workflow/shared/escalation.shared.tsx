@@ -23,7 +23,7 @@ import {
 } from '../../types/labQueueChrome';
 import { text, WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
 import type { Order } from '@/types';
-import type { EscalationResolutionAction } from '@/types/lab-operations';
+import type { EscalationResolutionAction } from '@/types/domain/labOperations';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { notify } from '@/feedback';
 import { DetailGrid } from './detailModalLayout';

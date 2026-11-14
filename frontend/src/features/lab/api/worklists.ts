@@ -8,7 +8,7 @@ import type {
   EntryWorklistItem,
   ValidationWorklistItem,
   WorklistPagination,
-} from '@/types/labWorklist';
+} from '@/lib/api/types';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
@@ -25,7 +25,7 @@ export type {
   LabWorklistAllowedActions,
   ValidationWorklistItem,
   WorklistPagination,
-} from '@/types/labWorklist';
+} from '@/lib/api/types';
 
 interface WorklistParams {
   page?: number;

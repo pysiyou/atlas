@@ -2,10 +2,8 @@
  * Central type exports
  */
 
-// Export all enums from consolidated source
-export * from '@/types/enums';
+export * from './contracts/enums';
 
-// Export type interfaces (not enums) to avoid conflicts
 export type {
   Patient,
   PatientContext,
@@ -13,24 +11,24 @@ export type {
   EmergencyContact,
   MedicalHistory,
   Affiliation,
-} from './patient';
+} from './domain/patient';
 export type {
   Order,
   OrderTest,
   TestResult,
   ResultRejectionType,
   LatestPaymentSnippet,
-} from './order';
-export { getOrderTests, getOrderTestCount } from './order';
+} from './domain/order';
+export { getOrderTests, getOrderTestCount } from './domain/order';
 export type {
   Sample,
   PendingSample,
   CollectedSample,
   RejectedSample,
-} from './sample';
-export { isCollectedSample, isRejectedSample } from './sample';
-export type { User, AuthUser } from './user';
-export type { PaginatedResponse, PaginationMeta } from './pagination';
+} from './domain/sample';
+export { isCollectedSample, isRejectedSample } from './domain/sample';
+export type { User, AuthUser } from './domain/user';
+export type { PaginatedResponse, PaginationMeta } from './domain/pagination';
 export type {
   Test,
   TestSummary,
@@ -40,9 +38,42 @@ export type {
   CriticalRange,
   ResultItem,
   TestWithContext,
-} from './test';
-export type { Payment, PaymentMethod, Invoice } from './payments';
+} from './domain/test';
+export type { Payment, PaymentMethod, Invoice } from './domain/payments';
+export type { AffiliationPlan, AffiliationPricing } from './domain/affiliation';
 export type {
   SampleCollectionQueueItem,
   SampleCollectionRequirement,
-} from './lab-operations';
+  CollectionQueueRow,
+  QualityIssueOptions,
+  QualityIssueResult,
+  QualityIssueTarget,
+  QualityIssueRecord,
+  ReportQualityIssueRequest,
+  EscalationResolveRequest,
+  EscalationResolveResult,
+  SampleRequirement,
+} from './domain/labOperations';
+export type { ApiError, ApiErrorDetail } from './validation';
+export {
+  zEnumFromValues,
+  phoneSchema,
+  emailSchema,
+  postalCodeSchema,
+  dateStringSchema,
+  nullableApiDatetimeSchema,
+  dateSchema,
+  positiveIntSchema,
+  percentageSchema,
+  nonEmptyString,
+  nameSchema,
+  apiErrorSchema,
+  apiErrorDetailSchema,
+} from './validation';
+export type {
+  ReportableOrder,
+  LabReportPayload,
+  ReportTemplate,
+  ReportPreviewResultsLayout,
+} from './domain/report';
+export { RESULT_NOT_AVAILABLE } from './domain/report';

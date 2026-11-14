@@ -8,7 +8,7 @@ import {
   PAYMENT_METHOD_VALUES,
   type PaymentMethod,
   type PaymentStatus,
-} from '@/types/enums';
+} from '../contracts/enums/order';
 
 export type { PaymentMethod };
 

@@ -2,17 +2,32 @@
  * Quality issue and lab operation types — aligned with backend contracts.
  */
 
-import type { PaymentStatus, Sample } from '@/types';
-import type { ContainerTopColor, ContainerType, SampleType } from '@/types';
+import type { PaymentStatus, PriorityLevel } from '../contracts/enums/order';
+import type { SampleType } from '../contracts/enums/sample';
+import type { ContainerTopColor, ContainerType } from '../contracts/enums/container-enums';
 import type {
   EscalationResolutionAction,
-  PriorityLevel,
   QualityDomain,
   QualityIssueTargetType,
   QualityStage,
   RemedyType,
-} from '@/types/enums';
-import { GENERATED_LAB_CONSTANTS } from '@/types/generated/labContract';
+} from '../contracts/enums';
+import type { EscalationReasonCode } from '../contracts/enums/lab-quality';
+import { GENERATED_LAB_CONSTANTS } from '../contracts/labContract';
+import type { Sample } from './sample';
+import type {
+  LabWorklistAllowedActions,
+  StatusPresentation,
+  CollectionWorklistItem,
+  DashboardWorklistItem,
+  EntryWorklistItem,
+  LabPipelineStage,
+  ValidationWorklistItem,
+  WorklistActionGateFields,
+  WorklistAttentionFields,
+  WorklistPagination,
+  WorklistReferentDoctorFields,
+} from '@/lib/api/types';
 
 export type {
   EscalationReasonCode,
@@ -21,7 +36,19 @@ export type {
   QualityIssueTargetType,
   QualityStage,
   RemedyType,
-} from '@/types/enums';
+};
+export type { LabWorklistAllowedActions };
+export type {
+  CollectionWorklistItem,
+  DashboardWorklistItem,
+  EntryWorklistItem,
+  LabPipelineStage,
+  ValidationWorklistItem,
+  WorklistActionGateFields,
+  WorklistAttentionFields,
+  WorklistPagination,
+  WorklistReferentDoctorFields,
+};
 
 /** Collection requirement for a sample (shared with modal payloads and lab queue). */
 export interface SampleCollectionRequirement {
@@ -34,11 +61,6 @@ export interface SampleCollectionRequirement {
   priority: PriorityLevel;
   orderId: number;
 }
-
-import type { LabWorklistAllowedActions } from '@/types/labWorklistApi';
-
-/** Server-driven gates from lab worklist API (OpenAPI). */
-export type { LabWorklistAllowedActions } from '@/types/labWorklistApi';
 
 /**
  * Collection queue row mapped from `CollectionWorklistItem` (worklist-native fields only).
@@ -55,7 +77,7 @@ export interface CollectionQueueRow {
   allowedActions?: LabWorklistAllowedActions;
   denyReason?: string | null;
   denyMessage?: string | null;
-  statusPresentation?: import('@/types/labProjection').StatusPresentation | null;
+  statusPresentation?: StatusPresentation | null;
   referentDoctorId?: number | null;
   referentDoctorName?: string | null;
   referentDoctorEmail?: string | null;
@@ -164,19 +186,4 @@ export interface EscalationResolveResult {
   newSampleId?: number;
 }
 
-export const {
-  MAX_RETEST_ATTEMPTS,
-  MAX_RECOLLECTION_ATTEMPTS,
-} = GENERATED_LAB_CONSTANTS;
-
-export type {
-  CollectionWorklistItem,
-  DashboardWorklistItem,
-  EntryWorklistItem,
-  LabPipelineStage,
-  ValidationWorklistItem,
-  WorklistActionGateFields,
-  WorklistAttentionFields,
-  WorklistPagination,
-  WorklistReferentDoctorFields,
-} from '@/types/labWorklist';
+export const { MAX_RETEST_ATTEMPTS, MAX_RECOLLECTION_ATTEMPTS } = GENERATED_LAB_CONSTANTS;

@@ -3,7 +3,7 @@
  */
 import type { LabPipelineStage } from './monitorModel';
 import type { Gender, PriorityLevel, TestStatus } from '@/types';
-import type { StatusPresentation } from '@/types/labProjection';
+import type { StatusPresentation } from '@/lib/api/types';
 
 export interface LabOrderTableRow {
   id: string;

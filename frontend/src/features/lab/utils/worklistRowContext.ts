@@ -2,7 +2,7 @@
  * Shared lab worklist → UI context projection (gates, presentation, attention).
  */
 
-import type { WorklistActionGateFields, WorklistAttentionFields } from '@/types/labWorklist';
+import type { WorklistActionGateFields, WorklistAttentionFields } from '@/lib/api/types';
 
 export type WorklistLabProjection = WorklistActionGateFields & WorklistAttentionFields;
 

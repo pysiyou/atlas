@@ -4,7 +4,7 @@ import {
   ATTENTION_REASON_KEYS,
   reasonBlocksProgress,
   type LabAttentionReason,
-} from '@/types/generated/labContract';
+} from '@/types/contracts/labContract';
 import { differenceInHours, parseISO, isValid } from 'date-fns';
 import { LAB_CONFIG } from '../constants/labConstants';
 import type { OrderTest, TestStatus } from '@/types';

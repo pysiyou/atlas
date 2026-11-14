@@ -12,7 +12,7 @@ import { useAffiliationPricing } from '@/features/catalog';
 import { formatCurrency } from '@/utils';
 import { getFeedback } from '@/feedback';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';
-import type { AffiliationPlan } from '@/types/affiliation';
+import type { AffiliationPlan } from '@/types/domain/affiliation';
 import type { AffiliationDuration } from '@/types';
 import { IconKeys } from '@/config/icons';
 import { Text } from '@/components/layout/Text';

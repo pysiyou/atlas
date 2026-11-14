@@ -9,7 +9,7 @@ import {
   useLabQueueFilterBarProps,
   useLabQueuePageFilters,
 } from '../hooks';
-import type { CollectionQueueRow } from '@/types/lab-operations';
+import type { CollectionQueueRow } from '@/types/domain/labOperations';
 import { LAB_CONFIG } from '../constants';
 import { useCollectSample } from '../api/samples';
 import { useCollectionWorklist } from '../api/worklists';

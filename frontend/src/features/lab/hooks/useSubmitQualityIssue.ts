@@ -10,7 +10,7 @@ import type {
   QualityIssueResult,
   QualityIssueTargetType,
   RemedyType,
-} from '@/types/lab-operations';
+} from '@/types/domain/labOperations';
 import { notifyQualityIssueSuccess } from '../validation/qualityIssueToastMessages';
 
 interface UseSubmitQualityIssueOptions {

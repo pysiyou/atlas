@@ -7,7 +7,7 @@ import { getEmptyCopy } from '@/config/emptyStateCopy';
 import { EmptyState } from '@/components/display/EmptyState';
 import { PANEL_EMPTY_STATE } from '@/config/emptyStatePresets';
 import { DataTable } from '@/components/data-table';
-import type { Order } from '@/types/order';
+import type { Order } from '@/types/domain/order';
 import { useTestNameLookup } from '@/features/catalog';
 import { createPatientRelatedOrdersTableConfig } from '../config/PatientOrdersTable.config';
 export interface PatientOrdersTableProps {
