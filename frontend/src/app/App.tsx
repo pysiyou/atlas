@@ -15,6 +15,7 @@ import { ProtectedLayout } from '@/app/ProtectedLayout';
 import { PublicRoute } from '@/app/PublicRoute';
 import { ModalRenderer } from '@/app/modals/ModalRenderer';
 import { ROUTES } from '@/config';
+import { isFeatureEnabled } from '@/config/clientConfig';
 
 type LazyPage = LazyExoticComponent<ComponentType>;
 
@@ -52,23 +53,30 @@ const Users = lazyNamed(() => import('@/features/users'), 'UsersPage');
 interface ProtectedRouteConfig {
   path: string;
   element: LazyPage;
+  featureKey?: string; // Optional feature flag key
 }
 
 const PROTECTED_ROUTES: ProtectedRouteConfig[] = [
-  { path: ROUTES.DASHBOARD, element: Dashboard },
-  { path: `${ROUTES.PATIENTS}/*`, element: Patients },
-  { path: `${ROUTES.ORDERS}/*`, element: Orders },
-  { path: `${ROUTES.CATALOG}/*`, element: Catalog },
-  { path: ROUTES.LABORATORY, element: Laboratory },
-  { path: `${ROUTES.LABORATORY}/:tab`, element: Laboratory },
-  { path: ROUTES.LAB_ALL_TESTS, element: LabAllTests },
-  { path: ROUTES.PAYMENTS, element: Payments },
-  { path: `${ROUTES.REPORTS}/*`, element: Reports },
-  { path: ROUTES.EVENT_LOG, element: EventLog },
-  { path: ROUTES.USERS, element: Users },
+  { path: ROUTES.DASHBOARD, element: Dashboard, featureKey: 'dashboard' },
+  { path: `${ROUTES.PATIENTS}/*`, element: Patients, featureKey: 'patients' },
+  { path: `${ROUTES.ORDERS}/*`, element: Orders, featureKey: 'orders' },
+  { path: `${ROUTES.CATALOG}/*`, element: Catalog, featureKey: 'catalog' },
+  { path: ROUTES.LABORATORY, element: Laboratory, featureKey: 'laboratory' },
+  { path: `${ROUTES.LABORATORY}/:tab`, element: Laboratory, featureKey: 'laboratory' },
+  { path: ROUTES.LAB_ALL_TESTS, element: LabAllTests, featureKey: 'laboratory' },
+  { path: ROUTES.PAYMENTS, element: Payments, featureKey: 'payments' },
+  { path: `${ROUTES.REPORTS}/*`, element: Reports, featureKey: 'reports' },
+  { path: ROUTES.EVENT_LOG, element: EventLog, featureKey: 'audit' },
+  { path: ROUTES.USERS, element: Users, featureKey: 'users' },
 ];
 
 const AppRoutes: React.FC = () => {
+  // Filter routes based on feature flags
+  const enabledRoutes = PROTECTED_ROUTES.filter(route => {
+    if (!route.featureKey) return true; // No feature key means always enabled
+    return isFeatureEnabled(route.featureKey);
+  });
+
   return (
     <Routes>
       <Route
@@ -83,7 +91,7 @@ const AppRoutes: React.FC = () => {
       />
 
       <Route element={<ProtectedLayout />}>
-        {PROTECTED_ROUTES.map(({ path, element: Page }) => (
+        {enabledRoutes.map(({ path, element: Page }) => (
           <Route key={path} path={path} element={<Page />} />
         ))}
       </Route>

@@ -1,12 +1,17 @@
 /**
- * Company Configuration
- * Centralized company-specific data configuration for multi-tenant support
+ * Company Configuration Facade
+ * 
+ * Thin facade over API-loaded client configuration (ClientConfig).
+ * Maintains backward compatibility with existing call sites while reading
+ * from the single source of truth: config/client-config.json via API.
+ * 
+ * Note: For non-React modules (PDF utils), ensure config is loaded before calling.
  */
 
-import companyConfigData from './company-config.json';
+import { getClientConfig } from './clientConfig';
 
 /**
- * Company configuration type definitions
+ * Company configuration type definitions (legacy compatibility)
  */
 export interface CompanyAddress {
   street: string;
@@ -50,7 +55,7 @@ export interface TrustIndicator {
 }
 
 export interface CompanyMarketing {
-  trustIndicator: TrustIndicator;
+  trustIndicator?: TrustIndicator;
 }
 
 export interface CompanyData {
@@ -71,102 +76,214 @@ export interface CompanyData {
 }
 
 /**
- * Company configuration singleton
- * Loads company data from JSON file (will be replaced with database fetch later)
+ * Default values when config is not yet loaded or fields are missing
+ */
+const DEFAULT_VALUES = {
+  name: 'Atlas Lab',
+  displayName: 'Atlas Lab',
+  fullName: 'Atlas Clinical Laboratories',
+  subtitle: 'Laboratory Information System',
+  tagline: 'Excellence in Diagnostic Testing',
+  version: '2.0',
+  copyright: '© 2026 Atlas Clinical Labs. All rights reserved.',
+  logoPath: '/icons/here.svg',
+  primaryColor: '#0284c7',
+  secondaryColor: '#38bdf8',
+  headerText: 'Laboratory Report',
+  footerText: 'This report contains confidential patient information.',
+  includeSignature: true,
+};
+
+/**
+ * Company configuration facade
+ * Reads from API-loaded ClientConfig instead of bundled JSON
  */
 class CompanyConfig {
-  private config: CompanyData;
-
-  constructor() {
-    this.config = companyConfigData as CompanyData;
-  }
-
   /**
-   * Get full company configuration
+   * Get full company configuration (legacy format)
    */
   getConfig(): CompanyData {
-    return this.config;
+    const config = getClientConfig();
+    
+    if (!config) {
+      console.warn('Client config not loaded yet, returning defaults');
+    }
+    
+    return {
+      company: {
+        name: config?.company.name || DEFAULT_VALUES.name,
+        subtitle: config?.company.subtitle || DEFAULT_VALUES.subtitle,
+        fullName: config?.company.fullName || DEFAULT_VALUES.fullName,
+        displayName: config?.company.displayName || DEFAULT_VALUES.displayName,
+        tagline: config?.company.tagline || DEFAULT_VALUES.tagline,
+        version: config?.company.version || DEFAULT_VALUES.version,
+        copyright: config?.company.copyright || DEFAULT_VALUES.copyright,
+      },
+      branding: {
+        logoPath: config?.branding.logoPath || DEFAULT_VALUES.logoPath,
+        primaryColor: config?.branding.primaryColor || DEFAULT_VALUES.primaryColor,
+        secondaryColor: config?.branding.secondaryColor || DEFAULT_VALUES.secondaryColor,
+      },
+      contact: this._getContact(config),
+      features: this._getFeatures(config),
+      reports: this._getReports(config),
+      marketing: this._getMarketing(config),
+    };
   }
 
   /**
    * Get company name
    */
   getName(): string {
-    return this.config.company.name;
+    const config = getClientConfig();
+    return config?.company.name || DEFAULT_VALUES.name;
   }
 
   /**
    * Get full company name
    */
   getFullName(): string {
-    return this.config.company.fullName;
+    const config = getClientConfig();
+    return config?.company.fullName || DEFAULT_VALUES.fullName;
   }
 
   /**
    * Get display name
    */
   getDisplayName(): string {
-    return this.config.company.displayName;
+    const config = getClientConfig();
+    return config?.company.displayName || DEFAULT_VALUES.displayName;
   }
 
   /**
    * Get company tagline
    */
   getTagline(): string {
-    return this.config.company.tagline;
+    const config = getClientConfig();
+    return config?.company.tagline || DEFAULT_VALUES.tagline;
   }
 
   /**
    * Get app version
    */
   getVersion(): string {
-    return this.config.company.version;
+    const config = getClientConfig();
+    return config?.company.version || DEFAULT_VALUES.version;
   }
 
   /**
    * Get copyright text
    */
   getCopyright(): string {
-    return this.config.company.copyright;
+    const config = getClientConfig();
+    return config?.company.copyright || DEFAULT_VALUES.copyright;
   }
 
   /**
    * Get branding configuration
    */
   getBranding(): CompanyBranding {
-    return this.config.branding;
+    const config = getClientConfig();
+    return {
+      logoPath: config?.branding.logoPath || DEFAULT_VALUES.logoPath,
+      primaryColor: config?.branding.primaryColor || DEFAULT_VALUES.primaryColor,
+      secondaryColor: config?.branding.secondaryColor || DEFAULT_VALUES.secondaryColor,
+    };
   }
 
   /**
    * Get contact information
    */
   getContact(): CompanyContact {
-    return this.config.contact;
+    const config = getClientConfig();
+    return this._getContact(config);
   }
 
   /**
-   * Get feature list
+   * Get feature list (for login marketing)
    */
   getFeatures(): CompanyFeature[] {
-    return this.config.features;
+    const config = getClientConfig();
+    return this._getFeatures(config);
   }
 
   /**
    * Get report configuration
    */
   getReports(): CompanyReports {
-    return this.config.reports;
+    const config = getClientConfig();
+    return this._getReports(config);
   }
 
   /**
    * Get marketing data
    */
   getMarketing(): CompanyMarketing {
-    return this.config.marketing;
+    const config = getClientConfig();
+    return this._getMarketing(config);
+  }
+
+  // Private helpers to transform API config to legacy format
+  
+  private _getContact(config: ReturnType<typeof getClientConfig>): CompanyContact {
+    const address = config?.company.contact?.address;
+    return {
+      address: {
+        street: address?.street || '',
+        city: address?.city || '',
+        state: address?.state || '',
+        zipCode: address?.zipCode || '',
+        country: address?.country || '',
+        fullAddress: address?.fullAddress || '',
+      },
+      phone: config?.company.contact?.phone || [],
+      email: config?.company.contact?.email || '',
+      website: config?.company.contact?.website || '',
+    };
+  }
+
+  private _getFeatures(config: ReturnType<typeof getClientConfig>): CompanyFeature[] {
+    // If marketing.features exists, convert string array to CompanyFeature format
+    if (config?.marketing?.features) {
+      return config.marketing.features.map(feature => ({
+        title: feature,
+        description: '',
+      }));
+    }
+    
+    // Return default features
+    return [
+      {
+        title: 'Intelligent Patient Management',
+        description: 'Unified records, appointments, and complete medical history at your fingertips',
+      },
+      {
+        title: 'Streamlined Lab Workflows',
+        description: 'From sample collection to result delivery — optimized every step of the way',
+      },
+      {
+        title: 'Real-time Quality Control',
+        description: 'Instant validation, automated alerts, and comprehensive audit trails',
+      },
+    ];
+  }
+
+  private _getReports(config: ReturnType<typeof getClientConfig>): CompanyReports {
+    return {
+      headerText: config?.reports?.headerText || DEFAULT_VALUES.headerText,
+      footerText: config?.reports?.footerText || DEFAULT_VALUES.footerText,
+      includeSignature: config?.reports?.includeSignature ?? DEFAULT_VALUES.includeSignature,
+    };
+  }
+
+  private _getMarketing(config: ReturnType<typeof getClientConfig>): CompanyMarketing {
+    // Return empty marketing object if not configured
+    // Can be extended when marketing data is needed
+    return {};
   }
 }
 
 /**
- * Singleton instance of company configuration
+ * Singleton instance of company configuration facade
  */
 export const companyConfig = new CompanyConfig();

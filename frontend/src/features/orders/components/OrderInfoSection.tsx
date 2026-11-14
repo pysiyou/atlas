@@ -18,6 +18,7 @@ import { useUserLookup } from '@/lib/api/users';
 import { useTestNameLookup } from '@/features/catalog';
 import { getBillableTests } from '../utils/orderCalculator';
 import { renderOrderTestsBlock } from '@/features/shared/entityPresentation';
+import { OrderDoctorApprovalControl } from './OrderDoctorApprovalControl';
 
 export interface OrderInfoSectionProps {
   order: Order;
@@ -51,6 +52,9 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order }) => 
   return (
     <div className="flex min-h-0 h-full flex-col">
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+        <div className="mb-space-3">
+          <OrderDoctorApprovalControl order={order} />
+        </div>
         <div className={DETAIL_SECTION_GENERAL_INFO_GRID}>
           <DescriptionItem
             icon={getDataFieldIcon('orderId')}

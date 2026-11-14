@@ -110,9 +110,10 @@ def _tests_must_transition_on_collect(order_tests: list[OrderTest]) -> tuple[boo
 
 
 def assert_can_collect(sample: Sample, order: Order, order_tests: list[OrderTest]) -> None:
-    # Check payment requirement based on workflow configuration
+    # Check workflow requirements based on configuration
     from app.platform.client_config import client_config
     
+    # Workflow: requirePaymentBeforeCollection
     require_payment = client_config.workflows.get("requirePaymentBeforeCollection", True)
     if require_payment and order.paymentStatus != PaymentStatus.PAID:
         raise LabOperationError(
@@ -120,6 +121,16 @@ def assert_can_collect(sample: Sample, order: Order, order_tests: list[OrderTest
             status_code=402,
             error_code="PAYMENT_REQUIRED",
         )
+    
+    # Workflow: requireDoctorApproval
+    require_doctor_approval = client_config.workflows.get("requireDoctorApproval", False)
+    if require_doctor_approval and not order.doctorApprovedBy:
+        raise LabOperationError(
+            "Sample collection requires doctor approval. Order must be approved before collecting.",
+            status_code=403,
+            error_code="DOCTOR_APPROVAL_REQUIRED",
+        )
+    
     try:
         SampleStateMachine.validate_transition(sample.status, SampleStatus.COLLECTED)
     except StateTransitionError as exc:
@@ -142,10 +153,26 @@ def assert_can_enter_results(order_test: OrderTest) -> None:
         raise LabOperationError(reason, status_code=400, error_code="INVALID_TRANSITION")
 
 
-def assert_can_validate(order_test: OrderTest) -> None:
+def assert_can_validate(order_test: OrderTest, validator_id: str | None = None) -> None:
+    """
+    Check if result can be validated.
+    If requireDualValidation is enabled, ensures second validator is different from first.
+    """
+    from app.platform.client_config import client_config
+    
     can_validate, reason = TestStateMachine.can_validate(order_test.status)
     if not can_validate:
         raise LabOperationError(reason, status_code=400, error_code="INVALID_TRANSITION")
+    
+    # Workflow: requireDualValidation — second sign-off must be a different user
+    require_dual = client_config.workflows.get("requireDualValidation", False)
+    if require_dual and order_test.validatedBy and not order_test.secondValidatorId:
+        if validator_id and order_test.validatedBy == validator_id:
+            raise LabOperationError(
+                "Dual validation requires a different validator for the second validation.",
+                status_code=403,
+                error_code="DUAL_VALIDATION_REQUIRED",
+            )
 
 
 def action_flags_for_collection(

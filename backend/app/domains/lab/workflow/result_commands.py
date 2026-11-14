@@ -214,8 +214,18 @@ class ResultCommandHandler:
         # so no need for additional escalation check here.
 
         from app.domains.lab.rules.eligibility import assert_can_validate
+        from app.platform.client_config import client_config
 
-        assert_can_validate(order_test)
+        user_id_str = str(user_id)
+        assert_can_validate(order_test, validator_id=user_id_str)
+
+        require_dual = client_config.workflows.get("requireDualValidation", False)
+        is_second_signoff = (
+            require_dual
+            and order_test.validatedBy
+            and not order_test.secondValidatorId
+        )
+        is_first_dual_signoff = require_dual and not order_test.validatedBy
 
         # Allow approve even when linked specimen is rejected — validator owns the decision.
         # Record that context in validation notes for audit when applicable.
@@ -232,26 +242,46 @@ class ResultCommandHandler:
                     else reject_note
                 )
 
-        order_test.resultValidatedAt = datetime.now(UTC)
-        order_test.validatedBy = str(user_id)
-        order_test.validationNotes = validation_notes
-        order_test.status = TestStatus.VALIDATED
+        now = datetime.now(UTC)
+        if is_first_dual_signoff:
+            order_test.validatedBy = user_id_str
+            order_test.resultValidatedAt = now
+            order_test.validationNotes = validation_notes
+            # Await second validator; keep status RESULTED
+        elif is_second_signoff:
+            order_test.secondValidatorId = user_id_str
+            order_test.secondValidatedAt = now
+            if validation_notes:
+                order_test.validationNotes = validation_notes
+            order_test.status = TestStatus.VALIDATED
+        else:
+            order_test.resultValidatedAt = now
+            order_test.validatedBy = user_id_str
+            order_test.validationNotes = validation_notes
+            order_test.status = TestStatus.VALIDATED
 
         approve_metadata: dict[str, Any] = {"validation_notes": validation_notes}
+        if is_first_dual_signoff:
+            approve_metadata["dual_validation"] = "first_signoff"
         if order_test.results:
             approve_metadata["results"] = order_test.results
         if order_test.flags:
             approve_metadata["flags"] = list(order_test.flags)
 
-        self._svc.emitter.validation_approved(
-            order_id,
-            order_test.id,
-            order_test.testCode,
-            user_id,
-            metadata=approve_metadata,
-        )
+        if not is_first_dual_signoff:
+            self._svc.emitter.validation_approved(
+                order_id,
+                order_test.id,
+                order_test.testCode,
+                user_id,
+                metadata=approve_metadata,
+            )
 
-        reflex_added = ReflexEngine(self._svc.db).evaluate_after_validation(order_test, user_id)
+        reflex_added = []
+        if not is_first_dual_signoff:
+            reflex_added = ReflexEngine(self._svc.db).evaluate_after_validation(
+                order_test, user_id
+            )
         if reflex_added:
             reflex_note = "; ".join(
                 f"Reflex {r.added_test_code}: {r.rule_description}" for r in reflex_added

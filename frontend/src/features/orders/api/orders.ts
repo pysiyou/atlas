@@ -131,6 +131,15 @@ export const orderAPI = {
       amountPaid,
     });
   },
+
+  async approveForCollection(orderId: string): Promise<{
+    orderId: number;
+    doctorApprovedBy: string;
+    doctorApprovedAt: string;
+    message: string;
+  }> {
+    return apiClient.post(`/orders/${orderId}/approve`);
+  },
 };
 
 /**

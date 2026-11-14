@@ -147,6 +147,8 @@ export interface Order {
   referentDoctorEmail?: string | null;
   referentDoctorPhone?: string | null;
   referentDoctorHospital?: string | null;
+  doctorApprovedBy?: string | null;
+  doctorApprovedAt?: string | null;
   referentDoctorUsername?: string | null;
   priority: PriorityLevel;
 

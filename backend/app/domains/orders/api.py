@@ -11,6 +11,7 @@ from app.domains.orders.schemas import (
     OrderSummaryResponse,
     OrderUpdate,
 )
+from app.domains.orders.models import Order
 from app.domains.orders.service import OrderService
 from app.domains.users.models import User
 from app.platform.database import get_db
@@ -18,7 +19,7 @@ from app.platform.http.dependencies import PaginationParams, get_current_user
 from app.platform.utils.common import parse_csv_values
 from app.shared.contracts.enums import OrderStatus, PaymentMethod, PaymentStatus
 from app.shared.schemas.pagination import PaginatedResponse
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 router = APIRouter()
@@ -135,3 +136,48 @@ def mark_as_reported(
     current_user: User = Depends(get_current_user),
 ) -> OrderReportResponse:
     return OrderService(db).mark_as_reported(orderId, current_user.id)
+
+
+@router.post("/orders/{orderId}/approve", status_code=status.HTTP_200_OK)
+def approve_order(
+    orderId: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Approve an order for sample collection (requireDoctorApproval workflow).
+    Only needed when requireDoctorApproval is enabled in client config.
+    """
+    from datetime import UTC, datetime
+    from app.platform.client_config import client_config
+    
+    require_approval = client_config.workflows.get("requireDoctorApproval", False)
+    if not require_approval:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Doctor approval workflow is not enabled in configuration.",
+        )
+    
+    order = db.query(Order).filter(Order.orderId == orderId).first()
+    if not order:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Order {orderId} not found",
+        )
+    
+    if order.doctorApprovedBy:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Order {orderId} is already approved by {order.doctorApprovedBy}",
+        )
+    
+    order.doctorApprovedBy = str(current_user.id)
+    order.doctorApprovedAt = datetime.now(UTC)
+    db.commit()
+    
+    return {
+        "orderId": orderId,
+        "doctorApprovedBy": order.doctorApprovedBy,
+        "doctorApprovedAt": order.doctorApprovedAt.isoformat(),
+        "message": "Order approved successfully"
+    }

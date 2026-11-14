@@ -13,6 +13,7 @@ from app.domains.patients.schemas import (
     PatientResponse,
     PatientUpdate,
 )
+from app.platform.client_config import client_config
 from app.platform.utils.common import parse_display_id_from_search
 from app.shared.contracts.enums import Gender, PaymentStatus
 from fastapi import HTTPException, status
@@ -198,6 +199,16 @@ class PatientService:
         return serialize_patient_full(patient)
 
     def create(self, patient_data: PatientCreate, user_id: int) -> dict:
+        # Check workflow: requireEmergencyContact
+        require_emergency = client_config.workflows.get("requireEmergencyContact", True)
+        if require_emergency:
+            emergency = patient_data.emergencyContact
+            if not emergency or not emergency.fullName or not emergency.phone:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Emergency contact information is required (name and phone).",
+                )
+        
         medical_history_data = (
             patient_data.medicalHistory.model_dump()
             if patient_data.medicalHistory

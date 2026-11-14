@@ -42,6 +42,10 @@ class Order(Base):
         index=True,
     )
     priority = Column(contract_enum(PriorityLevel), nullable=False, default=PriorityLevel.LOW)
+    
+    # Workflow: Doctor approval (optional based on config)
+    doctorApprovedBy = Column("doctor_approved_by", String, nullable=True)
+    doctorApprovedAt = Column("doctor_approved_at", DateTime(timezone=True), nullable=True)
 
     # Metadata
     createdBy = Column("created_by", String, nullable=False)
@@ -130,6 +134,10 @@ class OrderTest(Base):
     resultValidatedAt = Column("result_validated_at", DateTime(timezone=True), nullable=True)
     validatedBy = Column("validated_by", String, nullable=True)
     validationNotes = Column("validation_notes", String, nullable=True)
+    
+    # Workflow: Dual validation (optional based on config)
+    secondValidatorId = Column("second_validator_id", String, nullable=True)
+    secondValidatedAt = Column("second_validated_at", DateTime(timezone=True), nullable=True)
 
     # Flags and notes
     flags = Column(JSON, nullable=True)  # Array of strings

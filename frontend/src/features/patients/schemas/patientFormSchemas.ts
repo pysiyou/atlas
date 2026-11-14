@@ -9,6 +9,7 @@ import {
 } from '@/types/schemas/common.schema';
 import { AFFILIATION_DURATION_VALUES, GENDER_VALUES, RELATIONSHIP_VALUES } from '@/types/enums';
 import { zEnumFromValues } from '@/types/schemas/enumFromValues';
+import { getClientConfig } from '@/config/clientConfig';
 
 export const addressSchema = z.object({
   street: z.string().min(1, 'Street is required'),
@@ -123,8 +124,28 @@ export const patientCreateSchema = patientSchema
   })
   .extend({
     phone: phoneSchema,
-    emergencyContact: emergencyContactSchema,
+    emergencyContact: emergencyContactSchema.partial(),
     affiliation: affiliationFormSchema.nullish(),
+  })
+  .superRefine((data, ctx) => {
+    const requireEmergency =
+      getClientConfig()?.workflows?.requireEmergencyContact !== false;
+    if (!requireEmergency) return;
+    const ec = data.emergencyContact;
+    if (!ec?.fullName?.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['emergencyContact', 'fullName'],
+        message: 'Emergency contact name is required',
+      });
+    }
+    if (!ec?.phone?.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['emergencyContact', 'phone'],
+        message: 'Emergency contact phone is required',
+      });
+    }
   });
 
 // Form schema for UPDATE (all fields optional for partial updates)

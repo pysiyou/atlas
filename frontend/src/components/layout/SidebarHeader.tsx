@@ -3,6 +3,7 @@ import { actionButtonPreset, Icon, IconButton } from '@/components/primitives';
 import { IconKeys } from '@/config/icons';
 import { text, CHROME, RADIUS } from '@/theme/recipes';
 import { cn } from '@/utils';
+import { BrandLogo } from '@/components/branding/BrandLogo';
 
 export interface SidebarHeaderProps {
   isCollapsed: boolean;
@@ -13,7 +14,7 @@ export interface SidebarHeaderProps {
 function BrandMark({ className }: { className?: string }) {
   return (
     <div className={cn(CHROME.navIcon, 'text-brand', className)}>
-      <Icon iconKey={IconKeys.ui.appLogo} className="size-[1.125rem]" />
+      <BrandLogo className="size-[1.125rem]" />
     </div>
   );
 }

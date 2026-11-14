@@ -8,6 +8,7 @@ import { Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/feedback';
 import { IconKeys } from '@/config/icons';
 import { companyConfig } from '@/config';
+import { BrandLogo } from '@/components/branding/BrandLogo';
 import { PROMO_CONTROL, PROMO_SHADOW, PROMO_TYPE, RADIUS } from '@/theme/recipes';
 
 interface LoginFormCardProps {
@@ -67,7 +68,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
 
           {/* Mobile logo */}
           <div className="flex lg:hidden items-center gap-space-3 mb-space-8">
-            <Icon iconKey={IconKeys.ui.appLogo} className="w-11 h-11 text-promo-fg shrink-0" />
+            <BrandLogo className="w-11 h-11 text-promo-fg shrink-0" />
             <div>
               <h1 className={PROMO_TYPE.mobileBrandTitle}>{company.company.name}</h1>
               <p className={PROMO_TYPE.companySubtitle}>

@@ -12,8 +12,17 @@ export interface ClientConfig {
     fullName?: string;
     subtitle?: string;
     tagline?: string;
+    version?: string;
+    copyright?: string;
     contact?: {
-      address?: Record<string, string>;
+      address?: {
+        street?: string;
+        city?: string;
+        state?: string;
+        zipCode?: string;
+        country?: string;
+        fullAddress?: string;
+      };
       phone?: string[];
       email?: string;
       website?: string;
@@ -24,16 +33,27 @@ export interface ClientConfig {
     primaryColor: string;
     secondaryColor?: string;
     defaultTheme?: string;
+    faviconPath?: string;
   };
   terminology?: Record<string, string>;
   features?: Record<string, boolean>;
   workflows?: Record<string, boolean>;
+  reports?: {
+    headerText?: string;
+    footerText?: string;
+    includeSignature?: boolean;
+  };
+  marketing?: {
+    features?: string[];
+    description?: string;
+  };
 }
 
 let cachedConfig: ClientConfig | null = null;
 
 /**
  * Load configuration from API
+ * Uses relative /api/v1/config in dev (via Vite proxy) or API_CONFIG.baseURL in production
  */
 export async function loadClientConfig(): Promise<ClientConfig> {
   if (cachedConfig) {
@@ -41,7 +61,16 @@ export async function loadClientConfig(): Promise<ClientConfig> {
   }
 
   try {
-    const response = await fetch('/api/v1/config');
+    // In development, use relative URL to leverage Vite proxy
+    // In production, use the full baseURL from API_CONFIG
+    const isDev = import.meta.env.DEV;
+    const configUrl = isDev 
+      ? '/api/v1/config' 
+      : `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/v1/config`;
+    
+    console.log(`Loading config from: ${configUrl} (dev: ${isDev})`);
+    
+    const response = await fetch(configUrl);
     if (!response.ok) {
       console.error(`Failed to load config: ${response.status} ${response.statusText}`);
       throw new Error(`Config API returned ${response.status}`);
@@ -187,6 +216,14 @@ export function interpolate(template: string, context: Record<string, string> = 
 export function isFeatureEnabled(feature: string): boolean {
   const config = getClientConfig();
   return config?.features?.[feature] !== false;
+}
+
+/**
+ * Check if a workflow flag is enabled (defaults to false when unset).
+ */
+export function isWorkflowEnabled(workflow: string): boolean {
+  const config = getClientConfig();
+  return config?.workflows?.[workflow] === true;
 }
 
 /**

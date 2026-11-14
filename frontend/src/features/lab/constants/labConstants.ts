@@ -1,60 +1,73 @@
-/** Lab copy, config, routing, visuals, and API path constants. */
+/** Lab copy, config, routing, visuals, and API path constants with terminology support. */
 import type { IconKey } from '@/config/icons';
 import { IconKeys } from '@/config/icons';
 import { GENERATED_LAB_CONSTANTS } from '@/types/generated/labContract';
 import { ROUTES } from '@/config';
 import type { TestStatus } from '@/types/enums';
 import type { BadgeColor } from '@/components/primitives/badgeTypes';
+import { t, tCap } from '@/config/clientConfig';
 
 export type LabWorkflowStage = 'collection' | 'entry' | 'validation';
 export type LabWorkflowKpiStage = LabWorkflowStage | 'sentBack';
 export type LabStageLabelVariant = 'short' | 'nav' | 'full';
 export type LabTimelineLane = 'sample' | 'results' | 'validation' | 'quality';
 
-export const LAB_COPY = {
-  entity: { sample: 'Sample', sampleType: 'Sample type', samples: 'samples' },
-  workflow: {
-    collection: 'Collection',
-    collectionNav: 'Sample Collection',
-    entry: 'Result Entry',
-    entryShort: 'Entry',
-    validation: 'Validation',
-    monitorNav: 'Monitor',
-    monitorPageTitle: 'Lab monitor',
-    allTestsPageTitle: 'All tests',
-    allTestsPageSubtitle: 'Every order test, sorted by last modified',
-    escalation: 'Escalation',
-    sentBack: 'Sent back',
-    sentBackShort: 'Rework',
-  },
-  quality: {
-    sampleRejected: 'Sample rejected',
-    sampleIssue: 'Sample issue',
-    reportSampleIssue: 'Report Sample Issue',
-  },
-  attention: {
-    criticalValue: 'Critical values',
-    recollection: 'Recollection',
-    panelTitle: 'Attention queue',
-    panelMetaEmpty: 'Escalations, holds, priority, and turnaround exceptions',
-  },
-  dashboardToday: {
-    testsWorked: 'updated today',
-    headerUniverse: 'in view',
-    footerUniverse: 'tests in view',
-    footerInPipeline: 'In pipeline now',
-    summaryAria: "Today's pipeline stage summary",
-    footnote:
-      'Percentages use all tests in the monitor view (running plus updated today).',
-    columnStage: 'Stage',
-    columnInQueue: 'In queue',
-    columnToday: 'Today',
-    columnMix: 'Queue / today',
-    stageCollection: 'Collection',
-    stageEntry: 'Result entry',
-    stageValidation: 'Validation',
-  },
-} as const;
+/**
+ * Get lab copy with terminology support
+ */
+export function getLabCopy() {
+  return {
+    entity: { 
+      sample: tCap('sample', 'Sample'), 
+      sampleType: `${tCap('sample', 'Sample')} type`, 
+      samples: t('samples', 'samples') 
+    },
+    workflow: {
+      collection: 'Collection',
+      collectionNav: `${tCap('sample', 'Sample')} Collection`,
+      entry: 'Result Entry',
+      entryShort: 'Entry',
+      validation: 'Validation',
+      monitorNav: 'Monitor',
+      monitorPageTitle: `${tCap('laboratory', 'Lab')} monitor`,
+      allTestsPageTitle: `All ${t('tests', 'tests')}`,
+      allTestsPageSubtitle: `Every ${t('order', 'order')} ${t('test', 'test')}, sorted by last modified`,
+      escalation: 'Escalation',
+      sentBack: 'Sent back',
+      sentBackShort: 'Rework',
+    },
+    quality: {
+      sampleRejected: `${tCap('sample', 'Sample')} rejected`,
+      sampleIssue: `${tCap('sample', 'Sample')} issue`,
+      reportSampleIssue: `Report ${tCap('sample', 'Sample')} Issue`,
+    },
+    attention: {
+      criticalValue: 'Critical values',
+      recollection: 'Recollection',
+      panelTitle: 'Attention queue',
+      panelMetaEmpty: 'Escalations, holds, priority, and turnaround exceptions',
+    },
+    dashboardToday: {
+      testsWorked: 'updated today',
+      headerUniverse: 'in view',
+      footerUniverse: `${t('tests', 'tests')} in view`,
+      footerInPipeline: 'In pipeline now',
+      summaryAria: "Today's pipeline stage summary",
+      footnote:
+        `Percentages use all ${t('tests', 'tests')} in the monitor view (running plus updated today).`,
+      columnStage: 'Stage',
+      columnInQueue: 'In queue',
+      columnToday: 'Today',
+      columnMix: 'Queue / today',
+      stageCollection: 'Collection',
+      stageEntry: 'Result entry',
+      stageValidation: 'Validation',
+    },
+  };
+}
+
+// Legacy constant export for backward compatibility
+export const LAB_COPY = getLabCopy();
 
 export function labStageLabel(
   stage: LabWorkflowStage,

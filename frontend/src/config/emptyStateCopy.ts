@@ -1,7 +1,9 @@
 /**
- * Shared empty-state copy.
+ * Shared empty-state copy with terminology support.
  * Title: "No …" (sentence case). Subtitle: "{Subject} will appear here when {condition}."
  */
+
+import { t } from './clientConfig';
 
 export type EmptyCopy = { title: string; description: string };
 
@@ -19,92 +21,101 @@ export function emptyTitle(nounPhrase: string): string {
   return `No ${phrase}`;
 }
 
-export const EMPTY_COPY = {
-  recentActivity: {
-    title: 'No activity recorded',
-    description:
-      'Posts will appear here as accession, specimen, result, and oversight events are recorded.',
-  },
-  activeTests: {
-    title: 'No active tests',
-    description: emptySubtitle('tests', 'they enter the pipeline'),
-  },
-  allTestsWorklist: {
-    title: emptyTitle('tests match these filters'),
-    description: emptySubtitle('order tests', 'they are ordered or match your search'),
-  },
-  dashboardWorklist: {
-    title: emptyTitle("tests in today's view"),
-    description: emptySubtitle(
-      'tests',
-      'an order test is updated today or still in the pipeline',
-    ),
-  },
-  dashboardTodayKpi: {
-    title: emptyTitle('lab activity for today'),
-    description: emptySubtitle(
-      'stage metrics',
-      'tests are in the monitor view (running or updated today)',
-    ),
-  },
-  pendingAttention: {
-    title: 'No items in queue',
-    description:
-      'Accessions will appear here when they require pathologist review, operational hold, or expedited handling.',
-  },
-  recentOrders: {
-    title: 'No recent orders',
-    description: emptySubtitle('orders', 'new ones are created'),
-  },
-  relatedOrders: {
-    title: 'No related orders',
-    description: emptySubtitle('orders', 'this patient has placed one'),
-  },
-  reports: {
-    title: 'No reports',
-    description: emptySubtitle('reports', 'results are validated for this patient'),
-  },
-  orderTests: {
-    title: 'No tests',
-    description: emptySubtitle('tests', 'they are added to this order'),
-  },
-  pendingValidation: {
-    title: 'No pending validation',
-    description: emptySubtitle('results', 'they are ready for validation or review'),
-  },
-  pendingCollections: {
-    title: 'No pending collections',
-    description: emptySubtitle('samples', 'they are waiting to be collected'),
-  },
-  pendingResults: {
-    title: 'No pending results',
-    description: emptySubtitle('samples', 'they are waiting for result entry'),
-  },
-  recordedActions: {
-    title: 'No recorded actions',
-    description: emptySubtitle('actions', 'work is recorded on this record'),
-  },
-  orderActivity: {
-    title: 'No order activity',
-    description: emptySubtitle('events', 'the order progresses'),
-  },
-  data: {
-    title: 'No data',
-    description: emptySubtitle('items', 'data is available or filters match'),
-  },
-  matchingPatients: {
-    title: 'No matching patients',
-    description: emptySubtitle('patients', 'your search matches the directory'),
-  },
-  matchingTests: {
-    title: 'No matching tests',
-    description: emptySubtitle('tests', 'your search matches the catalog'),
-  },
-  matchingSamples: {
-    title: 'No matching samples',
-    description: emptySubtitle(
-      'samples',
-      'your search matches a sample ID or patient name',
-    ),
-  },
-} satisfies Record<string, EmptyCopy>;
+/**
+ * Get empty state copy with terminology support.
+ * Returns functions instead of constants to pick up terminology at runtime.
+ */
+export function getEmptyCopy(): Record<string, EmptyCopy> {
+  return {
+    recentActivity: {
+      title: 'No activity recorded',
+      description:
+        'Posts will appear here as accession, specimen, result, and oversight events are recorded.',
+    },
+    activeTests: {
+      title: emptyTitle(t('tests', 'tests')),
+      description: emptySubtitle(t('tests', 'tests'), 'they enter the pipeline'),
+    },
+    allTestsWorklist: {
+      title: emptyTitle(`${t('tests', 'tests')} match these filters`),
+      description: emptySubtitle(`${t('order', 'order')} ${t('tests', 'tests')}`, 'they are ordered or match your search'),
+    },
+    dashboardWorklist: {
+      title: emptyTitle(`${t('tests', 'tests')} in today's view`),
+      description: emptySubtitle(
+        t('tests', 'tests'),
+        `an ${t('order', 'order')} ${t('test', 'test')} is updated today or still in the pipeline`,
+      ),
+    },
+    dashboardTodayKpi: {
+      title: emptyTitle(`${t('laboratory', 'lab')} activity for today`),
+      description: emptySubtitle(
+        'stage metrics',
+        `${t('tests', 'tests')} are in the monitor view (running or updated today)`,
+      ),
+    },
+    pendingAttention: {
+      title: 'No items in queue',
+      description:
+        'Accessions will appear here when they require pathologist review, operational hold, or expedited handling.',
+    },
+    recentOrders: {
+      title: emptyTitle(t('orders', 'recent orders')),
+      description: emptySubtitle(t('orders', 'orders'), 'new ones are created'),
+    },
+    relatedOrders: {
+      title: emptyTitle(`related ${t('orders', 'orders')}`),
+      description: emptySubtitle(t('orders', 'orders'), `this ${t('patient', 'patient')} has placed one`),
+    },
+    reports: {
+      title: emptyTitle(t('reports', 'reports')),
+      description: emptySubtitle(t('reports', 'reports'), `results are validated for this ${t('patient', 'patient')}`),
+    },
+    orderTests: {
+      title: emptyTitle(t('tests', 'tests')),
+      description: emptySubtitle(t('tests', 'tests'), `they are added to this ${t('order', 'order')}`),
+    },
+    pendingValidation: {
+      title: 'No pending validation',
+      description: emptySubtitle('results', 'they are ready for validation or review'),
+    },
+    pendingCollections: {
+      title: 'No pending collections',
+      description: emptySubtitle(t('samples', 'samples'), 'they are waiting to be collected'),
+    },
+    pendingResults: {
+      title: 'No pending results',
+      description: emptySubtitle(t('samples', 'samples'), 'they are waiting for result entry'),
+    },
+    recordedActions: {
+      title: 'No recorded actions',
+      description: emptySubtitle('actions', 'work is recorded on this record'),
+    },
+    orderActivity: {
+      title: emptyTitle(`${t('order', 'order')} activity`),
+      description: emptySubtitle('events', `the ${t('order', 'order')} progresses`),
+    },
+    data: {
+      title: 'No data',
+      description: emptySubtitle('items', 'data is available or filters match'),
+    },
+    matchingPatients: {
+      title: emptyTitle(`matching ${t('patients', 'patients')}`),
+      description: emptySubtitle(t('patients', 'patients'), 'your search matches the directory'),
+    },
+    matchingTests: {
+      title: emptyTitle(`matching ${t('tests', 'tests')}`),
+      description: emptySubtitle(t('tests', 'tests'), 'your search matches the catalog'),
+    },
+    matchingSamples: {
+      title: emptyTitle(`matching ${t('samples', 'samples')}`),
+      description: emptySubtitle(
+        t('samples', 'samples'),
+        `your search matches a ${t('sample', 'sample')} ID or ${t('patient', 'patient')} name`,
+      ),
+    },
+  };
+}
+
+// Legacy constant export for backward compatibility - calls function
+export const EMPTY_COPY = getEmptyCopy();

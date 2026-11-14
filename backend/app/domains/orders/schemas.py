@@ -182,6 +182,8 @@ class OrderResponse(BaseModel):
     clinicalNotes: str | None = None
     specialInstructions: list[str] | None = None
     patientPrepInstructions: str | None = None
+    doctorApprovedBy: str | None = None
+    doctorApprovedAt: datetime | None = None
     createdBy: str
     createdAt: datetime
     updatedAt: datetime

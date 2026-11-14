@@ -20,7 +20,7 @@ if (!rootElement) {
   throw new Error('Root element not found');
 }
 
-document.title = companyConfig.getDisplayName();
+// Document title is set via applyBranding() in ConfigLoader after API config loads
 
 /** Paint after the instance theme pair CSS is ready so the first frame is not unthemed. */
 function renderApp(root: HTMLElement): void {
