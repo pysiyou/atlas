@@ -5,6 +5,8 @@
 import { Panel } from '@/components/surfaces';
 import { LAYOUT } from '@/theme/recipes';
 import { MODAL_WORKFLOW_BODY_STACK } from './ModalPageShell';
+import { getModuleListTitles } from '@/config/pageCopy';
+import { tCap } from '@/config/clientConfig';
 
 export type ModalLoadingVariant = 'default' | 'workflow' | 'form';
 
@@ -22,11 +24,12 @@ export function ModalLoadingBody({ variant = 'default' }: { variant?: ModalLoadi
   }
 
   if (variant === 'form') {
+    const titles = getModuleListTitles();
     return (
       <div className="space-y-space-6 max-w-full" aria-busy="true" aria-label="Loading form">
-        <Panel preset="panel.pageEmbed.visible" title="Patient" loading />
-        <Panel preset="panel.pageEmbed.visible" title="Tests" loading />
-        <Panel preset="panel.pageEmbed.visible" title="Order details" loading />
+        <Panel preset="panel.pageEmbed.visible" title={titles.patientDetail} loading />
+        <Panel preset="panel.pageEmbed.visible" title={tCap('tests', 'Tests')} loading />
+        <Panel preset="panel.pageEmbed.visible" title={`${titles.orderDetail} details`} loading />
       </div>
     );
   }

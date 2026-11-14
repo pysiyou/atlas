@@ -6,11 +6,8 @@ import type { NavigateFunction } from 'react-router-dom';
 import type { TableViewConfig } from '@/components/data-table';
 import { buildViews, TABLE_COLUMN_WIDTH } from '@/components/data-table';
 import { cn } from '@/utils';
-import {
-  ORDER_TABLE_COLUMN_HEADERS,
-  OrderStatusBadge,
-  renderOrderPatientName,
-} from '@/features/orders';
+import { OrderStatusBadge, renderOrderPatientName } from '@/features/orders';
+import { getOrderTableColumnHeaders } from '@/config/pageCopy';
 import { renderDateTimeCell } from '@/utils/tableColumnRenders';
 import { formatReportOrderTestsPreview } from '@/utils/presentation';
 import {
@@ -33,10 +30,11 @@ export const createReportTableConfig = (
   onPrint: (order: ReportableOrder) => void,
   generatingOrderId: number | null
 ): TableViewConfig<ReportableOrder> => {
+  const headers = getOrderTableColumnHeaders();
   const columnMap = {
     orderId: {
       key: 'orderId',
-      header: ORDER_TABLE_COLUMN_HEADERS.orderId,
+      header: headers.orderId,
       width: TABLE_COLUMN_WIDTH.id,
       sortable: true,
       accessor: (order: ReportableOrder) => order.orderId,
@@ -44,7 +42,7 @@ export const createReportTableConfig = (
     },
     patientName: {
       key: 'patientName',
-      header: 'Patient',
+      header: headers.patientName,
       width: TABLE_COLUMN_WIDTH.patientName,
       sortable: true,
       accessor: (order: ReportableOrder) => order.patientName,
@@ -56,7 +54,7 @@ export const createReportTableConfig = (
     },
     tests: {
       key: 'tests',
-      header: 'Tests',
+      header: headers.tests,
       width: TABLE_COLUMN_WIDTH.flex,
       sortable: true,
       accessor: (order: ReportableOrder) => formatReportOrderTestsPreview(order).names,
@@ -72,7 +70,7 @@ export const createReportTableConfig = (
     },
     status: {
       key: 'status',
-      header: ORDER_TABLE_COLUMN_HEADERS.overallStatus,
+      header: headers.overallStatus,
       width: TABLE_COLUMN_WIDTH.badgeWide,
       sortable: true,
       accessor: (order: ReportableOrder) => order.overallStatus,

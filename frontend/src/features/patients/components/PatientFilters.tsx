@@ -4,7 +4,8 @@
 
 import React, { useMemo } from 'react';
 import { FeatureFilterBar } from '@/components/filters';
-import { patientFilterConfig } from '../config/patientFilters.config';
+import { getPatientFilterConfig } from '../config/patientFilters.config';
+import { useClientConfig } from '@/config/ClientConfigContext';
 import type { Gender } from '@/types';
 
 export interface PatientFiltersProps {
@@ -24,6 +25,8 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
   sexFilters,
   onSexFiltersChange,
 }) => {
+  const { status: configStatus } = useClientConfig();
+  const filterConfig = useMemo(() => getPatientFilterConfig(), [configStatus]);
   const value = useMemo(
     () => ({ search: searchQuery, sex: sexFilters, ageRange }),
     [searchQuery, sexFilters, ageRange],
@@ -31,7 +34,7 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
 
   return (
     <FeatureFilterBar
-      config={patientFilterConfig}
+      config={filterConfig}
       value={value}
       handlers={{
         search: onSearchChange,

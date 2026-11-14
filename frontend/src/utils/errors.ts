@@ -3,10 +3,10 @@
  * HTTP/API error parsing and `ApiError` guards: `@/lib/api/errors`.
  */
 
-import { FEEDBACK_CATALOG, type FeedbackId } from '@/types/generated/feedbackCatalog';
+import type { FeedbackId } from '@/types/generated/feedbackCatalog';
+import { resolveFeedbackTitle } from '@/feedback/terminology';
 
-/** Local catalog titles — avoids importing `@/feedback` (feedback imports getErrorMessage here). */
-const feedbackTitle = (id: FeedbackId): string => FEEDBACK_CATALOG[id].title;
+const feedbackTitle = (id: FeedbackId): string => resolveFeedbackTitle(id);
 
 export function getLoginErrorMessage(
   error: unknown,

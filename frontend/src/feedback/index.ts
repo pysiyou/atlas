@@ -9,30 +9,20 @@ import {
   type FeedbackVariant,
 } from '@/types/generated/feedbackCatalog';
 import { isApiError } from '@/lib/api/errors';
-import { getFeedbackTerminologyContext, interpolate } from '@/config/clientConfig';
 import { getErrorMessage } from '@/utils/errors';
+import { applyFeedbackTerminology, resolveFeedbackTitle } from './terminology';
 import { showToast } from './toast';
 import { TOAST_ALERT_MESSAGE } from './ui';
 import type { ToastVariant } from './ui';
 
 export type { FeedbackId, FeedbackEntry, FeedbackVariant } from '@/types/generated/feedbackCatalog';
 
-function withTerminology(entry: FeedbackEntry): FeedbackEntry {
-  const terminologyContext = getFeedbackTerminologyContext();
-  return {
-    ...entry,
-    title: interpolate(entry.title, terminologyContext),
-    subtitle: entry.subtitle ? interpolate(entry.subtitle, terminologyContext) : undefined,
-    brief: entry.brief ? interpolate(entry.brief, terminologyContext) : undefined,
-  };
-}
-
 export function getFeedback(id: FeedbackId): FeedbackEntry {
-  return withTerminology(FEEDBACK_CATALOG[id]);
+  return applyFeedbackTerminology(FEEDBACK_CATALOG[id]);
 }
 
 export function feedbackTitle(id: FeedbackId): string {
-  return withTerminology(FEEDBACK_CATALOG[id]).title;
+  return resolveFeedbackTitle(id);
 }
 
 let sessionExpired = false;

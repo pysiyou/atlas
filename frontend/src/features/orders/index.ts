@@ -57,7 +57,6 @@ export type { BillingSummarySectionProps } from './components/BillingSummarySect
 export * from './utils/orderCalculator';
 export { formInputToPayload, orderToFormInput } from './utils/formTransformers';
 export {
-  ORDER_TABLE_COLUMN_HEADERS,
   ORDER_TABLE_VIEW_KEYS,
   ORDER_TABLE_VIEW_KEYS_WITHOUT_PATIENT,
   ORDER_TABLE_VIEW_KEYS_PAYMENT,

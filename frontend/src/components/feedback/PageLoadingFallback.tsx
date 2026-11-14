@@ -15,6 +15,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { TableLoadingPlaceholder } from '@/components/data-table/TableLoadingPlaceholder';
 import { PANEL, WORKSPACE } from '@/theme/recipes';
 import { ROUTES } from '@/config';
+import { getModuleListTitles } from '@/config/pageCopy';
 
 function pathWithoutTrailingSlash(pathname: string): string {
   if (pathname.length > 1 && pathname.endsWith('/')) {
@@ -86,11 +87,12 @@ function LabMonitorRouteLoadingFallback() {
 function PageLoadingLayout({ fullScreen = false }: { fullScreen?: boolean }) {
   const { pathname } = useLocation();
 
+  const titles = getModuleListTitles();
   if (!fullScreen && isRecordDetailPath(pathname, ROUTES.PATIENTS)) {
-    return <DetailRouteLoadingFallback title="Patient" grid={PATIENT_DETAIL_LOADING_GRID} />;
+    return <DetailRouteLoadingFallback title={titles.patientDetail} grid={PATIENT_DETAIL_LOADING_GRID} />;
   }
   if (!fullScreen && isRecordDetailPath(pathname, ROUTES.ORDERS)) {
-    return <DetailRouteLoadingFallback title="Order" grid={ORDER_DETAIL_LOADING_GRID} />;
+    return <DetailRouteLoadingFallback title={titles.orderDetail} grid={ORDER_DETAIL_LOADING_GRID} />;
   }
   if (!fullScreen && isLabMonitorPath(pathname)) {
     return <LabMonitorRouteLoadingFallback />;

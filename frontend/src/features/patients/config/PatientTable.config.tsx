@@ -18,6 +18,7 @@ import type { PatientContext } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { PatientCard } from '../components/PatientCard';
 import { TABLE_TYPE } from '@/theme/recipes';
+import { getPatientTableColumnHeaders } from '@/config/pageCopy';
 
 const PATIENT_VIEWS = {
   full: ['id', 'fullName', 'contact', 'gender', 'orders', 'registrationDate', 'affiliation'],
@@ -28,10 +29,11 @@ const PATIENT_VIEWS = {
 export const createPatientTableConfig = (
   _navigate: NavigateFunction
 ): TableViewConfig<PatientContext> => {
+  const headers = getPatientTableColumnHeaders();
   const columnMap = {
     id: createIdColumn<PatientContext>(
       'id',
-      'Patient ID',
+      headers.patientId,
       patient => renderPatientId(patient.id),
       {
         sortable: true,
@@ -64,7 +66,7 @@ export const createPatientTableConfig = (
     ),
     orders: {
       key: 'orders',
-      header: 'Orders',
+      header: headers.orders,
       width: TABLE_COLUMN_WIDTH.supporting,
       sortable: true,
       accessor: (patient: PatientContext) => patient.lastOrderDate ?? '',

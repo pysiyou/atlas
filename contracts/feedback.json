@@ -53,7 +53,7 @@
       "channel": "toast",
       "variant": "success",
       "title": "Payment status updated",
-      "subtitle": "The order payment record has been saved.",
+      "subtitle": "The {{order}} payment record has been saved.",
       "brief": "updated"
     },
     "order.invoice.preview": {
@@ -91,28 +91,28 @@
     "report.download.success": {
       "channel": "toast",
       "variant": "success",
-      "title": "Report downloaded successfully",
-      "subtitle": "The report has been generated and the download should start shortly. Check your downloads folder.",
+      "title": "{{reportCap}} downloaded successfully",
+      "subtitle": "The {{report}} has been generated and the download should start shortly. Check your downloads folder.",
       "brief": "downloaded"
     },
     "report.download.error": {
       "channel": "toast",
       "variant": "error",
-      "title": "Failed to generate report",
-      "subtitle": "The report could not be generated. Please try again or contact support if the issue persists.",
+      "title": "Failed to generate {{report}}",
+      "subtitle": "The {{report}} could not be generated. Please try again or contact support if the issue persists.",
       "brief": "failed"
     },
     "report.generate.success": {
       "channel": "toast",
       "variant": "success",
-      "title": "Report generated",
-      "subtitle": "The report is ready to view or download.",
+      "title": "{{reportCap}} generated",
+      "subtitle": "The {{report}} is ready to view or download.",
       "brief": "generated"
     },
     "report.generate.error": {
       "channel": "toast",
       "variant": "error",
-      "title": "Failed to generate report",
+      "title": "Failed to generate {{report}}",
       "subtitle": "Please try again or contact support if the issue persists.",
       "brief": "failed"
     },
@@ -133,7 +133,7 @@
       "channel": "toast",
       "variant": "success",
       "title": "Payment recorded",
-      "subtitle": "The order payment status has been updated.",
+      "subtitle": "The {{order}} payment status has been updated.",
       "brief": "recorded"
     },
     "payment.process.error": {
@@ -149,15 +149,15 @@
     "lab.collection.authRequired": {
       "channel": "toast",
       "variant": "error",
-      "title": "You must be logged in to collect samples",
-      "subtitle": "Please sign in to record sample collections, then try again.",
+      "title": "You must be logged in to collect {{samples}}",
+      "subtitle": "Please sign in to record {{sample}} collections, then try again.",
       "brief": "failed"
     },
     "lab.collection.invalidSample": {
       "channel": "toast",
       "variant": "error",
-      "title": "Invalid sample data",
-      "subtitle": "The sample or requirement data is missing or invalid. Refresh the page and try again.",
+      "title": "Invalid {{sample}} data",
+      "subtitle": "The {{sample}} or requirement data is missing or invalid. Refresh the page and try again.",
       "brief": "invalid"
     },
     "lab.collection.colorRequired": {
@@ -178,28 +178,28 @@
       "channel": "toast",
       "variant": "error",
       "title": "Please select the top color",
-      "subtitle": "Select the container cap color used for this sample.",
+      "subtitle": "Select the container cap color used for this {{sample}}.",
       "brief": "required"
     },
     "lab.collection.popover.containerRequired": {
       "channel": "toast",
       "variant": "error",
       "title": "Please select the container type",
-      "subtitle": "Select tube or cup used for this sample.",
+      "subtitle": "Select tube or cup used for this {{sample}}.",
       "brief": "required"
     },
     "lab.collection.success": {
       "channel": "toast",
       "variant": "success",
-      "title": "Sample collected",
-      "subtitle": "The sample has been recorded and the order has been updated. You can continue with the next sample.",
+      "title": "{{sampleCap}} collected",
+      "subtitle": "The {{sample}} has been recorded and the {{order}} has been updated. You can continue with the next {{sample}}.",
       "brief": "collected"
     },
     "lab.collection.refreshWarning": {
       "channel": "toast",
       "variant": "warning",
       "title": "Collection saved",
-      "subtitle": "The sample was collected, but the list could not be refreshed. Reload the page to see the latest status.",
+      "subtitle": "The {{sample}} was collected, but the list could not be refreshed. Reload the page to see the latest status.",
       "brief": "collected"
     },
     "lab.collection.networkAmbiguous": {
@@ -212,7 +212,7 @@
     "lab.collection.error": {
       "channel": "toast",
       "variant": "error",
-      "title": "Failed to collect sample",
+      "title": "Failed to collect {{sample}}",
       "subtitle": "The collection could not be saved. Check your connection and try again.",
       "brief": "failed"
     },
@@ -227,35 +227,35 @@
       "channel": "toast",
       "variant": "error",
       "title": "Failed to print label",
-      "subtitle": "Ensure the printer is connected and the sample data is valid.",
+      "subtitle": "Ensure the printer is connected and the {{sample}} data is valid.",
       "brief": "failed"
     },
     "lab.entry.noResults": {
       "channel": "toast",
       "variant": "error",
       "title": "No results to save",
-      "subtitle": "There are no results entered for this test. Enter values in the required fields before saving.",
+      "subtitle": "There are no results entered for this {{test}}. Enter values in the required fields before saving.",
       "brief": "failed"
     },
     "lab.entry.testNotFound": {
       "channel": "toast",
       "variant": "error",
-      "title": "Test not found in current list",
-      "subtitle": "This test could not be found in the current order. The list may have been updated—refresh and try again.",
+      "title": "{{testCap}} not found in current list",
+      "subtitle": "This {{test}} could not be found in the current {{order}}. The list may have been updated—refresh and try again.",
       "brief": "failed"
     },
     "lab.entry.parametersMissing": {
       "channel": "toast",
       "variant": "error",
-      "title": "Test parameters not found",
-      "subtitle": "The test configuration could not be loaded. Refresh the page or contact support.",
+      "title": "{{testCap}} parameters not found",
+      "subtitle": "The {{test}} configuration could not be loaded. Refresh the page or contact support.",
       "brief": "failed"
     },
     "lab.entry.save.success": {
       "channel": "toast",
       "variant": "success",
       "title": "Results saved successfully",
-      "subtitle": "The results have been saved and the order has been updated. You can continue with other tests.",
+      "subtitle": "The results have been saved and the {{order}} has been updated. You can continue with other {{tests}}.",
       "brief": "resulted"
     },
     "lab.entry.save.error": {
@@ -283,7 +283,7 @@
       "channel": "toast",
       "variant": "success",
       "title": "Results approved",
-      "subtitle": "These results have been approved and are now final. The order status has been updated.",
+      "subtitle": "These results have been approved and are now final. The {{order}} status has been updated.",
       "brief": "validated"
     },
     "lab.validation.approve.networkAmbiguous": {
@@ -303,7 +303,7 @@
     "lab.validation.testUnavailable": {
       "channel": "toast",
       "variant": "error",
-      "title": "Test record unavailable",
+      "title": "{{testCap}} record unavailable",
       "subtitle": "Refresh the page and try again.",
       "brief": "failed"
     },
@@ -318,7 +318,7 @@
       "channel": "toast",
       "variant": "success",
       "title": "Escalation resolved",
-      "subtitle": "The escalation has been resolved and the test status updated.",
+      "subtitle": "The escalation has been resolved and the {{test}} status updated.",
       "brief": "resolved"
     },
     "lab.escalation.resolve.error": {
@@ -331,28 +331,28 @@
     "lab.qualityIssue.report.error": {
       "channel": "toast",
       "variant": "error",
-      "title": "Failed to report quality issue",
+      "title": "Failed to {{report}} quality issue",
       "subtitle": "Check the details and try again.",
       "brief": "failed"
     },
     "lab.history.sampleNotFound": {
       "channel": "toast",
       "variant": "error",
-      "title": "Sample not found",
+      "title": "{{sampleCap}} not found",
       "subtitle": "It may have been removed.",
       "brief": "failed"
     },
     "lab.history.testNotFound": {
       "channel": "toast",
       "variant": "error",
-      "title": "Test not found",
-      "subtitle": "This test is no longer in the current workflow list.",
+      "title": "{{testCap}} not found",
+      "subtitle": "This {{test}} is no longer in the current workflow list.",
       "brief": "failed"
     },
     "lab.history.testLoadFailed": {
       "channel": "toast",
       "variant": "error",
-      "title": "Test record not found",
+      "title": "{{testCap}} record not found",
       "brief": "failed"
     },
     "lab.critical.profileMissing": {
@@ -411,7 +411,7 @@
       "channel": "toast",
       "variant": "success",
       "title": "Escalated to supervisor",
-      "subtitle": "This test has been sent to the escalation queue for supervisor review.",
+      "subtitle": "This {{test}} has been sent to the escalation queue for supervisor review.",
       "brief": "escalated"
     },
     "lab.qualityIssue.escalate.limitHit": {
@@ -425,28 +425,28 @@
       "channel": "toast",
       "variant": "success",
       "title": "Re-test requested",
-      "subtitle": "A new result entry has been created using the same sample.",
+      "subtitle": "A new result entry has been created using the same {{sample}}.",
       "brief": "Retest scheduled"
     },
     "lab.qualityIssue.retest.limitHit": {
       "channel": "toast",
       "variant": "success",
       "title": "Escalated for re-test approval",
-      "subtitle": "Re-test limit reached. The test is on Validation awaiting supervisor approval.",
+      "subtitle": "Re-test limit reached. The {{test}} is on Validation awaiting supervisor approval.",
       "brief": "Retest escalated"
     },
     "lab.qualityIssue.recollection.requested": {
       "channel": "toast",
       "variant": "success",
       "title": "Recollection scheduled",
-      "subtitle": "A new pending sample was created for collection.",
+      "subtitle": "A new pending {{sample}} was created for collection.",
       "brief": "Recollection scheduled"
     },
     "lab.qualityIssue.specimenRejected": {
       "channel": "toast",
       "variant": "success",
-      "title": "Sample rejected",
-      "subtitle": "Linked resulted tests remain in Validation for validator decision.",
+      "title": "{{sampleCap}} rejected",
+      "subtitle": "Linked resulted {{tests}} remain in Validation for validator decision.",
       "brief": "rejected"
     },
     "lab.qualityIssue.cancelled": {
@@ -487,7 +487,7 @@
       "channel": "toast",
       "variant": "error",
       "title": "Reason required",
-      "subtitle": "Provide a clinical reason to cancel this test.",
+      "subtitle": "Provide a clinical reason to cancel this {{test}}.",
       "brief": "required"
     },
     "orders.list.loadFailed": {
@@ -505,19 +505,19 @@
     "catalog.list.loadFailed": {
       "channel": "toast",
       "variant": "danger",
-      "title": "Failed to load test catalog",
+      "title": "Failed to load {{test}} catalog",
       "brief": "failed"
     },
     "catalog.bootstrap.loadFailed": {
       "channel": "toast",
       "variant": "danger",
-      "title": "Failed to load tests",
+      "title": "Failed to load {{tests}}",
       "brief": "failed"
     },
     "reports.list.loadFailed": {
       "channel": "toast",
       "variant": "danger",
-      "title": "Failed to load reports",
+      "title": "Failed to load {{reports}}",
       "brief": "failed"
     },
     "payments.list.loadFailed": {
@@ -607,13 +607,13 @@
     "lab.entry.context.loadFailed": {
       "channel": "toast",
       "variant": "danger",
-      "title": "Failed to load this test for result entry",
+      "title": "Failed to load this {{test}} for result entry",
       "brief": "failed"
     },
     "lab.collection.workContext.loadFailed": {
       "channel": "toast",
       "variant": "danger",
-      "title": "Failed to load sample collection eligibility",
+      "title": "Failed to load {{sample}} collection eligibility",
       "brief": "failed"
     },
     "billing.claims.loadFailed": {
@@ -645,12 +645,12 @@
     "payment.orderAmount.invalid": {
       "channel": "inline",
       "variant": "danger",
-      "title": "Invalid order amount"
+      "title": "Invalid {{order}} amount"
     },
     "payment.alreadyPaid": {
       "channel": "inline",
       "variant": "danger",
-      "title": "This order is already paid. Refresh the page to see the latest status."
+      "title": "This {{order}} is already paid. Refresh the page to see the latest status."
     },
     "auth.login.profileLoadFailed": {
       "channel": "inline",
@@ -721,8 +721,8 @@
     "lab.collection.printLabel.uncollected": {
       "channel": "toast",
       "variant": "error",
-      "title": "Cannot print sample label",
-      "subtitle": "A sample ID is required before a label can be printed.",
+      "title": "Cannot print {{sample}} label",
+      "subtitle": "A {{sample}} ID is required before a label can be printed.",
       "brief": "failed"
     },
     "lab.collection.printLabel.popupBlocked": {
@@ -745,12 +745,12 @@
     "catalog.detail.notFoundTitle": {
       "channel": "inline",
       "variant": "danger",
-      "title": "Test Not Found"
+      "title": "{{testCap}} Not Found"
     },
     "catalog.detail.notFoundDescription": {
       "channel": "inline",
       "variant": "danger",
-      "title": "The test could not be found in the catalog."
+      "title": "The {{test}} could not be found in the catalog."
     },
     "patient.detail.notFoundTitle": {
       "channel": "inline",
@@ -820,7 +820,7 @@
     "lab.qualityIssue.dialog.reject.warningBody": {
       "channel": "inline",
       "variant": "warning",
-      "title": "Select a rejection reason and where to send this test. The system will not decide automatically."
+      "title": "Select a rejection reason and where to send this {{test}}. The system will not decide automatically."
     },
     "lab.qualityIssue.dialog.reject.reasonLabel": {
       "channel": "inline",
@@ -855,12 +855,12 @@
     "lab.qualityIssue.dialog.actions.retest": {
       "channel": "inline",
       "variant": "info",
-      "title": "Retest on same sample"
+      "title": "Retest on same {{sample}}"
     },
     "lab.qualityIssue.dialog.actions.retestDescription": {
       "channel": "inline",
       "variant": "info",
-      "title": "Run the test again on the specimen already collected."
+      "title": "Run the {{test}} again on the specimen already collected."
     },
     "lab.qualityIssue.dialog.actions.recollect": {
       "channel": "inline",
@@ -870,17 +870,17 @@
     "lab.qualityIssue.dialog.actions.recollectDescription": {
       "channel": "inline",
       "variant": "info",
-      "title": "Authorize a new sample collection and linked retest."
+      "title": "Authorize a new {{sample}} collection and linked retest."
     },
     "lab.qualityIssue.dialog.actions.cancel": {
       "channel": "inline",
       "variant": "info",
-      "title": "Cancel this test"
+      "title": "Cancel this {{test}}"
     },
     "lab.qualityIssue.dialog.actions.cancelDescription": {
       "channel": "inline",
       "variant": "info",
-      "title": "Close this test line. Other tests on the order are not affected."
+      "title": "Close this {{test}} line. Other {{tests}} on the {{order}} are not affected."
     },
     "lab.qualityIssue.dialog.actions.retestLimit": {
       "channel": "inline",
@@ -895,7 +895,7 @@
     "lab.qualityIssue.dialog.recollectBlocked": {
       "channel": "inline",
       "variant": "warning",
-      "title": "Cannot collect new sample - order has validated tests"
+      "title": "Cannot collect new {{sample}} - {{order}} has validated {{tests}}"
     },
     "lab.qualityIssue.dialog.trigger": {
       "channel": "inline",
@@ -905,32 +905,32 @@
     "lab.qualityIssue.collection.recollect.warningTitle": {
       "channel": "inline",
       "variant": "warning",
-      "title": "Reject Sample"
+      "title": "Reject {{sampleCap}}"
     },
     "lab.qualityIssue.collection.recollect.warningBody": {
       "channel": "inline",
       "variant": "warning",
-      "title": "Decide what happens to unfinished tests. Unvalidated resulted tests will be cleared and reset or cancelled per your remedy. Validated results stay released."
+      "title": "Decide what happens to unfinished {{tests}}. Unvalidated resulted {{tests}} will be cleared and reset or cancelled per your remedy. Validated results stay released."
     },
     "lab.qualityIssue.collection.reasonLabel": {
       "channel": "inline",
       "variant": "warning",
-      "title": "Sample Issue"
+      "title": "{{sampleCap}} Issue"
     },
     "lab.qualityIssue.collection.escalate.warningTitle": {
       "channel": "inline",
       "variant": "warning",
-      "title": "Linked Tests Have Results"
+      "title": "Linked {{testsCap}} Have Results"
     },
     "lab.qualityIssue.collection.escalate.warningBody": {
       "channel": "inline",
       "variant": "warning",
-      "title": "Unvalidated resulted tests will be cleared when the tube is rejected. Validated results will remain released."
+      "title": "Unvalidated resulted {{tests}} will be cleared when the tube is rejected. Validated results will remain released."
     },
     "lab.qualityIssue.collection.actions.followUp": {
       "channel": "inline",
       "variant": "info",
-      "title": "Unfinished linked tests"
+      "title": "Unfinished linked {{tests}}"
     },
     "lab.qualityIssue.collection.actions.recollect": {
       "channel": "inline",
@@ -940,7 +940,7 @@
     "lab.qualityIssue.collection.actions.recollectDescription": {
       "channel": "inline",
       "variant": "info",
-      "title": "Reject this tube and create a new pending sample for collection when attempts remain."
+      "title": "Reject this tube and create a new pending {{sample}} for collection when attempts remain."
     },
     "lab.qualityIssue.collection.actions.cancelUnfinished": {
       "channel": "inline",
@@ -950,7 +950,7 @@
     "lab.qualityIssue.collection.actions.cancelUnfinishedDescription": {
       "channel": "inline",
       "variant": "info",
-      "title": "Mark specimen rejected without opening a recollection request. Unfinished tests reset to await collection."
+      "title": "Mark specimen rejected without opening a recollection request. Unfinished {{tests}} reset to await collection."
     }
   }
 }

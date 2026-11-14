@@ -6,6 +6,7 @@ import { Icon } from '@/components/primitives';
 import { formatCurrency } from '@/utils';
 import { IconKeys } from '@/config/icons';
 import type { DashboardStat } from './DashboardStatsGrid';
+import { tCap } from '@/config/clientConfig';
 
 export function buildDashboardStats({
   isReceptionRole,
@@ -26,18 +27,21 @@ export function buildDashboardStats({
   todayRevenue: number;
   pendingOrders: number;
 }): DashboardStat[] {
+  const patientsLabel = `Total ${tCap('patients', 'Patients')}`;
+  const ordersLabel = `Total ${tCap('orders', 'Orders')}`;
+  const activeOrdersLabel = `Active ${tCap('orders', 'Orders')}`;
   return [
     ...(isReceptionRole
       ? [
           {
-            label: 'Total Patients',
+            label: patientsLabel,
             value: patientsCount,
             today: todayPatients,
             icon: <Icon iconKey={IconKeys.ui.usersGroup} className="w-8 h-8 text-brand" />,
             color: 'bg-brand-muted',
           },
           {
-            label: 'Total Orders',
+            label: ordersLabel,
             value: ordersCount,
             today: todayOrders,
             icon: (
@@ -56,7 +60,7 @@ export function buildDashboardStats({
     ...(isLabRole
       ? [
           {
-            label: 'Active Orders',
+            label: activeOrdersLabel,
             value: pendingOrders,
             icon: <Icon iconKey={IconKeys.dataFields.trendingUp} className="w-8 h-8 text-brand" />,
             color: 'bg-brand-muted',

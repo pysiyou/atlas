@@ -4,12 +4,12 @@ import { StatusValueBadge } from '@/features/shared';
 import type { TableViewConfig } from '@/components/data-table';
 import { buildViews } from '@/components/data-table';
 import {
-  ORDER_TABLE_COLUMN_HEADERS,
   ORDER_TABLE_VIEW_KEYS_PAYMENT,
   createOrderSharedColumns,
   renderOrderDateCell,
   renderOrderId,
 } from '@/features/orders';
+import { getOrderTableColumnHeaders } from '@/config/pageCopy';
 import { PaymentButton } from '../components/PaymentButton';
 import { PaymentCard } from '../components/PaymentCard';
 import type { OrderPaymentView } from '../types';
@@ -37,6 +37,7 @@ export const createPaymentTableConfig = (
   getTestName: (testCode: string) => string,
   onPaymentSuccess?: () => void
 ): TableViewConfig<OrderPaymentView> => {
+  const headers = getOrderTableColumnHeaders();
   const shared = createOrderSharedColumns<OrderPaymentView>(
     {
       getOrderId: item => item.order.orderId,
@@ -75,7 +76,7 @@ export const createPaymentTableConfig = (
     },
     paidDate: {
       key: 'paidDate',
-      header: ORDER_TABLE_COLUMN_HEADERS.orderDate,
+      header: headers.orderDate,
       width: TABLE_COLUMN_WIDTH.datetime,
       sortable: true,
       accessor: (item: OrderPaymentView) => getPaymentSortDate(item),

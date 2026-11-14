@@ -5,13 +5,17 @@
 import type { UrlFilterKey, UrlFilters } from '@/utils/filters';
 import { displayId } from '@/utils';
 import { ActiveFilterChipBar, type ActiveFilterItem } from './ActiveFilterChipBar';
+import { getUrlFilterChipLabels } from '@/config/pageCopy';
 
-const LABELS: Record<string, { label: string; format: (v: string | number) => string }> = {
-  patientId: { label: 'Patient', format: v => displayId.patient(Number(v)) },
-  orderId: { label: 'Order', format: v => displayId.order(Number(v)) },
-  sampleId: { label: 'Sample', format: v => displayId.sample(Number(v)) },
-  testId: { label: 'Test', format: v => displayId.orderTest(Number(v)) },
-};
+function buildUrlFilterLabels(): Record<string, { label: string; format: (v: string | number) => string }> {
+  const chip = getUrlFilterChipLabels();
+  return {
+    patientId: { label: chip.patientId, format: v => displayId.patient(Number(v)) },
+    orderId: { label: chip.orderId, format: v => displayId.order(Number(v)) },
+    sampleId: { label: chip.sampleId, format: v => displayId.sample(Number(v)) },
+    testId: { label: chip.testId, format: v => displayId.orderTest(Number(v)) },
+  };
+}
 
 export interface UrlFilterChipBarProps<K extends UrlFilterKey = UrlFilterKey> {
   urlFilters: UrlFilters;
@@ -26,6 +30,7 @@ export function UrlFilterChipBar<K extends UrlFilterKey>({
   onClear,
   onClearSingle,
 }: UrlFilterChipBarProps<K>) {
+  const LABELS = buildUrlFilterLabels();
   const allowed = new Set<string>(urlFilterKeys);
   const items: ActiveFilterItem[] = [];
   for (const key of urlFilterKeys) {

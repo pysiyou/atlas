@@ -5,17 +5,6 @@
 
 import type { OrderSharedColumnKey } from '../utils/orderTableColumns';
 
-export const ORDER_TABLE_COLUMN_HEADERS = {
-  orderId: 'Order',
-  patientName: 'Patient',
-  tests: 'Tests',
-  orderDate: 'Date',
-  overallStatus: 'Status',
-  priority: 'Priority',
-  paymentStatus: 'Payment',
-  totalPrice: 'Total',
-} as const satisfies Record<OrderSharedColumnKey, string>;
-
 const ORDER_TABLE_VIEW_KEYS_FULL: OrderSharedColumnKey[] = [
   'orderId',
   'patientName',

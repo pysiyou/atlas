@@ -8,6 +8,7 @@ import type { CardComponentProps } from '@/components/data-table';
 import { formatPhoneNumber } from '@/utils';
 import { formatPatientSexAgeLine } from '../utils/patientFormatters';
 import type { Patient } from '@/types';
+import { getModuleListTitles } from '@/config/pageCopy';
 
 /**
  * PatientCard Component
@@ -49,7 +50,12 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
       </Stack>
 
       <CardFooter align="end">
-        <IconButton {...actionButtonPreset('add')} size="sm" title="Add Order" onClick={handleAddOrder} />
+        <IconButton
+          {...actionButtonPreset('add')}
+          size="sm"
+          title={getModuleListTitles().addOrder}
+          onClick={handleAddOrder}
+        />
       </CardFooter>
     </ListCard>
   );

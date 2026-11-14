@@ -21,6 +21,52 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/config": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Client Config
+         * @description Get client-specific configuration.
+         *
+         *     This endpoint is public (no auth required) so the frontend
+         *     can load branding/config before user logs in.
+         */
+        get: operations["get_client_config_api_v1_config_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/config/validate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Validate Config
+         * @description Validate the current configuration file.
+         *
+         *     Checks if the config file exists, is valid JSON, and matches the schema.
+         *     Returns validation errors and warnings.
+         */
+        get: operations["validate_config_api_v1_config_validate_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/login": {
         parameters: {
             query?: never;
@@ -353,6 +399,27 @@ export interface paths {
         put?: never;
         /** Mark As Reported */
         post: operations["mark_as_reported_api_v1_orders__orderId__report_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/orders/{orderId}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Approve Order
+         * @description Approve an order for sample collection (requireDoctorApproval workflow).
+         *     Only needed when requireDoctorApproval is enabled in client config.
+         */
+        post: operations["approve_order_api_v1_orders__orderId__approve_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1480,6 +1547,34 @@ export interface components {
             /** Priorityrank */
             priorityRank?: number | null;
         };
+        /** CollectionWorklistResponse */
+        CollectionWorklistResponse: {
+            /** Items */
+            items: components["schemas"]["CollectionWorklistItem"][];
+            pagination: components["schemas"]["WorklistPagination"];
+        };
+        /**
+         * ConfigValidationResult
+         * @description Result of config validation
+         */
+        ConfigValidationResult: {
+            /** Valid */
+            valid: boolean;
+            /**
+             * Errors
+             * @default []
+             */
+            errors: string[];
+            /**
+             * Warnings
+             * @default []
+             */
+            warnings: string[];
+            /** Config */
+            config?: {
+                [key: string]: unknown;
+            } | null;
+        };
         /**
          * ContainerTopColor
          * @enum {string}
@@ -1551,6 +1646,71 @@ export interface components {
             recentOrders: components["schemas"]["OrderSummaryResponse"][];
         };
         /**
+         * DashboardWorklistItem
+         * @description In-pipeline order tests plus rows updated today (any status).
+         */
+        DashboardWorklistItem: {
+            /** Ordertestid */
+            orderTestId: number;
+            /** Orderid */
+            orderId: number;
+            /** Patientid */
+            patientId: number;
+            /** Patientname */
+            patientName: string;
+            /** Patientdob */
+            patientDob: string;
+            patientGender: components["schemas"]["Gender"];
+            /** Testcode */
+            testCode: string;
+            /** Testname */
+            testName: string;
+            /** Sampletype */
+            sampleType: string;
+            priority: components["schemas"]["PriorityLevel"];
+            status: components["schemas"]["TestStatus"];
+            /**
+             * Stage
+             * @enum {string}
+             */
+            stage: "collection" | "entry" | "validation";
+            /**
+             * Activityat
+             * Format: date-time
+             */
+            activityAt: string;
+            /**
+             * Orderdate
+             * Format: date-time
+             */
+            orderDate: string;
+            /** Referentdoctorid */
+            referentDoctorId?: number | null;
+            /** Referentdoctorname */
+            referentDoctorName?: string | null;
+            /** Referentdoctoremail */
+            referentDoctorEmail?: string | null;
+            /** Referentdoctorphone */
+            referentDoctorPhone?: string | null;
+            /** Referentdoctorhospital */
+            referentDoctorHospital?: string | null;
+            /** Referentdoctorusername */
+            referentDoctorUsername?: string | null;
+            /** Testcategory */
+            testCategory?: string | null;
+            /** Attentionreason */
+            attentionReason?: string | null;
+            /** Attentionlabel */
+            attentionLabel?: string | null;
+            statusPresentation?: components["schemas"]["StatusPresentation"] | null;
+        };
+        /** DashboardWorklistResponse */
+        DashboardWorklistResponse: {
+            /** Items */
+            items: components["schemas"]["DashboardWorklistItem"][];
+            pagination: components["schemas"]["WorklistPagination"];
+        };
+        /**
          * EmergencyContact
          * @description Emergency contact information.
          */
@@ -1575,6 +1735,91 @@ export interface components {
             phone: string;
             /** Email */
             email?: string | null;
+        };
+        /** EntryWorklistItem */
+        EntryWorklistItem: {
+            /** Ordertestid */
+            orderTestId: number;
+            /** Orderid */
+            orderId: number;
+            /** Patientid */
+            patientId: number;
+            /** Patientname */
+            patientName: string;
+            /** Testcode */
+            testCode: string;
+            /** Testname */
+            testName: string;
+            /** Sampleid */
+            sampleId: number | null;
+            /** Sampletype */
+            sampleType: string;
+            priority: components["schemas"]["PriorityLevel"];
+            status: components["schemas"]["TestStatus"];
+            /** Collectedat */
+            collectedAt: string | null;
+            /**
+             * Orderdate
+             * Format: date-time
+             */
+            orderDate: string;
+            /** Waitinghours */
+            waitingHours: number;
+            /** Turnaroundhours */
+            turnaroundHours: number;
+            /** Isretest */
+            isRetest: boolean;
+            /** Retestoftestid */
+            retestOfTestId?: number | null;
+            /**
+             * Retestnumber
+             * @default 0
+             */
+            retestNumber: number;
+            /** Referentdoctorid */
+            referentDoctorId?: number | null;
+            /** Referentdoctorname */
+            referentDoctorName?: string | null;
+            /** Referentdoctoremail */
+            referentDoctorEmail?: string | null;
+            /** Referentdoctorphone */
+            referentDoctorPhone?: string | null;
+            /** Referentdoctorhospital */
+            referentDoctorHospital?: string | null;
+            /** Referentdoctorusername */
+            referentDoctorUsername?: string | null;
+            /** Testcategory */
+            testCategory?: string | null;
+            /** Pipelinestage */
+            pipelineStage?: ("collection" | "entry" | "validation" | "escalation" | "completed" | "cancelled") | null;
+            /** Attentionreason */
+            attentionReason?: string | null;
+            /** Attentionlabel */
+            attentionLabel?: string | null;
+            /**
+             * @default {
+             *       "collect": false,
+             *       "enterResults": false,
+             *       "validate": false,
+             *       "reject": false
+             *     }
+             */
+            allowedActions: components["schemas"]["LabWorklistAllowedActions"];
+            /** Denyreason */
+            denyReason?: string | null;
+            /** Denymessage */
+            denyMessage?: string | null;
+            statusPresentation?: components["schemas"]["StatusPresentation"] | null;
+            /** Queueageband */
+            queueAgeBand?: ("fresh" | "onTrack" | "warning" | "critical") | null;
+            /** Priorityrank */
+            priorityRank?: number | null;
+        };
+        /** EntryWorklistResponse */
+        EntryWorklistResponse: {
+            /** Items */
+            items: components["schemas"]["EntryWorklistItem"][];
+            pagination: components["schemas"]["WorklistPagination"];
         };
         /** EscalationActionFlags */
         EscalationActionFlags: {
@@ -2021,6 +2266,10 @@ export interface components {
             specialInstructions?: string[] | null;
             /** Patientprepinstructions */
             patientPrepInstructions?: string | null;
+            /** Doctorapprovedby */
+            doctorApprovedBy?: string | null;
+            /** Doctorapprovedat */
+            doctorApprovedAt?: string | null;
             /** Createdby */
             createdBy: string;
             /**
@@ -2103,6 +2352,10 @@ export interface components {
             specialInstructions?: string[] | null;
             /** Patientprepinstructions */
             patientPrepInstructions?: string | null;
+            /** Doctorapprovedby */
+            doctorApprovedBy?: string | null;
+            /** Doctorapprovedat */
+            doctorApprovedAt?: string | null;
             /** Createdby */
             createdBy: string;
             /**
@@ -3442,6 +3695,122 @@ export interface components {
             /** Error Type */
             type: string;
         };
+        /** ValidationWorklistItem */
+        ValidationWorklistItem: {
+            /** Ordertestid */
+            orderTestId: number;
+            /** Orderid */
+            orderId: number;
+            /** Patientid */
+            patientId: number;
+            /** Patientname */
+            patientName: string;
+            /** Testcode */
+            testCode: string;
+            /** Testname */
+            testName: string;
+            /** Sampletype */
+            sampleType: string;
+            priority: components["schemas"]["PriorityLevel"];
+            status: components["schemas"]["TestStatus"];
+            /** Sampleid */
+            sampleId?: number | null;
+            sampleStatus?: components["schemas"]["SampleStatus"] | null;
+            /** Results */
+            results?: {
+                [key: string]: components["schemas"]["TestResultValue"] | {
+                    [key: string]: unknown;
+                } | string | number | null;
+            } | null;
+            /** Flags */
+            flags?: string[] | null;
+            /** Enteredby */
+            enteredBy?: string | null;
+            /** Referentdoctorid */
+            referentDoctorId?: number | null;
+            /** Referentdoctorname */
+            referentDoctorName?: string | null;
+            /** Referentdoctoremail */
+            referentDoctorEmail?: string | null;
+            /** Referentdoctorphone */
+            referentDoctorPhone?: string | null;
+            /** Referentdoctorhospital */
+            referentDoctorHospital?: string | null;
+            /** Referentdoctorusername */
+            referentDoctorUsername?: string | null;
+            /**
+             * Isretest
+             * @default false
+             */
+            isRetest: boolean;
+            /** Retestoftestid */
+            retestOfTestId?: number | null;
+            /**
+             * Retestnumber
+             * @default 0
+             */
+            retestNumber: number;
+            /** Resultenteredat */
+            resultEnteredAt: string | null;
+            /**
+             * Orderdate
+             * Format: date-time
+             */
+            orderDate: string;
+            /** Waitinghours */
+            waitingHours: number;
+            /** Turnaroundhours */
+            turnaroundHours: number;
+            /** Hascriticalvalues */
+            hasCriticalValues: boolean;
+            /** Testcategory */
+            testCategory?: string | null;
+            /** Pipelinestage */
+            pipelineStage?: ("collection" | "entry" | "validation" | "escalation" | "completed" | "cancelled") | null;
+            /** Attentionreason */
+            attentionReason?: string | null;
+            /** Attentionlabel */
+            attentionLabel?: string | null;
+            /**
+             * @default {
+             *       "collect": false,
+             *       "enterResults": false,
+             *       "validate": false,
+             *       "reject": false
+             *     }
+             */
+            allowedActions: components["schemas"]["LabWorklistAllowedActions"];
+            /** Denyreason */
+            denyReason?: string | null;
+            /** Denymessage */
+            denyMessage?: string | null;
+            statusPresentation?: components["schemas"]["StatusPresentation"] | null;
+            /** Queueageband */
+            queueAgeBand?: ("fresh" | "onTrack" | "warning" | "critical") | null;
+            /** Priorityrank */
+            priorityRank?: number | null;
+        };
+        /** ValidationWorklistResponse */
+        ValidationWorklistResponse: {
+            /** Items */
+            items: components["schemas"]["ValidationWorklistItem"][];
+            pagination: components["schemas"]["WorklistPagination"];
+        };
+        /** WorklistPagination */
+        WorklistPagination: {
+            /** Page */
+            page: number;
+            /** Pagesize */
+            pageSize: number;
+            /** Total */
+            total: number;
+            /** Totalpages */
+            totalPages: number;
+            /** Hasnext */
+            hasNext: boolean;
+            /** Hasprev */
+            hasPrev: boolean;
+        };
     };
     responses: never;
     parameters: never;
@@ -3467,6 +3836,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
+                };
+            };
+        };
+    };
+    get_client_config_api_v1_config_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    validate_config_api_v1_config_validate_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConfigValidationResult"];
                 };
             };
         };
@@ -4315,6 +4724,37 @@ export interface operations {
             };
         };
     };
+    approve_order_api_v1_orders__orderId__approve_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_referent_doctors_api_v1_referent_doctors_get: {
         parameters: {
             query?: {
@@ -5101,7 +5541,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["CollectionWorklistResponse"];
                 };
             };
             /** @description Validation Error */
@@ -5139,7 +5579,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["EntryWorklistResponse"];
                 };
             };
             /** @description Validation Error */
@@ -5177,7 +5617,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["ValidationWorklistResponse"];
                 };
             };
             /** @description Validation Error */
@@ -5209,7 +5649,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["DashboardWorklistResponse"];
                 };
             };
             /** @description Validation Error */
@@ -5252,7 +5692,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["DashboardWorklistResponse"];
                 };
             };
             /** @description Validation Error */

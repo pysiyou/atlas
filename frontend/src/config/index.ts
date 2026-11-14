@@ -23,6 +23,11 @@ export { useClientConfig, useClientConfigReady, ClientConfigProvider } from './C
 export { getModuleListTitles } from './pageCopy';
 export { useModuleListTitles } from './useModuleListTitles';
 export {
+  getOrderTableColumnHeaders,
+  getPatientTableColumnHeaders,
+  getUrlFilterChipLabels,
+} from './pageCopy';
+export {
   getOrderFilterPlaceholders,
   getPatientFilterPlaceholders,
   getPaymentFilterPlaceholders,
@@ -30,10 +35,3 @@ export {
   getSharedFilterPlaceholders,
   getLabQueueFilterPlaceholders,
 } from './filterPlaceholders';
-export {
-  FEEDBACK_CATALOG,
-  type FeedbackChannel,
-  type FeedbackEntry,
-  type FeedbackId,
-  type FeedbackVariant,
-} from '@/types/generated/feedbackCatalog';

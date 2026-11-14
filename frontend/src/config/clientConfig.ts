@@ -236,6 +236,8 @@ export function getFeedbackTerminologyContext(): Record<string, string> {
     reportCap: tCap('report', 'Report'),
     reports: tLower('reports', 'reports'),
     reportsCap: tCap('reports', 'Reports'),
+    samples: tLower('samples', 'samples'),
+    samplesCap: tCap('samples', 'Samples'),
   };
 }
 

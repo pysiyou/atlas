@@ -8,6 +8,7 @@ import { actionButtonPreset, Button, Icon, IconButton } from '@/components/primi
 import { PageHeader } from '@/components/layout';
 import type { Order, Invoice } from '@/types';
 import { IconKeys } from '@/config/icons';
+import { useModuleListTitles } from '@/config/useModuleListTitles';
 
 export interface OrderHeaderProps {
   order: Order;
@@ -24,6 +25,7 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
   onViewInvoice,
   onEdit,
 }) => {
+  const titles = useModuleListTitles();
   const actions = (
     <div
       className={`flex items-center gap-space-2 ${!isLarge ? 'w-full sm:w-auto sm:justify-end justify-end' : ''}`}
@@ -56,7 +58,7 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
             <IconButton
               {...actionButtonPreset('view')}
               size="sm"
-              title="Edit Order"
+              title={titles.editOrder}
               icon={<Icon iconKey={IconKeys.actions.edit} className="w-4 h-4" />}
               onClick={onEdit}
             />
