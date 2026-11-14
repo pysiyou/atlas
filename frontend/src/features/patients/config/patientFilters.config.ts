@@ -6,7 +6,9 @@ import type { FilterConfig } from '@/components/filters/types';
 import { IconKeys } from '@/config/icons';
 import { createFilterOptions } from '@/utils/filtering';
 import { GENDER_VALUES, GENDER_CONFIG } from '@/types';
-import { PATIENT_FILTER_PLACEHOLDERS } from '@/config/filterPlaceholders';
+import { getPatientFilterPlaceholders } from '@/config/filterPlaceholders';
+
+const PATIENT_FILTER_PLACEHOLDERS = getPatientFilterPlaceholders();
 import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
 
 const genderOptions = createFilterOptions(GENDER_VALUES, GENDER_CONFIG);

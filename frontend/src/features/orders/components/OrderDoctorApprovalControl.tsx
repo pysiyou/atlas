@@ -6,8 +6,8 @@ import React, { useCallback, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/primitives';
 import { isWorkflowEnabled } from '@/config/clientConfig';
-import { queryKeys } from '@/lib/api/queryKeys';
-import { ordersApi } from '../api/orders';
+import { queryKeys } from '@/lib/query';
+import { orderAPI } from '../api/orders';
 import type { Order } from '@/types';
 import { formatDateTime } from '@/utils/date';
 
@@ -27,7 +27,7 @@ export const OrderDoctorApprovalControl: React.FC<OrderDoctorApprovalControlProp
   const handleApprove = useCallback(async () => {
     setSubmitting(true);
     try {
-      await ordersApi.approveForCollection(String(order.orderId));
+      await orderAPI.approveForCollection(String(order.orderId));
       await queryClient.invalidateQueries({
         queryKey: queryKeys.orders.byId(String(order.orderId)),
       });

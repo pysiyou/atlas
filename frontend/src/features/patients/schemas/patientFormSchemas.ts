@@ -40,18 +40,18 @@ export const affiliationSchema = z
 
 export type Affiliation = z.infer<typeof affiliationSchema>;
 
+const affiliationFormFieldsSchema = z.object({
+  assuranceNumber: z.string().min(1).nullish(),
+  startDate: dateStringSchema.nullish(),
+  endDate: dateStringSchema.nullish(),
+  duration: affiliationDurationSchema.nullish(),
+});
+
 /** Form-only: all fields optional (partial submission allowed) */
-export const affiliationFormSchema = z
-  .object({
-    assuranceNumber: z.string().min(1).nullish(),
-    startDate: dateStringSchema.nullish(),
-    endDate: dateStringSchema.nullish(),
-    duration: affiliationDurationSchema.nullish(),
-  })
-  .refine(
-    data => !data.startDate || !data.endDate || new Date(data.endDate) > new Date(data.startDate),
-    { message: 'End date must be after start date', path: ['endDate'] }
-  );
+export const affiliationFormSchema = affiliationFormFieldsSchema.refine(
+  data => !data.startDate || !data.endDate || new Date(data.endDate) > new Date(data.startDate),
+  { message: 'End date must be after start date', path: ['endDate'] }
+);
 
 export type AffiliationFormInput = z.infer<typeof affiliationFormSchema>;
 
@@ -63,6 +63,51 @@ export const emergencyContactSchema = z.object({
 });
 
 export type EmergencyContact = z.infer<typeof emergencyContactSchema>;
+
+/** Optional emergency contact on write when workflow does not require it. */
+const emergencyContactFormSchema = z.object({
+  fullName: nameSchema.optional(),
+  relationship: zEnumFromValues(RELATIONSHIP_VALUES).optional(),
+  phone: phoneSchema.optional(),
+  email: emailSchema.optional(),
+});
+
+function refineAffiliationDates(
+  affiliation: z.infer<typeof affiliationFormFieldsSchema> | null | undefined,
+  ctx: z.RefinementCtx,
+): void {
+  if (!affiliation?.startDate || !affiliation?.endDate) return;
+  if (new Date(affiliation.endDate) <= new Date(affiliation.startDate)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['affiliation', 'endDate'],
+      message: 'End date must be after start date',
+    });
+  }
+}
+
+function refineEmergencyContactRequired(
+  emergencyContact: z.infer<typeof emergencyContactFormSchema> | undefined,
+  ctx: z.RefinementCtx,
+): void {
+  const requireEmergency =
+    getClientConfig()?.workflows?.requireEmergencyContact !== false;
+  if (!requireEmergency) return;
+  if (!emergencyContact?.fullName?.trim()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['emergencyContact', 'fullName'],
+      message: 'Emergency contact name is required',
+    });
+  }
+  if (!emergencyContact?.phone?.trim()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['emergencyContact', 'phone'],
+      message: 'Emergency contact phone is required',
+    });
+  }
+}
 
 /** Backend PatientResponse allows legacy phones shorter than the write minimum. */
 const patientReadPhoneSchema = z
@@ -112,8 +157,8 @@ export const patientSchema = z.object({
 export type Patient = z.infer<typeof patientSchema>;
 export type MedicalHistory = z.infer<typeof medicalHistorySchema>;
 
-// Form schema for CREATE (excludes auto-generated fields; all required fields enforced)
-export const patientCreateSchema = patientSchema
+/** Shared patient form fields (no refinements — safe to call `.partial()` on). */
+const patientFormFieldsSchema = patientSchema
   .omit({
     id: true,
     registrationDate: true,
@@ -124,32 +169,27 @@ export const patientCreateSchema = patientSchema
   })
   .extend({
     phone: phoneSchema,
-    emergencyContact: emergencyContactSchema.partial(),
-    affiliation: affiliationFormSchema.nullish(),
-  })
-  .superRefine((data, ctx) => {
-    const requireEmergency =
-      getClientConfig()?.workflows?.requireEmergencyContact !== false;
-    if (!requireEmergency) return;
-    const ec = data.emergencyContact;
-    if (!ec?.fullName?.trim()) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ['emergencyContact', 'fullName'],
-        message: 'Emergency contact name is required',
-      });
-    }
-    if (!ec?.phone?.trim()) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ['emergencyContact', 'phone'],
-        message: 'Emergency contact phone is required',
-      });
-    }
+    emergencyContact: emergencyContactFormSchema,
+    affiliation: affiliationFormFieldsSchema.nullish(),
   });
 
+// Form schema for CREATE (excludes auto-generated fields; all required fields enforced)
+export const patientCreateSchema = patientFormFieldsSchema.superRefine((data, ctx) => {
+  refineAffiliationDates(data.affiliation, ctx);
+  refineEmergencyContactRequired(data.emergencyContact, ctx);
+});
+
 // Form schema for UPDATE (all fields optional for partial updates)
-export const patientUpdateSchema = patientCreateSchema.partial();
+export const patientUpdateSchema = patientFormFieldsSchema
+  .partial()
+  .superRefine((data, ctx) => {
+    if (data.affiliation !== undefined) {
+      refineAffiliationDates(data.affiliation, ctx);
+    }
+    if (data.emergencyContact !== undefined) {
+      refineEmergencyContactRequired(data.emergencyContact, ctx);
+    }
+  });
 
 export type PatientFormInput = z.infer<typeof patientCreateSchema>;
 export type PatientCreateInput = z.infer<typeof patientCreateSchema>;

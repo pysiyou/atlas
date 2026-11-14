@@ -116,6 +116,3 @@ export function getEmptyCopy(): Record<string, EmptyCopy> {
     },
   };
 }
-
-// Legacy constant export for backward compatibility - calls function
-export const EMPTY_COPY = getEmptyCopy();

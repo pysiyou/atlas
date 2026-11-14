@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { actionButtonPreset, Icon, IconButton } from '@/components/primitives';
-import { EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components/display';
+import { EmptyState, getEmptyCopy, PANEL_EMPTY_STATE } from '@/components/display';
 import { RecordId } from '@/features/shared';
 import { formatDateTime } from '@/utils';
 import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
@@ -26,8 +26,8 @@ export const PatientReportsList: React.FC<PatientReportsListProps> = ({ orders }
     return (
       <EmptyState
         {...PANEL_EMPTY_STATE}
-        title={EMPTY_COPY.reports.title}
-        description={EMPTY_COPY.reports.description}
+        title={getEmptyCopy().reports.title}
+        description={getEmptyCopy().reports.description}
       />
     );
   }

@@ -6,7 +6,7 @@ import { cn } from '@/utils';
 
 /**
  * Unified empty UI for tables, panels, sections, and feeds.
- * Copy: see EMPTY_COPY / emptySubtitle in emptyStateCopy.ts and @/utils/constants.
+ * Copy: see getEmptyCopy() / emptySubtitle in emptyStateCopy.ts and @/utils/constants.
  */
 interface EmptyStateProps {
   /** When omitted, only title and description are shown */

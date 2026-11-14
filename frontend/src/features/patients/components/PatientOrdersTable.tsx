@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { EMPTY_COPY } from '@/config/emptyStateCopy';
+import { getEmptyCopy } from '@/config/emptyStateCopy';
 import { EmptyState } from '@/components/display/EmptyState';
 import { PANEL_EMPTY_STATE } from '@/config/emptyStatePresets';
 import { DataTable } from '@/components/data-table';
@@ -19,8 +19,8 @@ export interface PatientOrdersTableProps {
 const EMPTY_MESSAGE = (
   <EmptyState
     {...PANEL_EMPTY_STATE}
-    title={EMPTY_COPY.relatedOrders.title}
-    description={EMPTY_COPY.relatedOrders.description}
+    title={getEmptyCopy().relatedOrders.title}
+    description={getEmptyCopy().relatedOrders.description}
   />
 );
 

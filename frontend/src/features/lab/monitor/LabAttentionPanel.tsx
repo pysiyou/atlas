@@ -4,7 +4,7 @@
 
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { EmptyState, EMPTY_COPY, DENSE_EMPTY_STATE_TEXT } from '@/components/display';
+import { EmptyState, getEmptyCopy, DENSE_EMPTY_STATE_TEXT } from '@/components/display';
 import { RecordId } from '@/features/shared';
 import { Badge } from '@/components/primitives';
 import { Panel } from '@/components/surfaces';
@@ -14,7 +14,7 @@ import { cn, displayId } from '@/utils';
 import { getLabQueueUrl } from '../utils/labSearchAndLinks';
 import {CONTROL, FEED_ACCENT, FEED_GROUPED, RADIUS, FG } from '@/theme/recipes';
 import { Text } from '@/components/layout';
-import { LAB_COPY } from '../constants/labConstants';
+import { getLabCopy } from '../constants/labConstants';
 import {
   ATTENTION_TYPE_ORDER,
   getAttentionTone,
@@ -179,8 +179,8 @@ function AttentionFeed({ items }: { items: LabAttentionQueueItem[] }) {
       <div className="flex h-full min-h-0 flex-col bg-surface">
         <EmptyState
           {...DENSE_EMPTY_STATE_TEXT}
-          title={EMPTY_COPY.pendingAttention.title}
-          description={EMPTY_COPY.pendingAttention.description}
+          title={getEmptyCopy().pendingAttention.title}
+          description={getEmptyCopy().pendingAttention.description}
         />
       </div>
     );
@@ -224,7 +224,7 @@ export const LabAttentionPanel: React.FC<LabAttentionPanelProps> = ({
             ? capped
               ? `Prioritized view · ${shownTests} of ${attentionTotal} tests`
               : `${items.length} accessions · ${attentionTotal} tests`
-            : LAB_COPY.attention.panelMetaEmpty
+            : getLabCopy().attention.panelMetaEmpty
       }
     >
       <AttentionFeed items={items} />

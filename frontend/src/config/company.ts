@@ -2,8 +2,7 @@
  * Company Configuration Facade
  * 
  * Thin facade over API-loaded client configuration (ClientConfig).
- * Maintains backward compatibility with existing call sites while reading
- * from the single source of truth: config/client-config.json via API.
+ * Reads from the single source of truth: config/client-config.json via API.
  * 
  * Note: For non-React modules (PDF utils), ensure config is loaded before calling.
  */
@@ -11,7 +10,7 @@
 import { getClientConfig } from './clientConfig';
 
 /**
- * Company configuration type definitions (legacy compatibility)
+ * Company configuration type definitions for UI and PDF consumers.
  */
 export interface CompanyAddress {
   street: string;
@@ -55,7 +54,7 @@ export interface TrustIndicator {
 }
 
 export interface CompanyMarketing {
-  trustIndicator?: TrustIndicator;
+  trustIndicator: TrustIndicator;
 }
 
 export interface CompanyData {
@@ -100,7 +99,7 @@ const DEFAULT_VALUES = {
  */
 class CompanyConfig {
   /**
-   * Get full company configuration (legacy format)
+   * Get full company configuration for forms and reports
    */
   getConfig(): CompanyData {
     const config = getClientConfig();
@@ -223,7 +222,7 @@ class CompanyConfig {
     return this._getMarketing(config);
   }
 
-  // Private helpers to transform API config to legacy format
+  // Private helpers to shape API config for UI consumers
   
   private _getContact(config: ReturnType<typeof getClientConfig>): CompanyContact {
     const address = config?.company.contact?.address;
@@ -277,9 +276,17 @@ class CompanyConfig {
   }
 
   private _getMarketing(config: ReturnType<typeof getClientConfig>): CompanyMarketing {
-    // Return empty marketing object if not configured
-    // Can be extended when marketing data is needed
-    return {};
+    const trust = (
+      config?.marketing as { trustIndicator?: TrustIndicator } | undefined
+    )?.trustIndicator;
+
+    return {
+      trustIndicator: {
+        text: trust?.text ?? 'Trusted by',
+        count: trust?.count ?? '500+',
+        audience: trust?.audience ?? 'healthcare professionals',
+      },
+    };
   }
 }
 

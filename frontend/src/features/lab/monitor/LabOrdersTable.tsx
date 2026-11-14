@@ -2,7 +2,7 @@
  * Lab monitor table — union of tests updated today (UTC) and still-running pipeline tests.
  */
 import React, { useCallback, useMemo } from 'react';
-import { EMPTY_COPY } from '@/config/emptyStateCopy';
+import { getEmptyCopy } from '@/config/emptyStateCopy';
 import { DataTable } from '@/components/data-table';
 import { Panel } from '@/components/surfaces/Panel';
 import { useDashboardWorklistToday } from '../api/worklists';
@@ -48,8 +48,8 @@ export const LabOrdersTable: React.FC = () => {
         rowClassName={row =>
           cn(SPLIT_ROW_INTERACTIVE, getOrderTestLineageRowClass({ status: row.status }))
         }
-        emptyMessage={EMPTY_COPY.dashboardWorklist.title}
-        emptyDescription={EMPTY_COPY.dashboardWorklist.description}
+        emptyMessage={getEmptyCopy().dashboardWorklist.title}
+        emptyDescription={getEmptyCopy().dashboardWorklist.description}
         emptyVariant="dense"
         ariaLabel="Lab monitor worklist"
       />

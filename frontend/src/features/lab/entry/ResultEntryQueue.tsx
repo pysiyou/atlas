@@ -16,7 +16,7 @@ import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { entryFilterConfig } from '../constants';
-import { EMPTY_COPY } from '@/components/display';
+import { getEmptyCopy } from '@/components/display';
 import { ErrorBoundary } from '@/feedback';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import { useResultEntryWorkflow } from './useResultEntryWorkflow';
@@ -131,8 +131,8 @@ export const ResultEntryQueue: React.FC = () => {
           );
         }}
         getItemKey={(row, idx) => `entry-${(row as EntryQueueRow).orderTestId}-${idx}`}
-        emptyTitle={EMPTY_COPY.pendingResults.title}
-        emptyDescription={EMPTY_COPY.pendingResults.description}
+        emptyTitle={getEmptyCopy().pendingResults.title}
+        emptyDescription={getEmptyCopy().pendingResults.description}
         filterRow={
           <LabQueueFilterRow pagination={pagination} onPageChange={goToPage}>
             <LabQueueFilters config={entryFilterConfig} {...filterBarProps} />

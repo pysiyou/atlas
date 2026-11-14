@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Avatar, RemovableTag, TagChip } from '@/components/primitives';
-import { EMPTY_COPY } from '@/components/display';
+import { getEmptyCopy } from '@/components/display';
 import { cn, formatPhoneNumber } from '@/utils';
 import { text, FG } from '@/theme/recipes';
 import type { Patient } from '@/types';
@@ -153,8 +153,8 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
         <SearchResultsPopoverShell
           title="Matching patients"
           resultCount={visiblePatients.length}
-          emptyMessage={EMPTY_COPY.matchingPatients.title}
-          emptyDescription={EMPTY_COPY.matchingPatients.description}
+          emptyMessage={getEmptyCopy().matchingPatients.title}
+          emptyDescription={getEmptyCopy().matchingPatients.description}
           isEmpty={visiblePatients.length === 0}
         >
           {visiblePatients.map(patient => {

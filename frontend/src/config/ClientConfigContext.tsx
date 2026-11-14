@@ -4,7 +4,7 @@
  * Provides centralized access to white-label configuration throughout the app.
  * Eliminates timing races by holding config state and blocking UI until ready.
  */
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, type ReactNode } from 'react';
 import type { ClientConfig } from './clientConfig';
 
 type ConfigStatus = 'loading' | 'ready' | 'error';

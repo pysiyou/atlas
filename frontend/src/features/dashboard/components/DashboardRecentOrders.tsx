@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components/display';
+import { EmptyState, getEmptyCopy, PANEL_EMPTY_STATE } from '@/components/display';
 import { RecordId } from '@/features/shared';
 import { Panel } from '@/components/surfaces';
 import { OrderStatusBadge } from '@/features/orders';
@@ -63,8 +63,8 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
       ) : (
         <EmptyState
           {...PANEL_EMPTY_STATE}
-          title={EMPTY_COPY.recentOrders.title}
-          description={EMPTY_COPY.recentOrders.description}
+          title={getEmptyCopy().recentOrders.title}
+          description={getEmptyCopy().recentOrders.description}
         />
       )}
     </div>

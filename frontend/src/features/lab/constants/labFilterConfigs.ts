@@ -11,7 +11,9 @@ import {
   PRIORITY_LEVEL_CONFIG,
   TEST_STATUS_VALUES } from '@/types';
 import { IconKeys } from '@/config/icons';
-import { SHARED_FILTER_PLACEHOLDERS } from '@/config/filterPlaceholders';
+import { getSharedFilterPlaceholders } from '@/config/filterPlaceholders';
+
+const SHARED_FILTER_PLACEHOLDERS = getSharedFilterPlaceholders();
 import { buildLabFilterConfig } from '../utils/buildLabFilterConfig';
 
 const COLLECTION_STATUS_OPTIONS: FilterOption[] = [

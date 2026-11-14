@@ -1,5 +1,5 @@
 /** Command center board types and attention-queue categories. */
-import { LAB_CONFIG, LAB_COPY } from '../constants/labConstants';
+import { LAB_CONFIG, getLabCopy } from '../constants/labConstants';
 import type { LabAttentionReason } from '../utils/queueDisplay';
 import type { PriorityLevel } from '@/types';
 
@@ -34,7 +34,7 @@ export interface AttentionTypeConfig {
 export const ATTENTION_TYPE_CONFIG: Record<AttentionType, AttentionTypeConfig> = {
   escalation_critical: {
     id: 'escalation_critical',
-    groupLabel: LAB_COPY.attention.criticalValue,
+    groupLabel: getLabCopy().attention.criticalValue,
     pillLabel: 'Critical',
     badgeVariant: 'escalated',
     sortOrder: 10,

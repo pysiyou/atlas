@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Controller, type Control } from 'react-hook-form';
 import { Icon, RemovableTag, TagChip } from '@/components/primitives';
 import { Input } from '@/components/inputs';
-import { EMPTY_COPY } from '@/components/display';
+import { getEmptyCopy } from '@/components/display';
 import { cn, formatPhoneNumber } from '@/utils';
 import {
   text,
@@ -219,7 +219,7 @@ export const ReferentDoctorSelect: React.FC<ReferentDoctorSelectProps> = ({
             <SearchResultsPopoverShell
               title="Referent doctors"
               resultCount={visibleResults.length + (canCreate ? 1 : 0)}
-              emptyMessage={EMPTY_COPY.matchingPatients.title}
+              emptyMessage={getEmptyCopy().matchingPatients.title}
               emptyDescription={
                 isLoading ? 'Searching…' : 'Type a name to search or add a new referent doctor.'
               }

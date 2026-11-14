@@ -10,7 +10,7 @@ import { useQualityIssueOptions } from '../api/qualityIssues';
 import type { QualityIssueOptions, QualityIssueTargetType, RemedyType } from '@/types/lab-operations';
 import { QUALITY_ISSUE_POPOVER_COPY } from '../constants/qualityIssuePopoverCopy';
 import { QualityIssueInlineWarning } from './QualityIssueInlineWarning';
-import { LAB_COPY } from '../constants/labConstants';
+import { getLabCopy } from '../constants/labConstants';
 import { QualityIssueRemedyPicker } from './QualityIssueRemedyPicker';
 import {
   buildSampleRemedyOptions,
@@ -131,7 +131,7 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
             onNotesChange={onNotesChange ?? (() => {})}
             reasonLabel={
               collectionCopy?.reasonLabel ??
-              (targetType === 'test' ? 'Result rejection reason' : LAB_COPY.quality.sampleIssue)
+              (targetType === 'test' ? 'Result rejection reason' : getLabCopy().quality.sampleIssue)
             }
             notesLabel={collectionCopy?.notesLabel}
           />

@@ -3,7 +3,7 @@
  */
 import type { LabTodayPanelSnapshot, LabTodayStageSnapshot } from './monitorModel';
 import {
-  LAB_COPY,
+  getLabCopy,
   getKpiStageVisual,
   type LabWorkflowStage,
 } from '../constants/labConstants';
@@ -16,9 +16,9 @@ export interface TodayStageRowConfig {
 }
 
 export const STAGE_ROWS: readonly TodayStageRowConfig[] = [
-  { stage: 'collection', tableLabel: LAB_COPY.dashboardToday.stageCollection },
-  { stage: 'entry', tableLabel: LAB_COPY.dashboardToday.stageEntry },
-  { stage: 'validation', tableLabel: LAB_COPY.dashboardToday.stageValidation },
+  { stage: 'collection', tableLabel: getLabCopy().dashboardToday.stageCollection },
+  { stage: 'entry', tableLabel: getLabCopy().dashboardToday.stageEntry },
+  { stage: 'validation', tableLabel: getLabCopy().dashboardToday.stageValidation },
 ] as const;
 
 export interface TodayStageSegment {

@@ -3,7 +3,7 @@
  * Use these so search, date, status, etc. have consistent text and order per page.
  */
 
-import { t, tLower } from './clientConfig';
+import { tLower } from './clientConfig';
 
 /** Get placeholders for Orders page filters with terminology */
 export function getOrderFilterPlaceholders() {
@@ -59,10 +59,3 @@ export function getSharedFilterPlaceholders() {
     paymentMethod: 'Select payment method',
   };
 }
-
-// Legacy constant exports for backward compatibility - call functions
-export const ORDER_FILTER_PLACEHOLDERS = getOrderFilterPlaceholders();
-export const PATIENT_FILTER_PLACEHOLDERS = getPatientFilterPlaceholders();
-export const PAYMENT_FILTER_PLACEHOLDERS = getPaymentFilterPlaceholders();
-export const REPORT_FILTER_PLACEHOLDERS = getReportFilterPlaceholders();
-export const SHARED_FILTER_PLACEHOLDERS = getSharedFilterPlaceholders();

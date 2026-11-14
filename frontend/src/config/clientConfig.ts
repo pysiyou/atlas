@@ -194,7 +194,7 @@ export function interpolate(template: string, context: Record<string, string> = 
   
   // Replace terminology placeholders
   const terminologyPattern = /\{\{(\w+)\}\}/g;
-  result = result.replace(terminologyPattern, (match, key) => {
+  result = result.replace(terminologyPattern, (_match, key) => {
     // First check context
     if (context[key] !== undefined) {
       return context[key];

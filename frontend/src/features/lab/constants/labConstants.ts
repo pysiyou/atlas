@@ -66,20 +66,18 @@ export function getLabCopy() {
   };
 }
 
-// Legacy constant export for backward compatibility
-export const LAB_COPY = getLabCopy();
-
 export function labStageLabel(
   stage: LabWorkflowStage,
   variant: LabStageLabelVariant = 'full',
 ): string {
+  const copy = getLabCopy();
   switch (stage) {
     case 'collection':
-      return variant === 'nav' ? LAB_COPY.workflow.collectionNav : LAB_COPY.workflow.collection;
+      return variant === 'nav' ? copy.workflow.collectionNav : copy.workflow.collection;
     case 'entry':
-      return variant === 'short' ? LAB_COPY.workflow.entryShort : LAB_COPY.workflow.entry;
+      return variant === 'short' ? copy.workflow.entryShort : copy.workflow.entry;
     case 'validation':
-      return LAB_COPY.workflow.validation;
+      return copy.workflow.validation;
   }
 }
 
@@ -112,12 +110,15 @@ export const LAB_CONFIG = {
 export const LAB_TAB_IDS = ['collection', 'entry', 'validation', 'monitor'] as const;
 export type LabTabId = (typeof LAB_TAB_IDS)[number];
 
-export const LAB_TAB_LABELS: Record<LabTabId, string> = {
-  collection: labStageLabel('collection', 'nav'),
-  entry: labStageLabel('entry', 'nav'),
-  validation: labStageLabel('validation', 'nav'),
-  monitor: LAB_COPY.workflow.monitorNav,
-};
+export function getLabTabLabels(): Record<LabTabId, string> {
+  const copy = getLabCopy();
+  return {
+    collection: labStageLabel('collection', 'nav'),
+    entry: labStageLabel('entry', 'nav'),
+    validation: labStageLabel('validation', 'nav'),
+    monitor: copy.workflow.monitorNav,
+  };
+}
 
 export const LAB_WORKFLOW_KPI_ICONS: Record<LabWorkflowKpiStage, IconKey> = {
   collection: IconKeys.modules.laboratory,

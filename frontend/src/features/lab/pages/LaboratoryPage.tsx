@@ -12,8 +12,8 @@ import { useLabStageQueueCounts, getValidationTabCount } from '../hooks';
 import {
   DEFAULT_LAB_TAB,
   normalizeLabTabParam,
-  LAB_COPY,
-  LAB_TAB_LABELS,
+  getLabCopy,
+  getLabTabLabels,
   LAB_TAB_ICONS,
   type LabTabId,
   getLabTabPath } from '../constants/labConstants';
@@ -53,28 +53,29 @@ export const LaboratoryPage: React.FC = () => {
   );
 
   const tabs = useMemo((): LaboratoryPageTabDef[] => {
+    const tabLabels = getLabTabLabels();
     const all: LaboratoryPageTabDef[] = [
       {
         id: 'collection',
-        label: LAB_TAB_LABELS.collection,
+        label: tabLabels.collection,
         icon: <Icon iconKey={LAB_TAB_ICONS.collection} className="w-3.5 h-3.5" />,
         count: counts.collection,
       },
       {
         id: 'entry',
-        label: LAB_TAB_LABELS.entry,
+        label: tabLabels.entry,
         icon: <Icon iconKey={LAB_TAB_ICONS.entry} className="w-3.5 h-3.5" />,
         count: counts.entry,
       },
       {
         id: 'validation',
-        label: LAB_TAB_LABELS.validation,
+        label: tabLabels.validation,
         icon: <Icon iconKey={LAB_TAB_ICONS.validation} className="w-3.5 h-3.5" />,
         count: getValidationTabCount(counts),
       },
       {
         id: 'monitor',
-        label: LAB_TAB_LABELS.monitor,
+        label: tabLabels.monitor,
         icon: <Icon iconKey={LAB_TAB_ICONS.monitor} className="w-3.5 h-3.5" />,
       },
     ];
@@ -95,7 +96,7 @@ export const LaboratoryPage: React.FC = () => {
   }
 
   const pageTitle =
-    activeTab === 'monitor' ? LAB_COPY.workflow.monitorPageTitle : LAB_TAB_LABELS[activeTab];
+    activeTab === 'monitor' ? getLabCopy().workflow.monitorPageTitle : getLabTabLabels()[activeTab];
 
   return (
     <div className={WORKSPACE.page}>

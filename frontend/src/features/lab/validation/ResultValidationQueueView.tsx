@@ -1,6 +1,6 @@
 import { EscalationCard, ResultValidationCard } from '../workflow';
 import { LabValidationQueueSection } from '../components/LabValidationQueueSection';
-import { EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components/display';
+import { EmptyState, getEmptyCopy, PANEL_EMPTY_STATE } from '@/components/display';
 import type { PendingEscalationItem } from '../api/results';
 import type { ValidationQueueRow } from '../types/queues';
 import type { QualityIssueResult } from '@/types/lab-operations';
@@ -46,8 +46,8 @@ export function ResultValidationQueueView({
     return (
       <EmptyState
         {...PANEL_EMPTY_STATE}
-        title={EMPTY_COPY.pendingValidation.title}
-        description={EMPTY_COPY.pendingValidation.description}
+        title={getEmptyCopy().pendingValidation.title}
+        description={getEmptyCopy().pendingValidation.description}
       />
     );
   }

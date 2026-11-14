@@ -14,7 +14,9 @@ import {
   ListFilterModal,
   ResponsiveFilterMobileBar,
 } from '@/components/filters';
-import { REPORT_FILTER_PLACEHOLDERS } from '@/config/filterPlaceholders';
+import { getReportFilterPlaceholders } from '@/config/filterPlaceholders';
+
+const REPORT_FILTER_PLACEHOLDERS = getReportFilterPlaceholders();
 
 /**
  * Props interface for ReportFilters component

@@ -11,7 +11,7 @@ import {
   getValidationTabCount,
   getLabTabPath,
   getStageVisual,
-  LAB_TAB_LABELS,
+  getLabTabLabels,
   LAB_WORKFLOW_KPI_ICONS,
   type LabWorkflowStage,
 } from '@/features/lab/cross';
@@ -70,7 +70,7 @@ export const LabPipelineSummary: React.FC<LabPipelineSummaryProps> = ({ loading:
                   iconKey={LAB_WORKFLOW_KPI_ICONS[item.id]}
                   className={`w-4 h-4 shrink-0 ${stageVisual.text}`}
                 />
-                <span className={`${text({ role: 'label' })} truncate`}>{LAB_TAB_LABELS[item.id]}</span>
+                <span className={`${text({ role: 'label' })} truncate`}>{getLabTabLabels()[item.id]}</span>
               </div>
               {count > 0 && (
                 <Badge variant="primary" size="xs">

@@ -6,7 +6,6 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './app/App';
 import { initializeTheme, preloadThemePair } from '@/theme/theme';
-import { companyConfig } from '@/config';
 import '@/theme/tokens/primitives.css';
 import '@/theme/tokens/typography.css';
 import '@/theme/tokens/semantic-light.css';

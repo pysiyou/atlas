@@ -16,7 +16,7 @@ import {
   type LabWorkflowModalContext,
   type LabAuditLine } from '../../components/LabWorkflowHeader';
 import { text , FG } from '@/theme/recipes';
-import { LAB_COPY, labStageLabel, type LabWorkflowStage } from '../../constants/labConstants';
+import { getLabCopy, labStageLabel, type LabWorkflowStage } from '../../constants/labConstants';
 
 export interface QueueModalShellProps {
   isOpen: boolean;
@@ -175,7 +175,7 @@ export const ModalFooter: React.FC<ModalFooterProps> = ({
 export type LabModalStage = LabWorkflowStage | 'escalation';
 
 export function labModalStageLabel(stage: LabModalStage): string {
-  return stage === 'escalation' ? LAB_COPY.workflow.escalation : labStageLabel(stage, 'full');
+  return stage === 'escalation' ? getLabCopy().workflow.escalation : labStageLabel(stage, 'full');
 }
 
 /** Modal title + context line for lab workflow detail modals (matches report preview chrome). */

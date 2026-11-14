@@ -3,7 +3,7 @@
  * Shared pagination sizes, display limits, empty-state copy, and typography aliases.
  */
 
-import { EMPTY_COPY, emptySubtitle, emptyTitle } from '@/config/emptyStateCopy';
+import { getEmptyCopy, emptySubtitle, emptyTitle } from '@/config/emptyStateCopy';
 
 // ---------------------------------------------------------------------------
 // Pagination & Display Limits
@@ -32,8 +32,8 @@ export const AGE_RANGE = {
 // Empty State
 // ---------------------------------------------------------------------------
 
-export const DEFAULT_EMPTY_TITLE = EMPTY_COPY.data.title;
-export const DEFAULT_EMPTY_DESCRIPTION = EMPTY_COPY.data.description;
+export const DEFAULT_EMPTY_TITLE = getEmptyCopy().data.title;
+export const DEFAULT_EMPTY_DESCRIPTION = getEmptyCopy().data.description;
 export const DEFAULT_EMPTY_DESCRIPTION_SEARCH = emptySubtitle(
   'results',
   'your search or filters match records',

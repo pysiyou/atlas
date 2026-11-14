@@ -4,7 +4,7 @@
 
 import { ATTENTION_LABELS } from '@/types/generated/labContract';
 import { displayId } from '@/utils';
-import { LAB_CONFIG, LAB_COPY, labStageLabel } from '../constants/labConstants';
+import { LAB_CONFIG, getLabCopy, labStageLabel } from '../constants/labConstants';
 import type { LabAttentionQueueItem } from './monitorModel';
 import type { AttentionType } from './monitorModel';
 
@@ -45,7 +45,7 @@ function testIdChip(item: LabAttentionQueueItem): AttentionDetail | null {
 }
 
 function queueDetails(item: LabAttentionQueueItem): AttentionDetail[] {
-  const unit = item.stage === 'collection' ? LAB_COPY.entity.samples : 'tests';
+  const unit = item.stage === 'collection' ? getLabCopy().entity.samples : 'tests';
   const details: AttentionDetail[] = [
     { type: 'queueStage', stageLabel: labStageLabel(item.stage, 'full') },
   ];

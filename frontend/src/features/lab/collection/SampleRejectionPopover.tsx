@@ -12,7 +12,7 @@ import {
   buildSampleRemedyOptions,
   resolveSuggestedRemedy } from '../constants/qualityIssuePopoverCopy';
 import type { QualityIssueOptions } from '@/types/lab-operations';
-import { LAB_COPY } from '../constants/labConstants';
+import { getLabCopy } from '../constants/labConstants';
 import type { RemedyType } from '@/types/lab-operations';
 
 function parseNumericSampleId(sampleId: string): number | undefined {
@@ -111,7 +111,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
 
   return (
     <LabFormPopoverChrome
-      title={LAB_COPY.quality.reportSampleIssue}
+      title={getLabCopy().quality.reportSampleIssue}
       subtitle={subtitle}
       onCancel={onCancel}
       onConfirm={handleConfirm}
@@ -124,7 +124,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
         <QualityIssueForm
           targetType="sample"
           targetId={numericSampleId}
-          title={LAB_COPY.quality.sampleIssue}
+          title={getLabCopy().quality.sampleIssue}
           reason={reason}
           notes={notes}
           preferredRemedy={preferredRemedy}
@@ -162,8 +162,8 @@ export const SampleRejectionPopover: React.FC<CollectionRejectionPopoverProps> =
     <LabAnchoredPopover
       trigger={
         trigger ?? (
-          <Button {...actionButtonPreset('reject')} size="sm" title={LAB_COPY.quality.reportSampleIssue}>
-            {LAB_COPY.quality.reportSampleIssue}
+          <Button {...actionButtonPreset('reject')} size="sm" title={getLabCopy().quality.reportSampleIssue}>
+            {getLabCopy().quality.reportSampleIssue}
           </Button>
         )
       }

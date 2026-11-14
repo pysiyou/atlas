@@ -5,7 +5,7 @@
 
 import React, { useCallback, useMemo } from 'react';
 import { DataTable } from '@/components/data-table';
-import { EmptyState, EMPTY_COPY, PANEL_EMPTY_STATE } from '@/components/display';
+import { EmptyState, getEmptyCopy, PANEL_EMPTY_STATE } from '@/components/display';
 import { useTestCatalog } from '@/features/catalog';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
 import type { Order, OrderTest, Patient } from '@/types';
@@ -23,8 +23,8 @@ export interface TestsTableProps {
 const EMPTY_MESSAGE = (
   <EmptyState
     {...PANEL_EMPTY_STATE}
-    title={EMPTY_COPY.orderTests.title}
-    description={EMPTY_COPY.orderTests.description}
+    title={getEmptyCopy().orderTests.title}
+    description={getEmptyCopy().orderTests.description}
   />
 );
 

@@ -2,7 +2,7 @@
  * All order tests — server-paginated registry sorted by last modified.
  */
 import React, { useCallback, useMemo } from 'react';
-import { EMPTY_COPY } from '@/config/emptyStateCopy';
+import { getEmptyCopy } from '@/config/emptyStateCopy';
 import { ListView } from '@/components/surfaces';
 import { EmptyState } from '@/components/display';
 import { PANEL_EMPTY_STATE } from '@/components/display';
@@ -16,7 +16,7 @@ import { inclusiveDateRangeBounds, toIsoDateParam } from '@/utils';
 import { getOrderTestLineageRowClass } from '@/features/orders';
 import { cn } from '@/utils';
 import { SPLIT_ROW_INTERACTIVE } from '@/theme/recipes';
-import { LAB_CONFIG, LAB_COPY } from '../constants/labConstants';
+import { LAB_CONFIG, getLabCopy } from '../constants/labConstants';
 import { allTestsFilterConfig } from '../constants/labFilterConfigs';
 import { useAllTestsWorklist, WORKLIST_PAGE_SIZE } from '../api/worklists';
 import { createLabOrdersTableConfig } from '../monitor/LabOrdersTable.config';
@@ -140,8 +140,8 @@ export const LabAllTestsPage: React.FC = () => {
         viewConfig={viewConfig}
         loading={loading}
         onRowClick={handleRowClick}
-        title={LAB_COPY.workflow.allTestsPageTitle}
-        subtitle={LAB_COPY.workflow.allTestsPageSubtitle}
+        title={getLabCopy().workflow.allTestsPageTitle}
+        subtitle={getLabCopy().workflow.allTestsPageSubtitle}
         filters={
           <FeatureFilterBar
             config={allTestsFilterConfig}
@@ -156,8 +156,8 @@ export const LabAllTestsPage: React.FC = () => {
         emptyState={
           <EmptyState
             {...PANEL_EMPTY_STATE}
-            title={EMPTY_COPY.allTestsWorklist.title}
-            description={EMPTY_COPY.allTestsWorklist.description}
+            title={getEmptyCopy().allTestsWorklist.title}
+            description={getEmptyCopy().allTestsWorklist.description}
             variant="dense"
           />
         }

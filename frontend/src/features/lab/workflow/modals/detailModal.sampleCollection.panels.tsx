@@ -14,7 +14,7 @@ import { formatRejectionReasons } from '../../utils/labFormatters';
 import { QueueCardTestList } from '../shared/queueCardLayout';
 import { SampleCollectionPopover } from '../../collection/SampleCollectionPopover';
 import { SampleRejectionPopover } from '../../collection/SampleRejectionPopover';
-import { LAB_COPY } from '../../constants/labConstants';
+import { getLabCopy } from '../../constants/labConstants';
 import type { SampleCollectionQueueItem } from '@/types/lab-operations';
 import { isLabActionAllowed, labDisabledActionTooltip } from '../../utils/queueDisplay';
 import { printSampleLabel } from '../../utils/labSample';
@@ -241,7 +241,7 @@ export function SampleCollectionDetailFooter({
           onSuccess={onClose}
           trigger={
             <Button {...actionButtonPreset('reject')} size="sm">
-              {LAB_COPY.quality.reportSampleIssue}
+              {getLabCopy().quality.reportSampleIssue}
             </Button>
           }
         />

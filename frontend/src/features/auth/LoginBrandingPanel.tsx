@@ -21,6 +21,7 @@ interface LoginBrandingPanelProps {
 export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisible }) => {
   const company = companyConfig.getConfig();
   const features = companyConfig.getFeatures();
+  const trust = companyConfig.getMarketing().trustIndicator!;
 
   return (
     <div
@@ -88,11 +89,11 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
             ))}
           </div>
           <p className={PROMO_TYPE.footer}>
-            {company.marketing.trustIndicator.text}{' '}
+            {trust.text}{' '}
             <span className="text-promo-fg-light font-normal">
-              {company.marketing.trustIndicator.count}
+              {trust.count}
             </span>{' '}
-            {company.marketing.trustIndicator.audience}
+            {trust.audience}
           </p>
         </div>
       </div>

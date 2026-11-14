@@ -21,7 +21,7 @@ export {
   getLabTabPath,
   getStageVisual,
   getKpiStageVisual,
-  LAB_TAB_LABELS,
+  getLabTabLabels,
   LAB_CONFIG,
   LAB_WORKFLOW_KPI_ICONS,
 } from './constants/labConstants';

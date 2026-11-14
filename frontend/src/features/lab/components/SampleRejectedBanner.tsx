@@ -4,7 +4,7 @@
 import { Alert } from '@/components/display';
 import { RecordId } from '@/features/shared';
 import {text, FG } from '@/theme/recipes';
-import { LAB_COPY } from '../constants/labConstants';
+import { getLabCopy } from '../constants/labConstants';
 
 export interface SampleRejectedBannerProps {
   sampleId?: number;
@@ -26,12 +26,12 @@ export function SampleRejectedBanner({
       <div className="space-y-space-1">
         <div>
           <p className={`font-semibold ${isCompact ? text({ role: 'caption' }) : text({ role: 'body' })}`}>
-            {LAB_COPY.quality.sampleRejected} — Validator Decision Required
+            {getLabCopy().quality.sampleRejected} — Validator Decision Required
           </p>
           <p
             className={`${FG.labelMuted} leading-tight mt-space-0-5 ${isCompact ? text({ role: 'caption' }) : text({ role: 'body' })}`}
           >
-            {LAB_COPY.entity.sample} <RecordId type="sample" value={sampleId} /> was rejected
+            {getLabCopy().entity.sample} <RecordId type="sample" value={sampleId} /> was rejected
             {sampleRejectionReason && (
               <>
                 : <span className="italic">{sampleRejectionReason}</span>

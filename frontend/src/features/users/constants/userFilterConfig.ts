@@ -3,7 +3,9 @@
  */
 import type { FilterConfig } from '@/components/filters/types';
 import { IconKeys } from '@/config/icons';
-import { SHARED_FILTER_PLACEHOLDERS } from '@/config/filterPlaceholders';
+import { getSharedFilterPlaceholders } from '@/config/filterPlaceholders';
+
+const SHARED_FILTER_PLACEHOLDERS = getSharedFilterPlaceholders();
 import { USER_ROLE_CONFIG, USER_ROLE_VALUES, type UserRole } from '@/types';
 import { createFilterOptions } from '@/utils/filtering';
 

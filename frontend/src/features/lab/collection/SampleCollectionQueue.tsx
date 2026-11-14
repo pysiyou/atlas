@@ -20,7 +20,7 @@ import { LabQueueFilters } from '../components/LabQueueFilters';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { collectionFilterConfig } from '../constants';
 import { worklistItemToQueueRow } from '../utils/worklistMappers';
-import { EMPTY_COPY, emptySubtitle } from '@/components/display';
+import { getEmptyCopy, emptySubtitle } from '@/components/display';
 import { ErrorBoundary } from '@/feedback';
 import { useAuthStore } from '@/app/authStore';
 import { useTestCatalog } from '@/features/catalog';
@@ -91,17 +91,17 @@ export const SampleCollectionQueue: React.FC = () => {
           `${display.orderId}-${display.sample?.sampleType || 'unknown'}-${display.sample?.sampleId || idx}-${idx}`
         }
         emptyTitle={
-          isSampleLookup ? EMPTY_COPY.matchingSamples.title : EMPTY_COPY.pendingCollections.title
+          isSampleLookup ? getEmptyCopy().matchingSamples.title : getEmptyCopy().pendingCollections.title
         }
         emptyDescription={
           isSampleLookup
-            ? EMPTY_COPY.matchingSamples.description
+            ? getEmptyCopy().matchingSamples.description
             : isLookupBelowMin
               ? emptySubtitle(
                   'samples',
                   `you enter at least ${LAB_CONFIG.SAMPLE_LOOKUP_MIN_CHARS} characters to search`,
                 )
-              : EMPTY_COPY.pendingCollections.description
+              : getEmptyCopy().pendingCollections.description
         }
         filterRow={
           <LabQueueFilterRow pagination={pagination} onPageChange={goToPage}>
