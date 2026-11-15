@@ -27,12 +27,6 @@ export function labStageLabel(
   }
 }
 
-export const LAB_STAGE_SHORT_ROWS = [
-  { key: 'collection' as const, label: labStageLabel('collection', 'short') },
-  { key: 'entry' as const, label: labStageLabel('entry', 'short') },
-  { key: 'validation' as const, label: labStageLabel('validation', 'short') },
-] as const;
-
 export const LAB_CONFIG = {
   MAX_RETEST_ATTEMPTS: GENERATED_LAB_CONSTANTS.MAX_RETEST_ATTEMPTS,
   MAX_RECOLLECTION_ATTEMPTS: GENERATED_LAB_CONSTANTS.MAX_RECOLLECTION_ATTEMPTS,

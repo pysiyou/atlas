@@ -16,7 +16,7 @@ import { cn, displayId } from '@/utils';
 import { getLabQueueUrl } from '../utils/labSearchAndLinks';
 import {CONTROL, FEED_ACCENT, FEED_GROUPED, RADIUS, FG } from '@/theme/recipes';
 import { Text } from '@/components/layout';
-import { getLabCopy } from '@/strings';
+import { useLabCopy } from '@/strings';
 import {
   ATTENTION_TYPE_ORDER,
   getAttentionTone,
@@ -211,6 +211,7 @@ export function LabAttentionPanel({
   attentionTotal,
   loading = false,
 }: LabAttentionPanelProps) {
+  const labCopy = useLabCopy();
   const shownTests = items.reduce((sum, item) => sum + item.workItemCount, 0);
   const capped = attentionTotal > shownTests;
 
@@ -226,7 +227,7 @@ export function LabAttentionPanel({
             ? capped
               ? `Prioritized view · ${shownTests} of ${attentionTotal} tests`
               : `${items.length} accessions · ${attentionTotal} tests`
-            : getLabCopy().attention.panelMetaEmpty
+            : labCopy.attention.panelMetaEmpty
       }
     >
       <AttentionFeed items={items} />

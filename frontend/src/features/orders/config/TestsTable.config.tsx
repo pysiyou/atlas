@@ -10,12 +10,15 @@ import {
 } from '@/components/data-table';
 import { cn, formatCurrency } from '@/utils';
 import { getTestName, getTestProperty } from '@/features/catalog/testLookup';
-import { StatusValueBadge } from '@/features/shared';
+import {
+  renderNavigableSampleId,
+  renderOrderTestIdentity,
+  StatusValueBadge,
+} from '@/features/shared';
 import { OrderTestStatusBadge } from '../components/OrderDomainBadges';
 import { getOrderTestLineageRowClass } from '../utils/orderTestLineage';
 import type { OrderTest, TestSummary } from '@/types';
 import { text, BADGE, TABLE_TYPE, RADIUS } from '@/theme/recipes';
-import { renderNavigableSampleId, renderOrderTestIdentity } from '@/features/shared/EntityPresentation';
 
 const SIMPLE_VIEWS = {
   full: ['test', 'category', 'status'],

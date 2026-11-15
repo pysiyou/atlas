@@ -3,14 +3,14 @@ import { OrderStatusBadge } from './OrderDomainBadges';
 import { Avatar } from '@/components/primitives';
 import { ListCard } from '@/components/surfaces';
 import { useTestNameLookup } from '@/features/catalog';
-import { RecordId, StatusValueBadge } from '@/features/shared';
-import { formatCurrency } from '@/utils';
-import { formatPatientSexAgeLine } from '@/utils/presentation';
 import {
-
+  RecordId,
   renderCardDateTimeSecondary,
   renderOrderTestsBlock,
-} from '@/features/shared/EntityPresentation';
+  StatusValueBadge,
+} from '@/features/shared';
+import { formatCurrency } from '@/utils';
+import { formatPatientSexAgeLine } from '@/utils/presentation';
 import { getBillableTests } from '../utils/orderCalculator';
 import type { Order } from '@/types';
 import { CardFooter, Text } from '@/components/layout';

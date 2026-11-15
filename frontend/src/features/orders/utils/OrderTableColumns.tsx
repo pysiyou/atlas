@@ -13,16 +13,16 @@ import {
   OrderPriorityBadge,
   OrderStatusBadge,
 } from '../components/OrderDomainBadges';
-import { StatusValueBadge } from '@/features/shared';
-import { getOrderTableColumnHeaders } from '@/strings';
-import { formatPatientSexAgeLine } from '@/utils/presentation';
-import type { Gender } from '@/types';
 import {
   renderOrderDateCell,
   renderOrderPatientName,
   renderOrderTestsBlock,
   renderOrderTotalPrice,
-} from '@/features/shared/EntityPresentation';
+  StatusValueBadge,
+} from '@/features/shared';
+import { getOrderTableColumnHeaders } from '@/strings';
+import { formatPatientSexAgeLine } from '@/utils/presentation';
+import type { Gender } from '@/types';
 
 export interface OrderColumnAccessors<T> {
   getOrderId: (item: T) => number | string;

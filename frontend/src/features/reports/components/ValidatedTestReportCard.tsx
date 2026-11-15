@@ -4,14 +4,17 @@
  * Custom mobile card component for report data in table view.
  */
 import { ListCard } from '@/components/surfaces';
-import { RecordId } from '@/features/shared';
+import {
+  EntityStack,
+  RecordId,
+  renderCardDateTimeSecondary,
+  useReportableOrderPresentation,
+} from '@/features/shared';
 import type { CardComponentProps } from '@/components/data-table';
 import type { ReportableOrder } from '@/types';
 import { OrderStatusBadge } from '@/features/orders';
 import { ReportRowActionsMenu } from './ReportRowActionsMenu';
 import { INTERACTIVE, text } from '@/theme/recipes';
-import { EntityStack, renderCardDateTimeSecondary } from '@/features/shared/EntityPresentation';
-import { useReportableOrderPresentation } from '@/features/shared';
 import { cn } from '@/utils';
 import { renderTruncatedListPreview } from '@/utils/TruncatedListPreviewRender';
 

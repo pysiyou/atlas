@@ -6,7 +6,7 @@ import { IconKeys } from '@/icons';
 import { formatDisplayId } from '@/utils/id';
 import type { AuditSearchPreviewResponse } from './api';
 import { parseRecordFilterDisplayId } from './eventLogPanelState';
-import { EVENT_LOG_COPY } from './types';
+import { getEventLogCopy } from '@/strings';
 
 export type EventLogSearchIntentMode =
   | 'empty'
@@ -131,7 +131,7 @@ function buildRecordIdItems(intent: EventLogSearchIntent): EventLogSearchMatchIt
       {
         key: 'order',
         icon: IconKeys.dataFields.document,
-        primary: `${EVENT_LOG_COPY.searchIntentOrder} ${intent.displayToken}`,
+        primary: `${getEventLogCopy().searchIntentOrder} ${intent.displayToken}`,
         secondary: intent.displayToken,
         applyValue: intent.displayToken,
       },
@@ -142,7 +142,7 @@ function buildRecordIdItems(intent: EventLogSearchIntent): EventLogSearchMatchIt
       {
         key: 'test',
         icon: IconKeys.dataFields.testId,
-        primary: `${EVENT_LOG_COPY.searchIntentTest} ${intent.displayToken}`,
+        primary: `${getEventLogCopy().searchIntentTest} ${intent.displayToken}`,
         secondary: intent.displayToken,
         applyValue: intent.displayToken,
       },
@@ -153,7 +153,7 @@ function buildRecordIdItems(intent: EventLogSearchIntent): EventLogSearchMatchIt
       {
         key: 'sample',
         icon: IconKeys.dataFields.sampleId,
-        primary: `${EVENT_LOG_COPY.searchIntentSample} ${intent.displayToken}`,
+        primary: `${getEventLogCopy().searchIntentSample} ${intent.displayToken}`,
         secondary: intent.displayToken,
         applyValue: intent.displayToken,
       },
@@ -164,7 +164,7 @@ function buildRecordIdItems(intent: EventLogSearchIntent): EventLogSearchMatchIt
       {
         key: 'patient',
         icon: IconKeys.dataFields.patientId,
-        primary: `${EVENT_LOG_COPY.searchIntentPatient} ${intent.displayToken}`,
+        primary: `${getEventLogCopy().searchIntentPatient} ${intent.displayToken}`,
         secondary: intent.displayToken,
         applyValue: intent.displayToken,
       },
@@ -181,35 +181,35 @@ function buildRecordIdItems(intent: EventLogSearchIntent): EventLogSearchMatchIt
       {
         key: 'numeric-order',
         icon: IconKeys.dataFields.orderId,
-        primary: `${EVENT_LOG_COPY.searchIntentOrder} ${orderId}`,
+        primary: `${getEventLogCopy().searchIntentOrder} ${orderId}`,
         secondary: orderId,
         applyValue: orderId,
       },
       {
         key: 'numeric-patient',
         icon: IconKeys.dataFields.patientId,
-        primary: `${EVENT_LOG_COPY.searchIntentPatient} ${patientId}`,
+        primary: `${getEventLogCopy().searchIntentPatient} ${patientId}`,
         secondary: patientId,
         applyValue: patientId,
       },
       {
         key: 'numeric-test',
         icon: IconKeys.dataFields.testId,
-        primary: `${EVENT_LOG_COPY.searchIntentTest} ${testId}`,
+        primary: `${getEventLogCopy().searchIntentTest} ${testId}`,
         secondary: testId,
         applyValue: testId,
       },
       {
         key: 'numeric-sample',
         icon: IconKeys.dataFields.sampleId,
-        primary: `${EVENT_LOG_COPY.searchIntentSample} ${sampleId}`,
+        primary: `${getEventLogCopy().searchIntentSample} ${sampleId}`,
         secondary: sampleId,
         applyValue: sampleId,
       },
       {
         key: 'numeric-target',
         icon: IconKeys.dataFields.orderId,
-        primary: `${EVENT_LOG_COPY.searchIntentNumericTarget} ${term}`,
+        primary: `${getEventLogCopy().searchIntentNumericTarget} ${term}`,
         secondary: term,
         applyValue: term,
       },
@@ -230,7 +230,7 @@ export function buildEventLogSearchMatchGroups(
   if (recordItems.length > 0) {
     groups.push({
       id: 'recordIds',
-      label: EVENT_LOG_COPY.searchPreviewRecordIds,
+      label: getEventLogCopy().searchPreviewRecordIds,
       items: recordItems,
     });
   }
@@ -239,7 +239,7 @@ export function buildEventLogSearchMatchGroups(
     if (preview.patients.length > 0) {
       groups.push({
         id: 'patients',
-        label: EVENT_LOG_COPY.searchPreviewPatients,
+        label: getEventLogCopy().searchPreviewPatients,
         items: preview.patients.map(patient => ({
           key: `patient-${patient.id}`,
           avatarName: patient.fullName,
@@ -252,7 +252,7 @@ export function buildEventLogSearchMatchGroups(
     if (preview.users.length > 0) {
       groups.push({
         id: 'users',
-        label: EVENT_LOG_COPY.searchPreviewUsers,
+        label: getEventLogCopy().searchPreviewUsers,
         items: preview.users.map(user => ({
           key: `user-${user.id}`,
           icon: IconKeys.dataFields.user,

@@ -3,7 +3,6 @@
  */
 
 import type { InlineHighlightProps } from '@/components/primitives';
-import { getEventLogCopy } from '@/strings';
 import type { UserRole } from '@/types';
 import type {
   EventLogDomain,
@@ -169,14 +168,3 @@ export const DEFAULT_EVENT_LOG_USER_FILTERS: EventLogUserFilters = {
   patientId: null,
 };
 
-export { getEventLogCopy } from '@/strings';
-
-/** Backward-compatible accessor; resolves copy when properties are read. */
-export const EVENT_LOG_COPY: ReturnType<typeof getEventLogCopy> = new Proxy(
-  {} as ReturnType<typeof getEventLogCopy>,
-  {
-    get(_target, prop: string) {
-      return getEventLogCopy()[prop as keyof ReturnType<typeof getEventLogCopy>];
-    },
-  },
-);

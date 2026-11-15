@@ -34,8 +34,19 @@
         "reportsSubtitleAvailable",
         "users",
         "newUser",
+        "editUser",
+        "newUserSubtitle",
+        "disableAccount",
+        "disableAccountQuestion",
+        "disableAccountBody",
+        "createUser",
+        "saveChanges",
         "userManagement",
-        "labMonitor"
+        "labMonitor",
+        "details",
+        "activity",
+        "loading",
+        "loadingForm"
       ]
     },
     "tables": { "type": "object", "additionalProperties": true },

@@ -5,7 +5,7 @@
 import { displayId } from '@/utils/id';
 import { ORDER_STATUS_CONFIG, type OrderStatus } from '@/types/generated/enums';
 import { resolveRejectionReasonLabel } from '@/types/generated/policies';
-import { EVENT_LOG_COPY } from './types';
+import { getEventLogCopy } from '@/strings';
 import type {
   EventLogDomain,
   EventLogHeadlinePart,
@@ -545,7 +545,7 @@ export function appendTriggeredByClause(
 export function actorDisplayName(record: EventLogRecord): string {
   const snap = record.actorSnapshot;
   if (snap.userId === 'system' || snap.role === 'system') {
-    return EVENT_LOG_COPY.systemActorName;
+    return getEventLogCopy().systemActorName;
   }
   const name = snap.name.trim();
   return name || 'Unknown';

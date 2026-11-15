@@ -12,7 +12,7 @@ import {
   buildSampleRemedyOptions,
   resolveSuggestedRemedy } from '../constants/qualityIssuePopoverCopy';
 import type { QualityIssueOptions } from '@/types';
-import { getLabCopy } from '@/strings';
+import { useLabCopy } from '@/strings';
 import type { RemedyType } from '@/types';
 
 function parseNumericSampleId(sampleId: string): number | undefined {
@@ -54,6 +54,7 @@ function CollectionRejectionPopoverContent({
   patientName,
   isRecollection = false,
 }: CollectionRejectionPopoverContentProps) {
+  const labCopy = useLabCopy();
   const {
     reason,
     notes,
@@ -111,7 +112,7 @@ function CollectionRejectionPopoverContent({
 
   return (
     <LabFormPopoverChrome
-      title={getLabCopy().quality.reportSampleIssue}
+      title={labCopy.quality.reportSampleIssue}
       subtitle={subtitle}
       onCancel={onCancel}
       onConfirm={handleConfirm}
@@ -124,7 +125,7 @@ function CollectionRejectionPopoverContent({
         <QualityIssueForm
           targetType="sample"
           targetId={numericSampleId}
-          title={getLabCopy().quality.sampleIssue}
+          title={labCopy.quality.sampleIssue}
           reason={reason}
           notes={notes}
           preferredRemedy={preferredRemedy}
@@ -158,12 +159,13 @@ export function SampleRejectionPopover({
   onSuccess,
   trigger,
 }: CollectionRejectionPopoverProps) {
+  const labCopy = useLabCopy();
   return (
     <LabAnchoredPopover
       trigger={
         trigger ?? (
-          <Button {...actionButtonPreset('reject')} size="sm" title={getLabCopy().quality.reportSampleIssue}>
-            {getLabCopy().quality.reportSampleIssue}
+          <Button {...actionButtonPreset('reject')} size="sm" title={labCopy.quality.reportSampleIssue}>
+            {labCopy.quality.reportSampleIssue}
           </Button>
         )
       }

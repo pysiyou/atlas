@@ -5,6 +5,7 @@
 import { Panel } from '@/components/surfaces';
 import { LAYOUT } from '@/theme/recipes';
 import { MODAL_WORKFLOW_BODY_STACK } from '@/components/overlays/ModalPageShell';
+import { useModuleListTitles } from '@/strings';
 import { LabResultsTableSkeleton } from '../../components/LabResultsTableSkeleton';
 
 export type LabModalPlaceholderVariant =
@@ -23,6 +24,7 @@ const PLACEHOLDER_ARIA_LABEL: Record<LabModalPlaceholderVariant, string> = {
 };
 
 export function LabModalPlaceholder({ variant }: { variant: LabModalPlaceholderVariant }) {
+  const activityTitle = useModuleListTitles().activity;
   const stackClass = MODAL_WORKFLOW_BODY_STACK;
 
   if (variant === 'resultEntry') {
@@ -42,7 +44,7 @@ export function LabModalPlaceholder({ variant }: { variant: LabModalPlaceholderV
           <Panel preset="panel.pageEmbed.visible" title="Order" loading />
           <Panel preset="panel.pageEmbed.visible" title="Sample" loading />
         </div>
-        <Panel preset="panel.compact.standard" title="Activity" loading />
+        <Panel preset="panel.compact.standard" title={activityTitle} loading />
       </div>
     );
   }
@@ -63,7 +65,7 @@ export function LabModalPlaceholder({ variant }: { variant: LabModalPlaceholderV
           title="Related tests"
           loading
         />
-        <Panel preset="panel.compact.standard" title="Activity" loading />
+        <Panel preset="panel.compact.standard" title={activityTitle} loading />
       </div>
     );
   }
@@ -81,7 +83,7 @@ export function LabModalPlaceholder({ variant }: { variant: LabModalPlaceholderV
           title="Related samples"
           loading
         />
-        <Panel preset="panel.compact.standard" title="Activity" loading />
+        <Panel preset="panel.compact.standard" title={activityTitle} loading />
       </div>
     );
   }
@@ -108,7 +110,7 @@ export function LabModalPlaceholder({ variant }: { variant: LabModalPlaceholderV
         title="Related tests"
         loading
       />
-      <Panel preset="panel.compact.standard" title="Activity" loading />
+      <Panel preset="panel.compact.standard" title={activityTitle} loading />
     </div>
   );
 }

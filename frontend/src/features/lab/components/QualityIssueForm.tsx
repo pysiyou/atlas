@@ -12,7 +12,7 @@ import type { QualityIssueOptions } from '@/types';
 import type { QualityIssueTargetType, RemedyType } from '@/types';
 import { QUALITY_ISSUE_POPOVER_COPY } from '../constants/qualityIssuePopoverCopy';
 import { QualityIssueInlineWarning } from './QualityIssueInlineWarning';
-import { getLabCopy } from '@/strings';
+import { useLabCopy } from '@/strings';
 import { QualityIssueRemedyPicker } from './QualityIssueRemedyPicker';
 import {
   buildSampleRemedyOptions,
@@ -79,6 +79,7 @@ export function QualityIssueForm({
   notes,
   onOptionsLoaded,
 }: QualityIssueFormProps) {
+  const labCopy = useLabCopy();
   const { data: options, isLoading } = useQualityIssueOptions(targetType, targetId);
 
   React.useEffect(() => {
@@ -133,7 +134,9 @@ export function QualityIssueForm({
             onNotesChange={onNotesChange ?? (() => {})}
             reasonLabel={
               collectionCopy?.reasonLabel ??
-              (targetType === 'test' ? 'Result rejection reason' : getLabCopy().quality.sampleIssue)
+              (targetType === 'test'
+                ? QUALITY_ISSUE_POPOVER_COPY.reject.reasonLabel
+                : labCopy.quality.sampleIssue)
             }
             notesLabel={collectionCopy?.notesLabel}
           />

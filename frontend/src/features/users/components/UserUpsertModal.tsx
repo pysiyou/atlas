@@ -15,6 +15,7 @@ import {
   canDisableUser,
   isLastActiveAdministrator,
   isUserActive } from '../utils/userAccountGuards';
+import { useModuleListTitles } from '@/strings';
 import { UserUpsertFormFields } from './UserUpsertFormFields';
 import { UserUpsertModalSummary } from './UserUpsertModalSummary';
 
@@ -92,13 +93,14 @@ export function UserUpsertModal({
   const lastActiveAdmin = isEdit && user ? isLastActiveAdministrator(user, users) : false;
   const allowDisable = isEdit && user ? canDisableUser(user, currentUserId, users) : false;
   const allowEnable = isEdit && user ? !isUserActive(user) : false;
+  const titles = useModuleListTitles();
   const draftName = form.watch('name')?.trim() ?? '';
-  const modalTitle = isEdit && user ? draftName || user.name : 'New user';
+  const modalTitle = isEdit && user ? draftName || user.name : titles.newUser;
   const modalSubtitle = confirmingDisable
-    ? 'Disable this account?'
+    ? titles.disableAccountQuestion
     : isEdit
-      ? 'Edit user'
-      : 'Set credentials and profile details for the new account.';
+      ? titles.editUser
+      : titles.newUserSubtitle;
 
   return (
     <Modal
@@ -115,7 +117,11 @@ export function UserUpsertModal({
           <FormDialogFooter
             formId={FORM_ID}
             submitLabel={
-              confirmingDisable ? 'Disable account' : isEdit ? 'Save changes' : 'Create user'
+              confirmingDisable
+                ? titles.disableAccount
+                : isEdit
+                  ? titles.saveChanges
+                  : titles.createUser
             }
             submitVariant={confirmingDisable ? 'danger' : 'save'}
             isSubmitting={isSubmitting}
@@ -130,7 +136,7 @@ export function UserUpsertModal({
                 />
               )
             }
-            footerInfo={<FooterInfo icon={IconKeys.modules.users} label="Users" size="md" />}
+            footerInfo={<FooterInfo icon={IconKeys.modules.users} label={titles.users} size="md" />}
           />
         }
       >
@@ -138,8 +144,8 @@ export function UserUpsertModal({
           <>
             <Alert
               variant="danger"
-              title="Disable account"
-              description={`${user.name} will not be able to sign in. Historical records will still show this name.`}
+              title={titles.disableAccount}
+              description={titles.disableAccountBody(user.name)}
             />
             <form id={FORM_ID} className="hidden" onSubmit={handleSubmit} />
           </>

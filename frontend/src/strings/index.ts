@@ -34,4 +34,4 @@ export {
   type OrderTableColumnHeaders,
 } from './catalog';
 
-export { useEventLogCopy, useModuleListTitles, useNavCopy } from './react';
+export { useEventLogCopy, useLabCopy, useModuleListTitles, useNavCopy } from './react';

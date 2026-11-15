@@ -8,7 +8,7 @@ import { getEmptyCopy, DENSE_EMPTY_STATE_TEXT } from '@/strings';
 import { Panel } from '@/components/surfaces/Panel';
 import type { LabTodayPanelSnapshot } from './monitorModel';
 import { METER_KPI, KPI_PANEL } from '@/theme/recipes';
-import { getLabCopy } from '@/strings';
+import { useLabCopy } from '@/strings';
 import { formatDate } from '@/utils';
 import { buildTodayStageSegments, sumAtStage } from './todayPanelStairLayout';
 import { TodayStageRow } from './TodayStageRow';
@@ -31,6 +31,7 @@ export function LabTodayPanel({
   todayPanel,
   loading = false,
 }: LabTodayPanelProps) {
+  const labCopy = useLabCopy();
   const snapshot = todayPanel ?? EMPTY_TODAY_PANEL;
 
   const dayLabel = useMemo(
@@ -68,21 +69,21 @@ export function LabTodayPanel({
           />
         ) : (
           <>
-            <div className={KPI_PANEL.main} aria-label={getLabCopy().dashboardToday.summaryAria}>
+            <div className={KPI_PANEL.main} aria-label={labCopy.dashboardToday.summaryAria}>
               <div className={KPI_PANEL.stack}>
                 <div className={METER_KPI.tableStage} role="table">
                   <div className={METER_KPI.tableHeadRowStage} role="row">
                     <span className={METER_KPI.tableHeadCell} role="columnheader">
-                      {getLabCopy().dashboardToday.columnStage}
+                      {labCopy.dashboardToday.columnStage}
                     </span>
                     <span className={METER_KPI.tableHeadCellMetric} role="columnheader">
-                      {getLabCopy().dashboardToday.columnInQueue}
+                      {labCopy.dashboardToday.columnInQueue}
                     </span>
                     <span className={METER_KPI.tableHeadCellMetric} role="columnheader">
-                      {getLabCopy().dashboardToday.columnToday}
+                      {labCopy.dashboardToday.columnToday}
                     </span>
                     <span className={METER_KPI.tableHeadCellMetric} role="columnheader">
-                      {getLabCopy().dashboardToday.columnMix}
+                      {labCopy.dashboardToday.columnMix}
                     </span>
                   </div>
                   <div className={METER_KPI.tableBody} role="rowgroup">
@@ -95,13 +96,13 @@ export function LabTodayPanel({
                     ))}
                   </div>
                 </div>
-                <p className={METER_KPI.footerCaption}>{getLabCopy().dashboardToday.footnote}</p>
+                <p className={METER_KPI.footerCaption}>{labCopy.dashboardToday.footnote}</p>
               </div>
             </div>
 
             <div className={KPI_PANEL.footer}>
               <div className={METER_KPI.tableTotalStage} role="row">
-                <span className={METER_KPI.tableTotalLabel}>{getLabCopy().dashboardToday.footerInPipeline}</span>
+                <span className={METER_KPI.tableTotalLabel}>{labCopy.dashboardToday.footerInPipeline}</span>
                 <span className={METER_KPI.tableMetricCell}>
                   <span className={METER_KPI.tablePercent}>
                     {totalTests > 0 ? Math.min(100, Math.round((inPipelineNow / totalTests) * 100)) : 0}%
@@ -112,11 +113,11 @@ export function LabTodayPanel({
                   <span className={METER_KPI.tablePercent}>
                     {snapshot.testsUpdatedToday.toLocaleString()}
                   </span>
-                  <span className={METER_KPI.tableCount}> {getLabCopy().dashboardToday.testsWorked}</span>
+                  <span className={METER_KPI.tableCount}> {labCopy.dashboardToday.testsWorked}</span>
                 </span>
                 <span className={METER_KPI.tableTotalValue}>
                   {totalTests.toLocaleString()}
-                  <span className={METER_KPI.tableCount}> {getLabCopy().dashboardToday.footerUniverse}</span>
+                  <span className={METER_KPI.tableCount}> {labCopy.dashboardToday.footerUniverse}</span>
                 </span>
               </div>
             </div>

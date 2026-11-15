@@ -18,10 +18,9 @@ import { inclusiveDateRangeBounds, toIsoDateParam } from '@/utils';
 import { getOrderTestLineageRowClass } from '@/features/orders';
 import { cn } from '@/utils';
 import { SPLIT_ROW_INTERACTIVE } from '@/theme/recipes';
-import { getLabCopy } from '@/strings';
+import { useLabCopy } from '@/strings';
 import { LAB_CONFIG } from '../constants/labConstants';
 import { getAllTestsFilterConfig } from '../constants/labFilterConfigs';
-import { useClientConfig } from '@/app/clientConfigContext';
 import { useAllTestsWorklist, WORKLIST_PAGE_SIZE } from '../api/worklists';
 import { createLabOrdersTableConfig } from '../monitor/LabOrdersTable.config';
 import { mapDashboardWorklistRow } from '../monitor/labOrderTableRow';
@@ -32,7 +31,7 @@ const EMPTY_STATUSES: TestStatus[] = [];
 const EMPTY_PRIORITIES: PriorityLevel[] = [];
 
 export function LabAllTestsPage() {
-  useClientConfig();
+  const labCopy = useLabCopy();
   const allTestsFilterConfig = getAllTestsFilterConfig();
   const { openModal } = useModal();
 
@@ -146,8 +145,8 @@ export function LabAllTestsPage() {
         viewConfig={viewConfig}
         loading={loading}
         onRowClick={handleRowClick}
-        title={getLabCopy().workflow.allTestsPageTitle}
-        subtitle={getLabCopy().workflow.allTestsPageSubtitle}
+        title={labCopy.workflow.allTestsPageTitle}
+        subtitle={labCopy.workflow.allTestsPageSubtitle}
         filters={
           <FeatureFilterBar
             config={allTestsFilterConfig}

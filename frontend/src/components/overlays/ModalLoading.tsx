@@ -14,29 +14,29 @@ export function ModalLoadingBody({ variant = 'default' }: { variant?: ModalLoadi
   const titles = useModuleListTitles();
   if (variant === 'workflow') {
     return (
-      <div className={MODAL_WORKFLOW_BODY_STACK} aria-busy="true" aria-label="Loading">
+      <div className={MODAL_WORKFLOW_BODY_STACK} aria-busy="true" aria-label={titles.loading}>
         <div className={`grid grid-cols-1 md:grid-cols-2 ${LAYOUT.balancedColumns}`}>
-          <Panel preset="panel.pageEmbed.visible" title="Details" loading />
-          <Panel preset="panel.pageEmbed.visible" title="Details" loading />
+          <Panel preset="panel.pageEmbed.visible" title={titles.details} loading />
+          <Panel preset="panel.pageEmbed.visible" title={titles.details} loading />
         </div>
-        <Panel preset="panel.compact.standard" title="Activity" loading />
+        <Panel preset="panel.compact.standard" title={titles.activity} loading />
       </div>
     );
   }
 
   if (variant === 'form') {
     return (
-      <div className="space-y-space-6 max-w-full" aria-busy="true" aria-label="Loading form">
+      <div className="space-y-space-6 max-w-full" aria-busy="true" aria-label={titles.loadingForm}>
         <Panel preset="panel.pageEmbed.visible" title={titles.patientDetail} loading />
         <Panel preset="panel.pageEmbed.visible" title={tCap('tests', 'Tests')} loading />
-        <Panel preset="panel.pageEmbed.visible" title={`${titles.orderDetail} details`} loading />
+        <Panel preset="panel.pageEmbed.visible" title={`${titles.orderDetail} ${titles.details.toLowerCase()}`} loading />
       </div>
     );
   }
 
   return (
-    <div className="space-y-space-5" aria-busy="true" aria-label="Loading">
-      <Panel preset="panel.pageEmbed.visible" title="Loading" loading />
+    <div className="space-y-space-5" aria-busy="true" aria-label={titles.loading}>
+      <Panel preset="panel.pageEmbed.visible" title={titles.loading} loading />
       <Panel preset="panel.pageEmbed.visible" loading />
     </div>
   );

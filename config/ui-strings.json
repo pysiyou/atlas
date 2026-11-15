@@ -25,8 +25,19 @@
     "reportsSubtitleAvailable": "(s) available",
     "users": "Users",
     "newUser": "New user",
+    "editUser": "Edit user",
+    "newUserSubtitle": "Set credentials and profile details for the new account.",
+    "disableAccount": "Disable account",
+    "disableAccountQuestion": "Disable this account?",
+    "disableAccountBody": "{{name}} will not be able to sign in. Historical records will still show this name.",
+    "createUser": "Create user",
+    "saveChanges": "Save changes",
     "userManagement": "User management",
-    "labMonitor": "{{laboratoryCap}} monitor"
+    "labMonitor": "{{laboratoryCap}} monitor",
+    "details": "Details",
+    "activity": "Activity",
+    "loading": "Loading",
+    "loadingForm": "Loading form"
   },
   "tables": {
     "orders": {
@@ -231,7 +242,14 @@
     "quality": {
       "sampleRejected": "{{sampleCap}} rejected",
       "sampleIssue": "{{sampleCap}} issue",
-      "reportSampleIssue": "Report {{sampleCap}} Issue"
+      "reportSampleIssue": "Report {{sampleCap}} Issue",
+      "validatorDecisionRequired": "Validator Decision Required",
+      "wasRejected": "was rejected",
+      "enteredBeforeRejection": "This result was entered before sample rejection.",
+      "approveOrAction": "You may still approve this result (clinical judgment) or choose another action:",
+      "actionApprove": "Approve result (add validation notes explaining decision)",
+      "actionRecollect": "Request recollection with new sample",
+      "actionCancel": "Cancel this test"
     },
     "attention": {
       "criticalValue": "Critical values",

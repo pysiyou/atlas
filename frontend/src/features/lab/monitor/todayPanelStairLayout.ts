@@ -15,11 +15,15 @@ export interface TodayStageRowConfig {
   tableLabel: string;
 }
 
-export const STAGE_ROWS: readonly TodayStageRowConfig[] = [
-  { stage: 'collection', tableLabel: getLabCopy().dashboardToday.stageCollection },
-  { stage: 'entry', tableLabel: getLabCopy().dashboardToday.stageEntry },
-  { stage: 'validation', tableLabel: getLabCopy().dashboardToday.stageValidation },
-] as const;
+/** Stage table labels resolved at call time so terminology can load after import. */
+function getTodayStageRows(): readonly TodayStageRowConfig[] {
+  const copy = getLabCopy().dashboardToday;
+  return [
+    { stage: 'collection', tableLabel: copy.stageCollection },
+    { stage: 'entry', tableLabel: copy.stageEntry },
+    { stage: 'validation', tableLabel: copy.stageValidation },
+  ];
+}
 
 export interface TodayStageSegment {
   stage: TodayPipelineStage;
@@ -57,7 +61,7 @@ function stageSnapshotByKey(
 }
 
 export function buildTodayStageSegments(snapshot: LabTodayPanelSnapshot): TodayStageSegment[] {
-  return STAGE_ROWS.map(row => {
+  return getTodayStageRows().map(row => {
     const metrics = stageSnapshotByKey(snapshot, row.stage);
     const visual = getKpiStageVisual(row.stage as LabWorkflowStage);
     return {

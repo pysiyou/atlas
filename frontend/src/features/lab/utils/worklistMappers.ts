@@ -1,6 +1,6 @@
 /**
  * Maps flat worklist DTOs to legacy Sample/Order shapes for workflow actions.
- * For display-only UI, use `@/features/shared/EntityPresentation` and `@/hooks`.
+ * For display-only UI, use `@/features/shared` and `@/hooks`.
  */
 import type { SampleRequirement } from './labSample';
 import type { Sample, SampleType } from '@/types';

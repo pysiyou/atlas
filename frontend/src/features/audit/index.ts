@@ -11,7 +11,7 @@ export type {
   EventLogHeadlinePart,
 } from './types';
 
-export { EVENT_LOG_COPY, DEFAULT_EVENT_LOG_USER_FILTERS } from './types';
+export { DEFAULT_EVENT_LOG_USER_FILTERS } from './types';
 export { EventLogFeed } from './EventLogFeed';
 export {
   EventLogPanel,

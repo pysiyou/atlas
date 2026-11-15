@@ -11,7 +11,7 @@ import {
   SampleStatusBadge,
   SampleTypeBadge,
 } from './LabDomainBadges';
-import { StatusPresentationBadge } from '@/features/shared/EntityPresentation';
+import { StatusPresentationBadge } from '@/features/shared';
 import { useLabHeaderCompact } from './LabWorkflowHeader';
 import {
   LabCardMetaRow,

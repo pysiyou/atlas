@@ -6,7 +6,7 @@ import { useMemo } from 'react';
 import { useLabMonitorBoardQuery, type LabBoardResponse } from '../api/labMonitor';
 import type { LabAttentionReason } from '../utils/queueDisplay';
 import { labStageLabel } from '../constants/labConstants';
-import { ATTENTION_TYPE_CONFIG, type AttentionType } from './monitorModel';
+import { ATTENTION_TYPE_KEYS, type AttentionType } from './monitorModel';
 import type { LabAttentionQueueItem, LabBoardViewState, LabPipelineStage } from './monitorModel';
 
 const EMPTY_KPI_PANEL: LabBoardViewState['todayPanel'] = {
@@ -27,7 +27,7 @@ function isLabPipelineStage(value: string | null | undefined): value is LabPipel
 }
 
 function isAttentionType(value: string): value is AttentionType {
-  return value in ATTENTION_TYPE_CONFIG;
+  return value in ATTENTION_TYPE_KEYS;
 }
 
 function mapLabAttentionQueueItem(item: LabBoardResponse['attentionItems'][number]): LabAttentionQueueItem {

@@ -2,7 +2,7 @@
  * Header meta for the Today panel — UTC day label and monitor universe size.
  */
 import { METER_KPI } from '@/theme/recipes';
-import { getLabCopy } from '@/strings';
+import { useLabCopy } from '@/strings';
 
 export interface TodayPanelHeaderMetaProps {
   headerRange: string;
@@ -15,6 +15,7 @@ export function TodayPanelHeaderMeta({
   totalTests,
   testsUpdatedToday,
 }: TodayPanelHeaderMetaProps) {
+  const labCopy = useLabCopy();
   if (totalTests <= 0) {
     return <span className={METER_KPI.headerRange}>{headerRange}</span>;
   }
@@ -23,11 +24,11 @@ export function TodayPanelHeaderMeta({
     <div className={METER_KPI.headerEndWrap}>
       <span className={METER_KPI.headerRange}>{headerRange}</span>
       <span className={METER_KPI.headerInsight}>
-        {totalTests.toLocaleString()} {getLabCopy().dashboardToday.headerUniverse}
+        {totalTests.toLocaleString()} {labCopy.dashboardToday.headerUniverse}
       </span>
       {testsUpdatedToday > 0 ? (
         <span className={METER_KPI.headerInsightMuted}>
-          {testsUpdatedToday.toLocaleString()} {getLabCopy().dashboardToday.testsWorked}
+          {testsUpdatedToday.toLocaleString()} {labCopy.dashboardToday.testsWorked}
         </span>
       ) : null}
     </div>

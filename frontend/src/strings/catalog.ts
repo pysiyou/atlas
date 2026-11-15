@@ -86,8 +86,19 @@ export function getModuleListTitles() {
     testsPanel: msg(m.testsPanel),
     users: msg(m.users),
     newUser: msg(m.newUser),
+    editUser: msg(m.editUser),
+    newUserSubtitle: msg(m.newUserSubtitle),
+    disableAccount: msg(m.disableAccount),
+    disableAccountQuestion: msg(m.disableAccountQuestion),
+    disableAccountBody: (name: string) => msg(m.disableAccountBody, { name }),
+    createUser: msg(m.createUser),
+    saveChanges: msg(m.saveChanges),
     userManagement: msg(m.userManagement),
     labMonitor: msg(m.labMonitor),
+    details: msg(m.details),
+    activity: msg(m.activity),
+    loading: msg(m.loading),
+    loadingForm: msg(m.loadingForm),
   };
 }
 

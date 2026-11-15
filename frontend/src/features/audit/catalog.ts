@@ -9,8 +9,8 @@ import {
   type AuditEventDefinition,
   type AuditEventWire,
 } from '@/types/generated/audit';
+import { getEventLogCopy } from '@/strings';
 import { formatRelativeDateTime } from '@/utils/date';
-import { EVENT_LOG_COPY } from './types';
 import type {
   EventLogDomain,
   EventLogHeadlinePart,
@@ -41,8 +41,6 @@ import {
   type TestNameLookup,
 } from './catalogParts';
 import { EVENT_HEADLINE_BUILDERS } from './headlineBuilders';
-
-export { LABORATORY_HEADLINE_BUILDERS } from './headlineBuilders';
 
 export {
   collectTestCodes,
@@ -228,9 +226,9 @@ function pickNoteForCard(
   const headlineKeys = new Set(headlineMetaKeysFor(record.eventType));
 
   const cardFirst: Array<{ label: string; value: unknown }> = [
-    { label: EVENT_LOG_COPY.narrativeDefaultLabel, value: meta.notes },
-    { label: EVENT_LOG_COPY.narrativeDefaultLabel, value: meta.rejection_notes },
-    { label: EVENT_LOG_COPY.commentLabel, value: meta.comment },
+    { label: getEventLogCopy().narrativeDefaultLabel, value: meta.notes },
+    { label: getEventLogCopy().narrativeDefaultLabel, value: meta.rejection_notes },
+    { label: getEventLogCopy().commentLabel, value: meta.comment },
   ];
 
   for (const { label, value } of cardFirst) {
@@ -249,7 +247,7 @@ function pickNoteForCard(
     if (typeof value !== 'string' || !value.trim()) continue;
     const text = value.trim();
     if (headlineKeys.has(key) || headlineIncludesNote(headlineParts, text)) continue;
-    return { label: EVENT_LOG_COPY.narrativeDefaultLabel, text };
+    return { label: getEventLogCopy().narrativeDefaultLabel, text };
   }
 
   return null;
@@ -299,7 +297,7 @@ export function resolveEventLogItem(
   const results = pickResultsForCard(record);
   const resultFlags = results ? pickResultFlags(record) : undefined;
 
-  const actorName = system ? EVENT_LOG_COPY.systemActorName : record.actorSnapshot.name;
+  const actorName = system ? getEventLogCopy().systemActorName : record.actorSnapshot.name;
   const targetLabel = formatTargetLabel(record, getTestName, getPatientName);
 
   return {

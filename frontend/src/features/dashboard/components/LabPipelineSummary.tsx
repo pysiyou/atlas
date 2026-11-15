@@ -15,6 +15,7 @@ import {
   type LabWorkflowStage,
 } from '@/features/lab/cross';
 import { useAuthStore } from '@/app/authStore';
+import { useLabCopy } from '@/strings';
 import { text, INLINE_LINK, RADIUS } from '@/theme/recipes';
 
 const LAB_QUEUE_ITEMS: Array<{
@@ -31,6 +32,7 @@ export interface LabPipelineSummaryProps {
 }
 
 export function LabPipelineSummary({ loading: loadingProp }: LabPipelineSummaryProps) {
+  useLabCopy();
   const { hasRole } = useAuthStore();
   const canViewLab = hasRole(['administrator', 'lab-technician', 'lab-technician-plus']);
   const { counts, isPending } = useLabStageQueueCounts();

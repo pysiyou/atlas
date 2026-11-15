@@ -3,6 +3,7 @@
  */
 
 import { ATTENTION_LABELS } from '@/types/generated/policies';
+import { tLower } from '@/config';
 import { displayId } from '@/utils';
 import { getLabCopy } from '@/strings';
 import { LAB_CONFIG, labStageLabel } from '../constants/labConstants';
@@ -46,7 +47,8 @@ function testIdChip(item: LabAttentionQueueItem): AttentionDetail | null {
 }
 
 function queueDetails(item: LabAttentionQueueItem): AttentionDetail[] {
-  const unit = item.stage === 'collection' ? getLabCopy().entity.samples : 'tests';
+  const unit =
+    item.stage === 'collection' ? getLabCopy().entity.samples : tLower('tests', 'tests');
   const details: AttentionDetail[] = [
     { type: 'queueStage', stageLabel: labStageLabel(item.stage, 'full') },
   ];

@@ -3,6 +3,7 @@
  */
 import { lazy, Suspense } from 'react';
 import { Panel } from '@/components/surfaces/Panel';
+import { useModuleListTitles } from '@/strings';
 
 const LabEventLogPanelLazy = lazy(() =>
   import('./EventLogPanel').then(m => ({ default: m.LabEventLogPanel }))
@@ -14,12 +15,15 @@ export interface LazyLabEventLogPanelProps {
   className?: string;
 }
 
-export function LazyLabEventLogPanel(props: LazyLabEventLogPanelProps) { return (
+export function LazyLabEventLogPanel(props: LazyLabEventLogPanelProps) {
+  const activityTitle = useModuleListTitles().activity;
+  return (
   <Suspense
     fallback={
-      <Panel preset="panel.compactEmbed.auto" title="Activity" loading />
+      <Panel preset="panel.compactEmbed.auto" title={activityTitle} loading />
     }
   >
     <LabEventLogPanelLazy {...props} />
   </Suspense>
-); }
+  );
+}

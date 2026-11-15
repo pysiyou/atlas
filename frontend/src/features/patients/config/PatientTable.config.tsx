@@ -14,7 +14,7 @@ import {
   renderPatientId,
   renderPatientNameWithAge,
   renderPatientOrdersSummary,
-} from '@/features/shared/EntityPresentation';
+} from '@/features/shared';
 import type { PatientContext } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { PatientCard } from '../components/PatientCard';

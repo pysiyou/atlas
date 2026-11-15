@@ -1,6 +1,7 @@
 import { useClientConfig } from '@/app/clientConfigContext';
 import {
   getEventLogCopy,
+  getLabCopy,
   getModuleListTitles,
   getNavCopy,
 } from './catalog';
@@ -21,4 +22,10 @@ export function useNavCopy() {
 export function useEventLogCopy() {
   useClientConfig();
   return getEventLogCopy();
+}
+
+/** Lab copy that refreshes when client config loads. */
+export function useLabCopy() {
+  useClientConfig();
+  return getLabCopy();
 }

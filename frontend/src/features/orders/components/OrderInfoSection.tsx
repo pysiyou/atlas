@@ -3,7 +3,7 @@
  */
 
 import { useMemo } from 'react';
-import { RecordId } from '@/features/shared';
+import { RecordId, renderOrderTestsBlock } from '@/features/shared';
 import type { Order } from '@/types';
 import { OrderPriorityBadge, OrderStatusBadge } from './OrderDomainBadges';
 import { DescriptionItem, DETAIL_SECTION_GENERAL_INFO_GRID } from '@/components/display';
@@ -18,7 +18,6 @@ import {
 import { useUserLookup } from '@/lib/api';
 import { useTestNameLookup } from '@/features/catalog';
 import { getBillableTests } from '../utils/orderCalculator';
-import { renderOrderTestsBlock } from '@/features/shared/EntityPresentation';
 import { OrderDoctorApprovalControl } from './OrderDoctorApprovalControl';
 
 export interface OrderInfoSectionProps {

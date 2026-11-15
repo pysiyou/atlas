@@ -9,7 +9,7 @@ import { Icon } from '@/components/primitives';
 import { PageHeader } from '@/components/layout';
 import { WORKSPACE } from '@/theme/recipes';
 import { useLabStageQueueCounts, getValidationTabCount } from '../hooks';
-import { getLabCopy } from '@/strings';
+import { useLabCopy } from '@/strings';
 import {
   DEFAULT_LAB_TAB,
   normalizeLabTabParam,
@@ -23,6 +23,7 @@ import { LaboratoryPageTabRail, type LaboratoryPageTabDef } from './LaboratoryPa
 import { LaboratoryPageStageContent } from './LaboratoryPageStageContent';
 
 export function LaboratoryPage() {
+  const labCopy = useLabCopy();
   const navigate = useNavigate();
   const { tab: tabParam } = useParams<{ tab?: string }>();
   const { hasRole } = useAuthStore();
@@ -96,7 +97,7 @@ export function LaboratoryPage() {
   }
 
   const pageTitle =
-    activeTab === 'monitor' ? getLabCopy().workflow.monitorPageTitle : getLabTabLabels()[activeTab];
+    activeTab === 'monitor' ? labCopy.workflow.monitorPageTitle : getLabTabLabels()[activeTab];
 
   return (
     <div className={WORKSPACE.page}>

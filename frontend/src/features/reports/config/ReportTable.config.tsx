@@ -13,7 +13,7 @@ import { formatReportOrderTestsPreview } from '@/utils/presentation';
 import {
   renderNavigableOrderId,
   renderReportableOrderTestsCell,
-} from '@/features/shared/EntityPresentation';
+} from '@/features/shared';
 import type { ReportableOrder } from '@/types';
 import { ReportRowActionsMenu } from '../components/ReportRowActionsMenu';
 import { ValidatedTestReportCard } from '../components/ValidatedTestReportCard';

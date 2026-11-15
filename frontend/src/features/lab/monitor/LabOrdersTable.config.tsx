@@ -29,7 +29,7 @@ import {
   renderPatientNameCell,
   renderTestNameCodeStack,
   StatusPresentationBadge,
-} from '@/features/shared/EntityPresentation';
+} from '@/features/shared';
 import type { LabOrderTableRow } from './LabOrdersTable.types';
 import { BADGE } from '@/theme/recipes';
 
