@@ -18,7 +18,7 @@ import {
   MediumScreenLayout,
   LargeScreenLayout,
 } from '../components/OrderDetailLayouts';
-import { useModuleListTitles } from '@/config';
+import { useModuleListTitles } from '@/hooks/useModuleListTitles';
 
 export const OrderDetail: React.FC = () => {
   const orderLabel = useModuleListTitles().orderDetail;

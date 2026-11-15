@@ -1,9 +1,6 @@
 import React, { type ReactNode } from 'react';
-import {
-  ClientConfigContext,
-  type ClientConfig,
-  type ConfigStatus,
-} from './domain/client';
+import type { ClientConfig } from '@/config';
+import { ClientConfigContext, type ConfigStatus } from './clientConfigContext';
 
 interface ClientConfigProviderProps {
   children: ReactNode;
@@ -17,10 +14,6 @@ export const ClientConfigProvider: React.FC<ClientConfigProviderProps> = ({
   config,
   status,
   error,
-}) => {
-  return (
-    <ClientConfigContext.Provider value={{ config, status, error }}>
-      {children}
-    </ClientConfigContext.Provider>
-  );
-};
+}) => (
+  <ClientConfigContext.Provider value={{ config, status, error }}>{children}</ClientConfigContext.Provider>
+);

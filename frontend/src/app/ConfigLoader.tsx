@@ -5,10 +5,9 @@
  */
 import React, { useEffect, useState } from 'react';
 import { loadClientConfig, applyBranding, type ClientConfig } from '@/config';
-import { ClientConfigProvider } from '@/config';
+import { ClientConfigProvider } from './ClientConfigProvider';
+import type { ConfigStatus } from './clientConfigContext';
 import { setThemeMode, type ThemeName } from '@/theme/theme';
-
-type ConfigStatus = 'loading' | 'ready' | 'error';
 
 interface ConfigLoaderProps {
   children: React.ReactNode;

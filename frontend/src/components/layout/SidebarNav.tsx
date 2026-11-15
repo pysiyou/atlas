@@ -2,13 +2,18 @@ import type { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import { CHROME } from '@/theme/recipes';
 import { cn } from '@/utils';
-import type { MenuItem, SettingsPopoverLink } from '@/config';
-import { settingsPopoverTrigger } from '@/config';
 import { SidebarSettingsMenu } from './SidebarSettingsMenu';
+import { SidebarNavIcon } from './sidebarNavIcon';
+import type {
+  SidebarNavItem,
+  SidebarSettingsLink,
+  SidebarSettingsTrigger,
+} from './useSidebarMenu';
 
 export interface SidebarNavProps {
-  menuItems: MenuItem[];
-  settingsPopoverLinks: SettingsPopoverLink[];
+  menuItems: SidebarNavItem[];
+  settingsPopoverLinks: SidebarSettingsLink[];
+  settingsTrigger: SidebarSettingsTrigger;
   isCollapsed?: boolean;
   onNavigate?: () => void;
 }
@@ -64,6 +69,7 @@ const navRowReset =
 export function SidebarNav({
   menuItems,
   settingsPopoverLinks,
+  settingsTrigger,
   isCollapsed = false,
   onNavigate,
 }: SidebarNavProps) {
@@ -82,7 +88,11 @@ export function SidebarNav({
             className={cn(CHROME.navItem, navRowReset)}
           >
             {({ isActive }) => (
-              <NavRowBody icon={item.icon} label={item.label} isActive={isActive} />
+              <NavRowBody
+                icon={<SidebarNavIcon iconKey={item.iconKey} />}
+                label={item.label}
+                isActive={isActive}
+              />
             )}
           </NavLink>
         ))}
@@ -97,8 +107,8 @@ export function SidebarNav({
           <div className={CHROME.navList} role="group" aria-label="Settings">
             <SidebarSettingsMenu
               isCollapsed={isCollapsed}
-              triggerIcon={settingsPopoverTrigger.icon}
-              triggerLabel={settingsPopoverTrigger.label}
+              triggerIconKey={settingsTrigger.iconKey}
+              triggerLabel={settingsTrigger.label}
               items={settingsPopoverLinks}
               onNavigate={handleNavClick}
             />

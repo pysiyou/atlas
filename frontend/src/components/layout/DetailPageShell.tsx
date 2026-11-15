@@ -12,7 +12,7 @@ import { EmptyState } from '@/components/display';
 
 import { IconKeys } from '@/config/icons';
 import { WORKSPACE } from '@/theme/recipes';
-import { useAppChromeMount } from '@/config';
+import { useAppChromeMount } from './appChromeMount';
 import { cn } from '@/utils';
 
 export interface DetailPageShellProps {

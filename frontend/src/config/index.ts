@@ -9,15 +9,21 @@
  *
  * ## Naming
  * - Copy helpers: `getModuleListTitles`, `getOrderFilterPlaceholders`, `emptyTitle`.
- * - Route keys: `ROUTES.HOME`, etc. Types: PascalCase (`MenuItem`, `PanelPresetId`).
+ * - Route keys: `ROUTES.HOME`, etc. Types: PascalCase (`NavMenuItemDefinition`, `PanelPresetId`).
+ * - Sidebar nav: wire definitions in `domain/chrome.ts`; labels via `t()` in layout (`useSidebarMenu`).
  * - Feature config files: `*Table.config.tsx`, `*Filters.config.ts`.
  *
- * ## Domain files (internal; import via `@/config` only)
- * - `domain/client.ts` — load/cache, terminology, company facade, React hooks.
+ * ## Domain files (internal; import via `@/config` only — no React)
+ * - `domain/client.ts` — load/cache, terminology, company facade.
  * - `domain/copy.ts` — module titles, table headers, filters, empty states.
- * - `domain/chrome.ts` — sidebar menu, motion, app chrome mount (React allowed).
+ * - `domain/chrome.ts` — sidebar nav wire data and motion tokens.
  * - `domain/panels.ts` — panel preset registry.
  * - `static/api.ts`, `static/routes.ts` — env and route constants.
+ *
+ * ## React (not under `config/`)
+ * - `app/clientConfigContext.ts`, `app/ClientConfigProvider.tsx` — loaded config context.
+ * - `hooks/useModuleListTitles.ts` — terminology-aware list titles hook.
+ * - `components/layout/appChromeMount.tsx` — page header portal target.
  *
  * ## Feature config conventions
  * - Import `@/config` and `@/config/icons`; do not import another feature's `config/`.
@@ -50,13 +56,9 @@ export {
   isWorkflowEnabled,
   applyBranding,
   companyConfig,
-  useClientConfig,
-  useClientConfigReady,
 } from './domain/client';
 export type {
   ClientConfig,
-  ConfigStatus,
-  ClientConfigContextValue,
   CompanyAddress,
   CompanyContact,
   CompanyBranding,
@@ -67,13 +69,10 @@ export type {
   CompanyData,
 } from './domain/client';
 
-export { ClientConfigProvider } from './ClientConfigProvider';
-export { ClientConfigContext } from './domain/client';
-
 // =============================================================================
 // copy — module titles
 // =============================================================================
-export { getModuleListTitles, useModuleListTitles } from './domain/copy';
+export { getModuleListTitles } from './domain/copy';
 
 // =============================================================================
 // copy — table headers
@@ -112,17 +111,19 @@ export {
 // chrome — sidebar and mount
 // =============================================================================
 export {
-  useAppChromeMount,
-  AppChromeMountContext,
   SIDEBAR_MOTION,
-  menuItems,
-  settingsPopoverTrigger,
-  settingsPopoverLinks,
-  getFilteredMenuItems,
-  getFilteredSettingsPopoverLinks,
+  NAV_MENU_DEFINITIONS,
+  SETTINGS_POPOVER_TRIGGER,
+  SETTINGS_POPOVER_LINK_DEFINITIONS,
+  getFilteredNavMenuDefinitions,
+  getFilteredSettingsPopoverLinkDefinitions,
   getFilteredSettingsItems,
 } from './domain/chrome';
-export type { MenuItem, SettingsPopoverLink, SettingsItem } from './domain/chrome';
+export type {
+  NavMenuItemDefinition,
+  SettingsPopoverLinkDefinition,
+  SettingsItem,
+} from './domain/chrome';
 
 // =============================================================================
 // panels — registry

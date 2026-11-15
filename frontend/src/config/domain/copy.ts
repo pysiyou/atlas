@@ -4,7 +4,7 @@
  */
 import type { IconKey } from '../icons';
 import { IconKeys } from '../icons';
-import { t, tCap, tLower, useClientConfig } from './client';
+import { t, tCap, tLower } from './client';
 
 
 // =============================================================================
@@ -316,13 +316,3 @@ export const DENSE_EMPTY_STATE_TEXT = {
   variant: 'dense' as const,
   fill: true,
 } as const;
-
-
-// =============================================================================
-// react-hooks
-// =============================================================================
-/** Module list/detail titles that refresh when client config loads */
-export function useModuleListTitles() {
-  useClientConfig();
-  return getModuleListTitles();
-}

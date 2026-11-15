@@ -19,7 +19,7 @@ import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { getCollectionFilterConfig } from '../constants';
-import { useClientConfig } from '@/config';
+import { useClientConfig } from '@/app/clientConfigContext';
 import { worklistItemToQueueRow } from '../utils/worklistMappers';
 import { getEmptyCopy, emptySubtitle } from '@/config';
 

@@ -19,7 +19,7 @@ import { usePageFilters } from '@/hooks';
 import { ORDER_URL_FILTER_KEYS } from '../config/orderFilters.config';
 import type { Order, OrderStatus } from '@/types';
 import { UrlFilterChipBar } from '@/components/filters';
-import { useModuleListTitles } from '@/config';
+import { useModuleListTitles } from '@/hooks/useModuleListTitles';
 
 export const OrderList: React.FC = () => {
   const listTitles = useModuleListTitles();

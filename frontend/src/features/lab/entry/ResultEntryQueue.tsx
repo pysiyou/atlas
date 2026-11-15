@@ -16,7 +16,7 @@ import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { getEntryFilterConfig } from '../constants';
-import { useClientConfig } from '@/config';
+import { useClientConfig } from '@/app/clientConfigContext';
 import { getEmptyCopy } from '@/config';
 
 import { ErrorBoundary } from '@/feedback';

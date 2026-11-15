@@ -5,8 +5,8 @@
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useAuthStore } from '@/app/authStore';
-import { getFilteredMenuItems, getFilteredSettingsItems } from '@/config';
 import { SidebarContent } from './SidebarContent';
+import { useSidebarMenu } from './useSidebarMenu';
 
 interface SidebarProps {
   isMobileOpen?: boolean;
@@ -21,8 +21,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 }) => {
   const { user: currentUser, logout, hasRole } = useAuthStore();
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const filteredMenuItems = getFilteredMenuItems();
-  const filteredSettingsItems = getFilteredSettingsItems(hasRole);
+  const { menuItems, settingsPopoverLinks, settingsTrigger } = useSidebarMenu(hasRole);
 
   useEffect(() => {
     if (isMobile && isMobileOpen) document.body.style.overflow = 'hidden';
@@ -46,8 +45,9 @@ const SidebarComponent: React.FC<SidebarProps> = ({
       isCollapsed={isCollapsed}
       isMobile={isMobile}
       onMobileClose={onMobileClose}
-      menuItems={filteredMenuItems}
-      settingsPopoverLinks={filteredSettingsItems}
+      menuItems={menuItems}
+      settingsPopoverLinks={settingsPopoverLinks}
+      settingsTrigger={settingsTrigger}
       currentUser={currentUser}
       onLogout={logout}
       onToggleCollapse={() => setIsCollapsed(prev => !prev)}

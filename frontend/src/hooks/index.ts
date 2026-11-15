@@ -1,4 +1,5 @@
 export { useAnchoredPopoverDismiss } from './useAnchoredPopoverDismiss';
+export { useModuleListTitles } from './useModuleListTitles';
 
 export { usePageFilters, applyPageFilters } from './usePageFilters';
 export type { UsePageFiltersOptions, UsePageFiltersReturn } from './usePageFilters';

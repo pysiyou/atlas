@@ -3,9 +3,9 @@ import { motion } from 'framer-motion';
 import { CHROME } from '@/theme/recipes';
 import { cn } from '@/utils';
 import type { AuthUser } from '@/types';
-import type { MenuItem, SettingsPopoverLink } from '@/config';
 import { SidebarHeader } from './SidebarHeader';
 import { SidebarNav } from './SidebarNav';
+import type { SidebarNavItem, SidebarSettingsLink, SidebarSettingsTrigger } from './useSidebarMenu';
 import { ThemeSwitch } from '@/components/inputs';
 import { SidebarProfile } from './SidebarProfile';
 import { SIDEBAR_MOTION } from '@/config';
@@ -14,8 +14,9 @@ export interface SidebarContentProps {
   isCollapsed: boolean;
   isMobile: boolean;
   onMobileClose?: () => void;
-  menuItems: MenuItem[];
-  settingsPopoverLinks: SettingsPopoverLink[];
+  menuItems: SidebarNavItem[];
+  settingsPopoverLinks: SidebarSettingsLink[];
+  settingsTrigger: SidebarSettingsTrigger;
   currentUser: AuthUser | null | undefined;
   onLogout: () => void;
   onToggleCollapse: () => void;
@@ -27,6 +28,7 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
   onMobileClose,
   menuItems,
   settingsPopoverLinks: settingsPopoverLinksProp,
+  settingsTrigger,
   currentUser,
   onLogout,
   onToggleCollapse,
@@ -60,6 +62,7 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
       <SidebarNav
         menuItems={menuItems}
         settingsPopoverLinks={settingsPopoverLinksProp}
+        settingsTrigger={settingsTrigger}
         isCollapsed={collapsed}
         onNavigate={isMobile ? onMobileClose : undefined}
       />

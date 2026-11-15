@@ -1,9 +1,7 @@
 /**
- * Client config load/cache, terminology, company facade, and React context.
- * Style spec: see `config/index.ts`.
+ * Client config load/cache, terminology, and company facade (no React).
+ * Style spec: see `config/index.ts`. React wiring: `app/clientConfigContext.ts`.
  */
-import { createContext, useContext } from 'react';
-
 
 // =============================================================================
 // wire-types
@@ -621,42 +619,3 @@ class CompanyConfig {
  * Singleton instance of company configuration facade
  */
 export const companyConfig = new CompanyConfig();
-
-
-// =============================================================================
-// react-context
-// =============================================================================
-export type ConfigStatus = 'loading' | 'ready' | 'error';
-
-export interface ClientConfigContextValue {
-  config: ClientConfig | null;
-  status: ConfigStatus;
-  error?: Error;
-}
-
-export const ClientConfigContext = createContext<ClientConfigContextValue | undefined>(
-  undefined,
-);
-
-
-// =============================================================================
-// react-hooks
-// =============================================================================
-export function useClientConfig() {
-  const context = useContext(ClientConfigContext);
-  if (context === undefined) {
-    throw new Error('useClientConfig must be used within ClientConfigProvider');
-  }
-  return context;
-}
-
-export function useClientConfigReady(): ClientConfig {
-  const { config, status, error } = useClientConfig();
-  if (status === 'loading') {
-    throw new Promise(() => {});
-  }
-  if (status === 'error' || !config) {
-    throw error || new Error('Configuration failed to load');
-  }
-  return config;
-}

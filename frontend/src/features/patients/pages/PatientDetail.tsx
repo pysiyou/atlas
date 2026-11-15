@@ -14,7 +14,7 @@ import { EditPatientModal } from '../components/EditPatientModal';
 import { PatientHeader } from '../components/PatientHeader';
 import { SmallScreenLayout, MediumScreenLayout, LargeScreenLayout } from '../components/PatientDetailLayouts';
 import { feedbackTitle } from '@/feedback';
-import { useModuleListTitles } from '@/config';
+import { useModuleListTitles } from '@/hooks/useModuleListTitles';
 
 export const PatientDetail: React.FC = () => {
   const patientLabel = useModuleListTitles().patientDetail;

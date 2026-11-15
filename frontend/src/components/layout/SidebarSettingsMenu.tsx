@@ -3,25 +3,28 @@ import { useNavigate } from 'react-router-dom';
 import { Popover, type PopoverPlacement } from '@/components/overlays/Popover';
 import { cn } from '@/utils';
 import { CHROME, CONTROL, MENU_ITEM_TYPE, RADIUS, text } from '@/theme/recipes';
-import type { SettingsPopoverLink } from '@/config';
+import type { IconKey } from '@/config/icons';
+import type { SidebarSettingsLink } from './useSidebarMenu';
+import { SidebarNavIcon } from './sidebarNavIcon';
 
 export interface SidebarSettingsMenuProps {
   isCollapsed: boolean;
-  triggerIcon: ReactNode;
+  triggerIconKey: IconKey;
   triggerLabel: string;
-  items: SettingsPopoverLink[];
+  items: SidebarSettingsLink[];
   onNavigate?: () => void;
 }
 
 export function SidebarSettingsMenu({
   isCollapsed,
-  triggerIcon,
+  triggerIconKey,
   triggerLabel,
   items,
   onNavigate,
 }: SidebarSettingsMenuProps) {
   const navigate = useNavigate();
   const placement: PopoverPlacement = isCollapsed ? 'right-start' : 'right-start';
+  const triggerIcon = <SidebarNavIcon iconKey={triggerIconKey} />;
 
   return (
     <Popover
@@ -58,12 +61,16 @@ export function SidebarSettingsMenu({
                       CONTROL.focusVisible,
                     ),
               );
-              const iconNode = item.icon ?? null;
+              const iconNode = item.iconKey ? (
+                <span className="flex size-4 shrink-0 items-center justify-center">
+                  <SidebarNavIcon iconKey={item.iconKey} />
+                </span>
+              ) : null;
 
               if (item.disabled || !item.path) {
                 return (
                   <div key={item.label} role="menuitem" aria-disabled="true" className={rowClass}>
-                    {iconNode ? <span className="flex size-4 shrink-0 items-center justify-center">{iconNode}</span> : null}
+                    {iconNode}
                     <span className="truncate">{item.label}</span>
                   </div>
                 );
@@ -81,7 +88,7 @@ export function SidebarSettingsMenu({
                     onNavigate?.();
                   }}
                 >
-                  {iconNode ? <span className="flex size-4 shrink-0 items-center justify-center">{iconNode}</span> : null}
+                  {iconNode}
                   <span className="truncate">{item.label}</span>
                 </button>
               );

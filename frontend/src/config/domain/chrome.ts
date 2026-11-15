@@ -1,25 +1,11 @@
 /**
- * App chrome: sidebar menu and portal mount (React allowed).
- * Style spec: see config/index.ts.
+ * App chrome wire data: sidebar menu definitions and motion tokens (no React).
+ * Style spec: see config/index.ts. Portal mount: `components/layout/appChromeMount.tsx`.
  */
-import React, { type ReactNode, createContext, useContext } from 'react';
-import { IconKeys } from '../icons';
-import { Icon } from '@/components/primitives';
-import { ICON_SIZE } from '@/theme/recipes';
+import { IconKeys, type IconKey } from '../icons';
 import { ROUTES } from '../static/routes';
-import { getClientConfig, t } from './client';
+import { getClientConfig, isFeatureEnabled } from './client';
 import type { UserRole } from '@/types';
-
-
-// =============================================================================
-// app-chrome-mount
-// =============================================================================
-export const AppChromeMountContext = createContext<HTMLElement | null>(null);
-
-export function useAppChromeMount(): HTMLElement | null {
-  return useContext(AppChromeMountContext);
-}
-
 
 // =============================================================================
 // sidebar-motion
@@ -37,100 +23,152 @@ export const SIDEBAR_MOTION = {
   },
 } as const;
 
-
 // =============================================================================
 // sidebar-menu
 // =============================================================================
-const navIconClass = ICON_SIZE.sidebarNav.icon;
-
-export interface MenuItem {
+/** Main nav row — resolve `label` with `t(terminologyKey, labelFallback)` in layout. */
+export interface NavMenuItemDefinition {
   path: string;
-  label: string;
-  icon: ReactNode;
-  roles: string[];
-  featureKey?: string; // Optional feature flag key
+  terminologyKey: string;
+  labelFallback: string;
+  iconKey: IconKey;
+  roles: readonly string[];
+  featureKey?: string;
 }
 
-/** Row inside the Settings sidebar popover. */
-export interface SettingsPopoverLink {
+/** Settings popover row — static `label` unless `terminologyKey` is set. */
+export interface SettingsPopoverLinkDefinition {
   label: string;
-  icon?: ReactNode;
+  terminologyKey?: string;
+  iconKey?: IconKey;
   path?: string;
   disabled?: boolean;
   roles?: UserRole[];
-  featureKey?: string; // Optional feature flag key
+  featureKey?: string;
 }
 
-export type SettingsItem = SettingsPopoverLink;
+export type SettingsItem = SettingsPopoverLinkDefinition;
 
-// Note: Menu items use t() for terminology. Since this is a module-level array,
-// the labels are computed at import time. For dynamic updates, convert to a function
-// or use a component-level approach.
-export const menuItems: MenuItem[] = [
-  { path: ROUTES.DASHBOARD, label: t('dashboard', 'Dashboard'), icon: React.createElement(Icon, { iconKey: IconKeys.modules.dashboard, className: navIconClass }), roles: [], featureKey: 'dashboard' },
-  { path: ROUTES.PATIENTS, label: t('patients', 'Patients'), icon: React.createElement(Icon, { iconKey: IconKeys.modules.patients, className: navIconClass }), roles: [], featureKey: 'patients' },
-  { path: ROUTES.ORDERS, label: t('orders', 'Orders'), icon: React.createElement(Icon, { iconKey: IconKeys.modules.orders, className: navIconClass }), roles: [], featureKey: 'orders' },
-  { path: ROUTES.LABORATORY, label: t('laboratory', 'Laboratory'), icon: React.createElement(Icon, { iconKey: IconKeys.modules.laboratory, className: navIconClass }), roles: [], featureKey: 'laboratory' },
-  { path: ROUTES.LAB_ALL_TESTS, label: t('tests', 'All tests'), icon: React.createElement(Icon, { iconKey: IconKeys.modules.labTests, className: navIconClass }), roles: [], featureKey: 'laboratory' },
-  { path: ROUTES.PAYMENTS, label: t('payments', 'Payments'), icon: React.createElement(Icon, { iconKey: IconKeys.modules.payments, className: navIconClass }), roles: [], featureKey: 'payments' },
-  { path: ROUTES.REPORTS, label: t('reports', 'Reports'), icon: React.createElement(Icon, { iconKey: IconKeys.modules.reports, className: navIconClass }), roles: [], featureKey: 'reports' },
-  { path: ROUTES.CATALOG, label: t('catalog', 'Catalog'), icon: React.createElement(Icon, { iconKey: IconKeys.modules.catalog, className: navIconClass }), roles: [], featureKey: 'catalog' },
-  { path: ROUTES.EVENT_LOG, label: t('audit', 'Event log'), icon: React.createElement(Icon, { iconKey: IconKeys.modules.eventLog, className: navIconClass }), roles: [], featureKey: 'audit' },
+export const NAV_MENU_DEFINITIONS: readonly NavMenuItemDefinition[] = [
+  {
+    path: ROUTES.DASHBOARD,
+    terminologyKey: 'dashboard',
+    labelFallback: 'Dashboard',
+    iconKey: IconKeys.modules.dashboard,
+    roles: [],
+    featureKey: 'dashboard',
+  },
+  {
+    path: ROUTES.PATIENTS,
+    terminologyKey: 'patients',
+    labelFallback: 'Patients',
+    iconKey: IconKeys.modules.patients,
+    roles: [],
+    featureKey: 'patients',
+  },
+  {
+    path: ROUTES.ORDERS,
+    terminologyKey: 'orders',
+    labelFallback: 'Orders',
+    iconKey: IconKeys.modules.orders,
+    roles: [],
+    featureKey: 'orders',
+  },
+  {
+    path: ROUTES.LABORATORY,
+    terminologyKey: 'laboratory',
+    labelFallback: 'Laboratory',
+    iconKey: IconKeys.modules.laboratory,
+    roles: [],
+    featureKey: 'laboratory',
+  },
+  {
+    path: ROUTES.LAB_ALL_TESTS,
+    terminologyKey: 'tests',
+    labelFallback: 'All tests',
+    iconKey: IconKeys.modules.labTests,
+    roles: [],
+    featureKey: 'laboratory',
+  },
+  {
+    path: ROUTES.PAYMENTS,
+    terminologyKey: 'payments',
+    labelFallback: 'Payments',
+    iconKey: IconKeys.modules.payments,
+    roles: [],
+    featureKey: 'payments',
+  },
+  {
+    path: ROUTES.REPORTS,
+    terminologyKey: 'reports',
+    labelFallback: 'Reports',
+    iconKey: IconKeys.modules.reports,
+    roles: [],
+    featureKey: 'reports',
+  },
+  {
+    path: ROUTES.CATALOG,
+    terminologyKey: 'catalog',
+    labelFallback: 'Catalog',
+    iconKey: IconKeys.modules.catalog,
+    roles: [],
+    featureKey: 'catalog',
+  },
+  {
+    path: ROUTES.EVENT_LOG,
+    terminologyKey: 'audit',
+    labelFallback: 'Event log',
+    iconKey: IconKeys.modules.eventLog,
+    roles: [],
+    featureKey: 'audit',
+  },
 ];
 
-export const settingsPopoverTrigger = {
+export const SETTINGS_POPOVER_TRIGGER = {
   label: 'Settings',
-  icon: React.createElement(Icon, { iconKey: IconKeys.ui.setting, className: navIconClass }),
+  iconKey: IconKeys.ui.setting,
 } as const;
 
-export const settingsPopoverLinks: SettingsPopoverLink[] = [
+export const SETTINGS_POPOVER_LINK_DEFINITIONS: readonly SettingsPopoverLinkDefinition[] = [
   {
     label: 'User management',
-    icon: React.createElement(Icon, { iconKey: IconKeys.modules.users, className: navIconClass }),
+    iconKey: IconKeys.modules.users,
     path: ROUTES.USERS,
     roles: ['administrator'],
     featureKey: 'users',
   },
   {
     label: 'Notification & alerts',
-    icon: React.createElement(Icon, { iconKey: IconKeys.ui.bell, className: navIconClass }),
+    iconKey: IconKeys.ui.bell,
     disabled: true,
   },
 ];
 
-/**
- * Check if a feature is enabled in the config
- * Returns true if feature is explicitly enabled or if config is not loaded yet (permissive default)
- */
-function isFeatureEnabledInternal(featureKey: string | undefined): boolean {
-  if (!featureKey) return true; // No feature key means always enabled
-  
+function isNavFeatureEnabled(featureKey: string | undefined): boolean {
+  if (!featureKey) return true;
   const config = getClientConfig();
-  if (!config || !config.features) return true; // Permissive default if config not loaded
-  
-  // If feature is explicitly defined, use that value; otherwise default to true
-  return config.features[featureKey] !== false;
+  if (!config?.features) return true;
+  return isFeatureEnabled(featureKey);
 }
 
-export function getFilteredMenuItems(): MenuItem[] {
-  return menuItems.filter(item => isFeatureEnabledInternal(item.featureKey));
+/** Filter nav definitions by feature flags (labels resolved in layout). */
+export function getFilteredNavMenuDefinitions(): NavMenuItemDefinition[] {
+  return NAV_MENU_DEFINITIONS.filter(item => isNavFeatureEnabled(item.featureKey));
 }
 
-export function getFilteredSettingsPopoverLinks(
+export function getFilteredSettingsPopoverLinkDefinitions(
   hasRole: (roles: UserRole | UserRole[]) => boolean,
-): SettingsPopoverLink[] {
-  return settingsPopoverLinks.filter(item => {
-    // Check feature flag first
-    if (!isFeatureEnabledInternal(item.featureKey)) return false;
-    
-    // Then check role access
+): SettingsPopoverLinkDefinition[] {
+  return SETTINGS_POPOVER_LINK_DEFINITIONS.filter(item => {
+    if (!isNavFeatureEnabled(item.featureKey)) return false;
     if (!item.roles || item.roles.length === 0) return true;
     return hasRole(item.roles);
   });
 }
 
+/** @deprecated Use getFilteredSettingsPopoverLinkDefinitions */
 export function getFilteredSettingsItems(
   hasRole: (roles: UserRole | UserRole[]) => boolean,
-): SettingsPopoverLink[] {
-  return getFilteredSettingsPopoverLinks(hasRole);
+): SettingsPopoverLinkDefinition[] {
+  return getFilteredSettingsPopoverLinkDefinitions(hasRole);
 }

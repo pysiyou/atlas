@@ -20,7 +20,7 @@ import { cn } from '@/utils';
 import { SPLIT_ROW_INTERACTIVE } from '@/theme/recipes';
 import { LAB_CONFIG, getLabCopy } from '../constants/labConstants';
 import { getAllTestsFilterConfig } from '../constants/labFilterConfigs';
-import { useClientConfig } from '@/config';
+import { useClientConfig } from '@/app/clientConfigContext';
 import { useAllTestsWorklist, WORKLIST_PAGE_SIZE } from '../api/worklists';
 import { createLabOrdersTableConfig } from '../monitor/LabOrdersTable.config';
 import { mapDashboardWorklistRow } from '../monitor/labOrderTableRow';
