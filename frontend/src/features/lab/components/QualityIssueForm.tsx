@@ -12,7 +12,7 @@ import type { QualityIssueOptions } from '@/types';
 import type { QualityIssueTargetType, RemedyType } from '@/types';
 import { QUALITY_ISSUE_POPOVER_COPY } from '../constants/qualityIssuePopoverCopy';
 import { QualityIssueInlineWarning } from './QualityIssueInlineWarning';
-import { getLabCopy } from '../constants/labConstants';
+import { getLabCopy } from '@/strings';
 import { QualityIssueRemedyPicker } from './QualityIssueRemedyPicker';
 import {
   buildSampleRemedyOptions,

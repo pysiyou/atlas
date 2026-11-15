@@ -16,7 +16,7 @@ import { cn, displayId } from '@/utils';
 import { getLabQueueUrl } from '../utils/labSearchAndLinks';
 import {CONTROL, FEED_ACCENT, FEED_GROUPED, RADIUS, FG } from '@/theme/recipes';
 import { Text } from '@/components/layout';
-import { getLabCopy } from '../constants/labConstants';
+import { getLabCopy } from '@/strings';
 import {
   ATTENTION_TYPE_ORDER,
   getAttentionTone,

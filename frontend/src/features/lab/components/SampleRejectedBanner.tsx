@@ -5,7 +5,7 @@ import { Alert } from '@/components/display';
 
 import { RecordId } from '@/features/shared';
 import {text, FG } from '@/theme/recipes';
-import { getLabCopy } from '../constants/labConstants';
+import { getLabCopy } from '@/strings';
 
 export interface SampleRejectedBannerProps {
   sampleId?: number;

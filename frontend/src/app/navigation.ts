@@ -1,10 +1,11 @@
 /**
  * Main navigation wire data and sidebar motion tokens.
- * Labels resolved in `components/layout/useSidebarMenu.ts` via `t()` from `@/config`.
+ * Labels resolved in `components/layout/useSidebarMenu.ts` via `getNavCopy()` from `@/strings`.
  */
 import { IconKeys, type IconKey } from '@/icons';
 import { ROUTES } from '@/app/routes';
 import { getClientConfig, isFeatureEnabled } from '@/config';
+import type { NavMainKey, NavSettingsLinkKey } from '@/strings';
 import type { UserRole } from '@/types';
 
 // =============================================================================
@@ -26,20 +27,18 @@ export const SIDEBAR_MOTION = {
 // =============================================================================
 // sidebar-menu
 // =============================================================================
-/** Main nav row — resolve `label` with `t(terminologyKey, labelFallback)` in layout. */
+/** Main nav row — resolve `label` with `getNavCopy().main[stringKey]` in layout. */
 export interface NavMenuItemDefinition {
   path: string;
-  terminologyKey: string;
-  labelFallback: string;
+  stringKey: NavMainKey;
   iconKey: IconKey;
   roles: readonly string[];
   featureKey?: string;
 }
 
-/** Settings popover row — static `label` unless `terminologyKey` is set. */
+/** Settings popover row — resolve `label` with `getNavCopy().settingsLinks[stringKey]`. */
 export interface SettingsPopoverLinkDefinition {
-  label: string;
-  terminologyKey?: string;
+  stringKey: NavSettingsLinkKey;
   iconKey?: IconKey;
   path?: string;
   disabled?: boolean;
@@ -52,72 +51,63 @@ export type SettingsItem = SettingsPopoverLinkDefinition;
 export const NAV_MENU_DEFINITIONS: readonly NavMenuItemDefinition[] = [
   {
     path: ROUTES.DASHBOARD,
-    terminologyKey: 'dashboard',
-    labelFallback: 'Dashboard',
+    stringKey: 'dashboard',
     iconKey: IconKeys.modules.dashboard,
     roles: [],
     featureKey: 'dashboard',
   },
   {
     path: ROUTES.PATIENTS,
-    terminologyKey: 'patients',
-    labelFallback: 'Patients',
+    stringKey: 'patients',
     iconKey: IconKeys.modules.patients,
     roles: [],
     featureKey: 'patients',
   },
   {
     path: ROUTES.ORDERS,
-    terminologyKey: 'orders',
-    labelFallback: 'Orders',
+    stringKey: 'orders',
     iconKey: IconKeys.modules.orders,
     roles: [],
     featureKey: 'orders',
   },
   {
     path: ROUTES.LABORATORY,
-    terminologyKey: 'laboratory',
-    labelFallback: 'Laboratory',
+    stringKey: 'laboratory',
     iconKey: IconKeys.modules.laboratory,
     roles: [],
     featureKey: 'laboratory',
   },
   {
     path: ROUTES.LAB_ALL_TESTS,
-    terminologyKey: 'tests',
-    labelFallback: 'All tests',
+    stringKey: 'tests',
     iconKey: IconKeys.modules.labTests,
     roles: [],
     featureKey: 'laboratory',
   },
   {
     path: ROUTES.PAYMENTS,
-    terminologyKey: 'payments',
-    labelFallback: 'Payments',
+    stringKey: 'payments',
     iconKey: IconKeys.modules.payments,
     roles: [],
     featureKey: 'payments',
   },
   {
     path: ROUTES.REPORTS,
-    terminologyKey: 'reports',
-    labelFallback: 'Reports',
+    stringKey: 'reports',
     iconKey: IconKeys.modules.reports,
     roles: [],
     featureKey: 'reports',
   },
   {
     path: ROUTES.CATALOG,
-    terminologyKey: 'catalog',
-    labelFallback: 'Catalog',
+    stringKey: 'catalog',
     iconKey: IconKeys.modules.catalog,
     roles: [],
     featureKey: 'catalog',
   },
   {
     path: ROUTES.EVENT_LOG,
-    terminologyKey: 'audit',
-    labelFallback: 'Event log',
+    stringKey: 'audit',
     iconKey: IconKeys.modules.eventLog,
     roles: [],
     featureKey: 'audit',
@@ -125,20 +115,19 @@ export const NAV_MENU_DEFINITIONS: readonly NavMenuItemDefinition[] = [
 ];
 
 export const SETTINGS_POPOVER_TRIGGER = {
-  label: 'Settings',
   iconKey: IconKeys.ui.setting,
 } as const;
 
 export const SETTINGS_POPOVER_LINK_DEFINITIONS: readonly SettingsPopoverLinkDefinition[] = [
   {
-    label: 'User management',
+    stringKey: 'users',
     iconKey: IconKeys.modules.users,
     path: ROUTES.USERS,
     roles: ['administrator'],
     featureKey: 'users',
   },
   {
-    label: 'Notification & alerts',
+    stringKey: 'notifications',
     iconKey: IconKeys.ui.bell,
     disabled: true,
   },
@@ -164,11 +153,4 @@ export function getFilteredSettingsPopoverLinkDefinitions(
     if (!item.roles || item.roles.length === 0) return true;
     return hasRole(item.roles);
   });
-}
-
-/** @deprecated Use getFilteredSettingsPopoverLinkDefinitions */
-export function getFilteredSettingsItems(
-  hasRole: (roles: UserRole | UserRole[]) => boolean,
-): SettingsPopoverLinkDefinition[] {
-  return getFilteredSettingsPopoverLinkDefinitions(hasRole);
 }

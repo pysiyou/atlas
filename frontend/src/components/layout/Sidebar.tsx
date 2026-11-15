@@ -21,7 +21,7 @@ function SidebarComponent({
 }: SidebarProps) {
   const { user: currentUser, logout, hasRole } = useAuthStore();
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const { menuItems, settingsPopoverLinks, settingsTrigger } = useSidebarMenu(hasRole);
+  const { menuItems, settingsPopoverLinks, settingsTrigger, chrome } = useSidebarMenu(hasRole);
 
   useEffect(() => {
     if (isMobile && isMobileOpen) document.body.style.overflow = 'hidden';
@@ -48,6 +48,7 @@ function SidebarComponent({
       menuItems={menuItems}
       settingsPopoverLinks={settingsPopoverLinks}
       settingsTrigger={settingsTrigger}
+      chrome={chrome}
       currentUser={currentUser}
       onLogout={logout}
       onToggleCollapse={() => setIsCollapsed(prev => !prev)}

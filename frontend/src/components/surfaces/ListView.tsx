@@ -1,7 +1,13 @@
 /**
  * ListView — page shell for data tables.
  *
- * List pages should use `useServerListChrome` or `useClientListChrome` for loading and load-error toasts.
+ * Recipe:
+ * - Server lists (patients, orders, payments, reports, lab all-tests):
+ *   `usePageFilters` → query hook → `useServerListChrome` → this component.
+ * - Client lists (catalog, users): `usePageFilters` + `applyPageFilters` →
+ *   `useClientListChrome` → this component.
+ * Titles come from `useModuleListTitles()` / `getLabCopy()`. Default empty copy
+ * uses the page title; pass `emptyState` when a JSON empty-state key is needed.
  */
 
 import { type ReactNode } from 'react';

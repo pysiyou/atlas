@@ -18,7 +18,8 @@ import {
   type LabWorkflowModalContext,
   type LabAuditLine } from '../../components/LabWorkflowHeader';
 import { text , FG } from '@/theme/recipes';
-import { getLabCopy, labStageLabel, type LabWorkflowStage } from '../../constants/labConstants';
+import { getLabCopy } from '@/strings';
+import { labStageLabel, type LabWorkflowStage } from '../../constants/labConstants';
 
 export interface QueueModalShellProps {
   isOpen: boolean;

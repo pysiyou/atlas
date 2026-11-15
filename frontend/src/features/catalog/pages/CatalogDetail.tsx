@@ -24,7 +24,7 @@ import {
   formatTurnaroundTime,
 } from '@/utils';
 import type { Test } from '@/types';
-import { getModuleListTitles } from '@/strings';
+import { useModuleListTitles } from '@/strings';
 
 /** Column count for the catalog detail grid. */
 function catalogDetailColumnCount(breakpoint: string): number {
@@ -157,7 +157,7 @@ export function CatalogDetail() {
   const breakpoint = useBreakpoint();
   const columnCount = catalogDetailColumnCount(breakpoint);
   const { test, isLoading, isError } = useTest(testCode);
-  const testLabel = getModuleListTitles().testDetail;
+  const testLabel = useModuleListTitles().testDetail;
 
   if (isLoading) {
     return (

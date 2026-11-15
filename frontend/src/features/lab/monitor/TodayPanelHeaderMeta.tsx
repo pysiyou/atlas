@@ -2,7 +2,7 @@
  * Header meta for the Today panel — UTC day label and monitor universe size.
  */
 import { METER_KPI } from '@/theme/recipes';
-import { getLabCopy } from '../constants/labConstants';
+import { getLabCopy } from '@/strings';
 
 export interface TodayPanelHeaderMetaProps {
   headerRange: string;

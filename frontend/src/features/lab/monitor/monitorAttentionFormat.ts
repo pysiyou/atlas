@@ -4,7 +4,8 @@
 
 import { ATTENTION_LABELS } from '@/types/generated/policies';
 import { displayId } from '@/utils';
-import { LAB_CONFIG, getLabCopy, labStageLabel } from '../constants/labConstants';
+import { getLabCopy } from '@/strings';
+import { LAB_CONFIG, labStageLabel } from '../constants/labConstants';
 import type { LabAttentionQueueItem } from './monitorModel';
 import type { AttentionType } from './monitorModel';
 

@@ -9,10 +9,10 @@ import { Icon } from '@/components/primitives';
 import { PageHeader } from '@/components/layout';
 import { WORKSPACE } from '@/theme/recipes';
 import { useLabStageQueueCounts, getValidationTabCount } from '../hooks';
+import { getLabCopy } from '@/strings';
 import {
   DEFAULT_LAB_TAB,
   normalizeLabTabParam,
-  getLabCopy,
   getLabTabLabels,
   LAB_TAB_ICONS,
   type LabTabId,

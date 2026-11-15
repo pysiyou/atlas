@@ -1,6 +1,6 @@
 /**
  * Unified test-detail modal — full order-test context at any pipeline stage (view or validate).
- * Filename is `detailModal.testDetail.tsx` (not a unit test).
+ * Filename is `DetailModal.TestDetail.tsx` (not a unit test).
  */
 
 import type { TestDetailModalProps } from '@/lib/context/modalTypes';

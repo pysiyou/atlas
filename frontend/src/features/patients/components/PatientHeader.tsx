@@ -10,7 +10,7 @@ import type { Patient } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { AffiliationPopover } from './AffiliationPopover';
 import { IconKeys } from '@/icons';
-import { getModuleListTitles } from '@/strings';
+import { useModuleListTitles } from '@/strings';
 
 export interface PatientHeaderProps {
   patient: Patient;
@@ -23,6 +23,7 @@ export function PatientHeader({
   isLarge,
   onEdit,
 }: PatientHeaderProps) {
+  const titles = useModuleListTitles();
   const avatar = (
     <div className="flex items-center gap-space-2">
       <Avatar primaryText={patient.fullName} size="sm" avatarOnly />
@@ -52,7 +53,7 @@ export function PatientHeader({
       <IconButton
         {...actionButtonPreset('edit')}
         size="lg"
-        title={getModuleListTitles().editPatient}
+        title={titles.editPatient}
         onClick={onEdit}
       />
     </div>

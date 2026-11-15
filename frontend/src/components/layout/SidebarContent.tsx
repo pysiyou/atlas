@@ -1,4 +1,9 @@
-import type { SidebarNavItem, SidebarSettingsLink, SidebarSettingsTrigger } from './useSidebarMenu';
+import type {
+  SidebarNavChrome,
+  SidebarNavItem,
+  SidebarSettingsLink,
+  SidebarSettingsTrigger,
+} from './useSidebarMenu';
 import type { AuthUser } from '@/types';
 import { SidebarHeader } from './SidebarHeader';
 import { SidebarNav } from './SidebarNav';
@@ -16,6 +21,7 @@ export interface SidebarContentProps {
   menuItems: SidebarNavItem[];
   settingsPopoverLinks: SidebarSettingsLink[];
   settingsTrigger: SidebarSettingsTrigger;
+  chrome: SidebarNavChrome;
   currentUser: AuthUser | null | undefined;
   onLogout: () => void;
   onToggleCollapse: () => void;
@@ -28,6 +34,7 @@ export function SidebarContent({
   menuItems,
   settingsPopoverLinks: settingsPopoverLinksProp,
   settingsTrigger,
+  chrome,
   currentUser,
   onLogout,
   onToggleCollapse,
@@ -62,6 +69,7 @@ export function SidebarContent({
         menuItems={menuItems}
         settingsPopoverLinks={settingsPopoverLinksProp}
         settingsTrigger={settingsTrigger}
+        chrome={chrome}
         isCollapsed={collapsed}
         onNavigate={isMobile ? onMobileClose : undefined}
       />

@@ -3,15 +3,22 @@
  */
 
 export {
+  applyLabQueueFilters,
   applyLabQueueFiltersWithProfile,
+  type LabQueueClientSkipFlags,
+  type LabQueueClientStatus,
+  type LabQueueFilterState,
+} from './labQueueFilterApply';
+export {
   useLabQueueBarFilters,
+  type LabQueueBarState,
+} from './useLabQueueBarFilters';
+export {
   useLabQueueFilterBarProps,
   useLabQueuePageFilters,
-  type LabQueueBarState,
   type LabQueueFilterBarPropsOptions,
-  type LabQueueFilterState,
   type UseLabQueuePageFiltersOptions,
-} from './labQueueFilters';
+} from './useLabQueuePageFilters';
 export { useLabStageQueueCounts, getValidationTabCount } from '../api/labMonitor';
 export {
   useResultValidationQueueData,

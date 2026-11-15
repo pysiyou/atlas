@@ -8,7 +8,7 @@ import { getEmptyCopy, DENSE_EMPTY_STATE_TEXT } from '@/strings';
 import { Panel } from '@/components/surfaces/Panel';
 import type { LabTodayPanelSnapshot } from './monitorModel';
 import { METER_KPI, KPI_PANEL } from '@/theme/recipes';
-import { getLabCopy } from '../constants/labConstants';
+import { getLabCopy } from '@/strings';
 import { formatDate } from '@/utils';
 import { buildTodayStageSegments, sumAtStage } from './todayPanelStairLayout';
 import { TodayStageRow } from './TodayStageRow';

@@ -17,7 +17,7 @@ import { usePatient, usePatientSearch } from '@/features/patients';
 import type { ReferentDoctor } from '@/features/referent-doctors';
 import { useCreatePayment } from '@/features/payments';
 import { useOrder } from '../api/orders';
-import { getModuleListTitles } from '@/strings';
+import { useModuleListTitles } from '@/strings';
 
 export interface UseOrderUpsertModalParams {
   isOpen: boolean;
@@ -190,7 +190,7 @@ export function useOrderUpsertModal({
     []
   );
 
-  const titles = getModuleListTitles();
+  const titles = useModuleListTitles();
   const modalTitle = mode === 'edit' ? titles.editOrder : titles.newOrderModal;
   const subtitle = useMemo((): React.ReactNode => {
     if (mode === 'edit' && order) {

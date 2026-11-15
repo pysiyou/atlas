@@ -14,7 +14,7 @@ import { formatRejectionReasons } from '../../utils/labFormatters';
 import { QueueCardTestList } from '../shared/QueueCardLayout';
 import { SampleCollectionPopover } from '../../collection/SampleCollectionPopover';
 import { SampleRejectionPopover } from '../../collection/SampleRejectionPopover';
-import { getLabCopy } from '../../constants/labConstants';
+import { getLabCopy } from '@/strings';
 import type { SampleCollectionQueueItem } from '@/types';
 import { isLabActionAllowed, labDisabledActionTooltip } from '../../utils/queueDisplay';
 import { printSampleLabel } from '../../utils/labSample';

@@ -2,8 +2,8 @@
  * Today panel — per-stage queue depth, today's activity, and share of monitor universe.
  */
 import type { LabTodayPanelSnapshot, LabTodayStageSnapshot } from './monitorModel';
+import { getLabCopy } from '@/strings';
 import {
-  getLabCopy,
   getKpiStageVisual,
   type LabWorkflowStage,
 } from '../constants/labConstants';

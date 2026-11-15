@@ -22,7 +22,11 @@
     "orderInformation": "{{orderCap}} Information",
     "orderActivity": "{{orderCap}} activity",
     "testsPanel": "{{testsCap}}",
-    "reportsSubtitleAvailable": "(s) available"
+    "reportsSubtitleAvailable": "(s) available",
+    "users": "Users",
+    "newUser": "New user",
+    "userManagement": "User management",
+    "labMonitor": "{{laboratoryCap}} monitor"
   },
   "tables": {
     "orders": {
@@ -130,7 +134,7 @@
       "descriptionWhen": "an {{order}} {{test}} is updated today or still in the pipeline"
     },
     "dashboardTodayKpi": {
-      "titlePhraseWithLaboratory": " activity for today",
+      "titlePhrase": "{{laboratory}} activity for today",
       "descriptionSubject": "stage metrics",
       "descriptionWhen": "{{tests}} are in the monitor view (running or updated today)"
     },
@@ -139,6 +143,7 @@
       "description": "Accessions will appear here when they require pathologist review, operational hold, or expedited handling."
     },
     "recentOrders": {
+      "titlePhrase": "{{orders}}",
       "descriptionSubject": "{{orders}}",
       "descriptionWhen": "new ones are created"
     },
@@ -249,5 +254,63 @@
       "stageEntry": "Result entry",
       "stageValidation": "Validation"
     }
+  },
+  "nav": {
+    "menu": "Menu",
+    "settings": "Settings",
+    "mainAriaLabel": "Main navigation",
+    "main": {
+      "dashboard": "{{dashboardCap}}",
+      "patients": "{{patientsCap}}",
+      "orders": "{{ordersCap}}",
+      "laboratory": "{{laboratoryCap}}",
+      "tests": "All {{tests}}",
+      "payments": "Payments",
+      "reports": "{{reportsCap}}",
+      "catalog": "{{testCap}} Catalog",
+      "audit": "Event log"
+    },
+    "settingsLinks": {
+      "users": "User management",
+      "notifications": "Notification & alerts"
+    }
+  },
+  "eventLog": {
+    "panelTitle": "Event log",
+    "panelMetaOrder": "Most recent actions on this {{order}} first",
+    "panelMetaLab": "Most recent {{laboratory}} actions for this item first",
+    "panelMetaPatient": "Most recent actions on this {{patient}} first",
+    "panelMetaRecord": "Most recent actions for this item first",
+    "panelMetaCommandCenter": "Last 24 hours · most recent activity first",
+    "panelMetaMonitor": "Last 24 hours · most recent activity first",
+    "panelMetaAll": "Most recent events · newest first · load more for older rows",
+    "emptyTitle": "No events yet",
+    "emptyDescription": "Actions and status changes will appear here as they occur.",
+    "narrativeDefaultLabel": "Notes",
+    "reasonInlinePrefix": "Reason: ",
+    "outcomeInlinePrefix": "Outcome: ",
+    "commentLabel": "Comment",
+    "resultTitle": "Results",
+    "debugTitle": "Debug",
+    "loadMore": "Load older events",
+    "searchPreviewTitle": "Search matches",
+    "searchPreviewRecordIds": "Record IDs",
+    "searchPreviewPatients": "{{patientsCap}}",
+    "searchPreviewUsers": "Users",
+    "searchPreviewEventCount": "events match",
+    "searchPreviewEventCountLoading": "Counting events…",
+    "searchPreviewNoSuggestions": "No matches for this query",
+    "searchIntentOrder": "{{orderCap}}",
+    "searchIntentTest": "{{testCap}}",
+    "searchIntentSample": "{{sampleCap}}",
+    "searchIntentPatient": "{{patientCap}}",
+    "searchIntentNumericTarget": "Target id",
+    "verbositySummary": "Summary",
+    "verbosityDetailed": "Detailed",
+    "verbosityDebug": "Debug",
+    "showMore": "Show more",
+    "showLess": "Show less",
+    "systemActorName": "Atlas",
+    "transitionArrow": "→"
   }
 }

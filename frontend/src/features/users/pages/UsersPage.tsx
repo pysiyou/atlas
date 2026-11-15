@@ -7,7 +7,7 @@ import { actionButtonPreset, Button } from '@/components/primitives';
 import { ListView } from '@/components/surfaces';
 import { useAuthStore } from '@/app/authStore';
 import { ROUTES } from '@/app/routes';
-import { applyPageFilters, useClientListChrome, usePageFilters } from '@/hooks';
+import { applyPageFilters, useClientListChrome, useModuleListTitles, usePageFilters } from '@/hooks';
 import { useUsersAdminList, type UserAdminRecord } from '../api/usersAdmin';
 import { UserFilters } from '../components/UserFilters';
 import { UserUpsertModal } from '../components/UserUpsertModal';
@@ -27,6 +27,7 @@ export function UsersPage() {
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserAdminRecord | null>(null);
+  const titles = useModuleListTitles();
   const tableConfig = useMemo(() => createUserTableConfig(), []);
   const { loading } = useClientListChrome({
     loadFailedKey: 'users.list.loadFailed',
@@ -57,17 +58,17 @@ export function UsersPage() {
         viewConfig={tableConfig}
         loading={loading}
         onRowClick={openEdit}
-        title="User management"
+        title={titles.userManagement}
         headerActions={
           <Button {...actionButtonPreset('add')} size="sm" onClick={openCreate}>
-            New user
+            {titles.newUser}
           </Button>
         }
         filters={<UserFilters filters={filters} setFilter={setFilter} />}
         pagination={{ mode: 'client', pageSize: 20 }}
         defaultSort={{ key: 'name', direction: 'asc' }}
         rowClassName={user => (isUserActive(user) ? '' : 'opacity-60')}
-        ariaLabel="Users"
+        ariaLabel={titles.users}
       />
       {isModalOpen ? (
         <UserUpsertModal

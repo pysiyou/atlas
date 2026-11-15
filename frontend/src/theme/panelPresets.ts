@@ -265,8 +265,6 @@ export const layoutPanelPresets = {
 // =============================================================================
 // registry
 // =============================================================================
-export const PANEL_PRESETS = layoutPanelPresets;
-
 export type PanelPresetId = keyof typeof layoutPanelPresets;
 
 export function getPanelPreset(preset: PanelPresetId): PanelPresetDefinition {

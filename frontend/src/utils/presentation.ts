@@ -4,35 +4,26 @@
  * Name collision (do not merge):
  * - `@/utils/presentation` — this module
  * - `@/theme/recipes/presentation` — CSS recipes
- * - `@/types/generated/enums
  *
- * React table/card renders: `@/features/shared/EntityPresentation`.
- * Screen hooks: `@/hooks`.
+ * React table/card renders: `@/features/shared`.
  * Patient-only formatters: `@/features/patients/utils/patientFormatters`.
  */
-
 import type { ReactNode } from 'react';
 import { format, isValid, parseISO } from 'date-fns';
 import { getBrandingPresentation, getCompanyName } from '@/config';
 import type { DescriptionListItemConfig } from '@/components/display/DescriptionList';
-import type { Gender, Order, OrderTest } from '@/types';
-import { GENDER_CONFIG } from '@/types';
+import type { Gender, Order, OrderTest, RejectedSample, Sample } from '@/types';
 import {
   CONTAINER_TOP_COLOR_OPTIONS,
   CONTAINER_TYPE_CONFIG,
+  GENDER_CONFIG,
   type ContainerType,
-  type RejectedSample,
-  type Sample,
 } from '@/types';
 import { INACTIVE_REPORTABLE_TEST_STATUSES } from '@/types/generated/policies';
 import { formatTruncatedListPreview } from '@/utils/array';
-import { formatCurrency } from '@/utils/currency';
-import { formatDateTime } from '@/utils/date';
 import { displayId } from '@/utils/id';
+import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { calculateAge } from '@/utils/string';
-import { formatStatusBadgeLabel, resolveStatusBadgeColor } from '@/utils/statusBadge';
-
-export { formatCurrency, formatDateTime, formatStatusBadgeLabel, resolveStatusBadgeColor };
 
 export type FieldKind = 'text' | 'timestamp' | 'badge';
 
@@ -59,9 +50,10 @@ function isHidden(descriptor: FieldDescriptor, ctx: PresentationContext): boolea
   return descriptor.hidden === true;
 }
 
+/** Convert field descriptors into description-list item configs, skipping hidden rows. */
 export function buildDescriptionItems(
   descriptors: FieldDescriptor[],
-  ctx: PresentationContext = {}
+  ctx: PresentationContext = {},
 ): DescriptionListItemConfig[] {
   const items: DescriptionListItemConfig[] = [];
 
@@ -89,20 +81,10 @@ export function buildDescriptionItems(
   return items;
 }
 
-export function formatDateTimeOrDash(date: string | Date | null | undefined): string {
-  if (!date) {
-    return '—';
-  }
-  return formatDateTime(date);
-}
-
-export function formatTableAmount(amount: number): string {
-  return formatCurrency(amount);
-}
-
+/** Truncated synonym preview (e.g. `"foo, bar +2 more"`). */
 export function formatSynonymsPreview(
   synonyms: string[] | undefined,
-  max = 2
+  max = 2,
 ): string | null {
   if (!synonyms?.length) {
     return null;
@@ -112,6 +94,17 @@ export function formatSynonymsPreview(
     return `${preview} +${synonyms.length - max} more`;
   }
   return preview;
+}
+
+export function formatTestCountLabel(count: number): string {
+  return `${count} test${count !== 1 ? 's' : ''}`;
+}
+
+export function formatReportValidationStatus(
+  validatedCount: number,
+  activeCount: number,
+): string {
+  return `${validatedCount}/${activeCount}`;
 }
 
 /**
@@ -132,17 +125,6 @@ export function formatPatientSexAgeLine(
     parts.push(age === 1 ? '1 year old' : `${age} years old`);
   }
   return parts.length > 0 ? parts.join(' · ') : null;
-}
-
-export function formatTestCountLabel(count: number): string {
-  return `${count} test${count !== 1 ? 's' : ''}`;
-}
-
-export function formatReportValidationStatus(
-  validatedCount: number,
-  activeCount: number
-): string {
-  return `${validatedCount}/${activeCount}`;
 }
 
 export function formatPatientOrdersCountLabel(orderCount: number): string {
@@ -182,6 +164,7 @@ export interface ReportableOrderTestsInput {
   order?: Order | null;
 }
 
+/** Active (reportable) order tests, sorted by id. */
 export function getActiveOrderTests(order: Order): OrderTest[] {
   return (order.tests ?? [])
     .filter(test => !INACTIVE_REPORTABLE_TEST_STATUSES.has(test.status))
@@ -219,7 +202,7 @@ function resolveCodeLabels(input: OrderTestsPresentationInput): string[] {
 function buildNamesFirstPreview(
   labels: string[],
   activeCount: number,
-  showAllNames: boolean
+  showAllNames: boolean,
 ): string {
   if (labels.length === 0) {
     return activeCount > 0 ? formatTestCountLabel(activeCount) : '';
@@ -231,7 +214,7 @@ function buildNamesFirstPreview(
 }
 
 export function resolveOrderTestsPresentation(
-  input: OrderTestsPresentationInput
+  input: OrderTestsPresentationInput,
 ): OrderTestsPresentationResult {
   const activeCount = resolveActiveCount(input);
   const nameLabels = resolveNameLabels(input);
@@ -267,7 +250,7 @@ export function resolveOrderTestsPresentation(
 }
 
 export function resolveReportableOrderTests(
-  order: ReportableOrderTestsInput
+  order: ReportableOrderTestsInput,
 ): OrderTestsPresentationResult {
   const nameLabels =
     order.testNames.length > 0
@@ -339,9 +322,10 @@ export interface OrderContextPresentation {
   orderDate?: string;
 }
 
+/** Patient + order header snippet used on list rows and worklists. */
 export function buildOrderContextPresentation(
   patient: PatientListSnippet,
-  order?: OrderListHeader
+  order?: OrderListHeader,
 ): OrderContextPresentation {
   return {
     patientName: patient.patientName,
@@ -473,9 +457,10 @@ function formatBirthdayDisplay(source: ReportHeaderSource): string {
   return '';
 }
 
+/** Report PDF header view-model (branch, order, patient, timestamps). */
 export function buildReportHeaderViewModel(
   source: ReportHeaderSource,
-  printingDate: Date = new Date()
+  printingDate: Date = new Date(),
 ): ReportHeaderViewModel {
   const registeredAt = resolveRegisteredAt(source);
   const collectedAt = resolveCollectedAt(source);
@@ -511,11 +496,11 @@ export function formatVolumeMl(volumeInMl: number): string {
   return `${volumeInMl.toFixed(1)}mL`;
 }
 
-export function formatSampleStatusLabel(status: string): string {
+function formatSampleStatusLabel(status: string): string {
   return formatStatusBadgeLabel(status);
 }
 
-export function formatSampleTypeLabel(sampleType: string): string {
+function formatSampleTypeLabel(sampleType: string): string {
   return formatStatusBadgeLabel(sampleType);
 }
 
@@ -587,7 +572,7 @@ export function getSampleCollectionViewModel(sample: Sample): SampleCollectionVi
 
 export function resolveCollectionPatientName(
   pendingPatientFullName: string | undefined,
-  order: Order | undefined
+  order: Order | undefined,
 ): string {
   return pendingPatientFullName || order?.patientName || 'Unknown';
 }
@@ -595,7 +580,7 @@ export function resolveCollectionPatientName(
 export function deriveCollectionModalFields(
   sample: Sample,
   order: Order | undefined,
-  pendingPatientFullName: string | undefined
+  pendingPatientFullName: string | undefined,
 ) {
   const vm = getSampleCollectionViewModel(sample);
   const patientName = resolveCollectionPatientName(pendingPatientFullName, order);
@@ -619,7 +604,7 @@ export function deriveCollectionModalFields(
 
 function appendPendingContainerDescriptors(
   descriptors: FieldDescriptor[],
-  sample: Sample
+  sample: Sample,
 ): void {
   if (sample.status !== 'pending' || !sample.requiredContainerTypes?.length) {
     return;
@@ -635,7 +620,7 @@ function appendPendingContainerDescriptors(
 
 function appendCollectionDescriptors(
   descriptors: FieldDescriptor[],
-  sample: Sample
+  sample: Sample,
 ): void {
   const vm = getSampleCollectionViewModel(sample);
   if (!vm.hasCollection) {
@@ -660,7 +645,7 @@ function appendCollectionDescriptors(
       label: 'Remaining',
       value:
         vm.remainingVolume !== undefined ? formatVolumeMl(vm.remainingVolume) : undefined,
-    }
+    },
   );
 
   if (vm.containerType) {
@@ -676,7 +661,7 @@ function appendCollectionDescriptors(
 
 function appendRecollectionDescriptors(
   descriptors: FieldDescriptor[],
-  sample: Sample
+  sample: Sample,
 ): void {
   if (!sample.isRecollection) {
     return;
@@ -695,7 +680,7 @@ function appendRecollectionDescriptors(
           ? displayId.sample(sample.originalSampleId)
           : undefined,
     },
-    { id: 'reason', label: 'Reason', value: sample.recollectionReason }
+    { id: 'reason', label: 'Reason', value: sample.recollectionReason },
   );
 }
 

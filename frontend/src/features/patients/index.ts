@@ -23,7 +23,7 @@ export {
   renderPatientNameWithAge,
   renderPatientOrdersSummary,
   renderPatientSexAgeSecondary,
-} from '@/features/shared/EntityPresentation';
+} from '@/features/shared';
 export {
   formatAddress,
   formatPatientSexAgeLine,

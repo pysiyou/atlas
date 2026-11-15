@@ -79,7 +79,7 @@ export {
   renderOrderTotalPriceInline,
   renderOrderDateCell,
   type RenderOrderTestsBlockOptions,
-} from '@/features/shared/EntityPresentation';
+} from '@/features/shared';
 
 export { Orders as OrdersPage } from './pages/OrdersPage';
 export { OrderList } from './pages/OrderList';

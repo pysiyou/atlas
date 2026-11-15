@@ -6,6 +6,7 @@ import { cn } from '@/utils';
 import { NavLink } from 'react-router-dom';
 import type {
 
+  SidebarNavChrome,
   SidebarNavItem,
   SidebarSettingsLink,
   SidebarSettingsTrigger,
@@ -15,6 +16,7 @@ export interface SidebarNavProps {
   menuItems: SidebarNavItem[];
   settingsPopoverLinks: SidebarSettingsLink[];
   settingsTrigger: SidebarSettingsTrigger;
+  chrome: SidebarNavChrome;
   isCollapsed?: boolean;
   onNavigate?: () => void;
 }
@@ -71,6 +73,7 @@ export function SidebarNav({
   menuItems,
   settingsPopoverLinks,
   settingsTrigger,
+  chrome,
   isCollapsed = false,
   onNavigate,
 }: SidebarNavProps) {
@@ -79,8 +82,8 @@ export function SidebarNav({
 
   return (
     <div className={CHROME.navScroll}>
-      <SectionTitle>Menu</SectionTitle>
-      <nav className={CHROME.navList} aria-label="Main navigation">
+      <SectionTitle>{chrome.menu}</SectionTitle>
+      <nav className={CHROME.navList} aria-label={chrome.mainAriaLabel}>
         {menuItems.map(item => (
           <NavLink
             key={item.path}
@@ -104,8 +107,8 @@ export function SidebarNav({
           <div className={CHROME.footerDivider} aria-hidden="true">
             <div className={CHROME.footerDividerRule} />
           </div>
-          <SectionTitle>Settings</SectionTitle>
-          <div className={CHROME.navList} role="group" aria-label="Settings">
+          <SectionTitle>{chrome.settings}</SectionTitle>
+          <div className={CHROME.navList} role="group" aria-label={chrome.settings}>
             <SidebarSettingsMenu
               isCollapsed={isCollapsed}
               triggerIconKey={settingsTrigger.iconKey}

@@ -1,5 +1,6 @@
 /** Command center board types and attention-queue categories. */
-import { LAB_CONFIG, getLabCopy } from '../constants/labConstants';
+import { getLabCopy } from '@/strings';
+import { LAB_CONFIG } from '../constants/labConstants';
 import type { LabAttentionReason } from '../utils/queueDisplay';
 import type { PriorityLevel } from '@/types';
 

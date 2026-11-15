@@ -7,8 +7,6 @@ import type { TestStatus } from '@/types/generated/enums';
 import type { BadgeColor } from '@/components/primitives';
 import { getLabCopy } from '@/strings';
 
-export { getLabCopy };
-
 export type LabWorkflowStage = 'collection' | 'entry' | 'validation';
 export type LabWorkflowKpiStage = LabWorkflowStage | 'sentBack';
 export type LabStageLabelVariant = 'short' | 'nav' | 'full';

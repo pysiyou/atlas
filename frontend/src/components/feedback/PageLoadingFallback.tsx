@@ -14,7 +14,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { TableLoadingPlaceholder } from '@/components/data-table/TableLoadingPlaceholder';
 import { PANEL, WORKSPACE } from '@/theme/recipes';
 import { ROUTES } from '@/app/routes';
-import { getModuleListTitles } from '@/strings';
+import { useModuleListTitles } from '@/strings';
 
 function pathWithoutTrailingSlash(pathname: string): string {
   if (pathname.length > 1 && pathname.endsWith('/')) {
@@ -72,10 +72,10 @@ function DetailRouteLoadingFallback({
   );
 }
 
-function LabMonitorRouteLoadingFallback() {
+function LabMonitorRouteLoadingFallback({ title }: { title: string }) {
   return (
     <div className={WORKSPACE.page} aria-busy="true">
-      <PageHeader variant="bar" title="Lab monitor" />
+      <PageHeader variant="bar" title={title} />
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
         <LabMonitorLoadingGrid />
       </div>
@@ -86,7 +86,7 @@ function LabMonitorRouteLoadingFallback() {
 function PageLoadingLayout({ fullScreen = false }: { fullScreen?: boolean }) {
   const { pathname } = useLocation();
 
-  const titles = getModuleListTitles();
+  const titles = useModuleListTitles();
   if (!fullScreen && isRecordDetailPath(pathname, ROUTES.PATIENTS)) {
     return <DetailRouteLoadingFallback title={titles.patientDetail} grid={PATIENT_DETAIL_LOADING_GRID} />;
   }
@@ -94,7 +94,7 @@ function PageLoadingLayout({ fullScreen = false }: { fullScreen?: boolean }) {
     return <DetailRouteLoadingFallback title={titles.orderDetail} grid={ORDER_DETAIL_LOADING_GRID} />;
   }
   if (!fullScreen && isLabMonitorPath(pathname)) {
-    return <LabMonitorRouteLoadingFallback />;
+    return <LabMonitorRouteLoadingFallback title={titles.labMonitor} />;
   }
 
   return <TablePageLoadingLayout fullScreen={fullScreen} />;

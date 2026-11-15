@@ -7,7 +7,7 @@ import { actionButtonPreset, Avatar, IconButton } from '@/components/primitives'
 import { ListCard } from '@/components/surfaces';
 import { RecordId } from '@/features/shared';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
-import { getModuleListTitles } from '@/strings';
+import { useModuleListTitles } from '@/strings';
 import { formatPhoneNumber } from '@/utils';
 import React from 'react';
 
@@ -19,6 +19,7 @@ import React from 'react';
  */
 export function PatientCard({ item: patient, onClick }: CardComponentProps<Patient>) {
   const { openModal } = useModal();
+  const titles = useModuleListTitles();
 
   const handleAddOrder = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -54,7 +55,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
         <IconButton
           {...actionButtonPreset('add')}
           size="sm"
-          title={getModuleListTitles().addOrder}
+          title={titles.addOrder}
           onClick={handleAddOrder}
         />
       </CardFooter>

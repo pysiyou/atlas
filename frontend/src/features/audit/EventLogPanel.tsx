@@ -8,7 +8,7 @@ import { Panel } from '@/components/surfaces/Panel';
 import type { PanelPresetId } from '@/theme/panelPresets';
 import { cn } from '@/utils';
 import { useClientListChrome } from '@/hooks';
-import { EVENT_LOG_COPY } from './types';
+import { useEventLogCopy, type EventLogCopy } from '@/strings';
 import { EventLogFeed } from './EventLogFeed';
 import { EventLogFilters } from './EventLogFilters';
 import { useEventLog } from './useEventLog';
@@ -46,29 +46,29 @@ export interface EventLogPanelProps {
   loading?: boolean;
 }
 
-function metaForQuery(query: EventLogQuery, hasUserFilters: boolean): string {
+function metaForQuery(query: EventLogQuery, hasUserFilters: boolean, copy: EventLogCopy): string {
   if (hasUserFilters) {
     return 'Newest first';
   }
   if (query.scope === 'stream' && query.kinds?.includes('laboratory') && query.hours === 24) {
-    return EVENT_LOG_COPY.panelMetaMonitor;
+    return copy.panelMetaMonitor;
   }
   if (query.scope === 'order') {
-    return EVENT_LOG_COPY.panelMetaOrder;
+    return copy.panelMetaOrder;
   }
   if (query.scope === 'lab') {
-    return EVENT_LOG_COPY.panelMetaLab;
+    return copy.panelMetaLab;
   }
   if (query.scope === 'patient') {
-    return EVENT_LOG_COPY.panelMetaPatient;
+    return copy.panelMetaPatient;
   }
   if (query.limit === 2000 && !query.hours) {
-    return EVENT_LOG_COPY.panelMetaAll;
+    return copy.panelMetaAll;
   }
   if (query.hours != null) {
-    return EVENT_LOG_COPY.panelMetaMonitor;
+    return copy.panelMetaMonitor;
   }
-  return EVENT_LOG_COPY.panelMetaAll;
+  return copy.panelMetaAll;
 }
 
 export function EventLogPanel({
@@ -83,6 +83,7 @@ export function EventLogPanel({
   filterPanelState,
   loading: loadingProp,
 }: EventLogPanelProps) {
+  const copy = useEventLogCopy();
   const visibleFields = filterUi?.fields ?? [];
   const showFilters = visibleFields.length > 0;
 
@@ -111,8 +112,8 @@ export function EventLogPanel({
   const panelMeta = useMemo(() => {
     if (hideMeta || layout === 'embedded') return undefined;
     if (meta) return meta;
-    return metaForQuery(query, panelState.activeFilterCount > 0);
-  }, [hideMeta, layout, meta, query, panelState.activeFilterCount]);
+    return metaForQuery(query, panelState.activeFilterCount > 0, copy);
+  }, [hideMeta, layout, meta, query, panelState.activeFilterCount, copy]);
 
   const filters = showFilters ? (
     <EventLogFilters
@@ -167,7 +168,7 @@ export function EventLogPanel({
                 isLoading={isFetchingMore}
                 disabled={isFetchingMore}
               >
-                {EVENT_LOG_COPY.loadMore}
+                {copy.loadMore}
               </Button>
             </div>
           ) : null}
@@ -188,7 +189,7 @@ export function EventLogPanel({
   return (
     <Panel
       preset={eventLogPreset(panelVariant)}
-      title="Event log"
+      title={copy.panelTitle}
       meta={loadingProp ? undefined : panelMeta}
       loading={loadingProp === true}
     >

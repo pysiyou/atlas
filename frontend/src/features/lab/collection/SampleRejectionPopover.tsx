@@ -12,7 +12,7 @@ import {
   buildSampleRemedyOptions,
   resolveSuggestedRemedy } from '../constants/qualityIssuePopoverCopy';
 import type { QualityIssueOptions } from '@/types';
-import { getLabCopy } from '../constants/labConstants';
+import { getLabCopy } from '@/strings';
 import type { RemedyType } from '@/types';
 
 function parseNumericSampleId(sampleId: string): number | undefined {

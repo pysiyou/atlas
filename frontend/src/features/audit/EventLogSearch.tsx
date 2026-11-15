@@ -12,7 +12,7 @@ import { cn } from '@/utils';
 import { text, FORM_FIELD_LABEL, FG, CONTROL, inputClearButton, inputInner, inputText, inputWrapper } from '@/theme/recipes';
 import { EVENT_LOG_FILTER_PLACEHOLDERS } from './eventLogFilterConfig';
 import type { AuditSearchPreviewResponse } from './api';
-import { EVENT_LOG_COPY } from './types';
+import { useEventLogCopy } from '@/strings';
 import {
   buildEventLogSearchMatchGroups,
   countEventLogSearchMatchItems,
@@ -43,6 +43,7 @@ function EventLogSearchPopover({
   isFetching,
   onSelectMatch,
 }: EventLogSearchPopoverProps) {
+  const copy = useEventLogCopy();
   const itemCount = countEventLogSearchMatchItems(groups);
   const isEmpty = itemCount === 0 && !isFetching;
   const headerCount =
@@ -50,14 +51,14 @@ function EventLogSearchPopover({
 
   const emptyDescription =
     isFetching
-      ? EVENT_LOG_COPY.searchPreviewEventCountLoading
-      : EVENT_LOG_COPY.searchPreviewNoSuggestions;
+      ? copy.searchPreviewEventCountLoading
+      : copy.searchPreviewNoSuggestions;
 
   return (
     <SearchResultsPopoverShell
-      title={EVENT_LOG_COPY.searchPreviewTitle}
+      title={copy.searchPreviewTitle}
       resultCount={headerCount}
-      emptyMessage={EVENT_LOG_COPY.searchPreviewNoSuggestions}
+      emptyMessage={copy.searchPreviewNoSuggestions}
       emptyDescription={emptyDescription}
       isEmpty={isEmpty}
     >
@@ -72,14 +73,14 @@ function EventLogSearchPopover({
           <span>
             <span className={`font-medium ${FG.body} tabular-nums`}>{preview.eventCount}</span>
             {' '}
-            {EVENT_LOG_COPY.searchPreviewEventCount}
+            {copy.searchPreviewEventCount}
           </span>
           {isFetching ? <SpinnerLoader size="xs" /> : null}
         </div>
       ) : isFetching ? (
         <div className={`px-space-4 py-space-2 border-b border-border-default/70 ${text({ role: 'caption' })} ${FG.muted} flex items-center gap-space-2`}>
           <SpinnerLoader size="xs" />
-          {EVENT_LOG_COPY.searchPreviewEventCountLoading}
+          {copy.searchPreviewEventCountLoading}
         </div>
       ) : null}
 
@@ -156,6 +157,7 @@ export function EventLogSearchField({
   onChange,
   debounceMs = 300,
 }: EventLogSearchFieldProps) {
+  const copy = useEventLogCopy();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const listId = useId();
@@ -246,7 +248,7 @@ export function EventLogSearchField({
       </div>
 
       {showPopover ? (
-        <div id={listId} role="listbox" aria-label={EVENT_LOG_COPY.searchPreviewTitle}>
+        <div id={listId} role="listbox" aria-label={copy.searchPreviewTitle}>
           <EventLogSearchPopover
             groups={groups}
             preview={preview}

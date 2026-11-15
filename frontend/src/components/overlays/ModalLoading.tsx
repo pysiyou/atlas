@@ -5,12 +5,13 @@
 import { Panel } from '@/components/surfaces';
 import { LAYOUT } from '@/theme/recipes';
 import { MODAL_WORKFLOW_BODY_STACK } from './ModalPageShell';
-import { getModuleListTitles } from '@/strings';
+import { useModuleListTitles } from '@/strings';
 import { tCap } from '@/config';
 
 export type ModalLoadingVariant = 'default' | 'workflow' | 'form';
 
 export function ModalLoadingBody({ variant = 'default' }: { variant?: ModalLoadingVariant }) {
+  const titles = useModuleListTitles();
   if (variant === 'workflow') {
     return (
       <div className={MODAL_WORKFLOW_BODY_STACK} aria-busy="true" aria-label="Loading">
@@ -24,7 +25,6 @@ export function ModalLoadingBody({ variant = 'default' }: { variant?: ModalLoadi
   }
 
   if (variant === 'form') {
-    const titles = getModuleListTitles();
     return (
       <div className="space-y-space-6 max-w-full" aria-busy="true" aria-label="Loading form">
         <Panel preset="panel.pageEmbed.visible" title={titles.patientDetail} loading />

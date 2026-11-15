@@ -15,7 +15,8 @@ import {
 import { EventLogSearchField } from './EventLogSearch';
 import type { UserRole } from '@/types';
 import { USER_ROLE_OPTIONS } from '@/types';
-import { EVENT_LOG_COPY, type EventLogFilterField, type EventLogKind, type EventLogVerbosity } from './types';
+import { useEventLogCopy, type EventLogCopy } from '@/strings';
+import type { EventLogFilterField, EventLogKind, EventLogVerbosity } from './types';
 
 const kindFilterOptions = EVENT_LOG_KIND_OPTIONS.map(opt => ({
   id: opt.id,
@@ -27,11 +28,13 @@ const actorRoleFilterOptions = USER_ROLE_OPTIONS.map(opt => ({
   label: opt.label,
 }));
 
-const VERBOSITY_OPTIONS: { value: EventLogVerbosity; label: string }[] = [
-  { value: 'summary', label: EVENT_LOG_COPY.verbositySummary },
-  { value: 'detailed', label: EVENT_LOG_COPY.verbosityDetailed },
-  { value: 'debug', label: EVENT_LOG_COPY.verbosityDebug },
-];
+function verbosityOptions(copy: EventLogCopy): { value: EventLogVerbosity; label: string }[] {
+  return [
+    { value: 'summary', label: copy.verbositySummary },
+    { value: 'detailed', label: copy.verbosityDetailed },
+    { value: 'debug', label: copy.verbosityDebug },
+  ];
+}
 
 export interface EventLogFiltersInlineControlsProps {
   visibleFields: EventLogFilterField[];
@@ -59,6 +62,7 @@ function renderFieldControl(
   field: EventLogFilterField,
   props: EventLogFiltersInlineControlsProps,
   show: (f: EventLogFilterField) => boolean,
+  copy: EventLogCopy,
 ): React.ReactNode {
   if (!show(field)) return null;
 
@@ -154,7 +158,7 @@ function renderFieldControl(
             aria-label={EVENT_LOG_FILTER_PLACEHOLDERS.verbosity}
             value={props.verbosity}
             onChange={event => props.onVerbosityChange(event.target.value as EventLogVerbosity)}
-            options={VERBOSITY_OPTIONS}
+            options={verbosityOptions(copy)}
             className="w-full"
           />
         </div>
@@ -165,9 +169,10 @@ function renderFieldControl(
 }
 
 export function EventLogFiltersInlineControls(props: EventLogFiltersInlineControlsProps) {
+  const copy = useEventLogCopy();
   const show = (field: EventLogFilterField) =>
     props.visibleFields.includes(field) && !props.lockedFields.has(field);
 
-  return <>{EVENT_LOG_FILTER_FIELD_ORDER.map(field => renderFieldControl(field, props, show))}</>;
+  return <>{EVENT_LOG_FILTER_FIELD_ORDER.map(field => renderFieldControl(field, props, show, copy))}</>;
 }
 
