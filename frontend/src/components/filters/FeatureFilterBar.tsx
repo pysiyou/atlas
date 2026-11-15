@@ -5,7 +5,7 @@
 import { FilterBar } from './FilterBar';
 import type { FilterConfig } from './types';
 import type { FilterValues } from './types';
-import { useFilterBarBridge } from '@/hooks/filters/useFilterBarBridge';
+import { useFilterBarBridge } from '@/hooks';
 
 type FilterHandlers<T extends FilterValues> = {
   [K in keyof T]?: (next: T[K]) => void;

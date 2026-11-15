@@ -18,7 +18,7 @@ import { useServerListChrome } from '@/hooks';
 import { dateSearchServerParams } from '@/utils';
 import type { PaymentStatus } from '@/types';
 import type { OrderPaymentView } from '../types';
-import { useModuleListTitles } from '@/hooks/useModuleListTitles';
+import { useModuleListTitles } from '@/hooks';
 
 export const PaymentList: React.FC = () => {
   const listTitles = useModuleListTitles();

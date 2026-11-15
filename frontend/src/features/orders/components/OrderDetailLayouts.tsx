@@ -22,7 +22,7 @@ import { PatientInfoSection } from './PatientInfoSection';
 import { TestsTable } from './TestsTable';
 import { BillingSummarySection } from './BillingSummarySection';
 import { OrderEventLogPanel } from '@/features/audit';
-import { useModuleListTitles } from '@/hooks/useModuleListTitles';
+import { useModuleListTitles } from '@/hooks';
 
 interface LayoutProps {
   loading?: boolean;

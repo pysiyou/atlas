@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
+import { useBreakpoint, isBreakpointAtMost } from '@/hooks';
 import {
   useLabQueueBarFilters,
   useLabQueueFilterBarProps,

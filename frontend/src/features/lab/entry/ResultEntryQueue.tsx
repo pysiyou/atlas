@@ -20,7 +20,7 @@ import { useClientConfig } from '@/app/clientConfigContext';
 import { getEmptyCopy } from '@/copy';
 
 import { ErrorBoundary } from '@/feedback';
-import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
+import { useBreakpoint, isBreakpointAtMost } from '@/hooks';
 import { useResultEntryWorkflow } from './useResultEntryWorkflow';
 import { useLabDraftStore } from '../state/labDraftStore';
 import { ResultEntryQueueItem } from './ResultEntryQueueCards';

@@ -7,7 +7,7 @@
  * - `@/types/generated/enums
  *
  * React table/card renders: `@/features/shared/entityPresentation`.
- * Screen hooks: `@/hooks/presentationHooks`.
+ * Screen hooks: `@/hooks`.
  * Patient-only formatters: `@/features/patients/utils/patientFormatters`.
  */
 

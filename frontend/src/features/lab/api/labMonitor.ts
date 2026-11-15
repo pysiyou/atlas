@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/app/authStore';
 import { queryKeys, cacheConfig } from '@/lib/query';
 import { LAB_CONFIG, LAB_PATHS } from '../constants/labConstants';
-import { useDocumentVisible } from '@/hooks/useDocumentVisible';
+import { useDocumentVisible } from '@/hooks';
 
 export type LabBoardResponse = components['schemas']['LabBoardResponse'];
 

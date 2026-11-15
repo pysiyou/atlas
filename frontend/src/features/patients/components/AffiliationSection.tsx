@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useWatch } from 'react-hook-form';
 import { Badge, Button, Checkbox } from '@/components/primitives';
-import { useAsyncAction } from '@/hooks/useAsyncAction';
+import { useAsyncAction } from '@/hooks';
 import type { AffiliationDuration } from '@/types';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import { formatDate } from '@/utils';

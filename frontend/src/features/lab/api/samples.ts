@@ -10,7 +10,7 @@ import {
 } from '@/types';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
-import { useEntityLookup, parseNumericKey } from '@/hooks/useEntityLookup';
+import { useEntityLookup, parseNumericKey } from '@/hooks';
 import { queryKeys, cacheConfig, getQueryClient, useAuthQueryEnabled } from '@/lib/query';
 import { invalidateCollectionQueries } from '@/lib/query/invalidate';
 import { LAB_PATHS } from '../constants/labConstants';

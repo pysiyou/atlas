@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { useResponsiveLayout } from '@/hooks';
 import { useOrder } from '../api/orders';
 import { getBillableTests } from '../utils/orderCalculator';
 import { notify } from '@/feedback';
@@ -18,7 +18,7 @@ import {
   MediumScreenLayout,
   LargeScreenLayout,
 } from '../components/OrderDetailLayouts';
-import { useModuleListTitles } from '@/hooks/useModuleListTitles';
+import { useModuleListTitles } from '@/hooks';
 
 export const OrderDetail: React.FC = () => {
   const orderLabel = useModuleListTitles().orderDetail;

@@ -9,7 +9,7 @@
 
 import { useState, useMemo, useEffect, useLayoutEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useDebouncedValue } from '@/hooks/useDebouncedValue';
+import { useDebouncedValue } from '@/hooks';
 import type { PriorityLevel, SampleStatus, TestStatus } from '@/types';
 import { isDateInInclusiveRange } from '@/utils';
 import { LAB_CONFIG } from '../constants/labConstants';

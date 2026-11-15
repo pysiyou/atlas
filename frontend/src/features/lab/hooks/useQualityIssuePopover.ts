@@ -12,7 +12,7 @@ import {
 } from '../constants/qualityIssuePopoverCopy';
 import { displayId } from '@/utils';
 import { inlineFeedbackMessage } from '@/feedback';
-import { useListLoadErrorToast } from '@/hooks/listPage/useListLoadErrorToast';
+import { useListLoadErrorToast } from '@/hooks';
 import {
   buildValidationRemedyOptions,
   resolveSuggestedRemedy,

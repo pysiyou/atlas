@@ -18,7 +18,7 @@ import { actionButtonPreset, Button } from '@/components/primitives';
 import { Modal, ModalPageShell } from '@/components/overlays';
 import { QueueModalShell } from '../shared/detailModalLayout';
 import { LabModalPlaceholder } from '../shared/labModalPlaceholders';
-import { useListLoadErrorToast } from '@/hooks/listPage/useListLoadErrorToast';
+import { useListLoadErrorToast } from '@/hooks';
 import { SampleCollectionDetailModalView } from './detailModal.sampleCollection.view';
 import { findCollectionQueueItem } from '../../utils/findCollectionQueueItem';
 import { useSubmitSampleCollection } from '../../collection/useSubmitSampleCollection';

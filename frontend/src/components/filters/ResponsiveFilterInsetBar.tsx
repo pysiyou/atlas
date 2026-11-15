@@ -4,7 +4,7 @@ import { Modal, ModalPageShell } from '@/components/overlays';
 import { FilterModalFooter } from '@/components/filters/FilterModalFooter';
 import { FILTER } from '@/theme/recipes';
 import { cn } from '@/utils';
-import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
+import { useBreakpoint, isBreakpointAtMost } from '@/hooks';
 import type { IconKey } from '@/icons';
 
 export interface ResponsiveFilterInsetBarProps {

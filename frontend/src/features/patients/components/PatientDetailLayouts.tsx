@@ -18,7 +18,7 @@ import { CareSnapshotSection } from './CareSnapshotSection';
 import { PatientOrdersTable } from './PatientOrdersTable';
 import { PatientReportsList } from './PatientReportsList';
 import { getReportableOrders } from '../utils/patientFormatters';
-import { useModuleListTitles } from '@/hooks/useModuleListTitles';
+import { useModuleListTitles } from '@/hooks';
 import { tCap } from '@/config';
 
 interface LayoutProps {

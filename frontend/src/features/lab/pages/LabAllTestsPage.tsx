@@ -11,7 +11,7 @@ import { PANEL_EMPTY_STATE } from '@/copy';
 import { LIST_PAGE_SIZE_OPTIONS } from '@/lib/api/constants';
 import { FeatureFilterBar } from '@/components/filters';
 import { usePageFilters, useServerListChrome } from '@/hooks';
-import { useDebouncedValue } from '@/hooks/useDebouncedValue';
+import { useDebouncedValue } from '@/hooks';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
 import type { PriorityLevel, TestStatus } from '@/types';
 import { inclusiveDateRangeBounds, toIsoDateParam } from '@/utils';

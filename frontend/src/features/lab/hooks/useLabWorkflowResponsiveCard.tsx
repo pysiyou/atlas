@@ -3,7 +3,7 @@
  */
 
 import { useMemo, type FC, type ReactElement } from 'react';
-import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
+import { useBreakpoint, isBreakpointAtMost } from '@/hooks';
 
 export interface ResponsiveCardConfig<TItem, TDerived> {
   item: TItem;

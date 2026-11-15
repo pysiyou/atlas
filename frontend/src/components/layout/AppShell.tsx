@@ -8,7 +8,7 @@
  */
 
 import React, { type ReactNode, useState, useEffect, useCallback } from 'react';
-import { useBreakpoint, isBreakpointAtLeast } from '@/hooks/useBreakpoint';
+import { useBreakpoint, isBreakpointAtLeast } from '@/hooks';
 import { AppChromeMountContext } from './appChromeMount';
 import { useToastMountRef } from '@/feedback';
 import { Sidebar } from './Sidebar';

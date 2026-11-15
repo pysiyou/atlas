@@ -12,7 +12,7 @@ import { DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constant
 import { cn } from '@/utils';
 import type { ColumnConfig, SortConfig, TableVariant } from './types';
 import { ROW_HEIGHTS } from './constants';
-import { useGridTemplateColumns } from '@/hooks/useTable';
+import { useGridTemplateColumns } from '@/hooks';
 import {
   TableDataRow,
   TableHeader,

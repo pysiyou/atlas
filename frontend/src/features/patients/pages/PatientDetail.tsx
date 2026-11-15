@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { useResponsiveLayout } from '@/hooks';
 import { usePatient } from '../api/patients';
 import { useOrdersByPatient } from '@/features/orders';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
@@ -14,7 +14,7 @@ import { EditPatientModal } from '../components/EditPatientModal';
 import { PatientHeader } from '../components/PatientHeader';
 import { SmallScreenLayout, MediumScreenLayout, LargeScreenLayout } from '../components/PatientDetailLayouts';
 import { feedbackTitle } from '@/feedback';
-import { useModuleListTitles } from '@/hooks/useModuleListTitles';
+import { useModuleListTitles } from '@/hooks';
 
 export const PatientDetail: React.FC = () => {
   const patientLabel = useModuleListTitles().patientDetail;

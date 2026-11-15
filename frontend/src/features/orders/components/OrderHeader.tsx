@@ -8,7 +8,7 @@ import { actionButtonPreset, Button, Icon, IconButton } from '@/components/primi
 import { PageHeader } from '@/components/layout';
 import type { Order, Invoice } from '@/types';
 import { IconKeys } from '@/icons';
-import { useModuleListTitles } from '@/hooks/useModuleListTitles';
+import { useModuleListTitles } from '@/hooks';
 
 export interface OrderHeaderProps {
   order: Order;

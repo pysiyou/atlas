@@ -1,6 +1,4 @@
-/**
- * Screen-level presentation hooks. Import from `@/hooks/presentationHooks`.
- */
+/** Screen-level presentation hooks for orders, reports, and worklists. */
 
 import { useMemo } from 'react';
 import type { ReportableOrder } from '@/types';

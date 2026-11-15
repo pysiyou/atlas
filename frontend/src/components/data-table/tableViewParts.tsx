@@ -13,7 +13,7 @@ import type {
 import { PANEL, TABLE_SHELL, TABLE_TYPE } from '@/theme/recipes';
 import { ROW_HEIGHTS, HEADER_PADDING } from './constants';
 import { composedTableCell } from './columnHelpers';
-import { useGridTemplateColumns } from '@/hooks/useTable';
+import { useGridTemplateColumns } from '@/hooks';
 import { cn } from '@/utils';
 
 const TABLE_CELL_DENSITY = {

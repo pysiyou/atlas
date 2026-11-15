@@ -325,7 +325,7 @@ export default defineConfig([
     },
   },
   {
-    files: ['src/features/shared/entityPresentation.tsx', 'src/hooks/presentationHooks.ts'],
+    files: ['src/features/shared/entityPresentation.tsx', 'src/features/shared/presentationHooks.ts'],
     rules: {
       'react-refresh/only-export-components': 'off',
       'no-restricted-imports': 'off',

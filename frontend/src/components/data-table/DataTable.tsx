@@ -3,8 +3,8 @@
  */
 
 import { useMemo, useRef } from 'react';
-import { useBreakpoint, isBreakpointAtMost, type Breakpoint } from '@/hooks/useBreakpoint';
-import { useDataTable } from '@/hooks/useDataTable';
+import { useBreakpoint, isBreakpointAtMost, type Breakpoint } from '@/hooks';
+import { useDataTable } from '@/hooks';
 import { Pagination } from '@/components/surfaces';
 import type { TableProps } from './types';
 import { CardGridView } from './CardGridView';

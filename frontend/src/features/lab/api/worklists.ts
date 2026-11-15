@@ -12,7 +12,7 @@ import type {
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
-import { usePaginatedPageSize } from '@/hooks/usePaginatedPageSize';
+import { usePaginatedPageSize } from '@/hooks';
 import { LAB_PATHS } from '../constants/labConstants';
 
 /** Default server page size for lab queues (backend max is 200). */

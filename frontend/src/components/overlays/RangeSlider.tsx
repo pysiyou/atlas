@@ -5,7 +5,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { text, RANGE_SLIDER, RADIUS, CONTROL, PRICE_RANGE_TYPE } from '@/theme/recipes';
 import { cn } from '@/utils';
-import { useDualHandleSlider } from '@/hooks/useDualHandleSlider';
+import { useDualHandleSlider } from '@/hooks';
 
 export type RangeTuple = [number, number];
 

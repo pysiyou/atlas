@@ -4,8 +4,8 @@
  */
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useDebouncedValue } from '@/hooks/useDebouncedValue';
-import { parseNumericKey } from '@/hooks/useEntityLookup';
+import { useDebouncedValue } from '@/hooks';
+import { parseNumericKey } from '@/hooks';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { useInvalidateQueryKey, invalidateOrderDetailQuery } from '@/lib/query/invalidate';

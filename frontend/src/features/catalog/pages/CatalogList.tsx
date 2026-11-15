@@ -15,7 +15,7 @@ import {
 } from '../utils/filterCatalogTests';
 import { applyPageFilters, useClientListChrome, usePageFilters } from '@/hooks';
 import type { TestSummary } from '@/types';
-import { useModuleListTitles } from '@/hooks/useModuleListTitles';
+import { useModuleListTitles } from '@/hooks';
 
 export const CatalogList: React.FC = () => {
   const listTitles = useModuleListTitles();

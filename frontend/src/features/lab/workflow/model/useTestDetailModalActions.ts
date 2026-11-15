@@ -3,7 +3,7 @@
  */
 import { useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { useAsyncAction } from '@/hooks/useAsyncAction';
+import { useAsyncAction } from '@/hooks';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
 import type { OrderTest } from '@/types';
 import type { TestDetailInteraction } from '@/lib/context/modalTypes';

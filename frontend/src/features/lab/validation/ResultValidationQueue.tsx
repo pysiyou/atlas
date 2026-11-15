@@ -26,7 +26,7 @@ import { useClientConfig } from '@/app/clientConfigContext';
 import { ErrorBoundary } from '@/feedback';
 import { useClientListChrome } from '@/hooks';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
-import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
+import { useBreakpoint, isBreakpointAtMost } from '@/hooks';
 import type { ValidationQueueRow } from '../types/queues';
 import { useResultValidationWorkflow } from './useResultValidationWorkflow';
 import { useLabDraftStore } from '../state/labDraftStore';
