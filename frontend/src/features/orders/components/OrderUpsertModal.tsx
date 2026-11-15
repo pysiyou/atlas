@@ -14,7 +14,7 @@ import { IconKeys } from '@/icons';
 import { formatCurrency } from '@/utils';
 import { useOrderUpsertModal } from '../hooks/useOrderUpsertModal';
 import { OrderUpsertFormFields } from './OrderUpsertFormFields';
-import { EditPatientModal } from '@/features/patients/components/EditPatientModal';
+import { EditPatientModal } from '@/features/patients';
 import { useClientListChrome } from '@/hooks';
 import type { OrderUpsertModalOpenProps } from '@/lib/context/modalTypes';
 
