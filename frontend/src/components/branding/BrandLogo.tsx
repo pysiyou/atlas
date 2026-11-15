@@ -13,7 +13,7 @@
 import React from 'react';
 import { useClientConfig } from '@/app/clientConfigContext';
 import { Icon } from '@/components/primitives/Icon';
-import { parseIconKey, type IconKey } from '@/config/icons';
+import { parseIconKey, type IconKey } from '@/icons';
 
 function logoPathToIconKey(logoPath: string): IconKey | null {
   if (!logoPath.startsWith('/icons/')) return null;

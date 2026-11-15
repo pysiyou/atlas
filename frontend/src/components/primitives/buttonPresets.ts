@@ -2,8 +2,8 @@
  * Base button presets — prefer these over semantic `Button` variants.
  */
 
-import { IconKeys } from '@/config/icons';
-import type { IconKey } from '@/config/icons';
+import { IconKeys } from '@/icons';
+import type { IconKey } from '@/icons';
 import type { BaseVariant, ButtonLayout, ButtonSize } from './Button';
 
 export type ActionButtonPreset =

@@ -1,6 +1,6 @@
 /**
  * Icon registry — semantic keys and SVG asset slugs.
- * Import via `@/config/icons` only (not from `@/config` barrel).
+ * Import via `@/icons` only (not from `@/config` barrel).
  * Style spec: see `config/index.ts`.
  */
 import type { ContainerType } from '@/types';

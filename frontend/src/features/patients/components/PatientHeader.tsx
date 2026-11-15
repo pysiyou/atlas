@@ -10,8 +10,8 @@ import { PageHeader } from '@/components/layout';
 import type { Patient } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { AffiliationPopover } from './AffiliationPopover';
-import { IconKeys } from '@/config/icons';
-import { getModuleListTitles } from '@/config';
+import { IconKeys } from '@/icons';
+import { getModuleListTitles } from '@/copy';
 
 export interface PatientHeaderProps {
   patient: Patient;

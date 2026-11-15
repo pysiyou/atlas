@@ -6,14 +6,14 @@
 import React from 'react';
 import { actionButtonPreset, Icon, IconButton } from '@/components/primitives';
 import { EmptyState } from '@/components/display';
-import { getEmptyCopy, PANEL_EMPTY_STATE } from '@/config';
+import { getEmptyCopy, PANEL_EMPTY_STATE } from '@/copy';
 
 import { RecordId } from '@/features/shared';
 import { formatDateTime } from '@/utils';
 import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
 import type { Order } from '@/types';
 import { getReportableOrders } from '../utils/patientFormatters';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { text, TONE } from '@/theme/recipes';
 
 

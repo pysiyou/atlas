@@ -4,7 +4,7 @@
 import React from 'react';
 import { Popover } from '@/components/overlays';
 import { actionButtonPreset, Icon, IconButton } from '@/components/primitives';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { cn } from '@/utils';
 import { CONTROL, MENU_ITEM_TYPE, RADIUS, text } from '@/theme/recipes';
 import type { ReportableOrder } from '@/types';

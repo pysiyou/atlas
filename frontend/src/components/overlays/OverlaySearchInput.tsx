@@ -6,7 +6,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Icon } from '@/components/primitives';
 import { cn } from '@/utils';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { filterInputIcon } from '@/components/filters/filterControlIcons';
 import { inputContainerBase, inputInner, inputText, inputClearButton } from '@/theme/recipes';
 

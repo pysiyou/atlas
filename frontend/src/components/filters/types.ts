@@ -3,7 +3,7 @@
  */
 
 import type { FilterOption } from '@/utils/filtering';
-import type { IconKey } from '@/config/icons';
+import type { IconKey } from '@/icons';
 
 export type FilterControlType =
   | 'text'

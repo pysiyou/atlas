@@ -14,8 +14,8 @@ import { LabMonitorLoadingGrid } from '@/components/layout/LabMonitorLoadingGrid
 import { PageHeader } from '@/components/layout/PageHeader';
 import { TableLoadingPlaceholder } from '@/components/data-table/TableLoadingPlaceholder';
 import { PANEL, WORKSPACE } from '@/theme/recipes';
-import { ROUTES } from '@/config';
-import { getModuleListTitles } from '@/config';
+import { ROUTES } from '@/app/routes';
+import { getModuleListTitles } from '@/copy';
 
 function pathWithoutTrailingSlash(pathname: string): string {
   if (pathname.length > 1 && pathname.endsWith('/')) {

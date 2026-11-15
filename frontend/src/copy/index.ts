@@ -1,10 +1,9 @@
 /**
- * Terminology-aware copy: titles, headers, filters, empty states.
- * Style spec: see config/index.ts.
+ * Terminology-aware UI copy (uses `t()` from loaded client-config).
  */
-import type { IconKey } from '../icons';
-import { IconKeys } from '../icons';
-import { t, tCap, tLower } from './client';
+import type { IconKey } from '@/icons';
+import { IconKeys } from '@/icons';
+import { t, tCap, tLower } from '@/config';
 
 
 // =============================================================================

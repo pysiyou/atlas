@@ -2,8 +2,8 @@
  * User directory filter options, placeholders, and FilterBar config.
  */
 import type { FilterConfig } from '@/components/filters/types';
-import { IconKeys } from '@/config/icons';
-import { getSharedFilterPlaceholders } from '@/config';
+import { IconKeys } from '@/icons';
+import { getSharedFilterPlaceholders } from '@/copy';
 
 const SHARED_FILTER_PLACEHOLDERS = getSharedFilterPlaceholders();
 import { USER_ROLE_CONFIG, USER_ROLE_VALUES, type UserRole } from '@/types';

@@ -8,7 +8,7 @@ import React from 'react';
 import { Icon } from '@/components/primitives/Icon';
 import { inputTrigger, inputTriggerOpen, filterTriggerText, inputClearButton } from '@/theme/recipes';
 import { cn } from '@/utils';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { filterInputIcon } from '@/components/filters/filterControlIcons';
 
 export interface FilterTriggerShellProps {

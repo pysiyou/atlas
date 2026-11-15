@@ -17,7 +17,7 @@ import { LabQueueFilters } from '../components/LabQueueFilters';
 import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { getEntryFilterConfig } from '../constants';
 import { useClientConfig } from '@/app/clientConfigContext';
-import { getEmptyCopy } from '@/config';
+import { getEmptyCopy } from '@/copy';
 
 import { ErrorBoundary } from '@/feedback';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';

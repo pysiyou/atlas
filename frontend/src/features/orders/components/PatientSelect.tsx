@@ -1,11 +1,11 @@
 import React, { useRef, useState } from 'react';
 import { Avatar, RemovableTag, TagChip } from '@/components/primitives';
-import { getEmptyCopy } from '@/config';
+import { getEmptyCopy } from '@/copy';
 
 import { cn, formatPhoneNumber } from '@/utils';
 import { text, FG } from '@/theme/recipes';
 import type { Patient } from '@/types';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { SearchResultsPopoverShell } from '@/components/overlays/SearchResultsPopoverShell';
 import {
   SearchTagInputChrome,

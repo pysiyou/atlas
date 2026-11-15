@@ -15,6 +15,6 @@ export * from './Checkbox';
 export * from './CheckboxList';
 export * from './CircularProgress';
 export { Icon, type IconProps } from './Icon';
-export type { IconAsset, IconKey } from '@/config/icons';
-export { IconKeys, parseIconKey, resolveIconKey } from '@/config/icons';
+export type { IconAsset, IconKey } from '@/icons';
+export { IconKeys, parseIconKey, resolveIconKey } from '@/icons';
 export * from './InlineHighlight';

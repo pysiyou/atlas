@@ -7,15 +7,7 @@ import { PANEL_LAYOUT, PANEL_SHELL, SPACING } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { FieldsPlaceholder } from './FieldsPlaceholder';
 import { PanelHeaderAsidePlaceholder } from './panelLoading';
-import {
-  getPanelPreset,
-  PANEL_BODY_LAYOUT,
-  PANEL_SCROLL,
-  PANEL_SHELL_LAYOUT,
-  PANEL_SPACING,
-  type PanelPresetId,
-  type PanelVariant,
-} from '@/config';
+import { getPanelPreset, PANEL_BODY_LAYOUT, PANEL_SCROLL, PANEL_SHELL_LAYOUT, PANEL_SPACING, type PanelPresetId, type PanelVariant } from '@/theme/panelPresets';
 
 function isCompactPanelVariant(variant: PanelVariant): boolean {
   return variant === 'compact' || variant === 'compactEmbed';

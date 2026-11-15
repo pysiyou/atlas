@@ -4,7 +4,7 @@
 
 import React, { type ReactNode } from 'react';
 import { Modal, ModalPageShell, OverlaySearchInput } from '@/components/overlays';
-import type { IconKey } from '@/config/icons';
+import type { IconKey } from '@/icons';
 import { FilterModalFooter } from './FilterModalFooter';
 
 export interface ListFilterModalProps {

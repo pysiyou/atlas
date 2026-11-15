@@ -44,9 +44,17 @@ class CompanyConfig(BaseModel):
         populate_by_name = True
 
 
+class TrustIndicatorConfig(BaseModel):
+    """Login trust line (optional)"""
+    text: str
+    count: str
+    audience: str
+
+
 class BrandingConfig(BaseModel):
     """Branding and visual identity configuration"""
     logoPath: str = Field(alias="logoPath")
+    faviconPath: Optional[str] = Field(default=None, alias="faviconPath")
     primaryColor: str = Field(alias="primaryColor")
     secondaryColor: Optional[str] = Field(default=None, alias="secondaryColor")
     defaultTheme: Optional[str] = Field(default=None, alias="defaultTheme")
@@ -79,6 +87,7 @@ class MarketingConfig(BaseModel):
     """Marketing and login screen configuration (optional)"""
     features: Optional[list[str]] = None
     description: Optional[str] = None
+    trustIndicator: Optional[TrustIndicatorConfig] = Field(default=None, alias="trustIndicator")
     
     class Config:
         populate_by_name = True

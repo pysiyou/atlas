@@ -1,10 +1,10 @@
 /**
- * App chrome wire data: sidebar menu definitions and motion tokens (no React).
- * Style spec: see config/index.ts. Portal mount: `components/layout/appChromeMount.tsx`.
+ * Main navigation wire data and sidebar motion tokens.
+ * Labels resolved in `components/layout/useSidebarMenu.ts` via `t()` from `@/config`.
  */
-import { IconKeys, type IconKey } from '../icons';
-import { ROUTES } from '../static/routes';
-import { getClientConfig, isFeatureEnabled } from './client';
+import { IconKeys, type IconKey } from '@/icons';
+import { ROUTES } from '@/app/routes';
+import { getClientConfig, isFeatureEnabled } from '@/config';
 import type { UserRole } from '@/types';
 
 // =============================================================================

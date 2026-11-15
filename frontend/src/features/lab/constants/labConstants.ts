@@ -1,8 +1,8 @@
 /** Lab copy, config, routing, visuals, and API path constants with terminology support. */
-import type { IconKey } from '@/config/icons';
-import { IconKeys } from '@/config/icons';
+import type { IconKey } from '@/icons';
+import { IconKeys } from '@/icons';
 import { GENERATED_LAB_CONSTANTS } from '@/types/generated/policies';
-import { ROUTES } from '@/config';
+import { ROUTES } from '@/app/routes';
 import type { TestStatus } from '@/types/generated/enums';
 import type { BadgeColor } from '@/components/primitives/badgeTypes';
 import { t, tCap } from '@/config';

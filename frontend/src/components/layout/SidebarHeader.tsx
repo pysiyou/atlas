@@ -1,6 +1,6 @@
-import { companyConfig } from '@/config';
+import { getBrandingPresentation } from '@/config';
 import { actionButtonPreset, Icon, IconButton } from '@/components/primitives';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { text, CHROME, RADIUS } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { BrandLogo } from '@/components/branding/BrandLogo';
@@ -24,7 +24,7 @@ export function SidebarHeader({
   onToggleCollapse,
   onMobileClose,
 }: SidebarHeaderProps) {
-  const { company, branding } = companyConfig.getConfig();
+  const { company, branding } = getBrandingPresentation();
   const displayName = company.displayName;
   const splitAt = branding.appNamePart2Start;
   const part1 =

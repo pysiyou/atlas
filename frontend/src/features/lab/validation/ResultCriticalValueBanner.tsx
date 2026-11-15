@@ -6,7 +6,7 @@ import React from 'react';
 import { Alert } from '@/components/display';
 
 import { Icon } from '@/components/primitives';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { text, FIELD_ERROR, TONE } from '@/theme/recipes';
 
 

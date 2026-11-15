@@ -7,7 +7,7 @@ import { RecordId } from '@/features/shared';
 import { DetailGrid } from '../shared/detailModalLayout';
 import type { LabModalWorkItem } from '../../types/labQueueChrome';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { FG } from '@/theme/recipes';
 
 export function ResultEntryDetailGrid({

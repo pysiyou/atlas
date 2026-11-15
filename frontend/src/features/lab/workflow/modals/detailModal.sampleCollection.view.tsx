@@ -5,7 +5,7 @@
 import type { ContainerType, Order, Sample, Test } from '@/types';
 import { FooterInfo } from '@/components/display';
 
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { QueueModalShell, labModalHeaderContext } from '../shared/detailModalLayout';
 import { CollectionHeaderBadges } from '../../components/LabWorkflowBadges';
 import { SampleCollectionCardLeftColumn } from '../shared/queueCardLeftColumn';

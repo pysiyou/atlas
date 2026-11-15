@@ -14,7 +14,7 @@ import {
   isAfter,
 } from 'date-fns';
 import { Icon } from '@/components/primitives';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { cn } from '@/utils';
 import { text, RADIUS, CALENDAR_TYPE } from '@/theme/recipes';
 import {

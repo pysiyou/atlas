@@ -7,8 +7,8 @@
 
 import React from 'react';
 import { Icon } from '@/components/primitives/Icon';
-import { FEEDBACK_ICON_KEYS } from '@/config/icons';
-import type { IconKey } from '@/config/icons';
+import { FEEDBACK_ICON_KEYS } from '@/icons';
+import type { IconKey } from '@/icons';
 import { text, RADIUS, TONE } from '@/theme/recipes';
 
 export type CalloutVariant = 'neutral' | 'info' | 'success' | 'warning' | 'danger';

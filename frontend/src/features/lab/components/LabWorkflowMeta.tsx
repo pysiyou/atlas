@@ -7,7 +7,7 @@ import { Icon } from '@/components/primitives';
 import { getContainerIconColor } from '../utils';
 import type { ContainerType, ContainerTopColor } from '@/types';
 import { CONTAINER_TOP_COLOR_OPTIONS } from '@/types';
-import { getContainerIcon } from '@/config/icons';
+import { getContainerIcon } from '@/icons';
 import { FG } from '@/theme/recipes';
 import { LabAuditLineView } from './LabWorkflowHeader';
 

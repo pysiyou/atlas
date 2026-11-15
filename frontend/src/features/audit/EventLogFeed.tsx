@@ -3,7 +3,7 @@ import { format, isSameDay, startOfDay } from 'date-fns';
 import { EmptyState } from '@/components/display/EmptyState';
 import { InlineHighlight } from '@/components/primitives/InlineHighlight';
 import { text, RADIUS } from '@/theme/recipes';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { parseAppDate } from '@/utils/date';
 import { cn } from '@/utils';
 import { text as detailText, FG } from '@/theme/recipes';

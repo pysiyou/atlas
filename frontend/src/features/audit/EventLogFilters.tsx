@@ -2,7 +2,7 @@
  * Event log filter bar, inline controls, and panel filter row.
  */
 import React from 'react';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { ResponsiveFilterInsetBar } from '@/components/filters/ResponsiveFilterInsetBar';
 import {
   EventLogFiltersInlineControls,

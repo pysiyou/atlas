@@ -1,7 +1,7 @@
 import React from 'react';
 import { EMPTY } from '@/theme/recipes';
 import { Icon } from '@/components/primitives/Icon';
-import type { IconKey } from '@/config/icons';
+import type { IconKey } from '@/icons';
 import { cn } from '@/utils';
 
 /**

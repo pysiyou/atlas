@@ -7,7 +7,7 @@ import React from 'react';
 import { actionButtonPreset, Button, Icon, IconButton } from '@/components/primitives';
 import { PageHeader } from '@/components/layout';
 import type { Order, Invoice } from '@/types';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { useModuleListTitles } from '@/hooks/useModuleListTitles';
 
 export interface OrderHeaderProps {

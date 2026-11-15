@@ -2,7 +2,7 @@ import type jsPDF from 'jspdf';
 import type { OrderTest, Patient, Test, TestParameter, TestResult } from '@/types';
 import type { LabReportPayload, ReportableOrder } from '@/types';
 import { RESULT_NOT_AVAILABLE } from '@/types';
-import { companyConfig } from '@/config';
+import { getBrandingPresentation } from '@/config';
 import { isDateInInclusiveRange } from '@/utils/date';
 import { calculateAge } from '@/utils/string';
 import { getActiveOrderTests } from '@/utils/presentation';
@@ -242,7 +242,7 @@ export function prepareReportData({
     sampleCollection: {
       collectedAt,
       collectedBy,
-      address: companyConfig.getContact().address.fullAddress,
+      address: getBrandingPresentation().contact.address.fullAddress,
     },
     testResults,
   };

@@ -2,7 +2,7 @@
 import type { ReactNode } from 'react';
 import { Icon } from '@/components/primitives';
 import { FieldsPlaceholder, FIELDS_PLACEHOLDER_TABLE_INSET } from '@/components/surfaces/FieldsPlaceholder';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import type {
   ColumnConfig,
   TableCellProps,

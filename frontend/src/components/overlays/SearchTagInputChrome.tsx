@@ -3,7 +3,7 @@
  */
 import type { ReactNode } from 'react';
 import { Icon } from '@/components/primitives';
-import type { IconKey } from '@/config/icons';
+import type { IconKey } from '@/icons';
 import { cn } from '@/utils';
 import {
   inputContainerBase,

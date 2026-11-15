@@ -20,7 +20,7 @@ import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import { formatDateTime } from '@/utils';
 import { formatArrayWithFallback, formatBoolean, capitalize } from '@/utils';
 import type { Test } from '@/types';
-import { getModuleListTitles } from '@/config';
+import { getModuleListTitles } from '@/copy';
 
 /** Column count for the catalog detail grid. */
 function catalogDetailColumnCount(breakpoint: string): number {

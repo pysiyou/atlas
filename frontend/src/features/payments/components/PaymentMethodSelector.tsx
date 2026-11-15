@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Icon } from '@/components/primitives/Icon';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import type { PaymentMethod } from '@/types';
 import type { PaymentMethodOption } from '@/features/payments/constants/paymentMethods';
 import {text, RADIUS, FG } from '@/theme/recipes';

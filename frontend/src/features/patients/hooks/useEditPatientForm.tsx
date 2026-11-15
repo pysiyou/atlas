@@ -17,7 +17,7 @@ import {
   patientFormTabForFieldPath,
   resolveFirstPatientFormErrorPath,
 } from '../patientFormNavigation';
-import { getModuleListTitles } from '@/config';
+import { getModuleListTitles } from '@/copy';
 
 export interface UseEditPatientFormParams {
   patient?: Patient;

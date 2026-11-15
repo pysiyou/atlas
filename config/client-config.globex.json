@@ -74,5 +74,17 @@
     "headerText": "Globex Testing Center - Test Results",
     "footerText": "This document contains confidential client information. Unauthorized disclosure is prohibited.",
     "includeSignature": true
+  },
+  "marketing": {
+    "features": [
+      "Fast specimen intake and tracking",
+      "Clear results for referring physicians",
+      "Configurable workflows per site"
+    ],
+    "trustIndicator": {
+      "text": "Serving",
+      "count": "200+",
+      "audience": "referring clinics"
+    }
   }
 }

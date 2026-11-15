@@ -11,12 +11,12 @@ import { Popover, PopoverFormChrome, RadioCard } from '@/components/overlays';
 import { FooterInfo } from '@/components/display';
 
 import { SelectionCheck } from '@/components/inputs';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import type { ContainerType } from '@/types';
 import { COLLECTION_TOP_COLOR_PRESETS, CONTAINER_CATALOG_CONFIG } from '@/types';
 import type { SampleRequirement } from '@/types';
 import { cn, formatArray } from '@/utils';
-import { getContainerIcon } from '@/config/icons';
+import { getContainerIcon } from '@/icons';
 import {text, inputBase, inputError, FORM_FIELD_LABEL, FG } from '@/theme/recipes';
 import { FIELD_ERROR_CAPTION, RADIUS, SHADOW, TONE } from '@/theme/recipes';
 import {

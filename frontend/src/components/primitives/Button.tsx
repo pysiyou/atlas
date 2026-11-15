@@ -8,7 +8,7 @@ import { SpinnerLoader } from '@/components/feedback/SpinnerLoader';
 import { ICON_SIZE, iconButton as iconButtonRecipe, labelButton as labelButtonRecipe } from '@/theme/recipes';
 import { cn } from '@/utils/cn';
 import { Icon } from './Icon';
-import type { IconKey } from '@/config/icons';
+import type { IconKey } from '@/icons';
 
 export type BaseVariant =
   | 'primary'

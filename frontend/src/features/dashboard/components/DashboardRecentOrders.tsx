@@ -5,12 +5,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { EmptyState } from '@/components/display';
-import { getEmptyCopy, PANEL_EMPTY_STATE } from '@/config';
+import { getEmptyCopy, PANEL_EMPTY_STATE } from '@/copy';
 
 import { RecordId } from '@/features/shared';
 import { Panel } from '@/components/surfaces';
 import { OrderStatusBadge } from '@/features/orders';
-import { ROUTES } from '@/config';
+import { ROUTES } from '@/app/routes';
 import type { Order } from '@/types';
 import { text, INLINE_LINK, RADIUS } from '@/theme/recipes';
 

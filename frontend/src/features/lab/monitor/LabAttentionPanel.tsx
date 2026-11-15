@@ -5,7 +5,7 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { EmptyState } from '@/components/display';
-import { getEmptyCopy, DENSE_EMPTY_STATE_TEXT } from '@/config';
+import { getEmptyCopy, DENSE_EMPTY_STATE_TEXT } from '@/copy';
 
 import { RecordId } from '@/features/shared';
 import { Badge } from '@/components/primitives';

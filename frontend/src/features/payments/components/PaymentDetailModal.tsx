@@ -22,7 +22,7 @@ import {
 import { getPaymentErrorMessage } from '@/utils/errors';
 import { feedbackTitle, getFeedback } from '@/feedback';
 import type { OrderPaymentView } from '../types';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 
 interface PaymentDetailModalProps {
   /** Whether the modal is open */

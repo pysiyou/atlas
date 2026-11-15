@@ -4,7 +4,7 @@
 
 import type React from 'react';
 import { Icon, Badge } from '@/components/primitives';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { text } from '@/theme/recipes';
 
 export interface ActiveFilterItem {

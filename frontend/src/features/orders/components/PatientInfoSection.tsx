@@ -5,7 +5,7 @@
 import React, { useMemo } from 'react';
 import { text, FG } from '@/theme/recipes';
 import { Icon } from '@/components/primitives';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import type { Patient } from '@/types';
 import { DETAIL_SECTION_GENERAL_INFO_GRID } from '@/components/display';
 

@@ -2,7 +2,7 @@
 import { text, RADIUS } from '@/theme/recipes';
 import { Icon } from '@/components/primitives';
 import type { NumberRangeFilterControl } from './types';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { uppercaseLabel, cn } from '@/utils';
 
 export function resolveNumberRange(control: NumberRangeFilterControl) {

@@ -15,7 +15,7 @@ import { getFeedback } from '@/feedback';
 import { AFFILIATION_DURATION_OPTIONS } from '@/types';
 import type { AffiliationPlan } from '@/types';
 import type { AffiliationDuration } from '@/types';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { Text } from '@/components/layout/Text';
 import { text, RADIUS, SHADOW } from '@/theme/recipes';
 

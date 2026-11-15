@@ -1,4 +1,4 @@
-import { parseIconKey, type IconKey } from '@/config/icons';
+import { parseIconKey, type IconKey } from '@/icons';
 import {
   PAYMENT_METHOD_CONFIG,
   PAYMENT_METHOD_VALUES,

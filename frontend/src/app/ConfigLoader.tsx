@@ -4,6 +4,7 @@
  * Loads white-label configuration at app startup and provides it via context
  */
 import React, { useEffect, useState } from 'react';
+import clientConfigMinimal from '../../../config/client-config.minimal.json';
 import { loadClientConfig, applyBranding, type ClientConfig } from '@/config';
 import { ClientConfigProvider } from './ClientConfigProvider';
 import type { ConfigStatus } from './clientConfigContext';
@@ -52,22 +53,9 @@ export const ConfigLoader: React.FC<ConfigLoaderProps> = ({ children }) => {
         console.error('Failed to load config:', err);
         setError(err instanceof Error ? err : new Error(String(err)));
         setStatus('error');
-        // Still set a default config to allow app to continue
-        const defaultConfig: ClientConfig = {
-          company: {
-            name: 'Atlas Lab',
-            displayName: 'Atlas Lab',
-          },
-          branding: {
-            logoPath: '/icons/here.svg',
-            primaryColor: '#0284c7',
-          },
-          terminology: {},
-          features: {},
-          workflows: {},
-        };
-        setConfig(defaultConfig);
-        applyBranding(defaultConfig);
+        const fallbackConfig = clientConfigMinimal as ClientConfig;
+        setConfig(fallbackConfig);
+        applyBranding(fallbackConfig);
       });
   }, []);
 

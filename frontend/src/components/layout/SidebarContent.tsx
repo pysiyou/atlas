@@ -8,7 +8,7 @@ import { SidebarNav } from './SidebarNav';
 import type { SidebarNavItem, SidebarSettingsLink, SidebarSettingsTrigger } from './useSidebarMenu';
 import { ThemeSwitch } from '@/components/inputs';
 import { SidebarProfile } from './SidebarProfile';
-import { SIDEBAR_MOTION } from '@/config';
+import { SIDEBAR_MOTION } from '@/app/navigation';
 
 export interface SidebarContentProps {
   isCollapsed: boolean;

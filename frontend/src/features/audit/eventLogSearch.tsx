@@ -6,7 +6,7 @@ import { Avatar, Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/feedback';
 import { SearchResultsPopoverShell } from '@/components/overlays/SearchResultsPopoverShell';
 import { filterInputIcon } from '@/components/filters/filterControlIcons';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { useEventLogSearchPreview } from './eventLogSearchPreview';
 import { cn } from '@/utils';
 import { text, FORM_FIELD_LABEL, FG, CONTROL, inputClearButton, inputInner, inputText, inputWrapper } from '@/theme/recipes';

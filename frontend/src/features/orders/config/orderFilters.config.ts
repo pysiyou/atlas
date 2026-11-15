@@ -3,10 +3,10 @@
  */
 
 import type { FilterConfig } from '@/components/filters/types';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { createFilterOptions } from '@/utils/filtering';
 import { ORDER_STATUS_VALUES, ORDER_STATUS_CONFIG } from '@/types';
-import { getOrderFilterPlaceholders } from '@/config';
+import { getOrderFilterPlaceholders } from '@/copy';
 
 const ORDER_FILTER_PLACEHOLDERS = getOrderFilterPlaceholders();
 

@@ -8,7 +8,7 @@
 import { type ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuthStore } from '@/app/authStore';
-import { ROUTES } from '@/config';
+import { ROUTES } from '@/app/routes';
 import { PageLoadingFallback } from '@/components/feedback';
 
 interface Props {

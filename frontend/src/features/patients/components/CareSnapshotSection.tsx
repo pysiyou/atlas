@@ -11,7 +11,7 @@ import { DescriptionItem } from '@/components/display';
 import { TONE } from '@/theme/recipes';
 import type { Patient } from '@/types';
 import { cn, formatDate } from '@/utils';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import {
   calculateBodyMassIndex,

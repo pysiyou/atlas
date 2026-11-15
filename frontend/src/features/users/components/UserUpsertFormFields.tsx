@@ -7,7 +7,7 @@ import { Input } from '@/components/inputs';
 import { MultiSelectFilter } from '@/components/overlays';
 import { text, FORM_FIELD_LABEL } from '@/theme/recipes';
 import { TONE } from '@/theme/recipes';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import type { UserRole } from '@/types';
 import type { UserAdminRecord } from '../api/usersAdmin';
 import { userRoleFilterOptions } from '../constants/userFilterConfig';

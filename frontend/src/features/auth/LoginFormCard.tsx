@@ -6,8 +6,8 @@
 import React, { useRef, useEffect } from 'react';
 import { Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/feedback';
-import { IconKeys } from '@/config/icons';
-import { companyConfig } from '@/config';
+import { IconKeys } from '@/icons';
+import { getBrandingPresentation } from '@/config';
 import { BrandLogo } from '@/components/branding/BrandLogo';
 import { PROMO_CONTROL, PROMO_SHADOW, PROMO_TYPE, RADIUS } from '@/theme/recipes';
 
@@ -44,7 +44,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
   onSubmit,
   onErrorDismiss,
 }) => {
-  const company = companyConfig.getConfig();
+  const company = getBrandingPresentation();
   const usernameInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {

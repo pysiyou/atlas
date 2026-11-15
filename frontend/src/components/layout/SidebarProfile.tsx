@@ -1,7 +1,7 @@
 import { Avatar } from '@/components/primitives/Avatar';
 import { Icon } from '@/components/primitives/Icon';
 import { Popover, type PopoverPlacement } from '@/components/overlays/Popover';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { cn } from '@/utils';
 import { formatStatus } from '@/utils/string';
 import type { AuthUser } from '@/types';

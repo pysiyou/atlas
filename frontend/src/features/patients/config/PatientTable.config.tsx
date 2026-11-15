@@ -18,7 +18,7 @@ import type { PatientContext } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { PatientCard } from '../components/PatientCard';
 import { TABLE_TYPE } from '@/theme/recipes';
-import { getPatientTableColumnHeaders } from '@/config';
+import { getPatientTableColumnHeaders } from '@/copy';
 
 const PATIENT_VIEWS = {
   full: ['id', 'fullName', 'contact', 'gender', 'orders', 'registrationDate', 'affiliation'],

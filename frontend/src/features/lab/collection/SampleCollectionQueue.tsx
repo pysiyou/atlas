@@ -21,7 +21,7 @@ import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
 import { getCollectionFilterConfig } from '../constants';
 import { useClientConfig } from '@/app/clientConfigContext';
 import { worklistItemToQueueRow } from '../utils/worklistMappers';
-import { getEmptyCopy, emptySubtitle } from '@/config';
+import { getEmptyCopy, emptySubtitle } from '@/copy';
 
 import { ErrorBoundary } from '@/feedback';
 import { useAuthStore } from '@/app/authStore';

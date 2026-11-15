@@ -66,5 +66,17 @@
     "headerText": "Atlas Clinical Laboratories - Laboratory Report",
     "footerText": "This report contains confidential patient information. Handle according to applicable privacy laws.",
     "includeSignature": true
+  },
+  "marketing": {
+    "features": [
+      "Streamlined order and sample workflow",
+      "Integrated laboratory queue and validation",
+      "Secure patient records and reporting"
+    ],
+    "trustIndicator": {
+      "text": "Trusted by",
+      "count": "500+",
+      "audience": "healthcare professionals"
+    }
   }
 }

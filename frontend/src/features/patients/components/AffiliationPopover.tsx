@@ -5,7 +5,7 @@ import { FooterInfo } from '@/components/display';
 
 import type { Affiliation } from '@/types';
 import { AffiliationInfo } from './AffiliationInfoSection';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 
 interface AffiliationPopoverProps {
   affiliation?: Affiliation;

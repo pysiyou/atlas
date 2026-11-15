@@ -13,7 +13,7 @@ import { AppChromeMountContext } from './appChromeMount';
 import { useToastMountRef } from '@/feedback';
 import { Sidebar } from './Sidebar';
 import { Icon } from '@/components/primitives/Icon';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { CHROME, RADIUS, SHADOW, SURFACE, WORKSPACE } from '@/theme/recipes';
 import { cn } from '@/utils';
 

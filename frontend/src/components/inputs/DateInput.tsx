@@ -7,7 +7,7 @@ import { format } from 'date-fns';
 import { Popover } from '@/components/overlays';
 import { Icon } from '@/components/primitives';
 import { cn } from '@/utils';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { text, inputTrigger,
   inputTriggerOpen,
   inputError,

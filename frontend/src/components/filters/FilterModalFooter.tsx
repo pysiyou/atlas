@@ -7,7 +7,7 @@ import { FooterInfo } from '@/components/display';
 
 import { DialogFooter } from '@/components/overlays';
 import { Button } from '@/components/primitives';
-import type { IconKey } from '@/config/icons';
+import type { IconKey } from '@/icons';
 
 export interface FilterModalFooterProps {
   onReset: () => void;

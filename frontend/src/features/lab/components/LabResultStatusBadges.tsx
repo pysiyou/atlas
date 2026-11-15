@@ -6,7 +6,7 @@ import React from 'react';
 import { Badge, Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/feedback';
 import type { BadgeSize } from '@/components/primitives';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { ATTENTION_LABELS } from '@/types/generated/policies';
 import { BADGE, WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
 

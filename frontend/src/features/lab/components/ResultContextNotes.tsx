@@ -3,7 +3,7 @@
  */
 import React, { useMemo } from 'react';
 import { Icon } from '@/components/primitives';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import {text, FIELD_ERROR, RADIUS, TONE, FG } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { useParameterLabelMap } from '@/features/catalog';

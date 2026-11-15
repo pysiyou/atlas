@@ -1,7 +1,7 @@
 /**
  * HTTP client with JWT authentication, automatic token refresh, and retry logic.
  */
-import { API_CONFIG } from '@/config';
+import { API_CONFIG } from '@/lib/api/env';
 import {
   isAbortError,
   isApiError,

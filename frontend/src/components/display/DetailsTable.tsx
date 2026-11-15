@@ -5,9 +5,9 @@
 
 import React from 'react';
 import { Panel } from '@/components/surfaces';
-import type { PanelPresetId } from '@/config';
+import type { PanelPresetId } from '@/theme/panelPresets';
 import { EmptyState } from './EmptyState';
-import { PANEL_EMPTY_STATE } from '@/config';
+import { PANEL_EMPTY_STATE } from '@/copy';
 import { TABLE_CELL, text } from '@/theme/recipes';
 import { DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';
 import { filterDetailRows, type DetailTableRow } from './detailsTableUtils';

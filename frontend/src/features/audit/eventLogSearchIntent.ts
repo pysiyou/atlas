@@ -1,8 +1,8 @@
 /**
  * Event log search intent classification and match-group builders (pure).
  */
-import type { IconKey } from '@/config/icons';
-import { IconKeys } from '@/config/icons';
+import type { IconKey } from '@/icons';
+import { IconKeys } from '@/icons';
 import { formatDisplayId } from '@/utils/id';
 import type { AuditSearchPreviewResponse } from './api';
 import { parseRecordFilterDisplayId } from './eventLogPanelState';

@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 import { Badge } from '@/components/primitives';
 import { cn } from '@/utils';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { text, OVERLAY, RADIUS, TONE , FG } from '@/theme/recipes';
 
 

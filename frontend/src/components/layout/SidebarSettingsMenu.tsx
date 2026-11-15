@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Popover, type PopoverPlacement } from '@/components/overlays/Popover';
 import { cn } from '@/utils';
 import { CHROME, CONTROL, MENU_ITEM_TYPE, RADIUS, text } from '@/theme/recipes';
-import type { IconKey } from '@/config/icons';
+import type { IconKey } from '@/icons';
 import type { SidebarSettingsLink } from './useSidebarMenu';
 import { SidebarNavIcon } from './sidebarNavIcon';
 

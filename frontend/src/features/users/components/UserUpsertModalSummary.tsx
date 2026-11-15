@@ -5,7 +5,7 @@ import React from 'react';
 import { Avatar, Badge } from '@/components/primitives';
 import { Callout } from '@/components/display';
 
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { text, ERROR_SURFACE_TYPE, RADIUS , FG } from '@/theme/recipes';
 import { USER_ROLE_CONFIG, type UserRole } from '@/types';
 import { resolveStatusBadgeColor } from '@/utils/statusBadge';

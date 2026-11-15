@@ -10,7 +10,7 @@
 import React, { type ReactNode } from 'react';
 import { EmptyState } from '@/components/display';
 
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { WORKSPACE } from '@/theme/recipes';
 import { useAppChromeMount } from './appChromeMount';
 import { cn } from '@/utils';

@@ -1,4 +1,4 @@
-import { getModuleListTitles } from '@/config';
+import { getModuleListTitles } from '@/copy';
 import { useClientConfig } from '@/app/clientConfigContext';
 
 /** Module list/detail titles that refresh when client config loads. */

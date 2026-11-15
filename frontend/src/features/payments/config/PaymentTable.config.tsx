@@ -9,7 +9,7 @@ import {
   renderOrderDateCell,
   renderOrderId,
 } from '@/features/orders';
-import { getOrderTableColumnHeaders } from '@/config';
+import { getOrderTableColumnHeaders } from '@/copy';
 import { PaymentButton } from '../components/PaymentButton';
 import { PaymentCard } from '../components/PaymentCard';
 import type { OrderPaymentView } from '../types';

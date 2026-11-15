@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { Icon } from '@/components/primitives/Icon';
-import { IconKeys, type IconKey } from '@/config/icons';
+import { IconKeys, type IconKey } from '@/icons';
 import type { FilterControl } from './types';
 
 const triggerIconClass =

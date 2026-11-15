@@ -8,7 +8,7 @@ import { FooterInfo } from '@/components/display/FooterInfo';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Icon } from '@/components/primitives/Icon';
 import { DialogHeader, DialogFooter } from './DialogChrome';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { cn } from '@/utils';
 import { text, MENU_ITEM, RADIUS, TONE } from '@/theme/recipes';
 

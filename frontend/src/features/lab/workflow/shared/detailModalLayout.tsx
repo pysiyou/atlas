@@ -6,10 +6,10 @@
 import React, { type ReactNode } from 'react';
 import { DialogFooter, Modal, ModalPageShell, MODAL_WORKFLOW_BODY_STACK } from '@/components/overlays';
 import { Panel } from '@/components/surfaces';
-import type { PanelPresetId } from '@/config';
+import type { PanelPresetId } from '@/theme/panelPresets';
 import { DescriptionList, FooterInfo, ModalContextSubtitle } from '@/components/display';
 
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import type { DescriptionListItemConfig } from '@/components/display';
 import { useUserLookup } from '@/lib/api/users';
 import {

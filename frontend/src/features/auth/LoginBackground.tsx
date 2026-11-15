@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { Icon } from '@/components/primitives';
-import { IconKeys, type IconKey } from '@/config/icons';
+import { IconKeys, type IconKey } from '@/icons';
 import { RADIUS } from '@/theme/recipes';
 
 interface FloatingIconConfig {

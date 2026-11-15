@@ -7,8 +7,8 @@ import { cn } from '@/utils';
 import { INLINE_HIGHLIGHT } from '@/theme/recipes';
 import { resolveColor } from './badgeStyles';
 import type { BadgeColor, BadgeVariant } from './badgeTypes';
-import { INLINE_HIGHLIGHT_ICON_KEYS } from '@/config/icons';
-import type { IconKey } from '@/config/icons';
+import { INLINE_HIGHLIGHT_ICON_KEYS } from '@/icons';
+import type { IconKey } from '@/icons';
 import { Icon } from './Icon';
 
 export type InlineHighlightVariant = BadgeVariant;

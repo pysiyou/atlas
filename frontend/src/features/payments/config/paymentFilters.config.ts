@@ -3,10 +3,10 @@
  */
 
 import type { FilterConfig } from '@/components/filters/types';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { createFilterOptions } from '@/utils/filtering';
 import { PAYMENT_STATUS_VALUES, PAYMENT_STATUS_CONFIG } from '@/types';
-import { getPaymentFilterPlaceholders } from '@/config';
+import { getPaymentFilterPlaceholders } from '@/copy';
 
 const PAYMENT_FILTER_PLACEHOLDERS = getPaymentFilterPlaceholders();
 

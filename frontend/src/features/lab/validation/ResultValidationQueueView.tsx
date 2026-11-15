@@ -1,7 +1,7 @@
 import { EscalationCard, ResultValidationCard } from '../workflow';
 import { LabValidationQueueSection } from '../components/LabValidationQueueSection';
 import { EmptyState } from '@/components/display';
-import { getEmptyCopy, PANEL_EMPTY_STATE } from '@/config';
+import { getEmptyCopy, PANEL_EMPTY_STATE } from '@/copy';
 
 import type { PendingEscalationItem } from '../api/results';
 import type { ValidationQueueRow } from '../types/queues';

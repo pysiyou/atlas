@@ -6,7 +6,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/app/authStore';
-import { ROUTES } from '@/config';
+import { ROUTES } from '@/app/routes';
 
 import { getFeedback } from '@/feedback';
 import { getLoginErrorMessage } from '@/utils/errors';

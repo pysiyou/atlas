@@ -5,7 +5,7 @@
 import React, { useMemo } from 'react';
 import { RADIUS, TONE } from '@/theme/recipes';
 import { Icon } from '@/components/primitives/Icon';
-import { FEEDBACK_ICON_KEYS } from '@/config/icons';
+import { FEEDBACK_ICON_KEYS } from '@/icons';
 import { RecordId } from '@/features/shared';
 import { Panel } from '@/components/surfaces';
 import { SegmentedControl } from '@/components/inputs/SegmentedControl';

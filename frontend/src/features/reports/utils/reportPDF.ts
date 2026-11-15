@@ -1,6 +1,6 @@
 /** Lab report PDF — printable export (header + body; body expanded incrementally). */
 import type jsPDF from 'jspdf';
-import { companyConfig } from '@/config';
+import { getBrandingPresentation, getCompanyFullName } from '@/config';
 import type { Test } from '@/types';
 import type { LabReportPayload, ReportTemplate } from '@/types';
 import { drawLabReportBody } from './reportPDFBody';
@@ -9,9 +9,9 @@ import { drawLabReportHeader, drawLabReportPageFooter } from './reportPDFHeader'
 const MARGIN = 12.7;
 
 export function getDefaultTemplate(): ReportTemplate {
-  const reports = companyConfig.getReports();
+  const reports = getBrandingPresentation().reports;
   return {
-    name: companyConfig.getFullName(),
+    name: getCompanyFullName(),
     headerText: reports.headerText,
     footerText: reports.footerText,
     includeSignature: reports.includeSignature,

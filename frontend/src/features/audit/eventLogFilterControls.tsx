@@ -7,7 +7,7 @@ import { SearchTextInput, Select } from '@/components/inputs';
 import { DatePicker } from '@/components/inputs/DatePicker';
 import { MultiSelectFilter } from '@/components/overlays/MultiSelectFilter';
 import { RADIUS } from '@/theme/recipes';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import {
   EVENT_LOG_FILTER_FIELD_ORDER,
   EVENT_LOG_FILTER_PLACEHOLDERS,

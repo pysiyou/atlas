@@ -14,11 +14,11 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { resolveIconKey, type IconKey } from '@/config/icons';
+import { resolveIconKey, type IconKey } from '@/icons';
 import { logger } from '@/utils/logger';
 
 export interface IconProps {
-  /** Semantic icon key from @/config/icons. */
+  /** Semantic icon key from @/icons. */
   iconKey: IconKey;
   /** Additional CSS classes to apply (use Tailwind for sizing: "w-4 h-4") */
   className?: string;

@@ -2,11 +2,11 @@
  * All order tests — server-paginated registry sorted by last modified.
  */
 import React, { useCallback, useMemo } from 'react';
-import { getEmptyCopy } from '@/config';
+import { getEmptyCopy } from '@/copy';
 import { ListView } from '@/components/surfaces';
 import { EmptyState } from '@/components/display';
 
-import { PANEL_EMPTY_STATE } from '@/config';
+import { PANEL_EMPTY_STATE } from '@/copy';
 
 import { LIST_PAGE_SIZE_OPTIONS } from '@/lib/api/constants';
 import { FeatureFilterBar } from '@/components/filters';

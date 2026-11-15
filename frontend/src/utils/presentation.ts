@@ -13,7 +13,7 @@
 
 import type { ReactNode } from 'react';
 import { format, isValid, parseISO } from 'date-fns';
-import { companyConfig } from '@/config';
+import { getBrandingPresentation, getCompanyName } from '@/config';
 import type { DescriptionListItemConfig } from '@/components/display/DescriptionList';
 import type { Gender, Order, OrderTest } from '@/types';
 import { GENDER_CONFIG } from '@/types';
@@ -436,9 +436,9 @@ export function formatReportGenderLetter(gender?: string): string {
 }
 
 function resolveBranchName(): string {
-  const city = companyConfig.getContact().address.city?.trim();
+  const city = getBrandingPresentation().contact.address.city?.trim();
   if (city) return city;
-  return companyConfig.getName();
+  return getCompanyName();
 }
 
 function resolveRegisteredAt(source: ReportHeaderSource): string | undefined {

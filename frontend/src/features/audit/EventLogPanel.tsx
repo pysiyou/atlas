@@ -5,7 +5,7 @@
 import React, { useMemo } from 'react';
 import { Button } from '@/components/primitives';
 import { Panel } from '@/components/surfaces/Panel';
-import type { PanelPresetId } from '@/config';
+import type { PanelPresetId } from '@/theme/panelPresets';
 import { cn } from '@/utils';
 import { useClientListChrome } from '@/hooks';
 import { EVENT_LOG_COPY } from './types';

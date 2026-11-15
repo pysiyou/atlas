@@ -28,7 +28,7 @@ import {
 } from '@/features/payments/constants/paymentMethods';
 import { useCreatePayment, useOrderRemainingBalance } from '../api/payments';
 import { feedbackTitle, getFeedback, notify } from '@/feedback';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { getPaymentErrorMessage } from '@/utils/errors';
 
 interface PaymentPopoverProps {

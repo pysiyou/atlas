@@ -3,7 +3,7 @@ import type { Patient, PriorityLevel } from '@/types';
 import { Textarea } from '@/components/inputs';
 import { MultiSelectFilter } from '@/components/overlays';
 import { Panel } from '@/components/surfaces';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import type { OrderFormInput } from '../schemas/order.schema';
 import { PatientSelect } from './PatientSelect';
 import { TestSelect } from './TestSelect';

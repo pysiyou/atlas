@@ -14,7 +14,7 @@ import { InitialDataPreload } from '@/app/InitialDataPreload';
 import { ProtectedLayout } from '@/app/ProtectedLayout';
 import { PublicRoute } from '@/app/PublicRoute';
 import { ModalRenderer } from '@/app/modals/ModalRenderer';
-import { ROUTES } from '@/config';
+import { ROUTES } from '@/app/routes';
 import { isFeatureEnabled } from '@/config';
 
 type LazyPage = LazyExoticComponent<ComponentType>;

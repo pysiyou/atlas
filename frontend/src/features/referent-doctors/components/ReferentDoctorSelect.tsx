@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Controller, type Control } from 'react-hook-form';
 import { Icon, RemovableTag, TagChip } from '@/components/primitives';
 import { Input } from '@/components/inputs';
-import { getEmptyCopy } from '@/config';
+import { getEmptyCopy } from '@/copy';
 
 import { cn, formatPhoneNumber } from '@/utils';
 import {
@@ -14,7 +14,7 @@ import {
   CONTROL,
   FIELD_ERROR,
   SPACING } from '@/theme/recipes';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { SearchResultsPopoverShell } from '@/components/overlays/SearchResultsPopoverShell';
 import type { OrderFormInput } from '@/features/orders/schemas/order.schema';
 import { useAnchoredPopoverDismiss } from '@/hooks';

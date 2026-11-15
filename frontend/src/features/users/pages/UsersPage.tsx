@@ -6,7 +6,7 @@ import { Navigate } from 'react-router-dom';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { ListView } from '@/components/surfaces';
 import { useAuthStore } from '@/app/authStore';
-import { ROUTES } from '@/config';
+import { ROUTES } from '@/app/routes';
 import { applyPageFilters, useClientListChrome, usePageFilters } from '@/hooks';
 import { useUsersAdminList, type UserAdminRecord } from '../api/usersAdmin';
 import { UserFilters } from '../components/UserFilters';

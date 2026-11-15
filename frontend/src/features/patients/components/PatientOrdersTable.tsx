@@ -3,9 +3,9 @@
  */
 
 import React, { useMemo } from 'react';
-import { getEmptyCopy } from '@/config';
+import { getEmptyCopy } from '@/copy';
 import { EmptyState } from '@/components/display/EmptyState';
-import { PANEL_EMPTY_STATE } from '@/config';
+import { PANEL_EMPTY_STATE } from '@/copy';
 import { DataTable } from '@/components/data-table';
 import type { Order } from '@/types';
 import { useTestNameLookup } from '@/features/catalog';

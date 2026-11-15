@@ -3,7 +3,7 @@
  */
 
 import type { ReactNode } from 'react';
-import type { IconKey } from '@/config/icons';
+import type { IconKey } from '@/icons';
 
 export type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 

@@ -8,7 +8,7 @@ import { Icon } from '@/components/primitives';
 import { text, CONTROL, RADIUS , FG } from '@/theme/recipes';
 import { inputTrigger, inputTriggerOpen, inputBase, inputError } from '@/theme/recipes';
 import { cn } from '@/utils';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import type { TestParameter } from '@/types';
 import { validatePhysiologicValue } from '../utils';
 import { titleCaseWords } from '@/utils/string';

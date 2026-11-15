@@ -7,7 +7,7 @@ import { actionButtonPreset, Button } from '@/components/primitives';
 import { Alert, FooterInfo } from '@/components/display';
 
 import { FormDialogFooter, Modal, ModalPageShell } from '@/components/overlays';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import type { UserAdminRecord } from '../api/usersAdmin';
 import { useUserUpsertForm } from '../hooks/useUserUpsertForm';
 import { useUserUpsertSubmit } from '../hooks/useUserUpsertSubmit';

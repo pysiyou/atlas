@@ -5,7 +5,7 @@ import { FilterModalFooter } from '@/components/filters/FilterModalFooter';
 import { FILTER } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
-import type { IconKey } from '@/config/icons';
+import type { IconKey } from '@/icons';
 
 export interface ResponsiveFilterInsetBarProps {
   activeFilterCount: number;

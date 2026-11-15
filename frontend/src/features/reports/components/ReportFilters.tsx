@@ -7,14 +7,14 @@ import React, { useState } from 'react';
 import { FILTER_TYPE } from '@/theme/recipes';
 import { DatePicker } from '@/components/inputs';
 import { SearchTextInput } from '@/components/inputs';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks/useBreakpoint';
 import {
   DatePresetChipSelect,
   ListFilterModal,
   ResponsiveFilterMobileBar,
 } from '@/components/filters';
-import { getReportFilterPlaceholders } from '@/config';
+import { getReportFilterPlaceholders } from '@/copy';
 
 const REPORT_FILTER_PLACEHOLDERS = getReportFilterPlaceholders();
 

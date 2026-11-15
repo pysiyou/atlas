@@ -3,8 +3,8 @@
  * Shared pagination sizes, display limits, empty-state copy, and typography aliases.
  */
 
-import { getEmptyCopy, emptySubtitle, emptyTitle } from '@/config';
-import { IconKeys } from '@/config/icons';
+import { getEmptyCopy, emptySubtitle, emptyTitle } from '@/copy';
+import { IconKeys } from '@/icons';
 
 // =============================================================================
 // pagination-limits

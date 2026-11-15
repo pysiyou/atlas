@@ -10,14 +10,14 @@
  * - The popover stays open while selecting; outside click or Escape closes it.
  */
 import React, { useMemo, useRef, useState } from 'react';
-import { getEmptyCopy } from '@/config';
+import { getEmptyCopy } from '@/copy';
 
 import { RemovableTag, CheckboxIndicator } from '@/components/primitives';
 import type { TestSummary } from '@/types';
 import { indexTestsByCode } from '@/features/catalog/testLookup';
 import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
 import { cn, formatCurrency, formatTurnaroundTime, titleCaseWords } from '@/utils';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { text, FG } from '@/theme/recipes';
 import { SearchResultsPopoverShell } from '@/components/overlays/SearchResultsPopoverShell';
 import {

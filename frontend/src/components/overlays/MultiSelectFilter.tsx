@@ -4,11 +4,11 @@
 
 import React, { useCallback, useMemo } from 'react';
 import { cn, uppercaseLabel } from '@/utils';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { Badge } from '@/components/primitives';
 import { parseBadgeVariant } from '@/components/primitives/badgeStyles';
 import { Icon } from '@/components/primitives/Icon';
-import type { IconKey } from '@/config/icons';
+import type { IconKey } from '@/icons';
 import { Popover } from './Popover';
 import { FilterTriggerShell } from './FilterTriggerShell';
 import { filterTriggerIcon } from '@/components/filters/filterControlIcons';

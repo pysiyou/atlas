@@ -6,8 +6,8 @@
 
 import React, { type InputHTMLAttributes } from 'react';
 import { Icon } from '@/components/primitives/Icon';
-import { IconKeys } from '@/config/icons';
-import type { IconKey } from '@/config/icons';
+import { IconKeys } from '@/icons';
+import type { IconKey } from '@/icons';
 import { text, inputBase, inputError, FORM_CONTROL_LABEL } from '@/theme/recipes';
 import { FIELD_ERROR, SPACING, TONE } from '@/theme/recipes';
 

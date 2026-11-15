@@ -4,7 +4,7 @@
 
 import { Icon } from '@/components/primitives';
 import { formatCurrency } from '@/utils';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import type { DashboardStat } from './DashboardStatsGrid';
 import { tCap } from '@/config';
 

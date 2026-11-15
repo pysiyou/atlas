@@ -4,7 +4,7 @@
 import React from 'react';
 import { RADIUS } from '@/theme/recipes';
 import { Icon } from '@/components/primitives/Icon';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { cn } from '@/utils';
 
 export interface SelectionCheckProps {

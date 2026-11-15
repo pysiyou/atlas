@@ -4,13 +4,13 @@
  */
 
 import type { FilterConfig } from '@/components/filters';
-import { getSharedFilterPlaceholders } from '@/config';
+import { getSharedFilterPlaceholders } from '@/copy';
 
 const SHARED_FILTER_PLACEHOLDERS = getSharedFilterPlaceholders();
 import type { TestCategory } from '@/types';
 import { SAMPLE_TYPE_VALUES, SAMPLE_TYPE_CONFIG } from '@/types';
 import { PRICE_RANGE } from '@/utils/constants';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 
 import {
   TEST_CATEGORY_CONFIG as GENERATED_TEST_CATEGORY_CONFIG,

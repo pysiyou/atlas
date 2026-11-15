@@ -9,7 +9,7 @@ import { useAuthStore } from '@/app/authStore';
 import { AppShell } from '@/components/layout';
 import { PageContentLoadingFallback, PageLoadingFallback } from '@/components/feedback';
 import { ErrorBoundary } from '@/feedback';
-import { ROUTES } from '@/config';
+import { ROUTES } from '@/app/routes';
 
 export const ProtectedLayout: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuthStore();

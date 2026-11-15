@@ -79,9 +79,9 @@ export default defineConfig([
       'no-restricted-imports': ['error', {
         paths: [
           {
-            name: '@/config/icons',
+            name: '@/icons',
             importNames: ['ICONS'],
-            message: 'Use IconKeys (and parseIconKey for enum strings) from @/config/icons — ICONS was removed.',
+            message: 'Use IconKeys from @/icons — ICONS was removed.',
           },
         ],
         patterns: [
@@ -96,27 +96,10 @@ export default defineConfig([
             group: [
               '@/config/domain/**',
               '@/config/static/**',
-              '@/config/api',
-              '@/config/routes',
-              '@/config/clientConfig',
-              '@/config/clientConfigHooks',
-              '@/config/clientConfigContext',
-              '@/config/ClientConfigProvider',
-              '@/config/company',
-              '@/config/pageCopy',
-              '@/config/filterPlaceholders',
-              '@/config/emptyStateCopy',
-              '@/config/emptyStatePresets',
-              '@/config/useModuleListTitles',
-              '@/config/sidebarMenu',
-              '@/config/sidebarMotion',
-              '@/config/appChromeMount',
-              '@/config/panelLayouts',
-              '@/config/panelLayoutTypes',
-              '@/config/panelLayoutTokens',
-              '@/config/panelLayoutPresets',
+              '@/config/icons',
+              '@/config/icons/**',
             ],
-            message: 'See config/index.ts (Import rules). Use @/config or @/config/icons.',
+            message: 'See config/index.ts (Import rules). White-label: @/config. Product: @/icons, @/copy, @/app/routes, @/app/navigation, @/theme/panelPresets.',
           },
           {
             group: [
@@ -148,7 +131,7 @@ export default defineConfig([
           {
             group: ['@/utils'],
             importNames: ['ICONS'],
-            message: 'ICONS was removed from @/utils. Use IconKeys from @/config/icons.',
+            message: 'ICONS was removed from @/utils. Use IconKeys from @/icons.',
           },
         ],
       }],
@@ -176,27 +159,10 @@ export default defineConfig([
             group: [
               '@/config/domain/**',
               '@/config/static/**',
-              '@/config/api',
-              '@/config/routes',
-              '@/config/clientConfig',
-              '@/config/clientConfigHooks',
-              '@/config/clientConfigContext',
-              '@/config/ClientConfigProvider',
-              '@/config/company',
-              '@/config/pageCopy',
-              '@/config/filterPlaceholders',
-              '@/config/emptyStateCopy',
-              '@/config/emptyStatePresets',
-              '@/config/useModuleListTitles',
-              '@/config/sidebarMenu',
-              '@/config/sidebarMotion',
-              '@/config/appChromeMount',
-              '@/config/panelLayouts',
-              '@/config/panelLayoutTypes',
-              '@/config/panelLayoutTokens',
-              '@/config/panelLayoutPresets',
+              '@/config/icons',
+              '@/config/icons/**',
             ],
-            message: 'See config/index.ts (Import rules). Use @/config or @/config/icons.',
+            message: 'See config/index.ts (Import rules). White-label: @/config. Product: @/icons, @/copy, @/app/routes, @/app/navigation, @/theme/panelPresets.',
           },
           {
             group: [
@@ -228,7 +194,7 @@ export default defineConfig([
           {
             group: ['@/utils'],
             importNames: ['ICONS'],
-            message: 'ICONS was removed from @/utils. Use IconKeys from @/config/icons.',
+            message: 'ICONS was removed from @/utils. Use IconKeys from @/icons.',
           },
         ],
       }],
@@ -272,12 +238,6 @@ export default defineConfig([
   },
   {
     files: ['src/types/generated/**', 'src/types/domain/**'],
-    rules: {
-      'max-lines': 'off',
-    },
-  },
-  {
-    files: ['src/config/domain/**', 'src/config/icons.ts'],
     rules: {
       'max-lines': 'off',
     },

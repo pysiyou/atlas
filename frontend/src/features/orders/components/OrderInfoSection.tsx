@@ -14,7 +14,7 @@ import {
   getPriorityIcon,
   getOrderStatusIcon,
   IconKeys,
-} from '@/config/icons';
+} from '@/icons';
 import { useUserLookup } from '@/lib/api/users';
 import { useTestNameLookup } from '@/features/catalog';
 import { getBillableTests } from '../utils/orderCalculator';

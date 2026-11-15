@@ -5,8 +5,8 @@
 import React from 'react';
 import { cn } from '@/utils';
 import { useBadgeAppearance } from '@/theme/theme';
-import { IconKeys } from '@/config/icons';
-import type { IconKey } from '@/config/icons';
+import { IconKeys } from '@/icons';
+import type { IconKey } from '@/icons';
 import { Icon } from './Icon';
 import { BADGE, CONTROL, RADIUS } from '@/theme/recipes';
 import {

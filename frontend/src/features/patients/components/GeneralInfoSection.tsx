@@ -12,7 +12,7 @@ import {
   formatBirthdayWithAge,
   formatAddress,
   formatEmergencyContactDisplay } from '../utils/patientFormatters';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { DescriptionColumns } from '@/components/display';
 
 

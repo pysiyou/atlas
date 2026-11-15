@@ -5,8 +5,8 @@
 
 import React from 'react';
 import { Icon } from '@/components/primitives';
-import { IconKeys } from '@/config/icons';
-import { companyConfig } from '@/config';
+import { IconKeys } from '@/icons';
+import { getBrandingPresentation } from '@/config';
 import { BrandLogo } from '@/components/branding/BrandLogo';
 import { PROMO_TYPE, RADIUS } from '@/theme/recipes';
 
@@ -19,9 +19,9 @@ interface LoginBrandingPanelProps {
  * Displays the branding panel on the left side of the login page
  */
 export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisible }) => {
-  const company = companyConfig.getConfig();
-  const features = companyConfig.getFeatures();
-  const trust = companyConfig.getMarketing().trustIndicator!;
+  const branding = getBrandingPresentation();
+  const { company, features, marketing } = branding;
+  const trust = marketing.trustIndicator;
 
   return (
     <div
@@ -35,17 +35,17 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
           <BrandLogo className="w-16 h-16 text-promo-fg shrink-0" />
           <div>
             <h1 className="font-display text-5xl text-promo-fg tracking-tight">
-              {company.company.name}
+              {company.name}
             </h1>
             <p className={PROMO_TYPE.brandingKicker}>
-              {company.company.subtitle}
+              {company.subtitle}
             </p>
           </div>
         </div>
 
         {/* Tagline */}
         <p className={PROMO_TYPE.brandingLead}>
-          {company.company.tagline}
+          {company.tagline}
         </p>
       </div>
 
@@ -75,28 +75,29 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
         ))}
       </div>
 
-      {/* Trust indicators */}
-      <div className="pt-space-6 border-t border-promo-stroke w-full">
-        <div className="flex items-center gap-space-3">
-          <div className="flex -space-x-space-2">
-            {[1, 2, 3].map(i => (
-              <div
-                key={i}
-                className={`w-8 h-8 ${RADIUS.pill} bg-promo-badge border-2 border-promo-badge-border flex items-center justify-center`}
-              >
-                <Icon iconKey={IconKeys.dataFields.user} className="w-4 h-4 text-promo-badge-icon" />
-              </div>
-            ))}
+      {trust ? (
+        <div className="pt-space-6 border-t border-promo-stroke w-full">
+          <div className="flex items-center gap-space-3">
+            <div className="flex -space-x-space-2">
+              {[1, 2, 3].map(i => (
+                <div
+                  key={i}
+                  className={`w-8 h-8 ${RADIUS.pill} bg-promo-badge border-2 border-promo-badge-border flex items-center justify-center`}
+                >
+                  <Icon iconKey={IconKeys.dataFields.user} className="w-4 h-4 text-promo-badge-icon" />
+                </div>
+              ))}
+            </div>
+            <p className={PROMO_TYPE.footer}>
+              {trust.text}{' '}
+              <span className="text-promo-fg-light font-normal">
+                {trust.count}
+              </span>{' '}
+              {trust.audience}
+            </p>
           </div>
-          <p className={PROMO_TYPE.footer}>
-            {trust.text}{' '}
-            <span className="text-promo-fg-light font-normal">
-              {trust.count}
-            </span>{' '}
-            {trust.audience}
-          </p>
         </div>
-      </div>
+      ) : null}
     </div>
   );
 };

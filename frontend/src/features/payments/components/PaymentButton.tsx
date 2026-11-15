@@ -8,7 +8,7 @@ import React from 'react';
 import { Icon } from '@/components/primitives';
 import { PaymentPopover } from './PaymentPopover';
 import type { Order } from '@/types';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import {BADGE, FG } from '@/theme/recipes';
 import { isFullyPaid } from '../utils/paymentStatus';
 

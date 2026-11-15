@@ -1,6 +1,6 @@
 import React from 'react';
 import { EmptyState } from '@/components/display';
-import { PANEL_EMPTY_STATE } from '@/config';
+import { PANEL_EMPTY_STATE } from '@/copy';
 
 import { FG, FORM_FIELD_LABEL, text } from '@/theme/recipes';
 import { OVERLAY, RADIUS } from '@/theme/recipes';

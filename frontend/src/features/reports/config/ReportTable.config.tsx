@@ -7,7 +7,7 @@ import type { TableViewConfig } from '@/components/data-table';
 import { buildViews, TABLE_COLUMN_WIDTH } from '@/components/data-table';
 import { cn } from '@/utils';
 import { OrderStatusBadge, renderOrderPatientName } from '@/features/orders';
-import { getOrderTableColumnHeaders } from '@/config';
+import { getOrderTableColumnHeaders } from '@/copy';
 import { renderDateTimeCell } from '@/utils/tableColumnRenders';
 import { formatReportOrderTestsPreview } from '@/utils/presentation';
 import {

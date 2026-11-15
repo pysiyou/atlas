@@ -7,7 +7,7 @@ import React from 'react';
 import { Badge, Icon } from '@/components/primitives';
 import { RecordId } from '@/features/shared';
 import type { BadgeSize } from '@/components/primitives';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { BADGE, WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
 
 const badgeIconClass = BADGE.icon.xs;

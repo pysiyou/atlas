@@ -5,7 +5,7 @@
 import type { UrlFilterKey, UrlFilters } from '@/utils/filters';
 import { displayId } from '@/utils';
 import { ActiveFilterChipBar, type ActiveFilterItem } from './ActiveFilterChipBar';
-import { getUrlFilterChipLabels } from '@/config';
+import { getUrlFilterChipLabels } from '@/copy';
 
 function buildUrlFilterLabels(): Record<string, { label: string; format: (v: string | number) => string }> {
   const chip = getUrlFilterChipLabels();

@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { LAYOUT } from '@/theme/recipes';
-import type { PanelPresetId } from '@/config';
+import type { PanelPresetId } from '@/theme/panelPresets';
 import { DetailsTable, type DetailTableRow } from '@/components/display/DetailsTable';
 import { cn } from '@/utils';
 import { filterDetailRows } from '@/components/display/detailsTableUtils';

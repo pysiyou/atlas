@@ -13,7 +13,7 @@ import {
 } from '@/components/overlays';
 import { FooterInfo, ModalContextSubtitle } from '@/components/display';
 
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { ReportPreviewResults } from './ReportPreviewResults';
 import { uniqueSortedTestCodes, useTestsByCodes } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api/users';

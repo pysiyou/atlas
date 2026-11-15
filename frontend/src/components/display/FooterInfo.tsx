@@ -7,10 +7,10 @@
 
 import React from 'react';
 import { Icon } from '@/components/primitives/Icon';
-import type { IconKey } from '@/config/icons';
+import type { IconKey } from '@/icons';
 
 interface FooterInfoProps {
-  /** Semantic icon key from @/config/icons */
+  /** Semantic icon key from @/icons */
   icon: IconKey;
   /** Screen-reader label (not shown visually) */
   label?: string;

@@ -5,7 +5,7 @@
 
 import type { NavigateFunction } from 'react-router-dom';
 import type { FilterValues } from '@/components/filters/types';
-import { ROUTES } from '@/config';
+import { ROUTES } from '@/app/routes';
 import { displayId } from '@/utils/id';
 
 /** Lab URL segments under {@link ROUTES.LABORATORY} (aligned with `LAB_TAB_IDS` in lab constants). */

@@ -6,7 +6,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import { format, isBefore, isSameDay, startOfDay, endOfDay } from 'date-fns';
 import { FilterTriggerShell, Popover } from '@/components/overlays';
 import { FilterChip } from '@/components/primitives';
-import { IconKeys, type IconKey } from '@/config/icons';
+import { IconKeys, type IconKey } from '@/icons';
 import { filterTriggerIcon } from '@/components/filters/filterControlIcons';
 import { CALENDAR_TYPE, RADIUS } from '@/theme/recipes';
 import { CalendarGrid, CalendarHeader, useCalendarMonth, type CalendarView } from './dateCalendarShared';

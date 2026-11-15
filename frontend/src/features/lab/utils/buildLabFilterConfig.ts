@@ -3,9 +3,9 @@
  */
 
 import type { FilterConfig, FilterControlConfig } from '@/components/filters';
-import { getSharedFilterPlaceholders } from '@/config';
+import { getSharedFilterPlaceholders } from '@/copy';
 import { tCap } from '@/config';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { LAB_CONFIG } from '../constants';
 import { SAMPLE_TYPE_VALUES, SAMPLE_TYPE_CONFIG } from '@/types';
 import type { FilterOption } from '@/utils/filtering';

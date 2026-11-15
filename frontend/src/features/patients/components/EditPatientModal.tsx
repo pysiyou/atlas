@@ -11,7 +11,7 @@ import { FooterInfo } from '@/components/display';
 
 import { SegmentedControl } from '@/components/inputs/SegmentedControl';
 import { ErrorBoundary } from '@/feedback';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 import { useEditPatientForm } from '../hooks/useEditPatientForm';
 import { PatientFormTabs } from './PatientFormTabs';
 

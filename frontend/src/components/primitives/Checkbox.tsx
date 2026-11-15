@@ -7,7 +7,7 @@ import React from 'react';
 import { Icon } from './Icon';
 import { text, RADIUS } from '@/theme/recipes';
 import { cn } from '@/utils';
-import { IconKeys } from '@/config/icons';
+import { IconKeys } from '@/icons';
 
 export interface CheckboxIndicatorProps {
   checked: boolean;
