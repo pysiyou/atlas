@@ -1,5 +1,8 @@
 /**
  * User management table columns.
+ *
+ * Text-heavy columns use wider tokens than the shared table defaults so
+ * names, usernames, emails, role labels, and timestamps are less truncated.
  */
 import { Badge } from '@/components/primitives';
 import type { TableViewConfig } from '@/components/data-table';
@@ -22,6 +25,11 @@ const USER_VIEWS = {
   compact: ['name', 'role', 'status'],
 } as const;
 
+/**
+ * Build the responsive column sets for the administrator user directory.
+ *
+ * @returns Table view config with full, medium, and compact column layouts
+ */
 export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
   const columnMap = {
     name: {
@@ -40,6 +48,7 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
       header: 'Username',
       width: TABLE_COLUMN_WIDTH.username,
       sortable: true,
+      truncate: true,
       accessor: (user: UserAdminRecord) => user.username,
       render: (user: UserAdminRecord) => (
         <Text role="label" truncate className="font-normal">{user.username}</Text>
@@ -58,7 +67,7 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
       },
       {
         sortable: true,
-        width: TABLE_COLUMN_WIDTH.badgeWide,
+        width: TABLE_COLUMN_WIDTH.category,
         accessor: user => user.role,
       }
     ),
@@ -75,6 +84,7 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
       },
       {
         sortable: true,
+        width: TABLE_COLUMN_WIDTH.badgeWide,
         accessor: user => (isUserActive(user) ? 'active' : 'disabled'),
       }
     ),
@@ -83,6 +93,7 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
       header: 'Email',
       width: TABLE_COLUMN_WIDTH.email,
       sortable: true,
+      truncate: true,
       accessor: (user: UserAdminRecord) => user.email ?? '',
       render: (user: UserAdminRecord) => (
         <Text role="body" intent="muted" truncate className="font-normal">{user.email ?? '—'}</Text>
@@ -91,9 +102,15 @@ export function createUserTableConfig(): TableViewConfig<UserAdminRecord> {
     lastLogin: createDateTimeColumn<UserAdminRecord>(
       'lastLogin',
       'Last Login',
-      user => user.loggedInAt
+      user => user.loggedInAt,
+      { width: TABLE_COLUMN_WIDTH.datetimeWide }
     ),
-    created: createDateTimeColumn<UserAdminRecord>('created', 'Created', user => user.createdAt),
+    created: createDateTimeColumn<UserAdminRecord>(
+      'created',
+      'Created',
+      user => user.createdAt,
+      { width: TABLE_COLUMN_WIDTH.datetimeWide }
+    ),
   };
 
   return {

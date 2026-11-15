@@ -12,6 +12,8 @@ export const TABLE_COLUMN_WIDTH = {
   /** Currency / numeric amount columns. */
   amount: 'sm',
   datetime: 'md',
+  /** Datetime columns that include a visible time (last login, created). */
+  datetimeWide: 'xl',
   badge: 'sm',
   /** Badge columns with longer labels (e.g. user role). */
   badgeWide: 'md',
@@ -21,9 +23,9 @@ export const TABLE_COLUMN_WIDTH = {
   /** Narrow numeric / fraction columns (e.g. validated count). */
   compact: 'xs',
   /** Login / account identifier columns. */
-  username: 'md',
+  username: 'xl',
   /** Email and similar contact strings. */
-  email: 'lg',
+  email: 'xl',
   /** Patient or person name columns (not full-width). */
   patientName: 'xl',
   /** Primary two-line identity (test name + code). */
