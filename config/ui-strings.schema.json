@@ -3,7 +3,7 @@
   "title": "Atlas UI strings",
   "description": "Default terminology-aware UI copy; placeholders use {{patientCap}} style resolved at runtime from client-config",
   "type": "object",
-  "required": ["modules", "tables", "filters", "emptyStates", "lab", "nav", "eventLog"],
+  "required": ["modules", "tables", "filters", "emptyStates", "lab", "nav", "eventLog", "panels"],
   "additionalProperties": false,
   "properties": {
     "modules": {
@@ -137,7 +137,8 @@
         "showMore",
         "showLess",
         "systemActorName",
-        "transitionArrow"
+        "transitionArrow",
+        "filter"
       ],
       "properties": {
         "panelTitle": { "type": "string" },
@@ -175,7 +176,55 @@
         "showMore": { "type": "string" },
         "showLess": { "type": "string" },
         "systemActorName": { "type": "string" },
-        "transitionArrow": { "type": "string" }
+        "transitionArrow": { "type": "string" },
+        "filter": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "search",
+            "recordId",
+            "actorRole",
+            "actor",
+            "viewsDownloads",
+            "detailLevel",
+            "dateRange",
+            "eventDomain"
+          ],
+          "properties": {
+            "search": { "type": "string" },
+            "recordId": { "type": "string" },
+            "actorRole": { "type": "string" },
+            "actor": { "type": "string" },
+            "viewsDownloads": { "type": "string" },
+            "detailLevel": { "type": "string" },
+            "dateRange": { "type": "string" },
+            "eventDomain": { "type": "string" }
+          }
+        }
+      }
+    },
+    "panels": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "shared",
+        "patients",
+        "orders",
+        "payments",
+        "dashboard",
+        "users",
+        "catalog",
+        "actions"
+      ],
+      "properties": {
+        "shared": { "type": "object", "additionalProperties": { "type": "string" } },
+        "patients": { "type": "object", "additionalProperties": { "type": "string" } },
+        "orders": { "type": "object", "additionalProperties": { "type": "string" } },
+        "payments": { "type": "object", "additionalProperties": { "type": "string" } },
+        "dashboard": { "type": "object", "additionalProperties": { "type": "string" } },
+        "users": { "type": "object", "additionalProperties": { "type": "string" } },
+        "catalog": { "type": "object", "additionalProperties": { "type": "string" } },
+        "actions": { "type": "object", "additionalProperties": { "type": "string" } }
       }
     }
   }

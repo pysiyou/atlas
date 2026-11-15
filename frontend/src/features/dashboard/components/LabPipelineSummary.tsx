@@ -15,7 +15,7 @@ import {
   type LabWorkflowStage,
 } from '@/features/lab/cross';
 import { useAuthStore } from '@/app/authStore';
-import { useLabCopy } from '@/strings';
+import { usePanelCopy } from '@/strings';
 import { text, INLINE_LINK, RADIUS } from '@/theme/recipes';
 
 const LAB_QUEUE_ITEMS: Array<{
@@ -32,7 +32,7 @@ export interface LabPipelineSummaryProps {
 }
 
 export function LabPipelineSummary({ loading: loadingProp }: LabPipelineSummaryProps) {
-  useLabCopy();
+  const panels = usePanelCopy();
   const { hasRole } = useAuthStore();
   const canViewLab = hasRole(['administrator', 'lab-technician', 'lab-technician-plus']);
   const { counts, isPending } = useLabStageQueueCounts();
@@ -48,9 +48,9 @@ export function LabPipelineSummary({ loading: loadingProp }: LabPipelineSummaryP
       loading={loading}
     >
       <div className="flex items-center justify-between mb-space-4">
-        <h2 className={text({ role: 'amount' })}>Lab Pipeline</h2>
+        <h2 className={text({ role: 'amount' })}>{panels.dashboard.labPipeline}</h2>
         <Link to={getLabTabPath('monitor')} className={INLINE_LINK}>
-          Command Center
+          {panels.dashboard.commandCenter}
         </Link>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-space-3">

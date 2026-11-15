@@ -23,6 +23,10 @@ export type FeedbackId =
   | "auth.login.network"
   | "auth.login.profileLoadFailed"
   | "auth.login.timeout"
+  | "auth.setup.alreadyCompleted"
+  | "auth.setup.failed"
+  | "auth.setup.fieldsRequired"
+  | "auth.setup.statusFailed"
   | "billing.claim.submit.error"
   | "billing.claim.submit.success"
   | "billing.claims.loadFailed"
@@ -192,6 +196,10 @@ export const FEEDBACK_CATALOG: Record<FeedbackId, FeedbackEntry> = {
   "auth.login.network": { channel: "inline", variant: "danger", title: "Unable to connect to server. Please check your connection." },
   "auth.login.profileLoadFailed": { channel: "inline", variant: "danger", title: "Failed to load user after login. Please try again." },
   "auth.login.timeout": { channel: "inline", variant: "danger", title: "Request timed out. Please try again." },
+  "auth.setup.alreadyCompleted": { channel: "inline", variant: "danger", title: "An administrator already exists. Sign in instead." },
+  "auth.setup.failed": { channel: "inline", variant: "danger", title: "Could not create the administrator account. Please try again." },
+  "auth.setup.fieldsRequired": { channel: "inline", variant: "danger", title: "Please enter name, username, and password" },
+  "auth.setup.statusFailed": { channel: "inline", variant: "danger", title: "Could not check whether setup is required. Please try again." },
   "billing.claim.submit.error": { channel: "toast", variant: "danger", title: "Failed to submit claim", brief: "failed" },
   "billing.claim.submit.success": { channel: "toast", variant: "success", title: "Claim submitted", subtitle: "The insurance claim has been recorded for this invoice.", brief: "submitted" },
   "billing.claims.loadFailed": { channel: "toast", variant: "danger", title: "Failed to load insurance claims", brief: "failed" },

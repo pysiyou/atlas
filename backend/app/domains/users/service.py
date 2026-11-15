@@ -3,10 +3,11 @@ import logging
 
 from app.domains.audit.service import AuditEmitter
 from app.domains.users.models import User
-from app.domains.users.schemas import UserCreate, UserUpdate
+from app.domains.users.schemas import FirstAdminSetupRequest, UserCreate, UserUpdate
 from app.platform.security import get_password_hash
 from app.shared.contracts.enums import UserRole
 from fastapi import HTTPException, status
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 logger = logging.getLogger(__name__)
@@ -23,6 +24,60 @@ class UserService:
 
     def list_all(self) -> list[User]:
         return self.db.query(User).all()
+
+    def setup_is_required(self) -> bool:
+        """True when no user rows exist and the login screen must create the first admin."""
+        return self.db.query(User).first() is None
+
+    def create_first_administrator(self, payload: FirstAdminSetupRequest) -> User:
+        """
+        Create the first administrator when the user table is empty.
+
+        Locks `users` so two concurrent setup requests cannot both succeed.
+        """
+        username = payload.username.strip()
+        name = payload.name.strip()
+        password = payload.password
+        email = payload.email.strip() if payload.email else None
+
+        if not username or not name or not password:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Name, username, and password are required",
+            )
+
+        self.db.execute(text("LOCK TABLE users IN EXCLUSIVE MODE"))
+        if self.db.query(User).first() is not None:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="An administrator already exists",
+            )
+
+        user = User(
+            username=username,
+            hashedPassword=get_password_hash(password),
+            name=name,
+            role=UserRole.ADMIN,
+            email=email,
+            isActive=True,
+        )
+        try:
+            self.db.add(user)
+            self.db.flush()
+            self.emitter.user_created(user.id, user.id)
+            self.db.commit()
+            self.db.refresh(user)
+        except HTTPException:
+            self.db.rollback()
+            raise
+        except Exception:
+            self.db.rollback()
+            logger.exception("Failed to create first administrator %s", username)
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to create administrator",
+            )
+        return user
 
     def list_lookup(self) -> list[User]:
         """Return every user, including disabled accounts, so historical names still resolve."""

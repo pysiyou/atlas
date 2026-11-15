@@ -4,7 +4,7 @@ import type { QualityIssueResult } from '@/types';
 import { LabValidationQueueSection } from '../components/LabValidationQueueSection';
 import { EscalationCard, ResultValidationCard } from '../workflow';
 import { EmptyState } from '@/components/display';
-import { getEmptyCopy, PANEL_EMPTY_STATE } from '@/strings';
+import { getEmptyCopy, PANEL_EMPTY_STATE, useLabCopy } from '@/strings';
 
 interface ResultValidationQueueViewProps {
   isEmpty: boolean;
@@ -43,6 +43,7 @@ export function ResultValidationQueueView({
   onReject,
   onOpenValidation,
 }: ResultValidationQueueViewProps) {
+  const labCopy = useLabCopy();
   if (isEmpty) {
     return (
       <EmptyState
@@ -74,7 +75,7 @@ export function ResultValidationQueueView({
       )}
 
       {hasValidation && (
-        <LabValidationQueueSection title="Pending validation" count={validationRows.length}>
+        <LabValidationQueueSection title={labCopy.panels.pendingValidation} count={validationRows.length}>
           {validationRows.map((row, idx) => {
             const commentKey = getCommentKey(row);
             return (

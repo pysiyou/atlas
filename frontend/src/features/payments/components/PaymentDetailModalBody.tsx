@@ -15,6 +15,7 @@ import { TONE } from '@/theme/recipes';
 import type { PaymentMethod } from '@/types';
 import type { PaymentMethodOption } from '@/features/payments/constants/paymentMethods';
 import type { OrderPaymentView } from '../types';
+import { usePanelCopy } from '@/strings';
 
 export interface PaymentDetailModalBodyProps {
   view: OrderPaymentView;
@@ -50,11 +51,13 @@ export function PaymentDetailModalBody({
   onAmountChange,
   error,
   paymentMethods,
-}: PaymentDetailModalBodyProps) { return (
+}: PaymentDetailModalBodyProps) {
+  const panels = usePanelCopy();
+  return (
   <div className="space-y-space-6 p-space-6">
     <Panel
       preset="panel.pageEmbed.modalShrink.flexColumn"
-      title="Billing Summary"
+      title={panels.orders.billingSummary}
       loading={orderDetailLoading}
     >
       {orderDetailError ? (

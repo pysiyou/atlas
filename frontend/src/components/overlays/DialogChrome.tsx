@@ -6,6 +6,7 @@ import { type ReactNode } from 'react';
 import { actionButtonPreset, IconButton } from '@/components/primitives';
 import { text, DIALOG } from '@/theme/recipes';
 import { cn } from '@/utils';
+import { usePanelCopy } from '@/strings';
 
 export type DialogChromeSize = 'modal' | 'popover';
 
@@ -53,6 +54,7 @@ export function DialogHeader({
   actions,
   closeSize,
 }: DialogHeaderProps) {
+  const panels = usePanelCopy();
   const TitleTag = size === 'popover' ? 'h4' : 'h2';
   const resolvedCloseSize = closeSize ?? (size === 'popover' ? 'sm' : 'md');
 
@@ -112,7 +114,7 @@ export function DialogHeader({
         onClick={onClose}
         {...actionButtonPreset('close')}
         size={resolvedCloseSize}
-        title="Close"
+        title={panels.shared.close}
         disabled={disabled}
       />
     ) : null;

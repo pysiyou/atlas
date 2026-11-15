@@ -8,6 +8,7 @@ import { PageHeader } from '@/components/layout';
 import type { Order, Invoice } from '@/types';
 import { IconKeys } from '@/icons';
 import { useModuleListTitles } from '@/hooks';
+import { usePanelCopy } from '@/strings';
 
 export interface OrderHeaderProps {
   order: Order;
@@ -25,6 +26,7 @@ export function OrderHeader({
   onEdit,
 }: OrderHeaderProps) {
   const titles = useModuleListTitles();
+  const panels = usePanelCopy();
   const actions = (
     <div
       className={`flex items-center gap-space-2 ${!isLarge ? 'w-full sm:w-auto sm:justify-end justify-end' : ''}`}
@@ -65,7 +67,7 @@ export function OrderHeader({
           <IconButton
             {...actionButtonPreset('print')}
             size="sm"
-            title="Print"
+            title={panels.actions.print}
             onClick={() => {
               /* Print */
             }}
@@ -74,7 +76,7 @@ export function OrderHeader({
             <IconButton
               variant="primary"
               size="sm"
-              title="View Invoice"
+              title={panels.actions.viewInvoice}
               icon={<Icon iconKey={IconKeys.dataFields.bill} className="w-4 h-4" />}
               onClick={onViewInvoice}
             />

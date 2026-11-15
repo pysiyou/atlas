@@ -8,6 +8,7 @@ import { cn } from '@/utils';
 import { CONTROL, MENU_ITEM_TYPE, RADIUS, text } from '@/theme/recipes';
 import type { ReportableOrder } from '@/types';
 import { canPrintReport } from '../utils/reportEligibility';
+import { usePanelCopy } from '@/strings';
 
 export interface ReportRowActionsMenuProps {
   order: ReportableOrder;
@@ -22,6 +23,7 @@ export function ReportRowActionsMenu({
   disabled = false,
   size = 'sm',
 }: ReportRowActionsMenuProps) {
+  const panels = usePanelCopy();
   const printable = canPrintReport(order);
   const printDisabled = disabled || !printable;
   const printHint = printable ? 'Print report' : 'Print available when order is completed';
@@ -38,8 +40,8 @@ export function ReportRowActionsMenu({
           {...actionButtonPreset('menu')}
           variant="primary"
           size={size}
-          title="Actions"
-          aria-label="Report actions"
+          title={panels.shared.actions}
+          aria-label={panels.actions.reportActions}
           aria-expanded={isOpen}
           aria-haspopup="menu"
         />
@@ -48,9 +50,9 @@ export function ReportRowActionsMenu({
       {({ close }) => (
         <div className="flex flex-col" onClick={e => e.stopPropagation()}>
           <div className="flex items-center gap-space-3 border-b border-border-default bg-surface-page px-space-3 py-space-3">
-            <p className={`${text({ role: 'title-section' })} min-w-0 flex-1 truncate`}>Actions</p>
+            <p className={`${text({ role: 'title-section' })} min-w-0 flex-1 truncate`}>{panels.shared.actions}</p>
           </div>
-          <div className="p-space-1-5" role="menu" aria-label="Report actions">
+          <div className="p-space-1-5" role="menu" aria-label={panels.actions.reportActions}>
             <button
               type="button"
               role="menuitem"
@@ -74,7 +76,7 @@ export function ReportRowActionsMenu({
               }}
             >
               <Icon iconKey={IconKeys.actions.printer} className="size-4 shrink-0" />
-              <span className="truncate">Print</span>
+              <span className="truncate">{panels.actions.print}</span>
             </button>
           </div>
         </div>

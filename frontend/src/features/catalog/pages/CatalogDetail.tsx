@@ -157,7 +157,8 @@ export function CatalogDetail() {
   const breakpoint = useBreakpoint();
   const columnCount = catalogDetailColumnCount(breakpoint);
   const { test, isLoading, isError } = useTest(testCode);
-  const testLabel = useModuleListTitles().testDetail;
+  const titles = useModuleListTitles();
+  const testLabel = titles.testDetail;
 
   if (isLoading) {
     return (
@@ -170,7 +171,7 @@ export function CatalogDetail() {
             <Panel
               key={index}
               preset="panel.pageEmbed.visible"
-              title="Loading"
+              title={titles.loading}
               loading
             />
           ))}

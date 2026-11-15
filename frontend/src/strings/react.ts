@@ -4,6 +4,7 @@ import {
   getLabCopy,
   getModuleListTitles,
   getNavCopy,
+  getPanelCopy,
 } from './catalog';
 
 /** Module list/detail titles that refresh when client config loads. */
@@ -28,4 +29,10 @@ export function useEventLogCopy() {
 export function useLabCopy() {
   useClientConfig();
   return getLabCopy();
+}
+
+/** Panel/modal/section titles that refresh when client config loads. */
+export function usePanelCopy() {
+  useClientConfig();
+  return getPanelCopy();
 }

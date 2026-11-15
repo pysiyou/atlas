@@ -14,12 +14,16 @@ import { PROMO_CONTROL, PROMO_SHADOW, PROMO_TYPE, RADIUS } from '@/theme/recipes
 interface LoginFormCardProps {
   username: string;
   password: string;
+  displayName: string;
   error: string;
   isSubmitting: boolean;
   showPassword: boolean;
   isVisible: boolean;
+  /** `null` while the public setup-status request is in flight. */
+  setupRequired: boolean | null;
   onUsernameChange: (value: string) => void;
   onPasswordChange: (value: string) => void;
+  onDisplayNameChange: (value: string) => void;
   onTogglePasswordVisibility: () => void;
   onSubmit: (e: React.FormEvent) => void;
   onErrorDismiss: () => void;
@@ -34,16 +38,21 @@ interface LoginFormCardProps {
 export function LoginFormCard({
   username,
   password,
+  displayName,
   error,
   isSubmitting,
   showPassword,
   isVisible,
+  setupRequired,
   onUsernameChange,
   onPasswordChange,
+  onDisplayNameChange,
   onTogglePasswordVisibility,
   onSubmit,
   onErrorDismiss,
 }: LoginFormCardProps) {
+  const isSetup = setupRequired === true;
+  const statusPending = setupRequired === null;
   const company = getBrandingPresentation();
   const usernameInputRef = useRef<HTMLInputElement>(null);
 
@@ -79,9 +88,13 @@ export function LoginFormCard({
 
           {/* Form header */}
           <div className="mb-space-8">
-            <h2 className="font-display text-3xl sm:text-4xl text-promo-fg mb-space-2">Welcome back</h2>
+            <h2 className="font-display text-3xl sm:text-4xl text-promo-fg mb-space-2">
+              {isSetup ? 'Create administrator' : 'Welcome back'}
+            </h2>
             <p className={PROMO_TYPE.formSubtitle}>
-              Sign in to continue to your dashboard
+              {isSetup
+                ? 'This instance has no users yet. Create the first administrator account.'
+                : 'Sign in to continue to your dashboard'}
             </p>
           </div>
 
@@ -99,6 +112,34 @@ export function LoginFormCard({
 
           {/* Login form */}
           <form onSubmit={onSubmit} className="space-y-space-5">
+            {isSetup ? (
+              <div className="space-y-space-2">
+                <label htmlFor="display-name" className={PROMO_TYPE.fieldLabel}>
+                  Name
+                </label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-space-4 flex items-center pointer-events-none z-10">
+                    <Icon iconKey={IconKeys.dataFields.user}
+                      className="h-5 w-5 text-promo-fg-subtle group-focus-within:text-promo-fg-light transition-colors duration-200"
+                    />
+                  </div>
+                  <input
+                    id="display-name"
+                    type="text"
+                    value={displayName}
+                    onChange={e => {
+                      onDisplayNameChange(e.target.value);
+                      onErrorDismiss();
+                    }}
+                    placeholder="Full name"
+                    className={`font-body block w-full pl-space-12 pr-space-4 py-space-3-5 bg-promo-input border border-promo-input-stroke ${RADIUS.menu} text-promo-fg placeholder-promo-fg-subtle ${PROMO_CONTROL.focusField} hover:bg-promo-panel-hover transition-all duration-200`}
+                    required
+                    disabled={statusPending}
+                  />
+                </div>
+              </div>
+            ) : null}
+
             {/* Username field */}
             <div className="space-y-space-2">
               <label
@@ -125,6 +166,7 @@ export function LoginFormCard({
                   placeholder="Enter your username"
                   className={`font-body block w-full pl-space-12 pr-space-4 py-space-3-5 bg-promo-input border border-promo-input-stroke ${RADIUS.menu} text-promo-fg placeholder-promo-fg-subtle ${PROMO_CONTROL.focusField} hover:bg-promo-panel-hover transition-all duration-200`}
                   required
+                  disabled={statusPending}
                 />
               </div>
             </div>
@@ -154,6 +196,7 @@ export function LoginFormCard({
                   placeholder="Enter your password"
                   className={`font-body block w-full pl-space-12 pr-space-12 py-space-3-5 bg-promo-input border border-promo-input-stroke ${RADIUS.menu} text-promo-fg placeholder-promo-fg-subtle ${PROMO_CONTROL.focusField} hover:bg-promo-panel-hover transition-all duration-200`}
                   required
+                  disabled={statusPending}
                 />
                 <button
                   type="button"
@@ -169,16 +212,18 @@ export function LoginFormCard({
             {/* Submit button */}
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || statusPending}
               className={`relative w-full mt-space-2 font-body font-normal py-space-4 px-table-cell-x-default ${RADIUS.menu} text-promo-fg overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-300 ${PROMO_CONTROL.focusSubmit}`}
             >
               <div className="absolute inset-0 bg-promo-accent transition-all duration-300 hover:bg-promo-accent-hover" />
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-shimmer" />
               <span className="relative flex items-center justify-center">
-                {isSubmitting ? (
+                {isSubmitting || statusPending ? (
                   <span className="inline-flex shrink-0">
                     <SpinnerLoader size="xs" />
                   </span>
+                ) : isSetup ? (
+                  'Create account'
                 ) : (
                   'Sign In'
                 )}

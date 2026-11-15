@@ -10,7 +10,7 @@
  * - The popover stays open while selecting; outside click or Escape closes it.
  */
 import React, { useMemo, useRef, useState } from 'react';
-import { getEmptyCopy } from '@/strings';
+import { getEmptyCopy, usePanelCopy } from '@/strings';
 
 import { RemovableTag, CheckboxIndicator } from '@/components/primitives';
 import type { TestSummary } from '@/types';
@@ -160,9 +160,11 @@ function TestSelectPopover({
   visibleTests,
   selectedSet,
   onToggleTest,
-}: TestSelectPopoverProps) { return (
+}: TestSelectPopoverProps) {
+  const panels = usePanelCopy();
+  return (
   <SearchResultsPopoverShell
-    title="Matching tests"
+    title={panels.orders.matchingTests}
     resultCount={visibleTests.length}
     emptyMessage={getEmptyCopy().matchingTests.title}
     emptyDescription={getEmptyCopy().matchingTests.description}

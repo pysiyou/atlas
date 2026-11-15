@@ -21,12 +21,15 @@ export function LoginPage() {
   const {
     username,
     password,
+    displayName,
     error,
     isSubmitting,
     showPassword,
     isVisible,
+    setupRequired,
     setUsername,
     setPassword,
+    setDisplayName,
     handleSubmit,
     togglePasswordVisibility,
     clearError,
@@ -51,12 +54,15 @@ export function LoginPage() {
         <LoginFormCard
           username={username}
           password={password}
+          displayName={displayName}
           error={error}
           isSubmitting={isSubmitting}
           showPassword={showPassword}
           isVisible={isVisible}
+          setupRequired={setupRequired}
           onUsernameChange={setUsername}
           onPasswordChange={setPassword}
+          onDisplayNameChange={setDisplayName}
           onTogglePasswordVisibility={togglePasswordVisibility}
           onSubmit={handleSubmit}
           onErrorDismiss={clearError}

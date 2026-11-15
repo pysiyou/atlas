@@ -6,6 +6,7 @@ import { type ReactNode } from 'react';
 import { Modal, ModalPageShell, OverlaySearchInput } from '@/components/overlays';
 import type { IconKey } from '@/icons';
 import { FilterModalFooter } from './FilterModalFooter';
+import { usePanelCopy } from '@/strings';
 
 export interface ListFilterModalProps {
   isOpen: boolean;
@@ -29,8 +30,10 @@ export function ListFilterModal({
   footerIcon,
   footerLabel,
   children,
-}: ListFilterModalProps) { return (
-  <Modal isOpen={isOpen} onClose={onClose} title="Filter" size="md">
+}: ListFilterModalProps) {
+  const panels = usePanelCopy();
+  return (
+  <Modal isOpen={isOpen} onClose={onClose} title={panels.shared.filter} size="md">
     <ModalPageShell
       tone="panel"
       bodyPadding="filter"

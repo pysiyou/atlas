@@ -11,6 +11,7 @@ import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import type { UserAdminRecord } from '../api/usersAdmin';
 import { formatUserTimestamp } from '../utils/formatUserTimestamp';
 import { isUserActive } from '../utils/userAccountGuards';
+import { usePanelCopy } from '@/strings';
 
 export interface UserUpsertModalSummaryProps {
   isEdit: boolean;
@@ -43,9 +44,10 @@ export function UserUpsertModalSummary({
   user,
   displayName,
 }: UserUpsertModalSummaryProps) {
+  const panels = usePanelCopy();
   if (!isEdit || !user) {
     return (
-      <Callout variant="neutral" icon={IconKeys.modules.users} title="Provision account">
+      <Callout variant="neutral" icon={IconKeys.modules.users} title={panels.users.provisionAccount}>
         Pick a unique <span className={`font-mono ${FG.body}`}>username</span> (login handle) and
         role. Password is set here once; you can reset or disable the account later from this panel.
       </Callout>

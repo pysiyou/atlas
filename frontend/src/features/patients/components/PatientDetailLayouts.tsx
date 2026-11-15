@@ -18,6 +18,7 @@ import { PatientOrdersTable } from './PatientOrdersTable';
 import { PatientReportsList } from './PatientReportsList';
 import { getReportableOrders } from '../utils/patientFormatters';
 import { useModuleListTitles } from '@/hooks';
+import { usePanelCopy } from '@/strings';
 import { tCap } from '@/config';
 
 interface LayoutProps {
@@ -57,12 +58,13 @@ export function SmallScreenLayout({
   onNewOrder,
 }: LayoutProps) {
   const titles = useModuleListTitles();
+  const panels = usePanelCopy();
   const reportsTitle = tCap('reports', 'Reports');
   return (
     <div className={LAYOUT.detailScroll}>
       <Panel
         preset="panel.page.visible.shrink"
-        title="General Info"
+        title={panels.patients.generalInfo}
         loading={loading}
       >
         {patient ? <GeneralInfoSection patient={patient} /> : null}
@@ -70,7 +72,7 @@ export function SmallScreenLayout({
 
       <Panel
         preset="panel.page.visible.shrink"
-        title="Medical History"
+        title={panels.patients.medicalHistory}
         loading={loading}
       >
         {patient ? <MedicalHistorySectionDisplay patient={patient} /> : null}
@@ -78,7 +80,7 @@ export function SmallScreenLayout({
 
       <Panel
         preset="panel.page.visible.shrink"
-        title="Care Snapshot"
+        title={panels.patients.careSnapshot}
         loading={loading}
       >
         {patient ? <CareSnapshotSection patient={patient} /> : null}
@@ -119,18 +121,19 @@ export function MediumScreenLayout({
   onNewOrder,
 }: LayoutProps) {
   const titles = useModuleListTitles();
+  const panels = usePanelCopy();
   const reportsTitle = tCap('reports', 'Reports');
   return (
     <div className={cn(LAYOUT.detailGrid2, 'w-full pb-layout-scroll-end')}>
-      <Panel preset="panel.page.visible" title="General Info" loading={loading}>
+      <Panel preset="panel.page.visible" title={panels.patients.generalInfo} loading={loading}>
         {patient ? <GeneralInfoSection patient={patient} /> : null}
       </Panel>
 
-      <Panel preset="panel.page.visible" title="Medical History" loading={loading}>
+      <Panel preset="panel.page.visible" title={panels.patients.medicalHistory} loading={loading}>
         {patient ? <MedicalHistorySectionDisplay patient={patient} /> : null}
       </Panel>
 
-      <Panel preset="panel.page.visible.span2" title="Care Snapshot" loading={loading}>
+      <Panel preset="panel.page.visible.span2" title={panels.patients.careSnapshot} loading={loading}>
         {patient ? <CareSnapshotSection patient={patient} /> : null}
       </Panel>
 
@@ -168,19 +171,20 @@ export function LargeScreenLayout({
   onNewOrder,
 }: LayoutProps) {
   const titles = useModuleListTitles();
+  const panels = usePanelCopy();
   const reportsTitle = tCap('reports', 'Reports');
   return (
     <div className={LAYOUT.detailGridRowsSplit}>
       <div className={cn(LAYOUT.detailGrid3, 'min-h-0 h-full items-stretch')}>
-        <Panel preset="panel.page.auto.fill" title="General Info" loading={loading}>
+        <Panel preset="panel.page.auto.fill" title={panels.patients.generalInfo} loading={loading}>
           {patient ? <GeneralInfoSection patient={patient} /> : null}
         </Panel>
 
-        <Panel preset="panel.page.auto.fill" title="Medical History" loading={loading}>
+        <Panel preset="panel.page.auto.fill" title={panels.patients.medicalHistory} loading={loading}>
           {patient ? <MedicalHistorySectionDisplay patient={patient} /> : null}
         </Panel>
 
-        <Panel preset="panel.page.auto.fill" title="Care Snapshot" loading={loading}>
+        <Panel preset="panel.page.auto.fill" title={panels.patients.careSnapshot} loading={loading}>
           {patient ? <CareSnapshotSection patient={patient} /> : null}
         </Panel>
       </div>

@@ -59,3 +59,18 @@ class Token(BaseModel):
 class LoginRequest(BaseModel):
     username: str
     password: str
+
+
+class SetupStatusResponse(BaseModel):
+    """Whether the login screen should collect the first administrator."""
+
+    required: bool
+
+
+class FirstAdminSetupRequest(BaseModel):
+    """Public first-account payload. Role is always administrator."""
+
+    username: str
+    password: str
+    name: str
+    email: str | None = None

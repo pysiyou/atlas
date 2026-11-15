@@ -23,6 +23,7 @@ import { getPaymentErrorMessage } from '@/utils/errors';
 import { feedbackTitle, getFeedback } from '@/feedback';
 import type { OrderPaymentView } from '../types';
 import { IconKeys } from '@/icons';
+import { usePanelCopy } from '@/strings';
 
 interface PaymentDetailModalProps {
   /** Whether the modal is open */
@@ -78,6 +79,7 @@ export function PaymentDetailModal({
   onPaymentSuccess,
 }: PaymentDetailModalProps) {
   // Use mutation hook for payment creation
+  const panels = usePanelCopy();
   const { mutate: createPaymentMutation, isPending: submitting } = useCreatePayment();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(getDefaultPaymentMethod());
   const [notes, setNotes] = useState<string>('');
@@ -172,7 +174,7 @@ export function PaymentDetailModal({
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        title="Process Payment"
+        title={panels.payments.processPayment}
         subtitle={
           <ModalContextSubtitle
             label={sourceOrder.patientName}

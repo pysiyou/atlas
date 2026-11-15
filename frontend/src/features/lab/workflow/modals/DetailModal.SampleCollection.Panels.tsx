@@ -87,6 +87,7 @@ export function SampleCollectionDetailContent({
   };
   showBarcode?: boolean;
 }) {
+  const labCopy = useLabCopy();
   return (
     <>
       {showBarcode && sample.sampleId != null && (
@@ -101,14 +102,14 @@ export function SampleCollectionDetailContent({
           />
         </div>
       )}
-      <Panel preset="panel.compact.standard" title="Required for">
+      <Panel preset="panel.compact.standard" title={labCopy.panels.requiredFor}>
         <QueueCardTestList
           tests={testNames.map((name, i) => ({ name, code: testCodes[i] || '' }))}
         />
       </Panel>
 
       {isRejected && rejectedSample && (
-        <Panel preset="panel.compact.standard" title="Rejection Details">
+        <Panel preset="panel.compact.standard" title={labCopy.panels.rejectionDetails}>
           <div className={`space-y-space-2 ${text({ role: 'label' })}`}>
             {rejectedSample.rejectionReasons && rejectedSample.rejectionReasons.length > 0 && (
               <p>
@@ -140,7 +141,7 @@ export function SampleCollectionDetailContent({
       )}
 
       {collectionNotes && (
-        <Panel preset="panel.compact.standard" title="Collection Notes">
+        <Panel preset="panel.compact.standard" title={labCopy.panels.collectionNotes}>
           <div className={text({ role: 'amount' })}>{collectionNotes}</div>
         </Panel>
       )}

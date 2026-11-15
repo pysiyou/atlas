@@ -12,6 +12,7 @@ import { EmergencyContactSection } from './EmergencyContactSection';
 import { AffiliationSection } from './AffiliationSection';
 import { MedicalHistorySection } from './MedicalHistorySection';
 import { Panel } from '@/components/surfaces';
+import { usePanelCopy } from '@/strings';
 
 export interface PatientFormTabsProps {
   activeTab: string;
@@ -23,6 +24,7 @@ export function PatientFormTabs({
   existingAffiliation,
 }: PatientFormTabsProps) {
   const { setValue } = useFormContext<PatientFormInput>();
+  const panels = usePanelCopy();
   const initialHasAffiliation = useMemo(() => !!existingAffiliation, [existingAffiliation]);
   const [affiliationEnabled, setAffiliationEnabled] = useState(initialHasAffiliation);
 
@@ -30,11 +32,11 @@ export function PatientFormTabs({
     case 'general':
       return (
         <div className="space-y-space-6">
-          <Panel preset="panel.page.form" title="Identity & Contact">
+          <Panel preset="panel.page.form" title={panels.patients.identityContact}>
             <DemographicsSection />
             <AddressSection />
           </Panel>
-          <Panel preset="panel.page.form" title="Emergency Contact">
+          <Panel preset="panel.page.form" title={panels.patients.emergencyContact}>
             <EmergencyContactSection />
           </Panel>
         </div>
@@ -42,7 +44,7 @@ export function PatientFormTabs({
 
     case 'medical':
       return (
-        <Panel preset="panel.page.form" title="History, Conditions & Lifestyle">
+        <Panel preset="panel.page.form" title={panels.patients.historyConditionsLifestyle}>
           <MedicalHistorySection />
         </Panel>
       );
@@ -51,7 +53,7 @@ export function PatientFormTabs({
       return (
         <Panel
           preset="panel.page.form"
-          title="Select Your Plan"
+          title={panels.patients.selectPlan}
           meta="Choose a duration and pricing that works for you"
         >
           <AffiliationSection

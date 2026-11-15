@@ -30,6 +30,7 @@ import { useCreatePayment, useOrderRemainingBalance } from '../api/payments';
 import { feedbackTitle, getFeedback, notify } from '@/feedback';
 import { IconKeys } from '@/icons';
 import { getPaymentErrorMessage } from '@/utils/errors';
+import { usePanelCopy } from '@/strings';
 
 interface PaymentPopoverProps {
   /** Order to process payment for */
@@ -77,6 +78,7 @@ function PaymentPopoverContent({
   error,
   onSubmit,
 }: PaymentPopoverContentProps) {
+  const panels = usePanelCopy();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(getDefaultPaymentMethod());
   const [notes, setNotes] = useState<string>('');
   const [amount, setAmount] = useState(remainingAmount);
@@ -118,7 +120,7 @@ function PaymentPopoverContent({
 
   return (
     <PopoverFormChrome
-      title="Process Payment"
+      title={panels.payments.processPayment}
       subtitle={
         <span>
           Order <RecordId type="order" value={order.orderId} />

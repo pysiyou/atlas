@@ -12,6 +12,7 @@ import { SegmentedControl } from '@/components/inputs/SegmentedControl';
 import { Text } from '@/components/layout/Text';
 import { formatArray } from '@/utils';
 import { formatRejectionCriteriaList } from '../utils/catalogRejectionCriteria';
+import { useLabCopy } from '@/strings';
 
 /** Test detail for requirements display */
 export interface TestDetail {
@@ -34,6 +35,7 @@ interface CollectionRequirementsSectionProps {
 export function SampleCollectionRequirementsSection({
   testDetails,
 }: CollectionRequirementsSectionProps) {
+  const labCopy = useLabCopy();
   const [activeTestCode, setActiveTestCode] = React.useState(testDetails[0]?.code || '');
   const activeTest = testDetails.find(t => t.code === activeTestCode) || testDetails[0];
 
@@ -55,7 +57,7 @@ export function SampleCollectionRequirementsSection({
 
   return (
     <Panel
-      preset="panel.compact.standard" title="Collection Requirements & Instructions"
+      preset="panel.compact.standard" title={labCopy.panels.collectionRequirements}
       headerEnd={
         testDetails.length > 1 ? (
           <SegmentedControl

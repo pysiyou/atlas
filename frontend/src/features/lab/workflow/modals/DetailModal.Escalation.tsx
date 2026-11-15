@@ -27,6 +27,7 @@ import type { Order } from '@/types';
 import type { CriticalValueRecord } from '../../criticalValues/criticalValues';
 import type { EscalationResolveOptions } from '../../validation/EscalationResolutionActions';
 import type { EscalationResolutionAction } from '@/types';
+import { getLabCopy } from '@/strings';
 
 function ticketString(value: unknown): string | undefined {
   return typeof value === 'string' ? value : undefined;
@@ -87,7 +88,7 @@ function escalationModalHeader(
           orderId: chromeRow.orderId,
           badges: headerBadges ?? undefined,
         })
-      : { title: 'Escalation', subtitle: '' };
+      : { title: getLabCopy().workflow.escalation, subtitle: '' };
   const headerLeftColumn =
     contentReady && chromeRow ? (
       <TestWorkflowCardLeftColumn

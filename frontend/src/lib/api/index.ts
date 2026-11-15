@@ -6,7 +6,13 @@
 export { apiClient } from './client';
 export type { ApiError } from './client';
 
-export { authAPI, bindAuthClientHandlers, type LoginResponse, type RefreshResponse } from './auth';
+export {
+  authAPI,
+  bindAuthClientHandlers,
+  type FirstAdminSetupInput,
+  type LoginResponse,
+  type RefreshResponse,
+} from './auth';
 
 export {
   usersAPI,
@@ -42,6 +48,7 @@ export {
 export {
   authUserResponseSchema,
   loginTokenResponseSchema,
+  setupStatusResponseSchema,
   operationResponseSchema,
   parseApiResponse,
   paymentResponseSchema,

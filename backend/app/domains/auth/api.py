@@ -8,7 +8,14 @@ from datetime import UTC, datetime
 
 from app.domains.audit.service import AuditEmitter
 from app.domains.users.models import User
-from app.domains.users.schemas import LoginRequest, Token, UserResponse
+from app.domains.users.schemas import (
+    FirstAdminSetupRequest,
+    LoginRequest,
+    SetupStatusResponse,
+    Token,
+    UserResponse,
+)
+from app.domains.users.service import UserService
 from app.platform.database import get_db
 from app.platform.http.dependencies import get_current_user
 from app.platform.security import (
@@ -42,6 +49,35 @@ class RefreshResponse(BaseModel):
 # -----------------------------------------------------------------------------
 # Endpoints
 # -----------------------------------------------------------------------------
+
+
+@router.get("/setup", response_model=SetupStatusResponse)
+def get_setup_status(db: Session = Depends(get_db)):
+    """Public: whether the first administrator still needs to be created in the UI."""
+    return SetupStatusResponse(required=UserService(db).setup_is_required())
+
+
+@router.post("/setup", response_model=Token, status_code=status.HTTP_201_CREATED)
+def create_first_administrator(
+    payload: FirstAdminSetupRequest,
+    db: Session = Depends(get_db),
+):
+    """
+    Public once: create the first administrator from the login screen.
+
+    Rejected with 409 after any user exists. Later accounts are created by an
+    administrator in User management.
+    """
+    user = UserService(db).create_first_administrator(payload)
+    access_token, refresh_token = create_tokens(user.id)
+    user.loggedInAt = datetime.now(UTC)
+    AuditEmitter(db).user_login(user.id)
+    db.commit()
+    return Token(
+        access_token=access_token,
+        refresh_token=refresh_token,
+        role=user.role,
+    )
 
 
 @router.post("/login", response_model=Token)

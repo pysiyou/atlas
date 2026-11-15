@@ -15,6 +15,7 @@ import {
   type EventLogFiltersInlineControlsProps,
 } from './EventLogFilterControls';
 import type { EventLogKind } from './types';
+import { getEventLogCopy } from '@/strings';
 
 const kindCheckboxOptions = EVENT_LOG_KIND_OPTIONS.map(opt => ({
   id: opt.id,
@@ -50,15 +51,16 @@ export function buildEventLogFilterModalExtras(
     showVerbosity: boolean;
   },
 ) {
+  const filter = getEventLogCopy().filter;
   return (
     <>
       {flags.showSearch ? (
-        <ModalSection title="Search">
+        <ModalSection title={filter.search}>
           <EventLogSearchField value={props.search} onChange={props.onSearchChange} />
         </ModalSection>
       ) : null}
       {flags.showRecordId && props.onRecordIdInputChange ? (
-        <ModalSection title="Record ID" divider={false}>
+        <ModalSection title={filter.recordId} divider={false}>
           <SearchTextInput
             value={props.recordIdInput ?? ''}
             onChange={props.onRecordIdInputChange}
@@ -67,17 +69,17 @@ export function buildEventLogFilterModalExtras(
         </ModalSection>
       ) : null}
       {flags.showActorRole ? (
-        <ModalSection title="Actor role">
+        <ModalSection title={filter.actorRole}>
           <EventLogFiltersInlineControls {...props} visibleFields={['actorRole']} />
         </ModalSection>
       ) : null}
       {flags.showActorSearch ? (
-        <ModalSection title="Actor">
+        <ModalSection title={filter.actor}>
           <EventLogFiltersInlineControls {...props} visibleFields={['actorSearch']} />
         </ModalSection>
       ) : null}
       {flags.showIncludeAccess ? (
-        <ModalSection title="Views & downloads" divider={false}>
+        <ModalSection title={filter.viewsDownloads} divider={false}>
           <Checkbox
             id="event-log-include-access-modal"
             checked={props.includeAccess}
@@ -87,7 +89,7 @@ export function buildEventLogFilterModalExtras(
         </ModalSection>
       ) : null}
       {flags.showVerbosity ? (
-        <ModalSection title="Detail level" divider={false}>
+        <ModalSection title={filter.detailLevel} divider={false}>
           <EventLogFiltersInlineControls {...props} visibleFields={['verbosity']} />
         </ModalSection>
       ) : null}
@@ -102,15 +104,16 @@ export function buildEventLogFilterModalSections(
   onDateRangeChange: (range: [Date, Date] | null) => void,
   flags: { showKind: boolean; showDate: boolean },
 ) {
+  const filter = getEventLogCopy().filter;
   return (
     <>
       {flags.showDate ? (
-        <ModalSection title="Date range">
+        <ModalSection title={filter.dateRange}>
           <DatePresetChipSelect value={dateRange} onChange={onDateRangeChange} />
         </ModalSection>
       ) : null}
       {flags.showKind ? (
-        <ModalSection title="Event domain" divider={false}>
+        <ModalSection title={filter.eventDomain} divider={false}>
           <CheckboxList
             options={kindCheckboxOptions}
             selectedIds={kinds}

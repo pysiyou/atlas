@@ -13,6 +13,7 @@ import type { Order, OrderTest, Sample } from '@/types';
 import { displayId } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { text, INLINE_LINK_BUTTON } from '@/theme/recipes';
+import { usePanelCopy } from '@/strings';
 
 type LabRelatedTestsPanelProps = {
   orderId: number;
@@ -67,6 +68,7 @@ export function LabRelatedSamplesPanel({
   isOpen,
   onOpenSample,
 }: LabRelatedSamplesPanelProps) {
+  const panels = usePanelCopy();
   const { data: orderSamples = [] } = useQuery({
     queryKey: queryKeys.samples.byOrder(String(sample.orderId)),
     queryFn: () => sampleAPI.getAll({ orderId: String(sample.orderId) }),
@@ -85,7 +87,7 @@ export function LabRelatedSamplesPanel({
   }
 
   return (
-    <Panel preset="panel.compact.fullWidth" title="Related samples">
+    <Panel preset="panel.compact.fullWidth" title={panels.shared.relatedSamples}>
       <ul className={`space-y-space-2 ${text({ role: 'body' })}`}>
         {others.map(s => (
           <li

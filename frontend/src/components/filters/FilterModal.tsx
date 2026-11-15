@@ -9,6 +9,7 @@ import { QuickFilters } from './QuickFilters';
 import { FilterModalFooter } from './FilterModalFooter';
 import type { FilterConfig, ActiveFilterBadge, FilterValues } from './types';
 import { renderFilterControl } from './FilterControlRender';
+import { usePanelCopy } from '@/strings';
 
 export interface FilterModalProps {
   isOpen: boolean;
@@ -32,6 +33,7 @@ export function FilterModal({
   activePresetId,
   onPresetClick,
 }: FilterModalProps) {
+  const panels = usePanelCopy();
   // Get search and non-search controls
   const isTextControl = (c: (typeof config.primaryFilters.controls)[0]) =>
     c.type === 'search' || c.type === 'text';
@@ -51,7 +53,7 @@ export function FilterModal({
     });
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Filter" size="md">
+    <Modal isOpen={isOpen} onClose={onClose} title={panels.shared.filter} size="md">
       <ModalPageShell
         tone="panel"
         bodyPadding="filter"

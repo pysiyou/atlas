@@ -14,6 +14,7 @@ import { SegmentedControl } from '@/components/inputs/SegmentedControl';
 import { text, INLINE_LINK_BUTTON } from '@/theme/recipes';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { displayId } from '@/utils';
+import { usePanelCopy } from '@/strings';
 
 export interface OrderTestSampleTabsProps {
   samples: Sample[];
@@ -51,6 +52,7 @@ export function OrderTestSampleTabs({
   onViewFullSample,
 }: OrderTestSampleTabsProps) {
   const { getUserName } = useUserLookup();
+  const panels = usePanelCopy();
   const tabs = useMemo(
     () =>
       samples.map(s => ({
@@ -87,7 +89,7 @@ export function OrderTestSampleTabs({
 
   if (samples.length === 0) {
     return (
-      <Panel preset="panel.compact.standard" title="Collection Requirements & Instructions">
+      <Panel preset="panel.compact.standard" title={panels.orders.collectionRequirements}>
         <p className={text({ role: 'label' })}>No sample is linked to this test yet.</p>
         {catalogTest ? <CatalogSampleRequirements catalogTest={catalogTest} /> : null}
       </Panel>
@@ -98,7 +100,7 @@ export function OrderTestSampleTabs({
     tabs.find(t => t.id === resolvedActiveTabId)?.sample ?? samples[0];
 
   return (
-    <Panel preset="panel.compact.standard" title="Collection Requirements & Instructions" headerEnd={headerEnd}>
+    <Panel preset="panel.compact.standard" title={panels.orders.collectionRequirements} headerEnd={headerEnd}>
       <OrderTestDescriptionItemGrid
         columns={splitDescriptionItemsIntoTwoColumns(
           buildSampleCollectionDescriptionItems(activeSample)

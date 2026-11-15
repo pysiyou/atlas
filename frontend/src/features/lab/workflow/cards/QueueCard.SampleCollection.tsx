@@ -24,6 +24,7 @@ import {
   type SampleCollectionCardSharedData,
 } from '../shared/QueueCardLeftColumn';
 import { getSampleCollectionViewModel } from './queueCard.sampleCollection.viewModel';
+import { useLabCopy } from '@/strings';
 
 export type { SampleCollectionCardLeftColumnProps, SampleCollectionCardSharedData };
 
@@ -87,6 +88,7 @@ export function SampleCollectionCardDesktop({
   testNames,
   handleCardClick,
 }: SampleCollectionCardSharedData) {
+  const labCopy = useLabCopy();
   const vm = getSampleCollectionViewModel(display, sample);
 
   const leftColumn = (
@@ -144,7 +146,7 @@ export function SampleCollectionCardDesktop({
                 onClick={() => printSampleCollectionLabel(display, patientName)}
                 {...actionButtonPreset('print')}
                 size="sm"
-                title="Print Sample Label"
+                title={labCopy.actions.printSampleLabel}
               />
             </>
           ) : null}
@@ -155,7 +157,7 @@ export function SampleCollectionCardDesktop({
           tests={testNames.map((name, i) => ({ name, code: requirement.testCodes[i] || '' }))}
         />
       }
-      contentTitle="Required for"
+      contentTitle={labCopy.panels.requiredFor}
     />
   );
 }
@@ -170,6 +172,7 @@ export function SampleCollectionCardMobile({
   handleCardClick,
   isCollecting,
 }: SampleCollectionCardSharedData) {
+  const labCopy = useLabCopy();
   const vm = getSampleCollectionViewModel(display, sample);
 
   const leftColumn = (
@@ -208,7 +211,7 @@ export function SampleCollectionCardMobile({
     <IconButton
       {...actionButtonPreset('view')}
       size="sm"
-      title="View Details"
+      title={labCopy.actions.viewDetails}
       onClick={e => {
         e.stopPropagation();
         handleCardClick();
@@ -224,7 +227,7 @@ export function SampleCollectionCardMobile({
         actions={actions}
         actionsPlacement="header"
       >
-        <QueueCardPanel title="Required for">
+        <QueueCardPanel title={labCopy.panels.requiredFor}>
           <QueueCardTestList
             tests={testNames.map((name, i) => ({ name, code: requirement.testCodes[i] || '' }))}
           />

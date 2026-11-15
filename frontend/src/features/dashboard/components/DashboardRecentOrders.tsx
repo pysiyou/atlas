@@ -4,7 +4,7 @@
 
 import { Link } from 'react-router-dom';
 import { EmptyState } from '@/components/display';
-import { getEmptyCopy, PANEL_EMPTY_STATE } from '@/strings';
+import { getEmptyCopy, PANEL_EMPTY_STATE, usePanelCopy } from '@/strings';
 
 import { RecordId } from '@/features/shared';
 import { Panel } from '@/components/surfaces';
@@ -23,10 +23,12 @@ export interface DashboardRecentOrdersProps {
 export function DashboardRecentOrders({
   orders,
   loading = false,
-}: DashboardRecentOrdersProps) { return (
+}: DashboardRecentOrdersProps) {
+  const panels = usePanelCopy();
+  return (
   <Panel
     preset="panel.page.standard"
-    title="Recent Orders"
+    title={panels.orders.recentOrders}
     loading={loading}
     loadingHeaderAside
     headerEnd={

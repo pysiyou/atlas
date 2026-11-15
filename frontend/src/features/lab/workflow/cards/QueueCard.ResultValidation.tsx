@@ -26,6 +26,7 @@ import type { QualityIssueResult } from '@/types';
 import { QueueCard, QueueCardMobile } from '../shared/QueueCardLayout';
 import { TestWorkflowCardLeftColumn } from '../shared/QueueCardLeftColumn';
 import { MOBILE_LIST_CARD } from '@/theme/recipes';
+import { useLabCopy } from '@/strings';
 
 export interface ResultValidationCardProps {
   row: ValidationQueueRow;
@@ -120,6 +121,7 @@ function ResultValidationCardDesktop({
   canReject,
   patientName,
 }: ResultValidationCardSharedData) {
+  const labCopy = useLabCopy();
   const { showAttemptIndicator } = rejection;
   const { leftColumn, badges } = useResultValidationCardHeader(chromeRow, patientName);
   const { showBanner: isSampleRejected, sampleId, sampleRejectionReason } = sampleRejection;
@@ -144,7 +146,7 @@ function ResultValidationCardDesktop({
           <Button
             {...actionButtonPreset('approve')}
             size="sm"
-            title="Approve Results"
+            title={labCopy.actions.approveResults}
             isLoading={isApproving}
             disabled={!canValidate}
             onClick={e => {
@@ -190,6 +192,7 @@ function ResultValidationCardMobile({
   canValidate,
   canReject,
 }: ResultValidationCardSharedData) {
+  const labCopy = useLabCopy();
   const { showAttemptIndicator } = rejection;
   const { leftColumn } = useResultValidationCardHeader(chromeRow, patientName);
   const { showBanner: isSampleRejected, sampleId, sampleRejectionReason } = sampleRejection;
@@ -231,7 +234,7 @@ function ResultValidationCardMobile({
             <Button
               {...actionButtonPreset('approve')}
               size="sm"
-              title="Approve Results"
+              title={labCopy.actions.approveResults}
               isLoading={isApproving}
               disabled={!canValidate}
               onClick={e => {

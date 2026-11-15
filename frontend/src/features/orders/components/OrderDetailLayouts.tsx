@@ -23,6 +23,7 @@ import { TestsTable } from './TestsTable';
 import { BillingSummarySection } from './BillingSummarySection';
 import { OrderEventLogPanel } from '@/features/audit';
 import { useModuleListTitles } from '@/hooks';
+import { usePanelCopy } from '@/strings';
 
 interface LayoutProps {
   loading?: boolean;
@@ -45,6 +46,7 @@ function BillingSummaryPanelActions({
   order: Order;
   onPaymentSuccess?: () => void;
 }) {
+  const panels = usePanelCopy();
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const { payments } = usePaymentsByOrder(String(order.orderId));
   const isPaid = isFullyPaid(order.paymentStatus);
@@ -79,7 +81,7 @@ function BillingSummaryPanelActions({
         <IconButton
           {...actionButtonPreset('view')}
           size="sm"
-          title="View payment"
+          title={panels.actions.viewPayment}
           onClick={handleOpenPaymentModal}
         />
         {!isPaid && <PaymentPopover order={order} onSuccess={onPaymentSuccess} size="sm" />}
@@ -125,6 +127,7 @@ function OrderDetailPanels({
   fillHeight,
 }: OrderDetailPanelsProps) {
   const titles = useModuleListTitles();
+  const panels = usePanelCopy();
   const testsHeaderMeta =
     order != null
       ? getTestsHeaderMeta(
@@ -202,7 +205,7 @@ function OrderDetailPanels({
 
         <Panel
           preset={fillHeight ? 'panel.pageEmbed.auto.fill.flexColumn' : 'panel.pageEmbed.visible.flexColumn'}
-          title="Billing Summary"
+          title={panels.orders.billingSummary}
           loading={loading}
           loadingHeaderAside={!loading && Boolean(billingHeaderEnd)}
           headerEnd={billingHeaderEnd}
@@ -219,6 +222,7 @@ function OrderDetailPanels({
  */
 export function SmallScreenLayout(props: LayoutProps) {
   const titles = useModuleListTitles();
+  const panels = usePanelCopy();
   const {
     loading = false,
     order,
@@ -297,7 +301,7 @@ export function SmallScreenLayout(props: LayoutProps) {
 
       <Panel
         preset="panel.pageEmbed.visible.shrink.flexColumn"
-        title="Billing Summary"
+        title={panels.orders.billingSummary}
         loading={loading}
         loadingHeaderAside={!loading && Boolean(billingHeaderEnd)}
         headerEnd={billingHeaderEnd}

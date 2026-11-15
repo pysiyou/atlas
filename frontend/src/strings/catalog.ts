@@ -200,6 +200,13 @@ export function getLabCopy() {
   return msgObject(uiStrings.lab);
 }
 
+/** Panel, modal, and section chrome titles (not module list titles). */
+export function getPanelCopy() {
+  return msgObject(uiStrings.panels);
+}
+
+export type PanelCopy = ReturnType<typeof getPanelCopy>;
+
 // =============================================================================
 // empty-state-copy
 // =============================================================================

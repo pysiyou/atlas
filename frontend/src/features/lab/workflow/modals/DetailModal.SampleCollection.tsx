@@ -25,6 +25,7 @@ import { useSubmitSampleCollection } from '../../collection/useSubmitSampleColle
 import { useAuthStore } from '@/app/authStore';
 import type { SampleDetailModalProps } from '@/lib/context/modalTypes';
 import { worklistItemToQueueRow } from '../../utils/worklistMappers';
+import { useLabCopy } from '@/strings';
 
 export function SampleCollectionDetailModal({
   isOpen,
@@ -33,6 +34,7 @@ export function SampleCollectionDetailModal({
   sampleId,
   readOnly = false,
 }: SampleDetailModalProps) {
+  const labCopy = useLabCopy();
   const { getUserName } = useUserLookup();
   const { tests = [] } = useTestCatalog();
   const { openModal } = useModal();
@@ -156,7 +158,7 @@ export function SampleCollectionDetailModal({
           isOpen={isOpen}
           onClose={onClose}
           isActive={isActive}
-          title="Sample"
+          title={labCopy.entity.sample}
           subtitle=""
         >
           <LabModalPlaceholder variant="sampleCollection" />
@@ -178,7 +180,7 @@ export function SampleCollectionDetailModal({
         isOpen={isOpen}
         onClose={onClose}
         isActive={isActive}
-        title="Sample"
+        title={labCopy.entity.sample}
         subtitle=""
       >
         <LabModalPlaceholder variant="sampleCollection" />
@@ -188,7 +190,7 @@ export function SampleCollectionDetailModal({
 
   if (workContextLoadFailed) {
     return (
-      <Modal isOpen={isOpen} onClose={onClose} title="Sample" size="3xl" isActive={isActive}>
+      <Modal isOpen={isOpen} onClose={onClose} title={labCopy.entity.sample} size="3xl" isActive={isActive}>
         <ModalPageShell>
           <div className="flex justify-center p-panel">
             <Button

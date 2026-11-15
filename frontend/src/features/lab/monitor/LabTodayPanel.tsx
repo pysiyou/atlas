@@ -47,7 +47,7 @@ export function LabTodayPanel({
   return (
     <Panel
       preset="panel.pageEmbed.flexColumnFill"
-      title="Today"
+      title={labCopy.dashboardToday.panelTitle}
       loading={loading}
       loadingHeaderAside={loading}
       headerEnd={

@@ -218,7 +218,7 @@ export function LabAttentionPanel({
   return (
     <Panel
       preset="panel.pageEmbed.standard"
-      title="Attention queue"
+      title={labCopy.attention.panelTitle}
       loading={loading}
       meta={
         loading

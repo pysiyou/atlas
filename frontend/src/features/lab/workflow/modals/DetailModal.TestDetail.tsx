@@ -13,6 +13,7 @@ import {
   TestDetailModalFooter,
   TestDetailModalHeaderBadges,
 } from './DetailModal.TestDetail.Parts';
+import { useModuleListTitles } from '@/strings';
 
 /**
  * Test-detail modal orchestrator: loads the work item, then renders header/body/footer parts.
@@ -25,6 +26,7 @@ export function TestDetailModal({
   interaction = 'view',
   worklistRow,
 }: TestDetailModalProps) {
+  const titles = useModuleListTitles();
   const view = useTestDetailModalView({
     isOpen,
     onClose,
@@ -44,7 +46,7 @@ export function TestDetailModal({
         orderId: view.order!.orderId,
         badges: headerBadges ?? undefined,
       })
-    : { title: 'Test', subtitle: null };
+    : { title: titles.testDetail, subtitle: null };
 
   const headerLeftColumn =
     view.contentReady && view.order && view.orderTest && view.displayWorkItem ? (

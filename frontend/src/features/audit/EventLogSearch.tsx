@@ -12,7 +12,7 @@ import { cn } from '@/utils';
 import { text, FORM_FIELD_LABEL, FG, CONTROL, inputClearButton, inputInner, inputText, inputWrapper } from '@/theme/recipes';
 import { EVENT_LOG_FILTER_PLACEHOLDERS } from './eventLogFilterConfig';
 import type { AuditSearchPreviewResponse } from './api';
-import { useEventLogCopy } from '@/strings';
+import { useEventLogCopy, usePanelCopy } from '@/strings';
 import {
   buildEventLogSearchMatchGroups,
   countEventLogSearchMatchItems,
@@ -158,6 +158,7 @@ export function EventLogSearchField({
   debounceMs = 300,
 }: EventLogSearchFieldProps) {
   const copy = useEventLogCopy();
+  const panels = usePanelCopy();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const listId = useId();
@@ -239,7 +240,7 @@ export function EventLogSearchField({
               type="button"
               onClick={handleClear}
               className={cn(inputClearButton, 'hover:bg-surface-page')}
-              aria-label="Clear search"
+              aria-label={panels.shared.clearSearch}
             >
               <Icon iconKey={IconKeys.actions.close} className={`w-4 h-4 ${FG.captionMuted}`} />
             </button>

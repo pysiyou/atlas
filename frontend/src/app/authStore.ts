@@ -1,5 +1,5 @@
 import type { AuthUser, UserRole } from '@/types';
-import { authAPI, bindAuthClientHandlers } from '@/lib/api';
+import { authAPI, bindAuthClientHandlers, type FirstAdminSetupInput } from '@/lib/api';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import {
@@ -20,6 +20,7 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (username: string, password: string) => Promise<void>;
+  setupFirstAdmin: (input: FirstAdminSetupInput) => Promise<void>;
   logout: () => void;
   refreshAccessToken: () => Promise<string | null>;
   hasRole: (roles: UserRole | UserRole[]) => boolean;
@@ -40,28 +41,12 @@ export const useAuthStore = create<AuthState>()(
 
         login: async (username, password) => {
           const response = await authAPI.login(username, password);
+          await establishSession(response.access_token, response.refresh_token);
+        },
 
-          set({
-            token: response.access_token,
-            refreshToken: response.refresh_token,
-          });
-
-          try {
-            const userInfo = await authAPI.getMe();
-            clearSessionExpired();
-            set({
-              user: userInfo,
-              isAuthenticated: true,
-            });
-          } catch {
-            set({
-              user: null,
-              token: null,
-              refreshToken: null,
-              isAuthenticated: false,
-            });
-            throw new Error(feedbackTitle('auth.login.profileLoadFailed'));
-          }
+        setupFirstAdmin: async input => {
+          const response = await authAPI.setupFirstAdmin(input);
+          await establishSession(response.access_token, response.refresh_token);
         },
 
         logout: async () => {
@@ -171,3 +156,30 @@ export const useAuthStore = create<AuthState>()(
     }
   )
 );
+
+/**
+ * Persist tokens then load `/auth/me`. Clears the session if the profile call fails.
+ */
+async function establishSession(accessToken: string, refreshToken: string): Promise<void> {
+  useAuthStore.setState({
+    token: accessToken,
+    refreshToken,
+  });
+
+  try {
+    const userInfo = await authAPI.getMe();
+    clearSessionExpired();
+    useAuthStore.setState({
+      user: userInfo,
+      isAuthenticated: true,
+    });
+  } catch {
+    useAuthStore.setState({
+      user: null,
+      token: null,
+      refreshToken: null,
+      isAuthenticated: false,
+    });
+    throw new Error(feedbackTitle('auth.login.profileLoadFailed'));
+  }
+}

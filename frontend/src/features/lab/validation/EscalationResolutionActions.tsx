@@ -8,6 +8,7 @@ import {
   ResolutionPopover,
   RetestAction,
 } from './EscalationResolutionPopover';
+import { useLabCopy } from '@/strings';
 
 export interface EscalationResolveOptions {
   readBack?: CriticalReadBackPayload;
@@ -105,6 +106,7 @@ export function EscalationResolutionActions({
   onValidationError,
   hasResults = false,
 }: EscalationResolutionActionsProps) {
+  const labCopy = useLabCopy();
   const { allowRetestSameSample, allowRecollect, showApplyAmendment, showForceValidate } =
     visibleActions(reasonCode, hasResults, allowForceValidate);
 
@@ -112,9 +114,9 @@ export function EscalationResolutionActions({
     <div className="flex items-center gap-space-2 flex-nowrap justify-end w-full">
       <ResolutionPopover
         resolving={resolving}
-        triggerLabel="Cancel Test"
+        triggerLabel={labCopy.actions.cancelTest}
         triggerVariant="danger"
-        title="Cancel Test"
+        title={labCopy.actions.cancelTest}
         subtitle={popoverSubtitle(orderTestId, 'Clinical reason (required)')}
         textareaId="escalation-cancel-test-reason"
         placeholder="e.g. Test no longer clinically indicated"
@@ -135,15 +137,15 @@ export function EscalationResolutionActions({
       {showApplyAmendment ? (
         <ResolutionPopover
           resolving={resolving}
-          triggerLabel="Force Validate"
+          triggerLabel={labCopy.actions.forceValidate}
           triggerVariant="success"
-          title="Force Validate"
+          title={labCopy.actions.forceValidate}
           subtitle={popoverSubtitle(orderTestId, 'Validation notes (optional)')}
           textareaId="escalation-apply-amendment-notes"
           placeholder="e.g. Supervisor approved corrected values"
           value={validationNotesForceValidate}
           onChange={onValidationNotesForceValidateChange}
-          confirmLabel="Force Validate"
+          confirmLabel={labCopy.actions.forceValidate}
           confirmVariant="success"
           onConfirm={() => resolveAsync('apply_amendment', validationNotesForceValidate)}
         />
@@ -165,7 +167,7 @@ export function EscalationResolutionActions({
         />
       ) : (
         <Button variant="success" size="sm" layout="text" disabled>
-          Force Validate
+          {labCopy.actions.forceValidate}
         </Button>
       )}
 

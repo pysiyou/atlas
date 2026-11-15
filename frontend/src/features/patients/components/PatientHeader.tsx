@@ -10,7 +10,7 @@ import type { Patient } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { AffiliationPopover } from './AffiliationPopover';
 import { IconKeys } from '@/icons';
-import { useModuleListTitles } from '@/strings';
+import { useModuleListTitles, usePanelCopy } from '@/strings';
 
 export interface PatientHeaderProps {
   patient: Patient;
@@ -24,6 +24,7 @@ export function PatientHeader({
   onEdit,
 }: PatientHeaderProps) {
   const titles = useModuleListTitles();
+  const panels = usePanelCopy();
   const avatar = (
     <div className="flex items-center gap-space-2">
       <Avatar primaryText={patient.fullName} size="sm" avatarOnly />
@@ -34,8 +35,8 @@ export function PatientHeader({
             <button
               type="button"
               className={`${CONTROL.focusBrandSoft} ${RADIUS.field} flex items-center justify-center ${INTERACTIVE.clickable}`}
-              aria-label="View affiliation details"
-              title="View affiliation details"
+              aria-label={panels.patients.viewAffiliation}
+              title={panels.patients.viewAffiliation}
             >
               <Icon iconKey={IconKeys.ui.verified}
                 className="w-5 h-5 text-brand opacity-70 hover:opacity-100"

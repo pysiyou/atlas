@@ -16,12 +16,14 @@ import { Icon } from '@/components/primitives';
 import { IconKeys } from '@/icons';
 import { CHROME, RADIUS, SHADOW, SURFACE, WORKSPACE } from '@/theme/recipes';
 import { cn } from '@/utils';
+import { usePanelCopy } from '@/strings';
 
 export interface AppShellProps {
   children: ReactNode;
 }
 
 export function AppShell({ children }: AppShellProps) {
+  const panels = usePanelCopy();
   const breakpoint = useBreakpoint();
   const isMobile = !isBreakpointAtLeast(breakpoint, 'lg');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
@@ -67,13 +69,13 @@ export function AppShell({ children }: AppShellProps) {
                   <button
                     type="button"
                     onClick={handleToggleMobileSidebar}
-                    title="Open Menu"
+                    title={panels.shared.openMenu}
                     className={cn(
                       CHROME.navIndicator,
                       SURFACE.raised,
                       `cursor-pointer text-text-primary ${SHADOW.subtle} hover:bg-surface-hover lg:hidden`,
                     )}
-                    aria-label="Open navigation menu"
+                    aria-label={panels.shared.openNavMenu}
                   >
                     <Icon iconKey={IconKeys.actions.menu} className="size-5" />
                   </button>

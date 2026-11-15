@@ -25,6 +25,7 @@ import type { LabReportPayload } from '@/types';
 import { formatDate } from '@/utils';
 import { notify } from '@/feedback';
 import { canPrintReport } from '../utils/reportEligibility';
+import { usePanelCopy } from '@/strings';
 
 export function ReportPreviewModal({
   isOpen,
@@ -33,6 +34,7 @@ export function ReportPreviewModal({
   orderId,
   layout = 'table',
 }: ReportPreviewModalProps) {
+  const panels = usePanelCopy();
   const { getUserName } = useUserLookup();
   const { reportableOrder, isLoading, isError } = useReportableOrder(isOpen ? orderId : null);
   const orderTestCodes = useMemo(
@@ -113,7 +115,7 @@ export function ReportPreviewModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Report Preview"
+      title={panels.orders.reportPreview}
       subtitle={
         reportData ? (
           <ModalContextSubtitle

@@ -20,6 +20,7 @@ import {
 } from '@/features/catalog';
 import { ResultValueAnnotations } from './ResultValueAnnotations';
 import type { Gender, Patient } from '@/types';
+import { useLabCopy } from '@/strings';
 
 export type ResultsGridVariant = 'inline' | 'tiles';
 export type ResultsGridLayout = 'grid' | 'table';
@@ -45,6 +46,7 @@ export function ResultsParameterGrid({
   layout = 'table',
   dense = false,
 }: ResultsParameterGridProps) {
+  const labCopy = useLabCopy();
   const flagStatusMap = useMemo(() => statusMapFromFlags(flags), [flags]);
   const { test: catalogTest } = useTest(testCode);
   const parameterLabels = useMemo(
@@ -124,7 +126,7 @@ export function ResultsParameterGrid({
                       showStatus={showStatus}
                     />
                   </td>
-                  <td className={DATA_GRID.bodyCell} title="Reference interval">
+                  <td className={DATA_GRID.bodyCell} title={labCopy.actions.referenceInterval}>
                     <ReferenceIntervalCell
                       lines={intervalLines}
                       valueColumnCh={referenceValueColumnCh}

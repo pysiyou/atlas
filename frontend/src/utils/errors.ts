@@ -10,7 +10,7 @@ const feedbackTitle = (id: FeedbackId): string => resolveFeedbackTitle(id);
 
 export function getLoginErrorMessage(
   error: unknown,
-  fallback = feedbackTitle('auth.login.failed')
+  fallback: string = feedbackTitle('auth.login.failed')
 ): string {
   if (!(error instanceof Error)) return fallback;
 

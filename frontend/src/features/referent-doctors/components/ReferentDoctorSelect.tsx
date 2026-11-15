@@ -1,6 +1,6 @@
 import { Input } from '@/components/inputs';
 import { Icon, RemovableTag, TagChip } from '@/components/primitives';
-import { getEmptyCopy } from '@/strings';
+import { getEmptyCopy, usePanelCopy } from '@/strings';
 import { cn, formatPhoneNumber } from '@/utils';
 import { useRef, useState } from 'react';
 import { Controller, type Control } from 'react-hook-form';
@@ -59,6 +59,7 @@ export function ReferentDoctorSelect({
   useAnchoredPopoverDismiss(containerRef, setIsPopoverOpen);
   const { results, isLoading } = useReferentDoctorSearch(search);
   const createDoctor = useCreateReferentDoctor();
+  const panels = usePanelCopy();
 
   const trimmedSearch = search.trim();
   const canCreate =
@@ -218,7 +219,7 @@ export function ReferentDoctorSelect({
 
           {!disabled && isPopoverOpen && (
             <SearchResultsPopoverShell
-              title="Referent doctors"
+              title={panels.catalog.referentDoctors}
               resultCount={visibleResults.length + (canCreate ? 1 : 0)}
               emptyMessage={getEmptyCopy().matchingPatients.title}
               emptyDescription={

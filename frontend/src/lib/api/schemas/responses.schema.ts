@@ -9,6 +9,10 @@ export const loginTokenResponseSchema = z.object({
   role: z.string().optional(),
 });
 
+export const setupStatusResponseSchema = z.object({
+  required: z.boolean(),
+});
+
 export const refreshTokenResponseSchema = z.object({
   access_token: z.string(),
 });

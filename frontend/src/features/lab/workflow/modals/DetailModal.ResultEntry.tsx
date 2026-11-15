@@ -36,6 +36,7 @@ import { Modal, ModalPageShell } from '@/components/overlays';
 import { LabModalPlaceholder } from '../shared/LabModalPlaceholders';
 import type { ResultDetailModalProps } from '@/lib/context/modalTypes';
 import { useLabModalWorkItemModel } from '../model/useLabModalWorkItemModel';
+import { useLabCopy } from '@/strings';
 
 export function ResultEntryDetailModal({
   isOpen,
@@ -45,6 +46,7 @@ export function ResultEntryDetailModal({
   readOnly = false,
   worklistRow,
 }: ResultDetailModalProps) {
+  const labCopy = useLabCopy();
   const queryClient = useQueryClient();
   const {
     order,
@@ -189,7 +191,7 @@ export function ResultEntryDetailModal({
 
   if (isOpen && contextLoadFailed) {
     return (
-      <Modal isOpen={isOpen} onClose={onClose} title="Result entry" size="3xl" isActive={isActive}>
+      <Modal isOpen={isOpen} onClose={onClose} title={labCopy.workflow.entry} size="3xl" isActive={isActive}>
         <ModalPageShell>
           <div className="flex justify-center p-panel">
             <Button {...actionButtonPreset('retry')} size="sm" onClick={retryContextLoad}>
@@ -207,7 +209,7 @@ export function ResultEntryDetailModal({
 
   if (isOpen && catalogError && !contentReady) {
     return (
-      <Modal isOpen={isOpen} onClose={onClose} title="Result entry" size="3xl" isActive={isActive}>
+      <Modal isOpen={isOpen} onClose={onClose} title={labCopy.workflow.entry} size="3xl" isActive={isActive}>
         <ModalPageShell>
           <div className="flex justify-center p-panel">
             <Button
@@ -285,7 +287,7 @@ export function ResultEntryDetailModal({
         orderId,
         badges: headerBadges ?? undefined,
       })
-    : { title: 'Result entry', subtitle: '' };
+    : { title: labCopy.workflow.entry, subtitle: '' };
   const headerLeftColumn =
     contentReady && resolvedTestDef && workItem ? (
       <TestWorkflowCardLeftColumn
@@ -447,11 +449,12 @@ function EntryDetailMainPanel({
   onNotesChange: (key: string, notes: string) => void;
   onSave: () => void;
 }) {
+  const labCopy = useLabCopy();
   if (readOnly && hasResultsOnWorkItem(workItem)) {
     return (
       <ResultValidationPanel
         preset="panel.compact.scrollAuto.maxH"
-        title="Recorded Results"
+        title={labCopy.panels.recordedResults}
         results={workItem.results ?? {}}
         flags={workItem.flags ?? undefined}
         testCode={workItem.testCode}
@@ -465,7 +468,7 @@ function EntryDetailMainPanel({
     );
   }
   return (
-    <Panel preset="panel.compact.standard" title="Result Entry" headerEnd={progressIndicator}>
+    <Panel preset="panel.compact.standard" title={labCopy.workflow.entry} headerEnd={progressIndicator}>
       <ResultEntryForm
         testDef={resolvedTestDef}
         resultKey={resultKey}

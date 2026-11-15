@@ -270,7 +270,35 @@
       "columnMix": "Queue / today",
       "stageCollection": "Collection",
       "stageEntry": "Result entry",
-      "stageValidation": "Validation"
+      "stageValidation": "Validation",
+      "panelTitle": "Today"
+    },
+    "panels": {
+      "requiredFor": "Required for",
+      "rejectionDetails": "Rejection Details",
+      "collectionNotes": "Collection Notes",
+      "recordedResults": "Recorded Results",
+      "resolution": "Resolution",
+      "testsOnSample": "Tests on sample",
+      "criticalValueNotification": "Critical Value Notification",
+      "escalationSummary": "Escalation Summary",
+      "pendingValidation": "Pending validation",
+      "collectionRequirements": "Collection Requirements & Instructions",
+      "resultValidation": "Result Validation",
+      "placeholderTestDetails": "Test details",
+      "placeholderValidationReview": "Validation review",
+      "placeholderResultEntry": "Result entry",
+      "placeholderEscalation": "Escalation review",
+      "placeholderSampleCollection": "Sample collection"
+    },
+    "actions": {
+      "approveResults": "Approve Results",
+      "forceValidate": "Force Validate",
+      "retest": "Retest",
+      "cancelTest": "Cancel Test",
+      "printSampleLabel": "Print Sample Label",
+      "viewDetails": "View Details",
+      "referenceInterval": "Reference interval"
     }
   },
   "nav": {
@@ -329,6 +357,69 @@
     "showMore": "Show more",
     "showLess": "Show less",
     "systemActorName": "Atlas",
-    "transitionArrow": "→"
+    "transitionArrow": "→",
+    "filter": {
+      "search": "Search",
+      "recordId": "Record ID",
+      "actorRole": "Actor role",
+      "actor": "Actor",
+      "viewsDownloads": "Views & downloads",
+      "detailLevel": "Detail level",
+      "dateRange": "Date range",
+      "eventDomain": "Event domain"
+    }
+  },
+  "panels": {
+    "shared": {
+      "filter": "Filter",
+      "close": "Close",
+      "openMenu": "Open Menu",
+      "openNavMenu": "Open navigation menu",
+      "unableToOpen": "Unable to open",
+      "unableToOpenBody": "This dialog failed to load. Please try again.",
+      "actions": "Actions",
+      "relatedTests": "Related {{tests}}",
+      "relatedSamples": "Related {{samples}}",
+      "clearSearch": "Clear search",
+      "clear": "Clear",
+      "removeFilter": "Remove filter"
+    },
+    "patients": {
+      "generalInfo": "General Info",
+      "medicalHistory": "Medical History",
+      "careSnapshot": "Care Snapshot",
+      "identityContact": "Identity & Contact",
+      "emergencyContact": "Emergency Contact",
+      "historyConditionsLifestyle": "History, Conditions & Lifestyle",
+      "selectPlan": "Select Your Plan",
+      "viewAffiliation": "View affiliation details"
+    },
+    "orders": {
+      "billingSummary": "Billing Summary",
+      "collectionRequirements": "Collection Requirements & Instructions",
+      "matchingTests": "Matching tests",
+      "reportPreview": "Report Preview",
+      "recentOrders": "Recent {{ordersCap}}"
+    },
+    "payments": {
+      "processPayment": "Process Payment"
+    },
+    "dashboard": {
+      "labPipeline": "{{laboratoryCap}} Pipeline",
+      "commandCenter": "Command Center"
+    },
+    "users": {
+      "provisionAccount": "Provision account"
+    },
+    "catalog": {
+      "referentDoctors": "Referent doctors"
+    },
+    "actions": {
+      "print": "Print",
+      "viewInvoice": "View Invoice",
+      "viewPayment": "View payment",
+      "downloadReport": "Download Report",
+      "reportActions": "Report actions"
+    }
   }
 }

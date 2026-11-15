@@ -16,6 +16,7 @@ export {
   getLabQueueFilterPlaceholders,
   getModuleListTitles,
   getNavCopy,
+  getPanelCopy,
   getOrderFilterPlaceholders,
   getOrderTableColumnHeaders,
   getPatientFilterPlaceholders,
@@ -32,6 +33,7 @@ export {
   type NavMainKey,
   type NavSettingsLinkKey,
   type OrderTableColumnHeaders,
+  type PanelCopy,
 } from './catalog';
 
-export { useEventLogCopy, useLabCopy, useModuleListTitles, useNavCopy } from './react';
+export { useEventLogCopy, useLabCopy, useModuleListTitles, useNavCopy, usePanelCopy } from './react';

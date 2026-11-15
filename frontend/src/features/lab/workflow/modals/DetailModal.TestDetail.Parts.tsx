@@ -35,6 +35,7 @@ import {
   type TestDetailHeaderVariant,
 } from '../shared/testDetailHeader';
 import { labModalFooterDenyMessage } from '../../utils/queueDisplay';
+import { useLabCopy } from '@/strings';
 
 /** Left-column identity chrome for the test-detail modal header. */
 export function TestDetailHeaderColumn({
@@ -222,6 +223,8 @@ export function TestDetailModalBody({
   orderTestId,
   patient,
 }: TestDetailModalBodyProps) {
+  const labCopy = useLabCopy();
+  const resultsTitle = isValidate ? labCopy.panels.resultValidation : labCopy.panels.recordedResults;
   return (
     <>
       {sampleRejection.showBanner ? (
@@ -236,7 +239,7 @@ export function TestDetailModalBody({
       {hasResults && orderTest?.results ? (
         <ResultValidationPanel
           preset={resultsPanelPreset}
-          title={isValidate ? 'Result Validation' : 'Recorded Results'}
+          title={resultsTitle}
           results={orderTest.results}
           flags={orderTest.flags}
           testCode={orderTest.testCode}
@@ -251,7 +254,7 @@ export function TestDetailModalBody({
       ) : (
         <Panel
           preset={resultsPanelPreset}
-          title={isValidate ? 'Result Validation' : 'Recorded Results'}
+          title={resultsTitle}
         >
           <p className={text({ role: 'label' })}>
             {orderTest ? formatPipelinePendingMessage(orderTest) : 'Loading test details…'}
@@ -260,7 +263,7 @@ export function TestDetailModalBody({
       )}
 
       {isValidate && criticalRecord ? (
-        <Panel preset="panel.compact.standard" title="Critical Value Notification">
+        <Panel preset="panel.compact.standard" title={labCopy.panels.criticalValueNotification}>
           <CriticalValueActions record={criticalRecord} onUpdated={onCriticalValueUpdated} />
         </Panel>
       ) : null}

@@ -15,6 +15,7 @@ import {
   type RegisteredModalComponent,
 } from './modalRegistry';
 import { logger } from '@/utils/logger';
+import { usePanelCopy } from '@/strings';
 
 initializeModalRegistry();
 
@@ -52,6 +53,7 @@ function LazyRegisteredModal({
   onClose,
   isActive,
 }: LazyRegisteredModalProps) {
+  const panels = usePanelCopy();
   const cached = modalComponentCache.get(frame.type) ?? null;
   const loader = getModalLoader(frame.type);
   const [asyncLoad, setAsyncLoad] = useState<{
@@ -94,11 +96,11 @@ function LazyRegisteredModal({
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        title="Unable to open"
+        title={panels.shared.unableToOpen}
         size="3xl"
         isActive={isActive}
       >
-        <Text role="body" intent="muted">This dialog failed to load. Please try again.</Text>
+        <Text role="body" intent="muted">{panels.shared.unableToOpenBody}</Text>
       </Modal>
     );
   }

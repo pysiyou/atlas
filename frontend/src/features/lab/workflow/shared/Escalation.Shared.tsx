@@ -22,11 +22,11 @@ import {
   type LabOrderTestQueueRow,
 } from '../../types/labQueueChrome';
 import { text, WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
-import type { Order } from '@/types';
-import type { EscalationResolutionAction } from '@/types';
+import type { EscalationResolutionAction, Order } from '@/types';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { notify } from '@/feedback';
 import { DetailGrid } from './DetailModalLayout';
+import { useLabCopy } from '@/strings';
 
 function ticketString(value: unknown): string | undefined {
   return typeof value === 'string' && value.trim() !== '' ? value : undefined;
@@ -105,17 +105,12 @@ export interface EscalationResolutionBodyProps {
   onCriticalValueUpdated: () => void;
 }
 
-function EscalationResultsPanel({
-  workItem,
-  readOnly,
-}: {
-  workItem: LabModalWorkItem;
-  readOnly: boolean;
-}) {
+function EscalationResultsPanel({ workItem, readOnly }: { workItem: LabModalWorkItem; readOnly: boolean }) {
+  const labCopy = useLabCopy();
   return (
     <ResultValidationPanel
       preset="panel.compact.scrollAuto.maxH"
-      title={readOnly ? 'Recorded Results' : 'Result Validation'}
+      title={readOnly ? labCopy.panels.recordedResults : labCopy.panels.resultValidation}
       results={workItem.results ?? {}}
       flags={workItem.flags ?? undefined}
       testCode={workItem.testCode}
@@ -132,12 +127,10 @@ function EscalationResultsPanel({
 function EscalationSummaryPanel({
   rejectionReason,
   rejectionNotes,
-}: {
-  rejectionReason?: string;
-  rejectionNotes?: string;
-}) {
+}: { rejectionReason?: string; rejectionNotes?: string }) {
+  const labCopy = useLabCopy();
   return (
-    <Panel preset="panel.compact.standard" title="Escalation Summary">
+    <Panel preset="panel.compact.standard" title={labCopy.panels.escalationSummary}>
       <p className={text({ role: 'label' })}>
         This test was escalated before results were entered. Review the context below and choose an
         action.
@@ -173,6 +166,7 @@ export function EscalationResolutionBody({
   criticalRecord,
   onCriticalValueUpdated,
 }: EscalationResolutionBodyProps) {
+  const labCopy = useLabCopy();
   return (
     <>
       {hasResults ? (
@@ -185,7 +179,7 @@ export function EscalationResolutionBody({
       )}
 
       {criticalRecord && (
-        <Panel preset="panel.compact.standard" title="Critical Value Notification">
+        <Panel preset="panel.compact.standard" title={labCopy.panels.criticalValueNotification}>
           <CriticalValueActions record={criticalRecord} onUpdated={onCriticalValueUpdated} />
         </Panel>
       )}

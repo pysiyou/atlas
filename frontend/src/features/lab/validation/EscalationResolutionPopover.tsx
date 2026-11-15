@@ -7,6 +7,7 @@ import { Button } from '@/components/primitives';
 import { inputBase, text } from '@/theme/recipes';
 import { cn, displayId } from '@/utils';
 import { useEffect, useState } from 'react';
+import { useLabCopy } from '@/strings';
 
 export { ResolutionPopover } from './EscalationResolutionPopover.Chrome';
 
@@ -52,18 +53,19 @@ export function ForceValidateAction({
   resolveAsync,
   onValidationError,
 }: ForceValidateActionProps) {
+  const labCopy = useLabCopy();
   return (
     <ResolutionPopover
       resolving={resolving}
-      triggerLabel="Force Validate"
+      triggerLabel={labCopy.actions.forceValidate}
       triggerVariant="success"
-      title="Force Validate"
+      title={labCopy.actions.forceValidate}
       subtitle={popoverSubtitle(orderTestId, 'Validation notes (optional)')}
       textareaId="escalation-force-validate-notes"
       placeholder="e.g. Supervisor override after review"
       value={validationNotesForceValidate}
       onChange={onValidationNotesForceValidateChange}
-      confirmLabel="Force Validate"
+      confirmLabel={labCopy.actions.forceValidate}
       confirmVariant="success"
       disabled={
         requiresReadBack &&
@@ -148,6 +150,7 @@ export function RetestAction({
   resolveAsync,
   onValidationError,
 }: RetestActionProps) {
+  const labCopy = useLabCopy();
   const retestAvailable = allowSameSample || allowRecollect;
   const defaultPath: RetestPath = allowSameSample ? 'same_sample' : 'recollect';
 
@@ -164,7 +167,7 @@ export function RetestAction({
           disabled={resolving || !retestAvailable}
           isLoading={resolving}
         >
-          Retest
+          {labCopy.actions.retest}
         </Button>
       }
     >
@@ -209,6 +212,7 @@ function RetestActionPopoverBody({
   resolveAsync,
   onValidationError,
 }: RetestActionPopoverBodyProps) {
+  const labCopy = useLabCopy();
   const [path, setPath] = useState<RetestPath>(defaultPath);
 
   useEffect(() => {
@@ -223,7 +227,7 @@ function RetestActionPopoverBody({
   return (
     <div data-popover-content onClick={e => e.stopPropagation()}>
       <PopoverFormChrome
-        title="Retest"
+        title={labCopy.actions.retest}
         subtitle={popoverSubtitle(
           orderTestId,
           path === 'recollect' ? 'New sample required' : 'Same collected sample',

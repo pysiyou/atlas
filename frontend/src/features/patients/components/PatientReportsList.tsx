@@ -5,7 +5,7 @@
 
 import { actionButtonPreset, Icon, IconButton } from '@/components/primitives';
 import { EmptyState } from '@/components/display';
-import { getEmptyCopy, PANEL_EMPTY_STATE } from '@/strings';
+import { getEmptyCopy, PANEL_EMPTY_STATE, usePanelCopy } from '@/strings';
 
 import { RecordId } from '@/features/shared';
 import { formatDateTime } from '@/utils';
@@ -21,6 +21,7 @@ export interface PatientReportsListProps {
 }
 
 export function PatientReportsList({ orders }: PatientReportsListProps) {
+  const panels = usePanelCopy();
   const reportableOrders = getReportableOrders(orders);
 
   if (reportableOrders.length === 0) {
@@ -53,7 +54,7 @@ export function PatientReportsList({ orders }: PatientReportsListProps) {
               </p>
             </div>
           </div>
-          <IconButton {...actionButtonPreset('download')} size="sm" title="Download Report" />
+          <IconButton {...actionButtonPreset('download')} size="sm" title={panels.actions.downloadReport} />
         </div>
       ))}
     </div>

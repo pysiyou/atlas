@@ -146,6 +146,26 @@
       "variant": "danger",
       "title": "Please enter both username and password"
     },
+    "auth.setup.fieldsRequired": {
+      "channel": "inline",
+      "variant": "danger",
+      "title": "Please enter name, username, and password"
+    },
+    "auth.setup.failed": {
+      "channel": "inline",
+      "variant": "danger",
+      "title": "Could not create the administrator account. Please try again."
+    },
+    "auth.setup.alreadyCompleted": {
+      "channel": "inline",
+      "variant": "danger",
+      "title": "An administrator already exists. Sign in instead."
+    },
+    "auth.setup.statusFailed": {
+      "channel": "inline",
+      "variant": "danger",
+      "title": "Could not check whether setup is required. Please try again."
+    },
     "lab.collection.authRequired": {
       "channel": "toast",
       "variant": "error",

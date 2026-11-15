@@ -11,6 +11,7 @@ import {
   getSiblingOrderTestsOnSample,
 } from '../utils/orderTestRelations';
 import { LinkedOrderTestsList } from './LinkedOrderTestsList';
+import { usePanelCopy } from '@/strings';
 
 export type TestRelatedTestsPanelProps = {
   order: Order;
@@ -23,6 +24,7 @@ export function TestRelatedTestsPanel({
   orderTest,
   onOpenOrderTest,
 }: TestRelatedTestsPanelProps) {
+  const panels = usePanelCopy();
   const onSample = useMemo(
     () => getSiblingOrderTestsOnSample(order, orderTest),
     [order, orderTest]
@@ -37,7 +39,7 @@ export function TestRelatedTestsPanel({
   }
 
   return (
-    <Panel preset="panel.compact.fullWidth" title="Related tests">
+    <Panel preset="panel.compact.fullWidth" title={panels.shared.relatedTests}>
       <div className="space-y-space-3">
         {onSample.length > 0 ? (
           <div className="space-y-space-0-5">
