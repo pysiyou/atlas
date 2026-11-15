@@ -1,0 +1,253 @@
+{
+  "$schema": "./ui-strings.schema.json",
+  "modules": {
+    "patients": "{{patientsCap}}",
+    "newPatient": "New {{patientCap}}",
+    "patientDetail": "{{patientCap}}",
+    "orders": "{{ordersCap}}",
+    "newOrder": "New {{orderCap}}",
+    "orderDetail": "{{orderCap}}",
+    "payments": "Payments",
+    "reports": "{{reportsCap}}",
+    "catalog": "{{testCap}} Catalog",
+    "testDetail": "{{testCap}}",
+    "editPatient": "Edit {{patientCap}}",
+    "newPatientModal": "New {{patientCap}}",
+    "editOrder": "Edit {{orderCap}}",
+    "newOrderModal": "New {{orderCap}}",
+    "relatedOrders": "Related {{ordersCap}}",
+    "patientInformation": "{{patientCap}} Information",
+    "viewPatient": "View {{patientCap}}",
+    "addOrder": "Add {{orderCap}}",
+    "orderInformation": "{{orderCap}} Information",
+    "orderActivity": "{{orderCap}} activity",
+    "testsPanel": "{{testsCap}}",
+    "reportsSubtitleAvailable": "(s) available"
+  },
+  "tables": {
+    "orders": {
+      "orderId": "{{orderCap}}",
+      "patientName": "{{patientCap}}",
+      "tests": "{{testsCap}}",
+      "orderDate": "Date",
+      "overallStatus": "Status",
+      "priority": "Priority",
+      "paymentStatus": "Payment",
+      "totalPrice": "Total"
+    },
+    "patients": {
+      "patientId": "{{patientCap}} ID",
+      "orders": "{{ordersCap}}",
+      "filterTitle": "{{patientCap}} Filters",
+      "searchLabel": "Search {{patientsCap}}",
+      "footerLabel": "{{patientsCap}}"
+    },
+    "urlFilterChips": {
+      "patientId": "{{patientCap}}",
+      "orderId": "{{orderCap}}",
+      "sampleId": "{{sampleCap}}",
+      "testId": "{{testCap}}"
+    }
+  },
+  "filters": {
+    "orders": {
+      "search": "Search {{orders}}...",
+      "searchLong": "Search {{orders}} by ID, {{patient}} name, or details...",
+      "dateRange": "Filter by date range",
+      "orderStatus": "Select {{order}} status",
+      "paymentStatus": "Select payment status"
+    },
+    "patients": {
+      "search": "Search {{patients}}...",
+      "searchLong": "Search {{patients}} by name, ID, phone, or email...",
+      "ageRange": "Filter by age range",
+      "sex": "Select sex",
+      "affiliationStatus": "Select affiliation status"
+    },
+    "payments": {
+      "search": "Search payments...",
+      "searchLong": "Search payments by transaction ID, {{patient}} name, or reference...",
+      "dateRange": "Filter by date range",
+      "paymentStatus": "Select payment status",
+      "paymentMethod": "Select payment method"
+    },
+    "reports": {
+      "search": "Search {{reports}}...",
+      "searchLong": "Search by {{test}} ID, {{order}} ID, {{patient}} name, or {{test}} name...",
+      "dateRange": "Filter by date range"
+    },
+    "shared": {
+      "dateRange": "Filter by date range",
+      "ageRange": "Filter by age range",
+      "priceRange": "Filter by price range",
+      "sampleType": "Select {{sample}} type",
+      "status": "Select status",
+      "testCategory": "Select {{test}} category",
+      "paymentMethod": "Select payment method"
+    },
+    "labQueues": {
+      "idHint": "{{sample}} ID (SAM####), {{order}} ID (ORD####), {{test}} ID (TST####)",
+      "collection": {
+        "searchPlaceholder": "{{sampleCap}}, {{order}}, or {{test}} ID (SAM/ORD/TST) — min 3 chars for lookup...",
+        "searchHelpText": "Search by {{idHint}}, numeric IDs, or {{patient}} name. Lookup runs after 3 characters.",
+        "dateRangeHelpText": "Filter {{samples}} by collection or {{order}} date range."
+      },
+      "entry": {
+        "searchPlaceholder": "{{sampleCap}}, {{order}}, or {{test}} ID (SAM/ORD/TST) or {{patient}}...",
+        "searchHelpText": "Search by {{idHint}}, {{patient}} name, or {{test}} name.",
+        "dateRangeHelpText": "Filter by {{order}} or result date range."
+      },
+      "validation": {
+        "searchPlaceholder": "{{sampleCap}}, {{order}}, or {{test}} ID (SAM/ORD/TST) or {{patient}}...",
+        "searchHelpText": "Search by {{idHint}}, {{patient}} name, or {{test}} name.",
+        "dateRangeHelpText": "Filter by {{order}} or validation date range."
+      },
+      "allTests": {
+        "searchPlaceholder": "{{sampleCap}}, {{order}}, or {{test}} ID (SAM/ORD/TST), {{patient}}, or {{test}} name...",
+        "searchHelpText": "Search by {{idHint}}, {{patient}} name, {{test}} name, or {{test}} code.",
+        "dateRangeHelpText": "Filter by last modified date (UTC)."
+      }
+    }
+  },
+  "emptyStates": {
+    "recentActivity": {
+      "title": "No activity recorded",
+      "description": "Posts will appear here as accession, specimen, result, and oversight events are recorded."
+    },
+    "activeTests": {
+      "titlePhrase": "{{tests}}",
+      "descriptionSubject": "{{tests}}",
+      "descriptionWhen": "they enter the pipeline"
+    },
+    "allTestsWorklist": {
+      "titlePhrase": "{{tests}} match these filters",
+      "descriptionSubject": "{{order}} {{tests}}",
+      "descriptionWhen": "they are ordered or match your search"
+    },
+    "dashboardWorklist": {
+      "titlePhrase": "{{tests}} in today's view",
+      "descriptionSubject": "{{tests}}",
+      "descriptionWhen": "an {{order}} {{test}} is updated today or still in the pipeline"
+    },
+    "dashboardTodayKpi": {
+      "titlePhraseWithLaboratory": " activity for today",
+      "descriptionSubject": "stage metrics",
+      "descriptionWhen": "{{tests}} are in the monitor view (running or updated today)"
+    },
+    "pendingAttention": {
+      "title": "No items in queue",
+      "description": "Accessions will appear here when they require pathologist review, operational hold, or expedited handling."
+    },
+    "recentOrders": {
+      "descriptionSubject": "{{orders}}",
+      "descriptionWhen": "new ones are created"
+    },
+    "relatedOrders": {
+      "titlePhrase": "related {{orders}}",
+      "descriptionSubject": "{{orders}}",
+      "descriptionWhen": "this {{patient}} has placed one"
+    },
+    "reports": {
+      "titlePhrase": "{{reports}}",
+      "descriptionSubject": "{{reports}}",
+      "descriptionWhen": "results are validated for this {{patient}}"
+    },
+    "orderTests": {
+      "titlePhrase": "{{tests}}",
+      "descriptionSubject": "{{tests}}",
+      "descriptionWhen": "they are added to this {{order}}"
+    },
+    "pendingValidation": {
+      "title": "No pending validation",
+      "descriptionSubject": "results",
+      "descriptionWhen": "they are ready for validation or review"
+    },
+    "pendingCollections": {
+      "title": "No pending collections",
+      "descriptionSubject": "{{samples}}",
+      "descriptionWhen": "they are waiting to be collected"
+    },
+    "pendingResults": {
+      "title": "No pending results",
+      "descriptionSubject": "{{samples}}",
+      "descriptionWhen": "they are waiting for result entry"
+    },
+    "recordedActions": {
+      "title": "No recorded actions",
+      "descriptionSubject": "actions",
+      "descriptionWhen": "work is recorded on this record"
+    },
+    "orderActivity": {
+      "titlePhrase": "{{order}} activity",
+      "descriptionSubject": "events",
+      "descriptionWhen": "the {{order}} progresses"
+    },
+    "data": {
+      "title": "No data",
+      "descriptionSubject": "items",
+      "descriptionWhen": "data is available or filters match"
+    },
+    "matchingPatients": {
+      "titlePhrase": "matching {{patients}}",
+      "descriptionSubject": "{{patients}}",
+      "descriptionWhen": "your search matches the directory"
+    },
+    "matchingTests": {
+      "titlePhrase": "matching {{tests}}",
+      "descriptionSubject": "{{tests}}",
+      "descriptionWhen": "your search matches the catalog"
+    },
+    "matchingSamples": {
+      "titlePhrase": "matching {{samples}}",
+      "descriptionSubject": "{{samples}}",
+      "descriptionWhen": "your search matches a {{sample}} ID or {{patient}} name"
+    }
+  },
+  "lab": {
+    "entity": {
+      "sample": "{{sampleCap}}",
+      "sampleType": "{{sampleCap}} type",
+      "samples": "{{samples}}"
+    },
+    "workflow": {
+      "collection": "Collection",
+      "collectionNav": "{{sampleCap}} Collection",
+      "entry": "Result Entry",
+      "entryShort": "Entry",
+      "validation": "Validation",
+      "monitorNav": "Monitor",
+      "monitorPageTitle": "{{laboratoryCap}} monitor",
+      "allTestsPageTitle": "All {{tests}}",
+      "allTestsPageSubtitle": "Every {{order}} {{test}}, sorted by last modified",
+      "escalation": "Escalation",
+      "sentBack": "Sent back",
+      "sentBackShort": "Rework"
+    },
+    "quality": {
+      "sampleRejected": "{{sampleCap}} rejected",
+      "sampleIssue": "{{sampleCap}} issue",
+      "reportSampleIssue": "Report {{sampleCap}} Issue"
+    },
+    "attention": {
+      "criticalValue": "Critical values",
+      "recollection": "Recollection",
+      "panelTitle": "Attention queue",
+      "panelMetaEmpty": "Escalations, holds, priority, and turnaround exceptions"
+    },
+    "dashboardToday": {
+      "testsWorked": "updated today",
+      "headerUniverse": "in view",
+      "footerUniverse": "{{tests}} in view",
+      "footerInPipeline": "In pipeline now",
+      "summaryAria": "Today's pipeline stage summary",
+      "footnote": "Percentages use all {{tests}} in the monitor view (running plus updated today).",
+      "columnStage": "Stage",
+      "columnInQueue": "In queue",
+      "columnToday": "Today",
+      "columnMix": "Queue / today",
+      "stageCollection": "Collection",
+      "stageEntry": "Result entry",
+      "stageValidation": "Validation"
+    }
+  }
+}

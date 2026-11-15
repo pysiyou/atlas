@@ -2,7 +2,7 @@
  * Load/cache client-config.json from API; terminology and feature flags.
  */
 import type { ClientConfig } from './types';
-import clientConfigMinimal from '../../../config/client-config.minimal.json';
+import defaultClientConfig from '../../../config/client-config.json';
 import { API_CONFIG } from '@/lib/api/env';
 
 let cachedConfig: ClientConfig | null = null;
@@ -44,7 +44,7 @@ export async function loadClientConfig(): Promise<ClientConfig> {
     console.warn('Using default configuration as fallback');
     
     // Return default config
-    cachedConfig = clientConfigMinimal as ClientConfig;
+    cachedConfig = defaultClientConfig as ClientConfig;
     return cachedConfig;
   }
 }

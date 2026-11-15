@@ -5,66 +5,14 @@ import { GENERATED_LAB_CONSTANTS } from '@/types/generated/policies';
 import { ROUTES } from '@/app/routes';
 import type { TestStatus } from '@/types/generated/enums';
 import type { BadgeColor } from '@/components/primitives/badgeTypes';
-import { t, tCap } from '@/config';
+import { getLabCopy } from '@/strings';
+
+export { getLabCopy };
 
 export type LabWorkflowStage = 'collection' | 'entry' | 'validation';
 export type LabWorkflowKpiStage = LabWorkflowStage | 'sentBack';
 export type LabStageLabelVariant = 'short' | 'nav' | 'full';
 export type LabTimelineLane = 'sample' | 'results' | 'validation' | 'quality';
-
-/**
- * Get lab copy with terminology support
- */
-export function getLabCopy() {
-  return {
-    entity: { 
-      sample: tCap('sample', 'Sample'), 
-      sampleType: `${tCap('sample', 'Sample')} type`, 
-      samples: t('samples', 'samples') 
-    },
-    workflow: {
-      collection: 'Collection',
-      collectionNav: `${tCap('sample', 'Sample')} Collection`,
-      entry: 'Result Entry',
-      entryShort: 'Entry',
-      validation: 'Validation',
-      monitorNav: 'Monitor',
-      monitorPageTitle: `${tCap('laboratory', 'Lab')} monitor`,
-      allTestsPageTitle: `All ${t('tests', 'tests')}`,
-      allTestsPageSubtitle: `Every ${t('order', 'order')} ${t('test', 'test')}, sorted by last modified`,
-      escalation: 'Escalation',
-      sentBack: 'Sent back',
-      sentBackShort: 'Rework',
-    },
-    quality: {
-      sampleRejected: `${tCap('sample', 'Sample')} rejected`,
-      sampleIssue: `${tCap('sample', 'Sample')} issue`,
-      reportSampleIssue: `Report ${tCap('sample', 'Sample')} Issue`,
-    },
-    attention: {
-      criticalValue: 'Critical values',
-      recollection: 'Recollection',
-      panelTitle: 'Attention queue',
-      panelMetaEmpty: 'Escalations, holds, priority, and turnaround exceptions',
-    },
-    dashboardToday: {
-      testsWorked: 'updated today',
-      headerUniverse: 'in view',
-      footerUniverse: `${t('tests', 'tests')} in view`,
-      footerInPipeline: 'In pipeline now',
-      summaryAria: "Today's pipeline stage summary",
-      footnote:
-        `Percentages use all ${t('tests', 'tests')} in the monitor view (running plus updated today).`,
-      columnStage: 'Stage',
-      columnInQueue: 'In queue',
-      columnToday: 'Today',
-      columnMix: 'Queue / today',
-      stageCollection: 'Collection',
-      stageEntry: 'Result entry',
-      stageValidation: 'Validation',
-    },
-  };
-}
 
 export function labStageLabel(
   stage: LabWorkflowStage,

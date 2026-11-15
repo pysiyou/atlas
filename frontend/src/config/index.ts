@@ -3,12 +3,12 @@
  *
  * ## Import rules
  * - `@/config` — load, terminology (`t`), feature/workflow flags, branding views.
- * - `@/icons`, `@/copy`, `@/app/routes`, `@/app/navigation`, `@/theme/panelPresets` — product code.
+ * - `@/icons`, `@/strings` (UI copy from `config/ui-strings.json`; `@/copy` re-exports), `@/app/routes`, `@/app/navigation`, `@/theme/panelPresets` — product code.
  * - React: `app/clientConfigContext.ts`, `app/ClientConfigProvider.tsx`.
  *
- * ## Repo files (see `config/README.md`)
- * - Schema: `config/client-config.schema.json` → `types.ts` via `npm run codegen:client-config`.
- * - Fallback: `config/client-config.minimal.json` only (no TS defaults).
+ * ## Repo files (`config/` — each pair is `*.schema.json` + `*.json`)
+ * - Client: `client-config.schema.json`, `client-config.json` → `types.ts` via `npm run codegen:client-config`.
+ * - UI strings: `ui-strings.schema.json`, `ui-strings.json` (see `@/strings`).
  */
 
 export type { ClientConfig } from './types';

@@ -4,7 +4,7 @@
  * Loads white-label configuration at app startup and provides it via context
  */
 import React, { useEffect, useState } from 'react';
-import clientConfigMinimal from '../../../config/client-config.minimal.json';
+import defaultClientConfig from '../../../config/client-config.json';
 import { loadClientConfig, applyBranding, type ClientConfig } from '@/config';
 import { ClientConfigProvider } from './ClientConfigProvider';
 import type { ConfigStatus } from './clientConfigContext';
@@ -53,7 +53,7 @@ export const ConfigLoader: React.FC<ConfigLoaderProps> = ({ children }) => {
         console.error('Failed to load config:', err);
         setError(err instanceof Error ? err : new Error(String(err)));
         setStatus('error');
-        const fallbackConfig = clientConfigMinimal as ClientConfig;
+        const fallbackConfig = defaultClientConfig as ClientConfig;
         setConfig(fallbackConfig);
         applyBranding(fallbackConfig);
       });

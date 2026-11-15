@@ -2,12 +2,12 @@
  * Read-only views over loaded client-config (for auth chrome, PDF, sidebar).
  */
 import type { ClientConfig } from './types';
-import clientConfigMinimal from '../../../config/client-config.minimal.json';
+import defaultClientConfig from '../../../config/client-config.json';
 import { getClientConfig } from './client';
 
-/** Cached API config, or repo minimal JSON when load has not run or failed. */
+/** Cached API config, or repo `client-config.json` when load has not run or failed. */
 export function getEffectiveClientConfig(): ClientConfig {
-  return (getClientConfig() ?? clientConfigMinimal) as ClientConfig;
+  return (getClientConfig() ?? defaultClientConfig) as ClientConfig;
 }
 
 export interface BrandingFeatureBullet {

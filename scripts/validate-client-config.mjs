@@ -21,32 +21,18 @@ const ajv = new Ajv({ allErrors: true, strict: false });
 addFormats(ajv);
 const validate = ajv.compile(schema);
 
-const files = [
-  'client-config.minimal.json',
-  'client-config.globex.json',
-  'client-config.json',
-];
-
-let failed = false;
-for (const name of files) {
-  const filePath = path.join(configDir, name);
-  if (!fs.existsSync(filePath)) {
-    if (name === 'client-config.json') {
-      console.log(`skip ${name} (optional local deployment file)`);
-      continue;
-    }
-    console.error(`missing ${name}`);
-    failed = true;
-    continue;
-  }
-  const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-  delete data.$schema;
-  if (!validate(data)) {
-    console.error(`${name}:`, validate.errors);
-    failed = true;
-  } else {
-    console.log(`ok ${name}`);
-  }
+const filePath = path.join(configDir, 'client-config.json');
+if (!fs.existsSync(filePath)) {
+  console.error('missing client-config.json');
+  process.exit(1);
 }
 
-process.exit(failed ? 1 : 0);
+const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+delete data.$schema;
+
+if (!validate(data)) {
+  console.error('client-config.json:', validate.errors);
+  process.exit(1);
+}
+
+console.log('ok client-config.json');

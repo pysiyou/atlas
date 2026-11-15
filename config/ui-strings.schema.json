@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Atlas UI strings",
+  "description": "Default terminology-aware UI copy; placeholders use {{patientCap}} style resolved at runtime from client-config",
+  "type": "object",
+  "required": ["modules", "tables", "filters", "emptyStates", "lab"],
+  "additionalProperties": false,
+  "properties": {
+    "modules": { "type": "object", "additionalProperties": { "type": "string" } },
+    "tables": { "type": "object", "additionalProperties": true },
+    "filters": { "type": "object", "additionalProperties": true },
+    "emptyStates": { "type": "object", "additionalProperties": true },
+    "lab": { "type": "object", "additionalProperties": true }
+  }
+}

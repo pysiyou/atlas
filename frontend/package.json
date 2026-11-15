@@ -15,7 +15,8 @@
     "codegen:client-config": "node ../scripts/generate-client-config-types.mjs",
     "codegen:openapi": "python ../scripts/export-openapi.py && openapi-typescript ../contracts/openapi.json -o src/lib/api/types/generated/api.d.ts",
     "codegen": "npm run codegen:openapi && npm run codegen:feedback && npm run codegen:client-config",
-    "validate:client-config": "node ../scripts/validate-client-config.mjs"
+    "validate:client-config": "node ../scripts/validate-client-config.mjs",
+    "validate:ui-strings": "node ../scripts/validate-ui-strings.mjs"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.16",
