@@ -2,9 +2,9 @@
  * Results HTTP + query/mutation hooks.
  * Convention: `*API` objects are pure fetch; `use*` hooks wrap TanStack Query (same file).
  */
-import { apiClient } from '@/lib/api/client';
+import { apiClient } from '@/lib/api';
 import type { ApiEscalationResolveResponse } from '@/lib/api/types';
-import type { components } from '@/lib/api/types/generated/api';
+import type { components } from '@/lib/api/types';
 import type { ValidationDecision } from '@/types';
 
 export type PendingEscalationItem = components['schemas']['PendingEscalationItemResponse'];
@@ -18,7 +18,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   invalidateAfterLabMutation,
   invalidatePendingEscalationQueries,
-} from '@/lib/query/invalidate';
+} from '@/lib/query';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { useAuthStore } from '@/app/authStore';
 import { feedbackTitle } from '@/feedback';

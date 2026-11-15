@@ -1,8 +1,8 @@
 /**
  * Lab monitor API — board snapshot and summary for tab badges.
  */
-import { apiClient } from '@/lib/api/client';
-import type { components } from '@/lib/api/types/generated/api';
+import { apiClient } from '@/lib/api';
+import type { components } from '@/lib/api/types';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/app/authStore';
 import { queryKeys, cacheConfig } from '@/lib/query';

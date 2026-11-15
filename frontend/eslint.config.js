@@ -14,6 +14,49 @@ import {
   featureSemanticTextRestrictedSyntax,
 } from './eslint.restricted-syntax.mjs'
 
+/** Shared import-boundary patterns (no dead-path or “removed API” guards — TS enforces those). */
+const productImportPatterns = [
+  {
+    group: ['@/types/domain/**'],
+    message: 'Use @/types, @/types/generated/*, or @/types/zod.',
+  },
+  {
+    group: [
+      '@/features/*/components/*',
+      '@/features/*/hooks/*',
+      '@/features/*/api/*',
+      '@/features/*/utils/*',
+      '@/features/*/collection/**',
+      '@/features/*/entry/**',
+      '@/features/*/validation/**',
+      '@/features/*/monitor/**',
+      '@/features/*/pages/**',
+    ],
+    message: 'Import from the feature public API (@/features/<name>) unless this is an intra-feature relative import.',
+  },
+  {
+    group: [
+      '@/features/lab/hooks',
+      '@/features/lab/hooks/**',
+      '@/features/lab/utils',
+      '@/features/lab/utils/**',
+      '@/features/lab/types',
+      '@/features/lab/types/**',
+      '@/features/lab/constants',
+      '@/features/lab/constants/**',
+    ],
+    message: 'Use @/features/lab/cross or @/features/lab/routes from outside lab; use relative imports inside features/lab.',
+  },
+  {
+    group: ['@/lib/query/*'],
+    message: 'Import from @/lib/query.',
+  },
+  {
+    group: ['@/lib/api/*', '!@/lib/api/types', '!@/lib/api/types/**'],
+    message: 'Import runtime API from @/lib/api; types from @/lib/api/types.',
+  },
+]
+
 export default defineConfig([
   globalIgnores(['dist', 'node_modules', 'build', '.vite', 'src/lib/api/types/generated/**']),
   {
@@ -121,66 +164,7 @@ export default defineConfig([
         },
       ],
 
-      // Import boundaries — prefer feature barrels for cross-feature access
-      'no-restricted-imports': ['error', {
-        paths: [
-          {
-            name: '@/icons',
-            importNames: ['ICONS'],
-            message: 'Use IconKeys from @/icons — ICONS was removed.',
-          },
-        ],
-        patterns: [
-          {
-            group: [
-              '@/types/domain/**',
-              '@/types/contracts/**',
-            ],
-            message: 'See types/index.ts (Import rules). Use @/types, @/types/generated/*, or @/types/zod.',
-          },
-          {
-            group: [
-              '@/config/domain/**',
-              '@/config/static/**',
-              '@/config/icons',
-              '@/config/icons/**',
-            ],
-            message: 'See config/index.ts (Import rules). White-label: @/config. Product: @/icons, @/copy, @/app/routes, @/app/navigation, @/theme/panelPresets.',
-          },
-          {
-            group: [
-              '@/features/*/components/*',
-              '@/features/*/hooks/*',
-              '@/features/*/api/*',
-              '@/features/*/utils/*',
-              '@/features/*/collection/**',
-              '@/features/*/entry/**',
-              '@/features/*/validation/**',
-              '@/features/*/monitor/**',
-              '@/features/*/pages/**',
-            ],
-            message: 'Import from the feature public API (@/features/<name>) unless this is an intra-feature relative import.',
-          },
-          {
-            group: [
-              '@/features/lab/hooks',
-              '@/features/lab/hooks/**',
-              '@/features/lab/utils',
-              '@/features/lab/utils/**',
-              '@/features/lab/types',
-              '@/features/lab/types/**',
-              '@/features/lab/constants',
-              '@/features/lab/constants/**',
-            ],
-            message: 'Use @/features/lab/cross or @/features/lab/routes from outside lab; use relative imports inside features/lab.',
-          },
-          {
-            group: ['@/utils'],
-            importNames: ['ICONS'],
-            message: 'ICONS was removed from @/utils. Use IconKeys from @/icons.',
-          },
-        ],
-      }],
+      'no-restricted-imports': ['error', { patterns: productImportPatterns }],
     },
   },
   {
@@ -190,59 +174,10 @@ export default defineConfig([
         paths: [
           {
             name: '@/components',
-            message: 'Import from @/components/<subpath> (primitives, data-table, filters, overlays, etc.) instead of the top-level barrel.',
+            message: 'Import from @/components/<subpath> instead of the top-level barrel.',
           },
         ],
-        patterns: [
-          {
-            group: [
-              '@/types/domain/**',
-              '@/types/contracts/**',
-            ],
-            message: 'See types/index.ts (Import rules). Use @/types, @/types/generated/*, or @/types/zod.',
-          },
-          {
-            group: [
-              '@/config/domain/**',
-              '@/config/static/**',
-              '@/config/icons',
-              '@/config/icons/**',
-            ],
-            message: 'See config/index.ts (Import rules). White-label: @/config. Product: @/icons, @/copy, @/app/routes, @/app/navigation, @/theme/panelPresets.',
-          },
-          {
-            group: [
-              '@/features/*/components/*',
-              '@/features/*/hooks/*',
-              '@/features/*/api/*',
-              '@/features/*/utils/*',
-              '@/features/*/collection/**',
-              '@/features/*/entry/**',
-              '@/features/*/validation/**',
-              '@/features/*/monitor/**',
-              '@/features/*/pages/**',
-            ],
-            message: 'Import from the feature public API (@/features/<name>) unless this is an intra-feature relative import.',
-          },
-          {
-            group: [
-              '@/features/lab/hooks',
-              '@/features/lab/hooks/**',
-              '@/features/lab/utils',
-              '@/features/lab/utils/**',
-              '@/features/lab/types',
-              '@/features/lab/types/**',
-              '@/features/lab/constants',
-              '@/features/lab/constants/**',
-            ],
-            message: 'Use @/features/lab/cross or @/features/lab/routes from outside lab; use relative imports inside features/lab.',
-          },
-          {
-            group: ['@/utils'],
-            importNames: ['ICONS'],
-            message: 'ICONS was removed from @/utils. Use IconKeys from @/icons.',
-          },
-        ],
+        patterns: productImportPatterns,
       }],
     },
   },
@@ -290,6 +225,12 @@ export default defineConfig([
   },
   {
     files: ['src/config/**'],
+    rules: {
+      'no-restricted-imports': 'off',
+    },
+  },
+  {
+    files: ['src/lib/api/**', 'src/lib/query/**'],
     rules: {
       'no-restricted-imports': 'off',
     },

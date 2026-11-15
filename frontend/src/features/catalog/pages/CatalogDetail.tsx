@@ -15,11 +15,16 @@ import { RecordId } from '@/features/shared';
 import { formatRejectionCriteriaList } from '@/features/lab/cross';
 import { SPACING } from '@/theme/recipes';
 import { feedbackTitle } from '@/feedback';
-import { formatCurrency, formatTurnaroundTime } from '@/utils';
-import { formatDateTime } from '@/utils';
-import { formatArrayWithFallback, formatBoolean, capitalize } from '@/utils';
+import {
+  capitalize,
+  formatArrayWithFallback,
+  formatBoolean,
+  formatCurrency,
+  formatDateTime,
+  formatTurnaroundTime,
+} from '@/utils';
 import type { Test } from '@/types';
-import { getModuleListTitles } from '@/copy';
+import { getModuleListTitles } from '@/strings';
 
 /** Column count for the catalog detail grid. */
 function catalogDetailColumnCount(breakpoint: string): number {

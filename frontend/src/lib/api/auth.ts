@@ -7,14 +7,14 @@ import {
   loginTokenResponseSchema,
   parseApiResponse,
   refreshTokenResponseSchema,
-} from '@/lib/api/schemas/responses.schema';
+} from './schemas/responses.schema';
 import type {
   ApiAuthUserResponse,
   ApiLoginTokenResponse,
   ApiRefreshTokenResponse,
   LoginTokenResponse,
   RefreshTokenResponse,
-} from '@/lib/api/types';
+} from './types';
 import { apiClient } from './client';
 
 export interface LoginResponse extends LoginTokenResponse {

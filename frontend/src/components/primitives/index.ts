@@ -6,7 +6,8 @@
  */
 
 export * from './Badge';
-export { getColorStyles, resolveColor } from './badgeStyles';
+export { getColorStyles, parseBadgeVariant, resolveColor } from './badgeStyles';
+export type { BadgeColor, BadgeVariant } from './badgeStyles';
 export * from './Avatar';
 export * from './Button';
 export * from './SelectableCard';

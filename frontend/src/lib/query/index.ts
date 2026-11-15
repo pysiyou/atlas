@@ -15,6 +15,7 @@ export { queryKeys } from './keys';
 export type { QueryKeys } from './keys';
 export {
   invalidateOrderQueries,
+  invalidateOrderDetailQuery,
   invalidatePatientQueries,
   invalidateAfterLabMutation,
   invalidateCriticalValueQueries,
@@ -23,6 +24,8 @@ export {
   invalidateWorklistQueries,
   invalidatePendingEscalationQueries,
   invalidateAuditEventQueries,
+  invalidatePaymentDetailQueries,
+  patchOrderSummaryInPaginatedCaches,
   useInvalidateQueryKey,
 } from './invalidate';
 export type {

@@ -1,7 +1,7 @@
 /**
  * Shared pagination query params for list APIs that use skip/limit.
  */
-import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
+import { DEFAULT_LIST_PAGE_SIZE } from './constants';
 
 export interface PageParams {
   page?: number;

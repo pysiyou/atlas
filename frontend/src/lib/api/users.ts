@@ -2,8 +2,8 @@
  * App-wide user lookup for display names.
  * Admin directory CRUD lives in `@/features/users/api/usersAdmin`.
  */
-import { apiClient } from '@/lib/api/client';
-import type { ApiUserLookupResponse } from '@/lib/api/types';
+import { apiClient } from './client';
+import type { ApiUserLookupResponse } from './types';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 import { queryKeys, cacheConfig } from '@/lib/query';
