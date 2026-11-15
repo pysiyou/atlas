@@ -1285,21 +1285,6 @@ class AuditEmitter:
             metadata=metadata,
         )
 
-    def reporting_emailed(
-        self,
-        order_id: int,
-        user_id: int,
-        recipients: list[str],
-    ) -> None:
-        self._emit(
-            EventType.REPORTING_EMAIL,
-            "order",
-            order_id,
-            user_id,
-            context=self._order_context(order_id),
-            metadata={"recipients": recipients},
-        )
-
     def user_login(self, user_id: int) -> None:
         self._emit(EventType.SYSTEM_USER_LOGIN, "user", user_id, user_id)
 

@@ -97,25 +97,6 @@ export const reportsAPI = {
   downloadPdf(orderId: number): Promise<Blob> {
     return apiClient.getBlob(`/reports/orders/${orderId}/pdf`);
   },
-  emailReport(
-    orderId: number,
-    payload: { includePatient?: boolean; includePhysician?: boolean; extraRecipients?: string[] } = {}
-  ) {
-    return apiClient.post(`/reports/orders/${orderId}/email`, {
-      includePatient: payload.includePatient ?? true,
-      includePhysician: payload.includePhysician ?? true,
-      extraRecipients: payload.extraRecipients ?? [],
-    });
-  },
-  downloadBatchPdf(orderIds: number[]): Promise<Blob> {
-    return apiClient.getBlob('/reports/batch/pdf', undefined, {
-      method: 'POST',
-      body: { orderIds },
-    });
-  },
-  emailBatch(orderIds: number[]) {
-    return apiClient.post('/reports/batch/email', { orderIds });
-  },
 };
 
 function triggerBlobDownload(blob: Blob, filename: string): void {
@@ -130,14 +111,6 @@ function triggerBlobDownload(blob: Blob, filename: string): void {
 export async function downloadServerReportPdf(orderId: number): Promise<void> {
   const blob = await reportsAPI.downloadPdf(orderId);
   triggerBlobDownload(blob, `lab-report-ORD${String(orderId).padStart(4, '0')}.pdf`);
-}
-
-export async function downloadServerReportBatch(orderIds: number[]): Promise<void> {
-  const blob = await reportsAPI.downloadBatchPdf(orderIds);
-  const filename = orderIds.length === 1
-    ? `lab-report-ORD${String(orderIds[0]).padStart(4, '0')}.pdf`
-    : 'lab-reports.zip';
-  triggerBlobDownload(blob, filename);
 }
 
 const EMPTY_PAGINATION = {

@@ -399,16 +399,6 @@
       ]
     },
     {
-      "member": "REPORTING_EMAIL",
-      "wire": "reporting.email",
-      "domain": "reporting",
-      "domainLabel": "Reporting",
-      "verbPhrase": "report emailed for order",
-      "headlineMetaKeys": [
-        "recipients"
-      ]
-    },
-    {
       "member": "SYSTEM_USER_LOGIN",
       "wire": "system.user.login",
       "domain": "system",

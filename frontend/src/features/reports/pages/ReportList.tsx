@@ -13,7 +13,6 @@ import {
   reportsAPI,
   toReportableOrder,
   usePaginatedReportableOrders,
-  downloadServerReportBatch,
   downloadServerReportPdf,
 } from '../api/reports';
 import { ListView } from '@/components/surfaces';
@@ -24,7 +23,6 @@ import { generateLabReport, downloadPDF, getDefaultTemplate } from '../utils/rep
 import type { ReportableOrder } from '@/types';
 import { prepareReportData, downloadLabReport } from '../utils/prepareReportData';
 import { canPrintReport } from '../utils/reportEligibility';
-import { Button } from '@/components/primitives';
 import { dateSearchServerParams, formatDate } from '@/utils';
 import { notify } from '@/feedback';
 import { LIST_PAGE_SIZE_OPTIONS } from '@/lib/api';
@@ -96,7 +94,6 @@ export function ReportList() {
 
   const { openModal } = useModal();
   const [generatingOrderId, setGeneratingOrderId] = useState<number | null>(null);
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const buildReportData = useCallback(
     async (reportableOrder: ReportableOrder) => {
@@ -185,36 +182,6 @@ export function ReportList() {
         onRowClick={handlePreview}
         title={listTitles.reports}
         subtitle={listTitles.reportsSubtitle(pagination.total)}
-        headerActions={
-          <div className="flex flex-wrap items-center gap-space-2">
-            <Button
-              size="sm"
-              onClick={() => setSelectedIds(reportableOrders.map(item => item.orderId))}
-            >
-              Select page
-            </Button>
-            <Button
-              size="sm"
-              disabled={selectedIds.length === 0}
-              onClick={() =>
-                void downloadServerReportBatch(selectedIds).then(() =>
-                  notify.show('report.download.success')
-                )
-              }
-            >
-              Download
-            </Button>
-            <Button
-              size="sm"
-              disabled={selectedIds.length === 0}
-              onClick={() =>
-                void reportsAPI.emailBatch(selectedIds).then(() => notify.show('report.download.success'))
-              }
-            >
-              Email
-            </Button>
-          </div>
-        }
         filters={
           <ReportFilters
             searchQuery={searchQuery}

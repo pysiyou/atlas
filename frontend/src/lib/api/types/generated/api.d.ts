@@ -1321,64 +1321,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/reports/orders/{orderId}/email": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Email Order Report */
-        post: operations["email_order_report_api_v1_reports_orders__orderId__email_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/reports/batch/pdf": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Batch Download Pdfs
-         * @description Return concatenated PDFs as a zip-like sequential payload of per-order files.
-         *
-         *     Clients should prefer per-order GET /pdf; this endpoint archives each order
-         *     and returns the last generated file when a single id is supplied, or a
-         *     simple application/zip of all PDFs for multiple ids.
-         */
-        post: operations["batch_download_pdfs_api_v1_reports_batch_pdf_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/reports/batch/email": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Batch Email Reports */
-        post: operations["batch_email_reports_api_v1_reports_batch_email_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -3462,32 +3404,6 @@ export interface components {
          * @enum {string}
          */
         RemedyType: "retry_same_sample" | "recollect" | "request_recollection" | "escalate" | "cancel";
-        /**
-         * ReportBatchRequest
-         * @description Batch PDF/email of completed reportable orders.
-         */
-        ReportBatchRequest: {
-            /** Orderids */
-            orderIds: number[];
-        };
-        /**
-         * ReportEmailRequest
-         * @description Send the order PDF to the patient and/or referent physician.
-         */
-        ReportEmailRequest: {
-            /**
-             * Includepatient
-             * @default true
-             */
-            includePatient: boolean;
-            /**
-             * Includephysician
-             * @default true
-             */
-            includePhysician: boolean;
-            /** Extrarecipients */
-            extraRecipients?: string[];
-        };
         /** ReportQualityIssueRequest */
         ReportQualityIssueRequest: {
             target: components["schemas"]["QualityIssueTarget"];
@@ -7060,107 +6976,6 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    email_order_report_api_v1_reports_orders__orderId__email_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                orderId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ReportEmailRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    batch_download_pdfs_api_v1_reports_batch_pdf_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ReportBatchRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    batch_email_reports_api_v1_reports_batch_email_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ReportBatchRequest"];
-            };
-        };
         responses: {
             /** @description Successful Response */
             200: {

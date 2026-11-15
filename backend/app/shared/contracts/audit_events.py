@@ -48,7 +48,6 @@ class EventType(str, enum.Enum):
     BILLING_INSURANCE_SUBMIT = "billing.insurance.submit"
     REPORTING_GENERATE = "reporting.generate"
     REPORTING_DOWNLOAD = "reporting.download"
-    REPORTING_EMAIL = "reporting.email"
     SYSTEM_USER_LOGIN = "system.user.login"
     SYSTEM_USER_LOGOUT = "system.user.logout"
     SYSTEM_USER_CREATE = "system.user.create"

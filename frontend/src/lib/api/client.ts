@@ -136,27 +136,18 @@ class APIClient {
   }
 
   /**
-   * Fetch a binary payload (PDF/zip). Does not JSON-parse the body.
+   * Fetch a binary payload (PDF). Does not JSON-parse the body.
    */
-  async getBlob(
-    endpoint: string,
-    params?: Record<string, string>,
-    options?: { method?: 'GET' | 'POST'; body?: unknown }
-  ): Promise<Blob> {
+  async getBlob(endpoint: string, params?: Record<string, string>): Promise<Blob> {
     let url = endpoint;
     if (params) {
       url = `${endpoint}?${new URLSearchParams(params).toString()}`;
     }
     const headers = buildAuthHeaders({ ...this.headers }, this.getToken);
-    if (options?.body) {
-      headers['Content-Type'] = 'application/json';
-    } else {
-      delete headers['Content-Type'];
-    }
+    delete headers['Content-Type'];
     const response = await fetch(`${this.baseURL}${url}`, {
-      method: options?.method ?? 'GET',
+      method: 'GET',
       headers,
-      body: options?.body ? JSON.stringify(options.body) : undefined,
       cache: 'no-store',
     });
     if (!response.ok) {
