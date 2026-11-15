@@ -381,7 +381,7 @@ export function useUpdateOrder() {
     onSuccess: () => {
       notify.show('order.update.success');
     },
-    onSettled: (_, __, variables) => {
+    onSettled: (_data, _error, variables) => {
       const orderIdStr = variables.orderId.toString();
       return invalidateOrderQueries(queryClient, { orderId: orderIdStr, samples: true });
     },

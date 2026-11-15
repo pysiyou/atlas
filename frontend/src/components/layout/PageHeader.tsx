@@ -3,11 +3,11 @@
  * When rendered under AppShell, portals into the top chrome row (same row as sidebar logo).
  */
 
-import React, { type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { text, CHROME, PAGE_HEADER, RADIUS, SURFACE } from '@/theme/recipes';
 import { cn } from '@/utils';
-import { useAppChromeMount } from './appChromeMount';
+import { useAppChromeMount } from './AppChromeMount';
 
 export type PageHeaderVariant = 'detail' | 'bar';
 export type PageHeaderPlacement = 'inline' | 'chrome';
@@ -83,10 +83,10 @@ function PageHeaderContent({
   );
 }
 
-export const PageHeader: React.FC<PageHeaderProps> = ({
+export function PageHeader({
   variant = 'detail',
   ...rest
-}) => {
+}: PageHeaderProps) {
   const mountNode = useAppChromeMount();
   const content = (
     <PageHeaderContent {...rest} variant={variant} placement={mountNode ? 'chrome' : 'inline'} />
@@ -97,4 +97,4 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   }
 
   return content;
-};
+}

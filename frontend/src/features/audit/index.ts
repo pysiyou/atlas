@@ -27,7 +27,7 @@ export { useEventLog } from './useEventLog';
 export { useEventLogPanelState } from './eventLogPanelState';
 export { fetchAuditEvents, normalizeAuditEvent } from './api';
 export { EventLogPage } from './EventLogPage';
-export { EventLogSearchField } from './eventLogSearch';
+export { EventLogSearchField } from './EventLogSearch';
 export {
   classifyEventLogSearchIntent,
   buildEventLogSearchMatchGroups,

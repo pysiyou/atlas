@@ -12,13 +12,13 @@ import { ResultValidationPanel } from '../../validation/ResultValidationForm';
 import type { Test } from '@/types';
 import { useAsyncAction } from '@/hooks';
 import { useListLoadErrorToast } from '@/hooks';
-import { ModalFooter, QueueModalShell, labModalHeaderContext } from '../shared/detailModalLayout';
+import { ModalFooter, QueueModalShell, labModalHeaderContext } from '../shared/DetailModalLayout';
 import { LazyLabEventLogPanel } from '@/features/audit/LazyLabEventLogPanel';
 import { TestHeaderBadges } from '../../components/LabWorkflowBadges';
-import { TestWorkflowCardLeftColumn } from '../shared/queueCardLeftColumn';
+import { TestWorkflowCardLeftColumn } from '../shared/QueueCardLeftColumn';
 import { useTest } from '@/features/catalog';
 import { LabRelatedTestsPanel } from '../../components/LabRelatedWorkflowPanel';
-import { ResultEntryDetailGrid } from './detailModal.resultEntry.grid';
+import { ResultEntryDetailGrid } from './DetailModal.ResultEntry.Grid';
 import { useEnterResults } from '../../api/results';
 import type { LabModalWorkItem } from '../../types/labQueueChrome';
 import { entryDraftLifecycleKey, useLabDraftStore } from '../../state/labDraftStore';
@@ -33,18 +33,18 @@ import {
 import { notify } from '@/feedback';
 import { logger } from '@/utils/logger';
 import { Modal, ModalPageShell } from '@/components/overlays';
-import { LabModalPlaceholder } from '../shared/labModalPlaceholders';
+import { LabModalPlaceholder } from '../shared/LabModalPlaceholders';
 import type { ResultDetailModalProps } from '@/lib/context/modalTypes';
 import { useLabModalWorkItemModel } from '../model/useLabModalWorkItemModel';
 
-export const ResultEntryDetailModal: React.FC<ResultDetailModalProps> = ({
+export function ResultEntryDetailModal({
   isOpen,
   onClose,
   isActive = true,
   orderTestId,
   readOnly = false,
   worklistRow,
-}) => {
+}: ResultDetailModalProps) {
   const queryClient = useQueryClient();
   const {
     order,
@@ -381,7 +381,7 @@ export const ResultEntryDetailModal: React.FC<ResultDetailModalProps> = ({
       )}
     </QueueModalShell>
   );
-};
+}
 
 function EntryDetailModalFooter({
   readOnly,

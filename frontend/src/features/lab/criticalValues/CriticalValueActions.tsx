@@ -2,7 +2,7 @@
  * CriticalValueActions - Notify and acknowledge critical lab results.
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Alert } from '@/components/display';
 
@@ -23,11 +23,11 @@ interface CriticalValueActionsProps {
   onUpdated?: () => void;
 }
 
-export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
+export function CriticalValueActions({
   record,
   compact = false,
   onUpdated,
-}) => {
+}: CriticalValueActionsProps) {
   const { user } = useAuthStore();
   const notifyMutation = useNotifyCriticalValue();
   const acknowledgeMutation = useAcknowledgeCriticalValue();
@@ -135,4 +135,4 @@ export const CriticalValueActions: React.FC<CriticalValueActionsProps> = ({
       )}
     </div>
   );
-};
+}

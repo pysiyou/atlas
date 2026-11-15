@@ -1,8 +1,8 @@
+import React from 'react';
 /**
  * DateInput — single date picker with calendar popover.
  */
 
-import React from 'react';
 import { format } from 'date-fns';
 import { Popover } from '@/components/overlays';
 import { Icon } from '@/components/primitives';
@@ -14,7 +14,7 @@ import { text, inputTrigger,
   inputClearButton,
   FORM_CONTROL_LABEL } from '@/theme/recipes';
 import { FIELD_ERROR, TONE } from '@/theme/recipes';
-import { CalendarGrid, CalendarHeader, useCalendarMonth } from './dateCalendarShared';
+import { CalendarGrid, CalendarHeader, useCalendarMonth } from './DateCalendarShared';
 
 export interface DateInputProps {
   label?: string;
@@ -30,7 +30,7 @@ export interface DateInputProps {
   maxDate?: Date;
 }
 
-export const DateInput: React.FC<DateInputProps> = ({
+export function DateInput({
   label,
   value,
   onChange,
@@ -42,7 +42,7 @@ export const DateInput: React.FC<DateInputProps> = ({
   disabled = false,
   minDate,
   maxDate,
-}) => {
+}: DateInputProps) {
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
   const dateValue = value ? new Date(value) : null;
   const {
@@ -149,4 +149,4 @@ export const DateInput: React.FC<DateInputProps> = ({
       {error && <p className={`${FIELD_ERROR} mt-space-1`}>{error}</p>}
     </div>
   );
-};
+}

@@ -14,13 +14,13 @@ import { validatePhysiologicValue } from '../utils';
 import { titleCaseWords } from '@/utils/string';
 import { RadioCard } from '@/components/overlays';
 
-const SelectParameterInput: React.FC<{
+function SelectParameterInput({ param, value, onChange, inputId, disabled = false }: {
   param: TestParameter;
   value: string;
   onChange: (value: string) => void;
   inputId: string;
   disabled?: boolean;
-}> = ({ param, value, onChange, inputId, disabled = false }) => {
+}) {
   const handleClear = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
@@ -89,9 +89,9 @@ const SelectParameterInput: React.FC<{
       )}
     </Popover>
   );
-};
+}
 
-export const ParameterInput: React.FC<{
+export function ParameterInput({ param, value, onChange, onKeyDown, inputId, validationError, onValidationChange, disabled }: {
   param: TestParameter;
   value: string;
   onChange: (value: string) => void;
@@ -100,7 +100,7 @@ export const ParameterInput: React.FC<{
   validationError?: string;
   onValidationChange?: (error: string | undefined) => void;
   disabled?: boolean;
-}> = ({ param, value, onChange, onKeyDown, inputId, validationError, onValidationChange, disabled }) => {
+}) {
   const valueType =
     param.valueType ||
     (param.type === 'numeric' ? 'NUMERIC' : param.type === 'select' ? 'SELECT' : 'TEXT');
@@ -172,4 +172,4 @@ export const ParameterInput: React.FC<{
       placeholder="--"
     />
   );
-};
+}

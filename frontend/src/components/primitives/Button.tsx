@@ -81,7 +81,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   showTextWhenLoading?: boolean;
 }
 
-export const Button: React.FC<ButtonProps> = ({
+export function Button({
   children,
   variant = 'primary',
   size = 'md',
@@ -95,7 +95,7 @@ export const Button: React.FC<ButtonProps> = ({
   className,
   disabled,
   ...props
-}) => {
+}: ButtonProps) {
   const withIcon = resolveLayout(layout, icon, iconKey) === 'icon-text';
   const shouldRenderIcon = withIcon && (icon != null || iconKey != null);
   const iconClass = labelIconSize[size];
@@ -154,7 +154,7 @@ export const Button: React.FC<ButtonProps> = ({
       {body}
     </button>
   );
-};
+}
 
 interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
   icon?: React.ReactNode;

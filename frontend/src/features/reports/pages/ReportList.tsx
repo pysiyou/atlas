@@ -2,7 +2,7 @@
  * ReportList — server-paginated reportable orders.
  */
 
-import React, { useMemo, useState, useCallback, useEffect, useRef } from 'react';
+import { useMemo, useState, useCallback, useEffect, useRef } from 'react';
 import { usePageFilters } from '@/hooks';
 import { useServerListChrome } from '@/hooks';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -30,7 +30,7 @@ function parseReportOrderId(id: string | undefined): number | null {
   return Number.isFinite(orderId) ? orderId : null;
 }
 
-export const ReportList: React.FC = () => {
+export function ReportList() {
   const listTitles = useModuleListTitles();
   const navigate = useNavigate();
   const { id: routeOrderId } = useParams<{ id?: string }>();
@@ -184,4 +184,4 @@ export const ReportList: React.FC = () => {
       />
     </div>
   );
-};
+}

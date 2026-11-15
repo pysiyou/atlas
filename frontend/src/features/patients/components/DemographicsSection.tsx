@@ -11,7 +11,7 @@ import { FIELD_ERROR, TONE } from '@/theme/recipes';
 import { patientFieldError } from '../patientFormFieldError';
 import { usePatientFormSection } from '../hooks/usePatientFormSection';
 
-export const DemographicsSection: React.FC = () => {
+export function DemographicsSection() {
   const { control, errors } = usePatientFormSection();
   const { field: fullName } = useController({ control, name: 'fullName' });
   const { field: dateOfBirth } = useController({ control, name: 'dateOfBirth' });
@@ -139,4 +139,4 @@ export const DemographicsSection: React.FC = () => {
       </div>
     </div>
   );
-};
+}

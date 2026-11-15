@@ -2,7 +2,6 @@
  * Shared catalog-driven rejection reason dropdown and optional notes field.
  */
 
-import React from 'react';
 import { Alert } from '@/components/display';
 
 import { cn } from '@/utils';
@@ -24,7 +23,7 @@ export interface CatalogRejectionFieldsProps {
   showNotes?: boolean;
 }
 
-export const CatalogRejectionCriteriaFields: React.FC<CatalogRejectionFieldsProps> = ({
+export function CatalogRejectionCriteriaFields({
   criteria,
   criteriaLoading = false,
   rejectionReason,
@@ -36,7 +35,7 @@ export const CatalogRejectionCriteriaFields: React.FC<CatalogRejectionFieldsProp
   notesRows = 2,
   showReason = true,
   showNotes = true,
-}) => {
+}: CatalogRejectionFieldsProps) {
   if (showReason && criteriaLoading) {
     return <p className={text({ role: 'body', intent: 'muted' })}>Loading rejection criteria...</p>;
   }
@@ -85,4 +84,4 @@ export const CatalogRejectionCriteriaFields: React.FC<CatalogRejectionFieldsProp
       )}
     </>
   );
-};
+}

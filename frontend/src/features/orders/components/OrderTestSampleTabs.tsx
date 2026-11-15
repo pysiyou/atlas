@@ -3,10 +3,10 @@
  * Uses lab workflow Panel with fields inline (no nested section panels).
  */
 
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Panel } from '@/components/surfaces';
 import { useUserLookup } from '@/lib/api/users';
-import { OrderTestDescriptionItemGrid } from '../utils/orderTestDescriptionColumns';
+import { OrderTestDescriptionItemGrid } from '../utils/OrderTestDescriptionColumns';
 import { splitDescriptionItemsIntoTwoColumns } from '../utils/orderTestDescriptionLayout';
 import type { Sample, Test } from '@/types';
 import { buildSampleCollectionDescriptionItems } from '@/utils/presentation';
@@ -44,12 +44,12 @@ function CatalogSampleRequirements({ catalogTest }: { catalogTest: Test }) {
   );
 }
 
-export const OrderTestSampleTabs: React.FC<OrderTestSampleTabsProps> = ({
+export function OrderTestSampleTabs({
   samples,
   linkedSampleId,
   catalogTest,
   onViewFullSample,
-}) => {
+}: OrderTestSampleTabsProps) {
   const { getUserName } = useUserLookup();
   const tabs = useMemo(
     () =>
@@ -114,4 +114,4 @@ export const OrderTestSampleTabs: React.FC<OrderTestSampleTabsProps> = ({
       </button>
     </Panel>
   );
-};
+}

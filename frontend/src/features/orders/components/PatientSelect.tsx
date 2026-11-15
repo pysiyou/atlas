@@ -65,14 +65,14 @@ interface PatientSelectorProps {
  * - User can type to search and change selection
  * - Clicking the X clears selection
  */
-const PatientSearchTagInput: React.FC<{
+function PatientSearchTagInput({ selectedPatient, value, onValueChange, onClearSelection, error, disabled = false }: {
   selectedPatient: Patient | null;
   value: string;
   onValueChange: (value: string) => void;
   onClearSelection: () => void;
   error?: string;
   disabled?: boolean;
-}> = ({ selectedPatient, value, onValueChange, onClearSelection, error, disabled = false }) => (
+}) { return (
   <SearchTagInputChrome
     label="Patient"
     htmlFor="order-patient-search"
@@ -113,9 +113,9 @@ const PatientSearchTagInput: React.FC<{
       disabled={disabled}
     />
   </SearchTagInputChrome>
-);
+); }
 
-export const PatientSelect: React.FC<PatientSelectorProps> = ({
+export function PatientSelect({
   selectedPatient,
   patientSearch,
   onPatientSearchChange,
@@ -124,7 +124,7 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
   onClearSelection,
   error,
   disabled = false,
-}) => {
+}: PatientSelectorProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   useAnchoredPopoverDismiss(containerRef, setIsPopoverOpen);
@@ -206,4 +206,4 @@ export const PatientSelect: React.FC<PatientSelectorProps> = ({
       )}
     </div>
   );
-};
+}

@@ -11,14 +11,14 @@ import {
   type TableDateTone,
   TABLE_DATETIME_CELL_CLASS,
   TABLE_DATETIME_SECONDARY_CLASS,
-} from '@/components/data-table/datetimeColumnRender';
+} from '@/components/data-table/DatetimeColumnRender';
 import { PRESENTATION_STACK_CLASS, TABLE_TYPE } from '@/theme/recipes';
-import { renderStackedIdentity } from '@/utils/presentationRenders';
+import { renderStackedIdentity } from '@/utils/PresentationRenders';
 
 export {
   TABLE_DATETIME_CELL_CLASS,
   TABLE_DATETIME_SECONDARY_CLASS,
-} from '@/components/data-table/datetimeColumnRender';
+} from '@/components/data-table/DatetimeColumnRender';
 
 /** Primary table body line — prefer over raw text-text-primary in column renders. */
 export const TABLE_PRIMARY_CELL_CLASS = `${TABLE_TYPE.cell} truncate font-normal`;

@@ -1,10 +1,9 @@
-import React from 'react';
 import { useController } from 'react-hook-form';
 import { Input } from '@/components/inputs';
 import { patientFieldError } from '../patientFormFieldError';
 import { usePatientFormSection } from '../hooks/usePatientFormSection';
 
-export const AddressSection: React.FC = () => {
+export function AddressSection() {
   const { control, errors } = usePatientFormSection();
   const { field: street } = useController({ control, name: 'address.street' });
   const { field: city } = useController({ control, name: 'address.city' });
@@ -48,4 +47,4 @@ export const AddressSection: React.FC = () => {
       </div>
     </div>
   );
-};
+}

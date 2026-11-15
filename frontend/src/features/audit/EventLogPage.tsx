@@ -2,7 +2,6 @@
  * Global event log — all recent audit events with full filter bar.
  */
 
-import React from 'react';
 import { PageHeader } from '@/components/layout';
 import { PANEL, WORKSPACE } from '@/theme/recipes';
 import { EventLogPanel } from './EventLogPanel';
@@ -12,7 +11,7 @@ import { useEventLogUrlPageFilters } from './eventLogPanelState';
 
 const STREAM_QUERY = { scope: 'stream' as const, limit: 2000 };
 
-export const EventLogPage: React.FC = () => {
+export function EventLogPage() {
   const filterPanelState = useEventLogUrlPageFilters({
     query: STREAM_QUERY,
     visibleFields: GLOBAL_EVENT_LOG_FILTER_FIELDS,
@@ -33,4 +32,4 @@ export const EventLogPage: React.FC = () => {
       </div>
     </div>
   );
-};
+}

@@ -3,7 +3,6 @@
  * Main component for displaying order details with responsive layouts
  */
 
-import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useResponsiveLayout } from '@/hooks';
 import { useOrder } from '../api/orders';
@@ -20,7 +19,7 @@ import {
 } from '../components/OrderDetailLayouts';
 import { useModuleListTitles } from '@/hooks';
 
-export const OrderDetail: React.FC = () => {
+export function OrderDetail() {
   const orderLabel = useModuleListTitles().orderDetail;
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -107,4 +106,4 @@ export const OrderDetail: React.FC = () => {
       {renderContent()}
     </DetailPageShell>
   );
-};
+}

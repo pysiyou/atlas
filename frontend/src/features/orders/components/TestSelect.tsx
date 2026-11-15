@@ -105,14 +105,14 @@ interface TestSelectorProps {
  * input text remains controlled by the parent (used to drive the results list).
  * Tags match the patient tag styling (bg-brand-muted, border-border-default) but without avatars.
  */
-const TestSearchTagInput: React.FC<{
+function TestSearchTagInput({ selectedTags, selectedCount, value, onValueChange, onRemoveTag, error }: {
   selectedTags: Array<{ code: string; name: string; test?: TestSummary }>;
   selectedCount: number;
   value: string;
   onValueChange: (value: string) => void;
   onRemoveTag: (code: string) => void;
   error?: string;
-}> = ({ selectedTags, selectedCount, value, onValueChange, onRemoveTag, error }) => (
+}) { return (
   <SearchTagInputChrome
     label="Tests"
     htmlFor="order-test-search"
@@ -148,7 +148,7 @@ const TestSearchTagInput: React.FC<{
       autoComplete="off"
     />
   </SearchTagInputChrome>
-);
+); }
 
 interface TestSelectPopoverProps {
   visibleTests: TestSummary[];
@@ -156,11 +156,11 @@ interface TestSelectPopoverProps {
   onToggleTest: (testCode: string) => void;
 }
 
-const TestSelectPopover: React.FC<TestSelectPopoverProps> = ({
+function TestSelectPopover({
   visibleTests,
   selectedSet,
   onToggleTest,
-}) => (
+}: TestSelectPopoverProps) { return (
   <SearchResultsPopoverShell
     title="Matching tests"
     resultCount={visibleTests.length}
@@ -208,9 +208,9 @@ const TestSelectPopover: React.FC<TestSelectPopoverProps> = ({
             );
     })}
   </SearchResultsPopoverShell>
-);
+); }
 
-export const TestSelect: React.FC<TestSelectorProps> = ({
+export function TestSelect({
   selectedTests,
   testSearch,
   onTestSearchChange,
@@ -218,7 +218,7 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
   onToggleTest,
   error,
   tests = [],
-}) => {
+}: TestSelectorProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   useAnchoredPopoverDismiss(containerRef, setIsPopoverOpen);
@@ -280,4 +280,4 @@ export const TestSelect: React.FC<TestSelectorProps> = ({
       )}
     </div>
   );
-};
+}

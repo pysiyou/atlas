@@ -2,7 +2,6 @@
  * Status chips for retest, recollection, flags, review, and queue blocks.
  */
 
-import React from 'react';
 import { Badge, Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/feedback';
 import type { BadgeSize } from '@/components/primitives';
@@ -18,15 +17,15 @@ interface RetestBadgeProps {
   className?: string;
 }
 
-export const RetestBadge: React.FC<RetestBadgeProps> = ({
+export function RetestBadge({
   retestNumber,
   size = WORKLIST_CARD_BADGE_SIZE,
   className = '',
-}) => (
+}: RetestBadgeProps) { return (
   <Badge size={size} variant="warning" className={className}>
     RE-TEST #{retestNumber}
   </Badge>
-);
+); }
 
 interface RecollectionAttemptBadgeProps {
   attemptNumber: number;
@@ -35,17 +34,17 @@ interface RecollectionAttemptBadgeProps {
   showIcon?: boolean;
 }
 
-export const RecollectionAttemptBadge: React.FC<RecollectionAttemptBadgeProps> = ({
+export function RecollectionAttemptBadge({
   attemptNumber,
   size = WORKLIST_CARD_BADGE_SIZE,
   className = '',
   showIcon = false,
-}) => (
+}: RecollectionAttemptBadgeProps) { return (
   <Badge size={size} variant="warning" className={`flex items-center gap-space-1 ${className}`}>
     {showIcon && <SpinnerLoader size="xs" />}
     RE-COLLECT #{attemptNumber}
   </Badge>
-);
+); }
 
 interface FlagCountBadgeProps {
   count: number;
@@ -54,12 +53,12 @@ interface FlagCountBadgeProps {
   showIcon?: boolean;
 }
 
-export const FlagCountBadge: React.FC<FlagCountBadgeProps> = ({
+export function FlagCountBadge({
   count,
   size = WORKLIST_CARD_BADGE_SIZE,
   className = '',
   showIcon = true,
-}) => {
+}: FlagCountBadgeProps) {
   if (count === 0) return null;
 
   return (
@@ -68,7 +67,7 @@ export const FlagCountBadge: React.FC<FlagCountBadgeProps> = ({
       {count} flag{count !== 1 ? 's' : ''}
     </Badge>
   );
-};
+}
 
 interface ReviewRequiredBadgeProps {
   size?: 'sm' | 'xs';
@@ -76,16 +75,16 @@ interface ReviewRequiredBadgeProps {
   showIcon?: boolean;
 }
 
-export const ReviewRequiredBadge: React.FC<ReviewRequiredBadgeProps> = ({
+export function ReviewRequiredBadge({
   size = WORKLIST_CARD_BADGE_SIZE,
   className = '',
   showIcon = true,
-}) => (
+}: ReviewRequiredBadgeProps) { return (
   <Badge size={size} variant="danger" className={`flex items-center gap-space-1 ${className}`}>
     {showIcon && <Icon iconKey={IconKeys.actions.warning} className={badgeIconClass} />}
     Review Required
   </Badge>
-);
+); }
 
 interface AttentionReasonBadgeProps {
   label: string;
@@ -95,13 +94,13 @@ interface AttentionReasonBadgeProps {
   variant?: 'warning' | 'danger' | 'info';
 }
 
-export const AttentionReasonBadge: React.FC<AttentionReasonBadgeProps> = ({
+export function AttentionReasonBadge({
   label,
   size = 'xs',
   className = '',
   showIcon = true,
   variant = 'warning',
-}) => (
+}: AttentionReasonBadgeProps) { return (
   <Badge
     size={size}
     variant={variant}
@@ -112,7 +111,7 @@ export const AttentionReasonBadge: React.FC<AttentionReasonBadgeProps> = ({
     ) : null}
     {label}
   </Badge>
-);
+); }
 
 interface SupervisorApprovalBadgeProps {
   size?: BadgeSize;
@@ -120,14 +119,14 @@ interface SupervisorApprovalBadgeProps {
 }
 
 /** Supervisor gate — recollection / authorization queues (not specimen blocked). */
-export const SupervisorApprovalBadge: React.FC<SupervisorApprovalBadgeProps> = ({
+export function SupervisorApprovalBadge({
   size = WORKLIST_CARD_BADGE_SIZE,
   className = '',
-}) => (
+}: SupervisorApprovalBadgeProps) { return (
   <AttentionReasonBadge
     label={ATTENTION_LABELS.supervisor_review}
     size={size}
     variant="danger"
     className={className}
   />
-);
+); }

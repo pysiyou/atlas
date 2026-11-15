@@ -3,7 +3,6 @@
  * Displays patient header with avatar and action buttons. Uses shared PageHeader for a11y and layout.
  */
 
-import React from 'react';
 import { CONTROL, INTERACTIVE, RADIUS } from '@/theme/recipes';
 import { actionButtonPreset, Avatar, Icon, IconButton } from '@/components/primitives';
 import { PageHeader } from '@/components/layout';
@@ -19,11 +18,11 @@ export interface PatientHeaderProps {
   onEdit: () => void;
 }
 
-export const PatientHeader: React.FC<PatientHeaderProps> = ({
+export function PatientHeader({
   patient,
   isLarge,
   onEdit,
-}) => {
+}: PatientHeaderProps) {
   const avatar = (
     <div className="flex items-center gap-space-2">
       <Avatar primaryText={patient.fullName} size="sm" avatarOnly />
@@ -59,4 +58,4 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
     </div>
   );
   return <PageHeader title={patient.fullName} avatar={avatar} actions={actions} />;
-};
+}

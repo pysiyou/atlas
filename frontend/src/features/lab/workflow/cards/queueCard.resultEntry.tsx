@@ -3,7 +3,7 @@
  */
 /* eslint-disable react-refresh/only-export-components -- queue card + colocated data hook */
 
-import { memo, useMemo, type FC } from 'react';
+import React, { memo, useMemo, type FC } from 'react';
 import { actionButtonPreset, IconButton } from '@/components/primitives';
 import { Card } from '@/components/surfaces';
 import { cn } from '@/utils';
@@ -20,8 +20,8 @@ import {
   retestContextFromRow,
   type LabOrderTestQueueRow,
 } from '../../types/labQueueChrome';
-import { QueueCard, QueueCardMobile } from '../shared/queueCardLayout';
-import { TestWorkflowCardLeftColumn } from '../shared/queueCardLeftColumn';
+import { QueueCard, QueueCardMobile } from '../shared/QueueCardLayout';
+import { TestWorkflowCardLeftColumn } from '../shared/QueueCardLeftColumn';
 
 export interface ResultEntryCardProps {
   row: EntryQueueRow;

@@ -1,10 +1,10 @@
+import React from 'react';
 /**
  * MedicalHistorySectionDisplay
  * Read-only medical history in a two-column vertical flow.
  */
 /* eslint-disable react-refresh/only-export-components -- description builders exported for order detail */
 
-import React from 'react';
 import type { Patient } from '@/types';
 import { DescriptionItem } from '@/components/display';
 
@@ -71,12 +71,12 @@ export function renderMedicalHistoryDescriptionItems(patient: Patient): React.Re
   ];
 }
 
-export const MedicalHistorySectionDisplay: React.FC<MedicalHistorySectionDisplayProps> = ({
+export function MedicalHistorySectionDisplay({
   patient,
-}) => {
+}: MedicalHistorySectionDisplayProps) {
   return (
     <div className="flex min-h-0 h-full flex-col">
       <DescriptionColumns>{renderMedicalHistoryDescriptionItems(patient)}</DescriptionColumns>
     </div>
   );
-};
+}

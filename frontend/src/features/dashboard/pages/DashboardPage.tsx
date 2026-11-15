@@ -3,20 +3,19 @@
  * Reception/admin overview with real metrics (no stub data).
  */
 
-import React from 'react';
 import { useAuthStore } from '@/app/authStore';
 import { formatDate } from '@/utils';
 import { useDashboardSummary } from '../api/dashboard';
 import { LabPipelineSummary } from '../components/LabPipelineSummary';
 import { PendingCriticalValuesPanel } from '@/features/lab/cross';
 import { DashboardStatsGrid } from '../components/DashboardStatsGrid';
-import { buildDashboardStats } from '../components/buildDashboardStats';
+import { buildDashboardStats } from '../components/BuildDashboardStats';
 import { DashboardOrdersInProgressBanner } from '../components/DashboardOrdersInProgressBanner';
 import { DashboardRecentOrders } from '../components/DashboardRecentOrders';
 import { PageHeader } from '@/components/layout';
 import { WORKSPACE } from '@/theme/recipes';
 
-export const Dashboard: React.FC = () => {
+export function Dashboard() {
   const { user: currentUser, hasRole } = useAuthStore();
   const { summary, isLoading } = useDashboardSummary();
   const loading = isLoading && summary == null;
@@ -69,4 +68,4 @@ export const Dashboard: React.FC = () => {
       </div>
     </div>
   );
-};
+}

@@ -2,7 +2,7 @@
  * OrderInfoSection — order metadata in a two-column row grid (Created by spans full width last).
  */
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { RecordId } from '@/features/shared';
 import type { Order } from '@/types';
 import { OrderPriorityBadge, OrderStatusBadge } from './OrderDomainBadges';
@@ -18,14 +18,14 @@ import {
 import { useUserLookup } from '@/lib/api/users';
 import { useTestNameLookup } from '@/features/catalog';
 import { getBillableTests } from '../utils/orderCalculator';
-import { renderOrderTestsBlock } from '@/features/shared/entityPresentation';
+import { renderOrderTestsBlock } from '@/features/shared/EntityPresentation';
 import { OrderDoctorApprovalControl } from './OrderDoctorApprovalControl';
 
 export interface OrderInfoSectionProps {
   order: Order;
 }
 
-export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order }) => {
+export function OrderInfoSection({ order }: OrderInfoSectionProps) {
   const { getUserName } = useUserLookup();
   const { getTestName } = useTestNameLookup();
   const createdById = order.createdBy?.trim() || null;
@@ -117,4 +117,4 @@ export const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({ order }) => 
       </div>
     </div>
   );
-};
+}

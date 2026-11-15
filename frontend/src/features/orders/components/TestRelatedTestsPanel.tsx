@@ -2,7 +2,7 @@
  * Related order tests — same sample tube and same test code (retest rows).
  */
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Panel } from '@/components/surfaces';
 import type { Order, OrderTest } from '@/types';
 import { text } from '@/theme/recipes';
@@ -18,11 +18,11 @@ export type TestRelatedTestsPanelProps = {
   onOpenOrderTest: (test: OrderTest) => void;
 };
 
-export const TestRelatedTestsPanel: React.FC<TestRelatedTestsPanelProps> = ({
+export function TestRelatedTestsPanel({
   order,
   orderTest,
   onOpenOrderTest,
-}) => {
+}: TestRelatedTestsPanelProps) {
   const onSample = useMemo(
     () => getSiblingOrderTestsOnSample(order, orderTest),
     [order, orderTest]
@@ -54,4 +54,4 @@ export const TestRelatedTestsPanel: React.FC<TestRelatedTestsPanelProps> = ({
       </div>
     </Panel>
   );
-};
+}

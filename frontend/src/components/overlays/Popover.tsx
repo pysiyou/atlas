@@ -105,7 +105,7 @@ interface FloatingContentProps {
  * Inner component for popover content to properly handle the floating ref
  * Extracted to avoid eslint react-hooks/refs false positive
  */
-const FloatingContent: React.FC<FloatingContentProps> = ({
+function FloatingContent({
   floatingRef,
   floatingStyles,
   floatingProps,
@@ -114,7 +114,7 @@ const FloatingContent: React.FC<FloatingContentProps> = ({
   duration,
   onClose,
   children,
-}) => {
+}: FloatingContentProps) {
   return (
     <div ref={floatingRef} style={floatingStyles} className="z-[100]">
       <motion.div
@@ -136,12 +136,12 @@ const FloatingContent: React.FC<FloatingContentProps> = ({
       </motion.div>
     </div>
   );
-};
+}
 
 /**
  * Popover component that automatically positions itself relative to a trigger element
  */
-export const Popover: React.FC<PopoverProps> = ({
+export function Popover({
   trigger,
   children,
   placement = 'bottom',
@@ -155,7 +155,7 @@ export const Popover: React.FC<PopoverProps> = ({
   open: controlledOpen,
   onOpenChange,
   defaultOpen = false,
-}) => {
+}: PopoverProps) {
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
   const isControlled = controlledOpen !== undefined;
   const isOpen = isControlled ? controlledOpen : uncontrolledOpen;
@@ -259,4 +259,4 @@ export const Popover: React.FC<PopoverProps> = ({
       </FloatingPortal>
     </>
   );
-};
+}

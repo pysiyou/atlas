@@ -2,7 +2,6 @@
  * Banner shown when orders are in progress for reception roles.
  */
 
-import React from 'react';
 import { Card } from '@/components/surfaces';
 import { Icon } from '@/components/primitives';
 import { IconKeys } from '@/icons';
@@ -13,10 +12,10 @@ export interface DashboardOrdersInProgressBannerProps {
   loading?: boolean;
 }
 
-export const DashboardOrdersInProgressBanner: React.FC<DashboardOrdersInProgressBannerProps> = ({
+export function DashboardOrdersInProgressBanner({
   pendingOrders,
   loading = false,
-}) => {
+}: DashboardOrdersInProgressBannerProps) {
   if (!loading && pendingOrders <= 0) {
     return null;
   }
@@ -34,4 +33,4 @@ export const DashboardOrdersInProgressBanner: React.FC<DashboardOrdersInProgress
       </div>
     </Card>
   );
-};
+}

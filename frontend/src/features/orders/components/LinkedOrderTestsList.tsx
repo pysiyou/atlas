@@ -2,7 +2,6 @@
  * Plain-text list of order tests with navigation to order test detail.
  */
 
-import React from 'react';
 import { RecordId } from '@/features/shared';
 import type { OrderTest } from '@/types';
 import { displayId } from '@/utils';
@@ -14,7 +13,7 @@ export type LinkedOrderTestsListProps = {
   onOpen: (test: OrderTest) => void;
 };
 
-export const LinkedOrderTestsList: React.FC<LinkedOrderTestsListProps> = ({ tests, onOpen }) => {
+export function LinkedOrderTestsList({ tests, onOpen }: LinkedOrderTestsListProps) {
   if (tests.length === 0) return null;
 
   return (
@@ -39,4 +38,4 @@ export const LinkedOrderTestsList: React.FC<LinkedOrderTestsListProps> = ({ test
       ))}
     </ul>
   );
-};
+}

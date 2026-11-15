@@ -3,7 +3,6 @@
  * Order: link badge (re-test of / recollection of) → attempt indicator (2/3).
  */
 
-import React from 'react';
 import type { BadgeSize } from '@/components/primitives';
 import type { Sample } from '@/types';
 import { AttemptIndicator } from './LabAttemptIndicators';
@@ -25,7 +24,7 @@ export interface LabRejectionTailBadgesProps {
   size?: BadgeSize;
 }
 
-export const LabRejectionTailBadges: React.FC<LabRejectionTailBadgesProps> = ({
+export function LabRejectionTailBadges({
   retestOfTestId,
   originalSampleId,
   showRetestLink = false,
@@ -35,7 +34,7 @@ export const LabRejectionTailBadges: React.FC<LabRejectionTailBadgesProps> = ({
   attemptType,
   previousReason,
   size,
-}) => {
+}: LabRejectionTailBadgesProps) {
   const showAttempt = attemptNumber > 1;
   const hasLink =
     (showRetestLink && retestOfTestId != null) ||
@@ -61,13 +60,13 @@ export const LabRejectionTailBadges: React.FC<LabRejectionTailBadgesProps> = ({
       )}
     </>
   );
-};
+}
 
-export const LabRejectionTailBadgesFromWorkItem: React.FC<{
+export function LabRejectionTailBadgesFromWorkItem({ row, previousReason, size }: {
   row: LabOrderTestQueueRow;
   previousReason?: string;
   size?: BadgeSize;
-}> = ({ row, previousReason, size }) => {
+}) {
   const ctx = deriveRetestContextFromRow(row);
   if (!ctx.showAttemptIndicator && !ctx.showRetestBadge && !ctx.showRecollectionLink) {
     return null;
@@ -86,12 +85,12 @@ export const LabRejectionTailBadgesFromWorkItem: React.FC<{
       size={size}
     />
   );
-};
+}
 
-export const LabRejectionTailBadgesFromSample: React.FC<{
+export function LabRejectionTailBadgesFromSample({ sample, size }: {
   sample: Sample;
   size?: BadgeSize;
-}> = ({ sample, size }) => {
+}) {
   if (!sample.isRecollection) return null;
 
   return (
@@ -105,4 +104,4 @@ export const LabRejectionTailBadgesFromSample: React.FC<{
       size={size}
     />
   );
-};
+}

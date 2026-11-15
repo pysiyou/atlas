@@ -2,7 +2,7 @@
  * PatientOrdersTable – related orders on patient detail (columns tuned for that panel).
  */
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { getEmptyCopy } from '@/copy';
 import { EmptyState } from '@/components/display/EmptyState';
 import { PANEL_EMPTY_STATE } from '@/copy';
@@ -24,11 +24,11 @@ const EMPTY_MESSAGE = (
   />
 );
 
-export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({
+export function PatientOrdersTable({
   orders,
   onOrderClick,
   loading = false,
-}) => {
+}: PatientOrdersTableProps) {
   const { getTestName } = useTestNameLookup();
 
   const viewConfig = useMemo(
@@ -49,4 +49,4 @@ export const PatientOrdersTable: React.FC<PatientOrdersTableProps> = ({
       embedded
     />
   );
-};
+}

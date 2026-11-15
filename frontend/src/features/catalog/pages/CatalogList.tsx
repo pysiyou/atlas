@@ -2,7 +2,7 @@
  * CatalogList — test catalog with client-side filters and pagination.
  */
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTestCatalog } from '../api/tests';
 import { ListView } from '@/components/surfaces';
@@ -17,7 +17,7 @@ import { applyPageFilters, useClientListChrome, usePageFilters } from '@/hooks';
 import type { TestSummary } from '@/types';
 import { useModuleListTitles } from '@/hooks';
 
-export const CatalogList: React.FC = () => {
+export function CatalogList() {
   const listTitles = useModuleListTitles();
   const navigate = useNavigate();
 
@@ -59,4 +59,4 @@ export const CatalogList: React.FC = () => {
       />
     </div>
   );
-};
+}

@@ -2,7 +2,6 @@
  * OrderReceipt — shared dashed receipt for billing panel, payment popover, and payment modal.
  */
 
-import React from 'react';
 import { RecordId } from '@/features/shared';
 import { StatusValueBadge } from '@/features/shared';
 import { cn, displayId, formatCurrency, formatDateTime } from '@/utils';
@@ -228,7 +227,7 @@ function ReceiptItems({
   );
 }
 
-export const OrderReceipt: React.FC<OrderReceiptProps> = ({
+export function OrderReceipt({
   order,
   variant = 'panel',
   paymentDate,
@@ -238,7 +237,7 @@ export const OrderReceipt: React.FC<OrderReceiptProps> = ({
   expandItems = false,
   amountPaid,
   remainingAmount,
-}) => {
+}: OrderReceiptProps) {
   const billableTests = getBillableTests(order.tests ?? []);
   const billableTotal = getBillableTotal(order.tests ?? []);
   const pad = variant === 'detailed' ? 'px-table-cell-x-default' : variant === 'compact' ? 'px-space-3' : 'px-space-4';
@@ -265,4 +264,4 @@ export const OrderReceipt: React.FC<OrderReceiptProps> = ({
       )}
     </div>
   );
-};
+}

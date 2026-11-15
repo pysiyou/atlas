@@ -2,7 +2,7 @@
  * Modal shell for list-page filters on small screens.
  */
 
-import React, { type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { Modal, ModalPageShell, OverlaySearchInput } from '@/components/overlays';
 import type { IconKey } from '@/icons';
 import { FilterModalFooter } from './FilterModalFooter';
@@ -19,7 +19,7 @@ export interface ListFilterModalProps {
   children: ReactNode;
 }
 
-export const ListFilterModal: React.FC<ListFilterModalProps> = ({
+export function ListFilterModal({
   isOpen,
   onClose,
   searchQuery,
@@ -29,7 +29,7 @@ export const ListFilterModal: React.FC<ListFilterModalProps> = ({
   footerIcon,
   footerLabel,
   children,
-}) => (
+}: ListFilterModalProps) { return (
   <Modal isOpen={isOpen} onClose={onClose} title="Filter" size="md">
     <ModalPageShell
       tone="panel"
@@ -53,4 +53,4 @@ export const ListFilterModal: React.FC<ListFilterModalProps> = ({
       <div className="space-y-space-5">{children}</div>
     </ModalPageShell>
   </Modal>
-);
+); }

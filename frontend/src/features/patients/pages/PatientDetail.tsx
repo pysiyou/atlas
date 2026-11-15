@@ -1,9 +1,9 @@
+import React from 'react';
 /**
  * PatientDetail Component
  * Main component for displaying patient details with responsive layouts
  */
 
-import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useResponsiveLayout } from '@/hooks';
 import { usePatient } from '../api/patients';
@@ -16,7 +16,7 @@ import { SmallScreenLayout, MediumScreenLayout, LargeScreenLayout } from '../com
 import { feedbackTitle } from '@/feedback';
 import { useModuleListTitles } from '@/hooks';
 
-export const PatientDetail: React.FC = () => {
+export function PatientDetail() {
   const patientLabel = useModuleListTitles().patientDetail;
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -78,4 +78,4 @@ export const PatientDetail: React.FC = () => {
       )}
     </>
   );
-};
+}

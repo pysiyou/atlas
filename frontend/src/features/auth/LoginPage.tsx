@@ -5,7 +5,7 @@
  * Uses useLoginForm hook for all form logic to avoid duplication.
  */
 
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { useLoginForm } from './useLoginForm';
 import { LoginBackground } from './LoginBackground';
 import { LoginBrandingPanel } from './LoginBrandingPanel';
@@ -16,7 +16,7 @@ import { LoginFormCard } from './LoginFormCard';
  * Renders the complete login page with branding, form, and background effects
  * PublicRoute component handles redirecting authenticated users
  */
-export const LoginPage: React.FC = () => {
+export function LoginPage() {
   // Use the hook for all form logic
   const {
     username,
@@ -64,4 +64,4 @@ export const LoginPage: React.FC = () => {
       </div>
     </div>
   );
-};
+}

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { text } from '@/theme/recipes';
 import type { PaymentMethod } from '@/types';
 import { getEnabledPaymentMethods } from '@/features/payments/constants/paymentMethods';
@@ -17,7 +17,7 @@ export interface OrderPaymentSectionProps {
   onClearError: () => void;
 }
 
-export const OrderPaymentSection: React.FC<OrderPaymentSectionProps> = ({
+export function OrderPaymentSection({
   mode,
   paymentMethod,
   onPaymentMethodChange,
@@ -25,7 +25,7 @@ export const OrderPaymentSection: React.FC<OrderPaymentSectionProps> = ({
   isProcessingPayment,
   paymentError,
   onClearError,
-}) => {
+}: OrderPaymentSectionProps) {
   const methods = useMemo(() => getEnabledPaymentMethods(), []);
 
   if (mode !== 'create') return null;
@@ -49,4 +49,4 @@ export const OrderPaymentSection: React.FC<OrderPaymentSectionProps> = ({
       )}
     </div>
   );
-};
+}

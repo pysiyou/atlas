@@ -10,7 +10,7 @@ import { formatPatientSexAgeLine } from '@/utils/presentation';
 import {
   renderCardDateTimeSecondary,
   renderOrderTestsBlock,
-} from '@/features/shared/entityPresentation';
+} from '@/features/shared/EntityPresentation';
 import { getBillableTests } from '../utils/orderCalculator';
 import type { Order } from '@/types';
 import { CardFooter, Text } from '@/components/layout';

@@ -206,11 +206,11 @@ export interface LabAttentionPanelProps {
   loading?: boolean;
 }
 
-export const LabAttentionPanel: React.FC<LabAttentionPanelProps> = ({
+export function LabAttentionPanel({
   items,
   attentionTotal,
   loading = false,
-}) => {
+}: LabAttentionPanelProps) {
   const shownTests = items.reduce((sum, item) => sum + item.workItemCount, 0);
   const capped = attentionTotal > shownTests;
 
@@ -232,4 +232,4 @@ export const LabAttentionPanel: React.FC<LabAttentionPanelProps> = ({
       <AttentionFeed items={items} />
     </Panel>
   );
-};
+}

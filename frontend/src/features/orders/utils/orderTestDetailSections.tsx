@@ -12,7 +12,7 @@ import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import {
   buildOrderTestWorkflowFields,
   type OrderTestWorkflowFieldOptions,
-} from './buildOrderTestWorkflowFields';
+} from './BuildOrderTestWorkflowFields';
 
 export type OrderTestWorkflowOptions = OrderTestWorkflowFieldOptions;
 

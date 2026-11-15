@@ -1,7 +1,7 @@
 /**
  * Read-only parameter display — inline (validation card) or tile (entry) layouts.
  */
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import {
   getParameterReferenceIntervalLines,
   parseResultEntry,
@@ -36,7 +36,7 @@ interface ResultsParameterGridProps {
   dense?: boolean;
 }
 
-export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
+export function ResultsParameterGrid({
   results,
   flags,
   testCode,
@@ -44,7 +44,7 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
   variant = 'inline',
   layout = 'table',
   dense = false,
-}) => {
+}: ResultsParameterGridProps) {
   const flagStatusMap = useMemo(() => statusMapFromFlags(flags), [flags]);
   const { test: catalogTest } = useTest(testCode);
   const parameterLabels = useMemo(
@@ -202,4 +202,4 @@ export const ResultsParameterGrid: React.FC<ResultsParameterGridProps> = ({
       )}
     </div>
   );
-};
+}

@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { CHROME } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { SidebarSettingsMenu } from './SidebarSettingsMenu';
-import { SidebarNavIcon } from './sidebarNavIcon';
+import { SidebarNavIcon } from './SidebarNavIcon';
 import type {
   SidebarNavItem,
   SidebarSettingsLink,

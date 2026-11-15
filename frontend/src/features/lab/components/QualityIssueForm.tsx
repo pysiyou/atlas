@@ -1,7 +1,7 @@
+import React from 'react';
 /**
  * Unified quality issue form — used at collection (sample reject).
  */
-import React from 'react';
 import { text } from '@/theme/recipes';
 import { Alert } from '@/components/display';
 
@@ -64,7 +64,7 @@ export interface QualityIssueFormProps {
   onOptionsLoaded?: (options: QualityIssueOptions | undefined) => void;
 }
 
-export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
+export function QualityIssueForm({
   targetType,
   targetId,
   title: _title,
@@ -78,7 +78,7 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
   reason,
   notes,
   onOptionsLoaded,
-}) => {
+}: QualityIssueFormProps) {
   const { data: options, isLoading } = useQualityIssueOptions(targetType, targetId);
 
   React.useEffect(() => {
@@ -150,4 +150,4 @@ export const QualityIssueForm: React.FC<QualityIssueFormProps> = ({
       )}
     </div>
   );
-};
+}

@@ -3,7 +3,7 @@
  * testCatalog required for name/category/sample lookups; variant drives simple vs detailed columns.
  */
 
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { DataTable } from '@/components/data-table';
 import { EmptyState } from '@/components/display';
 import { getEmptyCopy, PANEL_EMPTY_STATE } from '@/copy';
@@ -30,11 +30,11 @@ const EMPTY_MESSAGE = (
   />
 );
 
-export const TestsTable: React.FC<TestsTableProps> = ({
+export function TestsTable({
   tests,
   variant = 'simple',
   loading = false,
-}) => {
+}: TestsTableProps) {
   const { openModal } = useModal();
   const { tests: testCatalog = [] } = useTestCatalog();
   const visibleTests = useMemo(() => tests.filter(t => t.status !== 'removed'), [tests]);
@@ -70,4 +70,4 @@ export const TestsTable: React.FC<TestsTableProps> = ({
       embedded
     />
   );
-};
+}

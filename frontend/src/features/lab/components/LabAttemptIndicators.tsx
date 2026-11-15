@@ -1,7 +1,7 @@
 /**
  * Attempt count indicator and remaining-attempt progress bar.
  */
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Badge } from '@/components/primitives';
 import { cn } from '@/utils';
 import { IconKeys } from '@/icons';
@@ -24,13 +24,13 @@ interface AttemptIndicatorProps {
  * AttemptIndicator component
  * Shows attempt count with hover tooltip for rejection history
  */
-export const AttemptIndicator: React.FC<AttemptIndicatorProps> = ({
+export function AttemptIndicator({
   attemptNumber,
   maxAttempts,
   type,
   previousReason,
   className,
-}) => {
+}: AttemptIndicatorProps) {
   const [showTooltip, setShowTooltip] = useState(false);
 
   if (attemptNumber <= 1) {
@@ -77,7 +77,7 @@ export const AttemptIndicator: React.FC<AttemptIndicatorProps> = ({
       )}
     </div>
   );
-};
+}
 
 /**
  * AttemptProgressBar - Visual indicator for remaining attempts
@@ -106,13 +106,13 @@ const VARIANT_TONES = {
  * AttemptProgressBar component
  * Displays a progress bar showing used/remaining attempts
  */
-export const AttemptProgressBar: React.FC<AttemptProgressBarProps> = ({
+export function AttemptProgressBar({
   used,
   total,
   label,
   variant = 'sky',
   className,
-}) => {
+}: AttemptProgressBarProps) {
   const remaining = Math.max(0, total - used);
   const percentage = total > 0 ? ((total - used) / total) * 100 : 0;
   const colors = VARIANT_TONES[variant];
@@ -133,5 +133,5 @@ export const AttemptProgressBar: React.FC<AttemptProgressBarProps> = ({
       </div>
     </div>
   );
-};
+}
 

@@ -15,19 +15,19 @@ export type ModalLoader = () => Promise<{ default: RegisteredModalComponent }>;
 
 const MODAL_LOADERS: Partial<Record<ModalTypeName, ModalLoader>> = {
   [ModalType.SAMPLE_DETAIL]: () =>
-    import('@/features/lab/workflow/modals/detailModal.sampleCollection').then(m => ({
+    import('@/features/lab/workflow/modals/DetailModal.SampleCollection').then(m => ({
       default: m.SampleCollectionDetailModal as unknown as RegisteredModalComponent,
     })),
   [ModalType.RESULT_DETAIL]: () =>
-    import('@/features/lab/workflow/modals/detailModal.resultEntry').then(m => ({
+    import('@/features/lab/workflow/modals/DetailModal.ResultEntry').then(m => ({
       default: m.ResultEntryDetailModal as unknown as RegisteredModalComponent,
     })),
   [ModalType.TEST_DETAIL]: () =>
-    import('@/features/lab/workflow/modals/detailModal.testDetail').then(m => ({
+    import('@/features/lab/workflow/modals/DetailModal.TestDetail').then(m => ({
       default: m.TestDetailModal as unknown as RegisteredModalComponent,
     })),
   [ModalType.ESCALATION_RESOLUTION_DETAIL]: () =>
-    import('@/features/lab/workflow/modals/detailModal.escalation').then(m => ({
+    import('@/features/lab/workflow/modals/DetailModal.Escalation').then(m => ({
       default: m.EscalationResolutionModal as unknown as RegisteredModalComponent,
     })),
   [ModalType.NEW_ORDER]: () =>

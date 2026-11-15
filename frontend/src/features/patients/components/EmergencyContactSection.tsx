@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useController } from 'react-hook-form';
 import { Input } from '@/components/inputs';
 import { MultiSelectFilter } from '@/components/overlays';
@@ -10,7 +10,7 @@ import { FIELD_ERROR, TONE } from '@/theme/recipes';
 import { patientFieldError } from '../patientFormFieldError';
 import { usePatientFormSection } from '../hooks/usePatientFormSection';
 
-export const EmergencyContactSection: React.FC = () => {
+export function EmergencyContactSection() {
   const { control, errors } = usePatientFormSection();
   const { field: fullName } = useController({ control, name: 'emergencyContact.fullName' });
   const { field: relationship } = useController({ control, name: 'emergencyContact.relationship' });
@@ -101,4 +101,4 @@ export const EmergencyContactSection: React.FC = () => {
       </div>
     </div>
   );
-};
+}

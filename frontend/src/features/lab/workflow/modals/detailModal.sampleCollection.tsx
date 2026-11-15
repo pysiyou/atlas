@@ -2,7 +2,7 @@
  * SampleCollectionDetailModal — loads a sample by id and owns collect mutations.
  */
 
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query';
 import { sampleAPI, useCollectSample, useSampleWorkContext } from '../../api/samples';
@@ -16,23 +16,23 @@ import type { SampleCollectionQueueItem } from '@/types';
 import { deriveCollectionModalFields } from '@/utils/presentation';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Modal, ModalPageShell } from '@/components/overlays';
-import { QueueModalShell } from '../shared/detailModalLayout';
-import { LabModalPlaceholder } from '../shared/labModalPlaceholders';
+import { QueueModalShell } from '../shared/DetailModalLayout';
+import { LabModalPlaceholder } from '../shared/LabModalPlaceholders';
 import { useListLoadErrorToast } from '@/hooks';
-import { SampleCollectionDetailModalView } from './detailModal.sampleCollection.view';
+import { SampleCollectionDetailModalView } from './DetailModal.SampleCollection.View';
 import { findCollectionQueueItem } from '../../utils/findCollectionQueueItem';
 import { useSubmitSampleCollection } from '../../collection/useSubmitSampleCollection';
 import { useAuthStore } from '@/app/authStore';
 import type { SampleDetailModalProps } from '@/lib/context/modalTypes';
 import { worklistItemToQueueRow } from '../../utils/worklistMappers';
 
-export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({
+export function SampleCollectionDetailModal({
   isOpen,
   onClose,
   isActive = true,
   sampleId,
   readOnly = false,
-}) => {
+}: SampleDetailModalProps) {
   const { getUserName } = useUserLookup();
   const { tests = [] } = useTestCatalog();
   const { openModal } = useModal();
@@ -233,4 +233,4 @@ export const SampleCollectionDetailModal: React.FC<SampleDetailModalProps> = ({
       openSampleDetail={openSampleDetail}
     />
   );
-};
+}

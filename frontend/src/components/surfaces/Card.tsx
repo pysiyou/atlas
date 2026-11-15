@@ -34,7 +34,7 @@ export interface CardProps {
 
 const cardSurfaceClass = cn(SURFACE.raised, RADIUS.surface, 'duration-200');
 
-export const Card: React.FC<CardProps> = ({
+export function Card({
   children,
   className = '',
   padding = 'md',
@@ -42,7 +42,7 @@ export const Card: React.FC<CardProps> = ({
   hover = false,
   onClick,
   loading = false,
-}) => {
+}: CardProps) {
   /** Same pair pattern as Panel; min-height gives auto-sized cards a measurable host. */
   const body = loading ? (
     <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
@@ -74,4 +74,4 @@ export const Card: React.FC<CardProps> = ({
       {body}
     </div>
   );
-};
+}

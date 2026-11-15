@@ -2,7 +2,7 @@
  * Queue card left columns — sample collection and test workflow stages.
  */
 
-import { type ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { cn, formatDate } from '@/utils';
 import { RecordId } from '@/features/shared';
 import { type ContainerType, type Sample, type RejectedSample } from '@/types';

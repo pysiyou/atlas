@@ -3,13 +3,12 @@
  * Modal interface for filters on small screens
  */
 
-import React from 'react';
 import { Modal, ModalPageShell } from '@/components/overlays';
 import { FILTER_TYPE } from '@/theme/recipes';
 import { QuickFilters } from './QuickFilters';
 import { FilterModalFooter } from './FilterModalFooter';
 import type { FilterConfig, ActiveFilterBadge, FilterValues } from './types';
-import { renderFilterControl } from './filterControlRender';
+import { renderFilterControl } from './FilterControlRender';
 
 export interface FilterModalProps {
   isOpen: boolean;
@@ -23,7 +22,7 @@ export interface FilterModalProps {
   onPresetClick: (presetId: string) => void;
 }
 
-export const FilterModal: React.FC<FilterModalProps> = ({
+export function FilterModal({
   isOpen,
   onClose,
   config,
@@ -32,7 +31,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
   onClearAll,
   activePresetId,
   onPresetClick,
-}) => {
+}: FilterModalProps) {
   // Get search and non-search controls
   const isTextControl = (c: (typeof config.primaryFilters.controls)[0]) =>
     c.type === 'search' || c.type === 'text';
@@ -102,4 +101,4 @@ export const FilterModal: React.FC<FilterModalProps> = ({
       </ModalPageShell>
     </Modal>
   );
-};
+}

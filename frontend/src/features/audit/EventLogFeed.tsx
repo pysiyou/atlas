@@ -267,12 +267,12 @@ interface EventLogFeedProps {
   emptyDescription?: string;
 }
 
-export const EventLogFeed: React.FC<EventLogFeedProps> = ({
+export function EventLogFeed({
   items,
   className,
   emptyTitle = EVENT_LOG_COPY.emptyTitle,
   emptyDescription = EVENT_LOG_COPY.emptyDescription,
-}) => {
+}: EventLogFeedProps) {
   const dayGroups = useMemo(() => groupEventLogByDay(items), [items]);
 
   if (items.length === 0) {
@@ -304,4 +304,4 @@ export const EventLogFeed: React.FC<EventLogFeedProps> = ({
       ))}
     </div>
   );
-};
+}

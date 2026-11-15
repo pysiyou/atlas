@@ -2,7 +2,6 @@
  * Lab dashboard — today panel, attention queue, event log panel, orders table.
  */
 
-import React from 'react';
 import { useClientListChrome } from '@/hooks';
 import { SPLIT_WORKSPACE_PANEL } from '@/theme/recipes';
 import { SPLIT_BOTTOM_PANEL, SPLIT_BOTTOM_ROW, SPLIT_WORKSPACE_PAGE, SPLIT_TABLE_WRAP } from '@/theme/recipes';
@@ -17,9 +16,9 @@ export interface LabMonitorBoardProps {
   monitorActive?: boolean;
 }
 
-export const LabMonitorBoard: React.FC<LabMonitorBoardProps> = ({
+export function LabMonitorBoard({
   monitorActive = true,
-}) => {
+}: LabMonitorBoardProps) {
   const board = useLabMonitorViewModel({ enabled: monitorActive });
   useClientListChrome({
     loadFailedKey: 'lab.page.loadFailed',
@@ -55,4 +54,4 @@ export const LabMonitorBoard: React.FC<LabMonitorBoardProps> = ({
       </div>
     </div>
   );
-};
+}

@@ -27,7 +27,7 @@ function familyHistoryDisplay(value: string[] | string | null | undefined): stri
   return '';
 }
 
-export const MedicalHistorySection: React.FC = () => {
+export function MedicalHistorySection() {
   const { control } = usePatientFormSection();
   const { field: chronicConditions } = useController({
     control,
@@ -115,4 +115,4 @@ export const MedicalHistorySection: React.FC = () => {
       </div>
     </div>
   );
-};
+}

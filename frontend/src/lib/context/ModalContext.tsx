@@ -6,16 +6,7 @@
  * animation), then opens the new frame.
  */
 
-import React, {
-  createContext,
-  type ReactNode,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { createContext, type ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   type ModalFrame,
   type ModalStack,
@@ -69,7 +60,7 @@ interface ModalProviderProps {
 /**
  * Holds the modal stack and stable action callbacks.
  */
-export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
+export function ModalProvider({ children }: ModalProviderProps) {
   const [stack, setStack] = useState<ModalStack>([]);
   const stackRef = useRef(stack);
 
@@ -125,4 +116,4 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
       <ModalStateContext.Provider value={stack}>{children}</ModalStateContext.Provider>
     </ModalActionsContext.Provider>
   );
-};
+}

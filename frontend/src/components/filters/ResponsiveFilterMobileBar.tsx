@@ -2,7 +2,6 @@
  * ResponsiveFilterMobileBar - Search row with filters button for small screens.
  */
 
-import React from 'react';
 import { SearchTextInput } from '@/components/inputs';
 import { actionButtonPreset, Badge, Button } from '@/components/primitives';
 import { CONTROL } from '@/theme/recipes';
@@ -18,14 +17,14 @@ export interface ResponsiveFilterMobileBarProps {
   searchRowHeight?: string;
 }
 
-export const ResponsiveFilterMobileBar: React.FC<ResponsiveFilterMobileBarProps> = ({
+export function ResponsiveFilterMobileBar({
   searchQuery,
   onSearchChange,
   searchPlaceholder,
   activeFilterCount,
   onOpenModal,
   searchRowHeight = CONTROL.height,
-}) => (
+}: ResponsiveFilterMobileBarProps) { return (
   <div className="w-full bg-surface border-b border-border-default">
     <div className="px-space-3 py-space-2 w-full">
       <div className="grid grid-cols-[1fr_auto] gap-space-2 items-center w-full">
@@ -53,4 +52,4 @@ export const ResponsiveFilterMobileBar: React.FC<ResponsiveFilterMobileBarProps>
       </div>
     </div>
   </div>
-);
+); }

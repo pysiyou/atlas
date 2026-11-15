@@ -3,7 +3,6 @@
  * Preset filter buttons for common filter combinations
  */
 
-import React from 'react';
 import { FilterChip } from '@/components/primitives';
 import { cn } from '@/utils';
 import type { QuickFilterPreset } from './types';
@@ -15,12 +14,12 @@ export interface QuickFiltersProps {
   className?: string;
 }
 
-export const QuickFilters: React.FC<QuickFiltersProps> = ({
+export function QuickFilters({
   presets,
   activePresetId,
   onPresetClick,
   className,
-}) => {
+}: QuickFiltersProps) {
   if (presets.length === 0) {
     return null;
   }
@@ -40,4 +39,4 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
       ))}
     </div>
   );
-};
+}

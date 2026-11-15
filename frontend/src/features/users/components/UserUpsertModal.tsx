@@ -1,7 +1,7 @@
 /**
  * Create or edit a user account (administrator).
  */
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Alert, FooterInfo } from '@/components/display';
@@ -73,13 +73,13 @@ function AccountStatusActions({
   return null;
 }
 
-export const UserUpsertModal: React.FC<UserUpsertModalProps> = ({
+export function UserUpsertModal({
   isOpen,
   onClose,
   user,
   users,
   currentUserId,
-}) => {
+}: UserUpsertModalProps) {
   const isEdit = user != null;
   const form = useUserUpsertForm(user);
   const [confirmingDisable, setConfirmingDisable] = useState(false);
@@ -164,4 +164,4 @@ export const UserUpsertModal: React.FC<UserUpsertModalProps> = ({
       </ModalPageShell>
     </Modal>
   );
-};
+}

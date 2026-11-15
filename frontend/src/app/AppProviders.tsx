@@ -3,7 +3,7 @@
  * Combines context providers into a single component.
  */
 
-import React, { type ReactNode } from 'react';
+import { type ComponentType, type ReactNode } from 'react';
 import { QueryProvider } from '@/lib/query';
 import { ModalProvider } from '@/lib/context/ModalContext';
 import { ToastProvider } from '@/feedback';
@@ -14,21 +14,22 @@ interface AppProvidersProps {
 }
 
 function composeProviders(
-  providers: Array<React.ComponentType<{ children: ReactNode }>>
-): React.FC<{ children: ReactNode }> {
-  return ({ children }) =>
-    providers.reduceRight((acc, Provider) => <Provider>{acc}</Provider>, children);
+  providers: Array<ComponentType<{ children: ReactNode }>>
+): ComponentType<{ children: ReactNode }> {
+  return function ComposedProviders({ children }: { children: ReactNode }) {
+    return providers.reduceRight((acc, Provider) => <Provider>{acc}</Provider>, children);
+  };
 }
 
 const featureProviders = [ToastProvider, ModalProvider];
 const ComposedProviders = composeProviders(featureProviders);
 
-export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => (
+export function AppProviders({ children }: AppProvidersProps) { return (
   <QueryProvider>
     <ComposedProviders>
       <ConfigLoader>{children}</ConfigLoader>
     </ComposedProviders>
   </QueryProvider>
-);
+); }
 
 export { QueryProvider, ModalProvider };

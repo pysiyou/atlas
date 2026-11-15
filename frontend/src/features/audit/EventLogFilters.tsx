@@ -1,16 +1,15 @@
 /**
  * Event log filter bar, inline controls, and panel filter row.
  */
-import React from 'react';
 import { IconKeys } from '@/icons';
 import { ResponsiveFilterInsetBar } from '@/components/filters/ResponsiveFilterInsetBar';
 import {
   EventLogFiltersInlineControls,
-  type EventLogFiltersInlineControlsProps } from './eventLogFilterControls';
+  type EventLogFiltersInlineControlsProps } from './EventLogFilterControls';
 import type { EventLogFilterField } from './types';
 import {
   buildEventLogFilterModalExtras,
-  buildEventLogFilterModalSections } from './eventLogFilterModalBuilders';
+  buildEventLogFilterModalSections } from './EventLogFilterModalBuilders';
 
 export interface EventLogFiltersProps extends EventLogFiltersInlineControlsProps {
   activeFilterCount: number;
@@ -25,7 +24,7 @@ function fieldVisible(
   return visibleFields.includes(field) && !lockedFields.has(field);
 }
 
-export const EventLogFilters: React.FC<EventLogFiltersProps> = props => {
+export function EventLogFilters(props: EventLogFiltersProps) {
   const inlineProps: EventLogFiltersInlineControlsProps = {
     visibleFields: props.visibleFields,
     lockedFields: props.lockedFields,
@@ -77,4 +76,4 @@ export const EventLogFilters: React.FC<EventLogFiltersProps> = props => {
       inlineControls={<EventLogFiltersInlineControls {...inlineProps} />}
     />
   );
-};
+}

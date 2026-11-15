@@ -2,7 +2,7 @@
  * Shared popover chrome for escalation resolution actions.
  */
 
-import { type ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { Button } from '@/components/primitives';
 import { Popover, PopoverFormChrome } from '@/components/overlays';
 import { cn } from '@/utils';

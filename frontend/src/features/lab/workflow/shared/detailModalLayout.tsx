@@ -38,7 +38,7 @@ export interface QueueModalShellProps {
   isActive?: boolean;
 }
 
-export const QueueModalShell: React.FC<QueueModalShellProps> = ({
+export function QueueModalShell({
   isOpen,
   onClose,
   title,
@@ -53,7 +53,7 @@ export const QueueModalShell: React.FC<QueueModalShellProps> = ({
   footerInfo,
   disableClose = false,
   isActive = true,
-}) => {
+}: QueueModalShellProps) {
   return (
     <Modal
       isOpen={isOpen}
@@ -96,7 +96,7 @@ export const QueueModalShell: React.FC<QueueModalShellProps> = ({
       </ModalPageShell>
     </Modal>
   );
-};
+}
 
 export interface DetailGridSectionConfig {
   preset: PanelPresetId;
@@ -110,7 +110,7 @@ interface DetailGridProps {
   sections?: DetailGridSectionConfig[];
 }
 
-export const DetailGrid: React.FC<DetailGridProps> = ({ children, sections }) => {
+export function DetailGrid({ children, sections }: DetailGridProps) {
   const { getUserName } = useUserLookup();
 
   if (sections && sections.length > 0) {
@@ -145,7 +145,7 @@ export const DetailGrid: React.FC<DetailGridProps> = ({ children, sections }) =>
   }
 
   return <div className="grid grid-cols-1 md:grid-cols-2 gap-layout-section">{children}</div>;
-};
+}
 
 interface ModalFooterProps {
   statusMessage?: string;
@@ -153,11 +153,11 @@ interface ModalFooterProps {
   children?: ReactNode;
 }
 
-export const ModalFooter: React.FC<ModalFooterProps> = ({
+export function ModalFooter({
   statusMessage = '',
   statusClassName = FG.captionMuted,
   children,
-}) => {
+}: ModalFooterProps) {
   const hasStatus = Boolean(statusMessage);
 
   return (
@@ -172,7 +172,7 @@ export const ModalFooter: React.FC<ModalFooterProps> = ({
       <div className="flex items-center gap-space-2 flex-nowrap">{children}</div>
     </div>
   );
-};
+}
 
 export type LabModalStage = LabWorkflowStage | 'escalation';
 
@@ -206,5 +206,5 @@ export function labModalHeaderContext({
 }
 
 /** Stage-specific detail field grids (shared {@link DetailGrid} shell). */
-export { CollectionDetailGrid } from '../modals/detailModal.sampleCollection.grid';
-export { ResultEntryDetailGrid } from '../modals/detailModal.resultEntry.grid';
+export { CollectionDetailGrid } from '../modals/DetailModal.SampleCollection.Grid';
+export { ResultEntryDetailGrid } from '../modals/DetailModal.ResultEntry.Grid';

@@ -3,7 +3,7 @@
  * Responsive filter controls for reportable order reports
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FILTER_TYPE } from '@/theme/recipes';
 import { DatePicker } from '@/components/inputs';
 import { SearchTextInput } from '@/components/inputs';
@@ -33,12 +33,12 @@ export interface ReportFiltersProps {
  * - lg+/md: 2-column grid (search + date)
  * - sm/xs: Search bar + Filters button (opens ListFilterModal)
  */
-export const ReportFilters: React.FC<ReportFiltersProps> = ({
+export function ReportFilters({
   searchQuery,
   onSearchChange,
   dateRange,
   onDateRangeChange,
-}) => {
+}: ReportFiltersProps) {
   const breakpoint = useBreakpoint();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -102,4 +102,4 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
       </div>
     </div>
   );
-};
+}

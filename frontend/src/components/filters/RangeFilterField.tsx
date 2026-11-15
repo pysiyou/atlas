@@ -1,8 +1,8 @@
+import React from 'react';
 /**
  * Popover filter field with dual-thumb range slider.
  */
 
-import React from 'react';
 import { FilterTriggerShell, Popover } from '@/components/overlays';
 import { RangeSlider, type RangeTuple } from '@/components/overlays/RangeSlider';
 import { cn } from '@/utils';
@@ -22,7 +22,7 @@ export interface RangeFilterFieldProps {
   className?: string;
 }
 
-export const RangeFilterField: React.FC<RangeFilterFieldProps> = ({
+export function RangeFilterField({
   value,
   onChange,
   minValue,
@@ -35,7 +35,7 @@ export const RangeFilterField: React.FC<RangeFilterFieldProps> = ({
   summary,
   icon,
   className,
-}) => {
+}: RangeFilterFieldProps) {
   const isDefault = value[0] === minValue && value[1] === maxValue;
   const showClear = !isDefault;
 
@@ -80,4 +80,4 @@ export const RangeFilterField: React.FC<RangeFilterFieldProps> = ({
       )}
     </Popover>
   );
-};
+}

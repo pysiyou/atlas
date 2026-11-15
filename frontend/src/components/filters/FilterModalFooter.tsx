@@ -2,7 +2,6 @@
  * FilterModalFooter - Reset and apply actions for responsive filter modals.
  */
 
-import React from 'react';
 import { FooterInfo } from '@/components/display';
 
 import { DialogFooter } from '@/components/overlays';
@@ -18,12 +17,12 @@ export interface FilterModalFooterProps {
   label?: string;
 }
 
-export const FilterModalFooter: React.FC<FilterModalFooterProps> = ({
+export function FilterModalFooter({
   onReset,
   onApply,
   icon,
   label,
-}) => (
+}: FilterModalFooterProps) { return (
   <DialogFooter
     start={<FooterInfo icon={icon} label={label} size="md" />}
     end={
@@ -37,4 +36,4 @@ export const FilterModalFooter: React.FC<FilterModalFooterProps> = ({
       </>
     }
   />
-);
+); }

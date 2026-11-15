@@ -74,7 +74,7 @@ interface FormFieldWrapperProps {
   children: React.ReactNode;
 }
 
-const FormFieldWrapper: React.FC<FormFieldWrapperProps> = ({
+function FormFieldWrapper({
   label,
   error,
   helperText,
@@ -82,7 +82,7 @@ const FormFieldWrapper: React.FC<FormFieldWrapperProps> = ({
   required,
   className = 'w-full group',
   children,
-}) => (
+}: FormFieldWrapperProps) { return (
   <div className={className}>
     {label && (
       <div className="flex justify-between items-baseline mb-space-1 gap-space-2">
@@ -96,7 +96,7 @@ const FormFieldWrapper: React.FC<FormFieldWrapperProps> = ({
     {error && <p className={`${FIELD_ERROR} mt-space-1`}>{error}</p>}
     {helperText && !error && <p className={`${text({ role: 'body', intent: 'muted' })} mt-space-1`}>{helperText}</p>}
   </div>
-);
+); }
 
 const getInputClasses = (hasError: boolean, hasIcon: boolean) => {
   const iconPadding = hasIcon ? SPACING.plSpace10 : '';
@@ -113,7 +113,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   inferIcon?: boolean;
 }
 
-export const Input: React.FC<InputProps> = ({
+export function Input({
   label,
   error,
   helperText,
@@ -122,7 +122,7 @@ export const Input: React.FC<InputProps> = ({
   icon,
   inferIcon = false,
   ...props
-}) => {
+}: InputProps) {
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
   const displayIcon = getDefaultIconForField('input', icon, inferIcon, props.type, props.name);
 
@@ -150,9 +150,9 @@ export const Input: React.FC<InputProps> = ({
           {...props}
         />
       </div>
-    </FormFieldWrapper>
-  );
-};
+      </FormFieldWrapper>
+    );
+}
 
 interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
@@ -162,7 +162,7 @@ interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
   inferIcon?: boolean;
 }
 
-export const Textarea: React.FC<TextareaProps> = ({
+export function Textarea({
   label,
   error,
   helperText,
@@ -171,7 +171,7 @@ export const Textarea: React.FC<TextareaProps> = ({
   icon,
   inferIcon = false,
   ...props
-}) => {
+}: TextareaProps) {
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
   const displayIcon = getDefaultIconForField('textarea', icon, inferIcon, undefined, props.name);
 
@@ -201,7 +201,7 @@ export const Textarea: React.FC<TextareaProps> = ({
       </div>
     </FormFieldWrapper>
   );
-};
+}
 
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
@@ -212,7 +212,7 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   inferIcon?: boolean;
 }
 
-export const Select: React.FC<SelectProps> = ({
+export function Select({
   label,
   error,
   helperText,
@@ -222,7 +222,7 @@ export const Select: React.FC<SelectProps> = ({
   icon,
   inferIcon = false,
   ...props
-}) => {
+}: SelectProps) {
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
   const displayIcon = getDefaultIconForField('select', icon, inferIcon, undefined, props.name);
 
@@ -257,4 +257,4 @@ export const Select: React.FC<SelectProps> = ({
       </div>
     </FormFieldWrapper>
   );
-};
+}

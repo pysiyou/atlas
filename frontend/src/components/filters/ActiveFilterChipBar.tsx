@@ -2,14 +2,14 @@
  * Removable active-filter chips — labels supplied by the caller.
  */
 
-import type React from 'react';
+import type { ReactNode } from 'react';
 import { Icon, Badge } from '@/components/primitives';
 import { IconKeys } from '@/icons';
 import { text } from '@/theme/recipes';
 
 export interface ActiveFilterItem {
   id: string;
-  label: React.ReactNode;
+  label: ReactNode;
 }
 
 export interface ActiveFilterChipBarProps {

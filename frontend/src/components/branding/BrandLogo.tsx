@@ -10,7 +10,6 @@
  *   <BrandLogo className="h-8 w-8" />
  */
 
-import React from 'react';
 import { useClientConfig } from '@/app/clientConfigContext';
 import { Icon } from '@/components/primitives/Icon';
 import { parseIconKey, type IconKey } from '@/icons';
@@ -36,7 +35,7 @@ export interface BrandLogoProps {
  * BrandLogo renders the configured company logo
  * Uses Icon component for icon registry paths, img tag for external images
  */
-export const BrandLogo: React.FC<BrandLogoProps> = ({ className = '', alt }) => {
+export function BrandLogo({ className = '', alt }: BrandLogoProps) {
   const { config, status } = useClientConfig();
   
   // While loading, show a placeholder
@@ -62,4 +61,4 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({ className = '', alt }) => 
       className={className}
     />
   );
-};
+}

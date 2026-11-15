@@ -4,7 +4,7 @@
 
 import { Component, type ReactNode, type ErrorInfo } from 'react';
 import { logger } from '@/utils/logger';
-import { ErrorFallback } from './ui';
+import { ErrorFallback } from './FeedbackUi';
 
 interface ErrorBoundaryProps {
   children: ReactNode;

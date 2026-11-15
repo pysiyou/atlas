@@ -3,7 +3,7 @@
  * id → patient → tests → date → status → priority → total → payment
  */
 
-import type { OrderSharedColumnKey } from '../utils/orderTableColumns';
+import type { OrderSharedColumnKey } from '../utils/OrderTableColumns';
 
 const ORDER_TABLE_VIEW_KEYS_FULL: OrderSharedColumnKey[] = [
   'orderId',

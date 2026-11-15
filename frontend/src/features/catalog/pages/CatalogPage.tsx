@@ -3,7 +3,6 @@
  * Test catalog management - browse and view test details
  */
 
-import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { CatalogList } from './CatalogList';
 import { CatalogDetail } from './CatalogDetail';
@@ -12,7 +11,7 @@ import { CatalogDetail } from './CatalogDetail';
  * Catalog Page Component
  * Handles routing between catalog list and detail views
  */
-export const Catalog: React.FC = () => {
+export function Catalog() {
   return (
     <Routes>
       {/* Default route: show catalog list */}
@@ -23,4 +22,4 @@ export const Catalog: React.FC = () => {
       <Route path="*" element={<Navigate to="/catalog" replace />} />
     </Routes>
   );
-};
+}

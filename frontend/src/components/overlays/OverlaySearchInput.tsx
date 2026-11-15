@@ -3,11 +3,11 @@
  * Shared by FilterModal and PatientFilters.
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Icon } from '@/components/primitives';
 import { cn } from '@/utils';
 import { IconKeys } from '@/icons';
-import { filterInputIcon } from '@/components/filters/filterControlIcons';
+import { filterInputIcon } from '@/components/filters/FilterControlIcons';
 import { inputContainerBase, inputInner, inputText, inputClearButton } from '@/theme/recipes';
 
 export interface OverlaySearchInputProps {
@@ -18,12 +18,12 @@ export interface OverlaySearchInputProps {
   debounceMs?: number;
 }
 
-export const OverlaySearchInput: React.FC<OverlaySearchInputProps> = ({
+export function OverlaySearchInput({
   value,
   onChange,
   placeholder = 'Search...',
   debounceMs = 300,
-}) => {
+}: OverlaySearchInputProps) {
   const [localValue, setLocalValue] = useState(value);
   useEffect(() => {
     setLocalValue(value);
@@ -56,5 +56,5 @@ export const OverlaySearchInput: React.FC<OverlaySearchInputProps> = ({
       )}
     </div>
   );
-};
+}
 

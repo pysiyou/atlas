@@ -5,7 +5,6 @@
  * Supports different sizes and full-screen mode.
  */
 
-import React from 'react';
 import { SpinnerLoader } from './SpinnerLoader';
 import { text, RADIUS } from '@/theme/recipes';
 import { cn } from '@/utils/cn';
@@ -35,12 +34,12 @@ export interface LoadingStateProps {
  * <LoadingState message="Loading patients..." size="md" />
  * ```
  */
-export const LoadingState: React.FC<LoadingStateProps> = ({
+export function LoadingState({
   message = 'Loading...',
   size = 'md',
   fullScreen = false,
   className = '',
-}) => {
+}: LoadingStateProps) {
   const containerClasses = fullScreen
     ? 'flex items-center justify-center min-h-screen'
     : 'flex items-center justify-center p-space-8';
@@ -67,4 +66,4 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
       </div>
     </div>
   );
-};
+}

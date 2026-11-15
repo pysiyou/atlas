@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { CHROME } from '@/theme/recipes';
 import { cn } from '@/utils';
@@ -22,7 +21,7 @@ export interface SidebarContentProps {
   onToggleCollapse: () => void;
 }
 
-export const SidebarContent: React.FC<SidebarContentProps> = ({
+export function SidebarContent({
   isCollapsed,
   isMobile,
   onMobileClose,
@@ -32,7 +31,7 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
   currentUser,
   onLogout,
   onToggleCollapse,
-}) => {
+}: SidebarContentProps) {
   const collapsed = isCollapsed && !isMobile;
   const sidebarVariants = {
     expanded: {
@@ -77,4 +76,4 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
       </div>
     </motion.aside>
   );
-};
+}

@@ -2,7 +2,7 @@
  * Patient context on order detail — single field list; panel body provides scrolling.
  */
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { text, FG } from '@/theme/recipes';
 import { Icon } from '@/components/primitives';
 import { IconKeys } from '@/icons';
@@ -16,10 +16,10 @@ export interface PatientInfoSectionProps {
   onViewPatient?: () => void;
 }
 
-export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
+export function PatientInfoSection({
   patient,
   onViewPatient: _onViewPatient,
-}) => {
+}: PatientInfoSectionProps) {
   const infoItems = useMemo(
     () => (patient ? renderGeneralInfoDescriptionItems(patient) : []),
     [patient]
@@ -45,4 +45,4 @@ export const PatientInfoSection: React.FC<PatientInfoSectionProps> = ({
       </div>
     </div>
   );
-};
+}

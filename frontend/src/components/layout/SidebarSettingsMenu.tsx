@@ -5,7 +5,7 @@ import { cn } from '@/utils';
 import { CHROME, CONTROL, MENU_ITEM_TYPE, RADIUS, text } from '@/theme/recipes';
 import type { IconKey } from '@/icons';
 import type { SidebarSettingsLink } from './useSidebarMenu';
-import { SidebarNavIcon } from './sidebarNavIcon';
+import { SidebarNavIcon } from './SidebarNavIcon';
 
 export interface SidebarSettingsMenuProps {
   isCollapsed: boolean;

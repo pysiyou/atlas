@@ -2,7 +2,7 @@
  * OrderList — server-paginated orders with URL entity filters.
  */
 
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTestNameLookup } from '@/features/catalog';
 import { usePaginatedOrders } from '../api/orders';
@@ -21,7 +21,7 @@ import type { Order, OrderStatus } from '@/types';
 import { UrlFilterChipBar } from '@/components/filters';
 import { useModuleListTitles } from '@/hooks';
 
-export const OrderList: React.FC = () => {
+export function OrderList() {
   const listTitles = useModuleListTitles();
   const navigate = useNavigate();
   const { openModal } = useModal();
@@ -131,4 +131,4 @@ export const OrderList: React.FC = () => {
       />
     </div>
   );
-};
+}

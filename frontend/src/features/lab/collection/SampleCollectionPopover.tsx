@@ -56,14 +56,14 @@ interface CollectionPopoverContentProps {
   isSubmitting?: boolean;
 }
 
-const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
+function CollectionPopoverContent({
   requirement,
   patientName,
   testNames,
   onConfirm,
   onCancel,
   isSubmitting = false,
-}) => {
+}: CollectionPopoverContentProps) {
   const minimumVolume = requirement.totalVolume;
   const [volume, setVolume] = useState<number>(minimumVolume);
   const [notes, setNotes] = useState('');
@@ -268,7 +268,7 @@ const CollectionPopoverContent: React.FC<CollectionPopoverContentProps> = ({
       </div>
     </PopoverFormChrome>
   );
-};
+}
 
 interface CollectionPopoverProps {
   /** Sample requirement data */
@@ -297,7 +297,7 @@ interface CollectionPopoverProps {
   collectDisabledTitle?: string;
 }
 
-export const SampleCollectionPopover: React.FC<CollectionPopoverProps> = ({
+export function SampleCollectionPopover({
   requirement,
   patientName,
   testNames,
@@ -308,7 +308,7 @@ export const SampleCollectionPopover: React.FC<CollectionPopoverProps> = ({
   trigger,
   collectDisabled = false,
   collectDisabledTitle,
-}) => {
+}: CollectionPopoverProps) {
   const [localSubmitting, setLocalSubmitting] = useState(false);
   const effectiveSubmitting = isSubmitting || localSubmitting;
 
@@ -356,4 +356,4 @@ export const SampleCollectionPopover: React.FC<CollectionPopoverProps> = ({
       )}
     </Popover>
   );
-};
+}

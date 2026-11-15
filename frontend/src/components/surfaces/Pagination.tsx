@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import { useMemo, useCallback } from 'react';
 
 import { Icon } from '@/components/primitives/Icon';
 import { SHOW_ALL_PAGE_SIZE } from '@/components/data-table/constants';
@@ -62,14 +62,14 @@ function buildPageNumbers(currentPage: number, totalPages: number): (number | 'e
   return out;
 }
 
-export const Pagination: React.FC<PaginationProps> = ({
+export function Pagination({
   currentPage,
   totalItems,
   pageSize,
   onPageChange,
   onPageSizeChange,
   pageSizeOptions = [10, 20, 50, 100],
-}) => {
+}: PaginationProps) {
   const showAll = pageSize === SHOW_ALL_PAGE_SIZE;
   const totalPages = showAll ? 1 : Math.max(1, Math.ceil(totalItems / pageSize) || 1);
   const activePage = clampPage(currentPage, totalPages);
@@ -199,4 +199,4 @@ export const Pagination: React.FC<PaginationProps> = ({
       </div>
     </nav>
   );
-};
+}

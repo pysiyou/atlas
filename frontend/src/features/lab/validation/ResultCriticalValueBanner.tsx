@@ -2,7 +2,6 @@
  * Critical Value Banner — inline banner for critical values (auto-notified on approval).
  */
 
-import React from 'react';
 import { Alert } from '@/components/display';
 
 import { Icon } from '@/components/primitives';
@@ -24,10 +23,10 @@ export interface CriticalValueBannerProps {
 /**
  * Shows which values are critical without requiring explicit acknowledgment.
  */
-export const ResultCriticalValueBanner: React.FC<CriticalValueBannerProps> = ({
+export function ResultCriticalValueBanner({
   criticalParameters,
   className,
-}) => {
+}: CriticalValueBannerProps) {
   if (criticalParameters.length === 0) {
     return null;
   }
@@ -58,4 +57,4 @@ export const ResultCriticalValueBanner: React.FC<CriticalValueBannerProps> = ({
       </div>
     </Alert>
   );
-};
+}

@@ -2,7 +2,7 @@
  * UserFilters — FilterBar wrapper for the user directory.
  */
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import type { FilterValues } from '@/components/filters/types';
 import { FeatureFilterBar } from '@/components/filters';
 import type { UserRole } from '@/types';
@@ -16,7 +16,7 @@ export interface UserFiltersProps {
   setFilter: (key: string, value: unknown) => void;
 }
 
-export const UserFilters: React.FC<UserFiltersProps> = ({ filters, setFilter }) => {
+export function UserFilters({ filters, setFilter }: UserFiltersProps) {
   const value = useMemo(
     () => ({
       search: (filters.search as string) ?? '',
@@ -37,4 +37,4 @@ export const UserFilters: React.FC<UserFiltersProps> = ({ filters, setFilter }) 
       }}
     />
   );
-};
+}

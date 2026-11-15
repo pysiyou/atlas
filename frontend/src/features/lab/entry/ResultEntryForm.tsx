@@ -2,7 +2,7 @@
  * ResultEntryForm - Form for entering test results
  */
 
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Textarea } from '@/components/inputs';
 import { cn } from '@/utils';
@@ -31,7 +31,7 @@ interface EntryFormProps {
   denyMessage?: string | null;
 }
 
-export const ResultEntryForm: React.FC<EntryFormProps> = ({
+export function ResultEntryForm({
   testDef,
   resultKey,
   results,
@@ -45,7 +45,7 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
   readOnly = false,
   canEnter = true,
   denyMessage,
-}) => {
+}: EntryFormProps) {
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
 
   const handleValidationChange = useCallback((paramCode: string, error: string | undefined) => {
@@ -172,4 +172,4 @@ export const ResultEntryForm: React.FC<EntryFormProps> = ({
       )}
     </div>
   );
-};
+}

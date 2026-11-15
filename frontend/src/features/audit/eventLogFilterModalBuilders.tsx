@@ -9,11 +9,11 @@ import {
   EVENT_LOG_FILTER_PLACEHOLDERS,
   EVENT_LOG_KIND_OPTIONS,
 } from './eventLogFilterConfig';
-import { EventLogSearchField } from './eventLogSearch';
+import { EventLogSearchField } from './EventLogSearch';
 import {
   EventLogFiltersInlineControls,
   type EventLogFiltersInlineControlsProps,
-} from './eventLogFilterControls';
+} from './EventLogFilterControls';
 import type { EventLogKind } from './types';
 
 const kindCheckboxOptions = EVENT_LOG_KIND_OPTIONS.map(opt => ({

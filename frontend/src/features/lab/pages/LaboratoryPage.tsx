@@ -3,7 +3,7 @@
  * Lab operations - sample collection, result entry, validation, command center
  */
 
-import React, { useMemo, useCallback, useEffect } from 'react';
+import { useMemo, useCallback, useEffect } from 'react';
 import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import { Icon } from '@/components/primitives';
 import { PageHeader } from '@/components/layout';
@@ -22,7 +22,7 @@ import { tabAllowed } from './laboratoryPageAccess';
 import { LaboratoryPageTabRail, type LaboratoryPageTabDef } from './LaboratoryPageTabRail';
 import { LaboratoryPageStageContent } from './LaboratoryPageStageContent';
 
-export const LaboratoryPage: React.FC = () => {
+export function LaboratoryPage() {
   const navigate = useNavigate();
   const { tab: tabParam } = useParams<{ tab?: string }>();
   const { hasRole } = useAuthStore();
@@ -121,4 +121,4 @@ export const LaboratoryPage: React.FC = () => {
       />
     </div>
   );
-};
+}

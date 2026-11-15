@@ -154,7 +154,7 @@ export function ResultValidationPanel({
 }
 
 /** Inline scrollable form (results + notes together). Prefer `ResultValidationPanel` in modals. */
-export const ResultValidationForm: React.FC<ValidationFormProps> = formProps => {
+export function ResultValidationForm(formProps: ValidationFormProps) {
   return (
     <div
       className={`${LAB_CONFIG.RESULT_VALIDATION_PANEL_MAX_HEIGHT} overflow-y-auto overscroll-contain min-h-0 space-y-space-2-5 pr-space-0.5`}
@@ -163,4 +163,4 @@ export const ResultValidationForm: React.FC<ValidationFormProps> = formProps => 
       <ResultValidationNotesSection {...formProps} />
     </div>
   );
-};
+}

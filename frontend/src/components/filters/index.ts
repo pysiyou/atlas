@@ -36,7 +36,7 @@ export {
   type FilterControlProps,
   type FilterControlSurface,
 } from './FilterControl';
-export { renderFilterControl } from './filterControlRender';
+export { renderFilterControl } from './FilterControlRender';
 export { UrlFilterChipBar, type UrlFilterChipBarProps } from './UrlFilterChipBar';
 export { DatePresetChipSelect, type DatePresetChipSelectProps } from './DatePresetChipSelect';
 export { ListFilterModal, type ListFilterModalProps } from './ListFilterModal';

@@ -14,7 +14,7 @@ interface ConfigLoaderProps {
   children: React.ReactNode;
 }
 
-export const ConfigLoader: React.FC<ConfigLoaderProps> = ({ children }) => {
+export function ConfigLoader({ children }: ConfigLoaderProps) {
   const [status, setStatus] = useState<ConfigStatus>('loading');
   const [config, setConfig] = useState<ClientConfig | null>(null);
   const [error, setError] = useState<Error | undefined>(undefined);
@@ -72,4 +72,4 @@ export const ConfigLoader: React.FC<ConfigLoaderProps> = ({ children }) => {
       {children}
     </ClientConfigProvider>
   );
-};
+}

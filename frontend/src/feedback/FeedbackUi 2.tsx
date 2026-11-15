@@ -2,7 +2,7 @@
  * Inline feedback surfaces (alerts, error fallback).
  */
 
-import React, { type HTMLAttributes, type ReactNode } from 'react';
+import { type HTMLAttributes, type ReactNode } from 'react';
 import { Icon } from '@/components/primitives/Icon';
 import { IconKeys, TOAST_ICON_KEYS } from '@/icons';
 import { RADIUS, TOAST_TYPE, text } from '@/theme/recipes';
@@ -220,7 +220,7 @@ export interface AlertProps {
   className?: string;
 }
 
-export const Alert: React.FC<AlertProps> = ({
+export function Alert({
   children,
   title,
   description,
@@ -228,7 +228,7 @@ export const Alert: React.FC<AlertProps> = ({
   actions,
   onClose,
   className,
-}) => (
+}: AlertProps) { return (
   <Notice
     density="comfortable"
     variant={toVisualVariant(variant)}
@@ -240,7 +240,7 @@ export const Alert: React.FC<AlertProps> = ({
     dismissAriaLabel="Close alert"
     className={className}
   />
-);
+); }
 
 const FALLBACK_TYPE = {
   title: `${text({ role: 'title-section' })} font-semibold leading-snug text-toast-fg`,
@@ -269,7 +269,7 @@ export interface ErrorFallbackProps {
   homeHref?: string;
 }
 
-export const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error, onRetry, homeHref = '/' }) => {
+export function ErrorFallback({ error, onRetry, homeHref = '/' }: ErrorFallbackProps) {
   const errorIconKey = TOAST_ICON_KEYS.error;
 
   return (
@@ -313,4 +313,4 @@ export const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error, onRetry, ho
       </div>
     </div>
   );
-};
+}

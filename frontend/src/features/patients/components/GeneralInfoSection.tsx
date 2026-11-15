@@ -1,10 +1,10 @@
+import React from 'react';
 /**
  * GeneralInfoSection
  * Identity, contact, and emergency details in a two-column vertical flow.
  */
 /* eslint-disable react-refresh/only-export-components -- description builders exported for order detail */
 
-import React from 'react';
 import type { Patient } from '@/types';
 import { DescriptionItem } from '@/components/display';
 
@@ -85,10 +85,10 @@ export function renderGeneralInfoDescriptionItems(patient: Patient): React.React
  * Displays who the patient is and how to reach them.
  * Body measurements live on the care snapshot with BMI.
  */
-export const GeneralInfoSection: React.FC<GeneralInfoSectionProps> = ({ patient }) => {
+export function GeneralInfoSection({ patient }: GeneralInfoSectionProps) {
   return (
     <div className="flex min-h-0 h-full flex-col">
       <DescriptionColumns>{renderGeneralInfoDescriptionItems(patient)}</DescriptionColumns>
     </div>
   );
-};
+}

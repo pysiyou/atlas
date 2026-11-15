@@ -1,4 +1,3 @@
-import React from 'react';
 import type { FeedbackId } from '@/types/generated/feedback';
 import { Button } from '@/components/primitives';
 import { displayId } from '@/utils';
@@ -81,7 +80,7 @@ function visibleActions(
   };
 }
 
-export const EscalationResolutionActions: React.FC<EscalationResolutionActionsProps> = ({
+export function EscalationResolutionActions({
   orderTestId,
   resolving,
   requiresReadBack,
@@ -104,7 +103,7 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
   resolveAsync,
   onValidationError,
   hasResults = false,
-}) => {
+}: EscalationResolutionActionsProps) {
   const { allowRetestSameSample, allowRecollect, showApplyAmendment, showForceValidate } =
     visibleActions(reasonCode, hasResults, allowForceValidate);
 
@@ -183,4 +182,4 @@ export const EscalationResolutionActions: React.FC<EscalationResolutionActionsPr
       />
     </div>
   );
-};
+}

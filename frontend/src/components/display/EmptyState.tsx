@@ -56,7 +56,7 @@ function emptyStateVariantStyles(variant: EmptyStateVariant) {
   }
 }
 
-export const EmptyState: React.FC<EmptyStateProps> = ({
+export function EmptyState({
   icon,
   title,
   description,
@@ -65,7 +65,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   variant = 'default',
   fill = false,
   iconOnly = false,
-}) => {
+}: EmptyStateProps) {
   const styles = emptyStateVariantStyles(variant);
   const ariaLabel =
     iconOnly && title ? (description ? `${title}. ${description}` : title) : undefined;
@@ -88,4 +88,4 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       {action && <div className={EMPTY.actionWrap}>{action}</div>}
     </div>
   );
-};
+}

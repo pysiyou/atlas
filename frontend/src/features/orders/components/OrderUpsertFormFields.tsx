@@ -39,12 +39,12 @@ interface OrderUpsertFormFieldsProps {
   >;
 }
 
-export const OrderUpsertFormFields: React.FC<OrderUpsertFormFieldsProps> = ({
+export function OrderUpsertFormFields({
   control,
   mode,
   patientId,
   modalState,
-}) => {
+}: OrderUpsertFormFieldsProps) {
   const {
     selectedPatient,
     patientSearch,
@@ -185,4 +185,4 @@ export const OrderUpsertFormFields: React.FC<OrderUpsertFormFieldsProps> = ({
       ) : null}
     </Panel>
   );
-};
+}

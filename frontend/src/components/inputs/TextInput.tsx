@@ -7,7 +7,7 @@ import { Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/feedback/SpinnerLoader';
 import { cn } from '@/utils';
 import { IconKeys } from '@/icons';
-import { filterInputIcon } from '@/components/filters/filterControlIcons';
+import { filterInputIcon } from '@/components/filters/FilterControlIcons';
 import { inputWrapper, inputInner, inputText, inputClearButton, inputContainerError } from '@/theme/recipes';
 
 export interface TextInputProps {
@@ -24,7 +24,7 @@ export interface TextInputProps {
   showClear?: boolean;
 }
 
-export const TextInput: React.FC<TextInputProps> = ({
+export function TextInput({
   value,
   onChange,
   placeholder = 'Search...',
@@ -36,7 +36,7 @@ export const TextInput: React.FC<TextInputProps> = ({
   'aria-label': ariaLabel,
   className,
   showClear = true,
-}) => {
+}: TextInputProps) {
   const [localValue, setLocalValue] = useState(value);
   const [isPending, setIsPending] = useState(false);
 
@@ -104,13 +104,13 @@ export const TextInput: React.FC<TextInputProps> = ({
       </div>
     </div>
   );
-};
+}
 
 /** Search field with icon and debounce — convenience over {@link TextInput}. */
 export type SearchTextInputProps = Omit<TextInputProps, 'leading'> & {
   placeholder?: string;
 };
 
-export const SearchTextInput: React.FC<SearchTextInputProps> = props => (
+export function SearchTextInput(props: SearchTextInputProps) { return (
   <TextInput {...props} debounceMs={props.debounceMs ?? 300} leading={filterInputIcon} />
-);
+); }

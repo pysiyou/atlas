@@ -42,12 +42,12 @@ export const typeScaleRestrictedSyntax = [
   {
     selector: 'Literal[value=/text-text-primary truncate font-normal/]',
     message:
-      'Use TABLE_TYPE.cell or TABLE_PRIMARY_CELL_CLASS from @/utils/tableColumnRenders for table body text.',
+      'Use TABLE_TYPE.cell or TABLE_PRIMARY_CELL_CLASS from @/utils/TableColumnRenders for table body text.',
   },
   {
     selector: 'TemplateElement[value.raw=/text-text-primary truncate font-normal/]',
     message:
-      'Use TABLE_TYPE.cell or TABLE_PRIMARY_CELL_CLASS from @/utils/tableColumnRenders for table body text.',
+      'Use TABLE_TYPE.cell or TABLE_PRIMARY_CELL_CLASS from @/utils/TableColumnRenders for table body text.',
   },
 ]
 

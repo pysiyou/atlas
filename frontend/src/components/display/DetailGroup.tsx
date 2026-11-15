@@ -1,8 +1,8 @@
+import React from 'react';
 /**
  * DetailGroup — labeled cluster of detail fields inside a panel.
  */
 
-import React from 'react';
 import { text } from '@/theme/recipes';
 import { cn } from '@/utils';
 
@@ -19,12 +19,12 @@ export const DETAIL_GROUP_TITLE_COMPACT = `${text({ role: 'section-title', inten
 export const DETAIL_FIELDS_WRAP_GRID =
   'grid w-full grid-cols-[repeat(auto-fill,minmax(9.75rem,1fr))] items-start gap-x-layout-stack gap-y-layout-section content-start';
 
-export const DetailGroup: React.FC<DetailGroupProps> = ({
+export function DetailGroup({
   title,
   titleClassName,
   className,
   children,
-}) => {
+}: DetailGroupProps) {
   const items = React.Children.toArray(children).filter(Boolean);
 
   return (
@@ -49,7 +49,7 @@ export const DetailGroup: React.FC<DetailGroupProps> = ({
       </div>
     </section>
   );
-};
+}
 
 export const DETAIL_SECTION_TWO_ROW_GRID =
   'grid h-full min-h-0 w-full grid-cols-1 auto-rows-auto gap-layout-section sm:grid-cols-2 sm:grid-rows-[minmax(0,1fr)_minmax(0,1fr)]';

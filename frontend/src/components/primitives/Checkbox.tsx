@@ -1,9 +1,9 @@
+import React from 'react';
 /**
  * Checkbox - Single checkbox matching CheckboxList visual style (sr-only input + styled box + check icon).
  * Use for forms and modals; multi-option lists use CheckboxList.
  */
 
-import React from 'react';
 import { Icon } from './Icon';
 import { text, RADIUS } from '@/theme/recipes';
 import { cn } from '@/utils';
@@ -15,7 +15,7 @@ export interface CheckboxIndicatorProps {
 }
 
 /** Square checkbox control (visual only). */
-export const CheckboxIndicator: React.FC<CheckboxIndicatorProps> = ({ checked, className }) => (
+export function CheckboxIndicator({ checked, className }: CheckboxIndicatorProps) { return (
   <div
     className={cn(
       `w-4 h-4 ${RADIUS.field} border-2 flex items-center justify-center transition-all duration-150 shrink-0`,
@@ -26,7 +26,7 @@ export const CheckboxIndicator: React.FC<CheckboxIndicatorProps> = ({ checked, c
   >
     {checked && <Icon iconKey={IconKeys.actions.check} className="w-3 h-3 text-on-brand" />}
   </div>
-);
+); }
 
 export interface CheckboxProps {
   id: string;
@@ -38,7 +38,7 @@ export interface CheckboxProps {
   className?: string;
 }
 
-export const Checkbox: React.FC<CheckboxProps> = ({
+export function Checkbox({
   id,
   name,
   checked,
@@ -46,7 +46,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   label,
   disabled = false,
   className,
-}) => (
+}: CheckboxProps) { return (
   <label
     htmlFor={id}
     className={cn(
@@ -83,4 +83,4 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       {label}
     </span>
   </label>
-);
+); }

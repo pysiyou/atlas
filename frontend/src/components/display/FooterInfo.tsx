@@ -5,7 +5,6 @@
  * an optional label is available for screen readers.
  */
 
-import React from 'react';
 import { Icon } from '@/components/primitives/Icon';
 import type { IconKey } from '@/icons';
 
@@ -23,8 +22,8 @@ const ICON_SIZE_CLASSES = {
   md: 'w-5 h-5',
 } as const;
 
-export const FooterInfo: React.FC<FooterInfoProps> = ({ icon, label, size = 'sm' }) => (
+export function FooterInfo({ icon, label, size = 'sm' }: FooterInfoProps) { return (
   <div className="flex items-center shrink-0" aria-label={label} role={label ? 'img' : undefined}>
     <Icon iconKey={icon} className={`${ICON_SIZE_CLASSES[size]} text-text-muted`} />
   </div>
-);
+); }

@@ -6,14 +6,14 @@ import type { ContainerType, Order, Sample, Test } from '@/types';
 import { FooterInfo } from '@/components/display';
 
 import { IconKeys } from '@/icons';
-import { QueueModalShell, labModalHeaderContext } from '../shared/detailModalLayout';
+import { QueueModalShell, labModalHeaderContext } from '../shared/DetailModalLayout';
 import { CollectionHeaderBadges } from '../../components/LabWorkflowBadges';
-import { SampleCollectionCardLeftColumn } from '../shared/queueCardLeftColumn';
+import { SampleCollectionCardLeftColumn } from '../shared/QueueCardLeftColumn';
 import { LabRelatedSamplesPanel } from '../../components/LabRelatedWorkflowPanel';
 import type { SampleCollectionQueueItem } from '@/types';
 import {
   SampleCollectionDetailContent,
-  SampleCollectionDetailFooter } from './detailModal.sampleCollection.panels';
+  SampleCollectionDetailFooter } from './DetailModal.SampleCollection.Panels';
 import { LazyLabEventLogPanel } from '@/features/audit/LazyLabEventLogPanel';
 import type { deriveCollectionModalFields } from '@/utils/presentation';
 

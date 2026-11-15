@@ -2,7 +2,7 @@
  * Prevents lab card click handlers from firing when interacting with nested controls.
  */
 
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 
 const INTERACTIVE_SELECTOR =
   'button, input, form, textarea, select, a, [data-popover-content]';

@@ -6,7 +6,7 @@
  * - `@/theme/recipes/presentation` — CSS recipes
  * - `@/types/generated/enums
  *
- * React table/card renders: `@/features/shared/entityPresentation`.
+ * React table/card renders: `@/features/shared/EntityPresentation`.
  * Screen hooks: `@/hooks`.
  * Patient-only formatters: `@/features/patients/utils/patientFormatters`.
  */

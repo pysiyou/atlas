@@ -4,7 +4,7 @@
 
 import { Icon } from '@/components/primitives';
 import { RecordId } from '@/features/shared';
-import { DetailGrid } from '../shared/detailModalLayout';
+import { DetailGrid } from '../shared/DetailModalLayout';
 import type { LabModalWorkItem } from '../../types/labQueueChrome';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { IconKeys } from '@/icons';

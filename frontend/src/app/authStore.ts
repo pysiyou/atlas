@@ -87,9 +87,9 @@ export const useAuthStore = create<AuthState>()(
           if (!currentRefreshToken) return null;
 
           try {
-            const { access_token } = await authAPI.refresh(currentRefreshToken);
-            set({ token: access_token });
-            return access_token;
+            const { access_token: accessToken } = await authAPI.refresh(currentRefreshToken);
+            set({ token: accessToken });
+            return accessToken;
           } catch {
             markSessionExpired();
             notify.show('session.expired');

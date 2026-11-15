@@ -1,8 +1,8 @@
+import React from 'react';
 /**
  * Dashboard stats grid with role-based metric cards.
  */
 
-import React from 'react';
 import { text, RADIUS, FG } from '@/theme/recipes';
 import { Card } from '@/components/surfaces';
 
@@ -20,11 +20,11 @@ export interface DashboardStatsGridProps {
   skeletonStatCount?: number;
 }
 
-export const DashboardStatsGrid: React.FC<DashboardStatsGridProps> = ({
+export function DashboardStatsGrid({
   stats,
   loading = false,
   skeletonStatCount = 0,
-}) => {
+}: DashboardStatsGridProps) {
   const count = loading ? skeletonStatCount : stats.length;
   if (count <= 0) return null;
 
@@ -50,4 +50,4 @@ export const DashboardStatsGrid: React.FC<DashboardStatsGridProps> = ({
           ))}
     </div>
   );
-};
+}

@@ -2,7 +2,6 @@
  * PaymentMethodSelector - Single source of truth for payment method selection UI.
  */
 
-import React from 'react';
 import { Icon } from '@/components/primitives/Icon';
 import { IconKeys } from '@/icons';
 import type { PaymentMethod } from '@/types';
@@ -16,12 +15,12 @@ export interface PaymentMethodSelectorProps {
   disabled?: boolean;
 }
 
-export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
+export function PaymentMethodSelector({
   methods,
   value,
   onChange,
   disabled = false,
-}) => (
+}: PaymentMethodSelectorProps) { return (
   <div className="grid grid-cols-2 gap-space-2">
     {methods.map(method => {
       const isSelected = value === method.value;
@@ -52,4 +51,4 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
       );
     })}
   </div>
-);
+); }

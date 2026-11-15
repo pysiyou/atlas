@@ -1,7 +1,6 @@
 /**
  * Header meta for the Today panel — UTC day label and monitor universe size.
  */
-import React from 'react';
 import { METER_KPI } from '@/theme/recipes';
 import { getLabCopy } from '../constants/labConstants';
 
@@ -11,11 +10,11 @@ export interface TodayPanelHeaderMetaProps {
   testsUpdatedToday: number;
 }
 
-export const TodayPanelHeaderMeta: React.FC<TodayPanelHeaderMetaProps> = ({
+export function TodayPanelHeaderMeta({
   headerRange,
   totalTests,
   testsUpdatedToday,
-}) => {
+}: TodayPanelHeaderMetaProps) {
   if (totalTests <= 0) {
     return <span className={METER_KPI.headerRange}>{headerRange}</span>;
   }
@@ -33,4 +32,4 @@ export const TodayPanelHeaderMeta: React.FC<TodayPanelHeaderMetaProps> = ({
       ) : null}
     </div>
   );
-};
+}

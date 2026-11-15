@@ -3,7 +3,7 @@
  * Child routes render via <Outlet />; Suspense wraps lazy page chunks once.
  */
 
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuthStore } from '@/app/authStore';
 import { AppShell } from '@/components/layout';
@@ -11,7 +11,7 @@ import { PageContentLoadingFallback, PageLoadingFallback } from '@/components/fe
 import { ErrorBoundary } from '@/feedback';
 import { ROUTES } from '@/app/routes';
 
-export const ProtectedLayout: React.FC = () => {
+export function ProtectedLayout() {
   const { isAuthenticated, isLoading } = useAuthStore();
 
   if (isLoading) return <PageLoadingFallback />;
@@ -26,4 +26,4 @@ export const ProtectedLayout: React.FC = () => {
       </ErrorBoundary>
     </AppShell>
   );
-};
+}

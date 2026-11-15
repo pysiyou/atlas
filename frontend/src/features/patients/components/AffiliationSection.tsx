@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { useWatch } from 'react-hook-form';
 import { Badge, Button, Checkbox } from '@/components/primitives';
 import { useAsyncAction } from '@/hooks';
@@ -13,13 +13,13 @@ import type { PatientAffiliationSectionProps } from '../patientFormTypes';
 import { patientFieldError } from '../patientFormFieldError';
 import { usePatientFormSection } from '../hooks/usePatientFormSection';
 
-export const AffiliationSection: React.FC<PatientAffiliationSectionProps> = ({
+export function AffiliationSection({
   setValue,
   existingAffiliation,
   affiliationEnabled,
   onAffiliationEnabledChange,
   onRenew,
-}) => {
+}: PatientAffiliationSectionProps) {
   const { control, errors } = usePatientFormSection();
   const affiliation = useWatch({ control, name: 'affiliation' });
   const duration = affiliation?.duration ?? undefined;
@@ -135,4 +135,4 @@ export const AffiliationSection: React.FC<PatientAffiliationSectionProps> = ({
       )}
     </div>
   );
-};
+}

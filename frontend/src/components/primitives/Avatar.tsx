@@ -39,7 +39,7 @@ const LABEL_SIZE_CLASSES: Record<AvatarSize, { primary: string; secondary: strin
   xl: { primary: AVATAR_TYPE.primary.xl, secondary: AVATAR_TYPE.secondary.xl },
 };
 
-export const Avatar: React.FC<AvatarProps> = ({
+export function Avatar({
   primaryText,
   src,
   size = 'md',
@@ -50,7 +50,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   secondarySlot = 'meta',
   primaryTextClassName = '',
   avatarOnly = false,
-}) => {
+}: AvatarProps) {
   const [imageError, setImageError] = useState(false);
 
   const isButton = Boolean(onClick);
@@ -107,4 +107,4 @@ export const Avatar: React.FC<AvatarProps> = ({
       )}
     </div>
   );
-};
+}

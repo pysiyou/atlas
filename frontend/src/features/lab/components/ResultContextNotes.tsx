@@ -1,7 +1,7 @@
 /**
  * Technician notes and analytical flags below a result grid.
  */
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Icon } from '@/components/primitives';
 import { IconKeys } from '@/icons';
 import {text, FIELD_ERROR, RADIUS, TONE, FG } from '@/theme/recipes';
@@ -86,13 +86,13 @@ function AnalyticalFlagsBlock({
   );
 }
 
-export const ResultContextNotes: React.FC<ResultContextNotesProps> = ({
+export function ResultContextNotes({
   flags,
   testCode,
   technicianNotes,
   className,
   compact = false,
-}) => {
+}: ResultContextNotesProps) {
   const hasFlags = Boolean(flags?.length);
   const hasNotes = Boolean(technicianNotes?.trim());
 
@@ -124,4 +124,4 @@ export const ResultContextNotes: React.FC<ResultContextNotesProps> = ({
       )}
     </div>
   );
-};
+}

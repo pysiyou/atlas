@@ -31,9 +31,9 @@ interface CollectionRequirementsSectionProps {
  * Requirements section with tabs for each test
  * Displays collection requirements, fasting info, and rejection criteria
  */
-export const SampleCollectionRequirementsSection: React.FC<CollectionRequirementsSectionProps> = ({
+export function SampleCollectionRequirementsSection({
   testDetails,
-}) => {
+}: CollectionRequirementsSectionProps) {
   const [activeTestCode, setActiveTestCode] = React.useState(testDetails[0]?.code || '');
   const activeTest = testDetails.find(t => t.code === activeTestCode) || testDetails[0];
 
@@ -128,4 +128,4 @@ export const SampleCollectionRequirementsSection: React.FC<CollectionRequirement
       </div>
     </Panel>
   );
-};
+}

@@ -2,7 +2,6 @@
  * Quick date-range presets as a chip row.
  */
 
-import React from 'react';
 import { ChipSelectGroup } from '@/components/inputs/ChipSelectGroup';
 import {
   DATE_PRESETS,
@@ -16,7 +15,7 @@ export interface DatePresetChipSelectProps {
   onChange: (value: [Date, Date] | null) => void;
 }
 
-export const DatePresetChipSelect: React.FC<DatePresetChipSelectProps> = ({ value, onChange }) => {
+export function DatePresetChipSelect({ value, onChange }: DatePresetChipSelectProps) {
   const activePresetId = getActivePresetId(value);
   return (
     <ChipSelectGroup
@@ -28,4 +27,4 @@ export const DatePresetChipSelect: React.FC<DatePresetChipSelectProps> = ({ valu
       }}
     />
   );
-};
+}

@@ -45,7 +45,7 @@ interface CollectionRejectionPopoverContentProps {
   isRecollection?: boolean;
 }
 
-const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverContentProps> = ({
+function CollectionRejectionPopoverContent({
   onSuccess,
   onCancel,
   sampleId,
@@ -53,7 +53,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
   sampleType,
   patientName,
   isRecollection = false,
-}) => {
+}: CollectionRejectionPopoverContentProps) {
   const {
     reason,
     notes,
@@ -137,7 +137,7 @@ const CollectionRejectionPopoverContent: React.FC<CollectionRejectionPopoverCont
       ) : null}
     </LabFormPopoverChrome>
   );
-};
+}
 
 interface CollectionRejectionPopoverProps {
   sampleId: string;
@@ -149,7 +149,7 @@ interface CollectionRejectionPopoverProps {
   trigger?: React.ReactNode;
 }
 
-export const SampleRejectionPopover: React.FC<CollectionRejectionPopoverProps> = ({
+export function SampleRejectionPopover({
   sampleId,
   testCodes,
   sampleType,
@@ -157,7 +157,7 @@ export const SampleRejectionPopover: React.FC<CollectionRejectionPopoverProps> =
   isRecollection,
   onSuccess,
   trigger,
-}) => {
+}: CollectionRejectionPopoverProps) {
   return (
     <LabAnchoredPopover
       trigger={
@@ -184,4 +184,4 @@ export const SampleRejectionPopover: React.FC<CollectionRejectionPopoverProps> =
       )}
     </LabAnchoredPopover>
   );
-};
+}

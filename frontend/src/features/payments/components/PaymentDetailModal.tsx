@@ -38,14 +38,14 @@ interface PaymentDetailModalProps {
 /** Get enabled payment methods from the single source of truth */
 const PAYMENT_METHODS = getEnabledPaymentMethods();
 
-const PaymentDetailFooter: React.FC<{
+function PaymentDetailFooter({ isPaid, submitting, paymentsLoading, remainingAmount, amount, onPay }: {
   isPaid: boolean;
   submitting: boolean;
   paymentsLoading: boolean;
   remainingAmount: number;
   amount: number;
   onPay: () => void;
-}> = ({ isPaid, submitting, paymentsLoading, remainingAmount, amount, onPay }) => {
+}) {
   const chargeAmount = roundMoney(amount);
   const remaining = roundMoney(remainingAmount);
   const canPay = !submitting && !paymentsLoading && chargeAmount > 0 && chargeAmount <= remaining;
@@ -69,14 +69,14 @@ const PaymentDetailFooter: React.FC<{
       }
     />
   );
-};
+}
 
-export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
+export function PaymentDetailModal({
   isOpen,
   onClose,
   order: view,
   onPaymentSuccess,
-}) => {
+}: PaymentDetailModalProps) {
   // Use mutation hook for payment creation
   const { mutate: createPaymentMutation, isPending: submitting } = useCreatePayment();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(getDefaultPaymentMethod());
@@ -217,4 +217,4 @@ export const PaymentDetailModal: React.FC<PaymentDetailModalProps> = ({
       </Modal>
     </ErrorBoundary>
   );
-};
+}

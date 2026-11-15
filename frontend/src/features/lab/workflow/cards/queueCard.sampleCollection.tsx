@@ -17,12 +17,12 @@ import { SampleRejectionPopover } from '../../collection/SampleRejectionPopover'
 import { useLabWorkflowCardClickGuard } from '../../hooks';
 import { useLabWorkflowResponsiveCard } from '../../hooks/useLabWorkflowResponsiveCard';
 import { printSampleCollectionLabel } from '../../utils';
-import { QueueCard, QueueCardMobile, QueueCardPanel, QueueCardTestList } from '../shared/queueCardLayout';
+import { QueueCard, QueueCardMobile, QueueCardPanel, QueueCardTestList } from '../shared/QueueCardLayout';
 import {
   SampleCollectionCardLeftColumn,
   type SampleCollectionCardLeftColumnProps,
   type SampleCollectionCardSharedData,
-} from '../shared/queueCardLeftColumn';
+} from '../shared/QueueCardLeftColumn';
 import { getSampleCollectionViewModel } from './queueCard.sampleCollection.viewModel';
 
 export type { SampleCollectionCardLeftColumnProps, SampleCollectionCardSharedData };

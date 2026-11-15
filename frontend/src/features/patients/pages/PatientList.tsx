@@ -2,7 +2,7 @@
  * PatientList — server-paginated patients with URL entity filters.
  */
 
-import React, { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePaginatedPatientContextList } from '../api/patients';
 import { usePageFilters } from '@/hooks';
@@ -20,7 +20,7 @@ import type { PatientContext, Gender } from '@/types';
 import { EditPatientModal } from '../components/EditPatientModal';
 import { useModuleListTitles } from '@/hooks';
 
-export const PatientList: React.FC = () => {
+export function PatientList() {
   const listTitles = useModuleListTitles();
   const navigate = useNavigate();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -140,4 +140,4 @@ export const PatientList: React.FC = () => {
       />
     </>
   );
-};
+}

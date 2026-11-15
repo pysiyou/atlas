@@ -23,13 +23,13 @@ import {
   renderDateTimeCell,
   renderTableEmptyCell,
   renderTableTwoLineCell,
-} from '@/utils/tableColumnRenders';
+} from '@/utils/TableColumnRenders';
 import { formatPatientSexAgeLine } from '@/utils/presentation';
 import {
   renderPatientNameCell,
   renderTestNameCodeStack,
   StatusPresentationBadge,
-} from '@/features/shared/entityPresentation';
+} from '@/features/shared/EntityPresentation';
 import type { LabOrderTableRow } from './LabOrdersTable.types';
 import { BADGE } from '@/theme/recipes';
 

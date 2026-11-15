@@ -1,7 +1,6 @@
 /**
  * ReportRowActionsMenu — row overflow menu (print and future report actions).
  */
-import React from 'react';
 import { Popover } from '@/components/overlays';
 import { actionButtonPreset, Icon, IconButton } from '@/components/primitives';
 import { IconKeys } from '@/icons';
@@ -17,12 +16,12 @@ export interface ReportRowActionsMenuProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
-export const ReportRowActionsMenu: React.FC<ReportRowActionsMenuProps> = ({
+export function ReportRowActionsMenu({
   order,
   onPrint,
   disabled = false,
   size = 'sm',
-}) => {
+}: ReportRowActionsMenuProps) {
   const printable = canPrintReport(order);
   const printDisabled = disabled || !printable;
   const printHint = printable ? 'Print report' : 'Print available when order is completed';
@@ -82,4 +81,4 @@ export const ReportRowActionsMenu: React.FC<ReportRowActionsMenuProps> = ({
       )}
     </Popover>
   );
-};
+}

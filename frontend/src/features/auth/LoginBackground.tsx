@@ -3,7 +3,6 @@
  * Renders the animated background with floating icons and atmospheric effects
  */
 
-import React from 'react';
 import { Icon } from '@/components/primitives';
 import { IconKeys, type IconKey } from '@/icons';
 import { RADIUS } from '@/theme/recipes';
@@ -152,7 +151,7 @@ const FLOATING_ICONS_CONFIG: FloatingIconConfig[] = [
   },
 ];
 
-const FloatingIcon: React.FC<FloatingIconConfig> = ({
+function FloatingIcon({
   iconKey,
   left,
   top,
@@ -161,7 +160,7 @@ const FloatingIcon: React.FC<FloatingIconConfig> = ({
   duration,
   rotation,
   opacity,
-}) => (
+}: FloatingIconConfig) { return (
   <div
     className="absolute pointer-events-none select-none"
     style={{
@@ -182,13 +181,13 @@ const FloatingIcon: React.FC<FloatingIconConfig> = ({
       aria-hidden
     />
   </div>
-);
+); }
 
 /**
  * LoginBackground Component
  * Renders background effects including floating icons, color accents, and grid pattern
  */
-export const LoginBackground: React.FC = () => {
+export function LoginBackground() {
   return (
     <>
       {/* CSS Keyframes for custom animations */}
@@ -272,4 +271,4 @@ export const LoginBackground: React.FC = () => {
       ))}
     </>
   );
-};
+}

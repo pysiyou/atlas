@@ -3,7 +3,6 @@
  * Generic details table with consistent styling and automatic filtering of empty values
  */
 
-import React from 'react';
 import { Panel } from '@/components/surfaces';
 import type { PanelPresetId } from '@/theme/panelPresets';
 import { EmptyState } from './EmptyState';
@@ -23,13 +22,13 @@ export interface DetailsTableProps {
   filteredRows?: DetailTableRow[];
 }
 
-export const DetailsTable: React.FC<DetailsTableProps> = ({
+export function DetailsTable({
   preset,
   title,
   meta,
   rows,
   filteredRows: providedFilteredRows,
-}) => {
+}: DetailsTableProps) {
   const filteredRows = providedFilteredRows ?? filterDetailRows(rows);
 
   return (
@@ -64,4 +63,4 @@ export const DetailsTable: React.FC<DetailsTableProps> = ({
       </table>
     </Panel>
   );
-};
+}

@@ -2,7 +2,7 @@
  * Related tests (same sample / same test code) and samples (recollection chain) in lab modals.
  */
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Panel } from '@/components/surfaces';
 import { sampleAPI } from '../api/samples';
@@ -22,12 +22,12 @@ type LabRelatedTestsPanelProps = {
   order?: Order;
 };
 
-export const LabRelatedTestsPanel: React.FC<LabRelatedTestsPanelProps> = ({
+export function LabRelatedTestsPanel({
   orderId,
   orderTestId,
   isOpen,
   order: orderProp,
-}) => {
+}: LabRelatedTestsPanelProps) {
   const { openModal } = useModal();
   const shouldFetchOrder = isOpen && orderId > 0 && orderProp?.orderId !== orderId;
   const { order: fetchedOrder } = useOrder(shouldFetchOrder ? String(orderId) : undefined);
@@ -54,7 +54,7 @@ export const LabRelatedTestsPanel: React.FC<LabRelatedTestsPanelProps> = ({
   return (
     <TestRelatedTestsPanel order={order} orderTest={orderTest} onOpenOrderTest={openOrderTest} />
   );
-};
+}
 
 type LabRelatedSamplesPanelProps = {
   sample: Sample;
@@ -62,11 +62,11 @@ type LabRelatedSamplesPanelProps = {
   onOpenSample: (sampleId: number) => void;
 };
 
-export const LabRelatedSamplesPanel: React.FC<LabRelatedSamplesPanelProps> = ({
+export function LabRelatedSamplesPanel({
   sample,
   isOpen,
   onOpenSample,
-}) => {
+}: LabRelatedSamplesPanelProps) {
   const { data: orderSamples = [] } = useQuery({
     queryKey: queryKeys.samples.byOrder(String(sample.orderId)),
     queryFn: () => sampleAPI.getAll({ orderId: String(sample.orderId) }),
@@ -109,4 +109,4 @@ export const LabRelatedSamplesPanel: React.FC<LabRelatedSamplesPanelProps> = ({
       </ul>
     </Panel>
   );
-};
+}

@@ -3,7 +3,7 @@
  */
 /* eslint-disable react-refresh/only-export-components -- card layout + small layout helpers */
 
-import { type ReactNode, useState } from 'react';
+import React, { type ReactNode, useState } from 'react';
 import { cn } from '@/utils';
 import { Card } from '@/components/surfaces';
 import { RecordId } from '@/features/shared';

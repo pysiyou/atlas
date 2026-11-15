@@ -3,7 +3,7 @@
  * Responsive layouts for order detail page
  */
 
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { actionButtonPreset, IconButton } from '@/components/primitives';
 import { Panel } from '@/components/surfaces';
 import { LAYOUT, SPACING } from '@/theme/recipes';
@@ -112,7 +112,7 @@ interface OrderDetailPanelsProps extends LayoutProps {
 /**
  * Shared panel set: top row (Order, Patient, Progress) + bottom row (Tests, Billing).
  */
-const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
+function OrderDetailPanels({
   loading = false,
   order,
   patient,
@@ -123,7 +123,7 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
   onPaymentSuccess,
   testsVariant,
   fillHeight,
-}) => {
+}: OrderDetailPanelsProps) {
   const titles = useModuleListTitles();
   const testsHeaderMeta =
     order != null
@@ -212,12 +212,12 @@ const OrderDetailPanels: React.FC<OrderDetailPanelsProps> = ({
       </div>
     </>
   );
-};
+}
 
 /**
  * SmallScreenLayout - Single column stack for small screens.
  */
-export const SmallScreenLayout: React.FC<LayoutProps> = props => {
+export function SmallScreenLayout(props: LayoutProps) {
   const titles = useModuleListTitles();
   const {
     loading = false,
@@ -306,22 +306,22 @@ export const SmallScreenLayout: React.FC<LayoutProps> = props => {
       </Panel>
     </div>
   );
-};
+}
 
 /**
  * MediumScreenLayout - 3 panels on top, 2 on bottom. Page scrolls when content overflows.
  */
-export const MediumScreenLayout: React.FC<LayoutProps> = props => (
+export function MediumScreenLayout(props: LayoutProps) { return (
   <div className={LAYOUT.detailGridRows2}>
     <OrderDetailPanels {...props} testsVariant="detailed" fillHeight={false} />
   </div>
-);
+); }
 
 /**
  * LargeScreenLayout - 3 panels on top, 2 on bottom. Fills viewport height with internal scrolling.
  */
-export const LargeScreenLayout: React.FC<LayoutProps> = props => (
+export function LargeScreenLayout(props: LayoutProps) { return (
   <div className={LAYOUT.detailGridRowsSplit} style={{ height: '100%', maxHeight: '100%' }}>
     <OrderDetailPanels {...props} testsVariant="detailed" fillHeight />
   </div>
-);
+); }

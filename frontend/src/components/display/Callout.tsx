@@ -1,3 +1,4 @@
+import React from 'react';
 /**
  * Callout Component
  *
@@ -5,7 +6,6 @@
  * Extracted from Card.tsx to separate concerns.
  */
 
-import React from 'react';
 import { Icon } from '@/components/primitives/Icon';
 import { FEEDBACK_ICON_KEYS } from '@/icons';
 import type { IconKey } from '@/icons';
@@ -51,14 +51,14 @@ export interface CalloutProps {
   className?: string;
 }
 
-export const Callout: React.FC<CalloutProps> = ({
+export function Callout({
   variant = 'neutral',
   title,
   icon,
   children,
   items,
   className = '',
-}) => {
+}: CalloutProps) {
   const styles = CALLOUT_STYLES[variant];
   const iconKey = icon ?? DEFAULT_CALLOUT_ICON_KEYS[variant];
 
@@ -86,4 +86,4 @@ export const Callout: React.FC<CalloutProps> = ({
       </div>
     </div>
   );
-};
+}

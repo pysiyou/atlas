@@ -1,4 +1,4 @@
-import React from 'react';
+import type { ComponentType } from 'react';
 import type { TableViewConfig, CardComponentProps } from '@/components/data-table';
 import {
   buildViews,
@@ -14,7 +14,7 @@ import { OrderTestStatusBadge } from '../components/OrderDomainBadges';
 import { getOrderTestLineageRowClass } from '../utils/orderTestLineage';
 import type { OrderTest, TestSummary } from '@/types';
 import { text, BADGE, TABLE_TYPE, RADIUS } from '@/theme/recipes';
-import { renderNavigableSampleId, renderOrderTestIdentity } from '@/features/shared/entityPresentation';
+import { renderNavigableSampleId, renderOrderTestIdentity } from '@/features/shared/EntityPresentation';
 
 
 const SIMPLE_VIEWS = {
@@ -35,7 +35,9 @@ function renderTestCategoryBadge(test: OrderTest, testCatalog: TestSummary[]) {
   return <StatusValueBadge value={category} size="xs" className={BADGE.tableEmbed} />;
 }
 
-function createTestTableCard(testCatalog: TestSummary[]): React.FC<CardComponentProps<OrderTest>> {
+function createTestTableCard(
+  testCatalog: TestSummary[]
+): ComponentType<CardComponentProps<OrderTest>> {
   return function TestTableCard({ item, onClick }) {
     const categoryBadge = renderTestCategoryBadge(item, testCatalog);
 

@@ -5,7 +5,6 @@
  * visible behind the preview modal.
  */
 
-import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ReportList } from './ReportList';
 
@@ -13,7 +12,7 @@ import { ReportList } from './ReportList';
  * Reports Page Component
  * Handles routing between the report list and a deep-linked preview.
  */
-export const Reports: React.FC = () => {
+export function Reports() {
   return (
     <Routes>
       <Route index element={<ReportList />} />
@@ -21,4 +20,4 @@ export const Reports: React.FC = () => {
       <Route path="*" element={<Navigate to="/reports" replace />} />
     </Routes>
   );
-};
+}

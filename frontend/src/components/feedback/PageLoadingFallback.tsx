@@ -3,7 +3,6 @@
  * Detail routes paint the real page grid so layout does not pop in after the chunk loads.
  */
 
-import React from 'react';
 import { useLocation } from 'react-router-dom';
 import {
   DetailPageLoadingGrid,
@@ -102,7 +101,11 @@ function PageLoadingLayout({ fullScreen = false }: { fullScreen?: boolean }) {
 }
 
 /** Full-screen fallback for auth bootstrap and public routes (no app shell). */
-export const PageLoadingFallback: React.FC = () => <PageLoadingLayout fullScreen />;
+export function PageLoadingFallback() {
+  return <PageLoadingLayout fullScreen />;
+}
 
 /** Fills the app shell content pane during lazy route chunk loads. */
-export const PageContentLoadingFallback: React.FC = () => <PageLoadingLayout />;
+export function PageContentLoadingFallback() {
+  return <PageLoadingLayout />;
+}

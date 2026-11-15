@@ -1,8 +1,8 @@
+import React from 'react';
 /**
  * Badge, TagChip, RemovableTag, and FilterChip.
  */
 
-import React from 'react';
 import { cn } from '@/utils';
 import { useBadgeAppearance } from '@/theme/theme';
 import { IconKeys } from '@/icons';
@@ -54,7 +54,7 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 
 const UNIFIED_BASE = 'bg-badge border border-border-default';
 
-export const Badge: React.FC<BadgeProps> = ({
+export function Badge({
   className,
   variant = 'neutral',
   size = 'xs',
@@ -65,7 +65,7 @@ export const Badge: React.FC<BadgeProps> = ({
   label,
   children,
   ...props
-}) => {
+}: BadgeProps) {
   const normalizedVariant = String(variant).toLowerCase();
   const appearance = useBadgeAppearance();
   const isContainer = normalizedVariant.startsWith('container-');
@@ -104,20 +104,20 @@ export const Badge: React.FC<BadgeProps> = ({
       {content}
     </span>
   );
-};
+}
 
 export interface TagChipProps extends React.HTMLAttributes<HTMLDivElement> {
   size?: BadgeSize;
   emphasis?: 'default' | 'code';
 }
 
-export const TagChip: React.FC<TagChipProps> = ({
+export function TagChip({
   className,
   size = 'xs',
   emphasis = 'default',
   children,
   ...props
-}) => {
+}: TagChipProps) {
   const chip = SELECTION_CHIP[useBadgeAppearance()];
   return (
     <div
@@ -133,7 +133,7 @@ export const TagChip: React.FC<TagChipProps> = ({
       {children}
     </div>
   );
-};
+}
 
 export interface RemovableTagProps extends React.HTMLAttributes<HTMLDivElement> {
   onRemove: () => void;
@@ -141,14 +141,14 @@ export interface RemovableTagProps extends React.HTMLAttributes<HTMLDivElement> 
   size?: BadgeSize;
 }
 
-export const RemovableTag: React.FC<RemovableTagProps> = ({
+export function RemovableTag({
   className,
   size = 'xs',
   onRemove,
   removeAriaLabel,
   children,
   ...props
-}) => {
+}: RemovableTagProps) {
   const chip = SELECTION_CHIP[useBadgeAppearance()];
   return (
     <div
@@ -171,7 +171,7 @@ export const RemovableTag: React.FC<RemovableTagProps> = ({
       </button>
     </div>
   );
-};
+}
 
 export interface FilterChipProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   active?: boolean;
@@ -179,7 +179,7 @@ export interface FilterChipProps extends React.ButtonHTMLAttributes<HTMLButtonEl
   size?: keyof typeof FILTER_CHIP_SIZE;
 }
 
-export const FilterChip: React.FC<FilterChipProps> = ({
+export function FilterChip({
   active = false,
   icon,
   size = 'xs',
@@ -187,7 +187,7 @@ export const FilterChip: React.FC<FilterChipProps> = ({
   children,
   type = 'button',
   ...props
-}) => (
+}: FilterChipProps) { return (
   <button
     type={type}
     className={cn(
@@ -203,4 +203,4 @@ export const FilterChip: React.FC<FilterChipProps> = ({
     {icon ? <Icon iconKey={icon} className="h-3 w-3 shrink-0" /> : null}
     <span>{children}</span>
   </button>
-);
+); }

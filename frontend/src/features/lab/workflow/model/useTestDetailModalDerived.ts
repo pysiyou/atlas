@@ -8,7 +8,7 @@ import {
   buildOrderTestOverviewFields,
   buildOrderTestWorkflowFields,
 } from '@/features/orders';
-import type { DetailGridSectionConfig } from '../shared/detailModalLayout';
+import type { DetailGridSectionConfig } from '../shared/DetailModalLayout';
 import type { resolveLinkedOrderTests } from './useTestDetailModel';
 import type { TestDetailInteraction } from '@/lib/context/modalTypes';
 import type { LabModalWorkItem } from '../../types/labQueueChrome';

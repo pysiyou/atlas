@@ -20,8 +20,8 @@ import {
   renderTableTwoLineCell,
   TABLE_DATETIME_SECONDARY_CLASS,
   TABLE_PRIMARY_CELL_CLASS,
-} from '@/utils/tableColumnRenders';
-import { renderTruncatedListPreview } from '@/utils/truncatedListPreviewRender';
+} from '@/utils/TableColumnRenders';
+import { renderTruncatedListPreview } from '@/utils/TruncatedListPreviewRender';
 import { formatStatusBadgeLabel, resolveStatusBadgeColor } from '@/utils/statusBadge';
 import {
   buildOrderContextPresentation,

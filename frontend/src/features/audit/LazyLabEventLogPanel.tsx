@@ -1,7 +1,7 @@
 /**
  * Code-split wrapper — loads LabEventLogPanel (and audit catalog) only when embedded in lab UI.
  */
-import React, { lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { Panel } from '@/components/surfaces/Panel';
 
 const LabEventLogPanelLazy = lazy(() =>
@@ -14,7 +14,7 @@ export interface LazyLabEventLogPanelProps {
   className?: string;
 }
 
-export const LazyLabEventLogPanel: React.FC<LazyLabEventLogPanelProps> = props => (
+export function LazyLabEventLogPanel(props: LazyLabEventLogPanelProps) { return (
   <Suspense
     fallback={
       <Panel preset="panel.compactEmbed.auto" title="Activity" loading />
@@ -22,4 +22,4 @@ export const LazyLabEventLogPanel: React.FC<LazyLabEventLogPanelProps> = props =
   >
     <LabEventLogPanelLazy {...props} />
   </Suspense>
-);
+); }

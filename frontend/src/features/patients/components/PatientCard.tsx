@@ -1,3 +1,4 @@
+import React from 'react';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { actionButtonPreset, Avatar, IconButton } from '@/components/primitives';
 import { CardFooter, MetadataGrid, MetadataItem, Stack } from '@/components/layout';

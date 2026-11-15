@@ -8,7 +8,7 @@
  * - Automatic cache restoration on app load
  */
 
-import React, { type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { getQueryClient } from './client';
@@ -35,7 +35,7 @@ interface QueryProviderProps {
  * </QueryProvider>
  * ```
  */
-export const QueryProvider: React.FC<QueryProviderProps> = ({ children }) => {
+export function QueryProvider({ children }: QueryProviderProps) {
   // Get singleton QueryClient instance
   const queryClient = getQueryClient();
 
@@ -61,4 +61,4 @@ export const QueryProvider: React.FC<QueryProviderProps> = ({ children }) => {
 
   // Fallback to standard QueryClientProvider (SSR or no localStorage)
   return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
-};
+}

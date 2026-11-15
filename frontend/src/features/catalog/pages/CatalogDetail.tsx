@@ -3,7 +3,6 @@
  * Uses BalancedColumnsLayout for automatic table arrangement.
  */
 
-import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useTest } from '../api/tests';
 import { useBreakpoint } from '@/hooks';
@@ -148,7 +147,7 @@ function buildCatalogDetailTables(test: Test): TableInput[] {
 /**
  * Catalog detail page for a single test code.
  */
-export const CatalogDetail: React.FC = () => {
+export function CatalogDetail() {
   const { testCode } = useParams<{ testCode: string }>();
   const breakpoint = useBreakpoint();
   const columnCount = catalogDetailColumnCount(breakpoint);
@@ -201,4 +200,4 @@ export const CatalogDetail: React.FC = () => {
       />
     </DetailPageShell>
   );
-};
+}

@@ -7,12 +7,12 @@
  * Load failures should use `notify.show` (see list chrome hooks), not inline alerts here.
  */
 
-import React, { type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { EmptyState } from '@/components/display';
 
 import { IconKeys } from '@/icons';
 import { WORKSPACE } from '@/theme/recipes';
-import { useAppChromeMount } from './appChromeMount';
+import { useAppChromeMount } from './AppChromeMount';
 import { cn } from '@/utils';
 
 export interface DetailPageShellProps {
@@ -31,7 +31,7 @@ export interface DetailPageShellProps {
   className?: string;
 }
 
-export const DetailPageShell: React.FC<DetailPageShellProps> = ({
+export function DetailPageShell({
   header,
   children,
   loading = false,
@@ -39,7 +39,7 @@ export const DetailPageShell: React.FC<DetailPageShellProps> = ({
   notFoundTitle = 'Not Found',
   notFoundDescription,
   className = '',
-}) => {
+}: DetailPageShellProps) {
   const headerInChrome = useAppChromeMount() != null;
   const headerSlotClass = headerInChrome ? 'contents' : 'shrink-0';
 
@@ -64,4 +64,4 @@ export const DetailPageShell: React.FC<DetailPageShellProps> = ({
       )}
     </div>
   );
-};
+}

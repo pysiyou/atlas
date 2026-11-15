@@ -1,7 +1,7 @@
 /**
  * LabValidationQueueSection — section header + card grid matching LabWorkflowQueueLayout layout.
  */
-import React, { type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { text } from '@/theme/recipes';
 
 interface LabValidationQueueSectionProps {
@@ -11,12 +11,12 @@ interface LabValidationQueueSectionProps {
   className?: string;
 }
 
-export const LabValidationQueueSection: React.FC<LabValidationQueueSectionProps> = ({
+export function LabValidationQueueSection({
   title,
   count,
   children,
   className = '',
-}) => (
+}: LabValidationQueueSectionProps) { return (
   <section className={className}>
     <h3 className={`${text({ role: 'section-title' })} mb-space-4`}>
       {title}
@@ -24,4 +24,4 @@ export const LabValidationQueueSection: React.FC<LabValidationQueueSectionProps>
     </h3>
     <div className="grid gap-layout-section content-start">{children}</div>
   </section>
-);
+); }

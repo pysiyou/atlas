@@ -6,7 +6,6 @@
  * Delegates visual rendering to the shared <Checkbox> component.
  */
 
-import React from 'react';
 import { cn, uppercaseLabel } from '@/utils';
 import { Checkbox } from './Checkbox';
 
@@ -35,13 +34,13 @@ export interface CheckboxListProps {
  *
  * @component
  */
-export const CheckboxList: React.FC<CheckboxListProps> = ({
+export function CheckboxList({
   options,
   selectedIds,
   onChange,
   className,
   columns = 1,
-}) => {
+}: CheckboxListProps) {
   const handleToggle = (id: string) => {
     const newSelected = selectedIds.includes(id)
       ? selectedIds.filter(selectedId => selectedId !== id)
@@ -64,4 +63,4 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
       ))}
     </div>
   );
-};
+}

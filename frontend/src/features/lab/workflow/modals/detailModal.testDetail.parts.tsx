@@ -27,8 +27,8 @@ import {
   ModalFooter,
   type LabModalStage,
   type DetailGridSectionConfig,
-} from '../shared/detailModalLayout';
-import { TestWorkflowCardLeftColumn } from '../shared/queueCardLeftColumn';
+} from '../shared/DetailModalLayout';
+import { TestWorkflowCardLeftColumn } from '../shared/QueueCardLeftColumn';
 import {
   countFilledResults,
   resolveTestDetailQueueSince,

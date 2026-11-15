@@ -1,7 +1,6 @@
 /**
  * Pipeline stage row — in-queue vs today's activity (counts and % of monitor view).
  */
-import React from 'react';
 import { METER_KPI } from '@/theme/recipes';
 import {
   formatTodayStageRowAria,
@@ -15,7 +14,7 @@ export interface TodayStageRowProps {
   totalTests: number;
 }
 
-export const TodayStageRow: React.FC<TodayStageRowProps> = ({ segment, totalTests }) => {
+export function TodayStageRow({ segment, totalTests }: TodayStageRowProps) {
   const rowTitle = formatTodayStageRowTitle(segment, totalTests);
   const rowAria = formatTodayStageRowAria(segment);
 
@@ -49,4 +48,4 @@ export const TodayStageRow: React.FC<TodayStageRowProps> = ({ segment, totalTest
       </span>
     </div>
   );
-};
+}

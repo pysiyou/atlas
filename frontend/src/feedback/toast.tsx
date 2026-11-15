@@ -6,7 +6,7 @@ import React, { useCallback, useContext, useEffect, useState, type ReactNode } f
 import { createPortal } from 'react-dom';
 import toastLib, { resolveValue, useToaster, type DefaultToastOptions, type Toast as HotToast } from 'react-hot-toast';
 import { cn } from '@/utils';
-import { CompactNotice, TOAST_ALERT_MESSAGE, type ToastVariant } from './ui';
+import { CompactNotice, TOAST_ALERT_MESSAGE, type ToastVariant } from './FeedbackUi';
 
 export const TOAST_DEFAULT_DURATION_MS = 4000;
 

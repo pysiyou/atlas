@@ -12,8 +12,8 @@ import { isApiError } from '@/lib/api/errors';
 import { getErrorMessage } from '@/utils/errors';
 import { applyFeedbackTerminology, resolveFeedbackTitle } from './terminology';
 import { showToast } from './toast';
-import { TOAST_ALERT_MESSAGE } from './ui';
-import type { ToastVariant } from './ui';
+import { TOAST_ALERT_MESSAGE } from './FeedbackUi';
+import type { ToastVariant } from './FeedbackUi';
 
 export type { FeedbackId, FeedbackEntry, FeedbackVariant } from '@/types/generated/feedback';
 
@@ -111,7 +111,7 @@ export {
   type AlertProps,
   type ErrorFallbackProps,
   type ToastVariant,
-} from './ui';
+} from './FeedbackUi';
 
 export { TOAST_DEFAULT_DURATION_MS, ToastHost, ToastProvider, useToastMountRef } from './toast';
 export { ErrorBoundary } from './ErrorBoundary';

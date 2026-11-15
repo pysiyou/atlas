@@ -84,11 +84,11 @@ function CollectionOperationalMeta({
 }
 
 /** Queue card — full collection context (same facts as modal, card typography). */
-export const CollectionCardAlerts: React.FC<CollectionCardMetaProps> = props => (
+export function CollectionCardAlerts(props: CollectionCardMetaProps) { return (
   <CollectionOperationalMeta {...props} MetaRow={LabCardMetaRow} />
-);
+); }
 
 /** Detail modal — full collection context. */
-export const CollectionModalMeta: React.FC<CollectionCardMetaProps> = props => (
+export function CollectionModalMeta(props: CollectionCardMetaProps) { return (
   <CollectionOperationalMeta {...props} MetaRow={LabModalMetaRow} />
-);
+); }

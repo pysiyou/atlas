@@ -4,7 +4,6 @@
  *
  * Shows a check-circle icon when paid, or a payment popover when unpaid.
  */
-import React from 'react';
 import { Icon } from '@/components/primitives';
 import { PaymentPopover } from './PaymentPopover';
 import type { Order } from '@/types';
@@ -27,11 +26,11 @@ interface PaymentButtonProps {
  * When paid: Shows a green check-circle icon
  * When unpaid/partial: Shows the PaymentPopover trigger button
  */
-export const PaymentButton: React.FC<PaymentButtonProps> = ({
+export function PaymentButton({
   order,
   onPaymentSuccess,
   size = 'sm',
-}) => {
+}: PaymentButtonProps) {
   const isPaid = isFullyPaid(order.paymentStatus);
 
   // Show check-circle icon for paid orders
@@ -47,4 +46,4 @@ export const PaymentButton: React.FC<PaymentButtonProps> = ({
 
   // Show payment popover for unpaid orders
   return <PaymentPopover order={order} onSuccess={onPaymentSuccess} size={size} />;
-};
+}

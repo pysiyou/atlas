@@ -5,7 +5,7 @@
 import type { ReactNode } from 'react';
 import { cn } from '@/utils';
 import { FILTER } from '@/theme/recipes';
-import { ModalLoadingBody, type ModalLoadingVariant } from './modalLoading';
+import { ModalLoadingBody, type ModalLoadingVariant } from './ModalLoading';
 
 /** Default vertical rhythm for workflow / preview modal sections. */
 export const MODAL_WORKFLOW_BODY_STACK = 'space-y-space-3';

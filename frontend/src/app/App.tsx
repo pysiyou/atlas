@@ -4,7 +4,7 @@
  * Implements route-based code splitting for optimal performance
  */
 
-import React, { lazy, Suspense, type ComponentType, type LazyExoticComponent } from 'react';
+import { lazy, Suspense, type ComponentType, type LazyExoticComponent } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 import { AppProviders } from '@/app/AppProviders';
@@ -70,7 +70,7 @@ const PROTECTED_ROUTES: ProtectedRouteConfig[] = [
   { path: ROUTES.USERS, element: Users, featureKey: 'users' },
 ];
 
-const AppRoutes: React.FC = () => {
+function AppRoutes() {
   // Filter routes based on feature flags
   const enabledRoutes = PROTECTED_ROUTES.filter(route => {
     if (!route.featureKey) return true; // No feature key means always enabled
@@ -100,9 +100,9 @@ const AppRoutes: React.FC = () => {
       <Route path="*" element={<Navigate to={ROUTES.LOGIN} replace />} />
     </Routes>
   );
-};
+}
 
-const App: React.FC = () => {
+function App() {
   return (
     <ErrorBoundary>
       <Router>
@@ -116,6 +116,6 @@ const App: React.FC = () => {
       </Router>
     </ErrorBoundary>
   );
-};
+}
 
 export { App };

@@ -1,7 +1,6 @@
 /**
  * Server-side pager for lab worklists.
  */
-import React from 'react';
 import type { WorklistPagination } from '../api/worklists';
 import { Button } from '@/components/primitives';
 import { text } from '@/theme/recipes';
@@ -11,10 +10,10 @@ interface LabWorklistPaginationNoticeProps {
   onPageChange?: (page: number) => void;
 }
 
-export const LabWorklistPaginationNotice: React.FC<LabWorklistPaginationNoticeProps> = ({
+export function LabWorklistPaginationNotice({
   pagination,
   onPageChange,
-}) => {
+}: LabWorklistPaginationNoticeProps) {
   if (!pagination || pagination.total <= 0) return null;
 
   const { total, pageSize, page, totalPages, hasNext, hasPrev } = pagination;
@@ -57,4 +56,4 @@ export const LabWorklistPaginationNotice: React.FC<LabWorklistPaginationNoticePr
       ) : null}
     </div>
   );
-};
+}

@@ -3,29 +3,28 @@
  * Filename is `detailModal.testDetail.tsx` (not a unit test).
  */
 
-import React from 'react';
 import type { TestDetailModalProps } from '@/lib/context/modalTypes';
-import { QueueModalShell, labModalHeaderContext } from '../shared/detailModalLayout';
+import { QueueModalShell, labModalHeaderContext } from '../shared/DetailModalLayout';
 import { useTestDetailModalView } from '../model/useTestDetailModalView';
-import { LabModalPlaceholder } from '../shared/labModalPlaceholders';
+import { LabModalPlaceholder } from '../shared/LabModalPlaceholders';
 import {
   TestDetailHeaderColumn,
   TestDetailModalBody,
   TestDetailModalFooter,
   TestDetailModalHeaderBadges,
-} from './detailModal.testDetail.parts';
+} from './DetailModal.TestDetail.Parts';
 
 /**
  * Test-detail modal orchestrator: loads the work item, then renders header/body/footer parts.
  */
-export const TestDetailModal: React.FC<TestDetailModalProps> = ({
+export function TestDetailModal({
   isOpen,
   onClose,
   isActive = true,
   orderTestId,
   interaction = 'view',
   worklistRow,
-}) => {
+}: TestDetailModalProps) {
   const view = useTestDetailModalView({
     isOpen,
     onClose,
@@ -117,4 +116,4 @@ export const TestDetailModal: React.FC<TestDetailModalProps> = ({
       )}
     </QueueModalShell>
   );
-};
+}

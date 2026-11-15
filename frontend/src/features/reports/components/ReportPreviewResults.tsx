@@ -2,7 +2,6 @@
  * Report preview results — one panel per active test; `layout` selects table vs grid.
  */
 
-import React from 'react';
 import { Panel } from '@/components/surfaces';
 import { RecordId } from '@/features/shared';
 import {
@@ -49,11 +48,11 @@ function reportPatient(
   return { gender, age: reportData.patientAge };
 }
 
-export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({
+export function ReportPreviewResults({
   reportData,
   layout = 'table',
   loading = false,
-}) => {
+}: ReportPreviewResultsProps) {
   if (loading || reportData == null) {
     return (
       <div className={SPACING.stackRelaxed} aria-busy="true" aria-label="Loading report preview">
@@ -112,4 +111,4 @@ export const ReportPreviewResults: React.FC<ReportPreviewResultsProps> = ({
       })}
     </div>
   );
-};
+}

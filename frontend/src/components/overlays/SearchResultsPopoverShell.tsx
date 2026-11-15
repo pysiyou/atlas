@@ -25,14 +25,14 @@ export interface SearchResultsPopoverShellProps {
 }
 
 /** Anchored results panel for combobox-style search fields. */
-export const SearchResultsPopoverShell: React.FC<SearchResultsPopoverShellProps> = ({
+export function SearchResultsPopoverShell({
   title,
   resultCount,
   emptyMessage,
   emptyDescription = DEFAULT_EMPTY_DESCRIPTION_SEARCH,
   isEmpty,
   children,
-}) => (
+}: SearchResultsPopoverShellProps) { return (
   <div className={POPOVER_SHELL_CLASS}>
     <div className="px-space-4 py-space-2-5 bg-surface-page/70 border-b border-border-default/70 flex items-center justify-between">
       <div className={FORM_FIELD_LABEL}>{title}</div>
@@ -52,4 +52,4 @@ export const SearchResultsPopoverShell: React.FC<SearchResultsPopoverShellProps>
       </div>
     )}
   </div>
-);
+); }

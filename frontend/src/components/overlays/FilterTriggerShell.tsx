@@ -1,15 +1,15 @@
+import React from 'react';
 /**
  * FilterTriggerShell - Shared trigger layout for filter dropdowns (Popover-based).
  * Single source of truth for: inputTrigger, left icon, content area, clear button + chevron.
  * Used by DatePicker, AgeFilter, PriceRangeControl, SingleSelectControl, MultiSelectFilter.
  */
 
-import React from 'react';
 import { Icon } from '@/components/primitives/Icon';
 import { inputTrigger, inputTriggerOpen, filterTriggerText, inputClearButton } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { IconKeys } from '@/icons';
-import { filterInputIcon } from '@/components/filters/filterControlIcons';
+import { filterInputIcon } from '@/components/filters/FilterControlIcons';
 
 export interface FilterTriggerShellProps {
   /** Whether the popover is open (for border/chevron state) */
@@ -28,7 +28,7 @@ export interface FilterTriggerShellProps {
   className?: string;
 }
 
-export const FilterTriggerShell: React.FC<FilterTriggerShellProps> = ({
+export function FilterTriggerShell({
   isOpen,
   leftIcon,
   children,
@@ -36,7 +36,7 @@ export const FilterTriggerShell: React.FC<FilterTriggerShellProps> = ({
   onClear,
   onClearMouseDown,
   className,
-}) => (
+}: FilterTriggerShellProps) { return (
   <div
     className={cn(inputTrigger, 'justify-between w-full', isOpen && inputTriggerOpen, className)}
   >
@@ -63,4 +63,4 @@ export const FilterTriggerShell: React.FC<FilterTriggerShellProps> = ({
       />
     </div>
   </div>
-);
+); }

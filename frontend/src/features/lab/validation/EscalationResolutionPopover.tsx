@@ -8,9 +8,9 @@ import type { FeedbackId } from '@/types/generated/feedback';
 import type { CriticalReadBackPayload } from '@/types';
 import type { EscalationResolutionAction } from '@/types';
 import { RETEST_PATH_RADIO_COPY } from '../constants/qualityIssuePopoverCopy';
-import { ResolutionPopover } from './escalationResolutionPopover.chrome';
+import { ResolutionPopover } from './EscalationResolutionPopover.Chrome';
 
-export { ResolutionPopover } from './escalationResolutionPopover.chrome';
+export { ResolutionPopover } from './EscalationResolutionPopover.Chrome';
 
 type RetestPath = 'same_sample' | 'recollect';
 

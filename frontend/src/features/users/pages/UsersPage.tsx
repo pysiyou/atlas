@@ -1,7 +1,7 @@
 /**
  * Administrator-only user directory — create, edit, disable, and assign roles.
  */
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { ListView } from '@/components/surfaces';
@@ -15,7 +15,7 @@ import { createUserTableConfig } from '../config/UserTable.config';
 import { filterUsers, usersListInitialFilters } from '../utils/filterUsers';
 import { isUserActive } from '../utils/userAccountGuards';
 
-export const UsersPage: React.FC = () => {
+export function UsersPage() {
   const { hasRole, user: currentUser } = useAuthStore();
   const { users, isLoading, isError, error, refetch } = useUsersAdminList();
   const { filters, setFilter } = usePageFilters({
@@ -81,4 +81,4 @@ export const UsersPage: React.FC = () => {
       ) : null}
     </div>
   );
-};
+}

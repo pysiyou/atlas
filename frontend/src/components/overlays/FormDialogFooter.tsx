@@ -1,9 +1,9 @@
+import React from 'react';
 /**
  * FormDialogFooter — primary submit actions for modal forms (orders, patients, etc.).
  * Dismiss via the modal header close control (no footer cancel).
  */
 
-import React from 'react';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { DialogFooter } from './DialogChrome';
 
@@ -20,7 +20,7 @@ export interface FormDialogFooterProps {
   hideSubmit?: boolean;
 }
 
-export const FormDialogFooter: React.FC<FormDialogFooterProps> = ({
+export function FormDialogFooter({
   submitLabel,
   isSubmitting,
   formId,
@@ -29,7 +29,7 @@ export const FormDialogFooter: React.FC<FormDialogFooterProps> = ({
   submitIcon,
   leadingActions,
   hideSubmit = false,
-}) => {
+}: FormDialogFooterProps) {
   const submitPreset =
     submitVariant === 'save'
       ? actionButtonPreset('save')
@@ -61,4 +61,4 @@ export const FormDialogFooter: React.FC<FormDialogFooterProps> = ({
       }
     />
   );
-};
+}

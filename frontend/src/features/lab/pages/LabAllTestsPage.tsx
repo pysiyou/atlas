@@ -1,7 +1,7 @@
 /**
  * All order tests — server-paginated registry sorted by last modified.
  */
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { getEmptyCopy } from '@/copy';
 import { ListView } from '@/components/surfaces';
 import { EmptyState } from '@/components/display';
@@ -30,7 +30,7 @@ const EMPTY_SAMPLE_TYPES: string[] = [];
 const EMPTY_STATUSES: TestStatus[] = [];
 const EMPTY_PRIORITIES: PriorityLevel[] = [];
 
-export const LabAllTestsPage: React.FC = () => {
+export function LabAllTestsPage() {
   useClientConfig();
   const allTestsFilterConfig = getAllTestsFilterConfig();
   const { openModal } = useModal();
@@ -170,4 +170,4 @@ export const LabAllTestsPage: React.FC = () => {
       />
     </div>
   );
-};
+}

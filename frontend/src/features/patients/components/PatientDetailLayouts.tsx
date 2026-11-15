@@ -6,7 +6,6 @@
  * Bottom row places related orders beside the reports list.
  */
 
-import React from 'react';
 import { actionButtonPreset, IconButton } from '@/components/primitives';
 import { Panel } from '@/components/surfaces';
 import { LAYOUT } from '@/theme/recipes';
@@ -50,13 +49,13 @@ function RelatedOrdersHeader({ onNewOrder }: { onNewOrder: () => void }) {
  * SmallScreenLayout — single column.
  * Record panels first, then orders, then reports directly underneath.
  */
-export const SmallScreenLayout: React.FC<LayoutProps> = ({
+export function SmallScreenLayout({
   loading = false,
   patient,
   orders,
   onOrderClick,
   onNewOrder,
-}) => {
+}: LayoutProps) {
   const titles = useModuleListTitles();
   const reportsTitle = tCap('reports', 'Reports');
   return (
@@ -105,20 +104,20 @@ export const SmallScreenLayout: React.FC<LayoutProps> = ({
       </Panel>
     </div>
   );
-};
+}
 
 /**
  * MediumScreenLayout — two columns.
  * Profile and history share the first row, the care snapshot spans the width,
  * and reports sit beside related orders.
  */
-export const MediumScreenLayout: React.FC<LayoutProps> = ({
+export function MediumScreenLayout({
   loading = false,
   patient,
   orders,
   onOrderClick,
   onNewOrder,
-}) => {
+}: LayoutProps) {
   const titles = useModuleListTitles();
   const reportsTitle = tCap('reports', 'Reports');
   return (
@@ -155,19 +154,19 @@ export const MediumScreenLayout: React.FC<LayoutProps> = ({
       </Panel>
     </div>
   );
-};
+}
 
 /**
  * LargeScreenLayout — three record panels on top, orders and reports on the bottom.
  * Orders take two columns so the table keeps its columns; reports use the remaining column.
  */
-export const LargeScreenLayout: React.FC<LayoutProps> = ({
+export function LargeScreenLayout({
   loading = false,
   patient,
   orders,
   onOrderClick,
   onNewOrder,
-}) => {
+}: LayoutProps) {
   const titles = useModuleListTitles();
   const reportsTitle = tCap('reports', 'Reports');
   return (
@@ -208,4 +207,4 @@ export const LargeScreenLayout: React.FC<LayoutProps> = ({
       </div>
     </div>
   );
-};
+}

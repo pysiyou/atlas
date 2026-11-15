@@ -26,7 +26,7 @@ import type { Order } from '@/types';
 import type { EscalationResolutionAction } from '@/types';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { notify } from '@/feedback';
-import { DetailGrid } from './detailModalLayout';
+import { DetailGrid } from './DetailModalLayout';
 
 function ticketString(value: unknown): string | undefined {
   return typeof value === 'string' && value.trim() !== '' ? value : undefined;

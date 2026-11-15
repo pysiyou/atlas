@@ -1,11 +1,11 @@
 /**
  * Global event log search — intent, preview, popover, field.
  */
-import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Avatar, Icon } from '@/components/primitives';
 import { SpinnerLoader } from '@/components/feedback';
 import { SearchResultsPopoverShell } from '@/components/overlays/SearchResultsPopoverShell';
-import { filterInputIcon } from '@/components/filters/filterControlIcons';
+import { filterInputIcon } from '@/components/filters/FilterControlIcons';
 import { IconKeys } from '@/icons';
 import { useEventLogSearchPreview } from './eventLogSearchPreview';
 import { cn } from '@/utils';
@@ -36,13 +36,13 @@ const ROW_CLASS = cn(
   CONTROL.focusVisibleTight
 );
 
-const EventLogSearchPopover: React.FC<EventLogSearchPopoverProps> = ({
+function EventLogSearchPopover({
   groups,
   preview,
   previewInSync,
   isFetching,
   onSelectMatch,
-}) => {
+}: EventLogSearchPopoverProps) {
   const itemCount = countEventLogSearchMatchItems(groups);
   const isEmpty = itemCount === 0 && !isFetching;
   const headerCount =
@@ -121,7 +121,7 @@ const EventLogSearchPopover: React.FC<EventLogSearchPopoverProps> = ({
       ))}
     </SearchResultsPopoverShell>
   );
-};
+}
 
 /**
  * Global event log unified search with categorized match popover.
@@ -151,11 +151,11 @@ function useDebouncedCallback(
   return [draft, setDraft];
 }
 
-export const EventLogSearchField: React.FC<EventLogSearchFieldProps> = ({
+export function EventLogSearchField({
   value,
   onChange,
   debounceMs = 300,
-}) => {
+}: EventLogSearchFieldProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const listId = useId();
@@ -258,4 +258,4 @@ export const EventLogSearchField: React.FC<EventLogSearchFieldProps> = ({
       ) : null}
     </div>
   );
-};
+}

@@ -1,7 +1,7 @@
 /**
  * Amount field for partial or full payment. Caps at remaining balance.
  */
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { cn, formatCurrency } from '@/utils';
 import { FIELD_ERROR_CAPTION, FORM_FIELD_LABEL, TONE, inputBase, inputError, text } from '@/theme/recipes';
 import { parsePaymentAmount, roundMoney } from '../utils/paymentStatus';
@@ -23,13 +23,13 @@ function formatDraft(amount: number): string {
   return String(roundMoney(amount));
 }
 
-export const PaymentAmountInput: React.FC<PaymentAmountInputProps> = ({
+export function PaymentAmountInput({
   remainingAmount,
   value,
   onChange,
   disabled = false,
   error = null,
-}) => {
+}: PaymentAmountInputProps) {
   const [focused, setFocused] = useState(false);
   const [draft, setDraft] = useState(() => formatDraft(value));
   const display = focused ? draft : formatDraft(value);
@@ -75,4 +75,4 @@ export const PaymentAmountInput: React.FC<PaymentAmountInputProps> = ({
       {error ? <p className={`${FIELD_ERROR_CAPTION} mt-space-1`}>{error}</p> : null}
     </div>
   );
-};
+}

@@ -2,7 +2,6 @@
  * Recent orders panel for the dashboard reception view.
  */
 
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { EmptyState } from '@/components/display';
 import { getEmptyCopy, PANEL_EMPTY_STATE } from '@/copy';
@@ -21,10 +20,10 @@ export interface DashboardRecentOrdersProps {
   loading?: boolean;
 }
 
-export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
+export function DashboardRecentOrders({
   orders,
   loading = false,
-}) => (
+}: DashboardRecentOrdersProps) { return (
   <Panel
     preset="panel.page.standard"
     title="Recent Orders"
@@ -71,4 +70,4 @@ export const DashboardRecentOrders: React.FC<DashboardRecentOrdersProps> = ({
       )}
     </div>
   </Panel>
-);
+); }

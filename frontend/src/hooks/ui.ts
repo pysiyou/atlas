@@ -1,6 +1,6 @@
 /** Generic UI interaction hooks. */
 
-import { useState, useCallback, useRef, useEffect, type RefObject } from 'react';
+import React, { useState, useCallback, useRef, useEffect, type RefObject } from 'react';
 import type { UseAsyncActionOptions, LoadingStatus } from '@/components/feedback';
 
 export function useAnchoredPopoverDismiss(

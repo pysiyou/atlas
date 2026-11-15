@@ -1,7 +1,7 @@
+import React from 'react';
 /**
  * Event log filter field renderers (inline bar + mobile modal sections).
  */
-import React from 'react';
 import { Checkbox } from '@/components/primitives';
 import { SearchTextInput, Select } from '@/components/inputs';
 import { DatePicker } from '@/components/inputs/DatePicker';
@@ -12,7 +12,7 @@ import {
   EVENT_LOG_FILTER_FIELD_ORDER,
   EVENT_LOG_FILTER_PLACEHOLDERS,
   EVENT_LOG_KIND_OPTIONS } from './eventLogFilterConfig';
-import { EventLogSearchField } from './eventLogSearch';
+import { EventLogSearchField } from './EventLogSearch';
 import type { UserRole } from '@/types';
 import { USER_ROLE_OPTIONS } from '@/types';
 import { EVENT_LOG_COPY, type EventLogFilterField, type EventLogKind, type EventLogVerbosity } from './types';
@@ -164,10 +164,10 @@ function renderFieldControl(
   }
 }
 
-export const EventLogFiltersInlineControls: React.FC<EventLogFiltersInlineControlsProps> = props => {
+export function EventLogFiltersInlineControls(props: EventLogFiltersInlineControlsProps) {
   const show = (field: EventLogFilterField) =>
     props.visibleFields.includes(field) && !props.lockedFields.has(field);
 
   return <>{EVENT_LOG_FILTER_FIELD_ORDER.map(field => renderFieldControl(field, props, show))}</>;
-};
+}
 

@@ -3,7 +3,6 @@
  * Extracted to keep QualityIssuePopover.tsx focused on orchestration.
  */
 
-import React from 'react';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { QualityIssuePopoverLoadingView as QualityIssuePopoverLoadingViewPreset } from '@/components/surfaces';
 import { RadioCard } from '@/components/overlays';
@@ -15,19 +14,19 @@ import { QUALITY_ISSUE_POPOVER_LAYOUT, QUALITY_ISSUE_POPOVER_COPY } from '../con
 import { LAB_CONFIG } from '../constants';
 import { text, FORM_FIELD_LABEL } from '@/theme/recipes';
 /** Re-export preset so feature imports stay stable. */
-export const QualityIssuePopoverLoadingView: React.FC = () => (
+export function QualityIssuePopoverLoadingView() { return (
   <QualityIssuePopoverLoadingViewPreset />
-);
+); }
 
 export interface QualityIssuePopoverErrorViewProps {
   onRetry: () => void;
   onCancel: () => void;
 }
 
-export const QualityIssuePopoverErrorView: React.FC<QualityIssuePopoverErrorViewProps> = ({
+export function QualityIssuePopoverErrorView({
   onRetry,
   onCancel,
-}) => (
+}: QualityIssuePopoverErrorViewProps) { return (
   <div
     className={cn(QUALITY_ISSUE_POPOVER_LAYOUT.widthClass, 'flex flex-col gap-layout-section p-panel min-w-0')}
   >
@@ -44,7 +43,7 @@ export const QualityIssuePopoverErrorView: React.FC<QualityIssuePopoverErrorView
       </Button>
     </div>
   </div>
-);
+); }
 
 export interface RejectionActionCardsProps {
   selectedType: ResultRejectionType;
@@ -54,13 +53,13 @@ export interface RejectionActionCardsProps {
   retestAttemptsRemaining: number;
 }
 
-export const RejectionActionCards: React.FC<RejectionActionCardsProps> = ({
+export function RejectionActionCards({
   selectedType,
   onSelect,
   isRetestEnabled,
   retestDisabledReason,
   retestAttemptsRemaining,
-}) => {
+}: RejectionActionCardsProps) {
   const retestTotal = LAB_CONFIG.MAX_RETEST_ATTEMPTS;
   const retestUsed = retestTotal - retestAttemptsRemaining;
 
@@ -97,4 +96,4 @@ export const RejectionActionCards: React.FC<RejectionActionCardsProps> = ({
       </div>
     </div>
   );
-};
+}

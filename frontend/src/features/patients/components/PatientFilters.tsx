@@ -2,7 +2,7 @@
  * PatientFilters — FilterBar wrapper keeping the list-page prop interface.
  */
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { FeatureFilterBar } from '@/components/filters';
 import { getPatientFilterConfig } from '../config/patientFilters.config';
 import { useClientConfig } from '@/app/clientConfigContext';
@@ -17,14 +17,14 @@ export interface PatientFiltersProps {
   onSexFiltersChange: (values: Gender[]) => void;
 }
 
-export const PatientFilters: React.FC<PatientFiltersProps> = ({
+export function PatientFilters({
   searchQuery,
   onSearchChange,
   ageRange,
   onAgeRangeChange,
   sexFilters,
   onSexFiltersChange,
-}) => {
+}: PatientFiltersProps) {
   useClientConfig();
   const filterConfig = getPatientFilterConfig();
   const value = useMemo(
@@ -43,4 +43,4 @@ export const PatientFilters: React.FC<PatientFiltersProps> = ({
       }}
     />
   );
-};
+}

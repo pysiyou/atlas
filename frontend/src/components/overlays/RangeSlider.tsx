@@ -217,7 +217,7 @@ function HistogramModeSliderBody({
   );
 }
 
-export const RangeSlider: React.FC<RangeSliderProps> = props => {
+export function RangeSlider(props: RangeSliderProps) {
   if (props.mode === 'track') {
     return (
       <TrackRangeSlider
@@ -230,4 +230,4 @@ export const RangeSlider: React.FC<RangeSliderProps> = props => {
     );
   }
   return <HistogramModeSliderBody {...props} />;
-};
+}

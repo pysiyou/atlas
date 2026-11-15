@@ -23,8 +23,8 @@ import {
   type LabOrderTestQueueRow,
 } from '../../types/labQueueChrome';
 import type { QualityIssueResult } from '@/types';
-import { QueueCard, QueueCardMobile } from '../shared/queueCardLayout';
-import { TestWorkflowCardLeftColumn } from '../shared/queueCardLeftColumn';
+import { QueueCard, QueueCardMobile } from '../shared/QueueCardLayout';
+import { TestWorkflowCardLeftColumn } from '../shared/QueueCardLeftColumn';
 import { MOBILE_LIST_CARD } from '@/theme/recipes';
 
 export interface ResultValidationCardProps {

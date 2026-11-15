@@ -2,7 +2,6 @@
  * LabPipelineSummary - Quick links to lab workflow queues from the dashboard.
  */
 
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card } from '@/components/surfaces';
 import { Badge, Icon } from '@/components/primitives';
@@ -31,7 +30,7 @@ export interface LabPipelineSummaryProps {
   loading?: boolean;
 }
 
-export const LabPipelineSummary: React.FC<LabPipelineSummaryProps> = ({ loading: loadingProp }) => {
+export function LabPipelineSummary({ loading: loadingProp }: LabPipelineSummaryProps) {
   const { hasRole } = useAuthStore();
   const canViewLab = hasRole(['administrator', 'lab-technician', 'lab-technician-plus']);
   const { counts, isPending } = useLabStageQueueCounts();
@@ -83,4 +82,4 @@ export const LabPipelineSummary: React.FC<LabPipelineSummaryProps> = ({ loading:
       </div>
     </Card>
   );
-};
+}

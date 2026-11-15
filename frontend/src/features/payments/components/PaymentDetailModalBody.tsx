@@ -1,7 +1,6 @@
 /**
  * Scrollable payment modal body (billing, method, notes, errors).
  */
-import React from 'react';
 import { Panel } from '@/components/surfaces';
 import { Alert } from '@/components/display';
 
@@ -35,7 +34,7 @@ export interface PaymentDetailModalBodyProps {
   paymentMethods: PaymentMethodOption[];
 }
 
-export const PaymentDetailModalBody: React.FC<PaymentDetailModalBodyProps> = ({
+export function PaymentDetailModalBody({
   view,
   isPaid,
   submitting,
@@ -51,7 +50,7 @@ export const PaymentDetailModalBody: React.FC<PaymentDetailModalBodyProps> = ({
   onAmountChange,
   error,
   paymentMethods,
-}) => (
+}: PaymentDetailModalBodyProps) { return (
   <div className="space-y-space-6 p-space-6">
     <Panel
       preset="panel.pageEmbed.modalShrink.flexColumn"
@@ -120,4 +119,4 @@ export const PaymentDetailModalBody: React.FC<PaymentDetailModalBodyProps> = ({
 
     <BillingEventLogPanel orderId={view.order.orderId} />
   </div>
-);
+); }

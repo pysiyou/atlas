@@ -1,9 +1,9 @@
+import React from 'react';
 /**
  * Skeleton Component
  * Loading placeholder components for better UX during data fetching
  */
 
-import React from 'react';
 import { RADIUS } from '@/theme/recipes';
 
 interface SkeletonProps {
@@ -23,13 +23,13 @@ interface SkeletonProps {
  * Base Skeleton Component
  * Renders an animated placeholder element
  */
-export const Skeleton: React.FC<SkeletonProps> = ({
+export function Skeleton({
   width,
   height,
   circle = false,
   className = '',
   count = 1,
-}) => {
+}: SkeletonProps) {
   const style: React.CSSProperties = {
     width: typeof width === 'number' ? `${width}px` : width,
     height: typeof height === 'number' ? `${height}px` : height,
@@ -52,4 +52,4 @@ export const Skeleton: React.FC<SkeletonProps> = ({
       ))}
     </>
   );
-};
+}

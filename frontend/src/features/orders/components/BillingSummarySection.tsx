@@ -3,7 +3,6 @@
  * Displays billing summary information in receipt-style format matching PaymentPopover
  */
 
-import React from 'react';
 import type { Order } from '@/types';
 import { cn } from '@/utils';
 import { hasRecordedPayment, remainingPaymentAmount, usePaymentsByOrder } from '@/features/payments';
@@ -18,11 +17,11 @@ export interface BillingSummarySectionProps {
   paymentMethod?: string;
 }
 
-export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
+export function BillingSummarySection({
   order,
   fillHeight = true,
   paymentMethod: paymentMethodProp,
-}) => {
+}: BillingSummarySectionProps) {
   const billableTotal = getBillableTotal(order.tests ?? []);
   const { payments } = usePaymentsByOrder(String(order.orderId));
   const remainingAmount = remainingPaymentAmount(order.totalPrice, payments);
@@ -52,4 +51,4 @@ export const BillingSummarySection: React.FC<BillingSummarySectionProps> = ({
       </div>
     </div>
   );
-};
+}

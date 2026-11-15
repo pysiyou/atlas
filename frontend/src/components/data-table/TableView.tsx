@@ -21,7 +21,7 @@ import {
   TableViewEmpty,
   resolveEmptyMinHeight,
   resolveTableContainerClasses,
-} from './tableViewParts';
+} from './TableViewParts';
 
 export interface TableViewProps<T> {
   data: T[];

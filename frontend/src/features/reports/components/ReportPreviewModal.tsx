@@ -2,7 +2,7 @@
  * Report Preview Modal — loads reportable order by id and generates the PDF itself.
  */
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { ReportPreviewModalProps } from '@/lib/context/modalTypes';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import {
@@ -26,13 +26,13 @@ import { formatDate } from '@/utils';
 import { notify } from '@/feedback';
 import { canPrintReport } from '../utils/reportEligibility';
 
-export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
+export function ReportPreviewModal({
   isOpen,
   onClose,
   isActive = true,
   orderId,
   layout = 'table',
-}) => {
+}: ReportPreviewModalProps) {
   const { getUserName } = useUserLookup();
   const { reportableOrder, isLoading, isError } = useReportableOrder(isOpen ? orderId : null);
   const orderTestCodes = useMemo(
@@ -154,4 +154,4 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
       </ModalPageShell>
     </Modal>
   );
-};
+}

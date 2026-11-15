@@ -22,13 +22,13 @@ export interface UserUpsertFormFieldsProps {
   onSubmit: (event: React.FormEvent) => void;
 }
 
-export const UserUpsertFormFields: React.FC<UserUpsertFormFieldsProps> = ({
+export function UserUpsertFormFields({
   formId,
   isEdit,
   user,
   roleLocked,
   onSubmit,
-}) => {
+}: UserUpsertFormFieldsProps) {
   const { control } = useFormContext<UserUpsertFormInput>();
   const { field: name } = useController({ control, name: 'name' });
   const { field: username } = useController({ control, name: 'username' });
@@ -126,4 +126,4 @@ export const UserUpsertFormFields: React.FC<UserUpsertFormFieldsProps> = ({
       ) : null}
     </form>
   );
-};
+}

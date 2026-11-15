@@ -29,8 +29,8 @@ export {
   buildOrderTestOverviewFields,
   buildOrderTestWorkflowFields,
   formatPipelinePendingMessage,
-} from './utils/orderTestDetailSections';
-export type { OrderTestOverviewOptions, OrderTestWorkflowOptions } from './utils/orderTestDetailSections';
+} from './utils/OrderTestDetailSections';
+export type { OrderTestOverviewOptions, OrderTestWorkflowOptions } from './utils/OrderTestDetailSections';
 export {
   OrderPriorityBadge,
   OrderStatusBadge,
@@ -68,7 +68,7 @@ export {
   type OrderColumnRenderers,
   type OrderSharedColumnOptions,
   type OrderSharedColumnKey,
-} from './utils/orderTableColumns';
+} from './utils/OrderTableColumns';
 export {
   renderOrderId,
   renderNavigableOrderId,
@@ -79,7 +79,7 @@ export {
   renderOrderTotalPriceInline,
   renderOrderDateCell,
   type RenderOrderTestsBlockOptions,
-} from '@/features/shared/entityPresentation';
+} from '@/features/shared/EntityPresentation';
 
 export { Orders as OrdersPage } from './pages/OrdersPage';
 export { OrderList } from './pages/OrderList';

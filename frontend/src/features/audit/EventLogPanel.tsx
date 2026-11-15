@@ -2,7 +2,7 @@
  * Event log panel — fetch by named scope and optional kind / date / record filters.
  * Placeholders belong on the wrapping Panel/table/modal, not on this feed.
  */
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Button } from '@/components/primitives';
 import { Panel } from '@/components/surfaces/Panel';
 import type { PanelPresetId } from '@/theme/panelPresets';
@@ -71,7 +71,7 @@ function metaForQuery(query: EventLogQuery, hasUserFilters: boolean): string {
   return EVENT_LOG_COPY.panelMetaAll;
 }
 
-export const EventLogPanel: React.FC<EventLogPanelProps> = ({
+export function EventLogPanel({
   query,
   filterUi,
   filterDefaults,
@@ -82,7 +82,7 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
   hideMeta = false,
   filterPanelState,
   loading: loadingProp,
-}) => {
+}: EventLogPanelProps) {
   const visibleFields = filterUi?.fields ?? [];
   const showFilters = visibleFields.length > 0;
 
@@ -196,19 +196,19 @@ export const EventLogPanel: React.FC<EventLogPanelProps> = ({
       {body}
     </Panel>
   );
-};
+}
 
-export const OrderEventLogPanel: React.FC<{
+export function OrderEventLogPanel(props: {
   orderId: number;
   className?: string;
   layout?: EventLogPanelLayout;
-}> = props => (
+}) { return (
   <EventLogPanel
     query={{ scope: 'order', orderId: props.orderId, limit: 500 }}
     className={props.className}
     layout={props.layout ?? 'standalone'}
   />
-);
+); }
 
 /**
  * Laboratory workflow timeline for a test (plus its sample) or a sample (plus its tests).
@@ -217,11 +217,11 @@ export const OrderEventLogPanel: React.FC<{
  * same tube are excluded. Pass `sampleId` from collection so every test on the
  * tube is included. The backend resolves the sample↔test graph.
  */
-export const LabEventLogPanel: React.FC<{
+export function LabEventLogPanel(props: {
   testId?: number;
   sampleId?: number;
   className?: string;
-}> = props => {
+}) {
   const hasTest = props.testId != null;
   const hasSample = props.sampleId != null;
   if (!hasTest && !hasSample) {
@@ -240,39 +240,39 @@ export const LabEventLogPanel: React.FC<{
       className={props.className}
     />
   );
-};
+}
 
-export const PatientEventLogPanel: React.FC<{
+export function PatientEventLogPanel(props: {
   patientId: number;
   className?: string;
-}> = props => (
+}) { return (
   <EventLogPanel
     query={{ scope: 'patient', patientId: props.patientId, limit: 200 }}
     filterUi={{ fields: ['dateRange'] }}
     className={props.className}
   />
-);
+); }
 
-export const LabMonitorEventLogPanel: React.FC<{
+export function LabMonitorEventLogPanel({ loading }: {
   /** Parent board Panel loading — not the event feed. */
   loading?: boolean;
-}> = ({ loading }) => (
+}) { return (
   <EventLogPanel
     query={{ scope: 'stream', hours: 24, kinds: ['laboratory'], limit: 500 }}
     filterUi={{ fields: [] }}
     panelVariant="monitor"
     loading={loading}
   />
-);
+); }
 
 /**
  * Billing events for an order — payment and invoice rows on payment detail.
  */
-export const BillingEventLogPanel: React.FC<{ orderId: number; className?: string }> = props => (
+export function BillingEventLogPanel(props: { orderId: number; className?: string }) { return (
   <EventLogPanel
     query={{ scope: 'order', orderId: props.orderId, kinds: ['billing'], limit: 200 }}
     filterUi={{ fields: [] }}
     className={props.className}
   />
-);
+); }
 

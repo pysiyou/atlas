@@ -8,12 +8,12 @@ import {
   createIdColumn,
   TABLE_COLUMN_WIDTH,
 } from '@/components/data-table';
-import { renderContactBlock, renderDateCell } from '@/utils/tableColumnRenders';
+import { renderContactBlock, renderDateCell } from '@/utils/TableColumnRenders';
 import {
   renderPatientId,
   renderPatientNameWithAge,
   renderPatientOrdersSummary,
-} from '@/features/shared/entityPresentation';
+} from '@/features/shared/EntityPresentation';
 import type { PatientContext } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { PatientCard } from '../components/PatientCard';

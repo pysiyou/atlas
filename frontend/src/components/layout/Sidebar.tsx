@@ -2,7 +2,7 @@
  * Sidebar — main layout shell with mobile overlay support.
  */
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useAuthStore } from '@/app/authStore';
 import { SidebarContent } from './SidebarContent';
@@ -14,11 +14,11 @@ interface SidebarProps {
   isMobile?: boolean;
 }
 
-const SidebarComponent: React.FC<SidebarProps> = ({
+function SidebarComponent({
   isMobileOpen = false,
   onMobileClose,
   isMobile = false,
-}) => {
+}: SidebarProps) {
   const { user: currentUser, logout, hasRole } = useAuthStore();
   const [isCollapsed, setIsCollapsed] = useState(true);
   const { menuItems, settingsPopoverLinks, settingsTrigger } = useSidebarMenu(hasRole);
@@ -82,6 +82,6 @@ const SidebarComponent: React.FC<SidebarProps> = ({
       )}
     </AnimatePresence>
   );
-};
+}
 
 export const Sidebar = SidebarComponent;

@@ -2,6 +2,7 @@ import js from '@eslint/js'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
+import unicorn from 'eslint-plugin-unicorn'
 import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 import {
@@ -26,6 +27,9 @@ export default defineConfig([
     languageOptions: {
       ecmaVersion: 2022,
       globals: globals.browser,
+    },
+    plugins: {
+      unicorn,
     },
     rules: {
       // File size enforcement
@@ -65,7 +69,15 @@ export default defineConfig([
       'react-hooks/rules-of-hooks': 'error',
       
       // Code quality
-      'no-restricted-syntax': ['error', ...allRestrictedSyntax],
+      'no-restricted-syntax': [
+        'error',
+        ...allRestrictedSyntax,
+        {
+          selector: 'TSQualifiedName[left.name="React"][right.name="FC"]',
+          message:
+            'Use export function Component(props: ComponentProps) instead of React.FC.',
+        },
+      ],
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'prefer-const': 'error',
       'no-var': 'error',
@@ -74,6 +86,40 @@ export default defineConfig([
       'prefer-arrow-callback': 'error',
       // Allow separate type and value imports from same source
       'no-duplicate-imports': 'off',
+
+      // Naming and filename conventions (components: export function + PascalCase files)
+      '@typescript-eslint/naming-convention': [
+        'error',
+        { selector: 'variableLike', format: ['camelCase', 'PascalCase', 'UPPER_CASE'], leadingUnderscore: 'allow' },
+        { selector: 'typeLike', format: ['PascalCase'] },
+        { selector: 'function', format: ['camelCase', 'PascalCase'] },
+        { selector: 'enumMember', format: ['PascalCase', 'UPPER_CASE'] },
+      ],
+      'unicorn/filename-case': [
+        'error',
+        {
+          case: 'pascalCase',
+          ignore: [
+            String.raw`^index\.ts$`,
+            String.raw`^main\.tsx$`,
+            String.raw`^use[A-Z].*\.tsx?$`,
+            String.raw`^[a-z].*\.config\.ts$`,
+            String.raw`^[a-z].*\.ts$`,
+            String.raw`^[a-z].*\.shared\.tsx$`,
+            String.raw`^ui\.tsx$`,
+            String.raw`^toast\.tsx$`,
+            String.raw`^client\.ts$`,
+            String.raw`^routes\.ts$`,
+            String.raw`^types\.ts$`,
+            String.raw`^constants\.ts$`,
+            String.raw`^navigation\.ts$`,
+            String.raw`^views\.ts$`,
+            String.raw`^catalog\.ts$`,
+            String.raw`^api\.ts$`,
+            String.raw`^empty-html2canvas\.ts$`,
+          ],
+        },
+      ],
 
       // Import boundaries — prefer feature barrels for cross-feature access
       'no-restricted-imports': ['error', {
@@ -210,7 +256,7 @@ export default defineConfig([
             message: 'Shared components must not import from features. Move domain logic to @/utils or feature barrels.',
           },
           {
-            group: ['@/utils/tableColumnRenders', '@/utils/tableColumnRenders.tsx'],
+            group: ['@/utils/TableColumnRenders', '@/utils/TableColumnRenders.tsx'],
             message: 'Generic table cell helpers only; domain renders live in @/features/orders or @/features/patients.',
           },
           {
@@ -319,13 +365,13 @@ export default defineConfig([
     },
   },
   {
-    files: ['src/components/surfaces/loadingPresets.tsx'],
+    files: ['src/components/surfaces/LoadingPresets.tsx'],
     rules: {
       'react-refresh/only-export-components': 'off',
     },
   },
   {
-    files: ['src/features/shared/entityPresentation.tsx', 'src/features/shared/presentationHooks.ts'],
+    files: ['src/features/shared/EntityPresentation.tsx', 'src/features/shared/presentationHooks.ts'],
     rules: {
       'react-refresh/only-export-components': 'off',
       'no-restricted-imports': 'off',
@@ -337,15 +383,15 @@ export default defineConfig([
       'src/utils/presentation.ts',
       'src/features/reports/utils/reportPDFBody.ts',
       'src/features/lab/hooks/labQueueFilters.ts',
-      'src/features/lab/workflow/shared/queueCardLeftColumn.tsx',
-      'src/features/lab/workflow/modals/detailModal.resultEntry.tsx',
-      'src/features/lab/workflow/modals/detailModal.sampleCollection.tsx',
-      'src/features/lab/workflow/modals/detailModal.testDetail.tsx',
+      'src/features/lab/workflow/shared/QueueCardLeftColumn.tsx',
+      'src/features/lab/workflow/modals/DetailModal.ResultEntry.tsx',
+      'src/features/lab/workflow/modals/DetailModal.SampleCollection.tsx',
+      'src/features/lab/workflow/modals/DetailModal.TestDetail.tsx',
       'src/features/lab/collection/SampleCollectionPopover.tsx',
       'src/features/patients/api/patients.ts',
       'src/features/referent-doctors/components/ReferentDoctorSelect.tsx',
       'src/features/orders/hooks/useOrderUpsertModal.tsx',
-      'src/components/data-table/tableViewParts.tsx',
+      'src/components/data-table/TableViewParts.tsx',
     ],
     rules: {
       'max-lines': 'off',
@@ -354,7 +400,7 @@ export default defineConfig([
     },
   },
   {
-    files: ['src/features/lab/workflow/modals/detailModal.sampleCollection.view.tsx'],
+    files: ['src/features/lab/workflow/modals/DetailModal.SampleCollection.View.tsx'],
     rules: {
       'max-lines-per-function': ['warn', { max: 160, skipComments: true, skipBlankLines: true }],
     },
@@ -369,6 +415,18 @@ export default defineConfig([
     rules: {
       'max-lines-per-function': 'off',
       'complexity': 'off',
+    },
+  },
+  {
+    files: ['src/config/views.ts'],
+    rules: {
+      complexity: 'off',
+    },
+  },
+  {
+    files: ['src/hooks/filters.ts', 'src/icons/registry.ts'],
+    rules: {
+      'max-lines': 'off',
     },
   },
 ])

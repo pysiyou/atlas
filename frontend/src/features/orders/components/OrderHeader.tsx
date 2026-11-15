@@ -3,7 +3,6 @@
  * Displays order header with badges and action buttons. Uses shared PageHeader for consistent layout.
  */
 
-import React from 'react';
 import { actionButtonPreset, Button, Icon, IconButton } from '@/components/primitives';
 import { PageHeader } from '@/components/layout';
 import type { Order, Invoice } from '@/types';
@@ -18,13 +17,13 @@ export interface OrderHeaderProps {
   onEdit?: () => void;
 }
 
-export const OrderHeader: React.FC<OrderHeaderProps> = ({
+export function OrderHeader({
   order,
   invoice,
   isLarge,
   onViewInvoice,
   onEdit,
-}) => {
+}: OrderHeaderProps) {
   const titles = useModuleListTitles();
   const actions = (
     <div
@@ -87,4 +86,4 @@ export const OrderHeader: React.FC<OrderHeaderProps> = ({
   return (
     <PageHeader title={order.patientName} actions={actions} />
   );
-};
+}

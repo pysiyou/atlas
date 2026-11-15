@@ -11,7 +11,7 @@ import { Icon } from '@/components/primitives/Icon';
 import type { IconKey } from '@/icons';
 import { Popover } from './Popover';
 import { FilterTriggerShell } from './FilterTriggerShell';
-import { filterTriggerIcon } from '@/components/filters/filterControlIcons';
+import { filterTriggerIcon } from '@/components/filters/FilterControlIcons';
 import { text, MENU_ITEM_TYPE, RADIUS } from '@/theme/recipes';
 
 export interface FilterOption {
@@ -196,7 +196,7 @@ function MultiSelectOptionsPanel({
   );
 }
 
-export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
+export function MultiSelectFilter({
   label,
   options,
   selectedIds,
@@ -207,7 +207,7 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
   className = '',
   icon,
   singleSelect = false,
-}) => {
+}: MultiSelectFilterProps) {
   const allSelected = useMemo(
     () => options.length > 0 && selectedIds.length === options.length,
     [options.length, selectedIds.length]
@@ -294,4 +294,4 @@ export const MultiSelectFilter: React.FC<MultiSelectFilterProps> = ({
       )}
     </Popover>
   );
-};
+}

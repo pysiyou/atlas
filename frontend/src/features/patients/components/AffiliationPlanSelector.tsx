@@ -4,7 +4,7 @@
  * Inspired by modern subscription plan selection patterns
  */
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Button, Icon, SelectableCard } from '@/components/primitives';
 import { Callout } from '@/components/display';
 
@@ -43,7 +43,7 @@ export interface AffiliationPlanSelectorProps {
  */
 // Large component is necessary for subscription-style plan selector with pricing display, plan cards, and comprehensive UI
 // eslint-disable-next-line max-lines-per-function
-export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = ({
+export function AffiliationPlanSelector({
   selectedDuration,
   onDurationSelect,
   hasExistingAffiliation = false,
@@ -51,7 +51,7 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
   actionLabel = 'Continue',
   loading = false,
   onAction,
-}) => {
+}: AffiliationPlanSelectorProps) {
   // Use TanStack Query for pricing data with static caching
   const { pricing, isLoading: isLoadingPricing, isError } = useAffiliationPricing();
   const error = isError ? getFeedback('patients.affiliation.pricingLoadFailed').title : null;
@@ -288,4 +288,4 @@ export const AffiliationPlanSelector: React.FC<AffiliationPlanSelectorProps> = (
       </div>
     </div>
   );
-};
+}

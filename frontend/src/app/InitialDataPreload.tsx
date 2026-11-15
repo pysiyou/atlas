@@ -13,7 +13,7 @@ interface AuthenticatedPreloadProps {
   children: React.ReactNode;
 }
 
-const AuthenticatedPreload: React.FC<AuthenticatedPreloadProps> = ({ children }) => {
+function AuthenticatedPreload({ children }: AuthenticatedPreloadProps) {
   const testsQuery = useTestCatalog();
   const hasCachedCatalog = testsQuery.tests.length > 0;
   const catalogUnavailable = testsQuery.isError && !hasCachedCatalog;
@@ -42,13 +42,13 @@ const AuthenticatedPreload: React.FC<AuthenticatedPreloadProps> = ({ children })
   }
 
   return <>{children}</>;
-};
+}
 
 interface InitialDataPreloadProps {
   children: React.ReactNode;
 }
 
-export const InitialDataPreload: React.FC<InitialDataPreloadProps> = ({ children }) => {
+export function InitialDataPreload({ children }: InitialDataPreloadProps) {
   const { isAuthenticated } = useAuthStore();
 
   if (!isAuthenticated) {
@@ -56,4 +56,4 @@ export const InitialDataPreload: React.FC<InitialDataPreloadProps> = ({ children
   }
 
   return <AuthenticatedPreload>{children}</AuthenticatedPreload>;
-};
+}

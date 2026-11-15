@@ -45,10 +45,10 @@ interface QualityIssuePopoverFormBodyProps {
   actions: QualityIssueFormActions;
 }
 
-export const QualityIssuePopoverFormBody: React.FC<QualityIssuePopoverFormBodyProps> = ({
+export function QualityIssuePopoverFormBody({
   state,
   actions,
-}) => {
+}: QualityIssuePopoverFormBodyProps) {
   const {
     error,
     formCopy,
@@ -100,7 +100,7 @@ export const QualityIssuePopoverFormBody: React.FC<QualityIssuePopoverFormBodyPr
       />
     </>
   );
-};
+}
 
 interface QualityIssuePopoverContentProps {
   orderTestId: number;
@@ -112,7 +112,7 @@ interface QualityIssuePopoverContentProps {
   onSubmittingChange?: (submitting: boolean) => void;
 }
 
-const QualityIssuePopoverContent: React.FC<QualityIssuePopoverContentProps> = ({
+function QualityIssuePopoverContent({
   orderTestId,
   testName,
   testCode,
@@ -120,7 +120,7 @@ const QualityIssuePopoverContent: React.FC<QualityIssuePopoverContentProps> = ({
   onConfirm,
   onCancel,
   onSubmittingChange,
-}) => {
+}: QualityIssuePopoverContentProps) {
   const {
     rejectionReason,
     setRejectionReason,
@@ -180,7 +180,7 @@ const QualityIssuePopoverContent: React.FC<QualityIssuePopoverContentProps> = ({
       />
     </LabFormPopoverChrome>
   );
-};
+}
 
 interface QualityIssuePopoverProps {
   orderTestId: number;
@@ -192,7 +192,7 @@ interface QualityIssuePopoverProps {
   disabled?: boolean;
 }
 
-export const QualityIssuePopover: React.FC<QualityIssuePopoverProps> = ({
+export function QualityIssuePopover({
   orderTestId,
   testCode,
   testName,
@@ -200,7 +200,7 @@ export const QualityIssuePopover: React.FC<QualityIssuePopoverProps> = ({
   onReject,
   trigger,
   disabled = false,
-}) => {
+}: QualityIssuePopoverProps) {
   const [effectiveSubmitting, setEffectiveSubmitting] = useState(false);
 
   return (
@@ -239,4 +239,4 @@ export const QualityIssuePopover: React.FC<QualityIssuePopoverProps> = ({
       )}
     </Popover>
   );
-};
+}

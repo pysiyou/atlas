@@ -2,7 +2,7 @@
  * OrderFilters — FilterBar wrapper keeping the list-page prop interface.
  */
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { FeatureFilterBar } from '@/components/filters';
 import { orderFilterConfig } from '../config/orderFilters.config';
 import type { OrderStatus } from '@/types';
@@ -16,14 +16,14 @@ export interface OrderFiltersProps {
   onStatusFiltersChange: (values: OrderStatus[]) => void;
 }
 
-export const OrderFilters: React.FC<OrderFiltersProps> = ({
+export function OrderFilters({
   searchQuery,
   onSearchChange,
   dateRange,
   onDateRangeChange,
   statusFilters,
   onStatusFiltersChange,
-}) => {
+}: OrderFiltersProps) {
   const value = useMemo(
     () => ({ search: searchQuery, status: statusFilters, dateRange }),
     [searchQuery, statusFilters, dateRange],
@@ -40,4 +40,4 @@ export const OrderFilters: React.FC<OrderFiltersProps> = ({
       }}
     />
   );
-};
+}

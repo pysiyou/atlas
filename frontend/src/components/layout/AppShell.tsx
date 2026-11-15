@@ -7,9 +7,9 @@
  * - PageHeader portals into the top chrome row (shared with sidebar logo band)
  */
 
-import React, { type ReactNode, useState, useEffect, useCallback } from 'react';
+import { type ReactNode, useState, useEffect, useCallback } from 'react';
 import { useBreakpoint, isBreakpointAtLeast } from '@/hooks';
-import { AppChromeMountContext } from './appChromeMount';
+import { AppChromeMountContext } from './AppChromeMount';
 import { useToastMountRef } from '@/feedback';
 import { Sidebar } from './Sidebar';
 import { Icon } from '@/components/primitives/Icon';
@@ -21,7 +21,7 @@ export interface AppShellProps {
   children: ReactNode;
 }
 
-export const AppShell: React.FC<AppShellProps> = ({ children }) => {
+export function AppShell({ children }: AppShellProps) {
   const breakpoint = useBreakpoint();
   const isMobile = !isBreakpointAtLeast(breakpoint, 'lg');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
@@ -102,4 +102,4 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
       </div>
     </AppChromeMountContext.Provider>
   );
-};
+}

@@ -68,7 +68,7 @@ interface PaymentPopoverContentProps {
  *
  * Handles amount entry, payment method selection, and cash tendering logic.
  */
-const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
+function PaymentPopoverContent({
   order,
   remainingAmount,
   paymentsLoading,
@@ -76,7 +76,7 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
   submitting,
   error,
   onSubmit,
-}) => {
+}: PaymentPopoverContentProps) {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(getDefaultPaymentMethod());
   const [notes, setNotes] = useState<string>('');
   const [amount, setAmount] = useState(remainingAmount);
@@ -178,10 +178,10 @@ const PaymentPopoverContent: React.FC<PaymentPopoverContentProps> = ({
       )}
     </PopoverFormChrome>
   );
-};
+}
 
 /** Inner content wrapper: syncs close to closeRef in an effect to satisfy react-hooks/immutability. */
-const PaymentPopoverContentInner: React.FC<{
+function PaymentPopoverContentInner({ close, closeRef, order, remainingAmount, paymentsLoading, submitting, error, onSubmit }: {
   close: () => void;
   closeRef: React.MutableRefObject<(() => void) | null>;
   order: Order;
@@ -195,7 +195,7 @@ const PaymentPopoverContentInner: React.FC<{
     paymentMethod: PaymentMethod;
     notes?: string;
   }) => void;
-}> = ({ close, closeRef, order, remainingAmount, paymentsLoading, submitting, error, onSubmit }) => {
+}) {
   useEffect(() => {
     closeRef.current = close;
     return () => {
@@ -215,7 +215,7 @@ const PaymentPopoverContentInner: React.FC<{
       />
     </div>
   );
-};
+}
 
 /**
  * PaymentPopover - Popover trigger and container for payment processing
@@ -223,12 +223,12 @@ const PaymentPopoverContentInner: React.FC<{
  * Wraps PaymentPopoverContent with a Popover trigger. Shows PAY button when unpaid,
  * or a Paid badge when order is already paid.
  */
-export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
+export function PaymentPopover({
   order,
   onSuccess,
   size = 'sm',
   trigger,
-}) => {
+}: PaymentPopoverProps) {
   const [error, setError] = useState<string | null>(null);
   const { mutate: createPaymentMutation, isPending: submitting } = useCreatePayment();
   const { remainingAmount, paymentsLoading } = useOrderRemainingBalance(
@@ -311,4 +311,4 @@ export const PaymentPopover: React.FC<PaymentPopoverProps> = ({
       {({ close }) => renderContent(close)}
     </Popover>
   );
-};
+}

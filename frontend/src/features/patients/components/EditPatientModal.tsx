@@ -3,7 +3,6 @@
  * Form logic in useEditPatientForm.
  */
 
-import React from 'react';
 import { FormProvider } from 'react-hook-form';
 import type { Patient } from '@/types';
 import { FormDialogFooter, Modal, ModalPageShell } from '@/components/overlays';
@@ -28,7 +27,7 @@ interface TabNavigationProps {
   onTabChange: (tabId: string) => void;
 }
 
-const TabNavigation: React.FC<TabNavigationProps> = ({ tabs, activeTab, onTabChange }) => (
+function TabNavigation({ tabs, activeTab, onTabChange }: TabNavigationProps) { return (
   <div className="flex items-center justify-start mb-space-6">
     <SegmentedControl
       options={tabs.map(tab => ({ id: tab.id, label: tab.label }))}
@@ -36,14 +35,14 @@ const TabNavigation: React.FC<TabNavigationProps> = ({ tabs, activeTab, onTabCha
       onActiveIdChange={onTabChange}
     />
   </div>
-);
+); }
 
-export const EditPatientModal: React.FC<EditPatientModalProps> = ({
+export function EditPatientModal({
   isOpen,
   onClose,
   patient,
   mode,
-}) => {
+}: EditPatientModalProps) {
   const {
     form,
     handleSubmit,
@@ -89,4 +88,4 @@ export const EditPatientModal: React.FC<EditPatientModalProps> = ({
       </Modal>
     </ErrorBoundary>
   );
-};
+}

@@ -1,8 +1,8 @@
+import React from 'react';
 /**
  * Inline highlight for body copy (event log, notes). Multi-line via `box-decoration-clone`.
  * Styles: `INLINE_HIGHLIGHT` in `@/theme/recipes`.
  */
-import React from 'react';
 import { cn } from '@/utils';
 import { INLINE_HIGHLIGHT } from '@/theme/recipes';
 import { resolveColor } from './badgeStyles';
@@ -39,7 +39,7 @@ export interface InlineHighlightProps extends React.HTMLAttributes<HTMLSpanEleme
   children?: React.ReactNode;
 }
 
-export const InlineHighlight: React.FC<InlineHighlightProps> = ({
+export function InlineHighlight({
   variant = 'warning',
   size = 'sm',
   decoration,
@@ -48,7 +48,7 @@ export const InlineHighlight: React.FC<InlineHighlightProps> = ({
   className,
   children,
   ...props
-}) => {
+}: InlineHighlightProps) {
   const content = label ?? children;
 
   const resolvedIcon =
@@ -76,4 +76,4 @@ export const InlineHighlight: React.FC<InlineHighlightProps> = ({
       {content}
     </span>
   );
-};
+}

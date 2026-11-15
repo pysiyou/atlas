@@ -3,7 +3,7 @@
  *
  * Manages login form state, validation, and submission.
  */
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/app/authStore';
 import { ROUTES } from '@/app/routes';

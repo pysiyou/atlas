@@ -5,7 +5,7 @@
  * Allows users to add tags by typing and pressing Enter, and remove tags by clicking the X button.
  */
 
-import React, { useState, type KeyboardEvent, type ChangeEvent } from 'react';
+import { useState, type KeyboardEvent, type ChangeEvent } from 'react';
 import { RemovableTag } from '@/components/primitives';
 import { cn } from '@/utils';
 import { text, inputContainerBase, inputContainerError, FORM_CONTROL_LABEL } from '@/theme/recipes';
@@ -33,7 +33,7 @@ export interface TagInputProps {
   maxTags?: number;
 }
 
-export const TagInput: React.FC<TagInputProps> = ({
+export function TagInput({
   tags,
   onChange,
   placeholder = 'Type and press Enter to add',
@@ -43,7 +43,7 @@ export const TagInput: React.FC<TagInputProps> = ({
   required = false,
   className = '',
   maxTags,
-}) => {
+}: TagInputProps) {
   const [inputValue, setInputValue] = useState('');
 
   const handleAddTag = (value: string) => {
@@ -121,4 +121,4 @@ export const TagInput: React.FC<TagInputProps> = ({
       {helperText && !error && <p className={`${text({ role: 'body', intent: 'muted' })} mt-space-1-5`}>{helperText}</p>}
     </div>
   );
-};
+}

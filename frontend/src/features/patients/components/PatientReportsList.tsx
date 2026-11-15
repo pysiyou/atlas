@@ -3,14 +3,13 @@
  * Displays a list of available patient reports
  */
 
-import React from 'react';
 import { actionButtonPreset, Icon, IconButton } from '@/components/primitives';
 import { EmptyState } from '@/components/display';
 import { getEmptyCopy, PANEL_EMPTY_STATE } from '@/copy';
 
 import { RecordId } from '@/features/shared';
 import { formatDateTime } from '@/utils';
-import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/tableColumnRenders';
+import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/TableColumnRenders';
 import type { Order } from '@/types';
 import { getReportableOrders } from '../utils/patientFormatters';
 import { IconKeys } from '@/icons';
@@ -21,7 +20,7 @@ export interface PatientReportsListProps {
   orders: Order[];
 }
 
-export const PatientReportsList: React.FC<PatientReportsListProps> = ({ orders }) => {
+export function PatientReportsList({ orders }: PatientReportsListProps) {
   const reportableOrders = getReportableOrders(orders);
 
   if (reportableOrders.length === 0) {
@@ -59,4 +58,4 @@ export const PatientReportsList: React.FC<PatientReportsListProps> = ({ orders }
       ))}
     </div>
   );
-};
+}

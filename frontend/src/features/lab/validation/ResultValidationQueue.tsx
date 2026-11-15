@@ -2,7 +2,7 @@
  * ResultValidationQueue - Result validation and supervisor exception review.
  */
 
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useAuthStore } from '@/app/authStore';
 import {
   LabWorkflowQueueMultiSectionLayout,
@@ -39,7 +39,7 @@ function getCommentKey(row: ValidationQueueRow) {
   return orderTestKey(row.orderTestId);
 }
 
-export const ResultValidationQueue: React.FC = () => {
+export function ResultValidationQueue() {
   useClientConfig();
   const validationFilterConfig = getValidationFilterConfig();
   const { hasRole } = useAuthStore();
@@ -171,4 +171,4 @@ export const ResultValidationQueue: React.FC = () => {
       </LabWorkflowQueueMultiSectionLayout>
     </ErrorBoundary>
   );
-};
+}

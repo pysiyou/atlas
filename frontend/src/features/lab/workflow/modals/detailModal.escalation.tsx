@@ -2,11 +2,11 @@
  * EscalationResolutionModal — loads the escalated test by id and owns resolution.
  */
 
-import React, { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { QueueModalShell } from '../shared/detailModalLayout';
+import { QueueModalShell } from '../shared/DetailModalLayout';
 import { TestHeaderBadges } from '../../components/LabWorkflowBadges';
-import { TestWorkflowCardLeftColumn } from '../shared/queueCardLeftColumn';
+import { TestWorkflowCardLeftColumn } from '../shared/QueueCardLeftColumn';
 import { buildCriticalValueRecord } from '../../criticalValues/criticalValues';
 import {
   invalidateAfterLabMutation,
@@ -16,10 +16,10 @@ import { useEscalationResolution } from '../../validation/useEscalationResolutio
 import {
   EscalationResolutionBody,
   EscalationResolutionFooter,
-} from '../shared/escalation.shared';
-import { labModalHeaderContext } from '../shared/detailModalLayout';
+} from '../shared/Escalation.Shared';
+import { labModalHeaderContext } from '../shared/DetailModalLayout';
 import { hasResultsOnWorkItem } from '../../utils/labSearchAndLinks';
-import { LabModalPlaceholder } from '../shared/labModalPlaceholders';
+import { LabModalPlaceholder } from '../shared/LabModalPlaceholders';
 import type { EscalationResolutionModalProps } from '@/lib/context/modalTypes';
 import { useLabModalWorkItemModel } from '../model/useLabModalWorkItemModel';
 import type { LabModalWorkItem } from '../../types/labQueueChrome';
@@ -206,14 +206,14 @@ function EscalationModalFrame({
   );
 }
 
-export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps> = ({
+export function EscalationResolutionModal({
   isOpen,
   onClose,
   isActive = true,
   orderTestId,
   readOnly = false,
   escalationSnapshot,
-}) => {
+}: EscalationResolutionModalProps) {
   const {
     order,
     displayWorkItem,
@@ -285,4 +285,4 @@ export const EscalationResolutionModal: React.FC<EscalationResolutionModalProps>
       onCriticalValueUpdated={handleCriticalValueUpdated}
     />
   );
-};
+}

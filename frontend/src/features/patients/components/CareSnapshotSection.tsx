@@ -1,10 +1,10 @@
+import React from 'react';
 /**
  * CareSnapshotSection
  * High-signal facts in a two-column vertical flow.
  */
 /* eslint-disable react-refresh/only-export-components -- description builders exported for order detail */
 
-import React from 'react';
 import { Badge } from '@/components/primitives';
 import { DescriptionItem } from '@/components/display';
 
@@ -126,13 +126,13 @@ export function renderCareSnapshotDescriptionItems(patient: Patient): React.Reac
   return items;
 }
 
-export const CareSnapshotSection: React.FC<CareSnapshotSectionProps> = ({ patient }) => {
+export function CareSnapshotSection({ patient }: CareSnapshotSectionProps) {
   return (
     <div className="flex min-h-0 h-full flex-col">
       <DescriptionColumns>{renderCareSnapshotDescriptionItems(patient)}</DescriptionColumns>
     </div>
   );
-};
+}
 
 function formatCoveragePeriod(startDate: string, endDate: string, isActive: boolean): React.ReactNode {
   const start = formatDate(startDate) || 'N/A';

@@ -2,7 +2,6 @@
 /**
  * Sample container type and color icon for collection cards and modals.
  */
-import React from 'react';
 import { Icon } from '@/components/primitives';
 import { getContainerIconColor } from '../utils';
 import type { ContainerType, ContainerTopColor } from '@/types';
@@ -17,11 +16,11 @@ interface SampleContainerInfoProps {
   size?: 'sm' | 'md';
 }
 
-export const SampleContainerInfo: React.FC<SampleContainerInfoProps> = ({
+export function SampleContainerInfo({
   containerType,
   containerColor,
   size = 'sm',
-}) => {
+}: SampleContainerInfoProps) {
   const colorName = containerColor
     ? CONTAINER_TOP_COLOR_OPTIONS.find(opt => opt.value === containerColor)?.label || 'N/A'
     : 'N/A';
@@ -35,7 +34,7 @@ export const SampleContainerInfo: React.FC<SampleContainerInfoProps> = ({
       />
     </span>
   );
-};
+}
 
 /**
  * Sample collection metadata line (who collected, when, sample id).
@@ -48,12 +47,12 @@ interface SampleCollectionMetaLineProps {
   className?: string;
 }
 
-export const SampleCollectionMetaLine: React.FC<SampleCollectionMetaLineProps> = ({
+export function SampleCollectionMetaLine({
   sampleId,
   collectedAt,
   collectedBy,
   className,
-}) => {
+}: SampleCollectionMetaLineProps) {
   if (!collectedAt) return null;
 
   const line =
@@ -71,7 +70,7 @@ export const SampleCollectionMetaLine: React.FC<SampleCollectionMetaLineProps> =
         };
 
   return <LabAuditLineView line={line} className={className} />;
-};
+}
 
 /**
  * Result entry metadata line (who entered values, when).
@@ -83,11 +82,11 @@ interface ResultEntryMetaLineProps {
   className?: string;
 }
 
-export const ResultEntryMetaLine: React.FC<ResultEntryMetaLineProps> = ({
+export function ResultEntryMetaLine({
   enteredAt,
   enteredBy,
   className,
-}) => {
+}: ResultEntryMetaLineProps) {
   if (!enteredAt) return null;
 
   return (
@@ -96,5 +95,5 @@ export const ResultEntryMetaLine: React.FC<ResultEntryMetaLineProps> = ({
       className={className}
     />
   );
-};
+}
 

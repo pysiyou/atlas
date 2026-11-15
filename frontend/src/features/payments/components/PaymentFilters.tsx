@@ -2,7 +2,7 @@
  * PaymentFilters — FilterBar wrapper keeping the list-page prop interface.
  */
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { FeatureFilterBar } from '@/components/filters';
 import { paymentFilterConfig } from '../config/paymentFilters.config';
 import type { PaymentStatus } from '@/types';
@@ -16,14 +16,14 @@ export interface PaymentFiltersProps {
   onStatusFiltersChange: (values: PaymentStatus[]) => void;
 }
 
-export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
+export function PaymentFilters({
   searchQuery,
   onSearchChange,
   dateRange,
   onDateRangeChange,
   statusFilters,
   onStatusFiltersChange,
-}) => {
+}: PaymentFiltersProps) {
   const value = useMemo(
     () => ({ search: searchQuery, statusFilters, dateRange }),
     [searchQuery, statusFilters, dateRange],
@@ -40,4 +40,4 @@ export const PaymentFilters: React.FC<PaymentFiltersProps> = ({
       }}
     />
   );
-};
+}

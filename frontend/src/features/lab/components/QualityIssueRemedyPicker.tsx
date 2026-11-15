@@ -1,7 +1,6 @@
 /**
  * QualityIssueRemedyPicker — explicit destination for validation / sample rejection.
  */
-import React from 'react';
 import type { RemedyType } from '@/types';
 import { RadioCard } from '@/components/overlays';
 import { QUALITY_ISSUE_POPOVER_COPY, type RemedyOption } from '../constants/qualityIssuePopoverCopy';
@@ -17,13 +16,13 @@ export interface RemedyDestinationPickerProps {
   disabled?: boolean;
 }
 
-export const QualityIssueRemedyPicker: React.FC<RemedyDestinationPickerProps> = ({
+export function QualityIssueRemedyPicker({
   label = QUALITY_ISSUE_POPOVER_COPY.actions.followUpLabel,
   options,
   value,
   onChange,
   disabled = false,
-}) => {
+}: RemedyDestinationPickerProps) {
   if (options.length === 0) return null;
 
   return (
@@ -47,4 +46,4 @@ export const QualityIssueRemedyPicker: React.FC<RemedyDestinationPickerProps> = 
       </div>
     </div>
   );
-};
+}

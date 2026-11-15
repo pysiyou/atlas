@@ -1,7 +1,6 @@
 /**
  * Hero summary for the user upsert modal (create callout or edit identity strip).
  */
-import React from 'react';
 import { Avatar, Badge } from '@/components/primitives';
 import { Callout } from '@/components/display';
 
@@ -39,11 +38,11 @@ function AccountMetaItem({ label, value, mono }: { label: string; value: string;
 /**
  * Top-of-modal context: onboarding hint for create, avatar + badges + audit strip for edit.
  */
-export const UserUpsertModalSummary: React.FC<UserUpsertModalSummaryProps> = ({
+export function UserUpsertModalSummary({
   isEdit,
   user,
   displayName,
-}) => {
+}: UserUpsertModalSummaryProps) {
   if (!isEdit || !user) {
     return (
       <Callout variant="neutral" icon={IconKeys.modules.users} title="Provision account">
@@ -90,4 +89,4 @@ export const UserUpsertModalSummary: React.FC<UserUpsertModalSummaryProps> = ({
       </div>
     </div>
   );
-};
+}

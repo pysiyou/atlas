@@ -2,7 +2,7 @@
  * SampleCollectionQueue - Main view for sample collection workflow
  */
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks';
 import {
   useLabQueueBarFilters,
@@ -28,7 +28,7 @@ import { useAuthStore } from '@/app/authStore';
 import { useTestCatalog } from '@/features/catalog';
 import { useClientListChrome } from '@/hooks';
 
-export const SampleCollectionQueue: React.FC = () => {
+export function SampleCollectionQueue() {
   useClientConfig();
   const collectionFilterConfig = getCollectionFilterConfig();
   const { user: currentUser } = useAuthStore();
@@ -115,4 +115,4 @@ export const SampleCollectionQueue: React.FC = () => {
       />
     </ErrorBoundary>
   );
-};
+}

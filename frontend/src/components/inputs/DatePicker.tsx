@@ -7,9 +7,9 @@ import { format, isBefore, isSameDay, startOfDay, endOfDay } from 'date-fns';
 import { FilterTriggerShell, Popover } from '@/components/overlays';
 import { FilterChip } from '@/components/primitives';
 import { IconKeys, type IconKey } from '@/icons';
-import { filterTriggerIcon } from '@/components/filters/filterControlIcons';
+import { filterTriggerIcon } from '@/components/filters/FilterControlIcons';
 import { CALENDAR_TYPE, RADIUS } from '@/theme/recipes';
-import { CalendarGrid, CalendarHeader, useCalendarMonth, type CalendarView } from './dateCalendarShared';
+import { CalendarGrid, CalendarHeader, useCalendarMonth, type CalendarView } from './DateCalendarShared';
 import {
   isDateDisabledForPicker,
   isSelectedDateForPicker,
@@ -124,13 +124,13 @@ function DatePickerPopoverBody({
   );
 }
 
-export const DatePicker: React.FC<DatePickerProps> = ({
+export function DatePicker({
   value,
   onChange,
   placeholder = 'Filter by date range',
   className,
   iconKey = IconKeys.dataFields.date,
-}) => {
+}: DatePickerProps) {
   const {
     currentMonth,
     setCurrentMonth,
@@ -260,4 +260,4 @@ export const DatePicker: React.FC<DatePickerProps> = ({
       )}
     </Popover>
   );
-};
+}

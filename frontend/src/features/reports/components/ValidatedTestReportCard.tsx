@@ -10,10 +10,10 @@ import type { ReportableOrder } from '@/types';
 import { OrderStatusBadge } from '@/features/orders';
 import { ReportRowActionsMenu } from './ReportRowActionsMenu';
 import { INTERACTIVE, text } from '@/theme/recipes';
-import { EntityStack, renderCardDateTimeSecondary } from '@/features/shared/entityPresentation';
+import { EntityStack, renderCardDateTimeSecondary } from '@/features/shared/EntityPresentation';
 import { useReportableOrderPresentation } from '@/hooks';
 import { cn } from '@/utils';
-import { renderTruncatedListPreview } from '@/utils/truncatedListPreviewRender';
+import { renderTruncatedListPreview } from '@/utils/TruncatedListPreviewRender';
 
 interface ValidatedTestReportCardProps extends CardComponentProps<ReportableOrder> {
   onPrint: (order: ReportableOrder) => void;

@@ -5,7 +5,6 @@
  * Uses the LPT (Longest Processing Time) algorithm to minimize empty space.
  */
 
-import React from 'react';
 import { LAYOUT } from '@/theme/recipes';
 import type { PanelPresetId } from '@/theme/panelPresets';
 import { DetailsTable, type DetailTableRow } from '@/components/display/DetailsTable';
@@ -88,12 +87,12 @@ const balanceTablesAcrossColumns = (
   return cols;
 };
 
-export const BalancedColumnsLayout: React.FC<BalancedColumnsLayoutProps> = ({
+export function BalancedColumnsLayout({
   tables,
   columns = 2,
   tieBreakBias = 'left',
   className = '',
-}) => {
+}: BalancedColumnsLayoutProps) {
   if (!Array.isArray(tables) || tables.length === 0) return null;
   const safeColumns = Math.max(1, Math.floor(columns));
   const balancedColumns = balanceTablesAcrossColumns(tables, safeColumns, tieBreakBias);
@@ -118,5 +117,5 @@ export const BalancedColumnsLayout: React.FC<BalancedColumnsLayoutProps> = ({
       ))}
     </div>
   );
-};
+}
 

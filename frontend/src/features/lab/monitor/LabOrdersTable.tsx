@@ -1,7 +1,7 @@
 /**
  * Lab monitor table — union of tests updated today (UTC) and still-running pipeline tests.
  */
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { getEmptyCopy } from '@/copy';
 import { DataTable } from '@/components/data-table';
 import { Panel } from '@/components/surfaces/Panel';
@@ -16,7 +16,7 @@ import type { LabOrderTableRow } from './LabOrdersTable.types';
 
 const viewConfig = createLabOrdersTableConfig();
 
-export const LabOrdersTable: React.FC = () => {
+export function LabOrdersTable() {
   const { openModal } = useModal();
   const workToday = useDashboardWorklistToday({ pageSize: 200 });
 
@@ -55,4 +55,4 @@ export const LabOrdersTable: React.FC = () => {
       />
     </Panel>
   );
-};
+}

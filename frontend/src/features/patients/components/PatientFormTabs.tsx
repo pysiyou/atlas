@@ -2,7 +2,7 @@
  * PatientFormTabs — tab shell for patient create/edit; sections bind React Hook Form directly.
  */
 
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import type { PatientFormInput } from '../schemas/patientFormSchemas';
 import type { Patient } from '@/types';
@@ -18,10 +18,10 @@ export interface PatientFormTabsProps {
   existingAffiliation?: Patient['affiliation'];
 }
 
-export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
+export function PatientFormTabs({
   activeTab,
   existingAffiliation,
-}) => {
+}: PatientFormTabsProps) {
   const { setValue } = useFormContext<PatientFormInput>();
   const initialHasAffiliation = useMemo(() => !!existingAffiliation, [existingAffiliation]);
   const [affiliationEnabled, setAffiliationEnabled] = useState(initialHasAffiliation);
@@ -67,4 +67,4 @@ export const PatientFormTabs: React.FC<PatientFormTabsProps> = ({
     default:
       return null;
   }
-};
+}

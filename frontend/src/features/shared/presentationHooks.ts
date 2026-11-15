@@ -14,7 +14,7 @@ import {
 import {
   buildWorklistRowPresentation,
   type WorklistRowSource,
-} from '@/features/shared/entityPresentation';
+} from '@/features/shared/EntityPresentation';
 
 export function useReportableOrderPresentation(order: ReportableOrder) {
   return useMemo(() => {

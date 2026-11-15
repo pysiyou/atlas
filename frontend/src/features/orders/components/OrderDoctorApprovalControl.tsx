@@ -2,7 +2,7 @@
  * Doctor approval control for requireDoctorApproval workflow.
  */
 
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/primitives';
 import { isWorkflowEnabled } from '@/config';
@@ -16,9 +16,9 @@ export interface OrderDoctorApprovalControlProps {
   order: Order;
 }
 
-export const OrderDoctorApprovalControl: React.FC<OrderDoctorApprovalControlProps> = ({
+export function OrderDoctorApprovalControl({
   order,
-}) => {
+}: OrderDoctorApprovalControlProps) {
   const queryClient = useQueryClient();
   const [submitting, setSubmitting] = useState(false);
   const enabled = isWorkflowEnabled('requireDoctorApproval');
@@ -59,4 +59,4 @@ export const OrderDoctorApprovalControl: React.FC<OrderDoctorApprovalControlProp
       {submitting ? 'Approving…' : 'Approve for collection'}
     </Button>
   );
-};
+}

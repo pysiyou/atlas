@@ -31,7 +31,7 @@ interface LoginFormCardProps {
  */
 // Large component is necessary for comprehensive login form with validation, error handling, and multiple input fields
 // eslint-disable-next-line max-lines-per-function
-export const LoginFormCard: React.FC<LoginFormCardProps> = ({
+export function LoginFormCard({
   username,
   password,
   error,
@@ -43,7 +43,7 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
   onTogglePasswordVisibility,
   onSubmit,
   onErrorDismiss,
-}) => {
+}: LoginFormCardProps) {
   const company = getBrandingPresentation();
   const usernameInputRef = useRef<HTMLInputElement>(null);
 
@@ -196,4 +196,4 @@ export const LoginFormCard: React.FC<LoginFormCardProps> = ({
       </div>
     </div>
   );
-};
+}

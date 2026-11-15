@@ -2,7 +2,7 @@
  * CatalogFilters — FilterBar for the test catalog list.
  */
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import type { FilterValues } from '@/components/filters/types';
 import { FeatureFilterBar } from '@/components/filters';
 import { catalogFilterConfig } from '../constants/catalogConfig';
@@ -13,7 +13,7 @@ export interface CatalogFiltersProps {
   setFilter: (key: string, value: unknown) => void;
 }
 
-export const CatalogFilters: React.FC<CatalogFiltersProps> = ({ filters, setFilter }) => {
+export function CatalogFilters({ filters, setFilter }: CatalogFiltersProps) {
   const value = useMemo(
     () => ({
       search: (filters.search as string) ?? '',
@@ -36,4 +36,4 @@ export const CatalogFilters: React.FC<CatalogFiltersProps> = ({ filters, setFilt
       }}
     />
   );
-};
+}

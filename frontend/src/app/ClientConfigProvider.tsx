@@ -1,4 +1,4 @@
-import React, { type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import type { ClientConfig } from '@/config';
 import { ClientConfigContext, type ConfigStatus } from './clientConfigContext';
 
@@ -9,11 +9,11 @@ interface ClientConfigProviderProps {
   error?: Error;
 }
 
-export const ClientConfigProvider: React.FC<ClientConfigProviderProps> = ({
+export function ClientConfigProvider({
   children,
   config,
   status,
   error,
-}) => (
+}: ClientConfigProviderProps) { return (
   <ClientConfigContext.Provider value={{ config, status, error }}>{children}</ClientConfigContext.Provider>
-);
+); }

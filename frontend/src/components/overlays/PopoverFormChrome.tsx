@@ -1,3 +1,4 @@
+import React from 'react';
 /**
  * PopoverFormChrome — header, scroll body, and cancel/confirm footer for anchored forms.
  * Used by lab workflow popovers, payment popover, and similar flows.

@@ -2,7 +2,6 @@
  * PendingCriticalValuesPanel - Pending critical value notifications queue.
  */
 
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Badge, Icon } from '@/components/primitives';
 import { Panel } from '@/components/surfaces';
@@ -19,9 +18,9 @@ export interface PendingCriticalValuesPanelProps {
   loading?: boolean;
 }
 
-export const PendingCriticalValuesPanel: React.FC<PendingCriticalValuesPanelProps> = ({
+export function PendingCriticalValuesPanel({
   loading: loadingProp,
-}) => {
+}: PendingCriticalValuesPanelProps) {
   const { criticalValues, isLoading, refetch } = usePendingCriticalValues();
   const loading = loadingProp ?? isLoading;
 
@@ -70,4 +69,4 @@ export const PendingCriticalValuesPanel: React.FC<PendingCriticalValuesPanelProp
       </div>
     </Panel>
   );
-};
+}

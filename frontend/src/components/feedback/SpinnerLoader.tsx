@@ -35,7 +35,7 @@ function ringMask(strokeWidth: number): React.CSSProperties {
   };
 }
 
-export const SpinnerLoader: React.FC<SpinnerLoaderProps> = ({ size = 'md', className = '' }) => {
+export function SpinnerLoader({ size = 'md', className = '' }: SpinnerLoaderProps) {
   const { size: diameter, strokeWidth } = SIZES[size] ?? SIZES.md;
 
   const sweepStyle = useMemo(
@@ -83,4 +83,4 @@ export const SpinnerLoader: React.FC<SpinnerLoaderProps> = ({ size = 'md', class
       />
     </div>
   );
-};
+}

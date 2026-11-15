@@ -2,7 +2,6 @@
  * Patient, test name, and IDs — one wrapping row; cards hide secondary fields at narrow widths.
  */
 
-import React from 'react';
 import { RecordId } from '@/features/shared';
 import { InlineSegments, type InlineSegment } from '@/components/layout';
 import { formatDate } from '@/utils';
@@ -25,11 +24,11 @@ interface LabIdentityRowProps {
   compact?: boolean;
 }
 
-export const LabIdentityRow: React.FC<LabIdentityRowProps> = ({
+export function LabIdentityRow({
   context,
   className,
   compact = false,
-}) => {
+}: LabIdentityRowProps) {
   const idClass = 'whitespace-nowrap';
   const hideMd = compact ? ('md' as const) : undefined;
   const hideLg = compact ? ('lg' as const) : undefined;
@@ -112,4 +111,4 @@ export const LabIdentityRow: React.FC<LabIdentityRowProps> = ({
       segments={segments}
     />
   );
-};
+}

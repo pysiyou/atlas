@@ -3,12 +3,11 @@
  * Patient management - list, search, and register
  */
 
-import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { PatientList } from './PatientList';
 import { PatientDetail } from './PatientDetail';
 
-export const Patients: React.FC = () => {
+export function Patients() {
   return (
     <Routes>
       <Route index element={<PatientList />} />
@@ -17,4 +16,4 @@ export const Patients: React.FC = () => {
       <Route path="*" element={<Navigate to="/patients" replace />} />
     </Routes>
   );
-};
+}

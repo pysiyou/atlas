@@ -112,7 +112,7 @@ function FilterBarInlineGrid({
 /**
  * Config-driven filter bar with breakpoint-specific layouts.
  */
-export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, className }) => {
+export function FilterBar({ config, value, onChange, className }: FilterBarProps) {
   const breakpoint = useBreakpoint();
   const isMedium = breakpoint === 'md';
   const isSmall = isBreakpointAtMost(breakpoint, 'sm');
@@ -214,4 +214,4 @@ export const FilterBar: React.FC<FilterBarProps> = ({ config, value, onChange, c
       applyPreset={applyPreset}
     />
   );
-};
+}

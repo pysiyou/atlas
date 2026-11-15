@@ -20,7 +20,7 @@ export interface CircularProgressProps {
   className?: string;
 }
 
-export const CircularProgress: React.FC<CircularProgressProps> = ({
+export function CircularProgress({
   size = 32,
   strokeWidth = 2,
   trackColorClass = 'stroke-neutral-200',
@@ -29,7 +29,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
   label,
   labelClassName = `${text({ role: 'body', intent: 'muted' })} normal-case font-normal`,
   className = '',
-}) => {
+}: CircularProgressProps) {
   const center = size / 2;
   const radius = center - strokeWidth;
   const circumference = 2 * Math.PI * radius;
@@ -78,4 +78,4 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
       {label && <span className={labelClassName}>{label}</span>}
     </div>
   );
-};
+}

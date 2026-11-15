@@ -3,7 +3,7 @@
  */
 /* eslint-disable react-refresh/only-export-components -- queue card + colocated data hook */
 
-import { useMemo, type FC } from 'react';
+import React, { useMemo, type FC } from 'react';
 import { Card } from '@/components/surfaces';
 import { cn } from '@/utils';
 import { useUserLookup } from '@/lib/api/users';
@@ -16,12 +16,12 @@ import {
   retestContextFromRow,
   type LabOrderTestQueueRow,
 } from '../../types/labQueueChrome';
-import { QueueCard, QueueCardMobile } from '../shared/queueCardLayout';
-import { TestWorkflowCardLeftColumn } from '../shared/queueCardLeftColumn';
+import { QueueCard, QueueCardMobile } from '../shared/QueueCardLayout';
+import { TestWorkflowCardLeftColumn } from '../shared/QueueCardLeftColumn';
 import {
   EscalationExceptionBadges,
   EscalationExceptionReviewBody,
-} from '../shared/escalation.shared';
+} from '../shared/Escalation.Shared';
 
 export interface EscalationCardProps {
   item: PendingEscalationItem;

@@ -2,7 +2,7 @@
  * ResultEntryQueue - Main view for result entry workflow
  */
 
-import React, { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { uniqueSortedTestCodes, useTestsByCodes } from '@/features/catalog';
 import {
   useLabQueueBarFilters,
@@ -29,7 +29,7 @@ import { useClientListChrome } from '@/hooks';
 /** Stable empty map so unedited cards keep the same `results` identity. */
 const EMPTY_RESULT_VALUES: Record<string, string> = {};
 
-export const ResultEntryQueue: React.FC = () => {
+export function ResultEntryQueue() {
   useClientConfig();
   const entryFilterConfig = getEntryFilterConfig();
   const breakpoint = useBreakpoint();
@@ -145,4 +145,4 @@ export const ResultEntryQueue: React.FC = () => {
       />
     </ErrorBoundary>
   );
-};
+}

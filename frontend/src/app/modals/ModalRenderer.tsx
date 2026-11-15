@@ -2,9 +2,9 @@
  * Renders the current modal frame (at most one visible at a time).
  */
 
-import React, { createElement, useEffect, useState } from 'react';
+import { createElement, useEffect, useState } from 'react';
 import { Modal } from '@/components/overlays/Modal';
-import { ModalLoadingBody } from '@/components/overlays/modalLoading';
+import { ModalLoadingBody } from '@/components/overlays/ModalLoading';
 import { Text } from '@/components/layout/Text';
 import { useModal, useModalStack } from '@/lib/context/ModalContext';
 import { modalFrameKey, modalFramePayload, type ModalFrame } from '@/lib/context/modalTypes';
@@ -46,12 +46,12 @@ interface LazyRegisteredModalProps {
   isActive: boolean;
 }
 
-const LazyRegisteredModal: React.FC<LazyRegisteredModalProps> = ({
+function LazyRegisteredModal({
   frame,
   isOpen,
   onClose,
   isActive,
-}) => {
+}: LazyRegisteredModalProps) {
   const cached = modalComponentCache.get(frame.type) ?? null;
   const loader = getModalLoader(frame.type);
   const [asyncLoad, setAsyncLoad] = useState<{
@@ -118,7 +118,7 @@ const LazyRegisteredModal: React.FC<LazyRegisteredModalProps> = ({
   }
 
   return createElement(Component, sharedProps);
-};
+}
 
 /**
  * ModalRenderer Component
@@ -126,7 +126,7 @@ const LazyRegisteredModal: React.FC<LazyRegisteredModalProps> = ({
  * Sample lookup is intentionally not mounted here — SAMPLE_DETAIL loads its own
  * sample by id so authenticated routes do not fetch the full samples list.
  */
-export const ModalRenderer: React.FC = () => {
+export function ModalRenderer() {
   const stack = useModalStack();
   const { closeModal } = useModal();
 
@@ -151,4 +151,4 @@ export const ModalRenderer: React.FC = () => {
       ))}
     </>
   );
-};
+}

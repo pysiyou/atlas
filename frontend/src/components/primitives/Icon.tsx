@@ -13,7 +13,7 @@
  *       `size` prop — dynamic class names like `w-${n}` are purged by Tailwind.
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { resolveIconKey, type IconKey } from '@/icons';
 import { logger } from '@/utils/logger';
 
@@ -73,11 +73,11 @@ async function loadSvgAsset(asset: string, fallbackAsset?: string): Promise<stri
  * A stable invisible placeholder is rendered while the SVG is loading
  * so the surrounding layout does not shift.
  */
-export const Icon: React.FC<IconProps> = ({
+export function Icon({
   iconKey,
   className = '',
   fallbackIconKey,
-}) => {
+}: IconProps) {
   const asset = useMemo(() => resolveIconKey(iconKey), [iconKey]);
   const fallbackAsset = useMemo(
     () => (fallbackIconKey ? resolveIconKey(fallbackIconKey) : undefined),
@@ -111,4 +111,4 @@ export const Icon: React.FC<IconProps> = ({
       aria-hidden="true"
     />
   );
-};
+}

@@ -1,7 +1,7 @@
 /**
  * Lab dashboard Today panel — per-stage queue vs today's activity (% of monitor universe).
  */
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { EmptyState } from '@/components/display';
 import { getEmptyCopy, DENSE_EMPTY_STATE_TEXT } from '@/copy';
 
@@ -27,10 +27,10 @@ export interface LabTodayPanelProps {
   loading?: boolean;
 }
 
-export const LabTodayPanel: React.FC<LabTodayPanelProps> = ({
+export function LabTodayPanel({
   todayPanel,
   loading = false,
-}) => {
+}: LabTodayPanelProps) {
   const snapshot = todayPanel ?? EMPTY_TODAY_PANEL;
 
   const dayLabel = useMemo(
@@ -125,4 +125,4 @@ export const LabTodayPanel: React.FC<LabTodayPanelProps> = ({
       </div>
     </Panel>
   );
-};
+}

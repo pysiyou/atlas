@@ -3,7 +3,6 @@
  * Displays patient affiliation information
  */
 
-import React from 'react';
 import { Badge } from '@/components/primitives';
 import { DescriptionItem } from '@/components/display';
 
@@ -19,7 +18,7 @@ interface AffiliationInfoProps {
 /**
  * AffiliationInfo - Displays affiliation details in grid format
  */
-export const AffiliationInfo: React.FC<AffiliationInfoProps> = ({ affiliation }) => {
+export function AffiliationInfo({ affiliation }: AffiliationInfoProps) {
   const isActive = isAffiliationActive(affiliation);
 
   return (
@@ -60,4 +59,4 @@ export const AffiliationInfo: React.FC<AffiliationInfoProps> = ({ affiliation })
       />
     </div>
   );
-};
+}

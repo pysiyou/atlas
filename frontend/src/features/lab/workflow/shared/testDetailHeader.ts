@@ -2,7 +2,7 @@
  * Stage-aware header helpers for the unified test detail modal.
  */
 
-import type { LabModalStage } from './detailModalLayout';
+import type { LabModalStage } from './DetailModalLayout';
 import type { LabWorkItemProjection } from '@/lib/api/types';
 import type { Order, OrderTest } from '@/types';
 import type { LabModalWorkItem } from '../../types/labQueueChrome';

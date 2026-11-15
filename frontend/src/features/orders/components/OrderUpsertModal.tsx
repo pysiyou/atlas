@@ -5,7 +5,6 @@
  * Logic lives in useOrderUpsertModal; this component is presentational.
  */
 
-import React from 'react';
 import { text } from '@/theme/recipes';
 import { FormDialogFooter, Modal, ModalPageShell } from '@/components/overlays';
 import { FooterInfo } from '@/components/display';
@@ -20,14 +19,14 @@ import type { OrderUpsertModalOpenProps } from '@/lib/context/modalTypes';
 
 export type OrderUpsertModalProps = OrderUpsertModalOpenProps;
 
-export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
+export function OrderUpsertModal({
   isOpen,
   onClose,
   isActive = true,
   orderId,
   mode: modeProp,
   patientId,
-}) => {
+}: OrderUpsertModalProps) {
   const mode = modeProp ?? (orderId != null ? 'edit' : 'create');
   const modalState = useOrderUpsertModal({
     isOpen,
@@ -119,4 +118,4 @@ export const OrderUpsertModal: React.FC<OrderUpsertModalProps> = ({
       </ModalPageShell>
     </Modal>
   );
-};
+}

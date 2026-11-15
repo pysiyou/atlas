@@ -3,7 +3,7 @@
  */
 
 import type { FilterControl as FilterControlConfig } from './types';
-import { renderFilterControlSwitch } from './filterControlSwitch';
+import { renderFilterControlSwitch } from './FilterControlSwitch';
 
 export type FilterControlSurface = 'bar' | 'modal';
 

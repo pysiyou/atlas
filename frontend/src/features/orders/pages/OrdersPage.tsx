@@ -3,7 +3,7 @@
  * Test orders management
  */
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { OrderList } from './OrderList';
 import { OrderDetail } from './OrderDetail';
@@ -23,7 +23,7 @@ function NewOrderRedirect() {
   return <Navigate to="/orders" replace />;
 }
 
-export const Orders: React.FC = () => {
+export function Orders() {
   return (
     <Routes>
       <Route index element={<OrderList />} />
@@ -32,4 +32,4 @@ export const Orders: React.FC = () => {
       <Route path="*" element={<Navigate to="/orders" replace />} />
     </Routes>
   );
-};
+}

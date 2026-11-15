@@ -2,7 +2,7 @@
  * PaymentList — server-paginated orders with latestPayment embed (single request).
  */
 
-import React, { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePageFilters } from '@/hooks';
 import { ListView } from '@/components/surfaces';
@@ -20,7 +20,7 @@ import type { PaymentStatus } from '@/types';
 import type { OrderPaymentView } from '../types';
 import { useModuleListTitles } from '@/hooks';
 
-export const PaymentList: React.FC = () => {
+export function PaymentList() {
   const listTitles = useModuleListTitles();
   const navigate = useNavigate();
   const [selectedOrder, setSelectedOrder] = useState<OrderPaymentView | null>(null);
@@ -146,4 +146,4 @@ export const PaymentList: React.FC = () => {
       />
     </>
   );
-};
+}

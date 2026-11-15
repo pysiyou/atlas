@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Controller, type Control } from 'react-hook-form';
 import { Icon, RemovableTag, TagChip } from '@/components/primitives';
 import { Input } from '@/components/inputs';
@@ -42,13 +42,13 @@ interface ReferentDoctorSelectProps {
   disabled?: boolean;
 }
 
-export const ReferentDoctorSelect: React.FC<ReferentDoctorSelectProps> = ({
+export function ReferentDoctorSelect({
   control,
   selectedDoctor,
   onSelectDoctor,
   onClearSelection,
   disabled = false,
-}) => {
+}: ReferentDoctorSelectProps) {
   const [search, setSearch] = useState('');
   const [newUsername, setNewUsername] = useState('');
   const [newEmail, setNewEmail] = useState('');
@@ -275,4 +275,4 @@ export const ReferentDoctorSelect: React.FC<ReferentDoctorSelectProps> = ({
       )}
     />
   );
-};
+}

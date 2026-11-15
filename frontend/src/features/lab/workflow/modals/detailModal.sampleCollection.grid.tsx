@@ -6,7 +6,7 @@ import type { ContainerType, Sample } from '@/types';
 import { CONTAINER_TOP_COLOR_OPTIONS, CONTAINER_TYPE_CONFIG } from '@/types';
 import { formatVolumeMl } from '@/utils/presentation';
 import { TONE } from '@/theme/recipes';
-import { DetailGrid, type DetailGridSectionConfig } from '../shared/detailModalLayout';
+import { DetailGrid, type DetailGridSectionConfig } from '../shared/DetailModalLayout';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 
 export function CollectionDetailGrid({

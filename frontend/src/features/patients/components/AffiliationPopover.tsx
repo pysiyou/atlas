@@ -18,7 +18,7 @@ interface AffiliationPopoverProps {
  * Displays patient affiliation information in a concise grid layout.
  * Triggered by an element passed via props.
  */
-export const AffiliationPopover: React.FC<AffiliationPopoverProps> = ({ affiliation, trigger }) => {
+export function AffiliationPopover({ affiliation, trigger }: AffiliationPopoverProps) {
   if (!affiliation) return null;
 
   return (
@@ -38,4 +38,4 @@ export const AffiliationPopover: React.FC<AffiliationPopoverProps> = ({ affiliat
       )}
     </Popover>
   );
-};
+}

@@ -3,7 +3,6 @@
  * Left panel displaying branding, features, and trust indicators
  */
 
-import React from 'react';
 import { Icon } from '@/components/primitives';
 import { IconKeys } from '@/icons';
 import { getBrandingPresentation } from '@/config';
@@ -18,7 +17,7 @@ interface LoginBrandingPanelProps {
  * LoginBrandingPanel Component
  * Displays the branding panel on the left side of the login page
  */
-export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisible }) => {
+export function LoginBrandingPanel({ isVisible }: LoginBrandingPanelProps) {
   const branding = getBrandingPresentation();
   const { company, features, marketing } = branding;
   const trust = marketing.trustIndicator;
@@ -100,4 +99,4 @@ export const LoginBrandingPanel: React.FC<LoginBrandingPanelProps> = ({ isVisibl
       ) : null}
     </div>
   );
-};
+}
